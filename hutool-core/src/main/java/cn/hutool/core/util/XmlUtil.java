@@ -6,13 +6,17 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.BiMap;
 import cn.hutool.core.map.MapUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,10 +73,25 @@ public class XmlUtil {
 	private static String defaultDocumentBuilderFactory = "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl";
 
 	/**
+	 * 是否打开命名空间支持
+	 */
+	private static boolean namespaceAware = true;
+
+	/**
 	 * 禁用默认的DocumentBuilderFactory，禁用后如果有第三方的实现（如oracle的xdb包中的xmlparse），将会自动加载实现。
 	 */
 	synchronized public static void disableDefaultDocumentBuilderFactory() {
 		defaultDocumentBuilderFactory = null;
+	}
+
+	/**
+	 * 设置是否打开命名空间支持，默认打开
+	 *
+	 * @param isNamespaceAware 是否命名空间支持
+	 * @since 5.3.1
+	 */
+	synchronized public static void setNamespaceAware(boolean isNamespaceAware) {
+		namespaceAware = isNamespaceAware;
 	}
 
 	// -------------------------------------------------------------------------------------- Read
@@ -176,7 +195,7 @@ public class XmlUtil {
 			throw new IllegalArgumentException("XML content string is empty !");
 		}
 		xmlStr = cleanInvalid(xmlStr);
-		return readXML(new InputSource(StrUtil.getReader(xmlStr)));
+		return readXML(StrUtil.getReader(xmlStr));
 	}
 
 	/**
@@ -261,7 +280,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
-		return toStr(doc, charset, isPretty,false);
+		return toStr(doc, charset, isPretty, false);
 	}
 
 	/**
@@ -421,7 +440,7 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void transform(Source source, Result result, String charset, int indent,boolean omitXmlDeclaration) {
+	public static void transform(Source source, Result result, String charset, int indent, boolean omitXmlDeclaration) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
@@ -432,7 +451,7 @@ public class XmlUtil {
 			if (StrUtil.isNotBlank(charset)) {
 				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
 			}
-			if (omitXmlDeclaration){
+			if (omitXmlDeclaration) {
 				xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			}
 			xformer.transform(source, result);
@@ -487,7 +506,7 @@ public class XmlUtil {
 			factory = DocumentBuilderFactory.newInstance();
 		}
 		// 默认打开NamespaceAware，getElementsByTagNameNS可以使用命名空间
-		factory.setNamespaceAware(true);
+		factory.setNamespaceAware(namespaceAware);
 		return disableXXE(factory);
 	}
 
@@ -533,11 +552,12 @@ public class XmlUtil {
 
 	/**
 	 * 获取节点所在的Document
+	 *
 	 * @param node 节点
 	 * @return {@link Document}
 	 * @since 5.3.0
 	 */
-	public static Document getOwnerDocument(Node node){
+	public static Document getOwnerDocument(Node node) {
 		return (node instanceof Document) ? (Document) node : node.getOwnerDocument();
 	}
 
@@ -728,7 +748,31 @@ public class XmlUtil {
 	 * @since 3.2.0
 	 */
 	public static Object getByXPath(String expression, Object source, QName returnType) {
+		NamespaceContext nsContext = null;
+		if (source instanceof Node) {
+			nsContext = new UniversalNamespaceCache((Node) source, false);
+		}
+		return getByXPath(expression, source, returnType, nsContext);
+	}
+
+	/**
+	 * 通过XPath方式读取XML节点等信息<br>
+	 * Xpath相关文章：<br>
+	 * https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html<br>
+	 * https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/
+	 *
+	 * @param expression XPath表达式
+	 * @param source     资源，可以是Docunent、Node节点等
+	 * @param returnType 返回类型，{@link javax.xml.xpath.XPathConstants}
+	 * @param nsContext  {@link NamespaceContext}
+	 * @return 匹配返回类型的值
+	 * @since 5.3.1
+	 */
+	public static Object getByXPath(String expression, Object source, QName returnType, NamespaceContext nsContext) {
 		final XPath xPath = createXPath();
+		if (null != nsContext) {
+			xPath.setNamespaceContext(nsContext);
+		}
 		try {
 			if (source instanceof InputSource) {
 				return xPath.evaluate(expression, (InputSource) source, returnType);
@@ -784,13 +828,13 @@ public class XmlUtil {
 	/**
 	 * XML转Java Bean
 	 *
-	 * @param <T> bean类型
+	 * @param <T>  bean类型
 	 * @param node XML节点
 	 * @param bean bean类
 	 * @return bean
 	 * @since 5.2.4
 	 */
-	public static <T> T xmlToBean(Node node, Class<T> bean){
+	public static <T> T xmlToBean(Node node, Class<T> bean) {
 		return BeanUtil.toBean(xmlToMap(node), bean);
 	}
 
@@ -853,7 +897,7 @@ public class XmlUtil {
 				final Map<String, Object> map = xmlToMap(childEle);
 				if (MapUtil.isNotEmpty(map)) {
 					newValue = map;
-				} else{
+				} else {
 					newValue = childEle.getTextContent();
 				}
 			} else {
@@ -879,7 +923,7 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
-	 * @param data     Map类型数据
+	 * @param data Map类型数据
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
@@ -895,8 +939,8 @@ public class XmlUtil {
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data,boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, "xml"),CharsetUtil.UTF_8,false,omitXmlDeclaration);
+	public static String mapToXmlStr(Map<?, ?> data, boolean omitXmlDeclaration) {
+		return toStr(mapToXml(data, "xml"), CharsetUtil.UTF_8, false, omitXmlDeclaration);
 	}
 
 	/**
@@ -965,7 +1009,7 @@ public class XmlUtil {
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, String charset,boolean isPretty, boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, String charset, boolean isPretty, boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, rootName, namespace), charset, isPretty, omitXmlDeclaration);
 	}
 
@@ -1007,7 +1051,7 @@ public class XmlUtil {
 	 * @since 5.2.4
 	 */
 	public static Document beanToXml(Object bean, String namespace) {
-		if(null == bean){
+		if (null == bean) {
 			return null;
 		}
 		return mapToXml(BeanUtil.beanToMap(bean), bean.getClass().getSimpleName(), namespace);
@@ -1060,7 +1104,7 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 5.3.0
 	 */
-	public static Node appendText(Node node, CharSequence text){
+	public static Node appendText(Node node, CharSequence text) {
 		return appendText(getOwnerDocument(node), node, text);
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
@@ -1068,21 +1112,21 @@ public class XmlUtil {
 	/**
 	 * 追加数据子节点，可以是Map、集合、文本
 	 *
-	 * @param doc {@link Document}
+	 * @param doc  {@link Document}
 	 * @param node 节点
 	 * @param data 数据
 	 */
 	@SuppressWarnings("rawtypes")
-	private static void append(Document doc, Node node, Object data){
+	private static void append(Document doc, Node node, Object data) {
 		if (data instanceof Map) {
 			// 如果值依旧为map，递归继续
 			appendMap(doc, node, (Map) data);
 		} else if (data instanceof Iterator) {
 			// 如果值依旧为map，递归继续
 			appendIterator(doc, node, (Iterator) data);
-		}else if (data instanceof Iterable) {
+		} else if (data instanceof Iterable) {
 			// 如果值依旧为map，递归继续
-			appendIterator(doc, node, ((Iterable)data).iterator());
+			appendIterator(doc, node, ((Iterable) data).iterator());
 		} else {
 			appendText(doc, node, data.toString());
 		}
@@ -1091,17 +1135,17 @@ public class XmlUtil {
 	/**
 	 * 追加Map数据子节点
 	 *
-	 * @param doc     {@link Document}
+	 * @param doc  {@link Document}
 	 * @param node 当前节点
-	 * @param data    Map类型数据
+	 * @param data Map类型数据
 	 * @since 4.0.8
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static void appendMap(Document doc, Node node, Map data) {
-		data.forEach((key, value)->{
-			if(null != key){
+		data.forEach((key, value) -> {
+			if (null != key) {
 				final Element child = appendChild(node, key.toString());
-				if(null != value){
+				if (null != value) {
 					append(doc, child, value);
 				}
 			}
@@ -1111,21 +1155,21 @@ public class XmlUtil {
 	/**
 	 * 追加集合节点
 	 *
-	 * @param doc {@link Document}
+	 * @param doc  {@link Document}
 	 * @param node 节点
 	 * @param data 数据
 	 */
 	@SuppressWarnings("rawtypes")
-	private static void appendIterator(Document doc, Node node, Iterator data){
+	private static void appendIterator(Document doc, Node node, Iterator data) {
 		final Node parentNode = node.getParentNode();
 		boolean isFirst = true;
 		Object eleData;
-		while(data.hasNext()){
+		while (data.hasNext()) {
 			eleData = data.next();
-			if(isFirst){
+			if (isFirst) {
 				append(doc, node, eleData);
 				isFirst = false;
-			} else{
+			} else {
 				final Node cloneNode = node.cloneNode(false);
 				parentNode.appendChild(cloneNode);
 				append(doc, cloneNode, eleData);
@@ -1136,13 +1180,13 @@ public class XmlUtil {
 	/**
 	 * 追加文本节点
 	 *
-	 * @param doc {@link Document}
+	 * @param doc  {@link Document}
 	 * @param node 节点
 	 * @param text 文本内容
 	 * @return 增加的子节点，即Text节点
 	 * @since 5.3.0
 	 */
-	private static Node appendText(Document doc, Node node, CharSequence text){
+	private static Node appendText(Document doc, Node node, CharSequence text) {
 		return node.appendChild(doc.createTextNode(StrUtil.str(text)));
 	}
 
@@ -1181,6 +1225,103 @@ public class XmlUtil {
 			// ignore
 		}
 		return dbf;
+	}
+
+	/**
+	 * 全局命名空间上下文<br>
+	 * 见：https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/
+	 */
+	public static class UniversalNamespaceCache implements NamespaceContext {
+		private static final String DEFAULT_NS = "DEFAULT";
+		private final BiMap<String, String> prefixUri = new BiMap<>(new HashMap<>());
+
+		/**
+		 * This constructor parses the document and stores all namespaces it can
+		 * find. If toplevelOnly is true, only namespaces in the root are used.
+		 *
+		 * @param node         source Node
+		 * @param toplevelOnly restriction of the search to enhance performance
+		 */
+		public UniversalNamespaceCache(Node node, boolean toplevelOnly) {
+			examineNode(node.getFirstChild(), toplevelOnly);
+		}
+
+		/**
+		 * A single node is read, the namespace attributes are extracted and stored.
+		 *
+		 * @param node            to examine
+		 * @param attributesOnly, if true no recursion happens
+		 */
+		private void examineNode(Node node, boolean attributesOnly) {
+			NamedNodeMap attributes = node.getAttributes();
+			for (int i = 0; i < attributes.getLength(); i++) {
+				Node attribute = attributes.item(i);
+				storeAttribute(attribute);
+			}
+
+			if (false == attributesOnly) {
+				NodeList childNodes = node.getChildNodes();
+				for (int i = 0; i < childNodes.getLength(); i++) {
+					Node item = childNodes.item(i);
+					if (item.getNodeType() == Node.ELEMENT_NODE)
+						examineNode(item, false);
+				}
+			}
+		}
+
+		/**
+		 * This method looks at an attribute and stores it, if it is a namespace
+		 * attribute.
+		 *
+		 * @param attribute to examine
+		 */
+		private void storeAttribute(Node attribute) {
+			// examine the attributes in namespace xmlns
+			if (attribute.getNamespaceURI() != null
+					&& attribute.getNamespaceURI().equals(
+					XMLConstants.XMLNS_ATTRIBUTE_NS_URI)) {
+				// Default namespace xmlns="uri goes here"
+				if (attribute.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
+					prefixUri.put(DEFAULT_NS, attribute.getNodeValue());
+				} else {
+					// The defined prefixes are stored here
+					prefixUri.put(attribute.getLocalName(), attribute.getNodeValue());
+				}
+			}
+
+		}
+
+		/**
+		 * This method is called by XPath. It returns the default namespace, if the
+		 * prefix is null or "".
+		 *
+		 * @param prefix to search for
+		 * @return uri
+		 */
+		@Override
+		public String getNamespaceURI(String prefix) {
+			if (prefix == null || prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
+				return prefixUri.get(DEFAULT_NS);
+			} else {
+				return prefixUri.get(prefix);
+			}
+		}
+
+		/**
+		 * This method is not needed in this context, but can be implemented in a
+		 * similar way.
+		 */
+		@Override
+		public String getPrefix(String namespaceURI) {
+			return prefixUri.getInverse().get(namespaceURI);
+		}
+
+		@Override
+		public Iterator<?> getPrefixes(String namespaceURI) {
+			// Not implemented
+			return null;
+		}
+
 	}
 	// ---------------------------------------------------------------------------------------- Private method end
 

@@ -147,4 +147,22 @@ public class XmlUtilTest {
 		String xml = XmlUtil.mapToXmlStr(map, true);
 		Assert.assertEquals("<xml><name>ddatsh</name></xml>", xml);
 	}
+
+	@Test
+	public void getByPathTest(){
+		String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+				"  <soap:Body>\n" +
+				"    <ns2:testResponse xmlns:ns2=\"http://ws.xxx.com/\">\n" +
+				"      <return>2020/04/15 21:01:21</return>\n" +
+				"    </ns2:testResponse>\n" +
+				"  </soap:Body>\n" +
+				"</soap:Envelope>\n";
+
+		Document document = XmlUtil.readXML(xmlStr);
+		Object value = XmlUtil.getByXPath(
+				"//soap:Envelope/soap:Body/ns2:testResponse/return",
+				document,XPathConstants.STRING);//
+		Assert.assertEquals("2020/04/15 21:01:21", value);
+	}
 }

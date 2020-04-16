@@ -10,6 +10,7 @@
 * 【poi    】     调整别名策略，clearHeaderAlias和addHeaderAlias同时清除aliasComparator（issue#828@Github）
 * 【core   】     修改StrUtil.equals逻辑，改为contentEquals
 * 【core   】     增加URLUtil.UrlDecoder
+* 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
 
 ### Bug修复
 * 【json   】     修复解析JSON字符串时配置无法传递问题
