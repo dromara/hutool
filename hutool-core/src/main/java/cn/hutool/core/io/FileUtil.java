@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.file.FileCopier;
 import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.io.file.FileReader;
@@ -51,20 +52,11 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-
 /**
  * 文件工具类
  *
@@ -449,6 +441,62 @@ public class FileUtil {
 			}
 		}
 		return file;
+	}
+
+	/**
+	 * 创建带有年份信息的File对象<br>
+	 * 如
+	 * d:\test\test.java
+	 * d:\test\2020\test.java
+	 *
+	 * @param parent 父目录
+	 * @param path   文件路径
+	 * @return File
+	 */
+	public static File fileYear(String parent, String path) {
+		Date now = new Date();
+		String append = DateUtil.year(now) + "/";
+		String yearParent = StrUtil.appendIfMissing(parent,append);
+		return file(new File(yearParent, path));
+	}
+
+	/**
+	 * 创建带有月份信息的File对象<br>
+	 * 如
+	 * d:\test\test.java
+	 * d:\test\2020\4\test.java
+	 *
+	 * @param parent 父目录
+	 * @param path   文件路径
+	 * @return File
+	 */
+	public static File fileMonth(String parent, String path) {
+		Date now = new Date();
+		String year = DateUtil.year(now) + "/";
+		String month = (DateUtil.month(now) + 1) + "/";
+		String append = year + month;
+		String monthParent = StrUtil.appendIfMissing(parent,append);
+		return file(new File(monthParent, path));
+	}
+
+	/**
+	 * 创建带有日期信息的File对象<br>
+	 * 如
+	 * d:\test\test.java
+	 * d:\test\2020\4\17\test.java
+	 *
+	 * @param parent 父目录
+	 * @param path   文件路径
+	 * @return File
+	 */
+	public static File fileDay(String parent, String path) {
+		Date now = new Date();
+		String year = DateUtil.year(now) + "/";
+		String month = (DateUtil.month(now) + 1) + "/";
+		String day = DateUtil.dayOfMonth(now)  + "/";
+		String append = year + month + day;
+		String monthParent = StrUtil.appendIfMissing(parent,append);
+		return file(new File(monthParent, path));
 	}
 
 	/**
