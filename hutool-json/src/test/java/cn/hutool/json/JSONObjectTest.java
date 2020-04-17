@@ -125,6 +125,14 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void parseStringTest4() {
+		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals(new Integer(0), json.getInt("ok"));
+		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+	}
+
+	@Test
 	@Ignore
 	public void parseStringWithBomTest() {
 		String jsonStr = FileUtil.readUtf8String("f:/test/jsontest.txt");
