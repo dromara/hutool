@@ -551,11 +551,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 */
 	@Override
 	public String toString() {
-		try {
-			return this.toJSONString(0);
-		} catch (Exception e) {
-			return null;
-		}
+		return this.toJSONString(0);
 	}
 
 	@Override
