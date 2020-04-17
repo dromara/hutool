@@ -1,20 +1,19 @@
 package cn.hutool.aop.interceptor;
 
 import cn.hutool.aop.aspects.Aspect;
-import cn.hutool.core.lang.Console;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Cglib实现的动态代理切面
+ * Spring-cglib实现的动态代理切面
  *
- * @author looly, ted.L
+ * @author looly
  */
-public class CglibInterceptor implements MethodInterceptor, Serializable {
+public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final Object target;
@@ -26,11 +25,16 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 	 * @param target 被代理对象
 	 * @param aspect 切面实现
 	 */
-	public CglibInterceptor(Object target, Aspect aspect) {
+	public SpringCglibInterceptor(Object target, Aspect aspect) {
 		this.target = target;
 		this.aspect = aspect;
 	}
 
+	/**
+	 * 获得目标对象
+	 *
+	 * @return 目标对象
+	 */
 	public Object getTarget() {
 		return this.target;
 	}
@@ -43,7 +47,6 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 		if (aspect.before(target, method, args)) {
 			try {
 //				result = proxy.invokeSuper(obj, args);
-				Console.log(target);
 				result = proxy.invoke(target, args);
 			} catch (InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）

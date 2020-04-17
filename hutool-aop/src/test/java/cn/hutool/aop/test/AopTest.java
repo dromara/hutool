@@ -23,7 +23,7 @@ public class AopTest {
 	}
 
 	@Test
-	public void aopByCglibTest() {
+	public void aopByAutoCglibTest() {
 		Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
 		String result = dog.eat();
 		Assert.assertEquals("狗吃肉", result);
