@@ -188,8 +188,7 @@ final class InternalJSONUtil {
 	 * @return JSONObject
 	 */
 	protected static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value) {
-		String keyStr = Convert.toStr(key);
-		String[] path = StrUtil.split(keyStr, StrUtil.DOT);
+		final String[] path = StrUtil.split(Convert.toStr(key), StrUtil.DOT);
 		int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {

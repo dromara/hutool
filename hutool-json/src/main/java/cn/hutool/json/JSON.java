@@ -1,12 +1,12 @@
 package cn.hutool.json;
 
+import cn.hutool.core.bean.BeanPath;
+import cn.hutool.core.lang.TypeReference;
+
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
-
-import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.lang.TypeReference;
 
 /**
  * JSON接口

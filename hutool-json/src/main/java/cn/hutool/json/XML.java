@@ -9,44 +9,109 @@ import java.util.Iterator;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
- * 
+ *
  * @author JSON.org
  */
 public class XML {
 
-	/** The Character '&amp;'. */
+	/**
+	 * The Character '&amp;'.
+	 */
 	public static final Character AMP = CharUtil.AMP;
 
-	/** The Character '''. */
+	/**
+	 * The Character '''.
+	 */
 	public static final Character APOS = CharUtil.SINGLE_QUOTE;
 
-	/** The Character '!'. */
+	/**
+	 * The Character '!'.
+	 */
 	public static final Character BANG = '!';
 
-	/** The Character '='. */
+	/**
+	 * The Character '='.
+	 */
 	public static final Character EQ = '=';
 
-	/** The Character '&gt;'. */
+	/**
+	 * The Character '&gt;'.
+	 */
 	public static final Character GT = '>';
 
-	/** The Character '&lt;'. */
+	/**
+	 * The Character '&lt;'.
+	 */
 	public static final Character LT = '<';
 
-	/** The Character '?'. */
+	/**
+	 * The Character '?'.
+	 */
 	public static final Character QUEST = '?';
 
-	/** The Character '"'. */
+	/**
+	 * The Character '"'.
+	 */
 	public static final Character QUOT = CharUtil.DOUBLE_QUOTES;
 
-	/** The Character '/'. */
+	/**
+	 * The Character '/'.
+	 */
 	public static final Character SLASH = CharUtil.SLASH;
 
 	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
+	 *
+	 * @param string The source string.
+	 * @return A JSONObject containing the structured data from the XML string.
+	 * @throws JSONException Thrown if there is an errors while parsing the string
+	 */
+	public static JSONObject toJSONObject(String string) throws JSONException {
+		return toJSONObject(string, false);
+	}
+
+	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
+	 * All values are converted as strings, for 1, 01, 29.0 will not be coerced to numbers but will instead be the exact value as seen in the XML document.
+	 *
+	 * @param string      The source string.
+	 * @param keepStrings If true, then values will not be coerced into boolean or numeric values and will instead be left as strings
+	 * @return A JSONObject containing the structured data from the XML string.
+	 * @throws JSONException Thrown if there is an errors while parsing the string
+	 */
+	public static JSONObject toJSONObject(String string, boolean keepStrings) throws JSONException {
+		return toJSONObject(new JSONObject(), string, keepStrings);
+	}
+
+	/**
+	 * 转换XML为JSONObject
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 *
+	 * @param jo          JSONObject
+	 * @param string      XML字符串
+	 * @param keepStrings If true, then values will not be coerced into boolean or numeric values and will instead be left as strings
+	 * @return A JSONObject containing the structured data from the XML string.
+	 * @throws JSONException Thrown if there is an errors while parsing the string
+	 * @since 5.3.1
+	 */
+	public static JSONObject toJSONObject(JSONObject jo, String string, boolean keepStrings) throws JSONException {
+		XMLTokener x = new XMLTokener(string, jo.getConfig());
+		while (x.more() && x.skipPast("<")) {
+			parse(x, jo, null, keepStrings);
+		}
+		return jo;
+	}
+
+	/**
 	 * Scan the content following the named tag, attaching it to the context.
-	 * 
-	 * @param x The XMLTokener containing the source string.
+	 *
+	 * @param x       The XMLTokener containing the source string.
 	 * @param context The JSONObject that will include the new material.
-	 * @param name The tag name.
+	 * @param name    The tag name.
 	 * @return true if the close tag is processed.
 	 * @throws JSONException JSON异常
 	 */
@@ -135,7 +200,7 @@ public class XML {
 			tagName = (String) token;
 			token = null;
 			jsonobject = new JSONObject();
-			for (;;) {
+			for (; ; ) {
 				if (token == null) {
 					token = x.nextToken();
 				}
@@ -169,7 +234,7 @@ public class XML {
 
 				} else if (token == GT) {
 					// Content, between <...> and </...>
-					for (;;) {
+					for (; ; ) {
 						token = x.nextContent();
 						if (token == null) {
 							if (tagName != null) {
@@ -204,42 +269,9 @@ public class XML {
 	}
 
 	/**
-	 * 转换XML为JSONObject
-	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
-	 * 
-	 * @param string The source string.
-	 * @return A JSONObject containing the structured data from the XML string.
-	 * @throws JSONException Thrown if there is an errors while parsing the string
-	 */
-	public static JSONObject toJSONObject(String string) throws JSONException {
-		return toJSONObject(string, false);
-	}
-
-	/**
-	 * 转换XML为JSONObject
-	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
-	 * All values are converted as strings, for 1, 01, 29.0 will not be coerced to numbers but will instead be the exact value as seen in the XML document.
-	 * 
-	 * @param string The source string.
-	 * @param keepStrings If true, then values will not be coerced into boolean or numeric values and will instead be left as strings
-	 * @return A JSONObject containing the structured data from the XML string.
-	 * @throws JSONException Thrown if there is an errors while parsing the string
-	 */
-	public static JSONObject toJSONObject(String string, boolean keepStrings) throws JSONException {
-		JSONObject jo = new JSONObject();
-		XMLTokener x = new XMLTokener(string, jo.getConfig());
-		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, keepStrings);
-		}
-		return jo;
-	}
-
-	/**
 	 * 转换JSONObject为XML
 	 * Convert a JSONObject into a well-formed, element-normal XML string.
-	 * 
+	 *
 	 * @param object A JSONObject.
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
@@ -251,17 +283,17 @@ public class XML {
 	/**
 	 * 转换JSONObject为XML
 	 * Convert a JSONObject into a well-formed, element-normal XML string.
-	 * 
-	 * @param object A JSONObject.
+	 *
+	 * @param object  A JSONObject.
 	 * @param tagName The optional name of the enclosing tag.
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
 	public static String toXml(Object object, String tagName) throws JSONException {
-		if(null == object) {
+		if (null == object) {
 			return null;
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		JSONArray ja;
 		JSONObject jo;

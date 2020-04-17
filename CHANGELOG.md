@@ -13,6 +13,7 @@
 * 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
 * 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
 * 【aop    】     增加Spring-cglib支持，改为SPI实现
+* 【json   】     增加JSONUtil.parseXXX增加JSONConfig参数
 
 ### Bug修复
 * 【json   】     修复解析JSON字符串时配置无法传递问题
