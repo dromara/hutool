@@ -15,6 +15,7 @@
 * 【aop    】     增加Spring-cglib支持，改为SPI实现
 * 【json   】     增加JSONUtil.parseXXX增加JSONConfig参数
 * 【core   】     RandomUtil.randomNumber改为返回char
+* 【crypto 】     SM2支持设置Digest和DSAEncoding（issue#829@Github）
 
 ### Bug修复
 * 【json   】     修复解析JSON字符串时配置无法传递问题
