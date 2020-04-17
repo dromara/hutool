@@ -17,7 +17,6 @@
 * 【core   】     修改StrUtil.equals逻辑，改为contentEquals
 * 【core   】     增加URLUtil.UrlDecoder
 * 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
-* 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
 * 【aop    】     增加Spring-cglib支持，改为SPI实现
 * 【json   】     增加JSONUtil.parseXXX增加JSONConfig参数
 * 【core   】     RandomUtil.randomNumber改为返回char
