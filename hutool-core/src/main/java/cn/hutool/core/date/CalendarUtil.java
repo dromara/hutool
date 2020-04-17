@@ -280,7 +280,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获得指定日期区间内的年份和季节<br>
+	 * 获得指定日期区间内的年份和季度<br>
 	 *
 	 * @param startDate 起始日期（包含）
 	 * @param endDate   结束日期（包含）
@@ -302,10 +302,11 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获得指定日期年份和季节<br>
+	 * 获得指定日期年份和季度<br>
 	 * 格式：[20131]表示2013年第一季度
 	 *
 	 * @param cal 日期
+	 * @return 年和季度，格式类似于20131
 	 */
 	public static String yearAndQuarter(Calendar cal) {
 		return StrUtil.builder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();

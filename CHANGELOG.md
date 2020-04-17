@@ -18,7 +18,7 @@
 * 【crypto 】     SM2支持设置Digest和DSAEncoding（issue#829@Github）
 
 ### Bug修复
-* 【json   】     修复解析JSON字符串时配置无法传递问题
+* 【json   】     修复解析JSON字符串时配置无法传递问题（issue#I1EIDN@Gitee）
 * 【core   】     修复ServletUtil.readCookieMap空指针问题（issue#827@Github）
 * 【crypto 】     修复SM2中检查密钥导致的问题（issue#I1EC47@Gitee）
 * 【core   】     修复TableMap.isEmpty判断问题
