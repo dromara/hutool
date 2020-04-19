@@ -7,8 +7,11 @@
 
 ### 新特性
 * 【core   】     增加NetUtil.isOpen方法
+* 【core   】     增加ThreadUtil.sleep和safeSleep的重载
+
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题
+* 【cron   】     修复更改系统时间后CronTimer被阻塞的问题（issue#838@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.1 (2020-04-17)
