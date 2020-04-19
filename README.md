@@ -1,10 +1,10 @@
-<p align="center">
+<p style="text-align:center">
 	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="400"></a>
 </p>
-<p align="center">
+<p style="text-align:center">
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
-<p align="center">
+<p style="text-align:center">
 	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
@@ -36,10 +36,10 @@
 		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"/>
 	</a>
 </p>
-<p align="center">
+<p style="text-align:center">
 	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
 </p>
-<p align="center">
+<p style="text-align:center">
 	-- QQ群④：<a href="https://shang.qq.com/wpa/qunwpa?idkey=309056e409a304a454c7ba250a10d38dd82b9b49cd0e1f180fedbde78b02ae0d">718802356</a> --
 </p>
 
