@@ -157,6 +157,16 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void mapToBeanWithAliasTest() {
+		Map<String, Object> map = MapUtil.newHashMap();
+		map.put("aliasSubName", "sub名字");
+		map.put("slow", true);
+
+		final SubPersonWithAlias subPersonWithAlias = BeanUtil.mapToBean(map, SubPersonWithAlias.class, false);
+		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
+	}
+
+	@Test
 	public void beanToMapWithLocalDateTimeTest() {
 		final LocalDateTime now = LocalDateTime.now();
 

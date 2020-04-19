@@ -9,7 +9,6 @@ public class DocServerTest {
 		HttpUtil.createServer(80)
 				// 设置默认根目录，
 				.setRoot("D:\\workspace\\site\\hutool-site")
-				// 返回JSON数据测试
 				.start();
 
 		DesktopUtil.browse("http://localhost/");

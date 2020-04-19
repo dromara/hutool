@@ -12,6 +12,7 @@ import java.io.IOException;
  * @author Looly
  * @since 5.2.6
  */
+@FunctionalInterface
 public interface Action {
 
 	/**
