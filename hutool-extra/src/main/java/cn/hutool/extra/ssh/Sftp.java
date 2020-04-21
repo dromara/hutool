@@ -408,6 +408,15 @@ public class Sftp extends AbstractFtp {
 		JschUtil.close(this.session);
 	}
 
+	@Override
+	public String toString() {
+		return "Sftp{" +
+				"host='" + host + '\'' +
+				", port=" + port +
+				", user='" + user + '\'' +
+				'}';
+	}
+
 	/**
 	 * JSch支持的三种文件传输模式
 	 * 

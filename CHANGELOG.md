@@ -8,6 +8,7 @@
 ### 新特性
 * 【core   】     增加NetUtil.isOpen方法
 * 【core   】     增加ThreadUtil.sleep和safeSleep的重载
+* 【core   】     Sftp类增加toString方法（issue#I1F2T4@Gitee）
 
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题
