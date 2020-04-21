@@ -34,6 +34,12 @@ import java.util.SortedSet;
 public class CollUtilTest {
 
 	@Test
+	public void isNotEmptyTest(){
+		Assert.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
+		;
+	}
+
+	@Test
 	public void newHashSetTest() {
 		Set<String> set = CollUtil.newHashSet((String[]) null);
 		Assert.assertNotNull(set);
