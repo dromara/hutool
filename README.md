@@ -133,7 +133,7 @@ compile 'cn.hutool:hutool-all:5.3.2'
 - [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.3.2/)
 
 > 注意
-> Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类获工具方法可用。
+> Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
 > 如果你的项目使用JDK7，请使用Hutool 4.x版本
 
 ### 编译安装
