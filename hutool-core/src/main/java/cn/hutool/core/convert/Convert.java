@@ -1,14 +1,5 @@
 package cn.hutool.core.convert;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.MapConverter;
@@ -19,6 +10,21 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 类型转换器
@@ -674,7 +680,7 @@ public class Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
-		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
+		return convertWithCheck(type, value, defaultValue, false);
 	}
 	
 	/**
@@ -703,10 +709,30 @@ public class Convert {
 	 * @since 4.5.10
 	 */
 	public static <T> T convertQuietly(Type type, Object value, T defaultValue) {
+		return convertWithCheck(type, value, defaultValue, true);
+	}
+
+	/**
+	 * 转换值为指定类型，可选是否不抛异常转换<br>
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <T> 目标类型
+	 * @param type 目标类型
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @param quietly 是否静默转换，true不抛异常
+	 * @return 转换后的值
+	 * @since 5.3.2
+	 */
+	public static <T> T convertWithCheck(Type type, Object value, T defaultValue, boolean quietly) {
+		final ConverterRegistry registry = ConverterRegistry.getInstance();
 		try {
-			return convert(type, value, defaultValue);
+			return registry.convert(type, value, defaultValue);
 		} catch (Exception e) {
-			return defaultValue;
+			if(quietly){
+				return defaultValue;
+			}
+			throw e;
 		}
 	}
 	

@@ -13,7 +13,8 @@
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题
 * 【cron   】     修复更改系统时间后CronTimer被阻塞的问题（issue#838@Github）
-* 【db     】     修复Page.addOrder无效问题（issue#838@Github）
+* 【db     】     修复Page.addOrder无效问题（issue#I1F9MZ@Gitee）
+* 【json   】     修复JSONConvert转换日期空指针问题（issue#I1F8M2@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.1 (2020-04-17)

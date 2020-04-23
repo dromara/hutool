@@ -17,14 +17,26 @@ import java.util.Map;
 public class MapValueProvider implements ValueProvider<String> {
 
 	private final Map<?, ?> map;
+	private final boolean ignoreError;
+
+	/**
+	 * 构造
+	 *
+	 * @param map Map
+	 * @param ignoreCase 是否忽略key的大小写
+	 */
+	public MapValueProvider(Map<?, ?> map, boolean ignoreCase) {
+		this(map, ignoreCase, false);
+	}
 
 	/**
 	 * 构造
 	 * 
 	 * @param map Map
 	 * @param ignoreCase 是否忽略key的大小写
+	 * @since 5.3.2
 	 */
-	public MapValueProvider(Map<?, ?> map, boolean ignoreCase) {
+	public MapValueProvider(Map<?, ?> map, boolean ignoreCase, boolean ignoreError) {
 		if(false == ignoreCase || map instanceof CaseInsensitiveMap) {
 			//不忽略大小写或者提供的Map本身为CaseInsensitiveMap则无需转换
 			this.map = map;
@@ -32,6 +44,7 @@ public class MapValueProvider implements ValueProvider<String> {
 			//转换为大小写不敏感的Map
 			this.map = new CaseInsensitiveMap<>(map);
 		}
+		this.ignoreError = ignoreError;
 	}
 
 	@Override
@@ -42,7 +55,7 @@ public class MapValueProvider implements ValueProvider<String> {
 			value = map.get(StrUtil.toUnderlineCase(key));
 		}
 
-		return Convert.convert(valueType, value);
+		return Convert.convertWithCheck(valueType, value, null, this.ignoreError);
 	}
 
 	@Override

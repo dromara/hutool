@@ -130,7 +130,10 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param bean Bean
 	 */
 	private void mapToBean(Map<?, ?> map, Object bean) {
-		valueProviderToBean(new MapValueProvider(map, this.copyOptions.ignoreCase), bean);
+		valueProviderToBean(
+				new MapValueProvider(map, this.copyOptions.ignoreCase, this.copyOptions.ignoreError),
+				bean
+		);
 	}
 
 	/**
