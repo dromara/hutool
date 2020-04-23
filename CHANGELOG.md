@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.2 (2020-04-19)
+## 5.3.2 (2020-04-23)
 
 ### 新特性
 * 【core   】     增加NetUtil.isOpen方法
 * 【core   】     增加ThreadUtil.sleep和safeSleep的重载
 * 【core   】     Sftp类增加toString方法（issue#I1F2T4@Gitee）
+* 【core   】     修改FileUtil.size逻辑，不存在的文件返回0
 
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题
