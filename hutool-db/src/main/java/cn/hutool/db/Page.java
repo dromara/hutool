@@ -134,10 +134,7 @@ public class Page implements Serializable {
 	 * @param orders 排序
 	 */
 	public void addOrder(Order... orders) {
-		if (null != this.orders) {
-			ArrayUtil.append(this.orders, orders);
-		}
-		this.orders = orders;
+		this.orders = ArrayUtil.append(this.orders, orders);
 	}
 	// ---------------------------------------------------------- Getters and Setters end
 
