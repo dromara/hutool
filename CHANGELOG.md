@@ -10,6 +10,7 @@
 * 【core   】     增加ThreadUtil.sleep和safeSleep的重载
 * 【core   】     Sftp类增加toString方法（issue#I1F2T4@Gitee）
 * 【core   】     修改FileUtil.size逻辑，不存在的文件返回0
+* 【extra  】     Sftp.ls遇到文件不存在返回空集合，而非抛异常（issue#844@Github）
 
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题
@@ -17,6 +18,7 @@
 * 【db     】     修复Page.addOrder无效问题（issue#I1F9MZ@Gitee）
 * 【json   】     修复JSONConvert转换日期空指针问题（issue#I1F8M2@Gitee）
 * 【core   】     修复XML中带注释Xpath解析导致空指针问题（issue#I1F2WI@Gitee）
+* 【core   】     修复FileUtil.rename原文件无扩展名多点的问题（issue#839@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.1 (2020-04-17)

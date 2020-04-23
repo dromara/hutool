@@ -1175,7 +1175,10 @@ public class FileUtil {
 	 */
 	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
 		if (isRetainExt) {
-			newName = newName.concat(".").concat(FileUtil.extName(file));
+			final String extName = FileUtil.extName(file);
+			if(StrUtil.isNotBlank(extName)){
+				newName = newName.concat(".").concat(extName);
+			}
 		}
 		final Path path = file.toPath();
 		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
