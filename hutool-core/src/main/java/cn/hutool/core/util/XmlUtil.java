@@ -1253,18 +1253,23 @@ public class XmlUtil {
 		 * @param attributesOnly, if true no recursion happens
 		 */
 		private void examineNode(Node node, boolean attributesOnly) {
-			NamedNodeMap attributes = node.getAttributes();
-			for (int i = 0; i < attributes.getLength(); i++) {
-				Node attribute = attributes.item(i);
-				storeAttribute(attribute);
+			final NamedNodeMap attributes = node.getAttributes();
+			if(null != attributes){
+				for (int i = 0; i < attributes.getLength(); i++) {
+					Node attribute = attributes.item(i);
+					storeAttribute(attribute);
+				}
 			}
 
 			if (false == attributesOnly) {
-				NodeList childNodes = node.getChildNodes();
-				for (int i = 0; i < childNodes.getLength(); i++) {
-					Node item = childNodes.item(i);
-					if (item.getNodeType() == Node.ELEMENT_NODE)
-						examineNode(item, false);
+				final NodeList childNodes = node.getChildNodes();
+				if(null != childNodes){
+					Node item;
+					for (int i = 0; i < childNodes.getLength(); i++) {
+						item = childNodes.item(i);
+						if (item.getNodeType() == Node.ELEMENT_NODE)
+							examineNode(item, false);
+					}
 				}
 			}
 		}
@@ -1276,12 +1281,13 @@ public class XmlUtil {
 		 * @param attribute to examine
 		 */
 		private void storeAttribute(Node attribute) {
+			if(null == attribute){
+				return;
+			}
 			// examine the attributes in namespace xmlns
-			if (attribute.getNamespaceURI() != null
-					&& attribute.getNamespaceURI().equals(
-					XMLConstants.XMLNS_ATTRIBUTE_NS_URI)) {
+			if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(attribute.getNamespaceURI())) {
 				// Default namespace xmlns="uri goes here"
-				if (attribute.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
+				if (XMLConstants.XMLNS_ATTRIBUTE.equals(attribute.getNodeName())) {
 					prefixUri.put(DEFAULT_NS, attribute.getNodeValue());
 				} else {
 					// The defined prefixes are stored here

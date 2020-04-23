@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
@@ -59,6 +60,14 @@ public class XmlUtilTest {
 				+ "<taskID>885</taskID>"//
 				+ "<successCounts>1</successCounts>"//
 				+ "</returnsms>";
+		Document docResult = XmlUtil.parseXml(result);
+		Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
+		Assert.assertEquals("ok", value);
+	}
+
+	@Test
+	public void xpathTest2() {
+		String result = ResourceUtil.readUtf8Str("test.xml");
 		Document docResult = XmlUtil.parseXml(result);
 		Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
 		Assert.assertEquals("ok", value);
