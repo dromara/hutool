@@ -28,7 +28,17 @@ url = jdbc:sqlite:test.db
 [hsqldb]
 url = jdbc:hsqldb:mem:mem_hutool
 user = SA
-pass = 
+pass =
+
+# 测试用HSQLDB数据库
+[h2]
+url = jdbc:h2:mem:h2_hutool
+user = sa
+pass =
+
+# 测试用HSQLDB数据库
+[derby]
+url = jdbc:derby:.derby/test_db;create=true
 
 # 测试用Oracle数据库
 [orcl]

@@ -45,9 +45,7 @@ public class DialectFactory {
 	/** JDBC 驱动 H2 */
 	public static final String DRIVER_H2 = "org.h2.Driver";
 	/** JDBC 驱动 Derby */
-	public static final String DRIVER_DERBY = "org.apache.derby.jdbc.ClientDriver";
-	/** JDBC 驱动 Derby嵌入式 */
-	public static final String DRIVER_DERBY_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static final String DRIVER_DERBY = "org.apache.derby.jdbc.AutoloadedDriver";
 	/** JDBC 驱动 HSQLDB */
 	public static final String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
 	/** JDBC 驱动 达梦7 */
@@ -126,12 +124,9 @@ public class DialectFactory {
 			driver = DRIVER_HIVE;
 		} else if (nameContainsProductInfo.contains("h2")) {
 			driver = DRIVER_H2;
-		} else if (nameContainsProductInfo.startsWith("jdbc:derby://")) {
-			// Derby数据库网络连接方式
-			driver = DRIVER_DERBY;
 		} else if (nameContainsProductInfo.contains("derby")) {
 			// 嵌入式Derby数据库
-			driver = DRIVER_DERBY_EMBEDDED;
+			driver = DRIVER_DERBY;
 		} else if (nameContainsProductInfo.contains("hsqldb")) {
 			// HSQLDB
 			driver = DRIVER_HSQLDB;
