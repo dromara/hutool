@@ -11,6 +11,7 @@
 * 【core   】     Sftp类增加toString方法（issue#I1F2T4@Gitee）
 * 【core   】     修改FileUtil.size逻辑，不存在的文件返回0
 * 【extra  】     Sftp.ls遇到文件不存在返回空集合，而非抛异常（issue#844@Github）
+* 【http   】     改进HttpRequest.toString()格式，添加url
 
 ### Bug修复
 * 【db     】     修复PageResult.isLast计算问题

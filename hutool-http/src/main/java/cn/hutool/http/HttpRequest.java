@@ -933,10 +933,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpResponse execute(boolean isAsync) {
 		// 初始化URL
 		urlWithParamIfGet();
-
 		// 初始化 connection
 		initConnection();
-
 		// 发送请求
 		send();
 
@@ -975,6 +973,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		header(Header.AUTHORIZATION, content, true);
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = StrUtil.builder();
+		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
+		sb.append(super.toString());
+		return sb.toString();
+	}
+
 	// ---------------------------------------------------------------- Private method start
 
 	/**
@@ -1102,12 +1109,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			IoUtil.write(this.httpConnection.getOutputStream(), true, this.bodyBytes);
-		} else {
-			final String content = HttpUtil.toParams(this.form, this.charset);
-			IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
+		byte[] content;
+		if(ArrayUtil.isNotEmpty(this.bodyBytes)){
+			content = this.bodyBytes;
+		} else{
+			content = StrUtil.bytes(getFormUrlEncoded(), this.charset);
 		}
+		IoUtil.write(this.httpConnection.getOutputStream(), true, content);
+	}
+
+	/**
+	 * 获取编码后的表单数据，无表单数据返回""
+	 *
+	 * @return 编码后的表单数据，无表单数据返回""
+	 * @since 5.3.2
+	 */
+	private String getFormUrlEncoded() {
+		return HttpUtil.toParams(this.form, this.charset);
 	}
 
 	/**
