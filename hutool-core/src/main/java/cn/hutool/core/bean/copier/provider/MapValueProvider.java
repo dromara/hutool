@@ -34,6 +34,7 @@ public class MapValueProvider implements ValueProvider<String> {
 	 * 
 	 * @param map Map
 	 * @param ignoreCase 是否忽略key的大小写
+	 * @param ignoreError 是否忽略错误
 	 * @since 5.3.2
 	 */
 	public MapValueProvider(Map<?, ?> map, boolean ignoreCase, boolean ignoreError) {
