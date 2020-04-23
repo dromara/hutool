@@ -19,6 +19,7 @@
 * 【json   】     修复JSONConvert转换日期空指针问题（issue#I1F8M2@Gitee）
 * 【core   】     修复XML中带注释Xpath解析导致空指针问题（issue#I1F2WI@Gitee）
 * 【core   】     修复FileUtil.rename原文件无扩展名多点的问题（issue#839@Github）
+* 【db     】     修复DbUtil.close可能存在的空指针问题（issue#847@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.1 (2020-04-17)

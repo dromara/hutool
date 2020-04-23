@@ -152,10 +152,12 @@ public final class DbUtil {
 	 */
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
-			if (obj instanceof AutoCloseable) {
-				IoUtil.close((AutoCloseable) obj);
-			} else {
-				log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
+			if(null != obj){
+				if (obj instanceof AutoCloseable) {
+					IoUtil.close((AutoCloseable) obj);
+				} else {
+					log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
+				}
 			}
 		}
 	}
