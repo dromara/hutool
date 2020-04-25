@@ -599,13 +599,13 @@ public final class JSONUtil {
 		}
 
 		char b; // 前一个字符
-		char c = 0; // 当前字符
+		char c; // 当前字符
 		int len = str.length();
 		if (isWrap) {
 			writer.write('"');
 		}
 		for (int i = 0; i < len; i++) {
-			b = c;
+//			b = c;
 			c = str.charAt(i);
 			switch (c) {
 				case '\\':
@@ -613,12 +613,13 @@ public final class JSONUtil {
 					writer.write("\\");
 					writer.write(c);
 					break;
-				case '/':
-					if (b == '<') {
-						writer.write('\\');
-					}
-					writer.write(c);
-					break;
+					//此处转义导致输出不和预期一致
+//				case '/':
+//					if (b == '<') {
+//						writer.write('\\');
+//					}
+//					writer.write(c);
+//					break;
 				default:
 					writer.write(escape(c));
 			}

@@ -143,6 +143,15 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void parseStringWithSlashTest() {
+		//在5.3.2之前，</div>中的/会被转义，修复此bug的单元测试
+		String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals("<div>aaa</div>", json.get("a"));
+		Assert.assertEquals(jsonStr, json.toString());
+	}
+
+	@Test
 	public void toBeanTest() {
 		JSONObject subJson = JSONUtil.createObj().set("value1", "strValue1").set("value2", "234");
 		JSONObject json = JSONUtil.createObj().set("strValue", "strTest").set("intValue", 123)

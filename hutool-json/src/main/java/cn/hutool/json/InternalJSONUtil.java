@@ -31,7 +31,7 @@ final class InternalJSONUtil {
 	 *
 	 * @param writer       Writer
 	 * @param value        值
-	 * @param indentFactor 每一级别的缩进量
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       缩进空格数
 	 * @param config       配置项
 	 * @return Writer
