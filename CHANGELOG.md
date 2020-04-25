@@ -8,9 +8,10 @@
 ### 新特性
 * 【core   】     ImgUtil.createImage支持背景透明（issue#851@Github）
 * 【json   】     更改JSON转字符串时"</"被转义的规则为不转义（issue#852@Github）
+* 【cron   】     表达式的所有段支持L关键字（issue#849@Github）
 
 ### Bug修复
-* 【http   】     修复URL中有`&amp;`导致的问题（issue#850@Github）
+* 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
