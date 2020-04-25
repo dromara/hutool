@@ -295,4 +295,13 @@ public class HttpUtilTest {
 		String mimeType = HttpUtil.getMimeType("aaa.aaa");
 		Assert.assertNull(mimeType);
 	}
+
+	@Test
+	@Ignore
+	public void getWeixinTest(){
+		// 测试特殊URL，即URL中有&amp;情况是否请求正常
+		String url = "https://mp.weixin.qq.com/s?__biz=MzI5NjkyNTIxMg==&amp;mid=100000465&amp;idx=1&amp;sn=1044c0d19723f74f04f4c1da34eefa35&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
+		final String s = HttpUtil.get(url);
+		Console.log(s);
+	}
 }

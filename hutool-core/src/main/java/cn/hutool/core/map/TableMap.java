@@ -191,6 +191,14 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 		};
 	}
 
+	@Override
+	public String toString() {
+		return "TableMap{" +
+				"keys=" + keys +
+				", values=" + values +
+				'}';
+	}
+
 	private static class Entry<K, V> implements Map.Entry<K, V> {
 
 		private final K key;

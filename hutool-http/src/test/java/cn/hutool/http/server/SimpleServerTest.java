@@ -11,6 +11,10 @@ public class SimpleServerTest {
 		HttpUtil.createServer(8888)
 				// 设置默认根目录，
 				.setRoot("d:/test")
+				// get数据测试，返回请求的PATH
+				.addAction("/get", (request, response) ->
+						response.write(request.getURI().toString(), ContentType.TEXT_PLAIN.toString())
+				)
 				// 返回JSON数据测试
 				.addAction("/restTest", (request, response) ->
 						response.write("{\"id\": 1, \"msg\": \"OK\"}", ContentType.JSON.toString())

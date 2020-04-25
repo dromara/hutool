@@ -170,4 +170,22 @@ public class UrlBuilderTest {
 
 		Assert.assertEquals("frag1", builder.getFragment());
 	}
+
+	@Test
+	public void weixinUrlTest(){
+		String urlStr = "https://mp.weixin.qq.com/s?" +
+				"__biz=MzI5NjkyNTIxMg==" +
+				"&amp;mid=100000465" +
+				"&amp;idx=1" +
+				"&amp;sn=1044c0d19723f74f04f4c1da34eefa35" +
+				"&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
+		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		// 原URL中的&amp;替换为&，value中的=被编码为%3D
+		Assert.assertEquals("https://mp.weixin.qq.com/s?" +
+				"__biz=MzI5NjkyNTIxMg%3D%3D" +
+				"&mid=100000465&idx=1" +
+				"&sn=1044c0d19723f74f04f4c1da34eefa35" +
+				"&chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7",
+				builder.toString());
+	}
 }

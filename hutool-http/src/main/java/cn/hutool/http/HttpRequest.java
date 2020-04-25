@@ -14,6 +14,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -159,12 +160,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private SSLSocketFactory ssf;
 
 	/**
-	 * 构造
+	 * 构造，URL编码默认使用UTF-8
 	 *
 	 * @param url URL
 	 */
 	public HttpRequest(String url) {
-		setUrl(url);
+		this(UrlBuilder.ofHttp(url, CharsetUtil.CHARSET_UTF_8));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param url {@link UrlBuilder}
+	 */
+	public HttpRequest(UrlBuilder url) {
+		this.url = url;
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}

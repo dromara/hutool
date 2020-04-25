@@ -61,10 +61,10 @@ public class UrlQuery {
 	 * @param queryMap 初始化的查询键值对
 	 */
 	public UrlQuery(Map<? extends CharSequence, ?> queryMap) {
-		if(MapUtil.isNotEmpty(queryMap)) {
+		if (MapUtil.isNotEmpty(queryMap)) {
 			query = new TableMap<>(queryMap.size());
 			addAll(queryMap);
-		} else{
+		} else {
 			query = new TableMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
 		}
 	}
@@ -88,7 +88,7 @@ public class UrlQuery {
 	 * @return this
 	 */
 	public UrlQuery addAll(Map<? extends CharSequence, ?> queryMap) {
-		if(MapUtil.isNotEmpty(queryMap)) {
+		if (MapUtil.isNotEmpty(queryMap)) {
 			queryMap.forEach(this::add);
 		}
 		return this;
@@ -122,34 +122,31 @@ public class UrlQuery {
 		char c; // 当前字符
 		for (i = 0; i < len; i++) {
 			c = queryStr.charAt(i);
-			if (c == '=') { // 键值对的分界点
-				if (null == name) {
-					// name可以是""
-					name = queryStr.substring(pos, i);
-				}
-				pos = i + 1;
-			} else if (c == '&') { // 参数对的分界点
-				if (null == name && pos != i) {
-					// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
-					addParam(queryStr.substring(pos, i), StrUtil.EMPTY, charset);
-				} else if (name != null) {
+			switch (c) {
+				case '='://键和值的分界符
+					if (null == name) {
+						// name可以是""
+						name = queryStr.substring(pos, i);
+						// 开始位置从分节符后开始
+						pos = i + 1;
+					}
+					// 当=不作为分界符时，按照普通字符对待
+					break;
+				case '&'://键值对之间的分界符
 					addParam(name, queryStr.substring(pos, i), charset);
 					name = null;
-				}
-				pos = i + 1;
+					if ("amp;".equals(queryStr.substring(i + 1, i + 5))) {
+						// issue#850@Github，"&amp;"转义为"&"
+						i+=4;
+					}
+					// 开始位置从分节符后开始
+					pos = i + 1;
+					break;
 			}
 		}
 
 		// 处理结尾
-		if (pos != i) {
-			if (name == null) {
-				addParam(queryStr.substring(pos, i), StrUtil.EMPTY, charset);
-			} else {
-				addParam(name, queryStr.substring(pos, i), charset);
-			}
-		} else if (name != null) {
-			addParam(name, StrUtil.EMPTY, charset);
-		}
+		addParam(name, queryStr.substring(pos, i), charset);
 		return this;
 	}
 
@@ -158,17 +155,18 @@ public class UrlQuery {
 	 *
 	 * @return 查询的Map，只读
 	 */
-	public Map<CharSequence, CharSequence> getQueryMap(){
+	public Map<CharSequence, CharSequence> getQueryMap() {
 		return MapUtil.unmodifiable(this.query);
 	}
 
 	/**
 	 * 获取查询值
+	 *
 	 * @param key 键
 	 * @return 值
 	 */
-	public CharSequence get(CharSequence key){
-		if(MapUtil.isEmpty(this.query)){
+	public CharSequence get(CharSequence key) {
+		if (MapUtil.isEmpty(this.query)) {
 			return null;
 		}
 		return this.query.get(key);
@@ -231,15 +229,25 @@ public class UrlQuery {
 	}
 
 	/**
-	 * 将键值对加入到值为List类型的Map中
+	 * 将键值对加入到值为List类型的Map中,，情况如下：
+	 * <pre>
+	 *     1、key和value都不为null，类似于 "a=1"或者"=1"，直接put
+	 *     2、key不为null，value为null，类似于 "a="，值传""
+	 *     3、key为null，value不为null，类似于 "1"
+	 *     4、key和value都为null，忽略之，比如&&
+	 * </pre>
 	 *
-	 * @param name    key
-	 * @param value   value
+	 * @param key     key，为null则value作为key
+	 * @param value   value，为null且key不为null时传入""
 	 * @param charset 编码
 	 */
-	private void addParam(String name, String value, Charset charset) {
-		name = URLUtil.decode(name, charset);
-		value = URLUtil.decode(value, charset);
-		this.query.put(name, value);
+	private void addParam(String key, String value, Charset charset) {
+		if (null != key) {
+			final String actualKey = URLUtil.decode(key, charset);
+			this.query.put(actualKey, StrUtil.nullToEmpty(URLUtil.decode(value, charset)));
+		} else if (null != value) {
+			// name为空，value作为name，value赋值""
+			this.query.put(URLUtil.decode(value, charset), StrUtil.EMPTY);
+		}
 	}
 }
