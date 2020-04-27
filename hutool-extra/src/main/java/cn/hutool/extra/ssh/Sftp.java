@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
+import cn.hutool.extra.ftp.FtpConfig;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
@@ -59,7 +60,18 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
-		init(sshHost, sshPort, sshUser, sshPass, charset);
+		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param config FTP配置
+	 * @since 5.3.3
+	 */
+	public Sftp(FtpConfig config) {
+		super(config);
+		init(config);
 	}
 
 	/**
@@ -79,6 +91,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(Session session, Charset charset) {
+		super(FtpConfig.create().setCharset(charset));
 		init(session, charset);
 	}
 
@@ -89,6 +102,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public Sftp(ChannelSftp channel, Charset charset) {
+		super(FtpConfig.create().setCharset(charset));
 		init(channel, charset);
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
@@ -103,11 +117,26 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public void init(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
-		this.host = sshHost;
-		this.port = sshPort;
-		this.user = sshUser;
-		this.password = sshPass;
 		init(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
+	}
+
+	/**
+	 * 初始化
+	 *
+	 * @since 5.3.3
+	 */
+	public void init() {
+		init(this.ftpConfig);
+	}
+
+	/**
+	 * 初始化
+	 *
+	 * @param config FTP配置
+	 * @since 5.3.3
+	 */
+	public void init(FtpConfig config) {
+		init(config.getHost(), config.getPort(), config.getUser(), config.getPassword(), config.getCharset());
 	}
 
 	/**
@@ -118,7 +147,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public void init(Session session, Charset charset) {
 		this.session = session;
-		init(JschUtil.openSftp(session), charset);
+		init(JschUtil.openSftp(session, (int)this.ftpConfig.getConnectionTimeout()), charset);
 	}
 
 	/**
@@ -128,7 +157,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public void init(ChannelSftp channel, Charset charset) {
-		this.charset = charset;
+		this.ftpConfig.setCharset(charset);
 		try {
 			channel.setFilenameEncoding(charset.toString());
 		} catch (SftpException e) {
@@ -139,8 +168,8 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public Sftp reconnectIfTimeout() {
-		if (false == this.cd("/") && StrUtil.isNotBlank(this.host)) {
-			init(this.host, this.port, this.user, this.password, this.charset);
+		if (false == this.cd("/") && StrUtil.isNotBlank(this.ftpConfig.getHost())) {
+			init(this.ftpConfig);
 		}
 		return this;
 	}
@@ -414,9 +443,9 @@ public class Sftp extends AbstractFtp {
 	@Override
 	public String toString() {
 		return "Sftp{" +
-				"host='" + host + '\'' +
-				", port=" + port +
-				", user='" + user + '\'' +
+				"host='" + this.ftpConfig.getHost() + '\'' +
+				", port=" + this.ftpConfig.getPort() +
+				", user='" + this.ftpConfig.getUser() + '\'' +
 				'}';
 	}
 

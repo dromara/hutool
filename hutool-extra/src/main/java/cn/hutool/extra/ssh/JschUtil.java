@@ -85,9 +85,24 @@ public class JschUtil {
 	 * @return SSH会话
 	 */
 	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+		return openSession(sshHost, sshPort, sshUser, sshPass, 0);
+	}
+
+	/**
+	 * 打开一个新的SSH会话
+	 *
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名
+	 * @param sshPass 密码
+	 * @param timeout Socket连接超时时长，单位毫秒
+	 * @return SSH会话
+	 * @since 5.3.3
+	 */
+	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass, int timeout) {
 		final Session session = createSession(sshHost, sshPort, sshUser, sshPass);
 		try {
-			session.connect();
+			session.connect(timeout);
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -257,7 +272,19 @@ public class JschUtil {
 	 * @since 4.0.3
 	 */
 	public static ChannelSftp openSftp(Session session) {
-		return (ChannelSftp) openChannel(session, ChannelType.SFTP);
+		return openSftp(session, 0);
+	}
+
+	/**
+	 * 打开SFTP连接
+	 *
+	 * @param session Session会话
+	 * @param timeout 连接超时时长，单位毫秒
+	 * @return {@link ChannelSftp}
+	 * @since 5.3.3
+	 */
+	public static ChannelSftp openSftp(Session session, int timeout) {
+		return (ChannelSftp) openChannel(session, ChannelType.SFTP, timeout);
 	}
 
 	/**
@@ -305,9 +332,22 @@ public class JschUtil {
 	 * @since 4.5.2
 	 */
 	public static Channel openChannel(Session session, ChannelType channelType) {
+		return openChannel(session, channelType, 0);
+	}
+
+	/**
+	 * 打开Channel连接
+	 *
+	 * @param session     Session会话
+	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
+	 * @param timeout     连接超时时长，单位毫秒
+	 * @return {@link Channel}
+	 * @since 5.3.3
+	 */
+	public static Channel openChannel(Session session, ChannelType channelType, int timeout) {
 		final Channel channel = createChannel(session, channelType);
 		try {
-			channel.connect();
+			channel.connect(Math.max(timeout, 0));
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}

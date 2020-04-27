@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.lang.func.Func0;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.StampedLock;
@@ -14,7 +15,7 @@ import java.util.concurrent.locks.StampedLock;
  * @param <V> 值类型
  * @author Looly
  */
-public class SimpleCache<K, V> implements Serializable {
+public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -147,5 +148,10 @@ public class SimpleCache<K, V> implements Serializable {
 		} finally {
 			lock.unlockWrite(stamp);
 		}
+	}
+
+	@Override
+	public Iterator<Map.Entry<K, V>> iterator() {
+		return this.cache.entrySet().iterator();
 	}
 }
