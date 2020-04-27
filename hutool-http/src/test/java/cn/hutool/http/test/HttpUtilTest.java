@@ -126,6 +126,14 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void decodeParamMapTest() {
+		// 参数值存在分界标记等号时
+		Map<String, String> paramMap = HttpUtil.decodeParamMap("https://www.xxx.com/api.action?aa=123&f_token=NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("123",paramMap.get("aa"));
+		Assert.assertEquals("NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=",paramMap.get("f_token"));
+	}
+
+	@Test
 	public void toParamsTest() {
 		String paramsStr = "uuuu=0&a=b&c=3Ddsssss555555";
 		Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
