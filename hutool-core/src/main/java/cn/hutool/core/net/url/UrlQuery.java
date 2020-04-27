@@ -120,15 +120,17 @@ public class UrlQuery {
 		int pos = 0; // 未处理字符开始位置
 		int i; // 未处理字符结束位置
 		char c; // 当前字符
+		char last = 0;// 上一个分界点的字符
 		for (i = 0; i < len; i++) {
 			c = queryStr.charAt(i);
-			if (c == '=') { // 键值对的分界点
+			if (c == '=' && last != '=') { // 键值对的分界点
 				if (null == name) {
 					// name可以是""
 					name = queryStr.substring(pos, i);
 				}
 				pos = i + 1;
-			} else if (c == '&') { // 参数对的分界点
+				last = '=';
+			} else if (c == '&' && last != '&') { // 参数对的分界点
 				if (null == name && pos != i) {
 					// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 					addParam(queryStr.substring(pos, i), StrUtil.EMPTY, charset);
@@ -137,6 +139,7 @@ public class UrlQuery {
 					name = null;
 				}
 				pos = i + 1;
+				last = '&';
 			}
 		}
 
