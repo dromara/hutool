@@ -301,7 +301,6 @@ public class HttpUtilTest {
         // 参数值存在分界标记等号时
         Map<String, String> paramMap = HttpUtil.decodeParamMap("https://www.xxx.com/api.action?aa=123&f_token=NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", CharsetUtil.CHARSET_UTF_8);
         Assert.assertEquals("NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=",paramMap.get("f_token"));
-        System.out.println();
     }
 
 }
