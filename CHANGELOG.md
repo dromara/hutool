@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.3 (2020-04-25)
+## 5.3.3 (2020-04-29)
 
 ### 新特性
 * 【core   】     ImgUtil.createImage支持背景透明（issue#851@Github）
@@ -11,6 +11,7 @@
 * 【cron   】     表达式的所有段支持L关键字（issue#849@Github）
 * 【extra  】     增加PinyinUtil，封装TinyPinyin
 * 【extra  】     Ftp和Sftp增加FtpConfig，提供超时等更多可选参数
+* 【extra  】     SpringUtil增加getActiveProfiles、getBeansOfType、getBeanNamesForType方法（issue#I1FXF3@Gitee）
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
