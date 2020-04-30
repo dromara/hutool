@@ -34,14 +34,14 @@ public class HOTP {
 	private final byte[] buffer;
 
 	/**
-	 * 构造，使用默认密码长度和默认HMAC算法
+	 * 构造，使用默认密码长度和默认HMAC算法(HmacSHA1)
 	 */
 	public HOTP(byte[] key) {
 		this(DEFAULT_PASSWORD_LENGTH, key);
 	}
 
 	/**
-	 * 构造，使用默认HMAC算法
+	 * 构造，使用默认HMAC算法(HmacSHA1)
 	 *
 	 * @param passwordLength 密码长度，可以是6,7,8
 	 * @param key            共享密码，RFC 4226要求最少128位
@@ -72,7 +72,7 @@ public class HOTP {
 	 *                可以是基于计次的动移动因子，也可以是计时移动因子
 	 * @return 一次性密码的int值
 	 */
-	public synchronized int generateOneTimePassword(final long counter) {
+	public synchronized int generate(final long counter) {
 		// C 的整数值需要用二进制的字符串表达，比如某个事件计数为 3，
 		// 则C是 "11"（此处省略了前面的二进制的数字0）
 		this.buffer[0] = (byte) ((counter & 0xff00000000000000L) >>> 56);
