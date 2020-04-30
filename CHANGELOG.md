@@ -12,6 +12,8 @@
 * 【extra  】     增加PinyinUtil，封装TinyPinyin
 * 【extra  】     Ftp和Sftp增加FtpConfig，提供超时等更多可选参数
 * 【extra  】     SpringUtil增加getActiveProfiles、getBeansOfType、getBeanNamesForType方法（issue#I1FXF3@Gitee）
+* 【bloomFilter】 避免布隆过滤器数字溢出（pr#119@Gitee）
+* 【core   】     增加IoUtil.writeObj（issue#I1FZIE）
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）

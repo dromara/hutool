@@ -989,6 +989,19 @@ public class IoUtil {
 	 *
 	 * @param out        输出流
 	 * @param isCloseOut 写入完毕是否关闭输出流
+	 * @param obj   写入的对象内容
+	 * @throws IORuntimeException IO异常
+	 * @since 5.3.3
+	 */
+	public static void writeObj(OutputStream out, boolean isCloseOut, Serializable obj) throws IORuntimeException {
+		writeObjects(out, isCloseOut, obj);
+	}
+
+	/**
+	 * 将多部分内容写到流中
+	 *
+	 * @param out        输出流
+	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param contents   写入的内容
 	 * @throws IORuntimeException IO异常
 	 */
