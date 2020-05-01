@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -18,7 +17,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * ClassPath资源工具类
+ * Resource资源工具类
  * 
  * @author Looly
  *
@@ -33,7 +32,7 @@ public class ResourceUtil {
 	 * @since 3.1.1
 	 */
 	public static String readUtf8Str(String resource) {
-		return readStr(resource, CharsetUtil.CHARSET_UTF_8);
+		return getResourceObj(resource).readUtf8Str();
 	}
 
 	/**

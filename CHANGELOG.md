@@ -14,9 +14,11 @@
 * 【extra  】     SpringUtil增加getActiveProfiles、getBeansOfType、getBeanNamesForType方法（issue#I1FXF3@Gitee）
 * 【bloomFilter】 避免布隆过滤器数字溢出（pr#119@Gitee）
 * 【core   】     增加IoUtil.writeObj（issue#I1FZIE）
+* 【core   】     增加FastStringWriter
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
+* 【db     】     修复SqlBuilder中orderBy无效问题（issue#856@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

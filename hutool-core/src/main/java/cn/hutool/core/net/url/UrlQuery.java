@@ -135,7 +135,7 @@ public class UrlQuery {
 				case '&'://键值对之间的分界符
 					addParam(name, queryStr.substring(pos, i), charset);
 					name = null;
-					if ("amp;".equals(queryStr.substring(i + 1, i + 5))) {
+					if (i+4 < len && "amp;".equals(queryStr.substring(i + 1, i + 5))) {
 						// issue#850@Github，"&amp;"转义为"&"
 						i+=4;
 					}

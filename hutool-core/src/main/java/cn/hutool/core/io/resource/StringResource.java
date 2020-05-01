@@ -83,11 +83,6 @@ public class StringResource implements Resource, Serializable {
 	}
 
 	@Override
-	public String readUtf8Str() throws IORuntimeException {
-		return this.data;
-	}
-
-	@Override
 	public byte[] readBytes() throws IORuntimeException {
 		return this.data.getBytes(this.charset);
 	}

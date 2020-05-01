@@ -2,7 +2,6 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -72,11 +71,6 @@ public class InputStreamResource implements Resource, Serializable {
 		} finally {
 			IoUtil.close(reader);
 		}
-	}
-
-	@Override
-	public String readUtf8Str() throws IORuntimeException {
-		return readStr(CharsetUtil.CHARSET_UTF_8);
 	}
 
 	@Override

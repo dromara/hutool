@@ -94,7 +94,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	}
 
 	@Override
-	public Resource next() {
+	public synchronized Resource next() {
 		if (cursor >= resources.size()) {
 			throw new ConcurrentModificationException();
 		}
@@ -110,7 +110,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	/**
 	 * 重置游标
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		this.cursor = 0;
 	}
 	

@@ -71,7 +71,7 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
-	 * 使用URL字符串构建UrlBuilder
+	 * 使用URL字符串构建UrlBuilder，当传入的URL没有协议时，按照http协议对待。
 	 *
 	 * @param httpUrl URL字符串
 	 * @param charset 编码，用于URLEncode和URLDecode

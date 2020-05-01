@@ -1,12 +1,13 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import cn.hutool.core.io.IORuntimeException;
 
 /**
  * 资源接口定义<br>
@@ -60,7 +61,9 @@ public interface Resource {
 	 * @return 读取资源内容
 	 * @throws IORuntimeException 包装IOException
 	 */
-	String readUtf8Str() throws IORuntimeException;
+	default String readUtf8Str() throws IORuntimeException{
+		return readStr(CharsetUtil.CHARSET_UTF_8);
+	}
 	
 	/**
 	 * 读取资源内容，读取完毕后会关闭流<br>

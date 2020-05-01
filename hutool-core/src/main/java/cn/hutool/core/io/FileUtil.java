@@ -3578,6 +3578,6 @@ public class FileUtil {
 	 * @param charset 编码
 	 */
 	public static void tail(File file, Charset charset) {
-		FileUtil.tail(file, charset, Tailer.CONSOLE_HANDLER);
+		tail(file, charset, Tailer.CONSOLE_HANDLER);
 	}
 }
