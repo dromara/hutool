@@ -1,14 +1,12 @@
 package cn.hutool.core.convert;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import cn.hutool.core.map.MapBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.map.MapBuilder;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Map转换单元测试
@@ -31,7 +29,10 @@ public class MapConvertTest {
 
 	@Test
 	public void mapToMapTest() {
-		Map<String, Object> srcMap = MapBuilder.create(new HashMap<String, Object>()).put("name", "AAA").put("age", 45).map();
+		Map<String, Object> srcMap = MapBuilder
+				.create(new HashMap<String, Object>())
+				.put("name", "AAA")
+				.put("age", 45).map();
 
 		LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
 		Assert.assertEquals("AAA", map.get("name"));

@@ -85,6 +85,20 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	}
 
 	/**
+	 * 根据value获得对应的key，只返回找到的第一个value对应的key值
+	 * @param value 值
+	 * @return 键
+	 * @since 5.3.3
+	 */
+	public K getKey(V value){
+		final int index = values.indexOf(value);
+		if (index > -1 && index < keys.size()) {
+			return keys.get(index);
+		}
+		return null;
+	}
+
+	/**
 	 * 获取指定key对应的所有值
 	 *
 	 * @param key 键
@@ -145,19 +159,16 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 		values.clear();
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<K> keySet() {
 		return new HashSet<>(keys);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Collection<V> values() {
 		return Collections.unmodifiableList(this.values);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
 		final Set<Map.Entry<K, V>> hashSet = new LinkedHashSet<>();
