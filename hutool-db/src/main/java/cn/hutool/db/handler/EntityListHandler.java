@@ -1,11 +1,11 @@
 package cn.hutool.db.handler;
 
+import cn.hutool.db.Entity;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.hutool.db.Entity;
 
 /**
  * 结果集处理类 ，处理出的结果为Entity列表
@@ -16,7 +16,7 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 	private static final long serialVersionUID = -2846240126316979895L;
 	
 	/** 是否大小写不敏感 */
-	private boolean caseInsensitive;
+	private final boolean caseInsensitive;
 	
 	/**
 	 * 创建一个 EntityListHandler对象

@@ -5,11 +5,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.MapUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * 集合工具类单元测试
@@ -28,6 +32,12 @@ import java.util.Set;
  *
  */
 public class CollUtilTest {
+
+	@Test
+	public void isNotEmptyTest(){
+		Assert.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
+		;
+	}
 
 	@Test
 	public void newHashSetTest() {
@@ -303,6 +313,20 @@ public class CollUtilTest {
 		Assert.assertEquals(new Integer(14), map.get("王五"));
 	}
 
+	@Test
+	public void emptyTest() {
+		final SortedSet<String> emptySortedSet = CollUtil.empty(SortedSet.class);
+		Assert.assertEquals(Collections.emptySortedSet(), emptySortedSet);
+
+		final Set<String> emptySet = CollUtil.empty(Set.class);
+		Assert.assertEquals(Collections.emptySet(), emptySet);
+
+		final List<String> emptyList = CollUtil.empty(List.class);
+		Assert.assertEquals(Collections.emptyList(), emptyList);
+	}
+
+	@Data
+	@AllArgsConstructor
 	public static class TestBean {
 		private String name;
 		private int age;
@@ -311,41 +335,6 @@ public class CollUtilTest {
 		public TestBean(String name, int age) {
 			this.name = name;
 			this.age = age;
-		}
-
-		public TestBean(String name, int age, Date createTime) {
-			this.name = name;
-			this.age = age;
-			this.createTime = createTime;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public int getAge() {
-			return age;
-		}
-
-		public void setAge(int age) {
-			this.age = age;
-		}
-
-		public Date getCreateTime() {
-			return createTime;
-		}
-
-		public void setCreateTime(Date createTime) {
-			this.createTime = createTime;
-		}
-
-		@Override
-		public String toString() {
-			return "TestBeans [name=" + name + ", age=" + age + "]";
 		}
 	}
 

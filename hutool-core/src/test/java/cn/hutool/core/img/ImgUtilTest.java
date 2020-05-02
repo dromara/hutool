@@ -1,19 +1,16 @@
 package cn.hutool.core.img;
 
+import cn.hutool.core.io.FileUtil;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import cn.hutool.core.io.FileUtil;
 
 public class ImgUtilTest {
 

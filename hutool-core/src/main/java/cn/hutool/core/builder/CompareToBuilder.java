@@ -1,12 +1,12 @@
 package cn.hutool.core.builder;
 
+import cn.hutool.core.util.ArrayUtil;
+
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Comparator;
-
-import cn.hutool.core.util.ArrayUtil;
 
 /** 
  * 用于构建 {@link java.lang.Comparable#compareTo(Object)} 方法的辅助工具
@@ -418,7 +418,7 @@ public class CompareToBuilder implements Builder<Integer> {
         if (comparison != 0) {
             return this;
         }
-        comparison = ((lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0));
+        comparison = (Long.compare(lhs, rhs));
         return this;
     }
 
@@ -434,7 +434,7 @@ public class CompareToBuilder implements Builder<Integer> {
         if (comparison != 0) {
             return this;
         }
-        comparison = ((lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0));
+        comparison = (Integer.compare(lhs, rhs));
         return this;
     }
 
@@ -450,7 +450,7 @@ public class CompareToBuilder implements Builder<Integer> {
         if (comparison != 0) {
             return this;
         }
-        comparison = ((lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0));
+        comparison = (Short.compare(lhs, rhs));
         return this;
     }
 
@@ -466,7 +466,7 @@ public class CompareToBuilder implements Builder<Integer> {
         if (comparison != 0) {
             return this;
         }
-        comparison = ((lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0));
+        comparison = (Character.compare(lhs, rhs));
         return this;
     }
 
@@ -482,7 +482,7 @@ public class CompareToBuilder implements Builder<Integer> {
         if (comparison != 0) {
             return this;
         }
-        comparison = ((lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0));
+        comparison = (Byte.compare(lhs, rhs));
         return this;
     }
 

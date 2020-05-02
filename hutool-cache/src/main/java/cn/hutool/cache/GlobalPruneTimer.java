@@ -24,7 +24,7 @@ public enum GlobalPruneTimer {
 	/**
 	 * 缓存任务计数
 	 */
-	private AtomicInteger cacheTaskNumber = new AtomicInteger(1);
+	private final AtomicInteger cacheTaskNumber = new AtomicInteger(1);
 
 	/**
 	 * 定时器

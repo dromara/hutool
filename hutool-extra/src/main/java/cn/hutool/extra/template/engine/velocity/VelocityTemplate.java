@@ -1,19 +1,18 @@
 package cn.hutool.extra.template.engine.velocity;
 
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.Map;
-
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.AbstractTemplate;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Velocity模板包装
@@ -24,7 +23,7 @@ import cn.hutool.extra.template.AbstractTemplate;
 public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	private static final long serialVersionUID = -132774960373894911L;
 
-	private org.apache.velocity.Template rawTemplate;
+	private final org.apache.velocity.Template rawTemplate;
 	private String charset;
 	
 	/**

@@ -125,6 +125,22 @@ public class CronPatternTest {
 		assertMatch(pattern, "2017-02-19 04:20:33");
 	}
 
+	@Test
+	public void lastTest() {
+		// 每月最后一天的任意时间
+		CronPattern pattern = new CronPattern("* * * L * ?");
+		assertMatch(pattern, "2017-07-31 04:20:00");
+		assertMatch(pattern, "2017-02-28 04:20:00");
+
+		// 最后一个月的任意时间
+		pattern = new CronPattern("* * * * L ?");
+		assertMatch(pattern, "2017-12-02 04:20:00");
+
+		// 任意天的最后时间
+		pattern = new CronPattern("L L L * * ?");
+		assertMatch(pattern, "2017-12-02 23:59:59");
+	}
+
 	@Test(expected = CronException.class)
 	public void rangeYearTest() {
 		// year的范围是1970~2099年，超出报错

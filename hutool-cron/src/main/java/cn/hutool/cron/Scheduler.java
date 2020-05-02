@@ -55,7 +55,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Scheduler implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
 	/** 时区 */
 	private TimeZone timezone;

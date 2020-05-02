@@ -1,13 +1,13 @@
 package cn.hutool.setting.profile;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.setting.Setting;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.setting.Setting;
 
 /**
  * Profile可以让我们定义一系列的配置信息，然后指定其激活条件。<br>
@@ -36,7 +36,7 @@ public class Profile implements Serializable {
 	/** 是否使用变量 */
 	private boolean useVar;
 	/** 配置文件缓存 */
-	private Map<String, Setting> settingMap = new ConcurrentHashMap<>();
+	private final Map<String, Setting> settingMap = new ConcurrentHashMap<>();
 
 	// -------------------------------------------------------------------------------- Constructor start
 	/**

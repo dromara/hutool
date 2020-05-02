@@ -35,7 +35,17 @@ public enum WatchKind {
 	 */
 	DELETE(StandardWatchEventKinds.ENTRY_DELETE);
 
-	private WatchEvent.Kind<?> value;
+	/**
+	 * 全部事件
+	 */
+	public static final WatchEvent.Kind<?>[] ALL = {//
+			OVERFLOW.getValue(),      //事件丢失
+			MODIFY.getValue(), //修改
+			CREATE.getValue(),  //创建
+			DELETE.getValue()   //删除
+	};
+
+	private final WatchEvent.Kind<?> value;
 
 	/**
 	 * 构造

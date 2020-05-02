@@ -17,8 +17,8 @@ import cn.hutool.core.date.TimeInterval;
  * @author kwer
  */
 public class ConcurrencyTester {
-	private SyncFinisher sf;
-	private TimeInterval timeInterval;
+	private final SyncFinisher sf;
+	private final TimeInterval timeInterval;
 	private long interval;
 
 	public ConcurrencyTester(int threadSize) {

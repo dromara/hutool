@@ -1,10 +1,10 @@
 package cn.hutool.db.ds.pooled;
 
+import cn.hutool.db.DbUtil;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import cn.hutool.db.DbUtil;
 
 /**
  * 池化
@@ -13,7 +13,7 @@ import cn.hutool.db.DbUtil;
  */
 public class PooledConnection extends ConnectionWraper{
 	
-	private PooledDataSource ds;
+	private final PooledDataSource ds;
 	private boolean isClosed;
 	
 	public PooledConnection(PooledDataSource ds) throws SQLException {

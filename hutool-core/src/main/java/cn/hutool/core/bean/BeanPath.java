@@ -1,13 +1,5 @@
 package cn.hutool.core.bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
@@ -15,6 +7,14 @@ import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
@@ -242,10 +242,6 @@ public class BeanPath implements Serializable{
 					}
 					isNumStart = false;
 					// 中括号结束加入下标
-					if (builder.length() > 0) {
-						localPatternParts.add(unWrapIfPossible(builder));
-					}
-					builder.reset();
 				} else {
 					if (isNumStart) {
 						// 非结束中括号情况下发现起始中括号报错（中括号未关闭）
@@ -255,11 +251,11 @@ public class BeanPath implements Serializable{
 						isNumStart = true;
 					}
 					// 每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
-					if (builder.length() > 0) {
-						localPatternParts.add(unWrapIfPossible(builder));
-					}
-					builder.reset();
 				}
+				if (builder.length() > 0) {
+					localPatternParts.add(unWrapIfPossible(builder));
+				}
+				builder.reset();
 			} else {
 				// 非边界符号，追加字符
 				builder.append(c);

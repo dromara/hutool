@@ -29,7 +29,7 @@ import java.util.Date;
 public class PrimitiveConverter extends AbstractConverter<Object> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<?> targetType;
+	private final Class<?> targetType;
 
 	/**
 	 * 构造<br>

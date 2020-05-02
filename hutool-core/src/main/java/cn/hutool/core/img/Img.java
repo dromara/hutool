@@ -47,7 +47,7 @@ import java.nio.file.Path;
 public class Img implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private BufferedImage srcImage;
+	private final BufferedImage srcImage;
 	private Image targetImage;
 	/**
 	 * 目标图片文件格式，用于写出

@@ -3,6 +3,7 @@ package cn.hutool.core.bean.copier.provider;
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.StrUtil;
 
@@ -42,20 +43,23 @@ public class BeanValueProvider implements ValueProvider<String> {
 			//boolean类型字段字段名支持两种方式
 			sourcePd = sourcePdMap.get(StrUtil.upperFirstAndAddPre(key, "is"));
 		}
-		
+
+		Object result = null;
 		if (null != sourcePd) {
 			final Method getter = sourcePd.getGetter();
 			if (null != getter) {
 				try {
-					return getter.invoke(source);
+					result = getter.invoke(source);
 				} catch (Exception e) {
 					if (false == ignoreError) {
 						throw new UtilException(e, "Inject [{}] error!", key);
 					}
 				}
+
+				result = Convert.convertWithCheck(valueType,result, null, ignoreError);
 			}
 		}
-		return null;
+		return result;
 	}
 
 	@Override

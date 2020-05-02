@@ -1,8 +1,8 @@
 package cn.hutool.crypto.digest;
 
-import java.security.SecureRandom;
-
 import cn.hutool.core.util.CharsetUtil;
+
+import java.security.SecureRandom;
 
 /**
  * BCrypt加密算法实现。由它加密的文件可在所有支持的操作系统和处理器上进行转移。它的口令必须是8至56个字符，并将在内部被转化为448位的密钥。
@@ -177,7 +177,7 @@ public class BCrypt {
 	 * @return the decoded value of x
 	 */
 	private static byte char64(char x) {
-		if ((int) x < 0 || (int) x > index_64.length)
+		if ((int) x > index_64.length)
 			return -1;
 		return index_64[(int) x];
 	}
@@ -191,6 +191,7 @@ public class BCrypt {
 	 * @return an array containing the decoded bytes
 	 * @throws IllegalArgumentException if maxolen is invalid
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static byte[] decodeBase64(String s, int maxolen) throws IllegalArgumentException {
 		final StringBuilder rs = new StringBuilder();
 		int off = 0, slen = s.length(), olen = 0;
@@ -285,8 +286,8 @@ public class BCrypt {
 	 * Initialise the Blowfish key schedule
 	 */
 	private void init_key() {
-		P = (int[]) P_orig.clone();
-		S = (int[]) S_orig.clone();
+		P = P_orig.clone();
+		S = S_orig.clone();
 	}
 
 	/**
@@ -438,7 +439,7 @@ public class BCrypt {
 		saltb = decodeBase64(real_salt, BCRYPT_SALT_LEN);
 
 		bcrypt = new BCrypt();
-		hashed = bcrypt.crypt(passwordb, saltb, rounds, (int[]) bf_crypt_ciphertext.clone());
+		hashed = bcrypt.crypt(passwordb, saltb, rounds, bf_crypt_ciphertext.clone());
 
 		rs.append("$2");
 		if (minor >= 'a')

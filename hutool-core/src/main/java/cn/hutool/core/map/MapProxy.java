@@ -1,5 +1,12 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -7,13 +14,6 @@ import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * Map代理，提供各种getXXX方法，并提供默认值支持
@@ -123,7 +123,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 		final Class<?>[] parameterTypes = method.getParameterTypes();
 		if (ArrayUtil.isEmpty(parameterTypes)) {
 			final Class<?> returnType = method.getReturnType();
-			if (null != returnType && void.class != returnType) {
+			if (void.class != returnType) {
 				// 匹配Getter
 				final String methodName = method.getName();
 				String fieldName = null;

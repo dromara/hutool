@@ -1,16 +1,15 @@
 package cn.hutool.crypto.digest.mac;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.crypto.CryptoException;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.Mac;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.crypto.CryptoException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * BouncyCastle的HMAC算法实现引擎，使用{@link Mac} 实现摘要<br>
@@ -94,4 +93,13 @@ public class BCHMacEngine implements MacEngine {
 		return mac;
 	}
 
+	@Override
+	public int getMacLength() {
+		return mac.getMacSize();
+	}
+
+	@Override
+	public String getAlgorithm() {
+		return this.mac.getAlgorithmName();
+	}
 }

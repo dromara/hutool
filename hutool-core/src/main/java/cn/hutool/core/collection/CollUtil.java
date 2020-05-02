@@ -38,8 +38,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -349,6 +351,24 @@ public class CollUtil {
 			return null;
 		}
 		return IterUtil.join(iterable.iterator(), conjunction);
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将集合转换为字符串
+	 *
+	 * @param <T>         集合元素类型
+	 * @param iterable    {@link Iterable}
+	 * @param conjunction 分隔符
+	 * @param prefix      每个元素添加的前缀，null表示不添加
+	 * @param suffix      每个元素添加的后缀，null表示不添加
+	 * @return 连接后的字符串
+	 * @since 5.3.0
+	 */
+	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, String prefix, String suffix) {
+		if (null == iterable) {
+			return null;
+		}
+		return IterUtil.join(iterable.iterator(), conjunction, prefix, suffix);
 	}
 
 	/**
@@ -1760,6 +1780,7 @@ public class CollUtil {
 	 * @param <K>     Map键类型
 	 * @param <V>     Map值类型
 	 * @param values  数据列表
+	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
 	 * @param keyFunc 生成key的函数
 	 * @return 生成的map
 	 * @since 5.2.6
@@ -1772,12 +1793,13 @@ public class CollUtil {
 	 * 集合转换为Map，转换规则为：<br>
 	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
 	 *
-	 * @param <K>     Map键类型
-	 * @param <V>     Map值类型
-	 * @param <E>     元素类型
-	 * @param values  数据列表
-	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc 生成key的函数
+	 * @param <K>       Map键类型
+	 * @param <V>       Map值类型
+	 * @param <E>       元素类型
+	 * @param values    数据列表
+	 * @param map       Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
+	 * @param keyFunc   生成key的函数
+	 * @param valueFunc 生成值的策略函数
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
@@ -2342,15 +2364,14 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理<br>
+	 * 和JDK8中的map.forEach不同的是，此方法支持index
 	 *
 	 * @param <K>        Key类型
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
-	 * @deprecated JDK8+中使用map.forEach
 	 */
-	@Deprecated
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
 		int index = 0;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -2539,6 +2560,44 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> unmodifiable(Collection<? extends T> c) {
 		return Collections.unmodifiableCollection(c);
+	}
+
+	/**
+	 * 根据给定的集合类型，返回对应的空集合，支持类型包括：
+	 * *
+	 * <pre>
+	 *     1. NavigableSet
+	 *     2. SortedSet
+	 *     3. Set
+	 *     4. List
+	 * </pre>
+	 *
+	 * @param <E>             元素类型
+	 * @param <T>             集合类型
+	 * @param collectionClass 集合类型
+	 * @return 空集合
+	 * @since 5.3.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <E, T extends Collection<E>> T empty(Class<?> collectionClass) {
+		if (null == collectionClass) {
+			return (T) Collections.emptyList();
+		}
+
+		if (Set.class.isAssignableFrom(collectionClass)) {
+			if (NavigableSet.class == collectionClass) {
+				return (T) Collections.emptyNavigableSet();
+			} else if (SortedSet.class == collectionClass) {
+				return (T) Collections.emptySortedSet();
+			} else {
+				return (T) Collections.emptySet();
+			}
+		} else if (List.class.isAssignableFrom(collectionClass)) {
+			return (T) Collections.emptyList();
+		}
+
+		// 不支持空集合的集合类型
+		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", collectionClass));
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start

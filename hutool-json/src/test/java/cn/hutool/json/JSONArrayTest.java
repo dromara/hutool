@@ -1,14 +1,5 @@
 package cn.hutool.json;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
@@ -17,6 +8,14 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;
 import cn.hutool.json.test.bean.KeyBean;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JSONArray单元测试
@@ -44,6 +43,17 @@ public class JSONArrayTest {
 		String jsonStr = "[\"value1\", \"value2\", \"value3\"]";
 		JSONArray array = JSONUtil.parseArray(jsonStr);
 		Assert.assertEquals(array.get(0), "value1");
+	}
+
+	@Test
+	public void parseWithNullTest() {
+		String jsonStr = "[{\"grep\":\"4.8\",\"result\":\"右\"},{\"grep\":\"4.8\",\"result\":null}]";
+		JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
+		Assert.assertFalse(jsonArray.getJSONObject(1).containsKey("result"));
+
+		// 不忽略null，则null的键值对被保留
+		jsonArray = new JSONArray(jsonStr, false);
+		Assert.assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
 	}
 
 	@Test
@@ -121,6 +131,7 @@ public class JSONArrayTest {
 		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.CHARSET_UTF_8);
 		JSONArray array = JSONUtil.parseArray(jsonStr);
 
+		//noinspection SuspiciousToArrayCall
 		Exam[] list = array.toArray(new Exam[0]);
 		Assert.assertNotEquals(0, list.length);
 		Assert.assertEquals(Exam.class, list[0].getClass());

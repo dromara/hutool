@@ -3,19 +3,17 @@ package cn.hutool.db.dialect.impl;
 import cn.hutool.db.Page;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
 
 /**
  * H2数据库方言
- * 
- * @author loolly
  *
+ * @author loolly
  */
 public class H2Dialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = 1490520247974768214L;
 
 	public H2Dialect() {
-		wrapper = new Wrapper('"', '"');
+//		wrapper = new Wrapper('"');
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class LongMap implements BitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long[] longs;
+	private final long[] longs;
 
 	/**
 	 * 构造

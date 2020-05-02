@@ -1,5 +1,8 @@
 package cn.hutool.socket.nio;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,9 +13,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 
 /**
  * 基于NIO的Socket服务端实现
@@ -130,7 +130,7 @@ public abstract class NioServer implements Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		IoUtil.close(this.selector);
 		IoUtil.close(this.serverSocketChannel);
 	}
@@ -166,6 +166,7 @@ public abstract class NioServer implements Closeable {
 		try {
 			channel.configureBlocking(false);
 			// 注册通道
+			//noinspection MagicConstant
 			channel.register(selector, ops.getValue());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

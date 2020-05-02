@@ -18,7 +18,7 @@ import java.util.Date;
 public class DateConverter extends AbstractConverter<java.util.Date> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<? extends java.util.Date> targetType;
+	private final Class<? extends java.util.Date> targetType;
 	/** 日期格式化 */
 	private String format;
 

@@ -43,7 +43,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/** 响应状态码 */
 	protected int status;
 	/** 是否忽略读取Http响应体 */
-	private boolean ignoreBody;
+	private final boolean ignoreBody;
 	/** 从响应中获取的编码 */
 	private Charset charsetFromResponse;
 
@@ -471,11 +471,11 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	private String getFileNameFromDisposition() {
 		String fileName = null;
-		final String desposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(desposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", desposition, 1);
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
 			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(desposition, "filename=", true);
+				fileName = StrUtil.subAfter(disposition, "filename=", true);
 			}
 		}
 		return fileName;

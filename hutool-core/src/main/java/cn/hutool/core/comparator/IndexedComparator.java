@@ -1,8 +1,8 @@
 package cn.hutool.core.comparator;
 
-import java.util.Comparator;
-
 import cn.hutool.core.util.ArrayUtil;
+
+import java.util.Comparator;
 
 /**
  * 按照数组的顺序正序排列，数组的元素位置决定了对象的排序先后<br>
@@ -15,7 +15,7 @@ import cn.hutool.core.util.ArrayUtil;
  */
 public class IndexedComparator<T> implements Comparator<T> {
 
-	private T[] array;
+	private final T[] array;
 
 	/**
 	 * 构造

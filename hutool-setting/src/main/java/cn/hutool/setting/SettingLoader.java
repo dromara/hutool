@@ -8,7 +8,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.util.Set;
  *
  */
 public class SettingLoader {
-	private static Log log = LogFactory.get();
+	private static final Log log = Log.get();
 
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static char COMMENT_FLAG_PRE = '#';
@@ -38,11 +37,11 @@ public class SettingLoader {
 	private String varRegex = "\\$\\{(.*?)\\}";
 
 	/** 本设置对象的字符集 */
-	private Charset charset;
+	private final Charset charset;
 	/** 是否使用变量 */
-	private boolean isUseVariable;
+	private final boolean isUseVariable;
 	/** GroupedMap */
-	private GroupedMap groupedMap;
+	private final GroupedMap groupedMap;
 
 	/**
 	 * 构造

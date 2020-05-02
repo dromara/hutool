@@ -1,12 +1,12 @@
 package cn.hutool.bloomfilter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.BitSet;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.HashUtil;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.BitSet;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
@@ -17,10 +17,10 @@ import cn.hutool.core.util.HashUtil;
 public class BitSetBloomFilter implements BloomFilter{
 	private static final long serialVersionUID = 1L;
 	
-	private BitSet bitSet;
-	private int bitSetSize;
-	private int addedElements;
-	private int hashFunctionNumber;
+	private final BitSet bitSet;
+	private final int bitSetSize;
+	private final int addedElements;
+	private final int hashFunctionNumber;
 
 	/**
 	 * 构造一个布隆过滤器，过滤器的容量为c * n 个bit.

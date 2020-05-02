@@ -70,8 +70,8 @@ public class SqlFormatter {
 		boolean afterInsert = false;
 		int inFunction = 0;
 		int parensSinceSelect = 0;
-		private LinkedList<Integer> parenCounts = new LinkedList<>();
-		private LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<>();
+		private final LinkedList<Integer> parenCounts = new LinkedList<>();
+		private final LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<>();
 
 		int indent = 1;
 
@@ -273,14 +273,13 @@ public class SqlFormatter {
 			}
 			if (this.inFunction > 0) {
 				this.inFunction -= 1;
-				out();
 			} else {
 				if (!this.afterByOrSetOrFromOrSelect) {
 					this.indent -= 1;
 					newline();
 				}
-				out();
 			}
+			out();
 			this.beginLine = false;
 		}
 

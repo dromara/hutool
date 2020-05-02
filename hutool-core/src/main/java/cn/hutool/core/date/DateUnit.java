@@ -19,7 +19,7 @@ public enum DateUnit {
 	/**一周的毫秒数 */
 	WEEK(DAY.getMillis() * 7);
 	
-	private long millis;
+	private final long millis;
 	DateUnit(long millis){
 		this.millis = millis;
 	}

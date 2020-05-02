@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -713,11 +714,28 @@ public class NetUtil {
 	 * @return cookie字符串
 	 * @since 5.2.6
 	 */
-	public static List<HttpCookie> parseCookies(String cookieStr){
-		if(StrUtil.isBlank(cookieStr)){
-			return CollUtil.newArrayList();
+	public static List<HttpCookie> parseCookies(String cookieStr) {
+		if (StrUtil.isBlank(cookieStr)) {
+			return Collections.emptyList();
 		}
 		return HttpCookie.parse(cookieStr);
+	}
+
+	/**
+	 * 检查远程端口是否开启
+	 *
+	 * @param address 远程地址
+	 * @param timeout 检测超时
+	 * @return 远程端口是否开启
+	 * @since 5.3.2
+	 */
+	public static boolean isOpen(InetSocketAddress address, int timeout) {
+		try (Socket sc = new Socket()){
+			sc.connect(address, timeout);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	// ----------------------------------------------------------------------------------------- Private method start
 

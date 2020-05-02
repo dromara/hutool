@@ -1,8 +1,9 @@
 package cn.hutool.socket;
 
-import java.io.Serializable;
-
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.RuntimeUtil;
+
+import java.io.Serializable;
 
 /**
  * Socket通讯配置
@@ -14,7 +15,7 @@ public class SocketConfig implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** CPU核心数 */
-	private static int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+	private static final int CPU_COUNT = RuntimeUtil.getProcessorCount();
 
 	/** 共享线程池大小，此线程池用于接收和处理用户连接 */
 	private int threadPoolSize = CPU_COUNT;

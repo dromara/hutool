@@ -18,7 +18,7 @@ import java.util.Map;
 public class RythmTemplate extends AbstractTemplate implements Serializable {
 	private static final long serialVersionUID = -132774960373894911L;
 
-	private org.rythmengine.template.ITemplate rawTemplate;
+	private final org.rythmengine.template.ITemplate rawTemplate;
 	
 	/**
 	 * 包装Rythm模板

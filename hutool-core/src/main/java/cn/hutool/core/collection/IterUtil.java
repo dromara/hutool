@@ -9,6 +9,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -202,7 +203,7 @@ public class IterUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueMap(Iterator<V> iter, String fieldName) {
-		return toMap(iter, new HashMap<>(), (value)->(K)ReflectUtil.getFieldValue(value, fieldName));
+		return toMap(iter, new HashMap<>(), (value) -> (K) ReflectUtil.getFieldValue(value, fieldName));
 	}
 
 	/**
@@ -236,8 +237,8 @@ public class IterUtil {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueAsMap(Iterator<?> iter, String fieldNameForKey, String fieldNameForValue) {
 		return toMap(iter, new HashMap<>(),
-				(value)->(K)ReflectUtil.getFieldValue(value, fieldNameForKey),
-				(value)->(V)ReflectUtil.getFieldValue(value, fieldNameForValue)
+				(value) -> (K) ReflectUtil.getFieldValue(value, fieldNameForKey),
+				(value) -> (V) ReflectUtil.getFieldValue(value, fieldNameForValue)
 		);
 	}
 
@@ -302,7 +303,9 @@ public class IterUtil {
 	 * @param suffix      每个元素添加的后缀，null表示不添加
 	 * @return 连接后的字符串
 	 * @since 4.0.10
+	 * @deprecated 如果对象同时实现Iterable和Iterator接口会产生歧义，请使用CollUtil.join
 	 */
+	@Deprecated
 	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, String prefix, String suffix) {
 		if (null == iterable) {
 			return null;
@@ -644,12 +647,13 @@ public class IterUtil {
 	 * 集合转换为Map，转换规则为：<br>
 	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
 	 *
-	 * @param <K>      Map键类型
-	 * @param <V>      Map值类型
-	 * @param <E>      元素类型
-	 * @param iterator 数据列表
-	 * @param map      Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc  生成key的函数
+	 * @param <K>       Map键类型
+	 * @param <V>       Map值类型
+	 * @param <E>       元素类型
+	 * @param iterator  数据列表
+	 * @param map       Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
+	 * @param keyFunc   生成key的函数
+	 * @param valueFunc 生成值的策略函数
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
@@ -672,5 +676,17 @@ public class IterUtil {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * 返回一个空Iterator
+	 *
+	 * @param <T> 元素类型
+	 * @return 空Iterator
+	 * @see Collections#emptyIterator()
+	 * @since 5.3.1
+	 */
+	public static <T> Iterator<T> empty() {
+		return Collections.emptyIterator();
 	}
 }

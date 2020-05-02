@@ -10,8 +10,8 @@ package cn.hutool.cron;
  */
 public class TaskLauncher implements Runnable{
 	
-	private Scheduler scheduler;
-	private long millis;
+	private final Scheduler scheduler;
+	private final long millis;
 	
 	public TaskLauncher(Scheduler scheduler, long millis) {
 		this.scheduler = scheduler;

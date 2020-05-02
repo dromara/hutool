@@ -1,14 +1,13 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 基于{@link InputStream}的资源获取器<br>
@@ -20,8 +19,8 @@ import cn.hutool.core.util.CharsetUtil;
 public class InputStreamResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private InputStream in;
-	private String name;
+	private final InputStream in;
+	private final String name;
 
 	/**
 	 * 构造
@@ -72,11 +71,6 @@ public class InputStreamResource implements Resource, Serializable {
 		} finally {
 			IoUtil.close(reader);
 		}
-	}
-
-	@Override
-	public String readUtf8Str() throws IORuntimeException {
-		return readStr(CharsetUtil.CHARSET_UTF_8);
 	}
 
 	@Override

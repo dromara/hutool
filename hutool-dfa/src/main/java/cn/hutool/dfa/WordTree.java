@@ -1,16 +1,16 @@
 package cn.hutool.dfa;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.util.StrUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * DFA（Deterministic Finite Automaton 确定有穷自动机）
@@ -33,7 +33,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	/**
 	 * 敏感词字符末尾标识，用于标识单词末尾字符
 	 */
-	private Set<Character> endCharacterSet = new HashSet<>();
+	private final Set<Character> endCharacterSet = new HashSet<>();
 	/**
 	 * 字符过滤规则，通过定义字符串过滤规则，过滤不需要的字符，当accept为false时，此字符不参与匹配
 	 */

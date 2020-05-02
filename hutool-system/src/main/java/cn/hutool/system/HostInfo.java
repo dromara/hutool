@@ -1,9 +1,9 @@
 package cn.hutool.system;
 
+import cn.hutool.core.net.NetUtil;
+
 import java.io.Serializable;
 import java.net.InetAddress;
-
-import cn.hutool.core.net.NetUtil;
 
 /**
  * 代表当前主机的信息。
@@ -16,8 +16,13 @@ public class HostInfo implements Serializable {
 
 	public HostInfo() {
 		final InetAddress localhost = NetUtil.getLocalhost();
-		HOST_NAME = localhost.getHostName();
-		HOST_ADDRESS = localhost.getHostAddress();
+		if(null != localhost){
+			HOST_NAME = localhost.getHostName();
+			HOST_ADDRESS = localhost.getHostAddress();
+		} else{
+			HOST_NAME = null;
+			HOST_ADDRESS = null;
+		}
 	}
 
 	/**

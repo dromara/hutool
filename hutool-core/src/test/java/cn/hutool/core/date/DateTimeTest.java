@@ -67,12 +67,12 @@ public class DateTimeTest {
 
 		// 默认情况下DateTime为可变对象
 		DateTime offsite = dateTime.offset(DateField.YEAR, 0);
-		Assert.assertTrue(offsite == dateTime);
+		Assert.assertSame(offsite, dateTime);
 
 		// 设置为不可变对象后变动将返回新对象
 		dateTime.setMutable(false);
 		offsite = dateTime.offset(DateField.YEAR, 0);
-		Assert.assertFalse(offsite == dateTime);
+		Assert.assertNotSame(offsite, dateTime);
 	}
 
 	@Test
@@ -86,6 +86,7 @@ public class DateTimeTest {
 
 	@Test
 	public void monthTest() {
+		//noinspection ConstantConditions
 		int month = DateUtil.parse("2017-07-01").month();
 		Assert.assertEquals(6, month);
 	}
@@ -93,6 +94,7 @@ public class DateTimeTest {
 	@Test
 	public void weekOfYearTest() {
 		DateTime date = DateUtil.parse("2016-12-27");
+		//noinspection ConstantConditions
 		Assert.assertEquals(2016, date.year());
 		//跨年的周返回的总是1
 		Assert.assertEquals(1, date.weekOfYear());

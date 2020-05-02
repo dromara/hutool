@@ -1,16 +1,16 @@
 package cn.hutool.extra.mail;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 邮件工具类，基于javax.mail封装
@@ -370,14 +370,14 @@ public class MailUtil {
 
 		// 可选抄送人
 		if (CollUtil.isNotEmpty(ccs)) {
-			mail.setCcs(ccs.toArray(new String[ccs.size()]));
+			mail.setCcs(ccs.toArray(new String[0]));
 		}
 		// 可选密送人
 		if (CollUtil.isNotEmpty(bccs)) {
-			mail.setBccs(bccs.toArray(new String[bccs.size()]));
+			mail.setBccs(bccs.toArray(new String[0]));
 		}
 
-		mail.setTos(tos.toArray(new String[tos.size()]));
+		mail.setTos(tos.toArray(new String[0]));
 		mail.setTitle(subject);
 		mail.setContent(content);
 		mail.setHtml(isHtml);

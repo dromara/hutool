@@ -1,5 +1,7 @@
 package cn.hutool.core.comparator;
 
+import cn.hutool.core.lang.Chain;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -7,8 +9,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-
-import cn.hutool.core.lang.Chain;
 
 /**
  * 比较器链。此链包装了多个比较器，最终比较结果按照比较器顺序综合多个比较器结果。<br>
@@ -24,7 +24,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	/** 比较器链. */
 	private final List<Comparator<E>> chain;
 	/** 对应比较器位置是否反序. */
-	private BitSet orderingBits;
+	private final BitSet orderingBits;
 	/** 比较器是否被锁定。锁定的比较器链不能再添加新的比较器。比较器会在开始比较时开始加锁。 */
 	private boolean lock = false;
 
@@ -249,8 +249,9 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 		}
 		if (object.getClass().equals(this.getClass())) {
 			final ComparatorChain<?> otherChain = (ComparatorChain<?>) object;
-			return (Objects.equals(this.orderingBits, otherChain.orderingBits)) //
-					&& (null == otherChain ? null == otherChain.chain : this.chain.equals(otherChain.chain));
+			//
+			return Objects.equals(this.orderingBits, otherChain.orderingBits)
+					&& this.chain.equals(otherChain.chain);
 		}
 		return false;
 	}

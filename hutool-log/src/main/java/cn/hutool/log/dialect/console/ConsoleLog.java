@@ -19,7 +19,7 @@ public class ConsoleLog extends AbstractLog {
 	private static final String logFormat = "[{date}] [{level}] {name}: {msg}";
 	private static Level currentLevel = Level.DEBUG;
 
-	private String name;
+	private final String name;
 
 	//------------------------------------------------------------------------- Constructor
 

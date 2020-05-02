@@ -1,14 +1,14 @@
 package cn.hutool.db.sql;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map.Entry;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map.Entry;
 
 /**
  * 包装器<br>
@@ -135,7 +135,7 @@ public class Wrapper {
 			return fields;
 		}
 		
-		return Arrays.asList(wrap(fields.toArray(new String[fields.size()])));
+		return Arrays.asList(wrap(fields.toArray(new String[0])));
 	}
 	
 	/**

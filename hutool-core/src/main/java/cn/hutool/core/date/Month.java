@@ -53,7 +53,7 @@ public enum Month {
 	UNDECIMBER(Calendar.UNDECIMBER);
 
 	// ---------------------------------------------------------------
-	private int value;
+	private final int value;
 
 	Month(int value) {
 		this.value = value;

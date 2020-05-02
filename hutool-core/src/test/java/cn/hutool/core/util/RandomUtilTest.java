@@ -35,4 +35,10 @@ public class RandomUtilTest {
 	public void randomBooleanTest() {
 		Console.log(RandomUtil.randomBoolean());
 	}
+
+	@Test
+	public void randomNumberTest() {
+		final char c = RandomUtil.randomNumber();
+		Assert.assertTrue(c <= '9');
+	}
 }

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class YearValueMatcher implements ValueMatcher{
 	
-	private List<Integer> valueList;
+	private final List<Integer> valueList;
 	
 	public YearValueMatcher(List<Integer> intValueList) {
 		this.valueList = intValueList;

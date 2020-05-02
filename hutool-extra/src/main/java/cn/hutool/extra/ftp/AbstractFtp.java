@@ -1,14 +1,14 @@
 package cn.hutool.extra.ftp;
 
-import java.io.Closeable;
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.List;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Closeable;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * 抽象FTP类，用于定义通用的FTP方法
@@ -19,14 +19,18 @@ import cn.hutool.core.util.StrUtil;
 public abstract class AbstractFtp implements Closeable {
 	
 	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8 ;
-	
-	protected String host;
-	protected int port;
-	
-	protected String user;
-	protected String password;
-	
-	protected Charset charset;
+
+	protected FtpConfig ftpConfig;
+
+	/**
+	 * 构造
+	 *
+	 * @param config FTP配置
+	 * @since 5.3.3
+	 */
+	protected AbstractFtp(FtpConfig config){
+		this.ftpConfig = config;
+	}
 
 	/**
 	 * 如果连接超时的话，重新进行连接
@@ -119,12 +123,12 @@ public abstract class AbstractFtp implements Closeable {
 			//首位为空，表示以/开头
 			this.cd(StrUtil.SLASH);
 		}
-		for (int i = 0; i < dirs.length; i++) {
-			if (StrUtil.isNotEmpty(dirs[i])) {
-				if (false == cd(dirs[i])) {
+		for (String s : dirs) {
+			if (StrUtil.isNotEmpty(s)) {
+				if (false == cd(s)) {
 					//目录不存在时创建
-					mkdir(dirs[i]);
-					cd(dirs[i]);
+					mkdir(s);
+					cd(s);
 				}
 			}
 		}

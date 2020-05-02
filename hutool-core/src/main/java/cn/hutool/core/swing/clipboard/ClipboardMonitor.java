@@ -1,14 +1,14 @@
 package cn.hutool.core.swing.clipboard;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
+
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.io.Closeable;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 剪贴板监听
@@ -189,6 +189,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 		for (int i = 0; i < this.tryCount; i++) {
 			if (this.delay > 0 && i > 0) {
 				// 第一次获取不等待，只有从第二次获取时才开始等待
+				//noinspection BusyWait
 				Thread.sleep(this.delay);
 			}
 
@@ -201,7 +202,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 				return newContents;
 			}
 		}
-		return newContents;
+		return null;
 	}
 	// ------------------------------------------------------------------------------------------------------------------------- Private method end
 }

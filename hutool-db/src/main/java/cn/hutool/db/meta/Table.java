@@ -21,8 +21,8 @@ public class Table implements Serializable, Cloneable {
 	/** 注释 */
 	private String comment;
 	/** 主键字段名列表 */
-	private Set<String> pkNames = new LinkedHashSet<String>();
-	private Map<String, Column> columns = new LinkedHashMap<>();
+	private Set<String> pkNames = new LinkedHashSet<>();
+	private final Map<String, Column> columns = new LinkedHashMap<>();
 
 	public static Table create(String tableName) {
 		return new Table(tableName);

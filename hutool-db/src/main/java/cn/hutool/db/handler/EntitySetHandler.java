@@ -1,10 +1,10 @@
 package cn.hutool.db.handler;
 
+import cn.hutool.db.Entity;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashSet;
-
-import cn.hutool.db.Entity;
 
 /**
  * 结果集处理类 ，处理出的结果为Entity列表，结果不能重复（按照Entity对象去重）
@@ -15,7 +15,7 @@ public class EntitySetHandler implements RsHandler<LinkedHashSet<Entity>>{
 	private static final long serialVersionUID = 8191723216703506736L;
 
 	/** 是否大小写不敏感 */
-	private boolean caseInsensitive;
+	private final boolean caseInsensitive;
 
 	/**
 	 * 创建一个 EntityHandler对象

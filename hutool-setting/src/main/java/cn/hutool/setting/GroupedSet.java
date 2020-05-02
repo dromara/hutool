@@ -1,5 +1,12 @@
 package cn.hutool.setting;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -12,13 +19,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 
 /**
  * 分组化的Set集合类<br>
@@ -94,9 +94,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 			throw new RuntimeException("Null GroupSet file!");
 		}
 		final URL url = URLUtil.getURL(configFile);
-		if (url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", configFile.getAbsolutePath()));
-		}
 		this.init(url, charset);
 	}
 

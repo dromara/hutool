@@ -25,16 +25,12 @@ public class JSONNull implements Serializable{
 	 * @param object An object to test for nullness.
 	 * @return true if the object parameter is the JSONObject.NULL object or null.
 	 */
+	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	@Override
 	public boolean equals(Object object) {
-		return object == null || (object instanceof JSONNull && object == this);
+		return object == null || (object == this);
 	}
 	
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
-
 	/**
 	 * Get the "null" string value.
 	 *获得“null”字符串

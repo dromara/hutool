@@ -121,7 +121,7 @@ public enum Header {
 	 */
 	LOCATION("Location");
 
-	private String value;
+	private final String value;
 
 	Header(String value) {
 		this.value = value;

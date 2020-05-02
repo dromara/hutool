@@ -2,6 +2,11 @@ package cn.hutool.core.comparator;
 
 import java.util.Comparator;
 
+/**
+ * 比较工具类
+ *
+ * @author looly
+ */
 public class CompareUtil {
 
 	/**
@@ -22,7 +27,7 @@ public class CompareUtil {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static <T> int compare(T c1, T c2, Comparator<T> comparator) {
 		if (null == comparator) {
-			return compare((Comparable)c1, (Comparable)c2);
+			return compare((Comparable) c1, (Comparable) c2);
 		}
 		return comparator.compare(c1, c2);
 	}

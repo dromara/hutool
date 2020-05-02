@@ -3,9 +3,6 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
-
 /**
  * HexUtil单元测试
  * @author Looly

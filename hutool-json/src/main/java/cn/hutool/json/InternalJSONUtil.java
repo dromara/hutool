@@ -31,7 +31,7 @@ final class InternalJSONUtil {
 	 *
 	 * @param writer       Writer
 	 * @param value        值
-	 * @param indentFactor 每一级别的缩进量
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       缩进空格数
 	 * @param config       配置项
 	 * @return Writer
@@ -188,15 +188,14 @@ final class InternalJSONUtil {
 	 * @return JSONObject
 	 */
 	protected static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value) {
-		String keyStr = Convert.toStr(key);
-		String[] path = StrUtil.split(keyStr, StrUtil.DOT);
+		final String[] path = StrUtil.split(Convert.toStr(key), StrUtil.DOT);
 		int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
 			String segment = path[i];
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
-				nextTarget = new JSONObject();
+				nextTarget = new JSONObject(target.getConfig());
 				target.set(segment, nextTarget);
 			}
 			target = nextTarget;
@@ -206,8 +205,13 @@ final class InternalJSONUtil {
 	}
 
 	/**
-	 * 默认情况下是否忽略null值的策略选择<br>
-	 * JavaBean默认忽略null值，其它对象不忽略
+	 * 默认情况下是否忽略null值的策略选择，以下对象不忽略null值，其它对象忽略：
+	 *
+	 * <pre>
+	 *     1. CharSequence
+	 *     2. JSONTokener
+	 *     3. Map
+	 * </pre>
 	 *
 	 * @param obj 需要检查的对象
 	 * @return 是否忽略null值
@@ -234,13 +238,13 @@ final class InternalJSONUtil {
 
 		//默认使用时间戳
 		long timeMillis;
-		if(dateObj instanceof TemporalAccessor){
-			timeMillis = DateUtil.toInstant((TemporalAccessor)dateObj).toEpochMilli();
-		} else if(dateObj instanceof  Date){
+		if (dateObj instanceof TemporalAccessor) {
+			timeMillis = DateUtil.toInstant((TemporalAccessor) dateObj).toEpochMilli();
+		} else if (dateObj instanceof Date) {
 			timeMillis = ((Date) dateObj).getTime();
-		} else if(dateObj instanceof Calendar){
+		} else if (dateObj instanceof Calendar) {
 			timeMillis = ((Calendar) dateObj).getTimeInMillis();
-		} else{
+		} else {
 			throw new UnsupportedOperationException("Unsupported Date type: " + dateObj.getClass());
 		}
 		return String.valueOf(timeMillis);

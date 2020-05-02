@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
  */
 public class JcsegResult implements Result{
 	
-	private ISegment result;
+	private final ISegment result;
 	private Word cachedWord;
 	
 	/**

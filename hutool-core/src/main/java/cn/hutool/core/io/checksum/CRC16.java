@@ -66,7 +66,7 @@ public class CRC16 implements Checksum, Serializable {
 	@Override
 	public void update(byte[] b, int off, int len) {
 		for (int i = off; i < off + len; i++)
-			update((int) b[i]);
+			update(b[i]);
 	}
 
 	@Override

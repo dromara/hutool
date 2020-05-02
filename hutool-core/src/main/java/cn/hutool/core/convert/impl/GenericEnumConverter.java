@@ -14,7 +14,7 @@ import cn.hutool.core.convert.AbstractConverter;
 public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<E> enumClass;
+	private final Class<E> enumClass;
 	
 	/**
 	 * 构造

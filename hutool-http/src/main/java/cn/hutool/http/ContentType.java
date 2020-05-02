@@ -41,7 +41,7 @@ public enum ContentType {
 	 */
 	TEXT_HTML("text/html");
 
-	private String value;
+	private final String value;
 
 	ContentType(String value) {
 		this.value = value;

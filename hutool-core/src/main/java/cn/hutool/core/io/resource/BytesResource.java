@@ -1,5 +1,8 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -7,10 +10,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 基于byte[]的资源获取器<br>
@@ -68,11 +67,6 @@ public class BytesResource implements Resource, Serializable {
 	@Override
 	public String readStr(Charset charset) throws IORuntimeException {
 		return StrUtil.str(this.bytes, charset);
-	}
-
-	@Override
-	public String readUtf8Str() throws IORuntimeException {
-		return readStr(CharsetUtil.CHARSET_UTF_8);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class DbSetting {
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
 
-	private Setting setting;
+	private final Setting setting;
 
 	/**
 	 * 构造

@@ -10,6 +10,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
@@ -418,6 +419,11 @@ public class ServletUtil {
 	 * @return Cookie map
 	 */
 	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
+		final Cookie[] cookies = httpServletRequest.getCookies();
+		if(ArrayUtil.isEmpty(cookies)){
+			return MapUtil.empty();
+		}
+
 		return IterUtil.toMap(
 				new ArrayIter<>(httpServletRequest.getCookies()),
 				new CaseInsensitiveMap<>(),

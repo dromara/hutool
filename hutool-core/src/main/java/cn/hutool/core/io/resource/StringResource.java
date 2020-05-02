@@ -1,5 +1,9 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -7,10 +11,6 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 字符串资源，字符串做为资源
@@ -21,9 +21,9 @@ import cn.hutool.core.util.CharsetUtil;
 public class StringResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String data;
-	private String name;
-	private Charset charset;
+	private final String data;
+	private final String name;
+	private final Charset charset;
 
 	/**
 	 * 构造，使用UTF8编码
@@ -79,11 +79,6 @@ public class StringResource implements Resource, Serializable {
 
 	@Override
 	public String readStr(Charset charset) throws IORuntimeException {
-		return this.data;
-	}
-
-	@Override
-	public String readUtf8Str() throws IORuntimeException {
 		return this.data;
 	}
 

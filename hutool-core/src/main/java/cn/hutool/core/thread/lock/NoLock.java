@@ -38,7 +38,7 @@ public class NoLock implements Lock{
 	@SuppressWarnings("NullableProblems")
 	@Override
 	public Condition newCondition() {
-		return null;
+		throw new UnsupportedOperationException("NoLock`s newCondition method is unsupported");
 	}
 
 }

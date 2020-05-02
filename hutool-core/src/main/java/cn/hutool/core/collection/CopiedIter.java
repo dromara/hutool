@@ -24,7 +24,7 @@ import java.util.List;
 public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Iterator<E> listIterator;
+	private final Iterator<E> listIterator;
 	
 	public static <V> CopiedIter<V> copyOf(Iterator<V> iterator){
 		return new CopiedIter<>(iterator);

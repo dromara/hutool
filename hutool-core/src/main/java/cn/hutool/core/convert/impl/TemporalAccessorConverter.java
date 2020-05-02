@@ -4,6 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ import java.util.Objects;
 public class TemporalAccessorConverter extends AbstractConverter<TemporalAccessor> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<?> targetType;
+	private final Class<?> targetType;
 	/**
 	 * 日期格式化
 	 */
@@ -107,6 +108,10 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return 日期对象
 	 */
 	private TemporalAccessor parseFromCharSequence(CharSequence value) {
+		if(StrUtil.isBlank(value)){
+			return null;
+		}
+
 		final Instant instant;
 		ZoneId zoneId;
 		if (null != this.format) {

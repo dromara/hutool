@@ -24,7 +24,7 @@ public abstract class LogFactory {
 	/**
 	 * 日志对象缓存
 	 */
-	private Map<Object, Log> logCache;
+	private final Map<Object, Log> logCache;
 
 	/**
 	 * 构造

@@ -125,6 +125,14 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void parseStringTest4() {
+		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals(new Integer(0), json.getInt("ok"));
+		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+	}
+
+	@Test
 	@Ignore
 	public void parseStringWithBomTest() {
 		String jsonStr = FileUtil.readUtf8String("f:/test/jsontest.txt");
@@ -132,6 +140,15 @@ public class JSONObjectTest {
 		JSONObject json2 = JSONUtil.parseObj(json);
 		Console.log(json);
 		Console.log(json2);
+	}
+
+	@Test
+	public void parseStringWithSlashTest() {
+		//在5.3.2之前，</div>中的/会被转义，修复此bug的单元测试
+		String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals("<div>aaa</div>", json.get("a"));
+		Assert.assertEquals(jsonStr, json.toString());
 	}
 
 	@Test
@@ -186,12 +203,11 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void toBeanTest3() {
+	public void toBeanWithNullTest() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
+		Console.log(JSONUtil.parseObj(jsonStr));
 		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
-		String password = user.getData().get("password");
 		Assert.assertTrue(user.getData().containsKey("password"));
-		Assert.assertNull(password);
 	}
 
 	@Test

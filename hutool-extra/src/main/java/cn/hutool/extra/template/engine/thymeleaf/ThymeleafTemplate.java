@@ -1,21 +1,20 @@
 package cn.hutool.extra.template.engine.thymeleaf;
 
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.Locale;
-import java.util.Map;
-
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.template.AbstractTemplate;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Thymeleaf模板实现
@@ -26,9 +25,9 @@ import cn.hutool.extra.template.AbstractTemplate;
 public class ThymeleafTemplate extends AbstractTemplate implements Serializable {
 	private static final long serialVersionUID = 781284916568562509L;
 
-	private TemplateEngine engine;
-	private String template;
-	private Charset charset;
+	private final TemplateEngine engine;
+	private final String template;
+	private final Charset charset;
 
 	/**
 	 * 包装Thymeleaf模板

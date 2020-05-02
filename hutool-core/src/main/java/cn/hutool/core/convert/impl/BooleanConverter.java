@@ -13,11 +13,8 @@ public class BooleanConverter extends AbstractConverter<Boolean>{
 
 	@Override
 	protected Boolean convertInternal(Object value) {
-		if(boolean.class == value.getClass()){
-			return Boolean.valueOf((boolean)value);
-		}
-		String valueStr = convertToStr(value);
-		return Boolean.valueOf(BooleanUtil.toBoolean(valueStr));
+		//Object不可能出现Primitive类型，故忽略
+		return BooleanUtil.toBoolean(convertToStr(value));
 	}
 
 }

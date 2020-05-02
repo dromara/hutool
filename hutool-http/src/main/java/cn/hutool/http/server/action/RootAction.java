@@ -19,7 +19,7 @@ public class RootAction implements Action {
 	public static final String DEFAULT_INDEX_FILE_NAME = "index.html";
 
 	private final String rootDir;
-	private List<String> indexFileNames;
+	private final List<String> indexFileNames;
 
 	/**
 	 * 构造

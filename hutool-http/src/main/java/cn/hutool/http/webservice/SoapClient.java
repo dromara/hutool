@@ -1,11 +1,15 @@
 package cn.hutool.http.webservice;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.XmlUtil;
+import cn.hutool.http.HttpGlobalConfig;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -18,17 +22,12 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * SOAP客户端
@@ -91,7 +90,7 @@ public class SoapClient {
 	/**
 	 * 应用于方法上的命名空间URI
 	 */
-	private String namespaceURI;
+	private final String namespaceURI;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议

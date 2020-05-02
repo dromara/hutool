@@ -2207,7 +2207,7 @@ public class StrUtil {
 		if (ignoreCase) {
 			return str1.toString().equalsIgnoreCase(str2.toString());
 		} else {
-			return str1.equals(str2);
+			return str1.toString().contentEquals(str2);
 		}
 	}
 
@@ -2385,8 +2385,12 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将对象转为字符串<br>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
+	 * 将对象转为字符串
+	 *
+	 * <pre>
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+	 * 2、对象数组会调用Arrays.toString方法
+	 * </pre>
 	 *
 	 * @param obj         对象
 	 * @param charsetName 字符集
@@ -2397,8 +2401,11 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将对象转为字符串<br>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
+	 * 将对象转为字符串
+	 * <pre>
+	 * 	 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+	 * 	 2、对象数组会调用Arrays.toString方法
+	 * </pre>
 	 *
 	 * @param obj     对象
 	 * @param charset 字符集

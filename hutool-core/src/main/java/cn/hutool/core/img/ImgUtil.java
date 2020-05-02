@@ -10,6 +10,7 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -1291,28 +1292,65 @@ public class ImgUtil {
 	 *
 	 * @param str             文字
 	 * @param font            字体{@link Font}
-	 * @param backgroundColor 背景颜色
-	 * @param fontColor       字体颜色
+	 * @param backgroundColor 背景颜色，默认透明
+	 * @param fontColor       字体颜色，默认黑色
 	 * @param out             图片输出地
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws IORuntimeException {
+		writePng(createImage(str, font, backgroundColor, fontColor, BufferedImage.TYPE_INT_ARGB), out);
+	}
+
+	/**
+	 * 根据文字创建图片
+	 *
+	 * @param str             文字
+	 * @param font            字体{@link Font}
+	 * @param backgroundColor 背景颜色，默认透明
+	 * @param fontColor       字体颜色，默认黑色
+	 * @param imageType 图片类型，见：{@link BufferedImage}
+	 * @return 图片
+	 * @throws IORuntimeException IO异常
+	 */
+	public static BufferedImage createImage(String str, Font font, Color backgroundColor, Color fontColor, int imageType) throws IORuntimeException {
 		// 获取font的样式应用在str上的整个矩形
-		Rectangle2D r = font.getStringBounds(str, new FontRenderContext(AffineTransform.getScaleInstance(1, 1), false, false));
-		int unitHeight = (int) Math.floor(r.getHeight());// 获取单个字符的高度
+		final Rectangle2D r = getRectangle(str, font);
+		// 获取单个字符的高度
+		int unitHeight = (int) Math.floor(r.getHeight());
 		// 获取整个str用了font样式的宽度这里用四舍五入后+1保证宽度绝对能容纳这个字符串作为图片的宽度
 		int width = (int) Math.round(r.getWidth()) + 1;
-		int height = unitHeight + 3;// 把单个字符的高度+3保证高度绝对能容纳字符串作为图片的高度
+		// 把单个字符的高度+3保证高度绝对能容纳字符串作为图片的高度
+		int height = unitHeight + 3;
+
 		// 创建图片
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-		Graphics g = image.getGraphics();
-		g.setColor(backgroundColor);
-		g.fillRect(0, 0, width, height);// 先用背景色填充整张图片,也就是背景
-		g.setColor(fontColor);
+		final BufferedImage image = new BufferedImage(width, height, imageType);
+		final Graphics g = image.getGraphics();
+		if (null != backgroundColor) {
+			// 先用背景色填充整张图片,也就是背景
+			g.setColor(backgroundColor);
+			g.fillRect(0, 0, width, height);
+		}
+		g.setColor(ObjectUtil.defaultIfNull(fontColor, Color.BLACK));
 		g.setFont(font);// 设置画笔字体
 		g.drawString(str, 0, font.getSize());// 画出字符串
 		g.dispose();
-		writePng(image, out);
+
+		return image;
+	}
+
+	/**
+	 * 获取font的样式应用在str上的整个矩形
+	 *
+	 * @param str 字符串，必须非空
+	 * @param font 字体，必须非空
+	 * @return {@link Rectangle2D}
+	 * @since 5.3.3
+	 */
+	public static Rectangle2D getRectangle(String str, Font font) {
+		return font.getStringBounds(str,
+				new FontRenderContext(AffineTransform.getScaleInstance(1, 1),
+						false,
+						false));
 	}
 
 	/**

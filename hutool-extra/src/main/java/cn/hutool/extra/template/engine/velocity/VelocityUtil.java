@@ -37,7 +37,7 @@ public class VelocityUtil {
 	/**
 	 * 全局上下文，当设定值时，对于每个模板都有效
 	 */
-	private static Map<String, Object> globalContext = new HashMap<>();
+	private static final Map<String, Object> globalContext = new HashMap<>();
 
 	/**
 	 * 设置Velocity全局上下文<br>

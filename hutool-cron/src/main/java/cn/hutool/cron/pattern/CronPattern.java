@@ -1,11 +1,5 @@
 package cn.hutool.cron.pattern;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
@@ -21,6 +15,12 @@ import cn.hutool.cron.pattern.parser.MonthValueParser;
 import cn.hutool.cron.pattern.parser.SecondValueParser;
 import cn.hutool.cron.pattern.parser.ValueParser;
 import cn.hutool.cron.pattern.parser.YearValueParser;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * 定时任务表达式<br>
@@ -90,22 +90,22 @@ public class CronPattern {
 	private static final ValueParser DAY_OF_WEEK_VALUE_PARSER = new DayOfWeekValueParser();
 	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
 
-	private String pattern;
+	private final String pattern;
 
 	/** 秒字段匹配列表 */
-	private List<ValueMatcher> secondMatchers = new ArrayList<>();
+	private final List<ValueMatcher> secondMatchers = new ArrayList<>();
 	/** 分字段匹配列表 */
-	private List<ValueMatcher> minuteMatchers = new ArrayList<>();
+	private final List<ValueMatcher> minuteMatchers = new ArrayList<>();
 	/** 时字段匹配列表 */
-	private List<ValueMatcher> hourMatchers = new ArrayList<>();
+	private final List<ValueMatcher> hourMatchers = new ArrayList<>();
 	/** 每月几号字段匹配列表 */
-	private List<ValueMatcher> dayOfMonthMatchers = new ArrayList<>();
+	private final List<ValueMatcher> dayOfMonthMatchers = new ArrayList<>();
 	/** 月字段匹配列表 */
-	private List<ValueMatcher> monthMatchers = new ArrayList<>();
+	private final List<ValueMatcher> monthMatchers = new ArrayList<>();
 	/** 星期字段匹配列表 */
-	private List<ValueMatcher> dayOfWeekMatchers = new ArrayList<>();
+	private final List<ValueMatcher> dayOfWeekMatchers = new ArrayList<>();
 	/** 年字段匹配列表 */
-	private List<ValueMatcher> yearMatchers = new ArrayList<>();
+	private final List<ValueMatcher> yearMatchers = new ArrayList<>();
 	/** 匹配器个数，取决于复合任务表达式中的单一表达式个数 */
 	private int matcherSize;
 
