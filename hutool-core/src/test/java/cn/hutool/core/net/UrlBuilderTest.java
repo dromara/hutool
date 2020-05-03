@@ -1,5 +1,6 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
@@ -187,5 +188,14 @@ public class UrlBuilderTest {
 				"&sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7",
 				builder.toString());
+	}
+
+	@Test
+	public void endWithSlashTest(){
+		// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
+		final String today = DateUtil.date().toString("yyyyMMdd");
+		final String getWorkDayUrl = "https://tool.bitefu.net/jiari/?info=1&d=" + today;
+		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(getWorkDayUrl, builder.toString());
 	}
 }
