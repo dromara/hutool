@@ -99,6 +99,7 @@ public class SpringUtil implements ApplicationContextAware {
 	 * 获取配置文件配置项的值
 	 *
 	 * @param key 配置项key
+	 * @return 属性值
 	 * @since 5.3.3
 	 */
 	public static String getProperty(String key) {
