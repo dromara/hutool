@@ -752,6 +752,18 @@ public class NumberUtil {
 		return v1.divide(v2, scale, roundingMode);
 	}
 
+	/**
+	 * 补充Math.ceilDiv() JDK8中添加了和Math.floorDiv()但却没有ceilDiv()
+	 *
+	 * @param v1           被除数
+	 * @param v2           除数
+	 * @return 两个参数的商
+	 * @since 5.3.3
+	 */
+	public static int ceilDiv(int v1, int v2) {
+		return (int)Math.ceil((double)v1 / v2);
+	}
+
 	// ------------------------------------------------------------------------------------------- round
 
 	/**
