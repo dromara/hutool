@@ -23,6 +23,7 @@
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
 * 【core   】     修复URLBuilder中路径以`/`结尾导致的问题（issue#I1G44J@Gitee）
 * 【db     】     修复SqlBuilder中orderBy无效问题（issue#856@Github）
+* 【core   】     修复StrUtil.subBetweenAll错误问题（issue#861@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
