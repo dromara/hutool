@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -30,11 +31,26 @@ public final class Singleton {
 	 * @param params 构造方法参数
 	 * @return 单例对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T get(Class<T> clazz, Object... params) {
 		Assert.notNull(clazz, "Class must be not null !");
 		final String key = buildKey(clazz.getName(), params);
-		return (T) POOL.get(key, () -> ReflectUtil.newInstance(clazz, params));
+		return get(key, () -> ReflectUtil.newInstance(clazz, params));
+	}
+
+	/**
+	 * 获得指定类的单例对象<br>
+	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
+	 * 注意：单例针对的是类和对象，因此get方法第一次调用时创建的对象始终唯一，也就是说就算参数变更，返回的依旧是第一次创建的对象
+	 *
+	 * @param <T>      单例对象类型
+	 * @param key      自定义键
+	 * @param supplier 单例对象的创建函数
+	 * @return 单例对象
+	 * @since 5.3.3
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T get(String key, Func0<T> supplier) {
+		return (T) POOL.get(key, supplier::call);
 	}
 
 	/**
@@ -60,7 +76,18 @@ public final class Singleton {
 	 */
 	public static void put(Object obj) {
 		Assert.notNull(obj, "Bean object must be not null !");
-		POOL.put(obj.getClass().getName(), obj);
+		put(obj.getClass().getName(), obj);
+	}
+
+	/**
+	 * 将已有对象放入单例中，其Class做为键
+	 *
+	 * @param key 键
+	 * @param obj 对象
+	 * @since 5.3.3
+	 */
+	public static void put(String key, Object obj) {
+		POOL.put(key, obj);
 	}
 
 	/**
@@ -70,8 +97,17 @@ public final class Singleton {
 	 */
 	public static void remove(Class<?> clazz) {
 		if (null != clazz) {
-			POOL.remove(clazz.getName());
+			remove(clazz.getName());
 		}
+	}
+
+	/**
+	 * 移除指定Singleton对象
+	 *
+	 * @param key 键
+	 */
+	public static void remove(String key) {
+		POOL.remove(key);
 	}
 
 	/**

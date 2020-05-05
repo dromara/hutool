@@ -839,6 +839,27 @@ public class ArrayUtil {
 	}
 
 	/**
+	 * 编辑数组<br>
+	 * 编辑过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 *
+	 * <pre>
+	 * 1、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 *
+	 * 注意：此方法会修改原数组！
+	 *
+	 * @param <T> 数组元素类型
+	 * @param array 数组
+	 * @param editor 编辑器接口
+	 * @since 5.3.3
+	 */
+	public static <T> void edit(T[] array, Editor<T> editor) {
+		for(int i = 0; i < array.length; i++){
+			array[i] = editor.edit(array[i]);
+		}
+	}
+
+	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
@@ -2407,6 +2428,39 @@ public class ArrayUtil {
 				sb.append(IterUtil.join((Iterator<?>) item, conjunction, prefix, suffix));
 			} else {
 				sb.append(StrUtil.wrap(StrUtil.toString(item), prefix, suffix));
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 *
+	 * @param <T> 被处理的集合
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @param editor 每个元素的编辑器，null表示不编辑
+	 * @return 连接后的字符串
+	 * @since 5.3.3
+	 */
+	public static <T> String join(T[] array, CharSequence conjunction, Editor<T> editor) {
+		if (null == array) {
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (T item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			if(null != editor){
+				item = editor.edit(item);
+			}
+			if(null != item){
+				sb.append(StrUtil.toString(item));
 			}
 		}
 		return sb.toString();

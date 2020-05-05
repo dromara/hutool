@@ -17,6 +17,7 @@
 * 【core   】     增加FastStringWriter
 * 【core   】     增加NumberUtil.ceilDiv方法（pr#858@Github）
 * 【core   】     IdcardUtil增加省份校验（issue#859@Github）
+* 【extra  】     TemplateFactory和TokenizerFactory增加单例的get方法
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
