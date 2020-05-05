@@ -37,11 +37,11 @@ public class PinyinUtil {
 	/**
 	 * 如果c为汉字，则返回大写拼音；如果c不是汉字，则返回String.valueOf(c)
 	 *
-	 * @param c             任意字符，汉族返回拼音，非汉字原样返回
+	 * @param c             任意字符，汉字返回拼音，非汉字原样返回
 	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(char c, boolean isToUpperCase) {
+	public static String getPinyin(char c, boolean isToUpperCase) {
 		final String pinyin = Pinyin.toPinyin(c);
 		return isToUpperCase ? pinyin : pinyin.toLowerCase();
 	}
@@ -49,24 +49,39 @@ public class PinyinUtil {
 	/**
 	 * 将输入字符串转为拼音，每个字之间的拼音使用空格分隔
 	 *
-	 * @param str           任意字符，汉族返回拼音，非汉字原样返回
+	 * @param str           任意字符，汉字返回拼音，非汉字原样返回
 	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(String str, boolean isToUpperCase) {
-		return toPinyin(str, " ", isToUpperCase);
+	public static String getPinyin(String str, boolean isToUpperCase) {
+		return getPinyin(str, " ", isToUpperCase);
 	}
 
 	/**
 	 * 将输入字符串转为拼音，以字符为单位插入分隔符
 	 *
-	 * @param str           任意字符，汉族返回拼音，非汉字原样返回
+	 * @param str           任意字符，汉字返回拼音，非汉字原样返回
 	 * @param separator     每个字拼音之间的分隔符
 	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(String str, String separator, boolean isToUpperCase) {
+	public static String getPinyin(String str, String separator, boolean isToUpperCase) {
 		final String pinyin = Pinyin.toPinyin(str, separator);
 		return isToUpperCase ? pinyin : pinyin.toLowerCase();
+	}
+
+	/**
+	 * 将输入字符串转为拼音首字母，其它字符原样返回
+	 *
+	 * @param str           任意字符，汉字返回拼音，非汉字原样返回
+	 * @param isToUpperCase 是否转换为大写
+	 * @return 汉字返回拼音，非汉字原样返回
+	 */
+	public static char[] getFirstLetter(String str, boolean isToUpperCase) {
+		final char[] result = new char[str.length()];
+		for(int i=0; i < result.length; i++){
+			result[i] = getPinyin(str.charAt(i), isToUpperCase).charAt(0);
+		}
+		return result;
 	}
 }
