@@ -26,6 +26,7 @@ build/
 *.diff
 *.patch
 *.tmp
+.jython_cache/
 
 # system ignore
 .DS_Store
