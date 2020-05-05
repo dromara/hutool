@@ -19,7 +19,7 @@ import java.util.Map;
 public class HttpUtilTest {
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void postTest() {
 		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
 		Console.log(result);

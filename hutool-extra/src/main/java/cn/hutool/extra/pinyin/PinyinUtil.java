@@ -20,7 +20,6 @@ import com.github.promeg.pinyinhelper.Pinyin;
  *     &lt;version&gt;2.0.3.RELEASE&lt;/version&gt;
  * &lt;/dependency&gt;
  * </pre>
- * </p>
  *
  * @author looly
  */

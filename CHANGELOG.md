@@ -15,6 +15,7 @@
 * 【bloomFilter】 避免布隆过滤器数字溢出（pr#119@Gitee）
 * 【core   】     增加IoUtil.writeObj（issue#I1FZIE）
 * 【core   】     增加FastStringWriter
+* 【core   】     增加NumberUtil.ceilDiv方法（pr#858@Github）
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
