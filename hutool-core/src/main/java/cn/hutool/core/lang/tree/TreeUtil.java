@@ -134,6 +134,11 @@ public class TreeUtil {
 			return node;
 		}
 
+		//fix NPE
+		if(null == node.getChildren()) {
+			return null;
+		}
+		
 		// 查找子节点
 		Tree<T> childNode;
 		for (Tree<T> child : node.getChildren()) {
