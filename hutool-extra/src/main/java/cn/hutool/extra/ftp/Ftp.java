@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,13 +156,9 @@ public class Ftp extends AbstractFtp {
 		client.setControlEncoding(config.getCharset().toString());
 		client.setConnectTimeout((int) config.getConnectionTimeout());
 		try {
-			client.setSoTimeout((int)config.getSoTimeout());
-		} catch (SocketException e) {
-			//ignore
-		}
-		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
+			client.setSoTimeout((int)config.getSoTimeout());
 			// 登录ftp服务器
 			client.login(config.getUser(), config.getPassword());
 		} catch (IOException e) {
