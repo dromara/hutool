@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.3.3-SNAPSHOT</version>
+		<version>5.3.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -218,6 +218,18 @@
 			<groupId>io.github.biezhi</groupId>
 			<artifactId>TinyPinyin</artifactId>
 			<version>2.0.3.RELEASE</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.1</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.github.stuxuhai</groupId>
+			<artifactId>jpinyin</artifactId>
+			<version>1.1.8</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

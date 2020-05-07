@@ -6,14 +6,20 @@ import org.junit.Test;
 public class PinyinUtilTest {
 
 	@Test
-	public void toPinyinTest(){
-		final String pinyin = PinyinUtil.toPinyin("你好", false);
+	public void getPinyinTest(){
+		final String pinyin = PinyinUtil.getPinyin("你好", " ");
 		Assert.assertEquals("ni hao", pinyin);
 	}
 
 	@Test
-	public void toPinyinUpperCaseTest(){
-		final String pinyin = PinyinUtil.toPinyin("你好怡", true);
-		Assert.assertEquals("NI HAO YI", pinyin);
+	public void getPinyinUpperCaseTest(){
+		final String pinyin = PinyinUtil.getPinyin("你好怡", " ");
+		Assert.assertEquals("ni hao yi", pinyin);
+	}
+
+	@Test
+	public void getFirstLetterTest(){
+		final String result = PinyinUtil.getFirstLetter("H是第一个", ", ");
+		Assert.assertEquals("h, s, d, y, g", result);
 	}
 }

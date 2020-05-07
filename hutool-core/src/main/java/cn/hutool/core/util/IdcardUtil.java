@@ -218,6 +218,12 @@ public class IdcardUtil {
 			return false;
 		}
 
+		// 省份
+		final String proCode = idCard.substring(0, 2);
+		if (null == CITY_CODES.get(proCode)) {
+			return false;
+		}
+
 		//校验生日
 		if (false == Validator.isBirthday(idCard.substring(6, 14))) {
 			return false;

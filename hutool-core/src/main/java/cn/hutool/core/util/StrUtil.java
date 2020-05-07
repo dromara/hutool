@@ -1510,7 +1510,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 切分字符串
+	 * 切分字符串，如果分隔符不存在则返回原字符串
 	 *
 	 * @param str       被切分的字符串
 	 * @param separator 分隔符
@@ -1976,11 +1976,14 @@ public class StrUtil {
 	 * @since 5.2.5
 	 */
 	public static String[] subBetweenAll(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		if (hasEmpty(str, prefix, suffix)) {
+		if (hasEmpty(str, prefix, suffix) ||
+				// 不包含起始字符串，则肯定没有子串
+				false == contains(str, prefix)) {
 			return new String[0];
 		}
 
 		final List<String> result = new LinkedList<>();
+		final String[] split = split(str, prefix);
 		for (String fragment : split(str, prefix)) {
 			int suffixIndex = fragment.indexOf(suffix.toString());
 			if (suffixIndex > 0) {

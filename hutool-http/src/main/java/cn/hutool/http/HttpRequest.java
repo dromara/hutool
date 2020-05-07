@@ -878,7 +878,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest setSSLProtocol(String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
 		try {
-			this.ssf = SSLSocketFactoryBuilder.create().setProtocol(protocol).build();
+			setSSLSocketFactory(SSLSocketFactoryBuilder.create().setProtocol(protocol).build());
 		} catch (Exception e) {
 			throw new HttpException(e);
 		}

@@ -3,7 +3,15 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.3 (2020-04-29)
+## 5.3.4 (2020-05-06)
+
+### 新特性
+
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.3 (2020-05-05)
 
 ### 新特性
 * 【core   】     ImgUtil.createImage支持背景透明（issue#851@Github）
@@ -15,10 +23,15 @@
 * 【bloomFilter】 避免布隆过滤器数字溢出（pr#119@Gitee）
 * 【core   】     增加IoUtil.writeObj（issue#I1FZIE）
 * 【core   】     增加FastStringWriter
+* 【core   】     增加NumberUtil.ceilDiv方法（pr#858@Github）
+* 【core   】     IdcardUtil增加省份校验（issue#859@Github）
+* 【extra  】     TemplateFactory和TokenizerFactory增加单例的get方法
 
 ### Bug修复
 * 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
+* 【core   】     修复URLBuilder中路径以`/`结尾导致的问题（issue#I1G44J@Gitee）
 * 【db     】     修复SqlBuilder中orderBy无效问题（issue#856@Github）
+* 【core   】     修复StrUtil.subBetweenAll错误问题（issue#861@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

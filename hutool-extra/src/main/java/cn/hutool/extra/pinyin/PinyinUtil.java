@@ -1,73 +1,85 @@
 package cn.hutool.extra.pinyin;
 
-import com.github.promeg.pinyinhelper.Pinyin;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.pinyin.engine.PinyinFactory;
 
 /**
- * 拼音工具类，封装了TinyPinyin
- *
- * <p>
- * TinyPinyin(https://github.com/promeG/TinyPinyin)提供者未提交Maven中央库，<br>
- * 因此使用
- * https://github.com/biezhi/TinyPinyin打包的版本
- * </p>
- *
- * <p>
- * 引入：
- * <pre>
- * &lt;dependency&gt;
- *     &lt;groupId&gt;io.github.biezhi&lt;/groupId&gt;
- *     &lt;artifactId&gt;TinyPinyin&lt;/artifactId&gt;
- *     &lt;version&gt;2.0.3.RELEASE&lt;/version&gt;
- * &lt;/dependency&gt;
- * </pre>
- * </p>
+ * 拼音工具类，封装了TinyPinyin、JPinyin、Pinyin4j，通过SPI自动识别。
  *
  * @author looly
  */
 public class PinyinUtil {
 
+	private static final String CHINESE_REGEX = "[\\u4e00-\\u9fa5]";
+
 	/**
-	 * 自定义拼音全局配置，例如加入自定义字典等
+	 * 获得全局单例的拼音引擎
 	 *
-	 * @param config 配置，通过Pinyin.newConfig().with(dict)添加字典
+	 * @return 全局单例的拼音引擎
 	 */
-	public static void init(Pinyin.Config config) {
-		Pinyin.init(config);
+	public static PinyinEngine getEngine(){
+		return PinyinFactory.get();
 	}
 
 	/**
 	 * 如果c为汉字，则返回大写拼音；如果c不是汉字，则返回String.valueOf(c)
 	 *
-	 * @param c             任意字符，汉族返回拼音，非汉字原样返回
-	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @param c 任意字符，汉字返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(char c, boolean isToUpperCase) {
-		final String pinyin = Pinyin.toPinyin(c);
-		return isToUpperCase ? pinyin : pinyin.toLowerCase();
+	public static String getPinyin(char c) {
+		return getEngine().getPinyin(c);
 	}
 
 	/**
 	 * 将输入字符串转为拼音，每个字之间的拼音使用空格分隔
 	 *
-	 * @param str           任意字符，汉族返回拼音，非汉字原样返回
-	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @param str 任意字符，汉字返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(String str, boolean isToUpperCase) {
-		return toPinyin(str, " ", isToUpperCase);
+	public static String getPinyin(String str) {
+		return getPinyin(str, StrUtil.SPACE);
 	}
 
 	/**
 	 * 将输入字符串转为拼音，以字符为单位插入分隔符
 	 *
-	 * @param str           任意字符，汉族返回拼音，非汉字原样返回
-	 * @param separator     每个字拼音之间的分隔符
-	 * @param isToUpperCase 是否转换为大写
-	 * @return 汉族返回拼音，非汉字原样返回
+	 * @param str       任意字符，汉字返回拼音，非汉字原样返回
+	 * @param separator 每个字拼音之间的分隔符
+	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String toPinyin(String str, String separator, boolean isToUpperCase) {
-		final String pinyin = Pinyin.toPinyin(str, separator);
-		return isToUpperCase ? pinyin : pinyin.toLowerCase();
+	public static String getPinyin(String str, String separator) {
+		return getEngine().getPinyin(str, separator);
+	}
+
+	/**
+	 * 将输入字符串转为拼音首字母，其它字符原样返回
+	 *
+	 * @param c 任意字符，汉字返回拼音，非汉字原样返回
+	 * @return 汉字返回拼音，非汉字原样返回
+	 */
+	public static char getFirstLetter(char c) {
+		return getEngine().getFirstLetter(c);
+	}
+
+	/**
+	 * 将输入字符串转为拼音首字母，其它字符原样返回
+	 *
+	 * @param str       任意字符，汉字返回拼音，非汉字原样返回
+	 * @param separator 分隔符
+	 * @return 汉字返回拼音，非汉字原样返回
+	 */
+	public static String getFirstLetter(String str, String separator) {
+		return getEngine().getFirstLetter(str, separator);
+	}
+
+	/**
+	 * 是否为中文字符
+	 *
+	 * @param c 字符
+	 * @return 是否为中文字符
+	 */
+	public static boolean isChinese(char c) {
+		return '〇' == c || String.valueOf(c).matches(CHINESE_REGEX);
 	}
 }

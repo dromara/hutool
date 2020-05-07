@@ -53,12 +53,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public Log getLog(String name) {
-		Log log = logCache.get(name);
-		if (null == log) {
-			log = createLog(name);
-			logCache.put(name, log);
-		}
-		return log;
+		return logCache.computeIfAbsent(name, o -> createLog((String)o));
 	}
 
 	/**
@@ -68,12 +63,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public Log getLog(Class<?> clazz) {
-		Log log = logCache.get(clazz);
-		if (null == log) {
-			log = createLog(clazz);
-			logCache.put(clazz, log);
-		}
-		return log;
+		return logCache.computeIfAbsent(clazz, o -> createLog((Class<?>)o));
 	}
 
 	/**

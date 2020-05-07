@@ -101,6 +101,11 @@ public class UrlPath {
 		if (StrUtil.isNotEmpty(path)) {
 			path = path.trim();
 
+			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
+			if(StrUtil.endWith(path, CharUtil.SLASH)){
+				this.withEngTag = true;
+			}
+
 			final StringTokenizer tokenizer = new StringTokenizer(path, "/");
 			while (tokenizer.hasMoreTokens()) {
 				add(URLUtil.decode(tokenizer.nextToken(), charset));

@@ -432,5 +432,18 @@ public class StrUtilTest {
 		Assert.assertArrayEquals(new String[0], StrUtil.subBetweenAll("abc",null,"z"));
 		Assert.assertArrayEquals(new String[0], StrUtil.subBetweenAll("abc","y",null));
 	}
+
+	@Test
+	public void subBetweenAllTest2() {
+		//issue#861@Github，起始不匹配的时候，应该直接空
+		String src1 = "/* \n* hutool  */  asdas  /* \n* hutool  */";
+		String src2 = "/ * hutool  */  asdas  / * hutool  */";
+
+		String[] results1 = StrUtil.subBetweenAll(src1,"/**","*/");
+		Assert.assertEquals(0, results1.length);
+
+		String[] results2 = StrUtil.subBetweenAll(src2,"/*","*/");
+		Assert.assertEquals(0, results2.length);
+	}
 	
 }

@@ -35,6 +35,8 @@ public class HOTP {
 
 	/**
 	 * 构造，使用默认密码长度和默认HMAC算法(HmacSHA1)
+	 *
+	 * @param key 共享密码，RFC 4226要求最少128位
 	 */
 	public HOTP(byte[] key) {
 		this(DEFAULT_PASSWORD_LENGTH, key);

@@ -14,7 +14,7 @@ import java.util.Objects;
 public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	private static final long serialVersionUID = -4158133823263496197L;
 
-	private final transient V defaultValue;
+	private final V defaultValue;
 
 	/**
 	 * 构造
@@ -83,11 +83,12 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		if (!super.equals(o)) {
+		if (false == super.equals(o)) {
 			return false;
 		}
-		TolerantMap<?, ?> that = (TolerantMap<?, ?>) o;
-		return getRaw().equals(that.getRaw()) && Objects.equals(defaultValue, that.defaultValue);
+		final TolerantMap<?, ?> that = (TolerantMap<?, ?>) o;
+		return getRaw().equals(that.getRaw())
+				&& Objects.equals(defaultValue, that.defaultValue);
 	}
 
 	@Override
