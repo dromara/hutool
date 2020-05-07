@@ -15,11 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -737,5 +739,31 @@ public class URLUtil {
 	 */
 	public static String buildQuery(Map<String, ?> paramMap, Charset charset) {
 		return UrlQuery.of(paramMap).build(charset);
+	}
+
+	/**
+	 * 获取指定URL对应资源的内容长度，对于Http，其长度使用Content-Length头决定。
+	 *
+	 * @param url URL
+	 * @return 内容长度，未知返回-1
+	 * @throws IORuntimeException IO异常
+	 * @since 5.3.4
+	 */
+	public static long getContentLength(URL url) throws IORuntimeException{
+		if(null == url){
+			return -1;
+		}
+		
+		URLConnection conn = null;
+		try {
+			conn = url.openConnection();
+			return conn.getContentLengthLong();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			if (conn instanceof HttpURLConnection) {
+				((HttpURLConnection)conn).disconnect();
+			}
+		}
 	}
 }
