@@ -3,20 +3,14 @@ package cn.hutool.core.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 数组工具类
@@ -3359,6 +3353,32 @@ public class ArrayUtil {
 	}
 
 	/**
+	 * 根据比较器 取最小值
+	 *
+	 * @param <T> 			元素类型
+	 * @param array 		对象数组
+	 * @param comparator 	比较器
+	 * @return 最小值
+	 * @since 5.3.4
+	 * @author dahuoyzs
+	 */
+	public static <T extends Comparable<? super T>> T min(T[] array, Comparator<T> comparator) {
+		if (isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
+		if (comparator==null){
+			return min(array);
+		}
+		T min = array[0];
+		for (T t : array) {
+			if (CompareUtil.compare(min, t,comparator) > 0) {
+				min = t;
+			}
+		}
+		return min;
+	}
+
+	/**
 	 * 取最小值
 	 * 
 	 * @param numberArray 数字数组
@@ -3514,6 +3534,32 @@ public class ArrayUtil {
 		for (int i = 1; i < numberArray.length; i++) {
 			if (ObjectUtil.compare(max, numberArray[i]) < 0) {
 				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 根据比较器 取最大值
+	 *
+	 * @param <T> 			元素类型
+	 * @param array 		对象数组
+	 * @param comparator 	比较器
+	 * @return 最大值
+	 * @since 5.3.4
+	 * @author dahuoyzs
+	 */
+	public static <T extends Comparable<? super T>> T max(T[] array, Comparator<T> comparator) {
+		if (isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
+		if (comparator==null){
+			return max(array);
+		}
+		T max = array[0];
+		for (int i = 1; i < array.length; i++) {
+			if (CompareUtil.compare(max, array[i],comparator) < 0) {
+				max = array[i];
 			}
 		}
 		return max;
