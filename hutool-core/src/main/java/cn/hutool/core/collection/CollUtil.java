@@ -307,7 +307,15 @@ public class CollUtil {
 	 * @since 4.5.12
 	 */
 	public static boolean containsAll(Collection<?> coll1, Collection<?> coll2) {
-		if (isEmpty(coll1) || isEmpty(coll2) || coll1.size() < coll2.size()) {
+		if(isEmpty(coll1)){
+			return isEmpty(coll2);
+		}
+
+		if(isEmpty(coll2)){
+			return true;
+		}
+
+		if (coll1.size() < coll2.size()) {
 			return false;
 		}
 

@@ -13,6 +13,8 @@
 * 【extra  】     修复Ftp设置超时问题（issue#I1GMTQ@Gitee）
 * 【core   】     修复TreeUtil根据id查找子节点时的NPE问题（pr#120@Gitee）
 * 【core   】     修复BeanUtil.copyProperties中Alias注解无效问题（issue#I1GK3M@Gitee）
+* 【core   】     修复CollUtil.containsAll空集合判断问题（issue#I1G9DE@Gitee）
+* 【core   】     修复XmlUtil.xmlToBean失败问题（issue#865@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

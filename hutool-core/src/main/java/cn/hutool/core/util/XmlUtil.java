@@ -835,7 +835,11 @@ public class XmlUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T xmlToBean(Node node, Class<T> bean) {
-		return BeanUtil.toBean(xmlToMap(node), bean);
+		final Map<String, Object> map = xmlToMap(node);
+		if(null != map && map.size() == 1){
+			return BeanUtil.toBean(map.get(bean.getSimpleName()), bean);
+		}
+		return BeanUtil.toBean(map, bean);
 	}
 
 	/**
@@ -1040,6 +1044,17 @@ public class XmlUtil {
 
 		appendMap(doc, root, data);
 		return doc;
+	}
+
+	/**
+	 * 将Bean转换为XML
+	 *
+	 * @param bean      Bean对象
+	 * @return XML
+	 * @since 5.3.4
+	 */
+	public static Document beanToXml(Object bean) {
+		return beanToXml(bean, null);
 	}
 
 	/**

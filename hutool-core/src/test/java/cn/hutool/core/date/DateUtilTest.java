@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -376,6 +377,14 @@ public class DateUtilTest {
 	public void parseTest7() {
 		String str = "2019-06-01T19:45:43.000 +0800";
 		DateTime dateTime = DateUtil.parse(str, "yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+	}
+
+	@Test
+	@Ignore
+	public void parseTest8() {
+		String str = "2020-04-24 9:00:00";
+		DateTime dateTime = DateUtil.parse(str);
 		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 

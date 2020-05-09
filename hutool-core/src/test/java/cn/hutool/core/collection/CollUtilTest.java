@@ -36,7 +36,6 @@ public class CollUtilTest {
 	@Test
 	public void isNotEmptyTest(){
 		Assert.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
-		;
 	}
 
 	@Test
@@ -589,8 +588,11 @@ public class CollUtilTest {
 	public void containsAllTest() {
 		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
 		ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1);
-
 		Assert.assertTrue(CollUtil.containsAll(list1, list2));
+
+		ArrayList<Integer> list3 = CollUtil.newArrayList(1);
+		ArrayList<Integer> list4 = CollUtil.newArrayList();
+		Assert.assertTrue(CollUtil.containsAll(list3, list4));
 	}
 
 	@Test

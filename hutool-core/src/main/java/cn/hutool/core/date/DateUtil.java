@@ -714,7 +714,14 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 格式yyyy-MM-dd HH:mm:ss
+	 * 解析日期时间字符串，格式支持：
+	 *
+	 * <pre>
+	 * yyyy-MM-dd HH:mm:ss
+	 * yyyy/MM/dd HH:mm:ss
+	 * yyyy.MM.dd HH:mm:ss
+	 * yyyy年MM月dd日 HH:mm:ss
+	 * </pre>
 	 *
 	 * @param dateString 标准形式的时间字符串
 	 * @return 日期对象
@@ -725,7 +732,13 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 解析格式为yyyy-MM-dd的日期，忽略时分秒
+	 * 解析日期字符串，忽略时分秒，支持的格式包括：
+	 * <pre>
+	 * yyyy-MM-dd
+	 * yyyy/MM/dd
+	 * yyyy.MM.dd
+	 * yyyy年MM月dd日
+	 * </pre>
 	 *
 	 * @param dateString 标准形式的日期字符串
 	 * @return 日期对象
