@@ -6,7 +6,9 @@ import cn.hutool.core.lang.Filter;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -161,6 +163,17 @@ public class ArrayUtilTest {
 
 		double maxDouble = ArrayUtil.max(1D, 2.4D, 13.0D, 4.55D, 5D);
 		Assert.assertEquals(13.0, maxDouble, 2);
+
+		BigDecimal one = new BigDecimal("1.00");
+		BigDecimal two = new BigDecimal("2.0");
+		BigDecimal three = new BigDecimal("3");
+		BigDecimal[] bigDecimals = {two,one,three};
+
+		BigDecimal minAccuracy = ArrayUtil.min(bigDecimals, Comparator.comparingInt(BigDecimal::scale));
+		Assert.assertEquals(minAccuracy,three);
+
+		BigDecimal maxAccuracy = ArrayUtil.max(bigDecimals,Comparator.comparingInt(BigDecimal::scale));
+		Assert.assertEquals(maxAccuracy,one);
 	}
 
 	@Test

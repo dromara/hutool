@@ -7,10 +7,12 @@
 
 ### 新特性
 * 【core   】     增加URLUtil.getContentLength方法（issue#I1GB1Z@Gitee）
+* 【extra  】     增加PinyinUtil（issue#I1GMIV@Gitee）
 
 ### Bug修复
-* 【extra  】     修复Ftp设置超时问题
-* 【extra  】     修复TreeUtil根据id查找子节点时的NPE问题（pr#120@Gitee）
+* 【extra  】     修复Ftp设置超时问题（issue#I1GMTQ@Gitee）
+* 【core   】     修复TreeUtil根据id查找子节点时的NPE问题（pr#120@Gitee）
+* 【core   】     修复BeanUtil.copyProperties中Alias注解无效问题（issue#I1GK3M@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

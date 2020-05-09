@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -3393,19 +3395,32 @@ public class ArrayUtil {
 	// ------------------------------------------------------------------------------------------------------------ min and max
 	/**
 	 * 取最小值
-	 * 
+	 *
 	 * @param <T> 元素类型
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+		return min(numberArray, null);
+	}
+
+	/**
+	 * 取最小值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @param comparator 比较器，null按照默认比较
+	 * @return 最小值
+	 * @since 5.3.4
+	 */
+	public static <T extends Comparable<? super T>> T min(T[] numberArray, Comparator<T> comparator) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
 		T min = numberArray[0];
 		for (T t : numberArray) {
-			if (ObjectUtil.compare(min, t) > 0) {
+			if (CompareUtil.compare(min, t, comparator) > 0) {
 				min = t;
 			}
 		}
@@ -3554,19 +3569,32 @@ public class ArrayUtil {
 
 	/**
 	 * 取最大值
-	 * 
+	 *
 	 * @param <T> 元素类型
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+		return max(numberArray, null);
+	}
+
+	/**
+	 * 取最大值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @param comparator 比较器，null表示默认比较器
+	 * @return 最大值
+	 * @since 5.3.4
+	 */
+	public static <T extends Comparable<? super T>> T max(T[] numberArray, Comparator<T> comparator) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
 		T max = numberArray[0];
 		for (int i = 1; i < numberArray.length; i++) {
-			if (ObjectUtil.compare(max, numberArray[i]) < 0) {
+			if (CompareUtil.compare(max, numberArray[i], comparator) < 0) {
 				max = numberArray[i];
 			}
 		}

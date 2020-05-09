@@ -5,12 +5,14 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -213,7 +215,7 @@ public class BeanUtilTest {
 	}
 
 	@Test
-	public void copyProperties() {
+	public void copyPropertiesTest() {
 		SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
@@ -331,9 +333,9 @@ public class BeanUtilTest {
 	}
 
 	@Test
-	public void beanToBeanTest(){
+	public void beanToBeanTest() {
 		// 修复对象无getter方法导致报错的问题
-		Page page1=new Page();
+		Page page1 = new Page();
 		BeanUtil.toBean(page1, Page.class);
 	}
 
@@ -348,5 +350,31 @@ public class BeanUtilTest {
 			this.optimizeCountSql = optimizeCountSql;
 			return this;
 		}
+	}
+
+	@Test
+	public void copyBeanToBeanTest() {
+		// 测试在copyProperties方法中alias是否有效
+		Food info = new Food();
+		info.setBookID("0");
+		info.setCode("123");
+		HllFoodEntity entity = new HllFoodEntity();
+		BeanUtil.copyProperties(info, entity);
+		Assert.assertEquals(info.getBookID(), entity.getBookId());
+		Assert.assertEquals(info.getCode(), entity.getCode2());
+	}
+
+	@Data
+	public static class Food {
+		@Alias("bookId")
+		private String bookID;
+		private String code;
+	}
+
+	@Data
+	public static class HllFoodEntity implements Serializable {
+		private String bookId;
+		@Alias("code")
+		private String code2;
 	}
 }

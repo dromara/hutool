@@ -149,7 +149,7 @@ public class ReflectUtil {
 		final Field[] fields = getFields(beanClass);
 		if (ArrayUtil.isNotEmpty(fields)) {
 			for (Field field : fields) {
-				if ((name.equals(field.getName()))) {
+				if ((name.equals(getFieldName(field)))) {
 					return field;
 				}
 			}

@@ -141,7 +141,7 @@ public class BeanDesc implements Serializable{
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
 			if(false == ModifierUtil.isStatic(field)) {
 				//只针对非static属性
-				this.propMap.put(field.getName(), createProp(field));
+				this.propMap.put(ReflectUtil.getFieldName(field), createProp(field));
 			}
 		}
 		return this;
