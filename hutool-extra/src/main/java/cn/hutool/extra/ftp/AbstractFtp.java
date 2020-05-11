@@ -154,6 +154,14 @@ public abstract class AbstractFtp implements Closeable {
 	 */
 	public abstract void download(String path, File outFile);
 
+	/**
+	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步), 服务器上有新文件会覆盖本地文件
+	 *
+	 * @param sourcePath      ftp服务器目录
+	 * @param destinationPath 本地目录
+	 */
+	public abstract void recursiveDownloadFolder(String sourcePath, String destinationPath) throws Exception;
+
 	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 是否包含指定字符串，忽略大小写

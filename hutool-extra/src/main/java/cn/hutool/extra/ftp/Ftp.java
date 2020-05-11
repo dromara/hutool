@@ -477,6 +477,35 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步)
+	 *
+	 * @param sourcePath      ftp服务器目录
+	 * @param destinationPath 本地目录
+	 */
+	@Override
+	public void recursiveDownloadFolder(String sourcePath, String destinationPath) {
+		String pathSeparator = "/";
+		FTPFile[] lsFiles = lsFiles(sourcePath);
+
+		for (FTPFile ftpFile : lsFiles) {
+			String sourcePathPathFile = sourcePath + pathSeparator + ftpFile.getName();
+			String destinationPathFile = destinationPath + pathSeparator + ftpFile.getName();
+
+			if (!ftpFile.isDirectory()) {
+				// 本地不存在文件或者ftp上文件有修改则下载
+				if (!FileUtil.exist(destinationPathFile)
+						|| (ftpFile.getTimestamp().getTimeInMillis() > FileUtil.lastModifiedTime(destinationPathFile).getTime())) {
+					// Download file from source (source filename, destination filename).
+					download(sourcePathPathFile, FileUtil.file(destinationPathFile));
+				}
+			} else if (!(".".equals(ftpFile.getName()) || "..".equals(ftpFile.getName()))) {
+				FileUtil.mkdir(destinationPathFile);
+				recursiveDownloadFolder(sourcePathPathFile, destinationPathFile);
+			}
+		}
+	}
+
+	/**
 	 * 下载文件
 	 *
 	 * @param path     文件路径

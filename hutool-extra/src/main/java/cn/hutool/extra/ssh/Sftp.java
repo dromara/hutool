@@ -22,12 +22,12 @@ import java.util.Vector;
  * SFTP是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。<br>
  * SFTP 为 SSH的一部份，是一种传输文件到服务器的安全方式。SFTP是使用加密传输认证信息和传输的数据，所以，使用SFTP是非常安全的。<br>
  * 但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多，如果您对网络安全性要求更高时，可以使用SFTP代替FTP。<br>
- * 
+ *
  * <p>
  * 此类为基于jsch的SFTP实现<br>
  * 参考：https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html
  * </p>
- * 
+ *
  * @author looly
  * @since 4.0.2
  */
@@ -39,7 +39,7 @@ public class Sftp extends AbstractFtp {
 	// ---------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param sshHost 远程主机
 	 * @param sshPort 远程主机端口
 	 * @param sshUser 远程主机用户名
@@ -51,7 +51,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param sshHost 远程主机
 	 * @param sshPort 远程主机端口
 	 * @param sshUser 远程主机用户名
@@ -76,7 +76,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param session {@link Session}
 	 */
 	public Sftp(Session session) {
@@ -85,7 +85,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param session {@link Session}
 	 * @param charset 编码
 	 * @since 4.1.14
@@ -97,7 +97,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param channel {@link ChannelSftp}
 	 * @param charset 编码
 	 */
@@ -109,7 +109,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param sshHost 远程主机
 	 * @param sshPort 远程主机端口
 	 * @param sshUser 远程主机用户名
@@ -141,7 +141,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param session {@link Session}
 	 * @param charset 编码
 	 */
@@ -152,7 +152,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param channel {@link ChannelSftp}
 	 * @param charset 编码
 	 */
@@ -176,7 +176,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 获取SFTP通道客户端
-	 * 
+	 *
 	 * @return 通道客户端
 	 * @since 4.1.14
 	 */
@@ -186,7 +186,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 远程当前目录
-	 * 
+	 *
 	 * @return 远程当前目录
 	 */
 	@Override
@@ -200,7 +200,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 获取HOME路径
-	 * 
+	 *
 	 * @return HOME路径
 	 * @since 4.0.5
 	 */
@@ -214,7 +214,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 遍历某个目录下所有文件或目录，不会递归遍历
-	 * 
+	 *
 	 * @param path 遍历某个目录下所有文件或目录
 	 * @return 目录或文件名列表
 	 * @since 4.0.5
@@ -226,7 +226,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 遍历某个目录下所有目录，不会递归遍历
-	 * 
+	 *
 	 * @param path 遍历某个目录下所有目录
 	 * @return 目录名列表
 	 * @since 4.0.5
@@ -237,7 +237,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 遍历某个目录下所有文件，不会递归遍历
-	 * 
+	 *
 	 * @param path 遍历某个目录下所有文件
 	 * @return 文件名列表
 	 * @since 4.0.5
@@ -248,7 +248,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 遍历某个目录下所有文件或目录，不会递归遍历
-	 * 
+	 *
 	 * @param path 遍历某个目录下所有文件或目录
 	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
 	 * @return 目录或文件名列表
@@ -287,7 +287,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 打开指定目录，如果指定路径非目录或不存在返回false
-	 * 
+	 *
 	 * @param directory directory
 	 * @return 是否打开目录
 	 */
@@ -307,7 +307,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 删除文件
-	 * 
+	 *
 	 * @param filePath 要删除的文件绝对路径
 	 */
 	@Override
@@ -322,7 +322,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 删除文件夹及其文件夹下的所有文件
-	 * 
+	 *
 	 * @param dirPath 文件夹路径
 	 * @return boolean 是否删除成功
 	 */
@@ -373,7 +373,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
-	 * 
+	 *
 	 * @param srcFilePath 本地文件路径
 	 * @param destPath 目标路径，
 	 * @return this
@@ -384,7 +384,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。
-	 * 
+	 *
 	 * @param srcFilePath 本地文件路径
 	 * @param destPath 目标路径，
 	 * @param mode {@link Mode} 模式
@@ -393,10 +393,10 @@ public class Sftp extends AbstractFtp {
 	public Sftp put(String srcFilePath, String destPath, Mode mode) {
 		return put(srcFilePath, destPath, null, mode);
 	}
-	
+
 	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。
-	 * 
+	 *
 	 * @param srcFilePath 本地文件路径
 	 * @param destPath 目标路径，
 	 * @param monitor 上传进度监控，通过实现此接口完成进度显示
@@ -419,8 +419,40 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
+	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步)
+	 *
+	 * @param sourcePath      ftp服务器目录
+	 * @param destinationPath 本地目录
+	 */
+	@Override
+	public void recursiveDownloadFolder(String sourcePath, String destinationPath) throws Exception {
+		String pathSeparator = "/";
+		Vector<ChannelSftp.LsEntry> fileAndFolderList = channel.ls(sourcePath);
+
+		//Iterate through list of folder content
+		for (ChannelSftp.LsEntry item : fileAndFolderList) {
+
+			String sourcePathPathFile = sourcePath + pathSeparator + item.getFilename();
+			String destinationPathFile = destinationPath + pathSeparator + item.getFilename();
+
+			if (!item.getAttrs().isDir()) {
+				// 本地不存在文件或者ftp上文件有修改则下载
+				if (!FileUtil.exist(destinationPathFile)
+						|| (item.getAttrs().getMTime() > (FileUtil.lastModifiedTime(destinationPathFile).getTime() / 1000))) {
+					// Download file from source (source filename, destination filename).
+					channel.get(sourcePathPathFile, destinationPathFile);
+				}
+			} else if (!(".".equals(item.getFilename()) || "..".equals(item.getFilename()))) {
+				FileUtil.mkdir(destinationPathFile);
+				recursiveDownloadFolder(sourcePathPathFile, destinationPathFile);
+			}
+		}
+
+	}
+
+	/**
 	 * 获取远程文件
-	 * 
+	 *
 	 * @param src 远程文件路径
 	 * @param dest 目标文件路径
 	 * @return this
@@ -451,7 +483,7 @@ public class Sftp extends AbstractFtp {
 
 	/**
 	 * JSch支持的三种文件传输模式
-	 * 
+	 *
 	 * @author looly
 	 *
 	 */
