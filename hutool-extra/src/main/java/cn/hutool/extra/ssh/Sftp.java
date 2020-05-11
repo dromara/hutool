@@ -1,5 +1,7 @@
 package cn.hutool.extra.ssh;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
@@ -37,6 +39,7 @@ public class Sftp extends AbstractFtp {
 	private ChannelSftp channel;
 
 	// ---------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 *
@@ -147,7 +150,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public void init(Session session, Charset charset) {
 		this.session = session;
-		init(JschUtil.openSftp(session, (int)this.ftpConfig.getConnectionTimeout()), charset);
+		init(JschUtil.openSftp(session, (int) this.ftpConfig.getConnectionTimeout()), charset);
 	}
 
 	/**
@@ -247,32 +250,62 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
-	 * 遍历某个目录下所有文件或目录，不会递归遍历
+	 * 遍历某个目录下所有文件或目录，不会递归遍历<br>
+	 * 此方法自动过滤"."和".."两种目录
 	 *
-	 * @param path 遍历某个目录下所有文件或目录
+	 * @param path   遍历某个目录下所有文件或目录
 	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
 	 * @return 目录或文件名列表
 	 * @since 4.0.5
 	 */
 	public List<String> ls(String path, final Filter<LsEntry> filter) {
-		final List<String> fileNames = new ArrayList<>();
+		final List<LsEntry> entries = lsEntries(path, filter);
+		if (CollUtil.isEmpty(entries)) {
+			return ListUtil.empty();
+		}
+		return CollUtil.map(entries, LsEntry::getFilename, true);
+	}
+
+	/**
+	 * 遍历某个目录下所有文件或目录，生成LsEntry列表，不会递归遍历<br>
+	 * 此方法自动过滤"."和".."两种目录
+	 *
+	 * @param path 遍历某个目录下所有文件或目录
+	 * @return 目录或文件名列表
+	 * @since 5.3.5
+	 */
+	public List<LsEntry> lsEntries(String path) {
+		return lsEntries(path, null);
+	}
+
+	/**
+	 * 遍历某个目录下所有文件或目录，生成LsEntry列表，不会递归遍历<br>
+	 * 此方法自动过滤"."和".."两种目录
+	 *
+	 * @param path   遍历某个目录下所有文件或目录
+	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
+	 * @return 目录或文件名列表
+	 * @since 5.3.5
+	 */
+	public List<LsEntry> lsEntries(String path, Filter<LsEntry> filter) {
+		final List<LsEntry> entryList = new ArrayList<>();
 		try {
 			channel.ls(path, entry -> {
-				String fileName = entry.getFilename();
+				final String fileName = entry.getFilename();
 				if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
 					if (null == filter || filter.accept(entry)) {
-						fileNames.add(entry.getFilename());
+						entryList.add(entry);
 					}
 				}
 				return LsEntrySelector.CONTINUE;
 			});
 		} catch (SftpException e) {
-			if(false == StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")){
+			if (false == StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")) {
 				throw new JschRuntimeException(e);
 			}
 			// 文件不存在忽略
 		}
-		return fileNames;
+		return entryList;
 	}
 
 	@Override
@@ -375,7 +408,7 @@ public class Sftp extends AbstractFtp {
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
 	 *
 	 * @param srcFilePath 本地文件路径
-	 * @param destPath 目标路径，
+	 * @param destPath    目标路径，
 	 * @return this
 	 */
 	public Sftp put(String srcFilePath, String destPath) {
@@ -386,8 +419,8 @@ public class Sftp extends AbstractFtp {
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。
 	 *
 	 * @param srcFilePath 本地文件路径
-	 * @param destPath 目标路径，
-	 * @param mode {@link Mode} 模式
+	 * @param destPath    目标路径，
+	 * @param mode        {@link Mode} 模式
 	 * @return this
 	 */
 	public Sftp put(String srcFilePath, String destPath, Mode mode) {
@@ -398,9 +431,9 @@ public class Sftp extends AbstractFtp {
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。
 	 *
 	 * @param srcFilePath 本地文件路径
-	 * @param destPath 目标路径，
-	 * @param monitor 上传进度监控，通过实现此接口完成进度显示
-	 * @param mode {@link Mode} 模式
+	 * @param destPath    目标路径，
+	 * @param monitor     上传进度监控，通过实现此接口完成进度显示
+	 * @param mode        {@link Mode} 模式
 	 * @return this
 	 * @since 4.6.5
 	 */
@@ -421,30 +454,29 @@ public class Sftp extends AbstractFtp {
 	/**
 	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步)
 	 *
-	 * @param sourcePath      ftp服务器目录
-	 * @param destinationPath 本地目录
+	 * @param sourcePath ftp服务器目录，必须为目录
+	 * @param destDir    本地目录
 	 */
 	@Override
-	public void recursiveDownloadFolder(String sourcePath, String destinationPath) throws Exception {
-		String pathSeparator = "/";
-		Vector<ChannelSftp.LsEntry> fileAndFolderList = channel.ls(sourcePath);
+	public void recursiveDownloadFolder(String sourcePath, File destDir) throws JschRuntimeException {
+		String fileName;
+		String srcFile;
+		File destFile;
+		for (LsEntry item : lsEntries(sourcePath)) {
+			fileName = item.getFilename();
+			srcFile = StrUtil.format("{}/{}", sourcePath, fileName);
+			destFile = FileUtil.file(destDir, fileName);
 
-		//Iterate through list of folder content
-		for (ChannelSftp.LsEntry item : fileAndFolderList) {
-
-			String sourcePathPathFile = sourcePath + pathSeparator + item.getFilename();
-			String destinationPathFile = destinationPath + pathSeparator + item.getFilename();
-
-			if (!item.getAttrs().isDir()) {
+			if (false == item.getAttrs().isDir()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (!FileUtil.exist(destinationPathFile)
-						|| (item.getAttrs().getMTime() > (FileUtil.lastModifiedTime(destinationPathFile).getTime() / 1000))) {
-					// Download file from source (source filename, destination filename).
-					channel.get(sourcePathPathFile, destinationPathFile);
+				if (false == FileUtil.exist(destFile)
+						|| (item.getAttrs().getMTime() > (destFile.lastModified() / 1000))) {
+					download(srcFile, destFile);
 				}
-			} else if (!(".".equals(item.getFilename()) || "..".equals(item.getFilename()))) {
-				FileUtil.mkdir(destinationPathFile);
-				recursiveDownloadFolder(sourcePathPathFile, destinationPathFile);
+			} else {
+				// 服务端依旧是目录，继续递归
+				FileUtil.mkdir(destFile);
+				recursiveDownloadFolder(srcFile, destFile);
 			}
 		}
 
@@ -453,7 +485,7 @@ public class Sftp extends AbstractFtp {
 	/**
 	 * 获取远程文件
 	 *
-	 * @param src 远程文件路径
+	 * @param src  远程文件路径
 	 * @param dest 目标文件路径
 	 * @return this
 	 */
@@ -485,14 +517,19 @@ public class Sftp extends AbstractFtp {
 	 * JSch支持的三种文件传输模式
 	 *
 	 * @author looly
-	 *
 	 */
 	public enum Mode {
-		/** 完全覆盖模式，这是JSch的默认文件传输模式，即如果目标文件已经存在，传输的文件将完全覆盖目标文件，产生新的文件。 */
+		/**
+		 * 完全覆盖模式，这是JSch的默认文件传输模式，即如果目标文件已经存在，传输的文件将完全覆盖目标文件，产生新的文件。
+		 */
 		OVERWRITE,
-		/** 恢复模式，如果文件已经传输一部分，这时由于网络或其他任何原因导致文件传输中断，如果下一次传输相同的文件，则会从上一次中断的地方续传。 */
+		/**
+		 * 恢复模式，如果文件已经传输一部分，这时由于网络或其他任何原因导致文件传输中断，如果下一次传输相同的文件，则会从上一次中断的地方续传。
+		 */
 		RESUME,
-		/** 追加模式，如果目标文件已存在，传输的文件将在目标文件后追加。 */
+		/**
+		 * 追加模式，如果目标文件已存在，传输的文件将在目标文件后追加。
+		 */
 		APPEND
 	}
 }

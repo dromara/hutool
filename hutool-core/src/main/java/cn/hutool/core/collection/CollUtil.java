@@ -49,6 +49,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.Function;
 
 /**
  * 集合相关工具类
@@ -1170,16 +1171,31 @@ public class CollUtil {
 	 * @param ignoreNull 是否忽略空值
 	 * @return 抽取后的新列表
 	 * @since 4.5.7
+	 * @see #map(Iterable, Function, boolean)
 	 */
 	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor, boolean ignoreNull) {
-		final List<Object> fieldValueList = new ArrayList<>();
+		return map(collection, editor::edit, ignoreNull);
+	}
+
+	/**
+	 * 通过func自定义一个规则，此规则将原集合中的元素转换成新的元素，生成新的列表返回<br>
+	 * 例如提供的是一个Bean列表，通过Function接口实现获取某个字段值，返回这个字段值组成的新列表
+	 *
+	 * @param collection 原集合
+	 * @param func       编辑函数
+	 * @param ignoreNull 是否忽略空值
+	 * @return 抽取后的新列表
+	 * @since 5.3.5
+	 */
+	public static <T, R> List<R> map(Iterable<T> collection, Function<T, R> func, boolean ignoreNull) {
+		final List<R> fieldValueList = new ArrayList<>();
 		if (null == collection) {
 			return fieldValueList;
 		}
 
-		Object value;
-		for (Object bean : collection) {
-			value = editor.edit(bean);
+		R value;
+		for (T bean : collection) {
+			value = func.apply(bean);
 			if (null == value && ignoreNull) {
 				continue;
 			}
@@ -1212,7 +1228,7 @@ public class CollUtil {
 	 * @since 4.5.7
 	 */
 	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName, boolean ignoreNull) {
-		return extract(collection, bean -> {
+		return map(collection, bean -> {
 			if (bean instanceof Map) {
 				return ((Map<?, ?>) bean).get(fieldName);
 			} else {

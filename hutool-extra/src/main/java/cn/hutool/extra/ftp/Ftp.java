@@ -1,7 +1,9 @@
 package cn.hutool.extra.ftp;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -158,7 +160,7 @@ public class Ftp extends AbstractFtp {
 		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
-			client.setSoTimeout((int)config.getSoTimeout());
+			client.setSoTimeout((int) config.getSoTimeout());
 			// 登录ftp服务器
 			client.login(config.getUser(), config.getPassword());
 		} catch (IOException e) {
@@ -275,6 +277,34 @@ public class Ftp extends AbstractFtp {
 			fileNames.add(ftpFile.getName());
 		}
 		return fileNames;
+	}
+
+	/**
+	 * 遍历某个目录下所有文件和目录，不会递归遍历<br>
+	 * 此方法自动过滤"."和".."两种目录
+	 *
+	 * @param path   目录
+	 * @param filter 过滤器，null表示不过滤，默认去掉"."和".."两种目录
+	 * @return 文件或目录列表
+	 * @since 5.3.5
+	 */
+	public List<FTPFile> lsFiles(String path, Filter<FTPFile> filter) {
+		final FTPFile[] ftpFiles = lsFiles(path);
+		if (ArrayUtil.isEmpty(ftpFiles)) {
+			return ListUtil.empty();
+		}
+
+		final List<FTPFile> result = new ArrayList<>(ftpFiles.length - 2);
+		String fileName;
+		for (FTPFile ftpFile : ftpFiles) {
+			fileName = ftpFile.getName();
+			if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
+				if (null == filter || filter.accept(ftpFile)) {
+					result.add(ftpFile);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -479,28 +509,29 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步)
 	 *
-	 * @param sourcePath      ftp服务器目录
-	 * @param destinationPath 本地目录
+	 * @param sourcePath ftp服务器目录
+	 * @param destDir    本地目录
 	 */
 	@Override
-	public void recursiveDownloadFolder(String sourcePath, String destinationPath) {
-		String pathSeparator = "/";
-		FTPFile[] lsFiles = lsFiles(sourcePath);
+	public void recursiveDownloadFolder(String sourcePath, File destDir) {
+		String fileName;
+		String srcFile;
+		File destFile;
+		for (FTPFile ftpFile : lsFiles(sourcePath, null)) {
+			fileName = ftpFile.getName();
+			srcFile = StrUtil.format("{}/{}", sourcePath, fileName);
+			destFile = FileUtil.file(destDir, fileName);
 
-		for (FTPFile ftpFile : lsFiles) {
-			String sourcePathPathFile = sourcePath + pathSeparator + ftpFile.getName();
-			String destinationPathFile = destinationPath + pathSeparator + ftpFile.getName();
-
-			if (!ftpFile.isDirectory()) {
+			if (false == ftpFile.isDirectory()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (!FileUtil.exist(destinationPathFile)
-						|| (ftpFile.getTimestamp().getTimeInMillis() > FileUtil.lastModifiedTime(destinationPathFile).getTime())) {
-					// Download file from source (source filename, destination filename).
-					download(sourcePathPathFile, FileUtil.file(destinationPathFile));
+				if (false == FileUtil.exist(destFile)
+						|| (ftpFile.getTimestamp().getTimeInMillis() > destFile.lastModified())) {
+					download(srcFile, destFile);
 				}
-			} else if (!(".".equals(ftpFile.getName()) || "..".equals(ftpFile.getName()))) {
-				FileUtil.mkdir(destinationPathFile);
-				recursiveDownloadFolder(sourcePathPathFile, destinationPathFile);
+			} else {
+				// 服务端依旧是目录，继续递归
+				FileUtil.mkdir(destFile);
+				recursiveDownloadFolder(srcFile, destFile);
 			}
 		}
 	}

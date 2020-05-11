@@ -1,14 +1,13 @@
 package cn.hutool.extra.ftp;
 
-import java.util.List;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.extra.ssh.Sftp;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Console;
+import java.util.List;
 
 public class FtpTest {
 
@@ -63,21 +62,21 @@ public class FtpTest {
 
 	@Test
 	@Ignore
-	public void recursiveDownloadFolder() throws Exception {
+	public void recursiveDownloadFolder() {
 		Ftp ftp = new Ftp("looly.centos");
-		ftp.recursiveDownloadFolder("/","d:/test/download");
+		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
 		IoUtil.close(ftp);
 	}
 
 	@Test
 	@Ignore
-	public void recursiveDownloadFolderSftp() throws Exception {
+	public void recursiveDownloadFolderSftp() {
 		Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
 
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
-		ftp.recursiveDownloadFolder("/","d:/test/download");
+		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
 		IoUtil.close(ftp);
 	}
