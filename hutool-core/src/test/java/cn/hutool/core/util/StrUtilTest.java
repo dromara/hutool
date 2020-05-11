@@ -346,6 +346,9 @@ public class StrUtilTest {
 		String str1 = "TableTestOfDay";
 		String result1 = StrUtil.toCamelCase(str1);
 		Assert.assertEquals("TableTestOfDay", result1);
+
+		String abc1d = StrUtil.toCamelCase("abc_1d");
+		Assert.assertEquals("abc1d", abc1d);
 	}
 	
 	@Test

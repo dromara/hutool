@@ -6,6 +6,7 @@ import oshi.hardware.ComputerSystem;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.hardware.NetworkIF;
 import oshi.hardware.Sensors;
 import oshi.software.os.OperatingSystem;
 
@@ -98,4 +99,15 @@ public class OshiUtil {
 	public static HWDiskStore[] getDiskStores() {
 		return hardware.getDiskStores();
 	}
+
+	/**
+	 * 获取网络相关信息，可能多块网卡
+	 * @return 网络相关信息
+	 * @since 5.3.5
+	 */
+	public static NetworkIF[] getNetworkIFs(){
+		return hardware.getNetworkIFs();
+	}
+
+
 }

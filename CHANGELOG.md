@@ -8,6 +8,7 @@
 ### 新特性
 * 【core   】     增加CollUtil.map方法
 * 【extra  】     增加Sftp.lsEntries方法，Ftp和Sftp增加recursiveDownloadFolder（pr#121@Gitee）
+* 【system 】     OshiUtil增加getNetworkIFs方法
 ### Bug修复
 
 -------------------------------------------------------------------------------------------------------------
