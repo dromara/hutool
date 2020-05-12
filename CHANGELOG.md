@@ -10,7 +10,10 @@
 * 【extra  】     增加Sftp.lsEntries方法，Ftp和Sftp增加recursiveDownloadFolder（pr#121@Gitee）
 * 【system 】     OshiUtil增加getNetworkIFs方法
 * 【core   】     CollUtil增加unionDistinct、unionAll方法（pr#122@Gitee）
+* 【core   】     增加IoUtil.readObj重载，通过ValidateObjectInputStream由用户自定义安全检查。
+
 ### Bug修复
+* 【core   】     修复IoUtil.readObj中反序列化安全检查导致的一些问题，去掉安全检查。
 
 -------------------------------------------------------------------------------------------------------------
 

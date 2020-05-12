@@ -293,7 +293,7 @@ public class CollUtil {
 			return coll1;
 		}
 
-		final ArrayList<T> result = new ArrayList<>();
+		final List<T> result = new ArrayList<>();
 		final Map<T, Integer> map1 = countMap(coll1);
 		final Map<T, Integer> map2 = countMap(coll2);
 		final Set<T> elts = newHashSet(coll2);

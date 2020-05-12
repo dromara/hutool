@@ -20,7 +20,6 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -648,20 +647,26 @@ public class IoUtil {
 	/**
 	 * 从流中读取对象，即对象的反序列化
 	 *
+	 * <p>
+	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
+	 * </p>
+	 *
 	 * @param <T> 读取对象的类型
 	 * @param in  输入流
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
 	 * @throws UtilException      ClassNotFoundException包装
-	 * @deprecated 由于存在对象反序列化漏洞风险，请使用{@link #readObj(InputStream, Class)}
 	 */
-	@Deprecated
 	public static <T> T readObj(InputStream in) throws IORuntimeException, UtilException {
 		return readObj(in, null);
 	}
 
 	/**
 	 * 从流中读取对象，即对象的反序列化，读取后不关闭流
+	 *
+	 * <p>
+	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
+	 * </p>
 	 *
 	 * @param <T>   读取对象的类型
 	 * @param in    输入流
@@ -671,14 +676,38 @@ public class IoUtil {
 	 * @throws UtilException      ClassNotFoundException包装
 	 */
 	public static <T> T readObj(InputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
+		try {
+			return readObj((in instanceof ValidateObjectInputStream) ?
+							(ValidateObjectInputStream) in : new ValidateObjectInputStream(in),
+					clazz);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从流中读取对象，即对象的反序列化，读取后不关闭流
+	 *
+	 * <p>
+	 * 此方法使用了{@link ValidateObjectInputStream}中的黑白名单方式过滤类，用于避免反序列化漏洞<br>
+	 * 通过构造{@link ValidateObjectInputStream}，调用{@link ValidateObjectInputStream#accept(Class[])}
+	 * 或者{@link ValidateObjectInputStream#refuse(Class[])}方法添加可以被序列化的类或者禁止序列化的类。
+	 * </p>
+	 *
+	 * @param <T>   读取对象的类型
+	 * @param in    输入流，使用{@link ValidateObjectInputStream}中的黑白名单方式过滤类，用于避免反序列化漏洞
+	 * @param clazz 读取对象类型
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 * @throws UtilException      ClassNotFoundException包装
+	 */
+	public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
 		}
-		ObjectInputStream ois;
 		try {
-			ois = new ValidateObjectInputStream(in, clazz);
 			//noinspection unchecked
-			return (T) ois.readObject();
+			return (T) in.readObject();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (ClassNotFoundException e) {
@@ -989,7 +1018,7 @@ public class IoUtil {
 	 *
 	 * @param out        输出流
 	 * @param isCloseOut 写入完毕是否关闭输出流
-	 * @param obj   写入的对象内容
+	 * @param obj        写入的对象内容
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.3
 	 */
