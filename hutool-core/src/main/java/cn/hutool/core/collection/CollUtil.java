@@ -145,6 +145,74 @@ public class CollUtil {
 	}
 
 	/**
+	 * 多个集合的非重复并集，类似于SQL中的“UNION DISTINCT”<br>
+	 * 针对一个集合中存在多个相同元素的情况，只保留一个<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c]，此结果中只保留了一个c
+	 *
+	 * @param <T>        集合元素类型
+	 * @param coll1      集合1
+	 * @param coll2      集合2
+	 * @param otherColls 其它集合
+	 * @return 并集的集合，返回 {@link LinkedHashSet}
+	 */
+	@SafeVarargs
+	public static <T> Set<T> unionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+		final Set<T> result;
+		if(isEmpty(coll1)){
+			result = new LinkedHashSet<>();
+		} else {
+			result = new LinkedHashSet<>(coll1);
+		}
+
+		if(isNotEmpty(coll2)){
+			result.addAll(coll2);
+		}
+
+		if(ArrayUtil.isNotEmpty(otherColls)){
+			for (Collection<T> otherColl : otherColls) {
+				result.addAll(otherColl);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * 多个集合的完全并集，类似于SQL中的“UNION ALL”<br>
+	 * 针对一个集合中存在多个相同元素的情况，保留全部元素<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c, c, c, a, b, c, c]
+	 *
+	 * @param <T>        集合元素类型
+	 * @param coll1      集合1
+	 * @param coll2      集合2
+	 * @param otherColls 其它集合
+	 * @return 并集的集合，返回 {@link ArrayList}
+	 */
+	@SafeVarargs
+	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+		final List<T> result;
+		if(isEmpty(coll1)){
+			result = new ArrayList<>();
+		} else {
+			result = new ArrayList<>(coll1);
+		}
+
+		if(isNotEmpty(coll2)){
+			result.addAll(coll2);
+		}
+
+		if(ArrayUtil.isNotEmpty(otherColls)){
+			for (Collection<T> otherColl : otherColls) {
+				result.addAll(otherColl);
+			}
+		}
+
+		return result;
+	}
+
+	/**
 	 * 两个集合的交集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
