@@ -327,6 +327,39 @@ public class CollUtil {
 	}
 
 	/**
+	 * 计算集合的单差集，即只返回【集合1】中有，但是【集合2】中没有的元素，例如：
+	 *
+	 * <pre>
+	 *     subtractToList([1,2,3,4],[2,3,4,5]) -》 [1]
+	 * </pre>
+	 *
+	 * @param coll1 集合1
+	 * @param coll2 集合2
+	 * @param <T>   元素类型
+	 * @return 单差集
+	 * @since 5.3.5
+	 */
+	public static <T> List<T> subtractToList(Collection<T> coll1, Collection<T> coll2) {
+
+		if (isEmpty(coll1)) {
+			return ListUtil.empty();
+		}
+		if (isEmpty(coll2)) {
+			return ListUtil.list(true, coll2);
+		}
+
+		//将被交数用链表储存，防止因为频繁扩容影响性能
+		final List<T> result = new LinkedList<>();
+		Set<T> set = new HashSet<>(coll2);
+		for (T t : coll1) {
+			if (false == set.contains(t)) {
+				result.add(t);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
 	 *
 	 * @param collection 集合

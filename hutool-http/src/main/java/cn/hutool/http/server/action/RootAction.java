@@ -54,6 +54,8 @@ public class RootAction implements Action {
 						response.write(file);
 					}
 				}
+			} else{
+				response.write(file);
 			}
 		}
 
