@@ -159,17 +159,17 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> Set<T> unionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		final Set<T> result;
-		if(isEmpty(coll1)){
+		if (isEmpty(coll1)) {
 			result = new LinkedHashSet<>();
 		} else {
 			result = new LinkedHashSet<>(coll1);
 		}
 
-		if(isNotEmpty(coll2)){
+		if (isNotEmpty(coll2)) {
 			result.addAll(coll2);
 		}
 
-		if(ArrayUtil.isNotEmpty(otherColls)){
+		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
 				result.addAll(otherColl);
 			}
@@ -193,17 +193,17 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		final List<T> result;
-		if(isEmpty(coll1)){
+		if (isEmpty(coll1)) {
 			result = new ArrayList<>();
 		} else {
 			result = new ArrayList<>(coll1);
 		}
 
-		if(isNotEmpty(coll2)){
+		if (isNotEmpty(coll2)) {
 			result.addAll(coll2);
 		}
 
-		if(ArrayUtil.isNotEmpty(otherColls)){
+		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
 				result.addAll(otherColl);
 			}
@@ -409,11 +409,11 @@ public class CollUtil {
 	 * @since 4.5.12
 	 */
 	public static boolean containsAll(Collection<?> coll1, Collection<?> coll2) {
-		if(isEmpty(coll1)){
+		if (isEmpty(coll1)) {
 			return isEmpty(coll2);
 		}
 
-		if(isEmpty(coll2)){
+		if (isEmpty(coll2)) {
 			return true;
 		}
 
@@ -1271,8 +1271,8 @@ public class CollUtil {
 	 * @param editor     编辑器
 	 * @param ignoreNull 是否忽略空值
 	 * @return 抽取后的新列表
-	 * @since 4.5.7
 	 * @see #map(Iterable, Function, boolean)
+	 * @since 4.5.7
 	 */
 	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor, boolean ignoreNull) {
 		return map(collection, editor::edit, ignoreNull);
@@ -1282,6 +1282,8 @@ public class CollUtil {
 	 * 通过func自定义一个规则，此规则将原集合中的元素转换成新的元素，生成新的列表返回<br>
 	 * 例如提供的是一个Bean列表，通过Function接口实现获取某个字段值，返回这个字段值组成的新列表
 	 *
+	 * @param <T>        集合元素类型
+	 * @param <R>        返回集合元素类型
 	 * @param collection 原集合
 	 * @param func       编辑函数
 	 * @param ignoreNull 是否忽略空值
