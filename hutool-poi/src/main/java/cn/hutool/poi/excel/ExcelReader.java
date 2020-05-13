@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -239,6 +240,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		List rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = readRow(i);
+			Console.log("### {}: {}", i, rowList);
 			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
 				if (null == rowList) {
 					rowList = new ArrayList<>(0);

@@ -1,17 +1,16 @@
 package cn.hutool.poi.excel.test;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Excel读取单元测试
@@ -208,4 +207,5 @@ public class ExcelReadTest {
 		Assert.assertEquals(11L, read.get(1).get(2));
 		Assert.assertEquals(11L, read.get(2).get(2));
 	}
+
 }
