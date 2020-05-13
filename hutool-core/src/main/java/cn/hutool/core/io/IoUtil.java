@@ -1001,9 +1001,9 @@ public class IoUtil {
 			for (Object content : contents) {
 				if (content != null) {
 					osw.write(Convert.toStr(content, StrUtil.EMPTY));
-					osw.flush();
 				}
 			}
+			osw.flush();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {

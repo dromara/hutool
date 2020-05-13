@@ -397,18 +397,8 @@ public class ObjectUtil {
 		if (false == (obj instanceof Serializable)) {
 			return null;
 		}
-
-		FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(byteOut);
-			oos.writeObject(obj);
-			oos.flush();
-		} catch (Exception e) {
-			throw new UtilException(e);
-		} finally {
-			IoUtil.close(oos);
-		}
+		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
+		IoUtil.writeObjects(byteOut, false, (Serializable) obj);
 		return byteOut.toByteArray();
 	}
 
@@ -416,20 +406,16 @@ public class ObjectUtil {
 	 * 反序列化<br>
 	 * 对象必须实现Serializable接口
 	 *
+	 * <p>
+	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
+	 * </p>
+	 *
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T deserialize(byte[] bytes) {
-		ObjectInputStream ois;
-		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-			ois = new ObjectInputStream(bais);
-			return (T) ois.readObject();
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		return IoUtil.readObj(new ByteArrayInputStream(bytes));
 	}
 
 	/**

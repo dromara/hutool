@@ -43,6 +43,10 @@ public enum ContentType {
 
 	private final String value;
 
+	/**
+	 * 构造
+	 * @param value ContentType值
+	 */
 	ContentType(String value) {
 		this.value = value;
 	}

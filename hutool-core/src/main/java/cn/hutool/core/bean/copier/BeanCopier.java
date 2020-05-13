@@ -267,7 +267,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}
-			if (bean.equals(value)) {
+			if (bean == value) {
 				continue;// 值不能为bean本身，防止循环引用
 			}
 

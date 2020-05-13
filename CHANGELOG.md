@@ -11,10 +11,12 @@
 * 【system 】     OshiUtil增加getNetworkIFs方法
 * 【core   】     CollUtil增加unionDistinct、unionAll方法（pr#122@Gitee）
 * 【core   】     增加IoUtil.readObj重载，通过ValidateObjectInputStream由用户自定义安全检查。
+* 【http   】     改造HttpRequest中文件上传部分，增加MultipartBody类
 
 ### Bug修复
 * 【core   】     修复IoUtil.readObj中反序列化安全检查导致的一些问题，去掉安全检查。
 * 【http   】     修复SimpleServer文件访问404问题（issue#I1GZI3@Gitee）
+* 【core   】     修复BeanCopier中循环引用逻辑问题（issue#I1H2VN@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
