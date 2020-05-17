@@ -2953,7 +2953,7 @@ public class StrUtil {
 	 * StrUtil.padAfter("123", 2, '0');//"23"
 	 * </pre>
 	 *
-	 * @param str       字符串，如果为<code>null</code>，按照空串处理
+	 * @param str       字符串，如果为<code>null</code>，直接返回null
 	 * @param minLength 最小长度
 	 * @param padChar   补充的字符
 	 * @return 补充后的字符串
@@ -2981,7 +2981,7 @@ public class StrUtil {
 	 * StrUtil.padAfter("123", 2, "ABC");//"23"
 	 * </pre>
 	 *
-	 * @param str       字符串，如果为<code>null</code>，按照空串处理
+	 * @param str       字符串，如果为<code>null</code>，直接返回null
 	 * @param minLength 最小长度
 	 * @param padStr    补充的字符
 	 * @return 补充后的字符串
