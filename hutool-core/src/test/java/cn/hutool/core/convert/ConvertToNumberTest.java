@@ -17,6 +17,14 @@ public class ConvertToNumberTest {
 	}
 
 	@Test
+	public void dateToIntTest(){
+		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
+		final Integer dateInt = Convert.toInt(date);
+		assert date != null;
+		Assert.assertEquals((int)date.getTime(), dateInt.intValue());
+	}
+
+	@Test
 	public void dateToAtomicLongTest(){
 		final DateTime date = DateUtil.parse("2020-05-17 12:32:00");
 		final AtomicLong dateLong = Convert.convert(AtomicLong.class, date);
