@@ -47,6 +47,6 @@ public class PinyinFactory {
 			return engine;
 		}
 
-		throw new TemplateException("No template found ! Please add one of pinyin jar to your project !");
+		throw new TemplateException("No pinyin jar found ! Please add one of it to your project !");
 	}
 }
