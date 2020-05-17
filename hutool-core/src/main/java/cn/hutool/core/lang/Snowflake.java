@@ -177,8 +177,14 @@ public class Snowflake implements Serializable {
 	 */
 	private long tilNextMillis(long lastTimestamp) {
 		long timestamp = genTime();
-		while (timestamp <= lastTimestamp) {
+		// 循环直到操作系统时间戳变化
+		while (timestamp == lastTimestamp) {
 			timestamp = genTime();
+		}
+		if (timestamp < lastTimestamp) {
+			// 如果发现新的时间戳比上次记录的时间戳数值小，说明操作系统时间发生了倒退，报错
+			throw new IllegalStateException(
+					StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
 		}
 		return timestamp;
 	}
