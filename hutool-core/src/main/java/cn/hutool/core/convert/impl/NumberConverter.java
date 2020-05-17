@@ -1,12 +1,16 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -93,6 +97,12 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return ((Number) value).longValue();
 			} else if(value instanceof Boolean) {
 				return BooleanUtil.toLongObj((Boolean)value);
+			} else if (value instanceof Date) {
+				return ((Date) value).getTime();
+			} else if (value instanceof Calendar) {
+				return ((Calendar) value).getTimeInMillis();
+			} else if (value instanceof TemporalAccessor) {
+				return DateUtil.toInstant((TemporalAccessor) value).toEpochMilli();
 			}
 			final String valueStr = convertToStr(value);
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseLong(valueStr);
