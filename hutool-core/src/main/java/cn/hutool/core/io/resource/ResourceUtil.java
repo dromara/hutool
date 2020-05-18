@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -61,25 +62,25 @@ public class ResourceUtil {
 	/**
 	 * 从ClassPath资源中获取{@link InputStream}
 	 * 
-	 * @param resurce ClassPath资源
+	 * @param resource ClassPath资源
 	 * @return {@link InputStream}
 	 * @throws NoResourceException 资源不存在异常
 	 * @since 3.1.2
 	 */
-	public static InputStream getStream(String resurce) throws NoResourceException {
-		return getResourceObj(resurce).getStream();
+	public static InputStream getStream(String resource) throws NoResourceException {
+		return getResourceObj(resource).getStream();
 	}
 
 	/**
 	 * 从ClassPath资源中获取{@link InputStream}，当资源不存在时返回null
 	 * 
-	 * @param resurce ClassPath资源
+	 * @param resource ClassPath资源
 	 * @return {@link InputStream}
 	 * @since 4.0.3
 	 */
-	public static InputStream getStreamSafe(String resurce) {
+	public static InputStream getStreamSafe(String resource) {
 		try {
-			return getResourceObj(resurce).getStream();
+			return getResourceObj(resource).getStream();
 		} catch (NoResourceException e) {
 			// ignore
 		}
@@ -88,14 +89,25 @@ public class ResourceUtil {
 
 	/**
 	 * 从ClassPath资源中获取{@link BufferedReader}
+	 *
+	 * @param resource ClassPath资源
+	 * @return {@link InputStream}
+	 * @since 5.3.6
+	 */
+	public static BufferedReader getUtf8Reader(String resource) {
+		return getReader(resource, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 从ClassPath资源中获取{@link BufferedReader}
 	 * 
-	 * @param resurce ClassPath资源
+	 * @param resource ClassPath资源
 	 * @param charset 编码
 	 * @return {@link InputStream}
 	 * @since 3.1.2
 	 */
-	public static BufferedReader getReader(String resurce, Charset charset) {
-		return getResourceObj(resurce).getReader(charset);
+	public static BufferedReader getReader(String resource, Charset charset) {
+		return getResourceObj(resource).getReader(charset);
 	}
 
 	/**

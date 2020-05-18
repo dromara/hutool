@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -146,17 +147,6 @@ public class CsvBaseReader implements Serializable {
 	/**
 	 * 从Reader中读取CSV数据，读取后关闭Reader
 	 *
-	 * @param reader     Reader
-	 * @param rowHandler 行处理器，用于一行一行的处理数据
-	 * @throws IORuntimeException IO异常
-	 */
-	public void read(Reader reader, CsvRowHandler rowHandler) throws IORuntimeException {
-		read(parse(reader), rowHandler);
-	}
-
-	/**
-	 * 从Reader中读取CSV数据，读取后关闭Reader
-	 *
 	 * @param reader Reader
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
@@ -168,6 +158,52 @@ public class CsvBaseReader implements Serializable {
 		final List<String> header = config.containsHeader ? csvParser.getHeader() : null;
 
 		return new CsvData(header, rows);
+	}
+
+	/**
+	 * 从Reader中读取CSV数据，结果为Map，读取后关闭Reader。<br>
+	 * 此方法默认识别首行为标题行。
+	 *
+	 * @param reader Reader
+	 * @return {@link CsvData}，包含数据列表和行信息
+	 * @throws IORuntimeException IO异常
+	 */
+	public List<Map<String, String>> readMapList(Reader reader) throws IORuntimeException {
+		// 此方法必须包含标题
+		this.config.setContainsHeader(true);
+
+		final List<Map<String, String>> result = new ArrayList<>();
+		read(reader, (row) -> result.add(row.getFieldMap()));
+		return result;
+	}
+
+	/**
+	 * 从Reader中读取CSV数据并转换为Bean列表，读取后关闭Reader。<br>
+	 * 此方法默认识别首行为标题行。
+	 *
+	 * @param <T>    Bean类型
+	 * @param reader Reader
+	 * @param clazz  Bean类型
+	 * @return Bean列表
+	 */
+	public <T> List<T> read(Reader reader, Class<T> clazz) {
+		// 此方法必须包含标题
+		this.config.setContainsHeader(true);
+
+		final List<T> result = new ArrayList<>();
+		read(reader, (row) -> result.add(row.toBean(clazz)));
+		return result;
+	}
+
+	/**
+	 * 从Reader中读取CSV数据，读取后关闭Reader
+	 *
+	 * @param reader     Reader
+	 * @param rowHandler 行处理器，用于一行一行的处理数据
+	 * @throws IORuntimeException IO异常
+	 */
+	public void read(Reader reader, CsvRowHandler rowHandler) throws IORuntimeException {
+		read(parse(reader), rowHandler);
 	}
 
 	//--------------------------------------------------------------------------------------------- Private method start

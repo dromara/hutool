@@ -8,6 +8,7 @@
 ### 新特性
 * 【core   】     NumberConverter Long类型增加日期转换（pr#872@Github）
 * 【all    】     StrUtil and SymmetricCrypto注释修正（pr#873@Github）
+* 【core   】     CsvReader支持返回Bean（issue#869@Github）
 
 ### Bug修复
 
