@@ -467,6 +467,7 @@ public class IterUtil {
 	 * @param <K>       键类型
 	 * @param <V>       值类型
 	 * @return HashMap
+	 * @since 5.3.6
 	 */
 	public static <K, V> Map<K, List<V>> toListMap(Iterable<V> iterable, Function<V, K> keyMapper) {
 		return toListMap(iterable, keyMapper, v -> v);
@@ -482,10 +483,29 @@ public class IterUtil {
 	 * @param <K>         键类型
 	 * @param <V>         值类型
 	 * @return HashMap
+	 * @since 5.3.6
 	 */
 	public static <T, K, V> Map<K, List<V>> toListMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
-		final HashMap<K, List<V>> resultMap = MapUtil.newHashMap();
+		return toListMap(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
+	}
 
+	/**
+	 * 将列表转成值为List的HashMap
+	 *
+	 * @param resultMap   结果Map，可自定义结果Map类型
+	 * @param iterable    值列表
+	 * @param keyMapper   Map的键映射
+	 * @param valueMapper Map中List的值映射
+	 * @param <T>         列表值类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <T, K, V> Map<K, List<V>> toListMap(Map<K, List<V>> resultMap, Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		if (null == resultMap) {
+			resultMap = MapUtil.newHashMap();
+		}
 		if (ObjectUtil.isNull(iterable)) {
 			return resultMap;
 		}
@@ -505,6 +525,7 @@ public class IterUtil {
 	 * @param <K>       键类型
 	 * @param <V>       值类型
 	 * @return HashMap
+	 * @since 5.3.6
 	 */
 	public static <K, V> Map<K, V> toMap(Iterable<V> iterable, Function<V, K> keyMapper) {
 		return toMap(iterable, keyMapper, v -> v);
@@ -520,10 +541,29 @@ public class IterUtil {
 	 * @param <K>         键类型
 	 * @param <V>         值类型
 	 * @return HashMap
+	 * @since 5.3.6
 	 */
 	public static <T, K, V> Map<K, V> toMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
-		final HashMap<K, V> resultMap = MapUtil.newHashMap();
+		return toMap(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
+	}
 
+	/**
+	 * 将列表转成Map
+	 *
+	 * @param resultMap   结果Map，通过传入map对象决定结果的Map类型
+	 * @param iterable    值列表
+	 * @param keyMapper   Map的键映射
+	 * @param valueMapper Map的值映射
+	 * @param <T>         列表值类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <T, K, V> Map<K, V> toMap(Map<K, V> resultMap, Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		if (null == resultMap) {
+			resultMap = MapUtil.newHashMap();
+		}
 		if (ObjectUtil.isNull(iterable)) {
 			return resultMap;
 		}

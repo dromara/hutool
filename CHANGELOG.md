@@ -12,6 +12,7 @@
 * 【core   】     Snowflake循环等待下一个时间时避免长时间循环，加入对时钟倒退的判断（pr#874@Github）
 * 【extra  】     新增 QRCode base64 编码形式返回（pr#878@Github）
 * 【core   】     ImgUtil增加toBase64DateUri，URLUtil增加getDataUri方法
+* 【core   】     IterUtil添加List转Map的工具方法（pr#123@Gitee）
 
 ### Bug修复
 
