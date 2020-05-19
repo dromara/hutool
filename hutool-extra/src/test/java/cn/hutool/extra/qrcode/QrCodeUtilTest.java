@@ -55,6 +55,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void generateAsBase64Test(){
 		String base64 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png");
 		System.out.println(base64);
