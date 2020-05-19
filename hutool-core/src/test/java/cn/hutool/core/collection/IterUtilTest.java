@@ -3,8 +3,7 @@ package cn.hutool.core.collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * {@link IterUtil} 单元测试
@@ -36,6 +35,31 @@ public class IterUtilTest {
 		ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
 		String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
 		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
+	}
+
+	@Test
+	public void testToListMap() {
+		Map<String, List<String>> expectedMap = new HashMap<>();
+		expectedMap.put("a", Collections.singletonList("and"));
+		expectedMap.put("b", Arrays.asList("brave", "back"));
+
+		Map<String, List<String>> testMap = IterUtil.toListMap(Arrays.asList("and", "brave", "back"),
+				v -> v.substring(0, 1));
+		Assert.assertEquals(testMap, expectedMap);
+	}
+
+	@Test
+	public void testToMap() {
+		Map<String, Car> expectedMap = new HashMap<>();
+
+		Car bmw = new Car("123", "bmw");
+		expectedMap.put("123", bmw);
+
+		Car benz = new Car("456", "benz");
+		expectedMap.put("456", benz);
+
+		Map<String, Car> testMap = IterUtil.toMap(Arrays.asList(bmw, benz), Car::getCarNumber);
+		Assert.assertEquals(expectedMap, testMap);
 	}
 
 	public static class Car {
