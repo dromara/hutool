@@ -1,5 +1,12 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.format.DateParser;
+import cn.hutool.core.date.format.DatePrinter;
+import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,13 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import cn.hutool.core.date.format.DateParser;
-import cn.hutool.core.date.format.DatePrinter;
-import cn.hutool.core.date.format.FastDateFormat;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 包装java.util.Date
@@ -833,10 +833,10 @@ public class DateTime extends Date {
 	// -------------------------------------------------------------------- toString start
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 如果时区被设置，会转换为其时区对应的时间，否则转换为当前地点对应的时区
 	 *
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 */
 	@Override
 	public String toString() {
@@ -844,10 +844,10 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 时区使用当前地区的默认时区
 	 *
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 * @since 4.1.14
 	 */
 	public String toStringDefaultTimeZone() {
@@ -855,11 +855,11 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 如果时区不为{@code null}，会转换为其时区对应的时间，否则转换为当前时间对应的时区
 	 *
 	 * @param timeZone 时区
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 * @since 4.1.14
 	 */
 	public String toString(TimeZone timeZone) {
@@ -872,9 +872,9 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd " 格式字符串
+	 * 转为"yyyy-MM-dd" 格式字符串
 	 *
-	 * @return "yyyy-MM-dd " 格式字符串
+	 * @return "yyyy-MM-dd" 格式字符串
 	 * @since 4.0.0
 	 */
 	public String toDateStr() {
