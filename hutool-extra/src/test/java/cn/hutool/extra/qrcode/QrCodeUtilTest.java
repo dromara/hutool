@@ -1,7 +1,9 @@
 package cn.hutool.extra.qrcode;
 
 import java.awt.Color;
+import java.io.File;
 
+import cn.hutool.core.codec.Base64;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -51,4 +53,18 @@ public class QrCodeUtilTest {
 		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
 		Console.log(decode);
 	}
+
+	@Test
+	public void generateAsBase64Test(){
+		String base64 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png");
+		System.out.println(base64);
+
+		byte[] bytes = FileUtil.readBytes(
+			new File("e:/pic/qr.png"));
+		String encode = Base64.encode(bytes);
+		String base641 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png", encode);
+		System.out.println(base641);
+
+	}
+
 }

@@ -19,11 +19,17 @@ import com.google.zxing.common.HybridBinarizer;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 /**
  * 基于Zxing的二维码工具类
@@ -35,8 +41,58 @@ import java.util.HashMap;
 public class QrCodeUtil {
 
 	/**
+	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
+	 * @param content	内容
+	 * @param qrConfig	二维码配置，包括长、宽、边距、颜色等
+	 * @param imageType	图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param logoBase64 logo 图片的 base64 编码
+	 * @return			图片 Base64 编码字符串
+	 */
+	public static String generateAsBase64(String content, QrConfig qrConfig,String imageType,String logoBase64){
+		byte[] decode;
+		try {
+			decode = Base64.getDecoder().decode(logoBase64);
+		}catch (Exception e){
+			throw new QrCodeException(e);
+		}
+		return generateAsBase64(content,qrConfig,imageType,decode);
+	}
+
+	/**
+	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
+	 * @param content	内容
+	 * @param qrConfig	二维码配置，包括长、宽、边距、颜色等
+	 * @param imageType	图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param logo		logo 图片的byte[]
+	 * @return			图片 Base64 编码字符串
+	 */
+	public static String generateAsBase64(String content, QrConfig qrConfig,String imageType,byte [] logo){
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new ByteArrayInputStream(logo));
+		} catch (IOException e) {
+			throw new QrCodeException(e);
+		}
+		qrConfig.setImg(img);
+		return generateAsBase64(content,qrConfig, imageType);
+	}
+
+	/**
+	 * 生成 Base64 编码格式的二维码，以 String 形式表示
+	 * @param content	内容
+	 * @param qrConfig	二维码配置，包括长、宽、边距、颜色等
+	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
+	 * @return 图片 Base64 编码字符串
+	 */
+	public static String generateAsBase64(String content,QrConfig qrConfig,String imageType){
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		generate(content,qrConfig,imageType,bos);
+		byte[] encode = Base64.getEncoder().encode(bos.toByteArray());
+		return MessageFormat.format("data:image/{0};base64,{1}",imageType,new String(encode));
+	}
+	/**
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
-	 * 
+	 *
 	 * @param content 内容
 	 * @param width 宽度
 	 * @param height 高度
@@ -51,7 +107,7 @@ public class QrCodeUtil {
 
 	/**
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
-	 * 
+	 *
 	 * @param content 内容
 	 * @param config 二维码配置，包括长、宽、边距、颜色等
 	 * @return 图片的byte[]
