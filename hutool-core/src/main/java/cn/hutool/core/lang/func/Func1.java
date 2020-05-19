@@ -23,4 +23,19 @@ public interface Func1<P, R> {
 	 * @throws Exception 自定义异常
 	 */
 	R call(P parameter) throws Exception;
+
+	/**
+	 * 执行函数，异常包装为RuntimeException
+	 *
+	 * @param parameter 参数
+	 * @return 函数执行结果
+	 * @since 5.3.6
+	 */
+	default R callWithRuntimeException(P parameter){
+		try {
+			return call(parameter);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
