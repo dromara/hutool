@@ -13,6 +13,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -1259,6 +1260,20 @@ public class ImgUtil {
 	 */
 	public static ByteArrayInputStream toStream(Image image, String imageType) {
 		return IoUtil.toStream(toBytes(image, imageType));
+	}
+
+	/**
+	 * 将图片对象转换为Base64的Data URI形式，格式为：data:image/[imageType];base64,[data]
+	 *
+	 * @param image     图片对象
+	 * @param imageType 图片类型
+	 * @return Base64的字符串表现形式
+	 * @since 5.3.6
+	 */
+	public static String toBase64DateUri(Image image, String imageType) {
+		return URLUtil.getDataUri(
+				"image/" + imageType, "base64",
+				toBase64(image, imageType));
 	}
 
 	/**
