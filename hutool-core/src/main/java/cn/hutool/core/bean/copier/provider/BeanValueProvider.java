@@ -56,7 +56,8 @@ public class BeanValueProvider implements ValueProvider<String> {
 					}
 				}
 
-				result = Convert.convertWithCheck(valueType,result, null, ignoreError);
+				// 尝试将结果转换为目标类型，如果转换失败，返回原类型。
+				result = Convert.convertWithCheck(valueType,result, result, ignoreError);
 			}
 		}
 		return result;
