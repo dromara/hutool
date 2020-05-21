@@ -353,7 +353,7 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 将Map形式的Form表单数据转换为Url参数形式，不做编码
+	 * 将Map形式的Form表单数据转换为Url参数形式，会自动url编码键和值
 	 *
 	 * @param paramMap 表单数据
 	 * @return url参数
