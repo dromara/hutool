@@ -70,13 +70,13 @@ public class ImgUtilTest {
 	@Ignore
 	public void pressTextTest() {
 		ImgUtil.pressText(//
-				FileUtil.file("e:/pic/face.jpg"), //
-				FileUtil.file("e:/pic/test2_result.png"), //
-				"版权所有", Color.WHITE, //
+				FileUtil.file("d:/test/617180969474805871.jpg"), //
+				FileUtil.file("d:/test/test2_result.png"), //
+				"版权所有", Color.RED, //
 				new Font("黑体", Font.BOLD, 100), //
 				0, //
 				0, //
-				0.8f);
+				1f);
 	}
 
 	@Test

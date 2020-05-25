@@ -4,6 +4,9 @@ import cn.hutool.core.io.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.awt.Color;
+import java.awt.Font;
+
 public class ImgTest {
 	
 	@Test
@@ -22,5 +25,18 @@ public class ImgTest {
 	@Ignore
 	public void roundTest() {
 		Img.from(FileUtil.file("e:/pic/face.jpg")).round(0.5).write(FileUtil.file("e:/pic/face_round.png"));
+	}
+
+	@Test
+	@Ignore
+	public void pressTextTest() {
+		Img.from(FileUtil.file("d:/test/617180969474805871.jpg"))
+				.setPositionBaseCentre(false)
+				.pressText("版权所有", Color.RED, //
+						new Font("黑体", Font.BOLD, 100), //
+						0, //
+						100, //
+						1f)
+				.write(FileUtil.file("d:/test/test2_result.png"));
 	}
 }
