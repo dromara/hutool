@@ -60,7 +60,10 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void pressImgTest() {
-		ImgUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImgUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), 0, 0, 0.1f);
+		ImgUtil.pressImage(
+				FileUtil.file("d:/test/617180969474805871.jpg"),
+				FileUtil.file("d:/test/dest.png"),
+				ImgUtil.read(FileUtil.file("d:/test/vbbb.png")), 0, 0, 0.9f);
 	}
 
 	@Test
