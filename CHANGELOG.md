@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.6 (2020-05-19)
+## 5.3.6 (2020-05-25)
 
 ### 新特性
 * 【core   】     NumberConverter Long类型增加日期转换（pr#872@Github）
@@ -14,6 +14,7 @@
 * 【core   】     ImgUtil增加toBase64DateUri，URLUtil增加getDataUri方法
 * 【core   】     IterUtil添加List转Map的工具方法（pr#123@Gitee）
 * 【core   】     BeanValuePovider转换失败时，返回原数据，而非null
+* 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

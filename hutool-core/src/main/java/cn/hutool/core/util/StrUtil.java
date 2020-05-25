@@ -1741,14 +1741,14 @@ public class StrUtil {
 	 * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subBefore(null, *)      = null
-	 * StrUtil.subBefore("", *)        = ""
-	 * StrUtil.subBefore("abc", "a")   = ""
-	 * StrUtil.subBefore("abcba", "b") = "a"
-	 * StrUtil.subBefore("abc", "c")   = "ab"
-	 * StrUtil.subBefore("abc", "d")   = "abc"
-	 * StrUtil.subBefore("abc", "")    = ""
-	 * StrUtil.subBefore("abc", null)  = "abc"
+	 * StrUtil.subBefore(null, *, false)      = null
+	 * StrUtil.subBefore("", *, false)        = ""
+	 * StrUtil.subBefore("abc", "a", false)   = ""
+	 * StrUtil.subBefore("abcba", "b", false) = "a"
+	 * StrUtil.subBefore("abc", "c", false)   = "ab"
+	 * StrUtil.subBefore("abc", "d", false)   = "abc"
+	 * StrUtil.subBefore("abc", "", false)    = ""
+	 * StrUtil.subBefore("abc", null, false)  = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1783,12 +1783,12 @@ public class StrUtil {
 	 * 如果分隔字符串未找到，返回原字符串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subBefore(null, *)      = null
-	 * StrUtil.subBefore("", *)        = ""
-	 * StrUtil.subBefore("abc", 'a')   = ""
-	 * StrUtil.subBefore("abcba", 'b') = "a"
-	 * StrUtil.subBefore("abc", 'c')   = "ab"
-	 * StrUtil.subBefore("abc", 'd')   = "abc"
+	 * StrUtil.subBefore(null, *, false)      = null
+	 * StrUtil.subBefore("", *, false)        = ""
+	 * StrUtil.subBefore("abc", 'a', false)   = ""
+	 * StrUtil.subBefore("abcba", 'b', false) = "a"
+	 * StrUtil.subBefore("abc", 'c', false)   = "ab"
+	 * StrUtil.subBefore("abc", 'd', false)   = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1819,14 +1819,14 @@ public class StrUtil {
 	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subAfter(null, *)      = null
-	 * StrUtil.subAfter("", *)        = ""
-	 * StrUtil.subAfter(*, null)      = ""
-	 * StrUtil.subAfter("abc", "a")   = "bc"
-	 * StrUtil.subAfter("abcba", "b") = "cba"
-	 * StrUtil.subAfter("abc", "c")   = ""
-	 * StrUtil.subAfter("abc", "d")   = ""
-	 * StrUtil.subAfter("abc", "")    = "abc"
+	 * StrUtil.subAfter(null, *, false)      = null
+	 * StrUtil.subAfter("", *, false)        = ""
+	 * StrUtil.subAfter(*, null, false)      = ""
+	 * StrUtil.subAfter("abc", "a", false)   = "bc"
+	 * StrUtil.subAfter("abcba", "b", false) = "cba"
+	 * StrUtil.subAfter("abc", "c", false)   = ""
+	 * StrUtil.subAfter("abc", "d", false)   = ""
+	 * StrUtil.subAfter("abc", "", false)    = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1857,12 +1857,12 @@ public class StrUtil {
 	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subAfter(null, *)      = null
-	 * StrUtil.subAfter("", *)        = ""
-	 * StrUtil.subAfter("abc", 'a')   = "bc"
-	 * StrUtil.subAfter("abcba", 'b') = "cba"
-	 * StrUtil.subAfter("abc", 'c')   = ""
-	 * StrUtil.subAfter("abc", 'd')   = ""
+	 * StrUtil.subAfter(null, *, false)      = null
+	 * StrUtil.subAfter("", *, false)        = ""
+	 * StrUtil.subAfter("abc", 'a', false)   = "bc"
+	 * StrUtil.subAfter("abcba", 'b', false) = "cba"
+	 * StrUtil.subAfter("abc", 'c', false)   = ""
+	 * StrUtil.subAfter("abc", 'd', false)   = ""
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串

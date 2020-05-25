@@ -476,7 +476,7 @@ public class BeanUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz, CopyOptions options) {
-		final T target = ReflectUtil.newInstance(clazz);
+		final T target = ReflectUtil.newInstanceIfPossible(clazz);
 		copyProperties(source, target, options);
 		return target;
 	}
