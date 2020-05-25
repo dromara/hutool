@@ -16,6 +16,7 @@
 * 【core   】     BeanValuePovider转换失败时，返回原数据，而非null
 * 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
 * 【core   】     MapUtil和CollUtil增加clear方法（issue#I1I4HC@Gitee）
+* 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）
