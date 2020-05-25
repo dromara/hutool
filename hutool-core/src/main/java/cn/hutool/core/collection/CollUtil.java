@@ -2727,6 +2727,20 @@ public class CollUtil {
 		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", collectionClass));
 	}
 
+	/**
+	 * 清除一个或多个集合内的元素，每个集合调用clear()方法
+	 *
+	 * @param collections 一个或多个集合
+	 * @since 5.3.6
+	 */
+	public static void clear(Collection<?>... collections) {
+		for (Collection<?> collection : collections) {
+			if (isNotEmpty(collection)) {
+				collection.clear();
+			}
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------------- Interface start
 
 	/**

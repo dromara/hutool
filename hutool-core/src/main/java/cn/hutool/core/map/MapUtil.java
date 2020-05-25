@@ -1115,4 +1115,17 @@ public class MapUtil {
 		// 不支持空集合的集合类型
 		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", mapClass));
 	}
+
+	/**
+	 * 清除一个或多个Map集合内的元素，每个Map调用clear()方法
+	 *
+	 * @param maps 一个或多个Map
+	 */
+	public static void clear(Map<?, ?>... maps) {
+		for (Map<?, ?> map : maps) {
+			if (isNotEmpty(map)) {
+				map.clear();
+			}
+		}
+	}
 }
