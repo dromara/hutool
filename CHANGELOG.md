@@ -17,6 +17,7 @@
 * 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
 * 【core   】     MapUtil和CollUtil增加clear方法（issue#I1I4HC@Gitee）
 * 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）
+* 【core   】     SoapClient支持自定义请求头（issue#I1I0AO@Gitee）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

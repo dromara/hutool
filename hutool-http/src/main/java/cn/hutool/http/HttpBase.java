@@ -271,7 +271,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T charset(String charset) {
 		if(StrUtil.isNotBlank(charset)){
-			this.charset = Charset.forName(charset);
+			charset(Charset.forName(charset));
 		}
 		return (T) this;
 	}
