@@ -19,6 +19,8 @@
 * 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）
 * 【http   】     SoapClient支持自定义请求头（issue#I1I0AO@Gitee）
 * 【script 】     ScriptUtil增加evalInvocable和invoke方法（issue#I1HHCP@Gitee）
+* 【core   】     ImgUtil增加去除背景色的方法（pr#124@Gitee）
+* 【system 】     OshiUtil增加获取CPU使用率的方法（pr#124@Gitee）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

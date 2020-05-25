@@ -1,6 +1,7 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.io.FileUtil;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class ImgUtilTest {
@@ -108,5 +110,26 @@ public class ImgUtilTest {
 	public void copyTest() {
 		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
 		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
+	}
+
+	@Test
+	public void toHexTest(){
+		final String s = ImgUtil.toHex(Color.RED);
+		Assert.assertEquals("#FF0000", s);
+	}
+
+	@Test
+	@Ignore
+	public void backgroundRemovalTest() {
+		// 图片 背景 换成 透明的
+		ImgUtil.backgroundRemoval(
+				"d:/test/617180969474805871.jpg",
+				"d:/test/2.jpg", 10);
+
+		// 图片 背景 换成 红色的
+		ImgUtil.backgroundRemoval(new File(
+				"d:/test/617180969474805871.jpg"),
+				new File("d:/test/3.jpg"),
+				new Color(200, 0, 0), 10);
 	}
 }
