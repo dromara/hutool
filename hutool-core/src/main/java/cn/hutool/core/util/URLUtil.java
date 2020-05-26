@@ -783,16 +783,16 @@ public class URLUtil {
 	 * <p>
 	 * Data URI的格式规范：
 	 * <pre>
-	 *     data:[<mime type>][;charset=<charset>][;<encoding>],<encoded data>
+	 *     data:[&lt;mime type&gt;][;charset=&lt;charset&gt;][;&lt;encoding&gt;],&lt;encoded data&gt;
 	 * </pre>
 	 *
 	 * @param mimeType 可选项（null表示无），数据类型（image/png、text/plain等）
 	 * @param encoding 数据编码方式（US-ASCII，BASE64等）
-	 * @param data 编码后的数据
+	 * @param data     编码后的数据
 	 * @return Data URI字符串
 	 * @since 5.3.6
 	 */
-	public static String getDataUri(String mimeType, String encoding, String data){
+	public static String getDataUri(String mimeType, String encoding, String data) {
 		return getDataUri(mimeType, null, encoding, data);
 	}
 
@@ -803,25 +803,25 @@ public class URLUtil {
 	 * <p>
 	 * Data URI的格式规范：
 	 * <pre>
-	 *     data:[<mime type>][;charset=<charset>][;<encoding>],<encoded data>
+	 *     data:[&lt;mime type&gt;][;charset=&lt;charset&gt;][;&lt;encoding&gt;],&lt;encoded data&gt;
 	 * </pre>
 	 *
 	 * @param mimeType 可选项（null表示无），数据类型（image/png、text/plain等）
-	 * @param charset 可选项（null表示无），源文本的字符集编码方式
+	 * @param charset  可选项（null表示无），源文本的字符集编码方式
 	 * @param encoding 数据编码方式（US-ASCII，BASE64等）
-	 * @param data 编码后的数据
+	 * @param data     编码后的数据
 	 * @return Data URI字符串
 	 * @since 5.3.6
 	 */
-	public static String getDataUri(String mimeType, Charset charset, String encoding, String data){
+	public static String getDataUri(String mimeType, Charset charset, String encoding, String data) {
 		final StringBuilder builder = StrUtil.builder("data:");
-		if(StrUtil.isNotBlank(mimeType)){
+		if (StrUtil.isNotBlank(mimeType)) {
 			builder.append(mimeType);
 		}
-		if(null != charset){
+		if (null != charset) {
 			builder.append(";charset=").append(charset.name());
 		}
-		if(StrUtil.isNotBlank(encoding)){
+		if (StrUtil.isNotBlank(encoding)) {
 			builder.append(';').append(encoding);
 		}
 		builder.append(',').append(data);

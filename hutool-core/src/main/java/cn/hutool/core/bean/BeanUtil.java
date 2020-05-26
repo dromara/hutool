@@ -614,7 +614,7 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(Object source, Class<T> tClass) {
-		T target = ReflectUtil.newInstance(tClass);
+		T target = ReflectUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create());
 		return target;
 	}

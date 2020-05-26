@@ -58,7 +58,8 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 			T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);
 		} else {
-			throw new IllegalArgumentException(StrUtil.format("Default value [{}] is not the instance of [{}]", defaultValue, targetType));
+			throw new IllegalArgumentException(
+					StrUtil.format("Default value [{}]({}) is not the instance of [{}]", defaultValue, defaultValue.getClass(), targetType));
 		}
 	}
 

@@ -237,6 +237,7 @@ public class BeanUtilTest {
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
+
 		SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
 		Assert.assertEquals(14, person1.getAge());
 		Assert.assertEquals("11213232", person1.getOpenid());
