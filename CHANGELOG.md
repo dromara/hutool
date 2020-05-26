@@ -24,6 +24,7 @@
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）
+* 【core   】     修复SemaphoreRunnable释放问题（issue#I1HLQQ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

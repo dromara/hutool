@@ -31,16 +31,28 @@ public class SemaphoreRunnable implements Runnable {
 		this.semaphore = semaphore;
 	}
 
+	/**
+	 * 获得信号量
+	 *
+	 * @return {@link Semaphore}
+	 * @since 5.3.6
+	 */
+	public Semaphore getSemaphore(){
+		return this.semaphore;
+	}
+
 	@Override
 	public void run() {
 		if (null != this.semaphore) {
-			try {
+			try{
 				semaphore.acquire();
-				this.runnable.run();
-			} catch (InterruptedException e) {
+				try {
+					this.runnable.run();
+				} finally {
+					semaphore.release();
+				}
+			}catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-			} finally {
-				semaphore.release();
 			}
 		}
 	}
