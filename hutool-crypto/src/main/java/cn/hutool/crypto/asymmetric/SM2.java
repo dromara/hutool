@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.BCUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
@@ -78,8 +79,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2(byte[] privateKey, byte[] publicKey) {
 		this(//
-				SecureUtil.generatePrivateKey(ALGORITHM_SM2, privateKey), //
-				SecureUtil.generatePublicKey(ALGORITHM_SM2, publicKey)//
+				KeyUtil.generatePrivateKey(ALGORITHM_SM2, privateKey), //
+				KeyUtil.generatePublicKey(ALGORITHM_SM2, publicKey)//
 		);
 	}
 

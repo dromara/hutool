@@ -21,6 +21,7 @@
 * 【script 】     ScriptUtil增加evalInvocable和invoke方法（issue#I1HHCP@Gitee）
 * 【core   】     ImgUtil增加去除背景色的方法（pr#124@Gitee）
 * 【system 】     OshiUtil增加获取CPU使用率的方法（pr#124@Gitee）
+* 【crypto 】     AsymmetricAlgorithm去除EC（issue#887@Github）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

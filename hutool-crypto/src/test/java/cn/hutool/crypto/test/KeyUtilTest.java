@@ -1,14 +1,15 @@
 package cn.hutool.crypto.test;
 
-import java.security.KeyPair;
-
+import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.GlobalBouncyCastleProvider;
+import cn.hutool.crypto.KeyUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.GlobalBouncyCastleProvider;
-import cn.hutool.crypto.KeyUtil;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 public class KeyUtilTest {
 
@@ -23,4 +24,11 @@ public class KeyUtilTest {
 		Assert.assertNotNull(pair);
 	}
 
+	@Test
+	public void getRSAPublicKeyTest(){
+		final KeyPair keyPair = KeyUtil.generateKeyPair("RSA");
+		final PrivateKey aPrivate = keyPair.getPrivate();
+		final PublicKey rsaPublicKey = KeyUtil.getRSAPublicKey(aPrivate);
+		Assert.assertEquals(rsaPublicKey, keyPair.getPublic());
+	}
 }
