@@ -2,7 +2,6 @@ package cn.hutool.core.img;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
-import sun.font.FontDesignMetrics;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -92,18 +91,6 @@ public class FontUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-	}
-
-	/**
-	 * 获得字体对应字符串的长宽信息
-	 *
-	 * @param font 字体
-	 * @param str  字符串
-	 * @return 长宽信息
-	 */
-	public static Dimension getDimension(Font font, String str) {
-		final FontMetrics metrics = FontDesignMetrics.getMetrics(font);
-		return getDimension(FontDesignMetrics.getMetrics(font), str);
 	}
 
 	/**
