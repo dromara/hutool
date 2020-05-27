@@ -22,10 +22,13 @@
 * 【core   】     ImgUtil增加去除背景色的方法（pr#124@Gitee）
 * 【system 】     OshiUtil增加获取CPU使用率的方法（pr#124@Gitee）
 * 【crypto 】     AsymmetricAlgorithm去除EC（issue#887@Github）
+* 【cache  】     超时缓存使用的线程池大小默认为1（issue#890@Github）
+* 【poi    】     ExcelSaxReader支持handleCell方法
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）
 * 【core   】     修复SemaphoreRunnable释放问题（issue#I1HLQQ@Gitee）
+* 【poi    】     修复Sax方式读取Excel行号错误问题（issue#882@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

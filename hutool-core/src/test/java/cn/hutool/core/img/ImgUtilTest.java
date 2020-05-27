@@ -102,7 +102,8 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void compressTest() {
-		ImgUtil.compress(FileUtil.file("e:/pic/1111.png"), FileUtil.file("e:/pic/1111_target.jpg"), 0.8f);
+		ImgUtil.compress(FileUtil.file("d:/test/dest.png"),
+				FileUtil.file("d:/test/1111_target.jpg"), 0.1f);
 	}
 	
 	@Test

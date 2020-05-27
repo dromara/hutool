@@ -1,5 +1,7 @@
 package cn.hutool.poi.excel.sax.handler;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+
 import java.util.List;
 
 /**
@@ -9,12 +11,24 @@ import java.util.List;
  */
 @FunctionalInterface
 public interface RowHandler {
-	
+
+	/**
+	 * 处理一个单元格的数据
+	 * @param sheetIndex 当前Sheet序号
+	 * @param rowIndex 当前行号
+	 * @param cellIndex 当前列号
+	 * @param value 单元格的值
+	 * @param xssfCellStyle 单元格样式
+	 */
+	default void handleCell(int sheetIndex, long rowIndex, int cellIndex, Object value, CellStyle xssfCellStyle){
+		//pass
+	}
+
 	/**
 	 * 处理一行数据
 	 * @param sheetIndex 当前Sheet序号
-	 * @param rowIndex 当前行号
+	 * @param rowIndex 当前行号，从0开始计数
 	 * @param rowList 行数据列表
 	 */
-	void handle(int sheetIndex, int rowIndex, List<Object> rowList);
+	void handle(int sheetIndex, long rowIndex, List<Object> rowList);
 }

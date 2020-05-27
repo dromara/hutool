@@ -554,7 +554,7 @@ public class Img implements Serializable {
 	 * @return 处理过的图片
 	 */
 	public Image getImg() {
-		return this.targetImage;
+		return null == this.targetImage ? this.srcImage : this.targetImage;
 	}
 
 	/**

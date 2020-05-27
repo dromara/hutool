@@ -15,7 +15,7 @@ public enum CellDataType {
 	FORMULA("str"),
 	/** 富文本类型 */
 	INLINESTR("inlineStr"),
-	/** 字符串类型 */
+	/** 共享字符串索引类型 */
 	SSTINDEX("s"),
 	/** 数字类型 */
 	NUMBER(""),
