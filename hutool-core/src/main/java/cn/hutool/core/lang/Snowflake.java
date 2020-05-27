@@ -141,10 +141,16 @@ public class Snowflake implements Serializable {
 	public synchronized long nextId() {
 		long timestamp = genTime();
 		if (timestamp < lastTimestamp) {
-			// 如果服务器时间有问题(时钟后退) 报错。
-			throw new IllegalStateException(StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+			if(lastTimestamp - timestamp < 2000){
+				// 容忍2秒内的回拨，避免NTP校时造成的异常
+				timestamp = lastTimestamp;
+			} else{
+				// 如果服务器时间有问题(时钟后退) 报错。
+				throw new IllegalStateException(StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
+			}
 		}
-		if (lastTimestamp == timestamp) {
+
+		if (timestamp == lastTimestamp) {
 			sequence = (sequence + 1) & sequenceMask;
 			if (sequence == 0) {
 				timestamp = tilNextMillis(lastTimestamp);

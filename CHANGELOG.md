@@ -24,6 +24,7 @@
 * 【crypto 】     AsymmetricAlgorithm去除EC（issue#887@Github）
 * 【cache  】     超时缓存使用的线程池大小默认为1（issue#890@Github）
 * 【poi    】     ExcelSaxReader支持handleCell方法
+* 【core   】     Snowflake容忍2秒内的时间回拨（issue#I1IGDX@Gitee）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）
