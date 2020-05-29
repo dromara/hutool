@@ -357,6 +357,26 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 下载远程文件数据
+	 *
+	 * @param url            请求的url
+	 * @return 文件数据
+	 */
+	public static byte[] downloadBytes(String url) {
+		if (StrUtil.isBlank(url)) {
+			throw new NullPointerException("[url] is null!");
+		}
+
+		HttpRequest request = new HttpRequest(url);
+		request.setFollowRedirects(true);
+		final HttpResponse response = request.executeAsync();
+		if (false == response.isOk()) {
+			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
+		}
+		return response.bodyBytes();
+	}
+
+	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式，不做编码
 	 *
 	 * @param paramMap 表单数据
