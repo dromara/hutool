@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.6 (2020-05-25)
+## 5.3.6 (2020-05-30)
 
 ### 新特性
 * 【core   】     NumberConverter Long类型增加日期转换（pr#872@Github）
@@ -25,6 +25,10 @@
 * 【cache  】     超时缓存使用的线程池大小默认为1（issue#890@Github）
 * 【poi    】     ExcelSaxReader支持handleCell方法
 * 【core   】     Snowflake容忍2秒内的时间回拨（issue#I1IGDX@Gitee）
+* 【core   】     StrUtil增加isAllNotEmpty、isAllNotBlank方法（pr#895@Github）
+* 【core   】     DateUtil增加dayOfYear方法（pr#895@Github）
+* 【core   】     DateUtil增加dayOfYear方法（pr#895@Github）
+* 【http   】     HttpUtil增加downloadBytes方法（pr#895@Github）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

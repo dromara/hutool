@@ -353,20 +353,19 @@ public class HttpUtil {
 	}
 
 	/**
-
-	 * 下载远程文件数据
+	 * 下载远程文件数据，支持30x跳转
 	 *
-	 * @param url            请求的url
+	 * @param url 请求的url
 	 * @return 文件数据
+	 * @since 5.3.6
 	 */
 	public static byte[] downloadBytes(String url) {
 		if (StrUtil.isBlank(url)) {
 			throw new NullPointerException("[url] is null!");
 		}
 
-		HttpRequest request = new HttpRequest(url);
-		request.setFollowRedirects(true);
-		final HttpResponse response = request.executeAsync();
+		final HttpResponse response = HttpRequest.get(url)
+				.setFollowRedirects(true).executeAsync();
 		if (false == response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}

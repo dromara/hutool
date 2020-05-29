@@ -252,16 +252,14 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 获得指定日期是这个日期所在月份的第几天<br>
+	 * 获得指定日期是这个日期所在年的第几天
 	 *
 	 * @param date 日期
 	 * @return 天
-	 * issue#896@Github
+	 * @since 5.3.6
 	 */
 	public static int dayOfYear(Date date) {
-		Calendar instance = Calendar.getInstance();
-		instance.setTime(date);
-		return instance.get(Calendar.DAY_OF_YEAR);
+		return DateTime.of(date).getField(DateField.DAY_OF_YEAR);
 	}
 
 	/**
