@@ -343,6 +343,17 @@ public class StrUtil {
 	}
 
 	/**
+	 * 是否存都不为{@code null}或空对象，通过{@link StrUtil#hasEmpty(CharSequence...)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都不为空
+	 * @since 5.3.5
+	 */
+	public static boolean isAllNotEmpty(CharSequence... args) {
+		return false == hasEmpty(args);
+	}
+
+	/**
 	 * 检查字符串是否为null、“null”、“undefined”
 	 * 
 	 * @param str 被检查的字符串
