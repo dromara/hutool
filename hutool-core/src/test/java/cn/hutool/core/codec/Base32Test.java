@@ -3,8 +3,6 @@ package cn.hutool.core.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.codec.Base32;
-
 public class Base32Test {
 	
 	@Test
