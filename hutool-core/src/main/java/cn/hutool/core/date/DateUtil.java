@@ -288,6 +288,19 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获得指定日期是这个日期所在月份的第几天<br>
+	 *
+	 * @param date 日期
+	 * @return 天
+	 * issue#896@Github
+	 */
+	public static int dayOfYear(Date date) {
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(date);
+		return instance.get(Calendar.DAY_OF_YEAR);
+	}
+
+	/**
 	 * 获得指定日期是星期几，1表示周日，2表示周一
 	 *
 	 * @param date 日期
