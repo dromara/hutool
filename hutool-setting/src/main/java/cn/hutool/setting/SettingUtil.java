@@ -17,8 +17,7 @@ public class SettingUtil {
 	/**
 	 * 配置文件缓存
 	 */
-	private static Map<String, Setting> settingMap = new ConcurrentHashMap<>();
-	private static final Object lock = new Object();
+	private static final Map<String, Setting> SETTING_MAP = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取当前环境下的配置文件<br>
@@ -28,10 +27,10 @@ public class SettingUtil {
 	 * @return 当前环境下配置文件
 	 */
 	public static Setting get(String name) {
-		Setting setting = settingMap.get(name);
+		Setting setting = SETTING_MAP.get(name);
 		if (null == setting) {
-			synchronized (lock) {
-				setting = settingMap.get(name);
+			synchronized (SettingUtil.class) {
+				setting = SETTING_MAP.get(name);
 				if (null == setting) {
 					String filePath = name;
 					String extName = FileUtil.extName(filePath);
@@ -39,7 +38,7 @@ public class SettingUtil {
 						filePath = filePath + "." + Setting.EXT_NAME;
 					}
 					setting = new Setting(filePath, true);
-					settingMap.put(name, setting);
+					SETTING_MAP.put(name, setting);
 				}
 			}
 		}
@@ -56,7 +55,6 @@ public class SettingUtil {
 	 * @since 5.1.3
 	 */
 	public static Setting getFirstFound(String... names) {
-		Setting setting;
 		for (String name : names) {
 			try {
 				return get(name);

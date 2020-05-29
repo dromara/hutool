@@ -1,17 +1,16 @@
 package cn.hutool.db.ds.pooled;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.simple.AbstractDataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * 池化数据源
@@ -24,7 +23,7 @@ public class PooledDataSource extends AbstractDataSource {
 	private Queue<PooledConnection> freePool;
 	private int activeCount; // 活跃连接数
 
-	private DbConfig config;
+	private final DbConfig config;
 
 	/**
 	 * 获得一个数据源
@@ -79,7 +78,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 */
 	public PooledDataSource(DbConfig config) {
 		this.config = config;
-		freePool = new LinkedList<PooledConnection>();
+		freePool = new LinkedList<>();
 		int initialSize = config.getInitialSize();
 		try {
 			while (initialSize-- > 0) {
@@ -146,7 +145,7 @@ public class PooledDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	synchronized public void close() throws IOException {
+	synchronized public void close() {
 		if (CollectionUtil.isNotEmpty(this.freePool)) {
 			for (PooledConnection pooledConnection : freePool) {
 				pooledConnection.release();
@@ -157,7 +156,7 @@ public class PooledDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	protected void finalize() throws Throwable {
+	protected void finalize() {
 		IoUtil.close(this);
 	}
 

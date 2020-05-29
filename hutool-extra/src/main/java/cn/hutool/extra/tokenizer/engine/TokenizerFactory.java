@@ -1,5 +1,6 @@
 package cn.hutool.extra.tokenizer.engine;
 
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
@@ -13,6 +14,18 @@ import cn.hutool.log.StaticLog;
  *
  */
 public class TokenizerFactory {
+
+	/**
+	 * 根据用户引入的模板引擎jar，自动创建对应的分词引擎对象<br>
+	 * 获得的是单例的TokenizerEngine
+	 *
+	 * @return 单例的TokenizerEngine
+	 * @since 5.3.3
+	 */
+	public static TokenizerEngine get(){
+		return Singleton.get(TokenizerEngine.class.getName(), TokenizerFactory::create);
+	}
+
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
 	 * 

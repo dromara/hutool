@@ -15,7 +15,7 @@ import cn.hutool.extra.tokenizer.Result;
  */
 public class IKAnalyzerEngine implements TokenizerEngine {
 
-	private IKSegmenter seg;
+	private final IKSegmenter seg;
 
 	/**
 	 * 构造

@@ -1,10 +1,10 @@
 package cn.hutool.extra.tokenizer.engine.word;
 
-import java.util.Iterator;
-import java.util.List;
-
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.Word;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Word分词结果实现<br>
@@ -15,7 +15,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class WordResult implements Result{
 
-	private Iterator<org.apdplat.word.segmentation.Word> wordIter;
+	private final Iterator<org.apdplat.word.segmentation.Word> wordIter;
 
 	/**
 	 * 构造

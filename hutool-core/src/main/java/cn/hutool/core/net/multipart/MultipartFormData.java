@@ -1,16 +1,16 @@
-package cn.hutool.extra.servlet.multipart;
+package cn.hutool.core.net.multipart;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.multi.ListValueMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletRequest;
-
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * HttpRequest解析器<br>
@@ -21,14 +21,14 @@ import cn.hutool.core.util.ArrayUtil;
 public class MultipartFormData {
 
 	/** 请求参数 */
-	private Map<String, String[]> requestParameters = new HashMap<String, String[]>();
+	private final ListValueMap<String, String> requestParameters = new ListValueMap<>();
 	/** 请求文件 */
-	private Map<String, UploadFile[]> requestFiles = new HashMap<String, UploadFile[]>();
+	private final ListValueMap<String, UploadFile> requestFiles = new ListValueMap<>();
+	/** 上传选项 */
+	private final UploadSetting setting;
 
 	/** 是否解析完毕 */
 	private boolean loaded;
-	/** 上传选项 */
-	private UploadSetting setting;
 
 	// --------------------------------------------------------------------- Constructor start
 	/**
@@ -49,23 +49,13 @@ public class MultipartFormData {
 	// --------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 解析上传文件和表单数据
-	 * 
-	 * @param request Http请求
-	 * @throws IOException IO异常
-	 */
-	public void parseRequest(ServletRequest request) throws IOException {
-		parseRequestStream(request.getInputStream(), request.getCharacterEncoding());
-	}
-
-	/**
 	 * 提取上传的文件和表单数据
 	 * 
 	 * @param inputStream HttpRequest流
 	 * @param charset 编码
 	 * @throws IOException IO异常
 	 */
-	public void parseRequestStream(InputStream inputStream, String charset) throws IOException {
+	public void parseRequestStream(InputStream inputStream, Charset charset) throws IOException {
 		setLoaded();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
@@ -115,12 +105,9 @@ public class MultipartFormData {
 	 * @return null未找到，否则返回值
 	 */
 	public String getParam(String paramName) {
-		if (requestParameters == null) {
-			return null;
-		}
-		String[] values = requestParameters.get(paramName);
-		if (ArrayUtil.isNotEmpty(values)) {
-			return values[0];
+		final List<String> values = getListParam(paramName);
+		if (CollUtil.isNotEmpty(values)) {
+			return values.get(0);
 		}
 		return null;
 	}
@@ -129,9 +116,6 @@ public class MultipartFormData {
 	 * @return 获得参数名集合
 	 */
 	public Set<String> getParamNames() {
-		if (requestParameters == null) {
-			return Collections.emptySet();
-		}
 		return requestParameters.keySet();
 	}
 
@@ -142,9 +126,21 @@ public class MultipartFormData {
 	 * @return 数组表单值
 	 */
 	public String[] getArrayParam(String paramName) {
-		if (requestParameters == null) {
-			return null;
+		final List<String> listParam = getListParam(paramName);
+		if(null != listParam){
+			return listParam.toArray(new String[0]);
 		}
+		return null;
+	}
+
+	/**
+	 * 获得集合表单值
+	 *
+	 * @param paramName 参数名
+	 * @return 数组表单值
+	 * @since 5.3.0
+	 */
+	public List<String> getListParam(String paramName) {
 		return requestParameters.get(paramName);
 	}
 
@@ -154,7 +150,16 @@ public class MultipartFormData {
 	 * @return 所有属性的集合
 	 */
 	public Map<String, String[]> getParamMap() {
-		return requestParameters;
+		return Convert.toMap(String.class, String[].class, getParamListMap());
+	}
+
+	/**
+	 * 获取所有属性的集合
+	 *
+	 * @return 所有属性的集合
+	 */
+	public ListValueMap<String, String> getParamListMap() {
+		return this.requestParameters;
 	}
 
 	// --------------------------------------------------------------------------- Files parameters
@@ -180,9 +185,22 @@ public class MultipartFormData {
 	 * @return 上传的文件列表
 	 */
 	public UploadFile[] getFiles(String paramName) {
-		if (requestFiles == null) {
-			return null;
+		final List<UploadFile> fileList = getFileList(paramName);
+		if(null != fileList){
+			return fileList.toArray(new UploadFile[0]);
 		}
+		return null;
+	}
+
+	/**
+	 * 获得某个属性名的所有文件<br>
+	 * 当表单中两个文件使用同一个name的时候
+	 *
+	 * @param paramName 属性名
+	 * @return 上传的文件列表
+	 * @since 5.3.0
+	 */
+	public List<UploadFile> getFileList(String paramName) {
 		return requestFiles.get(paramName);
 	}
 
@@ -192,9 +210,6 @@ public class MultipartFormData {
 	 * @return 上传的文件属性名集合
 	 */
 	public Set<String> getFileParamNames() {
-		if (requestFiles == null) {
-			return Collections.emptySet();
-		}
 		return requestFiles.keySet();
 	}
 
@@ -204,6 +219,15 @@ public class MultipartFormData {
 	 * @return 文件映射
 	 */
 	public Map<String, UploadFile[]> getFileMap() {
+		return Convert.toMap(String.class, UploadFile[].class, getFileListValueMap());
+	}
+
+	/**
+	 * 获取文件映射
+	 *
+	 * @return 文件映射
+	 */
+	public ListValueMap<String, UploadFile> getFileListValueMap() {
 		return this.requestFiles;
 	}
 
@@ -225,9 +249,7 @@ public class MultipartFormData {
 	 * @param uploadFile 文件
 	 */
 	private void putFile(String name, UploadFile uploadFile) {
-		UploadFile[] fileUploads = requestFiles.get(name);
-		fileUploads = fileUploads == null ? new UploadFile[] { uploadFile } : ArrayUtil.append(fileUploads, uploadFile);
-		requestFiles.put(name, fileUploads);
+		this.requestFiles.putValue(name, uploadFile);
 	}
 
 	/**
@@ -237,9 +259,7 @@ public class MultipartFormData {
 	 * @param value 参数值
 	 */
 	private void putParameter(String name, String value) {
-		String[] params = requestParameters.get(name);
-		params = params == null ? new String[] { value } : ArrayUtil.append(params, value);
-		requestParameters.put(name, params);
+		this.requestParameters.putValue(name, value);
 	}
 
 	/**

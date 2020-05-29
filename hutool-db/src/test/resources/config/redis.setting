@@ -18,7 +18,7 @@ connectionTimeout = 2000
 # 读取超时，默认timeout
 soTimeout = 2000
 # 密码，默认无
-password = 
+#password =
 # 数据库序号，默认0
 database = 0
 # 客户端名，默认"Hutool"

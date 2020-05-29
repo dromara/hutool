@@ -121,14 +121,23 @@ public enum Header {
 	 */
 	LOCATION("Location");
 
-	private String value;
+	private final String value;
 
 	Header(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * 获取值
+	 *
+	 * @return 值
+	 */
+	public String getValue(){
+		return this.value;
+	}
+
 	@Override
 	public String toString() {
-		return value;
+		return getValue();
 	}
 }

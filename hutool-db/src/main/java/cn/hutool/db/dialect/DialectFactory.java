@@ -1,11 +1,5 @@
 package cn.hutool.db.dialect;
 
-import java.sql.Connection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.impl.AnsiSqlDialect;
@@ -17,6 +11,11 @@ import cn.hutool.db.dialect.impl.SqlServer2012Dialect;
 import cn.hutool.db.dialect.impl.Sqlite3Dialect;
 import cn.hutool.log.StaticLog;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 方言工厂类
  * 
@@ -26,35 +25,33 @@ import cn.hutool.log.StaticLog;
 public class DialectFactory {
 	
 	/** JDBC 驱动 MySQL */
-	public final static String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
+	public static final String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
 	/** JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制 */
-	public final static String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
+	public static final String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
 	/** JDBC 驱动 Oracle */
-	public final static String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
+	public static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
 	/** JDBC 驱动 Oracle，旧版使用 */
-	public final static String DRIVER_ORACLE_OLD = "oracle.jdbc.driver.OracleDriver";
+	public static final String DRIVER_ORACLE_OLD = "oracle.jdbc.driver.OracleDriver";
 	/** JDBC 驱动 PostgreSQL */
-	public final static String DRIVER_POSTGRESQL = "org.postgresql.Driver";
+	public static final String DRIVER_POSTGRESQL = "org.postgresql.Driver";
 	/** JDBC 驱动 SQLLite3 */
-	public final static String DRIVER_SQLLITE3 = "org.sqlite.JDBC";
+	public static final String DRIVER_SQLLITE3 = "org.sqlite.JDBC";
 	/** JDBC 驱动 SQLServer */
-	public final static String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+	public static final String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	/** JDBC 驱动 Hive */
-	public final static String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
+	public static final String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
 	/** JDBC 驱动 Hive2 */
-	public final static String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
+	public static final String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
 	/** JDBC 驱动 H2 */
-	public final static String DRIVER_H2 = "org.h2.Driver";
+	public static final String DRIVER_H2 = "org.h2.Driver";
 	/** JDBC 驱动 Derby */
-	public final static String DRIVER_DERBY = "org.apache.derby.jdbc.ClientDriver";
-	/** JDBC 驱动 Derby嵌入式 */
-	public final static String DRIVER_DERBY_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver";
+	public static final String DRIVER_DERBY = "org.apache.derby.jdbc.AutoloadedDriver";
 	/** JDBC 驱动 HSQLDB */
-	public final static String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
+	public static final String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
 	/** JDBC 驱动 达梦7 */
-	public final static String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
+	public static final String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
 	
-	private static Map<DataSource, Dialect> dialectPool = new ConcurrentHashMap<>();
+	private static final Map<DataSource, Dialect> DIALECT_POOL = new ConcurrentHashMap<>();
 
 	private DialectFactory() {
 	}
@@ -127,12 +124,9 @@ public class DialectFactory {
 			driver = DRIVER_HIVE;
 		} else if (nameContainsProductInfo.contains("h2")) {
 			driver = DRIVER_H2;
-		} else if (nameContainsProductInfo.startsWith("jdbc:derby://")) {
-			// Derby数据库网络连接方式
-			driver = DRIVER_DERBY;
 		} else if (nameContainsProductInfo.contains("derby")) {
 			// 嵌入式Derby数据库
-			driver = DRIVER_DERBY_EMBEDDED;
+			driver = DRIVER_DERBY;
 		} else if (nameContainsProductInfo.contains("hsqldb")) {
 			// HSQLDB
 			driver = DRIVER_HSQLDB;
@@ -150,15 +144,15 @@ public class DialectFactory {
 	 * @return {@link Dialect}方言
 	 */
 	public static Dialect getDialect(DataSource ds) {
-		Dialect dialect = dialectPool.get(ds);
+		Dialect dialect = DIALECT_POOL.get(ds);
 		if(null == dialect) {
 			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
 			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (ds) {
-				dialect = dialectPool.get(ds);
+				dialect = DIALECT_POOL.get(ds);
 				if(null == dialect) {
 					dialect = newDialect(ds);
-					dialectPool.put(ds, dialect);
+					DIALECT_POOL.put(ds, dialect);
 				}
 			}
 		}

@@ -65,7 +65,9 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 
 	@Override
 	protected T convertInternal(Object value) {
-		if(value instanceof Map || value instanceof ValueProvider || BeanUtil.isBean(value.getClass())) {
+		if(value instanceof Map ||
+				value instanceof ValueProvider ||
+				BeanUtil.isBean(value.getClass())) {
 			if(value instanceof Map && this.beanClass.isInterface()) {
 				// 将Map动态代理为Bean
 				return MapProxy.create((Map<?, ?>)value).toProxyBean(this.beanClass);

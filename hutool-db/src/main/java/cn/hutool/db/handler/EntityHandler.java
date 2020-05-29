@@ -1,10 +1,10 @@
 package cn.hutool.db.handler;
 
+import cn.hutool.db.Entity;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
-import cn.hutool.db.Entity;
 
 /**
  * Entity对象处理器，只处理第一条数据
@@ -16,7 +16,7 @@ public class EntityHandler implements RsHandler<Entity>{
 	private static final long serialVersionUID = -8742432871908355992L;
 
 	/** 是否大小写不敏感 */
-	private boolean caseInsensitive;
+	private final boolean caseInsensitive;
 
 	/**
 	 * 创建一个 EntityHandler对象

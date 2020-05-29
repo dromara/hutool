@@ -1,14 +1,14 @@
 package cn.hutool.core.text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串切分器
@@ -149,10 +149,10 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase){
 		if(StrUtil.isEmpty(str)){
-			return new ArrayList<String>(0);
+			return new ArrayList<>(0);
 		}
 		if(limit == 1){
-			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
 		}
 		
 		final ArrayList<String> list = new ArrayList<>(limit > 0 ? limit : 16);
@@ -288,10 +288,10 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase){
 		if(StrUtil.isEmpty(str)){
-			return new ArrayList<String>(0);
+			return new ArrayList<>(0);
 		}
 		if(limit == 1){
-			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
 		}
 		
 		if(StrUtil.isEmpty(separator)){//分隔符为空时按照空白符切分
@@ -350,10 +350,10 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, int limit){
 		if(StrUtil.isEmpty(str)){
-			return new ArrayList<String>(0);
+			return new ArrayList<>(0);
 		}
 		if(limit == 1){
-			return addToList(new ArrayList<String>(1), str, true, true);
+			return addToList(new ArrayList<>(1), str, true, true);
 		}
 		
 		final ArrayList<String> list = new ArrayList<>();
@@ -413,10 +413,10 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty){
 		if(StrUtil.isEmpty(str)){
-			return new ArrayList<String>(0);
+			return new ArrayList<>(0);
 		}
 		if(limit == 1){
-			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
 		}
 		
 		if(null == separatorPattern){//分隔符为空时按照空白符切分
@@ -507,7 +507,7 @@ public class StrSpliter {
 	 * @return Array
 	 */
 	private static String[] toArray(List<String> list){
-		return list.toArray(new String[list.size()]);
+		return list.toArray(new String[0]);
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end
 }

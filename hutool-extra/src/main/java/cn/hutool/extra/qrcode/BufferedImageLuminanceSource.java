@@ -99,6 +99,7 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 		return true;
 	}
 
+	@SuppressWarnings("SuspiciousNameCombination")
 	@Override
 	public LuminanceSource rotateCounterClockwise() {
 

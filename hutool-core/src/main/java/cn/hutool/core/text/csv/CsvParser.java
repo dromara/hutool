@@ -1,5 +1,12 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
@@ -10,13 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * CSV行解析器，参考：FastCSV
@@ -96,12 +96,8 @@ public final class CsvParser implements Closeable, Serializable {
 		while (false == finished) {
 			startingLineNo = ++lineNo;
 			currentFields = readLine();
-			if(null == currentFields) {
-				break;
-			}
 			fieldCount = currentFields.size();
-			// 末尾
-			if (fieldCount == 0) {
+			if(fieldCount < 1){
 				break;
 			}
 

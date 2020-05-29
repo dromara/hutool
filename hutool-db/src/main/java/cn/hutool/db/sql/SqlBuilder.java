@@ -1,11 +1,5 @@
 package cn.hutool.db.sql;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-
 import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -14,6 +8,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.dialect.DialectName;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * SQL构建器<br>
@@ -404,12 +404,13 @@ public class SqlBuilder implements Builder<String>{
 		}
 
 		sql.append(" ORDER BY ");
-		String field = null;
+		String field;
 		boolean isFirst = true;
 		for (Order order : orders) {
+			field = order.getField();
 			if (null != wrapper) {
 				// 包装字段名
-				field = wrapper.wrap(order.getField());
+				field = wrapper.wrap(field);
 			}
 			if (StrUtil.isBlank(field)) {
 				continue;

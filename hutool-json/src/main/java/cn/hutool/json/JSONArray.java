@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
 
-import static cn.hutool.json.JSONConverter.*;
+import static cn.hutool.json.JSONConverter.jsonConvert;
 
 /**
  * JSON数组<br>
@@ -41,7 +42,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/** 持有原始数据的List */
 	private final List<Object> rawList;
 	/** 配置项 */
-	private JSONConfig config;
+	private final JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -189,6 +190,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
+	@Override
+	public JSONConfig getConfig() {
+		return this.config;
+	}
+
 	/**
 	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
 	 * 
@@ -252,8 +258,21 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
+	 * @see #set(Object)
 	 */
 	public JSONArray put(Object value) {
+		return set(value);
+	}
+
+	/**
+	 * Append an object value. This increases the array's length by one. <br>
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
+	 * @return this.
+	 * @since 5.2.5
+	 */
+	public JSONArray set(Object value) {
 		this.add(value);
 		return this;
 	}
@@ -282,9 +301,9 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
-		JSONObject jo = new JSONObject();
+		final JSONObject jo = new JSONObject(this.config);
 		for (int i = 0; i < names.size(); i += 1) {
-			jo.put(names.getStr(i), this.getObj(i));
+			jo.set(names.getStr(i), this.getObj(i));
 		}
 		return jo;
 	}
@@ -347,14 +366,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return rawList.contains(o);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Object[] toArray() {
 		return rawList.toArray();
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "NullableProblems"})
+	@SuppressWarnings({"unchecked"})
 	public <T> T[] toArray(T[] a) {
 		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
 	}
@@ -440,7 +458,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
 			}
-			this.put(element);
+			this.set(element);
 		}
 
 	}
@@ -502,11 +520,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	@Override
 	public String toString() {
-		try {
-			return this.toJSONString(0);
-		} catch (Exception e) {
-			return null;
-		}
+		return this.toJSONString(0);
 	}
 
 	@Override
@@ -578,9 +592,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			init((CharSequence) source);
+		}else if (source instanceof JSONTokener) {
+			init((JSONTokener) source);
 		} else {
 			Iterator<?> iter;
-			if (source.getClass().isArray()) {// 数组
+			if (ArrayUtil.isArray(source)) {// 数组
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
 				iter = ((Iterator<?>) source);
@@ -602,7 +618,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	private void init(CharSequence source) {
 		if (null != source) {
-			init(new JSONTokener(StrUtil.trim(source)));
+			init(new JSONTokener(StrUtil.trim(source), this.config));
 		}
 	}
 

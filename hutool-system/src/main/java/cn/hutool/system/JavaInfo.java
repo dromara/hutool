@@ -1,5 +1,6 @@
 package cn.hutool.system;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 
 import java.io.Serializable;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 /**
  * 代表Java Implementation的信息。
  */
-public class JavaInfo implements Serializable{
+public class JavaInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String JAVA_VERSION = SystemUtil.get("java.version", false);
@@ -32,13 +33,11 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"1.4.2"</code>
-	 * 
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
 	 * @since Java 1.1
 	 */
 	public final String getVersion() {
@@ -47,15 +46,15 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如：
-	 * 
+	 *
 	 * <ul>
 	 * <li>JDK 1.2：<code>1.2f</code>。</li>
 	 * <li>JDK 1.3.1：<code>1.31f</code></li>
 	 * </ul>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>0</code>。
 	 */
 	public final float getVersionFloat() {
@@ -64,19 +63,17 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>），java10及其之后的版本返回值为4位。
-	 * 
+	 *
 	 * <p>
 	 * 例如：
-	 * 
+	 *
 	 * <ul>
 	 * <li>JDK 1.2：<code>120</code>。</li>
 	 * <li>JDK 1.3.1：<code>131</code></li>
 	 * <li>JDK 11.0.2：<code>1102</code></li>
 	 * </ul>
-	 * 
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>0</code>。
-	 * 
 	 * @since Java 1.1
 	 */
 	public final int getVersionInt() {
@@ -85,7 +82,7 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的版本的<code>float</code>值。
-	 * 
+	 *
 	 * @return Java版本的<code>float</code>值或<code>0</code>
 	 */
 	private float getJavaVersionAsFloat() {
@@ -95,14 +92,14 @@ public class JavaInfo implements Serializable{
 
 		String str = JAVA_VERSION;
 
-        str = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2})?", str,0);
+		str = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2})?", str, 0);
 
-        return Float.parseFloat(str);
+		return Float.parseFloat(str);
 	}
 
 	/**
 	 * 取得当前Java impl.的版本的<code>int</code>值。
-	 * 
+	 *
 	 * @return Java版本的<code>int</code>值或<code>0</code>
 	 */
 	private int getJavaVersionAsInt() {
@@ -110,22 +107,14 @@ public class JavaInfo implements Serializable{
 			return 0;
 		}
 
-        String java_version = JAVA_VERSION;
+		String javaVersion = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2}){0,2}", JAVA_VERSION, 0);
 
-        java_version = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2}){0,2}", java_version,0);
+		String[] split = javaVersion.split("\\.");
+		String result = ArrayUtil.join(split, "");
 
-        String[] split = java_version.split("\\.");
-
-        String result = "";
-
-        for (int i = 0; i < split.length; i++) {
-            result = result + split[i];
-        }
-
-        //保证java10及其之后的版本返回的值为4位
-        if (split[0].length()>1 && result.length()!=4){
-        	result = result + "0000";
-        	result = result.substring(0,4);
+		//保证java10及其之后的版本返回的值为4位
+		if (split[0].length() > 1) {
+			result = (result + "0000").substring(0, 4);
 		}
 
 		return Integer.parseInt(result);
@@ -133,13 +122,11 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的厂商（取自系统属性：<code>java.vendor</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"Sun Microsystems Inc."</code>
-	 * 
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
 	 * @since Java 1.1
 	 */
 	public final String getVendor() {
@@ -148,13 +135,11 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 取得当前Java impl.的厂商网站的URL（取自系统属性：<code>java.vendor.url</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"http://java.sun.com/"</code>
-	 * 
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
 	 * @since Java 1.1
 	 */
 	public final String getVendorURL() {
@@ -163,11 +148,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.1，则返回<code>true</code>
 	 */
 	public final boolean isJava1_1() {
@@ -176,11 +160,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.2，则返回<code>true</code>
 	 */
 	public final boolean isJava1_2() {
@@ -189,11 +172,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.3，则返回<code>true</code>
 	 */
 	public final boolean isJava1_3() {
@@ -202,11 +184,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.4，则返回<code>true</code>
 	 */
 	public final boolean isJava1_4() {
@@ -215,11 +196,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.5，则返回<code>true</code>
 	 */
 	public final boolean isJava1_5() {
@@ -228,11 +208,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.6，则返回<code>true</code>
 	 */
 	public final boolean isJava1_6() {
@@ -241,11 +220,10 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判断当前Java的版本。
-	 * 
+	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
-	 * 
+	 *
 	 * @return 如果当前Java版本为1.7，则返回<code>true</code>
 	 */
 	public final boolean isJava1_7() {
@@ -257,7 +235,6 @@ public class JavaInfo implements Serializable{
 	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * 
 	 *
 	 * @return 如果当前Java版本为1.8，则返回<code>true</code>
 	 */
@@ -271,7 +248,6 @@ public class JavaInfo implements Serializable{
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
 	 *
-	 *
 	 * @return 如果当前Java版本为9，则返回<code>true</code>
 	 */
 	public final boolean isJava9() {
@@ -283,7 +259,6 @@ public class JavaInfo implements Serializable{
 	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 *
 	 *
 	 * @return 如果当前Java版本为10，则返回<code>true</code>
 	 */
@@ -297,7 +272,6 @@ public class JavaInfo implements Serializable{
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
 	 *
-	 *
 	 * @return 如果当前Java版本为11，则返回<code>true</code>
 	 */
 	public final boolean isJava11() {
@@ -310,7 +284,6 @@ public class JavaInfo implements Serializable{
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
 	 *
-	 *
 	 * @return 如果当前Java版本为12，则返回<code>true</code>
 	 */
 	public final boolean isJava12() {
@@ -319,9 +292,8 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 匹配当前Java的版本。
-	 * 
+	 *
 	 * @param versionPrefix Java版本前缀
-	 * 
 	 * @return 如果版本匹配，则返回<code>true</code>
 	 */
 	private boolean getJavaVersionMatches(String versionPrefix) {
@@ -334,19 +306,17 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判定当前Java的版本是否大于等于指定的版本号。
-	 * 
+	 *
 	 * <p>
 	 * 例如：
-	 * 
-	 * 
+	 *
+	 *
 	 * <ul>
 	 * <li>测试JDK 1.2：<code>isJavaVersionAtLeast(1.2f)</code></li>
 	 * <li>测试JDK 1.2.1：<code>isJavaVersionAtLeast(1.31f)</code></li>
 	 * </ul>
-	 * 
-	 * 
+	 *
 	 * @param requiredVersion 需要的版本
-	 * 
 	 * @return 如果当前Java版本大于或等于指定的版本，则返回<code>true</code>
 	 */
 	public final boolean isJavaVersionAtLeast(float requiredVersion) {
@@ -355,19 +325,17 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 判定当前Java的版本是否大于等于指定的版本号。
-	 * 
+	 *
 	 * <p>
 	 * 例如：
-	 * 
-	 * 
+	 *
+	 *
 	 * <ul>
 	 * <li>测试JDK 1.2：<code>isJavaVersionAtLeast(120)</code></li>
 	 * <li>测试JDK 1.2.1：<code>isJavaVersionAtLeast(131)</code></li>
 	 * </ul>
-	 * 
-	 * 
+	 *
 	 * @param requiredVersion 需要的版本
-	 * 
 	 * @return 如果当前Java版本大于或等于指定的版本，则返回<code>true</code>
 	 */
 	public final boolean isJavaVersionAtLeast(int requiredVersion) {
@@ -376,7 +344,7 @@ public class JavaInfo implements Serializable{
 
 	/**
 	 * 将Java Implementation的信息转换成字符串。
-	 * 
+	 *
 	 * @return JVM impl.的字符串表示
 	 */
 	@Override

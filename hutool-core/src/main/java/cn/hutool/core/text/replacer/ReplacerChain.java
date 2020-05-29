@@ -1,11 +1,11 @@
 package cn.hutool.core.text.replacer;
 
+import cn.hutool.core.lang.Chain;
+import cn.hutool.core.text.StrBuilder;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import cn.hutool.core.lang.Chain;
-import cn.hutool.core.text.StrBuilder;
 
 /**
  * 字符串替换链，用于组合多个字符串替换逻辑
@@ -16,7 +16,7 @@ import cn.hutool.core.text.StrBuilder;
 public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, ReplacerChain> {
 	private static final long serialVersionUID = 1L;
 
-	private List<StrReplacer> replacers = new LinkedList<>();
+	private final List<StrReplacer> replacers = new LinkedList<>();
 
 	/**
 	 * 构造

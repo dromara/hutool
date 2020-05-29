@@ -1,14 +1,14 @@
 package cn.hutool.extra.qrcode;
 
-import java.awt.Color;
-
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
+import java.awt.Color;
+import java.io.File;
 
 /**
  * 二维码工具类单元测试
@@ -51,4 +51,19 @@ public class QrCodeUtilTest {
 		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
 		Console.log(decode);
 	}
+
+	@Test
+	@Ignore
+	public void generateAsBase64Test(){
+		String base64 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png");
+		System.out.println(base64);
+
+		byte[] bytes = FileUtil.readBytes(
+			new File("d:/test/qr.png"));
+		String encode = Base64.encode(bytes);
+		String base641 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png", encode);
+		System.out.println(base641);
+
+	}
+
 }

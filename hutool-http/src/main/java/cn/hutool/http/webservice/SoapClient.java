@@ -1,11 +1,15 @@
 package cn.hutool.http.webservice;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.XmlUtil;
+import cn.hutool.http.HttpBase;
+import cn.hutool.http.HttpGlobalConfig;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -18,17 +22,12 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * SOAP客户端
@@ -52,7 +51,7 @@ import cn.hutool.http.HttpResponse;
  * @author looly
  * @since 4.5.4
  */
-public class SoapClient {
+public class SoapClient extends HttpBase<SoapClient> {
 
 	/**
 	 * XML消息体的Content-Type
@@ -63,10 +62,7 @@ public class SoapClient {
 	 * 请求的URL地址
 	 */
 	private String url;
-	/**
-	 * 编码
-	 */
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+
 	/**
 	 * 默认连接超时
 	 */
@@ -91,7 +87,7 @@ public class SoapClient {
 	/**
 	 * 应用于方法上的命名空间URI
 	 */
-	private String namespaceURI;
+	private final String namespaceURI;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -204,11 +200,17 @@ public class SoapClient {
 	 *
 	 * @param charset 编码
 	 * @return this
+	 * @see #charset(Charset)
 	 */
 	public SoapClient setCharset(Charset charset) {
-		this.charset = charset;
+		return this.charset(charset);
+	}
+
+	@Override
+	public SoapClient charset(Charset charset) {
+		super.charset(charset);
 		try {
-			this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, this.charset.toString());
+			this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, this.charset());
 			this.message.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "true");
 		} catch (SOAPException e) {
 			// ignore
@@ -229,17 +231,45 @@ public class SoapClient {
 	}
 
 	/**
-	 * 设置头信息
+	 * 设置SOAP头信息
+	 *
+	 * @param name 头信息标签名
+	 * @return this
+	 * @deprecated 为了和Http Hrader区分，请使用{@link #setSOAPHeader(QName)}
+	 */
+	@Deprecated
+	public SoapClient setHeader(QName name) {
+		return setSOAPHeader(name, null, null, null, null);
+	}
+
+	/**
+	 * 设置SOAP头信息
 	 *
 	 * @param name 头信息标签名
 	 * @return this
 	 */
-	public SoapClient setHeader(QName name) {
-		return setHeader(name, null, null, null, null);
+	public SoapClient setSOAPHeader(QName name) {
+		return setSOAPHeader(name, null, null, null, null);
 	}
 
 	/**
-	 * 设置头信息
+	 * 设置SOAP头信息
+	 *
+	 * @param name           头信息标签名
+	 * @param actorURI       中间的消息接收者
+	 * @param roleUri        Role的URI
+	 * @param mustUnderstand 标题项对于要对其进行处理的接收者来说是强制的还是可选的
+	 * @param relay          relay属性
+	 * @return this
+	 * @deprecated 为了和Http Hrader区分，请使用{@link #setSOAPHeader(QName, String, String, Boolean, Boolean)}
+	 */
+	@Deprecated
+	public SoapClient setHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
+		return setSOAPHeader(name, actorURI, roleUri, mustUnderstand, relay);
+	}
+
+	/**
+	 * 设置SOAP头信息
 	 *
 	 * @param name           头信息标签名
 	 * @param actorURI       中间的消息接收者
@@ -248,7 +278,7 @@ public class SoapClient {
 	 * @param relay          relay属性
 	 * @return this
 	 */
-	public SoapClient setHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
+	public SoapClient setSOAPHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
 		SOAPHeader header;
 		SOAPHeaderElement ele;
 		try {
@@ -549,6 +579,7 @@ public class SoapClient {
 				.setConnectionTimeout(this.connectionTimeout)
 				.setReadTimeout(this.readTimeout)
 				.contentType(getXmlContentType())//
+				.header(this.headers())
 				.body(getMsgStr(false))//
 				.executeAsync();
 	}

@@ -18,7 +18,7 @@ public class TemplateUtil {
 	 * @since 4.1.11
 	 */
 	public static TemplateEngine createEngine() {
-		return createEngine(new TemplateConfig());
+		return TemplateFactory.create();
 	}
 
 	/**

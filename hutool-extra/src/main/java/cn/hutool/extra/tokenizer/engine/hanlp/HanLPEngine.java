@@ -16,7 +16,7 @@ import cn.hutool.extra.tokenizer.Result;
  */
 public class HanLPEngine implements TokenizerEngine {
 
-	private Segment seg;
+	private final Segment seg;
 	
 	/**
 	 * 构造

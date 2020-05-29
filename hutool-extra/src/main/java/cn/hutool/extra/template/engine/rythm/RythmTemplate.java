@@ -1,14 +1,13 @@
 package cn.hutool.extra.template.engine.rythm;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.extra.template.AbstractTemplate;
+
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.extra.template.AbstractTemplate;
-import cn.hutool.extra.template.engine.beetl.BeetlTemplate;
 
 /**
  * Rythm模板包装
@@ -19,13 +18,13 @@ import cn.hutool.extra.template.engine.beetl.BeetlTemplate;
 public class RythmTemplate extends AbstractTemplate implements Serializable {
 	private static final long serialVersionUID = -132774960373894911L;
 
-	private org.rythmengine.template.ITemplate rawTemplate;
+	private final org.rythmengine.template.ITemplate rawTemplate;
 	
 	/**
 	 * 包装Rythm模板
 	 * 
 	 * @param template Rythm的模板对象 {@link org.rythmengine.template.ITemplate}
-	 * @return {@link BeetlTemplate}
+	 * @return {@link RythmTemplate}
 	 */
 	public static RythmTemplate wrap(org.rythmengine.template.ITemplate template) {
 		return (null == template) ? null : new RythmTemplate(template);

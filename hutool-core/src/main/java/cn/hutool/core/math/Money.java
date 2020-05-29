@@ -77,7 +77,7 @@ public class Money implements Serializable, Comparable<Money> {
 	/**
 	 * 币种。
 	 */
-	private Currency currency;
+	private final Currency currency;
 
 	// 构造器 ====================================================
 

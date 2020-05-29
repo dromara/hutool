@@ -71,22 +71,16 @@ public class JSONConverter implements Converter<JSON> {
 		}
 		
 		if(value instanceof JSON) {
-			JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
+			final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
 			if(null != deserializer) {
 				return (T) deserializer.deserialize((JSON)value);
 			}
 		}
 
-		Object targetValue;
-		try {
-			targetValue = Convert.convert(targetType, value);
-		} catch (ConvertException e) {
-			if (ignoreError) {
-				return null;
-			}
-			throw e;
-		}
-		
+		final T targetValue = ignoreError ?
+				Convert.convertQuietly(targetType, value):
+				Convert.convert(targetType, value);
+
 		if (null == targetValue && false == ignoreError) {
 			if (StrUtil.isBlankIfStr(value)) {
 				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原始类型，转换器会返回false。
@@ -97,7 +91,7 @@ public class JSONConverter implements Converter<JSON> {
 			throw new ConvertException("Can not convert {} to type {}", value, ObjectUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
 		}
 
-		return (T) targetValue;
+		return targetValue;
 	}
 
 	@Override

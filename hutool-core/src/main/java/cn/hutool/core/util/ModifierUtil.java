@@ -45,7 +45,7 @@ public class ModifierUtil {
 		STRICT(Modifier.STRICT);
 
 		/** 修饰符枚举对应的int修饰符值 */
-		private int value;
+		private final int value;
 
 		/**
 		 * 构造

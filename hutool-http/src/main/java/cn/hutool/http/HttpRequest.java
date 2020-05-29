@@ -1,22 +1,22 @@
 package cn.hutool.http;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
-import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.body.MultipartBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 
@@ -24,18 +24,15 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * http请求类<br>
@@ -45,12 +42,7 @@ import java.util.Map.Entry;
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
 
-	private static final String BOUNDARY = "--------------------Hutool_" + RandomUtil.randomString(16);
-	private static final byte[] BOUNDARY_END = StrUtil.format("--{}--\r\n", BOUNDARY).getBytes();
-	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
-	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
-
-	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
+	private static final String CONTENT_TYPE_MULTIPART_PREFIX = ContentType.MULTIPART.getValue() + "; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
 	/**
@@ -96,7 +88,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		GlobalCookieManager.setCookieManager(null);
 	}
 
-	private String url;
+	private UrlBuilder url;
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/**
@@ -112,9 +104,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private Map<String, Object> form;
 	/**
-	 * 文件表单对象，用于文件上传
+	 * 是否为Multipart表单
 	 */
-	private Map<String, Resource> fileForm;
+	private boolean isMultiPart;
 	/**
 	 * Cookie
 	 */
@@ -128,10 +120,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 是否禁用缓存
 	 */
 	private boolean isDisableCache;
-	/**
-	 * 是否对url中的参数进行编码
-	 */
-	private boolean encodeUrlParams;
 	/**
 	 * 是否是REST请求模式
 	 */
@@ -163,13 +151,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private SSLSocketFactory ssf;
 
 	/**
-	 * 构造
+	 * 构造，URL编码默认使用UTF-8
 	 *
 	 * @param url URL
 	 */
 	public HttpRequest(String url) {
-		Assert.notBlank(url, "Param [url] can not be blank !");
-		this.url = URLUtil.normalize(url, true);
+		this(UrlBuilder.ofHttp(url, CharsetUtil.CHARSET_UTF_8));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param url {@link UrlBuilder}
+	 */
+	public HttpRequest(UrlBuilder url) {
+		this.url = url;
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
@@ -265,7 +261,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.1.8
 	 */
 	public String getUrl() {
-		return url;
+		return url.toString();
 	}
 
 	/**
@@ -276,7 +272,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.1.8
 	 */
 	public HttpRequest setUrl(String url) {
-		this.url = url;
+		this.url = UrlBuilder.ofHttp(url, this.charset);
+		return this;
+	}
+
+	/**
+	 * 设置URL
+	 *
+	 * @param urlBuilder url字符串
+	 * @return this
+	 * @since 5.3.1
+	 */
+	public HttpRequest setUrl(UrlBuilder urlBuilder) {
+		this.url = urlBuilder;
 		return this;
 	}
 
@@ -475,17 +483,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (value instanceof File) {
 			// 文件上传
 			return this.form(name, (File) value);
-		} else if (value instanceof Resource) {
-			// 自定义流上传
-			return this.form(name, (Resource) value);
-		} else if (this.form == null) {
-			this.form = new LinkedHashMap<>();
 		}
 
+		if(value instanceof Resource){
+			return form(name, (Resource)value);
+		}
+
+		// 普通值
 		String strValue;
 		if (value instanceof List) {
 			// 列表对象
-			strValue = CollectionUtil.join((List<?>) value, ",");
+			strValue = CollUtil.join((List<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
 			if (File.class == ArrayUtil.getComponentType(value)) {
 				// 多文件
@@ -498,8 +506,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			strValue = Convert.toStr(value, null);
 		}
 
-		form.put(name, strValue);
-		return this;
+		return putToForm(name, strValue);
 	}
 
 	/**
@@ -514,8 +521,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		form(name, value);
 
 		for (int i = 0; i < parameters.length; i += 2) {
-			name = parameters[i].toString();
-			form(name, parameters[i + 1]);
+			form(parameters[i].toString(), parameters[i + 1]);
 		}
 		return this;
 	}
@@ -528,9 +534,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest form(Map<String, Object> formMap) {
 		if (MapUtil.isNotEmpty(formMap)) {
-			for (Map.Entry<String, Object> entry : formMap.entrySet()) {
-				form(entry.getKey(), entry.getValue());
-			}
+			formMap.forEach(this::form);
 		}
 		return this;
 	}
@@ -540,10 +544,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 *
 	 * @param name  名
-	 * @param files 需要上传的文件
+	 * @param files 需要上传的文件，为空跳过
 	 * @return this
 	 */
 	public HttpRequest form(String name, File... files) {
+		if(ArrayUtil.isEmpty(files)){
+			return this;
+		}
 		if (1 == files.length) {
 			final File file = files[0];
 			return form(name, file, file.getName());
@@ -611,11 +618,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				keepAlive(true);
 			}
 
-			if (null == this.fileForm) {
-				fileForm = new HashMap<>();
-			}
-			// 文件对象
-			this.fileForm.put(name, resource);
+			this.isMultiPart = true;
+			return putToForm(name, resource);
 		}
 		return this;
 	}
@@ -636,7 +640,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.3.0
 	 */
 	public Map<String, Resource> fileForm() {
-		return this.fileForm;
+		final Map<String, Resource> result = MapUtil.newHashMap();
+		this.form.forEach((key, value)->{
+			if(value instanceof Resource){
+				result.put(key, (Resource)value);
+			}
+		});
+		return result;
 	}
 	// ---------------------------------------------------------------- Form end
 
@@ -774,9 +784,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isEncodeUrlParams 是否对URL中的参数进行编码
 	 * @return this
 	 * @since 4.4.1
+	 * @deprecated 编码自动完成，无需设置
 	 */
+	@Deprecated
 	public HttpRequest setEncodeUrlParams(boolean isEncodeUrlParams) {
-		this.encodeUrlParams = isEncodeUrlParams;
 		return this;
 	}
 
@@ -860,7 +871,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest setSSLProtocol(String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
 		try {
-			this.ssf = SSLSocketFactoryBuilder.create().setProtocol(protocol).build();
+			setSSLSocketFactory(SSLSocketFactoryBuilder.create().setProtocol(protocol).build());
 		} catch (Exception e) {
 			throw new HttpException(e);
 		}
@@ -925,14 +936,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpResponse execute(boolean isAsync) {
 		// 初始化URL
 		urlWithParamIfGet();
-		// 编码URL
-		if (this.encodeUrlParams) {
-			this.url = HttpUtil.encodeParams(this.url, this.charset);
-		}
-
 		// 初始化 connection
 		initConnection();
-
 		// 发送请求
 		send();
 
@@ -971,6 +976,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		header(Header.AUTHORIZATION, content, true);
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = StrUtil.builder();
+		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
+		sb.append(super.toString());
+		return sb.toString();
+	}
+
 	// ---------------------------------------------------------------- Private method start
 
 	/**
@@ -982,7 +996,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.httpConnection.disconnectQuietly();
 		}
 
-		this.httpConnection = HttpConnection.create(URLUtil.toUrlForHttp(this.url, this.urlHandler), this.proxy)//
+		this.httpConnection = HttpConnection
+				.create(this.url.toURL(this.urlHandler), this.proxy)//
 				.setMethod(this.method)//
 				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
 				.setConnectTimeout(this.connectionTimeout)//
@@ -1016,9 +1031,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (Method.GET.equals(method) && false == this.isRest) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-				this.url = HttpUtil.urlWithForm(this.url, StrUtil.str(this.bodyBytes, this.charset), this.charset, false);
+				this.url.getQuery().parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
 			} else {
-				this.url = HttpUtil.urlWithForm(this.url, this.form, this.charset, false);
+				this.url.getQuery().addAll(this.form);
 			}
 		}
 	}
@@ -1047,7 +1062,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
-					this.url = httpConnection.header(Header.LOCATION);
+					setUrl(httpConnection.header(Header.LOCATION));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
 						return execute();
@@ -1069,10 +1084,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					|| Method.PUT.equals(this.method) //
 					|| Method.DELETE.equals(this.method) //
 					|| this.isRest) {
-				if (CollectionUtil.isEmpty(this.fileForm)) {
-					sendFormUrlEncoded();// 普通表单
-				} else {
+				if (isMultipart()) {
 					sendMultipart(); // 文件上传表单
+				} else {
+					sendFormUrlEncoded();// 普通表单
 				}
 			} else {
 				this.httpConnection.connect();
@@ -1097,12 +1112,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			IoUtil.write(this.httpConnection.getOutputStream(), true, this.bodyBytes);
-		} else {
-			final String content = HttpUtil.toParams(this.form, this.charset);
-			IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
+		byte[] content;
+		if(ArrayUtil.isNotEmpty(this.bodyBytes)){
+			content = this.bodyBytes;
+		} else{
+			content = StrUtil.bytes(getFormUrlEncoded(), this.charset);
 		}
+		IoUtil.write(this.httpConnection.getOutputStream(), true, content);
+	}
+
+	/**
+	 * 获取编码后的表单数据，无表单数据返回""
+	 *
+	 * @return 编码后的表单数据，无表单数据返回""
+	 * @since 5.3.2
+	 */
+	private String getFormUrlEncoded() {
+		return HttpUtil.toParams(this.form, this.charset);
 	}
 
 	/**
@@ -1115,94 +1141,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		setMultipart();// 设置表单类型为Multipart
 
 		try (OutputStream out = this.httpConnection.getOutputStream()) {
-			writeFileForm(out);
-			writeForm(out);
-			formEnd(out);
+			MultipartBody.create(this.form, this.charset).write(out);
 		}
-	}
-
-	// 普通字符串数据
-
-	/**
-	 * 发送普通表单内容
-	 *
-	 * @param out 输出流
-	 */
-	private void writeForm(OutputStream out) {
-		if (CollectionUtil.isNotEmpty(this.form)) {
-			StringBuilder builder = StrUtil.builder();
-			for (Entry<String, Object> entry : this.form.entrySet()) {
-				builder.append("--").append(BOUNDARY).append(StrUtil.CRLF);
-				builder.append(StrUtil.format(CONTENT_DISPOSITION_TEMPLATE, entry.getKey()));
-				builder.append(entry.getValue()).append(StrUtil.CRLF);
-			}
-			IoUtil.write(out, this.charset, false, builder);
-		}
-	}
-
-	/**
-	 * 发送文件对象表单
-	 *
-	 * @param out 输出流
-	 */
-	private void writeFileForm(OutputStream out) {
-		for (Entry<String, Resource> entry : this.fileForm.entrySet()) {
-			appendPart(entry.getKey(), entry.getValue(), out);
-		}
-	}
-
-	/**
-	 * 添加Multipart表单的数据项
-	 *
-	 * @param formFieldName 表单名
-	 * @param resource      资源，可以是文件等
-	 * @param out           Http流
-	 * @since 4.1.0
-	 */
-	private void appendPart(String formFieldName, Resource resource, OutputStream out) {
-		if (resource instanceof MultiResource) {
-			// 多资源
-			for (Resource subResource : (MultiResource) resource) {
-				appendPart(formFieldName, subResource, out);
-			}
-		} else {
-			// 普通资源
-			final StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
-			final String fileName = resource.getName();
-			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, ObjectUtil.defaultIfNull(fileName, formFieldName)));
-			// 根据name的扩展名指定互联网媒体类型，默认二进制流数据
-			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(fileName, "application/octet-stream")));
-			IoUtil.write(out, this.charset, false, builder);
-			InputStream in = null;
-			try {
-				in = resource.getStream();
-				IoUtil.copy(in, out);
-			} finally {
-				IoUtil.close(in);
-			}
-			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
-		}
-
-	}
-
-	// 添加结尾数据
-
-	/**
-	 * 上传表单结束
-	 *
-	 * @param out 输出流
-	 * @throws IOException IO异常
-	 */
-	private void formEnd(OutputStream out) throws IOException {
-		out.write(BOUNDARY_END);
-		out.flush();
 	}
 
 	/**
 	 * 设置表单类型为Multipart（文件上传）
 	 */
 	private void setMultipart() {
-		this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY, true);
+		this.httpConnection.header(Header.CONTENT_TYPE, MultipartBody.getContentType(), true);
 	}
 
 	/**
@@ -1217,6 +1164,44 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				|| Method.CONNECT == this.method //
 				|| Method.OPTIONS == this.method //
 				|| Method.TRACE == this.method;
+	}
+
+	/**
+	 * 判断是否为multipart/form-data表单，条件如下：
+	 *
+	 * <pre>
+	 *     1. 存在资源对象（fileForm非空）
+	 *     2. 用户自定义头为multipart/form-data开头
+	 * </pre>
+	 * @return 是否为multipart/form-data表单
+	 * @since 5.3.5
+	 */
+	private boolean isMultipart(){
+		if(this.isMultiPart){
+			return true;
+		}
+
+		final String contentType = header(Header.CONTENT_TYPE);
+		return StrUtil.isNotEmpty(contentType) &&
+				contentType.startsWith(ContentType.MULTIPART.getValue());
+	}
+
+	/**
+	 * 将参数加入到form中，如果form为空，新建之。
+	 *
+	 * @param name 表单属性名
+	 * @param value 属性值
+	 * @return this
+	 */
+	private HttpRequest putToForm(String name, Object value){
+		if(null == name || null == value){
+			return this;
+		}
+		if(null == this.form){
+			this.form = new LinkedHashMap<>();
+		}
+		this.form.put(name, value);
+		return this;
 	}
 	// ---------------------------------------------------------------- Private method end
 

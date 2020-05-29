@@ -23,7 +23,7 @@ public enum LineSeparator {
 	/** Windows系统换行符："\r\n" */
 	WINDOWS("\r\n");
 
-	private String value;
+	private final String value;
 
 	LineSeparator(String lineSeparator) {
 		this.value = lineSeparator;

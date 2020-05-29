@@ -15,7 +15,6 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Excel工具类
@@ -348,7 +347,7 @@ public class ExcelUtil {
 	// ------------------------------------------------------------------------------------------------ getWriter
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
-	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 不传入写出的Excel文件路径，只能调用ExcelWriter#flush(OutputStream)方法写出到流<br>
 	 * 若写出到文件，还需调用{@link ExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link ExcelWriter#flush()}方法写出到文件
 	 * 
 	 * @return {@link ExcelWriter}
@@ -364,7 +363,7 @@ public class ExcelUtil {
 
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
-	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 不传入写出的Excel文件路径，只能调用ExcelWriter#flush(OutputStream)方法写出到流<br>
 	 * 若写出到文件，还需调用{@link ExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link ExcelWriter#flush()}方法写出到文件
 	 * 
 	 * @param isXlsx 是否为xlsx格式
@@ -455,7 +454,7 @@ public class ExcelUtil {
 	// ------------------------------------------------------------------------------------------------ getBigWriter
 	/**
 	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
-	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 不传入写出的Excel文件路径，只能调用ExcelWriter#flush(OutputStream)方法写出到流<br>
 	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
 	 * 
 	 * @return {@link BigExcelWriter}
@@ -471,7 +470,7 @@ public class ExcelUtil {
 
 	/**
 	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
-	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 不传入写出的Excel文件路径，只能调用ExcelWriter#flush(OutputStream)方法写出到流<br>
 	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
 	 * 
 	 * @param rowAccessWindowSize 在内存中的行数

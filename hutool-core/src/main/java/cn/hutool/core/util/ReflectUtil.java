@@ -13,6 +13,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -149,7 +150,7 @@ public class ReflectUtil {
 		final Field[] fields = getFields(beanClass);
 		if (ArrayUtil.isNotEmpty(fields)) {
 			for (Field field : fields) {
-				if ((name.equals(field.getName()))) {
+				if ((name.equals(getFieldName(field)))) {
 					return field;
 				}
 			}
@@ -769,13 +770,32 @@ public class ReflectUtil {
 
 	/**
 	 * 尝试遍历并调用此类的所有构造方法，直到构造成功并返回
+	 * <p>
+	 * 对于某些特殊的接口，按照其默认实现实例化，例如：
+	 * <pre>
+	 *     Map       -》 HashMap
+	 *     Collction -》 ArrayList
+	 *     List      -》 ArrayList
+	 *     Set       -》 HashSet
+	 * </pre>
 	 *
 	 * @param <T>       对象类型
 	 * @param beanClass 被构造的类
 	 * @return 构造后的对象
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T newInstanceIfPossible(Class<T> beanClass) {
 		Assert.notNull(beanClass);
+
+		// 某些特殊接口的实例化按照默认实现进行
+		if (beanClass.isAssignableFrom(AbstractMap.class)) {
+			beanClass = (Class<T>) HashMap.class;
+		} else if (beanClass.isAssignableFrom(List.class)) {
+			beanClass = (Class<T>) ArrayList.class;
+		} else if (beanClass.isAssignableFrom(Set.class)) {
+			beanClass = (Class<T>) HashSet.class;
+		}
+
 		try {
 			return newInstance(beanClass);
 		} catch (Exception e) {

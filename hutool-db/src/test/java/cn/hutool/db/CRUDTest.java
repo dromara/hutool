@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CRUDTest {
 
-	private static Db db = Db.use("test");
+	private static final Db db = Db.use("test");
 
 	@Test
 	public void findIsNullTest() throws SQLException {
@@ -87,7 +87,8 @@ public class CRUDTest {
 
 	@Test
 	public void findInTest2() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("id", new Condition("id", new long[]{1, 2, 3})));
+		List<Entity> results = db.findAll(Entity.create("user")
+				.set("id", new Condition("id", new long[]{1, 2, 3})));
 		Assert.assertEquals(2, results.size());
 	}
 

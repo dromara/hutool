@@ -11,8 +11,8 @@ import cn.hutool.cron.task.Task;
  */
 public class TaskExecutor implements Runnable {
 
-	private Scheduler scheduler;
-	private Task task;
+	private final Scheduler scheduler;
+	private final Task task;
 
 	/**
 	 * 获得任务对象

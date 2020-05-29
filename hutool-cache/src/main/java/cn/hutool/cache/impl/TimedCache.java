@@ -28,7 +28,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	 * @param timeout 超时（过期）时长，单位毫秒
 	 */
 	public TimedCache(long timeout) {
-		this(timeout, new HashMap<K, CacheObj<K, V>>());
+		this(timeout, new HashMap<>());
 	}
 
 	/**

@@ -1,8 +1,10 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,12 +16,11 @@ import java.util.Map;
 
 /**
  * {@link XmlUtil} 工具类
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class XmlUtilTest {
-	
+
 	@Test
 	public void parseTest() {
 		String result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
@@ -66,6 +67,14 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	public void xpathTest2() {
+		String result = ResourceUtil.readUtf8Str("test.xml");
+		Document docResult = XmlUtil.parseXml(result);
+		Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
+		Assert.assertEquals("ok", value);
+	}
+
+	@Test
 	public void xmlToMapTest() {
 		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
 				+ "<returnsms>"//
@@ -84,7 +93,7 @@ public class XmlUtilTest {
 		Assert.assertEquals("1490", map.get("remainpoint"));
 		Assert.assertEquals("885", map.get("taskID"));
 		Assert.assertEquals("1", map.get("successCounts"));
-		Assert.assertEquals("subText", ((Map<?, ?>)map.get("newNode")).get("sub"));
+		Assert.assertEquals("subText", ((Map<?, ?>) map.get("newNode")).get("sub"));
 	}
 
 	@Test
@@ -106,17 +115,33 @@ public class XmlUtilTest {
 		Document doc = XmlUtil.mapToXml(map, "user");
 		// Console.log(XmlUtil.toStr(doc, false));
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"//
-				+ "<user>"//
-				+ "<name>张三</name>"//
-				+ "<age>12</age>"//
-				+ "<game>"//
-				+ "<昵称>Looly</昵称>"//
-				+ "<level>14</level>"//
-				+ "</game>"//
-				+ "</user>", //
+						+ "<user>"//
+						+ "<name>张三</name>"//
+						+ "<age>12</age>"//
+						+ "<game>"//
+						+ "<昵称>Looly</昵称>"//
+						+ "<level>14</level>"//
+						+ "</game>"//
+						+ "</user>", //
 				XmlUtil.toStr(doc, false));
 	}
-	
+
+	@Test
+	public void mapToXmlTest2() {
+		// 测试List
+		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
+				.put("Town", CollUtil.newArrayList("town1", "town2"))
+				.build();
+
+		Document doc = XmlUtil.mapToXml(map, "City");
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+						"<City>" +
+						"<Town>town1</Town>" +
+						"<Town>town2</Town>" +
+						"</City>",
+				XmlUtil.toStr(doc));
+	}
+
 	@Test
 	public void readTest() {
 		Document doc = XmlUtil.readXML("test.xml");
@@ -127,9 +152,56 @@ public class XmlUtilTest {
 	public void mapToXmlTestWithOmitXmlDeclaration() {
 
 		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
-		                                    .put("name", "ddatsh")
-		                                    .build();
-		String xml=XmlUtil.mapToXmlStr(map,true);
-		Assert.assertEquals(xml,"<xml><name>ddatsh</name></xml>");
- 	}
+				.put("name", "ddatsh")
+				.build();
+		String xml = XmlUtil.mapToXmlStr(map, true);
+		Assert.assertEquals("<xml><name>ddatsh</name></xml>", xml);
+	}
+
+	@Test
+	public void getByPathTest(){
+		String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+				"  <soap:Body>\n" +
+				"    <ns2:testResponse xmlns:ns2=\"http://ws.xxx.com/\">\n" +
+				"      <return>2020/04/15 21:01:21</return>\n" +
+				"    </ns2:testResponse>\n" +
+				"  </soap:Body>\n" +
+				"</soap:Envelope>\n";
+
+		Document document = XmlUtil.readXML(xmlStr);
+		Object value = XmlUtil.getByXPath(
+				"//soap:Envelope/soap:Body/ns2:testResponse/return",
+				document,XPathConstants.STRING);//
+		Assert.assertEquals("2020/04/15 21:01:21", value);
+	}
+
+	@Test
+	public void xmlToBeanTest(){
+		final TestBean testBean = new TestBean();
+		testBean.setReqCode("1111");
+		testBean.setAccountName("账户名称");
+		testBean.setOperator("cz");
+		testBean.setProjectCode("123");
+		testBean.setBankCode("00001");
+
+		final Document doc = XmlUtil.beanToXml(testBean);
+		Assert.assertEquals(TestBean.class.getSimpleName(), doc.getDocumentElement().getTagName());
+
+		final TestBean testBean2 = XmlUtil.xmlToBean(doc, TestBean.class);
+		Assert.assertEquals(testBean.getReqCode(), testBean2.getReqCode());
+		Assert.assertEquals(testBean.getAccountName(), testBean2.getAccountName());
+		Assert.assertEquals(testBean.getOperator(), testBean2.getOperator());
+		Assert.assertEquals(testBean.getProjectCode(), testBean2.getProjectCode());
+		Assert.assertEquals(testBean.getBankCode(), testBean2.getBankCode());
+	}
+
+	@Data
+	public static class TestBean{
+		private String ReqCode;
+		private String AccountName;
+		private String Operator;
+		private String ProjectCode;
+		private String BankCode;
+	}
 }

@@ -41,8 +41,9 @@ public class CronTest {
 		// 支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
 		CronUtil.start();
-		
-		ThreadUtil.sleep(30000);
+
+		ThreadUtil.waitForDie();
+		Console.log("Exit.");
 	}
 
 	@Test

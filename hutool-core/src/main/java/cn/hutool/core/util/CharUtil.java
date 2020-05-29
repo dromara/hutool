@@ -332,4 +332,15 @@ public class CharUtil {
 	public static int getType(int c) {
 		return Character.getType(c);
 	}
+
+	/**
+	 * 获取给定字符的16进制数值
+	 *
+	 * @param b 字符
+	 * @return 16进制字符
+	 * @since 5.3.1
+	 */
+	public static int digit16(int b) {
+		return Character.digit(b, 16);
+	}
 }

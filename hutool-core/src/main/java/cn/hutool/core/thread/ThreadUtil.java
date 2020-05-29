@@ -226,11 +226,23 @@ public class ThreadUtil {
 		if (millis == null) {
 			return true;
 		}
+		return sleep(millis.longValue());
+	}
 
-		try {
-			Thread.sleep(millis.longValue());
-		} catch (InterruptedException e) {
-			return false;
+	/**
+	 * 挂起当前线程
+	 *
+	 * @param millis 挂起的毫秒数
+	 * @return 被中断返回false，否则true
+	 * @since 5.3.2
+	 */
+	public static boolean sleep(long millis) {
+		if (millis > 0) {
+			try {
+				Thread.sleep(millis);
+			} catch (InterruptedException e) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -243,15 +255,36 @@ public class ThreadUtil {
 	 * @see ThreadUtil#sleep(Number)
 	 */
 	public static boolean safeSleep(Number millis) {
-		long millisLong = millis.longValue();
+		if (millis == null) {
+			return true;
+		}
+
+		return safeSleep(millis.longValue());
+	}
+
+	/**
+	 * 考虑{@link Thread#sleep(long)}方法有可能时间不足给定毫秒数，此方法保证sleep时间不小于给定的毫秒数
+	 *
+	 * @param millis 给定的sleep时间
+	 * @return 被中断返回false，否则true
+	 * @see ThreadUtil#sleep(Number)
+	 * @since 5.3.2
+	 */
+	public static boolean safeSleep(long millis) {
 		long done = 0;
-		while (done < millisLong) {
-			long before = System.currentTimeMillis();
-			if (false == sleep(millisLong - done)) {
+		long before;
+		long spendTime;
+		while (done >= 0 && done < millis) {
+			before = System.currentTimeMillis();
+			if (false == sleep(millis - done)) {
 				return false;
 			}
-			long after = System.currentTimeMillis();
-			done += (after - before);
+			spendTime = System.currentTimeMillis() - before;
+			if (spendTime <= 0) {
+				// Sleep花费时间为0或者负数，说明系统时间被拨动
+				break;
+			}
+			done += spendTime;
 		}
 		return true;
 	}
@@ -316,6 +349,13 @@ public class ThreadUtil {
 				waitForDie(thread);
 			}
 		}
+	}
+
+	/**
+	 * 等待当前线程结束. 调用 {@link Thread#join()} 并忽略 {@link InterruptedException}
+	 */
+	public static void waitForDie() {
+		waitForDie(Thread.currentThread());
 	}
 
 	/**

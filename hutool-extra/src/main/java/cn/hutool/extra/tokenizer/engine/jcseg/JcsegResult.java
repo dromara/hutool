@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
  */
 public class JcsegResult implements Result{
 	
-	private ISegment result;
+	private final ISegment result;
 	private Word cachedWord;
 	
 	/**
@@ -63,7 +63,6 @@ public class JcsegResult implements Result{
 		throw new UnsupportedOperationException("Jcseg result not allow to remove !");
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Word> iterator() {
 		return this;

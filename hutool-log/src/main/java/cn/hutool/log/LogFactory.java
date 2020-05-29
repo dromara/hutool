@@ -3,14 +3,8 @@ package cn.hutool.log;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
-import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
-import cn.hutool.log.dialect.jboss.JbossLogFactory;
 import cn.hutool.log.dialect.jdk.JdkLogFactory;
-import cn.hutool.log.dialect.log4j.Log4jLogFactory;
-import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
-import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
-import cn.hutool.log.dialect.tinylog.TinyLogFactory;
 
 import java.net.URL;
 import java.util.Map;
@@ -20,14 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * 日志工厂类
  *
  * @author Looly
- * @see Slf4jLogFactory
- * @see Log4j2LogFactory
- * @see Log4jLogFactory
- * @see ApacheCommonsLogFactory
- * @see TinyLogFactory
- * @see JbossLogFactory
- * @see ConsoleLogFactory
- * @see JdkLogFactory
  */
 public abstract class LogFactory {
 
@@ -38,7 +24,7 @@ public abstract class LogFactory {
 	/**
 	 * 日志对象缓存
 	 */
-	private Map<Object, Log> logCache;
+	private final Map<Object, Log> logCache;
 
 	/**
 	 * 构造
@@ -67,12 +53,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public Log getLog(String name) {
-		Log log = logCache.get(name);
-		if (null == log) {
-			log = createLog(name);
-			logCache.put(name, log);
-		}
-		return log;
+		return logCache.computeIfAbsent(name, o -> createLog((String)o));
 	}
 
 	/**
@@ -82,12 +63,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public Log getLog(Class<?> clazz) {
-		Log log = logCache.get(clazz);
-		if (null == log) {
-			log = createLog(clazz);
-			logCache.put(clazz, log);
-		}
-		return log;
+		return logCache.computeIfAbsent(clazz, o -> createLog((Class<?>)o));
 	}
 
 	/**
@@ -131,14 +107,6 @@ public abstract class LogFactory {
 	 *
 	 * @param logFactoryClass 日志工厂类
 	 * @return 自定义的日志工厂类
-	 * @see Slf4jLogFactory
-	 * @see Log4j2LogFactory
-	 * @see Log4jLogFactory
-	 * @see ApacheCommonsLogFactory
-	 * @see TinyLogFactory
-	 * @see JbossLogFactory
-	 * @see ConsoleLogFactory
-	 * @see JdkLogFactory
 	 */
 	public static LogFactory setCurrentLogFactory(Class<? extends LogFactory> logFactoryClass) {
 		return GlobalLogFactory.set(logFactoryClass);
@@ -149,14 +117,6 @@ public abstract class LogFactory {
 	 *
 	 * @param logFactory 日志工厂类对象
 	 * @return 自定义的日志工厂类
-	 * @see Slf4jLogFactory
-	 * @see Log4j2LogFactory
-	 * @see Log4jLogFactory
-	 * @see ApacheCommonsLogFactory
-	 * @see TinyLogFactory
-	 * @see JbossLogFactory
-	 * @see ConsoleLogFactory
-	 * @see JdkLogFactory
 	 */
 	public static LogFactory setCurrentLogFactory(LogFactory logFactory) {
 		return GlobalLogFactory.set(logFactory);
@@ -195,14 +155,6 @@ public abstract class LogFactory {
 	 * 依次按照顺序检查日志库的jar是否被引入，如果未引入任何日志库，则检查ClassPath下的logging.properties，存在则使用JdkLogFactory，否则使用ConsoleLogFactory
 	 *
 	 * @return 日志实现类
-	 * @see Slf4jLogFactory
-	 * @see Log4j2LogFactory
-	 * @see Log4jLogFactory
-	 * @see ApacheCommonsLogFactory
-	 * @see TinyLogFactory
-	 * @see JbossLogFactory
-	 * @see ConsoleLogFactory
-	 * @see JdkLogFactory
 	 */
 	public static LogFactory create() {
 		final LogFactory factory = doCreate();
@@ -216,18 +168,10 @@ public abstract class LogFactory {
 	 * 依次按照顺序检查日志库的jar是否被引入，如果未引入任何日志库，则检查ClassPath下的logging.properties，存在则使用JdkLogFactory，否则使用ConsoleLogFactory
 	 *
 	 * @return 日志实现类
-	 * @see Slf4jLogFactory
-	 * @see Log4j2LogFactory
-	 * @see Log4jLogFactory
-	 * @see ApacheCommonsLogFactory
-	 * @see TinyLogFactory
-	 * @see JbossLogFactory
-	 * @see ConsoleLogFactory
-	 * @see JdkLogFactory
 	 */
 	private static LogFactory doCreate() {
 		final LogFactory factory = ServiceLoaderUtil.loadFirstAvailable(LogFactory.class);
-		if(null != factory){
+		if (null != factory) {
 			return factory;
 		}
 

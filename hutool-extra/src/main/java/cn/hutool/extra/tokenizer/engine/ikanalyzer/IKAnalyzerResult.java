@@ -1,13 +1,12 @@
 package cn.hutool.extra.tokenizer.engine.ikanalyzer;
 
-import java.io.IOException;
-
-import org.wltea.analyzer.core.IKSegmenter;
-import org.wltea.analyzer.core.Lexeme;
-
 import cn.hutool.extra.tokenizer.AbstractResult;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
+
+import java.io.IOException;
 
 /**
  * IKAnalyzer分词结果实现<br>
@@ -18,7 +17,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class IKAnalyzerResult extends AbstractResult {
 
-	private IKSegmenter seg;
+	private final IKSegmenter seg;
 
 	/**
 	 * 构造

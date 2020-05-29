@@ -59,11 +59,7 @@ public class TypeUtil {
 		if (null == field) {
 			return null;
 		}
-		Type type = field.getGenericType();
-		if (null == type) {
-			type = field.getType();
-		}
-		return type;
+		return field.getGenericType();
 	}
 
 	/**

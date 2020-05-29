@@ -13,7 +13,7 @@ import cn.hutool.core.util.IdUtil;
  */
 public class TestJob {
 	
-	private String jobId = IdUtil.simpleUUID();
+	private final String jobId = IdUtil.simpleUUID();
 
 	/**
 	 * 执行定时任务内容

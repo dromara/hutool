@@ -1,8 +1,11 @@
 package cn.hutool.extra.spring;
 
+import cn.hutool.core.util.ArrayUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * Spring(Spring boot)工具封装，包括：
@@ -19,12 +22,9 @@ public class SpringUtil implements ApplicationContextAware {
 
 	private static ApplicationContext applicationContext;
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
-		if (SpringUtil.applicationContext == null) {
-			SpringUtil.applicationContext = applicationContext;
-		}
+		SpringUtil.applicationContext = applicationContext;
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class SpringUtil implements ApplicationContextAware {
 	 * @param name Bean名称
 	 * @return Bean
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
-		//noinspection unchecked
 		return (T) applicationContext.getBean(name);
 	}
 
@@ -73,6 +73,59 @@ public class SpringUtil implements ApplicationContextAware {
 		return applicationContext.getBean(name, clazz);
 	}
 
+	/**
+	 * 获取指定类型对应的所有Bean，包括子类
+	 *
+	 * @param <T> Bean类型
+	 * @param type 类、接口，null表示获取所有bean
+	 * @return 类型对应的bean，key是bean注册的name，value是Bean
+	 * @since 5.3.3
+	 */
+	public static <T> Map<String, T> getBeansOfType(Class<T> type){
+		return applicationContext.getBeansOfType(type);
+	}
+
+	/**
+	 * 获取指定类型对应的Bean名称，包括子类
+	 * @param type 类、接口，null表示获取所有bean名称
+	 * @return bean名称
+	 * @since 5.3.3
+	 */
+	public static String[] getBeanNamesForType(Class<?> type){
+		return applicationContext.getBeanNamesForType(type);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param key 配置项key
+	 * @return 属性值
+	 * @since 5.3.3
+	 */
+	public static String getProperty(String key) {
+		return applicationContext.getEnvironment().getProperty(key);
+	}
+
+	/**
+	 * 获取当前的环境配置，无配置返回null
+	 *
+	 * @return 当前的环境配置
+	 * @since 5.3.3
+	 */
+	public static String[] getActiveProfiles(){
+		return applicationContext.getEnvironment().getActiveProfiles();
+	}
+
+	/**
+	 * 获取当前的环境配置，当有多个环境配置时，只获取第一个
+	 *
+	 * @return 当前的环境配置
+	 * @since 5.3.3
+	 */
+	public static String getActiveProfile(){
+		final String[] activeProfiles = getActiveProfiles();
+		return ArrayUtil.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
+	}
 }
 
 

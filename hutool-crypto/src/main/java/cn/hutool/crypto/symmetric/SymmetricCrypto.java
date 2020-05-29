@@ -48,7 +48,7 @@ public class SymmetricCrypto implements Serializable {
 	 * 是否0填充
 	 */
 	private boolean isZeroPadding;
-	private Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
 	// ------------------------------------------------------------------ Constructor start
 
@@ -436,7 +436,7 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 解密Hex表示的字符串，默认UTF-8编码
+	 * 解密Hex（16进制）或Base64表示的字符串，默认UTF-8编码
 	 *
 	 * @param data 被解密的String
 	 * @return 解密后的String

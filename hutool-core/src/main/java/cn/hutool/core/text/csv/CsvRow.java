@@ -1,5 +1,7 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.bean.BeanUtil;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -74,7 +76,7 @@ public final class CsvRow implements List<String> {
 	/**
 	 * 获取标题与字段值对应的Map
 	 *
-	 * @return an unmodifiable map of header names and field values of this row
+	 * @return 标题与字段值对应的Map
 	 * @throws IllegalStateException CSV文件无标题行抛出此异常
 	 */
 	public Map<String, String> getFieldMap() {
@@ -82,7 +84,7 @@ public final class CsvRow implements List<String> {
 			throw new IllegalStateException("No header available");
 		}
 
-		final Map<String, String> fieldMap = new LinkedHashMap<>(headerMap.size());
+		final Map<String, String> fieldMap = new LinkedHashMap<>(headerMap.size(), 1);
 		String key;
 		Integer col;
 		String val;
@@ -94,6 +96,18 @@ public final class CsvRow implements List<String> {
 		}
 
 		return fieldMap;
+	}
+
+	/**
+	 * 一行数据转换为Bean对象
+	 *
+	 * @param <T> Bean类型
+	 * @param clazz bean类
+	 * @return Bean
+	 * @since 5.3.6
+	 */
+	public <T> T toBean(Class<T> clazz){
+		return BeanUtil.mapToBean(getFieldMap(), clazz, true);
 	}
 
 	/**

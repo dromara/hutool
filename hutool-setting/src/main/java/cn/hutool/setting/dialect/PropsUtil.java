@@ -19,7 +19,7 @@ public class PropsUtil {
 	/**
 	 * 配置文件缓存
 	 */
-	private static Map<String, Props> propsMap = new ConcurrentHashMap<>();
+	private static final Map<String, Props> propsMap = new ConcurrentHashMap<>();
 	private static final Object lock = new Object();
 
 	/**
@@ -57,7 +57,6 @@ public class PropsUtil {
 	 * @return 当前环境下配置文件
 	 */
 	public static Props getFirstFound(String... names) {
-		Props props;
 		for (String name : names) {
 			try {
 				return get(name);

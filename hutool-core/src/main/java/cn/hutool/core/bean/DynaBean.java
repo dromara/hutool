@@ -1,13 +1,13 @@
 package cn.hutool.core.bean;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 动态Bean，通过反射对Bean的相关方法做操作<br>
@@ -19,8 +19,8 @@ import cn.hutool.core.util.ReflectUtil;
 public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private Class<?> beanClass;
-	private Object bean;
+	private final Class<?> beanClass;
+	private final Object bean;
 	
 	/**
 	 * 创建一个{@link DynaBean}

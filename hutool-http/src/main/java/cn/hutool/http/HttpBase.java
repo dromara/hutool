@@ -1,5 +1,11 @@
 package cn.hutool.http;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,11 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.map.CaseInsensitiveMap;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * http基类
@@ -270,7 +271,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T charset(String charset) {
 		if(StrUtil.isNotBlank(charset)){
-			this.charset = Charset.forName(charset);
+			charset(Charset.forName(charset));
 		}
 		return (T) this;
 	}
@@ -293,7 +294,9 @@ public abstract class HttpBase<T> {
 		StringBuilder sb = StrUtil.builder();
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
 		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
-			sb.append("    ").append(entry).append(StrUtil.CRLF);
+			sb.append("    ").append(
+					entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
+					.append(StrUtil.CRLF);
 		}
 		
 		sb.append("Request Body: ").append(StrUtil.CRLF);

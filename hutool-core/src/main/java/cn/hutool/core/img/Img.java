@@ -15,9 +15,9 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
@@ -47,7 +47,7 @@ import java.nio.file.Path;
 public class Img implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private BufferedImage srcImage;
+	private final BufferedImage srcImage;
 	private Image targetImage;
 	/**
 	 * 目标图片文件格式，用于写出
@@ -145,13 +145,13 @@ public class Img implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param srcImage 来源图片
+	 * @param srcImage        来源图片
 	 * @param targetImageType 目标图片类型
 	 * @since 5.0.7
 	 */
 	public Img(BufferedImage srcImage, String targetImageType) {
 		this.srcImage = srcImage;
-		if(null == targetImageType){
+		if (null == targetImageType) {
 			targetImageType = ImgUtil.IMAGE_TYPE_JPG;
 		}
 		this.targetImageType = targetImageType;
@@ -312,7 +312,7 @@ public class Img implements Serializable {
 		Graphics2D g = image.createGraphics();
 
 		// 设置背景
-		if(null != fixedColor){
+		if (null != fixedColor) {
 			g.setBackground(fixedColor);
 			g.clearRect(0, 0, width, height);
 		}
@@ -450,20 +450,22 @@ public class Img implements Serializable {
 
 		if (null == font) {
 			// 默认字体
-			font = new Font("Courier", Font.PLAIN, (int) (targetImage.getHeight() * 0.75));
+			font = FontUtil.createSansSerifFont((int) (targetImage.getHeight() * 0.75));
 		}
-
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(color);
-		g.setFont(font);
 		// 透明度
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		// 在指定坐标绘制水印文字
-		final FontMetrics metrics = g.getFontMetrics(font);
-		final int textLength = metrics.stringWidth(pressText);
-		final int textHeight = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
-		g.drawString(pressText, Math.abs(targetImage.getWidth() - textLength) / 2 + x, Math.abs(targetImage.getHeight() + textHeight) / 2 + y);
+
+		// 绘制
+		if (positionBaseCentre) {
+			// 基于中心绘制
+			GraphicsUtil.drawString(g, pressText, font, color,
+					new Rectangle(x, y, targetImage.getWidth(), targetImage.getHeight()));
+		} else {
+			// 基于左上角绘制
+			GraphicsUtil.drawString(g, pressText, font, color,
+					new Point(x, y));
+		}
+
 		g.dispose();
 		this.targetImage = targetImage;
 
@@ -482,7 +484,6 @@ public class Img implements Serializable {
 	public Img pressImage(Image pressImg, int x, int y, float alpha) {
 		final int pressImgWidth = pressImg.getWidth(null);
 		final int pressImgHeight = pressImg.getHeight(null);
-
 		return pressImage(pressImg, new Rectangle(x, y, pressImgWidth, pressImgHeight), alpha);
 	}
 
@@ -498,7 +499,6 @@ public class Img implements Serializable {
 	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
 		final Image targetImg = getValidSrcImg();
 
-		fixRectangle(rectangle, targetImg.getWidth(null), targetImg.getHeight(null));
 		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg), pressImg, rectangle, alpha);
 		return this;
 	}
@@ -554,7 +554,7 @@ public class Img implements Serializable {
 	 * @return 处理过的图片
 	 */
 	public Image getImg() {
-		return this.targetImage;
+		return null == this.targetImage ? this.srcImage : this.targetImage;
 	}
 
 	/**
@@ -620,12 +620,21 @@ public class Img implements Serializable {
 	 * @param backgroundImg 背景图片
 	 * @param img           要绘制的图片
 	 * @param rectangle     矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
+	 * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 绘制后的背景
 	 */
-	private static BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
+	private BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
 		final Graphics2D g = backgroundImg.createGraphics();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
+		GraphicsUtil.setAlpha(g, alpha);
+
+		Point point;
+		if (positionBaseCentre) {
+			point = ImgUtil.getPointBaseCentre(rectangle, backgroundImg.getWidth(), backgroundImg.getHeight());
+		} else {
+			point = new Point(rectangle.x, rectangle.y);
+		}
+		GraphicsUtil.drawImg(g, img, point);
+
 		g.dispose();
 		return backgroundImg;
 	}

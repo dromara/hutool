@@ -1,15 +1,15 @@
 package cn.hutool.crypto.digest.mac;
 
-import java.io.IOException;
-import java.io.InputStream;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.SecureUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Key;
 
 /**
  * 默认的HMAC算法实现引擎，使用{@link Mac} 实现摘要<br>
@@ -39,7 +39,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key 密钥
 	 * @since 4.5.13
 	 */
-	public DefaultHMacEngine(String algorithm, SecretKey key) {
+	public DefaultHMacEngine(String algorithm, Key key) {
 		init(algorithm, key);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
@@ -61,7 +61,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @return this
 	 * @throws CryptoException Cause by IOException
 	 */
-	public DefaultHMacEngine init(String algorithm, SecretKey key){
+	public DefaultHMacEngine init(String algorithm, Key key){
 		try {
 			mac = SecureUtil.createMac(algorithm);
 			if(null == key){
@@ -105,5 +105,15 @@ public class DefaultHMacEngine implements MacEngine {
 	 */
 	public Mac getMac() {
 		return mac;
+	}
+
+	@Override
+	public int getMacLength() {
+		return mac.getMacLength();
+	}
+
+	@Override
+	public String getAlgorithm() {
+		return this.mac.getAlgorithm();
 	}
 }

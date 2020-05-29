@@ -19,16 +19,16 @@ public class ChineseDate {
 	private static final Date baseDate = DateUtil.parseDate("1900-01-31");
 
 	//农历年
-	private int year;
+	private final int year;
 	//农历月
-	private int month;
+	private final int month;
 	//农历日
-	private int day;
+	private final int day;
 	//是否闰年
 	private boolean leap;
-	private String[] chineseNumber = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
-	private String[] chineseNumberName = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "腊"};
-	private long[] lunarInfo = new long[]{0x04bd8, 0x04ae0, 0x0a570,
+	private final String[] chineseNumber = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
+	private final String[] chineseNumberName = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "腊"};
+	private final long[] lunarInfo = new long[]{0x04bd8, 0x04ae0, 0x0a570,
 			0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
 			0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0,
 			0x0ada2, 0x095b0, 0x14977, 0x04970, 0x0a4b0, 0x0b4b5, 0x06a50,
@@ -51,7 +51,7 @@ public class ChineseDate {
 			0x1d0b6, 0x0d250, 0x0d520, 0x0dd45, 0x0b5a0, 0x056d0, 0x055b2,
 			0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0};
 	//农历节日  *表示放假日
-	private String[] lFtv = new String[]{
+	private final String[] lFtv = new String[]{
 			"0101 春节", "0102 大年初二", "0103 大年初三", "0104 大年初四",
 			"0105 大年初五", "0106 大年初六", "0107 大年初七", "0105 路神生日",
 			"0115 元宵节", "0202 龙抬头", "0219 观世音圣诞", "0404 寒食节",

@@ -16,7 +16,7 @@ public class MathGenerator implements CodeGenerator {
 	private static final String operators = "+-*";
 
 	/** 参与计算数字最大长度 */
-	private int numberLength;
+	private final int numberLength;
 
 	/**
 	 * 构造

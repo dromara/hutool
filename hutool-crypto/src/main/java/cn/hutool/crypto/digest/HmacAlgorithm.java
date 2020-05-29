@@ -15,7 +15,7 @@ public enum HmacAlgorithm {
 	/** HmacSM3算法实现，需要BouncyCastle库支持 */
 	HmacSM3("HmacSM3");
 
-	private String value;
+	private final String value;
 
 	HmacAlgorithm(String value) {
 		this.value = value;

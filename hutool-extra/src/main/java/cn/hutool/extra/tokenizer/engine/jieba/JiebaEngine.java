@@ -16,8 +16,8 @@ import cn.hutool.extra.tokenizer.Result;
  */
 public class JiebaEngine implements TokenizerEngine {
 
-	private JiebaSegmenter jiebaSegmenter;
-	private SegMode mode;
+	private final JiebaSegmenter jiebaSegmenter;
+	private final SegMode mode;
 	
 	/**
 	 * 构造

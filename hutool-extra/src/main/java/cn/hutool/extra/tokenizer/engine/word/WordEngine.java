@@ -17,7 +17,7 @@ import cn.hutool.extra.tokenizer.TokenizerEngine;
  */
 public class WordEngine implements TokenizerEngine {
 	
-	private Segmentation segmentation;
+	private final Segmentation segmentation;
 
 	/**
 	 * 构造

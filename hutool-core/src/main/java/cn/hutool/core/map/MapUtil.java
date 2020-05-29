@@ -22,7 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -560,7 +562,7 @@ public class MapUtil {
 	public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
 		final StringBuilder strBuilder = StrUtil.builder();
 		boolean isFirst = true;
-		if(isNotEmpty(map)){
+		if (isNotEmpty(map)) {
 			for (Entry<K, V> entry : map.entrySet()) {
 				if (false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
 					if (isFirst) {
@@ -681,10 +683,13 @@ public class MapUtil {
 
 	/**
 	 * Map的键和值互换
+	 * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
+	 * 值的顺序在HashMap中不确定，所以谁覆盖谁也不确定，在有序的Map中按照先后顺序覆盖，保留最后的值
 	 *
 	 * @param <T> 键和值类型
 	 * @param map Map对象，键值类型必须一致
 	 * @return 互换后的Map
+	 * @see #inverse(Map)
 	 * @since 3.2.2
 	 */
 	public static <T> Map<T, T> reverse(Map<T, T> map) {
@@ -705,6 +710,23 @@ public class MapUtil {
 				throw new UnsupportedOperationException("Unsupported setValue method !");
 			}
 		});
+	}
+
+	/**
+	 * Map的键和值互换<br>
+	 * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
+	 * 值的顺序在HashMap中不确定，所以谁覆盖谁也不确定，在有序的Map中按照先后顺序覆盖，保留最后的值
+	 *
+	 * @param <K> 键和值类型
+	 * @param <V> 键和值类型
+	 * @param map Map对象，键值类型必须一致
+	 * @return 互换后的Map
+	 * @since 5.2.6
+	 */
+	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+		final Map<V, K> result = createMap(map.getClass());
+		map.forEach((key, value) -> result.put(value, key));
+		return result;
 	}
 
 	/**
@@ -733,7 +755,7 @@ public class MapUtil {
 	 * @since 4.0.1
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
-		if(null == map){
+		if (null == map) {
 			return null;
 		}
 
@@ -775,6 +797,19 @@ public class MapUtil {
 	 */
 	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
 		return new MapWrapper<>(map);
+	}
+
+	/**
+	 * 将对应Map转换为不可修改的Map
+	 *
+	 * @param map Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 不修改Map
+	 * @since 5.2.6
+	 */
+	public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
+		return Collections.unmodifiableMap(map);
 	}
 
 	// ----------------------------------------------------------------------------------------------- builder
@@ -1033,5 +1068,64 @@ public class MapUtil {
 		}
 
 		return map;
+	}
+
+	/**
+	 * 返回一个空Map
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 空Map
+	 * @see Collections#emptyMap()
+	 * @since 5.3.1
+	 */
+	public static <K, V> Map<K, V> empty() {
+		return Collections.emptyMap();
+	}
+
+	/**
+	 * 根据传入的Map类型不同，返回对应类型的空Map，支持类型包括：
+	 *
+	 * <pre>
+	 *     1. NavigableMap
+	 *     2. SortedMap
+	 *     3. Map
+	 * </pre>
+	 *
+	 * @param <K>      键类型
+	 * @param <V>      值类型
+	 * @param <T>      Map类型
+	 * @param mapClass Map类型，null返回默认的Map
+	 * @return 空Map
+	 * @since 5.3.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V, T extends Map<K, V>> T empty(Class<?> mapClass) {
+		if (null == mapClass) {
+			return (T) Collections.emptyMap();
+		}
+		if (NavigableMap.class == mapClass) {
+			return (T) Collections.emptyNavigableMap();
+		} else if (SortedMap.class == mapClass) {
+			return (T) Collections.emptySortedMap();
+		} else if (Map.class == mapClass) {
+			return (T) Collections.emptyMap();
+		}
+
+		// 不支持空集合的集合类型
+		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", mapClass));
+	}
+
+	/**
+	 * 清除一个或多个Map集合内的元素，每个Map调用clear()方法
+	 *
+	 * @param maps 一个或多个Map
+	 */
+	public static void clear(Map<?, ?>... maps) {
+		for (Map<?, ?> map : maps) {
+			if (isNotEmpty(map)) {
+				map.clear();
+			}
+		}
 	}
 }

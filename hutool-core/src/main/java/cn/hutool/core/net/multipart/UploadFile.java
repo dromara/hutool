@@ -1,36 +1,29 @@
-package cn.hutool.extra.servlet.multipart;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+package cn.hutool.core.net.multipart;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 上传的文件对象
- * 
+ *
  * @author xiaoleilu
- * 
  */
 public class UploadFile {
-	private static Log log = LogFactory.get();
 
 	private static final String TMP_FILE_PREFIX = "hutool-";
 	private static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
-	private UploadFileHeader header;
-	private UploadSetting setting;
-	
+	private final UploadFileHeader header;
+	private final UploadSetting setting;
+
 	private int size = -1;
 
 	// 文件流（小文件位于内存中）
@@ -40,8 +33,8 @@ public class UploadFile {
 
 	/**
 	 * 构造
-	 * 
-	 * @param header 头部信息
+	 *
+	 * @param header  头部信息
 	 * @param setting 上传设置
 	 */
 	public UploadFile(UploadFileHeader header, UploadSetting setting) {
@@ -56,6 +49,7 @@ public class UploadFile {
 	 */
 	public void delete() {
 		if (tempFile != null) {
+			//noinspection ResultOfMethodCallIgnored
 			tempFile.delete();
 		}
 		if (data != null) {
@@ -66,17 +60,18 @@ public class UploadFile {
 	/**
 	 * 将上传的文件写入指定的目标文件路径，自动创建文件<br>
 	 * 写入后原临时文件会被删除
+	 *
 	 * @param destPath 目标文件路径
 	 * @return 目标文件
 	 * @throws IOException IO异常
 	 */
 	public File write(String destPath) throws IOException {
-		if(data != null || tempFile != null) {
-			return write(FileUtil.touch(destPath));
+		if (data != null || tempFile != null) {
+			return write(FileUtil.file(destPath));
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 将上传的文件写入目标文件<br>
 	 * 写入后原临时文件会被删除
@@ -87,7 +82,7 @@ public class UploadFile {
 	 */
 	public File write(File destination) throws IOException {
 		assertValid();
-		
+
 		if (destination.isDirectory() == true) {
 			destination = new File(destination, this.header.getFileName());
 		}
@@ -101,14 +96,14 @@ public class UploadFile {
 		}
 		return destination;
 	}
-	
+
 	/**
 	 * @return 获得文件字节流
 	 * @throws IOException IO异常
 	 */
 	public byte[] getFileContent() throws IOException {
 		assertValid();
-		
+
 		if (data != null) {
 			return data;
 		}
@@ -124,12 +119,12 @@ public class UploadFile {
 	 */
 	public InputStream getFileInputStream() throws IOException {
 		assertValid();
-		
+
 		if (data != null) {
-			return new BufferedInputStream(new ByteArrayInputStream(data));
+			return IoUtil.toBuffered(IoUtil.toStream(this.data));
 		}
 		if (tempFile != null) {
-			return new BufferedInputStream(new FileInputStream(tempFile));
+			return IoUtil.toBuffered(IoUtil.toStream(this.tempFile));
 		}
 		return null;
 	}
@@ -174,9 +169,10 @@ public class UploadFile {
 	}
 
 	// ---------------------------------------------------------------- process
+
 	/**
 	 * 处理上传表单流，提取出文件
-	 * 
+	 *
 	 * @param input 上传表单的流
 	 * @return 是否成功
 	 * @throws IOException IO异常
@@ -184,7 +180,6 @@ public class UploadFile {
 	protected boolean processStream(MultipartRequestInputStream input) throws IOException {
 		if (!isAllowedExtension()) {
 			// 非允许的扩展名
-			log.debug("Forbidden uploaded file [{}]", this.getFileName());
 			size = input.skipToBoundary();
 			return false;
 		}
@@ -193,7 +188,7 @@ public class UploadFile {
 		// 处理内存文件
 		int memoryThreshold = setting.memoryThreshold;
 		if (memoryThreshold > 0) {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
 			int written = input.copy(baos, memoryThreshold);
 			data = baos.toByteArray();
 			if (written <= memoryThreshold) {
@@ -220,9 +215,9 @@ public class UploadFile {
 			size += input.copy(out, maxFileSize - size + 1); // one more byte to detect larger files
 			if (size > maxFileSize) {
 				// 超出上传大小限制
+				//noinspection ResultOfMethodCallIgnored
 				tempFile.delete();
 				tempFile = null;
-				log.debug("Upload file [{}] too big, file size > [{}]", this.getFileName(), maxFileSize);
 				input.skipToBoundary();
 				return false;
 			}
@@ -236,6 +231,7 @@ public class UploadFile {
 	}
 
 	// ---------------------------------------------------------------------------- Private method start
+
 	/**
 	 * @return 是否为允许的扩展名
 	 */
@@ -257,13 +253,14 @@ public class UploadFile {
 		// 未匹配到扩展名，如果为允许列表，返回false， 否则true
 		return !isAllow;
 	}
-	
+
 	/**
 	 * 断言是否文件流可用
+	 *
 	 * @throws IOException IO异常
 	 */
 	private void assertValid() throws IOException {
-		if(! isUploaded()) {
+		if (false == isUploaded()) {
 			throw new IOException(StrUtil.format("File [{}] upload fail", getFileName()));
 		}
 	}

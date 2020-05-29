@@ -13,7 +13,7 @@ import cn.hutool.extra.tokenizer.Word;
 public class IKAnalyzerWord implements Word {
 	private static final long serialVersionUID = 1L;
 	
-	private Lexeme word;
+	private final Lexeme word;
 
 	/**
 	 * 构造

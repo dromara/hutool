@@ -1,18 +1,5 @@
 package cn.hutool.setting;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
@@ -30,6 +17,19 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.dialect.Props;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * 设置工具类。 用于支持设置（配置）文件<br>
@@ -638,7 +638,6 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 *
 	 * @param m Map
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
 		this.groupedMap.putAll(DEFAULT_GROUP, m);
@@ -657,7 +656,6 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 *
 	 * @return 默认分组（空分组）中的所有键列表
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<String> keySet() {
 		return this.groupedMap.keySet(DEFAULT_GROUP);
@@ -668,7 +666,6 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 *
 	 * @return 默认分组（空分组）中的所有值列表
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Collection<String> values() {
 		return this.groupedMap.values(DEFAULT_GROUP);
@@ -679,7 +676,6 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 *
 	 * @return 默认分组（空分组）中的所有键值对列表
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Entry<String, String>> entrySet() {
 		return this.groupedMap.entrySet(DEFAULT_GROUP);

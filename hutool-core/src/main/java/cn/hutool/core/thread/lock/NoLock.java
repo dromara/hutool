@@ -17,7 +17,7 @@ public class NoLock implements Lock{
 	}
 
 	@Override
-	public void lockInterruptibly() throws InterruptedException {
+	public void lockInterruptibly() {
 	}
 
 	@Override
@@ -25,8 +25,9 @@ public class NoLock implements Lock{
 		return true;
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
-	public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+	public boolean tryLock(long time, TimeUnit unit) {
 		return true;
 	}
 
@@ -34,9 +35,10 @@ public class NoLock implements Lock{
 	public void unlock() {
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Condition newCondition() {
-		return null;
+		throw new UnsupportedOperationException("NoLock`s newCondition method is unsupported");
 	}
 
 }

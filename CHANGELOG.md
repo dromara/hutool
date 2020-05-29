@@ -3,7 +3,168 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.2.5
+## 5.3.6 (2020-05-25)
+
+### 新特性
+* 【core   】     NumberConverter Long类型增加日期转换（pr#872@Github）
+* 【all    】     StrUtil and SymmetricCrypto注释修正（pr#873@Github）
+* 【core   】     CsvReader支持返回Bean（issue#869@Github）
+* 【core   】     Snowflake循环等待下一个时间时避免长时间循环，加入对时钟倒退的判断（pr#874@Github）
+* 【extra  】     新增 QRCode base64 编码形式返回（pr#878@Github）
+* 【core   】     ImgUtil增加toBase64DateUri，URLUtil增加getDataUri方法
+* 【core   】     IterUtil添加List转Map的工具方法（pr#123@Gitee）
+* 【core   】     BeanValuePovider转换失败时，返回原数据，而非null
+* 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
+* 【core   】     MapUtil和CollUtil增加clear方法（issue#I1I4HC@Gitee）
+* 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）
+* 【http   】     SoapClient支持自定义请求头（issue#I1I0AO@Gitee）
+* 【script 】     ScriptUtil增加evalInvocable和invoke方法（issue#I1HHCP@Gitee）
+* 【core   】     ImgUtil增加去除背景色的方法（pr#124@Gitee）
+* 【system 】     OshiUtil增加获取CPU使用率的方法（pr#124@Gitee）
+* 【crypto 】     AsymmetricAlgorithm去除EC（issue#887@Github）
+* 【cache  】     超时缓存使用的线程池大小默认为1（issue#890@Github）
+* 【poi    】     ExcelSaxReader支持handleCell方法
+* 【core   】     Snowflake容忍2秒内的时间回拨（issue#I1IGDX@Gitee）
+
+### Bug修复
+* 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）
+* 【core   】     修复SemaphoreRunnable释放问题（issue#I1HLQQ@Gitee）
+* 【poi    】     修复Sax方式读取Excel行号错误问题（issue#882@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.5 (2020-05-13)
+
+### 新特性
+* 【core   】     增加CollUtil.map方法
+* 【extra  】     增加Sftp.lsEntries方法，Ftp和Sftp增加recursiveDownloadFolder（pr#121@Gitee）
+* 【system 】     OshiUtil增加getNetworkIFs方法
+* 【core   】     CollUtil增加unionDistinct、unionAll方法（pr#122@Gitee）
+* 【core   】     增加IoUtil.readObj重载，通过ValidateObjectInputStream由用户自定义安全检查。
+* 【http   】     改造HttpRequest中文件上传部分，增加MultipartBody类
+
+### Bug修复
+* 【core   】     修复IoUtil.readObj中反序列化安全检查导致的一些问题，去掉安全检查。
+* 【http   】     修复SimpleServer文件访问404问题（issue#I1GZI3@Gitee）
+* 【core   】     修复BeanCopier中循环引用逻辑问题（issue#I1H2VN@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.4 (2020-05-10)
+
+### 新特性
+* 【core   】     增加URLUtil.getContentLength方法（issue#I1GB1Z@Gitee）
+* 【extra  】     增加PinyinUtil（issue#I1GMIV@Gitee）
+
+### Bug修复
+* 【extra  】     修复Ftp设置超时问题（issue#I1GMTQ@Gitee）
+* 【core   】     修复TreeUtil根据id查找子节点时的NPE问题（pr#120@Gitee）
+* 【core   】     修复BeanUtil.copyProperties中Alias注解无效问题（issue#I1GK3M@Gitee）
+* 【core   】     修复CollUtil.containsAll空集合判断问题（issue#I1G9DE@Gitee）
+* 【core   】     修复XmlUtil.xmlToBean失败问题（issue#865@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.3 (2020-05-05)
+
+### 新特性
+* 【core   】     ImgUtil.createImage支持背景透明（issue#851@Github）
+* 【json   】     更改JSON转字符串时"</"被转义的规则为不转义（issue#852@Github）
+* 【cron   】     表达式的所有段支持L关键字（issue#849@Github）
+* 【extra  】     增加PinyinUtil，封装TinyPinyin
+* 【extra  】     Ftp和Sftp增加FtpConfig，提供超时等更多可选参数
+* 【extra  】     SpringUtil增加getActiveProfiles、getBeansOfType、getBeanNamesForType方法（issue#I1FXF3@Gitee）
+* 【bloomFilter】 避免布隆过滤器数字溢出（pr#119@Gitee）
+* 【core   】     增加IoUtil.writeObj（issue#I1FZIE）
+* 【core   】     增加FastStringWriter
+* 【core   】     增加NumberUtil.ceilDiv方法（pr#858@Github）
+* 【core   】     IdcardUtil增加省份校验（issue#859@Github）
+* 【extra  】     TemplateFactory和TokenizerFactory增加单例的get方法
+
+### Bug修复
+* 【core   】     修复URLBuilder中请求参数有`&amp;`导致的问题（issue#850@Github）
+* 【core   】     修复URLBuilder中路径以`/`结尾导致的问题（issue#I1G44J@Gitee）
+* 【db     】     修复SqlBuilder中orderBy无效问题（issue#856@Github）
+* 【core   】     修复StrUtil.subBetweenAll错误问题（issue#861@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.2 (2020-04-23)
+
+### 新特性
+* 【core   】     增加NetUtil.isOpen方法
+* 【core   】     增加ThreadUtil.sleep和safeSleep的重载
+* 【core   】     Sftp类增加toString方法（issue#I1F2T4@Gitee）
+* 【core   】     修改FileUtil.size逻辑，不存在的文件返回0
+* 【extra  】     Sftp.ls遇到文件不存在返回空集合，而非抛异常（issue#844@Github）
+* 【http   】     改进HttpRequest.toString()格式，添加url
+
+### Bug修复
+* 【db     】     修复PageResult.isLast计算问题
+* 【cron   】     修复更改系统时间后CronTimer被阻塞的问题（issue#838@Github）
+* 【db     】     修复Page.addOrder无效问题（issue#I1F9MZ@Gitee）
+* 【json   】     修复JSONConvert转换日期空指针问题（issue#I1F8M2@Gitee）
+* 【core   】     修复XML中带注释Xpath解析导致空指针问题（issue#I1F2WI@Gitee）
+* 【core   】     修复FileUtil.rename原文件无扩展名多点的问题（issue#839@Github）
+* 【db     】     修复DbUtil.close可能存在的空指针问题（issue#847@Github）
+
+-------------------------------------------------------------------------------------------------------------
+## 5.3.1 (2020-04-17)
+
+### 新特性
+* 【core   】     ListUtil、MapUtil、CollUtil增加empty方法
+* 【poi    】     调整别名策略，clearHeaderAlias和addHeaderAlias同时清除aliasComparator（issue#828@Github）
+* 【core   】     修改StrUtil.equals逻辑，改为contentEquals
+* 【core   】     增加URLUtil.UrlDecoder
+* 【core   】     增加XmlUtil.setNamespaceAware，getByPath支持UniversalNamespaceCache
+* 【aop    】     增加Spring-cglib支持，改为SPI实现
+* 【json   】     增加JSONUtil.parseXXX增加JSONConfig参数
+* 【core   】     RandomUtil.randomNumber改为返回char
+* 【crypto 】     SM2支持设置Digest和DSAEncoding（issue#829@Github）
+
+### Bug修复
+* 【json   】     修复解析JSON字符串时配置无法传递问题（issue#I1EIDN@Gitee）
+* 【core   】     修复ServletUtil.readCookieMap空指针问题（issue#827@Github）
+* 【crypto 】     修复SM2中检查密钥导致的问题（issue#I1EC47@Gitee）
+* 【core   】     修复TableMap.isEmpty判断问题
+* 【http   】     修复编码后的URL传入导致二次编码的问题（issue#I1EIMN@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.3.0 (2020-04-07)
+
+### 新特性
+* 【extra  】     JschUtil增加execByShell方法(issue#I1CYES@Gitee)
+* 【core   】     StrUtil增加subBetweenAll方法，Console增加where和lineNumber方法(issue#812@Github)
+* 【core   】     TableMap增加getKeys和getValues方法
+* 【json   】     JSONObject和JSONArray增加set方法，标识put弃用
+* 【http   】     增加SimpleHttpServer
+* 【script 】     增加createXXXScript，区别单例
+* 【core   】     修改FileUtil.writeFileToStream等方法返回值为long
+* 【core   】     CollUtil.split增加空集合判定（issue#814@Github）
+* 【core   】     NetUtil增加parseCookies方法
+* 【core   】     CollUtil增加toMap方法
+* 【core   】     CollUtil和IterUtil废弃一些方法
+* 【core   】     添加ValidateObjectInputStream避免对象反序列化漏洞风险
+* 【core   】     添加BiMap
+* 【all    】     cn.hutool.extra.servlet.multipart包迁移到cn.hutool.core.net下
+* 【core   】     XmlUtil.mapToXml方法支持集合解析（issue#820@Github）
+* 【json   】     解析Object中对是否为bean单独判断，而不是直接解析
+* 【core   】     SimHash锁改为StampedLock
+* 【core   】     Singleton改为SimpleCache实现
+* 【core   】     增加CalendarUtil，DateUtil相关方法全部迁移到此
+
+### Bug修复
+* 【extra  】     修复SpringUtil使用devtools重启报错问题
+* 【http   】     修复HttpUtil.encodeParams针对无参数URL问题（issue#817@Github）
+* 【extra  】     修复模板中无效引用的问题
+* 【extra  】     修复读取JSON文本配置未应用到子对象的问题（issue#818@Github）
+* 【extra  】     修复XmlUtil.createXml中namespace反向问题
+* 【core   】     修复WatchMonitor默认无event问题
+
+-------------------------------------------------------------------------------------------------------------
+
+## 5.2.5 (2020-03-26)
 
 ### 新特性
 * 【core   】     增加逻辑，对于原始类型注入，使用默认值（issue#797@Github）
@@ -16,6 +177,7 @@
 * 【core   】     CollUtil.newHashSet重载歧义，更换为set方法
 * 【core   】     增加ListUtil，增加Hash32、Hash64、Hash128接口
 * 【crypto 】     BCUtil增加readPemPrivateKey和readPemPublicKey方法
+* 【cache  】     替换读写锁为StampedLock，增加LockUtil
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）

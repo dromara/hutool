@@ -1,7 +1,26 @@
 package cn.hutool.crypto;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -17,31 +36,14 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 /**
  * 密钥工具类
@@ -905,5 +907,50 @@ public class KeyUtil {
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
 		return BCUtil.decodeECPoint(encodeByte, curveName);
+	}
+
+	/**
+	 * 通过RSA私钥生成RSA公钥
+	 *
+	 * @param privateKey RSA私钥
+	 * @return RSA公钥，null表示私钥不被支持
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(PrivateKey privateKey){
+		if(privateKey instanceof RSAPrivateCrtKey){
+			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey)privateKey;
+			return getRSAPublicKey(privk.getModulus(), privk.getPublicExponent());
+		}
+		return null;
+	}
+
+	/**
+	 * 获得RSA公钥对象
+	 *
+	 * @param modulus Modulus
+	 * @param publicExponent Public Exponent
+	 * @return 公钥
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(String modulus, String publicExponent){
+		return getRSAPublicKey(
+				new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
+	}
+
+	/**
+	 * 获得RSA公钥对象
+	 *
+	 * @param modulus Modulus
+	 * @param publicExponent Public Exponent
+	 * @return 公钥
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(BigInteger modulus, BigInteger publicExponent){
+		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+		try {
+			return getKeyFactory("RSA").generatePublic(publicKeySpec);
+		} catch (InvalidKeySpecException e) {
+			throw new CryptoException(e);
+		}
 	}
 }

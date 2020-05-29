@@ -4,14 +4,15 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -72,6 +73,22 @@ public class BeanUtilTest {
 		Assert.assertEquals(person.getName(), "Joe");
 		Assert.assertEquals(person.getAge(), 12);
 		Assert.assertEquals(person.getOpenid(), "DFDFSDFWERWER");
+	}
+
+	@Test
+	public void toBeanTest(){
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		final Map<?, ?> map = BeanUtil.toBean(person, Map.class);
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals(14, map.get("age"));
+		Assert.assertEquals("11213232", map.get("openid"));
+		// static属性应被忽略
+		Assert.assertFalse(map.containsKey("SUBNAME"));
 	}
 
 	@Test
@@ -154,8 +171,17 @@ public class BeanUtilTest {
 		person.setSlow(true);
 
 		Map<String, Object> map = BeanUtil.beanToMap(person);
-		Console.log(map);
 		Assert.assertEquals("sub名字", map.get("aliasSubName"));
+	}
+
+	@Test
+	public void mapToBeanWithAliasTest() {
+		Map<String, Object> map = MapUtil.newHashMap();
+		map.put("aliasSubName", "sub名字");
+		map.put("slow", true);
+
+		final SubPersonWithAlias subPersonWithAlias = BeanUtil.mapToBean(map, SubPersonWithAlias.class, false);
+		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
 	}
 
 	@Test
@@ -205,12 +231,13 @@ public class BeanUtilTest {
 	}
 
 	@Test
-	public void copyProperties() {
+	public void copyPropertiesTest() {
 		SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
+
 		SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
 		Assert.assertEquals(14, person1.getAge());
 		Assert.assertEquals("11213232", person1.getOpenid());
@@ -323,9 +350,9 @@ public class BeanUtilTest {
 	}
 
 	@Test
-	public void beanToBeanTest(){
+	public void beanToBeanTest() {
 		// 修复对象无getter方法导致报错的问题
-		Page page1=new Page();
+		Page page1 = new Page();
 		BeanUtil.toBean(page1, Page.class);
 	}
 
@@ -340,5 +367,31 @@ public class BeanUtilTest {
 			this.optimizeCountSql = optimizeCountSql;
 			return this;
 		}
+	}
+
+	@Test
+	public void copyBeanToBeanTest() {
+		// 测试在copyProperties方法中alias是否有效
+		Food info = new Food();
+		info.setBookID("0");
+		info.setCode("123");
+		HllFoodEntity entity = new HllFoodEntity();
+		BeanUtil.copyProperties(info, entity);
+		Assert.assertEquals(info.getBookID(), entity.getBookId());
+		Assert.assertEquals(info.getCode(), entity.getCode2());
+	}
+
+	@Data
+	public static class Food {
+		@Alias("bookId")
+		private String bookID;
+		private String code;
+	}
+
+	@Data
+	public static class HllFoodEntity implements Serializable {
+		private String bookId;
+		@Alias("code")
+		private String code2;
 	}
 }

@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
-import java.util.ArrayList;
-
 import cn.hutool.core.util.PageUtil;
+
+import java.util.ArrayList;
 
 /**
  * 分页数据结果集
@@ -169,6 +169,6 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @return 是否最后一页
 	 */
 	public boolean isLast() {
-		return this.page >= this.totalPage;
+		return this.page >= (this.totalPage - 1);
 	}
 }

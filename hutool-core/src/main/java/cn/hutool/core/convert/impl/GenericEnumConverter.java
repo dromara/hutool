@@ -14,7 +14,7 @@ import cn.hutool.core.convert.AbstractConverter;
 public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<E> enumClass;
+	private final Class<E> enumClass;
 	
 	/**
 	 * 构造
@@ -25,9 +25,9 @@ public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E
 		this.enumClass = enumClass;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected E convertInternal(Object value) {
-		//noinspection unchecked
 		E enumValue = (E) EnumConverter.tryConvertEnum(value, this.enumClass);
 		if(null == enumValue && false == value instanceof String){
 			// 最后尝试valueOf转换

@@ -1,16 +1,5 @@
 package cn.hutool.db;
 
-import java.io.Closeable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
@@ -21,6 +10,11 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 /**
  * 数据库操作工具类
@@ -156,30 +150,13 @@ public final class DbUtil {
 	 *
 	 * @param objsToClose 需要关闭的对象
 	 */
-	@SuppressWarnings("ConstantConditions")
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
-			if (obj instanceof AutoCloseable) {
-				IoUtil.close((AutoCloseable) obj);
-			} else if (obj instanceof Closeable) {
-				IoUtil.close((Closeable) obj);
-			} else {
-				try {
-					if (obj != null) {
-						if (obj instanceof ResultSet) {
-							((ResultSet) obj).close();
-						} else if (obj instanceof Statement) {
-							((Statement) obj).close();
-						} else if (obj instanceof PreparedStatement) {
-							((PreparedStatement) obj).close();
-						} else if (obj instanceof Connection) {
-							((Connection) obj).close();
-						} else {
-							log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
-						}
-					}
-				} catch (SQLException e) {
-					// ignore
+			if(null != obj){
+				if (obj instanceof AutoCloseable) {
+					IoUtil.close((AutoCloseable) obj);
+				} else {
+					log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
 				}
 			}
 		}

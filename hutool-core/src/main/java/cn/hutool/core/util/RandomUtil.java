@@ -1,5 +1,14 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.lang.WeightRandom;
+import cn.hutool.core.lang.WeightRandom.WeightObj;
+
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,15 +22,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.UUID;
-import cn.hutool.core.lang.WeightRandom;
-import cn.hutool.core.lang.WeightRandom.WeightObj;
 
 /**
  * 随机工具类
@@ -487,7 +487,7 @@ public class RandomUtil {
 	 * @return 随机数字字符
 	 * @since 3.1.2
 	 */
-	public static int randomNumber() {
+	public static char randomNumber() {
 		return randomChar(BASE_NUMBER);
 	}
 

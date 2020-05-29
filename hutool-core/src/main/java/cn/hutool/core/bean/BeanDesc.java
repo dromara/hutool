@@ -1,14 +1,5 @@
 package cn.hutool.core.bean;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.BooleanUtil;
@@ -17,6 +8,14 @@ import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述<br>
@@ -142,7 +141,7 @@ public class BeanDesc implements Serializable{
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
 			if(false == ModifierUtil.isStatic(field)) {
 				//只针对非static属性
-				this.propMap.put(field.getName(), createProp(field));
+				this.propMap.put(ReflectUtil.getFieldName(field), createProp(field));
 			}
 		}
 		return this;
@@ -322,7 +321,7 @@ public class BeanDesc implements Serializable{
 		}
 
 		/**
-		 * 获取字段名，如果存在{@link Alias}注解，读取注解的值作为名称
+		 * 获取字段名，如果存在Alias注解，读取注解的值作为名称
 		 * 
 		 * @return 字段名
 		 */

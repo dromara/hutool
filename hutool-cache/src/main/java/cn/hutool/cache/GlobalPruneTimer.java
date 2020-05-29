@@ -24,7 +24,7 @@ public enum GlobalPruneTimer {
 	/**
 	 * 缓存任务计数
 	 */
-	private AtomicInteger cacheTaskNumber = new AtomicInteger(1);
+	private final AtomicInteger cacheTaskNumber = new AtomicInteger(1);
 
 	/**
 	 * 定时器
@@ -56,7 +56,7 @@ public enum GlobalPruneTimer {
 		if (null != pruneTimer) {
 			shutdownNow();
 		}
-		this.pruneTimer = new ScheduledThreadPoolExecutor(16, r -> ThreadUtil.newThread(r, StrUtil.format("Pure-Timer-{}", cacheTaskNumber.getAndIncrement())));
+		this.pruneTimer = new ScheduledThreadPoolExecutor(1, r -> ThreadUtil.newThread(r, StrUtil.format("Pure-Timer-{}", cacheTaskNumber.getAndIncrement())));
 	}
 
 	/**

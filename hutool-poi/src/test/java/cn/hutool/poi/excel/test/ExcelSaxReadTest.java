@@ -7,15 +7,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * Excel sax方式读取
- * 
- * @author looly
  *
+ * @author looly
  */
 public class ExcelSaxReadTest {
 
@@ -63,5 +65,40 @@ public class ExcelSaxReadTest {
 				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
 			}
 		};
+	}
+
+	@Test
+	@Ignore
+	public void handle07CellTest() {
+		ExcelUtil.readBySax("d:/test/test.xlsx", -1, new RowHandler() {
+
+					@Override
+					public void handleCell(int sheetIndex, long rowIndex, int cellIndex, Object value, CellStyle xssfCellStyle) {
+						Console.log("{} {} {}", rowIndex, cellIndex, value);
+					}
+
+					@Override
+					public void handle(int sheetIndex, long rowIndex, List<Object> rowList) {
+
+					}
+				}
+		);
+	}
+
+	@Test
+	@Ignore
+	public void handle03CellTest() {
+		ExcelUtil.readBySax("d:/test/test.xls", -1, new RowHandler() {
+
+					@Override
+					public void handleCell(int sheetIndex, long rowIndex, int cellIndex, Object value, CellStyle xssfCellStyle) {
+						Console.log("{} {} {}", rowIndex, cellIndex, value);
+					}
+
+					@Override
+					public void handle(int sheetIndex, long rowIndex, List<Object> rowList) {
+					}
+				}
+		);
 	}
 }

@@ -13,7 +13,32 @@ import java.util.Map;
 public class MapBuilder<K, V> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private Map<K, V> map;
+	private final Map<K, V> map;
+
+	/**
+	 * 创建Builder，默认HashMap实现
+	 *
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @return MapBuilder
+	 * @since 5.3.0
+	 */
+	public static <K, V> MapBuilder<K, V> create() {
+		return create(false);
+	}
+
+	/**
+	 * 创建Builder
+	 *
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param isLinked true创建LinkedHashMap，false创建HashMap
+	 * @return MapBuilder
+	 * @since 5.3.0
+	 */
+	public static <K, V> MapBuilder<K, V> create(boolean isLinked) {
+		return create(MapUtil.newHashMap(isLinked));
+	}
 
 	/**
 	 * 创建Builder

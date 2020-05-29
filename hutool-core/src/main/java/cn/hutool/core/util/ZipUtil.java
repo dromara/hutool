@@ -938,7 +938,6 @@ public class ZipUtil {
 				addDir(subPath, out);
 			}
 			// 压缩目录下的子文件或目录
-			//noinspection ConstantConditions
 			for (File childFile : files) {
 				zip(childFile, srcRootDir, out, filter);
 			}

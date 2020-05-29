@@ -1,7 +1,7 @@
 package cn.hutool.extra.template;
 
-import java.io.IOException;
-
+import cn.hutool.core.lang.Dict;
+import cn.hutool.extra.template.engine.beetl.BeetlUtil;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
@@ -9,8 +9,7 @@ import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Dict;
-import cn.hutool.extra.template.engine.beetl.BeetlUtil;
+import java.io.IOException;
 
 /**
  * BeetlUtil单元测试
@@ -18,6 +17,7 @@ import cn.hutool.extra.template.engine.beetl.BeetlUtil;
  * @author looly
  *
  */
+@SuppressWarnings("deprecation")
 public class BeetlUtilTest {
 
 	@Test

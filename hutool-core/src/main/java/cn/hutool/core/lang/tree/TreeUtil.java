@@ -134,9 +134,14 @@ public class TreeUtil {
 			return node;
 		}
 
+		final List<Tree<T>> children = node.getChildren();
+		if(null == children) {
+			return null;
+		}
+		
 		// 查找子节点
 		Tree<T> childNode;
-		for (Tree<T> child : node.getChildren()) {
+		for (Tree<T> child : children) {
 			childNode = child.getNode(id);
 			if (null != childNode) {
 				return childNode;

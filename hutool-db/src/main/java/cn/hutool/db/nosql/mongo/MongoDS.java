@@ -353,17 +353,6 @@ public class MongoDS implements Closeable {
 			log.debug("MongoDB connectionsPerHost: {}", connectionsPerHost);
 		}
 
-		// multiplier for connectionsPerHost for # of threads that can block if connectionsPerHost is 10, and threadsAllowedToBlockForConnectionMultiplier is 5, then 50 threads can block more than
-		// that and an exception will be throw --int
-		Integer threadsAllowedToBlockForConnectionMultiplier = setting.getInt(group + "threadsAllowedToBlockForConnectionMultiplier");
-		if (StrUtil.isBlank(group) == false && threadsAllowedToBlockForConnectionMultiplier == null) {
-			threadsAllowedToBlockForConnectionMultiplier = setting.getInt("threadsAllowedToBlockForConnectionMultiplier");
-		}
-		if (threadsAllowedToBlockForConnectionMultiplier != null) {
-			builder.threadsAllowedToBlockForConnectionMultiplier(threadsAllowedToBlockForConnectionMultiplier);
-			log.debug("MongoDB threadsAllowedToBlockForConnectionMultiplier: {}", threadsAllowedToBlockForConnectionMultiplier);
-		}
-
 		// 被阻塞线程从连接池获取连接的最长等待时间（ms） --int
 		Integer connectTimeout = setting.getInt(group + "connectTimeout");
 		if (StrUtil.isBlank(group) == false && connectTimeout == null) {

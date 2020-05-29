@@ -1,15 +1,14 @@
 package cn.hutool.db.ds;
 
+import cn.hutool.core.io.IoUtil;
+
+import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
-
-import javax.sql.DataSource;
-
-import cn.hutool.core.io.IoUtil;
 
 /**
  * {@link DataSource} 数据源实现包装，通过包装，提供基本功能外的额外功能和参数持有，包括：
@@ -23,8 +22,8 @@ import cn.hutool.core.io.IoUtil;
  */
 public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 
-	private DataSource ds;
-	private String driver;
+	private final DataSource ds;
+	private final String driver;
 
 	/**
 	 * 包装指定的DataSource

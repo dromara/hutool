@@ -9,13 +9,6 @@ public class ThreadUtilTest {
 	public void executeTest() {
 		final boolean isValid = true;
 		
-		ThreadUtil.execute(new Runnable() {
-			
-			@Override
-			public void run() {
-				Assert.assertTrue(isValid);
-			}
-		});
-		
+		ThreadUtil.execute(() -> Assert.assertTrue(isValid));
 	}
 }

@@ -22,4 +22,18 @@ public interface VoidFunc<P> {
 	 */
 	@SuppressWarnings("unchecked")
 	void call(P... parameters) throws Exception;
+
+	/**
+	 * 执行函数，异常包装为RuntimeException
+	 *
+	 * @param parameters 参数列表
+	 */
+	@SuppressWarnings("unchecked")
+	default void callWithRuntimeException(P... parameters){
+		try {
+			call(parameters);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

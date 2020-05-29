@@ -90,6 +90,8 @@ public class ExcelWriteTest {
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
 		writer.autoSizeColumn(0, true);
+		//冻结前两行
+		writer.setFreezePane(0, 2);
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -448,15 +450,26 @@ public class ExcelWriteTest {
 			rows.add(tempList);
 		}
 		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet.xlsx", "正常数据");
+		writer.addHeaderAlias("1", "row1");
+		writer.addHeaderAlias("3", "row2");
+		writer.setOnlyAlias(true);
+
 		writer.write(rows, true);
 		writer.autoSizeColumnAll();
 
+		//表2
 		writer.setSheet("当前重复数据");
+		writer.clearHeaderAlias();
+		writer.addHeaderAlias("3", "行3");
+		writer.addHeaderAlias("1", "行1");
 		writer.write(rows, true);
 		writer.autoSizeColumnAll();
+
+		//表3
 		writer.setSheet("历史重复数据");
 		writer.write(rows, true);
 		writer.autoSizeColumnAll();
+
 		writer.close();
 	}
 

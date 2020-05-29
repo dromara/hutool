@@ -1,22 +1,12 @@
-package cn.hutool.extra.servlet.multipart;
-
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.log.Log;
-import cn.hutool.setting.Setting;
-
-import java.net.URL;
+package cn.hutool.core.net.multipart;
 
 /**
  * 上传文件设定文件
- * 
+ *
  * @author xiaoleilu
  *
  */
 public class UploadSetting {
-	private static final Log log = Log.get();
-
-	/** 默认的配置文件路径（相对ClassPath） */
-	public final static String DEFAULT_SETTING_PATH = "config/upload.setting";
 
 	/** 最大文件大小，默认无限制 */
 	protected int maxFileSize = -1;
@@ -42,7 +32,7 @@ public class UploadSetting {
 
 	/**
 	 * 设定最大文件大小，-1表示无限制
-	 * 
+	 *
 	 * @param maxFileSize 最大文件大小
 	 */
 	public void setMaxFileSize(int maxFileSize) {
@@ -59,7 +49,7 @@ public class UploadSetting {
 	/**
 	 * 设定文件保存到内存的边界<br>
 	 * 如果文件大小小于这个边界，将保存于内存中，否则保存至临时目录中
-	 * 
+	 *
 	 * @param memoryThreshold 文件保存到内存的边界
 	 */
 	public void setMemoryThreshold(int memoryThreshold) {
@@ -75,7 +65,7 @@ public class UploadSetting {
 
 	/**
 	 * 设定上传文件的临时目录，null表示使用系统临时目录
-	 * 
+	 *
 	 * @param tmpUploadPath 临时目录，绝对路径
 	 */
 	public void setTmpUploadPath(String tmpUploadPath) {
@@ -92,7 +82,7 @@ public class UploadSetting {
 	/**
 	 * 设定文件扩展名限定里列表<br>
 	 * 禁止列表还是允许列表取决于isAllowFileExts
-	 * 
+	 *
 	 * @param fileExts 文件扩展名列表
 	 */
 	public void setFileExts(String[] fileExts) {
@@ -101,7 +91,7 @@ public class UploadSetting {
 
 	/**
 	 * 是否允许文件扩展名<br>
-	 * 
+	 *
 	 * @return 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
 	 */
 	public boolean isAllowFileExts() {
@@ -110,39 +100,11 @@ public class UploadSetting {
 
 	/**
 	 * 设定是否允许扩展名
-	 * 
+	 *
 	 * @param isAllowFileExts 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
 	 */
 	public void setAllowFileExts(boolean isAllowFileExts) {
 		this.isAllowFileExts = isAllowFileExts;
 	}
 	// ---------------------------------------------------------------------- Setters and Getters end
-
-	/**
-	 * 加载全局设定<br>
-	 * 使用默认的配置文件classpath/config/upload.setting
-	 */
-	public void load() {
-		load(DEFAULT_SETTING_PATH);
-	}
-
-	/**
-	 * 加载全局设定
-	 * 
-	 * @param settingPath 设定文件路径，相对Classpath
-	 */
-	synchronized public void load(String settingPath) {
-		URL url = URLUtil.getURL(settingPath);
-		if (url == null) {
-			log.info("Can not find Upload setting file [{}], use default setting.", settingPath);
-			return;
-		}
-		Setting setting = new Setting(url, Setting.DEFAULT_CHARSET, true);
-
-		maxFileSize = setting.getInt("file.size.max");
-		memoryThreshold = setting.getInt("memory.threshold");
-		tmpUploadPath = setting.getStr("tmp.upload.path");
-		fileExts = setting.getStrings("file.exts");
-		isAllowFileExts = setting.getBool("file.exts.allow");
-	}
 }

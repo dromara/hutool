@@ -1,17 +1,16 @@
 package cn.hutool.extra.tokenizer.engine.jcseg;
 
-import java.io.IOException;
-import java.io.StringReader;
-
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.tokenizer.Result;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
+import cn.hutool.extra.tokenizer.TokenizerException;
 import org.lionsoul.jcseg.ISegment;
 import org.lionsoul.jcseg.dic.ADictionary;
 import org.lionsoul.jcseg.dic.DictionaryFactory;
 import org.lionsoul.jcseg.segmenter.SegmenterConfig;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.TokenizerEngine;
-import cn.hutool.extra.tokenizer.Result;
-import cn.hutool.extra.tokenizer.TokenizerException;
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Jcseg分词引擎实现<br>
@@ -22,7 +21,7 @@ import cn.hutool.extra.tokenizer.TokenizerException;
  */
 public class JcsegEngine implements TokenizerEngine {
 
-	private ISegment segment;
+	private final ISegment segment;
 
 	/**
 	 * 构造

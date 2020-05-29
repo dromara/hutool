@@ -11,7 +11,7 @@ import cn.hutool.core.convert.Convert;
 public class BooleanUtil {
 
 	/** 表示为真的字符串 */
-	private static final String[] TRUE_ARRAY = { "true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", };
+	private static final String[] TRUE_ARRAY = { "true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√"};
 
 	/**
 	 * 取相反值

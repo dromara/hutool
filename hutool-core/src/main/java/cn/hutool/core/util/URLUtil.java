@@ -6,56 +6,94 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.url.UrlQuery;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
+import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.jar.JarFile;
 
 /**
- * 统一资源定位符相关工具类
+ * URL（Uniform Resource Locator）统一资源定位符相关工具类
+ *
+ * <p>
+ * 统一资源定位符，描述了一台特定服务器上某资源的特定位置。
+ * </p>
+ * URL组成：
+ * <pre>
+ *   协议://主机名[:端口]/ 路径/[:参数] [?查询]#Fragment
+ *   protocol :// hostname[:port] / path / [:parameters][?query]#fragment
+ * </pre>
  *
  * @author xiaoleilu
- *
  */
 public class URLUtil {
 
-	/** 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:" */
+	/**
+	 * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
+	 */
 	public static final String CLASSPATH_URL_PREFIX = "classpath:";
-	/** URL 前缀表示文件: "file:" */
+	/**
+	 * URL 前缀表示文件: "file:"
+	 */
 	public static final String FILE_URL_PREFIX = "file:";
-	/** URL 前缀表示jar: "jar:" */
+	/**
+	 * URL 前缀表示jar: "jar:"
+	 */
 	public static final String JAR_URL_PREFIX = "jar:";
-	/** URL 前缀表示war: "war:" */
+	/**
+	 * URL 前缀表示war: "war:"
+	 */
 	public static final String WAR_URL_PREFIX = "war:";
-	/** URL 协议表示文件: "file" */
+	/**
+	 * URL 协议表示文件: "file"
+	 */
 	public static final String URL_PROTOCOL_FILE = "file";
-	/** URL 协议表示Jar文件: "jar" */
+	/**
+	 * URL 协议表示Jar文件: "jar"
+	 */
 	public static final String URL_PROTOCOL_JAR = "jar";
-	/** URL 协议表示zip文件: "zip" */
+	/**
+	 * URL 协议表示zip文件: "zip"
+	 */
 	public static final String URL_PROTOCOL_ZIP = "zip";
-	/** URL 协议表示WebSphere文件: "wsjar" */
+	/**
+	 * URL 协议表示WebSphere文件: "wsjar"
+	 */
 	public static final String URL_PROTOCOL_WSJAR = "wsjar";
-	/** URL 协议表示JBoss zip文件: "vfszip" */
+	/**
+	 * URL 协议表示JBoss zip文件: "vfszip"
+	 */
 	public static final String URL_PROTOCOL_VFSZIP = "vfszip";
-	/** URL 协议表示JBoss文件: "vfsfile" */
+	/**
+	 * URL 协议表示JBoss文件: "vfsfile"
+	 */
 	public static final String URL_PROTOCOL_VFSFILE = "vfsfile";
-	/** URL 协议表示JBoss VFS资源: "vfs" */
+	/**
+	 * URL 协议表示JBoss VFS资源: "vfs"
+	 */
 	public static final String URL_PROTOCOL_VFS = "vfs";
-	/** Jar路径以及内部文件路径的分界符: "!/" */
+	/**
+	 * Jar路径以及内部文件路径的分界符: "!/"
+	 */
 	public static final String JAR_URL_SEPARATOR = "!/";
-	/** WAR路径及内部文件路径分界符 */
+	/**
+	 * WAR路径及内部文件路径分界符
+	 */
 	public static final String WAR_URL_SEPARATOR = "*/";
 
 	/**
@@ -71,7 +109,7 @@ public class URLUtil {
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
 	 *
-	 * @param url URL
+	 * @param url     URL
 	 * @param handler {@link URLStreamHandler}
 	 * @return URL对象
 	 * @since 4.1.1
@@ -111,7 +149,7 @@ public class URLUtil {
 	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
 	 *
-	 * @param urlStr URL字符串
+	 * @param urlStr  URL字符串
 	 * @param handler {@link URLStreamHandler}
 	 * @return URL
 	 * @since 4.1.9
@@ -167,7 +205,7 @@ public class URLUtil {
 	/**
 	 * 获得URL
 	 *
-	 * @param path 相对给定 class所在的路径
+	 * @param path  相对给定 class所在的路径
 	 * @param clazz 指定class
 	 * @return URL
 	 * @see ResourceUtil#getResource(String, Class)
@@ -181,7 +219,7 @@ public class URLUtil {
 	 *
 	 * @param file URL对应的文件对象
 	 * @return URL
-	 * @exception UtilException MalformedURLException
+	 * @throws UtilException MalformedURLException
 	 */
 	public static URL getURL(File file) {
 		Assert.notNull(file, "File is null !");
@@ -197,7 +235,7 @@ public class URLUtil {
 	 *
 	 * @param files URL对应的文件对象
 	 * @return URL
-	 * @exception UtilException MalformedURLException
+	 * @throws UtilException MalformedURLException
 	 */
 	public static URL[] getURLs(File... files) {
 		final URL[] urls = new URL[files.length];
@@ -219,8 +257,8 @@ public class URLUtil {
 	 * @return 域名的URI
 	 * @since 4.6.9
 	 */
-	public static URI getHost(URL url){
-		if(null == url){
+	public static URI getHost(URL url) {
+		if (null == url) {
 			return null;
 		}
 
@@ -234,12 +272,26 @@ public class URLUtil {
 	/**
 	 * 补全相对路径
 	 *
-	 * @param baseUrl 基准URL
+	 * @param baseUrl      基准URL
 	 * @param relativePath 相对URL
 	 * @return 相对路径
-	 * @exception UtilException MalformedURLException
+	 * @throws UtilException MalformedURLException
+	 * @deprecated 拼写错误，请使用{@link #completeUrl(String, String)}
 	 */
+	@Deprecated
 	public static String complateUrl(String baseUrl, String relativePath) {
+		return completeUrl(baseUrl, relativePath);
+	}
+
+	/**
+	 * 补全相对路径
+	 *
+	 * @param baseUrl      基准URL
+	 * @param relativePath 相对URL
+	 * @return 相对路径
+	 * @throws UtilException MalformedURLException
+	 */
+	public static String completeUrl(String baseUrl, String relativePath) {
 		baseUrl = normalize(baseUrl, false);
 		if (StrUtil.isBlank(baseUrl)) {
 			return null;
@@ -260,7 +312,7 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encodeAll(String url) {
 		return encodeAll(url, CharsetUtil.CHARSET_UTF_8);
@@ -270,12 +322,15 @@ public class URLUtil {
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
 	 *
-	 * @param url URL
-	 * @param charset 编码
+	 * @param url     URL
+	 * @param charset 编码，为null表示不编码
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encodeAll(String url, Charset charset) throws UtilException {
+		if (null == charset) {
+			return url;
+		}
 		try {
 			return java.net.URLEncoder.encode(url, charset.toString());
 		} catch (UnsupportedEncodingException e) {
@@ -290,7 +345,7 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 * @since 3.1.2
 	 */
 	public static String encode(String url) throws UtilException {
@@ -304,7 +359,7 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 * @since 3.1.2
 	 */
 	public static String encodeQuery(String url) throws UtilException {
@@ -316,7 +371,7 @@ public class URLUtil {
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 *
-	 * @param url 被编码内容
+	 * @param url     被编码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
 	 * @since 4.4.1
@@ -336,7 +391,7 @@ public class URLUtil {
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
 	 *
-	 * @param url 被编码内容
+	 * @param url     被编码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
 	 * @since 4.4.1
@@ -356,10 +411,10 @@ public class URLUtil {
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 *
-	 * @param url URL
+	 * @param url     URL
 	 * @param charset 编码
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encode(String url, String charset) throws UtilException {
 		if (StrUtil.isEmpty(url)) {
@@ -373,10 +428,10 @@ public class URLUtil {
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
 	 *
-	 * @param url URL
+	 * @param url     URL
 	 * @param charset 编码
 	 * @return 编码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encodeQuery(String url, String charset) throws UtilException {
 		return encodeQuery(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
@@ -388,7 +443,7 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return 解码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 * @since 3.1.2
 	 */
 	public static String decode(String url) throws UtilException {
@@ -396,38 +451,32 @@ public class URLUtil {
 	}
 
 	/**
-	 * 解码application/x-www-form-urlencoded字符
+	 * 解码application/x-www-form-urlencoded字符<br>
+	 * 将%开头的16进制表示的内容解码。
 	 *
 	 * @param content 被解码内容
-	 * @param charset 编码
+	 * @param charset 编码，null表示不解码
 	 * @return 编码后的字符
 	 * @since 4.4.1
 	 */
 	public static String decode(String content, Charset charset) {
 		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
+			return content;
 		}
-		return decode(content, charset.name());
+		return URLDecoder.decode(content, charset);
 	}
 
 	/**
-	 * 解码URL<br>
+	 * 解码application/x-www-form-urlencoded字符<br>
 	 * 将%开头的16进制表示的内容解码。
 	 *
-	 * @param url URL
+	 * @param content URL
 	 * @param charset 编码
 	 * @return 解码后的URL
-	 * @exception UtilException UnsupportedEncodingException
+	 * @throws UtilException UnsupportedEncodingException
 	 */
-	public static String decode(String url, String charset) throws UtilException {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		try {
-			return URLDecoder.decode(url, charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(e, "Unsupported encoding: [{}]", charset);
-		}
+	public static String decode(String content, String charset) throws UtilException {
+		return decode(content, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -435,7 +484,7 @@ public class URLUtil {
 	 *
 	 * @param uriStr URI路径
 	 * @return path
-	 * @exception UtilException 包装URISyntaxException
+	 * @throws UtilException 包装URISyntaxException
 	 */
 	public static String getPath(String uriStr) {
 		URI uri;
@@ -476,7 +525,7 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return URI
-	 * @exception UtilException 包装URISyntaxException
+	 * @throws UtilException 包装URISyntaxException
 	 */
 	public static URI toURI(URL url) throws UtilException {
 		return toURI(url, false);
@@ -485,10 +534,10 @@ public class URLUtil {
 	/**
 	 * 转URL为URI
 	 *
-	 * @param url URL
+	 * @param url      URL
 	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
-	 * @exception UtilException 包装URISyntaxException
+	 * @throws UtilException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
 	public static URI toURI(URL url, boolean isEncode) throws UtilException {
@@ -504,7 +553,7 @@ public class URLUtil {
 	 *
 	 * @param location 字符串路径
 	 * @return URI
-	 * @exception UtilException 包装URISyntaxException
+	 * @throws UtilException 包装URISyntaxException
 	 */
 	public static URI toURI(String location) throws UtilException {
 		return toURI(location, false);
@@ -516,11 +565,11 @@ public class URLUtil {
 	 * @param location 字符串路径
 	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
-	 * @exception UtilException 包装URISyntaxException
+	 * @throws UtilException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
 	public static URI toURI(String location, boolean isEncode) throws UtilException {
-		if(isEncode){
+		if (isEncode) {
 			location = encode(location);
 		}
 		try {
@@ -590,7 +639,7 @@ public class URLUtil {
 	/**
 	 * 获得Reader
 	 *
-	 * @param url {@link URL}
+	 * @param url     {@link URL}
 	 * @param charset 编码
 	 * @return {@link BufferedReader}
 	 * @since 3.2.1
@@ -636,7 +685,7 @@ public class URLUtil {
 	 * 1. 多个/替换为一个
 	 * </pre>
 	 *
-	 * @param url URL字符串
+	 * @param url          URL字符串
 	 * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
 	 * @return 标准化后的URL字符串
 	 * @since 4.4.1
@@ -663,7 +712,7 @@ public class URLUtil {
 			body = StrUtil.subPre(body, paramsSepIndex);
 		}
 
-		if(StrUtil.isNotEmpty(body)){
+		if (StrUtil.isNotEmpty(body)) {
 			// 去除开头的\或者/
 			//noinspection ConstantConditions
 			body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
@@ -682,5 +731,101 @@ public class URLUtil {
 			path = encode(path);
 		}
 		return protocol + domain + StrUtil.nullToEmpty(path) + StrUtil.nullToEmpty(params);
+	}
+
+	/**
+	 * 将Map形式的Form表单数据转换为Url参数形式<br>
+	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
+	 * 会自动url编码键和值
+	 *
+	 * <pre>
+	 * key1=v1&amp;key2=&amp;key3=v3
+	 * </pre>
+	 *
+	 * @param paramMap 表单数据
+	 * @param charset  编码，编码为null表示不编码
+	 * @return url参数
+	 */
+	public static String buildQuery(Map<String, ?> paramMap, Charset charset) {
+		return UrlQuery.of(paramMap).build(charset);
+	}
+
+	/**
+	 * 获取指定URL对应资源的内容长度，对于Http，其长度使用Content-Length头决定。
+	 *
+	 * @param url URL
+	 * @return 内容长度，未知返回-1
+	 * @throws IORuntimeException IO异常
+	 * @since 5.3.4
+	 */
+	public static long getContentLength(URL url) throws IORuntimeException {
+		if (null == url) {
+			return -1;
+		}
+
+		URLConnection conn = null;
+		try {
+			conn = url.openConnection();
+			return conn.getContentLengthLong();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			if (conn instanceof HttpURLConnection) {
+				((HttpURLConnection) conn).disconnect();
+			}
+		}
+	}
+
+	/**
+	 * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
+	 * 目的是将一些小的数据，直接嵌入到网页中，从而不用再从外部文件载入。常用于将图片嵌入网页。
+	 *
+	 * <p>
+	 * Data URI的格式规范：
+	 * <pre>
+	 *     data:[&lt;mime type&gt;][;charset=&lt;charset&gt;][;&lt;encoding&gt;],&lt;encoded data&gt;
+	 * </pre>
+	 *
+	 * @param mimeType 可选项（null表示无），数据类型（image/png、text/plain等）
+	 * @param encoding 数据编码方式（US-ASCII，BASE64等）
+	 * @param data     编码后的数据
+	 * @return Data URI字符串
+	 * @since 5.3.6
+	 */
+	public static String getDataUri(String mimeType, String encoding, String data) {
+		return getDataUri(mimeType, null, encoding, data);
+	}
+
+	/**
+	 * Data URI Scheme封装。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
+	 * 目的是将一些小的数据，直接嵌入到网页中，从而不用再从外部文件载入。常用于将图片嵌入网页。
+	 *
+	 * <p>
+	 * Data URI的格式规范：
+	 * <pre>
+	 *     data:[&lt;mime type&gt;][;charset=&lt;charset&gt;][;&lt;encoding&gt;],&lt;encoded data&gt;
+	 * </pre>
+	 *
+	 * @param mimeType 可选项（null表示无），数据类型（image/png、text/plain等）
+	 * @param charset  可选项（null表示无），源文本的字符集编码方式
+	 * @param encoding 数据编码方式（US-ASCII，BASE64等）
+	 * @param data     编码后的数据
+	 * @return Data URI字符串
+	 * @since 5.3.6
+	 */
+	public static String getDataUri(String mimeType, Charset charset, String encoding, String data) {
+		final StringBuilder builder = StrUtil.builder("data:");
+		if (StrUtil.isNotBlank(mimeType)) {
+			builder.append(mimeType);
+		}
+		if (null != charset) {
+			builder.append(";charset=").append(charset.name());
+		}
+		if (StrUtil.isNotBlank(encoding)) {
+			builder.append(';').append(encoding);
+		}
+		builder.append(',').append(data);
+
+		return builder.toString();
 	}
 }
