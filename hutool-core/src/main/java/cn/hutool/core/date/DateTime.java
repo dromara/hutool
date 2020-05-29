@@ -455,6 +455,16 @@ public class DateTime extends Date {
 	}
 
 	/**
+	 * 获得指定日期是这个日期所在年份的第几天<br>
+	 *
+	 * @return 天
+	 * @since 5.3.6
+	 */
+	public int dayOfYear() {
+		return getField(DateField.DAY_OF_YEAR);
+	}
+
+	/**
 	 * 获得指定日期是星期几，1表示周日，2表示周一
 	 *
 	 * @return 星期几

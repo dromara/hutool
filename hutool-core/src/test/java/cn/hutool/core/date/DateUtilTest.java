@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -381,14 +380,6 @@ public class DateUtilTest {
 	}
 
 	@Test
-	@Ignore
-	public void parseTest8() {
-		String str = "2020-04-24 9:00:00";
-		DateTime dateTime = DateUtil.parse(str);
-		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
-	}
-
-	@Test
 	public void parseAndOffsetTest() {
 		// 检查UTC时间偏移是否准确
 		String str = "2019-09-17T13:26:17.948Z";
@@ -761,5 +752,13 @@ public class DateUtilTest {
 
 		final long weekCount = DateUtil.betweenWeek(start, end, true);
 		Assert.assertEquals(30L, weekCount);
+	}
+
+	@Test
+	public void dayOfYearTest() {
+		int dayOfYear = DateUtil.dayOfYear(DateUtil.parse("2020-01-01"));
+		Assert.assertEquals(1, dayOfYear);
+		int lengthOfYear = DateUtil.lengthOfYear(2020);
+		Assert.assertEquals(366, lengthOfYear);
 	}
 }

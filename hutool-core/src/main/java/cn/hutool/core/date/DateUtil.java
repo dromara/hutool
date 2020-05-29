@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -259,7 +260,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.3.6
 	 */
 	public static int dayOfYear(Date date) {
-		return DateTime.of(date).getField(DateField.DAY_OF_YEAR);
+		return DateTime.of(date).dayOfYear();
 	}
 
 	/**
@@ -1861,6 +1862,17 @@ public class DateUtil extends CalendarUtil {
 	public static LocalDateTime toLocalDateTime(Date date) {
 		final DateTime dateTime = date(date);
 		return LocalDateTime.ofInstant(dateTime.toInstant(), dateTime.getZoneId());
+	}
+
+	/**
+	 * 获得指定年份的总天数
+	 *
+	 * @param year 年份
+	 * @return 天
+	 * @since 5.3.6
+	 */
+	public static int lengthOfYear(int year) {
+		return Year.of(year).length();
 	}
 
 	// ------------------------------------------------------------------------ Private method start
