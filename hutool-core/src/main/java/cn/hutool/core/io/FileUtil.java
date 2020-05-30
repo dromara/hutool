@@ -1160,6 +1160,30 @@ public class FileUtil {
 	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
 	 * </pre>
 	 * <p>
+	 *
+	 * <pre>
+	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
+	 * </pre>
+	 *
+	 * @param file        被修改的文件
+	 * @param newName     新的文件名，包括扩展名
+	 * @param isOverride  是否覆盖目标文件
+	 * @return 目标文件
+	 * @since 5.3.6
+	 */
+	public static File rename(File file, String newName, boolean isOverride) {
+		return rename(file, newName, false, isOverride);
+	}
+
+	/**
+	 * 修改文件或目录的文件名，不变更路径，只是简单修改文件名<br>
+	 * 重命名有两种模式：<br>
+	 * 1、isRetainExt为true时，保留原扩展名：
+	 *
+	 * <pre>
+	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
+	 * </pre>
+	 * <p>
 	 * 2、isRetainExt为false时，不保留原扩展名，需要在newName中
 	 *
 	 * <pre>

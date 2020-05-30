@@ -70,7 +70,7 @@ public class FileUtilTest {
 	@Test
 	@Ignore
 	public void renameTest() {
-		FileUtil.rename(FileUtil.file("hutool.jpg"), "b.png", false, false);
+		FileUtil.rename(FileUtil.file("d:/test/3.jpg"), "2.jpg", false);
 	}
 
 	@Test
