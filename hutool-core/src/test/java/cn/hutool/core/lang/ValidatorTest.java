@@ -136,4 +136,10 @@ public class ValidatorTest {
 		Assert.assertTrue(Validator.isPlateNumber("粤BA03205"));
 		Assert.assertTrue(Validator.isPlateNumber("闽20401领"));
 	}
+
+	@Test
+	public void isChineseTest(){
+		Assert.assertTrue(Validator.isChinese("全都是中文"));
+		Assert.assertFalse(Validator.isChinese("not全都是中文"));
+	}
 }

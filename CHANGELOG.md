@@ -29,6 +29,8 @@
 * 【core   】     DateUtil增加dayOfYear方法（pr#895@Github）
 * 【core   】     DateUtil增加dayOfYear方法（pr#895@Github）
 * 【http   】     HttpUtil增加downloadBytes方法（pr#895@Github）
+* 【core   】     isMactchRegex失效标记，增加isMatchRegex（issue#I1IPJG@Gitee）
+* 【core   】     优化Validator.isChinese
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

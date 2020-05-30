@@ -328,17 +328,6 @@ public class Validator {
 	}
 
 	/**
-	 * 通过正则表达式验证
-	 *
-	 * @param regex 正则
-	 * @param value 值
-	 * @return 是否匹配正则
-	 */
-	public static boolean isMactchRegex(String regex, CharSequence value) {
-		return ReUtil.isMatch(regex, value);
-	}
-
-	/**
 	 * 通过正则表达式验证<br>
 	 * 不符合正则抛出{@link ValidateException} 异常
 	 *
@@ -350,7 +339,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateMatchRegex(String regex, T value, String errorMsg) throws ValidateException {
-		if (false == isMactchRegex(regex, value)) {
+		if (false == isMatchRegex(regex, value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -372,12 +361,36 @@ public class Validator {
 	/**
 	 * 通过正则表达式验证
 	 *
+	 * @param regex 正则
+	 * @param value 值
+	 * @return 是否匹配正则
+	 * @deprecated 拼写错误，请使用{@link #isMatchRegex(String, CharSequence)}
+	 */
+	@Deprecated
+	public static boolean isMactchRegex(String regex, CharSequence value) {
+		return ReUtil.isMatch(regex, value);
+	}
+
+	/**
+	 * 通过正则表达式验证
+	 *
 	 * @param pattern 正则模式
 	 * @param value   值
 	 * @return 是否匹配正则
 	 */
 	public static boolean isMatchRegex(Pattern pattern, CharSequence value) {
 		return ReUtil.isMatch(pattern, value);
+	}
+
+	/**
+	 * 通过正则表达式验证
+	 *
+	 * @param regex 正则
+	 * @param value 值
+	 * @return 是否匹配正则
+	 */
+	public static boolean isMatchRegex(String regex, CharSequence value) {
+		return ReUtil.isMatch(regex, value);
 	}
 
 	/**
@@ -422,7 +435,7 @@ public class Validator {
 		if (max <= 0) {
 			reg = "^\\w{" + min + ",}$";
 		}
-		return isMactchRegex(reg, value);
+		return isMatchRegex(reg, value);
 	}
 
 	/**
@@ -954,13 +967,13 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为汉字
+	 * 验证是否都为汉字
 	 *
 	 * @param value 值
 	 * @return 是否为汉字
 	 */
 	public static boolean isChinese(CharSequence value) {
-		return isMactchRegex("^" + ReUtil.RE_CHINESES + "$", value);
+		return isMatchRegex(PatternPool.CHINESES, value);
 	}
 
 	/**
