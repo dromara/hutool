@@ -8,6 +8,7 @@ import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -918,7 +919,25 @@ public class DateUtil extends CalendarUtil {
 			// yyyy-MM-dd HH:mm
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
+			//yyyy-MM-dd HH:mm:ss.SSS
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_FORMAT);
+		}
+
+		//含有单个位数数字的日期时间格式
+		dateStr = normalize(dateStr);
+		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
+			final int colonCount = StrUtil.count(dateStr, CharUtil.COLON);
+			switch (colonCount) {
+				case 0:
+					// yyyy-MM-dd
+					return parseDate(dateStr);
+				case 1:
+					// yyyy-MM-dd HH:mm
+					return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
+				case 2:
+					// yyyy-MM-dd HH:mm:ss
+					return parseDateTime(dateStr);
+			}
 		}
 
 		// 没有更多匹配的时间格式

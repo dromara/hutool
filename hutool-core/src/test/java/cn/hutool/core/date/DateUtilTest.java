@@ -761,4 +761,21 @@ public class DateUtilTest {
 		int lengthOfYear = DateUtil.lengthOfYear(2020);
 		Assert.assertEquals(366, lengthOfYear);
 	}
+
+	@SuppressWarnings("ConstantConditions")
+	@Test
+	public void parseSingleNumberTest(){
+		DateTime dateTime = DateUtil.parse("2020-5-08");
+		Assert.assertEquals("2020-05-08 00:00:00", dateTime.toString());
+		dateTime = DateUtil.parse("2020-5-8");
+		Assert.assertEquals("2020-05-08 00:00:00", dateTime.toString());
+		dateTime = DateUtil.parse("2020-05-8");
+		Assert.assertEquals("2020-05-08 00:00:00", dateTime.toString());
+
+		//datetime
+		dateTime = DateUtil.parse("2020-5-8 3:12:3");
+		Assert.assertEquals("2020-05-08 03:12:03", dateTime.toString());
+		dateTime = DateUtil.parse("2020-5-8 3:2:3");
+		Assert.assertEquals("2020-05-08 03:02:03", dateTime.toString());
+	}
 }
