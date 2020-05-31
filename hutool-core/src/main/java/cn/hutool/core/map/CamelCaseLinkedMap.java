@@ -1,6 +1,6 @@
 package cn.hutool.core.map;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -60,7 +60,7 @@ public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CamelCaseLinkedMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<>(initialCapacity, loadFactor));
+		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 }

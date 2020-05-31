@@ -39,6 +39,7 @@
 * 【core   】     修复SemaphoreRunnable释放问题（issue#I1HLQQ@Gitee）
 * 【poi    】     修复Sax方式读取Excel行号错误问题（issue#882@Github）
 * 【poi    】     修复Sax方式读取Excel日期类型数据03和07不一致问题（issue#I1HL1C@Gitee）
+* 【poi    】     修复CamelCaseLinkedMap构造错误（issue#I1IZ30@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
