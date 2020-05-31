@@ -170,10 +170,21 @@ public class ExcelSaxUtil {
 	 *
 	 * @param value 单元格值
 	 * @return 日期
+	 * @since 5.3.6
+	 */
+	public static DateTime getDateValue(String value) {
+		return getDateValue(Double.parseDouble(value));
+	}
+
+	/**
+	 * 获取日期
+	 *
+	 * @param value 单元格值
+	 * @return 日期
 	 * @since 4.1.0
 	 */
-	private static DateTime getDateValue(String value) {
-		return DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(Double.parseDouble(value), false));
+	public static DateTime getDateValue(double value) {
+		return DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(value, false));
 	}
 
 	/**

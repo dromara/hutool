@@ -103,8 +103,9 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
+	@Ignore
 	public void dateReadTest(){
-		ExcelUtil.readBySax("d:/test/sax_test.xls", 0, (RowHandler) (i, i1, list) ->
+		ExcelUtil.readBySax("d:/test/sax_date_test.xlsx", 0, (i, i1, list) ->
 				Console.log(StrUtil.join(", ", list)));
-	};
+	}
 }

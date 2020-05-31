@@ -308,7 +308,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 					value = numrec.getValue();
 				} else if (formatString.contains(StrUtil.SLASH) || formatString.contains(StrUtil.COLON)) {
 					//日期
-					value = formatListener.formatNumberDateCell(numrec);
+					value = ExcelSaxUtil.getDateValue(numrec.getValue());
 				} else {
 					final double doubleValue = numrec.getValue();
 					final long longPart = (long) doubleValue;
