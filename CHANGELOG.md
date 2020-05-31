@@ -31,6 +31,7 @@
 * 【http   】     HttpUtil增加downloadBytes方法（pr#895@Github）
 * 【core   】     isMactchRegex失效标记，增加isMatchRegex（issue#I1IPJG@Gitee）
 * 【core   】     优化Validator.isChinese
+* 【core   】     ArrayUtil.addAll增加原始类型支持（issue#898@Github）
 
 ### Bug修复
 * 【core   】     修复SimpleCache死锁问题（issue#I1HOKB@Gitee）

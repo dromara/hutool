@@ -283,4 +283,10 @@ public class ArrayUtilTest {
 		Assert.assertEquals("C", array[2]);
 		Assert.assertEquals("D", array[3]);
 	}
+
+	@Test
+	public void addAllTest(){
+		final int[] ints = ArrayUtil.addAll(new int[]{1, 2, 3}, new int[]{4, 5, 6});
+		Assert.assertArrayEquals(new int[]{1,2,3,4,5,6}, ints);
+	}
 }
