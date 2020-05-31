@@ -1159,7 +1159,6 @@ public class FileUtil {
 	 * <pre>
 	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
 	 * </pre>
-	 * <p>
 	 *
 	 * <pre>
 	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg

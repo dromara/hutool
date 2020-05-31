@@ -21,12 +21,12 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.7.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
-		<druid.version>1.1.20</druid.version>
+		<druid.version>1.1.22</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.2</mongo.version>
-		<sqlite.version>3.30.1</sqlite.version>
+		<mongo.version>3.12.4</mongo.version>
+		<sqlite.version>3.31.1</sqlite.version>
 		<hsqldb.version>2.5.0</hsqldb.version>
-		<jedis.version>3.2.0</jedis.version>
+		<jedis.version>3.3.0</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -114,13 +114,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.19</version>
+			<version>8.0.20</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.11.jre7</version>
+			<version>42.2.12.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
