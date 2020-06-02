@@ -777,5 +777,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2020-05-08 03:12:03", dateTime.toString());
 		dateTime = DateUtil.parse("2020-5-8 3:2:3");
 		Assert.assertEquals("2020-05-08 03:02:03", dateTime.toString());
+		dateTime = DateUtil.parse("2020-5-8 3:12:13");
+		Assert.assertEquals("2020-05-08 03:12:13", dateTime.toString());
 	}
 }
