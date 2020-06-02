@@ -1,13 +1,12 @@
 package cn.hutool.core.util;
 
-import java.io.File;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
+import java.io.File;
 
 /**
  * {@link ZipUtil}单元测试
@@ -36,7 +35,7 @@ public class ZipUtilTest {
 		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
 		Console.log(unzip);
 	}
-	
+
 	@Test
 	@Ignore
 	public void unzipFromStreamTest() {

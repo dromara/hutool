@@ -388,7 +388,8 @@ public class ZipUtil {
 	 * @since 3.2.2
 	 */
 	public static File unzip(File zipFile, Charset charset) throws UtilException {
-		return unzip(zipFile, FileUtil.file(zipFile.getParentFile(), FileUtil.mainName(zipFile)), charset);
+		final File destDir = FileUtil.file(zipFile.getParentFile(), FileUtil.mainName(zipFile));
+		return unzip(zipFile, destDir, charset);
 	}
 
 	/**
@@ -459,6 +460,9 @@ public class ZipUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static File unzip(ZipFile zipFile, File outFile) throws IORuntimeException {
+		if(outFile.exists() && outFile.isFile()){
+			throw new UtilException("Target path [{}] exist!", outFile.getAbsolutePath());
+		}
 		try {
 			final Enumeration<ZipEntry> em = (Enumeration<ZipEntry>) zipFile.entries();
 			ZipEntry zipEntry;
