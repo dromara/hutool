@@ -3,9 +3,11 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.6 (2020-05-31)
+## 5.3.6 (2020-06-02)
 
 ### 新特性
+* 【core   】     ThreadFactoryBuilder的setUncaughtExceptionHandler返回this（issue#I1J4YJ@Gitee）
+
 ### Bug修复
 * 【core   】     修复DateUtil.parse解析2020-5-8 3:12:13错误问题（issue#I1IZA3@Gitee）
 

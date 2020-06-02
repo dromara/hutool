@@ -95,9 +95,11 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 	 * 设置未捕获异常的处理方式
 	 * 
 	 * @param uncaughtExceptionHandler {@link UncaughtExceptionHandler}
+	 * @return this
 	 */
-	public void setUncaughtExceptionHandler(UncaughtExceptionHandler uncaughtExceptionHandler) {
+	public ThreadFactoryBuilder setUncaughtExceptionHandler(UncaughtExceptionHandler uncaughtExceptionHandler) {
 		this.uncaughtExceptionHandler = uncaughtExceptionHandler;
+		return this;
 	}
 
 	/**
