@@ -633,7 +633,8 @@ public class Img implements Serializable {
 		} else {
 			point = new Point(rectangle.x, rectangle.y);
 		}
-		GraphicsUtil.drawImg(g, img, point);
+		rectangle.setLocation(point.x, point.y);
+		GraphicsUtil.drawImg(g, img, rectangle);
 
 		g.dispose();
 		return backgroundImg;

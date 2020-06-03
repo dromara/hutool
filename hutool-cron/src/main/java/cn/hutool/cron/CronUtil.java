@@ -1,15 +1,15 @@
 
 package cn.hutool.cron;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.Task;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.SettingRuntimeException;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 定时任务工具类<br>
@@ -183,7 +183,7 @@ public class CronUtil {
 			}
 			if (scheduler.isStarted()) {
 				//关闭并清除已有任务
-				scheduler.stop(true);
+				stop();
 			}
 		} finally {
 			lock.unlock();
@@ -199,7 +199,7 @@ public class CronUtil {
 	 * 停止
 	 */
 	public static void stop() {
-		scheduler.stop();
+		scheduler.stop(true);
 	}
 
 }

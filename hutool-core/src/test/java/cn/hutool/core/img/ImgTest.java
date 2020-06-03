@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
 
 public class ImgTest {
 	
@@ -45,5 +46,13 @@ public class ImgTest {
 						100, //
 						1f)
 				.write(FileUtil.file("d:/test/test2_result.png"));
+	}
+
+	@Test
+	@Ignore
+	public void pressImgTest(){
+		Img.from(FileUtil.file("d:/test/图片1.JPG"))
+				.pressImage(ImgUtil.read("d:/test/617180969474805871.jpg"), new Rectangle(0, 0, 800, 800), 1f)
+				.write(FileUtil.file("d:/test/pressImg_result.jpg"));
 	}
 }
