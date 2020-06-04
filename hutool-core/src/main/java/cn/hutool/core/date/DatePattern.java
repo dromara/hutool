@@ -50,7 +50,12 @@ public class DatePattern {
 	public static final String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 	/** 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSS */
 	public static final FastDateFormat NORM_DATETIME_MS_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MS_PATTERN);
-	
+
+	/** ISO8601日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss,SSS */
+	public static final String ISO8601_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
+	/** ISO8601日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss,SSS */
+	public static final FastDateFormat ISO8601_FORMAT = FastDateFormat.getInstance(ISO8601_PATTERN);
+
 	/** 标准日期格式：yyyy年MM月dd日 */
 	public static final String CHINESE_DATE_PATTERN = "yyyy年MM月dd日";
 	/** 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日 */
