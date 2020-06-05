@@ -1943,6 +1943,8 @@ public class DateUtil extends CalendarUtil {
 			builder.append(' ');
 			String timePart = dateAndTime.get(1).replaceAll("[时分秒]", ":");
 			timePart = StrUtil.removeSuffix(timePart, ":");
+			//将ISO8601中的逗号替换为.
+			timePart = timePart.replace(',', '.');
 			builder.append(timePart);
 		}
 
