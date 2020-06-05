@@ -282,7 +282,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (CollectionUtil.isEmpty(names)) {
 			return null;
 		}
-		final JSONArray ja = new JSONArray();
+		final JSONArray ja = new JSONArray(this.config);
 		Object value;
 		for (String name : names) {
 			value = this.get(name);
@@ -432,11 +432,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.put(key, value instanceof JSONArray ? new JSONArray().set(value) : value);
+			this.put(key, value instanceof JSONArray ? new JSONArray(this.config).set(value) : value);
 		} else if (object instanceof JSONArray) {
 			((JSONArray) object).set(value);
 		} else {
-			this.set(key, new JSONArray().set(object).set(value));
+			this.set(key, new JSONArray(this.config).set(object).set(value));
 		}
 		return this;
 	}
@@ -453,7 +453,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.set(key, new JSONArray().set(value));
+			this.set(key, new JSONArray(this.config).set(value));
 		} else if (object instanceof JSONArray) {
 			this.set(key, ((JSONArray) object).set(value));
 		} else {

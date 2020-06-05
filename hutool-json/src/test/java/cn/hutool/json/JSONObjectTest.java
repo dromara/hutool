@@ -404,6 +404,19 @@ public class JSONObjectTest {
 		Assert.assertEquals(new Integer(35), bean.getValue2());
 	}
 
+	@Test
+	public void setDateFormatTest(){
+		JSONConfig jsonConfig = JSONConfig.create();
+		jsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+		jsonConfig.setOrder(true);
+
+		JSONObject json = new JSONObject(jsonConfig);
+		json.append("date", DateUtil.parse("2020-06-05 11:16:11"));
+		json.append("bbb", "222");
+		json.append("aaa", "123");
+		Assert.assertEquals("{\"date\":[\"2020-06-05 11:16:11\"],\"bbb\":[\"222\"],\"aaa\":[\"123\"]}", json.toString());
+	}
+
 	public enum TestEnum {
 		TYPE_A, TYPE_B
 	}
