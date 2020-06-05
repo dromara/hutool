@@ -1,13 +1,13 @@
 package cn.hutool.cron.pattern;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 定时任务表达式工具类

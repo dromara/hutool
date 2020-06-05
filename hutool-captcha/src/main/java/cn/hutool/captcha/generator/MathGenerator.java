@@ -76,8 +76,8 @@ public class MathGenerator implements CodeGenerator {
 	}
 
 	/**
-	 * 获取长度验证码
-	 * 
+	 * 获取验证码长度
+	 *
 	 * @return 验证码长度
 	 */
 	public int getLength() {
