@@ -273,7 +273,7 @@ public class FileUtilTest {
 			Console.log(file.getPath());
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void loopFilesWithDepthTest() {
