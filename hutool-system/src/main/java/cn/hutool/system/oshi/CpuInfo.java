@@ -3,8 +3,7 @@ package cn.hutool.system.oshi;
 import java.text.DecimalFormat;
 
 /**
- * <p></p>
- * <p>2020-05-21 14:19</p>
+ * <p>CPU相关信息</p>
  *
  * @author Dai Yuanchuan
  **/
