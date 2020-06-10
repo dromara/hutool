@@ -345,7 +345,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 		if (isEmpty(coll2)) {
-			return ListUtil.list(true, coll2);
+			return ListUtil.list(true, coll1);
 		}
 
 		//将被交数用链表储存，防止因为频繁扩容影响性能
