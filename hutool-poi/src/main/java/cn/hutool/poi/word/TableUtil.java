@@ -69,19 +69,14 @@ public class TableUtil {
 	public static void writeRow(XWPFTableRow row, Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			writeRow(row, (Iterable<?>) rowBean);
-		}
-		
-		Map rowMap = null;
-		if(rowBean instanceof Map) {
-			rowMap = (Map) rowBean;
-		} else if (BeanUtil.isBean(rowBean.getClass())) {
-			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
-		} else {
+		}else if(rowBean instanceof Map){
+			writeRow(row, (Map)rowBean, isWriteKeyAsHead);
+		}else if(BeanUtil.isBean(rowBean.getClass())){
+			writeRow(row, BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false), isWriteKeyAsHead);
+		}else if (BeanUtil.isBean(rowBean.getClass())) {
 			// 其它转为字符串默认输出
 			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
 		}
-		
-		writeRow(row, rowMap, isWriteKeyAsHead);
 	}
 	
 	/**
