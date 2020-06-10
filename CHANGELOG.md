@@ -13,6 +13,7 @@
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
 * 【core   】     修复CollUtil.subtractToList判断错误（pr#915@Github）
+* 【poi    】     修复WordWriter写表格问题（pr#914@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
