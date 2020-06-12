@@ -618,6 +618,21 @@ public class BeanUtil {
 		copyProperties(source, target, CopyOptions.create());
 		return target;
 	}
+	
+	/**
+	 * 按照Bean对象属性创建对应的Class对象，并忽略某些属性
+	 *
+	 * @param <T>    对象类型
+	 * @param source 源Bean对象
+	 * @param tClass 目标Class
+	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @return 目标对象
+	 */
+	public static <T> T copyProperties(Object source, Class<T> tClass, String... ignoreProperties) {
+		T target = ReflectUtil.newInstanceIfPossible(tClass);
+		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		return target;
+	}
 
 	/**
 	 * 复制Bean对象属性
