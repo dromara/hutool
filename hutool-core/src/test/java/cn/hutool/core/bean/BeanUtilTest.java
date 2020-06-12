@@ -380,6 +380,16 @@ public class BeanUtilTest {
 		Assert.assertEquals(info.getBookID(), entity.getBookId());
 		Assert.assertEquals(info.getCode(), entity.getCode2());
 	}
+	
+	@Test
+	public void copyBeanTest(){
+		Food info = new Food();
+		info.setBookID("0");
+		info.setCode("123");
+		Food newFood = BeanUtil.copyProperties(info, Food.class, "code");
+		Assert.assertEquals(info.getBookID(), newFood.getBookID());
+		Assert.assertNull(newFood.getCode());
+	}
 
 	@Data
 	public static class Food {
