@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -107,5 +108,17 @@ public class ExcelSaxReadTest {
 	public void dateReadTest(){
 		ExcelUtil.readBySax("d:/test/sax_date_test.xlsx", 0, (i, i1, list) ->
 				Console.log(StrUtil.join(", ", list)));
+	}
+
+	@Test
+	@Ignore
+	public void readBlankTest(){
+		File file = new File("D:/test/b.xlsx");
+
+		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> {
+			rowList.forEach(System.out::println);
+		});
+
+		ExcelUtil.getReader(file).read().forEach(System.out::println);
 	}
 }
