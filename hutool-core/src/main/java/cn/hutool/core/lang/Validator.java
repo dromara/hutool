@@ -675,7 +675,7 @@ public class Validator {
 	 * 验证是否为可用邮箱地址
 	 *
 	 * @param value 值
-	 * @return 否为可用邮箱地址
+	 * @return true为可用邮箱地址
 	 */
 	public static boolean isEmail(CharSequence value) {
 		return isMatchRegex(EMAIL, value);
