@@ -16,7 +16,8 @@
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
 * 【core   】     修复CollUtil.subtractToList判断错误（pr#915@Github）
 * 【poi    】     修复WordWriter写表格问题（pr#914@Github）
-* 【core   】     修复IoUtil.readBytes缓存数组长度问题（issue#I1KIUE@Github）
+* 【core   】     修复IoUtil.readBytes缓存数组长度问题（issue#I1KIUE@Gitee）
+* 【core   】     修复BigExcelWriter多次flush导致的问题（issue#920@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

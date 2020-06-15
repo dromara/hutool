@@ -1,11 +1,12 @@
 package cn.hutool.poi.excel;
 
-import java.io.File;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import cn.hutool.core.io.FileUtil;
+import java.io.File;
+import java.io.OutputStream;
 
 /**
  * 大数据量Excel写出
@@ -16,6 +17,11 @@ import cn.hutool.core.io.FileUtil;
 public class BigExcelWriter extends ExcelWriter {
 
 	public static final int DEFAULT_WINDOW_SIZE = SXSSFWorkbook.DEFAULT_WINDOW_SIZE;
+
+	/**
+	 * BigExcelWriter只能flush一次，因此调用后不再重复写出
+	 */
+	private boolean isFlushed;
 
 	// -------------------------------------------------------------------------- Constructor start
 	/**
@@ -117,10 +123,21 @@ public class BigExcelWriter extends ExcelWriter {
 	// -------------------------------------------------------------------------- Constructor end
 
 	@Override
+	public ExcelWriter flush(OutputStream out, boolean isCloseOut) throws IORuntimeException {
+		if(false == isFlushed){
+			isFlushed = true;
+			return super.flush(out, isCloseOut);
+		}
+		return this;
+	}
+
+	@Override
 	public void close() {
-		if (null != this.destFile) {
+		if (null != this.destFile && false == isFlushed) {
 			flush();
 		}
+
+		// 清理临时文件
 		((SXSSFWorkbook) this.workbook).dispose();
 		super.closeWithoutFlush();
 	}

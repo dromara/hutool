@@ -1,17 +1,5 @@
 package cn.hutool.poi.excel.test;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -19,7 +7,20 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 写出Excel单元测试
@@ -197,10 +198,23 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeCellValueTest() {
-		String path = "e:/cellValueTest.xlsx";
+		String path = "d:/test/cellValueTest.xlsx";
 		FileUtil.del(path);
 		BigExcelWriter writer = new BigExcelWriter(path);
 		writer.writeCellValue(3, 5, "aaa");
 		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void closeTest() {
+		final Map<String, ?> map1 = MapUtil.of("id", "123456");
+		final Map<String, ?> map2 = MapUtil.of("id", "123457");
+		final List<?> data = Arrays.asList(map1, map2);
+		final String destFilePath = "d:/test/closeTest.xlsx";//略
+		FileUtil.del(destFilePath);
+		try (ExcelWriter writer = ExcelUtil.getBigWriter(destFilePath)) {
+			writer.write(data).flush();
+		}
 	}
 }
