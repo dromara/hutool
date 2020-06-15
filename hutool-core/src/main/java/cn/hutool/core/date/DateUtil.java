@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 
 /**
  * 时间工具类
@@ -911,6 +912,7 @@ public class DateUtil extends CalendarUtil {
 
 		//标准日期格式（包括单个数字的日期时间）
 		dateStr = normalize(dateStr);
+		final Matcher matcher = DatePattern.REGEX_NORM.matcher(dateStr);
 		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
 			final int colonCount = StrUtil.count(dateStr, CharUtil.COLON);
 			switch (colonCount) {
@@ -921,15 +923,13 @@ public class DateUtil extends CalendarUtil {
 					// yyyy-MM-dd HH:mm
 					return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 				case 2:
+					if(StrUtil.contains(dateStr, CharUtil.DOT)){
+						// yyyy-MM-dd HH:mm:ss.SSS
+						return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
+					}
 					// yyyy-MM-dd HH:mm:ss
 					return parse(dateStr, DatePattern.NORM_DATETIME_FORMAT);
 			}
-		}
-
-		// 长度判断
-		if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
-			//yyyy-MM-dd HH:mm:ss.SSS
-			return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
 		}
 
 		// 没有更多匹配的时间格式

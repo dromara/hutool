@@ -10,6 +10,7 @@
 * 【setting】     Props异常规则修改（issue#907@Github）
 * 【setting】     增加GIF支持
 * 【core   】     复制创建一个Bean对象, 并忽略某些属性(pr#130@Gitee)
+* 【core   】     DateUtil.parse支持更多日期格式(issue#I1KHTB@Gitee)
 
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
