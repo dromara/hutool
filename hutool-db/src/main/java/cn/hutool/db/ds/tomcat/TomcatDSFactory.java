@@ -1,10 +1,11 @@
 package cn.hutool.db.ds.tomcat;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
-
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
+import cn.hutool.setting.dialect.Props;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 /**
  * Tomcat-Jdbc-Pool数据源工厂类
@@ -40,6 +41,20 @@ public class TomcatDSFactory extends AbstractDSFactory {
 		poolProps.setDriverClassName(driver);
 		poolProps.setUsername(user);
 		poolProps.setPassword(pass);
+
+		// remarks等特殊配置，since 5.3.8
+		final Props connProps = new Props();
+		String connValue;
+		for (String key : KEY_CONN_PROPS) {
+			connValue = poolSetting.getAndRemoveStr(key);
+			if(StrUtil.isNotBlank(connValue)){
+				connProps.setProperty(key, connValue);
+			}
+		}
+		poolProps.setDbProperties(connProps);
+
+		// 连接池相关参数
+		poolSetting.toBean(poolProps);
 		
 		return new DataSource(poolProps);
 	}

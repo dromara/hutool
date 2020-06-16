@@ -1,14 +1,14 @@
 package cn.hutool.db.ds.c3p0;
 
-import java.beans.PropertyVetoException;
-
-import javax.sql.DataSource;
-
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
+import cn.hutool.setting.dialect.Props;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 
 /**
  * Druid数据源工厂类
@@ -48,8 +48,21 @@ public class C3p0DSFactory extends AbstractDSFactory {
 		}
 		ds.setUser(user);
 		ds.setPassword(pass);
-		poolSetting.toBean(ds);// 注入属性
-		
+
+		// remarks等特殊配置，since 5.3.8
+		final Props connProps = new Props();
+		String connValue;
+		for (String key : KEY_CONN_PROPS) {
+			connValue = poolSetting.getAndRemoveStr(key);
+			if(StrUtil.isNotBlank(connValue)){
+				connProps.setProperty(key, connValue);
+			}
+		}
+		ds.setProperties(connProps);
+
+		// 注入属性
+		poolSetting.toBean(ds);
+
 		return ds;
 	}
 }

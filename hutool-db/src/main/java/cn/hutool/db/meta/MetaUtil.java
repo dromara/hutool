@@ -18,6 +18,13 @@ import java.util.List;
 /**
  * 数据库元数据信息工具类
  *
+ * <p>
+ * 需要注意的是，此工具类在某些数据库（比如Oracle）下无效，此时需要手动在数据库配置中增加：
+ * <pre>
+ *  remarks = true
+ *  useInformationSchema = true
+ * </pre>
+ *
  * @author looly
  */
 public class MetaUtil {

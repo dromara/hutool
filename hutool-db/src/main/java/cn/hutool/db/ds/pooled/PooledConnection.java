@@ -1,10 +1,13 @@
 package cn.hutool.db.ds.pooled;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.db.DbUtil;
+import cn.hutool.setting.dialect.Props;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * 池化
@@ -15,11 +18,34 @@ public class PooledConnection extends ConnectionWraper{
 	
 	private final PooledDataSource ds;
 	private boolean isClosed;
-	
+
+	/**
+	 * 构造
+	 *
+	 * @param ds 数据源
+	 * @throws SQLException SQL异常
+	 */
 	public PooledConnection(PooledDataSource ds) throws SQLException {
 		this.ds = ds;
-		DbConfig config = ds.getConfig();
-		this.raw = DriverManager.getConnection(config.getUrl(), config.getUser(), config.getPass());
+		final DbConfig config = ds.getConfig();
+
+		final Props info = new Props();
+		final String user = config.getUser();
+		if (user != null) {
+			info.setProperty("user", user);
+		}
+		final String password = config.getPass();
+		if (password != null) {
+			info.setProperty("password", password);
+		}
+
+		// 其它参数
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			info.putAll(connProps);
+		}
+
+		this.raw = DriverManager.getConnection(config.getUrl(), info);
 	}
 	
 	public PooledConnection(PooledDataSource ds, Connection conn) {
@@ -31,7 +57,7 @@ public class PooledConnection extends ConnectionWraper{
 	 * 重写关闭连接，实际操作是归还到连接池中
 	 */
 	@Override
-	public void close() throws SQLException {
+	public void close() {
 		this.ds.free(this);
 		this.isClosed = true;
 	}

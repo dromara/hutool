@@ -1,9 +1,9 @@
 package cn.hutool.db.ds.simple;
 
-import javax.sql.DataSource;
-
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
+
+import javax.sql.DataSource;
 
 /**
  * 简单数据源工厂类
@@ -26,12 +26,13 @@ public class SimpleDSFactory extends AbstractDSFactory {
 
 	@Override
 	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
-		return new SimpleDataSource(//
+		SimpleDataSource ds = new SimpleDataSource(//
 				jdbcUrl, //
 				user, //
 				pass, //
 				driver//
 		);
+		ds.setConnProps(poolSetting.getProps(Setting.DEFAULT_GROUP));
+		return ds;
 	}
-
 }

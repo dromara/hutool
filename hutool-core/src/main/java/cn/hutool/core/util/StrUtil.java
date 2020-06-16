@@ -966,6 +966,25 @@ public class StrUtil {
 	}
 
 	/**
+	 * 移除字符串中所有给定字符串，当某个字符串出现多次，则全部移除<br>
+	 * 例：removeAny("aa-bb-cc-dd", "a", "b") =》 --cc-dd
+	 *
+	 * @param str         字符串
+	 * @param strsToRemove 被移除的字符串
+	 * @return 移除后的字符串
+	 * @since 5.3.8
+	 */
+	public static String removeAny(CharSequence str, CharSequence... strsToRemove) {
+		String result = str(str);
+		if (isNotEmpty(str)) {
+			for (CharSequence strToRemove : strsToRemove) {
+				result = removeAll(str, strToRemove);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * 去除字符串中指定的多个字符，如有多个则全部去除
 	 *
 	 * @param str   字符串

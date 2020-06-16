@@ -1,11 +1,11 @@
 package cn.hutool.db.ds.dbcp;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.dbcp2.BasicDataSource;
-
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
+import org.apache.commons.dbcp2.BasicDataSource;
+
+import javax.sql.DataSource;
 
 /**
  * DBCP2数据源工厂类
@@ -34,8 +34,19 @@ public class DbcpDSFactory extends AbstractDSFactory {
 		ds.setDriverClassName(driver);
 		ds.setUsername(user);
 		ds.setPassword(pass);
-		poolSetting.toBean(ds);// 注入属性
-		
+
+		// remarks等特殊配置，since 5.3.8
+		String connValue;
+		for (String key : KEY_CONN_PROPS) {
+			connValue = poolSetting.getAndRemoveStr(key);
+			if(StrUtil.isNotBlank(connValue)){
+				ds.addConnectionProperty(key, connValue);
+			}
+		}
+
+		// 注入属性
+		poolSetting.toBean(ds);
+
 		return ds;
 	}
 }

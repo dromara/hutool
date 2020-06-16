@@ -1,16 +1,18 @@
 package cn.hutool.db.ds.simple;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
+import cn.hutool.setting.dialect.Props;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /***
  * 简易数据源，没有使用连接池，仅供测试或打开关闭连接非常少的场合使用！
@@ -28,6 +30,9 @@ public class SimpleDataSource extends AbstractDataSource {
 	private String url; // jdbc url
 	private String user; // 用户名
 	private String pass; // 密码
+
+	// 连接配置
+	private Properties connProps;
 	// -------------------------------------------------------------------- Fields end
 
 	/**
@@ -87,6 +92,9 @@ public class SimpleDataSource extends AbstractDataSource {
 				config.getAndRemoveStr(DSFactory.KEY_ALIAS_PASSWORD), //
 				config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER)//
 		);
+
+		// 其它连接参数
+		this.connProps = config.getProps(Setting.DEFAULT_GROUP);
 	}
 
 	/**
@@ -178,11 +186,40 @@ public class SimpleDataSource extends AbstractDataSource {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
+
+	public Properties getConnProps() {
+		return connProps;
+	}
+
+	public void setConnProps(Properties connProps) {
+		this.connProps = connProps;
+	}
+
+	public void addConnProps(String key, String value){
+		if(null == this.connProps){
+			this.connProps = new Properties();
+		}
+		this.connProps.setProperty(key, value);
+	}
 	// -------------------------------------------------------------------- Getters and Setters end
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(this.url, this.user, this.pass);
+		final Props info = new Props();
+		if (this.user != null) {
+			info.setProperty("user", this.user);
+		}
+		if (this.pass != null) {
+			info.setProperty("password", this.pass);
+		}
+
+		// 其它参数
+		final Properties connProps = this.connProps;
+		if(MapUtil.isNotEmpty(connProps)){
+			info.putAll(connProps);
+		}
+
+		return DriverManager.getConnection(this.url, info);
 	}
 
 	@Override
@@ -191,7 +228,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		// Not need to close;
 	}
 }

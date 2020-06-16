@@ -1,15 +1,12 @@
 package cn.hutool.db.ds.druid;
 
-import java.util.Map.Entry;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import com.alibaba.druid.pool.DruidDataSource;
-
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
+import cn.hutool.setting.dialect.Props;
+import com.alibaba.druid.pool.DruidDataSource;
+
+import javax.sql.DataSource;
 
 /**
  * Druid数据源工厂类
@@ -42,19 +39,24 @@ public class DruidDSFactory extends AbstractDSFactory {
 	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
 		final DruidDataSource ds = new DruidDataSource();
 
+		// 基本信息
 		ds.setUrl(jdbcUrl);
 		ds.setDriverClassName(driver);
 		ds.setUsername(user);
 		ds.setPassword(pass);
 
-		// 规范化属性名
-		Properties druidProps = new Properties();
-		String keyStr;
-		for (Entry<String, String> entry : poolSetting.entrySet()) {
-			keyStr = StrUtil.addPrefixIfNot(entry.getKey(), "druid.");
-			druidProps.put(keyStr, entry.getValue());
+		// remarks等特殊配置，since 5.3.8
+		String connValue;
+		for (String key : KEY_CONN_PROPS) {
+			connValue = poolSetting.getAndRemoveStr(key);
+			if(StrUtil.isNotBlank(connValue)){
+				ds.addConnectionProperty(key, connValue);
+			}
 		}
-		// 连接池信息
+
+		// Druid连接池配置信息，规范化属性名
+		final Props druidProps = new Props();
+		poolSetting.forEach((key, value)-> druidProps.put(StrUtil.addPrefixIfNot(key, "druid."), value));
 		ds.configFromPropety(druidProps);
 
 		// 检查关联配置，在用户未设置某项配置时，

@@ -1,10 +1,5 @@
 package cn.hutool.db.ds;
 
-import java.io.Closeable;
-import java.io.Serializable;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
@@ -15,6 +10,10 @@ import cn.hutool.db.ds.tomcat.TomcatDSFactory;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.setting.Setting;
+
+import javax.sql.DataSource;
+import java.io.Closeable;
+import java.io.Serializable;
 
 /**
  * 抽象数据源工厂类<br>
@@ -28,6 +27,9 @@ public abstract class DSFactory implements Closeable, Serializable{
 	private static final long serialVersionUID = -8789780234095234765L;
 
 	private static final Log log = LogFactory.get();
+
+	/** 某些数据库需要的特殊配置项需要的配置项 */
+	public static final String[] KEY_CONN_PROPS = {"remarks", "useInformationSchema"};
 
 	/** 别名字段名：URL */
 	public static final String[] KEY_ALIAS_URL = { "url", "jdbcUrl" };

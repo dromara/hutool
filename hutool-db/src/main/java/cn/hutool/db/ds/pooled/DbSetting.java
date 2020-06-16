@@ -71,6 +71,15 @@ public class DbSetting {
 		dbConfig.setMaxActive(setting.getInt("maxActive", group, 8));
 		dbConfig.setMaxWait(setting.getLong("maxWait", group, 6000L));
 
+		// remarks等特殊配置，since 5.3.8
+		String connValue;
+		for (String key : DSFactory.KEY_CONN_PROPS) {
+			connValue = config.get(key);
+			if(StrUtil.isNotBlank(connValue)){
+				dbConfig.addConnProps(key, connValue);
+			}
+		}
+
 		return dbConfig;
 	}
 }
