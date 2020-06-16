@@ -13,10 +13,10 @@ public class PinyinUtilTest {
 	}
 
 	@Test
-	public void getPinyinByPinyin4jTest(){
+	public void getPinyinByPinyin4jTest() {
 		final Pinyin4jEngine engine = new Pinyin4jEngine();
-		final String pinyin = engine.getPinyin("你好", " ");
-		Assert.assertEquals("ni hao", pinyin);
+		final String pinyin = engine.getPinyin("你好h", " ");
+		Assert.assertEquals("ni hao h", pinyin);
 	}
 
 	@Test

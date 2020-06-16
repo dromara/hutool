@@ -48,6 +48,6 @@ public interface PinyinEngine {
 	default String getFirstLetter(String str, String separator) {
 		final String splitSeparator = StrUtil.isEmpty(separator) ? "#" : separator;
 		final String[] split = StrUtil.split(getPinyin(str, splitSeparator), splitSeparator);
-		return ArrayUtil.join(split, separator, (s)->String.valueOf(s.charAt(0)));
+		return ArrayUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : ""));
 	}
 }

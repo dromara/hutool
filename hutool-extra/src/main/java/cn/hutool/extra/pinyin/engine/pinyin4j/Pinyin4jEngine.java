@@ -1,5 +1,6 @@
 package cn.hutool.extra.pinyin.engine.pinyin4j;
 
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinEngine;
@@ -83,16 +84,27 @@ public class Pinyin4jEngine implements PinyinEngine {
 
 	@Override
 	public String getPinyin(String str, String separator) {
-		// 添加一个后缀是为了解决Pinyin4j的bug，在指定分隔符后，最后两个词的分隔符失效
-		str += StrUtil.SPACE;
-		String result;
+		final StrBuilder result = StrUtil.strBuilder();
+		boolean isFirst = true;
+		final int strLen = str.length();
 		try {
-			result = PinyinHelper.toHanYuPinyinString(str, format, separator, true);
+			for(int i = 0; i < strLen; i++){
+				if(isFirst){
+					isFirst = false;
+				} else{
+					result.append(separator);
+				}
+				final String[] pinyinStringArray = PinyinHelper.toHanyuPinyinStringArray(str.charAt(i), format);
+				if(ArrayUtil.isEmpty(pinyinStringArray)){
+					result.append(str.charAt(i));
+				} else{
+					result.append(pinyinStringArray[0]);
+				}
+			}
 		} catch (BadHanyuPinyinOutputFormatCombination e) {
 			throw new PinyinException(e);
 		}
 
-		return StrUtil.removeSuffix(result, StrUtil.SPACE);
+		return result.toString();
 	}
-
 }
