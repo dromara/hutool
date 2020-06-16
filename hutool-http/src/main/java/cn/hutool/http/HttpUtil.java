@@ -53,6 +53,17 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 检测是否http
+	 *
+	 * @param url URL
+	 * @return 是否https
+	 * @since 5.3.8
+	 */
+	public static boolean isHttp(String url) {
+		return url.toLowerCase().startsWith("http");
+	}
+
+	/**
 	 * 创建Http请求对象
 	 *
 	 * @param method 方法枚举{@link Method}

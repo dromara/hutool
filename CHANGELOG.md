@@ -18,6 +18,7 @@
 * 【poi    】     修复WordWriter写表格问题（pr#914@Github）
 * 【core   】     修复IoUtil.readBytes缓存数组长度问题（issue#I1KIUE@Gitee）
 * 【core   】     修复BigExcelWriter多次flush导致的问题（issue#920@Github）
+* 【extra  】     绕过Pinyin4j最后一个分隔符失效的bug（issue#921@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
