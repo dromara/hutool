@@ -143,7 +143,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 * @return 获得私钥
 	 */
 	public String getPrivateKeyBase64() {
-		return Base64.encode(getPrivateKey().getEncoded());
+		final PrivateKey privateKey = getPrivateKey();
+		return (null == privateKey) ? null : Base64.encode(privateKey.getEncoded());
 	}
 
 	/**
