@@ -15,6 +15,7 @@
 * 【core   】     增加StrUtil.removeAny方法(issue#923@Github)
 * 【db     】     增加部分Connection参数支持(issue#924@Github)
 * 【core   】     FileUtil增加别名方法(pr#926@Github)
+* 【poi    】     EcelReader中增加read重载，提供每个单元格单独处理的方法(issue#I1JZTL@Gitee)
 
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）

@@ -208,4 +208,10 @@ public class ExcelReadTest {
 		Assert.assertEquals(11L, read.get(2).get(2));
 	}
 
+	@Test
+	public void readCellsTest() {
+		final ExcelReader reader = ExcelUtil.getReader("merge_test.xlsx");
+		reader.read((cell, value)-> Console.log("{}, {} {}", cell.getRowIndex(), cell.getColumnIndex(), value));
+	}
+
 }
