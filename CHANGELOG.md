@@ -14,6 +14,7 @@
 * 【crypto 】     增加获取密钥空指针的检查(issue#925@Github)
 * 【core   】     增加StrUtil.removeAny方法(issue#923@Github)
 * 【db     】     增加部分Connection参数支持(issue#924@Github)
+* 【core   】     FileUtil增加别名方法(pr#926@Github)
 
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
