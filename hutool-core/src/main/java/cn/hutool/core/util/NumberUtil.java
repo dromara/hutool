@@ -2114,7 +2114,7 @@ public class NumberUtil {
 	 */
 	public static int partValue(int total, int partCount, boolean isPlusOneWhenHasRem) {
 		int partValue = total / partCount;
-		if (isPlusOneWhenHasRem && total % partCount == 0) {
+		if (isPlusOneWhenHasRem && total % partCount > 0) {
 			partValue++;
 		}
 		return partValue;
