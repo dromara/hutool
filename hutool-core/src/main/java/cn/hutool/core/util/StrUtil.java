@@ -3312,11 +3312,11 @@ public class StrUtil {
 		if (null == str) {
 			return null;
 		}
-		if ((str.length() + 3) <= maxLength) {
+		if (str.length() <= maxLength) {
 			return str.toString();
 		}
 		int w = maxLength / 2;
-		int l = str.length();
+		int l = str.length() + 3;
 
 		final String str2 = str.toString();
 		return format("{}...{}", str2.substring(0, maxLength - w), str2.substring(l - w));
