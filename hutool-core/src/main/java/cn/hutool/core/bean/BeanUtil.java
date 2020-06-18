@@ -690,6 +690,9 @@ public class BeanUtil {
 
 		final Field[] fields = ReflectUtil.getFields(bean.getClass());
 		for (Field field : fields) {
+			if(ModifierUtil.isStatic(field)){
+				continue;
+			}
 			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
 				// 不处理忽略的Fields
 				continue;
@@ -723,7 +726,8 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code>
+	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code><br>
+	 * 此方法不判断static属性
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
@@ -733,6 +737,9 @@ public class BeanUtil {
 	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
 		if (null != bean) {
 			for (Field field : ReflectUtil.getFields(bean.getClass())) {
+				if(ModifierUtil.isStatic(field)){
+					continue;
+				}
 				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
 						&& null != ReflectUtil.getFieldValue(bean, field)) {
 					return false;
@@ -756,6 +763,9 @@ public class BeanUtil {
 			return true;
 		}
 		for (Field field : ReflectUtil.getFields(bean.getClass())) {
+			if(ModifierUtil.isStatic(field)){
+				continue;
+			}
 			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))//
 					&& null == ReflectUtil.getFieldValue(bean, field)) {
 				return true;
