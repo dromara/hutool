@@ -1,11 +1,14 @@
 package cn.hutool.core.lang.tree;
 
+import java.io.Serializable;
+
 /**
  * 树配置属性相关
  *
  * @author liangbaikai
  */
-public class TreeNodeConfig {
+public class TreeNodeConfig implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 默认属性配置对象

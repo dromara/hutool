@@ -12,6 +12,7 @@ import java.util.Map;
  * @author liangbaikai
  */
 public class TreeNode<T> implements Node<T> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ID

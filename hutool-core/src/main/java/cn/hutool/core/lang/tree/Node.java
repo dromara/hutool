@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.tree;
 
+import java.io.Serializable;
+
 /**
  * 节点接口，提供节点相关的的方法定义
  *
@@ -7,7 +9,8 @@ package cn.hutool.core.lang.tree;
  * @author looly
  * @since 5.2.4
  */
-public interface Node<T> extends Comparable<Node<T>> {
+public interface Node<T> extends Comparable<Node<T>>, Serializable {
+
 	/**
 	 * 获取ID
 	 *
