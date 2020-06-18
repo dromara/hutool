@@ -74,7 +74,7 @@ public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable{
 	@Override
 	@SuppressWarnings("unchecked")
 	public E next() {
-		if (hasNext() == false) {
+		if (!hasNext()) {
 			throw new NoSuchElementException();
 		}
 		return (E)Array.get(array, index++);

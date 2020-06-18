@@ -9,11 +9,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 组合注解 对JDK的原生注解机制做一个增强，支持类似Spring的组合注解。<br>
@@ -103,7 +99,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		// 直接注解
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (!META_ANNOTATIONS.contains(annotationType)) {
 				declaredAnnotationMap.put(annotationType, annotation);
 				parseDeclared(annotationType.getDeclaredAnnotations());
 			}
@@ -119,7 +115,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		Class<? extends Annotation> annotationType;
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (!META_ANNOTATIONS.contains(annotationType)) {
 				annotationMap.put(annotationType, annotation);
 				parse(annotationType.getAnnotations());
 			}
