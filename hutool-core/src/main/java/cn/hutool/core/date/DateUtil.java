@@ -638,12 +638,12 @@ public class DateUtil extends CalendarUtil {
 	}
 	
 	/**
-	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日 12时13分14秒，否则返回二〇一八年十月二十四日 十二时十三分十四秒
+	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日12时13分14秒，否则返回二〇一八年二月二十四日一十二时一十三分一十四秒
 	 *
 	 * @param date        被格式化的日期
 	 * @param isUppercase 是否采用大写形式
-	 * @return 中文日期字符串
-	 * @since 4.1.19
+	 * @return 中文日期时间串字符串
+	 * @since 5.3.7
 	 */
 	public static String formatChineseDateTime(Date date, boolean isUppercase) {
 		if (null == date) {
