@@ -65,4 +65,18 @@ public class NumberChineseFormatterTest {
 		String digitToChinese3 = Convert.digitToChinese(2421.02);
 		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese3);
 	}
+
+	@Test
+	public void numberCharToChineseTest(){
+		String s = NumberChineseFormatter.numberCharToChinese('1', false);
+		Assert.assertEquals("一", s);
+		s = NumberChineseFormatter.numberCharToChinese('2', false);
+		Assert.assertEquals("二", s);
+		s = NumberChineseFormatter.numberCharToChinese('0', false);
+		Assert.assertEquals("零", s);
+
+		// 非数字字符原样返回
+		s = NumberChineseFormatter.numberCharToChinese('A', false);
+		Assert.assertEquals("A", s);
+	}
 }

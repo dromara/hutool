@@ -142,6 +142,23 @@ public class NumberChineseFormatter {
 	}
 
 	/**
+	 * 数字字符转中文，非数字字符原样返回
+	 *
+	 * @param c                数字字符
+	 * @param isUseTraditional 是否繁体
+	 * @return 中文字符
+	 * @since 5.3.9
+	 */
+	public static String numberCharToChinese(char c, boolean isUseTraditional) {
+		String[] numArray = isUseTraditional ? traditionalDigits : simpleDigits;
+		int index = c - 48;
+		if (index < 0 || index >= numArray.length) {
+			return String.valueOf(c);
+		}
+		return numArray[index];
+	}
+
+	/**
 	 * 把一个 0~9999 之间的整数转换为汉字的字符串，如果是 0 则返回 ""
 	 *
 	 * @param amountPart       数字部分
