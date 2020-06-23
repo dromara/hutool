@@ -448,5 +448,12 @@ public class StrUtilTest {
 		String[] results2 = StrUtil.subBetweenAll(src2,"/*","*/");
 		Assert.assertEquals(0, results2.length);
 	}
-	
+
+	@Test
+	public void briefTest(){
+		String str = RandomUtil.randomString(1000);
+		int maxLength = RandomUtil.randomInt(1000);
+		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals(brief.length(), maxLength);
+	}
 }
