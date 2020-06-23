@@ -1,6 +1,7 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.convert.NumberChineseFormatter;
 import cn.hutool.core.util.StrUtil;
 
 import java.time.Instant;
@@ -387,6 +388,57 @@ public class CalendarUtil {
 	 */
 	public static int age(Calendar birthday, Calendar dateToCompare) {
 		return age(birthday.getTimeInMillis(), dateToCompare.getTimeInMillis());
+	}
+
+	/**
+	 * 将指定Calendar时间格式化为纯中文形式，比如：
+	 *
+	 * <pre>
+	 *     2018-02-24 12:13:14转换为 二〇一八年二月二十四日（withTime为false）
+	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日一十二时一十三分一十四秒（withTime为true）
+	 * </pre>
+	 * @param calendar {@link Calendar}
+	 * @param withTime 是否包含时间部分
+	 * @return 格式化后的字符串
+	 * @since 5.3.9
+	 */
+	public static String formatChineseDate(Calendar calendar, boolean withTime){
+		final StringBuilder result = StrUtil.builder();
+
+		// 年
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		final int length = year.length();
+		for(int i = 0;i < length; i++){
+			result.append(NumberChineseFormatter.numberCharToChinese(year.charAt(i), false));
+		}
+		result.append('年');
+
+		// 月
+		int month = calendar.get(Calendar.MONTH) + 1;
+		result.append(NumberChineseFormatter.format(month, false));
+		result.append('月');
+
+		// 日
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		result.append(NumberChineseFormatter.format(day, false));
+		result.append('日');
+
+		if(withTime){
+			// 时
+			int hour = calendar.get(Calendar.HOUR_OF_DAY);
+			result.append(NumberChineseFormatter.format(hour, false));
+			result.append('时');
+			// 分
+			int minute = calendar.get(Calendar.MINUTE);
+			result.append(NumberChineseFormatter.format(minute, false));
+			result.append('分');
+			// 秒
+			int second = calendar.get(Calendar.SECOND);
+			result.append(NumberChineseFormatter.format(second, false));
+			result.append('秒');
+		}
+
+		return result.toString().replace('零', '〇');
 	}
 
 	/**
