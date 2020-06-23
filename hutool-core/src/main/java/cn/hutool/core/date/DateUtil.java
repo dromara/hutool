@@ -636,6 +636,42 @@ public class DateUtil extends CalendarUtil {
 		}
 		return format;
 	}
+	
+	/**
+	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日12时13分14秒，否则返回二〇一八年二月二十四日一十二时一十三分一十四秒
+	 *
+	 * @param date        被格式化的日期
+	 * @param isUppercase 是否采用大写形式
+	 * @return 中文日期时间串字符串
+	 * @since 5.3.7
+	 */
+	public static String formatChineseDateTime(Date date, boolean isUppercase) {
+		if (null == date) {
+			return null;
+		}
+
+		String format = DatePattern.CHINESE_DATE_TIME_FORMAT.format(date);
+		if (isUppercase) {
+			final StringBuilder builder = StrUtil.builder(format.length());
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
+			builder.append(format, 4, 5);
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
+			builder.append(format, 7, 8);
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
+			builder.append(format, 10, 11);
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(11, 13)), false));
+			builder.append(format, 13, 14);
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(14, 16)), false));
+			builder.append(format, 16, 17);
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(17, 19)), false));
+			builder.append(format.substring(19));
+			format = builder.toString().replace('零', '〇');
+		}
+		return format;
+	}	
 	// ------------------------------------ Format end ----------------------------------------------
 
 	// ------------------------------------ Parse start ----------------------------------------------

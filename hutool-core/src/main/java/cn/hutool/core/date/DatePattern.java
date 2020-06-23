@@ -62,6 +62,11 @@ public class DatePattern {
 	/** 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日 */
 	public static final FastDateFormat CHINESE_DATE_FORMAT = FastDateFormat.getInstance(CHINESE_DATE_PATTERN);
 	
+    /** 标准日期格式：yyyy年MM月dd日 HH时mm分ss秒 */
+	public static final String CHINESE_DATE_TIME_PATTERN = "yyyy年MM月dd日HH时mm分ss秒";
+	/** 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日HH时mm分ss秒*/
+	public static final FastDateFormat CHINESE_DATE_TIME_FORMAT = FastDateFormat.getInstance(CHINESE_DATE_TIME_PATTERN);
+	
 	//-------------------------------------------------------------------------------------------------------------------------------- Pure
 	/** 标准日期格式：yyyyMMdd */
 	public static final String PURE_DATE_PATTERN = "yyyyMMdd";

@@ -223,6 +223,12 @@ public class DateUtilTest {
 		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true);
 		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);
 	}
+	
+    @Test
+    public void formatChineseDateTimeTest() {
+        String formatChineseDateTime = DateUtil.formatChineseDateTime(DateUtil.parse("2018-02-24 12:13:14"), true);
+        Assert.assertEquals("二〇一八年二月二十四日一十二时一十三分一十四秒", formatChineseDateTime);
+    }	
 
 	@Test
 	public void formatBetweenTest() {
