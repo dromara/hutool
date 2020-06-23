@@ -6,6 +6,8 @@
 ## 5.3.9 (2020-06-17)
 
 ### 新特性
+* 【core   】     DateUtil增加formatChineseDate（pr#932@Github）
+
 ### Bug修复
 * 【core   】     修复NumberUtil.partValue有余数问题（issue#I1KX66@Gitee）
 * 【core   】     修复BeanUtil.isEmpty不能忽略static字段问题（issue#I1KZI6@Gitee）
