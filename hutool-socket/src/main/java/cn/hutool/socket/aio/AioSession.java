@@ -45,6 +45,8 @@ public class AioSession implements Closeable{
 		this.channel = channel;
 		this.readBuffer = ByteBuffer.allocate(config.getReadBufferSize());
 		this.writeBuffer = ByteBuffer.allocate(config.getWriteBufferSize());
+		this.readTimeout = config.getReadTimeout();
+		this.writeTimeout = config.getWriteTimeout();
 		this.ioAction = ioAction;
 	}
 
