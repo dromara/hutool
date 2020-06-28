@@ -76,8 +76,21 @@ public class CollUtilTest {
 		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
 		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
-		Collection<String> union = CollUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollUtil.count(union, t -> t.equals("b")));
+		Collection<String> intersection = CollUtil.intersection(list1, list2);
+		Assert.assertEquals(2, CollUtil.count(intersection, t -> t.equals("b")));
+	}
+	
+	@Test
+	public void intersectionTest2() {
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		ArrayList<String> list3 = CollUtil.newArrayList();
+
+		Collection<String> intersectionDistinct = CollUtil.intersectionDistinct(list1, list2);
+        	Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
+
+        	Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
+        	Assert.assertTrue(intersectionDistinct2.isEmpty());
 	}
 
 	@Test

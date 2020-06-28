@@ -266,6 +266,39 @@ public class CollUtil {
 		}
 		return intersection;
 	}
+	
+	/**
+	 * 多个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，只保留一个<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c]，此结果中只保留了一个c
+	 *
+	 * @param <T>        集合元素类型
+	 * @param coll1      集合1
+	 * @param coll2      集合2
+	 * @param otherColls 其它集合
+	 * @return 并集的集合，返回 {@link LinkedHashSet}
+	 */
+	@SafeVarargs
+	public static <T> Set<T> intersectionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+		final Set<T> result;
+		if (isEmpty(coll1)) {
+			result = new LinkedHashSet<>();
+		} else {
+			result = new LinkedHashSet<>(coll1);
+		}
+
+		if (isNotEmpty(coll2)) {
+			result.retainAll(coll2);
+		}
+
+		if (ArrayUtil.isNotEmpty(otherColls)) {
+			for (Collection<T> otherColl : otherColls) {
+				result.retainAll(otherColl);
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * 两个集合的差集<br>
