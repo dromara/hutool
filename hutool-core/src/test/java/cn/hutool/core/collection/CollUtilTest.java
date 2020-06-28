@@ -81,7 +81,7 @@ public class CollUtilTest {
 	}
 	
 	@Test
-	public void intersectionTest2() {
+	public void intersectionDistinctTest() {
 		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
 		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 		ArrayList<String> list3 = CollUtil.newArrayList();

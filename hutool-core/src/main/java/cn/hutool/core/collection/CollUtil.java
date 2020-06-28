@@ -278,6 +278,7 @@ public class CollUtil {
 	 * @param coll2      集合2
 	 * @param otherColls 其它集合
 	 * @return 并集的集合，返回 {@link LinkedHashSet}
+	 * @since 5.3.9
 	 */
 	@SafeVarargs
 	public static <T> Set<T> intersectionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
@@ -294,7 +295,9 @@ public class CollUtil {
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
-				result.retainAll(otherColl);
+				if(isNotEmpty(otherColl)){
+					result.retainAll(otherColl);
+				}
 			}
 		}
 		return result;
