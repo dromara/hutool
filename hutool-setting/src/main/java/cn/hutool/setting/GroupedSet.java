@@ -278,8 +278,8 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 */
 	public boolean contains(String group, String value, String... otherValues) {
 		if (ArrayUtil.isNotEmpty(otherValues)) {
-			// 需要测试多个值的情况
-			final List<String> valueList = Arrays.asList(otherValues);
+			// 需要测试多个值的情况		
+			final List<String> valueList = new ArrayList<>(Arrays.asList(otherValues));
 			valueList.add(value);
 			return contains(group, valueList);
 		} else {
