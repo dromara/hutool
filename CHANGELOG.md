@@ -13,6 +13,7 @@
 * 【core   】     修复BeanUtil.isEmpty不能忽略static字段问题（issue#I1KZI6@Gitee）
 * 【core   】     修复StrUtil.brief长度问题（pr#930@Github）
 * 【socket 】     修复AioSession构造超时无效问题（pr#941@Github）
+* 【setting】     修复GroupSet.contains错误（pr#943@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

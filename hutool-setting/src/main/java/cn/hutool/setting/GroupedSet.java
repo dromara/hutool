@@ -1,6 +1,7 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -279,7 +279,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	public boolean contains(String group, String value, String... otherValues) {
 		if (ArrayUtil.isNotEmpty(otherValues)) {
 			// 需要测试多个值的情况		
-			final List<String> valueList = new ArrayList<>(Arrays.asList(otherValues));
+			final List<String> valueList = ListUtil.toList(otherValues);
 			valueList.add(value);
 			return contains(group, valueList);
 		} else {
