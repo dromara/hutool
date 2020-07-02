@@ -66,12 +66,13 @@ public class ArrayUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(Object array) {
-		if (null == array) {
-			return true;
-		} else if (isArray(array)) {
-			return 0 == Array.getLength(array);
+		if (array != null) {
+			if (isArray(array)) {
+				return 0 == Array.getLength(array);
+			}
+			return false;
 		}
-		throw new UtilException("Object to provide is not a Array !");
+		return true;		
 	}
 
 	/**
