@@ -15,6 +15,7 @@
 * 【core   】     修复StrUtil.brief长度问题（pr#930@Github）
 * 【socket 】     修复AioSession构造超时无效问题（pr#941@Github）
 * 【setting】     修复GroupSet.contains错误（pr#943@Github）
+* 【core   】     修复ZipUtil没有调用finish问题（issue#944@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)
