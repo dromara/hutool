@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core   】     DateUtil增加formatChineseDate（pr#932@Github）
+* 【core   】     ArrayUtil.isEmpty修改逻辑（pr#948@Github）
 
 ### Bug修复
 * 【core   】     修复NumberUtil.partValue有余数问题（issue#I1KX66@Gitee）
