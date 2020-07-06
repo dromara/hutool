@@ -298,7 +298,7 @@ public class Ftp extends AbstractFtp {
 		String fileName;
 		for (FTPFile ftpFile : ftpFiles) {
 			fileName = ftpFile.getName();
-			if (!StrUtil.equals(".", fileName) && !StrUtil.equals("..", fileName)) {
+			if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
 				if (null == filter || filter.accept(ftpFile)) {
 					result.add(ftpFile);
 				}
