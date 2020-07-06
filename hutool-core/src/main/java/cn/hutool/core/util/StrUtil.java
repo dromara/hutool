@@ -1840,7 +1840,7 @@ public class StrUtil {
 	 */
 	public static String subBefore(CharSequence string, char separator, boolean isLastSeparator) {
 		if (isEmpty(string)) {
-			return null == string ? null : string.toString();
+			return null == string ? null : EMPTY;
 		}
 
 		final String str = string.toString();
@@ -1878,7 +1878,7 @@ public class StrUtil {
 	 */
 	public static String subAfter(CharSequence string, CharSequence separator, boolean isLastSeparator) {
 		if (isEmpty(string)) {
-			return null == string ? null : string.toString();
+			return null == string ? null : EMPTY;
 		}
 		if (separator == null) {
 			return EMPTY;
@@ -1914,7 +1914,7 @@ public class StrUtil {
 	 */
 	public static String subAfter(CharSequence string, char separator, boolean isLastSeparator) {
 		if (isEmpty(string)) {
-			return null == string ? null : string.toString();
+			return null == string ? null : EMPTY;
 		}
 		final String str = string.toString();
 		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
