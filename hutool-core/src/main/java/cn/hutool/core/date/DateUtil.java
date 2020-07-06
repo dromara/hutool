@@ -321,9 +321,21 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param date 日期
 	 * @return 毫秒数
+	 * @deprecated 拼写错误，请使用{@link #millisecond(Date)}
 	 */
+	@Deprecated
 	public static int millsecond(Date date) {
-		return DateTime.of(date).millsecond();
+		return DateTime.of(date).millisecond();
+	}
+
+	/**
+	 * 获得指定日期的毫秒数部分<br>
+	 *
+	 * @param date 日期
+	 * @return 毫秒数
+	 */
+	public static int millisecond(Date date) {
+		return DateTime.of(date).millisecond();
 	}
 
 	/**
@@ -426,9 +438,18 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * @return 当前日期的毫秒数部分<br>
+	 * @deprecated 拼写错误，请使用{@link #thisMillisecond()}
 	 */
+	@Deprecated
 	public static int thisMillsecond() {
-		return millsecond(date());
+		return millisecond(date());
+	}
+
+	/**
+	 * @return 当前日期的毫秒数部分<br>
+	 */
+	public static int thisMillisecond() {
+		return millisecond(date());
 	}
 	// -------------------------------------------------------------- Part of Date end
 
@@ -1398,7 +1419,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.0.1
 	 */
 	public static String formatBetween(long betweenMs) {
-		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLSECOND).format();
+		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLISECOND).format();
 	}
 
 	/**

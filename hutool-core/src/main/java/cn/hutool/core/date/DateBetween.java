@@ -165,6 +165,6 @@ public class DateBetween implements Serializable{
 
 	@Override
 	public String toString() {
-		return toString(BetweenFormater.Level.MILLSECOND);
+		return toString(BetweenFormater.Level.MILLISECOND);
 	}
 }

@@ -525,6 +525,17 @@ public class DateTime extends Date {
 	 *
 	 * @return 毫秒数
 	 */
+	public int millisecond() {
+		return getField(DateField.MILLISECOND);
+	}
+
+	/**
+	 * 获得指定日期的毫秒数部分<br>
+	 *
+	 * @return 毫秒数
+	 * @deprecated 拼写错误，请使用{@link #millisecond()}
+	 */
+	@Deprecated
 	public int millsecond() {
 		return getField(DateField.MILLISECOND);
 	}
