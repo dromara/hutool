@@ -19,6 +19,7 @@
 * 【setting】     修复GroupSet.contains错误（pr#943@Github）
 * 【core   】     修复ZipUtil没有调用finish问题（issue#944@Github）
 * 【extra  】     修复Ftp中ArrayList长度为负问题（pr#136@Github）
+* 【core   】     修复Dict中putAll大小写问题（issue#I1MU5B@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

@@ -464,6 +464,11 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	}
 
 	@Override
+	public void putAll(Map<? extends String, ?> m) {
+		m.forEach(this::put);
+	}
+
+	@Override
 	public Dict clone() {
 		return (Dict) super.clone();
 	}

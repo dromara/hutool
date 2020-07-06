@@ -38,9 +38,7 @@ public abstract class CustomKeyMap<K, V> extends MapWrapper<K, V> {
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
-		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-			this.put(entry.getKey(), entry.getValue());
-		}
+		m.forEach(this::put);
 	}
 
 	@Override
