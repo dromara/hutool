@@ -115,10 +115,8 @@ public class ExcelSaxReadTest {
 	public void readBlankTest(){
 		File file = new File("D:/test/b.xlsx");
 
-		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> {
-			rowList.forEach(System.out::println);
-		});
+		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> rowList.forEach(Console::log));
 
-		ExcelUtil.getReader(file).read().forEach(System.out::println);
+		ExcelUtil.getReader(file).read().forEach(Console::log);
 	}
 }

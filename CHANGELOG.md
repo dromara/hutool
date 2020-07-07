@@ -21,6 +21,7 @@
 * 【core   】     修复ZipUtil没有调用finish问题（issue#944@Github）
 * 【extra  】     修复Ftp中ArrayList长度为负问题（pr#136@Github）
 * 【core   】     修复Dict中putAll大小写问题（issue#I1MU5B@Gitee）
+* 【core   】     修复POI中sax读取数字判断错误问题（issue#931@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

@@ -213,5 +213,4 @@ public class ExcelReadTest {
 		final ExcelReader reader = ExcelUtil.getReader("merge_test.xlsx");
 		reader.read((cell, value)-> Console.log("{}, {} {}", cell.getRowIndex(), cell.getColumnIndex(), value));
 	}
-
 }
