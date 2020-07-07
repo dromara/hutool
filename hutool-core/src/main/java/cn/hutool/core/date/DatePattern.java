@@ -76,6 +76,7 @@ public class DatePattern {
 	 * ISO8601日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss,SSS
 	 */
 	public static final String ISO8601_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
+
 	/**
 	 * ISO8601日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss,SSS
 	 */
@@ -154,6 +155,15 @@ public class DatePattern {
 	 * JDK中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy
 	 */
 	public static final FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN, Locale.US);
+
+	/**
+	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss
+	 */
+	public static final String UTC_SIMPLE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+	/**
+	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss
+	 */
+	public static final FastDateFormat UTC_SIMPLE_FORMAT = FastDateFormat.getInstance(UTC_SIMPLE_PATTERN, TimeZone.getTimeZone("UTC"));
 
 	/**
 	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss'Z'

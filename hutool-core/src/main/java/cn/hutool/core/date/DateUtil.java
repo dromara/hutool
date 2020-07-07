@@ -834,6 +834,9 @@ public class DateUtil extends CalendarUtil {
 			} else if (length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
 				// 格式类似：2018-09-13T05:34:31.999+0800 或 2018-09-13T05:34:31.999+08:00
 				return parse(utcString, DatePattern.UTC_MS_WITH_ZONE_OFFSET_FORMAT);
+			} else if(length == DatePattern.UTC_SIMPLE_PATTERN.length()-2){
+				// 格式类似：2018-09-13T05:34:31
+				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
 			}
 		}
 		// 没有更多匹配的时间格式
@@ -1868,9 +1871,10 @@ public class DateUtil extends CalendarUtil {
 	 * @param instant {@link Instant}
 	 * @return {@link LocalDateTime}
 	 * @since 5.0.5
+	 * @see LocalDateTimeUtil#of(Instant)
 	 */
 	public static LocalDateTime toLocalDateTime(Instant instant) {
-		return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		return LocalDateTimeUtil.of(instant);
 	}
 
 	/**
@@ -1879,10 +1883,10 @@ public class DateUtil extends CalendarUtil {
 	 * @param date {@link Date}
 	 * @return {@link LocalDateTime}
 	 * @since 5.0.5
+	 * @see LocalDateTimeUtil#of(Date)
 	 */
 	public static LocalDateTime toLocalDateTime(Date date) {
-		final DateTime dateTime = date(date);
-		return LocalDateTime.ofInstant(dateTime.toInstant(), dateTime.getZoneId());
+		return LocalDateTimeUtil.of(date);
 	}
 
 	/**

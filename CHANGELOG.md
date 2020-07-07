@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.9 (2020-07-06)
+## 5.3.9 (2020-07-07)
 
 ### 新特性
 * 【core   】     DateUtil增加formatChineseDate（pr#932@Github）
 * 【core   】     ArrayUtil.isEmpty修改逻辑（pr#948@Github）
 * 【core   】     增强StrUtil中空判断后返回数据性能（pr#949@Github）
-* 【core   】     deprecate掉millsecond，改为millisecond（issue#I1M9P8@Github）
+* 【core   】     deprecate掉millsecond，改为millisecond（issue#I1M9P8@Gitee）
+* 【core   】     增加LocalDateTimeUtil（issue#I1KUVC@Gitee）
 
 ### Bug修复
 * 【core   】     修复NumberUtil.partValue有余数问题（issue#I1KX66@Gitee）
