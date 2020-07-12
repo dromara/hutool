@@ -12,24 +12,23 @@ import java.util.BitSet;
 
 /**
  * URL编码，数据内容的类型是 application/x-www-form-urlencoded。
- * 
+ *
  * <pre>
  * 1.字符"a"-"z"，"A"-"Z"，"0"-"9"，"."，"-"，"*"，和"_" 都不会被编码;
  * 2.将空格转换为%20 ;
  * 3.将非文本内容转换成"%xy"的形式,xy是两位16进制的数值;
  * </pre>
- * 
- * @author looly,
  *
+ * @author looly
  */
-public class URLEncoder implements Serializable{
+public class URLEncoder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// --------------------------------------------------------------------------------------------- Static method start
 	/**
 	 * 默认{@link URLEncoder}<br>
 	 * 默认的编码器针对URI路径编码，定义如下：
-	 * 
+	 *
 	 * <pre>
 	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
@@ -37,32 +36,42 @@ public class URLEncoder implements Serializable{
 	 * </pre>
 	 */
 	public static final URLEncoder DEFAULT = createDefault();
-	
+
 	/**
 	 * 用于查询语句的{@link URLEncoder}<br>
 	 * 编码器针对URI路径编码，定义如下：
-	 * 
+	 *
 	 * <pre>
-	 * 0x20 ' ' =》 '+' 
-	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
+	 * 0x20 ' ' =》 '+'
+	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
 	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
 	 * 其它编码为 %nn 形式
 	 * </pre>
-	 * 
+	 * <p>
 	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
 	 */
 	public static final URLEncoder QUERY = createQuery();
 
 	/**
+	 * 全编码的{@link URLEncoder}<br>
+	 * <pre>
+	 * 	 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
+	 * 	 '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
+	 * 	 其它编码为 %nn 形式
+	 * 	 </pre>
+	 */
+	public static final URLEncoder ALL = createAll();
+
+	/**
 	 * 创建默认{@link URLEncoder}<br>
 	 * 默认的编码器针对URI路径编码，定义如下：
-	 * 
+	 *
 	 * <pre>
 	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
-	 * 
+	 *
 	 * @return {@link URLEncoder}
 	 */
 	public static URLEncoder createDefault() {
@@ -95,16 +104,16 @@ public class URLEncoder implements Serializable{
 	/**
 	 * 创建用于查询语句的{@link URLEncoder}<br>
 	 * 编码器针对URI路径编码，定义如下：
-	 * 
+	 *
 	 * <pre>
-	 * 0x20 ' ' =》 '+' 
-	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
+	 * 0x20 ' ' =》 '+'
+	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
 	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
 	 * 其它编码为 %nn 形式
 	 * </pre>
-	 * 
+	 * <p>
 	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
-	 * 
+	 *
 	 * @return {@link URLEncoder}
 	 */
 	public static URLEncoder createQuery() {
@@ -122,16 +131,44 @@ public class URLEncoder implements Serializable{
 
 		return encoder;
 	}
+
+	/**
+	 * 创建{@link URLEncoder}<br>
+	 * 编码器针对URI路径编码，定义如下：
+	 *
+	 * <pre>
+	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
+	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
+	 * 其它编码为 %nn 形式
+	 * </pre>
+	 * <p>
+	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
+	 *
+	 * @return {@link URLEncoder}
+	 */
+	public static URLEncoder createAll() {
+		final URLEncoder encoder = new URLEncoder();
+		encoder.addSafeCharacter('*');
+		encoder.addSafeCharacter('-');
+		encoder.addSafeCharacter('.');
+		encoder.addSafeCharacter('_');
+
+		return encoder;
+	}
 	// --------------------------------------------------------------------------------------------- Static method end
 
-	/** 存放安全编码 */
+	/**
+	 * 存放安全编码
+	 */
 	private final BitSet safeCharacters;
-	/** 是否编码空格为+ */
+	/**
+	 * 是否编码空格为+
+	 */
 	private boolean encodeSpaceAsPlus = false;
 
 	/**
 	 * 构造<br>
-	 * 
+	 * <p>
 	 * [a-zA-Z0-9]默认不被编码
 	 */
 	public URLEncoder() {
@@ -150,7 +187,7 @@ public class URLEncoder implements Serializable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param safeCharacters 安全字符，安全字符不被编码
 	 */
 	private URLEncoder(BitSet safeCharacters) {
@@ -160,7 +197,7 @@ public class URLEncoder implements Serializable{
 	/**
 	 * 增加安全字符<br>
 	 * 安全字符不被编码
-	 * 
+	 *
 	 * @param c 字符
 	 */
 	public void addSafeCharacter(char c) {
@@ -170,7 +207,7 @@ public class URLEncoder implements Serializable{
 	/**
 	 * 移除安全字符<br>
 	 * 安全字符不被编码
-	 * 
+	 *
 	 * @param c 字符
 	 */
 	public void removeSafeCharacter(char c) {
@@ -179,7 +216,7 @@ public class URLEncoder implements Serializable{
 
 	/**
 	 * 是否将空格编码为+
-	 * 
+	 *
 	 * @param encodeSpaceAsPlus 是否将空格编码为+
 	 */
 	public void setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
@@ -189,9 +226,8 @@ public class URLEncoder implements Serializable{
 	/**
 	 * 将URL中的字符串编码为%形式
 	 *
-	 * @param path 需要编码的字符串
+	 * @param path    需要编码的字符串
 	 * @param charset 编码
-	 *
 	 * @return 编码后的字符串
 	 */
 	public String encode(String path, Charset charset) {

@@ -14,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -331,11 +330,8 @@ public class URLUtil {
 		if (null == charset) {
 			return url;
 		}
-		try {
-			return java.net.URLEncoder.encode(url, charset.toString());
-		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(e);
-		}
+
+		return URLEncoder.ALL.encode(url, charset);
 	}
 
 	/**

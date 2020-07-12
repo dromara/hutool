@@ -283,23 +283,26 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> Set<T> intersectionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		final Set<T> result;
-		if (isEmpty(coll1)) {
-			result = new LinkedHashSet<>();
+		if (isEmpty(coll1) || isEmpty(coll2)) {
+			// 有一个空集合就直接返回空
+			return new LinkedHashSet<>();
 		} else {
 			result = new LinkedHashSet<>(coll1);
-		}
-
-		if (isNotEmpty(coll2)) {
-			result.retainAll(coll2);
 		}
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
 				if(isNotEmpty(otherColl)){
 					result.retainAll(otherColl);
+				} else {
+					// 有一个空集合就直接返回空
+					return new LinkedHashSet<>();
 				}
 			}
 		}
+
+		result.retainAll(coll2);
+
 		return result;
 	}
 

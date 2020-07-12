@@ -24,6 +24,8 @@
 * 【core   】     修复Dict中putAll大小写问题（issue#I1MU5B@Gitee）
 * 【core   】     修复POI中sax读取数字判断错误问题（issue#931@Github）
 * 【core   】     修复DateUtil.endOfQuarter错误问题（issue#I1NGZ7@Gitee）
+* 【core   】     修复URL中有空格转为+问题（issue#I1NGW4@Gitee）
+* 【core   】     修复CollUtil.intersectionDistinct空集合结果错误问题
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

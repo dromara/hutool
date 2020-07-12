@@ -27,14 +27,13 @@ import java.util.SortedSet;
 
 /**
  * 集合工具类单元测试
- * 
- * @author looly
  *
+ * @author looly
  */
 public class CollUtilTest {
 
 	@Test
-	public void isNotEmptyTest(){
+	public void isNotEmptyTest() {
 		Assert.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
 	}
 
@@ -79,7 +78,7 @@ public class CollUtilTest {
 		Collection<String> intersection = CollUtil.intersection(list1, list2);
 		Assert.assertEquals(2, CollUtil.count(intersection, t -> t.equals("b")));
 	}
-	
+
 	@Test
 	public void intersectionDistinctTest() {
 		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
@@ -87,10 +86,10 @@ public class CollUtilTest {
 		ArrayList<String> list3 = CollUtil.newArrayList();
 
 		Collection<String> intersectionDistinct = CollUtil.intersectionDistinct(list1, list2);
-        	Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
+		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
 
-        	Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
-        	Assert.assertTrue(intersectionDistinct2.isEmpty());
+		Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
+		Assert.assertTrue(intersectionDistinct2.isEmpty());
 	}
 
 	@Test
@@ -144,7 +143,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void subtractTest(){
+	public void subtractTest() {
 		List<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
 		List<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 		final Collection<String> subtract = CollUtil.subtract(list1, list2);
@@ -228,7 +227,7 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
 	}
-	
+
 	@Test
 	public void removeNullTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
@@ -239,7 +238,7 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
 	}
-	
+
 	@Test
 	public void removeEmptyTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
@@ -250,13 +249,13 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
 	}
-	
+
 	@Test
 	public void removeBlankTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
-		
+
 		ArrayList<String> filtered = CollUtil.removeBlank(list);
-		
+
 		// 原地过滤
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
@@ -632,9 +631,9 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void toMapTest(){
+	public void toMapTest() {
 		Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
-		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value)->"key" + value);
+		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value) -> "key" + value);
 		Assert.assertEquals("a", map.get("keya"));
 		Assert.assertEquals("b", map.get("keyb"));
 		Assert.assertEquals("c", map.get("keyc"));

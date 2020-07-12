@@ -198,4 +198,10 @@ public class UrlBuilderTest {
 		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals(getWorkDayUrl, builder.toString());
 	}
+
+	@Test
+	public void blankEncodeTest(){
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
+	}
 }
