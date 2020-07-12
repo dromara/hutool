@@ -73,7 +73,7 @@ public class DateUtilTest {
 
 	@Test
 	public void beginAndEndTest() {
-		String dateStr = "2017-03-01 22:33:23";
+		String dateStr = "2017-03-01 00:33:23";
 		Date date = DateUtil.parse(dateStr);
 
 		// 一天的开始
@@ -82,6 +82,12 @@ public class DateUtilTest {
 		// 一天的结束
 		Date endOfDay = DateUtil.endOfDay(date);
 		Assert.assertEquals("2017-03-01 23:59:59", endOfDay.toString());
+	}
+
+	@Test
+	public void endOfDayTest() {
+		final DateTime parse = DateUtil.parse("2020-05-31 00:00:00");
+		Assert.assertEquals("2020-05-31 23:59:59", DateUtil.endOfDay(parse).toString());
 	}
 
 	@Test
@@ -585,6 +591,14 @@ public class DateUtilTest {
 		date.setField(DateField.YEAR, 2019);
 		DateTime endOfYear = DateUtil.endOfYear(date);
 		Assert.assertEquals("2019-12-31 23:59:59", endOfYear.toString());
+	}
+
+	@Test
+	public void endOfQuarterTest() {
+		Date date = DateUtil.endOfQuarter(
+				DateUtil.parse("2020-05-31 00:00:00"));
+
+		Assert.assertEquals("2020-06-30 23:59:59", DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
 	}
 
 	@Test

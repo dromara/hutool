@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.9 (2020-07-07)
+## 5.3.9 (2020-07-12)
 
 ### 新特性
 * 【core   】     DateUtil增加formatChineseDate（pr#932@Github）
@@ -11,6 +11,7 @@
 * 【core   】     增强StrUtil中空判断后返回数据性能（pr#949@Github）
 * 【core   】     deprecate掉millsecond，改为millisecond（issue#I1M9P8@Gitee）
 * 【core   】     增加LocalDateTimeUtil（issue#I1KUVC@Gitee）
+* 【core   】     Month增加getLastDay方法
 
 ### Bug修复
 * 【core   】     修复NumberUtil.partValue有余数问题（issue#I1KX66@Gitee）
@@ -22,6 +23,7 @@
 * 【extra  】     修复Ftp中ArrayList长度为负问题（pr#136@Github）
 * 【core   】     修复Dict中putAll大小写问题（issue#I1MU5B@Gitee）
 * 【core   】     修复POI中sax读取数字判断错误问题（issue#931@Github）
+* 【core   】     修复DateUtil.endOfQuarter错误问题（issue#I1NGZ7@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

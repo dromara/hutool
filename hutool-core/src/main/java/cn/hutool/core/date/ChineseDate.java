@@ -16,7 +16,11 @@ import java.util.List;
  */
 public class ChineseDate {
 
-	private static final Date baseDate = DateUtil.parseDate("1900-01-31");
+//	private static final Date baseDate = DateUtil.parseDate("1900-01-31");
+	/**
+	 * 1900-01-31
+	 */
+	private static final long baseDate = -2206425943000L;
 
 	//农历年
 	private final int year;
@@ -28,6 +32,12 @@ public class ChineseDate {
 	private boolean leap;
 	private final String[] chineseNumber = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
 	private final String[] chineseNumberName = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "腊"};
+	/**
+	 *农历表示：
+	 * 1.  表示当年有无闰年，有的话，为闰月的月份，没有的话，为0。
+	 * 2-4.为除了闰月外的正常月份是大月还是小月，1为30天，0为29天。
+	 * 5.  表示闰月是大月还是小月，仅当存在闰月的情况下有意义。
+	 */
 	private final long[] lunarInfo = new long[]{0x04bd8, 0x04ae0, 0x0a570,
 			0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
 			0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0,
@@ -66,33 +76,30 @@ public class ChineseDate {
 	 * @param date 日期
 	 */
 	public ChineseDate(Date date) {
-		// -------------------- private --------------------
 		int yearCyl;
 		int monCyl;
 		int dayCyl;
-		int leapMonth;
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((date.getTime() - baseDate.getTime()) / 86400000L);
+		int offset = (int) ((date.getTime() - baseDate) / DateUnit.DAY.getMillis());
 		monCyl = 14;
 		// 用offset减去每农历年的天数
 		// 计算当天是农历第几天
 		// i最终结果是农历的年份
 		// offset是当年的第几天
 		int iYear;
-		int daysOfYear = 0;
-		for (iYear = 1900; iYear < 2050 && offset > 0; iYear++) {
+		int daysOfYear;
+		for (iYear = 1900; iYear < 2050; iYear++) {
 			daysOfYear = yearDays(iYear);
+			if (offset < daysOfYear) {
+				break;
+			}
 			offset -= daysOfYear;
 			monCyl += 12;
 		}
-		if (offset < 0) {
-			offset += daysOfYear;
-			iYear--;
-			monCyl -= 12;
-		}
+
 		// 农历年份
 		year = iYear;
-		leapMonth = leapMonth(iYear); // 闰哪个月,1-12
+		int leapMonth = leapMonth(iYear); // 闰哪个月,1-12
 		leap = false;
 		// 用当年的天数offset,逐个减去每月（农历）的天数，求出当天是本月的第几天
 		int iMonth, daysOfMonth = 0;
@@ -270,7 +277,7 @@ public class ChineseDate {
 	 * @return 标准的日期格式
 	 * @since 5.2.4
 	 */
-	public String toStringNormal(){
+	public String toStringNormal() {
 		return String.format("%04d-%02d-%02d", this.year, this.month, this.day);
 	}
 
@@ -314,8 +321,9 @@ public class ChineseDate {
 	private int leapDays(int y) {
 		if (leapMonth(y) != 0) {
 			return (lunarInfo[y - 1900] & 0x10000) != 0 ? 30 : 29;
-		} else
-			return 0;
+		}
+
+		return 0;
 	}
 
 

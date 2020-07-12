@@ -237,11 +237,15 @@ public class CalendarUtil {
 	 * @return {@link Calendar}
 	 * @since 4.1.0
 	 */
+	@SuppressWarnings({"MagicConstant", "ConstantConditions"})
 	public static Calendar endOfQuarter(Calendar calendar) {
-		//noinspection MagicConstant
-		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2);
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-		return endOfDay(calendar);
+		final int year = calendar.get(Calendar.YEAR);
+		final int month = calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2;
+
+		final Calendar resultCal = Calendar.getInstance(calendar.getTimeZone());
+		resultCal.set(year, month, Month.of(month).getLastDay(DateUtil.isLeapYear(year)));
+
+		return endOfDay(resultCal);
 	}
 
 	/**

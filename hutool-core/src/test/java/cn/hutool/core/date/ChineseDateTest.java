@@ -36,4 +36,13 @@ public class ChineseDateTest {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-03-1"));
 		Assert.assertEquals("2020-02-08", date.toStringNormal());
 	}
+
+	@Test
+	public void parseTest(){
+		ChineseDate date = new ChineseDate(DateUtil.parseDate("1996-07-14"));
+		Assert.assertEquals("丙子鼠年 五月廿九", date.toString());
+
+		date = new ChineseDate(DateUtil.parseDate("1996-07-15"));
+		Assert.assertEquals("丙子鼠年 五月三十", date.toString());
+	}
 }
