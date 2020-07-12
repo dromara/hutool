@@ -326,6 +326,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return 单元格样式
 	 */
 	public CellStyle getCellStyle() {
+		if(null == this.styleSet){
+			return null;
+		}
 		return this.styleSet.cellStyle;
 	}
 

@@ -12,6 +12,7 @@
 * 【core   】     deprecate掉millsecond，改为millisecond（issue#I1M9P8@Gitee）
 * 【core   】     增加LocalDateTimeUtil（issue#I1KUVC@Gitee）
 * 【core   】     Month增加getLastDay方法
+* 【core   】     ChineseDate支持到2099年
 
 ### Bug修复
 * 【core   】     修复NumberUtil.partValue有余数问题（issue#I1KX66@Gitee）
@@ -26,6 +27,7 @@
 * 【core   】     修复DateUtil.endOfQuarter错误问题（issue#I1NGZ7@Gitee）
 * 【core   】     修复URL中有空格转为+问题（issue#I1NGW4@Gitee）
 * 【core   】     修复CollUtil.intersectionDistinct空集合结果错误问题
+* 【core   】     修复ChineseDate在1996年计算错误问题（issue#I1N96I@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.8 (2020-06-16)

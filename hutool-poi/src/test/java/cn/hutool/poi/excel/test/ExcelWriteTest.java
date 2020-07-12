@@ -27,7 +27,7 @@ import java.util.TreeMap;
 
 /**
  * 写出Excel单元测试
- * 
+ *
  * @author looly
  */
 public class ExcelWriteTest {
@@ -211,7 +211,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeMapWithStyleTest() {
@@ -227,14 +227,14 @@ public class ExcelWriteTest {
 		FileUtil.del(path);
 		ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.setStyleSet(null);
-		
+
 		// 一次性写出内容，使用默认样式
 		writer.writeRow(row1, true);
-		
+
 		// 设置某个单元格样式
 		CellStyle orCreateRowStyle = writer.getOrCreateCellStyle(0, 1);
-		StyleUtil.setColor(orCreateRowStyle,IndexedColors.RED.getIndex(),FillPatternType.SOLID_FOREGROUND );
-		
+		StyleUtil.setColor(orCreateRowStyle, IndexedColors.RED.getIndex(), FillPatternType.SOLID_FOREGROUND);
+
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -306,7 +306,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeMapOnlyAliasTest2() {
@@ -409,7 +409,7 @@ public class ExcelWriteTest {
 		writer.writeCellValue(3, 5, "aaa");
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void addSelectTest() {
@@ -440,7 +440,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeMultiSheetTest(){
+	public void writeMultiSheetTest() {
 		List<Map<String, Object>> rows = new LinkedList<>();
 		for (int i = 0; i < 10; i++) {
 			Map<String, Object> tempList = new TreeMap<>();
@@ -475,22 +475,22 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeMapsTest(){
-		List<Map<String,Object>> rows = new ArrayList<>();
+	public void writeMapsTest() {
+		List<Map<String, Object>> rows = new ArrayList<>();
 
 		Map<String, Object> map1 = new HashMap<>();
-		map1.put("a",1);
-		map1.put("b",2);
-		map1.put("c",3);
-		map1.put("d",4);
-		map1.put("e",5);
+		map1.put("a", 1);
+		map1.put("b", 2);
+		map1.put("c", 3);
+		map1.put("d", 4);
+		map1.put("e", 5);
 		Map<String, Object> map2 = new HashMap<>();
-		map2.put("c",3);
-		map2.put("d",4);
-		map2.put("e",5);
+		map2.put("c", 3);
+		map2.put("d", 4);
+		map2.put("e", 5);
 		Map<String, Object> map3 = new HashMap<>();
-		map3.put("d",4);
-		map3.put("e",5);
+		map3.put("d", 4);
+		map3.put("e", 5);
 
 		rows.add(map1);
 		rows.add(map2);
