@@ -481,7 +481,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回<code>""</code>。
+	 * 除去字符串头尾部的空白，如果字符串是{@code null}或者""，返回{@code null}。
 	 *
 	 * <pre>
 	 * StrUtil.trimToNull(null)          = null
