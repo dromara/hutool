@@ -21,7 +21,7 @@ import java.io.OutputStream;
  *    e.addFrame(image2);
  *    e.finish();
  * </pre>
- *
+ * <p>
  * 来自：https://github.com/rtyley/animated-gif-lib-for-java
  *
  * @author Kevin Weiner, FM Software
@@ -119,7 +119,8 @@ public class AnimatedGifEncoder {
 	 * closest one.
 	 * May be set to null to indicate no transparent color.
 	 *
-	 * @param c Color to be treated as transparent on display.
+	 * @param c          Color to be treated as transparent on display.
+	 * @param exactMatch If exactMatch is set to true, transparent color index is search with exact match
 	 */
 	public void setTransparent(Color c, boolean exactMatch) {
 		transparent = c;
@@ -192,6 +193,8 @@ public class AnimatedGifEncoder {
 	 * Flushes any pending data and closes output file.
 	 * If writing to an OutputStream, the stream is not
 	 * closed.
+	 *
+	 * @return is ok
 	 */
 	public boolean finish() {
 		if (!started) return false;
@@ -344,6 +347,9 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Returns index of palette color closest to c
+	 *
+	 * @param c Color
+	 * @return index
 	 */
 	protected int findClosest(Color c) {
 		if (colorTab == null) return -1;
@@ -368,9 +374,13 @@ public class AnimatedGifEncoder {
 		return minpos;
 	}
 
-	/*
-	 * Returns true if the exact matching color is existing, and used in the color palette, otherwise, return false. This method has to be called before
-	 * finishing the image, because after finished the palette is destroyed and it will always return false.
+	/**
+	 * Returns true if the exact matching color is existing, and used in the color palette, otherwise, return false.
+	 * This method has to be called before finishing the image,
+	 * because after finished the palette is destroyed and it will always return false.
+	 *
+	 * @param c 颜色
+	 * @return 颜色是否存在
 	 */
 	boolean isColorUsed(Color c) {
 		return findExact(c) != -1;
@@ -378,6 +388,9 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Returns index of palette exactly matching to color c or -1 if there is no exact matching.
+	 *
+	 * @param c Color
+	 * @return index
 	 */
 	protected int findExact(Color c) {
 		if (colorTab == null) {
@@ -422,6 +435,8 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Writes Graphic Control Extension
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writeGraphicCtrlExt() throws IOException {
 		out.write(0x21); // extension introducer
@@ -454,6 +469,8 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Writes Image Descriptor
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writeImageDesc() throws IOException {
 		out.write(0x2c); // image separator
@@ -478,6 +495,8 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Writes Logical Screen Descriptor
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writeLSD() throws IOException {
 		// logical screen size
@@ -497,6 +516,8 @@ public class AnimatedGifEncoder {
 	/**
 	 * Writes Netscape application extension to define
 	 * repeat count.
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writeNetscapeExt() throws IOException {
 		out.write(0x21); // extension introducer
@@ -511,6 +532,8 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Writes color table
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writePalette() throws IOException {
 		out.write(colorTab, 0, colorTab.length);
@@ -522,6 +545,8 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Encodes and writes pixel data
+	 *
+	 * @throws IOException IO异常
 	 */
 	protected void writePixels() throws IOException {
 		LZWEncoder encoder = new LZWEncoder(width, height, indexedPixels, colorDepth);
@@ -530,6 +555,9 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Write 16-bit value to output stream, LSB first
+	 *
+	 * @param value 16-bit value
+	 * @throws IOException IO异常
 	 */
 	protected void writeShort(int value) throws IOException {
 		out.write(value & 0xff);
@@ -538,6 +566,9 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Writes string to output stream
+	 *
+	 * @param s String
+	 * @throws IOException IO异常
 	 */
 	protected void writeString(String s) throws IOException {
 		for (int i = 0; i < s.length(); i++) {

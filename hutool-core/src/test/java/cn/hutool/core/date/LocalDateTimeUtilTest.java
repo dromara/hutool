@@ -53,6 +53,12 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void parseTest5() {
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
+		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
+	}
+
+	@Test
 	public void formatTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		String format = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);

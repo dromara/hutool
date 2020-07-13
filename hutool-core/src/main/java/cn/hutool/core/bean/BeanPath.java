@@ -193,16 +193,16 @@ public class BeanPath implements Serializable{
 			} else if (ArrayUtil.isArray(bean)) {
 				return ArrayUtil.getAny(bean, Convert.convert(int[].class, keys));
 			} else {
-				final String[] unwrapedKeys = new String[keys.size()];
-				for (int i = 0; i < unwrapedKeys.length; i++) {
-					unwrapedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
+				final String[] unWrappedKeys = new String[keys.size()];
+				for (int i = 0; i < unWrappedKeys.length; i++) {
+					unWrappedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
 				}
 				if (bean instanceof Map) {
 					// 只支持String为key的Map
-					return MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);
+					return MapUtil.getAny((Map<String, ?>) bean, unWrappedKeys);
 				} else {
 					final Map<String, Object> map = BeanUtil.beanToMap(bean);
-					return MapUtil.getAny(map, unwrapedKeys);
+					return MapUtil.getAny(map, unWrappedKeys);
 				}
 			}
 		} else {

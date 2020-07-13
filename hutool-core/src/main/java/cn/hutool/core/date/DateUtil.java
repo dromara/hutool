@@ -632,6 +632,7 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param date        被格式化的日期
 	 * @param isUppercase 是否采用大写形式
+	 * @param withTime    是否包含时间部分
 	 * @return 中文日期字符串
 	 * @since 5.3.9
 	 */
