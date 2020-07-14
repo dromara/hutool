@@ -228,8 +228,8 @@ public class ZipUtil {
 				// 调用递归压缩方法进行目录或文件压缩
 				zip(srcFile, srcRootDir, zipOutputStream, filter);
 				zipOutputStream.flush();
-				zipOutputStream.finish();
 			}
+			zipOutputStream.finish();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
