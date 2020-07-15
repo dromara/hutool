@@ -5,9 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
 
@@ -22,12 +20,7 @@ import java.sql.Connection;
  * @author Luxiaolei
  */
 public final class DbUtil {
-	private final static Log log = LogFactory.get();
-
-	/**
-	 * 是否大小写不敏感（默认大小写不敏感）
-	 */
-	protected static boolean caseInsensitiveGlobal = true;
+	private final static Log log = Log.get();
 
 	/**
 	 * 实例化一个新的SQL运行对象
@@ -240,7 +233,7 @@ public final class DbUtil {
 	 * @since 4.1.7
 	 */
 	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
-		SqlLog.INSTANCE.init(isShowSql, isFormatSql, isShowParams, level);
+		GlobalDbConfig.setShowSql(isShowSql, isFormatSql, isShowParams, level);
 	}
 
 	/**
@@ -251,6 +244,18 @@ public final class DbUtil {
 	 * @since 5.2.4
 	 */
 	public static void setCaseInsensitiveGlobal(boolean caseInsensitive) {
-		caseInsensitiveGlobal = caseInsensitive;
+		GlobalDbConfig.setCaseInsensitive(caseInsensitive);
+	}
+
+	/**
+	 * 设置全局是否INSERT语句中默认返回主键（默认返回主键）<br>
+	 * 如果false，则在Insert操作后，返回影响行数
+	 * 主要用于某些数据库不支持返回主键的情况
+	 *
+	 * @param returnGeneratedKey 是否INSERT语句中默认返回主键
+	 * @since 5.3.10
+	 */
+	public static void setReturnGeneratedKeyGlobal(boolean returnGeneratedKey) {
+		GlobalDbConfig.setReturnGeneratedKey(returnGeneratedKey);
 	}
 }

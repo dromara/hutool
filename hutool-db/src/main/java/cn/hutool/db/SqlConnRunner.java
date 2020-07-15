@@ -39,7 +39,7 @@ public class SqlConnRunner implements Serializable {
 	/**
 	 * 是否大小写不敏感（默认大小写不敏感）
 	 */
-	protected boolean caseInsensitive = DbUtil.caseInsensitiveGlobal;
+	protected boolean caseInsensitive = GlobalDbConfig.caseInsensitive;
 
 	/**
 	 * 实例化一个新的SQL运行对象
@@ -532,7 +532,7 @@ public class SqlConnRunner implements Serializable {
 
 		//查询全部
 		if (null == page) {
-			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler(DbUtil.caseInsensitiveGlobal));
+			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler(GlobalDbConfig.caseInsensitive));
 			final PageResult<Entity> pageResult = new PageResult<>(0, entityList.size(), entityList.size());
 			pageResult.addAll(entityList);
 			return pageResult;

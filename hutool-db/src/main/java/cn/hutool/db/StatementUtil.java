@@ -124,7 +124,7 @@ public class StatementUtil {
 
 		SqlLog.INSTANCE.log(sql, ArrayUtil.isEmpty(params) ? null : params);
 		PreparedStatement ps;
-		if (StrUtil.startWithIgnoreCase(sql, "insert")) {
+		if (GlobalDbConfig.returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		} else {

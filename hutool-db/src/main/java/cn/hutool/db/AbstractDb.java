@@ -41,7 +41,7 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 是否大小写不敏感（默认大小写不敏感）
 	 */
-	protected boolean caseInsensitive = DbUtil.caseInsensitiveGlobal;
+	protected boolean caseInsensitive = GlobalDbConfig.caseInsensitive;
 	protected SqlConnRunner runner;
 
 	// ------------------------------------------------------- Constructor start

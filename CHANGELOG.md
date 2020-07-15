@@ -6,6 +6,8 @@
 ## 5.3.10 (2020-07-14)
 
 ### 新特性
+* 【db   】       增加DbUtil.setReturnGeneratedKeyGlobal（issue#I1NM0K@Gitee）
+
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）
 

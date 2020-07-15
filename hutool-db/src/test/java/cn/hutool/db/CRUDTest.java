@@ -93,6 +93,13 @@ public class CRUDTest {
 	}
 
 	@Test
+	public void findInTest3() throws SQLException {
+		List<Entity> results = db.findAll(Entity.create("user")
+				.set("id", new long[]{1, 2, 3}));
+		Assert.assertEquals(2, results.size());
+	}
+
+	@Test
 	public void findAllTest() throws SQLException {
 		List<Entity> results = db.findAll("user");
 		Assert.assertEquals(4, results.size());
