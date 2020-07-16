@@ -273,7 +273,10 @@ public class CharUtil {
 	 * @since 4.0.10
 	 */
 	public static boolean isBlankChar(int c) {
-		return Character.isWhitespace(c) || Character.isSpaceChar(c) || c == '\ufeff' || c == '\u202a';
+		return Character.isWhitespace(c)
+				|| Character.isSpaceChar(c)
+				|| c == '\ufeff'
+				|| c == '\u202a';
 	}
 
 	/**
