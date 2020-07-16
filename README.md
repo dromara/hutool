@@ -5,7 +5,7 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
+	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
 	<a target="_blank" href="https://license.coscl.org.cn/MulanPSL2/">
