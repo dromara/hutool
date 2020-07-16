@@ -1,5 +1,7 @@
 package cn.hutool.core.io.unit;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
  * 数据单位封装<p>
  * 此类来自于：Spring-framework
@@ -69,7 +71,8 @@ public enum DataUnit {
 	 */
 	public static DataUnit fromSuffix(String suffix) {
 		for (DataUnit candidate : values()) {
-			if (candidate.suffix.equalsIgnoreCase(suffix)) {
+			// 支持类似于 3MB，3M，3m等写法
+			if (StrUtil.startWithIgnoreCase(candidate.suffix, suffix)) {
 				return candidate;
 			}
 		}

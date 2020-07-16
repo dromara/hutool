@@ -16,7 +16,7 @@ public class DataSizeUtil {
 	 * @param text 数据大小字符串，类似于：12KB, 5MB等
 	 * @return bytes大小
 	 */
-	public long parse(String text) {
+	public static long parse(String text) {
 		return DataSize.parse(text).toBytes();
 	}
 
