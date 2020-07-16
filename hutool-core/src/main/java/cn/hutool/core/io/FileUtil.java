@@ -9,6 +9,7 @@ import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -50,7 +51,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -3361,14 +3361,10 @@ public class FileUtil {
 	 *
 	 * @param size Long类型大小
 	 * @return 大小
+	 * @see DataSizeUtil#format(long)
 	 */
 	public static String readableFileSize(long size) {
-		if (size <= 0) {
-			return "0";
-		}
-		final String[] units = new String[]{"B", "kB", "MB", "GB", "TB", "EB"};
-		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+		return DataSizeUtil.format(size);
 	}
 
 	/**
