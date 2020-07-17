@@ -18,7 +18,7 @@
 	<properties>
 		<jython.version>2.7.2</jython.version>
 		<luaj.version>3.0.1</luaj.version>
-		<groovy.version>3.0.4</groovy.version>
+		<groovy.version>3.0.2</groovy.version>
 	</properties>
 
 	<dependencies>

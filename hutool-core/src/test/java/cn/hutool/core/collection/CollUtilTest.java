@@ -650,4 +650,14 @@ public class CollUtilTest {
 		Assert.assertEquals(Integer.valueOf(2), countMap.get("c"));
 		Assert.assertEquals(Integer.valueOf(1), countMap.get("d"));
 	}
+
+	@Test
+	public void pageTest(){
+		List<Dict> objects = CollUtil.newArrayList();
+		for (int i = 0; i < 10; i++) {
+			objects.add(Dict.create().set("name", "姓名：" + i));
+		}
+
+		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());
+	}
 }

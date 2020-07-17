@@ -1322,7 +1322,7 @@ public class ImgUtil {
 	 * @param font            字体{@link Font}
 	 * @param backgroundColor 背景颜色，默认透明
 	 * @param fontColor       字体颜色，默认黑色
-	 * @param imageType 图片类型，见：{@link BufferedImage}
+	 * @param imageType       图片类型，见：{@link BufferedImage}
 	 * @return 图片
 	 * @throws IORuntimeException IO异常
 	 */
@@ -1355,7 +1355,7 @@ public class ImgUtil {
 	/**
 	 * 获取font的样式应用在str上的整个矩形
 	 *
-	 * @param str 字符串，必须非空
+	 * @param str  字符串，必须非空
 	 * @param font 字体，必须非空
 	 * @return {@link Rectangle2D}
 	 * @since 5.3.3
@@ -1607,11 +1607,18 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage read(File imageFile) {
+		BufferedImage result;
 		try {
-			return ImageIO.read(imageFile);
+			result = ImageIO.read(imageFile);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type of file [" + imageFile.getName() + "] is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1633,11 +1640,18 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage read(InputStream imageStream) {
+		BufferedImage result;
 		try {
-			return ImageIO.read(imageStream);
+			result = ImageIO.read(imageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1648,11 +1662,18 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage read(ImageInputStream imageStream) {
+		BufferedImage result;
 		try {
-			return ImageIO.read(imageStream);
+			result = ImageIO.read(imageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1663,11 +1684,18 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage read(URL imageUrl) {
+		BufferedImage result;
 		try {
-			return ImageIO.read(imageUrl);
+			result = ImageIO.read(imageUrl);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type of [" + imageUrl.toString() + "] is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1679,11 +1707,18 @@ public class ImgUtil {
 	 * @since 3.1.2
 	 */
 	public static ImageOutputStream getImageOutputStream(OutputStream out) throws IORuntimeException {
+		ImageOutputStream result;
 		try {
-			return ImageIO.createImageOutputStream(out);
+			result = ImageIO.createImageOutputStream(out);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1695,11 +1730,18 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static ImageOutputStream getImageOutputStream(File outFile) throws IORuntimeException {
+		ImageOutputStream result;
 		try {
-			return ImageIO.createImageOutputStream(outFile);
+			result = ImageIO.createImageOutputStream(outFile);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type of file [" + outFile.getName() + "] is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1711,11 +1753,18 @@ public class ImgUtil {
 	 * @since 3.1.2
 	 */
 	public static ImageInputStream getImageInputStream(InputStream in) throws IORuntimeException {
+		ImageOutputStream result;
 		try {
-			return ImageIO.createImageInputStream(in);
+			result = ImageIO.createImageOutputStream(in);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		if (null == result) {
+			throw new IllegalArgumentException("Image type is not supported!");
+		}
+
+		return result;
 	}
 
 	/**
@@ -1778,7 +1827,7 @@ public class ImgUtil {
 	 */
 	public static String toHex(int r, int g, int b) {
 		// rgb 小于 255
-		if(r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255){
+		if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
 			throw new IllegalArgumentException("RGB must be 0~255!");
 		}
 		return String.format("#%02X%02X%02X", r, g, b);
@@ -1908,9 +1957,9 @@ public class ImgUtil {
 	/**
 	 * 获得修正后的矩形坐标位置，变为以背景中心为基准坐标（即x,y == 0,0时，处于背景正中）
 	 *
-	 * @param rectangle  矩形
+	 * @param rectangle        矩形
 	 * @param backgroundWidth  参考宽（背景宽）
-	 * @param backgroundHeight  参考高（背景高）
+	 * @param backgroundHeight 参考高（背景高）
 	 * @return 修正后的{@link Point}
 	 * @since 5.3.6
 	 */

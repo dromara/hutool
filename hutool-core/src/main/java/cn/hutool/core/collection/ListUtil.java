@@ -235,10 +235,17 @@ public class ListUtil {
 				return new ArrayList<>(0);
 			}
 		}
+
+		if((pageNo * pageSize) > resultSize){
+			// 越界直接返回空
+			return new ArrayList<>(0);
+		}
+
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
 		if (startEnd[1] > resultSize) {
 			startEnd[1] = resultSize;
 		}
+
 		return list.subList(startEnd[0], startEnd[1]);
 	}
 
