@@ -6,15 +6,13 @@ import cn.hutool.core.util.StrUtil;
  * 数据单位封装<p>
  * 此类来自于：Spring-framework
  *
- * <p>
- * <table border="1">
- * <tr><th>名称</th><th>数据大小</th><th>Power&nbsp;of&nbsp;2</th><th>bytes表示</th></tr>
- * <tr><td>{@link #BYTES}</td><td>1B</td><td>2^0</td><td>1</td></tr>
- * <tr><td>{@link #KILOBYTES}</td><td>1KB</td><td>2^10</td><td>1,024</td></tr>
- * <tr><td>{@link #MEGABYTES}</td><td>1MB</td><td>2^20</td><td>1,048,576</td></tr>
- * <tr><td>{@link #GIGABYTES}</td><td>1GB</td><td>2^30</td><td>1,073,741,824</td></tr>
- * <tr><td>{@link #TERABYTES}</td><td>1TB</td><td>2^40</td><td>1,099,511,627,776</td></tr>
- * </table>
+ * <pre>
+ *     BYTES      1B      2^0     1
+ *     KILOBYTES  1KB     2^10    1,024
+ *     MEGABYTES  1MB     2^20    1,048,576
+ *     GIGABYTES  1GB     2^30    1,073,741,824
+ *     TERABYTES  1TB     2^40    1,099,511,627,776
+ * </pre>
  *
  * @author Sam Brannen，Stephane Nicoll
  * @since 5.3.10

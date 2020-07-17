@@ -11,15 +11,13 @@ import java.util.regex.Pattern;
  * <p>
  * 此类来自于：Spring-framework
  *
- * <p>
- * <table border="1">
- * <tr><th>Term</th><th>Data Size</th><th>Size in Bytes</th></tr>
- * <tr><td>byte</td><td>1B</td><td>1</td></tr>
- * <tr><td>kilobyte</td><td>1KB</td><td>1,024</td></tr>
- * <tr><td>megabyte</td><td>1MB</td><td>1,048,576</td></tr>
- * <tr><td>gigabyte</td><td>1GB</td><td>1,073,741,824</td></tr>
- * <tr><td>terabyte</td><td>1TB</td><td>1,099,511,627,776</td></tr>
- * </table>
+ * <pre>
+ *     byte        1B     1
+ *     kilobyte    1KB    1,024
+ *     megabyte    1MB    1,048,576
+ *     gigabyte    1GB    1,073,741,824
+ *     terabyte    1TB    1,099,511,627,776
+ * </pre>
  *
  * @author Sam Brannen,Stephane Nicoll
  * @since 5.3.10
@@ -165,6 +163,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * </pre>
 	 *
 	 * @param text the text to parse
+	 * @param defaultUnit 默认的数据单位
 	 * @return the parsed {@link DataSize}
 	 */
 	public static DataSize parse(CharSequence text, DataUnit defaultUnit) {
