@@ -159,7 +159,7 @@ public class XmlUtilTest {
 	}
 
 	@Test
-	public void getByPathTest(){
+	public void getByPathTest() {
 		String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
 				"  <soap:Body>\n" +
@@ -172,12 +172,12 @@ public class XmlUtilTest {
 		Document document = XmlUtil.readXML(xmlStr);
 		Object value = XmlUtil.getByXPath(
 				"//soap:Envelope/soap:Body/ns2:testResponse/return",
-				document,XPathConstants.STRING);//
+				document, XPathConstants.STRING);//
 		Assert.assertEquals("2020/04/15 21:01:21", value);
 	}
 
 	@Test
-	public void xmlToBeanTest(){
+	public void xmlToBeanTest() {
 		final TestBean testBean = new TestBean();
 		testBean.setReqCode("1111");
 		testBean.setAccountName("账户名称");
@@ -197,7 +197,7 @@ public class XmlUtilTest {
 	}
 
 	@Data
-	public static class TestBean{
+	public static class TestBean {
 		private String ReqCode;
 		private String AccountName;
 		private String Operator;
