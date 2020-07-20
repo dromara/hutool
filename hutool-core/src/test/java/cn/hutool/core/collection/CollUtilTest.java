@@ -10,20 +10,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * 集合工具类单元测试
@@ -31,6 +18,33 @@ import java.util.SortedSet;
  * @author looly
  */
 public class CollUtilTest {
+
+	@Test
+	public void testPadLeft() {
+		List<Integer> srcList = CollUtil.newArrayList();
+		List<Integer> answerList = CollUtil.newArrayList(2, 1);
+		CollUtil.padLeft(srcList, 1, 1);
+		CollUtil.padLeft(srcList, 2, 2);
+		Assert.assertEquals(srcList, answerList);
+
+		srcList = CollUtil.newArrayList(1, 2);
+		answerList = CollUtil.newArrayList(1, 2);
+		CollUtil.padLeft(srcList, 2, 1);
+		Assert.assertEquals(srcList, answerList);
+
+		srcList = CollUtil.newArrayList(3);
+		answerList = CollUtil.newArrayList(1, 1, 3);
+		CollUtil.padLeft(srcList, 3, 1);
+		Assert.assertEquals(srcList, answerList);
+	}
+
+	@Test
+	public void testPadRight() {
+		List<Integer> srcList = CollUtil.newArrayList(6);
+		List<Integer> answerList = CollUtil.newArrayList(6, 3, 3, 3, 3);
+		CollUtil.padRight(srcList, 5, 3);
+		Assert.assertEquals(srcList, answerList);
+	}
 
 	@Test
 	public void isNotEmptyTest() {
