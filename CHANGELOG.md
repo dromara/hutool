@@ -11,6 +11,7 @@
 * 【core 】       ImgUtil增加异常，避免空指针（issue#I1NKXG@Gitee）
 * 【core 】       增加CRC16算法若干（pr#963@Github）
 * 【core 】       LocalDateTimeUtil增加format等方法（pr#140@Gitee）
+* 【http 】       UserAgentUtil增加Android原生浏览器识别（pr#975@Github）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）
