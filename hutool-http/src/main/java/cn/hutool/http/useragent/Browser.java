@@ -27,6 +27,7 @@ public class Browser extends UserAgentInfo {
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Firefox", "firefox", Other_Version), //
 			new Browser("IEMobile", "iemobile", Other_Version), //
+			new Browser("Android Browser", "android", "version\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Safari", "safari", "version\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Opera", "opera", Other_Version), //
 			new Browser("Konqueror", "konqueror", Other_Version), //

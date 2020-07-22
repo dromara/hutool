@@ -47,6 +47,32 @@ public class UserAgentUtilTest {
 	}
 
 	@Test
+	public void parseHuaweiPhoneWithNativeBrowserTest() {
+		String uaString = "Mozilla/5.0 (Linux; Android 10; EML-AL00 Build/HUAWEIEML-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Android Browser", ua.getBrowser().toString());
+		Assert.assertEquals("4.0", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseSamsungPhoneWithNativeBrowserTest() {
+		String uaString = "Dalvik/2.1.0 (Linux; U; Android 9; SM-G950U Build/PPR1.180610.011)";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Android Browser", ua.getBrowser().toString());
+		Assert.assertNull(ua.getVersion());
+		Assert.assertEquals("Unknown", ua.getEngine().toString());
+		Assert.assertNull(ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
 	public void parseWindows10WithChromeTest() {
 		String uaStr = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36";
 		UserAgent ua = UserAgentUtil.parse(uaStr);
