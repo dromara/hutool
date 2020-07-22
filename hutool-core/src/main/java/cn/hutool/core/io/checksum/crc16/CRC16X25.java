@@ -11,7 +11,8 @@ public class CRC16X25 extends CRC16Checksum{
 
 	private static final int wCPoly = 0x8408;
 
-	public CRC16X25(){
+	@Override
+	public void reset(){
 		this.wCRCin = 0xffff;
 	}
 

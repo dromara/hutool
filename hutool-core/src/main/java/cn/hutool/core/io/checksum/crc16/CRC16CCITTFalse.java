@@ -10,7 +10,8 @@ public class CRC16CCITTFalse extends CRC16Checksum{
 
 	private static final int wCPoly = 0x1021;
 
-	public CRC16CCITTFalse(){
+	@Override
+	public void reset() {
 		this.wCRCin = 0xffff;
 	}
 

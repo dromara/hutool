@@ -1,5 +1,8 @@
 package cn.hutool.core.io.checksum.crc16;
 
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.Serializable;
 import java.util.zip.Checksum;
 
@@ -16,11 +19,38 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
 	/**
 	 * CRC16 Checksum 结果值
 	 */
-	protected int wCRCin = 0x0000;
+	protected int wCRCin;
+
+	public CRC16Checksum(){
+		reset();
+	}
 
 	@Override
 	public long getValue() {
 		return wCRCin;
+	}
+
+	/**
+	 * 获取16进制的CRC16值
+	 *
+	 * @return 16进制的CRC16值
+	 */
+	public String getHexValue(){
+		return getHexValue(false);
+	}
+
+	/**
+	 * 获取16进制的CRC16值
+	 * @param isPadding 不足4位时，是否填充0以满足位数
+	 * @return 16进制的CRC16值，4位
+	 */
+	public String getHexValue(boolean isPadding){
+		String hex = HexUtil.toHex(getValue());
+		if(isPadding){
+			hex = StrUtil.padAfter(hex, 4, '0');
+		}
+
+		return hex;
 	}
 
 	@Override

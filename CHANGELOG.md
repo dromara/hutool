@@ -9,6 +9,7 @@
 * 【db   】       增加DbUtil.setReturnGeneratedKeyGlobal（issue#I1NM0K@Gitee）
 * 【core 】       增加DataSize和DataSizeUtil（issue#967@Github）
 * 【core 】       ImgUtil增加异常，避免空指针（issue#I1NKXG@Gitee）
+* 【core 】       增加CRC16算法若干（pr#963@Github）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）

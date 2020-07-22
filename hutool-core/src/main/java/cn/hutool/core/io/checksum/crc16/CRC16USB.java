@@ -11,7 +11,8 @@ public class CRC16USB extends CRC16Checksum{
 
 	private static final int wCPoly = 0xa001;
 
-	public CRC16USB(){
+	@Override
+	public void reset(){
 		this.wCRCin = 0xFFFF;
 	}
 

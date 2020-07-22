@@ -12,13 +12,14 @@ public class CRC16Modbus extends CRC16Checksum{
 
 	private static final int wCPoly = 0xa001;
 
-	public CRC16Modbus(){
+	@Override
+	public void reset(){
 		this.wCRCin = 0xffff;
 	}
 
 	@Override
 	public void update(int b) {
-		wCRCin ^= ((int) b & 0x00ff);
+		wCRCin ^= (b & 0x00ff);
 		for (int j = 0; j < 8; j++) {
 			if ((wCRCin & 0x0001) != 0) {
 				wCRCin >>= 1;
