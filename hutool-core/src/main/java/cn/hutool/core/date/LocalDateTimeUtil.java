@@ -158,7 +158,7 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * {@link Date}转{@link LocalDateTime}，使用默认时区
+	 * {@link TemporalAccessor}转{@link LocalDateTime}，使用默认时区
 	 *
 	 * @param temporalAccessor {@link TemporalAccessor}
 	 * @return {@link LocalDateTime}
@@ -180,6 +180,29 @@ public class LocalDateTimeUtil {
 				TemporalAccessorUtil.get(temporalAccessor, ChronoField.MINUTE_OF_HOUR),
 				TemporalAccessorUtil.get(temporalAccessor, ChronoField.SECOND_OF_MINUTE),
 				TemporalAccessorUtil.get(temporalAccessor, ChronoField.NANO_OF_SECOND)
+		);
+	}
+
+	/**
+	 * {@link TemporalAccessor}转{@link LocalDate}，使用默认时区
+	 *
+	 * @param temporalAccessor {@link TemporalAccessor}
+	 * @return {@link LocalDate}
+	 * @since 5.3.10
+	 */
+	public static LocalDate ofDate(TemporalAccessor temporalAccessor) {
+		if (null == temporalAccessor) {
+			return null;
+		}
+
+		if(temporalAccessor instanceof LocalDateTime){
+			return ((LocalDateTime)temporalAccessor).toLocalDate();
+		}
+
+		return LocalDate.of(
+				TemporalAccessorUtil.get(temporalAccessor, ChronoField.YEAR),
+				TemporalAccessorUtil.get(temporalAccessor, ChronoField.MONTH_OF_YEAR),
+				TemporalAccessorUtil.get(temporalAccessor, ChronoField.DAY_OF_MONTH)
 		);
 	}
 
@@ -226,6 +249,50 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 解析日期时间字符串为{@link LocalDate}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30
+	 *
+	 * @param text      日期时间字符串
+	 * @return {@link LocalDate}
+	 * @since 5.3.10
+	 */
+	public static LocalDate parseDate(CharSequence text) {
+		return parseDate(text, (DateTimeFormatter)null);
+	}
+
+	/**
+	 * 解析日期时间字符串为{@link LocalDate}，格式支持日期
+	 *
+	 * @param text      日期时间字符串
+	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
+	 * @return {@link LocalDate}
+	 * @since 5.3.10
+	 */
+	public static LocalDate parseDate(CharSequence text, DateTimeFormatter formatter) {
+		if (null == text) {
+			return null;
+		}
+		if (null == formatter) {
+			return LocalDate.parse(text);
+		}
+
+		return ofDate(formatter.parse(text));
+	}
+
+	/**
+	 * 解析日期字符串为{@link LocalDate}
+	 *
+	 * @param text   日期字符串
+	 * @param format 日期格式，类似于yyyy-MM-dd
+	 * @return {@link LocalDateTime}
+	 */
+	public static LocalDate parseDate(CharSequence text, String format) {
+		if (null == text) {
+			return null;
+		}
+		return parseDate(text, DateTimeFormatter.ofPattern(format));
+	}
+
+	/**
 	 * 格式化日期时间为指定格式
 	 *
 	 * @param time      {@link LocalDateTime}
@@ -233,10 +300,7 @@ public class LocalDateTimeUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(LocalDateTime time, DateTimeFormatter formatter) {
-		if (null == time) {
-			return null;
-		}
-		return time.format(formatter);
+		return TemporalAccessorUtil.format(time, formatter);
 	}
 
 	/**
@@ -251,6 +315,33 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 		return format(time, DateTimeFormatter.ofPattern(format));
+	}
+
+	/**
+	 * 格式化日期时间为指定格式
+	 *
+	 * @param date      {@link LocalDate}
+	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
+	 * @return 格式化后的字符串
+	 * @since 5.3.10
+	 */
+	public static String format(LocalDate date, DateTimeFormatter formatter) {
+		return TemporalAccessorUtil.format(date, formatter);
+	}
+
+	/**
+	 * 格式化日期时间为指定格式
+	 *
+	 * @param date   {@link LocalDate}
+	 * @param format 日期格式，类似于yyyy-MM-dd
+	 * @return 格式化后的字符串
+	 * @since 5.3.10
+	 */
+	public static String format(LocalDate date, String format) {
+		if (null == date) {
+			return null;
+		}
+		return format(date, DateTimeFormatter.ofPattern(format));
 	}
 
 	/**

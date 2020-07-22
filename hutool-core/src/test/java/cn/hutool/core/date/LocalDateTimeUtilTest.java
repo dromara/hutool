@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -59,12 +60,28 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void parseDateTest() {
+		LocalDate localDate = LocalDateTimeUtil.parseDate("2020-01-23");
+		Assert.assertEquals("2020-01-23", localDate.toString());
+
+		localDate = LocalDateTimeUtil.parseDate("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
+		Assert.assertEquals("2020-01-23", localDate.toString());
+	}
+
+	@Test
 	public void formatTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		String format = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals("2020-01-23 12:23:56", format);
 
 		format = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("2020-01-23", format);
+	}
+
+	@Test
+	public void formatLocalDateTest() {
+		final LocalDate localDateTime = LocalDate.parse("2020-01-23");
+		String format = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("2020-01-23", format);
 	}
 

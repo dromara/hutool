@@ -751,7 +751,7 @@ public class DateUtilTest {
 		String strDate1 = DateUtil.formatLocalDateTime(ldt);
 		Assert.assertEquals(strDate, strDate1);
 		
-		String strDate2 = "2019年12月01日 17:02:30.111";
+		String strDate2 = "2019-12-01 17:02:30.111";
 		ldt = DateUtil.parseLocalDateTime(strDate2, DatePattern.NORM_DATETIME_MS_PATTERN);
 		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(strDate, strDate1);

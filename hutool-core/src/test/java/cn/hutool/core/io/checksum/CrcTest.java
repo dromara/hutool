@@ -1,9 +1,8 @@
 package cn.hutool.core.io.checksum;
 
+import cn.hutool.core.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.util.HexUtil;
 
 /**
  * CRC校验单元测试

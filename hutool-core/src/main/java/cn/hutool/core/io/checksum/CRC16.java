@@ -3,13 +3,15 @@ package cn.hutool.core.io.checksum;
 import cn.hutool.core.io.checksum.crc16.CRC16Checksum;
 import cn.hutool.core.io.checksum.crc16.CRC16IBM;
 
+import java.util.zip.Checksum;
+
 /**
  * CRC16 循环冗余校验码（Cyclic Redundancy Check）实现，默认IBM算法
  *
  * @author looly
  * @since 4.4.1
  */
-public class CRC16 extends CRC16Checksum {
+public class CRC16 implements Checksum {
 	private static final long serialVersionUID = 1L;
 
 	private final CRC16Checksum crc16;

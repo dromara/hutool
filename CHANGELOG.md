@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.10 (2020-07-17)
+## 5.3.10 (2020-07-22)
 
 ### 新特性
 * 【db   】       增加DbUtil.setReturnGeneratedKeyGlobal（issue#I1NM0K@Gitee）
 * 【core 】       增加DataSize和DataSizeUtil（issue#967@Github）
 * 【core 】       ImgUtil增加异常，避免空指针（issue#I1NKXG@Gitee）
 * 【core 】       增加CRC16算法若干（pr#963@Github）
+* 【core 】       LocalDateTimeUtil增加format等方法（pr#140@Gitee）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）
