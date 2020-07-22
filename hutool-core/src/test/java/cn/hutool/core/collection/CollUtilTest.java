@@ -21,28 +21,28 @@ public class CollUtilTest {
 
 	@Test
 	public void testPadLeft() {
-		List<Integer> srcList = CollUtil.newArrayList();
-		List<Integer> answerList = CollUtil.newArrayList(2, 1);
-		CollUtil.padLeft(srcList, 1, 1);
-		CollUtil.padLeft(srcList, 2, 2);
+		List<String> srcList = CollUtil.newArrayList();
+		List<String> answerList = CollUtil.newArrayList("a", "b");
+		CollUtil.padLeft(srcList, 1, "b");
+		CollUtil.padLeft(srcList, 2, "a");
 		Assert.assertEquals(srcList, answerList);
 
-		srcList = CollUtil.newArrayList(1, 2);
-		answerList = CollUtil.newArrayList(1, 2);
-		CollUtil.padLeft(srcList, 2, 1);
+		srcList = CollUtil.newArrayList("a", "b");
+		answerList = CollUtil.newArrayList("a", "b");
+		CollUtil.padLeft(srcList, 2, "a");
 		Assert.assertEquals(srcList, answerList);
 
-		srcList = CollUtil.newArrayList(3);
-		answerList = CollUtil.newArrayList(1, 1, 3);
-		CollUtil.padLeft(srcList, 3, 1);
+		srcList = CollUtil.newArrayList("c");
+		answerList = CollUtil.newArrayList("a", "a", "c");
+		CollUtil.padLeft(srcList, 3, "a");
 		Assert.assertEquals(srcList, answerList);
 	}
 
 	@Test
 	public void testPadRight() {
-		List<Integer> srcList = CollUtil.newArrayList(6);
-		List<Integer> answerList = CollUtil.newArrayList(6, 3, 3, 3, 3);
-		CollUtil.padRight(srcList, 5, 3);
+		List<String> srcList = CollUtil.newArrayList("a");
+		List<String> answerList = CollUtil.newArrayList("a", "b", "b", "b", "b");
+		CollUtil.padRight(srcList, 5, "b");
 		Assert.assertEquals(srcList, answerList);
 	}
 

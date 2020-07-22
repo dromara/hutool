@@ -38,6 +38,7 @@ public class CollUtil {
 
 	/**
 	 * 填充List，以达到最小长度
+	 *
 	 * @param list 列表
 	 * @param minLen 最小长度
 	 * @param padObj 填充的对象
@@ -45,32 +46,26 @@ public class CollUtil {
 	 */
 	public static <T> void padLeft(List<T> list, int minLen, T padObj) {
 		Objects.requireNonNull(list);
-		if (isEmpty(list)) {
+		if (list.isEmpty()) {
 			padRight(list, minLen, padObj);
 			return;
 		}
-		int iterCnt = minLen - list.size();
-		if (iterCnt < 1) {
-			return;
+		for (int i = list.size(); i < minLen; i++) {
+			list.add(0, padObj);
 		}
-		List<T> padList = new ArrayList<>(iterCnt);
-		for (int i = 0; i < iterCnt; i++) {
-			padList.add(padObj);
-		}
-		list.addAll(0, padList);
 	}
 
 	/**
 	 * 填充List，以达到最小长度
+	 *
 	 * @param list 列表
 	 * @param minLen 最小长度
 	 * @param padObj 填充的对象
 	 * @param <T> 集合元素类型
 	 */
-	public static <T> void padRight(List<T> list, int minLen, T padObj) {
+	public static <T> void padRight(Collection<T> list, int minLen, T padObj) {
 		Objects.requireNonNull(list);
-		int iterCnt = minLen - list.size();
-		for (int i = 0; i < iterCnt; i++) {
+		for (int i = list.size(); i < minLen; i++) {
 			list.add(padObj);
 		}
 	}
