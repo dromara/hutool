@@ -116,21 +116,21 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.3.10</version>
+    <version>5.3.11</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:5.3.10'
+compile 'cn.hutool:hutool-all:5.3.11'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.3.10/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.3.10/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.3.11/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.3.11/)
 
 > 注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
