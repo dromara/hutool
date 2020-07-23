@@ -12,10 +12,12 @@
 * 【core 】       增加CRC16算法若干（pr#963@Github）
 * 【core 】       LocalDateTimeUtil增加format等方法（pr#140@Gitee）
 * 【http 】       UserAgentUtil增加Android原生浏览器识别（pr#975@Github）
+* 【crypto 】     增加ECIES算法类（issue#979@Github）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）
 * 【core   】     修复CollUtil.page未越界检查的问题（issue#I1O2LR@Gitee）
+* 【core   】     修复StrUtil.removeAny的bug（issue#977@Github）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.3.9 (2020-07-12)

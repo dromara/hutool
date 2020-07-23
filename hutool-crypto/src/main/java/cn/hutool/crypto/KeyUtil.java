@@ -342,7 +342,12 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm) {
-		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE);
+		int keySize = DEFAULT_KEY_SIZE;
+		if("ECIES".equalsIgnoreCase(algorithm)){
+			// ECIES算法对KEY的长度有要求，此处默认256
+			keySize = 256;
+		}
+		return generateKeyPair(algorithm, keySize);
 	}
 
 	/**

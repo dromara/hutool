@@ -196,5 +196,4 @@ public class RSATest {
 		final String encryptBase64 = rsa.encryptBase64("测试内容", KeyType.PublicKey);
 		Assert.assertNotNull(encryptBase64);
 	}
-
 }

@@ -978,7 +978,7 @@ public class StrUtil {
 		String result = str(str);
 		if (isNotEmpty(str)) {
 			for (CharSequence strToRemove : strsToRemove) {
-				result = removeAll(str, strToRemove);
+				result = removeAll(result, strToRemove);
 			}
 		}
 		return result;
