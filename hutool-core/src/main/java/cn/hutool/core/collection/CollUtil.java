@@ -12,39 +12,11 @@ import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
 
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -63,6 +35,40 @@ import java.util.function.Function;
  * @since 3.1.1
  */
 public class CollUtil {
+
+	/**
+	 * 填充List，以达到最小长度
+	 *
+	 * @param list 列表
+	 * @param minLen 最小长度
+	 * @param padObj 填充的对象
+	 * @param <T> 集合元素类型
+	 */
+	public static <T> void padLeft(List<T> list, int minLen, T padObj) {
+		Objects.requireNonNull(list);
+		if (list.isEmpty()) {
+			padRight(list, minLen, padObj);
+			return;
+		}
+		for (int i = list.size(); i < minLen; i++) {
+			list.add(0, padObj);
+		}
+	}
+
+	/**
+	 * 填充List，以达到最小长度
+	 *
+	 * @param list 列表
+	 * @param minLen 最小长度
+	 * @param padObj 填充的对象
+	 * @param <T> 集合元素类型
+	 */
+	public static <T> void padRight(Collection<T> list, int minLen, T padObj) {
+		Objects.requireNonNull(list);
+		for (int i = list.size(); i < minLen; i++) {
+			list.add(padObj);
+		}
+	}
 
 	/**
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
