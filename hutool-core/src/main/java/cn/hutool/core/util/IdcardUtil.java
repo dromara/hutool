@@ -46,10 +46,6 @@ public class IdcardUtil {
 	 * 台湾身份首字母对应数字
 	 */
 	private static final Map<String, Integer> TW_FIRST_CODE = new HashMap<>();
-	/**
-	 * 香港身份首字母对应数字
-	 */
-	private static final Map<String, Integer> HK_FIRST_CODE = new HashMap<>();
 
 	static {
 		CITY_CODES.put("11", "北京");
@@ -114,18 +110,6 @@ public class IdcardUtil {
 		TW_FIRST_CODE.put("Z", 33);
 		TW_FIRST_CODE.put("I", 34);
 		TW_FIRST_CODE.put("O", 35);
-
-		//来自http://shenfenzheng.bajiu.cn/?rid=40
-		HK_FIRST_CODE.put("A", 1);// 持证人拥有香港居留权
-		HK_FIRST_CODE.put("B", 2);// 持证人所报称的出生日期或地点自首次登记以后，曾作出更改
-		HK_FIRST_CODE.put("C", 3);// 持证人登记领证时在香港的居留受到入境事务处处长的限制
-		HK_FIRST_CODE.put("N", 14);// 持证人所报的姓名自首次登记以后，曾作出更改
-		HK_FIRST_CODE.put("O", 15);// 持证人报称在香港、澳门及中国以外其他地区或国家出生
-		HK_FIRST_CODE.put("R", 18);// 持证人拥有香港入境权
-		HK_FIRST_CODE.put("U", 21);// 持证人登记领证时在香港的居留不受入境事务处处长的限制
-		HK_FIRST_CODE.put("W", 23);// 持证人报称在澳门地区出生
-		HK_FIRST_CODE.put("X", 24);// 持证人报称在中国大陆出生
-		HK_FIRST_CODE.put("Z", 26);// 持证人报称在香港出生
 	}
 
 	/**
@@ -357,11 +341,10 @@ public class IdcardUtil {
 		} else {
 			sum = 522 + (Character.toUpperCase(card.charAt(0)) - 55) * 8;
 		}
-		String start = idCard.substring(0, 1);
-		Integer iStart = HK_FIRST_CODE.get(start);
-		if (null == iStart) {
-			return false;
-		}
+
+		// 首字母A-Z，A表示1，以此类推
+		char start = idCard.charAt(0);
+		int iStart = start - 'A' + 1;
 		String mid = card.substring(1, 7);
 		String end = card.substring(7, 8);
 		char[] chars = mid.toCharArray();

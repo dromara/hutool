@@ -87,4 +87,10 @@ public class IdcardUtilTest {
 		Assert.assertFalse(isValidCard18);
 	}
 
+	@Test
+	public void isValidHKCardIdTest(){
+		String hkCard="P174468(6)";
+		boolean flag=IdcardUtil.isValidHKCard(hkCard);
+		Assert.assertTrue(flag);
+	}
 }

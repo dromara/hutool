@@ -14,6 +14,7 @@
 * 【http 】       UserAgentUtil增加Android原生浏览器识别（pr#975@Github）
 * 【crypto 】     增加ECIES算法类（issue#979@Github）
 * 【crypto 】     CollUtil增加padLeft和padRight方法（pr#141@Gitee）
+* 【core 】       IdCardUtil香港身份证去除首字母校验（issue#I1OOTB@Gitee）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）
