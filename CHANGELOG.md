@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.10 (2020-07-22)
+## 5.3.10 (2020-07-23)
 
 ### 新特性
 * 【db   】       增加DbUtil.setReturnGeneratedKeyGlobal（issue#I1NM0K@Gitee）
@@ -13,6 +13,7 @@
 * 【core 】       LocalDateTimeUtil增加format等方法（pr#140@Gitee）
 * 【http 】       UserAgentUtil增加Android原生浏览器识别（pr#975@Github）
 * 【crypto 】     增加ECIES算法类（issue#979@Github）
+* 【crypto 】     CollUtil增加padLeft和padRight方法（pr#141@Gitee）
 
 ### Bug修复
 * 【core   】     修复ZipUtil中finish位于循环内的问题（issue#961@Github）

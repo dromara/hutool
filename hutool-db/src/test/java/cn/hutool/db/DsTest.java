@@ -1,16 +1,6 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
@@ -18,6 +8,12 @@ import cn.hutool.db.ds.druid.DruidDSFactory;
 import cn.hutool.db.ds.hikari.HikariDSFactory;
 import cn.hutool.db.ds.pooled.PooledDSFactory;
 import cn.hutool.db.ds.tomcat.TomcatDSFactory;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * 数据源单元测试
