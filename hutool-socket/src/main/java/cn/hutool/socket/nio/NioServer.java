@@ -137,7 +137,7 @@ public abstract class NioServer implements Closeable {
 
 	/**
 	 * 处理读事件<br>
-	 * 当收到读取准备就绪的信号后，回调此方法，用户可读取从客户端传世来的消息
+	 * 当收到读取准备就绪的信号后，回调此方法，用户可读取从客户端传出来的消息
 	 * 
 	 * @param socketChannel SocketChannel
 	 */
