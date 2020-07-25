@@ -88,7 +88,7 @@ public class QrCodeUtil {
 	 */
 	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType) {
 		final BufferedImage img = generate(content, qrConfig);
-		return ImgUtil.toBase64DateUri(img, imageType);
+		return ImgUtil.toBase64DataUri(img, imageType);
 	}
 
 	/**
