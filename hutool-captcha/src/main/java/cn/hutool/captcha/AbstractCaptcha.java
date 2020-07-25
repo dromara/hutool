@@ -195,6 +195,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	}
 
 	/**
+	 * 获取图片带文件格式的 Base64
+	 *
+	 * @return 图片带文件格式的 Base64
+	 */
+	public String getImageBase64Full(){
+		return "data:image/png;base64," + Base64.encode(getImageBytes());
+	}
+
+	/**
 	 * 自定义字体
 	 *
 	 * @param font 字体
