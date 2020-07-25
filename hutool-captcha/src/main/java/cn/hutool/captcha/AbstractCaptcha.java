@@ -7,6 +7,7 @@ import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.URLUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -198,9 +199,10 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * 获取图片带文件格式的 Base64
 	 *
 	 * @return 图片带文件格式的 Base64
+	 * @since 5.3.11
 	 */
-	public String getImageBase64Full(){
-		return "data:image/png;base64," + Base64.encode(getImageBytes());
+	public String getImageBase64Data(){
+		return URLUtil.getDataUriBase64("image/png", getImageBase64());
 	}
 
 	/**
