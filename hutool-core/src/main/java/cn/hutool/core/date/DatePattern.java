@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.FastDateFormat;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
@@ -35,6 +36,10 @@ public class DatePattern {
 	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd
 	 */
 	public static final FastDateFormat NORM_DATE_FORMAT = FastDateFormat.getInstance(NORM_DATE_PATTERN);
+	/**
+	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd
+	 */
+	public static final DateTimeFormatter NORM_DATE_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATE_PATTERN);
 
 	/**
 	 * 标准时间格式：HH:mm:ss
@@ -62,6 +67,10 @@ public class DatePattern {
 	 * 标准日期时间格式，精确到秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss
 	 */
 	public static final FastDateFormat NORM_DATETIME_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_PATTERN);
+	/**
+	 * 标准日期时间格式，精确到秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss
+	 */
+	public static final DateTimeFormatter NORM_DATETIME_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN);
 
 	/**
 	 * 标准日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss.SSS

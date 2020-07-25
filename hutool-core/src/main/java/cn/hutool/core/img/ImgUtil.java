@@ -1269,7 +1269,7 @@ public class ImgUtil {
 	 * @return Base64的字符串表现形式
 	 * @since 5.3.6
 	 */
-	public static String toBase64DateUri(Image image, String imageType) {
+	public static String toBase64DataUri(Image image, String imageType) {
 		return URLUtil.getDataUri(
 				"image/" + imageType, "base64",
 				toBase64(image, imageType));

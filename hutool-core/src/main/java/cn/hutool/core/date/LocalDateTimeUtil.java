@@ -293,6 +293,17 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 格式化日期时间为yyyy-MM-dd HH:mm:ss格式
+	 *
+	 * @param time      {@link LocalDateTime}
+	 * @return 格式化后的字符串
+	 * @since 5.3.11
+	 */
+	public static String formatNormal(LocalDateTime time) {
+		return format(time, DatePattern.NORM_DATETIME_FORMATTER);
+	}
+
+	/**
 	 * 格式化日期时间为指定格式
 	 *
 	 * @param time      {@link LocalDateTime}
@@ -315,6 +326,17 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 		return format(time, DateTimeFormatter.ofPattern(format));
+	}
+
+	/**
+	 * 格式化日期时间为yyyy-MM-dd格式
+	 *
+	 * @param date      {@link LocalDate}
+	 * @return 格式化后的字符串
+	 * @since 5.3.11
+	 */
+	public static String formatNormal(LocalDate date) {
+		return format(date, DatePattern.NORM_DATE_FORMATTER);
 	}
 
 	/**

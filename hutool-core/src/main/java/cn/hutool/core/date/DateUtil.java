@@ -482,7 +482,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String formatLocalDateTime(LocalDateTime localDateTime) {
-		return format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
+		return LocalDateTimeUtil.formatNormal(localDateTime);
 	}
 
 	/**
