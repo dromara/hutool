@@ -26,8 +26,8 @@
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" />
 	</a>
-	<a target="_blank" href="https://gitee.com/loolly/hutool/stargazers">
-		<img src="https://gitee.com/loolly/hutool/badge/star.svg?theme=dark" alt='gitee star'/>
+	<a target="_blank" href='https://gitee.com/loolly/hutool/stargazers'>
+		<img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=gvp' alt='star'/>
 	</a>
 	<a target="_blank" href='https://github.com/looly/hutool'>
 		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"/>
