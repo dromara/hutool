@@ -10,7 +10,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 
 public class NioClientTest {
@@ -35,7 +37,6 @@ public class NioClientTest {
                     readBuffer.get(bytes);
                     String body = new String(bytes, "UTF-8");
                     System.out.println("the read client receive message: " + body);
-                    doWrite(sc, body);
                 }else if(readBytes < 0){
                     sc.close();
                 }
@@ -46,50 +47,21 @@ public class NioClientTest {
         }
         ByteBuffer buffer = ByteBuffer.wrap("client 发生到 server".getBytes());
         client.write(buffer);
-        if(!buffer.hasRemaining()) {
-            System.err.println("第一次发送成功...");
-        }
         buffer = ByteBuffer.wrap("client 再次发生到 server".getBytes());
         client.write(buffer);
-        if(!buffer.hasRemaining()) {
-            System.err.println("第二次发送成功...");
-        }
-    }
 
-    //发送请求
-    private static void doWriteRequest(SocketChannel socketChannel) throws Exception{
-        System.err.println("start connect...");
-
-        //创建ByteBuffer对象，会放入数据
-        ByteBuffer byteBuffer = ByteBuffer.allocate("Hello nio.example.Server!".getBytes().length);
-        byteBuffer.put("Hello nio.example.Server!".getBytes());
-        byteBuffer.flip();
-        //写数据
-        socketChannel.write(byteBuffer);
-        if(!byteBuffer.hasRemaining()) {
-            System.err.println("Send request success...");
-        }
-    }
-
-    //读取服务端的响应
-    private static void doRead(SelectionKey selectionKey) throws Exception{
-        SocketChannel socketChannel = ((SocketChannel) selectionKey.channel());
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        int len = socketChannel.read(byteBuffer);
-        System.out.println("Recv:" + new String(byteBuffer.array(), 0 ,len));
-    }
-
-    public static void doWrite(SocketChannel channel, String response) throws IOException {
-        response = "我们已收到消息："+response;
-        if(!StrUtil.isBlank(response)){
-            byte []  bytes = response.getBytes();
-            //分配一个bytes的length长度的ByteBuffer
-            ByteBuffer write = ByteBuffer.allocate(bytes.length);
-            //将返回数据写入缓冲区
-            write.put(bytes);
-            write.flip();
-            //将缓冲数据写入渠道，返回给客户端
-            channel.write(write);
+        /**
+         * 在控制台向服务器端发送数据
+         */
+        System.out.println("请在下方畅所欲言");
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String request = scanner.nextLine();
+            if (request != null && request.trim().length() > 0) {
+                client.write(
+                        Charset.forName("UTF-8")
+                                .encode("测试client" + ": " + request));
+            }
         }
     }
 }

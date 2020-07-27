@@ -105,7 +105,6 @@ public abstract class NioClient implements Closeable {
 		this.executorService = Executors.newSingleThreadExecutor(r -> {
             final Thread thread = Executors.defaultThreadFactory().newThread(r);
             thread.setName("nio-client-listen");
-            thread.setDaemon(true);
             return thread;
         });
 		this.executorService.execute(() -> {
@@ -139,13 +138,6 @@ public abstract class NioClient implements Closeable {
      * @param key SelectionKey
      */
     private void handle(SelectionKey key) throws IOException {
-        //连接建立完成
-//        if (key.isConnectable()) {
-//            if (this.channel.finishConnect()) {
-//                this.channel.register(selector, SelectionKey.OP_READ);
-//            }
-//        }
-
         // 读事件就绪
         if (key.isReadable()) {
             final SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -160,22 +152,6 @@ public abstract class NioClient implements Closeable {
      * @param socketChannel SocketChannel
      */
     protected abstract void read(SocketChannel socketChannel);
-
-    /**
-     * 处理读事件<br>
-     * 当收到读取准备就绪的信号后，回调此方法，用户可读取从客户端传世来的消息
-     *
-     * @param buffer 服务端数据存储缓存
-     * @return this
-     */
-    public NioClient read(ByteBuffer buffer) {
-        try {
-            this.channel.read(buffer);
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-        return this;
-    }
 
     /**
      * 实现写逻辑<br>
