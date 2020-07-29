@@ -4044,6 +4044,32 @@ public class StrUtil {
 	}
 
 	/**
+	 * 制定字符覆盖原字符串。
+	 * 注意参数:
+	 * StrUtil.hide()是  开始位置,到结束位置。
+	 * StrUtil.cover()是 开始位置,指定长度。
+	 *
+	 * @param str               原字符串
+	 * @param start             开始位置
+	 * @param len               覆盖的长度
+	 * @param character         覆盖的符号
+	 * @return 返回值类型        符号覆盖字符后的字符串
+	 * @since 5.3.11
+	 * @author dahuoyzs
+	 */
+	public CharSequence cover(String str,int start,int len,Character character){
+		if (start<0||len>str.length()){
+			throw new IndexOutOfBoundsException();
+		}
+		int end = start + len;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < str.length(); i++) {
+			sb.append((start <= i && i < end) ? character : str.charAt(i));
+		}
+		return sb;
+	}
+
+	/**
 	 * 替换字符字符数组中所有的字符为replacedStr<br>
 	 * 提供的chars为所有需要被替换的字符，例如："\r\n"，则"\r"和"\n"都会被替换，哪怕他们单独存在
 	 *
