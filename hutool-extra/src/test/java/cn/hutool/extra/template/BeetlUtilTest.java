@@ -21,15 +21,16 @@ import java.io.IOException;
 public class BeetlUtilTest {
 
 	@Test
-	public void renderStrTest() throws IOException {
+	public void renderTest() throws IOException {
 		GroupTemplate groupTemplate = BeetlUtil.createGroupTemplate(new StringTemplateResourceLoader(), Configuration.defaultConfiguration());
 		Template template = BeetlUtil.getTemplate(groupTemplate, "hello,${name}");
 		String result = BeetlUtil.render(template, Dict.create().set("name", "hutool"));
-
 		Assert.assertEquals("hello,hutool", result);
+	}
 
+	@Test
+	public void renderFromStrTest() {
 		String renderFromStr = BeetlUtil.renderFromStr("hello,${name}", Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", renderFromStr);
-
 	}
 }
