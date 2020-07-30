@@ -134,7 +134,7 @@ public class Img implements Serializable {
 	}
 
 	/**
-	 * 构造
+	 * 构造，目标图片类型取决于来源图片类型
 	 *
 	 * @param srcImage 来源图片
 	 */
@@ -146,13 +146,21 @@ public class Img implements Serializable {
 	 * 构造
 	 *
 	 * @param srcImage        来源图片
-	 * @param targetImageType 目标图片类型
+	 * @param targetImageType 目标图片类型，null则读取来源图片类型
 	 * @since 5.0.7
 	 */
 	public Img(BufferedImage srcImage, String targetImageType) {
 		this.srcImage = srcImage;
 		if (null == targetImageType) {
-			targetImageType = ImgUtil.IMAGE_TYPE_JPG;
+			if (srcImage.getType() == BufferedImage.TYPE_INT_ARGB
+					|| srcImage.getType() == BufferedImage.TYPE_INT_ARGB_PRE
+					|| srcImage.getType() == BufferedImage.TYPE_4BYTE_ABGR
+					|| srcImage.getType() == BufferedImage.TYPE_4BYTE_ABGR_PRE
+			) {
+				targetImageType = ImgUtil.IMAGE_TYPE_PNG;
+			} else {
+				targetImageType = ImgUtil.IMAGE_TYPE_JPG;
+			}
 		}
 		this.targetImageType = targetImageType;
 	}

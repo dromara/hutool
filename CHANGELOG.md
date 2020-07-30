@@ -8,6 +8,7 @@
 ### 新特性
 * 【captcha】     AbstractCaptcha增加getImageBase64Data方法（pr#985@Github）
 * 【core   】     增加PhoneUtil（pr#990@Github）
+* 【core   】     改进Img，目标图片类型未定义使用源图片类型（issue#I1PB0B@Gitee）
 
 ### Bug修复
 
