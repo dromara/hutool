@@ -625,6 +625,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		Method getter;
 		Object value;
 		for (PropDesc prop : props) {
+			if(this.config.isIgnoreTransient() && prop.isTransient()){
+				// 忽略Transient字段和方法
+				continue;
+			}
+
 			// 得到property对应的getter方法
 			getter = prop.getGetter();
 			if (null == getter) {
