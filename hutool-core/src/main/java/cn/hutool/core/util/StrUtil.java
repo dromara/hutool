@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrBuilder;
@@ -4316,13 +4317,13 @@ public class StrUtil {
 	/**
 	 * 过滤字符串
 	 *
-	 * @param str       字符串
-	 * @param predicate 过滤条件
+	 * @param str    字符串
+	 * @param filter 过滤器
 	 * @return 过滤后的字符串
 	 * @since 5.4.0
 	 */
-	public static String filter(CharSequence str, Predicate<Character> predicate) {
-		if (str == null || predicate == null) {
+	public static String filter(CharSequence str, Filter<Character> filter) {
+		if (str == null || filter == null) {
 			return str(str);
 		}
 
@@ -4331,7 +4332,7 @@ public class StrUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			if (predicate.test(c)) {
+			if (filter.accept(c)) {
 				sb.append(c);
 			}
 		}
