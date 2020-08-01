@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.3.11 (2020-07-30)
+## 5.3.11 (2020-08-01)
 
 ### 新特性
 * 【captcha】     AbstractCaptcha增加getImageBase64Data方法（pr#985@Github）
@@ -11,6 +11,7 @@
 * 【core   】     改进Img，目标图片类型未定义使用源图片类型（issue#I1PB0B@Gitee）
 * 【json   】     JSONConfig增加Transient选项（issue#I1PLHN@Gitee）
 * 【core   】     MapUtil增加getXXX的默认值重载（issue#I1PTGI@Gitee）
+* 【core   】     CalendarUtil增加parseByPatterns方法（issue#993@Github）
 
 ### Bug修复
 

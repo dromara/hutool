@@ -18,10 +18,9 @@ import java.util.concurrent.ConcurrentMap;
  * {@link java.text.SimpleDateFormat} 的线程安全版本，用于将 {@link Date} 格式化输出<br>
  * Thanks to Apache Commons Lang 3.5
  *
- * @since 2.16.2
  * @see FastDateParser
  */
-class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
+public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
 	
 	/** 规则列表. */
@@ -38,7 +37,7 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param timeZone 非空时区{@link TimeZone}
 	 * @param locale 非空{@link Locale} 日期地理位置
 	 */
-	protected FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
+	public FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
 		super(pattern, timeZone, locale);
 		init();
 	}

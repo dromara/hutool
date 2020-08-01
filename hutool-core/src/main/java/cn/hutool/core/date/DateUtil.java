@@ -723,6 +723,21 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 通过给定的日期格式解析日期时间字符串。<br>
+	 * 传入的日期格式会逐个尝试，直到解析成功，返回{@link DateTime}对象，否则抛出{@link DateException}异常。
+	 *
+	 * @param str           日期时间字符串，非空
+	 * @param parsePatterns 需要尝试的日期时间格式数组，非空, 见SimpleDateFormat
+	 * @return 解析后的Date
+	 * @throws IllegalArgumentException if the date string or pattern array is null
+	 * @throws DateException            if none of the date patterns were suitable
+	 * @since 5.3.11
+	 */
+	public static DateTime parse(String str, String... parsePatterns) throws DateException {
+		return new DateTime(CalendarUtil.parseByPatterns(str, parsePatterns));
+	}
+
+	/**
 	 * 解析日期时间字符串，格式支持：
 	 *
 	 * <pre>
@@ -1429,7 +1444,8 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 是否为相同时间
+	 * 是否为相同时间<br>
+	 * 此方法比较两个日期的时间戳是否相同
 	 *
 	 * @param date1 日期1
 	 * @param date2 日期2
@@ -1452,7 +1468,7 @@ public class DateUtil extends CalendarUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return isSameDay(calendar(date1), calendar(date2));
+		return CalendarUtil.isSameDay(calendar(date1), calendar(date2));
 	}
 
 	/**
