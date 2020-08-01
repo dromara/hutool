@@ -3,6 +3,7 @@ package cn.hutool.socket.nio;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.socket.SocketRuntimeException;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -19,9 +20,11 @@ import java.util.Iterator;
  * @author looly
  * @since 4.4.5
  */
-public abstract class NioClient implements Closeable {
+public class NioClient implements Closeable {
+
 	private Selector selector;
 	private SocketChannel channel;
+	private ChannelHandler handler;
 
 	/**
 	 * 构造
@@ -69,6 +72,17 @@ public abstract class NioClient implements Closeable {
 	}
 
 	/**
+	 * 设置NIO数据处理器
+	 *
+	 * @param handler {@link ChannelHandler}
+	 * @return this
+	 */
+	public NioClient setChannelHandler(ChannelHandler handler){
+		this.handler = handler;
+		return this;
+	}
+
+	/**
 	 * 开始监听
 	 */
 	public void listen() {
@@ -106,17 +120,13 @@ public abstract class NioClient implements Closeable {
 		// 读事件就绪
 		if (key.isReadable()) {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
-			read(socketChannel);
+			try{
+				handler.handle(socketChannel);
+			} catch (Exception e){
+				throw new SocketRuntimeException(e);
+			}
 		}
 	}
-
-	/**
-	 * 处理读事件<br>
-	 * 当收到读取准备就绪的信号后，回调此方法，用户可读取从客户端传出来的消息
-	 *
-	 * @param socketChannel SocketChannel
-	 */
-	protected abstract void read(SocketChannel socketChannel);
 
 	/**
 	 * 实现写逻辑<br>

@@ -3,6 +3,7 @@ package cn.hutool.socket.nio;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.log.Log;
+import cn.hutool.log.StaticLog;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -135,7 +136,12 @@ public class NioServer implements Closeable {
 		// 读事件就绪
 		if (key.isReadable()) {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
-			handler.handle(socketChannel);
+			try{
+				handler.handle(socketChannel);
+			} catch (Exception e){
+				IoUtil.close(socketChannel);
+				StaticLog.error(e);
+			}
 		}
 	}
 

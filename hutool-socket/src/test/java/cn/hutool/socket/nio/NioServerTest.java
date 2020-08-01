@@ -1,5 +1,6 @@
 package cn.hutool.socket.nio;
 
+import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
@@ -28,7 +29,8 @@ public class NioServerTest {
 					//将缓冲区的数据读到bytes数组
 					readBuffer.get(bytes);
 					String body = StrUtil.utf8Str(bytes);
-					Console.log("the read server receive message: " + body);
+					Console.log("[{}]: {}", sc.getRemoteAddress(), body);
+
 					doWrite(sc, body);
 				} else if (readBytes < 0) {
 					IoUtil.close(sc);
@@ -41,16 +43,8 @@ public class NioServerTest {
 	}
 
 	public static void doWrite(SocketChannel channel, String response) throws IOException {
-		response = "我们已收到消息：" + response;
-		if (!StrUtil.isBlank(response)) {
-			byte[] bytes = response.getBytes();
-			//分配一个bytes的length长度的ByteBuffer
-			ByteBuffer write = ByteBuffer.allocate(bytes.length);
-			//将返回数据写入缓冲区
-			write.put(bytes);
-			write.flip();
-			//将缓冲数据写入渠道，返回给客户端
-			channel.write(write);
-		}
+		response = "收到消息：" + response;
+		//将缓冲数据写入渠道，返回给客户端
+		channel.write(BufferUtil.createUtf8(response));
 	}
 }
