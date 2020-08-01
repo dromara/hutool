@@ -1333,7 +1333,7 @@ public class StrUtil {
 	 * @return 清理后的字符串
 	 */
 	public static String cleanBlank(CharSequence str) {
-		return filter(str, c -> !CharUtil.isBlankChar(c));
+		return filter(str, c -> false == CharUtil.isBlankChar(c));
 	}
 
 	// ------------------------------------------------------------------------------ Split

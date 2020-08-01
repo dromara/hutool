@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【socket】     对NioServer和NioClient改造（pr#992@Github）
+* 【core  】     StrUtil增加filter方法（pr#149@Gitee）
 
 ### Bug修复#
 
