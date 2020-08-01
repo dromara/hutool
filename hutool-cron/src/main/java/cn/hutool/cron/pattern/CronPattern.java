@@ -45,7 +45,6 @@ import java.util.TimeZone;
  * 
  * <pre>
  * 当isMatchSecond为<code>true</code>时才会匹配秒部分
- * 当isMatchYear为<code>true</code>时才会匹配年部分
  * 默认都是关闭的
  * </pre>
  * 
