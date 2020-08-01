@@ -526,7 +526,7 @@ public class MapUtil {
 	 * @since 5.0.4
 	 */
 	public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull,
-	                              String... otherParams) {
+								  String... otherParams) {
 		return join(sort(params), separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -896,6 +896,19 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为字符串
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static String getStr(Map<?, ?> map, Object key, String defaultValue) {
+		return get(map, key, String.class, defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为Integer
 	 *
 	 * @param map Map
@@ -905,6 +918,19 @@ public class MapUtil {
 	 */
 	public static Integer getInt(Map<?, ?> map, Object key) {
 		return get(map, key, Integer.class);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为Integer
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Integer getInt(Map<?, ?> map, Object key, Integer defaultValue) {
+		return get(map, key, Integer.class, defaultValue);
 	}
 
 	/**
@@ -920,6 +946,19 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为Double
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Double getDouble(Map<?, ?> map, Object key, Double defaultValue) {
+		return get(map, key, Double.class, defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为Float
 	 *
 	 * @param map Map
@@ -929,6 +968,19 @@ public class MapUtil {
 	 */
 	public static Float getFloat(Map<?, ?> map, Object key) {
 		return get(map, key, Float.class);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为Float
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Float getFloat(Map<?, ?> map, Object key, Float defaultValue) {
+		return get(map, key, Float.class, defaultValue);
 	}
 
 	/**
@@ -944,6 +996,19 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为Short
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Short getShort(Map<?, ?> map, Object key, Short defaultValue) {
+		return get(map, key, Short.class, defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为Bool
 	 *
 	 * @param map Map
@@ -953,6 +1018,19 @@ public class MapUtil {
 	 */
 	public static Boolean getBool(Map<?, ?> map, Object key) {
 		return get(map, key, Boolean.class);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为Bool
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Boolean getBool(Map<?, ?> map, Object key, Boolean defaultValue) {
+		return get(map, key, Boolean.class, defaultValue);
 	}
 
 	/**
@@ -968,6 +1046,19 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为Character
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Character getChar(Map<?, ?> map, Object key, Character defaultValue) {
+		return get(map, key, Character.class, defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为Long
 	 *
 	 * @param map Map
@@ -977,6 +1068,19 @@ public class MapUtil {
 	 */
 	public static Long getLong(Map<?, ?> map, Object key) {
 		return get(map, key, Long.class);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为Long
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static Long getLong(Map<?, ?> map, Object key, Long defaultValue) {
+		return get(map, key, Long.class, defaultValue);
 	}
 
 	/**
@@ -992,6 +1096,19 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为{@link Date}
+	 *
+	 * @param map          Map
+	 * @param key          键
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 4.1.2
+	 */
+	public static Date getDate(Map<?, ?> map, Object key, Date defaultValue) {
+		return get(map, key, Date.class, defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为指定类型
 	 *
 	 * @param <T>  目标值类型
@@ -1002,7 +1119,22 @@ public class MapUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
-		return null == map ? null : Convert.convert(type, map.get(key));
+		return get(map, key, type, null);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为指定类型
+	 *
+	 * @param <T>          目标值类型
+	 * @param map          Map
+	 * @param key          键
+	 * @param type         值类型
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static <T> T get(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
+		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1016,7 +1148,22 @@ public class MapUtil {
 	 * @since 4.5.12
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type) {
-		return null == map ? null : Convert.convert(type, map.get(key));
+		return get(map, key, type, null);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为指定类型
+	 *
+	 * @param <T>          目标值类型
+	 * @param map          Map
+	 * @param key          键
+	 * @param type         值类型
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.3.11
+	 */
+	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
+		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**

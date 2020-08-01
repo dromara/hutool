@@ -10,6 +10,7 @@
 * 【core   】     增加PhoneUtil（pr#990@Github）
 * 【core   】     改进Img，目标图片类型未定义使用源图片类型（issue#I1PB0B@Gitee）
 * 【json   】     JSONConfig增加Transient选项（issue#I1PLHN@Gitee）
+* 【core   】     MapUtil增加getXXX的默认值重载（issue#I1PTGI@Gitee）
 
 ### Bug修复
 
