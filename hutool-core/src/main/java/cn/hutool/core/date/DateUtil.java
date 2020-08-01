@@ -1042,6 +1042,18 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 获取某周的开始时间
+	 *
+	 * @param date               日期
+	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
+	 * @return {@link DateTime}
+	 * @since 5.4.0
+	 */
+	public static DateTime beginOfWeek(Date date, boolean isMondayAsFirstDay) {
+		return new DateTime(beginOfWeek(calendar(date), isMondayAsFirstDay));
+	}
+
+	/**
 	 * 获取某周的结束时间，周日定为一周的结束
 	 *
 	 * @param date 日期
@@ -1049,6 +1061,18 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static DateTime endOfWeek(Date date) {
 		return new DateTime(endOfWeek(calendar(date)));
+	}
+
+	/**
+	 * 获取某周的结束时间
+	 *
+	 * @param date              日期
+	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
+	 * @return {@link DateTime}
+	 * @since 5.4.0
+	 */
+	public static DateTime endOfWeek(Date date, boolean isSundayAsLastDay) {
+		return new DateTime(endOfWeek(calendar(date), isSundayAsLastDay));
 	}
 
 	/**

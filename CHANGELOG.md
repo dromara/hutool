@@ -8,6 +8,7 @@
 ### 新特性
 * 【socket】     对NioServer和NioClient改造（pr#992@Github）
 * 【core  】     StrUtil增加filter方法（pr#149@Gitee）
+* 【core  】     DateUtil增加beginOfWeek重载
 
 ### Bug修复#
 

@@ -99,7 +99,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void beginAndWeedTest() {
+	public void beginOfWeekTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		DateTime date = DateUtil.parse(dateStr);
 		Objects.requireNonNull(date).setFirstDayOfWeek(Week.MONDAY);
@@ -121,7 +121,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void beginAndWeedTest2() {
+	public void beginOfWeekTest2() {
 		String beginStr = "2020-03-11";
 		DateTime date = DateUtil.parseDate(beginStr);
 		Calendar calendar = date.toCalendar();
