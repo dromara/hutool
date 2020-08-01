@@ -4321,7 +4321,7 @@ public class StrUtil {
 	 * @return 过滤后的字符串
 	 * @since 5.4.0
 	 */
-	public static String filter(CharSequence str, Filter<Character> filter) {
+	public static String filter(CharSequence str, final Filter<Character> filter) {
 		if (str == null || filter == null) {
 			return str(str);
 		}
