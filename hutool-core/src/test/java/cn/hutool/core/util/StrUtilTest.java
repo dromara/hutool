@@ -460,7 +460,7 @@ public class StrUtilTest {
 	@Test
 	public void filterTest() {
 		final String filterNumber = StrUtil.filter("hutool678", CharUtil::isNumber);
-		Assert.assertEquals(filterNumber, "678");
+		Assert.assertEquals("678", filterNumber);
 		String cleanBlank = StrUtil.filter("	 你 好　", c -> !CharUtil.isBlankChar(c));
 		Assert.assertEquals("你好", cleanBlank);
 	}
