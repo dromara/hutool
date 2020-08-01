@@ -456,4 +456,12 @@ public class StrUtilTest {
 		String brief = StrUtil.brief(str, maxLength);
 		Assert.assertEquals(brief.length(), maxLength);
 	}
+
+	@Test
+	public void filterTest() {
+		final String filterNumber = StrUtil.filter("hutool678", CharUtil::isNumber);
+		Assert.assertEquals(filterNumber, "678");
+		String cleanBlank = StrUtil.filter("	 你 好　", c -> !CharUtil.isBlankChar(c));
+		Assert.assertEquals("你好", cleanBlank);
+	}
 }

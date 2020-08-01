@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -1332,20 +1333,7 @@ public class StrUtil {
 	 * @return 清理后的字符串
 	 */
 	public static String cleanBlank(CharSequence str) {
-		if (str == null) {
-			return null;
-		}
-
-		int len = str.length();
-		final StringBuilder sb = new StringBuilder(len);
-		char c;
-		for (int i = 0; i < len; i++) {
-			c = str.charAt(i);
-			if (false == CharUtil.isBlankChar(c)) {
-				sb.append(c);
-			}
-		}
-		return sb.toString();
+		return filter(str, c -> !CharUtil.isBlankChar(c));
 	}
 
 	// ------------------------------------------------------------------------------ Split
@@ -4323,5 +4311,30 @@ public class StrUtil {
 			}
 		}
 		return new String(buffer);
+	}
+
+	/**
+	 * 过滤字符串
+	 *
+	 * @param str       字符串
+	 * @param predicate 过滤条件
+	 * @return 过滤后的字符串
+	 * @since 5.4.0
+	 */
+	public static String filter(CharSequence str, Predicate<Character> predicate) {
+		if (str == null || predicate == null) {
+			return str(str);
+		}
+
+		int len = str.length();
+		final StringBuilder sb = new StringBuilder(len);
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			if (predicate.test(c)) {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 }
