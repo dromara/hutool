@@ -1,13 +1,10 @@
-package cn.hutool.socket;
-
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
+package cn.hutool.socket.aio;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.socket.aio.AioClient;
-import cn.hutool.socket.aio.AioSession;
-import cn.hutool.socket.aio.SimpleIoAction;
+
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 
 public class AioClientTest {
 	public static void main(String[] args) {

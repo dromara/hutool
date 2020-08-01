@@ -1,15 +1,12 @@
-package cn.hutool.socket;
-
-import java.nio.ByteBuffer;
+package cn.hutool.socket.aio;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
-import cn.hutool.socket.aio.AioServer;
-import cn.hutool.socket.aio.AioSession;
-import cn.hutool.socket.aio.SimpleIoAction;
+
+import java.nio.ByteBuffer;
 
 public class AioServerTest {
 	

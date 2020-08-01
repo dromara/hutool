@@ -1,13 +1,5 @@
 package cn.hutool.socket.aio;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketOption;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousServerSocketChannel;
-
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
@@ -15,6 +7,14 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.socket.SocketConfig;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketOption;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannelGroup;
+import java.nio.channels.AsynchronousServerSocketChannel;
 
 /**
  * 基于AIO的Socket服务端实现
@@ -76,11 +76,7 @@ public class AioServer implements Closeable {
 	 * @param sync 是否阻塞
 	 */
 	public void start(boolean sync) {
-		try {
-			doStart(sync);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		doStart(sync);
 	}
 
 	/**
@@ -173,9 +169,8 @@ public class AioServer implements Closeable {
 	 * 开始监听
 	 *
 	 * @param sync 是否阻塞
-	 * @throws IOException IO异常
 	 */
-	private void doStart(boolean sync) throws IOException {
+	private void doStart(boolean sync) {
 		log.debug("Aio Server started, waiting for accept.");
 
 		// 接收客户端连接
