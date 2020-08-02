@@ -92,13 +92,29 @@ public class BeanUtilTest {
 		Assert.assertFalse(map.containsKey("SUBNAME"));
 	}
 
+	/**
+	 * 忽略转换错误测试
+	 */
+	@Test
+	public void toBeanIgnoreErrorTest(){
+		HashMap<String, Object> map = CollUtil.newHashMap();
+		map.put("name", "Joe");
+		// 错误的类型，此处忽略
+		map.put("age", "aaaaaa");
+
+		Person person = BeanUtil.toBeanIgnoreError(map, Person.class);
+		Assert.assertEquals("Joe", person.getName());
+		// 错误的类型，不copy这个字段，使用对象创建的默认值
+		Assert.assertEquals(0, person.getAge());
+	}
+
 	@Test
 	public void mapToBeanIgnoreCaseTest() {
 		HashMap<String, Object> map = CollUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
-		Person person = BeanUtil.mapToBeanIgnoreCase(map, Person.class, false);
+		Person person = BeanUtil.toBeanIgnoreCase(map, Person.class, false);
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -114,7 +130,7 @@ public class BeanUtilTest {
 		mapping.put("a_name", "name");
 		mapping.put("b_age", "age");
 
-		Person person = BeanUtil.mapToBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
+		Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -128,9 +144,20 @@ public class BeanUtilTest {
 		map.put("name", "Joe");
 		map.put("age", 12);
 
-		Person2 person = BeanUtil.mapToBean(map, Person2.class, CopyOptions.create());
+		// 非空构造也可以实例化成功
+		Person2 person = BeanUtil.toBean(map, Person2.class, CopyOptions.create());
 		Assert.assertEquals("Joe", person.name);
 		Assert.assertEquals(12, person.age);
+	}
+
+	/**
+	 * 测试在不忽略错误情况下，转换失败需要报错。
+	 */
+	@Test(expected = NumberFormatException.class)
+	public void mapToBeanWinErrorTest() {
+		Map<String, String> map = new HashMap<>();
+		map.put("age", "哈哈");
+		Person user = BeanUtil.toBean(map, Person.class);
 	}
 
 	@Test
@@ -181,7 +208,7 @@ public class BeanUtilTest {
 		map.put("aliasSubName", "sub名字");
 		map.put("slow", true);
 
-		final SubPersonWithAlias subPersonWithAlias = BeanUtil.mapToBean(map, SubPersonWithAlias.class, false);
+		final SubPersonWithAlias subPersonWithAlias = BeanUtil.toBean(map, SubPersonWithAlias.class);
 		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
 	}
 
@@ -345,6 +372,13 @@ public class BeanUtilTest {
 	}
 
 	public static class Person2 {
+
+		public Person2(String name, int age, String openid) {
+			this.name = name;
+			this.age = age;
+			this.openid = openid;
+		}
+
 		public String name;
 		public int age;
 		public String openid;

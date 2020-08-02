@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -79,7 +80,8 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 			// 尝试反序列化
 			return ObjectUtil.deserialize((byte[])value);
 		}
-		return null;
+
+		throw new ConvertException("Unsupported source type: {}", value.getClass());
 	}
 
 	@Override

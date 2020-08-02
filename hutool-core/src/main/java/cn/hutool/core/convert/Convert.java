@@ -609,9 +609,8 @@ public class Convert {
 	 * @since 4.0.7
 	 * @throws ConvertException 转换器不存在
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T convertByClassName(String className, Object value) throws ConvertException{
-		return (T) convert(ClassUtil.loadClass(className), value);
+		return convert(ClassUtil.loadClass(className), value);
 	}
 	
 	/**

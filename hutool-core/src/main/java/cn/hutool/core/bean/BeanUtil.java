@@ -52,7 +52,7 @@ public class BeanUtil {
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为可读的Bean对象
-	 * @see #hasGetter(Class) 
+	 * @see #hasGetter(Class)
 	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isReadableBean(Class<?> clazz) {
@@ -342,9 +342,11 @@ public class BeanUtil {
 	 * @param beanClass     Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
+	 * @deprecated 请使用 {@link #toBean(Object, Class)} 或 {@link #toBeanIgnoreError(Object, Class)}
 	 */
+	@Deprecated
 	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
+		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -356,9 +358,11 @@ public class BeanUtil {
 	 * @param beanClass     Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
+	 * @deprecated 请使用 {@link #toBeanIgnoreCase(Object, Class, boolean)}
 	 */
+	@Deprecated
 	public static <T> T mapToBeanIgnoreCase(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
+		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -369,9 +373,25 @@ public class BeanUtil {
 	 * @param beanClass   Bean Class
 	 * @param copyOptions 转Bean选项
 	 * @return Bean
+	 * @deprecated 请使用 {@link #toBean(Object, Class, CopyOptions)}
 	 */
+	@Deprecated
 	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, CopyOptions copyOptions) {
-		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), copyOptions);
+		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), copyOptions);
+	}
+
+	/**
+	 * Map转换为Bean对象
+	 *
+	 * @param <T>           Bean类型
+	 * @param map           {@link Map}
+	 * @param beanClass     Bean Class
+	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
+	 * @param copyOptions   转Bean选项
+	 * @return Bean
+	 */
+	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isToCamelCase, CopyOptions copyOptions) {
+		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
@@ -447,7 +467,8 @@ public class BeanUtil {
 		if (isToCamelCase) {
 			map = MapUtil.toCamelCaseMap(map);
 		}
-		return BeanCopier.create(map, bean, copyOptions).copy();
+		copyProperties(map, bean, copyOptions);
+		return bean;
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBean
@@ -463,6 +484,36 @@ public class BeanUtil {
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz) {
 		return toBean(source, clazz, null);
+	}
+
+	/**
+	 * 对象或Map转Bean，忽略字段转换时发生的异常
+	 *
+	 * @param <T>    转换的Bean类型
+	 * @param source Bean对象或Map
+	 * @param clazz  目标的Bean类型
+	 * @return Bean对象
+	 * @since 5.4.0
+	 */
+	public static <T> T toBeanIgnoreError(Object source, Class<T> clazz) {
+		return toBean(source, clazz, CopyOptions.create().setIgnoreError(true));
+	}
+
+	/**
+	 * 对象或Map转Bean，忽略字段转换时发生的异常
+	 *
+	 * @param <T>         转换的Bean类型
+	 * @param source      Bean对象或Map
+	 * @param clazz       目标的Bean类型
+	 * @param ignoreError 是否忽略注入错误
+	 * @return Bean对象
+	 * @since 5.4.0
+	 */
+	public static <T> T toBeanIgnoreCase(Object source, Class<T> clazz, boolean ignoreError) {
+		return toBean(source, clazz,
+				CopyOptions.create()
+						.setIgnoreCase(true)
+						.setIgnoreError(ignoreError));
 	}
 
 	/**
@@ -491,7 +542,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(Class<T> beanClass, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
-		return fillBean(ReflectUtil.newInstance(beanClass), valueProvider, copyOptions);
+		return fillBean(ReflectUtil.newInstanceIfPossible(beanClass), valueProvider, copyOptions);
 	}
 
 	/**
@@ -608,9 +659,9 @@ public class BeanUtil {
 	/**
 	 * 按照Bean对象属性创建对应的Class对象，并忽略某些属性
 	 *
-	 * @param <T>    对象类型
-	 * @param source 源Bean对象
-	 * @param tClass 目标Class
+	 * @param <T>              对象类型
+	 * @param source           源Bean对象
+	 * @param tClass           目标Class
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 * @return 目标对象
 	 */
@@ -690,7 +741,7 @@ public class BeanUtil {
 
 		final Field[] fields = ReflectUtil.getFields(bean.getClass());
 		for (Field field : fields) {
-			if(ModifierUtil.isStatic(field)){
+			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
 			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
@@ -737,7 +788,7 @@ public class BeanUtil {
 	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
 		if (null != bean) {
 			for (Field field : ReflectUtil.getFields(bean.getClass())) {
-				if(ModifierUtil.isStatic(field)){
+				if (ModifierUtil.isStatic(field)) {
 					continue;
 				}
 				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
@@ -763,7 +814,7 @@ public class BeanUtil {
 			return true;
 		}
 		for (Field field : ReflectUtil.getFields(bean.getClass())) {
-			if(ModifierUtil.isStatic(field)){
+			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
 			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))//
