@@ -43,7 +43,6 @@
 
 <br/>
 <p align="center">
-	<a>QQ交流群：</a>
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=oolXnM7i9pHbiyUOfCdQWSA3RuIXqUsk&jump_from=webapi"><img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A3-718802356-orange"/></a>
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=0wwldaU0E8r-ZzHl_wma33W7420zwXYi&jump_from=webapi"><img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A4-956375658-orange"/></a>
 </p>
