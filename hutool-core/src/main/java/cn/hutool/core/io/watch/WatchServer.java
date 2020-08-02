@@ -15,7 +15,6 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -139,6 +138,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 			wk = watchService.take();
 		} catch (InterruptedException | ClosedWatchServiceException e) {
 			// 用户中断
+			close();
 			return;
 		}
 
@@ -152,6 +152,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 
 			action.doAction(event, currentPath);
 		}
+
 		wk.reset();
 	}
 
@@ -163,15 +164,15 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 */
 	public void watch(Watcher watcher, Filter<WatchEvent<?>> watchFilter) {
 		watch((event, currentPath)->{
-			WatchEvent.Kind<?> kind = event.kind();
+			final WatchEvent.Kind<?> kind = event.kind();
 
-			if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+			if (kind == WatchKind.CREATE.getValue()) {
 				watcher.onCreate(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+			} else if (kind == WatchKind.MODIFY.getValue()) {
 				watcher.onModify(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+			} else if (kind == WatchKind.DELETE.getValue()) {
 				watcher.onDelete(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.OVERFLOW) {
+			} else if (kind == WatchKind.OVERFLOW.getValue()) {
 				watcher.onOverflow(event, currentPath);
 			}
 		}, watchFilter);
