@@ -1241,4 +1241,17 @@ public class IoUtil {
 		}
 		return checksum;
 	}
+
+	/**
+	 * 计算流的校验码，计算后关闭流
+	 *
+	 * @param in       流
+	 * @param checksum {@link Checksum}
+	 * @return Checksum
+	 * @throws IORuntimeException IO异常
+	 * @since 5.4.0
+	 */
+	public static long checksumValue(InputStream in, Checksum checksum){
+		return checksum(in, checksum).getValue();
+	}
 }
