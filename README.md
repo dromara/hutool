@@ -2,6 +2,9 @@
 	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="400"></a>
 </p>
 <p align="center">
+	<a href="https://hutool.cn">https://hutool.cn/</a>
+</p>
+<p align="center">
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
@@ -36,9 +39,9 @@
 		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"/>
 	</a>
 </p>
-<p align="center">
-	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
-</p>
+
+-------------------------------------------------------------------------------
+
 <p align="center">
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=oolXnM7i9pHbiyUOfCdQWSA3RuIXqUsk&jump_from=webapi"><img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A3-718802356-orange"/></a>
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=0wwldaU0E8r-ZzHl_wma33W7420zwXYi&jump_from=webapi"><img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A4-956375658-orange"/></a>
