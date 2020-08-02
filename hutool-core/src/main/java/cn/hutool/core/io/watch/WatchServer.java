@@ -129,10 +129,11 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	/**
 	 * 执行事件获取并处理
 	 *
-	 * @param watcher     {@link Watcher}
+	 * @param action     监听回调函数，实现此函数接口用于处理WatchEvent事件
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
+	 * @since 5.4.0
 	 */
-	public void watch(Watcher watcher, Filter<WatchEvent<?>> watchFilter) {
+	public void watch(WatchAction action, Filter<WatchEvent<?>> watchFilter) {
 		WatchKey wk;
 		try {
 			wk = watchService.take();
@@ -142,14 +143,27 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 		}
 
 		final Path currentPath = watchKeyPathMap.get(wk);
-		WatchEvent.Kind<?> kind;
-		for (WatchEvent<?> event : wk.pollEvents()) {
-			kind = event.kind();
 
+		for (WatchEvent<?> event : wk.pollEvents()) {
 			// 如果监听文件，检查当前事件是否与所监听文件关联
 			if (null != watchFilter && false == watchFilter.accept(event)) {
 				continue;
 			}
+
+			action.doAction(event, currentPath);
+		}
+		wk.reset();
+	}
+
+	/**
+	 * 执行事件获取并处理
+	 *
+	 * @param watcher     {@link Watcher}
+	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
+	 */
+	public void watch(Watcher watcher, Filter<WatchEvent<?>> watchFilter) {
+		watch((event, currentPath)->{
+			WatchEvent.Kind<?> kind = event.kind();
 
 			if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 				watcher.onCreate(event, currentPath);
@@ -160,8 +174,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 			} else if (kind == StandardWatchEventKinds.OVERFLOW) {
 				watcher.onOverflow(event, currentPath);
 			}
-		}
-		wk.reset();
+		}, watchFilter);
 	}
 
 	/**

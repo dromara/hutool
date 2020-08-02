@@ -10,6 +10,7 @@
 * 【core  】     StrUtil增加filter方法（pr#149@Gitee）
 * 【core  】     DateUtil增加beginOfWeek重载
 * 【core  】     将有歧义的BeanUtil.mapToBean方法置为过期（使用toBean方法）
+* 【core  】     添加WatchAction（对Watcher的抽象）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
