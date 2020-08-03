@@ -92,9 +92,9 @@ public class HexUtil {
 	}
 
 	/**
-	 * 将字节数组转换为十六进制字符串，结果为小写
+	 * 将字符串转换为十六进制字符串，结果为小写
 	 *
-	 * @param data    被编码的字符串
+	 * @param data    需要被编码的字符串
 	 * @param charset 编码
 	 * @return 十六进制String
 	 */
@@ -103,7 +103,7 @@ public class HexUtil {
 	}
 
 	/**
-	 * 将字节数组转换为十六进制字符串，结果为小写，默认编码是UTF-8
+	 * 将字符串转换为十六进制字符串，结果为小写，默认编码是UTF-8
 	 *
 	 * @param data 被编码的字符串
 	 * @return 十六进制String
