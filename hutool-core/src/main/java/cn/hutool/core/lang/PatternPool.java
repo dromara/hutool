@@ -83,11 +83,11 @@ public class PatternPool {
 	/**
 	 * UUID
 	 */
-	public final static Pattern UUID = Pattern.compile("^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$");
+	public final static Pattern UUID = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 	/**
 	 * 不带横线的UUID
 	 */
-	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-z]{32}$");
+	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-f]{32}$", Pattern.CASE_INSENSITIVE);
 	/**
 	 * MAC地址正则
 	 */

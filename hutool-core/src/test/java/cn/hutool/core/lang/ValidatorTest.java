@@ -1,6 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.util.IdUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -141,5 +142,14 @@ public class ValidatorTest {
 	public void isChineseTest(){
 		Assert.assertTrue(Validator.isChinese("全都是中文"));
 		Assert.assertFalse(Validator.isChinese("not全都是中文"));
+	}
+
+	@Test
+	public void isUUIDTest(){
+		Assert.assertTrue(Validator.isUUID(IdUtil.randomUUID()));
+		Assert.assertTrue(Validator.isUUID(IdUtil.fastSimpleUUID()));
+
+		Assert.assertTrue(Validator.isUUID(IdUtil.randomUUID().toUpperCase()));
+		Assert.assertTrue(Validator.isUUID(IdUtil.fastSimpleUUID().toUpperCase()));
 	}
 }

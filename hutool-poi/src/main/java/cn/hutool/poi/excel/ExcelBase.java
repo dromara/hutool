@@ -1,10 +1,10 @@
 package cn.hutool.poi.excel;
 
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.poi.excel.cell.CellLocation;
+import cn.hutool.poi.excel.cell.CellUtil;
+import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,10 +12,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.poi.excel.cell.CellUtil;
-import cn.hutool.poi.excel.style.StyleUtil;
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
@@ -281,9 +280,20 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	public CellStyle createCellStyle(int x, int y) {
 		final Cell cell = getOrCreateCell(x, y);
-		final CellStyle cellStyle = this.workbook.createCellStyle();
+			final CellStyle cellStyle = this.workbook.createCellStyle();
 		cell.setCellStyle(cellStyle);
 		return cellStyle;
+	}
+
+	/**
+	 * 创建单元格样式
+	 *
+	 * @return {@link CellStyle}
+	 * @see Workbook#createCellStyle()
+	 * @since 5.4.0
+	 */
+	public CellStyle createCellStyle(){
+		return StyleUtil.createCellStyle(this.workbook);
 	}
 
 	/**

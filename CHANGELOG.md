@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.0 (2020-08-01)
+# 5.4.0 (2020-08-04)
 
 ### 新特性
 * 【socket】     对NioServer和NioClient改造（pr#992@Github）
@@ -11,6 +11,7 @@
 * 【core  】     DateUtil增加beginOfWeek重载
 * 【core  】     将有歧义的BeanUtil.mapToBean方法置为过期（使用toBean方法）
 * 【core  】     添加WatchAction（对Watcher的抽象）
+* 【core  】     修改UUID正则，更加严谨（issue#I1Q1IW@Gitee）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
