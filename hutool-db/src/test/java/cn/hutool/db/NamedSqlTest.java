@@ -15,7 +15,11 @@ public class NamedSqlTest {
 	public void parseTest() {
 		String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
 
-		Map<String, Object> paramMap = MapUtil.builder("name1", (Object)"张三").put("age", 12).put("subName", "小豆豆").build();
+		Map<String, Object> paramMap = MapUtil
+				.builder("name1", (Object)"张三")
+				.put("age", 12)
+				.put("subName", "小豆豆")
+				.build();
 
 		NamedSql namedSql = new NamedSql(sql, paramMap);
 		//未指定参数原样输出
@@ -28,7 +32,12 @@ public class NamedSqlTest {
 	public void parseTest2() {
 		String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
 		
-		Map<String, Object> paramMap = MapUtil.builder("name1", (Object)"张三").put("age", 12).put("subName", "小豆豆").put("id", null).build();
+		Map<String, Object> paramMap = MapUtil
+				.builder("name1", (Object)"张三")
+				.put("age", 12)
+				.put("subName", "小豆豆")
+				.put("id", null)
+				.build();
 		
 		NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals("select * from table where id=? and name = ? and nickName = ?", namedSql.getSql());
@@ -36,6 +45,19 @@ public class NamedSqlTest {
 		Assert.assertNull(namedSql.getParams()[0]);
 		Assert.assertEquals("张三", namedSql.getParams()[1]);
 		Assert.assertEquals("小豆豆", namedSql.getParams()[2]);
+	}
+
+	@Test
+	public void parseTest3() {
+		// 测试连续变量名出现是否有问题
+		String sql = "SELECT to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') as sysdate FROM dual";
+
+		Map<String, Object> paramMap = MapUtil
+				.builder("name1", (Object)"张三")
+				.build();
+
+		NamedSql namedSql = new NamedSql(sql, paramMap);
+		Assert.assertEquals(sql, namedSql.getSql());
 	}
 
 	@Test
