@@ -474,4 +474,45 @@ public class ListUtil {
 	public static <T> List<T> empty() {
 		return Collections.emptyList();
 	}
+
+	/**
+	 * 将一条list 按照一定条数拆分成几个list存放在List<java.util.List < T>>里
+	 *
+	 * @param resList	需要拆分的数据List数据
+	 * @param count 	需要拆分的条数
+	 * @return 一个存放拆分后的1+n条list的list
+	 * @author 金聖聰
+	 * @since 5.3.10
+	 */
+	public static <T> List<List<T>> splitByCount(List<T> resList, int count) {
+		if (resList == null || count < 1) {
+			return null;
+		}
+		List<List<T>> ret = new ArrayList<>();
+		int size = resList.size();
+		if (size <= count) {
+			// 数据量不足count指定的大小
+			ret.add(resList);
+		} else {
+			int pre = size / count;
+			int last = size % count;
+			// 前面pre个集合，每个大小都是count个元素
+			for (int i = 0; i < pre; i++) {
+				List<T> itemList = new ArrayList<>();
+				for (int j = 0; j < count; j++) {
+					itemList.add(resList.get(i * count + j));
+				}
+				ret.add(itemList);
+			}
+			// last的进行处理
+			if (last > 0) {
+				List<T> itemList = new ArrayList<>();
+				for (int i = 0; i < last; i++) {
+					itemList.add(resList.get(pre * count + i));
+				}
+				ret.add(itemList);
+			}
+		}
+		return ret;
+	}
 }
