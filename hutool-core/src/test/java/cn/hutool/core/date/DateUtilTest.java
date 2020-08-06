@@ -392,6 +392,14 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void parseTest8() {
+		String str = "2020-06-28T02:14:13.000Z";
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2020-06-28 02:14:13", dateTime.toString());
+	}
+
+	@Test
 	public void parseAndOffsetTest() {
 		// 检查UTC时间偏移是否准确
 		String str = "2019-09-17T13:26:17.948Z";

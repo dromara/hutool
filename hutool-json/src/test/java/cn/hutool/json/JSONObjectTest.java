@@ -50,6 +50,7 @@ public class JSONObjectTest {
 	@Test
 	public void toStringTest2() {
 		String str = "{\"test\":\"关于开展2018年度“文明集体”、“文明职工”评选表彰活动的通知\"}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(str);
 		Assert.assertEquals(str, json.toString());
 	}
@@ -112,6 +113,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseStringTest2() {
 		String jsonStr = "{\"file_name\":\"RMM20180127009_731.000\",\"error_data\":\"201121151350701001252500000032 18973908335 18973908335 13601893517 201711211700152017112115135420171121 6594000000010100000000000000000000000043190101701001910072 100001100 \",\"error_code\":\"F140\",\"error_info\":\"最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”\",\"app_name\":\"inter-pre-check\"}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals("F140", json.getStr("error_code"));
 		Assert.assertEquals("最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”", json.getStr("error_info"));
@@ -120,6 +122,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseStringTest3() {
 		String jsonStr = "{\"test\":\"体”、“文\"}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals("体”、“文", json.getStr("test"));
 	}
@@ -127,6 +130,7 @@ public class JSONObjectTest {
 	@Test
 	public void parseStringTest4() {
 		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals(new Integer(0), json.getInt("ok"));
 		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
@@ -146,6 +150,7 @@ public class JSONObjectTest {
 	public void parseStringWithSlashTest() {
 		//在5.3.2之前，</div>中的/会被转义，修复此bug的单元测试
 		String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals("<div>aaa</div>", json.get("a"));
 		Assert.assertEquals(jsonStr, json.toString());
@@ -453,5 +458,33 @@ public class JSONObjectTest {
 		private String value1;
 		@Alias("age")
 		private Integer value2;
+	}
+
+	@Test
+	public void parseBeanSameNameTest(){
+		final SameNameBean sameNameBean = new SameNameBean();
+		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
+		Assert.assertEquals("123", parse.getStr("username"));
+		Assert.assertEquals("abc", parse.getStr("userName"));
+	}
+
+	/**
+	 * 测试子Bean
+	 *
+	 * @author Looly
+	 */
+	@SuppressWarnings("FieldCanBeLocal")
+	public static class SameNameBean {
+		private final String username = "123";
+		private final String userName = "abc";
+
+		public String getUsername() {
+			return username;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
 	}
 }

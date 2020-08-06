@@ -22,7 +22,7 @@ public class StrUtilTest {
 	
 	@Test
 	public void isBlankTest2() {
-		String blank = "\u202a";
+		String blank = "你看不见\u202a";
 		Assert.assertTrue(StrUtil.isBlank(blank));
 	}
 

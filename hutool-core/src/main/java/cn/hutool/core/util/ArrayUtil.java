@@ -278,33 +278,12 @@ public class ArrayUtil {
 	 * @param <T> 数组元素类型
 	 * @param array 被检查的数组
 	 * @return 多个字段是否全为null
-	 * @since 5.3.11
-	 * @author dahuoyzs
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> boolean allNull(T... array) {
-		if (isNotEmpty(array)) {
-			for (T element : array) {
-				if (null != element) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 多个字段是否全为null
-	 *
-	 * @param <T> 数组元素类型
-	 * @param array 被检查的数组
-	 * @return 多个字段是否全为null
-	 * @since 5.3.11
+	 * @since 5.4.0
 	 * @author dahuoyzs
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isAllNull(T... array) {
-		return allNull(array);
+		return null == firstNonNull(array);
 	}
 
 	/**

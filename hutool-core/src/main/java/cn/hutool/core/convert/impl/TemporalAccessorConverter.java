@@ -52,7 +52,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @param targetType 目标类型
 	 */
 	public TemporalAccessorConverter(Class<?> targetType) {
-		this.targetType = targetType;
+		this(targetType, null);
 	}
 
 	/**

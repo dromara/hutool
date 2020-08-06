@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.0 (2020-08-04)
+# 5.4.0 (2020-08-06)
 
 ### 新特性
 * 【socket】     对NioServer和NioClient改造（pr#992@Github）
@@ -12,11 +12,13 @@
 * 【core  】     将有歧义的BeanUtil.mapToBean方法置为过期（使用toBean方法）
 * 【core  】     添加WatchAction（对Watcher的抽象）
 * 【core  】     修改UUID正则，更加严谨（issue#I1Q1IW@Gitee）
+* 【core  】     ArrayUtil增加isAllNull方法（issue#1004@Github）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
 * 【core  】     修复BeanUtil.mapToBean中bean的class非空构造无法实例化问题
 * 【core  】     修复NamedSql多个连续变量出现替换问题
+* 【core  】     修复Bean重名字段（大小写区别）获取数据出错的问题（issue#I1QBQ4@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
