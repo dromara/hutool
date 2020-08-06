@@ -10,15 +10,7 @@ import cn.hutool.core.lang.Filter;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 数组工具类
@@ -278,6 +270,41 @@ public class ArrayUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 多个字段是否全为null
+	 *
+	 * @param <T> 数组元素类型
+	 * @param array 被检查的数组
+	 * @return 多个字段是否全为null
+	 * @since 5.3.11
+	 * @author dahuoyzs
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean allNull(T... array) {
+		if (isNotEmpty(array)) {
+			for (T element : array) {
+				if (null != element) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 多个字段是否全为null
+	 *
+	 * @param <T> 数组元素类型
+	 * @param array 被检查的数组
+	 * @return 多个字段是否全为null
+	 * @since 5.3.11
+	 * @author dahuoyzs
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean isAllNull(T... array) {
+		return allNull(array);
 	}
 
 	/**
