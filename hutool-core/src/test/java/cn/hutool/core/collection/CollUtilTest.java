@@ -20,6 +20,13 @@ import java.util.*;
 public class CollUtilTest {
 
 	@Test
+	public void testPredicateContains() {
+		ArrayList<String> list = CollUtil.newArrayList("bbbbb", "aaaaa", "ccccc");
+		Assert.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
+		Assert.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
+	}
+
+	@Test
 	public void testPadLeft() {
 		List<String> srcList = CollUtil.newArrayList();
 		List<String> answerList = CollUtil.newArrayList("a", "b");
