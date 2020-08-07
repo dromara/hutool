@@ -21,12 +21,6 @@ public class StrUtilTest {
 	}
 	
 	@Test
-	public void isBlankTest2() {
-		String blank = "你看不见\u202a";
-		Assert.assertTrue(StrUtil.isBlank(blank));
-	}
-
-	@Test
 	public void trimTest() {
 		String blank = "	 哈哈 　";
 		String trim = StrUtil.trim(blank);

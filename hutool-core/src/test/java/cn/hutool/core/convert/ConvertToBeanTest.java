@@ -90,7 +90,7 @@ public class ConvertToBeanTest {
 	@Test
 	public void nullStrToBeanTest(){
 		String nullStr = "null";
-		final SubPerson subPerson = Convert.convert(SubPerson.class, nullStr);
+		final SubPerson subPerson = Convert.convertQuietly(SubPerson.class, nullStr);
 		Assert.assertNull(subPerson);
 	}
 }
