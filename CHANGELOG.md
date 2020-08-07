@@ -13,6 +13,7 @@
 * 【core  】     添加WatchAction（对Watcher的抽象）
 * 【core  】     修改UUID正则，更加严谨（issue#I1Q1IW@Gitee）
 * 【core  】     ArrayUtil增加isAllNull方法（issue#1004@Github）
+* 【core  】     CollUtil增加contains方法（pr#152@Gitee）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
