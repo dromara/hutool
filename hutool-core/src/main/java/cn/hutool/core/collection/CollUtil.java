@@ -50,6 +50,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 集合相关工具类
@@ -408,6 +409,26 @@ public class CollUtil {
 	 */
 	public static boolean contains(Collection<?> collection, Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
+	}
+
+	/**
+	 * 自定义函数判断集合是否包含某类值
+	 *
+	 * @param collection 集合
+	 * @param containFunc 自定义判断函数
+	 * @param <T> 值类型
+	 * @return 是否包含自定义规则的值
+	 */
+	public static <T> boolean contains(Collection<T> collection, Predicate<? super T> containFunc) {
+		if (isEmpty(collection)) {
+			return false;
+		}
+		for (T t : collection) {
+			if (containFunc.test(t)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
