@@ -1,22 +1,21 @@
 
 package cn.hutool.poi.excel;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.exceptions.POIException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Excel工作簿{@link Workbook}相关工具类
@@ -94,9 +93,20 @@ public class WorkbookUtil {
 	 * @param in Excel输入流
 	 * @param closeAfterRead 读取结束是否关闭流
 	 * @return {@link Workbook}
+	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义，请使用{@link #createBook(InputStream)}
 	 */
 	public static Workbook createBook(InputStream in, boolean closeAfterRead) {
-		return createBook(in, null, closeAfterRead);
+		return createBook(in, null);
+	}
+
+	/**
+	 * 创建或加载工作簿
+	 *
+	 * @param in Excel输入流
+	 * @return {@link Workbook}
+	 */
+	public static Workbook createBook(InputStream in) {
+		return createBook(in, null);
 	}
 
 	/**
@@ -107,16 +117,28 @@ public class WorkbookUtil {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 * @return {@link Workbook}
 	 * @since 4.0.3
+	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义，请使用{@link #createBook(InputStream, String)}
 	 */
+	@Deprecated
 	public static Workbook createBook(InputStream in, String password, boolean closeAfterRead) {
+		return createBook(in, password);
+	}
+
+	/**
+	 * 创建或加载工作簿
+	 *
+	 * @param in Excel输入流，使用完毕自动关闭流
+	 * @param password 密码
+	 * @return {@link Workbook}
+	 * @since 4.0.3
+	 */
+	public static Workbook createBook(InputStream in, String password) {
 		try {
 			return WorkbookFactory.create(IoUtil.toMarkSupportStream(in), password);
 		} catch (Exception e) {
 			throw new POIException(e);
-		} finally {
-			if (closeAfterRead) {
-				IoUtil.close(in);
-			}
+		} finally{
+			IoUtil.close(in);
 		}
 	}
 
@@ -191,9 +213,23 @@ public class WorkbookUtil {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
+	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义，请使用{@link #createSXSSFBook(InputStream, String)}
 	 */
+	@Deprecated
 	public static SXSSFWorkbook createSXSSFBook(InputStream in, String password, boolean closeAfterRead) {
 		return toSXSSFBook(createBook(in, password, closeAfterRead));
+	}
+
+	/**
+	 * 创建或加载SXSSFWorkbook工作簿
+	 *
+	 * @param in Excel输入流
+	 * @param password 密码
+	 * @return {@link SXSSFWorkbook}
+	 * @since 4.1.13
+	 */
+	public static SXSSFWorkbook createSXSSFBook(InputStream in, String password) {
+		return toSXSSFBook(createBook(in, password));
 	}
 
 	/**
