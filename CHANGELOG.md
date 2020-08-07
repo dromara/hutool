@@ -16,6 +16,7 @@
 * 【core  】     CollUtil增加contains方法（pr#152@Gitee）
 * 【core  】     ArrayUtil增加isAllNotNull方法（pr#1008@Github）
 * 【poi   】     closeAfterRead参数无效，方法设为过期（issue#1007@Github）
+* 【core  】     CollUtil中部分方法返回null变更为返回empty
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
