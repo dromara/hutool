@@ -289,4 +289,12 @@ public class ArrayUtilTest {
 		final int[] ints = ArrayUtil.addAll(new int[]{1, 2, 3}, new int[]{4, 5, 6});
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5,6}, ints);
 	}
+
+	@Test
+	public void isAllNotNullTest(){
+		String[] allNotNull = {"aa", "bb", "cc", "dd", "bb", "dd"};
+		Assert.assertTrue(ArrayUtil.isAllNotNull(allNotNull));
+		String[] hasNull = {"aa", "bb", "cc", null, "bb", "dd"};
+		Assert.assertFalse(ArrayUtil.isAllNotNull(hasNull));
+	}
 }
