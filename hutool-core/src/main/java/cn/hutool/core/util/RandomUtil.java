@@ -47,6 +47,11 @@ public class RandomUtil {
 	 * 获取随机数生成器对象<br>
 	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
 	 *
+	 * <p>
+	 *     注意：此方法返回的{@link ThreadLocalRandom}不可以在多线程环境下共享对象，否则有重复随机数问题。
+	 *     见：https://www.jianshu.com/p/89dfe990295c
+	 * </p>
+	 *
 	 * @return {@link ThreadLocalRandom}
 	 * @since 3.1.2
 	 */
