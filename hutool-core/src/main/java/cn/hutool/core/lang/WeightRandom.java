@@ -32,7 +32,7 @@ public class WeightRandom<T> implements Serializable {
 	private static final long serialVersionUID = -8244697995702786499L;
 
 	private final TreeMap<Double, T> weightMap;
-	private final Random random;
+
 
 	/**
 	 * 创建权重随机获取器
@@ -50,7 +50,7 @@ public class WeightRandom<T> implements Serializable {
 	 */
 	public WeightRandom() {
 		weightMap = new TreeMap<>();
-		random = RandomUtil.getRandom();
+
 	}
 
 	/**
@@ -141,6 +141,7 @@ public class WeightRandom<T> implements Serializable {
 		if(MapUtil.isEmpty(this.weightMap)) {
 			return null;
 		}
+		final Random random = RandomUtil.getRandom();
 		final double randomWeight = this.weightMap.lastKey() * random.nextDouble();
 		final SortedMap<Double, T> tailMap = this.weightMap.tailMap(randomWeight, false);
 		return this.weightMap.get(tailMap.firstKey());
