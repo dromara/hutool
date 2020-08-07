@@ -567,7 +567,7 @@ public class CollUtil {
 	 */
 	public static <T> List<T> popPart(Stack<T> surplusAlaDatas, int partSize) {
 		if (isEmpty(surplusAlaDatas)) {
-			return null;
+			return ListUtil.empty();
 		}
 
 		final List<T> currentAlaDatas = new ArrayList<>();
@@ -596,7 +596,7 @@ public class CollUtil {
 	 */
 	public static <T> List<T> popPart(Deque<T> surplusAlaDatas, int partSize) {
 		if (isEmpty(surplusAlaDatas)) {
-			return null;
+			return ListUtil.empty();
 		}
 
 		final List<T> currentAlaDatas = new ArrayList<>();
@@ -1101,7 +1101,7 @@ public class CollUtil {
 	 */
 	public static <T> List<T> sub(Collection<T> list, int start, int end, int step) {
 		if (list == null || list.isEmpty()) {
-			return null;
+			return ListUtil.empty();
 		}
 
 		return sub(new ArrayList<>(list), start, end, step);
@@ -1768,7 +1768,7 @@ public class CollUtil {
 	 */
 	public static <K, V> Map<K, V> zip(Collection<K> keys, Collection<V> values) {
 		if (isEmpty(keys) || isEmpty(values)) {
-			return null;
+			return MapUtil.empty();
 		}
 
 		int entryCount = Math.min(keys.size(), values.size());
@@ -2845,6 +2845,7 @@ public class CollUtil {
 	 * @param <T> 处理参数类型
 	 * @author Looly
 	 */
+	@FunctionalInterface
 	public interface Consumer<T> {
 		/**
 		 * 接受并处理一个参数
@@ -2862,6 +2863,7 @@ public class CollUtil {
 	 * @param <V> VALUE类型
 	 * @author Looly
 	 */
+	@FunctionalInterface
 	public interface KVConsumer<K, V> {
 		/**
 		 * 接受并处理一对参数
