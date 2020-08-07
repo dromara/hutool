@@ -10,7 +10,6 @@ import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.http.HttpUtil;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -116,9 +115,6 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return 响应头
 	 */
 	public Headers getHeaders() {
-		if (false == this.isSendCode) {
-			sendOk();
-		}
 		return this.httpExchange.getResponseHeaders();
 	}
 
@@ -356,10 +352,13 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param fileName    文件名
 	 * @since 5.2.6
 	 */
-	public void write(InputStream in, String contentType, String fileName) {
+		public void write(InputStream in, String contentType, String fileName) {
 		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
-		setHeader("Content-Disposition", StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
-		setContentType(contentType);
-		write(in);
+
+		if(false == contentType.startsWith("text/")){
+			// 非文本类型数据直接走下载
+			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
+		}
+		write(in, contentType);
 	}
 }

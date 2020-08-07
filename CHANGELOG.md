@@ -19,6 +19,7 @@
 * 【core  】     修复BeanUtil.mapToBean中bean的class非空构造无法实例化问题
 * 【core  】     修复NamedSql多个连续变量出现替换问题
 * 【core  】     修复Bean重名字段（大小写区别）获取数据出错的问题（issue#I1QBQ4@Gitee）
+* 【http  】     修复SimpleServer响应头无效问题（issue#1006@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

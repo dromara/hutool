@@ -8,6 +8,7 @@ import cn.hutool.http.server.handler.ActionHandler;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
@@ -73,6 +74,16 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer setRoot(String root) {
+		return setRoot(new File(root));
+	}
+
+	/**
+	 * 设置根目录，默认的页面从root目录中读取解析返回
+	 *
+	 * @param root 路径
+	 * @return this
+	 */
+	public SimpleServer setRoot(File root) {
 		return addAction("/", new RootAction(root));
 	}
 
