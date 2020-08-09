@@ -1,6 +1,5 @@
 package cn.hutool.extra.spring;
 
-import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.context.ApplicationContext;
@@ -9,7 +8,6 @@ import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -92,7 +90,7 @@ public class SpringUtil implements ApplicationContextAware {
 		Class<T> rawType = (Class<T>) parameterizedType.getRawType();
 		Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
 		String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
-		return applicationContext.getBean(beanNames[0], rawType);
+		return getBean(beanNames[0], rawType);
 	}
 
 	/**
