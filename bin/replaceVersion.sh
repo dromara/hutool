@@ -27,7 +27,8 @@ fi
 
 # 替换README.md中的版本
 sed -i "s/${old_version}/${new_version}/g" $pwd/README.md
-# 替换docs/index.html中的版本
+sed -i "s/${old_version}/${new_version}/g" $pwd/README-EN.md
+# 替换docs/js/version.js中的版本
 sed -i "s/${old_version}/${new_version}/g" $pwd/docs/js/version.js
 
 # 保留新版本号

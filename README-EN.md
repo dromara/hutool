@@ -72,6 +72,8 @@ To calculate MD5 for example:
 
 Hutool exists to reduce code search costs and avoid bugs caused by imperfect code on the web.
 
+### Thanks
+> this README is PR by [chengxian-yi](https://gitee.com/yichengxian)
 -------------------------------------------------------------------------------
 
 ## Module
