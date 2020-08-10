@@ -45,7 +45,7 @@ public class SpringUtil implements ApplicationContextAware {
 	/**
 	 * 通过name获取 Bean
 	 *
-	 * @param <T> Bean类型
+	 * @param <T>  Bean类型
 	 * @param name Bean名称
 	 * @return Bean
 	 */
@@ -57,7 +57,7 @@ public class SpringUtil implements ApplicationContextAware {
 	/**
 	 * 通过class获取Bean
 	 *
-	 * @param <T> Bean类型
+	 * @param <T>   Bean类型
 	 * @param clazz Bean类
 	 * @return Bean对象
 	 */
@@ -68,8 +68,8 @@ public class SpringUtil implements ApplicationContextAware {
 	/**
 	 * 通过name,以及Clazz返回指定的Bean
 	 *
-	 * @param <T> bean类型
-	 * @param name Bean名称
+	 * @param <T>   bean类型
+	 * @param name  Bean名称
 	 * @param clazz bean类型
 	 * @return Bean对象
 	 */
@@ -77,41 +77,43 @@ public class SpringUtil implements ApplicationContextAware {
 		return applicationContext.getBean(name, clazz);
 	}
 
-    /**
-     * 通过类型参考返回带泛型参数的Bean
-     *
-     * @param reference 类型参考，用于持有转换后的泛型类型
-     * @param <T> Bean类型
-     * @return 带泛型参数的Bean
-     */
+	/**
+	 * 通过类型参考返回带泛型参数的Bean
+	 *
+	 * @param reference 类型参考，用于持有转换后的泛型类型
+	 * @param <T>       Bean类型
+	 * @return 带泛型参数的Bean
+	 * @since 5.4.0
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(TypeReference<T> reference) {
-		ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
-		Class<T> rawType = (Class<T>) parameterizedType.getRawType();
-		Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
-		String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
+		final ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
+		final Class<T> rawType = (Class<T>) parameterizedType.getRawType();
+		final Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
+		final String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
 		return getBean(beanNames[0], rawType);
 	}
 
 	/**
 	 * 获取指定类型对应的所有Bean，包括子类
 	 *
-	 * @param <T> Bean类型
+	 * @param <T>  Bean类型
 	 * @param type 类、接口，null表示获取所有bean
 	 * @return 类型对应的bean，key是bean注册的name，value是Bean
 	 * @since 5.3.3
 	 */
-	public static <T> Map<String, T> getBeansOfType(Class<T> type){
+	public static <T> Map<String, T> getBeansOfType(Class<T> type) {
 		return applicationContext.getBeansOfType(type);
 	}
 
 	/**
 	 * 获取指定类型对应的Bean名称，包括子类
+	 *
 	 * @param type 类、接口，null表示获取所有bean名称
 	 * @return bean名称
 	 * @since 5.3.3
 	 */
-	public static String[] getBeanNamesForType(Class<?> type){
+	public static String[] getBeanNamesForType(Class<?> type) {
 		return applicationContext.getBeanNamesForType(type);
 	}
 
@@ -132,7 +134,7 @@ public class SpringUtil implements ApplicationContextAware {
 	 * @return 当前的环境配置
 	 * @since 5.3.3
 	 */
-	public static String[] getActiveProfiles(){
+	public static String[] getActiveProfiles() {
 		return applicationContext.getEnvironment().getActiveProfiles();
 	}
 
@@ -142,7 +144,7 @@ public class SpringUtil implements ApplicationContextAware {
 	 * @return 当前的环境配置
 	 * @since 5.3.3
 	 */
-	public static String getActiveProfile(){
+	public static String getActiveProfile() {
 		final String[] activeProfiles = getActiveProfiles();
 		return ArrayUtil.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
 	}
