@@ -1,10 +1,14 @@
 package cn.hutool.extra.spring;
 
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -71,6 +75,22 @@ public class SpringUtil implements ApplicationContextAware {
 	 */
 	public static <T> T getBean(String name, Class<T> clazz) {
 		return applicationContext.getBean(name, clazz);
+	}
+
+    /**
+     * 通过类型参考返回带泛型参数的Bean
+     *
+     * @param reference 类型参考，用于持有转换后的泛型类型
+     * @param <T> Bean类型
+     * @return 带泛型参数的Bean
+     */
+	@SuppressWarnings("unchecked")
+	public static <T> T getBean(TypeReference<T> reference) {
+		ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
+		Class<T> rawType = (Class<T>) parameterizedType.getRawType();
+		Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
+		String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
+		return getBean(beanNames[0], rawType);
 	}
 
 	/**
