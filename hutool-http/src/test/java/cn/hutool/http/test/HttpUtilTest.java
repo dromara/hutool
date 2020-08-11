@@ -312,4 +312,12 @@ public class HttpUtilTest {
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
+
+	@Test
+	@Ignore
+	public void getNocovTest(){
+		String url = "https://qiniu.nocov.cn/medical-manage%2Ftest%2FBANNER_IMG%2F444004467954556928%2F1595215173047icon.png~imgReduce?e=1597081986&token=V2lJYVgQgAv_sbypfEZ0qpKs6TzD1q5JIDVr0Tw8:89cbBkLLwEc9JsMoCLkAEOu820E=";
+		final String s = HttpUtil.get(url);
+		Console.log(s);
+	}
 }

@@ -19,6 +19,7 @@
 * 【core  】     CollUtil中部分方法返回null变更为返回empty
 * 【all   】     添加英文README（pr#153@Gitee）
 * 【extra 】     SpringUtil增加getBean(TypeReference)（pr#1009@Github）
+* 【core  】     Assert增加方法，支持自定义异常处理（pr#154@Gitee）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题
