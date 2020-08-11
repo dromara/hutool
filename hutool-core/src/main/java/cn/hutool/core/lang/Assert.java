@@ -1,14 +1,12 @@
 package cn.hutool.core.lang;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 断言<br>
@@ -26,6 +24,7 @@ public class Assert {
 	 * Assert.isTrue(i &gt; 0, IllegalArgumentException::new);
 	 * </pre>
 	 *
+	 * @param <X> 异常类型
 	 * @param expression 布尔值
 	 * @param supplier   指定断言不通过时抛出的异常
 	 * @throws X if expression is {@code false}
