@@ -2,8 +2,11 @@ package cn.hutool.core.lang;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -15,6 +18,23 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class Assert {
+
+	/**
+	 * 断言是否为真，如果为 {@code false} 抛出给定的异常<br>
+	 *
+	 * <pre class="code">
+	 * Assert.isTrue(i &gt; 0, IllegalArgumentException::new);
+	 * </pre>
+	 *
+	 * @param expression 布尔值
+	 * @param supplier   指定断言不通过时抛出的异常
+	 * @throws X if expression is {@code false}
+	 */
+	public static <X extends Throwable> void isTrue(boolean expression, Func0<? extends X> supplier) throws X {
+		if (false == expression) {
+			throw supplier.callWithRuntimeException();
+		}
+	}
 
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出 {@code IllegalArgumentException} 异常<br>
