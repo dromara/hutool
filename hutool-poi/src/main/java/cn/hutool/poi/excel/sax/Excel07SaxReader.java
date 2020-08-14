@@ -137,6 +137,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 				// 根据 rId# 或 rSheet# 查找sheet
 				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (rid + 1));
 				ExcelSaxUtil.readFrom(sheetInputStream, this);
+				rowHandler.doAfterAllAnalysed();
 			} else {
 				this.sheetIndex = -1;
 				// 遍历所有sheet
@@ -147,6 +148,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 					this.sheetIndex++;
 					sheetInputStream = sheetInputStreams.next();
 					ExcelSaxUtil.readFrom(sheetInputStream, this);
+					rowHandler.doAfterAllAnalysed();
 				}
 			}
 		} catch (RuntimeException e) {

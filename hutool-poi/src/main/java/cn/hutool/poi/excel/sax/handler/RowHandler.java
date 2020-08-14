@@ -31,4 +31,11 @@ public interface RowHandler {
 	 * @param rowList 行数据列表
 	 */
 	void handle(int sheetIndex, long rowIndex, List<Object> rowList);
+
+	/**
+	 * 处理一个sheet页完成的操作
+	 */
+	default void doAfterAllAnalysed(){
+		//pass
+	}
 }
