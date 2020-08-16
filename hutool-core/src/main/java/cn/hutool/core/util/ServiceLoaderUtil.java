@@ -28,7 +28,6 @@ public class ServiceLoaderUtil {
 	 */
 	public static <T> T loadFirstAvailable(Class<T> clazz) {
 		final Iterator<T> iterator = load(clazz).iterator();
-		//noinspection WhileLoopReplaceableByForEach
 		while(iterator.hasNext()){
 			try {
 				return iterator.next();

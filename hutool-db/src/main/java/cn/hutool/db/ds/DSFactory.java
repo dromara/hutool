@@ -1,6 +1,7 @@
 package cn.hutool.db.ds;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.ds.bee.BeeDSFactory;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
 import cn.hutool.db.ds.druid.DruidDSFactory;
@@ -156,7 +157,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	/**
 	 * 创建数据源实现工厂<br>
 	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
-	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
+	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; BeeCP &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
 	 *
 	 * @param setting 数据库配置项
 	 * @return 日志实现类
@@ -178,6 +179,11 @@ public abstract class DSFactory implements Closeable, Serializable{
 		} catch (NoClassDefFoundError e) {
 			//如果未引入包，此处会报org.apache.tomcat.jdbc.pool.PoolConfiguration未找到错误
 			//因为org.apache.tomcat.jdbc.pool.DataSource实现了此接口，会首先检查接口的存在与否
+			// ignore
+		}
+		try {
+			return new BeeDSFactory(setting);
+		} catch (NoClassDefFoundError e) {
 			// ignore
 		}
 		try {

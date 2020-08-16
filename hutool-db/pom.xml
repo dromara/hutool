@@ -72,6 +72,12 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.github.chris2018998</groupId>
+			<artifactId>BeeCP</artifactId>
+			<version>2.5.3</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
