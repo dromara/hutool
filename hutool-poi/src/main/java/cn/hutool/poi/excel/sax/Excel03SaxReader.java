@@ -14,18 +14,7 @@ import org.apache.poi.hssf.eventusermodel.MissingRecordAwareHSSFListener;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.LastCellOfRowDummyRecord;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.MissingCellDummyRecord;
 import org.apache.poi.hssf.model.HSSFFormulaParser;
-import org.apache.poi.hssf.record.BOFRecord;
-import org.apache.poi.hssf.record.BlankRecord;
-import org.apache.poi.hssf.record.BoolErrRecord;
-import org.apache.poi.hssf.record.BoundSheetRecord;
-import org.apache.poi.hssf.record.CellValueRecordInterface;
-import org.apache.poi.hssf.record.FormulaRecord;
-import org.apache.poi.hssf.record.LabelRecord;
-import org.apache.poi.hssf.record.LabelSSTRecord;
-import org.apache.poi.hssf.record.NumberRecord;
-import org.apache.poi.hssf.record.Record;
-import org.apache.poi.hssf.record.SSTRecord;
-import org.apache.poi.hssf.record.StringRecord;
+import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -190,6 +179,8 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 				}
 				curRid++;
 			}
+		} else if (record instanceof EOFRecord){
+			processLastCellSheet();
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
 				// 空值的操作
@@ -337,6 +328,13 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 		this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
 		// 清空行Cache
 		this.rowCellList = new ArrayList<>(this.rowCellList.size());
+	}
+
+	/**
+	 * 处理sheet结束后的操作
+	 */
+	private void processLastCellSheet(){
+		this.rowHandler.doAfterAllAnalysed();
 	}
 
 	/**
