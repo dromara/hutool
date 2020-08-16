@@ -511,12 +511,12 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @return 转换别名列表
 	 */
 	private List<String> aliasHeader(List<Object> headerList) {
-		final int size = headerList.size();
-		final ArrayList<String> result = new ArrayList<>(size);
-		if (CollUtil.isEmpty(headerList)) {
-			return result;
+		if(CollUtil.isEmpty(headerList)){
+			return new ArrayList<>(0);
 		}
 
+		final int size = headerList.size();
+		final ArrayList<String> result = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			result.add(aliasHeader(headerList.get(i), i));
 		}

@@ -507,7 +507,7 @@ public class Img implements Serializable {
 	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
 		final Image targetImg = getValidSrcImg();
 
-		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg), pressImg, rectangle, alpha);
+		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg, this.targetImageType), pressImg, rectangle, alpha);
 		return this;
 	}
 

@@ -23,6 +23,7 @@
 * 【core  】     BooleanConverter增加数字转换规则（issue#I1R2AB@Gitee）
 * 【poi   】     sax方式读取增加一个sheet结束的回调（issue#155@Gitee）
 * 【db    】     增加BeeCP连接池支持
+* 【core  】     改进Img.pressImage方法，避免变色问题（issue#1001@Github）
 
 ### Bug修复#
 * 【core  】     修复原始类型转换时，转换失败没有抛出异常的问题

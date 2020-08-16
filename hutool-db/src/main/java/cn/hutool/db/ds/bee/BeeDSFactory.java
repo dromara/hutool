@@ -33,6 +33,11 @@ public class BeeDSFactory extends AbstractDSFactory {
 		final BeeDataSourceConfig beeConfig = new BeeDataSourceConfig(driver, jdbcUrl, user, pass);
 		poolSetting.toBean(beeConfig);
 
+		// 修复BeeCP默认参数无效问题
+		if(beeConfig.getBorrowConcurrentSize() > beeConfig.getMaxActive()){
+			beeConfig.setMaxActive(beeConfig.getBorrowConcurrentSize() + 1);
+		}
+
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
 		for (String key : KEY_CONN_PROPS) {
