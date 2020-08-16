@@ -21,7 +21,7 @@ public class AssertTest {
 		cn.hutool.core.lang.Assert.isTrue(i > 0, IllegalArgumentException::new);
 	}
 
-	@Test()
+	@Test(expected = IndexOutOfBoundsException.class)
 	public void isTrueTest2() {
 		int i = -1;
 		cn.hutool.core.lang.Assert.isTrue(i >= 0, IndexOutOfBoundsException::new);
