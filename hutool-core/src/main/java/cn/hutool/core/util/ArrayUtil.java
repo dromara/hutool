@@ -7,6 +7,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Matcher;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -299,9 +300,23 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(T... array) {
+		return firstMatch(Objects::nonNull, array);
+	}
+
+	/**
+	 * 返回数组中第一个匹配规则的值
+	 *
+	 * @param <T>   数组元素类型
+	 * @param matcher 匹配接口，实现此接口自定义匹配规则
+	 * @param array 数组
+	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
+	 * @since 3.0.7
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T firstMatch(Matcher<T> matcher, T... array) {
 		if (isNotEmpty(array)) {
 			for (final T val : array) {
-				if (null != val) {
+				if(matcher.match(val)){
 					return val;
 				}
 			}

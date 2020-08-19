@@ -4337,4 +4337,45 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * 返回第一个非{@code null} 元素
+	 *
+	 * @param strs 多个元素
+	 * @param <T>  元素类型
+	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+	 * @since 5.4.1
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends CharSequence> T firstNonNull(T... strs) {
+		return ArrayUtil.firstNonNull(strs);
+	}
+
+	/**
+	 * 返回第一个非empty 元素
+	 *
+	 * @param strs 多个元素
+	 * @param <T>  元素类型
+	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+	 * @since 5.4.1
+	 * @see #isNotEmpty(CharSequence)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends CharSequence> T firstNonEmpty(T... strs) {
+			return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
+	}
+
+	/**
+	 * 返回第一个非blank 元素
+	 *
+	 * @param strs 多个元素
+	 * @param <T>  元素类型
+	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
+	 * @since 5.4.1
+	 * @see #isNotBlank(CharSequence)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends CharSequence> T firstNonBlank(T... strs) {
+		return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
+	}
 }

@@ -13,7 +13,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
@@ -275,19 +274,13 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				// valueProvider在没有对值做转换且当类型不匹配的时候，执行默认转换
 				propClass = prop.getFieldClass();
 				if (false ==propClass.isInstance(value)) {
-					value = Convert.convert(propClass, value);
+					value = Convert.convertWithCheck(propClass, value, null, copyOptions.ignoreError);
 					if (null == value && copyOptions.ignoreNullValue) {
 						continue;// 当允许跳过空时，跳过
 					}
 				}
 
-				if(null == setterMethod){
-					// 直接注入值
-					ReflectUtil.setFieldValue(bean, field, value);
-				} else{
-					// 执行set方法注入值
-					ReflectUtil.invoke(bean, setterMethod, value);
-				}
+				prop.setValue(bean, value);
 			} catch (Exception e) {
 				if (false ==copyOptions.ignoreError) {
 					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
