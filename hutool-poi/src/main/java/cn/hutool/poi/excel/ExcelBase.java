@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.io.Closeable;
@@ -415,7 +416,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 4.6.2
 	 */
 	public boolean isXlsx() {
-		return this.sheet instanceof XSSFSheet;
+		return this.sheet instanceof XSSFSheet || this.sheet instanceof SXSSFSheet;
 	}
 
 	/**
