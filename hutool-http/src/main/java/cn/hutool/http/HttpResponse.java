@@ -1,25 +1,14 @@
 package cn.hutool.http;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.io.*;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -249,46 +238,39 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 	}
-
+	
 	/**
 	 * 将响应内容写出到文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
-	 * @param destFile 写出到的文件
+	 *
+	 * @param destFile       写出到的文件
 	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 *
 	 * @return 写出bytes数
+	 *
 	 * @since 3.3.2
 	 */
 	public long writeBody(File destFile, StreamProgress streamProgress) {
 		if (null == destFile) {
 			throw new NullPointerException("[destFile] is null!");
 		}
-		if (destFile.isDirectory()) {
-			// 从头信息中获取文件名
-			String fileName = getFileNameFromDisposition();
-			if (StrUtil.isBlank(fileName)) {
-				final String path = this.httpConnection.getUrl().getPath();
-				// 从路径中获取文件名
-				fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
-				if (StrUtil.isBlank(fileName)) {
-					// 编码后的路径做为文件名
-					fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
-				}
-			}
-			destFile = FileUtil.file(destFile, fileName);
-		}
-
-		return writeBody(FileUtil.getOutputStream(destFile), true, streamProgress);
+		
+		File outFile = completeFileNameFromHeader(destFile);
+		OutputStream outputStream = FileUtil.getOutputStream(outFile);
+		return writeBody(outputStream, true, streamProgress);
 	}
-
+	
+	
 	/**
 	 * 将响应内容写出到文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
+	 *
 	 * @param destFile 写出到的文件
+	 *
 	 * @return 写出bytes数
+	 *
 	 * @since 3.3.2
 	 */
 	public long writeBody(File destFile) {
@@ -316,7 +298,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 关闭连接
 		this.httpConnection.disconnectQuietly();
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
@@ -324,18 +306,46 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(entry).append(StrUtil.CRLF);
 		}
-
+		
 		sb.append("Response Body: ").append(StrUtil.CRLF);
 		sb.append("    ").append(this.body()).append(StrUtil.CRLF);
-
+		
 		return sb.toString();
 	}
-
+	
+	/**
+	 * 从响应头补全下载文件名
+	 *
+	 * @param destFile 目标文件夹或者目标文件
+	 *
+	 * @return File 保存的文件
+	 */
+	public File completeFileNameFromHeader(File destFile) {
+		if (!destFile.isDirectory()) {
+			// 非目录直接返回
+			return destFile;
+		}
+		
+		// 从头信息中获取文件名
+		String fileName = getFileNameFromDisposition();
+		if (StrUtil.isBlank(fileName)) {
+			final String path = httpConnection.getUrl().getPath();
+			// 从路径中获取文件名
+			fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
+			if (StrUtil.isBlank(fileName)) {
+				// 编码后的路径做为文件名
+				fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
+			}
+		}
+		return FileUtil.file(destFile, fileName);
+	}
+	
 	// ---------------------------------------------------------------- Private method start
+	
 	/**
 	 * 初始化Http响应，并在报错时关闭连接。<br>
 	 * 初始化包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1、读取Http状态
 	 * 2、读取头信息
@@ -463,10 +473,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 		return this;
 	}
-
+	
 	/**
 	 * 从Content-Disposition头中获取文件名
-	 * 
+	 *
 	 * @return 文件名，empty表示无
 	 */
 	private String getFileNameFromDisposition() {
@@ -480,5 +490,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 		return fileName;
 	}
+	
 	// ---------------------------------------------------------------- Private method end
 }

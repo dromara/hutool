@@ -1,13 +1,17 @@
 package cn.hutool.http.test;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.UUID;
 
 /**
  * 下载单元测试
@@ -56,11 +60,134 @@ public class DownloadTest {
 				long speed = progressSize / (System.currentTimeMillis() - time) * 1000;
 				Console.log("已下载：{}, 速度：{}/s", FileUtil.readableFileSize(progressSize), FileUtil.readableFileSize(speed));
 			}
-
+			
 			@Override
 			public void finish() {
 				Console.log("下载完成！");
 			}
 		});
+	}
+	
+	@Test
+	@Ignore
+	public void downloadFileFromUrlTest1() {
+		File file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", "d:/download/temp");
+		Assert.assertNotNull(file);
+		Assert.assertTrue(file.isFile());
+		Assert.assertTrue(file.length() > 0);
+	}
+	
+	@Test
+	@Ignore
+	public void downloadFileFromUrlTest2() {
+		File file = null;
+		try {
+			file = HttpUtil.downloadFileFromUrl("https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.4.0/hutool-all-5.4.0-sources.jar", FileUtil.file("d:/download/temp"), 1, new StreamProgress() {
+				@Override
+				public void start() {
+					System.out.println("start");
+				}
+				
+				@Override
+				public void progress(long progressSize) {
+					System.out.println("download size:" + progressSize);
+				}
+				
+				@Override
+				public void finish() {
+					System.out.println("end");
+				}
+			});
+			
+			Assert.assertNotNull(file);
+			Assert.assertTrue(file.exists());
+			Assert.assertTrue(file.isFile());
+			Assert.assertTrue(file.length() > 0);
+			Assert.assertTrue(file.getName().length() > 0);
+		} catch (Exception e) {
+			Assert.assertTrue(e instanceof IORuntimeException);
+		} finally {
+			FileUtil.del(file);
+		}
+	}
+	
+	@Test
+	@Ignore
+	public void downloadFileFromUrlTest3() {
+		File file = null;
+		try {
+			file = HttpUtil.downloadFileFromUrl("https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.4.0/hutool-all-5.4.0-sources.jar", FileUtil.file("d:/download/temp"), new StreamProgress() {
+				@Override
+				public void start() {
+					System.out.println("start");
+				}
+				
+				@Override
+				public void progress(long progressSize) {
+					System.out.println("download size:" + progressSize);
+				}
+				
+				@Override
+				public void finish() {
+					System.out.println("end");
+				}
+			});
+			
+			Assert.assertNotNull(file);
+			Assert.assertTrue(file.exists());
+			Assert.assertTrue(file.isFile());
+			Assert.assertTrue(file.length() > 0);
+			Assert.assertTrue(file.getName().length() > 0);
+		} finally {
+			FileUtil.del(file);
+		}
+	}
+	
+	@Test
+	@Ignore
+	public void downloadFileFromUrlTest4() {
+		File file = null;
+		try {
+			file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"), 1);
+			
+			Assert.assertNotNull(file);
+			Assert.assertTrue(file.exists());
+			Assert.assertTrue(file.isFile());
+			Assert.assertTrue(file.length() > 0);
+			Assert.assertTrue(file.getName().length() > 0);
+		} catch (Exception e) {
+			Assert.assertTrue(e instanceof IORuntimeException);
+		} finally {
+			FileUtil.del(file);
+		}
+	}
+	
+	
+	@Test
+	@Ignore
+	public void downloadFileFromUrlTest5() {
+		File file = null;
+		try {
+			file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp", UUID.randomUUID().toString()));
+			
+			Assert.assertNotNull(file);
+			Assert.assertTrue(file.exists());
+			Assert.assertTrue(file.isFile());
+			Assert.assertTrue(file.length() > 0);
+		} finally {
+			FileUtil.del(file);
+		}
+		
+		File file1 = null;
+		try {
+			file1 = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"));
+			
+			Assert.assertNotNull(file1);
+			Assert.assertTrue(file1.exists());
+			Assert.assertTrue(file1.isFile());
+			Assert.assertTrue(file1.length() > 0);
+		} finally {
+			FileUtil.del(file1);
+		}
 	}
 }

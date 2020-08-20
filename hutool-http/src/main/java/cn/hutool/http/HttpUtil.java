@@ -8,11 +8,7 @@ import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;
@@ -314,6 +310,88 @@ public class HttpUtil {
 	 * @since 4.0.4
 	 */
 	public static long downloadFile(String url, File destFile, int timeout, StreamProgress streamProgress) {
+		HttpResponse response = requestDownloadFile(url, destFile, timeout);
+		return response.writeBody(destFile, streamProgress);
+	}
+	
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url  请求的url
+	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 *
+	 * @return 文件
+	 */
+	public static File downloadFileFromUrl(String url, String dest) {
+		return downloadFileFromUrl(url, FileUtil.file(dest));
+	}
+	
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url      请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 *
+	 * @return 文件
+	 */
+	public static File downloadFileFromUrl(String url, File destFile) {
+		return downloadFileFromUrl(url, destFile, null);
+	}
+	
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url      请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout  超时，单位毫秒，-1表示默认超时
+	 *
+	 * @return 文件
+	 */
+	public static File downloadFileFromUrl(String url, File destFile, int timeout) {
+		return downloadFileFromUrl(url, destFile, timeout, null);
+	}
+	
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url            请求的url
+	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param streamProgress 进度条
+	 *
+	 * @return 文件
+	 */
+	public static File downloadFileFromUrl(String url, File destFile, StreamProgress streamProgress) {
+		return downloadFileFromUrl(url, destFile, -1, streamProgress);
+	}
+	
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url            请求的url
+	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout        超时，单位毫秒，-1表示默认超时
+	 * @param streamProgress 进度条
+	 *
+	 * @return 文件
+	 */
+	public static File downloadFileFromUrl(String url, File destFile, int timeout, StreamProgress streamProgress) {
+		HttpResponse response = requestDownloadFile(url, destFile, timeout);
+		
+		File outFile = response.completeFileNameFromHeader(destFile);
+		long writeBytes = response.writeBody(outFile, streamProgress);
+		return outFile;
+	}
+	
+	/**
+	 * 请求下载文件
+	 *
+	 * @param url      请求下载文件地址
+	 * @param destFile 目标目录或者目标文件
+	 * @param timeout  超时时间
+	 *
+	 * @return HttpResponse
+	 */
+	private static HttpResponse requestDownloadFile(String url, File destFile, int timeout) {
 		if (StrUtil.isBlank(url)) {
 			throw new NullPointerException("[url] is null!");
 		}
@@ -321,18 +399,19 @@ public class HttpUtil {
 			throw new NullPointerException("[destFile] is null!");
 		}
 		final HttpResponse response = HttpRequest.get(url).timeout(timeout).executeAsync();
-		if (false == response.isOk()) {
+		if (!response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}
-		return response.writeBody(destFile, streamProgress);
+		return response;
 	}
-
+	
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url        请求的url
 	 * @param out        将下载内容写到输出流中 {@link OutputStream}
 	 * @param isCloseOut 是否关闭输出流
+	 *
 	 * @return 文件大小
 	 */
 	public static long download(String url, OutputStream out, boolean isCloseOut) {
@@ -355,29 +434,31 @@ public class HttpUtil {
 		if (null == out) {
 			throw new NullPointerException("[out] is null!");
 		}
-
+		
 		final HttpResponse response = HttpRequest.get(url).executeAsync();
-		if (false == response.isOk()) {
+		if (!response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}
 		return response.writeBody(out, isCloseOut, streamProgress);
 	}
-
+	
 	/**
 	 * 下载远程文件数据，支持30x跳转
 	 *
 	 * @param url 请求的url
+	 *
 	 * @return 文件数据
+	 *
 	 * @since 5.3.6
 	 */
 	public static byte[] downloadBytes(String url) {
 		if (StrUtil.isBlank(url)) {
 			throw new NullPointerException("[url] is null!");
 		}
-
+		
 		final HttpResponse response = HttpRequest.get(url)
 				.setFollowRedirects(true).executeAsync();
-		if (false == response.isOk()) {
+		if (!response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}
 		return response.bodyBytes();
