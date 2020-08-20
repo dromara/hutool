@@ -294,21 +294,24 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 			case NumberRecord.sid: // 数字类型
 				final NumberRecord numrec = (NumberRecord) record;
 				final String formatString = formatListener.getFormatString(numrec);
-				if (formatString.contains(StrUtil.DOT)) {
-					//浮点数
-					value = numrec.getValue();
-				} else if (formatString.contains(StrUtil.SLASH) || formatString.contains(StrUtil.COLON)) {
-					//日期
-					value = ExcelSaxUtil.getDateValue(numrec.getValue());
+				//fix: 1.修复formatString为null时,抛异常
+				if (StrUtil.contains(formatString, StrUtil.DOT)) {
+				    //浮点数
+				    value = numrec.getValue();
+				} 
+				//fix: 2.补充日期判断类型
+				else if (StrUtil.containsAnyIgnoreCase(formatString, StrUtil.SLASH, StrUtil.COLON, "年", "月", "日", "时", "分", "秒")) {
+				    //日期
+				    value = ExcelSaxUtil.getDateValue(numrec.getValue());
 				} else {
-					final double doubleValue = numrec.getValue();
-					final long longPart = (long) doubleValue;
-					// 对于无小数部分的数字类型，转为Long，否则保留原数字
-					if (((double) longPart) == doubleValue) {
-						value = longPart;
-					} else {
-						value = doubleValue;
-					}
+				    final double doubleValue = numrec.getValue();
+				    final long longPart = (long) doubleValue;
+				    // 对于无小数部分的数字类型，转为Long，否则保留原数字
+				    if (((double) longPart) == doubleValue) {
+					value = longPart;
+				    } else {
+					value = doubleValue;
+				    }
 				}
 				// 向容器加入列值
 				addToRowCellList(numrec, value);
