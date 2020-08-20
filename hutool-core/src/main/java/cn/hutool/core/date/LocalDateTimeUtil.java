@@ -415,4 +415,16 @@ public class LocalDateTimeUtil {
 	public static LocalDateTime endOfDay(LocalDateTime time) {
 		return time.with(LocalTime.of(23, 59, 59, 999_999_999));
 	}
+
+	/**
+	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）
+	 *
+	 * @param temporalAccessor Date对象
+	 * @return {@link Instant}对象
+	 * @since 5.4.1
+	 * @see TemporalAccessorUtil#toEpochMilli(TemporalAccessor)
+	 */
+	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
+		return TemporalAccessorUtil.toEpochMilli(temporalAccessor);
+	}
 }

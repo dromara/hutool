@@ -77,6 +77,17 @@ public class TemporalAccessorUtil {
 	}
 
 	/**
+	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）
+	 *
+	 * @param temporalAccessor Date对象
+	 * @return {@link Instant}对象
+	 * @since 5.4.1
+	 */
+	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
+		return toInstant(temporalAccessor).toEpochMilli();
+	}
+
+	/**
 	 * {@link TemporalAccessor}转换为 {@link Instant}对象
 	 *
 	 * @param temporalAccessor Date对象

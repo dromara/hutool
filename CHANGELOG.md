@@ -9,6 +9,7 @@
 * 【core  】     StrUtil增加firstNonXXX方法（issue#1020@Github）
 * 【core  】     BeanCopier修改规则，可选bean拷贝空字段报错问题（pr#160@Gitee）
 * 【http  】     HttpUtil增加downloadFileFromUrl（pr#1023@Github）
+* 【core  】     增加toEpochMilli方法
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
