@@ -52,6 +52,12 @@ public class Validator {
 	 * 移动电话
 	 */
 	public final static Pattern MOBILE = PatternPool.MOBILE;
+
+	/**
+	 * 身份证号码
+	 */
+	public final static Pattern CITIZEN_ID = PatternPool.CITIZEN_ID;
+
 	/**
 	 * 邮编
 	 */

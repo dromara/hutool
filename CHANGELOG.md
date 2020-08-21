@@ -10,6 +10,7 @@
 * 【core  】     BeanCopier修改规则，可选bean拷贝空字段报错问题（pr#160@Gitee）
 * 【http  】     HttpUtil增加downloadFileFromUrl（pr#1023@Github）
 * 【core  】     增加toEpochMilli方法
+* 【core  】     Validator修改isCitizenId校验（pr#1032@Github）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
