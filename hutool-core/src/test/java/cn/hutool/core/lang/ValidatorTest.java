@@ -71,8 +71,17 @@ public class ValidatorTest {
 
 	@Test
 	public void isCitizenIdTest() {
-		boolean b = Validator.isCitizenId("150218199012123389");
+		// 18为身份证号码验证
+		boolean b = Validator.isCitizenId("110101199003074477");
 		Assert.assertTrue(b);
+
+		// 15位身份证号码验证
+		boolean b1 = Validator.isCitizenId("410001910101123");
+		Assert.assertTrue(b1);
+
+		// 10位身份证号码验证
+		boolean b2 = Validator.isCitizenId("U193683453");
+		Assert.assertTrue(b2);
 	}
 
 	@Test(expected = ValidateException.class)
