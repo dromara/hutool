@@ -57,9 +57,9 @@ public class PatternPool {
 	 */
 	public final static Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[3-9]\\d{9}");
 	/**
-	 * 18位身份证号码
+	 * 15或18位身份证号码
 	 */
-	public final static Pattern CITIZEN_ID = Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([012]\\d)|3[0-1])\\d{3}(\\d|X|x)");
+	public final static Pattern CITIZEN_ID = Pattern.compile("(^[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0-2]\\d)|3[0-1])\\d{3}(\\d|X|x)$)|(^[1-9]\\d{5}\\d{2}((0\\d)|(1[0-2]))(([0-2]\\d)|3[0-1])\\d{3}$)");
 	/**
 	 * 邮编
 	 */

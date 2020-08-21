@@ -724,18 +724,18 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为身份证号码（18位中国）<br>
+	 * 验证是否为身份证号码（15或18位中国）<br>
 	 * 出生日期只支持到到2999年
 	 *
 	 * @param value 值
-	 * @return 是否为身份证号码（18位中国）
+	 * @return 是否为身份证号码（15或18位中国）
 	 */
 	public static boolean isCitizenId(CharSequence value) {
 		return isMatchRegex(CITIZEN_ID, value);
 	}
 
 	/**
-	 * 验证是否为身份证号码（18位中国）<br>
+	 * 验证是否为身份证号码（15或18位中国）<br>
 	 * 出生日期只支持到到2999年
 	 *
 	 * @param <T>      字符串类型
