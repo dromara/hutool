@@ -205,12 +205,7 @@ public class BeanUtil {
 	 * @throws BeanException 获取属性异常
 	 */
 	public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
-		Map<String, PropertyDescriptor> map = BeanInfoCache.INSTANCE.getPropertyDescriptorMap(clazz, ignoreCase);
-		if (null == map) {
-			map = internalGetPropertyDescriptorMap(clazz, ignoreCase);
-			BeanInfoCache.INSTANCE.putPropertyDescriptorMap(clazz, map, ignoreCase);
-		}
-		return map;
+		return BeanInfoCache.INSTANCE.getPropertyDescriptorMap(clazz, ignoreCase, ()-> internalGetPropertyDescriptorMap(clazz, ignoreCase));
 	}
 
 	/**
