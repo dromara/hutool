@@ -31,6 +31,7 @@
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.3.1.RELEASE</spring-boot.version>
+		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
 	<dependencies>
@@ -230,6 +231,13 @@
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>jpinyin</artifactId>
 			<version>1.1.8</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${cglib.version}</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
