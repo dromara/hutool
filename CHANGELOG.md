@@ -12,6 +12,7 @@
 * 【core  】     增加toEpochMilli方法
 * 【core  】     Validator修改isCitizenId校验（pr#1032@Github）
 * 【core  】     增加PathUtil和FileNameUtil，分离FileUtil中部分方法
+* 【core  】     改造IndexedComparator，增加InstanceComparator
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

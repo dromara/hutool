@@ -40,7 +40,7 @@ import java.util.Random;
  *
  * @since 4.1.11
  */
-public final class UUID implements java.io.Serializable, Comparable<UUID> {
+public class UUID implements java.io.Serializable, Comparable<UUID> {
 	private static final long serialVersionUID = -1185015143654744140L;
 
 	/**
