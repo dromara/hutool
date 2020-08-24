@@ -1501,7 +1501,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param date1 日期1
 	 * @param date2 日期2
 	 * @return 是否为同一月
-	 * @since 5.4.11
+	 * @since 5.4.1
 	 */
 	public static boolean isSameMonth(final Date date1, final Date date2) {
 		if (date1 == null || date2 == null) {

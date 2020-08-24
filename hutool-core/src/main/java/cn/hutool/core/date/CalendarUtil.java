@@ -295,6 +295,7 @@ public class CalendarUtil {
 	 * @param cal1 日期1
 	 * @param cal2 日期2
 	 * @return 是否为同一月
+	 * @since 5.4.1
 	 */
 	public static boolean isSameMonth(Calendar cal1, Calendar cal2) {
 		if (cal1 == null || cal2 == null) {
