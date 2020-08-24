@@ -1496,6 +1496,22 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一月
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一月
+	 * @since 5.4.11
+	 */
+	public static boolean isSameMonth(final Date date1, final Date date2) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return CalendarUtil.isSameMonth(calendar(date1), calendar(date2));
+	}
+
+
+	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
 	 *
 	 * @param preTime 之前记录的时间
