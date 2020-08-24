@@ -14,8 +14,9 @@
 * 【core  】     增加PathUtil和FileNameUtil，分离FileUtil中部分方法
 * 【core  】     改造IndexedComparator，增加InstanceComparator
 * 【extra 】     增加CglibUtil
-* 【extra 】     增加Ipv4Util（pr#161@Gitee）
-* 【extra 】     增加CalendarUtil和DateUtil增加isSameMonth方法（pr#161@Gitee）
+* 【core  】     增加Ipv4Util（pr#161@Gitee）
+* 【core  】     增加CalendarUtil和DateUtil增加isSameMonth方法（pr#161@Gitee）
+* 【core  】     Dict增加of方法（issue#1035@Github）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

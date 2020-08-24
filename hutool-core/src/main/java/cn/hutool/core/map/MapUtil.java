@@ -289,7 +289,11 @@ public class MapUtil {
 	 * </pre>
 	 *
 	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] { { "RED", "#FF0000" }, { "GREEN", "#00FF00" }, { "BLUE", "#0000FF" } });
+	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {
+	 * 	{ "RED", "#FF0000" },
+	 * 	{ "GREEN", "#00FF00" },
+	 * 	{ "BLUE", "#0000FF" }
+	 * });
 	 * </pre>
 	 * <p>
 	 * 参考：commons-lang
@@ -305,7 +309,7 @@ public class MapUtil {
 		}
 		final HashMap<Object, Object> map = new HashMap<>((int) (array.length * 1.5));
 		for (int i = 0; i < array.length; i++) {
-			Object object = array[i];
+			final Object object = array[i];
 			if (object instanceof Map.Entry) {
 				Map.Entry entry = (Map.Entry) object;
 				map.put(entry.getKey(), entry.getValue());
@@ -315,7 +319,7 @@ public class MapUtil {
 					map.put(entry[0], entry[1]);
 				}
 			} else if (object instanceof Iterable) {
-				Iterator iter = ((Iterable) object).iterator();
+				final Iterator iter = ((Iterable) object).iterator();
 				if (iter.hasNext()) {
 					final Object key = iter.next();
 					if (iter.hasNext()) {
@@ -324,7 +328,7 @@ public class MapUtil {
 					}
 				}
 			} else if (object instanceof Iterator) {
-				Iterator iter = ((Iterator) object);
+				final Iterator iter = ((Iterator) object);
 				if (iter.hasNext()) {
 					final Object key = iter.next();
 					if (iter.hasNext()) {
