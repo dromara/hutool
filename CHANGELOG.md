@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.1 (2020-08-20)
+# 5.4.1 (2020-08-24)
 
 ### 新特性
 * 【core  】     StrUtil增加firstNonXXX方法（issue#1020@Github）
@@ -14,6 +14,7 @@
 * 【core  】     增加PathUtil和FileNameUtil，分离FileUtil中部分方法
 * 【core  】     改造IndexedComparator，增加InstanceComparator
 * 【extra 】     增加CglibUtil
+* 【extra 】     增加Ipv4Util（pr#161@Gitee）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

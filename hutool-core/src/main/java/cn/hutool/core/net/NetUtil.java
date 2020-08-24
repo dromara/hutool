@@ -5,7 +5,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -58,19 +57,10 @@ public class NetUtil {
 	 *
 	 * @param longIP IP的long表示形式
 	 * @return IP V4 地址
+	 * @see Ipv4Util#longToIpv4(long)
 	 */
 	public static String longToIpv4(long longIP) {
-		final StringBuilder sb = StrUtil.builder();
-		// 直接右移24位
-		sb.append((longIP >>> 24));
-		sb.append(".");
-		// 将高8位置0，然后右移16位
-		sb.append(((longIP & 0x00FFFFFF) >>> 16));
-		sb.append(".");
-		sb.append(((longIP & 0x0000FFFF) >>> 8));
-		sb.append(".");
-		sb.append((longIP & 0x000000FF));
-		return sb.toString();
+		return Ipv4Util.longToIpv4(longIP);
 	}
 
 	/**
@@ -78,22 +68,10 @@ public class NetUtil {
 	 *
 	 * @param strIP IP V4 地址
 	 * @return long值
+	 * @see Ipv4Util#ipv4ToLong(String)
 	 */
 	public static long ipv4ToLong(String strIP) {
-		if (Validator.isIpv4(strIP)) {
-			long[] ip = new long[4];
-			// 先找到IP地址字符串中.的位置
-			int position1 = strIP.indexOf(".");
-			int position2 = strIP.indexOf(".", position1 + 1);
-			int position3 = strIP.indexOf(".", position2 + 1);
-			// 将每个.之间的字符串转换成整型
-			ip[0] = Long.parseLong(strIP.substring(0, position1));
-			ip[1] = Long.parseLong(strIP.substring(position1 + 1, position2));
-			ip[2] = Long.parseLong(strIP.substring(position2 + 1, position3));
-			ip[3] = Long.parseLong(strIP.substring(position3 + 1));
-			return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
-		}
-		return 0;
+		return Ipv4Util.ipv4ToLong(strIP);
 	}
 
 	/**
