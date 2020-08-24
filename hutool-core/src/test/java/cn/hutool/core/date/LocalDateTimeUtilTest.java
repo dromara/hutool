@@ -54,12 +54,6 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
-	public void parseTest5() {
-		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
-		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
-	}
-
-	@Test
 	public void parseDateTest() {
 		LocalDate localDate = LocalDateTimeUtil.parseDate("2020-01-23");
 		Assert.assertEquals("2020-01-23", localDate.toString());
