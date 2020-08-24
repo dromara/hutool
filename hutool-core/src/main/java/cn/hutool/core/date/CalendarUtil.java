@@ -290,6 +290,21 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一月
+	 *
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @return 是否为同一月
+	 */
+	public static boolean isSameMonth(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
+				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+	}
+
+	/**
 	 * <p>检查两个Calendar时间戳是否相同。</p>
 	 *
 	 * <p>此方法检查两个Calendar的毫秒数时间戳是否相同。</p>
