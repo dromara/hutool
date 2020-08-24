@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -279,6 +280,22 @@ public class MapUtil {
 	}
 
 	/**
+	 * 根据给定的Pair数组创建Map对象
+	 *
+	 * @param pairs 键值对
+	 * @return Map
+	 * @since 5.4.1
+	 */
+	@SafeVarargs
+	public static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
+		final Map<K, V> map = new HashMap<>();
+		for (Pair<K, V> pair : pairs) {
+			map.put(pair.getKey(), pair.getValue());
+		}
+		return map;
+	}
+
+	/**
 	 * 将数组转换为Map（HashMap），支持数组元素类型为：
 	 *
 	 * <pre>
@@ -290,9 +307,9 @@ public class MapUtil {
 	 *
 	 * <pre>
 	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {
-	 * 	{ "RED", "#FF0000" },
-	 * 	{ "GREEN", "#00FF00" },
-	 * 	{ "BLUE", "#0000FF" }
+	 *    { "RED", "#FF0000" },
+	 *    { "GREEN", "#00FF00" },
+	 *    { "BLUE", "#0000FF" }
 	 * });
 	 * </pre>
 	 * <p>
