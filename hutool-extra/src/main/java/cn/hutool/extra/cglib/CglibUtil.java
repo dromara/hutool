@@ -21,6 +21,7 @@ public class CglibUtil {
 	 * @param <T>         目标对象类型
 	 * @param source      源bean对象
 	 * @param targetClass 目标bean类，自动实例化此对象
+	 * @return 目标对象
 	 */
 	public static <T> T copy(Object source, Class<T> targetClass) {
 		return copy(source, targetClass, null);
@@ -34,6 +35,7 @@ public class CglibUtil {
 	 * @param source      源bean对象
 	 * @param targetClass 目标bean类，自动实例化此对象
 	 * @param converter   转换器，无需可传{@code null}
+	 * @return 目标对象
 	 */
 	public static <T> T copy(Object source, Class<T> targetClass, Converter converter) {
 		final T target = ReflectUtil.newInstanceIfPossible(targetClass);
@@ -77,7 +79,7 @@ public class CglibUtil {
 	 * @param bean Bean对象
 	 * @return {@link BeanMap}
 	 */
-	public static BeanMap toMap(Object bean){
+	public static BeanMap toMap(Object bean) {
 		return BeanMap.create(bean);
 	}
 }
