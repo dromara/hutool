@@ -1,6 +1,10 @@
 package cn.hutool.core.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * 叶容器-当对象存在树型结构,通过此注解标注属性告知存储位置
