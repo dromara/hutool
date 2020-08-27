@@ -61,7 +61,7 @@ public class EnumUtil {
 	 */
 	public static <E extends Enum<E>> E getEnumAt(Class<E> enumClass, int index) {
 		final E[] enumConstants = enumClass.getEnumConstants();
-		return index < enumConstants.length ? enumConstants[index] : null;
+		return index >= 0 && index < enumConstants.length ? enumConstants[index] : null;
 	}
 
 	/**
