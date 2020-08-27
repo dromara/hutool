@@ -458,4 +458,13 @@ public class StrUtilTest {
 		String cleanBlank = StrUtil.filter("	 你 好　", c -> !CharUtil.isBlankChar(c));
 		Assert.assertEquals("你好", cleanBlank);
 	}
+
+	@Test
+	public void wrapAllTest(){
+		String[] strings = StrUtil.wrapAll("`", "`", StrUtil.splitToArray("1,2,3,4", ','));
+		Assert.assertEquals("[`1`, `2`, `3`, `4`]", StrUtil.utf8Str(strings));
+
+		strings = StrUtil.wrapAllWithPair("`", StrUtil.splitToArray("1,2,3,4", ','));
+		Assert.assertEquals("[`1`, `2`, `3`, `4`]", StrUtil.utf8Str(strings));
+	}
 }

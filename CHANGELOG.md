@@ -17,6 +17,7 @@
 * 【core  】     增加Ipv4Util（pr#161@Gitee）
 * 【core  】     增加CalendarUtil和DateUtil增加isSameMonth方法（pr#161@Gitee）
 * 【core  】     Dict增加of方法（issue#1035@Github）
+* 【core  】     StrUtil.wrapAll方法不明确修改改为wrapAllWithPair（issue#1042@Github）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

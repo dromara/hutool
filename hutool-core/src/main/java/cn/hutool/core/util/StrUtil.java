@@ -2731,14 +2731,14 @@ public class StrUtil {
 	}
 
 	/**
-	 * 包装多个字符串
+	 * 使用单个字符包装多个字符串
 	 *
 	 * @param prefixAndSuffix 前缀和后缀
 	 * @param strs            多个字符串
 	 * @return 包装的字符串数组
-	 * @since 4.0.7
+	 * @since 5.4.1
 	 */
-	public static String[] wrapAll(CharSequence prefixAndSuffix, CharSequence... strs) {
+	public static String[] wrapAllWithPair(CharSequence prefixAndSuffix, CharSequence... strs) {
 		return wrapAll(prefixAndSuffix, prefixAndSuffix, strs);
 	}
 
@@ -2792,14 +2792,14 @@ public class StrUtil {
 	}
 
 	/**
-	 * 包装多个字符串，如果已经包装，则不再包装
+	 * 使用成对的字符包装多个字符串，如果已经包装，则不再包装
 	 *
 	 * @param prefixAndSuffix 前缀和后缀
 	 * @param strs            多个字符串
 	 * @return 包装的字符串数组
-	 * @since 4.0.7
+	 * @since 5.4.1
 	 */
-	public static String[] wrapAllIfMissing(CharSequence prefixAndSuffix, CharSequence... strs) {
+	public static String[] wrapAllWithPairIfMissing(CharSequence prefixAndSuffix, CharSequence... strs) {
 		return wrapAllIfMissing(prefixAndSuffix, prefixAndSuffix, strs);
 	}
 
