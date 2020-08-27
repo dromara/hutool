@@ -11,8 +11,7 @@ import java.util.List;
  * 树转换测试
  */
 public class TreeConvertTest {
-    //
-    private static final String ROOT = "0";
+
     // 子父级测试数据
     private List<Dept> parentChildMaterials = Arrays.asList(
             new Dept("00000001", "0", "xxx公司"),
@@ -39,22 +38,12 @@ public class TreeConvertTest {
     @Test
     public void testParentChild() {
         List<Dept> tree = TreeConvert.convert(parentChildMaterials, Dept.class,
-                // TreeConvertTest::rootDecide
-                root -> ROOT.equals(root.getParentId()),
-                // TreeConvertTest::leafDecide
+                root -> "0".equals(root.getParentId()),
                 (root, leaf) -> leaf.getParentId().equals(root.getDeptId())
         );
-        Assert.assertEquals(ROOT, tree.get(0).getParentId());
+        Assert.assertEquals("0", tree.get(0).getParentId());
     }
 
-    // 静态抽象
-    public static boolean rootDecide(Dept root) {
-        return ROOT.equals(root.getDeptId());
-    }
-    // 静态抽象
-    public static boolean leafDecide(Dept root, Dept leaf) {
-        return leaf.getParentId().equals(root.getDeptId());
-    }
     // 排序号测试
     @Test
     public void testSortNo() {
@@ -65,7 +54,7 @@ public class TreeConvertTest {
                         !leaf.getSortNo().equals(root.getSortNo()) &&
                         leaf.getSortNo().length() - root.getSortNo().length() == 2
         );
-        Assert.assertEquals("00", tree.get(0).getSortNo());
+        Assert.assertEquals("0", tree.get(0).getParentId());
     }
 
     // 测试实体类
