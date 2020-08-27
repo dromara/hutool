@@ -10,9 +10,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Collection;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * 树结构转换工具
@@ -28,13 +26,6 @@ import java.util.ArrayList;
  */
 public class TreeConvert {
 
-    /**
-     * 构造私有化，静态方法不需要暴露公共构造器
-     * 修复 <code>Add a private constructor to hide the implicit public one</code>
-     */
-    private TreeConvert() {
-
-    }
     /**
      * 生成树结构
      * 通过反射检测LeafCollection注解,转换为父子结构容器,子数据装入LeafCollection容器中
@@ -96,11 +87,8 @@ public class TreeConvert {
      * @throws IntrospectionException    e
      * @throws InvocationTargetException e
      * @throws IllegalAccessException    e
-     *
-     * 2020-08-26 修复方法名过长
      */
-    private static <T> List<T> sort(T root, Collection<T> elements, LeafDecide<T> leafDecide, Class<?> clazz, Field leafField)
-            throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    private static <T> List<T> sort(T root, Collection<T> elements, LeafDecide<T> leafDecide, Class<?> clazz, Field leafField) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         List<T> subMenu = null;
         for (T element : elements) {
             if (leafDecide.isLeaf(root, element)) {
