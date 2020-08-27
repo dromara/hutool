@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.1 (2020-08-24)
+# 5.4.1 (2020-08-27)
 
 ### 新特性
 * 【core  】     StrUtil增加firstNonXXX方法（issue#1020@Github）
@@ -18,10 +18,12 @@
 * 【core  】     增加CalendarUtil和DateUtil增加isSameMonth方法（pr#161@Gitee）
 * 【core  】     Dict增加of方法（issue#1035@Github）
 * 【core  】     StrUtil.wrapAll方法不明确修改改为wrapAllWithPair（issue#1042@Github）
+* 【core  】     EnumUtil.getEnumAt负数返回null（pr#167@Gitee）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
 * 【poi   】     修复Excel03SaxReader日期方法判断问题（pr#1026@Github）
+* 【core  】     修复StrUtil.indexOf空指针问题（issue#1038@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

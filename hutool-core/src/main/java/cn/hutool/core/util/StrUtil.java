@@ -3427,7 +3427,7 @@ public class StrUtil {
 	 * @param start      起始位置，如果小于0，从0开始查找
 	 * @return 位置
 	 */
-	public static int indexOf(final CharSequence str, char searchChar, int start) {
+	public static int indexOf(CharSequence str, char searchChar, int start) {
 		if (str instanceof String) {
 			return ((String) str).indexOf(searchChar, start);
 		} else {
@@ -3445,6 +3445,9 @@ public class StrUtil {
 	 * @return 位置
 	 */
 	public static int indexOf(final CharSequence str, char searchChar, int start, int end) {
+		if(isEmpty(str)){
+			return INDEX_NOT_FOUND;
+		}
 		final int len = str.length();
 		if (start < 0 || start > len) {
 			start = 0;
@@ -3457,7 +3460,7 @@ public class StrUtil {
 				return i;
 			}
 		}
-		return -1;
+		return INDEX_NOT_FOUND;
 	}
 
 	/**
