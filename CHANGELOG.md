@@ -134,7 +134,7 @@
 * 【core   】     增加StrUtil.removeAny方法(issue#923@Github)
 * 【db     】     增加部分Connection参数支持(issue#924@Github)
 * 【core   】     FileUtil增加别名方法(pr#926@Github)
-* 【poi    】     EcelReader中增加read重载，提供每个单元格单独处理的方法(issue#I1JZTL@Gitee)
+* 【poi    】     ExcelReader中增加read重载，提供每个单元格单独处理的方法(issue#I1JZTL@Gitee)
 
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
@@ -167,7 +167,7 @@
 * 【extra  】     新增 QRCode base64 编码形式返回（pr#878@Github）
 * 【core   】     ImgUtil增加toBase64DateUri，URLUtil增加getDataUri方法
 * 【core   】     IterUtil添加List转Map的工具方法（pr#123@Gitee）
-* 【core   】     BeanValuePovider转换失败时，返回原数据，而非null
+* 【core   】     BeanValueProvider转换失败时，返回原数据，而非null
 * 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
 * 【core   】     MapUtil和CollUtil增加clear方法（issue#I1I4HC@Gitee）
 * 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）
