@@ -1,13 +1,5 @@
 package cn.hutool.extra.template;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.lang.Dict;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
 import cn.hutool.extra.template.engine.beetl.BeetlEngine;
@@ -16,6 +8,13 @@ import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
 import cn.hutool.extra.template.engine.rythm.RythmEngine;
 import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 模板引擎单元测试
@@ -99,10 +98,13 @@ public class TemplateUtilTest {
 		//ClassPath模板
 		engine = TemplateUtil.createEngine(
 				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(VelocityEngine.class));
+		template = engine.getTemplate("velocity_test.vtl");
+		result = template.render(Dict.create().set("name", "hutool"));
+		Assert.assertEquals("你好,hutool", result);
+
 		template = engine.getTemplate("templates/velocity_test.vtl");
 		result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("你好,hutool", result);
-		
 	}
 
 	@Test

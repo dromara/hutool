@@ -24,6 +24,7 @@
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
 * 【poi   】     修复Excel03SaxReader日期方法判断问题（pr#1026@Github）
 * 【core  】     修复StrUtil.indexOf空指针问题（issue#1038@Github）
+* 【extra 】     修复VelocityEngine编码问题和路径前缀问题（issue#I1T0IG@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

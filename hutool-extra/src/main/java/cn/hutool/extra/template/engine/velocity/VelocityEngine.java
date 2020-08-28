@@ -1,11 +1,10 @@
 package cn.hutool.extra.template.engine.velocity;
 
-import org.apache.velocity.app.Velocity;
-
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
+import org.apache.velocity.app.Velocity;
 
 /**
  * Velocity模板引擎
@@ -16,6 +15,7 @@ import cn.hutool.extra.template.TemplateEngine;
 public class VelocityEngine implements TemplateEngine {
 
 	private org.apache.velocity.app.VelocityEngine engine;
+	private TemplateConfig config;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
@@ -47,6 +47,7 @@ public class VelocityEngine implements TemplateEngine {
 		if(null == config){
 			config = TemplateConfig.DEFAULT;
 		}
+		this.config = config;
 		init(createEngine(config));
 		return this;
 	}
@@ -74,7 +75,25 @@ public class VelocityEngine implements TemplateEngine {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
-		return VelocityTemplate.wrap(engine.getTemplate(resource));
+
+		// 目录前缀
+		String root;
+		// 自定义编码
+		String charsetStr = null;
+		if(null != this.config){
+			root = this.config.getPath();
+			charsetStr = this.config.getCharsetStr();
+
+			// 修正template目录，在classpath或者web_root模式下，按照配置添加默认前缀
+			// 如果用户已经自行添加了前缀，则忽略之
+			final TemplateConfig.ResourceMode resourceMode = this.config.getResourceMode();
+			if(TemplateConfig.ResourceMode.CLASSPATH == resourceMode
+					|| TemplateConfig.ResourceMode.WEB_ROOT == resourceMode){
+				resource = StrUtil.addPrefixIfNot(resource, StrUtil.addSuffixIfNot(root, "/"));
+			}
+		}
+
+		return VelocityTemplate.wrap(engine.getTemplate(resource, charsetStr));
 	}
 
 	/**
@@ -98,7 +117,9 @@ public class VelocityEngine implements TemplateEngine {
 		// loader
 		switch (config.getResourceMode()) {
 		case CLASSPATH:
-			ve.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+			// 新版Velocity弃用
+//			ve.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+			ve.setProperty("resource.loader.file.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 			break;
 		case FILE:
 			// path
