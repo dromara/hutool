@@ -30,6 +30,7 @@ import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -411,6 +412,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest contentLength(int value) {
 		header(Header.CONTENT_LENGTH, String.valueOf(value));
 		return this;
+	}
+
+	/**
+	 * 设置Cookie<br>
+	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
+	 *
+	 * @param cookies Cookie值数组，如果为{@code null}则设置无效，使用默认Cookie行为
+	 * @return this
+	 * @since 5.4.1
+	 */
+	public HttpRequest cookie(Collection<HttpCookie> cookies) {
+		return cookie(CollUtil.isEmpty(cookies) ? null : cookies.toArray(new HttpCookie[0]));
 	}
 
 	/**

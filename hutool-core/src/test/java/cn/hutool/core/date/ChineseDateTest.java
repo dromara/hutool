@@ -53,7 +53,7 @@ public class ChineseDateTest {
 		Assert.assertEquals("壬申年癸丑月丁亥日",cyclicalYMD);
 	}
 	@Test
-	public void getCyclicalYMDTest_2(){
+	public void getCyclicalYMDTest2(){
 		//通过农历构建
 		ChineseDate chineseDate = new ChineseDate(1992,12,14);
 		String cyclicalYMD = chineseDate.getCyclicalYMD();

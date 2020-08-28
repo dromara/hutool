@@ -400,6 +400,15 @@ public class DateTime extends Date {
 	}
 
 	/**
+	 * 获取月，从1开始计数
+	 * @return 月份，1表示一月
+	 * @since 5.4.1
+	 */
+	public int monthBaseOne(){
+		return month() + 1;
+	}
+
+	/**
 	 * 获得月份，从1开始计数<br>
 	 * 由于{@link Calendar} 中的月份按照0开始计数，导致某些需求容易误解，因此如果想用1表示一月，2表示二月则调用此方法
 	 *
@@ -446,18 +455,18 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得指定日期是这个日期所在月份的第几天<br>
+	 * 获得指定日期是这个日期所在月份的第几天，从1开始
 	 *
-	 * @return 天
+	 * @return 天，1表示第一天
 	 */
 	public int dayOfMonth() {
 		return getField(DateField.DAY_OF_MONTH);
 	}
 
 	/**
-	 * 获得指定日期是这个日期所在年份的第几天<br>
+	 * 获得指定日期是这个日期所在年份的第几天，从1开始
 	 *
-	 * @return 天
+	 * @return 天，1表示第一天
 	 * @since 5.3.6
 	 */
 	public int dayOfYear() {

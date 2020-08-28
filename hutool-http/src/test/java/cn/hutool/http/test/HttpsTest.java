@@ -25,5 +25,4 @@ public class HttpsTest {
 		}
 		ThreadUtil.sync(this);
 	}
-
 }
