@@ -1,5 +1,8 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.builder.Builder;
+import cn.hutool.core.util.ObjectUtil;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -11,11 +14,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import cn.hutool.core.builder.Builder;
-import cn.hutool.core.util.ObjectUtil;
-
 /**
  * {@link ThreadPoolExecutor} 建造者
+ *
+ * <pre>
+ *     1. 如果池中任务数 &lt; corePoolSize     -》 放入立即执行
+ *     2. 如果池中任务数 &gt; corePoolSize     -》 放入队列等待
+ *     3. 队列满                              -》 新建线程立即执行
+ *     4. 执行中的线程 &gt; maxPoolSize        -》 触发handler（RejectedExecutionHandler）异常
+ * </pre>
  *
  * @author looly
  * @since 4.1.9
@@ -39,7 +46,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 */
 	private long keepAliveTime = TimeUnit.SECONDS.toNanos(60);
 	/**
-	 * 队列，用于存在未执行的线程
+	 * 队列，用于存放未执行的线程
 	 */
 	private BlockingQueue<Runnable> workQueue;
 	/**
@@ -105,7 +112,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 *
 	 * <pre>
 	 * 1. {@link SynchronousQueue}    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
-	 * 2. {@link LinkedBlockingQueue} 默认无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maximumPoolSize无效。
+	 * 2. {@link LinkedBlockingQueue} 默认无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maxPoolSize无效。
 	 *                        当构造LinkedBlockingQueue对象时传入参数，变为有界队列，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * 3. {@link ArrayBlockingQueue}  有界队列，相对无界队列有利于控制队列大小，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * </pre>

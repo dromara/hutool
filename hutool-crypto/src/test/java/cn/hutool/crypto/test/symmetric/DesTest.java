@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.Mode;

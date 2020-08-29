@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
@@ -19,9 +19,8 @@ import java.security.PublicKey;
 
 /**
  * SM2算法单元测试
- * 
- * @author Looly, Gsealy
  *
+ * @author Looly, Gsealy
  */
 public class SM2Test {
 
@@ -71,7 +70,7 @@ public class SM2Test {
 		byte[] decrypt = sm2.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 	}
-	
+
 	@Test
 	public void sm2BcdTest() {
 		String text = "我是一段测试aaaa";
@@ -138,6 +137,19 @@ public class SM2Test {
 
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
 
+		final SM2 sm2 = new SM2(pair.getPrivate(), pair.getPublic());
+
+		byte[] sign = sm2.sign(content.getBytes());
+		boolean verify = sm2.verify(content.getBytes(), sign);
+		Assert.assertTrue(verify);
+	}
+
+	@Test
+	public void sm2SignAndVerifyUseKeyTest2() {
+		String content = "我是Hanley.";
+
+		KeyPair pair = SecureUtil.generateKeyPair("SM2");
+
 		final SM2 sm2 = new SM2(//
 				HexUtil.encodeHexStr(pair.getPrivate().getEncoded()), //
 				HexUtil.encodeHexStr(pair.getPublic().getEncoded())//
@@ -162,7 +174,7 @@ public class SM2Test {
 	}
 
 	@Test
-	public void sm2WithPointTest(){
+	public void sm2WithPointTest() {
 		String d = "FAB8BBE670FAE338C9E9382B9FB6485225C11A3ECB84C938F10F20A93B6215F0";
 		String x = "9EF573019D9A03B16B0BE44FC8A5B4E8E098F56034C97B312282DD0B4810AFC3";
 		String y = "CC759673ED0FC9B9DC7E6FA38F0E2B121E02654BF37EA6B63FAF2A0D6013EADF";
@@ -176,7 +188,7 @@ public class SM2Test {
 	}
 
 	@Test
-	public void sm2PlainWithPointTest(){
+	public void sm2PlainWithPointTest() {
 		// 测试地址：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
 
 		String d = "FAB8BBE670FAE338C9E9382B9FB6485225C11A3ECB84C938F10F20A93B6215F0";
