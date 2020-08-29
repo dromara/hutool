@@ -55,4 +55,12 @@ public class ImgTest {
 				.pressImage(ImgUtil.read("d:/test/617180969474805871.jpg"), new Rectangle(0, 0, 800, 800), 1f)
 				.write(FileUtil.file("d:/test/pressImg_result.jpg"));
 	}
+
+	@Test
+	@Ignore
+	public void strokeTest(){
+		Img.from(FileUtil.file("d:/test/公章3.png"))
+				.stroke(null, 2f)
+				.write(FileUtil.file("d:/test/stroke_result.png"));
+	}
 }

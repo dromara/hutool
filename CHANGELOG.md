@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.1 (2020-08-28)
+# 5.4.1 (2020-08-29)
 
 ### 新特性
 * 【core  】     StrUtil增加firstNonXXX方法（issue#1020@Github）
@@ -20,6 +20,7 @@
 * 【core  】     StrUtil.wrapAll方法不明确修改改为wrapAllWithPair（issue#1042@Github）
 * 【core  】     EnumUtil.getEnumAt负数返回null（pr#167@Gitee）
 * 【core  】     ChineseDate增加天干地支和转换为公历方法（pr#169@Gitee）
+* 【core  】     Img增加stroke描边方法（issue#1033@Github）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
