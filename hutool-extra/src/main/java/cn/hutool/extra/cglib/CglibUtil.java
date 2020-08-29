@@ -6,6 +6,7 @@ import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.beans.BeanMap;
 import net.sf.cglib.core.Converter;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -27,7 +28,6 @@ public class CglibUtil {
 	 * @param source      源bean对象
 	 * @param targetClass 目标bean类，自动实例化此对象
 	 * @return 目标对象
-	 * @since 5.4.1
 	 */
 	public static <T> T copy(Object source, Class<T> targetClass) {
 		return copy(source, targetClass, null);
@@ -42,7 +42,6 @@ public class CglibUtil {
 	 * @param targetClass 目标bean类，自动实例化此对象
 	 * @param converter   转换器，无需可传{@code null}
 	 * @return 目标对象
-	 * @since 5.4.1
 	 */
 	public static <T> T copy(Object source, Class<T> targetClass, Converter converter) {
 		final T target = ReflectUtil.newInstanceIfPossible(targetClass);
@@ -55,7 +54,6 @@ public class CglibUtil {
 	 *
 	 * @param source 源bean对象
 	 * @param target 目标bean对象
-	 * @since 5.4.1
 	 */
 	public static void copy(Object source, Object target) {
 		copy(source, target, null);
@@ -82,14 +80,13 @@ public class CglibUtil {
 	/**
 	 * 拷贝List Bean对象属性
 	 *
-	 * @param source 源bean对象list
-	 * @param target 目标bean对象
 	 * @param <S>    源bean类型
 	 * @param <T>    目标bean类型
+	 * @param source 源bean对象list
+	 * @param target 目标bean对象
 	 * @return 目标bean对象list
-	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(List<S> source, Supplier<T> target) {
+	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target) {
 		return copyList(source, target, null, null);
 	}
 
@@ -104,7 +101,7 @@ public class CglibUtil {
 	 * @return 目标bean对象list
 	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(List<S> source, Supplier<T> target, Converter converter) {
+	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter) {
 		return copyList(source, target, converter, null);
 	}
 
@@ -119,7 +116,7 @@ public class CglibUtil {
 	 * @return 目标bean对象list
 	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(List<S> source, Supplier<T> target, BiConsumer<S, T> callback) {
+	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, BiConsumer<S, T> callback) {
 		return copyList(source, target, null, callback);
 	}
 
@@ -133,9 +130,8 @@ public class CglibUtil {
 	 * @param <S>       源bean类型
 	 * @param <T>       目标bean类型
 	 * @return 目标bean对象list
-	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(List<S> source, Supplier<T> target, Converter converter, BiConsumer<S, T> callback) {
+	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter, BiConsumer<S, T> callback) {
 		return source.stream().map(s -> {
 			T t = target.get();
 			copy(source, t, converter);

@@ -27,10 +27,9 @@ public enum BeanCopierCache {
 	 * @param targetClass 目标Bean的类
 	 * @param converter   转换器
 	 * @return Map中对应的BeanCopier
-	 * @since 5.4.1
 	 */
 	public BeanCopier get(Class<?> srcClass, Class<?> targetClass, Converter converter) {
-		String key = genKey(srcClass, targetClass, converter);
+		final String key = genKey(srcClass, targetClass, converter);
 		return cache.get(key, () -> BeanCopier.create(srcClass, targetClass, converter != null));
 	}
 
@@ -41,11 +40,12 @@ public enum BeanCopierCache {
 	 * @param targetClass 目标Bean的类
 	 * @param converter   转换器
 	 * @return 属性名和Map映射的key
-	 * @since 5.4.1
 	 */
 	private String genKey(Class<?> srcClass, Class<?> targetClass, Converter converter) {
-
-		return converter == null ? StrUtil.format("{}#{}", srcClass.getName(), targetClass.getName())
-				: StrUtil.format("{}#{}#{}", srcClass.getName(), targetClass.getName(), converter.getClass().getName());
+		String key = StrUtil.format("{}#{}", srcClass.getName(), targetClass.getName());
+		if(null != converter){
+			key += "#" + converter.getClass().getName();
+		}
+		return key;
 	}
 }
