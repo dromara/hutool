@@ -11,9 +11,11 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
+import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
@@ -355,6 +357,12 @@ public class Mail {
 		try {
 			return doSend();
 		} catch (MessagingException e) {
+			if(e instanceof SendFailedException){
+				// 当地址无效时，显示更加详细的无效地址信息
+				final Address[] invalidAddresses = ((SendFailedException) e).getInvalidAddresses();
+				final String msg = StrUtil.format("Invalid Addresses: {}", ArrayUtil.toString(invalidAddresses));
+				throw new MailException(msg, e);
+			}
 			throw new MailException(e);
 		}
 	}
