@@ -204,7 +204,7 @@ public class SymmetricCrypto implements Serializable {
 			} else {
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
-			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
+				return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {

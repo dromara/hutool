@@ -16,9 +16,10 @@ import java.util.concurrent.ExecutorService;
  * ps:
  * //模拟1000个线程并发
  * SyncFinisher sf = new SyncFinisher(1000);
- * concurrencyTestUtil.run(() -&gt; {
+ * sf.addWorker(() -&gt; {
  *      // 需要并发测试的业务代码
  * });
+ * sf.start()
  * </pre>
  * 
  * 
