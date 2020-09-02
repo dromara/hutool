@@ -9,6 +9,7 @@
 * 【core  】     lock放在try外边（pr#1050@Github）
 * 【core  】     MailUtil增加错误信息（issue#I1TAKJ@Gitee）
 * 【core  】     JschUtil添加远程转发功能（pr#171@Gitee）
+* 【db    】     AbstractDb增加executeBatch重载（issue#1053@Github）
 
 ### Bug修复#
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
