@@ -236,6 +236,7 @@ public class JschUtil {
 	 * @param port     host上的端口
 	 * @return 成功与否
 	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @since 5.4.2
 	 */
 	public static boolean bindRemotePort(Session session, int bindPort, String host, int port) throws JschRuntimeException {
 		if (session != null && session.isConnected()) {
