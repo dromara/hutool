@@ -1,14 +1,11 @@
 package cn.hutool.poi.excel;
 
+import cn.hutool.core.io.IORuntimeException;
+import org.apache.poi.poifs.filesystem.FileMagic;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
-
-import org.apache.poi.poifs.filesystem.FileMagic;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 
 /**
  * Excel文件工具类
@@ -26,9 +23,19 @@ public class ExcelFileUtil {
 	 * @return 是否为XLS格式的Excel文件（HSSF）
 	 */
 	public static boolean isXls(InputStream in) {
-		final PushbackInputStream pin = IoUtil.toPushbackStream(in, 8);
+
+		/**
+		 * {@link java.io.PushbackInputStream}
+		 * PushbackInputStream的markSupported()为false，并不支持mark和reset
+		 * 如果强转成PushbackInputStream在调用FileMagic.valueOf(inputStream)时会报错
+		 * {@link FileMagic}
+		 * 报错内容：getFileMagic() only operates on streams which support mark(int)
+		 * 此处修改成 final InputStream inputStream = FileMagic.prepareToCheckMagic(in)
+		 * @author kefan.qu
+		 */
+		final InputStream inputStream = FileMagic.prepareToCheckMagic(in);
 		try {
-			return FileMagic.valueOf(pin) == FileMagic.OLE2;
+			return FileMagic.valueOf(inputStream) == FileMagic.OLE2;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
