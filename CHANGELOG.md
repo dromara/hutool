@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.2 (2020-09-02)
+# 5.4.2 (2020-09-03)
 
 ### 新特性
 * 【core  】     lock放在try外边（pr#1050@Github）
@@ -11,6 +11,7 @@
 * 【core  】     JschUtil添加远程转发功能（pr#171@Gitee）
 * 【db    】     AbstractDb增加executeBatch重载（issue#1053@Github）
 * 【extra 】     新增方便引入SpringUtil的注解@EnableSpringUtil（pr#172@Gitee）
+* 【poi   】     RowUtil增加插入和删除行（pr#1060@Github）
 
 ### Bug修复#
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题

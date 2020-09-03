@@ -109,6 +109,7 @@ public class RowUtil {
 	 * @param sheet        工作表
 	 * @param startRow     插入的起始行
 	 * @param insertNumber 插入的行数
+	 * @since 5.4.2
 	 */
 	public static void insertRow(Sheet sheet, int startRow, int insertNumber) {
 		if (insertNumber <= 0) {
@@ -136,6 +137,7 @@ public class RowUtil {
 	 *
 	 * @param row 需要删除的行
 	 * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=56454">sheet.shiftRows的bug</a>
+	 * @since 5.4.2
 	 */
 	public static void removeRow(Row row) {
 		if (row == null) {
