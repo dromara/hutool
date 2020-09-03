@@ -23,8 +23,7 @@ public class ExcelFileUtil {
 	 * @return 是否为XLS格式的Excel文件（HSSF）
 	 */
 	public static boolean isXls(InputStream in) {
-
-		/**
+		/*
 		 * {@link java.io.PushbackInputStream}
 		 * PushbackInputStream的markSupported()为false，并不支持mark和reset
 		 * 如果强转成PushbackInputStream在调用FileMagic.valueOf(inputStream)时会报错
