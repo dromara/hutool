@@ -10,6 +10,7 @@
 * 【core  】     MailUtil增加错误信息（issue#I1TAKJ@Gitee）
 * 【core  】     JschUtil添加远程转发功能（pr#171@Gitee）
 * 【db    】     AbstractDb增加executeBatch重载（issue#1053@Github）
+* 【extra 】     新增方便引入SpringUtil的注解@EnableSpringUtil（pr#172@Gitee）
 
 ### Bug修复#
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
