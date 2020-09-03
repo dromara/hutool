@@ -13,7 +13,6 @@ pom.xml.versionsBackup
 .gradle/
 build/
 
-#IDEA
 # idea ignore
 .idea/
 *.ipr
@@ -31,3 +30,5 @@ build/
 # system ignore
 .DS_Store
 Thumbs.db
+
+#idea
