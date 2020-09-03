@@ -187,7 +187,7 @@ public class CharUtil {
 	}
 
 	/**
-	 * 是否为字符或数字，包括A~Z、a~z、0~9
+	 * 是否为字母或数字，包括A~Z、a~z、0~9
 	 *
 	 * <pre>
 	 *   CharUtil.isLetterOrNumber('a')  = true
@@ -199,7 +199,7 @@ public class CharUtil {
 	 * </pre>
 	 *
 	 * @param ch 被检查的字符
-	 * @return true表示为字符或数字，包括A~Z、a~z、0~9
+	 * @return true表示为字母或数字，包括A~Z、a~z、0~9
 	 */
 	public static boolean isLetterOrNumber(final char ch) {
 		return isLetter(ch) || isNumber(ch);
