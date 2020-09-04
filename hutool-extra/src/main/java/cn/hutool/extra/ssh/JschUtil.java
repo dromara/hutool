@@ -6,13 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -231,6 +225,31 @@ public class JschUtil {
 		}
 		return false;
 	}
+
+	/**
+	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
+	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
+	 *
+	 * @param session  与ssh服务端建立的会话
+	 * @param bindPort ssh服务端上要被绑定的端口
+	 * @param host     转发到的host
+	 * @param port     host上的端口
+	 * @return 成功与否
+	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @since 5.4.2
+	 */
+	public static boolean bindRemotePort(Session session, int bindPort, String host, int port) throws JschRuntimeException {
+		if (session != null && session.isConnected()) {
+			try {
+				session.setPortForwardingR(bindPort, host, port);
+			} catch (JSchException e) {
+				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", bindPort, port);
+			}
+			return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * 解除端口映射

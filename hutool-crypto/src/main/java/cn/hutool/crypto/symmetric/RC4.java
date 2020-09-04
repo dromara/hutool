@@ -140,8 +140,8 @@ public class RC4 implements Serializable {
 	 */
 	public byte[] crypt(final byte[] msg) {
 		final ReadLock readLock = this.lock.readLock();
-		readLock.lock();
 		byte[] code;
+		readLock.lock();
 		try {
 			final int[] sbox = this.sbox.clone();
 			code = new byte[msg.length];

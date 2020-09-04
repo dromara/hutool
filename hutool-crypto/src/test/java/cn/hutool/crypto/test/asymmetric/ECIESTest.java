@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.ECIES;

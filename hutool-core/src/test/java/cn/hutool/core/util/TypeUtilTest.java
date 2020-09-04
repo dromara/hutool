@@ -56,4 +56,5 @@ public class TypeUtilTest {
 		public void service(String string) {
 		}
 	}
+
 }

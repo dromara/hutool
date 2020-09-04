@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto.test.symmetric;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -105,7 +105,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 
 	@Override
 	public boolean remove(Object o) {
-		return map.remove(o) == PRESENT;
+		return PRESENT.equals(map.remove(o));
 	}
 
 	@Override

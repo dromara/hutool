@@ -333,7 +333,7 @@ public class BeanDesc implements Serializable {
 	// ------------------------------------------------------------------------------------------------------ Private method end
 
 	/**
-	 * 属性描述
+	 * 属性描述，包括了字段、getter、setter和相应的方法执行
 	 *
 	 * @author looly
 	 */

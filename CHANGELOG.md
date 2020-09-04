@@ -3,7 +3,23 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.1 (2020-08-24)
+# 5.4.2 (2020-09-03)
+
+### 新特性
+* 【core  】     lock放在try外边（pr#1050@Github）
+* 【core  】     MailUtil增加错误信息（issue#I1TAKJ@Gitee）
+* 【core  】     JschUtil添加远程转发功能（pr#171@Gitee）
+* 【db    】     AbstractDb增加executeBatch重载（issue#1053@Github）
+* 【extra 】     新增方便引入SpringUtil的注解@EnableSpringUtil（pr#172@Gitee）
+* 【poi   】     RowUtil增加插入和删除行（pr#1060@Github）
+
+### Bug修复#
+* 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
+* 【poi   】     修复ExcelFileUtil.isXls判断问题（pr#1055@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.4.1 (2020-08-29)
 
 ### 新特性
 * 【core  】     StrUtil增加firstNonXXX方法（issue#1020@Github）
@@ -17,10 +33,16 @@
 * 【core  】     增加Ipv4Util（pr#161@Gitee）
 * 【core  】     增加CalendarUtil和DateUtil增加isSameMonth方法（pr#161@Gitee）
 * 【core  】     Dict增加of方法（issue#1035@Github）
+* 【core  】     StrUtil.wrapAll方法不明确修改改为wrapAllWithPair（issue#1042@Github）
+* 【core  】     EnumUtil.getEnumAt负数返回null（pr#167@Gitee）
+* 【core  】     ChineseDate增加天干地支和转换为公历方法（pr#169@Gitee）
+* 【core  】     Img增加stroke描边方法（issue#1033@Github）
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）
 * 【poi   】     修复Excel03SaxReader日期方法判断问题（pr#1026@Github）
+* 【core  】     修复StrUtil.indexOf空指针问题（issue#1038@Github）
+* 【extra 】     修复VelocityEngine编码问题和路径前缀问题（issue#I1T0IG@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -130,7 +152,7 @@
 * 【core   】     增加StrUtil.removeAny方法(issue#923@Github)
 * 【db     】     增加部分Connection参数支持(issue#924@Github)
 * 【core   】     FileUtil增加别名方法(pr#926@Github)
-* 【poi    】     EcelReader中增加read重载，提供每个单元格单独处理的方法(issue#I1JZTL@Gitee)
+* 【poi    】     ExcelReader中增加read重载，提供每个单元格单独处理的方法(issue#I1JZTL@Gitee)
 
 ### Bug修复
 * 【json   】     修复append方法导致的JSONConfig传递失效问题（issue#906@Github）
@@ -163,7 +185,7 @@
 * 【extra  】     新增 QRCode base64 编码形式返回（pr#878@Github）
 * 【core   】     ImgUtil增加toBase64DateUri，URLUtil增加getDataUri方法
 * 【core   】     IterUtil添加List转Map的工具方法（pr#123@Gitee）
-* 【core   】     BeanValuePovider转换失败时，返回原数据，而非null
+* 【core   】     BeanValueProvider转换失败时，返回原数据，而非null
 * 【core   】     支持BeanUtil.toBean(object, Map.class)转换（issue#I1I4HC@Gitee）
 * 【core   】     MapUtil和CollUtil增加clear方法（issue#I1I4HC@Gitee）
 * 【core   】     增加FontUtil，可定义pressText是否从中间（issue#I1HSWU@Gitee）

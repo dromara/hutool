@@ -1,11 +1,9 @@
 package cn.hutool.extra.cglib;
 
 import cn.hutool.core.lang.SimpleCache;
-import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.StrUtil;
 import net.sf.cglib.beans.BeanCopier;
-
-import java.beans.PropertyDescriptor;
+import net.sf.cglib.core.Converter;
 
 /**
  * BeanCopier属性缓存<br>
@@ -15,20 +13,39 @@ import java.beans.PropertyDescriptor;
  * @since 5.4.1
  */
 public enum BeanCopierCache {
+	/**
+	 * BeanCopier属性缓存单例
+	 */
 	INSTANCE;
 
 	private final SimpleCache<String, BeanCopier> cache = new SimpleCache<>();
 
 	/**
-	 * 获得属性名和{@link PropertyDescriptor}Map映射
+	 * 获得类与转换器生成的key在{@link BeanCopier}的Map中对应的元素
 	 *
 	 * @param srcClass    源Bean的类
 	 * @param targetClass 目标Bean的类
-	 * @param supplier    缓存对象产生函数
-	 * @return 属性名和{@link PropertyDescriptor}Map映射
-	 * @since 5.4.1
+	 * @param converter   转换器
+	 * @return Map中对应的BeanCopier
 	 */
-	public BeanCopier get(Class<?> srcClass, Class<?> targetClass, Func0<BeanCopier> supplier) {
-		return this.cache.get(StrUtil.format("{}_{}", srcClass.getName(), srcClass.getName()), supplier);
+	public BeanCopier get(Class<?> srcClass, Class<?> targetClass, Converter converter) {
+		final String key = genKey(srcClass, targetClass, converter);
+		return cache.get(key, () -> BeanCopier.create(srcClass, targetClass, converter != null));
+	}
+
+	/**
+	 * 获得类与转换器生成的key
+	 *
+	 * @param srcClass    源Bean的类
+	 * @param targetClass 目标Bean的类
+	 * @param converter   转换器
+	 * @return 属性名和Map映射的key
+	 */
+	private String genKey(Class<?> srcClass, Class<?> targetClass, Converter converter) {
+		String key = StrUtil.format("{}#{}", srcClass.getName(), targetClass.getName());
+		if(null != converter){
+			key += "#" + converter.getClass().getName();
+		}
+		return key;
 	}
 }

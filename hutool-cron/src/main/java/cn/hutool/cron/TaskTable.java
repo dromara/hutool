@@ -52,8 +52,8 @@ public class TaskTable implements Serializable {
 	 */
 	public TaskTable add(String id, CronPattern pattern, Task task) {
 		final Lock writeLock = lock.writeLock();
+		writeLock.lock();
 		try {
-			writeLock.lock();
 			if (ids.contains(id)) {
 				throw new CronException("Id [{}] has been existed!", id);
 			}
@@ -75,8 +75,8 @@ public class TaskTable implements Serializable {
 	 */
 	public List<String> getIds() {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			return Collections.unmodifiableList(this.ids);
 		} finally {
 			readLock.unlock();
@@ -91,8 +91,8 @@ public class TaskTable implements Serializable {
 	 */
 	public List<CronPattern> getPatterns() {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			return Collections.unmodifiableList(this.patterns);
 		} finally {
 			readLock.unlock();
@@ -107,8 +107,8 @@ public class TaskTable implements Serializable {
 	 */
 	public List<Task> getTasks() {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			return Collections.unmodifiableList(this.tasks);
 		} finally {
 			readLock.unlock();
@@ -122,8 +122,8 @@ public class TaskTable implements Serializable {
 	 */
 	public void remove(String id) {
 		final Lock writeLock = lock.writeLock();
+		writeLock.lock();
 		try {
-			writeLock.lock();
 			final int index = ids.indexOf(id);
 			if (index > -1) {
 				tasks.remove(index);
@@ -146,8 +146,8 @@ public class TaskTable implements Serializable {
 	 */
 	public boolean updatePattern(String id, CronPattern pattern) {
 		final Lock writeLock = lock.writeLock();
+		writeLock.lock();
 		try {
-			writeLock.lock();
 			final int index = ids.indexOf(id);
 			if (index > -1) {
 				patterns.set(index, pattern);
@@ -168,8 +168,8 @@ public class TaskTable implements Serializable {
 	 */
 	public Task getTask(int index) {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			return tasks.get(index);
 		} finally {
 			readLock.unlock();
@@ -200,8 +200,8 @@ public class TaskTable implements Serializable {
 	 */
 	public CronPattern getPattern(int index) {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			return patterns.get(index);
 		} finally {
 			readLock.unlock();
@@ -250,8 +250,8 @@ public class TaskTable implements Serializable {
 	 */
 	public void executeTaskIfMatch(long millis) {
 		final Lock readLock = lock.readLock();
+		readLock.lock();
 		try {
-			readLock.lock();
 			executeTaskIfMatchInternal(millis);
 		} finally {
 			readLock.unlock();

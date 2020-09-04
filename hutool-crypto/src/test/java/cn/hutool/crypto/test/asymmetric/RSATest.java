@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.ArrayUtil;

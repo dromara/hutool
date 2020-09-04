@@ -282,6 +282,8 @@ public class MapUtil {
 	/**
 	 * 根据给定的Pair数组创建Map对象
 	 *
+	 * @param <K>     键类型
+	 * @param <V>     值类型
 	 * @param pairs 键值对
 	 * @return Map
 	 * @since 5.4.1

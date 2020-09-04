@@ -3,6 +3,7 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import com.jcraft.jsch.Session;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import org.junit.Test;
  *
  */
 public class JschUtilTest {
-	
+
 	@Test
 	@Ignore
 	public void bindPortTest() {
@@ -22,7 +23,22 @@ public class JschUtilTest {
 		// 将堡垒机保护的内网8080端口映射到localhost，我们就可以通过访问http://localhost:8080/访问内网服务了
 		JschUtil.bindPort(session, "172.20.12.123", 8080, 8080);
 	}
-	
+
+
+	@Test
+	@Ignore
+	public void bindRemotePort() throws InterruptedException {
+		// 建立会话
+		Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
+		// 绑定ssh服务端8089端口到本机的8000端口上
+		boolean b = JschUtil.bindRemotePort(session, 8089, "localhost", 8000);
+		Assert.assertTrue(b);
+		// 保证一直运行
+//		while (true){
+//			Thread.sleep(3000);
+//		}
+	}
+
 	@Test
 	@Ignore
 	public void sftpTest() {
