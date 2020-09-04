@@ -20,6 +20,27 @@ import java.util.Map;
 //@Import(cn.hutool.extra.spring.SpringUtil.class)
 public class SpringUtilTest {
 
+	/**
+	 * 注册bean
+	 * 方便执行顺序使用abcd...的顺序命名方法
+	 */
+	@Test
+	public void a() {
+		Demo2 registerBean = new Demo2();
+		registerBean.setId(123);
+		registerBean.setName("222");
+		SpringUtil.registerBean("registerBean", registerBean);
+	}
+
+	/**
+	 * 验证注册的bean
+	 */
+	@Test
+	public void b() {
+		Demo2 registerBean = SpringUtil.getBean("registerBean");
+		Assert.assertEquals(123, registerBean.getId());
+		Assert.assertEquals("222", registerBean.getName());
+	}
 	@Test
 	public void getBeanTest(){
 		final Demo2 testDemo = SpringUtil.getBean("testDemo");
