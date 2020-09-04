@@ -1,6 +1,8 @@
 package cn.hutool.core.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
@@ -61,7 +63,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 */
 	public static <T> ServiceLoader<T> load(Class<T> clazz) {
-		return ServiceLoader.load(clazz);
+		return load(clazz,null);
 	}
 
 	/**
@@ -73,6 +75,37 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 */
 	public static <T> ServiceLoader<T> load(Class<T> clazz, ClassLoader loader) {
+		if(loader==null) {
+			loader = Thread.currentThread().getContextClassLoader();
+		}
 		return ServiceLoader.load(clazz, loader);
+	}
+	/**
+	 * 加载服务 并已list列表返回
+	 * @param <T> 接口类型
+	 * @param clazz 服务接口
+	 * @return 服务接口实现列表
+	 */
+	public static <T> List<T> loadList(Class<T> clazz){
+		return loadList(clazz);
+	}
+	/**
+	 * 加载服务 并已list列表返回
+	 * @param <T> 接口类型
+	 * @param clazz 服务接口
+	 * @param loader {@link ClassLoader}
+	 * @return 服务接口实现列表
+	 */
+	public static <T> List<T> loadList(Class<T> clazz, ClassLoader loader){
+		final Iterator<T> iterator = load(clazz).iterator();
+		List<T> list=new ArrayList<>();
+		while(iterator.hasNext()){
+			try {
+				  list.add(iterator.next());
+			} catch (ServiceConfigurationError e) {
+				// ignore
+			}
+		}
+		return list;
 	}
 }
