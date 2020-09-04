@@ -836,7 +836,7 @@ public class XmlUtil {
 	 */
 	public static <T> T xmlToBean(Node node, Class<T> bean) {
 		final Map<String, Object> map = xmlToMap(node);
-		if(null != map && map.size() == 1){
+		if (null != map && map.size() == 1) {
 			return BeanUtil.toBean(map.get(bean.getSimpleName()), bean);
 		}
 		return BeanUtil.toBean(map, bean);
@@ -1049,7 +1049,7 @@ public class XmlUtil {
 	/**
 	 * 将Bean转换为XML
 	 *
-	 * @param bean      Bean对象
+	 * @param bean Bean对象
 	 * @return XML
 	 * @since 5.3.4
 	 */
@@ -1269,7 +1269,7 @@ public class XmlUtil {
 		 */
 		private void examineNode(Node node, boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
-			if(null != attributes){
+			if (null != attributes) {
 				for (int i = 0; i < attributes.getLength(); i++) {
 					Node attribute = attributes.item(i);
 					storeAttribute(attribute);
@@ -1278,7 +1278,7 @@ public class XmlUtil {
 
 			if (false == attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
-				if(null != childNodes){
+				if (null != childNodes) {
 					Node item;
 					for (int i = 0; i < childNodes.getLength(); i++) {
 						item = childNodes.item(i);
@@ -1296,7 +1296,7 @@ public class XmlUtil {
 		 * @param attribute to examine
 		 */
 		private void storeAttribute(Node attribute) {
-			if(null == attribute){
+			if (null == attribute) {
 				return;
 			}
 			// examine the attributes in namespace xmlns
