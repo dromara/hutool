@@ -4,6 +4,7 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
@@ -148,6 +149,22 @@ public class SpringUtil implements ApplicationContextAware {
 		final String[] activeProfiles = getActiveProfiles();
 		return ArrayUtil.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
 	}
+
+    /**
+     * 动态向Spring注册Bean
+     * <p>
+     * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
+     *
+     * @param beanName 名称
+     * @param bean     bean
+     * @param <T>      泛型
+     * @author shadow
+     * @date 2020-09-04
+     */
+    public static <T> void registerBean(String beanName, T bean) {
+        ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+        context.getBeanFactory().registerSingleton(beanName, bean);
+    }
 }
 
 
