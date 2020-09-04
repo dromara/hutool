@@ -14,6 +14,7 @@
 * 【poi   】     RowUtil增加插入和删除行（pr#1060@Github）
 * 【extra 】     SpringUtil增加注册bean（pr#174@Gitee）
 * 【core  】     修改NetUtil.getMacAddress避免空指针（issue#1057@Github）
+* 【core  】     增加EnumItem接口，枚举扩展转换，增加SPI自定义转换（pr#173@Gitee）
 
 ### Bug修复#
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
