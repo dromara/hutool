@@ -12,6 +12,7 @@
 * 【db    】     AbstractDb增加executeBatch重载（issue#1053@Github）
 * 【extra 】     新增方便引入SpringUtil的注解@EnableSpringUtil（pr#172@Gitee）
 * 【poi   】     RowUtil增加插入和删除行（pr#1060@Github）
+* 【extra 】     SpringUtil增加注册bean（pr#174@Gitee）
 
 ### Bug修复#
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题

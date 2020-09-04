@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,26 +19,20 @@ import java.util.Map;
 public class SpringUtilTest {
 
 	/**
-	 * 注册bean
-	 * 方便执行顺序使用abcd...的顺序命名方法
+	 * 注册验证bean
 	 */
 	@Test
-	public void a() {
+	public void registerBeanTest() {
 		Demo2 registerBean = new Demo2();
 		registerBean.setId(123);
 		registerBean.setName("222");
 		SpringUtil.registerBean("registerBean", registerBean);
+
+		Demo2 registerBean2 = SpringUtil.getBean("registerBean");
+		Assert.assertEquals(123, registerBean2.getId());
+		Assert.assertEquals("222", registerBean2.getName());
 	}
 
-	/**
-	 * 验证注册的bean
-	 */
-	@Test
-	public void b() {
-		Demo2 registerBean = SpringUtil.getBean("registerBean");
-		Assert.assertEquals(123, registerBean.getId());
-		Assert.assertEquals("222", registerBean.getName());
-	}
 	@Test
 	public void getBeanTest(){
 		final Demo2 testDemo = SpringUtil.getBean("testDemo");

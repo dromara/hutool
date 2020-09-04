@@ -150,21 +150,21 @@ public class SpringUtil implements ApplicationContextAware {
 		return ArrayUtil.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
 	}
 
-    /**
-     * 动态向Spring注册Bean
-     * <p>
-     * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
-     *
-     * @param beanName 名称
-     * @param bean     bean
-     * @param <T>      泛型
-     * @author shadow
-     * @date 2020-09-04
-     */
-    public static <T> void registerBean(String beanName, T bean) {
-        ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
-        context.getBeanFactory().registerSingleton(beanName, bean);
-    }
+	/**
+	 * 动态向Spring注册Bean
+	 * <p>
+	 * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
+	 *
+	 * @param <T>      Bean类型
+	 * @param beanName 名称
+	 * @param bean     bean
+	 * @author shadow
+	 * @since 5.4.2
+	 */
+	public static <T> void registerBean(String beanName, T bean) {
+		ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+		context.getBeanFactory().registerSingleton(beanName, bean);
+	}
 }
 
 
