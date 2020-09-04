@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Excel工具类
+ * Excel工具类,不建议直接使用index直接操作sheet，在wps/excel中sheet显示顺序与index无关，还有隐藏sheet
  * 
  * @author Looly
  *

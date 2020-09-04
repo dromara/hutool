@@ -32,8 +32,10 @@ import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.io.Serializable;
@@ -59,6 +61,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -107,6 +110,22 @@ public class ConverterRegistry implements Serializable{
 
 	public ConverterRegistry() {
 		defaultConverter();
+		putCustomBySpi();
+		
+		
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void putCustomBySpi() {
+		List<Converter> list = ServiceLoaderUtil.loadList(Converter.class);
+		list.forEach(converter->{
+			try {
+				Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
+				putCustom(type, converter);
+			} catch (Exception e) {
+				 // 忽略注册失败的
+			}
+		});
 	}
 
 	/**

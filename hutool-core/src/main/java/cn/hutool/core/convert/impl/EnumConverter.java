@@ -1,6 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.convert.EnumItem;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.EnumUtil;
@@ -52,37 +53,55 @@ public class EnumConverter extends AbstractConverter<Object> {
 	}
 
 	/**
-	 * 尝试找到类似转换的静态方法调用实现转换
-	 *
+	 * 尝试找到类似转换的静态方法调用实现转换且优先使用<br>
+	 * 约定枚举类应该提供 valueOf(String) 和 valueOf(Integer)用于转换
+	 * oriInt /name 转换托底
+	 * 
 	 * @param value     被转换的值
 	 * @param enumClass enum类
 	 * @return 对应的枚举值
 	 */
 	protected static Enum tryConvertEnum(Object value, Class enumClass) {
+		if(value==null) {
+			return null;
+		}
 		Enum enumResult = null;
-		if (value instanceof Integer) {
-			enumResult = EnumUtil.getEnumAt(enumClass, (Integer)value);
-		} else if (value instanceof String) {
-			try {
-				enumResult = Enum.valueOf(enumClass, (String) value);
-			} catch (IllegalArgumentException e) {
-				//ignore
+		if(EnumItem.class.isAssignableFrom(enumClass)) {
+			EnumItem first = (EnumItem) EnumUtil.getEnumAt(enumClass, 0);
+			if(value instanceof Integer) {
+				return (Enum) first.fromInt((Integer) value);
+			}else if(value instanceof String){
+				return (Enum) first.fromStr( value.toString());
 			}
 		}
-
-		// 尝试查找其它用户自定义方法
-		if(null == enumResult){
-			final Map<Class<?>, Method> valueOfMethods = getValueOfMethods(enumClass);
-			if (MapUtil.isNotEmpty(valueOfMethods)) {
-				final Class<?> valueClass = value.getClass();
-				for (Map.Entry<Class<?>, Method> entry : valueOfMethods.entrySet()) {
-					if (ClassUtil.isAssignable(entry.getKey(), valueClass)) {
-						enumResult = ReflectUtil.invokeStatic(entry.getValue(), value);
-					}
+		// 用户自定义方法优先，
+		final Map<Class<?>, Method> valueOfMethods = getValueOfMethods(enumClass);
+		if (MapUtil.isNotEmpty(valueOfMethods)) {
+			final Class<?> valueClass = value.getClass();
+			for (Map.Entry<Class<?>, Method> entry : valueOfMethods.entrySet()) {
+				if (ClassUtil.isAssignable(entry.getKey(), valueClass)) {
+					enumResult = ReflectUtil.invokeStatic(entry.getValue(), value);
 				}
 			}
 		}
-
+		//oriInt 应该滞后使用 以 GB/T 2261.1-2003 性别编码为例，对应整数并非连续数字会导致数字转枚举时失败
+		//0 - 未知的性别
+		//1 - 男性
+		//2 - 女性
+		//5 - 女性改(变)为男性
+		//6 - 男性改(变)为女性
+		//9 - 未说明的性别
+		if(null == enumResult){		
+			if (value instanceof Integer) {
+				enumResult = EnumUtil.getEnumAt(enumClass, (Integer)value);
+			} else if (value instanceof String) {
+				try {
+					enumResult = Enum.valueOf(enumClass, (String) value);
+				} catch (IllegalArgumentException e) {
+					//ignore
+				}
+			}
+		}
 		return enumResult;
 	}
 
