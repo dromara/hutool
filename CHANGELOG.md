@@ -40,6 +40,7 @@
 * 【core  】     EnumUtil.getEnumAt负数返回null（pr#167@Gitee）
 * 【core  】     ChineseDate增加天干地支和转换为公历方法（pr#169@Gitee）
 * 【core  】     Img增加stroke描边方法（issue#1033@Github）
+* 【core  】     TypeUtil增加getActualTypeMap方法
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

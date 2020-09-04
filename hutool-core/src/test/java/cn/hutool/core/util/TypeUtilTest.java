@@ -57,4 +57,9 @@ public class TypeUtilTest {
 		}
 	}
 
+	@Test
+	public void getActualTypesTest(){
+
+	}
+
 }

@@ -8,7 +8,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.util.Map;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
@@ -267,6 +266,40 @@ public class TypeUtil {
 		}
 		return result;
 	}
+
+	/**
+	 * 获取泛型变量和真实类型的对应表，使用{@link TableMap}表示，key不会重复<br>
+	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
+	 * 使用此方法注意：
+	 *
+	 * <pre>
+	 * 1. typeDefineClass必须是clazz的父类或者clazz实现的接口
+	 * </pre>
+	 *
+	 *
+	 * @param actualType 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param typeDefineClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @return 给定泛型参数对应的实际类型，如果无对应类型，返回null
+	 * @since 5.4.1
+	 */
+	public static TableMap<TypeVariable<?>, Type> getActualTypeMap(Type actualType, Class<?> typeDefineClass) {
+		if (false == typeDefineClass.isAssignableFrom(getClass(actualType))) {
+			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
+		}
+
+		// 泛型参数标识符列表
+		final TypeVariable<?>[] typeVars = typeDefineClass.getTypeParameters();
+		if(ArrayUtil.isEmpty(typeVars)) {
+			return new TableMap<>(0);
+		}
+		// 实际类型列表
+		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(actualType);
+		if(ArrayUtil.isEmpty(actualTypeArguments)) {
+			return new TableMap<>(0);
+		}
+
+		return new TableMap<>(typeVars, actualTypeArguments);
+	}
 	
 	/**
 	 * 获取指定泛型变量对应的真实类型<br>
@@ -286,26 +319,10 @@ public class TypeUtil {
 	 * @since 4.5.7
 	 */
 	public static Type[] getActualTypes(Type actualType, Class<?> typeDefineClass, Type... typeVariables) {
-		if (false == typeDefineClass.isAssignableFrom(getClass(actualType))) {
-			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
-		}
+		final TableMap<TypeVariable<?>, Type> tableMap = getActualTypeMap(actualType, typeDefineClass);
 
-		// 泛型参数标识符列表
-		final TypeVariable<?>[] typeVars = typeDefineClass.getTypeParameters();
-		if(ArrayUtil.isEmpty(typeVars)) {
-			return null;
-		}
-		// 实际类型列表
-		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(actualType);
-		if(ArrayUtil.isEmpty(actualTypeArguments)) {
-			return null;
-		}
-		
-		int size = Math.min(actualTypeArguments.length, typeVars.length);
-		final Map<TypeVariable<?>, Type> tableMap = new TableMap<>(typeVars, actualTypeArguments);
-		
 		// 查找方法定义所在类或接口中此泛型参数的位置
-		final Type[] result = new Type[size];
+		final Type[] result = new Type[typeVariables.length];
 		for(int i = 0; i < typeVariables.length; i++) {
 			//noinspection SuspiciousMethodCalls
 			result[i] = (typeVariables[i] instanceof TypeVariable) ? tableMap.get(typeVariables[i]) : typeVariables[i];
