@@ -312,7 +312,12 @@ public class TypeUtil {
 	}
 
 	/**
-	 * 获取泛型变量和泛型实际类型的对应关系Map
+	 * 获取泛型变量和泛型实际类型的对应关系Map，例如：
+	 *
+	 * <pre>
+	 *     T    cn.hutool.test.User
+	 *     E    java.lang.Integer
+	 * </pre>
 	 *
 	 * @param clazz 被解析的包含泛型参数的类
 	 * @return 泛型对应关系Map
@@ -324,12 +329,12 @@ public class TypeUtil {
 	/**
 	 * 获得泛型字段对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
 	 *
-	 * @param type 实际类型明确的类
+	 * @param type  实际类型明确的类
 	 * @param field 字段
 	 * @return 实际类型，可能为Class等
 	 */
 	public static Type getActualType(Type type, Field field) {
-		if(null == field){
+		if (null == field) {
 			return null;
 		}
 		return getActualType(ObjectUtil.defaultIfNull(type, field.getDeclaringClass()), field.getGenericType());
@@ -337,15 +342,20 @@ public class TypeUtil {
 
 	/**
 	 * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
-	 * 此方法可以处理
+	 * 此方法可以处理：
 	 *
-	 * @param type        类
+	 * <pre>
+	 *     1. 泛型化对象，类似于Map&lt;User, Key&lt;Long&gt;&gt;
+	 *     2. 泛型变量，类似于T
+	 * </pre>
+	 *
+	 * @param type         类
 	 * @param typeVariable 泛型变量，例如T等
 	 * @return 实际类型，可能为Class等
 	 */
 	public static Type getActualType(Type type, Type typeVariable) {
 		if (typeVariable instanceof ParameterizedType) {
-			return getActualType(type, (ParameterizedType)typeVariable);
+			return getActualType(type, (ParameterizedType) typeVariable);
 		}
 
 		if (typeVariable instanceof TypeVariable) {
@@ -358,9 +368,9 @@ public class TypeUtil {
 
 	/**
 	 * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
-	 * 此方法可以处理
+	 * 此方法可以处理复杂的泛型化对象，类似于Map&lt;User, Key&lt;Long&gt;&gt;
 	 *
-	 * @param type        类
+	 * @param type              类
 	 * @param parameterizedType 泛型变量，例如List&lt;T&gt;等
 	 * @return 实际类型，可能为Class等
 	 */
@@ -370,7 +380,7 @@ public class TypeUtil {
 
 		// 泛型对象中含有未被转换的泛型变量
 		if (TypeUtil.hasTypeVeriable(actualTypeArguments)) {
-			actualTypeArguments = getActualTypes(type , parameterizedType.getActualTypeArguments());
+			actualTypeArguments = getActualTypes(type, parameterizedType.getActualTypeArguments());
 			if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
 				// 替换泛型变量为实际类型，例如List<T>变为List<String>
 				parameterizedType = new ParameterizedTypeImpl(actualTypeArguments, parameterizedType.getOwnerType(), parameterizedType.getRawType());
@@ -383,7 +393,7 @@ public class TypeUtil {
 	/**
 	 * 获得泛型变量对应的泛型实际类型，如果此变量没有对应的实际类型，返回null
 	 *
-	 * @param type        类
+	 * @param type          类
 	 * @param typeVariables 泛型变量数组，例如T等
 	 * @return 实际类型数组，可能为Class等
 	 */
