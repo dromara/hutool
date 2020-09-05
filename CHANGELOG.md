@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.2 (2020-09-03)
+# 5.4.2 (2020-09-05)
 
 ### 新特性
 * 【core  】     lock放在try外边（pr#1050@Github）
@@ -14,11 +14,13 @@
 * 【poi   】     RowUtil增加插入和删除行（pr#1060@Github）
 * 【extra 】     SpringUtil增加注册bean（pr#174@Gitee）
 * 【core  】     修改NetUtil.getMacAddress避免空指针（issue#1057@Github）
-* 【core  】     增加EnumItem接口，枚举扩展转换，增加SPI自定义转换（pr#173@Gitee）
+* 【core  】     增加EnumItem接口，枚举扩展转换，增加SPI自定义转换（pr#173@Github）
+* 【core  】     TypeUtil增加getActualTypeMap方法
 
-### Bug修复#
+### Bug修复
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
 * 【poi   】     修复ExcelFileUtil.isXls判断问题（pr#1055@Github）
+* 【poi   】     修复CglibUtil.copyList参数错误导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -40,7 +42,6 @@
 * 【core  】     EnumUtil.getEnumAt负数返回null（pr#167@Gitee）
 * 【core  】     ChineseDate增加天干地支和转换为公历方法（pr#169@Gitee）
 * 【core  】     Img增加stroke描边方法（issue#1033@Github）
-* 【core  】     TypeUtil增加getActualTypeMap方法
 
 ### Bug修复#
 * 【poi   】     修复ExcelBase.isXlsx方法判断问题（issue#I1S502@Gitee）

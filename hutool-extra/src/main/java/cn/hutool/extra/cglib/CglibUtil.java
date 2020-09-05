@@ -134,7 +134,7 @@ public class CglibUtil {
 	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter, BiConsumer<S, T> callback) {
 		return source.stream().map(s -> {
 			T t = target.get();
-			copy(source, t, converter);
+			copy(s, t, converter);
 			if (callback != null) {
 				callback.accept(s, t);
 			}

@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -59,7 +60,23 @@ public class TypeUtilTest {
 
 	@Test
 	public void getActualTypesTest(){
+		final Type id = TypeUtil.getActualType(
+				Station.class,
+				Entity.class,
+				TypeUtil.getFieldType(Station.class, "id"));
+	}
 
+	public static class Station extends Tree<Station, Long>{
+
+	}
+
+	public static class Tree<E, T> extends Entity<T>{
+
+	}
+
+	@Data
+	public static class Entity<T>{
+		private T id;
 	}
 
 }
