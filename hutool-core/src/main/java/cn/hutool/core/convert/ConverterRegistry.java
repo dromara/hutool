@@ -226,14 +226,14 @@ public class ConverterRegistry implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T convert(Type type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
-		if (TypeUtil.isUnknow(type) && null == defaultValue) {
+		if (TypeUtil.isUnknown(type) && null == defaultValue) {
 			// 对于用户不指定目标类型的情况，返回原值
 			return (T) value;
 		}
 		if (ObjectUtil.isNull(value)) {
 			return defaultValue;
 		}
-		if (TypeUtil.isUnknow(type)) {
+		if (TypeUtil.isUnknown(type)) {
 			type = defaultValue.getClass();
 		}
 

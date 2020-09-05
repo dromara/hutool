@@ -7,10 +7,8 @@ import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -19,9 +17,7 @@ import cn.hutool.core.util.TypeUtil;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -246,24 +242,8 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 			// 获取目标字段真实类型
 			Type fieldType = (null == setterMethod) ? TypeUtil.getType(field) : TypeUtil.getFirstParamType(setterMethod);
-			if (fieldType instanceof ParameterizedType) {
-				// 字段类型为泛型参数类型，解析对应泛型类型为真实类型，类似于List<T> a
-				final ParameterizedType fieldParameterizedType = (ParameterizedType) fieldType;
-				Type[] actualTypeArguments = fieldParameterizedType.getActualTypeArguments();
-				if (TypeUtil.hasTypeVeriable(actualTypeArguments)) {
-					// 泛型对象中含有未被转换的泛型变量
-					actualTypeArguments = TypeUtil.getActualTypes(this.destType, field.getDeclaringClass(), fieldParameterizedType.getActualTypeArguments());
-					if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
-						// 替换泛型变量为实际类型
-						fieldType = new ParameterizedTypeImpl(actualTypeArguments, fieldParameterizedType.getOwnerType(), fieldParameterizedType.getRawType());
-					}
-				}
-			} else if (fieldType instanceof TypeVariable) {
-				// 字段类型为泛型，查找其真实类型（适用于泛型方法定义于泛型父类），类似于T a
-				fieldType = TypeUtil.getActualType(this.destType, field.getDeclaringClass(), fieldType);
-			}
+			fieldType = TypeUtil.getActualType(this.destType ,fieldType);
 
-			//
 			value = valueProvider.value(providerKey, fieldType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过

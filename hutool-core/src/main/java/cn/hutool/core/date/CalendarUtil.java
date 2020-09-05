@@ -366,6 +366,19 @@ public class CalendarUtil {
 	 * @param dateField {@link DateField}
 	 * @return 字段最小值
 	 * @see Calendar#getActualMinimum(int)
+	 * @since 5.4.2
+	 */
+	public static int getBeginValue(Calendar calendar, DateField dateField) {
+		return getBeginValue(calendar, dateField.getValue());
+	}
+
+	/**
+	 * 获取指定日期字段的最小值，例如分钟的最小值是0
+	 *
+	 * @param calendar  {@link Calendar}
+	 * @param dateField {@link DateField}
+	 * @return 字段最小值
+	 * @see Calendar#getActualMinimum(int)
 	 * @since 4.5.7
 	 */
 	public static int getBeginValue(Calendar calendar, int dateField) {
@@ -373,6 +386,19 @@ public class CalendarUtil {
 			return calendar.getFirstDayOfWeek();
 		}
 		return calendar.getActualMinimum(dateField);
+	}
+
+	/**
+	 * 获取指定日期字段的最大值，例如分钟的最大值是59
+	 *
+	 * @param calendar  {@link Calendar}
+	 * @param dateField {@link DateField}
+	 * @return 字段最大值
+	 * @see Calendar#getActualMaximum(int)
+	 * @since 5.4.2
+	 */
+	public static int getEndValue(Calendar calendar, DateField dateField) {
+		return getEndValue(calendar, dateField.getValue());
 	}
 
 	/**

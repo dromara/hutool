@@ -1916,6 +1916,18 @@ public class DateUtil extends CalendarUtil {
 		return Year.of(year).length();
 	}
 
+	/**
+	 * 获得指定月份的总天数
+	 *
+	 * @param month 年份
+	 * @param isLeapYear 是否闰年
+	 * @return 天
+	 * @since 5.4.2
+	 */
+	public static int lengthOfMonth(int month, boolean isLeapYear) {
+		return java.time.Month.of(month).length(isLeapYear);
+	}
+
 	// ------------------------------------------------------------------------ Private method start
 
 	/**

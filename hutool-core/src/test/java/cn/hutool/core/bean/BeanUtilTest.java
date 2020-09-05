@@ -446,4 +446,28 @@ public class BeanUtilTest {
 		BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
 		Console.log(resultMap);
 	}
+
+	@Test
+	public void beanCopyTest(){
+		final Station station = new Station();
+		station.setId(123456L);
+
+		final Station station2 = new Station();
+
+		BeanUtil.copyProperties(station, station2);
+		Assert.assertEquals(new Long(123456L), station2.getId());
+	}
+
+	public static class Station extends Tree<Station, Long> {
+
+	}
+
+	public static class Tree<E, T> extends Entity<T> {
+
+	}
+
+	@Data
+	public static class Entity<T>{
+		private T id;
+	}
 }

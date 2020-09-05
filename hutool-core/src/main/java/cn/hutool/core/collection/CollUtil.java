@@ -2023,7 +2023,7 @@ public class CollUtil {
 		if (null == collection || null == value) {
 			return collection;
 		}
-		if (TypeUtil.isUnknow(elementType)) {
+		if (TypeUtil.isUnknown(elementType)) {
 			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		}

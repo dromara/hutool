@@ -60,24 +60,23 @@ public class TypeUtilTest {
 
 	@Test
 	public void getActualTypesTest(){
-		final Type idType = TypeUtil.getActualType(
-				Station.class,
-				Tree.class,
-				TypeUtil.getFieldType(Station.class, "id"));
+		// 测试多层级泛型参数是否能获取成功
+		Type idType = TypeUtil.getActualType(Level3.class,
+				ReflectUtil.getField(Level3.class, "id"));
 
 		Assert.assertEquals(Long.class, idType);
 	}
 
-	public static class Station extends Tree<Station, Long>{
+	public static class Level3 extends Level2<Level3>{
 
 	}
 
-	public static class Tree<E, T> extends Entity<T>{
+	public static class Level2<E> extends Level1<Long>{
 
 	}
 
 	@Data
-	public static class Entity<T>{
+	public static class Level1<T>{
 		private T id;
 	}
 

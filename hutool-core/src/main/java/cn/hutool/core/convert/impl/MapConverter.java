@@ -86,8 +86,8 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		Object key;
 		Object value;
 		for (Entry<?, ?> entry : srcMap.entrySet()) {
-			key = TypeUtil.isUnknow(this.keyType) ? entry.getKey() : convert.convert(this.keyType, entry.getKey());
-			value = TypeUtil.isUnknow(this.valueType) ? entry.getValue() : convert.convert(this.valueType, entry.getValue());
+			key = TypeUtil.isUnknown(this.keyType) ? entry.getKey() : convert.convert(this.keyType, entry.getKey());
+			value = TypeUtil.isUnknown(this.valueType) ? entry.getValue() : convert.convert(this.valueType, entry.getValue());
 			targetMap.put(key, value);
 		}
 	}
