@@ -6,18 +6,21 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
+import cn.hutool.json.JSONUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * {@link HttpRequest}单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class HttpRequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
@@ -43,7 +46,7 @@ public class HttpRequestTest {
 	@Ignore
 	public void toStringTest() {
 		String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
-		
+
 		HttpRequest request = HttpRequest.get(url).body("a=乌海");
 		Console.log(request.toString());
 	}
@@ -105,8 +108,29 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void bodyTest(){
+	public void bodyTest() {
 		String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().body();
 		Console.log(ddddd1);
+	}
+
+	/**
+	 * 测试GET请求附带body体是否会变更为POST
+	 */
+	@Test
+	@Ignore
+	public void getLocalTest() {
+		List<String> list = new ArrayList<>();
+		list.add("hhhhh");
+		list.add("sssss");
+
+		Map<String, Object> map = new HashMap<>(16);
+		map.put("recordId", "12321321");
+		map.put("page", "1");
+		map.put("size", "2");
+		map.put("sizes", list);
+
+		String s = JSONUtil.toJsonStr(map);
+		HttpRequest request = HttpUtil.createGet("http://localhost:8888/get");
+		Console.log(request.execute().body());
 	}
 }

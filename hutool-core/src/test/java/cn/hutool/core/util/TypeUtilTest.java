@@ -60,10 +60,12 @@ public class TypeUtilTest {
 
 	@Test
 	public void getActualTypesTest(){
-		final Type id = TypeUtil.getActualType(
+		final Type idType = TypeUtil.getActualType(
 				Station.class,
-				Entity.class,
+				Tree.class,
 				TypeUtil.getFieldType(Station.class, "id"));
+
+		Assert.assertEquals(Long.class, idType);
 	}
 
 	public static class Station extends Tree<Station, Long>{

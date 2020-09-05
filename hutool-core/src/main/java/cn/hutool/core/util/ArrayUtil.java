@@ -11,7 +11,17 @@ import cn.hutool.core.lang.Matcher;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * 数组工具类
@@ -4273,5 +4283,24 @@ public class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isAllNotNull(T... array) {
 		return false == hasNull(array);
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组转换为另一种类型
+	 *
+	 * @param array 被转换的数组
+	 * @param targetComponentType 目标的元素类型
+	 * @param func 转换规则函数
+	 * @param <T> 原数组类型
+	 * @param <R> 目标数组类型
+	 * @return 转换后的数组
+	 * @since 5.4.2
+	 */
+	public static <T, R> R[] map(T[] array, Class<R> targetComponentType, Function<? super T, ? extends R> func){
+		final R[] result = newArray(targetComponentType, array.length);
+		for(int i=0; i< array.length; i++){
+			result[i] = func.apply(array[i]);
+		}
+		return result;
 	}
 }

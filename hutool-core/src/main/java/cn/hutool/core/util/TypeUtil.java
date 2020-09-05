@@ -295,7 +295,7 @@ public class TypeUtil {
 	 * @return 给定泛型参数对应的实际类型，如果无对应类型，返回null
 	 * @since 5.4.1
 	 */
-	public static TableMap<TypeVariable<?>, Type> getActualTypeMap(Type actualType, Class<?> typeDefineClass) {
+	public static TableMap<String, Type> getActualTypeMap(Type actualType, Class<?> typeDefineClass) {
 		if (false == typeDefineClass.isAssignableFrom(getClass(actualType))) {
 			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
 		}
@@ -305,13 +305,14 @@ public class TypeUtil {
 		if (ArrayUtil.isEmpty(typeVars)) {
 			return new TableMap<>(0);
 		}
+
 		// 实际类型列表
 		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(actualType);
 		if (ArrayUtil.isEmpty(actualTypeArguments)) {
 			return new TableMap<>(0);
 		}
 
-		return new TableMap<>(typeVars, actualTypeArguments);
+		return new TableMap<>(ArrayUtil.map(typeVars, String.class, TypeVariable::getName), actualTypeArguments);
 	}
 
 	/**
@@ -331,13 +332,14 @@ public class TypeUtil {
 	 * @since 4.5.7
 	 */
 	public static Type[] getActualTypes(Type actualType, Class<?> typeDefineClass, Type... typeVariables) {
-		final TableMap<TypeVariable<?>, Type> tableMap = getActualTypeMap(actualType, typeDefineClass);
+		final TableMap<String, Type> tableMap = getActualTypeMap(actualType, typeDefineClass);
 
 		// 查找方法定义所在类或接口中此泛型参数的位置
 		final Type[] result = new Type[typeVariables.length];
 		for (int i = 0; i < typeVariables.length; i++) {
-			//noinspection SuspiciousMethodCalls
-			result[i] = (typeVariables[i] instanceof TypeVariable) ? tableMap.get(typeVariables[i]) : typeVariables[i];
+			result[i] = (typeVariables[i] instanceof TypeVariable)
+					? tableMap.get(((TypeVariable<?>) typeVariables[i]).getName())
+					: typeVariables[i];
 		}
 		return result;
 	}
@@ -359,7 +361,7 @@ public class TypeUtil {
 	 * @since 4.5.2
 	 */
 	public static Type getActualType(Type actualType, Class<?> typeDefineClass, Type typeVariable) {
-		Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
+		final Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
 		if (ArrayUtil.isNotEmpty(types)) {
 			return types[0];
 		}
