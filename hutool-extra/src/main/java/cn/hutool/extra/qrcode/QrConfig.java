@@ -34,6 +34,8 @@ public class QrConfig {
 	protected Integer backColor = WHITE;
 	/** 边距1~4 */
 	protected Integer margin = 2;
+	/** 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化 */
+	protected Integer qrVersion = 0;
 	/** 纠错级别 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */
@@ -205,6 +207,26 @@ public class QrConfig {
 	}
 
 	/**
+	 * 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化
+	 *
+	 * @return 二维码中的信息量
+	 */
+	public Integer getQrVersion() {
+		return qrVersion;
+	}
+
+	/**
+	 * 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化
+	 *
+	 * @param qrVersion 二维码中的信息量
+	 * @return this
+	 */
+	public QrConfig setQrVersion(Integer qrVersion) {
+		this.qrVersion = qrVersion;
+		return this;
+	}
+
+	/**
 	 * 获取纠错级别
 	 * 
 	 * @return 纠错级别
@@ -320,6 +342,9 @@ public class QrConfig {
 		}
 		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);
+		}
+		if (null != this.qrVersion){
+			hints.put(EncodeHintType.QR_VERSION, this.qrVersion);
 		}
 		return hints;
 	}
