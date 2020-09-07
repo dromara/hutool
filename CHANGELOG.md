@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.2 (2020-09-05)
+# 5.4.2 (2020-09-07)
 
 ### 新特性
 * 【core  】     lock放在try外边（pr#1050@Github）
@@ -16,6 +16,7 @@
 * 【core  】     修改NetUtil.getMacAddress避免空指针（issue#1057@Github）
 * 【core  】     增加EnumItem接口，枚举扩展转换，增加SPI自定义转换（pr#173@Github）
 * 【core  】     TypeUtil增加getActualType，增加ActualTypeMapperPool类（issue#I1TBWH@Gitee）
+* 【extra 】     QRConfig中添加qrVersion属性（pr#1068@Github）
 
 ### Bug修复
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
