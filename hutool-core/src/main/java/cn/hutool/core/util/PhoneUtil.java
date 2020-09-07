@@ -17,7 +17,7 @@ public class PhoneUtil {
 	/**
 	 * 座机号码
 	 */
-	private static Pattern TEL = Pattern.compile("0\\d{2,3}-[1-9]\\d{6,7}");
+	private static final Pattern TEL = Pattern.compile("0\\d{2,3}-[1-9]\\d{6,7}");
 
 	/**
 	 * 验证是否为手机号码（中国）
