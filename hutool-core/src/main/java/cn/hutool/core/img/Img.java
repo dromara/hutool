@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -304,9 +303,7 @@ public class Img implements Serializable {
 		double widthRatio = NumberUtil.div(width, srcWidth);
 
 		// 浮点数之间的等值判断,基本数据类型不能用==比较,包装数据类型不能用equals来判断。
-		BigDecimal heightRatioBigDecimal = new BigDecimal(heightRatio);
-		BigDecimal widthRatioBigDecimal = new BigDecimal(widthRatio);
-		if (heightRatioBigDecimal.compareTo(widthRatioBigDecimal) == 0) {
+		if (NumberUtil.equals(heightRatio, widthRatio)) {
 			// 长宽都按照相同比例缩放时，返回缩放后的图片
 			scale(width, height);
 		} else if (widthRatio < heightRatio) {
