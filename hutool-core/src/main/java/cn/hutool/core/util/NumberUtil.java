@@ -1712,8 +1712,13 @@ public class NumberUtil {
 	 * @return 是否相等
 	 */
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
-		Assert.notNull(bigNum1);
-		Assert.notNull(bigNum2);
+		//noinspection NumberEquality
+		if (bigNum1 == bigNum2){
+			return true;
+		}
+		if (bigNum1==null || bigNum2==null){
+			return false;
+		}
 		return 0 == bigNum1.compareTo(bigNum2);
 	}
 

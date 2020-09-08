@@ -3,11 +3,10 @@ package cn.hutool.core.builder;
 import java.io.Serializable;
 
 /**
- * Wrap an identity key (System.identityHashCode()) so that an object can only be equal() to itself.
- * 
- * This is necessary to disambiguate the occasional duplicate identityHashCodes that can occur.
- * 
- * TODO 待整理
+ * 包装唯一键（System.identityHashCode()）使对象只有和自己 equals
+ *
+ * 此对象用于消除小概率下System.identityHashCode()产生的ID重复问题。
+ *
  * 来自于Apache-Commons-Lang3
  * @author looly，Apache-Commons
  * @since 4.2.2
@@ -19,17 +18,16 @@ final class IDKey implements Serializable{
 	private final int id;
 
 	/**
-	 * Constructor for IDKey
+	 * 构造
 	 * 
-	 * @param _value The value
+	 * @param obj 计算唯一ID的对象
 	 */
-	public IDKey(final Object _value) {
-		// This is the Object hashcode
-		id = System.identityHashCode(_value);
+	public IDKey(final Object obj) {
+		id = System.identityHashCode(obj);
 		// There have been some cases (LANG-459) that return the
 		// same identity hash code for different objects. So
 		// the value is also added to disambiguate these cases.
-		value = _value;
+		value = obj;
 	}
 
 	/**

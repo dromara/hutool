@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
@@ -4302,5 +4303,50 @@ public class ArrayUtil {
 			result[i] = func.apply(array[i]);
 		}
 		return result;
+	}
+
+	/**
+	 * 判断两个数组是否相等，判断依据包括数组长度和每个元素都相等。
+	 * @param array1 数组1
+	 * @param array2 数组2
+	 * @return 是否相等
+	 * @since 5.4.2
+	 */
+	public static boolean equals(Object array1, Object array2){
+		if(array1 == array2){
+			return true;
+		}
+		if(hasNull(array1, array2)){
+			return false;
+		}
+
+		Assert.isTrue(isArray(array1), "First is not a Array !");
+		Assert.isTrue(isArray(array2), "Second is not a Array !");
+
+		// 数组类型一致性判断
+		if(array1.getClass() != array2.getClass()){
+			return false;
+		}
+
+		if (array1 instanceof long[]) {
+			return Arrays.equals((long[]) array1, (long[]) array2);
+		} else if (array1 instanceof int[]) {
+			return Arrays.equals((int[]) array1, (int[]) array2);
+		} else if (array1 instanceof short[]) {
+			return Arrays.equals((short[]) array1, (short[]) array2);
+		} else if (array1 instanceof char[]) {
+			return Arrays.equals((char[]) array1, (char[]) array2);
+		} else if (array1 instanceof byte[]) {
+			return Arrays.equals((byte[]) array1, (byte[]) array2);
+		} else if (array1 instanceof double[]) {
+			return Arrays.equals((double[]) array1, (double[]) array2);
+		} else if (array1 instanceof float[]) {
+			return Arrays.equals((float[]) array1, (float[]) array2);
+		} else if (array1 instanceof boolean[]) {
+			return Arrays.equals((boolean[]) array1, (boolean[]) array2);
+		} else {
+			// Not an array of primitives
+			return Arrays.deepEquals((Object[]) array1, (Object[]) array2);
+		}
 	}
 }

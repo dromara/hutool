@@ -39,6 +39,8 @@ import java.util.Set;
  *   return EqualsBuilder.reflectionEquals(this, obj);
  * }
  * </pre>
+ *
+ * 来自Apache Commons Lang改造
  */
 public class EqualsBuilder implements Builder<Boolean> {
 	private static final long serialVersionUID = 1L;
@@ -47,8 +49,6 @@ public class EqualsBuilder implements Builder<Boolean> {
 	 * <p>
 	 * A registry of objects used by reflection methods to detect cyclical object references and avoid infinite loops.
 	 * </p>
-	 *
-	 * @since 3.0
 	 */
 	private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<>();
 
@@ -379,35 +379,13 @@ public class EqualsBuilder implements Builder<Boolean> {
 			return this;
 		}
 		final Class<?> lhsClass = lhs.getClass();
-		if (!lhsClass.isArray()) {
+		if (false == lhsClass.isArray()) {
 			// The simple case, not an array, just test the element
 			isEquals = lhs.equals(rhs);
-		} else if (lhs.getClass() != rhs.getClass()) {
-			// Here when we compare different dimensions, for example: a boolean[][] to a boolean[]
-			this.setEquals(false);
 		}
-		// 'Switch' on type of array, to dispatch to the correct handler
-		// This handles multi dimensional arrays of the same depth
-		else if (lhs instanceof long[]) {
-			append((long[]) lhs, (long[]) rhs);
-		} else if (lhs instanceof int[]) {
-			append((int[]) lhs, (int[]) rhs);
-		} else if (lhs instanceof short[]) {
-			append((short[]) lhs, (short[]) rhs);
-		} else if (lhs instanceof char[]) {
-			append((char[]) lhs, (char[]) rhs);
-		} else if (lhs instanceof byte[]) {
-			append((byte[]) lhs, (byte[]) rhs);
-		} else if (lhs instanceof double[]) {
-			append((double[]) lhs, (double[]) rhs);
-		} else if (lhs instanceof float[]) {
-			append((float[]) lhs, (float[]) rhs);
-		} else if (lhs instanceof boolean[]) {
-			append((boolean[]) lhs, (boolean[]) rhs);
-		} else {
-			// Not an array of primitives
-			append((Object[]) lhs, (Object[]) rhs);
-		}
+
+		// 判断数组的equals
+		this.setEquals(ArrayUtil.equals(lhs, rhs));
 		return this;
 	}
 
@@ -540,285 +518,6 @@ public class EqualsBuilder implements Builder<Boolean> {
 			return this;
 		}
 		isEquals = (lhs == rhs);
-		return this;
-	}
-
-	/**
-	 * <p>Performs a deep comparison of two <code>Object</code> arrays.</p>
-	 *
-	 * <p>This also will be called for the top level of
-	 * multi-dimensional, ragged, and multi-typed arrays.</p>
-	 *
-	 * @param lhs the left hand <code>Object[]</code>
-	 * @param rhs the right hand <code>Object[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final Object[] lhs, final Object[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>long</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(long, long)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>long[]</code>
-	 * @param rhs the right hand <code>long[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final long[] lhs, final long[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>int</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(int, int)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>int[]</code>
-	 * @param rhs the right hand <code>int[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final int[] lhs, final int[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>short</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(short, short)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>short[]</code>
-	 * @param rhs the right hand <code>short[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final short[] lhs, final short[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>char</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(char, char)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>char[]</code>
-	 * @param rhs the right hand <code>char[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final char[] lhs, final char[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>byte</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(byte, byte)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>byte[]</code>
-	 * @param rhs the right hand <code>byte[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final byte[] lhs, final byte[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>double</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(double, double)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>double[]</code>
-	 * @param rhs the right hand <code>double[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final double[] lhs, final double[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>float</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(float, float)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>float[]</code>
-	 * @param rhs the right hand <code>float[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final float[] lhs, final float[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
-		return this;
-	}
-
-	/**
-	 * <p>Deep comparison of array of <code>boolean</code>. Length and all
-	 * values are compared.</p>
-	 *
-	 * <p>The method {@link #append(boolean, boolean)} is used.</p>
-	 *
-	 * @param lhs the left hand <code>boolean[]</code>
-	 * @param rhs the right hand <code>boolean[]</code>
-	 * @return EqualsBuilder - used to chain calls.
-	 */
-	public EqualsBuilder append(final boolean[] lhs, final boolean[] rhs) {
-		if (isEquals == false) {
-			return this;
-		}
-		if (lhs == rhs) {
-			return this;
-		}
-		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
-		}
-		if (lhs.length != rhs.length) {
-			this.setEquals(false);
-			return this;
-		}
-		for (int i = 0; i < lhs.length && isEquals; ++i) {
-			append(lhs[i], rhs[i]);
-		}
 		return this;
 	}
 

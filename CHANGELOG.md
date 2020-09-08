@@ -17,6 +17,7 @@
 * 【core  】     增加EnumItem接口，枚举扩展转换，增加SPI自定义转换（pr#173@Github）
 * 【core  】     TypeUtil增加getActualType，增加ActualTypeMapperPool类（issue#I1TBWH@Gitee）
 * 【extra 】     QRConfig中添加qrVersion属性（pr#1068@Github）
+* 【core  】     ArrayUtil增加equals方法
 
 ### Bug修复
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
