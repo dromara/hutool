@@ -166,12 +166,7 @@ public class BeanUtil {
 	 * @since 3.1.2
 	 */
 	public static BeanDesc getBeanDesc(Class<?> clazz) {
-		BeanDesc beanDesc = BeanDescCache.INSTANCE.getBeanDesc(clazz);
-		if (null == beanDesc) {
-			beanDesc = new BeanDesc(clazz);
-			BeanDescCache.INSTANCE.putBeanDesc(clazz, beanDesc);
-		}
-		return beanDesc;
+		return BeanDescCache.INSTANCE.getBeanDesc(clazz, ()-> new BeanDesc(clazz));
 	}
 
 	// --------------------------------------------------------------------------------------------------------- PropertyDescriptor

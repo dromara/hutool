@@ -1,6 +1,8 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.annotation.Ignore;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.BooleanUtil;
@@ -439,7 +441,7 @@ public class BeanDesc implements Serializable {
 		}
 
 		/**
-		 * 获取字段值<br>
+		 * 获取属性值<br>
 		 * 首先调用字段对应的Getter方法获取值，如果Getter方法不存在，则判断字段如果为public，则直接获取字段值
 		 *
 		 * @param bean Bean对象
@@ -456,11 +458,41 @@ public class BeanDesc implements Serializable {
 		}
 
 		/**
+		 * 获取属性值，自动转换属性值类型<br>
+		 * 首先调用字段对应的Getter方法获取值，如果Getter方法不存在，则判断字段如果为public，则直接获取字段值
+		 *
+		 * @param bean        Bean对象
+		 * @param valueType   返回属性值类型，null表示不转换
+		 * @param ignoreError 是否忽略错误，包括转换错误和注入错误
+		 * @return this
+		 * @since 5.4.2
+		 */
+		public Object getValueWithConvert(Object bean, Type valueType, boolean ignoreError) {
+			Object result = null;
+			try {
+				result = getValue(bean);
+			} catch (Exception e) {
+				if (false == ignoreError) {
+					throw new BeanException(e, "Get value of [{}] error!", getFieldName());
+				}
+			}
+
+			if (null != result && null != valueType) {
+				// 尝试将结果转换为目标类型，如果转换失败，返回原类型。
+				final Object convertValue = Convert.convertWithCheck(valueType, result, null, ignoreError);
+				if (null != convertValue) {
+					result = convertValue;
+				}
+			}
+			return result;
+		}
+
+		/**
 		 * 设置Bean的字段值<br>
 		 * 首先调用字段对应的Setter方法，如果Setter方法不存在，则判断字段如果为public，则直接赋值字段值
 		 *
 		 * @param bean  Bean对象
-		 * @param value 值
+		 * @param value 值，必须与字段值类型匹配
 		 * @return this
 		 * @since 4.0.5
 		 */
@@ -470,6 +502,44 @@ public class BeanDesc implements Serializable {
 			} else if (ModifierUtil.isPublic(this.field)) {
 				ReflectUtil.setFieldValue(bean, this.field, value);
 			}
+			return this;
+		}
+
+		/**
+		 * 设置属性值，可以自动转换字段类型为目标类型
+		 *
+		 * @param bean        Bean对象
+		 * @param value       属性值，可以为任意类型
+		 * @param ignoreNull  是否忽略{@code null}值，true表示忽略
+		 * @param ignoreError 是否忽略错误，包括转换错误和注入错误
+		 * @return this
+		 * @since 5.4.2
+		 */
+		public PropDesc setValueWithConvert(Object bean, Object value, boolean ignoreNull, boolean ignoreError) {
+			if (ignoreNull && null == value) {
+				return this;
+			}
+
+			// 当类型不匹配的时候，执行默认转换
+			if (null != value) {
+				final Class<?> propClass = getFieldClass();
+				if (false == propClass.isInstance(value)) {
+					value = Convert.convertWithCheck(propClass, value, null, ignoreError);
+				}
+			}
+
+			// 属性赋值
+			if (null != value || false == ignoreNull) {
+				try {
+					this.setValue(bean, value);
+				} catch (Exception e) {
+					if (false == ignoreError) {
+						throw new BeanException(e, "Set value of [{}] error!", getFieldName());
+					}
+					// 忽略注入失败
+				}
+			}
+
 			return this;
 		}
 
@@ -488,11 +558,41 @@ public class BeanDesc implements Serializable {
 
 				// 检查注解
 				if (false == isTransient) {
-					isTransient = null != AnnotationUtil.getAnnotation(this.getter, Transient.class);
+					isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
 				}
 			}
 
 			return isTransient;
+		}
+
+		/**
+		 * 检查字段是否被忽略读，通过{@link Ignore} 注解完成，规则为：
+		 * <pre>
+		 *     1. 在字段上有{@link Ignore} 注解
+		 *     2. 在getXXX方法上有{@link Ignore} 注解
+		 * </pre>
+		 *
+		 * @return 是否忽略读
+		 * @since 5.4.2
+		 */
+		public boolean isIgnoreGet() {
+			return AnnotationUtil.hasAnnotation(this.field, Ignore.class)
+					|| AnnotationUtil.hasAnnotation(this.getter, Ignore.class);
+		}
+
+		/**
+		 * 检查字段是否被忽略写，通过{@link Ignore} 注解完成，规则为：
+		 * <pre>
+		 *     1. 在字段上有{@link Ignore} 注解
+		 *     2. 在setXXX方法上有{@link Ignore} 注解
+		 * </pre>
+		 *
+		 * @return 是否忽略写
+		 * @since 5.4.2
+		 */
+		public boolean isIgnoreSet() {
+			return AnnotationUtil.hasAnnotation(this.field, Ignore.class)
+					|| AnnotationUtil.hasAnnotation(this.setter, Ignore.class);
 		}
 
 		//------------------------------------------------------------------------------------ Private method start

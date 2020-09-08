@@ -625,7 +625,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		Method getter;
 		Object value;
 		for (PropDesc prop : props) {
-			if(this.config.isIgnoreTransient() && prop.isTransient()){
+			if(this.config.isTransientSupport() && prop.isTransient()){
 				// 忽略Transient字段和方法
 				continue;
 			}

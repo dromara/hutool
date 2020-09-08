@@ -1,12 +1,11 @@
 package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.BeanException;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
 import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ModifierUtil;
@@ -23,7 +22,14 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Bean拷贝
+ * Bean拷贝，提供：
+ *
+ * <pre>
+ *     1. Bean 转 Bean
+ *     2. Bean 转 Map
+ *     3. Map  转 Bean
+ *     4. Map  转 Map
+ * </pre>
  * 
  * @author looly
  *
@@ -158,36 +164,33 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 		final CopyOptions copyOptions = this.copyOptions;
 
 		String key;
-		Method getter;
 		Object value;
 		for (PropDesc prop : props) {
-			key = prop.getFieldName();
-			// 过滤class属性
-			// 得到property对应的getter方法
-			getter = prop.getGetter();
-			if (null != getter) {
-				// 只读取有getter方法的属性
-				try {
-					value = getter.invoke(bean);
-				} catch (Exception e) {
-					if (copyOptions.ignoreError) {
-						continue;// 忽略反射失败
-					} else {
-						throw new UtilException(e, "Get value of [{}] error!", prop.getFieldName());
-					}
-				}
-				if (CollUtil.contains(ignoreSet, key)) {
-					// 目标属性值被忽略或值提供者无此key时跳过
-					continue;
-				}
-				if (null == value && copyOptions.ignoreNullValue) {
-					continue;// 当允许跳过空时，跳过
-				}
-				if (bean.equals(value)) {
-					continue;// 值不能为bean本身，防止循环引用
-				}
-				targetMap.put(mappingKey(copyOptions.fieldMapping, key), value);
+			// 忽略注解的字段
+			if(prop.isIgnoreGet()){
+				continue;
 			}
+			key = prop.getFieldName();
+			if (CollUtil.contains(ignoreSet, key)) {
+				// 目标属性值被忽略或值提供者无此key时跳过
+				continue;
+			}
+			try {
+				value = prop.getValue(bean);
+			} catch (Exception e) {
+				if (copyOptions.ignoreError) {
+					continue;// 忽略反射失败
+				} else {
+					throw new BeanException(e, "Get value of [{}] error!", prop.getFieldName());
+				}
+			}
+			if (null == value && copyOptions.ignoreNullValue) {
+				continue;// 当允许跳过空时，跳过
+			}
+			if (bean.equals(value)) {
+				continue;// 值不能为bean本身，防止循环引用
+			}
+			targetMap.put(mappingKey(copyOptions.fieldMapping, key), value);
 		}
 	}
 
@@ -228,6 +231,17 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				// 目标属性值被忽略或值提供者无此key时跳过
 				continue;
 			}
+
+			// 在支持情况下，忽略transient修饰（包括修饰和注解）
+			if(copyOptions.isTransientSupport() && prop.isTransient()){
+				continue;
+			}
+
+			// @Ignore修饰的字段和setXXX方法忽略之
+			if(prop.isIgnoreSet()){
+				continue;
+			}
+
 			final String providerKey = mappingKey(fieldReverseMapping, fieldName);
 			if (false == valueProvider.containsKey(providerKey)) {
 				// 无对应值可提供
@@ -241,34 +255,18 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			}
 
 			// 获取目标字段真实类型
-			Type fieldType = (null == setterMethod) ? TypeUtil.getType(field) : TypeUtil.getFirstParamType(setterMethod);
-			fieldType = TypeUtil.getActualType(this.destType ,fieldType);
+			final Type fieldType = TypeUtil.getActualType(this.destType ,prop.getFieldType());
 
 			value = valueProvider.value(providerKey, fieldType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}
 			if (bean == value) {
-				continue;// 值不能为bean本身，防止循环引用
+				// 值不能为bean本身，防止循环引用
+				continue;
 			}
 
-			try {
-				// valueProvider在没有对值做转换且当类型不匹配的时候，执行默认转换
-				propClass = prop.getFieldClass();
-				if (false ==propClass.isInstance(value)) {
-					value = Convert.convertWithCheck(propClass, value, null, copyOptions.ignoreError);
-					if (null == value && copyOptions.ignoreNullValue) {
-						continue;// 当允许跳过空时，跳过
-					}
-				}
-
-				prop.setValue(bean, value);
-			} catch (Exception e) {
-				if (false ==copyOptions.ignoreError) {
-					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
-				}
-				// 忽略注入失败
-			}
+			prop.setValueWithConvert(bean, value, copyOptions.ignoreNullValue, copyOptions.ignoreError);
 		}
 	}
 

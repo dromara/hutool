@@ -62,6 +62,18 @@ public class AnnotationUtil {
 	}
 
 	/**
+	 * 检查是否包含指定注解指定注解
+	 *
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类型
+	 * @return 是否包含指定注解
+	 * @since 5.4.2
+	 */
+	public static boolean hasAnnotation(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) {
+		return null != getAnnotation(annotationEle, annotationType);
+	}
+
+	/**
 	 * 获取指定注解默认值<br>
 	 * 如果无指定的属性方法返回null
 	 *

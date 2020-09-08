@@ -32,9 +32,9 @@ public class JSONConfig implements Serializable {
 	 */
 	private boolean ignoreNullValue = true;
 	/**
-	 * 是否忽略transient关键字修饰的字段
+	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 */
-	private boolean ignoreTransient = true;
+	private boolean transientSupport = true;
 
 	/**
 	 * 创建默认的配置项
@@ -150,9 +150,11 @@ public class JSONConfig implements Serializable {
 	 *
 	 * @return 是否忽略transient关键字修饰的字段
 	 * @since 5.3.11
+	 * @deprecated 此方法名称有二义性，请使用{@link #isTransientSupport()}
 	 */
+	@Deprecated
 	public boolean isIgnoreTransient() {
-		return this.ignoreTransient;
+		return isTransientSupport();
 	}
 
 	/**
@@ -161,9 +163,32 @@ public class JSONConfig implements Serializable {
 	 * @param ignoreTransient 是否忽略transient关键字修饰的字段
 	 * @return this
 	 * @since 5.3.11
+	 * @deprecated 此方法名称有二义性，请使用{@link #setTransientSupport(boolean)}
 	 */
+	@Deprecated
 	public JSONConfig setIgnoreTransient(boolean ignoreTransient) {
-		this.ignoreTransient = ignoreTransient;
+		return setTransientSupport(ignoreTransient);
+	}
+
+	/**
+	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
+	 *
+	 * @return 是否支持
+	 * @since 5.4.2
+	 */
+	public boolean isTransientSupport() {
+		return this.transientSupport;
+	}
+
+	/**
+	 * 设置是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
+	 *
+	 * @param transientSupport 是否支持
+	 * @return this
+	 * @since 5.4.2
+	 */
+	public JSONConfig setTransientSupport(boolean transientSupport) {
+		this.transientSupport = transientSupport;
 		return this;
 	}
 }
