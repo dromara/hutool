@@ -1,7 +1,7 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.annotation.Ignore;
+import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -566,33 +566,33 @@ public class BeanDesc implements Serializable {
 		}
 
 		/**
-		 * 检查字段是否被忽略读，通过{@link Ignore} 注解完成，规则为：
+		 * 检查字段是否被忽略读，通过{@link PropIgnore} 注解完成，规则为：
 		 * <pre>
-		 *     1. 在字段上有{@link Ignore} 注解
-		 *     2. 在getXXX方法上有{@link Ignore} 注解
+		 *     1. 在字段上有{@link PropIgnore} 注解
+		 *     2. 在getXXX方法上有{@link PropIgnore} 注解
 		 * </pre>
 		 *
 		 * @return 是否忽略读
 		 * @since 5.4.2
 		 */
 		public boolean isIgnoreGet() {
-			return AnnotationUtil.hasAnnotation(this.field, Ignore.class)
-					|| AnnotationUtil.hasAnnotation(this.getter, Ignore.class);
+			return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
+					|| AnnotationUtil.hasAnnotation(this.getter, PropIgnore.class);
 		}
 
 		/**
-		 * 检查字段是否被忽略写，通过{@link Ignore} 注解完成，规则为：
+		 * 检查字段是否被忽略写，通过{@link PropIgnore} 注解完成，规则为：
 		 * <pre>
-		 *     1. 在字段上有{@link Ignore} 注解
-		 *     2. 在setXXX方法上有{@link Ignore} 注解
+		 *     1. 在字段上有{@link PropIgnore} 注解
+		 *     2. 在setXXX方法上有{@link PropIgnore} 注解
 		 * </pre>
 		 *
 		 * @return 是否忽略写
 		 * @since 5.4.2
 		 */
 		public boolean isIgnoreSet() {
-			return AnnotationUtil.hasAnnotation(this.field, Ignore.class)
-					|| AnnotationUtil.hasAnnotation(this.setter, Ignore.class);
+			return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
+					|| AnnotationUtil.hasAnnotation(this.setter, PropIgnore.class);
 		}
 
 		//------------------------------------------------------------------------------------ Private method start

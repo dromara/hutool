@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
@@ -268,7 +269,9 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toBeanTest7() {
-		String jsonStr = " {\"result\":{\"phone\":\"15926297342\",\"appKey\":\"e1ie12e1ewsdqw1\",\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"message\":\"validate message\"}";
+		String jsonStr = " {\"result\":{\"phone\":\"15926297342\",\"appKey\":\"e1ie12e1ewsdqw1\"," +
+				"\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"" +
+				"message\":\"validate message\"}";
 		ResultDto<?> dto = JSONUtil.toBean(jsonStr, ResultDto.class);
 		Assert.assertEquals("validate message", dto.getMessage());
 	}
@@ -466,6 +469,9 @@ public class JSONObjectTest {
 		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
 		Assert.assertEquals("123", parse.getStr("username"));
 		Assert.assertEquals("abc", parse.getStr("userName"));
+
+		// 测试ignore注解是否有效
+		Assert.assertNull(parse.getStr("fieldToIgnore"));
 	}
 
 	/**
@@ -477,14 +483,18 @@ public class JSONObjectTest {
 	public static class SameNameBean {
 		private final String username = "123";
 		private final String userName = "abc";
-
 		public String getUsername() {
 			return username;
 		}
+		@PropIgnore
+		private final String fieldToIgnore = "sfdsdads";
 
 		public String getUserName() {
 			return userName;
 		}
 
+		public String getFieldToIgnore(){
+			return this.fieldToIgnore;
+		}
 	}
 }

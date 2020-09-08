@@ -19,6 +19,7 @@
 * 【extra 】     QRConfig中添加qrVersion属性（pr#1068@Github）
 * 【core  】     ArrayUtil增加equals方法
 * 【core  】     BeanDesc增加方法
+* 【core  】     增加@PropIgnore注解（issue#I1U846@Gitee）
 
 ### Bug修复
 * 【core  】     重新整理农历节假日，解决一个pr过来的玩笑导致的问题
