@@ -19,4 +19,10 @@ public class DataSizeUtilTest {
 		parse = DataSizeUtil.parse("3mb");
 		Assert.assertEquals(3145728, parse);
 	}
+
+	@Test
+	public void formatTest(){
+		final String format = DataSizeUtil.format(Long.MAX_VALUE);
+		Assert.assertEquals("8,192 EB", format);
+	}
 }
