@@ -3,7 +3,9 @@ package cn.hutool.core.bean.copier;
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanException;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
+import cn.hutool.core.bean.copier.provider.DynaBeanValueProvider;
 import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.copier.Copier;
@@ -97,6 +99,9 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			if (this.source instanceof ValueProvider) {
 				// 目标只支持Bean
 				valueProviderToBean((ValueProvider<String>) this.source, this.dest);
+			} else if (this.source instanceof DynaBean) {
+				// 目标只支持Bean
+				valueProviderToBean(new DynaBeanValueProvider((DynaBean) this.source, copyOptions.ignoreError), this.dest);
 			} else if (this.source instanceof Map) {
 				if (this.dest instanceof Map) {
 					mapToMap((Map<?, ?>) this.source, (Map<?, ?>) this.dest);
