@@ -161,6 +161,16 @@ public class ChineseDate {
 		return this.month;
 	}
 
+	/**
+	 * 当前农历月份是否为闰月
+	 *
+	 * @return 是否为闰月
+	 * @since 5.4.2
+	 */
+	public boolean isLeapMonth(){
+		return ChineseMonth.isLeapMonth(this.year, this.month);
+	}
+
 
 	/**
 	 * 获得农历月份（中文，例如二月，十二月，或者润一月）
@@ -168,7 +178,7 @@ public class ChineseDate {
 	 * @return 返回农历月份
 	 */
 	public String getChineseMonth() {
-		return ChineseMonth.getChineseMonthName(this.leap, this.month, false);
+		return ChineseMonth.getChineseMonthName(isLeapMonth(), this.month, false);
 	}
 
 	/**
@@ -177,7 +187,7 @@ public class ChineseDate {
 	 * @return 返回农历月份称呼
 	 */
 	public String getChineseMonthName() {
-		return ChineseMonth.getChineseMonthName(this.leap, this.month, true);
+		return ChineseMonth.getChineseMonthName(isLeapMonth(), this.month, true);
 	}
 
 	/**

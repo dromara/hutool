@@ -68,4 +68,13 @@ public class ChineseDateTest {
 		String cyclicalYMD = chineseDate.getCyclicalYMD();
 		Assert.assertEquals("庚子年甲申月癸卯日",cyclicalYMD);
 	}
+
+	@Test
+	public void getChineseMonthTest(){
+		ChineseDate chineseDate = new ChineseDate(2020,6,15);
+		Assert.assertEquals("六月", chineseDate.getChineseMonth());
+
+		chineseDate = new ChineseDate(2020,4,15);
+		Assert.assertEquals("闰四月", chineseDate.getChineseMonth());
+	}
 }
