@@ -136,10 +136,10 @@ public class CompareUtil {
 	 */
 	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor, boolean reverse) {
 		Objects.requireNonNull(keyExtractor);
-		Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+		PinyinComparator pinyinComparator = new PinyinComparator();
 		if (reverse) {
-			return (o1, o2) -> chineseCollator.compare(keyExtractor.apply(o2), keyExtractor.apply(o1));
+			return (o1, o2) -> pinyinComparator.compare(keyExtractor.apply(o2), keyExtractor.apply(o1));
 		}
-		return (o1, o2) -> chineseCollator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
+		return (o1, o2) -> pinyinComparator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
 	}
 }
