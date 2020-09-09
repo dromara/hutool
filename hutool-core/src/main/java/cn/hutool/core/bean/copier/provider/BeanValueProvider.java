@@ -1,7 +1,7 @@
 package cn.hutool.core.bean.copier.provider;
 
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.util.StrUtil;
 
@@ -38,7 +38,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 
 		Object result = null;
 		if (null != sourcePd) {
-			result = sourcePd.getValueWithConvert(this.source, valueType, this.ignoreError);
+			result = sourcePd.getValue(this.source, valueType, this.ignoreError);
 		}
 		return result;
 	}
@@ -48,7 +48,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 		final PropDesc sourcePd = getPropDesc(key, null);
 
 		// 字段描述不存在或忽略读的情况下，表示不存在
-		return null != sourcePd && false == sourcePd.isIgnoreGet();
+		return null != sourcePd && false == sourcePd.isReadable(false);
 	}
 
 	/**

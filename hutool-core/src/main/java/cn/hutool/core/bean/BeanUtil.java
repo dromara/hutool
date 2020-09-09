@@ -1,6 +1,5 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
@@ -29,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Bean工具类
@@ -167,6 +167,17 @@ public class BeanUtil {
 	 */
 	public static BeanDesc getBeanDesc(Class<?> clazz) {
 		return BeanDescCache.INSTANCE.getBeanDesc(clazz, ()-> new BeanDesc(clazz));
+	}
+
+	/**
+	 * 遍历Bean的属性
+	 *
+	 * @param clazz Bean类
+	 * @param action 每个元素的处理类
+	 * @since 5.4.2
+	 */
+	public static void descForEach(Class<?> clazz, Consumer<? super PropDesc> action){
+		getBeanDesc(clazz).getProps().forEach(action);
 	}
 
 	// --------------------------------------------------------------------------------------------------------- PropertyDescriptor
@@ -616,32 +627,11 @@ public class BeanUtil {
 			return null;
 		}
 
-		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
-
-		String key;
-		Method getter;
-		Object value;
-		for (PropDesc prop : props) {
-			key = prop.getFieldName();
-			// 过滤class属性
-			// 得到property对应的getter方法
-			getter = prop.getGetter();
-			if (null != getter) {
-				// 只读取有getter方法的属性
-				try {
-					value = getter.invoke(bean);
-				} catch (Exception ignore) {
-					continue;
-				}
-				if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
-					key = keyEditor.edit(key);
-					if (null != key) {
-						targetMap.put(key, value);
-					}
-				}
-			}
-		}
-		return targetMap;
+		return BeanCopier.create(bean, targetMap,
+				CopyOptions.create()
+						.setIgnoreNullValue(ignoreNullValue)
+						.setFieldNameEditor(keyEditor)
+		).copy();
 	}
 
 	// --------------------------------------------------------------------------------------------- copyProperties

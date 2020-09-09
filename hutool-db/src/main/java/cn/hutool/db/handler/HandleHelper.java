@@ -1,7 +1,7 @@
 package cn.hutool.db.handler;
 
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;

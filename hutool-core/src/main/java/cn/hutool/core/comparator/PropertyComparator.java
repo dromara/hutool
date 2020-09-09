@@ -1,10 +1,10 @@
 package cn.hutool.core.comparator;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Bean属性排序器<br>
@@ -53,8 +53,8 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 		Comparable<?> v1;
 		Comparable<?> v2;
 		try {
-			v1 = (Comparable<?>) BeanUtil.getProperty(o1, property);
-			v2 = (Comparable<?>) BeanUtil.getProperty(o2, property);
+			v1 = BeanUtil.getProperty(o1, property);
+			v2 = BeanUtil.getProperty(o2, property);
 		} catch (Exception e) {
 			throw new ComparatorException(e);
 		}
