@@ -4,7 +4,6 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -444,7 +443,7 @@ public class BeanUtilTest {
 	public void setPropertiesTest(){
 		Map<String, Object> resultMap = MapUtil.newHashMap();
 		BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
-		Console.log(resultMap);
+		Assert.assertEquals("{codeList={0={name=张三}}}", resultMap.toString());
 	}
 
 	@Test

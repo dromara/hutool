@@ -216,12 +216,12 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 		}
 		final HashSet<String> ignoreSet = (null != copyOptions.ignoreProperties) ? CollUtil.newHashSet(copyOptions.ignoreProperties) : null;
 
+		// 遍历目标bean的所有属性
 		BeanUtil.descForEach(actualEditable, (prop)->{
 			if(false == prop.isWritable(this.copyOptions.isTransientSupport())){
 				// 字段不可写，跳过之
 				return;
 			}
-
 			// 检查属性名
 			String fieldName = prop.getFieldName();
 			if (CollUtil.contains(ignoreSet, fieldName)) {

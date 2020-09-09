@@ -48,7 +48,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 		final PropDesc sourcePd = getPropDesc(key, null);
 
 		// 字段描述不存在或忽略读的情况下，表示不存在
-		return null != sourcePd && false == sourcePd.isReadable(false);
+		return null != sourcePd && sourcePd.isReadable(false);
 	}
 
 	/**

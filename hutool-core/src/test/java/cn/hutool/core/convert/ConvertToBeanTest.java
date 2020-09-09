@@ -1,7 +1,6 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.bean.BeanUtilTest.SubPerson;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +61,6 @@ public class ConvertToBeanTest {
 		map1.put("key4", 4);
 
 		Map<String, String> map2 = Convert.toMap(String.class, String.class, map1);
-		Console.log(map2);
 
 		Assert.assertEquals("1", map2.get("key1"));
 		Assert.assertEquals("2", map2.get("key2"));
