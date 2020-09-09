@@ -20,10 +20,6 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 	private final K key;
 	private final V value;
 
-	public static <K, V> Pair<K, V> of(K key, V value) {
-		return new Pair<>(key, value);
-	}
-
 	/**
 	 * 构造
 	 * 
@@ -33,6 +29,10 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 	public Pair(K key, V value) {
 		this.key = key;
 		this.value = value;
+	}
+
+	public static <K, V> Pair<K, V> of(K key, V value) {
+		return new Pair<>(key, value);
 	}
 
 	/**
