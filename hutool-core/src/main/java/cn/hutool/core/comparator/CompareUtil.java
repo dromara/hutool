@@ -1,8 +1,6 @@
 package cn.hutool.core.comparator;
 
-import java.text.Collator;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -116,10 +114,10 @@ public class CompareUtil {
 	/**
 	 * 中文比较器
 	 *
-	 * @param keyExtractor 从对象中提取中文
-	 * @param <T> 对象类型
-	 *
+	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
+	 * @param <T>          对象类型
 	 * @return 中文比较器
+	 * @since 5.4.3
 	 */
 	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor) {
 		return comparingPinyin(keyExtractor, false);
@@ -128,11 +126,11 @@ public class CompareUtil {
 	/**
 	 * 中文比较器
 	 *
-	 * @param keyExtractor 从对象中提取中文
-	 * @param reverse 是否反序
-	 * @param <T> 对象类型
-	 *
+	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
+	 * @param reverse      是否反序
+	 * @param <T>          对象类型
 	 * @return 中文比较器
+	 * @since 5.4.3
 	 */
 	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor, boolean reverse) {
 		Objects.requireNonNull(keyExtractor);

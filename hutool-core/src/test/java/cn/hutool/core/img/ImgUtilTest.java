@@ -84,7 +84,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void sliceByRowsAndColsTest() {
-		ImgUtil.sliceByRowsAndCols(FileUtil.file("e:/pic/1.png"), FileUtil.file("e:/pic/dest"), 10, 10);
+		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
 	}
 	
 	@Test

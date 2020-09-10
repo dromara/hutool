@@ -4,8 +4,6 @@ import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CompareUtilTest {
@@ -21,8 +19,7 @@ public class CompareUtilTest {
 
 	@Test
 	public void comparingPinyin() {
-		List<String> list = new ArrayList<>();
-		Collections.addAll(list, "成都", "北京", "上海", "深圳");
+		List<String> list = ListUtil.toList("成都", "北京", "上海", "深圳");
 
 		List<String> ascendingOrderResult = ListUtil.of("北京", "成都", "上海", "深圳");
 		List<String> descendingOrderResult = ListUtil.of("深圳", "上海", "成都", "北京");
