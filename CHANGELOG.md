@@ -6,7 +6,8 @@
 # 5.4.3 (2020-09-10)
 
 ### 新特性
-* 【core  】     使用静态的of方法来new对象（pr#177@Gitee）
+* 【core   】     使用静态的of方法来new对象（pr#177@Gitee）
+* 【setting】     Setting增加store无参方法（issue#1072@Github）
 
 ### Bug修复
 

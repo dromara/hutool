@@ -3,6 +3,7 @@ package cn.hutool.setting;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.UrlResource;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
@@ -10,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -168,9 +170,22 @@ public class SettingLoader {
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
+		store(FileUtil.touch(absolutePath));
+	}
+
+	/**
+	 * 持久化当前设置，会覆盖掉之前的设置<br>
+	 * 持久化会不会保留之前的分组
+	 *
+	 * @param file 设置文件
+	 * @since 5.4.3
+	 */
+	public void store(File file) {
+		Assert.notNull(file, "File to store must be not null !");
+		log.debug("Store Setting to [{}]...", file.getAbsolutePath());
 		PrintWriter writer = null;
 		try {
-			writer = FileUtil.getPrintWriter(absolutePath, charset, false);
+			writer = FileUtil.getPrintWriter(file, charset, false);
 			store(writer);
 		} finally {
 			IoUtil.close(writer);

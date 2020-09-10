@@ -2442,6 +2442,20 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 获得一个打印写入对象，可以有print
+	 *
+	 * @param file     文件
+	 * @param charset  字符集
+	 * @param isAppend 是否追加
+	 * @return 打印对象
+	 * @throws IORuntimeException IO异常
+	 * @since 5.4.3
+	 */
+	public static PrintWriter getPrintWriter(File file, Charset charset, boolean isAppend) throws IORuntimeException {
+		return new PrintWriter(getWriter(file, charset, isAppend));
+	}
+
+	/**
 	 * 获取当前系统的换行分隔符
 	 *
 	 * <pre>
