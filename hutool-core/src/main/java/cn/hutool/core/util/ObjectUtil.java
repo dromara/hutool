@@ -653,21 +653,21 @@ public class ObjectUtil {
      * 判断传入的对象是否是基本类型的默认值。<br>
      * 当类成员为基本类型时，即使没有对其初始化，jvm会为其赋初始值,八大类型的默认值如下所示：<br>
      * <p>
-     * boolean --- false<br>
+     * boolean ---》 false<br>
      * <p>
-     * char --- '/uoooo'(null)<br>
+     * char ---》 '/uoooo'(null)<br>
      * <p>
-     * byte --- (byte)0<br>
+     * byte ---》 (byte)0<br>
      * <p>
-     * short --- (short)0<br>
+     * short ---》 (short)0<br>
      * <p>
-     * int --- 0<br>
+     * int ---》 0<br>
      * <p>
-     * long --- 0L<br>
+     * long ---》 0L<br>
      * <p>
-     * float --- 0.0f<br>
+     * float ---》 0.0f<br>
      * <p>
-     * double --- 0.0d<br>
+     * double ---》 0.0d<br>
      *
      * @param object        待判断的值
      * @param ignoreBoolean 是否忽略boolean类型的判断
