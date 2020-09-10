@@ -474,4 +474,19 @@ public class ListUtil {
 	public static <T> List<T> empty() {
 		return Collections.emptyList();
 	}
+
+	/**
+	 * 像java11一样获取一个List
+	 * @param ts 对象
+	 * @param <T> 对象类型
+	 * @return 不可修改List
+	 */
+	public static <T> List<T> of(T... ts) {
+		if (ArrayUtil.isEmpty(ts)) {
+			return Collections.emptyList();
+		}
+		List<T> unmodifiableList = new ArrayList<>(ts.length);
+		Collections.addAll(unmodifiableList, ts);
+		return Collections.unmodifiableList(unmodifiableList);
+	}
 }

@@ -31,6 +31,10 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 		this.value = value;
 	}
 
+	public static <K, V> Pair<K, V> of(K key, V value) {
+		return new Pair<>(key, value);
+	}
+
 	/**
 	 * 获取键
 	 * @return 键

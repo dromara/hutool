@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Arrays;
 
 /**
  * 比较器链。此链包装了多个比较器，最终比较结果按照比较器顺序综合多个比较器结果。<br>
@@ -79,6 +80,26 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	public ComparatorChain(final List<Comparator<E>> list, final BitSet bits) {
 		chain = list;
 		orderingBits = bits;
+	}
+
+	public static <E> ComparatorChain<E> of(Comparator<E> comparator) {
+		return of(comparator, false);
+	}
+
+	public static <E> ComparatorChain<E> of(Comparator<E> comparator, boolean reverse) {
+		return new ComparatorChain<>(comparator, reverse);
+	}
+
+	public static <E> ComparatorChain<E> of(Comparator<E>... comparators) {
+		return of(Arrays.asList(comparators));
+	}
+
+	public static <E> ComparatorChain<E> of(List<Comparator<E>> comparators) {
+		return new ComparatorChain<>(comparators);
+	}
+
+	public static <E> ComparatorChain<E> of(List<Comparator<E>> comparators, BitSet bits) {
+		return new ComparatorChain<>(comparators, bits);
 	}
 
 	// -----------------------------------------------------------------------
