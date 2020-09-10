@@ -220,7 +220,6 @@ public class ObjectUtilTest {
      */
     class Course {
         private String name;
-        private Integer score;
         private List<Student> students;
 
         public String getName() {

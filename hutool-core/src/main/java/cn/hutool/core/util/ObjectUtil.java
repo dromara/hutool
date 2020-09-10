@@ -675,22 +675,22 @@ public class ObjectUtil {
      */
     public static boolean isPrimitiveDefault(Object object, Boolean ignoreBoolean) {
         String typeName = object.getClass().getSimpleName();
-        if (typeName.equalsIgnoreCase(java.lang.Integer.class.getSimpleName())) {
+        if (typeName.equalsIgnoreCase(Integer.class.getSimpleName())) {
             return (int) object == 0;
-        } else if (typeName.equalsIgnoreCase(java.lang.Byte.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Byte.class.getSimpleName())) {
             return (byte) object == 0;
-        } else if (typeName.equalsIgnoreCase(java.lang.Long.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Long.class.getSimpleName())) {
             return (long) object == 0L;
-        } else if (typeName.equalsIgnoreCase(java.lang.Double.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Double.class.getSimpleName())) {
             return (double) object == 0.0d;
-        } else if (typeName.equalsIgnoreCase(java.lang.Float.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Float.class.getSimpleName())) {
             return (float) object == 0.0f;
-        } else if (typeName.equalsIgnoreCase(java.lang.Character.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Character.class.getSimpleName())) {
             return (char) object == '\u0000';
-        } else if (typeName.equalsIgnoreCase(java.lang.Short.class.getSimpleName())) {
+        } else if (typeName.equalsIgnoreCase(Short.class.getSimpleName())) {
             return (short) object == 0;
-        } else if (!ignoreBoolean && typeName.equalsIgnoreCase(java.lang.Boolean.class.getSimpleName())) {
-            return (boolean) object == false;
+        } else if (!ignoreBoolean && typeName.equalsIgnoreCase(Boolean.class.getSimpleName())) {
+            return !(boolean) object;
         }
         return false;
     }
