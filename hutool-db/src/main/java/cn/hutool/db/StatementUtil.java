@@ -163,9 +163,9 @@ public class StatementUtil {
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, paramsBatch);
 		PreparedStatement ps = conn.prepareStatement(sql);
-		Map<Integer, Integer> nullTypeMap = new HashMap<>();
+		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Object[] params : paramsBatch) {
-			StatementUtil.fillParams(ps, params, nullTypeMap);
+			fillParams(ps, new ArrayIter<>(params), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
@@ -191,7 +191,7 @@ public class StatementUtil {
 		//null参数的类型缓存，避免循环中重复获取类型
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Entity entity : entities) {
-			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, fields), nullTypeMap);
+			fillParams(ps, CollectionUtil.valuesOfKeys(entity, fields), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
