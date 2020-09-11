@@ -163,8 +163,9 @@ public class StatementUtil {
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, paramsBatch);
 		PreparedStatement ps = conn.prepareStatement(sql);
+		Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Object[] params : paramsBatch) {
-			StatementUtil.fillParams(ps, params);
+			StatementUtil.fillParams(ps, params, nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
