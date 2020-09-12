@@ -195,10 +195,10 @@ public class UrlQuery {
 			}
 			key = entry.getKey();
 			if (StrUtil.isNotEmpty(key)) {
-				sb.append(URLUtil.encodeAll(StrUtil.str(key), charset)).append("=");
+				sb.append(URLUtil.encodeAll(StrUtil.str(key), charset));
 				value = entry.getValue();
-				if (StrUtil.isNotEmpty(value)) {
-					sb.append(URLUtil.encodeAll(StrUtil.str(value), charset));
+				if (null != value) {
+					sb.append("=").append(URLUtil.encodeAll(StrUtil.str(value), charset));
 				}
 			}
 		}
@@ -246,8 +246,8 @@ public class UrlQuery {
 			final String actualKey = URLUtil.decode(key, charset);
 			this.query.put(actualKey, StrUtil.nullToEmpty(URLUtil.decode(value, charset)));
 		} else if (null != value) {
-			// name为空，value作为name，value赋值""
-			this.query.put(URLUtil.decode(value, charset), StrUtil.EMPTY);
+			// name为空，value作为name，value赋值null
+			this.query.put(URLUtil.decode(value, charset), null);
 		}
 	}
 }
