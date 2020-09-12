@@ -172,7 +172,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toParams(String dHex, ECDomainParameters domainParameters) {
-		return toParams(new BigInteger(dHex, 16), domainParameters);
+		return ECKeyUtil.toPrivateParams(dHex, domainParameters);
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toParams(byte[] d, ECDomainParameters domainParameters) {
-		return toParams(new BigInteger(d), domainParameters);
+		return ECKeyUtil.toPrivateParams(d, domainParameters);
 	}
 
 	/**
@@ -214,10 +214,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toParams(BigInteger d, ECDomainParameters domainParameters) {
-		if(null == d){
-			return null;
-		}
-		return new ECPrivateKeyParameters(d, domainParameters);
+		return ECKeyUtil.toPrivateParams(d, domainParameters);
 	}
 
 	/**
@@ -229,10 +226,7 @@ public class BCUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toParams(BigInteger x, BigInteger y, ECDomainParameters domainParameters) {
-		if(null == x || null == y){
-			return null;
-		}
-		return toParams(x.toByteArray(), y.toByteArray(), domainParameters);
+		return ECKeyUtil.toPublicParams(x, y, domainParameters);
 	}
 
 	/**
@@ -278,13 +272,7 @@ public class BCUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toParams(byte[] xBytes, byte[] yBytes, ECDomainParameters domainParameters) {
-		if(null == xBytes || null == yBytes){
-			return null;
-		}
-		final ECCurve curve = domainParameters.getCurve();
-		final int curveLength = getCurveLength(curve);
-		final byte[] encodedPubKey = encodePoint(xBytes, yBytes, curveLength);
-		return new ECPublicKeyParameters(curve.decodePoint(encodedPubKey), domainParameters);
+		return ECKeyUtil.toPublicParams(xBytes, yBytes, domainParameters);
 	}
 
 	/**
@@ -294,14 +282,7 @@ public class BCUtil {
 	 * @return {@link ECPublicKeyParameters}或null
 	 */
 	public static ECPublicKeyParameters toParams(PublicKey publicKey) {
-		if (null == publicKey) {
-			return null;
-		}
-		try {
-			return (ECPublicKeyParameters) ECUtil.generatePublicKeyParameter(publicKey);
-		} catch (InvalidKeyException e) {
-			throw new CryptoException(e);
-		}
+		return ECKeyUtil.toPublicParams(publicKey);
 	}
 
 	/**
@@ -311,14 +292,7 @@ public class BCUtil {
 	 * @return {@link ECPrivateKeyParameters}或null
 	 */
 	public static ECPrivateKeyParameters toParams(PrivateKey privateKey) {
-		if (null == privateKey) {
-			return null;
-		}
-		try {
-			return (ECPrivateKeyParameters) ECUtil.generatePrivateKeyParameter(privateKey);
-		} catch (InvalidKeyException e) {
-			throw new CryptoException(e);
-		}
+		return ECKeyUtil.toPrivateParams(privateKey);
 	}
 
 	/**
@@ -343,59 +317,5 @@ public class BCUtil {
 	 */
 	public static PublicKey readPemPublicKey(InputStream pemStream) {
 		return PemUtil.readPemPublicKey(pemStream);
-	}
-
-	/**
-	 * 将X，Y曲线点编码为bytes
-	 *
-	 * @param xBytes      X坐标bytes
-	 * @param yBytes      Y坐标bytes
-	 * @param curveLength 曲线编码后的长度
-	 * @return 编码bytes
-	 */
-	private static byte[] encodePoint(byte[] xBytes, byte[] yBytes, int curveLength) {
-		xBytes = fixLength(curveLength, xBytes);
-		yBytes = fixLength(curveLength, yBytes);
-		final byte[] encodedPubKey = new byte[1 + xBytes.length + yBytes.length];
-
-		// 压缩类型：无压缩
-		encodedPubKey[0] = 0x04;
-		System.arraycopy(xBytes, 0, encodedPubKey, 1, xBytes.length);
-		System.arraycopy(yBytes, 0, encodedPubKey, 1 + xBytes.length, yBytes.length);
-
-		return encodedPubKey;
-	}
-
-	/**
-	 * 获取Curve长度
-	 *
-	 * @param curve {@link ECCurve}
-	 * @return Curve长度
-	 */
-	private static int getCurveLength(ECCurve curve) {
-		return (curve.getFieldSize() + 7) / 8;
-	}
-
-	/**
-	 * 修正长度
-	 *
-	 * @param curveLength 修正后的长度
-	 * @param src         bytes
-	 * @return 修正后的bytes
-	 */
-	private static byte[] fixLength(int curveLength, byte[] src) {
-		if (src.length == curveLength) {
-			return src;
-		}
-
-		byte[] result = new byte[curveLength];
-		if (src.length > curveLength) {
-			// 裁剪末尾的指定长度
-			System.arraycopy(src, src.length - result.length, result, 0, result.length);
-		} else {
-			// 放置于末尾
-			System.arraycopy(src, 0, result, result.length - src.length, src.length);
-		}
-		return result;
 	}
 }

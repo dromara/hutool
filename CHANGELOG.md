@@ -10,6 +10,7 @@
 * 【setting】     Setting增加store无参方法（issue#1072@Github）
 * 【setting】     StatementUtil增加null缓存（pr#1076@Github）
 * 【core   】     扩充Console功能，支持可变参数（issue#1077@Github）
+* 【crypto 】     增加ECKeyUtil（issue#I1UOF5@Gitee）
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
