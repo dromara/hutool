@@ -1,5 +1,6 @@
 package cn.hutool.crypto;
 
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
@@ -9,6 +10,7 @@ import org.bouncycastle.util.BigIntegers;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -19,6 +21,22 @@ import java.security.PublicKey;
  * @since 5.4.3
  */
 public class ECKeyUtil {
+
+	/**
+	 * 密钥转换为AsymmetricKeyParameter
+	 *
+	 * @param key PrivateKey或者PublicKey
+	 * @return ECPrivateKeyParameters或者ECPublicKeyParameters
+	 */
+	public static AsymmetricKeyParameter toParams(Key key) {
+		if (key instanceof PrivateKey) {
+			return toPrivateParams((PrivateKey) key);
+		} else if (key instanceof PublicKey) {
+			return toPublicParams((PublicKey) key);
+		}
+
+		return null;
+	}
 
 	//--------------------------------------------------------------------------- Public Key
 	/**

@@ -1,6 +1,5 @@
 package cn.hutool.crypto;
 
-import cn.hutool.core.util.HexUtil;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -16,8 +15,6 @@ import org.bouncycastle.math.ec.ECCurve;
 
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -83,12 +80,7 @@ public class BCUtil {
 
 		// 根据曲线恢复公钥格式
 		final ECNamedCurveSpec ecSpec = new ECNamedCurveSpec(curveName, curve, x9ECParameters.getG(), x9ECParameters.getN());
-
-		try {
-			return KeyUtil.getKeyFactory("EC").generatePublic(new ECPublicKeySpec(point, ecSpec));
-		} catch (GeneralSecurityException e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.generatePublicKey("EC", new ECPublicKeySpec(point, ecSpec));
 	}
 
 	/**
@@ -141,27 +133,17 @@ public class BCUtil {
 	 * @since 5.2.0
 	 */
 	public static AsymmetricKeyParameter toParams(Key key) {
-		try {
-			if (key instanceof PrivateKey) {
-				return ECUtil.generatePrivateKeyParameter((PrivateKey) key);
-			} else if (key instanceof PublicKey) {
-				return ECUtil.generatePublicKeyParameter((PublicKey) key);
-			}
-		} catch (InvalidKeyException e) {
-			throw new CryptoException(e);
-		}
-
-		return null;
+		return ECKeyUtil.toParams(key);
 	}
 
 	/**
 	 * 转换为 ECPrivateKeyParameters
 	 *
-	 * @param dHex 私钥d值16进制字符串
+	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2Params(String dHex) {
-		return toSm2Params(HexUtil.toBigInteger(dHex));
+	public static ECPrivateKeyParameters toSm2Params(String d) {
+		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
 	/**
@@ -182,7 +164,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toSm2Params(byte[] d) {
-		return toSm2Params(new BigInteger(d));
+		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
 	/**
@@ -203,7 +185,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toSm2Params(BigInteger d) {
-		return toParams(d, SmUtil.SM2_DOMAIN_PARAMS);
+		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
 	/**
@@ -237,7 +219,7 @@ public class BCUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toSm2Params(String xHex, String yHex) {
-		return toParams(xHex, yHex, SmUtil.SM2_DOMAIN_PARAMS);
+		return ECKeyUtil.toSm2PublicParams(xHex, yHex);
 	}
 
 	/**
@@ -249,7 +231,7 @@ public class BCUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toParams(String xHex, String yHex, ECDomainParameters domainParameters) {
-		return toParams(HexUtil.decodeHex(xHex), HexUtil.decodeHex(yHex), domainParameters);
+		return ECKeyUtil.toPublicParams(xHex, yHex, domainParameters);
 	}
 
 	/**
@@ -260,7 +242,7 @@ public class BCUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toSm2Params(byte[] xBytes, byte[] yBytes) {
-		return toParams(xBytes, yBytes, SmUtil.SM2_DOMAIN_PARAMS);
+		return ECKeyUtil.toSm2PublicParams(xBytes, yBytes);
 	}
 
 	/**
