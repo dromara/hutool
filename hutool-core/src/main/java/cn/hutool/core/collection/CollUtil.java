@@ -414,9 +414,9 @@ public class CollUtil {
 	/**
 	 * 自定义函数判断集合是否包含某类值
 	 *
-	 * @param collection 集合
+	 * @param collection  集合
 	 * @param containFunc 自定义判断函数
-	 * @param <T> 值类型
+	 * @param <T>         值类型
 	 * @return 是否包含自定义规则的值
 	 */
 	public static <T> boolean contains(Collection<T> collection, Predicate<? super T> containFunc) {
@@ -2835,6 +2835,18 @@ public class CollUtil {
 		for (int i = list.size(); i < minLen; i++) {
 			list.add(padObj);
 		}
+	}
+
+	/**
+	 * 使用给定的转换函数，转换源集合为新类型的集合
+	 *
+	 * @param <F> 源元素类型
+	 * @param <T> 目标元素类型
+	 * @return 新类型的集合
+	 * @since 5.4.3
+	 */
+	public static <F, T> Collection<T> trans(Collection<F> collection, Function<? super F, ? extends T> function) {
+		return new TransCollection<>(collection, function);
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
