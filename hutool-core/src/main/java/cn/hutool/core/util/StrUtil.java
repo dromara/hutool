@@ -2633,7 +2633,7 @@ public class StrUtil {
 		}
 
 		final int length = str.length();
-		final StringBuilder sb = new StringBuilder();
+		final StrBuilder sb = new StrBuilder();
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);
@@ -2642,12 +2642,12 @@ public class StrUtil {
 				// 遇到大写字母处理
 				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
 				if (null != preChar && Character.isUpperCase(preChar)) {
-					// 前一个字符为大写，则按照一个词对待
+					// 前一个字符为大写，则按照一个词对待，例如AB
 					sb.append(c);
-				} else if (null != nextChar && Character.isUpperCase(nextChar)) {
-					// 后一个为大写字母，按照一个词对待
+				} else if (null != nextChar && (false == Character.isLowerCase(nextChar))) {
+					// 后一个为非小写字母，按照一个词对待
 					if (null != preChar && symbol != preChar) {
-						// 前一个是非大写时按照新词对待，加连接符
+						// 前一个是非大写时按照新词对待，加连接符，例如xAB
 						sb.append(symbol);
 					}
 					sb.append(c);
@@ -2660,8 +2660,11 @@ public class StrUtil {
 					sb.append(Character.toLowerCase(c));
 				}
 			} else {
-				if (sb.length() > 0 && Character.isUpperCase(sb.charAt(sb.length() - 1)) && symbol != c) {
-					// 当结果中前一个字母为大写，当前为小写，说明此字符为新词开始（连接符也表示新词）
+				if (symbol != c
+						&& sb.length() > 0
+						&& Character.isUpperCase(sb.charAt(-1))
+						&& Character.isLowerCase(c)) {
+					// 当结果中前一个字母为大写，当前为小写(非数字或字符)，说明此字符为新词开始（连接符也表示新词）
 					sb.append(symbol);
 				}
 				// 小写或符号
