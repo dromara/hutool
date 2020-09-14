@@ -618,11 +618,19 @@ public class KeyUtil {
 	 */
 	public static String getAlgorithmAfterWith(String algorithm) {
 		Assert.notNull(algorithm, "algorithm must be not null !");
+
+		if(StrUtil.startWithIgnoreCase(algorithm, "ECIESWith")){
+			return "EC";
+		}
+
 		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
 		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
-		if ("ECDSA".equalsIgnoreCase(algorithm) || "SM2".equalsIgnoreCase(algorithm)) {
+		if ("ECDSA".equalsIgnoreCase(algorithm)
+				|| "SM2".equalsIgnoreCase(algorithm)
+				|| "ECIES".equalsIgnoreCase(algorithm)
+		) {
 			algorithm = "EC";
 		}
 		return algorithm;

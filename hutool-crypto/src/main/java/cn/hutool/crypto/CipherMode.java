@@ -1,26 +1,30 @@
-package cn.hutool.crypto.asymmetric;
+package cn.hutool.crypto;
 
 import javax.crypto.Cipher;
 
 /**
- * 密钥类型
- * 
- * @author Looly
+ * Cipher模式的枚举封装
  *
+ * @author looly
+ * @since 5.4.3
  */
-public enum KeyType {
+public enum CipherMode {
 	/**
-	 * 公钥
+	 * 加密模式
 	 */
-	PublicKey(Cipher.PUBLIC_KEY),
+	encrypt(Cipher.ENCRYPT_MODE),
 	/**
-	 * 私钥
+	 * 解密模式
 	 */
-	PrivateKey(Cipher.PRIVATE_KEY),
+	decrypt(Cipher.DECRYPT_MODE),
 	/**
-	 * 密钥
+	 * 包装模式
 	 */
-	SecretKey(Cipher.SECRET_KEY);
+	wrap(Cipher.WRAP_MODE),
+	/**
+	 * 拆包模式
+	 */
+	unwrap(Cipher.UNWRAP_MODE);
 
 
 	/**
@@ -28,7 +32,7 @@ public enum KeyType {
 	 *
 	 * @param value 见{@link Cipher}
 	 */
-	KeyType(int value) {
+	CipherMode(int value) {
 		this.value = value;
 	}
 
