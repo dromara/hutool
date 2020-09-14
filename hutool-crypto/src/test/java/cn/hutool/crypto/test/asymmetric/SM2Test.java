@@ -1,6 +1,7 @@
 package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
@@ -220,9 +221,12 @@ public class SM2Test {
 		final ECPrivateKeyParameters ecPrivateKeyParameters = ECKeyUtil.toSm2PrivateParams(d);
 
 		final SM2 sm2 = new SM2(ecPrivateKeyParameters, ecPublicKeyParameters);
+		sm2.setMode(SM2Engine.Mode.C1C2C3);
 		final String encryptHex = sm2.encryptHex(data, KeyType.PublicKey);
+		Console.log(encryptHex);
 		final String decryptStr = sm2.decryptStr(encryptHex, KeyType.PrivateKey);
 
 		Assert.assertEquals(data, decryptStr);
 	}
+
 }
