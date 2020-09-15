@@ -14,6 +14,7 @@
 * 【core   】     增加TransXXX（issue#I1TU1Y@Gitee）
 * 【core   】     增加Generator
 * 【db     】     Column增加是否主键、保留位数等字段
+* 【cache  】     Cache接口增加get重载（issue#1080@Github）
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
