@@ -17,4 +17,13 @@ public class AESTest {
 		Assert.assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
 	}
 
+	@Test
+	public void encryptPKCS7Test() {
+		// 构建
+		AES aes = new AES(Mode.CBC.name(), "pkcs7padding",
+				"1234567890123456".getBytes(), "1234567890123456".getBytes());
+		String encryptHex = aes.encryptHex("123456");
+		Assert.assertEquals("d637735ae9e21ba50cb686b74fab8d2c", encryptHex);
+	}
+
 }
