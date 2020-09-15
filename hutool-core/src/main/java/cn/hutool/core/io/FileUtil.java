@@ -1005,20 +1005,14 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 修改文件或目录的文件名，不变更路径，只是简单修改文件名<br>
-	 * 重命名有两种模式：<br>
-	 * 1、isRetainExt为true时，保留原扩展名：
+	 * 修改文件或目录的文件名，不变更路径，只是简单修改文件名，不保留扩展名。<br>
 	 *
 	 * <pre>
-	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
-	 * </pre>
-	 *
-	 * <pre>
-	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
+	 * FileUtil.rename(file, "aaa.png", true) xx/xx.png =》xx/aaa.png
 	 * </pre>
 	 *
 	 * @param file       被修改的文件
-	 * @param newName    新的文件名，包括扩展名
+	 * @param newName    新的文件名，如需扩展名，需自行在此参数加上，原文件名的扩展名不会被保留
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件
 	 * @since 5.3.6
@@ -1035,6 +1029,7 @@ public class FileUtil extends PathUtil {
 	 * <pre>
 	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
 	 * </pre>
+	 *
 	 * <p>
 	 * 2、isRetainExt为false时，不保留原扩展名，需要在newName中
 	 *

@@ -12,6 +12,8 @@
 * 【core   】     扩充Console功能，支持可变参数（issue#1077@Github）
 * 【crypto 】     增加ECKeyUtil（issue#I1UOF5@Gitee）
 * 【core   】     增加TransXXX（issue#I1TU1Y@Gitee）
+* 【core   】     增加Generator
+* 【db     】     Column增加是否主键、保留位数等字段
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
