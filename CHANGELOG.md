@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.3 (2020-09-15)
+# 5.4.3 (2020-09-16)
 
 ### 新特性
 * 【core   】     使用静态的of方法来new对象（pr#177@Gitee）
@@ -15,6 +15,7 @@
 * 【core   】     增加Generator
 * 【db     】     Column增加是否主键、保留位数等字段
 * 【cache  】     Cache接口增加get重载（issue#1080@Github）
+* 【core   】     增加Interner和InternUtil（issue#I1TU1Y@Gitee）
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
