@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
@@ -124,6 +125,16 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static DateTime date(TemporalAccessor temporalAccessor) {
 		return new DateTime(temporalAccessor);
+	}
+
+	/**
+	 * {@link LocalDateTime} 类型转 {@link DateTime}
+	 *
+	 * @param localDateTime {@link LocalDateTime}
+	 * @return 时间对象
+	 */
+	public static DateTime date(LocalDateTime localDateTime) {
+		return new DateTime(localDateTime.atZone(ZoneId.systemDefault()));
 	}
 
 	/**

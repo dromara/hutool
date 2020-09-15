@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -85,6 +86,16 @@ public class DateTime extends Date {
 	 */
 	public static DateTime of(String dateStr, String format) {
 		return new DateTime(dateStr, format);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param localDateTime {@link LocalDateTime}
+	 * @return {@link DateTime}
+	 */
+	public static DateTime of(LocalDateTime localDateTime) {
+		return new DateTime(localDateTime);
 	}
 
 	/**
