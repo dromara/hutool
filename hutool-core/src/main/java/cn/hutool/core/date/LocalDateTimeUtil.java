@@ -1,6 +1,8 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -10,6 +12,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalUnit;
@@ -245,7 +248,29 @@ public class LocalDateTimeUtil {
 		if (null == text) {
 			return null;
 		}
-		return parse(text, DateTimeFormatter.ofPattern(format));
+
+		DateTimeFormatter formatter = null;
+		if(StrUtil.isNotBlank(format)){
+			// 修复yyyyMMddHHmmssSSS格式不能解析的问题
+			// fix issue#1082
+			//see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
+			// jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
+			if(StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN)){
+				final String fraction = StrUtil.removePrefix(format, DatePattern.PURE_DATETIME_PATTERN);
+				if(ReUtil.isMatch("[S]{1,2}", fraction)){
+					//将yyyyMMddHHmmssS、yyyyMMddHHmmssSS的日期统一替换为yyyyMMddHHmmssSSS格式，用0补
+					text += StrUtil.repeat('0', 3-fraction.length());
+				}
+				formatter = new DateTimeFormatterBuilder()
+						.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
+						.appendValue(ChronoField.MILLI_OF_SECOND, 3)
+						.toFormatter();
+			} else{
+				formatter = DateTimeFormatter.ofPattern(format);
+			}
+		}
+
+		return parse(text, formatter);
 	}
 
 	/**

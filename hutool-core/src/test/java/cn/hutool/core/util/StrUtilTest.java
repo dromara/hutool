@@ -456,4 +456,13 @@ public class StrUtilTest {
 		strings = StrUtil.wrapAllWithPair("`", StrUtil.splitToArray("1,2,3,4", ','));
 		Assert.assertEquals("[`1`, `2`, `3`, `4`]", StrUtil.utf8Str(strings));
 	}
+
+	@Test
+	public void startWithTest(){
+		String a = "123";
+		String b = "123";
+
+		Assert.assertTrue(StrUtil.startWith(a, b));
+		Assert.assertFalse(StrUtil.startWithIgnoreEquals(a, b));
+	}
 }

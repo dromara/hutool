@@ -24,6 +24,7 @@
 * 【log    】     修复打印null对象显示{msg}异常问题（issue#1084@Github）
 * 【extra  】     修复ServletUtil.getReader中未关闭的问题
 * 【extra  】     修复QrCodeUtil在新版本zxing报错问题（issue#1088@Github）
+* 【core   】     修复LocalDateTimeUtil.parse无法解析yyyyMMddHHmmssSSS的bug（issue#1082@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
