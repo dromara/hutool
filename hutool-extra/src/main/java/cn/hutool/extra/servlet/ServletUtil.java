@@ -27,6 +27,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,8 +92,8 @@ public class ServletUtil {
 	 * @since 4.0.2
 	 */
 	public static String getBody(ServletRequest request) {
-		try {
-			return IoUtil.read(request.getReader());
+		try(final BufferedReader reader = request.getReader()) {
+			return IoUtil.read(reader);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

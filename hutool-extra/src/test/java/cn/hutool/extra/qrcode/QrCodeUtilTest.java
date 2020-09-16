@@ -4,10 +4,12 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
@@ -19,9 +21,9 @@ import java.io.File;
 public class QrCodeUtilTest {
 
 	@Test
-	@Ignore
 	public void generateTest() {
-		QrCodeUtil.generate("https://hutool.cn/", 300, 300, FileUtil.file("e:/qrcode.jpg"));
+		final BufferedImage image = QrCodeUtil.generate("https://hutool.cn/", 300, 300);
+		Assert.assertNotNull(image);
 	}
 
 	@Test
