@@ -21,6 +21,7 @@
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
 * 【core   】     修复UrlBuilder地址参数问题（issue#I1UWCA@Gitee）
 * 【core   】     修复StrUtil.toSymbolCase转换问题（issue#1075@Github）
+* 【log    】     修复打印null对象显示{msg}异常问题（issue#1084@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

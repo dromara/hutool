@@ -116,7 +116,7 @@ public class TinyLog extends AbstractLog {
 		if(null == t){
 			t = getLastArgumentIfThrowable(arguments);
 		}
-		LogEntryForwarder.forward(DEPTH, level, t, format, arguments);
+		LogEntryForwarder.forward(DEPTH, level, t, StrUtil.toString(format), arguments);
 	}
 	
 	/**

@@ -2301,13 +2301,13 @@ public class StrUtil {
 	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
 	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
 	 *
-	 * @param template 文本模板，被替换的部分用 {} 表示
+	 * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
 	 * @param params   参数值
-	 * @return 格式化后的文本
+	 * @return 格式化后的文本，如果模板为null，返回"null"
 	 */
 	public static String format(CharSequence template, Object... params) {
 		if (null == template) {
-			return null;
+			return NULL;
 		}
 		if (ArrayUtil.isEmpty(params) || isBlank(template)) {
 			return template.toString();
@@ -2337,6 +2337,20 @@ public class StrUtil {
 	 * @return 格式化后的文本
 	 */
 	public static String format(CharSequence template, Map<?, ?> map) {
+		return format(template, map, true);
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+	 *
+	 * @param template   文本模板，被替换的部分用 {key} 表示
+	 * @param map        参数值对
+	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
+	 * @return 格式化后的文本
+	 * @since 5.4.3
+	 */
+	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		if (null == template) {
 			return null;
 		}
@@ -2348,9 +2362,10 @@ public class StrUtil {
 		String value;
 		for (Entry<?, ?> entry : map.entrySet()) {
 			value = utf8Str(entry.getValue());
-			if (null != value) {
-				template2 = replace(template2, "{" + entry.getKey() + "}", value);
+			if (null == value && ignoreNull) {
+				continue;
 			}
+			template2 = replace(template2, "{" + entry.getKey() + "}", value);
 		}
 		return template2;
 	}
@@ -3448,7 +3463,7 @@ public class StrUtil {
 	 * @return 位置
 	 */
 	public static int indexOf(final CharSequence str, char searchChar, int start, int end) {
-		if(isEmpty(str)){
+		if (isEmpty(str)) {
 			return INDEX_NOT_FOUND;
 		}
 		final int len = str.length();
@@ -4363,12 +4378,12 @@ public class StrUtil {
 	 * @param strs 多个元素
 	 * @param <T>  元素类型
 	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
-	 * @since 5.4.1
 	 * @see #isNotEmpty(CharSequence)
+	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends CharSequence> T firstNonEmpty(T... strs) {
-			return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
+		return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
 	}
 
 	/**
@@ -4377,8 +4392,8 @@ public class StrUtil {
 	 * @param strs 多个元素
 	 * @param <T>  元素类型
 	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
-	 * @since 5.4.1
 	 * @see #isNotBlank(CharSequence)
+	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends CharSequence> T firstNonBlank(T... strs) {

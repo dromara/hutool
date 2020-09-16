@@ -28,8 +28,17 @@ public class CustomLogTest {
 		LogFactory.setCurrentLogFactory(factory);
 		Log log = LogFactory.get();
 		
-		log.info(null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+	}
+
+	@Test
+	public void consoleLogNullTest(){
+		LogFactory factory = new ConsoleLogFactory();
+		LogFactory.setCurrentLogFactory(factory);
+		Log log = LogFactory.get();
+
+		log.info(null);
+		log.info((String)null);
 	}
 	
 	@Test
@@ -39,6 +48,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -49,6 +59,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -61,6 +72,7 @@ public class CustomLogTest {
 		log.debug(null);
 		log.debug("This is custom '{}' log\n{}", factory.getName(), LINE);
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -71,6 +83,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 		
 	}
@@ -82,6 +95,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -92,6 +106,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -102,6 +117,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 }
