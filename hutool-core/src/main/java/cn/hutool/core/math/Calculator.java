@@ -1,6 +1,7 @@
 package cn.hutool.core.math;
 
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -25,28 +26,21 @@ public class Calculator {
 	 * @return 计算结果
 	 */
 	public static double conversion(String expression) {
-		double result;
-		Calculator cal = new Calculator();
-		try {
-			expression = transform(expression);
-			result = cal.calculate(expression);
-		} catch (Exception e) {
-			// e.printStackTrace();
-			// 运算错误返回NaN
-			return Double.NaN;
-		}
-		// return new String().valueOf(result);
-		return result;
+		final Calculator cal = new Calculator();
+		expression = transform(expression);
+		return cal.calculate(expression);
 	}
 
 	/**
 	 * 将表达式中负数的符号更改
 	 *
 	 * @param expression 例如-2+-1*(-3E-2)-(-1) 被转为 ~2+~1*(~3E~2)-(~1)
-	 * @return 更改后的表达式
+	 * @return 转换后的字符串
 	 */
 	private static String transform(String expression) {
-		char[] arr = expression.toCharArray();
+		expression = StrUtil.cleanBlank(expression);
+		expression = StrUtil.removeSuffix(expression, "=");
+		final char[] arr = expression.toCharArray();
 		for (int i = 0; i < arr.length; i++) {
 			if (arr[i] == '-') {
 				if (i == 0) {
