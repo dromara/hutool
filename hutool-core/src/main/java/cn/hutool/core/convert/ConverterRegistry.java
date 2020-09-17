@@ -350,11 +350,7 @@ public class ConverterRegistry implements Serializable {
 		// 数组转换
 		if (rowType.isArray()) {
 			final ArrayConverter arrayConverter = new ArrayConverter(rowType);
-			try {
-				return (T) arrayConverter.convert(value, defaultValue);
-			} catch (Exception e) {
-				// 数组转换失败进行下一步
-			}
+			return (T) arrayConverter.convert(value, defaultValue);
 		}
 
 		// 表示非需要特殊转换的对象
