@@ -17,6 +17,7 @@
 * 【cache  】     Cache接口增加get重载（issue#1080@Github）
 * 【core   】     增加Interner和InternUtil（issue#I1TU1Y@Gitee）
 * 【core   】     增加Calculator（issue#1090@Github）
+* 【core   】     IdcardUtil增加getIdcardInfo方法（issue#1092@Github）
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
@@ -26,6 +27,7 @@
 * 【extra  】     修复ServletUtil.getReader中未关闭的问题
 * 【extra  】     修复QrCodeUtil在新版本zxing报错问题（issue#1088@Github）
 * 【core   】     修复LocalDateTimeUtil.parse无法解析yyyyMMddHHmmssSSS的bug（issue#1082@Github）
+* 【core   】     修复VersionComparator.equals递归调用问题（issue#1093@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
