@@ -101,7 +101,7 @@ public class SqlBuilder implements Builder<String>{
 	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
 	 * 
 	 * @param entity 实体
-	 * @param dialectName 方言名
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
 	 * @return 自己
 	 */
 	public SqlBuilder insert(Entity entity, DialectName dialectName) {

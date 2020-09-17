@@ -18,6 +18,7 @@
 * 【core   】     增加Interner和InternUtil（issue#I1TU1Y@Gitee）
 * 【core   】     增加Calculator（issue#1090@Github）
 * 【core   】     IdcardUtil增加getIdcardInfo方法（issue#1092@Github）
+* 【core   】     改进ObjectUtil.equal，支持BigDecimal判断
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）
