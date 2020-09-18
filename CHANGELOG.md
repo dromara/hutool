@@ -21,6 +21,7 @@
 * 【core   】     改进ObjectUtil.equal，支持BigDecimal判断
 * 【core   】     ArrayConverter增加可选是否忽略错误（issue#I1VNYQ@Gitee）
 * 【db     】     增加ConditionBuilder
+* 【setting】     Setting和Props增加create方法
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）

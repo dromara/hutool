@@ -51,11 +51,21 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/**
 	 * 默认字符集
 	 */
-	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/**
 	 * 默认配置文件扩展名
 	 */
-	public final static String EXT_NAME = "setting";
+	public static final String EXT_NAME = "setting";
+
+	/**
+	 * 构建一个空的Setting，用于手动加入参数
+	 *
+	 * @return Setting
+	 * @since 5.4.3
+	 */
+	public static Setting create() {
+		return new Setting();
+	}
 
 	/**
 	 * 附带分组的键值对存储
