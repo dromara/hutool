@@ -3,4 +3,5 @@ cn.hutool.log.dialect.log4j2.Log4j2LogFactory
 cn.hutool.log.dialect.log4j.Log4jLogFactory
 cn.hutool.log.dialect.commons.ApacheCommonsLogFactory
 cn.hutool.log.dialect.tinylog.TinyLogFactory
+cn.hutool.log.dialect.tinylog.TinyLog2Factory
 cn.hutool.log.dialect.jboss.JbossLogFactory
