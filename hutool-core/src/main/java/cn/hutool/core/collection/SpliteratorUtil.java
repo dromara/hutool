@@ -16,6 +16,8 @@ public class SpliteratorUtil {
 	 *
 	 * @param <F> 源元素类型
 	 * @param <T> 目标元素类型
+	 * @param fromSpliterator 源{@link Spliterator}
+	 * @param function 转换函数
 	 * @return 新类型的{@link Spliterator}
 	 */
 	public static <F, T> Spliterator<T> trans(Spliterator<F> fromSpliterator, Function<? super F, ? extends T> function) {

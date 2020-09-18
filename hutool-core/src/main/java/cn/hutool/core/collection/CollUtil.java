@@ -2842,6 +2842,8 @@ public class CollUtil {
 	 *
 	 * @param <F> 源元素类型
 	 * @param <T> 目标元素类型
+	 * @param collection 集合
+	 * @param function 转换函数
 	 * @return 新类型的集合
 	 * @since 5.4.3
 	 */
