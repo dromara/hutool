@@ -20,6 +20,7 @@
 * 【core   】     IdcardUtil增加getIdcardInfo方法（issue#1092@Github）
 * 【core   】     改进ObjectUtil.equal，支持BigDecimal判断
 * 【core   】     ArrayConverter增加可选是否忽略错误（issue#I1VNYQ@Gitee）
+* 【db     】     增加ConditionBuilder
 
 ### Bug修复
 * 【core   】     修复Dict.of错误（issue#I1UUO5@Gitee）

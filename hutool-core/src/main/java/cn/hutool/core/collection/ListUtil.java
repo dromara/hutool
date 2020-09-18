@@ -478,6 +478,9 @@ public class ListUtil {
 	 * @since 5.2.6
 	 */
 	public static <T> List<T> unmodifiable(List<T> list) {
+		if(null == list){
+			return null;
+		}
 		return Collections.unmodifiableList(list);
 	}
 

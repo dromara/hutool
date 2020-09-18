@@ -10,6 +10,7 @@ import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
+import cn.hutool.db.sql.LogicalOperator;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
@@ -628,7 +629,7 @@ public abstract class AbstractDb implements Serializable {
 	 * 根据多个条件查询数据列表，返回所有字段
 	 *
 	 * @param tableName 表名
-	 * @param wheres    字段名
+	 * @param wheres    条件，多个条件的连接逻辑使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.0
