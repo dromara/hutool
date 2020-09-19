@@ -1,11 +1,11 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.ListUtil;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
-
-import cn.hutool.core.collection.ListUtil;
 
 /**
  * SPI机制中的服务加载工具类，流程如下
@@ -34,7 +34,7 @@ public class ServiceLoaderUtil {
 		while (iterator.hasNext()) {
 			try {
 				return iterator.next();
-			} catch (ServiceConfigurationError e) {
+			} catch (ServiceConfigurationError ignore) {
 				// ignore
 			}
 		}
@@ -64,7 +64,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 */
 	public static <T> ServiceLoader<T> load(Class<T> clazz) {
-		return load(clazz, Thread.currentThread().getContextClassLoader());
+		return load(clazz, null);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 */
 	public static <T> ServiceLoader<T> load(Class<T> clazz, ClassLoader loader) {
-		return ServiceLoader.load(clazz, loader);
+		return ServiceLoader.load(clazz, ObjectUtil.defaultIfNull(loader, ClassLoaderUtil.getClassLoader()));
 	}
 
 	/**
@@ -101,6 +101,6 @@ public class ServiceLoaderUtil {
 	 * @since 5.4.2
 	 */
 	public static <T> List<T> loadList(Class<T> clazz, ClassLoader loader) {
-		return ListUtil.list(false, load(clazz));
+		return ListUtil.list(false, load(clazz, loader));
 	}
 }
