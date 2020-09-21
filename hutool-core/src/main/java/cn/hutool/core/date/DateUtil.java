@@ -21,13 +21,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
@@ -1387,6 +1381,30 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static long betweenMonth(Date beginDate, Date endDate, boolean isReset) {
 		return new DateBetween(beginDate, endDate).betweenMonth(isReset);
+	}
+
+	/**
+	 * 获取两个日期之间所有的月份
+	 * @param start 开始时间
+	 * @param end 结束时间
+	 * @return List<String> 格式为yyyMM格式的月份列表 包含收尾</>
+	 * @since 5.4.4
+	 */
+	public static List<String> getBetweenMonths(Date start, Date end) {
+		List<String> result = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+		Calendar tempStart = Calendar.getInstance();
+		tempStart.setTime(start);
+		// 加一个月，保证开始和结束同步时返回当月
+		tempStart.add(Calendar.MONTH, 1);
+		Calendar tempEnd = Calendar.getInstance();
+		tempEnd.setTime(end);
+		result.add(sdf.format(start));
+		while (tempStart.before(tempEnd) || tempStart.equals(tempEnd)) {
+			result.add(sdf.format(tempStart.getTime()));
+			tempStart.add(Calendar.MONTH, 1);
+		}
+		return result;
 	}
 
 	/**
