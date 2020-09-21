@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 /**
@@ -649,6 +651,29 @@ public class BeanUtil {
 		T target = ReflectUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 		return target;
+	}
+
+	/**
+	 * 依赖{@link BeanUtil#copyProperties(java.lang.Object, java.lang.Class, java.lang.String...)}提供对象集合的属性拷贝
+	 *
+	 * @param source           对象集合源数据
+	 * @param tClass           目标Class
+	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @param <E>              目标Class
+	 * @return 返回拷贝后的目标Class对象集合
+	 */
+	public static <E> List<E> copyProperties(List<?> source, Class<E> tClass, String... ignoreProperties) {
+		if (CollUtil.isEmpty(source)) {
+			return Collections.emptyList();
+		}
+		return new ArrayList<E>(source.size()) {
+			private static final long serialVersionUID = 1L;
+			{
+				for (Object src : source) {
+					add(copyProperties(src, tClass, ignoreProperties));
+				}
+			}
+		};
 	}
 
 	/**
