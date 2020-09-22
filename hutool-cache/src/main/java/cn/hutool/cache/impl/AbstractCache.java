@@ -97,7 +97,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				return false;
 			}
 
-			if (false == co.isExpired()) {
+			if (!co.isExpired()) {
 				// 命中
 				return true;
 			}
