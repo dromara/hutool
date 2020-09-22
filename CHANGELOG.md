@@ -8,8 +8,13 @@
 ### 新特性
 * 【core   】     ServiceLoaderUtil改为使用contextClassLoader（pr#183@Gitee）
 * 【core   】     NetUtil增加getLocalHostName（pr#1103@Github）
+* 【extra  】     FTP增加stat方法（issue#I1W346@Gitee）
+* 【core   】     Convert.toNumber支持类似12.2F这种形式字符串转换（issue#I1VYLJ@Gitee）
+* 【core   】     使用静态变量替换999等（issue#I1W8IB@Gitee）
 
 ### Bug修复
+* 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
+* 【core   】     修复新建默认TreeSet没有默认比较器导致的问题（issue#1101@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

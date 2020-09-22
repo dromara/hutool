@@ -343,6 +343,20 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 获取服务端目录状态。
+	 * @param path 路径
+	 * @return 状态int，服务端不同，返回不同
+	 * @since 5.4.3
+	 */
+	public int stat(String path) {
+		try {
+			return this.client.stat(path);
+		} catch (IOException e) {
+			throw new FtpException(e);
+		}
+	}
+
+	/**
 	 * 判断ftp服务器文件是否存在
 	 *
 	 * @param path 文件路径
