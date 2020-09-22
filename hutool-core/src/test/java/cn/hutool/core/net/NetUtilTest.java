@@ -77,6 +77,6 @@ public class NetUtilTest {
 
 	@Test
 	public void getLocalHostNameTest() {
-		System.out.println(NetUtil.getLocalHostName());
+		Assert.assertNotNull(NetUtil.getLocalHostName());
 	}
 }
