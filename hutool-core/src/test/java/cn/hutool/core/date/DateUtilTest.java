@@ -3,7 +3,6 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.date.format.FastDateFormat;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -819,13 +818,5 @@ public class DateUtilTest {
 		String dt = "2020-06-03 12:32:12,333";
 		final DateTime parse = DateUtil.parse(dt);
 		Assert.assertEquals("2020-06-03 12:32:12", parse.toString());
-	}
-
-	@Test
-	public void getBetweenMonthsTest() {
-		List<String> months1 = DateUtil.getBetweenMonths(new Date(), new Date());
-		Assert.assertEquals(1, months1.size());
-		List<String> months = DateUtil.getBetweenMonths(DateUtil.parse("2020-05-08 3:12:3"), new Date());
-		Assert.assertEquals(5, months.size());
 	}
 }
