@@ -61,7 +61,7 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
 		CacheObj<K, V> co;
 		while (values.hasNext()) {
 			co = values.next();
-			if (co.isExpired() == true) {
+			if (co.isExpired()) {
 				values.remove();
 				onRemove(co.key, co.obj);
 				count++;
