@@ -48,6 +48,7 @@ public class StrUtil {
 	public static final char C_BRACKET_START = CharUtil.BRACKET_START;
 	public static final char C_BRACKET_END = CharUtil.BRACKET_END;
 	public static final char C_COLON = CharUtil.COLON;
+	public static final char C_AT = CharUtil.AT;
 
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
@@ -68,6 +69,7 @@ public class StrUtil {
 	public static final String BRACKET_START = "[";
 	public static final String BRACKET_END = "]";
 	public static final String COLON = ":";
+	public static final String AT = "@";
 
 	public static final String HTML_NBSP = "&nbsp;";
 	public static final String HTML_AMP = "&amp;";
