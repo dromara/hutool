@@ -74,4 +74,9 @@ public class NetUtilTest {
 		Assert.assertEquals("/", httpCookie.getPath());
 		Assert.assertEquals("cookiedomain.com", httpCookie.getDomain());
 	}
+
+	@Test
+	public void getLocalHostNameTest() {
+		Assert.assertNotNull(NetUtil.getLocalHostName());
+	}
 }
