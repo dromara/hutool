@@ -104,22 +104,22 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
-		final ArrayList<T> list = new ArrayList<>();
 		if (isEmpty(coll1)) {
-			list.addAll(coll2);
+		    return new ArrayList<>(coll2);
 		} else if (isEmpty(coll2)) {
-			list.addAll(coll1);
-		} else {
-			final Map<T, Integer> map1 = countMap(coll1);
-			final Map<T, Integer> map2 = countMap(coll2);
-			final Set<T> elts = newHashSet(coll2);
-			elts.addAll(coll1);
-			int m;
-			for (T t : elts) {
-				m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
-				for (int i = 0; i < m; i++) {
-					list.add(t);
-				}
+		    return new ArrayList<>(coll1);
+		}
+
+		final ArrayList<T> list = new ArrayList<>(Math.max(coll1.size(), coll2.size()));
+		final Map<T, Integer> map1 = countMap(coll1);
+		final Map<T, Integer> map2 = countMap(coll2);
+		final Set<T> elts = newHashSet(coll2);
+		elts.addAll(coll1);
+		int m;
+		for (T t : elts) {
+			m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+			for (int i = 0; i < m; i++) {
+				list.add(t);
 			}
 		}
 		return list;
@@ -226,8 +226,8 @@ public class CollUtil {
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
 	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2) {
-		final ArrayList<T> list = new ArrayList<>();
 		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
+			final ArrayList<T> list = new ArrayList<>(Math.min(coll1.size(), coll2.size()));
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
@@ -238,8 +238,10 @@ public class CollUtil {
 					list.add(t);
 				}
 			}
+			return list;
 		}
-		return list;
+
+		return new ArrayList<>();
 	}
 
 	/**
