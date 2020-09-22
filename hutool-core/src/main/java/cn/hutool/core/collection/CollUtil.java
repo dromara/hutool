@@ -1,6 +1,7 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
@@ -992,8 +993,13 @@ public class CollUtil {
 		} else if (collectionType.isAssignableFrom(LinkedHashSet.class)) {
 			list = new LinkedHashSet<>();
 		} else if (collectionType.isAssignableFrom(TreeSet.class)) {
-			//noinspection SortedCollectionWithNonComparableKeys
-			list = new TreeSet<>();
+			list = new TreeSet<>((o1, o2) -> {
+				// 优先按照对象本身比较，如果没有实现比较接口，默认按照toString内容比较
+				if (o1 instanceof Comparable) {
+					return ((Comparable<T>) o1).compareTo(o2);
+				}
+				return CompareUtil.compare(o1.toString(), o2.toString());
+			});
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
 			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
 		}
