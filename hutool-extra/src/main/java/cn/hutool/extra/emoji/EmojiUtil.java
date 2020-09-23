@@ -38,22 +38,7 @@ public class EmojiUtil {
 	 * @since 4.5.11
 	 */
 	public static boolean containsEmoji(String str) {
-		if (str == null) {
-			return false;
-		}
-		final char[] chars = str.toCharArray();
-		EmojiTrie.Matches status;
-		for (int i = 0; i < chars.length; i++) {
-			for (int j = i + 1; j <= chars.length; j++) {
-				status = EmojiManager.isEmoji(Arrays.copyOfRange(chars, i, j));
-				if (status.impossibleMatch()) {
-					break;
-				} else if (status.exactMatch()) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return EmojiManager.containsEmoji(str);
 	}
 
 	/**
