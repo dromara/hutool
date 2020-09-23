@@ -1,17 +1,17 @@
 package cn.hutool.crypto.symmetric;
 
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
+
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 /**
  * RC4加密解密算法实现<br>
@@ -103,6 +103,7 @@ public class RC4 implements Serializable {
 	 *
 	 * @param data 被加密的字符串
 	 * @return 加密后的Hex
+	 * @since 5.4.4
 	 */
 	public String encryptHex(String data) {
 		return HexUtil.encodeHexStr(encrypt(data));
@@ -126,6 +127,7 @@ public class RC4 implements Serializable {
 	 *
 	 * @param data 被加密的字符串
 	 * @return 加密后的Base64
+	 * @since 5.4.4
 	 */
 	public String encryptBase64(String data) {
 		return Base64.encode(encrypt(data));
@@ -159,6 +161,7 @@ public class RC4 implements Serializable {
 	 *
 	 * @param message 消息
 	 * @return 明文
+	 * @since 5.4.4
 	 */
 	public String decrypt(String message) {
 		return decrypt(SecureUtil.decode(message));
@@ -170,6 +173,7 @@ public class RC4 implements Serializable {
 	 * @param message    明文
 	 * @param charset 解密后的charset
 	 * @return 明文
+	 * @since 5.4.4
 	 */
 	public String decrypt(String message, Charset charset) {
 		return StrUtil.str(decrypt(message), charset);

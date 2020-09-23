@@ -12,6 +12,8 @@
 * 【core   】     Convert.toNumber支持类似12.2F这种形式字符串转换（issue#I1VYLJ@Gitee）
 * 【core   】     使用静态变量替换999等（issue#I1W8IB@Gitee）
 * 【core   】     URLUtil自动trim（issue#I1W803@Gitee）
+* 【crypto 】     RC4增加ecrypt（pr#1108@Github）
+* 【core   】     CharUtil and StrUtil增加@（pr#1106@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
