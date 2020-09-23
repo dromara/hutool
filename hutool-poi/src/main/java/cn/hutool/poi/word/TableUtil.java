@@ -71,7 +71,7 @@ public class TableUtil {
 			return;
 		}
 		
-		Map rowMap = null;
+		Map rowMap;
 		if(rowBean instanceof Map) {
 			rowMap = (Map) rowBean;
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
@@ -79,6 +79,7 @@ public class TableUtil {
 		} else {
 			// 其它转为字符串默认输出
 			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
+			return;
 		}
 		
 		writeRow(row, rowMap, isWriteKeyAsHead);
@@ -98,6 +99,7 @@ public class TableUtil {
 
 		if (isWriteKeyAsHead) {
 			writeRow(row, rowMap.keySet());
+			row = row.getTable().createRow();
 		}
 		writeRow(row, rowMap.values());
 	}

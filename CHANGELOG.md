@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.4 (2020-09-22)
+# 5.4.4 (2020-09-23)
 
 ### 新特性
 * 【core   】     ServiceLoaderUtil改为使用contextClassLoader（pr#183@Gitee）
@@ -11,10 +11,13 @@
 * 【extra  】     FTP增加stat方法（issue#I1W346@Gitee）
 * 【core   】     Convert.toNumber支持类似12.2F这种形式字符串转换（issue#I1VYLJ@Gitee）
 * 【core   】     使用静态变量替换999等（issue#I1W8IB@Gitee）
+* 【core   】     URLUtil自动trim（issue#I1W803@Gitee）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
 * 【core   】     修复新建默认TreeSet没有默认比较器导致的问题（issue#1101@Github）
+* 【core   】     修复Linux下使用Windows路径分隔符导致的解压错误（issue#I1MW0E@Gitee）
+* 【core   】     修复Word07Writer写出map问题（issue#I1W49R@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
