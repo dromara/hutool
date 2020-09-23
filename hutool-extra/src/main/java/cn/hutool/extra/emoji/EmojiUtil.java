@@ -1,14 +1,12 @@
 package cn.hutool.extra.emoji;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
-import com.vdurmont.emoji.EmojiTrie;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 基于https://github.com/vdurmont/emoji-java的Emoji表情工具类
