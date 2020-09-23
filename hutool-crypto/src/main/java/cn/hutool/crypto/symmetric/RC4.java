@@ -11,6 +11,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
 
 /**
  * RC4加密解密算法实现<br>
@@ -98,6 +99,16 @@ public class RC4 implements Serializable {
 	}
 
 	/**
+	 * 加密，使用UTF-8编码
+	 *
+	 * @param data 被加密的字符串
+	 * @return 加密后的Hex
+	 */
+	public String encryptHex(String data) {
+		return HexUtil.encodeHexStr(encrypt(data));
+	}
+
+	/**
 	 * 加密
 	 * 
 	 * @param data 被加密的字符串
@@ -107,6 +118,17 @@ public class RC4 implements Serializable {
 	 */
 	public String encryptBase64(String data, Charset charset) {
 		return Base64.encode(encrypt(data, charset));
+	}
+
+
+	/**
+	 * 加密，使用UTF-8编码
+	 *
+	 * @param data 被加密的字符串
+	 * @return 加密后的Base64
+	 */
+	public String encryptBase64(String data) {
+		return Base64.encode(encrypt(data));
 	}
 
 	/**
@@ -131,6 +153,28 @@ public class RC4 implements Serializable {
 	public String decrypt(byte[] message) throws CryptoException {
 		return decrypt(message, CharsetUtil.CHARSET_UTF_8);
 	}
+
+	/**
+	 * 解密Hex（16进制）或Base64表示的字符串，使用默认编码UTF-8
+	 *
+	 * @param message 消息
+	 * @return 明文
+	 */
+	public String decrypt(String message) {
+		return decrypt(SecureUtil.decode(message));
+	}
+
+	/**
+	 * 解密Hex（16进制）或Base64表示的字符串
+	 *
+	 * @param message    明文
+	 * @param charset 解密后的charset
+	 * @return 明文
+	 */
+	public String decrypt(String message, Charset charset) {
+		return StrUtil.str(decrypt(message), charset);
+	}
+
 
 	/**
 	 * 加密或解密指定值，调用此方法前需初始化密钥
