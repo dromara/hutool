@@ -105,9 +105,9 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
 		if (isEmpty(coll1)) {
-		    return new ArrayList<>(coll2);
+			return new ArrayList<>(coll2);
 		} else if (isEmpty(coll2)) {
-		    return new ArrayList<>(coll1);
+			return new ArrayList<>(coll1);
 		}
 
 		final ArrayList<T> list = new ArrayList<>(Math.max(coll1.size(), coll2.size()));
@@ -2848,10 +2848,10 @@ public class CollUtil {
 	/**
 	 * 使用给定的转换函数，转换源集合为新类型的集合
 	 *
-	 * @param <F> 源元素类型
-	 * @param <T> 目标元素类型
+	 * @param <F>        源元素类型
+	 * @param <T>        目标元素类型
 	 * @param collection 集合
-	 * @param function 转换函数
+	 * @param function   转换函数
 	 * @return 新类型的集合
 	 * @since 5.4.3
 	 */

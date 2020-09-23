@@ -15,6 +15,7 @@
 * 【crypto 】     RC4增加ecrypt（pr#1108@Github）
 * 【core   】     CharUtil and StrUtil增加@（pr#1106@Github）
 * 【extra  】     优化EMOJ查询逻辑（pr#1112@Github）
+* 【extra  】     优化CollUtil交并集结果集合设置初始化大小，避免扩容成本（pr#1110@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
