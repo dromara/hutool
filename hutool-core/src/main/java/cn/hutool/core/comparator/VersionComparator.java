@@ -1,12 +1,12 @@
 package cn.hutool.core.comparator;
 
-import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
-
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 版本比较器<br>
@@ -84,20 +84,5 @@ public class VersionComparator implements Comparator<String>, Serializable {
 
 		// 如果已经分出大小，则直接返回，如果未分出大小，则再比较位数，有子版本的为大；
 		return (diff != 0) ? diff : v1s.size() - v2s.size();
-	}
-
-	@Override
-	public boolean equals(final Object object) {
-		if (this == object) {
-			return true;
-		}
-		if (null == object) {
-			return false;
-		}
-		if (object.getClass().equals(this.getClass())) {
-			final VersionComparator other = (VersionComparator) object;
-			return this.equals(other);
-		}
-		return false;
 	}
 }

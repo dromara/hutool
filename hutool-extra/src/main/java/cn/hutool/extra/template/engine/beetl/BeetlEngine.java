@@ -1,7 +1,9 @@
 package cn.hutool.extra.template.engine.beetl;
 
-import java.io.IOException;
-
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
@@ -11,10 +13,7 @@ import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
-import cn.hutool.extra.template.TemplateEngine;
+import java.io.IOException;
 
 /**
  * Beetl模板引擎封装
@@ -109,7 +108,7 @@ public class BeetlEngine implements TemplateEngine {
 	 * @return {@link GroupTemplate}
 	 * @since 3.2.0
 	 */
-	private static GroupTemplate createGroupTemplate(ResourceLoader loader) {
+	private static GroupTemplate createGroupTemplate(ResourceLoader<?> loader) {
 		try {
 			return createGroupTemplate(loader, Configuration.defaultConfiguration());
 		} catch (IOException e) {
@@ -124,7 +123,7 @@ public class BeetlEngine implements TemplateEngine {
 	 * @param conf {@link Configuration} 配置文件
 	 * @return {@link GroupTemplate}
 	 */
-	private static GroupTemplate createGroupTemplate(ResourceLoader loader, Configuration conf) {
+	private static GroupTemplate createGroupTemplate(ResourceLoader<?> loader, Configuration conf) {
 		return new GroupTemplate(loader, conf);
 	}
 }

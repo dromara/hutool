@@ -69,7 +69,7 @@ public class GlobalCookieManager {
 
 		Map<String, List<String>> cookieHeader;
 		try {
-			cookieHeader = cookieManager.get(getURI(conn), new HashMap<String, List<String>>(0));
+			cookieHeader = cookieManager.get(getURI(conn), new HashMap<>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

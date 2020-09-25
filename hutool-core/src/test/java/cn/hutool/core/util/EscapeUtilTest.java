@@ -37,4 +37,11 @@ public class EscapeUtilTest {
 		String unescape = EscapeUtil.unescape(escape);
 		Assert.assertEquals(str, unescape);
 	}
+
+	@Test
+	public void escapeSinleQuotesTest(){
+		String str = "'some text with single quotes'";
+		final String s = EscapeUtil.escapeHtml4(str);
+		Assert.assertEquals(str, s);
+	}
 }

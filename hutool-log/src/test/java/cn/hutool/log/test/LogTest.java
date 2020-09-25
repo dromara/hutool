@@ -37,4 +37,12 @@ public class LogTest {
 		Exception e = new Exception("test Exception");
 		log.error("我是错误消息", e);
 	}
+
+	@Test
+	public void logNullTest(){
+		final Log log = Log.get();
+		log.debug(null);
+		log.info(null);
+		log.warn(null);
+	}
 }

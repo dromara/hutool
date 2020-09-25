@@ -1,6 +1,6 @@
 package cn.hutool.db.dialect.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,7 +10,10 @@ import cn.hutool.db.Page;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectName;
-import cn.hutool.db.sql.*;
+import cn.hutool.db.sql.Condition;
+import cn.hutool.db.sql.Query;
+import cn.hutool.db.sql.SqlBuilder;
+import cn.hutool.db.sql.Wrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,7 +66,7 @@ public class AnsiSqlDialect implements Dialect {
 			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
 		}
-		final SqlBuilder delete = SqlBuilder.create(wrapper).delete(query.getFirstTableName()).where(LogicalOperator.AND, where);
+		final SqlBuilder delete = SqlBuilder.create(wrapper).delete(query.getFirstTableName()).where(where);
 
 		return StatementUtil.prepareStatement(conn, delete);
 	}
@@ -72,13 +75,13 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException {
 		Assert.notNull(query, "query must not be null !");
 
-		Condition[] where = query.getWhere();
+		final Condition[] where = query.getWhere();
 		if (ArrayUtil.isEmpty(where)) {
 			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepare statement for update everything.");
 		}
 
-		final SqlBuilder update = SqlBuilder.create(wrapper).update(entity).where(LogicalOperator.AND, where);
+		final SqlBuilder update = SqlBuilder.create(wrapper).update(entity).where(where);
 
 		return StatementUtil.prepareStatement(conn, update);
 	}
@@ -129,7 +132,7 @@ public class AnsiSqlDialect implements Dialect {
 
 	@Override
 	public PreparedStatement psForCount(Connection conn, Query query) throws SQLException {
-		query.setFields(CollectionUtil.newArrayList("count(1)"));
+		query.setFields(ListUtil.toList("count(1)"));
 		return psForFind(conn, query);
 	}
 

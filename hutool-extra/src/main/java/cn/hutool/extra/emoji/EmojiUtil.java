@@ -1,14 +1,12 @@
 package cn.hutool.extra.emoji;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
-import com.vdurmont.emoji.EmojiTrie;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 基于https://github.com/vdurmont/emoji-java的Emoji表情工具类
@@ -38,22 +36,7 @@ public class EmojiUtil {
 	 * @since 4.5.11
 	 */
 	public static boolean containsEmoji(String str) {
-		if (str == null) {
-			return false;
-		}
-		final char[] chars = str.toCharArray();
-		EmojiTrie.Matches status;
-		for (int i = 0; i < chars.length; i++) {
-			for (int j = i + 1; j <= chars.length; j++) {
-				status = EmojiManager.isEmoji(Arrays.copyOfRange(chars, i, j));
-				if (status.impossibleMatch()) {
-					break;
-				} else if (status.exactMatch()) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return EmojiManager.containsEmoji(str);
 	}
 
 	/**

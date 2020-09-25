@@ -125,13 +125,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public V get(K key) {
-		return get(key, true);
-	}
-
-	@Override
-	public V get(K key, Func0<V> supplier) {
-		V v = get(key);
+	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
+		V v = get(key, isUpdateLastAccess);
 		if (null == v && null != supplier) {
 			final long stamp = lock.writeLock();
 			try {

@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.ArrayIter;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -13,8 +13,19 @@ import cn.hutool.db.sql.SqlUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.*;
-import java.util.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Statement和PreparedStatement工具类
@@ -163,8 +174,9 @@ public class StatementUtil {
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, paramsBatch);
 		PreparedStatement ps = conn.prepareStatement(sql);
+		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Object[] params : paramsBatch) {
-			StatementUtil.fillParams(ps, params);
+			fillParams(ps, new ArrayIter<>(params), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
@@ -190,7 +202,7 @@ public class StatementUtil {
 		//null参数的类型缓存，避免循环中重复获取类型
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Entity entity : entities) {
-			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, fields), nullTypeMap);
+			fillParams(ps, CollUtil.valuesOfKeys(entity, fields), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;

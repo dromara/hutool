@@ -214,9 +214,14 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 获得指定日期是所在年份的第几周<br>
+	 * 此方法返回值与一周的第一天有关，比如：<br>
+	 * 2016年1月3日为周日，如果一周的第一天为周日，那这天是第二周（返回2）<br>
+	 * 如果一周的第一天为周一，那这天是第一周（返回1）<br>
+	 * 跨年的那个星期得到的结果总是1
 	 *
 	 * @param date 日期
 	 * @return 周
+	 * @see DateTime#setFirstDayOfWeek(Week)
 	 */
 	public static int weekOfYear(Date date) {
 		return DateTime.of(date).weekOfYear();
@@ -1381,30 +1386,6 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static long betweenMonth(Date beginDate, Date endDate, boolean isReset) {
 		return new DateBetween(beginDate, endDate).betweenMonth(isReset);
-	}
-
-	/**
-	 * 获取两个日期之间所有的月份
-	 * @param start 开始时间
-	 * @param end 结束时间
-	 * @return List<String> 格式为yyyMM格式的月份列表 包含收尾</>
-	 * @since 5.4.4
-	 */
-	public static List<String> getBetweenMonths(Date start, Date end) {
-		List<String> result = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-		Calendar tempStart = Calendar.getInstance();
-		tempStart.setTime(start);
-		// 加一个月，保证开始和结束同步时返回当月
-		tempStart.add(Calendar.MONTH, 1);
-		Calendar tempEnd = Calendar.getInstance();
-		tempEnd.setTime(end);
-		result.add(sdf.format(start));
-		while (tempStart.before(tempEnd) || tempStart.equals(tempEnd)) {
-			result.add(sdf.format(tempStart.getTime()));
-			tempStart.add(Calendar.MONTH, 1);
-		}
-		return result;
 	}
 
 	/**

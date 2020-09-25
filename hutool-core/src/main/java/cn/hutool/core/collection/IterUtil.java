@@ -807,4 +807,18 @@ public class IterUtil {
 	public static <T> Iterator<T> empty() {
 		return Collections.emptyIterator();
 	}
+
+	/**
+	 * 按照给定函数，转换{@link Iterator}为另一种类型的{@link Iterator}
+	 *
+	 * @param <F>      源元素类型
+	 * @param <T>      目标元素类型
+	 * @param iterator 源{@link Iterator}
+	 * @param function 转换函数
+	 * @return 转换后的{@link Iterator}
+	 * @since 5.4.3
+	 */
+	public static <F, T> Iterator<T> trans(Iterator<F> iterator, Function<? super F, ? extends T> function) {
+		return new TransIter<>(iterator, function);
+	}
 }

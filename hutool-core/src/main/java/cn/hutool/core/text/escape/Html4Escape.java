@@ -5,6 +5,8 @@ import cn.hutool.core.text.replacer.ReplacerChain;
 
 /**
  * HTML4的ESCAPE
+ * 参考：Commons Lang3
+ *
  * @author looly
  *
  */

@@ -1,17 +1,16 @@
 package cn.hutool.extra.qrcode;
 
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 二维码设置
@@ -34,8 +33,8 @@ public class QrConfig {
 	protected Integer backColor = WHITE;
 	/** 边距1~4 */
 	protected Integer margin = 2;
-	/** 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化 */
-	protected Integer qrVersion = 0;
+	/** 设置二维码中的信息量，可设置1-40的整数 */
+	protected Integer qrVersion;
 	/** 纠错级别 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */

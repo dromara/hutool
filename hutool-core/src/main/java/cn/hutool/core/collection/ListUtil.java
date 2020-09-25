@@ -150,6 +150,23 @@ public class ListUtil {
 	}
 
 	/**
+	 * 数组转为一个不可变List<br>
+	 * 类似于Java9中的List.of
+	 *
+	 * @param ts  对象
+	 * @param <T> 对象类型
+	 * @return 不可修改List
+	 * @since 5.4.3
+	 */
+	@SafeVarargs
+	public static <T> List<T> of(T... ts) {
+		if (ArrayUtil.isEmpty(ts)) {
+			return Collections.emptyList();
+		}
+		return Collections.unmodifiableList(toList(ts));
+	}
+
+	/**
 	 * 新建一个CopyOnWriteArrayList
 	 *
 	 * @param <T>        集合元素类型
@@ -236,7 +253,7 @@ public class ListUtil {
 			}
 		}
 
-		if((pageNo * pageSize) > resultSize){
+		if ((pageNo * pageSize) > resultSize) {
 			// 越界直接返回空
 			return new ArrayList<>(0);
 		}
@@ -461,6 +478,9 @@ public class ListUtil {
 	 * @since 5.2.6
 	 */
 	public static <T> List<T> unmodifiable(List<T> list) {
+		if(null == list){
+			return null;
+		}
 		return Collections.unmodifiableList(list);
 	}
 

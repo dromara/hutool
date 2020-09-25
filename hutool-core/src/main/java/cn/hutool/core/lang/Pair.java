@@ -7,23 +7,36 @@ import java.util.Objects;
 
 /**
  * 键值对对象，只能在构造时传入键值
- * 
- * @author looly
  *
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author looly
  * @since 4.1.5
  */
-public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable{
+public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final K key;
 	private final V value;
 
 	/**
+	 * 构建{@link Pair}对象
+	 *
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @param key   键
+	 * @param value 值
+	 * @return {@link Pair}
+	 * @since 5.4.3
+	 */
+	public static <K, V> Pair<K, V> of(K key, V value) {
+		return new Pair<>(key, value);
+	}
+
+	/**
 	 * 构造
-	 * 
-	 * @param key 键
+	 *
+	 * @param key   键
 	 * @param value 值
 	 */
 	public Pair(K key, V value) {
@@ -33,6 +46,7 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 
 	/**
 	 * 获取键
+	 *
 	 * @return 键
 	 */
 	public K getKey() {
@@ -41,6 +55,7 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 
 	/**
 	 * 获取值
+	 *
 	 * @return 值
 	 */
 	public V getValue() {

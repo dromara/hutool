@@ -1,15 +1,19 @@
 package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
 import org.bouncycastle.crypto.engines.SM2Engine;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -205,4 +209,38 @@ public class SM2Test {
 		String sign = "DCA0E80A7F46C93714B51C3EFC55A922BCEF7ECF0FE9E62B53BA6A7438B543A76C145A452CA9036F3CB70D7E6C67D4D9D7FE114E5367A2F6F5A4D39F2B10F3D6";
 		Assert.assertTrue(sm2.verifyHex(data, sign));
 	}
+
+	@Test
+	public void sm2PlainWithPointTest2() {
+		String d = "4BD9A450D7E68A5D7E08EB7A0BFA468FD3EB32B71126246E66249A73A9E4D44A";
+		String q = "04970AB36C3B870FBC04041087DB1BC36FB4C6E125B5EA406DB0EC3E2F80F0A55D8AFF28357A0BB215ADC2928BE76F1AFF869BF4C0A3852A78F3B827812C650AD3";
+
+		String data = "123456";
+
+		final ECPublicKeyParameters ecPublicKeyParameters = ECKeyUtil.toSm2PublicParams(q);
+		final ECPrivateKeyParameters ecPrivateKeyParameters = ECKeyUtil.toSm2PrivateParams(d);
+
+		final SM2 sm2 = new SM2(ecPrivateKeyParameters, ecPublicKeyParameters);
+		sm2.setMode(SM2Engine.Mode.C1C2C3);
+		final String encryptHex = sm2.encryptHex(data, KeyType.PublicKey);
+		Console.log(encryptHex);
+		final String decryptStr = sm2.decryptStr(encryptHex, KeyType.PrivateKey);
+
+		Assert.assertEquals(data, decryptStr);
+	}
+
+	@Test
+	public void encryptAndSignTest(){
+		SM2 sm2 = SmUtil.sm2();
+
+		String src = "Sm2Test";
+		byte[] data = sm2.encrypt(src, KeyType.PublicKey);
+		byte[] sign =  sm2.sign(src.getBytes());
+
+		Assert.assertTrue(sm2.verify( src.getBytes(), sign));
+
+		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
+		Assert.assertArrayEquals(dec, src.getBytes());
+	}
+
 }

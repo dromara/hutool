@@ -52,6 +52,11 @@ public class NoCache<K, V> implements Cache<K, V> {
 	
 	@Override
 	public V get(K key, Func0<V> supplier) {
+		return get(key, true, supplier);
+	}
+
+	@Override
+	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
 		try {
 			return (null == supplier) ? null : supplier.call();
 		} catch (Exception e) {

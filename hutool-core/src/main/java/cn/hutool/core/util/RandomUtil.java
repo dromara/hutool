@@ -123,7 +123,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得随机数[0, 2^32)
+	 * 获得随机数int值
 	 *
 	 * @return 随机数
 	 */

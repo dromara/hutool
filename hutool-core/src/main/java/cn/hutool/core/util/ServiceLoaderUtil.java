@@ -34,7 +34,7 @@ public class ServiceLoaderUtil {
 		while (iterator.hasNext()) {
 			try {
 				return iterator.next();
-			} catch (ServiceConfigurationError e) {
+			} catch (ServiceConfigurationError ignore) {
 				// ignore
 			}
 		}
@@ -76,7 +76,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 */
 	public static <T> ServiceLoader<T> load(Class<T> clazz, ClassLoader loader) {
-		return ServiceLoader.load(clazz, loader);
+		return ServiceLoader.load(clazz, ObjectUtil.defaultIfNull(loader, ClassLoaderUtil.getClassLoader()));
 	}
 
 	/**
@@ -101,6 +101,6 @@ public class ServiceLoaderUtil {
 	 * @since 5.4.2
 	 */
 	public static <T> List<T> loadList(Class<T> clazz, ClassLoader loader) {
-		return ListUtil.list(false, load(clazz));
+		return ListUtil.list(false, load(clazz, loader));
 	}
 }

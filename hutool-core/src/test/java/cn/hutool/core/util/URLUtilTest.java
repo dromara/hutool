@@ -84,4 +84,11 @@ public class URLUtilTest {
 		String encode2 = URLUtil.encodeQuery(body);
 		Assert.assertEquals("366466+-+%E5%89%AF%E6%9C%AC.jpg", encode2);
 	}
+
+	@Test
+	public void getPathTest(){
+		String url = " http://www.aaa.bbb/search?scope=ccc&q=ddd";
+		String path = URLUtil.getPath(url);
+		Assert.assertEquals("/search", path);
+	}
 }

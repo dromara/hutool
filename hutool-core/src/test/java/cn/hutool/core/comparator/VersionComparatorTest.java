@@ -46,4 +46,11 @@ public class VersionComparatorTest {
 		int compare = VersionComparator.INSTANCE.compare("V0.0.20170102", "V0.0.20170101");
 		Assert.assertTrue(compare > 0);
 	}
+
+	@Test
+	public void equalsTest(){
+		VersionComparator first = new VersionComparator();
+		VersionComparator other = new VersionComparator();
+		Assert.assertFalse(first.equals(other));
+	}
 }

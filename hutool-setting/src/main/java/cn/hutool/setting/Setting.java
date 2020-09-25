@@ -2,6 +2,7 @@ package cn.hutool.setting;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.io.resource.FileResource;
@@ -50,11 +51,21 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/**
 	 * 默认字符集
 	 */
-	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/**
 	 * 默认配置文件扩展名
 	 */
-	public final static String EXT_NAME = "setting";
+	public static final String EXT_NAME = "setting";
+
+	/**
+	 * 构建一个空的Setting，用于手动加入参数
+	 *
+	 * @return Setting
+	 * @since 5.4.3
+	 */
+	public static Setting create() {
+		return new Setting();
+	}
 
 	/**
 	 * 附带分组的键值对存储
@@ -153,6 +164,18 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		Assert.notNull(url, "Null setting url define!");
 		this.init(new UrlResource(url), charset, isUseVariable);
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param resource      Setting的Resource
+	 * @param charset       字符集
+	 * @param isUseVariable 是否使用变量
+	 * @since 5.4.4
+	 */
+	public Setting(Resource resource, Charset charset, boolean isUseVariable) {
+		this.init(resource, charset, isUseVariable);
+	}
 	// ------------------------------------------------------------------------------------- Constructor end
 
 	/**
@@ -165,7 +188,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public boolean init(Resource resource, Charset charset, boolean isUseVariable) {
 		if (resource == null) {
-			throw new NullPointerException("Null setting url define!");
+			throw new NullPointerException("Null setting resource define!");
 		}
 		this.settingUrl = resource.getUrl();
 		this.charset = charset;
@@ -227,6 +250,18 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
+	 * 获得设定文件的URL
+	 *
+	 * @return 获得设定文件的路径
+	 * @since 5.4.3
+	 */
+	public URL getSettingUrl() {
+		return this.settingUrl;
+	}
+
+	/**
+	 * 获得设定文件的路径
+	 *
 	 * @return 获得设定文件的路径
 	 */
 	public String getSettingPath() {
@@ -296,10 +331,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
+	 * 获取group分组下所有配置键值对，组成新的Setting
 	 *
 	 * @param group 分组
-	 * @return {@link Setting}
+	 * @return Setting
 	 */
 	public Setting getSetting(String group) {
 		final Setting setting = new Setting();
@@ -336,15 +371,37 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
+	 * 持久化不会保留之前的分组，注意如果配置文件在jar内部或者在exe中，此方法会报错。
+	 *
+	 * @since 5.4.3
+	 */
+	public void store() {
+		Assert.notNull(this.settingUrl, "Setting path must be not null !");
+		store(FileUtil.file(this.settingUrl));
+	}
+
+	/**
+	 * 持久化当前设置，会覆盖掉之前的设置<br>
 	 * 持久化不会保留之前的分组
 	 *
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
+		store(FileUtil.touch(absolutePath));
+	}
+
+	/**
+	 * 持久化当前设置，会覆盖掉之前的设置<br>
+	 * 持久化不会保留之前的分组
+	 *
+	 * @param file 设置文件
+	 * @since 5.4.3
+	 */
+	public void store(File file) {
 		if (null == this.settingLoader) {
 			settingLoader = new SettingLoader(this.groupedMap, this.charset, this.isUseVariable);
 		}
-		settingLoader.store(absolutePath);
+		settingLoader.store(file);
 	}
 
 	/**

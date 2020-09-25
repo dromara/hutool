@@ -1,9 +1,8 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.BetweenFormater.Level;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.date.BetweenFormater.Level;
 
 public class BetweenFormaterTest {
 	

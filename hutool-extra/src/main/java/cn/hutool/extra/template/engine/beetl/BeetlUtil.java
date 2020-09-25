@@ -106,7 +106,7 @@ public final class BeetlUtil {
 	 * @return {@link GroupTemplate}
 	 * @since 3.2.0
 	 */
-	public static GroupTemplate createGroupTemplate(ResourceLoader loader) {
+	public static GroupTemplate createGroupTemplate(ResourceLoader<?> loader) {
 		try {
 			return createGroupTemplate(loader, Configuration.defaultConfiguration());
 		} catch (IOException e) {
@@ -121,7 +121,7 @@ public final class BeetlUtil {
 	 * @param conf {@link Configuration} 配置文件
 	 * @return {@link GroupTemplate}
 	 */
-	public static GroupTemplate createGroupTemplate(ResourceLoader loader, Configuration conf) {
+	public static GroupTemplate createGroupTemplate(ResourceLoader<?> loader, Configuration conf) {
 		return new GroupTemplate(loader, conf);
 	}
 
@@ -273,7 +273,7 @@ public final class BeetlUtil {
 		 * @param resourceLoader {@link ResourceLoader} 匹配时对应的资源加载器
 		 * @return {@link ResourceLoaderBuilder}
 		 */
-		public ResourceLoaderBuilder add(Matcher matcher, ResourceLoader resourceLoader) {
+		public ResourceLoaderBuilder add(Matcher matcher, ResourceLoader<?> resourceLoader) {
 			compositeResourceLoader.addResourceLoader(matcher, resourceLoader);
 			return this;
 		}
@@ -283,7 +283,7 @@ public final class BeetlUtil {
 		 * 
 		 * @return {@link ResourceLoader} 资源加载器
 		 */
-		public ResourceLoader build() {
+		public ResourceLoader<?> build() {
 			return compositeResourceLoader;
 		}
 	}

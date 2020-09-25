@@ -69,6 +69,11 @@ public class Condition extends CloneSupport<Condition> {
 	private Object secondValue;
 
 	/**
+	 * 与前一个Condition连接的逻辑运算符，可以是and或or
+	 */
+	private LogicalOperator linkOperator = LogicalOperator.AND;
+
+	/**
 	 * 解析为Condition
 	 *
 	 * @param field      字段名
@@ -280,6 +285,26 @@ public class Condition extends CloneSupport<Condition> {
 	 */
 	public void setSecondValue(Object secondValue) {
 		this.secondValue = secondValue;
+	}
+
+	/**
+	 * 获取与前一个Condition连接的逻辑运算符，可以是and或or
+	 *
+	 * @return 与前一个Condition连接的逻辑运算符，可以是and或or
+	 * @since 5.4.3
+	 */
+	public LogicalOperator getLinkOperator() {
+		return linkOperator;
+	}
+
+	/**
+	 * 设置与前一个Condition连接的逻辑运算符，可以是and或or
+	 *
+	 * @param linkOperator 与前一个Condition连接的逻辑运算符，可以是and或or
+	 * @since 5.4.3
+	 */
+	public void setLinkOperator(LogicalOperator linkOperator) {
+		this.linkOperator = linkOperator;
 	}
 
 	// --------------------------------------------------------------- Getters and Setters end

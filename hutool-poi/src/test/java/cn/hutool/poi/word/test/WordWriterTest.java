@@ -1,5 +1,6 @@
 package cn.hutool.poi.word.test;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.poi.word.Word07Writer;
@@ -8,6 +9,8 @@ import org.junit.Test;
 
 import java.awt.Font;
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class WordWriterTest {
 	
@@ -31,5 +34,19 @@ public class WordWriterTest {
 		writer.flush(FileUtil.file("d:/test/writePic.docx"));
 		// 关闭
 		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeTableTest(){
+		final Word07Writer writer = new Word07Writer();
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("姓名", "张三");
+		map.put("年龄", "23");
+		map.put("成绩", 88.32);
+		map.put("是否合格", true);
+
+		writer.addTable(CollUtil.newArrayList(map));
+		writer.flush(FileUtil.file("d:/test/test.docx"));
 	}
 }

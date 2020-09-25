@@ -93,7 +93,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
 	 *
 	 * @param url WS的URL地址
-	 * @return {@link SoapClient}
+	 * @return this
 	 */
 	public static SoapClient create(String url) {
 		return new SoapClient(url);
@@ -104,7 +104,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 *
 	 * @param url      WS的URL地址
 	 * @param protocol 协议，见{@link SoapProtocol}
-	 * @return {@link SoapClient}
+	 * @return this
 	 */
 	public static SoapClient create(String url, SoapProtocol protocol) {
 		return new SoapClient(url, protocol);
@@ -116,7 +116,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @param url          WS的URL地址
 	 * @param protocol     协议，见{@link SoapProtocol}
 	 * @param namespaceURI 方法上的命名空间URI
-	 * @return {@link SoapClient}
+	 * @return this
 	 * @since 4.5.6
 	 */
 	public static SoapClient create(String url, SoapProtocol protocol, String namespaceURI) {

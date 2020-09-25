@@ -48,6 +48,7 @@ public class StrUtil {
 	public static final char C_BRACKET_START = CharUtil.BRACKET_START;
 	public static final char C_BRACKET_END = CharUtil.BRACKET_END;
 	public static final char C_COLON = CharUtil.COLON;
+	public static final char C_AT = CharUtil.AT;
 
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
@@ -68,6 +69,7 @@ public class StrUtil {
 	public static final String BRACKET_START = "[";
 	public static final String BRACKET_END = "]";
 	public static final String COLON = ":";
+	public static final String AT = "@";
 
 	public static final String HTML_NBSP = "&nbsp;";
 	public static final String HTML_AMP = "&amp;";
@@ -599,19 +601,44 @@ public class StrUtil {
 	 *
 	 * @param str          被监测字符串
 	 * @param prefix       开头字符串
-	 * @param isIgnoreCase 是否忽略大小写
+	 * @param ignoreCase 是否忽略大小写
 	 * @return 是否以指定字符串开头
+	 * @since 5.4.3
 	 */
-	public static boolean startWith(CharSequence str, CharSequence prefix, boolean isIgnoreCase) {
+	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase) {
+		return startWith(str, prefix, ignoreCase, false);
+	}
+
+	/**
+	 * 是否以指定字符串开头<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 *
+	 * @param str          被监测字符串
+	 * @param prefix       开头字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @param ignoreEquals 是否忽略字符串相等的情况
+	 * @return 是否以指定字符串开头
+	 * @since 5.4.3
+	 */
+	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
 		if (null == str || null == prefix) {
+			if(false == ignoreEquals){
+				return false;
+			}
 			return null == str && null == prefix;
 		}
 
-		if (isIgnoreCase) {
-			return str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
+		boolean isStartWith;
+		if (ignoreCase) {
+			isStartWith = str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
 		} else {
-			return str.toString().startsWith(prefix.toString());
+			isStartWith = str.toString().startsWith(prefix.toString());
 		}
+
+		if(isStartWith){
+			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
+		}
+		return false;
 	}
 
 	/**
@@ -623,6 +650,17 @@ public class StrUtil {
 	 */
 	public static boolean startWith(CharSequence str, CharSequence prefix) {
 		return startWith(str, prefix, false);
+	}
+
+	/**
+	 * 是否以指定字符串开头，忽略相等字符串的情况
+	 *
+	 * @param str    被监测字符串
+	 * @param prefix 开头字符串
+	 * @return 是否以指定字符串开头并且两个字符串不相等
+	 */
+	public static boolean startWithIgnoreEquals(CharSequence str, CharSequence prefix) {
+		return startWith(str, prefix, false, true);
 	}
 
 	/**
@@ -2301,13 +2339,13 @@ public class StrUtil {
 	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
 	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
 	 *
-	 * @param template 文本模板，被替换的部分用 {} 表示
+	 * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
 	 * @param params   参数值
-	 * @return 格式化后的文本
+	 * @return 格式化后的文本，如果模板为null，返回"null"
 	 */
 	public static String format(CharSequence template, Object... params) {
 		if (null == template) {
-			return null;
+			return NULL;
 		}
 		if (ArrayUtil.isEmpty(params) || isBlank(template)) {
 			return template.toString();
@@ -2337,6 +2375,20 @@ public class StrUtil {
 	 * @return 格式化后的文本
 	 */
 	public static String format(CharSequence template, Map<?, ?> map) {
+		return format(template, map, true);
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
+	 *
+	 * @param template   文本模板，被替换的部分用 {key} 表示
+	 * @param map        参数值对
+	 * @param ignoreNull 是否忽略 {@code null} 值，忽略则 {@code null} 值对应的变量不被替换，否则替换为""
+	 * @return 格式化后的文本
+	 * @since 5.4.3
+	 */
+	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		if (null == template) {
 			return null;
 		}
@@ -2348,9 +2400,10 @@ public class StrUtil {
 		String value;
 		for (Entry<?, ?> entry : map.entrySet()) {
 			value = utf8Str(entry.getValue());
-			if (null != value) {
-				template2 = replace(template2, "{" + entry.getKey() + "}", value);
+			if (null == value && ignoreNull) {
+				continue;
 			}
+			template2 = replace(template2, "{" + entry.getKey() + "}", value);
 		}
 		return template2;
 	}
@@ -2633,7 +2686,7 @@ public class StrUtil {
 		}
 
 		final int length = str.length();
-		final StringBuilder sb = new StringBuilder();
+		final StrBuilder sb = new StrBuilder();
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);
@@ -2642,12 +2695,12 @@ public class StrUtil {
 				// 遇到大写字母处理
 				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
 				if (null != preChar && Character.isUpperCase(preChar)) {
-					// 前一个字符为大写，则按照一个词对待
+					// 前一个字符为大写，则按照一个词对待，例如AB
 					sb.append(c);
-				} else if (null != nextChar && Character.isUpperCase(nextChar)) {
-					// 后一个为大写字母，按照一个词对待
+				} else if (null != nextChar && (false == Character.isLowerCase(nextChar))) {
+					// 后一个为非小写字母，按照一个词对待
 					if (null != preChar && symbol != preChar) {
-						// 前一个是非大写时按照新词对待，加连接符
+						// 前一个是非大写时按照新词对待，加连接符，例如xAB
 						sb.append(symbol);
 					}
 					sb.append(c);
@@ -2660,8 +2713,11 @@ public class StrUtil {
 					sb.append(Character.toLowerCase(c));
 				}
 			} else {
-				if (sb.length() > 0 && Character.isUpperCase(sb.charAt(sb.length() - 1)) && symbol != c) {
-					// 当结果中前一个字母为大写，当前为小写，说明此字符为新词开始（连接符也表示新词）
+				if (symbol != c
+						&& sb.length() > 0
+						&& Character.isUpperCase(sb.charAt(-1))
+						&& Character.isLowerCase(c)) {
+					// 当结果中前一个字母为大写，当前为小写(非数字或字符)，说明此字符为新词开始（连接符也表示新词）
 					sb.append(symbol);
 				}
 				// 小写或符号
@@ -3445,7 +3501,7 @@ public class StrUtil {
 	 * @return 位置
 	 */
 	public static int indexOf(final CharSequence str, char searchChar, int start, int end) {
-		if(isEmpty(str)){
+		if (isEmpty(str)) {
 			return INDEX_NOT_FOUND;
 		}
 		final int len = str.length();
@@ -4360,12 +4416,12 @@ public class StrUtil {
 	 * @param strs 多个元素
 	 * @param <T>  元素类型
 	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
-	 * @since 5.4.1
 	 * @see #isNotEmpty(CharSequence)
+	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends CharSequence> T firstNonEmpty(T... strs) {
-			return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
+		return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
 	}
 
 	/**
@@ -4374,8 +4430,8 @@ public class StrUtil {
 	 * @param strs 多个元素
 	 * @param <T>  元素类型
 	 * @return 第一个非空元素，如果给定的数组为空或者都为空，返回{@code null}
-	 * @since 5.4.1
 	 * @see #isNotBlank(CharSequence)
+	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends CharSequence> T firstNonBlank(T... strs) {

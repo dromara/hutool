@@ -42,7 +42,8 @@ import java.util.TreeSet;
 public class NetUtil {
 
 	public final static String LOCAL_IP = "127.0.0.1";
-	public static String LOCAL_HOSTNAME = "";
+
+	public static String localhostName;
 
 	/**
 	 * 默认最小端口，1024
@@ -535,20 +536,26 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获取主机名称
+	 * 获取主机名称，一次获取会缓存名称
+	 *
 	 * @return 主机名称
 	 * @since 5.4.4
 	 */
 	public static String getLocalHostName() {
-		try {
-			if (StrUtil.isNotBlank(LOCAL_HOSTNAME)) {
-				return LOCAL_HOSTNAME;
-			}
-			LOCAL_HOSTNAME = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			LOCAL_HOSTNAME = getLocalhostStr();
+		if (StrUtil.isNotBlank(localhostName)) {
+			return localhostName;
 		}
-		return LOCAL_HOSTNAME;
+
+		final InetAddress localhost = getLocalhost();
+		if(null != localhost){
+			String name = localhost.getHostName();
+			if(StrUtil.isEmpty(name)){
+				name = localhost.getHostAddress();
+			}
+			localhostName = name;
+		}
+
+		return localhostName;
 	}
 
 	/**

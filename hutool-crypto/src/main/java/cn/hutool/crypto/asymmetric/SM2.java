@@ -499,8 +499,10 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	private SM2Engine getEngine() {
 		if (null == this.engine) {
+			Assert.notNull(this.digest, "digest must be not null !");
 			this.engine = new SM2Engine(this.digest, this.mode);
 		}
+		this.digest.reset();
 		return this.engine;
 	}
 
@@ -511,8 +513,10 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	private SM2Signer getSigner() {
 		if (null == this.signer) {
+			Assert.notNull(this.digest, "digest must be not null !");
 			this.signer = new SM2Signer(this.encoding, this.digest);
 		}
+		this.digest.reset();
 		return this.signer;
 	}
 	// ------------------------------------------------------------------------------------------------------------------------- Private method end

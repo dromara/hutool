@@ -133,4 +133,14 @@ public class HttpRequestTest {
 		HttpRequest request = HttpUtil.createGet("http://localhost:8888/get");
 		Console.log(request.execute().body());
 	}
+
+	@Test
+	@Ignore
+	public void getWithoutEncodeTest(){
+		String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
+		HttpRequest get = HttpUtil.createGet(url);
+		Console.log(get.getUrl());
+		HttpResponse execute = get.execute();
+		Console.log(execute.body());
+	}
 }

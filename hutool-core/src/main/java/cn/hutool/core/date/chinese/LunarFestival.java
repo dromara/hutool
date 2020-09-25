@@ -22,7 +22,7 @@ public class LunarFestival {
 		lFtv.put(new Pair<>(1, 3), "猪日");
 		lFtv.put(new Pair<>(1, 4), "羊日");
 		lFtv.put(new Pair<>(1, 5), "牛日 破五日");
-		lFtv.put(new Pair<>(1, 6), "马日，送穷日");
+		lFtv.put(new Pair<>(1, 6), "马日 送穷日");
 		lFtv.put(new Pair<>(1, 7), "人日 人胜节");
 		lFtv.put(new Pair<>(1, 8), "谷日 八仙日");
 		lFtv.put(new Pair<>(1, 9), "天日 九皇会");

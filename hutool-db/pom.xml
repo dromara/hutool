@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.4.2</version>
+		<version>5.4.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -23,8 +23,8 @@
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
 		<druid.version>1.1.23</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.4</mongo.version>
-		<sqlite.version>3.32.3</sqlite.version>
+		<mongo.version>3.12.7</mongo.version>
+		<sqlite.version>3.32.3.2</sqlite.version>
 		<hsqldb.version>2.5.1</hsqldb.version>
 		<jedis.version>3.3.0</jedis.version>
 	</properties>
@@ -120,13 +120,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.20</version>
+			<version>8.0.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.12.jre7</version>
+			<version>42.2.16.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

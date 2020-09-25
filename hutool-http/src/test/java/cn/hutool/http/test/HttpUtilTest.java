@@ -236,7 +236,8 @@ public class HttpUtilTest {
 		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
 		Assert.assertEquals("b", map.get("a").get(0));
 		Assert.assertEquals("d", map.get("c").get(0));
-		Assert.assertEquals("", map.get("e").get(0));
+		Assert.assertNull(map.get("e").get(0));
+		Assert.assertNull(map.get("").get(0));
 
 		// 被编码的键和值被还原
 		a = "a=bbb&c=%E4%BD%A0%E5%A5%BD&%E5%93%88%E5%96%BD=";

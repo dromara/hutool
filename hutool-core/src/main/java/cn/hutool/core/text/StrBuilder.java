@@ -462,6 +462,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 
 	@Override
 	public char charAt(int index) {
+		if(index < 0){
+			index = this.position + index;
+		}
 		if ((index < 0) || (index > this.position)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}

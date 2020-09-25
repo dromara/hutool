@@ -67,11 +67,11 @@ public class SqlBuilder implements Builder<String>{
 	}
 	// --------------------------------------------------------------- Enums end
 
-	final private StringBuilder sql = new StringBuilder();
+	private final StringBuilder sql = new StringBuilder();
 	/** 字段列表（仅用于插入和更新） */
-	final private List<String> fields = new ArrayList<>();
+	private final List<String> fields = new ArrayList<>();
 	/** 占位符对应的值列表 */
-	final private List<Object> paramValues = new ArrayList<>();
+	private final List<Object> paramValues = new ArrayList<>();
 	/** 包装器 */
 	private Wrapper wrapper;
 
@@ -101,7 +101,7 @@ public class SqlBuilder implements Builder<String>{
 	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
 	 * 
 	 * @param entity 实体
-	 * @param dialectName 方言名
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
 	 * @return 自己
 	 */
 	public SqlBuilder insert(Entity entity, DialectName dialectName) {
@@ -284,14 +284,18 @@ public class SqlBuilder implements Builder<String>{
 	}
 	
 	/**
-	 * 添加Where语句，所有逻辑之间为AND的关系
+	 * 添加Where语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
 	 * 
 	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
 	 * @return 自己
 	 * @since 4.4.4
 	 */
 	public SqlBuilder where(Condition... conditions) {
-		return where(LogicalOperator.AND, conditions);
+		if (ArrayUtil.isNotEmpty(conditions)) {
+			where(buildCondition(conditions));
+		}
+
+		return this;
 	}
 
 	/**
@@ -301,17 +305,11 @@ public class SqlBuilder implements Builder<String>{
 	 * @param logicalOperator 逻辑运算符
 	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
 	 * @return 自己
+	 * @deprecated logicalOperator放在Condition中了，因此请使用 {@link #where(Condition...)}
 	 */
+	@Deprecated
 	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions) {
-		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			where(buildCondition(logicalOperator, conditions));
-		}
-
-		return this;
+		return where(conditions);
 	}
 
 	/**
@@ -366,14 +364,23 @@ public class SqlBuilder implements Builder<String>{
 	 * @param logicalOperator 逻辑运算符
 	 * @param conditions 条件
 	 * @return 自己
+	 * @deprecated logicalOperator放在Condition中了，因此请使用 {@link #having(Condition...)}
 	 */
+	@Deprecated
 	public SqlBuilder having(LogicalOperator logicalOperator, Condition... conditions) {
+		return having(conditions);
+	}
+
+	/**
+	 * 添加Having语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
+	 *
+	 * @param conditions 条件
+	 * @return this
+	 * @since 5.4.3
+	 */
+	public SqlBuilder having(Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			having(buildCondition(logicalOperator, conditions));
+			having(buildCondition(conditions));
 		}
 
 		return this;
@@ -461,14 +468,23 @@ public class SqlBuilder implements Builder<String>{
 	 * @param logicalOperator 逻辑运算符
 	 * @param conditions 条件
 	 * @return 自己
+	 * @deprecated logicalOperator放在Condition中了，因此请使用 {@link #on(Condition...)}
 	 */
+	@Deprecated
 	public SqlBuilder on(LogicalOperator logicalOperator, Condition... conditions) {
+		return on(conditions);
+	}
+
+	/**
+	 * 配合JOIN的 ON语句，多表关联的条件语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
+	 *
+	 * @param conditions 条件
+	 * @return this
+	 * @since 5.4.3
+	 */
+	public SqlBuilder on(Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			on(buildCondition(logicalOperator, conditions));
+			on(buildCondition(conditions));
 		}
 
 		return this;
@@ -582,34 +598,20 @@ public class SqlBuilder implements Builder<String>{
 	 * 构建组合条件<br>
 	 * 例如：name = ? AND type IN (?, ?) AND other LIKE ?
 	 * 
-	 * @param logicalOperator 逻辑运算符
 	 * @param conditions 条件对象
 	 * @return 构建后的SQL语句条件部分
 	 */
-	private String buildCondition(LogicalOperator logicalOperator, Condition... conditions) {
+	private String buildCondition(Condition... conditions) {
 		if (ArrayUtil.isEmpty(conditions)) {
 			return StrUtil.EMPTY;
 		}
-		if (null == logicalOperator) {
-			logicalOperator = LogicalOperator.AND;
+
+		if (null != wrapper) {
+			// 包装字段名
+			conditions = wrapper.wrap(conditions);
 		}
 
-		final StringBuilder conditionStrBuilder = new StringBuilder();
-		boolean isFirst = true;
-		for (Condition condition : conditions) {
-			// 添加逻辑运算符
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				// " AND " 或者 " OR "
-				conditionStrBuilder.append(StrUtil.SPACE).append(logicalOperator).append(StrUtil.SPACE);
-			}
-
-			// 构建条件部分："name = ?"、"name IN (?,?,?)"、"name BETWEEN ？AND ？"、"name LIKE ?"
-			conditionStrBuilder.append(condition.toString(this.paramValues));
-		}
-
-		return conditionStrBuilder.toString();
+		return ConditionBuilder.of(conditions).build(this.paramValues);
 	}
 
 	/**

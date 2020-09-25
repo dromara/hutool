@@ -1,16 +1,15 @@
 package cn.hutool.core.convert;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-
+import cn.hutool.core.convert.impl.ArrayConverter;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * 类型转换工具单元测试<br>
@@ -34,6 +33,15 @@ public class ConvertToArrayTest {
 		long[] c = {1,2,3,4,5};
 		Integer[] intArray2 = Convert.toIntArray(c);
 		Assert.assertArrayEquals(intArray2, new Integer[]{1,2,3,4,5});
+	}
+
+	@Test
+	public void toIntArrayTestIgnoreComponentErrorTest() {
+		String[] b = { "a", "1" };
+
+		final ArrayConverter arrayConverter = new ArrayConverter(Integer[].class, true);
+		Integer[] integerArray = (Integer[]) arrayConverter.convert(b, null);
+		Assert.assertArrayEquals(integerArray, new Integer[]{null, 1});
 	}
 	
 	@Test
