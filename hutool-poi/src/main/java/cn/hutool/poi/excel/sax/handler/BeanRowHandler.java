@@ -15,7 +15,7 @@ import java.util.List;
  * @author looly
  * @since 5.4.4
  */
-public abstract class BeanRowHandler<T> extends AbstractRowHandler<T>{
+public abstract class BeanRowHandler<T> extends AbstractRowHandler<T> {
 
 	/**
 	 * 标题所在行（从0开始计数）
@@ -30,14 +30,15 @@ public abstract class BeanRowHandler<T> extends AbstractRowHandler<T>{
 	 * 构造
 	 *
 	 * @param headerRowIndex 标题所在行（从0开始计数）
-	 * @param startRowIndex 读取起始行（包含，从0开始计数）
-	 * @param endRowIndex 读取结束行（包含，从0开始计数）
+	 * @param startRowIndex  读取起始行（包含，从0开始计数）
+	 * @param endRowIndex    读取结束行（包含，从0开始计数）
+	 * @param clazz          Bean类型
 	 */
-	public BeanRowHandler(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> clazz){
+	public BeanRowHandler(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> clazz) {
 		super(startRowIndex, endRowIndex);
 		Assert.isTrue(headerRowIndex <= startRowIndex, "Header row must before the start row!");
 		this.headerRowIndex = headerRowIndex;
-		this.convertFunc = (rowList)-> BeanUtil.toBean(IterUtil.toMap(headerList, rowList), clazz);
+		this.convertFunc = (rowList) -> BeanUtil.toBean(IterUtil.toMap(headerList, rowList), clazz);
 	}
 
 	@Override

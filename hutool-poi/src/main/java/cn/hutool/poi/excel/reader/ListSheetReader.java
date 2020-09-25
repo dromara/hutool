@@ -15,13 +15,15 @@ import java.util.List;
  */
 public class ListSheetReader extends AbstractSheetReader<List<List<Object>>> {
 
+	/** 是否首行作为标题行转换别名 */
 	private final boolean aliasFirstLine;
 
 	/**
 	 * 构造
 	 *
-	 * @param startRowIndex 起始行（包含，从0开始计数）
-	 * @param endRowIndex   结束行（包含，从0开始计数）
+	 * @param startRowIndex  起始行（包含，从0开始计数）
+	 * @param endRowIndex    结束行（包含，从0开始计数）
+	 * @param aliasFirstLine 是否首行作为标题行转换别名
 	 */
 	public ListSheetReader(int startRowIndex, int endRowIndex, boolean aliasFirstLine) {
 		super(startRowIndex, endRowIndex);

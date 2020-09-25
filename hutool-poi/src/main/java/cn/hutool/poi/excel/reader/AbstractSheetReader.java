@@ -130,9 +130,9 @@ public abstract class AbstractSheetReader<T> implements SheetReader<T> {
 	/**
 	 * 读取某一行数据
 	 *
+	 * @param sheet {@link Sheet}
 	 * @param rowIndex 行号，从0开始
 	 * @return 一行数据
-	 * @since 4.0.3
 	 */
 	protected List<Object> readRow(Sheet sheet, int rowIndex) {
 		return RowUtil.readRow(sheet.getRow(rowIndex), this.cellEditor);

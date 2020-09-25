@@ -16,6 +16,7 @@ public class ExcelExtractorUtil {
 	/**
 	 * 获取 {@link ExcelExtractor} 对象
 	 *
+	 * @param wb {@link Workbook}
 	 * @return {@link ExcelExtractor}
 	 */
 	public static ExcelExtractor getExtractor(Workbook wb) {
@@ -32,7 +33,7 @@ public class ExcelExtractorUtil {
 	 * 读取为文本格式<br>
 	 * 使用{@link ExcelExtractor} 提取Excel内容
 	 *
-	 * @param wb {@link Workbook}
+	 * @param wb            {@link Workbook}
 	 * @param withSheetName 是否附带sheet名
 	 * @return Excel文本
 	 * @since 4.1.0
