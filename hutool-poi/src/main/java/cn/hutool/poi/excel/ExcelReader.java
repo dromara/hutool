@@ -1,28 +1,22 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellHandler;
 import cn.hutool.poi.excel.cell.CellUtil;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import cn.hutool.poi.excel.reader.BeanSheetReader;
+import cn.hutool.poi.excel.reader.ListSheetReader;
+import cn.hutool.poi.excel.reader.MapSheetReader;
+import cn.hutool.poi.excel.reader.SheetReader;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,37 +250,31 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	}
 
 	/**
-	 * 读取工作簿中指定的Sheet
+	 * 读取工作簿中指定的Sheet，此方法会把第一行作为标题行，替换标题别名
 	 *
 	 * @param startRowIndex 起始行（包含，从0开始计数）
 	 * @param endRowIndex   结束行（包含，从0开始计数）
 	 * @return 行的集合，一行使用List表示
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	public List<List<Object>> read(int startRowIndex, int endRowIndex) {
-		checkNotClosed();
-		List<List<Object>> resultList = new ArrayList<>();
+		return read(startRowIndex, endRowIndex, true);
+	}
 
-		startRowIndex = Math.max(startRowIndex, this.sheet.getFirstRowNum());// 读取起始行（包含）
-		endRowIndex = Math.min(endRowIndex, this.sheet.getLastRowNum());// 读取结束行（包含）
-		boolean isFirstLine = true;
-		List rowList;
-		for (int i = startRowIndex; i <= endRowIndex; i++) {
-			rowList = readRow(i);
-			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
-				if (null == rowList) {
-					rowList = new ArrayList<>(0);
-				}
-				if (isFirstLine) {
-					isFirstLine = false;
-					if (MapUtil.isNotEmpty(this.headerAlias)) {
-						rowList = aliasHeader(rowList);
-					}
-				}
-				resultList.add(rowList);
-			}
-		}
-		return resultList;
+	/**
+	 * 读取工作簿中指定的Sheet
+	 *
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @param endRowIndex   结束行（包含，从0开始计数）
+	 * @param aliasFirstLine 是否首行作为标题行转换别名
+	 * @return 行的集合，一行使用List表示
+	 * @since 5.4.4
+	 */
+	public List<List<Object>> read(int startRowIndex, int endRowIndex, boolean aliasFirstLine) {
+		final ListSheetReader reader = new ListSheetReader(startRowIndex, endRowIndex, aliasFirstLine);
+		reader.setCellEditor(this.cellEditor);
+		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
+		reader.setHeaderAlias(headerAlias);
+		return read(reader);
 	}
 
 	/**
@@ -348,33 +336,11 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @return Map的列表
 	 */
 	public List<Map<String, Object>> read(int headerRowIndex, int startRowIndex, int endRowIndex) {
-		checkNotClosed();
-		// 边界判断
-		final int firstRowNum = sheet.getFirstRowNum();
-		final int lastRowNum = sheet.getLastRowNum();
-		if (headerRowIndex < firstRowNum) {
-			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is lower than first row index {}.", headerRowIndex, firstRowNum));
-		} else if (headerRowIndex > lastRowNum) {
-			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is greater than last row index {}.", headerRowIndex, firstRowNum));
-		}
-		startRowIndex = Math.max(startRowIndex, firstRowNum);// 读取起始行（包含）
-		endRowIndex = Math.min(endRowIndex, lastRowNum);// 读取结束行（包含）
-
-		// 读取header
-		List<Object> headerList = readRow(sheet.getRow(headerRowIndex));
-
-		final List<Map<String, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
-		List<Object> rowList;
-		for (int i = startRowIndex; i <= endRowIndex; i++) {
-			if (i != headerRowIndex) {
-				// 跳过标题行
-				rowList = readRow(sheet.getRow(i));
-				if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
-					result.add(IterUtil.toMap(aliasHeader(headerList), rowList, true));
-				}
-			}
-		}
-		return result;
+		final MapSheetReader reader = new MapSheetReader(headerRowIndex, startRowIndex, endRowIndex);
+		reader.setCellEditor(this.cellEditor);
+		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
+		reader.setHeaderAlias(headerAlias);
+		return read(reader);
 	}
 
 	/**
@@ -412,19 +378,25 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param beanType       每行对应Bean的类型
 	 * @return Map的列表
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> List<T> read(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> beanType) {
-		checkNotClosed();
-		final List<Map<String, Object>> mapList = read(headerRowIndex, startRowIndex, endRowIndex);
-		if (Map.class.isAssignableFrom(beanType)) {
-			return (List<T>) mapList;
-		}
+		final BeanSheetReader<T> reader = new BeanSheetReader<>(headerRowIndex, startRowIndex, endRowIndex, beanType);
+		reader.setCellEditor(this.cellEditor);
+		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
+		reader.setHeaderAlias(headerAlias);
+		return read(reader);
+	}
 
-		final List<T> beanList = new ArrayList<>(mapList.size());
-		for (Map<String, Object> map : mapList) {
-			beanList.add(BeanUtil.toBean(map, beanType));
-		}
-		return beanList;
+	/**
+	 * 读取数据为指定类型
+	 *
+	 * @param <T> 读取数据类型
+	 * @param sheetReader {@link SheetReader}实现
+	 * @return 数据读取结果
+	 * @since 5.4.4
+	 */
+	public <T> T read(SheetReader<T> sheetReader){
+		checkNotClosed();
+		return Assert.notNull(sheetReader).read(this.sheet);
 	}
 
 	/**
@@ -436,9 +408,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @since 4.1.0
 	 */
 	public String readAsText(boolean withSheetName) {
-		final ExcelExtractor extractor = getExtractor();
-		extractor.setIncludeSheetNames(withSheetName);
-		return extractor.getText();
+		return ExcelExtractorUtil.readAsText(this.workbook, withSheetName);
 	}
 
 	/**
@@ -448,14 +418,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @since 4.1.0
 	 */
 	public ExcelExtractor getExtractor() {
-		ExcelExtractor extractor;
-		Workbook wb = this.workbook;
-		if (wb instanceof HSSFWorkbook) {
-			extractor = new org.apache.poi.hssf.extractor.ExcelExtractor((HSSFWorkbook) wb);
-		} else {
-			extractor = new XSSFExcelExtractor((XSSFWorkbook) wb);
-		}
-		return extractor;
+		return ExcelExtractorUtil.getExtractor(this.workbook);
 	}
 
 	/**
@@ -502,42 +465,6 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 */
 	private List<Object> readRow(Row row) {
 		return RowUtil.readRow(row, this.cellEditor);
-	}
-
-	/**
-	 * 转换标题别名，如果没有别名则使用原标题，当标题为空时，列号对应的字母便是header
-	 *
-	 * @param headerList 原标题列表
-	 * @return 转换别名列表
-	 */
-	private List<String> aliasHeader(List<Object> headerList) {
-		if(CollUtil.isEmpty(headerList)){
-			return new ArrayList<>(0);
-		}
-
-		final int size = headerList.size();
-		final ArrayList<String> result = new ArrayList<>(size);
-		for (int i = 0; i < size; i++) {
-			result.add(aliasHeader(headerList.get(i), i));
-		}
-		return result;
-	}
-
-	/**
-	 * 转换标题别名，如果没有别名则使用原标题，当标题为空时，列号对应的字母便是header
-	 *
-	 * @param headerObj 原标题
-	 * @param index     标题所在列号，当标题为空时，列号对应的字母便是header
-	 * @return 转换别名列表
-	 * @since 4.3.2
-	 */
-	private String aliasHeader(Object headerObj, int index) {
-		if (null == headerObj) {
-			return ExcelUtil.indexToColName(index);
-		}
-
-		final String header = headerObj.toString();
-		return ObjectUtil.defaultIfNull(this.headerAlias.get(header), header);
 	}
 
 	/**

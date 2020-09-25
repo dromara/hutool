@@ -1,12 +1,13 @@
 package cn.hutool.cron.demo;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.CronUtil;
+import cn.hutool.cron.TaskExecutor;
+import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.task.Task;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * 定时任务样例
@@ -38,6 +39,23 @@ public class CronTest {
 	@Test
 	@Ignore
 	public void cronTest2() {
+		CronUtil.getScheduler().addListener(new TaskListener() {
+			@Override
+			public void onStart(TaskExecutor executor) {
+				Console.log("Listen task start!");
+			}
+
+			@Override
+			public void onSucceeded(TaskExecutor executor) {
+
+			}
+
+			@Override
+			public void onFailed(TaskExecutor executor, Throwable exception) {
+
+			}
+		});
+
 		// 支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
 		CronUtil.start();
