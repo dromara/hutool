@@ -38,7 +38,7 @@ public enum GlobalMailAccount {
 		for (String mailSettingPath : MailAccount.MAIL_SETTING_PATHS) {
 			try {
 				return new MailAccount(mailSettingPath);
-			} catch (IORuntimeException e) {
+			} catch (IORuntimeException ignore) {
 				//ignore
 			}
 		}

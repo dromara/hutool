@@ -16,6 +16,9 @@
 * 【core   】     CharUtil and StrUtil增加@（pr#1106@Github）
 * 【extra  】     优化EMOJ查询逻辑（pr#1112@Github）
 * 【extra  】     优化CollUtil交并集结果集合设置初始化大小，避免扩容成本（pr#1110@Github）
+* 【core   】     优化PageUtil彩虹算法（issue#1110@Github）
+* 【core   】     IoUtil增加readUtf8方法
+* 【core   】     优化全局邮箱账户初始化逻辑（pr#1114@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
