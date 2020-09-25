@@ -21,6 +21,7 @@
 * 【core   】     优化全局邮箱账户初始化逻辑（pr#1114@Github）
 * 【http   】     SoapClient增加addSOAPHeader方法
 * 【http   】     完善StrUtil的注释（pr#186@Gitee）
+* 【aop    】     去除调试日志（issue#1116@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
