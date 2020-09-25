@@ -120,15 +120,15 @@ public class StrUtil {
 
 	/** 字符串常量：HTML 空格转义 */
 	public static final String HTML_NBSP = "&nbsp;";
-	/** 字符串常量：HTML And 符转义 & */
+	/** 字符串常量：HTML And 符转义 &amp; */
 	public static final String HTML_AMP = "&amp;";
 	/** 字符串常量：HTML 双引号转义 " */
 	public static final String HTML_QUOTE = "&quot;";
 	/** 字符串常量：HTML 单引号转义 ' */
 	public static final String HTML_APOS = "&apos;";
-	/** 字符串常量：HTML 小于号转义 < */
+	/** 字符串常量：HTML 小于号转义 &lt; */
 	public static final String HTML_LT = "&lt;";
-	/** 字符串常量：HTML 大于号转义 > */
+	/** 字符串常量：HTML 大于号转义 &gt; */
 	public static final String HTML_GT = "&gt;";
 	/** 字符串常量：空 JSON "{}" */
 	public static final String EMPTY_JSON = "{}";

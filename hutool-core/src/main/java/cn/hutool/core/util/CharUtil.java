@@ -43,9 +43,9 @@ public class CharUtil {
 	public static final char DOUBLE_QUOTES = '"';
 	/** 字符常量：单引号 ' */
 	public static final char SINGLE_QUOTE = '\'';
-	/** 字符常量：冒号 : */
+	/** 字符常量：与 &amp; */
 	public static final char AMP = '&';
-	/** 字符常量：与 & */
+	/** 字符常量：冒号 : */
 	public static final char COLON = ':';
 	/** 字符常量：艾特 @ */
 	public static final char AT = '@';
