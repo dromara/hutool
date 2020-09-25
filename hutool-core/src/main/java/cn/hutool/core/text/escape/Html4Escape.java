@@ -18,7 +18,6 @@ public class Html4Escape extends ReplacerChain {
 			{ "&", "&amp;" }, // & - ampersand
 			{ "<", "&lt;" }, // < - less-than
 			{ ">", "&gt;" }, // > - greater-than
-			{"\'", "&apos;"} // ' - quote
 	};
 
 	protected static final String[][] ISO8859_1_ESCAPE = { //

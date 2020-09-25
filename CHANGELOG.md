@@ -22,6 +22,7 @@
 * 【http   】     SoapClient增加addSOAPHeader方法
 * 【http   】     完善StrUtil的注释（pr#186@Gitee）
 * 【aop    】     去除调试日志（issue#1116@Github）
+* 【core   】     增加&apos;反转义（pr#1121@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
