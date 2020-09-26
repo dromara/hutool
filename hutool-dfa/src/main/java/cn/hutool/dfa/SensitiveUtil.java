@@ -73,12 +73,15 @@ public final class SensitiveUtil {
 	}
 	
 	/**
-	 * 是否包含敏感词
-	 * @param text 文本
-	 * @return 是否包含
+	 * 设置字符过滤规则，通过定义字符串过滤规则，过滤不需要的字符<br>
+	 * 当accept为false时，此字符不参与匹配
+	 *
+	 * @param charFilter 过滤函数
 	 */
-	public static boolean containsSensitive(String text){
-		return sensitiveTree.isMatch(text);
+	public static void setCharFilter(Filter<Character> charFilter) {
+		if(charFilter != null) {
+			sensitiveTree.setCharFilter(charFilter);
+		}
 	}
 	
 	/**
