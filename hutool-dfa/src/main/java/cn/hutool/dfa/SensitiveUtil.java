@@ -86,6 +86,15 @@ public final class SensitiveUtil {
 	
 	/**
 	 * 是否包含敏感词
+	 * @param text 文本
+	 * @return 是否包含
+	 */
+	public static boolean containsSensitive(String text){
+		return sensitiveTree.isMatch(text);
+	}
+	
+	/**
+	 * 是否包含敏感词
 	 * @param obj bean，会被转为JSON字符串
 	 * @return 是否包含
 	 */
