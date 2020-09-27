@@ -67,7 +67,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * 此处，“分”是指货币的最小单位，“元”是货币的最常用单位，
 	 * 不同的币种有不同的元/分换算比例，如人民币是100，而日元为1。
 	 */
-	private static final int[] centFactors = new int[]{1, 10, 100, 1000};
+	private static final int[] CENT_FACTORS = new int[]{1, 10, 100, 1000};
 
 	/**
 	 * 金额，以分为单位。
@@ -318,7 +318,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 本货币币种的元/分换算比率。
 	 */
 	public int getCentFactor() {
-		return centFactors[currency.getDefaultFractionDigits()];
+		return CENT_FACTORS[currency.getDefaultFractionDigits()];
 	}
 
 	// 基本对象方法 ===================================================

@@ -17,8 +17,8 @@ import cn.hutool.core.util.StrUtil;
  */
 public class Morse {
 
-	private static final Map<Integer, String> alphabets = new HashMap<>(); // code point -> morse
-	private static final Map<String, Integer> dictionaries = new HashMap<>(); // morse -> code point
+	private static final Map<Integer, String> ALPHABETS = new HashMap<>(); // code point -> morse
+	private static final Map<String, Integer> DICTIONARIES = new HashMap<>(); // morse -> code point
 
 	/**
 	 * 注册莫尔斯电码表
@@ -27,8 +27,8 @@ public class Morse {
 	 * @param dict 二进制
 	 */
 	private static void registerMorse(Character abc, String dict) {
-		alphabets.put(Integer.valueOf(abc), dict);
-		dictionaries.put(dict, Integer.valueOf(abc));
+		ALPHABETS.put(Integer.valueOf(abc), dict);
+		DICTIONARIES.put(dict, Integer.valueOf(abc));
 	}
 
 	static {
@@ -129,7 +129,7 @@ public class Morse {
 		final int len = text.codePointCount(0, text.length());
 		for (int i = 0; i < len; i++) {
 			int codePoint = text.codePointAt(i);
-			String word = alphabets.get(codePoint);
+			String word = ALPHABETS.get(codePoint);
 			if (word == null) {
 				word = Integer.toBinaryString(codePoint);
 			}
@@ -161,7 +161,7 @@ public class Morse {
 				continue;
 			}
 			word = word.replace(dit, '0').replace(dah, '1');
-			codePoint = dictionaries.get(word);
+			codePoint = DICTIONARIES.get(word);
 			if (codePoint == null) {
 				codePoint = Integer.valueOf(word, 2);
 			}

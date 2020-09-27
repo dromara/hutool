@@ -26,7 +26,7 @@ abstract class FormatCache<F extends Format> {
 
 	private final ConcurrentMap<Tuple, F> cInstanceCache = new ConcurrentHashMap<>(7);
 
-	private static final ConcurrentMap<Tuple, String> cDateTimeInstanceCache = new ConcurrentHashMap<>(7);
+	private static final ConcurrentMap<Tuple, String> C_DATE_TIME_INSTANCE_CACHE = new ConcurrentHashMap<>(7);
 
 	/**
 	 * 使用默认的pattern、timezone和locale获得缓存中的实例
@@ -163,7 +163,7 @@ abstract class FormatCache<F extends Format> {
 	static String getPatternForStyle(final Integer dateStyle, final Integer timeStyle, final Locale locale) {
 		final Tuple key = new Tuple(dateStyle, timeStyle, locale);
 
-		String pattern = cDateTimeInstanceCache.get(key);
+		String pattern = C_DATE_TIME_INSTANCE_CACHE.get(key);
 		if (pattern == null) {
 			try {
 				DateFormat formatter;
@@ -175,7 +175,7 @@ abstract class FormatCache<F extends Format> {
 					formatter = DateFormat.getDateTimeInstance(dateStyle, timeStyle, locale);
 				}
 				pattern = ((SimpleDateFormat) formatter).toPattern();
-				final String previous = cDateTimeInstanceCache.putIfAbsent(key, pattern);
+				final String previous = C_DATE_TIME_INSTANCE_CACHE.putIfAbsent(key, pattern);
 				if (previous != null) {
 					// even though it doesn't matter if another thread put the pattern
 					// it's still good practice to return the String instance that is

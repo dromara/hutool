@@ -17,8 +17,8 @@ public class Base32 {
 	
 	private Base32() {}
 
-	private static final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-	private static final int[] base32Lookup = {//
+	private static final String BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+	private static final int[] BASE32_LOOKUP = {//
 			0xFF, 0xFF, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, // '0', '1', '2', '3', '4', '5', '6', '7'
 			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // '8', '9', ':', ';', '<', '=', '>', '?'
 			0xFF, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G'
@@ -68,7 +68,7 @@ public class Base32 {
 					i++;
 				}
 			}
-			base32.append(base32Chars.charAt(digit));
+			base32.append(BASE32_CHARS.charAt(digit));
 		}
 
 		return base32.toString();
@@ -120,11 +120,11 @@ public class Base32 {
 			lookup = base32.charAt(i) - '0';
 
 			/* Skip chars outside the lookup table */
-			if (lookup < 0 || lookup >= base32Lookup.length) {
+			if (lookup < 0 || lookup >= BASE32_LOOKUP.length) {
 				continue;
 			}
 
-			digit = base32Lookup[lookup];
+			digit = BASE32_LOOKUP[lookup];
 
 			/* If this digit is not in the table, ignore it */
 			if (digit == 0xFF) {

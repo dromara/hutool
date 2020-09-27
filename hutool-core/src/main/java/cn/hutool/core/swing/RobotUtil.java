@@ -20,12 +20,12 @@ import cn.hutool.core.swing.clipboard.ClipboardUtil;
  */
 public class RobotUtil {
 
-	private static final Robot robot;
+	private static final Robot ROBOT;
 	private static int delay;
 
 	static {
 		try {
-			robot = new Robot();
+			ROBOT = new Robot();
 		} catch (AWTException e) {
 			throw new UtilException(e);
 		}
@@ -50,7 +50,7 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void mouseMove(int x, int y) {
-		robot.mouseMove(x, y);
+		ROBOT.mouseMove(x, y);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void click() {
-		robot.mousePress(InputEvent.BUTTON1_MASK);
-		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		ROBOT.mousePress(InputEvent.BUTTON1_MASK);
+		ROBOT.mouseRelease(InputEvent.BUTTON1_MASK);
 		delay();
 	}
 
@@ -72,8 +72,8 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void rightClick() {
-		robot.mousePress(InputEvent.BUTTON1_MASK);
-		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		ROBOT.mousePress(InputEvent.BUTTON1_MASK);
+		ROBOT.mouseRelease(InputEvent.BUTTON1_MASK);
 		delay();
 	}
 
@@ -84,7 +84,7 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void mouseWheel(int wheelAmt) {
-		robot.mouseWheel(wheelAmt);
+		ROBOT.mouseWheel(wheelAmt);
 		delay();
 	}
 
@@ -97,8 +97,8 @@ public class RobotUtil {
 	 */
 	public static void keyClick(int... keyCodes) {
 		for (int keyCode : keyCodes) {
-			robot.keyPress(keyCode);
-			robot.keyRelease(keyCode);
+			ROBOT.keyPress(keyCode);
+			ROBOT.keyRelease(keyCode);
 		}
 		delay();
 	}
@@ -120,10 +120,10 @@ public class RobotUtil {
 	 * @param key 按键
 	 */
 	public static void keyPressWithShift(int key) {
-		robot.keyPress(KeyEvent.VK_SHIFT);
-		robot.keyPress(key);
-		robot.keyRelease(key);
-		robot.keyRelease(KeyEvent.VK_SHIFT);
+		ROBOT.keyPress(KeyEvent.VK_SHIFT);
+		ROBOT.keyPress(key);
+		ROBOT.keyRelease(key);
+		ROBOT.keyRelease(KeyEvent.VK_SHIFT);
 		delay();
 	}
 
@@ -133,10 +133,10 @@ public class RobotUtil {
 	 * @param key 按键
 	 */
 	public static void keyPressWithCtrl(int key) {
-		robot.keyPress(KeyEvent.VK_CONTROL);
-		robot.keyPress(key);
-		robot.keyRelease(key);
-		robot.keyRelease(KeyEvent.VK_CONTROL);
+		ROBOT.keyPress(KeyEvent.VK_CONTROL);
+		ROBOT.keyPress(key);
+		ROBOT.keyRelease(key);
+		ROBOT.keyRelease(KeyEvent.VK_CONTROL);
 		delay();
 	}
 
@@ -146,10 +146,10 @@ public class RobotUtil {
 	 * @param key 按键
 	 */
 	public static void keyPressWithAlt(int key) {
-		robot.keyPress(KeyEvent.VK_ALT);
-		robot.keyPress(key);
-		robot.keyRelease(key);
-		robot.keyRelease(KeyEvent.VK_ALT);
+		ROBOT.keyPress(KeyEvent.VK_ALT);
+		ROBOT.keyPress(key);
+		ROBOT.keyRelease(key);
+		ROBOT.keyRelease(KeyEvent.VK_ALT);
 		delay();
 	}
 
@@ -180,7 +180,7 @@ public class RobotUtil {
 	 * @return 截屏的图片
 	 */
 	public static BufferedImage captureScreen(Rectangle screenRect) {
-		return robot.createScreenCapture(screenRect);
+		return ROBOT.createScreenCapture(screenRect);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class RobotUtil {
 	 */
 	private static void delay() {
 		if (delay > 0) {
-			robot.delay(delay);
+			ROBOT.delay(delay);
 		}
 	}
 }

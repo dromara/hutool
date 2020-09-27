@@ -11,41 +11,41 @@ import java.util.Map;
  */
 public class MaskBit {
 
-	private static final Map<Integer, String> maskBitMap;
+	private static final Map<Integer, String> MASK_BIT_MAP;
 	static {
-		maskBitMap = new HashMap<>(32);
-		maskBitMap.put(1, "128.0.0.0");
-		maskBitMap.put(2, "192.0.0.0");
-		maskBitMap.put(3, "224.0.0.0");
-		maskBitMap.put(4, "240.0.0.0");
-		maskBitMap.put(5, "248.0.0.0");
-		maskBitMap.put(6, "252.0.0.0");
-		maskBitMap.put(7, "254.0.0.0");
-		maskBitMap.put(8, "255.0.0.0");
-		maskBitMap.put(9, "255.128.0.0");
-		maskBitMap.put(10, "255.192.0.0");
-		maskBitMap.put(11, "255.224.0.0");
-		maskBitMap.put(12, "255.240.0.0");
-		maskBitMap.put(13, "255.248.0.0");
-		maskBitMap.put(14, "255.252.0.0");
-		maskBitMap.put(15, "255.254.0.0");
-		maskBitMap.put(16, "255.255.0.0");
-		maskBitMap.put(17, "255.255.128.0");
-		maskBitMap.put(18, "255.255.192.0");
-		maskBitMap.put(19, "255.255.224.0");
-		maskBitMap.put(20, "255.255.240.0");
-		maskBitMap.put(21, "255.255.248.0");
-		maskBitMap.put(22, "255.255.252.0");
-		maskBitMap.put(23, "255.255.254.0");
-		maskBitMap.put(24, "255.255.255.0");
-		maskBitMap.put(25, "255.255.255.128");
-		maskBitMap.put(26, "255.255.255.192");
-		maskBitMap.put(27, "255.255.255.224");
-		maskBitMap.put(28, "255.255.255.240");
-		maskBitMap.put(29, "255.255.255.248");
-		maskBitMap.put(30, "255.255.255.252");
-		maskBitMap.put(31, "255.255.255.254");
-		maskBitMap.put(32, "255.255.255.255");
+		MASK_BIT_MAP = new HashMap<>(32);
+		MASK_BIT_MAP.put(1, "128.0.0.0");
+		MASK_BIT_MAP.put(2, "192.0.0.0");
+		MASK_BIT_MAP.put(3, "224.0.0.0");
+		MASK_BIT_MAP.put(4, "240.0.0.0");
+		MASK_BIT_MAP.put(5, "248.0.0.0");
+		MASK_BIT_MAP.put(6, "252.0.0.0");
+		MASK_BIT_MAP.put(7, "254.0.0.0");
+		MASK_BIT_MAP.put(8, "255.0.0.0");
+		MASK_BIT_MAP.put(9, "255.128.0.0");
+		MASK_BIT_MAP.put(10, "255.192.0.0");
+		MASK_BIT_MAP.put(11, "255.224.0.0");
+		MASK_BIT_MAP.put(12, "255.240.0.0");
+		MASK_BIT_MAP.put(13, "255.248.0.0");
+		MASK_BIT_MAP.put(14, "255.252.0.0");
+		MASK_BIT_MAP.put(15, "255.254.0.0");
+		MASK_BIT_MAP.put(16, "255.255.0.0");
+		MASK_BIT_MAP.put(17, "255.255.128.0");
+		MASK_BIT_MAP.put(18, "255.255.192.0");
+		MASK_BIT_MAP.put(19, "255.255.224.0");
+		MASK_BIT_MAP.put(20, "255.255.240.0");
+		MASK_BIT_MAP.put(21, "255.255.248.0");
+		MASK_BIT_MAP.put(22, "255.255.252.0");
+		MASK_BIT_MAP.put(23, "255.255.254.0");
+		MASK_BIT_MAP.put(24, "255.255.255.0");
+		MASK_BIT_MAP.put(25, "255.255.255.128");
+		MASK_BIT_MAP.put(26, "255.255.255.192");
+		MASK_BIT_MAP.put(27, "255.255.255.224");
+		MASK_BIT_MAP.put(28, "255.255.255.240");
+		MASK_BIT_MAP.put(29, "255.255.255.248");
+		MASK_BIT_MAP.put(30, "255.255.255.252");
+		MASK_BIT_MAP.put(31, "255.255.255.254");
+		MASK_BIT_MAP.put(32, "255.255.255.255");
 	}
 
 	/**
@@ -55,6 +55,6 @@ public class MaskBit {
 	 * @return 掩码
 	 */
 	public static String get(int maskBit) {
-		return maskBitMap.get(maskBit);
+		return MASK_BIT_MAP.get(maskBit);
 	}
 }

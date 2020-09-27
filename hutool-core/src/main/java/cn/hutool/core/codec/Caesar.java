@@ -9,7 +9,7 @@ package cn.hutool.core.codec;
 public class Caesar {
 
 	// 26个字母表
-	public static final String table = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+	public static final String TABLE = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 
 	/**
 	 * 传入明文，加密得到密文
@@ -63,8 +63,8 @@ public class Caesar {
 	 * @return 加密后的字符
 	 */
 	private static char encodeChar(char c, int offset) {
-		int position = (table.indexOf(c) + offset) % 52;
-		return table.charAt(position);
+		int position = (TABLE.indexOf(c) + offset) % 52;
+		return TABLE.charAt(position);
 
 	}
 
@@ -75,11 +75,11 @@ public class Caesar {
 	 * @return 解密后的字符
 	 */
 	private static char decodeChar(char c, int offset) {
-		int position = (table.indexOf(c) - offset) % 52;
+		int position = (TABLE.indexOf(c) - offset) % 52;
 		if (position < 0) {
 			position += 52;
 		}
-		return table.charAt(position);
+		return TABLE.charAt(position);
 	}
 	// ----------------------------------------------------------------------------------------- Private method end
 }
