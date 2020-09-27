@@ -150,7 +150,7 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
