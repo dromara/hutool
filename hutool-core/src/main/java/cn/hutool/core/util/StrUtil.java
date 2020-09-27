@@ -4227,7 +4227,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 计算连个字符串的相似度百分比
+	 * 计算两个字符串的相似度百分比
 	 *
 	 * @param str1  字符串1
 	 * @param str2  字符串2

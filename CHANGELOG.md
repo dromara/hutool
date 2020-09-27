@@ -24,6 +24,8 @@
 * 【aop    】     去除调试日志（issue#1116@Github）
 * 【core   】     增加&apos;反转义（pr#1121@Github）
 * 【poi    】     增加SheetReader和XXXRowHandler（issue#I1WHJP@Gitee）
+* 【dfa    】     增加过滤符号（pr#1122@Github）
+* 【dfa    】     SensitiveUtil增加setCharFilter方法（pr#1123@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
