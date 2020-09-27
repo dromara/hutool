@@ -9,7 +9,7 @@ package cn.hutool.core.io.checksum.crc16;
  */
 public class CRC16CCITT extends CRC16Checksum{
 
-	private static final int wCPoly = 0x8408;
+	private static final int WC_POLY = 0x8408;
 
 	@Override
 	public void update(int b) {
@@ -17,7 +17,7 @@ public class CRC16CCITT extends CRC16Checksum{
 		for (int j = 0; j < 8; j++) {
 			if ((wCRCin & 0x0001) != 0) {
 				wCRCin >>= 1;
-				wCRCin ^= wCPoly;
+				wCRCin ^= WC_POLY;
 			} else {
 				wCRCin >>= 1;
 			}

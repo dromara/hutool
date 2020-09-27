@@ -447,7 +447,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@SuppressWarnings("unchecked") // OK because we are creating an array with no entries
-	private static final ConcurrentMap<Locale, Strategy>[] caches = new ConcurrentMap[Calendar.FIELD_COUNT];
+	private static final ConcurrentMap<Locale, Strategy>[] CACHES = new ConcurrentMap[Calendar.FIELD_COUNT];
 
 	/**
 	 * Get a cache of Strategies for a particular field
@@ -456,11 +456,11 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	 * @return a cache of Locale to Strategy
 	 */
 	private static ConcurrentMap<Locale, Strategy> getCache(final int field) {
-		synchronized (caches) {
-			if (caches[field] == null) {
-				caches[field] = new ConcurrentHashMap<>(3);
+		synchronized (CACHES) {
+			if (CACHES[field] == null) {
+				CACHES[field] = new ConcurrentHashMap<>(3);
 			}
-			return caches[field];
+			return CACHES[field];
 		}
 	}
 

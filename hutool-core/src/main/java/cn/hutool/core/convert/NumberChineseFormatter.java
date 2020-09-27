@@ -18,20 +18,20 @@ public class NumberChineseFormatter {
 	/**
 	 * 简体中文形式
 	 **/
-	private static final String[] simpleDigits = {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
+	private static final String[] SIMPLE_DIGITS = {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
 	/**
 	 * 繁体中文形式
 	 **/
-	private static final String[] traditionalDigits = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
+	private static final String[] TRADITIONAL_DIGITS = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
 
 	/**
 	 * 简体中文单位
 	 **/
-	private static final String[] simpleUnits = {"", "十", "百", "千"};
+	private static final String[] SIMPLE_UNITS = {"", "十", "百", "千"};
 	/**
 	 * 繁体中文单位
 	 **/
-	private static final String[] traditionalUnits = {"", "拾", "佰", "仟"};
+	private static final String[] TRADITIONAL_UNITS = {"", "拾", "佰", "仟"};
 
 	/**
 	 * 阿拉伯数字转换成中文,小数点后四舍五入保留两位. 使用于整数、小数的转换.
@@ -53,7 +53,7 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 */
 	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
-		final String[] numArray = isUseTraditional ? traditionalDigits : simpleDigits;
+		final String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 
 		if (amount > 99999999999999.99 || amount < -99999999999999.99) {
 			throw new IllegalArgumentException("Number support only: (-99999999999999.99 ～ 99999999999999.99)！");
@@ -150,7 +150,7 @@ public class NumberChineseFormatter {
 	 * @since 5.3.9
 	 */
 	public static String numberCharToChinese(char c, boolean isUseTraditional) {
-		String[] numArray = isUseTraditional ? traditionalDigits : simpleDigits;
+		String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 		int index = c - 48;
 		if (index < 0 || index >= numArray.length) {
 			return String.valueOf(c);
@@ -170,8 +170,8 @@ public class NumberChineseFormatter {
 //			throw new IllegalArgumentException("Number must 0 < num < 10000！");
 //		}
 
-		String[] numArray = isUseTraditional ? traditionalDigits : simpleDigits;
-		String[] units = isUseTraditional ? traditionalUnits : simpleUnits;
+		String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
+		String[] units = isUseTraditional ? TRADITIONAL_UNITS : SIMPLE_UNITS;
 
 		int temp = amountPart;
 

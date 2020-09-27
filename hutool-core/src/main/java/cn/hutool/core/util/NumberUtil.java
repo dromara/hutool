@@ -1713,7 +1713,11 @@ public class NumberUtil {
 	 */
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
 		//noinspection NumberEquality
-		if (bigNum1 == bigNum2){
+		/*if (bigNum1 == bigNum2){
+			return true;
+		}*/
+		// 如果要进行null判断,那直接进行判断null,而不是使用 == 来判断容易引起误解
+		if (bigNum1 == null && bigNum2 == null){
 			return true;
 		}
 		if (bigNum1==null || bigNum2==null){

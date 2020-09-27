@@ -38,7 +38,7 @@ public class IdcardUtil {
 	/**
 	 * 每位加权因子
 	 */
-	private static final int[] power = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+	private static final int[] POWER = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
 	/**
 	 * 省市代码表
 	 */
@@ -602,9 +602,9 @@ public class IdcardUtil {
 	 */
 	private static int getPowerSum(char[] iArr) {
 		int iSum = 0;
-		if (power.length == iArr.length) {
+		if (POWER.length == iArr.length) {
 			for (int i = 0; i < iArr.length; i++) {
-				iSum += Integer.parseInt(String.valueOf(iArr[i])) * power[i];
+				iSum += Integer.parseInt(String.valueOf(iArr[i])) * POWER[i];
 			}
 		}
 		return iSum;
