@@ -440,14 +440,11 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		String value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
+		BigDecimal result =new BigDecimal(values[0]);
 		for (int i = 1; i < values.length; i++) {
-			value = values[i];
-			if (null != value) {
-				result = result.multiply(new BigDecimal(value));
-			}
+			result = result.multiply(new BigDecimal(values[i]));
 		}
+
 		return result;
 	}
 
@@ -464,13 +461,9 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : value;
+		BigDecimal result = values[0];
 		for (int i = 1; i < values.length; i++) {
-			value = values[i];
-			if (null != value) {
-				result = result.multiply(value);
-			}
+			result = result.multiply(values[i]);
 		}
 		return result;
 	}
@@ -1814,7 +1807,7 @@ public class NumberUtil {
 	 *
 	 * @param numberArray 数字数组
 	 * @return 最小值
-	 * @see ArrayUtil#min(Comparable[])
+	 * @see ArrayUtil#min(Comparable[]) 
 	 * @since 5.0.8
 	 */
 	public static BigDecimal min(BigDecimal... numberArray) {
