@@ -606,10 +606,11 @@ public class GifDecoder {
 							for (int i = 0; i < 11; i++) {
 								app.append((char) block[i]);
 							}
-							if (app.toString().equals("NETSCAPE2.0")) {
+							if ("NETSCAPE2.0".equals(app.toString())) {
 								readNetscapeExt();
-							} else
+							} else {
 								skip(); // don't care
+							}
 							break;
 
 						default: // uninteresting extension
