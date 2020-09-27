@@ -126,7 +126,7 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -150,7 +150,7 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -266,7 +266,7 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -290,7 +290,7 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -402,15 +402,15 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(Number... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			result = result.multiply(new BigDecimal(null == value ? "0" : value.toString()));
+			result = result.multiply(new BigDecimal(value.toString()));
 		}
 		return result;
 	}
@@ -436,12 +436,12 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(String... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
 		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -460,7 +460,7 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(BigDecimal... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
@@ -1814,7 +1814,7 @@ public class NumberUtil {
 	 *
 	 * @param numberArray 数字数组
 	 * @return 最小值
-	 * @see ArrayUtil#min(Comparable[]) 
+	 * @see ArrayUtil#min(Comparable[])
 	 * @since 5.0.8
 	 */
 	public static BigDecimal min(BigDecimal... numberArray) {
