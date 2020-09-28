@@ -254,4 +254,14 @@ public class NumberUtilTest {
 		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
 		Assert.assertEquals(BigDecimal.ZERO, mul);
 	}
+	
+	
+	@Test
+	public void isPowerOfTwoTest() {
+		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(-1));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(16));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(65536));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(1));
+		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(17));
+	}
 }
