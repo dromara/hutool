@@ -44,13 +44,13 @@ public class NumberUtil {
 	private static final int DEFAUT_DIV_SCALE = 10;
 
 	/**
-         * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
-         */
-        private static final long[] FACTORIALS = new long[]{
-            1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
-            87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
-            2432902008176640000L};
-	
+	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
+	 */
+	private static final long[] FACTORIALS = new long[]{
+			1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
+			87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
+			2432902008176640000L};
+
 	/**
 	 * 提供精确的加法运算
 	 *
@@ -448,7 +448,7 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal result =new BigDecimal(values[0]);
+		BigDecimal result = new BigDecimal(values[0]);
 		for (int i = 1; i < values.length; i++) {
 			result = result.multiply(new BigDecimal(values[i]));
 		}
@@ -756,13 +756,13 @@ public class NumberUtil {
 	/**
 	 * 补充Math.ceilDiv() JDK8中添加了和Math.floorDiv()但却没有ceilDiv()
 	 *
-	 * @param v1           被除数
-	 * @param v2           除数
+	 * @param v1 被除数
+	 * @param v2 除数
 	 * @return 两个参数的商
 	 * @since 5.3.3
 	 */
 	public static int ceilDiv(int v1, int v2) {
-		return (int)Math.ceil((double)v1 / v2);
+		return (int) Math.ceil((double) v1 / v2);
 	}
 
 	// ------------------------------------------------------------------------------------------- round
@@ -1430,50 +1430,49 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-        public static long factorial(long start, long end) {
-                // 负数没有阶乘
-                if(start < 0 || end < 0) {
-                        throw new IllegalArgumentException(String.format("Factorial start and end both must be >= 0, " +
-                            "but got start=%d, end=%d", start, end));
-                }
-                if (0L == start || start == end) {
-                        return 1L;
-                }
-                if (start < end) {
-                        return 0L;
-                }
-                return factorialMultiplyAndCheck(start, factorial(start - 1, end));
-        }
-	
-	/**
-         * 计算范围阶乘中校验中间的计算是否存在溢出，factorial提前做了负数和0的校验，因此这里没有校验数字的正负
-         * @param a 乘数
-         * @param b 被乘数
-         * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
-         */
-        private static long factorialMultiplyAndCheck(long a, long b) {
-                if (a <= Long.MAX_VALUE / b) {
-                        return a * b;
-                }
-                throw new IllegalArgumentException(String.format("Overflow in multiplication: {%d} * {%d}", a, b));
-        }
+	public static long factorial(long start, long end) {
+		// 负数没有阶乘
+		if (start < 0 || end < 0) {
+			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be >= 0, but got start={}, end={}", start, end));
+		}
+		if (0L == start || start == end) {
+			return 1L;
+		}
+		if (start < end) {
+			return 0L;
+		}
+		return factorialMultiplyAndCheck(start, factorial(start - 1, end));
+	}
 
-        /**
-         * 计算阶乘
-         * <p>
-         * n! = n * (n-1) * ... * 2 * 1
-         * </p>
-         *
-         * @param n 阶乘起始
-         * @return 结果
-         */
-        public static long factorial(long n) {
-                if (n < 0 || n > 20) {
-                        throw new IllegalArgumentException(String.format("Factorial must have n >= 0 and n <= 20 for n!, " +
-                            "but got n = %d", n));
-                }
-                return FACTORIALS[(int) n];
-        }
+	/**
+	 * 计算范围阶乘中校验中间的计算是否存在溢出，factorial提前做了负数和0的校验，因此这里没有校验数字的正负
+	 *
+	 * @param a 乘数
+	 * @param b 被乘数
+	 * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
+	 */
+	private static long factorialMultiplyAndCheck(long a, long b) {
+		if (a <= Long.MAX_VALUE / b) {
+			return a * b;
+		}
+		throw new IllegalArgumentException(StrUtil.format("Overflow in multiplication: {} * {}", a, b));
+	}
+
+	/**
+	 * 计算阶乘
+	 * <p>
+	 * n! = n * (n-1) * ... * 2 * 1
+	 * </p>
+	 *
+	 * @param n 阶乘起始
+	 * @return 结果
+	 */
+	public static long factorial(long n) {
+		if (n < 0 || n > 20) {
+			throw new IllegalArgumentException(StrUtil.format("Factorial must have n >= 0 and n <= 20 for n!, but got n = {}", n));
+		}
+		return FACTORIALS[(int) n];
+	}
 
 	/**
 	 * 平方根算法<br>
@@ -1736,11 +1735,11 @@ public class NumberUtil {
 	 */
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
 		//noinspection NumberEquality
-		if (bigNum1 == bigNum2){
+		if (bigNum1 == bigNum2) {
 			// 如果用户传入同一对象，省略compareTo以提高性能。
 			return true;
 		}
-		if (bigNum1==null || bigNum2==null){
+		if (bigNum1 == null || bigNum2 == null) {
 			return false;
 		}
 		return 0 == bigNum1.compareTo(bigNum2);
@@ -1838,7 +1837,7 @@ public class NumberUtil {
 	 *
 	 * @param numberArray 数字数组
 	 * @return 最小值
-	 * @see ArrayUtil#min(Comparable[]) 
+	 * @see ArrayUtil#min(Comparable[])
 	 * @since 5.0.8
 	 */
 	public static BigDecimal min(BigDecimal... numberArray) {
@@ -2186,17 +2185,17 @@ public class NumberUtil {
 	public static BigDecimal pow(BigDecimal number, int n) {
 		return number.pow(n);
 	}
-	
-	
-        /**
-         * 判断一个整数是否是2的幂
-         *
-         * @param n 待验证的整数
-         * @return 如果n是2的幂返回true, 反之返回false
-         */
-        public static boolean isPowerOfTwo(long n) { 
-                return (n > 0) && ((n & (n - 1)) == 0);
-        }
+
+
+	/**
+	 * 判断一个整数是否是2的幂
+	 *
+	 * @param n 待验证的整数
+	 * @return 如果n是2的幂返回true, 反之返回false
+	 */
+	public static boolean isPowerOfTwo(long n) {
+		return (n > 0) && ((n & (n - 1)) == 0);
+	}
 
 	/**
 	 * 解析转换数字字符串为int型数字，规则如下：
