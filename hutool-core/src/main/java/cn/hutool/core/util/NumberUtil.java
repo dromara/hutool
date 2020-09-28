@@ -1412,13 +1412,13 @@ public class NumberUtil {
 	// ------------------------------------------------------------------------------------------- others
 
 	/**
-	 * 计算阶乘
+	 * 计算范围阶乘
 	 * <p>
-	 * n! = n * (n-1) * ... * end
+	 * factorial(start, end) = start * (start - 1) * ... * (end - 1)
 	 * </p>
 	 *
-	 * @param start 阶乘起始
-	 * @param end   阶乘结束，必须小于起始
+	 * @param start 阶乘起始（包含）
+	 * @param end   阶乘结束，必须小于起始（不包括）
 	 * @return 结果
 	 * @since 4.1.0
 	 */

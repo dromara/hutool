@@ -28,6 +28,7 @@
 * 【dfa    】     SensitiveUtil增加setCharFilter方法（pr#1123@Github）
 * 【all    】     优化常量大小写规范（pr#188@Gitee）
 * 【core   】     优化NumberUtil中针对BigDecimal的一些处理逻辑（pr#1127@Github）
+* 【core   】     NumberUtil.factorial注释明确（pr#1126@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
