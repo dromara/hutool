@@ -44,6 +44,14 @@ public class NumberUtil {
 	private static final int DEFAUT_DIV_SCALE = 10;
 
 	/**
+         * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
+         */
+        private static final long[] FACTORIALS = new long[]{
+            1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
+            87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
+            2432902008176640000L};
+	
+	/**
 	 * 提供精确的加法运算
 	 *
 	 * @param v1 被加数
@@ -1422,28 +1430,50 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static long factorial(long start, long end) {
-		if (0L == start || start == end) {
-			return 1L;
-		}
-		if (start < end) {
-			return 0L;
-		}
-		return start * factorial(start - 1, end);
-	}
-
+        public static long factorial(long start, long end) {
+                // 负数没有阶乘
+                if(start < 0 || end < 0) {
+                        throw new IllegalArgumentException(String.format("Factorial start and end both must be >= 0, " +
+                            "but got start=%d, end=%d", start, end));
+                }
+                if (0L == start || start == end) {
+                        return 1L;
+                }
+                if (start < end) {
+                        return 0L;
+                }
+                return factorialMultiplyAndCheck(start, factorial(start - 1, end));
+        }
+	
 	/**
-	 * 计算阶乘
-	 * <p>
-	 * n! = n * (n-1) * ... * 2 * 1
-	 * </p>
-	 *
-	 * @param n 阶乘起始
-	 * @return 结果
-	 */
-	public static long factorial(long n) {
-		return factorial(n, 1);
-	}
+         * 计算范围阶乘中校验中间的计算是否存在溢出，factorial提前做了负数和0的校验，因此这里没有校验数字的正负
+         * @param a 乘数
+         * @param b 被乘数
+         * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
+         */
+        private static long factorialMultiplyAndCheck(long a, long b) {
+                if (a <= Long.MAX_VALUE / b) {
+                        return a * b;
+                }
+                throw new IllegalArgumentException(String.format("Overflow in multiplication: {%d} * {%d}", a, b));
+        }
+
+        /**
+         * 计算阶乘
+         * <p>
+         * n! = n * (n-1) * ... * 2 * 1
+         * </p>
+         *
+         * @param n 阶乘起始
+         * @return 结果
+         */
+        public static long factorial(long n) {
+                if (n < 0 || n > 20) {
+                        throw new IllegalArgumentException(String.format("Factorial must have n >= 0 and n <= 20 for n!, " +
+                            "but got n = %d", n));
+                }
+                return FACTORIALS[(int) n];
+        }
 
 	/**
 	 * 平方根算法<br>
