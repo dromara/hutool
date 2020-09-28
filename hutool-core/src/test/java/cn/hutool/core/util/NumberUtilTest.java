@@ -249,6 +249,7 @@ public class NumberUtilTest {
 		Assert.assertEquals(120, factorial);
 		factorial = NumberUtil.factorial(5, 1);
 		Assert.assertEquals(120, factorial);
+    
 		Assert.assertEquals(5, NumberUtil.factorial(5, 4));
 		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20, 0));
 	}
@@ -257,5 +258,15 @@ public class NumberUtilTest {
 	public void mulTest(){
 		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
 		Assert.assertEquals(BigDecimal.ZERO, mul);
+	}
+	
+	
+	@Test
+	public void isPowerOfTwoTest() {
+		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(-1));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(16));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(65536));
+		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(1));
+		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(17));
 	}
 }

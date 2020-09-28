@@ -106,9 +106,9 @@ public class ConverterRegistry implements Serializable {
 	}
 
 	/**
-	 * 获得单例的 {@link ConverterRegistry}
+	 * 获得单例的 ConverterRegistry
 	 *
-	 * @return {@link ConverterRegistry}
+	 * @return ConverterRegistry
 	 */
 	public static ConverterRegistry getInstance() {
 		return SingletonHolder.INSTANCE;
@@ -140,7 +140,7 @@ public class ConverterRegistry implements Serializable {
 	 *
 	 * @param type           转换的目标类型
 	 * @param converterClass 转换器类，必须有默认构造方法
-	 * @return {@link ConverterRegistry}
+	 * @return ConverterRegistry
 	 */
 	public ConverterRegistry putCustom(Type type, Class<? extends Converter<?>> converterClass) {
 		return putCustom(type, ReflectUtil.newInstance(converterClass));
@@ -151,7 +151,7 @@ public class ConverterRegistry implements Serializable {
 	 *
 	 * @param type      转换的目标类型
 	 * @param converter 转换器
-	 * @return {@link ConverterRegistry}
+	 * @return ConverterRegistry
 	 */
 	public ConverterRegistry putCustom(Type type, Converter<?> converter) {
 		if (null == customConverterMap) {
@@ -257,6 +257,7 @@ public class ConverterRegistry implements Serializable {
 			}
 		}
 
+
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if (null != result) {
@@ -269,7 +270,7 @@ public class ConverterRegistry implements Serializable {
 		}
 
 		// 无法转换
-		throw new ConvertException("No Converter for type [{}]", rowType.getName());
+		throw new ConvertException("Can not Converter from [{}] to [{}]", value.getClass().getName(), type.getTypeName());
 	}
 
 	/**

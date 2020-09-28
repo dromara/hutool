@@ -229,4 +229,18 @@ public class SM2Test {
 		Assert.assertEquals(data, decryptStr);
 	}
 
+	@Test
+	public void encryptAndSignTest(){
+		SM2 sm2 = SmUtil.sm2();
+
+		String src = "Sm2Test";
+		byte[] data = sm2.encrypt(src, KeyType.PublicKey);
+		byte[] sign =  sm2.sign(src.getBytes());
+
+		Assert.assertTrue(sm2.verify( src.getBytes(), sign));
+
+		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
+		Assert.assertArrayEquals(dec, src.getBytes());
+	}
+
 }

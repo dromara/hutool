@@ -109,6 +109,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				}
 			}
 		}
+
 		return this.dest;
 	}
 

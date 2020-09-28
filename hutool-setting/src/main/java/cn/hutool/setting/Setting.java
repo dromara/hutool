@@ -164,6 +164,18 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		Assert.notNull(url, "Null setting url define!");
 		this.init(new UrlResource(url), charset, isUseVariable);
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param resource      Setting的Resource
+	 * @param charset       字符集
+	 * @param isUseVariable 是否使用变量
+	 * @since 5.4.4
+	 */
+	public Setting(Resource resource, Charset charset, boolean isUseVariable) {
+		this.init(resource, charset, isUseVariable);
+	}
 	// ------------------------------------------------------------------------------------- Constructor end
 
 	/**
@@ -176,7 +188,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public boolean init(Resource resource, Charset charset, boolean isUseVariable) {
 		if (resource == null) {
-			throw new NullPointerException("Null setting url define!");
+			throw new NullPointerException("Null setting resource define!");
 		}
 		this.settingUrl = resource.getUrl();
 		this.charset = charset;
@@ -319,10 +331,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
+	 * 获取group分组下所有配置键值对，组成新的Setting
 	 *
 	 * @param group 分组
-	 * @return {@link Setting}
+	 * @return Setting
 	 */
 	public Setting getSetting(String group) {
 		final Setting setting = new Setting();

@@ -422,6 +422,18 @@ public class IoUtil {
 	// -------------------------------------------------------------------------------------- read start
 
 	/**
+	 * 从流中读取UTF8编码的内容
+	 *
+	 * @param in 输入流
+	 * @return 内容
+	 * @throws IORuntimeException IO异常
+	 * @since 5.4.4
+	 */
+	public static String readUtf8(InputStream in) throws IORuntimeException {
+		return read(in, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
 	 * 从流中读取内容
 	 *
 	 * @param in          输入流
@@ -1251,7 +1263,7 @@ public class IoUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.4.0
 	 */
-	public static long checksumValue(InputStream in, Checksum checksum){
+	public static long checksumValue(InputStream in, Checksum checksum) {
 		return checksum(in, checksum).getValue();
 	}
 }

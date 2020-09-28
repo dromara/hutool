@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ActualTypeMapperPool {
 
-	private static final SimpleCache<Type, Map<Type, Type>> cache = new SimpleCache<>();
+	private static final SimpleCache<Type, Map<Type, Type>> CACHE = new SimpleCache<>();
 
 	/**
 	 * 获取泛型变量和泛型实际类型的对应关系Map
@@ -26,7 +26,7 @@ public class ActualTypeMapperPool {
 	 * @return 泛型对应关系Map
 	 */
 	public static Map<Type, Type> get(Type type) {
-		return cache.get(type, () -> createTypeMap(type));
+		return CACHE.get(type, () -> createTypeMap(type));
 	}
 
 	/**

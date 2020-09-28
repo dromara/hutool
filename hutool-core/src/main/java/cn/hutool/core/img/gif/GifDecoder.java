@@ -95,7 +95,7 @@ public class GifDecoder {
 	protected int delay = 0; // delay in milliseconds
 	protected int transIndex; // transparent color index
 
-	protected static final int MaxStackSize = 4096;
+	protected static final int MAX_STACK_SIZE = 4096;
 	// max decoder pixel stack size
 
 	// LZW decoder working arrays
@@ -378,9 +378,9 @@ public class GifDecoder {
 		if ((pixels == null) || (pixels.length < npix)) {
 			pixels = new byte[npix]; // allocate new pixel array
 		}
-		if (prefix == null) prefix = new short[MaxStackSize];
-		if (suffix == null) suffix = new byte[MaxStackSize];
-		if (pixelStack == null) pixelStack = new byte[MaxStackSize + 1];
+		if (prefix == null) prefix = new short[MAX_STACK_SIZE];
+		if (suffix == null) suffix = new byte[MAX_STACK_SIZE];
+		if (pixelStack == null) pixelStack = new byte[MAX_STACK_SIZE + 1];
 
 		//  Initialize GIF data stream decoder.
 
@@ -455,7 +455,7 @@ public class GifDecoder {
 
 				//  Add a new string to the string table,
 
-				if (available >= MaxStackSize) {
+				if (available >= MAX_STACK_SIZE) {
 					pixelStack[top++] = (byte) first;
 					continue;
 				}
@@ -464,7 +464,7 @@ public class GifDecoder {
 				suffix[available] = (byte) first;
 				available++;
 				if (((available & code_mask) == 0)
-						&& (available < MaxStackSize)) {
+						&& (available < MAX_STACK_SIZE)) {
 					code_size++;
 					code_mask += available;
 				}
@@ -606,10 +606,11 @@ public class GifDecoder {
 							for (int i = 0; i < 11; i++) {
 								app.append((char) block[i]);
 							}
-							if (app.toString().equals("NETSCAPE2.0")) {
+							if ("NETSCAPE2.0".equals(app.toString())) {
 								readNetscapeExt();
-							} else
+							} else {
 								skip(); // don't care
+							}
 							break;
 
 						default: // uninteresting extension

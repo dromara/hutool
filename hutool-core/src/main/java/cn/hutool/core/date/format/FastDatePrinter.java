@@ -1052,7 +1052,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// -----------------------------------------------------------------------
 
-	private static final ConcurrentMap<TimeZoneDisplayKey, String> cTimeZoneDisplayCache = new ConcurrentHashMap<>(7);
+	private static final ConcurrentMap<TimeZoneDisplayKey, String> C_TIME_ZONE_DISPLAY_CACHE = new ConcurrentHashMap<>(7);
 
 	/**
 	 * <p>
@@ -1067,11 +1067,11 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 */
 	static String getTimeZoneDisplay(final TimeZone tz, final boolean daylight, final int style, final Locale locale) {
 		final TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
-		String value = cTimeZoneDisplayCache.get(key);
+		String value = C_TIME_ZONE_DISPLAY_CACHE.get(key);
 		if (value == null) {
 			// This is a very slow call, so cache the results.
 			value = tz.getDisplayName(daylight, style, locale);
-			final String prior = cTimeZoneDisplayCache.putIfAbsent(key, value);
+			final String prior = C_TIME_ZONE_DISPLAY_CACHE.putIfAbsent(key, value);
 			if (prior != null) {
 				value = prior;
 			}

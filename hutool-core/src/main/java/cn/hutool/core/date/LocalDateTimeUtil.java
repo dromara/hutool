@@ -428,7 +428,7 @@ public class LocalDateTimeUtil {
 	 * @return 一天的开始时间
 	 */
 	public static LocalDateTime beginOfDay(LocalDateTime time) {
-		return time.with(LocalTime.of(0, 0, 0, 0));
+		return time.with(LocalTime.MIN);
 	}
 
 	/**
@@ -438,7 +438,7 @@ public class LocalDateTimeUtil {
 	 * @return 一天的结束时间
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time) {
-		return time.with(LocalTime.of(23, 59, 59, 999_999_999));
+		return time.with(LocalTime.MAX);
 	}
 
 	/**

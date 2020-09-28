@@ -33,13 +33,13 @@ public class ClassLoaderUtil {
 	private static final char INNER_CLASS_SEPARATOR = '$';
 
 	/** 原始类型名和其class对应表，例如：int =》 int.class */
-	private static final Map<String, Class<?>> primitiveTypeNameMap = new ConcurrentHashMap<>(32);
-	private static final SimpleCache<String, Class<?>> classCache = new SimpleCache<>();
+	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new ConcurrentHashMap<>(32);
+	private static final SimpleCache<String, Class<?>> CLASS_CACHE = new SimpleCache<>();
 
 	static {
 		List<Class<?>> primitiveTypes = new ArrayList<>(32);
 		// 加入原始类型
-		primitiveTypes.addAll(BasicType.primitiveWrapperMap.keySet());
+		primitiveTypes.addAll(BasicType.PRIMITIVE_WRAPPER_MAP.keySet());
 		// 加入原始类型数组类型
 		primitiveTypes.add(boolean[].class);
 		primitiveTypes.add(byte[].class);
@@ -51,7 +51,7 @@ public class ClassLoaderUtil {
 		primitiveTypes.add(short[].class);
 		primitiveTypes.add(void.class);
 		for (Class<?> primitiveType : primitiveTypes) {
-			primitiveTypeNameMap.put(primitiveType.getName(), primitiveType);
+			PRIMITIVE_TYPE_NAME_MAP.put(primitiveType.getName(), primitiveType);
 		}
 	}
 
@@ -150,7 +150,7 @@ public class ClassLoaderUtil {
 		// 加载原始类型和缓存中的类
 		Class<?> clazz = loadPrimitiveClass(name);
 		if (clazz == null) {
-			clazz = classCache.get(name);
+			clazz = CLASS_CACHE.get(name);
 		}
 		if (clazz != null) {
 			return clazz;
@@ -188,7 +188,7 @@ public class ClassLoaderUtil {
 		}
 
 		// 加入缓存并返回
-		return classCache.put(name, clazz);
+		return CLASS_CACHE.put(name, clazz);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class ClassLoaderUtil {
 		if (StrUtil.isNotBlank(name)) {
 			name = name.trim();
 			if (name.length() <= 8) {
-				result = primitiveTypeNameMap.get(name);
+				result = PRIMITIVE_TYPE_NAME_MAP.get(name);
 			}
 		}
 		return result;

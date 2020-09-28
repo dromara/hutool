@@ -134,7 +134,7 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -158,7 +158,7 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -274,7 +274,7 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -298,7 +298,7 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -410,15 +410,15 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(Number... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
+		BigDecimal result = new BigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			result = result.multiply(new BigDecimal(null == value ? "0" : value.toString()));
+			result = result.multiply(new BigDecimal(value.toString()));
 		}
 		return result;
 	}
@@ -444,18 +444,15 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(String... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
-		String value = values[0];
-		BigDecimal result = new BigDecimal(null == value ? "0" : value);
+		BigDecimal result =new BigDecimal(values[0]);
 		for (int i = 1; i < values.length; i++) {
-			value = values[i];
-			if (null != value) {
-				result = result.multiply(new BigDecimal(value));
-			}
+			result = result.multiply(new BigDecimal(values[i]));
 		}
+
 		return result;
 	}
 
@@ -468,17 +465,13 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static BigDecimal mul(BigDecimal... values) {
-		if (ArrayUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : value;
+		BigDecimal result = values[0];
 		for (int i = 1; i < values.length; i++) {
-			value = values[i];
-			if (null != value) {
-				result = result.multiply(value);
-			}
+			result = result.multiply(values[i]);
 		}
 		return result;
 	}
@@ -1427,13 +1420,13 @@ public class NumberUtil {
 	// ------------------------------------------------------------------------------------------- others
 
 	/**
-	 * 计算阶乘
+	 * 计算范围阶乘
 	 * <p>
-	 * n! = n * (n-1) * ... * end
+	 * factorial(start, end) = start * (start - 1) * ... * (end - 1)
 	 * </p>
 	 *
-	 * @param start 阶乘起始
-	 * @param end   阶乘结束，必须小于起始
+	 * @param start 阶乘起始（包含）
+	 * @param end   阶乘结束，必须小于起始（不包括）
 	 * @return 结果
 	 * @since 4.1.0
 	 */
@@ -1744,6 +1737,7 @@ public class NumberUtil {
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
 		//noinspection NumberEquality
 		if (bigNum1 == bigNum2){
+			// 如果用户传入同一对象，省略compareTo以提高性能。
 			return true;
 		}
 		if (bigNum1==null || bigNum2==null){
@@ -2192,6 +2186,17 @@ public class NumberUtil {
 	public static BigDecimal pow(BigDecimal number, int n) {
 		return number.pow(n);
 	}
+	
+	
+        /**
+         * 判断一个整数是否是2的幂
+         *
+         * @param n 待验证的整数
+         * @return 如果n是2的幂返回true, 反之返回false
+         */
+        public static boolean isPowerOfTwo(long n) { 
+                return (n > 0) && ((n & (n - 1)) == 0);
+        }
 
 	/**
 	 * 解析转换数字字符串为int型数字，规则如下：

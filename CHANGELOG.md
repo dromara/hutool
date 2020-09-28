@@ -3,6 +3,42 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.4.4 (2020-09-23)
+
+### 新特性
+* 【core   】     ServiceLoaderUtil改为使用contextClassLoader（pr#183@Gitee）
+* 【core   】     NetUtil增加getLocalHostName（pr#1103@Github）
+* 【extra  】     FTP增加stat方法（issue#I1W346@Gitee）
+* 【core   】     Convert.toNumber支持类似12.2F这种形式字符串转换（issue#I1VYLJ@Gitee）
+* 【core   】     使用静态变量替换999等（issue#I1W8IB@Gitee）
+* 【core   】     URLUtil自动trim（issue#I1W803@Gitee）
+* 【crypto 】     RC4增加ecrypt（pr#1108@Github）
+* 【core   】     CharUtil and StrUtil增加@（pr#1106@Github）
+* 【extra  】     优化EMOJ查询逻辑（pr#1112@Github）
+* 【extra  】     优化CollUtil交并集结果集合设置初始化大小，避免扩容成本（pr#1110@Github）
+* 【core   】     优化PageUtil彩虹算法（issue#1110@Github）
+* 【core   】     IoUtil增加readUtf8方法
+* 【core   】     优化全局邮箱账户初始化逻辑（pr#1114@Github）
+* 【http   】     SoapClient增加addSOAPHeader方法
+* 【http   】     完善StrUtil的注释（pr#186@Gitee）
+* 【aop    】     去除调试日志（issue#1116@Github）
+* 【core   】     增加&apos;反转义（pr#1121@Github）
+* 【poi    】     增加SheetReader和XXXRowHandler（issue#I1WHJP@Gitee）
+* 【dfa    】     增加过滤符号（pr#1122@Github）
+* 【dfa    】     SensitiveUtil增加setCharFilter方法（pr#1123@Github）
+* 【all    】     优化常量大小写规范（pr#188@Gitee）
+* 【core   】     优化NumberUtil中针对BigDecimal的一些处理逻辑（pr#1127@Github）
+* 【core   】     NumberUtil.factorial注释明确（pr#1126@Github）
+* 【core   】     NumberUtil增加isPowerOfTwo方法（pr#1132@Github）
+
+### Bug修复
+* 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
+* 【core   】     修复新建默认TreeSet没有默认比较器导致的问题（issue#1101@Github）
+* 【core   】     修复Linux下使用Windows路径分隔符导致的解压错误（issue#I1MW0E@Gitee）
+* 【core   】     修复Word07Writer写出map问题（issue#I1W49R@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.4.3 (2020-09-16)
 
 ### 新特性

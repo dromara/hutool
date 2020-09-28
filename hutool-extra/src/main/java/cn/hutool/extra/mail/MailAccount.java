@@ -32,9 +32,7 @@ public class MailAccount implements Serializable {
 	private static final String MAIL_DEBUG = "mail.debug";
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
 
-	public static final String MAIL_SETTING_PATH = "config/mail.setting";
-	public static final String MAIL_SETTING_PATH2 = "config/mailAccount.setting";
-	public static final String MAIL_SETTING_PATH3 = "mail.setting";
+	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
 	/**
 	 * SMTP服务器域名

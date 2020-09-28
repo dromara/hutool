@@ -119,6 +119,7 @@ public class HtmlUtilTest {
 		Assert.assertEquals("&lt;html&gt;&lt;body&gt;123&#039;123&#039;&lt;/body&gt;&lt;/html&gt;", escape);
 		String restoreEscaped = HtmlUtil.unescape(escape);
 		Assert.assertEquals(html, restoreEscaped);
+		Assert.assertEquals("'", HtmlUtil.unescape("&apos;"));
 	}
 	
 	@Test

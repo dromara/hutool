@@ -43,6 +43,8 @@ public class NetUtil {
 
 	public final static String LOCAL_IP = "127.0.0.1";
 
+	public static String localhostName;
+
 	/**
 	 * 默认最小端口，1024
 	 */
@@ -531,6 +533,29 @@ public class NetUtil {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 获取主机名称，一次获取会缓存名称
+	 *
+	 * @return 主机名称
+	 * @since 5.4.4
+	 */
+	public static String getLocalHostName() {
+		if (StrUtil.isNotBlank(localhostName)) {
+			return localhostName;
+		}
+
+		final InetAddress localhost = getLocalhost();
+		if(null != localhost){
+			String name = localhost.getHostName();
+			if(StrUtil.isEmpty(name)){
+				name = localhost.getHostAddress();
+			}
+			localhostName = name;
+		}
+
+		return localhostName;
 	}
 
 	/**

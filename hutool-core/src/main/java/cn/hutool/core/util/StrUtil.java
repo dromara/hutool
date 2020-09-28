@@ -34,60 +34,125 @@ public class StrUtil {
 
 	public static final int INDEX_NOT_FOUND = -1;
 
+	/** 字符常量：空格符 ' ' */
 	public static final char C_SPACE = CharUtil.SPACE;
+	/** 字符常量：制表符 \t */
 	public static final char C_TAB = CharUtil.TAB;
+	/** 字符常量：点 . */
 	public static final char C_DOT = CharUtil.DOT;
+	/** 字符常量：斜杠 / */
 	public static final char C_SLASH = CharUtil.SLASH;
+	/** 字符常量：反斜杠 \ */
 	public static final char C_BACKSLASH = CharUtil.BACKSLASH;
+	/** 字符常量：回车符 \r */
 	public static final char C_CR = CharUtil.CR;
+	/** 字符常量：换行符 \n */
 	public static final char C_LF = CharUtil.LF;
+	/** 字符常量：下划线 _ */
 	public static final char C_UNDERLINE = CharUtil.UNDERLINE;
+	/** 字符常量：逗号 , */
 	public static final char C_COMMA = CharUtil.COMMA;
+	/** 字符常量：花括号（左） { */
 	public static final char C_DELIM_START = CharUtil.DELIM_START;
+	/** 字符常量：花括号（右） } */
 	public static final char C_DELIM_END = CharUtil.DELIM_END;
+	/** 字符常量：中括号（左） [ */
 	public static final char C_BRACKET_START = CharUtil.BRACKET_START;
+	/** 字符常量：中括号（右） ] */
 	public static final char C_BRACKET_END = CharUtil.BRACKET_END;
+	/** 字符常量：冒号 : */
 	public static final char C_COLON = CharUtil.COLON;
+	/** 字符常量：艾特 @ */
+	public static final char C_AT = CharUtil.AT;
 
+	/** 字符串常量：空格符 ' ' */
 	public static final String SPACE = " ";
+	/** 字符串常量：制表符 \t */
 	public static final String TAB = "	";
+	/** 字符串常量：点 . */
 	public static final String DOT = ".";
+	/**
+	 * 字符串常量：双点 ..
+	 * 用途：作为指向上级文件夹的路径 "../path"
+	 */
 	public static final String DOUBLE_DOT = "..";
+	/** 字符串常量：斜杠 / */
 	public static final String SLASH = "/";
+	/** 字符串常量：反斜杠 \ */
 	public static final String BACKSLASH = "\\";
+	/** 字符串常量：空字符串 "" */
 	public static final String EMPTY = "";
+	/**
+	 * 字符串常量："null"
+	 * 注意："null" != null
+	 */
 	public static final String NULL = "null";
+	/**
+	 * 字符串常量：回车符 \r
+	 * 解释：该字符常用于表示 Linux 系统和 MacOS 系统下的文本换行
+	 */
 	public static final String CR = "\r";
+	/** 字符串常量：换行符 \n */
 	public static final String LF = "\n";
+	/**
+	 * 字符串常量：Windows 换行 \r\n
+	 * 解释：该字符串常用于表示 Windows 系统下的文本换行
+	 */
 	public static final String CRLF = "\r\n";
+	/** 字符串常量：下划线 _ */
 	public static final String UNDERLINE = "_";
+	/** 字符串常量：减号（中划线） - */
 	public static final String DASHED = "-";
+	/** 字符串常量：逗号 , */
 	public static final String COMMA = ",";
+	/** 字符串常量：花括号（左） { */
 	public static final String DELIM_START = "{";
+	/** 字符串常量：花括号（右） } */
 	public static final String DELIM_END = "}";
+	/** 字符串常量：中括号（左） [ */
 	public static final String BRACKET_START = "[";
+	/** 字符串常量：中括号（右） ] */
 	public static final String BRACKET_END = "]";
+	/** 字符串常量：冒号 : */
 	public static final String COLON = ":";
+	/** 字符串常量：艾特 @ */
+	public static final String AT = "@";
 
+	/** 字符串常量：HTML 空格转义 */
 	public static final String HTML_NBSP = "&nbsp;";
+	/** 字符串常量：HTML And 符转义 &amp; */
 	public static final String HTML_AMP = "&amp;";
+	/** 字符串常量：HTML 双引号转义 " */
 	public static final String HTML_QUOTE = "&quot;";
+	/** 字符串常量：HTML 单引号转义 ' */
 	public static final String HTML_APOS = "&apos;";
+	/** 字符串常量：HTML 小于号转义 &lt; */
 	public static final String HTML_LT = "&lt;";
+	/** 字符串常量：HTML 大于号转义 &gt; */
 	public static final String HTML_GT = "&gt;";
-
+	/** 字符串常量：空 JSON "{}" */
 	public static final String EMPTY_JSON = "{}";
 
 	// ------------------------------------------------------------------------ Blank
 
 	/**
-	 * 字符串是否为空白 空白的定义如下： <br>
-	 * 1、为null <br>
-	 * 2、为不可见字符（如空格）<br>
-	 * 3、""<br>
+	 * <p>字符串是否为空白，空白的定义如下：</p>
+	 * <ol>
+	 *     <li>{@code null}</li>
+	 *     <li>空字符串：{@code ""}</li>
+	 *     <li>空格、全角空格、制表符、换行符，等不可见字符</li>
+	 * </ol>
+	 *
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code StrUtil.isBlank(null)     // true}</li>
+	 *     <li>{@code StrUtil.isBlank("")       // true}</li>
+	 *     <li>{@code StrUtil.isBlank(" \t\n")  // true}</li>
+	 *     <li>{@code StrUtil.isBlank("abc")    // false}</li>
+	 * </ul>
 	 *
 	 * @param str 被检测的字符串
-	 * @return 是否为空
+	 * @return 若为空白，则返回 true
 	 */
 	public static boolean isBlank(CharSequence str) {
 		int length;
@@ -107,13 +172,25 @@ public class StrUtil {
 	}
 
 	/**
-	 * 如果对象是字符串是否为空白，空白的定义如下： <br>
-	 * 1、为null <br>
-	 * 2、为不可见字符（如空格）<br>
-	 * 3、""<br>
+	 * <p>如果对象是字符串是否为空白，空白的定义如下：</p>
+	 * <ol>
+	 *     <li>{@code null}</li>
+	 *     <li>空字符串：{@code ""}</li>
+	 *     <li>空格、全角空格、制表符、换行符，等不可见字符</li>
+	 * </ol>
+	 *
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code StrUtil.isBlankIfStr(null)     // true}</li>
+	 *     <li>{@code StrUtil.isBlankIfStr("")       // true}</li>
+	 *     <li>{@code StrUtil.isBlankIfStr(" \t\n")  // true}</li>
+	 *     <li>{@code StrUtil.isBlankIfStr("abc")    // false}</li>
+	 * </ul>
 	 *
 	 * @param obj 对象
 	 * @return 如果为字符串是否为空串
+	 *
+	 * @see   StrUtil#isBlank(CharSequence)
 	 * @since 3.3.0
 	 */
 	public static boolean isBlankIfStr(Object obj) {
@@ -4150,7 +4227,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 计算连个字符串的相似度百分比
+	 * 计算两个字符串的相似度百分比
 	 *
 	 * @param str1  字符串1
 	 * @param str2  字符串2
