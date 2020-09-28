@@ -1438,16 +1438,16 @@ public class NumberUtil {
 	 * @since 4.1.0
 	 */
 	public static long factorial(long start, long end) {
-		 // 负数没有阶乘
-                 if(start < 0 || end < 0) {
-                     throw new IllegalArgumentException(String.format("Factorial start and end both must be >= 0, " +
+		// 负数没有阶乘
+                if(start < 0 || end < 0) {
+                	throw new IllegalArgumentException(String.format("Factorial start and end both must be >= 0, " +
                             "but got start=%d, end=%d", start, end));
-                 }
+                }
 		if (0L == start || start == end) {
-		    return 1L;
+		        return 1L;
 		}
 		if (start < end) {
-		    return 0L;
+			return 0L;
 		}
 		return factorialMultiplyAndCheck(start, factorial(start - 1, end));
 	}
@@ -1460,10 +1460,10 @@ public class NumberUtil {
          * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
         */
         private static long factorialMultiplyAndCheck(long a, long b) {
-            if (a <= Long.MAX_VALUE / b) {
-                return a * b;
-            }
-            throw new IllegalArgumentException(String.format("Overflow in multiplication: {%d} * {%d}", a, b));
+            	if (a <= Long.MAX_VALUE / b) {
+                	return a * b;
+            	}
+            	throw new IllegalArgumentException(String.format("Overflow in multiplication: {%d} * {%d}", a, b));
         }
 	
 	/**
@@ -1477,8 +1477,8 @@ public class NumberUtil {
 	 */
 	public static long factorial(long n) {
 		if (n < 0 || n > 20) {
-                    throw new IllegalArgumentException(String.format("Factorial must have n >= 0 and n <= 20 for n!, " +
-                        "but got n = %d", n));
+                	throw new IllegalArgumentException(String.format("Factorial must have n >= 0 and n <= 20 for n!, " +
+                        	"but got n = %d", n));
                 }
                 return FACTORIALS[(int) n];
 	}
