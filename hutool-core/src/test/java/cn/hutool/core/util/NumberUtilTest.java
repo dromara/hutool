@@ -241,6 +241,10 @@ public class NumberUtilTest {
 		long factorial = NumberUtil.factorial(0);
 		Assert.assertEquals(1, factorial);
 
+		Assert.assertEquals(1L, NumberUtil.factorial(1));
+		Assert.assertEquals(1307674368000L, NumberUtil.factorial(15));
+		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20));
+		
 		factorial = NumberUtil.factorial(5, 0);
 		Assert.assertEquals(120, factorial);
 		factorial = NumberUtil.factorial(5, 1);
