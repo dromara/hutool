@@ -2172,9 +2172,6 @@ public class NumberUtil {
         public static boolean isPowerOfTwo(long n) {
                 return (n > 0) && ((n & (n - 1)) == 0);
         }
-    public static boolean isPowerOfTwo(long n) {
-        return (n > 0) && ((n & (n - 1)) == 0);
-    }
 
 	/**
 	 * 解析转换数字字符串为int型数字，规则如下：
