@@ -249,6 +249,9 @@ public class NumberUtilTest {
 		Assert.assertEquals(120, factorial);
 		factorial = NumberUtil.factorial(5, 1);
 		Assert.assertEquals(120, factorial);
+		
+		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20, 0));
+
 	}
 
 	@Test
