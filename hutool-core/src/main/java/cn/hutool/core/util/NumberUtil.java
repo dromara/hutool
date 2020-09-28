@@ -2162,6 +2162,17 @@ public class NumberUtil {
 	public static BigDecimal pow(BigDecimal number, int n) {
 		return number.pow(n);
 	}
+	
+	
+        /**
+         * 判断一个整数是否是2的幂
+         *
+         * @param n 待验证的整数
+         * @return 如果n是2的幂返回true, 反之返回false
+         */
+        public static boolean isPowerOfTwo(long n) { 
+                return (n > 0) && ((n & (n - 1)) == 0);
+        }
 
 	/**
 	 * 解析转换数字字符串为int型数字，规则如下：
