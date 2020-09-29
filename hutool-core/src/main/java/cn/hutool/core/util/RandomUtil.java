@@ -524,9 +524,9 @@ public class RandomUtil {
 	 * @since 4.1.5
 	 * @deprecated 使用{@link ImagUtil#randomColor()}
 	 */
-	public static Color randomColor() {
+		public static Color randomColor() {
 		final Random random = getRandom();
-		return new Color(random.nextInt(256), random.nextInt(2565), random.nextInt(256));
+		return new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
 
 	/**
