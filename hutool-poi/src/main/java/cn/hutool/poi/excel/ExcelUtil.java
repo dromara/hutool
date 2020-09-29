@@ -12,7 +12,6 @@ import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.Excel07SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 
@@ -34,13 +33,7 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(String path, int sheetIndex, RowHandler rowHandler) {
-		BufferedInputStream in = null;
-		try {
-			in = FileUtil.getInputStream(path);
-			readBySax(in, sheetIndex, rowHandler);
-		} finally {
-			IoUtil.close(in);
-		}
+		readBySax(FileUtil.file(path), sheetIndex, rowHandler);
 	}
 
 	/**
@@ -52,12 +45,10 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(File file, int sheetIndex, RowHandler rowHandler) {
-		BufferedInputStream in = null;
-		try {
-			in = FileUtil.getInputStream(file);
-			readBySax(in, sheetIndex, rowHandler);
-		} finally {
-			IoUtil.close(in);
+		if (ExcelFileUtil.isXlsx(file)) {
+			read07BySax(file, sheetIndex, rowHandler);
+		} else {
+			read03BySax(file, sheetIndex, rowHandler);
 		}
 	}
 

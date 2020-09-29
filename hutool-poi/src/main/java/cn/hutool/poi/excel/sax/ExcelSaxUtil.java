@@ -73,9 +73,9 @@ public class ExcelSaxUtil {
 				}
 				break;
 			case NUMBER:
-				try{
+				try {
 					result = getNumberValue(value, numFmtString);
-				}catch (NumberFormatException e){
+				} catch (NumberFormatException e) {
 					result = value;
 				}
 				break;
@@ -150,6 +150,7 @@ public class ExcelSaxUtil {
 	public static void readFrom(InputStream xmlDocStream, ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
 		XMLReader xmlReader;
 		try {
+//			xmlReader = XMLReaderFactory.createXMLReader();
 			//noinspection deprecation
 			xmlReader = SAXHelper.newXMLReader();
 		} catch (SAXException | ParserConfigurationException e) {

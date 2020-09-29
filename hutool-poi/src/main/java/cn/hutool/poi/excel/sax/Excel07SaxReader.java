@@ -1,10 +1,14 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -12,10 +16,10 @@ import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +32,7 @@ import java.util.List;
  * @author Looly
  * @since 3.1.2
  */
-public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> implements ContentHandler {
+public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<Excel07SaxReader> {
 
 	// sheet r:Id前缀
 	private static final String RID_PREFIX = "rId";
@@ -92,20 +96,30 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	// ------------------------------------------------------------------------------ Read start
 	@Override
 	public Excel07SaxReader read(File file, int rid) throws POIException {
+		return read(file, RID_PREFIX + rid);
+	}
+
+	@Override
+	public Excel07SaxReader read(File file, String idOrRid) throws POIException {
 		try {
-			return read(OPCPackage.open(file), rid);
-		} catch (Exception e) {
+			return read(OPCPackage.open(file), idOrRid);
+		} catch (InvalidFormatException e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
 	public Excel07SaxReader read(InputStream in, int rid) throws POIException {
-		try {
-			return read(OPCPackage.open(in), rid);
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
+		return read(in, RID_PREFIX + rid);
+	}
+
+	@Override
+	public Excel07SaxReader read(InputStream in, String idOrRid) throws POIException {
+		try (final OPCPackage opcPackage = OPCPackage.open(in)) {
+			return read(opcPackage, idOrRid);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} catch (InvalidFormatException e) {
 			throw new POIException(e);
 		}
 	}
@@ -113,53 +127,60 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	/**
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
-	 * @param opcPackage {@link OPCPackage}，Excel包
+	 * @param opcPackage {@link OPCPackage}，Excel包，读取后不关闭
 	 * @param rid        Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
 	public Excel07SaxReader read(OPCPackage opcPackage, int rid) throws POIException {
-		InputStream sheetInputStream = null;
+		return read(opcPackage, RID_PREFIX + rid);
+	}
+
+	/**
+	 * 开始读取Excel，Sheet编号从0开始计数
+	 *
+	 * @param opcPackage {@link OPCPackage}，Excel包，读取后不关闭
+	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @return this
+	 * @throws POIException POI异常
+	 */
+	public Excel07SaxReader read(OPCPackage opcPackage, String idOrRid) throws POIException {
 		try {
-			final XSSFReader xssfReader = new XSSFReader(opcPackage);
-
-			// 获取共享样式表
-			try {
-				stylesTable = xssfReader.getStylesTable();
-			} catch (Exception e) {
-				//ignore
-			}
-			// 获取共享字符串表
-			this.sharedStringsTable = xssfReader.getSharedStringsTable();
-
-			if (rid > -1) {
-				this.sheetIndex = rid;
-				// 根据 rId# 或 rSheet# 查找sheet
-				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (rid + 1));
-				ExcelSaxUtil.readFrom(sheetInputStream, this);
-				rowHandler.doAfterAllAnalysed();
-			} else {
-				this.sheetIndex = -1;
-				// 遍历所有sheet
-				final Iterator<InputStream> sheetInputStreams = xssfReader.getSheetsData();
-				while (sheetInputStreams.hasNext()) {
-					// 重新读取一个sheet时行归零
-					index = 0;
-					this.sheetIndex++;
-					sheetInputStream = sheetInputStreams.next();
-					ExcelSaxUtil.readFrom(sheetInputStream, this);
-					rowHandler.doAfterAllAnalysed();
-				}
-			}
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
+			return read(new XSSFReader(opcPackage), idOrRid);
+		} catch (OpenXML4JException e) {
 			throw new POIException(e);
-		} finally {
-			IoUtil.close(sheetInputStream);
-			IoUtil.close(opcPackage);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
-		return this;
+	}
+
+	/**
+	 * 开始读取Excel，Sheet编号从0开始计数
+	 *
+	 * @param xssfReader {@link XSSFReader}，Excel读取器
+	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @return this
+	 * @throws POIException POI异常
+	 * @since 5.4.4
+	 */
+	public Excel07SaxReader read(XSSFReader xssfReader, String idOrRid) throws POIException {
+		// 获取共享样式表
+		try {
+			stylesTable = xssfReader.getStylesTable();
+		} catch (Exception e) {
+			//ignore
+		}
+
+		// 获取共享字符串表
+		try {
+			this.sharedStringsTable = xssfReader.getSharedStringsTable();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} catch (InvalidFormatException e) {
+			throw new POIException(e);
+		}
+
+		return readSheets(xssfReader, idOrRid);
 	}
 	// ------------------------------------------------------------------------------ Read end
 
@@ -196,52 +217,56 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 		lastContent.append(ch, start, length);
 	}
 
-	// --------------------------------------------------------------------------------------- Pass method start
-	@Override
-	public void setDocumentLocator(Locator locator) {
-		// pass
-	}
+	// --------------------------------------------------------------------------------------- Private method start
 
 	/**
-	 * ?xml标签的回调处理方法
+	 * 开始读取Excel，Sheet编号从0开始计数
+	 *
+	 * @param xssfReader {@link XSSFReader}，Excel读取器
+	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
+	 * @return this
+	 * @throws POIException POI异常
+	 * @since 5.4.4
 	 */
-	@Override
-	public void startDocument() {
-		// pass
+	private Excel07SaxReader readSheets(XSSFReader xssfReader, String idOrRid) throws POIException {
+		// 将sheetId转换为rid
+		if (NumberUtil.isInteger(idOrRid)) {
+			final SheetRidReader ridReader = new SheetRidReader();
+			final String rid = ridReader.read(xssfReader).getRidBySheetId(idOrRid);
+			if (StrUtil.isNotEmpty(rid)) {
+				idOrRid = rid;
+			}
+		}
+		this.sheetIndex = Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRid, RID_PREFIX));
+		InputStream sheetInputStream = null;
+		try {
+			if (this.sheetIndex > -1) {
+				// 根据 rId# 或 rSheet# 查找sheet
+				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (this.sheetIndex + 1));
+				ExcelSaxUtil.readFrom(sheetInputStream, this);
+				rowHandler.doAfterAllAnalysed();
+			} else {
+				this.sheetIndex = -1;
+				// 遍历所有sheet
+				final Iterator<InputStream> sheetInputStreams = xssfReader.getSheetsData();
+				while (sheetInputStreams.hasNext()) {
+					// 重新读取一个sheet时行归零
+					index = 0;
+					this.sheetIndex++;
+					sheetInputStream = sheetInputStreams.next();
+					ExcelSaxUtil.readFrom(sheetInputStream, this);
+					rowHandler.doAfterAllAnalysed();
+				}
+			}
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new POIException(e);
+		} finally {
+			IoUtil.close(sheetInputStream);
+		}
+		return this;
 	}
-
-	@Override
-	public void endDocument() {
-		// pass
-	}
-
-	@Override
-	public void startPrefixMapping(String prefix, String uri) {
-		// pass
-	}
-
-	@Override
-	public void endPrefixMapping(String prefix) {
-		// pass
-	}
-
-	@Override
-	public void ignorableWhitespace(char[] ch, int start, int length) {
-		// pass
-	}
-
-	@Override
-	public void processingInstruction(String target, String data) {
-		// pass
-	}
-
-	@Override
-	public void skippedEntity(String name) {
-		// pass
-	}
-	// --------------------------------------------------------------------------------------- Pass method end
-
-	// --------------------------------------------------------------------------------------- Private method start
 
 	/**
 	 * 行开始
@@ -317,10 +342,11 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 
 	/**
 	 * 在一行中的指定列增加值
+	 *
 	 * @param index 位置
 	 * @param value 值
 	 */
-	private void addCellValue(int index, Object value){
+	private void addCellValue(int index, Object value) {
 		this.rowCellList.add(index, value);
 		this.rowHandler.handleCell(this.sheetIndex, this.rowNumber, index, value, this.xssfCellStyle);
 	}

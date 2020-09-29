@@ -1,9 +1,10 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import org.apache.poi.poifs.filesystem.FileMagic;
 
-import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -48,11 +49,24 @@ public class ExcelFileUtil {
 	 * @return 是否为XLSX格式的Excel文件（XSSF）
 	 */
 	public static boolean isXlsx(InputStream in) {
-		if (false == in.markSupported()) {
-			in = new BufferedInputStream(in);
-		}
 		try {
-			return FileMagic.valueOf(in) == FileMagic.OOXML;
+			return FileMagic.valueOf(IoUtil.toMarkSupportStream(in)) == FileMagic.OOXML;
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 是否为XLSX格式的Excel文件（XSSF）<br>
+	 * XLSX文件主要用于Excel 2007+创建
+	 *
+	 * @param file excel文件
+	 * @return 是否为XLSX格式的Excel文件（XSSF）
+	 * @since 5.4.4
+	 */
+	public static boolean isXlsx(File file) {
+		try {
+			return FileMagic.valueOf(file) == FileMagic.OOXML;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

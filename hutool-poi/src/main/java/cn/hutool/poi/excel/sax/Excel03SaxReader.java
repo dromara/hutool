@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author looly
  */
-public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> implements HSSFListener {
+public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03SaxReader> {
 
 	/**
 	 * 如果为公式，true表示输出公式计算后的结果值，false表示输出公式本身
@@ -83,18 +83,18 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 
 	// ------------------------------------------------------------------------------ Read start
 	@Override
-	public Excel03SaxReader read(File file, int rid) throws POIException {
+	public Excel03SaxReader read(File file, String idOrRid) throws POIException {
 		try {
-			return read(new POIFSFileSystem(file), rid);
+			return read(new POIFSFileSystem(file), idOrRid);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
-	public Excel03SaxReader read(InputStream excelStream, int rid) throws POIException {
+	public Excel03SaxReader read(InputStream excelStream, String idOrRid) throws POIException {
 		try {
-			return read(new POIFSFileSystem(excelStream), rid);
+			return read(new POIFSFileSystem(excelStream), idOrRid);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
@@ -104,12 +104,12 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 * 读取
 	 *
 	 * @param fs  {@link POIFSFileSystem}
-	 * @param rid sheet序号
+	 * @param id sheet序号
 	 * @return this
 	 * @throws POIException IO异常包装
 	 */
-	public Excel03SaxReader read(POIFSFileSystem fs, int rid) throws POIException {
-		this.rid = rid;
+	public Excel03SaxReader read(POIFSFileSystem fs, String id) throws POIException {
+		this.rid = Integer.parseInt(id);
 
 		formatListener = new FormatTrackingHSSFListener(new MissingRecordAwareHSSFListener(this));
 		final HSSFRequest request = new HSSFRequest();
