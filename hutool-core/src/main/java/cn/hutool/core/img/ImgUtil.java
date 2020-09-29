@@ -61,6 +61,12 @@ public class ImgUtil {
 	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
 	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
+	
+	/**
+	 * RGB颜色范围上限
+	 */
+	private static final int RGB_COLOR_BOUND = 256;
+	
 
 	// ---------------------------------------------------------------------------------------------------------------------- scale
 
@@ -1952,7 +1958,7 @@ public class ImgUtil {
 		if (null == random) {
 			random = RandomUtil.getRandom();
 		}
-		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+		return new Color(random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND));
 	}
 
 	/**
