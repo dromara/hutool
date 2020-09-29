@@ -522,7 +522,7 @@ public class RandomUtil {
 	 *
 	 * @return 随机颜色
 	 * @since 4.1.5
-	 * @deprecated 使用{@link ImagUtil#randomColor()}
+	 * @deprecated 使用{@link ImgUtil#randomColor()}
 	 */
 		public static Color randomColor() {
 		final Random random = getRandom();
