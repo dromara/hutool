@@ -1,6 +1,9 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+
+import java.util.Set;
 
 /**
  * Boolean类型相关工具类
@@ -11,7 +14,7 @@ import cn.hutool.core.convert.Convert;
 public class BooleanUtil {
 
 	/** 表示为真的字符串 */
-	private static final Set<String> TRUE_SET = new HashSet<>(Arrays.asList("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√"));
+	private static final Set<String> TRUE_SET = CollUtil.newHashSet("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
 
 	/**
 	 * 取相反值

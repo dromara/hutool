@@ -30,6 +30,7 @@
 * 【core   】     优化NumberUtil中针对BigDecimal的一些处理逻辑（pr#1127@Github）
 * 【core   】     NumberUtil.factorial注释明确（pr#1126@Github）
 * 【core   】     NumberUtil增加isPowerOfTwo方法（pr#1132@Github）
+* 【core   】     优化BooleanUtil的校验逻辑（pr#1137@Github）
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）
