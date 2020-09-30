@@ -667,6 +667,9 @@ public class StrUtil {
 	 * @return 是否开始
 	 */
 	public static boolean startWith(CharSequence str, char c) {
+		if(true == isEmpty(str)) {
+			return false;
+		}
 		return c == str.charAt(0);
 	}
 
@@ -779,6 +782,9 @@ public class StrUtil {
 	 * @return 是否结尾
 	 */
 	public static boolean endWith(CharSequence str, char c) {
+		if(true == isEmpty(str)) {
+			return false;
+		}
 		return c == str.charAt(str.length() - 1);
 	}
 
@@ -1073,7 +1079,8 @@ public class StrUtil {
 	 * @return 移除后的字符串
 	 */
 	public static String removeAll(CharSequence str, CharSequence strToRemove) {
-		if (isEmpty(str)) {
+		// strToRemove如果为空， 也不用继续后面的逻辑
+		if (isEmpty(str) || isEmpty(strToRemove)) {
 			return str(str);
 		}
 		return str.toString().replace(strToRemove, EMPTY);
@@ -2125,7 +2132,6 @@ public class StrUtil {
 		}
 
 		final List<String> result = new LinkedList<>();
-		final String[] split = split(str, prefix);
 		for (String fragment : split(str, prefix)) {
 			int suffixIndex = fragment.indexOf(suffix.toString());
 			if (suffixIndex > 0) {
@@ -2205,10 +2211,10 @@ public class StrUtil {
 		if (null == str) {
 			return null;
 		}
-		if (count <= 0) {
+		if (count <= 0 || str.length() == 0) {
 			return EMPTY;
 		}
-		if (count == 1 || str.length() == 0) {
+		if (count == 1) {
 			return str.toString();
 		}
 
@@ -3997,11 +4003,12 @@ public class StrUtil {
 			return false;
 		}
 		int len = value.length();
-		boolean isAllMatch = true;
 		for (int i = 0; i < len; i++) {
-			isAllMatch &= matcher.match(value.charAt(i));
+			if(false == matcher.match(value.charAt(i))) {
+				return false;
+			}
 		}
-		return isAllMatch;
+		return true;
 	}
 
 	/**
