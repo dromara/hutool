@@ -32,6 +32,7 @@
 * 【core   】     NumberUtil增加isPowerOfTwo方法（pr#1132@Github）
 * 【core   】     优化BooleanUtil的校验逻辑（pr#1137@Github）
 * 【poi    】     改进sax方式读取逻辑，支持sheetId（issue#1141@Github）
+* 【core   】     XmlUtil增加readBySax方法
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）

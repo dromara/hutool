@@ -9,10 +9,13 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.xpath.XPathConstants;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link XmlUtil} 工具类
@@ -146,6 +149,18 @@ public class XmlUtilTest {
 	public void readTest() {
 		Document doc = XmlUtil.readXML("test.xml");
 		Assert.assertNotNull(doc);
+	}
+
+	@Test
+	public void readBySaxTest(){
+		final Set<String> eles = CollUtil.newHashSet(
+				"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
+		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler(){
+			@Override
+			public void startElement(String uri, String localName, String qName, Attributes attributes) {
+				Assert.assertTrue(eles.contains(localName));
+			}
+		});
 	}
 
 	@Test
