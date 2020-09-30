@@ -6,6 +6,7 @@
 # 5.4.5 (2020-09-30)
 
 ### 新特性
+* 【core   】     ConsoleTable代码优化（pr#190@Gitee）
 
 ### Bug修复
 
