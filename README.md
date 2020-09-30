@@ -141,7 +141,7 @@ compile 'cn.hutool:hutool-all:5.4.4'
 
 ### 编译安装
 
-访问Hutool的码云主页：[https://gitee.com/loolly/hutool](https://gitee.com/loolly/hutool) 下载整个项目源码（v5-master或v5-dev分支都可）然后进入Hutool项目目录执行：
+访问Hutool的Gitee主页：[https://gitee.com/loolly/hutool](https://gitee.com/loolly/hutool) 下载整个项目源码（v5-master或v5-dev分支都可）然后进入Hutool项目目录执行：
 
 ```sh
 ./hutool.sh install
@@ -166,7 +166,7 @@ Hutool的源码分为两个分支，功能如下：
 
 提交问题反馈请说明正在使用的JDK版本呢、Hutool版本和相关依赖库版本。
 
-- [码云Gitee issue](https://gitee.com/loolly/hutool/issues)
+- [Gitee issue](https://gitee.com/loolly/hutool/issues)
 - [Github issue](https://github.com/looly/hutool/issues)
 
 
@@ -177,14 +177,14 @@ Hutool的源码分为两个分支，功能如下：
 3. 修改代码（记得一定要修改v5-dev分支）
 4. commit后push到自己的库（v5-dev分支）
 5. 登录Gitee或Github在你首页可以看到一个 pull request 按钮，点击它，填写一些说明信息，然后提交即可。
-6. 等待作者合并
+6. 等待维护者合并
 
 ### PR遵照的原则
 
-Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过作者是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合一些规范，规范如下：
+Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合一些规范，规范如下：
 
 1. 注释完备，尤其每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，必要时请添加单元测试，如果愿意，也可以加上你的大名。
-2. Hutool的缩进按照Eclipse（~~不要跟我说IDEA多好用，作者非常懒，学不会~~，IDEA真香，改了Eclipse快捷键后舒服多了）默认（tab）缩进，所以请遵守（不要和我争执空格与tab的问题，这是一个病人的习惯）。
+2. Hutool的缩进按照Eclipse（~~不要跟我说IDEA多好用，维护者非常懒，学不会~~，IDEA真香，改了Eclipse快捷键后舒服多了）默认（tab）缩进，所以请遵守（不要和我争执空格与tab的问题，这是一个病人的习惯）。
 3. 新加的方法不要使用第三方库的方法，Hutool遵循无依赖原则（除非在extra模块中加方法工具）。
 4. 请pull request到`v5-dev`分支。Hutool在5.x版本后使用了新的分支：`v5-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。
 
@@ -192,7 +192,7 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过作者是一�
 
 ## 捐赠
 
-如果你觉得Hutool不错，可以捐赠请作者吃包辣条~，在此表示感谢^_^。
+如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
 
 点击以下链接，将页面拉到最下方点击“捐赠”即可。
 
