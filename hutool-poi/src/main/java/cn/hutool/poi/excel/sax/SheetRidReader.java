@@ -19,7 +19,7 @@ import java.util.Map;
  * <pre>
  * &lt;sheet name="Sheet6" sheetId="4" r:id="6"/&gt;
  * </pre>
- *
+ * <p>
  * 读取结果为：
  *
  * <pre>
@@ -43,10 +43,11 @@ public class SheetRidReader extends DefaultHandler {
 	 * 读取Wordkbook的XML中sheet标签中sheetId和rid的对应关系
 	 *
 	 * @param xssfReader XSSF读取器
+	 * @return this
 	 */
-	public SheetRidReader read(XSSFReader xssfReader){
+	public SheetRidReader read(XSSFReader xssfReader) {
 		InputStream workbookData = null;
-		try{
+		try {
 			workbookData = xssfReader.getWorkbookData();
 			ExcelSaxUtil.readFrom(workbookData, this);
 		} catch (InvalidFormatException e) {
@@ -65,7 +66,7 @@ public class SheetRidReader extends DefaultHandler {
 	 * @param sheetId Sheet的ID
 	 * @return rid
 	 */
-	public String getRidBySheetId(String sheetId){
+	public String getRidBySheetId(String sheetId) {
 		return ID_RID_MAP.get(sheetId);
 	}
 
@@ -75,19 +76,19 @@ public class SheetRidReader extends DefaultHandler {
 	 * @param sheetName Sheet的name
 	 * @return rid
 	 */
-	public String getRidByName(String sheetName){
+	public String getRidByName(String sheetName) {
 		return NAME_RID_MAP.get(sheetName);
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		if(TAG_NAME.equalsIgnoreCase(localName)){
+		if (TAG_NAME.equalsIgnoreCase(localName)) {
 			final int length = attributes.getLength();
 			String sheetId = null;
 			String rid = null;
 			String name = null;
 			for (int i = 0; i < length; i++) {
-				switch (attributes.getLocalName(i)){
+				switch (attributes.getLocalName(i)) {
 					case SHEET_ID_ATTR:
 						sheetId = attributes.getValue(i);
 						break;
@@ -98,10 +99,10 @@ public class SheetRidReader extends DefaultHandler {
 						name = attributes.getValue(i);
 						break;
 				}
-				if(StrUtil.isNotEmpty(sheetId)){
+				if (StrUtil.isNotEmpty(sheetId)) {
 					ID_RID_MAP.put(sheetId, rid);
 				}
-				if(StrUtil.isNotEmpty(name)){
+				if (StrUtil.isNotEmpty(name)) {
 					NAME_RID_MAP.put(name, rid);
 				}
 			}
