@@ -1786,16 +1786,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new int[0];
+		int capacity = 0;
+		for(Integer value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final int[] array = new int[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+		int start = 0;
+		int[] res = new int[capacity];
+		for (Integer value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
@@ -1830,17 +1834,22 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new long[0];
+		int capacity = 0;
+		for(Long value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final long[] array = new long[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+		int start = 0;
+		long[] res = new long[capacity];
+		for (Long value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
+
 
 	/**
 	 * 将原始类型数组包装为包装类型
@@ -1874,16 +1883,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new char[0];
+		int capacity = 0;
+		for(Character value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		char[] array = new char[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+		int start = 0;
+		char[] res = new char[capacity];
+		for (Character value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
@@ -1918,16 +1931,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new byte[0];
+		int capacity = 0;
+		for(Byte value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final byte[] array = new byte[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], (byte) 0);
+		int start = 0;
+		byte[] res = new byte[capacity];
+		for (Byte value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
@@ -1962,16 +1979,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new short[0];
+		int capacity = 0;
+		for(Short value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final short[] array = new short[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], (short) 0);
+		int start = 0;
+		short[] res = new short[capacity];
+		for (Short value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
@@ -2006,16 +2027,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new float[0];
+		int capacity = 0;
+		for(Float value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final float[] array = new float[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0F);
+		int start = 0;
+		float[] res = new float[capacity];
+		for (Float value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
@@ -2050,18 +2075,21 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new double[0];
+		int capacity = 0;
+		for(Double value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final double[] array = new double[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0D);
+		int start = 0;
+		double[] res = new double[capacity];
+		for (Double value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
-
 	/**
 	 * 将原始类型数组包装为包装类型
 	 *
@@ -2094,16 +2122,20 @@ public class ArrayUtil {
 		if (null == values) {
 			return null;
 		}
-		final int length = values.length;
-		if (0 == length) {
-			return new boolean[0];
+		int capacity = 0;
+		for(Boolean value : values) {
+			if(value != null) {
+				capacity++;
+			}
 		}
-
-		final boolean[] array = new boolean[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], false);
+		int start = 0;
+		boolean[] res = new boolean[capacity];
+		for (Boolean value : values) {
+			if (value != null) {
+				res[start++] = value;
+			}
 		}
-		return array;
+		return res;
 	}
 
 	/**
