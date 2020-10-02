@@ -36,6 +36,11 @@ public class ArrayUtil {
 	 */
 	public static final int INDEX_NOT_FOUND = -1;
 
+	/**
+	 * 浮点数比较的默认阈值
+	 */
+	private static final double DEFAULT_TOLERANCE = 1E-6;
+	
 	// ---------------------------------------------------------------------- isEmpty
 
 	/**
@@ -1603,6 +1608,29 @@ public class ArrayUtil {
 	}
 
 	/**
+	 * @param a 待比较的浮点数
+	 * @param b 待比较的浮点数
+	 * @param tolerance 可以认为相等的阈值
+	 * @return 在阈值范围内是否可以认为两个数相等
+	 */
+	public static boolean tolerateEquals(double a, double b, double tolerance) {
+		if (tolerance < 0.0D) {
+			throw new IllegalArgumentException("(tolerance:" + tolerance + ") must be >= 0");
+		}
+		return Math.copySign(a - b, 1.0D) <= tolerance || a == b || Double.isNaN(a) && Double.isNaN(b);
+	}
+
+	/**
+	 * @param a 待比较的浮点数
+	 * @param b 待比较的浮点数
+	 * @return 在阈值范围内判断两个浮点数是否相等
+	 */
+	public static boolean tolerateEquals(double a, double b) {
+		return tolerateEquals(a, b, DEFAULT_TOLERANCE);
+	}
+	
+	
+	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
@@ -1613,7 +1641,7 @@ public class ArrayUtil {
 	public static int indexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (tolerateEquals(array[i], value)) {
 					return i;
 				}
 			}
@@ -1632,7 +1660,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (tolerateEquals(array[i], value)) {
 					return i;
 				}
 			}
@@ -1663,7 +1691,7 @@ public class ArrayUtil {
 	public static int indexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (tolerateEquals(array[i], value)) {
 					return i;
 				}
 			}
@@ -1682,7 +1710,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (tolerateEquals(array[i], value)) {
 					return i;
 				}
 			}
