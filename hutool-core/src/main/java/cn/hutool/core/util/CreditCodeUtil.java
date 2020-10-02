@@ -98,11 +98,11 @@ public class CreditCodeUtil {
 		}
 		for (int i = 2; i < 8; i++) {
 			int num = RandomUtil.randomInt(10);
-			buf.append(Character.toUpperCase(BASE_CODE_ARRAY[num]));
+			buf.append(BASE_CODE_ARRAY[num]);
 		}
 		for (int i = 8; i < 17; i++) {
 			int num = RandomUtil.randomInt(BASE_CODE_ARRAY.length - 1);
-			buf.append(Character.toUpperCase(BASE_CODE_ARRAY[num]));
+			buf.append(BASE_CODE_ARRAY[num]);
 		}
 
 		final String code = buf.toString();
