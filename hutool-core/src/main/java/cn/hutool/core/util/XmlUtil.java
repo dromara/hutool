@@ -72,7 +72,7 @@ public class XmlUtil {
 	/**
 	 * 在XML中注释的内容 正则
 	 */
-	public static final String NOTE_REGEX = "(?s)<!--.+?-->";
+	public static final String COMMENT_REGEX = "(?s)<!--.+?-->";
 	/**
 	 * XML格式化输出默认缩进量
 	 */
@@ -680,12 +680,13 @@ public class XmlUtil {
 	 *
 	 * @param xmlContent XML文本
 	 * @return 当传入为null时返回null
+	 * @since 5.4.5
 	 */
-	public static String cleanNote(String xmlContent) {
+	public static String cleanComment(String xmlContent) {
 		if (xmlContent == null) {
 			return null;
 		}
-		return xmlContent.replaceAll(NOTE_REGEX, "");
+		return xmlContent.replaceAll(COMMENT_REGEX, StrUtil.EMPTY);
 	}
 
 	/**

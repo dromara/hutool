@@ -212,9 +212,9 @@ public class XmlUtilTest {
 	}
 
 	@Test
-	public void cleanNoteTest() {
+	public void cleanCommentTest() {
 		final String xmlContent = "<info><title>hutool</title><!-- 这是注释 --><lang>java</lang></info>";
-		final String ret = XmlUtil.cleanNote(xmlContent);
+		final String ret = XmlUtil.cleanComment(xmlContent);
 		Assert.assertEquals("<info><title>hutool</title><lang>java</lang></info>", ret);
 	}
 
