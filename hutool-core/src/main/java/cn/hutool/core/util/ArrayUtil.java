@@ -1777,7 +1777,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 包装类数组转为原始类型数组
+	 * 包装类数组转为原始类型数组，null转为0
 	 *
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
@@ -1793,7 +1793,7 @@ public class ArrayUtil {
 
 		final int[] array = new int[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], 0);
 		}
 		return array;
 	}
@@ -1837,7 +1837,7 @@ public class ArrayUtil {
 
 		final long[] array = new long[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], 0L);
 		}
 		return array;
 	}
@@ -1881,7 +1881,7 @@ public class ArrayUtil {
 
 		char[] array = new char[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], Character.MIN_VALUE);
 		}
 		return array;
 	}
