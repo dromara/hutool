@@ -8,9 +8,10 @@
 ### 新特性
 * 【core   】     ConsoleTable代码优化（pr#190@Gitee）
 * 【http   】     HttpRequest增加setProxy重载（pr#190@Gitee）
-* 【http   】     XmlUtil.cleanComment（pr#191@Gitee）
+* 【core   】     XmlUtil.cleanComment（pr#191@Gitee）
 
 ### Bug修复
+* 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
