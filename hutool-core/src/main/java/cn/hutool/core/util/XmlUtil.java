@@ -70,6 +70,10 @@ public class XmlUtil {
 	 */
 	public static final String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
 	/**
+	 * 在XML中注释的内容 正则
+	 */
+	public static final String NOTE_REGEX = "(?s)<!--.+?-->";
+	/**
 	 * XML格式化输出默认缩进量
 	 */
 	public static final int INDENT_DEFAULT = 2;
@@ -669,6 +673,19 @@ public class XmlUtil {
 			return null;
 		}
 		return xmlContent.replaceAll(INVALID_REGEX, "");
+	}
+
+	/**
+	 * 去除XML文本中的注释内容
+	 *
+	 * @param xmlContent XML文本
+	 * @return 当传入为null时返回null
+	 */
+	public static String cleanNote(String xmlContent) {
+		if (xmlContent == null) {
+			return null;
+		}
+		return xmlContent.replaceAll(NOTE_REGEX, "");
 	}
 
 	/**

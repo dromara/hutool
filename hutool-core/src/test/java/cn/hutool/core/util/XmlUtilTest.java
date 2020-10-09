@@ -211,6 +211,13 @@ public class XmlUtilTest {
 		Assert.assertEquals(testBean.getBankCode(), testBean2.getBankCode());
 	}
 
+	@Test
+	public void cleanNoteTest() {
+		final String xmlContent = "<info><title>hutool</title><!-- 这是注释 --><lang>java</lang></info>";
+		final String ret = XmlUtil.cleanNote(xmlContent);
+		Assert.assertEquals("<info><title>hutool</title><lang>java</lang></info>", ret);
+	}
+
 	@Data
 	public static class TestBean {
 		private String ReqCode;
