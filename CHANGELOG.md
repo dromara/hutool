@@ -11,6 +11,7 @@
 * 【core   】     XmlUtil.cleanComment（pr#191@Gitee）
 * 【core   】     ArrayUtil.unWrap增加默认值（pr#1149@Github）
 * 【core   】     ArrayUtil.indexOf修改double的equals判断（pr#1147@Github）
+* 【core   】     优化StrUtil中部分参数校验以及逻辑处理（pr#1144@Github）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
