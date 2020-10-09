@@ -154,4 +154,11 @@ public class JSONUtilTest {
 		Assert.assertEquals("aa", json.get("name"));
 		Assert.assertEquals(1, json.get("gender"));
 	}
+
+	@Test
+	public void doubleTest(){
+		String json = "{\"test\": 12.00}";
+		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
+	}
 }
