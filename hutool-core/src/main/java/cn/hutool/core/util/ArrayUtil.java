@@ -1613,7 +1613,7 @@ public class ArrayUtil {
 	public static int indexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1632,7 +1632,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1663,7 +1663,7 @@ public class ArrayUtil {
 	public static int indexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1682,7 +1682,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}

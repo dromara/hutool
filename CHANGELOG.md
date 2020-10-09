@@ -10,6 +10,7 @@
 * 【http   】     HttpRequest增加setProxy重载（pr#190@Gitee）
 * 【core   】     XmlUtil.cleanComment（pr#191@Gitee）
 * 【core   】     ArrayUtil.unWrap增加默认值（pr#1149@Github）
+* 【core   】     ArrayUtil.indexOf修改double的equals判断（pr#1147@Github）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）

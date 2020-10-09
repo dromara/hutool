@@ -1712,7 +1712,7 @@ public class NumberUtil {
 
 	/**
 	 * 比较大小，值相等 返回true<br>
-	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
+	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
 	 *
 	 * @param num1 数字1
@@ -1721,7 +1721,21 @@ public class NumberUtil {
 	 * @since 5.4.2
 	 */
 	public static boolean equals(double num1, double num2) {
-		return equals(toBigDecimal(num1), toBigDecimal(num2));
+		return Double.doubleToLongBits(num1) == Double.doubleToLongBits(num2);
+	}
+
+	/**
+	 * 比较大小，值相等 返回true<br>
+	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
+	 * 此方法判断值相等时忽略精度的，即0.00 == 0
+	 *
+	 * @param num1 数字1
+	 * @param num2 数字2
+	 * @return 是否相等
+	 * @since 5.4.5
+	 */
+	public static boolean equals(float num1, float num2) {
+		return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
 	}
 
 	/**

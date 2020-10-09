@@ -263,10 +263,10 @@ public class NumberUtilTest {
 	
 	@Test
 	public void isPowerOfTwoTest() {
-		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(-1));
-		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(16));
-		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(65536));
-		Assert.assertEquals(true, NumberUtil.isPowerOfTwo(1));
-		Assert.assertEquals(false, NumberUtil.isPowerOfTwo(17));
+		Assert.assertFalse(NumberUtil.isPowerOfTwo(-1));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(16));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(65536));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(1));
+		Assert.assertFalse(NumberUtil.isPowerOfTwo(17));
 	}
 }
