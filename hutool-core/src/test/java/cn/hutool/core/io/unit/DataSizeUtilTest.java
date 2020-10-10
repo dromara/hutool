@@ -30,6 +30,17 @@ public class DataSizeUtilTest {
 
 		parse = DataSizeUtil.parse("3.1mb");
 		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1");
+		Assert.assertEquals(3, parse);
+
+		try {
+			parse = DataSizeUtil.parse("3.1.3");
+		} catch (IllegalArgumentException ie) {
+			Assert.assertEquals("'3.1.3' is not a valid data size", ie.getMessage());
+		}
+
+
 	}
 
 	@Test
