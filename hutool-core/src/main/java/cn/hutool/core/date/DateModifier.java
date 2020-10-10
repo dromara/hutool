@@ -20,7 +20,7 @@ import cn.hutool.core.util.ArrayUtil;
 public class DateModifier {
 
 	/** 忽略的计算的字段 */
-	private static final int[] ignoreFields = new int[] { //
+	private static final int[] IGNORE_FIELDS = new int[] { //
 			Calendar.HOUR_OF_DAY, // 与HOUR同名
 			Calendar.AM_PM, // 此字段单独处理，不参与计算起始和结束
 			Calendar.DAY_OF_WEEK_IN_MONTH, // 不参与计算
@@ -62,7 +62,7 @@ public class DateModifier {
 
 		// 循环处理各级字段，精确到毫秒字段
 		for (int i = dateField + 1; i <= Calendar.MILLISECOND; i++) {
-			if (ArrayUtil.contains(ignoreFields, i)) {
+			if (ArrayUtil.contains(IGNORE_FIELDS, i)) {
 				// 忽略无关字段（WEEK_OF_MONTH）始终不做修改
 				continue;
 			}

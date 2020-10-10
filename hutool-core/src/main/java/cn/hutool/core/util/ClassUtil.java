@@ -713,7 +713,7 @@ public class ClassUtil {
 		if (null == clazz) {
 			return false;
 		}
-		return BasicType.wrapperPrimitiveMap.containsKey(clazz);
+		return BasicType.WRAPPER_PRIMITIVE_MAP.containsKey(clazz);
 	}
 
 	/**
@@ -798,11 +798,11 @@ public class ClassUtil {
 		// 基本类型
 		if (targetType.isPrimitive()) {
 			// 原始类型
-			Class<?> resolvedPrimitive = BasicType.wrapperPrimitiveMap.get(sourceType);
+			Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
 			return targetType.equals(resolvedPrimitive);
 		} else {
 			// 包装类型
-			Class<?> resolvedWrapper = BasicType.primitiveWrapperMap.get(sourceType);
+			Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
 			return resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper);
 		}
 	}
