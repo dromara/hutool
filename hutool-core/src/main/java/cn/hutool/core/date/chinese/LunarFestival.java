@@ -17,6 +17,7 @@ public class LunarFestival {
 	// 来自：https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD%E4%BC%A0%E7%BB%9F%E8%8A%82%E6%97%A5/396100
 	private static final TableMap<Pair<Integer, Integer>, String> L_FTV = new TableMap<>(16);
 	static{
+		// 节日
 		L_FTV.put(new Pair<>(1, 1), "春节");
 		L_FTV.put(new Pair<>(1, 2), "犬日");
 		L_FTV.put(new Pair<>(1, 3), "猪日");
@@ -78,12 +79,29 @@ public class LunarFestival {
 		L_FTV.put(new Pair<>(12, 8), "腊八节");
 		L_FTV.put(new Pair<>(12, 16), "尾牙");
 		L_FTV.put(new Pair<>(12, 23), "小年");
-		L_FTV.put(new Pair<>(12, 29), "除夕");
 		L_FTV.put(new Pair<>(12, 30), "除夕");
 	}
 
 	/**
 	 * 获得节日列表
+	 *
+	 * @param month 月
+	 * @param day   日
+	 * @return 获得农历节日
+	 * @since 5.4.5
+	 */
+	public static List<String> getFestivals(int year, int month, int day) {
+		// 春节判断，如果12月是小月，则29为除夕，否则30为除夕
+		if(12 == month && 29 == day){
+			if(29 == LunarInfo.monthDays(year, month)){
+				day++;
+			}
+		}
+		return getFestivals(month, day);
+	}
+
+	/**
+	 * 获得节日列表，此方法无法判断月是否为大月或小月
 	 *
 	 * @param month 月
 	 * @param day   日

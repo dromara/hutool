@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -76,5 +77,12 @@ public class ChineseDateTest {
 
 		chineseDate = new ChineseDate(2020,4,15);
 		Assert.assertEquals("闰四月", chineseDate.getChineseMonth());
+	}
+
+	@Test
+	public void getFestivalsTest(){
+		// issue#I1XHSF@Gitee，2023-01-20对应农历腊月29，非除夕
+		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2023-01-20"));
+		Assert.assertTrue(StrUtil.isEmpty(chineseDate.getFestivals()));
 	}
 }

@@ -252,8 +252,8 @@ public class ListUtil {
 				return new ArrayList<>(0);
 			}
 		}
-
-		if ((pageNo * pageSize) > resultSize) {
+		// 相乘可能会导致越界 临时用long
+		if (((long)pageNo * pageSize) > resultSize) {
 			// 越界直接返回空
 			return new ArrayList<>(0);
 		}

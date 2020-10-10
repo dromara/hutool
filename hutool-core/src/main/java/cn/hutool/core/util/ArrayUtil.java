@@ -1613,7 +1613,7 @@ public class ArrayUtil {
 	public static int indexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1632,7 +1632,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(double[] array, double value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1663,7 +1663,7 @@ public class ArrayUtil {
 	public static int indexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1682,7 +1682,7 @@ public class ArrayUtil {
 	public static int lastIndexOf(float[] array, float value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
-				if (value == array[i]) {
+				if (NumberUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1777,7 +1777,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 包装类数组转为原始类型数组
+	 * 包装类数组转为原始类型数组，null转为0
 	 *
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
@@ -1793,7 +1793,7 @@ public class ArrayUtil {
 
 		final int[] array = new int[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], 0);
 		}
 		return array;
 	}
@@ -1837,7 +1837,7 @@ public class ArrayUtil {
 
 		final long[] array = new long[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], 0L);
 		}
 		return array;
 	}
@@ -1881,7 +1881,7 @@ public class ArrayUtil {
 
 		char[] array = new char[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = ObjectUtil.defaultIfNull(values[i], Character.MIN_VALUE);
 		}
 		return array;
 	}

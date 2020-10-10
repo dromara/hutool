@@ -167,7 +167,7 @@ public class ChineseDate {
 	 * @return 是否为闰月
 	 * @since 5.4.2
 	 */
-	public boolean isLeapMonth(){
+	public boolean isLeapMonth() {
 		return ChineseMonth.isLeapMonth(this.year, this.month);
 	}
 
@@ -230,7 +230,7 @@ public class ChineseDate {
 	 * @return 获得农历节日
 	 */
 	public String getFestivals() {
-		return StrUtil.join(",", LunarFestival.getFestivals(this.month, this.day));
+		return StrUtil.join(",", LunarFestival.getFestivals(this.year, this.month, day));
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class ChineseDate {
 	 * @return 获得天干地支的年月日信息
 	 */
 	public String getCyclicalYMD() {
-		if (gyear >= LunarInfo.BASE_YEAR && gmonth > 0 && gday > 0){
+		if (gyear >= LunarInfo.BASE_YEAR && gmonth > 0 && gday > 0) {
 			return (cyclicalm(gyear, gmonth, gday));
 		}
 		return null;

@@ -3,6 +3,23 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.4.5 (2020-10-09)
+
+### 新特性
+* 【core   】     ConsoleTable代码优化（pr#190@Gitee）
+* 【http   】     HttpRequest增加setProxy重载（pr#190@Gitee）
+* 【core   】     XmlUtil.cleanComment（pr#191@Gitee）
+* 【core   】     ArrayUtil.unWrap增加默认值（pr#1149@Github）
+* 【core   】     ArrayUtil.indexOf修改double的equals判断（pr#1147@Github）
+* 【core   】     优化StrUtil中部分参数校验以及逻辑处理（pr#1144@Github）
+* 【core   】     简化CreditCode逻辑去除无用Character.toUpperCase（pr#1145@Github）
+
+### Bug修复
+* 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
+* 【core   】     解决ListUtil计算总量可能的int溢出问题（pr#1150@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.4.4 (2020-09-28)
 
 ### 新特性
@@ -31,6 +48,8 @@
 * 【core   】     NumberUtil.factorial注释明确（pr#1126@Github）
 * 【core   】     NumberUtil增加isPowerOfTwo方法（pr#1132@Github）
 * 【core   】     优化BooleanUtil的校验逻辑（pr#1137@Github）
+* 【poi    】     改进sax方式读取逻辑，支持sheetId（issue#1141@Github）
+* 【core   】     XmlUtil增加readBySax方法
 
 ### Bug修复
 * 【crypto 】     修复SM2验签后无法解密问题（issue#I1W0VP@Gitee）

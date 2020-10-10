@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.BiMap;
@@ -13,7 +14,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
@@ -21,6 +26,8 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -63,6 +70,10 @@ public class XmlUtil {
 	 */
 	public static final String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
 	/**
+	 * 在XML中注释的内容 正则
+	 */
+	public static final String COMMENT_REGEX = "(?s)<!--.+?-->";
+	/**
 	 * XML格式化输出默认缩进量
 	 */
 	public static final int INDENT_DEFAULT = 2;
@@ -76,6 +87,10 @@ public class XmlUtil {
 	 * 是否打开命名空间支持
 	 */
 	private static boolean namespaceAware = true;
+	/**
+	 * Sax读取器工厂缓存
+	 */
+	private static SAXParserFactory factory;
 
 	/**
 	 * 禁用默认的DocumentBuilderFactory，禁用后如果有第三方的实现（如oracle的xdb包中的xmlparse），将会自动加载实现。
@@ -181,6 +196,92 @@ public class XmlUtil {
 			return builder.parse(source);
 		} catch (Exception e) {
 			throw new UtilException(e, "Parse XML from stream error!");
+		}
+	}
+
+	/**
+	 * 使用Sax方式读取指定的XML<br>
+	 * 如果用户传入的contentHandler为{@link DefaultHandler}，则其接口都会被处理
+	 *
+	 * @param file         XML源文件,使用后自动关闭
+	 * @param contentHandler XML流处理器，用于按照Element处理xml
+	 * @since 5.4.4
+	 */
+	public static void readBySax(File file, ContentHandler contentHandler) {
+		InputStream in = null;
+		try{
+			in = FileUtil.getInputStream(file);
+			readBySax(new InputSource(in), contentHandler);
+		} finally {
+			IoUtil.close(in);
+		}
+	}
+
+	/**
+	 * 使用Sax方式读取指定的XML<br>
+	 * 如果用户传入的contentHandler为{@link DefaultHandler}，则其接口都会被处理
+	 *
+	 * @param reader         XML源Reader,使用后自动关闭
+	 * @param contentHandler XML流处理器，用于按照Element处理xml
+	 * @since 5.4.4
+	 */
+	public static void readBySax(Reader reader, ContentHandler contentHandler) {
+		try{
+			readBySax(new InputSource(reader), contentHandler);
+		} finally {
+			IoUtil.close(reader);
+		}
+	}
+
+	/**
+	 * 使用Sax方式读取指定的XML<br>
+	 * 如果用户传入的contentHandler为{@link DefaultHandler}，则其接口都会被处理
+	 *
+	 * @param source         XML源流,使用后自动关闭
+	 * @param contentHandler XML流处理器，用于按照Element处理xml
+	 * @since 5.4.4
+	 */
+	public static void readBySax(InputStream source, ContentHandler contentHandler) {
+		try{
+			readBySax(new InputSource(source), contentHandler);
+		} finally {
+			IoUtil.close(source);
+		}
+	}
+
+	/**
+	 * 使用Sax方式读取指定的XML<br>
+	 * 如果用户传入的contentHandler为{@link DefaultHandler}，则其接口都会被处理
+	 *
+	 * @param source         XML源，可以是文件、流、路径等
+	 * @param contentHandler XML流处理器，用于按照Element处理xml
+	 * @since 5.4.4
+	 */
+	public static void readBySax(InputSource source, ContentHandler contentHandler) {
+		// 1.获取解析工厂
+		if (null == factory) {
+			factory = SAXParserFactory.newInstance();
+			factory.setValidating(false);
+			factory.setNamespaceAware(namespaceAware);
+		}
+		// 2.从解析工厂获取解析器
+		final SAXParser parse;
+		XMLReader reader;
+		try {
+			parse = factory.newSAXParser();
+			if (contentHandler instanceof DefaultHandler) {
+				parse.parse(source, (DefaultHandler) contentHandler);
+				return;
+			}
+
+			// 3.得到解读器
+			reader = parse.getXMLReader();
+			reader.setContentHandler(contentHandler);
+			reader.parse(source);
+		} catch (ParserConfigurationException | SAXException e) {
+			throw new UtilException(e);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -572,6 +673,20 @@ public class XmlUtil {
 			return null;
 		}
 		return xmlContent.replaceAll(INVALID_REGEX, "");
+	}
+
+	/**
+	 * 去除XML文本中的注释内容
+	 *
+	 * @param xmlContent XML文本
+	 * @return 当传入为null时返回null
+	 * @since 5.4.5
+	 */
+	public static String cleanComment(String xmlContent) {
+		if (xmlContent == null) {
+			return null;
+		}
+		return xmlContent.replaceAll(COMMENT_REGEX, StrUtil.EMPTY);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.ooxml.util.SAXHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -73,9 +74,9 @@ public class ExcelSaxUtil {
 				}
 				break;
 			case NUMBER:
-				try{
+				try {
 					result = getNumberValue(value, numFmtString);
-				}catch (NumberFormatException e){
+				} catch (NumberFormatException e) {
 					result = value;
 				}
 				break;
@@ -150,6 +151,7 @@ public class ExcelSaxUtil {
 	public static void readFrom(InputStream xmlDocStream, ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
 		XMLReader xmlReader;
 		try {
+//			xmlReader = XMLReaderFactory.createXMLReader();
 			//noinspection deprecation
 			xmlReader = SAXHelper.newXMLReader();
 		} catch (SAXException | ParserConfigurationException e) {
@@ -189,6 +191,20 @@ public class ExcelSaxUtil {
 	 */
 	public static DateTime getDateValue(double value) {
 		return DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(value, false));
+	}
+
+	/**
+	 * 创建 {@link ExcelSaxReader}
+	 *
+	 * @param isXlsx     是否为xlsx格式（07格式）
+	 * @param rowHandler 行处理器
+	 * @return {@link ExcelSaxReader}
+	 * @since 5.4.4
+	 */
+	public static ExcelSaxReader<?> createSaxReader(boolean isXlsx, RowHandler rowHandler) {
+		return isXlsx
+				? new Excel07SaxReader(rowHandler)
+				: new Excel03SaxReader(rowHandler);
 	}
 
 	/**

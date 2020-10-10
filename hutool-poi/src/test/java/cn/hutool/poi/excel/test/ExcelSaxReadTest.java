@@ -25,7 +25,7 @@ public class ExcelSaxReadTest {
 	@Test
 	public void excel07Test() {
 		// 工具化快速读取
-		ExcelUtil.read07BySax("aaa.xlsx", 0, createRowHandler());
+		ExcelUtil.readBySax("aaa.xlsx", 0, createRowHandler());
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class ExcelSaxReadTest {
 		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", 1);
 		// Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
-		ExcelUtil.read03BySax("aaa.xls", 1, createRowHandler());
+		ExcelUtil.readBySax("aaa.xls", 1, createRowHandler());
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class ExcelSaxReadTest {
 
 	private RowHandler createRowHandler() {
 		return (sheetIndex, rowIndex, rowlist) -> {
-//				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
+//			Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
 			if (5 != rowIndex && 6 != rowIndex) {
 				// 测试样例中除第五行、第六行都为非空行
 				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
@@ -105,14 +105,14 @@ public class ExcelSaxReadTest {
 
 	@Test
 	@Ignore
-	public void dateReadTest(){
+	public void dateReadTest() {
 		ExcelUtil.readBySax("d:/test/sax_date_test.xlsx", 0, (i, i1, list) ->
 				Console.log(StrUtil.join(", ", list)));
 	}
 
 	@Test
 	@Ignore
-	public void readBlankTest(){
+	public void readBlankTest() {
 		File file = new File("D:/test/b.xlsx");
 
 		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> rowList.forEach(Console::log));

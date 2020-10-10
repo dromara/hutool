@@ -48,8 +48,8 @@ public class RandomUtil {
 	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
 	 *
 	 * <p>
-	 *     注意：此方法返回的{@link ThreadLocalRandom}不可以在多线程环境下共享对象，否则有重复随机数问题。
-	 *     见：https://www.jianshu.com/p/89dfe990295c
+	 * 注意：此方法返回的{@link ThreadLocalRandom}不可以在多线程环境下共享对象，否则有重复随机数问题。
+	 * 见：https://www.jianshu.com/p/89dfe990295c
 	 * </p>
 	 *
 	 * @return {@link ThreadLocalRandom}
@@ -522,9 +522,10 @@ public class RandomUtil {
 	 *
 	 * @return 随机颜色
 	 * @since 4.1.5
-	 * @deprecated 使用{@link ImagUtil#randomColor()}
+	 * @deprecated 使用ImgUtil.randomColor()
 	 */
-		public static Color randomColor() {
+	@Deprecated
+	public static Color randomColor() {
 		final Random random = getRandom();
 		return new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}

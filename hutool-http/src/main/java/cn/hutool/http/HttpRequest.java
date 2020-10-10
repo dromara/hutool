@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.util.Collection;
@@ -839,6 +840,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// 验证域
 		this.hostnameVerifier = hostnameVerifier;
 		return this;
+	}
+
+	/**
+	 * 设置Http代理
+	 *
+	 * @param host 代理 主机
+	 * @param port 代理 端口
+	 * @return this
+	 * @since 5.4.5
+	 */
+	public HttpRequest setHttpProxy(String host, int port) {
+		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
+				new InetSocketAddress(host, port));
+		return setProxy(proxy);
 	}
 
 	/**

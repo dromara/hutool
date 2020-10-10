@@ -34,53 +34,95 @@ public class StrUtil {
 
 	public static final int INDEX_NOT_FOUND = -1;
 
-	/** 字符常量：空格符 ' ' */
+	/**
+	 * 字符常量：空格符 ' '
+	 */
 	public static final char C_SPACE = CharUtil.SPACE;
-	/** 字符常量：制表符 \t */
+	/**
+	 * 字符常量：制表符 \t
+	 */
 	public static final char C_TAB = CharUtil.TAB;
-	/** 字符常量：点 . */
+	/**
+	 * 字符常量：点 .
+	 */
 	public static final char C_DOT = CharUtil.DOT;
-	/** 字符常量：斜杠 / */
+	/**
+	 * 字符常量：斜杠 /
+	 */
 	public static final char C_SLASH = CharUtil.SLASH;
-	/** 字符常量：反斜杠 \ */
+	/**
+	 * 字符常量：反斜杠 \
+	 */
 	public static final char C_BACKSLASH = CharUtil.BACKSLASH;
-	/** 字符常量：回车符 \r */
+	/**
+	 * 字符常量：回车符 \r
+	 */
 	public static final char C_CR = CharUtil.CR;
-	/** 字符常量：换行符 \n */
+	/**
+	 * 字符常量：换行符 \n
+	 */
 	public static final char C_LF = CharUtil.LF;
-	/** 字符常量：下划线 _ */
+	/**
+	 * 字符常量：下划线 _
+	 */
 	public static final char C_UNDERLINE = CharUtil.UNDERLINE;
-	/** 字符常量：逗号 , */
+	/**
+	 * 字符常量：逗号 ,
+	 */
 	public static final char C_COMMA = CharUtil.COMMA;
-	/** 字符常量：花括号（左） { */
+	/**
+	 * 字符常量：花括号（左） {
+	 */
 	public static final char C_DELIM_START = CharUtil.DELIM_START;
-	/** 字符常量：花括号（右） } */
+	/**
+	 * 字符常量：花括号（右） }
+	 */
 	public static final char C_DELIM_END = CharUtil.DELIM_END;
-	/** 字符常量：中括号（左） [ */
+	/**
+	 * 字符常量：中括号（左） [
+	 */
 	public static final char C_BRACKET_START = CharUtil.BRACKET_START;
-	/** 字符常量：中括号（右） ] */
+	/**
+	 * 字符常量：中括号（右） ]
+	 */
 	public static final char C_BRACKET_END = CharUtil.BRACKET_END;
-	/** 字符常量：冒号 : */
+	/**
+	 * 字符常量：冒号 :
+	 */
 	public static final char C_COLON = CharUtil.COLON;
-	/** 字符常量：艾特 @ */
+	/**
+	 * 字符常量：艾特 @
+	 */
 	public static final char C_AT = CharUtil.AT;
 
-	/** 字符串常量：空格符 ' ' */
+	/**
+	 * 字符串常量：空格符 ' '
+	 */
 	public static final String SPACE = " ";
-	/** 字符串常量：制表符 \t */
+	/**
+	 * 字符串常量：制表符 \t
+	 */
 	public static final String TAB = "	";
-	/** 字符串常量：点 . */
+	/**
+	 * 字符串常量：点 .
+	 */
 	public static final String DOT = ".";
 	/**
 	 * 字符串常量：双点 ..
 	 * 用途：作为指向上级文件夹的路径 "../path"
 	 */
 	public static final String DOUBLE_DOT = "..";
-	/** 字符串常量：斜杠 / */
+	/**
+	 * 字符串常量：斜杠 /
+	 */
 	public static final String SLASH = "/";
-	/** 字符串常量：反斜杠 \ */
+	/**
+	 * 字符串常量：反斜杠 \
+	 */
 	public static final String BACKSLASH = "\\";
-	/** 字符串常量：空字符串 "" */
+	/**
+	 * 字符串常量：空字符串 ""
+	 */
 	public static final String EMPTY = "";
 	/**
 	 * 字符串常量："null"
@@ -92,45 +134,79 @@ public class StrUtil {
 	 * 解释：该字符常用于表示 Linux 系统和 MacOS 系统下的文本换行
 	 */
 	public static final String CR = "\r";
-	/** 字符串常量：换行符 \n */
+	/**
+	 * 字符串常量：换行符 \n
+	 */
 	public static final String LF = "\n";
 	/**
 	 * 字符串常量：Windows 换行 \r\n
 	 * 解释：该字符串常用于表示 Windows 系统下的文本换行
 	 */
 	public static final String CRLF = "\r\n";
-	/** 字符串常量：下划线 _ */
+	/**
+	 * 字符串常量：下划线 _
+	 */
 	public static final String UNDERLINE = "_";
-	/** 字符串常量：减号（中划线） - */
+	/**
+	 * 字符串常量：减号（中划线） -
+	 */
 	public static final String DASHED = "-";
-	/** 字符串常量：逗号 , */
+	/**
+	 * 字符串常量：逗号 ,
+	 */
 	public static final String COMMA = ",";
-	/** 字符串常量：花括号（左） { */
+	/**
+	 * 字符串常量：花括号（左） {
+	 */
 	public static final String DELIM_START = "{";
-	/** 字符串常量：花括号（右） } */
+	/**
+	 * 字符串常量：花括号（右） }
+	 */
 	public static final String DELIM_END = "}";
-	/** 字符串常量：中括号（左） [ */
+	/**
+	 * 字符串常量：中括号（左） [
+	 */
 	public static final String BRACKET_START = "[";
-	/** 字符串常量：中括号（右） ] */
+	/**
+	 * 字符串常量：中括号（右） ]
+	 */
 	public static final String BRACKET_END = "]";
-	/** 字符串常量：冒号 : */
+	/**
+	 * 字符串常量：冒号 :
+	 */
 	public static final String COLON = ":";
-	/** 字符串常量：艾特 @ */
+	/**
+	 * 字符串常量：艾特 @
+	 */
 	public static final String AT = "@";
 
-	/** 字符串常量：HTML 空格转义 */
+	/**
+	 * 字符串常量：HTML 空格转义
+	 */
 	public static final String HTML_NBSP = "&nbsp;";
-	/** 字符串常量：HTML And 符转义 &amp; */
+	/**
+	 * 字符串常量：HTML And 符转义 &amp;
+	 */
 	public static final String HTML_AMP = "&amp;";
-	/** 字符串常量：HTML 双引号转义 " */
+	/**
+	 * 字符串常量：HTML 双引号转义 "
+	 */
 	public static final String HTML_QUOTE = "&quot;";
-	/** 字符串常量：HTML 单引号转义 ' */
+	/**
+	 * 字符串常量：HTML 单引号转义 '
+	 */
 	public static final String HTML_APOS = "&apos;";
-	/** 字符串常量：HTML 小于号转义 &lt; */
+	/**
+	 * 字符串常量：HTML 小于号转义 &lt;
+	 */
 	public static final String HTML_LT = "&lt;";
-	/** 字符串常量：HTML 大于号转义 &gt; */
+	/**
+	 * 字符串常量：HTML 大于号转义 &gt;
+	 */
 	public static final String HTML_GT = "&gt;";
-	/** 字符串常量：空 JSON "{}" */
+	/**
+	 * 字符串常量：空 JSON "{}"
+	 */
 	public static final String EMPTY_JSON = "{}";
 
 	// ------------------------------------------------------------------------ Blank
@@ -189,8 +265,7 @@ public class StrUtil {
 	 *
 	 * @param obj 对象
 	 * @return 如果为字符串是否为空串
-	 *
-	 * @see   StrUtil#isBlank(CharSequence)
+	 * @see StrUtil#isBlank(CharSequence)
 	 * @since 3.3.0
 	 */
 	public static boolean isBlankIfStr(Object obj) {
@@ -667,6 +742,9 @@ public class StrUtil {
 	 * @return 是否开始
 	 */
 	public static boolean startWith(CharSequence str, char c) {
+		if (isEmpty(str)) {
+			return false;
+		}
 		return c == str.charAt(0);
 	}
 
@@ -674,8 +752,8 @@ public class StrUtil {
 	 * 是否以指定字符串开头<br>
 	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
 	 *
-	 * @param str          被监测字符串
-	 * @param prefix       开头字符串
+	 * @param str        被监测字符串
+	 * @param prefix     开头字符串
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 是否以指定字符串开头
 	 * @since 5.4.3
@@ -690,14 +768,14 @@ public class StrUtil {
 	 *
 	 * @param str          被监测字符串
 	 * @param prefix       开头字符串
-	 * @param ignoreCase 是否忽略大小写
+	 * @param ignoreCase   是否忽略大小写
 	 * @param ignoreEquals 是否忽略字符串相等的情况
 	 * @return 是否以指定字符串开头
 	 * @since 5.4.3
 	 */
 	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
 		if (null == str || null == prefix) {
-			if(false == ignoreEquals){
+			if (false == ignoreEquals) {
 				return false;
 			}
 			return null == str && null == prefix;
@@ -710,7 +788,7 @@ public class StrUtil {
 			isStartWith = str.toString().startsWith(prefix.toString());
 		}
 
-		if(isStartWith){
+		if (isStartWith) {
 			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
 		}
 		return false;
@@ -779,6 +857,9 @@ public class StrUtil {
 	 * @return 是否结尾
 	 */
 	public static boolean endWith(CharSequence str, char c) {
+		if (isEmpty(str)) {
+			return false;
+		}
 		return c == str.charAt(str.length() - 1);
 	}
 
@@ -1073,7 +1154,8 @@ public class StrUtil {
 	 * @return 移除后的字符串
 	 */
 	public static String removeAll(CharSequence str, CharSequence strToRemove) {
-		if (isEmpty(str)) {
+		// strToRemove如果为空， 也不用继续后面的逻辑
+		if (isEmpty(str) || isEmpty(strToRemove)) {
 			return str(str);
 		}
 		return str.toString().replace(strToRemove, EMPTY);
@@ -2125,7 +2207,6 @@ public class StrUtil {
 		}
 
 		final List<String> result = new LinkedList<>();
-		final String[] split = split(str, prefix);
 		for (String fragment : split(str, prefix)) {
 			int suffixIndex = fragment.indexOf(suffix.toString());
 			if (suffixIndex > 0) {
@@ -2205,10 +2286,10 @@ public class StrUtil {
 		if (null == str) {
 			return null;
 		}
-		if (count <= 0) {
+		if (count <= 0 || str.length() == 0) {
 			return EMPTY;
 		}
-		if (count == 1 || str.length() == 0) {
+		if (count == 1) {
 			return str.toString();
 		}
 
@@ -3997,11 +4078,12 @@ public class StrUtil {
 			return false;
 		}
 		int len = value.length();
-		boolean isAllMatch = true;
 		for (int i = 0; i < len; i++) {
-			isAllMatch &= matcher.match(value.charAt(i));
+			if (false == matcher.match(value.charAt(i))) {
+				return false;
+			}
 		}
-		return isAllMatch;
+		return true;
 	}
 
 	/**
