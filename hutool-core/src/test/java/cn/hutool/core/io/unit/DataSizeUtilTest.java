@@ -18,6 +18,18 @@ public class DataSizeUtilTest {
 
 		parse = DataSizeUtil.parse("3mb");
 		Assert.assertEquals(3145728, parse);
+
+		parse = DataSizeUtil.parse("3.1M");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1m");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1MB");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1mb");
+		Assert.assertEquals(3250585, parse);
 	}
 
 	@Test
