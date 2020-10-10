@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collection;
@@ -158,10 +159,7 @@ final class InternalJSONUtil {
 		if ((b >= '0' && b <= '9') || b == '-') {
 			try {
 				if (string.indexOf('.') > -1 || string.indexOf('e') > -1 || string.indexOf('E') > -1) {
-					double d = Double.parseDouble(string);
-					if (false == Double.isInfinite(d) && false == Double.isNaN(d)) {
-						return d;
-					}
+					return new BigDecimal(string);
 				} else {
 					Long myLong = new Long(string);
 					if (string.equals(myLong.toString())) {
