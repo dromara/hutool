@@ -10,10 +10,8 @@ import cn.hutool.json.test.bean.UserC;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class JSONUtilTest {
@@ -127,15 +125,6 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void toBeanTest3() {
-		//		测试数字类型精度丢失的情况
-		String number = "1234.123456789123456";
-		String jsonString = "{\"create\":{\"details\":[{\"price\":" + number + "}]}}";
-		WebCreate create = JSONUtil.toBean(jsonString, WebCreate.class);
-		Assert.assertEquals(number,create.getCreate().getDetails().get(0).getPrice().toString());
-	}
-
-	@Test
 	public void putByPathTest() {
 		JSONObject json = new JSONObject();
 		json.putByPath("aa.bb", "BB");
@@ -171,63 +160,6 @@ public class JSONUtilTest {
 		String json = "{\"test\": 12.00}";
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
-	}
-
-
-	class WebCreate {
-		private Create create;
-		@Override
-		public String toString() {
-			return "WebCreate{" +
-					"create=" + create +
-					'}';
-		}
-
-		public void setCreate(Create create) {
-			this.create = create;
-		}
-
-		public Create getCreate() {
-			return create;
-		}
-	}
-
-	class Create {
-		@Override
-		public String toString() {
-			return "Create{" +
-					"details=" + details +
-					'}';
-		}
-
-		private List<Detail> details;
-
-		public void setDetails(List<Detail> details) {
-			this.details = details;
-		}
-
-		public List<Detail> getDetails() {
-			return details;
-		}
-	}
-
-	class Detail {
-		private BigDecimal price;
-
-		public void setPrice(BigDecimal price) {
-			this.price = price;
-		}
-
-		@Override
-		public String toString() {
-			return "Detail{" +
-					"price=" + price +
-					'}';
-		}
-
-		public BigDecimal getPrice() {
-			return price;
-		}
 	}
 }
 

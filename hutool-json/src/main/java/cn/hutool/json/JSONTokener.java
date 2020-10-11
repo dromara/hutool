@@ -349,7 +349,7 @@ public class JSONTokener {
 		this.back();
 
 		string = sb.toString().trim();
-		if ("".equals(string)) {
+		if (0 == string.length()) {
 			throw this.syntaxError("Missing value");
 		}
 		return InternalJSONUtil.stringToValue(string);
