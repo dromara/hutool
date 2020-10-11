@@ -240,7 +240,11 @@ public final class CsvParser implements Closeable, Serializable {
 					}
 					localCopyStart = localBufPos;
 				} else {
-					copyLen++;
+					if (c == CharUtil.U_FEFF && localBufPos == 1) {
+						++localCopyStart;
+					} else {
+						copyLen++;
+					}
 				}
 			}
 

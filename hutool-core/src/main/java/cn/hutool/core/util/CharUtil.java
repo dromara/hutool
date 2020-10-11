@@ -49,6 +49,10 @@ public class CharUtil {
 	public static final char COLON = ':';
 	/** 字符常量：艾特 @ */
 	public static final char AT = '@';
+	/**
+	 * with Bom 前缀
+	 */
+	public static final char U_FEFF = '\uFEFF';
 
 	/**
 	 * 是否为ASCII字符，ASCII字符位于0~127之间
