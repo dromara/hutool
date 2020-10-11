@@ -14,6 +14,7 @@
 * 【core   】     优化StrUtil中部分参数校验以及逻辑处理（pr#1144@Github）
 * 【core   】     简化CreditCode逻辑去除无用Character.toUpperCase（pr#1145@Github）
 * 【core   】     NumberUtil增加generateRandomNumber重载，可自定义seed（issue#I1XTUT@Gitee）
+* 【core   】     DataSizeUtil支持小数（pr#1158@Github）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
