@@ -3,6 +3,7 @@ package cn.hutool.core.io.unit;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public final class DataSize implements Comparable<DataSize> {
 	/**
 	 * The pattern for parsing.
 	 */
-	private static final Pattern PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
+	private static final Pattern PATTERN = Pattern.compile("^([+\\-]?\\d+||(\\d+\\.\\d+))([a-zA-Z]{0,2})$");
 
 	/**
 	 * Bytes per Kilobyte(KB).
@@ -131,6 +132,20 @@ public final class DataSize implements Comparable<DataSize> {
 	}
 
 	/**
+	 * 获得指定{@link DataUnit}对应的{@link DataSize}
+	 *
+	 * @param amount 大小
+	 * @param unit 数据大小单位，null表示默认的BYTES
+	 * @return {@link DataSize}
+	 */
+	public static DataSize of(BigDecimal amount, DataUnit unit) {
+		if(null == unit){
+			unit = DataUnit.BYTES;
+		}
+		return new DataSize(amount.multiply(new BigDecimal(unit.size().toBytes())).longValue());
+	}
+
+	/**
 	 * 获取指定数据大小文本对应的{@link DataSize}对象，如果无单位指定，默认获取{@link DataUnit#BYTES}
 	 * <p>
 	 * 例如：
@@ -171,9 +186,14 @@ public final class DataSize implements Comparable<DataSize> {
 		try {
 			Matcher matcher = PATTERN.matcher(text);
 			Assert.state(matcher.matches(), "Does not match data size pattern");
-			DataUnit unit = determineDataUnit(matcher.group(2), defaultUnit);
-			long amount = Long.parseLong(matcher.group(1));
-			return DataSize.of(amount, unit);
+			DataUnit unit = determineDataUnit(matcher.group(3), defaultUnit);
+			String value = matcher.group(1);
+			if (value.indexOf(".") > -1) {
+				return DataSize.of(new BigDecimal(value), unit);
+			} else {
+				long amount = Long.parseLong(matcher.group(1));
+				return DataSize.of(amount, unit);
+			}
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("'" + text + "' is not a valid data size", ex);
 		}
