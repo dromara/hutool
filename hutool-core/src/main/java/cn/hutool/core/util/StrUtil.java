@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
  * 字符串工具类
  *
  * @author xiaoleilu
+ * @since 1.0.0
  */
 public class StrUtil {
 
@@ -1113,6 +1114,8 @@ public class StrUtil {
 	 *
 	 * @param getOrSetMethodName Get或Set方法名
 	 * @return 如果是set或get方法名，返回field， 否则null
+	 *
+	 * @since 1.0.0
 	 */
 	public static String getGeneralField(CharSequence getOrSetMethodName) {
 		final String getOrSetMethodNameStr = getOrSetMethodName.toString();
@@ -1130,6 +1133,8 @@ public class StrUtil {
 	 *
 	 * @param fieldName 属性名
 	 * @return setXxx
+	 *
+	 * @since 1.0.0
 	 */
 	public static String genSetter(CharSequence fieldName) {
 		return upperFirstAndAddPre(fieldName, "set");
@@ -1140,6 +1145,8 @@ public class StrUtil {
 	 *
 	 * @param fieldName 属性名
 	 * @return getXxx
+	 *
+	 * @since 1.0.0
 	 */
 	public static String genGetter(CharSequence fieldName) {
 		return upperFirstAndAddPre(fieldName, "get");
@@ -1264,6 +1271,8 @@ public class StrUtil {
 	 * @param str       被处理的字符串
 	 * @param preString 添加的首部
 	 * @return 处理后的字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String upperFirstAndAddPre(CharSequence str, String preString) {
 		if (str == null || preString == null) {
@@ -1278,6 +1287,8 @@ public class StrUtil {
 	 *
 	 * @param str 字符串
 	 * @return 字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String upperFirst(CharSequence str) {
 		if (null == str) {
@@ -1298,6 +1309,8 @@ public class StrUtil {
 	 *
 	 * @param str 字符串
 	 * @return 字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String lowerFirst(CharSequence str) {
 		if (null == str) {
@@ -1318,6 +1331,8 @@ public class StrUtil {
 	 * @param str    字符串
 	 * @param prefix 前缀
 	 * @return 切掉后的字符串，若前缀不是 preffix， 返回原字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String removePrefix(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
@@ -1337,6 +1352,8 @@ public class StrUtil {
 	 * @param str    字符串
 	 * @param prefix 前缀
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String removePrefixIgnoreCase(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
@@ -1356,6 +1373,8 @@ public class StrUtil {
 	 * @param str    字符串
 	 * @param suffix 后缀
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String removeSuffix(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
@@ -1386,6 +1405,8 @@ public class StrUtil {
 	 * @param str    字符串
 	 * @param suffix 后缀
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String removeSuffixIgnoreCase(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
@@ -1526,6 +1547,8 @@ public class StrUtil {
 	 *
 	 * @param str 被清理的字符串
 	 * @return 清理后的字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String cleanBlank(CharSequence str) {
 		return filter(str, c -> false == CharUtil.isBlankChar(c));
@@ -1600,6 +1623,8 @@ public class StrUtil {
 	 * @param str       被切分的字符串
 	 * @param separator 分隔符字符
 	 * @return 切分后的集合
+	 *
+	 * @since 1.0.0
 	 */
 	public static List<String> split(CharSequence str, char separator) {
 		return split(str, separator, 0);
@@ -1627,6 +1652,8 @@ public class StrUtil {
 	 * @param separator 分隔符字符
 	 * @param limit     限制分片数，-1不限制
 	 * @return 切分后的集合
+	 *
+	 * @since 1.0.0
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, false, false);
@@ -1739,6 +1766,8 @@ public class StrUtil {
 	 * @param str       被切分的字符串
 	 * @param separator 分隔符
 	 * @return 字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String[] split(CharSequence str, CharSequence separator) {
 		if (str == null) {
@@ -1777,6 +1806,8 @@ public class StrUtil {
 	 * @param fromIndex 开始的index（包括）
 	 * @param toIndex   结束的index（不包括）
 	 * @return 字串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String sub(CharSequence str, int fromIndex, int toIndex) {
 		if (isEmpty(str)) {
@@ -2262,6 +2293,8 @@ public class StrUtil {
 	 * @param c     被重复的字符
 	 * @param count 重复的数目，如果小于等于0则返回""
 	 * @return 重复字符字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String repeat(char c, int count) {
 		if (count <= 0) {
@@ -2281,6 +2314,8 @@ public class StrUtil {
 	 * @param str   被重复的字符
 	 * @param count 重复的数目
 	 * @return 重复字符字符串
+	 *
+	 * @since 1.0.0
 	 */
 	public static String repeat(CharSequence str, int count) {
 		if (null == str) {
@@ -2498,6 +2533,8 @@ public class StrUtil {
 	 * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"
 	 * @param params   参数值
 	 * @return 格式化后的文本，如果模板为null，返回"null"
+	 *
+	 * @since 1.0.0
 	 */
 	public static String format(CharSequence template, Object... params) {
 		if (null == template) {
