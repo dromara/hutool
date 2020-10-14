@@ -494,4 +494,29 @@ public class ListUtil {
 	public static <T> List<T> empty() {
 		return Collections.emptyList();
 	}
+
+	/**
+	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 *
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param size 每个段的长度
+	 *
+	 * @return 分段列表
+	 */
+	public static <T> List<List<T>> split(List<T> list, int size) {
+		if (CollUtil.isEmpty(list)) {
+			return Collections.emptyList();
+		}
+
+		List<List<T>> result = new ArrayList<>(list.size() / size + 1);
+		int offset = 0;
+		for (int toIdx = size; toIdx <= list.size(); offset = toIdx, toIdx += size) {
+			result.add(list.subList(offset, toIdx));
+		}
+		if (offset < list.size()) {
+			result.add(list.subList(offset, list.size()));
+		}
+		return result;
+	}
 }
