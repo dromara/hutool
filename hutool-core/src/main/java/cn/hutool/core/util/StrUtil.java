@@ -126,7 +126,7 @@ public class StrUtil {
 	public static final String DOT = ".";
 
 	/**
-	 * 字符串常量：双点 {@code ".."} <br />
+	 * 字符串常量：双点 {@code ".."} <br>
 	 * 用途：作为指向上级文件夹的路径，如：{@code "../path"}
 	 */
 	public static final String DOUBLE_DOT = "..";
@@ -147,13 +147,13 @@ public class StrUtil {
 	public static final String EMPTY = "";
 
 	/**
-	 * 字符串常量：{@code "null"} <br />
+	 * 字符串常量：{@code "null"} <br>
 	 * 注意：{@code "null" != null}
 	 */
 	public static final String NULL = "null";
 
 	/**
-	 * 字符串常量：回车符 {@code "\r"} <br />
+	 * 字符串常量：回车符 {@code "\r"} <br>
 	 * 解释：该字符常用于表示 Linux 系统和 MacOS 系统下的文本换行
 	 */
 	public static final String CR = "\r";
@@ -164,7 +164,7 @@ public class StrUtil {
 	public static final String LF = "\n";
 
 	/**
-	 * 字符串常量：Windows 换行 {@code "\r\n"} <br />
+	 * 字符串常量：Windows 换行 {@code "\r\n"} <br>
 	 * 解释：该字符串常用于表示 Windows 系统下的文本换行
 	 */
 	public static final String CRLF = "\r\n";
@@ -271,7 +271,7 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #isEmpty(CharSequence)} 的区别是：
 	 * 该方法会校验空白字符，且性能相对于 {@link #isEmpty(CharSequence)} 略慢。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>建议：</p>
 	 * <ul>
@@ -364,7 +364,7 @@ public class StrUtil {
 	/**
 	 * <p>指定字符串数组中，是否包含空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>例：</p>
 	 * <ul>
@@ -376,8 +376,8 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #isAllBlank(CharSequence...)} 的区别在于：</p>
 	 * <ul>
-	 *     hasBlank(CharSequence...)            等价于 {@code isBlank(...) || isBlank(...) || ...}<br />
-	 *     {@link #isAllBlank(CharSequence...)} 等价于 {@code isBlank(...) && isBlank(...) && ...}
+	 *     <li>hasBlank(CharSequence...)            等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+	 *     <li>{@link #isAllBlank(CharSequence...)} 等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
 	 * </ul>
 	 *
 	 * @param strs 字符串列表
@@ -399,7 +399,7 @@ public class StrUtil {
 	/**
 	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>例：</p>
 	 * <ul>
@@ -411,8 +411,8 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #hasBlank(CharSequence...)} 的区别在于：</p>
 	 * <ul>
-	 *     {@link #hasBlank(CharSequence...)}   等价于 {@code isBlank(...) || isBlank(...) || ...}<br />
-	 *     isAllBlank(CharSequence...)          等价于 {@code isBlank(...) && isBlank(...) && ...}
+	 *     <li>{@link #hasBlank(CharSequence...)}   等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+	 *     <li>isAllBlank(CharSequence...)          等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
 	 * </ul>
 	 *
 	 * @param strs 字符串列表
@@ -610,7 +610,7 @@ public class StrUtil {
 	/**
 	 * <p>是否包含空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>例：</p>
 	 * <ul>
@@ -623,8 +623,8 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #isAllEmpty(CharSequence...)} 的区别在于：</p>
 	 * <ul>
-	 *     hasEmpty(CharSequence...)            等价于 {@code isEmpty(...) || isEmpty(...) || ...}<br />
-	 *     {@link #isAllEmpty(CharSequence...)} 等价于 {@code isEmpty(...) && isEmpty(...) && ...}
+	 *     <li>hasEmpty(CharSequence...)            等价于 {@code isEmpty(...) || isEmpty(...) || ...}</li>
+	 *     <li>{@link #isAllEmpty(CharSequence...)} 等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
 	 * </ul>
 	 *
 	 * @param strs 字符串列表
@@ -646,7 +646,7 @@ public class StrUtil {
 	/**
 	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>例：</p>
 	 * <ul>
@@ -659,8 +659,8 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #hasEmpty(CharSequence...)} 的区别在于：</p>
 	 * <ul>
-	 *     {@link #hasEmpty(CharSequence...)}   等价于 {@code isEmpty(...) || isEmpty(...) || ...}<br />
-	 *     isAllEmpty(CharSequence...)          等价于 {@code isEmpty(...) && isEmpty(...) && ...}
+	 *     <li>{@link #hasEmpty(CharSequence...)}   等价于 {@code isEmpty(...) || isEmpty(...) || ...}</li>
+	 *     <li>isAllEmpty(CharSequence...)          等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
 	 * </ul>
 	 *
 	 * @param strs 字符串列表
@@ -682,7 +682,7 @@ public class StrUtil {
 	/**
 	 * <p>指定字符串数组中的元素，是否都不为空字符串。</p>
 	 * <p>如果指定的字符串数组的长度不为 0，或者所有元素都不是空字符串，则返回 true。</p>
-	 * <br />
+	 * <br>
 	 *
 	 * <p>例：</p>
 	 * <ul>
@@ -695,8 +695,8 @@ public class StrUtil {
 	 *
 	 * <p>注意：该方法与 {@link #isAllEmpty(CharSequence...)} 的区别在于：</p>
 	 * <ul>
-	 *     {@link #isAllEmpty(CharSequence...)}    等价于 {@code isEmpty(...) && isEmpty(...) && ...}<br />
-	 *     isAllNotEmpty(CharSequence...)          等价于 {@code !isEmpty(...) && !isEmpty(...) && ...}
+	 *     <li>{@link #isAllEmpty(CharSequence...)}    等价于 {@code isEmpty(...) && isEmpty(...) && ...}</li>
+	 *     <li>isAllNotEmpty(CharSequence...)          等价于 {@code !isEmpty(...) && !isEmpty(...) && ...}</li>
 	 * </ul>
 	 *
 	 * @param args 字符串数组
