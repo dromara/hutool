@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.5 (2020-10-11)
+# 5.4.5 (2020-10-14)
 
 ### 新特性
 * 【core   】     ConsoleTable代码优化（pr#190@Gitee）
@@ -15,6 +15,7 @@
 * 【core   】     简化CreditCode逻辑去除无用Character.toUpperCase（pr#1145@Github）
 * 【core   】     NumberUtil增加generateRandomNumber重载，可自定义seed（issue#I1XTUT@Gitee）
 * 【core   】     DataSizeUtil支持小数（pr#1158@Github）
+* 【core   】     完善注释（pr#193@Gitee）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
