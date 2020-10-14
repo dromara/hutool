@@ -159,6 +159,7 @@ public class JSONUtilTest {
 	public void doubleTest(){
 		String json = "{\"test\": 12.00}";
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		//noinspection BigDecimalMethodWithoutRoundingCalled
 		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
 	}
 }
