@@ -16,11 +16,13 @@
 * 【core   】     NumberUtil增加generateRandomNumber重载，可自定义seed（issue#I1XTUT@Gitee）
 * 【core   】     DataSizeUtil支持小数（pr#1158@Github）
 * 【core   】     完善注释（pr#193@Gitee）
+* 【core   】     优化Combination.countAll（pr#1159@Github）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
 * 【core   】     解决ListUtil计算总量可能的int溢出问题（pr#1150@Github）
 * 【json   】     解决JSON中转换为double小数精度丢失问题（pr#192@Gitee）
+* 【core   】     修复CaseInsensitiveMap的remove等方法并没有忽略大小写的问题（pr#1163@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
