@@ -46,6 +46,18 @@ public abstract class CustomKeyMap<K, V> extends MapWrapper<K, V> {
 		return super.containsKey(customKey(key));
 	}
 
+	@Override
+	public V remove(Object key) { return super.remove(customKey(key)); }
+
+	@Override
+	public boolean remove(Object key, Object value) { return super.remove(customKey(key), value); }
+
+	@Override
+	public boolean replace(K key, V oldValue, V newValue) { return super.replace((K) customKey(key), oldValue, newValue); }
+
+	@Override
+	public V replace(K key, V value) { return super.replace((K) customKey(key), value); }
+
 	/**
 	 * 自定义键
 	 * 
