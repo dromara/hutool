@@ -48,14 +48,14 @@ public class Console {
 	 * 同 System.out.println()方法，打印控制台日志<br>
 	 * 如果传入打印对象为{@link Throwable}对象，那么同时打印堆栈
 	 *
-	 * @param obj1 第一个要打印的对象
+	 * @param obj1      第一个要打印的对象
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
 	public static void log(Object obj1, Object... otherObjs) {
-		if(ArrayUtil.isEmpty(otherObjs)){
+		if (ArrayUtil.isEmpty(otherObjs)) {
 			log(obj1);
-		} else{
+		} else {
 			log(buildTemplateSplitBySpace(otherObjs.length + 1), ArrayUtil.insert(otherObjs, 0, obj1));
 		}
 	}
@@ -97,11 +97,22 @@ public class Console {
 	 * @param values   值
 	 * @since 5.4.3
 	 */
-	private static void logInternal(String template, Object... values){
+	private static void logInternal(String template, Object... values) {
 		log(null, template, values);
 	}
 
 	// --------------------------------------------------------------------------------- print
+
+	/**
+	 * 打印表格到控制台
+	 *
+	 * @param consoleTable 控制台表格
+	 * @since 5.4.5
+	 */
+	public static void table(ConsoleTable consoleTable) {
+		print(consoleTable.toString());
+	}
+
 	/**
 	 * 同 System.out.print()方法，打印控制台日志
 	 *
@@ -116,14 +127,14 @@ public class Console {
 	 * 同 System.out.println()方法，打印控制台日志<br>
 	 * 如果传入打印对象为{@link Throwable}对象，那么同时打印堆栈
 	 *
-	 * @param obj1 第一个要打印的对象
+	 * @param obj1      第一个要打印的对象
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
 	public static void print(Object obj1, Object... otherObjs) {
-		if(ArrayUtil.isEmpty(otherObjs)){
+		if (ArrayUtil.isEmpty(otherObjs)) {
 			print(obj1);
-		} else{
+		} else {
 			print(buildTemplateSplitBySpace(otherObjs.length + 1), ArrayUtil.insert(otherObjs, 0, obj1));
 		}
 	}
@@ -174,7 +185,7 @@ public class Console {
 	 * @param values   值
 	 * @since 5.4.3
 	 */
-	private static void printInternal(String template, Object... values){
+	private static void printInternal(String template, Object... values) {
 		out.print(StrUtil.format(template, values));
 	}
 
@@ -205,14 +216,14 @@ public class Console {
 	 * 同 System.out.println()方法，打印控制台日志<br>
 	 * 如果传入打印对象为{@link Throwable}对象，那么同时打印堆栈
 	 *
-	 * @param obj1 第一个要打印的对象
+	 * @param obj1      第一个要打印的对象
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
 	public static void error(Object obj1, Object... otherObjs) {
-		if(ArrayUtil.isEmpty(otherObjs)){
+		if (ArrayUtil.isEmpty(otherObjs)) {
 			error(obj1);
-		} else{
+		} else {
 			error(buildTemplateSplitBySpace(otherObjs.length + 1), ArrayUtil.insert(otherObjs, 0, obj1));
 		}
 	}
@@ -312,7 +323,7 @@ public class Console {
 	 * @param count 变量数量
 	 * @return 模板
 	 */
-	private static String buildTemplateSplitBySpace(int count){
+	private static String buildTemplateSplitBySpace(int count) {
 		return StrUtil.repeatAndJoin(TEMPLATE_VAR, count, StrUtil.SPACE);
 	}
 

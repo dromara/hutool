@@ -36,6 +36,16 @@ public class ConsoleTable {
 	private List<Integer> columnCharNumber;
 
 	/**
+	 * 创建ConsoleTable对象
+	 *
+	 * @return ConsoleTable
+	 * @since 5.4.5
+	 */
+	public static ConsoleTable create(){
+		return new ConsoleTable();
+	}
+
+	/**
 	 * 添加头信息
 	 *
 	 * @param titles 列名
@@ -101,7 +111,7 @@ public class ConsoleTable {
 	/**
 	 * 填充表头或者表体信息
 	 *
-	 * @param sb
+	 * @param sb 内容
 	 * @param list 表头列表或者表体列表
 	 */
 	private void fillRow(StringBuilder sb, List<List<String>> list) {
