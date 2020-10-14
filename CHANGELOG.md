@@ -17,6 +17,7 @@
 * 【core   】     DataSizeUtil支持小数（pr#1158@Github）
 * 【core   】     完善注释（pr#193@Gitee）
 * 【core   】     优化Combination.countAll（pr#1159@Github）
+* 【core   】     优化针对list的split方法（pr#194@Gitee）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）

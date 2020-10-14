@@ -1117,12 +1117,16 @@ public class CollUtil {
 
 	/**
 	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 * <p>
+	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
+	 * 此方法返回的是原List的视图，也就是说原List有变更，切分后的结果也会变更。
+	 * </p>
 	 *
-	 * @param <T> 集合元素类型
+	 * @param <T>  集合元素类型
 	 * @param list 列表
 	 * @param size 每个段的长度
-	 *
 	 * @return 分段列表
+	 * @since 5.4.5
 	 */
 	public static <T> List<List<T>> splitList(List<T> list, int size) {
 		return ListUtil.split(list, size);

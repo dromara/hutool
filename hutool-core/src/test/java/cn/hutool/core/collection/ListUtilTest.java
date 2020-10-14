@@ -4,6 +4,7 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ListUtilTest {
 
 	@Test
+	@Ignore
 	public void split() {
 		List<String> list = new ArrayList<>();
 		CollUtil.padRight(list, RandomUtil.randomInt(1000_0000, 1_0000_0000), "test");
