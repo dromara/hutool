@@ -145,6 +145,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- 测试覆盖度 -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>
