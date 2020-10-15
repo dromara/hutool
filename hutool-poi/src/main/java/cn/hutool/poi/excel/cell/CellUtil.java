@@ -1,6 +1,7 @@
 package cn.hutool.poi.excel.cell;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
@@ -24,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Excel表格中单元格工具类
@@ -103,9 +103,10 @@ public class CellUtil {
 			cellType = cell.getCellTypeEnum();
 		}
 
-		if(CellType.BLANK == cellType || CellUtil.isMergedRegion(cell)){
-			// 空白单元格可能为合并单元格
-			cell = getMergedRegionCell(cell);
+		// 尝试获取合并单元格，如果是合并单元格，则重新获取单元格类型
+		final Cell mergedCell = getMergedRegionCell(cell);
+		if(mergedCell != cell){
+			cell = mergedCell;
 			cellType = cell.getCellTypeEnum();
 		}
 
@@ -341,7 +342,8 @@ public class CellUtil {
 	 * @since 4.6.3
 	 */
 	public static Object getMergedRegionValue(Sheet sheet, int x, int y) {
-		return getCellValue(getMergedRegionCell(sheet, x, y));
+		// 合并单元格的识别在getCellValue已经集成，无需重复获取合并单元格
+		return getCellValue(SheetUtil.getCell(sheet, x, y));
 	}
 
 	/**
@@ -353,7 +355,12 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static Cell getMergedRegionCell(Cell cell) {
-		return getMergedRegionCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+		if(null == cell){
+			return null;
+		}
+		return ObjectUtil.defaultIfNull(
+				getCellIfMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex()),
+				cell);
 	}
 
 	/**
@@ -367,29 +374,34 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
-		final List<CellRangeAddress> addrs = sheet.getMergedRegions();
-
-		int firstColumn;
-		int lastColumn;
-		int firstRow;
-		int lastRow;
-		for (CellRangeAddress ca : addrs) {
-			firstColumn = ca.getFirstColumn();
-			lastColumn = ca.getLastColumn();
-			firstRow = ca.getFirstRow();
-			lastRow = ca.getLastRow();
-
-			if (y >= firstRow && y <= lastRow) {
-				if (x >= firstColumn && x <= lastColumn) {
-					return SheetUtil.getCell(sheet, firstRow, firstColumn);
-				}
-			}
-		}
-
-		return SheetUtil.getCell(sheet, y, x);
+		return ObjectUtil.defaultIfNull(
+				getCellIfMergedRegion(sheet, x, y),
+				SheetUtil.getCell(sheet, y, x));
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start
+
+	/**
+	 * 获取合并单元格，非合并单元格返回<code>null</code><br>
+	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
+	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
+	 * @return 合并单元格，如果非合并单元格，返回<code>null</code>
+	 * @since 5.4.5
+	 */
+	private static Cell getCellIfMergedRegion(Sheet sheet, int x, int y){
+		final int sheetMergeCount = sheet.getNumMergedRegions();
+		CellRangeAddress ca;
+		for (int i = 0; i < sheetMergeCount; i++) {
+			ca = sheet.getMergedRegion(i);
+			if (ca.isInRange(y, x)) {
+				return SheetUtil.getCell(sheet, ca.getFirstRow(), ca.getFirstColumn());
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * 获取数字类型的单元格值

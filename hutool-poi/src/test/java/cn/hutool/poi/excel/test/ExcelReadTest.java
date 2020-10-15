@@ -217,8 +217,9 @@ public class ExcelReadTest {
 	@Test
 	@Ignore
 	public void readTest() {
+		// 测试合并单元格是否可以正常读到第一个单元格的值
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/人员体检信息表.xlsx");
-		final List<List<Object>> read = reader.read(2);
+		final List<List<Object>> read = reader.read();
 		for (List<Object> list : read) {
 			Console.log(list);
 		}
