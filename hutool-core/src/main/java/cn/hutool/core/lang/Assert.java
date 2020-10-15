@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * 断言<br>
@@ -16,7 +17,25 @@ import java.util.Map;
  *
  */
 public class Assert {
-
+	/**
+	 * 断言是否为真，如果为 {@code false} 抛出异常<br>
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 *  Assert.isTrue(i &gt; 0, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param expression 布尔值
+	 * @param errorMsgSupplier  错误抛出异常附带的消息生产接口
+	 * @throws IllegalArgumentException if expression is {@code false}
+	 */
+	public static void isTrue(boolean expression, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (!expression) {
+			isTrue(false, errorMsgSupplier.get());
+		}
+	}
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出给定的异常<br>
 	 *
@@ -66,7 +85,25 @@ public class Assert {
 	public static void isTrue(boolean expression) throws IllegalArgumentException {
 		isTrue(expression, "[Assertion failed] - this expression must be true");
 	}
-
+	/**
+	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 *  Assert.isFalse(i &gt; 0, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param expression 布尔值
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @throws IllegalArgumentException if expression is {@code false}
+	 */
+	public static void isFalse(boolean expression, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (expression) {
+			isFalse(true, errorMsgSupplier.get());
+		}
+	}
 	/**
 	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
 	 * 
@@ -98,7 +135,25 @@ public class Assert {
 	public static void isFalse(boolean expression) throws IllegalArgumentException {
 		isFalse(expression, "[Assertion failed] - this expression must be false");
 	}
-
+	/**
+	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.isNull(value,  ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param object 被检查的对象
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @throws IllegalArgumentException if the object is not {@code null}
+	 */
+	public static void isNull(Object object, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (object != null) {
+			isNull(object, errorMsgSupplier.get());
+		}
+	}
 	/**
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
@@ -132,6 +187,28 @@ public class Assert {
 	}
 
 	// ----------------------------------------------------------------------------------------------------------- Check not null
+	/**
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notNull(clazz, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T> 被检查对象泛型类型
+	 * @param object 被检查对象
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查后的对象
+	 * @throws IllegalArgumentException if the object is {@code null}
+	 */
+	public static <T> T notNull(T object, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (object == null) {
+			notNull(null, errorMsgSupplier.get());
+		}
+		return object;
+	}
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
 	 * 
@@ -172,6 +249,29 @@ public class Assert {
 	// ----------------------------------------------------------------------------------------------------------- Check empty
 	/**
 	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notEmpty(name, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T> 字符串类型
+	 * @param text 被检查字符串
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 非空字符串
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空
+	 */
+	public static <T extends CharSequence> T notEmpty(T text, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (StrUtil.isEmpty(text)) {
+			notEmpty(text, errorMsgSupplier.get());
+		}
+		return text;
+	}
+	/**
+	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
 	 * 
 	 * <pre class="code">
 	 * Assert.notEmpty(name, "Name must not be empty");
@@ -208,7 +308,29 @@ public class Assert {
 	public static <T extends CharSequence> T notEmpty(T text) throws IllegalArgumentException {
 		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
 	}
-
+	/**
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notBlank(name, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T> 字符串类型
+	 * @param text 被检查字符串
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 非空字符串
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空白
+	 */
+	public static <T extends CharSequence> T notBlank(T text, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (StrUtil.isBlank(text)) {
+			notBlank(text, errorMsgSupplier.get());
+		}
+		return text;
+	}
 	/**
 	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
 	 * 
@@ -247,7 +369,28 @@ public class Assert {
 	public static <T extends CharSequence> T notBlank(T text) throws IllegalArgumentException {
 		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
 	}
-
+	/**
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.doesNotContain(name, "rod", ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param textToSearch 被搜索的字符串
+	 * @param substring 被检查的子串
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的子串
+	 * @throws IllegalArgumentException 非子串抛出异常
+	 */
+	public static String notContain(String textToSearch, String substring, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (StrUtil.isNotEmpty(textToSearch) && StrUtil.isNotEmpty(substring) && textToSearch.contains(substring)) {
+			throw new IllegalArgumentException(errorMsgSupplier.get());
+		}
+		return substring;
+	}
 	/**
 	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
 	 * 
@@ -284,7 +427,27 @@ public class Assert {
 	public static String notContain(String textToSearch, String substring) throws IllegalArgumentException {
 		return notContain(textToSearch, substring, "[Assertion failed] - this String argument must not contain the substring [{}]", substring);
 	}
-
+	/**
+	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notEmpty(array, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param array 被检查的数组
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的数组
+	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
+	 */
+	public static Object[] notEmpty(Object[] array, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (ArrayUtil.isEmpty(array)) {
+			throw new IllegalArgumentException(errorMsgSupplier.get());
+		}
+		return array;
+	}
 	/**
 	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
 	 * 
@@ -319,7 +482,28 @@ public class Assert {
 	public static Object[] notEmpty(Object[] array) throws IllegalArgumentException {
 		return notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
 	}
-
+	/**
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.noNullElements(array, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T> 数组元素类型
+	 * @param array 被检查的数组
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的数组
+	 * @throws IllegalArgumentException if the object array contains a {@code null} element
+	 */
+	public static <T> T[] noNullElements(T[] array, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (ArrayUtil.hasNull(array)) {
+			throw new IllegalArgumentException(errorMsgSupplier.get());
+		}
+		return array;
+	}
 	/**
 	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
 	 * 
@@ -356,7 +540,28 @@ public class Assert {
 	public static <T> T[] noNullElements(T[] array) throws IllegalArgumentException {
 		return noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
 	}
-
+	/**
+	 * 断言给定集合非空
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notEmpty(collection, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <T> 集合元素类型
+	 * @param collection 被检查的集合
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 非空集合
+	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
+	 */
+	public static <T> Collection<T> notEmpty(Collection<T> collection, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (CollUtil.isEmpty(collection)) {
+			throw new IllegalArgumentException(errorMsgSupplier.get());
+		}
+		return collection;
+	}
 	/**
 	 * 断言给定集合非空
 	 * 
@@ -393,7 +598,30 @@ public class Assert {
 	public static <T> Collection<T> notEmpty(Collection<T> collection) throws IllegalArgumentException {
 		return notEmpty(collection, "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
 	}
-
+	/**
+	 * 断言给定Map非空
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.notEmpty(map, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 *
+	 * @param map 被检查的Map
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @return 被检查的Map
+	 * @throws IllegalArgumentException if the map is {@code null} or has no entries
+	 */
+	public static <K, V> Map<K, V> notEmpty(Map<K, V> map, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
+		if (CollUtil.isEmpty(map)) {
+			throw new IllegalArgumentException(errorMsgSupplier.get());
+		}
+		return map;
+	}
 	/**
 	 * 断言给定Map非空
 	 * 
@@ -511,7 +739,25 @@ public class Assert {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
-
+	/**
+	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
+	 * 并使用指定的函数获取错误信息返回
+	 * <pre class="code">
+	 * Assert.state(id == null, ()->{
+	 *      // to query relation message
+	 *      return "relation message to return ";
+	 *  });
+	 * </pre>
+	 *
+	 * @param expression boolean 表达式
+	 * @param errorMsgSupplier 错误抛出异常附带的消息生产接口
+	 * @throws IllegalStateException 表达式为 {@code false} 抛出此异常
+	 */
+	public static void state(boolean expression, Supplier<String> errorMsgSupplier) throws IllegalStateException {
+		if (false == expression) {
+			throw new IllegalStateException(errorMsgSupplier.get());
+		}
+	}
 	/**
 	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
 	 * 
