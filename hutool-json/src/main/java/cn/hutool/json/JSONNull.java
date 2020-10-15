@@ -1,5 +1,7 @@
 package cn.hutool.json;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.Serializable;
 
 /**
@@ -39,6 +41,6 @@ public class JSONNull implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "null";
+		return StrUtil.NULL;
 	}
 }

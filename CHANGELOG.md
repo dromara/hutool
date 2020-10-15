@@ -19,6 +19,7 @@
 * 【core   】     优化Combination.countAll（pr#1159@Github）
 * 【core   】     优化针对list的split方法（pr#194@Gitee）
 * 【poi    】     ExcelWriter增加setRowStyle方法
+* 【core   】     Assert增加函数接口（pr#1166@Github）
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）

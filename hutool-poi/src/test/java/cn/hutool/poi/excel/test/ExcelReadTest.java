@@ -214,4 +214,10 @@ public class ExcelReadTest {
 		reader.read((cell, value)-> Console.log("{}, {} {}", cell.getRowIndex(), cell.getColumnIndex(), value));
 	}
 
+	@Test
+	public void readTest() {
+		final ExcelReader reader = ExcelUtil.getReader("d:/test/人员体检信息表.xlsx");
+		final List<List<Object>> read = reader.read();
+//		Console.log(read);
+	}
 }
