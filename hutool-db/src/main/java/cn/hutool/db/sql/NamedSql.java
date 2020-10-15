@@ -78,7 +78,7 @@ public class NamedSql {
 			return;
 		}
 
-		int len = namedSql.length();
+		final int len = namedSql.length();
 
 		final StrBuilder name = StrUtil.strBuilder();
 		final StrBuilder sqlBuilder = StrUtil.strBuilder();
@@ -87,10 +87,9 @@ public class NamedSql {
 		for (int i = 0; i < len; i++) {
 			c = namedSql.charAt(i);
 			if (ArrayUtil.contains(NAME_START_CHARS, c)) {
-				nameStartChar = c;
-
 				// 新的变量开始符出现，要处理之前的变量
 				replaceVar(nameStartChar, name, sqlBuilder, paramMap);
+				nameStartChar = c;
 			} else if (null != nameStartChar) {
 				// 变量状态
 				if (isGenerateChar(c)) {
@@ -126,6 +125,10 @@ public class NamedSql {
 	 */
 	private void replaceVar(Character nameStartChar, StrBuilder name, StrBuilder sqlBuilder, Map<String, Object> paramMap){
 		if(name.isEmpty()){
+			if(null != nameStartChar){
+				// 类似于:的情况，需要补上:
+				sqlBuilder.append(nameStartChar);
+			}
 			// 无变量，按照普通字符处理
 			return;
 		}

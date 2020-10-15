@@ -61,6 +61,19 @@ public class NamedSqlTest {
 	}
 
 	@Test
+	public void parseTest4() {
+		// 测试postgre中形如data_value::numeric是否出错
+		String sql = "select device_key, min(data_value::numeric) as data_value from device";
+
+		Map<String, Object> paramMap = MapUtil
+				.builder("name1", (Object)"张三")
+				.build();
+
+		NamedSql namedSql = new NamedSql(sql, paramMap);
+		Assert.assertEquals(sql, namedSql.getSql());
+	}
+
+	@Test
 	public void queryTest() throws SQLException {
 		Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"王五")
