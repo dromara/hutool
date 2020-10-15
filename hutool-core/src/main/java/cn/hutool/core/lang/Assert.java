@@ -101,7 +101,7 @@ public class Assert {
 	 */
 	public static void isFalse(boolean expression, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
 		if (expression) {
-			isFalse(true,errorMsgSupplier.get());
+			isFalse(true, errorMsgSupplier.get());
 		}
 	}
 	/**
@@ -151,7 +151,7 @@ public class Assert {
 	 */
 	public static void isNull(Object object, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
 		if (object != null) {
-			isNull(object,errorMsgSupplier.get());
+			isNull(object, errorMsgSupplier.get());
 		}
 	}
 	/**
@@ -205,7 +205,7 @@ public class Assert {
 	 */
 	public static <T> T notNull(T object, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
 		if (object == null) {
-			notNull(null,errorMsgSupplier.get());
+			notNull(null, errorMsgSupplier.get());
 		}
 		return object;
 	}
@@ -266,7 +266,7 @@ public class Assert {
 	 */
 	public static <T extends CharSequence> T notEmpty(T text, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
 		if (StrUtil.isEmpty(text)) {
-			notEmpty(text,errorMsgSupplier.get());
+			notEmpty(text, errorMsgSupplier.get());
 		}
 		return text;
 	}
@@ -327,7 +327,7 @@ public class Assert {
 	 */
 	public static <T extends CharSequence> T notBlank(T text, Supplier<String> errorMsgSupplier) throws IllegalArgumentException {
 		if (StrUtil.isBlank(text)) {
-			notBlank(text,errorMsgSupplier.get());
+			notBlank(text, errorMsgSupplier.get());
 		}
 		return text;
 	}
