@@ -103,7 +103,7 @@ public class CellUtil {
 			cellType = cell.getCellTypeEnum();
 		}
 
-		if(CellType.BLANK == cellType){
+		if(CellType.BLANK == cellType || CellUtil.isMergedRegion(cell)){
 			// 空白单元格可能为合并单元格
 			cell = getMergedRegionCell(cell);
 			cellType = cell.getCellTypeEnum();

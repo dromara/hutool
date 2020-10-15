@@ -215,9 +215,12 @@ public class ExcelReadTest {
 	}
 
 	@Test
+	@Ignore
 	public void readTest() {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/人员体检信息表.xlsx");
-		final List<List<Object>> read = reader.read();
-//		Console.log(read);
+		final List<List<Object>> read = reader.read(2);
+		for (List<Object> list : read) {
+			Console.log(list);
+		}
 	}
 }
