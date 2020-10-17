@@ -2005,6 +2005,17 @@ public class NumberUtil {
 		if (null == number) {
 			return BigDecimal.ZERO;
 		}
+
+		if(number instanceof BigDecimal){
+			return (BigDecimal) number;
+		} else if (number instanceof Long) {
+			return new BigDecimal((Long) number);
+		} else if (number instanceof Integer) {
+			return new BigDecimal((Integer) number);
+		} else if (number instanceof BigInteger) {
+			return new BigDecimal((BigInteger) number);
+		}
+
 		return toBigDecimal(number.toString());
 	}
 
@@ -2017,6 +2028,38 @@ public class NumberUtil {
 	 */
 	public static BigDecimal toBigDecimal(String number) {
 		return (null == number) ? BigDecimal.ZERO : new BigDecimal(number);
+	}
+
+	/**
+	 * 数字转{@link BigInteger}
+	 *
+	 * @param number 数字
+	 * @return {@link BigInteger}
+	 * @since 5.4.5
+	 */
+	public static BigInteger toBigInteger(Number number) {
+		if (null == number) {
+			return BigInteger.ZERO;
+		}
+
+		if(number instanceof BigInteger){
+			return (BigInteger) number;
+		} else if (number instanceof Long) {
+			return BigInteger.valueOf((Long) number);
+		}
+
+		return toBigInteger(number.longValue());
+	}
+
+	/**
+	 * 数字转{@link BigInteger}
+	 *
+	 * @param number 数字
+	 * @return {@link BigInteger}
+	 * @since 5.4.5
+	 */
+	public static BigInteger toBigInteger(String number) {
+		return (null == number) ? BigInteger.ZERO : new BigInteger(number);
 	}
 
 	/**

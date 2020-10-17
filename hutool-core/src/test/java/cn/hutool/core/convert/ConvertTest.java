@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
  * 类型转换工具单元测试
@@ -220,6 +222,20 @@ public class ConvertTest {
 		Assert.assertEquals("zhangsan", product.getName());
 		Assert.assertEquals("张三", product.getCName());
 		Assert.assertEquals("5.1.1", product.getVersion());
+	}
+
+	@Test
+	public void toAtomicIntegerArrayTest(){
+		String str = "1,2";
+		final AtomicIntegerArray atomicIntegerArray = Convert.convert(AtomicIntegerArray.class, str);
+		Assert.assertEquals("[1, 2]", atomicIntegerArray.toString());
+	}
+
+	@Test
+	public void toAtomicLongArrayTest(){
+		String str = "1,2";
+		final AtomicLongArray atomicLongArray = Convert.convert(AtomicLongArray.class, str);
+		Assert.assertEquals("[1, 2]", atomicLongArray.toString());
 	}
 
 	@Data

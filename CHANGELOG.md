@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.5 (2020-10-16)
+# 5.4.5 (2020-10-17)
 
 ### 新特性
 * 【core   】     ConsoleTable代码优化（pr#190@Gitee）
@@ -20,6 +20,8 @@
 * 【core   】     优化针对list的split方法（pr#194@Gitee）
 * 【poi    】     ExcelWriter增加setRowStyle方法
 * 【core   】     Assert增加函数接口（pr#1166@Github）
+* 【core   】     新增AtomicIntegerArray、AtomicLongArray转换
+* 【extra  】     PinyinUtil新增Bopomofo4j支持
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）

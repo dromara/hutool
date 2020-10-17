@@ -234,6 +234,12 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.rnkrsoft.bopomofo4j</groupId>
+			<artifactId>bopomofo4j</artifactId>
+			<version>1.0.0</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 			<version>${cglib.version}</version>

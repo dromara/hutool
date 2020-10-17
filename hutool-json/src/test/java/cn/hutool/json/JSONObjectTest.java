@@ -9,6 +9,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.ResultDto;
@@ -27,9 +28,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * JSONObject单元测试
@@ -425,6 +430,14 @@ public class JSONObjectTest {
 		Assert.assertEquals("{\"date\":[\"2020-06-05 11:16:11\"],\"bbb\":[\"222\"],\"aaa\":[\"123\"]}", json.toString());
 	}
 
+	@Test
+	public void getTimestampTest(){
+		String timeStr = "1970-01-01 00:00:00";
+		final JSONObject jsonObject = JSONUtil.createObj().set("time", timeStr);
+		final Timestamp time = jsonObject.get("time", Timestamp.class);
+		Assert.assertEquals("1970-01-01 00:00:00.0", time.toString());
+	}
+
 	public enum TestEnum {
 		TYPE_A, TYPE_B
 	}
@@ -496,5 +509,15 @@ public class JSONObjectTest {
 		public String getFieldToIgnore(){
 			return this.fieldToIgnore;
 		}
+	}
+
+	@Test
+	public void setEntryTest(){
+		final HashMap<String, String> of = MapUtil.of("test", "testValue");
+		final Set<Map.Entry<String, String>> entries = of.entrySet();
+		final Map.Entry<String, String> next = entries.iterator().next();
+
+		final JSONObject jsonObject = JSONUtil.parseObj(next);
+		Console.log(jsonObject);
 	}
 }
