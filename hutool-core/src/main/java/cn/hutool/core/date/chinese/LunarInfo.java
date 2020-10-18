@@ -40,13 +40,18 @@ public class LunarInfo {
 			0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252,//2090-2099
 	};
 
+	// 支持的最大年限
+	public static final int MAX_YEAR = BASE_YEAR + LUNAR_CODE.length - 1;
+
 	/**
 	 * 获取支持的最大年（包括）
 	 *
 	 * @return 最大年（包括）
+	 * @deprecated 使用 {@link #MAX_YEAR}
 	 */
+	@Deprecated
 	public static int getMaxYear() {
-		return BASE_YEAR + LUNAR_CODE.length - 1;
+		return MAX_YEAR;
 	}
 
 	/**

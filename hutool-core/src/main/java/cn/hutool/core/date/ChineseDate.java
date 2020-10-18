@@ -21,7 +21,9 @@ public class ChineseDate {
 	/**
 	 * 1900-01-31
 	 */
-	private static final long BASE_DATE = -2206425943000L;
+//	private static final long BASE_DATE = -2206425943000L;
+	private static final long BASE_DAY = -25538;
+
 	//农历年
 	private final int year;
 	//农历月
@@ -46,13 +48,12 @@ public class ChineseDate {
 	 */
 	public ChineseDate(Date date) {
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((date.getTime() - BASE_DATE) / DateUnit.DAY.getMillis());
+		int offset = (int) ((date.getTime() / DateUnit.DAY.getMillis()) - BASE_DAY);
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;
 		int iYear = LunarInfo.BASE_YEAR;
-		final int maxYear = LunarInfo.getMaxYear();
-		for (; iYear <= maxYear; iYear++) {
+		for (; iYear <= LunarInfo.MAX_YEAR; iYear++) {
 			daysOfYear = LunarInfo.yearDays(iYear);
 			if (offset < daysOfYear) {
 				break;
@@ -299,7 +300,7 @@ public class ChineseDate {
 		if (D >= firstNode) {
 			gzM = GanZhi.cyclicalm((Y - LunarInfo.BASE_YEAR) * 12 + M + 12);
 		}
-		int dayCyclical = (int) ((DateUtil.parseDate(Y + "-" + M + "-" + "1").getTime() - BASE_DATE + 2592000000L) / DateUnit.DAY.getMillis()) + 10;
+		int dayCyclical = (int) ((DateUtil.parseDate(Y + "-" + M + "-" + "1").getTime() / DateUnit.DAY.getMillis() - BASE_DAY + 30)) + 10;
 		String gzD = GanZhi.cyclicalm(dayCyclical + D - 1);
 		return gzyear + "年" + gzM + "月" + gzD + "日";
 	}

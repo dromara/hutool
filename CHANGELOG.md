@@ -22,6 +22,7 @@
 * 【core   】     Assert增加函数接口（pr#1166@Github）
 * 【core   】     新增AtomicIntegerArray、AtomicLongArray转换
 * 【extra  】     PinyinUtil新增Bopomofo4j支持
+* 【core   】     新增TemporalUtil工具类，新增时间相关方法
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
@@ -30,6 +31,7 @@
 * 【core   】     修复CaseInsensitiveMap的remove等方法并没有忽略大小写的问题（pr#1163@Gitee）
 * 【poi    】     修复合并单元格值读取错误的问题
 * 【poi    】     修复NamedSql解析形如col::numeric出错问题（issue#I1YHBX@Gitee）
+* 【core   】     修复计算相差天数导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 
