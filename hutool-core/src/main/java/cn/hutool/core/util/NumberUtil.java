@@ -1967,20 +1967,20 @@ public class NumberUtil {
 
 	/**
 	 * 数字转字符串<br>
-	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
+	 * 调用{@link Number#toString()}或 {@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0
 	 *
 	 * @param number A Number
 	 * @return A String.
 	 */
 	public static String toStr(Number number) {
-		if (null == number) {
-			throw new NullPointerException("Number is null !");
+		Assert.notNull(number, "Number is null !");
+
+		// BigDecimal单独处理，使用非科学计数法
+		if(number instanceof BigDecimal){
+			return toStr((BigDecimal)number);
 		}
 
-		if (false == ObjectUtil.isValidIfNumber(number)) {
-			throw new IllegalArgumentException("Number is non-finite!");
-		}
-
+		Assert.isTrue(isValidNumber(number), "Number is non-finite!");
 		// 去掉小数点儿后多余的0
 		String string = number.toString();
 		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
@@ -1995,6 +1995,19 @@ public class NumberUtil {
 	}
 
 	/**
+	 * {@link BigDecimal}数字转字符串<br>
+	 * 调用{@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0
+	 *
+	 * @param bigDecimal A {@link BigDecimal}
+	 * @return A String.
+	 * @since 5.4.6
+	 */
+	public static String toStr(BigDecimal bigDecimal) {
+		Assert.notNull(bigDecimal, "BigDecimal is null !");
+		return bigDecimal.stripTrailingZeros().toPlainString();
+	}
+
+	/**
 	 * 数字转{@link BigDecimal}
 	 *
 	 * @param number 数字
@@ -2005,6 +2018,17 @@ public class NumberUtil {
 		if (null == number) {
 			return BigDecimal.ZERO;
 		}
+
+		if(number instanceof BigDecimal){
+			return (BigDecimal) number;
+		} else if (number instanceof Long) {
+			return new BigDecimal((Long) number);
+		} else if (number instanceof Integer) {
+			return new BigDecimal((Integer) number);
+		} else if (number instanceof BigInteger) {
+			return new BigDecimal((BigInteger) number);
+		}
+
 		return toBigDecimal(number.toString());
 	}
 
@@ -2017,6 +2041,38 @@ public class NumberUtil {
 	 */
 	public static BigDecimal toBigDecimal(String number) {
 		return (null == number) ? BigDecimal.ZERO : new BigDecimal(number);
+	}
+
+	/**
+	 * 数字转{@link BigInteger}
+	 *
+	 * @param number 数字
+	 * @return {@link BigInteger}
+	 * @since 5.4.5
+	 */
+	public static BigInteger toBigInteger(Number number) {
+		if (null == number) {
+			return BigInteger.ZERO;
+		}
+
+		if(number instanceof BigInteger){
+			return (BigInteger) number;
+		} else if (number instanceof Long) {
+			return BigInteger.valueOf((Long) number);
+		}
+
+		return toBigInteger(number.longValue());
+	}
+
+	/**
+	 * 数字转{@link BigInteger}
+	 *
+	 * @param number 数字
+	 * @return {@link BigInteger}
+	 * @since 5.4.5
+	 */
+	public static BigInteger toBigInteger(String number) {
+		return (null == number) ? BigInteger.ZERO : new BigInteger(number);
 	}
 
 	/**

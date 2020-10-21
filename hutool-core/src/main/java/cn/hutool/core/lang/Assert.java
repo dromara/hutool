@@ -68,7 +68,7 @@ public class Assert {
 	 * 断言是否为假，如果为 {@code true} 抛出指定类型异常<br>
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 *  Assert.isFalse(i &gt; 0, ()->{
+	 *  Assert.isFalse(i &gt; 0, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -120,7 +120,7 @@ public class Assert {
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出指定类型异常
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.isNull(value, ()->{
+	 * Assert.isNull(value, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -174,7 +174,7 @@ public class Assert {
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出指定类型异常
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.notNull(clazz, ()->{
+	 * Assert.notNull(clazz, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -234,7 +234,7 @@ public class Assert {
 	/**
 	 * 检查给定字符串是否为空，为空抛出自定义异常，并使用指定的函数获取错误信息返回。
 	 * <pre class="code">
-	 * Assert.notEmpty(name, ()->{
+	 * Assert.notEmpty(name, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -296,7 +296,7 @@ public class Assert {
 	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出自定义异常。
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.notBlank(name, ()->{
+	 * Assert.notBlank(name, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -357,7 +357,7 @@ public class Assert {
 	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.notContain(name, "rod", ()->{
+	 * Assert.notContain(name, "rod", ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return ");
 	 *  });
@@ -419,7 +419,7 @@ public class Assert {
 	 * 并使用指定的函数获取错误信息返回
 	 *
 	 * <pre class="code">
-	 * Assert.notEmpty(array, ()->{
+	 * Assert.notEmpty(array, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -479,7 +479,7 @@ public class Assert {
 	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.noNullElements(array, ()->{
+	 * Assert.noNullElements(array, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return ");
 	 *  });
@@ -538,7 +538,7 @@ public class Assert {
 	 * 断言给定集合非空
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.notEmpty(collection, ()->{
+	 * Assert.notEmpty(collection, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -601,7 +601,7 @@ public class Assert {
 	 * 断言给定Map非空
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.notEmpty(map, ()->{
+	 * Assert.notEmpty(map, ()-&gt;{
 	 *      // to query relation message
 	 *      return new IllegalArgumentException("relation message to return");
 	 *  });
@@ -744,7 +744,7 @@ public class Assert {
 	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
 	 * 并使用指定的函数获取错误信息返回
 	 * <pre class="code">
-	 * Assert.state(id == null, ()->{
+	 * Assert.state(id == null, ()-&gt;{
 	 *      // to query relation message
 	 *      return "relation message to return ";
 	 *  });

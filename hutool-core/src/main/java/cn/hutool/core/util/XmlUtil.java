@@ -352,9 +352,35 @@ public class XmlUtil {
 	 *
 	 * @param doc XML文档
 	 * @return XML字符串
+	 * @since 5.4.5
+	 */
+	public static String toStr(Node doc) {
+		return toStr(doc, false);
+	}
+
+	/**
+	 * 将XML文档转换为String<br>
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
+	 * 默认非格式化输出，若想格式化请使用{@link #format(Document)}
+	 *
+	 * @param doc XML文档
+	 * @return XML字符串
 	 */
 	public static String toStr(Document doc) {
-		return toStr(doc, false);
+		return toStr((Node)doc);
+	}
+
+	/**
+	 * 将XML文档转换为String<br>
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 *
+	 * @param doc      XML文档
+	 * @param isPretty 是否格式化输出
+	 * @return XML字符串
+	 * @since 5.4.5
+	 */
+	public static String toStr(Node doc, boolean isPretty) {
+		return toStr(doc, CharsetUtil.UTF_8, isPretty);
 	}
 
 	/**
@@ -367,7 +393,21 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, boolean isPretty) {
-		return toStr(doc, CharsetUtil.UTF_8, isPretty);
+		return toStr((Node)doc, isPretty);
+	}
+
+	/**
+	 * 将XML文档转换为String<br>
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 *
+	 * @param doc      XML文档
+	 * @param charset  编码
+	 * @param isPretty 是否格式化输出
+	 * @return XML字符串
+	 * @since 5.4.5
+	 */
+	public static String toStr(Node doc, String charset, boolean isPretty) {
+		return toStr(doc, charset, isPretty, false);
 	}
 
 	/**
@@ -381,7 +421,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
-		return toStr(doc, charset, isPretty, false);
+		return toStr((Node)doc, charset, isPretty);
 	}
 
 	/**
@@ -395,7 +435,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */
-	public static String toStr(Document doc, String charset, boolean isPretty, boolean omitXmlDeclaration) {
+	public static String toStr(Node doc, String charset, boolean isPretty, boolean omitXmlDeclaration) {
 		final StringWriter writer = StrUtil.getWriter();
 		try {
 			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);

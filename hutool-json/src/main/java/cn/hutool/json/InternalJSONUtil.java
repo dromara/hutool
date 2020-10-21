@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -239,6 +240,9 @@ final class InternalJSONUtil {
 	 */
 	private static String formatDate(Object dateObj, String format) {
 		if (StrUtil.isNotBlank(format)) {
+			if(dateObj instanceof TemporalAccessor){
+				return TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
+			}
 			//用户定义了日期格式
 			return JSONUtil.quote(DateUtil.format(Convert.toDate(dateObj), format));
 		}

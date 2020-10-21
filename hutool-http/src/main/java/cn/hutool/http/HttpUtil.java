@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
@@ -869,5 +870,22 @@ public class HttpUtil {
 	 */
 	public static SimpleServer createServer(int port) {
 		return new SimpleServer(port);
+	}
+
+	/**
+	 * 构建简单的账号秘密验证信息，构建后类似于：
+	 * <pre>
+	 *     Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 *
+	 * @param username 账号
+	 * @param password 密码
+	 * @param charset 编码（如果账号或密码中有非ASCII字符适用）
+	 * @return 密码验证信息
+	 * @since 5.4.6
+	 */
+	public static String buildBasicAuth(String username, String password, Charset charset){
+		final String data = username.concat(":").concat(password);
+		return "Basic " + Base64.encode(data, charset);
 	}
 }

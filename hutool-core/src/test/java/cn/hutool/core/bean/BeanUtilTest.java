@@ -364,12 +364,26 @@ public class BeanUtilTest {
 
 	@Getter
 	@Setter
-	public static class Person {
+	public static class SubPersonWithOverlayTransientField extends PersonWithTransientField {
+		// 覆盖父类中 transient 属性
 		private String name;
+	}
+
+	@Getter
+	@Setter
+	public static class Person {
+		private  String name;
 		private int age;
 		private String openid;
 	}
 
+	@Getter
+	@Setter
+	public static class PersonWithTransientField {
+		private transient String name;
+		private int age;
+		private String openid;
+	}
 	public static class Person2 {
 
 		public Person2(String name, int age, String openid) {
@@ -381,6 +395,23 @@ public class BeanUtilTest {
 		public String name;
 		public int age;
 		public String openid;
+	}
+
+	/**
+	 * <a href="https://github.com/looly/hutool/issues/1173">#1173</a>
+	 */
+	@Test
+	public void beanToBeanOverlayFieldTest() {
+		SubPersonWithOverlayTransientField source = new SubPersonWithOverlayTransientField();
+		source.setName("zhangsan");
+		source.setAge(20);
+		source.setOpenid("1");
+		SubPersonWithOverlayTransientField dest = new SubPersonWithOverlayTransientField();
+		BeanUtil.copyProperties(source, dest);
+
+		Assert.assertEquals(source.getName(), dest.getName());
+		Assert.assertEquals(source.getAge(), dest.getAge());
+		Assert.assertEquals(source.getOpenid(), dest.getOpenid());
 	}
 
 	@Test
@@ -434,6 +465,8 @@ public class BeanUtilTest {
 
 	@Data
 	public static class HllFoodEntity implements Serializable {
+		private static final long serialVersionUID = 1L;
+
 		private String bookId;
 		@Alias("code")
 		private String code2;

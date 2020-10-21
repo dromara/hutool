@@ -20,7 +20,7 @@ import java.time.temporal.TemporalField;
  * @author looly
  * @since 5.3.9
  */
-public class TemporalAccessorUtil {
+public class TemporalAccessorUtil extends TemporalUtil{
 
 	/**
 	 * 安全获取时间的某个属性，属性不存在返回0

@@ -279,4 +279,12 @@ public class NumberUtilTest {
 		final Set<?> set = Convert.convert(Set.class, ints);
 		Assert.assertEquals(5, set.size());
 	}
+
+	@Test
+	public void toStrTest(){
+		Assert.assertEquals("1", NumberUtil.toStr(new BigDecimal("1.0000000000")));
+		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.00000"), new BigDecimal("9600.00000"))));
+		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
+		Assert.assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
+	}
 }

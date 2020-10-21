@@ -9,11 +9,14 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
@@ -412,14 +415,43 @@ public class LocalDateTimeUtil {
 	 * <p>
 	 * 返回结果为{@link Duration}对象，通过调用toXXX方法返回相差单位
 	 *
-	 * @param startTime 开始时间
-	 * @param endTime   结束时间
+	 * @param startTimeInclude 开始时间（包含）
+	 * @param endTimeExclude   结束时间（不包含）
 	 * @return 时间差 {@link Duration}对象
+	 * @see TemporalUtil#between(Temporal, Temporal)
 	 */
-	public static Duration between(LocalDateTime startTime, LocalDateTime endTime) {
-		return Duration.between(startTime, endTime);
+	public static Duration between(LocalDateTime startTimeInclude, LocalDateTime endTimeExclude) {
+		return TemporalUtil.between(startTimeInclude, endTimeExclude);
 	}
 
+	/**
+	 * 获取两个日期的差，如果结束时间早于开始时间，获取结果为负。
+	 * <p>
+	 * 返回结果为时间差的long值
+	 *
+	 * @param startTimeInclude 开始时间（包括）
+	 * @param endTimeExclude   结束时间（不包括）
+	 * @param unit             时间差单位
+	 * @return 时间差
+	 * @since 5.4.5
+	 */
+	public static long between(LocalDateTime startTimeInclude, LocalDateTime endTimeExclude, ChronoUnit unit) {
+		return TemporalUtil.between(startTimeInclude, endTimeExclude, unit);
+	}
+
+	/**
+	 * 获取两个日期的表象时间差，如果结束时间早于开始时间，获取结果为负。
+	 * <p>
+	 * 比如2011年2月1日，和2021年8月11日，日相差了10天，月相差6月
+	 *
+	 * @param startTimeInclude 开始时间（包括）
+	 * @param endTimeExclude   结束时间（不包括）
+	 * @return 时间差
+	 * @since 5.4.5
+	 */
+	public static Period betweenPeriod(LocalDate startTimeInclude, LocalDate endTimeExclude) {
+		return Period.between(startTimeInclude, endTimeExclude);
+	}
 
 	/**
 	 * 修改为一天的开始时间，例如：2020-02-02 00:00:00,000

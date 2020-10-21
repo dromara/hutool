@@ -26,7 +26,7 @@ public class DateBetween implements Serializable{
 	 * 
 	 * @param begin 起始时间
 	 * @param end 结束时间
-	 * @return {@link DateBetween}
+	 * @return DateBetween
 	 * @since 3.2.3
 	 */
 	public static DateBetween create(Date begin, Date end) {
@@ -40,7 +40,7 @@ public class DateBetween implements Serializable{
 	 * @param begin 起始时间
 	 * @param end 结束时间
 	 * @param isAbs 日期间隔是否只保留绝对值正数
-	 * @return {@link DateBetween}
+	 * @return DateBetween
 	 * @since 3.2.3
 	 */
 	public static DateBetween create(Date begin, Date end, boolean isAbs) {

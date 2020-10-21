@@ -3,7 +3,21 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.5 (2020-10-16)
+# 5.4.6 (2020-10-21)
+
+### 新特性
+* 【http   】     HttpRequest增加basicProxyAuth方法（issue#I1YQGM@Gitee）
+* 【core   】     NumberUtil.toStr修改逻辑，去掉BigDecimal的科学计数表示（pr#196@Gitee）
+
+### Bug修复
+* 【core   】     修复ChineseDate没有忽略时分秒导致计算错误问题（issue#I1YW12@Gitee）
+* 【core   】     修复FileUtil中，copyFile方法断言判断参数传递错误（issue#I1Z2NY@Gitee）
+* 【core   】     修复BeanDesc读取父类属性覆盖子类属性导致的问题（pr#1175@Github）
+* 【aop    】     修复SimpleAspect一个重载导致的问题，去掉重载的after方法（issue#I1YUG9@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.4.5 (2020-10-18)
 
 ### 新特性
 * 【core   】     ConsoleTable代码优化（pr#190@Gitee）
@@ -20,6 +34,9 @@
 * 【core   】     优化针对list的split方法（pr#194@Gitee）
 * 【poi    】     ExcelWriter增加setRowStyle方法
 * 【core   】     Assert增加函数接口（pr#1166@Github）
+* 【core   】     新增AtomicIntegerArray、AtomicLongArray转换
+* 【extra  】     PinyinUtil新增Bopomofo4j支持
+* 【core   】     新增TemporalUtil工具类，新增时间相关方法
 
 ### Bug修复
 * 【core   】     解决农历判断节日未判断大小月导致的问题（issue#I1XHSF@Gitee）
@@ -28,6 +45,7 @@
 * 【core   】     修复CaseInsensitiveMap的remove等方法并没有忽略大小写的问题（pr#1163@Gitee）
 * 【poi    】     修复合并单元格值读取错误的问题
 * 【poi    】     修复NamedSql解析形如col::numeric出错问题（issue#I1YHBX@Gitee）
+* 【core   】     修复计算相差天数导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 

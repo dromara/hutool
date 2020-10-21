@@ -85,4 +85,20 @@ public class ChineseDateTest {
 		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2023-01-20"));
 		Assert.assertTrue(StrUtil.isEmpty(chineseDate.getFestivals()));
 	}
+
+	@Test
+	public void dateTest(){
+		// 修复这两个日期不正确的问题
+		// 问题出在计算与1900-01-31相差天数的问题上了，相差天数非整天
+		ChineseDate date = new ChineseDate(DateUtil.parseDate("1991-09-14"));
+		Assert.assertEquals("辛未羊年 八月初七", date.toString());
+		date = new ChineseDate(DateUtil.parseDate("1991-09-15"));
+		Assert.assertEquals("辛未羊年 八月初八", date.toString());
+	}
+
+	@Test
+	public void dateTest2(){
+		ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19 11:12:23"));
+		Assert.assertEquals("庚子鼠年 九月初三", date.toString());
+	}
 }

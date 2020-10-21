@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.4.5-SNAPSHOT</version>
+		<version>5.4.6-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -231,6 +231,12 @@
 			<groupId>com.github.stuxuhai</groupId>
 			<artifactId>jpinyin</artifactId>
 			<version>1.1.8</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.rnkrsoft.bopomofo4j</groupId>
+			<artifactId>bopomofo4j</artifactId>
+			<version>1.0.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

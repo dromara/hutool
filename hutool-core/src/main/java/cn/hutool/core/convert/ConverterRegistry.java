@@ -3,6 +3,8 @@ package cn.hutool.core.convert;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.AtomicBooleanConverter;
+import cn.hutool.core.convert.impl.AtomicIntegerArrayConverter;
+import cn.hutool.core.convert.impl.AtomicLongArrayConverter;
 import cn.hutool.core.convert.impl.AtomicReferenceConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.convert.impl.BooleanConverter;
@@ -69,7 +71,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -422,6 +426,10 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(WeakReference.class, new ReferenceConverter(WeakReference.class));// since 3.0.8
 		defaultConverterMap.put(SoftReference.class, new ReferenceConverter(SoftReference.class));// since 3.0.8
 		defaultConverterMap.put(AtomicReference.class, new AtomicReferenceConverter());// since 3.0.8
+
+		//AtomicXXXArray，since 5.4.5
+		defaultConverterMap.put(AtomicIntegerArray.class, new AtomicIntegerArrayConverter());
+		defaultConverterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
 
 		// 其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
