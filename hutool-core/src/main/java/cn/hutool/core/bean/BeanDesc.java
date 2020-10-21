@@ -146,9 +146,8 @@ public class BeanDesc implements Serializable {
 			if (false == ModifierUtil.isStatic(field)) {
 				//只针对非static属性
 				prop = createProp(field, methods);
-				PropDesc finalProp = prop;
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
-				this.propMap.putIfAbsent(prop.getFieldName(), finalProp);
+				this.propMap.putIfAbsent(prop.getFieldName(), prop);
 			}
 		}
 		return this;

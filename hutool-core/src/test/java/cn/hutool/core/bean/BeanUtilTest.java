@@ -465,6 +465,8 @@ public class BeanUtilTest {
 
 	@Data
 	public static class HllFoodEntity implements Serializable {
+		private static final long serialVersionUID = 1L;
+
 		private String bookId;
 		@Alias("code")
 		private String code2;
