@@ -97,5 +97,10 @@ public class ListUtilTest {
 		Assert.assertArrayEquals(new int[]{3,4},c2);
 		Assert.assertArrayEquals(new int[]{5},c3);
 		Assert.assertArrayEquals(new int[]{},c4);
+
+
+		PageUtil.setFirstPageNo(1);
+		int[] d1 = ListUtil.page(0,8,a).stream().mapToInt(Integer::valueOf).toArray();
+		Assert.assertArrayEquals(new int[]{1,2,3,4,5},d1);
 	}
 }
