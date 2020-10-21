@@ -202,6 +202,6 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("604.1.38", ua.getEngineVersion());
 		Assert.assertEquals("iPhone", ua.getOs().toString());
 		Assert.assertEquals("iPhone", ua.getPlatform().toString());
-		Assert.assertFalse(ua.isMobile());
+		Assert.assertTrue(ua.isMobile());
 	}
 }
