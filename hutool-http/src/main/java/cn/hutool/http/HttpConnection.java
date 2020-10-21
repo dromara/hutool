@@ -531,7 +531,7 @@ public class HttpConnection {
 		final URLConnection conn = openConnection();
 		if (false == conn instanceof HttpURLConnection) {
 			// 防止其它协议造成的转换异常
-			throw new HttpException("'{}' is not a http connection, make sure URL is format for http.", conn.getClass().getName());
+			throw new HttpException("'{}' of URL [{}] is not a http connection, make sure URL is format for http.", conn.getClass().getName(), this.url);
 		}
 
 		return (HttpURLConnection) conn;

@@ -204,4 +204,10 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
 	}
+
+	@Test
+	public void dotEncodeTest(){
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
+	}
 }
