@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【http   】     HttpRequest增加basicProxyAuth方法（issue#I1YQGM@Gitee）
+* 【core   】     NumberUtil.toStr修改逻辑，去掉BigDecimal的科学计数表示（pr#196@Gitee）
 
 ### Bug修复
 * 【core   】     修复ChineseDate没有忽略时分秒导致计算错误问题（issue#I1YW12@Gitee）

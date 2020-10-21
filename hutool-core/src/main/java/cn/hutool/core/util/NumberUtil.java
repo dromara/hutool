@@ -1967,20 +1967,20 @@ public class NumberUtil {
 
 	/**
 	 * 数字转字符串<br>
-	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
+	 * 调用{@link Number#toString()}或 {@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0
 	 *
 	 * @param number A Number
 	 * @return A String.
 	 */
 	public static String toStr(Number number) {
-		if (null == number) {
-			throw new NullPointerException("Number is null !");
+		Assert.notNull(number, "Number is null !");
+
+		// BigDecimal单独处理，使用非科学计数法
+		if(number instanceof BigDecimal){
+			return toStr((BigDecimal)number);
 		}
 
-		if (false == ObjectUtil.isValidIfNumber(number)) {
-			throw new IllegalArgumentException("Number is non-finite!");
-		}
-
+		Assert.isTrue(isValidNumber(number), "Number is non-finite!");
 		// 去掉小数点儿后多余的0
 		String string = number.toString();
 		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
@@ -1992,6 +1992,19 @@ public class NumberUtil {
 			}
 		}
 		return string;
+	}
+
+	/**
+	 * {@link BigDecimal}数字转字符串<br>
+	 * 调用{@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0
+	 *
+	 * @param bigDecimal A {@link BigDecimal}
+	 * @return A String.
+	 * @since 5.4.6
+	 */
+	public static String toStr(BigDecimal bigDecimal) {
+		Assert.notNull(bigDecimal, "BigDecimal is null !");
+		return bigDecimal.stripTrailingZeros().toPlainString();
 	}
 
 	/**
