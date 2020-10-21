@@ -1,6 +1,5 @@
 package cn.hutool.http;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
@@ -981,16 +980,32 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 简单验证
+	 * 简单验证，生成的头信息类似于：
+	 * <pre>
+	 * Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
 	 *
 	 * @param username 用户名
 	 * @param password 密码
-	 * @return HttpRequest
+	 * @return this
 	 */
 	public HttpRequest basicAuth(String username, String password) {
-		final String data = username.concat(":").concat(password);
-		final String base64 = Base64.encode(data, charset);
-		return auth("Basic " + base64);
+		return auth(HttpUtil.buildBasicAuth(username, password, charset));
+	}
+
+	/**
+	 * 简单代理验证，生成的头信息类似于：
+	 * <pre>
+	 * Proxy-Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 *
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return this
+	 * @since 5.4.6
+	 */
+	public HttpRequest basicProxyAuth(String username, String password) {
+		return proxyAuth(HttpUtil.buildBasicAuth(username, password, charset));
 	}
 
 	/**
@@ -1002,6 +1017,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest auth(String content) {
 		header(Header.AUTHORIZATION, content, true);
+		return this;
+	}
+
+	/**
+	 * 验证，简单插入Authorization头
+	 *
+	 * @param content 验证内容
+	 * @return HttpRequest
+	 * @since 5.4.6
+	 */
+	public HttpRequest proxyAuth(String content) {
+		header(Header.PROXY_AUTHORIZATION, content, true);
 		return this;
 	}
 

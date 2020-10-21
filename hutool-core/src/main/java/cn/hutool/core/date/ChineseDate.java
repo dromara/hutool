@@ -48,7 +48,7 @@ public class ChineseDate {
 	 */
 	public ChineseDate(Date date) {
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((date.getTime() / DateUnit.DAY.getMillis()) - BASE_DAY);
+		int offset = (int) ((DateUtil.beginOfDay(date).getTime() / DateUnit.DAY.getMillis()) - BASE_DAY);
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;

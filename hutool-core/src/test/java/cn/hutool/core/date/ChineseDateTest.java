@@ -95,4 +95,10 @@ public class ChineseDateTest {
 		date = new ChineseDate(DateUtil.parseDate("1991-09-15"));
 		Assert.assertEquals("辛未羊年 八月初八", date.toString());
 	}
+
+	@Test
+	public void dateTest2(){
+		ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19 11:12:23"));
+		Assert.assertEquals("庚子鼠年 九月初三", date.toString());
+	}
 }
