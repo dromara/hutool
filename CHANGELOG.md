@@ -16,6 +16,7 @@
 * 【core   】     修复FileUtil中，copyFile方法断言判断参数传递错误（issue#I1Z2NY@Gitee）
 * 【core   】     修复BeanDesc读取父类属性覆盖子类属性导致的问题（pr#1175@Github）
 * 【aop    】     修复SimpleAspect一个重载导致的问题，去掉重载的after方法（issue#I1YUG9@Gitee）
+* 【poi    】     修复03 sax读取日期问题（issue#I1Z83N@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -114,5 +114,5 @@ public interface ExcelSaxReader<T> {
 	 */
 	default T read(InputStream in, int rid) throws POIException{
 		return read(in, String.valueOf(rid));
-	};
+	}
 }

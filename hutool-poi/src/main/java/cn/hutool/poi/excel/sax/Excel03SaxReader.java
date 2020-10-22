@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,7 +15,19 @@ import org.apache.poi.hssf.eventusermodel.MissingRecordAwareHSSFListener;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.LastCellOfRowDummyRecord;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.MissingCellDummyRecord;
 import org.apache.poi.hssf.model.HSSFFormulaParser;
-import org.apache.poi.hssf.record.*;
+import org.apache.poi.hssf.record.BOFRecord;
+import org.apache.poi.hssf.record.BlankRecord;
+import org.apache.poi.hssf.record.BoolErrRecord;
+import org.apache.poi.hssf.record.BoundSheetRecord;
+import org.apache.poi.hssf.record.CellValueRecordInterface;
+import org.apache.poi.hssf.record.EOFRecord;
+import org.apache.poi.hssf.record.FormulaRecord;
+import org.apache.poi.hssf.record.LabelRecord;
+import org.apache.poi.hssf.record.LabelSSTRecord;
+import org.apache.poi.hssf.record.NumberRecord;
+import org.apache.poi.hssf.record.Record;
+import org.apache.poi.hssf.record.SSTRecord;
+import org.apache.poi.hssf.record.StringRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -294,12 +307,10 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			case NumberRecord.sid: // 数字类型
 				final NumberRecord numrec = (NumberRecord) record;
 				final String formatString = formatListener.getFormatString(numrec);
-				if (StrUtil.contains(formatString, StrUtil.DOT)) {
-					//浮点数
-					value = numrec.getValue();
-				} else if (StrUtil.containsAny(formatString, StrUtil.SLASH, StrUtil.COLON, "年", "月", "日", "时", "分", "秒")) {
-					//日期
-					value = ExcelSaxUtil.getDateValue(numrec.getValue());
+				if(false == StrUtil.contains(formatString, '%') &&
+						false == "General".equalsIgnoreCase(formatString)){
+					// 可能为日期格式
+					value = DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(numrec.getValue()));
 				} else {
 					final double doubleValue = numrec.getValue();
 					final long longPart = (long) doubleValue;
