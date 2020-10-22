@@ -92,7 +92,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得一个类中所有字段列表，直接反射获取，无缓存
+	 * 获得一个类中所有构造列表，直接反射获取，无缓存
 	 *
 	 * @param beanClass 类
 	 * @return 字段列表
