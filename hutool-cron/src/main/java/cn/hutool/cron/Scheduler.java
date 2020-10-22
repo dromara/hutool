@@ -229,7 +229,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}对应的String表达式
@@ -241,7 +241,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}对应的String表达式
@@ -253,7 +253,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}

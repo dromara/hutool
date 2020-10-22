@@ -57,8 +57,6 @@ public class ListUtilTest {
 
 	@Test
 	public void pageTest(){
-
-
 		List<Integer> a = ListUtil.toLinkedList(1, 2, 3,4,5);
 
 		PageUtil.setFirstPageNo(1);
