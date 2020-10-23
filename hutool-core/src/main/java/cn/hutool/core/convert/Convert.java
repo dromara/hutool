@@ -17,13 +17,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -626,6 +620,20 @@ public class Convert {
 	public static <T> T convert(Class<T> type, Object value) throws ConvertException{
 		return convert((Type)type, value);
 	}
+
+	/**
+	 * 转换值为指定类型 (重载)
+	 *
+	 * @param value 值
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @return 转换后的值
+	 * @since 5.4.7
+	 * @throws ConvertException 转换器不存在
+	 */
+	public static <T> T convert(Object value, Class<T> type) throws ConvertException{
+		return convert((Type)type, value);
+	}
 	
 	/**
 	 * 转换值为指定类型
@@ -665,6 +673,21 @@ public class Convert {
 	 * @since 4.0.0
 	 */
 	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+		return convert((Type)type, value, defaultValue);
+	}
+
+	/**
+	 * 转换值为指定类型 (重载)
+	 *
+	 * @param value 值
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param defaultValue 默认值
+	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
+	 * @since 5.4.7
+	 */
+	public static <T> T convert(Object value, Class<T> type, T defaultValue) throws ConvertException {
 		return convert((Type)type, value, defaultValue);
 	}
 	
@@ -734,7 +757,71 @@ public class Convert {
 			throw e;
 		}
 	}
-	
+
+	/**
+	 * List转换值为指定类型
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <O> 原始类型
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param list<O> 原始list
+	 * @return 转换后的list<T>
+	 * @since 5.4.7
+	 */
+	public static <O, T> List<T> convert(Class<T> type, List<O> list) {
+		LinkedList<T> linkedList = new LinkedList<>();
+		for (O e : list) {
+			linkedList.add(Convert.convert(type, e));
+		}
+		return linkedList;
+	}
+
+	/**
+	 * List转换值为指定类型 (重载)
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <O> 原始类型
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param list<O> 原始list
+	 * @return 转换后的list<T>
+	 * @since 5.4.7
+	 */
+	public static <O, T> List<T> convert(List<O> list, Class<T> type) {
+		return convert(type,list);
+	}
+
+	/**
+	 * List转换值为指定类型 (重载)
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <O> 原始类型
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param list<O> 原始list
+	 * @return 转换后的list<T>
+	 * @since 5.4.7
+	 */
+	public static <O, T> List<T> convertList(Class<T> type, List<O> list) {
+		return convert(type,list);
+	}
+
+	/**
+	 * List转换值为指定类型 (重载)
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <O> 原始类型
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param list<O> 原始list
+	 * @return 转换后的list<T>
+	 * @since 5.4.7
+	 */
+	public static <O, T> List<T> convertList(List<O> list, Class<T> type) {
+		return convert(type,list);
+	}
+
 	// ----------------------------------------------------------------------- 全角半角转换
 	/**
 	 * 半角转全角
