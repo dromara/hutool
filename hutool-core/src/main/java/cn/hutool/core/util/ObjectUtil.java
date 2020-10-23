@@ -14,7 +14,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * 对象工具类，包括判空、克隆、序列化等操作
@@ -295,6 +300,37 @@ public class ObjectUtil {
 	 */
 	public static <T> T defaultIfNull(final T object, final T defaultValue) {
 		return (null != object) ? object : defaultValue;
+	}
+
+
+	/**
+	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
+	 * @param source Object 类型对象
+	 * @param handle 自定义的处理方法
+	 * @param defaultValue 默认为空的返回值
+	 * @param <T> 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @return
+	 */
+	public static <T> T defaultIfNull(final Object source, Supplier<? extends T> handle, final T defaultValue) {
+		if (Objects.nonNull(source)) {
+			return handle.get();
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * 如果给定对象为{@code null}或者""返回默认值, 否则返回自定义handle处理后的返回值
+	 * @param str  String 类型
+	 * @param handle 自定义的处理方法
+	 * @param defaultValue 默认为空的返回值
+	 * @param <T> 被检查对象为{@code null}或者 ""返回默认值，否则返回自定义handle处理后的返回值
+	 * @return
+	 */
+	public static <T> T defaultIfEmpty(final String str, Supplier<? extends T> handle, final T defaultValue) {
+		if (StrUtil.isNotEmpty(str)) {
+			return handle.get();
+		}
+		return defaultValue;
 	}
 
 	/**
