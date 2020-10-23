@@ -3,13 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.6 (2020-10-22)
+# 5.4.6 (2020-10-23)
 
 ### 新特性
 * 【http   】     HttpRequest增加basicProxyAuth方法（issue#I1YQGM@Gitee）
 * 【core   】     NumberUtil.toStr修改逻辑，去掉BigDecimal的科学计数表示（pr#196@Gitee）
 * 【core   】     ListUtil.page第一页页码使用PageUtil（pr#198@Gitee）
-* 【http   】     增加微信ua识别（pr#1178@Github）
+* 【http   】     增加微信、企业微信ua识别（pr#1179@Github）
 
 ### Bug修复
 * 【core   】     修复ChineseDate没有忽略时分秒导致计算错误问题（issue#I1YW12@Gitee）

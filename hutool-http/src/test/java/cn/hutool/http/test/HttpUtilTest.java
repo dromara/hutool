@@ -4,30 +4,19 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.ZipUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
-import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HttpUtilTest {
-	@Test
-	public void utlTest() {
-		File file = new File("/Users/Downloads/test");
-		File zipFile = new File(file, "demo.zip");
-		HttpUtil.downloadFile("http://192.168.6.106:8000/demo.zip", file);
-		ZipUtil.unzip(zipFile);
-	}
 
 	@Test
 	@Ignore
