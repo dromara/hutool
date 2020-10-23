@@ -539,7 +539,7 @@ public class ClassUtil {
 	 *
 	 * <pre>
 	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取{@link ClassUtil}类对应的ClassLoader
+	 * 2、获取{@link ClassLoaderUtil}类对应的ClassLoader
 	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
 	 * </pre>
 	 *

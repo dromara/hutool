@@ -25,6 +25,12 @@ import java.util.Map;
  */
 public class JSONArrayTest {
 
+	@Test(expected = JSONException.class)
+	public void createJSONArrayTest(){
+		// 集合类不支持转为JSONObject
+		new JSONArray(new JSONObject(), JSONConfig.create());
+	}
+
 	@Test
 	public void addTest() {
 		// 方法1

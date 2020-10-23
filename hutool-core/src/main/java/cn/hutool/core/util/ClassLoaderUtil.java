@@ -1,17 +1,17 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.convert.BasicType;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.JarClassLoader;
+import cn.hutool.core.lang.SimpleCache;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import cn.hutool.core.convert.BasicType;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.JarClassLoader;
-import cn.hutool.core.lang.SimpleCache;
 
 /**
  * {@link ClassLoader}工具类
@@ -71,7 +71,7 @@ public class ClassLoaderUtil {
 	 * 
 	 * <pre>
 	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取{@link ClassLoaderUtil}类对应的ClassLoader
+	 * 2、获取当前类对应的ClassLoader
 	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
 	 * </pre>
 	 * 

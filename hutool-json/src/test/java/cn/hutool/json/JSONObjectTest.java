@@ -520,4 +520,10 @@ public class JSONObjectTest {
 		final JSONObject jsonObject = JSONUtil.parseObj(next);
 		Console.log(jsonObject);
 	}
+
+	@Test(expected = JSONException.class)
+	public void createJSONObjectTest(){
+		// 集合类不支持转为JSONObject
+		new JSONObject(new JSONArray(), JSONConfig.create());
+	}
 }

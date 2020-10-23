@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -644,11 +645,19 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			return;
 		}
 
+		// 自定义序列化
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
 		if (serializer instanceof JSONObjectSerializer) {
-			// 自定义序列化
 			serializer.serialize(this, source);
-		} else if (source instanceof Map) {
+			return;
+		}
+
+		if(ArrayUtil.isArray(source) || source instanceof Iterable || source instanceof Iterator){
+			// 不支持集合类型转换为JSONObject
+			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
+		}
+
+		if (source instanceof Map) {
 			// Map
 			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 				this.set(Convert.toStr(e.getKey()), e.getValue());
@@ -668,7 +677,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
 			this.populateMap(source);
+		} else {
+			// 不支持对象类型转换为JSONObject
+			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
+
 	}
 
 	/**

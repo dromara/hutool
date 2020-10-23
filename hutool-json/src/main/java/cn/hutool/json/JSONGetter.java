@@ -65,7 +65,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 			return null;
 		}
 
-		if (object instanceof JSONArray) {
+		if (object instanceof JSON) {
 			return (JSONArray) object;
 		}
 		return new JSONArray(object, getConfig());
@@ -84,7 +84,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 			return null;
 		}
 
-		if (object instanceof JSONObject) {
+		if (object instanceof JSON) {
 			return (JSONObject) object;
 		}
 		return new JSONObject(object, getConfig());
