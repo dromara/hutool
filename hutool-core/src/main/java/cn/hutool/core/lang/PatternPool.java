@@ -5,7 +5,7 @@ import cn.hutool.core.util.ReUtil;
 import java.util.regex.Pattern;
 
 /**
- * 常用正则表达式集合
+ * 常用正则表达式集合，更多正则见:https://any86.github.io/any-rule/
  *
  * @author Looly
  */

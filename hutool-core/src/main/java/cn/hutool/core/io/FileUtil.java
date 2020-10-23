@@ -511,7 +511,7 @@ public class FileUtil extends PathUtil {
 	 * @return 总大小，bytes长度
 	 */
 	public static long size(File file) {
-		if (null == file || false == file.exists() || FileUtil.isSymlink(file)) {
+		if (null == file || false == file.exists() || isSymlink(file)) {
 			return 0;
 		}
 

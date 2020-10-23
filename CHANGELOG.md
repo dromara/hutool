@@ -10,6 +10,7 @@
 * 【core   】     NumberUtil.toStr修改逻辑，去掉BigDecimal的科学计数表示（pr#196@Gitee）
 * 【core   】     ListUtil.page第一页页码使用PageUtil（pr#198@Gitee）
 * 【http   】     增加微信、企业微信ua识别（pr#1179@Github）
+* 【core   】     ObjectUtil增加defaultIfXXX（pr#199@Gitee）
 
 ### Bug修复
 * 【core   】     修复ChineseDate没有忽略时分秒导致计算错误问题（issue#I1YW12@Gitee）
@@ -17,6 +18,7 @@
 * 【core   】     修复BeanDesc读取父类属性覆盖子类属性导致的问题（pr#1175@Github）
 * 【aop    】     修复SimpleAspect一个重载导致的问题，去掉重载的after方法（issue#I1YUG9@Gitee）
 * 【poi    】     修复03 sax读取日期问题（issue#I1Z83N@Gitee）
+* 【core   】     修复FileUtil.size软链导致的问题（pr#200@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

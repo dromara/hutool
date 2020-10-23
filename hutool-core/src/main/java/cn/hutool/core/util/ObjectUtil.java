@@ -62,8 +62,8 @@ public class ObjectUtil {
 	 * @see Objects#equals(Object, Object)
 	 */
 	public static boolean equal(Object obj1, Object obj2) {
-		if(obj1 instanceof BigDecimal && obj2 instanceof BigDecimal){
-			return NumberUtil.equals((BigDecimal)obj1, (BigDecimal)obj2);
+		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
+			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
 		}
 		return Objects.equals(obj1, obj2);
 	}
@@ -305,13 +305,15 @@ public class ObjectUtil {
 
 	/**
 	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
-	 * @param source Object 类型对象
-	 * @param handle 自定义的处理方法
+	 *
+	 * @param source       Object 类型对象
+	 * @param handle       自定义的处理方法
 	 * @param defaultValue 默认为空的返回值
-	 * @param <T> 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
-	 * @return
+	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @return 处理后的返回值
+	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfNull(final Object source, Supplier<? extends T> handle, final T defaultValue) {
+	public static <T> T defaultIfNull(Object source, Supplier<? extends T> handle, final T defaultValue) {
 		if (Objects.nonNull(source)) {
 			return handle.get();
 		}
@@ -320,13 +322,15 @@ public class ObjectUtil {
 
 	/**
 	 * 如果给定对象为{@code null}或者""返回默认值, 否则返回自定义handle处理后的返回值
-	 * @param str  String 类型
-	 * @param handle 自定义的处理方法
+	 *
+	 * @param str          String 类型
+	 * @param handle       自定义的处理方法
 	 * @param defaultValue 默认为空的返回值
-	 * @param <T> 被检查对象为{@code null}或者 ""返回默认值，否则返回自定义handle处理后的返回值
-	 * @return
+	 * @param <T>          被检查对象为{@code null}或者 ""返回默认值，否则返回自定义handle处理后的返回值
+	 * @return 处理后的返回值
+	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfEmpty(final String str, Supplier<? extends T> handle, final T defaultValue) {
+	public static <T> T defaultIfEmpty(String str, Supplier<? extends T> handle, final T defaultValue) {
 		if (StrUtil.isNotEmpty(str)) {
 			return handle.get();
 		}
