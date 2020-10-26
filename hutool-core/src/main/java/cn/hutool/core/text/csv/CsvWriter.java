@@ -173,6 +173,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	public CsvWriter write(String[]... lines) throws IORuntimeException {
 		if (ArrayUtil.isNotEmpty(lines)) {
+			appendLine(new String(new byte[] { (byte) 0xEF, (byte) 0xBB,(byte) 0xBF }));
 			for (final String[] values : lines) {
 				appendLine(values);
 			}
@@ -190,6 +191,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	public CsvWriter write(Collection<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
+			appendLine(new String(new byte[] { (byte) 0xEF, (byte) 0xBB,(byte) 0xBF }));
 			for (Object values : lines) {
 				appendLine(Convert.toStrArray(values));
 			}
