@@ -71,7 +71,7 @@ public class ImgUtilTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void pressTextTest() {
 		ImgUtil.pressText(//
 				FileUtil.file("d:/test/2.jpg"), //
