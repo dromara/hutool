@@ -465,4 +465,10 @@ public class StrUtilTest {
 		Assert.assertTrue(StrUtil.startWith(a, b));
 		Assert.assertFalse(StrUtil.startWithIgnoreEquals(a, b));
 	}
+
+	@Test
+	public void indexedFormatTest() {
+		final String ret = StrUtil.indexedFormat("this is {0} for {1}", "a", 1000);
+		Assert.assertEquals("this is a for 1,000", ret);
+	}
 }

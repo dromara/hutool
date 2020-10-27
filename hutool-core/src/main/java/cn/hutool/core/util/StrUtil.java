@@ -2709,7 +2709,6 @@ public class StrUtil {
 
 	/**
 	 * 有序的格式化文本，使用{number}做为占位符<br>
-	 * 例：<br>
 	 * 通常使用：format("this is {0} for {1}", "a", "b") =》 this is a for b<br>
 	 *
 	 * @param pattern   文本格式
