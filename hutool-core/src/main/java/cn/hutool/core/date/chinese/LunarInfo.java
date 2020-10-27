@@ -8,7 +8,14 @@ package cn.hutool.core.date.chinese;
  */
 public class LunarInfo {
 
+	/**
+	 * 1900年
+	 */
 	public static final int BASE_YEAR = 1900;
+	/**
+	 * 1900-01-31
+	 */
+	public static final long BASE_DAY = -25538;
 
 	/**
 	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js

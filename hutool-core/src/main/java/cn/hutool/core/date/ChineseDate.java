@@ -5,7 +5,6 @@ import cn.hutool.core.date.chinese.ChineseMonth;
 import cn.hutool.core.date.chinese.GanZhi;
 import cn.hutool.core.date.chinese.LunarFestival;
 import cn.hutool.core.date.chinese.LunarInfo;
-import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Date;
@@ -18,11 +17,6 @@ import java.util.Date;
  * @since 5.1.1
  */
 public class ChineseDate {
-	/**
-	 * 1900-01-31
-	 */
-//	private static final long BASE_DATE = -2206425943000L;
-	private static final long BASE_DAY = -25538;
 
 	//农历年
 	private final int year;
@@ -48,7 +42,7 @@ public class ChineseDate {
 	 */
 	public ChineseDate(Date date) {
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((DateUtil.beginOfDay(date).getTime() / DateUnit.DAY.getMillis()) - BASE_DAY);
+		int offset = (int) ((DateUtil.beginOfDay(date).getTime() / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;
@@ -245,12 +239,12 @@ public class ChineseDate {
 
 
 	/**
-	 * 获得天干地支
+	 * 获得年的天干地支
 	 *
 	 * @return 获得天干地支
 	 */
 	public String getCyclical() {
-		return GanZhi.cyclicalm(year - LunarInfo.BASE_YEAR + 36);
+		return GanZhi.getGanzhiOfYear(this.year);
 	}
 
 	/**
@@ -260,7 +254,7 @@ public class ChineseDate {
 	 */
 	public String getCyclicalYMD() {
 		if (gyear >= LunarInfo.BASE_YEAR && gmonth > 0 && gday > 0) {
-			return (cyclicalm(gyear, gmonth, gday));
+			return cyclicalm(gyear, gmonth, gday);
 		}
 		return null;
 	}
@@ -285,24 +279,16 @@ public class ChineseDate {
 	/**
 	 * 这里同步处理年月日的天干地支信息
 	 *
-	 * @param Y 年
-	 * @param M 月
-	 * @param D 日
+	 * @param year  公历年
+	 * @param month 公历月，从1开始
+	 * @param day   公历日
 	 * @return 天干地支信息
 	 */
-	private String cyclicalm(int Y, int M, int D) {
-		String gzyear = GanZhi.cyclicalm(year - LunarInfo.BASE_YEAR + 36);
-		//天干地支处理
-		//返回当月「节」为几日开始
-		int firstNode = SolarTerms.getTerm(Y, (M * 2 - 1));
-		// 依据12节气修正干支月
-		String gzM = GanZhi.cyclicalm((Y - LunarInfo.BASE_YEAR) * 12 + M + 11);
-		if (D >= firstNode) {
-			gzM = GanZhi.cyclicalm((Y - LunarInfo.BASE_YEAR) * 12 + M + 12);
-		}
-		int dayCyclical = (int) ((DateUtil.parseDate(Y + "-" + M + "-" + "1").getTime() / DateUnit.DAY.getMillis() - BASE_DAY + 30)) + 10;
-		String gzD = GanZhi.cyclicalm(dayCyclical + D - 1);
-		return gzyear + "年" + gzM + "月" + gzD + "日";
+	private String cyclicalm(int year, int month, int day) {
+		return StrUtil.format("{}年{}月{}日",
+				GanZhi.getGanzhiOfYear(this.year),
+				GanZhi.getGanzhiOfMonth(year, month, day),
+				GanZhi.getGanzhiOfDay(year, month, day));
 	}
 
 	/**

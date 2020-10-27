@@ -3,7 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.date.format.FastDateFormat;
-import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -781,6 +781,17 @@ public class DateUtilTest {
 
 		final long weekCount = DateUtil.betweenWeek(start, end, true);
 		Assert.assertEquals(30L, weekCount);
+	}
+
+	@Test
+	public void betweenDayTest() {
+		for (int i = 0; i < 1000; i++) {
+			String datr = RandomUtil.randomInt(1900, 2099) + "-01-20";
+			long betweenDay = DateUtil.betweenDay(
+					DateUtil.parseDate("1970-01-01"),
+					DateUtil.parseDate(datr), false);
+			Assert.assertEquals(Math.abs(LocalDate.parse(datr).toEpochDay()), betweenDay);
+		}
 	}
 
 	@Test

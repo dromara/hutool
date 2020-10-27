@@ -1,15 +1,5 @@
 package cn.hutool.core.text.csv;
 
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.File;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.Collection;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
@@ -19,6 +9,16 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
+
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Collection;
 
 /**
  * CSV数据写出器
@@ -249,8 +249,8 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private void doAppendLine(final String... fields) throws IOException {
 		if (null != fields) {
-			for (int i = 0; i < fields.length; i++) {
-				appendField(fields[i]);
+			for (String field : fields) {
+				appendField(field);
 			}
 			writer.write(config.lineDelimiter);
 			newline = true;
