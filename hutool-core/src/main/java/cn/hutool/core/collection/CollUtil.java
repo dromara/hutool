@@ -1371,7 +1371,7 @@ public class CollUtil {
 	 * @param <R>        返回集合元素类型
 	 * @param collection 原集合
 	 * @param func       编辑函数
-	 * @param ignoreNull 是否忽略空值
+	 * @param ignoreNull 是否忽略空值，这里的空值包括函数处理前和处理后的null值
 	 * @return 抽取后的新列表
 	 * @since 5.3.5
 	 */
@@ -1382,8 +1382,11 @@ public class CollUtil {
 		}
 
 		R value;
-		for (T bean : collection) {
-			value = func.apply(bean);
+		for (T t : collection) {
+			if(null == t && ignoreNull){
+				continue;
+			}
+			value = func.apply(t);
 			if (null == value && ignoreNull) {
 				continue;
 			}
@@ -2546,6 +2549,18 @@ public class CollUtil {
 	// ------------------------------------------------------------------------------------------------- forEach
 
 	/**
+	 * 循环遍历 {@link Iterable}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @param consumer {@link Consumer} 遍历的每条数据处理器
+	 * @since 5.4.7
+	 */
+	public static <T> void forEach(Iterable<T> iterable, Consumer<T> consumer) {
+		forEach(iterable.iterator(), consumer);
+	}
+
+	/**
 	 * 循环遍历 {@link Iterator}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>      集合元素类型
@@ -2879,7 +2894,8 @@ public class CollUtil {
 	// ---------------------------------------------------------------------------------------------- Interface start
 
 	/**
-	 * 针对一个参数做相应的操作
+	 * 针对一个参数做相应的操作<br>
+	 * 此函数接口与JDK8中Consumer不同是多提供了index参数，用于标记遍历对象是第几个。
 	 *
 	 * @param <T> 处理参数类型
 	 * @author Looly
