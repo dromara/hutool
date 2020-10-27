@@ -325,11 +325,36 @@ public class SoapClient extends HttpBase<SoapClient> {
 	/**
 	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
 	 *
+	 * @param localName 头节点名称
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.7
+	 */
+	public SOAPHeaderElement addSOAPHeader(String localName) {
+		return addSOAPHeader(new QName(localName));
+	}
+
+	/**
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
+	 *
+	 * @param localName 头节点名称
+	 * @param value     头节点的值
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.7
+	 */
+	public SOAPHeaderElement addSOAPHeader(String localName, String value) {
+		final SOAPHeaderElement soapHeaderElement = addSOAPHeader(localName);
+		soapHeaderElement.setTextContent(value);
+		return soapHeaderElement;
+	}
+
+	/**
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
+	 *
 	 * @param name 头节点名称
 	 * @return {@link SOAPHeaderElement}
 	 * @since 5.4.4
 	 */
-	public SOAPHeaderElement addSOAPHeader(QName name){
+	public SOAPHeaderElement addSOAPHeader(QName name) {
 		SOAPHeaderElement ele;
 		try {
 			ele = this.message.getSOAPHeader().addHeaderElement(name);

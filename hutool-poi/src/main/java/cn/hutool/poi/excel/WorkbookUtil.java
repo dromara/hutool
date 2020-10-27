@@ -66,7 +66,7 @@ public class WorkbookUtil {
 		}
 
 		if (excelFile.exists()) {
-			return createBook(FileUtil.getInputStream(excelFile), true);
+			return createBook(FileUtil.getInputStream(excelFile));
 		}
 		
 		return createBook(StrUtil.endWithIgnoreCase(excelFile.getName(), ".xlsx"));
@@ -95,6 +95,7 @@ public class WorkbookUtil {
 	 * @return {@link Workbook}
 	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义，请使用{@link #createBook(InputStream)}
 	 */
+	@Deprecated
 	public static Workbook createBook(InputStream in, boolean closeAfterRead) {
 		return createBook(in, null);
 	}

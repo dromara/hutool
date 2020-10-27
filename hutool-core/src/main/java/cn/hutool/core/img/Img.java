@@ -68,7 +68,7 @@ public class Img implements Serializable {
 	 * 从Path读取图片并开始处理
 	 *
 	 * @param imagePath 图片文件路径
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(Path imagePath) {
 		return from(imagePath.toFile());
@@ -78,7 +78,7 @@ public class Img implements Serializable {
 	 * 从文件读取图片并开始处理
 	 *
 	 * @param imageFile 图片文件
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(File imageFile) {
 		return new Img(ImgUtil.read(imageFile));
@@ -88,7 +88,7 @@ public class Img implements Serializable {
 	 * 从资源对象中读取图片并开始处理
 	 *
 	 * @param resource 图片资源对象
-	 * @return {@link Img}
+	 * @return Img
 	 * @since 4.4.1
 	 */
 	public static Img from(Resource resource) {
@@ -99,7 +99,7 @@ public class Img implements Serializable {
 	 * 从流读取图片并开始处理
 	 *
 	 * @param in 图片流
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(InputStream in) {
 		return new Img(ImgUtil.read(in));
@@ -109,7 +109,7 @@ public class Img implements Serializable {
 	 * 从ImageInputStream取图片并开始处理
 	 *
 	 * @param imageStream 图片流
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(ImageInputStream imageStream) {
 		return new Img(ImgUtil.read(imageStream));
@@ -119,7 +119,7 @@ public class Img implements Serializable {
 	 * 从URL取图片并开始处理
 	 *
 	 * @param imageUrl 图片URL
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(URL imageUrl) {
 		return new Img(ImgUtil.read(imageUrl));
@@ -129,7 +129,7 @@ public class Img implements Serializable {
 	 * 从Image取图片并开始处理
 	 *
 	 * @param image 图片
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(Image image) {
 		return new Img(ImgUtil.toBufferedImage(image));
