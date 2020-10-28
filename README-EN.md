@@ -187,3 +187,9 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
 
 [gitee donate](https://gitee.com/loolly/hutool)
+
+## WeChat Official Account
+
+Welcome to the official account of Hutool cooperation.
+
+![Java2B](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qrcode.jpg)
