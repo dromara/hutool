@@ -11,6 +11,7 @@
 * 【core   】     CollUtil增加forEach重载（issue#I22NA4@Gitee）
 * 【core   】     CollUtil.map忽略空值改规则为原数组中的元素和处理后的元素都会忽略空值（issue#I22N08@Gitee）
 * 【http   】     增加SoapClient增加addSOAPHeader重载
+* 【http   】     ArrayUtil增加containsAll方法
 ### Bug修复
 
 -------------------------------------------------------------------------------------------------------------

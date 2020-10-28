@@ -1341,6 +1341,25 @@ public class ArrayUtil {
 	}
 
 	/**
+	 * 数组中是否包含指定元素中的全部
+	 *
+	 * @param <T>    数组元素类型
+	 * @param array  数组
+	 * @param values 被检查的多个元素
+	 * @return 是否包含指定元素中的全部
+	 * @since 5.4.7
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean containsAll(T[] array, T... values) {
+		for (T value : values) {
+			if (false == contains(array, value)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * 数组中是否包含元素，忽略大小写
 	 *
 	 * @param array 数组
