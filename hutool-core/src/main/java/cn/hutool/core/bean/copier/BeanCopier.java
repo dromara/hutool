@@ -172,6 +172,12 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				return;
 			}
 
+			// 对key做映射，映射后为null的忽略之
+			key = copyOptions.editFieldName(copyOptions.getMappedFieldName(key, false));
+			if(null == key){
+				return;
+			}
+
 			Object value;
 			try {
 				value = prop.getValue(bean);
@@ -188,8 +194,6 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				return;
 			}
 
-			// 对key做映射
-			key = copyOptions.editFieldName(copyOptions.getMappedFieldName(key, false));
 			targetMap.put(key, value);
 		});
 	}

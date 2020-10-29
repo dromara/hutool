@@ -618,7 +618,7 @@ public class BeanUtil {
 	 * @param bean            bean对象
 	 * @param targetMap       目标的Map
 	 * @param ignoreNullValue 是否忽略值为空的字段
-	 * @param keyEditor       属性字段（Map的key）编辑器，用于筛选、编辑key
+	 * @param keyEditor       属性字段（Map的key）编辑器，用于筛选、编辑key，如果这个Editor返回null则忽略这个字段
 	 * @return Map
 	 * @since 4.0.5
 	 */

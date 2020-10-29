@@ -194,7 +194,8 @@ public class CopyOptions implements Serializable {
 
 	/**
 	 * 设置字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等<br>
-	 * 此转换器只针对源端的字段做转换，请确认转换后与目标端字段一致
+	 * 此转换器只针对源端的字段做转换，请确认转换后与目标端字段一致<br>
+	 * 当转换后的字段名为null时忽略这个字段
 	 *
 	 * @param fieldNameEditor 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等
 	 * @return CopyOptions
