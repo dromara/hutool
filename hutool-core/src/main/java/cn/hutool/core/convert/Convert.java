@@ -17,13 +17,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -681,7 +675,26 @@ public class Convert {
 	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
 		return convertWithCheck(type, value, defaultValue, false);
 	}
-	
+
+	/**
+	 * List转换值为指定类型
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <O> 原始类型
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param list<O> 原始list
+	 * @return 转换后的list<T>
+	 * @since 5.4.7
+	 */
+	public static <O, T> List<T> convertList(Class<T> type, List<O> list) {
+		LinkedList<T> linkedList = new LinkedList<>();
+		for (O e : list) {
+			linkedList.add(convert(type, e));
+		}
+		return linkedList;
+	}
+
 	/**
 	 * 转换值为指定类型，不抛异常转换<br>
 	 * 当转换失败时返回{@code null}
