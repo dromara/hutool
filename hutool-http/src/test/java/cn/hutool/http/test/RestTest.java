@@ -1,6 +1,7 @@
 package cn.hutool.http.test;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -46,8 +47,9 @@ public class RestTest {
 
 	@Test
 	@Ignore
-	public void postTest3() {
-		HttpRequest request = HttpRequest.post("http://211.162.39.204:8181/jeesite-simple/a/open/bizGwbnService/test")//
+	public void getWithBodyTest() {
+		HttpRequest request = HttpRequest.get("http://localhost:8888/restTest")//
+				.header(Header.CONTENT_TYPE, "application/json")
 				.body(JSONUtil.createObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());

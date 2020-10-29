@@ -1,10 +1,12 @@
 package cn.hutool.cron.pattern.matcher;
 
+import cn.hutool.core.date.Month;
+
 import java.util.List;
 
 /**
  * 每月第几天匹配<br>
- * 考虑每月的天数不同，切存在闰年情况，日匹配单独使用
+ * 考虑每月的天数不同，且存在闰年情况，日匹配单独使用
  * 
  * @author Looly
  *
@@ -49,10 +51,6 @@ public class DayOfMonthValueMatcher extends BoolArrayValueMatcher {
 	 * @return 是否为本月最后一天
 	 */
 	private static boolean isLastDayOfMonth(int value, int month, boolean isLeapYear) {
-		if (isLeapYear && month == 2) {
-			return value == 29;
-		} else {
-			return value == LAST_DAYS[month - 1];
-		}
+		return value == Month.getLastDay(month, isLeapYear);
 	}
 }

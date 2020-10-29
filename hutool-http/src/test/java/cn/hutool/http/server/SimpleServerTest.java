@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.multipart.UploadFile;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 
 public class SimpleServerTest {
 
@@ -17,9 +18,13 @@ public class SimpleServerTest {
 						response.write(request.getURI().toString(), ContentType.TEXT_PLAIN.toString())
 				)
 				// 返回JSON数据测试
-				.addAction("/restTest", (request, response) ->
-						response.write("{\"id\": 1, \"msg\": \"OK\"}", ContentType.JSON.toString())
-				)
+				.addAction("/restTest", (request, response) -> {
+					String res = JSONUtil.createObj()
+							.set("id", 1)
+							.set("method", request.getMethod())
+							.toStringPretty();
+					response.write(res, ContentType.JSON.toString());
+				})
 				// 获取表单数据测试
 				// http://localhost:8888/formTest?a=1&a=2&b=3
 				.addAction("/formTest", (request, response) ->

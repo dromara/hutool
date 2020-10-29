@@ -965,7 +965,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
 	 * @since 4.0.9
-	 * @deprecated 请使用{@link #createCellStyle(int, int)}
+	 * @deprecated 请使用 {@link #createCellStyle(int, int)}
 	 */
 	@Deprecated
 	public CellStyle createStyleForCell(int x, int y) {

@@ -111,8 +111,6 @@ public class CronPattern {
 	/**
 	 * 构造
 	 * 
-	 * @see CronPattern
-	 * 
 	 * @param pattern 表达式
 	 */
 	public CronPattern(String pattern) {
