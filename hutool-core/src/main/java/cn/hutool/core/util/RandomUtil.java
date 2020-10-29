@@ -310,6 +310,9 @@ public class RandomUtil {
 	 * @return 随机元素
 	 */
 	public static <T> T randomEle(List<T> list, int limit) {
+		if (list.size() < limit){
+			limit = list.size();
+		}
 		return list.get(randomInt(limit));
 	}
 
@@ -335,6 +338,9 @@ public class RandomUtil {
 	 * @since 3.3.0
 	 */
 	public static <T> T randomEle(T[] array, int limit) {
+		if (array.length < limit){
+			limit = array.length;
+		}
 		return array[randomInt(limit)];
 	}
 
@@ -606,4 +612,5 @@ public class RandomUtil {
 
 		return DateUtil.offset(baseDate, dateField, randomInt(min, max));
 	}
+
 }
