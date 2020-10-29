@@ -98,7 +98,8 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		ImgUtil.write(ImgUtil.read("e:/test2.png"), FileUtil.file("e:/test2Write.jpg"));
+		final byte[] bytes = ImgUtil.toBytes(ImgUtil.read("d:/test/logo_484.png"), "png");
+		FileUtil.writeBytes(bytes, "d:/test/result.png");
 	}
 	
 	@Test

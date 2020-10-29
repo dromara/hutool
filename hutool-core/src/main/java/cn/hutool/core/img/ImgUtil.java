@@ -1515,8 +1515,9 @@ public class ImgUtil {
 			imageType = IMAGE_TYPE_JPG;
 		}
 
-		final ImageWriter writer = getWriter(image, imageType);
-		return write(toBufferedImage(image, imageType), writer, destImageStream, quality);
+		final BufferedImage bufferedImage = toBufferedImage(image, imageType);
+		final ImageWriter writer = getWriter(bufferedImage, imageType);
+		return write(bufferedImage, writer, destImageStream, quality);
 	}
 
 	/**
@@ -1783,7 +1784,7 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static ImageWriter getWriter(Image img, String formatName) {
-		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toRenderedImage(img));
+		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toBufferedImage(img, formatName));
 		final Iterator<ImageWriter> iter = ImageIO.getImageWriters(type, formatName);
 		return iter.hasNext() ? iter.next() : null;
 	}
