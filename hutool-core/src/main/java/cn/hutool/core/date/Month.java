@@ -165,7 +165,7 @@ public enum Month {
 
 	/**
 	 * 获得指定月的最后一天
-	 * @param month 月份
+	 * @param month 月份，从0开始
 	 * @param isLeapYear 是否为闰年，闰年只对二月有影响
 	 * @return 最后一天，可能为28,29,30,31
 	 * @since 5.4.7
