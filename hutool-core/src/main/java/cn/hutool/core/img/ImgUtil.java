@@ -61,12 +61,12 @@ public class ImgUtil {
 	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
 	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
-	
+
 	/**
 	 * RGB颜色范围上限
 	 */
 	private static final int RGB_COLOR_BOUND = 256;
-	
+
 
 	// ---------------------------------------------------------------------------------------------------------------------- scale
 
@@ -398,10 +398,10 @@ public class ImgUtil {
 		int srcWidth = srcImage.getWidth(null); // 源图宽度
 		int srcHeight = srcImage.getHeight(null); // 源图高度
 
-		if(srcWidth < destWidth){
+		if (srcWidth < destWidth) {
 			destWidth = srcWidth;
 		}
-		if(srcHeight < destHeight){
+		if (srcHeight < destHeight) {
 			destHeight = srcHeight;
 		}
 
@@ -1123,7 +1123,7 @@ public class ImgUtil {
 
 	/**
 	 * {@link Image} 转 {@link RenderedImage}<br>
-	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制
+	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制，使用 {@link BufferedImage#TYPE_INT_RGB} 模式。
 	 *
 	 * @param img {@link Image}
 	 * @return {@link BufferedImage}
@@ -1139,7 +1139,7 @@ public class ImgUtil {
 
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
-	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制
+	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制，使用 {@link BufferedImage#TYPE_INT_RGB} 模式
 	 *
 	 * @param img {@link Image}
 	 * @return {@link BufferedImage}
@@ -1154,27 +1154,39 @@ public class ImgUtil {
 
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
-	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制<br>
+	 * 默认的，png图片使用 {@link BufferedImage#TYPE_INT_ARGB}模式，其它使用 {@link BufferedImage#TYPE_INT_RGB} 模式
 	 *
 	 * @param image     {@link Image}
-	 * @param imageType 目标图片类型
+	 * @param imageType 目标图片类型，例如jpg或png等
 	 * @return {@link BufferedImage}
 	 * @since 4.3.2
 	 */
 	public static BufferedImage toBufferedImage(Image image, String imageType) {
+		final int type = imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)
+				 ? BufferedImage.TYPE_INT_ARGB
+				 : BufferedImage.TYPE_INT_RGB;
+		return toBufferedImage(image, type);
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
+	 *
+	 * @param image     {@link Image}
+	 * @param imageType 目标图片类型，{@link BufferedImage}中的常量，例如黑白等
+	 * @return {@link BufferedImage}
+	 * @since 5.4.7
+	 */
+	public static BufferedImage toBufferedImage(Image image, int imageType) {
 		BufferedImage bufferedImage;
-		if (false == imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)) {
-			// 当目标为非PNG类图片时，源图片统一转换为RGB格式
-			if (image instanceof BufferedImage) {
-				bufferedImage = (BufferedImage) image;
-				if (BufferedImage.TYPE_INT_RGB != bufferedImage.getType()) {
-					bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
-				}
-			} else {
-				bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
+		if (image instanceof BufferedImage) {
+			bufferedImage = (BufferedImage) image;
+			if (imageType != bufferedImage.getType()) {
+				bufferedImage = copyImage(image, imageType);
 			}
 		} else {
-			bufferedImage = toBufferedImage(image);
+			bufferedImage = copyImage(image, imageType);
 		}
 		return bufferedImage;
 	}
