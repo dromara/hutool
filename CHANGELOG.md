@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.7 (2020-10-29)
+# 5.4.7 (2020-10-31)
 
 ### 新特性
 * 【core   】     增加OptionalBean（pr#1182@Github）
@@ -13,10 +13,12 @@
 * 【http   】     增加SoapClient增加addSOAPHeader重载
 * 【http   】     ArrayUtil增加containsAll方法
 * 【http   】     增加CharsetDetector
+* 【cron   】     增加CronTask，监听支持获取id（issue#I23315@Gitee）
 
 ### Bug修复
 * 【core   】     修复BeanUtil.beanToMap方法中editor返回null没有去掉的问题
 * 【core   】     修复ImgUtil.toBufferedImage颜色模式的问题（issue#1194@Github）
+* 【cron   】     修复TimeZone设置无效的问题（issue#I23315@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

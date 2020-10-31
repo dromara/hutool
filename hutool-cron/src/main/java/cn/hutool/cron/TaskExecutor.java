@@ -1,5 +1,6 @@
 package cn.hutool.cron;
 
+import cn.hutool.cron.task.CronTask;
 import cn.hutool.cron.task.Task;
 
 /**
@@ -12,15 +13,25 @@ import cn.hutool.cron.task.Task;
 public class TaskExecutor implements Runnable {
 
 	private final Scheduler scheduler;
-	private final Task task;
+	private final CronTask task;
 
 	/**
-	 * 获得任务对象
+	 * 获得原始任务对象
 	 *
 	 * @return 任务对象
 	 */
 	public Task getTask() {
-		return task;
+		return this.task.getRaw();
+	}
+
+	/**
+	 * 获得原始任务对象
+	 *
+	 * @return 任务对象
+	 * @since 5.4.7
+	 */
+	public CronTask getCronTask() {
+		return this.task;
 	}
 
 	/**
@@ -29,7 +40,7 @@ public class TaskExecutor implements Runnable {
 	 * @param scheduler 调度器
 	 * @param task 被执行的任务
 	 */
-	public TaskExecutor(Scheduler scheduler, Task task) {
+	public TaskExecutor(Scheduler scheduler, CronTask task) {
 		this.scheduler = scheduler;
 		this.task = task;
 	}

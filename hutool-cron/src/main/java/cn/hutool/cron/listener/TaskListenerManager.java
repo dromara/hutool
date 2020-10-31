@@ -65,8 +65,8 @@ public class TaskListenerManager implements Serializable {
 	public void notifyTaskSucceeded(TaskExecutor executor) {
 		synchronized (listeners) {
 			int size = listeners.size();
-			for (TaskListener listenerl : listeners) {
-				listenerl.onSucceeded(executor);
+			for (TaskListener listener : listeners) {
+				listener.onSucceeded(executor);
 			}
 		}
 	}

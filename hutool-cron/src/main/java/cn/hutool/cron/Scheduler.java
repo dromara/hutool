@@ -57,19 +57,17 @@ public class Scheduler implements Serializable {
 
 	private final Lock lock = new ReentrantLock();
 
-	/** 时区 */
-	private TimeZone timezone;
+	/** 定时任务配置 */
+	protected CronConfig config = new CronConfig();
 	/** 是否已经启动 */
 	private boolean started = false;
-	/** 是否支持秒匹配 */
-	protected boolean matchSecond = false;
 	/** 是否为守护线程 */
 	protected boolean daemon;
 
 	/** 定时器 */
 	private CronTimer timer;
 	/** 定时任务表 */
-	protected TaskTable taskTable = new TaskTable(this);
+	protected TaskTable taskTable = new TaskTable();
 	/** 启动器管理器 */
 	protected TaskLauncherManager taskLauncherManager;
 	/** 执行器管理器 */
@@ -83,11 +81,11 @@ public class Scheduler implements Serializable {
 	/**
 	 * 设置时区
 	 * 
-	 * @param timezone 时区
+	 * @param timeZone 时区
 	 * @return this
 	 */
-	public Scheduler setTimeZone(TimeZone timezone) {
-		this.timezone = timezone;
+	public Scheduler setTimeZone(TimeZone timeZone) {
+		this.config.setTimeZone(timeZone);
 		return this;
 	}
 
@@ -97,7 +95,7 @@ public class Scheduler implements Serializable {
 	 * @return 时区
 	 */
 	public TimeZone getTimeZone() {
-		return timezone != null ? timezone : TimeZone.getDefault();
+		return this.config.getTimeZone();
 	}
 
 	/**
@@ -136,7 +134,7 @@ public class Scheduler implements Serializable {
 	 * @return <code>true</code>使用，<code>false</code>不使用
 	 */
 	public boolean isMatchSecond() {
-		return this.matchSecond;
+		return this.config.isMatchSecond();
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler setMatchSecond(boolean isMatchSecond) {
-		this.matchSecond = isMatchSecond;
+		this.config.setMatchSecond(isMatchSecond);
 		return this;
 	}
 
@@ -347,7 +345,7 @@ public class Scheduler implements Serializable {
 	 * @since 4.1.17
 	 */
 	public Scheduler clear() {
-		this.taskTable = new TaskTable(this);
+		this.taskTable = new TaskTable();
 		return this;
 	}
 	// -------------------------------------------------------------------- shcedule end

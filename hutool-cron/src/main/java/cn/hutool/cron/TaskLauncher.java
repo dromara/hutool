@@ -12,7 +12,13 @@ public class TaskLauncher implements Runnable{
 	
 	private final Scheduler scheduler;
 	private final long millis;
-	
+
+	/**
+	 * 构造
+	 *
+	 * @param scheduler {@link Scheduler}
+	 * @param millis 毫秒数
+	 */
 	public TaskLauncher(Scheduler scheduler, long millis) {
 		this.scheduler = scheduler;
 		this.millis = millis;
@@ -21,7 +27,7 @@ public class TaskLauncher implements Runnable{
 	@Override
 	public void run() {
 		//匹配秒部分由用户定义决定，始终不匹配年
-		scheduler.taskTable.executeTaskIfMatchInternal(millis);
+		scheduler.taskTable.executeTaskIfMatch(this.scheduler, this.millis);
 		
 		//结束通知
 		scheduler.taskLauncherManager.notifyLauncherCompleted(this);

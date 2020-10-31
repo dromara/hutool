@@ -1,13 +1,13 @@
 package cn.hutool.cron;
 
 import cn.hutool.cron.pattern.CronPattern;
+import cn.hutool.cron.task.CronTask;
 import cn.hutool.cron.task.Task;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -22,24 +22,33 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class TaskTable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final ReadWriteLock lock = new ReentrantReadWriteLock();
+	public static final int DEFAULT_CAPACITY = 10;
 
-	private final Scheduler scheduler;
-	private final TimeZone timezone;
+	private final ReadWriteLock lock;
 
-	private final List<String> ids = new ArrayList<>();
-	private final List<CronPattern> patterns = new ArrayList<>();
-	private final List<Task> tasks = new ArrayList<>();
+	private final List<String> ids;
+	private final List<CronPattern> patterns;
+	private final List<Task> tasks;
 	private int size;
 
 	/**
 	 * 构造
-	 *
-	 * @param scheduler {@link Scheduler}
 	 */
-	public TaskTable(Scheduler scheduler) {
-		this.scheduler = scheduler;
-		this.timezone = scheduler.getTimeZone();
+	public TaskTable() {
+		this(DEFAULT_CAPACITY);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param initialCapacity 容量，即预估的最大任务数
+	 */
+	public TaskTable(int initialCapacity) {
+		lock = new ReentrantReadWriteLock();
+
+		ids = new ArrayList<>(initialCapacity);
+		patterns = new ArrayList<>(initialCapacity);
+		tasks = new ArrayList<>(initialCapacity);
 	}
 
 	/**
@@ -246,13 +255,14 @@ public class TaskTable implements Serializable {
 	/**
 	 * 如果时间匹配则执行相应的Task，带读锁
 	 *
+	 * @param scheduler {@link Scheduler}
 	 * @param millis 时间毫秒
 	 */
-	public void executeTaskIfMatch(long millis) {
+	public void executeTaskIfMatch(Scheduler scheduler, long millis) {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			executeTaskIfMatchInternal(millis);
+			executeTaskIfMatchInternal(scheduler, millis);
 		} finally {
 			readLock.unlock();
 		}
@@ -261,13 +271,14 @@ public class TaskTable implements Serializable {
 	/**
 	 * 如果时间匹配则执行相应的Task，无锁
 	 *
+	 * @param scheduler {@link Scheduler}
 	 * @param millis 时间毫秒
 	 * @since 3.1.1
 	 */
-	protected void executeTaskIfMatchInternal(long millis) {
+	protected void executeTaskIfMatchInternal(Scheduler scheduler, long millis) {
 		for (int i = 0; i < size; i++) {
-			if (patterns.get(i).match(timezone, millis, this.scheduler.matchSecond)) {
-				this.scheduler.taskExecutorManager.spawnExecutor(tasks.get(i));
+			if (patterns.get(i).match(scheduler.config.timezone, millis, scheduler.config.matchSecond)) {
+				scheduler.taskExecutorManager.spawnExecutor(new CronTask(ids.get(i), patterns.get(i), tasks.get(i)));
 			}
 		}
 	}
