@@ -648,10 +648,6 @@ public class DateTime extends Date {
 		return new Date(this.getTime());
 	}
 
-	public Date writeReplace(){
-		return toJdkDate();
-	}
-
 	/**
 	 * 转为{@link Timestamp}
 	 *

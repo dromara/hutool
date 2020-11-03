@@ -7,6 +7,8 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
+import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
+import org.apache.poi.hssf.record.NumberRecord;
 import org.apache.poi.ooxml.util.SAXHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -169,6 +171,19 @@ public class ExcelSaxUtil {
 		} catch (SAXException e) {
 			throw new POIException(e);
 		}
+	}
+
+	/**
+	 * 判断数字Record中是否为日期格式
+	 * @param numrec 单元格记录
+	 * @param formatListener {@link FormatTrackingHSSFListener}
+	 * @return 是否为日期格式
+	 * @since 5.4.8
+	 */
+	public static boolean isDateFormat(NumberRecord numrec, FormatTrackingHSSFListener formatListener){
+		final int formatIndex = formatListener.getFormatIndex(numrec);
+		final String formatString = formatListener.getFormatString(numrec);
+		return org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, formatString);
 	}
 
 	/**

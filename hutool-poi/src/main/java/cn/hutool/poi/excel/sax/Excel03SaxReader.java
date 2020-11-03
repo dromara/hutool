@@ -1,6 +1,5 @@
 package cn.hutool.poi.excel.sax;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -306,11 +305,9 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 				break;
 			case NumberRecord.sid: // 数字类型
 				final NumberRecord numrec = (NumberRecord) record;
-				final String formatString = formatListener.getFormatString(numrec);
-				if(false == StrUtil.contains(formatString, '%') &&
-						false == "General".equalsIgnoreCase(formatString)){
+				if(ExcelSaxUtil.isDateFormat(numrec, formatListener)){
 					// 可能为日期格式
-					value = DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(numrec.getValue()));
+					value = ExcelSaxUtil.getDateValue(numrec.getValue());
 				} else {
 					final double doubleValue = numrec.getValue();
 					final long longPart = (long) doubleValue;

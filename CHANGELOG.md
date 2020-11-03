@@ -11,6 +11,7 @@
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
+* 【core   】     修复Excel03SaxReader判断日期出错问题（issue#I23M9H@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
