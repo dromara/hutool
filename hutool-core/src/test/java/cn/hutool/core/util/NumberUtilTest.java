@@ -221,6 +221,22 @@ public class NumberUtilTest {
 		int v7 = NumberUtil.parseInt("0");
 		Assert.assertEquals(0, v7);
 	}
+
+	@Test
+	public void parseIntTest2() {
+		// from 5.4.8 issue#I23ORQ@Gitee
+		// 千位分隔符去掉
+		int v1 = NumberUtil.parseInt("1,482.00");
+		Assert.assertEquals(1482, v1);
+	}
+
+	@Test
+	public void parseNumberTest() {
+		// from 5.4.8 issue#I23ORQ@Gitee
+		// 千位分隔符去掉
+		int v1 = NumberUtil.parseNumber("1,482.00").intValue();
+		Assert.assertEquals(1482, v1);
+	}
 	
 	@Test
 	public void parseLongTest() {

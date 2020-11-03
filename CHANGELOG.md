@@ -3,10 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.7 (2020-10-31)
+# 5.4.8 (2020-11-03)
 
 ### 新特性
+* 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
+* 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
+
 ### Bug修复
+* 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +23,7 @@
 * 【core   】     CollUtil.map忽略空值改规则为原数组中的元素和处理后的元素都会忽略空值（issue#I22N08@Gitee）
 * 【http   】     增加SoapClient增加addSOAPHeader重载
 * 【http   】     ArrayUtil增加containsAll方法
-* 【http   】     增加CharsetDetector
+* 【core   】     增加CharsetDetector
 * 【cron   】     增加CronTask，监听支持获取id（issue#I23315@Gitee）
 
 ### Bug修复

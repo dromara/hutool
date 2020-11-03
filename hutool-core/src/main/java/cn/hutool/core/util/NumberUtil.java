@@ -2511,6 +2511,10 @@ public class NumberUtil {
 	 * @return 去掉标识的字符串
 	 */
 	private static String removeNumberFlag(String number) {
+		// 去掉千位分隔符
+		if(StrUtil.contains(number, CharUtil.COMMA)){
+			number = StrUtil.removeAll(number, CharUtil.COMMA);
+		}
 		// 去掉类型标识的结尾
 		final int lastPos = number.length() - 1;
 		final char lastCharUpper = Character.toUpperCase(number.charAt(lastPos));

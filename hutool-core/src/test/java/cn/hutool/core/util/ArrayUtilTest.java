@@ -317,4 +317,64 @@ public class ArrayUtilTest {
 		String[] hasNull = {"aa", "bb", "cc", null, "bb", "dd"};
 		Assert.assertFalse(ArrayUtil.isAllNotNull(hasNull));
 	}
+
+	@Test
+	public void indexOfSubTest() {
+		Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
+		Integer[] b = {0x56, 0x78};
+		Integer[] c = {0x12, 0x56};
+		Integer[] d = {0x78, 0x9A};
+		Integer[] e = {0x78, 0x9A, 0x10};
+
+		int i = ArrayUtil.indexOfSub(a, b);
+		Assert.assertEquals(2, i);
+
+		i = ArrayUtil.indexOfSub(a, c);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.indexOfSub(a, d);
+		Assert.assertEquals(3, i);
+
+		i = ArrayUtil.indexOfSub(a, e);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.indexOfSub(a, null);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.indexOfSub(null, null);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.indexOfSub(null, b);
+		Assert.assertEquals(-1, i);
+	}
+
+	@Test
+	public void lastIndexOfSubTest() {
+		Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
+		Integer[] b = {0x56, 0x78};
+		Integer[] c = {0x12, 0x56};
+		Integer[] d = {0x78, 0x9A};
+		Integer[] e = {0x78, 0x9A, 0x10};
+
+		int i = ArrayUtil.lastIndexOfSub(a, b);
+		Assert.assertEquals(2, i);
+
+		i = ArrayUtil.lastIndexOfSub(a, c);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.lastIndexOfSub(a, d);
+		Assert.assertEquals(3, i);
+
+		i = ArrayUtil.lastIndexOfSub(a, e);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.lastIndexOfSub(a, null);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.lastIndexOfSub(null, null);
+		Assert.assertEquals(-1, i);
+
+		i = ArrayUtil.lastIndexOfSub(null, b);
+		Assert.assertEquals(-1, i);
+	}
 }

@@ -123,11 +123,10 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 当前时间的时间戳
 	 *
-	 * @param isNano 是否为高精度时间
 	 * @return 时间
 	 */
-	public static long current(boolean isNano) {
-		return isNano ? System.nanoTime() : System.currentTimeMillis();
+	public static long current() {
+		return System.currentTimeMillis();
 	}
 
 	/**

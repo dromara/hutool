@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 计时器<br>
- * 计算某个过程花费的时间，精确到毫秒
+ * 计算某个过程花费的时间，精确到毫秒或纳秒
  *
  * @author Looly
  */
@@ -34,7 +34,7 @@ public class TimeInterval implements Serializable {
 	 * @return 开始计时并返回当前时间
 	 */
 	public long start() {
-		time = DateUtil.current(isNano);
+		time = getTime(isNano);
 		return time;
 	}
 
@@ -42,7 +42,7 @@ public class TimeInterval implements Serializable {
 	 * @return 重新计时并返回从开始到当前的持续时间
 	 */
 	public long intervalRestart() {
-		long now = DateUtil.current(isNano);
+		long now = getTime(isNano);
 		long d = now - time;
 		time = now;
 		return d;
@@ -55,7 +55,7 @@ public class TimeInterval implements Serializable {
 	 * @since 3.0.1
 	 */
 	public TimeInterval restart() {
-		time = DateUtil.current(isNano);
+		time = getTime(isNano);
 		return this;
 	}
 
@@ -68,7 +68,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long interval() {
-		return DateUtil.current(isNano) - time;
+		return getTime(isNano) - time;
 	}
 
 	/**
@@ -135,4 +135,13 @@ public class TimeInterval implements Serializable {
 		return intervalMs() / DateUnit.WEEK.getMillis();
 	}
 
+	/**
+	 * 获取时间的毫秒或纳秒数，纳秒非时间戳
+	 *
+	 * @param isNano 是否为高精度时间
+	 * @return 时间
+	 */
+	private static long getTime(boolean isNano) {
+		return isNano ? System.nanoTime() : System.currentTimeMillis();
+	}
 }

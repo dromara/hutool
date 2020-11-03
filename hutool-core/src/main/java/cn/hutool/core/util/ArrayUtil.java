@@ -317,9 +317,9 @@ public class ArrayUtil {
 	/**
 	 * 返回数组中第一个匹配规则的值
 	 *
-	 * @param <T>   数组元素类型
+	 * @param <T>     数组元素类型
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
-	 * @param array 数组
+	 * @param array   数组
 	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
 	 * @since 3.0.7
 	 */
@@ -327,7 +327,7 @@ public class ArrayUtil {
 	public static <T> T firstMatch(Matcher<T> matcher, T... array) {
 		if (isNotEmpty(array)) {
 			for (final T val : array) {
-				if(matcher.match(val)){
+				if (matcher.match(val)) {
 					return val;
 				}
 			}
@@ -4308,17 +4308,17 @@ public class ArrayUtil {
 	/**
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
 	 *
-	 * @param array 被转换的数组
+	 * @param array               被转换的数组
 	 * @param targetComponentType 目标的元素类型
-	 * @param func 转换规则函数
-	 * @param <T> 原数组类型
-	 * @param <R> 目标数组类型
+	 * @param func                转换规则函数
+	 * @param <T>                 原数组类型
+	 * @param <R>                 目标数组类型
 	 * @return 转换后的数组
 	 * @since 5.4.2
 	 */
-	public static <T, R> R[] map(T[] array, Class<R> targetComponentType, Function<? super T, ? extends R> func){
+	public static <T, R> R[] map(T[] array, Class<R> targetComponentType, Function<? super T, ? extends R> func) {
 		final R[] result = newArray(targetComponentType, array.length);
-		for(int i=0; i< array.length; i++){
+		for (int i = 0; i < array.length; i++) {
 			result[i] = func.apply(array[i]);
 		}
 		return result;
@@ -4326,16 +4326,17 @@ public class ArrayUtil {
 
 	/**
 	 * 判断两个数组是否相等，判断依据包括数组长度和每个元素都相等。
+	 *
 	 * @param array1 数组1
 	 * @param array2 数组2
 	 * @return 是否相等
 	 * @since 5.4.2
 	 */
-	public static boolean equals(Object array1, Object array2){
-		if(array1 == array2){
+	public static boolean equals(Object array1, Object array2) {
+		if (array1 == array2) {
 			return true;
 		}
-		if(hasNull(array1, array2)){
+		if (hasNull(array1, array2)) {
 			return false;
 		}
 
@@ -4343,7 +4344,7 @@ public class ArrayUtil {
 		Assert.isTrue(isArray(array2), "Second is not a Array !");
 
 		// 数组类型一致性判断
-		if(array1.getClass() != array2.getClass()){
+		if (array1.getClass() != array2.getClass()) {
 			return false;
 		}
 
@@ -4367,5 +4368,73 @@ public class ArrayUtil {
 			// Not an array of primitives
 			return Arrays.deepEquals((Object[]) array1, (Object[]) array2);
 		}
+	}
+
+	/**
+	 * 查找子数组的位置
+	 *
+	 * @param array    数组
+	 * @param subArray 子数组
+	 * @param <T>      数组元素类型
+	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @since 5.4.8
+	 */
+	public static <T> boolean isSub(T[] array, T[] subArray) {
+		return indexOfSub(array, subArray) > INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 查找子数组的位置
+	 *
+	 * @param array    数组
+	 * @param subArray 子数组
+	 * @param <T>      数组元素类型
+	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @since 5.4.8
+	 */
+	public static <T> int indexOfSub(T[] array, T[] subArray) {
+		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
+			return INDEX_NOT_FOUND;
+		}
+		int firstIndex = indexOf(array, subArray[0]);
+		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
+			return INDEX_NOT_FOUND;
+		}
+
+		for (int i = 0; i < subArray.length; i++) {
+			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+				return INDEX_NOT_FOUND;
+			}
+		}
+
+		return firstIndex;
+	}
+
+	/**
+	 * 查找最后一个子数组的开始位置
+	 *
+	 * @param array    数组
+	 * @param subArray 子数组
+	 * @param <T>      数组元素类型
+	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @since 5.4.8
+	 */
+	public static <T> int lastIndexOfSub(T[] array, T[] subArray) {
+		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
+			return INDEX_NOT_FOUND;
+		}
+
+		int firstIndex = lastIndexOf(array, subArray[0]);
+		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
+			return INDEX_NOT_FOUND;
+		}
+
+		for (int i = 0; i < subArray.length; i++) {
+			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+				return INDEX_NOT_FOUND;
+			}
+		}
+
+		return firstIndex;
 	}
 }
