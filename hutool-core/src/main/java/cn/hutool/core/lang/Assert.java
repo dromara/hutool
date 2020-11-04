@@ -486,6 +486,7 @@ public class Assert {
 	 * </pre>
 	 *
 	 * @param <T>           数组元素类型
+	 * @param <X>           异常类型
 	 * @param array         被检查的数组
 	 * @param errorSupplier 错误抛出异常附带的消息生产接口
 	 * @return 被检查的数组

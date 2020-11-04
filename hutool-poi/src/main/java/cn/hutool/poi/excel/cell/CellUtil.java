@@ -6,13 +6,19 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.ss.util.RegionUtil;
@@ -377,6 +383,33 @@ public class CellUtil {
 		return ObjectUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
 				SheetUtil.getCell(sheet, y, x));
+	}
+
+	/**
+	 * 为特定单元格添加批注
+	 *
+	 * @param cell 单元格
+	 * @param commentText 批注内容
+	 * @param commentAuthor 作者
+	 * @param anchor 批注的位置、大小等信息，null表示使用默认
+	 * @since 5.4.8
+	 */
+	public static void setComment(Cell cell, String commentText, String commentAuthor, ClientAnchor anchor) {
+		final Sheet sheet = cell.getSheet();
+		final Workbook wb = sheet.getWorkbook();
+		final Drawing<?> drawing = sheet.createDrawingPatriarch();
+		final CreationHelper factory = wb.getCreationHelper();
+		if (anchor == null) {
+			anchor = factory.createClientAnchor();
+			anchor.setCol1(cell.getColumnIndex() + 1);
+			anchor.setCol2(cell.getColumnIndex() + 3);
+			anchor.setRow1(cell.getRowIndex());
+			anchor.setRow2(cell.getRowIndex() + 2);
+		}
+		Comment comment = drawing.createCellComment(anchor);
+		comment.setString(factory.createRichTextString(commentText));
+		comment.setAuthor(StrUtil.nullToEmpty(commentText));
+		cell.setCellComment(comment);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start

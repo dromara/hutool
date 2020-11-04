@@ -77,9 +77,7 @@ public class JSONConverter implements Converter<JSON> {
 			}
 		}
 
-		final T targetValue = ignoreError ?
-				Convert.convertQuietly(targetType, value):
-				Convert.convert(targetType, value);
+		final T targetValue = Convert.convertWithCheck(targetType, value, null, ignoreError);
 
 		if (null == targetValue && false == ignoreError) {
 			if (StrUtil.isBlankIfStr(value)) {
