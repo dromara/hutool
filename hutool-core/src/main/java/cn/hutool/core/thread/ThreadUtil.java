@@ -144,7 +144,7 @@ public class ThreadUtil {
 	 * @param isDaemon 是否守护线程。守护线程会在主线程结束后自动结束
 	 * @return 执行的方法体
 	 */
-	public static Runnable execAsync(final Runnable runnable, boolean isDaemon) {
+	public static Runnable execAsync(Runnable runnable, boolean isDaemon) {
 		Thread thread = new Thread(runnable);
 		thread.setDaemon(isDaemon);
 		thread.start();
