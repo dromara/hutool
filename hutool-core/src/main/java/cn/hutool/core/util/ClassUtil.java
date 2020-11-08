@@ -950,10 +950,7 @@ public class ClassUtil {
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
 		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
-		if (argumentType instanceof Class) {
-			return (Class<?>) argumentType;
-		}
-		return null;
+		return TypeUtil.getClass(argumentType);
 	}
 
 	/**

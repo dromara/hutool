@@ -238,6 +238,12 @@ public class ConvertTest {
 		Assert.assertEquals("[1, 2]", atomicLongArray.toString());
 	}
 
+	@Test
+	public void toClassTest(){
+		final Class<?> convert = Convert.convert(Class.class, "cn.hutool.core.convert.ConvertTest.Product");
+		Assert.assertEquals(Product.class, convert);
+	}
+
 	@Data
 	@AllArgsConstructor
 	public static class Product implements Serializable {
