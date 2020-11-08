@@ -1,5 +1,5 @@
 /**
- * java bean 校验工具
+ * 基于JSR-303标准的校验工具类，封装了javax.validation的API
  *
  * @author chengqiang
  */

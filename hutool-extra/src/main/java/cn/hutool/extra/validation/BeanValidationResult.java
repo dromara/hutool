@@ -14,29 +14,47 @@ public class BeanValidationResult {
 	/**
 	 * 校验是否成功
 	 */
-	private Boolean success = Boolean.TRUE;
-
+	private boolean success;
 	/**
 	 * 错误消息
 	 */
 	private List<ErrorMessage> errorMessages = new ArrayList<>();
 
-	public Boolean getSuccess() {
+	/**
+	 * 构造
+	 *
+	 * @param success 是否验证成功
+	 */
+	public BeanValidationResult(boolean success){
+		this.success = success;
+	}
+
+	public boolean isSuccess() {
 		return success;
 	}
 
-	public void setSuccess(Boolean success) {
+	public BeanValidationResult setSuccess(boolean success) {
 		this.success = success;
+		return this;
 	}
 
 	public List<ErrorMessage> getErrorMessages() {
 		return errorMessages;
 	}
 
-	public void setErrorMessages(List<ErrorMessage> errorMessages) {
+	public BeanValidationResult setErrorMessages(List<ErrorMessage> errorMessages) {
 		this.errorMessages = errorMessages;
+		return this;
 	}
 
+	public BeanValidationResult addErrorMessage(ErrorMessage errorMessage){
+		this.errorMessages.add(errorMessage);
+		return this;
+	}
+
+	/**
+	 * 错误消息，包括字段名（字段路径）和消息内容
+	 */
 	public static class ErrorMessage {
 		/**
 		 * 属性字段名称
@@ -61,6 +79,14 @@ public class BeanValidationResult {
 
 		public void setMessage(String message) {
 			this.message = message;
+		}
+
+		@Override
+		public String toString() {
+			return "ErrorMessage{" +
+					"propertyName='" + propertyName + '\'' +
+					", message='" + message + '\'' +
+					'}';
 		}
 	}
 }

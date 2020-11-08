@@ -3,11 +3,12 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.8 (2020-11-03)
+# 5.5.0 (2020-11-08)
 
 ### 新特性
 * 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
 * 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
+* 【extra  】     增加ValidationUtil（pr#207@Gitee）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
