@@ -15,13 +15,25 @@ import java.util.Set;
  * <p>注意：hibernate-validator还依赖了javax.el，需自行引入。</p>
  *
  * @author chengqiang
+ * @since 5.5.0
  */
 public class ValidationUtil {
-
+	/**
+	 * 默认{@link Validator} 对象
+	 */
 	private static final Validator validator;
 
 	static {
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
+	}
+
+	/**
+	 * 获取原生{@link Validator} 对象
+	 *
+	 * @return {@link Validator} 对象
+	 */
+	public static Validator getValidator() {
+		return validator;
 	}
 
 	/**

@@ -9,6 +9,7 @@
 * 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
 * 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
 * 【extra  】     增加ValidationUtil（pr#207@Gitee）
+* 【core   】     反射调用支持传递参数的值为null（pr#1205@Github）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）

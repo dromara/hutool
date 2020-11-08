@@ -7,10 +7,9 @@ import java.util.List;
  * bean 校验结果
  *
  * @author chengqiang
+ * @since 5.5.0
  */
-
 public class BeanValidationResult {
-
 	/**
 	 * 校验是否成功
 	 */
@@ -25,29 +24,57 @@ public class BeanValidationResult {
 	 *
 	 * @param success 是否验证成功
 	 */
-	public BeanValidationResult(boolean success){
+	public BeanValidationResult(boolean success) {
 		this.success = success;
 	}
 
+	/**
+	 * 是否验证通过
+	 *
+	 * @return 是否验证通过
+	 */
 	public boolean isSuccess() {
 		return success;
 	}
 
+	/**
+	 * 设置是否通过
+	 *
+	 * @param success 是否通过
+	 * @return this
+	 */
 	public BeanValidationResult setSuccess(boolean success) {
 		this.success = success;
 		return this;
 	}
 
+	/**
+	 * 获取错误信息列表
+	 *
+	 * @return 错误信息列表
+	 */
 	public List<ErrorMessage> getErrorMessages() {
 		return errorMessages;
 	}
 
+	/**
+	 * 设置错误信息列表
+	 *
+	 * @param errorMessages 错误信息列表
+	 * @return this
+	 */
 	public BeanValidationResult setErrorMessages(List<ErrorMessage> errorMessages) {
 		this.errorMessages = errorMessages;
 		return this;
 	}
 
-	public BeanValidationResult addErrorMessage(ErrorMessage errorMessage){
+	/**
+	 * 增加错误信息
+	 *
+	 * @param errorMessage 错误信息
+	 * @return this
+	 */
+	public BeanValidationResult addErrorMessage(ErrorMessage errorMessage) {
 		this.errorMessages.add(errorMessage);
 		return this;
 	}

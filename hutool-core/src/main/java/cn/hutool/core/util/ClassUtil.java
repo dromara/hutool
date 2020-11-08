@@ -140,21 +140,22 @@ public class ClassUtil {
 	 * @param objects 对象数组，如果数组中存在{@code null}元素，则此元素被认为是Object类型
 	 * @return 类数组
 	 */
-    public static Class<?>[] getClasses(Object... objects) {
-        Class<?>[] classes = new Class<?>[objects.length];
-        Object obj;
-        for (int i = 0; i < objects.length; i++) {
-            obj = objects[i];
-            if (obj instanceof NullWrapperBean) {
-                classes[i] = ((NullWrapperBean) obj).getClasses();
-            } else if (null == obj) {
-                classes[i] = Object.class;
-            } else {
-                classes[i] = obj.getClass();
-            }
-        }
-        return classes;
-    }
+	public static Class<?>[] getClasses(Object... objects) {
+		Class<?>[] classes = new Class<?>[objects.length];
+		Object obj;
+		for (int i = 0; i < objects.length; i++) {
+			obj = objects[i];
+			if (obj instanceof NullWrapperBean) {
+				// 自定义null值的参数类型
+				classes[i] = ((NullWrapperBean<?>) obj).getWrappedClass();
+			} else if (null == obj) {
+				classes[i] = Object.class;
+			} else {
+				classes[i] = obj.getClass();
+			}
+		}
+		return classes;
+	}
 
 	/**
 	 * 指定类是否与给定的类名相同
