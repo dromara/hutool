@@ -10,6 +10,7 @@
 * 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
 * 【extra  】     增加ValidationUtil（pr#207@Gitee）
 * 【core   】     反射调用支持传递参数的值为null（pr#1205@Github）
+* 【core   】     HexUtil增加format方法（issue#I245NF@Gitee）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
