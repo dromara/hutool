@@ -782,7 +782,7 @@ public class URLUtil {
 	 * @since 5.3.11
 	 */
 	public static String getDataUriBase64(String mimeType, String data) {
-		return getDataUri(mimeType, null, "BASE64", data);
+		return getDataUri(mimeType, null, "base64", data);
 	}
 
 	/**

@@ -393,6 +393,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 定位到最后一行的后边，用于追加数据
+	 * @return this
+	 * @since 5.5.0
+	 */
+	public ExcelWriter setCurrentRowToEnd(){
+		return setCurrentRow(getRowCount());
+	}
+
+	/**
 	 * 跳过当前行
 	 *
 	 * @return this
