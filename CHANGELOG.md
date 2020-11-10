@@ -21,6 +21,7 @@
 * 【core   】     修复Ipv4Util分隔符问题（issue#I24A9I@Gitee）
 * 【core   】     修复Ipv4Util.longToIp的问题
 * 【poi    】     修复Excel07SaxReader读取公式的错误的问题（issue#I23VFL@Gitee）
+* 【http   】     修复HttpUtil.isHttp判断问题（pr#1208@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

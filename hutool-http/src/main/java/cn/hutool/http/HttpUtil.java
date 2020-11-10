@@ -51,7 +51,7 @@ public class HttpUtil {
 	 * @return 是否https
 	 */
 	public static boolean isHttps(String url) {
-		return url.toLowerCase().startsWith("https");
+		return url.toLowerCase().startsWith("https:");
 	}
 
 	/**
