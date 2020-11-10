@@ -63,6 +63,12 @@
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP-java7</artifactId>
 			<version>${hikariCP.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -75,6 +81,12 @@
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>BeeCP</artifactId>
 			<version>2.5.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -95,6 +107,16 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -138,7 +160,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.26</version>
+			<version>1.7.30</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

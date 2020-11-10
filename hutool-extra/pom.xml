@@ -30,7 +30,7 @@
 		<net.version>3.7.2</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.3.4.RELEASE</spring-boot.version>
+		<spring-boot.version>2.3.5.RELEASE</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -73,6 +73,16 @@
 			<artifactId>rythm-engine</artifactId>
 			<version>${rythm.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-lang3</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>mvel2</artifactId>
+					<groupId>org.mvel</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -94,6 +104,12 @@
 			<artifactId>thymeleaf</artifactId>
 			<version>${thymeleaf.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -150,6 +166,12 @@
 			<groupId>com.huaban</groupId>
 			<artifactId>jieba-analysis</artifactId>
 			<version>1.0.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-lang3</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -200,6 +222,32 @@
 			<groupId>org.apdplat</groupId>
 			<artifactId>word</artifactId>
 			<version>1.3.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>pinyin4j</artifactId>
+					<groupId>com.belerweb</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-core</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jedis</artifactId>
+					<groupId>redis.clients</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -213,6 +261,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 			<version>${spring-boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-expression</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -246,6 +304,7 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- 验证工具可选依赖 begin -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
@@ -265,18 +324,44 @@
 			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- 验证工具可选依赖 end -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring-boot.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>asm</artifactId>
+					<groupId>org.ow2.asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit-jupiter-api</artifactId>
+					<groupId>org.junit.jupiter</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<!-- 表达式引擎可选依赖 begin -->
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
@@ -312,5 +397,6 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- 表达式引擎可选依赖 end -->
 	</dependencies>
 </project>
