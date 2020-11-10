@@ -54,6 +54,7 @@ public class ValidationUtil {
 	 * @param <T>          Bean类型
 	 * @param bean         bean
 	 * @param propertyName 属性名称
+	 * @param groups       验证分组
 	 * @return {@link Set}
 	 */
 	public static <T> Set<ConstraintViolation<T>> validateProperty(T bean, String propertyName, Class<?>... groups) {
@@ -77,6 +78,7 @@ public class ValidationUtil {
 	 *
 	 * @param bean         bean
 	 * @param propertyName 属性名称
+	 * @param groups       验证分组
 	 * @return {@link BeanValidationResult}
 	 */
 	public static <T> BeanValidationResult warpValidateProperty(T bean, String propertyName, Class<?>... groups) {
