@@ -5,10 +5,12 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -133,11 +135,13 @@ public class ExcelReadTest {
 		reader.addHeaderAlias("姓名", "name");
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
+		reader.addHeaderAlias("鞋码", "shoeSize");
 
 		List<Person> all = reader.readAll(Person.class);
 		Assert.assertEquals("张三", all.get(0).getName());
 		Assert.assertEquals("男", all.get(0).getGender());
 		Assert.assertEquals(Integer.valueOf(11), all.get(0).getAge());
+		Assert.assertEquals(new BigDecimal("41.5"), all.get(0).getShoeSize());
 	}
 
 	@Test
@@ -154,39 +158,12 @@ public class ExcelReadTest {
 		}
 	}
 
+	@Data
 	public static class Person {
 		private String name;
 		private String gender;
 		private Integer age;
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getGender() {
-			return gender;
-		}
-
-		public void setGender(String gender) {
-			this.gender = gender;
-		}
-
-		public Integer getAge() {
-			return age;
-		}
-
-		public void setAge(Integer age) {
-			this.age = age;
-		}
-
-		@Override
-		public String toString() {
-			return "Person [name=" + name + ", gender=" + gender + ", age=" + age + "]";
-		}
+		private BigDecimal shoeSize;
 	}
 
 	@Test
