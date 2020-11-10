@@ -1,0 +1,5 @@
+cn.hutool.extra.expression.engine.aviator.AviatorEngine
+cn.hutool.extra.expression.engine.jexl.JexlEngine
+cn.hutool.extra.expression.engine.mvel.MvelEngine
+cn.hutool.extra.expression.engine.jfireel.JfireELEngine
+cn.hutool.extra.expression.engine.spel.SpELEngine

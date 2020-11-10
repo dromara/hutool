@@ -13,6 +13,7 @@
 * 【core   】     HexUtil增加format方法（issue#I245NF@Gitee）
 * 【poi    】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
 * 【core   】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
+* 【extra  】     增加表达式引擎封装（ExpressionUtil）（pr#1203@Github）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
