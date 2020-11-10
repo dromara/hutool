@@ -2,9 +2,11 @@ package cn.hutool.poi.excel.test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,10 +107,39 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
+	public void formulaRead03Test() {
+		Console.log(FileUtil.file("data_for_sax_test.xls"));
+		List<Object> rows = new ArrayList<>();
+		ExcelUtil.readBySax("data_for_sax_test.xls", -1, (i, i1, list) -> {
+			if(list.size() > 1){
+				rows.add(list.get(1));
+			} else{
+				rows.add("");
+			}
+		});
+		Assert.assertEquals(50L, rows.get(3));
+	}
+
+	@Test
+	public void formulaRead07Test() {
+		List<Object> rows = new ArrayList<>();
+		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0, (i, i1, list) ->
+				rows.add(list.get(1)));
+
+		final FormulaCellValue value = (FormulaCellValue) rows.get(3);
+		Assert.assertEquals(50L, value.getResult());
+	}
+
+	@Test
 	public void dateReadTest() {
-		ExcelUtil.readBySax("d:/test/date_test.xls", 0, (i, i1, list) ->
-				Console.log(StrUtil.join(", ", list)));
+		List<String> rows = new ArrayList<>();
+		ExcelUtil.readBySax("data_for_sax_test.xls", 0, (i, i1, list) ->
+				rows.add(StrUtil.toString(list.get(0))));
+
+		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
+		// 非日期格式不做转换
+		Assert.assertEquals("112233", rows.get(2));
+		Assert.assertEquals("1000", rows.get(3));
 	}
 
 	@Test

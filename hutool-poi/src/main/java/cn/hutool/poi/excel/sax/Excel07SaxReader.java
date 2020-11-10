@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -54,6 +55,8 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	private long rowNumber;
 	// 当前列坐标， 如A1，B5
 	private String curCoordinate;
+	// 当前节点名称
+	private ElementName curElementName;
 	// 前一个列的坐标
 	private String preCoordinate;
 	// 行的最大列坐标
@@ -65,6 +68,8 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 
 	// 上一次的内容
 	private final StrBuilder lastContent = StrUtil.strBuilder();
+	// 上一次的内容
+	private final StrBuilder lastFormula = StrUtil.strBuilder();
 	// 存储每行的列元素
 	private List<Object> rowCellList = new ArrayList<>();
 
@@ -189,10 +194,20 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		if (ElementName.row.match(localName)) {// 行开始
-			startRow(attributes);
-		} else if (ElementName.c.match(localName)) {// 单元格元素
-			startCell(attributes);
+		final ElementName name = ElementName.of(localName);
+		this.curElementName = name;
+
+		if(null != name){
+			switch (name){
+				case row:
+					// 行开始
+					startRow(attributes);
+					break;
+				case c:
+					// 单元格元素
+					startCell(attributes);
+					break;
+			}
 		}
 	}
 
@@ -201,6 +216,7 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) {
+		this.curElementName = null;
 		if (ElementName.c.match(localName)) { // 单元格结束
 			endCell();
 		} else if (ElementName.row.match(localName)) {// 行结束
@@ -213,8 +229,16 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void characters(char[] ch, int start, int length) {
-		// 得到单元格内容的值
-		lastContent.append(ch, start, length);
+		switch (this.curElementName){
+			case v:
+				// 得到单元格内容的值
+				lastContent.append(ch, start, length);
+				break;
+			case f:
+				// 得到单元格内容的值
+				lastFormula.append(ch, start, length);
+				break;
+		}
 	}
 
 	// --------------------------------------------------------------------------------------- Private method start
@@ -299,16 +323,21 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 
 		// 清空之前的数据
 		lastContent.reset();
+		lastFormula.reset();
 	}
 
 	/**
 	 * 一个单元格结尾
 	 */
 	private void endCell() {
-		final String contentStr = StrUtil.trim(lastContent);
-		final Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
 		// 补全单元格之间的空格
 		fillBlankCell(preCoordinate, curCoordinate, false);
+
+		final String contentStr = StrUtil.trim(lastContent);
+		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
+		if(false == this.lastFormula.isEmpty()){
+			value = new FormulaCellValue(StrUtil.trim(lastFormula), value);
+		}
 		addCellValue(curCell++, value);
 	}
 
