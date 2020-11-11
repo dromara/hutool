@@ -15,6 +15,7 @@
 * 【core   】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
 * 【extra  】     增加表达式引擎封装（ExpressionUtil）（pr#1203@Github）
 * 【core   】     增加enum转数字支持（issue#I24QZY@Gitee）
+* 【core   】     NumberUtil.toBigDecimal空白符转换为0（issue#I24MRP@Gitee）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
@@ -26,6 +27,7 @@
 * 【http   】     修复HttpUtil.isHttp判断问题（pr#1208@Github）
 * 【http   】     修复Snowflake时间回拨导致ID重复的bug（issue#1206@Github）
 * 【core   】     修复StrUtil.lastIndexOf查找位于首位的字符串找不到的bug（issue#I24RSV@Gitee）
+* 【poi    】     修复BigExcelWriter的autoSizeColumnAll问题（pr#1221@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
