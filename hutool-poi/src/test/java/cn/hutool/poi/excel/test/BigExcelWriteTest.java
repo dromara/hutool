@@ -16,11 +16,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 写出Excel单元测试
@@ -216,5 +212,28 @@ public class BigExcelWriteTest {
 		try (ExcelWriter writer = ExcelUtil.getBigWriter(destFilePath)) {
 			writer.write(data).flush();
 		}
+	}
+
+	@Test
+	@Ignore
+	public void issue1210() {
+		// 通过工具类创建writer
+		String path = "e:/issue1210.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		writer.addHeaderAlias("id", "SN");
+		writer.addHeaderAlias("userName", "User Name");
+		List<Map<String, Object>> list = new ArrayList<>();
+		list.add(new HashMap<String, Object>() {{
+			put("id", 1);
+			put("userName", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		}});
+		list.add(new HashMap<String, Object>() {{
+			put("id", 2);
+			put("userName", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+		}});
+		writer.write(list, true);
+		writer.autoSizeColumnAll();
+		writer.close();
 	}
 }
