@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 
 import java.io.File;
@@ -268,6 +269,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 4.0.12
 	 */
 	public ExcelWriter autoSizeColumn(int columnIndex) {
+		SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.trackAllColumnsForAutoSizing();
 		this.sheet.autoSizeColumn(columnIndex);
 		return this;
 	}
