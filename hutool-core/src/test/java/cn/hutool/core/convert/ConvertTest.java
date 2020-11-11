@@ -2,6 +2,7 @@ package cn.hutool.core.convert;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -252,5 +253,29 @@ public class ConvertTest {
 		private String name;
 		private String cName;
 		private String version;
+	}
+
+	@Test
+	public void enumToIntTest(){
+		final Integer integer = Convert.toInt(BuildingType.CUO);
+		Assert.assertEquals(1, integer.intValue());
+	}
+
+	@Getter
+	public enum BuildingType {
+		PING(1, "平层"),
+		CUO(2, "错层"),
+		YUE(3, "跃层"),
+		FUSHI(4, "复式"),
+		KAIJIAN(5, "开间"),
+		OTHER(6, "其他");
+
+		private final int id;
+		private final String name;
+
+		BuildingType(int id, String name){
+			this.id = id;
+			this.name = name;
+		}
 	}
 }

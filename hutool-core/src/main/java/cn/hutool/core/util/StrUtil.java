@@ -4019,7 +4019,7 @@ public class StrUtil {
 			return str.toString().lastIndexOf(searchStr.toString(), fromIndex);
 		}
 
-		for (int i = fromIndex; i > 0; i--) {
+		for (int i = fromIndex; i >= 0; i--) {
 			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
 				return i;
 			}

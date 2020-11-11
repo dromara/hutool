@@ -164,6 +164,7 @@ public class StrUtilTest {
 		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", -1));
 		Assert.assertEquals(2, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(3, StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
+		Assert.assertEquals(0, StrUtil.lastIndexOfIgnoreCase("AAAcsd", "aaa"));
 	}
 
 	@Test

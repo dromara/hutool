@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.0 (2020-11-09)
+# 5.5.0 (2020-11-11)
 
 ### 新特性
 * 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
@@ -14,6 +14,7 @@
 * 【poi    】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
 * 【core   】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
 * 【extra  】     增加表达式引擎封装（ExpressionUtil）（pr#1203@Github）
+* 【core   】     增加enum转数字支持（issue#I24QZY@Gitee）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
@@ -24,6 +25,7 @@
 * 【poi    】     修复Excel07SaxReader读取公式的错误的问题（issue#I23VFL@Gitee）
 * 【http   】     修复HttpUtil.isHttp判断问题（pr#1208@Github）
 * 【http   】     修复Snowflake时间回拨导致ID重复的bug（issue#1206@Github）
+* 【core   】     修复StrUtil.lastIndexOf查找位于首位的字符串找不到的bug（issue#I24RSV@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
