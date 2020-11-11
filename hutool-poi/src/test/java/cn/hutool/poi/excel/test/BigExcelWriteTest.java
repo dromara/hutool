@@ -157,6 +157,29 @@ public class BigExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void issue1210() {
+		// 通过工具类创建writer
+		String path = "e:/issue1210.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		writer.addHeaderAlias("id", "SN");
+		writer.addHeaderAlias("userName", "User Name");
+		List<Map<String, Object>> list = new ArrayList<>();
+		list.add(new HashMap<String, Object>(){{
+			put("id", 1);
+			put("userName", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		}});
+		list.add(new HashMap<String, Object>(){{
+			put("id", 2);
+			put("userName", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+		}});
+		writer.write(list, true);
+		writer.autoSizeColumnAll();
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeBeanTest() {
 		TestBean bean1 = new TestBean();
 		bean1.setName("张三");
