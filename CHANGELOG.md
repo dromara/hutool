@@ -18,6 +18,7 @@
 * 【core   】     NumberUtil.toBigDecimal空白符转换为0（issue#I24MRP@Gitee）
 * 【core   】     CollUtil和IterUtil增加size方法（pr#208@Gitee）
 * 【extra  】     新增SimpleFtpServer
+* 【extra  】     新增CompressUtil压缩封装
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）

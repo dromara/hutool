@@ -27,6 +27,15 @@ import java.util.List;
  */
 public class SimpleFtpServer {
 
+	/**
+	 * 创建FTP服务器，调用{@link SimpleFtpServer#start()}启动即可
+	 *
+	 * @return SimpleFtpServer
+	 */
+	public static SimpleFtpServer create() {
+		return new SimpleFtpServer();
+	}
+
 	FtpServerFactory serverFactory;
 	ListenerFactory listenerFactory;
 
@@ -36,15 +45,6 @@ public class SimpleFtpServer {
 	public SimpleFtpServer() {
 		serverFactory = new FtpServerFactory();
 		listenerFactory = new ListenerFactory();
-	}
-
-	/**
-	 * 创建FTP服务器，调用{@link SimpleFtpServer#start()}启动即可
-	 *
-	 * @return SimpleFtpServer
-	 */
-	public static SimpleFtpServer create() {
-		return new SimpleFtpServer();
 	}
 
 	/**
