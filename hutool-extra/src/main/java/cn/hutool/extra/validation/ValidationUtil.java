@@ -76,6 +76,7 @@ public class ValidationUtil {
 	/**
 	 * 校验bean的某一个属性
 	 *
+	 * @param <T>  bean类型
 	 * @param bean         bean
 	 * @param propertyName 属性名称
 	 * @param groups       验证分组
