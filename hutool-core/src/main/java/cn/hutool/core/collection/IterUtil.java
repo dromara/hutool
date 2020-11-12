@@ -828,13 +828,17 @@ public class IterUtil {
 	 *
 	 * @param iterable Iterable对象
 	 * @return Iterable对象的元素数量
-	 * @since 5.4.8
+	 * @since 5.5.0
 	 */
 	public static int size(final Iterable<?> iterable) {
+		if(null == iterable){
+			return 0;
+		}
+
 		if (iterable instanceof Collection<?>) {
 			return ((Collection<?>) iterable).size();
 		} else {
-			return size(iterable != null ? iterable.iterator() : empty());
+			return size(iterable.iterator());
 		}
 	}
 
@@ -843,7 +847,7 @@ public class IterUtil {
 	 *
 	 * @param iterator Iterator对象
 	 * @return Iterator对象的元素数量
-	 * @since 5.4.8
+	 * @since 5.5.0
 	 */
 	public static int size(final Iterator<?> iterator) {
 		int size = 0;

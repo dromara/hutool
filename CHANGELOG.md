@@ -16,6 +16,7 @@
 * 【extra  】     增加表达式引擎封装（ExpressionUtil）（pr#1203@Github）
 * 【core   】     增加enum转数字支持（issue#I24QZY@Gitee）
 * 【core   】     NumberUtil.toBigDecimal空白符转换为0（issue#I24MRP@Gitee）
+* 【core   】     CollUtil和IterUtil增加size方法（pr#208@Gitee）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
