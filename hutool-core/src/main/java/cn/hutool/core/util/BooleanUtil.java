@@ -13,6 +13,16 @@ import java.util.Set;
  */
 public class BooleanUtil {
 
+	public static final String Y = "y";
+	public static final String N = "n";
+
+	public static final String YES = "yes";
+	public static final String NO = "no";
+
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+
+
 	/** 表示为真的字符串 */
 	private static final Set<String> TRUE_SET = CollUtil.newHashSet("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
 
