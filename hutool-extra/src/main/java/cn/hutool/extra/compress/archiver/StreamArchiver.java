@@ -56,7 +56,7 @@ public class StreamArchiver implements Archiver {
 		return new StreamArchiver(charset, archiverName, out);
 	}
 
-	private ArchiveOutputStream out;
+	private final ArchiveOutputStream out;
 
 	/**
 	 * 构造

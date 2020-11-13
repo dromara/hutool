@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * 数据归档封装，归档即将几个文件或目录打成一个压缩包<br>
+ * 数据归档封装，归档即将几个文件或目录打成一个压缩包
  *
  * @author looly
  */
