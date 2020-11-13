@@ -3,12 +3,12 @@ package cn.hutool.extra.compress.archiver;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.SeekableByteChannel;
@@ -67,7 +67,7 @@ public class SevenZArchiver implements Archiver {
 	}
 
 	@Override
-	public SevenZArchiver add(File file, String path, FileFilter filter) {
+	public SevenZArchiver add(File file, String path, Filter<File> filter) {
 		try {
 			addInternal(file, path, filter);
 		} catch (IOException e) {
@@ -108,9 +108,9 @@ public class SevenZArchiver implements Archiver {
 	 *
 	 * @param file   文件或目录
 	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link FileFilter#accept(File)}为true时加入。
+	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 */
-	private void addInternal(File file, String path, FileFilter filter) throws IOException {
+	private void addInternal(File file, String path, Filter<File> filter) throws IOException {
 		if (null != filter && false == filter.accept(file)) {
 			return;
 		}

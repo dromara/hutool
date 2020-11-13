@@ -3,6 +3,7 @@ package cn.hutool.extra.compress.archiver;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.compress.CompressException;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -12,7 +13,6 @@ import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -97,12 +97,12 @@ public class StreamArchiver implements Archiver {
 	 *
 	 * @param file   文件或目录
 	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link FileFilter#accept(File)}为true时加入。
+	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	@Override
-	public StreamArchiver add(File file, String path, FileFilter filter) throws IORuntimeException {
+	public StreamArchiver add(File file, String path, Filter<File> filter) throws IORuntimeException {
 		try {
 			addInternal(file, path, filter);
 		} catch (IOException e) {
@@ -141,9 +141,9 @@ public class StreamArchiver implements Archiver {
 	 *
 	 * @param file   文件或目录
 	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link FileFilter#accept(File)}为true时加入。
+	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 */
-	private void addInternal(File file, String path, FileFilter filter) throws IOException {
+	private void addInternal(File file, String path, Filter<File> filter) throws IOException {
 		if (null != filter && false == filter.accept(file)) {
 			return;
 		}
