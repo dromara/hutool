@@ -98,7 +98,8 @@ public class ValidationUtil {
 			ErrorMessage errorMessage = new ErrorMessage();
 			errorMessage.setPropertyName(constraintViolation.getPropertyPath().toString());
 			errorMessage.setMessage(constraintViolation.getMessage());
-			result.getErrorMessages().add(errorMessage);
+			errorMessage.setValue(constraintViolation.getInvalidValue());
+			result.addErrorMessage(errorMessage);
 		}
 		return result;
 	}
