@@ -5,20 +5,23 @@
 
 # 5.5.0 (2020-11-14)
 
+### 大版本特性
+* 【extra  】     增加jakarta.validation-api封装：ValidationUtil（pr#207@Gitee）
+* 【extra  】     增加表达式引擎封装：ExpressionUtil（pr#1203@Github）
+* 【extra  】     新增基于Apache-FtpServer封装：SimpleFtpServer
+* 【extra  】     新增基于Commons-Compress封装：CompressUtil
+
 ### 新特性
 * 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
 * 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
-* 【extra  】     增加ValidationUtil（pr#207@Gitee）
 * 【core   】     反射调用支持传递参数的值为null（pr#1205@Github）
 * 【core   】     HexUtil增加format方法（issue#I245NF@Gitee）
 * 【poi    】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
 * 【core   】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
-* 【extra  】     增加表达式引擎封装（ExpressionUtil）（pr#1203@Github）
 * 【core   】     增加enum转数字支持（issue#I24QZY@Gitee）
 * 【core   】     NumberUtil.toBigDecimal空白符转换为0（issue#I24MRP@Gitee）
 * 【core   】     CollUtil和IterUtil增加size方法（pr#208@Gitee）
-* 【extra  】     新增SimpleFtpServer
-* 【extra  】     新增CompressUtil压缩封装
+* 【poi    】     ExcelReader的read方法读取空单元格增加CellEditor处理（issue#1213@Github）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）

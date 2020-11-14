@@ -66,6 +66,15 @@ public class SevenZArchiver implements Archiver {
 		}
 	}
 
+	/**
+	 * 获取{@link SevenZOutputFile}以便自定义相关设置
+	 *
+	 * @return {@link SevenZOutputFile}
+	 */
+	public SevenZOutputFile getSevenZOutputFile() {
+		return this.sevenZOutputFile;
+	}
+
 	@Override
 	public SevenZArchiver add(File file, String path, Filter<File> filter) {
 		try {
@@ -93,9 +102,9 @@ public class SevenZArchiver implements Archiver {
 		} catch (Exception ignore) {
 			//ignore
 		}
-		if(null != out && this.channel instanceof SeekableInMemoryByteChannel){
+		if (null != out && this.channel instanceof SeekableInMemoryByteChannel) {
 			try {
-				out.write(((SeekableInMemoryByteChannel)this.channel).array());
+				out.write(((SeekableInMemoryByteChannel) this.channel).array());
 			} catch (IOException e) {
 				throw new IORuntimeException(e);
 			}

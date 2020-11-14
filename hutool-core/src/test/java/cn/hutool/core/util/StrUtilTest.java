@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
@@ -431,6 +432,14 @@ public class StrUtilTest {
 
 		String[] results2 = StrUtil.subBetweenAll(src2, "/*", "*/");
 		Assert.assertEquals(0, results2.length);
+	}
+
+	@Test
+	public void subBetweenAllTest3() {
+		String src1 = "'abc'and'123'";
+
+		final String[] strings = StrUtil.subBetweenAll(src1, "'", "'");
+		Console.log(strings);
 	}
 
 	@Test

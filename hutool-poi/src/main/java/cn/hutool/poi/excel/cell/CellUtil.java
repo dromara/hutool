@@ -74,10 +74,7 @@ public class CellUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
-		if (null == cell) {
-			return null;
-		}
-		return getCellValue(cell, cell.getCellTypeEnum(), cellEditor);
+		return getCellValue(cell, null, cellEditor);
 	}
 
 	/**
@@ -104,6 +101,9 @@ public class CellUtil {
 	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {
 		if (null == cell) {
 			return null;
+		}
+		if(cell instanceof NullCell){
+			return null == cellEditor ? null : cellEditor.edit(cell, null);
 		}
 		if (null == cellType) {
 			cellType = cell.getCellTypeEnum();
@@ -235,7 +235,23 @@ public class CellUtil {
 	}
 
 	/**
-	 * 获取已有行或创建新行
+	 *获取单元格，如果单元格不存在，返回{@link NullCell}
+	 *
+	 * @param row       Excel表的行
+	 * @param cellIndex 列号
+	 * @return {@link Row}
+	 * @since 5.5.0
+	 */
+	public static Cell getCell(Row row, int cellIndex) {
+		Cell cell = row.getCell(cellIndex);
+		if (null == cell) {
+			return new NullCell(row, cellIndex);
+		}
+		return cell;
+	}
+
+	/**
+	 * 获取已有单元格或创建新单元格
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号

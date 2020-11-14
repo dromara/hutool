@@ -1,5 +1,7 @@
 package cn.hutool.extra.compress;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.compress.archiver.Archiver;
 import cn.hutool.extra.compress.archiver.SevenZArchiver;
 import cn.hutool.extra.compress.archiver.StreamArchiver;
@@ -8,6 +10,10 @@ import cn.hutool.extra.compress.extractor.SenvenZExtractor;
 import cn.hutool.extra.compress.extractor.StreamExtractor;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.CompressorOutputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -22,6 +28,62 @@ import java.nio.charset.Charset;
  * @since 5.5.0
  */
 public class CompressUtil {
+
+	/**
+	 * 获取压缩输出流，用于压缩指定内容，支持的格式例如：
+	 * <ul>
+	 *     <li>{@value CompressorStreamFactory#GZIP}</li>
+	 *     <li>{@value CompressorStreamFactory#BZIP2}</li>
+	 *     <li>{@value CompressorStreamFactory#XZ}</li>
+	 *     <li>{@value CompressorStreamFactory#PACK200}</li>
+	 *     <li>{@value CompressorStreamFactory#SNAPPY_FRAMED}</li>
+	 *     <li>{@value CompressorStreamFactory#LZ4_BLOCK}</li>
+	 *     <li>{@value CompressorStreamFactory#LZ4_FRAMED}</li>
+	 *     <li>{@value CompressorStreamFactory#ZSTANDARD}</li>
+	 *     <li>{@value CompressorStreamFactory#DEFLATE}</li>
+	 * </ul>
+	 *
+	 * @param compressorName 压缩名称，见：{@link CompressorStreamFactory}
+	 * @param out            输出流，可以输出到内存、网络或文件
+	 * @return {@link CompressorOutputStream}
+	 */
+	public CompressorOutputStream getOut(String compressorName, OutputStream out) {
+		try {
+			return new CompressorStreamFactory().createCompressorOutputStream(compressorName, out);
+		} catch (CompressorException e) {
+			throw new CompressException(e);
+		}
+	}
+
+	/**
+	 * 获取压缩输入流，用于解压缩指定内容，支持的格式例如：
+	 * <ul>
+	 *     <li>{@value CompressorStreamFactory#GZIP}</li>
+	 *     <li>{@value CompressorStreamFactory#BZIP2}</li>
+	 *     <li>{@value CompressorStreamFactory#XZ}</li>
+	 *     <li>{@value CompressorStreamFactory#PACK200}</li>
+	 *     <li>{@value CompressorStreamFactory#SNAPPY_FRAMED}</li>
+	 *     <li>{@value CompressorStreamFactory#LZ4_BLOCK}</li>
+	 *     <li>{@value CompressorStreamFactory#LZ4_FRAMED}</li>
+	 *     <li>{@value CompressorStreamFactory#ZSTANDARD}</li>
+	 *     <li>{@value CompressorStreamFactory#DEFLATE}</li>
+	 * </ul>
+	 *
+	 * @param compressorName 压缩名称，见：{@link CompressorStreamFactory}，null表示自动检测
+	 * @param in            输出流，可以输出到内存、网络或文件
+	 * @return {@link CompressorOutputStream}
+	 */
+	public CompressorInputStream getIn(String compressorName, InputStream in) {
+		in = IoUtil.toMarkSupportStream(in);
+		try {
+			if(StrUtil.isBlank(compressorName)){
+				compressorName = CompressorStreamFactory.detect(in);
+			}
+			return new CompressorStreamFactory().createCompressorInputStream(compressorName, in);
+		} catch (CompressorException e) {
+			throw new CompressException(e);
+		}
+	}
 
 	/**
 	 * 创建归档器，支持：
@@ -108,11 +170,11 @@ public class CompressUtil {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SenvenZExtractor(file);
 		}
-		try{
+		try {
 			return new StreamExtractor(charset, archiverName, file);
-		} catch (CompressException e){
+		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
-			if(cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")){
+			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
 				return new SenvenZExtractor(file);
 			}
 			throw e;
@@ -158,11 +220,11 @@ public class CompressUtil {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SenvenZExtractor(in);
 		}
-		try{
+		try {
 			return new StreamExtractor(charset, archiverName, in);
-		} catch (CompressException e){
+		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
-			if(cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")){
+			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
 				return new SenvenZExtractor(in);
 			}
 			throw e;
