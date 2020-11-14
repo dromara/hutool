@@ -80,7 +80,7 @@ public class BeanValidationResult {
 	}
 
 	/**
-	 * 错误消息，包括字段名（字段路径）和消息内容
+	 * 错误消息，包括字段名（字段路径）、消息内容和字段值
 	 */
 	public static class ErrorMessage {
 		/**
@@ -91,6 +91,10 @@ public class BeanValidationResult {
 		 * 错误信息
 		 */
 		private String message;
+		/**
+		 * 错误值
+		 */
+		private Object value;
 
 		public String getPropertyName() {
 			return propertyName;
@@ -108,11 +112,20 @@ public class BeanValidationResult {
 			this.message = message;
 		}
 
+		public Object getValue() {
+			return value;
+		}
+
+		public void setValue(Object value) {
+			this.value = value;
+		}
+
 		@Override
 		public String toString() {
 			return "ErrorMessage{" +
 					"propertyName='" + propertyName + '\'' +
 					", message='" + message + '\'' +
+					", value=" + value +
 					'}';
 		}
 	}
