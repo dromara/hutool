@@ -2405,10 +2405,19 @@ public class StrUtil {
 		}
 
 		final List<String> result = new LinkedList<>();
-		for (String fragment : split(str, prefix)) {
-			int suffixIndex = fragment.indexOf(suffix.toString());
-			if (suffixIndex > 0) {
-				result.add(fragment.substring(0, suffixIndex));
+		final String[] split = split(str, prefix);
+		if(prefix.equals(suffix)){
+			// 前后缀字符相同，单独处理
+			for (int i = 1, length = split.length - 1; i < length; i += 2) {
+				result.add(split[i]);
+			}
+		} else{
+			int suffixIndex;
+			for (String fragment : split) {
+				suffixIndex = fragment.indexOf(suffix.toString());
+				if (suffixIndex > 0) {
+					result.add(fragment.substring(0, suffixIndex));
+				}
 			}
 		}
 
@@ -2433,23 +2442,13 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param str    被切割的字符串
-	 * @param beforeAndAfter 截取开始和结束的字符串标识
+	 * @param prefixAndSuffix 截取开始和结束的字符串标识
 	 * @return 截取后的字符串
 	 * @author gotanks
-	 * @since 5.4.7
+	 * @since 5.5.0
 	 */
-	public static String[] subBetweenAll(CharSequence str, CharSequence beforeAndAfter) {
-		String[] resultArr = new String[0];
-		if (hasEmpty(str, beforeAndAfter) || !contains(str, beforeAndAfter)) {
-			return resultArr;
-		}
-
-		final List<String> result = new LinkedList<>();
-		String[] split = split(str, beforeAndAfter);
-		for (int i = 1, length = split.length - 1; i < length; i = i + 2) {
-			result.add(split[i]);
-		}
-		return result.toArray(resultArr);
+	public static String[] subBetweenAll(CharSequence str, CharSequence prefixAndSuffix) {
+		return subBetweenAll(str, prefixAndSuffix, prefixAndSuffix);
 	}
 
 	/**

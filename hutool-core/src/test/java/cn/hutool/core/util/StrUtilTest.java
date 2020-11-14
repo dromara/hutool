@@ -1,6 +1,5 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
@@ -437,9 +436,21 @@ public class StrUtilTest {
 	@Test
 	public void subBetweenAllTest3() {
 		String src1 = "'abc'and'123'";
+		String[] strings = StrUtil.subBetweenAll(src1, "'", "'");
+		Assert.assertEquals(2, strings.length);
+		Assert.assertEquals("abc", strings[0]);
+		Assert.assertEquals("123", strings[1]);
 
-		final String[] strings = StrUtil.subBetweenAll(src1, "'", "'");
-		Console.log(strings);
+		String src2 = "'abc''123'";
+		strings = StrUtil.subBetweenAll(src2, "'", "'");
+		Assert.assertEquals(2, strings.length);
+		Assert.assertEquals("abc", strings[0]);
+		Assert.assertEquals("123", strings[1]);
+
+		String src3 = "'abc'123'";
+		strings = StrUtil.subBetweenAll(src3, "'", "'");
+		Assert.assertEquals(1, strings.length);
+		Assert.assertEquals("abc", strings[0]);
 	}
 
 	@Test

@@ -34,6 +34,7 @@
 * 【http   】     修复Snowflake时间回拨导致ID重复的bug（issue#1206@Github）
 * 【core   】     修复StrUtil.lastIndexOf查找位于首位的字符串找不到的bug（issue#I24RSV@Gitee）
 * 【poi    】     修复BigExcelWriter的autoSizeColumnAll问题（pr#1221@Github）
+* 【core   】     修复StrUtil.subBetweenAll不支持相同字符的问题（pr#1217@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
