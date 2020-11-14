@@ -2416,6 +2416,43 @@ public class StrUtil {
 	}
 
 	/**
+	 * 截取指定字符串多段中间部分，不包括标识字符串<br>
+	 * <p>
+	 * 栗子：
+	 *
+	 * <pre>
+	 * StrUtil.subBetweenAll(null, *)          			= []
+	 * StrUtil.subBetweenAll(*, null)          			= []
+	 * StrUtil.subBetweenAll(*, *)          			= []
+	 * StrUtil.subBetweenAll("", "")          			= []
+	 * StrUtil.subBetweenAll("", "#")         			= []
+	 * StrUtil.subBetweenAll("gotanks", "")     		= []
+	 * StrUtil.subBetweenAll("#gotanks#", "#")   		= ["gotanks"]
+	 * StrUtil.subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
+	 * StrUtil.subBetweenAll("#hello# world#!", "#");   = ["hello"]
+	 * </pre>
+	 *
+	 * @param str    被切割的字符串
+	 * @param beforeAndAfter 截取开始和结束的字符串标识
+	 * @return 截取后的字符串
+	 * @author gotanks
+	 * @since 5.4.7
+	 */
+	public static String[] subBetweenAll(CharSequence str, CharSequence beforeAndAfter) {
+		String[] resultArr = new String[0];
+		if (hasEmpty(str, beforeAndAfter) || !contains(str, beforeAndAfter)) {
+			return resultArr;
+		}
+
+		final List<String> result = new LinkedList<>();
+		String[] split = split(str, beforeAndAfter);
+		for (int i = 1, length = split.length - 1; i < length; i = i + 2) {
+			result.add(split[i]);
+		}
+		return result.toArray(resultArr);
+	}
+
+	/**
 	 * 给定字符串是否被字符包围
 	 *
 	 * @param str    字符串
