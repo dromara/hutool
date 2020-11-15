@@ -968,41 +968,13 @@ public class FileUtil extends PathUtil {
 	 * 移动文件或者目录
 	 *
 	 * @param src        源文件或者目录
-	 * @param dest       目标文件或者目录
+	 * @param target       目标文件或者目录
 	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
 	 * @throws IORuntimeException IO异常
+	 * @see PathUtil#move(Path, Path, boolean)
 	 */
-	public static void move(File src, File dest, boolean isOverride) throws IORuntimeException {
-		// check
-		if (false == src.exists()) {
-			throw new IORuntimeException("File not found: " + src);
-		}
-
-		// 来源为文件夹，目标为文件
-		if (src.isDirectory() && dest.isFile()) {
-			throw new IORuntimeException(StrUtil.format("Can not move directory [{}] to file [{}]", src, dest));
-		}
-
-		if (isOverride && dest.isFile()) {// 只有目标为文件的情况下覆盖之
-			//noinspection ResultOfMethodCallIgnored
-			dest.delete();
-		}
-
-		// 来源为文件，目标为文件夹
-		if (src.isFile() && dest.isDirectory()) {
-			dest = new File(dest, src.getName());
-		}
-
-		if (false == src.renameTo(dest)) {
-			// 在文件系统不同的情况下，renameTo会失败，此时使用copy，然后删除原文件
-			try {
-				copy(src, dest, isOverride);
-			} catch (Exception e) {
-				throw new IORuntimeException(StrUtil.format("Move [{}] to [{}] failed!", src, dest), e);
-			}
-			// 复制后删除源
-			del(src);
-		}
+	public static void move(File src, File target, boolean isOverride) throws IORuntimeException {
+		move(src.toPath(), target.toPath(), isOverride);
 	}
 
 	/**

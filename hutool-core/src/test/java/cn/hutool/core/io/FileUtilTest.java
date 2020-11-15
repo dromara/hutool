@@ -74,6 +74,12 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@Ignore
+	public void renameTest2() {
+		FileUtil.move(FileUtil.file("d:/test/a"), FileUtil.file("d:/test/b"), false);
+	}
+
+	@Test
 	public void copyTest() {
 		File srcFile = FileUtil.file("hutool.jpg");
 		File destFile = FileUtil.file("hutool.copy.jpg");
