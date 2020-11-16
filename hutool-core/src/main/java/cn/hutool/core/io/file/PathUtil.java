@@ -2,6 +2,8 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.visitor.CopyVisitor;
+import cn.hutool.core.io.file.visitor.DelVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -128,24 +130,7 @@ public class PathUtil {
 
 		try {
 			if (isDirectory(path)) {
-				Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-
-					@Override
-					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-						Files.delete(file);
-						return FileVisitResult.CONTINUE;
-					}
-
-					@Override
-					public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-						if (e == null) {
-							Files.delete(dir);
-							return FileVisitResult.CONTINUE;
-						} else {
-							throw e;
-						}
-					}
-				});
+				Files.walkFileTree(path, DelVisitor.INSTANCE);
 			} else {
 				Files.delete(path);
 			}
@@ -158,7 +143,7 @@ public class PathUtil {
 	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
 	 *
-	 * @param src     源文件路径
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
@@ -171,23 +156,59 @@ public class PathUtil {
 	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
 	 *
-	 * @param src     源文件路径
-	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
 	 * @since 5.4.1
 	 */
-	public static Path copyFile(Path src, Path dest, CopyOption... options) throws IORuntimeException {
+	public static Path copyFile(Path src, Path target, CopyOption... options) throws IORuntimeException {
 		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(dest, "Destination File or directiory is null !");
+		Assert.notNull(target, "Destination File or directiory is null !");
 
-		Path destPath = isDirectory(dest) ? dest.resolve(src.getFileName()) : dest;
+		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
 		try {
-			return Files.copy(src, destPath, options);
+			return Files.copy(src, targetPath, options);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 拷贝文件或目录
+	 *
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.1
+	 */
+	public static Path copy(Path src, Path target, CopyOption... options) throws IORuntimeException {
+		if(isFile(src, false)){
+			return copyFile(src, target, options);
+		}
+		return copyContent(src, target.resolve(src.getFileName()), options);
+	}
+
+	/**
+	 * 拷贝目录下的所有文件或目录到目标目录中
+	 *
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.1
+	 */
+	public static Path copyContent(Path src, Path target, CopyOption... options) throws IORuntimeException {
+		try {
+			Files.walkFileTree(src, new CopyVisitor(src, target));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return target;
 	}
 
 	/**
