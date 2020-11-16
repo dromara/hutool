@@ -45,6 +45,11 @@
 <p align="center">
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=0wwldaU0E8r-ZzHl_wma33W7420zwXYi&jump_from=webapi"><img src="https://img.shields.io/badge/QQ%20Group-956375658-orange"/></a>
 </p>
+
+-------------------------------------------------------------------------------
+
+[**中文说明**](README.md)
+
 -------------------------------------------------------------------------------
 
 ## Introduction
@@ -120,19 +125,19 @@ Each module can be introduced individually, or all modules can be introduced by 
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.4.8</version>
+    <version>5.5.1</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:5.4.8'
+compile 'cn.hutool:hutool-all:5.5.1'
 ```
 
 ## Download
 
-- [Maven1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.4.8/)
-- [Maven2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.4.8/)
+- [Maven1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.5.1/)
+- [Maven2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.5.1/)
 
 > note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.

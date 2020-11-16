@@ -306,6 +306,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建File对象<br>
+	 * 根据的路径构建文件，在Win下直接构建，在Linux下拆分路径单独构建
 	 * 此方法会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
 	 *
 	 * @param parent 父文件对象
@@ -316,7 +317,7 @@ public class FileUtil extends PathUtil {
 		if (StrUtil.isBlank(path)) {
 			throw new NullPointerException("File path is blank!");
 		}
-		return checkSlip(parent, new File(parent, path));
+		return checkSlip(parent, buildFile(parent, path));
 	}
 
 	/**
@@ -967,41 +968,13 @@ public class FileUtil extends PathUtil {
 	 * 移动文件或者目录
 	 *
 	 * @param src        源文件或者目录
-	 * @param dest       目标文件或者目录
+	 * @param target       目标文件或者目录
 	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
 	 * @throws IORuntimeException IO异常
+	 * @see PathUtil#move(Path, Path, boolean)
 	 */
-	public static void move(File src, File dest, boolean isOverride) throws IORuntimeException {
-		// check
-		if (false == src.exists()) {
-			throw new IORuntimeException("File not found: " + src);
-		}
-
-		// 来源为文件夹，目标为文件
-		if (src.isDirectory() && dest.isFile()) {
-			throw new IORuntimeException(StrUtil.format("Can not move directory [{}] to file [{}]", src, dest));
-		}
-
-		if (isOverride && dest.isFile()) {// 只有目标为文件的情况下覆盖之
-			//noinspection ResultOfMethodCallIgnored
-			dest.delete();
-		}
-
-		// 来源为文件，目标为文件夹
-		if (src.isFile() && dest.isDirectory()) {
-			dest = new File(dest, src.getName());
-		}
-
-		if (false == src.renameTo(dest)) {
-			// 在文件系统不同的情况下，renameTo会失败，此时使用copy，然后删除原文件
-			try {
-				copy(src, dest, isOverride);
-			} catch (Exception e) {
-				throw new IORuntimeException(StrUtil.format("Move [{}] to [{}] failed!", src, dest), e);
-			}
-			// 复制后删除源
-			del(src);
-		}
+	public static void move(File src, File target, boolean isOverride) throws IORuntimeException {
+		move(src.toPath(), target.toPath(), isOverride);
 	}
 
 	/**
@@ -3276,5 +3249,35 @@ public class FileUtil extends PathUtil {
 	 */
 	public static void tail(File file, Charset charset) {
 		tail(file, charset, Tailer.CONSOLE_HANDLER);
+	}
+
+	/**
+	 * 根据压缩包中的路径构建目录结构，在Win下直接构建，在Linux下拆分路径单独构建
+	 *
+	 * @param outFile  最外部路径
+	 * @param fileName 文件名，可以包含路径
+	 * @return 文件或目录
+	 * @since 5.0.5
+	 */
+	private static File buildFile(File outFile, String fileName) {
+		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
+		fileName = fileName.replace('\\', '/');
+		if (false == FileUtil.isWindows()
+				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
+				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
+			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
+			// 使用/拆分路径（zip中无\），级联创建父目录
+			final List<String> pathParts = StrUtil.split(fileName, '/', false, true);
+			final int lastPartIndex = pathParts.size() - 1;//目录个数
+			for (int i = 0; i < lastPartIndex; i++) {
+				//由于路径拆分，slip不检查，在最后一步检查
+				outFile = new File(outFile, pathParts.get(i));
+			}
+			//noinspection ResultOfMethodCallIgnored
+			outFile.mkdirs();
+			// 最后一个部分如果非空，作为文件名
+			fileName = pathParts.get(lastPartIndex);
+		}
+		return new File(outFile, fileName);
 	}
 }

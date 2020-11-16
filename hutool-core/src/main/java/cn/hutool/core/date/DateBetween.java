@@ -159,12 +159,12 @@ public class DateBetween implements Serializable{
 	 * @param level 级别
 	 * @return 字符串
 	 */
-	public String toString(BetweenFormater.Level level) {
+	public String toString(BetweenFormatter.Level level) {
 		return DateUtil.formatBetween(between(DateUnit.MS), level);
 	}
 
 	@Override
 	public String toString() {
-		return toString(BetweenFormater.Level.MILLISECOND);
+		return toString(BetweenFormatter.Level.MILLISECOND);
 	}
 }

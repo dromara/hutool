@@ -76,6 +76,7 @@ public class ValidationUtil {
 	/**
 	 * 校验bean的某一个属性
 	 *
+	 * @param <T>  bean类型
 	 * @param bean         bean
 	 * @param propertyName 属性名称
 	 * @param groups       验证分组
@@ -97,7 +98,8 @@ public class ValidationUtil {
 			ErrorMessage errorMessage = new ErrorMessage();
 			errorMessage.setPropertyName(constraintViolation.getPropertyPath().toString());
 			errorMessage.setMessage(constraintViolation.getMessage());
-			result.getErrorMessages().add(errorMessage);
+			errorMessage.setValue(constraintViolation.getInvalidValue());
+			result.addErrorMessage(errorMessage);
 		}
 		return result;
 	}

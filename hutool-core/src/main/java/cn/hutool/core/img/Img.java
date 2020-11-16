@@ -553,6 +553,7 @@ public class Img implements Serializable {
 		Graphics2D graphics2d = targetImg.createGraphics();
 		graphics2d.drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
 		graphics2d.dispose();
+
 		this.targetImage = targetImg;
 		return this;
 	}

@@ -66,7 +66,7 @@ public class PathUtil {
 
 		if (null == path || false == Files.exists(path)) {
 			return fileList;
-		} else if (false == Files.isDirectory(path)) {
+		} else if (false == isDirectory(path)) {
 			final File file = path.toFile();
 			if (null == fileFilter || fileFilter.accept(file)) {
 				fileList.add(file);
@@ -112,7 +112,7 @@ public class PathUtil {
 	}
 
 	/**
-	 * 删除文件或者文件夹<br>
+	 * 删除文件或者文件夹，不追踪软链<br>
 	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作
 	 *
@@ -127,7 +127,7 @@ public class PathUtil {
 		}
 
 		try {
-			if (Files.isDirectory(path)) {
+			if (isDirectory(path)) {
 				Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 
 					@Override
@@ -182,12 +182,24 @@ public class PathUtil {
 		Assert.notNull(src, "Source File is null !");
 		Assert.notNull(dest, "Destination File or directiory is null !");
 
-		Path destPath = dest.toFile().isDirectory() ? dest.resolve(src.getFileName()) : dest;
+		Path destPath = isDirectory(dest) ? dest.resolve(src.getFileName()) : dest;
 		try {
 			return Files.copy(src, destPath, options);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 判断是否为目录，如果file为null，则返回false<br>
+	 * 此方法不会追踪到软链对应的真实地址，即软链被当作文件
+	 *
+	 * @param path          {@link Path}
+	 * @return 如果为目录true
+	 * @since 5.5.1
+	 */
+	public static boolean isDirectory(Path path) {
+		return isDirectory(path, false);
 	}
 
 	/**
@@ -370,9 +382,28 @@ public class PathUtil {
 	 * @since 5.4.1
 	 */
 	public static Path rename(Path path, String newName, boolean isOverride) {
+		return move(path, path.resolveSibling(newName), isOverride);
+	}
+
+	/**
+	 * 移动文件或目录<br>
+	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下
+	 *
+	 * @param src        源文件或目录路径
+	 * @param target     目标路径，如果为目录，则移动到此目录下
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标文件Path
+	 * @since 5.5.1
+	 */
+	public static Path move(Path src, Path target, boolean isOverride) {
+		Assert.notNull(src, "Src path must be not null !");
+		Assert.notNull(target, "Target path must be not null !");
 		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
+		if (isDirectory(target)) {
+			target = target.resolve(src.getFileName());
+		}
 		try {
-			return Files.move(path, path.resolveSibling(newName), options);
+			return Files.move(src, target, options);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

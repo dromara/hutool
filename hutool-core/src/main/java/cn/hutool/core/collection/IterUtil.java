@@ -10,6 +10,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -820,5 +821,42 @@ public class IterUtil {
 	 */
 	public static <F, T> Iterator<T> trans(Iterator<F> iterator, Function<? super F, ? extends T> function) {
 		return new TransIter<>(iterator, function);
+	}
+
+	/**
+	 * 返回 Iterable 对象的元素数量
+	 *
+	 * @param iterable Iterable对象
+	 * @return Iterable对象的元素数量
+	 * @since 5.5.0
+	 */
+	public static int size(final Iterable<?> iterable) {
+		if(null == iterable){
+			return 0;
+		}
+
+		if (iterable instanceof Collection<?>) {
+			return ((Collection<?>) iterable).size();
+		} else {
+			return size(iterable.iterator());
+		}
+	}
+
+	/**
+	 * 返回 Iterator 对象的元素数量
+	 *
+	 * @param iterator Iterator对象
+	 * @return Iterator对象的元素数量
+	 * @since 5.5.0
+	 */
+	public static int size(final Iterator<?> iterator) {
+		int size = 0;
+		if (iterator != null) {
+			while (iterator.hasNext()) {
+				iterator.next();
+				size++;
+			}
+		}
+		return size;
 	}
 }

@@ -3,6 +3,7 @@ package cn.hutool.poi.excel;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
@@ -121,6 +122,24 @@ public class BigExcelWriter extends ExcelWriter {
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
+
+	@Override
+	public BigExcelWriter autoSizeColumn(int columnIndex) {
+		final SXSSFSheet sheet = (SXSSFSheet)this.sheet;
+		sheet.trackColumnForAutoSizing(columnIndex);
+		super.autoSizeColumn(columnIndex);
+		sheet.untrackColumnForAutoSizing(columnIndex);
+		return this;
+	}
+
+	@Override
+	public BigExcelWriter autoSizeColumnAll() {
+		final SXSSFSheet sheet = (SXSSFSheet)this.sheet;
+		sheet.trackAllColumnsForAutoSizing();
+		super.autoSizeColumnAll();
+		sheet.untrackAllColumnsForAutoSizing();
+		return this;
+	}
 
 	@Override
 	public ExcelWriter flush(OutputStream out, boolean isCloseOut) throws IORuntimeException {

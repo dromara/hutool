@@ -1283,7 +1283,7 @@ public class NumberUtil {
 	 * @param begin 最小数字（包含该数）
 	 * @param end   最大数字（不包含该数）
 	 * @param size  指定产生随机数的个数
-	 * @param seed 种子，用于取随机数的int池
+	 * @param seed  种子，用于取随机数的int池
 	 * @return 随机int数组
 	 * @since 5.4.5
 	 */
@@ -1976,8 +1976,8 @@ public class NumberUtil {
 		Assert.notNull(number, "Number is null !");
 
 		// BigDecimal单独处理，使用非科学计数法
-		if(number instanceof BigDecimal){
-			return toStr((BigDecimal)number);
+		if (number instanceof BigDecimal) {
+			return toStr((BigDecimal) number);
 		}
 
 		Assert.isTrue(isValidNumber(number), "Number is non-finite!");
@@ -2008,7 +2008,9 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 数字转{@link BigDecimal}
+	 * 数字转{@link BigDecimal}<br>
+	 * Float、Double等有精度问题，转换为字符串后再转换<br>
+	 * null转换为0
 	 *
 	 * @param number 数字
 	 * @return {@link BigDecimal}
@@ -2019,7 +2021,7 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		if(number instanceof BigDecimal){
+		if (number instanceof BigDecimal) {
 			return (BigDecimal) number;
 		} else if (number instanceof Long) {
 			return new BigDecimal((Long) number);
@@ -2029,22 +2031,25 @@ public class NumberUtil {
 			return new BigDecimal((BigInteger) number);
 		}
 
+		// Float、Double等有精度问题，转换为字符串后再转换
 		return toBigDecimal(number.toString());
 	}
 
 	/**
-	 * 数字转{@link BigDecimal}
+	 * 数字转{@link BigDecimal}<br>
+	 * null或""或空白符转换为0
 	 *
-	 * @param number 数字
+	 * @param number 数字字符串
 	 * @return {@link BigDecimal}
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String number) {
-		return (null == number) ? BigDecimal.ZERO : new BigDecimal(number);
+		return StrUtil.isBlank(number) ? BigDecimal.ZERO : new BigDecimal(number);
 	}
 
 	/**
-	 * 数字转{@link BigInteger}
+	 * 数字转{@link BigInteger}<br>
+	 * null转换为0
 	 *
 	 * @param number 数字
 	 * @return {@link BigInteger}
@@ -2055,7 +2060,7 @@ public class NumberUtil {
 			return BigInteger.ZERO;
 		}
 
-		if(number instanceof BigInteger){
+		if (number instanceof BigInteger) {
 			return (BigInteger) number;
 		} else if (number instanceof Long) {
 			return BigInteger.valueOf((Long) number);
@@ -2065,14 +2070,15 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 数字转{@link BigInteger}
+	 * 数字转{@link BigInteger}<br>
+	 * null或""或空白符转换为0
 	 *
-	 * @param number 数字
+	 * @param number 数字字符串
 	 * @return {@link BigInteger}
 	 * @since 5.4.5
 	 */
 	public static BigInteger toBigInteger(String number) {
-		return (null == number) ? BigInteger.ZERO : new BigInteger(number);
+		return StrUtil.isBlank(number) ? BigInteger.ZERO : new BigInteger(number);
 	}
 
 	/**
@@ -2512,7 +2518,7 @@ public class NumberUtil {
 	 */
 	private static String removeNumberFlag(String number) {
 		// 去掉千位分隔符
-		if(StrUtil.contains(number, CharUtil.COMMA)){
+		if (StrUtil.contains(number, CharUtil.COMMA)) {
 			number = StrUtil.removeAll(number, CharUtil.COMMA);
 		}
 		// 去掉类型标识的结尾

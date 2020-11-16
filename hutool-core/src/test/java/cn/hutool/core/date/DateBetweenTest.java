@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.date.BetweenFormatter.Level;
 import org.junit.Assert;
 import org.junit.Test;
 

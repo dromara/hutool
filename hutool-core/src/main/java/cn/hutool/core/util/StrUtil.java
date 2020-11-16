@@ -2405,14 +2405,50 @@ public class StrUtil {
 		}
 
 		final List<String> result = new LinkedList<>();
-		for (String fragment : split(str, prefix)) {
-			int suffixIndex = fragment.indexOf(suffix.toString());
-			if (suffixIndex > 0) {
-				result.add(fragment.substring(0, suffixIndex));
+		final String[] split = split(str, prefix);
+		if(prefix.equals(suffix)){
+			// 前后缀字符相同，单独处理
+			for (int i = 1, length = split.length - 1; i < length; i += 2) {
+				result.add(split[i]);
+			}
+		} else{
+			int suffixIndex;
+			for (String fragment : split) {
+				suffixIndex = fragment.indexOf(suffix.toString());
+				if (suffixIndex > 0) {
+					result.add(fragment.substring(0, suffixIndex));
+				}
 			}
 		}
 
 		return result.toArray(new String[0]);
+	}
+
+	/**
+	 * 截取指定字符串多段中间部分，不包括标识字符串<br>
+	 * <p>
+	 * 栗子：
+	 *
+	 * <pre>
+	 * StrUtil.subBetweenAll(null, *)          			= []
+	 * StrUtil.subBetweenAll(*, null)          			= []
+	 * StrUtil.subBetweenAll(*, *)          			= []
+	 * StrUtil.subBetweenAll("", "")          			= []
+	 * StrUtil.subBetweenAll("", "#")         			= []
+	 * StrUtil.subBetweenAll("gotanks", "")     		= []
+	 * StrUtil.subBetweenAll("#gotanks#", "#")   		= ["gotanks"]
+	 * StrUtil.subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
+	 * StrUtil.subBetweenAll("#hello# world#!", "#");   = ["hello"]
+	 * </pre>
+	 *
+	 * @param str    被切割的字符串
+	 * @param prefixAndSuffix 截取开始和结束的字符串标识
+	 * @return 截取后的字符串
+	 * @author gotanks
+	 * @since 5.5.0
+	 */
+	public static String[] subBetweenAll(CharSequence str, CharSequence prefixAndSuffix) {
+		return subBetweenAll(str, prefixAndSuffix, prefixAndSuffix);
 	}
 
 	/**
@@ -4019,7 +4055,7 @@ public class StrUtil {
 			return str.toString().lastIndexOf(searchStr.toString(), fromIndex);
 		}
 
-		for (int i = fromIndex; i > 0; i--) {
+		for (int i = fromIndex; i >= 0; i--) {
 			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
 				return i;
 			}
