@@ -526,4 +526,13 @@ public class JSONObjectTest {
 		// 集合类不支持转为JSONObject
 		new JSONObject(new JSONArray(), JSONConfig.create());
 	}
+
+	@Test
+	public void floatTest(){
+		Map<String, Object> map = new HashMap<>();
+		map.put("c", 2.0F);
+
+		final String s = JSONUtil.toJsonStr(map);
+		Console.log(s);
+	}
 }
