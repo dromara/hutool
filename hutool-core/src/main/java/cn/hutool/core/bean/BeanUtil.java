@@ -797,7 +797,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))//
+			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
 					&& null == ReflectUtil.getFieldValue(bean, field)) {
 				return true;
 			}
