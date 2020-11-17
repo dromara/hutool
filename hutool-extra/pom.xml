@@ -410,6 +410,13 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.mozilla</groupId>
+			<artifactId>rhino</artifactId>
+			<version>1.7.12</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- 表达式引擎可选依赖 end -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
