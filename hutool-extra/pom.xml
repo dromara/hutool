@@ -382,6 +382,13 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- 手动引入aviator的关联依赖，解决版本问题 -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.4</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-jexl3</artifactId>
