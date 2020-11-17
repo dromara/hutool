@@ -93,8 +93,7 @@ public class CollStreamUtil {
 	}
 
 	/**
-	 * 将collection按照两个规则(比如有相同的年级id,班级id)分类成双层map
-	 * <br></br>
+	 * 将collection按照两个规则(比如有相同的年级id,班级id)分类成双层map<br>
 	 * <B>{@code Collection<E>  --->  Map<T,Map<U,E>> } </B>
 	 *
 	 * @param collection 需要分类的集合
