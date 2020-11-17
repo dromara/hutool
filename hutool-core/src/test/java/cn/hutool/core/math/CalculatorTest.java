@@ -16,4 +16,10 @@ public class CalculatorTest {
 		final double conversion = Calculator.conversion("77 * 12");
 		Assert.assertEquals(924.0, conversion, 2);
 	}
+
+	@Test
+	public void conversationTest3(){
+		final double conversion = Calculator.conversion("1");
+		Assert.assertEquals(1, conversion, 2);
+	}
 }
