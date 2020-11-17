@@ -2,6 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -84,6 +85,7 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(InputStream in, int rid, RowHandler rowHandler) {
+		in = IoUtil.toMarkSupportStream(in);
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
 		reader.read(in, rid);
 	}
@@ -97,6 +99,7 @@ public class ExcelUtil {
 	 * @since 5.4.4
 	 */
 	public static void readBySax(InputStream in, String idOrRid, RowHandler rowHandler) {
+		in = IoUtil.toMarkSupportStream(in);
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
 		reader.read(in, idOrRid);
 	}

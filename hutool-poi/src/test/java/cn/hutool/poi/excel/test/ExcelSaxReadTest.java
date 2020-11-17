@@ -3,6 +3,7 @@ package cn.hutool.poi.excel.test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -29,6 +30,12 @@ public class ExcelSaxReadTest {
 	public void excel07Test() {
 		// 工具化快速读取
 		ExcelUtil.readBySax("aaa.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	public void excel07FromStreamTest() {
+		// issue#1225 非markSupport的流读取会错误
+		ExcelUtil.readBySax(IoUtil.toStream(FileUtil.file("aaa.xlsx")), 0, createRowHandler());
 	}
 
 	@Test
