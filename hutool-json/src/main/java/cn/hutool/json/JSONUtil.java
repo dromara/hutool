@@ -495,10 +495,23 @@ public final class JSONUtil {
 	// -------------------------------------------------------------------- toBean end
 
 	/**
+	 * 将JSONArray字符串转换为Bean的List，默认为ArrayList
+	 *
+	 * @param <T>         Bean类型
+	 * @param jsonArray   JSONArray字符串
+	 * @param elementType List中元素类型
+	 * @return List
+	 * @since 5.5.2
+	 */
+	public static <T> List<T> toList(String jsonArray, Class<T> elementType) {
+		return toList(parseArray(jsonArray), elementType);
+	}
+
+	/**
 	 * 将JSONArray转换为Bean的List，默认为ArrayList
 	 *
 	 * @param <T>         Bean类型
-	 * @param jsonArray   JSONArray
+	 * @param jsonArray   {@link JSONArray}
 	 * @param elementType List中元素类型
 	 * @return List
 	 * @since 4.0.7
