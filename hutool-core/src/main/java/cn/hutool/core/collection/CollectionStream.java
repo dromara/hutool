@@ -27,7 +27,7 @@ public class CollectionStream {
      * @param key        E类型转化为T类型的lambda方法
      * @param <E>        collection中的泛型
      * @param <T>        map中的key类型
-     * @return           转化后的map
+     * @return 转化后的map
      */
     public static <E, T> Map<T, E> toIdentityMap(Collection<E> collection, Function<E, T> key) {
         if (CollUtil.isEmpty(collection)) {
@@ -48,7 +48,7 @@ public class CollectionStream {
      * @param <E>        collection中的泛型
      * @param <T>        map中的key类型
      * @param <U>        map中的value类型
-     * @return           转化后的map
+     * @return 转化后的map
      */
     public static <E, T, U> Map<T, U> toMap(Collection<E> collection, Function<E, T> key, Function<E, U> value) {
         if (CollUtil.isEmpty(collection)) {
@@ -66,7 +66,7 @@ public class CollectionStream {
      * @param key        分类的规则
      * @param <E>        collection中的泛型
      * @param <T>        map中的key类型
-     * @return           分类后的map
+     * @return 分类后的map
      */
     public static <E, T> Map<T, List<E>> groupByKey(Collection<E> collection, Function<E, T> key) {
         if (CollUtil.isEmpty(collection)) {
@@ -87,7 +87,7 @@ public class CollectionStream {
      * @param key2       第二个分类的规则
      * @param <E>        第一个map中的key类型
      * @param <T>        第二个map中的key类型
-     * @return           分类后的map
+     * @return 分类后的map
      */
     public static <E, T, U> Map<T, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, T> key1, Function<E, U> key2) {
         if (CollUtil.isEmpty(collection)) {
@@ -109,7 +109,7 @@ public class CollectionStream {
      * @param <T>        第一个map中的key类型
      * @param <U>        第二个map中的key类型
      * @param <E>        collection中的泛型
-     * @return           分类后的map
+     * @return 分类后的map
      */
     public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection, Function<E, T> key1, Function<E, U> key2) {
         if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
@@ -129,7 +129,7 @@ public class CollectionStream {
      * @param function   collection中的泛型转化为list泛型的lambda表达式
      * @param <E>        collection中的泛型
      * @param <T>        List中的泛型
-     * @return           转化后的list
+     * @return 转化后的list
      */
     public static <E, T> List<T> translate2List(Collection<E> collection, Function<E, T> function) {
         if (CollUtil.isEmpty(collection)) {
@@ -151,7 +151,7 @@ public class CollectionStream {
      * @param function   collection中的泛型转化为set泛型的lambda表达式
      * @param <E>        collection中的泛型
      * @param <T>        Set中的泛型
-     * @return           转化后的Set
+     * @return 转化后的Set
      */
     public static <E, T> Set<T> translate2Set(Collection<E> collection, Function<E, T> function) {
         if (CollUtil.isEmpty(collection) || function == null) {
@@ -175,7 +175,7 @@ public class CollectionStream {
      * @param <X>   第一个 map的value类型
      * @param <Y>   第二个 map的value类型
      * @param <Z>   最终map的value类型
-     * @return      合并后的map
+     * @return 合并后的map
      */
     public static <T, X, Y, Z> Map<T, Z> merge(Map<T, X> map1, Map<T, Y> map2, BiFunction<X, Y, Z> merge) {
         if (MapUtil.isEmpty(map1) && MapUtil.isEmpty(map2)) {

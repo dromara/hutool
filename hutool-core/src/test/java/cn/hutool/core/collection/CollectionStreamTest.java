@@ -130,7 +130,7 @@ public class CollectionStreamTest {
         Map<Long, Student> map2 = new HashMap<>();
         map2.put(2L, new Student(2, 2, 1, "王五"));
         compare.put(2L, map2);
-        Assert.assertEquals(true,compare.equals(map));
+        Assert.assertEquals(true, compare.equals(map));
 
     }
 
