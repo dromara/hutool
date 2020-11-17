@@ -2,9 +2,9 @@ package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -46,6 +46,16 @@ public class AES extends SymmetricCrypto {
 	 * @param key 密钥
 	 */
 	public AES(byte[] key) {
+		super(SymmetricAlgorithm.AES, key);
+	}
+
+	/**
+	 * 构造，使用默认的AES/ECB/PKCS5Padding
+	 *
+	 * @param key 密钥
+	 * @since 5.5.2
+	 */
+	public AES(SecretKey key) {
 		super(SymmetricAlgorithm.AES, key);
 	}
 
@@ -152,7 +162,7 @@ public class AES extends SymmetricCrypto {
 	 */
 	public AES(String mode, String padding, byte[] key, byte[] iv) {
 		this(mode, padding,//
-				SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue(), key),//
+				KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue(), key),//
 				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 

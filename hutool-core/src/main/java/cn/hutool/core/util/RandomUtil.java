@@ -71,7 +71,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
+	 * 获取SHA1PRNG的{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
 	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
 	 *
 	 * <p>
@@ -81,11 +81,31 @@ public class RandomUtil {
 	 * @since 3.1.2
 	 */
 	public static SecureRandom getSecureRandom() {
+		return getSecureRandom(null);
+	}
+
+	/**
+	 * 获取SHA1PRNG的{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
+	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
+	 *
+	 * <p>
+	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
+	 *
+	 * @param seed 随机数种子
+	 * @return {@link SecureRandom}
+	 * @since 5.5.2
+	 */
+	public static SecureRandom getSecureRandom(byte[] seed) {
+		SecureRandom random;
 		try {
-			return SecureRandom.getInstance("SHA1PRNG");
+			random = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException e) {
 			throw new UtilException(e);
 		}
+		if(null != seed){
+			random.setSeed(seed);
+		}
+		return random;
 	}
 
 	/**
