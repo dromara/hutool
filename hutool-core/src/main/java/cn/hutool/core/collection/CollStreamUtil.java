@@ -115,8 +115,7 @@ public class CollStreamUtil {
 	}
 
 	/**
-	 * 将collection转化为List集合，但是两者的泛型不同
-	 * <br></br>
+	 * 将collection转化为List集合，但是两者的泛型不同<br>
 	 * <B>{@code Collection<E>  ------>  List<T> } </B>
 	 *
 	 * @param collection 需要转化的集合
@@ -137,8 +136,7 @@ public class CollStreamUtil {
 	}
 
 	/**
-	 * 将collection转化为Set集合，但是两者的泛型不同
-	 * <br></br>
+	 * 将collection转化为Set集合，但是两者的泛型不同<br>
 	 * <B>{@code Collection<E>  ------>  Set<T> } </B>
 	 *
 	 * @param collection 需要转化的集合
