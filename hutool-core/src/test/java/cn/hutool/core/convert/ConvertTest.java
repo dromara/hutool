@@ -1,5 +1,7 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
 
@@ -259,6 +262,13 @@ public class ConvertTest {
 	public void enumToIntTest(){
 		final Integer integer = Convert.toInt(BuildingType.CUO);
 		Assert.assertEquals(1, integer.intValue());
+	}
+
+	@Test
+	public void toSetTest(){
+		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
+		}, "1,2,3");
+		Assert.assertEquals(CollUtil.set(false, 1,2,3), result);
 	}
 
 	@Getter
