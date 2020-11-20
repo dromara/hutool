@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.2 (2020-11-19)
+# 5.5.2 (2020-11-20)
 
 ### 新特性
 * 【crypto 】     KeyUtil增加重载，AES构造增加重载（issue#I25NNZ@Gitee）
@@ -11,6 +11,7 @@
 * 【core   】     新增CollStreamUtil（issue#1228@Github）
 * 【extra  】     新增Rhino表达式执行引擎（pr#1229@Github）
 * 【crypto 】     增加判空（issue#1230@Github）
+* 【core   】     xml.setXmlStandalone(true)格式优化（pr#1234@Github）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
