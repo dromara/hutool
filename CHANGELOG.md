@@ -17,6 +17,7 @@
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
 * 【core   】     修复Calculator.conversion单个数字越界问题（issue#1222@Github）
 * 【poi    】     修复ExcelUtil.getSaxReader使用非MarkSupport流报错问题（issue#1225@Github）
+* 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

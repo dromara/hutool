@@ -47,6 +47,6 @@ public class HexUtilTest {
 	public void formatHexTest(){
 		String hex = "e8c670380cb220095268f40221fc748fa6ac39d6e930e63c30da68bad97f885d";
 		String formatHex = HexUtil.format(hex);
-		Assert.assertEquals("e8 8c 67 03 80 cb 22 00 95 26 8f 40 22 1f c7 48 fa 6a c3 9d 6e 93 0e 63 c3 0d a6 8b ad 97 f8 85", formatHex);
+		Assert.assertEquals("e8 c6 70 38 0c b2 20 09 52 68 f4 02 21 fc 74 8f a6 ac 39 d6 e9 30 e6 3c 30 da 68 ba d9 7f 88 5d", formatHex);
 	}
 }
