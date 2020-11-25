@@ -12,8 +12,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -205,20 +203,16 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 刷新注解的属性值
+	 * 设置新的注解的属性（字段）值
+	 *
 	 * @param annotation 注解对象
-	 * @param annotationField 注解属性名称
+	 * @param annotationField 注解属性（字段）名称
 	 * @param value 要更新的属性值
-	 * @throws Exception 可能出现的异常(一般情况下不会发生)
+	 * @since 5.5.2
 	 */
-	public static void refreshAnnotationValue(Annotation annotation, String annotationField, Object value) throws Exception {
-		InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
-		Field field = invocationHandler.getClass().getDeclaredField("memberValues");
-		boolean accessible = field.isAccessible();
-		field.setAccessible(true);
-		@SuppressWarnings("unchecked")
-		Map<Object, Object> memberValues = (Map<Object, Object>) field.get(invocationHandler);
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void setValue(Annotation annotation, String annotationField, Object value) {
+		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
 		memberValues.put(annotationField, value);
-		field.setAccessible(accessible);
 	}
 }
