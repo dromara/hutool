@@ -459,13 +459,12 @@ public class ZipUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.8
 	 */
-	@SuppressWarnings("unchecked")
 	public static File unzip(ZipFile zipFile, File outFile) throws IORuntimeException {
 		if(outFile.exists() && outFile.isFile()){
 			throw new UtilException("Target path [{}] exist!", outFile.getAbsolutePath());
 		}
 		try {
-			final Enumeration<ZipEntry> em = (Enumeration<ZipEntry>) zipFile.entries();
+			final Enumeration<? extends ZipEntry> em = zipFile.entries();
 			ZipEntry zipEntry;
 			File outItemFile;
 			while (em.hasMoreElements()) {
@@ -485,6 +484,40 @@ public class ZipUtil {
 			IoUtil.close(zipFile);
 		}
 		return outFile;
+	}
+
+	/**
+	 * 获取压缩包中的指定文件流
+	 * @param zipFile 压缩文件
+	 * @param path 需要提取文件的文件名或路径
+	 * @return 压缩文件流，如果未找到返回{@code null}
+	 * @since 5.5.2
+	 */
+	public static InputStream get(File zipFile, Charset charset, String path){
+		try {
+			return get(new ZipFile(zipFile, charset), path);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 获取压缩包中的指定文件流
+	 * @param zipFile 压缩文件
+	 * @param path 需要提取文件的文件名或路径
+	 * @return 压缩文件流，如果未找到返回{@code null}
+	 * @since 5.5.2
+	 */
+	public static InputStream get(ZipFile zipFile, String path){
+		final ZipEntry entry = zipFile.getEntry(path);
+		if(null != entry){
+			try {
+				return zipFile.getInputStream(entry);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -1024,15 +1057,9 @@ public class ZipUtil {
 				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 
-			try {
-				final File parentFile = zipFile.getCanonicalFile().getParentFile();
-				// 压缩文件不能位于被压缩的目录内
-				if (srcFile.isDirectory() && parentFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
-					throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getCanonicalPath(), srcFile.getCanonicalPath());
-				}
-
-			} catch (IOException e) {
-				throw new UtilException(e);
+			// 压缩文件不能位于被压缩的目录内
+			if(srcFile.isDirectory() && FileUtil.isSub(srcFile, zipFile.getParentFile())){
+				throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getPath(), srcFile.getPath());
 			}
 		}
 	}
