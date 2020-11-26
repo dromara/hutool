@@ -69,21 +69,20 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
 			}
 
 			//找出访问最少的对象
-			if (comin == null || co.accessCount < comin.accessCount) {
+			if (comin == null || co.accessCount.get() < comin.accessCount.get()) {
 				comin = co;
 			}
 		}
 
 		// 减少所有对象访问量，并清除减少后为0的访问对象
 		if (isFull() && comin != null) {
-			long minAccessCount = comin.accessCount;
+			long minAccessCount = comin.accessCount.get();
 
 			values = cacheMap.values().iterator();
 			CacheObj<K, V> co1;
 			while (values.hasNext()) {
 				co1 = values.next();
-				co1.accessCount -= minAccessCount;
-				if (co1.accessCount <= 0) {
+				if (co1.accessCount.addAndGet(-minAccessCount) <= 0) {
 					values.remove();
 					onRemove(co1.key, co1.obj);
 					count++;

@@ -14,6 +14,7 @@
 * 【core   】     xml.setXmlStandalone(true)格式优化（pr#1234@Github）
 * 【core   】     AnnotationUtil增加setValue方法（pr#1250@Github）
 * 【core   】     ZipUtil增加get方法
+* 【cache  】     对CacheObj等变量使用volatile关键字
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）

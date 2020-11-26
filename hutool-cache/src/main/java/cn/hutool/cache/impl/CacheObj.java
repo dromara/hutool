@@ -1,6 +1,7 @@
 package cn.hutool.cache.impl;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 缓存对象
@@ -16,9 +17,9 @@ public class CacheObj<K, V> implements Serializable{
 	protected final V obj;
 	
 	/** 上次访问时间 */
-	private long lastAccess; 
+	private volatile long lastAccess;
 	/** 访问次数 */
-	protected long accessCount;
+	protected AtomicLong accessCount;
 	/** 对象存活时长，0表示永久存活*/
 	private final long ttl;
 	
@@ -61,7 +62,7 @@ public class CacheObj<K, V> implements Serializable{
 		if(isUpdateLastAccess) {
 			lastAccess = System.currentTimeMillis();
 		}
-		accessCount++;
+		accessCount.getAndIncrement();
 		return this.obj;
 	}
 	
