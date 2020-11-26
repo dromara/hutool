@@ -23,10 +23,5 @@ public enum Padding {
 	OAEPPadding,
 	PKCS1Padding,
 	PKCS5Padding,
-    /** 
-    * 注意需要引入对应jar 包
-    * @see cn.hutool.crypto.GlobalBouncyCastleProvider#setUseBouncyCastle
-    */
-    PKCS7Padding,
 	SSL3Padding
 }
