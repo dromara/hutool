@@ -40,6 +40,7 @@ public class DatePattern {
 	 * 年月格式 {@link FastDateFormat}：yyyy-MM
 	 */
 	public static final DateTimeFormatter NORM_MONTH_FORMATTER = DateTimeFormatter.ofPattern(NORM_MONTH_PATTERN);
+
 	/**
 	 * 简单年月格式：yyyyMM
 	 */
@@ -52,6 +53,7 @@ public class DatePattern {
 	 * 简单年月格式 {@link FastDateFormat}：yyyyMM
 	 */
 	public static final DateTimeFormatter SIMPLE_MONTH_FORMATTER = DateTimeFormatter.ofPattern(SIMPLE_MONTH_PATTERN);
+
 	/**
 	 * 标准日期格式：yyyy-MM-dd
 	 */
