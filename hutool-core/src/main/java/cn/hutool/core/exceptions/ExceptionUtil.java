@@ -48,7 +48,7 @@ public class ExceptionUtil {
 	/**
 	 * 使用运行时异常包装编译异常<br>
 	 * 
-	 * 如果
+	 * 如果传入参数已经是运行时异常，则直接返回，不再额外包装
 	 * 
 	 * @param throwable 异常
 	 * @return 运行时异常
@@ -58,6 +58,16 @@ public class ExceptionUtil {
 			return (RuntimeException) throwable;
 		}
 		return new RuntimeException(throwable);
+	}
+
+	/**
+	 * 将指定的消息包装为运行时异常
+	 * @param message 异常消息
+	 * @return 运行时异常
+	 * @since 5.5.2
+	 */
+	public static RuntimeException wrapRuntime(String message){
+		return new RuntimeException(message);
 	}
 
 	/**
@@ -91,6 +101,15 @@ public class ExceptionUtil {
 			throw (Error) throwable;
 		}
 		throw new UndeclaredThrowableException(throwable);
+	}
+
+	/**
+	 * 将消息包装为运行时异常并抛出
+	 * @param message 异常消息
+	 * @since 5.5.2
+	 */
+	public static void wrapRuntimeAndThrow(String message){
+		throw new RuntimeException(message);
 	}
 
 	/**
