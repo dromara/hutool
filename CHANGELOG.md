@@ -15,6 +15,7 @@
 * 【core   】     AnnotationUtil增加setValue方法（pr#1250@Github）
 * 【core   】     ZipUtil增加get方法
 * 【cache  】     对CacheObj等变量使用volatile关键字
+* 【core   】     Base64增加encodeWithoutPadding方法（issue#I26J16@Gitee）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
