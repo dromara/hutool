@@ -101,7 +101,7 @@ public class StopWatch {
 	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 获取{@link StopWatch} 的ID，用于多个秒表对象的区分
+	 * 获取StopWatch 的ID，用于多个秒表对象的区分
 	 *
 	 * @return the ID 空字符串为
 	 * @see #StopWatch(String)
