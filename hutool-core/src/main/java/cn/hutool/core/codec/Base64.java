@@ -3,6 +3,7 @@ package cn.hutool.core.codec;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -76,6 +77,17 @@ public class Base64 {
 	}
 
 	/**
+	 * base64编码，不进行padding(末尾不会填充'=')
+	 *
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 5.5.2
+	 */
+	public static String encodeWithoutPadding(CharSequence source, String charset) {
+		return encodeWithoutPadding(StrUtil.bytes(source, charset));
+	}
+
+	/**
 	 * base64编码,URL安全
 	 * 
 	 * @param source 被编码的base64字符串
@@ -118,6 +130,17 @@ public class Base64 {
 	 */
 	public static String encode(byte[] source) {
 		return Base64Encoder.encode(source);
+	}
+
+	/**
+	 * base64编码，不进行padding(末尾不会填充'=')
+	 *
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 5.5.2
+	 */
+	public static String encodeWithoutPadding(byte[] source) {
+		return java.util.Base64.getEncoder().withoutPadding().encodeToString(source);
 	}
 
 	/**
@@ -173,60 +196,6 @@ public class Base64 {
 	 */
 	public static String encodeUrlSafe(File file) {
 		return Base64Encoder.encodeUrlSafe(FileUtil.readBytes(file));
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encode(byte[] source, String charset) {
-		return Base64Encoder.encode(source);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encodeUrlSafe(byte[] source, String charset) {
-		return Base64Encoder.encodeUrlSafe(source);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encode(byte[] source, Charset charset) {
-		return Base64Encoder.encode(source);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encodeUrlSafe(byte[] source, Charset charset) {
-		return Base64Encoder.encodeUrlSafe(source);
 	}
 
 	/**

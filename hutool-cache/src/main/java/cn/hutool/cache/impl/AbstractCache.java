@@ -6,6 +6,7 @@ import cn.hutool.core.lang.func.Func0;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.StampedLock;
 
 /**
@@ -44,11 +45,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * 命中数
 	 */
-	protected int hitCount;
+	protected AtomicLong hitCount;
 	/**
 	 * 丢失数
 	 */
-	protected int missCount;
+	protected AtomicLong missCount;
 
 	// ---------------------------------------------------------------- put start
 	@Override
@@ -113,15 +114,15 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * @return 命中数
 	 */
-	public int getHitCount() {
-		return hitCount;
+	public long getHitCount() {
+		return hitCount.get();
 	}
 
 	/**
 	 * @return 丢失数
 	 */
-	public int getMissCount() {
-		return missCount;
+	public long getMissCount() {
+		return missCount.get();
 	}
 
 	@Override
@@ -157,15 +158,15 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 			// 不存在或已移除
 			final CacheObj<K, V> co = cacheMap.get(key);
 			if (null == co) {
-				missCount++;
+				missCount.getAndIncrement();
 				return null;
 			}
 
 			if (co.isExpired()) {
-				missCount++;
+				missCount.getAndIncrement();
 			} else{
 				// 命中
-				hitCount++;
+				hitCount.getAndIncrement();
 				return co.get(isUpdateLastAccess);
 			}
 		} finally {
@@ -318,7 +319,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		final CacheObj<K, V> co = cacheMap.remove(key);
 		if (withMissCount) {
 			// 在丢失计数有效的情况下，移除一般为get时的超时操作，此处应该丢失数+1
-			this.missCount++;
+			this.missCount.getAndIncrement();
 		}
 		return co;
 	}

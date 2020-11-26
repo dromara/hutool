@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.2 (2020-11-20)
+# 5.5.2 (2020-11-25)
 
 ### 新特性
 * 【crypto 】     KeyUtil增加重载，AES构造增加重载（issue#I25NNZ@Gitee）
@@ -12,12 +12,17 @@
 * 【extra  】     新增Rhino表达式执行引擎（pr#1229@Github）
 * 【crypto 】     增加判空（issue#1230@Github）
 * 【core   】     xml.setXmlStandalone(true)格式优化（pr#1234@Github）
+* 【core   】     AnnotationUtil增加setValue方法（pr#1250@Github）
+* 【core   】     ZipUtil增加get方法
+* 【cache  】     对CacheObj等变量使用volatile关键字
+* 【core   】     Base64增加encodeWithoutPadding方法（issue#I26J16@Gitee）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
 * 【core   】     修复Calculator.conversion单个数字越界问题（issue#1222@Github）
 * 【poi    】     修复ExcelUtil.getSaxReader使用非MarkSupport流报错问题（issue#1225@Github）
 * 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
+* 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

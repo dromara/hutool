@@ -446,8 +446,7 @@ public class JschUtil {
 	/**
 	 * 执行Shell命令
 	 * <p>
-	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。<br>
-	 * 此方法返回数据中可能
+	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。
 	 * </p>
 	 *
 	 * @param session Session会话
