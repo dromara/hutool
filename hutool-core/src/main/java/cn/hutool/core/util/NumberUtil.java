@@ -1972,7 +1972,7 @@ public class NumberUtil {
 	 * @param number A Number
 	 * @return A String.
 	 */
-		public static String toStr(Number number) {
+	public static String toStr(Number number) {
 		Assert.notNull(number, "Number is null !");
 
 		// BigDecimal单独处理，使用非科学计数法
