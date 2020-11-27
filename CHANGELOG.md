@@ -28,6 +28,7 @@
 * 【poi    】     修复ExcelUtil.getSaxReader使用非MarkSupport流报错问题（issue#1225@Github）
 * 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
+* 【json   】     修复JSONObject.accumulate问题
 
 -------------------------------------------------------------------------------------------------------------
 

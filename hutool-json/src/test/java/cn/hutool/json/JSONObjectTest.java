@@ -535,4 +535,10 @@ public class JSONObjectTest {
 		final String s = JSONUtil.toJsonStr(map);
 		Console.log(s);
 	}
+
+	@Test
+	public void accumulateTest(){
+		final JSONObject accumulate = JSONUtil.createObj().accumulate("key1", "value1");
+		Assert.assertEquals("{\"key1\":[\"value1\"]}", accumulate.toString());
+	}
 }

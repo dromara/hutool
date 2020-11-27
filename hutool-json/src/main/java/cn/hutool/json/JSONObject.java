@@ -432,7 +432,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.set(key, value instanceof JSONArray ? new JSONArray(this.config).set(value) : value);
+			this.set(key, (value instanceof JSONArray) ? value : new JSONArray(this.config).set(value));
 		} else if (object instanceof JSONArray) {
 			((JSONArray) object).set(value);
 		} else {
