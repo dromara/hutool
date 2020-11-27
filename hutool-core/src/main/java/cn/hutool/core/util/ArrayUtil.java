@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -4020,6 +4021,308 @@ public class ArrayUtil {
 			}
 		}
 		return max;
+	}
+
+
+	// 使用Fisher–Yates洗牌算法，以线性时间复杂度打乱数组顺序
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static int[] shuffle(int[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static int[] shuffle(int[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static long[] shuffle(long[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static long[] shuffle(long[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static double[] shuffle(double[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static double[] shuffle(double[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static float[] shuffle(float[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static float[] shuffle(float[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean[] shuffle(boolean[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean[] shuffle(boolean[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static byte[] shuffle(byte[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static byte[] shuffle(byte[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static char[] shuffle(char[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static char[] shuffle(char[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static short[] shuffle(short[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static short[] shuffle(short[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param <T> 元素类型
+	 * @param array 数组，会变更
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T> T[] shuffle(T[] array) {
+		return shuffle(array, RandomUtil.getRandom());
+	}
+
+	/**
+	 * 打乱数组顺序，会变更原数组
+	 *
+	 * @param <T> 元素类型
+	 * @param array  数组，会变更
+	 * @param random 随机数生成器
+	 * @return 打乱后的数组
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T> T[] shuffle(T[] array, Random random) {
+		if (array == null || random == null || array.length <= 1) {
+			return array;
+		}
+
+		for (int i = array.length; i > 1; i--) {
+			swap(array, i - 1, random.nextInt(i));
+		}
+
+		return array;
 	}
 
 	/**
