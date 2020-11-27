@@ -1,4 +1,4 @@
-package cn.hutool.crypto.digest.opt;
+package cn.hutool.crypto.digest.otp;
 
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
@@ -13,7 +13,7 @@ import java.time.Instant;
  *
  * @author Looly
  */
-public class TOPT extends HOTP {
+public class TOTP extends HOTP {
 
 	/**
 	 * 默认步进 (30秒).
@@ -27,7 +27,7 @@ public class TOPT extends HOTP {
 	 *
 	 * @param key 共享密码，RFC 4226要求最少128位
 	 */
-	public TOPT(byte[] key) {
+	public TOTP(byte[] key) {
 		this(DEFAULT_TIME_STEP, key);
 	}
 
@@ -37,7 +37,7 @@ public class TOPT extends HOTP {
 	 * @param timeStep 日期步进，用于生成移动因子（moving factor）
 	 * @param key      共享密码，RFC 4226要求最少128位
 	 */
-	public TOPT(Duration timeStep, byte[] key) {
+	public TOTP(Duration timeStep, byte[] key) {
 		this(timeStep, DEFAULT_PASSWORD_LENGTH, key);
 	}
 
@@ -48,7 +48,7 @@ public class TOPT extends HOTP {
 	 * @param passwordLength 密码长度，可以是6,7,8
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public TOPT(Duration timeStep, int passwordLength, byte[] key) {
+	public TOTP(Duration timeStep, int passwordLength, byte[] key) {
 		this(timeStep, passwordLength, HOTP_HMAC_ALGORITHM, key);
 	}
 
@@ -60,7 +60,7 @@ public class TOPT extends HOTP {
 	 * @param algorithm      HMAC算法枚举
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public TOPT(Duration timeStep, int passwordLength, HmacAlgorithm algorithm, byte[] key) {
+	public TOTP(Duration timeStep, int passwordLength, HmacAlgorithm algorithm, byte[] key) {
 		super(passwordLength, algorithm, key);
 		this.timeStep = timeStep;
 	}

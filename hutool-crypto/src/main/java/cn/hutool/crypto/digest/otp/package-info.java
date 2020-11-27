@@ -11,4 +11,4 @@
  *
  * @author looly
  */
-package cn.hutool.crypto.digest.opt;
+package cn.hutool.crypto.digest.otp;
