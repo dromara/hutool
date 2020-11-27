@@ -26,13 +26,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -498,6 +492,21 @@ public class ServletUtil {
 	public static PrintWriter getWriter(HttpServletResponse response) throws IORuntimeException {
 		try {
 			return response.getWriter();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 获得OutputStream
+	 *
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @return 获得OutputStream
+	 * @throws IORuntimeException IO异常
+	 */
+	public static OutputStream getOutputStream(HttpServletResponse response) throws IORuntimeException {
+		try {
+			return response.getOutputStream();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
