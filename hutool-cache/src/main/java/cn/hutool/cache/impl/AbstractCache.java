@@ -45,11 +45,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * 命中数
 	 */
-	protected AtomicLong hitCount;
+	protected AtomicLong hitCount = new AtomicLong();
 	/**
 	 * 丢失数
 	 */
-	protected AtomicLong missCount;
+	protected AtomicLong missCount = new AtomicLong();
 
 	// ---------------------------------------------------------------- put start
 	@Override
