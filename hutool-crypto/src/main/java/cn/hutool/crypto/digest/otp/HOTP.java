@@ -1,4 +1,4 @@
-package cn.hutool.crypto.digest.opt;
+package cn.hutool.crypto.digest.otp;
 
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;

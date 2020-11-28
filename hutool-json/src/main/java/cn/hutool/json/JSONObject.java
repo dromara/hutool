@@ -420,7 +420,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	}
 
 	/**
-	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. <br>
+	 * 积累值。类似于set，当key对应value已经存在时，与value组成新的JSONArray. <br>
 	 * 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
 	 *
 	 * @param key   键
@@ -432,11 +432,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.set(key, value instanceof JSONArray ? new JSONArray(this.config).set(value) : value);
+			this.set(key, value);
 		} else if (object instanceof JSONArray) {
 			((JSONArray) object).set(value);
 		} else {
-			this.set(key, new JSONArray(this.config).set(object).set(value));
+			this.set(key, JSONUtil.createArray(this.config).set(object).set(value));
 		}
 		return this;
 	}

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.2 (2020-11-25)
+# 5.5.2 (2020-11-26)
 
 ### 新特性
 * 【crypto 】     KeyUtil增加重载，AES构造增加重载（issue#I25NNZ@Gitee）
@@ -13,9 +13,17 @@
 * 【crypto 】     增加判空（issue#1230@Github）
 * 【core   】     xml.setXmlStandalone(true)格式优化（pr#1234@Github）
 * 【core   】     AnnotationUtil增加setValue方法（pr#1250@Github）
-* 【core   】     ZipUtil增加get方法
+* 【core   】     ZipUtil增加get方法（issue#I27CUF@Gitee）
 * 【cache  】     对CacheObj等变量使用volatile关键字
 * 【core   】     Base64增加encodeWithoutPadding方法（issue#I26J16@Gitee）
+* 【core   】     ExceptionUtil增加message消息包装为运行时异常的方法（pr#1253@Gitee）
+* 【core   】     DatePattern增加年月格式化常量（pr#220@Gitee）
+* 【core   】     ArrayUtil增加shuffle方法（pr#1255@Github）
+* 【core   】     ArrayUtil部分方法分离至PrimitiveArrayUtil
+* 【crypto 】     opt改为otp包（issue#1257@Github）
+* 【cache  】     增加CacheListener（issue#1257@Github）
+* 【core   】     TimeInterval支持分组（issue#1238@Github）
+* 【core   】     增加compile包（pr#1243@Github）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
@@ -23,6 +31,7 @@
 * 【poi    】     修复ExcelUtil.getSaxReader使用非MarkSupport流报错问题（issue#1225@Github）
 * 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
+* 【json   】     修复JSONObject.accumulate问题
 
 -------------------------------------------------------------------------------------------------------------
 

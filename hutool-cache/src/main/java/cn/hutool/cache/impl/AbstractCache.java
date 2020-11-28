@@ -1,6 +1,7 @@
 package cn.hutool.cache.impl;
 
 import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheListener;
 import cn.hutool.core.collection.CopiedIter;
 import cn.hutool.core.lang.func.Func0;
 
@@ -45,11 +46,16 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * 命中数
 	 */
-	protected AtomicLong hitCount;
+	protected AtomicLong hitCount = new AtomicLong();
 	/**
 	 * 丢失数
 	 */
-	protected AtomicLong missCount;
+	protected AtomicLong missCount = new AtomicLong();
+
+	/**
+	 * 缓存监听
+	 */
+	protected CacheListener<K, V> listener;
 
 	// ---------------------------------------------------------------- put start
 	@Override
@@ -164,7 +170,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 			if (co.isExpired()) {
 				missCount.getAndIncrement();
-			} else{
+			} else {
 				// 命中
 				hitCount.getAndIncrement();
 				return co.get(isUpdateLastAccess);
@@ -280,13 +286,29 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	// ---------------------------------------------------------------- common end
 
 	/**
-	 * 对象移除回调。默认无动作
+	 * 设置监听
+	 *
+	 * @param listener 监听
+	 * @return this
+	 * @since 5.5.2
+	 */
+	public AbstractCache<K, V> setListener(CacheListener<K, V> listener) {
+		this.listener = listener;
+		return this;
+	}
+
+	/**
+	 * 对象移除回调。默认无动作<br>
+	 * 子类可重写此方法用于监听移除事件，如果重写，listener将无效
 	 *
 	 * @param key          键
 	 * @param cachedObject 被缓存的对象
 	 */
 	protected void onRemove(K key, V cachedObject) {
-		// ignore
+		final CacheListener<K, V> listener = this.listener;
+		if (null != listener) {
+			listener.onRemove(key, cachedObject);
+		}
 	}
 
 	/**
