@@ -538,7 +538,13 @@ public class JSONObjectTest {
 
 	@Test
 	public void accumulateTest(){
-		final JSONObject accumulate = JSONUtil.createObj().accumulate("key1", "value1");
-		Assert.assertEquals("{\"key1\":[\"value1\"]}", accumulate.toString());
+		final JSONObject jsonObject = JSONUtil.createObj().accumulate("key1", "value1");
+		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value2");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value3");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
 	}
 }
