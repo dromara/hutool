@@ -45,7 +45,6 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @param key     键
 	 * @param object  缓存的对象
 	 * @param timeout 失效时长，单位毫秒
-	 * @see Cache#put(Object, Object, long)
 	 */
 	void put(K key, V object, long timeout);
 
@@ -159,4 +158,15 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @return 是否包含key
 	 */
 	boolean containsKey(K key);
+
+	/**
+	 * 设置监听
+	 *
+	 * @param listener 监听
+	 * @return this
+	 * @since 5.5.2
+	 */
+	default Cache<K, V> setListener(CacheListener<K, V> listener){
+		return this;
+	}
 }

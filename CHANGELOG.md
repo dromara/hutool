@@ -21,6 +21,8 @@
 * 【core   】     ArrayUtil增加shuffle方法（pr#1255@Github）
 * 【core   】     ArrayUtil部分方法分离至PrimitiveArrayUtil
 * 【crypto 】     opt改为otp包（issue#1257@Github）
+* 【cache  】     增加CacheListener（issue#1257@Github）
+* 【core   】     TimeInterval支持分组（issue#1238@Github）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
