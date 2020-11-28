@@ -23,6 +23,7 @@
 * 【crypto 】     opt改为otp包（issue#1257@Github）
 * 【cache  】     增加CacheListener（issue#1257@Github）
 * 【core   】     TimeInterval支持分组（issue#1238@Github）
+* 【core   】     增加compile包（pr#1243@Github）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
