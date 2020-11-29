@@ -58,7 +58,9 @@ public interface Resource {
 	 * @param charset 编码
 	 * @return {@link BufferedReader}
 	 */
-	BufferedReader getReader(Charset charset);
+	default BufferedReader getReader(Charset charset){
+		return IoUtil.getReader(getStream(), charset);
+	}
 	
 	/**
 	 * 读取资源内容，读取完毕后会关闭流<br>
@@ -68,7 +70,9 @@ public interface Resource {
 	 * @return 读取资源内容
 	 * @throws IORuntimeException 包装{@link IOException}
 	 */
-	String readStr(Charset charset) throws IORuntimeException;
+	default String readStr(Charset charset) throws IORuntimeException{
+		return IoUtil.read(getReader(charset));
+	}
 	
 	/**
 	 * 读取资源内容，读取完毕后会关闭流<br>
@@ -88,5 +92,7 @@ public interface Resource {
 	 * @return 读取资源内容
 	 * @throws IORuntimeException 包装IOException
 	 */
-	byte[] readBytes() throws IORuntimeException;
+	default byte[] readBytes() throws IORuntimeException{
+		return IoUtil.readBytes(getStream());
+	}
 }

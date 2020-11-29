@@ -59,7 +59,7 @@ public class JarClassLoader extends URLClassLoader {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (File jar : jars) {
-					ReflectUtil.invoke(loader, method, new Object[]{jar.toURI().toURL()});
+					ReflectUtil.invoke(loader, method, jar.toURI().toURL());
 				}
 			}
 		} catch (IOException e) {

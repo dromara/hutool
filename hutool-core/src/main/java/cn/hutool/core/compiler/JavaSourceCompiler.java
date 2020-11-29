@@ -9,28 +9,21 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.URLUtil;
 
 import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * Java 源码编译器
@@ -38,11 +31,6 @@ import java.util.zip.ZipFile;
  * @author lzpeng
  */
 public class JavaSourceCompiler {
-
-	/**
-	 * java 编译器
-	 */
-	private static final JavaCompiler JAVA_COMPILER = ToolProvider.getSystemJavaCompiler();
 
 	/**
 	 * 待编译的文件 可以是 .java文件 压缩文件 文件夹 递归搜索文件夹内的zip包和jar包
@@ -68,10 +56,10 @@ public class JavaSourceCompiler {
 	/**
 	 * 构造
 	 *
-	 * @param parent 父类加载器
+	 * @param parent 父类加载器，null则使用默认类加载器
 	 */
 	private JavaSourceCompiler(ClassLoader parent) {
-		this.parentClassLoader = parent;
+		this.parentClassLoader = ObjectUtil.defaultIfNull(parent, ClassLoaderUtil.getClassLoader());
 	}
 
 
@@ -145,22 +133,19 @@ public class JavaSourceCompiler {
 	 * @return 类加载器
 	 */
 	public ClassLoader compile() {
-		final ClassLoader parent = ObjectUtil.defaultIfNull(this.parentClassLoader, ClassLoaderUtil.getClassLoader());
-
 		// 获得classPath
 		final List<File> classPath = getClassPath();
 		final URL[] urLs = URLUtil.getURLs(classPath.toArray(new File[0]));
-		final URLClassLoader ucl = URLClassLoader.newInstance(urLs, parent);
+		final URLClassLoader ucl = URLClassLoader.newInstance(urLs, this.parentClassLoader);
 		if (sourceCodeMap.isEmpty() && sourceFileList.isEmpty()) {
 			// 没有需要编译的源码
 			return ucl;
 		}
+
 		// 没有需要编译的源码文件返回加载zip或jar包的类加载器
-		final Iterable<JavaFileObject> javaFileObjectList = getJavaFileObject();
 
 		// 创建编译器
-		final JavaFileManager standardJavaFileManager = JAVA_COMPILER.getStandardFileManager(null, null, null);
-		final JavaFileManager javaFileManager = new JavaClassFileManager(ucl, standardJavaFileManager);
+		final JavaFileManager javaFileManager = new JavaClassFileManager(ucl, CompilerUtil.getFileManager());
 
 		// classpath
 		final List<String> options = new ArrayList<>();
@@ -172,17 +157,14 @@ public class JavaSourceCompiler {
 
 		// 编译文件
 		final DiagnosticCollector<? super JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
-		final CompilationTask task = JAVA_COMPILER.getTask(null, javaFileManager, diagnosticCollector,
-				options, null, javaFileObjectList);
+		final List<JavaFileObject> javaFileObjectList = getJavaFileObject();
+		final CompilationTask task = CompilerUtil.getTask(javaFileManager, diagnosticCollector, options, javaFileObjectList);
 		if (task.call()) {
+			// 加载编译后的类
 			return javaFileManager.getClassLoader(StandardLocation.CLASS_OUTPUT);
 		} else {
 			// 编译失败,收集错误信息
-			final List<?> diagnostics = diagnosticCollector.getDiagnostics();
-			final String errorMsg = diagnostics.stream().map(String::valueOf)
-					.collect(Collectors.joining(System.lineSeparator()));
-			// CompileException
-			throw new RuntimeException(errorMsg);
+			throw new CompilerException(DiagnosticUtil.getMessages(diagnosticCollector));
 		}
 	}
 
@@ -194,7 +176,7 @@ public class JavaSourceCompiler {
 	private List<File> getClassPath() {
 		List<File> classPathFileList = new ArrayList<>();
 		for (File file : libraryFileList) {
-			List<File> jarOrZipFile = FileUtil.loopFiles(file, this::isJarOrZipFile);
+			List<File> jarOrZipFile = FileUtil.loopFiles(file, (subFile)-> JavaFileObjectUtil.isJarOrZipFile(subFile.getName()));
 			classPathFileList.addAll(jarOrZipFile);
 			if (file.isDirectory()) {
 				classPathFileList.add(file);
@@ -208,20 +190,14 @@ public class JavaSourceCompiler {
 	 *
 	 * @return 待编译的Java文件对象
 	 */
-	private Iterable<JavaFileObject> getJavaFileObject() {
-		final Collection<JavaFileObject> collection = new ArrayList<>();
+	private List<JavaFileObject> getJavaFileObject() {
+		final List<JavaFileObject> collection = new ArrayList<>();
+
+		// 源码文件
 		for (File file : sourceFileList) {
-			// .java 文件
-			final List<File> javaFileList = FileUtil.loopFiles(file, this::isJavaFile);
-			for (File javaFile : javaFileList) {
-				collection.add(getJavaFileObjectByJavaFile(javaFile));
-			}
-			// 压缩包
-			final List<File> jarOrZipFileList = FileUtil.loopFiles(file, this::isJarOrZipFile);
-			for (File jarOrZipFile : jarOrZipFileList) {
-				collection.addAll(getJavaFileObjectByZipOrJarFile(jarOrZipFile));
-			}
+			FileUtil.walkFiles(file, (subFile)-> collection.addAll(JavaFileObjectUtil.getJavaFileObjects(file)));
 		}
+
 		// 源码Map
 		collection.addAll(getJavaFileObjectByMap(this.sourceCodeMap));
 		return collection;
@@ -250,56 +226,6 @@ public class JavaSourceCompiler {
 	 */
 	private JavaFileObject getJavaFileObjectByJavaFile(final File file) {
 		return new JavaSourceFileObject(file.toURI());
-	}
-
-	/**
-	 * 通过zip包或jar包创建Java文件对象
-	 *
-	 * @param file 压缩文件
-	 * @return Java文件对象
-	 */
-	private Collection<JavaFileObject> getJavaFileObjectByZipOrJarFile(final File file) {
-		final Collection<JavaFileObject> collection = new ArrayList<>();
-		try {
-			final ZipFile zipFile = new ZipFile(file);
-			final Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				final ZipEntry zipEntry = entries.nextElement();
-				final String name = zipEntry.getName();
-				if (name.endsWith(".java")) {
-					final InputStream inputStream = zipFile.getInputStream(zipEntry);
-					final JavaSourceFileObject fileObject = new JavaSourceFileObject(name, inputStream);
-					collection.add(fileObject);
-				}
-			}
-			return collection;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return Collections.emptyList();
-	}
-
-
-	/**
-	 * 是否是jar 或 zip 文件
-	 *
-	 * @param file 文件
-	 * @return 是否是jar 或 zip 文件
-	 */
-	private boolean isJarOrZipFile(final File file) {
-		final String fileName = file.getName();
-		return fileName.endsWith(".jar") || fileName.endsWith(".zip");
-	}
-
-	/**
-	 * 是否是.java文件
-	 *
-	 * @param file 文件
-	 * @return 是否是.java文件
-	 */
-	private boolean isJavaFile(final File file) {
-		final String fileName = file.getName();
-		return fileName.endsWith(".java");
 	}
 
 }

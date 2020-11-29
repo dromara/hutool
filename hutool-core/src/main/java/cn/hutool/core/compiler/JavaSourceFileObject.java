@@ -10,7 +10,11 @@ import java.net.URI;
 import java.nio.charset.Charset;
 
 /**
- * Java 源码文件对象
+ * Java 源码文件对象，支持：<br>
+ * <ol>
+ *     <li>源文件</li>
+ *     <li>代码内容</li>
+ * </ol>
  *
  * @author lzpeng
  * @since 5.5.2
@@ -34,23 +38,22 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	/**
 	 * 构造
 	 *
-	 * @param name        需要编译的文件名
-	 * @param inputStream 输入流
+	 * @param className 需要编译的类名
+	 * @param code      需要编译的类源码
 	 */
-	protected JavaSourceFileObject(String name, InputStream inputStream) {
-		this(URI.create("string:///" + name));
-		this.inputStream = inputStream;
+	protected JavaSourceFileObject(String className, String code, Charset charset) {
+		this(className, IoUtil.toStream(code, charset));
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param className 需要编译的类名
-	 * @param code      需要编译的类源码
+	 * @param name        需要编译的文件名
+	 * @param inputStream 输入流
 	 */
-	protected JavaSourceFileObject(String className, String code, Charset charset) {
-		this(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension));
-		this.inputStream = IoUtil.toStream(code, charset);
+	protected JavaSourceFileObject(String name, InputStream inputStream) {
+		this(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension));
+		this.inputStream = inputStream;
 	}
 
 	/**

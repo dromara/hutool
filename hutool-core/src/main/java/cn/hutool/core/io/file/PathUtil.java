@@ -95,6 +95,18 @@ public class PathUtil {
 	 * 遍历指定path下的文件并做处理
 	 *
 	 * @param start    起始路径，必须为目录
+	 * @param visitor  {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
+	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
+	 * @since 5.5.2
+	 */
+	public static void walkFiles(Path start, FileVisitor<? super Path> visitor) {
+		walkFiles(start, -1, visitor);
+	}
+
+	/**
+	 * 遍历指定path下的文件并做处理
+	 *
+	 * @param start    起始路径，必须为目录
 	 * @param maxDepth 最大遍历深度，-1表示不限制深度
 	 * @param visitor  {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
 	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
