@@ -316,7 +316,7 @@ public class ThreadUtil {
 		long spendTime;
 		while (done >= 0 && done < millis) {
 			before = System.currentTimeMillis();
-			if (false == sleep(millis - done)) {
+			if (!sleep(millis - done)) {
 				return false;
 			}
 			spendTime = System.currentTimeMillis() - before;
@@ -416,7 +416,7 @@ public class ThreadUtil {
 			} catch (InterruptedException e) {
 				// ignore
 			}
-		} while (false == dead);
+		} while (!dead);
 	}
 
 	/**
