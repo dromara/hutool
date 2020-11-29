@@ -4,6 +4,7 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 /**
@@ -13,6 +14,7 @@ import javax.tools.ToolProvider;
  * @since 5.5.2
  */
 public class CompilerUtil {
+
 	/**
 	 * java 编译器
 	 */
@@ -29,21 +31,21 @@ public class CompilerUtil {
 	}
 
 	/**
-	 * 获取{@link JavaFileManager}
+	 * 获取{@link StandardJavaFileManager}
 	 *
-	 * @return {@link JavaFileManager}
+	 * @return {@link StandardJavaFileManager}
 	 */
-	public static JavaFileManager getFileManager() {
+	public static StandardJavaFileManager getFileManager() {
 		return SYSTEM_COMPILER.getStandardFileManager(null, null, null);
 	}
 
 	/**
 	 * 新建编译任务
 	 *
-	 * @param fileManager {@link JavaFileManager}，用于管理已经编译好的文件
+	 * @param fileManager        {@link JavaFileManager}，用于管理已经编译好的文件
 	 * @param diagnosticListener 诊断监听
-	 * @param options 选项，例如 -cpXXX等
-	 * @param compilationUnits 编译单元，即需要编译的对象
+	 * @param options            选项，例如 -cpXXX等
+	 * @param compilationUnits   编译单元，即需要编译的对象
 	 * @return {@link JavaCompiler.CompilationTask}
 	 */
 	public static JavaCompiler.CompilationTask getTask(
@@ -52,5 +54,16 @@ public class CompilerUtil {
 			Iterable<String> options,
 			Iterable<? extends JavaFileObject> compilationUnits) {
 		return SYSTEM_COMPILER.getTask(null, fileManager, diagnosticListener, options, null, compilationUnits);
+	}
+
+	/**
+	 * 获取{@link JavaSourceCompiler}
+	 *
+	 * @param parent 父{@link ClassLoader}
+	 * @return {@link JavaSourceCompiler}
+	 * @see JavaSourceCompiler#create(ClassLoader)
+	 */
+	public static JavaSourceCompiler getCompiler(ClassLoader parent) {
+		return JavaSourceCompiler.create(parent);
 	}
 }

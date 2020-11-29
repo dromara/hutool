@@ -70,7 +70,7 @@ class JavaClassFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 	 */
 	@Override
 	public JavaFileObject getJavaFileForOutput(final Location location, final String className, final Kind kind, final FileObject sibling) {
-		final JavaFileObject javaFileObject = new JavaClassFileObject(className, kind);
+		final JavaFileObject javaFileObject = new JavaClassFileObject(className);
 		this.classFileObjectMap.put(className, new FileObjectResource(javaFileObject));
 		return javaFileObject;
 	}

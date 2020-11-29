@@ -355,23 +355,53 @@ public class ZipUtil {
 	 * @since 3.0.9
 	 */
 	public static File zip(File zipFile, String[] paths, InputStream[] ins, Charset charset) throws UtilException {
+		ZipOutputStream out = null;
+		try {
+			out = getZipOutputStream(zipFile, charset);
+			zip(out, paths, ins);
+		} finally {
+			IoUtil.close(out);
+		}
+		return zipFile;
+	}
+
+	/**
+	 * 将文件流压缩到目标流中
+	 *
+	 * @param out   目标流，压缩完成自动关闭
+	 * @param paths 流数据在压缩文件中的路径或文件名
+	 * @param ins   要压缩的源，添加完成后自动关闭流
+	 * @since 5.5.2
+	 */
+	public static void zip(OutputStream out, String[] paths, InputStream[] ins) {
+		ZipOutputStream zipOutputStream = null;
+		try {
+			zipOutputStream = getZipOutputStream(out, DEFAULT_CHARSET);
+			zip(zipOutputStream, paths, ins);
+		} finally {
+			IoUtil.close(zipOutputStream);
+		}
+	}
+
+	/**
+	 * 将文件流压缩到目标流中
+	 *
+	 * @param zipOutputStream 目标流，压缩完成不关闭
+	 * @param paths           流数据在压缩文件中的路径或文件名
+	 * @param ins             要压缩的源，添加完成后自动关闭流
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.2
+	 */
+	public static void zip(ZipOutputStream zipOutputStream, String[] paths, InputStream[] ins) throws IORuntimeException {
 		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
 			throw new IllegalArgumentException("Paths or ins is empty !");
 		}
 		if (paths.length != ins.length) {
 			throw new IllegalArgumentException("Paths length is not equals to ins length !");
 		}
-
-		ZipOutputStream out = null;
-		try {
-			out = getZipOutputStream(zipFile, charset);
-			for (int i = 0; i < paths.length; i++) {
-				add(ins[i], paths[i], out);
-			}
-		} finally {
-			IoUtil.close(out);
+		for (int i = 0; i < paths.length; i++) {
+			add(ins[i], paths[i], zipOutputStream);
 		}
-		return zipFile;
 	}
 
 	/**
@@ -1056,10 +1086,10 @@ public class ZipUtil {
 	 * @param file 需要压缩的文件
 	 * @param path 在压缩文件中的路径
 	 * @param out  压缩文件存储对象
-	 * @throws UtilException IO异常
+	 * @throws IORuntimeException IO异常
 	 * @since 4.0.5
 	 */
-	private static void add(File file, String path, ZipOutputStream out) throws UtilException {
+	private static void add(File file, String path, ZipOutputStream out) throws IORuntimeException {
 		add(FileUtil.getInputStream(file), path, out);
 	}
 
@@ -1069,9 +1099,9 @@ public class ZipUtil {
 	 * @param in   需要压缩的输入流，使用完后自动关闭
 	 * @param path 压缩的路径
 	 * @param out  压缩文件存储对象
-	 * @throws UtilException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	private static void add(InputStream in, String path, ZipOutputStream out) throws UtilException {
+	private static void add(InputStream in, String path, ZipOutputStream out) throws IORuntimeException {
 		if (null == in) {
 			return;
 		}
@@ -1079,7 +1109,7 @@ public class ZipUtil {
 			out.putNextEntry(new ZipEntry(path));
 			IoUtil.copy(in, out);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 			closeEntry(out);

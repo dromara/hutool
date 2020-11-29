@@ -1,6 +1,8 @@
 package cn.hutool.core.compiler;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.URLUtil;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.BufferedInputStream;
@@ -12,8 +14,8 @@ import java.nio.charset.Charset;
 /**
  * Java 源码文件对象，支持：<br>
  * <ol>
- *     <li>源文件</li>
- *     <li>代码内容</li>
+ *     <li>源文件，通过文件的uri传入</li>
+ *     <li>代码内容，通过流传入</li>
  * </ol>
  *
  * @author lzpeng
@@ -27,7 +29,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	private InputStream inputStream;
 
 	/**
-	 * 构造
+	 * 构造，支持File等路径类型的源码
 	 *
 	 * @param uri  需要编译的文件uri
 	 */
@@ -36,7 +38,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	}
 
 	/**
-	 * 构造
+	 * 构造，支持String类型的源码
 	 *
 	 * @param className 需要编译的类名
 	 * @param code      需要编译的类源码
@@ -46,13 +48,13 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	}
 
 	/**
-	 * 构造
+	 * 构造，支持流中读取源码（例如zip或网络等）
 	 *
 	 * @param name        需要编译的文件名
 	 * @param inputStream 输入流
 	 */
 	protected JavaSourceFileObject(String name, InputStream inputStream) {
-		this(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension));
+		this(URLUtil.getStringURI(name.replace(CharUtil.DOT, CharUtil.SLASH) + Kind.SOURCE.extension));
 		this.inputStream = inputStream;
 	}
 

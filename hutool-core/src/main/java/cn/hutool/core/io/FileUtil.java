@@ -183,7 +183,11 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 递归遍历目录并处理目录下的文件
+	 * 递归遍历目录并处理目录下的文件，可以处理目录或文件：
+	 * <ul>
+	 *     <li>非目录则直接调用{@link Consumer}处理</li>
+	 *     <li>目录则递归调用此方法处理</li>
+	 * </ul>
 	 *
 	 * @param file     文件或目录，文件直接处理
 	 * @param consumer 文件处理器，只会处理文件

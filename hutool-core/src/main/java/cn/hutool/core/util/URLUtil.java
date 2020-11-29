@@ -135,6 +135,18 @@ public class URLUtil {
 	}
 
 	/**
+	 * 获取string协议的URL，类似于string:///xxxxx
+	 *
+	 * @param content 正文
+	 * @return URL
+	 * @since 5.5.2
+	 */
+	public static URI getStringURI(CharSequence content){
+		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
+		return URI.create(contentStr);
+	}
+
+	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
 	 *
 	 * @param urlStr URL字符串
