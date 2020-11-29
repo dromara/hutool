@@ -1,6 +1,7 @@
 package cn.hutool.core.compiler;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -159,13 +160,16 @@ public class JavaSourceCompiler {
 		final DiagnosticCollector<? super JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
 		final List<JavaFileObject> javaFileObjectList = getJavaFileObject();
 		final CompilationTask task = CompilerUtil.getTask(javaFileManager, diagnosticCollector, options, javaFileObjectList);
-		if (task.call()) {
-			// 加载编译后的类
-			return javaFileManager.getClassLoader(StandardLocation.CLASS_OUTPUT);
-		} else {
-			// 编译失败,收集错误信息
-			throw new CompilerException(DiagnosticUtil.getMessages(diagnosticCollector));
+		try{
+			if (task.call()) {
+				// 加载编译后的类
+				return javaFileManager.getClassLoader(StandardLocation.CLASS_OUTPUT);
+			}
+		} finally {
+			IoUtil.close(javaFileManager);
 		}
+		//编译失败,收集错误信息
+		throw new CompilerException(DiagnosticUtil.getMessages(diagnosticCollector));
 	}
 
 	/**
