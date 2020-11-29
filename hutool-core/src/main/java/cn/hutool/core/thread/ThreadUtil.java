@@ -383,7 +383,7 @@ public class ThreadUtil {
 	 * @param isJoin 是否等待结束
 	 */
 	public static void interrupt(Thread thread, boolean isJoin) {
-		if (null != thread && false == thread.isInterrupted()) {
+		if (null != thread && !thread.isInterrupted()) {
 			thread.interrupt();
 			if (isJoin) {
 				waitForDie(thread);
