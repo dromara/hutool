@@ -500,13 +500,25 @@ public class IoUtil {
 	}
 
 	/**
-	 * 从Reader中读取String，读取完毕后并不关闭Reader
+	 * 从Reader中读取String，读取完毕后关闭Reader
 	 *
 	 * @param reader Reader
 	 * @return String
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String read(Reader reader) throws IORuntimeException {
+		return read(reader, true);
+	}
+
+	/**
+	 * 从{@link Reader}中读取String
+	 *
+	 * @param reader {@link Reader}
+	 * @param isClose 是否关闭{@link Reader}
+	 * @return String
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String read(Reader reader, boolean isClose) throws IORuntimeException {
 		final StringBuilder builder = StrUtil.builder();
 		final CharBuffer buffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE);
 		try {
@@ -515,6 +527,10 @@ public class IoUtil {
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally{
+			if(isClose){
+				IoUtil.close(reader);
+			}
 		}
 		return builder.toString();
 	}

@@ -21,6 +21,7 @@ public class JavaSourceCompilerTest {
 	 */
 	@Test
 	public void testCompile() throws ClassNotFoundException {
+		// 依赖A，编译B和C
 		final File libFile = ZipUtil.zip(FileUtil.file("lib.jar"),
 				new String[]{"a/A.class", "a/A$1.class", "a/A$InnerClass.class"},
 				new InputStream[]{

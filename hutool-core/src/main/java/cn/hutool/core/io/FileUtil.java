@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.FileCopier;
 import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.io.file.FileNameUtil;
@@ -50,6 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -64,11 +66,11 @@ public class FileUtil extends PathUtil {
 	/**
 	 * Class文件扩展名
 	 */
-	public static final String CLASS_EXT = ".class";
+	public static final String CLASS_EXT = FileNameUtil.EXT_CLASS;
 	/**
 	 * Jar文件扩展名
 	 */
-	public static final String JAR_FILE_EXT = ".jar";
+	public static final String JAR_FILE_EXT = FileNameUtil.EXT_JAR;
 	/**
 	 * 在Jar中的路径jar的扩展名形式
 	 */
@@ -171,25 +173,37 @@ public class FileUtil extends PathUtil {
 	 * @return 文件列表
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
-		final List<File> fileList = new ArrayList<>();
 		if (null == file || false == file.exists()) {
-			return fileList;
+			return ListUtil.empty();
 		}
 
+		final List<File> fileList = new ArrayList<>();
+		walkFiles(file, fileList::add);
+		return fileList;
+	}
+
+	/**
+	 * 递归遍历目录并处理目录下的文件，可以处理目录或文件：
+	 * <ul>
+	 *     <li>非目录则直接调用{@link Consumer}处理</li>
+	 *     <li>目录则递归调用此方法处理</li>
+	 * </ul>
+	 *
+	 * @param file     文件或目录，文件直接处理
+	 * @param consumer 文件处理器，只会处理文件
+	 * @since 5.5.2
+	 */
+	public static void walkFiles(File file, Consumer<File> consumer) {
 		if (file.isDirectory()) {
 			final File[] subFiles = file.listFiles();
 			if (ArrayUtil.isNotEmpty(subFiles)) {
 				for (File tmp : subFiles) {
-					fileList.addAll(loopFiles(tmp, fileFilter));
+					walkFiles(tmp, consumer);
 				}
 			}
 		} else {
-			if (null == fileFilter || fileFilter.accept(file)) {
-				fileList.add(file);
-			}
+			consumer.accept(file);
 		}
-
-		return fileList;
 	}
 
 	/**
@@ -968,7 +982,7 @@ public class FileUtil extends PathUtil {
 	 * 移动文件或者目录
 	 *
 	 * @param src        源文件或者目录
-	 * @param target       目标文件或者目录
+	 * @param target     目标文件或者目录
 	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
 	 * @throws IORuntimeException IO异常
 	 * @see PathUtil#move(Path, Path, boolean)
@@ -2900,6 +2914,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 将流的内容写入文件<br>
+	 * 此方法会自动关闭输入流
 	 *
 	 * @param dest 目标文件
 	 * @param in   输入流
@@ -2912,6 +2927,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 将流的内容写入文件<br>
+	 * 此方法会自动关闭输入流
 	 *
 	 * @param in           输入流
 	 * @param fullFilePath 文件绝对路径
@@ -2923,7 +2939,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 将文件写入流中
+	 * 将文件写入流中，此方法不会概念比输出流
 	 *
 	 * @param file 文件
 	 * @param out  流

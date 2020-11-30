@@ -3,11 +3,9 @@ package cn.hutool.core.io.resource;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -57,11 +55,6 @@ public class BytesResource implements Resource, Serializable {
 	@Override
 	public InputStream getStream() {
 		return new ByteArrayInputStream(this.bytes);
-	}
-
-	@Override
-	public BufferedReader getReader(Charset charset) {
-		return new BufferedReader(new StringReader(readStr(charset)));
 	}
 
 	@Override

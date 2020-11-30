@@ -1,22 +1,22 @@
 package cn.hutool.core.compiler;
 
 
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.URLUtil;
+
 import javax.tools.SimpleJavaFileObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 
 /**
- * Java 字节码文件对象
+ * Java 字节码文件对象，用于在内存中暂存class字节码，从而可以在ClassLoader中动态加载。
  *
  * @author lzpeng
- * @see JavaClassFileManager#getClassLoader(javax.tools.JavaFileManager.Location
- * @see JavaClassFileManager#getJavaFileForOutput(javax.tools.JavaFileManager.Location, java.lang.String, javax.tools.JavaFileObject.Kind, javax.tools.FileObject)
  * @since 5.5.2
  */
-final class JavaClassFileObject extends SimpleJavaFileObject {
+class JavaClassFileObject extends SimpleJavaFileObject {
 
 	/**
 	 * 字节码输出流
@@ -26,12 +26,11 @@ final class JavaClassFileObject extends SimpleJavaFileObject {
 	/**
 	 * 构造
 	 *
-	 * @param className 需要编译的类名
-	 * @param kind      需要编译的文件类型
+	 * @param className 编译后的class文件的类名
 	 * @see JavaClassFileManager#getJavaFileForOutput(javax.tools.JavaFileManager.Location, java.lang.String, javax.tools.JavaFileObject.Kind, javax.tools.FileObject)
 	 */
-	protected JavaClassFileObject(final String className, final Kind kind) {
-		super(URI.create("string:///" + className.replaceAll("\\.", "/") + kind.extension), kind);
+	protected JavaClassFileObject(String className) {
+		super(URLUtil.getStringURI(className.replace(CharUtil.DOT, CharUtil.SLASH) + Kind.CLASS.extension), Kind.CLASS);
 		this.byteArrayOutputStream = new ByteArrayOutputStream();
 	}
 
