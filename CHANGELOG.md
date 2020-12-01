@@ -28,7 +28,7 @@
 * 【core   】     修改IoUtil.read(Reader)逻辑默认关闭Reader
 * 【core   】     ZipUtil增加Zip方法（pr#222@Gitee）
 * 【all    】     增加Hutool.getAllUtils和printAllUtils方法
-* 【all    】     增加PonyCode（issue#1268@Gitee）
+* 【core   】     增加PunyCode（issue#1268@Gitee）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
