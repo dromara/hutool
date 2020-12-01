@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.2 (2020-11-26)
+# 5.5.2 (2020-12-01)
 
 ### 新特性
 * 【crypto 】     KeyUtil增加重载，AES构造增加重载（issue#I25NNZ@Gitee）
@@ -28,6 +28,7 @@
 * 【core   】     修改IoUtil.read(Reader)逻辑默认关闭Reader
 * 【core   】     ZipUtil增加Zip方法（pr#222@Gitee）
 * 【all    】     增加Hutool.getAllUtils和printAllUtils方法
+* 【all    】     增加PonyCode（issue#1268@Gitee）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
@@ -36,6 +37,7 @@
 * 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
 * 【json   】     修复JSONObject.accumulate问题
+* 【core   】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
