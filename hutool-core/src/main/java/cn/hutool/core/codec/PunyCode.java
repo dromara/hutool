@@ -1,6 +1,7 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -20,26 +21,38 @@ public class PunyCode {
 	private static final int DAMP = 700;
 	private static final int SKEW = 38;
 	private static final char DELIMITER = '-';
-	private static final String PONY_CODE_PREFIX = "xn--";
+
+	public static final String PUNY_CODE_PREFIX = "xn--";
 
 	/**
-	 * Punycodes a unicode string.
+	 * 将内容编码为PunyCode
 	 *
-	 * @param input Unicode string.
-	 * @return Punycoded string.
+	 * @param input      字符串
+	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
 	public static String encode(String input) throws UtilException {
+		return encode(input, false);
+	}
+
+	/**
+	 * 将内容编码为PunyCode
+	 *
+	 * @param input      字符串
+	 * @param withPrefix 是否包含 "xn--"前缀
+	 * @return PunyCode字符串
+	 * @throws UtilException 计算异常
+	 */
+	public static String encode(String input, boolean withPrefix) throws UtilException {
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
 		StringBuilder output = new StringBuilder();
 		// Copy all basic code points to the output
-		int length = input.length();
+		final int length = input.length();
 		int b = 0;
-		char c;
 		for (int i = 0; i < length; i++) {
-			c = input.charAt(i);
+			char c = input.charAt(i);
 			if (isBasic(c)) {
 				output.append(c);
 				b++;
@@ -50,11 +63,11 @@ public class PunyCode {
 			output.append(DELIMITER);
 		}
 		int h = b;
-		while (h < input.length()) {
+		while (h < length) {
 			int m = Integer.MAX_VALUE;
 			// Find the minimum code point >= n
-			for (int i = 0; i < input.length(); i++) {
-				int c = input.charAt(i);
+			for (int i = 0; i < length; i++) {
+				final char c = input.charAt(i);
 				if (c >= n && c < m) {
 					m = c;
 				}
@@ -64,7 +77,7 @@ public class PunyCode {
 			}
 			delta = delta + (m - n) * (h + 1);
 			n = m;
-			for (int j = 0; j < input.length(); j++) {
+			for (int j = 0; j < length; j++) {
 				int c = input.charAt(j);
 				if (c < n) {
 					delta++;
@@ -86,8 +99,7 @@ public class PunyCode {
 						if (q < t) {
 							break;
 						}
-						output.append((char) digit2codepoint(t + (q - t)
-								% (BASE - t)));
+						output.append((char) digit2codepoint(t + (q - t) % (BASE - t)));
 						q = (q - t) / (BASE - t);
 					}
 					output.append((char) digit2codepoint(q));
@@ -99,18 +111,23 @@ public class PunyCode {
 			delta++;
 			n++;
 		}
+
+		if(withPrefix){
+			output.insert(0, PUNY_CODE_PREFIX);
+		}
 		return output.toString();
 	}
 
 	/**
-	 * Decode a punycoded string.
+	 * 解码 PunyCode为字符串
 	 *
-	 * @param input Punycode string
-	 * @return Unicode string.
+	 * @param input PunyCode
+	 * @return 字符串
 	 * @throws UtilException 计算异常
 	 */
 	public static String decode(String input) throws UtilException {
-		input = StrUtil.removePrefixIgnoreCase(input, PONY_CODE_PREFIX);
+		input = StrUtil.removePrefixIgnoreCase(input, PUNY_CODE_PREFIX);
+
 		int n = INITIAL_N;
 		int i = 0;
 		int bias = INITIAL_BIAS;
@@ -118,21 +135,21 @@ public class PunyCode {
 		int d = input.lastIndexOf(DELIMITER);
 		if (d > 0) {
 			for (int j = 0; j < d; j++) {
-				char c = input.charAt(j);
-				if (false == isBasic(c)) {
-					throw new UtilException("BAD_INPUT");
+				final char c = input.charAt(j);
+				if (isBasic(c)) {
+					output.append(c);
 				}
-				output.append(c);
 			}
 			d++;
 		} else {
 			d = 0;
 		}
-		while (d < input.length()) {
+		final int length = input.length();
+		while (d < length) {
 			int oldi = i;
 			int w = 1;
 			for (int k = BASE; ; k += BASE) {
-				if (d == input.length()) {
+				if (d == length) {
 					throw new UtilException("BAD_INPUT");
 				}
 				int c = input.charAt(d++);
@@ -163,10 +180,11 @@ public class PunyCode {
 			output.insert(i, (char) n);
 			i++;
 		}
+
 		return output.toString();
 	}
 
-	public static int adapt(int delta, int numpoints, boolean first) {
+	private static int adapt(int delta, int numpoints, boolean first) {
 		if (first) {
 			delta = delta / DAMP;
 		} else {
@@ -181,11 +199,27 @@ public class PunyCode {
 		return k + ((BASE - TMIN + 1) * delta) / (delta + SKEW);
 	}
 
-	public static boolean isBasic(char c) {
+	private static boolean isBasic(char c) {
 		return c < 0x80;
 	}
 
-	public static int digit2codepoint(int d) throws UtilException {
+	/**
+	 * 将数字转为字符，对应关系为：
+	 * <pre>
+	 *     0 -&gt; a
+	 *     1 -&gt; b
+	 *     ...
+	 *     25 -&gt; z
+	 *     26 -&gt; '0'
+	 *     ...
+	 *     35 -&gt; '9'
+	 * </pre>
+	 * @param d 输入字符
+	 * @return 转换后的字符
+	 * @throws UtilException 无效字符
+	 */
+	private static int digit2codepoint(int d) throws UtilException {
+		Assert.checkBetween(d, 0, 35);
 		if (d < 26) {
 			// 0..25 : 'a'..'z'
 			return d + 'a';
@@ -197,7 +231,22 @@ public class PunyCode {
 		}
 	}
 
-	public static int codepoint2digit(int c) throws UtilException {
+	/**
+	 * 将字符转为数字，对应关系为：
+	 * <pre>
+	 *     a -&gt; 0
+	 *     b -&gt; 1
+	 *     ...
+	 *     z -&gt; 25
+	 *     '0' -&gt; 26
+	 *     ...
+	 *     '9' -&gt; 35
+	 * </pre>
+	 * @param c 输入字符
+	 * @return 转换后的字符
+	 * @throws UtilException 无效字符
+	 */
+	private static int codepoint2digit(int c) throws UtilException {
 		if (c - '0' < 10) {
 			// '0'..'9' : 26..35
 			return c - '0' + 26;
@@ -207,12 +256,5 @@ public class PunyCode {
 		} else {
 			throw new UtilException("BAD_INPUT");
 		}
-	}
-
-	public static void main(String[] args) {
-		String strPunycode = PONY_CODE_PREFIX + encode("北京大学");
-		System.out.println(strPunycode);
-		String strChinese = decode("xn--1lq90ic7fzpc");
-		System.out.println(strChinese);
 	}
 }
