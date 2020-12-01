@@ -2039,9 +2039,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		long tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2076,9 +2074,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		int tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2113,9 +2109,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		short tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2150,9 +2144,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		char tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2187,9 +2179,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		byte tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2224,9 +2214,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		double tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2261,9 +2249,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		float tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
@@ -2298,9 +2284,7 @@ public class PrimitiveArrayUtil {
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		boolean tmp;
 		while (j > i) {
-			tmp = array[j];
-			array[j] = array[i];
-			array[i] = tmp;
+			swap(array, i, j);
 			j--;
 			i++;
 		}
