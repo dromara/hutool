@@ -1761,4 +1761,481 @@ public class ArrayUtil extends PrimitiveArrayUtil{
 
 		return firstIndex;
 	}
+
+	// O(n)时间复杂度检查数组是否有序
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(byte[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(byte[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(byte[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(short[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(short[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(short[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(char[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(char[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(char[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(int[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(int[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(int[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(long[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(long[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(long[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(double[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(double[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(double[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSorted(float[] array) {
+		return isSortedASC(array);
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedASC(float[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] > array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 *
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static boolean isSortedDESC(float[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i] < array[i + 1]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否有序，即comparator.compare(array[i], array[i + 1]) <= 0，若传入空数组或空比较器，则返回false
+	 *
+	 * @param array      数组
+	 * @param comparator 比较器
+	 * @param <T>        数组元素类型
+	 * @return 数组是否有序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T> boolean isSorted(T[] array, Comparator<? super T> comparator) {
+		if (array == null || comparator == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (comparator.compare(array[i], array[i + 1]) > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) <= 0，若传入空数组，则返回false
+	 *
+	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T extends Comparable<? super T>> boolean isSorted(T[] array) {
+		return isSortedASC(array);
+	}
+
+
+	/**
+	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) <= 0，若传入空数组，则返回false
+	 *
+	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
+	 * @param array 数组
+	 * @return 数组是否升序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T extends Comparable<? super T>> boolean isSortedASC(T[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i].compareTo(array[i + 1]) > 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，即array[i].compareTo(array[i + 1]) >= 0，若传入空数组，则返回false
+	 *
+	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
+	 * @param array 数组
+	 * @return 数组是否降序
+	 * @author FengBaoheng
+	 * @since 5.5.2
+	 */
+	public static <T extends Comparable<? super T>> boolean isSortedDESC(T[] array) {
+		if (array == null) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length - 1; i++) {
+			if (array[i].compareTo(array[i + 1]) < 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
