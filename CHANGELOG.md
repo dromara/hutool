@@ -31,6 +31,7 @@
 * 【core   】     增加PunyCode（issue#1268@Gitee）
 * 【core   】     ArrayUtil增加isSorted方法（pr#1271@Github）
 * 【captcha】     增加GifCaptcha（pr#1273@Github）
+* 【core   】     增加SSLUtil、SSLContextBuilder
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
