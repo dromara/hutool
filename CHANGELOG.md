@@ -40,6 +40,7 @@
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
 * 【json   】     修复JSONObject.accumulate问题
 * 【core   】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
+* 【core   】     修复PatternPool中邮编的正则（issue#1274@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
