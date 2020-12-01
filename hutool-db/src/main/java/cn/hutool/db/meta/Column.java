@@ -65,6 +65,7 @@ public class Column implements Serializable, Cloneable {
 	 * @return 列对象
 	 * @deprecated 请使用 {@link #create(Table, ResultSet)}
 	 */
+	@Deprecated
 	public static Column create(String tableName, ResultSet columnMetaRs) {
 		return new Column(tableName, columnMetaRs);
 	}

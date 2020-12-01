@@ -767,12 +767,11 @@ public class FileUtil extends PathUtil {
 		final File[] files = directory.listFiles();
 		if (ArrayUtil.isEmpty(files)) {
 			// 空文件夹则删除之
-			//noinspection ResultOfMethodCallIgnored
-			directory.delete();
-		} else {
-			for (File childFile : files) {
-				cleanEmpty(childFile);
-			}
+			return directory.delete();
+		}
+
+		for (File childFile : files) {
+			cleanEmpty(childFile);
 		}
 		return true;
 	}
@@ -1666,7 +1665,7 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param file 文件 {@link File}
-	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException IO异常
 	 * @see FileTypeUtil#getType(File)
 	 */
