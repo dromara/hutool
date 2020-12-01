@@ -30,6 +30,7 @@
 * 【all    】     增加Hutool.getAllUtils和printAllUtils方法
 * 【core   】     增加PunyCode（issue#1268@Gitee）
 * 【core   】     ArrayUtil增加isSorted方法（pr#1271@Github）
+* 【captcha】     增加GifCaptcha（pr#1273@Github）
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
