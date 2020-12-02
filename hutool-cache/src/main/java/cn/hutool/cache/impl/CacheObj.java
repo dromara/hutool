@@ -46,7 +46,7 @@ public class CacheObj<K, V> implements Serializable{
 		if(this.ttl > 0) {
 			final long expiredTime = this.lastAccess + this.ttl;
 			// expiredTime > 0 杜绝Long类型溢出变负数问题，当当前时间超过过期时间，表示过期
-			return expiredTime > 0 && expiredTime < System.currentTimeMillis();
+			return expiredTime < 0 || expiredTime > System.currentTimeMillis();
 		}
 		return false;
 	}
