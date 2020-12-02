@@ -1,4 +1,4 @@
-package cn.hutool.http.test;
+package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;

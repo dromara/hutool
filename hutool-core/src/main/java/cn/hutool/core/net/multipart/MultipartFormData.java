@@ -2,7 +2,6 @@ package cn.hutool.core.net.multipart;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.multi.ListValueMap;
 
 import java.io.IOException;
@@ -78,7 +77,7 @@ public class MultipartFormData {
 				putFile(header.formFieldName, newFile);
 			} else {
 				// 标准表单项
-				putParameter(header.formFieldName, IoUtil.read(input, charset));
+				putParameter(header.formFieldName, input.readString(charset));
 			}
 
 			input.skipBytes(1);
