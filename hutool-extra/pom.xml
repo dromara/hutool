@@ -378,7 +378,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.1.4</version>
+			<version>5.2.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
