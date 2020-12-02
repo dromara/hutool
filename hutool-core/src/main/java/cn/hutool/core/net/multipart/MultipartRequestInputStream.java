@@ -171,7 +171,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public int copy(OutputStream out, int limit) throws IOException {
+	public int copy(OutputStream out, long limit) throws IOException {
 		int count = 0;
 		while (true) {
 			byte b = readByte();

@@ -38,7 +38,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param height 验证码高度
 	 */
 	public GifCaptcha(int width, int height) {
-		this(width, height, 100);
+		this(width, height, 5);
 	}
 
 	/**
