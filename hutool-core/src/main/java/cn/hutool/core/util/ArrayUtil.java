@@ -1765,7 +1765,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// O(n)时间复杂度检查数组是否有序
 
 	/**
-	 * 检查数组是否有序，即comparator.compare(array[i], array[i + 1]) <= 0，若传入空数组或空比较器，则返回false
+	 * 检查数组是否有序，即comparator.compare(array[i], array[i + 1]) &lt;= 0，若传入空数组或空比较器，则返回false
 	 *
 	 * @param array      数组
 	 * @param comparator 比较器
@@ -1788,7 +1788,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) <= 0，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) &lt;= 0，若传入空数组，则返回false
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
@@ -1802,7 +1802,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 
 	/**
-	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) <= 0，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) &lt;= 0，若传入空数组，则返回false
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
@@ -1825,7 +1825,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i].compareTo(array[i + 1]) >= 0，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i].compareTo(array[i + 1]) &gt;= 0，若传入空数组，则返回false
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组

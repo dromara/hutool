@@ -13,6 +13,7 @@ import java.util.Map;
  * @since 5.2.6
  */
 public class BiMap<K, V> extends MapWrapper<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	private Map<V, K> inverse;
 

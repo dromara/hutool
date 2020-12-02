@@ -3005,7 +3005,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3017,7 +3017,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3039,7 +3039,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3061,7 +3061,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3073,7 +3073,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3095,7 +3095,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3117,7 +3117,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3129,7 +3129,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3151,7 +3151,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3173,7 +3173,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3185,7 +3185,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3207,7 +3207,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3229,7 +3229,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3241,7 +3241,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3263,7 +3263,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3285,7 +3285,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3297,7 +3297,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3319,7 +3319,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3341,7 +3341,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3353,7 +3353,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] <= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3375,7 +3375,7 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] >= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序

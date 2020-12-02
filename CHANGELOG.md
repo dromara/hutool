@@ -3,6 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.5.3 (2020-12-02)
+
+### 新特性
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.5.2 (2020-12-01)
 
 ### 新特性
@@ -30,6 +37,8 @@
 * 【all    】     增加Hutool.getAllUtils和printAllUtils方法
 * 【core   】     增加PunyCode（issue#1268@Gitee）
 * 【core   】     ArrayUtil增加isSorted方法（pr#1271@Github）
+* 【captcha】     增加GifCaptcha（pr#1273@Github）
+* 【core   】     增加SSLUtil、SSLContextBuilder
 
 ### Bug修复
 * 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
@@ -39,6 +48,7 @@
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
 * 【json   】     修复JSONObject.accumulate问题
 * 【core   】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
+* 【core   】     修复PatternPool中邮编的正则（issue#1274@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

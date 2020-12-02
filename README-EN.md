@@ -65,7 +65,7 @@
 
 Hutool,' Hútú '(Chinese Pinyin)，On the one hand, it is simple and easy to understand, on the other hand, it means "hard to be confused".(note: confused means 'Hútú (糊涂)' in china )
 
-### How Hutool is changing the way we coding
+### How Hutool is changing the way we code
 
 The goal of  **Hutool**  is to use a simple function instead of a complex piece of code, thus avoiding the problem of "copy and paste" code as much as possible and revolutionizing the way we write code.
 
@@ -125,19 +125,19 @@ Each module can be introduced individually, or all modules can be introduced by 
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.5.2</version>
+    <version>5.5.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:5.5.2'
+compile 'cn.hutool:hutool-all:5.5.3'
 ```
 
 ## Download
 
-- [Maven1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.5.2/)
-- [Maven2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.5.2/)
+- [Maven1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.5.3/)
+- [Maven2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.5.3/)
 
 > note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -182,7 +182,7 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 
 1. Improve the comments, especially each new method should follow the Java documentation specification to indicate the method description, parameter description, return value description and other information, if necessary, please add unit tests, if you want, you can also add your name.
 2. Code indentation according to Eclipse.
-3. Newly added methods do not use third-party library methods，Unless the method tool is added to the '**extra module**'.
+3. Newly added methods do not use third-party library methods，Unless the method tool is add to the '**extra module**'.
 4. Please pull request to the `v5-dev` branch. Hutool uses a new branch after 5.x: `v5-master` is the master branch, which indicates the version of the central library that has been released, and this branch does not allow pr or modifications.
 
 -------------------------------------------------------------------------------

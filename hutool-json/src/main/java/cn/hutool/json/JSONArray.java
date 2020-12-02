@@ -208,7 +208,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	/**
-	 * JSONArray转为以<code>separator</code>为分界符的字符串
+	 * JSONArray转为以{@code separator}为分界符的字符串
 	 *
 	 * @param separator 分界符
 	 * @return a string.
