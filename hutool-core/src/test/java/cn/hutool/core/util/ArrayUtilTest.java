@@ -377,4 +377,11 @@ public class ArrayUtilTest {
 		i = ArrayUtil.lastIndexOfSub(null, b);
 		Assert.assertEquals(-1, i);
 	}
+
+	@Test
+	public void reverseTest(){
+		int[] a = {1,2,3,4};
+		final int[] reverse = ArrayUtil.reverse(a);
+		Assert.assertArrayEquals(new int[]{4,3,2,1}, reverse);
+	}
 }

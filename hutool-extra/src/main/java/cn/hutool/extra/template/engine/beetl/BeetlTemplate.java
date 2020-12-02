@@ -1,11 +1,11 @@
 package cn.hutool.extra.template.engine.beetl;
 
+import cn.hutool.extra.template.AbstractTemplate;
+
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
-
-import cn.hutool.extra.template.AbstractTemplate;
 
 /**
  * Beetl模板实现
@@ -21,7 +21,7 @@ public class BeetlTemplate extends AbstractTemplate implements Serializable{
 	 * 包装Beetl模板
 	 * 
 	 * @param beetlTemplate Beetl的模板对象 {@link org.beetl.core.Template}
-	 * @return {@link BeetlTemplate}
+	 * @return BeetlTemplate
 	 */
 	public static BeetlTemplate wrap(org.beetl.core.Template beetlTemplate) {
 		return (null == beetlTemplate) ? null : new BeetlTemplate(beetlTemplate);

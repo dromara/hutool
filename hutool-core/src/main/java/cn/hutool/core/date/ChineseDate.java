@@ -11,7 +11,12 @@ import java.util.Date;
 
 
 /**
- * 农历日期工具，最大支持到2055年
+ * 农历日期工具，最大支持到2055年，支持：
+ *
+ * <ul>
+ *     <li>通过公历日期构造获取对应农历</li>
+ *     <li>通过农历日期直接构造</li>
+ * </ul>
  *
  * @author zjw, looly
  * @since 5.1.1
@@ -36,9 +41,9 @@ public class ChineseDate {
 	private boolean leap;
 
 	/**
-	 * 构造方法传入日期
+	 * 通过公历日期构造
 	 *
-	 * @param date 日期
+	 * @param date 公历日期
 	 */
 	public ChineseDate(Date date) {
 		// 求出和1900年1月31日相差的天数

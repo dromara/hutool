@@ -193,7 +193,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @param uri     URI
 	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public static WatchMonitor createAll(URI uri, Watcher watcher) {
 		return createAll(Paths.get(uri), watcher);
@@ -204,7 +204,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @param url     URL
 	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public static WatchMonitor createAll(URL url, Watcher watcher) {
 		try {
@@ -219,7 +219,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @param file    被监听文件
 	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public static WatchMonitor createAll(File file, Watcher watcher) {
 		return createAll(file.toPath(), watcher);
@@ -230,7 +230,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @param path    路径
 	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public static WatchMonitor createAll(String path, Watcher watcher) {
 		return createAll(Paths.get(path), watcher);
@@ -241,7 +241,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @param path    路径
 	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public static WatchMonitor createAll(Path path, Watcher watcher) {
 		final WatchMonitor watchMonitor = create(path, EVENTS_ALL);
@@ -348,7 +348,7 @@ public class WatchMonitor extends WatchServer {
 	 * 多个监听请使用{@link WatcherChain}
 	 *
 	 * @param watcher 监听
-	 * @return {@link WatchMonitor}
+	 * @return WatchMonitor
 	 */
 	public WatchMonitor setWatcher(Watcher watcher) {
 		this.watcher = watcher;

@@ -229,16 +229,20 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void characters(char[] ch, int start, int length) {
-		switch (this.curElementName){
-			case v:
-				// 得到单元格内容的值
-				lastContent.append(ch, start, length);
-				break;
-			case f:
-				// 得到单元格内容的值
-				lastFormula.append(ch, start, length);
-				break;
+		final ElementName elementName = this.curElementName;
+		if(null != elementName){
+			switch (elementName){
+				case v:
+					// 得到单元格内容的值
+					lastContent.append(ch, start, length);
+					break;
+				case f:
+					// 得到单元格内容的值
+					lastFormula.append(ch, start, length);
+					break;
+			}
 		}
+		// 其它标签忽略
 	}
 
 	// --------------------------------------------------------------------------------------- Private method start

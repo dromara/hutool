@@ -90,7 +90,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param iv      偏移向量，加盐
 	 */
 	public SM4(Mode mode, Padding padding, SecretKey key, byte[] iv) {
-		this(mode, padding, key, ArrayUtil.isEmpty(iv) ? ((IvParameterSpec) null) : new IvParameterSpec(iv));
+		this(mode, padding, key, ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class SM4 extends SymmetricCrypto{
 	public SM4(String mode, String padding, byte[] key, byte[] iv) {
 		this(mode, padding,//
 				SecureUtil.generateKey(ALGORITHM_NAME, key),//
-				ArrayUtil.isEmpty(iv) ? ((IvParameterSpec) null) : new IvParameterSpec(iv));
+				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 
 	/**
