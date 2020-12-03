@@ -261,6 +261,9 @@ public class ListUtil {
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
 		if (startEnd[1] > resultSize) {
 			startEnd[1] = resultSize;
+			if (startEnd[0] > startEnd[1]) {
+			    return new ArrayList<>(0);
+			}
 		}
 
 		return list.subList(startEnd[0], startEnd[1]);
