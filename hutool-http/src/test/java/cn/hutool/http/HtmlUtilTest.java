@@ -1,4 +1,4 @@
-package cn.hutool.http.test;
+package cn.hutool.http;
 
 import org.junit.Assert;
 import org.junit.Test;
