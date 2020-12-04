@@ -303,4 +303,12 @@ public class NumberUtilTest {
 		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
 		Assert.assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
 	}
+
+	@Test
+	public void isBetweenTest() {
+		Assert.assertTrue(NumberUtil.isBetween(0, 1, 0));
+		Assert.assertTrue(NumberUtil.isBetween(0l, 1l, 1l));
+		Assert.assertTrue(NumberUtil.isBetween(0.1f, 0.2f, 0.19f));
+		Assert.assertTrue(NumberUtil.isBetween(0.1, 0.2, 0.19));
+	}
 }
