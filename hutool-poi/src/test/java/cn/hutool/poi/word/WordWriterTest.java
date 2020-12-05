@@ -1,4 +1,4 @@
-package cn.hutool.poi.word.test;
+package cn.hutool.poi.word;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;

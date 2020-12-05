@@ -1516,7 +1516,7 @@ public class NumberUtil {
 	 */
 	public static int processMultiple(int selectNum, int minNum) {
 		int result;
-		result = mathSubnode(selectNum, minNum) / mathNode(selectNum - minNum);
+		result = mathSubNode(selectNum, minNum) / mathNode(selectNum - minNum);
 		return result;
 	}
 
@@ -2494,11 +2494,11 @@ public class NumberUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
-	private static int mathSubnode(int selectNum, int minNum) {
+	private static int mathSubNode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
 		} else {
-			return selectNum * mathSubnode(selectNum - 1, minNum);
+			return selectNum * mathSubNode(selectNum - 1, minNum);
 		}
 	}
 

@@ -268,7 +268,7 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 				break;
 			case FormulaRecord.sid:
 				// 公式类型
-				FormulaRecord formulaRec = (FormulaRecord) record;
+				final FormulaRecord formulaRec = (FormulaRecord) record;
 				if (isOutputFormulaValues) {
 					if (Double.isNaN(formulaRec.getValue())) {
 						// Formula result is a string
