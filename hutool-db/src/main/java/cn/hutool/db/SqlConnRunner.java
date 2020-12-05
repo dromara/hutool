@@ -383,6 +383,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where  条件实体类（包含表名）
 	 * @param page   分页对象
+	 * @param handler 结果集处理器
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */

@@ -85,6 +85,7 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param conn   数据库连接
 	 * @param record 记录
+	 * @param generatedKeysHandler 自增主键处理器，用于定义返回自增主键的范围和类型
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
 	 */
