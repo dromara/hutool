@@ -65,7 +65,7 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBySaxTest2() {
-		ExcelUtil.readBySax("e:/B23_20180404164901240.xlsx", 2, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
+		ExcelUtil.readBySax("d:/test/default.xlsx", -1, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
 	private RowHandler createRowHandler() {

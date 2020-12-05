@@ -183,6 +183,25 @@ public class ExcelSaxUtil {
 	public static boolean isDateFormat(CellValueRecordInterface cell, FormatTrackingHSSFListener formatListener){
 		final int formatIndex = formatListener.getFormatIndex(cell);
 		final String formatString = formatListener.getFormatString(cell);
+		return isDateFormat(formatIndex, formatString);
+	}
+
+	/**
+	 * 判断日期格式
+	 *
+	 * @param formatIndex 格式索引，一般用于内建格式
+	 * @param formatString 格式字符串
+	 * @return 是否为日期格式
+	 * @since 5.5.3
+	 */
+	public static boolean isDateFormat(int formatIndex, String formatString){
+		// https://blog.csdn.net/u014342130/article/details/50619503
+		// issue#1283@Github
+		if(formatIndex == 28 || formatIndex == 31){
+			// 28 -> m月d日
+			// 31 -> yyyy年m月d日
+			return true;
+		}
 		return org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, formatString);
 	}
 

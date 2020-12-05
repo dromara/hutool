@@ -4,6 +4,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -410,21 +411,20 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	private void setCellType(Attributes attributes) {
 		// numFmtString的值
-		numFmtString = "";
+		numFmtString = StrUtil.EMPTY;
 		this.cellDataType = CellDataType.of(AttributeName.t.getValue(attributes));
 
 		// 获取单元格的xf索引，对应style.xml中cellXfs的子元素xf
 		if (null != this.stylesTable) {
 			final String xfIndexStr = AttributeName.s.getValue(attributes);
 			if (null != xfIndexStr) {
-				int xfIndex = Integer.parseInt(xfIndexStr);
-				this.xssfCellStyle = stylesTable.getStyleAt(xfIndex);
-				numFmtString = xssfCellStyle.getDataFormatString();
+				this.xssfCellStyle = stylesTable.getStyleAt(Integer.parseInt(xfIndexStr));
 				// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
-				int numFmtIndex = xssfCellStyle.getDataFormat();
-				if (numFmtString == null) {
-					numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
-				} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
+				final int numFmtIndex = xssfCellStyle.getDataFormat();
+				this.numFmtString = ObjectUtil.defaultIfNull(
+						xssfCellStyle.getDataFormatString(),
+						BuiltinFormats.getBuiltinFormat(numFmtIndex));
+				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
 					cellDataType = CellDataType.DATE;
 				}
 			}
