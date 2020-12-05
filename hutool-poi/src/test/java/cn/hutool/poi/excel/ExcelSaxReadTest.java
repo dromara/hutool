@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -138,15 +137,33 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	public void dateReadTest() {
+	public void dateReadXlsTest() {
 		List<String> rows = new ArrayList<>();
-		ExcelUtil.readBySax("data_for_sax_test.xls", 0, (i, i1, list) ->
-				rows.add(StrUtil.toString(list.get(0))));
+		ExcelUtil.readBySax("data_for_sax_test.xls", 0,
+				(i, i1, list) ->{
+					rows.add(StrUtil.toString(list.get(0)));
+				}
+		);
 
 		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
 		// 非日期格式不做转换
 		Assert.assertEquals("112233", rows.get(2));
-		Assert.assertEquals("1000", rows.get(3));
+		Assert.assertEquals("1000.0", rows.get(3));
+		Assert.assertEquals("2012-12-21 00:00:00", rows.get(4));
+	}
+
+	@Test
+	public void dateReadXlsxTest() {
+		List<String> rows = new ArrayList<>();
+		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0,
+				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
+		);
+
+		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
+		// 非日期格式不做转换
+		Assert.assertEquals("112233", rows.get(2));
+		Assert.assertEquals("1000.0", rows.get(3));
+		Assert.assertEquals("2012-12-21 00:00:00", rows.get(4));
 	}
 
 	@Test

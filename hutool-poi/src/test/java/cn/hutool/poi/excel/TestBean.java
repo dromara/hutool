@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
 import lombok.Data;
 
