@@ -190,8 +190,6 @@ public final class SensitiveUtil {
 	 * @return 敏感词过滤处理后的bean对象
 	 */
 	public static <T> T sensitiveFilter(T bean, boolean isGreedMatch, SensitiveProcessor sensitiveProcessor) {
-		sensitiveProcessor = sensitiveProcessor == null ? new SensitiveProcessor() {
-		} : sensitiveProcessor;
 		String jsonText = JSONUtil.toJsonStr(bean);
 		Class<T> c = (Class) bean.getClass();
 		return JSONUtil.toBean(sensitiveFilter(jsonText, isGreedMatch, sensitiveProcessor), c);
@@ -212,6 +210,8 @@ public final class SensitiveUtil {
 		if (CollectionUtil.isEmpty(foundWordList)) {
 			return text;
 		}
+		sensitiveProcessor = sensitiveProcessor == null ? new SensitiveProcessor() {
+		} : sensitiveProcessor;
 		Map<Integer, FoundWord> foundWordMap = new HashMap<>(foundWordList.size());
 		foundWordList.forEach(foundWord -> foundWordMap.put(foundWord.getStartIndex(), foundWord));
 		int length = text.length();
