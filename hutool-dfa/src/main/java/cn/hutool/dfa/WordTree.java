@@ -5,12 +5,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * DFA（Deterministic Finite Automaton 确定有穷自动机）
@@ -140,11 +135,11 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param text 被检查的文本
 	 * @return 匹配到的关键字
 	 */
-	public String match(String text) {
+	public FoundWord match(String text) {
 		if (null == text) {
 			return null;
 		}
-		List<String> matchAll = matchAll(text, 1);
+		List<FoundWord> matchAll = matchAll(text, 1);
 		if (CollectionUtil.isNotEmpty(matchAll)) {
 			return matchAll.get(0);
 		}
@@ -159,7 +154,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param text 被检查的文本
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text) {
+	public List<FoundWord> matchAll(String text) {
 		return matchAll(text, -1);
 	}
 
@@ -170,7 +165,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param limit 限制匹配个数
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text, int limit) {
+	public List<FoundWord> matchAll(String text, int limit) {
 		return matchAll(text, limit, false, false);
 	}
 
@@ -185,20 +180,22 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
+	public List<FoundWord> matchAll(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
 		if (null == text) {
 			return null;
 		}
 
-		List<String> foundWords = new ArrayList<>();
+		List<FoundWord> foundWords = new ArrayList<>();
 		WordTree current = this;
 		int length = text.length();
 		final Filter<Character> charFilter = this.charFilter;
 		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
 		final StrBuilder wordBuffer = StrUtil.strBuilder();
+		final StrBuilder keyBuffer = StrUtil.strBuilder();
 		char currentChar;
 		for (int i = 0; i < length; i++) {
 			wordBuffer.reset();
+			keyBuffer.reset();
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 //				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
@@ -216,9 +213,10 @@ public class WordTree extends HashMap<Character, WordTree> {
 					break;
 				}
 				wordBuffer.append(currentChar);
+				keyBuffer.append(currentChar);
 				if (current.isEnd(currentChar)) {
 					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-					foundWords.add(wordBuffer.toString());
+					foundWords.add(new FoundWord(keyBuffer.toString(), wordBuffer.toString(), i, j));
 					if (limit > 0 && foundWords.size() >= limit) {
 						//超过匹配限制个数，直接返回
 						return foundWords;
