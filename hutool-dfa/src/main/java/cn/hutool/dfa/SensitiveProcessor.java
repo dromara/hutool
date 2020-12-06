@@ -2,7 +2,6 @@ package cn.hutool.dfa;
 
 /**
  * @author 肖海斌
- * @Date 2020-12-05
  * 敏感词过滤处理器，默认按字符数替换成*
  */
 public interface SensitiveProcessor {
