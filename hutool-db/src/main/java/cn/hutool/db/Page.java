@@ -1,5 +1,6 @@
 package cn.hutool.db;
 
+import cn.hutool.core.lang.Segment;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.db.sql.Order;
@@ -12,7 +13,7 @@ import java.util.Arrays;
  *
  * @author Looly
  */
-public class Page implements Serializable {
+public class Page implements Segment<Integer>, Serializable {
 	private static final long serialVersionUID = 97792549823353462L;
 
 	public static final int DEFAULT_PAGE_SIZE = 20;
@@ -159,15 +160,27 @@ public class Page implements Serializable {
 
 	/**
 	 * @return 开始位置
+	 * @see #getStartIndex()
 	 */
 	public int getStartPosition() {
+		return getStartIndex();
+	}
+
+	@Override
+	public Integer getStartIndex() {
 		return PageUtil.getStart(this.pageNumber, this.pageSize);
 	}
 
 	/**
 	 * @return 结束位置
+	 * @see #getEndIndex()
 	 */
 	public int getEndPosition() {
+		return getEndIndex();
+	}
+
+	@Override
+	public Integer getEndIndex() {
 		return PageUtil.getEnd(this.pageNumber, this.pageSize);
 	}
 

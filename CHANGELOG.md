@@ -13,6 +13,7 @@
 * 【cache  】     CacheObj的isExpired()逻辑修改（issue#1295@Github）
 * 【json   】     JSONStrFormater改为JSONStrFormatter
 * 【dfa    】     增加FoundWord（pr#1290@Github）
+* 【core   】     增加Segment（pr#1290@Github）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
