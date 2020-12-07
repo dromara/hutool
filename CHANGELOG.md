@@ -10,6 +10,8 @@
 * 【core   】     multipart中int改为long，解决大文件上传越界问题（issue#I27WZ3@Gitee）
 * 【core   】     ListUtil.page增加检查（pr#224@Gitee）
 * 【db     】     Db增加使用sql的page方法（issue#247@Gitee）
+* 【cache  】     CacheObj的isExpired()逻辑修改（issue#1295@Github）
+* 【json   】     JSONStrFormater改为JSONStrFormatter
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
