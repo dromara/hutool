@@ -1,11 +1,12 @@
 package cn.hutool.db.sql;
 
-import java.util.Collection;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.Entity;
 import cn.hutool.db.Page;
+
+import java.util.Collection;
 
 /**
  * 查询对象，用于传递查询所需的字段值<br>
@@ -25,6 +26,16 @@ public class Query {
 	Condition[] where;
 	/** 分页对象 */
 	Page page;
+
+	/**
+	 * 从{@link Entity}构建Query
+	 * @param where 条件查询{@link Entity}，包含条件Map和表名
+	 * @return Query
+	 * @since 5.5.3
+	 */
+	public static Query of(Entity where){
+		return new Query(SqlUtil.buildConditions(where), where.getTableName());
+	}
 
 	// --------------------------------------------------------------- Constructor start
 	/**
@@ -147,9 +158,9 @@ public class Query {
 	}
 
 	/**
-	 * 获得分页对象
+	 * 获得分页对象，无分页返回{@code null}
 	 * 
-	 * @return 分页对象
+	 * @return 分页对象 or {@code null}
 	 */
 	public Page getPage() {
 		return page;

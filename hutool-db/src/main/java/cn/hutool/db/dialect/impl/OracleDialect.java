@@ -13,7 +13,8 @@ public class OracleDialect extends AnsiSqlDialect{
 	private static final long serialVersionUID = 6122761762247483015L;
 
 	public OracleDialect() {
-//		wrapper = new Wrapper('"');	//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
+		//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
+		//wrapper = new Wrapper('"');
 	}
 	
 	@Override
@@ -27,7 +28,7 @@ public class OracleDialect extends AnsiSqlDialect{
 	}
 	
 	@Override
-	public DialectName dialectName() {
-		return DialectName.ORACLE;
+	public String dialectName() {
+		return DialectName.ORACLE.name();
 	}
 }

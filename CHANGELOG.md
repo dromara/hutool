@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.3 (2020-12-05)
+# 5.5.3 (2020-12-06)
 
 ### 新特性
 * 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
 * 【core   】     multipart中int改为long，解决大文件上传越界问题（issue#I27WZ3@Gitee）
 * 【core   】     ListUtil.page增加检查（pr#224@Gitee）
+* 【db     】     Db增加使用sql的page方法（issue#247@Gitee）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
