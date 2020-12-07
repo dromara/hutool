@@ -15,8 +15,9 @@
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
 * 【poi    】     修复sax读取自定义格式单元格无法识别日期类型的问题（issue#1283@Github）
 * 【core   】     修复CollUtil.get越界问题（issue#1292@Github）
-* 【json   】     修复TemporalAccessorUtil无法格式化LocalDate带时间问题（issue#1289@Github）
+* 【core   】     修复TemporalAccessorUtil无法格式化LocalDate带时间问题（issue#1289@Github）
 * 【json   】     修复自定义日期格式的LocalDateTime没有包装引号问题（issue#1289@Github）
+* 【cache  】     get中unlock改为unlockRead（issue#1294@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
