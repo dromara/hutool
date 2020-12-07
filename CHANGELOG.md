@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.3 (2020-12-07)
+# 5.5.3 (2020-12-08)
 
 ### 新特性
 * 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
@@ -12,6 +12,7 @@
 * 【db     】     Db增加使用sql的page方法（issue#247@Gitee）
 * 【cache  】     CacheObj的isExpired()逻辑修改（issue#1295@Github）
 * 【json   】     JSONStrFormater改为JSONStrFormatter
+* 【dfa    】     增加FoundWord（pr#1290@Github）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）

@@ -1,13 +1,10 @@
-package cn.hutool.dfa.test;
+package cn.hutool.dfa;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.dfa.FoundWord;
-import cn.hutool.dfa.WordTree;
+import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * DFA单元测试
@@ -29,8 +26,8 @@ public class DfaTest {
 		// 情况一：标准匹配，匹配到最短关键词，并跳过已经匹配的关键词
 		// 匹配到【大】，就不再继续匹配了，因此【大土豆】不匹配
 		// 匹配到【刚出锅】，就跳过这三个字了，因此【出锅】不匹配（由于刚首先被匹配，因此长的被匹配，最短匹配只针对第一个字相同选最短）
-		List<FoundWord> matchAll = tree.matchAll(text, -1, false, false);
-		Assert.assertEquals(matchAll.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()), CollectionUtil.newArrayList("大", "土^豆", "刚出锅"));
+		List<String> matchAll = tree.matchAll(text, -1, false, false);
+		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "土^豆", "刚出锅"));
 	}
 
 	/**
@@ -45,8 +42,8 @@ public class DfaTest {
 		// 情况二：匹配到最短关键词，不跳过已经匹配的关键词
 		// 【大】被匹配，最短匹配原则【大土豆】被跳过，【土豆继续被匹配】
 		// 【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
-		List<FoundWord> matchAll = tree.matchAll(text, -1, true, false);
-		Assert.assertEquals(matchAll.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()), CollectionUtil.newArrayList("大", "土^豆", "刚出锅", "出锅"));
+		List<String> matchAll = tree.matchAll(text, -1, true, false);
+		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "土^豆", "刚出锅", "出锅"));
 	}
 
 	/**
@@ -61,8 +58,8 @@ public class DfaTest {
 		// 情况三：匹配到最长关键词，跳过已经匹配的关键词
 		// 匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配
 		// 由于【大土豆】被匹配，【土豆】被跳过，由于【刚出锅】被匹配，【出锅】被跳过
-		List<FoundWord> matchAll = tree.matchAll(text, -1, false, true);
-		Assert.assertEquals(matchAll.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()), CollectionUtil.newArrayList("大", "大土^豆", "刚出锅"));
+		List<String> matchAll = tree.matchAll(text, -1, false, true);
+		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "大土^豆", "刚出锅"));
 
 	}
 
@@ -78,8 +75,8 @@ public class DfaTest {
 		// 情况四：匹配到最长关键词，不跳过已经匹配的关键词（最全关键词）
 		// 匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配，由于不跳过已经匹配的关键词，土豆继续被匹配
 		// 【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
-		List<FoundWord> matchAll = tree.matchAll(text, -1, true, true);
-		Assert.assertEquals(matchAll.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()), CollectionUtil.newArrayList("大", "大土^豆", "土^豆", "刚出锅", "出锅"));
+		List<String> matchAll = tree.matchAll(text, -1, true, true);
+		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "大土^豆", "土^豆", "刚出锅", "出锅"));
 
 	}
 
@@ -91,21 +88,20 @@ public class DfaTest {
 		WordTree tree = new WordTree();
 		tree.addWord("tio");
 
-		List<FoundWord> all = tree.matchAll("AAAAAAAt-ioBBBBBBB");
-		Assert.assertEquals(all.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()), CollectionUtil.newArrayList("t-io"));
+		List<String> all = tree.matchAll("AAAAAAAt-ioBBBBBBB");
+		Assert.assertEquals(all, CollUtil.newArrayList("t-io"));
 	}
 
 	@Test
-	public void aTest() {
+	public void aTest(){
 		WordTree tree = new WordTree();
 		tree.addWord("women");
 		String text = "a WOMEN todo.".toLowerCase();
-		List<FoundWord> matchAll = tree.matchAll(text, -1, false, false);
-		Assert.assertEquals("[women]", matchAll.stream().map(fw -> fw.getFoundWord()).collect(Collectors.toList()).toString());
+		List<String> matchAll = tree.matchAll(text, -1, false, false);
+		Assert.assertEquals("[women]", matchAll.toString());
 	}
 
 	// ----------------------------------------------------------------------------------------------------------
-
 	/**
 	 * 构建查找树
 	 *

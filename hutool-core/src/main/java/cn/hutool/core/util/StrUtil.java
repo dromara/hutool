@@ -105,7 +105,7 @@ public class StrUtil {
 	public static final char C_COLON = CharUtil.COLON;
 
 	/**
-	 * 字符常量：艾特 <code>'@'</code>
+	 * 字符常量：艾特 {@code '@'}
 	 */
 	public static final char C_AT = CharUtil.AT;
 
@@ -210,7 +210,7 @@ public class StrUtil {
 	public static final String COLON = ":";
 
 	/**
-	 * 字符串常量：艾特 <code>"@"</code>
+	 * 字符串常量：艾特 {@code "@"}
 	 */
 	public static final String AT = "@";
 
@@ -246,7 +246,7 @@ public class StrUtil {
 	public static final String HTML_GT = "&gt;";
 
 	/**
-	 * 字符串常量：空 JSON <code>"{}"</code>
+	 * 字符串常量：空 JSON {@code "{}"}
 	 */
 	public static final String EMPTY_JSON = "{}";
 
@@ -542,7 +542,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 如果字符串是 <code>null</code>，则返回指定默认字符串，否则返回字符串本身。
+	 * 如果字符串是 {@code null}，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
 	 * nullToDefault(null, &quot;default&quot;)  = &quot;default&quot;
@@ -560,7 +560,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 如果字符串是<code>null</code>或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
+	 * 如果字符串是{@code null}或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
 	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
@@ -579,7 +579,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 如果字符串是<code>null</code>或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
+	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
 	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
@@ -598,7 +598,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 当给定字符串为空字符串时，转换为<code>null</code>
+	 * 当给定字符串为空字符串时，转换为{@code null}
 	 *
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
@@ -774,10 +774,10 @@ public class StrUtil {
 	// ------------------------------------------------------------------------ Trim
 
 	/**
-	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，依然返回<code>null</code>。
+	 * 除去字符串头尾部的空白，如果字符串是{@code null}，依然返回{@code null}。
 	 *
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 *
 	 * <pre>
 	 * trim(null)          = null
@@ -788,7 +788,7 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param str 要处理的字符串
-	 * @return 除去头尾空白的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
+	 * @return 除去头尾空白的字符串，如果原字串为{@code null}，则返回{@code null}
 	 */
 	public static String trim(CharSequence str) {
 		return (null == str) ? null : trim(str, 0);
@@ -813,7 +813,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回<code>""</code>。
+	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回{@code ""}。
 	 *
 	 * <pre>
 	 * StrUtil.trimToEmpty(null)          = ""
@@ -852,10 +852,10 @@ public class StrUtil {
 	}
 
 	/**
-	 * 除去字符串头部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
+	 * 除去字符串头部的空白，如果字符串是{@code null}，则返回{@code null}。
 	 *
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>CharUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 *
 	 * <pre>
 	 * trimStart(null)         = null
@@ -867,17 +867,17 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param str 要处理的字符串
-	 * @return 除去空白的字符串，如果原字串为<code>null</code>或结果字符串为<code>""</code>，则返回 <code>null</code>
+	 * @return 除去空白的字符串，如果原字串为{@code null}或结果字符串为{@code ""}，则返回 {@code null}
 	 */
 	public static String trimStart(CharSequence str) {
 		return trim(str, -1);
 	}
 
 	/**
-	 * 除去字符串尾部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
+	 * 除去字符串尾部的空白，如果字符串是{@code null}，则返回{@code null}。
 	 *
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>CharUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和{@link String#trim()}不同，此方法使用{@link CharUtil#isBlankChar(char)} 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 *
 	 * <pre>
 	 * trimEnd(null)       = null
@@ -889,47 +889,45 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param str 要处理的字符串
-	 * @return 除去空白的字符串，如果原字串为<code>null</code>或结果字符串为<code>""</code>，则返回 <code>null</code>
+	 * @return 除去空白的字符串，如果原字串为{@code null}或结果字符串为{@code ""}，则返回 {@code null}
 	 */
 	public static String trimEnd(CharSequence str) {
 		return trim(str, 1);
 	}
 
 	/**
-	 * 除去字符串头尾部的空白符，如果字符串是<code>null</code>，依然返回<code>null</code>。
+	 * 除去字符串头尾部的空白符，如果字符串是{@code null}，依然返回{@code null}。
 	 *
 	 * @param str  要处理的字符串
-	 * @param mode <code>-1</code>表示trimStart，<code>0</code>表示trim全部， <code>1</code>表示trimEnd
-	 * @return 除去指定字符后的的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
+	 * @param mode {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
 	 */
 	public static String trim(CharSequence str, int mode) {
+		String result;
 		if (str == null) {
-			return null;
-		}
-
-		int length = str.length();
-		int start = 0;
-		int end = length;
-
-		// 扫描字符串头部
-		if (mode <= 0) {
-			while ((start < end) && (CharUtil.isBlankChar(str.charAt(start)))) {
-				start++;
+			result = null;
+		} else {
+			int length = str.length();
+			int start = 0;
+			int end = length;// 扫描字符串头部
+			if (mode <= 0) {
+				while ((start < end) && (CharUtil.isBlankChar(str.charAt(start)))) {
+					start++;
+				}
+			}// 扫描字符串尾部
+			if (mode >= 0) {
+				while ((start < end) && (CharUtil.isBlankChar(str.charAt(end - 1)))) {
+					end--;
+				}
+			}
+			if ((start > 0) || (end < length)) {
+				result = str.toString().substring(start, end);
+			} else {
+				result = str.toString();
 			}
 		}
 
-		// 扫描字符串尾部
-		if (mode >= 0) {
-			while ((start < end) && (CharUtil.isBlankChar(str.charAt(end - 1)))) {
-				end--;
-			}
-		}
-
-		if ((start > 0) || (end < length)) {
-			return str.toString().substring(start, end);
-		}
-
-		return str.toString();
+		return result;
 	}
 
 	/**
@@ -1251,7 +1249,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 是否包含特定字符，忽略大小写，如果给定两个参数都为<code>null</code>，返回true
+	 * 是否包含特定字符，忽略大小写，如果给定两个参数都为{@code null}，返回true
 	 *
 	 * @param str     被检测字符串
 	 * @param testStr 被测试是否包含的字符串
@@ -1971,7 +1969,7 @@ public class StrUtil {
 	 * abcdefgh 2 3 =》 c <br>
 	 * abcdefgh 2 -3 =》 cde <br>
 	 *
-	 * @param str       String
+	 * @param str              String
 	 * @param fromIndexInclude 开始的index（包括）
 	 * @param toIndexExclude   结束的index（不包括）
 	 * @return 字串
@@ -2094,7 +2092,7 @@ public class StrUtil {
 	/**
 	 * 切割指定位置之前部分的字符串
 	 *
-	 * @param string  字符串
+	 * @param string         字符串
 	 * @param toIndexExclude 切割到的位置（不包括）
 	 * @return 切割后的剩余的前半部分字符串
 	 */
@@ -2406,12 +2404,12 @@ public class StrUtil {
 
 		final List<String> result = new LinkedList<>();
 		final String[] split = split(str, prefix);
-		if(prefix.equals(suffix)){
+		if (prefix.equals(suffix)) {
 			// 前后缀字符相同，单独处理
 			for (int i = 1, length = split.length - 1; i < length; i += 2) {
 				result.add(split[i]);
 			}
-		} else{
+		} else {
 			int suffixIndex;
 			for (String fragment : split) {
 				suffixIndex = fragment.indexOf(suffix.toString());
@@ -2441,7 +2439,7 @@ public class StrUtil {
 	 * StrUtil.subBetweenAll("#hello# world#!", "#");   = ["hello"]
 	 * </pre>
 	 *
-	 * @param str    被切割的字符串
+	 * @param str             被切割的字符串
 	 * @param prefixAndSuffix 截取开始和结束的字符串标识
 	 * @return 截取后的字符串
 	 * @author gotanks
@@ -2620,7 +2618,7 @@ public class StrUtil {
 	 *
 	 * @param str1 要比较的字符串1
 	 * @param str2 要比较的字符串2
-	 * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
+	 * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
 	 */
 	public static boolean equals(CharSequence str1, CharSequence str2) {
 		return equals(str1, str2, false);
@@ -2639,7 +2637,7 @@ public class StrUtil {
 	 *
 	 * @param str1 要比较的字符串1
 	 * @param str2 要比较的字符串2
-	 * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
+	 * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
 	 */
 	public static boolean equalsIgnoreCase(CharSequence str1, CharSequence str2) {
 		return equals(str1, str2, true);
@@ -2651,7 +2649,7 @@ public class StrUtil {
 	 * @param str1       要比较的字符串1
 	 * @param str2       要比较的字符串2
 	 * @param ignoreCase 是否忽略大小写
-	 * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
+	 * @return 如果两个字符串相同，或者都是{@code null}，则返回{@code true}
 	 * @since 3.2.0
 	 */
 	public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
@@ -3431,7 +3429,7 @@ public class StrUtil {
 	 * StrUtil.padAfter("123", 2, '0');//"23"
 	 * </pre>
 	 *
-	 * @param str       字符串，如果为<code>null</code>，直接返回null
+	 * @param str       字符串，如果为{@code null}，直接返回null
 	 * @param minLength 最小长度
 	 * @param padChar   补充的字符
 	 * @return 补充后的字符串
@@ -3459,7 +3457,7 @@ public class StrUtil {
 	 * StrUtil.padAfter("123", 2, "ABC");//"23"
 	 * </pre>
 	 *
-	 * @param str       字符串，如果为<code>null</code>，直接返回null
+	 * @param str       字符串，如果为{@code null}，直接返回null
 	 * @param minLength 最小长度
 	 * @param padStr    补充的字符
 	 * @return 补充后的字符串

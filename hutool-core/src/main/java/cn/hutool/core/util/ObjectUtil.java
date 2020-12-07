@@ -383,7 +383,7 @@ public class ObjectUtil {
 	 * 克隆对象<br>
 	 * 如果对象实现Cloneable接口，调用其clone方法<br>
 	 * 如果实现Serializable接口，执行深度克隆<br>
-	 * 否则返回<code>null</code>
+	 * 否则返回{@code null}
 	 *
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
@@ -607,10 +607,23 @@ public class ObjectUtil {
 	}
 
 	/**
+	 * 是否存在{@code null}对象，通过{@link ObjectUtil#isNull(Object)} 判断元素
+	 *
+	 * @param objs 被检查对象
+	 * @return 是否存在
+	 * @since 5.5.3
+	 * @see ArrayUtil#hasNull(Object[]) 
+	 */
+	public static boolean hasNull(Object... objs) {
+		return ArrayUtil.hasNull(objs);
+	}
+
+	/**
 	 * 是否存在{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查对象
 	 * @return 是否存在
+	 * @see ArrayUtil#hasEmpty(Object...)
 	 */
 	public static boolean hasEmpty(Object... objs) {
 		return ArrayUtil.hasEmpty(objs);

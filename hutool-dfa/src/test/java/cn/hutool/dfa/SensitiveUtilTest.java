@@ -1,6 +1,5 @@
-package cn.hutool.dfa.test;
+package cn.hutool.dfa;
 
-import cn.hutool.dfa.SensitiveUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
