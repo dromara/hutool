@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
+import java.time.temporal.UnsupportedTemporalTypeException;
 
 /**
  * {@link TemporalAccessor} 工具类封装
@@ -54,7 +55,19 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 		}
 
-		return formatter.format(time);
+
+		try {
+			return formatter.format(time);
+		} catch (UnsupportedTemporalTypeException e){
+			if(time instanceof LocalDate && e.getMessage().contains("HourOfDay")){
+				// 用户传入LocalDate，但是要求格式化带有时间部分，转换为LocalDateTime重试
+				return formatter.format(((LocalDate) time).atStartOfDay());
+			}else if(time instanceof LocalTime && e.getMessage().contains("YearOfEra")){
+				// 用户传入LocalTime，但是要求格式化带有日期部分，转换为LocalDateTime重试
+				return formatter.format(((LocalTime) time).atDate(LocalDate.now()));
+			}
+			throw e;
+		}
 	}
 
 	/**

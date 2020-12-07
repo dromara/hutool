@@ -1870,7 +1870,7 @@ public class CollUtil {
 	/**
 	 * Iterator转换为Enumeration
 	 * <p>
-	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * Adapt the specified {@link Iterator} to the {@link Enumeration} interface.
 	 *
 	 * @param <E>  集合元素类型
 	 * @param iter {@link Iterator}
@@ -1883,7 +1883,7 @@ public class CollUtil {
 	/**
 	 * Enumeration转换为Iterator
 	 * <p>
-	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
+	 * Adapt the specified {@code Enumeration} to the {@code Iterator} interface
 	 *
 	 * @param <E> 集合元素类型
 	 * @param e   {@link Enumeration}
@@ -2186,7 +2186,7 @@ public class CollUtil {
 		}
 
 		// 检查越界
-		if (index >= size) {
+		if (index >= size || index < 0) {
 			return null;
 		}
 
