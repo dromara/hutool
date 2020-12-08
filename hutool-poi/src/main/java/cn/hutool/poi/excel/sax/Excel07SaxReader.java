@@ -120,11 +120,11 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @since 5.4.4
 	 */
 	public Excel07SaxReader read(XSSFReader xssfReader, String idOrRid) throws POIException {
-		// 获取共享样式表
+		// 获取共享样式表，样式非必须
 		try {
 			this.handler.stylesTable = xssfReader.getStylesTable();
-		} catch (Exception e) {
-			//ignore
+		} catch (IOException | InvalidFormatException ignore) {
+			// ignore
 		}
 
 		// 获取共享字符串表
