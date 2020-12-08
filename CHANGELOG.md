@@ -15,6 +15,7 @@
 * 【dfa    】     增加FoundWord（pr#1290@Github）
 * 【core   】     增加Segment（pr#1290@Github）
 * 【core   】     增加CharSequenceUtil
+* 【poi    】     Excel07SaxReader拆分出SheetDataSaxHandler
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
