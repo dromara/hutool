@@ -66,6 +66,8 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	private XSSFCellStyle xssfCellStyle;
 	// 单元格存储的格式化字符串，nmtFmt的formatCode属性的值
 	private String numFmtString;
+	// 是否处于sheetData标签内，sax只解析此标签内的内容，其它标签忽略
+	private boolean isInSheetData;
 
 	// 上一次的内容
 	private final StrBuilder lastContent = StrUtil.strBuilder();
@@ -195,7 +197,17 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		final ElementName name = ElementName.of(localName);
+		if("sheetData".equals(qName)){
+			this.isInSheetData = true;
+			return;
+		}
+
+		if(false == this.isInSheetData){
+			// 非sheetData标签，忽略解析
+			return;
+		}
+
+		final ElementName name = ElementName.of(qName);
 		this.curElementName = name;
 
 		if(null != name){
@@ -217,12 +229,24 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) {
+		if("sheetData".equals(qName)){
+			// sheetData结束，不再解析别的标签
+			this.isInSheetData = false;
+			return;
+		}
+
+		if(false == this.isInSheetData){
+			// 非sheetData标签，忽略解析
+			return;
+		}
+
 		this.curElementName = null;
-		if (ElementName.c.match(localName)) { // 单元格结束
+		if (ElementName.c.match(qName)) { // 单元格结束
 			endCell();
-		} else if (ElementName.row.match(localName)) {// 行结束
+		} else if (ElementName.row.match(qName)) {// 行结束
 			endRow();
 		}
+		// 其它标签忽略
 	}
 
 	/**
@@ -230,6 +254,11 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 */
 	@Override
 	public void characters(char[] ch, int start, int length) {
+		if(false == this.isInSheetData){
+			// 非sheetData标签，忽略解析
+			return;
+		}
+
 		final ElementName elementName = this.curElementName;
 		if(null != elementName){
 			switch (elementName){
@@ -303,7 +332,10 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 	 * @param attributes 属性列表
 	 */
 	private void startRow(Attributes attributes) {
-		this.rowNumber = Long.parseLong(AttributeName.r.getValue(attributes)) - 1;
+		final String rValue = AttributeName.r.getValue(attributes);
+		if(null != rValue){
+			this.rowNumber = Long.parseLong(rValue) - 1;
+		}
 	}
 
 	/**
@@ -399,7 +431,7 @@ public class Excel07SaxReader extends DefaultHandler implements ExcelSaxReader<E
 				len++;
 			}
 			while (len-- > 0) {
-				addCellValue(curCell++, "");
+				addCellValue(curCell++, StrUtil.EMPTY);
 			}
 		}
 	}

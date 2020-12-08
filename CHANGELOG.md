@@ -23,6 +23,8 @@
 * 【core   】     修复TemporalAccessorUtil无法格式化LocalDate带时间问题（issue#1289@Github）
 * 【json   】     修复自定义日期格式的LocalDateTime没有包装引号问题（issue#1289@Github）
 * 【cache  】     get中unlock改为unlockRead（issue#1294@Github）
+* 【db     】     修复表名包含点导致的问题（issue#1300@Github）
+* 【poi    】     修复xdr:row标签导致的问题（issue#1297@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

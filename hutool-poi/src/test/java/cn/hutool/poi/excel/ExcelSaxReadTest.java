@@ -175,4 +175,12 @@ public class ExcelSaxReadTest {
 
 		ExcelUtil.getReader(file).read().forEach(Console::log);
 	}
+
+	@Test
+	@Ignore
+	public void readXlsmTest(){
+		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1, (sheetIndex, rowIndex, rowlist) -> {
+			Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
+		});
+	}
 }
