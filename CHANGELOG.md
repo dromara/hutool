@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.3 (2020-12-08)
+# 5.5.3 (2020-12-10)
 
 ### 新特性
 * 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
@@ -16,6 +16,7 @@
 * 【core   】     增加Segment（pr#1290@Github）
 * 【core   】     增加CharSequenceUtil
 * 【poi    】     Excel07SaxReader拆分出SheetDataSaxHandler
+* 【core   】     CollUtil.addAll增加判空（pr#228@Gitee）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
