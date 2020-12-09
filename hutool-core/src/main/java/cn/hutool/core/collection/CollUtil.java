@@ -2108,6 +2108,9 @@ public class CollUtil {
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Iterable<T> iterable) {
+		if (iterable == null) {
+			return collection;
+		}
 		return addAll(collection, iterable.iterator());
 	}
 
