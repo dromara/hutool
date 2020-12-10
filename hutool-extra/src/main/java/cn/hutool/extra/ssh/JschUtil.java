@@ -417,7 +417,7 @@ public class JschUtil {
 	 * @param cmd       命令
 	 * @param charset   发送和读取内容的编码
 	 * @param errStream 错误信息输出到的位置
-	 * @return {@link ChannelExec}
+	 * @return 执行结果内容
 	 * @since 4.3.1
 	 */
 	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
