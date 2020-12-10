@@ -432,7 +432,7 @@ public class JschUtil {
 		try {
 			channel.connect();
 			in = channel.getInputStream();
-			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
+			return IoUtil.read(in, charset);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (JSchException e) {
@@ -461,7 +461,6 @@ public class JschUtil {
 		shell.setPty(true);
 		OutputStream out = null;
 		InputStream in = null;
-		final StringBuilder result = StrUtil.builder();
 		try {
 			out = shell.getOutputStream();
 			in = shell.getInputStream();
@@ -469,9 +468,7 @@ public class JschUtil {
 			out.write(StrUtil.bytes(cmd, charset));
 			out.flush();
 
-			while (in.available() > 0) {
-				result.append(IoUtil.read(in, charset));
-			}
+			return IoUtil.read(in, charset);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -479,7 +476,6 @@ public class JschUtil {
 			IoUtil.close(in);
 			close(shell);
 		}
-		return result.toString();
 	}
 
 	/**
