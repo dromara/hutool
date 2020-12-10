@@ -510,7 +510,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
+	 * 根据身份编号获取市级编码，只支持15或18位身份证号码
 	 *
 	 * @param idcard 身份编码
 	 * @return 市级编码。
@@ -658,9 +658,9 @@ public class IdcardUtil {
 		}
 
 		/**
-		 * 获取省份代码
+		 * 获取市级编码
 		 *
-		 * @return 省份代码
+		 * @return 市级编码
 		 */
 		public String getCityCode() {
 			return this.cityCode;

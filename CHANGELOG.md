@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.3 (2020-12-10)
+# 5.5.3 (2020-12-11)
 
 ### 新特性
 * 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
@@ -17,6 +17,7 @@
 * 【core   】     增加CharSequenceUtil
 * 【poi    】     Excel07SaxReader拆分出SheetDataSaxHandler
 * 【core   】     CollUtil.addAll增加判空（pr#228@Gitee）
+* 【core   】     修正DateUtil.betweenXXX注释错误（issue#I28XGW@Gitee）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
@@ -27,6 +28,7 @@
 * 【cache  】     get中unlock改为unlockRead（issue#1294@Github）
 * 【db     】     修复表名包含点导致的问题（issue#1300@Github）
 * 【poi    】     修复xdr:row标签导致的问题（issue#1297@Github）
+* 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

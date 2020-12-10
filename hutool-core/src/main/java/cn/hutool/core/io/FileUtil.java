@@ -1,7 +1,6 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.FileCopier;
 import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.io.file.FileNameUtil;
@@ -173,13 +172,7 @@ public class FileUtil extends PathUtil {
 	 * @return 文件列表
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
-		if (null == file || false == file.exists()) {
-			return ListUtil.empty();
-		}
-
-		final List<File> fileList = new ArrayList<>();
-		walkFiles(file, fileList::add);
-		return fileList;
+		return loopFiles(file, -1, fileFilter);
 	}
 
 	/**
@@ -216,7 +209,7 @@ public class FileUtil extends PathUtil {
 	 * @return 文件列表
 	 * @since 4.6.3
 	 */
-	public static List<File> loopFiles(File file, int maxDepth, final FileFilter fileFilter) {
+	public static List<File> loopFiles(File file, int maxDepth, FileFilter fileFilter) {
 		return loopFiles(file.toPath(), maxDepth, fileFilter);
 	}
 
