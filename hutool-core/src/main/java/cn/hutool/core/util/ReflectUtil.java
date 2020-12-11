@@ -231,6 +231,30 @@ public class ReflectUtil {
 	}
 
 	/**
+	 * 获取字段值
+	 *
+	 * @param obj       对象，如果static字段，此处为类
+	 * @param fieldName 字段名
+	 * @param pattern   间隔符号
+	 * @return 字段值
+	 * @throws UtilException 包装IllegalAccessException异常
+	 */
+	public static Object getFieldValue(Object obj, String fieldName, String pattern) throws UtilException {
+		if (null == obj || StrUtil.isBlank(fieldName)) {
+			return null;
+		}
+		Object value = null;
+		if (fieldName.contains(pattern)) {
+			String propFront = fieldName.substring(0, fieldName.indexOf(pattern));
+			String propHind = fieldName.substring(fieldName.indexOf(pattern) + 1);
+			value = getFieldValue(obj, getField(obj instanceof Class ? (Class<?>) obj : obj.getClass(), propFront));
+			value = getFieldValue(value, propHind);
+			return value;
+		}
+		return getFieldValue(obj, getField(obj instanceof Class ? (Class<?>) obj : obj.getClass(), fieldName);
+	}
+				     
+	/**
 	 * 获取静态字段值
 	 *
 	 * @param field 字段
