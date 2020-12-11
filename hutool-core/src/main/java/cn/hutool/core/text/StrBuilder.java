@@ -239,7 +239,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	public StrBuilder insert(int index, CharSequence csq) {
 		if (null == csq) {
-			csq = "null";
+			csq = StrUtil.EMPTY;
 		}
 		int len = csq.length();
 		moveDataAfterIndex(index, csq.length());
@@ -523,7 +523,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param minimumCapacity 最小容量
 	 */
 	private void ensureCapacity(int minimumCapacity) {
-		if (minimumCapacity > value.length) {
+		// overflow-conscious code
+		if (minimumCapacity - value.length > 0) {
 			expandCapacity(minimumCapacity);
 		}
 	}
@@ -535,8 +536,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param minimumCapacity 需要扩展的最小容量
 	 */
 	private void expandCapacity(int minimumCapacity) {
-		int newCapacity = value.length * 2 + 2;
-		if (newCapacity < minimumCapacity) {
+		int newCapacity = (value.length << 1) + 2;
+		// overflow-conscious code
+		if (newCapacity - minimumCapacity < 0) {
 			newCapacity = minimumCapacity;
 		}
 		if (newCapacity < 0) {

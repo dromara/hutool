@@ -130,6 +130,13 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>ch.ethz.ganymed</groupId>
+			<artifactId>ganymed-ssh2</artifactId>
+			<version>262</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- 二维码 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>

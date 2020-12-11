@@ -3,17 +3,35 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.3 (2020-12-06)
+# 5.5.3 (2020-12-11)
 
 ### 新特性
 * 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
 * 【core   】     multipart中int改为long，解决大文件上传越界问题（issue#I27WZ3@Gitee）
 * 【core   】     ListUtil.page增加检查（pr#224@Gitee）
 * 【db     】     Db增加使用sql的page方法（issue#247@Gitee）
+* 【cache  】     CacheObj的isExpired()逻辑修改（issue#1295@Github）
+* 【json   】     JSONStrFormater改为JSONStrFormatter
+* 【dfa    】     增加FoundWord（pr#1290@Github）
+* 【core   】     增加Segment（pr#1290@Github）
+* 【core   】     增加CharSequenceUtil
+* 【poi    】     Excel07SaxReader拆分出SheetDataSaxHandler
+* 【core   】     CollUtil.addAll增加判空（pr#228@Gitee）
+* 【core   】     修正DateUtil.betweenXXX注释错误（issue#I28XGW@Gitee）
+* 【core   】     增加NioUtil
+* 【core   】     增加GanymedUtil
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
 * 【poi    】     修复sax读取自定义格式单元格无法识别日期类型的问题（issue#1283@Github）
+* 【core   】     修复CollUtil.get越界问题（issue#1292@Github）
+* 【core   】     修复TemporalAccessorUtil无法格式化LocalDate带时间问题（issue#1289@Github）
+* 【json   】     修复自定义日期格式的LocalDateTime没有包装引号问题（issue#1289@Github）
+* 【cache  】     get中unlock改为unlockRead（issue#1294@Github）
+* 【db     】     修复表名包含点导致的问题（issue#1300@Github）
+* 【poi    】     修复xdr:row标签导致的问题（issue#1297@Github）
+* 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
+* 【extra  】     修复JschUtil.execByShell返回空的问题（issue#1067@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

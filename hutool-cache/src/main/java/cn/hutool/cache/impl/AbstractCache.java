@@ -174,7 +174,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				return co.get(isUpdateLastAccess);
 			}
 		} finally {
-			lock.unlock(stamp);
+			lock.unlockRead(stamp);
 		}
 
 		// 过期

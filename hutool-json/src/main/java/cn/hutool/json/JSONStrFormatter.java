@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 3.1.2
  */
-public class JSONStrFormater {
+public class JSONStrFormatter {
 	
 	/** 单位缩进字符串。*/
 	private static final String SPACE = "    ";
