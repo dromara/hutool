@@ -32,6 +32,7 @@
 * 【poi    】     修复xdr:row标签导致的问题（issue#1297@Github）
 * 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
 * 【extra  】     修复JschUtil.execByShell返回空的问题（issue#1067@Github）
+* 【poi    】     修复特殊的excel使用sax读取时未读到值的问题（issue#1303@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +73,7 @@
 * 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
 * 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
 * 【json   】     修复JSONObject.accumulate问题
-* 【core   】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
+* 【poi    】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
 * 【core   】     修复PatternPool中邮编的正则（issue#1274@Github）
 
 -------------------------------------------------------------------------------------------------------------

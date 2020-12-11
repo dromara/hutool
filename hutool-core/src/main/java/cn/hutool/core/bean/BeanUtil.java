@@ -745,11 +745,11 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean是否为非空对象，非空对象表示本身不为<code>null</code>或者含有非<code>null</code>属性的对象
+	 * 判断Bean是否为非空对象，非空对象表示本身不为{@code null}或者含有非{@code null}属性的对象
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
-	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
 	 * @since 5.0.7
 	 */
 	public static boolean isNotEmpty(Object bean, String... ignoreFiledNames) {
@@ -757,12 +757,12 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code><br>
+	 * 判断Bean是否为空对象，空对象表示本身为{@code null}或者所有属性都为{@code null}<br>
 	 * 此方法不判断static属性
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
-	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
 	 * @since 4.1.10
 	 */
 	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
@@ -781,12 +781,12 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean是否包含值为<code>null</code>的属性<br>
-	 * 对象本身为<code>null</code>也返回true
+	 * 判断Bean是否包含值为{@code null}的属性<br>
+	 * 对象本身为{@code null}也返回true
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
-	 * @return 是否包含值为<code>null</code>的属性，<code>true</code> - 包含 / <code>false</code> - 不包含
+	 * @return 是否包含值为<code>null</code>的属性，{@code true} - 包含 / {@code false} - 不包含
 	 * @since 4.1.10
 	 */
 	public static boolean hasNullField(Object bean, String... ignoreFiledNames) {

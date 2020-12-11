@@ -64,7 +64,7 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBySaxTest2() {
-		ExcelUtil.readBySax("d:/test/default.xlsx", -1, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
+		ExcelUtil.readBySax("d:/test/456789.xlsx", "0", (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
 	private RowHandler createRowHandler() {
@@ -140,9 +140,7 @@ public class ExcelSaxReadTest {
 	public void dateReadXlsTest() {
 		List<String> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xls", 0,
-				(i, i1, list) ->{
-					rows.add(StrUtil.toString(list.get(0)));
-				}
+				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
 		);
 
 		Assert.assertEquals("2020-10-09 00:00:00", rows.get(1));
@@ -179,8 +177,7 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readXlsmTest(){
-		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1, (sheetIndex, rowIndex, rowlist) -> {
-			Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
-		});
+		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1,
+				(sheetIndex, rowIndex, rowlist) -> Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist));
 	}
 }
