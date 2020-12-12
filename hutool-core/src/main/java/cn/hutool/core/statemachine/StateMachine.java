@@ -84,7 +84,9 @@ public class StateMachine<S,E> {
 	 * @return
 	 */
 	public S start(){
-		if(startStatusSet.size()!=1) {
+		if(startStatusSet.size() == 0) {
+			throw new RuntimeException("起始状态未定义");
+		}else if(startStatusSet.size()>1) {
 			throw new RuntimeException("存在多个起始状态，需要指定一个确定的起始状态");
 		}
 		return startStatusSet.iterator().next();
