@@ -134,7 +134,7 @@ public class SymmetricCrypto implements Serializable {
 	 *
 	 * @param algorithm 算法
 	 * @param key       密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCrypto}的子对象，即子对象自身
+	 * @return SymmetricCrypto的子对象，即子对象自身
 	 */
 	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		Assert.notBlank(algorithm, "'algorithm' must be not blank !");

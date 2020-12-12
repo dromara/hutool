@@ -33,7 +33,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 创建字符串构建器
 	 *
-	 * @return {@link StrBuilder}
+	 * @return this
 	 */
 	public static StrBuilder create() {
 		return new StrBuilder();
@@ -43,7 +43,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * 创建字符串构建器
 	 *
 	 * @param initialCapacity 初始容量
-	 * @return {@link StrBuilder}
+	 * @return this
 	 */
 	public static StrBuilder create(int initialCapacity) {
 		return new StrBuilder(initialCapacity);
@@ -53,7 +53,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * 创建字符串构建器
 	 *
 	 * @param strs 初始字符串
-	 * @return {@link StrBuilder}
+	 * @return this
 	 * @since 4.0.1
 	 */
 	public static StrBuilder create(CharSequence... strs) {
@@ -239,7 +239,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	public StrBuilder insert(int index, CharSequence csq) {
 		if (null == csq) {
-			csq = "null";
+			csq = StrUtil.EMPTY;
 		}
 		int len = csq.length();
 		moveDataAfterIndex(index, csq.length());
@@ -523,7 +523,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param minimumCapacity 最小容量
 	 */
 	private void ensureCapacity(int minimumCapacity) {
-		if (minimumCapacity > value.length) {
+		// overflow-conscious code
+		if (minimumCapacity - value.length > 0) {
 			expandCapacity(minimumCapacity);
 		}
 	}
@@ -535,8 +536,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param minimumCapacity 需要扩展的最小容量
 	 */
 	private void expandCapacity(int minimumCapacity) {
-		int newCapacity = value.length * 2 + 2;
-		if (newCapacity < minimumCapacity) {
+		int newCapacity = (value.length << 1) + 2;
+		// overflow-conscious code
+		if (newCapacity - minimumCapacity < 0) {
 			newCapacity = minimumCapacity;
 		}
 		if (newCapacity < 0) {

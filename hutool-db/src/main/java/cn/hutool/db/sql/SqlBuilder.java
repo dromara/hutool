@@ -3,7 +3,6 @@ package cn.hutool.db.sql;
 import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
@@ -12,6 +11,7 @@ import cn.hutool.db.dialect.DialectName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -44,6 +44,16 @@ public class SqlBuilder implements Builder<String>{
 	 */
 	public static SqlBuilder create(Wrapper wrapper) {
 		return new SqlBuilder(wrapper);
+	}
+
+	/**
+	 * 从已有的SQL中构建一个SqlBuilder
+	 * @param sql SQL语句
+	 * @return SqlBuilder
+	 * @since 5.5.3
+	 */
+	public static SqlBuilder of(CharSequence sql){
+		return create().append(sql);
 	}
 
 	// --------------------------------------------------------------- Static methods end
@@ -99,12 +109,25 @@ public class SqlBuilder implements Builder<String>{
 	/**
 	 * 插入<br>
 	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
-	 * 
+	 *
 	 * @param entity 实体
 	 * @param dialectName 方言名，用于对特殊数据库特殊处理
 	 * @return 自己
 	 */
 	public SqlBuilder insert(Entity entity, DialectName dialectName) {
+		return insert(entity, dialectName.name());
+	}
+
+	/**
+	 * 插入<br>
+	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
+	 * 
+	 * @param entity 实体
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
+	 * @return 自己
+	 * @since 5.5.3
+	 */
+	public SqlBuilder insert(Entity entity, String dialectName) {
 		// 验证
 		validateEntity(entity);
 
@@ -114,7 +137,7 @@ public class SqlBuilder implements Builder<String>{
 			entity.setTableName(wrapper.wrap(entity.getTableName()));
 		}
 
-		final boolean isOracle = ObjectUtil.equal(dialectName, DialectName.ORACLE);// 对Oracle的特殊处理
+		final boolean isOracle = StrUtil.equalsAnyIgnoreCase(dialectName, DialectName.ORACLE.name());// 对Oracle的特殊处理
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
 
@@ -519,7 +542,14 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	/**
-	 * 追加SQL其它部分片段
+	 * 追加SQL其它部分片段，此方法只是简单的追加SQL字符串，空格需手动加入，例如：
+	 *
+	 * <pre>
+	 *     SqlBuilder builder = SqlBuilder.of("select *");
+	 *     builder.append(" from ").append("user");
+	 * </pre>
+	 *
+	 * 如果需要追加带占位符的片段，需调用{@link #addParams(Object...)} 方法加入对应参数值。
 	 * 
 	 * @param sqlFragment SQL其它部分片段
 	 * @return this
@@ -527,6 +557,26 @@ public class SqlBuilder implements Builder<String>{
 	public SqlBuilder append(Object sqlFragment) {
 		if (null != sqlFragment) {
 			this.sql.append(sqlFragment);
+		}
+		return this;
+	}
+
+	/**
+	 * 手动增加参数，调用此方法前需确认SQL中有对应占位符，主要用于自定义SQL片段中有占位符的情况，例如：
+	 *
+	 * <pre>
+	 *     SqlBuilder builder = SqlBuilder.of("select * from user where id=?");
+	 *     builder.append(" and name=?")
+	 *     builder.addParams(1, "looly");
+	 * </pre>
+	 *
+	 * @param params 参数列表
+	 * @return this
+	 * @since 5.5.3
+	 */
+	public SqlBuilder addParams(Object... params){
+		if(ArrayUtil.isNotEmpty(params)){
+			Collections.addAll(this.paramValues, params);
 		}
 		return this;
 	}

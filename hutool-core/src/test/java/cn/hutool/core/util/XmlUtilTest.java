@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
@@ -9,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -225,5 +228,39 @@ public class XmlUtilTest {
 		private String Operator;
 		private String ProjectCode;
 		private String BankCode;
+	}
+
+
+	@Test
+	@Ignore
+	public void formatTest(){
+		// https://github.com/looly/hutool/pull/1234
+		Document xml = XmlUtil.createXml("NODES");
+		xml.setXmlStandalone(true);
+
+		NodeList parentNode = xml.getElementsByTagName("NODES");
+
+		Element parent1Node = xml.createElement("NODE");
+
+		Element node1 = xml.createElement("NODENAME");
+		node1.setTextContent("走位");
+		Element node2 = xml.createElement("STEP");
+		node2.setTextContent("1");
+		Element node3 = xml.createElement("STATE");
+		node3.setTextContent("2");
+		Element node4 = xml.createElement("TIMELIMIT");
+		node4.setTextContent("");
+		Element node5 = xml.createElement("STARTTIME");
+
+		parent1Node.appendChild(node1);
+		parent1Node.appendChild(node2);
+		parent1Node.appendChild(node3);
+		parent1Node.appendChild(node4);
+		parent1Node.appendChild(node5);
+
+		parentNode.item(0).appendChild(parent1Node);
+
+		String format = XmlUtil.toStr(xml,"GBK",true);
+		Console.log(format);
 	}
 }

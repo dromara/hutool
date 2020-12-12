@@ -17,39 +17,40 @@ public class URLUtilTest {
 
 	@Test
 	public void normalizeTest() {
+		// issue#I25MZL，多个/被允许
 		String url = "http://www.hutool.cn//aaa/bbb";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
 
 		url = "www.hutool.cn//aaa/bbb";
 		normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
 	}
 	
 	@Test
 	public void normalizeTest2() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 		
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 	}
 	
 	@Test
 	public void normalizeTest3() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 		
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 
 		url = "\\/www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 	}
 
 	@Test
@@ -63,7 +64,7 @@ public class URLUtilTest {
 	public void formatTest() {
 		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
-		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 	}
 
 	@Test

@@ -1,9 +1,10 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.date.BetweenFormatter.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class DateBetweenTest {
@@ -60,5 +61,18 @@ public class DateBetweenTest {
 		Date date2 = DateUtil.parse("2017-03-01 23:33:23");
 		String formatBetween = DateUtil.formatBetween(date1, date2, Level.SECOND);
 		Assert.assertEquals("3小时", formatBetween);
+	}
+
+	@Test
+	public void betweenWeeksTest(){
+		final long betweenWeek = DateUtil.betweenWeek(
+				DateUtil.parse("2020-11-21"),
+				DateUtil.parse("2020-11-23"), false);
+
+		final long betweenWeek2 = LocalDateTimeUtil.between(
+				LocalDateTimeUtil.parse("2020-11-21", "yyy-MM-dd"),
+				LocalDateTimeUtil.parse("2020-11-23", "yyy-MM-dd"),
+				ChronoUnit.WEEKS);
+		Assert.assertEquals(betweenWeek, betweenWeek2);
 	}
 }

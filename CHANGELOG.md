@@ -3,15 +3,125 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.4.8 (2020-11-03)
+# 5.5.3 (2020-12-11)
+
+### 新特性
+* 【core   】     IdcardUtil增加行政区划83（issue#1277@Github）
+* 【core   】     multipart中int改为long，解决大文件上传越界问题（issue#I27WZ3@Gitee）
+* 【core   】     ListUtil.page增加检查（pr#224@Gitee）
+* 【db     】     Db增加使用sql的page方法（issue#247@Gitee）
+* 【cache  】     CacheObj的isExpired()逻辑修改（issue#1295@Github）
+* 【json   】     JSONStrFormater改为JSONStrFormatter
+* 【dfa    】     增加FoundWord（pr#1290@Github）
+* 【core   】     增加Segment（pr#1290@Github）
+* 【core   】     增加CharSequenceUtil
+* 【poi    】     Excel07SaxReader拆分出SheetDataSaxHandler
+* 【core   】     CollUtil.addAll增加判空（pr#228@Gitee）
+* 【core   】     修正DateUtil.betweenXXX注释错误（issue#I28XGW@Gitee）
+* 【core   】     增加NioUtil
+* 【core   】     增加GanymedUtil
+* 【poi    】     增加OFD支持，OfdWriter
+
+### Bug修复
+* 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
+* 【poi    】     修复sax读取自定义格式单元格无法识别日期类型的问题（issue#1283@Github）
+* 【core   】     修复CollUtil.get越界问题（issue#1292@Github）
+* 【core   】     修复TemporalAccessorUtil无法格式化LocalDate带时间问题（issue#1289@Github）
+* 【json   】     修复自定义日期格式的LocalDateTime没有包装引号问题（issue#1289@Github）
+* 【cache  】     get中unlock改为unlockRead（issue#1294@Github）
+* 【db     】     修复表名包含点导致的问题（issue#1300@Github）
+* 【poi    】     修复xdr:row标签导致的问题（issue#1297@Github）
+* 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
+* 【extra  】     修复JschUtil.execByShell返回空的问题（issue#1067@Github）
+* 【poi    】     修复特殊的excel使用sax读取时未读到值的问题（issue#1303@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.5.2 (2020-12-01)
+
+### 新特性
+* 【crypto 】     KeyUtil增加重载，AES构造增加重载（issue#I25NNZ@Gitee）
+* 【json   】     JSONUtil增加toList重载（issue#1228@Github）
+* 【core   】     新增CollStreamUtil（issue#1228@Github）
+* 【extra  】     新增Rhino表达式执行引擎（pr#1229@Github）
+* 【crypto 】     增加判空（issue#1230@Github）
+* 【core   】     xml.setXmlStandalone(true)格式优化（pr#1234@Github）
+* 【core   】     AnnotationUtil增加setValue方法（pr#1250@Github）
+* 【core   】     ZipUtil增加get方法（issue#I27CUF@Gitee）
+* 【cache  】     对CacheObj等变量使用volatile关键字
+* 【core   】     Base64增加encodeWithoutPadding方法（issue#I26J16@Gitee）
+* 【core   】     ExceptionUtil增加message消息包装为运行时异常的方法（pr#1253@Gitee）
+* 【core   】     DatePattern增加年月格式化常量（pr#220@Gitee）
+* 【core   】     ArrayUtil增加shuffle方法（pr#1255@Github）
+* 【core   】     ArrayUtil部分方法分离至PrimitiveArrayUtil
+* 【crypto 】     opt改为otp包（issue#1257@Github）
+* 【cache  】     增加CacheListener（issue#1257@Github）
+* 【core   】     TimeInterval支持分组（issue#1238@Github）
+* 【core   】     增加compile包（pr#1243@Github）
+* 【core   】     增加ResourceClassLoader、CharSequenceResource、FileObjectResource
+* 【core   】     修改IoUtil.read(Reader)逻辑默认关闭Reader
+* 【core   】     ZipUtil增加Zip方法（pr#222@Gitee）
+* 【all    】     增加Hutool.getAllUtils和printAllUtils方法
+* 【core   】     增加PunyCode（issue#1268@Gitee）
+* 【core   】     ArrayUtil增加isSorted方法（pr#1271@Github）
+* 【captcha】     增加GifCaptcha（pr#1273@Github）
+* 【core   】     增加SSLUtil、SSLContextBuilder
+
+### Bug修复
+* 【cron   】     修复CronTimer可能死循环的问题（issue#1224@Github）
+* 【core   】     修复Calculator.conversion单个数字越界问题（issue#1222@Github）
+* 【poi    】     修复ExcelUtil.getSaxReader使用非MarkSupport流报错问题（issue#1225@Github）
+* 【core   】     修复HexUtil.format问题（issue#I268XT@Gitee）
+* 【core   】     修复ZipUtil判断压缩文件是否位于压缩目录内的逻辑有误的问题（issue#1251@Github）
+* 【json   】     修复JSONObject.accumulate问题
+* 【poi    】     修复部分xlsx文件sax方式解析空指针问题（issue#1265@Github）
+* 【core   】     修复PatternPool中邮编的正则（issue#1274@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.5.1 (2020-11-16)
+
+### 新特性
+* 【core   】     增加CopyVisitor和DelVisitor
+
+### Bug修复
+* 【core   】     修复在Linux下FileUtil.move失败问题（issue#I254Y3@Gitee）
+* 【http   】     修复UrlUtil和UrlBuilder中多个/被替换问题（issue#I25MZL@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.5.0 (2020-11-14)
+
+### 大版本特性
+* 【extra  】     增加jakarta.validation-api封装：ValidationUtil（pr#207@Gitee）
+* 【extra  】     增加表达式引擎封装：ExpressionUtil（pr#1203@Github）
+* 【extra  】     新增基于Apache-FtpServer封装：SimpleFtpServer
+* 【extra  】     新增基于Commons-Compress封装：CompressUtil
 
 ### 新特性
 * 【core   】     NumberUtil.parseInt等支持123,2.00这类数字（issue#I23ORQ@Gitee）
 * 【core   】     增加ArrayUtil.isSub、indexOfSub、lastIndexOfSub方法（issue#I23O1K@Gitee）
+* 【core   】     反射调用支持传递参数的值为null（pr#1205@Github）
+* 【core   】     HexUtil增加format方法（issue#I245NF@Gitee）
+* 【poi    】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
+* 【core   】     ExcelWriter增加setCurrentRowToEnd方法（issue#I24A2R@Gitee）
+* 【core   】     增加enum转数字支持（issue#I24QZY@Gitee）
+* 【core   】     NumberUtil.toBigDecimal空白符转换为0（issue#I24MRP@Gitee）
+* 【core   】     CollUtil和IterUtil增加size方法（pr#208@Gitee）
+* 【poi    】     ExcelReader的read方法读取空单元格增加CellEditor处理（issue#1213@Github）
 
 ### Bug修复
 * 【core   】     修复DateUtil.current使用System.nanoTime的问题（issue#1198@Github）
 * 【core   】     修复Excel03SaxReader判断日期出错问题（issue#I23M9H@Gitee）
+* 【core   】     修复ClassUtil.getTypeArgument方法在判断泛型时导致的问题（issue#1207@Github）
+* 【core   】     修复Ipv4Util分隔符问题（issue#I24A9I@Gitee）
+* 【core   】     修复Ipv4Util.longToIp的问题
+* 【poi    】     修复Excel07SaxReader读取公式的错误的问题（issue#I23VFL@Gitee）
+* 【http   】     修复HttpUtil.isHttp判断问题（pr#1208@Github）
+* 【http   】     修复Snowflake时间回拨导致ID重复的bug（issue#1206@Github）
+* 【core   】     修复StrUtil.lastIndexOf查找位于首位的字符串找不到的bug（issue#I24RSV@Gitee）
+* 【poi    】     修复BigExcelWriter的autoSizeColumnAll问题（pr#1221@Github）
+* 【core   】     修复StrUtil.subBetweenAll不支持相同字符的问题（pr#1217@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

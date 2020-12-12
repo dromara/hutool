@@ -73,7 +73,7 @@ public class RowUtil {
 		Object cellValue;
 		boolean isAllNull = true;
 		for (int i = startCellNumInclude; i < size; i++) {
-			cellValue = CellUtil.getCellValue(row.getCell(i), cellEditor);
+			cellValue = CellUtil.getCellValue(CellUtil.getCell(row, i), cellEditor);
 			isAllNull &= StrUtil.isEmptyIfStr(cellValue);
 			cellValues.add(cellValue);
 		}

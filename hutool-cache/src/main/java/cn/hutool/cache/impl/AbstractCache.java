@@ -1,11 +1,13 @@
 package cn.hutool.cache.impl;
 
 import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheListener;
 import cn.hutool.core.collection.CopiedIter;
 import cn.hutool.core.lang.func.Func0;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.StampedLock;
 
 /**
@@ -13,7 +15,7 @@ import java.util.concurrent.locks.StampedLock;
  * 继承此抽象缓存需要：<br>
  * <ul>
  * <li>创建一个新的Map</li>
- * <li>实现 <code>prune</code> 策略</li>
+ * <li>实现 {@code prune} 策略</li>
  * </ul>
  *
  * @param <K> 键类型
@@ -28,11 +30,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	private final StampedLock lock = new StampedLock();
 
 	/**
-	 * 返回缓存容量，<code>0</code>表示无大小限制
+	 * 返回缓存容量，{@code 0}表示无大小限制
 	 */
 	protected int capacity;
 	/**
-	 * 缓存失效时长， <code>0</code> 表示无限制，单位毫秒
+	 * 缓存失效时长， {@code 0} 表示无限制，单位毫秒
 	 */
 	protected long timeout;
 
@@ -44,11 +46,16 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * 命中数
 	 */
-	protected int hitCount;
+	protected AtomicLong hitCount = new AtomicLong();
 	/**
 	 * 丢失数
 	 */
-	protected int missCount;
+	protected AtomicLong missCount = new AtomicLong();
+
+	/**
+	 * 缓存监听
+	 */
+	protected CacheListener<K, V> listener;
 
 	// ---------------------------------------------------------------- put start
 	@Override
@@ -113,15 +120,15 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * @return 命中数
 	 */
-	public int getHitCount() {
-		return hitCount;
+	public long getHitCount() {
+		return hitCount.get();
 	}
 
 	/**
 	 * @return 丢失数
 	 */
-	public int getMissCount() {
-		return missCount;
+	public long getMissCount() {
+		return missCount.get();
 	}
 
 	@Override
@@ -157,19 +164,17 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 			// 不存在或已移除
 			final CacheObj<K, V> co = cacheMap.get(key);
 			if (null == co) {
-				missCount++;
+				missCount.getAndIncrement();
 				return null;
 			}
 
-			if (co.isExpired()) {
-				missCount++;
-			} else{
-				// 命中
-				hitCount++;
+			// 命中
+			if (false == co.isExpired()) {
+				hitCount.getAndIncrement();
 				return co.get(isUpdateLastAccess);
 			}
 		} finally {
-			lock.unlock(stamp);
+			lock.unlockRead(stamp);
 		}
 
 		// 过期
@@ -279,13 +284,29 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	// ---------------------------------------------------------------- common end
 
 	/**
-	 * 对象移除回调。默认无动作
+	 * 设置监听
+	 *
+	 * @param listener 监听
+	 * @return this
+	 * @since 5.5.2
+	 */
+	public AbstractCache<K, V> setListener(CacheListener<K, V> listener) {
+		this.listener = listener;
+		return this;
+	}
+
+	/**
+	 * 对象移除回调。默认无动作<br>
+	 * 子类可重写此方法用于监听移除事件，如果重写，listener将无效
 	 *
 	 * @param key          键
 	 * @param cachedObject 被缓存的对象
 	 */
 	protected void onRemove(K key, V cachedObject) {
-		// ignore
+		final CacheListener<K, V> listener = this.listener;
+		if (null != listener) {
+			listener.onRemove(key, cachedObject);
+		}
 	}
 
 	/**
@@ -318,7 +339,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		final CacheObj<K, V> co = cacheMap.remove(key);
 		if (withMissCount) {
 			// 在丢失计数有效的情况下，移除一般为get时的超时操作，此处应该丢失数+1
-			this.missCount++;
+			this.missCount.getAndIncrement();
 		}
 		return co;
 	}

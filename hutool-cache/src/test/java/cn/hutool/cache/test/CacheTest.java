@@ -18,6 +18,12 @@ public class CacheTest {
 	@Test
 	public void fifoCacheTest(){
 		Cache<String,String> fifoCache = CacheUtil.newFIFOCache(3);
+		fifoCache.setListener((key, value)->{
+			// 监听测试，此测试中只有key1被移除，测试是否监听成功
+			Assert.assertEquals("key1", key);
+			Assert.assertEquals("value1", value);
+		});
+
 		fifoCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);

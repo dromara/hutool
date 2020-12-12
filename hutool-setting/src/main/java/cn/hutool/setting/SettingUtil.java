@@ -1,6 +1,6 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.util.StrUtil;
 
@@ -27,22 +27,13 @@ public class SettingUtil {
 	 * @return 当前环境下配置文件
 	 */
 	public static Setting get(String name) {
-		Setting setting = SETTING_MAP.get(name);
-		if (null == setting) {
-			synchronized (SettingUtil.class) {
-				setting = SETTING_MAP.get(name);
-				if (null == setting) {
-					String filePath = name;
-					String extName = FileUtil.extName(filePath);
-					if (StrUtil.isEmpty(extName)) {
-						filePath = filePath + "." + Setting.EXT_NAME;
-					}
-					setting = new Setting(filePath, true);
-					SETTING_MAP.put(name, setting);
-				}
+		return SETTING_MAP.computeIfAbsent(name, (filePath)->{
+			final String extName = FileNameUtil.extName(filePath);
+			if (StrUtil.isEmpty(extName)) {
+				filePath = filePath + "." + Setting.EXT_NAME;
 			}
-		}
-		return setting;
+			return new Setting(filePath, true);
+		});
 	}
 
 	/**

@@ -1,13 +1,8 @@
 package cn.hutool.core.io.resource;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 /**
  * 基于{@link InputStream}的资源获取器<br>
@@ -56,32 +51,4 @@ public class InputStreamResource implements Resource, Serializable {
 	public InputStream getStream() {
 		return this.in;
 	}
-
-	@Override
-	public BufferedReader getReader(Charset charset) {
-		return IoUtil.getReader(this.in, charset);
-	}
-
-	@Override
-	public String readStr(Charset charset) throws IORuntimeException {
-		BufferedReader reader = null;
-		try {
-			reader = getReader(charset);
-			return IoUtil.read(reader);
-		} finally {
-			IoUtil.close(reader);
-		}
-	}
-
-	@Override
-	public byte[] readBytes() throws IORuntimeException {
-		InputStream in = null;
-		try {
-			in = getStream();
-			return IoUtil.readBytes(in);
-		} finally {
-			IoUtil.close(in);
-		}
-	}
-
 }

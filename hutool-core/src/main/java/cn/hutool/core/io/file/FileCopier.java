@@ -44,7 +44,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 新建一个文件复制器
 	 * @param srcPath 源文件路径（相对ClassPath路径或绝对路径）
 	 * @param destPath 目标文件路径（相对ClassPath路径或绝对路径）
-	 * @return {@link FileCopier}
+	 * @return this
 	 */
 	public static FileCopier create(String srcPath, String destPath) {
 		return new FileCopier(FileUtil.file(srcPath), FileUtil.file(destPath));
@@ -54,7 +54,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 新建一个文件复制器
 	 * @param src 源文件
 	 * @param dest 目标文件
-	 * @return {@link FileCopier}
+	 * @return this
 	 */
 	public static FileCopier create(File src, File dest) {
 		return new FileCopier(src, dest);
@@ -188,8 +188,8 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 				throw new IORuntimeException("Dest is a sub directory of src !");
 			}
 			
-			final File subDest = isCopyContentIfDir ? dest : FileUtil.mkdir(FileUtil.file(dest, src.getName()));
-			internalCopyDirContent(src, subDest);
+			final File subTarget = isCopyContentIfDir ? dest : FileUtil.mkdir(FileUtil.file(dest, src.getName()));
+			internalCopyDirContent(src, subTarget);
 		} else {// 复制文件
 			internalCopyFile(src, dest);
 		}

@@ -1,7 +1,10 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
 
@@ -238,6 +242,12 @@ public class ConvertTest {
 		Assert.assertEquals("[1, 2]", atomicLongArray.toString());
 	}
 
+	@Test
+	public void toClassTest(){
+		final Class<?> convert = Convert.convert(Class.class, "cn.hutool.core.convert.ConvertTest.Product");
+		Assert.assertEquals(Product.class, convert);
+	}
+
 	@Data
 	@AllArgsConstructor
 	public static class Product implements Serializable {
@@ -246,5 +256,36 @@ public class ConvertTest {
 		private String name;
 		private String cName;
 		private String version;
+	}
+
+	@Test
+	public void enumToIntTest(){
+		final Integer integer = Convert.toInt(BuildingType.CUO);
+		Assert.assertEquals(1, integer.intValue());
+	}
+
+	@Test
+	public void toSetTest(){
+		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
+		}, "1,2,3");
+		Assert.assertEquals(CollUtil.set(false, 1,2,3), result);
+	}
+
+	@Getter
+	public enum BuildingType {
+		PING(1, "平层"),
+		CUO(2, "错层"),
+		YUE(3, "跃层"),
+		FUSHI(4, "复式"),
+		KAIJIAN(5, "开间"),
+		OTHER(6, "其他");
+
+		private final int id;
+		private final String name;
+
+		BuildingType(int id, String name){
+			this.id = id;
+			this.name = name;
+		}
 	}
 }

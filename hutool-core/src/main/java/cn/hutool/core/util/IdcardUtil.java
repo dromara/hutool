@@ -83,6 +83,8 @@ public class IdcardUtil {
 		CITY_CODES.put("71", "台湾");
 		CITY_CODES.put("81", "香港");
 		CITY_CODES.put("82", "澳门");
+		//issue#1277，台湾身份证号码以83开头，但是行政区划为71
+		CITY_CODES.put("83", "台湾");
 		CITY_CODES.put("91", "国外");
 
 		TW_FIRST_CODE.put("A", 10);
@@ -354,7 +356,7 @@ public class IdcardUtil {
 			sum = sum + Integer.parseInt(String.valueOf(c)) * iflag;
 			iflag--;
 		}
-		if ("A".equals(end.toUpperCase())) {
+		if ("A".equalsIgnoreCase(end)) {
 			sum += 10;
 		} else {
 			sum += Integer.parseInt(end);
@@ -508,7 +510,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
+	 * 根据身份编号获取市级编码，只支持15或18位身份证号码
 	 *
 	 * @param idcard 身份编码
 	 * @return 市级编码。
@@ -656,9 +658,9 @@ public class IdcardUtil {
 		}
 
 		/**
-		 * 获取省份代码
+		 * 获取市级编码
 		 *
-		 * @return 省份代码
+		 * @return 市级编码
 		 */
 		public String getCityCode() {
 			return this.cityCode;

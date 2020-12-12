@@ -495,10 +495,23 @@ public final class JSONUtil {
 	// -------------------------------------------------------------------- toBean end
 
 	/**
+	 * 将JSONArray字符串转换为Bean的List，默认为ArrayList
+	 *
+	 * @param <T>         Bean类型
+	 * @param jsonArray   JSONArray字符串
+	 * @param elementType List中元素类型
+	 * @return List
+	 * @since 5.5.2
+	 */
+	public static <T> List<T> toList(String jsonArray, Class<T> elementType) {
+		return toList(parseArray(jsonArray), elementType);
+	}
+
+	/**
 	 * 将JSONArray转换为Bean的List，默认为ArrayList
 	 *
 	 * @param <T>         Bean类型
-	 * @param jsonArray   JSONArray
+	 * @param jsonArray   {@link JSONArray}
 	 * @param elementType List中元素类型
 	 * @return List
 	 * @since 4.0.7
@@ -681,12 +694,12 @@ public final class JSONUtil {
 	 * 在需要的时候包装对象<br>
 	 * 包装包括：
 	 * <ul>
-	 * <li><code>null</code> =》 <code>JSONNull.NULL</code></li>
+	 * <li>{@code null} =》 {@code JSONNull.NULL}</li>
 	 * <li>array or collection =》 JSONArray</li>
 	 * <li>map =》 JSONObject</li>
 	 * <li>standard property (Double, String, et al) =》 原对象</li>
 	 * <li>来自于java包 =》 字符串</li>
-	 * <li>其它 =》 尝试包装为JSONObject，否则返回<code>null</code></li>
+	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
 	 * </ul>
 	 *
 	 * @param object     被包装的对象
@@ -763,7 +776,7 @@ public final class JSONUtil {
 	 * @since 3.1.2
 	 */
 	public static String formatJsonStr(String jsonStr) {
-		return JSONStrFormater.format(jsonStr);
+		return JSONStrFormatter.format(jsonStr);
 	}
 
 	/**

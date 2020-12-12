@@ -38,6 +38,25 @@ public class DbTest {
 	}
 
 	@Test
+	public void pageTest2() throws SQLException {
+		String sql = "select * from user";
+		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
+		List<Entity> page0 = Db.use().page(
+				sql, Page.of(0, 3));
+		Assert.assertEquals(3, page0.size());
+
+		List<Entity> page1 = Db.use().page(
+				sql, Page.of(1, 3));
+		Assert.assertEquals(1, page1.size());
+	}
+
+	@Test
+	public void countTest() throws SQLException {
+		final long count = Db.use().count("select * from user");
+		Assert.assertEquals(4, count);
+	}
+
+	@Test
 	public void findLikeTest() throws SQLException {
 		// 方式1
 		List<Entity> find = Db.use().find(Entity.create("user").set("name", "like 王%"));

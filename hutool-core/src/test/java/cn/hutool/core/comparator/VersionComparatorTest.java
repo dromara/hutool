@@ -51,6 +51,6 @@ public class VersionComparatorTest {
 	public void equalsTest(){
 		VersionComparator first = new VersionComparator();
 		VersionComparator other = new VersionComparator();
-		Assert.assertFalse(first.equals(other));
+		Assert.assertNotEquals(first, other);
 	}
 }

@@ -17,7 +17,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 	}
 
 	@Override
-	public DialectName dialectName() {
-		return DialectName.POSTGREESQL;
+	public String dialectName() {
+		return DialectName.POSTGREESQL.name();
 	}
 }

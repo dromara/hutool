@@ -1,5 +1,7 @@
 package cn.hutool.core.net.multipart;
 
+import cn.hutool.core.io.FastByteArrayOutputStream;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -144,7 +146,20 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	// ---------------------------------------------------------------- copy
 
 	/**
-	 * 全部字节流复制到out
+	 * 读取字节流，直到下一个boundary
+	 *
+	 * @param charset 编码，null表示系统默认编码
+	 * @return 读取的字符串
+	 * @throws IOException 读取异常
+	 */
+	public String readString(Charset charset) throws IOException {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		copy(out);
+		return out.toString(charset);
+	}
+
+	/**
+	 * 字节流复制到out，直到下一个boundary
 	 *
 	 * @param out 输出流
 	 * @return 复制的字节数
@@ -171,7 +186,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public int copy(OutputStream out, int limit) throws IOException {
+	public int copy(OutputStream out, long limit) throws IOException {
 		int count = 0;
 		while (true) {
 			byte b = readByte();

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.4.8-SNAPSHOT</version>
+		<version>5.5.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-script</artifactId>
@@ -45,6 +45,12 @@
 			<version>${groovy.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

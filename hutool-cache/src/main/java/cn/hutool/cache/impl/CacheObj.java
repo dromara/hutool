@@ -1,6 +1,7 @@
 package cn.hutool.cache.impl;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 缓存对象
@@ -16,9 +17,9 @@ public class CacheObj<K, V> implements Serializable{
 	protected final V obj;
 	
 	/** 上次访问时间 */
-	private long lastAccess; 
+	private volatile long lastAccess;
 	/** 访问次数 */
-	protected long accessCount;
+	protected AtomicLong accessCount = new AtomicLong();
 	/** 对象存活时长，0表示永久存活*/
 	private final long ttl;
 	
@@ -43,9 +44,8 @@ public class CacheObj<K, V> implements Serializable{
 	 */
 	boolean isExpired() {
 		if(this.ttl > 0) {
-			final long expiredTime = this.lastAccess + this.ttl;
-			// expiredTime > 0 杜绝Long类型溢出变负数问题，当当前时间超过过期时间，表示过期
-			return expiredTime > 0 && expiredTime < System.currentTimeMillis();
+			// 此处不考虑时间回拨
+			return (System.currentTimeMillis() - this.lastAccess) > this.ttl;
 		}
 		return false;
 	}
@@ -61,7 +61,7 @@ public class CacheObj<K, V> implements Serializable{
 		if(isUpdateLastAccess) {
 			lastAccess = System.currentTimeMillis();
 		}
-		accessCount++;
+		accessCount.getAndIncrement();
 		return this.obj;
 	}
 	

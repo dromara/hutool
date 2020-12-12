@@ -20,7 +20,7 @@ public class JSONUtilTest {
 	 * 出现语法错误时报错，检查解析\x字符时是否会导致死循环异常
 	 */
 	@Test(expected = JSONException.class)
-	public void parseTest(){
+	public void parseTest() {
 		JSONArray jsonArray = JSONUtil.parseArray("[{\"a\":\"a\\x]");
 		Console.log(jsonArray);
 	}
@@ -29,7 +29,7 @@ public class JSONUtilTest {
 	 * 数字解析为JSONArray报错
 	 */
 	@Test(expected = JSONException.class)
-	public void parseNumberTest(){
+	public void parseNumberTest() {
 		JSONArray json = JSONUtil.parseArray(123L);
 		Console.log(json);
 	}
@@ -38,7 +38,7 @@ public class JSONUtilTest {
 	 * 数字解析为JSONObject忽略
 	 */
 	@Test
-	public void parseNumberTest2(){
+	public void parseNumberTest2() {
 		JSONObject json = JSONUtil.parseObj(123L);
 		Assert.assertEquals(new JSONObject(), json);
 	}
@@ -156,11 +156,19 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void doubleTest(){
+	public void doubleTest() {
 		String json = "{\"test\": 12.00}";
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 		//noinspection BigDecimalMethodWithoutRoundingCalled
 		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
+	}
+
+	@Test
+	public void parseObjTest() {
+		// 测试转义
+		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
+				"    \"test\": \"\\\\地库地库\",\n" +
+				"}");
 	}
 }
 

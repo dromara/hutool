@@ -16,7 +16,9 @@ public class CsvReaderTest {
 	public void readTest() {
 		CsvReader reader = new CsvReader();
 		CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.CHARSET_UTF_8));
-		Assert.assertEquals("关注\"对象\"", data.getRow(0).get(2));
+		Assert.assertEquals("sss,sss", data.getRow(0).get(0));
+		Assert.assertEquals("性别", data.getRow(0).get(2));
+		Assert.assertEquals("关注\"对象\"", data.getRow(0).get(3));
 	}
 
 	@Test

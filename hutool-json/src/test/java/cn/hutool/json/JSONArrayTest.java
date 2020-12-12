@@ -1,9 +1,12 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;
@@ -29,6 +32,14 @@ public class JSONArrayTest {
 	public void createJSONArrayTest(){
 		// 集合类不支持转为JSONObject
 		new JSONArray(new JSONObject(), JSONConfig.create());
+	}
+
+	@Test
+	public void addNullTest(){
+		final List<String> aaa = ListUtil.of("aaa", null);
+		String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
+				JSONConfig.create().setIgnoreNullValue(false)));
+		Assert.assertEquals("[\"aaa\",null]", jsonStr);
 	}
 
 	@Test
@@ -94,7 +105,7 @@ public class JSONArrayTest {
 
 		List<Exam> list = array.toList(Exam.class);
 		Assert.assertFalse(list.isEmpty());
-		Assert.assertEquals(Exam.class, list.get(0).getClass());
+		Assert.assertSame(Exam.class, list.get(0).getClass());
 	}
 
 	@Test
@@ -105,7 +116,7 @@ public class JSONArrayTest {
 		List<User> userList = JSONUtil.toList(array, User.class);
 		
 		Assert.assertFalse(userList.isEmpty());
-		Assert.assertEquals(User.class, userList.get(0).getClass());
+		Assert.assertSame(User.class, userList.get(0).getClass());
 		
 		Assert.assertEquals(Integer.valueOf(111), userList.get(0).getId());
 		Assert.assertEquals(Integer.valueOf(112), userList.get(1).getId());
@@ -123,7 +134,7 @@ public class JSONArrayTest {
 		List<Dict> list = JSONUtil.toList(array, Dict.class);
 		
 		Assert.assertFalse(list.isEmpty());
-		Assert.assertEquals(Dict.class, list.get(0).getClass());
+		Assert.assertSame(Dict.class, list.get(0).getClass());
 		
 		Assert.assertEquals(Integer.valueOf(111), list.get(0).getInt("id"));
 		Assert.assertEquals(Integer.valueOf(112), list.get(1).getInt("id"));
@@ -140,7 +151,7 @@ public class JSONArrayTest {
 		//noinspection SuspiciousToArrayCall
 		Exam[] list = array.toArray(new Exam[0]);
 		Assert.assertNotEquals(0, list.length);
-		Assert.assertEquals(Exam.class, list[0].getClass());
+		Assert.assertSame(Exam.class, list[0].getClass());
 	}
 
 	/**
@@ -155,6 +166,14 @@ public class JSONArrayTest {
 		Assert.assertNull(list.get(0));
 		Assert.assertEquals("avalue", list.get(1).getAkey());
 		Assert.assertEquals("bvalue", list.get(1).getBkey());
+	}
+
+	@Test(expected = ConvertException.class)
+	public void toListWithErrorTest(){
+		String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
+		JSONArray ja = JSONUtil.parseArray(json);
+
+		List<List<KeyBean>> list = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
 	}
 
 	@Test

@@ -13,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -199,5 +200,19 @@ public class AnnotationUtil {
 	 */
 	public static boolean isInherited(Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Inherited.class);
+	}
+
+	/**
+	 * 设置新的注解的属性（字段）值
+	 *
+	 * @param annotation 注解对象
+	 * @param annotationField 注解属性（字段）名称
+	 * @param value 要更新的属性值
+	 * @since 5.5.2
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void setValue(Annotation annotation, String annotationField, Object value) {
+		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+		memberValues.put(annotationField, value);
 	}
 }

@@ -1,11 +1,15 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * IPV4地址工具类
@@ -24,7 +28,7 @@ public class Ipv4Util {
 	/**
 	 * IP与掩码的分割符
 	 */
-	public static final String IP_MASK_SPLIT_MARK = "/";
+	public static final String IP_MASK_SPLIT_MARK = StrUtil.SLASH;
 
 	/**
 	 * 最大掩码位
@@ -51,15 +55,15 @@ public class Ipv4Util {
 	 */
 	public static List<String> list(String ipRange, boolean isAll) {
 		if (ipRange.contains(IP_SPLIT_MARK)) {
-			String[] range = ipRange.split(IP_SPLIT_MARK);
+			// X.X.X.X-X.X.X.X
+			final String[] range = StrUtil.split(ipRange, IP_SPLIT_MARK);
 			return list(range[0], range[1]);
 		} else if (ipRange.contains(IP_MASK_SPLIT_MARK)) {
-			String[] param = ipRange.split(IP_MASK_SPLIT_MARK);
+			// X.X.X.X/X
+			final String[] param = StrUtil.split(ipRange, IP_MASK_SPLIT_MARK);
 			return list(param[0], Integer.parseInt(param[1]), isAll);
 		} else {
-			List<String> ips = new ArrayList<>();
-			ips.add(ipRange);
-			return ips;
+			return ListUtil.toList(ipRange);
 		}
 	}
 
@@ -72,26 +76,27 @@ public class Ipv4Util {
 	 * @return 区间地址
 	 */
 	public static List<String> list(String ip, int maskBit, boolean isAll) {
-		List<String> list = new ArrayList<>();
 		if (maskBit == IP_MASK_MAX) {
-			if (Boolean.TRUE.equals(isAll)) {
+			final List<String> list = new ArrayList<>();
+			if (isAll) {
 				list.add(ip);
 			}
-		} else {
-			String startIp = getBeginIpStr(ip, maskBit);
-			String endIp = getEndIpStr(ip, maskBit);
-			String subStart = startIp.split("\\.")[0] + "." + startIp.split("\\.")[1] + "." + startIp.split("\\.")[2] + ".";
-			String subEnd = endIp.split("\\.")[0] + "." + endIp.split("\\.")[1] + "." + endIp.split("\\.")[2] + ".";
-			if (Boolean.TRUE.equals(isAll)) {
-				startIp = subStart + (Integer.parseInt(startIp.split("\\.")[3]));
-				endIp = subEnd + (Integer.parseInt(endIp.split("\\.")[3]));
-			} else {
-				startIp = subStart + (Integer.parseInt(startIp.split("\\.")[3]) + 1);
-				endIp = subEnd + (Integer.parseInt(endIp.split("\\.")[3]) - 1);
-			}
-			list = list(startIp, endIp);
+			return list;
 		}
-		return list;
+
+		String startIp = getBeginIpStr(ip, maskBit);
+		String endIp = getEndIpStr(ip, maskBit);
+		if (isAll) {
+			return list(startIp, endIp);
+		}
+
+		int lastDotIndex = startIp.lastIndexOf(CharUtil.DOT) + 1;
+		startIp = StrUtil.subPre(startIp, lastDotIndex) +
+				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(startIp, lastDotIndex))) + 1);
+		lastDotIndex = endIp.lastIndexOf(CharUtil.DOT) + 1;
+		endIp = StrUtil.subPre(endIp, lastDotIndex) +
+				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(endIp, lastDotIndex))) - 1);
+		return list(startIp, endIp);
 	}
 
 	/**
@@ -102,8 +107,8 @@ public class Ipv4Util {
 	 * @return 区间地址
 	 */
 	public static List<String> list(String ipFrom, String ipTo) {
-		final int[] ipf = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, '.'));
-		final int[] ipt = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, '.'));
+		final int[] ipf = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, CharUtil.DOT));
+		final int[] ipt = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, CharUtil.DOT));
 
 		final List<String> ips = new ArrayList<>();
 		for (int a = ipf[0]; a <= ipt[0]; a++) {
@@ -130,14 +135,14 @@ public class Ipv4Util {
 	public static String longToIpv4(long longIP) {
 		final StringBuilder sb = StrUtil.builder();
 		// 直接右移24位
-		sb.append((longIP >>> 24));
-		sb.append(".");
+		sb.append(longIP >> 24 & 0xFF);
+		sb.append(CharUtil.DOT);
 		// 将高8位置0，然后右移16位
-		sb.append(((longIP & 0x00FFFFFF) >>> 16));
-		sb.append(".");
-		sb.append(((longIP & 0x0000FFFF) >>> 8));
-		sb.append(".");
-		sb.append((longIP & 0x000000FF));
+		sb.append(longIP >> 16 & 0xFF);
+		sb.append(CharUtil.DOT);
+		sb.append(longIP >> 8 & 0xFF);
+		sb.append(CharUtil.DOT);
+		sb.append(longIP & 0xFF);
 		return sb.toString();
 	}
 
@@ -148,20 +153,9 @@ public class Ipv4Util {
 	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {
-		if (Validator.isIpv4(strIP)) {
-			long[] ip = new long[4];
-			// 先找到IP地址字符串中.的位置
-			int position1 = strIP.indexOf(".");
-			int position2 = strIP.indexOf(".", position1 + 1);
-			int position3 = strIP.indexOf(".", position2 + 1);
-			// 将每个.之间的字符串转换成整型
-			ip[0] = Long.parseLong(strIP.substring(0, position1));
-			ip[1] = Long.parseLong(strIP.substring(position1 + 1, position2));
-			ip[2] = Long.parseLong(strIP.substring(position2 + 1, position3));
-			ip[3] = Long.parseLong(strIP.substring(position3 + 1));
-			return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
-		}
-		return 0;
+		Validator.validateIpv4(strIP, "Invalid IPv4 address!");
+		final long[] ip = Convert.convert(long[].class, StrUtil.split(strIP, CharUtil.DOT));
+		return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
 	}
 
 	/**
@@ -208,8 +202,8 @@ public class Ipv4Util {
 		String str;
 		int inetmask = 0;
 		int count;
-		for (String s : StrUtil.split(mask, ',')) {
-			sbf = toBin(Integer.parseInt(s));
+		for (String part : StrUtil.split(mask, CharUtil.DOT)) {
+			sbf = toBin(Integer.parseInt(part));
 			str = sbf.reverse().toString();
 			count = 0;
 			for (int i = 0; i < str.length(); i++) {
@@ -233,15 +227,12 @@ public class Ipv4Util {
 	 */
 	public static int countByMaskBit(int maskBit, boolean isAll) {
 		//如果是可用地址的情况，掩码位小于等于0或大于等于32，则可用地址为0
-		boolean isZero = !isAll && (maskBit <= 0 || maskBit >= 32);
-		if (isZero) {
+		if ((false == isAll) && (maskBit <= 0 || maskBit >= 32)) {
 			return 0;
 		}
-		if (isAll) {
-			return (int) Math.pow(2, 32 - maskBit);
-		} else {
-			return (int) Math.pow(2, 32 - maskBit) - 2;
-		}
+
+		final int count = (int) Math.pow(2, 32 - maskBit);
+		return isAll ? count : count - 2;
 	}
 
 	/**
@@ -264,14 +255,13 @@ public class Ipv4Util {
 	public static String getMaskByIpRange(String fromIp, String toIp) {
 		long toIpLong = ipv4ToLong(toIp);
 		long fromIpLong = ipv4ToLong(fromIp);
-		if (fromIpLong > toIpLong) {
-			throw new IllegalArgumentException("to IP must be greater than from IP!");
-		}
-		String[] fromIpSplit = StrUtil.splitToArray(fromIp, '.');
-		String[] toIpSplit = StrUtil.splitToArray(toIp, '.');
+		Assert.isTrue(fromIpLong < toIpLong, "to IP must be greater than from IP!");
+
+		String[] fromIpSplit = StrUtil.splitToArray(fromIp, CharUtil.DOT);
+		String[] toIpSplit = StrUtil.splitToArray(toIp, CharUtil.DOT);
 		StringBuilder mask = new StringBuilder();
 		for (int i = 0; i < toIpSplit.length; i++) {
-			mask.append(255 - Integer.parseInt(toIpSplit[i]) + Integer.parseInt(fromIpSplit[i])).append(".");
+			mask.append(255 - Integer.parseInt(toIpSplit[i]) + Integer.parseInt(fromIpSplit[i])).append(CharUtil.DOT);
 		}
 		return mask.substring(0, mask.length() - 1);
 	}
@@ -290,8 +280,8 @@ public class Ipv4Util {
 			throw new IllegalArgumentException("to IP must be greater than from IP!");
 		}
 		int count = 1;
-		int[] fromIpSplit = StrUtil.split(fromIp, '.').stream().mapToInt(Integer::parseInt).toArray();
-		int[] toIpSplit = StrUtil.split(toIp, '.').stream().mapToInt(Integer::parseInt).toArray();
+		int[] fromIpSplit = StrUtil.split(fromIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
+		int[] toIpSplit = StrUtil.split(toIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
 		for (int i = fromIpSplit.length - 1; i >= 0; i--) {
 			count += (toIpSplit[i] - fromIpSplit[i]) * Math.pow(256, fromIpSplit.length - i - 1);
 		}

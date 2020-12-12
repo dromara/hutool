@@ -135,6 +135,18 @@ public class URLUtil {
 	}
 
 	/**
+	 * 获取string协议的URL，类似于string:///xxxxx
+	 *
+	 * @param content 正文
+	 * @return URL
+	 * @since 5.5.2
+	 */
+	public static URI getStringURI(CharSequence content){
+		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
+		return URI.create(contentStr);
+	}
+
+	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
 	 *
 	 * @param urlStr URL字符串
@@ -707,7 +719,9 @@ public class URLUtil {
 			//noinspection ConstantConditions
 			body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
 			// 替换多个\或/为单个/
-			body = body.replace("\\", "/").replaceAll("//+", "/");
+			body = body.replace("\\", "/");
+			//issue#I25MZL，双斜杠在URL中是允许存在的，不做替换
+			//.replaceAll("//+", "/");
 		}
 
 		final int pathSepIndex = StrUtil.indexOf(body, '/');
@@ -782,7 +796,7 @@ public class URLUtil {
 	 * @since 5.3.11
 	 */
 	public static String getDataUriBase64(String mimeType, String data) {
-		return getDataUri(mimeType, null, "BASE64", data);
+		return getDataUri(mimeType, null, "base64", data);
 	}
 
 	/**

@@ -210,4 +210,11 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
 	}
+
+	@Test
+	public void multiSlashTest(){
+		//issue#I25MZL，某些URL中有多个斜杠，此为合法路径
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
+	}
 }

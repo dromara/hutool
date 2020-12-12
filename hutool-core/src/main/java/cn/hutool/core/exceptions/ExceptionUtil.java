@@ -16,15 +16,14 @@ import java.util.Map;
 
 /**
  * 异常工具类
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class ExceptionUtil {
 
 	/**
 	 * 获得完整消息，包括异常名，消息格式为：{SimpleClassName}: {ThrowableMessage}
-	 * 
+	 *
 	 * @param e 异常
 	 * @return 完整消息
 	 */
@@ -37,7 +36,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 获得消息，调用异常类的getMessage方法
-	 * 
+	 *
 	 * @param e 异常
 	 * @return 消息
 	 */
@@ -47,9 +46,9 @@ public class ExceptionUtil {
 
 	/**
 	 * 使用运行时异常包装编译异常<br>
-	 * 
-	 * 如果
-	 * 
+	 * <p>
+	 * 如果传入参数已经是运行时异常，则直接返回，不再额外包装
+	 *
 	 * @param throwable 异常
 	 * @return 运行时异常
 	 */
@@ -61,10 +60,21 @@ public class ExceptionUtil {
 	}
 
 	/**
+	 * 将指定的消息包装为运行时异常
+	 *
+	 * @param message 异常消息
+	 * @return 运行时异常
+	 * @since 5.5.2
+	 */
+	public static RuntimeException wrapRuntime(String message) {
+		return new RuntimeException(message);
+	}
+
+	/**
 	 * 包装一个异常
 	 *
-	 * @param <T> 被包装的异常类型
-	 * @param throwable 异常
+	 * @param <T>           被包装的异常类型
+	 * @param throwable     异常
 	 * @param wrapThrowable 包装后的异常类
 	 * @return 包装后的异常
 	 * @since 3.3.0
@@ -80,7 +90,7 @@ public class ExceptionUtil {
 	/**
 	 * 包装异常并重新抛出此异常<br>
 	 * {@link RuntimeException} 和{@link Error} 直接抛出，其它检查异常包装为{@link UndeclaredThrowableException} 后抛出
-	 * 
+	 *
 	 * @param throwable 异常
 	 */
 	public static void wrapAndThrow(Throwable throwable) {
@@ -94,8 +104,18 @@ public class ExceptionUtil {
 	}
 
 	/**
+	 * 将消息包装为运行时异常并抛出
+	 *
+	 * @param message 异常消息
+	 * @since 5.5.2
+	 */
+	public static void wrapRuntimeAndThrow(String message) {
+		throw new RuntimeException(message);
+	}
+
+	/**
 	 * 剥离反射引发的InvocationTargetException、UndeclaredThrowableException中间异常，返回业务本身的异常
-	 * 
+	 *
 	 * @param wrapped 包装的异常
 	 * @return 剥离后的异常
 	 */
@@ -114,7 +134,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 获取当前栈信息
-	 * 
+	 *
 	 * @return 当前栈信息
 	 */
 	public static StackTraceElement[] getStackElements() {
@@ -135,7 +155,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 获取入口堆栈信息
-	 * 
+	 *
 	 * @return 入口堆栈信息
 	 * @since 4.1.4
 	 */
@@ -146,7 +166,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 堆栈转为单行完整字符串
-	 * 
+	 *
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
 	 */
@@ -156,9 +176,9 @@ public class ExceptionUtil {
 
 	/**
 	 * 堆栈转为单行完整字符串
-	 * 
+	 *
 	 * @param throwable 异常对象
-	 * @param limit 限制最大长度
+	 * @param limit     限制最大长度
 	 * @return 堆栈转为的字符串
 	 */
 	public static String stacktraceToOneLineString(Throwable throwable, int limit) {
@@ -172,7 +192,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 堆栈转为完整字符串
-	 * 
+	 *
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
 	 */
@@ -182,9 +202,9 @@ public class ExceptionUtil {
 
 	/**
 	 * 堆栈转为完整字符串
-	 * 
+	 *
 	 * @param throwable 异常对象
-	 * @param limit 限制最大长度
+	 * @param limit     限制最大长度
 	 * @return 堆栈转为的字符串
 	 */
 	public static String stacktraceToString(Throwable throwable, int limit) {
@@ -193,9 +213,9 @@ public class ExceptionUtil {
 
 	/**
 	 * 堆栈转为完整字符串
-	 * 
-	 * @param throwable 异常对象
-	 * @param limit 限制最大长度
+	 *
+	 * @param throwable           异常对象
+	 * @param limit               限制最大长度
 	 * @param replaceCharToStrMap 替换字符为指定字符串
 	 * @return 堆栈转为的字符串
 	 */
@@ -229,8 +249,8 @@ public class ExceptionUtil {
 
 	/**
 	 * 判断是否由指定异常类引起
-	 * 
-	 * @param throwable 异常
+	 *
+	 * @param throwable    异常
 	 * @param causeClasses 定义的引起异常的类
 	 * @return 是否由指定异常类引起
 	 * @since 4.1.13
@@ -242,8 +262,8 @@ public class ExceptionUtil {
 
 	/**
 	 * 获取由指定异常类引起的异常
-	 * 
-	 * @param throwable 异常
+	 *
+	 * @param throwable    异常
 	 * @param causeClasses 定义的引起异常的类
 	 * @return 是否由指定异常类引起
 	 * @since 4.1.13
@@ -265,7 +285,7 @@ public class ExceptionUtil {
 	/**
 	 * 判断指定异常是否来自或者包含指定异常
 	 *
-	 * @param throwable 异常
+	 * @param throwable      异常
 	 * @param exceptionClass 定义的引起异常的类
 	 * @return true 来自或者包含
 	 * @since 4.3.2
@@ -277,9 +297,9 @@ public class ExceptionUtil {
 	/**
 	 * 判断指定异常是否来自或者包含指定异常
 	 *
-	 * @param throwable 异常
+	 * @param throwable      异常
 	 * @param exceptionClass 定义的引起异常的类
-	 * @param checkCause 判断cause
+	 * @param checkCause     判断cause
 	 * @return true 来自或者包含
 	 * @since 4.4.1
 	 */
@@ -290,8 +310,8 @@ public class ExceptionUtil {
 	/**
 	 * 转化指定异常为来自或者包含指定异常
 	 *
-	 * @param <T> 异常类型
-	 * @param throwable 异常
+	 * @param <T>            异常类型
+	 * @param throwable      异常
 	 * @param exceptionClass 定义的引起异常的类
 	 * @return 结果为null 不是来自或者包含
 	 * @since 4.3.2
@@ -303,10 +323,10 @@ public class ExceptionUtil {
 	/**
 	 * 转化指定异常为来自或者包含指定异常
 	 *
-	 * @param <T> 异常类型
-	 * @param throwable 异常
+	 * @param <T>            异常类型
+	 * @param throwable      异常
 	 * @param exceptionClass 定义的引起异常的类
-	 * @param checkCause 判断cause
+	 * @param checkCause     判断cause
 	 * @return 结果为null 不是来自或者包含
 	 * @since 4.4.1
 	 */
@@ -338,11 +358,11 @@ public class ExceptionUtil {
 	/**
 	 * 获取异常链上所有异常的集合，如果{@link Throwable} 对象没有cause，返回只有一个节点的List<br>
 	 * 如果传入null，返回空集合
-	 * 
+	 *
 	 * <p>
 	 * 此方法来自Apache-Commons-Lang3
 	 * </p>
-	 * 
+	 *
 	 * @param throwable 异常对象，可以为null
 	 * @return 异常链中所有异常集合
 	 * @since 4.6.2
@@ -360,11 +380,11 @@ public class ExceptionUtil {
 	 * 获取异常链中最尾端的异常，即异常最早发生的异常对象。<br>
 	 * 此方法通过调用{@link Throwable#getCause()} 直到没有cause为止，如果异常本身没有cause，返回异常本身<br>
 	 * 传入null返回也为null
-	 * 
+	 *
 	 * <p>
 	 * 此方法来自Apache-Commons-Lang3
 	 * </p>
-	 * 
+	 *
 	 * @param throwable 异常对象，可能为null
 	 * @return 最尾端异常，传入null参数返回也为null
 	 */
@@ -375,7 +395,7 @@ public class ExceptionUtil {
 
 	/**
 	 * 获取异常链中最尾端的异常的消息，消息格式为：{SimpleClassName}: {ThrowableMessage}
-	 * 
+	 *
 	 * @param th 异常
 	 * @return 消息
 	 * @since 4.6.2

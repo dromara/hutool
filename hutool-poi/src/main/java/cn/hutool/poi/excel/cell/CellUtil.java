@@ -6,13 +6,19 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.ss.util.RegionUtil;
@@ -68,10 +74,7 @@ public class CellUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
-		if (null == cell) {
-			return null;
-		}
-		return getCellValue(cell, cell.getCellTypeEnum(), cellEditor);
+		return getCellValue(cell, null, cellEditor);
 	}
 
 	/**
@@ -98,6 +101,9 @@ public class CellUtil {
 	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {
 		if (null == cell) {
 			return null;
+		}
+		if(cell instanceof NullCell){
+			return null == cellEditor ? null : cellEditor.edit(cell, null);
 		}
 		if (null == cellType) {
 			cellType = cell.getCellTypeEnum();
@@ -229,7 +235,23 @@ public class CellUtil {
 	}
 
 	/**
-	 * 获取已有行或创建新行
+	 *获取单元格，如果单元格不存在，返回{@link NullCell}
+	 *
+	 * @param row       Excel表的行
+	 * @param cellIndex 列号
+	 * @return {@link Row}
+	 * @since 5.5.0
+	 */
+	public static Cell getCell(Row row, int cellIndex) {
+		Cell cell = row.getCell(cellIndex);
+		if (null == cell) {
+			return new NullCell(row, cellIndex);
+		}
+		return cell;
+	}
+
+	/**
+	 * 获取已有单元格或创建新单元格
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
@@ -377,6 +399,33 @@ public class CellUtil {
 		return ObjectUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
 				SheetUtil.getCell(sheet, y, x));
+	}
+
+	/**
+	 * 为特定单元格添加批注
+	 *
+	 * @param cell 单元格
+	 * @param commentText 批注内容
+	 * @param commentAuthor 作者
+	 * @param anchor 批注的位置、大小等信息，null表示使用默认
+	 * @since 5.4.8
+	 */
+	public static void setComment(Cell cell, String commentText, String commentAuthor, ClientAnchor anchor) {
+		final Sheet sheet = cell.getSheet();
+		final Workbook wb = sheet.getWorkbook();
+		final Drawing<?> drawing = sheet.createDrawingPatriarch();
+		final CreationHelper factory = wb.getCreationHelper();
+		if (anchor == null) {
+			anchor = factory.createClientAnchor();
+			anchor.setCol1(cell.getColumnIndex() + 1);
+			anchor.setCol2(cell.getColumnIndex() + 3);
+			anchor.setRow1(cell.getRowIndex());
+			anchor.setRow2(cell.getRowIndex() + 2);
+		}
+		Comment comment = drawing.createCellComment(anchor);
+		comment.setString(factory.createRichTextString(commentText));
+		comment.setAuthor(StrUtil.nullToEmpty(commentText));
+		cell.setCellComment(comment);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start

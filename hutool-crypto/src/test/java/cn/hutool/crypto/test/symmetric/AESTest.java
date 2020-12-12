@@ -2,11 +2,16 @@ package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import org.junit.Assert;
 import org.junit.Test;
+
+import javax.crypto.SecretKey;
+import java.security.SecureRandom;
 
 public class AESTest {
 
@@ -94,5 +99,18 @@ public class AESTest {
 		Assert.assertEquals("16c5", aes.decryptStr("79c210d3e304932cf9ea6a9c887c6d7c"));
 		Assert.assertEquals("16c5", aes.decryptStr(Base64.decode("ecIQ0+MEkyz56mqciHxtfA==")));
 		// ------------------------------------------------------------------------
+	}
+
+	@Test
+	public void aesWithSha1PrngTest() {
+		final SecureRandom random = RandomUtil.getSecureRandom("123456".getBytes());
+		final SecretKey secretKey = KeyUtil.generateKey("AES", 128, random);
+
+		String content = "12sdfsdfs你好啊！";
+		AES aes = new AES(secretKey);
+		final String result1 = aes.encryptBase64(content);
+
+		final String decryptStr = aes.decryptStr(result1);
+		Assert.assertEquals(content, decryptStr);
 	}
 }

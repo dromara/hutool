@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -139,7 +140,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 查找指定类中的指定name的字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
+	 * 查找指定类中的指定name的字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回{@code null}
 	 *
 	 * @param beanClass 被查找字段的类,不能为null
 	 * @param name      字段名
@@ -148,7 +149,7 @@ public class ReflectUtil {
 	 */
 	public static Field getField(Class<?> beanClass, String name) throws SecurityException {
 		final Field[] fields = getFields(beanClass);
-		return ArrayUtil.firstMatch((field)->name.equals(getFieldName(field)), fields);
+		return ArrayUtil.firstMatch((field) -> name.equals(getFieldName(field)), fields);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class ReflectUtil {
 	 * 获得一个类中所有字段列表，直接反射获取，无缓存<br>
 	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
 	 *
-	 * @param beanClass           类
+	 * @param beanClass            类
 	 * @param withSuperClassFields 是否包括父类的字段列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
@@ -421,7 +422,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回<code>null</code>
+	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回{@code null}
 	 *
 	 * @param clazz      类
 	 * @param methodName 方法名
@@ -441,7 +442,7 @@ public class ReflectUtil {
 	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
 	 *
 	 * <p>
-	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。
 	 * </p>
 	 *
 	 * @param obj        被查找的对象，如果为{@code null}返回{@code null}
@@ -458,10 +459,10 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回<code>null</code>
+	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
-	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。
 	 * </p>
 	 *
 	 * @param clazz      类，如果为{@code null}返回{@code null}
@@ -476,10 +477,10 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
+	 * 查找指定方法 如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
-	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。
 	 * </p>
 	 *
 	 * @param clazz      类，如果为{@code null}返回{@code null}
@@ -493,10 +494,10 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
+	 * 查找指定方法 如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
-	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。
 	 * </p>
 	 *
 	 * @param clazz      类，如果为{@code null}返回{@code null}
@@ -526,7 +527,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
 	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
@@ -543,7 +544,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
 	 * 此方法只检查方法名是否一致（忽略大小写），并不检查参数的一致性。
@@ -560,7 +561,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回{@code null}
 	 *
 	 * <p>
 	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
@@ -841,7 +842,7 @@ public class ReflectUtil {
 	 * </pre>
 	 *
 	 * @param <T>    返回对象类型
-	 * @param obj    对象，如果执行静态方法，此值为<code>null</code>
+	 * @param obj    对象，如果执行静态方法，此值为{@code null}
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
@@ -877,7 +878,7 @@ public class ReflectUtil {
 	 * </pre>
 	 *
 	 * @param <T>    返回对象类型
-	 * @param obj    对象，如果执行静态方法，此值为<code>null</code>
+	 * @param obj    对象，如果执行静态方法，此值为{@code null}
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
@@ -890,8 +891,9 @@ public class ReflectUtil {
 		// 检查用户传入参数：
 		// 1、忽略多余的参数
 		// 2、参数不够补齐默认值
-		// 3、传入参数为null，但是目标参数类型为原始类型，做转换
-		// 4、传入参数类型不对应，尝试转换类型
+		// 3、通过NullWrapperBean传递的参数,会直接赋值null
+		// 4、传入参数为null，但是目标参数类型为原始类型，做转换
+		// 5、传入参数类型不对应，尝试转换类型
 		final Class<?>[] parameterTypes = method.getParameterTypes();
 		final Object[] actualArgs = new Object[parameterTypes.length];
 		if (null != args) {
@@ -899,6 +901,9 @@ public class ReflectUtil {
 				if (i >= args.length || null == args[i]) {
 					// 越界或者空值
 					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+				} else if (args[i] instanceof NullWrapperBean) {
+					//如果是通过NullWrapperBean传递的null参数,直接赋值null
+					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
 					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
@@ -920,6 +925,7 @@ public class ReflectUtil {
 
 	/**
 	 * 执行对象中指定方法
+	 * 如果需要传递的参数为null,请使用NullWrapperBean来传递,不然会丢失类型信息
 	 *
 	 * @param <T>        返回对象类型
 	 * @param obj        方法所在对象
@@ -927,6 +933,7 @@ public class ReflectUtil {
 	 * @param args       参数列表
 	 * @return 执行结果
 	 * @throws UtilException IllegalAccessException包装
+	 * @see NullWrapperBean
 	 * @since 3.1.2
 	 */
 	public static <T> T invoke(Object obj, String methodName, Object... args) throws UtilException {

@@ -268,17 +268,17 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 				break;
 			case FormulaRecord.sid:
 				// 公式类型
-				FormulaRecord formulaRec = (FormulaRecord) record;
+				final FormulaRecord formulaRec = (FormulaRecord) record;
 				if (isOutputFormulaValues) {
 					if (Double.isNaN(formulaRec.getValue())) {
 						// Formula result is a string
 						// This is stored in the next record
 						isOutputNextStringRecord = true;
 					} else {
-						value = formatListener.formatNumberDateCell(formulaRec);
+						value = ExcelSaxUtil.getNumberOrDateValue(formulaRec, formulaRec.getValue(), this.formatListener);
 					}
 				} else {
-					value = StrUtil.wrap(HSSFFormulaParser.toFormulaString(stubWorkbook, formulaRec.getParsedExpression()), "\"");
+					value = HSSFFormulaParser.toFormulaString(stubWorkbook, formulaRec.getParsedExpression());
 				}
 				addToRowCellList(formulaRec, value);
 				break;
@@ -305,19 +305,7 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 				break;
 			case NumberRecord.sid: // 数字类型
 				final NumberRecord numrec = (NumberRecord) record;
-				if(ExcelSaxUtil.isDateFormat(numrec, formatListener)){
-					// 可能为日期格式
-					value = ExcelSaxUtil.getDateValue(numrec.getValue());
-				} else {
-					final double doubleValue = numrec.getValue();
-					final long longPart = (long) doubleValue;
-					// 对于无小数部分的数字类型，转为Long，否则保留原数字
-					if (((double) longPart) == doubleValue) {
-						value = longPart;
-					} else {
-						value = doubleValue;
-					}
-				}
+				value = ExcelSaxUtil.getNumberOrDateValue(numrec, numrec.getValue(), this.formatListener);
 				// 向容器加入列值
 				addToRowCellList(numrec, value);
 				break;

@@ -819,10 +819,10 @@ public class DateUtil extends CalendarUtil {
 		int length = utcString.length();
 		if (StrUtil.contains(utcString, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31Z
+				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_FORMAT);
 			} else if (length == DatePattern.UTC_MS_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31.999Z
+				// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
 		} else {
@@ -1339,8 +1339,8 @@ public class DateUtil extends CalendarUtil {
 	 * <pre>
 	 * 有时候我们计算相差天数的时候需要忽略时分秒。
 	 * 比如：2016-02-01 23:59:59和2016-02-02 00:00:00相差一秒
-	 * 如果isReset为<code>false</code>相差天数为0。
-	 * 如果isReset为<code>true</code>相差天数将被计算为1
+	 * 如果isReset为{@code false}相差天数为0。
+	 * 如果isReset为{@code true}相差天数将被计算为1
 	 * </pre>
 	 *
 	 * @param beginDate 起始日期
@@ -1375,7 +1375,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 计算两个日期相差月数<br>
-	 * 在非重置情况下，如果起始日期的天小于结束日期的天，月数要少算1（不足1个月）
+	 * 在非重置情况下，如果起始日期的天大于结束日期的天，月数要少算1（不足1个月）
 	 *
 	 * @param beginDate 起始日期
 	 * @param endDate   结束日期
@@ -1389,7 +1389,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 计算两个日期相差年数<br>
-	 * 在非重置情况下，如果起始日期的月小于结束日期的月，年数要少算1（不足1年）
+	 * 在非重置情况下，如果起始日期的月大于结束日期的月，年数要少算1（不足1年）
 	 *
 	 * @param beginDate 起始日期
 	 * @param endDate   结束日期
@@ -1409,7 +1409,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒
 	 */
-	public static String formatBetween(Date beginDate, Date endDate, BetweenFormater.Level level) {
+	public static String formatBetween(Date beginDate, Date endDate, BetweenFormatter.Level level) {
 		return formatBetween(between(beginDate, endDate, DateUnit.MS), level);
 	}
 
@@ -1432,8 +1432,8 @@ public class DateUtil extends CalendarUtil {
 	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒XX毫秒
 	 */
-	public static String formatBetween(long betweenMs, BetweenFormater.Level level) {
-		return new BetweenFormater(betweenMs, level).format();
+	public static String formatBetween(long betweenMs, BetweenFormatter.Level level) {
+		return new BetweenFormatter(betweenMs, level).format();
 	}
 
 	/**
@@ -1444,7 +1444,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.0.1
 	 */
 	public static String formatBetween(long betweenMs) {
-		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLISECOND).format();
+		return new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
 	}
 
 	/**
