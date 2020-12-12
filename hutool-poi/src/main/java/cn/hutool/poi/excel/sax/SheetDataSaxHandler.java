@@ -137,9 +137,6 @@ public class SheetDataSaxHandler extends DefaultHandler {
 		// 其它标签忽略
 	}
 
-	/**
-	 * s标签结束的回调处理方法
-	 */
 	@Override
 	public void characters(char[] ch, int start, int length) {
 		if (false == this.isInSheetData) {
@@ -159,8 +156,11 @@ public class SheetDataSaxHandler extends DefaultHandler {
 					lastFormula.append(ch, start, length);
 					break;
 			}
+		} else{
+			// 按理说内容应该为"<v>内容</v>"，但是某些特别的XML内容不在v或f标签中，此处做一些兼容
+			// issue#1303@Github
+			lastContent.append(ch, start, length);
 		}
-		// 其它标签忽略
 	}
 
 	// --------------------------------------------------------------------------------------- Private method start
