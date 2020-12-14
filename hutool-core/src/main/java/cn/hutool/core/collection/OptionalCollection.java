@@ -1,13 +1,11 @@
 package cn.hutool.core.collection;
 
-import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * 集合optional操作类, 具体用法与{@link Optional}类似
@@ -24,17 +22,6 @@ import java.util.function.Supplier;
  * List<String> ids = new ArrayList();
  * OptionalCollection.ofEmpty(ids)
  *         .ifNotEmpty(userAddressMapper::deleteBatchIds);
- *
- * // 转OptionalStream排序再回转OptionalCollection，如果null则返回defaultList
- * List<String> defaultList = Arrays.asList("abc", "bac");
- * List<String> list = Arrays.asList("aaa", "bb", "ccaa", "ccbb", "aabb");
- * Collection<String> sortedList = OptionalCollection.ofEmpty(list)
- *         .stream()
- *         .map(stream -> stream
- *                 .filter(str -> str.contains("a"))
- *                 .sorted())
- *         .toOptionalCollection()
- *         .orElse(defaultList);
  *
  * // 集合空则抛异常
  * List<String> list = null;
@@ -94,13 +81,13 @@ public class OptionalCollection<E> {
 		return (OptionalCollection<T>) EMPTY;
 	}
 
-	/**
-	 * Build an {@code OptionalStream} instance according to {@code collection}.
+	/**	 * Fetch stream from the collection.
 	 *
-	 * @return an OptionalStream wrap collection stream
+	 * @return the collection stream, if collection is empty, then will return a empty stream
 	 */
-	public OptionalStream<E> stream() {
-		return OptionalStream.ofEmpty(collection);
+	@SuppressWarnings("unchecked")
+	public Stream<E> stream() {
+		return collection != null ? collection.stream() : (Stream<E>) Collections.emptyList().stream();
 	}
 
 	/**
@@ -109,23 +96,9 @@ public class OptionalCollection<E> {
 	 * @param mapper map function
 	 * @return result collection
 	 */
-	public <U> OptionalCollection<U> map(Function<Collection<? super E>, Collection<U>> mapper) {
+	public <U> OptionalCollection<U> map(Function<Collection<E>, Collection<U>> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isNotEmpty()) {
-			return empty();
-		} else {
-			return OptionalCollection.ofEmpty(mapper.apply(collection));
-		}
-	}
-
-	/**
-	 * Map the collection to an {@code optional} instance.
-	 *
-	 * @param mapper map function
-	 * @return an {@code Optional} instance after map operation
-	 */
-	public <V> Optional<V> optional(Function<Collection<E>, V> mapper) {
-		return Optional.ofNullable(mapper.apply(collection));
+		return isEmpty() ? empty() : OptionalCollection.ofEmpty(mapper.apply(collection));
 	}
 
 	/**
@@ -147,14 +120,12 @@ public class OptionalCollection<E> {
 	}
 
 	/**
-	 * If a collection is not empty, and the collection matches the given predicate,
-	 * return an {@code OptionalCollection} describing the collection, otherwise return an
-	 * empty {@code Optional}.
+	 * 若集合为空, 或与predicate.test()返回{@code true}, 则返回当前collection, 否则返回空集合
 	 *
 	 * @param predicate a predicate to apply to the collection, if present
-	 * @return an {@code OptionalCollection} describing the collection of this {@code OptionalCollection}
+	 * @return an {@code OptionalCollection} describing the collection of this {@link OptionalCollection}
 	 * if a collection is present and the collection matches the given predicate,
-	 * otherwise an empty {@code Optional}
+	 * otherwise an empty {@link OptionalCollection}
 	 * @throws NullPointerException if the predicate is null
 	 */
 	public OptionalCollection<E> filter(Predicate<? super Collection<E>> predicate) {
@@ -162,6 +133,21 @@ public class OptionalCollection<E> {
 		return isEmpty() || predicate.test(collection) ? this : empty();
 	}
 
+
+	/**
+	 * 若集合不为空, 且与predicate.test()返回{@code true}, 则返回当前collection, 否则返回{@code orElse}集合
+	 *
+	 * @param predicate a predicate to apply to the collection, if present
+	 * @param orElse    predicate执行为false则返回该值
+	 * @return an {@code OptionalCollection} describing the collection of this {@code OptionalCollection}
+	 * if a collection is present and the collection matches the given predicate,
+	 * otherwise an {@code orElse} {@link OptionalCollection}
+	 * @throws NullPointerException if the predicate is null
+	 */
+	public OptionalCollection<E> filterOrElse(Predicate<? super Collection<E>> predicate, Collection<E> orElse) {
+		Objects.requireNonNull(predicate);
+		return isNotEmpty() && predicate.test(collection) ? this : ofEmpty(orElse);
+	}
 
 	/**
 	 * Return {@code true} if there is a collection present, otherwise {@code false}.
@@ -198,19 +184,6 @@ public class OptionalCollection<E> {
 	}
 
 	/**
-	 * Return the collection if collection is not empty, otherwise invoke {@code other} and return
-	 * the result of that invocation.
-	 *
-	 * @param other a {@code Supplier} whose result is returned if collection is empty
-	 * @return the collection if not null otherwise the result of {@code other.get()}
-	 * @throws NullPointerException if collection is null and {@code other} is null
-	 */
-	public Collection<E> orEmptyElseGet(Supplier<Collection<E>> other) {
-		return isEmpty() ? other.get() : collection;
-	}
-
-
-	/**
 	 * Return the collection if not empty, otherwise return {@code other}.
 	 *
 	 * @param other the collection to be returned if collection is empty, may be null
@@ -228,8 +201,21 @@ public class OptionalCollection<E> {
 	 * @return the collection if not null otherwise the result of {@code other.get()}
 	 * @throws NullPointerException if collection is null and {@code other} is null
 	 */
-	public Collection<E> orElseGet(Supplier<Collection<E>> other) {
+	public Collection<E> orNullGet(Supplier<Collection<E>> other) {
 		return collection != null ? collection : other.get();
+	}
+
+
+	/**
+	 * Return the collection if collection is not empty, otherwise invoke {@code other} and return
+	 * the result of that invocation.
+	 *
+	 * @param other a {@code Supplier} whose result is returned if collection is empty
+	 * @return the collection if not empty otherwise the result of {@code other.get()}
+	 * @throws NullPointerException if {@code other} is null
+	 */
+	public Collection<E> orEmptyGet(Supplier<Collection<E>> other) {
+		return isEmpty() ? other.get() : collection;
 	}
 
 	/**
@@ -251,11 +237,25 @@ public class OptionalCollection<E> {
 	}
 
 	/**
+	 * If the collection is present(not null), invoke the specified function with the collection,
+	 * otherwise return {@code orElse}.
+	 *
+	 * @param function block to be executed if a collection is present and return result
+	 * @return If the collection is present, return function apply result, otherwise {@code orElse}
+	 * @throws NullPointerException if collection is present and {@code consumer} is
+	 *                              null
+	 */
+	public <V> V ifPresentOrElse(Function<Collection<E>, V> function, V orElse) {
+		Objects.requireNonNull(function);
+		return collection != null ? function.apply(collection) : orElse;
+	}
+
+	/**
 	 * If a collection is not empty, invoke the specified consumer with the collection,
 	 * otherwise do nothing.
 	 *
 	 * @param consumer block to be executed if a collection is not empty
-	 * @throws NullPointerException if collection is not empty and {@code consumer} is null
+	 * @throws NullPointerException if {@code consumer} is null
 	 */
 	public void ifNotEmpty(Consumer<Collection<E>> consumer) {
 		Objects.requireNonNull(consumer);
@@ -263,6 +263,20 @@ public class OptionalCollection<E> {
 			consumer.accept(collection);
 		}
 	}
+
+	/**
+	 * If the collection is present, invoke the specified function with the collection,
+	 * otherwise return {@code orElse}.
+	 *
+	 * @param function block to be executed if a collection is present and return result
+	 * @return If the collection is not empty, return function apply result, otherwise{@code orElse}
+	 * @throws NullPointerException if {@code function} is null
+	 */
+	public <V> V ifNotEmptyOrElse(Function<Collection<E>, V> function, V orElse) {
+		Objects.requireNonNull(function);
+		return isNotEmpty() ? function.apply(collection) : orElse;
+	}
+
 
 	/**
 	 * Return the contained collection, if not null, otherwise throw an exception
@@ -345,7 +359,7 @@ public class OptionalCollection<E> {
 	}
 
 	/**
-	 * Wraps stream.toString() with OptionalStream.
+	 * Wraps collection.toString() with OptionalCollection.
 	 *
 	 * @return "OptionalCollection[{collection.toString()}]" or "OptionalCollection.empty"
 	 */

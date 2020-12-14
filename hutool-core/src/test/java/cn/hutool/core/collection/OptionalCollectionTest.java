@@ -7,89 +7,153 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * {@link OptionalCollection} 与 {@link  OptionalStream}用法测试
- *
- * @author Wilson-He
+ * @author Wilson
  */
 public class OptionalCollectionTest {
 
 	@Test
-	public void empty() {
-		List<String> defaultList = Arrays.asList("aaa", "bbb", "ccc");
-		// test if empty, won't do anything
-		List<String> list = null;
-		OptionalCollection.ofEmpty(list)
-				.ifNotEmpty(collection -> System.out.println("isPresent: " + collection));
-
-		// test if null, subsequent operations won't throw NullPointerException
-		OptionalCollection.ofEmpty(list)
-				.filter(collection -> collection.contains("aaa"))
-				.ifNotEmpty(collection -> System.out.println("filter: " + collection));
-
-		// test if empty, won't do anything
-		Assert.assertEquals(OptionalCollection.ofEmpty(list)
-				.filter(collection -> collection.contains("aaa"))
-				.orElse(defaultList), defaultList);
+	public void build() {
+		Assert.assertThrows(NullPointerException.class, () -> OptionalCollection.of(null));
+		Assert.assertFalse(OptionalCollection.ofEmpty(null).isPresent());
+		Assert.assertTrue(OptionalCollection.ofEmpty(null).isEmpty());
+		Assert.assertTrue(OptionalCollection.ofEmpty(Arrays.asList("1", "2")).isNotEmpty());
 	}
 
+	@Test
+	public void orElse() {
+		List<String> defaultList = Arrays.asList("1", "2", "3");
+		List<String> nullList = null;
+		List<String> testList = new ArrayList<>();
+		// null orElse test
+		Assert.assertEquals(OptionalCollection.ofEmpty(nullList)
+				.orElse(defaultList), defaultList);
+		Assert.assertEquals(OptionalCollection.ofEmpty(nullList)
+				.orNullGet(() -> Arrays.asList("1", "2", "3")), defaultList);
+		// empty orElse test
+		Assert.assertNotEquals(OptionalCollection.ofEmpty(testList)
+				.orElse(defaultList), defaultList);
+		Assert.assertEquals(OptionalCollection.ofEmpty(testList)
+				.orEmptyElse(defaultList), defaultList);
+		Assert.assertNotEquals(OptionalCollection.ofEmpty(testList)
+				.orNullGet(() -> Arrays.asList("1", "2", "3")), defaultList);
+		Assert.assertEquals(OptionalCollection.ofEmpty(testList)
+				.orEmptyGet(() -> Arrays.asList("1", "2", "3")), defaultList);
 
-	/**
-	 * {@code OptionStream} usage test
-	 */
+	}
+
+	@Test
+	public void throwException() {
+		Assert.assertThrows(IllegalArgumentException.class, () ->
+				OptionalCollection.ofEmpty(null)
+						.orNullThrow(() -> new IllegalArgumentException("集合不能为null")));
+		Assert.assertThrows(IllegalArgumentException.class, () ->
+				OptionalCollection.ofEmpty(new ArrayList<>())
+						.orEmptyThrow(() -> new IllegalArgumentException("集合不能为空")));
+	}
+
+	@Test
+	public void map() {
+		List<String> defaultList = Arrays.asList("1", "2", "3");
+		Collection<Integer> resultList = OptionalCollection.ofEmpty(defaultList)
+				.map(collection -> collection.stream()
+						.map(Integer::valueOf)
+						.collect(Collectors.toList()))
+				.orElse(Arrays.asList(111, 222));
+		int sum = resultList.stream().reduce(Integer::sum).orElse(100);
+		Assert.assertEquals(sum, 6);
+
+	}
+
 	@Test
 	public void stream() {
-		List<String> defaultList = Arrays.asList("abc", "bac");
-
-		// sorted list
-		List<String> list = Arrays.asList("aaa", "bb", "ccaa", "ccbb", "aabb");
-		Collection<String> sortedList = OptionalCollection.ofEmpty(list)
+		List<String> defaultList = Arrays.asList("1", "2", "3");
+		Assert.assertEquals("123", OptionalCollection.ofEmpty(defaultList)
 				.stream()
-				.map(stream -> stream
-						.filter(str -> str.contains("a"))
-						.sorted())
-				.toOptionalCollection()
-				.orElse(defaultList);
-		List<String> compareList = new ArrayList<>();
-		compareList.add("aaa");
-		compareList.add("aabb");
-		compareList.add("ccaa");
-		Assert.assertEquals(sortedList, compareList);
+				.reduce((a, b) -> a + b)
+				.orElse("empty"));
 
-		// filter test
-		boolean filter = OptionalCollection.ofEmpty(list)
+		List<String> emptyList = new ArrayList<>();
+		Assert.assertEquals("empty", OptionalCollection.ofEmpty(emptyList)
 				.stream()
-				.optional(stream -> stream
-						.filter(str -> str.contains("a"))
-						.anyMatch(str -> str.contains("c")))
-				.orElse(false);
-		Assert.assertTrue(filter);
+				.reduce((a, b) -> a + b)
+				.orElse("empty"));
 
-		filter = OptionalCollection.ofEmpty(list)
+		List<String> nullList = null;
+		Assert.assertEquals("empty", OptionalCollection.ofEmpty(nullList)
 				.stream()
-				.optional(stream -> stream
-						.filter(str -> str.contains("a"))
-						.anyMatch(str -> str.contains("d")))
-				.orElse(false);
-		Assert.assertFalse(filter);
-
-		// ensure list not modified
-		Assert.assertEquals(list, ListUtil.of("aaa", "bb", "ccaa", "ccbb", "aabb"));
+				.reduce((a, b) -> a + b)
+				.orElse("empty"));
 	}
-
 
 	@Test
-	public void orElseThrow() {
-		// test throw exception if empty
-		List<String> list = null;
-		String exceptionMsg = "Collection is empty";
-		OptionalCollection.ofEmpty(list)
-				.filter(collection -> collection.contains("aaa"))
-				.orEmptyThrow(() -> new IllegalArgumentException(exceptionMsg));
-		Assert.assertThrows(exceptionMsg, IllegalArgumentException.class,
-				() -> OptionalCollection.ofEmpty(list)
-						.filter(collection -> collection.contains("aaa"))
-						.orEmptyThrow(() -> new IllegalArgumentException(exceptionMsg)));
+	public void filter() {
+		List<String> defaultList = Arrays.asList("aa", "bb", "cc", "abcd");
+		Assert.assertTrue(OptionalCollection.ofEmpty(defaultList)
+				.filter(collection -> collection.contains("abcd"))
+				.isNotEmpty());
+		Assert.assertTrue(OptionalCollection.ofEmpty(defaultList)
+				.filter(collection -> collection.contains("cd"))
+				.isEmpty());
+		Assert.assertTrue(OptionalCollection.ofEmpty(defaultList)
+				.filterOrElse(collection -> collection.contains("cd"), Arrays.asList("cd", "ef"))
+				.isNotEmpty());
+		Assert.assertTrue(OptionalCollection.ofEmpty(defaultList)
+				.filterOrElse(collection -> collection.contains("cd"), Arrays.asList("cd", "ef"))
+				.get()
+				.contains("cd"));
 	}
+
+	@Test
+	public void ifPresentOrElse() {
+		List<String> defaultList = Arrays.asList("a", "b", "c");
+		String concat = OptionalCollection.ofEmpty(defaultList)
+				.ifPresentOrElse(collection -> collection.stream()
+						.reduce((a, b) -> a + "," + b)
+						.orElse("abc"), "aaa");
+		Assert.assertEquals(concat, "a,b,c");
+
+		Assert.assertEquals("aaa", OptionalCollection.ofEmpty(null)
+				.ifPresentOrElse(collection -> collection.stream()
+						.reduce((a, b) -> a + "," + b)
+						.orElse("abc"), "aaa"));
+
+	}
+
+	@Test
+	public void ifNotEmpty() {
+		List<String> defaultList = Arrays.asList("a", "b", "c");
+		// print
+		OptionalCollection.ofEmpty(defaultList)
+				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
+		// won't print
+		OptionalCollection.ofEmpty(null)
+				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
+		OptionalCollection.ofEmpty(new ArrayList<>())
+				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
+	}
+
+	private static <V> void deleteBatchIds(Collection<V> collection) {
+		System.out.println("delete batch ids: " + collection);
+	}
+
+	@Test
+	public void ifNotEmptyOrElse() {
+		List<String> defaultList = Arrays.asList("a", "b", "c");
+		Assert.assertEquals("abc", OptionalCollection.ofEmpty(defaultList)
+				.ifNotEmptyOrElse(collection -> collection.stream()
+								.reduce((a, b) -> a + b)
+								.get(),
+						"abcdef"));
+
+		List<String> nullList = null;
+		Assert.assertEquals("abcdef", OptionalCollection.ofEmpty(nullList)
+				.ifNotEmptyOrElse(collection -> collection.stream()
+								.reduce((a, b) -> a + b)
+								.orElse("abc"),
+						"abcdef"));
+	}
+
 }
