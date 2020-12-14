@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * OptionalCollection.ofEmpty(ids)
  *         .ifNotEmpty(userAddressMapper::deleteBatchIds);
  *
- * // 转OptionalStream排序再回转OptionalCollection，如果空则返回defaultList
+ * // 转OptionalStream排序再回转OptionalCollection，如果null则返回defaultList
  * List<String> defaultList = Arrays.asList("abc", "bac");
  * List<String> list = Arrays.asList("aaa", "bb", "ccaa", "ccbb", "aabb");
  * Collection<String> sortedList = OptionalCollection.ofEmpty(list)
