@@ -1,11 +1,11 @@
 package cn.hutool.db;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.db.sql.Order;
+
+import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 分页对象
@@ -42,26 +42,26 @@ public class Page implements Serializable {
 	 * @param pageSize 每页结果数
 	 */
 	public Page(int pageNumber, int pageSize) {
-		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
+		this.pageNumber = Math.max(pageNumber, 0);
 		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 
 	/**
 	 * 构造
 	 * 
-	 * @param pageNumber 页码
-	 * @param numPerPage 每页结果数
+	 * @param pageNumber 页码，0表示第一页
+	 * @param pageSize 每页结果数
 	 * @param order 排序对象
 	 */
-	public Page(int pageNumber, int numPerPage, Order order) {
-		this(pageNumber, numPerPage);
+	public Page(int pageNumber, int pageSize, Order order) {
+		this(pageNumber, pageSize);
 		this.orders = new Order[] { order };
 	}
 	// ---------------------------------------------------------- Constructor start
 
 	// ---------------------------------------------------------- Getters and Setters start
 	/**
-	 * @return 页码
+	 * @return 页码，0表示第一页
 	 */
 	public int getPageNumber() {
 		return pageNumber;
@@ -73,7 +73,7 @@ public class Page implements Serializable {
 	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
+		this.pageNumber = Math.max(pageNumber, 0);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class Page implements Serializable {
 	 * @param pageSize 每页结果数
 	 */
 	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
+		this.pageSize = (pageSize <= 0) ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 
 	/**
@@ -134,10 +134,7 @@ public class Page implements Serializable {
 	 * @param orders 排序
 	 */
 	public void addOrder(Order... orders) {
-		if (null != this.orders) {
-			ArrayUtil.append(this.orders, orders);
-		}
-		this.orders = orders;
+		this.orders = ArrayUtil.append(this.orders, orders);
 	}
 	// ---------------------------------------------------------- Getters and Setters end
 
@@ -145,22 +142,26 @@ public class Page implements Serializable {
 	 * @return 开始位置
 	 */
 	public int getStartPosition() {
-		return getStartEnd()[0];
+		return PageUtil.getStart(this.pageNumber, this.pageSize);
 	}
 
 	/**
 	 * @return 结束位置
 	 */
 	public int getEndPosition() {
-		return getStartEnd()[1];
+		return PageUtil.getEnd(this.pageNumber, this.pageSize);
 	}
 
 	/**
 	 * 开始位置和结束位置<br>
-	 * 例如：<br>
-	 * 页码：1，每页10 =》 [0, 10]<br>
-	 * 页码：2，每页10 =》 [10, 20]<br>
-	 * 。。。<br>
+	 * 例如：
+	 *
+	 * <pre>
+	 * 页码：0，每页10 =》 [0, 10]
+	 * 页码：1，每页10 =》 [10, 20]
+	 * 页码：2，每页10 =》 [21, 30]
+	 * 。。。
+	 * </pre>
 	 * 
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.6.8</version>
+		<version>5.5.2</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -18,15 +18,15 @@
 
 	<properties>
 		<!-- versions -->
-		<c3p0.version>0.9.5.4</c3p0.version>
-		<dbcp2.version>2.4.0</dbcp2.version>
-		<tomcat-jdbc.version>8.5.35</tomcat-jdbc.version>
-		<druid.version>1.1.12</druid.version>
+		<c3p0.version>0.9.5.5</c3p0.version>
+		<dbcp2.version>2.8.0</dbcp2.version>
+		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
+		<druid.version>1.2.3</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.8.2</mongo.version>
-		<sqlite.version>3.21.0.1</sqlite.version>
-		<hsqldb.version>2.3.6</hsqldb.version>
-		<jedis.version>3.0.1</jedis.version>
+		<mongo.version>3.12.7</mongo.version>
+		<sqlite.version>3.32.3.2</sqlite.version>
+		<hsqldb.version>2.5.1</hsqldb.version>
+		<jedis.version>3.3.0</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -63,12 +63,30 @@
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP-java7</artifactId>
 			<version>${hikariCP.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.mchange</groupId>
 			<artifactId>c3p0</artifactId>
 			<version>${c3p0.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.github.chris2018998</groupId>
+			<artifactId>BeeCP</artifactId>
+			<version>2.5.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -89,6 +107,16 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -114,25 +142,31 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.41</version>
+			<version>8.0.22</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.5.jre7</version>
+			<version>42.2.18.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>6.4.0.jre7</version>
+			<version>7.4.1.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.26</version>
+			<version>1.7.30</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

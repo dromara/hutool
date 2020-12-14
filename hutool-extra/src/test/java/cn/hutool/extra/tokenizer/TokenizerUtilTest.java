@@ -1,12 +1,6 @@
 package cn.hutool.extra.tokenizer;
 
-import java.util.Iterator;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.extra.tokenizer.engine.analysis.SmartcnEngine;
 import cn.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
 import cn.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;
@@ -15,6 +9,11 @@ import cn.hutool.extra.tokenizer.engine.jieba.JiebaEngine;
 import cn.hutool.extra.tokenizer.engine.mmseg.MmsegEngine;
 import cn.hutool.extra.tokenizer.engine.mynlp.MynlpEngine;
 import cn.hutool.extra.tokenizer.engine.word.WordEngine;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.Iterator;
 
 /**
  * 模板引擎单元测试
@@ -38,7 +37,7 @@ public class TokenizerUtilTest {
 	public void hanlpTest() {
 		TokenizerEngine engine = new HanLPEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两 个 方法 的 区别 在于 返回 值", resultStr);
 	}
 	
@@ -46,7 +45,7 @@ public class TokenizerUtilTest {
 	public void ikAnalyzerTest() {
 		TokenizerEngine engine = new IKAnalyzerEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这两个 方法 的 区别 在于 返回值", resultStr);
 	}
 	
@@ -61,7 +60,7 @@ public class TokenizerUtilTest {
 	public void jiebaTest() {
 		TokenizerEngine engine = new JiebaEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两个 方法 的 区别 在于 返回值", resultStr);
 	}
 	
@@ -76,7 +75,7 @@ public class TokenizerUtilTest {
 	public void smartcnTest() {
 		TokenizerEngine engine = new SmartcnEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两 个 方法 的 区别 在于 返回 值", resultStr);
 	}
 	
@@ -84,7 +83,7 @@ public class TokenizerUtilTest {
 	public void wordTest() {
 		TokenizerEngine engine = new WordEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这两个 方法 的 区别 在于 返回值", resultStr);
 	}
 	
@@ -94,12 +93,12 @@ public class TokenizerUtilTest {
 		// 此单元测试需要JDK8，默认忽略
 		TokenizerEngine engine = new MynlpEngine();
 		Result result = engine.parse(text);
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两个 方法 的 区别 在于 返回 值", resultStr);
 	}
 	
 	private void checkResult(Result result) {
-		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
+		String resultStr = IterUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两个 方法 的 区别 在于 返回 值", resultStr);
 	}
 }

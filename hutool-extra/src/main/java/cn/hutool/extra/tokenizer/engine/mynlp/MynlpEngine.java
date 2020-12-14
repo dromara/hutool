@@ -17,7 +17,7 @@ import cn.hutool.extra.tokenizer.TokenizerEngine;
  */
 public class MynlpEngine implements TokenizerEngine {
 
-	private Lexer lexer;
+	private final Lexer lexer;
 	
 	/**
 	 * 构造

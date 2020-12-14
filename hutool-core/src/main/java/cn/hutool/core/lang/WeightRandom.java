@@ -1,13 +1,13 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
+
 import java.io.Serializable;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.RandomUtil;
 
 /**
  * 权重随机算法实现<br>
@@ -31,12 +31,13 @@ import cn.hutool.core.util.RandomUtil;
 public class WeightRandom<T> implements Serializable {
 	private static final long serialVersionUID = -8244697995702786499L;
 
-	private TreeMap<Double, T> weightMap;
-	private Random random;
+	private final TreeMap<Double, T> weightMap;
+
 
 	/**
 	 * 创建权重随机获取器
-	 * 
+	 *
+	 * @param <T> 权重随机获取的对象类型
 	 * @return {@link WeightRandom}
 	 */
 	public static <T> WeightRandom<T> create() {
@@ -49,7 +50,7 @@ public class WeightRandom<T> implements Serializable {
 	 */
 	public WeightRandom() {
 		weightMap = new TreeMap<>();
-		random = RandomUtil.getRandom();
+
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class WeightRandom<T> implements Serializable {
 	 * @return this
 	 */
 	public WeightRandom<T> add(T obj, double weight) {
-		return add(new WeightObj<T>(obj, weight));
+		return add(new WeightObj<>(obj, weight));
 	}
 
 	/**
@@ -140,6 +141,7 @@ public class WeightRandom<T> implements Serializable {
 		if(MapUtil.isEmpty(this.weightMap)) {
 			return null;
 		}
+		final Random random = RandomUtil.getRandom();
 		final double randomWeight = this.weightMap.lastKey() * random.nextDouble();
 		final SortedMap<Double, T> tailMap = this.weightMap.tailMap(randomWeight, false);
 		return this.weightMap.get(tailMap.firstKey());
@@ -156,7 +158,7 @@ public class WeightRandom<T> implements Serializable {
 		/** 对象 */
 		private T obj;
 		/** 权重 */
-		private double weight;
+		private final double weight;
 
 		/**
 		 * 构造
@@ -226,10 +228,7 @@ public class WeightRandom<T> implements Serializable {
 			} else if (!this.obj.equals(other.obj)) {
 				return false;
 			}
-			if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)) {
-				return false;
-			}
-			return true;
+			return Double.doubleToLongBits(weight) == Double.doubleToLongBits(other.weight);
 		}
 	}
 	

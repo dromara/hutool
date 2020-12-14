@@ -1,13 +1,12 @@
 package cn.hutool.core.convert;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * 抽象转换器，提供通用的转换逻辑，同时通过convertInternal实现对应类型的专属逻辑<br>
@@ -54,12 +53,13 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
 			if (targetType.isInstance(value) && false == Map.class.isAssignableFrom(targetType)) {
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
-				return (T) targetType.cast(value);
+				return targetType.cast(value);
 			}
 			T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);
 		} else {
-			throw new IllegalArgumentException(StrUtil.format("Default value [{}] is not the instance of [{}]", defaultValue, targetType));
+			throw new IllegalArgumentException(
+					StrUtil.format("Default value [{}]({}) is not the instance of [{}]", defaultValue, defaultValue.getClass(), targetType));
 		}
 	}
 

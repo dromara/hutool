@@ -1,5 +1,16 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.bean.NullWrapperBean;
+import cn.hutool.core.convert.BasicType;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.ClassScanner;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Singleton;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -8,22 +19,13 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import cn.hutool.core.convert.BasicType;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.ClassScaner;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Singleton;
 
 /**
  * 类工具类 <br>
@@ -57,7 +59,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 是否为顶层类，既定义在包中的类，而非定义在类中的内部类
+	 * 是否为顶层类，即定义在包中的类，而非定义在类中的内部类
 	 *
 	 * @param clazz 类
 	 * @return 是否为顶层类
@@ -143,7 +145,14 @@ public class ClassUtil {
 		Object obj;
 		for (int i = 0; i < objects.length; i++) {
 			obj = objects[i];
-			classes[i] = (null == obj) ? Object.class : obj.getClass();
+			if (obj instanceof NullWrapperBean) {
+				// 自定义null值的参数类型
+				classes[i] = ((NullWrapperBean<?>) obj).getWrappedClass();
+			} else if (null == obj) {
+				classes[i] = Object.class;
+			} else {
+				classes[i] = obj.getClass();
+			}
 		}
 		return classes;
 	}
@@ -176,10 +185,10 @@ public class ClassUtil {
 	 * @param packageName     包路径
 	 * @param annotationClass 注解类
 	 * @return 类集合
-	 * @see ClassScaner#scanPackageByAnnotation(String, Class)
+	 * @see ClassScanner#scanPackageByAnnotation(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return ClassScaner.scanPackageByAnnotation(packageName, annotationClass);
+		return ClassScanner.scanPackageByAnnotation(packageName, annotationClass);
 	}
 
 	/**
@@ -188,20 +197,20 @@ public class ClassUtil {
 	 * @param packageName 包路径
 	 * @param superClass  父类或接口
 	 * @return 类集合
-	 * @see ClassScaner#scanPackageBySuper(String, Class)
+	 * @see ClassScanner#scanPackageBySuper(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return ClassScaner.scanPackageBySuper(packageName, superClass);
+		return ClassScanner.scanPackageBySuper(packageName, superClass);
 	}
 
 	/**
 	 * 扫面该包路径下所有class文件
 	 *
 	 * @return 类集合
-	 * @see ClassScaner#scanPackage()
+	 * @see ClassScanner#scanPackage()
 	 */
 	public static Set<Class<?>> scanPackage() {
-		return ClassScaner.scanPackage();
+		return ClassScanner.scanPackage();
 	}
 
 	/**
@@ -209,10 +218,10 @@ public class ClassUtil {
 	 *
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @return 类集合
-	 * @see ClassScaner#scanPackage(String)
+	 * @see ClassScanner#scanPackage(String)
 	 */
 	public static Set<Class<?>> scanPackage(String packageName) {
-		return ClassScaner.scanPackage(packageName);
+		return ClassScanner.scanPackage(packageName);
 	}
 
 	/**
@@ -225,7 +234,7 @@ public class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
-		return ClassScaner.scanPackage(packageName, classFilter);
+		return ClassScanner.scanPackage(packageName, classFilter);
 	}
 
 	// ----------------------------------------------------------------------------------------- Method
@@ -538,7 +547,7 @@ public class ClassUtil {
 	 *
 	 * <pre>
 	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取{@link ClassUtil}类对应的ClassLoader
+	 * 2、获取{@link ClassLoaderUtil}类对应的ClassLoader
 	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
 	 * </pre>
 	 *
@@ -712,7 +721,7 @@ public class ClassUtil {
 		if (null == clazz) {
 			return false;
 		}
-		return BasicType.wrapperPrimitiveMap.containsKey(clazz);
+		return BasicType.WRAPPER_PRIMITIVE_MAP.containsKey(clazz);
 	}
 
 	/**
@@ -744,7 +753,17 @@ public class ClassUtil {
 
 	/**
 	 * 是否为简单值类型<br>
-	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class.
+	 * 包括：
+	 * <pre>
+	 *     原始类型
+	 *     String、other CharSequence
+	 *     Number
+	 *     Date
+	 *     URI
+	 *     URL
+	 *     Locale
+	 *     Class
+	 * </pre>
 	 *
 	 * @param clazz 类
 	 * @return 是否为简单值类型
@@ -758,7 +777,9 @@ public class ClassUtil {
 				|| clazz.equals(URI.class) //
 				|| clazz.equals(URL.class) //
 				|| clazz.equals(Locale.class) //
-				|| clazz.equals(Class.class);//
+				|| clazz.equals(Class.class)//
+				// jdk8 date object
+				|| TemporalAccessor.class.isAssignableFrom(clazz); //
 	}
 
 	/**
@@ -785,11 +806,11 @@ public class ClassUtil {
 		// 基本类型
 		if (targetType.isPrimitive()) {
 			// 原始类型
-			Class<?> resolvedPrimitive = BasicType.wrapperPrimitiveMap.get(sourceType);
+			Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
 			return targetType.equals(resolvedPrimitive);
 		} else {
 			// 包装类型
-			Class<?> resolvedWrapper = BasicType.primitiveWrapperMap.get(sourceType);
+			Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
 			return resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper);
 		}
 	}
@@ -924,15 +945,12 @@ public class ClassUtil {
 	 * 获得给定类的泛型参数
 	 *
 	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
-	 * @param index 泛型类型的索引号，既第几个泛型类型
+	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Class}
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
 		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
-		if (argumentType instanceof Class) {
-			return (Class<?>) argumentType;
-		}
-		return null;
+		return TypeUtil.getClass(argumentType);
 	}
 
 	/**
@@ -1040,5 +1058,38 @@ public class ClassUtil {
 		return objectPackageName.startsWith("java.") //
 				|| objectPackageName.startsWith("javax.") //
 				|| clazz.getClassLoader() == null;
+	}
+
+	/**
+	 * 获取class类路径URL, 不管是否在jar包中都会返回文件夹的路径<br>
+	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
+	 * jdk中的类不能使用此方法
+	 *
+	 * @param clazz 类
+	 * @return URL
+	 * @since 5.2.4
+	 */
+	public static URL getLocation(Class<?> clazz) {
+		if (null == clazz) {
+			return null;
+		}
+		return clazz.getProtectionDomain().getCodeSource().getLocation();
+	}
+
+	/**
+	 * 获取class类路径, 不管是否在jar包中都会返回文件夹的路径<br>
+	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
+	 * jdk中的类不能使用此方法
+	 *
+	 * @param clazz 类
+	 * @return class路径
+	 * @since 5.2.4
+	 */
+	public static String getLocationPath(Class<?> clazz) {
+		final URL location = getLocation(clazz);
+		if (null == location) {
+			return null;
+		}
+		return location.getPath();
 	}
 }

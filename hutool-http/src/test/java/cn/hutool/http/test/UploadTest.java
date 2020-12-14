@@ -1,15 +1,15 @@
 package cn.hutool.http.test;
 
-import java.io.File;
-import java.util.HashMap;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * 文件上传单元测试
@@ -24,16 +24,16 @@ public class UploadTest {
 	@Test
 	@Ignore
 	public void uploadFilesTest() {
-		File file = FileUtil.file("e:\\face.jpg");
-		File file2 = FileUtil.file("e:\\face2.jpg");
+		File file = FileUtil.file("d:\\图片1.JPG");
+		File file2 = FileUtil.file("d:\\图片3.png");
 
 		// 方法一：自定义构建表单
 		HttpRequest request = HttpRequest//
-				.post("http://localhost:8090/file/upload")//
+				.post("http://localhost:8888/file")//
 				.form("file", file2, file)//
 				.form("fileType", "图片");
 		HttpResponse response = request.execute();
-		System.out.println(response.body());
+		Console.log(response.body());
 	}
 	
 	@Test

@@ -1,8 +1,7 @@
 package cn.hutool.extra.tokenizer.engine.jcseg;
 
-import org.lionsoul.jcseg.tokenizer.core.IWord;
-
 import cn.hutool.extra.tokenizer.Word;
+import org.lionsoul.jcseg.IWord;
 
 /**
  * Jcseg分词中的一个单词包装
@@ -11,7 +10,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class JcsegWord implements Word {
-	private IWord word;
+	private static final long serialVersionUID = 1L;
+
+	private final IWord word;
 
 	/**
 	 * 构造

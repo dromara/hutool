@@ -1,10 +1,10 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 基于快速缓冲FastByteBuffer的OutputStream，随着数据的增长自动扩充缓冲区
@@ -52,7 +52,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * 此方法无任何效果，当流被关闭后不会抛出IOException
 	 */
 	@Override
-	public void close() throws IOException{
+	public void close() {
 		// nop
 	}
 

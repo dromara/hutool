@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.6.8</version>
+		<version>5.5.2</version>
 	</parent>
 
 	<artifactId>hutool-setting</artifactId>
@@ -26,12 +26,6 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.6</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

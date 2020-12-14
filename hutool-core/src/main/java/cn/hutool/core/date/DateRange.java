@@ -1,8 +1,8 @@
 package cn.hutool.core.date;
 
-import java.util.Date;
-
 import cn.hutool.core.lang.Range;
+
+import java.util.Date;
 
 /**
  * 日期范围
@@ -47,16 +47,12 @@ public class DateRange extends Range<DateTime> {
 	 * @param isIncludeEnd 是否包含结束的时间
 	 */
 	public DateRange(Date start, Date end, final DateField unit, final int step, boolean isIncludeStart, boolean isIncludeEnd) {
-		super(DateUtil.date(start), DateUtil.date(end), new Steper<DateTime>() {
-
-			@Override
-			public DateTime step(DateTime current, DateTime end, int index) {
-				DateTime dt = current.offsetNew(unit, step);
-				if (dt.isAfter(end)) {
-					return null;
-				}
-				return current.offsetNew(unit, step);
+		super(DateUtil.date(start), DateUtil.date(end), (current, end1, index) -> {
+			DateTime dt = current.offsetNew(unit, step);
+			if (dt.isAfter(end1)) {
+				return null;
 			}
+			return current.offsetNew(unit, step);
 		}, isIncludeStart, isIncludeEnd);
 	}
 

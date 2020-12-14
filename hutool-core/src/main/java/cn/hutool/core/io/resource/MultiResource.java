@@ -1,5 +1,8 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IORuntimeException;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -9,9 +12,6 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IORuntimeException;
 
 /**
  * 多资源组合资源<br>
@@ -23,7 +23,7 @@ import cn.hutool.core.io.IORuntimeException;
 public class MultiResource implements Resource, Iterable<Resource>, Iterator<Resource>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<Resource> resources;
+	private final List<Resource> resources;
 	private int cursor;
 	
 	/**
@@ -94,7 +94,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	}
 
 	@Override
-	public Resource next() {
+	public synchronized Resource next() {
 		if (cursor >= resources.size()) {
 			throw new ConcurrentModificationException();
 		}
@@ -110,7 +110,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	/**
 	 * 重置游标
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		this.cursor = 0;
 	}
 	

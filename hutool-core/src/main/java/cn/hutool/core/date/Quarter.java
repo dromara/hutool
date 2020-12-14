@@ -23,7 +23,7 @@ public enum Quarter {
 	Q4(4);
 	
 	// ---------------------------------------------------------------
-	private int value;
+	private final int value;
 
 	Quarter(int value) {
 		this.value = value;

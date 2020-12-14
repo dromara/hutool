@@ -22,7 +22,7 @@ public enum SymmetricAlgorithm {
 	PBEWithSHA1AndDESede("PBEWithSHA1AndDESede"), 
 	PBEWithSHA1AndRC2_40("PBEWithSHA1AndRC2_40");
 
-	private String value;
+	private final String value;
 
 	/**
 	 * 构造

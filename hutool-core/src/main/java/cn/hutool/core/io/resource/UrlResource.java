@@ -1,18 +1,13 @@
 package cn.hutool.core.io.resource;
 
-import java.io.BufferedReader;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.URLUtil;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.nio.charset.Charset;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.URLUtil;
 
 /**
  * URL资源访问类
@@ -68,47 +63,9 @@ public class UrlResource implements Resource, Serializable{
 	@Override
 	public InputStream getStream() throws NoResourceException{
 		if(null == this.url){
-			throw new NoResourceException("Resource [{}] not exist!", this.url);
+			throw new NoResourceException("Resource URL is null!");
 		}
 		return URLUtil.getStream(url);
-	}
-	
-	/**
-	 * 获得Reader
-	 * @param charset 编码
-	 * @return {@link BufferedReader}
-	 * @since 3.0.1
-	 */
-	public BufferedReader getReader(Charset charset){
-		return URLUtil.getReader(this.url, charset);
-	}
-	
-	//------------------------------------------------------------------------------- read
-	@Override
-	public String readStr(Charset charset) throws IORuntimeException{
-		BufferedReader reader = null;
-		try {
-			reader = getReader(charset);
-			return IoUtil.read(reader);
-		} finally {
-			IoUtil.close(reader);
-		}
-	}
-	
-	@Override
-	public String readUtf8Str() throws IORuntimeException{
-		return readStr(CharsetUtil.CHARSET_UTF_8);
-	}
-	
-	@Override
-	public byte[] readBytes() throws IORuntimeException{
-		InputStream in = null;
-		try {
-			in = getStream();
-			return IoUtil.readBytes(in);
-		} finally {
-			IoUtil.close(in);
-		}
 	}
 	
 	/**

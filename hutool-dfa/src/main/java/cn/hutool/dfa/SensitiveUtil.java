@@ -1,12 +1,12 @@
 package cn.hutool.dfa;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 敏感词工具类
@@ -14,10 +14,9 @@ import cn.hutool.json.JSONUtil;
  *
  */
 public final class SensitiveUtil {
-//	private static final Log log = LogFactory.get();
-	
+
 	public static final char DEFAULT_SEPARATOR = StrUtil.C_COMMA;
-	private static WordTree sensitiveTree = new WordTree();
+	private static final WordTree sensitiveTree = new WordTree();
 	
 	/**
 	 * @return 是否已经被初始化
@@ -33,13 +32,9 @@ public final class SensitiveUtil {
 	 */
 	public static void init(final Collection<String> sensitiveWords, boolean isAsync){
 		if(isAsync){
-			ThreadUtil.execAsync(new Callable<Boolean>(){
-				@Override
-				public Boolean call() throws Exception {
-					init(sensitiveWords);
-					return true;
-				}
-				
+			ThreadUtil.execAsync(() -> {
+				init(sensitiveWords);
+				return true;
 			});
 		}else{
 			init(sensitiveWords);
@@ -75,6 +70,19 @@ public final class SensitiveUtil {
 	 */
 	public static void init(String sensitiveWords, boolean isAsync){
 		init(sensitiveWords, DEFAULT_SEPARATOR, isAsync);
+	}
+	
+	/**
+	 * 设置字符过滤规则，通过定义字符串过滤规则，过滤不需要的字符<br>
+	 * 当accept为false时，此字符不参与匹配
+	 *
+	 * @param charFilter 过滤函数
+	 * @since 5.4.4
+	 */
+	public static void setCharFilter(Filter<Character> charFilter) {
+		if(charFilter != null) {
+			sensitiveTree.setCharFilter(charFilter);
+		}
 	}
 	
 	/**

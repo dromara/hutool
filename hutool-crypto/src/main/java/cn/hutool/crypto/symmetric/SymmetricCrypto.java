@@ -48,7 +48,7 @@ public class SymmetricCrypto implements Serializable {
 	 * 是否0填充
 	 */
 	private boolean isZeroPadding;
-	private Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
 	// ------------------------------------------------------------------ Constructor start
 
@@ -134,7 +134,7 @@ public class SymmetricCrypto implements Serializable {
 	 *
 	 * @param algorithm 算法
 	 * @param key       密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCrypto}的子对象，既子对象自身
+	 * @return SymmetricCrypto的子对象，即子对象自身
 	 */
 	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		Assert.notBlank(algorithm, "'algorithm' must be not blank !");
@@ -204,7 +204,7 @@ public class SymmetricCrypto implements Serializable {
 			} else {
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
-			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
+				return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -436,7 +436,7 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 解密Hex表示的字符串，默认UTF-8编码
+	 * 解密Hex（16进制）或Base64表示的字符串，默认UTF-8编码
 	 *
 	 * @param data 被解密的String
 	 * @return 解密后的String

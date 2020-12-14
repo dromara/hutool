@@ -1,15 +1,12 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.List;
-
+import cn.hutool.db.pojo.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
-import cn.hutool.db.pojo.User;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Entity测试

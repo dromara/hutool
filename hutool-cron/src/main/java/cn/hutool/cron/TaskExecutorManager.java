@@ -1,11 +1,12 @@
 package cn.hutool.cron;
 
+import cn.hutool.cron.task.CronTask;
+import cn.hutool.cron.task.Task;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import cn.hutool.cron.task.Task;
 
 /**
  * 作业执行管理器<br>
@@ -47,7 +48,7 @@ public class TaskExecutorManager implements Serializable {
 	 * @param task {@link Task}
 	 * @return {@link TaskExecutor}
 	 */
-	public TaskExecutor spawnExecutor(Task task) {
+	public TaskExecutor spawnExecutor(CronTask task) {
 		final TaskExecutor executor = new TaskExecutor(this.scheduler, task);
 		synchronized (this.executors) {
 			this.executors.add(executor);

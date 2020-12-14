@@ -40,7 +40,7 @@ public class BeanPathTest {
 		examInfoDict2.setExamType(1);
 		examInfoDict2.setAnswerIs(0);
 
-		List<ExamInfoDict> examInfoDicts = new ArrayList<ExamInfoDict>();
+		List<ExamInfoDict> examInfoDicts = new ArrayList<>();
 		examInfoDicts.add(examInfoDict);
 		examInfoDicts.add(examInfoDict1);
 		examInfoDicts.add(examInfoDict2);
@@ -52,7 +52,7 @@ public class BeanPathTest {
 		userInfoDict.setRealName("张三");
 		userInfoDict.setExamInfoDict(examInfoDicts);
 
-		tempMap = new HashMap<String, Object>();
+		tempMap = new HashMap<>();
 		tempMap.put("userInfo", userInfoDict);
 		tempMap.put("flag", 1);
 	}
@@ -64,6 +64,7 @@ public class BeanPathTest {
 		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
 		Assert.assertEquals("0", pattern.patternParts.get(2));
 		Assert.assertEquals("id", pattern.patternParts.get(3));
+
 	}
 	
 	@Test
@@ -97,5 +98,14 @@ public class BeanPathTest {
 		pattern.set(tempMap, 2);
 		Object result = pattern.get(tempMap);
 		Assert.assertEquals(2, result);
+	}
+
+	@Test
+	public void getMapTest () {
+		BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
+		@SuppressWarnings("unchecked")
+		Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
+		Assert.assertEquals(1, result.get("id"));
+		Assert.assertEquals("yx.mm.com", result.get("photoPath"));
 	}
 }

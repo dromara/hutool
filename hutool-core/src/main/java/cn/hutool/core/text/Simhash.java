@@ -1,16 +1,14 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.lang.hash.MurmurHash;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
-import cn.hutool.core.lang.MurmurHash;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  * <p>
@@ -35,8 +33,8 @@ public class Simhash {
 	private final int hammingThresh;
 	
 	/** 按照分段存储simhash，查找更快速 */
-	private List<Map<String, List<Long>>> storage;
-	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	private final List<Map<String, List<Long>>> storage;
+	private final StampedLock lock = new StampedLock();
 
 	/**
 	 * 构造
@@ -57,7 +55,7 @@ public class Simhash {
 		this.hammingThresh = hammingThresh;
 		this.storage = new ArrayList<>(fracCount);
 		for (int i = 0; i < fracCount; i++) {
-			storage.add(new HashMap<String, List<Long>>());
+			storage.add(new HashMap<>());
 		}
 	}
 
@@ -104,8 +102,7 @@ public class Simhash {
 
 		String frac;
 		Map<String, List<Long>> fracMap;
-		final ReadLock readLock = this.lock.readLock();
-		readLock.lock();
+		final long stamp = this.lock.readLock();
 		try {
 			for (int i = 0; i < fracCount; i++) {
 				frac = fracList.get(i);
@@ -120,13 +117,13 @@ public class Simhash {
 				}
 			}
 		} finally {
-			readLock.unlock();
+			this.lock.unlockRead(stamp);
 		}
 		return false;
 	}
 	
 	/**
-	 * 按照(frac, <simhash, content>)索引进行存储
+	 * 按照(frac, 《simhash, content》)索引进行存储
 	 *
 	 * @param simhash Simhash值
 	 */
@@ -137,8 +134,7 @@ public class Simhash {
 		
 		String frac;
 		Map<String, List<Long>> fracMap;
-		final WriteLock writeLock = this.lock.writeLock();
-		writeLock.lock();
+		final long stamp = this.lock.writeLock();
 		try {
 			for (int i = 0; i < fracCount; i++) {
 				frac = lFrac.get(i);
@@ -146,13 +142,13 @@ public class Simhash {
 				if (fracMap.containsKey(frac)) {
 					fracMap.get(frac).add(simhash);
 				} else {
-					final List<Long> ls = new ArrayList<Long>();
+					final List<Long> ls = new ArrayList<>();
 					ls.add(simhash);
 					fracMap.put(frac, ls);
 				}
 			}
 		} finally {
-			writeLock.unlock();
+			this.lock.unlockWrite(stamp);
 		}
 	}
 
@@ -184,7 +180,7 @@ public class Simhash {
 		final int bitNum = this.bitNum;
 		final int fracBitNum = this.fracBitNum;
 
-		final List<String> ls = new ArrayList<String>();
+		final List<String> ls = new ArrayList<>();
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bitNum; i++) {
 			sb.append(simhash >> i & 1);

@@ -1,10 +1,12 @@
 package cn.hutool.core.util;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
+import cn.hutool.core.convert.Convert;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Set;
 
 /**
  * {@link NumberUtil} 单元测试类
@@ -188,16 +190,16 @@ public class NumberUtilTest {
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
 		Assert.assertEquals("3.14", bigDecimal.toString());
 	}
-	
+
 	@Test
 	public void maxTest() {
-		int max = NumberUtil.max(new int[]{5,4,3,6,1});
+		int max = NumberUtil.max(5,4,3,6,1);
 		Assert.assertEquals(6, max);
 	}
-	
+
 	@Test
 	public void minTest() {
-		int min = NumberUtil.min(new int[]{5,4,3,6,1});
+		int min = NumberUtil.min(5,4,3,6,1);
 		Assert.assertEquals(1, min);
 	}
 	
@@ -215,6 +217,25 @@ public class NumberUtilTest {
 		Assert.assertEquals(10, v5);
 		int v6 = NumberUtil.parseInt("22.4D");
 		Assert.assertEquals(22, v6);
+
+		int v7 = NumberUtil.parseInt("0");
+		Assert.assertEquals(0, v7);
+	}
+
+	@Test
+	public void parseIntTest2() {
+		// from 5.4.8 issue#I23ORQ@Gitee
+		// 千位分隔符去掉
+		int v1 = NumberUtil.parseInt("1,482.00");
+		Assert.assertEquals(1482, v1);
+	}
+
+	@Test
+	public void parseNumberTest() {
+		// from 5.4.8 issue#I23ORQ@Gitee
+		// 千位分隔符去掉
+		int v1 = NumberUtil.parseNumber("1,482.00").intValue();
+		Assert.assertEquals(1482, v1);
 	}
 	
 	@Test
@@ -231,5 +252,55 @@ public class NumberUtilTest {
 		Assert.assertEquals(10L, v5);
 		long v6 = NumberUtil.parseLong("22.4D");
 		Assert.assertEquals(22L, v6);
+	}
+
+	@Test
+	public void factorialTest(){
+		long factorial = NumberUtil.factorial(0);
+		Assert.assertEquals(1, factorial);
+
+		Assert.assertEquals(1L, NumberUtil.factorial(1));
+		Assert.assertEquals(1307674368000L, NumberUtil.factorial(15));
+		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20));
+
+		factorial = NumberUtil.factorial(5, 0);
+		Assert.assertEquals(120, factorial);
+		factorial = NumberUtil.factorial(5, 1);
+		Assert.assertEquals(120, factorial);
+    
+		Assert.assertEquals(5, NumberUtil.factorial(5, 4));
+		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20, 0));
+	}
+
+	@Test
+	public void mulTest(){
+		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
+		Assert.assertEquals(BigDecimal.ZERO, mul);
+	}
+	
+	
+	@Test
+	public void isPowerOfTwoTest() {
+		Assert.assertFalse(NumberUtil.isPowerOfTwo(-1));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(16));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(65536));
+		Assert.assertTrue(NumberUtil.isPowerOfTwo(1));
+		Assert.assertFalse(NumberUtil.isPowerOfTwo(17));
+	}
+
+	@Test
+	public void generateRandomNumberTest(){
+		final int[] ints = NumberUtil.generateRandomNumber(10, 20, 5);
+		Assert.assertEquals(5, ints.length);
+		final Set<?> set = Convert.convert(Set.class, ints);
+		Assert.assertEquals(5, set.size());
+	}
+
+	@Test
+	public void toStrTest(){
+		Assert.assertEquals("1", NumberUtil.toStr(new BigDecimal("1.0000000000")));
+		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.00000"), new BigDecimal("9600.00000"))));
+		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
+		Assert.assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
 	}
 }

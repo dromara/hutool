@@ -1,14 +1,14 @@
 package cn.hutool.core.convert.impl;
 
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
-
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 
 /**
  * {@link Reference}转换器
@@ -20,7 +20,7 @@ import cn.hutool.core.util.TypeUtil;
 public class ReferenceConverter extends AbstractConverter<Reference> {
 	private static final long serialVersionUID = 1L;
 	
-	private Class<? extends Reference> targetType;
+	private final Class<? extends Reference> targetType;
 	
 	/**
 	 * 构造
@@ -37,7 +37,7 @@ public class ReferenceConverter extends AbstractConverter<Reference> {
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;
 		final Type paramType = TypeUtil.getTypeArgument(targetType);
-		if(false == TypeUtil.isUnknow(paramType)){
+		if(false == TypeUtil.isUnknown(paramType)){
 			targetValue = ConverterRegistry.getInstance().convert(paramType, value);
 		}
 		if(null == targetValue){

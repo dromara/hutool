@@ -1,8 +1,5 @@
 package cn.hutool.json;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
@@ -13,6 +10,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * JSON转换器
@@ -56,8 +56,8 @@ public class JSONConverter implements Converter<JSON> {
 	/**
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
-	 * @param <T>
-	 * 
+	 *
+	 * @param <T> 转换后的对象类型
 	 * @param targetType 目标类型
 	 * @param value 值
 	 * @param ignoreError 是否忽略转换错误
@@ -71,22 +71,14 @@ public class JSONConverter implements Converter<JSON> {
 		}
 		
 		if(value instanceof JSON) {
-			JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
+			final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
 			if(null != deserializer) {
 				return (T) deserializer.deserialize((JSON)value);
 			}
 		}
-		
-		Object targetValue = null;
-		try {
-			targetValue = Convert.convert(targetType, value);
-		} catch (ConvertException e) {
-			if (ignoreError) {
-				return null;
-			}
-			throw e;
-		}
-		
+
+		final T targetValue = Convert.convertWithCheck(targetType, value, null, ignoreError);
+
 		if (null == targetValue && false == ignoreError) {
 			if (StrUtil.isBlankIfStr(value)) {
 				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原始类型，转换器会返回false。
@@ -97,7 +89,7 @@ public class JSONConverter implements Converter<JSON> {
 			throw new ConvertException("Can not convert {} to type {}", value, ObjectUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
 		}
 
-		return (T) targetValue;
+		return targetValue;
 	}
 
 	@Override

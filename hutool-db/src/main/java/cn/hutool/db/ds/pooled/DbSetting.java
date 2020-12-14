@@ -17,7 +17,7 @@ public class DbSetting {
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
 
-	private Setting setting;
+	private final Setting setting;
 
 	/**
 	 * 构造
@@ -70,6 +70,15 @@ public class DbSetting {
 		dbConfig.setMinIdle(setting.getInt("minIdle", group, 0));
 		dbConfig.setMaxActive(setting.getInt("maxActive", group, 8));
 		dbConfig.setMaxWait(setting.getLong("maxWait", group, 6000L));
+
+		// remarks等特殊配置，since 5.3.8
+		String connValue;
+		for (String key : DSFactory.KEY_CONN_PROPS) {
+			connValue = config.get(key);
+			if(StrUtil.isNotBlank(connValue)){
+				dbConfig.addConnProps(key, connValue);
+			}
+		}
 
 		return dbConfig;
 	}

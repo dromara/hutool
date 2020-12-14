@@ -19,7 +19,7 @@ public class ConsoleLog extends AbstractLog {
 	private static final String logFormat = "[{date}] [{level}] {name}: {msg}";
 	private static Level currentLevel = Level.DEBUG;
 
-	private String name;
+	private final String name;
 
 	//------------------------------------------------------------------------- Constructor
 
@@ -119,6 +119,7 @@ public class ConsoleLog extends AbstractLog {
 		if (false == isEnabled(level)) {
 			return;
 		}
+
 
 		final Dict dict = Dict.create()
 				.set("date", DateUtil.now())

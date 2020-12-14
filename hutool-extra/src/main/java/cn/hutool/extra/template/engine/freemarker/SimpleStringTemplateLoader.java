@@ -1,10 +1,9 @@
 package cn.hutool.extra.template.engine.freemarker;
 
-import java.io.IOException;
+import freemarker.cache.TemplateLoader;
+
 import java.io.Reader;
 import java.io.StringReader;
-
-import freemarker.cache.TemplateLoader;
 
 /**
  * {@link TemplateLoader} 字符串实现形式<br>
@@ -16,7 +15,7 @@ import freemarker.cache.TemplateLoader;
 public class SimpleStringTemplateLoader implements TemplateLoader {
 
 	@Override
-	public Object findTemplateSource(String name) throws IOException {
+	public Object findTemplateSource(String name) {
 		return name;
 	}
 
@@ -26,12 +25,12 @@ public class SimpleStringTemplateLoader implements TemplateLoader {
 	}
 
 	@Override
-	public Reader getReader(Object templateSource, String encoding) throws IOException {
+	public Reader getReader(Object templateSource, String encoding) {
 		return new StringReader((String) templateSource);
 	}
 
 	@Override
-	public void closeTemplateSource(Object templateSource) throws IOException {
+	public void closeTemplateSource(Object templateSource) {
 		// ignore
 	}
 

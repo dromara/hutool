@@ -1,10 +1,11 @@
 package cn.hutool.core.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * {@link ClassUtil} 单元测试
@@ -24,7 +25,7 @@ public class ClassUtilTest {
 	}
 
 	@SuppressWarnings("unused")
-	class TestClass {
+	static class TestClass {
 		private String privateField;
 		protected String field;
 
@@ -35,7 +36,7 @@ public class ClassUtilTest {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "InnerClassMayBeStatic"})
 	class TestSubClass extends TestClass {
 		private String subField;
 		
@@ -61,7 +62,7 @@ public class ClassUtilTest {
 	}
 
 	@Test
-	public void getDeclaredMethod() throws Exception {
+	public void getDeclaredMethod() {
 		Method noMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "noMethod");
 		Assert.assertNull(noMethod);
 
@@ -101,5 +102,11 @@ public class ClassUtilTest {
 		String className = "cn.hutool.core.util.StrUtil";
 		String result = ClassUtil.getShortClassName(className);
 		Assert.assertEquals("c.h.c.u.StrUtil", result);
+	}
+
+	@Test
+	public void getLocationPathTest(){
+		final String classDir = ClassUtil.getLocationPath(ClassUtilTest.class);
+		Assert.assertTrue(Objects.requireNonNull(classDir).endsWith("/hutool-core/target/test-classes/"));
 	}
 }

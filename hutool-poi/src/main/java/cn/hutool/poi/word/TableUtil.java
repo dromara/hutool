@@ -1,19 +1,18 @@
 package cn.hutool.poi.word;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Word中表格相关工具
@@ -69,16 +68,18 @@ public class TableUtil {
 	public static void writeRow(XWPFTableRow row, Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			writeRow(row, (Iterable<?>) rowBean);
+			return;
 		}
 		
-		Map rowMap = null;
+		Map rowMap;
 		if(rowBean instanceof Map) {
 			rowMap = (Map) rowBean;
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
-			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
+			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 		} else {
 			// 其它转为字符串默认输出
 			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
+			return;
 		}
 		
 		writeRow(row, rowMap, isWriteKeyAsHead);
@@ -98,6 +99,7 @@ public class TableUtil {
 
 		if (isWriteKeyAsHead) {
 			writeRow(row, rowMap.keySet());
+			row = row.getTable().createRow();
 		}
 		writeRow(row, rowMap.values());
 	}

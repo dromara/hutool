@@ -1,12 +1,12 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.builder.Builder;
+import cn.hutool.core.util.StrUtil;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
-
-import cn.hutool.core.builder.Builder;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * ThreadFactory创建器<br>
@@ -95,9 +95,11 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 	 * 设置未捕获异常的处理方式
 	 * 
 	 * @param uncaughtExceptionHandler {@link UncaughtExceptionHandler}
+	 * @return this
 	 */
-	public void setUncaughtExceptionHandler(UncaughtExceptionHandler uncaughtExceptionHandler) {
+	public ThreadFactoryBuilder setUncaughtExceptionHandler(UncaughtExceptionHandler uncaughtExceptionHandler) {
 		this.uncaughtExceptionHandler = uncaughtExceptionHandler;
+		return this;
 	}
 
 	/**
@@ -125,24 +127,21 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 		final Integer priority = builder.priority;
 		final UncaughtExceptionHandler handler = builder.uncaughtExceptionHandler;
 		final AtomicLong count = (null == namePrefix) ? null : new AtomicLong();
-		return new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				final Thread thread = backingThreadFactory.newThread(r);
-				if (null != namePrefix) {
-					thread.setName(namePrefix + count.getAndIncrement());
-				}
-				if (null != daemon) {
-					thread.setDaemon(daemon);
-				}
-				if (null != priority) {
-					thread.setPriority(priority);
-				}
-				if (null != handler) {
-					thread.setUncaughtExceptionHandler(handler);
-				}
-				return thread;
+		return r -> {
+			final Thread thread = backingThreadFactory.newThread(r);
+			if (null != namePrefix) {
+				thread.setName(namePrefix + count.getAndIncrement());
 			}
+			if (null != daemon) {
+				thread.setDaemon(daemon);
+			}
+			if (null != priority) {
+				thread.setPriority(priority);
+			}
+			if (null != handler) {
+				thread.setUncaughtExceptionHandler(handler);
+			}
+			return thread;
 		};
 	}
 }

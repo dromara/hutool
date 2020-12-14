@@ -1,12 +1,12 @@
 package cn.hutool.core.io.watch;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
+import java.nio.file.*;
 
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.URLUtil;
 
 /**
@@ -376,5 +376,22 @@ public class WatchUtil {
 		final WatchMonitor watchMonitor = create(path, maxDepth, WatchMonitor.ENTRY_MODIFY);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
+	}
+
+	/**
+	 * 注册Watchable对象到WatchService服务
+	 *
+	 * @param watchable 可注册对象
+	 * @param watcher WatchService对象
+	 * @param events 监听事件
+	 * @return {@link WatchKey}
+	 * @since 4.6.9
+	 */
+	public static WatchKey register(Watchable watchable, WatchService watcher, WatchEvent.Kind<?>... events){
+		try {
+			return watchable.register(watcher, events);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

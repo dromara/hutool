@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.6.8</version>
+		<version>5.5.2</version>
 	</parent>
 
 	<artifactId>hutool-crypto</artifactId>
@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<bouncycastle.version>1.60</bouncycastle.version>
+		<bouncycastle.version>1.66</bouncycastle.version>
 	</properties>
 
 	<dependencies>
@@ -29,7 +29,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
+			<artifactId>bcprov-jdk15to18</artifactId>
 			<version>${bouncycastle.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>

@@ -21,7 +21,7 @@ public class LocalPortGenerater implements Serializable{
 	/**
 	 * 构造
 	 * 
-	 * @param beginPort
+	 * @param beginPort 起始端口号
 	 */
 	public LocalPortGenerater(int beginPort) {
 		alternativePort = new AtomicInteger(beginPort);

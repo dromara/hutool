@@ -1,14 +1,11 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
+import java.sql.SQLException;
 
 public class UpdateTest {
 	
@@ -22,7 +19,7 @@ public class UpdateTest {
 	/**
 	 * 对更新做单元测试
 	 * 
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	@Test
 	@Ignore
@@ -32,6 +29,6 @@ public class UpdateTest {
 		int update = db.update(Entity.create("user").set("age", 88), Entity.create().set("name", "unitTestUser"));
 		Assert.assertTrue(update > 0);
 		Entity result2 = db.get("user", "name", "unitTestUser");
-		Assert.assertSame(88, (int) result2.getInt("age"));
+		Assert.assertSame(88, result2.getInt("age"));
 	}
 }

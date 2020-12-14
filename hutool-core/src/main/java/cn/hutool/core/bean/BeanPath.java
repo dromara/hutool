@@ -1,13 +1,5 @@
 package cn.hutool.core.bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
@@ -15,6 +7,14 @@ import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
@@ -41,9 +41,9 @@ public class BeanPath implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 表达式边界符号数组 */
-	private static final char[] expChars = { CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END };
+	private static final char[] EXP_CHARS = { CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END };
 
-	private boolean isStartWith$ = false;
+	private boolean isStartWith = false;
 	protected List<String> patternParts;
 
 	/**
@@ -66,7 +66,7 @@ public class BeanPath implements Serializable{
 	 * </pre>
 	 * 
 	 * @param expression 表达式
-	 * @return {@link BeanPath}
+	 * @return BeanPath
 	 */
 	public static BeanPath create(String expression) {
 		return new BeanPath(expression);
@@ -154,7 +154,7 @@ public class BeanPath implements Serializable{
 			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
-				if (isFirst && false == this.isStartWith$ && BeanUtil.isMatchName(bean, patternPart, true)) {
+				if (isFirst && false == this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
 					subBean = bean;
 					isFirst = false;
 				} else {
@@ -193,16 +193,16 @@ public class BeanPath implements Serializable{
 			} else if (ArrayUtil.isArray(bean)) {
 				return ArrayUtil.getAny(bean, Convert.convert(int[].class, keys));
 			} else {
-				final String[] unwrapedKeys = new String[keys.size()];
-				for (int i = 0; i < unwrapedKeys.length; i++) {
-					unwrapedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
+				final String[] unWrappedKeys = new String[keys.size()];
+				for (int i = 0; i < unWrappedKeys.length; i++) {
+					unWrappedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
 				}
 				if (bean instanceof Map) {
 					// 只支持String为key的Map
-					MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);
+					return MapUtil.getAny((Map<String, ?>) bean, unWrappedKeys);
 				} else {
 					final Map<String, Object> map = BeanUtil.beanToMap(bean);
-					MapUtil.getAny(map, unwrapedKeys);
+					return MapUtil.getAny(map, unWrappedKeys);
 				}
 			}
 		} else {
@@ -229,11 +229,11 @@ public class BeanPath implements Serializable{
 			c = expression.charAt(i);
 			if (0 == i && '$' == c) {
 				// 忽略开头的$符，表示当前对象
-				isStartWith$ = true;
+				isStartWith = true;
 				continue;
 			}
 
-			if (ArrayUtil.contains(expChars, c)) {
+			if (ArrayUtil.contains(EXP_CHARS, c)) {
 				// 处理边界符号
 				if (CharUtil.BRACKET_END == c) {
 					// 中括号（数字下标）结束
@@ -242,10 +242,6 @@ public class BeanPath implements Serializable{
 					}
 					isNumStart = false;
 					// 中括号结束加入下标
-					if (builder.length() > 0) {
-						localPatternParts.add(unWrapIfPossible(builder));
-					}
-					builder.reset();
 				} else {
 					if (isNumStart) {
 						// 非结束中括号情况下发现起始中括号报错（中括号未关闭）
@@ -255,11 +251,11 @@ public class BeanPath implements Serializable{
 						isNumStart = true;
 					}
 					// 每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
-					if (builder.length() > 0) {
-						localPatternParts.add(unWrapIfPossible(builder));
-					}
-					builder.reset();
 				}
+				if (builder.length() > 0) {
+					localPatternParts.add(unWrapIfPossible(builder));
+				}
+				builder.reset();
 			} else {
 				// 非边界符号，追加字符
 				builder.append(c);

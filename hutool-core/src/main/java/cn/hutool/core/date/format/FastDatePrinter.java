@@ -1,5 +1,7 @@
 package cn.hutool.core.date.format;
 
+import cn.hutool.core.date.DateException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.DateFormatSymbols;
@@ -12,16 +14,13 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import cn.hutool.core.date.DateException;
-
 /**
  * {@link java.text.SimpleDateFormat} 的线程安全版本，用于将 {@link Date} 格式化输出<br>
  * Thanks to Apache Commons Lang 3.5
  *
- * @since 2.16.2
  * @see FastDateParser
  */
-class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
+public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
 	
 	/** 规则列表. */
@@ -38,7 +37,7 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param timeZone 非空时区{@link TimeZone}
 	 * @param locale 非空{@link Locale} 日期地理位置
 	 */
-	protected FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
+	public FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
 		super(pattern, timeZone, locale);
 		init();
 	}
@@ -48,7 +47,7 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 */
 	private void init() {
 		final List<Rule> rulesList = parsePattern();
-		rules = rulesList.toArray(new Rule[rulesList.size()]);
+		rules = rulesList.toArray(new Rule[0]);
 
 		int len = 0;
 		for (int i = rules.length; --i >= 0;) {
@@ -104,7 +103,7 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 					if (tokenLen == 2) {
 						rule = TwoDigitYearField.INSTANCE;
 					} else {
-						rule = selectNumberRule(Calendar.YEAR, tokenLen < 4 ? 4 : tokenLen);
+						rule = selectNumberRule(Calendar.YEAR, Math.max(tokenLen, 4));
 					}
 					if (c == 'Y') {
 						rule = new WeekYear((NumberRule) rule);
@@ -1053,7 +1052,7 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// -----------------------------------------------------------------------
 
-	private static final ConcurrentMap<TimeZoneDisplayKey, String> cTimeZoneDisplayCache = new ConcurrentHashMap<>(7);
+	private static final ConcurrentMap<TimeZoneDisplayKey, String> C_TIME_ZONE_DISPLAY_CACHE = new ConcurrentHashMap<>(7);
 
 	/**
 	 * <p>
@@ -1068,11 +1067,11 @@ class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 */
 	static String getTimeZoneDisplay(final TimeZone tz, final boolean daylight, final int style, final Locale locale) {
 		final TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
-		String value = cTimeZoneDisplayCache.get(key);
+		String value = C_TIME_ZONE_DISPLAY_CACHE.get(key);
 		if (value == null) {
 			// This is a very slow call, so cache the results.
 			value = tz.getDisplayName(daylight, style, locale);
-			final String prior = cTimeZoneDisplayCache.putIfAbsent(key, value);
+			final String prior = C_TIME_ZONE_DISPLAY_CACHE.putIfAbsent(key, value);
 			if (prior != null) {
 				value = prior;
 			}

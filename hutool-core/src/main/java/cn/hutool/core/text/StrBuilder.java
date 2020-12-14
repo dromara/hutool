@@ -33,7 +33,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 创建字符串构建器
 	 *
-	 * @return {@link StrBuilder}
+	 * @return this
 	 */
 	public static StrBuilder create() {
 		return new StrBuilder();
@@ -43,7 +43,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * 创建字符串构建器
 	 *
 	 * @param initialCapacity 初始容量
-	 * @return {@link StrBuilder}
+	 * @return this
 	 */
 	public static StrBuilder create(int initialCapacity) {
 		return new StrBuilder(initialCapacity);
@@ -53,7 +53,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * 创建字符串构建器
 	 *
 	 * @param strs 初始字符串
-	 * @return {@link StrBuilder}
+	 * @return this
 	 * @since 4.0.1
 	 */
 	public static StrBuilder create(CharSequence... strs) {
@@ -86,8 +86,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	public StrBuilder(CharSequence... strs) {
 		this(ArrayUtil.isEmpty(strs) ? DEFAULT_CAPACITY : (totalLength(strs) + DEFAULT_CAPACITY));
-		for (int i = 0; i < strs.length; i++) {
-			append(strs[i]);
+		for (CharSequence str : strs) {
+			append(str);
 		}
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
@@ -155,7 +155,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 追加对象，对象会被转换为字符串
 	 *
-	 * @param obj 对象
+	 * @param index 插入位置
+	 * @param obj   对象
 	 * @return this
 	 */
 	public StrBuilder insert(int index, Object obj) {
@@ -392,7 +393,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param start 开始位置，负数按照0处理（包括）
 	 * @param end   结束位置，超出最大长度按照最大长度处理（不包括）
 	 * @return this
-	 * @throws StringIndexOutOfBoundsException 当start > end抛出此异常
+	 * @throws StringIndexOutOfBoundsException 当start &gt; end抛出此异常
 	 */
 	public StrBuilder del(int start, int end) throws StringIndexOutOfBoundsException {
 		if (start < 0) {
@@ -448,6 +449,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 生成字符串
 	 */
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public String toString() {
 		return toString(false);
@@ -460,6 +462,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 
 	@Override
 	public char charAt(int index) {
+		if(index < 0){
+			index = this.position + index;
+		}
 		if ((index < 0) || (index > this.position)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}
@@ -535,11 +540,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 			newCapacity = minimumCapacity;
 		}
 		if (newCapacity < 0) {
-			if (minimumCapacity < 0) {
-				// overflow
-				throw new OutOfMemoryError("Capacity is too long and max than Integer.MAX");
-			}
-			newCapacity = Integer.MAX_VALUE;
+			throw new OutOfMemoryError("Capacity is too long and max than Integer.MAX");
 		}
 		value = Arrays.copyOf(value, newCapacity);
 	}
@@ -554,8 +555,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	private static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
-		for (int i = 0; i < strs.length; i++) {
-			totalLength += (null == strs[i] ? 4 : strs[i].length());
+		for (CharSequence str : strs) {
+			totalLength += (null == str ? 4 : str.length());
 		}
 		return totalLength;
 	}

@@ -33,7 +33,7 @@ public enum SignAlgorithm {
 	SHA384withECDSA("SHA384withECDSA"), //
 	SHA512withECDSA("SHA512withECDSA");//
 
-	private String value;
+	private final String value;
 
 	/**
 	 * 构造

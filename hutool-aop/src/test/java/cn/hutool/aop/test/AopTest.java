@@ -1,11 +1,11 @@
 package cn.hutool.aop.test;
 
-import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.aop.ProxyUtil;
 import cn.hutool.aop.aspects.TimeIntervalAspect;
+import cn.hutool.core.lang.Console;
+import lombok.Data;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * AOP模块单元测试
@@ -23,10 +23,11 @@ public class AopTest {
 	}
 
 	@Test
-	public void aopByCglibTest() {
+	public void aopByAutoCglibTest() {
 		Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
 		String result = dog.eat();
 		Assert.assertEquals("狗吃肉", result);
+
 		dog.seize();
 	}
 
@@ -67,5 +68,21 @@ public class AopTest {
 		public void seize() {
             Console.log("抓了只鸡");
 		}
+	}
+
+	@Test
+	public void testCGLIBProxy() {
+		TagObj target = new TagObj();
+		//目标类设置标记
+		target.setTag("tag");
+
+		TagObj proxy = ProxyUtil.proxy(target, TimeIntervalAspect.class);
+		//代理类获取标记tag (断言错误)
+		Assert.assertEquals("tag", proxy.getTag());
+	}
+
+	@Data
+	public static class TagObj{
+		private String tag;
 	}
 }

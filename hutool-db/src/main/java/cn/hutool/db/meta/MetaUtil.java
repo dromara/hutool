@@ -1,5 +1,12 @@
 package cn.hutool.db.meta;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.DbUtil;
+import cn.hutool.db.Entity;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -8,24 +15,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
-import cn.hutool.db.Entity;
-
 /**
  * 数据库元数据信息工具类
- * 
- * @author looly
  *
+ * <p>
+ * 需要注意的是，此工具类在某些数据库（比如Oracle）下无效，此时需要手动在数据库配置中增加：
+ * <pre>
+ *  remarks = true
+ *  useInformationSchema = true
+ * </pre>
+ *
+ * @author looly
  */
 public class MetaUtil {
 	/**
 	 * 获得所有表名
-	 * 
+	 *
 	 * @param ds 数据源
 	 * @return 表名列表
 	 */
@@ -35,8 +40,8 @@ public class MetaUtil {
 
 	/**
 	 * 获得所有表名
-	 * 
-	 * @param ds 数据源
+	 *
+	 * @param ds    数据源
 	 * @param types 表类型
 	 * @return 表名列表
 	 */
@@ -46,10 +51,10 @@ public class MetaUtil {
 
 	/**
 	 * 获得所有表名
-	 * 
-	 * @param ds 数据源
+	 *
+	 * @param ds     数据源
 	 * @param schema 表数据库名，对于Oracle为用户名
-	 * @param types 表类型
+	 * @param types  表类型
 	 * @return 表名列表
 	 * @since 3.3.1
 	 */
@@ -59,50 +64,49 @@ public class MetaUtil {
 
 	/**
 	 * 获得所有表名
-	 * 
-	 * @param ds 数据源
-	 * @param schema 表数据库名，对于Oracle为用户名
+	 *
+	 * @param ds        数据源
+	 * @param schema    表数据库名，对于Oracle为用户名
 	 * @param tableName 表名
-	 * @param types 表类型
+	 * @param types     表类型
 	 * @return 表名列表
 	 * @since 3.3.1
 	 */
 	public static List<String> getTables(DataSource ds, String schema, String tableName, TableType... types) {
-		final List<String> tables = new ArrayList<String>();
+		final List<String> tables = new ArrayList<>();
 		Connection conn = null;
-		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
 			String catalog = getCataLog(conn);
-			if(null == schema) {
+			if (null == schema) {
 				schema = getSchema(conn);
 			}
 
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types));
-			if (rs == null) {
-				return null;
-			}
-			String table;
-			while (rs.next()) {
-				table = rs.getString("TABLE_NAME");
-				if (StrUtil.isNotBlank(table)) {
-					tables.add(table);
+			try (ResultSet rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types))) {
+				if (null != rs) {
+					String table;
+					while (rs.next()) {
+						table = rs.getString("TABLE_NAME");
+						if (StrUtil.isNotBlank(table)) {
+							tables.add(table);
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
 			throw new DbRuntimeException("Get tables error!", e);
 		} finally {
-			DbUtil.close(rs, conn);
+			DbUtil.close(conn);
 		}
 		return tables;
 	}
 
 	/**
 	 * 获得结果集的所有列名
-	 * 
+	 *
 	 * @param rs 结果集
 	 * @return 列名数组
 	 * @throws DbRuntimeException SQL执行异常
@@ -123,16 +127,15 @@ public class MetaUtil {
 
 	/**
 	 * 获得表的所有列名
-	 * 
-	 * @param ds 数据源
+	 *
+	 * @param ds        数据源
 	 * @param tableName 表名
 	 * @return 列数组
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public static String[] getColumnNames(DataSource ds, String tableName) {
-		List<String> columnNames = new ArrayList<String>();
+		List<String> columnNames = new ArrayList<>();
 		Connection conn = null;
-		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
 
@@ -141,23 +144,26 @@ public class MetaUtil {
 			String schema = getSchema(conn);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getColumns(catalog, schema, tableName, null);
-			while (rs.next()) {
-				columnNames.add(rs.getString("COLUMN_NAME"));
+			try (ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
+				if (null != rs) {
+					while (rs.next()) {
+						columnNames.add(rs.getString("COLUMN_NAME"));
+					}
+				}
 			}
-			return columnNames.toArray(new String[columnNames.size()]);
+			return columnNames.toArray(new String[0]);
 		} catch (Exception e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
-			DbUtil.close(rs, conn);
+			DbUtil.close(conn);
 		}
 	}
 
 	/**
 	 * 创建带有字段限制的Entity对象<br>
 	 * 此方法读取数据库中对应表的字段列表，加入到Entity中，当Entity被设置内容时，会忽略对应表字段外的所有KEY
-	 * 
-	 * @param ds 数据源
+	 *
+	 * @param ds        数据源
 	 * @param tableName 表名
 	 * @return Entity对象
 	 */
@@ -168,46 +174,55 @@ public class MetaUtil {
 
 	/**
 	 * 获得表的元信息
-	 * 
-	 * @param ds 数据源
+	 *
+	 * @param ds        数据源
 	 * @param tableName 表名
 	 * @return Table对象
 	 */
-	@SuppressWarnings("resource")
 	public static Table getTableMeta(DataSource ds, String tableName) {
 		final Table table = Table.create(tableName);
 		Connection conn = null;
-		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = getCataLog(conn);
-			String schema = getSchema(conn);
+			final String catalog = getCataLog(conn);
+			table.setCatalog(catalog);
+			final String schema = getSchema(conn);
+			table.setSchema(schema);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
 
 			// 获得表元数据（表注释）
-			rs = metaData.getTables(catalog, schema, tableName, new String[] { TableType.TABLE.value() });
-			if (rs.next()) {
-				table.setComment(rs.getString("REMARKS"));
+			try (ResultSet rs = metaData.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.value()})) {
+				if (null != rs) {
+					if (rs.next()) {
+						table.setComment(rs.getString("REMARKS"));
+					}
+				}
 			}
 
 			// 获得主键
-			rs = metaData.getPrimaryKeys(catalog, schema, tableName);
-			while (rs.next()) {
-				table.addPk(rs.getString("COLUMN_NAME"));
+			try (ResultSet rs = metaData.getPrimaryKeys(catalog, schema, tableName)) {
+				if (null != rs) {
+					while (rs.next()) {
+						table.addPk(rs.getString("COLUMN_NAME"));
+					}
+				}
 			}
 
 			// 获得列
-			rs = metaData.getColumns(catalog, schema, tableName, null);
-			while (rs.next()) {
-				table.setColumn(Column.create(tableName, rs));
+			try (ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
+				if (null != rs) {
+					while (rs.next()) {
+						table.setColumn(Column.create(table, rs));
+					}
+				}
 			}
 		} catch (SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
-			DbUtil.close(rs, conn);
+			DbUtil.close(conn);
 		}
 
 		return table;
@@ -215,7 +230,7 @@ public class MetaUtil {
 
 	/**
 	 * 获取catalog，获取失败返回{@code null}
-	 * 
+	 *
 	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
 	 * @return catalog，获取失败返回{@code null}
 	 * @since 4.6.0
@@ -235,7 +250,7 @@ public class MetaUtil {
 
 	/**
 	 * 获取schema，获取失败返回{@code null}
-	 * 
+	 *
 	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
 	 * @return schema，获取失败返回{@code null}
 	 * @since 4.6.0

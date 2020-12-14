@@ -1,10 +1,9 @@
 package cn.hutool.core.codec;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Base64单元测试

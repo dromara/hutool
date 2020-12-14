@@ -1,18 +1,18 @@
 package cn.hutool.core.img;
 
+import cn.hutool.core.io.FileUtil;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
-import cn.hutool.core.io.FileUtil;
 
 public class ImgUtilTest {
 
@@ -21,7 +21,15 @@ public class ImgUtilTest {
 	public void scaleTest() {
 		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
-	
+
+	@Test
+	@Ignore
+	public void scaleTest2() {
+		ImgUtil.scale(
+				FileUtil.file("d:/test/2.png"),
+				FileUtil.file("d:/test/2_result.jpg"), 600, 337, null);
+	}
+
 	@Test
 	@Ignore
 	public void scalePngTest() {
@@ -49,33 +57,36 @@ public class ImgUtilTest {
 
 	@Test
 	@Ignore
-	public void flipTest() throws IOException {
+	public void flipTest() {
 		ImgUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
 	}
 
 	@Test
 	@Ignore
 	public void pressImgTest() {
-		ImgUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImgUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), 0, 0, 0.1f);
+		ImgUtil.pressImage(
+				FileUtil.file("d:/test/617180969474805871.jpg"),
+				FileUtil.file("d:/test/dest.png"),
+				ImgUtil.read(FileUtil.file("d:/test/vbbb.png")), 0, 0, 0.9f);
 	}
 
 	@Test
 	@Ignore
 	public void pressTextTest() {
 		ImgUtil.pressText(//
-				FileUtil.file("e:/pic/face.jpg"), //
-				FileUtil.file("e:/pic/test2_result.png"), //
-				"版权所有", Color.WHITE, //
+				FileUtil.file("d:/test/2.jpg"), //
+				FileUtil.file("d:/test/2_result.png"), //
+				"版权所有", Color.RED, //
 				new Font("黑体", Font.BOLD, 100), //
 				0, //
 				0, //
-				0.8f);
+				1f);
 	}
 
 	@Test
 	@Ignore
 	public void sliceByRowsAndColsTest() {
-		ImgUtil.sliceByRowsAndCols(FileUtil.file("e:/pic/1.png"), FileUtil.file("e:/pic/dest"), 10, 10);
+		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
 	}
 	
 	@Test
@@ -87,13 +98,15 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		ImgUtil.write(ImgUtil.read("e:/test2.png"), FileUtil.file("e:/test2Write.jpg"));
+		final byte[] bytes = ImgUtil.toBytes(ImgUtil.read("d:/test/logo_484.png"), "png");
+		FileUtil.writeBytes(bytes, "d:/test/result.png");
 	}
 	
 	@Test
 	@Ignore
 	public void compressTest() {
-		ImgUtil.compress(FileUtil.file("e:/pic/1111.png"), FileUtil.file("e:/pic/1111_target.jpg"), 0.8f);
+		ImgUtil.compress(FileUtil.file("d:/test/dest.png"),
+				FileUtil.file("d:/test/1111_target.jpg"), 0.1f);
 	}
 	
 	@Test
@@ -101,5 +114,26 @@ public class ImgUtilTest {
 	public void copyTest() {
 		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
 		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
+	}
+
+	@Test
+	public void toHexTest(){
+		final String s = ImgUtil.toHex(Color.RED);
+		Assert.assertEquals("#FF0000", s);
+	}
+
+	@Test
+	@Ignore
+	public void backgroundRemovalTest() {
+		// 图片 背景 换成 透明的
+		ImgUtil.backgroundRemoval(
+				"d:/test/617180969474805871.jpg",
+				"d:/test/2.jpg", 10);
+
+		// 图片 背景 换成 红色的
+		ImgUtil.backgroundRemoval(new File(
+				"d:/test/617180969474805871.jpg"),
+				new File("d:/test/3.jpg"),
+				new Color(200, 0, 0), 10);
 	}
 }

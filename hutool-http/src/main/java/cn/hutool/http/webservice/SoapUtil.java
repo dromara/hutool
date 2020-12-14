@@ -81,7 +81,7 @@ public class SoapUtil {
 		} catch (SOAPException | IOException e) {
 			throw new SoapRuntimeException(e);
 		}
-		String messageToString = null;
+		String messageToString;
 		try {
 			messageToString = out.toString(charset.toString());
 		} catch (UnsupportedEncodingException e) {

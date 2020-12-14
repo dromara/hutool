@@ -13,9 +13,9 @@ public abstract class AbstractGenerator implements CodeGenerator {
 	private static final long serialVersionUID = 8685744597154953479L;
 	
 	/** 基础字符集合，用于随机获取字符串的字符集合 */
-	protected String baseStr;
+	protected final String baseStr;
 	/** 验证码长度 */
-	protected int length;
+	protected final int length;
 	
 	/**
 	 * 构造，使用字母+数字做为基础

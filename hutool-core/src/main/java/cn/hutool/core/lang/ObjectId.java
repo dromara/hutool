@@ -31,9 +31,9 @@ import cn.hutool.core.util.StrUtil;
 public class ObjectId {
 
 	/** 线程安全的下一个随机数,每次生成自增+1 */
-	private static final AtomicInteger nextInc = new AtomicInteger(RandomUtil.randomInt());
+	private static final AtomicInteger NEXT_INC = new AtomicInteger(RandomUtil.randomInt());
 	/** 机器信息 */
-	private static final int machine = getMachinePiece() | getProcessPiece();
+	private static final int MACHINE = getMachinePiece() | getProcessPiece();
 
 	/**
 	 * 给定的字符串是否为有效的ObjectId
@@ -77,8 +77,8 @@ public class ObjectId {
 	public static byte[] nextBytes() {
 		final ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
 		bb.putInt((int) DateUtil.currentSeconds());// 4位
-		bb.putInt(machine);// 4位
-		bb.putInt(nextInc.getAndIncrement());// 4位
+		bb.putInt(MACHINE);// 4位
+		bb.putInt(NEXT_INC.getAndIncrement());// 4位
 
 		return bb.array();
 	}
@@ -173,11 +173,9 @@ public class ObjectId {
 		int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
 
 		// 进程ID + 对象加载ID
-		StringBuilder processSb = new StringBuilder();
-		processSb.append(Integer.toHexString(processId));
-		processSb.append(Integer.toHexString(loaderId));
 		// 保留前2位
-		processPiece = processSb.toString().hashCode() & 0xFFFF;
+		final String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
+		processPiece = processSb.hashCode() & 0xFFFF;
 
 		return processPiece;
 	}

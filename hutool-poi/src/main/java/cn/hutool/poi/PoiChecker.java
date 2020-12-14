@@ -12,7 +12,7 @@ import cn.hutool.core.util.ClassLoaderUtil;
 public class PoiChecker {
 
 	/** 没有引入POI的错误消息 */
-	public static final String NO_POI_ERROR_MSG = "You need to add dependency of 'poi-ooxml' to your project, and version >= 3.17";
+	public static final String NO_POI_ERROR_MSG = "You need to add dependency of 'poi-ooxml' to your project, and version >= 4.1.2";
 
 	/**
 	 * 检查POI包的引入情况

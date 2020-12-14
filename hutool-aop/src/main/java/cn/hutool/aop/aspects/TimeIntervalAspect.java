@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 public class TimeIntervalAspect extends SimpleAspect {
 	private static final long serialVersionUID = 1L;
 
-	private TimeInterval interval = new TimeInterval();
+	private final TimeInterval interval = new TimeInterval();
 
 	@Override
 	public boolean before(Object target, Method method, Object[] args) {

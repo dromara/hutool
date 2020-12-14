@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.6.8</version>
+		<version>5.5.2</version>
 	</parent>
 
 	<artifactId>hutool-system</artifactId>
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>3.13.3</version>
+			<version>5.3.6</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -12,7 +12,7 @@ public class AnnotationUtilTest {
 	}
 	
 	@AnnotationForTest("测试")
-	class ClassWithAnnotation{
+	static class ClassWithAnnotation{
 		
 	}
 }

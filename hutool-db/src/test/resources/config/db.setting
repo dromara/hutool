@@ -1,3 +1,4 @@
+# suppress inspection "Annotator" for whole file
 #===================================================================
 # 数据库配置文件样例
 # DsFactory默认读取的配置文件是config/db.setting
@@ -17,35 +18,54 @@ sqlLevel = debug
 
 # 默认数据源
 url = jdbc:sqlite:test.db
+remarks = true
 
 
 # 测试数据源
 [test]
 url = jdbc:sqlite:test.db
+remarks = true
 
 # 测试用HSQLDB数据库
 [hsqldb]
 url = jdbc:hsqldb:mem:mem_hutool
 user = SA
-pass = 
+pass =
+remarks = true
+
+# 测试用HSQLDB数据库
+[h2]
+url = jdbc:h2:mem:h2_hutool
+user = sa
+pass =
+remarks = true
+
+# 测试用HSQLDB数据库
+[derby]
+url = jdbc:derby:.derby/test_db;create=true
+remarks = true
 
 # 测试用Oracle数据库
 [orcl]
 url = jdbc:oracle:thin:@//looly.centos:1521/XE
 user = looly
 pass = 123456
+remarks = true
 
 [mysql]
-url = jdbc:mysql://looly.centos:3306/test_hutool?useSSL=false
+url = jdbc:mysql://looly.centos8:3306/hutool_test?useSSL=false
 user = root
 pass = 123456
+remarks = true
 
 [postgre]
 url = jdbc:postgresql://looly.centos:5432/test_hutool
 user = postgres
 pass = 123456
+remarks = true
 
 [sqlserver]
 url = jdbc:sqlserver://looly.database.chinacloudapi.cn:1433;database=test;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.chinacloudapi.cn;loginTimeout=30;
 user = looly@looly
 pass = 123
+remarks = true

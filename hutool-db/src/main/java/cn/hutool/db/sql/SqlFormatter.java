@@ -1,9 +1,6 @@
 package cn.hutool.db.sql;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * SQL格式化器 from Hibernate
@@ -73,8 +70,8 @@ public class SqlFormatter {
 		boolean afterInsert = false;
 		int inFunction = 0;
 		int parensSinceSelect = 0;
-		private LinkedList<Integer> parenCounts = new LinkedList<>();
-		private LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<>();
+		private final LinkedList<Integer> parenCounts = new LinkedList<>();
+		private final LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<>();
 
 		int indent = 1;
 
@@ -129,7 +126,7 @@ public class SqlFormatter {
 					values();
 				} else if ("on".equals(this.lcToken)) {
 					on();
-				} else if ((this.afterBetween) && (this.lcToken.equals("and"))) {
+				} else if ((this.afterBetween) && ("and".equals(this.lcToken))) {
 					misc();
 					this.afterBetween = false;
 				} else if (LOGICAL.contains(this.lcToken)) {
@@ -216,8 +213,8 @@ public class SqlFormatter {
 			out();
 			this.indent += 1;
 			newline();
-			this.parenCounts.addLast(new Integer(this.parensSinceSelect));
-			this.afterByOrFromOrSelects.addLast(Boolean.valueOf(this.afterByOrSetOrFromOrSelect));
+			this.parenCounts.addLast(this.parensSinceSelect);
+			this.afterByOrFromOrSelects.addLast(this.afterByOrSetOrFromOrSelect);
 			this.parensSinceSelect = 0;
 			this.afterByOrSetOrFromOrSelect = true;
 		}
@@ -271,19 +268,18 @@ public class SqlFormatter {
 			this.parensSinceSelect -= 1;
 			if (this.parensSinceSelect < 0) {
 				this.indent -= 1;
-				this.parensSinceSelect = ((Integer) this.parenCounts.removeLast()).intValue();
-				this.afterByOrSetOrFromOrSelect = ((Boolean) this.afterByOrFromOrSelects.removeLast()).booleanValue();
+				this.parensSinceSelect = this.parenCounts.removeLast();
+				this.afterByOrSetOrFromOrSelect = this.afterByOrFromOrSelects.removeLast();
 			}
 			if (this.inFunction > 0) {
 				this.inFunction -= 1;
-				out();
 			} else {
 				if (!this.afterByOrSetOrFromOrSelect) {
 					this.indent -= 1;
 					newline();
 				}
-				out();
 			}
+			out();
 			this.beginLine = false;
 		}
 

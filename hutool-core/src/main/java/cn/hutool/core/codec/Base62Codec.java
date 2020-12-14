@@ -1,9 +1,9 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.util.ArrayUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * Base62编码解码实现，常用于短URL<br>
@@ -33,7 +33,7 @@ public class Base62Codec implements Serializable{
 	};
 
 	/**
-	 * 反转风格，既将GMP风格中的大小写做转换
+	 * 反转风格，即将GMP风格中的大小写做转换
 	 */
 	private static final byte[] INVERTED = { //
 			'0', '1', '2', '3', '4', '5', '6', '7', //
@@ -49,7 +49,7 @@ public class Base62Codec implements Serializable{
 	/**
 	 * 创建GMP风格的Base62编码解码器对象
 	 * 
-	 * @return {@link Base62Codec}
+	 * @return Base62Codec
 	 */
 	public static Base62Codec createGmp() {
 		return new Base62Codec(GMP);
@@ -58,7 +58,7 @@ public class Base62Codec implements Serializable{
 	/**
 	 * 创建Inverted风格的Base62编码解码器对象
 	 * 
-	 * @return {@link Base62Codec}
+	 * @return Base62Codec
 	 */
 	public static Base62Codec createInverted() {
 		return new Base62Codec(INVERTED);
@@ -141,8 +141,8 @@ public class Base62Codec implements Serializable{
 
 			int remainder = 0;
 
-			for (int i = 0; i < source.length; i++) {
-				final int accumulator = (source[i] & 0xFF) + remainder * sourceBase;
+			for (byte b : source) {
+				final int accumulator = (b & 0xFF) + remainder * sourceBase;
 				final int digit = (accumulator - (accumulator % targetBase)) / targetBase;
 
 				remainder = accumulator % targetBase;

@@ -1,12 +1,11 @@
 package cn.hutool.core.util;
 
-import java.util.List;
-import java.util.Map;
-
+import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.collection.CollUtil;
+import java.util.List;
+import java.util.Map;
 
 /**
  * EnumUtil单元测试
@@ -31,7 +30,8 @@ public class EnumUtilTest {
 	@Test
 	public void getFieldNamesTest() {
 		List<String> names = EnumUtil.getFieldNames(TestEnum.class);
-		Assert.assertEquals(CollUtil.newArrayList("type", "name"), names);
+		Assert.assertTrue(names.contains("type"));
+		Assert.assertTrue(names.contains("name"));
 	}
 	
 	@Test
@@ -49,17 +49,18 @@ public class EnumUtilTest {
 	@Test
 	public void getNameFieldMapTest() {
 		Map<String, Object> enumMap = EnumUtil.getNameFieldMap(TestEnum.class, "type");
+		assert enumMap != null;
 		Assert.assertEquals("type1", enumMap.get("TEST1"));
 	}
 	
 	public enum TestEnum{
 		TEST1("type1"), TEST2("type2"), TEST3("type3");
-		
+
 		TestEnum(String type) {
 			this.type = type;
 		}
-		
-		private String type;
+
+		private final String type;
 		private String name;
 		
 		public String getType() {

@@ -27,7 +27,7 @@ public enum ChannelType {
 	SUBSYSTEM("subsystem");
 
 	/** channel值 */
-	private String value;
+	private final String value;
 
 	/**
 	 * 构造

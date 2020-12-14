@@ -10,6 +10,7 @@ import java.util.TimeZone;
  * @since 2.16.2
  */
 public interface DateBasic {
+
 	/**
 	 * 获得日期格式化或者转换的格式
 	 * 

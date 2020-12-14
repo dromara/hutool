@@ -1,18 +1,20 @@
 package cn.hutool.http.cookie;
 
-import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpConnection;
 
+import java.io.IOException;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- * 全局Cooki管理器，只针对Hutool请求有效
+ * 全局Cookie管理器，只针对Hutool请求有效
  * 
  * @author Looly
  * @since 4.5.15
@@ -44,6 +46,17 @@ public class GlobalCookieManager {
 	}
 
 	/**
+	 * 获取指定域名下所有Cookie信息
+	 *
+	 * @param conn HTTP连接
+	 * @return Cookie信息列表
+	 * @since 4.6.9
+	 */
+	public static List<HttpCookie> getCookies(HttpConnection conn){
+		return cookieManager.getCookieStore().get(getURI(conn));
+	}
+
+	/**
 	 * 将本地存储的Cookie信息附带到Http请求中，不覆盖用户定义好的Cookie
 	 * 
 	 * @param conn {@link HttpConnection}
@@ -53,14 +66,15 @@ public class GlobalCookieManager {
 			// 全局Cookie管理器关闭
 			return;
 		}
-		
+
 		Map<String, List<String>> cookieHeader;
 		try {
-			cookieHeader = cookieManager.get(URLUtil.toURI(conn.getUrl()), new HashMap<String, List<String>>(0));
+			cookieHeader = cookieManager.get(getURI(conn), new HashMap<>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		
+
+
 		// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
 		conn.header(cookieHeader, false);
 	}
@@ -75,11 +89,20 @@ public class GlobalCookieManager {
 			// 全局Cookie管理器关闭
 			return;
 		}
-		
+
 		try {
-			cookieManager.put(URLUtil.toURI(conn.getUrl()), conn.headers());
+			cookieManager.put(getURI(conn), conn.headers());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 获取连接的URL中URI信息
+	 * @param conn HttpConnection
+	 * @return URI
+	 */
+	private static URI getURI(HttpConnection conn){
+		return URLUtil.toURI(conn.getUrl());
 	}
 }

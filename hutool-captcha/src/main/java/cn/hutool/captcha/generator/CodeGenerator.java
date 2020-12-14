@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @since 4.1.2
  */
 public interface CodeGenerator extends Serializable{
+
 	/**
 	 * 生成验证码
 	 * 

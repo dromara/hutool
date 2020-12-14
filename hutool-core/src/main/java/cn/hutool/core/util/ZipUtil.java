@@ -1,5 +1,12 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.Resource;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -24,28 +32,54 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-
 /**
  * 压缩工具类
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class ZipUtil {
 
 	private static final int DEFAULT_BYTE_ARRAY_LENGTH = 32;
 
-	/** 默认编码，使用平台相关编码 */
+	/**
+	 * 默认编码，使用平台相关编码
+	 */
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.defaultCharset();
 
 	/**
+	 * 将Zip文件转换为{@link ZipFile}
+	 *
+	 * @param file    zip文件
+	 * @param charset 解析zip文件的编码，null表示{@link CharsetUtil#CHARSET_UTF_8}
+	 * @return {@link ZipFile}
+	 */
+	public static ZipFile toZipFile(File file, Charset charset) {
+		try {
+			return new ZipFile(file, ObjectUtil.defaultIfNull(charset, CharsetUtil.CHARSET_UTF_8));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 获取指定{@link ZipEntry}的流，用于读取这个entry的内容
+	 *
+	 * @param zipFile  {@link ZipFile}
+	 * @param zipEntry {@link ZipEntry}
+	 * @return 流
+	 * @since 5.5.2
+	 */
+	public static InputStream getStream(ZipFile zipFile, ZipEntry zipEntry) {
+		try {
+			return zipFile.getInputStream(zipEntry);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
 	 * 打包到当前目录，使用默认编码UTF-8
-	 * 
+	 *
 	 * @param srcPath 源文件路径
 	 * @return 打包好的压缩文件
 	 * @throws UtilException IO异常
@@ -56,7 +90,7 @@ public class ZipUtil {
 
 	/**
 	 * 打包到当前目录
-	 * 
+	 *
 	 * @param srcPath 源文件路径
 	 * @param charset 编码
 	 * @return 打包好的压缩文件
@@ -68,7 +102,7 @@ public class ZipUtil {
 
 	/**
 	 * 打包到当前目录，使用默认编码UTF-8
-	 * 
+	 *
 	 * @param srcFile 源文件或目录
 	 * @return 打包好的压缩文件
 	 * @throws UtilException IO异常
@@ -79,7 +113,7 @@ public class ZipUtil {
 
 	/**
 	 * 打包到当前目录
-	 * 
+	 *
 	 * @param srcFile 源文件或目录
 	 * @param charset 编码
 	 * @return 打包好的压缩文件
@@ -94,7 +128,7 @@ public class ZipUtil {
 	/**
 	 * 对文件或文件目录进行压缩<br>
 	 * 不包含被打包目录
-	 * 
+	 *
 	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @return 压缩好的Zip文件
@@ -106,9 +140,9 @@ public class ZipUtil {
 
 	/**
 	 * 对文件或文件目录进行压缩<br>
-	 * 
-	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
-	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 *
+	 * @param srcPath    要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @param zipPath    压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
@@ -119,10 +153,10 @@ public class ZipUtil {
 
 	/**
 	 * 对文件或文件目录进行压缩<br>
-	 * 
-	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
-	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param charset 编码
+	 *
+	 * @param srcPath    要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @param zipPath    压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset    编码
 	 * @param withSrcDir 是否包含被打包目录
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
@@ -137,10 +171,10 @@ public class ZipUtil {
 	/**
 	 * 对文件或文件目录进行压缩<br>
 	 * 使用默认UTF-8编码
-	 * 
-	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 *
+	 * @param zipFile    生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
-	 * @param srcFiles 要压缩的源文件或目录。
+	 * @param srcFiles   要压缩的源文件或目录。
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 */
@@ -150,11 +184,11 @@ public class ZipUtil {
 
 	/**
 	 * 对文件或文件目录进行压缩
-	 * 
-	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param charset 编码
+	 *
+	 * @param zipFile    生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset    编码
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
-	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 */
@@ -164,21 +198,56 @@ public class ZipUtil {
 
 	/**
 	 * 对文件或文件目录进行压缩
-	 * 
-	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param charset 编码
+	 *
+	 * @param zipFile    生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset    编码
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
-	 * @param filter 文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
-	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws IORuntimeException IO异常
 	 * @since 4.6.5
 	 */
-	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws UtilException {
+	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
 		validateFiles(zipFile, srcFiles);
 
 		try (ZipOutputStream out = getZipOutputStream(zipFile, charset)) {
-			String srcRootDir;
+			zip(out, charset, withSrcDir, filter, srcFiles);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return zipFile;
+	}
+
+	/**
+	 * 对文件或文件目录进行压缩
+	 *
+	 * @param out        生成的Zip到的目标流，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset    编码
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @throws IORuntimeException IO异常
+	 * @since 5.1.1
+	 */
+	public static void zip(OutputStream out, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
+		zip(getZipOutputStream(out, charset), withSrcDir, filter, srcFiles);
+	}
+
+	/**
+	 * 对文件或文件目录进行压缩
+	 *
+	 * @param zipOutputStream 生成的Zip到的目标流，不关闭此流
+	 * @param withSrcDir      是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param filter          文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles        要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @throws IORuntimeException IO异常
+	 * @since 5.1.1
+	 */
+	public static void zip(ZipOutputStream zipOutputStream, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
+		String srcRootDir;
+		try {
 			for (File srcFile : srcFiles) {
 				if (null == srcFile) {
 					continue;
@@ -190,21 +259,21 @@ public class ZipUtil {
 					srcRootDir = srcFile.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
-				zip(srcFile, srcRootDir, out, filter);
-				out.flush();
+				zip(srcFile, srcRootDir, zipOutputStream, filter);
+				zipOutputStream.flush();
 			}
+			zipOutputStream.finish();
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
-		return zipFile;
 	}
 
 	/**
 	 * 对流中的数据加入到压缩文件，使用默认UTF-8编码
-	 * 
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param path 流数据在压缩文件中的路径或文件名
-	 * @param data 要压缩的数据
+	 * @param path    流数据在压缩文件中的路径或文件名
+	 * @param data    要压缩的数据
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.6
@@ -215,10 +284,10 @@ public class ZipUtil {
 
 	/**
 	 * 对流中的数据加入到压缩文件<br>
-	 * 
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param path 流数据在压缩文件中的路径或文件名
-	 * @param data 要压缩的数据
+	 * @param path    流数据在压缩文件中的路径或文件名
+	 * @param data    要压缩的数据
 	 * @param charset 编码
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
@@ -231,10 +300,10 @@ public class ZipUtil {
 	/**
 	 * 对流中的数据加入到压缩文件<br>
 	 * 使用默认编码UTF-8
-	 * 
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param path 流数据在压缩文件中的路径或文件名
-	 * @param in 要压缩的源
+	 * @param path    流数据在压缩文件中的路径或文件名
+	 * @param in      要压缩的源
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.6
@@ -244,27 +313,27 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 对流中的数据加入到压缩文件<br>
-	 * 
+	 * 对流中的数据加入到压缩文件
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param path 流数据在压缩文件中的路径或文件名
-	 * @param in 要压缩的源
+	 * @param path    流数据在压缩文件中的路径或文件名
+	 * @param in      要压缩的源，默认关闭
 	 * @param charset 编码
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.2.2
 	 */
 	public static File zip(File zipFile, String path, InputStream in, Charset charset) throws UtilException {
-		return zip(zipFile, new String[] { path }, new InputStream[] { in }, charset);
+		return zip(zipFile, new String[]{path}, new InputStream[]{in}, charset);
 	}
 
 	/**
 	 * 对流中的数据加入到压缩文件<br>
 	 * 路径列表和流列表长度必须一致
-	 * 
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param paths 流数据在压缩文件中的路径或文件名
-	 * @param ins 要压缩的源
+	 * @param paths   流数据在压缩文件中的路径或文件名
+	 * @param ins     要压缩的源，添加完成后自动关闭流
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.9
@@ -276,28 +345,82 @@ public class ZipUtil {
 	/**
 	 * 对流中的数据加入到压缩文件<br>
 	 * 路径列表和流列表长度必须一致
-	 * 
+	 *
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param paths 流数据在压缩文件中的路径或文件名
-	 * @param ins 要压缩的源
+	 * @param paths   流数据在压缩文件中的路径或文件名
+	 * @param ins     要压缩的源，添加完成后自动关闭流
 	 * @param charset 编码
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.9
 	 */
 	public static File zip(File zipFile, String[] paths, InputStream[] ins, Charset charset) throws UtilException {
+		ZipOutputStream out = null;
+		try {
+			out = getZipOutputStream(zipFile, charset);
+			zip(out, paths, ins);
+		} finally {
+			IoUtil.close(out);
+		}
+		return zipFile;
+	}
+
+	/**
+	 * 将文件流压缩到目标流中
+	 *
+	 * @param out   目标流，压缩完成自动关闭
+	 * @param paths 流数据在压缩文件中的路径或文件名
+	 * @param ins   要压缩的源，添加完成后自动关闭流
+	 * @since 5.5.2
+	 */
+	public static void zip(OutputStream out, String[] paths, InputStream[] ins) {
+		ZipOutputStream zipOutputStream = null;
+		try {
+			zipOutputStream = getZipOutputStream(out, DEFAULT_CHARSET);
+			zip(zipOutputStream, paths, ins);
+		} finally {
+			IoUtil.close(zipOutputStream);
+		}
+	}
+
+	/**
+	 * 将文件流压缩到目标流中
+	 *
+	 * @param zipOutputStream 目标流，压缩完成不关闭
+	 * @param paths           流数据在压缩文件中的路径或文件名
+	 * @param ins             要压缩的源，添加完成后自动关闭流
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.2
+	 */
+	public static void zip(ZipOutputStream zipOutputStream, String[] paths, InputStream[] ins) throws IORuntimeException {
 		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
 			throw new IllegalArgumentException("Paths or ins is empty !");
 		}
 		if (paths.length != ins.length) {
 			throw new IllegalArgumentException("Paths length is not equals to ins length !");
 		}
+		for (int i = 0; i < paths.length; i++) {
+			add(ins[i], paths[i], zipOutputStream);
+		}
+	}
 
+	/**
+	 * 对流中的数据加入到压缩文件<br>
+	 * 路径列表和流列表长度必须一致
+	 *
+	 * @param zipFile   生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset   编码
+	 * @param resources 需要压缩的资源，资源的路径为{@link Resource#getName()}
+	 * @return 压缩文件
+	 * @throws UtilException IO异常
+	 * @since 5.5.2
+	 */
+	public static File zip(File zipFile, Charset charset, Resource... resources) throws UtilException {
 		ZipOutputStream out = null;
 		try {
 			out = getZipOutputStream(zipFile, charset);
-			for (int i = 0; i < paths.length; i++) {
-				addFile(ins[i], paths[i], out);
+			for (Resource resource : resources) {
+				add(resource.getStream(), resource.getName(), out);
 			}
 		} finally {
 			IoUtil.close(out);
@@ -306,9 +429,10 @@ public class ZipUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------------- Unzip
+
 	/**
 	 * 解压到文件名相同的目录中，默认编码UTF-8
-	 * 
+	 *
 	 * @param zipFilePath 压缩文件路径
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
@@ -319,9 +443,9 @@ public class ZipUtil {
 
 	/**
 	 * 解压到文件名相同的目录中
-	 * 
+	 *
 	 * @param zipFilePath 压缩文件路径
-	 * @param charset 编码
+	 * @param charset     编码
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
 	 * @since 3.2.2
@@ -332,7 +456,7 @@ public class ZipUtil {
 
 	/**
 	 * 解压到文件名相同的目录中，使用UTF-8编码
-	 * 
+	 *
 	 * @param zipFile 压缩文件
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
@@ -344,7 +468,7 @@ public class ZipUtil {
 
 	/**
 	 * 解压到文件名相同的目录中
-	 * 
+	 *
 	 * @param zipFile 压缩文件
 	 * @param charset 编码
 	 * @return 解压的目录
@@ -352,14 +476,15 @@ public class ZipUtil {
 	 * @since 3.2.2
 	 */
 	public static File unzip(File zipFile, Charset charset) throws UtilException {
-		return unzip(zipFile, FileUtil.file(zipFile.getParentFile(), FileUtil.mainName(zipFile)), charset);
+		final File destDir = FileUtil.file(zipFile.getParentFile(), FileUtil.mainName(zipFile));
+		return unzip(zipFile, destDir, charset);
 	}
 
 	/**
 	 * 解压，默认UTF-8编码
-	 * 
+	 *
 	 * @param zipFilePath 压缩文件的路径
-	 * @param outFileDir 解压到的目录
+	 * @param outFileDir  解压到的目录
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
 	 */
@@ -369,10 +494,10 @@ public class ZipUtil {
 
 	/**
 	 * 解压
-	 * 
+	 *
 	 * @param zipFilePath 压缩文件的路径
-	 * @param outFileDir 解压到的目录
-	 * @param charset 编码
+	 * @param outFileDir  解压到的目录
+	 * @param charset     编码
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
 	 */
@@ -382,7 +507,7 @@ public class ZipUtil {
 
 	/**
 	 * 解压，默认使用UTF-8编码
-	 * 
+	 *
 	 * @param zipFile zip文件
 	 * @param outFile 解压到的目录
 	 * @return 解压的目录
@@ -394,62 +519,97 @@ public class ZipUtil {
 
 	/**
 	 * 解压
-	 * 
+	 *
 	 * @param zipFile zip文件
 	 * @param outFile 解压到的目录
 	 * @param charset 编码
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
 	 * @since 3.2.2
 	 */
-	public static File unzip(File zipFile, File outFile, Charset charset) throws UtilException {
-		ZipFile zip;
-		try {
-			zip = new ZipFile(zipFile, charset);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return unzip(zip, outFile);
+	public static File unzip(File zipFile, File outFile, Charset charset) {
+		return unzip(toZipFile(zipFile, charset), outFile);
 	}
 
 	/**
 	 * 解压
-	 * 
+	 *
 	 * @param zipFile zip文件，附带编码信息，使用完毕自动关闭
 	 * @param outFile 解压到的目录
 	 * @return 解压的目录
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.8
 	 */
-	@SuppressWarnings("unchecked")
 	public static File unzip(ZipFile zipFile, File outFile) throws IORuntimeException {
+		if (outFile.exists() && outFile.isFile()) {
+			throw new UtilException("Target path [{}] exist!", outFile.getAbsolutePath());
+		}
+		read(zipFile, (zipEntry) -> {
+			// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
+			File outItemFile = FileUtil.file(outFile, zipEntry.getName());
+			if (zipEntry.isDirectory()) {
+				// 创建对应目录
+				//noinspection ResultOfMethodCallIgnored
+				outItemFile.mkdirs();
+			} else {
+				// 写出文件
+				write(zipFile, zipEntry, outItemFile);
+			}
+		});
+
+		return outFile;
+	}
+
+	/**
+	 * 获取压缩包中的指定文件流
+	 *
+	 * @param zipFile 压缩文件
+	 * @param path    需要提取文件的文件名或路径
+	 * @return 压缩文件流，如果未找到返回{@code null}
+	 * @since 5.5.2
+	 */
+	public static InputStream get(File zipFile, Charset charset, String path) {
+		return get(toZipFile(zipFile, charset), path);
+	}
+
+	/**
+	 * 获取压缩包中的指定文件流
+	 *
+	 * @param zipFile 压缩文件
+	 * @param path    需要提取文件的文件名或路径
+	 * @return 压缩文件流，如果未找到返回{@code null}
+	 * @since 5.5.2
+	 */
+	public static InputStream get(ZipFile zipFile, String path) {
+		final ZipEntry entry = zipFile.getEntry(path);
+		if (null != entry) {
+			return getStream(zipFile, entry);
+		}
+		return null;
+	}
+
+	/**
+	 * 读取并处理Zip文件中的每一个{@link ZipEntry}
+	 *
+	 * @param zipFile  Zip文件
+	 * @param consumer {@link ZipEntry}处理器
+	 * @since 5.5.2
+	 */
+	public static void read(ZipFile zipFile, Consumer<ZipEntry> consumer) {
 		try {
-			final Enumeration<ZipEntry> em = (Enumeration<ZipEntry>) zipFile.entries();
-			ZipEntry zipEntry = null;
-			File outItemFile = null;
+			final Enumeration<? extends ZipEntry> em = zipFile.entries();
 			while (em.hasMoreElements()) {
-				zipEntry = em.nextElement();
-				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				outItemFile = FileUtil.file(outFile, zipEntry.getName());
-				if (zipEntry.isDirectory()) {
-					// 创建对应目录
-					outItemFile.mkdirs();
-				} else {
-					// 写出文件
-					write(zipFile, zipEntry, outItemFile);
-				}
+				consumer.accept(em.nextElement());
 			}
 		} finally {
 			IoUtil.close(zipFile);
 		}
-		return outFile;
 	}
 
 	/**
 	 * 解压<br>
 	 * ZIP条目不使用高速缓冲。
-	 * 
-	 * @param in zip文件流，使用完毕自动关闭
+	 *
+	 * @param in      zip文件流，使用完毕自动关闭
 	 * @param outFile 解压到的目录
 	 * @param charset 编码
 	 * @return 解压的目录
@@ -466,41 +626,55 @@ public class ZipUtil {
 	/**
 	 * 解压<br>
 	 * ZIP条目不使用高速缓冲。
-	 * 
+	 *
 	 * @param zipStream zip文件流，包含编码信息
-	 * @param outFile 解压到的目录
+	 * @param outFile   解压到的目录
 	 * @return 解压的目录
 	 * @throws UtilException IO异常
 	 * @since 4.5.8
 	 */
 	public static File unzip(ZipInputStream zipStream, File outFile) throws UtilException {
+		read(zipStream, (zipEntry) -> {
+			// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
+			File outItemFile = FileUtil.file(outFile, zipEntry.getName());
+			if (zipEntry.isDirectory()) {
+				// 目录
+				//noinspection ResultOfMethodCallIgnored
+				outItemFile.mkdirs();
+			} else {
+				// 文件
+				FileUtil.writeFromStream(zipStream, outItemFile);
+			}
+		});
+		return outFile;
+	}
+
+	/**
+	 * 读取并处理Zip流中的每一个{@link ZipEntry}
+	 *
+	 * @param zipStream zip文件流，包含编码信息
+	 * @param consumer  {@link ZipEntry}处理器
+	 * @since 5.5.2
+	 */
+	public static void read(ZipInputStream zipStream, Consumer<ZipEntry> consumer) {
 		try {
-			ZipEntry zipEntry = null;
-			File outItemFile = null;
+			ZipEntry zipEntry;
+			File outItemFile;
 			while (null != (zipEntry = zipStream.getNextEntry())) {
-				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				outItemFile = FileUtil.file(outFile, zipEntry.getName());
-				if (zipEntry.isDirectory()) {
-					// 目录
-					outItemFile.mkdirs();
-				} else {
-					// 文件
-					FileUtil.writeFromStream(zipStream, outItemFile);
-				}
+				consumer.accept(zipEntry);
 			}
 		} catch (IOException e) {
 			throw new UtilException(e);
 		} finally {
 			IoUtil.close(zipStream);
 		}
-		return outFile;
 	}
 
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
-	 * 
+	 *
 	 * @param zipFilePath Zip文件
-	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @param name        文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
 	 * @return 文件内容bytes
 	 * @since 4.1.8
 	 */
@@ -510,10 +684,10 @@ public class ZipUtil {
 
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
-	 * 
+	 *
 	 * @param zipFilePath Zip文件
-	 * @param charset 编码
-	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @param charset     编码
+	 * @param name        文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
 	 * @return 文件内容bytes
 	 * @since 4.1.8
 	 */
@@ -523,9 +697,9 @@ public class ZipUtil {
 
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
-	 * 
+	 *
 	 * @param zipFile Zip文件
-	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @param name    文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
 	 * @return 文件内容bytes
 	 * @since 4.1.8
 	 */
@@ -535,10 +709,10 @@ public class ZipUtil {
 
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
-	 * 
+	 *
 	 * @param zipFile Zip文件
 	 * @param charset 编码
-	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @param name    文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
 	 * @return 文件内容bytes
 	 * @since 4.1.8
 	 */
@@ -546,19 +720,15 @@ public class ZipUtil {
 	public static byte[] unzipFileBytes(File zipFile, Charset charset, String name) {
 		ZipFile zipFileObj = null;
 		try {
-			zipFileObj = new ZipFile(zipFile, charset);
+			zipFileObj = toZipFile(zipFile, charset);
 			final Enumeration<ZipEntry> em = (Enumeration<ZipEntry>) zipFileObj.entries();
-			ZipEntry zipEntry = null;
+			ZipEntry zipEntry;
 			while (em.hasMoreElements()) {
 				zipEntry = em.nextElement();
-				if (zipEntry.isDirectory()) {
-					continue;
-				} else if (name.equals(zipEntry.getName())) {
-					return IoUtil.readBytes(zipFileObj.getInputStream(zipEntry));
+				if ((false == zipEntry.isDirectory()) && name.equals(zipEntry.getName())) {
+					return IoUtil.readBytes(getStream(zipFileObj, zipEntry));
 				}
 			}
-		} catch (IOException e) {
-			throw new UtilException(e);
 		} finally {
 			IoUtil.close(zipFileObj);
 		}
@@ -566,9 +736,10 @@ public class ZipUtil {
 	}
 
 	// ----------------------------------------------------------------------------- Gzip
+
 	/**
 	 * Gzip压缩处理
-	 * 
+	 *
 	 * @param content 被压缩的字符串
 	 * @param charset 编码
 	 * @return 压缩后的字节流
@@ -580,7 +751,7 @@ public class ZipUtil {
 
 	/**
 	 * Gzip压缩处理
-	 * 
+	 *
 	 * @param buf 被压缩的字节流
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
@@ -591,7 +762,7 @@ public class ZipUtil {
 
 	/**
 	 * Gzip压缩文件
-	 * 
+	 *
 	 * @param file 被压缩的文件
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
@@ -608,7 +779,7 @@ public class ZipUtil {
 
 	/**
 	 * Gzip压缩文件
-	 * 
+	 *
 	 * @param in 被压缩的流
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
@@ -620,8 +791,8 @@ public class ZipUtil {
 
 	/**
 	 * Gzip压缩文件
-	 * 
-	 * @param in 被压缩的流
+	 *
+	 * @param in     被压缩的流
 	 * @param length 预估长度
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
@@ -644,8 +815,8 @@ public class ZipUtil {
 
 	/**
 	 * Gzip解压缩处理
-	 * 
-	 * @param buf 压缩过的字节流
+	 *
+	 * @param buf     压缩过的字节流
 	 * @param charset 编码
 	 * @return 解压后的字符串
 	 * @throws UtilException IO异常
@@ -656,7 +827,7 @@ public class ZipUtil {
 
 	/**
 	 * Gzip解压处理
-	 * 
+	 *
 	 * @param buf buf
 	 * @return bytes
 	 * @throws UtilException IO异常
@@ -667,7 +838,7 @@ public class ZipUtil {
 
 	/**
 	 * Gzip解压处理
-	 * 
+	 *
 	 * @param in Gzip数据
 	 * @return 解压后的数据
 	 * @throws UtilException IO异常
@@ -678,8 +849,8 @@ public class ZipUtil {
 
 	/**
 	 * Gzip解压处理
-	 * 
-	 * @param in Gzip数据
+	 *
+	 * @param in     Gzip数据
 	 * @param length 估算长度，如果无法确定请传入{@link #DEFAULT_BYTE_ARRAY_LENGTH}
 	 * @return 解压后的数据
 	 * @throws UtilException IO异常
@@ -687,7 +858,7 @@ public class ZipUtil {
 	 */
 	public static byte[] unGzip(InputStream in, int length) throws UtilException {
 		GZIPInputStream gzi = null;
-		FastByteArrayOutputStream bos = null;
+		FastByteArrayOutputStream bos;
 		try {
 			gzi = (in instanceof GZIPInputStream) ? (GZIPInputStream) in : new GZIPInputStream(in);
 			bos = new FastByteArrayOutputStream(length);
@@ -705,10 +876,10 @@ public class ZipUtil {
 
 	/**
 	 * Zlib压缩处理
-	 * 
+	 *
 	 * @param content 被压缩的字符串
 	 * @param charset 编码
-	 * @param level 压缩级别，1~9
+	 * @param level   压缩级别，1~9
 	 * @return 压缩后的字节流
 	 * @since 4.1.4
 	 */
@@ -718,8 +889,8 @@ public class ZipUtil {
 
 	/**
 	 * Zlib压缩文件
-	 * 
-	 * @param file 被压缩的文件
+	 *
+	 * @param file  被压缩的文件
 	 * @param level 压缩级别
 	 * @return 压缩后的字节流
 	 * @since 4.1.4
@@ -736,8 +907,8 @@ public class ZipUtil {
 
 	/**
 	 * 打成Zlib压缩包
-	 * 
-	 * @param buf 数据
+	 *
+	 * @param buf   数据
 	 * @param level 压缩级别，0~9
 	 * @return 压缩后的bytes
 	 * @since 4.1.4
@@ -748,8 +919,8 @@ public class ZipUtil {
 
 	/**
 	 * 打成Zlib压缩包
-	 * 
-	 * @param in 数据流
+	 *
+	 * @param in    数据流
 	 * @param level 压缩级别，0~9
 	 * @return 压缩后的bytes
 	 * @since 4.1.19
@@ -760,9 +931,9 @@ public class ZipUtil {
 
 	/**
 	 * 打成Zlib压缩包
-	 * 
-	 * @param in 数据流
-	 * @param level 压缩级别，0~9
+	 *
+	 * @param in     数据流
+	 * @param level  压缩级别，0~9
 	 * @param length 预估大小
 	 * @return 压缩后的bytes
 	 * @since 4.1.19
@@ -775,8 +946,8 @@ public class ZipUtil {
 
 	/**
 	 * Zlib解压缩处理
-	 * 
-	 * @param buf 压缩过的字节流
+	 *
+	 * @param buf     压缩过的字节流
 	 * @param charset 编码
 	 * @return 解压后的字符串
 	 * @since 4.1.4
@@ -787,7 +958,7 @@ public class ZipUtil {
 
 	/**
 	 * 解压缩zlib
-	 * 
+	 *
 	 * @param buf 数据
 	 * @return 解压后的bytes
 	 * @since 4.1.4
@@ -798,7 +969,7 @@ public class ZipUtil {
 
 	/**
 	 * 解压缩zlib
-	 * 
+	 *
 	 * @param in 数据流
 	 * @return 解压后的bytes
 	 * @since 4.1.19
@@ -809,8 +980,8 @@ public class ZipUtil {
 
 	/**
 	 * 解压缩zlib
-	 * 
-	 * @param in 数据流
+	 *
+	 * @param in     数据流
 	 * @param length 预估长度
 	 * @return 解压后的bytes
 	 * @since 4.1.19
@@ -823,9 +994,9 @@ public class ZipUtil {
 
 	/**
 	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录
-	 * 
+	 *
 	 * @param zipFile Zip文件
-	 * @param dir 目录前缀
+	 * @param dir     目录前缀（目录前缀不包含开头的/）
 	 * @return 文件列表
 	 * @since 4.6.6
 	 */
@@ -851,9 +1022,10 @@ public class ZipUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 获得 {@link ZipOutputStream}
-	 * 
+	 *
 	 * @param zipFile 压缩文件
 	 * @param charset 编码
 	 * @return {@link ZipOutputStream}
@@ -864,25 +1036,27 @@ public class ZipUtil {
 
 	/**
 	 * 获得 {@link ZipOutputStream}
-	 * 
-	 * @param zipFile 压缩文件
+	 *
+	 * @param out     压缩文件流
 	 * @param charset 编码
 	 * @return {@link ZipOutputStream}
 	 */
 	private static ZipOutputStream getZipOutputStream(OutputStream out, Charset charset) {
-		charset = (null == charset) ? DEFAULT_CHARSET : charset;
-		return new ZipOutputStream(out, charset);
+		if (out instanceof ZipOutputStream) {
+			return (ZipOutputStream) out;
+		}
+		return new ZipOutputStream(out, ObjectUtil.defaultIfNull(charset, DEFAULT_CHARSET));
 	}
 
 	/**
 	 * 递归压缩文件夹<br>
 	 * srcRootDir决定了路径截取的位置，例如：<br>
 	 * file的路径为d:/a/b/c/d.txt，srcRootDir为d:/a/b，则压缩后的文件与目录为结构为c/d.txt
-	 * 
-	 * @param out 压缩文件存储对象
+	 *
+	 * @param out        压缩文件存储对象
 	 * @param srcRootDir 被压缩的文件夹根目录
-	 * @param file 当前递归压缩的文件或目录对象
-	 * @param filter 文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param file       当前递归压缩的文件或目录对象
+	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
 	 * @throws UtilException IO异常
 	 */
 	private static void zip(File file, String srcRootDir, ZipOutputStream out, FileFilter filter) throws UtilException {
@@ -902,38 +1076,32 @@ public class ZipUtil {
 				zip(childFile, srcRootDir, out, filter);
 			}
 		} else {// 如果是文件或其它符号，则直接压缩该文件
-			addFile(file, subPath, out);
+			add(file, subPath, out);
 		}
 	}
 
 	/**
 	 * 添加文件到压缩包
-	 * 
+	 *
 	 * @param file 需要压缩的文件
 	 * @param path 在压缩文件中的路径
-	 * @param out 压缩文件存储对象
-	 * @throws UtilException IO异常
+	 * @param out  压缩文件存储对象
+	 * @throws IORuntimeException IO异常
 	 * @since 4.0.5
 	 */
-	private static void addFile(File file, String path, ZipOutputStream out) throws UtilException {
-		BufferedInputStream in = null;
-		try {
-			in = FileUtil.getInputStream(file);
-			addFile(in, path, out);
-		} finally {
-			IoUtil.close(in);
-		}
+	private static void add(File file, String path, ZipOutputStream out) throws IORuntimeException {
+		add(FileUtil.getInputStream(file), path, out);
 	}
 
 	/**
-	 * 添加文件流到压缩包，不关闭输入流
-	 * 
-	 * @param in 需要压缩的输入流
+	 * 添加文件流到压缩包，添加后关闭流
+	 *
+	 * @param in   需要压缩的输入流，使用完后自动关闭
 	 * @param path 压缩的路径
-	 * @param out 压缩文件存储对象
-	 * @throws UtilException IO异常
+	 * @param out  压缩文件存储对象
+	 * @throws IORuntimeException IO异常
 	 */
-	private static void addFile(InputStream in, String path, ZipOutputStream out) throws UtilException {
+	private static void add(InputStream in, String path, ZipOutputStream out) throws IORuntimeException {
 		if (null == in) {
 			return;
 		}
@@ -941,17 +1109,18 @@ public class ZipUtil {
 			out.putNextEntry(new ZipEntry(path));
 			IoUtil.copy(in, out);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
+			IoUtil.close(in);
 			closeEntry(out);
 		}
 	}
 
 	/**
 	 * 在压缩包中新建目录
-	 * 
+	 *
 	 * @param path 压缩的路径
-	 * @param out 压缩文件存储对象
+	 * @param out  压缩文件存储对象
 	 * @throws UtilException IO异常
 	 */
 	private static void addDir(String path, ZipOutputStream out) throws UtilException {
@@ -967,9 +1136,9 @@ public class ZipUtil {
 
 	/**
 	 * 判断压缩文件保存的路径是否为源文件路径的子文件夹，如果是，则抛出异常（防止无限递归压缩的发生）
-	 * 
-	 * @param zipFile 压缩后的产生的文件路径
-	 * @param srcFile 被压缩的文件或目录
+	 *
+	 * @param zipFile  压缩后的产生的文件路径
+	 * @param srcFiles 被压缩的文件或目录
 	 */
 	private static void validateFiles(File zipFile, File... srcFiles) throws UtilException {
 		if (zipFile.isDirectory()) {
@@ -984,22 +1153,16 @@ public class ZipUtil {
 				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 
-			try {
-				final File parentFile = zipFile.getCanonicalFile().getParentFile();
-				// 压缩文件不能位于被压缩的目录内
-				if (srcFile.isDirectory() && parentFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
-					throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getCanonicalPath(), srcFile.getCanonicalPath());
-				}
-
-			} catch (IOException e) {
-				throw new UtilException(e);
+			// 压缩文件不能位于被压缩的目录内
+			if (srcFile.isDirectory() && FileUtil.isSub(srcFile, zipFile.getParentFile())) {
+				throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getPath(), srcFile.getPath());
 			}
 		}
 	}
 
 	/**
 	 * 关闭当前Entry，继续下一个Entry
-	 * 
+	 *
 	 * @param out ZipOutputStream
 	 */
 	private static void closeEntry(ZipOutputStream out) {
@@ -1012,31 +1175,24 @@ public class ZipUtil {
 
 	/**
 	 * 从Zip中读取文件流并写出到文件
-	 * 
-	 * @param zipFile Zip文件
-	 * @param zipEntry zip文件中的子文件
+	 *
+	 * @param zipFile     Zip文件
+	 * @param zipEntry    zip文件中的子文件
 	 * @param outItemFile 输出到的文件
 	 * @throws IORuntimeException IO异常
 	 */
 	private static void write(ZipFile zipFile, ZipEntry zipEntry, File outItemFile) throws IORuntimeException {
-		InputStream in = null;
-		try {
-			in = zipFile.getInputStream(zipEntry);
-			FileUtil.writeFromStream(in, outItemFile);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(in);
-		}
+		FileUtil.writeFromStream(getStream(zipFile, zipEntry), outItemFile);
 	}
 
 	/**
 	 * 将Zlib流解压到out中
-	 * 
-	 * @param in zlib数据流
-	 * @param out 输出
+	 *
+	 * @param in     zlib数据流
+	 * @param out    输出
 	 * @param nowrap true表示兼容Gzip压缩
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static void inflater(InputStream in, OutputStream out, boolean nowrap) {
 		final InflaterOutputStream ios = (out instanceof InflaterOutputStream) ? (InflaterOutputStream) out : new InflaterOutputStream(out, new Inflater(nowrap));
 		IoUtil.copy(in, ios);
@@ -1049,12 +1205,13 @@ public class ZipUtil {
 
 	/**
 	 * 将普通数据流压缩成zlib到out中
-	 * 
-	 * @param in zlib数据流
-	 * @param out 输出
-	 * @param level 压缩级别，0~9
+	 *
+	 * @param in     zlib数据流
+	 * @param out    输出
+	 * @param level  压缩级别，0~9
 	 * @param nowrap true表示兼容Gzip压缩
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static void deflater(InputStream in, OutputStream out, int level, boolean nowrap) {
 		final DeflaterOutputStream ios = (out instanceof DeflaterOutputStream) ? (DeflaterOutputStream) out : new DeflaterOutputStream(out, new Deflater(level, nowrap));
 		IoUtil.copy(in, ios);

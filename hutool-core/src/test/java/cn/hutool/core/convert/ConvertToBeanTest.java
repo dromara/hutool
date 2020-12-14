@@ -1,14 +1,13 @@
 package cn.hutool.core.convert;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import cn.hutool.core.lang.Console;
+import cn.hutool.core.bean.BeanUtilTest.SubPerson;
+import cn.hutool.core.lang.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.bean.BeanUtilTest.SubPerson;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 类型转换工具单元测试<br>
@@ -45,6 +44,12 @@ public class ConvertToBeanTest {
 		Assert.assertEquals("测试A11", map.get("name"));
 		Assert.assertEquals("14", map.get("age"));
 		Assert.assertEquals("11213232", map.get("openid"));
+
+		final LinkedHashMap<String, String> map2 = Convert.convert(
+				new TypeReference<LinkedHashMap<String, String>>() {}, person);
+		Assert.assertEquals("测试A11", map2.get("name"));
+		Assert.assertEquals("14", map2.get("age"));
+		Assert.assertEquals("11213232", map2.get("openid"));
 	}
 
 	@Test
@@ -56,7 +61,6 @@ public class ConvertToBeanTest {
 		map1.put("key4", 4);
 
 		Map<String, String> map2 = Convert.toMap(String.class, String.class, map1);
-		Console.log(map2);
 
 		Assert.assertEquals("1", map2.get("key1"));
 		Assert.assertEquals("2", map2.get("key2"));
@@ -79,5 +83,12 @@ public class ConvertToBeanTest {
 		Assert.assertEquals("11213232", subPerson.getOpenid());
 		Assert.assertEquals("测试A11", subPerson.getName());
 		Assert.assertEquals("11213232", subPerson.getOpenid());
+	}
+
+	@Test
+	public void nullStrToBeanTest(){
+		String nullStr = "null";
+		final SubPerson subPerson = Convert.convertQuietly(SubPerson.class, nullStr);
+		Assert.assertNull(subPerson);
 	}
 }

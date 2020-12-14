@@ -28,7 +28,7 @@ public class LogTest {
 	}
 	
 	/**
-	 * 兼容slf4j日志消息格式测试，既第二个参数是异常对象时正常输出异常信息
+	 * 兼容slf4j日志消息格式测试，即第二个参数是异常对象时正常输出异常信息
 	 */
 	@Test
 	@Ignore
@@ -36,5 +36,13 @@ public class LogTest {
 		Log log = LogFactory.get();
 		Exception e = new Exception("test Exception");
 		log.error("我是错误消息", e);
+	}
+
+	@Test
+	public void logNullTest(){
+		final Log log = Log.get();
+		log.debug(null);
+		log.info(null);
+		log.warn(null);
 	}
 }

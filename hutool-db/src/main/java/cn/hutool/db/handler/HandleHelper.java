@@ -1,16 +1,7 @@
 package cn.hutool.db.handler;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Collection;
-import java.util.Map;
-
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -18,6 +9,17 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.db.Entity;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 数据结果集处理辅助类
@@ -29,7 +31,8 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -44,7 +47,8 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -84,8 +88,8 @@ public class HandleHelper {
 		final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(beanClass).getPropMap(true);
 		String columnLabel;
 		PropDesc pd;
-		Method setter = null;
-		Object value = null;
+		Method setter;
+		Object value;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
 			pd = propMap.get(columnLabel);
@@ -95,8 +99,8 @@ public class HandleHelper {
 			}
 			setter = (null == pd) ? null : pd.getSetter();
 			if(null != setter) {
-				value = getColumnValue(rs, columnLabel,  meta.getColumnType(i), TypeUtil.getFirstParamType(setter));
-				ReflectUtil.invokeWithCheck(bean, setter, new Object[] {value});
+				value = getColumnValue(rs, i,  meta.getColumnType(i), TypeUtil.getFirstParamType(setter));
+				ReflectUtil.invokeWithCheck(bean, setter, value);
 			}
 		}
 		return bean;
@@ -144,12 +148,10 @@ public class HandleHelper {
 	 * @since 3.3.1
 	 */
 	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
-		String columnLabel;
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
-			columnLabel = meta.getColumnLabel(i);
 			type = meta.getColumnType(i);
-			row.put(columnLabel, getColumnValue(rs, columnLabel, type, null));
+			row.put(meta.getColumnLabel(i), getColumnValue(rs, i, type, null));
 		}
 		if (withMetaInfo) {
 			row.setTableName(meta.getTableName(1));
@@ -160,7 +162,7 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
 	 * @param rs 数据集
 	 * @return 每一行的Entity
 	 * @throws SQLException SQL执行异常
@@ -169,6 +171,25 @@ public class HandleHelper {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 		return handleRow(columnCount, meta, rs);
+	}
+
+	/**
+	 * 处理单行数据
+	 *
+	 * @param rs 数据集（行）
+	 * @return 每一行的List
+	 * @throws SQLException SQL执行异常
+	 * @since 5.1.6
+	 */
+	public static List<Object> handleRowToList(ResultSet rs) throws SQLException {
+		final ResultSetMetaData meta = rs.getMetaData();
+		final int columnCount = meta.getColumnCount();
+		final List<Object> row = new ArrayList<>(columnCount);
+		for (int i = 1; i <= columnCount; i++) {
+			row.add(getColumnValue(rs, i, meta.getColumnType(i), null));
+		}
+
+		return row;
 	}
 
 	/**
@@ -236,39 +257,6 @@ public class HandleHelper {
 	 * 
 	 * @param <T> 返回类型
 	 * @param rs {@link ResultSet}
-	 * @param label 字段标签或者字段名
-	 * @param type 字段类型，默认Object
-	 * @param targetColumnType 结果要求的类型，需进行二次转换（null或者Object不转换）
-	 * @return 字段值
-	 * @throws SQLException SQL异常
-	 */
-	private static <T> Object getColumnValue(ResultSet rs, String label, int type, Type targetColumnType) throws SQLException {
-		Object rawValue;
-		switch (type) {
-		case Types.TIMESTAMP:
-			rawValue = rs.getTimestamp(label);
-			break;
-		case Types.TIME:
-			rawValue = rs.getTime(label);
-			break;
-		default:
-			rawValue = rs.getObject(label);
-		}
-		if (null == targetColumnType || Object.class == targetColumnType) {
-			// 无需转换
-			return rawValue;
-		} else {
-			// 按照返回值要求转换
-			return Convert.convert(targetColumnType, rawValue);
-		}
-	}
-
-	/**
-	 * 获取字段值<br>
-	 * 针对日期时间等做单独处理判断
-	 * 
-	 * @param <T> 返回类型
-	 * @param rs {@link ResultSet}
 	 * @param columnIndex 字段索引
 	 * @param type 字段类型，默认Object
 	 * @param targetColumnType 结果要求的类型，需进行二次转换（null或者Object不转换）
@@ -276,10 +264,15 @@ public class HandleHelper {
 	 * @throws SQLException SQL异常
 	 */
 	private static <T> Object getColumnValue(ResultSet rs, int columnIndex, int type, Type targetColumnType) throws SQLException {
-		Object rawValue;
+		Object rawValue = null;
 		switch (type) {
 		case Types.TIMESTAMP:
-			rawValue = rs.getTimestamp(columnIndex);
+			try{
+				rawValue = rs.getTimestamp(columnIndex);
+			} catch (SQLException ignore){
+				// issue#776@Github
+				// 当数据库中日期为0000-00-00 00:00:00报错，转为null
+			}
 			break;
 		case Types.TIME:
 			rawValue = rs.getTime(columnIndex);

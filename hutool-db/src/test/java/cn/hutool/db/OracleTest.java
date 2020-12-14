@@ -1,19 +1,14 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-
+import cn.hutool.core.lang.Console;
+import cn.hutool.db.sql.Query;
+import cn.hutool.db.sql.SqlBuilder;
+import cn.hutool.db.sql.SqlUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
-import cn.hutool.db.Page;
-import cn.hutool.db.PageResult;
-import cn.hutool.db.sql.Query;
-import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.SqlUtil;
+import java.sql.SQLException;
 
 /**
  * Oracle操作单元测试
@@ -25,7 +20,7 @@ public class OracleTest {
 
 	@Test
 	public void oraclePageSqlTest() {
-		Page page = new Page(1, 10);
+		Page page = new Page(0, 10);
 		Entity where = Entity.create("PMCPERFORMANCEINFO").set("yearPI", "2017");
 		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		query.setPage(page);

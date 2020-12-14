@@ -1,30 +1,31 @@
 package cn.hutool.poi.excel.test;
 
-import java.util.List;
-import java.util.Map;
-
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.poi.excel.ExcelReader;
-import cn.hutool.poi.excel.ExcelUtil;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Excel读取单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class ExcelReadTest {
-	
+
 	@Test
 	public void aliasTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
-		
+
 		//读取单个单元格内容测试
 		Object value = reader.readCellValue(1, 2);
 		Assert.assertEquals("仓库", value);
@@ -77,13 +78,13 @@ public class ExcelReadTest {
 		Assert.assertEquals(11L, readAll.get(1).get(2));
 		Assert.assertEquals(41.5D, readAll.get(1).get(3));
 	}
-	
+
 	@Test
 	public void excelReadAsTextTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		Assert.assertNotNull(reader.readAsText(false));
 	}
-	
+
 	@Test
 	public void excel03ReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
@@ -135,13 +136,15 @@ public class ExcelReadTest {
 		reader.addHeaderAlias("姓名", "name");
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
+		reader.addHeaderAlias("鞋码", "shoeSize");
 
 		List<Person> all = reader.readAll(Person.class);
 		Assert.assertEquals("张三", all.get(0).getName());
 		Assert.assertEquals("男", all.get(0).getGender());
 		Assert.assertEquals(Integer.valueOf(11), all.get(0).getAge());
+		Assert.assertEquals(new BigDecimal("41.5"), all.get(0).getShoeSize());
 	}
-	
+
 	@Test
 	@Ignore
 	public void excelReadToBeanListTest2() {
@@ -150,44 +153,70 @@ public class ExcelReadTest {
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
 
-		List<Person> all = reader.read(0,2, Person.class);
+		List<Person> all = reader.read(0, 2, Person.class);
 		for (Person person : all) {
 			Console.log(person);
 		}
 	}
 
+	@Data
 	public static class Person {
 		private String name;
 		private String gender;
 		private Integer age;
+		private BigDecimal shoeSize;
+	}
 
-		public String getName() {
-			return name;
+	@Test
+	@Ignore
+	public void readDoubleTest() {
+		ExcelReader reader = ExcelUtil.getReader("f:/test/doubleTest.xls");
+		final List<List<Object>> read = reader.read();
+		for (List<Object> list : read) {
+			Console.log(list.get(8));
 		}
+	}
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	@Test
+	public void mergeReadTest() {
+		final ExcelReader reader = ExcelUtil.getReader("merge_test.xlsx");
+		final List<List<Object>> read = reader.read();
+		// 验证合并单元格在两行中都可以取到值
+		Assert.assertEquals(11L, read.get(1).get(2));
+		Assert.assertEquals(11L, read.get(2).get(2));
+	}
 
-		public String getGender() {
-			return gender;
-		}
+	@Test
+	@Ignore
+	public void readCellsTest() {
+		final ExcelReader reader = ExcelUtil.getReader("merge_test.xlsx");
+		reader.read((cell, value)-> Console.log("{}, {} {}", cell.getRowIndex(), cell.getColumnIndex(), value));
+	}
 
-		public void setGender(String gender) {
-			this.gender = gender;
+	@Test
+	@Ignore
+	public void readTest() {
+		// 测试合并单元格是否可以正常读到第一个单元格的值
+		final ExcelReader reader = ExcelUtil.getReader("d:/test/人员体检信息表.xlsx");
+		final List<List<Object>> read = reader.read();
+		for (List<Object> list : read) {
+			Console.log(list);
 		}
+	}
 
-		public Integer getAge() {
-			return age;
-		}
+	@Test
+	public void nullValueEditTest(){
+		final ExcelReader reader = ExcelUtil.getReader("null_cell_test.xlsx");
+		reader.setCellEditor((cell, value)-> ObjectUtil.defaultIfNull(value, "#"));
+		final List<List<Object>> read = reader.read();
 
-		public void setAge(Integer age) {
-			this.age = age;
-		}
+		// 对于任意一个单元格有值的情况下，之前的单元格值按照null处理
+		Assert.assertEquals(1, read.get(1).size());
+		Assert.assertEquals(2, read.get(2).size());
+		Assert.assertEquals(3, read.get(3).size());
 
-		@Override
-		public String toString() {
-			return "Person [name=" + name + ", gender=" + gender + ", age=" + age + "]";
-		}
+		Assert.assertEquals("#", read.get(2).get(0));
+		Assert.assertEquals("#", read.get(3).get(0));
+		Assert.assertEquals("#", read.get(3).get(1));
 	}
 }

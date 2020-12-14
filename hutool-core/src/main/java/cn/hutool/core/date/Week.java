@@ -36,7 +36,7 @@ public enum Week {
 
 	// ---------------------------------------------------------------
 	/** 星期对应{@link Calendar} 中的Week值 */
-	private int value;
+	private final int value;
 
 	/**
 	 * 构造

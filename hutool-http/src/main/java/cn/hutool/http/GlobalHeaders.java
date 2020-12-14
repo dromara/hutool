@@ -21,7 +21,7 @@ public enum GlobalHeaders {
 	INSTANCE;
 
 	/** 存储头信息 */
-	protected Map<String, List<String>> headers = new HashMap<String, List<String>>();
+	protected Map<String, List<String>> headers = new HashMap<>();
 
 	/**
 	 * 构造

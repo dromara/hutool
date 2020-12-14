@@ -1,14 +1,11 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * HSQLDB数据库单元测试
@@ -20,8 +17,8 @@ public class HsqldbTest {
 	
 	private static final String DS_GROUP_NAME = "hsqldb";
 	
-	@Before
-	public void init() throws SQLException {
+	@BeforeClass
+	public static void init() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 		db.insert(Entity.create("test").set("a", 1).set("b", 11));
@@ -33,6 +30,12 @@ public class HsqldbTest {
 	@Test
 	public void connTest() throws SQLException {
 		List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
+		Assert.assertEquals(4, query.size());
+	}
+
+	@Test
+	public void findTest() throws SQLException {
+		List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
 		Assert.assertEquals(4, query.size());
 	}
 }

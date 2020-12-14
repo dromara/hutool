@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class LongMap implements BitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long[] longs = null;
+	private final long[] longs;
 
 	/**
 	 * 构造
@@ -33,24 +33,21 @@ public class LongMap implements BitMap, Serializable {
 	public void add(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
 		long c = i % BitMap.MACHINE64;
-		longs[r] = longs[r] | (1 << c);
+		longs[r] = longs[r] | (1L << c);
 	}
 
 	@Override
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
 		long c = i % BitMap.MACHINE64;
-		if (((longs[r] >>> c) & 1) == 1) {
-			return true;
-		}
-		return false;
+		return ((longs[r] >>> c) & 1) == 1;
 	}
 
 	@Override
 	public void remove(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
 		long c = i % BitMap.MACHINE64;
-		longs[r] &= ~(1 << c);
+		longs[r] &= ~(1L << c);
 	}
 
 }

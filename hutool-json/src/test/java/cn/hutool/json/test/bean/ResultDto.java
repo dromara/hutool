@@ -74,7 +74,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param message the message
 	 * @param result the result
 	 */
-	ResultDto(int code, String message, T result) {
+	public ResultDto(int code, String message, T result) {
 		super();
 		this.code(code).message(message).result(result);
 	}

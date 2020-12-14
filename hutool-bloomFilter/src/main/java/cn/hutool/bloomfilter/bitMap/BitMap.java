@@ -22,6 +22,7 @@ public interface BitMap{
 	 * 检查是否包含值
 	 * 
 	 * @param i 值
+	 * @return 是否包含
 	 */
 	boolean contains(long i);
 
@@ -30,5 +31,5 @@ public interface BitMap{
 	 * 
 	 * @param i 值
 	 */
-	public void remove(long i);
+	void remove(long i);
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * 此OutputStream写出数据到<b>/dev/null</b>，既忽略所有数据<br>
+ * 此OutputStream写出数据到<b>/dev/null</b>，即忽略所有数据<br>
  * 来自 Apache Commons io
  * 
  * @author looly

@@ -1,65 +1,99 @@
 package cn.hutool.core.lang;
 
-import java.net.MalformedURLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.IdcardUtil;
+
+import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字段验证器
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class Validator {
 
-	private Validator() {
-	}
-
-	/** 英文字母 、数字和下划线 */
+	/**
+	 * 英文字母 、数字和下划线
+	 */
 	public final static Pattern GENERAL = PatternPool.GENERAL;
-	/** 数字 */
+	/**
+	 * 数字
+	 */
 	public final static Pattern NUMBERS = PatternPool.NUMBERS;
-	/** 分组 */
+	/**
+	 * 分组
+	 */
 	public final static Pattern GROUP_VAR = PatternPool.GROUP_VAR;
-	/** IP v4 */
+	/**
+	 * IP v4
+	 */
 	public final static Pattern IPV4 = PatternPool.IPV4;
-	/** IP v6 */
+	/**
+	 * IP v6
+	 */
 	public final static Pattern IPV6 = PatternPool.IPV6;
-	/** 货币 */
+	/**
+	 * 货币
+	 */
 	public final static Pattern MONEY = PatternPool.MONEY;
-	/** 邮件 */
+	/**
+	 * 邮件
+	 */
 	public final static Pattern EMAIL = PatternPool.EMAIL;
-	/** 移动电话 */
+	/**
+	 * 移动电话
+	 */
 	public final static Pattern MOBILE = PatternPool.MOBILE;
-	/** 身份证号码 */
+
+	/**
+	 * 身份证号码
+	 */
 	public final static Pattern CITIZEN_ID = PatternPool.CITIZEN_ID;
-	/** 邮编 */
+
+	/**
+	 * 邮编
+	 */
 	public final static Pattern ZIP_CODE = PatternPool.ZIP_CODE;
-	/** 生日 */
+	/**
+	 * 生日
+	 */
 	public final static Pattern BIRTHDAY = PatternPool.BIRTHDAY;
-	/** URL */
+	/**
+	 * URL
+	 */
 	public final static Pattern URL = PatternPool.URL;
-	/** Http URL */
+	/**
+	 * Http URL
+	 */
 	public final static Pattern URL_HTTP = PatternPool.URL_HTTP;
-	/** 中文字、英文字母、数字和下划线 */
+	/**
+	 * 中文字、英文字母、数字和下划线
+	 */
 	public final static Pattern GENERAL_WITH_CHINESE = PatternPool.GENERAL_WITH_CHINESE;
-	/** UUID */
+	/**
+	 * UUID
+	 */
 	public final static Pattern UUID = PatternPool.UUID;
-	/** 不带横线的UUID */
+	/**
+	 * 不带横线的UUID
+	 */
 	public final static Pattern UUID_SIMPLE = PatternPool.UUID_SIMPLE;
-	/** 中国车牌号码 */
+	/**
+	 * 中国车牌号码
+	 */
 	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
 
 	/**
-	 * 给定值是否为<code>true</code>
-	 * 
+	 * 给定值是否为{@code true}
+	 *
 	 * @param value 值
 	 * @return 是否为<code>true</code>
 	 * @since 4.4.5
@@ -69,8 +103,8 @@ public class Validator {
 	}
 
 	/**
-	 * 给定值是否不为<code>false</code>
-	 * 
+	 * 给定值是否不为{@code false}
+	 *
 	 * @param value 值
 	 * @return 是否不为<code>false</code>
 	 * @since 4.4.5
@@ -80,11 +114,11 @@ public class Validator {
 	}
 
 	/**
-	 * 检查指定值是否为<code>true</code>
-	 * 
-	 * @param value 值
+	 * 检查指定值是否为{@code true}
+	 *
+	 * @param value            值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
-	 * @param params 模板中变量替换后的值
+	 * @param params           模板中变量替换后的值
 	 * @return 检查过后的值
 	 * @throws ValidateException 检查不满足条件抛出的异常
 	 * @since 4.4.5
@@ -93,15 +127,15 @@ public class Validator {
 		if (isFalse(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return true;
 	}
 
 	/**
-	 * 检查指定值是否为<code>false</code>
-	 * 
-	 * @param value 值
+	 * 检查指定值是否为{@code false}
+	 *
+	 * @param value            值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
-	 * @param params 模板中变量替换后的值
+	 * @param params           模板中变量替换后的值
 	 * @return 检查过后的值
 	 * @throws ValidateException 检查不满足条件抛出的异常
 	 * @since 4.4.5
@@ -110,12 +144,12 @@ public class Validator {
 		if (isTrue(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return false;
 	}
 
 	/**
-	 * 给定值是否为<code>null</code>
-	 * 
+	 * 给定值是否为{@code null}
+	 *
 	 * @param value 值
 	 * @return 是否为<code>null</code>
 	 */
@@ -124,8 +158,8 @@ public class Validator {
 	}
 
 	/**
-	 * 给定值是否不为<code>null</code>
-	 * 
+	 * 给定值是否不为{@code null}
+	 *
 	 * @param value 值
 	 * @return 是否不为<code>null</code>
 	 */
@@ -134,12 +168,12 @@ public class Validator {
 	}
 
 	/**
-	 * 检查指定值是否为<code>null</code>
-	 * 
-	 * @param <T> 被检查的对象类型
-	 * @param value 值
+	 * 检查指定值是否为{@code null}
+	 *
+	 * @param <T>              被检查的对象类型
+	 * @param value            值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
-	 * @param params 模板中变量替换后的值
+	 * @param params           模板中变量替换后的值
 	 * @return 检查过后的值
 	 * @throws ValidateException 检查不满足条件抛出的异常
 	 * @since 4.4.5
@@ -148,16 +182,16 @@ public class Validator {
 		if (isNotNull(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return null;
 	}
 
 	/**
-	 * 检查指定值是否非<code>null</code>
-	 * 
-	 * @param <T> 被检查的对象类型
-	 * @param value 值
+	 * 检查指定值是否非{@code null}
+	 *
+	 * @param <T>              被检查的对象类型
+	 * @param value            值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
-	 * @param params 模板中变量替换后的值
+	 * @param params           模板中变量替换后的值
 	 * @return 检查过后的值
 	 * @throws ValidateException 检查不满足条件抛出的异常
 	 */
@@ -171,7 +205,7 @@ public class Validator {
 	/**
 	 * 验证是否为空<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为空
 	 */
@@ -182,7 +216,7 @@ public class Validator {
 	/**
 	 * 验证是否为非空<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为空
 	 */
@@ -193,8 +227,9 @@ public class Validator {
 	/**
 	 * 验证是否为空，非空时抛出异常<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
-	 * 
-	 * @param value 值
+	 *
+	 * @param <T>      值类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值，验证通过返回此值，空值
 	 * @throws ValidateException 验证异常
@@ -209,8 +244,9 @@ public class Validator {
 	/**
 	 * 验证是否为非空，为空时抛出异常<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
-	 * 
-	 * @param value 值
+	 *
+	 * @param <T>      值类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值，验证通过返回此值，非空值
 	 * @throws ValidateException 验证异常
@@ -225,7 +261,7 @@ public class Validator {
 	/**
 	 * 验证是否相等<br>
 	 * 当两值都为null返回true
-	 * 
+	 *
 	 * @param t1 对象1
 	 * @param t2 对象2
 	 * @return 当两值都为null或相等返回true
@@ -236,9 +272,9 @@ public class Validator {
 
 	/**
 	 * 验证是否相等，不相等抛出异常<br>
-	 * 
-	 * @param t1 对象1
-	 * @param t2 对象2
+	 *
+	 * @param t1       对象1
+	 * @param t2       对象2
 	 * @param errorMsg 错误信息
 	 * @return 相同值
 	 * @throws ValidateException 验证异常
@@ -252,9 +288,9 @@ public class Validator {
 
 	/**
 	 * 验证是否不等，相等抛出异常<br>
-	 * 
-	 * @param t1 对象1
-	 * @param t2 对象2
+	 *
+	 * @param t1       对象1
+	 * @param t2       对象2
 	 * @param errorMsg 错误信息
 	 * @throws ValidateException 验证异常
 	 */
@@ -268,9 +304,9 @@ public class Validator {
 	 * 验证是否非空且与指定值相等<br>
 	 * 当数据为空时抛出验证异常<br>
 	 * 当两值不等时抛出异常
-	 * 
-	 * @param t1 对象1
-	 * @param t2 对象2
+	 *
+	 * @param t1       对象1
+	 * @param t2       对象2
 	 * @param errorMsg 错误信息
 	 * @throws ValidateException 验证异常
 	 */
@@ -283,9 +319,9 @@ public class Validator {
 	 * 验证是否非空且与指定值相等<br>
 	 * 当数据为空时抛出验证异常<br>
 	 * 当两值相等时抛出异常
-	 * 
-	 * @param t1 对象1
-	 * @param t2 对象2
+	 *
+	 * @param t1       对象1
+	 * @param t2       对象2
 	 * @param errorMsg 错误信息
 	 * @throws ValidateException 验证异常
 	 */
@@ -295,29 +331,18 @@ public class Validator {
 	}
 
 	/**
-	 * 通过正则表达式验证
-	 * 
-	 * @param regex 正则
-	 * @param value 值
-	 * @return 是否匹配正则
-	 */
-	public static boolean isMactchRegex(String regex, CharSequence value) {
-		return ReUtil.isMatch(regex, value);
-	}
-
-	/**
 	 * 通过正则表达式验证<br>
 	 * 不符合正则抛出{@link ValidateException} 异常
-	 * 
-	 * @param <T> 字符串类型
-	 * @param regex 正则
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param regex    正则
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateMatchRegex(String regex, T value, String errorMsg) throws ValidateException {
-		if (false == isMactchRegex(regex, value)) {
+		if (false == isMatchRegex(regex, value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -325,30 +350,67 @@ public class Validator {
 
 	/**
 	 * 通过正则表达式验证
-	 * 
+	 *
 	 * @param pattern 正则模式
-	 * @param value 值
+	 * @param value   值
 	 * @return 是否匹配正则
+	 * @deprecated 请使用 {@link #isMatchRegex(Pattern, CharSequence)}
 	 */
+	@Deprecated
 	public static boolean isMactchRegex(Pattern pattern, CharSequence value) {
 		return ReUtil.isMatch(pattern, value);
 	}
 
 	/**
-	 * 验证是否为英文字母 、数字和下划线
-	 * 
+	 * 通过正则表达式验证
+	 *
+	 * @param regex 正则
 	 * @param value 值
-	 * @return 是否为英文字母 、数字和下划线
+	 * @return 是否匹配正则
+	 * @deprecated 拼写错误，请使用{@link #isMatchRegex(String, CharSequence)}
 	 */
-	public static boolean isGeneral(CharSequence value) {
-		return isMactchRegex(GENERAL, value);
+	@Deprecated
+	public static boolean isMactchRegex(String regex, CharSequence value) {
+		return ReUtil.isMatch(regex, value);
+	}
+
+	/**
+	 * 通过正则表达式验证
+	 *
+	 * @param pattern 正则模式
+	 * @param value   值
+	 * @return 是否匹配正则
+	 */
+	public static boolean isMatchRegex(Pattern pattern, CharSequence value) {
+		return ReUtil.isMatch(pattern, value);
+	}
+
+	/**
+	 * 通过正则表达式验证
+	 *
+	 * @param regex 正则
+	 * @param value 值
+	 * @return 是否匹配正则
+	 */
+	public static boolean isMatchRegex(String regex, CharSequence value) {
+		return ReUtil.isMatch(regex, value);
 	}
 
 	/**
 	 * 验证是否为英文字母 、数字和下划线
-	 * 
-	 * @param <T> 字符串类型
+	 *
 	 * @param value 值
+	 * @return 是否为英文字母 、数字和下划线
+	 */
+	public static boolean isGeneral(CharSequence value) {
+		return isMatchRegex(GENERAL, value);
+	}
+
+	/**
+	 * 验证是否为英文字母 、数字和下划线
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -362,10 +424,10 @@ public class Validator {
 
 	/**
 	 * 验证是否为给定长度范围的英文字母 、数字和下划线
-	 * 
+	 *
 	 * @param value 值
-	 * @param min 最小长度，负数自动识别为0
-	 * @param max 最大长度，0或负数表示不限制最大长度
+	 * @param min   最小长度，负数自动识别为0
+	 * @param max   最大长度，0或负数表示不限制最大长度
 	 * @return 是否为给定长度范围的英文字母 、数字和下划线
 	 */
 	public static boolean isGeneral(CharSequence value, int min, int max) {
@@ -376,16 +438,16 @@ public class Validator {
 		if (max <= 0) {
 			reg = "^\\w{" + min + ",}$";
 		}
-		return isMactchRegex(reg, value);
+		return isMatchRegex(reg, value);
 	}
 
 	/**
 	 * 验证是否为给定长度范围的英文字母 、数字和下划线
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
-	 * @param min 最小长度，负数自动识别为0
-	 * @param max 最大长度，0或负数表示不限制最大长度
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
+	 * @param min      最小长度，负数自动识别为0
+	 * @param max      最大长度，0或负数表示不限制最大长度
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -399,9 +461,9 @@ public class Validator {
 
 	/**
 	 * 验证是否为给定最小长度的英文字母 、数字和下划线
-	 * 
+	 *
 	 * @param value 值
-	 * @param min 最小长度，负数自动识别为0
+	 * @param min   最小长度，负数自动识别为0
 	 * @return 是否为给定最小长度的英文字母 、数字和下划线
 	 */
 	public static boolean isGeneral(CharSequence value, int min) {
@@ -410,10 +472,10 @@ public class Validator {
 
 	/**
 	 * 验证是否为给定最小长度的英文字母 、数字和下划线
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
-	 * @param min 最小长度，负数自动识别为0
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
+	 * @param min      最小长度，负数自动识别为0
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -424,25 +486,20 @@ public class Validator {
 
 	/**
 	 * 判断字符串是否全部为字母组成，包括大写和小写字母和汉字
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否全部为字母组成，包括大写和小写字母和汉字
 	 * @since 3.3.0
 	 */
 	public static boolean isLetter(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isLetter(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isLetter);
 	}
 
 	/**
 	 * 验证是否全部为字母组成，包括大写和小写字母和汉字
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -457,25 +514,20 @@ public class Validator {
 
 	/**
 	 * 判断字符串是否全部为大写字母
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否全部为大写字母
 	 * @since 3.3.0
 	 */
 	public static boolean isUpperCase(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isUpperCase(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isUpperCase);
 	}
 
 	/**
 	 * 验证字符串是否全部为大写字母
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -490,25 +542,20 @@ public class Validator {
 
 	/**
 	 * 判断字符串是否全部为小写字母
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否全部为小写字母
 	 * @since 3.3.0
 	 */
 	public static boolean isLowerCase(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isLowerCase(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isLowerCase);
 	}
 
 	/**
 	 * 验证字符串是否全部为小写字母
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -523,18 +570,18 @@ public class Validator {
 
 	/**
 	 * 验证该字符串是否是数字
-	 * 
+	 *
 	 * @param value 字符串内容
 	 * @return 是否是数字
 	 */
-	public static boolean isNumber(String value) {
+	public static boolean isNumber(CharSequence value) {
 		return NumberUtil.isNumber(value);
 	}
 
 	/**
 	 * 验证是否为数字
-	 * 
-	 * @param value 表单值
+	 *
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -548,20 +595,20 @@ public class Validator {
 
 	/**
 	 * 验证该字符串是否是字母（包括大写和小写字母）
-	 * 
+	 *
 	 * @param value 字符串内容
 	 * @return 是否是字母（包括大写和小写字母）
 	 * @since 4.1.8
 	 */
 	public static boolean isWord(CharSequence value) {
-		return isMactchRegex(PatternPool.WORD, value);
+		return isMatchRegex(PatternPool.WORD, value);
 	}
 
 	/**
 	 * 验证是否为字母（包括大写和小写字母）
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -576,19 +623,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为货币
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为货币
 	 */
 	public static boolean isMoney(CharSequence value) {
-		return isMactchRegex(MONEY, value);
+		return isMatchRegex(MONEY, value);
 	}
 
 	/**
 	 * 验证是否为货币
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -603,19 +650,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为邮政编码（中国）
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为邮政编码（中国）
 	 */
 	public static boolean isZipCode(CharSequence value) {
-		return isMactchRegex(ZIP_CODE, value);
+		return isMatchRegex(ZIP_CODE, value);
 	}
 
 	/**
 	 * 验证是否为邮政编码（中国）
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -629,19 +676,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为可用邮箱地址
-	 * 
+	 *
 	 * @param value 值
-	 * @return 否为可用邮箱地址
+	 * @return true为可用邮箱地址
 	 */
 	public static boolean isEmail(CharSequence value) {
-		return isMactchRegex(EMAIL, value);
+		return isMatchRegex(EMAIL, value);
 	}
 
 	/**
 	 * 验证是否为可用邮箱地址
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -655,19 +702,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为手机号码（中国）
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为手机号码（中国）
 	 */
 	public static boolean isMobile(CharSequence value) {
-		return isMactchRegex(MOBILE, value);
+		return isMatchRegex(MOBILE, value);
 	}
 
 	/**
 	 * 验证是否为手机号码（中国）
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -680,22 +727,20 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为身份证号码（18位中国）<br>
-	 * 出生日期只支持到到2999年
-	 * 
-	 * @param value 值
-	 * @return 是否为身份证号码（18位中国）
+	 * 验证是否为身份证号码（支持18位、15位和港澳台的10位）
+	 *
+	 * @param value 身份证号，支持18位、15位和港澳台的10位
+	 * @return 是否为有效身份证号码
 	 */
 	public static boolean isCitizenId(CharSequence value) {
-		return isMactchRegex(CITIZEN_ID, value);
+		return IdcardUtil.isValidCard(String.valueOf(value));
 	}
 
 	/**
-	 * 验证是否为身份证号码（18位中国）<br>
-	 * 出生日期只支持到到2999年
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 * 验证是否为身份证号码（支持18位、15位和港澳台的10位）
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -709,10 +754,10 @@ public class Validator {
 
 	/**
 	 * 验证是否为生日
-	 * 
-	 * @param year 年，从1900年开始计算
+	 *
+	 * @param year  年，从1900年开始计算
 	 * @param month 月，从1开始计数
-	 * @param day 日，从1开始计数
+	 * @param day   日，从1开始计数
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(int year, int month, int day) {
@@ -752,28 +797,26 @@ public class Validator {
 	 * <li>yyyy.MM.dd</li>
 	 * <li>yyyy年MM月dd日</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(CharSequence value) {
-		if (isMactchRegex(BIRTHDAY, value)) {
-			Matcher matcher = BIRTHDAY.matcher(value);
-			if (matcher.find()) {
-				int year = Integer.parseInt(matcher.group(1));
-				int month = Integer.parseInt(matcher.group(3));
-				int day = Integer.parseInt(matcher.group(5));
-				return isBirthday(year, month, day);
-			}
+		final Matcher matcher = BIRTHDAY.matcher(value);
+		if (matcher.find()) {
+			int year = Integer.parseInt(matcher.group(1));
+			int month = Integer.parseInt(matcher.group(3));
+			int day = Integer.parseInt(matcher.group(5));
+			return isBirthday(year, month, day);
 		}
 		return false;
 	}
 
 	/**
 	 * 验证验证是否为生日
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -787,19 +830,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为IPV4地址
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为IPV4地址
 	 */
 	public static boolean isIpv4(CharSequence value) {
-		return isMactchRegex(IPV4, value);
+		return isMatchRegex(IPV4, value);
 	}
 
 	/**
 	 * 验证是否为IPV4地址
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -810,22 +853,22 @@ public class Validator {
 		}
 		return value;
 	}
-	
+
 	/**
 	 * 验证是否为IPV6地址
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为IPV6地址
 	 */
 	public static boolean isIpv6(CharSequence value) {
-		return isMactchRegex(IPV6, value);
+		return isMatchRegex(IPV6, value);
 	}
-	
+
 	/**
 	 * 验证是否为IPV6地址
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -839,20 +882,20 @@ public class Validator {
 
 	/**
 	 * 验证是否为MAC地址
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为MAC地址
 	 * @since 4.1.3
 	 */
 	public static boolean isMac(CharSequence value) {
-		return isMactchRegex(PatternPool.MAC_ADDRESS, value);
+		return isMatchRegex(PatternPool.MAC_ADDRESS, value);
 	}
 
 	/**
 	 * 验证是否为MAC地址
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -867,20 +910,20 @@ public class Validator {
 
 	/**
 	 * 验证是否为中国车牌号
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为中国车牌号
 	 * @since 3.0.6
 	 */
 	public static boolean isPlateNumber(CharSequence value) {
-		return isMactchRegex(PLATE_NUMBER, value);
+		return isMatchRegex(PLATE_NUMBER, value);
 	}
 
 	/**
 	 * 验证是否为中国车牌号
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -895,7 +938,7 @@ public class Validator {
 
 	/**
 	 * 验证是否为URL
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为URL
 	 */
@@ -910,9 +953,9 @@ public class Validator {
 
 	/**
 	 * 验证是否为URL
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -925,20 +968,31 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为汉字
-	 * 
+	 * 验证是否都为汉字
+	 *
 	 * @param value 值
 	 * @return 是否为汉字
 	 */
 	public static boolean isChinese(CharSequence value) {
-		return isMactchRegex("^" + ReUtil.RE_CHINESE + "+$", value);
+		return isMatchRegex(PatternPool.CHINESES, value);
+	}
+
+	/**
+	 * 验证是否包含汉字
+	 *
+	 * @param value 值
+	 * @return 是否包含汉字
+	 * @since 5.2.1
+	 */
+	public static boolean hasChinese(CharSequence value) {
+		return ReUtil.contains(ReUtil.RE_CHINESES, value);
 	}
 
 	/**
 	 * 验证是否为汉字
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 表单值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    表单值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -952,19 +1006,19 @@ public class Validator {
 
 	/**
 	 * 验证是否为中文字、英文字母、数字和下划线
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为中文字、英文字母、数字和下划线
 	 */
 	public static boolean isGeneralWithChinese(CharSequence value) {
-		return isMactchRegex(GENERAL_WITH_CHINESE, value);
+		return isMatchRegex(GENERAL_WITH_CHINESE, value);
 	}
 
 	/**
 	 * 验证是否为中文字、英文字母、数字和下划线
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -979,20 +1033,20 @@ public class Validator {
 	/**
 	 * 验证是否为UUID<br>
 	 * 包括带横线标准格式和不带横线的简单模式
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为UUID
 	 */
 	public static boolean isUUID(CharSequence value) {
-		return isMactchRegex(UUID, value) || isMactchRegex(UUID_SIMPLE, value);
+		return isMatchRegex(UUID, value) || isMatchRegex(UUID_SIMPLE, value);
 	}
 
 	/**
 	 * 验证是否为UUID<br>
 	 * 包括带横线标准格式和不带横线的简单模式
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -1006,20 +1060,20 @@ public class Validator {
 
 	/**
 	 * 验证是否为Hex（16进制）字符串
-	 * 
+	 *
 	 * @param value 值
 	 * @return 是否为Hex（16进制）字符串
 	 * @since 4.3.3
 	 */
 	public static boolean isHex(CharSequence value) {
-		return isMactchRegex(PatternPool.HEX, value);
+		return isMatchRegex(PatternPool.HEX, value);
 	}
 
 	/**
 	 * 验证是否为Hex（16进制）字符串
-	 * 
-	 * @param <T> 字符串类型
-	 * @param value 值
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
@@ -1034,10 +1088,10 @@ public class Validator {
 
 	/**
 	 * 检查给定的数字是否在指定范围内
-	 * 
+	 *
 	 * @param value 值
-	 * @param min 最小值（包含）
-	 * @param max 最大值（包含）
+	 * @param min   最小值（包含）
+	 * @param max   最大值（包含）
 	 * @return 是否满足
 	 * @since 4.1.10
 	 */
@@ -1051,10 +1105,10 @@ public class Validator {
 
 	/**
 	 * 检查给定的数字是否在指定范围内
-	 * 
-	 * @param value 值
-	 * @param min 最小值（包含）
-	 * @param max 最大值（包含）
+	 *
+	 * @param value    值
+	 * @param min      最小值（包含）
+	 * @param max      最大值（包含）
 	 * @param errorMsg 验证错误的信息
 	 * @throws ValidateException 验证异常
 	 * @since 4.1.10
@@ -1063,5 +1117,23 @@ public class Validator {
 		if (false == isBetween(value, min, max)) {
 			throw new ValidateException(errorMsg);
 		}
+	}
+
+	/**
+	 * 是否是有效的统一社会信用代码
+	 * <pre>
+	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
+	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
+	 * 第三部分：登记管理机关行政区划码6位 (数字)
+	 * 第四部分：主体标识码（组织机构代码）9位 (数字或大写英文字母)
+	 * 第五部分：校验码1位 (数字或大写英文字母)
+	 * </pre>
+	 *
+	 * @param creditCode 统一社会信用代码
+	 * @return 校验结果
+	 * @since 5.2.4
+	 */
+	public static boolean isCreditCode(CharSequence creditCode) {
+		return CreditCodeUtil.isCreditCode(creditCode);
 	}
 }

@@ -1,15 +1,15 @@
 package cn.hutool.extra.mail;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import cn.hutool.core.util.ArrayUtil;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
-
-import cn.hutool.core.util.ArrayUtil;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 邮件内部工具类
@@ -30,15 +30,13 @@ public class InternalMailUtil {
 	public static InternetAddress[] parseAddressFromStrs(String[] addrStrs, Charset charset) {
 		final List<InternetAddress> resultList = new ArrayList<>(addrStrs.length);
 		InternetAddress[] addrs;
-		for (int i = 0; i < addrStrs.length; i++) {
-			addrs = parseAddress(addrStrs[i], charset);
-			if(ArrayUtil.isNotEmpty(addrs)) {
-				for(int j = 0 ; j < addrs.length; j++) {
-					resultList.add(addrs[j]);
-				}
+		for (String addrStr : addrStrs) {
+			addrs = parseAddress(addrStr, charset);
+			if (ArrayUtil.isNotEmpty(addrs)) {
+				Collections.addAll(resultList, addrs);
 			}
 		}
-		return resultList.toArray(new InternetAddress[resultList.size()]);
+		return resultList.toArray(new InternetAddress[0]);
 	}
 	
 	/**

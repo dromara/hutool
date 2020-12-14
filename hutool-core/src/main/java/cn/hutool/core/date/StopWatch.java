@@ -1,11 +1,11 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 秒表封装<br>
@@ -42,6 +42,17 @@ import cn.hutool.core.util.StrUtil;
 public class StopWatch {
 
 	/**
+	 * 创建计时任务（秒表）
+	 *
+	 * @param id 用于标识秒表的唯一ID
+	 * @return StopWatch
+	 * @since 5.5.2
+	 */
+	public static StopWatch create(String id){
+		return new StopWatch(id);
+	}
+
+	/**
 	 * 秒表唯一标识，用于多个秒表对象的区分
 	 */
 	private final String id;
@@ -68,7 +79,6 @@ public class StopWatch {
 	 * 总运行时间
 	 */
 	private long totalTimeNanos;
-
 	// ------------------------------------------------------------------------------------------- Constructor start
 
 	/**
@@ -102,7 +112,7 @@ public class StopWatch {
 	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 获取{@link StopWatch} 的ID，用于多个秒表对象的区分
+	 * 获取StopWatch 的ID，用于多个秒表对象的区分
 	 *
 	 * @return the ID 空字符串为
 	 * @see #StopWatch(String)
@@ -338,8 +348,8 @@ public class StopWatch {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(shortSummary());
-		if (null == this.taskList) {
-			for (TaskInfo task : getTaskInfo()) {
+		if (null != this.taskList) {
+			for (TaskInfo task : this.taskList) {
 				sb.append("; [").append(task.getTaskName()).append("] took ").append(task.getTimeNanos()).append(" ns");
 				long percent = Math.round(100.0 * task.getTimeNanos() / getTotalTimeNanos());
 				sb.append(" = ").append(percent).append("%");
@@ -366,7 +376,9 @@ public class StopWatch {
 		}
 
 		/**
-		 * 获取任务名Get the name of this task.
+		 * 获取任务名
+		 *
+		 * @return 任务名
 		 */
 		public String getTaskName() {
 			return this.taskName;
@@ -375,6 +387,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：纳秒）
 		 *
+		 * @return 任务花费时间（单位：纳秒）
 		 * @see #getTimeMillis()
 		 * @see #getTimeSeconds()
 		 */
@@ -385,6 +398,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：毫秒）
 		 *
+		 * @return 任务花费时间（单位：毫秒）
 		 * @see #getTimeNanos()
 		 * @see #getTimeSeconds()
 		 */
@@ -395,6 +409,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：秒）
 		 *
+		 * @return 任务花费时间（单位：秒）
 		 * @see #getTimeMillis()
 		 * @see #getTimeNanos()
 		 */

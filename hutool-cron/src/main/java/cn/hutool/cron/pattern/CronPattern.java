@@ -1,11 +1,5 @@
 package cn.hutool.cron.pattern;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
@@ -21,6 +15,12 @@ import cn.hutool.cron.pattern.parser.MonthValueParser;
 import cn.hutool.cron.pattern.parser.SecondValueParser;
 import cn.hutool.cron.pattern.parser.ValueParser;
 import cn.hutool.cron.pattern.parser.YearValueParser;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * 定时任务表达式<br>
@@ -45,7 +45,6 @@ import cn.hutool.cron.pattern.parser.YearValueParser;
  * 
  * <pre>
  * 当isMatchSecond为<code>true</code>时才会匹配秒部分
- * 当isMatchYear为<code>true</code>时才会匹配年部分
  * 默认都是关闭的
  * </pre>
  * 
@@ -71,10 +70,10 @@ import cn.hutool.cron.pattern.parser.YearValueParser;
  * <ul>
  * <li><strong>5 * * * *</strong>：每个点钟的5分执行，00:05,01:05……</li>
  * <li><strong>* * * * *</strong>：每分钟执行</li>
- * <li><strong>*&#47;2 * * * *</strong>：每两小时执行</li>
+ * <li><strong>*&#47;2 * * * *</strong>：每两分钟执行</li>
  * <li><strong>* 12 * * *</strong>：12点的每分钟执行</li>
  * <li><strong>59 11 * * 1,2</strong>：每周一和周二的11:59执行</li>
- * <li><strong>3-18&#47;5 * * * *</strong>：3~18分，每5分钟执行一次，既0:03, 0:08, 0:13, 0:18, 1:03, 1:08……</li>
+ * <li><strong>3-18&#47;5 * * * *</strong>：3~18分，每5分钟执行一次，即0:03, 0:08, 0:13, 0:18, 1:03, 1:08……</li>
  * </ul>
  * 
  * @author Looly
@@ -90,29 +89,27 @@ public class CronPattern {
 	private static final ValueParser DAY_OF_WEEK_VALUE_PARSER = new DayOfWeekValueParser();
 	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
 
-	private String pattern;
+	private final String pattern;
 
 	/** 秒字段匹配列表 */
-	private List<ValueMatcher> secondMatchers = new ArrayList<>();
+	private final List<ValueMatcher> secondMatchers = new ArrayList<>();
 	/** 分字段匹配列表 */
-	private List<ValueMatcher> minuteMatchers = new ArrayList<>();
+	private final List<ValueMatcher> minuteMatchers = new ArrayList<>();
 	/** 时字段匹配列表 */
-	private List<ValueMatcher> hourMatchers = new ArrayList<>();
+	private final List<ValueMatcher> hourMatchers = new ArrayList<>();
 	/** 每月几号字段匹配列表 */
-	private List<ValueMatcher> dayOfMonthMatchers = new ArrayList<>();
+	private final List<ValueMatcher> dayOfMonthMatchers = new ArrayList<>();
 	/** 月字段匹配列表 */
-	private List<ValueMatcher> monthMatchers = new ArrayList<>();
+	private final List<ValueMatcher> monthMatchers = new ArrayList<>();
 	/** 星期字段匹配列表 */
-	private List<ValueMatcher> dayOfWeekMatchers = new ArrayList<>();
+	private final List<ValueMatcher> dayOfWeekMatchers = new ArrayList<>();
 	/** 年字段匹配列表 */
-	private List<ValueMatcher> yearMatchers = new ArrayList<>();
+	private final List<ValueMatcher> yearMatchers = new ArrayList<>();
 	/** 匹配器个数，取决于复合任务表达式中的单一表达式个数 */
 	private int matcherSize;
 
 	/**
 	 * 构造
-	 * 
-	 * @see CronPattern
 	 * 
 	 * @param pattern 表达式
 	 */
@@ -289,7 +286,7 @@ public class CronPattern {
 				throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
 			}
 		} else {// 不支持年的表达式，全部匹配
-			this.secondMatchers.add(new AlwaysTrueValueMatcher());
+			this.yearMatchers.add(new AlwaysTrueValueMatcher());
 		}
 		matcherSize++;
 	}

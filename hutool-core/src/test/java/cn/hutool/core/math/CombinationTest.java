@@ -1,9 +1,9 @@
 package cn.hutool.core.math;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * 组合单元测试
@@ -49,6 +49,6 @@ public class CombinationTest {
 		Assert.assertEquals(Combination.countAll(5), selectAll.size());
 		
 		List<String[]> list2 = combination.select(0);
-		Assert.assertTrue(1 == list2.size());
+		Assert.assertEquals(1, list2.size());
 	}
 }

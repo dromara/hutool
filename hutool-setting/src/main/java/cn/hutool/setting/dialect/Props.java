@@ -1,19 +1,5 @@
 package cn.hutool.setting.dialect;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-import java.util.Date;
-import java.util.Properties;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
@@ -34,10 +20,22 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.SettingRuntimeException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * Properties文件读取封装类
@@ -46,7 +44,21 @@ import cn.hutool.setting.SettingRuntimeException;
  */
 public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String> {
 	private static final long serialVersionUID = 1935981579709590740L;
-	private final static Log log = LogFactory.get();
+
+	/**
+	 * 默认配置文件扩展名
+	 */
+	public final static String EXT_NAME = "properties";
+
+	/**
+	 * 构建一个空的Props，用于手动加入参数
+	 *
+	 * @return Setting
+	 * @since 5.4.3
+	 */
+	public static Props create() {
+		return new Props();
+	}
 
 	// ----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
@@ -99,7 +111,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
-	 * @param path
+	 * @param path 配置文件路径，相对于ClassPath，或者使用绝对路径
 	 */
 	public Props(String path) {
 		this(path, CharsetUtil.CHARSET_ISO_8859_1);
@@ -226,7 +238,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		if (null != charset) {
 			this.charset = charset;
 		}
-		this.load(new UrlResource(propertiesUrl));
+		this.load(propertiesUrl);
 	}
 
 	/**
@@ -244,19 +256,29 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 初始化配置文件
-	 * 
-	 * @param urlResource {@link UrlResource}
+	 *
+	 * @param url {@link URL}
+	 * @since 5.5.2
 	 */
-	public void load(Resource urlResource) {
-		this.propertiesFileUrl = urlResource.getUrl();
+	public void load(URL url) {
+		load(new UrlResource(url));
+	}
+
+	/**
+	 * 初始化配置文件
+	 * 
+	 * @param resource {@link Resource}
+	 */
+	public void load(Resource resource) {
+		this.propertiesFileUrl = resource.getUrl();
 		if (null == this.propertiesFileUrl) {
-			throw new SettingRuntimeException("Can not find properties file: [{}]", urlResource);
+			throw new SettingRuntimeException("Can not find properties file: [{}]", resource);
 		}
-		log.debug("Load properties [{}]", propertiesFileUrl.getPath());
-		try (final BufferedReader reader = urlResource.getReader(charset)) {
+
+		try (final BufferedReader reader = resource.getReader(charset)) {
 			super.load(reader);
-		} catch (Exception e) {
-			log.error(e, "Load properties error!");
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -264,7 +286,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 重新加载配置文件
 	 */
 	public void load() {
-		this.load(new UrlResource(this.propertiesFileUrl));
+		this.load(this.propertiesFileUrl);
 	}
 
 	/**
@@ -484,7 +506,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param beanClass Bean类
 	 * @return Bean对象
 	 * @since 4.6.3
@@ -504,7 +527,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param beanClass Bean类
 	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
 	 * @return Bean对象
@@ -526,14 +550,15 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param bean Bean对象
 	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
 	 * @return Bean对象
 	 * @since 4.6.3
 	 */
 	public <T> T fillBean(T bean, String prefix) {
-		prefix = StrUtil.addSuffixIfNot(prefix, StrUtil.DOT);
+		prefix = StrUtil.nullToEmpty(StrUtil.addSuffixIfNot(prefix, StrUtil.DOT));
 
 		String key;
 		for (java.util.Map.Entry<Object, Object> entry : this.entrySet()) {

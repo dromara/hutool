@@ -1,15 +1,14 @@
 package cn.hutool.extra.tokenizer.engine.jcseg;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.lionsoul.jcseg.tokenizer.core.ISegment;
-import org.lionsoul.jcseg.tokenizer.core.IWord;
-
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
+import org.lionsoul.jcseg.ISegment;
+import org.lionsoul.jcseg.IWord;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Jcseg分词结果包装<br>
@@ -20,7 +19,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class JcsegResult implements Result{
 	
-	private ISegment result;
+	private final ISegment result;
 	private Word cachedWord;
 	
 	/**
@@ -36,7 +35,7 @@ public class JcsegResult implements Result{
 		if (this.cachedWord != null) {
 			return true;
 		}
-		IWord next = null;
+		IWord next;
 		try {
 			next = this.result.next();
 		} catch (IOException e) {

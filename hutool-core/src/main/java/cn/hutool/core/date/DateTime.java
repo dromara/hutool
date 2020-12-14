@@ -1,19 +1,24 @@
 package cn.hutool.core.date;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * 包装java.util.Date
@@ -75,7 +80,7 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr Date字符串
 	 * @param format  格式
-	 * @return {@link DateTime}
+	 * @return this
 	 * @see DatePattern
 	 */
 	public static DateTime of(String dateStr, String format) {
@@ -140,6 +145,48 @@ public class DateTime extends Date {
 	 */
 	public DateTime(Calendar calendar) {
 		this(calendar.getTime(), calendar.getTimeZone());
+		this.setFirstDayOfWeek(Week.of(calendar.getFirstDayOfWeek()));
+	}
+
+	/**
+	 * 给定日期Instant的构造
+	 *
+	 * @param instant {@link Instant} 对象
+	 * @since 5.0.0
+	 */
+	public DateTime(Instant instant) {
+		this(instant.toEpochMilli());
+	}
+
+	/**
+	 * 给定日期Instant的构造
+	 *
+	 * @param instant {@link Instant} 对象
+	 * @param zoneId  时区ID
+	 * @since 5.0.5
+	 */
+	public DateTime(Instant instant, ZoneId zoneId) {
+		this(instant.toEpochMilli(), TimeZone.getTimeZone(ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault())));
+	}
+
+	/**
+	 * 给定日期TemporalAccessor的构造
+	 *
+	 * @param temporalAccessor {@link TemporalAccessor} 对象
+	 * @since 5.0.0
+	 */
+	public DateTime(TemporalAccessor temporalAccessor) {
+		this(DateUtil.toInstant(temporalAccessor));
+	}
+
+	/**
+	 * 给定日期ZonedDateTime的构造
+	 *
+	 * @param zonedDateTime {@link ZonedDateTime} 对象
+	 * @since 5.0.5
+	 */
+	public DateTime(ZonedDateTime zonedDateTime) {
+		this(zonedDateTime.toInstant(), zonedDateTime.getZone());
 	}
 
 	/**
@@ -161,9 +208,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
-		if (null != timeZone) {
-			this.timeZone = timeZone;
-		}
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
 	}
 
 	/**
@@ -173,7 +218,7 @@ public class DateTime extends Date {
 	 * @param format  格式
 	 * @see DatePattern
 	 */
-	public DateTime(String dateStr, String format) {
+	public DateTime(CharSequence dateStr, String format) {
 		this(dateStr, new SimpleDateFormat(format));
 	}
 
@@ -184,8 +229,19 @@ public class DateTime extends Date {
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 * @see DatePattern
 	 */
-	public DateTime(String dateStr, DateFormat dateFormat) {
+	public DateTime(CharSequence dateStr, DateFormat dateFormat) {
 		this(parse(dateStr, dateFormat), dateFormat.getTimeZone());
+	}
+
+	/**
+	 * 构建DateTime对象
+	 *
+	 * @param dateStr   Date字符串
+	 * @param formatter 格式化器,{@link DateTimeFormatter}
+	 * @since 5.0.0
+	 */
+	public DateTime(CharSequence dateStr, DateTimeFormatter formatter) {
+		this(Instant.from(formatter.parse(dateStr)), formatter.getZone());
 	}
 
 	/**
@@ -195,7 +251,7 @@ public class DateTime extends Date {
 	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
 	 * @see DatePattern
 	 */
-	public DateTime(String dateStr, DateParser dateParser) {
+	public DateTime(CharSequence dateStr, DateParser dateParser) {
 		this(parse(dateStr, dateParser), dateParser.getTimeZone());
 	}
 
@@ -212,7 +268,12 @@ public class DateTime extends Date {
 	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 */
 	public DateTime offset(DateField datePart, int offset) {
+		if (DateField.ERA == datePart) {
+			throw new IllegalArgumentException("ERA is not support offset!");
+		}
+
 		final Calendar cal = toCalendar();
+		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
 		DateTime dt = mutable ? this : ObjectUtil.clone(this);
@@ -221,7 +282,7 @@ public class DateTime extends Date {
 
 	/**
 	 * 调整日期和时间<br>
-	 * 返回调整后的新{@link DateTime}，不影响原对象
+	 * 返回调整后的新DateTime，不影响原对象
 	 *
 	 * @param datePart 调整的部分 {@link DateField}
 	 * @param offset   偏移量，正数为向后偏移，负数为向前偏移
@@ -230,6 +291,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime offsetNew(DateField datePart, int offset) {
 		final Calendar cal = toCalendar();
+		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
 		DateTime dt = ObjectUtil.clone(this);
@@ -267,7 +329,7 @@ public class DateTime extends Date {
 	 *
 	 * @param field 表示日期的哪个部分的枚举 {@link DateField}
 	 * @param value 值
-	 * @return {@link DateTime}
+	 * @return this
 	 */
 	public DateTime setField(DateField field, int value) {
 		return setField(field.getValue(), value);
@@ -279,7 +341,7 @@ public class DateTime extends Date {
 	 *
 	 * @param field 表示日期的哪个部分的int值 {@link Calendar}
 	 * @param value 值
-	 * @return {@link DateTime}
+	 * @return this
 	 */
 	public DateTime setField(int field, int value) {
 		final Calendar calendar = toCalendar();
@@ -311,32 +373,6 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得当前日期所属季度<br>
-	 * 1：第一季度<br>
-	 * 2：第二季度<br>
-	 * 3：第三季度<br>
-	 * 4：第四季度<br>
-	 *
-	 * @return 第几个季度
-	 * @deprecated 请使用{@link Quarter}代替
-	 */
-	@Deprecated
-	public int season() {
-		return monthStartFromOne() / 4 + 1;
-	}
-
-	/**
-	 * 获得当前日期所属季度<br>
-	 *
-	 * @return 第几个季度 {@link Season}
-	 * @deprecated 请使用{@link #quarterEnum}代替
-	 */
-	@Deprecated
-	public Season seasonEnum() {
-		return Season.of(season());
-	}
-
-	/**
 	 * 获得当前日期所属季度，从1开始计数<br>
 	 *
 	 * @return 第几个季度 {@link Quarter}
@@ -361,6 +397,16 @@ public class DateTime extends Date {
 	 */
 	public int month() {
 		return getField(DateField.MONTH);
+	}
+
+	/**
+	 * 获取月，从1开始计数
+	 *
+	 * @return 月份，1表示一月
+	 * @since 5.4.1
+	 */
+	public int monthBaseOne() {
+		return month() + 1;
 	}
 
 	/**
@@ -410,12 +456,22 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得指定日期是这个日期所在月份的第几天<br>
+	 * 获得指定日期是这个日期所在月份的第几天，从1开始
 	 *
-	 * @return 天
+	 * @return 天，1表示第一天
 	 */
 	public int dayOfMonth() {
 		return getField(DateField.DAY_OF_MONTH);
+	}
+
+	/**
+	 * 获得指定日期是这个日期所在年份的第几天，从1开始
+	 *
+	 * @return 天，1表示第一天
+	 * @since 5.3.6
+	 */
+	public int dayOfYear() {
+		return getField(DateField.DAY_OF_YEAR);
 	}
 
 	/**
@@ -479,6 +535,17 @@ public class DateTime extends Date {
 	 *
 	 * @return 毫秒数
 	 */
+	public int millisecond() {
+		return getField(DateField.MILLISECOND);
+	}
+
+	/**
+	 * 获得指定日期的毫秒数部分<br>
+	 *
+	 * @return 毫秒数
+	 * @deprecated 拼写错误，请使用{@link #millisecond()}
+	 */
+	@Deprecated
 	public int millsecond() {
 		return getField(DateField.MILLISECOND);
 	}
@@ -564,6 +631,7 @@ public class DateTime extends Date {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 		final Calendar cal = (null != zone) ? Calendar.getInstance(zone, locale) : Calendar.getInstance(locale);
+		//noinspection MagicConstant
 		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;
@@ -627,7 +695,7 @@ public class DateTime extends Date {
 	 * @param formatLevel 格式化级别
 	 * @return 相差时长
 	 */
-	public String between(Date date, DateUnit unit, BetweenFormater.Level formatLevel) {
+	public String between(Date date, DateUnit unit, BetweenFormatter.Level formatLevel) {
 		return new DateBetween(this, date).toString(formatLevel);
 	}
 
@@ -762,6 +830,26 @@ public class DateTime extends Date {
 	}
 
 	/**
+	 * 获取时区
+	 *
+	 * @return 时区
+	 * @since 5.0.5
+	 */
+	public TimeZone getTimeZone() {
+		return this.timeZone;
+	}
+
+	/**
+	 * 获取时区ID
+	 *
+	 * @return 时区ID
+	 * @since 5.0.5
+	 */
+	public ZoneId getZoneId() {
+		return this.timeZone.toZoneId();
+	}
+
+	/**
 	 * 设置时区
 	 *
 	 * @param timeZone 时区
@@ -769,17 +857,17 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime setTimeZone(TimeZone timeZone) {
-		this.timeZone = timeZone;
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
 		return this;
 	}
 
 	// -------------------------------------------------------------------- toString start
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 如果时区被设置，会转换为其时区对应的时间，否则转换为当前地点对应的时区
 	 *
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 */
 	@Override
 	public String toString() {
@@ -787,10 +875,10 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 时区使用当前地区的默认时区
 	 *
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 * @since 4.1.14
 	 */
 	public String toStringDefaultTimeZone() {
@@ -798,11 +886,11 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
 	 * 如果时区不为{@code null}，会转换为其时区对应的时间，否则转换为当前时间对应的时区
 	 *
 	 * @param timeZone 时区
-	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
 	 * @since 4.1.14
 	 */
 	public String toString(TimeZone timeZone) {
@@ -815,9 +903,9 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转为"yyyy-MM-dd " 格式字符串
+	 * 转为"yyyy-MM-dd" 格式字符串
 	 *
-	 * @return "yyyy-MM-dd " 格式字符串
+	 * @return "yyyy-MM-dd" 格式字符串
 	 * @since 4.0.0
 	 */
 	public String toDateStr() {
@@ -894,9 +982,10 @@ public class DateTime extends Date {
 	 * @param dateFormat {@link SimpleDateFormat}
 	 * @return {@link Date}
 	 */
-	private static Date parse(String dateStr, DateFormat dateFormat) {
+	private static Date parse(CharSequence dateStr, DateFormat dateFormat) {
+		Assert.notBlank(dateStr, "Date String must be not blank !");
 		try {
-			return dateFormat.parse(dateStr);
+			return dateFormat.parse(dateStr.toString());
 		} catch (Exception e) {
 			String pattern;
 			if (dateFormat instanceof SimpleDateFormat) {
@@ -915,11 +1004,11 @@ public class DateTime extends Date {
 	 * @param parser  {@link FastDateFormat}
 	 * @return {@link Date}
 	 */
-	private static Date parse(String dateStr, DateParser parser) {
+	private static Date parse(CharSequence dateStr, DateParser parser) {
 		Assert.notNull(parser, "Parser or DateFromat must be not null !");
 		Assert.notBlank(dateStr, "Date String must be not blank !");
 		try {
-			return parser.parse(dateStr);
+			return parser.parse(dateStr.toString());
 		} catch (Exception e) {
 			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern(), e);
 		}

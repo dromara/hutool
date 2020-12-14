@@ -1,11 +1,9 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 身份证单元测试
@@ -14,6 +12,7 @@ import cn.hutool.core.date.DateUtil;
  *
  */
 public class IdcardUtilTest {
+
 	private static final String ID_18 = "321083197812162119";
 	private static final String ID_15 = "150102880730303";
 
@@ -25,7 +24,16 @@ public class IdcardUtilTest {
 		boolean valid15 = IdcardUtil.isValidCard(ID_15);
 		Assert.assertTrue(valid15);
 
+		// 无效
 		String idCard = "360198910283844";
+		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
+
+		// 生日无效
+		idCard = "201511221897205960";
+		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
+
+		// 生日无效
+		idCard = "815727834224151";
 		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
 	}
 
@@ -73,4 +81,16 @@ public class IdcardUtilTest {
 		Assert.assertEquals(1, gender);
 	}
 
+	@Test
+	public void isValidCard18Test(){
+		final boolean isValidCard18 = IdcardUtil.isValidCard18("3301022011022000D6");
+		Assert.assertFalse(isValidCard18);
+	}
+
+	@Test
+	public void isValidHKCardIdTest(){
+		String hkCard="P174468(6)";
+		boolean flag=IdcardUtil.isValidHKCard(hkCard);
+		Assert.assertTrue(flag);
+	}
 }

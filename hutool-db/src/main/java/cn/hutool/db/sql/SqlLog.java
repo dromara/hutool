@@ -30,6 +30,7 @@ public enum SqlLog {
 	 * @param isShowSql 是否显示SQL
 	 * @param isFormatSql 是否格式化显示的SQL
 	 * @param isShowParams 是否打印参数
+	 * @param level 日志级别
 	 */
 	public void init(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
 		this.showSql = isShowSql;

@@ -16,7 +16,7 @@ public enum Padding {
 	 */
 	NoPadding,
 	/**
-	 * 0补码，既不满block长度时使用0填充
+	 * 0补码，即不满block长度时使用0填充
 	 */
 	ZeroPadding,
 	ISO10126Padding,

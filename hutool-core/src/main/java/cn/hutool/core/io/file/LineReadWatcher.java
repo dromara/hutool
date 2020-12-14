@@ -1,15 +1,15 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.io.watch.SimpleWatcher;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.io.watch.SimpleWatcher;
 
 /**
  * 行处理的Watcher实现
@@ -19,9 +19,9 @@ import cn.hutool.core.io.watch.SimpleWatcher;
  */
 public class LineReadWatcher extends SimpleWatcher implements Runnable {
 
-	private RandomAccessFile randomAccessFile;
-	private Charset charset;
-	private LineHandler lineHandler;
+	private final RandomAccessFile randomAccessFile;
+	private final Charset charset;
+	private final LineHandler lineHandler;
 
 	/**
 	 * 构造

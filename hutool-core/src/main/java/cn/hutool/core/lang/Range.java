@@ -1,13 +1,13 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.thread.lock.NoLock;
+
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import cn.hutool.core.thread.lock.NoLock;
 
 /**
  * 范围生成器。根据给定的初始值、结束值和步进生成一个步进列表生成器<br>
@@ -27,21 +27,21 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	/** 锁保证线程安全 */
 	private Lock lock = new ReentrantLock();
 	/** 起始对象 */
-	private T start;
+	private final T start;
 	/** 结束对象 */
-	private T end;
+	private final T end;
 	/** 当前对象 */
 	private T current;
 	/** 下一个对象 */
 	private T next;
 	/** 步进 */
-	private Steper<T> steper;
+	private final Steper<T> steper;
 	/** 索引 */
 	private int index = 0;
 	/** 是否包含第一个元素 */
-	private boolean includeStart = true;
+	private final boolean includeStart;
 	/** 是否包含最后一个元素 */
-	private boolean includeEnd = true;
+	private boolean includeEnd;
 
 	/**
 	 * 构造
@@ -80,6 +80,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 		this.steper = steper;
 		this.next = safeStep(this.current);
 		this.includeStart = isIncludeStart;
+		includeEnd = true;
 		this.includeEnd = isIncludeEnd;
 	}
 
@@ -187,7 +188,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 步进接口可以定义以下逻辑：
 	 * 
 	 * <pre>
-	 * 1、步进规则，既对象如何做步进
+	 * 1、步进规则，即对象如何做步进
 	 * 2、步进大小，通过实现此接口，在实现类中定义一个对象属性，可灵活定义步进大小
 	 * 3、限制range个数，通过实现此接口，在实现类中定义一个对象属性，可灵活定义limit，限制range个数
 	 * </pre>

@@ -11,6 +11,7 @@ package cn.hutool.core.lang.func;
  * @param <R> 返回值类型
  * @since 4.5.2
  */
+@FunctionalInterface
 public interface Func0<R> {
 	/**
 	 * 执行函数
@@ -19,4 +20,18 @@ public interface Func0<R> {
 	 * @throws Exception 自定义异常
 	 */
 	R call() throws Exception;
+
+	/**
+	 * 执行函数，异常包装为RuntimeException
+	 *
+	 * @return 函数执行结果
+	 * @since 5.3.6
+	 */
+	default R callWithRuntimeException(){
+		try {
+			return call();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -1,11 +1,11 @@
 package cn.hutool.cache.impl;
 
+import cn.hutool.cache.GlobalPruneTimer;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
-
-import cn.hutool.cache.GlobalPruneTimer;
 
 /**
  * 定时缓存<br>
@@ -28,7 +28,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	 * @param timeout 超时（过期）时长，单位毫秒
 	 */
 	public TimedCache(long timeout) {
-		this(timeout, new HashMap<K, CacheObj<K, V>>());
+		this(timeout, new HashMap<>());
 	}
 
 	/**
@@ -72,12 +72,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	 * @param delay 间隔时长，单位毫秒
 	 */
 	public void schedulePrune(long delay) {
-		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(new Runnable() {
-			@Override
-			public void run() {
-				prune();
-			}
-		}, delay);
+		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(this::prune, delay);
 	}
 
 	/**

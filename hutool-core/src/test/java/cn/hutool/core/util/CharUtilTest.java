@@ -20,4 +20,22 @@ public class CharUtilTest {
 		Assert.assertTrue(CharUtil.isEmoji(a.charAt(1)));
 		
 	}
+
+	@Test
+	public void isCharTest(){
+		char a = 'a';
+		Assert.assertTrue(CharUtil.isChar(a));
+	}
+
+	@Test
+	public void isBlankCharTest(){
+		char a = '\u00A0';
+		Assert.assertTrue(CharUtil.isBlankChar(a));
+
+		char a2 = '\u0020';
+		Assert.assertTrue(CharUtil.isBlankChar(a2));
+
+		char a3 = '\u3000';
+		Assert.assertTrue(CharUtil.isBlankChar(a3));
+	}
 }

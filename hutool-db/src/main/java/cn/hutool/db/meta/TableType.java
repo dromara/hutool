@@ -14,7 +14,7 @@ public enum TableType {
 	ALIAS("ALIAS"),
 	SYNONYM("SYNONYM");
 	
-	private String value;
+	private final String value;
 	
 	/**
 	 * 构造

@@ -3,7 +3,6 @@ package cn.hutool.core.lang;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 
 /**
@@ -22,6 +21,12 @@ public class ConsoleTest {
 		
 		Console.log("This is Console log for {}.", "test");
 	}
+
+	@Test
+	public void logTest2(){
+		Console.log("a", "b", "c");
+		Console.log((Object) "a", "b", "c");
+	}
 	
 	@Test
 	public void printTest(){
@@ -29,6 +34,12 @@ public class ConsoleTest {
 		Console.print(a);
 		
 		Console.log("This is Console print for {}.", "test");
+	}
+
+	@Test
+	public void printTest2(){
+		Console.print("a", "b", "c");
+		Console.print((Object) "a", "b", "c");
 	}
 	
 	@Test
@@ -39,6 +50,12 @@ public class ConsoleTest {
 		Console.error(a);
 		
 		Console.error("This is Console error for {}.", "test");
+	}
+
+	@Test
+	public void errorTest2(){
+		Console.error("a", "b", "c");
+		Console.error((Object) "a", "b", "c");
 	}
 	
 	@Test
@@ -57,4 +74,5 @@ public class ConsoleTest {
 			ThreadUtil.sleep(200);
 		}
 	}
+
 }

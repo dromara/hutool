@@ -8,4 +8,5 @@ import cn.hutool.json.JSONObject;
  * 
  * @author Looly
  */
+@FunctionalInterface
 public interface JSONObjectSerializer<V> extends JSONSerializer<JSONObject, V>{}

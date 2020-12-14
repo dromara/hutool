@@ -1,8 +1,9 @@
 package cn.hutool.http.useragent;
 
-import java.util.regex.Pattern;
-
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * User-Agent解析器
@@ -19,6 +20,9 @@ public class UserAgentParser {
 	 * @return {@link UserAgent}
 	 */
 	public static UserAgent parse(String userAgentString) {
+		if(StrUtil.isBlank(userAgentString)){
+			return null;
+		}
 		final UserAgent userAgent = new UserAgent();
 		
 		final Browser browser = parseBrowser(userAgentString);
@@ -46,9 +50,9 @@ public class UserAgentParser {
 	 * @return 浏览器类型
 	 */
 	private static Browser parseBrowser(String userAgentString) {
-		for (Browser brower : Browser.browers) {
-			if (brower.isMatch(userAgentString)) {
-				return brower;
+		for (Browser browser : Browser.browers) {
+			if (browser.isMatch(userAgentString)) {
+				return browser;
 			}
 		}
 		return Browser.Unknown;
@@ -77,7 +81,7 @@ public class UserAgentParser {
 	 * @return 引擎版本
 	 */
 	private static String parseEngineVersion(Engine engine, String userAgentString) {
-		final String regexp = engine.getName() + "[\\/\\- ]([\\d\\w\\.\\-]+)";
+		final String regexp = engine.getName() + "[/\\- ]([\\d\\w.\\-]+)";
 		final Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 		return ReUtil.getGroup1(pattern, userAgentString);
 	}

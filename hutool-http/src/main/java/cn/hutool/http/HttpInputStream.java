@@ -1,13 +1,14 @@
 package cn.hutool.http;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.DeflaterInputStream;
 import java.util.zip.GZIPInputStream;
-
-import cn.hutool.core.util.StrUtil;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 /**
  * HTTP输入流，此流用于包装Http请求响应内容的流，用于解析各种压缩、分段的响应流内容
@@ -18,7 +19,7 @@ import cn.hutool.core.util.StrUtil;
 public class HttpInputStream extends InputStream {
 
 	/** 原始流 */
-	private volatile InputStream in;
+	private InputStream in;
 
 	/**
 	 * 构造
@@ -78,11 +79,10 @@ public class HttpInputStream extends InputStream {
 		try {
 			this.in = (response.status < HttpStatus.HTTP_BAD_REQUEST) ? response.httpConnection.getInputStream() : response.httpConnection.getErrorStream();
 		} catch (IOException e) {
-			if (e instanceof FileNotFoundException) {
-				// 服务器无返回内容，忽略之
-			} else {
+			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
+			// 服务器无返回内容，忽略之
 		}
 		
 		// 在一些情况下，返回的流为null，此时提供状态码说明
@@ -91,10 +91,6 @@ public class HttpInputStream extends InputStream {
 			return;
 		}
 		
-		// TODO 分段响应内容解析
-		if(response.isChunked()) {
-		}
-
 		if (response.isGzip() && false == (response.in instanceof GZIPInputStream)) {
 			// Accept-Encoding: gzip
 			try {
@@ -103,9 +99,9 @@ public class HttpInputStream extends InputStream {
 				// 在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
 				// ignore
 			}
-		} else if (response.isDeflate() && false == (this.in instanceof DeflaterInputStream)) {
+		} else if (response.isDeflate() && false == (this.in instanceof InflaterInputStream)) {
 			// Accept-Encoding: defalte
-			this.in = new DeflaterInputStream(this.in);
+			this.in = new InflaterInputStream(this.in, new Inflater(true));
 		}
 	}
 }

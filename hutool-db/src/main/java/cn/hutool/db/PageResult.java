@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
-import java.util.ArrayList;
-
 import cn.hutool.core.util.PageUtil;
+
+import java.util.ArrayList;
 
 /**
  * 分页数据结果集
@@ -16,7 +16,7 @@ public class PageResult<T> extends ArrayList<T> {
 	public static final int DEFAULT_PAGE_SIZE = Page.DEFAULT_PAGE_SIZE;
 
 	/**
-	 * 页码
+	 * 页码，0表示第一页
 	 */
 	private int page;
 	/**
@@ -44,7 +44,7 @@ public class PageResult<T> extends ArrayList<T> {
 	/**
 	 * 构造
 	 *
-	 * @param page     页码
+	 * @param page     页码，0表示第一页
 	 * @param pageSize 每页结果数
 	 */
 	public PageResult(int page, int pageSize) {
@@ -57,7 +57,7 @@ public class PageResult<T> extends ArrayList<T> {
 	/**
 	 * 构造
 	 *
-	 * @param page     页码
+	 * @param page     页码，0表示第一页
 	 * @param pageSize 每页结果数
 	 * @param total    结果总数
 	 */
@@ -72,14 +72,16 @@ public class PageResult<T> extends ArrayList<T> {
 	//---------------------------------------------------------- Getters and Setters start
 
 	/**
-	 * @return 页码
+	 * 页码，0表示第一页
+	 *
+	 * @return 页码，0表示第一页
 	 */
 	public int getPage() {
 		return page;
 	}
 
 	/**
-	 * 设置页码
+	 * 设置页码，0表示第一页
 	 *
 	 * @param page 页码
 	 */
@@ -167,6 +169,6 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @return 是否最后一页
 	 */
 	public boolean isLast() {
-		return this.page >= this.totalPage;
+		return this.page >= (this.totalPage - 1);
 	}
 }

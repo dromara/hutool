@@ -12,6 +12,7 @@ package cn.hutool.core.lang;
  * @param <T> 被编辑对象类型
  * @author Looly
  */
+@FunctionalInterface
 public interface Editor<T> {
 	/**
 	 * 修改过滤后的结果

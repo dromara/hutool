@@ -3,13 +3,14 @@ package cn.hutool.cron.task;
 /**
  * 定时作业接口，通过实现execute方法执行具体的任务
  * <p>
- * 作业执行是异步执行，既不同作业、相同作业在不同时间的执行是相互独立的。<br>
+ * 作业执行是异步执行，即不同作业、相同作业在不同时间的执行是相互独立的。<br>
  * 假如前一个作业未完成，下一个调度开始，则不会等待前一个作业，直接执行。<br>
  * 关于作业的互斥，请自行加锁完成。
  * </p>
  *
  * @author Looly
  */
+@FunctionalInterface
 public interface Task {
 
 	/**

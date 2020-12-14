@@ -1,15 +1,15 @@
 
 package cn.hutool.cron;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.Task;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.SettingRuntimeException;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 定时任务工具类<br>
@@ -116,7 +116,7 @@ public class CronUtil {
 	}
 
 	/**
-	 * 移除Task
+	 * 更新Task的执行时间规则
 	 * 
 	 * @param id Task的ID
 	 * @param pattern {@link CronPattern}
@@ -145,9 +145,9 @@ public class CronUtil {
 	/**
 	 * 开始
 	 * 
-	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 */
-	synchronized public static void start(boolean isDeamon) {
+	synchronized public static void start(boolean isDaemon) {
 		if (scheduler.isStarted()) {
 			throw new UtilException("Scheduler has been started, please stop it first!");
 		}
@@ -167,7 +167,7 @@ public class CronUtil {
 		}
 
 		schedule(crontabSetting);
-		scheduler.start(isDeamon);
+		scheduler.start(isDaemon);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class CronUtil {
 			}
 			if (scheduler.isStarted()) {
 				//关闭并清除已有任务
-				scheduler.stop(true);
+				stop();
 			}
 		} finally {
 			lock.unlock();
@@ -199,7 +199,7 @@ public class CronUtil {
 	 * 停止
 	 */
 	public static void stop() {
-		scheduler.stop();
+		scheduler.stop(true);
 	}
 
 }

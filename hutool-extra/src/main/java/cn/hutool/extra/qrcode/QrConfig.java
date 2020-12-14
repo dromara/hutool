@@ -1,16 +1,16 @@
 package cn.hutool.extra.qrcode;
 
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 二维码设置
@@ -29,10 +29,12 @@ public class QrConfig {
 	protected int height;
 	/** 前景色（二维码颜色） */
 	protected int foreColor = BLACK;
-	/** 背景色 */
-	protected int backColor = WHITE;
+	/** 背景色，默认白色，null表示透明 */
+	protected Integer backColor = WHITE;
 	/** 边距1~4 */
 	protected Integer margin = 2;
+	/** 设置二维码中的信息量，可设置1-40的整数 */
+	protected Integer qrVersion;
 	/** 纠错级别 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */
@@ -123,9 +125,25 @@ public class QrConfig {
 	 * 
 	 * @param foreColor 前景色
 	 * @return this
+	 * @deprecated 请使用 {@link #setForeColor(Color)}
 	 */
+	@Deprecated
 	public QrConfig setForeColor(int foreColor) {
 		this.foreColor = foreColor;
+		return this;
+	}
+
+	/**
+	 * 设置前景色，例如：Color.BLUE.getRGB()
+	 *
+	 * @param foreColor 前景色
+	 * @return this
+	 * @since 5.1.1
+	 */
+	public QrConfig setForeColor(Color foreColor) {
+		if(null != foreColor){
+			this.foreColor = foreColor.getRGB();
+		}
 		return this;
 	}
 
@@ -143,9 +161,27 @@ public class QrConfig {
 	 * 
 	 * @param backColor 背景色
 	 * @return this
+	 * @deprecated 请使用 {@link #setBackColor(Color)}
 	 */
+	@Deprecated
 	public QrConfig setBackColor(int backColor) {
 		this.backColor = backColor;
+		return this;
+	}
+
+	/**
+	 * 设置背景色，例如：Color.BLUE
+	 *
+	 * @param backColor 背景色,null表示透明背景
+	 * @return this
+	 * @since 5.1.1
+	 */
+	public QrConfig setBackColor(Color backColor) {
+		if(null == backColor){
+			this.backColor = null;
+		} else {
+			this.backColor = backColor.getRGB();
+		}
 		return this;
 	}
 
@@ -166,6 +202,26 @@ public class QrConfig {
 	 */
 	public QrConfig setMargin(Integer margin) {
 		this.margin = margin;
+		return this;
+	}
+
+	/**
+	 * 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化
+	 *
+	 * @return 二维码中的信息量
+	 */
+	public Integer getQrVersion() {
+		return qrVersion;
+	}
+
+	/**
+	 * 设置二维码中的信息量，可设置0-40的整数，二维码图片也会根据qrVersion而变化，0表示根据传入信息自动变化
+	 *
+	 * @param qrVersion 二维码中的信息量
+	 * @return this
+	 */
+	public QrConfig setQrVersion(Integer qrVersion) {
+		this.qrVersion = qrVersion;
 		return this;
 	}
 
@@ -278,13 +334,16 @@ public class QrConfig {
 		// 配置
 		final HashMap<EncodeHintType, Object> hints = new HashMap<>();
 		if (null != this.charset) {
-			hints.put(EncodeHintType.CHARACTER_SET, charset.toString());
+			hints.put(EncodeHintType.CHARACTER_SET, charset.toString().toLowerCase());
 		}
 		if (null != this.errorCorrection) {
 			hints.put(EncodeHintType.ERROR_CORRECTION, this.errorCorrection);
 		}
 		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);
+		}
+		if (null != this.qrVersion){
+			hints.put(EncodeHintType.QR_VERSION, this.qrVersion);
 		}
 		return hints;
 	}

@@ -1,10 +1,10 @@
 package cn.hutool.log;
 
-import java.io.Serializable;
-
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.level.Level;
+
+import java.io.Serializable;
 
 /**
  * 抽象日志类<br>

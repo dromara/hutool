@@ -1,11 +1,11 @@
 package cn.hutool.core.map.multi;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapWrapper;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapWrapper;
 
 /**
  * 值作为集合的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
@@ -67,7 +67,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 	 * @param loadFactor 加载因子
 	 */
 	public CollectionValueMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<K, Collection<V>>(initialCapacity, loadFactor));
+		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 
@@ -81,7 +81,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 	public void putValue(K key, V value) {
 		Collection<V> collection = this.get(key);
 		if (null == collection) {
-			collection = createCollction();
+			collection = createCollection();
 			this.put(key, collection);
 		}
 		collection.add(value);
@@ -105,5 +105,5 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 	 * 
 	 * @return {@link Collection}
 	 */
-	protected abstract Collection<V> createCollction();
+	protected abstract Collection<V> createCollection();
 }

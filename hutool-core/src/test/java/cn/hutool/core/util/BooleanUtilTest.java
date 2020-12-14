@@ -21,4 +21,22 @@ public class BooleanUtilTest {
 		Assert.assertFalse(BooleanUtil.toBoolean("6455434"));
 		Assert.assertFalse(BooleanUtil.toBoolean(""));
 	}
+
+	@Test
+	public void andTest(){
+		Assert.assertFalse(BooleanUtil.and(true,false));
+		Assert.assertFalse(BooleanUtil.andOfWrap(true,false));
+	}
+
+	@Test
+	public void orTest(){
+		Assert.assertTrue(BooleanUtil.or(true,false));
+		Assert.assertTrue(BooleanUtil.orOfWrap(true,false));
+	}
+
+	@Test
+	public void xorTest(){
+		Assert.assertTrue(BooleanUtil.xor(true,false));
+		Assert.assertTrue(BooleanUtil.xorOfWrap(true,false));
+	}
 }

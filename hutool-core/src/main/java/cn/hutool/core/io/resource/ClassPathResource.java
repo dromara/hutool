@@ -20,9 +20,9 @@ import cn.hutool.core.util.URLUtil;
 public class ClassPathResource extends UrlResource {
 	private static final long serialVersionUID = 1L;
 
-	private String path;
-	private ClassLoader classLoader;
-	private Class<?> clazz;
+	private final String path;
+	private final ClassLoader classLoader;
+	private final Class<?> clazz;
 
 	// -------------------------------------------------------------------------------------- Constructor start
 	/**

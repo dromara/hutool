@@ -1,33 +1,36 @@
 package cn.hutool.core.date;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.CompareUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateModifier.ModifyType;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+
 /**
  * 时间工具类
- * 
+ *
  * @author xiaoleilu
  */
-public class DateUtil {
+public class DateUtil extends CalendarUtil {
 
 	/**
 	 * java.util.Date EEE MMM zzz 缩写数组
@@ -40,7 +43,7 @@ public class DateUtil {
 
 	/**
 	 * 当前时间，转换为{@link DateTime}对象
-	 * 
+	 *
 	 * @return 当前时间
 	 */
 	public static DateTime date() {
@@ -49,7 +52,7 @@ public class DateUtil {
 
 	/**
 	 * 当前时间，转换为{@link DateTime}对象，忽略毫秒部分
-	 * 
+	 *
 	 * @return 当前时间
 	 * @since 4.6.2
 	 */
@@ -60,7 +63,7 @@ public class DateUtil {
 	/**
 	 * {@link Date}类型时间转为{@link DateTime}<br>
 	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
-	 * 
+	 *
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
 	 * @since 3.0.7
@@ -74,7 +77,7 @@ public class DateUtil {
 
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
-	 * 
+	 *
 	 * @param date Date对象
 	 * @return {@link DateTime}对象
 	 * @since 4.3.1
@@ -86,7 +89,7 @@ public class DateUtil {
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
 	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
-	 * 
+	 *
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
 	 */
@@ -97,7 +100,7 @@ public class DateUtil {
 	/**
 	 * {@link Calendar}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
-	 * 
+	 *
 	 * @param calendar {@link Calendar}
 	 * @return 时间对象
 	 */
@@ -106,54 +109,29 @@ public class DateUtil {
 	}
 
 	/**
-	 * 创建Calendar对象，时间为默认时区的当前时间
-	 * 
-	 * @return Calendar对象
-	 * @since 4.6.6
+	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
+	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
+	 *
+	 * @param temporalAccessor {@link TemporalAccessor}
+	 * @return 时间对象
+	 * @since 5.0.0
 	 */
-	public static Calendar calendar() {
-		return Calendar.getInstance();
-	}
-
-	/**
-	 * 转换为Calendar对象
-	 * 
-	 * @param date 日期对象
-	 * @return Calendar对象
-	 */
-	public static Calendar calendar(Date date) {
-		if (date instanceof DateTime) {
-			return ((DateTime) date).toCalendar();
-		} else {
-			return calendar(date.getTime());
-		}
-	}
-
-	/**
-	 * 转换为Calendar对象
-	 * 
-	 * @param millis 时间戳
-	 * @return Calendar对象
-	 */
-	public static Calendar calendar(long millis) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(millis);
-		return cal;
+	public static DateTime date(TemporalAccessor temporalAccessor) {
+		return new DateTime(temporalAccessor);
 	}
 
 	/**
 	 * 当前时间的时间戳
-	 * 
-	 * @param isNano 是否为高精度时间
+	 *
 	 * @return 时间
 	 */
-	public static long current(boolean isNano) {
-		return isNano ? System.nanoTime() : System.currentTimeMillis();
+	public static long current() {
+		return System.currentTimeMillis();
 	}
 
 	/**
 	 * 当前时间的时间戳（秒）
-	 * 
+	 *
 	 * @return 当前时间秒数
 	 * @since 4.0.0
 	 */
@@ -163,7 +141,7 @@ public class DateUtil {
 
 	/**
 	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
-	 * 
+	 *
 	 * @return 当前时间的标准形式字符串
 	 */
 	public static String now() {
@@ -172,7 +150,7 @@ public class DateUtil {
 
 	/**
 	 * 当前日期，格式 yyyy-MM-dd
-	 * 
+	 *
 	 * @return 当前日期的标准形式字符串
 	 */
 	public static String today() {
@@ -180,9 +158,10 @@ public class DateUtil {
 	}
 
 	// -------------------------------------------------------------- Part of Date start
+
 	/**
 	 * 获得年的部分
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 年的部分
 	 */
@@ -192,7 +171,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期所属季度，从1开始计数
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 第几个季度
 	 * @since 4.1.0
@@ -203,7 +182,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期所属季度
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 第几个季度枚举
 	 * @since 4.1.0
@@ -214,7 +193,7 @@ public class DateUtil {
 
 	/**
 	 * 获得月份，从0开始计数
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 月份，从0开始计数
 	 */
@@ -224,7 +203,7 @@ public class DateUtil {
 
 	/**
 	 * 获得月份
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link Month}
 	 */
@@ -234,9 +213,14 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期是所在年份的第几周<br>
-	 * 
+	 * 此方法返回值与一周的第一天有关，比如：<br>
+	 * 2016年1月3日为周日，如果一周的第一天为周日，那这天是第二周（返回2）<br>
+	 * 如果一周的第一天为周一，那这天是第一周（返回1）<br>
+	 * 跨年的那个星期得到的结果总是1
+	 *
 	 * @param date 日期
 	 * @return 周
+	 * @see DateTime#setFirstDayOfWeek(Week)
 	 */
 	public static int weekOfYear(Date date) {
 		return DateTime.of(date).weekOfYear();
@@ -244,7 +228,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期是所在月份的第几周<br>
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 周
 	 */
@@ -254,7 +238,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期是这个日期所在月份的第几天<br>
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 天
 	 */
@@ -263,8 +247,19 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获得指定日期是这个日期所在年的第几天
+	 *
+	 * @param date 日期
+	 * @return 天
+	 * @since 5.3.6
+	 */
+	public static int dayOfYear(Date date) {
+		return DateTime.of(date).dayOfYear();
+	}
+
+	/**
 	 * 获得指定日期是星期几，1表示周日，2表示周一
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 天
 	 */
@@ -274,7 +269,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期是星期几
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link Week}
 	 */
@@ -284,8 +279,8 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期的小时数部分<br>
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date          日期
 	 * @param is24HourClock 是否24小时制
 	 * @return 小时数
 	 */
@@ -296,7 +291,7 @@ public class DateUtil {
 	/**
 	 * 获得指定日期的分钟数部分<br>
 	 * 例如：10:04:15.250 =》 4
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 分钟数
 	 */
@@ -306,7 +301,7 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期的秒数部分<br>
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 秒数
 	 */
@@ -316,17 +311,29 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期的毫秒数部分<br>
-	 * 
+	 *
+	 * @param date 日期
+	 * @return 毫秒数
+	 * @deprecated 拼写错误，请使用{@link #millisecond(Date)}
+	 */
+	@Deprecated
+	public static int millsecond(Date date) {
+		return DateTime.of(date).millisecond();
+	}
+
+	/**
+	 * 获得指定日期的毫秒数部分<br>
+	 *
 	 * @param date 日期
 	 * @return 毫秒数
 	 */
-	public static int millsecond(Date date) {
-		return DateTime.of(date).millsecond();
+	public static int millisecond(Date date) {
+		return DateTime.of(date).millisecond();
 	}
 
 	/**
 	 * 是否为上午
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 是否为上午
 	 */
@@ -335,19 +342,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 是否为上午
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @return 是否为上午
-	 * @since 4.5.7
-	 */
-	public static boolean isAM(Calendar calendar) {
-		return Calendar.AM == calendar.get(Calendar.AM_PM);
-	}
-
-	/**
 	 * 是否为下午
-	 * 
+	 *
 	 * @param date 日期
 	 * @return 是否为下午
 	 */
@@ -384,7 +380,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @return 当前日期所在年份的第几周
+	 * @return 当前日期所在月份的第几周
 	 */
 	public static int thisWeekOfMonth() {
 		return weekOfMonth(date());
@@ -435,16 +431,25 @@ public class DateUtil {
 
 	/**
 	 * @return 当前日期的毫秒数部分<br>
+	 * @deprecated 拼写错误，请使用{@link #thisMillisecond()}
 	 */
+	@Deprecated
 	public static int thisMillsecond() {
-		return millsecond(date());
+		return millisecond(date());
+	}
+
+	/**
+	 * @return 当前日期的毫秒数部分<br>
+	 */
+	public static int thisMillisecond() {
+		return millisecond(date());
 	}
 	// -------------------------------------------------------------- Part of Date end
 
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度
-	 * 
+	 *
 	 * @param date 日期
 	 * @return Quarter ，类似于 20132
 	 */
@@ -454,9 +459,9 @@ public class DateUtil {
 
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
-	 * 
+	 *
 	 * @param startDate 起始日期（包含）
-	 * @param endDate 结束日期（包含）
+	 * @param endDate   结束日期（包含）
 	 * @return 季度列表 ，元素类似于 20132
 	 */
 	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
@@ -465,34 +470,34 @@ public class DateUtil {
 		}
 		return yearAndQuarter(startDate.getTime(), endDate.getTime());
 	}
+	// ------------------------------------ Format start ----------------------------------------------
 
 	/**
-	 * 获得指定日期区间内的年份和季节<br>
-	 * 
-	 * @param startDate 起始日期（包含）
-	 * @param endDate 结束日期（包含）
-	 * @return 季度列表 ，元素类似于 20132
-	 * @since 4.1.15
+	 * 格式化日期时间<br>
+	 * 格式 yyyy-MM-dd HH:mm:ss
+	 *
+	 * @param localDateTime 被格式化的日期
+	 * @return 格式化后的字符串
 	 */
-	public static LinkedHashSet<String> yearAndQuarter(long startDate, long endDate) {
-		LinkedHashSet<String> quarters = new LinkedHashSet<>();
-		final Calendar cal = calendar(startDate);
-		while (startDate <= endDate) {
-			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
-			quarters.add(yearAndQuarter(cal));
-
-			cal.add(Calendar.MONTH, 3);
-			startDate = cal.getTimeInMillis();
-		}
-
-		return quarters;
+	public static String formatLocalDateTime(LocalDateTime localDateTime) {
+		return LocalDateTimeUtil.formatNormal(localDateTime);
 	}
 
-	// ------------------------------------ Format start ----------------------------------------------
 	/**
 	 * 根据特定格式格式化日期
-	 * 
-	 * @param date 被格式化的日期
+	 *
+	 * @param localDateTime 被格式化的日期
+	 * @param format        日期格式，常用格式见： {@link DatePattern}
+	 * @return 格式化后的字符串
+	 */
+	public static String format(LocalDateTime localDateTime, String format) {
+		return LocalDateTimeUtil.format(localDateTime, format);
+	}
+
+	/**
+	 * 根据特定格式格式化日期
+	 *
+	 * @param date   被格式化的日期
 	 * @param format 日期格式，常用格式见： {@link DatePattern}
 	 * @return 格式化后的字符串
 	 */
@@ -500,13 +505,21 @@ public class DateUtil {
 		if (null == date || StrUtil.isBlank(format)) {
 			return null;
 		}
-		return format(date, FastDateFormat.getInstance(format));
+
+		final SimpleDateFormat sdf = new SimpleDateFormat(format);
+		if (date instanceof DateTime) {
+			final TimeZone timeZone = ((DateTime) date).getTimeZone();
+			if (null != timeZone) {
+				sdf.setTimeZone(timeZone);
+			}
+		}
+		return format(date, sdf);
 	}
 
 	/**
 	 * 根据特定格式格式化日期
-	 * 
-	 * @param date 被格式化的日期
+	 *
+	 * @param date   被格式化的日期
 	 * @param format {@link DatePrinter} 或 {@link FastDateFormat}
 	 * @return 格式化后的字符串
 	 */
@@ -519,8 +532,8 @@ public class DateUtil {
 
 	/**
 	 * 根据特定格式格式化日期
-	 * 
-	 * @param date 被格式化的日期
+	 *
+	 * @param date   被格式化的日期
 	 * @param format {@link SimpleDateFormat}
 	 * @return 格式化后的字符串
 	 */
@@ -532,9 +545,24 @@ public class DateUtil {
 	}
 
 	/**
+	 * 根据特定格式格式化日期
+	 *
+	 * @param date   被格式化的日期
+	 * @param format {@link SimpleDateFormat}
+	 * @return 格式化后的字符串
+	 * @since 5.0.0
+	 */
+	public static String format(Date date, DateTimeFormatter format) {
+		if (null == format || null == date) {
+			return null;
+		}
+		return format.format(date.toInstant());
+	}
+
+	/**
 	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
-	 * 
+	 *
 	 * @param date 被格式化的日期
 	 * @return 格式化后的日期
 	 */
@@ -548,7 +576,7 @@ public class DateUtil {
 	/**
 	 * 格式化日期部分（不包括时间）<br>
 	 * 格式 yyyy-MM-dd
-	 * 
+	 *
 	 * @param date 被格式化的日期
 	 * @return 格式化后的字符串
 	 */
@@ -562,7 +590,7 @@ public class DateUtil {
 	/**
 	 * 格式化时间<br>
 	 * 格式 HH:mm:ss
-	 * 
+	 *
 	 * @param date 被格式化的日期
 	 * @return 格式化后的字符串
 	 * @since 3.0.1
@@ -577,7 +605,7 @@ public class DateUtil {
 	/**
 	 * 格式化为Http的标准日期格式<br>
 	 * 标准日期格式遵循RFC 1123规范，格式类似于：Fri, 31 Dec 1999 23:59:59 GMT
-	 * 
+	 *
 	 * @param date 被格式化的日期
 	 * @return HTTP标准形式日期字符串
 	 */
@@ -590,124 +618,177 @@ public class DateUtil {
 
 	/**
 	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日，否则返回二〇一八年十月二十四日
-	 * 
-	 * @param date 被格式化的日期
+	 *
+	 * @param date        被格式化的日期
 	 * @param isUppercase 是否采用大写形式
+	 * @param withTime    是否包含时间部分
 	 * @return 中文日期字符串
-	 * @since 4.1.19
+	 * @since 5.3.9
 	 */
-	public static String formatChineseDate(Date date, boolean isUppercase) {
+	public static String formatChineseDate(Date date, boolean isUppercase, boolean withTime) {
 		if (null == date) {
 			return null;
 		}
 
-		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
-		if (isUppercase) {
-			final StringBuilder builder = StrUtil.builder(format.length());
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
-			builder.append(format, 4, 5);
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
-			builder.append(format, 7, 8);
-			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
-			builder.append(format.substring(10));
-			format = builder.toString().replace('零', '〇');
+		if (false == isUppercase) {
+			return (withTime ? DatePattern.CHINESE_DATE_TIME_FORMAT : DatePattern.CHINESE_DATE_FORMAT).format(date);
 		}
-		return format;
+
+		return CalendarUtil.formatChineseDate(CalendarUtil.calendar(date), withTime);
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 
 	// ------------------------------------ Parse start ----------------------------------------------
 
 	/**
+	 * 构建LocalDateTime对象<br>
+	 * 格式：yyyy-MM-dd HH:mm:ss
+	 *
+	 * @param dateStr 时间字符串（带格式）
+	 * @return LocalDateTime对象
+	 */
+	public static LocalDateTime parseLocalDateTime(CharSequence dateStr) {
+		return parseLocalDateTime(dateStr, DatePattern.NORM_DATETIME_PATTERN);
+	}
+
+	/**
+	 * 构建LocalDateTime对象
+	 *
+	 * @param dateStr 时间字符串（带格式）
+	 * @param format  使用{@link DatePattern}定义的格式
+	 * @return LocalDateTime对象
+	 */
+	public static LocalDateTime parseLocalDateTime(CharSequence dateStr, String format) {
+		return LocalDateTimeUtil.parse(dateStr, format);
+	}
+
+	/**
 	 * 构建DateTime对象
-	 * 
-	 * @param dateStr Date字符串
+	 *
+	 * @param dateStr    Date字符串
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(String dateStr, DateFormat dateFormat) {
+	public static DateTime parse(CharSequence dateStr, DateFormat dateFormat) {
 		return new DateTime(dateStr, dateFormat);
 	}
 
 	/**
 	 * 构建DateTime对象
-	 * 
+	 *
 	 * @param dateStr Date字符串
-	 * @param parser 格式化器,{@link FastDateFormat}
+	 * @param parser  格式化器,{@link FastDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(String dateStr, DateParser parser) {
+	public static DateTime parse(CharSequence dateStr, DateParser parser) {
 		return new DateTime(dateStr, parser);
 	}
 
 	/**
+	 * 构建DateTime对象
+	 *
+	 * @param dateStr   Date字符串
+	 * @param formatter 格式化器,{@link DateTimeFormatter}
+	 * @return DateTime对象
+	 * @since 5.0.0
+	 */
+	public static DateTime parse(CharSequence dateStr, DateTimeFormatter formatter) {
+		return new DateTime(dateStr, formatter);
+	}
+
+	/**
 	 * 将特定格式的日期转换为Date对象
-	 * 
+	 *
 	 * @param dateStr 特定格式的日期
-	 * @param format 格式，例如yyyy-MM-dd
+	 * @param format  格式，例如yyyy-MM-dd
 	 * @return 日期对象
 	 */
-	public static DateTime parse(String dateStr, String format) {
+	public static DateTime parse(CharSequence dateStr, String format) {
 		return new DateTime(dateStr, format);
 	}
 
 	/**
 	 * 将特定格式的日期转换为Date对象
-	 * 
+	 *
 	 * @param dateStr 特定格式的日期
-	 * @param format 格式，例如yyyy-MM-dd
-	 * @param locale 区域信息
+	 * @param format  格式，例如yyyy-MM-dd
+	 * @param locale  区域信息
 	 * @return 日期对象
 	 * @since 4.5.18
 	 */
-	public static DateTime parse(String dateStr, String format, Locale locale) {
+	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
 		return new DateTime(dateStr, new SimpleDateFormat(format, locale));
 	}
 
 	/**
-	 * 格式yyyy-MM-dd HH:mm:ss
-	 * 
+	 * 通过给定的日期格式解析日期时间字符串。<br>
+	 * 传入的日期格式会逐个尝试，直到解析成功，返回{@link DateTime}对象，否则抛出{@link DateException}异常。
+	 *
+	 * @param str           日期时间字符串，非空
+	 * @param parsePatterns 需要尝试的日期时间格式数组，非空, 见SimpleDateFormat
+	 * @return 解析后的Date
+	 * @throws IllegalArgumentException if the date string or pattern array is null
+	 * @throws DateException            if none of the date patterns were suitable
+	 * @since 5.3.11
+	 */
+	public static DateTime parse(String str, String... parsePatterns) throws DateException {
+		return new DateTime(CalendarUtil.parseByPatterns(str, parsePatterns));
+	}
+
+	/**
+	 * 解析日期时间字符串，格式支持：
+	 *
+	 * <pre>
+	 * yyyy-MM-dd HH:mm:ss
+	 * yyyy/MM/dd HH:mm:ss
+	 * yyyy.MM.dd HH:mm:ss
+	 * yyyy年MM月dd日 HH:mm:ss
+	 * </pre>
+	 *
 	 * @param dateString 标准形式的时间字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseDateTime(String dateString) {
+	public static DateTime parseDateTime(CharSequence dateString) {
 		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATETIME_FORMAT);
 	}
 
 	/**
-	 * 解析格式为yyyy-MM-dd的日期，忽略时分秒
-	 * 
+	 * 解析日期字符串，忽略时分秒，支持的格式包括：
+	 * <pre>
+	 * yyyy-MM-dd
+	 * yyyy/MM/dd
+	 * yyyy.MM.dd
+	 * yyyy年MM月dd日
+	 * </pre>
+	 *
 	 * @param dateString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseDate(String dateString) {
+	public static DateTime parseDate(CharSequence dateString) {
 		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATE_FORMAT);
 	}
 
 	/**
 	 * 解析时间，格式HH:mm:ss，日期部分默认为1970-01-01
-	 * 
+	 *
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseTime(String timeString) {
+	public static DateTime parseTime(CharSequence timeString) {
 		timeString = normalize(timeString);
 		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
 
 	/**
 	 * 解析时间，格式HH:mm 或 HH:mm:ss，日期默认为今天
-	 * 
+	 *
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
 	 * @since 3.1.1
 	 */
-	public static DateTime parseTimeToday(String timeString) {
+	public static DateTime parseTimeToday(CharSequence timeString) {
 		timeString = StrUtil.format("{} {}", today(), timeString);
 		if (1 == StrUtil.count(timeString, ':')) {
 			// 时间格式为 HH:mm
@@ -726,7 +807,7 @@ public class DateUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param utcString UTC时间
 	 * @return 日期对象
 	 * @since 4.1.14
@@ -738,10 +819,10 @@ public class DateUtil {
 		int length = utcString.length();
 		if (StrUtil.contains(utcString, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31Z
+				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_FORMAT);
 			} else if (length == DatePattern.UTC_MS_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31.999Z
+				// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
 		} else {
@@ -751,10 +832,31 @@ public class DateUtil {
 			} else if (length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
 				// 格式类似：2018-09-13T05:34:31.999+0800 或 2018-09-13T05:34:31.999+08:00
 				return parse(utcString, DatePattern.UTC_MS_WITH_ZONE_OFFSET_FORMAT);
+			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
+				// 格式类似：2018-09-13T05:34:31
+				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
 			}
 		}
 		// 没有更多匹配的时间格式
 		throw new DateException("No format fit for date String [{}] !", utcString);
+	}
+
+	/**
+	 * 解析CST时间，格式：<br>
+	 * <ol>
+	 * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
+	 * </ol>
+	 *
+	 * @param cstString UTC时间
+	 * @return 日期对象
+	 * @since 4.6.9
+	 */
+	public static DateTime parseCST(CharSequence cstString) {
+		if (cstString == null) {
+			return null;
+		}
+
+		return parse(cstString, DatePattern.JDK_DATETIME_FORMAT);
 	}
 
 	/**
@@ -781,19 +883,20 @@ public class DateUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
 	 * </ol>
-	 * 
-	 * @param dateStr 日期字符串
+	 *
+	 * @param dateCharSequence 日期字符串
 	 * @return 日期
 	 */
-	public static DateTime parse(String dateStr) {
-		if (null == dateStr) {
+	public static DateTime parse(CharSequence dateCharSequence) {
+		if (StrUtil.isBlank(dateCharSequence)) {
 			return null;
 		}
+		String dateStr = dateCharSequence.toString();
 		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
 		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
 		int length = dateStr.length();
 
-		if (Validator.isNumber(dateStr)) {
+		if (NumberUtil.isNumber(dateStr)) {
 			// 纯数字形式
 			if (length == DatePattern.PURE_DATETIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
@@ -808,24 +911,36 @@ public class DateUtil {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
 			return parseTimeToday(dateStr);
 		} else if (StrUtil.containsAnyIgnoreCase(dateStr, wtb)) {
-			// JDK的Date对象toString默认格式，类似于：Tue Jun 4 16:25:15 +0800 2019 或 Thu May 16 17:57:18 GMT+08:00 2019
-			return parse(dateStr, DatePattern.JDK_DATETIME_FORMAT);
+			// JDK的Date对象toString默认格式，类似于：
+			// Tue Jun 4 16:25:15 +0800 2019
+			// Thu May 16 17:57:18 GMT+08:00 2019
+			// Wed Aug 01 00:00:00 CST 2012
+			return parseCST(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
 			// UTC时间
 			return parseUTC(dateStr);
 		}
 
-		if (length == DatePattern.NORM_DATETIME_PATTERN.length()) {
-			// yyyy-MM-dd HH:mm:ss
-			return parseDateTime(dateStr);
-		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
-			// yyyy-MM-dd
-			return parseDate(dateStr);
-		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length()) {
-			// yyyy-MM-dd HH:mm
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
-		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_FORMAT);
+		//标准日期格式（包括单个数字的日期时间）
+		dateStr = normalize(dateStr);
+		final Matcher matcher = DatePattern.REGEX_NORM.matcher(dateStr);
+		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
+			final int colonCount = StrUtil.count(dateStr, CharUtil.COLON);
+			switch (colonCount) {
+				case 0:
+					// yyyy-MM-dd
+					return parse(dateStr, DatePattern.NORM_DATE_FORMAT);
+				case 1:
+					// yyyy-MM-dd HH:mm
+					return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_FORMAT);
+				case 2:
+					if (StrUtil.contains(dateStr, CharUtil.DOT)) {
+						// yyyy-MM-dd HH:mm:ss.SSS
+						return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
+					}
+					// yyyy-MM-dd HH:mm:ss
+					return parse(dateStr, DatePattern.NORM_DATETIME_FORMAT);
+			}
 		}
 
 		// 没有更多匹配的时间格式
@@ -835,10 +950,11 @@ public class DateUtil {
 	// ------------------------------------ Parse end ----------------------------------------------
 
 	// ------------------------------------ Offset start ----------------------------------------------
+
 	/**
 	 * 修改日期为某个时间字段起始时间
-	 * 
-	 * @param date {@link Date}
+	 *
+	 * @param date      {@link Date}
 	 * @param dateField 时间字段
 	 * @return {@link DateTime}
 	 * @since 4.5.7
@@ -848,21 +964,9 @@ public class DateUtil {
 	}
 
 	/**
-	 * 修改日期为某个时间字段起始时间
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @param dateField 时间字段
-	 * @return 原{@link Calendar}
-	 * @since 4.5.7
-	 */
-	public static Calendar truncate(Calendar calendar, DateField dateField) {
-		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.TRUNCATE);
-	}
-
-	/**
 	 * 修改日期为某个时间字段四舍五入时间
-	 * 
-	 * @param date {@link Date}
+	 *
+	 * @param date      {@link Date}
 	 * @param dateField 时间字段
 	 * @return {@link DateTime}
 	 * @since 4.5.7
@@ -872,21 +976,9 @@ public class DateUtil {
 	}
 
 	/**
-	 * 修改日期为某个时间字段四舍五入时间
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @param dateField 时间字段
-	 * @return 原{@link Calendar}
-	 * @since 4.5.7
-	 */
-	public static Calendar round(Calendar calendar, DateField dateField) {
-		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.ROUND);
-	}
-
-	/**
 	 * 修改日期为某个时间字段结束时间
-	 * 
-	 * @param date {@link Date}
+	 *
+	 * @param date      {@link Date}
 	 * @param dateField 时间字段
 	 * @return {@link DateTime}
 	 * @since 4.5.7
@@ -896,20 +988,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 修改日期为某个时间字段结束时间
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @param dateField 时间字段
-	 * @return 原{@link Calendar}
-	 * @since 4.5.7
-	 */
-	public static Calendar ceiling(Calendar calendar, DateField dateField) {
-		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.CEILING);
-	}
-
-	/**
-	 * 获取秒级别的开始时间，既忽略毫秒部分
-	 * 
+	 * 获取秒级别的开始时间，即忽略毫秒部分
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 * @since 4.6.2
@@ -919,8 +999,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的结束时间，既毫秒设置为999
-	 * 
+	 * 获取秒级别的结束时间，即毫秒设置为999
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 * @since 4.6.2
@@ -930,30 +1010,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，既忽略毫秒部分
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 * @since 4.6.2
-	 */
-	public static Calendar beginOfSecond(Calendar calendar) {
-		return truncate(calendar, DateField.SECOND);
-	}
-
-	/**
-	 * 获取秒级别的结束时间，既毫秒设置为999
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 * @since 4.6.2
-	 */
-	public static Calendar endOfSecond(Calendar calendar) {
-		return ceiling(calendar, DateField.SECOND);
-	}
-
-	/**
 	 * 获取某天的开始时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -963,7 +1021,7 @@ public class DateUtil {
 
 	/**
 	 * 获取某天的结束时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -972,28 +1030,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某天的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar beginOfDay(Calendar calendar) {
-		return truncate(calendar, DateField.DAY_OF_MONTH);
-	}
-
-	/**
-	 * 获取某天的结束时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar endOfDay(Calendar calendar) {
-		return ceiling(calendar, DateField.DAY_OF_MONTH);
-	}
-
-	/**
 	 * 获取某周的开始时间，周一定为一周的开始时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1002,8 +1040,20 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获取某周的开始时间
+	 *
+	 * @param date               日期
+	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
+	 * @return {@link DateTime}
+	 * @since 5.4.0
+	 */
+	public static DateTime beginOfWeek(Date date, boolean isMondayAsFirstDay) {
+		return new DateTime(beginOfWeek(calendar(date), isMondayAsFirstDay));
+	}
+
+	/**
 	 * 获取某周的结束时间，周日定为一周的结束
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1012,60 +1062,20 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取给定日期当前周的开始时间，周一定为一周的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar beginOfWeek(Calendar calendar) {
-		return beginOfWeek(calendar, true);
-	}
-
-	/**
-	 * 获取给定日期当前周的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
-	 * @return {@link Calendar}
-	 * @since 3.1.2
-	 */
-	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		if (isMondayAsFirstDay) {
-			calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		}
-		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
-		return truncate(calendar, DateField.WEEK_OF_MONTH);
-	}
-
-	/**
-	 * 获取某周的结束时间，周日定为一周的结束
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar endOfWeek(Calendar calendar) {
-		return endOfWeek(calendar, true);
-	}
-
-	/**
 	 * 获取某周的结束时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
+	 *
+	 * @param date              日期
 	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
-	 * @return {@link Calendar}
-	 * @since 3.1.2
+	 * @return {@link DateTime}
+	 * @since 5.4.0
 	 */
-	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		if (isSundayAsLastDay) {
-			calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		}
-		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
-		return ceiling(calendar, DateField.WEEK_OF_MONTH);
+	public static DateTime endOfWeek(Date date, boolean isSundayAsLastDay) {
+		return new DateTime(endOfWeek(calendar(date), isSundayAsLastDay));
 	}
 
 	/**
 	 * 获取某月的开始时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1075,7 +1085,7 @@ public class DateUtil {
 
 	/**
 	 * 获取某月的结束时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1084,28 +1094,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某月的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar beginOfMonth(Calendar calendar) {
-		return truncate(calendar, DateField.MONTH);
-	}
-
-	/**
-	 * 获取某月的结束时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar endOfMonth(Calendar calendar) {
-		return ceiling(calendar, DateField.MONTH);
-	}
-
-	/**
 	 * 获取某季度的开始时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1115,7 +1105,7 @@ public class DateUtil {
 
 	/**
 	 * 获取某季度的结束时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1124,34 +1114,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某季度的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 * @since 4.1.0
-	 */
-	public static Calendar beginOfQuarter(Calendar calendar) {
-		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		return beginOfDay(calendar);
-	}
-
-	/**
-	 * 获取某季度的结束时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 * @since 4.1.0
-	 */
-	public static Calendar endOfQuarter(Calendar calendar) {
-		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2);
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-		return endOfDay(calendar);
-	}
-
-	/**
 	 * 获取某年的开始时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
@@ -1161,38 +1125,18 @@ public class DateUtil {
 
 	/**
 	 * 获取某年的结束时间
-	 * 
+	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfYear(Date date) {
 		return new DateTime(endOfYear(calendar(date)));
 	}
-
-	/**
-	 * 获取某年的开始时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar beginOfYear(Calendar calendar) {
-		return truncate(calendar, DateField.YEAR);
-	}
-
-	/**
-	 * 获取某年的结束时间
-	 * 
-	 * @param calendar 日期 {@link Calendar}
-	 * @return {@link Calendar}
-	 */
-	public static Calendar endOfYear(Calendar calendar) {
-		return ceiling(calendar, DateField.YEAR);
-	}
-
 	// --------------------------------------------------- Offset for now
+
 	/**
 	 * 昨天
-	 * 
+	 *
 	 * @return 昨天
 	 */
 	public static DateTime yesterday() {
@@ -1201,7 +1145,7 @@ public class DateUtil {
 
 	/**
 	 * 明天
-	 * 
+	 *
 	 * @return 明天
 	 * @since 3.0.1
 	 */
@@ -1211,7 +1155,7 @@ public class DateUtil {
 
 	/**
 	 * 上周
-	 * 
+	 *
 	 * @return 上周
 	 */
 	public static DateTime lastWeek() {
@@ -1220,7 +1164,7 @@ public class DateUtil {
 
 	/**
 	 * 下周
-	 * 
+	 *
 	 * @return 下周
 	 * @since 3.0.1
 	 */
@@ -1230,7 +1174,7 @@ public class DateUtil {
 
 	/**
 	 * 上个月
-	 * 
+	 *
 	 * @return 上个月
 	 */
 	public static DateTime lastMonth() {
@@ -1239,7 +1183,7 @@ public class DateUtil {
 
 	/**
 	 * 下个月
-	 * 
+	 *
 	 * @return 下个月
 	 * @since 3.0.1
 	 */
@@ -1249,8 +1193,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移毫秒数
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移毫秒数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1260,8 +1204,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移秒数
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移秒数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1271,8 +1215,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移分钟
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移分钟数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1282,8 +1226,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移小时
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移小时数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1293,8 +1237,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移天
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移天数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1304,8 +1248,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移周
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移周数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1315,8 +1259,8 @@ public class DateUtil {
 
 	/**
 	 * 偏移月
-	 * 
-	 * @param date 日期
+	 *
+	 * @param date   日期
 	 * @param offset 偏移月数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
@@ -1326,10 +1270,10 @@ public class DateUtil {
 
 	/**
 	 * 获取指定日期偏移指定时间后的时间，生成的偏移日期不影响原日期
-	 * 
-	 * @param date 基准日期
+	 *
+	 * @param date      基准日期
 	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
-	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param offset    偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offset(Date date, DateField dateField, int offset) {
@@ -1338,10 +1282,10 @@ public class DateUtil {
 
 	/**
 	 * 获取指定日期偏移指定时间后的时间
-	 * 
-	 * @param date 基准日期
+	 *
+	 * @param date      基准日期
 	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
-	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param offset    偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 * @deprecated please use {@link DateUtil#offset(Date, DateField, int)}
 	 */
@@ -1353,10 +1297,10 @@ public class DateUtil {
 
 	/**
 	 * 判断两个日期相差的时长，只保留绝对值
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
+	 * @param endDate   结束日期
+	 * @param unit      相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 日期差
 	 */
 	public static long between(Date beginDate, Date endDate, DateUnit unit) {
@@ -1365,11 +1309,11 @@ public class DateUtil {
 
 	/**
 	 * 判断两个日期相差的时长
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
-	 * @param isAbs 日期间隔是否只保留绝对值正数
+	 * @param endDate   结束日期
+	 * @param unit      相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
+	 * @param isAbs     日期间隔是否只保留绝对值正数
 	 * @return 日期差
 	 * @since 3.3.1
 	 */
@@ -1379,9 +1323,9 @@ public class DateUtil {
 
 	/**
 	 * 判断两个日期相差的毫秒数
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
+	 * @param endDate   结束日期
 	 * @return 日期差
 	 * @since 3.0.1
 	 */
@@ -1391,17 +1335,17 @@ public class DateUtil {
 
 	/**
 	 * 判断两个日期相差的天数<br>
-	 * 
+	 *
 	 * <pre>
 	 * 有时候我们计算相差天数的时候需要忽略时分秒。
 	 * 比如：2016-02-01 23:59:59和2016-02-02 00:00:00相差一秒
 	 * 如果isReset为<code>false</code>相差天数为0。
 	 * 如果isReset为<code>true</code>相差天数将被计算为1
 	 * </pre>
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param isReset 是否重置时间为起始时间
+	 * @param endDate   结束日期
+	 * @param isReset   是否重置时间为起始时间
 	 * @return 日期差
 	 * @since 3.0.1
 	 */
@@ -1414,12 +1358,28 @@ public class DateUtil {
 	}
 
 	/**
+	 * 计算指定指定时间区间内的周数
+	 *
+	 * @param beginDate 开始时间
+	 * @param endDate   结束时间
+	 * @param isReset   是否重置时间为起始时间
+	 * @return 周数
+	 */
+	public static long betweenWeek(Date beginDate, Date endDate, boolean isReset) {
+		if (isReset) {
+			beginDate = beginOfDay(beginDate);
+			endDate = beginOfDay(endDate);
+		}
+		return between(beginDate, endDate, DateUnit.WEEK);
+	}
+
+	/**
 	 * 计算两个日期相差月数<br>
 	 * 在非重置情况下，如果起始日期的天小于结束日期的天，月数要少算1（不足1个月）
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param isReset 是否重置时间为起始时间（重置天时分秒）
+	 * @param endDate   结束日期
+	 * @param isReset   是否重置时间为起始时间（重置天时分秒）
 	 * @return 相差月数
 	 * @since 3.0.8
 	 */
@@ -1430,10 +1390,10 @@ public class DateUtil {
 	/**
 	 * 计算两个日期相差年数<br>
 	 * 在非重置情况下，如果起始日期的月小于结束日期的月，年数要少算1（不足1年）
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param isReset 是否重置时间为起始时间（重置月天时分秒）
+	 * @param endDate   结束日期
+	 * @param isReset   是否重置时间为起始时间（重置月天时分秒）
 	 * @return 相差年数
 	 * @since 3.0.8
 	 */
@@ -1443,21 +1403,21 @@ public class DateUtil {
 
 	/**
 	 * 格式化日期间隔输出
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
-	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级
+	 * @param endDate   结束日期
+	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒
 	 */
-	public static String formatBetween(Date beginDate, Date endDate, BetweenFormater.Level level) {
+	public static String formatBetween(Date beginDate, Date endDate, BetweenFormatter.Level level) {
 		return formatBetween(between(beginDate, endDate, DateUnit.MS), level);
 	}
 
 	/**
 	 * 格式化日期间隔输出，精确到毫秒
-	 * 
+	 *
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
+	 * @param endDate   结束日期
 	 * @return XX天XX小时XX分XX秒
 	 * @since 3.0.1
 	 */
@@ -1467,33 +1427,33 @@ public class DateUtil {
 
 	/**
 	 * 格式化日期间隔输出
-	 * 
+	 *
 	 * @param betweenMs 日期间隔
-	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级
+	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒XX毫秒
 	 */
-	public static String formatBetween(long betweenMs, BetweenFormater.Level level) {
-		return new BetweenFormater(betweenMs, level).format();
+	public static String formatBetween(long betweenMs, BetweenFormatter.Level level) {
+		return new BetweenFormatter(betweenMs, level).format();
 	}
 
 	/**
 	 * 格式化日期间隔输出，精确到毫秒
-	 * 
+	 *
 	 * @param betweenMs 日期间隔
 	 * @return XX天XX小时XX分XX秒XX毫秒
 	 * @since 3.0.1
 	 */
 	public static String formatBetween(long betweenMs) {
-		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLSECOND).format();
+		return new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
 	}
 
 	/**
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
-	 * 
-	 * @param date 被检查的日期
+	 *
+	 * @param date      被检查的日期
 	 * @param beginDate 起始日期
-	 * @param endDate 结束日期
+	 * @param endDate   结束日期
 	 * @return 是否在范围内
 	 * @since 3.0.8
 	 */
@@ -1506,8 +1466,9 @@ public class DateUtil {
 	}
 
 	/**
-	 * 是否为相同时间
-	 * 
+	 * 是否为相同时间<br>
+	 * 此方法比较两个日期的时间戳是否相同
+	 *
 	 * @param date1 日期1
 	 * @param date2 日期2
 	 * @return 是否为相同时间
@@ -1519,7 +1480,7 @@ public class DateUtil {
 
 	/**
 	 * 比较两个日期是否为同一天
-	 * 
+	 *
 	 * @param date1 日期1
 	 * @param date2 日期2
 	 * @return 是否为同一天
@@ -1529,29 +1490,28 @@ public class DateUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return isSameDay(calendar(date1), calendar(date2));
+		return CalendarUtil.isSameDay(calendar(date1), calendar(date2));
 	}
 
 	/**
-	 * 比较两个日期是否为同一天
-	 * 
-	 * @param cal1 日期1
-	 * @param cal2 日期2
-	 * @return 是否为同一天
-	 * @since 4.1.13
+	 * 比较两个日期是否为同一月
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一月
+	 * @since 5.4.1
 	 */
-	public static boolean isSameDay(Calendar cal1, Calendar cal2) {
-		if (cal1 == null || cal2 == null) {
+	public static boolean isSameMonth(final Date date1, final Date date2) {
+		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
-				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+		return CalendarUtil.isSameMonth(calendar(date1), calendar(date2));
 	}
+
 
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
-	 * 
+	 *
 	 * @param preTime 之前记录的时间
 	 * @return 时间差，纳秒
 	 */
@@ -1561,7 +1521,7 @@ public class DateUtil {
 
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：毫秒
-	 * 
+	 *
 	 * @param preTime 之前记录的时间
 	 * @return 时间差，毫秒
 	 */
@@ -1571,7 +1531,7 @@ public class DateUtil {
 
 	/**
 	 * 格式化成yyMMddHHmm后转换为int型
-	 * 
+	 *
 	 * @param date 日期
 	 * @return int
 	 */
@@ -1581,33 +1541,21 @@ public class DateUtil {
 
 	/**
 	 * 计算指定指定时间区间内的周数
-	 * 
+	 *
 	 * @param start 开始时间
-	 * @param end 结束时间
+	 * @param end   结束时间
 	 * @return 周数
+	 * @deprecated 请使用 {@link #betweenWeek(Date, Date, boolean)}
 	 */
+	@Deprecated
 	public static int weekCount(Date start, Date end) {
-		final Calendar startCalendar = Calendar.getInstance();
-		startCalendar.setTime(start);
-		final Calendar endCalendar = Calendar.getInstance();
-		endCalendar.setTime(end);
-
-		final int startWeekofYear = startCalendar.get(Calendar.WEEK_OF_YEAR);
-		final int endWeekofYear = endCalendar.get(Calendar.WEEK_OF_YEAR);
-
-		int count = endWeekofYear - startWeekofYear + 1;
-
-		if (Calendar.SUNDAY != startCalendar.get(Calendar.DAY_OF_WEEK)) {
-			count--;
-		}
-
-		return count;
+		return (int) betweenWeek(start, end, true);
 	}
 
 	/**
 	 * 计时器<br>
 	 * 计算某个过程花费的时间，精确到毫秒
-	 * 
+	 *
 	 * @return Timer
 	 */
 	public static TimeInterval timer() {
@@ -1616,8 +1564,81 @@ public class DateUtil {
 	}
 
 	/**
+	 * 计时器<br>
+	 * 计算某个过程花费的时间，精确到毫秒
+	 *
+	 * @param isNano 是否使用纳秒计数，false则使用毫秒
+	 * @return Timer
+	 * @since 5.2.3
+	 */
+	public static TimeInterval timer(boolean isNano) {
+		return new TimeInterval(isNano);
+	}
+
+	/**
+	 * 创建秒表{@link StopWatch}，用于对代码块的执行时间计数
+	 * <p>
+	 * 使用方法如下：
+	 *
+	 * <pre>
+	 * StopWatch stopWatch = DateUtil.createStopWatch();
+	 *
+	 * // 任务1
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(1000);
+	 * stopWatch.stop();
+	 *
+	 * // 任务2
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(2000);
+	 * stopWatch.stop();
+	 *
+	 * // 打印出耗时
+	 * Console.log(stopWatch.prettyPrint());
+	 *
+	 * </pre>
+	 *
+	 * @return {@link StopWatch}
+	 * @since 5.2.3
+	 */
+	public static StopWatch createStopWatch() {
+		return new StopWatch();
+	}
+
+	/**
+	 * 创建秒表{@link StopWatch}，用于对代码块的执行时间计数
+	 * <p>
+	 * 使用方法如下：
+	 *
+	 * <pre>
+	 * StopWatch stopWatch = DateUtil.createStopWatch("任务名称");
+	 *
+	 * // 任务1
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(1000);
+	 * stopWatch.stop();
+	 *
+	 * // 任务2
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(2000);
+	 * stopWatch.stop();
+	 *
+	 * // 打印出耗时
+	 * Console.log(stopWatch.prettyPrint());
+	 *
+	 * </pre>
+	 *
+	 * @param id 用于标识秒表的唯一ID
+	 * @return {@link StopWatch}
+	 * @since 5.2.3
+	 */
+	public static StopWatch createStopWatch(String id) {
+		return new StopWatch(id);
+	}
+
+	/**
 	 * 生日转为年龄，计算法定年龄
-	 * 
+	 *
 	 * @param birthDay 生日，标准日期字符串
 	 * @return 年龄
 	 */
@@ -1627,7 +1648,7 @@ public class DateUtil {
 
 	/**
 	 * 生日转为年龄，计算法定年龄
-	 * 
+	 *
 	 * @param birthDay 生日
 	 * @return 年龄
 	 */
@@ -1636,45 +1657,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
-	 * 
-	 * @param birthDay 生日
-	 * @param dateToCompare 需要对比的日期
-	 * @return 年龄
-	 */
-	public static int age(Date birthDay, Date dateToCompare) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateToCompare);
-
-		if (cal.before(birthDay)) {
-			throw new IllegalArgumentException(StrUtil.format("Birthday is after date {}!", formatDate(dateToCompare)));
-		}
-
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
-		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-
-		cal.setTime(birthDay);
-		int age = year - cal.get(Calendar.YEAR);
-
-		int monthBirth = cal.get(Calendar.MONTH);
-		if (month == monthBirth) {
-			int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
-			if (dayOfMonth < dayOfMonthBirth) {
-				// 如果生日在当月，但是未达到生日当天的日期，年龄减一
-				age--;
-			}
-		} else if (month < monthBirth) {
-			// 如果当前月份未达到生日的月份，年龄计算减一
-			age--;
-		}
-
-		return age;
-	}
-
-	/**
 	 * 是否闰年
-	 * 
+	 *
 	 * @param year 年
 	 * @return 是否闰年
 	 */
@@ -1683,24 +1667,61 @@ public class DateUtil {
 	}
 
 	/**
+	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 *
+	 * @param birthday      生日
+	 * @param dateToCompare 需要对比的日期
+	 * @return 年龄
+	 */
+	public static int age(Date birthday, Date dateToCompare) {
+		Assert.notNull(birthday, "Birthday can not be null !");
+		if (null == dateToCompare) {
+			dateToCompare = date();
+		}
+		return age(birthday.getTime(), dateToCompare.getTime());
+	}
+
+	/**
 	 * 判定给定开始时间经过某段时间后是否过期
-	 * 
-	 * @param startDate 开始时间
-	 * @param dateField 时间单位
-	 * @param timeLength 时长
-	 * @param checkedDate 被比较的时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 *
+	 * @param startDate  开始时间
+	 * @param dateField  时间单位
+	 * @param timeLength 实际经过时长
+	 * @param endDate    被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于截止时间，就表示过期
 	 * @return 是否过期
 	 * @since 3.1.1
+	 * @deprecated 此方法存在一定的歧义，容易产生误导，废弃。
 	 */
-	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date checkedDate) {
-		final Date endDate = offset(startDate, dateField, timeLength);
-		return endDate.after(checkedDate);
+	@Deprecated
+	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date endDate) {
+		final Date offsetDate = offset(startDate, dateField, timeLength);
+		return offsetDate.after(endDate);
+	}
+
+	/**
+	 * 判定在指定检查时间是否过期。
+	 *
+	 * <p>
+	 * 以商品为例，startDate即生产日期，endDate即保质期的截止日期，checkDate表示在何时检查是否过期（一般为当前时间）<br>
+	 * endDate和startDate的差值即为保质期（按照毫秒计），checkDate和startDate的差值即为实际经过的时长，实际时长大于保质期表示超时。
+	 * </p>
+	 *
+	 * @param startDate 开始时间
+	 * @param endDate   被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 * @param checkDate 检查时间，可以是当前时间，既
+	 * @return 是否过期
+	 * @since 5.1.1
+	 * @deprecated 使用isIn方法
+	 */
+	@Deprecated
+	public static boolean isExpired(Date startDate, Date endDate, Date checkDate) {
+		return betweenMs(startDate, checkDate) > betweenMs(startDate, endDate);
 	}
 
 	/**
 	 * HH:mm:ss 时间格式字符串转为秒数<br>
 	 * 参考：https://github.com/iceroot
-	 * 
+	 *
 	 * @param timeStr 字符串时分秒(HH:mm:ss)格式
 	 * @return 时分秒转换后的秒数
 	 * @since 3.1.2
@@ -1723,7 +1744,7 @@ public class DateUtil {
 	/**
 	 * 秒数转为时间格式(HH:mm:ss)<br>
 	 * 参考：https://github.com/iceroot
-	 * 
+	 *
 	 * @param seconds 需要转换的秒数
 	 * @return 转换后的字符串
 	 * @since 3.1.2
@@ -1757,10 +1778,10 @@ public class DateUtil {
 
 	/**
 	 * 创建日期范围生成器
-	 * 
+	 *
 	 * @param start 起始日期时间
-	 * @param end 结束日期时间
-	 * @param unit 步进单位
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
 	 * @return {@link DateRange}
 	 */
 	public static DateRange range(Date start, Date end, final DateField unit) {
@@ -1769,10 +1790,10 @@ public class DateUtil {
 
 	/**
 	 * 创建日期范围生成器
-	 * 
+	 *
 	 * @param start 起始日期时间
-	 * @param end 结束日期时间
-	 * @param unit 步进单位
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
 	 * @return {@link DateRange}
 	 */
 	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
@@ -1781,9 +1802,9 @@ public class DateUtil {
 
 	/**
 	 * 通过生日计算星座
-	 * 
+	 *
 	 * @param month 月，从0开始计数
-	 * @param day 天
+	 * @param day   天
 	 * @return 星座名
 	 * @since 4.4.3
 	 */
@@ -1793,7 +1814,7 @@ public class DateUtil {
 
 	/**
 	 * 计算生肖，只计算1900年后出生的人
-	 * 
+	 *
 	 * @param year 农历年
 	 * @return 生肖名
 	 * @since 4.4.3
@@ -1803,40 +1824,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取指定日期字段的最小值，例如分钟的最小值是0
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @param dateField {@link DateField}
-	 * @return 字段最小值
-	 * @since 4.5.7
-	 * @see Calendar#getActualMinimum(int)
-	 */
-	public static int getBeginValue(Calendar calendar, int dateField) {
-		if (Calendar.DAY_OF_WEEK == dateField) {
-			return calendar.getFirstDayOfWeek();
-		}
-		return calendar.getActualMinimum(dateField);
-	}
-
-	/**
-	 * 获取指定日期字段的最大值，例如分钟的最大值是59
-	 * 
-	 * @param calendar {@link Calendar}
-	 * @param dateField {@link DateField}
-	 * @return 字段最大值
-	 * @since 4.5.7
-	 * @see Calendar#getActualMaximum(int)
-	 */
-	public static int getEndValue(Calendar calendar, int dateField) {
-		if (Calendar.DAY_OF_WEEK == dateField) {
-			return (calendar.getFirstDayOfWeek() + 6) % 7;
-		}
-		return calendar.getActualMaximum(dateField);
-	}
-
-	/**
 	 * {@code null}安全的日期比较，{@code null}对象排在末尾
-	 * 
+	 *
 	 * @param date1 日期1
 	 * @param date2 日期2
 	 * @return 比较结果，如果date1 &lt; date2，返回数小于0，date1==date2返回0，date1 &gt; date2 大于0
@@ -1847,20 +1836,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * {@code null}安全的{@link Calendar}比较，{@code null}小于任何日期
-	 * 
-	 * @param calendar1 日期1
-	 * @param calendar2 日期2
-	 * @return 比较结果，如果calendar1 &lt; calendar2，返回数小于0，calendar1==calendar2返回0，calendar1 &gt; calendar2 大于0
-	 * @since 4.6.2
-	 */
-	public static int compare(Calendar calendar1, Calendar calendar2) {
-		return CompareUtil.compare(calendar1, calendar2);
-	}
-	
-	/**
 	 * 纳秒转毫秒
-	 * 
+	 *
 	 * @param duration 时长
 	 * @return 时长毫秒
 	 * @since 4.6.6
@@ -1871,7 +1848,7 @@ public class DateUtil {
 
 	/**
 	 * 纳秒转秒，保留小数
-	 * 
+	 *
 	 * @param duration 时长
 	 * @return 秒
 	 * @since 4.6.6
@@ -1880,50 +1857,110 @@ public class DateUtil {
 		return duration / 1_000_000_000.0;
 	}
 
-	// ------------------------------------------------------------------------ Private method start
 	/**
-	 * 获得指定日期年份和季节<br>
-	 * 格式：[20131]表示2013年第一季度
-	 * 
-	 * @param cal 日期
+	 * Date对象转换为{@link Instant}对象
+	 *
+	 * @param date Date对象
+	 * @return {@link Instant}对象
+	 * @since 5.0.2
 	 */
-	private static String yearAndQuarter(Calendar cal) {
-		return StrUtil.builder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
+	public static Instant toInstant(Date date) {
+		return null == date ? null : date.toInstant();
 	}
+
+	/**
+	 * Date对象转换为{@link Instant}对象
+	 *
+	 * @param temporalAccessor Date对象
+	 * @return {@link Instant}对象
+	 * @since 5.0.2
+	 */
+	public static Instant toInstant(TemporalAccessor temporalAccessor) {
+		return TemporalAccessorUtil.toInstant(temporalAccessor);
+	}
+
+	/**
+	 * {@link Instant} 转换为 {@link LocalDateTime}，使用系统默认时区
+	 *
+	 * @param instant {@link Instant}
+	 * @return {@link LocalDateTime}
+	 * @see LocalDateTimeUtil#of(Instant)
+	 * @since 5.0.5
+	 */
+	public static LocalDateTime toLocalDateTime(Instant instant) {
+		return LocalDateTimeUtil.of(instant);
+	}
+
+	/**
+	 * {@link Date} 转换为 {@link LocalDateTime}，使用系统默认时区
+	 *
+	 * @param date {@link Date}
+	 * @return {@link LocalDateTime}
+	 * @see LocalDateTimeUtil#of(Date)
+	 * @since 5.0.5
+	 */
+	public static LocalDateTime toLocalDateTime(Date date) {
+		return LocalDateTimeUtil.of(date);
+	}
+
+	/**
+	 * 获得指定年份的总天数
+	 *
+	 * @param year 年份
+	 * @return 天
+	 * @since 5.3.6
+	 */
+	public static int lengthOfYear(int year) {
+		return Year.of(year).length();
+	}
+
+	/**
+	 * 获得指定月份的总天数
+	 *
+	 * @param month 年份
+	 * @param isLeapYear 是否闰年
+	 * @return 天
+	 * @since 5.4.2
+	 */
+	public static int lengthOfMonth(int month, boolean isLeapYear) {
+		return java.time.Month.of(month).length(isLeapYear);
+	}
+
+	// ------------------------------------------------------------------------ Private method start
 
 	/**
 	 * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：<br>
 	 * 将以下字符替换为"-"
-	 * 
+	 *
 	 * <pre>
 	 * "."
 	 * "/"
 	 * "年"
 	 * "月"
 	 * </pre>
-	 * 
+	 * <p>
 	 * 将以下字符去除
-	 * 
+	 *
 	 * <pre>
 	 * "日"
 	 * </pre>
-	 * 
+	 * <p>
 	 * 将以下字符替换为":"
-	 * 
+	 *
 	 * <pre>
 	 * "时"
 	 * "分"
 	 * "秒"
 	 * </pre>
-	 * 
+	 * <p>
 	 * 当末位是":"时去除之（不存在毫秒时）
-	 * 
+	 *
 	 * @param dateStr 日期时间字符串
 	 * @return 格式化后的日期字符串
 	 */
-	private static String normalize(String dateStr) {
+	private static String normalize(CharSequence dateStr) {
 		if (StrUtil.isBlank(dateStr)) {
-			return dateStr;
+			return StrUtil.str(dateStr);
 		}
 
 		// 日期时间分开处理
@@ -1931,7 +1968,7 @@ public class DateUtil {
 		final int size = dateAndTime.size();
 		if (size < 1 || size > 2) {
 			// 非可被标准处理的格式
-			return dateStr;
+			return StrUtil.str(dateStr);
 		}
 
 		final StringBuilder builder = StrUtil.builder();
@@ -1946,6 +1983,8 @@ public class DateUtil {
 			builder.append(' ');
 			String timePart = dateAndTime.get(1).replaceAll("[时分秒]", ":");
 			timePart = StrUtil.removeSuffix(timePart, ":");
+			//将ISO8601中的逗号替换为.
+			timePart = timePart.replace(',', '.');
 			builder.append(timePart);
 		}
 

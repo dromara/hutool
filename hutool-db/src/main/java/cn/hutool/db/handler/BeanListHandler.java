@@ -15,7 +15,7 @@ import java.util.List;
 public class BeanListHandler<E> implements RsHandler<List<E>> {
 	private static final long serialVersionUID = 4510569754766197707L;
 	
-	private Class<E> elementBeanType;
+	private final Class<E> elementBeanType;
 
 	/**
 	 * 创建一个 BeanListHandler对象
@@ -25,7 +25,7 @@ public class BeanListHandler<E> implements RsHandler<List<E>> {
 	 * @return BeanListHandler对象
 	 */
 	public static <E> BeanListHandler<E> create(Class<E> beanType) {
-		return new BeanListHandler<E>(beanType);
+		return new BeanListHandler<>(beanType);
 	}
 
 	/**
@@ -38,6 +38,6 @@ public class BeanListHandler<E> implements RsHandler<List<E>> {
 
 	@Override
 	public List<E> handle(ResultSet rs) throws SQLException {
-		return HandleHelper.handleRsToBeanList(rs, new ArrayList<E>(), elementBeanType);
+		return HandleHelper.handleRsToBeanList(rs, new ArrayList<>(), elementBeanType);
 	}
 }

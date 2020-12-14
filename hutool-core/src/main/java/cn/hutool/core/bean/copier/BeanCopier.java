@@ -1,31 +1,30 @@
 package cn.hutool.core.bean.copier;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-
-import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.BeanException;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
+import cn.hutool.core.bean.copier.provider.DynaBeanValueProvider;
 import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.copier.Copier;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Map;
+
 /**
- * Bean拷贝
+ * Bean拷贝，提供：
+ *
+ * <pre>
+ *     1. Bean 转 Bean
+ *     2. Bean 转 Map
+ *     3. Map  转 Bean
+ *     4. Map  转 Map
+ * </pre>
  * 
  * @author looly
  *
@@ -36,13 +35,13 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/** 源对象 */
-	private Object source;
+	private final Object source;
 	/** 目标对象 */
-	private T dest;
+	private final T dest;
 	/** 目标的类型（用于泛型类注入） */
-	private Type destType;
+	private final Type destType;
 	/** 拷贝选项 */
-	private CopyOptions copyOptions;
+	private final CopyOptions copyOptions;
 
 	/**
 	 * 创建BeanCopier
@@ -93,6 +92,9 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			if (this.source instanceof ValueProvider) {
 				// 目标只支持Bean
 				valueProviderToBean((ValueProvider<String>) this.source, this.dest);
+			} else if (this.source instanceof DynaBean) {
+				// 目标只支持Bean
+				valueProviderToBean(new DynaBeanValueProvider((DynaBean) this.source, copyOptions.ignoreError), this.dest);
 			} else if (this.source instanceof Map) {
 				if (this.dest instanceof Map) {
 					mapToMap((Map<?, ?>) this.source, (Map<?, ?>) this.dest);
@@ -107,6 +109,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				}
 			}
 		}
+
 		return this.dest;
 	}
 
@@ -127,7 +130,10 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param bean Bean
 	 */
 	private void mapToBean(Map<?, ?> map, Object bean) {
-		valueProviderToBean(new MapValueProvider(map, this.copyOptions.ignoreCase), bean);
+		valueProviderToBean(
+				new MapValueProvider(map, this.copyOptions.ignoreCase, this.copyOptions.ignoreError),
+				bean
+		);
 	}
 
 	/**
@@ -152,46 +158,49 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void beanToMap(Object bean, Map targetMap) {
-		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
 		final HashSet<String> ignoreSet = (null != copyOptions.ignoreProperties) ? CollUtil.newHashSet(copyOptions.ignoreProperties) : null;
 		final CopyOptions copyOptions = this.copyOptions;
 
-		String key;
-		Method getter;
-		Object value;
-		for (PropDesc prop : props) {
-			key = prop.getFieldName();
-			// 过滤class属性
-			// 得到property对应的getter方法
-			getter = prop.getGetter();
-			if (null != getter) {
-				// 只读取有getter方法的属性
-				try {
-					value = getter.invoke(bean);
-				} catch (Exception e) {
-					if (copyOptions.ignoreError) {
-						continue;// 忽略反射失败
-					} else {
-						throw new UtilException(e, "Get value of [{}] error!", prop.getFieldName());
-					}
-				}
-				if (CollUtil.contains(ignoreSet, key)) {
-					// 目标属性值被忽略或值提供者无此key时跳过
-					continue;
-				}
-				if (null == value && copyOptions.ignoreNullValue) {
-					continue;// 当允许跳过空时，跳过
-				}
-				if (bean.equals(value)) {
-					continue;// 值不能为bean本身，防止循环引用
-				}
-				targetMap.put(mappingKey(copyOptions.fieldMapping, key), value);
+		BeanUtil.descForEach(bean.getClass(), (prop)->{
+			if(false == prop.isReadable(copyOptions.isTransientSupport())){
+				// 忽略的属性跳过之
+				return;
 			}
-		}
+			String key = prop.getFieldName();
+			if (CollUtil.contains(ignoreSet, key)) {
+				// 目标属性值被忽略或值提供者无此key时跳过
+				return;
+			}
+
+			// 对key做映射，映射后为null的忽略之
+			key = copyOptions.editFieldName(copyOptions.getMappedFieldName(key, false));
+			if(null == key){
+				return;
+			}
+
+			Object value;
+			try {
+				value = prop.getValue(bean);
+			} catch (Exception e) {
+				if (copyOptions.ignoreError) {
+					return;// 忽略反射失败
+				} else {
+					throw new BeanException(e, "Get value of [{}] error!", prop.getFieldName());
+				}
+			}
+			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
+				// 当允许跳过空时，跳过
+				//值不能为bean本身，防止循环引用，此类也跳过
+				return;
+			}
+
+			targetMap.put(key, value);
+		});
 	}
 
 	/**
-	 * 值提供器转Bean
+	 * 值提供器转Bean<br>
+	 * 此方法通过遍历目标Bean的字段，从ValueProvider查找对应值
 	 * 
 	 * @param valueProvider 值提供器
 	 * @param bean Bean
@@ -211,90 +220,38 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			actualEditable = copyOptions.editable;
 		}
 		final HashSet<String> ignoreSet = (null != copyOptions.ignoreProperties) ? CollUtil.newHashSet(copyOptions.ignoreProperties) : null;
-		final Map<String, String> fieldReverseMapping = copyOptions.getReversedMapping();
 
-		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
-		String fieldName;
-		Object value;
-		Method setterMethod;
-		Class<?> propClass;
-		for (PropDesc prop : props) {
-			// 获取值
-			fieldName = prop.getFieldName();
+		// 遍历目标bean的所有属性
+		BeanUtil.descForEach(actualEditable, (prop)->{
+			if(false == prop.isWritable(this.copyOptions.isTransientSupport())){
+				// 字段不可写，跳过之
+				return;
+			}
+			// 检查属性名
+			String fieldName = prop.getFieldName();
 			if (CollUtil.contains(ignoreSet, fieldName)) {
 				// 目标属性值被忽略或值提供者无此key时跳过
-				continue;
+				return;
 			}
-			final String providerKey = mappingKey(fieldReverseMapping, fieldName);
+
+			final String providerKey = copyOptions.getMappedFieldName(fieldName, true);
 			if (false == valueProvider.containsKey(providerKey)) {
 				// 无对应值可提供
-				continue;
-			}
-			setterMethod = prop.getSetter();
-			if (null == setterMethod) {
-				// Setter方法不存在跳过
-				continue;
+				return;
 			}
 
-			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
-			if (firstParamType instanceof ParameterizedType) {
-				// 参数为泛型参数类型，解析对应泛型类型为真实类型
-				ParameterizedType tmp = (ParameterizedType) firstParamType;
-				Type[] actualTypeArguments = tmp.getActualTypeArguments();
-				if (TypeUtil.hasTypeVeriable(actualTypeArguments)) {
-					// 泛型对象中含有未被转换的泛型变量
-					actualTypeArguments = TypeUtil.getActualTypes(this.destType, setterMethod.getDeclaringClass(), tmp.getActualTypeArguments());
-					if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
-						// 替换泛型变量为实际类型
-						firstParamType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
-					}
-				}
-			} else if (firstParamType instanceof TypeVariable) {
-				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
-				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), firstParamType);
+			// 获取目标字段真实类型
+			final Type fieldType = TypeUtil.getActualType(this.destType ,prop.getFieldType());
+
+			// 获取属性值
+			Object value = valueProvider.value(providerKey, fieldType);
+			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
+				// 当允许跳过空时，跳过
+				// 值不能为bean本身，防止循环引用
+				return;
 			}
 
-			value = valueProvider.value(providerKey, firstParamType);
-			if (null == value && copyOptions.ignoreNullValue) {
-				continue;// 当允许跳过空时，跳过
-			}
-			if (bean.equals(value)) {
-				continue;// 值不能为bean本身，防止循环引用
-			}
-
-			try {
-				// valueProvider在没有对值做转换且当类型不匹配的时候，执行默认转换
-				propClass = prop.getFieldClass();
-				if (false ==propClass.isInstance(value)) {
-					value = Convert.convert(propClass, value);
-					if (null == value && copyOptions.ignoreNullValue) {
-						continue;// 当允许跳过空时，跳过
-					}
-				}
-
-				// 执行set方法注入值
-				setterMethod.invoke(bean, value);
-			} catch (Exception e) {
-				if (false ==copyOptions.ignoreError) {
-					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
-				}
-				// 忽略注入失败
-			}
-		}
-	}
-
-	/**
-	 * 获取指定字段名对应的映射值
-	 * 
-	 * @param mapping 反向映射Map
-	 * @param fieldName 字段名
-	 * @return 映射值，无对应值返回字段名
-	 * @since 4.1.10
-	 */
-	private static String mappingKey(Map<String, String> mapping, String fieldName) {
-		if (MapUtil.isEmpty(mapping)) {
-			return fieldName;
-		}
-		return ObjectUtil.defaultIfNull(mapping.get(fieldName), fieldName);
+			prop.setValue(bean, value, copyOptions.ignoreNullValue, copyOptions.ignoreError);
+		});
 	}
 }

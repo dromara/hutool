@@ -15,7 +15,7 @@ import cn.hutool.core.map.MapUtil;
 public class ActiveEntity extends Entity {
 	private static final long serialVersionUID = 6112321379601134750L;
 
-	private Db db;
+	private final Db db;
 
 	// --------------------------------------------------------------- Static method start
 	/**

@@ -34,7 +34,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param algorithm {@link SignAlgorithm}
 	 */
 	public Sign(SignAlgorithm algorithm) {
-		this(algorithm, (byte[]) null, (byte[]) null);
+		this(algorithm, null, (byte[]) null);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param algorithm 算法
 	 */
 	public Sign(String algorithm) {
-		this(algorithm, (byte[]) null, (byte[]) null);
+		this(algorithm, null, (byte[]) null);
 	}
 
 	/**

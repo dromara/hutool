@@ -10,6 +10,7 @@ package cn.hutool.core.lang.func;
  *
  * @since 3.2.3
  */
+@FunctionalInterface
 public interface VoidFunc0 {
 
 	/**
@@ -18,4 +19,17 @@ public interface VoidFunc0 {
 	 * @throws Exception 自定义异常
 	 */
 	void call() throws Exception;
+
+	/**
+	 * 执行函数，异常包装为RuntimeException
+	 *
+	 * @since 5.3.6
+	 */
+	default void callWithRuntimeException(){
+		try {
+			call();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

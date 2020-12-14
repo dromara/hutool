@@ -1,5 +1,18 @@
 package cn.hutool.http;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.GlobalCookieManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.EOFException;
@@ -13,47 +26,46 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.cookie.GlobalCookieManager;
-
 /**
  * Http响应类<br>
  * 非线程安全对象
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
-	/** 持有连接对象 */
+	/**
+	 * 持有连接对象
+	 */
 	protected HttpConnection httpConnection;
-	/** Http请求原始流 */
+	/**
+	 * Http请求原始流
+	 */
 	protected InputStream in;
-	/** 是否异步，异步下只持有流，否则将在初始化时直接读取body内容 */
+	/**
+	 * 是否异步，异步下只持有流，否则将在初始化时直接读取body内容
+	 */
 	private volatile boolean isAsync;
-	/** 响应状态码 */
+	/**
+	 * 响应状态码
+	 */
 	protected int status;
-	/** 是否忽略读取Http响应体 */
-	private boolean ignoreBody;
-	/** 从响应中获取的编码 */
+	/**
+	 * 是否忽略读取Http响应体
+	 */
+	private final boolean ignoreBody;
+	/**
+	 * 从响应中获取的编码
+	 */
 	private Charset charsetFromResponse;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param httpConnection {@link HttpConnection}
-	 * @param charset 编码，从请求编码中获取默认编码
-	 * @param isAsync 是否异步
-	 * @param isIgnoreBody 是否忽略读取响应体
+	 * @param charset        编码，从请求编码中获取默认编码
+	 * @param isAsync        是否异步
+	 * @param isIgnoreBody   是否忽略读取响应体
 	 * @since 3.1.2
 	 */
 	protected HttpResponse(HttpConnection httpConnection, Charset charset, boolean isAsync, boolean isIgnoreBody) {
@@ -66,7 +78,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 获取状态码
-	 * 
+	 *
 	 * @return 状态码
 	 */
 	public int getStatus() {
@@ -75,7 +87,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 请求是否成功，判断依据为：状态码范围在200~299内。
-	 * 
+	 *
 	 * @return 是否成功请求
 	 * @since 4.1.9
 	 */
@@ -87,7 +99,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 同步<br>
 	 * 如果为异步状态，则暂时不读取服务器中响应的内容，而是持有Http链接的{@link InputStream}。<br>
 	 * 当调用此方法时，异步状态转为同步状态，此时从Http链接流中读取body内容并暂存在内容中。如果已经是同步状态，则不进行任何操作。
-	 * 
+	 *
 	 * @return this
 	 */
 	public HttpResponse sync() {
@@ -95,9 +107,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	// ---------------------------------------------------------------- Http Response Header start
+
 	/**
 	 * 获取内容编码
-	 * 
+	 *
 	 * @return String
 	 */
 	public String contentEncoding() {
@@ -106,39 +119,39 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 是否为gzip压缩过的内容
-	 * 
+	 *
 	 * @return 是否为gzip压缩过的内容
 	 */
 	public boolean isGzip() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+		return "gzip".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
 	 * 是否为zlib(Defalte)压缩过的内容
-	 * 
+	 *
 	 * @return 是否为zlib(Defalte)压缩过的内容
 	 * @since 4.5.7
 	 */
 	public boolean isDeflate() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && contentEncoding.equalsIgnoreCase("deflate");
+		return "deflate".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
 	 * 是否为Transfer-Encoding:Chunked的内容
-	 * 
+	 *
 	 * @return 是否为Transfer-Encoding:Chunked的内容
 	 * @since 4.6.2
 	 */
 	public boolean isChunked() {
 		final String transferEncoding = header(Header.TRANSFER_ENCODING);
-		return transferEncoding != null && transferEncoding.equalsIgnoreCase("Chunked");
+		return "Chunked".equalsIgnoreCase(transferEncoding);
 	}
 
 	/**
 	 * 获取本次请求服务器返回的Cookie信息
-	 * 
+	 *
 	 * @return Cookie字符串
 	 * @since 3.1.1
 	 */
@@ -148,18 +161,17 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 获取Cookie
-	 * 
+	 *
 	 * @return Cookie列表
 	 * @since 3.1.1
-	 * @see GlobalCookieManager#getCookieManager()
 	 */
 	public List<HttpCookie> getCookies() {
-		return GlobalCookieManager.getCookieManager().getCookieStore().getCookies();
+		return GlobalCookieManager.getCookies(this.httpConnection);
 	}
 
 	/**
 	 * 获取Cookie
-	 * 
+	 *
 	 * @param name Cookie名
 	 * @return {@link HttpCookie}
 	 * @since 4.1.4
@@ -178,7 +190,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 获取Cookie值
-	 * 
+	 *
 	 * @param name Cookie名
 	 * @return Cookie值
 	 * @since 4.1.4
@@ -190,12 +202,13 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	// ---------------------------------------------------------------- Http Response Header end
 
 	// ---------------------------------------------------------------- Body start
+
 	/**
 	 * 获得服务区响应流<br>
 	 * 异步模式下获取Http原生流，同步模式下获取获取到的在内存中的副本<br>
 	 * 如果想在同步模式下获取流，请先调用{@link #sync()}方法强制同步<br>
 	 * 流获取后处理完毕需关闭此类
-	 * 
+	 *
 	 * @return 响应流
 	 */
 	public InputStream bodyStream() {
@@ -208,7 +221,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/**
 	 * 获取响应流字节码<br>
 	 * 此方法会转为同步模式
-	 * 
+	 *
 	 * @return byte[]
 	 */
 	public byte[] bodyBytes() {
@@ -218,7 +231,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 获取响应主体
-	 * 
+	 *
 	 * @return String
 	 * @throws HttpException 包装IO异常
 	 */
@@ -230,9 +243,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 将响应内容写出到{@link OutputStream}<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
-	 * @param out 写出的流
-	 * @param isCloseOut 是否关闭输出流
+	 *
+	 * @param out            写出的流
+	 * @param isCloseOut     是否关闭输出流
 	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
 	 * @return 写出bytes数
 	 * @since 3.3.2
@@ -255,39 +268,26 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 将响应内容写出到文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
-	 * @param destFile 写出到的文件
+	 *
+	 * @param destFile       写出到的文件
 	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
 	public long writeBody(File destFile, StreamProgress streamProgress) {
-		if (null == destFile) {
-			throw new NullPointerException("[destFile] is null!");
-		}
-		if (destFile.isDirectory()) {
-			// 从头信息中获取文件名
-			String fileName = getFileNameFromDisposition();
-			if (StrUtil.isBlank(fileName)) {
-				final String path = this.httpConnection.getUrl().getPath();
-				// 从路径中获取文件名
-				fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
-				if (StrUtil.isBlank(fileName)) {
-					// 编码后的路径做为文件名
-					fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
-				}
-			}
-			destFile = FileUtil.file(destFile, fileName);
-		}
+		Assert.notNull(destFile, "[destFile] is null!");
 
-		return writeBody(FileUtil.getOutputStream(destFile), true, streamProgress);
+		final File outFile = completeFileNameFromHeader(destFile);
+		final OutputStream outputStream = FileUtil.getOutputStream(outFile);
+		return writeBody(outputStream, true, streamProgress);
 	}
+
 
 	/**
 	 * 将响应内容写出到文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
+	 *
 	 * @param destFile 写出到的文件
 	 * @return 写出bytes数
 	 * @since 3.3.2
@@ -300,7 +300,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 将响应内容写出到文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
-	 * 
+	 *
 	 * @param destFilePath 写出到的文件的路径
 	 * @return 写出bytes数
 	 * @since 3.3.2
@@ -332,17 +332,45 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		return sb.toString();
 	}
 
+	/**
+	 * 从响应头补全下载文件名
+	 *
+	 * @param destFile 目标文件夹或者目标文件
+	 * @return File 保存的文件
+	 * @since 5.4.1
+	 */
+	public File completeFileNameFromHeader(File destFile) {
+		if (false == destFile.isDirectory()) {
+			// 非目录直接返回
+			return destFile;
+		}
+
+		// 从头信息中获取文件名
+		String fileName = getFileNameFromDisposition();
+		if (StrUtil.isBlank(fileName)) {
+			final String path = httpConnection.getUrl().getPath();
+			// 从路径中获取文件名
+			fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
+			if (StrUtil.isBlank(fileName)) {
+				// 编码后的路径做为文件名
+				fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
+			}
+		}
+		return FileUtil.file(destFile, fileName);
+	}
+
 	// ---------------------------------------------------------------- Private method start
+
 	/**
 	 * 初始化Http响应，并在报错时关闭连接。<br>
 	 * 初始化包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1、读取Http状态
 	 * 2、读取头信息
 	 * 3、持有Http流，并不关闭流
 	 * </pre>
-	 * 
+	 *
 	 * @return this
 	 * @throws HttpException IO异常
 	 */
@@ -359,13 +387,13 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/**
 	 * 初始化Http响应<br>
 	 * 初始化包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1、读取Http状态
 	 * 2、读取头信息
 	 * 3、持有Http流，并不关闭流
 	 * </pre>
-	 * 
+	 *
 	 * @return this
 	 * @throws HttpException IO异常
 	 */
@@ -374,12 +402,12 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.status = httpConnection.responseCode();
 		} catch (IOException e) {
-			if (e instanceof FileNotFoundException) {
-				// 服务器无返回内容，忽略之
-			} else {
+			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
+			// 服务器无返回内容，忽略之
 		}
+
 
 		// 读取响应头信息
 		try {
@@ -408,9 +436,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 读取主体，忽略EOFException异常
-	 * 
+	 *
 	 * @param in 输入流
-	 * @return 自身
 	 * @throws IORuntimeException IO异常
 	 */
 	private void readBody(InputStream in) throws IORuntimeException {
@@ -423,6 +450,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			IoUtil.copy(in, out);
 		} catch (IORuntimeException e) {
+			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
 				// 忽略读取HTTP流中的EOF错误
 			} else {
@@ -435,14 +463,14 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/**
 	 * 强制同步，用于初始化<br>
 	 * 强制同步后变化如下：
-	 * 
+	 *
 	 * <pre>
 	 * 1、读取body内容到内存
 	 * 2、异步状态设为false（变为同步状态）
 	 * 3、关闭Http流
 	 * 4、断开与服务器连接
 	 * </pre>
-	 * 
+	 *
 	 * @return this
 	 */
 	private HttpResponse forceSync() {
@@ -450,6 +478,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.readBody(this.in);
 		} catch (IORuntimeException e) {
+			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof FileNotFoundException) {
 				// 服务器无返回内容，忽略之
 			} else {
@@ -466,19 +495,20 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/**
 	 * 从Content-Disposition头中获取文件名
-	 * 
+	 *
 	 * @return 文件名，empty表示无
 	 */
 	private String getFileNameFromDisposition() {
 		String fileName = null;
-		final String desposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(desposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", desposition, 1);
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
 			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(desposition, "filename=", true);
+				fileName = StrUtil.subAfter(disposition, "filename=", true);
 			}
 		}
 		return fileName;
 	}
+
 	// ---------------------------------------------------------------- Private method end
 }

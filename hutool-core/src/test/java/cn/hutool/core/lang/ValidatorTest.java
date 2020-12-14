@@ -1,10 +1,9 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.util.IdUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.lang.Validator;
 
 /**
  * 验证器单元测试
@@ -72,8 +71,17 @@ public class ValidatorTest {
 
 	@Test
 	public void isCitizenIdTest() {
-		boolean b = Validator.isCitizenId("150218199012123389");
+		// 18为身份证号码验证
+		boolean b = Validator.isCitizenId("110101199003074477");
 		Assert.assertTrue(b);
+
+		// 15位身份证号码验证
+		boolean b1 = Validator.isCitizenId("410001910101123");
+		Assert.assertTrue(b1);
+
+		// 10位身份证号码验证
+		boolean b2 = Validator.isCitizenId("U193683453");
+		Assert.assertTrue(b2);
 	}
 
 	@Test(expected = ValidateException.class)
@@ -108,13 +116,13 @@ public class ValidatorTest {
 	@Test
 	public void isMatchTest() {
 		String url = "http://aaa-bbb.somthing.com/a.php?a=b&c=2";
-		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL_HTTP, url));
 
 		url = "https://aaa-bbb.somthing.com/a.php?a=b&c=2";
-		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL_HTTP, url));
 
 		url = "https://aaa-bbb.somthing.com:8080/a.php?a=b&c=2";
-		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL_HTTP, url));
 	}
 
 	@Test
@@ -131,5 +139,52 @@ public class ValidatorTest {
 		str = "123_abc_ccc中文";
 		general = Validator.isGeneral(str, -1, 100);
 		Assert.assertFalse(general);
+	}
+
+	@Test
+	public void isPlateNumberTest(){
+		Assert.assertTrue(Validator.isPlateNumber("粤BA03205"));
+		Assert.assertTrue(Validator.isPlateNumber("闽20401领"));
+	}
+
+	@Test
+	public void isChineseTest(){
+		Assert.assertTrue(Validator.isChinese("全都是中文"));
+		Assert.assertFalse(Validator.isChinese("not全都是中文"));
+	}
+
+	@Test
+	public void isUUIDTest(){
+		Assert.assertTrue(Validator.isUUID(IdUtil.randomUUID()));
+		Assert.assertTrue(Validator.isUUID(IdUtil.fastSimpleUUID()));
+
+		Assert.assertTrue(Validator.isUUID(IdUtil.randomUUID().toUpperCase()));
+		Assert.assertTrue(Validator.isUUID(IdUtil.fastSimpleUUID().toUpperCase()));
+	}
+
+	@Test
+	public void isZipCodeTest(){
+		// 港
+		boolean zipCode = Validator.isZipCode("999077");
+		Assert.assertTrue(zipCode);
+		// 澳
+		zipCode = Validator.isZipCode("999078");
+		Assert.assertTrue(zipCode);
+		// 台（2020年3月起改用6位邮编，3+3）
+		zipCode = Validator.isZipCode("822001");
+		Assert.assertTrue(zipCode);
+
+		// 内蒙
+		zipCode = Validator.isZipCode("016063");
+		Assert.assertTrue(zipCode);
+		// 山西
+		zipCode = Validator.isZipCode("045246");
+		Assert.assertTrue(zipCode);
+		// 河北
+		zipCode = Validator.isZipCode("066502");
+		Assert.assertTrue(zipCode);
+		// 北京
+		zipCode = Validator.isZipCode("102629");
+		Assert.assertTrue(zipCode);
 	}
 }

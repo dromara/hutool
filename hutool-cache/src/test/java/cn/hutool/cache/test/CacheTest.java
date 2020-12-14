@@ -1,14 +1,12 @@
 package cn.hutool.cache.test;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.thread.ThreadUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 缓存测试用例
@@ -20,6 +18,12 @@ public class CacheTest {
 	@Test
 	public void fifoCacheTest(){
 		Cache<String,String> fifoCache = CacheUtil.newFIFOCache(3);
+		fifoCache.setListener((key, value)->{
+			// 监听测试，此测试中只有key1被移除，测试是否监听成功
+			Assert.assertEquals("key1", key);
+			Assert.assertEquals("value1", value);
+		});
+
 		fifoCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
@@ -27,7 +31,7 @@ public class CacheTest {
 		
 		//由于缓存容量只有3，当加入第四个元素的时候，根据FIFO规则，最先放入的对象将被移除
 		String value1 = fifoCache.get("key1");
-		Assert.assertTrue(null == value1);
+		Assert.assertNull(value1);
 	}
 	
 	@Test
@@ -44,9 +48,9 @@ public class CacheTest {
 		String value1 = lfuCache.get("key1");
 		String value2 = lfuCache.get("key2");
 		String value3 = lfuCache.get("key3");
-		Assert.assertTrue(null != value1);
-		Assert.assertTrue(null == value2);
-		Assert.assertTrue(null == value3);
+		Assert.assertNotNull(value1);
+		Assert.assertNull(value2);
+		Assert.assertNull(value3);
 	}
 	
 	@Test
@@ -60,7 +64,7 @@ public class CacheTest {
 		//使用时间推近
 		lruCache.get("key1");
 		lruCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
-		
+
 		String value1 = lruCache.get("key1");
 		Assert.assertNotNull(value1);
 		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2被移除）
@@ -84,21 +88,15 @@ public class CacheTest {
 		
 		//5毫秒后由于value2设置了5毫秒过期，因此只有value2被保留下来
 		String value1 = timedCache.get("key1");
-		Assert.assertTrue(null == value1);
+		Assert.assertNull(value1);
 		String value2 = timedCache.get("key2");
 		Assert.assertEquals("value2", value2);
 		
 		//5毫秒后，由于设置了默认过期，key3只被保留4毫秒，因此为null
 		String value3 = timedCache.get("key3");
-		Assert.assertTrue(null == value3);
+		Assert.assertNull(value3);
 		
-		String value3Supplier = timedCache.get("key3", new Func0<String>() {
-			
-			@Override
-			public String call() throws Exception {
-				return "Default supplier";
-			}
-		});
+		String value3Supplier = timedCache.get("key3", () -> "Default supplier");
 		Assert.assertEquals("Default supplier", value3Supplier);
 		
 		// 永不过期

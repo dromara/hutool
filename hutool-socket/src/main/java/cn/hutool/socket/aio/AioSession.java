@@ -1,5 +1,10 @@
 package cn.hutool.socket.aio;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.socket.SocketConfig;
+import cn.hutool.socket.SocketUtil;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -8,11 +13,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.socket.SocketConfig;
-import cn.hutool.socket.SocketUtil;
 
 /**
  * AIO会话<br>
@@ -25,14 +25,14 @@ public class AioSession implements Closeable{
 
 	private static final ReadHandler READ_HANDLER = new ReadHandler();
 
-	private AsynchronousSocketChannel channel;
-	private IoAction<ByteBuffer> ioAction;
+	private final AsynchronousSocketChannel channel;
+	private final IoAction<ByteBuffer> ioAction;
 	private ByteBuffer readBuffer;
 	private ByteBuffer writeBuffer;
 	/** 读取超时时长，小于等于0表示默认 */
-	private long readTimeout;
+	private final long readTimeout;
 	/** 写出超时时长，小于等于0表示默认 */
-	private long writeTimeout;
+	private final long writeTimeout;
 
 	/**
 	 * 构造
@@ -43,9 +43,12 @@ public class AioSession implements Closeable{
 	 */
 	public AioSession(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction, SocketConfig config) {
 		this.channel = channel;
+		this.ioAction = ioAction;
+
 		this.readBuffer = ByteBuffer.allocate(config.getReadBufferSize());
 		this.writeBuffer = ByteBuffer.allocate(config.getWriteBufferSize());
-		this.ioAction = ioAction;
+		this.readTimeout = config.getReadTimeout();
+		this.writeTimeout = config.getWriteTimeout();
 	}
 
 	/**
@@ -118,7 +121,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端，并关闭输出
-	 * 
+	 *
+	 * @param data 数据
 	 * @return this
 	 */
 	public AioSession writeAndClose(ByteBuffer data) {
@@ -128,7 +132,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端
-	 * 
+	 *
+	 * @param data 数据
 	 * @return {@link Future}
 	 */
 	public Future<Integer> write(ByteBuffer data) {
@@ -137,7 +142,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端
-	 * 
+	 *
+	 * @param data 数据
 	 * @param handler {@link CompletionHandler}
 	 * @return this
 	 */

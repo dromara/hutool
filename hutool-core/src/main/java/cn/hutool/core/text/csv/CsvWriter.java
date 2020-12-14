@@ -1,5 +1,15 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
+
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
@@ -9,15 +19,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Collection;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
 
 /**
  * CSV数据写出器
@@ -183,14 +184,14 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	/**
 	 * 将多行写出到Writer
 	 * 
-	 * @param lines 多行数据
+	 * @param lines 多行数据，每行数据可以是集合或者数组
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvWriter write(Collection<String[]> lines) throws IORuntimeException {
+	public CsvWriter write(Collection<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
-			for (final String[] values : lines) {
-				appendLine(values);
+			for (Object values : lines) {
+				appendLine(Convert.toStrArray(values));
 			}
 			flush();
 		}
@@ -248,8 +249,8 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private void doAppendLine(final String... fields) throws IOException {
 		if (null != fields) {
-			for (int i = 0; i < fields.length; i++) {
-				appendField(fields[i]);
+			for (String field : fields) {
+				appendField(field);
 			}
 			writer.write(config.lineDelimiter);
 			newline = true;

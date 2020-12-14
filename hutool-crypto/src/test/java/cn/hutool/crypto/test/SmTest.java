@@ -38,6 +38,18 @@ public class SmTest {
 	}
 
 	@Test
+	public void sm4Test2() {
+		String content = "test中文";
+		SM4 sm4 = new SM4(Mode.CTR, Padding.PKCS5Padding);
+		sm4.setIv("aaaabbbb".getBytes());
+
+		String encryptHex = sm4.encryptHex(content);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+
+		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
 	public void sm4ECBPKCS5PaddingTest2() {
 		String content = "test中文";
 		SM4 sm4 = new SM4(Mode.ECB, Padding.PKCS5Padding);

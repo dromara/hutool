@@ -27,10 +27,11 @@ import cn.hutool.core.util.CharsetUtil;
  * 参考： http://akini.mbnet.fi/java/unicodereader/UnicodeInputStream.java.txt
  */
 public class BOMInputStream extends InputStream {
-	PushbackInputStream in;
-	boolean isInited = false;
-	String defaultCharset;
-	String charset;
+
+	private final PushbackInputStream in;
+	private boolean isInited = false;
+	private final String defaultCharset;
+	private String charset;
 
 	private static final int BOM_SIZE = 4;
 

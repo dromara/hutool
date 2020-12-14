@@ -8,6 +8,7 @@ package cn.hutool.core.lang.loader;
  *
  * @param <T> 对象类型
  */
+@FunctionalInterface
 public interface Loader<T> {
 
 	/**

@@ -11,21 +11,21 @@ public enum CellDataType {
 	BOOL("b"),
 	/** 类型错误 */
 	ERROR("e"),
-	/** 计算结果类型 */
-	FORMULA("str"),
+	/** 计算结果类型，此类型使用f标签辅助判断，而非属性 */
+	FORMULA("formula"),
 	/** 富文本类型 */
 	INLINESTR("inlineStr"),
-	/** 字符串类型 */
+	/** 共享字符串索引类型 */
 	SSTINDEX("s"),
 	/** 数字类型 */
 	NUMBER(""),
-	/** 日期类型 */
+	/** 日期类型，此类型使用值判断，而非属性 */
 	DATE("m/d/yy"),
 	/** 空类型 */
 	NULL("");
 
 	/** 属性值 */
-	private String name;
+	private final String name;
 
 	/**
 	 * 构造

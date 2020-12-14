@@ -1,9 +1,8 @@
 package cn.hutool.core.io.checksum;
 
+import cn.hutool.core.util.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.util.HexUtil;
 
 /**
  * CRC校验单元测试
@@ -31,5 +30,14 @@ public class CrcTest {
 		crc.update(12);
 		crc.update(16);
 		Assert.assertEquals("cc04", HexUtil.toHex(crc.getValue()));
+	}
+
+	@Test
+	public void crc16Test2() {
+		String str = "QN=20160801085857223;ST=23;CN=2011;PW=123456;MN=010000A8900016F000169DC0;Flag=5;CP=&&DataTime=20160801085857; LA-Rtd=50.1&&";
+		CRC16 crc = new CRC16();
+		crc.update(str.getBytes(), 0, str.getBytes().length);
+		String crc16 = HexUtil.toHex(crc.getValue());
+		Assert.assertEquals("18c", crc16);
 	}
 }

@@ -1,26 +1,14 @@
 package cn.hutool.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.BeanCopier;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -30,28 +18,47 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import cn.hutool.json.serialize.JSONSerializer;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 /**
  * JSON对象<br>
  * 例：<br>
- * 
+ *
  * <pre>
  * json = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
  * </pre>
- * 
+ *
  * @author looly
  */
-public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
+public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object> {
 	private static final long serialVersionUID = -330220388580734346L;
 
-	/** 默认初始大小 */
-	public static final int DEFAULT_CAPACITY = 16;
+	/**
+	 * 默认初始大小
+	 */
+	public static final int DEFAULT_CAPACITY = MapUtil.DEFAULT_INITIAL_CAPACITY;
 
-	/** JSON的KV持有Map */
+	/**
+	 * JSON的KV持有Map
+	 */
 	private final Map<String, Object> rawHashMap;
-	/** 配置项 */
-	private JSONConfig config;
+	/**
+	 * 配置项
+	 */
+	private final JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY无序
 	 */
@@ -61,7 +68,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}
-	 * 
+	 *
 	 * @param isOrder 是否有序
 	 * @since 3.0.9
 	 */
@@ -71,9 +78,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param capacity 初始大小
-	 * @param isOrder 是否有序
+	 * @param isOrder  是否有序
 	 * @since 3.0.9
 	 */
 	public JSONObject(int capacity, boolean isOrder) {
@@ -82,19 +89,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 构造
-	 * 
-	 * @param capacity 初始大小
+	 *
+	 * @param capacity     初始大小
 	 * @param isIgnoreCase 是否忽略KEY大小写
-	 * @param isOrder 是否有序
+	 * @param isOrder      是否有序
 	 * @since 3.3.1
 	 */
 	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
 		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase).setOrder(isOrder));
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config JSON配置项
 	 * @since 4.6.5
 	 */
@@ -104,16 +111,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param capacity 初始大小
-	 * @param config JSON配置项
+	 * @param config   JSON配置项，null表示默认配置
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
+		if (null == config) {
+			config = JSONConfig.create();
+		}
 		if (config.isIgnoreCase()) {
-			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<String, Object>(capacity) : new CaseInsensitiveMap<String, Object>(capacity);
+			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 		} else {
-			this.rawHashMap = config.isOrder() ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
+			this.rawHashMap = MapUtil.newHashMap(config.isOrder());
 		}
 		this.config = config;
 	}
@@ -124,9 +134,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * <li>value为Map，将键值对加入JSON对象</li>
 	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
 	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	public JSONObject(Object source) {
@@ -141,8 +152,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * <li>value为JSONTokener，直接解析</li>
 	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
-	 * 
-	 * @param source JavaBean或者Map对象或者String
+	 *
+	 * @param source          JavaBean或者Map对象或者String
 	 * @param ignoreNullValue 是否忽略空值
 	 * @since 3.0.9
 	 */
@@ -158,15 +169,15 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * <li>value为JSONTokener，直接解析</li>
 	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
-	 * 
-	 * @param source JavaBean或者Map对象或者String
+	 *
+	 * @param source          JavaBean或者Map对象或者String
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @param isOrder 是否有序
+	 * @param isOrder         是否有序
 	 * @since 4.2.2
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
 		this(source, JSONConfig.create().setOrder(isOrder)//
-				.setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))//
+				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
 				.setIgnoreNullValue(ignoreNullValue));
 	}
 
@@ -178,11 +189,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * <li>value为JSONTokener，直接解析</li>
 	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
-	 * 
+	 * <p>
 	 * 如果给定值为Map，将键值对加入JSON对象;<br>
 	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
-	 * 
+	 *
 	 * @param source JavaBean或者Map对象或者String
 	 * @param config JSON配置文件
 	 * @since 4.2.2
@@ -194,16 +205,16 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 构建指定name列表对应的键值对为新的JSONObject，情况如下：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 若obj为Map，则获取name列表对应键值对
 	 * 2. 若obj为普通Bean，使用反射方式获取字段名和字段值
 	 * </pre>
-	 * 
+	 * <p>
 	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
 	 * 若names列表为空，则字段全部加入
 	 *
-	 * @param obj 包含需要字段的Bean对象或者Map对象
+	 * @param obj   包含需要字段的Bean对象或者Map对象
 	 * @param names 需要构建JSONObject的字段名列表
 	 */
 	public JSONObject(Object obj, String... names) {
@@ -233,9 +244,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 从JSON字符串解析为JSON对象，对于排序单独配置参数
 	 *
-	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
+	 * @param source  以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
 	 * @param isOrder 是否有序
-	 * @exception JSONException JSON字符串语法错误
+	 * @throws JSONException JSON字符串语法错误
 	 * @since 4.2.2
 	 */
 	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
@@ -244,19 +255,14 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
-	/**
-	 * 获取JSON配置
-	 * 
-	 * @return {@link JSONConfig}
-	 * @since 4.3.1
-	 */
+	@Override
 	public JSONConfig getConfig() {
 		return this.config;
 	}
 
 	/**
 	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
-	 * 
+	 *
 	 * @param format 格式，null表示使用时间戳
 	 * @return this
 	 * @since 4.1.19
@@ -277,63 +283,15 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		if (CollectionUtil.isEmpty(names)) {
 			return null;
 		}
-		final JSONArray ja = new JSONArray();
+		final JSONArray ja = new JSONArray(this.config);
 		Object value;
 		for (String name : names) {
 			value = this.get(name);
 			if (null != value) {
-				ja.put(value);
+				ja.set(value);
 			}
 		}
 		return ja;
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param clazz 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(Class<T> clazz) {
-		return toBean((Type) clazz);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param reference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @return 实体类对象
-	 * @since 4.2.2
-	 */
-	public <T> T toBean(TypeReference<T> reference) {
-		return toBean(reference.getType());
-	}
-	
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @return 实体类对象
-	 * @since 3.0.8
-	 */
-	public <T> T toBean(Type type) {
-		return toBean(type, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 * @since 4.3.2
-	 */
-	public <T> T toBean(Type type, boolean ignoreError) {
-		return JSONConverter.jsonConvert(type, this, ignoreError);
 	}
 
 	@Override
@@ -383,15 +341,29 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
+	 * PUT 键值对到JSONObject中，在忽略null模式下，如果值为<code>null</code>，将此键移除
 	 *
-	 * @param key 键
+	 * @param key   键
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 * @deprecated 此方法存在歧义，原Map接口返回的是之前的值，重写后返回this了，未来版本此方法会修改，请使用{@link #set(String, Object)}
+	 */
+	@Override
+	@Deprecated
+	public JSONObject put(String key, Object value) throws JSONException {
+		return set(key, value);
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为<code>null</code>，将此键移除
+	 *
+	 * @param key   键
 	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	@Override
-	public JSONObject put(String key, Object value) throws JSONException {
+	public JSONObject set(String key, Object value) throws JSONException {
 		if (null == key) {
 			return this;
 		}
@@ -410,17 +382,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
-	 * @param key 键
+	 * @param key   键
 	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
-		if (key != null && value != null) {
+		if (key != null) {
 			if (rawHashMap.containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
-			this.put(key, value);
+			this.set(key, value);
 		}
 		return this;
 	}
@@ -428,14 +400,14 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 在键和值都为非空的情况下put到JSONObject中
 	 *
-	 * @param key 键
+	 * @param key   键
 	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
 	 * @throws JSONException 值是无穷数字
 	 */
 	public JSONObject putOpt(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
-			this.put(key, value);
+			this.set(key, value);
 		}
 		return this;
 	}
@@ -443,15 +415,15 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	@Override
 	public void putAll(Map<? extends String, ?> m) {
 		for (Entry<? extends String, ?> entry : m.entrySet()) {
-			this.put(entry.getKey(), entry.getValue());
+			this.set(entry.getKey(), entry.getValue());
 		}
 	}
 
 	/**
-	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. <br>
+	 * 积累值。类似于set，当key对应value已经存在时，与value组成新的JSONArray. <br>
 	 * 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
 	 *
-	 * @param key 键
+	 * @param key   键
 	 * @param value 被积累的值
 	 * @return this.
 	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
@@ -460,11 +432,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
+			this.set(key, value);
 		} else if (object instanceof JSONArray) {
-			((JSONArray) object).put(value);
+			((JSONArray) object).set(value);
 		} else {
-			this.put(key, new JSONArray().put(object).put(value));
+			this.set(key, JSONUtil.createArray(this.config).set(object).set(value));
 		}
 		return this;
 	}
@@ -472,7 +444,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 追加值，如果key无对应值，就添加一个JSONArray，其元素只有value，如果值已经是一个JSONArray，则添加到值JSONArray中。
 	 *
-	 * @param key 键
+	 * @param key   键
 	 * @param value 值
 	 * @return this.
 	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
@@ -481,9 +453,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.put(key, new JSONArray().put(value));
+			this.set(key, new JSONArray(this.config).set(value));
 		} else if (object instanceof JSONArray) {
-			this.put(key, ((JSONArray) object).put(value));
+			this.set(key, ((JSONArray) object).set(value));
 		} else {
 			throw new JSONException("JSONObject [" + key + "] is not a JSONArray.");
 		}
@@ -500,19 +472,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public JSONObject increment(String key) throws JSONException {
 		Object value = this.getObj(key);
 		if (value == null) {
-			this.put(key, 1);
+			this.set(key, 1);
 		} else if (value instanceof BigInteger) {
-			this.put(key, ((BigInteger) value).add(BigInteger.ONE));
+			this.set(key, ((BigInteger) value).add(BigInteger.ONE));
 		} else if (value instanceof BigDecimal) {
-			this.put(key, ((BigDecimal) value).add(BigDecimal.ONE));
+			this.set(key, ((BigDecimal) value).add(BigDecimal.ONE));
 		} else if (value instanceof Integer) {
-			this.put(key, (Integer) value + 1);
+			this.set(key, (Integer) value + 1);
 		} else if (value instanceof Long) {
-			this.put(key, (Long) value + 1);
+			this.set(key, (Long) value + 1);
 		} else if (value instanceof Double) {
-			this.put(key, (Double) value + 1);
+			this.set(key, (Double) value + 1);
 		} else if (value instanceof Float) {
-			this.put(key, (Float) value + 1);
+			this.set(key, (Float) value + 1);
 		} else {
 			throw new JSONException("Unable to increment [" + JSONUtil.quote(key) + "].");
 		}
@@ -579,41 +551,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@Override
 	public String toString() {
-		try {
-			return this.toJSONString(0);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/**
-	 * 格式化打印JSON，缩进为4个空格
-	 * 
-	 * @return 格式化后的JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 * @since 3.0.9
-	 */
-	@Override
-	public String toStringPretty() throws JSONException {
-		return this.toJSONString(4);
-	}
-
-	/**
-	 * 格式化输出JSON字符串
-	 *
-	 * @param indentFactor 每层缩进空格数
-	 * @return JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 */
-	@Override
-	public String toJSONString(int indentFactor) throws JSONException {
-		final StringWriter w = new StringWriter();
-		return this.write(w, indentFactor, 0).toString();
-	}
-
-	@Override
-	public Writer write(Writer writer) throws JSONException {
-		return this.write(writer, 0, 0);
+		return this.toJSONString(0);
 	}
 
 	@Override
@@ -626,12 +564,13 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 将JSON内容写入Writer
-	 * 
-	 * @param writer writer
+	 *
+	 * @param writer       writer
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent 本级别缩进量
+	 * @param indent       本级别缩进量
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
@@ -677,40 +616,16 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * Bean对象转Map
-	 * 
+	 *
 	 * @param bean Bean对象
 	 */
 	private void populateMap(Object bean) {
-		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
-
-		Method getter;
-		Object value;
-		for (PropDesc prop : props) {
-			// 得到property对应的getter方法
-			getter = prop.getGetter();
-			if (null == getter) {
-				// 无Getter跳过
-				continue;
-			}
-
-			// 只读取有getter方法的属性
-			try {
-				value = getter.invoke(bean);
-			} catch (Exception ignore) {
-				// 忽略读取失败的属性
-				continue;
-			}
-
-			if (ObjectUtil.isNull(value) && this.config.isIgnoreNullValue()) {
-				// 值为null且用户定义跳过则跳过
-				continue;
-			}
-
-			if (value != bean) {
-				// 防止循环引用
-				this.put(prop.getFieldName(), value);
-			}
-		}
+		BeanCopier.create(bean, this,
+				CopyOptions.create()
+						.setIgnoreCase(config.isIgnoreCase())
+						.setIgnoreError(true)
+						.setIgnoreNullValue(config.isIgnoreNullValue())
+		).copy();
 	}
 
 	/**
@@ -721,50 +636,87 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * <li>value为JSONTokener，直接解析</li>
 	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param source JavaBean或者Map对象或者String
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void init(Object source) {
 		if (null == source) {
 			return;
 		}
-		
+
+		// 自定义序列化
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if(serializer instanceof JSONObjectSerializer) {
-			// 自定义序列化
+		if (serializer instanceof JSONObjectSerializer) {
 			serializer.serialize(this, source);
-		} else if (source instanceof Map) {
+			return;
+		}
+
+		if(ArrayUtil.isArray(source) || source instanceof Iterable || source instanceof Iterator){
+			// 不支持集合类型转换为JSONObject
+			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
+		}
+
+		if (source instanceof Map) {
 			// Map
 			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				this.put(Convert.toStr(e.getKey()), e.getValue());
+				this.set(Convert.toStr(e.getKey()), e.getValue());
 			}
+		}else if (source instanceof Map.Entry) {
+			final Map.Entry entry = (Map.Entry) source;
+			this.set(Convert.toStr(entry.getKey()), entry.getValue());
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			init((CharSequence) source);
 		} else if (source instanceof JSONTokener) {
 			// JSONTokener
 			init((JSONTokener) source);
-		} else if (source instanceof Number) {
-			// ignore Number
-		} else {
+		} else if (source instanceof ResourceBundle) {
+			// JSONTokener
+			init((ResourceBundle) source);
+		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
 			this.populateMap(source);
+		} else {
+			// 不支持对象类型转换为JSONObject
+			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
+		}
+
+	}
+
+	/**
+	 * 初始化
+	 *
+	 * @param bundle ResourceBundle
+	 * @since 5.3.1
+	 */
+	private void init(ResourceBundle bundle) {
+		Enumeration<String> keys = bundle.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			if (key != null) {
+				InternalJSONUtil.propertyPut(this, key, bundle.getString(key));
+			}
 		}
 	}
 
 	/**
-	 * 初始化
-	 * 
+	 * 初始化，可以判断字符串为JSON或者XML
+	 *
 	 * @param source JSON字符串
 	 */
 	private void init(CharSequence source) {
-		init(new JSONTokener(StrUtil.trim(source)));
+		final String jsonStr = StrUtil.trim(source);
+		if (StrUtil.startWith(jsonStr, '<')) {
+			// 可能为XML
+			XML.toJSONObject(this, jsonStr, false);
+		}
+		init(new JSONTokener(StrUtil.trim(source), this.config));
 	}
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param x JSONTokener
 	 */
 	private void init(JSONTokener x) {
@@ -774,16 +726,16 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		if (x.nextClean() != '{') {
 			throw x.syntaxError("A JSONObject text must begin with '{'");
 		}
-		for (;;) {
+		while (true) {
 			c = x.nextClean();
 			switch (c) {
-			case 0:
-				throw x.syntaxError("A JSONObject text must end with '}'");
-			case '}':
-				return;
-			default:
-				x.back();
-				key = x.nextValue().toString();
+				case 0:
+					throw x.syntaxError("A JSONObject text must end with '}'");
+				case '}':
+					return;
+				default:
+					x.back();
+					key = x.nextValue().toString();
 			}
 
 			// The key is followed by ':'.
@@ -797,17 +749,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			// Pairs are separated by ','.
 
 			switch (x.nextClean()) {
-			case ';':
-			case ',':
-				if (x.nextClean() == '}') {
+				case ';':
+				case ',':
+					if (x.nextClean() == '}') {
+						return;
+					}
+					x.back();
+					break;
+				case '}':
 					return;
-				}
-				x.back();
-				break;
-			case '}':
-				return;
-			default:
-				throw x.syntaxError("Expected a ',' or '}'");
+				default:
+					throw x.syntaxError("Expected a ',' or '}'");
 			}
 		}
 	}

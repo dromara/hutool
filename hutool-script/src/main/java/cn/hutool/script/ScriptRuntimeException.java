@@ -1,9 +1,9 @@
 package cn.hutool.script;
 
-import javax.script.ScriptException;
-
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.StrUtil;
+
+import javax.script.ScriptException;
 
 /**
  * 脚本运行时异常
@@ -50,7 +50,6 @@ public class ScriptRuntimeException extends RuntimeException {
 		super(message);
 		this.fileName = fileName;
 		this.lineNumber = lineNumber;
-		this.columnNumber = -1;
 	}
 
 	/**

@@ -11,7 +11,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class AnsjWord implements Word {
-	private Term term;
+	private static final long serialVersionUID = 1L;
+
+	private final Term term;
 
 	/**
 	 * 构造

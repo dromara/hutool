@@ -11,6 +11,7 @@ import java.security.spec.RSAPublicKeySpec;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.GlobalBouncyCastleProvider;
 import cn.hutool.crypto.SecureUtil;
 
 /**
@@ -186,7 +187,8 @@ public class RSA extends AsymmetricCrypto {
 
 	@Override
 	public byte[] encrypt(byte[] data, KeyType keyType) {
-		if (this.encryptBlockSize < 0) {
+		// 在非使用BC库情况下，blockSize使用默认的算法
+		if (this.encryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
 			// 加密数据长度 <= 模长-11
 			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8 - 11;
 		}
@@ -195,7 +197,8 @@ public class RSA extends AsymmetricCrypto {
 
 	@Override
 	public byte[] decrypt(byte[] bytes, KeyType keyType) {
-		if (this.decryptBlockSize < 0) {
+		// 在非使用BC库情况下，blockSize使用默认的算法
+		if (this.decryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
 			// 加密数据长度 <= 模长-11
 			this.decryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8;
 		}

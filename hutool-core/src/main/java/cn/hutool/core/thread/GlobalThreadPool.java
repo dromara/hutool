@@ -8,7 +8,7 @@ import cn.hutool.core.exceptions.UtilException;
 
 /**
  * 全局公共线程池<br>
- * 此线程池是一个无限线程池，既加入的线程不等待任何线程，直接执行
+ * 此线程池是一个无限线程池，即加入的线程不等待任何线程，直接执行
  * 
  * @author Looly
  *

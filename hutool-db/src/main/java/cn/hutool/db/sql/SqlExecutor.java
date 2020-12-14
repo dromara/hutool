@@ -1,5 +1,10 @@
 package cn.hutool.db.sql;
 
+import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.db.DbUtil;
+import cn.hutool.db.StatementUtil;
+import cn.hutool.db.handler.RsHandler;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,11 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
-
-import cn.hutool.core.collection.ArrayIter;
-import cn.hutool.db.DbUtil;
-import cn.hutool.db.StatementUtil;
-import cn.hutool.db.handler.RsHandler;
 
 /**
  * SQL执行器，全部为静态方法，执行查询或非查询的SQL语句<br>
@@ -92,13 +92,7 @@ public class SqlExecutor {
 	 * @since 4.1.4
 	 */
 	public static ResultSet callQuery(Connection conn, String sql, Object... params) throws SQLException {
-		CallableStatement proc = null;
-		try {
-			proc = StatementUtil.prepareCall(conn, sql, params);
-			return proc.executeQuery();
-		} finally {
-			DbUtil.close(proc);
-		}
+		return StatementUtil.prepareCall(conn, sql, params).executeQuery();
 	}
 
 	/**
@@ -162,7 +156,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
-		return executeBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+		return executeBatch(conn, sql, new ArrayIter<>(paramsBatch));
 	}
 	
 	/**
@@ -198,7 +192,7 @@ public class SqlExecutor {
 	 * @since 4.5.6
 	 */
 	public static int[] executeBatch(Connection conn, String... sqls) throws SQLException {
-		return executeBatch(conn, new ArrayIter<String>(sqls));
+		return executeBatch(conn, new ArrayIter<>(sqls));
 	}
 	
 	/**
@@ -226,7 +220,7 @@ public class SqlExecutor {
 	}
 
 	/**
-	 * 执行查询语句<br>
+	 * 执行查询语句，例如：select * from table where field1=:name1 <br>
 	 * 此方法不会关闭Connection
 	 * 
 	 * @param <T> 处理结果类型

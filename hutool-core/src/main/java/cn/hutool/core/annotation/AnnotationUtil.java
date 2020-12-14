@@ -1,5 +1,9 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,16 +11,11 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
 
 /**
  * 注解工具类<br>
@@ -44,10 +43,11 @@ public class AnnotationUtil {
 	 * 获取指定注解
 	 *
 	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param isToCombination 是否为转换为组合注解
 	 * @return 注解对象
 	 */
-	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isCombination) {
-		return (null == annotationEle) ? null : (isCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
+	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
+		return (null == annotationEle) ? null : (isToCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
 	}
 
 	/**
@@ -63,11 +63,23 @@ public class AnnotationUtil {
 	}
 
 	/**
+	 * 检查是否包含指定注解指定注解
+	 *
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类型
+	 * @return 是否包含指定注解
+	 * @since 5.4.2
+	 */
+	public static boolean hasAnnotation(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) {
+		return null != getAnnotation(annotationEle, annotationType);
+	}
+
+	/**
 	 * 获取指定注解默认值<br>
 	 * 如果无指定的属性方法返回null
 	 *
 	 * @param <T>            注解值类型
-	 * @param annotationEle  {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
@@ -81,7 +93,7 @@ public class AnnotationUtil {
 	 * 如果无指定的属性方法返回null
 	 *
 	 * @param <T>            注解值类型
-	 * @param annotationEle  {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
@@ -115,19 +127,16 @@ public class AnnotationUtil {
 			return null;
 		}
 
-		final Method[] methods = ReflectUtil.getMethods(annotationType, new Filter<Method>() {
-			@Override
-			public boolean accept(Method t) {
-				if (ArrayUtil.isEmpty(t.getParameterTypes())) {
-					// 只读取无参方法
-					final String name = t.getName();
-					// 跳过自有的几个方法
-					return (false == "hashCode".equals(name)) //
-							&& (false == "toString".equals(name)) //
-							&& (false == "annotationType".equals(name));
-				}
-				return false;
+		final Method[] methods = ReflectUtil.getMethods(annotationType, t -> {
+			if (ArrayUtil.isEmpty(t.getParameterTypes())) {
+				// 只读取无参方法
+				final String name = t.getName();
+				// 跳过自有的几个方法
+				return (false == "hashCode".equals(name)) //
+						&& (false == "toString".equals(name)) //
+						&& (false == "annotationType".equals(name));
 			}
+			return false;
 		});
 
 		final HashMap<String, Object> result = new HashMap<>(methods.length, 1);
@@ -191,5 +200,19 @@ public class AnnotationUtil {
 	 */
 	public static boolean isInherited(Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Inherited.class);
+	}
+
+	/**
+	 * 设置新的注解的属性（字段）值
+	 *
+	 * @param annotation 注解对象
+	 * @param annotationField 注解属性（字段）名称
+	 * @param value 要更新的属性值
+	 * @since 5.5.2
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void setValue(Annotation annotation, String annotationField, Object value) {
+		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+		memberValues.put(annotationField, value);
 	}
 }

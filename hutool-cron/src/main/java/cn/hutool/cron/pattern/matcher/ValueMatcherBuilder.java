@@ -1,15 +1,15 @@
 package cn.hutool.cron.pattern.matcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.parser.DayOfMonthValueParser;
 import cn.hutool.cron.pattern.parser.ValueParser;
 import cn.hutool.cron.pattern.parser.YearValueParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link ValueMatcher} 构建器，用于构建表达式中每一项的匹配器
@@ -64,7 +64,7 @@ public class ValueMatcherBuilder {
 	
 		final List<String> parts = StrUtil.split(value, StrUtil.C_COMMA);
 		for (String part : parts) {
-			CollectionUtil.addAllIfNotContains(values, parseStep(part, parser));
+			CollUtil.addAllIfNotContains(values, parseStep(part, parser));
 		}
 		return values;
 	}
@@ -170,11 +170,7 @@ public class ValueMatcherBuilder {
 				NumberUtil.appendRange(v1, parser.getMax(), step, results);
 				NumberUtil.appendRange(parser.getMin(), v2, step, results);
 			} else {// v1 == v2，此时与单值模式一致
-				if(step > 0) {//类似 20/2的形式
-					NumberUtil.appendRange(v1, parser.getMax(), step, results);
-				}else {
-					results.add(v1);
-				}
+				NumberUtil.appendRange(v1, parser.getMax(), step, results);
 			}
 		} else {
 			throw new CronException("Invalid syntax of field: [{}]", value);

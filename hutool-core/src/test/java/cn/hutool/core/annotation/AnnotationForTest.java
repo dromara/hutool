@@ -21,7 +21,7 @@ public @interface AnnotationForTest {
 	/**
 	 * 注解的默认属性值
 	 * 
-	 * @return
+	 * @return 属性值
 	 */
 	String value();
 }

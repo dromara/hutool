@@ -1,6 +1,9 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+
+import java.util.Set;
 
 /**
  * Boolean类型相关工具类
@@ -11,7 +14,7 @@ import cn.hutool.core.convert.Convert;
 public class BooleanUtil {
 
 	/** 表示为真的字符串 */
-	private static final String[] TRUE_ARRAY = { "true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", };
+	private static final Set<String> TRUE_SET = CollUtil.newHashSet("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
 
 	/**
 	 * 取相反值
@@ -23,7 +26,7 @@ public class BooleanUtil {
 		if (bool == null) {
 			return null;
 		}
-		return bool.booleanValue() ? Boolean.FALSE : Boolean.TRUE;
+		return bool ? Boolean.FALSE : Boolean.TRUE;
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class BooleanUtil {
 	 * @return 相反的Boolean值
 	 */
 	public static boolean negate(boolean bool) {
-		return bool ? false : true;
+		return !bool;
 	}
 
 	/**
@@ -77,7 +80,7 @@ public class BooleanUtil {
 	public static boolean toBoolean(String valueStr) {
 		if (StrUtil.isNotBlank(valueStr)) {
 			valueStr = valueStr.trim().toLowerCase();
-			return ArrayUtil.contains(TRUE_ARRAY, valueStr);
+			return TRUE_SET.contains(valueStr);
 		}
 		return false;
 	}
@@ -99,7 +102,7 @@ public class BooleanUtil {
 	 * @return Integer值
 	 */
 	public static Integer toInteger(boolean value) {
-		return Integer.valueOf(toInt(value));
+		return toInt(value);
 	}
 
 	/**
@@ -119,7 +122,7 @@ public class BooleanUtil {
 	 * @return Character值
 	 */
 	public static Character toCharacter(boolean value) {
-		return Character.valueOf(toChar(value));
+		return toChar(value);
 	}
 
 	/**
@@ -139,7 +142,7 @@ public class BooleanUtil {
 	 * @return Byte值
 	 */
 	public static Byte toByteObj(boolean value) {
-		return Byte.valueOf(toByte(value));
+		return toByte(value);
 	}
 
 	/**
@@ -149,7 +152,7 @@ public class BooleanUtil {
 	 * @return long值
 	 */
 	public static long toLong(boolean value) {
-		return (long) toInt(value);
+		return toInt(value);
 	}
 
 	/**
@@ -159,7 +162,7 @@ public class BooleanUtil {
 	 * @return Long值
 	 */
 	public static Long toLongObj(boolean value) {
-		return Long.valueOf(toLong(value));
+		return toLong(value);
 	}
 
 	/**
@@ -179,7 +182,7 @@ public class BooleanUtil {
 	 * @return Short值
 	 */
 	public static Short toShortObj(boolean value) {
-		return Short.valueOf(toShort(value));
+		return toShort(value);
 	}
 
 	/**
@@ -199,7 +202,7 @@ public class BooleanUtil {
 	 * @return float值
 	 */
 	public static Float toFloatObj(boolean value) {
-		return Float.valueOf(toFloat(value));
+		return toFloat(value);
 	}
 
 	/**
@@ -209,7 +212,7 @@ public class BooleanUtil {
 	 * @return double值
 	 */
 	public static double toDouble(boolean value) {
-		return (double) toInt(value);
+		return toInt(value);
 	}
 
 	/**
@@ -219,7 +222,7 @@ public class BooleanUtil {
 	 * @return double值
 	 */
 	public static Double toDoubleObj(boolean value) {
-		return Double.valueOf(toDouble(value));
+		return toDouble(value);
 	}
 
 	/**
@@ -325,12 +328,12 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取与为真返回{@code true}
 	 */
-	public static Boolean and(final Boolean... array) {
+	public static Boolean andOfWrap(Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
 		final boolean[] primitive = Convert.convert(boolean[].class, array);
-		return Boolean.valueOf(and(primitive));
+		return and(primitive);
 	}
 
 	/**
@@ -376,12 +379,12 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取或为真返回{@code true}
 	 */
-	public static Boolean or(Boolean... array) {
+	public static Boolean orOfWrap(Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
 		final boolean[] primitive = Convert.convert(boolean[].class, array);
-		return Boolean.valueOf(or(primitive));
+		return or(primitive);
 	}
 
 	/**
@@ -424,12 +427,12 @@ public class BooleanUtil {
 	 * @param array {@code Boolean} 数组
 	 * @return 异或为真取{@code true}
 	 */
-	public static Boolean xor(Boolean... array) {
+	public static Boolean xorOfWrap(Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
 		final boolean[] primitive = Convert.convert(boolean[].class, array);
-		return Boolean.valueOf(xor(primitive));
+		return xor(primitive);
 	}
 
 	/**

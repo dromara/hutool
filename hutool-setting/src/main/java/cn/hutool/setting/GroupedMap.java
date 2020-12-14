@@ -1,17 +1,17 @@
 package cn.hutool.setting;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 基于分组的Map<br>
@@ -63,6 +63,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * 
 	 * @return 总键值对数
 	 */
+	@Override
 	public int size() {
 		writeLock.lock();
 		try {
@@ -90,11 +91,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 		group = StrUtil.nullToEmpty(group).trim();
 		writeLock.lock();
 		try {
-			LinkedHashMap<String, String> valueMap = this.get(group);
-			if (null == valueMap) {
-				valueMap = new LinkedHashMap<>();
-				this.put(group, valueMap);
-			}
+			final LinkedHashMap<String, String> valueMap = this.computeIfAbsent(group, k -> new LinkedHashMap<>());
 			this.size = -1;
 			return valueMap.put(key, value);
 		} finally {

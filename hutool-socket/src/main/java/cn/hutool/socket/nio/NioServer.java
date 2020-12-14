@@ -1,18 +1,18 @@
 package cn.hutool.socket.nio;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.StaticLog;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 
 /**
  * 基于NIO的Socket服务端实现
@@ -20,10 +20,14 @@ import cn.hutool.core.io.IoUtil;
  * @author looly
  *
  */
-public abstract class NioServer implements Closeable {
+public class NioServer implements Closeable {
+	private static final Log log = Log.get();
+
+	private static final AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
 
 	private Selector selector;
 	private ServerSocketChannel serverSocketChannel;
+	private ChannelHandler handler;
 
 	/**
 	 * 构造
@@ -45,21 +49,50 @@ public abstract class NioServer implements Closeable {
 			// 打开服务器套接字通道
 			this.serverSocketChannel = ServerSocketChannel.open();
 			// 设置为非阻塞状态
-			serverSocketChannel.configureBlocking(false);
-			// 获取通道相关联的套接字
-			final ServerSocket serverSocket = serverSocketChannel.socket();
+			this.serverSocketChannel.configureBlocking(false);
 			// 绑定端口号
-			serverSocket.bind(address);
+			this.serverSocketChannel.bind(address);
 
 			// 打开一个选择器
-			selector = Selector.open();
+			this.selector = Selector.open();
 			// 服务器套接字注册到Selector中 并指定Selector监控连接事件
-			serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+			this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 
+		log.debug("Server listen on: [{}]...", address);
+
 		return this;
+	}
+
+	/**
+	 * 设置NIO数据处理器
+	 *
+	 * @param handler {@link ChannelHandler}
+	 * @return this
+	 */
+	public NioServer setChannelHandler(ChannelHandler handler){
+		this.handler = handler;
+		return this;
+	}
+
+	/**
+	 * 获取{@link Selector}
+	 *
+	 * @return {@link Selector}
+	 */
+	public Selector getSelector(){
+		return this.selector;
+	}
+
+	/**
+	 * 启动NIO服务端，即开始监听
+	 *
+	 * @see #listen()
+	 */
+	public void start(){
+		listen();
 	}
 
 	/**
@@ -79,7 +112,7 @@ public abstract class NioServer implements Closeable {
 	 * @throws IOException IO异常
 	 */
 	private void doListen() throws IOException {
-		while (0 != this.selector.select()) {
+		while (this.selector.isOpen() && 0 != this.selector.select()) {
 			// 返回已选择键的集合
 			final Iterator<SelectionKey> keyIter = selector.selectedKeys().iterator();
 			while (keyIter.hasNext()) {
@@ -97,78 +130,24 @@ public abstract class NioServer implements Closeable {
 	private void handle(SelectionKey key) {
 		// 有客户端接入此服务端
 		if (key.isAcceptable()) {
-			// 获取通道 转化为要处理的类型
-			final ServerSocketChannel server = (ServerSocketChannel) key.channel();
-			SocketChannel socketChannel;
-			try {
-				// 获取连接到此服务器的客户端通道
-				socketChannel = server.accept();
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			}
-
-			// SocketChannel通道的可读事件注册到Selector中
-			registerChannel(selector, socketChannel, Operation.READ);
+			ACCEPT_HANDLER.completed((ServerSocketChannel) key.channel(), this);
 		}
 
 		// 读事件就绪
 		if (key.isReadable()) {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
-			read(socketChannel);
-
-			// SocketChannel通道的可写事件注册到Selector中
-			registerChannel(selector, socketChannel, Operation.WRITE);
-		}
-
-		// 写事件就绪
-		if (key.isWritable()) {
-			final SocketChannel socketChannel = (SocketChannel) key.channel();
-			write(socketChannel);
-			// SocketChannel通道的可读事件注册到Selector中
-			registerChannel(selector, socketChannel, Operation.READ);
+			try{
+				handler.handle(socketChannel);
+			} catch (Exception e){
+				IoUtil.close(socketChannel);
+				StaticLog.error(e);
+			}
 		}
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		IoUtil.close(this.selector);
 		IoUtil.close(this.serverSocketChannel);
-	}
-
-	/**
-	 * 处理读事件<br>
-	 * 当收到读取准备就绪的信号后，回调此方法，用户可读取从客户端传世来的消息
-	 * 
-	 * @param socketChannel SocketChannel
-	 */
-	protected abstract void read(SocketChannel socketChannel);
-
-	/**
-	 * 实现写逻辑<br>
-	 * 当收到写出准备就绪的信号后，回调此方法，用户可向客户端发送消息
-	 * 
-	 * @param socketChannel SocketChannel
-	 */
-	protected abstract void write(SocketChannel socketChannel);
-
-	/**
-	 * 注册通道到指定Selector上
-	 * 
-	 * @param selector Selector
-	 * @param channel 通道
-	 * @param ops 注册的通道监听类型
-	 */
-	private void registerChannel(Selector selector, SelectableChannel channel, Operation ops) {
-		if (channel == null) {
-			return;
-		}
-
-		try {
-			channel.configureBlocking(false);
-			// 注册通道
-			channel.register(selector, ops.getValue());
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
 	}
 }

@@ -19,7 +19,7 @@ import cn.hutool.extra.tokenizer.TokenizerException;
  */
 public class AnalysisEngine implements TokenizerEngine {
 
-	private Analyzer analyzer;
+	private final Analyzer analyzer;
 
 	/**
 	 * 构造

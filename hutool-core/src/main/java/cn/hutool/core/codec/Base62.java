@@ -19,7 +19,7 @@ import cn.hutool.core.util.StrUtil;
 public class Base62 {
 
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
-	private static final Base62Codec codec = Base62Codec.createGmp();
+	private static final Base62Codec CODEC = Base62Codec.createGmp();
 
 	// -------------------------------------------------------------------- encode
 	/**
@@ -50,7 +50,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(byte[] source) {
-		return new String(codec.encode(source));
+		return new String(CODEC.encode(source));
 	}
 
 	/**
@@ -144,6 +144,6 @@ public class Base62 {
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(byte[] base62bytes) {
-		return codec.decode(base62bytes);
+		return CODEC.decode(base62bytes);
 	}
 }

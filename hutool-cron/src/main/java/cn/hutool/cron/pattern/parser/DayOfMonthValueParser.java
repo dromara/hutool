@@ -17,7 +17,7 @@ public class DayOfMonthValueParser extends SimpleValueParser {
 
 	@Override
 	public int parse(String value) throws CronException {
-		if (value.equalsIgnoreCase("L") || value.equals("32")) {// 每月最后一天
+		if ("L".equalsIgnoreCase(value) || "32".equals(value)) {// 每月最后一天
 			return 32;
 		} else {
 			return super.parse(value);

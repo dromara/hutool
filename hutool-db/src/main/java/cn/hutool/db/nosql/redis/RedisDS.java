@@ -1,8 +1,5 @@
 package cn.hutool.db.nosql.redis;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
@@ -10,6 +7,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
+
+import java.io.Closeable;
 
 /**
  * Jedis数据源
@@ -174,7 +173,7 @@ public class RedisDS implements Closeable{
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		IoUtil.close(pool);
 	}
 }

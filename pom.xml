@@ -8,9 +8,9 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>4.6.8</version>
+	<version>5.5.2</version>
 	<name>hutool</name>
-	<description>提供丰富的Java工具方法</description>
+	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
 	<url>https://github.com/looly/hutool</url>
 
 	<modules>
@@ -41,8 +41,9 @@
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
 		<!-- versions -->
-		<compile.version>7</compile.version>
-		<junit.version>4.12</junit.version>
+		<compile.version>8</compile.version>
+		<junit.version>4.13.1</junit.version>
+		<lombok.version>1.18.16</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -51,6 +52,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -127,7 +134,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.1.0</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>oss</id>
@@ -138,6 +145,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- 测试覆盖度 -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>

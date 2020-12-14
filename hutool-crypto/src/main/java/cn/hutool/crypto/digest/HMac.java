@@ -1,13 +1,5 @@
 package cn.hutool.crypto.digest;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -16,6 +8,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.digest.mac.MacEngineFactory;
+
+import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.security.Key;
 
 /**
  * HMAC摘要算法<br>
@@ -30,7 +29,7 @@ import cn.hutool.crypto.digest.mac.MacEngineFactory;
 public class HMac implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private MacEngine engine;
+	private final MacEngine engine;
 	
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -38,7 +37,7 @@ public class HMac implements Serializable {
 	 * @param algorithm 算法 {@link HmacAlgorithm}
 	 */
 	public HMac(HmacAlgorithm algorithm) {
-		this(algorithm, (SecretKey)null);
+		this(algorithm, (Key)null);
 	}
 	
 	/**
@@ -55,7 +54,7 @@ public class HMac implements Serializable {
 	 * @param algorithm 算法 {@link HmacAlgorithm}
 	 * @param key 密钥
 	 */
-	public HMac(HmacAlgorithm algorithm, SecretKey key) {
+	public HMac(HmacAlgorithm algorithm, Key key) {
 		this(algorithm.getValue(), key);
 	}
 	
@@ -75,7 +74,7 @@ public class HMac implements Serializable {
 	 * @param key 密钥
 	 * @since 4.5.13
 	 */
-	public HMac(String algorithm, SecretKey key) {
+	public HMac(String algorithm, Key key) {
 		this(MacEngineFactory.createEngine(algorithm, key));
 	}
 	
@@ -224,5 +223,23 @@ public class HMac implements Serializable {
 	public String digestHex(InputStream data, int bufferLength) {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
 	}
-	
+
+	/**
+	 * 获取MAC算法块长度
+	 * @return MAC算法块长度
+	 * @since 5.3.3
+	 */
+	public int getMacLength(){
+		return this.engine.getMacLength();
+	}
+
+	/**
+	 * 获取算法
+	 *
+	 * @return 算法
+	 * @since 5.3.3
+	 */
+	public String getAlgorithm() {
+		return this.engine.getAlgorithm();
+	}
 }

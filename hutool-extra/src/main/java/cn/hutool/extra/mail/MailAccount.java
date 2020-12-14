@@ -32,9 +32,7 @@ public class MailAccount implements Serializable {
 	private static final String MAIL_DEBUG = "mail.debug";
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
 
-	public static final String MAIL_SETTING_PATH = "config/mail.setting";
-	public static final String MAIL_SETTING_PATH2 = "config/mailAccount.setting";
-	public static final String MAIL_SETTING_PATH3 = "mail.setting";
+	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
 	/**
 	 * SMTP服务器域名
@@ -247,7 +245,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * <pre>
 	 * 1. user@xxx.xx
-	 * 2.  name <user@xxx.xx>
+	 * 2.  name &lt;user@xxx.xx&gt;
 	 * </pre>
 	 *
 	 * @param from 发送方，遵循RFC-822标准
@@ -272,6 +270,7 @@ public class MailAccount implements Serializable {
 	 * 设置是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 *
 	 * @param debug 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @return this
 	 * @since 4.0.2
 	 */
 	public MailAccount setDebug(boolean debug) {
@@ -466,7 +465,7 @@ public class MailAccount implements Serializable {
 
 		if (this.starttlsEnable) {
 			//STARTTLS是对纯文本通信协议的扩展。它将纯文本连接升级为加密连接（TLS或SSL）， 而不是使用一个单独的加密通信端口。
-			p.put(STARTTLS_ENABLE, String.valueOf(this.starttlsEnable));
+			p.put(STARTTLS_ENABLE, "true");
 
 			if (null == this.sslEnable) {
 				//为了兼容旧版本，当用户没有此项配置时，按照starttlsEnable开启状态时对待

@@ -1,5 +1,12 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -8,20 +15,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * Map代理，提供各种getXXX方法，并提供默认值支持
  * 
  * @author looly
  * @since 3.2.0
  */
-public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implements Map<Object, Object>, InvocationHandler, Serializable {
+public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObjectGetter<Object>, InvocationHandler, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
@@ -89,7 +89,7 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 		return map.remove(key);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public void putAll(Map<?, ?> m) {
 		map.putAll(m);
@@ -100,30 +100,30 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 		map.clear();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Set<Object> keySet() {
 		return map.keySet();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Collection<Object> values() {
 		return map.values();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Set<Entry<Object, Object>> entrySet() {
 		return map.entrySet();
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) {
 		final Class<?>[] parameterTypes = method.getParameterTypes();
 		if (ArrayUtil.isEmpty(parameterTypes)) {
 			final Class<?> returnType = method.getReturnType();
-			if (null != returnType && void.class != returnType) {
+			if (void.class != returnType) {
 				// 匹配Getter
 				final String methodName = method.getName();
 				String fieldName = null;
@@ -166,7 +166,8 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 	
 	/**
 	 * 将Map代理为指定接口的动态代理对象
-	 * 
+	 *
+	 * @param <T> 代理的Bean类型
 	 * @param interfaceClass 接口
 	 * @return 代理对象
 	 * @since 4.5.2

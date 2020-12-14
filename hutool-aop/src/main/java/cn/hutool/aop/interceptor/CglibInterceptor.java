@@ -16,8 +16,8 @@ import java.lang.reflect.Method;
 public class CglibInterceptor implements MethodInterceptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Object target;
-	private Aspect aspect;
+	private final Object target;
+	private final Aspect aspect;
 
 	/**
 	 * 构造
@@ -36,12 +36,13 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 
 	@Override
 	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+		final Object target = this.target;
 		Object result = null;
-
 		// 开始前回调
 		if (aspect.before(target, method, args)) {
 			try {
-				result = proxy.invokeSuper(obj, args);
+//				result = proxy.invokeSuper(obj, args);
+				result = proxy.invoke(target, args);
 			} catch (InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
 				if (aspect.afterException(target, method, args, e.getTargetException())) {

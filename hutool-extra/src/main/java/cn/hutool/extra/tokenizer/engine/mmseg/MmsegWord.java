@@ -9,8 +9,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class MmsegWord implements Word {
+	private static final long serialVersionUID = 1L;
 	
-	private com.chenlb.mmseg4j.Word word;
+	private final com.chenlb.mmseg4j.Word word;
 
 	/**
 	 * 构造

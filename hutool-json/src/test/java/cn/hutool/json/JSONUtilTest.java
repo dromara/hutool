@@ -1,20 +1,47 @@
 package cn.hutool.json;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JSONUtilTest {
+
+	/**
+	 * 出现语法错误时报错，检查解析\x字符时是否会导致死循环异常
+	 */
+	@Test(expected = JSONException.class)
+	public void parseTest() {
+		JSONArray jsonArray = JSONUtil.parseArray("[{\"a\":\"a\\x]");
+		Console.log(jsonArray);
+	}
+
+	/**
+	 * 数字解析为JSONArray报错
+	 */
+	@Test(expected = JSONException.class)
+	public void parseNumberTest() {
+		JSONArray json = JSONUtil.parseArray(123L);
+		Console.log(json);
+	}
+
+	/**
+	 * 数字解析为JSONObject忽略
+	 */
+	@Test
+	public void parseNumberTest2() {
+		JSONObject json = JSONUtil.parseObj(123L);
+		Assert.assertEquals(new JSONObject(), json);
+	}
 
 	@Test
 	public void toJsonStrTest() {
@@ -38,11 +65,11 @@ public class JSONUtilTest {
 
 	@Test
 	public void toJsonStrTest2() {
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		model.put("mobile", "17610836523");
 		model.put("type", 1);
 
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("model", model);
 		data.put("model2", model);
 
@@ -58,19 +85,19 @@ public class JSONUtilTest {
 	public void toJsonStrTest3() {
 		// 验证某个字段为JSON字符串时转义是否规范
 		JSONObject object = new JSONObject(true);
-		object.put("name", "123123");
-		object.put("value", "\\");
-		object.put("value2", "</");
+		object.set("name", "123123");
+		object.set("value", "\\");
+		object.set("value2", "</");
 
 		HashMap<String, String> map = MapUtil.newHashMap();
 		map.put("user", object.toString());
 
 		JSONObject json = JSONUtil.parseObj(map);
-		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json.get("user"));
-		Assert.assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"<\\\\/\\\"}\"}", json.toString());
+		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json.get("user"));
+		Assert.assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"</\\\"}\"}", json.toString());
 
 		JSONObject json2 = JSONUtil.parseObj(json.toString());
-		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json2.get("user"));
+		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json2.get("user"));
 	}
 
 	/**
@@ -127,4 +154,21 @@ public class JSONUtilTest {
 		Assert.assertEquals("aa", json.get("name"));
 		Assert.assertEquals(1, json.get("gender"));
 	}
+
+	@Test
+	public void doubleTest() {
+		String json = "{\"test\": 12.00}";
+		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		//noinspection BigDecimalMethodWithoutRoundingCalled
+		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
+	}
+
+	@Test
+	public void parseObjTest() {
+		// 测试转义
+		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
+				"    \"test\": \"\\\\地库地库\",\n" +
+				"}");
+	}
 }
+

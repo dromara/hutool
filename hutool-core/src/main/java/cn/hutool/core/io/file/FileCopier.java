@@ -1,17 +1,18 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.copier.SrcToDestCopier;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.copier.SrcToDestCopier;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件拷贝器<br>
@@ -43,7 +44,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 新建一个文件复制器
 	 * @param srcPath 源文件路径（相对ClassPath路径或绝对路径）
 	 * @param destPath 目标文件路径（相对ClassPath路径或绝对路径）
-	 * @return {@link FileCopier}
+	 * @return this
 	 */
 	public static FileCopier create(String srcPath, String destPath) {
 		return new FileCopier(FileUtil.file(srcPath), FileUtil.file(destPath));
@@ -53,7 +54,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 新建一个文件复制器
 	 * @param src 源文件
 	 * @param dest 目标文件
-	 * @return {@link FileCopier}
+	 * @return this
 	 */
 	public static FileCopier create(File src, File dest) {
 		return new FileCopier(src, dest);
@@ -139,6 +140,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 设置当拷贝来源是目录时是否只拷贝文件而忽略子目录
 	 * 
 	 * @param isOnlyCopyFile 当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * @return this
 	 * @since 4.1.5
 	 */
 	public FileCopier setOnlyCopyFile(boolean isOnlyCopyFile) {
@@ -186,8 +188,8 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 				throw new IORuntimeException("Dest is a sub directory of src !");
 			}
 			
-			final File subDest = isCopyContentIfDir ? dest : FileUtil.mkdir(FileUtil.file(dest, src.getName()));
-			internalCopyDirContent(src, subDest);
+			final File subTarget = isCopyContentIfDir ? dest : FileUtil.mkdir(FileUtil.file(dest, src.getName()));
+			internalCopyDirContent(src, subTarget);
 		} else {// 复制文件
 			internalCopyFile(src, dest);
 		}
@@ -208,25 +210,28 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			//被过滤的目录跳过
 			return;
 		}
-		
+
 		if (false == dest.exists()) {
 			//目标为不存在路径，创建为目录
+			//noinspection ResultOfMethodCallIgnored
 			dest.mkdirs();
 		} else if (false == dest.isDirectory()) {
 			throw new IORuntimeException(StrUtil.format("Src [{}] is a directory but dest [{}] is a file!", src.getPath(), dest.getPath()));
 		}
 		
 		final String[] files = src.list();
-		File srcFile;
-		File destFile;
-		for (String file : files) {
-			srcFile = new File(src, file);
-			destFile = this.isOnlyCopyFile ? dest : new File(dest, file);
-			// 递归复制
-			if (srcFile.isDirectory()) {
-				internalCopyDirContent(srcFile, destFile);
-			} else {
-				internalCopyFile(srcFile, destFile);
+		if(ArrayUtil.isNotEmpty(files)){
+			File srcFile;
+			File destFile;
+			for (String file : files) {
+				srcFile = new File(src, file);
+				destFile = this.isOnlyCopyFile ? dest : new File(dest, file);
+				// 递归复制
+				if (srcFile.isDirectory()) {
+					internalCopyDirContent(srcFile, destFile);
+				} else {
+					internalCopyFile(srcFile, destFile);
+				}
 			}
 		}
 	}
@@ -262,6 +267,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			}
 		}else {
 			//路径不存在则创建父目录
+			//noinspection ResultOfMethodCallIgnored
 			dest.getParentFile().mkdirs();
 		}
 		
@@ -274,7 +280,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		}
 		
 		try {
-			Files.copy(src.toPath(), dest.toPath(), optionList.toArray(new CopyOption[optionList.size()]));
+			Files.copy(src.toPath(), dest.toPath(), optionList.toArray(new CopyOption[0]));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

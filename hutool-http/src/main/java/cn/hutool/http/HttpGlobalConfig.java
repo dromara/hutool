@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import java.io.Serializable;
 import java.net.CookieManager;
 
 import cn.hutool.http.cookie.GlobalCookieManager;
@@ -10,10 +11,11 @@ import cn.hutool.http.cookie.GlobalCookieManager;
  * @author Looly
  * @since 4.6.2
  */
-public class HttpGlobalConfig {
+public class HttpGlobalConfig implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	protected static int timeout = -1;
-	
+
 	/**
 	 * 获取全局默认的超时时长
 	 * 

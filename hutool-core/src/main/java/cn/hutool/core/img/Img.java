@@ -1,13 +1,27 @@
 package cn.hutool.core.img;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
@@ -26,42 +40,35 @@ import java.io.Serializable;
 import java.net.URL;
 import java.nio.file.Path;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.Resource;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * 图像编辑器
- * 
+ *
  * @author looly
  * @since 4.1.5
  */
-public class Img implements Serializable{
+public class Img implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private BufferedImage srcImage;
+	private final BufferedImage srcImage;
 	private Image targetImage;
-	/** 目标图片文件格式，用于写出 */
-	private String targetImageType = ImgUtil.IMAGE_TYPE_JPG;
-	/** 计算x,y坐标的时候是否从中心做为原始坐标开始计算 */
+	/**
+	 * 目标图片文件格式，用于写出
+	 */
+	private String targetImageType;
+	/**
+	 * 计算x,y坐标的时候是否从中心做为原始坐标开始计算
+	 */
 	private boolean positionBaseCentre = true;
-	/** 图片输出质量，用于压缩 */
+	/**
+	 * 图片输出质量，用于压缩
+	 */
 	private float quality = -1;
 
 	/**
 	 * 从Path读取图片并开始处理
-	 * 
+	 *
 	 * @param imagePath 图片文件路径
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(Path imagePath) {
 		return from(imagePath.toFile());
@@ -69,9 +76,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 从文件读取图片并开始处理
-	 * 
+	 *
 	 * @param imageFile 图片文件
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(File imageFile) {
 		return new Img(ImgUtil.read(imageFile));
@@ -79,9 +86,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 从资源对象中读取图片并开始处理
-	 * 
+	 *
 	 * @param resource 图片资源对象
-	 * @return {@link Img}
+	 * @return Img
 	 * @since 4.4.1
 	 */
 	public static Img from(Resource resource) {
@@ -90,9 +97,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 从流读取图片并开始处理
-	 * 
+	 *
 	 * @param in 图片流
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(InputStream in) {
 		return new Img(ImgUtil.read(in));
@@ -100,9 +107,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 从ImageInputStream取图片并开始处理
-	 * 
+	 *
 	 * @param imageStream 图片流
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(ImageInputStream imageStream) {
 		return new Img(ImgUtil.read(imageStream));
@@ -110,9 +117,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 从URL取图片并开始处理
-	 * 
+	 *
 	 * @param imageUrl 图片URL
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(URL imageUrl) {
 		return new Img(ImgUtil.read(imageUrl));
@@ -120,26 +127,49 @@ public class Img implements Serializable{
 
 	/**
 	 * 从Image取图片并开始处理
-	 * 
+	 *
 	 * @param image 图片
-	 * @return {@link Img}
+	 * @return Img
 	 */
 	public static Img from(Image image) {
 		return new Img(ImgUtil.toBufferedImage(image));
 	}
 
 	/**
-	 * 构造
-	 * 
+	 * 构造，目标图片类型取决于来源图片类型
+	 *
 	 * @param srcImage 来源图片
 	 */
 	public Img(BufferedImage srcImage) {
+		this(srcImage, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param srcImage        来源图片
+	 * @param targetImageType 目标图片类型，null则读取来源图片类型
+	 * @since 5.0.7
+	 */
+	public Img(BufferedImage srcImage, String targetImageType) {
 		this.srcImage = srcImage;
+		if (null == targetImageType) {
+			if (srcImage.getType() == BufferedImage.TYPE_INT_ARGB
+					|| srcImage.getType() == BufferedImage.TYPE_INT_ARGB_PRE
+					|| srcImage.getType() == BufferedImage.TYPE_4BYTE_ABGR
+					|| srcImage.getType() == BufferedImage.TYPE_4BYTE_ABGR_PRE
+			) {
+				targetImageType = ImgUtil.IMAGE_TYPE_PNG;
+			} else {
+				targetImageType = ImgUtil.IMAGE_TYPE_JPG;
+			}
+		}
+		this.targetImageType = targetImageType;
 	}
 
 	/**
 	 * 设置目标图片文件格式，用于写出
-	 * 
+	 *
 	 * @param imgType 图片格式
 	 * @return this
 	 * @see ImgUtil#IMAGE_TYPE_JPG
@@ -152,8 +182,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 计算x,y坐标的时候是否从中心做为原始坐标开始计算
-	 * 
+	 *
 	 * @param positionBaseCentre 是否从中心做为原始坐标开始计算
+	 * @return this
 	 * @since 4.1.15
 	 */
 	public Img setPositionBaseCentre(boolean positionBaseCentre) {
@@ -163,8 +194,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 设置图片输出质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
-	 * 
+	 *
 	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @return this
 	 * @since 4.3.2
 	 */
 	public Img setQuality(double quality) {
@@ -173,8 +205,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 设置图片输出质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
-	 * 
+	 *
 	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @return this
 	 * @since 4.3.2
 	 */
 	public Img setQuality(float quality) {
@@ -188,7 +221,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 缩放图像（按比例缩放）
-	 * 
+	 *
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @return this
 	 */
@@ -218,8 +251,8 @@ public class Img implements Serializable{
 	/**
 	 * 缩放图像（按长宽缩放）<br>
 	 * 注意：目标长宽与原图不成比例会变形
-	 * 
-	 * @param width 目标宽度
+	 *
+	 * @param width  目标宽度
 	 * @param height 目标高度
 	 * @return this
 	 */
@@ -239,7 +272,7 @@ public class Img implements Serializable{
 		} else {
 			scaleType = Image.SCALE_DEFAULT;
 		}
-		
+
 		double sx = NumberUtil.div(width, srcWidth);
 		double sy = NumberUtil.div(height, srcHeight);
 
@@ -256,9 +289,9 @@ public class Img implements Serializable{
 	/**
 	 * 等比缩放图像，此方法按照按照给定的长宽等比缩放图片，按照长宽缩放比最多的一边等比缩放，空白部分填充背景色<br>
 	 * 缩放后默认为jpeg格式
-	 * 
-	 * @param width 缩放后的宽度
-	 * @param height 缩放后的高度
+	 *
+	 * @param width      缩放后的宽度
+	 * @param height     缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
 	 * @return this
 	 */
@@ -268,32 +301,32 @@ public class Img implements Serializable{
 		int srcWidth = srcImage.getWidth(null);
 		double heightRatio = NumberUtil.div(height, srcHeight);
 		double widthRatio = NumberUtil.div(width, srcWidth);
-		if (heightRatio == widthRatio) {
-			// 长宽都按照相同比例缩放时，返回缩放后的图片
-			return scale(width, height);
-		}
 
-		// 宽缩放比例多就按照宽缩放，否则按照高缩放
-		if (widthRatio < heightRatio) {
+		// 浮点数之间的等值判断,基本数据类型不能用==比较,包装数据类型不能用equals来判断。
+		if (NumberUtil.equals(heightRatio, widthRatio)) {
+			// 长宽都按照相同比例缩放时，返回缩放后的图片
+			scale(width, height);
+		} else if (widthRatio < heightRatio) {
+			// 宽缩放比例多就按照宽缩放
 			scale(width, (int) (srcHeight * widthRatio));
 		} else {
+			// 否则按照高缩放
 			scale((int) (srcWidth * heightRatio), height);
 		}
-		
+
 		// 获取缩放后的新的宽和高
 		srcImage = getValidSrcImg();
 		srcHeight = srcImage.getHeight(null);
 		srcWidth = srcImage.getWidth(null);
 
-		if (null == fixedColor) {// 补白
-			fixedColor = Color.WHITE;
-		}
 		final BufferedImage image = new BufferedImage(width, height, getTypeInt());
 		Graphics2D g = image.createGraphics();
 
 		// 设置背景
-		g.setBackground(fixedColor);
-		g.clearRect(0, 0, width, height);
+		if (null != fixedColor) {
+			g.setBackground(fixedColor);
+			g.clearRect(0, 0, width, height);
+		}
 
 		// 在中间贴图
 		g.drawImage(srcImage, (width - srcWidth) / 2, (height - srcHeight) / 2, srcWidth, srcHeight, fixedColor, null);
@@ -305,7 +338,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
-	 * 
+	 *
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @return this
 	 */
@@ -321,7 +354,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 图像切割为圆形(按指定起点坐标和半径切割)，填充满整个图片（直径取长宽最小值）
-	 * 
+	 *
 	 * @param x 原图的x坐标起始位置
 	 * @param y 原图的y坐标起始位置
 	 * @return this
@@ -333,9 +366,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 图像切割为圆形(按指定起点坐标和半径切割)
-	 * 
-	 * @param x 原图的x坐标起始位置
-	 * @param y 原图的y坐标起始位置
+	 *
+	 * @param x      原图的x坐标起始位置
+	 * @param y      原图的y坐标起始位置
 	 * @param radius 半径，小于0表示填充满整个图片（直径取长宽最小值）
 	 * @return this
 	 * @since 4.1.15
@@ -363,7 +396,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 图片圆角处理
-	 * 
+	 *
 	 * @param arc 圆角弧度，0~1，为长宽占比
 	 * @return this
 	 * @since 4.5.3
@@ -391,7 +424,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 彩色转为黑白
-	 * 
+	 *
 	 * @return this
 	 */
 	public Img gray() {
@@ -402,7 +435,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 彩色转为黑白二值化图片
-	 * 
+	 *
 	 * @return this
 	 */
 	public Img binary() {
@@ -413,13 +446,13 @@ public class Img implements Serializable{
 	/**
 	 * 给图片添加文字水印<br>
 	 * 此方法并不关闭流
-	 * 
+	 *
 	 * @param pressText 水印文字
-	 * @param color 水印的字体颜色
-	 * @param font {@link Font} 字体相关信息
-	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param color     水印的字体颜色
+	 * @param font      {@link Font} 字体相关信息
+	 * @param x         修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y         修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 处理后的图像
 	 */
 	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
@@ -428,20 +461,22 @@ public class Img implements Serializable{
 
 		if (null == font) {
 			// 默认字体
-			font = new Font("Courier", Font.PLAIN, (int) (targetImage.getHeight() * 0.75));
+			font = FontUtil.createSansSerifFont((int) (targetImage.getHeight() * 0.75));
 		}
-
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(color);
-		g.setFont(font);
 		// 透明度
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		// 在指定坐标绘制水印文字
-		final FontMetrics metrics = g.getFontMetrics(font);
-		final int textLength = metrics.stringWidth(pressText);
-		final int textHeight = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
-		g.drawString(pressText, Math.abs(targetImage.getWidth() - textLength) / 2 + x, Math.abs(targetImage.getHeight() + textHeight) / 2 + y);
+
+		// 绘制
+		if (positionBaseCentre) {
+			// 基于中心绘制
+			GraphicsUtil.drawString(g, pressText, font, color,
+					new Rectangle(x, y, targetImage.getWidth(), targetImage.getHeight()));
+		} else {
+			// 基于左上角绘制
+			GraphicsUtil.drawString(g, pressText, font, color,
+					new Point(x, y));
+		}
+
 		g.dispose();
 		this.targetImage = targetImage;
 
@@ -450,41 +485,39 @@ public class Img implements Serializable{
 
 	/**
 	 * 给图片添加图片水印
-	 * 
+	 *
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
-	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
-	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param x        修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y        修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha    透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return this
 	 */
 	public Img pressImage(Image pressImg, int x, int y, float alpha) {
 		final int pressImgWidth = pressImg.getWidth(null);
 		final int pressImgHeight = pressImg.getHeight(null);
-
 		return pressImage(pressImg, new Rectangle(x, y, pressImgWidth, pressImgHeight), alpha);
 	}
 
 	/**
 	 * 给图片添加图片水印
-	 * 
-	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 *
+	 * @param pressImg  水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
-	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return this
 	 * @since 4.1.14
 	 */
 	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
 		final Image targetImg = getValidSrcImg();
 
-		fixRectangle(rectangle, targetImg.getWidth(null), targetImg.getHeight(null));
-		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg), pressImg, rectangle, alpha);
+		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg, this.targetImageType), pressImg, rectangle, alpha);
 		return this;
 	}
 
 	/**
 	 * 旋转图片为指定角度<br>
 	 * 来自：http://blog.51cto.com/cping1982/130066
-	 * 
+	 *
 	 * @param degree 旋转角度
 	 * @return 旋转后的图片
 	 * @since 3.2.2
@@ -509,7 +542,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 水平翻转图像
-	 * 
+	 *
 	 * @return this
 	 */
 	public Img flip() {
@@ -520,23 +553,64 @@ public class Img implements Serializable{
 		Graphics2D graphics2d = targetImg.createGraphics();
 		graphics2d.drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
 		graphics2d.dispose();
+
 		this.targetImage = targetImg;
 		return this;
 	}
 
+	/**
+	 * 描边，此方法为向内描边，会覆盖图片相应的位置
+	 *
+	 * @param color 描边颜色，默认黑色
+	 * @param width 边框粗细
+	 * @return this
+	 * @since 5.4.1
+	 */
+	public Img stroke(Color color, float width){
+		return stroke(color, new BasicStroke(width));
+	}
+
+	/**
+	 * 描边，此方法为向内描边，会覆盖图片相应的位置
+	 *
+	 * @param color 描边颜色，默认黑色
+	 * @param stroke 描边属性，包括粗细、线条类型等，见{@link BasicStroke}
+	 * @return this
+	 * @since 5.4.1
+	 */
+	public Img stroke(Color color, Stroke stroke){
+		final BufferedImage image = ImgUtil.toBufferedImage(getValidSrcImg());
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		Graphics2D g = image.createGraphics();
+
+		g.setColor(ObjectUtil.defaultIfNull(color, Color.BLACK));
+		if(null != stroke){
+			g.setStroke(stroke);
+		}
+
+		g.drawRect(0, 0, width -1 , height - 1);
+
+		g.dispose();
+		this.targetImage = image;
+
+		return this;
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------- Write
+
 	/**
 	 * 获取处理过的图片
-	 * 
+	 *
 	 * @return 处理过的图片
 	 */
 	public Image getImg() {
-		return this.targetImage;
+		return null == this.targetImage ? this.srcImage : this.targetImage;
 	}
 
 	/**
 	 * 写出图像
-	 * 
+	 *
 	 * @param out 写出到的目标流
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
@@ -547,7 +621,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 写出图像为PNG格式
-	 * 
+	 *
 	 * @param targetImageStream 写出到的目标流
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
@@ -564,7 +638,7 @@ public class Img implements Serializable{
 
 	/**
 	 * 写出图像为目标文件扩展名对应的格式
-	 * 
+	 *
 	 * @param targetFile 目标文件
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
@@ -576,6 +650,7 @@ public class Img implements Serializable{
 		}
 
 		if (targetFile.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			targetFile.delete();
 		}
 
@@ -589,41 +664,53 @@ public class Img implements Serializable{
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 将图片绘制在背景上
-	 * 
+	 *
 	 * @param backgroundImg 背景图片
-	 * @param img 要绘制的图片
-	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
+	 * @param img           要绘制的图片
+	 * @param rectangle     矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
+	 * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 绘制后的背景
 	 */
-	private static BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
+	private BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
 		final Graphics2D g = backgroundImg.createGraphics();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
+		GraphicsUtil.setAlpha(g, alpha);
+
+		Point point;
+		if (positionBaseCentre) {
+			point = ImgUtil.getPointBaseCentre(rectangle, backgroundImg.getWidth(), backgroundImg.getHeight());
+		} else {
+			point = new Point(rectangle.x, rectangle.y);
+		}
+		rectangle.setLocation(point.x, point.y);
+		GraphicsUtil.drawImg(g, img, rectangle);
+
 		g.dispose();
 		return backgroundImg;
 	}
 
 	/**
 	 * 获取int类型的图片类型
-	 * 
+	 *
 	 * @return 图片类型
 	 * @see BufferedImage#TYPE_INT_ARGB
 	 * @see BufferedImage#TYPE_INT_RGB
 	 */
 	private int getTypeInt() {
+		//noinspection SwitchStatementWithTooFewBranches
 		switch (this.targetImageType) {
-		case ImgUtil.IMAGE_TYPE_PNG:
-			return BufferedImage.TYPE_INT_ARGB;
-		default:
-			return BufferedImage.TYPE_INT_RGB;
+			case ImgUtil.IMAGE_TYPE_PNG:
+				return BufferedImage.TYPE_INT_ARGB;
+			default:
+				return BufferedImage.TYPE_INT_RGB;
 		}
 	}
 
 	/**
 	 * 获取有效的源图片，首先检查上一次处理的结果图片，如无则使用用户传入的源图片
-	 * 
+	 *
 	 * @return 有效的源图片
 	 */
 	private Image getValidSrcImg() {
@@ -632,9 +719,9 @@ public class Img implements Serializable{
 
 	/**
 	 * 修正矩形框位置，如果{@link Img#setPositionBaseCentre(boolean)} 设为{@code true}，则坐标修正为基于图形中心，否则基于左上角
-	 * 
-	 * @param rectangle 矩形
-	 * @param baseWidth 参考宽
+	 *
+	 * @param rectangle  矩形
+	 * @param baseWidth  参考宽
 	 * @param baseHeight 参考高
 	 * @return 修正后的{@link Rectangle}
 	 * @since 4.1.15
@@ -652,21 +739,22 @@ public class Img implements Serializable{
 
 	/**
 	 * 计算旋转后的图片尺寸
-	 * 
-	 * @param width 宽度
+	 *
+	 * @param width  宽度
 	 * @param height 高度
 	 * @param degree 旋转角度
 	 * @return 计算后目标尺寸
 	 * @since 4.1.20
 	 */
 	private static Rectangle calcRotatedSize(int width, int height, int degree) {
-		if(degree < 0){
+		if (degree < 0) {
 			// 负数角度转换为正数角度
-			degree  += 360;
+			degree += 360;
 		}
 		if (degree >= 90) {
 			if (degree / 90 % 2 == 1) {
 				int temp = height;
+				//noinspection SuspiciousNameCombination
 				height = width;
 				width = temp;
 			}

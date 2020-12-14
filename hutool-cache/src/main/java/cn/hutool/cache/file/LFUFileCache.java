@@ -45,20 +45,19 @@ public class LFUFileCache extends AbstractFileCache{
 
 	@Override
 	protected Cache<File, byte[]> initCache() {
-		Cache<File, byte[]> cache = new LFUCache<File, byte[]>(this.capacity, this.timeout) {
+		return new LFUCache<File, byte[]>(LFUFileCache.this.capacity, LFUFileCache.this.timeout) {
 			private static final long serialVersionUID = 1L;
-			
+
 			@Override
 			public boolean isFull() {
 				return LFUFileCache.this.usedSize > this.capacity;
 			}
-			
+
 			@Override
 			protected void onRemove(File key, byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
 		};
-		return cache;
 	}
 
 }

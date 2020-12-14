@@ -1,14 +1,6 @@
 package cn.hutool.cron;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.TimeZone;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
@@ -22,6 +14,14 @@ import cn.hutool.cron.task.RunnableTask;
 import cn.hutool.cron.task.Task;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.Setting;
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 任务调度器<br>
@@ -55,21 +55,19 @@ import cn.hutool.setting.Setting;
 public class Scheduler implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
-	/** 时区 */
-	private TimeZone timezone;
+	/** 定时任务配置 */
+	protected CronConfig config = new CronConfig();
 	/** 是否已经启动 */
 	private boolean started = false;
-	/** 是否支持秒匹配 */
-	protected boolean matchSecond = false;
 	/** 是否为守护线程 */
 	protected boolean daemon;
 
 	/** 定时器 */
 	private CronTimer timer;
 	/** 定时任务表 */
-	protected TaskTable taskTable = new TaskTable(this);
+	protected TaskTable taskTable = new TaskTable();
 	/** 启动器管理器 */
 	protected TaskLauncherManager taskLauncherManager;
 	/** 执行器管理器 */
@@ -83,11 +81,11 @@ public class Scheduler implements Serializable {
 	/**
 	 * 设置时区
 	 * 
-	 * @param timezone 时区
+	 * @param timeZone 时区
 	 * @return this
 	 */
-	public Scheduler setTimeZone(TimeZone timezone) {
-		this.timezone = timezone;
+	public Scheduler setTimeZone(TimeZone timeZone) {
+		this.config.setTimeZone(timeZone);
 		return this;
 	}
 
@@ -97,7 +95,7 @@ public class Scheduler implements Serializable {
 	 * @return 时区
 	 */
 	public TimeZone getTimeZone() {
-		return timezone != null ? timezone : TimeZone.getDefault();
+		return this.config.getTimeZone();
 	}
 
 	/**
@@ -126,7 +124,7 @@ public class Scheduler implements Serializable {
 	 * 
 	 * @return 是否为守护线程
 	 */
-	public boolean isDeamon() {
+	public boolean isDaemon() {
 		return this.daemon;
 	}
 
@@ -136,7 +134,7 @@ public class Scheduler implements Serializable {
 	 * @return <code>true</code>使用，<code>false</code>不使用
 	 */
 	public boolean isMatchSecond() {
-		return this.matchSecond;
+		return this.config.isMatchSecond();
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler setMatchSecond(boolean isMatchSecond) {
-		this.matchSecond = isMatchSecond;
+		this.config.setMatchSecond(isMatchSecond);
 		return this;
 	}
 
@@ -182,7 +180,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler schedule(Setting cronSetting) {
-		if (CollectionUtil.isNotEmpty(cronSetting)) {
+		if (CollUtil.isNotEmpty(cronSetting)) {
 			String group;
 			for (Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
 				group = groupedEntry.getKey();
@@ -229,7 +227,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}对应的String表达式
@@ -241,7 +239,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}对应的String表达式
@@ -253,7 +251,7 @@ public class Scheduler implements Serializable {
 	}
 
 	/**
-	 * 新增Task
+	 * 新增Task，如果任务ID已经存在，抛出异常
 	 * 
 	 * @param id ID，为每一个Task定义一个ID
 	 * @param pattern {@link CronPattern}
@@ -347,7 +345,7 @@ public class Scheduler implements Serializable {
 	 * @since 4.1.17
 	 */
 	public Scheduler clear() {
-		this.taskTable = new TaskTable(this);
+		this.taskTable = new TaskTable();
 		return this;
 	}
 	// -------------------------------------------------------------------- shcedule end
@@ -362,11 +360,11 @@ public class Scheduler implements Serializable {
 	/**
 	 * 启动
 	 * 
-	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 * @return this
 	 */
-	public Scheduler start(boolean isDeamon) {
-		this.daemon = isDeamon;
+	public Scheduler start(boolean isDaemon) {
+		this.daemon = isDaemon;
 		return start();
 	}
 
@@ -414,7 +412,8 @@ public class Scheduler implements Serializable {
 	/**
 	 * 停止定时任务<br>
 	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。
-	 * 
+	 *
+	 * @param clearTasks 是否清除所有任务
 	 * @return this
 	 * @since 4.1.17
 	 */

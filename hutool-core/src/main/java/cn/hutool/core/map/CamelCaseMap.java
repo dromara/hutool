@@ -62,7 +62,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CamelCaseMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<K, V>(initialCapacity, loadFactor));
+		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 
@@ -74,7 +74,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	 */
 	@Override
 	protected Object customKey(Object key) {
-		if (null != key && key instanceof CharSequence) {
+		if (key instanceof CharSequence) {
 			key = StrUtil.toCamelCase(key.toString());
 		}
 		return key;
