@@ -8,15 +8,19 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * 集合optional操作类, 具体用法与{@link Optional}类似
+ * 集合optional操作类, 具体用法与{@link Optional}类似, 核心区别为<code>present</code>与<code>empty</code>:
+ * <ul>
+ * <li><code>present</code>: 指<code>collection</code>是否为<code>null</code></li>
+ * <li><code>empty</code>: 指<code>collection</code>是否为empty (<code>null</code>或集合元素数目为0)</li>
+ * </ul>
  * <p>
- * 以下是常见的示例：
+ * 以下是常见用法示例：
  * <pre>{@code
- *
- * // 非空则进行过滤与打印操作
- * OptionalCollection.ofEmpty(list)
- *         .filter(collection -> collection.contains("aaa"))
- *         .ifNotEmpty(collection -> System.out.println("filter: " + collection));
+ * // 从UserBase列表提取用户id, 若用户id列表不为empty则去查询UserAddress列表, id列表为empty则不调用mapper查询直接返回addresses为null
+ * List<UserBase> userBases = new ArrayList<>();
+ * List<UserAddress> addresses = OptionalCollection.ofEmpty(userBases)
+ * 		.map(collection -> ListUtils.collectToList(collection, UserBase::getId))
+ * 		.ifNotEmptyThen(userAddressMapper::listByUserIds);
  *
  * // 非空则根据id列表删除数据
  * List<String> ids = new ArrayList();
@@ -27,7 +31,6 @@ import java.util.stream.Stream;
  * List<String> list = null;
  * String exceptionMsg = "Collection is empty";
  * OptionalCollection.ofEmpty(list)
- *         .filter(collection -> collection.contains("aaa"))
  *         .orEmptyThrow(() -> new IllegalArgumentException(exceptionMsg));
  * }</pre>
  *
@@ -81,7 +84,8 @@ public class OptionalCollection<E> {
 		return (OptionalCollection<T>) EMPTY;
 	}
 
-	/**	 * Fetch stream from the collection.
+	/**
+	 * Fetch stream from the collection.
 	 *
 	 * @return the collection stream, if collection is empty, then will return a empty stream
 	 */
@@ -120,7 +124,7 @@ public class OptionalCollection<E> {
 	}
 
 	/**
-	 * 若集合为空, 或与predicate.test()返回{@code true}, 则返回当前collection, 否则返回空集合
+	 * 若集合为空, 或与predicate.test()返回{@code true}, 则返回当前OptionalCollection, 否则返回空OptionalCollection
 	 *
 	 * @param predicate a predicate to apply to the collection, if present
 	 * @return an {@code OptionalCollection} describing the collection of this {@link OptionalCollection}
@@ -135,7 +139,7 @@ public class OptionalCollection<E> {
 
 
 	/**
-	 * 若集合不为空, 且与predicate.test()返回{@code true}, 则返回当前collection, 否则返回{@code orElse}集合
+	 * 若集合不为空, 且与predicate.test()返回{@code true}, 则返回当前OptionalCollection, 否则返回{@code orElse}集合OptionalCollection
 	 *
 	 * @param predicate a predicate to apply to the collection, if present
 	 * @param orElse    predicate执行为false则返回该值
@@ -237,6 +241,18 @@ public class OptionalCollection<E> {
 	}
 
 	/**
+	 * If a collection is present, invoke the specified function with the collection,
+	 * otherwise do nothing and return null.
+	 *
+	 * @param function block to be executed if a collection is present
+	 * @throws NullPointerException if {@code function} is null
+	 */
+	public <V> V ifPresentThen(Function<Collection<E>, V> function) {
+		Objects.requireNonNull(function);
+		return collection == null ? null : function.apply(collection);
+	}
+
+	/**
 	 * If the collection is present(not null), invoke the specified function with the collection,
 	 * otherwise return {@code orElse}.
 	 *
@@ -265,10 +281,29 @@ public class OptionalCollection<E> {
 	}
 
 	/**
-	 * If the collection is present, invoke the specified function with the collection,
+	 * If a collection is not empty, invoke the specified function with the collection and return the result,
+	 * otherwise return {@code null}.
+	 *
+	 * <pre>{@code
+	 * List<UserBase> userBases = new ArrayList<>();
+	 * List<UserAddress> addresses = OptionalCollection.ofEmpty(userBases)
+	 * 		.map(collection -> ListUtils.collectToList(collection, UserBase::getId))
+	 * 		.ifNotEmptyThen(userAddressMapper::listByUserIds);
+	 * }</pre>
+	 *
+	 * @param function block to be executed if a collection is not empty
+	 * @throws NullPointerException if {@code consumer} is null
+	 */
+	public <V> V ifNotEmptyThen(Function<Collection<E>, V> function) {
+		Objects.requireNonNull(function);
+		return isEmpty() ? null : function.apply(collection);
+	}
+
+	/**
+	 * If the collection is not empty, invoke the specified function with the collection,
 	 * otherwise return {@code orElse}.
 	 *
-	 * @param function block to be executed if a collection is present and return result
+	 * @param function block to be executed if a collection is not empty and return result
 	 * @return If the collection is not empty, return function apply result, otherwise{@code orElse}
 	 * @throws NullPointerException if {@code function} is null
 	 */

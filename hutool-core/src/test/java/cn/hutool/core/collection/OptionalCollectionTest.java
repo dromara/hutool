@@ -119,24 +119,47 @@ public class OptionalCollectionTest {
 				.ifPresentOrElse(collection -> collection.stream()
 						.reduce((a, b) -> a + "," + b)
 						.orElse("abc"), "aaa"));
-
 	}
 
 	@Test
 	public void ifNotEmpty() {
-		List<String> defaultList = Arrays.asList("a", "b", "c");
+		List<String> strList = Arrays.asList("a", "b", "c");
 		// print
-		OptionalCollection.ofEmpty(defaultList)
+		OptionalCollection.ofEmpty(strList)
 				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
 		// won't print
 		OptionalCollection.ofEmpty(null)
 				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
 		OptionalCollection.ofEmpty(new ArrayList<>())
 				.ifNotEmpty(OptionalCollectionTest::deleteBatchIds);
+
+		// then
+		List<Integer> intList = null;
+		List<String> resultList = OptionalCollection.ofEmpty(intList)
+				.ifPresentThen(OptionalCollectionTest::selectByIds);
+		Assert.assertNull(resultList);
+
+		intList = new ArrayList<>();
+		resultList = OptionalCollection.ofEmpty(intList)
+				.ifPresentThen(OptionalCollectionTest::selectByIds);
+		Assert.assertNotNull(resultList);
+		Assert.assertTrue(resultList.isEmpty());
+
+		intList = Arrays.asList(1, 2, 3);
+		resultList = OptionalCollection.ofEmpty(intList)
+				.ifPresentThen(OptionalCollectionTest::selectByIds);
+		Assert.assertEquals(resultList, Arrays.asList("1", "2", "3"));
 	}
 
 	private static <V> void deleteBatchIds(Collection<V> collection) {
+		Assert.assertFalse(collection.isEmpty());
 		System.out.println("delete batch ids: " + collection);
+	}
+
+	private static List<String> selectByIds(Collection<? extends Number> collection) {
+		return collection.stream()
+				.map(String::valueOf)
+				.collect(Collectors.toList());
 	}
 
 	@Test
