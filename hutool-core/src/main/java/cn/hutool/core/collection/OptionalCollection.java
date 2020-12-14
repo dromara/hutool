@@ -226,10 +226,6 @@ public class OptionalCollection<E> {
 	 * If a collection is present, invoke the specified consumer with the collection,
 	 * otherwise do nothing.
 	 *
-	 * <pre>
-	 *
-	 * </pre>
-	 *
 	 * @param consumer block to be executed if a collection is present
 	 * @throws NullPointerException if collection is not empty and {@code consumer} is null
 	 */
