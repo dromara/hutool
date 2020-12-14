@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 集合optional操作类, 具体用法与{@link Optional}类似，主要用于辅助{@code OptionalCollection}操作
+ * 集合optional操作类, 具体用法与{@link Optional}类似，主要用于辅助{@link OptionalCollection}操作，
+ * 用法可参照{@link OptionalCollection}类注释
  *
- * @param <T> 流元素类型
  * @author Wilson-He
  */
 public class OptionalStream<T> {
