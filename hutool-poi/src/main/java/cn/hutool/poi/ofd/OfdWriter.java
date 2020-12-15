@@ -113,7 +113,7 @@ public class OfdWriter implements Serializable, Closeable {
 	}
 
 	/**
-	 * 增加节点，
+	 * 增加节点
 	 *
 	 * @param div 节点，可以是段落、Canvas、Img或者填充
 	 * @return this
@@ -124,8 +124,9 @@ public class OfdWriter implements Serializable, Closeable {
 	}
 
 	/**
-	 * 增加节点，
+	 * 增加注释，比如水印等
 	 *
+	 * @param page 页码
 	 * @param annotation 节点，可以是段落、Canvas、Img或者填充
 	 * @return this
 	 */

@@ -98,6 +98,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 添加单词，使用默认类型
 	 *
 	 * @param word 单词
+	 * @return this
 	 */
 	public WordTree addWord(String word) {
 		final Filter<Character> charFilter = this.charFilter;

@@ -19,6 +19,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * 提供基于方言的原始增删改查执行封装
+ *
+ * @author looly
+ * @since 5.5.3
+ */
 public class DialectRunner implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -47,6 +53,7 @@ public class DialectRunner implements Serializable {
 	}
 
 	//---------------------------------------------------------------------------- CRUD start
+
 	/**
 	 * 批量插入数据<br>
 	 * 批量插入必须严格保持Entity的结构一致，不一致会导致插入数据出现不可预知的结果<br>
@@ -65,7 +72,7 @@ public class DialectRunner implements Serializable {
 
 		PreparedStatement ps = null;
 		try {
-			if(1 == records.length){
+			if (1 == records.length) {
 				//单条单独处理
 				ps = dialect.psForInsert(conn, records[0]);
 				return new int[]{ps.executeUpdate()};
@@ -83,8 +90,9 @@ public class DialectRunner implements Serializable {
 	 * 插入数据<br>
 	 * 此方法不会关闭Connection
 	 *
-	 * @param conn   数据库连接
-	 * @param record 记录
+	 * @param <T>                  主键类型，可能为数字或对象列表
+	 * @param conn                 数据库连接
+	 * @param record               记录
 	 * @param generatedKeysHandler 自增主键处理器，用于定义返回自增主键的范围和类型
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
@@ -99,7 +107,7 @@ public class DialectRunner implements Serializable {
 		try {
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
-			if(null == generatedKeysHandler){
+			if (null == generatedKeysHandler) {
 				return null;
 			}
 			return StatementUtil.getGeneratedKeys(ps, generatedKeysHandler);
@@ -204,10 +212,10 @@ public class DialectRunner implements Serializable {
 	 * 分页查询<br>
 	 * 此方法不会关闭Connection
 	 *
-	 * @param <T>    结果对象类型
-	 * @param conn   数据库连接对象
+	 * @param <T>   结果对象类型
+	 * @param conn  数据库连接对象
 	 * @param query 查询条件（包含表名）
-	 * @param rsh    结果集处理对象
+	 * @param rsh   结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */

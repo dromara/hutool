@@ -70,6 +70,7 @@ public class GanymedUtil {
 	 * @param cmd       命令
 	 * @param charset   发送和读取内容的编码
 	 * @param errStream 错误信息输出到的位置
+	 * @return 执行返回结果
 	 */
 	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
 		final String result;
@@ -97,6 +98,7 @@ public class GanymedUtil {
 	 * @param cmd       命令
 	 * @param charset   发送和读取内容的编码
 	 * @param errStream 错误信息输出到的位置
+	 * @return 执行返回结果
 	 */
 	public static String execByShell(Session session, String cmd, Charset charset, OutputStream errStream) {
 		final String result;
