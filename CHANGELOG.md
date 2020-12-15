@@ -35,6 +35,7 @@
 * 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
 * 【extra  】     修复JschUtil.execByShell返回空的问题（issue#1067@Github）
 * 【poi    】     修复特殊的excel使用sax读取时未读到值的问题（issue#1303@Github）
+* 【http   】     修复HttpUtil类条件判断错误（pr#232@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
