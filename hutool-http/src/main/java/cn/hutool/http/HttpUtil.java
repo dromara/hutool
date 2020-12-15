@@ -404,7 +404,7 @@ public class HttpUtil {
 	 */
 	private static HttpResponse requestDownloadFile(String url, File destFile, int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
-		Assert.notNull(url, "[destFile] is null !");
+		Assert.notNull(destFile, "[destFile] is null !");
 
 		final HttpResponse response = HttpRequest.get(url).timeout(timeout).executeAsync();
 		if (response.isOk()) {
