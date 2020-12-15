@@ -1009,6 +1009,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 令牌验证，生成的头类似于："Authorization: Bearer XXXXX"，一般用于JWT
+	 *
+	 * @param token 令牌内容
+	 * @return HttpRequest
+	 * @since 5.5.3
+	 */
+	public HttpRequest bearerAuth(String token) {
+		return auth("Bearer " + token);
+	}
+
+	/**
 	 * 验证，简单插入Authorization头
 	 *
 	 * @param content 验证内容
