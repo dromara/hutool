@@ -22,6 +22,7 @@
 * 【core   】     增加GanymedUtil
 * 【poi    】     增加OFD支持，OfdWriter
 * 【poi    】     修复NumberUtil属性拼写错误（pr#1311@Github）
+* 【core   】     MapUtil增加getQuietly方法（issue#I29IWO@Gitee）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
