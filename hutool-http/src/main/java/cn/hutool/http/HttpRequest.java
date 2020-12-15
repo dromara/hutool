@@ -1094,9 +1094,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 调用转发，如果需要转发返回转发结果，否则返回<code>null</code>
+	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
-	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
+	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
 	private HttpResponse sendRedirectIfPossible() {
 		if (this.maxRedirectCount < 1) {
