@@ -187,4 +187,12 @@ public class ValidatorTest {
 		zipCode = Validator.isZipCode("102629");
 		Assert.assertTrue(zipCode);
 	}
+
+	@Test
+	public void isBetweenTest() {
+		Assert.assertTrue(Validator.isBetween(0, 0, 1));
+		Assert.assertTrue(Validator.isBetween(1L, 0L, 1L));
+		Assert.assertTrue(Validator.isBetween(0.19f, 0.1f, 0.2f));
+		Assert.assertTrue(Validator.isBetween(0.19, 0.1, 0.2));
+	}
 }

@@ -31,7 +31,8 @@ public class UploadFileHeader {
 	// ---------------------------------------------------------------- public interface
 
 	/**
-	 * Returns <code>true</code> if uploaded data are correctly marked as a file. This is true if header contains string 'filename'.
+	 * Returns {@code true} if uploaded data are correctly marked as a file.<br>
+	 * This is true if header contains string 'filename'.
 	 *
 	 * @return 是否为文件
 	 */

@@ -31,7 +31,7 @@ public class Session extends AbstractDb implements Closeable {
 	/**
 	 * 创建默认数据源会话
 	 * 
-	 * @return {@link Session}
+	 * @return Session
 	 * @since 3.2.3
 	 */
 	public static Session create() {
@@ -42,7 +42,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * 创建会话
 	 * 
 	 * @param group 分组
-	 * @return {@link Session}
+	 * @return Session
 	 * @since 4.0.11
 	 */
 	public static Session create(String group) {
@@ -53,7 +53,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * 创建会话
 	 * 
 	 * @param ds 数据源
-	 * @return {@link Session}
+	 * @return Session
 	 */
 	public static Session create(DataSource ds) {
 		return new Session(ds);

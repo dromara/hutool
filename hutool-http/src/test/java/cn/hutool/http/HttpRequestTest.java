@@ -1,17 +1,16 @@
-package cn.hutool.http.test;
+package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSONUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,6 +141,27 @@ public class HttpRequestTest {
 		Console.log(get.getUrl());
 		HttpResponse execute = get.execute();
 		Console.log(execute.body());
+	}
+
+	@Test
+	public void getByProxy(){
+		System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+
+		// 用户名密码, 若已添加白名单则不需要添加
+		final String ProxyUser = "t10757311156848";
+		final String ProxyPass = "ikm5uu44";
+
+		Authenticator.setDefault(new Authenticator() {
+			public PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(ProxyUser, ProxyPass.toCharArray());
+			}
+		});
+
+		final HttpResponse res = HttpRequest.get("https://httpbin.org/get")
+				.basicAuth(ProxyUser, ProxyPass)
+				.setHttpProxy("tps193.kdlapi.com", 15818).execute();
+
+		Console.log(res.body());
 	}
 
 }

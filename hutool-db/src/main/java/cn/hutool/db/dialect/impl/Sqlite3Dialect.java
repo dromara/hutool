@@ -16,7 +16,7 @@ public class Sqlite3Dialect extends AnsiSqlDialect{
 	}
 	
 	@Override
-	public DialectName dialectName() {
-		return DialectName.SQLITE3;
+	public String dialectName() {
+		return DialectName.SQLITE3.name();
 	}
 }

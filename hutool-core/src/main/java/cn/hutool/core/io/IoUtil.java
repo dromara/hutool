@@ -28,13 +28,8 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
-import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Objects;
@@ -48,25 +43,7 @@ import java.util.zip.Checksum;
  *
  * @author xiaoleilu
  */
-public class IoUtil {
-
-	/**
-	 * 默认缓存大小 8192
-	 */
-	public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
-	/**
-	 * 默认中等缓存大小 16384
-	 */
-	public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 2 << 13;
-	/**
-	 * 默认大缓存大小 32768
-	 */
-	public static final int DEFAULT_LARGE_BUFFER_SIZE = 2 << 14;
-
-	/**
-	 * 数据流末尾
-	 */
-	public static final int EOF = -1;
+public class IoUtil extends NioUtil{
 
 	// -------------------------------------------------------------------------------------- Copy start
 
@@ -196,21 +173,6 @@ public class IoUtil {
 	}
 
 	/**
-	 * 拷贝流 thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java<br>
-	 * 本方法不会关闭流
-	 *
-	 * @param in             输入流
-	 * @param out            输出流
-	 * @param bufferSize     缓存大小
-	 * @param streamProgress 进度条
-	 * @return 传输的byte数
-	 * @throws IORuntimeException IO异常
-	 */
-	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, streamProgress);
-	}
-
-	/**
 	 * 拷贝文件流，使用NIO
 	 *
 	 * @param in  输入
@@ -227,79 +189,13 @@ public class IoUtil {
 		try {
 			inChannel = in.getChannel();
 			outChannel = out.getChannel();
-			return inChannel.transferTo(0, inChannel.size(), outChannel);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			return copy(inChannel, outChannel);
 		} finally {
 			close(outChannel);
 			close(inChannel);
 		}
 	}
 
-	/**
-	 * 拷贝流，使用NIO，不会关闭流
-	 *
-	 * @param in  {@link ReadableByteChannel}
-	 * @param out {@link WritableByteChannel}
-	 * @return 拷贝的字节数
-	 * @throws IORuntimeException IO异常
-	 * @since 4.5.0
-	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out) throws IORuntimeException {
-		return copy(in, out, DEFAULT_BUFFER_SIZE);
-	}
-
-	/**
-	 * 拷贝流，使用NIO，不会关闭流
-	 *
-	 * @param in         {@link ReadableByteChannel}
-	 * @param out        {@link WritableByteChannel}
-	 * @param bufferSize 缓冲大小，如果小于等于0，使用默认
-	 * @return 拷贝的字节数
-	 * @throws IORuntimeException IO异常
-	 * @since 4.5.0
-	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize) throws IORuntimeException {
-		return copy(in, out, bufferSize, null);
-	}
-
-	/**
-	 * 拷贝流，使用NIO，不会关闭流
-	 *
-	 * @param in             {@link ReadableByteChannel}
-	 * @param out            {@link WritableByteChannel}
-	 * @param bufferSize     缓冲大小，如果小于等于0，使用默认
-	 * @param streamProgress {@link StreamProgress}进度处理器
-	 * @return 拷贝的字节数
-	 * @throws IORuntimeException IO异常
-	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		Assert.notNull(in, "InputStream is null !");
-		Assert.notNull(out, "OutputStream is null !");
-
-		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize <= 0 ? DEFAULT_BUFFER_SIZE : bufferSize);
-		long size = 0;
-		if (null != streamProgress) {
-			streamProgress.start();
-		}
-		try {
-			while (in.read(byteBuffer) != EOF) {
-				byteBuffer.flip();// 写转读
-				size += out.write(byteBuffer);
-				byteBuffer.clear();
-				if (null != streamProgress) {
-					streamProgress.progress(size);
-				}
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (null != streamProgress) {
-			streamProgress.finish();
-		}
-
-		return size;
-	}
 	// -------------------------------------------------------------------------------------- Copy end
 
 	// -------------------------------------------------------------------------------------- getReader and getWriter start
@@ -455,22 +351,7 @@ public class IoUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String read(InputStream in, Charset charset) throws IORuntimeException {
-		FastByteArrayOutputStream out = read(in);
-		return null == charset ? out.toString() : out.toString(charset);
-	}
-
-	/**
-	 * 从流中读取内容，读取完毕后并不关闭流
-	 *
-	 * @param channel 可读通道，读取完毕后并不关闭通道
-	 * @param charset 字符集
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 * @since 4.5.0
-	 */
-	public static String read(ReadableByteChannel channel, Charset charset) throws IORuntimeException {
-		FastByteArrayOutputStream out = read(channel);
-		return null == charset ? out.toString() : out.toString(charset);
+		return StrUtil.str(readBytes(in), charset);
 	}
 
 	/**
@@ -483,19 +364,6 @@ public class IoUtil {
 	public static FastByteArrayOutputStream read(InputStream in) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
-		return out;
-	}
-
-	/**
-	 * 从流中读取内容，读到输出流中
-	 *
-	 * @param channel 可读通道，读取完毕后并不关闭通道
-	 * @return 输出流
-	 * @throws IORuntimeException IO异常
-	 */
-	public static FastByteArrayOutputStream read(ReadableByteChannel channel) throws IORuntimeException {
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		copy(channel, Channels.newChannel(out));
 		return out;
 	}
 
@@ -513,7 +381,7 @@ public class IoUtil {
 	/**
 	 * 从{@link Reader}中读取String
 	 *
-	 * @param reader {@link Reader}
+	 * @param reader  {@link Reader}
 	 * @param isClose 是否关闭{@link Reader}
 	 * @return String
 	 * @throws IORuntimeException IO异常
@@ -527,53 +395,12 @@ public class IoUtil {
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		} finally{
-			if(isClose){
+		} finally {
+			if (isClose) {
 				IoUtil.close(reader);
 			}
 		}
 		return builder.toString();
-	}
-
-	/**
-	 * 从FileChannel中读取UTF-8编码内容
-	 *
-	 * @param fileChannel 文件管道
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String readUtf8(FileChannel fileChannel) throws IORuntimeException {
-		return read(fileChannel, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 从FileChannel中读取内容，读取完毕后并不关闭Channel
-	 *
-	 * @param fileChannel 文件管道
-	 * @param charsetName 字符集
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String read(FileChannel fileChannel, String charsetName) throws IORuntimeException {
-		return read(fileChannel, CharsetUtil.charset(charsetName));
-	}
-
-	/**
-	 * 从FileChannel中读取内容
-	 *
-	 * @param fileChannel 文件管道
-	 * @param charset     字符集
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String read(FileChannel fileChannel, Charset charset) throws IORuntimeException {
-		MappedByteBuffer buffer;
-		try {
-			buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return StrUtil.str(buffer, charset);
 	}
 
 	/**
@@ -597,12 +424,19 @@ public class IoUtil {
 	 * @since 5.0.4
 	 */
 	public static byte[] readBytes(InputStream in, boolean isCloseStream) throws IORuntimeException {
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		copy(in, out);
-		if (isCloseStream) {
-			close(in);
+		final InputStream availableStream = toAvailableStream(in);
+		try{
+			final int available = availableStream.available();
+			if(available > 0){
+				byte[] result = new byte[available];
+				//noinspection ResultOfMethodCallIgnored
+				availableStream.read(result);
+				return result;
+			}
+		} catch (IOException e){
+			throw new IORuntimeException(e);
 		}
-		return out.toByteArray();
+		return new byte[0];
 	}
 
 	/**
@@ -967,6 +801,42 @@ public class IoUtil {
 	}
 
 	/**
+	 * 将指定{@link InputStream} 转换为{@link InputStream#available()}方法可用的流。<br>
+	 * 在Socket通信流中，服务端未返回数据情况下{@link InputStream#available()}方法始终为{@code 0}<br>
+	 * 因此，在读取前需要调用{@link InputStream#read()}读取一个字节（未返回会阻塞），一旦读取到了，{@link InputStream#available()}方法就正常了。<br>
+	 * 此方法返回对象的规则为：
+	 *
+	 * <ul>
+	 *     <li>FileInputStream 返回原对象，因为文件流的available方法本身可用</li>
+	 *     <li>其它InputStream 返回PushbackInputStream</li>
+	 * </ul>
+	 *
+	 * @param in 被转换的流
+	 * @return 转换后的流，可能为{@link PushbackInputStream}
+	 * @since 5.5.3
+	 */
+	public static InputStream toAvailableStream(InputStream in) {
+		if(in instanceof FileInputStream){
+			// FileInputStream本身支持available方法。
+			return in;
+		}
+
+		final PushbackInputStream pushbackInputStream = toPushbackStream(in, 1);
+		try {
+			final int available = pushbackInputStream.available();
+			if (available <= 0) {
+				//此操作会阻塞，直到有数据被读到
+				int b = pushbackInputStream.read();
+				pushbackInputStream.unread(b);
+			}
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return pushbackInputStream;
+	}
+
+	/**
 	 * 将byte[]写到流中
 	 *
 	 * @param out        输出流
@@ -1104,22 +974,6 @@ public class IoUtil {
 	 * @param closeable 被关闭的对象
 	 */
 	public static void close(Closeable closeable) {
-		if (null != closeable) {
-			try {
-				closeable.close();
-			} catch (Exception e) {
-				// 静默关闭
-			}
-		}
-	}
-
-	/**
-	 * 关闭<br>
-	 * 关闭失败不会抛出异常
-	 *
-	 * @param closeable 被关闭的对象
-	 */
-	public static void close(AutoCloseable closeable) {
 		if (null != closeable) {
 			try {
 				closeable.close();

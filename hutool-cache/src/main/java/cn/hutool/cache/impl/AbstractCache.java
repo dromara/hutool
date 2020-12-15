@@ -15,7 +15,7 @@ import java.util.concurrent.locks.StampedLock;
  * 继承此抽象缓存需要：<br>
  * <ul>
  * <li>创建一个新的Map</li>
- * <li>实现 <code>prune</code> 策略</li>
+ * <li>实现 {@code prune} 策略</li>
  * </ul>
  *
  * @param <K> 键类型
@@ -30,11 +30,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	private final StampedLock lock = new StampedLock();
 
 	/**
-	 * 返回缓存容量，<code>0</code>表示无大小限制
+	 * 返回缓存容量，{@code 0}表示无大小限制
 	 */
 	protected int capacity;
 	/**
-	 * 缓存失效时长， <code>0</code> 表示无限制，单位毫秒
+	 * 缓存失效时长， {@code 0} 表示无限制，单位毫秒
 	 */
 	protected long timeout;
 
@@ -168,15 +168,13 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				return null;
 			}
 
-			if (co.isExpired()) {
-				missCount.getAndIncrement();
-			} else {
-				// 命中
+			// 命中
+			if (false == co.isExpired()) {
 				hitCount.getAndIncrement();
 				return co.get(isUpdateLastAccess);
 			}
 		} finally {
-			lock.unlock(stamp);
+			lock.unlockRead(stamp);
 		}
 
 		// 过期

@@ -1,6 +1,5 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
-import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
 import org.junit.Assert;
 import org.junit.Test;

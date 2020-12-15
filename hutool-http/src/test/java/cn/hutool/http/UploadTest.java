@@ -1,23 +1,23 @@
-package cn.hutool.http.test;
+package cn.hutool.http;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 文件上传单元测试
- * @author looly
  *
+ * @author looly
  */
 public class UploadTest {
-	
+
 	/**
 	 * 多文件上传测试
 	 */
@@ -35,7 +35,7 @@ public class UploadTest {
 		HttpResponse response = request.execute();
 		Console.log(response.body());
 	}
-	
+
 	@Test
 	@Ignore
 	public void uploadFileTest() {
@@ -47,5 +47,25 @@ public class UploadTest {
 		paramMap.put("file", file);
 		String result = HttpUtil.post("http://wthrcdn.etouch.cn/weather_mini", paramMap);
 		System.out.println(result);
+	}
+
+	@Test
+	@Ignore
+	public void uploadTest() {
+		//客户端
+		String url = "http://localhost:8888/file";
+		Path file = Paths.get("D:\\testBigData_upload.xlsx");
+		Map<String, String> headers = new HashMap<>(16);
+		headers.put("md5", "aaaaaaaa");
+
+		Map<String, Object> params = new HashMap<>(16);
+		params.put("fileName", file.toFile().getName());
+		params.put("file", file.toFile());
+		HttpRequest httpRequest = HttpRequest.post(url)
+				.setChunkedStreamingMode(1024 * 1024)
+				.headerMap(headers, false)
+				.form(params);
+		HttpResponse httpResponse = httpRequest.execute();
+		Console.log(httpResponse);
 	}
 }

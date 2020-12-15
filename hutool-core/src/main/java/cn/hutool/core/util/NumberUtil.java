@@ -41,7 +41,7 @@ public class NumberUtil {
 	/**
 	 * 默认除法运算精度
 	 */
-	private static final int DEFAUT_DIV_SCALE = 10;
+	private static final int DEFAULT_DIV_SCALE = 10;
 
 	/**
 	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
@@ -484,7 +484,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(float v1, float v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -495,7 +495,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(float v1, double v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, float v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -517,7 +517,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -528,7 +528,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(Double v1, Double v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -540,7 +540,7 @@ public class NumberUtil {
 	 * @since 3.1.0
 	 */
 	public static BigDecimal div(Number v1, Number v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -551,7 +551,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static BigDecimal div(String v1, String v2) {
-		return div(v1, v2, DEFAUT_DIV_SCALE);
+		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
 	/**
@@ -1516,7 +1516,7 @@ public class NumberUtil {
 	 */
 	public static int processMultiple(int selectNum, int minNum) {
 		int result;
-		result = mathSubnode(selectNum, minNum) / mathNode(selectNum - minNum);
+		result = mathSubNode(selectNum, minNum) / mathNode(selectNum - minNum);
 		return result;
 	}
 
@@ -2494,11 +2494,11 @@ public class NumberUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
-	private static int mathSubnode(int selectNum, int minNum) {
+	private static int mathSubNode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
 		} else {
-			return selectNum * mathSubnode(selectNum - 1, minNum);
+			return selectNum * mathSubNode(selectNum - 1, minNum);
 		}
 	}
 

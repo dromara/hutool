@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -6,8 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -340,21 +338,21 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeBeanTest() {
-		TestBean bean1 = new TestBean();
+		cn.hutool.poi.excel.TestBean bean1 = new cn.hutool.poi.excel.TestBean();
 		bean1.setName("张三");
 		bean1.setAge(22);
 		bean1.setPass(true);
 		bean1.setScore(66.30);
 		bean1.setExamDate(DateUtil.date());
 
-		TestBean bean2 = new TestBean();
+		cn.hutool.poi.excel.TestBean bean2 = new cn.hutool.poi.excel.TestBean();
 		bean2.setName("李四");
 		bean2.setAge(28);
 		bean2.setPass(false);
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		List<TestBean> rows = CollUtil.newArrayList(bean1, bean2);
+		List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
 		String file = "e:/writeBeanTest.xlsx";
 		FileUtil.del(file);
@@ -376,17 +374,17 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeBeanTest2() {
-		OrderExcel order1 = new OrderExcel();
+		cn.hutool.poi.excel.OrderExcel order1 = new cn.hutool.poi.excel.OrderExcel();
 		order1.setId("1");
 		order1.setNum("123");
 		order1.setBody("body1");
 
-		OrderExcel order2 = new OrderExcel();
+		cn.hutool.poi.excel.OrderExcel order2 = new cn.hutool.poi.excel.OrderExcel();
 		order1.setId("2");
 		order1.setNum("456");
 		order1.setBody("body2");
 
-		List<OrderExcel> rows = CollUtil.newArrayList(order1, order2);
+		List<cn.hutool.poi.excel.OrderExcel> rows = CollUtil.newArrayList(order1, order2);
 		// 通过工具类创建writer
 		String file = "f:/test/writeBeanTest2.xlsx";
 		FileUtil.del(file);

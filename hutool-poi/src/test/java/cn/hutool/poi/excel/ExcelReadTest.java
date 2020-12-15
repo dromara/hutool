@@ -1,11 +1,9 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.poi.excel.ExcelReader;
-import cn.hutool.poi.excel.ExcelUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;

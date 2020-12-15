@@ -19,6 +19,7 @@ import java.sql.SQLException;
  * @author Luxiaolei
  *
  */
+@FunctionalInterface
 public interface RsHandler<T> extends Serializable{
 	
 	/**

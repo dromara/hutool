@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel.test;
+package cn.hutool.poi.excel;
 
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.junit.Ignore;

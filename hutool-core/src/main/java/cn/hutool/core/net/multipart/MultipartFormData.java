@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.multi.ListValueMap;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -78,10 +77,7 @@ public class MultipartFormData {
 				putFile(header.formFieldName, newFile);
 			} else {
 				// 标准表单项
-				ByteArrayOutputStream fbos = new ByteArrayOutputStream(1024);
-				input.copy(fbos);
-				String value = (charset != null) ? new String(fbos.toByteArray(), charset) : new String(fbos.toByteArray());
-				putParameter(header.formFieldName, value);
+				putParameter(header.formFieldName, input.readString(charset));
 			}
 
 			input.skipBytes(1);

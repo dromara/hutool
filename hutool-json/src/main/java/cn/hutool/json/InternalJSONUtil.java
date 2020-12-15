@@ -74,7 +74,7 @@ final class InternalJSONUtil {
 	 * 缩进，使用空格符
 	 *
 	 * @param writer writer
-	 * @param indent 随进空格数
+	 * @param indent 缩进空格数
 	 * @throws IOException IO异常
 	 */
 	protected static void indent(Writer writer, int indent) throws IOException {
@@ -240,11 +240,14 @@ final class InternalJSONUtil {
 	 */
 	private static String formatDate(Object dateObj, String format) {
 		if (StrUtil.isNotBlank(format)) {
+			final String dateStr;
 			if(dateObj instanceof TemporalAccessor){
-				return TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
+				dateStr = TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
+			} else{
+				dateStr = DateUtil.format(Convert.toDate(dateObj), format);
 			}
 			//用户定义了日期格式
-			return JSONUtil.quote(DateUtil.format(Convert.toDate(dateObj), format));
+			return JSONUtil.quote(dateStr);
 		}
 
 		//默认使用时间戳
