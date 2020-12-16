@@ -3194,7 +3194,7 @@ public class FileUtil extends PathUtil {
 	public static boolean isSub(File parent, File sub) {
 		Assert.notNull(parent);
 		Assert.notNull(sub);
-		return sub.toPath().toAbsolutePath().normalize().startsWith(parent.toPath().toAbsolutePath().normalize());
+		return isSub(parent.toPath(), sub.toPath());
 	}
 
 	/**

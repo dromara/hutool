@@ -515,4 +515,28 @@ public class PathUtil {
 		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
 		return Files.exists(path, options);
 	}
+
+	/**
+	 * 判断给定的目录是否为给定文件或文件夹的子目录
+	 *
+	 * @param parent 父目录
+	 * @param sub    子目录
+	 * @return 子目录是否为父目录的子目录
+	 * @since 5.5.5
+	 */
+	public static boolean isSub(Path parent, Path sub) {
+		return toAbsNormal(sub).startsWith(toAbsNormal(parent));
+	}
+
+	/**
+	 * 将Path路径转换为标准的绝对路径
+	 *
+	 * @param path 文件或目录Path
+	 * @return 转换后的Path
+	 * @since 5.5.5
+	 */
+	public static Path toAbsNormal(Path path){
+		Assert.notNull(path);
+		return path.toAbsolutePath().normalize();
+	}
 }
