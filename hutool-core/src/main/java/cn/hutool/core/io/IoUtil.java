@@ -43,7 +43,7 @@ import java.util.zip.Checksum;
  *
  * @author xiaoleilu
  */
-public class IoUtil extends NioUtil{
+public class IoUtil extends NioUtil {
 
 	// -------------------------------------------------------------------------------------- Copy start
 
@@ -330,7 +330,7 @@ public class IoUtil extends NioUtil{
 	}
 
 	/**
-	 * 从流中读取内容
+	 * 从流中读取内容，读取完成后关闭流
 	 *
 	 * @param in          输入流
 	 * @param charsetName 字符集
@@ -338,7 +338,7 @@ public class IoUtil extends NioUtil{
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String read(InputStream in, String charsetName) throws IORuntimeException {
-		FastByteArrayOutputStream out = read(in);
+		final FastByteArrayOutputStream out = read(in);
 		return StrUtil.isBlank(charsetName) ? out.toString() : out.toString(charsetName);
 	}
 
@@ -362,8 +362,27 @@ public class IoUtil extends NioUtil{
 	 * @throws IORuntimeException IO异常
 	 */
 	public static FastByteArrayOutputStream read(InputStream in) throws IORuntimeException {
+		return read(in, true);
+	}
+
+	/**
+	 * 从流中读取内容，读到输出流中，读取完毕后并不关闭流
+	 *
+	 * @param in      输入流
+	 * @param isClose 读取完毕后是否关闭流
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.3
+	 */
+	public static FastByteArrayOutputStream read(InputStream in, boolean isClose) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		copy(in, out);
+		try {
+			copy(in, out);
+		} finally {
+			if (isClose) {
+				close(in);
+			}
+		}
 		return out;
 	}
 
@@ -417,26 +436,31 @@ public class IoUtil extends NioUtil{
 	/**
 	 * 从流中读取bytes
 	 *
-	 * @param in            {@link InputStream}
-	 * @param isCloseStream 是否关闭输入流
+	 * @param in      {@link InputStream}
+	 * @param isCLose 是否关闭输入流
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	public static byte[] readBytes(InputStream in, boolean isCloseStream) throws IORuntimeException {
-		final InputStream availableStream = toAvailableStream(in);
-		try{
-			final int available = availableStream.available();
-			if(available > 0){
-				byte[] result = new byte[available];
-				//noinspection ResultOfMethodCallIgnored
-				availableStream.read(result);
-				return result;
+	public static byte[] readBytes(InputStream in, boolean isCLose) throws IORuntimeException {
+		if (in instanceof FileInputStream) {
+			// 文件流的长度是可预见的，此时直接读取效率更高
+			final byte[] result;
+			try {
+				final int available = in.available();
+				result = new byte[available];
+				final int readLength = in.read(result);
+				if (readLength != available) {
+					throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", available, readLength));
+				}
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
 			}
-		} catch (IOException e){
-			throw new IORuntimeException(e);
+			return result;
 		}
-		return new byte[0];
+
+		// 未知bytes总量的流
+		return read(in, isCLose).toByteArray();
 	}
 
 	/**
@@ -804,6 +828,7 @@ public class IoUtil extends NioUtil{
 	 * 将指定{@link InputStream} 转换为{@link InputStream#available()}方法可用的流。<br>
 	 * 在Socket通信流中，服务端未返回数据情况下{@link InputStream#available()}方法始终为{@code 0}<br>
 	 * 因此，在读取前需要调用{@link InputStream#read()}读取一个字节（未返回会阻塞），一旦读取到了，{@link InputStream#available()}方法就正常了。<br>
+	 * 需要注意的是，在网络流中，是按照块来传输的，所以 {@link InputStream#available()} 读取到的并非最终长度，而是此次块的长度。<br>
 	 * 此方法返回对象的规则为：
 	 *
 	 * <ul>
@@ -816,7 +841,7 @@ public class IoUtil extends NioUtil{
 	 * @since 5.5.3
 	 */
 	public static InputStream toAvailableStream(InputStream in) {
-		if(in instanceof FileInputStream){
+		if (in instanceof FileInputStream) {
 			// FileInputStream本身支持available方法。
 			return in;
 		}
