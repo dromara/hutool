@@ -384,6 +384,21 @@ public class PathUtil {
 	}
 
 	/**
+	 * 读取文件的所有内容为byte数组
+	 *
+	 * @param path 文件
+	 * @return byte数组
+	 * @since 5.5.4
+	 */
+	public static byte[] readBytes(Path path){
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
 	 * 获得输出流
 	 *
 	 * @param path Path

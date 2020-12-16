@@ -563,6 +563,7 @@ public class ZipUtil {
 	 * 获取压缩包中的指定文件流
 	 *
 	 * @param zipFile 压缩文件
+	 * @param charset 编码
 	 * @param path    需要提取文件的文件名或路径
 	 * @return 压缩文件流，如果未找到返回{@code null}
 	 * @since 5.5.2
