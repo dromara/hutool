@@ -384,4 +384,11 @@ public class FileUtilTest {
 		File file2 = new File("d:/test2/aaa");
 		Assert.assertFalse(FileUtil.isSub(file, file2));
 	}
+
+	@Test
+	public void isSubRelativeTest() {
+		File file = new File("..");
+		File file2 = new File(".");
+		Assert.assertTrue(FileUtil.isSub(file, file2));
+	}
 }
