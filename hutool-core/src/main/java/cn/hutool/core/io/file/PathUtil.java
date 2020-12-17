@@ -539,4 +539,19 @@ public class PathUtil {
 		Assert.notNull(path);
 		return path.toAbsolutePath().normalize();
 	}
+
+	/**
+	 * 获得文件的MimeType
+	 *
+	 * @param file 文件
+	 * @return MimeType
+	 * @since 5.5.5
+	 */
+	public static String getMimeType(Path file) {
+		try {
+			return Files.probeContentType(file);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
 }
