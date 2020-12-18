@@ -153,7 +153,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Long insertForGeneratedKey(Connection conn, Entity record) throws SQLException {
-		return insert(conn, record, (rs)->{
+		return insert(conn, record, (rs) -> {
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
@@ -281,7 +281,7 @@ public class SqlConnRunner extends DialectRunner {
 	/**
 	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql)
 	 *
-	 * @param conn 数据库连接对象
+	 * @param conn      数据库连接对象
 	 * @param selectSql 查询语句
 	 * @return 结果数
 	 * @throws SQLException SQL异常
@@ -322,7 +322,7 @@ public class SqlConnRunner extends DialectRunner {
 	 */
 	public PageResult<Entity> page(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException {
 		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int)count(conn, sqlBuilder.build())),
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder.build())),
 				this.caseInsensitive);
 		return page(conn, sqlBuilder, page, pageResultHandler);
 	}
@@ -370,7 +370,7 @@ public class SqlConnRunner extends DialectRunner {
 	 */
 	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
 		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int)count(conn, where)),
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, where)),
 				this.caseInsensitive);
 		return page(conn, fields, where, page, pageResultHandler);
 	}
@@ -379,10 +379,11 @@ public class SqlConnRunner extends DialectRunner {
 	 * 分页查询<br>
 	 * 此方法不会关闭Connection
 	 *
-	 * @param conn   数据库连接对象
-	 * @param fields 返回的字段列表，null则返回所有字段
-	 * @param where  条件实体类（包含表名）
-	 * @param page   分页对象
+	 * @param <T>     结果类型，取决于 {@link RsHandler} 的处理逻辑
+	 * @param conn    数据库连接对象
+	 * @param fields  返回的字段列表，null则返回所有字段
+	 * @param where   条件实体类（包含表名）
+	 * @param page    分页对象
 	 * @param handler 结果集处理器
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常

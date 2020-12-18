@@ -94,8 +94,8 @@ public class PathUtil {
 	/**
 	 * 遍历指定path下的文件并做处理
 	 *
-	 * @param start    起始路径，必须为目录
-	 * @param visitor  {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
+	 * @param start   起始路径，必须为目录
+	 * @param visitor {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
 	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
 	 * @since 5.5.2
 	 */
@@ -169,7 +169,7 @@ public class PathUtil {
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
@@ -191,14 +191,14 @@ public class PathUtil {
 	 * 拷贝文件或目录
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.1
 	 */
 	public static Path copy(Path src, Path target, CopyOption... options) throws IORuntimeException {
-		if(isFile(src, false)){
+		if (isFile(src, false)) {
 			return copyFile(src, target, options);
 		}
 		return copyContent(src, target.resolve(src.getFileName()), options);
@@ -208,7 +208,7 @@ public class PathUtil {
 	 * 拷贝目录下的所有文件或目录到目标目录中
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param target    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
@@ -227,7 +227,7 @@ public class PathUtil {
 	 * 判断是否为目录，如果file为null，则返回false<br>
 	 * 此方法不会追踪到软链对应的真实地址，即软链被当作文件
 	 *
-	 * @param path          {@link Path}
+	 * @param path {@link Path}
 	 * @return 如果为目录true
 	 * @since 5.5.1
 	 */
@@ -384,6 +384,21 @@ public class PathUtil {
 	}
 
 	/**
+	 * 读取文件的所有内容为byte数组
+	 *
+	 * @param path 文件
+	 * @return byte数组
+	 * @since 5.5.4
+	 */
+	public static byte[] readBytes(Path path){
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
 	 * 获得输出流
 	 *
 	 * @param path Path
@@ -486,5 +501,57 @@ public class PathUtil {
 	 */
 	public static boolean isSymlink(Path path) {
 		return Files.isSymbolicLink(path);
+	}
+
+	/**
+	 * 判断文件或目录是否存在
+	 *
+	 * @param path          文件
+	 * @param isFollowLinks 是否跟踪软链（快捷方式）
+	 * @return 是否存在
+	 * @since 5.5.3
+	 */
+	public static boolean exists(Path path, boolean isFollowLinks) {
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
+		return Files.exists(path, options);
+	}
+
+	/**
+	 * 判断给定的目录是否为给定文件或文件夹的子目录
+	 *
+	 * @param parent 父目录
+	 * @param sub    子目录
+	 * @return 子目录是否为父目录的子目录
+	 * @since 5.5.5
+	 */
+	public static boolean isSub(Path parent, Path sub) {
+		return toAbsNormal(sub).startsWith(toAbsNormal(parent));
+	}
+
+	/**
+	 * 将Path路径转换为标准的绝对路径
+	 *
+	 * @param path 文件或目录Path
+	 * @return 转换后的Path
+	 * @since 5.5.5
+	 */
+	public static Path toAbsNormal(Path path){
+		Assert.notNull(path);
+		return path.toAbsolutePath().normalize();
+	}
+
+	/**
+	 * 获得文件的MimeType
+	 *
+	 * @param file 文件
+	 * @return MimeType
+	 * @since 5.5.5
+	 */
+	public static String getMimeType(Path file) {
+		try {
+			return Files.probeContentType(file);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

@@ -1009,6 +1009,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 令牌验证，生成的头类似于："Authorization: Bearer XXXXX"，一般用于JWT
+	 *
+	 * @param token 令牌内容
+	 * @return HttpRequest
+	 * @since 5.5.3
+	 */
+	public HttpRequest bearerAuth(String token) {
+		return auth("Bearer " + token);
+	}
+
+	/**
 	 * 验证，简单插入Authorization头
 	 *
 	 * @param content 验证内容
@@ -1094,9 +1105,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 调用转发，如果需要转发返回转发结果，否则返回<code>null</code>
+	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
-	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
+	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
 	private HttpResponse sendRedirectIfPossible() {
 		if (this.maxRedirectCount < 1) {

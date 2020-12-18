@@ -3,6 +3,24 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.5.5 (2020-12-17)
+
+### 新特性
+* 【core   】     URLUtil.normalize新增重载（pr#233@Gitee）
+* 【core   】     PathUtil增加isSub和toAbsNormal方法
+
+### Bug修复
+* 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.5.4 (2020-12-16)
+
+### 新特性
+### Bug修复
+* 【core   】     修复IoUtil.readBytes的问题
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.5.3 (2020-12-11)
 
 ### 新特性
@@ -21,6 +39,8 @@
 * 【core   】     增加NioUtil
 * 【core   】     增加GanymedUtil
 * 【poi    】     增加OFD支持，OfdWriter
+* 【poi    】     修复NumberUtil属性拼写错误（pr#1311@Github）
+* 【core   】     MapUtil增加getQuietly方法（issue#I29IWO@Gitee）
 
 ### Bug修复
 * 【cache  】     修复Cache中get重复misCount计数问题（issue#1281@Github）
@@ -34,6 +54,7 @@
 * 【core   】     修复FileUtil.loopFiles使用FileFilter无效问题（issue#I28V48@Gitee）
 * 【extra  】     修复JschUtil.execByShell返回空的问题（issue#1067@Github）
 * 【poi    】     修复特殊的excel使用sax读取时未读到值的问题（issue#1303@Github）
+* 【http   】     修复HttpUtil类条件判断错误（pr#232@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

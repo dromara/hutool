@@ -74,7 +74,7 @@ final class InternalJSONUtil {
 	 * 缩进，使用空格符
 	 *
 	 * @param writer writer
-	 * @param indent 随进空格数
+	 * @param indent 缩进空格数
 	 * @throws IOException IO异常
 	 */
 	protected static void indent(Writer writer, int indent) throws IOException {

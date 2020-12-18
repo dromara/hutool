@@ -4146,7 +4146,7 @@ public class CharSequenceUtil {
 		if (null == str) {
 			return null;
 		}
-		if (str.length() <= maxLength) {
+		if (maxLength <= 0 || str.length() <= maxLength) {
 			return str.toString();
 		}
 		int w = maxLength / 2;
