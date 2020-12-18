@@ -3,11 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.5 (2020-12-17)
+# 5.5.5 (2020-12-18)
 
 ### 新特性
 * 【core   】     URLUtil.normalize新增重载（pr#233@Gitee）
 * 【core   】     PathUtil增加isSub和toAbsNormal方法
+* 【db     】     RedisDS实现序列化接口（pr#1323@Github）
+* 【poi    】     StyleUtil增加getFormat方法（pr#235@Gitee）
 
 ### Bug修复
 * 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
