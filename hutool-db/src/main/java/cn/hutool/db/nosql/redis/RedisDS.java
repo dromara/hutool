@@ -16,7 +16,8 @@ import java.io.Closeable;
  * @author looly
  * @since 3.2.3
  */
-public class RedisDS implements Closeable{
+public class RedisDS implements Closeable, Serializable{
+	private static final long serialVersionUID = -5605411972456177456L;
 	/** 默认配置文件 */
 	public final static String REDIS_CONFIG_PATH = "config/redis.setting";
 
