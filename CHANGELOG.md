@@ -10,6 +10,7 @@
 * 【core   】     PathUtil增加isSub和toAbsNormal方法
 * 【db     】     RedisDS实现序列化接口（pr#1323@Github）
 * 【poi    】     StyleUtil增加getFormat方法（pr#235@Gitee）
+* 【poi    】     增加ExcelDateUtil更多日期格式支持（issue#1316@Github）
 
 ### Bug修复
 * 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
