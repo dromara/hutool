@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.5 (2020-12-23)
+# 5.5.5 (2020-12-24)
 
 ### 新特性
 * 【core   】     URLUtil.normalize新增重载（pr#233@Gitee）
@@ -11,11 +11,14 @@
 * 【db     】     RedisDS实现序列化接口（pr#1323@Github）
 * 【poi    】     StyleUtil增加getFormat方法（pr#235@Gitee）
 * 【poi    】     增加ExcelDateUtil更多日期格式支持（issue#1316@Github）
+* 【core   】     NumberUtil.toBigDecimal支持各类数字格式，如1,234.56等（issue#1334@Github）
+* 【core   】     NumberUtil增加parseXXX方法（issue#1334@Github）
 
 ### Bug修复
 * 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
 * 【core   】     TreeUtil增加空判定（issue#I2ACCW@Gitee）
 * 【db     】     解决Hive获取表名失败问题（issue#I2AGLU@Gitee）
+* 【core   】     修复DateUtil.parse未使用严格模式导致结果不正常的问题（issue#1332@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.5.4 (2020-12-16)
