@@ -3,6 +3,7 @@ package cn.hutool.poi.excel.cell;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
@@ -102,7 +103,7 @@ public class CellUtil {
 		if (null == cell) {
 			return null;
 		}
-		if(cell instanceof NullCell){
+		if (cell instanceof NullCell) {
 			return null == cellEditor ? null : cellEditor.edit(cell, null);
 		}
 		if (null == cellType) {
@@ -111,7 +112,7 @@ public class CellUtil {
 
 		// 尝试获取合并单元格，如果是合并单元格，则重新获取单元格类型
 		final Cell mergedCell = getMergedRegionCell(cell);
-		if(mergedCell != cell){
+		if (mergedCell != cell) {
 			cell = mergedCell;
 			cellType = cell.getCellTypeEnum();
 		}
@@ -235,7 +236,7 @@ public class CellUtil {
 	}
 
 	/**
-	 *获取单元格，如果单元格不存在，返回{@link NullCell}
+	 * 获取单元格，如果单元格不存在，返回{@link NullCell}
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
@@ -377,7 +378,7 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static Cell getMergedRegionCell(Cell cell) {
-		if(null == cell){
+		if (null == cell) {
 			return null;
 		}
 		return ObjectUtil.defaultIfNull(
@@ -404,10 +405,10 @@ public class CellUtil {
 	/**
 	 * 为特定单元格添加批注
 	 *
-	 * @param cell 单元格
-	 * @param commentText 批注内容
+	 * @param cell          单元格
+	 * @param commentText   批注内容
 	 * @param commentAuthor 作者
-	 * @param anchor 批注的位置、大小等信息，null表示使用默认
+	 * @param anchor        批注的位置、大小等信息，null表示使用默认
 	 * @since 5.4.8
 	 */
 	public static void setComment(Cell cell, String commentText, String commentAuthor, ClientAnchor anchor) {
@@ -431,16 +432,16 @@ public class CellUtil {
 	// -------------------------------------------------------------------------------------------------------------- Private method start
 
 	/**
-	 * 获取合并单元格，非合并单元格返回<code>null</code><br>
+	 * 获取合并单元格，非合并单元格返回{@code null}<br>
 	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
 	 *
 	 * @param sheet {@link Sheet}
 	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
 	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
-	 * @return 合并单元格，如果非合并单元格，返回<code>null</code>
+	 * @return 合并单元格，如果非合并单元格，返回{@code null}
 	 * @since 5.4.5
 	 */
-	private static Cell getCellIfMergedRegion(Sheet sheet, int x, int y){
+	private static Cell getCellIfMergedRegion(Sheet sheet, int x, int y) {
 		final int sheetMergeCount = sheet.getNumMergedRegions();
 		CellRangeAddress ca;
 		for (int i = 0; i < sheetMergeCount; i++) {
@@ -463,9 +464,8 @@ public class CellUtil {
 
 		final CellStyle style = cell.getCellStyle();
 		if (null != style) {
-			final short formatIndex = style.getDataFormat();
 			// 判断是否为日期
-			if (isDateType(cell, formatIndex)) {
+			if (ExcelDateUtil.isDateFormat(cell)) {
 				return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
 			}
 
@@ -482,33 +482,6 @@ public class CellUtil {
 
 		// 某些Excel单元格值为double计算结果，可能导致精度问题，通过转换解决精度问题。
 		return Double.parseDouble(NumberToTextConverter.toText(value));
-	}
-
-	/**
-	 * 是否为日期格式<br>
-	 * 判断方式：
-	 *
-	 * <pre>
-	 * 1、指定序号
-	 * 2、org.apache.poi.ss.usermodel.DateUtil.isADateFormat方法判定
-	 * </pre>
-	 *
-	 * @param cell        单元格
-	 * @param formatIndex 格式序号
-	 * @return 是否为日期格式
-	 */
-	private static boolean isDateType(Cell cell, int formatIndex) {
-		// yyyy-MM-dd----- 14
-		// yyyy年m月d日---- 31
-		// yyyy年m月------- 57
-		// m月d日 ---------- 58
-		// HH:mm----------- 20
-		// h时mm分 -------- 32
-		if (formatIndex == 14 || formatIndex == 31 || formatIndex == 57 || formatIndex == 58 || formatIndex == 20 || formatIndex == 32) {
-			return true;
-		}
-
-		return org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell);
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
 }

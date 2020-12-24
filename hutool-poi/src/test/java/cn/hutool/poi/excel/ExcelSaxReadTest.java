@@ -166,6 +166,14 @@ public class ExcelSaxReadTest {
 
 	@Test
 	@Ignore
+	public void dateReadXlsxTest2() {
+		ExcelUtil.readBySax("d:/test/custom_date_format2.xlsx", 0,
+				(i, i1, list) -> Console.log(list)
+		);
+	}
+
+	@Test
+	@Ignore
 	public void readBlankTest() {
 		File file = new File("D:/test/b.xlsx");
 

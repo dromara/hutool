@@ -1,5 +1,8 @@
 package cn.hutool.core.date.format;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Tuple;
+
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -7,9 +10,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Tuple;
 
 /**
  * 日期格式化器缓存<br>
@@ -43,7 +43,7 @@ abstract class FormatCache<F extends Format> {
 	 * @param timeZone 时区，默认当前时区
 	 * @param locale 地区，默认使用当前地区
 	 * @return 格式化器
-	 * @throws IllegalArgumentException pattern 无效或<code>null</code>
+	 * @throws IllegalArgumentException pattern 无效或{@code null}
 	 */
 	public F getInstance(final String pattern, TimeZone timeZone, Locale locale) {
 		Assert.notBlank(pattern, "pattern must not be blank") ;
@@ -74,7 +74,7 @@ abstract class FormatCache<F extends Format> {
 	 * @param timeZone 时区，默认当前时区
 	 * @param locale 地区，默认使用当前地区
 	 * @return 格式化器
-	 * @throws IllegalArgumentException pattern 无效或<code>null</code>
+	 * @throws IllegalArgumentException pattern 无效或{@code null}
 	 */
 	abstract protected F createInstance(String pattern, TimeZone timeZone, Locale locale);
 

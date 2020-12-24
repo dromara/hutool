@@ -14,14 +14,18 @@ import cn.hutool.core.util.StrUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
@@ -506,14 +510,11 @@ public class DateUtil extends CalendarUtil {
 			return null;
 		}
 
-		final SimpleDateFormat sdf = new SimpleDateFormat(format);
+		TimeZone timeZone = null;
 		if (date instanceof DateTime) {
-			final TimeZone timeZone = ((DateTime) date).getTimeZone();
-			if (null != timeZone) {
-				sdf.setTimeZone(timeZone);
-			}
+			timeZone = ((DateTime) date).getTimeZone();
 		}
-		return format(date, sdf);
+		return format(date, newSimpleFormat(format, null, timeZone));
 	}
 
 	/**
@@ -717,7 +718,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
-		return new DateTime(dateStr, new SimpleDateFormat(format, locale));
+		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
 	}
 
 	/**
@@ -1917,13 +1918,47 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 获得指定月份的总天数
 	 *
-	 * @param month 年份
+	 * @param month      年份
 	 * @param isLeapYear 是否闰年
 	 * @return 天
 	 * @since 5.4.2
 	 */
 	public static int lengthOfMonth(int month, boolean isLeapYear) {
 		return java.time.Month.of(month).length(isLeapYear);
+	}
+
+	/**
+	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
+	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
+	 *
+	 * @param pattern  表达式
+	 * @return {@link SimpleDateFormat}
+	 * @since 5.5.5
+	 */
+	public static SimpleDateFormat newSimpleFormat(String pattern) {
+		return newSimpleFormat(pattern, null, null);
+	}
+
+	/**
+	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
+	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
+	 *
+	 * @param pattern  表达式
+	 * @param locale   {@link Locale}，{@code null}表示默认
+	 * @param timeZone {@link TimeZone}，{@code null}表示默认
+	 * @return {@link SimpleDateFormat}
+	 * @since 5.5.5
+	 */
+	public static SimpleDateFormat newSimpleFormat(String pattern, Locale locale, TimeZone timeZone) {
+		if (null == locale) {
+			locale = Locale.getDefault(Locale.Category.FORMAT);
+		}
+		final SimpleDateFormat format = new SimpleDateFormat(pattern, locale);
+		if (null != timeZone) {
+			format.setTimeZone(timeZone);
+		}
+		format.setLenient(false);
+		return format;
 	}
 
 	// ------------------------------------------------------------------------ Private method start

@@ -189,6 +189,12 @@ public class NumberUtilTest {
 				
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
 		Assert.assertEquals("3.14", bigDecimal.toString());
+
+		bigDecimal = NumberUtil.toBigDecimal("1,234.55");
+		Assert.assertEquals("1234.55", bigDecimal.toString());
+
+		bigDecimal = NumberUtil.toBigDecimal("1,234.56D");
+		Assert.assertEquals("1234.56", bigDecimal.toString());
 	}
 
 	@Test
@@ -205,21 +211,33 @@ public class NumberUtilTest {
 	
 	@Test
 	public void parseIntTest() {
-		int v1 = NumberUtil.parseInt("0xFF");
-		Assert.assertEquals(255, v1);
-		int v2 = NumberUtil.parseInt("010");
-		Assert.assertEquals(10, v2);
-		int v3 = NumberUtil.parseInt("10");
-		Assert.assertEquals(10, v3);
-		int v4 = NumberUtil.parseInt("   ");
-		Assert.assertEquals(0, v4);
-		int v5 = NumberUtil.parseInt("10F");
-		Assert.assertEquals(10, v5);
-		int v6 = NumberUtil.parseInt("22.4D");
-		Assert.assertEquals(22, v6);
+		int number = NumberUtil.parseInt("0xFF");
+		Assert.assertEquals(255, number);
 
-		int v7 = NumberUtil.parseInt("0");
-		Assert.assertEquals(0, v7);
+		// 0开头
+		number = NumberUtil.parseInt("010");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseInt("10");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseInt("   ");
+		Assert.assertEquals(0, number);
+
+		number = NumberUtil.parseInt("10F");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseInt("22.4D");
+		Assert.assertEquals(22, number);
+
+		number = NumberUtil.parseInt("22.6D");
+		Assert.assertEquals(22, number);
+
+		number = NumberUtil.parseInt("0");
+		Assert.assertEquals(0, number);
+
+		number = NumberUtil.parseInt(".123");
+		Assert.assertEquals(0, number);
 	}
 
 	@Test
@@ -236,22 +254,40 @@ public class NumberUtilTest {
 		// 千位分隔符去掉
 		int v1 = NumberUtil.parseNumber("1,482.00").intValue();
 		Assert.assertEquals(1482, v1);
+
+		Number v2 = NumberUtil.parseNumber("1,482.00D");
+		Assert.assertEquals(1482L, v2);
 	}
 	
 	@Test
 	public void parseLongTest() {
-		long v1 = NumberUtil.parseLong("0xFF");
-		Assert.assertEquals(255L, v1);
-		long v2 = NumberUtil.parseLong("010");
-		Assert.assertEquals(10L, v2);
-		long v3 = NumberUtil.parseLong("10");
-		Assert.assertEquals(10L, v3);
-		long v4 = NumberUtil.parseLong("   ");
-		Assert.assertEquals(0L, v4);
-		long v5 = NumberUtil.parseLong("10F");
-		Assert.assertEquals(10L, v5);
-		long v6 = NumberUtil.parseLong("22.4D");
-		Assert.assertEquals(22L, v6);
+		long number = NumberUtil.parseLong("0xFF");
+		Assert.assertEquals(255, number);
+
+		// 0开头
+		number = NumberUtil.parseLong("010");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseLong("10");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseLong("   ");
+		Assert.assertEquals(0, number);
+
+		number = NumberUtil.parseLong("10F");
+		Assert.assertEquals(10, number);
+
+		number = NumberUtil.parseLong("22.4D");
+		Assert.assertEquals(22, number);
+
+		number = NumberUtil.parseLong("22.6D");
+		Assert.assertEquals(22, number);
+
+		number = NumberUtil.parseLong("0");
+		Assert.assertEquals(0, number);
+
+		number = NumberUtil.parseLong(".123");
+		Assert.assertEquals(0, number);
 	}
 
 	@Test

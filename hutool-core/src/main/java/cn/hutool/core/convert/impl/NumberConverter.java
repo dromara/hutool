@@ -21,16 +21,16 @@ import java.util.function.Function;
  * 数字转换器<br>
  * 支持类型为：<br>
  * <ul>
- * <li><code>java.lang.Byte</code></li>
- * <li><code>java.lang.Short</code></li>
- * <li><code>java.lang.Integer</code></li>
- * <li><code>java.util.concurrent.atomic.AtomicInteger</code></li>
- * <li><code>java.lang.Long</code></li>
- * <li><code>java.util.concurrent.atomic.AtomicLong</code></li>
- * <li><code>java.lang.Float</code></li>
- * <li><code>java.lang.Double</code></li>
- * <li><code>java.math.BigDecimal</code></li>
- * <li><code>java.math.BigInteger</code></li>
+ * <li>{@code java.lang.Byte}</li>
+ * <li>{@code java.lang.Short}</li>
+ * <li>{@code java.lang.Integer}</li>
+ * <li>{@code java.util.concurrent.atomic.AtomicInteger}</li>
+ * <li>{@code java.lang.Long}</li>
+ * <li>{@code java.util.concurrent.atomic.AtomicLong}</li>
+ * <li>{@code java.lang.Float}</li>
+ * <li>{@code java.lang.Double}</li>
+ * <li>{@code java.math.BigDecimal}</li>
+ * <li>{@code java.math.BigInteger}</li>
  * </ul>
  *
  * @author Looly
@@ -80,7 +80,11 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return BooleanUtil.toByteObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply(value);
-			return StrUtil.isBlank(valueStr) ? null : Byte.valueOf(valueStr);
+			try{
+				return StrUtil.isBlank(valueStr) ? null : Byte.valueOf(valueStr);
+			} catch (NumberFormatException e){
+				return NumberUtil.parseNumber(valueStr).byteValue();
+			}
 		} else if (Short.class == targetType) {
 			if (value instanceof Number) {
 				return ((Number) value).shortValue();
@@ -88,7 +92,11 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return BooleanUtil.toShortObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : Short.valueOf(valueStr);
+			try{
+				return StrUtil.isBlank(valueStr) ? null : Short.valueOf(valueStr);
+			} catch (NumberFormatException e){
+				return NumberUtil.parseNumber(valueStr).shortValue();
+			}
 		} else if (Integer.class == targetType) {
 			if (value instanceof Number) {
 				return ((Number) value).intValue();
@@ -146,8 +154,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return BooleanUtil.toFloatObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : Float.valueOf(valueStr);
-
+			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseFloat(valueStr);
 		} else if (Double.class == targetType) {
 			if (value instanceof Number) {
 				return ((Number) value).doubleValue();
@@ -155,7 +162,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return BooleanUtil.toDoubleObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : Double.valueOf(valueStr);
+			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseDouble(valueStr);
 		} else if (DoubleAdder.class == targetType) {
 			//jdk8 新增
 			final Number number = convert(value, Long.class, toStrFunc);
