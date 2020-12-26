@@ -88,7 +88,8 @@ public class SheetRidReader extends DefaultHandler {
 			String rid = null;
 			String name = null;
 			for (int i = 0; i < length; i++) {
-				switch (attributes.getLocalName(i)) {
+				final String attrName = attributes.getQName(i);
+				switch (attrName) {
 					case SHEET_ID_ATTR:
 						sheetId = attributes.getValue(i);
 						break;
