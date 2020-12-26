@@ -67,6 +67,11 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
+	public void readBySaxByNameTest() {
+		ExcelUtil.readBySax("blankAndDateTest.xlsx", "Sheet1", createRowHandler());
+	}
+
+	@Test
 	@Ignore
 	public void readBySaxTest2() {
 		ExcelUtil.readBySax("d:/test/456789.xlsx", "0", (sheetIndex, rowIndex, rowList) -> Console.log(rowList));

@@ -13,6 +13,7 @@
 * 【poi    】     增加ExcelDateUtil更多日期格式支持（issue#1316@Github）
 * 【core   】     NumberUtil.toBigDecimal支持各类数字格式，如1,234.56等（issue#1334@Github）
 * 【core   】     NumberUtil增加parseXXX方法（issue#1334@Github）
+* 【poi    】     Excel07SaxReader支持通过sheetName读取（issue#I2AOSE@Gitee）
 
 ### Bug修复
 * 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
