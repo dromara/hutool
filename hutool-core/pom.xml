@@ -5,14 +5,6 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
 
 	<parent>
 		<groupId>cn.hutool</groupId>

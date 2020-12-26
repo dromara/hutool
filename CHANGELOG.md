@@ -23,6 +23,7 @@
 * 【core   】     修复RuntimeUtil.getUsableMemory非static问题（issue#I2AQ2M@Gitee）
 * 【core   】     修复ArrayUtil.equals方法严格判断问题（issue#I2AO8B@Gitee）
 * 【poi    】     修复SheetRidReader在获取rid时读取错误问题（issue#I2AOQW@Gitee）
+* 【core   】     修复强依赖了POI的问题（issue#1336@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.5.4 (2020-12-16)
