@@ -2,7 +2,6 @@ package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -26,7 +25,7 @@ import java.util.Iterator;
 public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	// sheet r:Id前缀
-	private static final String RID_PREFIX = "rId";
+	public static final String RID_PREFIX = "rId";
 	private final SheetDataSaxHandler handler;
 
 	/**
@@ -146,21 +145,13 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
 	 * @param xssfReader {@link XSSFReader}，Excel读取器
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
+	 * @param idOrRid    Excel中的sheet id或者rid编号，从0开始，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 * @since 5.4.4
 	 */
 	private Excel07SaxReader readSheets(XSSFReader xssfReader, String idOrRid) throws POIException {
-		// 将sheetId转换为rid
-		if (NumberUtil.isInteger(idOrRid)) {
-			final SheetRidReader ridReader = new SheetRidReader();
-			final String rid = ridReader.read(xssfReader).getRidBySheetId(idOrRid);
-			if (StrUtil.isNotEmpty(rid)) {
-				idOrRid = rid;
-			}
-		}
-		this.handler.sheetIndex = Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRid, RID_PREFIX));
+		this.handler.sheetIndex = getSheetIndex(xssfReader, idOrRid);
 		InputStream sheetInputStream = null;
 		try {
 			if (this.handler.sheetIndex > -1) {
@@ -189,6 +180,36 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 			IoUtil.close(sheetInputStream);
 		}
 		return this;
+	}
+
+	/**
+	 * 获取sheet索引，从0开始
+	 * <ul>
+	 *     <li>传入'rId'开头，直接去除rId前缀</li>
+	 *     <li>传入纯数字，表示sheetIndex，通过{@link SheetRidReader}转换为rId</li>
+	 * </ul>
+	 *
+	 * @param xssfReader {@link XSSFReader}，Excel读取器
+	 * @param idOrRid    Excel中的sheet id或者rid编号，从0开始，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
+	 * @return sheet索引，从0开始
+	 * @since 5.5.5
+	 */
+	private int getSheetIndex(XSSFReader xssfReader, String idOrRid){
+		// rid直接处理
+		if(StrUtil.startWithIgnoreCase(idOrRid, RID_PREFIX)){
+			return Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRid, RID_PREFIX));
+		}
+
+		// sheetIndex需转换为rid
+		final int sheetIndex = Integer.parseInt(idOrRid);
+		final SheetRidReader ridReader = new SheetRidReader();
+		final Integer rid = ridReader.read(xssfReader).getRidBySheetIdBase0(sheetIndex);
+
+		if(null != rid){
+			return rid;
+		}
+
+		return sheetIndex;
 	}
 	// --------------------------------------------------------------------------------------- Private method end
 }

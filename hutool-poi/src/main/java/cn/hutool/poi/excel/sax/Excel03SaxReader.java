@@ -116,7 +116,7 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * 读取
 	 *
 	 * @param fs  {@link POIFSFileSystem}
-	 * @param id sheet序号
+	 * @param id sheet序号，从0开始
 	 * @return this
 	 * @throws POIException IO异常包装
 	 */

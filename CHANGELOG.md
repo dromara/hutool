@@ -21,7 +21,7 @@
 * 【core   】     修复DateUtil.parse未使用严格模式导致结果不正常的问题（issue#1332@Github）
 * 【core   】     修复RuntimeUtil.getUsableMemory非static问题（issue#I2AQ2M@Gitee）
 * 【core   】     修复ArrayUtil.equals方法严格判断问题（issue#I2AO8B@Gitee）
-* 【core   】     修复SheetRidReader在获取rid时读取错误问题（issue#I2AOQW@Gitee）
+* 【poi    】     修复SheetRidReader在获取rid时读取错误问题（issue#I2AOQW@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.5.4 (2020-12-16)
