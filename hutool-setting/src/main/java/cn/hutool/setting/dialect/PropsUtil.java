@@ -40,9 +40,9 @@ public class PropsUtil {
 
 	/**
 	 * 获取给定路径找到的第一个配置文件<br>
-	 * * name可以为不包括扩展名的文件名（默认.setting为结尾），也可以是文件名全称
+	 * * name可以为不包括扩展名的文件名（默认.properties为结尾），也可以是文件名全称
 	 *
-	 * @param names 文件名，如果没有扩展名，默认为.setting
+	 * @param names 文件名，如果没有扩展名，默认为.properties
 	 *
 	 * @return 当前环境下配置文件
 	 */
