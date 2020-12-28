@@ -56,7 +56,10 @@ public class PatternPool {
 	 * 移动电话
 	 */
 	public final static Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[3-9]\\d{9}");
-
+	/**
+	 * 座机号码
+	 */
+	public final static Pattern TEL = Pattern.compile("0\\d{2,3}-[1-9]\\d{6,7}");
 	/**
 	 * 18位身份证号码
 	 */
