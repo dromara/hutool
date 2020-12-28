@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
@@ -209,16 +210,10 @@ public class ExcelSaxUtil {
 	 * @param formatString 格式字符串
 	 * @return 是否为日期格式
 	 * @since 5.5.3
+	 * @see ExcelDateUtil#isDateFormat(int, String)
 	 */
 	public static boolean isDateFormat(int formatIndex, String formatString) {
-		// https://blog.csdn.net/u014342130/article/details/50619503
-		// issue#1283@Github
-		if (formatIndex == 28 || formatIndex == 31) {
-			// 28 -> m月d日
-			// 31 -> yyyy年m月d日
-			return true;
-		}
-		return org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, formatString);
+		return ExcelDateUtil.isDateFormat(formatIndex, formatString);
 	}
 
 	/**

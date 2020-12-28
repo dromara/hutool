@@ -3,12 +3,34 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.5.5 (2020-12-27)
+
+### 新特性
+* 【core   】     URLUtil.normalize新增重载（pr#233@Gitee）
+* 【core   】     PathUtil增加isSub和toAbsNormal方法
+* 【db     】     RedisDS实现序列化接口（pr#1323@Github）
+* 【poi    】     StyleUtil增加getFormat方法（pr#235@Gitee）
+* 【poi    】     增加ExcelDateUtil更多日期格式支持（issue#1316@Github）
+* 【core   】     NumberUtil.toBigDecimal支持各类数字格式，如1,234.56等（issue#1334@Github）
+* 【core   】     NumberUtil增加parseXXX方法（issue#1334@Github）
+* 【poi    】     Excel07SaxReader支持通过sheetName读取（issue#I2AOSE@Gitee）
+
+### Bug修复
+* 【core   】     FileUtil.isSub相对路径判断问题（pr#1315@Github）
+* 【core   】     TreeUtil增加空判定（issue#I2ACCW@Gitee）
+* 【db     】     解决Hive获取表名失败问题（issue#I2AGLU@Gitee）
+* 【core   】     修复DateUtil.parse未使用严格模式导致结果不正常的问题（issue#1332@Github）
+* 【core   】     修复RuntimeUtil.getUsableMemory非static问题（issue#I2AQ2M@Gitee）
+* 【core   】     修复ArrayUtil.equals方法严格判断问题（issue#I2AO8B@Gitee）
+* 【poi    】     修复SheetRidReader在获取rid时读取错误问题（issue#I2AOQW@Gitee）
+* 【core   】     修复强依赖了POI的问题（issue#1336@Github）
+
+-------------------------------------------------------------------------------------------------------------
 # 5.5.4 (2020-12-16)
 
 ### 新特性
 ### Bug修复
 * 【core   】     修复IoUtil.readBytes的问题
-
 
 -------------------------------------------------------------------------------------------------------------
 

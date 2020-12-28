@@ -523,7 +523,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 克隆数组，如果非数组返回<code>null</code>
+	 * 克隆数组，如果非数组返回{@code null}
 	 *
 	 * @param <T> 数组元素类型
 	 * @param obj 数组对象
@@ -1666,11 +1666,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		Assert.isTrue(isArray(array1), "First is not a Array !");
 		Assert.isTrue(isArray(array2), "Second is not a Array !");
-
-		// 数组类型一致性判断
-		if (array1.getClass() != array2.getClass()) {
-			return false;
-		}
 
 		if (array1 instanceof long[]) {
 			return Arrays.equals((long[]) array1, (long[]) array2);

@@ -58,7 +58,17 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void readBySaxTest() {
+		ExcelUtil.readBySax("blankAndDateTest.xlsx", "0", createRowHandler());
+	}
+
+	@Test
+	public void readBySaxByRidTest() {
 		ExcelUtil.readBySax("blankAndDateTest.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	public void readBySaxByNameTest() {
+		ExcelUtil.readBySax("blankAndDateTest.xlsx", "Sheet1", createRowHandler());
 	}
 
 	@Test
@@ -162,6 +172,14 @@ public class ExcelSaxReadTest {
 		Assert.assertEquals("112233", rows.get(2));
 		Assert.assertEquals("1000.0", rows.get(3));
 		Assert.assertEquals("2012-12-21 00:00:00", rows.get(4));
+	}
+
+	@Test
+	@Ignore
+	public void dateReadXlsxTest2() {
+		ExcelUtil.readBySax("d:/test/custom_date_format2.xlsx", 0,
+				(i, i1, list) -> Console.log(list)
+		);
 	}
 
 	@Test

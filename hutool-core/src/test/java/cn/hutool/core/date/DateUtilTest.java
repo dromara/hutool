@@ -831,4 +831,11 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse(dt);
 		Assert.assertEquals("2020-06-03 12:32:12", parse.toString());
 	}
+
+	@Test(expected = DateException.class)
+	public void parseNotFitTest(){
+		//https://github.com/looly/hutool/issues/1332
+		// 在日期格式不匹配的时候，测试是否正常报错
+		final DateTime parse = DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+	}
 }

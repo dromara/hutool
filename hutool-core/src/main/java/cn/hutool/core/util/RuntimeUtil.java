@@ -298,7 +298,7 @@ public class RuntimeUtil {
 	 *
 	 * @return 最大可用内存
 	 */
-	public final long getUsableMemory() {
+	public static long getUsableMemory() {
 		return getMaxMemory() - getTotalMemory() + getFreeMemory();
 	}
 }

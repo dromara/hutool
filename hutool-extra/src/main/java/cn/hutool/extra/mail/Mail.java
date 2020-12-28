@@ -81,7 +81,7 @@ public class Mail {
 	 * 创建邮件客户端
 	 *
 	 * @param mailAccount 邮件帐号
-	 * @return {@link Mail}
+	 * @return Mail
 	 */
 	public static Mail create(MailAccount mailAccount) {
 		return new Mail(mailAccount);
@@ -90,7 +90,7 @@ public class Mail {
 	/**
 	 * 创建邮件客户端，使用全局邮件帐户
 	 *
-	 * @return {@link Mail}
+	 * @return Mail
 	 */
 	public static Mail create() {
 		return new Mail();

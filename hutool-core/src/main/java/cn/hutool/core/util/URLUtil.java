@@ -14,14 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.JarURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.jar.JarFile;
@@ -669,9 +662,11 @@ public class URLUtil {
 	/**
 	 * 标准化URL字符串，包括：
 	 *
-	 * <pre>
-	 * 1. 多个/替换为一个
-	 * </pre>
+	 * <ol>
+	 *     <li>自动补齐“http://”头</li>
+	 *     <li>去除开头的\或者/</li>
+	 *     <li>替换\为/</li>
+	 * </ol>
 	 *
 	 * @param url URL字符串
 	 * @return 标准化后的URL字符串
@@ -683,9 +678,11 @@ public class URLUtil {
 	/**
 	 * 标准化URL字符串，包括：
 	 *
-	 * <pre>
-	 * 1. 多个/替换为一个
-	 * </pre>
+	 * <ol>
+	 *     <li>自动补齐“http://”头</li>
+	 *     <li>去除开头的\或者/</li>
+	 *     <li>替换\为/</li>
+	 * </ol>
 	 *
 	 * @param url          URL字符串
 	 * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
@@ -693,6 +690,26 @@ public class URLUtil {
 	 * @since 4.4.1
 	 */
 	public static String normalize(String url, boolean isEncodePath) {
+		return normalize(url, isEncodePath, false);
+	}
+
+	/**
+	 * 标准化URL字符串，包括：
+	 *
+	 * <ol>
+	 *     <li>自动补齐“http://”头</li>
+	 *     <li>去除开头的\或者/</li>
+	 *     <li>替换\为/</li>
+	 *     <li>如果replaceSlash为true，则替换多个/为一个</li>
+	 * </ol>
+	 *
+	 * @param url          URL字符串
+	 * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
+	 * @param replaceSlash  是否替换url body中的 //
+	 * @return 标准化后的URL字符串
+	 * @since 5.5.5
+	 */
+	public static String normalize(String url, boolean isEncodePath, boolean replaceSlash) {
 		if (StrUtil.isBlank(url)) {
 			return url;
 		}
@@ -718,10 +735,12 @@ public class URLUtil {
 			// 去除开头的\或者/
 			//noinspection ConstantConditions
 			body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
-			// 替换多个\或/为单个/
+			// 替换\为/
 			body = body.replace("\\", "/");
-			//issue#I25MZL，双斜杠在URL中是允许存在的，不做替换
-			//.replaceAll("//+", "/");
+			if (replaceSlash) {
+				//issue#I25MZL@Gitee，双斜杠在URL中是允许存在的，默认不做替换
+				body = body.replaceAll("//+", "/");
+			}
 		}
 
 		final int pathSepIndex = StrUtil.indexOf(body, '/');

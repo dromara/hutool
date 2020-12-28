@@ -1,5 +1,6 @@
 package cn.hutool.core.io.file;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -32,5 +33,11 @@ public class PathUtilTest {
 	@Ignore
 	public void moveTest(){
 		PathUtil.move(Paths.get("d:/lombok.jar"), Paths.get("d:/test/"), false);
+	}
+
+	@Test
+	public void getMimeTypeTest(){
+		final String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
+		Assert.assertEquals("image/jpeg", mimeType);
 	}
 }
