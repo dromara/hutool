@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core   】     手机号工具类 座机正则表达式统一管理（pr#243@Gitee）
+* 【extra  】     Mail增加setDebugOutput方法（issue#1335@Gitee）
 
 ### Bug修复
 * 【core   】     修复ZipUtil.unzip从流解压关闭问题（issue#I2B0S1@Gitee）
