@@ -113,7 +113,7 @@ public class SheetRidReader extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_NAME.equalsIgnoreCase(localName)) {
-			final String ridStr = attributes.getValue(SHEET_ID_ATTR);
+			final String ridStr = attributes.getValue(RID_ATTR);
 			if(StrUtil.isEmpty(ridStr)){
 				return;
 			}

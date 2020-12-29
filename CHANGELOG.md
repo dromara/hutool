@@ -10,7 +10,8 @@
 
 ### Bug修复
 * 【core   】     修复ZipUtil.unzip从流解压关闭问题（issue#I2B0S1@Gitee）
-* 【core   】     修复Excel07Writer写出表格错乱问题（issue#I2B57B@Gitee）
+* 【poi    】     修复Excel07Writer写出表格错乱问题（issue#I2B57B@Gitee）
+* 【poi    】     修复SheetRidReader读取字段错误问题（issue#1342@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
