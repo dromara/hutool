@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -33,7 +34,7 @@ public class TableUtil {
 	}
 
 	/**
-	 * 创建表格并填充数据
+	 * 创建表格并填充数据，默认表格
 	 * 
 	 * @param doc {@link XWPFDocument}
 	 * @param data 数据
@@ -41,19 +42,35 @@ public class TableUtil {
 	 */
 	public static XWPFTable createTable(XWPFDocument doc, Iterable<?> data) {
 		Assert.notNull(doc, "XWPFDocument must be not null !");
-		XWPFTable table = doc.createTable();
+		final XWPFTable table = doc.createTable();
+		// 新建table的时候默认会新建一行，此处移除之
+		table.removeRow(0);
+		return writeTable(table, data);
+	}
 
+	/**
+	 * 为table填充数据
+	 *
+	 * @param table {@link XWPFTable}
+	 * @param data 数据
+	 * @return {@link XWPFTable}
+	 * @since 5.5.6
+	 */
+	public static XWPFTable writeTable(XWPFTable table, Iterable<?> data){
+		Assert.notNull(table, "XWPFTable must be not null !");
 		if (IterUtil.isEmpty(data)) {
 			// 数据为空，返回空表
 			return table;
 		}
-		
-		int index = 0;
+
+		boolean isFirst = true;
 		for (Object rowData : data) {
-			writeRow(getOrCreateRow(table, index), rowData, true);
-			index ++;
+			writeRow(table.createRow(), rowData, isFirst);
+			if(isFirst){
+				isFirst = false;
+			}
 		}
-		
+
 		return table;
 	}
 	
@@ -81,7 +98,7 @@ public class TableUtil {
 			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
 			return;
 		}
-		
+
 		writeRow(row, rowMap, isWriteKeyAsHead);
 	}
 	

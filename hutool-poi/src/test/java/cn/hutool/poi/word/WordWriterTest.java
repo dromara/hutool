@@ -1,14 +1,15 @@
 package cn.hutool.poi.word;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.poi.word.Word07Writer;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Font;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,5 +49,37 @@ public class WordWriterTest {
 
 		writer.addTable(CollUtil.newArrayList(map));
 		writer.flush(FileUtil.file("d:/test/test.docx"));
+	}
+
+	@Test
+	@Ignore
+	public void writeMapAsTableTest() {
+		Word07Writer writer = new Word07Writer();
+
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("姓名", "张三");
+		data.put("年龄", 23);
+		data.put("成绩", 80.5);
+		data.put("是否合格", true);
+		data.put("考试日期", DateUtil.date());
+
+		Map<String, Object> data2 = new LinkedHashMap<>();
+		data2.put("姓名", "李四");
+		data2.put("年龄", 4);
+		data2.put("成绩", 59);
+		data2.put("是否合格", false);
+		data2.put("考试日期", DateUtil.date());
+
+		ArrayList<Map<String, Object>> mapArrayList = CollUtil.newArrayList(data, data2);
+
+		// 添加段落（标题）
+		writer.addText(new Font("方正小标宋简体", Font.PLAIN, 22), "我是第一部分");
+		// 添加段落（正文）
+		writer.addText(new Font("宋体", Font.PLAIN, 13), "我是正文第一部分");
+		writer.addTable(mapArrayList);
+		// 写出到文件
+		writer.flush(FileUtil.file("d:/test/a.docx"));
+		// 关闭
+		writer.close();
 	}
 }
