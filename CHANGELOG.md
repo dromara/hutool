@@ -12,6 +12,7 @@
 * 【core   】     修复ZipUtil.unzip从流解压关闭问题（issue#I2B0S1@Gitee）
 * 【poi    】     修复Excel07Writer写出表格错乱问题（issue#I2B57B@Gitee）
 * 【poi    】     修复SheetRidReader读取字段错误问题（issue#1342@Github）
+* 【core   】     修复FileUtil.getMimeType不支持css和js（issue#1341@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

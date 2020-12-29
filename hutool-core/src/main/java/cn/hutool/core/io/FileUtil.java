@@ -3182,7 +3182,16 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		if(null == contentType){
+			// 补充一些常用的mimeType
+			if(filePath.endsWith(".css")){
+				contentType = "text/css";
+			} else if(filePath.endsWith(".js")){
+				contentType = "application/x-javascript";
+			}
+		}
+		return contentType;
 	}
 
 	/**

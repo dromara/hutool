@@ -2,7 +2,6 @@ package cn.hutool.http.server.action;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
@@ -80,7 +79,6 @@ public class RootAction implements Action {
 			}
 		}
 
-		Console.log(file.getAbsolutePath());
 		response.send404("404 Not Found !");
 	}
 }
