@@ -33,6 +33,56 @@ public class DynaBeanTest {
 		Object invoke = bean2.invoke("testMethod");
 		Assert.assertEquals("test for 李华", invoke);
 	}
+
+
+    @Test
+    public void bean_by_static_clazz_constructor_Test() {
+        String name_before = "李华";
+        int age_before = 12;
+        DynaBean bean = DynaBean.create(User.class);
+        bean.set("name", name_before);
+        bean.set("age", age_before);
+
+        String name_after = bean.get("name");
+        Assert.assertEquals(name_before, name_after);
+        int age_after = bean.get("age");
+        Assert.assertEquals(age_before, age_after);
+
+        //重复包装测试
+        DynaBean bean2 = new DynaBean(bean);
+        User user2 = bean2.getBean();
+        User user1 = bean.getBean();
+        Assert.assertEquals(user1, user2);
+
+        //执行指定方法
+        Object invoke = bean2.invoke("testMethod");
+        Assert.assertEquals("test for 李华", invoke);
+    }
+
+
+    @Test
+    public void bean_by_instance_clazz_constructor_Test() {
+        String name_before = "李华";
+        int age_before = 12;
+        DynaBean bean = new DynaBean(User.class);
+        bean.set("name", name_before);
+        bean.set("age", age_before);
+
+        String name_after = bean.get("name");
+        Assert.assertEquals(name_before, name_after);
+        int age_after = bean.get("age");
+        Assert.assertEquals(age_before, age_after);
+
+        //重复包装测试
+        DynaBean bean2 = new DynaBean(bean);
+        User user2 = bean2.getBean();
+        User user1 = bean.getBean();
+        Assert.assertEquals(user1, user2);
+
+        //执行指定方法
+        Object invoke = bean2.invoke("testMethod");
+        Assert.assertEquals("test for 李华", invoke);
+    }
 	
 	public static class User{
 		private String name;
