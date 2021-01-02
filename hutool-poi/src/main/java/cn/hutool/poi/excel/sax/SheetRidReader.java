@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,7 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -36,8 +37,8 @@ public class SheetRidReader extends DefaultHandler {
 	private final static String SHEET_ID_ATTR = "sheetId";
 	private final static String NAME_ATTR = "name";
 
-	private final Map<Integer, Integer> ID_RID_MAP = new HashMap<>();
-	private final Map<String, Integer> NAME_RID_MAP = new HashMap<>();
+	private final Map<Integer, Integer> ID_RID_MAP = new LinkedHashMap<>();
+	private final Map<String, Integer> NAME_RID_MAP = new LinkedHashMap<>();
 
 	/**
 	 * 读取Wordkbook的XML中sheet标签中sheetId和rid的对应关系
@@ -79,7 +80,7 @@ public class SheetRidReader extends DefaultHandler {
 	 */
 	public Integer getRidBySheetIdBase0(int sheetId) {
 		final Integer rid = getRidBySheetId(sheetId + 1);
-		if(null != rid){
+		if (null != rid) {
 			return rid - 1;
 		}
 		return null;
@@ -104,7 +105,33 @@ public class SheetRidReader extends DefaultHandler {
 	 */
 	public Integer getRidByNameBase0(String sheetName) {
 		final Integer rid = getRidByName(sheetName);
-		if(null != rid){
+		if (null != rid) {
+			return rid - 1;
+		}
+		return null;
+	}
+
+	/**
+	 * 通过sheet的序号获取rid
+	 *
+	 * @param index 序号，从0开始
+	 * @return rid
+	 * @since 5.5.7
+	 */
+	public Integer getRidByIndex(int index) {
+		return CollUtil.get(this.NAME_RID_MAP.values(), index);
+	}
+
+	/**
+	 * 通过sheet的序号获取rid
+	 *
+	 * @param index 序号，从0开始
+	 * @return rid，从0开始
+	 * @since 5.5.7
+	 */
+	public Integer getRidByIndexBase0(int index) {
+		final Integer rid = CollUtil.get(this.NAME_RID_MAP.values(), index);
+		if (null != rid) {
 			return rid - 1;
 		}
 		return null;
@@ -114,7 +141,7 @@ public class SheetRidReader extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_NAME.equalsIgnoreCase(localName)) {
 			final String ridStr = attributes.getValue(RID_ATTR);
-			if(StrUtil.isEmpty(ridStr)){
+			if (StrUtil.isEmpty(ridStr)) {
 				return;
 			}
 			final int rid = Integer.parseInt(StrUtil.removePrefixIgnoreCase(ridStr, Excel07SaxReader.RID_PREFIX));
@@ -127,7 +154,7 @@ public class SheetRidReader extends DefaultHandler {
 
 			// sheetId和rid映射
 			final String sheetIdStr = attributes.getValue(SHEET_ID_ATTR);
-			if(StrUtil.isNotEmpty(sheetIdStr)){
+			if (StrUtil.isNotEmpty(sheetIdStr)) {
 				ID_RID_MAP.put(Integer.parseInt(sheetIdStr), rid);
 			}
 		}

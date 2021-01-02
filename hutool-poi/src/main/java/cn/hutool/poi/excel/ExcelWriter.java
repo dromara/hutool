@@ -233,7 +233,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 重命名sheet
 	 *
-	 * @param sheet     sheet需要，0表示第一个sheet
+	 * @param sheet     sheet序号，0表示第一个sheet
 	 * @param sheetName 新的sheet名
 	 * @return this
 	 * @since 4.1.8
