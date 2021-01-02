@@ -23,8 +23,10 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
 	private static final String SMTP_TIMEOUT = "mail.smtp.timeout";
 
+	// SSL
 	private static final String STARTTLS_ENABLE = "mail.smtp.starttls.enable";
 	private static final String SSL_ENABLE = "mail.smtp.ssl.enable";
+	private static final String SSL_PROTOCOLS = "mail.smtp.ssl.protocols";
 	private static final String SOCKET_FACTORY = "mail.smtp.socketFactory.class";
 	private static final String SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKET_FACTORY_PORT = "smtp.socketFactory.port";
@@ -80,6 +82,12 @@ public class MailAccount implements Serializable {
 	 * 使用 SSL安全连接
 	 */
 	private Boolean sslEnable;
+
+	/**
+	 * SSL协议，多个协议用空格分隔
+	 */
+	private String sslProtocols;
+
 	/**
 	 * 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 	 */
@@ -357,6 +365,25 @@ public class MailAccount implements Serializable {
 	}
 
 	/**
+	 * 获取SSL协议，多个协议用空格分隔
+	 * @return SSL协议，多个协议用空格分隔
+	 * @since 5.5.7
+	 */
+	public String getSslProtocols() {
+		return sslProtocols;
+	}
+
+	/**
+	 * 设置SSL协议，多个协议用空格分隔
+	 *
+	 * @param sslProtocols SSL协议，多个协议用空格分隔
+	 * @since 5.5.7
+	 */
+	public void setSslProtocols(String sslProtocols) {
+		this.sslProtocols = sslProtocols;
+	}
+
+	/**
 	 * 获取指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 	 *
 	 * @return 指定实现javax.net.SocketFactory接口的类的名称, 这个类将被用于创建SMTP的套接字
@@ -479,6 +506,10 @@ public class MailAccount implements Serializable {
 			p.put(SOCKET_FACTORY, socketFactoryClass);
 			p.put(SOCKET_FACTORY_FALLBACK, String.valueOf(this.socketFactoryFallback));
 			p.put(SOCKET_FACTORY_PORT, String.valueOf(this.socketFactoryPort));
+			// issue#IZN95@Gitee，在Linux下需自定义SSL协议版本
+			if(StrUtil.isNotBlank(this.sslProtocols)){
+				p.put(SSL_PROTOCOLS, this.sslProtocols);
+			}
 		}
 
 		return p;

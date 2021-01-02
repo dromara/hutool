@@ -9,6 +9,8 @@
 * 【core   】     DynaBean.create增加重载方法（pr#245@Gitee）
 * 【core   】     IdcardUtil增加重载是否忽略大小写（issue#1348@Github）
 * 【poi    】     SheetRidReader增加getRidByIndex方法（issue#1342@Github）
+* 【extra  】     MailAccount增加sslProtocols配置项（issue#IZN95@Gitee）
+* 【extra  】     MailUtil增加getSession方法
 
 ### Bug修复
 

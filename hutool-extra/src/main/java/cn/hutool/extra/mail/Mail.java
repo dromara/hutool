@@ -12,7 +12,6 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
 import javax.mail.Address;
-import javax.mail.Authenticator;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.SendFailedException;
@@ -407,7 +406,7 @@ public class Mail {
 	 */
 	private MimeMessage buildMsg() throws MessagingException {
 		final Charset charset = this.mailAccount.getCharset();
-		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
+		final MimeMessage msg = new MimeMessage(getSession());
 		// 发件人
 		final String from = this.mailAccount.getFrom();
 		if (StrUtil.isEmpty(from)) {
@@ -460,19 +459,10 @@ public class Mail {
 	 * 获取默认邮件会话<br>
 	 * 如果为全局单例的会话，则全局只允许一个邮件帐号，否则每次发送邮件会新建一个新的会话
 	 *
-	 * @param isSingleton 是否使用单例Session
 	 * @return 邮件会话 {@link Session}
-	 * @since 4.0.2
 	 */
-	private Session getSession(boolean isSingleton) {
-		final MailAccount mailAccount = this.mailAccount;
-		Authenticator authenticator = null;
-		if (mailAccount.isAuth()) {
-			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
-		}
-
-		final Session session = isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
-				: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
+	private Session getSession() {
+		final Session session = MailUtil.getSession(this.mailAccount, this.useGlobalSession);
 
 		if(null != this.debugOutput){
 			session.setDebugOut(debugOutput);
