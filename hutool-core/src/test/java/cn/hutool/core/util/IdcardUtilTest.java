@@ -43,7 +43,7 @@ public class IdcardUtilTest {
 		Assert.assertEquals("150102198807303035", convert15To18);
 
 		String convert15To18Second = IdcardUtil.convert15To18("330102200403064");
-		Assert.assertEquals("33010219200403064x", convert15To18Second);
+		Assert.assertEquals("33010219200403064X", convert15To18Second);
 	}
 
 	@Test
