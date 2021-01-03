@@ -32,33 +32,55 @@ public final class CsvParser implements Closeable, Serializable {
 	private final CsvReadConfig config;
 
 	private final char[] buf = new char[IoUtil.DEFAULT_LARGE_BUFFER_SIZE];
-	/** 当前位置 */
+	/**
+	 * 当前位置
+	 */
 	private int bufPos;
-	/** 读取一段后数据长度 */
+	/**
+	 * 读取一段后数据长度
+	 */
 	private int bufLen;
-	/** 拷贝开始的位置，一般为上一行的结束位置 */
+	/**
+	 * 拷贝开始的位置，一般为上一行的结束位置
+	 */
 	private int copyStart;
-	/** 前一个特殊分界字符 */
+	/**
+	 * 前一个特殊分界字符
+	 */
 	private int preChar = -1;
-	/** 是否在引号包装内 */
+	/**
+	 * 是否在引号包装内
+	 */
 	private boolean inQuotes;
-	/** 当前读取字段 */
+	/**
+	 * 当前读取字段
+	 */
 	private final StrBuilder currentField = new StrBuilder(512);
-	
-	/** 标题行 */
+
+	/**
+	 * 标题行
+	 */
 	private CsvRow header;
-	/** 当前行号 */
+	/**
+	 * 当前行号
+	 */
 	private long lineNo;
-	 /** 第一行字段数，用于检查每行字段数是否一致 */
+	/**
+	 * 第一行字段数，用于检查每行字段数是否一致
+	 */
 	private int firstLineFieldCount = -1;
-	/** 最大字段数量 */
+	/**
+	 * 最大字段数量
+	 */
 	private int maxFieldCount;
-	/** 是否读取结束 */
+	/**
+	 * 是否读取结束
+	 */
 	private boolean finished;
 
 	/**
 	 * CSV解析器
-	 * 
+	 *
 	 * @param reader Reader
 	 * @param config 配置，null则为默认配置
 	 */
@@ -84,7 +106,7 @@ public final class CsvParser implements Closeable, Serializable {
 	}
 
 	/**
-	 *读取下一行数据
+	 * 读取下一行数据
 	 *
 	 * @return CsvRow
 	 * @throws IORuntimeException IO读取异常
@@ -97,7 +119,7 @@ public final class CsvParser implements Closeable, Serializable {
 			startingLineNo = ++lineNo;
 			currentFields = readLine();
 			fieldCount = currentFields.size();
-			if(fieldCount < 1){
+			if (fieldCount < 1) {
 				break;
 			}
 
@@ -135,24 +157,24 @@ public final class CsvParser implements Closeable, Serializable {
 
 	/**
 	 * 当前行做为标题行
-	 * 
+	 *
 	 * @param currentFields 当前行字段列表
 	 */
 	private void initHeader(final List<String> currentFields) {
 		final Map<String, Integer> localHeaderMap = new LinkedHashMap<>(currentFields.size());
 		for (int i = 0; i < currentFields.size(); i++) {
 			final String field = currentFields.get(i);
-			if (StrUtil.isNotEmpty(field) && false ==localHeaderMap.containsKey(field)) {
+			if (StrUtil.isNotEmpty(field) && false == localHeaderMap.containsKey(field)) {
 				localHeaderMap.put(field, i);
 			}
 		}
-		
-		header = new CsvRow(this.lineNo, Collections.unmodifiableMap(localHeaderMap),  Collections.unmodifiableList(currentFields));
+
+		header = new CsvRow(this.lineNo, Collections.unmodifiableMap(localHeaderMap), Collections.unmodifiableList(currentFields));
 	}
 
 	/**
 	 * 读取一行数据
-	 * 
+	 *
 	 * @return 一行数据
 	 * @throws IORuntimeException IO异常
 	 */
@@ -185,7 +207,7 @@ public final class CsvParser implements Closeable, Serializable {
 
 					if (localPreChar == config.fieldSeparator || localCurrentField.hasContent()) {
 						//剩余部分作为一个字段
-						currentFields.add(StrUtil.unWrap(localCurrentField.toStringAndReset(), config.textDelimiter));
+						addField(currentFields, localCurrentField.toStringAndReset());
 					}
 					break;
 				}
@@ -208,36 +230,40 @@ public final class CsvParser implements Closeable, Serializable {
 				}
 				copyLen++;
 			} else {
+				// 非引号内
 				if (c == config.fieldSeparator) {
 					//一个字段结束
 					if (copyLen > 0) {
 						localCurrentField.append(localBuf, localCopyStart, copyLen);
 						copyLen = 0;
 					}
-					currentFields.add(StrUtil.unWrap(localCurrentField.toStringAndReset(), config.textDelimiter));
+					addField(currentFields, localCurrentField.toStringAndReset());
 					localCopyStart = localBufPos;
 				} else if (c == config.textDelimiter) {
 					// 引号开始
 					inQuotes = true;
 					copyLen++;
 				} else if (c == CharUtil.CR) {
+					// \r，直接结束
 					if (copyLen > 0) {
 						localCurrentField.append(localBuf, localCopyStart, copyLen);
 					}
-					currentFields.add(StrUtil.unWrap(localCurrentField.toStringAndReset(), config.textDelimiter));
+					addField(currentFields, localCurrentField.toStringAndReset());
 					localPreChar = c;
 					localCopyStart = localBufPos;
 					break;
 				} else if (c == CharUtil.LF) {
+					// \n
 					if (localPreChar != CharUtil.CR) {
 						if (copyLen > 0) {
 							localCurrentField.append(localBuf, localCopyStart, copyLen);
 						}
-						currentFields.add(StrUtil.unWrap(localCurrentField.toStringAndReset(), config.textDelimiter));
+						addField(currentFields, localCurrentField.toStringAndReset());
 						localPreChar = c;
 						localCopyStart = localBufPos;
 						break;
 					}
+					// 前一个字符是\r，已经处理过这个字段了，此处直接跳过
 					localCopyStart = localBufPos;
 				} else {
 					copyLen++;
@@ -254,9 +280,22 @@ public final class CsvParser implements Closeable, Serializable {
 
 		return currentFields;
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		reader.close();
+	}
+
+	/**
+	 * 将字段加入字段列表并自动去包装和去转义
+	 *
+	 * @param currentFields 当前的字段列表（即为行）
+	 * @param field         字段
+	 */
+	private void addField(List<String> currentFields, String field) {
+		field = StrUtil.unWrap(field, config.textDelimiter);
+		char textDelimiter = this.config.textDelimiter;
+		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
+		currentFields.add(StrUtil.unWrap(field, textDelimiter));
 	}
 }
