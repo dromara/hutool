@@ -31,19 +31,7 @@ public final class CsvParser implements Closeable, Serializable {
 	private final Reader reader;
 	private final CsvReadConfig config;
 
-	private final char[] buf = new char[IoUtil.DEFAULT_LARGE_BUFFER_SIZE];
-	/**
-	 * 当前位置
-	 */
-	private int bufPos;
-	/**
-	 * 读取一段后数据长度
-	 */
-	private int bufLen;
-	/**
-	 * 拷贝开始的位置，一般为上一行的结束位置
-	 */
-	private int copyStart;
+	private final Buffer buf = new Buffer(IoUtil.DEFAULT_LARGE_BUFFER_SIZE);
 	/**
 	 * 前一个特殊分界字符
 	 */
@@ -70,7 +58,7 @@ public final class CsvParser implements Closeable, Serializable {
 	 */
 	private int firstLineFieldCount = -1;
 	/**
-	 * 最大字段数量
+	 * 最大字段数量，用于初始化行，减少扩容
 	 */
 	private int maxFieldCount;
 	/**
@@ -181,42 +169,55 @@ public final class CsvParser implements Closeable, Serializable {
 	private List<String> readLine() throws IORuntimeException {
 		final List<String> currentFields = new ArrayList<>(maxFieldCount > 0 ? maxFieldCount : DEFAULT_ROW_CAPACITY);
 
-		final StrBuilder localCurrentField = currentField;
-		final char[] localBuf = this.buf;
-		int localBufPos = bufPos;//当前位置
-		int localPreChar = preChar;//前一个特殊分界字符
-		int localCopyStart = copyStart;//拷贝起始位置
+		final StrBuilder currentField = this.currentField;
+		final Buffer buf = this.buf;
+		int preChar = this.preChar;//前一个特殊分界字符
 		int copyLen = 0; //拷贝长度
+		boolean lineStart = true;
+		boolean inComment = false;
 
 		while (true) {
-			if (bufLen == localBufPos) {
+			if (false == buf.hasRemaining()) {
 				// 此Buffer读取结束，开始读取下一段
-
 				if (copyLen > 0) {
-					localCurrentField.append(localBuf, localCopyStart, copyLen);
+					buf.appendTo(currentField, copyLen);
+					// 此处无需mark，read方法会重置mark
 				}
-				try {
-					bufLen = reader.read(localBuf);
-				} catch (IOException e) {
-					throw new IORuntimeException(e);
-				}
-
-				if (bufLen < 0) {
+				if (buf.read(this.reader) < 0) {
 					// CSV读取结束
 					finished = true;
 
-					if (localPreChar == config.fieldSeparator || localCurrentField.hasContent()) {
+					if (currentField.hasContent() || preChar == config.fieldSeparator) {
 						//剩余部分作为一个字段
-						addField(currentFields, localCurrentField.toStringAndReset());
+						addField(currentFields, currentField.toStringAndReset());
 					}
 					break;
 				}
 
 				//重置
-				localCopyStart = localBufPos = copyLen = 0;
+				copyLen = 0;
 			}
 
-			final char c = localBuf[localBufPos++];
+			final char c = buf.get();
+
+			// 注释行标记
+			if(lineStart){
+				if(c == this.config.commentCharacter){
+					inComment = true;
+				}
+				lineStart = false;
+			}
+			// 注释行处理
+			if(inComment){
+				if ((c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR) {
+					// 注释行以换行符为结尾
+					inComment = false;
+				}
+				// 跳过注释行中的任何字符
+				buf.mark();
+				preChar = c;
+				continue;
+			}
 
 			if (inQuotes) {
 				//引号内，做为内容，直到引号结束
@@ -224,21 +225,23 @@ public final class CsvParser implements Closeable, Serializable {
 					// End of quoted text
 					inQuotes = false;
 				} else {
-					if ((c == CharUtil.CR || c == CharUtil.LF) && localPreChar != CharUtil.CR) {
+					// 新行
+					if ((c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR) {
 						lineNo++;
 					}
 				}
+				// 普通字段字符
 				copyLen++;
 			} else {
 				// 非引号内
 				if (c == config.fieldSeparator) {
 					//一个字段结束
 					if (copyLen > 0) {
-						localCurrentField.append(localBuf, localCopyStart, copyLen);
+						buf.appendTo(currentField, copyLen);
 						copyLen = 0;
 					}
-					addField(currentFields, localCurrentField.toStringAndReset());
-					localCopyStart = localBufPos;
+					buf.mark();
+					addField(currentFields, currentField.toStringAndReset());
 				} else if (c == config.textDelimiter) {
 					// 引号开始
 					inQuotes = true;
@@ -246,37 +249,36 @@ public final class CsvParser implements Closeable, Serializable {
 				} else if (c == CharUtil.CR) {
 					// \r，直接结束
 					if (copyLen > 0) {
-						localCurrentField.append(localBuf, localCopyStart, copyLen);
+						buf.appendTo(currentField, copyLen);
 					}
-					addField(currentFields, localCurrentField.toStringAndReset());
-					localPreChar = c;
-					localCopyStart = localBufPos;
+					buf.mark();
+					addField(currentFields, currentField.toStringAndReset());
+					preChar = c;
 					break;
 				} else if (c == CharUtil.LF) {
 					// \n
-					if (localPreChar != CharUtil.CR) {
+					if (preChar != CharUtil.CR) {
 						if (copyLen > 0) {
-							localCurrentField.append(localBuf, localCopyStart, copyLen);
+							buf.appendTo(currentField, copyLen);
 						}
-						addField(currentFields, localCurrentField.toStringAndReset());
-						localPreChar = c;
-						localCopyStart = localBufPos;
+						buf.mark();
+						addField(currentFields, currentField.toStringAndReset());
+						preChar = c;
 						break;
 					}
 					// 前一个字符是\r，已经处理过这个字段了，此处直接跳过
-					localCopyStart = localBufPos;
+					buf.mark();
 				} else {
+					// 普通字符
 					copyLen++;
 				}
 			}
 
-			localPreChar = c;
+			preChar = c;
 		}
 
 		// restore fields
-		bufPos = localBufPos;
-		preChar = localPreChar;
-		copyStart = localCopyStart;
+		this.preChar = preChar;
 
 		return currentFields;
 	}
@@ -297,5 +299,87 @@ public final class CsvParser implements Closeable, Serializable {
 		char textDelimiter = this.config.textDelimiter;
 		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
 		currentFields.add(StrUtil.unWrap(field, textDelimiter));
+	}
+
+	/**
+	 * 内部Buffer
+	 *
+	 * @author looly
+	 */
+	private static class Buffer {
+		final char[] buf;
+
+		/**
+		 * 标记位置，用于读数据
+		 */
+		private int mark;
+		/**
+		 * 当前位置
+		 */
+		private int position;
+		/**
+		 * 读取的数据长度，一般小于buf.length，-1表示无数据
+		 */
+		private int limit;
+
+		Buffer(int capacity) {
+			buf = new char[capacity];
+		}
+
+		/**
+		 * 是否还有未读数据
+		 *
+		 * @return 是否还有未读数据
+		 */
+		public final boolean hasRemaining() {
+			return position < limit;
+		}
+
+		/**
+		 * 读取到缓存
+		 *
+		 * @param reader {@link Reader}
+		 */
+		int read(Reader reader) {
+			int length;
+			try {
+				length = reader.read(this.buf);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+			this.mark = 0;
+			this.position = 0;
+			this.limit = length;
+			return length;
+		}
+
+		/**
+		 * 先获取当前字符，再将当前位置后移一位<br>
+		 * 此方法不检查是否到了数组末尾，请自行使用{@link #hasRemaining()}判断。
+		 *
+		 * @return 当前位置字符
+		 * @see #hasRemaining()
+		 */
+		char get() {
+			return this.buf[this.position++];
+		}
+
+		/**
+		 * 标记位置记为下次读取位置
+		 */
+		void mark() {
+			this.mark = this.position;
+		}
+
+		/**
+		 * 将数据追加到{@link StrBuilder}，追加结束后需手动调用{@link #mark()} 重置读取位置
+		 *
+		 * @param builder {@link StrBuilder}
+		 * @param length  追加的长度
+		 * @see #mark()
+		 */
+		void appendTo(StrBuilder builder, int length) {
+			builder.append(this.buf, this.mark, length);
+		}
 	}
 }

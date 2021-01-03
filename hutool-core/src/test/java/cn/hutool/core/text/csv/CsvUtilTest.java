@@ -41,6 +41,12 @@ public class CsvUtilTest {
 			Assert.assertEquals("\"", csvRow.get(6));
 		});
 	}
+
+	@Test
+	public void readTest3() {
+		CsvReader reader = CsvUtil.getReader();
+		reader.read(FileUtil.getUtf8Reader("test.csv"), Console::log);
+	}
 	
 	@Test
 	@Ignore
