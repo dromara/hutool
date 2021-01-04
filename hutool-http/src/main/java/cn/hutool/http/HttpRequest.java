@@ -1064,10 +1064,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		this.httpConnection = HttpConnection
 				.create(this.url.toURL(this.urlHandler), this.proxy)//
-				.setMethod(this.method)//
-				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
 				.setConnectTimeout(this.connectionTimeout)//
 				.setReadTimeout(this.readTimeout)//
+				.setMethod(this.method)//
+				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
 				// 定义转发
 				.setInstanceFollowRedirects(this.maxRedirectCount > 0)
 				// 流方式上传数据
