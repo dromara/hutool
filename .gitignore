@@ -5,6 +5,7 @@
 
 # Maven
 target/
+.flattened-pom.xml
 dependency-reduced-pom.xml
 pom.xml.versionsBackup
 .factorypath
