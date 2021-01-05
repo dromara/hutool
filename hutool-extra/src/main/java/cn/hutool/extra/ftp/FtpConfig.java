@@ -46,6 +46,17 @@ public class FtpConfig implements Serializable {
 	 */
 	private long soTimeout;
 
+    /**
+     * 设置服务器语言
+     */
+	private String serverLanguageCode;
+
+    /**
+     * 设置服务器系统关键词
+     * @see org.apache.commons.net.ftp.FTPClientConfig
+     */
+    private String systemKey;
+
 	/**
 	 * 构造
 	 */
@@ -61,12 +72,14 @@ public class FtpConfig implements Serializable {
 	 * @param password 密码
 	 * @param charset 编码
 	 */
-	public FtpConfig(String host, int port, String user, String password, Charset charset) {
+	public FtpConfig(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
 		this.host = host;
 		this.port = port;
 		this.user = user;
 		this.password = password;
 		this.charset = charset;
+		this.serverLanguageCode = serverLanguageCode;
+		this.systemKey = systemKey;
 	}
 
 	public String getHost() {
@@ -129,6 +142,24 @@ public class FtpConfig implements Serializable {
 
 	public FtpConfig setSoTimeout(long soTimeout) {
 		this.soTimeout = soTimeout;
+		return this;
+	}
+
+	public String getServerLanguageCode() {
+		return serverLanguageCode;
+	}
+
+	public FtpConfig setServerLanguageCode(String serverLanguageCode) {
+		this.serverLanguageCode = serverLanguageCode;
+		return this;
+	}
+
+	public String getSystemKey() {
+		return systemKey;
+	}
+
+	public FtpConfig setSystemKey(String systemKey) {
+		this.systemKey = systemKey;
 		return this;
 	}
 }
