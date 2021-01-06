@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.7 (2021-01-03)
+# 5.5.7 (2021-01-06)
 
 ### 新特性
 * 【core   】     DynaBean.create增加重载方法（pr#245@Gitee）
@@ -11,6 +11,7 @@
 * 【poi    】     SheetRidReader增加getRidByIndex方法（issue#1342@Github）
 * 【extra  】     MailAccount增加sslProtocols配置项（issue#IZN95@Gitee）
 * 【extra  】     MailUtil增加getSession方法
+* 【setting】     新增setByGroup和putByGroup，set和put标记为过期（issue#I2C42H@Gitee）
 
 ### Bug修复
 * 【core   】     修复CsvReader读取双引号未转义问题（issur#I2BMP1@Gitee）
