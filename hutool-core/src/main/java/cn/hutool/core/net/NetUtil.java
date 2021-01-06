@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.DatagramSocket;
 import java.net.HttpCookie;
 import java.net.IDN;
@@ -33,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 /**
  * 网络相关工具
@@ -74,6 +76,53 @@ public class NetUtil {
 	 */
 	public static long ipv4ToLong(String strIP) {
 		return Ipv4Util.ipv4ToLong(strIP);
+	}
+
+	/**
+	 * 检测给定的IP字符串符合哪个版本
+	 * @param ipStr 需要检测的字符串
+	 * @return 版本号['IPv4', 'IPv6', 'Neither']
+	 */
+	public static String getIpVersion(String ipStr) {
+		Pattern patternIpv4 = Pattern.compile("^(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}$");
+		Pattern patternIpv6 = Pattern.compile("^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$");
+		if (patternIpv6.matcher(ipStr).matches()) {
+			return "IPv6";
+		} else if (patternIpv4.matcher(ipStr).matches()) {
+			return "IPv4";
+		} else {
+			return "Neither";
+		}
+	}
+
+	/**
+	 * 将IPv6地址字符串转为大整数
+	 *
+	 * @param IPv6Str 字符串
+	 * @return 大整数, 如发生异常返回 null
+	 */
+	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+		try {
+			InetAddress address = InetAddress.getByName(IPv6Str);
+			if (address instanceof Inet6Address) {
+				return new BigInteger(1, address.getAddress());
+			}
+		} catch (UnknownHostException e) {}
+		return null;
+	}
+
+	/**
+	 * 将大整数转换成ipv6字符串
+	 *
+	 * @param bigInteger 大整数
+	 * @return IPv6字符串, 如发生异常返回 null
+	 */
+	public static String bigIntegerToIPv6(BigInteger bigInteger) {
+		try {
+			String ipv6 = InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
+			return ipv6;
+		} catch (UnknownHostException e) {}
+		return null;
 	}
 
 	/**
