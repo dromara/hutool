@@ -12,6 +12,8 @@
 * 【extra  】     MailAccount增加sslProtocols配置项（issue#IZN95@Gitee）
 * 【extra  】     MailUtil增加getSession方法
 * 【setting】     新增setByGroup和putByGroup，set和put标记为过期（issue#I2C42H@Gitee）
+* 【crypto 】     修改SymmetricAlgorithm注释（issue#1360@Github）
+* 【all    】     pom中将META-INF/maven下全部exclude（pr#1355@Github）
 
 ### Bug修复
 * 【core   】     修复CsvReader读取双引号未转义问题（issur#I2BMP1@Gitee）
