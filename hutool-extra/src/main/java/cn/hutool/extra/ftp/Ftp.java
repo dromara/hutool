@@ -84,7 +84,7 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset) {
-		this(host, port, user, password, charset,null, null, null);
+		this(host, port, user, password, charset,null, null);
 	}
 
 	/**
