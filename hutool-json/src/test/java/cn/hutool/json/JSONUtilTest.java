@@ -4,13 +4,13 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -165,11 +165,11 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void doubleTest2() {
-		String json = "{\"test\": 12.00}";
-		final JSONObject jsonObject = JSONUtil.parseObj(json);
-		jsonObject.set("test2", new BigInteger("12"));
-		Console.log(jsonObject);
+	public void customValueTest() {
+		final JSONObject jsonObject = JSONUtil.createObj()
+		.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
+
+		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}
 
 	@Test
