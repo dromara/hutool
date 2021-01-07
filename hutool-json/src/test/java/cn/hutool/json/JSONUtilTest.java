@@ -10,6 +10,7 @@ import cn.hutool.json.test.bean.UserC;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -161,6 +162,14 @@ public class JSONUtilTest {
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 		//noinspection BigDecimalMethodWithoutRoundingCalled
 		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
+	}
+
+	@Test
+	public void doubleTest2() {
+		String json = "{\"test\": 12.00}";
+		final JSONObject jsonObject = JSONUtil.parseObj(json);
+		jsonObject.set("test2", new BigInteger("12"));
+		Console.log(jsonObject);
 	}
 
 	@Test

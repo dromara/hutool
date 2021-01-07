@@ -45,10 +45,8 @@ public class SimpleServerTest {
 							response.write(request.getMultipart().getParamMap().toString(), ContentType.TEXT_PLAIN.toString());
 						}
 				)
-				.addAction("test/zeroStr", (req, res)->{
-					res.addHeader("Content-Length", "0".length() + "");
-					res.write("0");
-				})
+				// 测试输出响应内容是否能正常返回Content-Length头信息
+				.addAction("test/zeroStr", (req, res)-> res.write("0"))
 				.start();
 	}
 }

@@ -19,6 +19,7 @@
 ### Bug修复
 * 【core   】     修复CsvReader读取双引号未转义问题（issur#I2BMP1@Gitee）
 * 【json   】     JSONUtil.parse修复config无效问题（issur#1363@Github）
+* 【http   】     修复SimpleServer返回响应内容Content-Lenth不正确的问题（issur#1358@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
