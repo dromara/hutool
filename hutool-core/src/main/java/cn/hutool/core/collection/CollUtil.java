@@ -2560,6 +2560,9 @@ public class CollUtil {
 	 * @since 5.4.7
 	 */
 	public static <T> void forEach(Iterable<T> iterable, Consumer<T> consumer) {
+		if(iterable == null){
+			return;
+		}
 		forEach(iterable.iterator(), consumer);
 	}
 
@@ -2571,6 +2574,9 @@ public class CollUtil {
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer) {
+		if(iterator == null){
+			return;
+		}
 		int index = 0;
 		while (iterator.hasNext()) {
 			consumer.accept(iterator.next(), index);
@@ -2586,6 +2592,9 @@ public class CollUtil {
 	 * @param consumer    {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer) {
+		if(enumeration == null){
+			return;
+		}
 		int index = 0;
 		while (enumeration.hasMoreElements()) {
 			consumer.accept(enumeration.nextElement(), index);
@@ -2603,6 +2612,9 @@ public class CollUtil {
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
+		if(map == null){
+			return;
+		}
 		int index = 0;
 		for (Entry<K, V> entry : map.entrySet()) {
 			kvConsumer.accept(entry.getKey(), entry.getValue(), index);
