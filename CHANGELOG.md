@@ -14,12 +14,12 @@
 * 【setting】     新增setByGroup和putByGroup，set和put标记为过期（issue#I2C42H@Gitee）
 * 【crypto 】     修改SymmetricAlgorithm注释（issue#1360@Github）
 * 【all    】     pom中将META-INF/maven下全部exclude（pr#1355@Github）
-* 【core   】     pom中将META-INF/maven下全部exclude（pr#1355@Github）
+* 【http   】     SimpleServer中增加addFilter等方法，并使用全局线程池
 
 ### Bug修复
-* 【core   】     修复CsvReader读取双引号未转义问题（issur#I2BMP1@Gitee）
-* 【json   】     JSONUtil.parse修复config无效问题（issur#1363@Github）
-* 【http   】     修复SimpleServer返回响应内容Content-Lenth不正确的问题（issur#1358@Github）
+* 【core   】     修复CsvReader读取双引号未转义问题（issue#I2BMP1@Gitee）
+* 【json   】     JSONUtil.parse修复config无效问题（issue#1363@Github）
+* 【http   】     修复SimpleServer返回响应内容Content-Length不正确的问题（issue#1358@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

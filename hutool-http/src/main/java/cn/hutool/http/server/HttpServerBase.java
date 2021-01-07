@@ -1,6 +1,7 @@
 package cn.hutool.http.server;
 
 import cn.hutool.core.util.CharsetUtil;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.nio.charset.Charset;
@@ -33,5 +34,15 @@ public class HttpServerBase {
 	 */
 	public HttpExchange getHttpExchange() {
 		return this.httpExchange;
+	}
+
+	/**
+	 * 获取{@link HttpContext}
+	 *
+	 * @return {@link HttpContext}
+	 * @since 5.5.7
+	 */
+	public HttpContext getHttpContext() {
+		return getHttpExchange().getHttpContext();
 	}
 }
