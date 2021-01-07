@@ -2,6 +2,8 @@ package cn.hutool.http.server;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.thread.GlobalThreadPool;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.action.Action;
 import cn.hutool.http.server.action.RootAction;
 import cn.hutool.http.server.handler.ActionHandler;
@@ -53,6 +55,7 @@ public class SimpleServer {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+		setExecutor(GlobalThreadPool.getExecutor());
 	}
 
 	/**
@@ -63,6 +66,8 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer addHandler(String path, HttpHandler handler) {
+		// 非/开头的路径会报错
+		path = StrUtil.addPrefixIfNot(path, StrUtil.SLASH);
 		this.server.createContext(path, handler);
 		return this;
 	}

@@ -45,6 +45,10 @@ public class SimpleServerTest {
 							response.write(request.getMultipart().getParamMap().toString(), ContentType.TEXT_PLAIN.toString());
 						}
 				)
+				.addAction("test/zeroStr", (req, res)->{
+					res.addHeader("Content-Length", "0".length() + "");
+					res.write("0");
+				})
 				.start();
 	}
 }

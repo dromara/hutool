@@ -218,7 +218,7 @@ public final class JSONUtil {
 			json = (JSON) obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = StrUtil.startWith(jsonStr, '[') ? parseArray(jsonStr) : parseObj(jsonStr);
+			json = isJsonArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
 		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
 			json = new JSONArray(obj, config);
 		} else {// 对象
