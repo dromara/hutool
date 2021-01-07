@@ -224,6 +224,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	/**
 	 * 追加新行（换行）
 	 *
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public CsvWriter writeLine() throws IORuntimeException {

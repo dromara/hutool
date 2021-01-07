@@ -2922,6 +2922,7 @@ public class FileUtil extends PathUtil {
 	 *
 	 * @param dest 目标文件
 	 * @param in   输入流
+	 * @param isCloseIn 是否关闭输入流
 	 * @return dest
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.6
