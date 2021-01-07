@@ -21,6 +21,7 @@
 * 【core   】     修复CsvReader读取双引号未转义问题（issue#I2BMP1@Gitee）
 * 【json   】     JSONUtil.parse修复config无效问题（issue#1363@Github）
 * 【http   】     修复SimpleServer返回响应内容Content-Length不正确的问题（issue#1358@Github）
+* 【http   】     修复Https请求部分环境下报证书验证异常问题（issue#I2C1BZ@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

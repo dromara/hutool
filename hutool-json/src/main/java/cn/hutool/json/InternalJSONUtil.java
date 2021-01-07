@@ -253,7 +253,7 @@ final class InternalJSONUtil {
 		//默认使用时间戳
 		long timeMillis;
 		if (dateObj instanceof TemporalAccessor) {
-			timeMillis = DateUtil.toInstant((TemporalAccessor) dateObj).toEpochMilli();
+			timeMillis = TemporalAccessorUtil.toEpochMilli((TemporalAccessor) dateObj);
 		} else if (dateObj instanceof Date) {
 			timeMillis = ((Date) dateObj).getTime();
 		} else if (dateObj instanceof Calendar) {
