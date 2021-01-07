@@ -34,7 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 /**
  * 网络相关工具
@@ -79,27 +78,11 @@ public class NetUtil {
 	}
 
 	/**
-	 * 检测给定的IP字符串符合哪个版本
-	 * @param ipStr 需要检测的字符串
-	 * @return 版本号['IPv4', 'IPv6', 'Neither']
-	 */
-	public static String getIpVersion(String ipStr) {
-		Pattern patternIpv4 = Pattern.compile("^(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}$");
-		Pattern patternIpv6 = Pattern.compile("^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$");
-		if (patternIpv6.matcher(ipStr).matches()) {
-			return "IPv6";
-		} else if (patternIpv4.matcher(ipStr).matches()) {
-			return "IPv4";
-		} else {
-			return "Neither";
-		}
-	}
-
-	/**
 	 * 将IPv6地址字符串转为大整数
 	 *
 	 * @param IPv6Str 字符串
 	 * @return 大整数, 如发生异常返回 null
+	 * @since 5.5.7
 	 */
 	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
 		try {
@@ -107,7 +90,8 @@ public class NetUtil {
 			if (address instanceof Inet6Address) {
 				return new BigInteger(1, address.getAddress());
 			}
-		} catch (UnknownHostException e) {}
+		} catch (UnknownHostException ignore) {
+		}
 		return null;
 	}
 
@@ -116,13 +100,14 @@ public class NetUtil {
 	 *
 	 * @param bigInteger 大整数
 	 * @return IPv6字符串, 如发生异常返回 null
+	 * @since 5.5.7
 	 */
 	public static String bigIntegerToIPv6(BigInteger bigInteger) {
 		try {
-			String ipv6 = InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
-			return ipv6;
-		} catch (UnknownHostException e) {}
-		return null;
+			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
+		} catch (UnknownHostException ignore) {
+			return null;
+		}
 	}
 
 	/**
@@ -561,7 +546,7 @@ public class NetUtil {
 		byte[] mac = null;
 		try {
 			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-			if(null != networkInterface){
+			if (null != networkInterface) {
 				mac = networkInterface.getHardwareAddress();
 			}
 		} catch (SocketException e) {
@@ -596,9 +581,9 @@ public class NetUtil {
 		}
 
 		final InetAddress localhost = getLocalhost();
-		if(null != localhost){
+		if (null != localhost) {
 			String name = localhost.getHostName();
-			if(StrUtil.isEmpty(name)){
+			if (StrUtil.isEmpty(name)) {
 				name = localhost.getHostAddress();
 			}
 			localhostName = name;
@@ -787,7 +772,7 @@ public class NetUtil {
 	 * @since 5.3.2
 	 */
 	public static boolean isOpen(InetSocketAddress address, int timeout) {
-		try (Socket sc = new Socket()){
+		try (Socket sc = new Socket()) {
 			sc.connect(address, timeout);
 			return true;
 		} catch (Exception e) {
