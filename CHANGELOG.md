@@ -16,6 +16,7 @@
 * 【all    】     pom中将META-INF/maven下全部exclude（pr#1355@Github）
 * 【http   】     SimpleServer中增加addFilter等方法，并使用全局线程池
 * 【core   】     CollUtil.forEach 增加null 判断（pr#250@Gitee）
+* 【extra  】     FtpConfig增加serverLanguageCode和systemKey配置,Ftp.download增加重载（pr#248@Gitee）
 
 ### Bug修复
 * 【core   】     修复CsvReader读取双引号未转义问题（issue#I2BMP1@Gitee）

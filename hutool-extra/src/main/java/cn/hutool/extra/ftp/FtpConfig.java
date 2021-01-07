@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 public class FtpConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static FtpConfig create(){
+	public static FtpConfig create() {
 		return new FtpConfig();
 	}
 
@@ -46,16 +46,15 @@ public class FtpConfig implements Serializable {
 	 */
 	private long soTimeout;
 
-    /**
-     * 设置服务器语言
-     */
+	/**
+	 * 设置服务器语言
+	 */
 	private String serverLanguageCode;
 
-    /**
-     * 设置服务器系统关键词
-     * @see org.apache.commons.net.ftp.FTPClientConfig
-     */
-    private String systemKey;
+	/**
+	 * 设置服务器系统关键词
+	 */
+	private String systemKey;
 
 	/**
 	 * 构造
@@ -66,11 +65,27 @@ public class FtpConfig implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param host 主机
-	 * @param port 端口
-	 * @param user 用户名
-	 * @param password 密码
-	 * @param charset 编码
+	 * @param host               主机
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
+	 */
+	public FtpConfig(String host, int port, String user, String password, Charset charset) {
+		this(host, port, user, password, charset, null, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param host               主机
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
+	 * @param serverLanguageCode 服务器语言
+	 * @param systemKey          系统关键字
+	 * @since 5.5.7
 	 */
 	public FtpConfig(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
 		this.host = host;

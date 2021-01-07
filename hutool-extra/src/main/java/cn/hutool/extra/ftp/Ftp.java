@@ -1,5 +1,12 @@
 package cn.hutool.extra.ftp;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
@@ -13,14 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * FTP客户端封装<br>
@@ -84,19 +83,19 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset) {
-		this(host, port, user, password, charset,null, null);
+		this(host, port, user, password, charset, null, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param host     域名或IP
-	 * @param port     端口
-	 * @param user     用户名
-	 * @param password 密码
-	 * @param charset  编码
+	 * @param host               域名或IP
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
 	 * @param serverLanguageCode 服务器语言 例如：zh
-	 * @param systemKey 服务器标识 例如：org.apache.commons.net.ftp.FTPClientConfig.SYST_NT
+	 * @param systemKey          服务器标识 例如：org.apache.commons.net.ftp.FTPClientConfig.SYST_NT
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
 		this(host, port, user, password, charset, serverLanguageCode, systemKey, null);
@@ -173,17 +172,25 @@ public class Ftp extends AbstractFtp {
 	 */
 	public Ftp init(FtpConfig config, FtpMode mode) {
 		final FTPClient client = new FTPClient();
-		client.setControlEncoding(config.getCharset().toString());
+		final Charset charset = config.getCharset();
+		if (null != charset) {
+			client.setControlEncoding(charset.toString());
+		}
 		client.setConnectTimeout((int) config.getConnectionTimeout());
+		final String systemKey = config.getSystemKey();
+		if (StrUtil.isNotBlank(systemKey)) {
+			final FTPClientConfig conf = new FTPClientConfig(systemKey);
+			final String serverLanguageCode = config.getServerLanguageCode();
+			if (StrUtil.isNotBlank(serverLanguageCode)) {
+				conf.setServerLanguageCode(config.getServerLanguageCode());
+			}
+			client.configure(conf);
+		}
+
 		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
 			client.setSoTimeout((int) config.getSoTimeout());
-			// 下载中文文件
-			if (StrUtil.isNotBlank(config.getSystemKey()) && StrUtil.isNotBlank(config.getServerLanguageCode())){
-				FTPClientConfig conf = new FTPClientConfig(config.getSystemKey());
-				conf.setServerLanguageCode(config.getServerLanguageCode());
-			}
 			// 登录ftp服务器
 			client.login(config.getUser(), config.getPassword());
 		} catch (IOException e) {
@@ -367,6 +374,7 @@ public class Ftp extends AbstractFtp {
 
 	/**
 	 * 获取服务端目录状态。
+	 *
 	 * @param path 路径
 	 * @return 状态int，服务端不同，返回不同
 	 * @since 5.4.3
@@ -602,12 +610,29 @@ public class Ftp extends AbstractFtp {
 	 * @param out      输出位置
 	 */
 	public void download(String path, String fileName, OutputStream out) {
+		download(path, fileName, out, null);
+	}
+
+	/**
+	 * 下载文件到输出流
+	 *
+	 * @param path            文件路径
+	 * @param fileName        文件名
+	 * @param out             输出位置
+	 * @param fileNameCharset 文件名编码
+	 * @since 5.5.7
+	 */
+	public void download(String path, String fileName, OutputStream out, Charset fileNameCharset) {
 		String pwd = null;
 		if (this.backToPwd) {
 			pwd = pwd();
 		}
 
 		cd(path);
+
+		if (null != fileNameCharset) {
+			fileName = new String(fileName.getBytes(fileNameCharset), StandardCharsets.ISO_8859_1);
+		}
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 			client.retrieveFile(fileName, out);
@@ -620,31 +645,6 @@ public class Ftp extends AbstractFtp {
 		}
 	}
 
-    /**
-     * 下载文件到输出流
-     *
-     * @param path     文件路径
-     * @param fileName 文件名
-     * @param out      输出位置
-     */
-    public void download(String path, String fileName, OutputStream out, String fileNameCharset) {
-        String pwd = null;
-        if (this.backToPwd) {
-            pwd = pwd();
-        }
-
-        cd(path);
-        try {
-            client.setFileType(FTPClient.BINARY_FILE_TYPE);
-            client.retrieveFile(new String(fileName.getBytes(fileNameCharset), StandardCharsets.ISO_8859_1), out);
-        } catch (IOException e) {
-            throw new FtpException(e);
-        } finally {
-            if (backToPwd) {
-                cd(pwd);
-            }
-        }
-    }
 	/**
 	 * 获取FTPClient客户端对象
 	 *
