@@ -15,6 +15,7 @@
 * 【crypto 】     修改SymmetricAlgorithm注释（issue#1360@Github）
 * 【all    】     pom中将META-INF/maven下全部exclude（pr#1355@Github）
 * 【http   】     SimpleServer中增加addFilter等方法，并使用全局线程池
+* 【core   】     CollUtil.forEach 增加null 判断（pr#250@Gitee）
 
 ### Bug修复
 * 【core   】     修复CsvReader读取双引号未转义问题（issue#I2BMP1@Gitee）
