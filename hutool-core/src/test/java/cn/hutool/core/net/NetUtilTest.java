@@ -87,6 +87,7 @@ public class NetUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void isOpenTest(){
 		InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
 		Assert.assertTrue(NetUtil.isOpen(address, 200));
