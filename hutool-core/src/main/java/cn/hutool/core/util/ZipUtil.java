@@ -644,7 +644,7 @@ public class ZipUtil {
 				outItemFile.mkdirs();
 			} else {
 				// 文件
-				FileUtil.writeFromStream(zipStream, outItemFile);
+				FileUtil.writeFromStream(zipStream, outItemFile, false);
 			}
 		});
 		return outFile;

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
@@ -164,6 +165,14 @@ public class JSONUtilTest {
 	}
 
 	@Test
+	public void customValueTest() {
+		final JSONObject jsonObject = JSONUtil.createObj()
+		.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
+
+		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
+	}
+
+	@Test
 	public void parseObjTest() {
 		// 测试转义
 		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
@@ -171,4 +180,3 @@ public class JSONUtilTest {
 				"}");
 	}
 }
-

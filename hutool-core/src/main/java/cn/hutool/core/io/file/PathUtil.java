@@ -153,7 +153,8 @@ public class PathUtil {
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
+	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
@@ -166,7 +167,8 @@ public class PathUtil {
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
+	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
@@ -180,6 +182,8 @@ public class PathUtil {
 		Assert.notNull(target, "Destination File or directiory is null !");
 
 		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
+		// 创建级联父目录
+		mkParentDirs(targetPath);
 		try {
 			return Files.copy(src, targetPath, options);
 		} catch (IOException e) {
@@ -188,9 +192,15 @@ public class PathUtil {
 	}
 
 	/**
-	 * 拷贝文件或目录
+	 * 拷贝文件或目录，拷贝规则为：
 	 *
-	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * <ul>
+	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝整个目录到目标目录下</li>
+	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
+	 *     <li>源文件为文件，目标也为文件，则在{@link StandardCopyOption#REPLACE_EXISTING}情况下覆盖之</li>
+	 * </ul>
+	 *
+	 * @param src     源文件路径，如果为目录会在目标中创建新目录
 	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
@@ -198,17 +208,21 @@ public class PathUtil {
 	 * @since 5.5.1
 	 */
 	public static Path copy(Path src, Path target, CopyOption... options) throws IORuntimeException {
-		if (isFile(src, false)) {
-			return copyFile(src, target, options);
+		if (isDirectory(src)) {
+			return copyContent(src, target.resolve(src.getFileName()), options);
 		}
-		return copyContent(src, target.resolve(src.getFileName()), options);
+		return copyFile(src, target, options);
 	}
 
 	/**
-	 * 拷贝目录下的所有文件或目录到目标目录中
+	 * 拷贝目录下的所有文件或目录到目标目录中，此方法不支持文件对文件的拷贝。
+	 * <ul>
+	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝目录下所有文件和目录到目标目录下</li>
+	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
+	 * </ul>
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param target  目标目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
@@ -450,6 +464,8 @@ public class PathUtil {
 		if (isDirectory(target)) {
 			target = target.resolve(src.getFileName());
 		}
+		// 自动创建目标的父目录
+		mkParentDirs(target);
 		try {
 			return Files.move(src, target, options);
 		} catch (IOException e) {
@@ -546,6 +562,7 @@ public class PathUtil {
 	 * @param file 文件
 	 * @return MimeType
 	 * @since 5.5.5
+	 * @see Files#probeContentType(Path)
 	 */
 	public static String getMimeType(Path file) {
 		try {
@@ -553,5 +570,34 @@ public class PathUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 创建所给目录及其父目录
+	 *
+	 * @param dir 目录
+	 * @return 目录
+	 * @since 5.5.7
+	 */
+	public static Path mkdir(Path dir) {
+		if (null != dir && false == exists(dir, false)) {
+			try {
+				Files.createDirectories(dir);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+		return dir;
+	}
+
+	/**
+	 * 创建所给文件或目录的父目录
+	 *
+	 * @param path 文件或目录
+	 * @return 父目录
+	 * @since 5.5.7
+	 */
+	public static Path mkParentDirs(Path path) {
+		return mkdir(path.getParent());
 	}
 }

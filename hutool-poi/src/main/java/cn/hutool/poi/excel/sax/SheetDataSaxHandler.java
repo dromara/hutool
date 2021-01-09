@@ -29,7 +29,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	protected StylesTable stylesTable;
 	// excel 2007 的共享字符串表,对应sharedString.xml
 	protected SharedStringsTable sharedStringsTable;
-	// sheet的索引
+	// sheet的索引，从0开始
 	protected int sheetIndex;
 
 	// 当前非空行

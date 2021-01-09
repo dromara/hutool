@@ -8,6 +8,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +83,22 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset) {
-		this(host, port, user, password, charset, null);
+		this(host, port, user, password, charset, null, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param host               域名或IP
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
+	 * @param serverLanguageCode 服务器语言 例如：zh
+	 * @param systemKey          服务器标识 例如：org.apache.commons.net.ftp.FTPClientConfig.SYST_NT
+	 */
+	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
+		this(host, port, user, password, charset, serverLanguageCode, systemKey, null);
 	}
 
 	/**
@@ -94,8 +111,8 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 * @param mode     模式
 	 */
-	public Ftp(String host, int port, String user, String password, Charset charset, FtpMode mode) {
-		this(new FtpConfig(host, port, user, password, charset), mode);
+	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey, FtpMode mode) {
+		this(new FtpConfig(host, port, user, password, charset, serverLanguageCode, systemKey), mode);
 	}
 
 	/**
@@ -143,7 +160,7 @@ public class Ftp extends AbstractFtp {
 	 * @return this
 	 */
 	public Ftp init(String host, int port, String user, String password, FtpMode mode) {
-		return init(new FtpConfig(host, port, user, password, this.ftpConfig.getCharset()), mode);
+		return init(new FtpConfig(host, port, user, password, this.ftpConfig.getCharset(), null, null), mode);
 	}
 
 	/**
@@ -155,8 +172,21 @@ public class Ftp extends AbstractFtp {
 	 */
 	public Ftp init(FtpConfig config, FtpMode mode) {
 		final FTPClient client = new FTPClient();
-		client.setControlEncoding(config.getCharset().toString());
+		final Charset charset = config.getCharset();
+		if (null != charset) {
+			client.setControlEncoding(charset.toString());
+		}
 		client.setConnectTimeout((int) config.getConnectionTimeout());
+		final String systemKey = config.getSystemKey();
+		if (StrUtil.isNotBlank(systemKey)) {
+			final FTPClientConfig conf = new FTPClientConfig(systemKey);
+			final String serverLanguageCode = config.getServerLanguageCode();
+			if (StrUtil.isNotBlank(serverLanguageCode)) {
+				conf.setServerLanguageCode(config.getServerLanguageCode());
+			}
+			client.configure(conf);
+		}
+
 		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
@@ -344,6 +374,7 @@ public class Ftp extends AbstractFtp {
 
 	/**
 	 * 获取服务端目录状态。
+	 *
 	 * @param path 路径
 	 * @return 状态int，服务端不同，返回不同
 	 * @since 5.4.3
@@ -579,12 +610,29 @@ public class Ftp extends AbstractFtp {
 	 * @param out      输出位置
 	 */
 	public void download(String path, String fileName, OutputStream out) {
+		download(path, fileName, out, null);
+	}
+
+	/**
+	 * 下载文件到输出流
+	 *
+	 * @param path            文件路径
+	 * @param fileName        文件名
+	 * @param out             输出位置
+	 * @param fileNameCharset 文件名编码
+	 * @since 5.5.7
+	 */
+	public void download(String path, String fileName, OutputStream out, Charset fileNameCharset) {
 		String pwd = null;
 		if (this.backToPwd) {
 			pwd = pwd();
 		}
 
 		cd(path);
+
+		if (null != fileNameCharset) {
+			fileName = new String(fileName.getBytes(fileNameCharset), StandardCharsets.ISO_8859_1);
+		}
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 			client.retrieveFile(fileName, out);

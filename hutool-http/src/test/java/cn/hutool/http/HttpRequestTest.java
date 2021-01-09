@@ -25,7 +25,7 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void getHttpsTest() {
-		String body = HttpRequest.get("https://www.gjifa.com/pc/").execute().body();
+		String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().body();
 		Console.log(body);
 	}
 

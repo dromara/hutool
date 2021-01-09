@@ -8,7 +8,7 @@ package cn.hutool.crypto.symmetric;
  *
  */
 public enum SymmetricAlgorithm {
-	/** 默认的AES加密方式：AES/CBC/PKCS5Padding */
+	/** 默认的AES加密方式：AES/ECB/PKCS5Padding */
 	AES("AES"), 
 	ARCFOUR("ARCFOUR"), 
 	Blowfish("Blowfish"), 

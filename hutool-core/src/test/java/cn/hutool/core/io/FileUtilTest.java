@@ -376,6 +376,15 @@ public class FileUtilTest {
 	public void getMimeTypeTest() {
 		String mimeType = FileUtil.getMimeType("test2Write.jpg");
 		Assert.assertEquals("image/jpeg", mimeType);
+
+		mimeType = FileUtil.getMimeType("test2Write.html");
+		Assert.assertEquals("text/html", mimeType);
+
+		mimeType = FileUtil.getMimeType("main.css");
+		Assert.assertEquals("text/css", mimeType);
+
+		mimeType = FileUtil.getMimeType("test.js");
+		Assert.assertEquals("application/x-javascript", mimeType);
 	}
 
 	@Test

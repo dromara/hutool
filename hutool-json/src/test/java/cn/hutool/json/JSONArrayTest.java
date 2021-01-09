@@ -11,6 +11,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;
 import cn.hutool.json.test.bean.KeyBean;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -202,6 +203,14 @@ public class JSONArrayTest {
 		Assert.assertEquals("-0", nodeList.get(3).getName());
 	}
 
+	@Test
+	public void getByPathTest(){
+		String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
+		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
+		Assert.assertEquals("b", jsonArray.getByPath("[1].name"));
+		Assert.assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
+	}
+
 	private static Map<String, String> buildMap(String id, String parentId, String name) {
 		Map<String, String> map = new HashMap<>();
 		map.put("id", id);
@@ -209,26 +218,10 @@ public class JSONArrayTest {
 		map.put("name", name);
 		return map;
 	}
-	
+
+	@Data
 	static class User {
 		private Integer id;
 		private String name;
-		
-		public Integer getId() {
-			return id;
-		}
-		public void setId(Integer id) {
-			this.id = id;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		@Override
-		public String toString() {
-			return "User [id=" + id + ", name=" + name + "]";
-		}
 	}
 }

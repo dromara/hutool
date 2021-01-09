@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.5.5-SNAPSHOT</version>
+		<version>5.5.8-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -21,12 +21,12 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.8.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
-		<druid.version>1.2.3</druid.version>
+		<druid.version>1.2.4</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.12.7</mongo.version>
-		<sqlite.version>3.32.3.2</sqlite.version>
+		<sqlite.version>3.34.0</sqlite.version>
 		<hsqldb.version>2.5.1</hsqldb.version>
-		<jedis.version>3.3.0</jedis.version>
+		<jedis.version>3.4.1</jedis.version>
 	</properties>
 
 	<dependencies>

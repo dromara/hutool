@@ -22,21 +22,32 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	private final Object bean;
 
 	/**
-	 * 创建一个{@link DynaBean}
+	 * 创建一个DynaBean
 	 *
 	 * @param bean 普通Bean
-	 * @return {@link DynaBean}
+	 * @return DynaBean
 	 */
 	public static DynaBean create(Object bean) {
 		return new DynaBean(bean);
 	}
 
 	/**
-	 * 创建一个{@link DynaBean}
+	 * 创建一个DynaBean
+	 *
+	 * @param beanClass Bean类
+	 * @return DynaBean
+	 */
+	public static DynaBean create(Class<?> beanClass) {
+		return new DynaBean(beanClass);
+	}
+
+
+	/**
+	 * 创建一个DynaBean
 	 *
 	 * @param beanClass Bean类
 	 * @param params    构造Bean所需要的参数
-	 * @return {@link DynaBean}
+	 * @return DynaBean
 	 */
 	public static DynaBean create(Class<?> beanClass, Object... params) {
 		return new DynaBean(beanClass, params);
@@ -52,6 +63,15 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 */
 	public DynaBean(Class<?> beanClass, Object... params) {
 		this(ReflectUtil.newInstance(beanClass, params));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param beanClass Bean类
+	 */
+	public DynaBean(Class<?> beanClass) {
+		this(ReflectUtil.newInstance(beanClass));
 	}
 
 	/**
@@ -83,7 +103,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 			return (T) ((Map<?, ?>) bean).get(fieldName);
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
-			if(null == prop){
+			if (null == prop) {
 				throw new BeanException("No public field or get method for {}", fieldName);
 			}
 			return (T) prop.getValue(bean);
@@ -97,7 +117,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @return 是否有bean属性
 	 * @since 5.4.2
 	 */
-	public boolean containsProp(String fieldName){
+	public boolean containsProp(String fieldName) {
 		return null != BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 	}
 
@@ -130,7 +150,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 			((Map) bean).put(fieldName, value);
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
-			if(null == prop){
+			if (null == prop) {
 				throw new BeanException("No public field or set method for {}", fieldName);
 			}
 			prop.setValue(bean, value);

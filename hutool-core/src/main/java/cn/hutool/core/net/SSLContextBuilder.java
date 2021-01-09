@@ -52,7 +52,7 @@ public class SSLContextBuilder {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
-	private TrustManager[] trustManagers;
+	private TrustManager[] trustManagers = {new DefaultTrustManager()};
 	private SecureRandom secureRandom = new SecureRandom();
 
 

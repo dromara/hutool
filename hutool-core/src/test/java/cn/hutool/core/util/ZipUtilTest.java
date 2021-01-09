@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -8,6 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
@@ -102,8 +104,9 @@ public class ZipUtilTest {
 		try (OutputStream out = new FileOutputStream(zip)){
 			//实际应用中, out 为 HttpServletResponse.getOutputStream
 			ZipUtil.zip(out, Charset.defaultCharset(), false, null, new File(dir));
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
+
 }

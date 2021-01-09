@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.DatagramSocket;
 import java.net.HttpCookie;
 import java.net.IDN;
@@ -74,6 +75,39 @@ public class NetUtil {
 	 */
 	public static long ipv4ToLong(String strIP) {
 		return Ipv4Util.ipv4ToLong(strIP);
+	}
+
+	/**
+	 * 将IPv6地址字符串转为大整数
+	 *
+	 * @param IPv6Str 字符串
+	 * @return 大整数, 如发生异常返回 null
+	 * @since 5.5.7
+	 */
+	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+		try {
+			InetAddress address = InetAddress.getByName(IPv6Str);
+			if (address instanceof Inet6Address) {
+				return new BigInteger(1, address.getAddress());
+			}
+		} catch (UnknownHostException ignore) {
+		}
+		return null;
+	}
+
+	/**
+	 * 将大整数转换成ipv6字符串
+	 *
+	 * @param bigInteger 大整数
+	 * @return IPv6字符串, 如发生异常返回 null
+	 * @since 5.5.7
+	 */
+	public static String bigIntegerToIPv6(BigInteger bigInteger) {
+		try {
+			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
+		} catch (UnknownHostException ignore) {
+			return null;
+		}
 	}
 
 	/**
@@ -512,7 +546,7 @@ public class NetUtil {
 		byte[] mac = null;
 		try {
 			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-			if(null != networkInterface){
+			if (null != networkInterface) {
 				mac = networkInterface.getHardwareAddress();
 			}
 		} catch (SocketException e) {
@@ -547,9 +581,9 @@ public class NetUtil {
 		}
 
 		final InetAddress localhost = getLocalhost();
-		if(null != localhost){
+		if (null != localhost) {
 			String name = localhost.getHostName();
-			if(StrUtil.isEmpty(name)){
+			if (StrUtil.isEmpty(name)) {
 				name = localhost.getHostAddress();
 			}
 			localhostName = name;
@@ -738,7 +772,7 @@ public class NetUtil {
 	 * @since 5.3.2
 	 */
 	public static boolean isOpen(InetSocketAddress address, int timeout) {
-		try (Socket sc = new Socket()){
+		try (Socket sc = new Socket()) {
 			sc.connect(address, timeout);
 			return true;
 		} catch (Exception e) {

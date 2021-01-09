@@ -638,12 +638,10 @@ public class FileUtil extends PathUtil {
 	 * @return 父目录
 	 */
 	public static File mkParentDirs(File file) {
-		final File parentFile = file.getParentFile();
-		if (null != parentFile && false == parentFile.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			parentFile.mkdirs();
+		if(null == file){
+			return null;
 		}
-		return parentFile;
+		return mkdir(file.getParentFile());
 	}
 
 	/**
@@ -1022,6 +1020,7 @@ public class FileUtil extends PathUtil {
 	 * @param isOverride  是否覆盖目标文件
 	 * @return 目标文件
 	 * @since 3.0.9
+	 * @see PathUtil#rename(Path, String, boolean)
 	 */
 	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
 		if (isRetainExt) {
@@ -2914,7 +2913,21 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeFromStream(InputStream in, File dest) throws IORuntimeException {
-		return FileWriter.create(dest).writeFromStream(in);
+		return writeFromStream(in, dest, true);
+	}
+
+	/**
+	 * 将流的内容写入文件
+	 *
+	 * @param dest 目标文件
+	 * @param in   输入流
+	 * @param isCloseIn 是否关闭输入流
+	 * @return dest
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.6
+	 */
+	public static File writeFromStream(InputStream in, File dest, boolean isCloseIn) throws IORuntimeException {
+		return FileWriter.create(dest).writeFromStream(in, isCloseIn);
 	}
 
 	/**
@@ -3169,7 +3182,22 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		if(null == contentType){
+			// 补充一些常用的mimeType
+			if(filePath.endsWith(".css")){
+				contentType = "text/css";
+			} else if(filePath.endsWith(".js")){
+				contentType = "application/x-javascript";
+			}
+		}
+
+		// 补充
+		if(null == contentType){
+			contentType = getMimeType(Paths.get(filePath));
+		}
+
+		return contentType;
 	}
 
 	/**

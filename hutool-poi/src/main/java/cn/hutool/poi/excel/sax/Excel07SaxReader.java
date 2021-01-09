@@ -2,7 +2,6 @@ package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -25,8 +24,6 @@ import java.util.Iterator;
  */
 public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
-	// sheet r:Id前缀
-	private static final String RID_PREFIX = "rId";
 	private final SheetDataSaxHandler handler;
 
 	/**
@@ -56,9 +53,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	}
 
 	@Override
-	public Excel07SaxReader read(File file, String idOrRid) throws POIException {
+	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
 		try {
-			return read(OPCPackage.open(file), idOrRid);
+			return read(OPCPackage.open(file), idOrRidOrSheetName);
 		} catch (InvalidFormatException e) {
 			throw new POIException(e);
 		}
@@ -70,9 +67,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	}
 
 	@Override
-	public Excel07SaxReader read(InputStream in, String idOrRid) throws POIException {
+	public Excel07SaxReader read(InputStream in, String idOrRidOrSheetName) throws POIException {
 		try (final OPCPackage opcPackage = OPCPackage.open(in)) {
-			return read(opcPackage, idOrRid);
+			return read(opcPackage, idOrRidOrSheetName);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (InvalidFormatException e) {
@@ -96,13 +93,13 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
 	 * @param opcPackage {@link OPCPackage}，Excel包，读取后不关闭
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName    Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	public Excel07SaxReader read(OPCPackage opcPackage, String idOrRid) throws POIException {
+	public Excel07SaxReader read(OPCPackage opcPackage, String idOrRidOrSheetName) throws POIException {
 		try {
-			return read(new XSSFReader(opcPackage), idOrRid);
+			return read(new XSSFReader(opcPackage), idOrRidOrSheetName);
 		} catch (OpenXML4JException e) {
 			throw new POIException(e);
 		} catch (IOException e) {
@@ -114,12 +111,12 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
 	 * @param xssfReader {@link XSSFReader}，Excel读取器
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName    Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 * @since 5.4.4
 	 */
-	public Excel07SaxReader read(XSSFReader xssfReader, String idOrRid) throws POIException {
+	public Excel07SaxReader read(XSSFReader xssfReader, String idOrRidOrSheetName) throws POIException {
 		// 获取共享样式表，样式非必须
 		try {
 			this.handler.stylesTable = xssfReader.getStylesTable();
@@ -136,7 +133,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 			throw new POIException(e);
 		}
 
-		return readSheets(xssfReader, idOrRid);
+		return readSheets(xssfReader, idOrRidOrSheetName);
 	}
 	// ------------------------------------------------------------------------------ Read end
 
@@ -145,22 +142,14 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	/**
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
-	 * @param xssfReader {@link XSSFReader}，Excel读取器
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
+	 * @param xssfReader         {@link XSSFReader}，Excel读取器
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号或sheet名，从0开始，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 * @since 5.4.4
 	 */
-	private Excel07SaxReader readSheets(XSSFReader xssfReader, String idOrRid) throws POIException {
-		// 将sheetId转换为rid
-		if (NumberUtil.isInteger(idOrRid)) {
-			final SheetRidReader ridReader = new SheetRidReader();
-			final String rid = ridReader.read(xssfReader).getRidBySheetId(idOrRid);
-			if (StrUtil.isNotEmpty(rid)) {
-				idOrRid = rid;
-			}
-		}
-		this.handler.sheetIndex = Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRid, RID_PREFIX));
+	private Excel07SaxReader readSheets(XSSFReader xssfReader, String idOrRidOrSheetName) throws POIException {
+		this.handler.sheetIndex = getSheetIndex(xssfReader, idOrRidOrSheetName);
 		InputStream sheetInputStream = null;
 		try {
 			if (this.handler.sheetIndex > -1) {
@@ -189,6 +178,45 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 			IoUtil.close(sheetInputStream);
 		}
 		return this;
+	}
+
+	/**
+	 * 获取sheet索引，从0开始
+	 * <ul>
+	 *     <li>传入'rId'开头，直接去除rId前缀</li>
+	 *     <li>传入纯数字，表示sheetIndex，通过{@link SheetRidReader}转换为rId</li>
+	 *     <li>传入其它字符串，表示sheetName，通过{@link SheetRidReader}转换为rId</li>
+	 * </ul>
+	 *
+	 * @param xssfReader         {@link XSSFReader}，Excel读取器
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号或sheet名称，从0开始，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
+	 * @return sheet索引，从0开始
+	 * @since 5.5.5
+	 */
+	private int getSheetIndex(XSSFReader xssfReader, String idOrRidOrSheetName) {
+		// rid直接处理
+		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, RID_PREFIX)) {
+			return Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, RID_PREFIX));
+		}
+
+		// sheetIndex需转换为rid
+		final SheetRidReader ridReader = new SheetRidReader().read(xssfReader);
+
+		final int sheetIndex;
+		Integer rid;
+		try {
+			sheetIndex = Integer.parseInt(idOrRidOrSheetName);
+			rid = ridReader.getRidBySheetIdBase0(sheetIndex);
+			return (null != rid) ? rid : sheetIndex;
+		} catch (NumberFormatException ignore) {
+			// 非数字，可能为sheet名称
+			rid = ridReader.getRidByNameBase0(idOrRidOrSheetName);
+			if (null != rid) {
+				return rid;
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid rId or id or sheetName: " + idOrRidOrSheetName);
 	}
 	// --------------------------------------------------------------------------------------- Private method end
 }
