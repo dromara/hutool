@@ -638,12 +638,10 @@ public class FileUtil extends PathUtil {
 	 * @return 父目录
 	 */
 	public static File mkParentDirs(File file) {
-		final File parentFile = file.getParentFile();
-		if (null != parentFile && false == parentFile.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			parentFile.mkdirs();
+		if(null == file){
+			return null;
 		}
-		return parentFile;
+		return mkdir(file.getParentFile());
 	}
 
 	/**
@@ -1022,6 +1020,7 @@ public class FileUtil extends PathUtil {
 	 * @param isOverride  是否覆盖目标文件
 	 * @return 目标文件
 	 * @since 3.0.9
+	 * @see PathUtil#rename(Path, String, boolean)
 	 */
 	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
 		if (isRetainExt) {
@@ -3192,6 +3191,12 @@ public class FileUtil extends PathUtil {
 				contentType = "application/x-javascript";
 			}
 		}
+
+		// 补充
+		if(null == contentType){
+			contentType = getMimeType(Paths.get(filePath));
+		}
+
 		return contentType;
 	}
 

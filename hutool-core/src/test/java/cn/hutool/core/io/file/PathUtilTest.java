@@ -25,7 +25,16 @@ public class PathUtilTest {
 	public void copyTest(){
 		PathUtil.copy(
 				Paths.get("d:/Red2_LYY"),
-				Paths.get("d:/test/")
+				Paths.get("d:/test/aaa/aaa.txt")
+		);
+	}
+
+	@Test
+	@Ignore
+	public void copyContentTest(){
+		PathUtil.copyContent(
+				Paths.get("d:/Red2_LYY"),
+				Paths.get("d:/test/aaa/")
 		);
 	}
 
@@ -37,7 +46,10 @@ public class PathUtilTest {
 
 	@Test
 	public void getMimeTypeTest(){
-		final String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
+		String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
 		Assert.assertEquals("image/jpeg", mimeType);
+
+		mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.mov"));
+		Assert.assertEquals("video/quicktime", mimeType);
 	}
 }
