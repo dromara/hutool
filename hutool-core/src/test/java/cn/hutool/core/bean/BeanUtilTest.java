@@ -537,4 +537,53 @@ public class BeanUtilTest {
 		private Long sortOrder;
 		private Date createTime;
 	}
+
+	@Test
+	public void copyHookTest(){
+
+		Map<Integer, String> genderMap = MapUtil.newHashMap(2);
+		genderMap.put(0, "男");
+		genderMap.put(1, "女");
+
+		AccountEntity accountEntity = new AccountEntity();
+		accountEntity.setName("wangchen");
+		accountEntity.setGender(1);
+
+		AccountVO account = BeanUtil.copyProperties(accountEntity, AccountVO.class,
+				((entity, vo) -> vo.setGender(genderMap.get(entity.getGender())))
+		);
+
+		Assert.assertEquals(account.getGender(), "女");
+	}
+
+	@Test
+	public void copyHookSupplierTest(){
+
+		Map<Integer, String> genderMap = MapUtil.newHashMap(2);
+		genderMap.put(0, "男");
+		genderMap.put(1, "女");
+
+		AccountEntity accountEntity = new AccountEntity();
+		accountEntity.setName("wangchen");
+		accountEntity.setGender(1);
+
+		AccountVO account = BeanUtil.copyProperties(accountEntity, AccountVO::new,
+				((entity, vo) -> vo.setGender(genderMap.get(entity.getGender())))
+		);
+
+		Assert.assertEquals(account.getGender(), "女");
+	}
+
+	@Data
+	public static class AccountEntity{
+		private String name;
+		private Integer gender;
+	}
+
+	@Data
+	public static class AccountVO{
+		private String name;
+		private String gender;
+	}
+
 }

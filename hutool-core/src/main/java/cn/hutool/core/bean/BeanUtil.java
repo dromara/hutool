@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.bean.copier.BeanCopier;
+import cn.hutool.core.bean.copier.CopyHook;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
@@ -9,11 +10,7 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ModifierUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -29,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Bean工具类
@@ -648,6 +646,48 @@ public class BeanUtil {
 	public static <T> T copyProperties(Object source, Class<T> tClass, String... ignoreProperties) {
 		T target = ReflectUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		return target;
+	}
+
+	/**
+	 * 按照Bean对象属性创建对应的Class对象，并忽略某些属性
+	 * 通过{@link CopyHook}在拷贝过程中完成数据转换
+	 *
+	 * @param source 源Bean对象
+	 * @param tClass 目标Class
+	 * @param copyHook 钩子函数
+	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @param <S> 对象类型
+	 * @param <T> 目标类型
+	 * @return 目标对象
+	 */
+	public static <S, T> T copyProperties(S source, Class<T> tClass, CopyHook<S, T> copyHook, String... ignoreProperties) {
+		T target = ReflectUtil.newInstanceIfPossible(tClass);
+		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		if(ObjectUtil.isNotEmpty(copyHook)){
+			copyHook.hook(source, target);
+		}
+		return target;
+	}
+
+	/**
+	 * 按照Bean对象属性创建对应的Class对象，并忽略某些属性
+	 * 通过{@link CopyHook}在拷贝过程中完成数据转换
+	 *
+	 * @param source 源Bean对象
+	 * @param supplier 目标对象提供 object::new
+	 * @param copyHook 钩子函数
+	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @param <S> 对象类型
+	 * @param <T> 目标类型
+	 * @return 目标对象
+	 */
+	public static <S, T> T copyProperties(S source, Supplier<T> supplier, CopyHook<S, T> copyHook, String... ignoreProperties) {
+		T target = supplier.get();
+		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		if(ObjectUtil.isNotEmpty(copyHook)){
+			copyHook.hook(source, target);
+		}
 		return target;
 	}
 
