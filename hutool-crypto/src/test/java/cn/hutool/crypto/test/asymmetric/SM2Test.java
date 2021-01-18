@@ -31,6 +31,7 @@ public class SM2Test {
 	@Test
 	public void generateKeyPairTest() {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		Console.log(HexUtil.encodeHexStr(pair.getPublic().getEncoded()));
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
 	}
@@ -242,5 +243,4 @@ public class SM2Test {
 		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
 		Assert.assertArrayEquals(dec, src.getBytes());
 	}
-
 }
