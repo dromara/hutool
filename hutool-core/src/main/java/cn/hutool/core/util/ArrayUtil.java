@@ -19,11 +19,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 数组工具类
@@ -1646,6 +1648,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			result[i] = func.apply(array[i]);
 		}
 		return result;
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组元素提取后转换为List
+	 *
+	 * @param array 被转换的数组
+	 * @param func  转换规则函数
+	 * @param <T>   原数组类型
+	 * @param <R>   目标数组类型
+	 * @return 转换后的数组
+	 * @since 5.5.7
+	 */
+	public static <T, R> List<R> map(T[] array, Function<? super T, ? extends R> func) {
+		return Arrays.stream(array).map(func).collect(Collectors.toList());
 	}
 
 	/**

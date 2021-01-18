@@ -300,13 +300,7 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public List<String> ls(String path) {
-		final FTPFile[] ftpFiles = lsFiles(path);
-
-		final List<String> fileNames = new ArrayList<>();
-		for (FTPFile ftpFile : ftpFiles) {
-			fileNames.add(ftpFile.getName());
-		}
-		return fileNames;
+		return ArrayUtil.map(lsFiles(path), FTPFile::getName);
 	}
 
 	/**
