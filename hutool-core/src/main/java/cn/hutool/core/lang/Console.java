@@ -286,7 +286,7 @@ public class Console {
 	 * @since 3.3.1
 	 */
 	public static String input() {
-		return scanner().next();
+		return scanner().nextLine();
 	}
 
 	// --------------------------------------------------------------------------------- console lineNumber
