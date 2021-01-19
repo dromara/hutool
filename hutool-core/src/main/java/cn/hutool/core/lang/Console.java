@@ -85,6 +85,7 @@ public class Console {
 	public static void log(Throwable t, String template, Object... values) {
 		out.println(StrUtil.format(template, values));
 		if (null != t) {
+			//noinspection CallToPrintStackTrace
 			t.printStackTrace();
 			out.flush();
 		}
