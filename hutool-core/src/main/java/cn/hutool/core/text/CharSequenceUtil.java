@@ -2937,7 +2937,7 @@ public class CharSequenceUtil {
 	// ------------------------------------------------------------------------ pad
 
 	/**
-	 * 补充字符串以满足最小长度
+	 * 补充字符串以满足指定长度，如果提供的字符串大于指定长度，截断之
 	 *
 	 * <pre>
 	 * StrUtil.padPre(null, *, *);//null
@@ -2946,26 +2946,27 @@ public class CharSequenceUtil {
 	 * </pre>
 	 *
 	 * @param str       字符串
-	 * @param minLength 最小长度
+	 * @param length    长度
 	 * @param padStr    补充的字符
 	 * @return 补充后的字符串
 	 */
-	public static String padPre(CharSequence str, int minLength, CharSequence padStr) {
+	public static String padPre(CharSequence str, int length, CharSequence padStr) {
 		if (null == str) {
 			return null;
 		}
 		final int strLen = str.length();
-		if (strLen == minLength) {
+		if (strLen == length) {
 			return str.toString();
-		} else if (strLen > minLength) {
-			return subPre(str, minLength);
+		} else if (strLen > length) {
+			//如果提供的字符串大于指定长度，截断之
+			return subPre(str, length);
 		}
 
-		return repeatByLength(padStr, minLength - strLen).concat(str.toString());
+		return repeatByLength(padStr, length - strLen).concat(str.toString());
 	}
 
 	/**
-	 * 补充字符串以满足最小长度
+	 * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之
 	 *
 	 * <pre>
 	 * StrUtil.padPre(null, *, *);//null
@@ -2974,26 +2975,27 @@ public class CharSequenceUtil {
 	 * </pre>
 	 *
 	 * @param str       字符串
-	 * @param minLength 最小长度
+	 * @param length    长度
 	 * @param padChar   补充的字符
 	 * @return 补充后的字符串
 	 */
-	public static String padPre(CharSequence str, int minLength, char padChar) {
+	public static String padPre(CharSequence str, int length, char padChar) {
 		if (null == str) {
 			return null;
 		}
 		final int strLen = str.length();
-		if (strLen == minLength) {
+		if (strLen == length) {
 			return str.toString();
-		} else if (strLen > minLength) {
-			return subPre(str, minLength);
+		} else if (strLen > length) {
+			//如果提供的字符串大于指定长度，截断之
+			return subPre(str, length);
 		}
 
-		return repeat(padChar, minLength - strLen).concat(str.toString());
+		return repeat(padChar, length - strLen).concat(str.toString());
 	}
 
 	/**
-	 * 补充字符串以满足最小长度
+	 * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之
 	 *
 	 * <pre>
 	 * StrUtil.padAfter(null, *, *);//null
@@ -3002,22 +3004,23 @@ public class CharSequenceUtil {
 	 * </pre>
 	 *
 	 * @param str       字符串，如果为{@code null}，直接返回null
-	 * @param minLength 最小长度
+	 * @param length    长度
 	 * @param padChar   补充的字符
 	 * @return 补充后的字符串
 	 */
-	public static String padAfter(CharSequence str, int minLength, char padChar) {
+	public static String padAfter(CharSequence str, int length, char padChar) {
 		if (null == str) {
 			return null;
 		}
 		final int strLen = str.length();
-		if (strLen == minLength) {
+		if (strLen == length) {
 			return str.toString();
-		} else if (strLen > minLength) {
-			return sub(str, strLen - minLength, strLen);
+		} else if (strLen > length) {
+			//如果提供的字符串大于指定长度，截断之
+			return sub(str, strLen - length, strLen);
 		}
 
-		return str.toString().concat(repeat(padChar, minLength - strLen));
+		return str.toString().concat(repeat(padChar, length - strLen));
 	}
 
 	/**
@@ -3030,23 +3033,24 @@ public class CharSequenceUtil {
 	 * </pre>
 	 *
 	 * @param str       字符串，如果为{@code null}，直接返回null
-	 * @param minLength 最小长度
+	 * @param length    长度
 	 * @param padStr    补充的字符
 	 * @return 补充后的字符串
 	 * @since 4.3.2
 	 */
-	public static String padAfter(CharSequence str, int minLength, CharSequence padStr) {
+	public static String padAfter(CharSequence str, int length, CharSequence padStr) {
 		if (null == str) {
 			return null;
 		}
 		final int strLen = str.length();
-		if (strLen == minLength) {
+		if (strLen == length) {
 			return str.toString();
-		} else if (strLen > minLength) {
-			return subSufByLength(str, minLength);
+		} else if (strLen > length) {
+			//如果提供的字符串大于指定长度，截断之
+			return subSufByLength(str, length);
 		}
 
-		return str.toString().concat(repeatByLength(padStr, minLength - strLen));
+		return str.toString().concat(repeatByLength(padStr, length - strLen));
 	}
 
 	// ------------------------------------------------------------------------ center

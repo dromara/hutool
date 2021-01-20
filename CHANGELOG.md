@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.8 (2021-01-19)
+# 5.5.8 (2021-01-20)
 
 ### 新特性
 * 【extra  】     增加自动装配SpringUtil类（pr#1366@Github）
 * 【extra  】     ArrayUtil增加map方法重载
 * 【crypto 】     AsymmetricAlgorithm增加RSA_ECB("RSA/ECB/NoPadding")（issue#1368@Github）
+* 【core   】     补充StrUtil.padXXX注释（issue#I2E1S7@Gitee）
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）
