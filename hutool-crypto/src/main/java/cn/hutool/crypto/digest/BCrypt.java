@@ -11,22 +11,22 @@ import java.security.SecureRandom;
  * <p>
  * 使用方法如下：
  * <p>
- * <code>
+ * {@code
  * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt());
- * </code>
+ * }
  * <p>
  * 使用checkpw方法检查被加密的字符串是否与原始字符串匹配：
  * <p>
- * <code>
+ * {@code
  * BCrypt.checkpw(candidate_password, stored_hash);
- * </code>
+ * }
  * <p>
  * gensalt方法提供了可选参数 (log_rounds) 来定义加盐多少，也决定了加密的复杂度:
  * <p>
- * <code>
+ * {@code
  * String strong_salt = BCrypt.gensalt(10);
  * String stronger_salt = BCrypt.gensalt(12);
- * </code>
+ * }
  *
  * @author Damien Miller
  * @since 4.1.1
