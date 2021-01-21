@@ -332,7 +332,7 @@ public class URLUtil {
 	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encodeAll(String url, Charset charset) throws UtilException {
-		if (null == charset) {
+		if (null == charset || StrUtil.isEmpty(url)) {
 			return url;
 		}
 

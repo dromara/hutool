@@ -6,6 +6,10 @@ import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+
 public class UrlBuilderTest {
 
 	@Test
@@ -216,5 +220,19 @@ public class UrlBuilderTest {
 		//issue#I25MZL，某些URL中有多个斜杠，此为合法路径
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
+	}
+
+	@Test
+	public void toURITest() throws URISyntaxException {
+		String webUrl = "http://exmple.com/patha/pathb?a=123"; // 报错数据
+		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
+		Assert.assertEquals(new URI(webUrl), urlBuilder.toURI());
+	}
+
+	@Test
+	public void testEncodeInQuery() {
+		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
+		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
+		Assert.assertEquals("a=123&b=4%3F6&c=789", urlBuilder.getQueryStr());
 	}
 }
