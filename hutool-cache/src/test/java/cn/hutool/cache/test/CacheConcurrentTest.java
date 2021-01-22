@@ -102,7 +102,7 @@ public class CacheConcurrentTest {
 			});
 		});
 		long interval = concurrencyTester.getInterval();
-		// 总耗时应与单词操作耗时在同一个数量级
+		// 总耗时应与单次操作耗时在同一个数量级
 		Assert.assertTrue(interval < delay * 2);
 	}
 }
