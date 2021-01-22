@@ -7,7 +7,10 @@ import cn.hutool.core.lang.func.Func0;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.StampedLock;
 
 /**
@@ -28,6 +31,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	protected Map<K, CacheObj<K, V>> cacheMap;
 
 	private final StampedLock lock = new StampedLock();
+
+	/**
+	 * 写的时候每个key一把锁，降低锁的粒度
+	 */
+	protected final Map<K, Lock> keyLockMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 返回缓存容量，{@code 0}表示无大小限制
@@ -135,7 +143,9 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
 		V v = get(key, isUpdateLastAccess);
 		if (null == v && null != supplier) {
-			final long stamp = lock.writeLock();
+			//每个key单独获取一把锁，降低锁的粒度提高并发能力
+			Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
+			keyLock.lock();
 			try {
 				// 双重检查锁
 				final CacheObj<K, V> co = cacheMap.get(key);
@@ -145,12 +155,13 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
-					putWithoutLock(key, v, this.timeout);
+					put(key, v, this.timeout);
 				} else {
 					v = co.get(true);
 				}
 			} finally {
-				lock.unlockWrite(stamp);
+				keyLock.unlock();
+				keyLockMap.remove(key);
 			}
 		}
 		return v;
