@@ -51,10 +51,10 @@ public class UploadTest {
 
 	@Test
 	@Ignore
-	public void uploadTest() {
+	public void uploadTest2() {
 		//客户端
-		String url = "http://localhost:8888/file";
-		Path file = Paths.get("D:\\testBigData_upload.xlsx");
+		String url = "http://192.168.1.200:8888/meta/upload/img";
+		Path file = Paths.get("D:\\test\\testBigData_upload.xlsx");
 		Map<String, String> headers = new HashMap<>(16);
 		headers.put("md5", "aaaaaaaa");
 

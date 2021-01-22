@@ -840,7 +840,7 @@ public class FileUtil extends PathUtil {
 		int exceptionsCount = 0;
 		while (true) {
 			try {
-				File file = File.createTempFile(prefix, suffix, dir).getCanonicalFile();
+				File file = File.createTempFile(prefix, suffix, mkdir(dir)).getCanonicalFile();
 				if (isReCreat) {
 					//noinspection ResultOfMethodCallIgnored
 					file.delete();
@@ -978,6 +978,8 @@ public class FileUtil extends PathUtil {
 	 * @see PathUtil#move(Path, Path, boolean)
 	 */
 	public static void move(File src, File target, boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
 		move(src.toPath(), target.toPath(), isOverride);
 	}
 

@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 
 /**
  * 上传的文件对象
@@ -86,12 +87,19 @@ public class UploadFile {
 			destination = new File(destination, this.header.getFileName());
 		}
 		if (data != null) {
+			// 内存中
 			FileUtil.writeBytes(data, destination);
 			data = null;
 		} else {
-			if (tempFile != null) {
-				FileUtil.move(tempFile, destination, true);
+			// 临时文件
+			if(null == this.tempFile){
+				throw new NullPointerException("Temp file is null !");
 			}
+			if(false == this.tempFile.exists()){
+				throw new NoSuchFileException("Temp file: [" + this.tempFile.getAbsolutePath() + "] not exist!");
+			}
+
+			FileUtil.move(tempFile, destination, true);
 		}
 		return destination;
 	}
