@@ -294,7 +294,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 获得指定日期的分钟数部分<br>
-	 * 例如：10:04:15.250 =》 4
+	 * 例如：10:04:15.250 => 4
 	 *
 	 * @param date 日期
 	 * @return 分钟数
