@@ -223,6 +223,17 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * 从{@link BOMInputStream}中获取Reader
+	 *
+	 * @param in {@link BOMInputStream}
+	 * @return {@link BufferedReader}
+	 * @since 5.5.8
+	 */
+	public static BufferedReader getReader(BOMInputStream in) {
+		return getReader(in, in.getCharset());
+	}
+
+	/**
 	 * 获得一个Reader
 	 *
 	 * @param in      输入流

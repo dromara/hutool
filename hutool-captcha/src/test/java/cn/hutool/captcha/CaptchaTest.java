@@ -108,4 +108,11 @@ public class CaptchaTest {
 		captcha.write("d:/test/gif_captcha.gif");
 		assert captcha.verify(captcha.getCode());
 	}
+
+	@Test
+	public void bgTest(){
+		LineCaptcha captcha = CaptchaUtil.createLineCaptcha(200, 100, 4, 1);
+		captcha.setBackground(Color.WHITE);
+		captcha.write("d:/test/test.jpg");
+	}
 }

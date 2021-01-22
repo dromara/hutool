@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * {@link FileUtil} 单元测试类
- * 
+ *
  * @author Looly
  */
 public class FileUtilTest {
@@ -26,10 +26,10 @@ public class FileUtilTest {
 
 		// 构建目录中出现非子目录抛出异常
 		FileUtil.file(file, "../ccc");
-		
+
 		FileUtil.file("E:/");
 	}
-	
+
 	@Test
 	public void getAbsolutePathTest() {
 		String absolutePath = FileUtil.getAbsolutePath("LICENSE-junit.txt");
@@ -58,7 +58,7 @@ public class FileUtilTest {
 		boolean result = FileUtil.del("e:/Hutool_test_3434543533409843.txt");
 		Assert.assertTrue(result);
 	}
-	
+
 	@Test
 	@Ignore
 	public void delTest2() {
@@ -118,7 +118,7 @@ public class FileUtilTest {
 	}
 
 	@Test
-	public void equlasTest() {
+	public void equalsTest() {
 		// 源文件和目标文件都不存在
 		File srcFile = FileUtil.file("d:/hutool.jpg");
 		File destFile = FileUtil.file("d:/hutool.jpg");
@@ -261,7 +261,7 @@ public class FileUtilTest {
 			Console.log(name);
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void listFileNamesTest2() {
@@ -318,7 +318,7 @@ public class FileUtilTest {
 		String dir = "d:\\aaa\\bbb\\cc\\ddd";
 		int index = FileUtil.lastIndexOfSeparator(dir);
 		Assert.assertEquals(13, index);
-		
+
 		String file = "ddd.jpg";
 		int index2 = FileUtil.lastIndexOfSeparator(file);
 		Assert.assertEquals(-1, index2);
@@ -371,7 +371,7 @@ public class FileUtilTest {
 		Assert.assertNotNull(webRoot);
 		Assert.assertEquals("hutool-core", webRoot.getName());
 	}
-	
+
 	@Test
 	public void getMimeTypeTest() {
 		String mimeType = FileUtil.getMimeType("test2Write.jpg");
