@@ -13,6 +13,7 @@
 * 【core   】     修改上传文件检查逻辑
 * 【core   】     修正LocalDateTimeUtil.offset方法注释问题（issue#I2EEXC@Gitee）
 * 【extra  】     VelocityEngine的getRowEngine改为getRawEngine（issue#I2EGRG@Gitee）
+* 【cache  】     缓存降低锁的粒度，提高并发能力（pr#1385@Github）
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）

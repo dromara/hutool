@@ -40,7 +40,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 
 		this.capacity = capacity;
 		this.timeout = timeout;
-		
+
 		//链表key按照访问顺序排序，调用get方法后，会将这次访问的元素移至头部
 		cacheMap = new FixedLinkedHashMap<>(capacity);
 	}
