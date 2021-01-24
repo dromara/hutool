@@ -21,6 +21,7 @@
 * 【core   】     修复Console.input读取不全问题（pr#263@Gitee）
 * 【core   】     修复URLUtil.encodeAll未检查空指针问题（issue#I2CNPS@Gitee）
 * 【core   】     修复UrlBuilder.of的query中含有?丢失问题（issue#I2CNPS@Gitee）
+* 【crypto 】     修复BCrypt.checkpw报错问题（issue#1377@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
