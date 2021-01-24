@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
 import cn.hutool.extra.ftp.FtpConfig;
+import cn.hutool.extra.ftp.FtpException;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
@@ -323,9 +324,10 @@ public class Sftp extends AbstractFtp {
 	 *
 	 * @param directory directory
 	 * @return 是否打开目录
+	 * @throws FtpException 进入目录失败异常
 	 */
 	@Override
-	public boolean cd(String directory) {
+	public boolean cd(String directory) throws FtpException{
 		if (StrUtil.isBlank(directory)) {
 			// 当前目录
 			return true;
@@ -334,7 +336,7 @@ public class Sftp extends AbstractFtp {
 			channel.cd(directory.replaceAll("\\\\", "/"));
 			return true;
 		} catch (SftpException e) {
-			return false;
+			throw new FtpException(e);
 		}
 	}
 
