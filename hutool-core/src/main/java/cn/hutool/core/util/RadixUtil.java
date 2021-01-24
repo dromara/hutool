@@ -1,9 +1,10 @@
 package cn.hutool.core.util;
 
 /**
- * 把一个十进制整数根据自己定义的进制规则进行转换
- *
- * <h2>主要应用一下情况：</h2>
+ * 把一个十进制整数根据自己定义的进制规则进行转换<br>
+ * from：https://gitee.com/loolly/hutool/pulls/260
+ * <p>
+ * 主要应用一下情况：
  * <ul>
  *     <li>根据ID生成邀请码,并且尽可能的缩短。并且不希望直接猜测出和ID的关联</li>
  *     <li>短连接的生成，根据ID转成短连接，同样不希望被猜测到</li>
@@ -21,25 +22,28 @@ public class RadixUtil {
 	 * 对于需要补齐的，自己可以随机填充IO字符
 	 * 26个字母：abcdefghijklmnopqrstuvwxyz
 	 */
-	public final static String  RADIXS_34 = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+	public final static String RADIXS_34 = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 	/**
 	 * 打乱后的34进制
 	 */
-	public final static String  RADIXS_SHUFFLE_34 = "H3UM16TDFPSBZJ90CW28QYRE45AXKNGV7L";
+	public final static String RADIXS_SHUFFLE_34 = "H3UM16TDFPSBZJ90CW28QYRE45AXKNGV7L";
 
 	/**
 	 * 59进制字符串,不包含 IOl 字符
 	 */
-	public final static String  RADIXS_59 = "0123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+	public final static String RADIXS_59 = "0123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 	/**
 	 * 打乱后的59进制
 	 */
-	public final static String  RADIXS_SHUFFLE_59 = "vh9wGkfK8YmqbsoENP3764SeCX0dVzrgy1HRtpnTaLjJW2xQiZAcBMUFDu5";
+	public final static String RADIXS_SHUFFLE_59 = "vh9wGkfK8YmqbsoENP3764SeCX0dVzrgy1HRtpnTaLjJW2xQiZAcBMUFDu5";
+
 	/**
 	 * 把一个整型数值转换成自己定义的进制
-	 * 长度即进制<br/>
-	 * <li>encode("AB",10)  51转换成2进制，A=0;B=1 。 二进制1010，结果 BABA</li>
-	 * <li>encode("VIP",21)  21转换成3进制，V=0;I=1;P=2 ，三进制210 ,得到结果PIV </li>
+	 * 长度即进制<br>
+	 * <ul>
+	 *   <li>encode("AB",10)  51转换成2进制，A=0;B=1 。 二进制1010，结果 BABA</li>
+	 *   <li>encode("VIP",21)  21转换成3进制，V=0;I=1;P=2 ，三进制210 ,得到结果PIV </li>
+	 * </ul>
 	 *
 	 * @param radixs 自定进制,不要重复，否则转不回来的。
 	 * @param num    要转换的数值
@@ -93,21 +97,21 @@ public class RadixUtil {
 	 *
 	 * @param radixs    自定进制,需要和encode的保持一致
 	 * @param encodeStr 需要转换成十进制的字符串
-	 * @return
+	 * @return int
 	 */
 	public int decodeToInt(final String radixs, final String encodeStr) {
 		//还原负数
-		return (int) decodeToLong(radixs, encodeStr);
+		return (int) decode(radixs, encodeStr);
 	}
 
 	/**
 	 * 把转换后进制的字符还原成long 值
 	 *
-	 * @param radixs
-	 * @param encodeStr
-	 * @return
+	 * @param radixs 自定进制,需要和encode的保持一致
+	 * @param encodeStr 需要转换成十进制的字符串
+	 * @return long
 	 */
-	public long decodeToLong(final String radixs, final String encodeStr) {
+	public long decode(final String radixs, final String encodeStr) {
 		//目标是多少进制
 		int rl = radixs.length();
 		long res = 0L;
