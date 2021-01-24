@@ -295,7 +295,7 @@ public class HttpUtilTest {
 		String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("%E5%8F%82%E6%95%B0", encodeResult);
 	}
-	
+
 	@Test
 	public void getMimeTypeTest() {
 		String mimeType = HttpUtil.getMimeType("aaa.aaa");
@@ -315,6 +315,13 @@ public class HttpUtilTest {
 	@Ignore
 	public void getNocovTest(){
 		String url = "https://qiniu.nocov.cn/medical-manage%2Ftest%2FBANNER_IMG%2F444004467954556928%2F1595215173047icon.png~imgReduce?e=1597081986&token=V2lJYVgQgAv_sbypfEZ0qpKs6TzD1q5JIDVr0Tw8:89cbBkLLwEc9JsMoCLkAEOu820E=";
+		final String s = HttpUtil.get(url);
+		Console.log(s);
+	}
+
+	@Test
+	public void tjhrTest(){
+		String url = "https://www.51tjhr.com";
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
