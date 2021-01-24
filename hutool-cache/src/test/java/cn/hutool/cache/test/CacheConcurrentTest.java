@@ -3,14 +3,19 @@ package cn.hutool.cache.test;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.cache.impl.LRUCache;
+import cn.hutool.cache.impl.WeakCache;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 缓存单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -46,7 +51,7 @@ public class CacheConcurrentTest {
 		System.out.println("==============================");
 		ThreadUtil.sleep(10000);
 	}
-	
+
 	@Test
 	@Ignore
 	public void lruCacheTest() {
@@ -72,7 +77,7 @@ public class CacheConcurrentTest {
 				}
 			});
 		}
-		
+
 		ThreadUtil.sleep(5000);
 	}
 
@@ -81,5 +86,23 @@ public class CacheConcurrentTest {
 		for (Object tt : cache) {
 			Console.log(tt);
 		}
+	}
+
+	@Test
+	public void effectiveTest() {
+		// 模拟耗时操作消耗时间
+		int delay = 2000;
+		AtomicInteger ai = new AtomicInteger(0);
+		WeakCache<Integer, Integer> weakCache = new WeakCache<>(60 * 1000);
+		ConcurrencyTester concurrencyTester = ThreadUtil.concurrencyTest(32, () -> {
+			int i = ai.incrementAndGet() % 4;
+			weakCache.get(i, () -> {
+				ThreadUtil.sleep(delay);
+				return i;
+			});
+		});
+		long interval = concurrencyTester.getInterval();
+		// 总耗时应与单次操作耗时在同一个数量级
+		Assert.assertTrue(interval < delay * 2);
 	}
 }
