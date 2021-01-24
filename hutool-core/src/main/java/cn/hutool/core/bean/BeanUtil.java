@@ -263,11 +263,17 @@ public class BeanUtil {
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 *
+	 * <ul>
+	 *     <li>Map: fieldNameOrIndex需为key，获取对应value</li>
+	 *     <li>Collection: fieldNameOrIndex当为数字，返回index对应值，非数字遍历集合返回子bean对应name值</li>
+	 *     <li>Array: fieldNameOrIndex当为数字，返回index对应值，非数字遍历数组返回子bean对应name值</li>
+	 * </ul>
+	 *
 	 * @param bean             Bean对象
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @return 字段值
 	 */
-	public static Object getFieldValue(Object bean, String fieldNameOrIndex) {
+		public static Object getFieldValue(Object bean, String fieldNameOrIndex) {
 		if (null == bean || null == fieldNameOrIndex) {
 			return null;
 		}
@@ -275,9 +281,19 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
 		} else if (bean instanceof Collection) {
-			return CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldNameOrIndex));
+			try{
+				return CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldNameOrIndex));
+			} catch (NumberFormatException e){
+				// 非数字，see pr#254@Gitee
+				return CollUtil.map((Collection<?>) bean, (beanEle)-> getFieldValue(beanEle, fieldNameOrIndex), false);
+			}
 		} else if (ArrayUtil.isArray(bean)) {
-			return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
+			try{
+				return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
+			} catch (NumberFormatException e){
+				// 非数字，see pr#254@Gitee
+				return ArrayUtil.map(bean, Object.class, (beanEle)-> getFieldValue(beanEle, fieldNameOrIndex));
+			}
 		} else {// 普通Bean对象
 			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex);
 		}

@@ -16,6 +16,7 @@
 * 【cache  】     缓存降低锁的粒度，提高并发能力（pr#1385@Github）
 * 【core   】     SimpleCache缓存降低锁的粒度，提高并发能力（pr#1385@Github）
 * 【core   】     增加RadixUtil（pr#260@Gitee）
+* 【core   】     BeanUtil.getFieldValue支持获取字段集合（pr#254@Gitee）
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）

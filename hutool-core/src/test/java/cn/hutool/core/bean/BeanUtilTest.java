@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -536,5 +537,35 @@ public class BeanUtilTest {
 		private Long rowStatus;
 		private Long sortOrder;
 		private Date createTime;
+	}
+
+	@Test
+	public void getFieldValue(){
+		TestPojo testPojo = new TestPojo();
+		testPojo.setName("名字");
+
+		TestPojo2 testPojo2 = new TestPojo2();
+		testPojo2.setAge(2);
+		TestPojo2 testPojo3 = new TestPojo2();
+		testPojo3.setAge(3);
+
+
+		testPojo.setTestPojo2List(new TestPojo2[]{testPojo2,testPojo3});
+
+		BeanPath beanPath = BeanPath.create("testPojo2List.age");
+		Object o = beanPath.get(testPojo);
+
+		Assert.assertEquals(Integer.valueOf(2), ArrayUtil.get(o,0));
+		Assert.assertEquals(Integer.valueOf(3), ArrayUtil.get(o,1));
+	}
+
+	@Data
+	public static class TestPojo{
+		private String name;
+		private TestPojo2[] testPojo2List;
+	}
+	@Data
+	public static class TestPojo2{
+		private int age;
 	}
 }
