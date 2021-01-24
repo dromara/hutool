@@ -150,7 +150,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 			final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
 			keyLock.lock();
 			try {
-				// 双重检查锁
+				// 双重检查锁，防止在竞争锁的过程中已经有其它线程写入
 				final CacheObj<K, V> co = cacheMap.get(key);
 				if (null == co || co.isExpired()) {
 					try {
