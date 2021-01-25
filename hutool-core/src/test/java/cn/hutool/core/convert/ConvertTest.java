@@ -1,6 +1,7 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateException;
 import cn.hutool.core.lang.TypeReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerArray;
@@ -245,7 +247,7 @@ public class ConvertTest {
 	@Test
 	public void toClassTest(){
 		final Class<?> convert = Convert.convert(Class.class, "cn.hutool.core.convert.ConvertTest.Product");
-		Assert.assertEquals(Product.class, convert);
+		Assert.assertSame(Product.class, convert);
 	}
 
 	@Data
@@ -287,5 +289,11 @@ public class ConvertTest {
 			this.id = id;
 			this.name = name;
 		}
+	}
+
+	@Test(expected = DateException.class)
+	public void toDateTest(){
+		// 默认转换失败报错而不是返回null
+		Convert.convert(Date.class, "aaaa");
 	}
 }
