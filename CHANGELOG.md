@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.8 (2021-01-22)
+# 5.5.8 (2021-01-25)
 
 ### 新特性
 * 【extra  】     增加自动装配SpringUtil类（pr#1366@Github）
@@ -20,6 +20,7 @@
 * 【core   】     DateConvert转换失败默认抛出异常（issue#I2M5GN@Gitee）
 * 【http   】     HttpServerRequest增加getParam方法
 * 【http   】     RootAction增加可选name参数，返回指定文件名称
+* 【db     】     支持人大金仓8的驱动识别
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）
