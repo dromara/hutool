@@ -18,6 +18,8 @@
 * 【core   】     增加RadixUtil（pr#260@Gitee）
 * 【core   】     BeanUtil.getFieldValue支持获取字段集合（pr#254@Gitee）
 * 【core   】     DateConvert转换失败默认抛出异常（issue#I2M5GN@Gitee）
+* 【http   】     HttpServerRequest增加getParam方法
+* 【http   】     RootAction增加可选name参数，返回指定文件名称
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）

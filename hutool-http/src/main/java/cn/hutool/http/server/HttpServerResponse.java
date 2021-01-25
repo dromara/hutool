@@ -371,11 +371,25 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @since 5.2.6
 	 */
 	public HttpServerResponse write(File file) {
+		return write(file, null);
+	}
+
+	/**
+	 * 返回文件给客户端（文件下载）
+	 *
+	 * @param file 写出的文件对象
+	 * @return this
+	 * @since 5.5.8
+	 */
+	public HttpServerResponse write(File file, String fileName) {
 		final long fileSize = file.length();
 		if(fileSize > Integer.MAX_VALUE){
 			throw new IllegalArgumentException("File size is too bigger than " + Integer.MAX_VALUE);
 		}
-		final String fileName = file.getName();
+
+		if(StrUtil.isBlank(fileName)){
+			fileName = file.getName();
+		}
 		final String contentType = ObjectUtil.defaultIfNull(HttpUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
