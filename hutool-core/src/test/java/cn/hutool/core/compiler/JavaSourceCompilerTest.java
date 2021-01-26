@@ -33,6 +33,7 @@ public class JavaSourceCompilerTest {
 				.addSource(FileUtil.file("test-compile/b/B.java"))
 				.addSource("c.C", FileUtil.readUtf8String("test-compile/c/C.java"))
 				.addLibrary(libFile)
+//				.addLibrary(FileUtil.file("D:\\m2_repo\\cn\\hutool\\hutool-all\\5.5.7\\hutool-all-5.5.7.jar"))
 				.compile();
 		final Class<?> clazz = classLoader.loadClass("c.C");
 		Object obj = ReflectUtil.newInstance(clazz);

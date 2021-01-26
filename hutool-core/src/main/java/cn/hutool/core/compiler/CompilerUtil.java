@@ -40,6 +40,17 @@ public class CompilerUtil {
 	}
 
 	/**
+	 * 获取{@link StandardJavaFileManager}
+	 *
+	 * @param diagnosticListener 异常收集器
+	 * @return {@link StandardJavaFileManager}
+	 * @since 5.5.8
+	 */
+	public static StandardJavaFileManager getFileManager(DiagnosticListener<? super JavaFileObject> diagnosticListener) {
+		return SYSTEM_COMPILER.getStandardFileManager(null, null, null);
+	}
+
+	/**
 	 * 新建编译任务
 	 *
 	 * @param fileManager        {@link JavaFileManager}，用于管理已经编译好的文件

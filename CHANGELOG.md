@@ -29,6 +29,7 @@
 * 【core   】     修复UrlBuilder.of的query中含有?丢失问题（issue#I2CNPS@Gitee）
 * 【crypto 】     修复BCrypt.checkpw报错问题（issue#1377@Github）
 * 【extra  】     修复Fftp中cd失败导致的问题（issue#1371@Github）
+* 【core   】     修复Fftp中cd失败导致的问题（issue#1371@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

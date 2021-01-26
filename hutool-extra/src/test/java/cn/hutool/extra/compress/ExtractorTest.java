@@ -9,11 +9,11 @@ import org.junit.Test;
 public class ExtractorTest {
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void zipTest(){
 		Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
-				FileUtil.file("d:/test/compress/test.zip"));
+				FileUtil.file("d:/test/c_1344112734760931330_20201230104703032.zip"));
 
 		extractor.extract(FileUtil.file("d:/test/compress/test2/"));
 	}

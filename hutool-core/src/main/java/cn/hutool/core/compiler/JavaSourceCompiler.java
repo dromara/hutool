@@ -1,5 +1,6 @@
 package cn.hutool.core.compiler;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.FileResource;
@@ -182,9 +183,9 @@ public class JavaSourceCompiler {
 		// classpath
 		final List<String> options = new ArrayList<>();
 		if (false == classPath.isEmpty()) {
-			final List<String> cp = classPath.stream().map(File::getAbsolutePath).collect(Collectors.toList());
+			final List<String> cp = CollUtil.map(classPath, File::getAbsolutePath, true);
 			options.add("-cp");
-			options.addAll(cp);
+			options.add(CollUtil.join(cp, FileUtil.isWindows() ? ";" : ":"));
 		}
 
 		// 编译文件

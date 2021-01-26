@@ -230,12 +230,12 @@ public class DateUtilTest {
 		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true, false);
 		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);
 	}
-	
+
     @Test
     public void formatChineseDateTimeTest() {
         String formatChineseDateTime = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24 12:13:14"), true, true);
         Assert.assertEquals("二〇一八年二月二十四日一十二时一十三分一十四秒", formatChineseDateTime);
-    }	
+    }
 
 	@Test
 	public void formatBetweenTest() {
@@ -751,7 +751,7 @@ public class DateUtilTest {
 		boolean expired = DateUtil.isExpired(startDate, DateField.DAY_OF_YEAR, length, endDate);
 		Assert.assertTrue(expired);
 	}
-	
+
 	@Test
 	public void localDateTimeTest() {
 		// 测试字符串与LocalDateTime的互相转换
@@ -759,7 +759,7 @@ public class DateUtilTest {
 		LocalDateTime ldt = DateUtil.parseLocalDateTime(strDate);
 		String strDate1 = DateUtil.formatLocalDateTime(ldt);
 		Assert.assertEquals(strDate, strDate1);
-		
+
 		String strDate2 = "2019-12-01 17:02:30.111";
 		ldt = DateUtil.parseLocalDateTime(strDate2, DatePattern.NORM_DATETIME_MS_PATTERN);
 		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_PATTERN);
