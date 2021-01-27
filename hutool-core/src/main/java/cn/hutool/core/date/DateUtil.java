@@ -1011,6 +1011,26 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 获取某小时的开始时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfHour(Date date) {
+		return new DateTime(beginOfHour(calendar(date)));
+	}
+
+	/**
+	 * 获取某小时的结束时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfHour(Date date) {
+		return new DateTime(endOfHour(calendar(date)));
+	}
+
+	/**
 	 * 获取某天的开始时间
 	 *
 	 * @param date 日期
@@ -1931,7 +1951,7 @@ public class DateUtil extends CalendarUtil {
 	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
 	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
 	 *
-	 * @param pattern  表达式
+	 * @param pattern 表达式
 	 * @return {@link SimpleDateFormat}
 	 * @since 5.5.5
 	 */
