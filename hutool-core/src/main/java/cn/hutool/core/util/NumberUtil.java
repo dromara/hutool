@@ -1973,22 +1973,36 @@ public class NumberUtil {
 	 * @return A String.
 	 */
 	public static String toStr(Number number) {
+		return toStr(number, true);
+	}
+
+	/**
+	 * 数字转字符串<br>
+	 * 调用{@link Number#toString()}或 {@link BigDecimal#toPlainString()}，并去除尾小数点儿后多余的0
+	 *
+	 * @param number               A Number
+	 * @param isStripTrailingZeros 是否去除末尾多余0，例如5.0返回5
+	 * @return A String.
+	 */
+	public static String toStr(Number number, boolean isStripTrailingZeros) {
 		Assert.notNull(number, "Number is null !");
 
 		// BigDecimal单独处理，使用非科学计数法
 		if (number instanceof BigDecimal) {
-			return toStr((BigDecimal) number);
+			return toStr((BigDecimal) number, isStripTrailingZeros);
 		}
 
 		Assert.isTrue(isValidNumber(number), "Number is non-finite!");
 		// 去掉小数点儿后多余的0
 		String string = number.toString();
-		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
-			while (string.endsWith("0")) {
-				string = string.substring(0, string.length() - 1);
-			}
-			if (string.endsWith(".")) {
-				string = string.substring(0, string.length() - 1);
+		if (isStripTrailingZeros) {
+			if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
+				while (string.endsWith("0")) {
+					string = string.substring(0, string.length() - 1);
+				}
+				if (string.endsWith(".")) {
+					string = string.substring(0, string.length() - 1);
+				}
 			}
 		}
 		return string;
@@ -2003,8 +2017,24 @@ public class NumberUtil {
 	 * @since 5.4.6
 	 */
 	public static String toStr(BigDecimal bigDecimal) {
+		return toStr(bigDecimal, true);
+	}
+
+	/**
+	 * {@link BigDecimal}数字转字符串<br>
+	 * 调用{@link BigDecimal#toPlainString()}，可选去除尾小数点儿后多余的0
+	 *
+	 * @param bigDecimal           A {@link BigDecimal}
+	 * @param isStripTrailingZeros 是否去除末尾多余0，例如5.0返回5
+	 * @return A String.
+	 * @since 5.4.6
+	 */
+	public static String toStr(BigDecimal bigDecimal, boolean isStripTrailingZeros) {
 		Assert.notNull(bigDecimal, "BigDecimal is null !");
-		return bigDecimal.stripTrailingZeros().toPlainString();
+		if(isStripTrailingZeros){
+			bigDecimal = bigDecimal.stripTrailingZeros();
+		}
+		return bigDecimal.toPlainString();
 	}
 
 	/**
@@ -2044,9 +2074,9 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String number) {
-		try{
+		try {
 			number = parseNumber(number).toString();
-		} catch (Exception ignore){
+		} catch (Exception ignore) {
 			// 忽略解析错误
 		}
 		return StrUtil.isBlank(number) ? BigDecimal.ZERO : new BigDecimal(number);
@@ -2314,9 +2344,9 @@ public class NumberUtil {
 			return Integer.parseInt(number.substring(2), 16);
 		}
 
-		try{
+		try {
 			return Integer.parseInt(number);
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			return parseNumber(number).intValue();
 		}
 	}
@@ -2347,9 +2377,9 @@ public class NumberUtil {
 			return Long.parseLong(number.substring(2), 16);
 		}
 
-		try{
+		try {
 			return Long.parseLong(number);
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			return parseNumber(number).longValue();
 		}
 	}
@@ -2373,9 +2403,9 @@ public class NumberUtil {
 			return 0f;
 		}
 
-		try{
+		try {
 			return Float.parseFloat(number);
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			return parseNumber(number).floatValue();
 		}
 	}
@@ -2399,9 +2429,9 @@ public class NumberUtil {
 			return 0D;
 		}
 
-		try{
+		try {
 			return Double.parseDouble(number);
-		} catch (NumberFormatException e){
+		} catch (NumberFormatException e) {
 			return parseNumber(number).doubleValue();
 		}
 	}
@@ -2411,10 +2441,10 @@ public class NumberUtil {
 	 *
 	 * @param numberStr Number字符串
 	 * @return Number对象
-	 * @since 4.1.15
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
+	 * @since 4.1.15
 	 */
-	public static Number parseNumber(String numberStr) throws NumberFormatException{
+	public static Number parseNumber(String numberStr) throws NumberFormatException {
 		try {
 			return NumberFormat.getInstance().parse(numberStr);
 		} catch (ParseException e) {
