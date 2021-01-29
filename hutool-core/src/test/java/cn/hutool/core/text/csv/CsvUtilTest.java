@@ -7,10 +7,11 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CsvUtilTest {
-	
+
 	@Test
 	public void readTest() {
 		CsvReader reader = CsvUtil.getReader();
@@ -47,14 +48,14 @@ public class CsvUtilTest {
 		CsvReader reader = CsvUtil.getReader();
 		reader.read(FileUtil.getUtf8Reader("test.csv"), Console::log);
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeTest() {
 		CsvWriter writer = CsvUtil.getWriter("d:/test/testWrite.csv", CharsetUtil.CHARSET_UTF_8);
 		writer.write(
-				new String[] {"a1", "b1", "c1", "123345346456745756756785656"}, 
-				new String[] {"a2", "b2", "c2"}, 
+				new String[] {"a1", "b1", "c1", "123345346456745756756785656"},
+				new String[] {"a2", "b2", "c2"},
 				new String[] {"a3", "b3", "c3"}
 		);
 	}
@@ -67,5 +68,23 @@ public class CsvUtilTest {
 		for (CsvRow row : read) {
 			Console.log(row);
 		}
+	}
+
+	@Test
+	@Ignore
+	public void writeWrapTest(){
+		List<List<Object>> resultList=new ArrayList<>();
+		List<Object> list =new ArrayList<>();
+		list.add("\"name\"");
+		list.add("\"code\"");
+		resultList.add(list);
+
+		list =new ArrayList<>();
+		list.add("\"wang\"");
+		list.add(1);
+		resultList.add(list);
+
+		final CsvWriter writer = CsvUtil.getWriter("d:/test/csvWrapTest.csv", CharsetUtil.CHARSET_UTF_8);
+		writer.write(resultList);
 	}
 }
