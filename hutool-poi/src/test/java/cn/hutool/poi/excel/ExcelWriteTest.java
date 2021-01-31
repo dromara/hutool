@@ -498,4 +498,13 @@ public class ExcelWriteTest {
 		writer.write(rows);
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void formatTest(){
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
+		final CellStyle cellStyle = writer.createCellStyle(0, 0);
+		cellStyle.setDataFormat(writer.getWorkbook().createDataFormat().getFormat("yyyy-mm-dd"));
+		writer.close();
+	}
 }

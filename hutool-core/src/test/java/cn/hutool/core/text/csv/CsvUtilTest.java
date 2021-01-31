@@ -44,9 +44,10 @@ public class CsvUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void readTest3() {
 		CsvReader reader = CsvUtil.getReader();
-		reader.read(FileUtil.getUtf8Reader("test.csv"), Console::log);
+		reader.read(FileUtil.getUtf8Reader("d:/test/test.csv"), Console::log);
 	}
 
 	@Test

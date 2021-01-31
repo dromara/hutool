@@ -683,7 +683,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 *
 	 * @param lastColumn       合并到的最后一个列号
 	 * @param content          合并单元格后的内容
-	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式
+	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式，只提取边框样式
 	 * @return this
 	 * @since 4.0.10
 	 */
@@ -710,7 +710,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param firstColumn      起始列，0开始
 	 * @param lastColumn       结束列，0开始
 	 * @param content          合并单元格后的内容
-	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式
+	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式，只提取边框样式
 	 * @return this
 	 * @since 4.0.10
 	 */

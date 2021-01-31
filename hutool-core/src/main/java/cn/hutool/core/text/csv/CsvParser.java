@@ -173,7 +173,6 @@ public final class CsvParser implements Closeable, Serializable {
 		final Buffer buf = this.buf;
 		int preChar = this.preChar;//前一个特殊分界字符
 		int copyLen = 0; //拷贝长度
-		boolean lineStart = true;
 		boolean inComment = false;
 
 		while (true) {
@@ -201,15 +200,16 @@ public final class CsvParser implements Closeable, Serializable {
 			final char c = buf.get();
 
 			// 注释行标记
-			if(lineStart){
+			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
+				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
+				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
 				if(c == this.config.commentCharacter){
 					inComment = true;
 				}
-				lineStart = false;
 			}
 			// 注释行处理
 			if(inComment){
-				if ((c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR) {
+				if (c == CharUtil.CR || c == CharUtil.LF) {
 					// 注释行以换行符为结尾
 					inComment = false;
 				}
@@ -220,7 +220,7 @@ public final class CsvParser implements Closeable, Serializable {
 			}
 
 			if (inQuotes) {
-				//引号内，做为内容，直到引号结束
+				//引号内，作为内容，直到引号结束
 				if (c == config.textDelimiter) {
 					// End of quoted text
 					inQuotes = false;
@@ -295,10 +295,10 @@ public final class CsvParser implements Closeable, Serializable {
 	 * @param field         字段
 	 */
 	private void addField(List<String> currentFields, String field) {
-		field = StrUtil.unWrap(field, config.textDelimiter);
-		char textDelimiter = this.config.textDelimiter;
+		final char textDelimiter = this.config.textDelimiter;
+		field = StrUtil.unWrap(field, textDelimiter);
 		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
-		currentFields.add(StrUtil.unWrap(field, textDelimiter));
+		currentFields.add(field);
 	}
 
 	/**
