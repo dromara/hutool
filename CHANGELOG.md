@@ -26,6 +26,7 @@
 * 【core   】     DateUtil.beginOfHour（pr#269@Gitee）
 * 【core   】     MapUtil增加sortByValue（pr#259@Gitee）
 * 【core   】     TypeUtil修正hasTypeVeriable为hasTypeVariable
+* 【core   】     RandomUtil.getRandom改为new SecureRandom，避免阻塞
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）

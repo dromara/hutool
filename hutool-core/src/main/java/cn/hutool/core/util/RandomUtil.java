@@ -94,8 +94,25 @@ public class RandomUtil {
 	 * @param seed 随机数种子
 	 * @return {@link SecureRandom}
 	 * @since 5.5.2
+	 * @see #createSecureRandom(byte[])
 	 */
 	public static SecureRandom getSecureRandom(byte[] seed) {
+		return createSecureRandom(seed);
+	}
+
+	/**
+	 * 获取SHA1PRNG的{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
+	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）,在Linux下噪声生成时可能造成较长时间停顿。<br>
+	 * see: http://ifeve.com/jvm-random-and-entropy-source/
+	 *
+	 * <p>
+	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
+	 *
+	 * @param seed 随机数种子
+	 * @return {@link SecureRandom}
+	 * @since 5.5.8
+	 */
+	public static SecureRandom getSHA1PRNGRandom(byte[] seed) {
 		SecureRandom random;
 		try {
 			random = SecureRandom.getInstance("SHA1PRNG");
@@ -330,7 +347,7 @@ public class RandomUtil {
 	 * @return 随机元素
 	 */
 	public static <T> T randomEle(List<T> list, int limit) {
-		if (list.size() < limit){
+		if (list.size() < limit) {
 			limit = list.size();
 		}
 		return list.get(randomInt(limit));
@@ -358,7 +375,7 @@ public class RandomUtil {
 	 * @since 3.3.0
 	 */
 	public static <T> T randomEle(T[] array, int limit) {
-		if (array.length < limit){
+		if (array.length < limit) {
 			limit = array.length;
 		}
 		return array[randomInt(limit)];
