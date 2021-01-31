@@ -797,6 +797,26 @@ public class MapUtil {
 	}
 
 	/**
+	 * 按照值排序，可选是否倒序
+	 *
+	 * @param map 需要对值排序的map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param isDesc 是否倒序
+	 * @return Map<k, V> 排序后新的Map
+	 * @since 5.5.8
+	 */
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isDesc) {
+		Map<K, V> result = new LinkedHashMap<>();
+		Comparator<Entry<K, V>> entryComparator = Entry.comparingByValue();
+		if(isDesc){
+			entryComparator = entryComparator.reversed();
+		}
+		map.entrySet().stream().sorted(entryComparator).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+		return result;
+	}
+
+	/**
 	 * 创建代理Map<br>
 	 * {@link MapProxy}对Map做一次包装，提供各种getXXX方法
 	 *

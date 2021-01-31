@@ -24,6 +24,7 @@
 * 【db     】     ThreadUtil增加createScheduledExecutor和schedule方法（issue#I2NUTC@Gitee）
 * 【core   】     ImgUtil增加getImage方法（issue#I2DU1Z@Gitee）
 * 【core   】     DateUtil.beginOfHour（pr#269@Gitee）
+* 【core   】     MapUtil增加sortByValue（pr#259@Gitee）
 
 ### Bug修复
 * 【core   】     修复FileUtil.move以及PathUtil.copy等无法自动创建父目录的问题（issue#I2CKTI@Gitee）
