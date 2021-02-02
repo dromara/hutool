@@ -17,7 +17,13 @@ public class PemUtilTest {
 		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_private_key.pem"));
 		Assert.assertNotNull(privateKey);
 	}
-	
+
+	@Test
+	public void readECPrivateKeyTest() {
+		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		Assert.assertNotNull(privateKey);
+	}
+
 	@Test
 	public void readPublicKeyTest() {
 		PublicKey publicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_public_key.csr"));
@@ -34,10 +40,10 @@ public class PemUtilTest {
 	public void validateKey() {
 		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_private_key.pem"));
 		PublicKey publicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_public_key.csr"));
-		
+
 		RSA rsa = new RSA(privateKey, publicKey);
 		String str = "你好，Hutool";//测试字符串
-		
+
 		String encryptStr = rsa.encryptBase64(str, KeyType.PublicKey);
 		String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
 		Assert.assertEquals(str, decryptStr);

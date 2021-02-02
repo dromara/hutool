@@ -63,7 +63,9 @@ public class PemUtil {
 		final PemObject object = readPemObject(keyStream);
 		final String type = object.getType();
 		if (StrUtil.isNotBlank(type)) {
-			if (type.endsWith("PRIVATE KEY")) {
+			if (type.endsWith("EC PRIVATE KEY")) {
+				return KeyUtil.generateECPrivateKey(object.getContent());
+			} else if (type.endsWith("PRIVATE KEY")) {
 				return KeyUtil.generateRSAPrivateKey(object.getContent());
 			} else if (type.endsWith("PUBLIC KEY")) {
 				return KeyUtil.generateRSAPublicKey(object.getContent());

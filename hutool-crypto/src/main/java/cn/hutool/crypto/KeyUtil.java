@@ -9,6 +9,15 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMException;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -18,6 +27,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -984,6 +994,59 @@ public class KeyUtil {
 			return getKeyFactory("RSA").generatePublic(publicKeySpec);
 		} catch (InvalidKeySpecException e) {
 			throw new CryptoException(e);
+		}
+	}
+
+	/**
+	 * 生成EC私钥，仅用于非对称加密<br>
+	 * 支持国密SM2所使用的EC PRIVATE KEY pem文件读取
+	 * @param key 密钥，必须为DER编码存储
+	 * @return EC私钥 {@link PrivateKey}
+	 */
+	public static PrivateKey generateECPrivateKey(byte[] key){
+		try {
+			PEMKeyPair pemKeyPair = new ECDSAKeyPairParser().parse(key);
+			return new JcaPEMKeyConverter().setProvider(new BouncyCastleProvider()).getKeyPair(pemKeyPair).getPrivate();
+		} catch (IOException e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	/**
+	 * See Also: @see org.bouncycastle.openssl.PEMParser
+	 */
+	private static class ECDSAKeyPairParser {
+		public PEMKeyPair parse(byte[] encoding)
+				throws IOException
+		{
+			try
+			{
+				ASN1Sequence seq = ASN1Sequence.getInstance(encoding);
+
+				org.bouncycastle.asn1.sec.ECPrivateKey pKey = org.bouncycastle.asn1.sec.ECPrivateKey.getInstance(seq);
+				AlgorithmIdentifier algId = new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, pKey.getParameters());
+				PrivateKeyInfo privInfo = new PrivateKeyInfo(algId, pKey);
+
+				if (pKey.getPublicKey() != null)
+				{
+					SubjectPublicKeyInfo pubInfo = new SubjectPublicKeyInfo(algId, pKey.getPublicKey().getBytes());
+
+					return new PEMKeyPair(pubInfo, privInfo);
+				}
+				else
+				{
+					return new PEMKeyPair(null, privInfo);
+				}
+			}
+			catch (IOException e)
+			{
+				throw e;
+			}
+			catch (Exception e)
+			{
+				throw new PEMException(
+						"problem creating EC private key: " + e.toString(), e);
+			}
 		}
 	}
 }
