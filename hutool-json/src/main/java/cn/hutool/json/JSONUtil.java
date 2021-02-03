@@ -736,7 +736,7 @@ public final class JSONUtil {
 		}
 
 		try {
-			// fix issue#1401@Github
+			// fix issue#1399@Github
 			if(object instanceof SQLException){
 				return object.toString();
 			}
