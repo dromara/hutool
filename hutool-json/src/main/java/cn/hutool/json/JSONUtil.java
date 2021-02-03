@@ -801,7 +801,7 @@ public final class JSONUtil {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		return StrUtil.isWrap(str.trim(), '{', '}');
+		return StrUtil.isWrap(StrUtil.trim(str), '{', '}');
 	}
 
 	/**
@@ -815,7 +815,7 @@ public final class JSONUtil {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		return StrUtil.isWrap(str.trim(), '[', ']');
+		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
 	}
 
 	/**
