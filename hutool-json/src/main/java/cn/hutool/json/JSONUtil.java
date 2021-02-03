@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -735,6 +736,11 @@ public final class JSONUtil {
 		}
 
 		try {
+			// fix issue#1401@Github
+			if(object instanceof SQLException){
+				return object.toString();
+			}
+
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
 				return new JSONArray(object, jsonConfig);
