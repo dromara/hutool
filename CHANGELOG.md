@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【crypto 】     PemUtil.readPemKey支持EC（pr#1366@Github）
+* 【extra  】     Ftp等cd方法增加同步（issue#1397@Github）
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题
