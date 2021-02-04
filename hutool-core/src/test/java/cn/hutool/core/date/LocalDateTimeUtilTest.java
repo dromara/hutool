@@ -125,6 +125,16 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void formatBetween() {
+		LocalDateTime now1 = LocalDateTimeUtil.parse("2021-02-05T00:00:00");
+		LocalDateTime now2 = LocalDateTimeUtil.parse("2021-02-06T01:01:10.001");
+		Assert.assertEquals("1天1小时1分10秒1毫秒", LocalDateTimeUtil.formatBetween(now1, now2));
+		Assert.assertEquals("1天1小时1分10秒1毫秒", LocalDateTimeUtil.formatBetween(LocalDateTimeUtil.between(now1, now2).toMillis()));
+		Assert.assertEquals("1天1小时1分10秒", LocalDateTimeUtil.formatBetween(now1, now2, BetweenFormatter.Level.SECOND));
+		Assert.assertEquals("1天1小时1分10秒", LocalDateTimeUtil.formatBetween(LocalDateTimeUtil.between(now1, now2).toMillis(), BetweenFormatter.Level.SECOND));
+	}
+
+	@Test
 	public void beginOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		final LocalDateTime beginOfDay = LocalDateTimeUtil.beginOfDay(localDateTime);

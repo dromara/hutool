@@ -454,6 +454,54 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 格式化日期间隔输出
+	 *
+	 * @param startTime 开始时间
+	 * @param endTime   结束时间
+	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
+	 * @return XX天XX小时XX分XX秒
+	 * @since 5.5.9
+	 */
+	public static String formatBetween(LocalDateTime startTime, LocalDateTime endTime, BetweenFormatter.Level level) {
+		return formatBetween(between(startTime, endTime, ChronoUnit.MILLIS), level);
+	}
+
+	/**
+	 * 格式化日期间隔输出，精确到毫秒
+	 *
+	 * @param startTime 开始时间
+	 * @param endTime   结束时间
+	 * @return XX天XX小时XX分XX秒
+	 * @since 5.5.9
+	 */
+	public static String formatBetween(LocalDateTime startTime, LocalDateTime endTime) {
+		return formatBetween(startTime, endTime, BetweenFormatter.Level.MILLISECOND);
+	}
+
+	/**
+	 * 格式化日期间隔输出
+	 *
+	 * @param betweenMs 日期间隔
+	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级
+	 * @return XX天XX小时XX分XX秒XX毫秒
+	 * @since 5.5.9
+	 */
+	public static String formatBetween(long betweenMs, BetweenFormatter.Level level) {
+		return new BetweenFormatter(betweenMs, level).format();
+	}
+
+	/**
+	 * 格式化日期间隔输出，精确到毫秒
+	 *
+	 * @param betweenMs 日期间隔
+	 * @return XX天XX小时XX分XX秒XX毫秒
+	 * @since 5.5.9
+	 */
+	public static String formatBetween(long betweenMs) {
+		return new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
+	}
+
+	/**
 	 * 修改为一天的开始时间，例如：2020-02-02 00:00:00,000
 	 *
 	 * @param time 日期时间
