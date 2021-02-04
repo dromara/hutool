@@ -47,7 +47,7 @@ public class ImgUtilTest {
 	public void cutTest() {
 		ImgUtil.cut(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), new Rectangle(200, 200, 100, 100));
 	}
-	
+
 	@Test
 	@Ignore
 	public void rotateTest() throws IOException {
@@ -88,27 +88,27 @@ public class ImgUtilTest {
 	public void sliceByRowsAndColsTest() {
 		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
 	}
-	
+
 	@Test
 	@Ignore
 	public void convertTest() {
 		ImgUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeTest() {
 		final byte[] bytes = ImgUtil.toBytes(ImgUtil.read("d:/test/logo_484.png"), "png");
 		FileUtil.writeBytes(bytes, "d:/test/result.png");
 	}
-	
+
 	@Test
 	@Ignore
 	public void compressTest() {
 		ImgUtil.compress(FileUtil.file("d:/test/dest.png"),
 				FileUtil.file("d:/test/1111_target.jpg"), 0.1f);
 	}
-	
+
 	@Test
 	@Ignore
 	public void copyTest() {
@@ -135,5 +135,10 @@ public class ImgUtilTest {
 				"d:/test/617180969474805871.jpg"),
 				new File("d:/test/3.jpg"),
 				new Color(200, 0, 0), 10);
+	}
+	@Test
+	public void testConvertToBase64(){
+		String base64Str = ImgUtil.convertToBase64("/private/tmp/t_20200922203710.jpg");
+		System.out.println("base64Str = " + base64Str);
 	}
 }

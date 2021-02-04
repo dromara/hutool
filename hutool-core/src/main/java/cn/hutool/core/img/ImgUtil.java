@@ -7,41 +7,19 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
+import javax.imageio.*;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -549,6 +527,47 @@ public class ImgUtil {
 			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_RGB) : toBufferedImage(srcImage), formatName, destImageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 对图片进行base64编码
+	 *
+	 * @param imgPath 图片的绝对路径
+	 * @return 图片的base64字符串
+	 */
+	public static String convertToBase64(String imgPath) {
+		File file = new File(imgPath);
+		if (imgPath != null && file.exists()) {
+			return convertToBase64(file);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 对图片进行base64编码
+	 *
+	 * @param file 图片文件
+	 * @return 图片的base64字符串
+	 */
+	public static String convertToBase64(File file) {
+		byte[] data = null;
+		// 读取图片字节数组
+		try {
+			InputStream in = new FileInputStream(file);
+			data = new byte[in.available()];
+			in.read(data);
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// 返回Base64编码过的字节数组字符串
+		if (data != null) {
+			String imgStr = java.util.Base64.getEncoder().encodeToString(data);
+			return imgStr.replaceAll("[\\s*\t\n\r]", "");
+		} else {
+			return null;
 		}
 	}
 
@@ -1165,8 +1184,8 @@ public class ImgUtil {
 	 */
 	public static BufferedImage toBufferedImage(Image image, String imageType) {
 		final int type = imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)
-				 ? BufferedImage.TYPE_INT_ARGB
-				 : BufferedImage.TYPE_INT_RGB;
+				? BufferedImage.TYPE_INT_ARGB
+				: BufferedImage.TYPE_INT_RGB;
 		return toBufferedImage(image, type);
 	}
 
@@ -1649,7 +1668,7 @@ public class ImgUtil {
 	 * @return {@link Image}
 	 * @since 5.5.8
 	 */
-	public static Image getImage(URL url){
+	public static Image getImage(URL url) {
 		return Toolkit.getDefaultToolkit().getImage(url);
 	}
 
