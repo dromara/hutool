@@ -327,7 +327,7 @@ public class Sftp extends AbstractFtp {
 	 * @throws FtpException 进入目录失败异常
 	 */
 	@Override
-	public boolean cd(String directory) throws FtpException{
+	synchronized public boolean cd(String directory) throws FtpException{
 		if (StrUtil.isBlank(directory)) {
 			// 当前目录
 			return true;

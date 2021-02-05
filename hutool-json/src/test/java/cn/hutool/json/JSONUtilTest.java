@@ -11,6 +11,7 @@ import cn.hutool.json.test.bean.UserC;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -178,5 +179,13 @@ public class JSONUtilTest {
 		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
 				"    \"test\": \"\\\\地库地库\",\n" +
 				"}");
+	}
+
+	@Test
+	public void sqlExceptionTest(){
+		//https://github.com/looly/hutool/issues/1399
+		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
+		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
+		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
 }

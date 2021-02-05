@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -653,7 +652,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			return;
 		}
 
-		if(ArrayUtil.isArray(source) || source instanceof Iterable || source instanceof Iterator){
+		if(ArrayUtil.isArray(source)){
 			// 不支持集合类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}

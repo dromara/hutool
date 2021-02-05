@@ -19,12 +19,6 @@ public class PemUtilTest {
 	}
 
 	@Test
-	public void readECPrivateKeyTest() {
-		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
-		Assert.assertNotNull(privateKey);
-	}
-
-	@Test
 	public void readPublicKeyTest() {
 		PublicKey publicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_public_key.csr"));
 		Assert.assertNotNull(publicKey);
@@ -47,5 +41,11 @@ public class PemUtilTest {
 		String encryptStr = rsa.encryptBase64(str, KeyType.PublicKey);
 		String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
 		Assert.assertEquals(str, decryptStr);
+	}
+
+	@Test
+	public void readECPrivateKeyTest() {
+		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		Assert.assertNotNull(privateKey);
 	}
 }

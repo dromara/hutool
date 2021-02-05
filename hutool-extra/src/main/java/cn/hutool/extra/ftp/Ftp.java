@@ -272,7 +272,7 @@ public class Ftp extends AbstractFtp {
 	 * @return 是否成功
 	 */
 	@Override
-	public boolean cd(String directory) {
+	synchronized public boolean cd(String directory) {
 		if (StrUtil.isBlank(directory)) {
 			// 当前目录
 			return true;
