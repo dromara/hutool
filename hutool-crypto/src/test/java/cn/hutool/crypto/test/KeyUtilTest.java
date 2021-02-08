@@ -1,9 +1,7 @@
 package cn.hutool.crypto.test;
 
-import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.GlobalBouncyCastleProvider;
-import cn.hutool.crypto.KeyUtil;
-import cn.hutool.crypto.PemUtil;
+import cn.hutool.crypto.*;
+
 import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -20,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 
 public class KeyUtilTest {
 
@@ -93,6 +92,14 @@ public class KeyUtilTest {
 
 	}
 
+	@Test
+	public void generateSM2PublicKeyTest2() {
+		String pem = getECPublicKeyPem("SM2");
+		PemObject pemObject = PemUtil.readPemObject(new ByteArrayInputStream(pem.getBytes(StandardCharsets.UTF_8)));
+		PublicKey publicKey = KeyUtil.generatePublicKey("EC", new X509EncodedKeySpec(pemObject.getContent()));
+		Assert.assertNotNull(publicKey);
+	}
+
 	private String getECPrivateKeyPem(String algorithm) {
 		KeyPair keyPair = KeyUtil.generateKeyPair(algorithm);
 		StringWriter stringWriter;
@@ -109,4 +116,20 @@ public class KeyUtilTest {
 		}
 		return "";
 	}
+
+	private String getECPublicKeyPem(String algorithm) {
+		KeyPair keyPair = KeyUtil.generateKeyPair(algorithm);
+		StringWriter stringWriter;
+		try {
+			stringWriter = new StringWriter();
+			PemWriter w = new PemWriter(stringWriter);
+			w.writeObject(new PemObject("EC PUBLIC KEY", keyPair.getPublic().getEncoded()));
+			w.close();
+			return stringWriter.toString();
+		} catch (IOException e) {
+			//ignore
+		}
+		return "";
+	}
+
 }

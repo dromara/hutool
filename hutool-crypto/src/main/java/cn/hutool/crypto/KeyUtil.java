@@ -1001,6 +1001,7 @@ public class KeyUtil {
 	 * 生成EC私钥，仅用于非对称加密<br>
 	 * 支持国密SM2所使用的EC PRIVATE KEY pem文件读取
 	 * @param key 密钥，必须为DER编码存储
+	 * 关于为什么EC PRIVATE KEY不是PKCS#8格式 https://crypto.stackexchange.com/questions/68099/how-is-ec-key-encoded-in-pkcs8
 	 * @return EC私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generateECPrivateKey(byte[] key){

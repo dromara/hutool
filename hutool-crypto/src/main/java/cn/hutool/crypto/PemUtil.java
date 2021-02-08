@@ -65,7 +65,7 @@ public class PemUtil {
 		if (StrUtil.isNotBlank(type)) {
 			//private
 			if (type.endsWith("EC PRIVATE KEY")) {
-				return KeyUtil.generatePrivateKey("EC", object.getContent());
+				return KeyUtil.generateECPrivateKey(object.getContent());
 			}if (type.endsWith("PRIVATE KEY")) {
 				return KeyUtil.generateRSAPrivateKey(object.getContent());
 			}

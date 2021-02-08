@@ -48,4 +48,10 @@ public class PemUtilTest {
 		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
 		Assert.assertNotNull(privateKey);
 	}
+
+	@Test
+	public void readECPublicKeyTest() {
+		PublicKey publicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_ec_public_key.pem"));
+		Assert.assertNotNull(publicKey);
+	}
 }
