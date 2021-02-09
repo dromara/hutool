@@ -1031,6 +1031,26 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 获取某分钟的开始时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfMinute(Date date) {
+		return new DateTime(beginOfMinute(calendar(date)));
+	}
+
+	/**
+	 * 获取某分钟的结束时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfMinute(Date date) {
+		return new DateTime(endOfMinute(calendar(date)));
+	}
+
+	/**
 	 * 获取某天的开始时间
 	 *
 	 * @param date 日期
