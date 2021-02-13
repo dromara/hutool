@@ -6,10 +6,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
-import cn.hutool.db.Page;
-import cn.hutool.db.PageResult;
 
 /**
  * PostgreSQL 单元测试
