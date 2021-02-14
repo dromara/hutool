@@ -19,11 +19,11 @@ public class JSFilter extends AbstractFilter {
 		for (int i = 0; i < str.length(); i++) {
 			hash ^= ((hash << 5) + str.charAt(i) + (hash >> 2));
 		}
-		
+
 		if(hash<0) {
 			hash*=-1 ;
 		}
-		
+
 		return hash % size;
 	}
 

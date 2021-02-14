@@ -7,7 +7,7 @@ import cn.hutool.bloomfilter.bitMap.LongMap;
 
 /**
  * 抽象Bloom过滤器
- * 
+ *
  * @author loolly
  *
  */
@@ -20,7 +20,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param maxValue 最大值
 	 * @param machineNum 机器位数
 	 */
@@ -30,7 +30,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	/**
 	 * 构造32位
-	 * 
+	 *
 	 * @param maxValue 最大值
 	 */
 	public AbstractFilter(long maxValue) {
@@ -39,7 +39,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param maxValue 最大值
 	 * @param machineNum 机器位数
 	 */
@@ -75,7 +75,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	/**
 	 * 自定义Hash方法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return HashCode
 	 */
