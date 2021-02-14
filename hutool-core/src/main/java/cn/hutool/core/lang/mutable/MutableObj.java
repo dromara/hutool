@@ -17,7 +17,6 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 	 * 构造，空值
 	 */
 	public MutableObj() {
-		super();
 	}
 
 	/**
@@ -26,7 +25,6 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 	 * @param value 值
 	 */
 	public MutableObj(final T value) {
-		super();
 		this.value = value;
 	}
 

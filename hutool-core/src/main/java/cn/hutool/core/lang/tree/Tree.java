@@ -29,7 +29,6 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @param treeNodeConfig TreeNode配置
 	 */
 	public Tree(TreeNodeConfig treeNodeConfig) {
-		super();
 		this.treeNodeConfig = ObjectUtil.defaultIfNull(
 				treeNodeConfig, TreeNodeConfig.DEFAULT_CONFIG);
 	}

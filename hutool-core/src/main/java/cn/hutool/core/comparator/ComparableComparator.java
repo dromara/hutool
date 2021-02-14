@@ -21,7 +21,6 @@ public class ComparableComparator<E extends Comparable<? super E>> implements Co
 	 * 构造
 	 */
 	public ComparableComparator() {
-		super();
 	}
 
 	/**

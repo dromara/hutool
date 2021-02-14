@@ -17,7 +17,6 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 构造，默认值0
 	 */
 	public MutableByte() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * @param value 值
 	 */
 	public MutableByte(final byte value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,7 +41,6 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * @throws NumberFormatException 转为Byte错误
 	 */
 	public MutableByte(final String value) throws NumberFormatException {
-		super();
 		this.value = Byte.parseByte(value);
 	}
 

@@ -60,7 +60,6 @@ public class CompareToBuilder implements Builder<Integer> {
      * 构造，构造后调用append方法增加比较项，然后调用{@link #toComparison()}获取结果
      */
     public CompareToBuilder() {
-        super();
         comparison = 0;
     }
 
