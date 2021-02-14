@@ -93,6 +93,15 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	}
 
 	/**
+	 * 获取32位的uuid并以字符串的形式返回(去除uuid中的横杠)
+	 *
+	 * @return 随机生成的 {@code String}
+	 */
+	public static String shortUUID() {
+		return randomUUID(false).toString().toLowerCase().replace("-", "");
+	}
+
+	/**
 	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的本地线程伪随机数生成器生成该 UUID。
 	 *
 	 * @return 随机生成的 {@code UUID}
