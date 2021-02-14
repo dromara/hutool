@@ -307,6 +307,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return this
 	 * @since 5.5.2
 	 */
+	@Override
 	public AbstractCache<K, V> setListener(CacheListener<K, V> listener) {
 		this.listener = listener;
 		return this;
