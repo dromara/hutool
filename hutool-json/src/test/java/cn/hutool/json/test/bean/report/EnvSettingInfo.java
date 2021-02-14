@@ -66,7 +66,6 @@ public class EnvSettingInfo {
 	private String sqlitePath;
 	
 	public EnvSettingInfo() {
-		super();
 	}
 
 	public void setSqlitePath(String sqlitePath) {
