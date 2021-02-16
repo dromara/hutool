@@ -55,7 +55,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 *
 	 * @param key     键
 	 * @param object  缓存的对象
-	 * @param timeout 失效时长，单位毫秒
+	 * @param timeout 失效时长
 	 * @param timeUnit 时长单位
 	 * @since 5.5.9
 	 */

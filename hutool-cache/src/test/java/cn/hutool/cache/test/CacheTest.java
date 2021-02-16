@@ -112,7 +112,21 @@ public class CacheTest {
 	@Test
 	public void cacheTimeUnitTest(){
 		//默认过期(5毫秒)
-		TimedCache<String, String> timedCache = CacheUtil.newTimedCache(5);
+		TimedCache<String, String> timedCache = CacheUtil.newTimedCache(5,TimeUnit.MILLISECONDS);
+
+		//设置有效期为1毫秒
+		timedCache.put("key1", "value1",1, TimeUnit.MILLISECONDS);
+
+		//等待2毫秒
+		ThreadUtil.sleep(2, TimeUnit.MILLISECONDS);
+
+		Assert.assertNull(timedCache.get("key1"));
+	}
+
+	@Test
+	public void timeCacheTimeUnitTest(){
+		//默认过期(5毫秒)
+		TimedCache<String, String> timedCache = new TimedCache<>(5,TimeUnit.MILLISECONDS);
 
 		//设置有效期为1毫秒
 		timedCache.put("key1", "value1",1, TimeUnit.MILLISECONDS);

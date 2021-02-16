@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 定时缓存<br>
@@ -29,6 +30,17 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	 */
 	public TimedCache(long timeout) {
 		this(timeout, new HashMap<>());
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param timeout 超时（过期）时长
+	 * @param timeUnit 时长单位
+	 * @since 5.5.9
+	 */
+	public TimedCache(Number timeout, TimeUnit timeUnit) {
+		this(timeUnit.toMillis(timeout.longValue()), new HashMap<>());
 	}
 
 	/**
