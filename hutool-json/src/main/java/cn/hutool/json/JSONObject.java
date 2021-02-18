@@ -652,7 +652,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			return;
 		}
 
-		if(ArrayUtil.isArray(source)){
+		if(ArrayUtil.isArray(source) || source instanceof JSONArray){
 			// 不支持集合类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
