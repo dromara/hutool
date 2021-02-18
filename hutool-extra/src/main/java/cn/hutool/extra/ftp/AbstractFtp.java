@@ -82,7 +82,12 @@ public abstract class AbstractFtp implements Closeable {
 	public boolean exist(String path) {
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		final List<String> names = ls(dir);
+		final List<String> names;
+		try{
+			names = ls(dir);
+		} catch (FtpException ignore){
+			return false;
+		}
 		return containsIgnoreCase(names, fileName);
 	}
 
