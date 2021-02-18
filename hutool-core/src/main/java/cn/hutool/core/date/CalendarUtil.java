@@ -155,6 +155,26 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * 获取某分钟的开始时间
+	 *
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar beginOfMinute(Calendar calendar) {
+		return truncate(calendar, DateField.MINUTE);
+	}
+
+	/**
+	 * 获取某分钟的结束时间
+	 *
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfMinute(Calendar calendar) {
+		return ceiling(calendar, DateField.MINUTE);
+	}
+
+	/**
 	 * 获取某天的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
