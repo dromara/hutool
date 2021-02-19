@@ -16,6 +16,7 @@
 * 【json   】     修复SQLEXception导致的栈溢出（issue#1399@Github）
 * 【extra  】     修复Ftp中异常参数没有传入问题（issue#1397@Github）
 * 【crypto 】     修复Sm2使用D构造空指针问题（issue#I37Z4C@Gitee）
+* 【poi    】     修复ExcelPicUtil中图表报错问题（issue#I38857@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
