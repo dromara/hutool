@@ -9,7 +9,7 @@ package cn.hutool.core.net.multipart;
 public class UploadSetting {
 
 	/** 最大文件大小，默认无限制 */
-	protected int maxFileSize = -1;
+	protected long maxFileSize = -1;
 	/** 文件保存到内存的边界 */
 	protected int memoryThreshold = 8192;
 	/** 临时文件目录 */
@@ -26,7 +26,7 @@ public class UploadSetting {
 	/**
 	 * @return 获得最大文件大小，-1表示无限制
 	 */
-	public int getMaxFileSize() {
+	public long getMaxFileSize() {
 		return maxFileSize;
 	}
 
@@ -35,7 +35,7 @@ public class UploadSetting {
 	 *
 	 * @param maxFileSize 最大文件大小
 	 */
-	public void setMaxFileSize(int maxFileSize) {
+	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
 	}
 

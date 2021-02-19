@@ -9,6 +9,7 @@ package cn.hutool.core.date;
  */
 @Deprecated
 public class BetweenFormater extends BetweenFormatter {
+	private static final long serialVersionUID = 1L;
 
 	public BetweenFormater(long betweenMs, Level level) {
 		super(betweenMs, level);

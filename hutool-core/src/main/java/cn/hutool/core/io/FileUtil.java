@@ -50,6 +50,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -64,11 +65,11 @@ public class FileUtil extends PathUtil {
 	/**
 	 * Class文件扩展名
 	 */
-	public static final String CLASS_EXT = ".class";
+	public static final String CLASS_EXT = FileNameUtil.EXT_CLASS;
 	/**
 	 * Jar文件扩展名
 	 */
-	public static final String JAR_FILE_EXT = ".jar";
+	public static final String JAR_FILE_EXT = FileNameUtil.EXT_JAR;
 	/**
 	 * 在Jar中的路径jar的扩展名形式
 	 */
@@ -171,25 +172,31 @@ public class FileUtil extends PathUtil {
 	 * @return 文件列表
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
-		final List<File> fileList = new ArrayList<>();
-		if (null == file || false == file.exists()) {
-			return fileList;
-		}
+		return loopFiles(file, -1, fileFilter);
+	}
 
+	/**
+	 * 递归遍历目录并处理目录下的文件，可以处理目录或文件：
+	 * <ul>
+	 *     <li>非目录则直接调用{@link Consumer}处理</li>
+	 *     <li>目录则递归调用此方法处理</li>
+	 * </ul>
+	 *
+	 * @param file     文件或目录，文件直接处理
+	 * @param consumer 文件处理器，只会处理文件
+	 * @since 5.5.2
+	 */
+	public static void walkFiles(File file, Consumer<File> consumer) {
 		if (file.isDirectory()) {
 			final File[] subFiles = file.listFiles();
 			if (ArrayUtil.isNotEmpty(subFiles)) {
 				for (File tmp : subFiles) {
-					fileList.addAll(loopFiles(tmp, fileFilter));
+					walkFiles(tmp, consumer);
 				}
 			}
 		} else {
-			if (null == fileFilter || fileFilter.accept(file)) {
-				fileList.add(file);
-			}
+			consumer.accept(file);
 		}
-
-		return fileList;
 	}
 
 	/**
@@ -202,7 +209,7 @@ public class FileUtil extends PathUtil {
 	 * @return 文件列表
 	 * @since 4.6.3
 	 */
-	public static List<File> loopFiles(File file, int maxDepth, final FileFilter fileFilter) {
+	public static List<File> loopFiles(File file, int maxDepth, FileFilter fileFilter) {
 		return loopFiles(file.toPath(), maxDepth, fileFilter);
 	}
 
@@ -631,12 +638,10 @@ public class FileUtil extends PathUtil {
 	 * @return 父目录
 	 */
 	public static File mkParentDirs(File file) {
-		final File parentFile = file.getParentFile();
-		if (null != parentFile && false == parentFile.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			parentFile.mkdirs();
+		if (null == file) {
+			return null;
 		}
-		return parentFile;
+		return mkdir(file.getParentFile());
 	}
 
 	/**
@@ -753,12 +758,11 @@ public class FileUtil extends PathUtil {
 		final File[] files = directory.listFiles();
 		if (ArrayUtil.isEmpty(files)) {
 			// 空文件夹则删除之
-			//noinspection ResultOfMethodCallIgnored
-			directory.delete();
-		} else {
-			for (File childFile : files) {
-				cleanEmpty(childFile);
-			}
+			return directory.delete();
+		}
+
+		for (File childFile : files) {
+			cleanEmpty(childFile);
 		}
 		return true;
 	}
@@ -836,7 +840,7 @@ public class FileUtil extends PathUtil {
 		int exceptionsCount = 0;
 		while (true) {
 			try {
-				File file = File.createTempFile(prefix, suffix, dir).getCanonicalFile();
+				File file = File.createTempFile(prefix, suffix, mkdir(dir)).getCanonicalFile();
 				if (isReCreat) {
 					//noinspection ResultOfMethodCallIgnored
 					file.delete();
@@ -968,12 +972,14 @@ public class FileUtil extends PathUtil {
 	 * 移动文件或者目录
 	 *
 	 * @param src        源文件或者目录
-	 * @param target       目标文件或者目录
+	 * @param target     目标文件或者目录
 	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
 	 * @throws IORuntimeException IO异常
 	 * @see PathUtil#move(Path, Path, boolean)
 	 */
 	public static void move(File src, File target, boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
 		move(src.toPath(), target.toPath(), isOverride);
 	}
 
@@ -1015,6 +1021,7 @@ public class FileUtil extends PathUtil {
 	 * @param isRetainExt 是否保留原文件的扩展名，如果保留，则newName不需要加扩展名
 	 * @param isOverride  是否覆盖目标文件
 	 * @return 目标文件
+	 * @see PathUtil#rename(Path, String, boolean)
 	 * @since 3.0.9
 	 */
 	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
@@ -1652,7 +1659,7 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param file 文件 {@link File}
-	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException IO异常
 	 * @see FileTypeUtil#getType(File)
 	 */
@@ -1697,6 +1704,17 @@ public class FileUtil extends PathUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 读取带BOM头的文件为Reader
+	 *
+	 * @param file 文件
+	 * @return BufferedReader对象
+	 * @since 5.5.8
+	 */
+	public static BufferedReader getBOMReader(File file) {
+		return IoUtil.getReader(getBOMInputStream(file));
 	}
 
 	/**
@@ -2900,6 +2918,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 将流的内容写入文件<br>
+	 * 此方法会自动关闭输入流
 	 *
 	 * @param dest 目标文件
 	 * @param in   输入流
@@ -2907,11 +2926,26 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeFromStream(InputStream in, File dest) throws IORuntimeException {
-		return FileWriter.create(dest).writeFromStream(in);
+		return writeFromStream(in, dest, true);
+	}
+
+	/**
+	 * 将流的内容写入文件
+	 *
+	 * @param dest      目标文件
+	 * @param in        输入流
+	 * @param isCloseIn 是否关闭输入流
+	 * @return dest
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.6
+	 */
+	public static File writeFromStream(InputStream in, File dest, boolean isCloseIn) throws IORuntimeException {
+		return FileWriter.create(dest).writeFromStream(in, isCloseIn);
 	}
 
 	/**
 	 * 将流的内容写入文件<br>
+	 * 此方法会自动关闭输入流
 	 *
 	 * @param in           输入流
 	 * @param fullFilePath 文件绝对路径
@@ -2923,7 +2957,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 将文件写入流中
+	 * 将文件写入流中，此方法不会概念比输出流
 	 *
 	 * @param file 文件
 	 * @param out  流
@@ -3161,7 +3195,22 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		if (null == contentType) {
+			// 补充一些常用的mimeType
+			if (filePath.endsWith(".css")) {
+				contentType = "text/css";
+			} else if (filePath.endsWith(".js")) {
+				contentType = "application/x-javascript";
+			}
+		}
+
+		// 补充
+		if (null == contentType) {
+			contentType = getMimeType(Paths.get(filePath));
+		}
+
+		return contentType;
 	}
 
 	/**
@@ -3186,7 +3235,7 @@ public class FileUtil extends PathUtil {
 	public static boolean isSub(File parent, File sub) {
 		Assert.notNull(parent);
 		Assert.notNull(sub);
-		return sub.toPath().startsWith(parent.toPath());
+		return isSub(parent.toPath(), sub.toPath());
 	}
 
 	/**

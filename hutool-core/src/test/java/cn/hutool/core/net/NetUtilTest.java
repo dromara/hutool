@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.net.HttpCookie;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 
 /**
@@ -79,4 +80,17 @@ public class NetUtilTest {
 	public void getLocalHostNameTest() {
 		Assert.assertNotNull(NetUtil.getLocalHostName());
 	}
+
+	@Test
+	public void pingTest(){
+		Assert.assertTrue(NetUtil.ping("127.0.0.1"));
+	}
+
+	@Test
+	@Ignore
+	public void isOpenTest(){
+		InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
+		Assert.assertTrue(NetUtil.isOpen(address, 200));
+	}
+
 }

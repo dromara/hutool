@@ -21,6 +21,10 @@ public class ConcurrencyTester {
 	private final TimeInterval timeInterval;
 	private long interval;
 
+	/**
+	 * 构造
+	 * @param threadSize 线程数
+	 */
 	public ConcurrencyTester(int threadSize) {
 		this.sf = new SyncFinisher(threadSize);
 		this.timeInterval = new TimeInterval();

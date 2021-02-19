@@ -1,5 +1,8 @@
 package cn.hutool.http;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,9 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharUtil;
 
 /**
  * HTML过滤器，用于去除XSS(Cross Site Scripting) 漏洞隐患。
@@ -74,11 +74,11 @@ public final class HTMLFilter {
 	private final Map<String, Integer> vTagCounts = new HashMap<>();
 
 	/**
-	 * html elements which must always be self-closing (e.g. "<img />")
+	 * html elements which must always be self-closing (e.g. "&lt;img /&gt;")
 	 **/
 	private final String[] vSelfClosingTags;
 	/**
-	 * html elements which must always have separate opening and closing tags (e.g. "<b></b>")
+	 * html elements which must always have separate opening and closing tags (e.g. "&lt;b&gt;&lt;/b&gt;")
 	 **/
 	private final String[] vNeedClosingTags;
 	/**
@@ -94,7 +94,7 @@ public final class HTMLFilter {
 	 **/
 	private final String[] vAllowedProtocols;
 	/**
-	 * tags which should be removed if they contain no content (e.g. "<b></b>" or "<b />")
+	 * tags which should be removed if they contain no content (e.g. "&lt;b&gt;&lt;/b&gt;" or "&lt;b /&gt;")
 	 **/
 	private final String[] vRemoveBlanks;
 	/**
@@ -108,7 +108,8 @@ public final class HTMLFilter {
 	private final boolean encodeQuotes;
 	private boolean vDebug = false;
 	/**
-	 * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "<b text </b>" becomes "<b> text </b>"). If set to false, unbalanced angle brackets will be
+	 * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "&lt;b text &lt;/b&gt;" becomes "&lt;b&gt; text &lt;/g&gt;").
+	 * If set to false, unbalanced angle brackets will be
 	 * html escaped.
 	 */
 	private final boolean alwaysMakeTags;
@@ -452,7 +453,7 @@ public final class HTMLFilter {
 		Matcher m = P_ENTITY.matcher(s);
 		while (m.find()) {
 			final String match = m.group(1);
-			final int decimal = Integer.decode(match).intValue();
+			final int decimal = Integer.decode(match);
 			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
 		}
 		m.appendTail(buf);
@@ -462,7 +463,7 @@ public final class HTMLFilter {
 		m = P_ENTITY_UNICODE.matcher(s);
 		while (m.find()) {
 			final String match = m.group(1);
-			final int decimal = Integer.valueOf(match, 16).intValue();
+			final int decimal = Integer.parseInt(match, 16);
 			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
 		}
 		m.appendTail(buf);
@@ -472,7 +473,7 @@ public final class HTMLFilter {
 		m = P_ENCODE.matcher(s);
 		while (m.find()) {
 			final String match = m.group(1);
-			final int decimal = Integer.valueOf(match, 16).intValue();
+			final int decimal = Integer.parseInt(match, 16);
 			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
 		}
 		m.appendTail(buf);

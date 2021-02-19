@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * SQL格式化器 from Hibernate
+ *
  * @author looly
  */
 public class SqlFormatter {
@@ -13,7 +14,7 @@ public class SqlFormatter {
 	private static final Set<String> QUANTIFIERS = new HashSet<>();
 	private static final Set<String> DML = new HashSet<>();
 	private static final Set<String> MISC = new HashSet<>();
-	
+
 	static {
 		BEGIN_CLAUSES.add("left");
 		BEGIN_CLAUSES.add("right");
@@ -21,7 +22,7 @@ public class SqlFormatter {
 		BEGIN_CLAUSES.add("outer");
 		BEGIN_CLAUSES.add("group");
 		BEGIN_CLAUSES.add("order");
-		
+
 		END_CLAUSES.add("where");
 		END_CLAUSES.add("set");
 		END_CLAUSES.add("having");
@@ -30,41 +31,41 @@ public class SqlFormatter {
 		END_CLAUSES.add("by");
 		END_CLAUSES.add("into");
 		END_CLAUSES.add("union");
-		
+
 		LOGICAL.add("and");
 		LOGICAL.add("or");
 		LOGICAL.add("when");
 		LOGICAL.add("else");
 		LOGICAL.add("end");
-		
+
 		QUANTIFIERS.add("in");
 		QUANTIFIERS.add("all");
 		QUANTIFIERS.add("exists");
 		QUANTIFIERS.add("some");
 		QUANTIFIERS.add("any");
-		
+
 		DML.add("insert");
 		DML.add("update");
 		DML.add("delete");
-		
+
 		MISC.add("select");
 		MISC.add("on");
 	}
-	
+
 	private static final String indentString = "    ";
 	private static final String initial = "\n    ";
 
 	public static String format(String source) {
 		return new FormatProcess(source).perform().trim();
 	}
-	
+
 	//------------------------------------------------------------------------------------------------
 
 	private static class FormatProcess {
 		boolean beginLine = true;
 		boolean afterBeginBeforeEnd = false;
 		boolean afterByOrSetOrFromOrSelect = false;
-//		boolean afterValues = false;
+		//		boolean afterValues = false;
 		boolean afterOn = false;
 		boolean afterBetween = false;
 		boolean afterInsert = false;

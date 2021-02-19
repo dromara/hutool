@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.DatagramSocket;
 import java.net.HttpCookie;
 import java.net.IDN;
@@ -74,6 +75,39 @@ public class NetUtil {
 	 */
 	public static long ipv4ToLong(String strIP) {
 		return Ipv4Util.ipv4ToLong(strIP);
+	}
+
+	/**
+	 * 将IPv6地址字符串转为大整数
+	 *
+	 * @param IPv6Str 字符串
+	 * @return 大整数, 如发生异常返回 null
+	 * @since 5.5.7
+	 */
+	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+		try {
+			InetAddress address = InetAddress.getByName(IPv6Str);
+			if (address instanceof Inet6Address) {
+				return new BigInteger(1, address.getAddress());
+			}
+		} catch (UnknownHostException ignore) {
+		}
+		return null;
+	}
+
+	/**
+	 * 将大整数转换成ipv6字符串
+	 *
+	 * @param bigInteger 大整数
+	 * @return IPv6字符串, 如发生异常返回 null
+	 * @since 5.5.7
+	 */
+	public static String bigIntegerToIPv6(BigInteger bigInteger) {
+		try {
+			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
+		} catch (UnknownHostException ignore) {
+			return null;
+		}
 	}
 
 	/**
@@ -296,7 +330,7 @@ public class NetUtil {
 	 * 获取指定名称的网卡信息
 	 *
 	 * @param name 网络接口名，例如Linux下默认是eth0
-	 * @return 网卡，未找到返回<code>null</code>
+	 * @return 网卡，未找到返回{@code null}
 	 * @since 5.0.7
 	 */
 	public static NetworkInterface getNetworkInterface(String name) {
@@ -321,7 +355,7 @@ public class NetUtil {
 	/**
 	 * 获取本机所有网卡
 	 *
-	 * @return 所有网卡，异常返回<code>null</code>
+	 * @return 所有网卡，异常返回{@code null}
 	 * @since 3.0.1
 	 */
 	public static Collection<NetworkInterface> getNetworkInterfaces() {
@@ -425,11 +459,11 @@ public class NetUtil {
 	/**
 	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
 	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
-	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
 	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
 	 *
-	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.7
 	 */
 	public static String getLocalhostStr() {
@@ -448,11 +482,11 @@ public class NetUtil {
 	 * 2. 如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址
 	 * </pre>
 	 * <p>
-	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
 	 * 见：https://github.com/looly/hutool/issues/428
 	 *
-	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.1
 	 */
 	public static InetAddress getLocalhost() {
@@ -512,7 +546,7 @@ public class NetUtil {
 		byte[] mac = null;
 		try {
 			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-			if(null != networkInterface){
+			if (null != networkInterface) {
 				mac = networkInterface.getHardwareAddress();
 			}
 		} catch (SocketException e) {
@@ -547,9 +581,9 @@ public class NetUtil {
 		}
 
 		final InetAddress localhost = getLocalhost();
-		if(null != localhost){
+		if (null != localhost) {
 			String name = localhost.getHostName();
-			if(StrUtil.isEmpty(name)){
+			if (StrUtil.isEmpty(name)) {
 				name = localhost.getHostAddress();
 			}
 			localhostName = name;
@@ -674,6 +708,7 @@ public class NetUtil {
 	 * @since 4.4.1
 	 * @deprecated 拼写错误，请使用{@link #isUnknown(String)}
 	 */
+	@Deprecated
 	public static boolean isUnknow(String checkString) {
 		return isUnknown(checkString);
 	}
@@ -737,7 +772,7 @@ public class NetUtil {
 	 * @since 5.3.2
 	 */
 	public static boolean isOpen(InetSocketAddress address, int timeout) {
-		try (Socket sc = new Socket()){
+		try (Socket sc = new Socket()) {
 			sc.connect(address, timeout);
 			return true;
 		} catch (Exception e) {

@@ -5,7 +5,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
@@ -108,22 +107,43 @@ public class KeyUtil {
 	}
 
 	/**
-	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成<br>
+	 * 当指定keySize&lt;0时，AES默认长度为128，其它算法不指定。
 	 *
 	 * @param algorithm 算法，支持PBE算法
-	 * @param keySize   密钥长度
+	 * @param keySize   密钥长度，&lt;0表示不设定密钥长度，即使用默认长度
 	 * @return {@link SecretKey}
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
+		return generateKey(algorithm, keySize, null);
+	}
+
+	/**
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成<br>
+	 * 当指定keySize&lt;0时，AES默认长度为128，其它算法不指定。
+	 *
+	 * @param algorithm 算法，支持PBE算法
+	 * @param keySize   密钥长度，&lt;0表示不设定密钥长度，即使用默认长度
+	 * @param random 随机数生成器，null表示默认
+	 * @return {@link SecretKey}
+	 * @since 5.5.2
+	 */
+	public static SecretKey generateKey(String algorithm, int keySize, SecureRandom random) {
 		algorithm = getMainAlgorithm(algorithm);
 
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
-		if (keySize > 0) {
-			keyGenerator.init(keySize);
-		} else if (SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
+		if (keySize <= 0 && SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
 			// 对于AES的密钥，除非指定，否则强制使用128位
-			keyGenerator.init(128);
+			keySize = 128;
+		}
+
+		if(keySize > 0){
+			if (null == random) {
+				keyGenerator.init(keySize);
+			} else {
+				keyGenerator.init(keySize, random);
+			}
 		}
 		return keyGenerator.generateKey();
 	}
@@ -140,7 +160,7 @@ public class KeyUtil {
 		SecretKey secretKey;
 		if (algorithm.startsWith("PBE")) {
 			// PBE密钥
-			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.str(key, CharsetUtil.CHARSET_UTF_8).toCharArray());
+			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.utf8Str(key).toCharArray());
 		} else if (algorithm.startsWith("DES")) {
 			// DES密钥
 			secretKey = generateDESKey(algorithm, key);

@@ -20,9 +20,9 @@ public class EmojiUtilTest {
 	@Test
 	public void containsEmojiTest() {
 		boolean containsEmoji = EmojiUtil.containsEmoji("测试一下是否包含EMOJ:😄");
-		Assert.assertEquals(containsEmoji, true);
+		Assert.assertTrue(containsEmoji);
 		boolean notContainsEmoji = EmojiUtil.containsEmoji("不包含EMOJ:^_^");
-		Assert.assertEquals(notContainsEmoji, false);
+		Assert.assertFalse(notContainsEmoji);
 
 	}
 }

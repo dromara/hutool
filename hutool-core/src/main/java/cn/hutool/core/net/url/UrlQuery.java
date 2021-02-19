@@ -29,7 +29,7 @@ public class UrlQuery {
 	 * 构建UrlQuery
 	 *
 	 * @param queryMap 初始化的查询键值对
-	 * @return {@link UrlQuery}
+	 * @return UrlQuery
 	 */
 	public static UrlQuery of(Map<? extends CharSequence, ?> queryMap) {
 		return new UrlQuery(queryMap);
@@ -40,11 +40,24 @@ public class UrlQuery {
 	 *
 	 * @param queryStr 初始化的查询字符串
 	 * @param charset  decode用的编码，null表示不做decode
-	 * @return {@link UrlQuery}
+	 * @return UrlQuery
 	 */
 	public static UrlQuery of(String queryStr, Charset charset) {
+		return of(queryStr, charset, true);
+	}
+
+	/**
+	 * 构建UrlQuery
+	 *
+	 * @param queryStr       初始化的查询字符串
+	 * @param charset        decode用的编码，null表示不做decode
+	 * @param autoRemovePath 是否自动去除path部分，{@code true}则自动去除第一个?前的内容
+	 * @return UrlQuery
+	 * @since 5.5.8
+	 */
+	public static UrlQuery of(String queryStr, Charset charset, boolean autoRemovePath) {
 		final UrlQuery urlQuery = new UrlQuery();
-		urlQuery.parse(queryStr, charset);
+		urlQuery.parse(queryStr, charset, autoRemovePath);
 		return urlQuery;
 	}
 
@@ -102,16 +115,31 @@ public class UrlQuery {
 	 * @return this
 	 */
 	public UrlQuery parse(String queryStr, Charset charset) {
+		return parse(queryStr, charset, true);
+	}
+
+	/**
+	 * 解析URL中的查询字符串
+	 *
+	 * @param queryStr       查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
+	 * @param charset        decode编码，null表示不做decode
+	 * @param autoRemovePath 是否自动去除path部分，{@code true}则自动去除第一个?前的内容
+	 * @return this
+	 * @since 5.5.8
+	 */
+	public UrlQuery parse(String queryStr, Charset charset, boolean autoRemovePath) {
 		if (StrUtil.isBlank(queryStr)) {
 			return this;
 		}
 
-		// 去掉Path部分
-		int pathEndPos = queryStr.indexOf('?');
-		if (pathEndPos > -1) {
-			queryStr = StrUtil.subSuf(queryStr, pathEndPos + 1);
-			if (StrUtil.isBlank(queryStr)) {
-				return this;
+		if (autoRemovePath) {
+			// 去掉Path部分
+			int pathEndPos = queryStr.indexOf('?');
+			if (pathEndPos > -1) {
+				queryStr = StrUtil.subSuf(queryStr, pathEndPos + 1);
+				if (StrUtil.isBlank(queryStr)) {
+					return this;
+				}
 			}
 		}
 
@@ -135,9 +163,9 @@ public class UrlQuery {
 				case '&'://键值对之间的分界符
 					addParam(name, queryStr.substring(pos, i), charset);
 					name = null;
-					if (i+4 < len && "amp;".equals(queryStr.substring(i + 1, i + 5))) {
+					if (i + 4 < len && "amp;".equals(queryStr.substring(i + 1, i + 5))) {
 						// issue#850@Github，"&amp;"转义为"&"
-						i+=4;
+						i += 4;
 					}
 					// 开始位置从分节符后开始
 					pos = i + 1;

@@ -3,6 +3,7 @@ package cn.hutool.core.codec;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -13,17 +14,17 @@ import java.nio.charset.Charset;
  * Base64工具类，提供Base64的编码和解码方案<br>
  * base64编码是用64（2的6次方）个ASCII字符来表示256（2的8次方）个ASCII字符，<br>
  * 也就是三位二进制数组经过编码后变为四位的ASCII字符显示，长度比原来增加1/3。
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class Base64 {
 
 	// -------------------------------------------------------------------- encode
+
 	/**
 	 * 编码为Base64，非URL安全的
-	 * 
-	 * @param arr 被编码的数组
+	 *
+	 * @param arr     被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
 	 */
@@ -33,8 +34,8 @@ public class Base64 {
 
 	/**
 	 * 编码为Base64，URL安全的
-	 * 
-	 * @param arr 被编码的数组
+	 *
+	 * @param arr     被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
 	 * @since 3.0.6
@@ -45,7 +46,7 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -55,7 +56,7 @@ public class Base64 {
 
 	/**
 	 * base64编码，URL安全
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -66,8 +67,8 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
+	 *
+	 * @param source  被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -76,9 +77,21 @@ public class Base64 {
 	}
 
 	/**
+	 * base64编码，不进行padding(末尾不会填充'=')
+	 *
+	 * @param source  被编码的base64字符串
+	 * @param charset 编码
+	 * @return 被加密后的字符串
+	 * @since 5.5.2
+	 */
+	public static String encodeWithoutPadding(CharSequence source, String charset) {
+		return encodeWithoutPadding(StrUtil.bytes(source, charset));
+	}
+
+	/**
 	 * base64编码,URL安全
-	 * 
-	 * @param source 被编码的base64字符串
+	 *
+	 * @param source  被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -89,8 +102,8 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
+	 *
+	 * @param source  被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -100,8 +113,8 @@ public class Base64 {
 
 	/**
 	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
+	 *
+	 * @param source  被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -112,7 +125,7 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -121,8 +134,19 @@ public class Base64 {
 	}
 
 	/**
+	 * base64编码，不进行padding(末尾不会填充'=')
+	 *
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 5.5.2
+	 */
+	public static String encodeWithoutPadding(byte[] source) {
+		return java.util.Base64.getEncoder().withoutPadding().encodeToString(source);
+	}
+
+	/**
 	 * base64编码,URL安全的
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -133,7 +157,7 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param in 被编码base64的流（一般为图片流或者文件流）
 	 * @return 被加密后的字符串
 	 * @since 4.0.9
@@ -144,7 +168,7 @@ public class Base64 {
 
 	/**
 	 * base64编码,URL安全的
-	 * 
+	 *
 	 * @param in 被编码base64的流（一般为图片流或者文件流）
 	 * @return 被加密后的字符串
 	 * @since 4.0.9
@@ -155,7 +179,7 @@ public class Base64 {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param file 被编码base64的文件
 	 * @return 被加密后的字符串
 	 * @since 4.0.9
@@ -166,7 +190,7 @@ public class Base64 {
 
 	/**
 	 * base64编码,URL安全的
-	 * 
+	 *
 	 * @param file 被编码base64的文件
 	 * @return 被加密后的字符串
 	 * @since 4.0.9
@@ -176,66 +200,12 @@ public class Base64 {
 	}
 
 	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encode(byte[] source, String charset) {
-		return Base64Encoder.encode(source);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encodeUrlSafe(byte[] source, String charset) {
-		return Base64Encoder.encodeUrlSafe(source);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encode(byte[] source, Charset charset) {
-		return Base64Encoder.encode(source);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static String encodeUrlSafe(byte[] source, Charset charset) {
-		return Base64Encoder.encodeUrlSafe(source);
-	}
-
-	/**
 	 * 编码为Base64<br>
-	 * 如果isMultiLine为<code>true</code>，则每76个字符一个换行符，否则在一行显示
-	 * 
-	 * @param arr 被编码的数组
+	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
+	 *
+	 * @param arr         被编码的数组
 	 * @param isMultiLine 在76个char之后是CRLF还是EOF
-	 * @param isUrlSafe 是否使用URL安全字符，一般为<code>false</code>
+	 * @param isUrlSafe   是否使用URL安全字符，一般为{@code false}
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
@@ -243,9 +213,10 @@ public class Base64 {
 	}
 
 	// -------------------------------------------------------------------- decode
+
 	/**
 	 * base64解码
-	 * 
+	 *
 	 * @param source 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 * @since 4.3.2
@@ -256,7 +227,7 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
+	 *
 	 * @param source 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -266,8 +237,8 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
+	 *
+	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -277,8 +248,8 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
+	 *
+	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -288,8 +259,8 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param base64 被解码的base64字符串
+	 *
+	 * @param base64   被解码的base64字符串
 	 * @param destFile 目标文件
 	 * @return 目标文件
 	 * @since 4.0.9
@@ -300,9 +271,9 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param base64 被解码的base64字符串
-	 * @param out 写出到的流
+	 *
+	 * @param base64     被解码的base64字符串
+	 * @param out        写出到的流
 	 * @param isCloseOut 是否关闭输出流
 	 * @since 4.0.9
 	 */
@@ -312,7 +283,7 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
+	 *
 	 * @param base64 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -322,11 +293,11 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
+	 *
+	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
-	 *@deprecated 编码参数无意义，作废
+	 * @deprecated 编码参数无意义，作废
 	 */
 	@Deprecated
 	public static byte[] decode(CharSequence source, String charset) {
@@ -335,11 +306,11 @@ public class Base64 {
 
 	/**
 	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
+	 *
+	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
-	 *@deprecated 编码参数无意义，作废
+	 * @deprecated 编码参数无意义，作废
 	 */
 	@Deprecated
 	public static byte[] decode(CharSequence source, Charset charset) {
@@ -348,7 +319,7 @@ public class Base64 {
 
 	/**
 	 * 解码Base64
-	 * 
+	 *
 	 * @param in 输入
 	 * @return 解码后的bytes
 	 */

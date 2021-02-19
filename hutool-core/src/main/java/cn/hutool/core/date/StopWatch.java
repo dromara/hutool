@@ -42,6 +42,17 @@ import java.util.List;
 public class StopWatch {
 
 	/**
+	 * 创建计时任务（秒表）
+	 *
+	 * @param id 用于标识秒表的唯一ID
+	 * @return StopWatch
+	 * @since 5.5.2
+	 */
+	public static StopWatch create(String id){
+		return new StopWatch(id);
+	}
+
+	/**
 	 * 秒表唯一标识，用于多个秒表对象的区分
 	 */
 	private final String id;
@@ -101,7 +112,7 @@ public class StopWatch {
 	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 获取{@link StopWatch} 的ID，用于多个秒表对象的区分
+	 * 获取StopWatch 的ID，用于多个秒表对象的区分
 	 *
 	 * @return the ID 空字符串为
 	 * @see #StopWatch(String)

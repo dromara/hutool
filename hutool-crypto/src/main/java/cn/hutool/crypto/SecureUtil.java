@@ -626,7 +626,7 @@ public final class SecureUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
@@ -638,7 +638,7 @@ public final class SecureUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -650,7 +650,7 @@ public final class SecureUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥{@link SecretKey}，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -664,7 +664,7 @@ public final class SecureUtil {
 	 * HmacMD5加密：hmacMd5(key).digest(data)<br>
 	 * HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
 	 *
-	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
@@ -678,7 +678,7 @@ public final class SecureUtil {
 	 * HmacMD5加密：hmacMd5(key).digest(data)<br>
 	 * HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
 	 *
-	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacMd5(byte[] key) {
@@ -703,7 +703,7 @@ public final class SecureUtil {
 	 * HmacSHA1加密：hmacSha1(key).digest(data)<br>
 	 * HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
 	 *
-	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
@@ -717,7 +717,7 @@ public final class SecureUtil {
 	 * HmacSHA1加密：hmacSha1(key).digest(data)<br>
 	 * HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
 	 *
-	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacSha1(byte[] key) {

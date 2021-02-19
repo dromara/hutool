@@ -14,14 +14,18 @@ import cn.hutool.core.util.StrUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
@@ -506,14 +510,11 @@ public class DateUtil extends CalendarUtil {
 			return null;
 		}
 
-		final SimpleDateFormat sdf = new SimpleDateFormat(format);
+		TimeZone timeZone = null;
 		if (date instanceof DateTime) {
-			final TimeZone timeZone = ((DateTime) date).getTimeZone();
-			if (null != timeZone) {
-				sdf.setTimeZone(timeZone);
-			}
+			timeZone = ((DateTime) date).getTimeZone();
 		}
-		return format(date, sdf);
+		return format(date, newSimpleFormat(format, null, timeZone));
 	}
 
 	/**
@@ -717,7 +718,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
-		return new DateTime(dateStr, new SimpleDateFormat(format, locale));
+		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
 	}
 
 	/**
@@ -819,10 +820,10 @@ public class DateUtil extends CalendarUtil {
 		int length = utcString.length();
 		if (StrUtil.contains(utcString, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31Z
+				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_FORMAT);
 			} else if (length == DatePattern.UTC_MS_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31.999Z
+				// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
 		} else {
@@ -1007,6 +1008,46 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static DateTime endOfSecond(Date date) {
 		return new DateTime(endOfSecond(calendar(date)));
+	}
+
+	/**
+	 * 获取某小时的开始时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfHour(Date date) {
+		return new DateTime(beginOfHour(calendar(date)));
+	}
+
+	/**
+	 * 获取某小时的结束时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfHour(Date date) {
+		return new DateTime(endOfHour(calendar(date)));
+	}
+
+	/**
+	 * 获取某分钟的开始时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfMinute(Date date) {
+		return new DateTime(beginOfMinute(calendar(date)));
+	}
+
+	/**
+	 * 获取某分钟的结束时间
+	 *
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfMinute(Date date) {
+		return new DateTime(endOfMinute(calendar(date)));
 	}
 
 	/**
@@ -1339,8 +1380,8 @@ public class DateUtil extends CalendarUtil {
 	 * <pre>
 	 * 有时候我们计算相差天数的时候需要忽略时分秒。
 	 * 比如：2016-02-01 23:59:59和2016-02-02 00:00:00相差一秒
-	 * 如果isReset为<code>false</code>相差天数为0。
-	 * 如果isReset为<code>true</code>相差天数将被计算为1
+	 * 如果isReset为{@code false}相差天数为0。
+	 * 如果isReset为{@code true}相差天数将被计算为1
 	 * </pre>
 	 *
 	 * @param beginDate 起始日期
@@ -1375,7 +1416,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 计算两个日期相差月数<br>
-	 * 在非重置情况下，如果起始日期的天小于结束日期的天，月数要少算1（不足1个月）
+	 * 在非重置情况下，如果起始日期的天大于结束日期的天，月数要少算1（不足1个月）
 	 *
 	 * @param beginDate 起始日期
 	 * @param endDate   结束日期
@@ -1389,7 +1430,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 计算两个日期相差年数<br>
-	 * 在非重置情况下，如果起始日期的月小于结束日期的月，年数要少算1（不足1年）
+	 * 在非重置情况下，如果起始日期的月大于结束日期的月，年数要少算1（不足1年）
 	 *
 	 * @param beginDate 起始日期
 	 * @param endDate   结束日期
@@ -1917,13 +1958,47 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 获得指定月份的总天数
 	 *
-	 * @param month 年份
+	 * @param month      年份
 	 * @param isLeapYear 是否闰年
 	 * @return 天
 	 * @since 5.4.2
 	 */
 	public static int lengthOfMonth(int month, boolean isLeapYear) {
 		return java.time.Month.of(month).length(isLeapYear);
+	}
+
+	/**
+	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
+	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
+	 *
+	 * @param pattern 表达式
+	 * @return {@link SimpleDateFormat}
+	 * @since 5.5.5
+	 */
+	public static SimpleDateFormat newSimpleFormat(String pattern) {
+		return newSimpleFormat(pattern, null, null);
+	}
+
+	/**
+	 * 创建{@link SimpleDateFormat}，注意此对象非线程安全！<br>
+	 * 此对象默认为严格格式模式，即parse时如果格式不正确会报错。
+	 *
+	 * @param pattern  表达式
+	 * @param locale   {@link Locale}，{@code null}表示默认
+	 * @param timeZone {@link TimeZone}，{@code null}表示默认
+	 * @return {@link SimpleDateFormat}
+	 * @since 5.5.5
+	 */
+	public static SimpleDateFormat newSimpleFormat(String pattern, Locale locale, TimeZone timeZone) {
+		if (null == locale) {
+			locale = Locale.getDefault(Locale.Category.FORMAT);
+		}
+		final SimpleDateFormat format = new SimpleDateFormat(pattern, locale);
+		if (null != timeZone) {
+			format.setTimeZone(timeZone);
+		}
+		format.setLenient(false);
+		return format;
 	}
 
 	// ------------------------------------------------------------------------ Private method start

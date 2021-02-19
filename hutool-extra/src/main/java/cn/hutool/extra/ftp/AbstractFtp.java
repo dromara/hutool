@@ -41,7 +41,7 @@ public abstract class AbstractFtp implements Closeable {
 	public abstract AbstractFtp reconnectIfTimeout();
 
 	/**
-	 * 打开指定目录
+	 * 打开指定目录，具体逻辑取决于实现，例如在FTP中，进入失败返回{@code false}， SFTP中则抛出异常
 	 *
 	 * @param directory directory
 	 * @return 是否打开目录
@@ -82,7 +82,12 @@ public abstract class AbstractFtp implements Closeable {
 	public boolean exist(String path) {
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		final List<String> names = ls(dir);
+		final List<String> names;
+		try{
+			names = ls(dir);
+		} catch (FtpException ignore){
+			return false;
+		}
 		return containsIgnoreCase(names, fileName);
 	}
 

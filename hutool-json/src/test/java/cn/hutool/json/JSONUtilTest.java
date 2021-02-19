@@ -4,12 +4,14 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class JSONUtilTest {
 	 * 出现语法错误时报错，检查解析\x字符时是否会导致死循环异常
 	 */
 	@Test(expected = JSONException.class)
-	public void parseTest(){
+	public void parseTest() {
 		JSONArray jsonArray = JSONUtil.parseArray("[{\"a\":\"a\\x]");
 		Console.log(jsonArray);
 	}
@@ -29,7 +31,7 @@ public class JSONUtilTest {
 	 * 数字解析为JSONArray报错
 	 */
 	@Test(expected = JSONException.class)
-	public void parseNumberTest(){
+	public void parseNumberTest() {
 		JSONArray json = JSONUtil.parseArray(123L);
 		Console.log(json);
 	}
@@ -38,7 +40,7 @@ public class JSONUtilTest {
 	 * 数字解析为JSONObject忽略
 	 */
 	@Test
-	public void parseNumberTest2(){
+	public void parseNumberTest2() {
 		JSONObject json = JSONUtil.parseObj(123L);
 		Assert.assertEquals(new JSONObject(), json);
 	}
@@ -156,11 +158,34 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void doubleTest(){
+	public void doubleTest() {
 		String json = "{\"test\": 12.00}";
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 		//noinspection BigDecimalMethodWithoutRoundingCalled
 		Assert.assertEquals("12.00", jsonObject.getBigDecimal("test").setScale(2).toString());
 	}
-}
 
+	@Test
+	public void customValueTest() {
+		final JSONObject jsonObject = JSONUtil.createObj()
+		.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
+
+		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
+	}
+
+	@Test
+	public void parseObjTest() {
+		// 测试转义
+		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
+				"    \"test\": \"\\\\地库地库\",\n" +
+				"}");
+	}
+
+	@Test
+	public void sqlExceptionTest(){
+		//https://github.com/looly/hutool/issues/1399
+		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
+		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
+		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
+	}
+}

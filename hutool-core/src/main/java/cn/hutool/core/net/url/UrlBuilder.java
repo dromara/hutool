@@ -135,7 +135,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(String scheme, String host, int port, String path, String query, String fragment, Charset charset) {
-		return of(scheme, host, port, UrlPath.of(path, charset), UrlQuery.of(query, charset), fragment, charset);
+		return of(scheme, host, port, UrlPath.of(path, charset), UrlQuery.of(query, charset, false), fragment, charset);
 	}
 
 	/**

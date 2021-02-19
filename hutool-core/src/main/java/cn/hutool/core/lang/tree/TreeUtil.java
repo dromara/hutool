@@ -74,7 +74,7 @@ public class TreeUtil {
 
 		List<Tree<E>> finalTreeList = CollUtil.newArrayList();
 		for (Tree<E> node : treeList) {
-			if (parentId.equals(node.getParentId())) {
+			if (ObjectUtil.equals(parentId,node.getParentId())) {
 				finalTreeList.add(node);
 				innerBuild(treeList, node, 0, treeNodeConfig.getDeep());
 			}

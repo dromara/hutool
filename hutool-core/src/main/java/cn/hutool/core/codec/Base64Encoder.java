@@ -1,9 +1,9 @@
 package cn.hutool.core.codec;
 
-import java.nio.charset.Charset;
-
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.nio.charset.Charset;
 
 /**
  * Base64编码
@@ -128,11 +128,11 @@ public class Base64Encoder {
 
 	/**
 	 * 编码为Base64<br>
-	 * 如果isMultiLine为<code>true</code>，则每76个字符一个换行符，否则在一行显示
+	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
 	 * 
 	 * @param arr 被编码的数组
 	 * @param isMultiLine 在76个char之后是CRLF还是EOF
-	 * @param isUrlSafe 是否使用URL安全字符，一般为<code>false</code>
+	 * @param isUrlSafe 是否使用URL安全字符，一般为{@code false}
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {

@@ -8,6 +8,7 @@ package cn.hutool.core.io.checksum.crc16;
  * @since 5.3.10
  */
 public class CRC16XModem extends CRC16Checksum{
+	private static final long serialVersionUID = 1L;
 
 	// 0001 0000 0010 0001 (0, 5, 12)
 	private static final int WC_POLY = 0x1021;

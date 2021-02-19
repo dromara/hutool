@@ -1,5 +1,6 @@
 package cn.hutool.db;
 
+import cn.hutool.core.lang.Segment;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.db.sql.Order;
@@ -9,26 +10,44 @@ import java.util.Arrays;
 
 /**
  * 分页对象
- * 
- * @author Looly
  *
+ * @author Looly
  */
-public class Page implements Serializable {
+public class Page implements Segment<Integer>, Serializable {
 	private static final long serialVersionUID = 97792549823353462L;
 
 	public static final int DEFAULT_PAGE_SIZE = 20;
 
-	/** 页码，0表示第一页 */
+	/**
+	 * 页码，0表示第一页
+	 */
 	private int pageNumber;
-	/** 每页结果数 */
+	/**
+	 * 每页结果数
+	 */
 	private int pageSize;
-	/** 排序 */
+	/**
+	 * 排序
+	 */
 	private Order[] orders;
 
+	/**
+	 * 创建Page对象
+	 *
+	 * @param pageNumber 页码，0表示第一页
+	 * @param pageSize   每页结果数
+	 * @return Page
+	 * @since 5.5.3
+	 */
+	public static Page of(int pageNumber, int pageSize) {
+		return new Page(pageNumber, pageSize);
+	}
+
 	// ---------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造，默认第0页，每页{@value #DEFAULT_PAGE_SIZE} 条
-	 * 
+	 *
 	 * @since 4.5.16
 	 */
 	public Page() {
@@ -37,9 +56,9 @@ public class Page implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param pageNumber 页码，0表示第一页
-	 * @param pageSize 每页结果数
+	 * @param pageSize   每页结果数
 	 */
 	public Page(int pageNumber, int pageSize) {
 		this.pageNumber = Math.max(pageNumber, 0);
@@ -48,18 +67,19 @@ public class Page implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param pageNumber 页码，0表示第一页
-	 * @param pageSize 每页结果数
-	 * @param order 排序对象
+	 * @param pageSize   每页结果数
+	 * @param order      排序对象
 	 */
 	public Page(int pageNumber, int pageSize, Order order) {
 		this(pageNumber, pageSize);
-		this.orders = new Order[] { order };
+		this.orders = new Order[]{order};
 	}
 	// ---------------------------------------------------------- Constructor start
 
 	// ---------------------------------------------------------- Getters and Setters start
+
 	/**
 	 * @return 页码，0表示第一页
 	 */
@@ -69,7 +89,7 @@ public class Page implements Serializable {
 
 	/**
 	 * 设置页码，0表示第一页
-	 * 
+	 *
 	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
@@ -87,7 +107,7 @@ public class Page implements Serializable {
 
 	/**
 	 * 设置每页结果数
-	 * 
+	 *
 	 * @param pageSize 每页结果数
 	 * @deprecated 使用 {@link #setPageSize(int)} 代替
 	 */
@@ -105,7 +125,7 @@ public class Page implements Serializable {
 
 	/**
 	 * 设置每页结果数
-	 * 
+	 *
 	 * @param pageSize 每页结果数
 	 */
 	public void setPageSize(int pageSize) {
@@ -121,7 +141,7 @@ public class Page implements Serializable {
 
 	/**
 	 * 设置排序
-	 * 
+	 *
 	 * @param orders 排序
 	 */
 	public void setOrder(Order... orders) {
@@ -130,7 +150,7 @@ public class Page implements Serializable {
 
 	/**
 	 * 设置排序
-	 * 
+	 *
 	 * @param orders 排序
 	 */
 	public void addOrder(Order... orders) {
@@ -140,15 +160,27 @@ public class Page implements Serializable {
 
 	/**
 	 * @return 开始位置
+	 * @see #getStartIndex()
 	 */
 	public int getStartPosition() {
+		return getStartIndex();
+	}
+
+	@Override
+	public Integer getStartIndex() {
 		return PageUtil.getStart(this.pageNumber, this.pageSize);
 	}
 
 	/**
 	 * @return 结束位置
+	 * @see #getEndIndex()
 	 */
 	public int getEndPosition() {
+		return getEndIndex();
+	}
+
+	@Override
+	public Integer getEndIndex() {
 		return PageUtil.getEnd(this.pageNumber, this.pageSize);
 	}
 
@@ -162,7 +194,7 @@ public class Page implements Serializable {
 	 * 页码：2，每页10 =》 [21, 30]
 	 * 。。。
 	 * </pre>
-	 * 
+	 *
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */
 	public int[] getStartEnd() {

@@ -47,7 +47,7 @@ public class CharUtil {
 	public static final char AMP = '&';
 	/** 字符常量：冒号 {@code ':'} */
 	public static final char COLON = ':';
-	/** 字符常量：艾特 <code>'@'</code> */
+	/** 字符常量：艾特 {@code '@'} */
 	public static final char AT = '@';
 
 	/**

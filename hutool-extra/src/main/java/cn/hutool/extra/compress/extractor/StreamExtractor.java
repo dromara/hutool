@@ -119,7 +119,7 @@ public class StreamExtractor implements Extractor{
 				//noinspection ResultOfMethodCallIgnored
 				outItemFile.mkdirs();
 			} else {
-				FileUtil.writeFromStream(in, outItemFile);
+				FileUtil.writeFromStream(in, outItemFile, false);
 			}
 		}
 	}

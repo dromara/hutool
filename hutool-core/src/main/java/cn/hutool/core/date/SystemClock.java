@@ -62,24 +62,16 @@ public class SystemClock {
 	}
 
 	/**
-	 * 单例实例
-	 * @return 单例实例
-	 */
-	private static SystemClock instance() {
-		return InstanceHolder.INSTANCE;
-	}
-
-	/**
 	 * @return 当前时间
 	 */
 	public static long now() {
-		return instance().currentTimeMillis();
+		return InstanceHolder.INSTANCE.currentTimeMillis();
 	}
 
 	/**
 	 * @return 当前时间字符串表现形式
 	 */
 	public static String nowDate() {
-		return new Timestamp(instance().currentTimeMillis()).toString();
+		return new Timestamp(InstanceHolder.INSTANCE.currentTimeMillis()).toString();
 	}
 }

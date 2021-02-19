@@ -260,7 +260,7 @@ public final class BeetlUtil {
 		/**
 		 * 创建
 		 * 
-		 * @return {@link ResourceLoaderBuilder}
+		 * @return ResourceLoaderBuilder
 		 */
 		public static ResourceLoaderBuilder create() {
 			return new ResourceLoaderBuilder();
@@ -271,7 +271,7 @@ public final class BeetlUtil {
 		 * 
 		 * @param matcher {@link Matcher} 匹配器
 		 * @param resourceLoader {@link ResourceLoader} 匹配时对应的资源加载器
-		 * @return {@link ResourceLoaderBuilder}
+		 * @return ResourceLoaderBuilder
 		 */
 		public ResourceLoaderBuilder add(Matcher matcher, ResourceLoader<?> resourceLoader) {
 			compositeResourceLoader.addResourceLoader(matcher, resourceLoader);

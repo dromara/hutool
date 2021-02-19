@@ -399,7 +399,7 @@ public class LocalDateTimeUtil {
 	 *
 	 * @param time   {@link LocalDateTime}
 	 * @param number 偏移量，正数为向后偏移，负数为向前偏移
-	 * @param field  偏移单位，见{@link ChronoField}，不能为null
+	 * @param field  偏移单位，见{@link ChronoUnit}，不能为null
 	 * @return 偏移后的日期时间
 	 */
 	public static LocalDateTime offset(LocalDateTime time, long number, TemporalUnit field) {

@@ -5,6 +5,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -65,5 +66,13 @@ public class SnowflakeTest {
 				}
 			}
 		});
+	}
+
+	@Test
+	public void getSnowflakeLengthTest(){
+		for (int i = 0; i < 1000; i++) {
+			final long l = IdUtil.getSnowflake(0, 0).nextId();
+			Assert.assertEquals(19, StrUtil.toString(l).length());
+		}
 	}
 }

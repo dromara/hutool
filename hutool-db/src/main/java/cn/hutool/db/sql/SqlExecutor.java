@@ -259,6 +259,22 @@ public class SqlExecutor {
 		}
 	}
 
+	/**
+	 * 执行查询语句<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param <T> 处理结果类型
+	 * @param conn 数据库连接对象
+	 * @param sqlBuilder SQL构建器，包含参数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
+	 */
+	public static <T> T query(Connection conn, SqlBuilder sqlBuilder, RsHandler<T> rsh) throws SQLException {
+		return query(conn, sqlBuilder.build(), rsh, sqlBuilder.getParamValueArray());
+	}
+
 	// -------------------------------------------------------------------------------------- Execute With PreparedStatement
 	/**
 	 * 用于执行 INSERT、UPDATE 或 DELETE 语句以及 SQL DDL（数据定义语言）语句，例如 CREATE TABLE 和 DROP TABLE。<br>

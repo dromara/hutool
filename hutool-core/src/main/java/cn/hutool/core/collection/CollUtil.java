@@ -1870,7 +1870,7 @@ public class CollUtil {
 	/**
 	 * Iterator转换为Enumeration
 	 * <p>
-	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * Adapt the specified {@link Iterator} to the {@link Enumeration} interface.
 	 *
 	 * @param <E>  集合元素类型
 	 * @param iter {@link Iterator}
@@ -1883,7 +1883,7 @@ public class CollUtil {
 	/**
 	 * Enumeration转换为Iterator
 	 * <p>
-	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
+	 * Adapt the specified {@code Enumeration} to the {@code Iterator} interface
 	 *
 	 * @param <E> 集合元素类型
 	 * @param e   {@link Enumeration}
@@ -2108,6 +2108,9 @@ public class CollUtil {
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Iterable<T> iterable) {
+		if (iterable == null) {
+			return collection;
+		}
 		return addAll(collection, iterable.iterator());
 	}
 
@@ -2186,7 +2189,7 @@ public class CollUtil {
 		}
 
 		// 检查越界
-		if (index >= size) {
+		if (index >= size || index < 0) {
 			return null;
 		}
 
@@ -2557,6 +2560,9 @@ public class CollUtil {
 	 * @since 5.4.7
 	 */
 	public static <T> void forEach(Iterable<T> iterable, Consumer<T> consumer) {
+		if(iterable == null){
+			return;
+		}
 		forEach(iterable.iterator(), consumer);
 	}
 
@@ -2568,6 +2574,9 @@ public class CollUtil {
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer) {
+		if(iterator == null){
+			return;
+		}
 		int index = 0;
 		while (iterator.hasNext()) {
 			consumer.accept(iterator.next(), index);
@@ -2583,6 +2592,9 @@ public class CollUtil {
 	 * @param consumer    {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer) {
+		if(enumeration == null){
+			return;
+		}
 		int index = 0;
 		while (enumeration.hasMoreElements()) {
 			consumer.accept(enumeration.nextElement(), index);
@@ -2600,6 +2612,9 @@ public class CollUtil {
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
+		if(map == null){
+			return;
+		}
 		int index = 0;
 		for (Entry<K, V> entry : map.entrySet()) {
 			kvConsumer.accept(entry.getKey(), entry.getValue(), index);

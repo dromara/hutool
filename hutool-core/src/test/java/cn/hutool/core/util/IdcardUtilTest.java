@@ -43,7 +43,7 @@ public class IdcardUtilTest {
 		Assert.assertEquals("150102198807303035", convert15To18);
 
 		String convert15To18Second = IdcardUtil.convert15To18("330102200403064");
-		Assert.assertEquals("33010219200403064x", convert15To18Second);
+		Assert.assertEquals("33010219200403064X", convert15To18Second);
 	}
 
 	@Test
@@ -76,6 +76,12 @@ public class IdcardUtilTest {
 	}
 
 	@Test
+	public void getCityCodeByIdCardTest() {
+		String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
+		Assert.assertEquals("32108", codeByIdCard);
+	}
+
+	@Test
 	public void getGenderByIdCardTest() {
 		int gender = IdcardUtil.getGenderByIdCard(ID_18);
 		Assert.assertEquals(1, gender);
@@ -83,8 +89,20 @@ public class IdcardUtilTest {
 
 	@Test
 	public void isValidCard18Test(){
-		final boolean isValidCard18 = IdcardUtil.isValidCard18("3301022011022000D6");
+		boolean isValidCard18 = IdcardUtil.isValidCard18("3301022011022000D6");
 		Assert.assertFalse(isValidCard18);
+
+		// 不忽略大小写情况下，X严格校验必须大写
+		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064x", false);
+		Assert.assertFalse(isValidCard18);
+		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X", false);
+		Assert.assertTrue(isValidCard18);
+
+		// 非严格校验下大小写皆可
+		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064x");
+		Assert.assertTrue(isValidCard18);
+		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X");
+		Assert.assertTrue(isValidCard18);
 	}
 
 	@Test

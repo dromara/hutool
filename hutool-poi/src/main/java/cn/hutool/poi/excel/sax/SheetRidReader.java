@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,13 +12,13 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * 在Sax方式读取Excel时，读取sheet标签中sheetId和rid的对应关系，类似于:
  * <pre>
- * &lt;sheet name="Sheet6" sheetId="4" r:id="6"/&gt;
+ * &lt;sheet name="Sheet6" sheetId="4" r:id="rId6"/&gt;
  * </pre>
  * <p>
  * 读取结果为：
@@ -36,8 +37,8 @@ public class SheetRidReader extends DefaultHandler {
 	private final static String SHEET_ID_ATTR = "sheetId";
 	private final static String NAME_ATTR = "name";
 
-	private final Map<String, String> ID_RID_MAP = new HashMap<>();
-	private final Map<String, String> NAME_RID_MAP = new HashMap<>();
+	private final Map<Integer, Integer> ID_RID_MAP = new LinkedHashMap<>();
+	private final Map<String, Integer> NAME_RID_MAP = new LinkedHashMap<>();
 
 	/**
 	 * 读取Wordkbook的XML中sheet标签中sheetId和rid的对应关系
@@ -61,50 +62,100 @@ public class SheetRidReader extends DefaultHandler {
 	}
 
 	/**
-	 * 根据sheetId获取rid
+	 * 根据sheetId获取rid，从1开始
 	 *
-	 * @param sheetId Sheet的ID
-	 * @return rid
+	 * @param sheetId Sheet的ID，从1开始
+	 * @return rid，从1开始
 	 */
-	public String getRidBySheetId(String sheetId) {
+	public Integer getRidBySheetId(int sheetId) {
 		return ID_RID_MAP.get(sheetId);
 	}
 
 	/**
-	 * 根据sheet name获取rid
+	 * 根据sheetId获取rid，从0开始
+	 *
+	 * @param sheetId Sheet的ID，从0开始
+	 * @return rid，从0开始
+	 * @since 5.5.5
+	 */
+	public Integer getRidBySheetIdBase0(int sheetId) {
+		final Integer rid = getRidBySheetId(sheetId + 1);
+		if (null != rid) {
+			return rid - 1;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据sheet name获取rid，从1开始
 	 *
 	 * @param sheetName Sheet的name
-	 * @return rid
+	 * @return rid，从1开始
 	 */
-	public String getRidByName(String sheetName) {
+	public Integer getRidByName(String sheetName) {
 		return NAME_RID_MAP.get(sheetName);
+	}
+
+	/**
+	 * 根据sheet name获取rid，从0开始
+	 *
+	 * @param sheetName Sheet的name
+	 * @return rid，从0开始
+	 * @since 5.5.5
+	 */
+	public Integer getRidByNameBase0(String sheetName) {
+		final Integer rid = getRidByName(sheetName);
+		if (null != rid) {
+			return rid - 1;
+		}
+		return null;
+	}
+
+	/**
+	 * 通过sheet的序号获取rid
+	 *
+	 * @param index 序号，从0开始
+	 * @return rid
+	 * @since 5.5.7
+	 */
+	public Integer getRidByIndex(int index) {
+		return CollUtil.get(this.NAME_RID_MAP.values(), index);
+	}
+
+	/**
+	 * 通过sheet的序号获取rid
+	 *
+	 * @param index 序号，从0开始
+	 * @return rid，从0开始
+	 * @since 5.5.7
+	 */
+	public Integer getRidByIndexBase0(int index) {
+		final Integer rid = CollUtil.get(this.NAME_RID_MAP.values(), index);
+		if (null != rid) {
+			return rid - 1;
+		}
+		return null;
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_NAME.equalsIgnoreCase(localName)) {
-			final int length = attributes.getLength();
-			String sheetId = null;
-			String rid = null;
-			String name = null;
-			for (int i = 0; i < length; i++) {
-				switch (attributes.getLocalName(i)) {
-					case SHEET_ID_ATTR:
-						sheetId = attributes.getValue(i);
-						break;
-					case RID_ATTR:
-						rid = attributes.getValue(i);
-						break;
-					case NAME_ATTR:
-						name = attributes.getValue(i);
-						break;
-				}
-				if (StrUtil.isNotEmpty(sheetId)) {
-					ID_RID_MAP.put(sheetId, rid);
-				}
-				if (StrUtil.isNotEmpty(name)) {
-					NAME_RID_MAP.put(name, rid);
-				}
+			final String ridStr = attributes.getValue(RID_ATTR);
+			if (StrUtil.isEmpty(ridStr)) {
+				return;
+			}
+			final int rid = Integer.parseInt(StrUtil.removePrefixIgnoreCase(ridStr, Excel07SaxReader.RID_PREFIX));
+
+			// sheet名和rid映射
+			final String name = attributes.getValue(NAME_ATTR);
+			if (StrUtil.isNotEmpty(name)) {
+				NAME_RID_MAP.put(name, rid);
+			}
+
+			// sheetId和rid映射
+			final String sheetIdStr = attributes.getValue(SHEET_ID_ATTR);
+			if (StrUtil.isNotEmpty(sheetIdStr)) {
+				ID_RID_MAP.put(Integer.parseInt(sheetIdStr), rid);
 			}
 		}
 	}

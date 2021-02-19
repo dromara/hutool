@@ -115,7 +115,8 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 设置日期格式，null表示默认的时间戳
+	 * 设置日期格式，null表示默认的时间戳<br>
+	 * 此方法设置的日期格式仅对转换为JSON字符串有效，对解析JSON为bean无效。
 	 *
 	 * @param dateFormat 日期格式，null表示默认的时间戳
 	 * @return this

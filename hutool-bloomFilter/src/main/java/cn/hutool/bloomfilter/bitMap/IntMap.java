@@ -33,14 +33,14 @@ public class IntMap implements BitMap, Serializable {
 	public void add(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
 		int c = (int) (i % BitMap.MACHINE32);
-		ints[r] = (int) (ints[r] | (1 << c));
+		ints[r] = ints[r] | (1 << c);
 	}
 
 	@Override
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
 		int c = (int) (i % BitMap.MACHINE32);
-		return ((int) ((ints[r] >>> c)) & 1) == 1;
+		return ((ints[r] >>> c) & 1) == 1;
 	}
 
 	@Override

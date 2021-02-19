@@ -66,7 +66,7 @@ public class BeanPath implements Serializable{
 	 * </pre>
 	 * 
 	 * @param expression 表达式
-	 * @return {@link BeanPath}
+	 * @return BeanPath
 	 */
 	public static BeanPath create(String expression) {
 		return new BeanPath(expression);

@@ -21,6 +21,6 @@ public class NumberHandler implements RsHandler<Number>{
 
 	@Override
 	public Number handle(ResultSet rs) throws SQLException {
-		return rs.next() ? rs.getBigDecimal(1) : null;
+		return (null != rs && rs.next()) ? rs.getBigDecimal(1) : null;
 	}
 }

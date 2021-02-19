@@ -326,7 +326,7 @@ public class DaoTemplate {
 	 * @return 数量
 	 * @throws SQLException SQL执行异常
 	 */
-	public int count(Entity where) throws SQLException{
+	public long count(Entity where) throws SQLException{
 		return db.count(fixEntity(where));
 	}
 	

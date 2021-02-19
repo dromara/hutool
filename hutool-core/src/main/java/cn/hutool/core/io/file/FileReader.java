@@ -31,7 +31,7 @@ public class FileReader extends FileWrapper {
 	 * 创建 FileReader
 	 * @param file 文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
-	 * @return {@link FileReader}
+	 * @return FileReader
 	 */
 	public static FileReader create(File file, Charset charset){
 		return new FileReader(file, charset);
@@ -40,7 +40,7 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 创建 FileReader, 编码：{@link FileWrapper#DEFAULT_CHARSET}
 	 * @param file 文件
-	 * @return {@link FileReader}
+	 * @return FileReader
 	 */
 	public static FileReader create(File file){
 		return new FileReader(file);
@@ -244,19 +244,36 @@ public class FileReader extends FileWrapper {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
-	 * 将文件写入流中
-	 * 
+	 * 将文件写入流中，此方法不会关闭比输出流
+	 *
 	 * @param out 流
 	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 */
 	public long writeToStream(OutputStream out) throws IORuntimeException {
+		return writeToStream(out, false);
+	}
+	
+	/**
+	 * 将文件写入流中
+	 * 
+	 * @param out 流
+	 * @param isCloseOut 是否关闭输出流
+	 * @return 写出的流byte数
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.2
+	 */
+	public long writeToStream(OutputStream out, boolean isCloseOut) throws IORuntimeException {
 		try (FileInputStream in = new FileInputStream(this.file)){
 			return IoUtil.copy(in, out);
 		}catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally{
+			if(isCloseOut){
+				IoUtil.close(out);
+			}
 		}
 	}
 

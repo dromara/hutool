@@ -797,6 +797,26 @@ public class MapUtil {
 	}
 
 	/**
+	 * 按照值排序，可选是否倒序
+	 *
+	 * @param map 需要对值排序的map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param isDesc 是否倒序
+	 * @return 排序后新的Map
+	 * @since 5.5.8
+	 */
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isDesc) {
+		Map<K, V> result = new LinkedHashMap<>();
+		Comparator<Entry<K, V>> entryComparator = Entry.comparingByValue();
+		if(isDesc){
+			entryComparator = entryComparator.reversed();
+		}
+		map.entrySet().stream().sorted(entryComparator).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
+		return result;
+	}
+
+	/**
 	 * 创建代理Map<br>
 	 * {@link MapProxy}对Map做一次包装，提供各种getXXX方法
 	 *
@@ -1161,6 +1181,21 @@ public class MapUtil {
 	}
 
 	/**
+	 * 获取Map指定key的值，并转换为指定类型，此方法在转换失败后不抛异常，返回null。
+	 *
+	 * @param <T>          目标值类型
+	 * @param map          Map
+	 * @param key          键
+	 * @param type         值类型
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.5.3
+	 */
+	public static <T> T getQuietly(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
+		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为指定类型
 	 *
 	 * @param <T>  目标值类型
@@ -1187,6 +1222,21 @@ public class MapUtil {
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
 		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
+	}
+
+	/**
+	 * 获取Map指定key的值，并转换为指定类型，转换失败后返回null，不抛异常
+	 *
+	 * @param <T>          目标值类型
+	 * @param map          Map
+	 * @param key          键
+	 * @param type         值类型
+	 * @param defaultValue 默认值
+	 * @return 值
+	 * @since 5.5.3
+	 */
+	public static <T> T getQuietly(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
+		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**

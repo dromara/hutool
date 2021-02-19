@@ -85,6 +85,7 @@ public class Console {
 	public static void log(Throwable t, String template, Object... values) {
 		out.println(StrUtil.format(template, values));
 		if (null != t) {
+			//noinspection CallToPrintStackTrace
 			t.printStackTrace();
 			out.flush();
 		}
@@ -286,7 +287,7 @@ public class Console {
 	 * @since 3.3.1
 	 */
 	public static String input() {
-		return scanner().next();
+		return scanner().nextLine();
 	}
 
 	// --------------------------------------------------------------------------------- console lineNumber

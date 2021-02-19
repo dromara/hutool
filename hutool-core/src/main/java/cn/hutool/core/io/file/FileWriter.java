@@ -1,5 +1,12 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,13 +20,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * 文件写入器
  * @author Looly
@@ -32,7 +32,7 @@ public class FileWriter extends FileWrapper{
 	 * 创建 FileWriter
 	 * @param file 文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
-	 * @return {@link FileWriter}
+	 * @return FileWriter
 	 */
 	public static FileWriter create(File file, Charset charset){
 		return new FileWriter(file, charset);
@@ -41,7 +41,7 @@ public class FileWriter extends FileWrapper{
 	/**
 	 * 创建 FileWriter, 编码：{@link FileWrapper#DEFAULT_CHARSET}
 	 * @param file 文件
-	 * @return {@link FileWriter}
+	 * @return FileWriter
 	 */
 	public static FileWriter create(File file){
 		return new FileWriter(file);
@@ -302,13 +302,26 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将流的内容写入文件<br>
-	 * 此方法不会关闭输入流
-	 * 
+	 * 此方法会自动关闭输入流
+	 *
 	 * @param in 输入流，不关闭
 	 * @return dest
 	 * @throws IORuntimeException IO异常
 	 */
 	public File writeFromStream(InputStream in) throws IORuntimeException {
+		return writeFromStream(in, true);
+	}
+
+	/**
+	 * 将流的内容写入文件
+	 * 
+	 * @param in 输入流，不关闭
+	 * @param isCloseIn 是否关闭输入流
+	 * @return dest
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.2
+	 */
+	public File writeFromStream(InputStream in, boolean isCloseIn) throws IORuntimeException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(FileUtil.touch(file));
@@ -317,6 +330,9 @@ public class FileWriter extends FileWrapper{
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(out);
+			if(isCloseIn){
+				IoUtil.close(in);
+			}
 		}
 		return file;
 	}

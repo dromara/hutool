@@ -219,7 +219,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, String format) {
-		this(dateStr, new SimpleDateFormat(format));
+		this(dateStr, DateUtil.newSimpleFormat(format));
 	}
 
 	/**
@@ -895,9 +895,7 @@ public class DateTime extends Date {
 	 */
 	public String toString(TimeZone timeZone) {
 		if (null != timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-			simpleDateFormat.setTimeZone(timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATETIME_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_DATETIME_FORMAT);
 	}
@@ -910,9 +908,7 @@ public class DateTime extends Date {
 	 */
 	public String toDateStr() {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATE_PATTERN);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATE_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_DATE_FORMAT);
 	}
@@ -925,9 +921,7 @@ public class DateTime extends Date {
 	 */
 	public String toTimeStr() {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_TIME_PATTERN);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_TIME_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_TIME_FORMAT);
 	}
@@ -940,9 +934,7 @@ public class DateTime extends Date {
 	 */
 	public String toString(String format) {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(format, null, timeZone));
 		}
 		return toString(FastDateFormat.getInstance(format));
 	}

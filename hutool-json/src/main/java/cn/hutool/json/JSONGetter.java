@@ -20,10 +20,10 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	JSONConfig getConfig();
 
 	/**
-	 * key对应值是否为<code>null</code>或无此key
+	 * key对应值是否为{@code null}或无此key
 	 *
 	 * @param key 键
-	 * @return true 无此key或值为<code>null</code>或{@link JSONNull#NULL}返回<code>false</code>，其它返回<code>true</code>
+	 * @return true 无此key或值为{@code null}或{@link JSONNull#NULL}返回{@code false}，其它返回{@code true}
 	 */
 	default boolean isNull(K key) {
 		return JSONNull.NULL.equals(this.getObj(key));

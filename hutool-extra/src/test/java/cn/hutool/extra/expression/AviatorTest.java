@@ -1,5 +1,6 @@
 package cn.hutool.extra.expression;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.extra.expression.engine.aviator.AviatorEngine;
@@ -16,7 +17,7 @@ public class AviatorTest {
 
 	@Test
 	public void simpleTest(){
-		Foo foo = new Foo(100, 3.14f, new Date());
+		Foo foo = new Foo(100, 3.14f, DateUtil.parseDate("2020-11-12"));
 		ExpressionEngine engine = new AviatorEngine();
 		String exp =
 				"\"[foo i=\"+ foo.i + \", f=\" + foo.f + \", date.year=\" + (foo.date.year+1900) + \", date.month=\" + foo.date.month + \", bars[0].name=\" + #foo.bars[0].name + \"]\"";

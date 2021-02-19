@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ public class ThreadUtil {
 	 * @param corePoolSize 同时执行的线程数大小
 	 * @return ExecutorService
 	 */
-		public static ExecutorService newExecutor(int corePoolSize) {
+	public static ExecutorService newExecutor(int corePoolSize) {
 		ExecutorBuilder builder = ExecutorBuilder.create();
 		if (corePoolSize > 0) {
 			builder.setCorePoolSize(corePoolSize);
@@ -539,5 +540,50 @@ public class ThreadUtil {
 	 */
 	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
+	}
+
+	/**
+	 * 创建{@link ScheduledThreadPoolExecutor}
+	 *
+	 * @param corePoolSize 初始线程池大小
+	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @since 5.5.8
+	 */
+	public static ScheduledThreadPoolExecutor createScheduledExecutor(int corePoolSize) {
+		return new ScheduledThreadPoolExecutor(corePoolSize);
+	}
+
+	/**
+	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。
+	 *
+	 * <ul>
+	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
+	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 * </ul>
+	 *
+	 *
+	 * @param executor 定时任务线程池，{@code null}新建一个默认线程池
+	 * @param command 需要定时执行的逻辑
+	 * @param initialDelay 初始延迟
+	 * @param period 执行周期，单位毫秒
+	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
+	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @since 5.5.8
+	 */
+	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
+								Runnable command,
+								long initialDelay,
+								long period,
+								boolean fixedRateOrFixedDelay){
+		if(null == executor){
+			executor = createScheduledExecutor(2);
+		}
+		if(fixedRateOrFixedDelay){
+			executor.scheduleAtFixedRate(command, initialDelay, period, TimeUnit.NANOSECONDS);
+		} else{
+			executor.scheduleWithFixedDelay(command, initialDelay, period, TimeUnit.NANOSECONDS);
+		}
+
+		return executor;
 	}
 }

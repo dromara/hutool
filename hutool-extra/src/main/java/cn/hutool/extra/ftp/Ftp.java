@@ -2,12 +2,14 @@ package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +84,22 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset) {
-		this(host, port, user, password, charset, null);
+		this(host, port, user, password, charset, null, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param host               域名或IP
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
+	 * @param serverLanguageCode 服务器语言 例如：zh
+	 * @param systemKey          服务器标识 例如：org.apache.commons.net.ftp.FTPClientConfig.SYST_NT
+	 */
+	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
+		this(host, port, user, password, charset, serverLanguageCode, systemKey, null);
 	}
 
 	/**
@@ -94,8 +112,8 @@ public class Ftp extends AbstractFtp {
 	 * @param charset  编码
 	 * @param mode     模式
 	 */
-	public Ftp(String host, int port, String user, String password, Charset charset, FtpMode mode) {
-		this(new FtpConfig(host, port, user, password, charset), mode);
+	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey, FtpMode mode) {
+		this(new FtpConfig(host, port, user, password, charset, serverLanguageCode, systemKey), mode);
 	}
 
 	/**
@@ -143,7 +161,7 @@ public class Ftp extends AbstractFtp {
 	 * @return this
 	 */
 	public Ftp init(String host, int port, String user, String password, FtpMode mode) {
-		return init(new FtpConfig(host, port, user, password, this.ftpConfig.getCharset()), mode);
+		return init(new FtpConfig(host, port, user, password, this.ftpConfig.getCharset(), null, null), mode);
 	}
 
 	/**
@@ -155,8 +173,21 @@ public class Ftp extends AbstractFtp {
 	 */
 	public Ftp init(FtpConfig config, FtpMode mode) {
 		final FTPClient client = new FTPClient();
-		client.setControlEncoding(config.getCharset().toString());
+		final Charset charset = config.getCharset();
+		if (null != charset) {
+			client.setControlEncoding(charset.toString());
+		}
 		client.setConnectTimeout((int) config.getConnectionTimeout());
+		final String systemKey = config.getSystemKey();
+		if (StrUtil.isNotBlank(systemKey)) {
+			final FTPClientConfig conf = new FTPClientConfig(systemKey);
+			final String serverLanguageCode = config.getServerLanguageCode();
+			if (StrUtil.isNotBlank(serverLanguageCode)) {
+				conf.setServerLanguageCode(config.getServerLanguageCode());
+			}
+			client.configure(conf);
+		}
+
 		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
@@ -164,7 +195,7 @@ public class Ftp extends AbstractFtp {
 			// 登录ftp服务器
 			client.login(config.getUser(), config.getPassword());
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 		final int replyCode = client.getReplyCode(); // 是否成功登录服务器
 		if (false == FTPReply.isPositiveCompletion(replyCode)) {
@@ -224,7 +255,7 @@ public class Ftp extends AbstractFtp {
 		String pwd = null;
 		try {
 			pwd = pwd();
-		} catch (FtpException fex) {
+		} catch (IORuntimeException fex) {
 			// ignore
 		}
 
@@ -241,15 +272,16 @@ public class Ftp extends AbstractFtp {
 	 * @return 是否成功
 	 */
 	@Override
-	public boolean cd(String directory) {
+	synchronized public boolean cd(String directory) {
 		if (StrUtil.isBlank(directory)) {
-			return false;
+			// 当前目录
+			return true;
 		}
 
 		try {
 			return client.changeWorkingDirectory(directory);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -264,19 +296,13 @@ public class Ftp extends AbstractFtp {
 		try {
 			return client.printWorkingDirectory();
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
 	@Override
 	public List<String> ls(String path) {
-		final FTPFile[] ftpFiles = lsFiles(path);
-
-		final List<String> fileNames = new ArrayList<>();
-		for (FTPFile ftpFile : ftpFiles) {
-			fileNames.add(ftpFile.getName());
-		}
-		return fileNames;
+		return ArrayUtil.map(lsFiles(path), FTPFile::getName);
 	}
 
 	/**
@@ -310,21 +336,25 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 遍历某个目录下所有文件和目录，不会递归遍历
 	 *
-	 * @param path 目录
+	 * @param path 目录，如果目录不存在，抛出异常
 	 * @return 文件或目录列表
+	 * @throws FtpException 路径不存在
+	 * @throws IORuntimeException IO异常
 	 */
-	public FTPFile[] lsFiles(String path) {
+	public FTPFile[] lsFiles(String path) throws FtpException, IORuntimeException{
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			cd(path);
+			if(false == cd(path)){
+				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
+			}
 		}
 
 		FTPFile[] ftpFiles;
 		try {
 			ftpFiles = this.client.listFiles();
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			// 回到原目录
 			cd(pwd);
@@ -334,25 +364,26 @@ public class Ftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean mkdir(String dir) {
+	public boolean mkdir(String dir) throws IORuntimeException{
 		try {
 			return this.client.makeDirectory(dir);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
 	/**
 	 * 获取服务端目录状态。
+	 *
 	 * @param path 路径
 	 * @return 状态int，服务端不同，返回不同
 	 * @since 5.4.3
 	 */
-	public int stat(String path) {
+	public int stat(String path) throws IORuntimeException{
 		try {
 			return this.client.stat(path);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -361,28 +392,32 @@ public class Ftp extends AbstractFtp {
 	 *
 	 * @param path 文件路径
 	 * @return 是否存在
+	 * @throws IORuntimeException IO异常
 	 */
-	public boolean existFile(String path) {
+	public boolean existFile(String path) throws IORuntimeException{
 		FTPFile[] ftpFileArr;
 		try {
 			ftpFileArr = client.listFiles(path);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 		return ArrayUtil.isNotEmpty(ftpFileArr);
 	}
 
 	@Override
-	public boolean delFile(String path) {
+	public boolean delFile(String path) throws IORuntimeException{
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		cd(dir);
+		if(false == cd(dir)){
+			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
+		}
+
 		boolean isSuccess;
 		try {
 			isSuccess = client.deleteFile(fileName);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			// 回到原目录
 			cd(pwd);
@@ -391,12 +426,12 @@ public class Ftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean delDir(String dirPath) {
+	public boolean delDir(String dirPath) throws IORuntimeException{
 		FTPFile[] dirs;
 		try {
 			dirs = client.listFiles(dirPath);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 		String name;
 		String childPath;
@@ -417,7 +452,7 @@ public class Ftp extends AbstractFtp {
 		try {
 			return this.client.removeDirectory(dirPath);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -453,12 +488,13 @@ public class Ftp extends AbstractFtp {
 	 * @param path     服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName 自定义在服务端保存的文件名
 	 * @return 是否上传成功
+	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, File file) {
+	public boolean upload(String path, String fileName, File file) throws IORuntimeException{
 		try (InputStream in = FileUtil.getInputStream(file)) {
 			return upload(path, fileName, in);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -475,12 +511,13 @@ public class Ftp extends AbstractFtp {
 	 * @param fileName   文件名
 	 * @param fileStream 文件流
 	 * @return 是否上传成功
+	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, InputStream fileStream) {
+	public boolean upload(String path, String fileName, InputStream fileStream) throws IORuntimeException{
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 
 		String pwd = null;
@@ -490,16 +527,15 @@ public class Ftp extends AbstractFtp {
 
 		if (StrUtil.isNotBlank(path)) {
 			mkDirs(path);
-			boolean isOk = cd(path);
-			if (false == isOk) {
-				return false;
+			if (false == cd(path)) {
+				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 			}
 		}
 
 		try {
 			return client.storeFile(fileName, fileStream);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			if (this.backToPwd) {
 				cd(pwd);
@@ -556,8 +592,9 @@ public class Ftp extends AbstractFtp {
 	 * @param path     文件路径
 	 * @param fileName 文件名
 	 * @param outFile  输出文件或目录
+	 * @throws IORuntimeException IO异常
 	 */
-	public void download(String path, String fileName, File outFile) {
+	public void download(String path, String fileName, File outFile) throws IORuntimeException{
 		if (outFile.isDirectory()) {
 			outFile = new File(outFile, fileName);
 		}
@@ -567,7 +604,7 @@ public class Ftp extends AbstractFtp {
 		try (OutputStream out = FileUtil.getOutputStream(outFile)) {
 			download(path, fileName, out);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -579,17 +616,37 @@ public class Ftp extends AbstractFtp {
 	 * @param out      输出位置
 	 */
 	public void download(String path, String fileName, OutputStream out) {
+		download(path, fileName, out, null);
+	}
+
+	/**
+	 * 下载文件到输出流
+	 *
+	 * @param path            文件路径
+	 * @param fileName        文件名
+	 * @param out             输出位置
+	 * @param fileNameCharset 文件名编码
+	 * @since 5.5.7
+	 * @throws IORuntimeException IO异常
+	 */
+	public void download(String path, String fileName, OutputStream out, Charset fileNameCharset) throws IORuntimeException{
 		String pwd = null;
 		if (this.backToPwd) {
 			pwd = pwd();
 		}
 
-		cd(path);
+		if(false == cd(path)){
+			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
+		}
+
+		if (null != fileNameCharset) {
+			fileName = new String(fileName.getBytes(fileNameCharset), StandardCharsets.ISO_8859_1);
+		}
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 			client.retrieveFile(fileName, out);
 		} catch (IOException e) {
-			throw new FtpException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			if (backToPwd) {
 				cd(pwd);

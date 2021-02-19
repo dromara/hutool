@@ -526,4 +526,25 @@ public class JSONObjectTest {
 		// 集合类不支持转为JSONObject
 		new JSONObject(new JSONArray(), JSONConfig.create());
 	}
+
+	@Test
+	public void floatTest(){
+		Map<String, Object> map = new HashMap<>();
+		map.put("c", 2.0F);
+
+		final String s = JSONUtil.toJsonStr(map);
+		Console.log(s);
+	}
+
+	@Test
+	public void accumulateTest(){
+		final JSONObject jsonObject = JSONUtil.createObj().accumulate("key1", "value1");
+		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value2");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value3");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
+	}
 }

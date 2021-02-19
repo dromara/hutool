@@ -11,6 +11,10 @@ public class SimpleServerTest {
 
 	public static void main(String[] args) {
 		HttpUtil.createServer(8888)
+				.addFilter(((req, res, chain) -> {
+					Console.log("Filter: " + req.getPath());
+					chain.doFilter(req.getHttpExchange());
+				}))
 				// 设置默认根目录，classpath/html
 				.setRoot(FileUtil.file("html"))
 				// get数据测试，返回请求的PATH
@@ -45,6 +49,11 @@ public class SimpleServerTest {
 							response.write(request.getMultipart().getParamMap().toString(), ContentType.TEXT_PLAIN.toString());
 						}
 				)
+				// 测试输出响应内容是否能正常返回Content-Length头信息
+				.addAction("test/zeroStr", (req, res)-> {
+					res.write("0");
+					Console.log("Write 0 OK");
+				})
 				.start();
 	}
 }

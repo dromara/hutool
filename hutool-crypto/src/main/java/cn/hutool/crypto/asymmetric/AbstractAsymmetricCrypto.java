@@ -4,6 +4,7 @@ import cn.hutool.core.codec.BCD;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
@@ -301,6 +302,7 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * @since 4.1.0
 	 */
 	public byte[] decryptFromBcd(String data, KeyType keyType, Charset charset) {
+		Assert.notNull(data, "Bcd string must be not null!");
 		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
 		return decrypt(dataBytes, keyType);
 	}

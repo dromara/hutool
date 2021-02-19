@@ -16,6 +16,19 @@ import java.util.regex.Pattern;
 public class FileNameUtil {
 
 	/**
+	 * .java文件扩展名
+	 */
+	public static final String EXT_JAVA = ".java";
+	/**
+	 * .class文件扩展名
+	 */
+	public static final String EXT_CLASS = ".class";
+	/**
+	 * .jar文件扩展名
+	 */
+	public static final String EXT_JAR = ".jar";
+
+	/**
 	 * 类Unix路径分隔符
 	 */
 	public static final char UNIX_SEPARATOR = CharUtil.SLASH;
@@ -231,6 +244,18 @@ public class FileNameUtil {
 	 */
 	public static boolean containsInvalid(String fileName) {
 		return (false == StrUtil.isBlank(fileName)) && ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
+	}
+
+	/**
+	 * 根据文件名检查文件类型，忽略大小写
+	 *
+	 * @param fileName 文件名，例如hutool.png
+	 * @param extNames 被检查的扩展名数组，同一文件类型可能有多种扩展名，扩展名不带“.”
+	 * @return 是否是指定扩展名的类型
+	 * @since 5.5.2
+	 */
+	public static boolean isType(String fileName, String... extNames) {
+		return StrUtil.equalsAnyIgnoreCase(extName(fileName), extNames);
 	}
 	// -------------------------------------------------------------------------------------------- name end
 }
