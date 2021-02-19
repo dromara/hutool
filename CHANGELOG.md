@@ -9,11 +9,13 @@
 * 【crypto 】     PemUtil.readPemKey支持EC（pr#1366@Github）
 * 【extra  】     Ftp等cd方法增加同步（issue#1397@Github）
 * 【core   】     StrUtil增加endWithAnyIgnoreCase（issue#I37I0B@Gitee）
+* 【crypto 】     Sm2增加getD和getQ方法（issue#I37Z4C@Gitee）
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题
 * 【json   】     修复SQLEXception导致的栈溢出（issue#1399@Github）
 * 【extra  】     修复Ftp中异常参数没有传入问题（issue#1397@Github）
+* 【crypto 】     修复Sm2使用D构造空指针问题（issue#I37Z4C@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

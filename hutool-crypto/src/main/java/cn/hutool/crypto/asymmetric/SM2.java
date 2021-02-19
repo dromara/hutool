@@ -471,6 +471,27 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		return this;
 	}
 
+	/**
+	 * 获得私钥D值（编码后的私钥）
+	 *
+	 * @return D值
+	 * @since 5.5.9
+	 */
+	public byte[] getD() {
+		return this.privateKeyParams.getD().toByteArray();
+	}
+
+	/**
+	 * 获得公钥Q值（编码后的公钥）
+	 *
+	 * @param isCompressed 是否压缩
+	 * @return Q值
+	 * @since 5.5.9
+	 */
+	public byte[] getQ(boolean isCompressed) {
+		return this.publicKeyParams.getQ().getEncoded(isCompressed);
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
 
 	/**

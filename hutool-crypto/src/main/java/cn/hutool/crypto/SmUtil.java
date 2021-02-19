@@ -26,7 +26,7 @@ import java.math.BigInteger;
 
 /**
  * SM国密算法工具类<br>
- * 此工具类依赖org.bouncycastle:bcpkix-jdk15on
+ * 此工具类依赖org.bouncycastle:bcprov-jdk15to18
  *
  * @author looly
  * @since 4.3.2

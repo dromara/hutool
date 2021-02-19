@@ -1,7 +1,6 @@
 package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
@@ -31,7 +30,6 @@ public class SM2Test {
 	@Test
 	public void generateKeyPairTest() {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
-		Console.log(HexUtil.encodeHexStr(pair.getPublic().getEncoded()));
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
 	}
@@ -112,6 +110,36 @@ public class SM2Test {
 		sm2.setPublicKey(publicKey);
 		String decryptStr2 = StrUtil.utf8Str(sm2.decrypt(encryptStr, KeyType.PrivateKey));
 		Assert.assertEquals(text.toString(), decryptStr2);
+	}
+
+	@Test
+	public void sm2SignTest(){
+		//需要签名的明文,得到明文对应的字节数组
+		byte[] dataBytes = "我是一段测试aaaa".getBytes();
+
+		//指定的私钥
+		String privateKeyHex = "1ebf8b341c695ee456fd1a41b82645724bc25d79935437d30e7e4b0a554baa5e";
+		final SM2 sm2 = new SM2(privateKeyHex, null, null);
+		sm2.usePlainEncoding();
+		byte[] sign = sm2.sign(dataBytes, null);
+		// 64位签名
+		Assert.assertEquals(64, sign.length);
+	}
+
+	@Test
+	public void sm2VerifyTest(){
+		//指定的公钥
+		String publicKeyHex = "04db9629dd33ba568e9507add5df6587a0998361a03d3321948b448c653c2c1b7056434884ab6f3d1c529501f166a336e86f045cea10dffe58aa82ea13d7253763";
+		//需要加密的明文,得到明文对应的字节数组
+		byte[] dataBytes = "我是一段测试aaaa".getBytes();
+		//签名值
+		String signHex = "2881346e038d2ed706ccdd025f2b1dafa7377d5cf090134b98756fafe084dddbcdba0ab00b5348ed48025195af3f1dda29e819bb66aa9d4d088050ff148482a1";
+
+		final SM2 sm2 = new SM2(null, ECKeyUtil.toSm2PublicParams(publicKeyHex));
+		sm2.usePlainEncoding();
+
+		boolean verify = sm2.verify(dataBytes, HexUtil.decodeHex(signHex));
+		Assert.assertTrue(verify);
 	}
 
 	@Test
@@ -207,8 +235,12 @@ public class SM2Test {
 		// 生成的签名是64位
 		sm2.usePlainEncoding();
 
+
 		String sign = "DCA0E80A7F46C93714B51C3EFC55A922BCEF7ECF0FE9E62B53BA6A7438B543A76C145A452CA9036F3CB70D7E6C67D4D9D7FE114E5367A2F6F5A4D39F2B10F3D6";
 		Assert.assertTrue(sm2.verifyHex(data, sign));
+
+		String sign2 = sm2.signHex(data, id);
+		Assert.assertTrue(sm2.verifyHex(data, sign2));
 	}
 
 	@Test
@@ -224,7 +256,6 @@ public class SM2Test {
 		final SM2 sm2 = new SM2(ecPrivateKeyParameters, ecPublicKeyParameters);
 		sm2.setMode(SM2Engine.Mode.C1C2C3);
 		final String encryptHex = sm2.encryptHex(data, KeyType.PublicKey);
-		Console.log(encryptHex);
 		final String decryptStr = sm2.decryptStr(encryptHex, KeyType.PrivateKey);
 
 		Assert.assertEquals(data, decryptStr);

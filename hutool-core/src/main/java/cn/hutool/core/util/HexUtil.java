@@ -26,7 +26,7 @@ public class HexUtil {
 
 	/**
 	 * 判断给定字符串是否为16进制数<br>
-	 * 如果是，需要使用对应数字类型对象的<code>decode</code>方法解码<br>
+	 * 如果是，需要使用对应数字类型对象的{@code decode}方法解码<br>
 	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
 	 *
 	 * @param value 值
@@ -74,7 +74,7 @@ public class HexUtil {
 	 * 将字节数组转换为十六进制字符数组
 	 *
 	 * @param data        byte[]
-	 * @param toLowerCase <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制char[]
 	 */
 	public static char[] encodeHex(byte[] data, boolean toLowerCase) {
@@ -116,7 +116,7 @@ public class HexUtil {
 	 * 将字节数组转换为十六进制字符串
 	 *
 	 * @param data        byte[]
-	 * @param toLowerCase <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制String
 	 */
 	public static String encodeHexStr(byte[] data, boolean toLowerCase) {

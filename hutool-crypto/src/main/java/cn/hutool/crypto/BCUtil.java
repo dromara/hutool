@@ -41,15 +41,28 @@ public class BCUtil {
 	}
 
 	/**
-	 * 编码压缩EC公钥（基于BouncyCastle）<br>
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
 	 *
 	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
-	 * @return 压缩得到的X
+	 * @return 压缩得到的Q
 	 * @since 4.4.4
 	 */
 	public static byte[] encodeECPublicKey(PublicKey publicKey) {
-		return ((BCECPublicKey) publicKey).getQ().getEncoded(true);
+		return encodeECPublicKey(publicKey, true);
+	}
+
+	/**
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
+	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 *
+	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
+	 * @param isCompressed 是否压缩
+	 * @return 得到的Q
+	 * @since 5.5.9
+	 */
+	public static byte[] encodeECPublicKey(PublicKey publicKey, boolean isCompressed) {
+		return ((BCECPublicKey) publicKey).getQ().getEncoded(isCompressed);
 	}
 
 	/**

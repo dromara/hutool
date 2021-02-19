@@ -87,7 +87,7 @@ public class ECKeyUtil {
 	 * @param x             公钥X
 	 * @param y             公钥Y
 	 * @param domainParameters ECDomainParameters
-	 * @return ECPublicKeyParameters
+	 * @return ECPublicKeyParameters，x或y为{@code null}则返回{@code null}
 	 */
 	public static ECPublicKeyParameters toPublicParams(String x, String y, ECDomainParameters domainParameters) {
 		return toPublicParams(SecureUtil.decode(x), SecureUtil.decode(y), domainParameters);
@@ -102,6 +102,9 @@ public class ECKeyUtil {
 	 * @return ECPublicKeyParameters
 	 */
 	public static ECPublicKeyParameters toPublicParams(byte[] xBytes, byte[] yBytes, ECDomainParameters domainParameters) {
+		if(null == xBytes || null == yBytes){
+			return null;
+		}
 		return toPublicParams(BigIntegers.fromUnsignedByteArray(xBytes), BigIntegers.fromUnsignedByteArray(yBytes), domainParameters);
 	}
 
