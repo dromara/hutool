@@ -2780,11 +2780,11 @@ public class CollUtil {
 	}
 
 	/**
-	 * 取最大值
+	 * 取最小值
 	 *
 	 * @param <T>  元素类型
 	 * @param coll 集合
-	 * @return 最大值
+	 * @return 最小值
 	 * @see Collections#min(Collection)
 	 * @since 4.6.5
 	 */
