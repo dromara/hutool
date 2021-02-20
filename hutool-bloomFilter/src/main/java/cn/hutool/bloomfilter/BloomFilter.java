@@ -12,7 +12,7 @@ import java.io.Serializable;
 public interface BloomFilter extends Serializable{
 
 	/**
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 判断一个字符串是否bitMap中存在
 	 */
@@ -21,7 +21,7 @@ public interface BloomFilter extends Serializable{
 	/**
 	 * 在boolean的bitMap中增加一个字符串<br>
 	 * 如果存在就返回<code>false</code> .如果不存在.先增加这个字符串.再返回<code>true</code>
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 是否加入成功，如果存在就返回<code>false</code> .如果不存在返回<code>true</code>
 	 */

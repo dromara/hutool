@@ -8,11 +8,11 @@ public class ELFFilter extends AbstractFilter {
 	public ELFFilter(long maxValue, int machineNumber) {
 		super(maxValue, machineNumber);
 	}
-	
+
 	public ELFFilter(long maxValue) {
 		super(maxValue);
 	}
-	
+
 	@Override
 	public long hash(String str) {
 		return HashUtil.elfHash(str) % size;
