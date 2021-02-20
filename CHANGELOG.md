@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.9 (2021-02-18)
+# 5.5.9 (2021-02-20)
 
 ### 新特性
 * 【crypto 】     PemUtil.readPemKey支持EC（pr#1366@Github）
 * 【extra  】     Ftp等cd方法增加同步（issue#1397@Github）
 * 【core   】     StrUtil增加endWithAnyIgnoreCase（issue#I37I0B@Gitee）
 * 【crypto 】     Sm2增加getD和getQ方法（issue#I37Z4C@Gitee）
+* 【cache  】     AbstractCache增加keySet方法（issue#I37Z4C@Gitee）
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题
