@@ -2,7 +2,6 @@ package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.http.HttpUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
