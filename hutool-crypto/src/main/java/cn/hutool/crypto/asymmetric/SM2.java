@@ -62,8 +62,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKeyStr 私钥Hex或Base64表示
-	 * @param publicKeyStr  公钥Hex或Base64表示
+	 * @param privateKeyStr 私钥Hex或Base64表示，必须使用PKCS#8规范
+	 * @param publicKeyStr  公钥Hex或Base64表示，必须使用X509规范
 	 */
 	public SM2(String privateKeyStr, String publicKeyStr) {
 		this(SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
@@ -74,8 +74,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
+	 * @param privateKey 私钥，必须使用PKCS#8规范
+	 * @param publicKey  公钥，必须使用X509规范
 	 */
 	public SM2(byte[] privateKey, byte[] publicKey) {
 		this(//
@@ -135,8 +135,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKeyParams 私钥
-	 * @param publicKeyParams  公钥
+	 * @param privateKeyParams 私钥，可以为null
+	 * @param publicKeyParams  公钥，可以为null
 	 */
 	public SM2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
 		super(ALGORITHM_SM2, null, null);

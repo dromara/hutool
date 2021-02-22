@@ -246,7 +246,7 @@ public class ListUtil {
 		// 每页条目数大于总数直接返回所有
 		if (resultSize <= pageSize) {
 			if (pageNo < (PageUtil.getFirstPageNo() + 1)) {
-				return Collections.unmodifiableList(list);
+				return unmodifiable(list);
 			} else {
 				// 越界直接返回空
 				return new ArrayList<>(0);
@@ -262,11 +262,11 @@ public class ListUtil {
 		if (startEnd[1] > resultSize) {
 			startEnd[1] = resultSize;
 			if (startEnd[0] > startEnd[1]) {
-				return empty();
+				return new ArrayList<>(0);
 			}
 		}
 
-		return list.subList(startEnd[0], startEnd[1]);
+		return sub(list, startEnd[0], startEnd[1]);
 	}
 
 	/**
@@ -366,7 +366,8 @@ public class ListUtil {
 	}
 
 	/**
-	 * 截取集合的部分
+	 * 截取集合的部分<br>
+	 * 此方法与{@link List#subList(int, int)} 不同在于子列表是新的副本，操作子列表不会影响原列表。
 	 *
 	 * @param <T>   集合元素类型
 	 * @param list  被截取的数组
@@ -407,8 +408,8 @@ public class ListUtil {
 			end = size;
 		}
 
-		if (step <= 1) {
-			return list.subList(start, end);
+		if (step < 1) {
+			step = 1;
 		}
 
 		final List<T> result = new ArrayList<>();

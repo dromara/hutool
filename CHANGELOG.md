@@ -19,6 +19,8 @@
 * 【extra  】     修复Ftp中异常参数没有传入问题（issue#1397@Github）
 * 【crypto 】     修复Sm2使用D构造空指针问题（issue#I37Z4C@Gitee）
 * 【poi    】     修复ExcelPicUtil中图表报错问题（issue#I38857@Gitee）
+* 【core   】     修复ListUtil.page方法返回空列表无法编辑问题（issue#1415@Github）
+* 【core   】     修复ListUtil.sub中step不通结果不一致问题（issue#1409@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

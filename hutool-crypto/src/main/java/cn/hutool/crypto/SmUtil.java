@@ -16,6 +16,8 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.signers.DSAEncoding;
+import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -190,6 +192,35 @@ public class SmUtil {
 		System.arraycopy(c1c3c2, 0, result, 0, c1Len); // c1: 0->65
 		System.arraycopy(c1c3c2, c1Len + c3Len, result, c1Len, c1c3c2.length - c1Len - c3Len); // c2
 		System.arraycopy(c1c3c2, c1Len, result, c1c3c2.length - c3Len, c3Len); // c3
+		return result;
+	}
+
+	/**
+	 * 将sm2签名结果解码为R和S值
+	 *
+	 * @param encoding {@link DSAEncoding}
+	 * @param rsDer 签名结果的DER表示形式
+	 * @return R和S值，结果为64位，前32位为R，后32为为S
+	 * @since 5.5.9
+	 */
+	public static byte[] decode(DSAEncoding encoding, byte[] rsDer){
+		if(null == encoding){
+			encoding = StandardDSAEncoding.INSTANCE;
+		}
+
+		final BigInteger[] decode;
+		try {
+			decode = encoding.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		byte[] r = bigIntToFixedLengthBytes(decode[0]);
+		byte[] s = bigIntToFixedLengthBytes(decode[1]);
+		byte[] result = new byte[RS_LEN * 2];
+		System.arraycopy(r, 0, result, 0, r.length);
+		System.arraycopy(s, 0, result, RS_LEN, s.length);
+
 		return result;
 	}
 
