@@ -1,6 +1,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
@@ -9,14 +10,9 @@ import cn.hutool.crypto.digest.mac.BCHMacEngine;
 import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.symmetric.SM4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.signers.DSAEncoding;
 import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
@@ -196,35 +192,6 @@ public class SmUtil {
 	}
 
 	/**
-	 * 将sm2签名结果解码为R和S值
-	 *
-	 * @param encoding {@link DSAEncoding}
-	 * @param rsDer 签名结果的DER表示形式
-	 * @return R和S值，结果为64位，前32位为R，后32为为S
-	 * @since 5.5.9
-	 */
-	public static byte[] decode(DSAEncoding encoding, byte[] rsDer){
-		if(null == encoding){
-			encoding = StandardDSAEncoding.INSTANCE;
-		}
-
-		final BigInteger[] decode;
-		try {
-			decode = encoding.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		byte[] r = bigIntToFixedLengthBytes(decode[0]);
-		byte[] s = bigIntToFixedLengthBytes(decode[1]);
-		byte[] result = new byte[RS_LEN * 2];
-		System.arraycopy(r, 0, result, 0, r.length);
-		System.arraycopy(s, 0, result, RS_LEN, s.length);
-
-		return result;
-	}
-
-	/**
 	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s<br>
 	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
 	 *
@@ -233,14 +200,17 @@ public class SmUtil {
 	 * @since 4.5.0
 	 */
 	public static byte[] rsAsn1ToPlain(byte[] rsDer) {
-		ASN1Sequence seq = ASN1Sequence.getInstance(rsDer);
-		byte[] r = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
-		byte[] s = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
-		byte[] result = new byte[RS_LEN * 2];
-		System.arraycopy(r, 0, result, 0, r.length);
-		System.arraycopy(s, 0, result, RS_LEN, s.length);
+		final BigInteger[] decode;
+		try {
+			decode = StandardDSAEncoding.INSTANCE.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 
-		return result;
+		final byte[] r = bigIntToFixedLengthBytes(decode[0]);
+		final byte[] s = bigIntToFixedLengthBytes(decode[1]);
+
+		return ArrayUtil.addAll(r, s);
 	}
 
 	/**
@@ -257,11 +227,8 @@ public class SmUtil {
 		}
 		BigInteger r = new BigInteger(1, Arrays.copyOfRange(sign, 0, RS_LEN));
 		BigInteger s = new BigInteger(1, Arrays.copyOfRange(sign, RS_LEN, RS_LEN * 2));
-		ASN1EncodableVector v = new ASN1EncodableVector();
-		v.add(new ASN1Integer(r));
-		v.add(new ASN1Integer(s));
 		try {
-			return new DERSequence(v).getEncoded("DER");
+			return StandardDSAEncoding.INSTANCE.encode(SM2_DOMAIN_PARAMS.getN(), r, s);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
