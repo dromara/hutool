@@ -37,7 +37,7 @@ public class NumberWordFormatter {
 	}
 
 	/**
-	 * 将阿拉伯数字转化为简洁计数单位，例如 2100 => 2.1k
+	 * 将阿拉伯数字转化为简洁计数单位，例如 2100 =》 2.1k
 	 * 范围默认只到w
 	 *
 	 * @param value 被格式化的数字
@@ -49,7 +49,7 @@ public class NumberWordFormatter {
 	}
 
 	/**
-	 * 将阿拉伯数字转化为简介计数单位，例如 2100 => 2.1k
+	 * 将阿拉伯数字转化为简介计数单位，例如 2100 =》 2.1k
 	 *
 	 * @param value 对应数字的值
 	 * @param isTwo 控制是否为只为k、w，例如当为{@code false}时返回4.38m，{@code true}返回438.43w

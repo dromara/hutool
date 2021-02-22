@@ -967,7 +967,7 @@ public class Convert {
 	 * 将阿拉伯数字转为精简表示形式，例如:
 	 *
 	 * <pre>
-	 *     1200 -> 1.2k
+	 *     1200 -》 1.2k
 	 * </pre>
 	 *
 	 * @param number {@link Number}对象
