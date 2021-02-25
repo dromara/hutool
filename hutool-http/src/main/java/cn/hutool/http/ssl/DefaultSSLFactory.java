@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 public class DefaultSSLFactory extends CustomProtocolsSSLFactory {
 
 	public DefaultSSLFactory() throws KeyManagementException, NoSuchAlgorithmException {
-		super();
 	}
 
 }
