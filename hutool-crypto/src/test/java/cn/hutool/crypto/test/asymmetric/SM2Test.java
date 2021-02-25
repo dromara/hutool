@@ -275,4 +275,10 @@ public class SM2Test {
 		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
 		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
 	}
+
+	@Test
+	public void test(){
+		String priKey = "MHcCAQEEIE29XqAFV/rkJbnJzCoQRJLTeAHG2TR0h9ZCWag0+ZMEoAoGCCqBHM9VAYItoUQDQgAESkOzNigIsH5ehFvr9yQNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
+		String pubKey = "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESkOzNigIsH5ehFvr9yQNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
+	}
 }

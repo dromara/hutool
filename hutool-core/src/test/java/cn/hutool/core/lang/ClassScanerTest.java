@@ -1,12 +1,12 @@
 package cn.hutool.core.lang;
 
-import java.util.Set;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Set;
+
 public class ClassScanerTest {
-	
+
 	@Test
 	@Ignore
 	public void scanTest() {
