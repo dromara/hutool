@@ -1,5 +1,11 @@
 package cn.hutool.crypto;
 
+import cn.hutool.core.io.IORuntimeException;
+import org.bouncycastle.asn1.ASN1Encoding;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.sec.ECPrivateKey;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -8,6 +14,7 @@ import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.util.BigIntegers;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -260,6 +267,21 @@ public class ECKeyUtil {
 			return (ECPrivateKeyParameters) ECUtil.generatePrivateKeyParameter(privateKey);
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
+		}
+	}
+
+	/**
+	 * 将SM2算法的{@link ECPrivateKey} 转换为 {@link PrivateKey}
+	 * @param privateKey {@link ECPrivateKey}
+	 * @return {@link PrivateKey}
+	 */
+	public static PrivateKey toSm2PrivateKey(ECPrivateKey privateKey){
+		try {
+			final PrivateKeyInfo info = new PrivateKeyInfo(
+					new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, SmUtil.ID_SM2_PUBLIC_KEY_PARAM), privateKey);
+			return KeyUtil.generatePrivateKey("SM2", info.getEncoded(ASN1Encoding.DER));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 }

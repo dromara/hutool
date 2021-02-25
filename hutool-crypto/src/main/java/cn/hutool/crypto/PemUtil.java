@@ -3,6 +3,7 @@ package cn.hutool.crypto;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import org.bouncycastle.asn1.sec.ECPrivateKey;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -158,5 +159,16 @@ public class PemUtil {
 		} finally {
 			IoUtil.close(writer);
 		}
+	}
+
+	/**
+	 * 读取OpenSSL生成的ANS1格式的Pem私钥文件
+	 *
+	 * @param keyStream 私钥pem流
+	 * @return {@link PrivateKey}
+	 */
+	public static PrivateKey readSm2PemPrivateKey(InputStream keyStream){
+		final ECPrivateKey ecPrivateKey = ECPrivateKey.getInstance(readPem(keyStream));
+		return ECKeyUtil.toSm2PrivateKey(ecPrivateKey);
 	}
 }

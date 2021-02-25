@@ -4,10 +4,11 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.crypto.PemUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.hutool.crypto.asymmetric.SM2;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -45,9 +46,16 @@ public class PemUtilTest {
 	}
 
 	@Test
-	@Ignore
 	public void readECPrivateKeyTest() {
-		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
-		Assert.assertNotNull(privateKey);
+		PrivateKey privateKey = PemUtil.readSm2PemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		SM2 sm2 = new SM2(privateKey, null);
+		sm2.usePlainEncoding();
+
+		//需要签名的明文,得到明文对应的字节数组
+		byte[] dataBytes = "我是一段测试aaaa".getBytes(StandardCharsets.UTF_8);
+
+		byte[] sign = sm2.sign(dataBytes, null);
+		// 64位签名
+		Assert.assertEquals(64, sign.length);
 	}
 }

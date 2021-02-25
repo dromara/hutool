@@ -12,6 +12,7 @@
 * 【crypto 】     Sm2增加getD和getQ方法（issue#I37Z4C@Gitee）
 * 【cache  】     AbstractCache增加keySet方法（issue#I37Z4C@Gitee）
 * 【core   】     NumberWordFormatter增加formatSimple方法（pr#1436@Github）
+* 【crypto 】     增加读取openSSL生成的sm2私钥
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题

@@ -10,6 +10,7 @@ import cn.hutool.crypto.digest.mac.BCHMacEngine;
 import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.symmetric.SM4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -31,6 +32,7 @@ import java.math.BigInteger;
  */
 public class SmUtil {
 
+	private final static int RS_LEN = 32;
 	/**
 	 * SM2默认曲线
 	 */
@@ -38,13 +40,11 @@ public class SmUtil {
 	/**
 	 * SM2推荐曲线参数（来自https://github.com/ZZMarquis/gmhelper）
 	 */
-	public static final ECDomainParameters SM2_DOMAIN_PARAMS;
-
-	private final static int RS_LEN = 32;
-
-	static {
-		SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
-	}
+	public static final ECDomainParameters SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
+	/**
+	 * SM2国密算法公钥参数的Oid标识
+ 	 */
+	public static final ASN1ObjectIdentifier ID_SM2_PUBLIC_KEY_PARAM = new ASN1ObjectIdentifier("1.2.156.10197.1.301");
 
 	/**
 	 * 创建SM2算法对象<br>
