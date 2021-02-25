@@ -16,6 +16,7 @@ import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -115,7 +116,7 @@ public class SM2Test {
 	@Test
 	public void sm2SignTest(){
 		//需要签名的明文,得到明文对应的字节数组
-		byte[] dataBytes = "我是一段测试aaaa".getBytes();
+		byte[] dataBytes = "我是一段测试aaaa".getBytes(StandardCharsets.UTF_8);
 
 		//指定的私钥
 		String privateKeyHex = "1ebf8b341c695ee456fd1a41b82645724bc25d79935437d30e7e4b0a554baa5e";
@@ -131,7 +132,7 @@ public class SM2Test {
 		//指定的公钥
 		String publicKeyHex = "04db9629dd33ba568e9507add5df6587a0998361a03d3321948b448c653c2c1b7056434884ab6f3d1c529501f166a336e86f045cea10dffe58aa82ea13d7253763";
 		//需要加密的明文,得到明文对应的字节数组
-		byte[] dataBytes = "我是一段测试aaaa".getBytes();
+		byte[] dataBytes = "我是一段测试aaaa".getBytes(StandardCharsets.UTF_8);
 		//签名值
 		String signHex = "2881346e038d2ed706ccdd025f2b1dafa7377d5cf090134b98756fafe084dddbcdba0ab00b5348ed48025195af3f1dda29e819bb66aa9d4d088050ff148482a1";
 
@@ -148,8 +149,8 @@ public class SM2Test {
 
 		final SM2 sm2 = SmUtil.sm2();
 
-		byte[] sign = sm2.sign(content.getBytes());
-		boolean verify = sm2.verify(content.getBytes(), sign);
+		byte[] sign = sm2.sign(StrUtil.utf8Bytes(content));
+		boolean verify = sm2.verify(StrUtil.utf8Bytes(content), sign);
 		Assert.assertTrue(verify);
 	}
 
@@ -172,8 +173,8 @@ public class SM2Test {
 
 		final SM2 sm2 = new SM2(pair.getPrivate(), pair.getPublic());
 
-		byte[] sign = sm2.sign(content.getBytes());
-		boolean verify = sm2.verify(content.getBytes(), sign);
+		byte[] sign = sm2.sign(content.getBytes(StandardCharsets.UTF_8));
+		boolean verify = sm2.verify(content.getBytes(StandardCharsets.UTF_8), sign);
 		Assert.assertTrue(verify);
 	}
 
@@ -188,8 +189,8 @@ public class SM2Test {
 				HexUtil.encodeHexStr(pair.getPublic().getEncoded())//
 		);
 
-		byte[] sign = sm2.sign(content.getBytes());
-		boolean verify = sm2.verify(content.getBytes(), sign);
+		byte[] sign = sm2.sign(content.getBytes(StandardCharsets.UTF_8));
+		boolean verify = sm2.verify(content.getBytes(StandardCharsets.UTF_8), sign);
 		Assert.assertTrue(verify);
 	}
 
@@ -267,11 +268,11 @@ public class SM2Test {
 
 		String src = "Sm2Test";
 		byte[] data = sm2.encrypt(src, KeyType.PublicKey);
-		byte[] sign =  sm2.sign(src.getBytes());
+		byte[] sign =  sm2.sign(src.getBytes(StandardCharsets.UTF_8));
 
-		Assert.assertTrue(sm2.verify( src.getBytes(), sign));
+		Assert.assertTrue(sm2.verify( src.getBytes(StandardCharsets.UTF_8), sign));
 
 		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
-		Assert.assertArrayEquals(dec, src.getBytes());
+		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
 	}
 }

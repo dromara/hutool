@@ -5,6 +5,7 @@ import cn.hutool.crypto.PemUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.security.PrivateKey;
@@ -44,6 +45,7 @@ public class PemUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void readECPrivateKeyTest() {
 		PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
 		Assert.assertNotNull(privateKey);

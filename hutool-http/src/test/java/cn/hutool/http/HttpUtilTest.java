@@ -318,11 +318,4 @@ public class HttpUtilTest {
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
-
-	@Test
-	public void tjhrTest(){
-		String url = "https://www.51tjhr.com";
-		final String s = HttpUtil.get(url);
-		Console.log(s);
-	}
 }
