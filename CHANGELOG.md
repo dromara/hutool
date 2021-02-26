@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.9 (2021-02-25)
+# 5.5.9 (2021-02-26)
 
 ### 新特性
 * 【crypto 】     PemUtil.readPemKey支持EC（pr#1366@Github）
@@ -13,6 +13,7 @@
 * 【cache  】     AbstractCache增加keySet方法（issue#I37Z4C@Gitee）
 * 【core   】     NumberWordFormatter增加formatSimple方法（pr#1436@Github）
 * 【crypto 】     增加读取openSSL生成的sm2私钥
+* 【crypto 】     增加众多方法，SM2兼容各类密钥格式（issue#I37Z75@Gitee）
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题

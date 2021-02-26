@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.BCUtil;
 import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.KeyUtil;
+import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
@@ -74,13 +74,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥，必须使用PKCS#8规范
-	 * @param publicKey  公钥，必须使用X509规范
+	 * @param privateKey 私钥，可以使用PKCS#8、D值或PKCS#1规范
+	 * @param publicKey  公钥，可以使用X509、Q值或PKCS#1规范
 	 */
 	public SM2(byte[] privateKey, byte[] publicKey) {
-		this(//
-				KeyUtil.generatePrivateKey(ALGORITHM_SM2, privateKey), //
-				KeyUtil.generatePublicKey(ALGORITHM_SM2, publicKey)//
+		this(
+				ECKeyUtil.decodePrivateKeyParams(privateKey),
+				ECKeyUtil.decodePublicKeyParams(publicKey)
 		);
 	}
 

@@ -12,7 +12,7 @@ import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.jcajce.spec.OpenSSHPrivateKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -136,7 +136,7 @@ public class SM2Test {
 		//签名值
 		String signHex = "2881346e038d2ed706ccdd025f2b1dafa7377d5cf090134b98756fafe084dddbcdba0ab00b5348ed48025195af3f1dda29e819bb66aa9d4d088050ff148482a1";
 
-		final SM2 sm2 = new SM2(null, ECKeyUtil.toSm2PublicParams(publicKeyHex));
+		final SM2 sm2 = new SM2(null, publicKeyHex);
 		sm2.usePlainEncoding();
 
 		boolean verify = sm2.verify(dataBytes, HexUtil.decodeHex(signHex));
@@ -251,10 +251,7 @@ public class SM2Test {
 
 		String data = "123456";
 
-		final ECPublicKeyParameters ecPublicKeyParameters = ECKeyUtil.toSm2PublicParams(q);
-		final ECPrivateKeyParameters ecPrivateKeyParameters = ECKeyUtil.toSm2PrivateParams(d);
-
-		final SM2 sm2 = new SM2(ecPrivateKeyParameters, ecPublicKeyParameters);
+		final SM2 sm2 = new SM2(d, q);
 		sm2.setMode(SM2Engine.Mode.C1C2C3);
 		final String encryptHex = sm2.encryptHex(data, KeyType.PublicKey);
 		final String decryptStr = sm2.decryptStr(encryptHex, KeyType.PrivateKey);
@@ -277,8 +274,41 @@ public class SM2Test {
 	}
 
 	@Test
-	public void test(){
-		String priKey = "MHcCAQEEIE29XqAFV/rkJbnJzCoQRJLTeAHG2TR0h9ZCWag0+ZMEoAoGCCqBHM9VAYItoUQDQgAESkOzNigIsH5ehFvr9yQNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
+	public void getPublicKeyByPrivateKeyTest(){
+		// issue#I38SDP，openSSL生成的PKCS#1格式私钥
+		String priKey = "MHcCAQEEIE29XqAFV/rkJbnJzCoQRJLTeAHG2TR0h9ZCWag0+ZMEoAoGCCqBHM9VAYItoUQDQgAESkOzNigIsH5ehFvr9y" +
+				"QNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
+
+		PrivateKey privateKey = KeyUtil.generatePrivateKey("sm2", new OpenSSHPrivateKeySpec(SecureUtil.decode(priKey)));
+		final ECPrivateKeyParameters privateKeyParameters = ECKeyUtil.toPrivateParams(privateKey);
+
+		final SM2 sm2 = new SM2(privateKeyParameters, ECKeyUtil.getPublicParams(privateKeyParameters));
+
+		String src = "Sm2Test";
+		byte[] data = sm2.encrypt(src, KeyType.PublicKey);
+		byte[] sign =  sm2.sign(src.getBytes(StandardCharsets.UTF_8));
+
+		Assert.assertTrue(sm2.verify( src.getBytes(StandardCharsets.UTF_8), sign));
+
+		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
+		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
+	}
+
+	@Test
+	public void readPublicKeyTest(){
+		String priKey = "MHcCAQEEIE29XqAFV/rkJbnJzCoQRJLTeAHG2TR0h9ZCWag0+ZMEoAoGCCqBHM9VAYItoUQDQgAESkOzNigIsH5ehFvr9y" +
+				"QNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
 		String pubKey = "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESkOzNigIsH5ehFvr9yQNQ66genyOrm+Q4umCA4aWXPeRzmcTAWSlTineiReTFN2lqor2xaulT8u3a4w3AM/F6A==";
+
+		SM2 sm2 = SmUtil.sm2(priKey, pubKey);
+
+		String src = "Sm2Test中文";
+		byte[] data = sm2.encrypt(src, KeyType.PublicKey);
+		byte[] sign =  sm2.sign(src.getBytes(StandardCharsets.UTF_8));
+
+		Assert.assertTrue(sm2.verify( src.getBytes(StandardCharsets.UTF_8), sign));
+
+		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
+		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
 	}
 }

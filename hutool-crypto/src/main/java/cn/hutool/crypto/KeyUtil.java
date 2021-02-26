@@ -256,8 +256,8 @@ public class KeyUtil {
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 *
-	 * @param algorithm 算法
-	 * @param key       密钥，必须为DER编码存储
+	 * @param algorithm 算法，如RSA、EC、SM2等
+	 * @param key       密钥，PKCS#8格式
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
@@ -271,7 +271,7 @@ public class KeyUtil {
 	 * 生成私钥，仅用于非对称加密<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 *
-	 * @param algorithm 算法
+	 * @param algorithm 算法，如RSA、EC、SM2等
 	 * @param keySpec   {@link KeySpec}
 	 * @return 私钥 {@link PrivateKey}
 	 * @since 3.1.1

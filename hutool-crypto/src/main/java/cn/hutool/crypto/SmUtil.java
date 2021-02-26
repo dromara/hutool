@@ -14,6 +14,8 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
@@ -22,10 +24,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * SM国密算法工具类<br>
  * 此工具类依赖org.bouncycastle:bcprov-jdk15to18
+ *
+ * <p>封装包括：</p>
+ * <ul>
+ *     <li>SM2 椭圆曲线非对称加密和签名</li>
+ *     <li>SM3 杂凑算法</li>
+ *     <li>SM4 对称加密</li>
+ * </ul>
  *
  * @author looly
  * @since 4.3.2
@@ -74,12 +85,40 @@ public class SmUtil {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
+	 * @param privateKey 私钥，必须使用PKCS#8规范
+	 * @param publicKey  公钥，必须使用X509规范
 	 * @return {@link SM2}
 	 */
 	public static SM2 sm2(byte[] privateKey, byte[] publicKey) {
 		return new SM2(privateKey, publicKey);
+	}
+
+	/**
+	 * 创建SM2算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 *
+	 * @param privateKey 私钥
+	 * @param publicKey  公钥
+	 * @return {@link SM2}
+	 * @since 5.5.9
+	 */
+	public static SM2 sm2(PrivateKey privateKey, PublicKey publicKey) {
+		return new SM2(privateKey, publicKey);
+	}
+
+	/**
+	 * 创建SM2算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 *
+	 * @param privateKeyParams 私钥参数
+	 * @param publicKeyParams  公钥参数
+	 * @return {@link SM2}
+	 * @since 5.5.9
+	 */
+	public static SM2 sm2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
+		return new SM2(privateKeyParams, publicKeyParams);
 	}
 
 	/**
@@ -192,8 +231,7 @@ public class SmUtil {
 	}
 
 	/**
-	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s<br>
-	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
+	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s
 	 *
 	 * @param rsDer rs in asn1 format
 	 * @return sign result in plain byte array
@@ -214,8 +252,7 @@ public class SmUtil {
 	}
 
 	/**
-	 * BC的SM3withSM2验签需要的rs是asn1格式的，这个方法将直接拼接r||s的字节数组转化成asn1格式<br>
-	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
+	 * BC的SM3withSM2验签需要的rs是asn1格式的，这个方法将直接拼接r||s的字节数组转化成asn1格式
 	 *
 	 * @param sign in plain byte array
 	 * @return rs result in asn1 format
