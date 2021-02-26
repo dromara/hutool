@@ -274,7 +274,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	}
 
 	/**
-	 * 用私钥对信息生成数字签名
+	 * 用私钥对信息生成数字签名，签名格式为ASN1<br>
+	 * 	 * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
 	 *
 	 * @param data 加密数据
 	 * @return 签名
@@ -295,7 +296,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	}
 
 	/**
-	 * 用私钥对信息生成数字签名
+	 * 用私钥对信息生成数字签名，签名格式为ASN1<br>
+	 * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
 	 *
 	 * @param data 被签名的数据数据
 	 * @param id   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()

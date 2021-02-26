@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -67,7 +69,8 @@ public class PemUtil {
 			//private
 			if (type.endsWith("EC PRIVATE KEY")) {
 				return KeyUtil.generatePrivateKey("EC", object.getContent());
-			}if (type.endsWith("PRIVATE KEY")) {
+			}
+			if (type.endsWith("PRIVATE KEY")) {
 				return KeyUtil.generateRSAPrivateKey(object.getContent());
 			}
 
@@ -131,10 +134,34 @@ public class PemUtil {
 	}
 
 	/**
+	 * 读取OpenSSL生成的ANS1格式的Pem私钥文件
+	 *
+	 * @param keyStream 私钥pem流
+	 * @return {@link PrivateKey}
+	 */
+	public static PrivateKey readSm2PemPrivateKey(InputStream keyStream) {
+		final ECPrivateKey ecPrivateKey = ECPrivateKey.getInstance(readPem(keyStream));
+		return ECKeyUtil.toSm2PrivateKey(ecPrivateKey);
+	}
+
+	/**
+	 * 将私钥或公钥转换为PEM格式的字符串
+	 * @param type 密钥类型（私钥、公钥、证书）
+	 * @param content 密钥内容
+	 * @return PEM内容
+	 * @since 5.5.9
+	 */
+	public static String toPem(String type, byte[] content) {
+		final StringWriter stringWriter = new StringWriter();
+		writePemObject(type, content, stringWriter);
+		return stringWriter.toString();
+	}
+
+	/**
 	 * 写出pem密钥（私钥、公钥、证书）
 	 *
 	 * @param type      密钥类型（私钥、公钥、证书）
-	 * @param content   密钥内容
+	 * @param content   密钥内容，需为PKCS#1格式
 	 * @param keyStream pem流
 	 * @since 5.1.6
 	 */
@@ -145,30 +172,41 @@ public class PemUtil {
 	/**
 	 * 写出pem密钥（私钥、公钥、证书）
 	 *
+	 * @param type    密钥类型（私钥、公钥、证书）
+	 * @param content 密钥内容，需为PKCS#1格式
+	 * @param writer  pemWriter
+	 * @since 5.5.9
+	 */
+	public static void writePemObject(String type, byte[] content, Writer writer) {
+		writePemObject(new PemObject(type, content), writer);
+	}
+
+	/**
+	 * 写出pem密钥（私钥、公钥、证书）
+	 *
 	 * @param pemObject pem对象，包括密钥和密钥类型等信息
 	 * @param keyStream pem流
 	 * @since 5.1.6
 	 */
 	public static void writePemObject(PemObjectGenerator pemObject, OutputStream keyStream) {
-		PemWriter writer = null;
-		try {
-			writer = new PemWriter(IoUtil.getUtf8Writer(keyStream));
-			writer.writeObject(pemObject);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(writer);
-		}
+		writePemObject(pemObject, IoUtil.getUtf8Writer(keyStream));
 	}
 
 	/**
-	 * 读取OpenSSL生成的ANS1格式的Pem私钥文件
+	 * 写出pem密钥（私钥、公钥、证书）
 	 *
-	 * @param keyStream 私钥pem流
-	 * @return {@link PrivateKey}
+	 * @param pemObject pem对象，包括密钥和密钥类型等信息
+	 * @param writer    pemWriter
+	 * @since 5.5.9
 	 */
-	public static PrivateKey readSm2PemPrivateKey(InputStream keyStream){
-		final ECPrivateKey ecPrivateKey = ECPrivateKey.getInstance(readPem(keyStream));
-		return ECKeyUtil.toSm2PrivateKey(ecPrivateKey);
+	public static void writePemObject(PemObjectGenerator pemObject, Writer writer) {
+		final PemWriter pemWriter = new PemWriter(writer);
+		try {
+			pemWriter.writeObject(pemObject);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(pemWriter);
+		}
 	}
 }
