@@ -60,4 +60,10 @@ public class ConditionTest {
 		// issue I38LTM
 		Assert.assertSame(Long.class, age.getValue().getClass());
 	}
+
+	@Test
+	public void parseInTest(){
+		final Condition age = Condition.parse("age", "in 1,2,3");
+		Assert.assertEquals("age IN (?,?,?)", age.toString());
+	}
 }

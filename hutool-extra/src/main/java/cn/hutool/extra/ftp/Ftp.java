@@ -105,12 +105,14 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 构造
 	 *
-	 * @param host     域名或IP
-	 * @param port     端口
-	 * @param user     用户名
-	 * @param password 密码
-	 * @param charset  编码
-	 * @param mode     模式
+	 * @param host               域名或IP
+	 * @param port               端口
+	 * @param user               用户名
+	 * @param password           密码
+	 * @param charset            编码
+	 * @param serverLanguageCode 服务器语言
+	 * @param systemKey          系统关键字
+	 * @param mode               模式
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey, FtpMode mode) {
 		this(new FtpConfig(host, port, user, password, charset, serverLanguageCode, systemKey), mode);
@@ -338,14 +340,14 @@ public class Ftp extends AbstractFtp {
 	 *
 	 * @param path 目录，如果目录不存在，抛出异常
 	 * @return 文件或目录列表
-	 * @throws FtpException 路径不存在
+	 * @throws FtpException       路径不存在
 	 * @throws IORuntimeException IO异常
 	 */
-	public FTPFile[] lsFiles(String path) throws FtpException, IORuntimeException{
+	public FTPFile[] lsFiles(String path) throws FtpException, IORuntimeException {
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			if(false == cd(path)){
+			if (false == cd(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
 			}
 		}
@@ -364,7 +366,7 @@ public class Ftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean mkdir(String dir) throws IORuntimeException{
+	public boolean mkdir(String dir) throws IORuntimeException {
 		try {
 			return this.client.makeDirectory(dir);
 		} catch (IOException e) {
@@ -379,7 +381,7 @@ public class Ftp extends AbstractFtp {
 	 * @return 状态int，服务端不同，返回不同
 	 * @since 5.4.3
 	 */
-	public int stat(String path) throws IORuntimeException{
+	public int stat(String path) throws IORuntimeException {
 		try {
 			return this.client.stat(path);
 		} catch (IOException e) {
@@ -394,7 +396,7 @@ public class Ftp extends AbstractFtp {
 	 * @return 是否存在
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean existFile(String path) throws IORuntimeException{
+	public boolean existFile(String path) throws IORuntimeException {
 		FTPFile[] ftpFileArr;
 		try {
 			ftpFileArr = client.listFiles(path);
@@ -405,11 +407,11 @@ public class Ftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean delFile(String path) throws IORuntimeException{
+	public boolean delFile(String path) throws IORuntimeException {
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		if(false == cd(dir)){
+		if (false == cd(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
@@ -426,7 +428,7 @@ public class Ftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean delDir(String dirPath) throws IORuntimeException{
+	public boolean delDir(String dirPath) throws IORuntimeException {
 		FTPFile[] dirs;
 		try {
 			dirs = client.listFiles(dirPath);
@@ -490,7 +492,7 @@ public class Ftp extends AbstractFtp {
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, File file) throws IORuntimeException{
+	public boolean upload(String path, String fileName, File file) throws IORuntimeException {
 		try (InputStream in = FileUtil.getInputStream(file)) {
 			return upload(path, fileName, in);
 		} catch (IOException e) {
@@ -513,7 +515,7 @@ public class Ftp extends AbstractFtp {
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, InputStream fileStream) throws IORuntimeException{
+	public boolean upload(String path, String fileName, InputStream fileStream) throws IORuntimeException {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 		} catch (IOException e) {
@@ -594,7 +596,7 @@ public class Ftp extends AbstractFtp {
 	 * @param outFile  输出文件或目录
 	 * @throws IORuntimeException IO异常
 	 */
-	public void download(String path, String fileName, File outFile) throws IORuntimeException{
+	public void download(String path, String fileName, File outFile) throws IORuntimeException {
 		if (outFile.isDirectory()) {
 			outFile = new File(outFile, fileName);
 		}
@@ -626,16 +628,16 @@ public class Ftp extends AbstractFtp {
 	 * @param fileName        文件名
 	 * @param out             输出位置
 	 * @param fileNameCharset 文件名编码
-	 * @since 5.5.7
 	 * @throws IORuntimeException IO异常
+	 * @since 5.5.7
 	 */
-	public void download(String path, String fileName, OutputStream out, Charset fileNameCharset) throws IORuntimeException{
+	public void download(String path, String fileName, OutputStream out, Charset fileNameCharset) throws IORuntimeException {
 		String pwd = null;
 		if (this.backToPwd) {
 			pwd = pwd();
 		}
 
-		if(false == cd(path)){
+		if (false == cd(path)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 

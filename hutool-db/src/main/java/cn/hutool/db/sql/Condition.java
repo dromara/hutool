@@ -473,8 +473,9 @@ public class Condition extends CloneSupport<Condition> {
 		final String firstPart = strs.get(0).trim().toUpperCase();
 		if (OPERATORS.contains(firstPart)) {
 			this.operator = firstPart;
-			// 比较符号后跟大部分为数字，此处做转换
-			this.value = tryToNumber(strs.get(1));
+			// 比较符号后跟大部分为数字，此处做转换（IN不做转换）
+			final String valuePart = strs.get(1);
+			this.value = isOperatorIn() ? valuePart : tryToNumber(valuePart);
 			return;
 		}
 
@@ -537,6 +538,9 @@ public class Condition extends CloneSupport<Condition> {
 	 */
 	private static Object tryToNumber(String value){
 		value = StrUtil.trim(value);
+		if(false == NumberUtil.isNumber(value)){
+			return value;
+		}
 		try{
 			return NumberUtil.parseNumber(value);
 		} catch (Exception ignore){
