@@ -13,9 +13,9 @@ import java.util.Iterator;
  */
 public class IteratorEnumeration<E> implements Enumeration<E>, Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Iterator<E> iterator;
-	
+
 	/**
 	 * 构造
 	 * @param iterator {@link Iterator}对象

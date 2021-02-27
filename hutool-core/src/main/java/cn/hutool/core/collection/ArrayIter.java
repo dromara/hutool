@@ -58,7 +58,7 @@ public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable{
 		if(endIndex > 0 && endIndex < this.endIndex){
 			this.endIndex = endIndex;
 		}
-		
+
 		if(startIndex >=0 && startIndex < this.endIndex){
 			this.startIndex = startIndex;
 		}
