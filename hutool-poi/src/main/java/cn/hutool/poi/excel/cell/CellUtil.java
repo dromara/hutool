@@ -7,7 +7,6 @@ import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -39,7 +38,6 @@ import java.util.Date;
  * @author looly
  * @since 4.0.7
  */
-@SuppressWarnings("deprecation")
 public class CellUtil {
 
 	/**
@@ -64,7 +62,7 @@ public class CellUtil {
 		if (null == cell) {
 			return null;
 		}
-		return getCellValue(cell, cell.getCellTypeEnum(), isTrimCellValue);
+		return getCellValue(cell, cell.getCellType(), isTrimCellValue);
 	}
 
 	/**
@@ -107,14 +105,14 @@ public class CellUtil {
 			return null == cellEditor ? null : cellEditor.edit(cell, null);
 		}
 		if (null == cellType) {
-			cellType = cell.getCellTypeEnum();
+			cellType = cell.getCellType();
 		}
 
 		// 尝试获取合并单元格，如果是合并单元格，则重新获取单元格类型
 		final Cell mergedCell = getMergedRegionCell(cell);
 		if (mergedCell != cell) {
 			cell = mergedCell;
-			cellType = cell.getCellTypeEnum();
+			cellType = cell.getCellType();
 		}
 
 		Object value;
@@ -127,7 +125,7 @@ public class CellUtil {
 				break;
 			case FORMULA:
 				// 遇到公式时查找公式结果类型
-				value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), cellEditor);
+				value = getCellValue(cell, cell.getCachedFormulaResultType(), cellEditor);
 				break;
 			case BLANK:
 				value = StrUtil.EMPTY;
@@ -332,10 +330,10 @@ public class CellUtil {
 		);
 
 		if (null != cellStyle) {
-			RegionUtil.setBorderTop(cellStyle.getBorderTopEnum(), cellRangeAddress, sheet);
-			RegionUtil.setBorderRight(cellStyle.getBorderRightEnum(), cellRangeAddress, sheet);
-			RegionUtil.setBorderBottom(cellStyle.getBorderBottomEnum(), cellRangeAddress, sheet);
-			RegionUtil.setBorderLeft(cellStyle.getBorderLeftEnum(), cellRangeAddress, sheet);
+			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
+			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
+			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
+			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
 		}
 		return sheet.addMergedRegion(cellRangeAddress);
 	}

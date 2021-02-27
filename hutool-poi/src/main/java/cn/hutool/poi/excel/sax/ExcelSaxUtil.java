@@ -85,8 +85,7 @@ public class ExcelSaxUtil {
 			case SSTINDEX:
 				try {
 					final int index = Integer.parseInt(value);
-					//noinspection deprecation
-					result = new XSSFRichTextString(sharedStringsTable.getEntryAt(index)).getString();
+					result = sharedStringsTable.getItemAt(index).getString();
 				} catch (NumberFormatException e) {
 					result = value;
 				}
