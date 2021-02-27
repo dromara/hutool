@@ -14,7 +14,7 @@ import cn.hutool.core.util.RandomUtil;
 
 /**
  * 使用干扰线方式生成的图形验证码
- * 
+ *
  * @author looly
  * @since 3.1.2
  */
@@ -24,7 +24,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	// -------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，默认5位验证码，150条干扰线
-	 * 
+	 *
 	 * @param width 图片宽
 	 * @param height 图片高
 	 */
@@ -34,7 +34,7 @@ public class LineCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param width 图片宽
 	 * @param height 图片高
 	 * @param codeCount 字符个数
@@ -63,7 +63,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	// ----------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 绘制字符串
-	 * 
+	 *
 	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
@@ -77,7 +77,7 @@ public class LineCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 绘制干扰线
-	 * 
+	 *
 	 * @param g {@link Graphics2D}画笔
 	 */
 	private void drawInterfere(Graphics2D g) {

@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 /**
  * {@link cn.hutool.cache.impl.AbstractCache} 的CacheObj迭代器.
- * 
+ *
  * @author looly
  *
  * @param <K> 键类型
@@ -21,7 +21,7 @@ public class CacheObjIterator<K, V> implements Iterator<CacheObj<K, V>>, Seriali
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param iterator 原{@link Iterator}
 	 */
 	CacheObjIterator(Iterator<CacheObj<K, V>> iterator) {

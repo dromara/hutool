@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 数字计算验证码生成器
- * 
+ *
  * @author looly
  * @since 4.1.2
  */
@@ -28,7 +28,7 @@ public class MathGenerator implements CodeGenerator {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param numberLength 参与计算最大数字位数
 	 */
 	public MathGenerator(int numberLength) {
@@ -75,7 +75,7 @@ public class MathGenerator implements CodeGenerator {
 
 	/**
 	 * 根据长度获取参与计算数字最大值
-	 * 
+	 *
 	 * @return 最大值
 	 */
 	private int getLimit() {
