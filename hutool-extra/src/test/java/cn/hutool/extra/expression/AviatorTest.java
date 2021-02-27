@@ -53,7 +53,6 @@ public class AviatorTest {
 		Bar[] bars = new Bar[1];
 
 		public Foo(final int i, final float f, final Date date) {
-			super();
 			this.i = i;
 			this.f = f;
 			this.date = date;

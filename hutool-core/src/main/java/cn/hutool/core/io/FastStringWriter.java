@@ -27,7 +27,6 @@ public final class FastStringWriter extends Writer {
 	 * @param initialSize 初始容量
 	 */
 	public FastStringWriter(int initialSize) {
-		super();
 		if (initialSize < 0) {
 			initialSize = StrBuilder.DEFAULT_CAPACITY;
 		}
