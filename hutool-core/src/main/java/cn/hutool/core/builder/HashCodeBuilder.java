@@ -85,17 +85,17 @@ import cn.hutool.core.util.ArrayUtil;
  */
 public class HashCodeBuilder implements Builder<Integer> {
 	private static final long serialVersionUID = 1L;
-	
+
     /**
      * The default initial value to use in reflection hash code building.
      */
     private static final int DEFAULT_INITIAL_VALUE = 17;
-    
+
     /**
      * The default multipler value to use in reflection hash code building.
      */
     private static final int DEFAULT_MULTIPLIER_VALUE = 37;
-    
+
     /**
      * <p>
      * A registry of objects used by reflection methods to detect cyclical object references and avoid infinite loops.
@@ -380,7 +380,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      *             if the object is <code>null</code>
      */
     public static int reflectionHashCode(final Object object, final boolean testTransients) {
-        return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object, 
+        return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object,
                 testTransients, null);
     }
 
@@ -457,7 +457,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      *             if the object is <code>null</code>
      */
     public static int reflectionHashCode(final Object object, final String... excludeFields) {
-        return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object, false, 
+        return reflectionHashCode(DEFAULT_INITIAL_VALUE, DEFAULT_MULTIPLIER_VALUE, object, false,
                 null, excludeFields);
     }
 

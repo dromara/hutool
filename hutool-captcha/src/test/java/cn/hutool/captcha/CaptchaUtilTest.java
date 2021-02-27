@@ -4,7 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class CaptchaUtilTest {
-	
+
 	@Test
 	@Ignore
 	public void createTest() {
