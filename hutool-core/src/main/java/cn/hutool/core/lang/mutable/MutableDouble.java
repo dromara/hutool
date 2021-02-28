@@ -17,7 +17,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 构造，默认值0
 	 */
 	public MutableDouble() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * @param value 值
 	 */
 	public MutableDouble(final double value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,7 +41,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * @throws NumberFormatException 数字转换错误
 	 */
 	public MutableDouble(final String value) throws NumberFormatException {
-		super();
 		this.value = Double.parseDouble(value);
 	}
 

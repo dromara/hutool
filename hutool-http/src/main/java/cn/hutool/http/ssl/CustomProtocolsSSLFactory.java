@@ -28,7 +28,6 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 * @throws NoSuchAlgorithmException NoSuchAlgorithmException
 	 */
 	public CustomProtocolsSSLFactory(String... protocols) throws KeyManagementException, NoSuchAlgorithmException {
-		super();
 		this.protocols = protocols;
 		this.base = SSLSocketFactoryBuilder.create().build();
 	}

@@ -17,7 +17,6 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * 构造，默认值0
 	 */
 	public MutableInt() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * @param value 值
 	 */
 	public MutableInt(final int value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,7 +41,6 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * @throws NumberFormatException 数字转换错误
 	 */
 	public MutableInt(final String value) throws NumberFormatException {
-		super();
 		this.value = Integer.parseInt(value);
 	}
 
