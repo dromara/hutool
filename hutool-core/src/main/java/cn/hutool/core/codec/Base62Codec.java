@@ -48,16 +48,16 @@ public class Base62Codec implements Serializable{
 
 	/**
 	 * 创建GMP风格的Base62编码解码器对象
-	 * 
+	 *
 	 * @return Base62Codec
 	 */
 	public static Base62Codec createGmp() {
 		return new Base62Codec(GMP);
 	}
-	
+
 	/**
 	 * 创建Inverted风格的Base62编码解码器对象
-	 * 
+	 *
 	 * @return Base62Codec
 	 */
 	public static Base62Codec createInverted() {
@@ -69,7 +69,7 @@ public class Base62Codec implements Serializable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param alphabet 自定义字母表
 	 */
 	public Base62Codec(byte[] alphabet) {
@@ -93,7 +93,7 @@ public class Base62Codec implements Serializable{
 
 	/**
 	 * 解码Base62消息
-	 * 
+	 *
 	 * @param encoded Base62内容
 	 * @return 消息
 	 */
@@ -105,7 +105,7 @@ public class Base62Codec implements Serializable{
 	// --------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 按照字典转换bytes
-	 * 
+	 *
 	 * @param indices 内容
 	 * @param dictionary 字典
 	 * @return 转换值
@@ -122,7 +122,7 @@ public class Base62Codec implements Serializable{
 
 	/**
 	 * 使用定义的字母表从源基准到目标基准
-	 * 
+	 *
 	 * @param message 消息bytes
 	 * @param sourceBase 源基准长度
 	 * @param targetBase 目标基准长度
@@ -167,7 +167,7 @@ public class Base62Codec implements Serializable{
 
 	/**
 	 * 估算结果长度
-	 * 
+	 *
 	 * @param inputLength 输入长度
 	 * @param sourceBase 源基准长度
 	 * @param targetBase 目标基准长度

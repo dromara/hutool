@@ -14,7 +14,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class Base32 {
-	
+
 	private Base32() {}
 
 	private static final String BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
@@ -73,10 +73,10 @@ public class Base32 {
 
 		return base32.toString();
 	}
-	
+
 	/**
 	 * base32编码
-	 * 
+	 *
 	 * @param source 被编码的base32字符串
 	 * @return 被加密后的字符串
 	 */
@@ -86,7 +86,7 @@ public class Base32 {
 
 	/**
 	 * base32编码
-	 * 
+	 *
 	 * @param source 被编码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -97,7 +97,7 @@ public class Base32 {
 
 	/**
 	 * base32编码
-	 * 
+	 *
 	 * @param source 被编码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -155,10 +155,10 @@ public class Base32 {
 		}
 		return bytes;
 	}
-	
+
 	/**
 	 * base32解码
-	 * 
+	 *
 	 * @param source 被解码的base32字符串
 	 * @return 被加密后的字符串
 	 */
@@ -168,7 +168,7 @@ public class Base32 {
 
 	/**
 	 * base32解码
-	 * 
+	 *
 	 * @param source 被解码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -176,10 +176,10 @@ public class Base32 {
 	public static String decodeStr(String source, String charset) {
 		return StrUtil.str(decode(source), charset);
 	}
-	
+
 	/**
 	 * base32解码
-	 * 
+	 *
 	 * @param source 被解码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串

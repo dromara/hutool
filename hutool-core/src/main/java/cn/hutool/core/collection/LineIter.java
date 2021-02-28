@@ -17,7 +17,7 @@ import cn.hutool.core.lang.Assert;
 /**
  * 将Reader包装为一个按照行读取的Iterator<br>
  * 此对象遍历结束后，应关闭之，推荐使用方式:
- * 
+ *
  * <pre>
  * LineIterator it = null;
  * try {
@@ -30,7 +30,7 @@ import cn.hutool.core.lang.Assert;
  * 		it.close();
  * }
  * </pre>
- * 
+ *
  * 此类来自于Apache Commons io
  *
  * @author looly
@@ -45,7 +45,7 @@ public class LineIter implements Iterator<String>, Iterable<String>, Closeable, 
 	private String cachedLine;
 	/** A flag indicating if the iterator has been fully read. */
 	private boolean finished = false;
-	
+
 	/**
 	 * 构造
 	 *
@@ -148,7 +148,7 @@ public class LineIter implements Iterator<String>, Iterable<String>, Closeable, 
 
 	/**
 	 * 重写此方法来判断是否每一行都被返回，默认全部为true
-	 * 
+	 *
 	 * @param line 需要验证的行
 	 * @return 是否通过验证
 	 */

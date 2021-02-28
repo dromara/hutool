@@ -10,7 +10,7 @@ import cn.hutool.core.lang.Assert;
  *
  */
 public class BCD {
-	
+
 	/**
 	 * 字符串转BCD码
 	 * @param asc ASCII字符串
@@ -53,7 +53,7 @@ public class BCD {
 		}
 		return bbt;
 	}
-	
+
 	/**
 	 * ASCII转BCD
 	 * @param ascii ASCII byte数组
@@ -100,8 +100,8 @@ public class BCD {
 		}
 		return new String(temp);
 	}
-	
-	
+
+
 	//----------------------------------------------------------------- Private method start
 	/**
 	 * 转换单个byte为BCD

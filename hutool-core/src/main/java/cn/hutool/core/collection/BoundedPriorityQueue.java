@@ -15,15 +15,15 @@ import java.util.PriorityQueue;
  */
 public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	private static final long serialVersionUID = 3794348988671694820L;
-	
+
 	//容量
 	private final int capacity;
 	private final Comparator<? super E> comparator;
-	
+
 	public BoundedPriorityQueue(int capacity) {
 		this(capacity, null);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param capacity 容量
@@ -63,7 +63,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 		}
 		return super.offer(e);
 	}
-	
+
 	/**
 	 * 添加多个元素<br>
 	 * 参数为集合的情况请使用{@link PriorityQueue#addAll}
@@ -73,7 +73,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	public boolean addAll(E[] c) {
 		return this.addAll(Arrays.asList(c));
 	}
-	
+
 	/**
 	 * @return 返回排序后的列表
 	 */
@@ -82,7 +82,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 		list.sort(comparator);
 		return list;
 	}
-	
+
 	@Override
 	public Iterator<E> iterator() {
 		return toList().iterator();
