@@ -23,7 +23,7 @@ public abstract class AbstractFileCache implements Serializable{
 	protected final long timeout;
 	/** 缓存实现 */
 	protected final Cache<File, byte[]> cache;
-	
+
 	/** 已使用缓存空间 */
 	protected int usedSize;
 
@@ -122,7 +122,7 @@ public abstract class AbstractFileCache implements Serializable{
 
 		return bytes;
 	}
-	
+
 	// ---------------------------------------------------------------- protected method start
 	/**
 	 * 初始化实现文件缓存的缓存对象
