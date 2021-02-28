@@ -62,7 +62,7 @@ public class XML {
 	/**
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
+	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and {@code <[ [ ]]>} are ignored.
 	 *
 	 * @param string The source string.
 	 * @return A JSONObject containing the structured data from the XML string.
@@ -75,7 +75,7 @@ public class XML {
 	/**
 	 * 转换XML为JSONObject
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]&gt;</code> are ignored.
+	 * Content text may be placed in a "content" member. Comments, prologs, DTDs, and {@code <[ [ ]]>} are ignored.
 	 * All values are converted as strings, for 1, 01, 29.0 will not be coerced to numbers but will instead be the exact value as seen in the XML document.
 	 *
 	 * @param string      The source string.

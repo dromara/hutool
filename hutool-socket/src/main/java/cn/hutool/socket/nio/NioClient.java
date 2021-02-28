@@ -66,6 +66,7 @@ public class NioClient implements Closeable {
 			//noinspection StatementWithEmptyBody
 			while (false == channel.finishConnect()){}
 		} catch (IOException e) {
+			close();
 			throw new IORuntimeException(e);
 		}
 		return this;
