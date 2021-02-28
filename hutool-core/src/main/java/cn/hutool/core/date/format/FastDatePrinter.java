@@ -694,7 +694,6 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 */
 		UnpaddedMonthField() {
-			super();
 		}
 
 		/**
@@ -833,7 +832,6 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * Constructs an instance of {@code TwoDigitYearField}.
 		 */
 		TwoDigitYearField() {
-			super();
 		}
 
 		/**
@@ -873,7 +871,6 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * Constructs an instance of {@code TwoDigitMonthField}.
 		 */
 		TwoDigitMonthField() {
-			super();
 		}
 
 		/**

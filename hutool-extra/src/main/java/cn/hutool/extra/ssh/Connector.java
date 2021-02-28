@@ -39,7 +39,6 @@ public class Connector {
 	 * @param password 密码
 	 */
 	public Connector(String host, int port, String user, String password) {
-		super();
 		this.host = host;
 		this.port = port;
 		this.user = user;
