@@ -25,7 +25,7 @@ import java.util.Map;
  *     3. Map  转 Bean
  *     4. Map  转 Map
  * </pre>
- * 
+ *
  * @author looly
  *
  * @param <T> 目标对象类型
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class BeanCopier<T> implements Copier<T>, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** 源对象 */
 	private final Object source;
 	/** 目标对象 */
@@ -45,7 +45,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * 创建BeanCopier
-	 * 
+	 *
 	 * @param <T> 目标Bean类型
 	 * @param source 来源对象，可以是Bean或者Map
 	 * @param dest 目标Bean对象
@@ -58,7 +58,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * 创建BeanCopier
-	 * 
+	 *
 	 * @param <T> 目标Bean类型
 	 * @param source 来源对象，可以是Bean或者Map
 	 * @param dest 目标Bean对象
@@ -72,7 +72,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param source 来源对象，可以是Bean或者Map
 	 * @param dest 目标Bean对象
 	 * @param destType 目标的泛型类型，用于标注有泛型参数的Bean对象
@@ -115,7 +115,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * Bean和Bean之间属性拷贝
-	 * 
+	 *
 	 * @param providerBean 来源Bean
 	 * @param destBean 目标Bean
 	 */
@@ -125,7 +125,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * Map转Bean属性拷贝
-	 * 
+	 *
 	 * @param map Map
 	 * @param bean Bean
 	 */
@@ -138,7 +138,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * Map转Map
-	 * 
+	 *
 	 * @param source 源Map
 	 * @param dest 目标Map
 	 */
@@ -151,7 +151,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 	/**
 	 * 对象转Map
-	 * 
+	 *
 	 * @param bean bean对象
 	 * @param targetMap 目标的Map
 	 * @since 4.1.22
@@ -201,7 +201,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	/**
 	 * 值提供器转Bean<br>
 	 * 此方法通过遍历目标Bean的字段，从ValueProvider查找对应值
-	 * 
+	 *
 	 * @param valueProvider 值提供器
 	 * @param bean Bean
 	 */
