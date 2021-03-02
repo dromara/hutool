@@ -1,16 +1,19 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.KeyUtil;
-
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.KeyUtil;
 
 /**
  * 非对称基础，提供锁、私钥和公钥的持有
@@ -37,7 +40,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 */
 	protected final Lock lock = new ReentrantLock();
 
-	// ------------------------------------------------------------------ Constructor start
+	// ------------------------------------------------------------------
+	// Constructor start
 
 	/**
 	 * 构造
@@ -53,7 +57,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	public BaseAsymmetric(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
 		init(algorithm, privateKey, publicKey);
 	}
-	// ------------------------------------------------------------------ Constructor end
+	// ------------------------------------------------------------------
+	// Constructor end
 
 	/**
 	 * 初始化<br>
@@ -95,7 +100,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 		return (T) this;
 	}
 
-	// --------------------------------------------------------------------------------- Getters and Setters
+	// ---------------------------------------------------------------------------------
+	// Getters and Setters
 
 	/**
 	 * 获得公钥
@@ -104,6 +110,78 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 */
 	public PublicKey getPublicKey() {
 		return this.publicKey;
+	}
+
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数字节数组
+	 */
+	public byte[] getPublicKeyModulus() {
+		return ((RSAPublicKey) this.publicKey).getModulus().toByteArray();
+	}
+	
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数16进制
+	 */
+	public String getPublicKeyModulusHex() {
+		return HexUtil.encodeHexStr(getPublicKeyModulus());
+	}
+
+	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数字节数组
+	 */
+	public byte[] getPublicKeyExponent() {
+		return ((RSAPublicKey) this.publicKey).getPublicExponent().toByteArray();
+	}
+	
+	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数16进制
+	 */
+	public String getPublicKeyExponentHex() {
+		return HexUtil.encodeHexStr(getPublicKeyExponent());
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数字节数组
+	 */
+	public byte[] getPrivateKeyModulus() {
+		return ((RSAPrivateKey) this.privateKey).getModulus().toByteArray();
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数16进制
+	 */
+	public String getPrivateKeyModulusHex() {
+		return HexUtil.encodeHexStr(getPrivateKeyModulus());
+	}
+
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数字节数组
+	 */
+	public byte[] getPrivateKeyExponent() {
+		return ((RSAPrivateKey) this.privateKey).getPrivateExponent().toByteArray();
+	}
+	
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数16进制
+	 */
+	public String getPrivateKeyExponentHex() {
+		return HexUtil.encodeHexStr(getPrivateKeyExponent());
 	}
 
 	/**
@@ -185,16 +263,16 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 */
 	protected Key getKeyByType(KeyType type) {
 		switch (type) {
-			case PrivateKey:
-				if (null == this.privateKey) {
-					throw new NullPointerException("Private key must not null when use it !");
-				}
-				return this.privateKey;
-			case PublicKey:
-				if (null == this.publicKey) {
-					throw new NullPointerException("Public key must not null when use it !");
-				}
-				return this.publicKey;
+		case PrivateKey:
+			if (null == this.privateKey) {
+				throw new NullPointerException("Private key must not null when use it !");
+			}
+			return this.privateKey;
+		case PublicKey:
+			if (null == this.publicKey) {
+				throw new NullPointerException("Public key must not null when use it !");
+			}
+			return this.publicKey;
 		}
 		throw new CryptoException("Unsupported key type: " + type);
 	}
