@@ -129,6 +129,15 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	public String getPublicKeyModulusHex() {
 		return HexUtil.encodeHexStr(getPublicKeyModulus());
 	}
+	
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数base64编码
+	 */
+	public String getPublicKeyModulusBase64() {
+		return Base64.encode(getPublicKeyModulus());
+	}
 
 	/**
 	 * 获得公钥指数exponent
@@ -149,6 +158,15 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	}
 	
 	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数Base64
+	 */
+	public String getPublicKeyExponentBase64() {
+		return Base64.encode(getPublicKeyExponent());
+	}
+	
+	/**
 	 * 获得私钥模数modulus
 	 * 
 	 * @return 私钥模数字节数组
@@ -164,6 +182,15 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 */
 	public String getPrivateKeyModulusHex() {
 		return HexUtil.encodeHexStr(getPrivateKeyModulus());
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数Base64
+	 */
+	public String getPrivateKeyModulusBase64() {
+		return Base64.encode(getPrivateKeyModulus());
 	}
 
 	/**
@@ -182,6 +209,15 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 */
 	public String getPrivateKeyExponentHex() {
 		return HexUtil.encodeHexStr(getPrivateKeyExponent());
+	}
+	
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数Base64
+	 */
+	public String getPrivateKeyExponentBase64() {
+		return Base64.encode(getPrivateKeyExponent());
 	}
 
 	/**

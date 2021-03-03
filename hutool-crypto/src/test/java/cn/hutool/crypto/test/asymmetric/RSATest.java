@@ -205,23 +205,24 @@ public class RSATest {
 
 	@Test
 	public void rsaTest2() throws Exception {
-		String publicKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6s" +
-				"XqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9S" +
-				"dB1Ua44oncaTWz7OBGLbCiK45wIDAQAB";
+		String publicKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6s"
+				+ "XqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9S"
+				+ "dB1Ua44oncaTWz7OBGLbCiK45wIDAQAB";
 
 		byte[] keyBytes = Base64.decode(publicKeyStr);
 		PublicKey publicKey = KeyUtil.generateRSAPublicKey(keyBytes);
 
-		byte[] data = RandomUtil.randomString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 16).getBytes();
-		//长度不满足128补0
+		byte[] data = RandomUtil.randomString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 16)
+				.getBytes();
+		// 长度不满足128补0
 		byte[] finalData = ArrayUtil.resize(data, 128);
 
-		//jdk原生加密
+		// jdk原生加密
 		Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		String result1 = HexUtil.encodeHexStr(cipher.doFinal(finalData));
 
-		//hutool加密
+		// hutool加密
 		RSA rsa = new RSA("RSA/ECB/NoPadding", null, publicKeyStr);
 		rsa.setEncryptBlockSize(128);
 		String result2 = rsa.encryptHex(finalData, KeyType.PublicKey);
@@ -230,15 +231,35 @@ public class RSATest {
 	}
 
 	@Test
-	public void exponentTest(){
-		String modulus = "BD99BAAB9E56B7FD85FB8BCF53CAD2913C1ACEF9063E7C913CD6FC4FEE040DA44D8" +
-				"ADAA35A9DCABD6E936C402D47278049638407135BAB22BB091396CB6873195C8AC8B0B7AB123" +
-				"C3BF7A6341A4419BDBC0EFB85DBCD9A3AD12C99E2265BDCC1197913749E2AFA568EB7623DA3A" +
-				"361335AA1F9FFA6E1801DDC8228AA86306B87";
+	public void exponentTest() {
+		String modulus = "BD99BAAB9E56B7FD85FB8BCF53CAD2913C1ACEF9063E7C913CD6FC4FEE040DA44D8"
+				+ "ADAA35A9DCABD6E936C402D47278049638407135BAB22BB091396CB6873195C8AC8B0B7AB123"
+				+ "C3BF7A6341A4419BDBC0EFB85DBCD9A3AD12C99E2265BDCC1197913749E2AFA568EB7623DA3A"
+				+ "361335AA1F9FFA6E1801DDC8228AA86306B87";
 		String publicExponent = "65537";
 		RSA rsa = new RSA(new BigInteger(modulus, 16), null, new BigInteger(publicExponent));
 
 		final String encryptBase64 = rsa.encryptBase64("测试内容", KeyType.PublicKey);
 		Assert.assertNotNull(encryptBase64);
+	}
+
+	@Test
+	public void testGenerateModulusExponentByKey() {
+		String test = "测试字符串";
+		RSA rsa = new RSA();
+		String encStr = rsa.encryptBase64(test, KeyType.PublicKey);
+		String decStr = rsa.decryptStr(encStr, KeyType.PrivateKey);
+		Assert.assertEquals(test, decStr);
+		String hexModulus = rsa.getPublicKeyModulusHex();
+		String hexExponent = rsa.getPublicKeyExponentHex();
+		String hexPrivateExponent = rsa.getPrivateKeyExponentHex();
+
+		RSA rsaME = new RSA(new BigInteger(hexModulus, 16), new BigInteger(hexPrivateExponent, 16),
+				new BigInteger(hexExponent, 16));
+		String encMeStr = rsaME.encryptBase64(test, KeyType.PublicKey);
+		String decMeStr = rsa.decryptStr(encStr, KeyType.PrivateKey);
+		String decMeStr2 = rsa.decryptStr(encMeStr, KeyType.PrivateKey);
+		Assert.assertEquals(decStr, decMeStr);
+		Assert.assertEquals(decStr, decMeStr2);
 	}
 }
