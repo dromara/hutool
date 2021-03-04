@@ -60,7 +60,7 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("4d546864000000060001", "mid"); // MIDI (mid)
 		FILE_TYPE_MAP.put("526172211a0700cf9073", "rar"); // WinRAR
 		FILE_TYPE_MAP.put("235468697320636f6e66", "ini");
-		FILE_TYPE_MAP.put("504B0304140000000800", "odf"); // ofd文件 国标版式文件
+		FILE_TYPE_MAP.put("504B0304140000000800", "ofd"); // ofd文件 国标版式文件
 		FILE_TYPE_MAP.put("504B03040a0000000000", "jar");
 		FILE_TYPE_MAP.put("504B0304140008000800", "jar");
 		// MS Excel 注意：word、msi 和 excel的文件头一样

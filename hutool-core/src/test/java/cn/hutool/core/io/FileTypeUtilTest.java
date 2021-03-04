@@ -53,7 +53,7 @@ public class FileTypeUtilTest {
 		Console.log(hex);
 		String type = FileTypeUtil.getType(file);
 		Console.log(type);
-		Assert.assertEquals("odf", type);
+		Assert.assertEquals("ofd", type);
 	}
 
 }
