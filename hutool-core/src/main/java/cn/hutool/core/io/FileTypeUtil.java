@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import cn.hutool.core.util.StrUtil;
 
@@ -23,7 +23,15 @@ public class FileTypeUtil {
 	private static final Map<String, String> FILE_TYPE_MAP;
 
 	static {
-		FILE_TYPE_MAP = new ConcurrentHashMap<>();
+		FILE_TYPE_MAP = new ConcurrentSkipListMap<>((s1, s2) -> {
+			int len1 = s1.length();
+			int len2 = s2.length();
+			if (len1 == len2) {
+				return s1.compareTo(s2);
+			} else {
+				return len2 - len1;
+			}
+		});
 
 		FILE_TYPE_MAP.put("ffd8ff", "jpg"); // JPEG (jpg)
 		FILE_TYPE_MAP.put("89504e47", "png"); // PNG (png)
@@ -50,22 +58,23 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("52494646e27807005741", "wav"); // Wave (wav)
 		FILE_TYPE_MAP.put("52494646d07d60074156", "avi");
 		FILE_TYPE_MAP.put("4d546864000000060001", "mid"); // MIDI (mid)
-		FILE_TYPE_MAP.put("526172211a0700cf9073", "rar");// WinRAR
+		FILE_TYPE_MAP.put("526172211a0700cf9073", "rar"); // WinRAR
 		FILE_TYPE_MAP.put("235468697320636f6e66", "ini");
+		FILE_TYPE_MAP.put("504B0304140000000800", "odf"); // ofd文件 国标版式文件
 		FILE_TYPE_MAP.put("504B03040a0000000000", "jar");
 		FILE_TYPE_MAP.put("504B0304140008000800", "jar");
 		// MS Excel 注意：word、msi 和 excel的文件头一样
 		FILE_TYPE_MAP.put("d0cf11e0a1b11ae10", "xls");
 		FILE_TYPE_MAP.put("504B0304", "zip");
-		FILE_TYPE_MAP.put("4d5a9000030000000400", "exe");// 可执行文件
-		FILE_TYPE_MAP.put("3c25402070616765206c", "jsp");// jsp文件
-		FILE_TYPE_MAP.put("4d616e69666573742d56", "mf");// MF文件
-		FILE_TYPE_MAP.put("7061636b616765207765", "java");// java文件
-		FILE_TYPE_MAP.put("406563686f206f66660d", "bat");// bat文件
-		FILE_TYPE_MAP.put("1f8b0800000000000000", "gz");// gz文件
-		FILE_TYPE_MAP.put("cafebabe0000002e0041", "class");// bat文件
-		FILE_TYPE_MAP.put("49545346030000006000", "chm");// bat文件
-		FILE_TYPE_MAP.put("04000000010000001300", "mxp");// bat文件
+		FILE_TYPE_MAP.put("4d5a9000030000000400", "exe"); // 可执行文件
+		FILE_TYPE_MAP.put("3c25402070616765206c", "jsp"); // jsp文件
+		FILE_TYPE_MAP.put("4d616e69666573742d56", "mf"); // MF文件
+		FILE_TYPE_MAP.put("7061636b616765207765", "java"); // java文件
+		FILE_TYPE_MAP.put("406563686f206f66660d", "bat"); // bat文件
+		FILE_TYPE_MAP.put("1f8b0800000000000000", "gz"); // gz文件
+		FILE_TYPE_MAP.put("cafebabe0000002e0041", "class"); // class文件
+		FILE_TYPE_MAP.put("49545346030000006000", "chm"); // chm文件
+		FILE_TYPE_MAP.put("04000000010000001300", "mxp"); // mxp文件
 		FILE_TYPE_MAP.put("6431303a637265617465", "torrent");
 		FILE_TYPE_MAP.put("6D6F6F76", "mov"); // Quicktime (mov)
 		FILE_TYPE_MAP.put("FF575043", "wpd"); // WordPerfect (wpd)
@@ -85,7 +94,7 @@ public class FileTypeUtil {
 	 * @return 之前已经存在的文件扩展名
 	 */
 	public static String putFileType(String fileStreamHexHead, String extName) {
-		return FILE_TYPE_MAP.put(fileStreamHexHead.toLowerCase(), extName);
+		return FILE_TYPE_MAP.put(fileStreamHexHead, extName);
 	}
 
 	/**
@@ -95,7 +104,7 @@ public class FileTypeUtil {
 	 * @return 移除的文件扩展名
 	 */
 	public static String removeFileType(String fileStreamHexHead) {
-		return FILE_TYPE_MAP.remove(fileStreamHexHead.toLowerCase());
+		return FILE_TYPE_MAP.remove(fileStreamHexHead);
 	}
 
 	/**
