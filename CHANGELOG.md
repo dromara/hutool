@@ -11,6 +11,7 @@
 * 【core   】     IterUtil和CollUtil增加isEqualList方法（issue#I3A3PY@Gitee）
 * 【crypto 】     增加PBKDF2（issue#1416@Github）
 * 【core   】     增加FuncKeyMap（issue#1402@Github）
+* 【core   】     增加StrMatcher（issue#1379@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
