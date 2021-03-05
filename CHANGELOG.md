@@ -8,6 +8,7 @@
 ### 新特性
 * 【poi    】     重要：不再兼容POI-3.x，增加兼容POI-5.x（issue#I35J6B@Gitee）
 * 【core   】     FileTypeUtil使用长匹配优先（pr#1457@Github）
+* 【core   】     IterUtil和CollUtil增加isEqualList方法（issue#I3A3PY@Gitee）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
