@@ -1,6 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -25,11 +24,20 @@ public class StrMatcher {
 
 	List<String> patterns;
 
+	/**
+	 * 构造
+	 *
+	 * @param pattern 模式，变量用${XXX}占位
+	 */
 	public StrMatcher(String pattern) {
 		this.patterns = parse(pattern);
-		Console.log(this.patterns);
 	}
 
+	/**
+	 * 匹配并提取匹配到的内容
+	 * @param text 被匹配的文本
+	 * @return 匹配的map，key为变量名，value为匹配到的值
+	 */
 	public Map<String, String> match(String text) {
 		final HashMap<String, String> result = MapUtil.newHashMap(true);
 		int from = 0;
@@ -41,11 +49,16 @@ public class StrMatcher {
 				key = StrUtil.sub(part, 2, part.length() - 1);
 			} else {
 				to = text.indexOf(part, from);
+				if(to < 0){
+					//普通字符串未匹配到，说明整个模式不能匹配，返回空
+					return MapUtil.empty();
+				}
 				if (null != key && to > from) {
 					// 变量对应部分有内容
 					result.put(key, text.substring(from, to));
 				}
-				from = to + 1;
+				// 下一个起始点是普通字符串的末尾
+				from = to + part.length();
 				key = null;
 			}
 		}
