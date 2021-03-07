@@ -1429,9 +1429,61 @@ public class NumberUtil {
 	// ------------------------------------------------------------------------------------------- others
 
 	/**
+	 * 计算阶乘
+	 * <p>
+	 * n! = n * (n-1) * ... * 2 * 1
+	 * </p>
+	 *
+	 * @param n 阶乘起始
+	 * @return 结果
+	 * @since 5.6.0
+	 */
+	public static BigInteger factorial(BigInteger n) {
+		if(n.equals(BigInteger.ZERO)){
+			return BigInteger.ONE;
+		}
+		return factorial(n, BigInteger.ZERO);
+	}
+
+	/**
 	 * 计算范围阶乘
 	 * <p>
-	 * factorial(start, end) = start * (start - 1) * ... * (end - 1)
+	 * factorial(start, end) = start * (start - 1) * ... * (end + 1)
+	 * </p>
+	 *
+	 * @param start 阶乘起始（包含）
+	 * @param end   阶乘结束，必须小于起始（不包括）
+	 * @return 结果
+	 * @since 5.6.0
+	 */
+	public static BigInteger factorial(BigInteger start, BigInteger end) {
+		Assert.notNull(start, "Factorial start must be not null!");
+		Assert.notNull(end, "Factorial end must be not null!");
+		if(start.compareTo(BigInteger.ZERO) < 0 || end.compareTo(BigInteger.ZERO) < 0){
+			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be > 0, but got start={}, end={}", start, end));
+		}
+
+		if (start.equals(BigInteger.ZERO)){
+			start = BigInteger.ONE;
+		}
+
+		if(end.compareTo(BigInteger.ONE) < 0){
+			end = BigInteger.ONE;
+		}
+
+		BigInteger result = start;
+		end = end.add(BigInteger.ONE);
+		while(start.compareTo(end) > 0) {
+			start = start.subtract(BigInteger.ONE);
+			result = result.multiply(start);
+		}
+		return result;
+	}
+
+	/**
+	 * 计算范围阶乘
+	 * <p>
+	 * factorial(start, end) = start * (start - 1) * ... * (end + 1)
 	 * </p>
 	 *
 	 * @param start 阶乘起始（包含）

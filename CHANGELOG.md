@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.0 (2021-03-05)
+# 5.6.0 (2021-03-07)
 
 ### 新特性
 * 【poi    】     重要：不再兼容POI-3.x，增加兼容POI-5.x（issue#I35J6B@Gitee）
@@ -12,6 +12,7 @@
 * 【crypto 】     增加PBKDF2（issue#1416@Github）
 * 【core   】     增加FuncKeyMap（issue#1402@Github）
 * 【core   】     增加StrMatcher（issue#1379@Github）
+* 【core   】     NumberUtil增加factorial针对BigInterger方法（issue#1379@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
