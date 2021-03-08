@@ -6,10 +6,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.GlobalBouncyCastleProvider;
 import cn.hutool.crypto.SecureUtil;
@@ -218,5 +222,113 @@ public class RSA extends AsymmetricCrypto {
 			}
 			throw e;
 		}
+	}
+	
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数字节数组
+	 */
+	public byte[] getPublicKeyModulus() {
+		return ((RSAPublicKey) this.publicKey).getModulus().toByteArray();
+	}
+	
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数16进制
+	 */
+	public String getPublicKeyModulusHex() {
+		return HexUtil.encodeHexStr(getPublicKeyModulus());
+	}
+	
+	/**
+	 * 获得公钥模数modulus
+	 * 
+	 * @return 公钥模数base64编码
+	 */
+	public String getPublicKeyModulusBase64() {
+		return Base64.encode(getPublicKeyModulus());
+	}
+
+	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数字节数组
+	 */
+	public byte[] getPublicKeyExponent() {
+		return ((RSAPublicKey) this.publicKey).getPublicExponent().toByteArray();
+	}
+	
+	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数16进制
+	 */
+	public String getPublicKeyExponentHex() {
+		return HexUtil.encodeHexStr(getPublicKeyExponent());
+	}
+	
+	/**
+	 * 获得公钥指数exponent
+	 * 
+	 * @return 公钥指数Base64
+	 */
+	public String getPublicKeyExponentBase64() {
+		return Base64.encode(getPublicKeyExponent());
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数字节数组
+	 */
+	public byte[] getPrivateKeyModulus() {
+		return ((RSAPrivateKey) this.privateKey).getModulus().toByteArray();
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数16进制
+	 */
+	public String getPrivateKeyModulusHex() {
+		return HexUtil.encodeHexStr(getPrivateKeyModulus());
+	}
+	
+	/**
+	 * 获得私钥模数modulus
+	 * 
+	 * @return 私钥模数Base64
+	 */
+	public String getPrivateKeyModulusBase64() {
+		return Base64.encode(getPrivateKeyModulus());
+	}
+
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数字节数组
+	 */
+	public byte[] getPrivateKeyExponent() {
+		return ((RSAPrivateKey) this.privateKey).getPrivateExponent().toByteArray();
+	}
+	
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数16进制
+	 */
+	public String getPrivateKeyExponentHex() {
+		return HexUtil.encodeHexStr(getPrivateKeyExponent());
+	}
+	
+	/**
+	 * 获得私钥指数exponent
+	 * 
+	 * @return 私钥指数Base64
+	 */
+	public String getPrivateKeyExponentBase64() {
+		return Base64.encode(getPrivateKeyExponent());
 	}
 }
