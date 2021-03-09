@@ -35,7 +35,7 @@ import java.util.ResourceBundle;
  *
  * @author Looly
  */
-public final class JSONUtil {
+public class JSONUtil {
 
 	// -------------------------------------------------------------------- Pause start
 
