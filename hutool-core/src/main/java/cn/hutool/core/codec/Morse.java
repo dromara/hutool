@@ -11,7 +11,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 莫尔斯电码的编码和解码实现<br>
  * 参考：https://github.com/TakWolf/Java-MorseCoder
- * 
+ *
  * @author looly, TakWolf
  * @since 4.4.1
  */
@@ -22,7 +22,7 @@ public class Morse {
 
 	/**
 	 * 注册莫尔斯电码表
-	 * 
+	 *
 	 * @param abc 字母和字符
 	 * @param dict 二进制
 	 */
@@ -104,7 +104,7 @@ public class Morse {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param dit 点表示的字符
 	 * @param dah 横线表示的字符
 	 * @param split 分隔符
@@ -117,13 +117,13 @@ public class Morse {
 
 	/**
 	 * 编码
-	 * 
+	 *
 	 * @param text 文本
 	 * @return 密文
 	 */
 	public String encode(String text) {
 		Assert.notNull(text, "Text should not be null.");
-		
+
 		text = text.toUpperCase();
 		final StringBuilder morseBuilder = new StringBuilder();
 		final int len = text.codePointCount(0, text.length());
@@ -140,7 +140,7 @@ public class Morse {
 
 	/**
 	 * 解码
-	 * 
+	 *
 	 * @param morse 莫尔斯电码
 	 * @return 明文
 	 */

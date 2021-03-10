@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -612,7 +613,7 @@ public class IterUtil {
 	/**
 	 * Enumeration转换为Iterator
 	 * <p>
-	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
+	 * Adapt the specified {@code Enumeration} to the {@code Iterator} interface
 	 *
 	 * @param <E> 集合元素类型
 	 * @param e   {@link Enumeration}
@@ -858,5 +859,40 @@ public class IterUtil {
 			}
 		}
 		return size;
+	}
+
+	/**
+	 * 判断两个{@link Iterable} 是否元素和顺序相同，返回{@code true}的条件是：
+	 * <ul>
+	 *     <li>两个{@link Iterable}必须长度相同</li>
+	 *     <li>两个{@link Iterable}元素相同index的对象必须equals，满足{@link Objects#equals(Object, Object)}</li>
+	 * </ul>
+	 * 此方法来自Apache-Commons-Collections4。
+	 *
+	 * @param list1 列表1
+	 * @param list2 列表2
+	 * @return 是否相同
+	 * @since 5.6.0
+	 */
+	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
+		if (list1 == list2) {
+			return true;
+		}
+
+		final Iterator<?> it1 = list1.iterator();
+		final Iterator<?> it2 = list2.iterator();
+		Object obj1;
+		Object obj2;
+		while (it1.hasNext() && it2.hasNext()) {
+			obj1 = it1.next();
+			obj2 = it2.next();
+
+			if (false == Objects.equals(obj1, obj2)) {
+				return false;
+			}
+		}
+
+		// 当两个Iterable长度不一致时返回false
+		return false == (it1.hasNext() || it2.hasNext());
 	}
 }

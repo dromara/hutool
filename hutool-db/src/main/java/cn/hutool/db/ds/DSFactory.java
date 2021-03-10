@@ -20,7 +20,7 @@ import java.io.Serializable;
  * 抽象数据源工厂类<br>
  * 通过实现{@link #getDataSource(String)} 方法实现数据源的获取<br>
  * 如果{@link DataSource} 的实现是数据库连接池库，应该在getDataSource调用时创建数据源并缓存
- * 
+ *
  * @author Looly
  *
  */
@@ -46,7 +46,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param dataSourceName 数据源名称
 	 */
 	public DSFactory(String dataSourceName) {
@@ -55,7 +55,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 获得默认数据源
-	 * 
+	 *
 	 * @return 数据源
 	 */
 	public DataSource getDataSource() {
@@ -64,7 +64,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 获得分组对应数据源
-	 * 
+	 *
 	 * @param group 分组名
 	 * @return 数据源
 	 */
@@ -80,7 +80,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 关闭对应数据源
-	 * 
+	 *
 	 * @param group 分组
 	 */
 	public abstract void close(String group);
@@ -94,7 +94,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	/**
 	 * 获得数据源<br>
 	 * 使用默认配置文件的无分组配置
-	 * 
+	 *
 	 * @return 数据源
 	 */
 	public static DataSource get() {
@@ -103,7 +103,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 获得数据源
-	 * 
+	 *
 	 * @param group 配置文件中对应的分组
 	 * @return 数据源
 	 */
@@ -113,7 +113,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 
 	/**
 	 * 根据Setting获取当前数据源工厂对象
-	 * 
+	 *
 	 * @param setting 数据源配置文件
 	 * @return 当前使用的数据源工厂
 	 * @deprecated 此方法容易引起歧义，应使用{@link #create(Setting)} 方法代替之
@@ -127,12 +127,12 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * 设置全局的数据源工厂<br>
 	 * 在项目中存在多个连接池库的情况下，我们希望使用低优先级的库时使用此方法自定义之<br>
 	 * 重新定义全局的数据源工厂此方法可在以下两种情况下调用：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 在get方法调用前调用此方法来自定义全局的数据源工厂
 	 * 2. 替换已存在的全局数据源工厂，当已存在时会自动关闭
 	 * </pre>
-	 * 
+	 *
 	 * @param dsFactory 数据源工厂
 	 * @return 自定义的数据源工厂
 	 */

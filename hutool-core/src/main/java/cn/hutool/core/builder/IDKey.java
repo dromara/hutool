@@ -13,13 +13,13 @@ import java.io.Serializable;
  */
 final class IDKey implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Object value;
 	private final int id;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param obj 计算唯一ID的对象
 	 */
 	public IDKey(final Object obj) {
@@ -32,7 +32,7 @@ final class IDKey implements Serializable{
 
 	/**
 	 * returns hashcode - i.e. the system identity hashcode.
-	 * 
+	 *
 	 * @return the hashcode
 	 */
 	@Override
@@ -42,7 +42,7 @@ final class IDKey implements Serializable{
 
 	/**
 	 * checks if instances are equal
-	 * 
+	 *
 	 * @param other The other object to compare to
 	 * @return if the instances are for the same object
 	 */

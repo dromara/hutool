@@ -51,7 +51,13 @@ public class DataSizeUtilTest {
 
 	@Test
 	public void formatTest(){
-		final String format = DataSizeUtil.format(Long.MAX_VALUE);
-		Assert.assertEquals("8,192 EB", format);
+		String format = DataSizeUtil.format(Long.MAX_VALUE);
+		Assert.assertEquals("8 EB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024 * 1024);
+		Assert.assertEquals("1 PB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024);
+		Assert.assertEquals("1 TB", format);
 	}
 }

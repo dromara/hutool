@@ -19,6 +19,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
+import cn.hutool.crypto.symmetric.PBKDF2;
 import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
@@ -1047,5 +1048,17 @@ public final class SecureUtil {
 	 */
 	public static void disableBouncyCastle() {
 		GlobalBouncyCastleProvider.setUseBouncyCastle(false);
+	}
+
+	/**
+	 * PBKDF2加密密码
+	 *
+	 * @param password 密码
+	 * @param salt 盐
+	 * @return 盐，一般为16位
+	 * @since 5.6.0
+	 */
+	public static String pbkdf2(char[] password, byte[] salt){
+		return new PBKDF2().encryptHex(password, salt);
 	}
 }

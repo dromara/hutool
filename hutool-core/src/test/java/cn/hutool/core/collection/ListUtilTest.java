@@ -101,4 +101,15 @@ public class ListUtilTest {
 		int[] d1 = ListUtil.page(0,8,a).stream().mapToInt(Integer::valueOf).toArray();
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5},d1);
 	}
+
+	@Test
+	public void subTest(){
+		final List<Integer> of = ListUtil.of(1, 2, 3, 4);
+		final List<Integer> sub = ListUtil.sub(of, 2, 4);
+		sub.remove(0);
+
+		// 对子列表操作不影响原列表
+		Assert.assertEquals(4, of.size());
+		Assert.assertEquals(1, sub.size());
+	}
 }

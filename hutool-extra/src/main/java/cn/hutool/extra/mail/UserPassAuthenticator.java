@@ -21,7 +21,6 @@ public class UserPassAuthenticator extends Authenticator {
 	 * @param pass 密码
 	 */
 	public UserPassAuthenticator(String user, String pass) {
-		super();
 		this.user = user;
 		this.pass = pass;
 	}

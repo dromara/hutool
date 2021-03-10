@@ -3,8 +3,6 @@ package cn.hutool.core.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.codec.BCD;
-
 public class BCDTest {
 	
 	@Test

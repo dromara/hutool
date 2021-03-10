@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * 扭曲干扰验证码
- * 
+ *
  * @author looly
  * @since 3.2.3
  *
@@ -23,7 +23,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param width 图片宽
 	 * @param height 图片高
 	 */
@@ -33,7 +33,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param width 图片宽
 	 * @param height 图片高
 	 * @param codeCount 字符个数
@@ -44,7 +44,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param width 图片宽
 	 * @param height 图片高
 	 * @param codeCount 字符个数
@@ -73,7 +73,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	// ----------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 绘制字符串
-	 * 
+	 *
 	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
@@ -87,7 +87,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 扭曲
-	 * 
+	 *
 	 * @param g {@link Graphics}
 	 * @param w1 w1
 	 * @param h1 h1
@@ -100,7 +100,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * X坐标扭曲
-	 * 
+	 *
 	 * @param g {@link Graphics}
 	 * @param w1 宽
 	 * @param h1 高
@@ -125,7 +125,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * Y坐标扭曲
-	 * 
+	 *
 	 * @param g {@link Graphics}
 	 * @param w1 宽
 	 * @param h1 高
@@ -150,7 +150,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	/**
 	 * 干扰线
-	 * 
+	 *
 	 * @param g {@link Graphics}
 	 * @param x1 x1
 	 * @param y1 y1

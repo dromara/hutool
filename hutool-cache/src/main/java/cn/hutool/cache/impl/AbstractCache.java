@@ -7,6 +7,7 @@ import cn.hutool.core.lang.func.Func0;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
@@ -307,9 +308,20 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return this
 	 * @since 5.5.2
 	 */
+	@Override
 	public AbstractCache<K, V> setListener(CacheListener<K, V> listener) {
 		this.listener = listener;
 		return this;
+	}
+
+	/**
+	 * 返回所有键
+	 *
+	 * @return 所有键
+	 * @since 5.5.9
+	 */
+	public Set<K> keySet(){
+		return this.cacheMap.keySet();
 	}
 
 	/**

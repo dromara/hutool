@@ -7,7 +7,7 @@ package cn.hutool.core.clone;
  * @param <T> 继承类的类型
  */
 public class CloneSupport<T> implements Cloneable<T>{
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public T clone() {
@@ -17,5 +17,5 @@ public class CloneSupport<T> implements Cloneable<T>{
 			throw new CloneRuntimeException(e);
 		}
 	}
-	
+
 }

@@ -25,14 +25,14 @@ import java.util.Map;
 
 /**
  * Excel图片工具类
- * 
+ *
  * @author looly
  * @since 4.0.7
  */
 public class ExcelPicUtil {
 	/**
 	 * 获取工作簿指定sheet中图片列表
-	 * 
+	 *
 	 * @param workbook 工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
@@ -55,7 +55,7 @@ public class ExcelPicUtil {
 	// -------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取XLS工作簿指定sheet中图片列表
-	 * 
+	 *
 	 * @param workbook 工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
@@ -80,7 +80,7 @@ public class ExcelPicUtil {
 
 	/**
 	 * 获取XLSX工作簿指定sheet中图片列表
-	 * 
+	 *
 	 * @param workbook 工作簿{@link Workbook}
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
@@ -96,9 +96,12 @@ public class ExcelPicUtil {
 				XSSFPicture pic;
 				CTMarker ctMarker;
 				for (XSSFShape shape : shapes) {
-					pic = (XSSFPicture) shape;
-					ctMarker = pic.getPreferredSize().getFrom();
-					sheetIndexPicMap.put(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());
+					if(shape instanceof XSSFPicture){
+						pic = (XSSFPicture) shape;
+						ctMarker = pic.getPreferredSize().getFrom();
+						sheetIndexPicMap.put(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());
+					}
+					// 其他类似于图表等忽略，see: https://gitee.com/loolly/hutool/issues/I38857
 				}
 			}
 		}

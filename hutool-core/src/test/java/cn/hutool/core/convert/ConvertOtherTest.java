@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.CharsetUtil;
 
 /**

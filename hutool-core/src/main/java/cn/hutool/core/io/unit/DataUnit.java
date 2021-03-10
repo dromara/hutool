@@ -44,7 +44,7 @@ public enum DataUnit {
 	 */
 	TERABYTES("TB", DataSize.ofTerabytes(1));
 
-	public static final String[] UNIT_NAMES = new String[]{"B", "kB", "MB", "GB", "TB", "EB"};
+	public static final String[] UNIT_NAMES = new String[]{"B", "kB", "MB", "GB", "TB", "PB", "EB"};
 
 	private final String suffix;
 

@@ -3,8 +3,6 @@ package cn.hutool.http;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.http.HtmlUtil;
-
 /**
  * Html单元测试
  * 

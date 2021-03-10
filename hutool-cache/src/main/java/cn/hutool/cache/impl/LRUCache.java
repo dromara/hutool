@@ -48,7 +48,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 	// ---------------------------------------------------------------- prune
 
 	/**
-	 * 只清理超时对象，LRU的实现会交给<code>LinkedHashMap</code>
+	 * 只清理超时对象，LRU的实现会交给{@code LinkedHashMap}
 	 */
 	@Override
 	protected int pruneCache() {

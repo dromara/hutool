@@ -1,7 +1,7 @@
 package cn.hutool.crypto.digest;
 
 /**
- * SM3算法
+ * SM3杂凑算法
  *
  * @author looly
  * @since 4.6.8

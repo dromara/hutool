@@ -1,5 +1,11 @@
 package cn.hutool.socket.aio;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.socket.SocketConfig;
+import cn.hutool.socket.SocketRuntimeException;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,14 +15,9 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.thread.ThreadFactoryBuilder;
-import cn.hutool.socket.SocketConfig;
-import cn.hutool.socket.SocketRuntimeException;
-
 /**
  * Aio Socket客户端
- * 
+ *
  * @author looly
  * @since 4.5.0
  */
@@ -26,7 +27,7 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param address 地址
 	 * @param ioAction IO处理类
 	 */
@@ -36,7 +37,7 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param address 地址
 	 * @param ioAction IO处理类
 	 * @param config 配置项
@@ -47,7 +48,7 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @param ioAction IO处理类
 	 * @param config 配置项
@@ -74,7 +75,7 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 获取IO处理器
-	 * 
+	 *
 	 * @return {@link IoAction}
 	 */
 	public IoAction<ByteBuffer> getIoAction() {
@@ -83,7 +84,7 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 从服务端读取数据
-	 * 
+	 *
 	 * @return this
 	 */
 	public AioClient read() {
@@ -113,7 +114,7 @@ public class AioClient implements Closeable{
 	// ------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param address 地址和端口
 	 * @param poolSize 线程池大小
 	 * @return this
@@ -134,6 +135,7 @@ public class AioClient implements Closeable{
 		try {
 			channel.connect(address).get();
 		} catch (InterruptedException | ExecutionException e) {
+			IoUtil.close(channel);
 			throw new SocketRuntimeException(e);
 		}
 		return channel;

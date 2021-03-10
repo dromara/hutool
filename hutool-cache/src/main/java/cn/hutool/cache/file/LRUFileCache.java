@@ -12,7 +12,7 @@ import cn.hutool.cache.impl.LRUCache;
  */
 public class LRUFileCache extends AbstractFileCache{
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 构造<br>
 	 * 最大文件大小为缓存容量的一半<br>

@@ -294,7 +294,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回<code>null</code>
+	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回{@code null}
 	 *
 	 * @param clazz      类
 	 * @param methodName 方法名
@@ -341,7 +341,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回<code>null</code>
+	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回{@code null}
 	 *
 	 * @param clazz          被查找的类
 	 * @param methodName     方法名
@@ -356,7 +356,7 @@ public class ClassUtil {
 	// ----------------------------------------------------------------------------------------- Field
 
 	/**
-	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回<code>null</code>
+	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回{@code null}
 	 *
 	 * @param clazz     被查找字段的类
 	 * @param fieldName 字段名
@@ -558,7 +558,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回<code>true</code>
+	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回{@code true}
 	 *
 	 * @param types1 类组1
 	 * @param types2 类组2
@@ -626,7 +626,7 @@ public class ClassUtil {
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 *
 	 * @param <T>                     对象类型
-	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
+	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用{@code .}或{@code #}连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
 	 * @param args                    参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */

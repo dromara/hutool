@@ -6,7 +6,7 @@ import org.springframework.cglib.proxy.Enhancer;
 
 /**
  * 基于Spring-cglib的切面代理工厂
- * 
+ *
  * @author looly
  *
  */

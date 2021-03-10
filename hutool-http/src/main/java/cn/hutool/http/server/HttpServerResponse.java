@@ -378,6 +378,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * 返回文件给客户端（文件下载）
 	 *
 	 * @param file 写出的文件对象
+	 * @param fileName 文件名
 	 * @return this
 	 * @since 5.5.8
 	 */
@@ -417,6 +418,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * 返回文件数据给客户端（文件下载）
 	 *
 	 * @param in          需要返回客户端的内容
+	 * @param length 长度
 	 * @param contentType 返回的类型
 	 * @param fileName    文件名
 	 * @since 5.2.7

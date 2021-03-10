@@ -200,7 +200,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	/**
 	 * 创建ExecutorBuilder，开始构建
 	 *
-	 * @return {@link ExecutorBuilder}
+	 * @return this
 	 */
 	public static ExecutorBuilder create() {
 		return new ExecutorBuilder();
@@ -227,7 +227,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	/**
 	 * 构建ThreadPoolExecutor
 	 *
-	 * @param builder {@link ExecutorBuilder}
+	 * @param builder this
 	 * @return {@link ThreadPoolExecutor}
 	 */
 	private static ThreadPoolExecutor build(ExecutorBuilder builder) {

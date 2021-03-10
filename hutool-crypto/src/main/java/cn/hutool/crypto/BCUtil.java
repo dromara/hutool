@@ -1,5 +1,8 @@
 package cn.hutool.crypto;
 
+import cn.hutool.core.io.IORuntimeException;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.params.ECDomainParameters;
@@ -13,6 +16,7 @@ import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.Key;
@@ -41,15 +45,28 @@ public class BCUtil {
 	}
 
 	/**
-	 * 编码压缩EC公钥（基于BouncyCastle）<br>
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
 	 *
 	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
-	 * @return 压缩得到的X
+	 * @return 压缩得到的Q
 	 * @since 4.4.4
 	 */
 	public static byte[] encodeECPublicKey(PublicKey publicKey) {
-		return ((BCECPublicKey) publicKey).getQ().getEncoded(true);
+		return encodeECPublicKey(publicKey, true);
+	}
+
+	/**
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
+	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 *
+	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
+	 * @param isCompressed 是否压缩
+	 * @return 得到的Q
+	 * @since 5.5.9
+	 */
+	public static byte[] encodeECPublicKey(PublicKey publicKey, boolean isCompressed) {
+		return ((BCECPublicKey) publicKey).getQ().getEncoded(isCompressed);
 	}
 
 	/**
@@ -299,5 +316,38 @@ public class BCUtil {
 	 */
 	public static PublicKey readPemPublicKey(InputStream pemStream) {
 		return PemUtil.readPemPublicKey(pemStream);
+	}
+
+	/**
+	 * Java中的PKCS#8格式私钥转换为OpenSSL支持的PKCS#1格式
+	 *
+	 * @param privateKey PKCS#8格式私钥
+	 * @return PKCS#1格式私钥
+	 * @since 5.5.9
+	 */
+	public static byte[] toPkcs1(PrivateKey privateKey){
+		final PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
+		try {
+			return pkInfo.parsePrivateKey().toASN1Primitive().getEncoded();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * Java中的X.509格式公钥转换为OpenSSL支持的PKCS#1格式
+	 *
+	 * @param publicKey X.509格式公钥
+	 * @return PKCS#1格式公钥
+	 * @since 5.5.9
+	 */
+	public static byte[] toPkcs1(PublicKey publicKey){
+		final SubjectPublicKeyInfo spkInfo = SubjectPublicKeyInfo
+				.getInstance(publicKey.getEncoded());
+		try {
+			return spkInfo.parsePublicKey().getEncoded();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

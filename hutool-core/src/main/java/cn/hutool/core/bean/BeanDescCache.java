@@ -11,9 +11,9 @@ import cn.hutool.core.lang.func.Func0;
  */
 public enum BeanDescCache {
 	INSTANCE;
-	
+
 	private final SimpleCache<Class<?>, BeanDesc> bdCache = new SimpleCache<>();
-	
+
 	/**
 	 * 获得属性名和{@link BeanDesc}Map映射
 	 * @param beanClass Bean的类

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通过{@link ConcurrentHashMap}实现的线程安全HashSet
- * 
+ *
  * @author Looly
  *
  * @param <E> 元素类型
@@ -32,7 +32,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	/**
 	 * 构造<br>
 	 * 触发因子为默认的0.75
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 */
 	public ConcurrentHashSet(int initialCapacity) {
@@ -41,7 +41,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子。此参数决定数据增长时触发的百分比
 	 */
@@ -51,7 +51,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 触发因子。此参数决定数据增长时触发的百分比
 	 * @param concurrencyLevel 线程并发度
@@ -59,7 +59,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	public ConcurrentHashSet(int initialCapacity, float loadFactor, int concurrencyLevel) {
 		map = new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
 	}
-	
+
 	/**
 	 * 从已有集合中构造
 	 * @param iter {@link Iterable}

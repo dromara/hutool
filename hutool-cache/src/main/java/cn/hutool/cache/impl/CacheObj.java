@@ -12,20 +12,20 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class CacheObj<K, V> implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	protected final K key;
 	protected final V obj;
-	
+
 	/** 上次访问时间 */
 	private volatile long lastAccess;
 	/** 访问次数 */
 	protected AtomicLong accessCount = new AtomicLong();
 	/** 对象存活时长，0表示永久存活*/
 	private final long ttl;
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param key 键
 	 * @param obj 值
 	 * @param ttl 超时时长
@@ -36,10 +36,10 @@ public class CacheObj<K, V> implements Serializable{
 		this.ttl = ttl;
 		this.lastAccess = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * 判断是否过期
-	 * 
+	 *
 	 * @return 是否过期
 	 */
 	boolean isExpired() {
@@ -49,10 +49,10 @@ public class CacheObj<K, V> implements Serializable{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 获取值
-	 * 
+	 *
 	 * @param isUpdateLastAccess 是否更新最后访问时间
 	 * @return 获得对象
 	 * @since 4.0.10
@@ -64,7 +64,7 @@ public class CacheObj<K, V> implements Serializable{
 		accessCount.getAndIncrement();
 		return this.obj;
 	}
-	
+
 	/**
 	 * 获取键
 	 * @return 键
@@ -73,7 +73,7 @@ public class CacheObj<K, V> implements Serializable{
 	public K getKey() {
 		return this.key;
 	}
-	
+
 	/**
 	 * 获取值
 	 * @return 值
@@ -82,7 +82,7 @@ public class CacheObj<K, V> implements Serializable{
 	public V getValue() {
 		return this.obj;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "CacheObj [key=" + key + ", obj=" + obj + ", lastAccess=" + lastAccess + ", accessCount=" + accessCount + ", ttl=" + ttl + "]";

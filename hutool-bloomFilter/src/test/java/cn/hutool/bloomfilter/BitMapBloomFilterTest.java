@@ -8,14 +8,14 @@ import cn.hutool.bloomfilter.bitMap.IntMap;
 import cn.hutool.bloomfilter.bitMap.LongMap;
 
 public class BitMapBloomFilterTest {
-	
+
 	@Test
 	public void filterTest() {
 		BitMapBloomFilter filter = new BitMapBloomFilter(10);
 		filter.add("123");
 		filter.add("abc");
 		filter.add("ddd");
-		
+
 		Assert.assertTrue(filter.contains("abc"));
 		Assert.assertTrue(filter.contains("ddd"));
 		Assert.assertTrue(filter.contains("123"));

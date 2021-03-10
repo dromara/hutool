@@ -105,7 +105,6 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 构造
 	 */
 	public Props() {
-		super();
 	}
 
 	/**

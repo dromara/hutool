@@ -3,17 +3,45 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.5.9 (2021-02-18)
+# 5.6.0 (2021-03-10)
+
+### 新特性
+* 【poi    】     重要：不再兼容POI-3.x，增加兼容POI-5.x（issue#I35J6B@Gitee）
+* 【core   】     FileTypeUtil使用长匹配优先（pr#1457@Github）
+* 【core   】     IterUtil和CollUtil增加isEqualList方法（issue#I3A3PY@Gitee）
+* 【crypto 】     增加PBKDF2（issue#1416@Github）
+* 【core   】     增加FuncKeyMap（issue#1402@Github）
+* 【core   】     增加StrMatcher（issue#1379@Github）
+* 【core   】     NumberUtil增加factorial针对BigInterger方法（issue#1379@Github）
+* 【core   】     TreeNode增加equals方法（issue#1467@Github）
+
+### Bug修复
+* 【socket 】     修复Client创建失败资源未释放问题。
+* 【core   】     修复DataSizeUtil中EB单位错误问题（issue#I39O7I@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.5.9 (2021-02-26)
 
 ### 新特性
 * 【crypto 】     PemUtil.readPemKey支持EC（pr#1366@Github）
 * 【extra  】     Ftp等cd方法增加同步（issue#1397@Github）
 * 【core   】     StrUtil增加endWithAnyIgnoreCase（issue#I37I0B@Gitee）
+* 【crypto 】     Sm2增加getD和getQ方法（issue#I37Z4C@Gitee）
+* 【cache  】     AbstractCache增加keySet方法（issue#I37Z4C@Gitee）
+* 【core   】     NumberWordFormatter增加formatSimple方法（pr#1436@Github）
+* 【crypto 】     增加读取openSSL生成的sm2私钥
+* 【crypto 】     增加众多方法，SM2兼容各类密钥格式（issue#I37Z75@Gitee）
 
 ### Bug修复
 * 【json   】     JSONUtil.isJson方法改变trim策略，解决特殊空白符导致判断失败问题
 * 【json   】     修复SQLEXception导致的栈溢出（issue#1399@Github）
 * 【extra  】     修复Ftp中异常参数没有传入问题（issue#1397@Github）
+* 【crypto 】     修复Sm2使用D构造空指针问题（issue#I37Z4C@Gitee）
+* 【poi    】     修复ExcelPicUtil中图表报错问题（issue#I38857@Gitee）
+* 【core   】     修复ListUtil.page方法返回空列表无法编辑问题（issue#1415@Github）
+* 【core   】     修复ListUtil.sub中step不通结果不一致问题（issue#1409@Github）
+* 【db     】     修复Condition转换参数值时未转换数字异常（issue#I38LTM@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

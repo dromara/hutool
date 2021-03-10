@@ -2780,11 +2780,11 @@ public class CollUtil {
 	}
 
 	/**
-	 * 取最大值
+	 * 取最小值
 	 *
 	 * @param <T>  元素类型
 	 * @param coll 集合
-	 * @return 最大值
+	 * @return 最小值
 	 * @see Collections#min(Collection)
 	 * @since 4.6.5
 	 */
@@ -2987,5 +2987,26 @@ public class CollUtil {
 			throw new IllegalArgumentException("Unsupported object type: " + object.getClass().getName());
 		}
 		return total;
+	}
+
+	/**
+	 * 判断两个{@link Collection} 是否元素和顺序相同，返回{@code true}的条件是：
+	 * <ul>
+	 *     <li>两个{@link Collection}必须长度相同</li>
+	 *     <li>两个{@link Collection}元素相同index的对象必须equals，满足{@link Objects#equals(Object, Object)}</li>
+	 * </ul>
+	 * 此方法来自Apache-Commons-Collections4。
+	 *
+	 * @param list1 列表1
+	 * @param list2 列表2
+	 * @return 是否相同
+	 * @since 5.6.0
+	 */
+	public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
+		if (list1 == null || list2 == null || list1.size() != list2.size()) {
+			return false;
+		}
+
+		return IterUtil.isEqualList(list1, list2);
 	}
 }

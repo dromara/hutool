@@ -3,9 +3,6 @@ package cn.hutool.core.convert;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Converter;
-import cn.hutool.core.convert.ConverterRegistry;
-
 /**
  * ConverterRegistry 单元测试
  * @author Looly

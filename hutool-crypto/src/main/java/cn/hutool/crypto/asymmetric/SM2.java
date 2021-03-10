@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.BCUtil;
 import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.KeyUtil;
+import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
@@ -62,8 +62,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKeyStr 私钥Hex或Base64表示
-	 * @param publicKeyStr  公钥Hex或Base64表示
+	 * @param privateKeyStr 私钥Hex或Base64表示，必须使用PKCS#8规范
+	 * @param publicKeyStr  公钥Hex或Base64表示，必须使用X509规范
 	 */
 	public SM2(String privateKeyStr, String publicKeyStr) {
 		this(SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
@@ -74,13 +74,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
+	 * @param privateKey 私钥，可以使用PKCS#8、D值或PKCS#1规范
+	 * @param publicKey  公钥，可以使用X509、Q值或PKCS#1规范
 	 */
 	public SM2(byte[] privateKey, byte[] publicKey) {
-		this(//
-				KeyUtil.generatePrivateKey(ALGORITHM_SM2, privateKey), //
-				KeyUtil.generatePublicKey(ALGORITHM_SM2, publicKey)//
+		this(
+				ECKeyUtil.decodePrivateKeyParams(privateKey),
+				ECKeyUtil.decodePublicKeyParams(publicKey)
 		);
 	}
 
@@ -135,8 +135,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKeyParams 私钥
-	 * @param publicKeyParams  公钥
+	 * @param privateKeyParams 私钥，可以为null
+	 * @param publicKeyParams  公钥，可以为null
 	 */
 	public SM2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
 		super(ALGORITHM_SM2, null, null);
@@ -274,7 +274,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	}
 
 	/**
-	 * 用私钥对信息生成数字签名
+	 * 用私钥对信息生成数字签名，签名格式为ASN1<br>
+	 * 	 * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
 	 *
 	 * @param data 加密数据
 	 * @return 签名
@@ -295,7 +296,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	}
 
 	/**
-	 * 用私钥对信息生成数字签名
+	 * 用私钥对信息生成数字签名，签名格式为ASN1<br>
+	 * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
 	 *
 	 * @param data 被签名的数据数据
 	 * @param id   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
@@ -469,6 +471,27 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		this.mode = mode;
 		this.engine = null;
 		return this;
+	}
+
+	/**
+	 * 获得私钥D值（编码后的私钥）
+	 *
+	 * @return D值
+	 * @since 5.5.9
+	 */
+	public byte[] getD() {
+		return this.privateKeyParams.getD().toByteArray();
+	}
+
+	/**
+	 * 获得公钥Q值（编码后的公钥）
+	 *
+	 * @param isCompressed 是否压缩
+	 * @return Q值
+	 * @since 5.5.9
+	 */
+	public byte[] getQ(boolean isCompressed) {
+		return this.publicKeyParams.getQ().getEncoded(isCompressed);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
