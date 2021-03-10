@@ -34,6 +34,18 @@ public class NumberChineseFormatter {
 	private static final String[] TRADITIONAL_UNITS = {"", "拾", "佰", "仟"};
 
 	/**
+	 * 汉字转阿拉伯数字的
+	 */
+	private static final ChineseNameValue[] CHINESE_NAME_VALUE = {
+		new ChineseNameValue("十", 10, false),
+		new ChineseNameValue("百", 100, false),
+		new ChineseNameValue("千", 1000, false),
+		new ChineseNameValue("万", 10000, true),
+		new ChineseNameValue("亿", 100000000, true),
+	};
+
+
+	/**
 	 * 阿拉伯数字转换成中文,小数点后四舍五入保留两位. 使用于整数、小数的转换.
 	 *
 	 * @param amount           数字
@@ -192,5 +204,80 @@ public class NumberChineseFormatter {
 			temp = temp / 10;
 		}
 		return chineseStr.toString();
+	}
+
+	/**
+	 * 把中文转换为数字 如 二百二 220
+	 * @see <url>https://www.d5.nz/read/sfdlq/text-part0000_split_030.html</url>
+	 * @param chinese 中文字符
+	 * @return
+	 */
+	public static int chineseToNumber(String chinese) {
+		int pos = 0;
+		int rtn = 0;
+		int section = 0;
+		int number = 0;
+		boolean secUnit = false;
+		while (pos < chinese.length()) {
+			int num = chineseToValue(chinese.substring(pos, pos + 1));
+			if (num >= 0) {
+				number = num;
+				pos += 1;
+				if (pos >= chinese.length()) {
+					section += number;
+					rtn += section;
+					break;
+				}
+			} else {
+				int unit = 1;
+				int tmp = chineseToUnit(chinese.substring(pos, pos + 1));
+				if (tmp != -1) {
+					unit = CHINESE_NAME_VALUE[tmp].getValue();
+					secUnit = CHINESE_NAME_VALUE[tmp].isSecUnit();
+				}
+				if (secUnit) {
+					section = (section + number) * unit;
+					rtn += section;
+					section = 0;
+				} else {
+					section += (number * unit);
+				}
+				number = 0;
+				pos += 1;
+				if (pos >= chinese.length()) {
+					rtn += section;
+					break;
+				}
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * 中文到数字的转换
+	 * @param chinese
+	 * @return
+	 */
+	private static int chineseToValue(String chinese) {
+		for (int i = 0; i < SIMPLE_DIGITS.length; i++) {
+			if (SIMPLE_DIGITS[i].equals(chinese)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 查找对应的权
+	 * @param chinese
+	 * @return
+	 */
+	private static int chineseToUnit(String chinese) {
+		for (int i = 0; i < CHINESE_NAME_VALUE.length; i++) {
+			if (CHINESE_NAME_VALUE[i].getName().equals(chinese)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
