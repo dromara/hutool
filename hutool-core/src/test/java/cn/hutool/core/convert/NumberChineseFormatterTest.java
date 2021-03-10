@@ -83,15 +83,10 @@ public class NumberChineseFormatterTest {
 	@Test
 	public void chineseToNumberTest(){
 		Assert.assertEquals(0, NumberChineseFormatter.chineseToNumber("零"));
-
 		Assert.assertEquals(102, NumberChineseFormatter.chineseToNumber("一百零二"));
-
 		Assert.assertEquals(112, NumberChineseFormatter.chineseToNumber("一百一十二"));
-
 		Assert.assertEquals(1012, NumberChineseFormatter.chineseToNumber("一千零一十二"));
-
 		Assert.assertEquals(1000000, NumberChineseFormatter.chineseToNumber("一百万"));
-
 		Assert.assertEquals(2000100112, NumberChineseFormatter.chineseToNumber("二十亿零一十万零一百一十二"));
 	}
 }

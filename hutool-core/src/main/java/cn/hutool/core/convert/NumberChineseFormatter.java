@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -37,11 +38,11 @@ public class NumberChineseFormatter {
 	 * 汉字转阿拉伯数字的
 	 */
 	private static final ChineseNameValue[] CHINESE_NAME_VALUE = {
-		new ChineseNameValue("十", 10, false),
-		new ChineseNameValue("百", 100, false),
-		new ChineseNameValue("千", 1000, false),
-		new ChineseNameValue("万", 10000, true),
-		new ChineseNameValue("亿", 100000000, true),
+			new ChineseNameValue("十", 10, false),
+			new ChineseNameValue("百", 100, false),
+			new ChineseNameValue("千", 1000, false),
+			new ChineseNameValue("万", 10000, true),
+			new ChineseNameValue("亿", 100000000, true),
 	};
 
 
@@ -178,10 +179,6 @@ public class NumberChineseFormatter {
 	 * @return 转换后的汉字
 	 */
 	private static String toChinese(int amountPart, boolean isUseTraditional) {
-//		if (amountPart < 0 || amountPart > 10000) {
-//			throw new IllegalArgumentException("Number must 0 < num < 10000！");
-//		}
-
 		String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 		String[] units = isUseTraditional ? TRADITIONAL_UNITS : SIMPLE_UNITS;
 
@@ -207,10 +204,16 @@ public class NumberChineseFormatter {
 	}
 
 	/**
-	 * 把中文转换为数字 如 二百二 220
-	 * @see <url>https://www.d5.nz/read/sfdlq/text-part0000_split_030.html</url>
+	 * 把中文转换为数字 如 二百二 220<br>
+	 * 见：https://www.d5.nz/read/sfdlq/text-part0000_split_030.html
+	 * <ul>
+	 *     <li>一百一十二 -》 112</li>
+	 *     <li>一千零一十二 -》 1012</li>
+	 * </ul>
+	 *
 	 * @param chinese 中文字符
-	 * @return
+	 * @return 数字
+	 * @since 5.6.0
 	 */
 	public static int chineseToNumber(String chinese) {
 		int pos = 0;
@@ -218,12 +221,13 @@ public class NumberChineseFormatter {
 		int section = 0;
 		int number = 0;
 		boolean secUnit = false;
-		while (pos < chinese.length()) {
-			int num = chineseToValue(chinese.substring(pos, pos + 1));
+		final int length = chinese.length();
+		while (pos < length) {
+			int num = ArrayUtil.indexOf(SIMPLE_DIGITS, chinese.substring(pos, pos + 1));
 			if (num >= 0) {
 				number = num;
 				pos += 1;
-				if (pos >= chinese.length()) {
+				if (pos >= length) {
 					section += number;
 					rtn += section;
 					break;
@@ -232,8 +236,8 @@ public class NumberChineseFormatter {
 				int unit = 1;
 				int tmp = chineseToUnit(chinese.substring(pos, pos + 1));
 				if (tmp != -1) {
-					unit = CHINESE_NAME_VALUE[tmp].getValue();
-					secUnit = CHINESE_NAME_VALUE[tmp].isSecUnit();
+					unit = CHINESE_NAME_VALUE[tmp].value;
+					secUnit = CHINESE_NAME_VALUE[tmp].secUnit;
 				}
 				if (secUnit) {
 					section = (section + number) * unit;
@@ -254,13 +258,14 @@ public class NumberChineseFormatter {
 	}
 
 	/**
-	 * 中文到数字的转换
-	 * @param chinese
-	 * @return
+	 * 查找对应的权
+	 *
+	 * @param chinese 中文权位名
+	 * @return 位置
 	 */
-	private static int chineseToValue(String chinese) {
-		for (int i = 0; i < SIMPLE_DIGITS.length; i++) {
-			if (SIMPLE_DIGITS[i].equals(chinese)) {
+	private static int chineseToUnit(String chinese) {
+		for (int i = 0; i < CHINESE_NAME_VALUE.length; i++) {
+			if (CHINESE_NAME_VALUE[i].name.equals(chinese)) {
 				return i;
 			}
 		}
@@ -268,16 +273,29 @@ public class NumberChineseFormatter {
 	}
 
 	/**
-	 * 查找对应的权
-	 * @param chinese
-	 * @return
+	 * 权位
+	 *
+	 * @author totalo
+	 * @since 5.6.0
 	 */
-	private static int chineseToUnit(String chinese) {
-		for (int i = 0; i < CHINESE_NAME_VALUE.length; i++) {
-			if (CHINESE_NAME_VALUE[i].getName().equals(chinese)) {
-				return i;
-			}
+	private static class ChineseNameValue {
+		/**
+		 * 中文权名称
+		 */
+		private final String name;
+		/**
+		 * 10的倍数值
+		 */
+		private final int value;
+		/**
+		 * 是否为节权位
+		 */
+		private final boolean secUnit;
+
+		public ChineseNameValue(String name, int value, boolean secUnit) {
+			this.name = name;
+			this.value = value;
+			this.secUnit = secUnit;
 		}
-		return -1;
 	}
 }

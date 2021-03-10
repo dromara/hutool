@@ -14,6 +14,7 @@
 * 【core   】     增加StrMatcher（issue#1379@Github）
 * 【core   】     NumberUtil增加factorial针对BigInterger方法（issue#1379@Github）
 * 【core   】     TreeNode增加equals方法（issue#1467@Github）
+* 【core   】     增加汉字转阿拉伯数字Convert.chineseToNumber（pr#1469@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
