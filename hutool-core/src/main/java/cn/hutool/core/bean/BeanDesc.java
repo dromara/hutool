@@ -249,12 +249,14 @@ public class BeanDesc implements Serializable {
 	 * @return 是否匹配
 	 */
 	private boolean isMatchGetter(String methodName, String fieldName, boolean isBooleanField, boolean ignoreCase) {
-		// 全部转为小写，忽略大小写比较
+		final String handledFieldName;
 		if (ignoreCase) {
+			// 全部转为小写，忽略大小写比较
 			methodName = methodName.toLowerCase();
-			fieldName = fieldName.toLowerCase();
+			handledFieldName = fieldName.toLowerCase();
+			fieldName = handledFieldName;
 		} else {
-			fieldName = StrUtil.upperFirst(fieldName);
+			handledFieldName = StrUtil.upperFirst(fieldName);
 		}
 
 		if (false == methodName.startsWith("get") && false == methodName.startsWith("is")) {
@@ -271,12 +273,12 @@ public class BeanDesc implements Serializable {
 			if (fieldName.startsWith("is")) {
 				// 字段已经是is开头
 				if (methodName.equals(fieldName) // isName -》 isName
-						|| methodName.equals("get" + fieldName)// isName -》 getIsName
-						|| methodName.equals("is" + fieldName)// isName -》 isIsName
+						|| methodName.equals("get" + handledFieldName)// isName -》 getIsName
+						|| methodName.equals("is" + handledFieldName)// isName -》 isIsName
 				) {
 					return true;
 				}
-			} else if (methodName.equals("is" + fieldName)) {
+			} else if (methodName.equals("is" + handledFieldName)) {
 				// 字段非is开头， name -》 isName
 				return true;
 			}
@@ -304,9 +306,15 @@ public class BeanDesc implements Serializable {
 	 * @return 是否匹配
 	 */
 	private boolean isMatchSetter(String methodName, String fieldName, boolean isBooleanField, boolean ignoreCase) {
-		// 全部转为小写，忽略大小写比较
-		methodName = methodName.toLowerCase();
-		fieldName = fieldName.toLowerCase();
+		final String handledFieldName;
+		if (ignoreCase) {
+			// 全部转为小写，忽略大小写比较
+			methodName = methodName.toLowerCase();
+			handledFieldName = fieldName.toLowerCase();
+			fieldName = handledFieldName;
+		} else {
+			handledFieldName = StrUtil.upperFirst(fieldName);
+		}
 
 		// 非标准Setter方法跳过
 		if (false == methodName.startsWith("set")) {
@@ -314,7 +322,7 @@ public class BeanDesc implements Serializable {
 		}
 
 		// 针对Boolean类型特殊检查
-		if (isBooleanField && fieldName.startsWith("is")) {
+		if (isBooleanField && handledFieldName.startsWith("is")) {
 			// 字段是is开头
 			if (methodName.equals("set" + StrUtil.removePrefix(fieldName, "is"))// isName -》 setName
 					|| methodName.equals("set" + fieldName)// isName -》 setIsName

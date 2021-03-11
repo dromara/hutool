@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.0 (2021-03-10)
+# 5.6.0 (2021-03-11)
 
 ### 新特性
 * 【poi    】     重要：不再兼容POI-3.x，增加兼容POI-5.x（issue#I35J6B@Gitee）
@@ -15,10 +15,12 @@
 * 【core   】     NumberUtil增加factorial针对BigInterger方法（issue#1379@Github）
 * 【core   】     TreeNode增加equals方法（issue#1467@Github）
 * 【core   】     增加汉字转阿拉伯数字Convert.chineseToNumber（pr#1469@Github）
+* 【json   】     JSONUtil增加getByPath方法支持默认值（issue#1470@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
 * 【core   】     修复DataSizeUtil中EB单位错误问题（issue#I39O7I@Gitee）
+* 【core   】     修复BeanDesc.isMatchSetter的ignoreCase未使用问题（issue#I3AXIJ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
