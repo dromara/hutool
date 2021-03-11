@@ -6,6 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,6 +55,15 @@ public class FileTypeUtilTest {
 		String type = FileTypeUtil.getType(file);
 		Console.log(type);
 		Assert.assertEquals("ofd", type);
+	}
+
+
+	@Test
+	@Ignore
+	public void inputStreamAndFilenameTest() {
+		File file = FileUtil.file("e:/laboratory/test.xlsx");
+		String type = FileTypeUtil.getType(file);
+		Assert.assertEquals("xlsx", type);
 	}
 
 }
