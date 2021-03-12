@@ -1294,8 +1294,8 @@ public class NumberUtil {
 			end = temp;
 		}
 		// 加入逻辑判断，确保begin<end并且size不能大于该表示范围
-		Assert.isTrue((end - begin) > size, "Size is larger than range between begin and end!");
-		Assert.isTrue(seed.length > size, "Size is larger than seed size!");
+		Assert.isTrue((end - begin) >= size, "Size is larger than range between begin and end!");
+		Assert.isTrue(seed.length >= size, "Size is larger than seed size!");
 
 		final int[] ranArr = new int[size];
 		// 数量你可以自己定义。

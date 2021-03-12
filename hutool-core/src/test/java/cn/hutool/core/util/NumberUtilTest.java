@@ -361,6 +361,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void generateRandomNumberTest2(){
+		// 检查边界
 		final int[] ints = NumberUtil.generateRandomNumber(1, 8, 7);
 		Assert.assertEquals(7, ints.length);
 		final Set<?> set = Convert.convert(Set.class, ints);
