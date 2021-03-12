@@ -1,13 +1,13 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件类型判断工具类
@@ -111,7 +111,7 @@ public class FileTypeUtil {
 	 * 根据文件流的头部信息获得文件类型
 	 *
 	 * @param fileStreamHexHead 文件流头部16进制字符串
-	 * @return 文件类型，未找到为<code>null</code>
+	 * @return 文件类型，未找到为{@code null}
 	 */
 	public static String getType(String fileStreamHexHead) {
 		for (Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
@@ -126,7 +126,7 @@ public class FileTypeUtil {
 	 * 根据文件流的头部信息获得文件类型
 	 *
 	 * @param in {@link InputStream}
-	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取流引起的异常
 	 */
 	public static String getType(InputStream in) throws IORuntimeException {
@@ -144,7 +144,7 @@ public class FileTypeUtil {
 	 * </pre>
 	 * @param in {@link InputStream}
 	 * @param filename 文件名
-	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取流引起的异常
 	 */
 	public static String getType(InputStream in, String filename) {
@@ -189,7 +189,7 @@ public class FileTypeUtil {
 	 * </pre>
 	 *
 	 * @param file 文件 {@link File}
-	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取文件引起的异常
 	 */
 	public static String getType(File file) throws IORuntimeException {

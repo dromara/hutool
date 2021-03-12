@@ -17,6 +17,7 @@
 * 【core   】     增加汉字转阿拉伯数字Convert.chineseToNumber（pr#1469@Github）
 * 【json   】     JSONUtil增加getByPath方法支持默认值（issue#1470@Github）
 * 【crypto 】     SecureUtil增加hmacSha256方法（pr#1473@Github）
+* 【core   】     FileTypeUtil判断流增加文件名辅助判断（pr#1471@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。
