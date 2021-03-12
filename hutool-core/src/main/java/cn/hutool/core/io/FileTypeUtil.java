@@ -133,6 +133,52 @@ public class FileTypeUtil {
 		return getType(IoUtil.readHex28Upper(in));
 	}
 
+
+	/**
+	 * 根据文件流的头部信息获得文件类型
+	 *
+	 * <pre>
+	 *     1、无法识别类型默认按照扩展名识别
+	 *     2、xls、doc、msi头信息无法区分，按照扩展名区分
+	 *     3、zip可能为docx、xlsx、pptx、jar、war头信息无法区分，按照扩展名区分
+	 * </pre>
+	 * @param in {@link InputStream}
+	 * @param filename 文件名
+	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @throws IORuntimeException 读取流引起的异常
+	 */
+	public static String getType(InputStream in, String filename) {
+		String typeName = getType(in);
+
+		if (null == typeName) {
+			// 未成功识别类型，扩展名辅助识别
+			typeName = FileUtil.extName(filename);
+		} else if ("xls".equals(typeName)) {
+			// xls、doc、msi的头一样，使用扩展名辅助判断
+			final String extName = FileUtil.extName(filename);
+			if ("doc".equalsIgnoreCase(extName)) {
+				typeName = "doc";
+			} else if ("msi".equalsIgnoreCase(extName)) {
+				typeName = "msi";
+			}
+		} else if ("zip".equals(typeName)) {
+			// zip可能为docx、xlsx、pptx、jar、war等格式，扩展名辅助判断
+			final String extName = FileUtil.extName(filename);
+			if ("docx".equalsIgnoreCase(extName)) {
+				typeName = "docx";
+			} else if ("xlsx".equalsIgnoreCase(extName)) {
+				typeName = "xlsx";
+			} else if ("pptx".equalsIgnoreCase(extName)) {
+				typeName = "pptx";
+			} else if ("jar".equalsIgnoreCase(extName)) {
+				typeName = "jar";
+			} else if ("war".equalsIgnoreCase(extName)) {
+				typeName = "war";
+			}
+		}
+		return typeName;
+	}
+
 	/**
 	 * 根据文件流的头部信息获得文件类型
 	 *
@@ -147,42 +193,13 @@ public class FileTypeUtil {
 	 * @throws IORuntimeException 读取文件引起的异常
 	 */
 	public static String getType(File file) throws IORuntimeException {
-		String typeName;
 		FileInputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
-			typeName = getType(in);
+			return getType(in, file.getName());
 		} finally {
 			IoUtil.close(in);
 		}
-
-		if (null == typeName) {
-			// 未成功识别类型，扩展名辅助识别
-			typeName = FileUtil.extName(file);
-		} else if ("xls".equals(typeName)) {
-			// xls、doc、msi的头一样，使用扩展名辅助判断
-			final String extName = FileUtil.extName(file);
-			if ("doc".equalsIgnoreCase(extName)) {
-				typeName = "doc";
-			} else if ("msi".equalsIgnoreCase(extName)) {
-				typeName = "msi";
-			}
-		} else if ("zip".equals(typeName)) {
-			// zip可能为docx、xlsx、pptx、jar、war等格式，扩展名辅助判断
-			final String extName = FileUtil.extName(file);
-			if ("docx".equalsIgnoreCase(extName)) {
-				typeName = "docx";
-			} else if ("xlsx".equalsIgnoreCase(extName)) {
-				typeName = "xlsx";
-			} else if ("pptx".equalsIgnoreCase(extName)) {
-				typeName = "pptx";
-			} else if ("jar".equalsIgnoreCase(extName)) {
-				typeName = "jar";
-			} else if ("war".equalsIgnoreCase(extName)) {
-				typeName = "war";
-			}
-		}
-		return typeName;
 	}
 
 	/**
