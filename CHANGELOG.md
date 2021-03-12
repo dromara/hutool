@@ -16,6 +16,7 @@
 * 【core   】     TreeNode增加equals方法（issue#1467@Github）
 * 【core   】     增加汉字转阿拉伯数字Convert.chineseToNumber（pr#1469@Github）
 * 【json   】     JSONUtil增加getByPath方法支持默认值（issue#1470@Github）
+* 【crypto 】     SecureUtil增加hmacSha256方法（pr#1473@Github）
 
 ### Bug修复
 * 【socket 】     修复Client创建失败资源未释放问题。

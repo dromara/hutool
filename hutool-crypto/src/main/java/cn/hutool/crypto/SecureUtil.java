@@ -745,7 +745,7 @@ public final class SecureUtil {
 	 *
 	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
-	 * @since 3.3.0
+	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256(String key) {
 		return hmacSha256(StrUtil.utf8Bytes(key));
@@ -759,6 +759,7 @@ public final class SecureUtil {
 	 *
 	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
+	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256(byte[] key) {
 		return new HMac(HmacAlgorithm.HmacSHA256, key);
@@ -771,6 +772,7 @@ public final class SecureUtil {
 	 * HmacSHA256加密并转为16进制字符串：hmacSha256().digestHex(data)<br>
 	 *
 	 * @return {@link HMac}
+	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256() {
 		return new HMac(HmacAlgorithm.HmacSHA256);
