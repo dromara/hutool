@@ -30,8 +30,8 @@
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" />
 	</a>
-	<a target="_blank" href='https://gitee.com/loolly/hutool/stargazers'>
-		<img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=gvp' alt='star'/>
+	<a target="_blank" href='https://gitee.com/dromara/hutool/stargazers'>
+		<img src='https://gitee.com/dromara/hutool/badge/star.svg?theme=gvp' alt='star'/>
 	</a>
 	<a target="_blank" href='https://github.com/looly/hutool'>
 		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"/>
@@ -112,7 +112,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 [Chinese documentation](https://www.hutool.cn/docs/)
 
-[API](https://apidoc.gitee.com/loolly/hutool/)
+[API](https://apidoc.gitee.com/dromara/hutool/)
 
 [Video](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
 
@@ -147,7 +147,7 @@ compile 'cn.hutool:hutool-all:5.6.0'
 
 Download the entire project source code
 
-gitee：[https://gitee.com/loolly/hutool](https://gitee.com/loolly/hutool) 
+gitee：[https://gitee.com/dromara/hutool](https://gitee.com/dromara/hutool) 
 
 github:https://github.com/looly/hutool
 
@@ -173,7 +173,7 @@ Hutool's source code is divided into two branches:
 
 When submitting feedback, please indicate which JDK version, Hutool version, and related dependency library version you are using.
 
-- [Gitee issue](https://gitee.com/loolly/hutool/issues)
+- [Gitee issue](https://gitee.com/dromara/hutool/issues)
 - [Github issue](https://github.com/looly/hutool/issues)
 
 ### Principles of PR(pull request)
@@ -189,13 +189,13 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 
 ## Star Hutool
 
-[![Giteye chart](https://chart.giteye.net/gitee/loolly/hutool/8RVBCN69.png)](https://giteye.net/chart/8RVBCN69)
+[![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
 
 ## Donate
 
 If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
 
-[gitee donate](https://gitee.com/loolly/hutool)
+[gitee donate](https://gitee.com/dromara/hutool)
 
 ## WeChat Official Account
 
