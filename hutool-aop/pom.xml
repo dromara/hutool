@@ -15,11 +15,11 @@
 	<artifactId>hutool-aop</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 动态代理（AOP）</description>
-	
+
 	<properties>
 		<!-- versions -->
 		<cglib.version>3.3.0</cglib.version>
-		<spring.version>5.3.1</spring.version>
+		<spring.version>5.3.4</spring.version>
 	</properties>
 
 	<dependencies>
