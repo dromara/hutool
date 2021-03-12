@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.0 (2021-03-11)
+# 5.6.0 (2021-03-12)
 
 ### 新特性
 * 【poi    】     重要：不再兼容POI-3.x，增加兼容POI-5.x（issue#I35J6B@Gitee）
@@ -21,6 +21,8 @@
 * 【socket 】     修复Client创建失败资源未释放问题。
 * 【core   】     修复DataSizeUtil中EB单位错误问题（issue#I39O7I@Gitee）
 * 【core   】     修复BeanDesc.isMatchSetter的ignoreCase未使用问题（issue#I3AXIJ@Gitee）
+* 【core   】     修复CRC16Checksum中（issue#I3AXIJ@Gitee）
+* 【core   】     修复UrlQuery中对空key解析丢失问题（issue#I3B3J6@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

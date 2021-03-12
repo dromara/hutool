@@ -222,7 +222,7 @@ public class UrlQuery {
 				sb.append("&");
 			}
 			key = entry.getKey();
-			if (StrUtil.isNotEmpty(key)) {
+			if (null != key) {
 				sb.append(URLUtil.encodeAll(StrUtil.str(key), charset));
 				value = entry.getValue();
 				if (null != value) {

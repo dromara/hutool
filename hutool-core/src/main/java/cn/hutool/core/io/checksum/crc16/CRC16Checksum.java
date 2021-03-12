@@ -47,7 +47,7 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
 	public String getHexValue(boolean isPadding){
 		String hex = HexUtil.toHex(getValue());
 		if(isPadding){
-			hex = StrUtil.padAfter(hex, 4, '0');
+			hex = StrUtil.padPre(hex, 4, '0');
 		}
 
 		return hex;

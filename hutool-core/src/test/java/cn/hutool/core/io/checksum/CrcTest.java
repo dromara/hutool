@@ -1,12 +1,14 @@
 package cn.hutool.core.io.checksum;
 
+import cn.hutool.core.io.checksum.crc16.CRC16XModem;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * CRC校验单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -39,5 +41,15 @@ public class CrcTest {
 		crc.update(str.getBytes(), 0, str.getBytes().length);
 		String crc16 = HexUtil.toHex(crc.getValue());
 		Assert.assertEquals("18c", crc16);
+	}
+
+	@Test
+	public void paddingTest(){
+		// I3B3RV@Gitee
+		String text = "000123FFFFFF";
+		CRC16XModem crc16 = new CRC16XModem();
+		crc16.update(StrUtil.bytes(text));
+		String hexValue = crc16.getHexValue(true);
+		Assert.assertEquals("0e04", hexValue);
 	}
 }
