@@ -216,7 +216,6 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanWithNullTest() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
-		Console.log(JSONUtil.parseObj(jsonStr));
 		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
 		Assert.assertTrue(user.getData().containsKey("password"));
 	}
@@ -518,7 +517,7 @@ public class JSONObjectTest {
 		final Map.Entry<String, String> next = entries.iterator().next();
 
 		final JSONObject jsonObject = JSONUtil.parseObj(next);
-		Console.log(jsonObject);
+		Assert.assertEquals("{\"test\":\"testValue\"}", jsonObject.toString());
 	}
 
 	@Test(expected = JSONException.class)
@@ -533,7 +532,7 @@ public class JSONObjectTest {
 		map.put("c", 2.0F);
 
 		final String s = JSONUtil.toJsonStr(map);
-		Console.log(s);
+		Assert.assertEquals("{\"c\":2}", s);
 	}
 
 	@Test

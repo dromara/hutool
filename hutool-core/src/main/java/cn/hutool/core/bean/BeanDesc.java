@@ -285,7 +285,7 @@ public class BeanDesc implements Serializable {
 		}
 
 		// 包括boolean的任何类型只有一种匹配情况：name -》 getName
-		return methodName.equals("get" + fieldName);
+		return methodName.equals("get" + handledFieldName);
 	}
 
 	/**
@@ -322,10 +322,10 @@ public class BeanDesc implements Serializable {
 		}
 
 		// 针对Boolean类型特殊检查
-		if (isBooleanField && handledFieldName.startsWith("is")) {
+		if (isBooleanField && fieldName.startsWith("is")) {
 			// 字段是is开头
 			if (methodName.equals("set" + StrUtil.removePrefix(fieldName, "is"))// isName -》 setName
-					|| methodName.equals("set" + fieldName)// isName -》 setIsName
+					|| methodName.equals("set" + handledFieldName)// isName -》 setIsName
 			) {
 				return true;
 			}
