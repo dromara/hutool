@@ -737,6 +737,45 @@ public final class SecureUtil {
 		return new HMac(HmacAlgorithm.HmacSHA1);
 	}
 
+	/**
+	 * HmacSHA256加密器<br>
+	 * 例：<br>
+	 * HmacSHA256加密：hmacSha256(key).digest(data)<br>
+	 * HmacSHA256加密并转为16进制字符串：hmacSha256(key).digestHex(data)<br>
+	 *
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmacSha256(String key) {
+		return hmacSha256(StrUtil.utf8Bytes(key));
+	}
+
+	/**
+	 * HmacSHA256加密器<br>
+	 * 例：<br>
+	 * HmacSHA256加密：hmacSha256(key).digest(data)<br>
+	 * HmacSHA256加密并转为16进制字符串：hmacSha256(key).digestHex(data)<br>
+	 *
+	 * @param key 加密密钥，如果为{@code null}生成随机密钥
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacSha256(byte[] key) {
+		return new HMac(HmacAlgorithm.HmacSHA256, key);
+	}
+
+	/**
+	 * HmacSHA256加密器，生成随机KEY<br>
+	 * 例：<br>
+	 * HmacSHA256加密：hmacSha256().digest(data)<br>
+	 * HmacSHA256加密并转为16进制字符串：hmacSha256().digestHex(data)<br>
+	 *
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacSha256() {
+		return new HMac(HmacAlgorithm.HmacSHA256);
+	}
+
 	// ------------------------------------------------------------------- 非称加密算法
 
 	/**
