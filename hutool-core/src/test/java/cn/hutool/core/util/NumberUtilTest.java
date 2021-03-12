@@ -358,4 +358,12 @@ public class NumberUtilTest {
 		Assert.assertEquals("0", NumberUtil.toStr(NumberUtil.sub(new BigDecimal("9600.0000000000"), new BigDecimal("9600.000000"))));
 		Assert.assertEquals("0", NumberUtil.toStr(new BigDecimal("9600.00000").subtract(new BigDecimal("9600.000000000"))));
 	}
+
+	@Test
+	public void generateRandomNumberTest2(){
+		final int[] ints = NumberUtil.generateRandomNumber(1, 8, 7);
+		Assert.assertEquals(7, ints.length);
+		final Set<?> set = Convert.convert(Set.class, ints);
+		Assert.assertEquals(7, set.size());
+	}
 }

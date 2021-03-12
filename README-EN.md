@@ -187,6 +187,10 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 
 -------------------------------------------------------------------------------
 
+## Star Hutool
+
+[![Giteye chart](https://chart.giteye.net/gitee/loolly/hutool/8RVBCN69.png)](https://giteye.net/chart/8RVBCN69)
+
 ## Donate
 
 If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
