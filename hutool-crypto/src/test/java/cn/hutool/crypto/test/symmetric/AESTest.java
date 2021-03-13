@@ -1,16 +1,24 @@
 package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.test.digest.Md5Test;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 
 public class AESTest {
@@ -111,5 +119,20 @@ public class AESTest {
 
 		final String decryptStr = aes.decryptStr(result1);
 		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
+	public void encryptAndDecryptWithHugeFileTest() throws IOException {
+		final SecureRandom random = RandomUtil.getSecureRandom("123456".getBytes());
+		final SecretKey secretKey = KeyUtil.generateKey("AES", 128, random);
+
+		AES aes = new AES(Mode.CBC, Padding.NoPadding, secretKey);
+		try (BufferedInputStream bis = FileUtil.getInputStream("F:\\Downloads\\Twk2ndEvolutionCh1.rar")) {
+			File encryptedFile = aes.encrypt(bis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1.rar.enc"));
+
+			File decryptedFile = aes.decrypt(FileUtil.getInputStream(encryptedFile), Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1-dec.rar"));
+			String decryptedMd5 = new MD5().digestHex(decryptedFile);
+			Assert.assertEquals(new MD5().digestHex(bis), decryptedMd5);
+		}
 	}
 }
