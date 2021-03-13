@@ -356,7 +356,7 @@ public class SymmetricCrypto implements Serializable {
 	/**
 	 * 加密
 	 *
-	 * @param plainInputStream 待被加密的输入流(未加密)
+	 * @param plainInputStream 待被加密的输入流(未加密)，流不会关闭，调用者需自行关闭流
 	 * @return 加密后的文件
 	 * @throws CryptoException IO异常
 	 */
@@ -380,14 +380,13 @@ public class SymmetricCrypto implements Serializable {
 			// 加密流写入文件
 			int readCount;
 			while ((readCount = cipherInputStream.read(cache, 0, cache.length)) != -1) {
-				bos.write(cipher.doFinal(cache), 0, readCount);
+				bos.write(cache, 0, readCount);
 			}
 
 			bos.flush();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
-			IoUtil.close(plainInputStream);
 			lock.unlock();
 		}
 
@@ -524,9 +523,9 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 解密，会关闭流
+	 * 解密
 	 *
-	 * @param encryptedDataStream 被解密的输入流(已加密)
+	 * @param encryptedDataStream 被解密的输入流(已加密)，不会关闭流
 	 * @param outputDecFilePath 待输出的解密后文件路径
 	 * @return 解密后的文件
 	 * @throws CryptoException IO异常
@@ -550,14 +549,13 @@ public class SymmetricCrypto implements Serializable {
 			int readCount;
 			// 解密流开始写入文件
 			while ((readCount = encryptedDataStream.read(cache, 0, cache.length)) != -1) {
-				cipherOutputStream.write(cipher.doFinal(cache), 0, readCount);
+				cipherOutputStream.write(cache, 0, readCount);
 			}
 
 			cipherOutputStream.flush();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
-			IoUtil.close(encryptedDataStream);
 			lock.unlock();
 		}
 

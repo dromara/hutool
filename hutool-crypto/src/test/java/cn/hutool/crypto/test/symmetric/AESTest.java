@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import javax.crypto.SecretKey;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -126,13 +127,15 @@ public class AESTest {
 		final SecureRandom random = RandomUtil.getSecureRandom("123456".getBytes());
 		final SecretKey secretKey = KeyUtil.generateKey("AES", 128, random);
 
-		AES aes = new AES(Mode.CBC, Padding.NoPadding, secretKey);
+		AES aes = new AES(secretKey);
 		try (BufferedInputStream bis = FileUtil.getInputStream("F:\\Downloads\\Twk2ndEvolutionCh1.rar")) {
 			File encryptedFile = aes.encrypt(bis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1.rar.enc"));
 
-			File decryptedFile = aes.decrypt(FileUtil.getInputStream(encryptedFile), Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1-dec.rar"));
-			String decryptedMd5 = new MD5().digestHex(decryptedFile);
-			Assert.assertEquals(new MD5().digestHex(bis), decryptedMd5);
+			try (BufferedInputStream encBis = FileUtil.getInputStream(encryptedFile)) {
+				File decryptedFile = aes.decrypt(encBis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1-dec.rar"));
+				String decryptedMd5 = new MD5().digestHex(decryptedFile);
+				Assert.assertEquals(new MD5().digestHex(bis), decryptedMd5);
+			}
 		}
 	}
 }
