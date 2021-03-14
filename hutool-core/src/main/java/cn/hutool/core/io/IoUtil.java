@@ -448,12 +448,12 @@ public class IoUtil extends NioUtil {
 	 * 从流中读取bytes
 	 *
 	 * @param in      {@link InputStream}
-	 * @param isCLose 是否关闭输入流
+	 * @param isClose 是否关闭输入流
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	public static byte[] readBytes(InputStream in, boolean isCLose) throws IORuntimeException {
+	public static byte[] readBytes(InputStream in, boolean isClose) throws IORuntimeException {
 		if (in instanceof FileInputStream) {
 			// 文件流的长度是可预见的，此时直接读取效率更高
 			final byte[] result;
@@ -466,12 +466,16 @@ public class IoUtil extends NioUtil {
 				}
 			} catch (IOException e) {
 				throw new IORuntimeException(e);
+			} finally {
+				if (isClose) {
+					close(in);
+				}
 			}
 			return result;
 		}
 
 		// 未知bytes总量的流
-		return read(in, isCLose).toByteArray();
+		return read(in, isClose).toByteArray();
 	}
 
 	/**
