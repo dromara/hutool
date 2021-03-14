@@ -49,9 +49,9 @@ import java.util.Map;
  * 2、非对称加密（asymmetric），例如：RSA、DSA等<br>
  * 3、摘要加密（digest），例如：MD5、SHA-1、SHA-256、HMAC等<br>
  *
- * @author xiaoleilu, Gsealy
+ * @author Looly, Gsealy
  */
-public final class SecureUtil {
+public class SecureUtil {
 
 	/**
 	 * 默认密钥字节数
