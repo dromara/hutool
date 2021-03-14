@@ -386,7 +386,17 @@ public class IoUtil extends NioUtil {
 	 * @since 5.5.3
 	 */
 	public static FastByteArrayOutputStream read(InputStream in, boolean isClose) throws IORuntimeException {
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		final FastByteArrayOutputStream out;
+		if(in instanceof FileInputStream){
+			// 文件流的长度是可预见的，此时直接读取效率更高
+			try {
+				out = new FastByteArrayOutputStream(in.available());
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+		} else{
+			out = new FastByteArrayOutputStream();
+		}
 		try {
 			copy(in, out);
 		} finally {
@@ -794,7 +804,21 @@ public class IoUtil extends NioUtil {
 	 * @since 4.0.10
 	 */
 	public static BufferedInputStream toBuffered(InputStream in) {
+		Assert.notNull(in, "InputStream must be not null!");
 		return (in instanceof BufferedInputStream) ? (BufferedInputStream) in : new BufferedInputStream(in);
+	}
+
+	/**
+	 * 转换为{@link BufferedInputStream}
+	 *
+	 * @param in {@link InputStream}
+	 * @param bufferSize buffer size
+	 * @return {@link BufferedInputStream}
+	 * @since 5.6.1
+	 */
+	public static BufferedInputStream toBuffered(InputStream in, int bufferSize) {
+		Assert.notNull(in, "InputStream must be not null!");
+		return (in instanceof BufferedInputStream) ? (BufferedInputStream) in : new BufferedInputStream(in, bufferSize);
 	}
 
 	/**
@@ -805,7 +829,21 @@ public class IoUtil extends NioUtil {
 	 * @since 4.0.10
 	 */
 	public static BufferedOutputStream toBuffered(OutputStream out) {
+		Assert.notNull(out, "OutputStream must be not null!");
 		return (out instanceof BufferedOutputStream) ? (BufferedOutputStream) out : new BufferedOutputStream(out);
+	}
+
+	/**
+	 * 转换为{@link BufferedOutputStream}
+	 *
+	 * @param out {@link OutputStream}
+	 * @param bufferSize buffer size
+	 * @return {@link BufferedOutputStream}
+	 * @since 5.6.1
+	 */
+	public static BufferedOutputStream toBuffered(OutputStream out, int bufferSize) {
+		Assert.notNull(out, "OutputStream must be not null!");
+		return (out instanceof BufferedOutputStream) ? (BufferedOutputStream) out : new BufferedOutputStream(out, bufferSize);
 	}
 
 	/**
