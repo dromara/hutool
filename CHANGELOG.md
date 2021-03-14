@@ -7,6 +7,8 @@
 
 ### 新特性
 * 【crypto 】     SecureUtil去除final修饰符（issue#1474@Github）
+* 【core   】     IoUtil增加lineIter方法
+
 ### Bug修复
 * 【core   】     修复IoUtil.readBytes的FileInputStream中isClose参数失效问题（issue#I3B7UD@Gitee）
 

@@ -1,5 +1,9 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -9,10 +13,6 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
 
 /**
  * 将Reader包装为一个按照行读取的Iterator<br>
@@ -70,7 +70,8 @@ public class LineIter implements Iterator<String>, Iterable<String>, Closeable, 
 
 	// -----------------------------------------------------------------------
 	/**
-	 * 判断{@link Reader}是否可以存在下一行。 If there is an <code>IOException</code> then {@link #close()} will be called on this instance.
+	 * 判断{@link Reader}是否可以存在下一行。
+	 * If there is an {@code IOException} then {@link #close()} will be called on this instance.
 	 *
 	 * @return {@code true} 表示有更多行
 	 * @throws IORuntimeException IO异常

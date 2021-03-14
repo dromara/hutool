@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.collection.LineIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -10,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -847,6 +849,56 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * 转换为{@link BufferedReader}
+	 *
+	 * @param reader {@link Reader}
+	 * @return {@link BufferedReader}
+	 * @since 5.6.1
+	 */
+	public static BufferedReader toBuffered(Reader reader) {
+		Assert.notNull(reader, "Reader must be not null!");
+		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
+	}
+
+	/**
+	 * 转换为{@link BufferedReader}
+	 *
+	 * @param reader {@link Reader}
+	 * @param bufferSize buffer size
+	 * @return {@link BufferedReader}
+	 * @since 5.6.1
+	 */
+	public static BufferedReader toBuffered(Reader reader, int bufferSize) {
+		Assert.notNull(reader, "Reader must be not null!");
+		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader, bufferSize);
+	}
+
+	/**
+	 * 转换为{@link BufferedWriter}
+	 *
+	 * @param writer {@link Writer}
+	 * @return {@link BufferedWriter}
+	 * @since 5.6.1
+	 */
+	public static BufferedWriter toBuffered(Writer writer) {
+		Assert.notNull(writer, "Writer must be not null!");
+		return (writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer);
+	}
+
+	/**
+	 * 转换为{@link BufferedWriter}
+	 *
+	 * @param writer {@link Writer}
+	 * @param bufferSize buffer size
+	 * @return {@link BufferedWriter}
+	 * @since 5.6.1
+	 */
+	public static BufferedWriter toBuffered(Writer writer, int bufferSize) {
+		Assert.notNull(writer, "Writer must be not null!");
+		return (writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer, bufferSize);
+	}
+
+	/**
 	 * 将{@link InputStream}转换为支持mark标记的流<br>
 	 * 若原流支持mark标记，则返回原流，否则使用{@link BufferedInputStream} 包装之
 	 *
@@ -1213,5 +1265,52 @@ public class IoUtil extends NioUtil {
 	 */
 	public static long checksumValue(InputStream in, Checksum checksum) {
 		return checksum(in, checksum).getValue();
+	}
+
+	/**
+	 * 返回行遍历器
+	 * <pre>
+	 * LineIterator it = null;
+	 * try {
+	 * 	it = IoUtil.lineIter(reader);
+	 * 	while (it.hasNext()) {
+	 * 		String line = it.nextLine();
+	 * 		// do something with line
+	 * 	}
+	 * } finally {
+	 * 		it.close();
+	 * }
+	 * </pre>
+	 *
+	 * @param reader {@link Reader}
+	 * @return {@link LineIter}
+	 * @since 5.6.1
+	 */
+	public static LineIter lineIter(Reader reader){
+		return new LineIter(reader);
+	}
+
+	/**
+	 * 返回行遍历器
+	 * <pre>
+	 * LineIterator it = null;
+	 * try {
+	 * 	it = IoUtil.lineIter(in, CharsetUtil.CHARSET_UTF_8);
+	 * 	while (it.hasNext()) {
+	 * 		String line = it.nextLine();
+	 * 		// do something with line
+	 * 	}
+	 * } finally {
+	 * 		it.close();
+	 * }
+	 * </pre>
+	 *
+	 * @param in {@link InputStream}
+	 * @param charset 编码
+	 * @return {@link LineIter}
+	 * @since 5.6.1
+	 */
+	public static LineIter lineIter(InputStream in, Charset charset){
+		return new LineIter(in, charset);
 	}
 }
