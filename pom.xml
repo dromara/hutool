@@ -64,7 +64,7 @@
 
 	<issueManagement>
 		<system>Github Issue</system>
-		<url>https://github.com/looly/hutool/issues</url>
+		<url>https://github.com/dromara/hutool/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -82,9 +82,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git@github.com:looly/hutool.git</connection>
-		<developerConnection>scm:git@github.com:looly/hutool.git</developerConnection>
-		<url>git@github.com:looly/hutool.git</url>
+		<connection>scm:git@github.com:dromara/hutool.git</connection>
+		<developerConnection>scm:git@github.com:dromara/hutool.git</developerConnection>
+		<url>git@github.com:dromara/hutool.git</url>
 	</scm>
 
 	<build>
