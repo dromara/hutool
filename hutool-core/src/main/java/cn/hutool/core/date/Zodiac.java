@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * 星座 来自：https://blog.csdn.net/u010758605/article/details/48317881
- * 
+ *
  * @author looly
  * @since 4.4.3
  */
@@ -19,7 +19,7 @@ public class Zodiac {
 
 	/**
 	 * 通过生日计算星座
-	 * 
+	 *
 	 * @param date 出生日期
 	 * @return 星座名
 	 */
@@ -29,7 +29,7 @@ public class Zodiac {
 
 	/**
 	 * 通过生日计算星座
-	 * 
+	 *
 	 * @param calendar 出生日期
 	 * @return 星座名
 	 */
@@ -39,10 +39,10 @@ public class Zodiac {
 		}
 		return getZodiac(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
-	
+
 	/**
 	 * 通过生日计算星座
-	 * 
+	 *
 	 * @param month 月，从0开始计数
 	 * @param day 天
 	 * @return 星座名
@@ -54,7 +54,7 @@ public class Zodiac {
 
 	/**
 	 * 通过生日计算星座
-	 * 
+	 *
 	 * @param month 月，从0开始计数，见{@link Month#getValue()}
 	 * @param day 天
 	 * @return 星座名
@@ -67,7 +67,7 @@ public class Zodiac {
 	// ----------------------------------------------------------------------------------------------------------- 生肖
 	/**
 	 * 通过生日计算生肖，只计算1900年后出生的人
-	 * 
+	 *
 	 * @param date 出生日期（年需农历）
 	 * @return 星座名
 	 */
@@ -77,7 +77,7 @@ public class Zodiac {
 
 	/**
 	 * 通过生日计算生肖，只计算1900年后出生的人
-	 * 
+	 *
 	 * @param calendar 出生日期（年需农历）
 	 * @return 星座名
 	 */
@@ -90,7 +90,7 @@ public class Zodiac {
 
 	/**
 	 * 计算生肖，只计算1900年后出生的人
-	 * 
+	 *
 	 * @param year 农历年
 	 * @return 生肖名
 	 */

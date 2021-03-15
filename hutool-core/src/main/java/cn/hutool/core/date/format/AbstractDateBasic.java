@@ -6,14 +6,14 @@ import java.util.TimeZone;
 
 public abstract class AbstractDateBasic implements DateBasic, Serializable {
 	private static final long serialVersionUID = 6333136319870641818L;
-	
+
 	/** The pattern */
 	protected final  String pattern;
 	/** The time zone. */
 	protected final TimeZone timeZone;
 	/** The locale. */
 	protected final Locale locale;
-	
+
 	/**
 	 * 构造，内部使用
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式

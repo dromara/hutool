@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
-	
+
 	/** 规则列表. */
 	private transient Rule[] rules;
 	/** 估算最大长度. */
@@ -32,7 +32,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	// -----------------------------------------------------------------------
 	/**
 	 * 构造，内部使用<br>
-	 * 
+	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 非空时区{@link TimeZone}
 	 * @param locale 非空{@link Locale} 日期地理位置
@@ -289,7 +289,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * <p>
 	 * Formats a {@code Date}, {@code Calendar} or {@code Long} (milliseconds) object.
 	 * </p>
-	 * 
+	 *
 	 * @param obj the object to format
 	 * @return The formatted value.
 	 */
@@ -347,10 +347,10 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		}
 		return applyRules(calendar, buf);
 	}
-	
+
 	/**
 	 * Creates a String representation of the given Calendar by applying the rules of this printer to it.
-	 * 
+	 *
 	 * @param c the Calender to apply the rules to.
 	 * @return a String representation of the given Calendar.
 	 */

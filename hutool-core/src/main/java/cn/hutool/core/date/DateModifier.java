@@ -7,13 +7,13 @@ import cn.hutool.core.util.ArrayUtil;
 /**
  * 日期修改器<br>
  * 用于实现自定义某个日期字段的调整，包括：
- * 
+ *
  * <pre>
  * 1. 获取指定字段的起始时间
  * 2. 获取指定字段的四舍五入时间
  * 3. 获取指定字段的结束时间
  * </pre>
- * 
+ *
  * @author looly
  *
  */
@@ -31,7 +31,7 @@ public class DateModifier {
 
 	/**
 	 * 修改日期
-	 * 
+	 *
 	 * @param calendar {@link Calendar}
 	 * @param dateField 日期字段，即保留到哪个日期字段
 	 * @param modifyType 修改类型，包括舍去、四舍五入、进一等
@@ -87,7 +87,7 @@ public class DateModifier {
 	// -------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 修改日期字段值
-	 * 
+	 *
 	 * @param calendar {@link Calendar}
 	 * @param field 字段，见{@link Calendar}
 	 * @param modifyType {@link ModifyType}
@@ -125,7 +125,7 @@ public class DateModifier {
 
 	/**
 	 * 修改类型
-	 * 
+	 *
 	 * @author looly
 	 *
 	 */

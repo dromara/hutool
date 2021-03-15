@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 依赖异常
- * 
+ *
  * @author xiaoleilu
  * @since 4.0.10
  */
