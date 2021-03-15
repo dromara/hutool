@@ -10,7 +10,7 @@ import java.util.Collection;
 
 /**
  * 各种集合类转换器
- * 
+ *
  * @author Looly
  * @since 3.0.8
  */
@@ -31,7 +31,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	// ---------------------------------------------------------------------------------------------- Constractor start
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param collectionType 集合类型
 	 */
 	public CollectionConverter(Type collectionType) {
@@ -40,7 +40,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param collectionType 集合类型
 	 */
 	public CollectionConverter(Class<?> collectionType) {
@@ -49,7 +49,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param collectionType 集合类型
 	 * @param elementType 集合元素类型
 	 */
@@ -67,7 +67,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 
 	/**
 	 * 内部转换
-	 * 
+	 *
 	 * @param value 值
 	 * @return 转换后的集合对象
 	 */

@@ -4,7 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 
 /**
  * 泛型枚举转换器
- * 
+ *
  * @param <E> 枚举类类型
  * @author Looly
  * @since 4.0.2
@@ -15,10 +15,10 @@ public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E
 	private static final long serialVersionUID = 1L;
 
 	private final Class<E> enumClass;
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param enumClass 转换成的目标Enum类
 	 */
 	public GenericEnumConverter(Class<E> enumClass) {

@@ -9,7 +9,7 @@ import cn.hutool.core.util.ObjectUtil;
 /**
  * {@link StackTraceElement} 转换器<br>
  * 只支持Map方式转换
- * 
+ *
  * @author Looly
  * @since 3.0.8
  */
