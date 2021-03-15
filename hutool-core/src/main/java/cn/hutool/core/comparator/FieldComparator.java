@@ -12,7 +12,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * Bean字段排序器<br>
  * 参阅feilong-core中的PropertyComparator
- * 
+ *
  * @author Looly
  *
  * @param <T> 被比较的Bean
@@ -24,7 +24,7 @@ public class FieldComparator<T> implements Comparator<T>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param beanClass Bean类
 	 * @param fieldName 字段名
 	 */

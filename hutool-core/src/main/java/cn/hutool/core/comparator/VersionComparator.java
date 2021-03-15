@@ -14,7 +14,7 @@ import java.util.List;
  * 排序时版本从小到大排序，即比较时小版本在前，大版本在后<br>
  * 支持如：1.3.20.8，6.82.20160101，8.5a/8.5c等版本形式<br>
  * 参考：https://www.cnblogs.com/shihaiming/p/6286575.html
- * 
+ *
  * @author Looly
  * @since 4.0.2
  */
@@ -44,7 +44,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 * compare("1.13.0", "1.12.1c") &gt; 0
 	 * compare("V0.0.20170102", "V0.0.20170101") &gt; 0
 	 * </pre>
-	 * 
+	 *
 	 * @param version1 版本1
 	 * @param version2 版本2
 	 */

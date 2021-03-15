@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * {@link AtomicIntegerArray}转换器
- * 
+ *
  * @author Looly
  * @since 5.4.5
  */
