@@ -53,8 +53,7 @@ public class DateUtils8Transform {
 	 * 04. java.time.LocalDateTime --> java.util.Date
 	 */
 	public static Date java8Date2Date(LocalDateTime localDateTime) {
-		ZoneId zone = ZoneId.systemDefault();
-		Instant instant = localDateTime.atZone(zone).toInstant();
+		Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
 		return Date.from(instant);
 	}
 
@@ -80,7 +79,7 @@ public class DateUtils8Transform {
 	}
 
 	/**
-	 * java.sql.Date与java.util.Date的转化
+	 *  07. java.sql.Date与java.util.Date的转化
 	 *
 	 * @param sqlDate
 	 * @return
@@ -89,7 +88,13 @@ public class DateUtils8Transform {
 		return new Date(sqlDate.getTime());
 	}
 
-	public static Date date2SqlDate(Date date) {
+	/**
+	 * 08. java.util.Date与java.sql.Date的转化
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static java.sql.Date date2SqlDate(Date date) {
 		return new java.sql.Date(new Date().getTime());
 	}
 }
