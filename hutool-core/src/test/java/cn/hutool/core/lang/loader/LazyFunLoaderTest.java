@@ -20,6 +20,7 @@ public class LazyFunLoaderTest {
 		LazyFunLoader<BigObject> loader = new LazyFunLoader<>(BigObject::new);
 
 		Assert.assertNotNull(loader.get());
+		Assert.assertTrue(loader.isInitialize());
 
 		// 对于某些对象，在程序关闭时，需要进行销毁操作
 		loader.ifInitialized(BigObject::destroy);
@@ -38,5 +39,7 @@ public class LazyFunLoaderTest {
 			Assert.fail();
 			it.destroy();
 		});
+
+		Assert.assertFalse(loader.isInitialize());
 	}
 }
