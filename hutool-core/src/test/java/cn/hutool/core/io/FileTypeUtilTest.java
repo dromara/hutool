@@ -6,10 +6,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 文件类型判断单元测试
