@@ -17,10 +17,14 @@ import java.util.function.Supplier;
 public final class LazyFunLoader<T> extends LazyLoader<T> {
 
 	/**
-	 * 对象生成函数
+	 * 用于生成对象的函数
 	 */
 	private Supplier<T> supplier;
 
+	/**
+	 * 构造
+	 * @param supplier 用于生成对象的函数
+	 */
 	public LazyFunLoader(Supplier<T> supplier) {
 		Assert.notNull(supplier);
 		this.supplier = supplier;
