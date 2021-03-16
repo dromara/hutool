@@ -7,7 +7,7 @@ import cn.hutool.core.util.BooleanUtil;
 
 /**
  * {@link AtomicBoolean}转换器
- * 
+ *
  * @author Looly
  * @since 3.0.8
  */
