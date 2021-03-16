@@ -15,7 +15,7 @@ public interface DateParser extends DateBasic{
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
 	 * 等价于 {@link java.text.DateFormat#parse(String)}
-	 * 
+	 *
 	 * @param source 日期字符串
 	 * @return {@link Date}
 	 * @throws ParseException 转换异常，被转换的字符串格式错误。
@@ -25,7 +25,7 @@ public interface DateParser extends DateBasic{
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
 	 * 等价于 {@link java.text.DateFormat#parse(String, ParsePosition)}
-	 * 
+	 *
 	 * @param source 日期字符串
 	 * @param pos {@link ParsePosition}
 	 * @return {@link Date}
@@ -34,8 +34,8 @@ public interface DateParser extends DateBasic{
 
 	/**
 	 * 根据给定格式转换日期字符串
-	 * Updates the Calendar with parsed fields. Upon success, the ParsePosition index is updated to indicate how much of the source text was consumed. 
-	 * Not all source text needs to be consumed. 
+	 * Updates the Calendar with parsed fields. Upon success, the ParsePosition index is updated to indicate how much of the source text was consumed.
+	 * Not all source text needs to be consumed.
 	 * Upon parse failure, ParsePosition error index is updated to the offset of the source text which does not match the supplied format.
 	 *
 	 * @param source 被转换的日期字符串
@@ -48,7 +48,7 @@ public interface DateParser extends DateBasic{
 
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
-	 * 
+	 *
 	 * @param source A <code>String</code> whose beginning should be parsed.
 	 * @return a <code>java.util.Date</code> object
 	 * @throws ParseException if the beginning of the specified string cannot be parsed.
@@ -58,7 +58,7 @@ public interface DateParser extends DateBasic{
 
 	/**
 	 * 根据 {@link ParsePosition} 给定将日期字符串解析并转换为  {@link Date} 对象<br>
-	 * 
+	 *
 	 * @param source A <code>String</code> whose beginning should be parsed.
 	 * @param pos the parse position
 	 * @return a <code>java.util.Date</code> object

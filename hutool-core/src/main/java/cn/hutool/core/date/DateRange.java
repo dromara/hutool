@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * 日期范围
- * 
+ *
  * @author looly
  * @since 4.1.0
  */
@@ -15,7 +15,7 @@ public class DateRange extends Range<DateTime> {
 
 	/**
 	 * 构造，包含开始和结束日期时间
-	 * 
+	 *
 	 * @param start 起始日期时间
 	 * @param end 结束日期时间
 	 * @param unit 步进单位
@@ -26,7 +26,7 @@ public class DateRange extends Range<DateTime> {
 
 	/**
 	 * 构造，包含开始和结束日期时间
-	 * 
+	 *
 	 * @param start 起始日期时间
 	 * @param end 结束日期时间
 	 * @param unit 步进单位
@@ -38,7 +38,7 @@ public class DateRange extends Range<DateTime> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param start 起始日期时间
 	 * @param end 结束日期时间
 	 * @param unit 步进单位

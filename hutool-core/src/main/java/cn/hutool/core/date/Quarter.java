@@ -2,12 +2,12 @@ package cn.hutool.core.date;
 
 /**
  * 季度枚举
- * 
+ *
  * @see #Q1
  * @see #Q2
  * @see #Q3
  * @see #Q4
- * 
+ *
  * @author zhfish(https://github.com/zhfish)
  *
  */
@@ -21,7 +21,7 @@ public enum Quarter {
 	Q3(3),
 	/** 第四季度 */
 	Q4(4);
-	
+
 	// ---------------------------------------------------------------
 	private final int value;
 
@@ -35,12 +35,12 @@ public enum Quarter {
 
 	/**
 	 * 将 季度int转换为Season枚举对象<br>
-	 * 
+	 *
 	 * @see #Q1
 	 * @see #Q2
 	 * @see #Q3
 	 * @see #Q4
-	 * 
+	 *
 	 * @param intValue 季度int表示
 	 * @return {@link Quarter}
 	 */

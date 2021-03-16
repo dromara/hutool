@@ -22,7 +22,7 @@ import java.util.TimeZone;
  * {@link #getTimeInstance(int, TimeZone, Locale)}<br>
  * {@link #getDateTimeInstance(int, int, TimeZone, Locale)}
  * </p>
- * 
+ *
  * Thanks to Apache Commons Lang 3.5
  * @since 2.16.2
  */
@@ -51,7 +51,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	// -----------------------------------------------------------------------
 	/**
 	 * 获得 FastDateFormat实例，使用默认格式和地区
-	 * 
+	 *
 	 * @return FastDateFormat
 	 */
 	public static FastDateFormat getInstance() {
@@ -61,7 +61,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	/**
 	 * 获得 FastDateFormat 实例，使用默认地区<br>
 	 * 支持缓存
-	 * 
+	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @return FastDateFormat
 	 * @throws IllegalArgumentException 日期格式问题
@@ -73,7 +73,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	/**
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
-	 * 
+	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
 	 * @return FastDateFormat
@@ -99,7 +99,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	/**
 	 * 获得 FastDateFormat 实例<br>
 	 * 支持缓存
-	 * 
+	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
 	 * @param locale {@link Locale} 日期地理位置
