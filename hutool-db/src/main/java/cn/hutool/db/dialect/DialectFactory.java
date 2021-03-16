@@ -52,6 +52,8 @@ public class DialectFactory {
 	public static final String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
 	/** JDBC 驱动 人大金仓 */
 	public static final String DRIVER_KINGBASE8 = "com.kingbase8.Driver";
+	/** JDBC 驱动 Ignite thin */
+	public static final String DRIVER_IGNITE_THIN = "org.apache.ignite.IgniteJdbcThinDriver";
 
 	private static final Map<DataSource, Dialect> DIALECT_POOL = new ConcurrentHashMap<>();
 
@@ -138,6 +140,9 @@ public class DialectFactory {
 		} else if (nameContainsProductInfo.contains("kingbase8")) {
 			// 人大金仓8
 			driver = DRIVER_KINGBASE8;
+		} else if (nameContainsProductInfo.contains("ignite")) {
+			// Ignite thin
+			driver = DRIVER_IGNITE_THIN;
 		}
 
 		return driver;
