@@ -14,8 +14,10 @@ import java.util.function.Supplier;
  * @param <T> 被加载对象类型
  * @author Mr.Po
  * @see cn.hutool.core.lang.loader.LazyLoader
+ * @since 5.6.1
  */
-public final class LazyFunLoader<T> extends LazyLoader<T> {
+public class LazyFunLoader<T> extends LazyLoader<T> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 用于生成对象的函数
@@ -34,10 +36,8 @@ public final class LazyFunLoader<T> extends LazyLoader<T> {
 
 	@Override
 	protected T init() {
-
 		T t = this.supplier.get();
 		this.supplier = null;
-
 		return t;
 	}
 
@@ -56,7 +56,6 @@ public final class LazyFunLoader<T> extends LazyLoader<T> {
 	 * @param consumer 待执行函数
 	 */
 	public void ifInitialized(Consumer<T> consumer) {
-
 		Assert.notNull(consumer);
 
 		//	已经初始化
