@@ -57,6 +57,8 @@ public final class LazyFunLoader<T> extends LazyLoader<T> {
 	 */
 	public void ifInitialized(Consumer<T> consumer) {
 
+		Assert.notNull(consumer);
+
 		//	已经初始化
 		if (this.isInitialize()) {
 			consumer.accept(this.get());
