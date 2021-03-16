@@ -9,6 +9,7 @@
 * 【crypto 】     SecureUtil去除final修饰符（issue#1474@Github）
 * 【core   】     IoUtil增加lineIter方法
 * 【core   】     新增函数式懒加载加载器(pr#275@Gitee)
+* 【http   】     UserAgentUtil增加miniProgram判断(issue#1475@Github)
 
 ### Bug修复
 * 【core   】     修复IoUtil.readBytes的FileInputStream中isClose参数失效问题（issue#I3B7UD@Gitee）
