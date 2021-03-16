@@ -14,7 +14,7 @@ import java.util.Objects;
 
 /**
  * {@link Map} 转换器
- * 
+ *
  * @author Looly
  * @since 3.0.8
  */
@@ -30,7 +30,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 
 	/**
 	 * 构造，Map的key和value泛型类型自动获取
-	 * 
+	 *
 	 * @param mapType Map类型
 	 */
 	public MapConverter(Type mapType) {
@@ -39,7 +39,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mapType Map类型
 	 * @param keyType 键类型
 	 * @param valueType 值类型
@@ -77,7 +77,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 
 	/**
 	 * Map转Map
-	 * 
+	 *
 	 * @param srcMap 源Map
 	 * @param targetMap 目标Map
 	 */
