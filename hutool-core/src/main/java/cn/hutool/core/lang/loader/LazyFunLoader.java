@@ -2,6 +2,7 @@ package cn.hutool.core.lang.loader;
 
 import cn.hutool.core.lang.Assert;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -23,6 +24,7 @@ public final class LazyFunLoader<T> extends LazyLoader<T> {
 
 	/**
 	 * 构造
+	 *
 	 * @param supplier 用于生成对象的函数
 	 */
 	public LazyFunLoader(Supplier<T> supplier) {
@@ -46,5 +48,18 @@ public final class LazyFunLoader<T> extends LazyLoader<T> {
 	 */
 	public boolean isInitialize() {
 		return this.supplier == null;
+	}
+
+	/**
+	 * 如果已经初始化，就执行传入函数
+	 *
+	 * @param consumer 待执行函数
+	 */
+	public void ifInitialized(Consumer<T> consumer) {
+
+		//	已经初始化
+		if (this.isInitialize()) {
+			consumer.accept(this.get());
+		}
 	}
 }
