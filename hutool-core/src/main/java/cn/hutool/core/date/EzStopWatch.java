@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.date.DateUtil;
 import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,12 +70,16 @@ public class EzStopWatch{
     static {
         Properties properties = new Properties();
         FileInputStream fileInputStream;
-        try {
-            fileInputStream = new FileInputStream(new File("classpath:ezWatch.properties"));
-            properties.load(fileInputStream);
-            USABLE_THREAD_MASK = properties.getProperty("threadMask");
-        } catch (IOException ignored) {
-        
+        URL resource = EzStopWatch.class.getClassLoader().getResource("ezWatch.properties");
+       
+        if (resource != null) {
+            try {
+                fileInputStream = new FileInputStream(new File(resource.getFile()));
+                properties.load(fileInputStream);
+                USABLE_THREAD_MASK = properties.getProperty("threadMask");
+            } catch (IOException ignore) {
+                System.out.println("Failed to read target thread name, default log name will be enabled");;
+            }
         }
         
         if (USABLE_THREAD_MASK == null || "".equals(USABLE_THREAD_MASK)) {
@@ -122,18 +127,19 @@ public class EzStopWatch{
     public void start() {
         if (mark.compareAndSet(0,1)) {
             this.startTimeNanos = System.nanoTime();
+            return;
         }
         throw new IllegalStateException("Can't start StopWatch: it's already running");
     }
     
     public TraceTask stop() {
         if (mark.compareAndSet(1,0)) {
-            throw new IllegalStateException("Can't stop StopWatch: it's not running");
+            cleaner();
+            final long lastTime = System.nanoTime() - this.startTimeNanos;
+            this.totalTimeNanos += lastTime;
+            return new TraceTask(this.taskName,this.totalTimeNanos);
         }
-        cleaner();
-        final long lastTime = System.nanoTime() - this.startTimeNanos;
-        this.totalTimeNanos += lastTime;
-        return new TraceTask(this.taskName,this.totalTimeNanos);
+        throw new IllegalStateException("Can't stop StopWatch: it's not running");
     }
     
     private void rename(String newName) {
@@ -152,7 +158,7 @@ public class EzStopWatch{
     static class EzThreadLocal extends ThreadLocal<EzStopWatch> {
     
         /**
-         * 从这里获得的EzStopWatch （不做清除操作时）必为复用的
+         * 从这里获得的EzStopWatch 必为复用的（不做清除操作）
          * @return
          */
         @Override
@@ -224,9 +230,9 @@ public class EzStopWatch{
         public String toString() {
             return "TraceTask{" +
                     "任务调用时间 = '" + taskCallTime + '\'' +
-                    ", taskName='" + taskName + '\'' +
+                    ", 任务名称='" + taskName + '\'' +
                     ", 花费时间 =" + this.getTimeMillis() + "毫秒" +
-                    '}' + '\n';
+                    '}';
         }
     }
     
