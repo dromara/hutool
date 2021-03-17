@@ -6,6 +6,8 @@ import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * 属性拷贝选项<br>
@@ -27,6 +29,10 @@ public class CopyOptions implements Serializable {
 	 * 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 	 */
 	protected boolean ignoreNullValue;
+	/**
+	 * 忽略空值时的断言逻辑，默认为 value -> value == null，对于字符串可自行扩展
+	 */
+	protected Predicate<Object> nullValuePredicate;
 	/**
 	 * 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
@@ -81,6 +87,7 @@ public class CopyOptions implements Serializable {
 	 * 构造拷贝选项
 	 */
 	public CopyOptions() {
+		this.nullValuePredicate = Objects::isNull;
 	}
 
 	/**
@@ -91,6 +98,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
 	public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
+		this();
 		this.editable = editable;
 		this.ignoreNullValue = ignoreNullValue;
 		this.ignoreProperties = ignoreProperties;
@@ -115,6 +123,17 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions setIgnoreNullValue(boolean ignoreNullVall) {
 		this.ignoreNullValue = ignoreNullVall;
+		return this;
+	}
+
+	/**
+	 * 忽略空值时的断言逻辑，默认为 value -> value == null
+	 *
+	 * @param nullValuePredicate 空值断言逻辑
+	 * @return CopyOptions
+	 */
+	public CopyOptions setNullValuePredicate(Predicate<Object> nullValuePredicate) {
+		this.nullValuePredicate = nullValuePredicate;
 		return this;
 	}
 

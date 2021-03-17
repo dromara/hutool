@@ -6,6 +6,7 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -449,6 +450,18 @@ public class BeanUtilTest {
 		BeanUtil.copyProperties(info, entity);
 		Assert.assertEquals(info.getBookID(), entity.getBookId());
 		Assert.assertEquals(info.getCode(), entity.getCode2());
+	}
+
+	@Test
+	public void copyBeanToBeanNullValuePredicateTest() {
+		Food info = new Food();
+		info.setBookID("0");
+		info.setCode("");
+		Food newFood = new Food();
+		CopyOptions copyOptions = CopyOptions.create().setIgnoreNullValue(true).setNullValuePredicate(value -> value == null || value instanceof String && StrUtil.isBlank(value.toString()));
+		BeanUtil.copyProperties(info, newFood, copyOptions);
+		Assert.assertEquals(info.getBookID(), newFood.getBookID());
+		Assert.assertNull(newFood.getCode());
 	}
 
 	@Test

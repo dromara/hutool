@@ -188,7 +188,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 					throw new BeanException(e, "Get value of [{}] error!", prop.getFieldName());
 				}
 			}
-			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
+			if ((copyOptions.ignoreNullValue && copyOptions.nullValuePredicate.test(value)) || bean == value) {
 				// 当允许跳过空时，跳过
 				//值不能为bean本身，防止循环引用，此类也跳过
 				return;
@@ -245,7 +245,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 			// 获取属性值
 			Object value = valueProvider.value(providerKey, fieldType);
-			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
+			if ((copyOptions.ignoreNullValue && copyOptions.nullValuePredicate.test(value)) || bean == value) {
 				// 当允许跳过空时，跳过
 				// 值不能为bean本身，防止循环引用
 				return;
