@@ -207,6 +207,10 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 ## 公众号
 
-欢迎关注Hutool合作的公众号。
+#### 欢迎关注Hutool合作的公众号
 
 ![Java2B](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qrcode.jpg)
+
+#### Dromara开源组织公众号
+
+![Dromara](https://dromara.org/img/qrcode/qrcode_1.png)
