@@ -719,5 +719,16 @@ public class IdcardUtil {
 		public Integer getGender() {
 			return this.gender;
 		}
+
+
+		@Override
+		public String toString() {
+			return "Idcard{" +
+					"provinceCode='" + provinceCode + '\'' +
+					", cityCode='" + cityCode + '\'' +
+					", birthDate=" + birthDate +
+					", gender=" + gender +
+					'}';
+		}
 	}
 }

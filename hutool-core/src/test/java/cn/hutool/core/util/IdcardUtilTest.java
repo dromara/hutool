@@ -2,12 +2,13 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * 身份证单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -110,5 +111,12 @@ public class IdcardUtilTest {
 		String hkCard="P174468(6)";
 		boolean flag=IdcardUtil.isValidHKCard(hkCard);
 		Assert.assertTrue(flag);
+	}
+
+
+	@Test
+	public void getIdcardInfoTest(){
+		IdcardUtil.Idcard idcardInfo = IdcardUtil.getIdcardInfo(ID_18);
+		Console.log(idcardInfo);
 	}
 }
