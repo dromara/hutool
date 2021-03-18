@@ -7,6 +7,7 @@ import cn.hutool.core.date.chinese.LunarFestival;
 import cn.hutool.core.date.chinese.LunarInfo;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -152,6 +153,16 @@ public class ChineseDate {
 	}
 
 	/**
+	 * 获取公历的年
+	 *
+	 * @return 公历年
+	 * @since 5.6.1
+	 */
+	public int getGregorianYear(){
+		return this.gyear;
+	}
+
+	/**
 	 * 获取农历的月，从1开始计数
 	 *
 	 * @return 农历的月
@@ -159,6 +170,26 @@ public class ChineseDate {
 	 */
 	public int getMonth() {
 		return this.month;
+	}
+
+	/**
+	 * 获取公历的月，从1开始计数
+	 *
+	 * @return 公历月
+	 * @since 5.6.1
+	 */
+	public int getGregorianMonthBase1(){
+		return this.gmonth;
+	}
+
+	/**
+	 * 获取公历的月，从0开始计数
+	 *
+	 * @return 公历月
+	 * @since 5.6.1
+	 */
+	public int getGregorianMonth(){
+		return this.gmonth -1;
 	}
 
 	/**
@@ -201,6 +232,16 @@ public class ChineseDate {
 	}
 
 	/**
+	 * 获取公历的日
+	 *
+	 * @return 公历日
+	 * @since 5.6.1
+	 */
+	public int getGregorianDay(){
+		return this.gday;
+	}
+
+	/**
 	 * 获得农历日
 	 *
 	 * @return 获得农历日
@@ -223,6 +264,28 @@ public class ChineseDate {
 		}
 	}
 
+	/**
+	 * 获取公历的Date
+	 *
+	 * @return 公历Date
+	 * @since 5.6.1
+	 */
+	public Date getGregorianDate(){
+		return DateUtil.date(getGregorianCalendar());
+	}
+
+	/**
+	 * 获取公历的Calendar
+	 *
+	 * @return 公历Calendar
+	 * @since 5.6.1
+	 */
+	public Calendar getGregorianCalendar(){
+		final Calendar calendar = CalendarUtil.calendar();
+		//noinspection MagicConstant
+		calendar.set(this.gyear, getGregorianMonth(), this.gday, 0, 0, 0);
+		return calendar;
+	}
 
 	/**
 	 * 获得节日

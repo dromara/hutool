@@ -13,6 +13,7 @@
 * 【db     】     增加Ignite数据库驱动识别
 * 【core   】     DateUtil.parse支持带毫秒的UTC时间
 * 【core   】     IdcardUtil.Idcard增加toString（pr#1487@Github）
+* 【core   】     ChineseDate增加getGregorianXXX方法（issue#1481@Github）
 
 ### Bug修复
 * 【core   】     修复IoUtil.readBytes的FileInputStream中isClose参数失效问题（issue#I3B7UD@Gitee）

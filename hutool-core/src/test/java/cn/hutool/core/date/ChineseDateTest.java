@@ -9,6 +9,7 @@ public class ChineseDateTest {
 	@Test
 	public void chineseDateTest() {
 		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-01-25"));
+		Assert.assertEquals("2020-01-25 00:00:00", date.getGregorianDate().toString());
 		Assert.assertEquals(2020, date.getChineseYear());
 
 		Assert.assertEquals(1, date.getMonth());
@@ -50,6 +51,7 @@ public class ChineseDateTest {
 	@Test
 	public void getChineseMonthTest(){
 		ChineseDate chineseDate = new ChineseDate(2020,6,15);
+		Assert.assertEquals("2020-08-04 00:00:00", chineseDate.getGregorianDate().toString());
 		Assert.assertEquals("六月", chineseDate.getChineseMonth());
 
 		chineseDate = new ChineseDate(2020,4,15);
