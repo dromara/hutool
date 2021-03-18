@@ -201,6 +201,15 @@ public class DatePattern {
 	public static final FastDateFormat UTC_SIMPLE_FORMAT = FastDateFormat.getInstance(UTC_SIMPLE_PATTERN, TimeZone.getTimeZone("UTC"));
 
 	/**
+	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss.SSS
+	 */
+	public static final String UTC_SIMPLE_MS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+	/**
+	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss.SSS
+	 */
+	public static final FastDateFormat UTC_SIMPLE_MS_FORMAT = FastDateFormat.getInstance(UTC_SIMPLE_MS_PATTERN, TimeZone.getTimeZone("UTC"));
+
+	/**
 	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss'Z'
 	 */
 	public static final String UTC_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";

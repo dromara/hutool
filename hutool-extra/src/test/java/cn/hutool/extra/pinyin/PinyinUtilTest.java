@@ -40,6 +40,12 @@ public class PinyinUtilTest {
 	}
 
 	@Test
+	public void getFirstLetterTest2(){
+		final String result = PinyinUtil.getFirstLetter("崞阳", ", ");
+		Assert.assertEquals("g, y", result);
+	}
+
+	@Test
 	public void getFirstLetterByPinyin4jTest(){
 		final Pinyin4jEngine engine = new Pinyin4jEngine();
 		final String result = engine.getFirstLetter("林海", "");

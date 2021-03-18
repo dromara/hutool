@@ -550,6 +550,13 @@ public class DateUtilTest {
 		assert dt != null;
 		dateStr = dt.toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:39.999", dateStr);
+
+		// 使用UTC时区
+		dateStr1 = "2018-09-13T13:34:39.99";
+		dt = DateUtil.parse(dateStr1);
+		assert dt != null;
+		dateStr = dt.toString();
+		Assert.assertEquals("2018-09-13 13:34:39", dateStr);
 	}
 
 	@Test
