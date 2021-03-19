@@ -87,7 +87,6 @@ public class CopyOptions implements Serializable {
 	 * 构造拷贝选项
 	 */
 	public CopyOptions() {
-		this.propertiesFilter = (f, v) -> true;
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
 	public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
-		this();
+		this.propertiesFilter = (f, v) -> true;
 		this.editable = editable;
 		this.ignoreNullValue = ignoreNullValue;
 		this.ignoreProperties = ignoreProperties;
