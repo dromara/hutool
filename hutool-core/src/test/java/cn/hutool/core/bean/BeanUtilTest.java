@@ -6,6 +6,7 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -457,6 +458,18 @@ public class BeanUtilTest {
 		info.setBookID("0");
 		info.setCode("123");
 		Food newFood = BeanUtil.copyProperties(info, Food.class, "code");
+		Assert.assertEquals(info.getBookID(), newFood.getBookID());
+		Assert.assertNull(newFood.getCode());
+	}
+
+	@Test
+	public void copyBeanPropertiesFilterTest() {
+		Food info = new Food();
+		info.setBookID("0");
+		info.setCode("");
+		Food newFood = new Food();
+		CopyOptions copyOptions = CopyOptions.create().setPropertiesFilter((f, v) -> !(v instanceof CharSequence) || StrUtil.isNotBlank(v.toString()));
+		BeanUtil.copyProperties(info, newFood, copyOptions);
 		Assert.assertEquals(info.getBookID(), newFood.getBookID());
 		Assert.assertNull(newFood.getCode());
 	}

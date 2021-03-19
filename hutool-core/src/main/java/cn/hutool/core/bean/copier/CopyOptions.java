@@ -5,7 +5,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 /**
  * 属性拷贝选项<br>
@@ -27,6 +29,10 @@ public class CopyOptions implements Serializable {
 	 * 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 	 */
 	protected boolean ignoreNullValue;
+	/**
+	 * 属性过滤器，断言通过的属性才会被复制
+	 */
+	protected BiPredicate<Field, Object> propertiesFilter;
 	/**
 	 * 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
@@ -81,6 +87,7 @@ public class CopyOptions implements Serializable {
 	 * 构造拷贝选项
 	 */
 	public CopyOptions() {
+		this.propertiesFilter = (f, v) -> true;
 	}
 
 	/**
@@ -91,6 +98,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
 	public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
+		this();
 		this.editable = editable;
 		this.ignoreNullValue = ignoreNullValue;
 		this.ignoreProperties = ignoreProperties;
@@ -126,6 +134,17 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions ignoreNullValue() {
 		return setIgnoreNullValue(true);
+	}
+
+	/**
+	 * 属性过滤器，断言通过的属性才会被复制
+	 *
+	 * @param propertiesFilter 属性过滤器
+	 * @return CopyOptions
+	 */
+	public CopyOptions setPropertiesFilter(BiPredicate<Field, Object> propertiesFilter) {
+		this.propertiesFilter = propertiesFilter;
+		return this;
 	}
 
 	/**
