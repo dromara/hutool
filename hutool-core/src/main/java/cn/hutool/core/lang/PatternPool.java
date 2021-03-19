@@ -127,6 +127,22 @@ public class PatternPool {
 	 * </pre>
 	 */
 	public static final Pattern CREDIT_CODE = Pattern.compile("^[0-9A-HJ-NPQRTUWXY]{2}\\d{6}[0-9A-HJ-NPQRTUWXY]{10}$");
+	/**
+	 * 车架号
+	 * 别名：车辆识别代号 车辆识别码
+	 * eg:LDC613P23A1305189
+	 * eg:LSJA24U62JG269225
+	 * 十七位码、车架号
+	 * 车辆的唯一标示
+	 */
+	public static final Pattern CAR_VIN = Pattern.compile("^[A-Za-z0-9]{17}$");
+	/**
+	 * 驾驶证  别名：驾驶证档案编号、行驶证编号
+	 * eg:430101758218
+	 * 12位数字字符串
+	 * 仅限：中国驾驶证档案编号
+	 */
+	public static final Pattern CAR_DRIVING_LICENCE = Pattern.compile("^[0-9]{12}$");
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/**

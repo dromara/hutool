@@ -90,6 +90,14 @@ public class Validator {
 	 * 中国车牌号码
 	 */
 	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
+	/**
+	 * 车架号;别名：车辆识别代号 车辆识别码；十七位码
+	 */
+	public final static Pattern CAR_VIN = PatternPool.CAR_VIN;
+	/**
+	 * 驾驶证  别名：驾驶证档案编号、行驶证编号；12位数字字符串；仅限：中国驾驶证档案编号
+	 */
+	public final static Pattern CAR_DRIVING_LICENCE = PatternPool.CAR_DRIVING_LICENCE;
 
 	/**
 	 * 给定值是否为{@code true}
@@ -1135,5 +1143,62 @@ public class Validator {
 	 */
 	public static boolean isCreditCode(CharSequence creditCode) {
 		return CreditCodeUtil.isCreditCode(creditCode);
+	}
+
+	/**
+	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 *
+	 * @param value 值，17位车架号；形如：LSJA24U62JG269225、LDC613P23A1305189
+	 * @return 是否为车架号
+	 * @since 5.6.3
+	 */
+	public static boolean isCarVin(CharSequence value) {
+		return isMatchRegex(CAR_VIN, value);
+	}
+
+	/**
+	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
+	 * @param errorMsg 验证错误的信息
+	 * @return 验证后的值
+	 * @throws ValidateException 验证异常
+	 * @since 5.6.3
+	 */
+	public static <T extends CharSequence> T validateCarVin(T value, String errorMsg) throws ValidateException {
+		if (!isCarVin(value)) {
+			throw new ValidateException(errorMsg);
+		}
+		return value;
+	}
+
+	/**
+	 * 验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
+	 * 仅限：中国驾驶证档案编号
+	 *
+	 * @param value 值，12位数字字符串,eg:430101758218
+	 * @return 是否为档案编号
+	 * @since 5.6.3
+	 */
+	public static boolean isCarDrivingLicence(CharSequence value) {
+		return isMatchRegex(CAR_DRIVING_LICENCE, value);
+	}
+
+	/**
+	 *  验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
+	 * @param errorMsg 验证错误的信息
+	 * @return 验证后的值
+	 * @throws ValidateException 验证异常
+	 * @since 5.6.3
+	 */
+	public static <T extends CharSequence> T validateCarDrivingLicence(T value, String errorMsg) throws ValidateException {
+		if (!isCarDrivingLicence(value)) {
+			throw new ValidateException(errorMsg);
+		}
+		return value;
 	}
 }

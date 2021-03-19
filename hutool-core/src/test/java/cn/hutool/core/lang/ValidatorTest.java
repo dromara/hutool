@@ -195,4 +195,15 @@ public class ValidatorTest {
 		Assert.assertTrue(Validator.isBetween(0.19f, 0.1f, 0.2f));
 		Assert.assertTrue(Validator.isBetween(0.19, 0.1, 0.2));
 	}
+
+	@Test
+	public void isCarVinTest(){
+		Assert.assertTrue(Validator.isCarVin("LSJA24U62JG269225"));
+		Assert.assertTrue(Validator.isCarVin("LDC613P23A1305189"));
+	}
+
+	@Test
+	public void isCarDrivingLicenceTest(){
+		Assert.assertTrue(Validator.isCarDrivingLicence("430101758218"));
+	}
 }
