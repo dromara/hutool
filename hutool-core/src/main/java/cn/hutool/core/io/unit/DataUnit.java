@@ -44,7 +44,7 @@ public enum DataUnit {
 	 */
 	TERABYTES("TB", DataSize.ofTerabytes(1));
 
-	public static final String[] UNIT_NAMES = new String[]{"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+	public static final String[] UNIT_NAMES = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB"};
 
 	private final String suffix;
 
@@ -61,7 +61,7 @@ public enum DataUnit {
 	}
 
 	/**
-	 * 通过后缀返回对应的 {@link DataUnit}
+	 * 通过后缀返回对应的 DataUnit
 	 *
 	 * @param suffix 单位后缀
 	 * @return 匹配到的{@link DataUnit}

@@ -7,7 +7,7 @@ import java.lang.reflect.Modifier;
 
 /**
  * 修饰符工具类
- * 
+ *
  * @author looly
  * @since 4.0.5
  */
@@ -15,7 +15,7 @@ public class ModifierUtil {
 
 	/**
 	 * 修饰符枚举
-	 * 
+	 *
 	 * @author looly
 	 * @since 4.0.5
 	 */
@@ -66,7 +66,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
-	 * 
+	 *
 	 * @param clazz 类
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
@@ -80,7 +80,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
-	 * 
+	 *
 	 * @param constructor 构造方法
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
@@ -94,7 +94,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
-	 * 
+	 *
 	 * @param method 方法
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
@@ -105,10 +105,10 @@ public class ModifierUtil {
 		}
 		return 0 != (method.getModifiers() & modifiersToInt(modifierTypes));
 	}
-	
+
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
-	 * 
+	 *
 	 * @param field 字段
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
@@ -119,10 +119,10 @@ public class ModifierUtil {
 		}
 		return 0 != (field.getModifiers() & modifiersToInt(modifierTypes));
 	}
-	
+
 	/**
 	 * 是否是Public字段
-	 * 
+	 *
 	 * @param field 字段
 	 * @return 是否是Public
 	 */
@@ -132,7 +132,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否是Public方法
-	 * 
+	 *
 	 * @param method 方法
 	 * @return 是否是Public
 	 */
@@ -142,7 +142,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否是Public类
-	 * 
+	 *
 	 * @param clazz 类
 	 * @return 是否是Public
 	 */
@@ -152,17 +152,17 @@ public class ModifierUtil {
 
 	/**
 	 * 是否是Public构造
-	 * 
+	 *
 	 * @param constructor 构造
 	 * @return 是否是Public
 	 */
 	public static boolean isPublic(Constructor<?> constructor) {
 		return hasModifier(constructor, ModifierType.PUBLIC);
 	}
-	
+
 	/**
 	 * 是否是static字段
-	 * 
+	 *
 	 * @param field 字段
 	 * @return 是否是static
 	 * @since 4.0.8
@@ -173,7 +173,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否是static方法
-	 * 
+	 *
 	 * @param method 方法
 	 * @return 是否是static
 	 * @since 4.0.8
@@ -184,7 +184,7 @@ public class ModifierUtil {
 
 	/**
 	 * 是否是static类
-	 * 
+	 *
 	 * @param clazz 类
 	 * @return 是否是static
 	 * @since 4.0.8
@@ -192,7 +192,7 @@ public class ModifierUtil {
 	public static boolean isStatic(Class<?> clazz) {
 		return hasModifier(clazz, ModifierType.STATIC);
 	}
-	
+
 	//-------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 多个修饰符做“与”操作，表示同时存在多个修饰符
@@ -202,7 +202,7 @@ public class ModifierUtil {
 	private static int modifiersToInt(ModifierType... modifierTypes) {
 		int modifier = modifierTypes[0].getValue();
 		for(int i = 1; i < modifierTypes.length; i++) {
-			modifier &= modifierTypes[i].getValue();
+			modifier |= modifierTypes[i].getValue();
 		}
 		return modifier;
 	}

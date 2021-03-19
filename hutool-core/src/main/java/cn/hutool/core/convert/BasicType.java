@@ -10,12 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public enum BasicType {
 	BYTE, SHORT, INT, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, CHAR, CHARACTER, STRING;
-	
+
 	/** 包装类型为Key，原始类型为Value，例如： Integer.class =》 int.class. */
 	public static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_MAP = new ConcurrentHashMap<>(8);
 	/** 原始类型为Key，包装类型为Value，例如： int.class =》 Integer.class. */
 	public static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new ConcurrentHashMap<>(8);
-	
+
 	static {
 		WRAPPER_PRIMITIVE_MAP.put(Boolean.class, boolean.class);
 		WRAPPER_PRIMITIVE_MAP.put(Byte.class, byte.class);
@@ -30,7 +30,7 @@ public enum BasicType {
 			PRIMITIVE_WRAPPER_MAP.put(entry.getValue(), entry.getKey());
 		}
 	}
-	
+
 	/**
 	 * 原始类转为包装类，非原始类返回原类
 	 * @param clazz 原始类
@@ -43,7 +43,7 @@ public enum BasicType {
 		Class<?> result = PRIMITIVE_WRAPPER_MAP.get(clazz);
 		return (null == result) ? clazz : result;
 	}
-	
+
 	/**
 	 * 包装类转为原始类，非包装类返回原类
 	 * @param clazz 包装类

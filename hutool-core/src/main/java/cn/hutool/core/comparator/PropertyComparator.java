@@ -9,20 +9,20 @@ import java.util.Comparator;
 /**
  * Bean属性排序器<br>
  * 支持读取Bean多层次下的属性
- * 
+ *
  * @author Looly
  *
  * @param <T> 被比较的Bean
  */
 public class PropertyComparator<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 9157326766723846313L;
-	
+
 	private final String property;
 	private final boolean isNullGreater;
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param property 属性名
 	 */
 	public PropertyComparator(String property) {
@@ -31,7 +31,7 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param property 属性名
 	 * @param isNullGreater null值是否排在后（从小到大排序）
 	 */

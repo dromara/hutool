@@ -22,15 +22,15 @@ public class PathConverter extends AbstractConverter<Path>{
 			if(value instanceof URI){
 				return Paths.get((URI)value);
 			}
-			
+
 			if(value instanceof URL){
 				return Paths.get(((URL)value).toURI());
 			}
-			
+
 			if(value instanceof File){
 				return ((File)value).toPath();
 			}
-			
+
 			return Paths.get(convertToStr(value));
 		} catch (Exception e) {
 			// Ignore Exception

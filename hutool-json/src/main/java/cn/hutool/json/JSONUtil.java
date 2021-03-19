@@ -543,7 +543,7 @@ public class JSONUtil {
 	 * @see JSON#getByPath(String)
 	 */
 	public static Object getByPath(JSON json, String expression) {
-		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByPath(expression);
+		return getByPath(json, expression, null);
 	}
 
 	/**
@@ -572,7 +572,15 @@ public class JSONUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByPath(JSON json, String expression, T defaultValue) {
-		return (T) ObjectUtil.defaultIfNull(getByPath(json, expression), defaultValue);
+		if((null == json || StrUtil.isBlank(expression))){
+			return defaultValue;
+		}
+
+		if(null != defaultValue){
+			final Class<T> type = (Class<T>) defaultValue.getClass();
+			return ObjectUtil.defaultIfNull(json.getByPath(expression, type), defaultValue);
+		}
+		return (T) json.getByPath(expression);
 	}
 
 	/**

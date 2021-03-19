@@ -11,12 +11,12 @@ import java.util.concurrent.TimeUnit;
  * System.currentTimeMillis()的调用比new一个普通对象要耗时的多（具体耗时高出多少我还没测试过，有人说是100倍左右）
  * System.currentTimeMillis()之所以慢是因为去跟系统打了一次交道
  * 后台定时更新时钟，JVM退出时，线程自动回收
- * 
+ *
  * see： http://git.oschina.net/yu120/sequence
  * @author lry,looly
  */
 public class SystemClock {
-	
+
 	/** 时钟更新间隔，单位毫秒 */
 	private final long period;
 	/** 现在时刻的毫秒数 */
@@ -50,7 +50,7 @@ public class SystemClock {
 	private long currentTimeMillis() {
 		return now;
 	}
-	
+
 	//------------------------------------------------------------------------ static
 	/**
 	 * 单例

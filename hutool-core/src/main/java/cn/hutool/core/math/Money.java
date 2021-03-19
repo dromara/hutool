@@ -753,8 +753,8 @@ public class Money implements Serializable, Comparable<Money> {
 
 		long total = 0;
 
-		for (int i = 0; i < ratios.length; i++) {
-			total += ratios[i];
+		for (long element : ratios) {
+			total += element;
 		}
 
 		long remainder = cent;

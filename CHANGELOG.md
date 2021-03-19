@@ -3,14 +3,31 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.1 (2021-03-14)
+# 5.6.2 (2021-03-18)
+
+### 新特性
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.6.1 (2021-03-18)
 
 ### 新特性
 * 【crypto 】     SecureUtil去除final修饰符（issue#1474@Github）
 * 【core   】     IoUtil增加lineIter方法
+* 【core   】     新增函数式懒加载加载器(pr#275@Gitee)
+* 【http   】     UserAgentUtil增加miniProgram判断(issue#1475@Github)
+* 【db     】     增加Ignite数据库驱动识别
+* 【core   】     DateUtil.parse支持带毫秒的UTC时间
+* 【core   】     IdcardUtil.Idcard增加toString（pr#1487@Github）
+* 【core   】     ChineseDate增加getGregorianXXX方法（issue#1481@Github）
 
 ### Bug修复
 * 【core   】     修复IoUtil.readBytes的FileInputStream中isClose参数失效问题（issue#I3B7UD@Gitee）
+* 【core   】     修复DataUnit中KB不大写的问题
+* 【json   】     修复JSONUtil.getByPath类型错误问题（issue#I3BSDF@Gitee）
+* 【core   】     修复BeanUtil.toBean提供null未返回null的问题（issue#I3BQPV@Gitee）
+* 【core   】     修复ModifierUtil#modifiersToInt中逻辑判断问题（issue#1486@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

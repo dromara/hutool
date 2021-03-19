@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 字符转换器
- * 
+ *
  * @author Looly
  *
  */

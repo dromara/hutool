@@ -544,6 +544,9 @@ public class BeanUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz, CopyOptions options) {
+		if(null == source){
+			return null;
+		}
 		final T target = ReflectUtil.newInstanceIfPossible(clazz);
 		copyProperties(source, target, options);
 		return target;
@@ -559,6 +562,9 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(Class<T> beanClass, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
+		if (null == beanClass || null == valueProvider) {
+			return null;
+		}
 		return fillBean(ReflectUtil.newInstanceIfPossible(beanClass), valueProvider, copyOptions);
 	}
 
@@ -600,6 +606,9 @@ public class BeanUtil {
 	 * @return Map
 	 */
 	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+		if (null == bean) {
+			return null;
+		}
 		return beanToMap(bean, new LinkedHashMap<>(), isToUnderlineCase, ignoreNullValue);
 	}
 
@@ -614,7 +623,7 @@ public class BeanUtil {
 	 * @since 3.2.3
 	 */
 	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, final boolean isToUnderlineCase, boolean ignoreNullValue) {
-		if (bean == null) {
+		if (null == bean) {
 			return null;
 		}
 
@@ -639,7 +648,7 @@ public class BeanUtil {
 	 * @since 4.0.5
 	 */
 	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, boolean ignoreNullValue, Editor<String> keyEditor) {
-		if (bean == null) {
+		if (null == bean) {
 			return null;
 		}
 

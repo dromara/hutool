@@ -21,7 +21,7 @@ import java.util.Map;
  * Bean =》 Bean
  * ValueProvider =》 Bean
  * </pre>
- * 
+ *
  * @param <T> Bean类型
  * @author Looly
  * @since 4.0.2
@@ -32,10 +32,10 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	private final Type beanType;
 	private final Class<T> beanClass;
 	private final CopyOptions copyOptions;
-	
+
 	/**
 	 * 构造，默认转换选项，注入失败的字段忽略
-	 * 
+	 *
 	 * @param beanType 转换成的目标Bean类型
 	 */
 	public BeanConverter(Type beanType) {
@@ -44,16 +44,16 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 
 	/**
 	 * 构造，默认转换选项，注入失败的字段忽略
-	 * 
+	 *
 	 * @param beanClass 转换成的目标Bean类
 	 */
 	public BeanConverter(Class<T> beanClass) {
 		this(beanClass, CopyOptions.create().setIgnoreError(true));
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param beanType 转换成的目标Bean类
 	 * @param copyOptions Bean转换选项参数
 	 */

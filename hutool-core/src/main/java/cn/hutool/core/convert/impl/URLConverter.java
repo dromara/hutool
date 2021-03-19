@@ -20,7 +20,7 @@ public class URLConverter extends AbstractConverter<URL>{
 			if(value instanceof File){
 				return ((File)value).toURI().toURL();
 			}
-			
+
 			if(value instanceof URI){
 				return ((URI)value).toURL();
 			}

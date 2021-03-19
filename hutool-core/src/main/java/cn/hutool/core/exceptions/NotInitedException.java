@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 未初始化异常
- * 
+ *
  * @author xiaoleilu
  */
 public class NotInitedException extends RuntimeException {

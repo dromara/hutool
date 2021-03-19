@@ -6,10 +6,10 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * 
+ *
  * {@link Locale}对象转换器<br>
  * 只提供String转换支持
- * 
+ *
  * @author Looly
  * @since 4.5.2
  */
