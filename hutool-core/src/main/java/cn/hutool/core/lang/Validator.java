@@ -1167,7 +1167,7 @@ public class Validator {
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarVin(T value, String errorMsg) throws ValidateException {
-		if (!isCarVin(value)) {
+		if (false == isCarVin(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -1196,7 +1196,7 @@ public class Validator {
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarDrivingLicence(T value, String errorMsg) throws ValidateException {
-		if (!isCarDrivingLicence(value)) {
+		if (false == isCarDrivingLicence(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
