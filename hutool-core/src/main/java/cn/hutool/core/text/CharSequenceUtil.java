@@ -3642,6 +3642,7 @@ public class CharSequenceUtil {
 	 * StrUtil.hide("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
 	 * </pre>
 	 *
+	 * @author dazer and neusoft and qiaomu
 	 * @see DesensitizedUtils 如果需要自定义，脱敏规则，请使用该工具类；
 	 * @param str 字符串
 	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
@@ -3697,6 +3698,7 @@ public class CharSequenceUtil {
 	 * StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
 	 * </pre>
 	 *
+	 * @author dazer and neusoft and qiaomu
 	 * @see DesensitizedUtils 如果需要自定义，脱敏规则，请使用该工具类；
 	 * @param str 字符串
 	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
@@ -4375,8 +4377,9 @@ public class CharSequenceUtil {
 	 * </pre>
 	 *
 	 * @param str  从中获取最左边字符的字符串，可以为null
-	 * @param len  the length of the required String
-	 * @return the left most characters, {@code null} if null String input
+	 * @param len  要求的字符串长度
+	 * @return 返回最左边的字符串
+	 * @since 5.6.2
 	 */
 	public static String left(final String str, final int len) {
 		if (str == null) {
@@ -4410,6 +4413,7 @@ public class CharSequenceUtil {
 	 * @param size  填充到size长度
 	 * @return 如果不需要填充，请使用左填充字符串或原始字符串，
 	 *  {@code null} if null String input
+	 *  @since 5.6.2
 	 */
 	public static String leftPad(final String str, final int size) {
 		return leftPad(str, size, ' ');
@@ -4438,7 +4442,7 @@ public class CharSequenceUtil {
 	 * @return left padded String or original String if no padding is necessary,
 	 *         左侧填充字符串 or 如果不需要填充则返回原始字符串；
 	 *  {@code null} if null String input；  如果输入字符串是null
-	 * @since 2.0
+	 * @since 5.6.2
 	 */
 	public static String leftPad(final String str, final int size, final char padChar) {
 		if (str == null) {
@@ -4476,6 +4480,7 @@ public class CharSequenceUtil {
 	 * @param padStr  要填充的字符串，如果为null或空，则将其视为单个空格
 	 * @return 如果不需要填充，请使用左填充字符串或原始字符串，
 	 * {@code null} 如果为null字符串输入
+	 * @since 5.6.2
 	 */
 	public static String leftPad(final String str, final int size, String padStr) {
 		if (str == null) {
@@ -4526,6 +4531,7 @@ public class CharSequenceUtil {
 	 * @param str  从中获取最右边字符的字符串，可以为null
 	 * @param len  所需字符串的长度
 	 * @return 最右边的字符，{@code null}，如果为null字符串输入
+	 * @since 5.6.2
 	 */
 	public static String right(final String str, final int len) {
 		if (str == null) {
@@ -4557,6 +4563,7 @@ public class CharSequenceUtil {
 	 * @param size  填充的长度
 	 * @return 如果不需要填充，则使用右填充的字符串或原始字符串，
 	 *  {@code null} 如果为null字符串输入
+	 * @since 5.6.2
 	 */
 	public static String rightPad(final String str, final int size) {
 		return rightPad(str, size, ' ');
@@ -4581,7 +4588,7 @@ public class CharSequenceUtil {
 	 * @param padChar  用来填充的字符串
 	 * @return 返回 右侧填充字符串 or 如果不需要填充，则为原始String。
 	 * {@code null} 如果为null字符串输入
-	 * @since 2.0
+	 * @since 5.6.2
 	 */
 	public static String rightPad(final String str, final int size, final char padChar) {
 		if (str == null) {
@@ -4622,6 +4629,7 @@ public class CharSequenceUtil {
 	 * @return right padded String or original String if no padding is necessary,
 	 *         右侧填充字符串 or 如果不需要填充则返回原始字符串
 	 *  {@code null} if null String input
+	 *  @since 5.6.2
 	 */
 	public static String rightPad(final String str, final int size, String padStr) {
 		if (str == null) {
@@ -4684,6 +4692,7 @@ public class CharSequenceUtil {
 	 * @param pos  其实位置，如果是负数则当做0； the position to start from, negative treated as zero
 	 * @param len  要求字符串的长度； the length of the required String
 	 * @return the middle characters, {@code null} if null String input
+	 * @since 5.6.2
 	 */
 	public static String mid(final String str, int pos, final int len) {
 		if (str == null) {
