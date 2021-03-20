@@ -5,12 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -46,6 +41,12 @@ public class CharSequenceUtil {
 	 * 字符串常量：空格符 {@code " "}
 	 */
 	public static final String SPACE = " ";
+
+	/**
+	 * <p>The maximum size to which the padding constant(s) can expand.</p>
+	 * <p>填充常量可以最大填充的数量</p>
+	 */
+	private static final int PAD_LIMIT = 8192;
 
 	/**
 	 * <p>字符串是否为空白，空白的定义如下：</p>
@@ -2370,6 +2371,12 @@ public class CharSequenceUtil {
 	/**
 	 * 重复某个字符
 	 *
+	 * <pre>
+	 * StrUtil.repeat('e', 0)  = ""
+	 * StrUtil.repeat('e', 3)  = "eee"
+	 * StrUtil.repeat('e', -2) = ""
+	 * </pre>
+	 *
 	 * @param c     被重复的字符
 	 * @param count 重复的数目，如果小于等于0则返回""
 	 * @return 重复字符字符串
@@ -2960,11 +2967,13 @@ public class CharSequenceUtil {
 
 	/**
 	 * 补充字符串以满足指定长度，如果提供的字符串大于指定长度，截断之
+	 * 同：leftPad (org.apache.commons.lang3.leftPad)
 	 *
 	 * <pre>
 	 * StrUtil.padPre(null, *, *);//null
 	 * StrUtil.padPre("1", 3, "ABC");//"AB1"
 	 * StrUtil.padPre("123", 2, "ABC");//"12"
+	 * StrUtil.padPre("1039", -1, "0");//"103"
 	 * </pre>
 	 *
 	 * @param str       字符串
@@ -2989,6 +2998,7 @@ public class CharSequenceUtil {
 
 	/**
 	 * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之
+	 * 同：leftPad (org.apache.commons.lang3.leftPad)
 	 *
 	 * <pre>
 	 * StrUtil.padPre(null, *, *);//null
@@ -3023,6 +3033,7 @@ public class CharSequenceUtil {
 	 * StrUtil.padAfter(null, *, *);//null
 	 * StrUtil.padAfter("1", 3, '0');//"100"
 	 * StrUtil.padAfter("123", 2, '0');//"23"
+	 * StrUtil.padAfter("123", -1, '0')//"" 空串
 	 * </pre>
 	 *
 	 * @param str       字符串，如果为{@code null}，直接返回null
@@ -3596,6 +3607,17 @@ public class CharSequenceUtil {
 
 	/**
 	 * 替换指定字符串的指定区间内字符为"*"
+	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtils(脱敏工具类)
+	 *
+	 * <pre>
+	 * StrUtil.hide(null,*,*)=null
+	 * StrUtil.hide("",0,*)=""
+	 * StrUtil.hide("jackduan@163.com",-1,4)   ****duan@163.com
+	 * StrUtil.hide("jackduan@163.com",2,3)    ja*kduan@163.com
+	 * StrUtil.hide("jackduan@163.com",3,2)    jackduan@163.com
+	 * StrUtil.hide("jackduan@163.com",16,16)  jackduan@163.com
+	 * StrUtil.hide("jackduan@163.com",16,17)  jackduan@163.com
+	 * </pre>
 	 *
 	 * @param str          字符串
 	 * @param startInclude 开始位置（包含）
@@ -3605,6 +3627,84 @@ public class CharSequenceUtil {
 	 */
 	public static String hide(CharSequence str, int startInclude, int endExclude) {
 		return replace(str, startInclude, endExclude, '*');
+	}
+
+	/**
+	 * 脱敏，使用默认的脱敏策略
+	 * <pre>
+	 * StrUtil.hide("100", DesensitizedUtils.DesensitizedType.USER_ID)) =  "0"
+	 * StrUtil.hide("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME)) = "段**"
+	 * StrUtil.hide("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD)) = "5***************1X"
+	 * StrUtil.hide("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+	 * StrUtil.hide("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+	 * StrUtil.hide("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+	 * StrUtil.hide("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+	 * StrUtil.hide("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
+	 * </pre>
+	 *
+	 * @see DesensitizedUtils 如果需要自定义，脱敏规则，请使用该工具类；
+	 * @param str 字符串
+	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
+	 * @return 脱敏之后的字符串
+	 * @since 5.6.2
+	 */
+	public static String hide(CharSequence str, DesensitizedUtils.DesensitizedType desensitizedType) {
+		if (isBlank(str)) {
+			return EMPTY;
+		}
+		String newStr = String.valueOf(str);
+		switch (desensitizedType) {
+			case USER_ID:
+				newStr = String.valueOf(DesensitizedUtils.userId());
+				break;
+			case CHINESE_NAME:
+				newStr = DesensitizedUtils.chineseName(String.valueOf(str));
+				break;
+			case ID_CARD:
+				newStr = DesensitizedUtils.idCardNum(String.valueOf(str),1,2);
+				break;
+			case FIXED_PHONE:
+				newStr = DesensitizedUtils.fixedPhone(String.valueOf(str));
+				break;
+			case MOBILE_PHONE:
+				newStr = DesensitizedUtils.mobilePhone(String.valueOf(str));
+				break;
+			case ADDRESS:
+				newStr = DesensitizedUtils.address(String.valueOf(str), 8);
+				break;
+			case EMAIL:
+				newStr = DesensitizedUtils.email(String.valueOf(str));
+				break;
+			case PASSWORD:
+				newStr = DesensitizedUtils.password(String.valueOf(str));
+				break;
+			default:
+		}
+		return newStr;
+	}
+
+	/**
+	 * 脱敏，使用默认的脱敏策略
+	 *
+	 * <pre>
+	 * StrUtil.desensitized("100", DesensitizedUtils.DesensitizedType.USER_ID)) =  "0"
+	 * StrUtil.desensitized("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME)) = "段**"
+	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD)) = "5***************1X"
+	 * StrUtil.desensitized("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+	 * StrUtil.desensitized("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+	 * StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
+	 * </pre>
+	 *
+	 * @see DesensitizedUtils 如果需要自定义，脱敏规则，请使用该工具类；
+	 * @param str 字符串
+	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
+	 * @return 脱敏之后的字符串
+	 * @since 5.6.2
+	 */
+	public static String desensitized(CharSequence str, DesensitizedUtils.DesensitizedType desensitizedType) {
+		return hide(str, desensitizedType);
 	}
 
 	/**
@@ -4254,4 +4354,352 @@ public class CharSequenceUtil {
 		}
 		return strBuilder.toString();
 	}
+
+	// Left/Right/Mid 用来兼容 org.apache.commons.lang3.StringUtils 使用习惯 start
+	//-------------------------------------------------------------------------
+	/**
+	 * <p>获取字符串的最左{@code len}个字符。</p>
+	 *
+	 * <p>如果{@code len}个字符不可用，或者字符串为{@code null}，
+	 * 则将无例外地返回该字符串。
+	 * 如果len为负，则返回一个空字符串。
+	 * <p>
+	 *
+	 * <pre>
+	 * StrUtil.left(null, *)    = null
+	 * StrUtil.left(*, -ve)     = ""
+	 * StrUtil.left("", *)      = ""
+	 * StrUtil.left("neu", 0)   = ""
+	 * StrUtil.left("neu", 2)   = "ne"
+	 * StrUtil.left("neu", 4)   = "neu"
+	 * </pre>
+	 *
+	 * @param str  从中获取最左边字符的字符串，可以为null
+	 * @param len  the length of the required String
+	 * @return the left most characters, {@code null} if null String input
+	 */
+	public static String left(final String str, final int len) {
+		if (str == null) {
+			return null;
+		}
+		if (len < 0) {
+			return EMPTY;
+		}
+		if (str.length() <= len) {
+			return str;
+		}
+		return str.substring(0, len);
+	}
+
+	/**
+	 * <p>用空格在左侧填充字符串 (' ').</p>
+	 *
+	 * <p>填充字符串到指定的长度 {@code size}.</p>
+	 *
+	 * <pre>
+	 * StrUtil.leftPad(null, *)   = null
+	 * StrUtil.leftPad("", 3)     = "   "
+	 * StrUtil.leftPad("bat", 1)  = "bat"
+	 * StrUtil.leftPad("bat", -1) = "bat"
+	 * StrUtil.leftPad("bat", 3)  = "bat"
+	 * StrUtil.leftPad("bat", 5)  = "  bat"
+	 *
+	 * </pre>
+	 *
+	 * @param str  要填充的字符串，可以为null
+	 * @param size  填充到size长度
+	 * @return 如果不需要填充，请使用左填充字符串或原始字符串，
+	 *  {@code null} if null String input
+	 */
+	public static String leftPad(final String str, final int size) {
+		return leftPad(str, size, ' ');
+	}
+
+	/**
+	 * <p>Left pad a String with a specified character.</p>
+	 * <p>左侧用指定的字符串进行填充.</p>
+	 *
+	 * <p>Pad to a size of {@code size}.</p>
+	 * <p>填充到指定的长度 {@code size}.</p>
+	 *
+	 * <pre>
+	 * StrUtil.leftPad(null, *, *)     = null
+	 * StrUtil.leftPad("", 3, 'z')     = "zzz"
+	 * StrUtil.leftPad("bat", -1, 'z') = "bat"
+	 * StrUtil.leftPad("bat", 1, 'z')  = "bat"
+	 * StrUtil.leftPad("bat", 3, 'z')  = "bat"
+	 * StrUtil.leftPad("bat", 5, 'z')  = "zzbat"
+	 *
+	 * </pre>
+	 *
+	 * @param str  the String to pad out, may be null；  要填充的字符串，可以为null
+	 * @param size  the size to pad to;  填充到size长度
+	 * @param padChar  the character to pad with；  用来填充的字符
+	 * @return left padded String or original String if no padding is necessary,
+	 *         左侧填充字符串 or 如果不需要填充则返回原始字符串；
+	 *  {@code null} if null String input；  如果输入字符串是null
+	 * @since 2.0
+	 */
+	public static String leftPad(final String str, final int size, final char padChar) {
+		if (str == null) {
+			return null;
+		}
+		final int pads = size - str.length();
+		if (pads <= 0) {
+			return str; // 尽可能返回原始字符串 returns original String when possible
+		}
+		if (pads > PAD_LIMIT) {
+			return leftPad(str, size, String.valueOf(padChar));
+		}
+		return repeat(padChar, pads).concat(str);
+	}
+
+	/**
+	 * <p>用指定的字符串左填充字符串.</p>
+	 *
+	 * <p>填充到指定的长度 {@code size}.</p>
+	 *
+	 * <pre>
+	 * StrUtil.leftPad(null, *, *)      = null
+	 * StrUtil.leftPad("", 3, "z")      = "zzz"
+	 * StrUtil.leftPad("bat", 3, "yz")  = "bat"
+	 * StrUtil.leftPad("bat", 5, "yz")  = "yzbat"
+	 * StrUtil.leftPad("bat", 8, "yz")  = "yzyzybat"
+	 * StrUtil.leftPad("bat", 1, "yz")  = "bat"
+	 * StrUtil.leftPad("bat", -1, "yz") = "bat"
+	 * StrUtil.leftPad("bat", 5, null)  = "  bat"
+	 * StrUtil.leftPad("bat", 5, "")    = "  bat"
+	 * </pre>
+	 *
+	 * @param str  要填充的字符串，可以为null
+	 * @param size  填充到指定的长度
+	 * @param padStr  要填充的字符串，如果为null或空，则将其视为单个空格
+	 * @return 如果不需要填充，请使用左填充字符串或原始字符串，
+	 * {@code null} 如果为null字符串输入
+	 */
+	public static String leftPad(final String str, final int size, String padStr) {
+		if (str == null) {
+			return null;
+		}
+		if (isEmpty(padStr)) {
+			padStr = SPACE;
+		}
+		final int padLen = padStr.length();
+		final int strLen = str.length();
+		final int pads = size - strLen;
+		if (pads <= 0) {
+			return str; // 当有可能返回原始字符串； returns original String when possible
+		}
+		if (padLen == 1 && pads <= PAD_LIMIT) {
+			return leftPad(str, size, padStr.charAt(0));
+		}
+
+		if (pads == padLen) {
+			return padStr.concat(str);
+		} else if (pads < padLen) {
+			return padStr.substring(0, pads).concat(str);
+		} else {
+			final char[] padding = new char[pads];
+			final char[] padChars = padStr.toCharArray();
+			for (int i = 0; i < pads; i++) {
+				padding[i] = padChars[i % padLen];
+			}
+			return new String(padding).concat(str);
+		}
+	}
+
+	/**
+	 * <p>获取字符串的最右边{@code len}个字符。<p>
+	 *
+	 * <p>如果{@code len}个字符不可用，或者字符串为{@code null}，则将无例外地返回该字符串。如果len为负，则返回一个空字符串。<p>
+	 *
+	 * <pre>
+	 * StrUtil.right(null, *)    = null
+	 * StrUtil.right(*, -ve)     = ""
+	 * StrUtil.right("", *)      = ""
+	 * StrUtil.right("abc", -1)   = ""
+	 * StrUtil.right("abc", 0)   = ""
+	 * StrUtil.right("abc", 2)   = "bc"
+	 * StrUtil.right("abc", 4)   = "abc"
+	 * </pre>
+	 *
+	 * @param str  从中获取最右边字符的字符串，可以为null
+	 * @param len  所需字符串的长度
+	 * @return 最右边的字符，{@code null}，如果为null字符串输入
+	 */
+	public static String right(final String str, final int len) {
+		if (str == null) {
+			return null;
+		}
+		if (len < 0) {
+			return EMPTY;
+		}
+		if (str.length() <= len) {
+			return str;
+		}
+		return str.substring(str.length() - len);
+	}
+
+	/**
+	 * <p>用空格（''）右填充字符串。<p>
+	 * <p>将字符串填充为{@code size}的大小。<p>
+	 *
+	 * <pre>
+	 * StrUtil.rightPad(null, *)   = null
+	 * StrUtil.rightPad("", 3)     = "   "
+	 * StrUtil.rightPad("bat", 3)  = "bat"
+	 * StrUtil.rightPad("bat", 5)  = "bat  "
+	 * StrUtil.rightPad("bat", 1)  = "bat"
+	 * StrUtil.rightPad("bat", -1) = "bat"
+	 * </pre>
+	 *
+	 * @param str  要填充的字符串，可以为null
+	 * @param size  填充的长度
+	 * @return 如果不需要填充，则使用右填充的字符串或原始字符串，
+	 *  {@code null} 如果为null字符串输入
+	 */
+	public static String rightPad(final String str, final int size) {
+		return rightPad(str, size, ' ');
+	}
+
+	/**
+	 * <p>用指定的字符填充到原字符串的右侧.</p>
+	 *
+	 * <p>填充字符串到几位 {@code size}.</p>
+	 *
+	 * <pre>
+	 * StrUtil.rightPad(null, *, *)     = null
+	 * StrUtil.rightPad("", 3, 'z')     = "zzz"
+	 * StrUtil.rightPad("bat", 3, 'z')  = "bat"
+	 * StrUtil.rightPad("bat", 5, 'z')  = "batzz"
+	 * StrUtil.rightPad("bat", 1, 'z')  = "bat"
+	 * StrUtil.rightPad("bat", -1, 'z') = "bat"
+	 * </pre>
+	 *
+	 * @param str  要填充的字符串，可以为null
+	 * @param size  要填充的到size位
+	 * @param padChar  用来填充的字符串
+	 * @return 返回 右侧填充字符串 or 如果不需要填充，则为原始String。
+	 * {@code null} 如果为null字符串输入
+	 * @since 2.0
+	 */
+	public static String rightPad(final String str, final int size, final char padChar) {
+		if (str == null) {
+			return null;
+		}
+		final int pads = size - str.length();
+		if (pads <= 0) {
+			return str; // 当有可能返回原始字符串； returns original String when possible
+		}
+		if (pads > PAD_LIMIT) {
+			return rightPad(str, size, String.valueOf(padChar));
+		}
+		return str.concat(repeat(padChar, pads));
+	}
+
+	/**
+	 * <p>Right pad a String with a specified String.</p>
+	 * <p>用自定的字符串进行右侧填充.</p>
+	 *
+	 * <p>The String is padded to the size of {@code size}.</p>
+	 * <p>填充字符串到指定长度{@code size}.</p>
+	 *
+	 * <pre>
+	 * StrUtil.rightPad(null, *, *)      = null
+	 * StrUtil.rightPad("", 3, "z")      = "zzz"
+	 * StrUtil.rightPad("bat", 3, "yz")  = "bat"
+	 * StrUtil.rightPad("bat", 5, "yz")  = "batyz"
+	 * StrUtil.rightPad("bat", 8, "yz")  = "batyzyzy"
+	 * StrUtil.rightPad("bat", 1, "yz")  = "bat"
+	 * StrUtil.rightPad("bat", -1, "yz") = "bat"
+	 * StrUtil.rightPad("bat", 5, null)  = "bat  "
+	 * StrUtil.rightPad("bat", 5, "")    = "bat  "
+	 * </pre>
+	 *
+	 * @param str  要填充的字符串，可以为null
+	 * @param size  填充到size长度
+	 * @param padStr  用来填充的字符串
+	 * @return right padded String or original String if no padding is necessary,
+	 *         右侧填充字符串 or 如果不需要填充则返回原始字符串
+	 *  {@code null} if null String input
+	 */
+	public static String rightPad(final String str, final int size, String padStr) {
+		if (str == null) {
+			return null;
+		}
+		if (isEmpty(padStr)) {
+			padStr = SPACE;
+		}
+		final int padLen = padStr.length();
+		final int strLen = str.length();
+		final int pads = size - strLen;
+		if (pads <= 0) {
+			return str; // 当有可能返回原始字符串； returns original String when possible
+		}
+		if (padLen == 1 && pads <= PAD_LIMIT) {
+			return rightPad(str, size, padStr.charAt(0));
+		}
+
+		if (pads == padLen) {
+			return str.concat(padStr);
+		} else if (pads < padLen) {
+			return str.concat(padStr.substring(0, pads));
+		} else {
+			final char[] padding = new char[pads];
+			final char[] padChars = padStr.toCharArray();
+			for (int i = 0; i < pads; i++) {
+				padding[i] = padChars[i % padLen];
+			}
+			return str.concat(new String(padding));
+		}
+	}
+
+	/**
+	 * <p>Gets {@code len} characters from the middle of a String.</p>
+	 * <p>从字符串中间获取{@code len}个字符串.</p>
+	 *
+	 * <p>If {@code len} characters are not available, the remainder
+	 * of the String will be returned without an exception. If the
+	 * String is {@code null}, {@code null} will be returned.
+	 * An empty String is returned if len is negative or exceeds the
+	 * length of {@code str}.</p>
+	 *
+	 * <p>如果{@code len}个字符不可用，则将字符串的其余部分无例外地返回。
+	 * 如果字符串为{@code null}，则将返回{@code null}。
+	 * 如果len为负或超过{@code str}的长度，则返回一个空字符串。<p>
+	 *
+	 * <pre>
+	 * StrUtil.mid(null, *, *)    = null
+	 * StrUtil.mid(*, *, -ve)     = ""
+	 * StrUtil.mid("", 0, *)      = ""
+	 * StrUtil.mid("abc", 0, 2)   = "ab"
+	 * StrUtil.mid("abc", 0, 4)   = "abc"
+	 * StrUtil.mid("abc", 2, 4)   = "c"
+	 * StrUtil.mid("abc", 4, 2)   = ""
+	 * StrUtil.mid("abc", -2, 2)  = "ab"
+	 * </pre>
+	 *
+	 *
+	 * @param str  给定字符串，可以为null;  the String to get the characters from, may be null
+	 * @param pos  其实位置，如果是负数则当做0； the position to start from, negative treated as zero
+	 * @param len  要求字符串的长度； the length of the required String
+	 * @return the middle characters, {@code null} if null String input
+	 */
+	public static String mid(final String str, int pos, final int len) {
+		if (str == null) {
+			return null;
+		}
+		if (len < 0 || pos > str.length()) {
+			return EMPTY;
+		}
+		if (pos < 0) {
+			pos = 0;
+		}
+		if (str.length() <= pos + len) {
+			return str.substring(pos);
+		}
+		return str.substring(pos, pos + len);
+	}
+	// Left/Right/Mid 用来兼容 org.apache.commons.lang3.StringUtils 使用习惯 end
+	//-------------------------------------------------------------------------
 }
