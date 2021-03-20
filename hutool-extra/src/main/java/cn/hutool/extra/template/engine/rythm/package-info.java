@@ -1,6 +1,6 @@
 /**
- * Rythm实现
- * 
+ * Rythm实现，见：http://www.rythmengine.org/
+ *
  * @author looly
  *
  */
