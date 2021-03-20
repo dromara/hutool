@@ -21,8 +21,8 @@
 	<a target="_blank" href="https://travis-ci.org/dromara/hutool">
 		<img src="https://travis-ci.org/dromara/hutool.svg?branch=v4-master" />
 	</a>
-	<a href="https://www.codacy.com/app/dromara/hutool">
-		<img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c46579b7b0d01d60c6377"/>
+	<a href="https://www.codacy.com/gh/dromara/hutool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dromara/hutool&amp;utm_campaign=Badge_Grade">
+		<img src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
 	</a>
 	<a href="https://codecov.io/gh/dromara/hutool">
 		<img src="https://codecov.io/gh/dromara/hutool/branch/v5-master/graph/badge.svg" />
