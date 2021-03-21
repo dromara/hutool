@@ -1148,6 +1148,8 @@ public class Validator {
 	/**
 	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
 	 *
+	 * @author dazer and ourslook
+	 *
 	 * @param value 值，17位车架号；形如：LSJA24U62JG269225、LDC613P23A1305189
 	 * @return 是否为车架号
 	 * @since 5.6.3
@@ -1158,6 +1160,8 @@ public class Validator {
 
 	/**
 	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 *
+	 * @author dazer and ourslook
 	 *
 	 * @param <T>      字符串类型
 	 * @param value    值
@@ -1177,6 +1181,8 @@ public class Validator {
 	 * 验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
 	 * 仅限：中国驾驶证档案编号
 	 *
+	 * @author dazer and ourslook
+	 *
 	 * @param value 值，12位数字字符串,eg:430101758218
 	 * @return 是否为档案编号
 	 * @since 5.6.3
@@ -1187,6 +1193,8 @@ public class Validator {
 
 	/**
 	 *  验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
+	 *
+	 *  @author dazer and ourslook
 	 *
 	 * @param <T>      字符串类型
 	 * @param value    值
