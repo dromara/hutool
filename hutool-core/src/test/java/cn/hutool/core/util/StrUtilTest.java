@@ -407,7 +407,7 @@ public class StrUtilTest {
 		Assert.assertNull(StrUtil.padAfter(null, 10, ' '));
 		Assert.assertEquals("100", StrUtil.padAfter("1", 3, '0'));
 		Assert.assertEquals("23", StrUtil.padAfter("123", 2, '0'));
-		Assert.assertEquals("23", StrUtil.padAfter("123", -1, '0'));
+		Assert.assertEquals("", StrUtil.padAfter("123", -1, '0'));
 
 		Assert.assertNull(StrUtil.padAfter(null, 10, "ABC"));
 		Assert.assertEquals("1AB", StrUtil.padAfter("1", 3, "ABC"));
@@ -499,81 +499,6 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void leftTest() {
-		Assert.assertNull(StrUtil.left(null, 1));
-		Assert.assertEquals("", StrUtil.left("neu", -1));
-		Assert.assertEquals("", StrUtil.left("", 1));
-		Assert.assertEquals("", StrUtil.left("neu", 0));
-		Assert.assertEquals("ne", StrUtil.left("neu", 2));
-		Assert.assertEquals("neu", StrUtil.left("neu", 4));
-	}
-
-	@Test
-	public void leftPadTest() {
-		Assert.assertNull(StrUtil.leftPad(null, 1));
-		Assert.assertEquals("", StrUtil.leftPad("", -1));
-		Assert.assertEquals("   ", StrUtil.leftPad("", 3));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", -1));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", 1));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", 3));
-		Assert.assertEquals("  bat", StrUtil.leftPad("bat", 5));
-
-		Assert.assertNull(StrUtil.leftPad(null, 1, "z"));
-		Assert.assertEquals("", StrUtil.leftPad("", -1, "z"));
-		Assert.assertEquals("zzz", StrUtil.leftPad("", 3, "z"));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", -1, "z"));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", 1, "z"));
-		Assert.assertEquals("bat", StrUtil.leftPad("bat", 3, "z"));
-		Assert.assertEquals("zzbat", StrUtil.leftPad("bat", 5, "z"));
-	}
-
-	@Test
-	public void rightTest() {
-		Assert.assertNull(StrUtil.right(null, 1));
-		Assert.assertEquals("", StrUtil.right("neu", -1));
-		Assert.assertEquals("", StrUtil.right("", 1));
-		Assert.assertEquals("", StrUtil.right("neu", 0));
-		Assert.assertEquals("eu", StrUtil.right("neu", 2));
-		Assert.assertEquals("neu", StrUtil.right("neu", 4));
-	}
-
-	@Test
-	public void rightPadTest() {
-		Assert.assertNull(StrUtil.rightPad(null, 1));
-		Assert.assertEquals("   ", StrUtil.rightPad("", 3));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 3));
-		Assert.assertEquals("bat  ", StrUtil.rightPad("bat", 5));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 1));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", -1));
-
-		Assert.assertNull(StrUtil.rightPad(null, 1, 'z'));
-		Assert.assertEquals("zzz", StrUtil.rightPad("", 3, 'z'));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 3, 'z'));
-		Assert.assertEquals("batzz", StrUtil.rightPad("bat", 5, 'z'));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 1, 'z'));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", -1, 'z'));
-
-		Assert.assertNull(StrUtil.rightPad(null, 1, "z"));
-		Assert.assertEquals("zzz", StrUtil.rightPad("", 3, "z"));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 3, "z"));
-		Assert.assertEquals("batzz", StrUtil.rightPad("bat", 5, "z"));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", 1, "z"));
-		Assert.assertEquals("bat", StrUtil.rightPad("bat", -1, "z"));
-	}
-
-	@Test
-	public void midTest() {
-		Assert.assertNull(StrUtil.mid(null, 1, 1));
-		Assert.assertEquals("", StrUtil.mid("abc", 1, -1));
-		Assert.assertEquals("", StrUtil.mid("", 0, 1));
-		Assert.assertEquals("ab", StrUtil.mid("abc", 0, 2));
-		Assert.assertEquals("abc", StrUtil.mid("abc", 0, 4));
-		Assert.assertEquals("c", StrUtil.mid("abc", 2, 4));
-		Assert.assertEquals("", StrUtil.mid("abc", 4, 2));
-		Assert.assertEquals("ab", StrUtil.mid("abc", -2, 2));
-	}
-
-	@Test
 	public void hideTest() {
 		Assert.assertNull(StrUtil.hide(null, 1, 1));
 		Assert.assertEquals("", StrUtil.hide("", 1, 1));
@@ -582,24 +507,5 @@ public class StrUtilTest {
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 3, 2));
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 16));
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 17));
-
-
-		Assert.assertEquals("0", StrUtil.hide("100", DesensitizedUtils.DesensitizedType.USER_ID));
-		Assert.assertEquals("段**", StrUtil.hide("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME));
-		Assert.assertEquals("5***************1X", StrUtil.hide("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD));
-		Assert.assertEquals("0915*****79", StrUtil.hide("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE));
-		Assert.assertEquals("180****1999", StrUtil.hide("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE));
-		Assert.assertEquals("北京市海淀区马********", StrUtil.hide("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS));
-		Assert.assertEquals("d*************@gmail.com.cn", StrUtil.hide("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL));
-		Assert.assertEquals("**********", StrUtil.hide("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD));
-
-		Assert.assertEquals("0", StrUtil.desensitized("100", DesensitizedUtils.DesensitizedType.USER_ID));
-		Assert.assertEquals("段**", StrUtil.desensitized("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME));
-		Assert.assertEquals("5***************1X", StrUtil.desensitized("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD));
-		Assert.assertEquals("0915*****79", StrUtil.desensitized("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE));
-		Assert.assertEquals("180****1999", StrUtil.desensitized("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE));
-		Assert.assertEquals("北京市海淀区马********", StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS));
-		Assert.assertEquals("d*************@gmail.com.cn", StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL));
-		Assert.assertEquals("**********", StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD));
 	}
 }
