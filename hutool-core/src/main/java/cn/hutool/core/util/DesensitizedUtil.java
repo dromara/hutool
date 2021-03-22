@@ -40,7 +40,9 @@ public class DesensitizedUtil {
 		//电子邮件
 		EMAIL,
 		//密码
-		PASSWORD
+		PASSWORD,
+		//中国大陆车牌，包含普通车辆、新能源车辆
+		CAR_LICENSE
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class DesensitizedUtil {
 	 * DesensitizedUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
 	 * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
 	 * DesensitizedUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
-	 * </pre>
+	 * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
 	 *
 	 * @author dazer and neusoft and qiaomu
 	 * @param str 字符串
@@ -91,6 +93,9 @@ public class DesensitizedUtil {
 				break;
 			case PASSWORD:
 				newStr = DesensitizedUtil.password(String.valueOf(str));
+				break;
+			case CAR_LICENSE:
+				newStr = DesensitizedUtil.carLicense(String.valueOf(str));
 				break;
 			default:
 		}
@@ -213,5 +218,30 @@ public class DesensitizedUtil {
 			return StrUtil.EMPTY;
 		}
 		return StrUtil.repeat('*', password.length());
+	}
+
+	/**
+	 * 【中国车牌】车牌中间用*代替
+	 * eg1：null       => ""
+	 * eg1：""         => ""
+	 * eg3：苏D40000   => 苏D4***0
+	 * eg4：陕A12345D  => 陕A1****D
+	 * eg5：京A123     => 京A123     如果是错误的车牌，不处理
+	 *
+	 * @param carLicense 完整的车牌号
+	 * @return 脱敏后的车牌
+	 */
+	public static String carLicense(String carLicense) {
+		if (StrUtil.isBlank(carLicense)) {
+			return StrUtil.EMPTY;
+		}
+		// 普通车牌
+		if (carLicense.length() == 7) {
+			carLicense = StrUtil.hide(carLicense, 3, 6);
+		} else if (carLicense.length() == 8) {
+			// 新能源车牌
+			carLicense = StrUtil.hide(carLicense, 3, 7);
+		}
+		return carLicense;
 	}
 }

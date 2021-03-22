@@ -76,4 +76,13 @@ public class DesensitizedUtilTest {
 	public void passwordTest() {
 		Assert.assertEquals("**********", DesensitizedUtil.password("1234567890"));
 	}
+
+	@Test
+	public void carLicenseTest() {
+		Assert.assertEquals("", DesensitizedUtil.carLicense(null));
+		Assert.assertEquals("", DesensitizedUtil.carLicense(""));
+		Assert.assertEquals("苏D4***0", DesensitizedUtil.carLicense("苏D40000"));
+		Assert.assertEquals("陕A1****D", DesensitizedUtil.carLicense("陕A12345D"));
+		Assert.assertEquals("京A123", DesensitizedUtil.carLicense("京A123"));
+	}
 }
