@@ -57,11 +57,12 @@ public class DesensitizedUtil {
 	 * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
 	 * DesensitizedUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
 	 * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
+	 * </pre>
 	 *
-	 * @author dazer and neusoft and qiaomu
-	 * @param str 字符串
+	 * @param str              字符串
 	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
 	 * @return 脱敏之后的字符串
+	 * @author dazer and neusoft and qiaomu
 	 * @since 5.6.2
 	 */
 	public static String desensitized(CharSequence str, DesensitizedUtil.DesensitizedType desensitizedType) {
@@ -77,7 +78,7 @@ public class DesensitizedUtil {
 				newStr = DesensitizedUtil.chineseName(String.valueOf(str));
 				break;
 			case ID_CARD:
-				newStr = DesensitizedUtil.idCardNum(String.valueOf(str),1,2);
+				newStr = DesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
 				break;
 			case FIXED_PHONE:
 				newStr = DesensitizedUtil.fixedPhone(String.valueOf(str));
@@ -159,7 +160,7 @@ public class DesensitizedUtil {
 		if (StrUtil.isBlank(num)) {
 			return StrUtil.EMPTY;
 		}
-		return StrUtil.hide(num, 4, num.length()-2);
+		return StrUtil.hide(num, 4, num.length() - 2);
 	}
 
 	/**
@@ -172,7 +173,7 @@ public class DesensitizedUtil {
 		if (StrUtil.isBlank(num)) {
 			return StrUtil.EMPTY;
 		}
-		return StrUtil.hide(num, 3, num.length()-4);
+		return StrUtil.hide(num, 3, num.length() - 4);
 	}
 
 	/**
@@ -187,7 +188,7 @@ public class DesensitizedUtil {
 			return StrUtil.EMPTY;
 		}
 		int length = address.length();
-		return StrUtil.hide(address, length-sensitiveSize, length);
+		return StrUtil.hide(address, length - sensitiveSize, length);
 	}
 
 	/**
