@@ -43,7 +43,7 @@ import java.util.Map;
 
 /**
  * Servlet相关工具类封装
- * 
+ *
  * @author looly
  * @since 3.2.0
  */
@@ -60,7 +60,7 @@ public class ServletUtil {
 	// --------------------------------------------------------- getParam start
 	/**
 	 * 获得所有请求参数
-	 * 
+	 *
 	 * @param request 请求对象{@link ServletRequest}
 	 * @return Map
 	 */
@@ -71,7 +71,7 @@ public class ServletUtil {
 
 	/**
 	 * 获得所有请求参数
-	 * 
+	 *
 	 * @param request 请求对象{@link ServletRequest}
 	 * @return Map
 	 */
@@ -86,7 +86,7 @@ public class ServletUtil {
 	/**
 	 * 获取请求体<br>
 	 * 调用该方法后，getParam方法将失效
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体
 	 * @since 4.0.2
@@ -102,7 +102,7 @@ public class ServletUtil {
 	/**
 	 * 获取请求体byte[]<br>
 	 * 调用该方法后，getParam方法将失效
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体byte[]
 	 * @since 4.0.2
@@ -119,7 +119,7 @@ public class ServletUtil {
 	// --------------------------------------------------------- fillBean start
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param bean Bean
@@ -159,7 +159,7 @@ public class ServletUtil {
 
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request {@link ServletRequest}
 	 * @param bean Bean
@@ -172,7 +172,7 @@ public class ServletUtil {
 
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param beanClass Bean Class
@@ -186,10 +186,10 @@ public class ServletUtil {
 
 	/**
 	 * 获取客户端IP
-	 * 
+	 *
 	 * <p>
 	 * 默认检测的Header:
-	 * 
+	 *
 	 * <pre>
 	 * 1、X-Forwarded-For
 	 * 2、X-Real-IP
@@ -201,7 +201,7 @@ public class ServletUtil {
 	 * otherHeaderNames参数用于自定义检测的Header<br>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
@@ -214,15 +214,15 @@ public class ServletUtil {
 
 		return getClientIPByHeader(request, headers);
 	}
-	
+
 	/**
 	 * 获取客户端IP
-	 * 
+	 *
 	 * <p>
 	 * headerNames参数用于自定义检测的Header<br>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
 	 * </p>
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
@@ -243,7 +243,7 @@ public class ServletUtil {
 
 	/**
 	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @return MultipartFormData
 	 * @throws IORuntimeException IO异常
@@ -257,7 +257,7 @@ public class ServletUtil {
 	 * 获得multipart/form-data 表单内容<br>
 	 * 包括文件和普通表单数据<br>
 	 * 在同一次请求中，此方法只能被执行一次！
-	 * 
+	 *
 	 * @param request {@link ServletRequest}
 	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
 	 * @return MultiPart表单
@@ -278,28 +278,28 @@ public class ServletUtil {
 	// --------------------------------------------------------- Header start
 	/**
 	 * 获取请求所有的头（header）信息
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return header值
 	 * @since 4.6.2
 	 */
 	public static Map<String, String> getHeaderMap(HttpServletRequest request) {
 		final Map<String, String> headerMap = new HashMap<>();
-		
+
 		final Enumeration<String> names = request.getHeaderNames();
 		String name;
 		while (names.hasMoreElements()) {
 			name = names.nextElement();
 			headerMap.put(name, request.getHeader(name));
 		}
-		
+
 		return headerMap;
 	}
-	
-	
+
+
 	/**
 	 * 忽略大小写获得请求header中的信息
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param nameIgnoreCase 忽略大小写头信息的KEY
 	 * @return header值
@@ -316,10 +316,10 @@ public class ServletUtil {
 
 		return null;
 	}
-	
+
 	/**
 	 * 获得请求header中的信息
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param name 头信息的KEY
 	 * @param charsetName 字符集
@@ -331,7 +331,7 @@ public class ServletUtil {
 
 	/**
 	 * 获得请求header中的信息
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param name 头信息的KEY
 	 * @param charset 字符集
@@ -348,7 +348,7 @@ public class ServletUtil {
 
 	/**
 	 * 客户浏览器是否为IE
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 客户浏览器是否为IE
 	 */
@@ -364,7 +364,7 @@ public class ServletUtil {
 
 	/**
 	 * 是否为GET请求
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为GET请求
 	 */
@@ -374,7 +374,7 @@ public class ServletUtil {
 
 	/**
 	 * 是否为POST请求
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为POST请求
 	 */
@@ -384,7 +384,7 @@ public class ServletUtil {
 
 	/**
 	 * 是否为Multipart类型表单，此类型表单用于文件上传
-	 * 
+	 *
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
@@ -404,7 +404,7 @@ public class ServletUtil {
 	// --------------------------------------------------------- Cookie start
 	/**
 	 * 获得指定的Cookie
-	 * 
+	 *
 	 * @param httpServletRequest {@link HttpServletRequest}
 	 * @param name cookie名
 	 * @return Cookie对象
@@ -415,7 +415,7 @@ public class ServletUtil {
 
 	/**
 	 * 将cookie封装到Map里面
-	 * 
+	 *
 	 * @param httpServletRequest {@link HttpServletRequest}
 	 * @return Cookie map
 	 */
@@ -433,7 +433,7 @@ public class ServletUtil {
 
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param cookie Servlet Cookie对象
 	 */
@@ -443,7 +443,7 @@ public class ServletUtil {
 
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name Cookie名
 	 * @param value Cookie值
@@ -454,7 +454,7 @@ public class ServletUtil {
 
 	/**
 	 * 设定返回给客户端的Cookie
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name cookie名
 	 * @param value cookie值
@@ -476,7 +476,7 @@ public class ServletUtil {
 	 * 设定返回给客户端的Cookie<br>
 	 * Path: "/"<br>
 	 * No Domain
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name cookie名
 	 * @param value cookie值
@@ -490,7 +490,7 @@ public class ServletUtil {
 	// --------------------------------------------------------- Response start
 	/**
 	 * 获得PrintWriter
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @return 获得PrintWriter
 	 * @throws IORuntimeException IO异常
@@ -505,7 +505,7 @@ public class ServletUtil {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param text 返回的内容
 	 * @param contentType 返回的类型
@@ -526,7 +526,7 @@ public class ServletUtil {
 
 	/**
 	 * 返回文件给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param file 写出的文件对象
 	 * @since 4.1.15
@@ -545,10 +545,21 @@ public class ServletUtil {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param in 需要返回客户端的内容
 	 * @param contentType 返回的类型
+	 *                       如：
+	 *                       1、application/pdf、
+	 *                       2、application/vnd.ms-excel、
+	 *                       3、application/msword、
+	 *                       4、application/vnd.ms-powerpoint
+	 *        docx、xlsx 这种 office 2007 格式 设置 MIME;网页里面docx 文件是没问题，但是下载下来了之后就变成doc格式了
+	 *        https://blog.csdn.net/cyh2260629/article/details/73824760
+	 *                      5、MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	 *                      6、MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+	 *                      7、MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+	 *                      8、MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流
 	 * @param fileName 文件名
 	 * @since 4.1.15
 	 */
@@ -561,7 +572,7 @@ public class ServletUtil {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param in 需要返回客户端的内容
 	 * @param contentType 返回的类型
@@ -573,7 +584,7 @@ public class ServletUtil {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param in 需要返回客户端的内容
 	 */
@@ -583,7 +594,7 @@ public class ServletUtil {
 
 	/**
 	 * 返回数据给客户端
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param in 需要返回客户端的内容
 	 * @param bufferSize 缓存大小
@@ -603,7 +614,7 @@ public class ServletUtil {
 
 	/**
 	 * 设置响应的Header
-	 * 
+	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name 名
 	 * @param value 值，可以是String，Date， int
