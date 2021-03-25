@@ -11,6 +11,7 @@
 * 【extra  】     增加Wit模板引擎支持
 * 【core   】     增加DesensitizedUtil（pr#282@Gitee）
 * 【core   】     增加DateTime字符串构造（issue#I3CQZG@Gitee）
+* 【core   】     修改ArrayUtil代码风格（pr#287@Gitee）
 
 ### Bug修复
 * 【core   】     修复FileTypeUtil中OFD格式判断问题（pr#1489@Github）

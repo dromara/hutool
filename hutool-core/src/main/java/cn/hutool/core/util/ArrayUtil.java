@@ -89,7 +89,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static <T> boolean isNotEmpty(T[] array) {
-		return (array != null && array.length != 0);
+		return (null != array && array.length != 0);
 	}
 
 	/**
@@ -653,7 +653,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends CharSequence> T[] removeEmpty(T[] array) {
-		return filter(array, (Filter<T>) t -> false == StrUtil.isEmpty(t));
+		return filter(array, StrUtil::isNotEmpty);
 	}
 
 	/**
@@ -665,7 +665,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends CharSequence> T[] removeBlank(T[] array) {
-		return filter(array, (Filter<T>) t -> false == StrUtil.isBlank(t));
+		return filter(array, StrUtil::isNotBlank);
 	}
 
 	/**
@@ -900,11 +900,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否为数组对象，如果为{@code null} 返回false
 	 */
 	public static boolean isArray(Object obj) {
-		if (null == obj) {
-			// throw new NullPointerException("Object check for isArray is null");
-			return false;
-		}
-		return obj.getClass().isArray();
+		return null != obj && obj.getClass().isArray();
 	}
 
 	/**
@@ -1227,35 +1223,39 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(Object array, CharSequence conjunction) {
-		if (isArray(array)) {
-			final Class<?> componentType = array.getClass().getComponentType();
-			if (componentType.isPrimitive()) {
-				final String componentTypeName = componentType.getName();
-				switch (componentTypeName) {
-					case "long":
-						return join((long[]) array, conjunction);
-					case "int":
-						return join((int[]) array, conjunction);
-					case "short":
-						return join((short[]) array, conjunction);
-					case "char":
-						return join((char[]) array, conjunction);
-					case "byte":
-						return join((byte[]) array, conjunction);
-					case "boolean":
-						return join((boolean[]) array, conjunction);
-					case "float":
-						return join((float[]) array, conjunction);
-					case "double":
-						return join((double[]) array, conjunction);
-					default:
-						throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
-				}
-			} else {
-				return join((Object[]) array, conjunction);
-			}
+		if(null == array){
+			throw new NullPointerException("Array must be not null!");
 		}
-		throw new UtilException(StrUtil.format("[{}] is not a Array!", array.getClass()));
+		if (false == isArray(array)) {
+			throw new IllegalArgumentException(StrUtil.format("[{}] is not a Array!", array.getClass()));
+		}
+
+		final Class<?> componentType = array.getClass().getComponentType();
+		if (componentType.isPrimitive()) {
+			final String componentTypeName = componentType.getName();
+			switch (componentTypeName) {
+				case "long":
+					return join((long[]) array, conjunction);
+				case "int":
+					return join((int[]) array, conjunction);
+				case "short":
+					return join((short[]) array, conjunction);
+				case "char":
+					return join((char[]) array, conjunction);
+				case "byte":
+					return join((byte[]) array, conjunction);
+				case "boolean":
+					return join((boolean[]) array, conjunction);
+				case "float":
+					return join((float[]) array, conjunction);
+				case "double":
+					return join((double[]) array, conjunction);
+				default:
+					throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
+			}
+		} else {
+			return join((Object[]) array, conjunction);
+		}
 	}
 
 	/**
@@ -1266,7 +1266,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.1
 	 */
 	public static byte[] toArray(ByteBuffer bytebuffer) {
-		if (false == bytebuffer.hasArray()) {
+		if (bytebuffer.hasArray()) {
+			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
+		} else {
 			int oldPosition = bytebuffer.position();
 			bytebuffer.position(0);
 			int size = bytebuffer.limit();
@@ -1274,8 +1276,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			bytebuffer.get(buffers);
 			bytebuffer.position(oldPosition);
 			return buffers;
-		} else {
-			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
 		}
 	}
 

@@ -53,6 +53,12 @@ public class ArrayUtilTest {
 	public void isNotEmptyTest() {
 		int[] a = {1, 2};
 		Assert.assertTrue(ArrayUtil.isNotEmpty(a));
+
+		String[] b = {"a", "b", "c"};
+		Assert.assertTrue(ArrayUtil.isNotEmpty(b));
+
+		Object c = new Object[]{"1", "2", 3, 4D};
+		Assert.assertTrue(ArrayUtil.isNotEmpty(c));
 	}
 
 	@Test
@@ -253,15 +259,19 @@ public class ArrayUtilTest {
 		String[] array = {"aa", "bb", "cc", "dd"};
 		String join = ArrayUtil.join(array, ",", "[", "]");
 		Assert.assertEquals("[aa],[bb],[cc],[dd]", join);
+
+		Object array2 = new String[]{"aa", "bb", "cc", "dd"};
+		String join2 = ArrayUtil.join(array2, ",");
+		Assert.assertEquals("aa,bb,cc,dd", join2);
 	}
 
 	@Test
 	public void getArrayTypeTest() {
 		Class<?> arrayType = ArrayUtil.getArrayType(int.class);
-		Assert.assertEquals(int[].class, arrayType);
+		Assert.assertSame(int[].class, arrayType);
 
 		arrayType = ArrayUtil.getArrayType(String.class);
-		Assert.assertEquals(String[].class, arrayType);
+		Assert.assertSame(String[].class, arrayType);
 	}
 
 	@Test
@@ -383,5 +393,35 @@ public class ArrayUtilTest {
 		int[] a = {1,2,3,4};
 		final int[] reverse = ArrayUtil.reverse(a);
 		Assert.assertArrayEquals(new int[]{4,3,2,1}, reverse);
+	}
+
+	@Test
+	public void removeEmptyTest() {
+		String[] a = {"a", "b", "", null, " ", "c"};
+		String[] resultA = {"a", "b", " ", "c"};
+		Assert.assertArrayEquals(ArrayUtil.removeEmpty(a), resultA);
+	}
+
+	@Test
+	public void removeBlankTest() {
+		String[] a = {"a", "b", "", null, " ", "c"};
+		String[] resultA = {"a", "b", "c"};
+		Assert.assertArrayEquals(ArrayUtil.removeBlank(a), resultA);
+	}
+
+	@Test
+	public void nullToEmptyTest() {
+		String[] a = {"a", "b", "", null, " ", "c"};
+		String[] resultA = {"a", "b", "", "", " ", "c"};
+		Assert.assertArrayEquals(ArrayUtil.nullToEmpty(a), resultA);
+	}
+
+	@Test
+	public void wrapTest() {
+		Object a = new int[]{1, 2, 3, 4};
+		Object[] wrapA = ArrayUtil.wrap(a);
+		for (Object o : wrapA) {
+			Assert.assertTrue(o instanceof Integer);
+		}
 	}
 }
