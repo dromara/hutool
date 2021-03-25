@@ -5,7 +5,7 @@ import org.junit.Test;
 
 /**
  * DateTime单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -14,6 +14,27 @@ public class DateTimeTest {
 	@Test
 	public void datetimeTest() {
 		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+
+		// 年
+		int year = dateTime.year();
+		Assert.assertEquals(2017, year);
+
+		// 季度（非季节）
+		Quarter season = dateTime.quarterEnum();
+		Assert.assertEquals(Quarter.Q1, season);
+
+		// 月份
+		Month month = dateTime.monthEnum();
+		Assert.assertEquals(Month.JANUARY, month);
+
+		// 日
+		int day = dateTime.dayOfMonth();
+		Assert.assertEquals(5, day);
+	}
+
+	@Test
+	public void datetimeTest2() {
+		DateTime dateTime = new DateTime("2017-01-05 12:34:23");
 
 		// 年
 		int year = dateTime.year();
@@ -90,7 +111,7 @@ public class DateTimeTest {
 		int month = DateUtil.parse("2017-07-01").month();
 		Assert.assertEquals(6, month);
 	}
-	
+
 	@Test
 	public void weekOfYearTest() {
 		DateTime date = DateUtil.parse("2016-12-27");
