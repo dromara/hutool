@@ -22,7 +22,7 @@ public class ServletUtilTest {
 		// 这里没法直接测试，直接写到这里，方便调用；
 		if (response != null) {
 			String fileName = "签名文件.pdf";
-			String contentType = "application/pdf";// application/octet-stream、
+			String contentType = "application/pdf";// application/octet-stream、image/jpeg、image/gif
 			response.setCharacterEncoding(StandardCharsets.UTF_8.name()); // 必须设置否则乱码; 但是 safari乱码
 			ServletUtil.write(response, new ByteArrayInputStream(bytes), contentType, fileName);
 		}
