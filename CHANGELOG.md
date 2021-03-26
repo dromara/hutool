@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.2 (2021-03-25)
+# 5.6.2 (2021-03-26)
 
 ### 新特性
 * 【core   】     Validator增加车架号(车辆识别码)验证、驾驶证（驾驶证档案编号）的正则校验（pr#280@Gitee）
@@ -12,6 +12,7 @@
 * 【core   】     增加DesensitizedUtil（pr#282@Gitee）
 * 【core   】     增加DateTime字符串构造（issue#I3CQZG@Gitee）
 * 【core   】     修改ArrayUtil代码风格（pr#287@Gitee）
+* 【json   】     JSONConfig增加setStripTrailingZeros配置（issue#I3DJI8@Gitee）
 
 ### Bug修复
 * 【core   】     修复FileTypeUtil中OFD格式判断问题（pr#1489@Github）
