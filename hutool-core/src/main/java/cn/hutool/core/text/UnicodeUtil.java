@@ -55,6 +55,30 @@ public class UnicodeUtil {
 	}
 
 	/**
+	 * 字符编码为Unicode形式
+	 *
+	 * @param c 被编码的字符
+	 * @return Unicode字符串
+	 * @since 5.6.2
+	 * @see HexUtil#toUnicodeHex(char)
+	 */
+	public static String toUnicode(char c) {
+		return HexUtil.toUnicodeHex(c);
+	}
+
+	/**
+	 * 字符编码为Unicode形式
+	 *
+	 * @param c 被编码的字符
+	 * @return Unicode字符串
+	 * @since 5.6.2
+	 * @see HexUtil#toUnicodeHex(int)
+	 */
+	public static String toUnicode(int c) {
+		return HexUtil.toUnicodeHex(c);
+	}
+
+	/**
 	 * 字符串编码为Unicode形式
 	 *
 	 * @param str 被编码的字符串
