@@ -2,7 +2,7 @@ package cn.hutool.core.text;
 
 /**
  * 符号工具类
- * @author 段大志
+ * @author dazer & neusoft
  * @date 2021/3/26 12:21
  * 别名：Symbol or special signal or Special symbols
  * 说明：获取常见的特殊符号，如：带圈数字、
