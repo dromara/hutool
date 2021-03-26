@@ -122,20 +122,5 @@ public class AESTest {
 		Assert.assertEquals(content, decryptStr);
 	}
 
-	@Test
-	public void encryptAndDecryptWithHugeFileTest() throws IOException {
-		final SecureRandom random = RandomUtil.getSecureRandom("123456".getBytes());
-		final SecretKey secretKey = KeyUtil.generateKey("AES", 128, random);
 
-		AES aes = new AES(secretKey);
-		try (BufferedInputStream bis = FileUtil.getInputStream("F:\\Downloads\\Twk2ndEvolutionCh1.rar")) {
-			File encryptedFile = aes.encrypt(bis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1.rar.enc"));
-
-			try (BufferedInputStream encBis = FileUtil.getInputStream(encryptedFile)) {
-				File decryptedFile = aes.decrypt(encBis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1-dec.rar"));
-				String decryptedMd5 = new MD5().digestHex(decryptedFile);
-				Assert.assertEquals(new MD5().digestHex(bis), decryptedMd5);
-			}
-		}
-	}
 }

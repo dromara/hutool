@@ -23,10 +23,13 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -354,21 +357,22 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 加密
+	 * 加密普通文件到对应文件中
 	 *
-	 * @param plainInputStream 待被加密的输入流(未加密)，流不会关闭，调用者需自行关闭流
-	 * @return 加密后的文件
+	 * @param plainInputStream 待被加密的输入流(未加密)，流不会自动关闭，需要调用者自行处理
+	 * @return 加密后的文件路径
 	 * @throws CryptoException IO异常
 	 */
 	public File encrypt(InputStream plainInputStream, Path outputEncFilePath) {
 		Assert.notNull(plainInputStream, "Input stream must not be null");
 		Assert.notNull(outputEncFilePath, "Decrypt file path must not be null");
 
-		lock.lock();
+		FileUtil.deleteQuietly(outputEncFilePath);
 
+		lock.lock();
 		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputEncFilePath);
 			 // 创建加密流
-			 CipherInputStream cipherInputStream = new CipherInputStream(plainInputStream, cipher)) {
+			 CipherOutputStream cipherOutputStream = new CipherOutputStream(bos, cipher)) {
 			if (null == this.params) {
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			} else {
@@ -378,12 +382,12 @@ public class SymmetricCrypto implements Serializable {
 			byte [] cache = new byte[2048];
 
 			// 加密流写入文件
-			int readCount;
-			while ((readCount = cipherInputStream.read(cache, 0, cache.length)) != -1) {
-				bos.write(cache, 0, readCount);
+			int len;
+			while ((len = plainInputStream.read(cache, 0, cache.length)) != -1) {
+				cipherOutputStream.write(cache, 0, len);
 			}
 
-			bos.flush();
+			cipherOutputStream.flush();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -523,9 +527,9 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 解密
+	 * 解密加密后的文件到对应文件
 	 *
-	 * @param encryptedDataStream 被解密的输入流(已加密)，不会关闭流
+	 * @param encryptedDataStream 被解密的输入流(已加密)，会自动关闭流
 	 * @param outputDecFilePath 待输出的解密后文件路径
 	 * @return 解密后的文件
 	 * @throws CryptoException IO异常
@@ -534,11 +538,12 @@ public class SymmetricCrypto implements Serializable {
 		Assert.notNull(encryptedDataStream, "Encrypted input stream must not be null");
 		Assert.notNull(outputDecFilePath, "Decrypt file path must not be null");
 
-		lock.lock();
+		FileUtil.deleteQuietly(outputDecFilePath);
 
+		lock.lock();
 		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputDecFilePath);
 			 // 创建解密流
-			 CipherOutputStream cipherOutputStream = new CipherOutputStream(bos, cipher)) {
+			 CipherInputStream cipherInputStream = new CipherInputStream(encryptedDataStream, cipher)) {
 			if (null == this.params) {
 				cipher.init(Cipher.DECRYPT_MODE, secretKey);
 			} else {
@@ -546,13 +551,13 @@ public class SymmetricCrypto implements Serializable {
 			}
 			byte[] cache = new byte[2048];
 
-			int readCount;
+			int len;
 			// 解密流开始写入文件
-			while ((readCount = encryptedDataStream.read(cache, 0, cache.length)) != -1) {
-				cipherOutputStream.write(cache, 0, readCount);
+			while ((len = cipherInputStream.read(cache, 0, cache.length)) != -1) {
+				bos.write(cache, 0, len);
 			}
 
-			cipherOutputStream.flush();
+			bos.flush();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {

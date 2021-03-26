@@ -2,6 +2,8 @@ package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -9,8 +11,15 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -253,6 +262,46 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		}
 	}
 
+	/**
+	 * 加密普通文件到文件中
+	 *
+	 * @param plainInputStream 待被加密的输入流(未加密)，流不会自动关闭，需要调用者自行处理
+	 * @return 加密后的文件
+	 * @throws CryptoException IO异常
+	 */
+	public File encrypt(InputStream plainInputStream, Path outputEncFilePath, KeyType keyType) {
+		Assert.notNull(plainInputStream, "Input stream must not be null");
+		Assert.notNull(outputEncFilePath, "Decrypt file path must not be null");
+
+		FileUtil.deleteQuietly(outputEncFilePath);
+
+		final Key key = getKeyByType(keyType);
+
+		lock.lock();
+		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputEncFilePath);
+			 // 创建加密流
+			 CipherOutputStream cipherOutputStream = new CipherOutputStream(bos, cipher)) {
+
+			initCipher(Cipher.ENCRYPT_MODE, key);
+
+			byte [] cache = new byte[2048];
+
+			// 加密流写入文件
+			int len;
+			while ((len = plainInputStream.read(cache, 0, cache.length)) != -1) {
+				cipherOutputStream.write(cache, 0, len);
+			}
+
+			cipherOutputStream.flush();
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
+
+		return outputEncFilePath.toFile();
+	}
+
 	// --------------------------------------------------------------------------------- Decrypt
 
 	/**
@@ -283,6 +332,44 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	/**
+	 * 解密加密后的文件到对应文件
+	 *
+	 * @param encryptedDataStream 被解密的输入流(已加密)，会自动关闭流
+	 * @param outputDecFilePath 待输出的解密后文件路径
+	 * @param keyType 私钥或公钥 {@link KeyType}
+	 * @return 解密后的文件
+	 * @throws CryptoException IO异常
+	 */
+	public File decrypt(InputStream encryptedDataStream, Path outputDecFilePath, KeyType keyType) {
+		Assert.notNull(encryptedDataStream, "Encrypted input stream must not be null");
+		Assert.notNull(outputDecFilePath, "Decrypt file path must not be null");
+		final Key key = getKeyByType(keyType);
+		FileUtil.deleteQuietly(outputDecFilePath);
+
+		lock.lock();
+		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputDecFilePath);
+			 // 创建解密流
+			 CipherInputStream cipherInputStream = new CipherInputStream(encryptedDataStream, cipher)) {
+			initCipher(Cipher.DECRYPT_MODE, key);
+			byte[] cache = new byte[2048];
+
+			int len;
+			// 解密流开始写入文件
+			while ((len = cipherInputStream.read(cache, 0, cache.length)) != -1) {
+				bos.write(cache, 0, len);
+			}
+
+			bos.flush();
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
+
+		return outputDecFilePath.toFile();
 	}
 
 	// --------------------------------------------------------------------------------- Getters and Setters
