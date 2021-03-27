@@ -3,7 +3,9 @@ package cn.hutool.crypto.asymmetric;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -15,6 +17,7 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -273,7 +276,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		Assert.notNull(plainInputStream, "Input stream must not be null");
 		Assert.notNull(outputEncFilePath, "Decrypt file path must not be null");
 
-		FileUtil.deleteQuietly(outputEncFilePath);
+		FileUtil.delQuietly(outputEncFilePath);
 
 		final Key key = getKeyByType(keyType);
 
@@ -284,12 +287,28 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 			initCipher(Cipher.ENCRYPT_MODE, key);
 
-			byte [] cache = new byte[2048];
+			byte [] cache = new byte[IoUtil.DEFAULT_BUFFER_SIZE];
 
+			if (this.encryptBlockSize < 0) {
+				// 在引入BC库情况下，自动获取块大小
+				final int blockSize = this.cipher.getBlockSize();
+				if (blockSize > 0) {
+					this.encryptBlockSize = blockSize;
+				}
+			}
+
+			boolean isEncryptBlockSizeLtZero = this.encryptBlockSize < 0;
 			// 加密流写入文件
 			int len;
 			while ((len = plainInputStream.read(cache, 0, cache.length)) != -1) {
-				cipherOutputStream.write(cache, 0, len);
+				if (isEncryptBlockSizeLtZero) {
+					cipherOutputStream.write(cache, 0, len);
+				} else {
+					byte[][] splitBlockBytes = splitBytes(cache, this.encryptBlockSize, len);
+					for (byte[] splitBlockByte : splitBlockBytes) {
+						cipherOutputStream.write(splitBlockByte, 0, splitBlockByte.length);
+					}
+				}
 			}
 
 			cipherOutputStream.flush();
@@ -300,6 +319,44 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		}
 
 		return outputEncFilePath.toFile();
+	}
+
+	/**
+	 * 加密或解密
+	 *
+	 * @param data         被加密或解密的内容数据
+	 * @param maxBlockSize 最大块（分段）大小
+	 * @return 加密或解密后的数据
+	 * @throws IllegalBlockSizeException 分段异常
+	 * @throws BadPaddingException       padding错误异常
+	 * @throws IOException               IO异常，不会被触发
+	 */
+	private byte[][] splitBytes(byte[] data, int maxBlockSize, int dataLength) throws IllegalBlockSizeException, BadPaddingException, IOException {
+		// 模长
+		//final int dataLength = data.length;
+
+		// 不足分段
+		if (dataLength <= maxBlockSize) {
+			return new byte[][]{data};
+		}
+
+		// 分段拆分
+		int offSet = 0;
+		// 剩余长度
+		int remainLength = dataLength;
+		int blockSize;
+		int blockLen = (dataLength / maxBlockSize) + (dataLength % maxBlockSize == 0 ? 0 : 1);
+		byte[][] splitBlock = new byte[blockLen][];
+		// 对数据分段处理
+		for (int i = 0; i < blockLen && remainLength > 0; i++) {
+			blockSize = Math.min(remainLength, maxBlockSize);
+			byte[] blockBytes = new byte[blockSize];
+			System.arraycopy(data, offSet, blockBytes, 0, blockSize);
+			splitBlock[i] = blockBytes;
+			offSet += blockSize;
+			remainLength = dataLength - offSet;
+		}
+		return splitBlock;
 	}
 
 	// --------------------------------------------------------------------------------- Decrypt
@@ -347,19 +404,34 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		Assert.notNull(encryptedDataStream, "Encrypted input stream must not be null");
 		Assert.notNull(outputDecFilePath, "Decrypt file path must not be null");
 		final Key key = getKeyByType(keyType);
-		FileUtil.deleteQuietly(outputDecFilePath);
+		FileUtil.delQuietly(outputDecFilePath);
 
 		lock.lock();
 		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputDecFilePath);
 			 // 创建解密流
 			 CipherInputStream cipherInputStream = new CipherInputStream(encryptedDataStream, cipher)) {
 			initCipher(Cipher.DECRYPT_MODE, key);
-			byte[] cache = new byte[2048];
+			byte[] cache = new byte[IoUtil.DEFAULT_BUFFER_SIZE];
 
+			if (this.decryptBlockSize < 0) {
+				// 在引入BC库情况下，自动获取块大小
+				final int blockSize = this.cipher.getBlockSize();
+				if (blockSize > 0) {
+					this.decryptBlockSize = blockSize;
+				}
+			}
+			boolean isEncryptBlockSizeLtZero = this.encryptBlockSize < 0;
 			int len;
 			// 解密流开始写入文件
 			while ((len = cipherInputStream.read(cache, 0, cache.length)) != -1) {
-				bos.write(cache, 0, len);
+				if (isEncryptBlockSizeLtZero) {
+					bos.write(cache, 0, len);
+				} else {
+					byte[][] splitBlockBytes = splitBytes(cache, this.encryptBlockSize, len);
+					for (byte[] splitBlockByte : splitBlockBytes) {
+						bos.write(splitBlockByte, 0, splitBlockByte.length);
+					}
+				}
 			}
 
 			bos.flush();

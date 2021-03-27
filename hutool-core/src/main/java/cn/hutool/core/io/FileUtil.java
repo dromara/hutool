@@ -665,27 +665,6 @@ public class FileUtil extends PathUtil {
 	 *
 	 * @param fullFileOrDirPath 文件或者目录的路径
 	 * @return 成功与否
-	 */
-	public static boolean deleteQuietly(Path fullFileOrDirPath) {
-		if (null == fullFileOrDirPath || !Files.exists(fullFileOrDirPath)) {
-			return true;
-		}
-
-		try {
-			Files.delete(fullFileOrDirPath);
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * 删除文件或者文件夹<br>
-	 * 路径如果为相对路径，会转换为ClassPath路径！ 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
-	 * 某个文件删除失败会终止删除操作
-	 *
-	 * @param fullFileOrDirPath 文件或者目录的路径
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
 	 */
 	public static boolean del(String fullFileOrDirPath) throws IORuntimeException {

@@ -367,7 +367,7 @@ public class SymmetricCrypto implements Serializable {
 		Assert.notNull(plainInputStream, "Input stream must not be null");
 		Assert.notNull(outputEncFilePath, "Decrypt file path must not be null");
 
-		FileUtil.deleteQuietly(outputEncFilePath);
+		FileUtil.delQuietly(outputEncFilePath);
 
 		lock.lock();
 		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputEncFilePath);
@@ -379,7 +379,7 @@ public class SymmetricCrypto implements Serializable {
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
 
-			byte [] cache = new byte[2048];
+			byte [] cache = new byte[IoUtil.DEFAULT_BUFFER_SIZE];
 
 			// 加密流写入文件
 			int len;
@@ -538,7 +538,7 @@ public class SymmetricCrypto implements Serializable {
 		Assert.notNull(encryptedDataStream, "Encrypted input stream must not be null");
 		Assert.notNull(outputDecFilePath, "Decrypt file path must not be null");
 
-		FileUtil.deleteQuietly(outputDecFilePath);
+		FileUtil.delQuietly(outputDecFilePath);
 
 		lock.lock();
 		try (BufferedOutputStream bos = FileUtil.getOutputStream(outputDecFilePath);
@@ -549,7 +549,7 @@ public class SymmetricCrypto implements Serializable {
 			} else {
 				cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
 			}
-			byte[] cache = new byte[2048];
+			byte[] cache = new byte[IoUtil.DEFAULT_BUFFER_SIZE];
 
 			int len;
 			// 解密流开始写入文件

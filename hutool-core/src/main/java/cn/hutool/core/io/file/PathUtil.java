@@ -126,6 +126,23 @@ public class PathUtil {
 	}
 
 	/**
+	 * 静默删除文件或者文件夹，不追踪软链<br>
+	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
+	 *
+	 * @param path 文件对象
+	 * @return 成功与否
+	 * @since 4.4.2
+	 */
+	public static boolean delQuietly(Path path) {
+		try {
+			return del(path);
+		} catch (IORuntimeException e) {
+			return false;
+		}
+	}
+
+	/**
 	 * 删除文件或者文件夹，不追踪软链<br>
 	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作

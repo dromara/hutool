@@ -1,6 +1,5 @@
 package cn.hutool.crypto.test.symmetric;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,17 +7,14 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.MD5;
-import cn.hutool.crypto.symmetric.*;
+import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.symmetric.DES;
+import cn.hutool.crypto.symmetric.DESede;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.Vigenere;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.crypto.SecretKey;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.security.SecureRandom;
 
 /**
  * 对称加密算法单元测试
@@ -224,27 +220,4 @@ public class SymmetricTest {
 		Assert.assertEquals(content, decrypt);
 	}
 
-	@Test
-	public void encryptAndDecryptWithHugeFileTest() throws IOException {
-		final SecureRandom random = RandomUtil.getSecureRandom("123456".getBytes());
-		final SecretKey secretKey = KeyUtil.generateKey("AES", 128, random);
-
-		testEND(new AES(secretKey));
-		testEND(SecureUtil.des());
-		testEND(SecureUtil.desede());
-		testEND(new SM4());
-	}
-
-	private void testEND(SymmetricCrypto symmetricCrypto) throws IOException {
-		File originalFile = new File("F:\\Downloads\\Twk2ndEvolutionCh1.rar");
-		String originalMd5 = SecureUtil.md5(originalFile);
-		try (BufferedInputStream bis = FileUtil.getInputStream(originalFile)) {
-			File encryptedFile = symmetricCrypto.encrypt(bis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1.rar." + symmetricCrypto.getClass().getSimpleName() + ".enc"));
-			try (BufferedInputStream encBis = FileUtil.getInputStream(encryptedFile)) {
-				File decryptedFile = symmetricCrypto.decrypt(encBis, Paths.get("F:\\dm\\fafafa", "Twk2ndEvolutionCh1." + symmetricCrypto.getClass().getSimpleName() + ".dec.rar"));
-				String decryptedMd5 = new MD5().digestHex(decryptedFile);
-				Assert.assertEquals(symmetricCrypto.getClass().getSimpleName() + " md5 check failed.", originalMd5, decryptedMd5);
-			}
-		}
-	}
 }
