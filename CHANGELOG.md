@@ -18,6 +18,7 @@
 ### Bug修复
 * 【core   】     修复FileTypeUtil中OFD格式判断问题（pr#1489@Github）
 * 【core   】     修复CamelCaseLinkedMap和CaseInsensitiveLinkedMap的Linked失效问题（pr#1490@Github）
+* 【core   】     修复UrlPath中=被转义的问题
 
 -------------------------------------------------------------------------------------------------------------
 

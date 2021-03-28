@@ -235,4 +235,12 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
 		Assert.assertEquals("a=123&b=4%3F6&c=789", urlBuilder.getQueryStr());
 	}
+
+	@Test
+	public void encodePathTest(){
+		// Path中的某些符号无需转义，比如=
+		final String urlStr = "http://hq.sinajs.cn/list=sh600519";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(urlStr, urlBuilder.toString());
+	}
 }
