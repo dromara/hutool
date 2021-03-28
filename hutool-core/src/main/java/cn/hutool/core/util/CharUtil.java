@@ -402,6 +402,11 @@ public class CharUtil {
 	 * @param number 被转换的数字
 	 * @return 转换后的字符
 	 * @since 5.6.2
+	 *
+	 * @link 维基百科wikipedia-Unicode_symbols  https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols
+	 * @link 维基百科wikipedia-Unicode字符列表   https://zh.wikipedia.org/wiki/Unicode%E5%AD%97%E7%AC%A6%E5%88%97%E8%A1%A8
+	 * @link coolsymbol https://coolsymbol.com/
+	 * @link 百度百科 https://baike.baidu.com/item/%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/112715?fr=aladdin
 	 */
 	public static char toCloseByNumber(int number){
 		if(number > 20){
