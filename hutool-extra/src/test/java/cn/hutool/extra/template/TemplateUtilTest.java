@@ -157,10 +157,20 @@ public class TemplateUtilTest {
 
 	@Test
 	public void WitEngineTest() {
-		TemplateEngine engine = TemplateUtil.createEngine(
-				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(WitEngine.class));
-		Template template = engine.getTemplate("/templates/wit_test.wit");
+		//classpath模板
+		TemplateConfig config = new TemplateConfig("templates", ResourceMode.CLASSPATH)
+				.setCustomEngine(WitEngine.class);
+		TemplateEngine engine = TemplateUtil.createEngine(config);
+		Template template = engine.getTemplate("/wit_test.wit");
 		String result = template.render(Dict.create().set("name", "hutool"));
+		Assert.assertEquals("hello,hutool", StrUtil.trim(result));
+
+		// 字符串模板
+		config = new TemplateConfig("templates", ResourceMode.STRING)
+				.setCustomEngine(WitEngine.class);
+		engine = TemplateUtil.createEngine(config);
+		template = engine.getTemplate("<%var name;%>hello,${name}");
+		result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", StrUtil.trim(result));
 	}
 }

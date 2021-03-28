@@ -1,11 +1,16 @@
 package cn.hutool.extra.template.engine.wit;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateException;
 import org.febit.wit.Engine;
 import org.febit.wit.exceptions.ResourceNotFoundException;
+import org.febit.wit.util.Props;
+
+import java.io.File;
 
 /**
  * Wit(http://zqq90.github.io/webit-script/)模板引擎封装
@@ -75,10 +80,34 @@ public class WitEngine implements TemplateEngine {
 	 * @return {@link Engine}
 	 */
 	private static Engine createEngine(TemplateConfig config) {
-		if (null == config) {
-			config = TemplateConfig.DEFAULT;
+		final Props configProps = Engine.createConfigProps("");
+		Dict dict = null;
+
+		if (null != config) {
+			dict = Dict.create();
+			// 自定义编码
+			dict.set("DEFAULT_ENCODING", config.getCharset());
+
+			switch (config.getResourceMode()){
+				case CLASSPATH:
+					configProps.set("pathLoader.root", config.getPath());
+					configProps.set("routeLoader.defaultLoader", "classpathLoader");
+					break;
+				case STRING:
+					configProps.set("routeLoader.defaultLoader", "stringLoader");
+					break;
+				case FILE:
+					configProps.set("pathLoader.root", config.getPath());
+					configProps.set("routeLoader.defaultLoader", "fileLoader");
+					break;
+				case WEB_ROOT:
+					final File root = FileUtil.file(FileUtil.getWebRoot(), config.getPath());
+					configProps.set("pathLoader.root", FileUtil.getAbsolutePath(root));
+					configProps.set("routeLoader.defaultLoader", "fileLoader");
+					break;
+			}
 		}
 
-		return Engine.create();
+		return Engine.create(configProps,dict);
 	}
 }
