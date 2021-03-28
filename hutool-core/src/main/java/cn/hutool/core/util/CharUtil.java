@@ -398,7 +398,7 @@ public class CharUtil {
 	 *     12 -》 '⑫'
 	 *     20 -》 '⑳'
 	 * </pre>
-	 *
+	 * 也称作：封闭式字符，英文：Enclosed Alphanumerics
 	 * @param number 被转换的数字
 	 * @return 转换后的字符
 	 * @since 5.6.2
