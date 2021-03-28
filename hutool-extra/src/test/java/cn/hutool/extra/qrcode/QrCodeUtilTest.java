@@ -14,7 +14,7 @@ import java.io.File;
 
 /**
  * 二维码工具类单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -51,6 +51,14 @@ public class QrCodeUtilTest {
 	@Ignore
 	public void decodeTest() {
 		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
+		Console.log(decode);
+	}
+
+	@Test
+	@Ignore
+	public void decodeTest2() {
+		// 条形码
+		String decode = QrCodeUtil.decode(FileUtil.file("d:/test/90.png"));
 		Console.log(decode);
 	}
 

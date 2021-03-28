@@ -37,6 +37,11 @@ public class JSONConfig implements Serializable {
 	private boolean transientSupport = true;
 
 	/**
+	 * 是否去除末尾多余0，例如如果为true,5.0返回5
+	 */
+	private boolean stripTrailingZeros = true;
+
+	/**
 	 * 创建默认的配置项
 	 *
 	 * @return JSONConfig
@@ -190,6 +195,25 @@ public class JSONConfig implements Serializable {
 	 */
 	public JSONConfig setTransientSupport(boolean transientSupport) {
 		this.transientSupport = transientSupport;
+		return this;
+	}
+
+	/**
+	 * 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @return 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @since 5.6.2
+	 */
+	public boolean isStripTrailingZeros() {
+		return stripTrailingZeros;
+	}
+
+	/**
+	 * 设置是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @param stripTrailingZeros 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @since 5.6.2
+	 */
+	public JSONConfig setStripTrailingZeros(boolean stripTrailingZeros) {
+		this.stripTrailingZeros = stripTrailingZeros;
 		return this;
 	}
 }

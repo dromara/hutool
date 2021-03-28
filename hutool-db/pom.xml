@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.6.2-SNAPSHOT</version>
+		<version>5.6.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -26,7 +26,7 @@
 		<mongo.version>3.12.8</mongo.version>
 		<sqlite.version>3.34.0</sqlite.version>
 		<hsqldb.version>2.5.1</hsqldb.version>
-		<jedis.version>3.5.1</jedis.version>
+		<jedis.version>3.5.2</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -79,8 +79,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
-			<artifactId>BeeCP</artifactId>
-			<version>2.5.3</version>
+			<artifactId>beecp</artifactId>
+			<version>3.1.2</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -148,7 +148,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.18.jre7</version>
+			<version>42.2.19.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

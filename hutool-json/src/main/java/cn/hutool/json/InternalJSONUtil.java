@@ -50,7 +50,9 @@ final class InternalJSONUtil {
 		} else if (value instanceof Iterable || value instanceof Iterator || value.getClass().isArray()) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
-			writer.write(NumberUtil.toStr((Number) value));
+			// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
+			final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
+			writer.write(NumberUtil.toStr((Number) value, isStripTrailingZeros));
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			final String format = (null == config) ? null : config.getDateFormat();
 			writer.write(formatDate(value, format));

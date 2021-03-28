@@ -3,14 +3,29 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.2 (2021-03-21)
+# 5.6.3 (2021-03-28)
+
+### 新特性
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.6.2 (2021-03-28)
 
 ### 新特性
 * 【core   】     Validator增加车架号(车辆识别码)验证、驾驶证（驾驶证档案编号）的正则校验（pr#280@Gitee）
 * 【core   】     CopyOptions增加propertiesFilter（pr#281@Gitee）
 * 【extra  】     增加Wit模板引擎支持
 * 【core   】     增加DesensitizedUtil（pr#282@Gitee）
+* 【core   】     增加DateTime字符串构造（issue#I3CQZG@Gitee）
+* 【core   】     修改ArrayUtil代码风格（pr#287@Gitee）
+* 【json   】     JSONConfig增加setStripTrailingZeros配置（issue#I3DJI8@Gitee）
+* 【db     】     升级兼容BeeCP3.x
+
 ### Bug修复
+* 【core   】     修复FileTypeUtil中OFD格式判断问题（pr#1489@Github）
+* 【core   】     修复CamelCaseLinkedMap和CaseInsensitiveLinkedMap的Linked失效问题（pr#1490@Github）
+* 【core   】     修复UrlPath中=被转义的问题
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -262,7 +262,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '我' =》\u4f60
+	 * '你' =》\u4f60
 	 * </pre>
 	 *
 	 * @param value int值，也可以是char
@@ -287,7 +287,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '我' =》\u4f60
+	 * '你' =》'\u4f60'
 	 * </pre>
 	 *
 	 * @param ch char值

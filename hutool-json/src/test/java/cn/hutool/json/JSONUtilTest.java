@@ -174,6 +174,23 @@ public class JSONUtilTest {
 	}
 
 	@Test
+	public void setStripTrailingZerosTest() {
+		// 默认去除多余的0
+		final JSONObject jsonObjectDefault = JSONUtil.createObj()
+				.set("test2", 12.00D);
+		Assert.assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
+
+		// 不去除多余的0
+		final JSONObject jsonObject = JSONUtil.createObj(JSONConfig.create().setStripTrailingZeros(false))
+				.set("test2", 12.00D);
+		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
+
+		// 去除多余的0
+		jsonObject.getConfig().setStripTrailingZeros(true);
+		Assert.assertEquals("{\"test2\":12}", jsonObject.toString());
+	}
+
+	@Test
 	public void parseObjTest() {
 		// 测试转义
 		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +

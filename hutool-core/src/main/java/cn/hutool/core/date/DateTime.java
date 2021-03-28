@@ -122,7 +122,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(Date date) {
 		this(
-				date.getTime(),//
+				date,//
 				(date instanceof DateTime) ? ((DateTime) date).timeZone : TimeZone.getDefault()
 		);
 	}
@@ -135,7 +135,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(Date date, TimeZone timeZone) {
-		this(date.getTime(), timeZone);
+		this(ObjectUtil.defaultIfNull(date, new Date()).getTime(), timeZone);
 	}
 
 	/**
@@ -209,6 +209,38 @@ public class DateTime extends Date {
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
 		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+	}
+
+	/**
+	 * 构造格式：<br>
+	 * <ol>
+	 * <li>yyyy-MM-dd HH:mm:ss</li>
+	 * <li>yyyy/MM/dd HH:mm:ss</li>
+	 * <li>yyyy.MM.dd HH:mm:ss</li>
+	 * <li>yyyy年MM月dd日 HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd</li>
+	 * <li>yyyy/MM/dd</li>
+	 * <li>yyyy.MM.dd</li>
+	 * <li>HH:mm:ss</li>
+	 * <li>HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd HH:mm</li>
+	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * <li>yyyyMMddHHmmss</li>
+	 * <li>yyyyMMddHHmmssSSS</li>
+	 * <li>yyyyMMdd</li>
+	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
+	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * </ol>
+	 *
+	 * @param dateStr Date字符串
+	 * @since 5.6.2
+	 */
+	public DateTime(CharSequence dateStr) {
+		this(DateUtil.parse(dateStr));
 	}
 
 	/**

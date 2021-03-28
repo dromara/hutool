@@ -318,4 +318,11 @@ public class HttpUtilTest {
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
+
+	@Test
+	@Ignore
+	public void sinajsTest(){
+		final String s = HttpUtil.get("http://hq.sinajs.cn/list=sh600519");
+		Console.log(s);
+	}
 }

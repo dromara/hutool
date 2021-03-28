@@ -60,7 +60,6 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("4d546864000000060001", "mid"); // MIDI (mid)
 		FILE_TYPE_MAP.put("526172211a0700cf9073", "rar"); // WinRAR
 		FILE_TYPE_MAP.put("235468697320636f6e66", "ini");
-		FILE_TYPE_MAP.put("504B0304140000000800", "ofd"); // ofd文件 国标版式文件
 		FILE_TYPE_MAP.put("504B03040a0000000000", "jar");
 		FILE_TYPE_MAP.put("504B0304140008000800", "jar");
 		// MS Excel 注意：word、msi 和 excel的文件头一样
@@ -140,7 +139,7 @@ public class FileTypeUtil {
 	 * <pre>
 	 *     1、无法识别类型默认按照扩展名识别
 	 *     2、xls、doc、msi头信息无法区分，按照扩展名区分
-	 *     3、zip可能为docx、xlsx、pptx、jar、war头信息无法区分，按照扩展名区分
+	 *     3、zip可能为docx、xlsx、pptx、jar、war、ofd头信息无法区分，按照扩展名区分
 	 * </pre>
 	 * @param in {@link InputStream}
 	 * @param filename 文件名
@@ -162,7 +161,7 @@ public class FileTypeUtil {
 				typeName = "msi";
 			}
 		} else if ("zip".equals(typeName)) {
-			// zip可能为docx、xlsx、pptx、jar、war等格式，扩展名辅助判断
+			// zip可能为docx、xlsx、pptx、jar、war、ofd等格式，扩展名辅助判断
 			final String extName = FileUtil.extName(filename);
 			if ("docx".equalsIgnoreCase(extName)) {
 				typeName = "docx";
@@ -174,6 +173,8 @@ public class FileTypeUtil {
 				typeName = "jar";
 			} else if ("war".equalsIgnoreCase(extName)) {
 				typeName = "war";
+			} else if ("ofd".equalsIgnoreCase(extName)) {
+				typeName = "ofd";
 			}
 		}
 		return typeName;
