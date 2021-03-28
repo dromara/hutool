@@ -14,16 +14,11 @@ import cn.hutool.core.util.StrUtil;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -1044,92 +1039,223 @@ public class Convert {
 	}
 
 	/**
-	 * byte数组转short
+	 * byte数组转short<br>
+	 * 默认以小端序转换
 	 *
 	 * @param bytes byte数组
 	 * @return short值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static short bytesToShort(byte[] bytes) {
-		return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << 8);
+		return bytesToShort(bytes, ByteOrder.LITTLE_ENDIAN);
 	}
 
 	/**
-	 * short转byte数组
+	 * byte数组转short<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return short值
+	 * @since 5.6.3
+	 */
+	public static short bytesToShort(byte[] bytes, ByteOrder byteOrder) {
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
+		} else {
+			return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
+		}
+	}
+
+	/**
+	 * short转byte数组<br>
+	 * 默认以小端序转换
+	 *
 	 * @param shortValue short值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] shortToBytes(short shortValue) {
-		byte[] b = new byte[2];
-		b[1] = (byte) (shortValue & 0xff);
-		b[0] = (byte) ((shortValue >> 8) & 0xff);
+		return shortToBytes(shortValue, ByteOrder.LITTLE_ENDIAN);
+	}
+
+	/**
+	 * short转byte数组<br>
+	 * 自定义端序
+	 *
+	 * @param shortValue short值
+	 * @param byteOrder  端序
+	 * @return byte数组
+	 * @since 5.6.3
+	 */
+	public static byte[] shortToBytes(short shortValue, ByteOrder byteOrder) {
+		byte[] b = new byte[Short.BYTES];
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			b[1] = (byte) (shortValue & 0xff);
+			b[0] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
+		} else {
+			b[0] = (byte) (shortValue & 0xff);
+			b[1] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
+		}
 		return b;
 	}
 
 	/**
-	 * byte[]转int值
+	 * byte[]转int值<br>
+	 * 默认以小端序转换
 	 *
 	 * @param bytes byte数组
 	 * @return int值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static int bytesToInt(byte[] bytes) {
-		return bytes[3] & 0xFF | //
-				(bytes[2] & 0xFF) << 8 | //
-				(bytes[1] & 0xFF) << 16 | //
-				(bytes[0] & 0xFF) << 24; //
+		return bytesToInt(bytes, ByteOrder.LITTLE_ENDIAN);
 	}
 
 	/**
-	 * int转byte数组
+	 * byte[]转int值<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return int值
+	 * @since 5.6.3
+	 */
+	public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			return bytes[3] & 0xFF | //
+					(bytes[2] & 0xFF) << 8 | //
+					(bytes[1] & 0xFF) << 16 | //
+					(bytes[0] & 0xFF) << 24; //
+		} else {
+			return bytes[0] & 0xFF | //
+					(bytes[1] & 0xFF) << 8 | //
+					(bytes[2] & 0xFF) << 16 | //
+					(bytes[3] & 0xFF) << 24; //
+		}
+
+	}
+
+	/**
+	 * int转byte数组<br>
+	 * 默认以小端序转换
 	 *
 	 * @param intValue int值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] intToBytes(int intValue) {
-		return new byte[] { //
-				(byte) ((intValue >> 24) & 0xFF), //
-				(byte) ((intValue >> 16) & 0xFF), //
-				(byte) ((intValue >> 8) & 0xFF), //
-				(byte) (intValue & 0xFF) //
-		};
+		return intToBytes(intValue, ByteOrder.LITTLE_ENDIAN);
+	}
+
+	/**
+	 * int转byte数组<br>
+	 * 自定义端序
+	 *
+	 * @param intValue  int值
+	 * @param byteOrder 端序
+	 * @return byte数组
+	 * @since 5.6.3
+	 */
+	public static byte[] intToBytes(int intValue, ByteOrder byteOrder) {
+
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			return new byte[]{ //
+					(byte) ((intValue >> 24) & 0xFF), //
+					(byte) ((intValue >> 16) & 0xFF), //
+					(byte) ((intValue >> 8) & 0xFF), //
+					(byte) (intValue & 0xFF) //
+			};
+
+		} else {
+			return new byte[]{ //
+					(byte) (intValue & 0xFF), //
+					(byte) ((intValue >> 8) & 0xFF), //
+					(byte) ((intValue >> 16) & 0xFF), //
+					(byte) ((intValue >> 24) & 0xFF) //
+			};
+		}
+
+
 	}
 
 	/**
 	 * long转byte数组<br>
+	 * 默认以小端序转换<br>
 	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
 	 *
 	 * @param longValue long值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] longToBytes(long longValue) {
-		// Magic number 8 should be defined as Long.SIZE / Byte.SIZE
-		final byte[] result = new byte[8];
-		for (int i = 7; i >= 0; i--) {
-			result[i] = (byte) (longValue & 0xFF);
-			longValue >>= 8;
+		return longToBytes(longValue, ByteOrder.LITTLE_ENDIAN);
+	}
+
+	/**
+	 * long转byte数组<br>
+	 * 自定义端序<br>
+	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 *
+	 * @param longValue long值
+	 * @param byteOrder 端序
+	 * @return byte数组
+	 * @since 5.6.3
+	 */
+	public static byte[] longToBytes(long longValue, ByteOrder byteOrder) {
+		byte[] result = new byte[Long.BYTES];
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			for (int i = (result.length - 1); i >= 0; i--) {
+				result[i] = (byte) (longValue & 0xFF);
+				longValue >>= Byte.SIZE;
+			}
+		} else {
+			for (int i = 0; i < result.length; i++) {
+				result[i] = (byte) (longValue & 0xFF);
+				longValue >>= Byte.SIZE;
+			}
 		}
+
 		return result;
 	}
 
 	/**
 	 * byte数组转long<br>
+	 * 默认以小端序转换<br>
 	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
 	 *
 	 * @param bytes byte数组
 	 * @return long值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static long bytesToLong(byte[] bytes) {
-		// Magic number 8 should be defined as Long.SIZE / Byte.SIZE
+		return bytesToLong(bytes, ByteOrder.LITTLE_ENDIAN);
+	}
+
+	/**
+	 * byte数组转long<br>
+	 * 自定义端序<br>
+	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return long值
+	 * @since 5.6.3
+	 */
+	public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
 		long values = 0;
-		for (int i = 0; i < 8; i++) {
-			values <<= 8;
-			values |= (bytes[i] & 0xff);
+		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
+			for (int i = 0; i < Long.BYTES; i++) {
+				values <<= Byte.SIZE;
+				values |= (bytes[i] & 0xff);
+			}
+		} else {
+			for (int i = (Long.BYTES - 1); i >= 0; i--) {
+				values <<= Byte.SIZE;
+				values |= (bytes[i] & 0xff);
+			}
 		}
+
 		return values;
 	}
 }
