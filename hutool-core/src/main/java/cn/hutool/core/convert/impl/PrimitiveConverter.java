@@ -12,14 +12,14 @@ import java.util.function.Function;
  * 原始类型转换器<br>
  * 支持类型为：<br>
  * <ul>
- * 		<li><code>byte</code></li>
- * 		<li><code>short</code></li>
- * 		 <li><code>int</code></li>
- * 		 <li><code>long</code></li>
- * 		<li><code>float</code></li>
- * 		<li><code>double</code></li>
- * 		<li><code>char</code></li>
- * 		<li><code>boolean</code></li>
+ * 		<li>{@code byte}</li>
+ * 		<li>{@code short}</li>
+ * 		 <li>{@code int}</li>
+ * 		 <li>{@code long}</li>
+ * 		<li>{@code float}</li>
+ * 		<li>{@code double}</li>
+ * 		<li>{@code char}</li>
+ * 		<li>{@code boolean}</li>
  * </ul>
  *
  * @author Looly
