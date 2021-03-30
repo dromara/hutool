@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -174,12 +175,70 @@ public class ConvertTest {
 	}
 
 	@Test
+	public void intAndBytesLittleEndianTest() {
+		// 测试 int 转小端序 byte 数组
+		int int1 = 1417;
+
+		byte[] bytesInt = Convert.intToBytes(int1, ByteOrder.LITTLE_ENDIAN);
+		int int2 = Convert.bytesToInt(bytesInt, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(int1, int2);
+
+		byte[] bytesInt2 = Convert.intToBytes(int1, ByteOrder.LITTLE_ENDIAN);
+		int int3 = Convert.bytesToInt(bytesInt2, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(int1, int3);
+
+		byte[] bytesInt3 = Convert.intToBytes(int1, ByteOrder.LITTLE_ENDIAN);
+		int int4 = Convert.bytesToInt(bytesInt3, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(int1, int4);
+	}
+
+	@Test
+	public void intAndBytesBigEndianTest() {
+		// 测试 int 转大端序 byte 数组
+		int int2 = 1417;
+		byte[] bytesInt = Convert.intToBytes(int2, ByteOrder.BIG_ENDIAN);
+
+		// 测试大端序 byte 数组转 int
+		int int3 = Convert.bytesToInt(bytesInt, ByteOrder.BIG_ENDIAN);
+		Assert.assertEquals(int2, int3);
+	}
+
+	@Test
 	public void longAndBytesTest() {
 		// 测试 long 转 byte 数组
 		long long1 = 2223;
 
 		byte[] bytesLong = Convert.longToBytes(long1);
 		long long2 = Convert.bytesToLong(bytesLong);
+
+		Assert.assertEquals(long1, long2);
+	}
+
+	@Test
+	public void longAndBytesLittleEndianTest() {
+		// 测试 long 转 byte 数组
+		long long1 = 2223;
+
+		byte[] bytesLong = Convert.longToBytes(long1, ByteOrder.LITTLE_ENDIAN);
+		long long2 = Convert.bytesToLong(bytesLong, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(long1, long2);
+
+		byte[] bytesLong2 = Convert.longToBytes(long1);
+		long long3 = Convert.bytesToLong(bytesLong2, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(long1, long3);
+
+		byte[] bytesLong3 = Convert.longToBytes(long1, ByteOrder.LITTLE_ENDIAN);
+		long long4 = Convert.bytesToLong(bytesLong3);
+		Assert.assertEquals(long1, long4);
+	}
+
+	@Test
+	public void longAndBytesBigEndianTest() {
+		// 测试大端序 long 转 byte 数组
+		long long1 = 2223;
+
+		byte[] bytesLong = Convert.longToBytes(long1, ByteOrder.BIG_ENDIAN);
+		long long2 = Convert.bytesToLong(bytesLong, ByteOrder.BIG_ENDIAN);
 
 		Assert.assertEquals(long1, long2);
 	}
@@ -194,8 +253,34 @@ public class ConvertTest {
 	}
 
 	@Test
-	public void toListTest(){
-		List<String> list = Arrays.asList("1","2");
+	public void shortAndBytesLittleEndianTest() {
+		short short1 = 122;
+
+		byte[] bytes = Convert.shortToBytes(short1, ByteOrder.LITTLE_ENDIAN);
+		short short2 = Convert.bytesToShort(bytes, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(short2, short1);
+
+		byte[] bytes2 = Convert.shortToBytes(short1);
+		short short3 = Convert.bytesToShort(bytes2, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(short3, short1);
+
+		byte[] bytes3 = Convert.shortToBytes(short1, ByteOrder.LITTLE_ENDIAN);
+		short short4 = Convert.bytesToShort(bytes3);
+		Assert.assertEquals(short4, short1);
+	}
+
+	@Test
+	public void shortAndBytesBigEndianTest() {
+		short short1 = 122;
+		byte[] bytes = Convert.shortToBytes(short1, ByteOrder.BIG_ENDIAN);
+		short short2 = Convert.bytesToShort(bytes, ByteOrder.BIG_ENDIAN);
+
+		Assert.assertEquals(short2, short1);
+	}
+
+	@Test
+	public void toListTest() {
+		List<String> list = Arrays.asList("1", "2");
 		String str = Convert.toStr(list);
 		List<String> list2 = Convert.toList(String.class, str);
 		Assert.assertEquals("1", list2.get(0));
