@@ -528,14 +528,15 @@ public class PrimitiveArrayUtil {
 	 */
 	public static byte[][] split(byte[] array, int len) {
 		int amount = array.length / len;
-		int remainder = array.length % len;
+		final int remainder = array.length % len;
 		if (remainder != 0) {
 			++amount;
 		}
-		byte[][] arrays = new byte[amount][];
+		final byte[][] arrays = new byte[amount][];
 		byte[] arr;
 		for (int i = 0; i < amount; i++) {
 			if (i == amount - 1 && remainder != 0) {
+				// 有剩余，按照实际长度创建
 				arr = new byte[remainder];
 				System.arraycopy(array, i * len, arr, 0, remainder);
 			} else {
