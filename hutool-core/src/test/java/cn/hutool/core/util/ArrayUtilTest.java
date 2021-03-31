@@ -424,4 +424,12 @@ public class ArrayUtilTest {
 			Assert.assertTrue(o instanceof Integer);
 		}
 	}
+
+	@Test
+	public void splitTest() {
+		byte[] array = new byte[1024];
+		byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
+		Assert.assertEquals(3, arrayAfterSplit.length);
+		Assert.assertEquals(24, arrayAfterSplit[2].length);
+	}
 }
