@@ -577,6 +577,7 @@ public class BeanUtilTest {
 		private String name;
 		private TestPojo2[] testPojo2List;
 	}
+
 	@Data
 	public static class TestPojo2{
 		private int age;
