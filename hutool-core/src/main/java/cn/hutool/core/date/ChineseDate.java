@@ -1,7 +1,11 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.convert.NumberChineseFormatter;
-import cn.hutool.core.date.chinese.*;
+import cn.hutool.core.date.chinese.ChineseMonth;
+import cn.hutool.core.date.chinese.GanZhi;
+import cn.hutool.core.date.chinese.LunarFestival;
+import cn.hutool.core.date.chinese.LunarInfo;
+import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Calendar;
@@ -328,6 +332,7 @@ public class ChineseDate {
 	/**
 	 * 获得节气
 	 * @return 获得节气
+	 * @since 5.6.3
 	 */
 	public String getTerm() {
 		return SolarTerms.getTerm(gyear, gmonth, gday);

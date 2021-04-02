@@ -8,6 +8,7 @@
 ### 新特性
 * 【core   】     修改数字转换的实现，增加按照指定端序转换（pr#1492@Github）
 * 【core   】     修改拆分byte数组时最后一组长度的规则（pr#1494@Github）
+* 【core   】     新增根据日期获取节气（pr#1496@Github）
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）
