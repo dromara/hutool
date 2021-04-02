@@ -375,9 +375,26 @@ public class CharUtil {
 	 *     'a' -》 'ⓐ'
 	 * </pre>
 	 *
+	 * 获取带圈数字 /封闭式字母数字 ，从1-20,超过1-20报错
+	 *          0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F
+	 * 	U+246x	①	②	③	④	⑤	⑥	⑦	⑧	⑨	⑩	⑪	⑫	⑬	⑭	⑮	⑯
+	 * 	U+247x	⑰	⑱	⑲	⑳	⑴	⑵	⑶	⑷	⑸	⑹	⑺	⑻	⑼	⑽	⑾	⑿
+	 * 	U+248x	⒀	⒁	⒂	⒃	⒄	⒅	⒆	⒇	⒈	⒉	⒊	⒋	⒌	⒍	⒎	⒏
+	 * 	U+249x	⒐	⒑	⒒	⒓	⒔	⒕	⒖	⒗	⒘	⒙	⒚	⒛	⒜	⒝	⒞	⒟
+	 * 	U+24Ax	⒠	⒡	⒢	⒣	⒤	⒥	⒦	⒧	⒨	⒩	⒪	⒫	⒬	⒭	⒮	⒯
+	 * 	U+24Bx	⒰	⒱	⒲	⒳	⒴	⒵	Ⓐ	Ⓑ	Ⓒ	Ⓓ	Ⓔ	Ⓕ	Ⓖ	Ⓗ	Ⓘ	Ⓙ
+	 * 	U+24Cx	Ⓚ	Ⓛ	Ⓜ	Ⓝ	Ⓞ	Ⓟ	Ⓠ	Ⓡ	Ⓢ	Ⓣ	Ⓤ	Ⓥ	Ⓦ	Ⓧ	Ⓨ	Ⓩ
+	 * 	U+24Dx	ⓐ	ⓑ	ⓒ	ⓓ	ⓔ	ⓕ	ⓖ	ⓗ	ⓘ	ⓙ	ⓚ	ⓛ	ⓜ	ⓝ	ⓞ	ⓟ
+	 * 	U+24Ex	ⓠ	ⓡ	ⓢ	ⓣ	ⓤ	ⓥ	ⓦ	ⓧ	ⓨ	ⓩ	⓪	⓫	⓬	⓭	⓮	⓯
+	 * 	U+24Fx	⓰	⓱	⓲	⓳	⓴	⓵	⓶	⓷	⓸	⓹	⓺	⓻	⓼	⓽	⓾	⓿
+	 * @link Unicode_symbols https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols
+	 * @link Enclosed Alphanumerics https://en.wikipedia.org/wiki/Enclosed_Alphanumerics
+	 * 有其他特殊的需求，可以到 维基百科 查找说明
+	 *
 	 * @param c 被转换的字符，如果字符不支持转换，返回原字符
 	 * @return 转换后的字符
 	 * @since 5.6.2
+	 * @author dazer
 	 */
 	public static char toCloseChar(char c){
 		int result = c;
@@ -399,6 +416,7 @@ public class CharUtil {
 	 *     20 -》 '⑳'
 	 * </pre>
 	 * 也称作：封闭式字符，英文：Enclosed Alphanumerics
+	 * @author dazer
 	 * @param number 被转换的数字
 	 * @return 转换后的字符
 	 * @since 5.6.2
@@ -413,5 +431,15 @@ public class CharUtil {
 			throw new IllegalArgumentException("Number must be [1-20]");
 		}
 		return (char) ('①' + number - 1);
+	}
+
+	/**
+	 * 获取带圈字符
+	 * Enclosed Alphanumerics
+	 * @since 5.6.3
+	 * @see CharUtil#toEnclosedAlphanumericsCircleByInt(int)
+	 */
+	public static char toEnclosedAlphanumericsCircleByInt(int number){
+		return CharUtil.toCloseByNumber(number);
 	}
 }
