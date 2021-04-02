@@ -6,6 +6,7 @@ import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
@@ -1044,92 +1045,76 @@ public class Convert {
 	}
 
 	/**
-	 * byte数组转short
+	 * byte数组转short<br>
+	 * 默认以小端序转换
 	 *
 	 * @param bytes byte数组
 	 * @return short值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static short bytesToShort(byte[] bytes) {
-		return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << 8);
+		return ByteUtil.bytesToShort(bytes);
 	}
 
 	/**
-	 * short转byte数组
+	 * short转byte数组<br>
+	 * 默认以小端序转换
+	 *
 	 * @param shortValue short值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] shortToBytes(short shortValue) {
-		byte[] b = new byte[2];
-		b[1] = (byte) (shortValue & 0xff);
-		b[0] = (byte) ((shortValue >> 8) & 0xff);
-		return b;
+		return ByteUtil.shortToBytes(shortValue);
 	}
 
 	/**
-	 * byte[]转int值
+	 * byte[]转int值<br>
+	 * 默认以小端序转换
 	 *
 	 * @param bytes byte数组
 	 * @return int值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static int bytesToInt(byte[] bytes) {
-		return bytes[3] & 0xFF | //
-				(bytes[2] & 0xFF) << 8 | //
-				(bytes[1] & 0xFF) << 16 | //
-				(bytes[0] & 0xFF) << 24; //
+		return ByteUtil.bytesToInt(bytes);
 	}
 
 	/**
-	 * int转byte数组
+	 * int转byte数组<br>
+	 * 默认以小端序转换
 	 *
 	 * @param intValue int值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] intToBytes(int intValue) {
-		return new byte[] { //
-				(byte) ((intValue >> 24) & 0xFF), //
-				(byte) ((intValue >> 16) & 0xFF), //
-				(byte) ((intValue >> 8) & 0xFF), //
-				(byte) (intValue & 0xFF) //
-		};
+		return ByteUtil.intToBytes(intValue);
 	}
 
 	/**
 	 * long转byte数组<br>
+	 * 默认以小端序转换<br>
 	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
 	 *
 	 * @param longValue long值
 	 * @return byte数组
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static byte[] longToBytes(long longValue) {
-		// Magic number 8 should be defined as Long.SIZE / Byte.SIZE
-		final byte[] result = new byte[8];
-		for (int i = 7; i >= 0; i--) {
-			result[i] = (byte) (longValue & 0xFF);
-			longValue >>= 8;
-		}
-		return result;
+		return ByteUtil.longToBytes(longValue);
 	}
 
 	/**
 	 * byte数组转long<br>
+	 * 默认以小端序转换<br>
 	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
 	 *
 	 * @param bytes byte数组
 	 * @return long值
-	 * @since 3.2.0
+	 * @since 5.6.3
 	 */
 	public static long bytesToLong(byte[] bytes) {
-		// Magic number 8 should be defined as Long.SIZE / Byte.SIZE
-		long values = 0;
-		for (int i = 0; i < 8; i++) {
-			values <<= 8;
-			values |= (bytes[i] & 0xff);
-		}
-		return values;
+		return ByteUtil.bytesToLong(bytes);
 	}
 }

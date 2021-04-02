@@ -1365,7 +1365,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] reverse(T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static <T> T[]
+	reverse(T[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}

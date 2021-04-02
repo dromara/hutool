@@ -3,6 +3,7 @@ package cn.hutool.core.convert;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateException;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.ByteUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -194,8 +195,8 @@ public class ConvertTest {
 	}
 
 	@Test
-	public void toListTest(){
-		List<String> list = Arrays.asList("1","2");
+	public void toListTest() {
+		List<String> list = Arrays.asList("1", "2");
 		String str = Convert.toStr(list);
 		List<String> list2 = Convert.toList(String.class, str);
 		Assert.assertEquals("1", list2.get(0));
@@ -228,6 +229,13 @@ public class ConvertTest {
 		Assert.assertEquals("zhangsan", product.getName());
 		Assert.assertEquals("张三", product.getCName());
 		Assert.assertEquals("5.1.1", product.getVersion());
+	}
+
+	@Test
+	public void numberToByteArrayTest(){
+		// 测试Serializable转换为bytes，调用序列化转换
+		final byte[] bytes = Convert.toPrimitiveByteArray(12L);
+		Assert.assertArrayEquals(ByteUtil.longToBytes(12L), bytes);
 	}
 
 	@Test

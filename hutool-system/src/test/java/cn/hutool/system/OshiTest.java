@@ -6,9 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class OshiTest {
-	
+
 	@Test
-	public void getMemeryTest() {
+	public void getMemoryTest() {
 		long total = OshiUtil.getMemory().getTotal();
 		Assert.assertTrue(total > 0);
 	}

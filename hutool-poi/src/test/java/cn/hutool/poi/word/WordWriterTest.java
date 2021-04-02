@@ -1,6 +1,7 @@
 package cn.hutool.poi.word;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
@@ -11,10 +12,11 @@ import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WordWriterTest {
-	
+
 	@Test
 	@Ignore
 	public void writeTest() {
@@ -81,5 +83,16 @@ public class WordWriterTest {
 		writer.flush(FileUtil.file("d:/test/a.docx"));
 		// 关闭
 		writer.close();
+	}
+
+	@Test
+	public void overflowTest(){
+		final Word07Writer word07Writer = new Word07Writer();
+		final List<Object> list = ListUtil.list(false);
+		final List<Object> list2 = ListUtil.list(false);
+		list.add("溢出测试");
+		list2.add(list);
+		word07Writer.addTable(list);
+		word07Writer.close();
 	}
 }

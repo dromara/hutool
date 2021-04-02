@@ -298,7 +298,7 @@ public class ConverterRegistry implements Serializable {
 	 * @param <T>   转换的目标类型（转换器转换到的类型）
 	 * @param type  类型
 	 * @param value 值
-	 * @return 转换后的值，默认为<code>null</code>
+	 * @return 转换后的值，默认为{@code null}
 	 * @throws ConvertException 转换器不存在
 	 */
 	public <T> T convert(Type type, Object value) throws ConvertException {

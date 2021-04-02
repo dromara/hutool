@@ -13,7 +13,7 @@ import org.junit.Test;
 
 /**
  * 对称加密算法单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -25,7 +25,7 @@ public class SymmetricTest {
 
 		// 随机生成密钥
 		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
-		
+
 		// 构建
 		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
 
@@ -74,7 +74,7 @@ public class SymmetricTest {
 		String content = "test中文aaaaaaaaaaaaaaaaaaaaa";
 
 		AES aes = new AES(Mode.CTS, Padding.PKCS5Padding, "0CoJUm6Qyw8W8jud".getBytes(), "0102030405060708".getBytes());
-		
+
 		// 加密
 		byte[] encrypt = aes.encrypt(content);
 		// 解密
@@ -89,12 +89,12 @@ public class SymmetricTest {
 
 		Assert.assertEquals(content, decryptStr);
 	}
-	
+
 	@Test
 	public void aesTest4() {
 		String content = "4321c9a2db2e6b08987c3b903d8d11ff";
 		AES aes = new AES(Mode.CBC, Padding.PKCS5Padding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
-		
+
 		// 加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
 
@@ -105,6 +105,20 @@ public class SymmetricTest {
 	public void aesZeroPaddingTest() {
 		String content = RandomUtil.randomString(RandomUtil.randomInt(200));
 		AES aes = new AES(Mode.CBC, Padding.ZeroPadding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
+
+		// 加密为16进制表示
+		String encryptHex = aes.encryptHex(content);
+		// 解密
+		String decryptStr = aes.decryptStr(encryptHex);
+		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
+	public void aesPkcs7PaddingTest() {
+		String content = RandomUtil.randomString(RandomUtil.randomInt(200));
+		AES aes = new AES("CBC", "PKCS7Padding",
+				"0123456789ABHAEQ".getBytes(),
+				"DYgjCEIMVrj2W9xN".getBytes());
 
 		// 加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
@@ -148,21 +162,21 @@ public class SymmetricTest {
 
 		Assert.assertEquals(content, decryptStr);
 	}
-	
+
 	@Test
 	public void desTest3() {
 		String content = "test中文";
-		
+
 		DES des = new DES(Mode.CTS, Padding.PKCS5Padding, "0CoJUm6Qyw8W8jud".getBytes(), "01020304".getBytes());
-		
+
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
-		
+
 		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
-		
+
 		String encryptHex = des.encryptHex(content);
 		String decryptStr = des.decryptStr(encryptHex);
-		
+
 		Assert.assertEquals(content, decryptStr);
 	}
 
@@ -173,7 +187,7 @@ public class SymmetricTest {
 		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
 
 		DESede des = SecureUtil.desede(key);
-		
+
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
 
@@ -184,31 +198,31 @@ public class SymmetricTest {
 
 		Assert.assertEquals(content, decryptStr);
 	}
-	
+
 	@Test
 	public void desdeTest2() {
 		String content = "test中文";
-		
+
 		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
-		
+
 		DESede des = new DESede(Mode.CBC, Padding.PKCS5Padding, key, "12345678".getBytes());
-		
+
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
-		
+
 		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
-		
+
 		String encryptHex = des.encryptHex(content);
 		String decryptStr = des.decryptStr(encryptHex);
-		
+
 		Assert.assertEquals(content, decryptStr);
 	}
-	
+
 	@Test
 	public void vigenereTest() {
 		String content = "Wherethereisawillthereisaway";
 		String key = "CompleteVictory";
-		
+
 		String encrypt = Vigenere.encrypt(content, key);
 		Assert.assertEquals("zXScRZ]KIOMhQjc0\\bYRXZOJK[Vi", encrypt);
 		String decrypt = Vigenere.decrypt(encrypt, key);

@@ -520,26 +520,27 @@ public class PrimitiveArrayUtil {
 	// ---------------------------------------------------------------------- split
 
 	/**
-	 * 拆分byte数组为几个等份（最后一份可能小于len）
+	 * 拆分byte数组为几个等份（最后一份按照剩余长度分配空间）
 	 *
 	 * @param array 数组
 	 * @param len   每个小节的长度
 	 * @return 拆分后的数组
 	 */
 	public static byte[][] split(byte[] array, int len) {
-		int x = array.length / len;
-		int y = array.length % len;
-		int z = 0;
-		if (y != 0) {
-			z = 1;
+		int amount = array.length / len;
+		final int remainder = array.length % len;
+		if (remainder != 0) {
+			++amount;
 		}
-		byte[][] arrays = new byte[x + z][];
+		final byte[][] arrays = new byte[amount][];
 		byte[] arr;
-		for (int i = 0; i < x + z; i++) {
-			arr = new byte[len];
-			if (i == x + z - 1 && y != 0) {
-				System.arraycopy(array, i * len, arr, 0, y);
+		for (int i = 0; i < amount; i++) {
+			if (i == amount - 1 && remainder != 0) {
+				// 有剩余，按照实际长度创建
+				arr = new byte[remainder];
+				System.arraycopy(array, i * len, arr, 0, remainder);
 			} else {
+				arr = new byte[len];
 				System.arraycopy(array, i * len, arr, 0, len);
 			}
 			arrays[i] = arr;
