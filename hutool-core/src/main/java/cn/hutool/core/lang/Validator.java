@@ -951,6 +951,9 @@ public class Validator {
 	 * @return 是否为URL
 	 */
 	public static boolean isUrl(CharSequence value) {
+		if(StrUtil.isBlank(value)){
+			return false;
+		}
 		try {
 			new java.net.URL(StrUtil.str(value));
 		} catch (MalformedURLException e) {
