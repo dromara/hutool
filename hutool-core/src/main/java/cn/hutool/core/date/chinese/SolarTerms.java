@@ -166,7 +166,7 @@ public class SolarTerms {
 	 */
 	public static String getTerm(Date date) {
 		final DateTime dt = DateUtil.date(date);
-		return getTerm(dt.year(), dt.month() + 1, dt.dayOfMonth());
+		return getTerm0(dt.year(), dt.month() + 1, dt.dayOfMonth());
 	}
 
 
