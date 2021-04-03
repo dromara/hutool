@@ -50,23 +50,49 @@ public class MapValueProvider implements ValueProvider<String> {
 
 	@Override
 	public Object value(String key, Type valueType) {
-		Object value = map.get(key);
-		if (null == value) {
-			//检查下划线模式
-			value = map.get(StrUtil.toUnderlineCase(key));
-		}
-
+		Object value = map.get(getKey(key, valueType));
 		return Convert.convertWithCheck(valueType, value, null, this.ignoreError);
 	}
 
 	@Override
 	public boolean containsKey(String key) {
+		return map.containsKey(getKey(key, null));
+	}
+
+	/**
+	 * 获得map中可能包含的key
+	 *
+	 * @param key       map中可能包含的key
+	 * @param valueType 值类型，用于判断是否为Boolean，可以为null
+	 * @return map中可能包含的key
+	 */
+	private String getKey(String key, Type valueType) {
 		if (map.containsKey(key)) {
-			return true;
-		} else {
-			//检查下划线模式
-			return map.containsKey(StrUtil.toUnderlineCase(key));
+			return key;
 		}
+
+		//检查下划线模式
+		String containKey = StrUtil.toUnderlineCase(key);
+		if (map.containsKey(containKey)) {
+			return containKey;
+		}
+
+		//检查boolean类型
+		if (null == valueType || Boolean.class == valueType || boolean.class == valueType) {
+			//boolean类型字段字段名支持两种方式
+			containKey = StrUtil.upperFirstAndAddPre(key, "is");
+			if (map.containsKey(containKey)) {
+				return containKey;
+			}
+
+			//检查下划线模式
+			containKey = StrUtil.toUnderlineCase(containKey);
+			if (map.containsKey(containKey)) {
+				return containKey;
+			}
+		}
+
+		return key;
 	}
 
 }

@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,13 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Bean工具单元测试
@@ -201,6 +196,8 @@ public class BeanUtilTest {
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 		person.setSlow(true);
+		person.setBooleana(true);
+		person.setBooleanb(true);
 
 		Map<String, Object> map = BeanUtil.beanToMap(person);
 		Assert.assertEquals("sub名字", map.get("aliasSubName"));
@@ -211,9 +208,13 @@ public class BeanUtilTest {
 		Map<String, Object> map = MapUtil.newHashMap();
 		map.put("aliasSubName", "sub名字");
 		map.put("slow", true);
+		map.put("is_booleana", "1");
+		map.put("is_booleanb", true);
 
 		final SubPersonWithAlias subPersonWithAlias = BeanUtil.toBean(map, SubPersonWithAlias.class);
 		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
+		Assert.assertTrue(subPersonWithAlias.isBooleana());
+		Assert.assertEquals(true, subPersonWithAlias.getBooleanb());
 	}
 
 	@Test
@@ -360,11 +361,14 @@ public class BeanUtilTest {
 
 	@Getter
 	@Setter
+	@ToString
 	public static class SubPersonWithAlias extends Person {
 		// boolean参数值非isXXX形式
 		@Alias("aliasSubName")
 		private String subName;
 		private Boolean slow;
+		private boolean booleana;
+		private Boolean booleanb;
 	}
 
 	@Getter
