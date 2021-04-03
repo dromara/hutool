@@ -7,12 +7,7 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.crypto.symmetric.DES;
-import cn.hutool.crypto.symmetric.DESede;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import cn.hutool.crypto.symmetric.Vigenere;
+import cn.hutool.crypto.symmetric.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -219,5 +214,4 @@ public class SymmetricTest {
 		String decrypt = Vigenere.decrypt(encrypt, key);
 		Assert.assertEquals(content, decrypt);
 	}
-
 }

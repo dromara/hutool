@@ -1,25 +1,16 @@
 package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.crypto.test.digest.Md5Test;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
 
 public class AESTest {
@@ -121,6 +112,4 @@ public class AESTest {
 		final String decryptStr = aes.decryptStr(result1);
 		Assert.assertEquals(content, decryptStr);
 	}
-
-
 }
