@@ -1,6 +1,7 @@
 package cn.hutool.db.dialect;
 
 import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.impl.AnsiSqlDialect;
 import cn.hutool.db.dialect.impl.H2Dialect;
@@ -114,6 +115,12 @@ public class DialectFactory {
 		}
 		// 全部转为小写，忽略大小写
 		nameContainsProductInfo = StrUtil.cleanBlank(nameContainsProductInfo.toLowerCase());
+
+		// 首先判断是否为标准的JDBC URL，截取jdbc:xxxx:中间部分
+		final String name = ReUtil.getGroup1("jdbc:(.*?):", nameContainsProductInfo);
+		if(StrUtil.isNotBlank(name)){
+			nameContainsProductInfo = name;
+		}
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql")) {
