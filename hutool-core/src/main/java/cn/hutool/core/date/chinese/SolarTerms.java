@@ -4,6 +4,7 @@ import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -132,7 +133,7 @@ public class SolarTerms {
 	/**
 	 * 根据日期获取节气
 	 * @param date 日期
-	 * @return 返回指定日期所处的节气
+	 * @return 返回指定日期所处的节气，若不是一个节气则返回空字符串
 	 */
 	public static String getTerm(Date date) {
 		final DateTime dt = DateUtil.date(date);
@@ -143,7 +144,7 @@ public class SolarTerms {
 	/**
 	 * 根据农历日期获取节气
 	 * @param chineseDate 农历日期
-	 * @return 返回指定日期所处的节气
+	 * @return 返回指定农历日期所处的节气，若不是一个节气则返回空字符串
 	 */
 	public static String getTerm(ChineseDate chineseDate) {
 		return chineseDate.getTerm();
@@ -152,7 +153,7 @@ public class SolarTerms {
 	/**
 	 * 根据日期获取节气
 	 * @param date 日期
-	 * @return 返回指定日期所处的节气
+	 * @return 返回指定日期所处的节气，若不是一个节气则返回空字符串
 	 */
 	public static String getTerm(LocalDate date) {
 		return getTermInternal(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
@@ -163,7 +164,7 @@ public class SolarTerms {
 	 * @param year 公历年
 	 * @param mouth 公历月，从1开始
 	 * @param day 公历日，从1开始
-	 * @return 返回指定年月日所处的节气
+	 * @return 返回指定年月日所处的节气，若不是一个节气则返回空字符串
 	 */
 	public static String getTerm(int year, int mouth, int day) {
 		return getTerm(LocalDate.of(year, mouth, day));
@@ -171,10 +172,10 @@ public class SolarTerms {
 
 	/**
 	 * 根据年月日获取节气, 内部方法，不对月和日做有效校验
-	 * @param year 年
-	 * @param mouth 月，从1计数
-	 * @param day 日，从1计数
-	 * @return 返回指定年月日所处的节气
+	 * @param year 公历年
+	 * @param mouth 公历月，从1开始
+	 * @param day 公历日，从1开始
+	 * @return 返回指定年月日所处的节气，若不是一个节气则返回空字符串
 	 */
 	private static String getTermInternal(int year, int mouth, int day) {
 		if (year < 1900 || year > 2100) {
@@ -188,21 +189,21 @@ public class SolarTerms {
 		final int termInfo = Integer.parseInt(termTable.substring(segment * 5, (segment + 1) * 5), 16);
 		final String termInfoStr = String.valueOf(termInfo);
 
-		final String[] segmentTable = new String[24];
+		final String[] segmentTable = new String[4];
 		segmentTable[0] = termInfoStr.substring(0, 1);
 		segmentTable[1] = termInfoStr.substring(1, 3);
 		segmentTable[2] = termInfoStr.substring(3, 4);
 		segmentTable[3] = termInfoStr.substring(4, 6);
 
 		// 奇数月份的节气在前2个，偶数月份的节气在后两个
-		int segmentOffset = (mouth & 1) == 1 ? 0 : 2;
-		if (day < NumberUtil.parseInt(segmentTable[segmentOffset])) {
-			int idx = segment * 4 + segmentOffset - 1;
-			return TERMS[idx < 0 ? 23 : idx];
+		final int segmentOffset = (mouth & 1) == 1 ? 0 : 2;
+
+		if (day == Integer.parseInt(segmentTable[segmentOffset])) {
+			return TERMS[segment * 4 + segmentOffset];
 		}
-		if(day >= NumberUtil.parseInt(segmentTable[segmentOffset + 1])) {
+		if (day == Integer.parseInt(segmentTable[segmentOffset + 1])) {
 			return TERMS[segment * 4 + segmentOffset + 1];
 		}
-		return TERMS[segment * 4 + segmentOffset];
+		return StrUtil.EMPTY;
 	}
 }
