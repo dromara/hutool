@@ -30,7 +30,7 @@ public class LunarFestival {
 		L_FTV.put(new Pair<>(1, 10), "地日 石头生日");
 		L_FTV.put(new Pair<>(1, 12), "火日 老鼠娶媳妇日");
 		L_FTV.put(new Pair<>(1, 13), "上（试）灯日 关公升天日");
-		L_FTV.put(new Pair<>(1, 15), "元宵节");
+		L_FTV.put(new Pair<>(1, 15), "元宵节 上元节");
 		L_FTV.put(new Pair<>(1, 18), "落灯日");
 
 		// 二月
@@ -48,7 +48,7 @@ public class LunarFestival {
 		L_FTV.put(new Pair<>(4, 8), "佛诞节");
 
 		// 五月
-		L_FTV.put(new Pair<>(5, 5), "端午节");
+		L_FTV.put(new Pair<>(5, 5), "端午节 端阳节");
 
 		// 六月
 		L_FTV.put(new Pair<>(6, 6), "晒衣节 姑姑节");
@@ -59,7 +59,7 @@ public class LunarFestival {
 		L_FTV.put(new Pair<>(7, 7), "七夕");
 		L_FTV.put(new Pair<>(7, 14), "鬼节(南方)");
 		L_FTV.put(new Pair<>(7, 15), "中元节");
-		L_FTV.put(new Pair<>(7, 15), "盂兰盆节");
+		L_FTV.put(new Pair<>(7, 15), "盂兰盆节 中元节");
 		L_FTV.put(new Pair<>(7, 30), "地藏节");
 
 		// 八月
