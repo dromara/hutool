@@ -737,6 +737,7 @@ public class IdcardUtil {
 					", cityCode='" + cityCode + '\'' +
 					", birthDate=" + birthDate +
 					", gender=" + gender +
+					", age=" + age +
 					'}';
 		}
 	}
