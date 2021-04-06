@@ -33,7 +33,7 @@ public class PhoneUtil {
 	 * @param value 手机号码
 	 * @return 是否为香港手机号码
 	 * @since 5.6.3
-	 * @author dazer & ourslook
+	 * @author dazer, ourslook
 	 */
 	public static boolean isMobileHk(CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.MOBILE_HK, value);
@@ -56,7 +56,7 @@ public class PhoneUtil {
 	 * @param value 值
 	 * @return 是否为座机号码（中国）
 	 * @since 5.6.3
-	 * @author dazer & ourslook
+	 * @author dazer, ourslook
 	 */
 	public static boolean isTel400800(CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.TEL_400_800, value);
