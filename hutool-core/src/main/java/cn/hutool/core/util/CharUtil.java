@@ -419,7 +419,6 @@ public class CharUtil {
 	 * @return 转换后的字符
 	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">Unicode_symbols</a>
 	 * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Alphanumerics</a>
-	 * 有其他特殊的需求，可以到 维基百科 查找说明
 	 * @since 5.6.2
 	 */
 	public static char toCloseChar(char c) {

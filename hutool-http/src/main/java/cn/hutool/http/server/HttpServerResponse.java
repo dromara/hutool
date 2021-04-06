@@ -421,6 +421,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param length 长度
 	 * @param contentType 返回的类型
 	 * @param fileName    文件名
+	 * @return this
 	 * @since 5.2.7
 	 */
 	public HttpServerResponse write(InputStream in, int length, String contentType, String fileName) {

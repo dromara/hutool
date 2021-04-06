@@ -210,6 +210,7 @@ public class JSONConfig implements Serializable {
 	/**
 	 * 设置是否去除末尾多余0，例如如果为true,5.0返回5
 	 * @param stripTrailingZeros 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @return this
 	 * @since 5.6.2
 	 */
 	public JSONConfig setStripTrailingZeros(boolean stripTrailingZeros) {
