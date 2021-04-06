@@ -41,8 +41,8 @@ public class DateUtil extends CalendarUtil {
 	 */
 	private final static String[] wtb = { //
 			"sun", "mon", "tue", "wed", "thu", "fri", "sat", // 星期
-			"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", //
-			"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"//
+			"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", // 月份
+			"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"// 时间标准
 	};
 
 	/**
