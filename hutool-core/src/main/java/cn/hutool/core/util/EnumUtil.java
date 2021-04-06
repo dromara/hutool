@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * 枚举工具类
@@ -240,7 +239,7 @@ public class EnumUtil {
 		if (null == enums) {
 			return null;
 		}
-		final Map<String, Object> map = MapUtil.newHashMap(enums.length);
+		final Map<String, Object> map = new LinkedHashMap<>();
 		for (Enum<?> e : enums) {
 			map.put(e.name(), ReflectUtil.getFieldValue(e, fieldName));
 		}
