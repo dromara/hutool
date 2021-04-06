@@ -45,6 +45,7 @@ public class DesensitizedUtil {
 		PASSWORD,
 		//中国大陆车牌，包含普通车辆、新能源车辆
 		CAR_LICENSE,
+		//银行卡
 		BANK_CARD
 	}
 
@@ -60,7 +61,7 @@ public class DesensitizedUtil {
 	 * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
 	 * DesensitizedUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
 	 * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
-	 * DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "1101 **** **** **** 3256"
+	 * DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtils.DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
 	 * </pre>
 	 *
 	 * @param str              字符串
@@ -256,28 +257,32 @@ public class DesensitizedUtil {
 	/**
 	 * 银行卡号脱敏
 	 * eg: 1101 **** **** **** 3256
-	 * @param s 银行卡号
+	 *
+	 * @param bankCardNo 银行卡号
 	 * @return 脱敏之后的银行卡号
 	 * @since 5.6.3
 	 */
-	public static String bankCard(String s) {
-		if (StrUtil.isBlank(s)) {
-			return StrUtil.EMPTY;
+	public static String bankCard(String bankCardNo) {
+		if (StrUtil.isBlank(bankCardNo)) {
+			return bankCardNo;
 		}
-		s = StrUtil.trim(s);
-		if (s.length() < 9) {
-			return s;
+		bankCardNo = StrUtil.trim(bankCardNo);
+		if (bankCardNo.length() < 9) {
+			return bankCardNo;
 		}
-		String s1 = s.substring(0, 4);
-		String s2 = s.substring(s.length() - 4, s.length());
-		String sMiddle = s.substring(4, s.length() - 4);
-		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < sMiddle.length(); ++i) {
-			buf.append("*");
-			if ((i + 1) % 4 == 0) {
-				buf.append(" ");
+
+		final int length = bankCardNo.length();
+		final int midLength = length - 8;
+		final StringBuilder buf = new StringBuilder();
+
+		buf.append(bankCardNo, 0, 4);
+		for (int i = 0; i < midLength; ++i) {
+			if (i % 4 == 0) {
+				buf.append(CharUtil.SPACE);
 			}
+			buf.append('*');
 		}
-		return s1 + " " + buf.toString() + " " + s2 + "";
+		buf.append(CharUtil.SPACE).append(bankCardNo, length - 4, length);
+		return buf.toString();
 	}
 }

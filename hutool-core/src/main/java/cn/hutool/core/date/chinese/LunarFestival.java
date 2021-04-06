@@ -16,7 +16,8 @@ public class LunarFestival {
 	//农历节日  *表示放假日
 	// 来自：https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD%E4%BC%A0%E7%BB%9F%E8%8A%82%E6%97%A5/396100
 	private static final TableMap<Pair<Integer, Integer>, String> L_FTV = new TableMap<>(16);
-	static{
+
+	static {
 		// 节日
 		L_FTV.put(new Pair<>(1, 1), "春节");
 		L_FTV.put(new Pair<>(1, 2), "犬日");
@@ -85,7 +86,7 @@ public class LunarFestival {
 	/**
 	 * 获得节日列表
 	 *
-	 * @param year 年
+	 * @param year  年
 	 * @param month 月
 	 * @param day   日
 	 * @return 获得农历节日
@@ -93,8 +94,8 @@ public class LunarFestival {
 	 */
 	public static List<String> getFestivals(int year, int month, int day) {
 		// 春节判断，如果12月是小月，则29为除夕，否则30为除夕
-		if(12 == month && 29 == day){
-			if(29 == LunarInfo.monthDays(year, month)){
+		if (12 == month && 29 == day) {
+			if (29 == LunarInfo.monthDays(year, month)) {
 				day++;
 			}
 		}

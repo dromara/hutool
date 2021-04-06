@@ -3648,7 +3648,7 @@ public class CharSequenceUtil {
 	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
 	 * StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
 	 * StrUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
-	 * StrUtil.desensitized("11011111222233333256", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "1101 **** **** **** 3256"
+	 * StrUtil.desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
 	 * </pre>
 	 *
 	 * @param str              字符串

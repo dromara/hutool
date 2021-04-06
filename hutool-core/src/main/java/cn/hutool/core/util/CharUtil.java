@@ -11,43 +11,81 @@ import cn.hutool.core.text.ASCIIStrCache;
  */
 public class CharUtil {
 
-	/** 字符常量：空格符 {@code ' '} */
+	/**
+	 * 字符常量：空格符 {@code ' '}
+	 */
 	public static final char SPACE = ' ';
-	/** 字符常量：制表符 {@code '\t'} */
+	/**
+	 * 字符常量：制表符 {@code '\t'}
+	 */
 	public static final char TAB = '	';
-	/** 字符常量：点 {@code '.'} */
+	/**
+	 * 字符常量：点 {@code '.'}
+	 */
 	public static final char DOT = '.';
-	/** 字符常量：斜杠 {@code '/'} */
+	/**
+	 * 字符常量：斜杠 {@code '/'}
+	 */
 	public static final char SLASH = '/';
-	/** 字符常量：反斜杠 {@code '\\'} */
+	/**
+	 * 字符常量：反斜杠 {@code '\\'}
+	 */
 	public static final char BACKSLASH = '\\';
-	/** 字符常量：回车符 {@code '\r'} */
+	/**
+	 * 字符常量：回车符 {@code '\r'}
+	 */
 	public static final char CR = '\r';
-	/** 字符常量：换行符 {@code '\n'} */
+	/**
+	 * 字符常量：换行符 {@code '\n'}
+	 */
 	public static final char LF = '\n';
-	/** 字符常量：减号（连接符） {@code '-'} */
+	/**
+	 * 字符常量：减号（连接符） {@code '-'}
+	 */
 	public static final char DASHED = '-';
-	/** 字符常量：下划线 {@code '_'} */
+	/**
+	 * 字符常量：下划线 {@code '_'}
+	 */
 	public static final char UNDERLINE = '_';
-	/** 字符常量：逗号 {@code ','} */
+	/**
+	 * 字符常量：逗号 {@code ','}
+	 */
 	public static final char COMMA = ',';
-	/** 字符常量：花括号（左） <code>'{'</code> */
+	/**
+	 * 字符常量：花括号（左） <code>'{'</code>
+	 */
 	public static final char DELIM_START = '{';
-	/** 字符常量：花括号（右） <code>'}'</code> */
+	/**
+	 * 字符常量：花括号（右） <code>'}'</code>
+	 */
 	public static final char DELIM_END = '}';
-	/** 字符常量：中括号（左） {@code '['} */
+	/**
+	 * 字符常量：中括号（左） {@code '['}
+	 */
 	public static final char BRACKET_START = '[';
-	/** 字符常量：中括号（右） {@code ']'} */
+	/**
+	 * 字符常量：中括号（右） {@code ']'}
+	 */
 	public static final char BRACKET_END = ']';
-	/** 字符常量：双引号 {@code '"'} */
+	/**
+	 * 字符常量：双引号 {@code '"'}
+	 */
 	public static final char DOUBLE_QUOTES = '"';
-	/** 字符常量：单引号 {@code '\''} */
+	/**
+	 * 字符常量：单引号 {@code '\''}
+	 */
 	public static final char SINGLE_QUOTE = '\'';
-	/** 字符常量：与 {@code '&'} */
+	/**
+	 * 字符常量：与 {@code '&'}
+	 */
 	public static final char AMP = '&';
-	/** 字符常量：冒号 {@code ':'} */
+	/**
+	 * 字符常量：冒号 {@code ':'}
+	 */
 	public static final char COLON = ':';
-	/** 字符常量：艾特 {@code '@'} */
+	/**
+	 * 字符常量：艾特 {@code '@'}
+	 */
 	public static final char AT = '@';
 
 	/**
@@ -374,23 +412,23 @@ public class CharUtil {
 	 *     'A' -》 'Ⓐ'
 	 *     'a' -》 'ⓐ'
 	 * </pre>
-	 *
+	 * <p>
 	 * 获取带圈数字 /封闭式字母数字 ，从1-20,超过1-20报错
-	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">Unicode_symbols</a>
-	 * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Alphanumerics</a>
-	 * 有其他特殊的需求，可以到 维基百科 查找说明
 	 *
 	 * @param c 被转换的字符，如果字符不支持转换，返回原字符
 	 * @return 转换后的字符
+	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">Unicode_symbols</a>
+	 * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Alphanumerics</a>
+	 * 有其他特殊的需求，可以到 维基百科 查找说明
 	 * @since 5.6.2
 	 */
-	public static char toCloseChar(char c){
+	public static char toCloseChar(char c) {
 		int result = c;
-		if(c >='1' && c <= '9'){
+		if (c >= '1' && c <= '9') {
 			result = '①' + c - '1';
-		} else if(c >='A' && c <= 'Z'){
+		} else if (c >= 'A' && c <= 'Z') {
 			result = 'Ⓐ' + c - 'A';
-		} else if(c >='a' && c <= 'z'){
+		} else if (c >= 'a' && c <= 'z') {
 			result = 'ⓐ' + c - 'a';
 		}
 		return (char) result;
@@ -404,30 +442,20 @@ public class CharUtil {
 	 *     20 -》 '⑳'
 	 * </pre>
 	 * 也称作：封闭式字符，英文：Enclosed Alphanumerics
-	 * @author dazer
+	 *
 	 * @param number 被转换的数字
 	 * @return 转换后的字符
-	 * @since 5.6.2
-	 *
+	 * @author dazer
 	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">维基百科wikipedia-Unicode_symbols</a>
 	 * @see <a href="https://zh.wikipedia.org/wiki/Unicode%E5%AD%97%E7%AC%A6%E5%88%97%E8%A1%A8">维基百科wikipedia-Unicode字符列表</a>
 	 * @see <a href="https://coolsymbol.com/">coolsymbol</a>
 	 * @see <a href="https://baike.baidu.com/item/%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/112715?fr=aladdin">百度百科 特殊字符</a>
+	 * @since 5.6.2
 	 */
-	public static char toCloseByNumber(int number){
-		if(number > 20){
+	public static char toCloseByNumber(int number) {
+		if (number > 20) {
 			throw new IllegalArgumentException("Number must be [1-20]");
 		}
 		return (char) ('①' + number - 1);
-	}
-
-	/**
-	 * 获取带圈字符
-	 * Enclosed Alphanumerics
-	 * @since 5.6.3
-	 * @see CharUtil#toEnclosedAlphanumericsCircleByInt(int)
-	 */
-	public static char toEnclosedAlphanumericsCircleByInt(int number){
-		return CharUtil.toCloseByNumber(number);
 	}
 }

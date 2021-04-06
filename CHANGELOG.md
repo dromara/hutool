@@ -10,6 +10,9 @@
 * 【core   】     修改拆分byte数组时最后一组长度的规则（pr#1494@Github）
 * 【core   】     新增根据日期获取节气（pr#1496@Github）
 * 【core   】     mapToBean()添加对布尔值is前缀的识别（pr#294@Gitee）
+* 【core   】     农历十月十一月改为寒月和冬月（pr#301@Gitee）
+* 【core   】     增加港澳台电话正则（pr#301@Gitee）
+* 【core   】     增加银行卡号脱敏（pr#301@Gitee）
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）

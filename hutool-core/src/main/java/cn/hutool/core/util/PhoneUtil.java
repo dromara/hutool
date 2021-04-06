@@ -5,7 +5,12 @@ import cn.hutool.core.lang.Validator;
 
 
 /**
- * 手机号工具类
+ * 电话号码工具类，包括：
+ * <ul>
+ *     <li>手机号码</li>
+ *     <li>400、800号码</li>
+ *     <li>座机号码</li>
+ * </ul>
  *
  * @author dahuoyzs
  * @since 5.3.11
