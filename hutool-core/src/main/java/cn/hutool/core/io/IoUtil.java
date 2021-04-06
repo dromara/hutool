@@ -13,6 +13,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -160,11 +161,11 @@ public class IoUtil extends NioUtil {
 			for (int readSize; (readSize = in.read(buffer)) != EOF; ) {
 				out.write(buffer, 0, readSize);
 				size += readSize;
-				out.flush();
 				if (null != streamProgress) {
 					streamProgress.progress(size);
 				}
 			}
+			out.flush();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -771,7 +772,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 文件转为流
+	 * 文件转为{@link FileInputStream}
 	 *
 	 * @param file 文件
 	 * @return {@link FileInputStream}
@@ -785,7 +786,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * String 转为流
+	 * byte[] 转为{@link ByteArrayInputStream}
 	 *
 	 * @param content 内容bytes
 	 * @return 字节流
@@ -796,6 +797,20 @@ public class IoUtil extends NioUtil {
 			return null;
 		}
 		return new ByteArrayInputStream(content);
+	}
+
+	/**
+	 * {@link ByteArrayOutputStream}转为{@link ByteArrayInputStream}
+	 *
+	 * @param out {@link ByteArrayOutputStream}
+	 * @return 字节流
+	 * @since 5.3.6
+	 */
+	public static ByteArrayInputStream toStream(ByteArrayOutputStream out) {
+		if (out == null) {
+			return null;
+		}
+		return new ByteArrayInputStream(out.toByteArray());
 	}
 
 	/**
@@ -1069,9 +1084,9 @@ public class IoUtil extends NioUtil {
 			for (Object content : contents) {
 				if (content != null) {
 					osw.writeObject(content);
-					osw.flush();
 				}
 			}
+			osw.flush();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {

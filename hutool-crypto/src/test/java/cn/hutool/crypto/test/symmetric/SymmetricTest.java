@@ -1,5 +1,6 @@
 package cn.hutool.crypto.test.symmetric;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,15 +8,21 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.*;
+import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.symmetric.DES;
+import cn.hutool.crypto.symmetric.DESede;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.Vigenere;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * 对称加密算法单元测试
  *
  * @author Looly
- *
  */
 public class SymmetricTest {
 
@@ -111,6 +118,20 @@ public class SymmetricTest {
 		// 解密
 		String decryptStr = aes.decryptStr(encryptHex);
 		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
+	public void aesZeroPaddingTest2() {
+		String content = "RandomUtil.randomString(RandomUtil.randomInt(2000))";
+		AES aes = new AES(Mode.CBC, Padding.ZeroPadding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
+
+		final ByteArrayOutputStream encryptStream = new ByteArrayOutputStream();
+		aes.encrypt(IoUtil.toUtf8Stream(content), encryptStream, true);
+
+		final ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+		aes.decrypt(IoUtil.toStream(encryptStream), contentStream, true);
+
+		Assert.assertEquals(content, StrUtil.utf8Str(contentStream.toByteArray()));
 	}
 
 	@Test

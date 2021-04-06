@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.3 (2021-04-05)
+# 5.6.3 (2021-04-06)
 
 ### 新特性
 * 【core   】     修改数字转换的实现，增加按照指定端序转换（pr#1492@Github）
@@ -15,6 +15,7 @@
 * 【core   】     增加银行卡号脱敏（pr#301@Gitee）
 * 【cache  】     使用LongAddr代替AtomicLong（pr#301@Gitee）
 * 【cache  】     EnumUtil使用LinkedHashMap（pr#304@Gitee）
+* 【crypto 】     SymmetricCrypto支持大量数据加密解密（pr#1497@Gitee）
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）
