@@ -9,7 +9,7 @@ package cn.hutool.core.date.chinese;
 public class ChineseMonth {
 
 	private static final String[] MONTH_NAME = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"};
-	private static final String[] MONTH_NAME_TRADITIONAL = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "腊"};
+	private static final String[] MONTH_NAME_TRADITIONAL = {"正", "二", "三", "四", "五", "六", "七", "八", "九", "寒", "冬", "腊"};
 
 	/**
 	 * 当前农历月份是否为闰月

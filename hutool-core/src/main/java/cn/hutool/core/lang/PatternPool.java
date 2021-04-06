@@ -49,17 +49,33 @@ public class PatternPool {
 	public final static Pattern MONEY = Pattern.compile("^(\\d+(?:\\.\\d+)?)$");
 	/**
 	 * 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/
+	 * What is the maximum length of a valid email address? https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
+	 * 注意email 要宽松一点。比如 jetz.chong@hotmail.com、jetz-chong@ hotmail.com、jetz_chong@hotmail.com、dazhi.duan@com.cn 宽松一点把，都算是正常的邮箱
 	 */
-	// public final static Pattern EMAIL = Pattern.compile("(\\w|.)+@\\w+(\\.\\w+){1,2}");
 	public final static Pattern EMAIL = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])", Pattern.CASE_INSENSITIVE);
 	/**
 	 * 移动电话
 	 */
 	public final static Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[3-9]\\d{9}");
 	/**
+	 * 香港移动电话
+	 * eg: 中国香港： +852 5100 4810， 三位区域码+10位数字, 香港手机号码8位数
+	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+13位数字
+	 * 中国大陆 +86 Mainland China
+	 * 中国香港 +852 Hong Kong
+	 * 中国澳门 +853 Macau
+	 * 中国台湾 +886 Taiwan
+	 */
+	public final static Pattern MOBILE_HK = Pattern.compile("(?:0|852|\\+852)?\\d{8}");
+	/**
 	 * 座机号码
 	 */
 	public final static Pattern TEL = Pattern.compile("0\\d{2,3}-[1-9]\\d{6,7}");
+	/**
+	 * 座机号码+400+800电话
+	 * @see <a href="https://baike.baidu.com/item/800>800</a>
+	 */
+	public final static Pattern TEL_400_800 = Pattern.compile("(?:(?:0\\d{2,3}[\\- ]?[1-9]\\d{6,7})|(?:[48]00[\\- ]?[1-9]\\d{6}))");
 	/**
 	 * 18位身份证号码
 	 */

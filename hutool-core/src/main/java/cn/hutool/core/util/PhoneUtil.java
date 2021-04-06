@@ -24,6 +24,17 @@ public class PhoneUtil {
 	}
 
 	/**
+	 * 验证是否为手机号码（香港）
+	 * @param value 手机号码
+	 * @return 是否为香港手机号码
+	 * @since 5.6.3
+	 * @author dazer & ourslook
+	 */
+	public static boolean isMobileHk(CharSequence value) {
+		return Validator.isMatchRegex(PatternPool.MOBILE_HK, value);
+	}
+
+	/**
 	 * 验证是否为座机号码（中国）
 	 *
 	 * @param value 值
@@ -35,14 +46,26 @@ public class PhoneUtil {
 	}
 
 	/**
-	 * 验证是否为座机号码+手机号码（中国）
+	 * 验证是否为座机号码（中国）+ 400 + 800
 	 *
 	 * @param value 值
-	 * @return 是否为座机号码+手机号码（中国）
+	 * @return 是否为座机号码（中国）
+	 * @since 5.6.3
+	 * @author dazer & ourslook
+	 */
+	public static boolean isTel400800(CharSequence value) {
+		return Validator.isMatchRegex(PatternPool.TEL_400_800, value);
+	}
+
+	/**
+	 * 验证是否为座机号码+手机号码（CharUtil中国）+ 400 + 800电话 + 手机号号码（香港）
+	 *
+	 * @param value 值
+	 * @return 是否为座机号码+手机号码（中国）+手机号码（香港）
 	 * @since 5.3.11
 	 */
 	public static boolean isPhone(CharSequence value) {
-		return isMobile(value) || isTel(value);
+		return isMobile(value) || isTel400800(value) || isMobileHk(value);
 	}
 
 	/**
@@ -111,5 +134,4 @@ public class PhoneUtil {
 	public static CharSequence subAfter(CharSequence phone) {
 		return StrUtil.sub(phone, 7, 11);
 	}
-
 }

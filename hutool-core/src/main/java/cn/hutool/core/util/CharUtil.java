@@ -375,6 +375,11 @@ public class CharUtil {
 	 *     'a' -》 'ⓐ'
 	 * </pre>
 	 *
+	 * 获取带圈数字 /封闭式字母数字 ，从1-20,超过1-20报错
+	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">Unicode_symbols</a>
+	 * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Alphanumerics</a>
+	 * 有其他特殊的需求，可以到 维基百科 查找说明
+	 *
 	 * @param c 被转换的字符，如果字符不支持转换，返回原字符
 	 * @return 转换后的字符
 	 * @since 5.6.2
@@ -399,19 +404,30 @@ public class CharUtil {
 	 *     20 -》 '⑳'
 	 * </pre>
 	 * 也称作：封闭式字符，英文：Enclosed Alphanumerics
-	 * 见： 维基百科wikipedia-Unicode_symbols  https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols
-	 * 见： 维基百科wikipedia-Unicode字符列表   https://zh.wikipedia.org/wiki/Unicode%E5%AD%97%E7%AC%A6%E5%88%97%E8%A1%A8
-	 * 见： coolsymbol https://coolsymbol.com/
-	 * 见： 百度百科 https://baike.baidu.com/item/%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/112715?fr=aladdin
-	 *
+	 * @author dazer
 	 * @param number 被转换的数字
 	 * @return 转换后的字符
 	 * @since 5.6.2
+	 *
+	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">维基百科wikipedia-Unicode_symbols</a>
+	 * @see <a href="https://zh.wikipedia.org/wiki/Unicode%E5%AD%97%E7%AC%A6%E5%88%97%E8%A1%A8">维基百科wikipedia-Unicode字符列表</a>
+	 * @see <a href="https://coolsymbol.com/">coolsymbol</a>
+	 * @see <a href="https://baike.baidu.com/item/%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/112715?fr=aladdin">百度百科 特殊字符</a>
 	 */
 	public static char toCloseByNumber(int number){
 		if(number > 20){
 			throw new IllegalArgumentException("Number must be [1-20]");
 		}
 		return (char) ('①' + number - 1);
+	}
+
+	/**
+	 * 获取带圈字符
+	 * Enclosed Alphanumerics
+	 * @since 5.6.3
+	 * @see CharUtil#toEnclosedAlphanumericsCircleByInt(int)
+	 */
+	public static char toEnclosedAlphanumericsCircleByInt(int number){
+		return CharUtil.toCloseByNumber(number);
 	}
 }

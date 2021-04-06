@@ -36,7 +36,7 @@ public class ChineseDate {
 	private final int gyear;
 	//公历月
 	private final int gmonth;
-	//公里日
+	//公历日
 	private final int gday;
 
 	//是否闰年

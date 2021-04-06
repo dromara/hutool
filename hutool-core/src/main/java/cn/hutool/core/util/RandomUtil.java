@@ -486,7 +486,7 @@ public class RandomUtil {
 	 * 获得一个随机的字符串（只包含数字和字符） 并排除指定字符串
 	 *
 	 * @param length   字符串的长度
-	 * @param elemData 要排除的字符串
+	 * @param elemData 要排除的字符串,如：去重容易混淆的字符串，oO0、lL1、q9Q、pP
 	 * @return 随机字符串
 	 */
 	public static String randomStringWithoutStr(int length, String elemData) {
