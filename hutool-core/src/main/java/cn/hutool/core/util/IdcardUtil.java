@@ -662,6 +662,7 @@ public class IdcardUtil {
 		private final String cityCode;
 		private final DateTime birthDate;
 		private final Integer gender;
+		private final int age;
 
 		/**
 		 * 构造
@@ -673,6 +674,7 @@ public class IdcardUtil {
 			this.cityCode = IdcardUtil.getCityCodeByIdCard(idcard);
 			this.birthDate = IdcardUtil.getBirthDate(idcard);
 			this.gender = IdcardUtil.getGenderByIdCard(idcard);
+			this.age = IdcardUtil.getAgeByIdCard(idcard);
 		}
 
 		/**
@@ -718,6 +720,14 @@ public class IdcardUtil {
 		 */
 		public Integer getGender() {
 			return this.gender;
+		}
+
+		/**
+		 * 获取年龄
+		 * @return 年龄
+		 */
+		public int getAge() {
+			return age;
 		}
 
 		@Override
