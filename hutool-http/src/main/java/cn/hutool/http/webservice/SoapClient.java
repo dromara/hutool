@@ -661,9 +661,14 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 请求的Content-Type
 	 */
 	private String getXmlContentType() {
-		return SoapProtocol.SOAP_1_1.equals(this.protocol) ?
-				CONTENT_TYPE_SOAP11_TEXT_XML.concat(this.charset.toString()) :
-				CONTENT_TYPE_SOAP12_SOAP_XML.concat(this.charset.toString());
+		switch (this.protocol){
+			case SOAP_1_1:
+				return CONTENT_TYPE_SOAP11_TEXT_XML.concat(this.charset.toString());
+			case SOAP_1_2:
+				return CONTENT_TYPE_SOAP12_SOAP_XML.concat(this.charset.toString());
+			default:
+				throw new SoapRuntimeException("Unsupported protocol: {}", this.protocol);
+		}
 	}
 
 	/**
