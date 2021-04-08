@@ -54,8 +54,12 @@ public class SoapClient extends HttpBase<SoapClient> {
 
 	/**
 	 * XML消息体的Content-Type
+	 * soap1.1 : text/xml
+	 * soap1.2 : application/soap+xml
+	 * soap1.1与soap1.2区别:  https://www.cnblogs.com/qlqwjy/p/7577147.html
 	 */
-	private static final String TEXT_XML_CONTENT_TYPE = "text/xml;charset=";
+	private static final String CONTENT_TYPE_SOAP11_TEXT_XML = "text/xml;charset=";
+	private static final String CONTENT_TYPE_SOAP12_SOAP_XML = "application/soap+xml;charset=";
 
 	/**
 	 * 请求的URL地址
@@ -87,6 +91,12 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * 应用于方法上的命名空间URI
 	 */
 	private final String namespaceURI;
+	/**
+	 * Soap协议
+	 * soap1.1 : text/xml
+	 * soap1.2 : application/soap+xml
+	 */
+	private final SoapProtocol protocol;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -152,6 +162,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	public SoapClient(String url, SoapProtocol protocol, String namespaceURI) {
 		this.url = url;
 		this.namespaceURI = namespaceURI;
+		this.protocol = protocol;
 		init(protocol);
 	}
 
@@ -650,7 +661,9 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 请求的Content-Type
 	 */
 	private String getXmlContentType() {
-		return TEXT_XML_CONTENT_TYPE.concat(this.charset.toString());
+		return SoapProtocol.SOAP_1_1.equals(this.protocol) ?
+				CONTENT_TYPE_SOAP11_TEXT_XML.concat(this.charset.toString()) :
+				CONTENT_TYPE_SOAP12_SOAP_XML.concat(this.charset.toString());
 	}
 
 	/**
