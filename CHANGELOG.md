@@ -22,6 +22,7 @@
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）
 * 【db     】     修复数据库driver根据url的判断识别错误问题（issue#I3EWBI@Gitee）
 * 【json   】     修复JSONStrFormatter换行多余空行问题（issue#I3FA8B@Gitee）
+* 【core   】     修复UrlPath中的+被转义为空格%20的问题（issue#1501@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

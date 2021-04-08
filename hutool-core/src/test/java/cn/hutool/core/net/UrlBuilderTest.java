@@ -19,6 +19,13 @@ public class UrlBuilderTest {
 	}
 
 	@Test
+	public void buildTest2() {
+		// path中的+不做处理
+		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.CHARSET_UTF_8).build();
+		Assert.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
+	}
+
+	@Test
 	public void testHost() {
 		String buildUrl = UrlBuilder.create()
 				.setScheme("https")

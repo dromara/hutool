@@ -12,7 +12,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.body.MultipartBody;
@@ -157,7 +156,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 */
 	public HttpRequest(String url) {
-		this(UrlBuilder.ofHttp(url, CharsetUtil.CHARSET_UTF_8));
+		this(UrlBuilder.ofHttp(url));
 	}
 
 	/**

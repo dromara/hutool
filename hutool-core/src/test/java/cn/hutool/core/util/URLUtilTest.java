@@ -9,7 +9,7 @@ import java.net.URL;
 
 /**
  * URLUtil单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -26,24 +26,24 @@ public class URLUtilTest {
 		normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn//aaa/bbb", normalize);
 	}
-	
+
 	@Test
 	public void normalizeTest2() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
-		
+
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
 	}
-	
+
 	@Test
 	public void normalizeTest3() {
 		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url, true);
 		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
-		
+
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
 		Assert.assertEquals("http://www.hutool.cn//aaa/bbb?a=1&b=2", normalize);
@@ -59,7 +59,7 @@ public class URLUtilTest {
 		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", true);
 		Assert.assertEquals(url, normalize);
 	}
-	
+
 	@Test
 	public void formatTest() {
 		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
@@ -81,7 +81,7 @@ public class URLUtilTest {
 		String encode = URLUtil.encode(body);
 		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode);
 		Assert.assertEquals(body, URLUtil.decode(encode));
-		
+
 		String encode2 = URLUtil.encodeQuery(body);
 		Assert.assertEquals("366466+-+%E5%89%AF%E6%9C%AC.jpg", encode2);
 	}

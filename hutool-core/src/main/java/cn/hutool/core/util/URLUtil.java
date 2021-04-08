@@ -134,7 +134,7 @@ public class URLUtil {
 	 * @return URL
 	 * @since 5.5.2
 	 */
-	public static URI getStringURI(CharSequence content){
+	public static URI getStringURI(CharSequence content) {
 		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
 		return URI.create(contentStr);
 	}
@@ -471,6 +471,23 @@ public class URLUtil {
 	 * 解码application/x-www-form-urlencoded字符<br>
 	 * 将%开头的16进制表示的内容解码。
 	 *
+	 * @param content       被解码内容
+	 * @param charset       编码，null表示不解码
+	 * @param isPlusToSpace 是否+转换为空格
+	 * @return 编码后的字符
+	 * @since 5.6.3
+	 */
+	public static String decode(String content, Charset charset, boolean isPlusToSpace) {
+		if (null == charset) {
+			return content;
+		}
+		return URLDecoder.decode(content, charset, isPlusToSpace);
+	}
+
+	/**
+	 * 解码application/x-www-form-urlencoded字符<br>
+	 * 将%开头的16进制表示的内容解码。
+	 *
 	 * @param content URL
 	 * @param charset 编码
 	 * @return 解码后的URL
@@ -705,7 +722,7 @@ public class URLUtil {
 	 *
 	 * @param url          URL字符串
 	 * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
-	 * @param replaceSlash  是否替换url body中的 //
+	 * @param replaceSlash 是否替换url body中的 //
 	 * @return 标准化后的URL字符串
 	 * @since 5.5.5
 	 */

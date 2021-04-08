@@ -77,7 +77,7 @@ public enum ContentType {
 	}
 
 	/**
-	 * 是否为默认Content-Type，默认包括<code>null</code>和application/x-www-form-urlencoded
+	 * 是否为默认Content-Type，默认包括{@code null}和application/x-www-form-urlencoded
 	 *
 	 * @param contentType 内容类型
 	 * @return 是否为默认Content-Type

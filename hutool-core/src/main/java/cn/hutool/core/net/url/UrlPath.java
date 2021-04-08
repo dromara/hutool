@@ -2,6 +2,7 @@ package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -97,8 +98,6 @@ public class UrlPath {
 	 * @return this
 	 */
 	public UrlPath parse(String path, Charset charset) {
-		UrlPath urlPath = new UrlPath();
-
 		if (StrUtil.isNotEmpty(path)) {
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 			if(StrUtil.endWith(path, CharUtil.SLASH)){
@@ -108,11 +107,11 @@ public class UrlPath {
 			path = fixPath(path);
 			final List<String> split = StrUtil.split(path, '/');
 			for (String seg : split) {
-				addInternal(URLUtil.decode(seg, charset), false);
+				addInternal(URLDecoder.decodeForPath(seg, charset), false);
 			}
 		}
 
-		return urlPath;
+		return this;
 	}
 
 	/**
