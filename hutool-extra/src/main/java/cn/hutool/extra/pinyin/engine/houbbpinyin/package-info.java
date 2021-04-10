@@ -17,4 +17,4 @@
  *
  * @author looly
  */
-package cn.hutool.extra.pinyin.engine.pinyin;
+package cn.hutool.extra.pinyin.engine.houbbpinyin;

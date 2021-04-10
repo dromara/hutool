@@ -1,13 +1,14 @@
-package cn.hutool.extra.pinyin.engine.pinyin;
+package cn.hutool.extra.pinyin.engine.houbbpinyin;
 
+import cn.hutool.extra.pinyin.PinyinEngine;
 import com.github.houbb.pinyin.constant.enums.PinyinStyleEnum;
 import com.github.houbb.pinyin.util.PinyinHelper;
 
 /**
- * 封装了 Pinyin 的引擎。
+ * 封装了 houbb Pinyin 的引擎。
  *
  * <p>
- * pinyin(https://github.com/houbb/pinyin)封装。
+ * houbb pinyin(https://github.com/houbb/pinyin)封装。
  * </p>
  *
  * <p>
@@ -22,7 +23,7 @@ import com.github.houbb.pinyin.util.PinyinHelper;
  *
  * @author looly
  */
-public class PinyinEngine implements cn.hutool.extra.pinyin.PinyinEngine {
+public class HoubbPinyinEngine implements PinyinEngine {
 
 	/**
 	 * 汉字拼音输出的格式
@@ -32,7 +33,7 @@ public class PinyinEngine implements cn.hutool.extra.pinyin.PinyinEngine {
 	/**
 	 * 构造
 	 */
-	public PinyinEngine() {
+	public HoubbPinyinEngine() {
 		this(null);
 	}
 
@@ -41,7 +42,7 @@ public class PinyinEngine implements cn.hutool.extra.pinyin.PinyinEngine {
 	 *
 	 * @param format 格式
 	 */
-	public PinyinEngine(PinyinStyleEnum format) {
+	public HoubbPinyinEngine(PinyinStyleEnum format) {
 		init(format);
 	}
 
@@ -67,7 +68,7 @@ public class PinyinEngine implements cn.hutool.extra.pinyin.PinyinEngine {
 	@Override
 	public String getPinyin(String str, String separator) {
 		String result;
-		result = PinyinHelper.toPinyin(str, format);
+		result = PinyinHelper.toPinyin(str, format, separator);
 		return result;
 	}
 }

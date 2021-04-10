@@ -2,3 +2,4 @@ cn.hutool.extra.pinyin.engine.tinypinyin.TinyPinyinEngine
 cn.hutool.extra.pinyin.engine.jpinyin.JPinyinEngine
 cn.hutool.extra.pinyin.engine.pinyin4j.Pinyin4jEngine
 cn.hutool.extra.pinyin.engine.bopomofo4j.Bopomofo4jEngine
+cn.hutool.extra.pinyin.engine.houbbpinyin.HoubbPinyinEngine
