@@ -22,6 +22,8 @@
 * 【extra  】     添加Houbb Pinyin支持（pr#1506@Github）
 * 【core   】     添加LambdaUtil（pr#295@Gitee）
 * 【core   】     添加StrPool和CharPool
+* 【extra  】     CglibUtil增加toBean和fillBean方法
+* 【db     】     增加DriverNamePool
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）

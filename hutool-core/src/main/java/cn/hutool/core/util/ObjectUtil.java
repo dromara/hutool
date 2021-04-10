@@ -4,14 +4,8 @@ import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -427,24 +421,8 @@ public class ObjectUtil {
 	 * @return 克隆后的对象
 	 * @throws UtilException IO异常和ClassNotFoundException封装
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T cloneByStream(T obj) {
-		if (false == (obj instanceof Serializable)) {
-			return null;
-		}
-		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
-		ObjectOutputStream out = null;
-		try {
-			out = new ObjectOutputStream(byteOut);
-			out.writeObject(obj);
-			out.flush();
-			final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
-			return (T) in.readObject();
-		} catch (Exception e) {
-			throw new UtilException(e);
-		} finally {
-			IoUtil.close(out);
-		}
+		return SerializeUtil.clone(obj);
 	}
 
 	/**
@@ -456,12 +434,7 @@ public class ObjectUtil {
 	 * @return 序列化后的字节码
 	 */
 	public static <T> byte[] serialize(T obj) {
-		if (false == (obj instanceof Serializable)) {
-			return null;
-		}
-		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
-		IoUtil.writeObjects(byteOut, false, (Serializable) obj);
-		return byteOut.toByteArray();
+		return SerializeUtil.serialize(obj);
 	}
 
 	/**
@@ -477,7 +450,7 @@ public class ObjectUtil {
 	 * @return 反序列化后的对象
 	 */
 	public static <T> T deserialize(byte[] bytes) {
-		return IoUtil.readObj(new ByteArrayInputStream(bytes));
+		return SerializeUtil.deserialize(bytes);
 	}
 
 	/**
@@ -612,7 +585,7 @@ public class ObjectUtil {
 	 * @param objs 被检查对象
 	 * @return 是否存在
 	 * @since 5.5.3
-	 * @see ArrayUtil#hasNull(Object[]) 
+	 * @see ArrayUtil#hasNull(Object[])
 	 */
 	public static boolean hasNull(Object... objs) {
 		return ArrayUtil.hasNull(objs);

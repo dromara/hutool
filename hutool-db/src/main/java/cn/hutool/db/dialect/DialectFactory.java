@@ -23,40 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author loolly
  *
  */
-public class DialectFactory {
-
-	/** JDBC 驱动 MySQL */
-	public static final String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
-	/** JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制 */
-	public static final String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
-	/** JDBC 驱动 Oracle */
-	public static final String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
-	/** JDBC 驱动 Oracle，旧版使用 */
-	public static final String DRIVER_ORACLE_OLD = "oracle.jdbc.driver.OracleDriver";
-	/** JDBC 驱动 PostgreSQL */
-	public static final String DRIVER_POSTGRESQL = "org.postgresql.Driver";
-	/** JDBC 驱动 SQLLite3 */
-	public static final String DRIVER_SQLLITE3 = "org.sqlite.JDBC";
-	/** JDBC 驱动 SQLServer */
-	public static final String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	/** JDBC 驱动 Hive */
-	public static final String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
-	/** JDBC 驱动 Hive2 */
-	public static final String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
-	/** JDBC 驱动 H2 */
-	public static final String DRIVER_H2 = "org.h2.Driver";
-	/** JDBC 驱动 Derby */
-	public static final String DRIVER_DERBY = "org.apache.derby.jdbc.AutoloadedDriver";
-	/** JDBC 驱动 HSQLDB */
-	public static final String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
-	/** JDBC 驱动 达梦7 */
-	public static final String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
-	/** JDBC 驱动 人大金仓 */
-	public static final String DRIVER_KINGBASE8 = "com.kingbase8.Driver";
-	/** JDBC 驱动 Ignite thin */
-	public static final String DRIVER_IGNITE_THIN = "org.apache.ignite.IgniteJdbcThinDriver";
-	/** JDBC 驱动 ClickHouse */
-	public static final String DRIVER_CLICK_HOUSE = "ru.yandex.clickhouse.ClickHouseDriver";
+public class DialectFactory implements DriverNamePool{
 
 	private static final Map<DataSource, Dialect> DIALECT_POOL = new ConcurrentHashMap<>();
 
@@ -123,7 +90,7 @@ public class DialectFactory {
 		}
 
 		String driver = null;
-		if (nameContainsProductInfo.contains("mysql")) {
+		if (nameContainsProductInfo.contains("mysql") || nameContainsProductInfo.contains("cobar")) {
 			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
 		} else if (nameContainsProductInfo.contains("oracle")) {
 			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
@@ -131,7 +98,7 @@ public class DialectFactory {
 			driver = DRIVER_POSTGRESQL;
 		} else if (nameContainsProductInfo.contains("sqlite")) {
 			driver = DRIVER_SQLLITE3;
-		} else if (nameContainsProductInfo.contains("sqlserver")) {
+		} else if (nameContainsProductInfo.contains("sqlserver") || nameContainsProductInfo.contains("microsoft")) {
 			driver = DRIVER_SQLSERVER;
 		} else if (nameContainsProductInfo.contains("hive")) {
 			driver = DRIVER_HIVE;
@@ -155,6 +122,30 @@ public class DialectFactory {
 		} else if (nameContainsProductInfo.contains("clickhouse")) {
 			// ClickHouse
 			driver = DRIVER_CLICK_HOUSE;
+		} else if (nameContainsProductInfo.contains("highgo")) {
+			// 瀚高
+			driver = DRIVER_HIGHGO;
+		} else if (nameContainsProductInfo.contains("db2")) {
+			// DB2
+			driver = DRIVER_DB2;
+		} else if (nameContainsProductInfo.contains("xugu")) {
+			// 虚谷
+			driver = DRIVER_XUGU;
+		} else if (nameContainsProductInfo.contains("phoenix")) {
+			// Apache Phoenix
+			driver = DRIVER_PHOENIX;
+		} else if (nameContainsProductInfo.contains("zenith")) {
+			// 华为高斯
+			driver = DRIVER_GAUSS;
+		} else if (nameContainsProductInfo.contains("gbase")) {
+			// 华为高斯
+			driver = DRIVER_GBASE;
+		} else if (nameContainsProductInfo.contains("oscar")) {
+			// 神州数据库
+			driver = DRIVER_OSCAR;
+		} else if (nameContainsProductInfo.contains("sybase")) {
+			// 神州数据库
+			driver = DRIVER_SYBASE;
 		}
 
 		return driver;
