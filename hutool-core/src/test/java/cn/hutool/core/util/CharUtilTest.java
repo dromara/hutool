@@ -37,6 +37,9 @@ public class CharUtilTest {
 
 		char a3 = '\u3000';
 		Assert.assertTrue(CharUtil.isBlankChar(a3));
+
+		char a4 = '\u0000';
+		Assert.assertTrue(CharUtil.isBlankChar(a4));
 	}
 
 	@Test
