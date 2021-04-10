@@ -334,7 +334,8 @@ public class CharUtil {
 		return Character.isWhitespace(c)
 				|| Character.isSpaceChar(c)
 				|| c == '\ufeff'
-				|| c == '\u202a';
+				|| c == '\u202a'
+				|| c == '\u0000';
 	}
 
 	/**
