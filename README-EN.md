@@ -136,8 +136,7 @@ compile 'cn.hutool:hutool-all:5.6.3'
 
 ## Download
 
-- [Maven1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.6.3/)
-- [Maven2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.6.3/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.6.3/)
 
 > note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -195,7 +194,8 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 
 If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
 
-[gitee donate](https://gitee.com/dromara/hutool)
+[Gitee donate](https://gitee.com/dromara/hutool)
+[Dromara donate](https://dromara.gitee.io/donate.html)
 
 ## WeChat Official Account
 

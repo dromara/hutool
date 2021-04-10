@@ -1,4 +1,4 @@
 # These are supported funding model platforms
 
 github: [looly]
-custom: https://gitee.com/dromara/hutool
+custom: ['https://gitee.com/dromara/hutool', 'https://dromara.gitee.io/donate.html']
