@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.3 (2021-04-08)
+# 5.6.3 (2021-04-10)
 
 ### 新特性
 * 【core   】     修改数字转换的实现，增加按照指定端序转换（pr#1492@Github）
@@ -17,12 +17,14 @@
 * 【cache  】     EnumUtil使用LinkedHashMap（pr#304@Gitee）
 * 【crypto 】     SymmetricCrypto支持大量数据加密解密（pr#1497@Gitee）
 * 【http   】     SoapClient增加针对不同协议的头信息（pr#305@Gitee）
+* 【http   】     HttpRequest支持307、308状态码识别（issue#1504@Gitee）
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）
 * 【db     】     修复数据库driver根据url的判断识别错误问题（issue#I3EWBI@Gitee）
 * 【json   】     修复JSONStrFormatter换行多余空行问题（issue#I3FA8B@Gitee）
 * 【core   】     修复UrlPath中的+被转义为空格%20的问题（issue#1501@Github）
+* 【core   】     修复DateUtil.parse方法对UTC时间毫秒少于3位不识别问题（issue#1503@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

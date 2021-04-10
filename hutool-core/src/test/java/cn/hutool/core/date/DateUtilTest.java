@@ -560,6 +560,23 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void parseUTCTest2(){
+		// issue1503@Github
+		// 检查不同毫秒长度都可以正常匹配
+		String utcTime="2021-03-30T12:56:51.3Z";
+		DateTime parse = DateUtil.parseUTC(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+
+		utcTime="2021-03-30T12:56:51.34Z";
+		parse = DateUtil.parseUTC(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+
+		utcTime="2021-03-30T12:56:51.345Z";
+		parse = DateUtil.parseUTC(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+	}
+
+	@Test
 	public void parseCSTTest(){
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 

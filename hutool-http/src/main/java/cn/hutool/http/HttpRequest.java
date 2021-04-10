@@ -1126,7 +1126,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+				if (HttpStatus.isRedirected(responseCode)) {
 					setUrl(httpConnection.header(Header.LOCATION));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
