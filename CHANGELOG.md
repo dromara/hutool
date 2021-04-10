@@ -20,6 +20,8 @@
 * 【http   】     HttpRequest支持307、308状态码识别（issue#1504@Github）
 * 【core   】     CharUtil.isBlankChar增加\u0000判断（pr#1505@Github）
 * 【extra  】     添加Houbb Pinyin支持（pr#1506@Github）
+* 【core   】     添加LambdaUtil（pr#295@Gitee）
+* 【core   】     添加StrPool和CharPool
 
 ### Bug修复
 * 【core   】     修复Validator.isUrl()传空返回true（issue#I3ETTY@Gitee）

@@ -193,6 +193,39 @@ public class ModifierUtil {
 		return hasModifier(clazz, ModifierType.STATIC);
 	}
 
+	/**
+	 * 是否是合成字段（由java编译器生成的）
+	 *
+	 * @param field 字段
+	 * @return 是否是合成字段
+	 * @since 5.6.3
+	 */
+	public static boolean isSynthetic(Field field) {
+		return field.isSynthetic();
+	}
+
+	/**
+	 * 是否是合成方法（由java编译器生成的）
+	 *
+	 * @param method 方法
+	 * @return 是否是合成方法
+	 * @since 5.6.3
+	 */
+	public static boolean isSynthetic(Method method) {
+		return method.isSynthetic();
+	}
+
+	/**
+	 * 是否是合成类（由java编译器生成的）
+	 *
+	 * @param clazz 类
+	 * @return 是否是合成
+	 * @since 5.6.3
+	 */
+	public static boolean isSynthetic(Class<?> clazz) {
+		return clazz.isSynthetic();
+	}
+
 	//-------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 多个修饰符做“与”操作，表示同时存在多个修饰符
