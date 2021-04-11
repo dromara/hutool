@@ -195,6 +195,7 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
 
 [Gitee donate](https://gitee.com/dromara/hutool)
+
 [Dromara donate](https://dromara.gitee.io/donate.html)
 
 ## WeChat Official Account

@@ -203,8 +203,9 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 点击以下链接，将页面拉到最下方点击“捐赠”即可。
 
-[前往捐赠](https://gitee.com/dromara/hutool)
-[Dromara组织捐赠](https://dromara.gitee.io/donate.html)
+[Gitee上捐赠](https://gitee.com/dromara/hutool)
+
+[捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
 
 ## 公众号
 
