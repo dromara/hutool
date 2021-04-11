@@ -1,10 +1,13 @@
 package cn.hutool.core.date.format;
 
+import cn.hutool.core.date.DatePattern;
+
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.ParsePosition;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -370,6 +373,27 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	 */
 	public int getMaxLengthEstimate() {
 		return printer.getMaxLengthEstimate();
+	}
+
+	// convert DateTimeFormatter
+	// -----------------------------------------------------------------------
+
+	/**
+	 * 便捷获取 DateTimeFormatter
+	 * 由于 {@link DatePattern} 很大一部分的格式没有提供 {@link DateTimeFormatter},因此这里提供快捷获取方式
+	 * @return DateTimeFormatter
+	 * @author dazer & neusoft
+	 * @since 5.6.4
+	 */
+	public DateTimeFormatter getDateTimeFormatter() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.getPattern());
+		if (this.getLocale() != null) {
+			formatter = formatter.withLocale(this.getLocale());
+		}
+		if (this.getTimeZone() != null) {
+			formatter = formatter.withZone(this.getTimeZone().toZoneId());
+		}
+		return formatter;
 	}
 
 	// Basics
