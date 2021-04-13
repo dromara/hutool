@@ -382,7 +382,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	 * 便捷获取 DateTimeFormatter
 	 * 由于 {@link DatePattern} 很大一部分的格式没有提供 {@link DateTimeFormatter},因此这里提供快捷获取方式
 	 * @return DateTimeFormatter
-	 * @author dazer & neusoft
+	 * @author dazer neusoft
 	 * @since 5.6.4
 	 */
 	public DateTimeFormatter getDateTimeFormatter() {
