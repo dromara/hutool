@@ -1,7 +1,9 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.handler.EntityListHandler;
@@ -279,7 +281,7 @@ public class SqlConnRunner extends DialectRunner {
 	}
 
 	/**
-	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql)
+	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) as _count
 	 *
 	 * @param conn      数据库连接对象
 	 * @param selectSql 查询语句
@@ -287,7 +289,16 @@ public class SqlConnRunner extends DialectRunner {
 	 * @throws SQLException SQL异常
 	 */
 	public long count(Connection conn, CharSequence selectSql) throws SQLException {
-		SqlBuilder sqlBuilder = SqlBuilder.of(selectSql).insertPreFragment("SELECT count(1) from(").append(")");
+		Assert.notBlank(selectSql, "Select SQL must be not blank!");
+		final int orderByIndex = StrUtil.indexOfIgnoreCase(selectSql, " order by");
+		if(orderByIndex > 0){
+			selectSql = StrUtil.subPre(selectSql, orderByIndex);
+		}
+
+		SqlBuilder sqlBuilder = SqlBuilder.of(selectSql)
+				.insertPreFragment("SELECT count(1) from(")
+				// issue#I3IJ8X@Gitee，在子查询时需设置单独别名，此处为了防止和用户的表名冲突，使用自定义的较长别名
+				.append(") as _hutool_alias_count_");
 		return page(conn, sqlBuilder, null, new NumberHandler()).intValue();
 	}
 
