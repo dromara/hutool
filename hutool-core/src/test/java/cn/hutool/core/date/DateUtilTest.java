@@ -701,12 +701,17 @@ public class DateUtilTest {
 	@Test
 	public void compareTest() {
 		Date date1 = DateUtil.parse("2021-04-13 23:59:59.999");
-		Date date2 = DateUtil.parse("2021-04-13 23:10:10");
+		Date date2 = DateUtil.parse("2021-04-13 23:59:10");
 
 		Assert.assertEquals(1, DateUtil.compare(date1, date2));
 		Assert.assertEquals(1, DateUtil.compare(date1, date2, DatePattern.NORM_DATETIME_PATTERN));
 		Assert.assertEquals(0, DateUtil.compare(date1, date2, DatePattern.NORM_DATE_PATTERN));
 		Assert.assertEquals(0, DateUtil.compare(date1, date2, DatePattern.NORM_DATETIME_MINUTE_PATTERN));
+
+
+		Date date11 = DateUtil.parse("2021-04-13 23:59:59.999");
+		Date date22 = DateUtil.parse("2021-04-11 23:10:10");
+		Assert.assertEquals(0, DateUtil.compare(date11, date22, DatePattern.NORM_MONTH_PATTERN));
 	}
 
 	@Test
