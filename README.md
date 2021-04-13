@@ -197,6 +197,8 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 [![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
 
+[![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
+
 ## 捐赠
 
 如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
