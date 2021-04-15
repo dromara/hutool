@@ -1938,7 +1938,7 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 获得指定月份的总天数
 	 *
-	 * @param month      年份
+	 * @param month      月份
 	 * @param isLeapYear 是否闰年
 	 * @return 天
 	 * @since 5.4.2
