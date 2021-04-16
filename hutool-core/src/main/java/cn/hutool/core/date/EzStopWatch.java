@@ -65,7 +65,7 @@ public class EzStopWatch{
     /**
      * 保证只有指定线程才能一直持有EzStopWatch对象，防止内存泄露
      */
-    private static String USABLE_THREAD_MASK = "";
+    private static String USEABLE_THREAD_MASK = "";
     
     static {
         Properties properties = new Properties();
@@ -76,15 +76,15 @@ public class EzStopWatch{
             try {
                 fileInputStream = new FileInputStream(new File(resource.getFile()));
                 properties.load(fileInputStream);
-                USABLE_THREAD_MASK = properties.getProperty("threadMask");
+                USEABLE_THREAD_MASK = properties.getProperty("threadMask");
             } catch (IOException ignore) {
                 System.out.println("Failed to read target thread name, default log name will be enabled");;
             }
         }
         
-        if (USABLE_THREAD_MASK == null || "".equals(USABLE_THREAD_MASK)) {
+        if (USEABLE_THREAD_MASK == null || "".equals(USEABLE_THREAD_MASK)) {
             //不做任何配置的话,只有执行日志打印的线程可长期持有
-            USABLE_THREAD_MASK = "log";
+            USEABLE_THREAD_MASK = "log";
         }
     }
     
@@ -150,7 +150,7 @@ public class EzStopWatch{
      * EzStopWatch 只在指定的线程池的线程中复用，不能是个线程就存着，容易造成内存泄露
      */
     private void cleaner() {
-        if (isReuse && !Thread.currentThread().getName().contains(USABLE_THREAD_MASK)) {
+        if (isReuse && !Thread.currentThread().getName().contains(USEABLE_THREAD_MASK)) {
             ezThreadLocal.remove();
         }
     }
