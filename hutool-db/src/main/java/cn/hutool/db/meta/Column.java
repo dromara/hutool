@@ -51,6 +51,11 @@ public class Column implements Serializable, Cloneable {
 	 * 是否自增
 	 */
 	private boolean autoIncrement;
+
+	/**
+	 *  default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be <code>null</code>)
+	 */
+	private String columnDef;
 	/**
 	 * 是否为主键
 	 */
@@ -153,6 +158,7 @@ public class Column implements Serializable, Cloneable {
 		this.size = columnMetaRs.getInt("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.comment = columnMetaRs.getString("REMARKS");
+		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
 
 		// 保留小数位数
 		try {
@@ -387,6 +393,26 @@ public class Column implements Serializable, Cloneable {
 		this.isPk = isPk;
 		return this;
 	}
+	/**
+	 * 获取默认值
+	 *
+	 * @return 默认值
+	 */
+	public String getColumnDef() {
+		return columnDef;
+	}
+
+	/**
+	 * 设置默认值
+	 *
+	 * @param columnDef 默认值
+	 * @return this
+	 */
+	public Column setColumnDef(String columnDef) {
+		this.columnDef = columnDef;
+		return this;
+	}
+
 	// ----------------------------------------------------- Getters and Setters end
 
 	@Override
