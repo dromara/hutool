@@ -51,9 +51,9 @@ public class Column implements Serializable, Cloneable {
 	 * 是否自增
 	 */
 	private boolean autoIncrement;
-
 	/**
-	 *  default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be <code>null</code>)
+	 * 字段默认值<br>
+	 *  default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be {@code null})
 	 */
 	private String columnDef;
 	/**
