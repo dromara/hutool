@@ -1,6 +1,7 @@
 package cn.hutool.core.convert;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class NumberChineseFormatterTest {
@@ -88,5 +89,11 @@ public class NumberChineseFormatterTest {
 		Assert.assertEquals(1012, NumberChineseFormatter.chineseToNumber("一千零一十二"));
 		Assert.assertEquals(1000000, NumberChineseFormatter.chineseToNumber("一百万"));
 		Assert.assertEquals(2000100112, NumberChineseFormatter.chineseToNumber("二十亿零一十万零一百一十二"));
+	}
+
+	@Test
+	@Ignore
+	public void chineseToNumberTest2(){
+		Assert.assertEquals(120, NumberChineseFormatter.chineseToNumber("一百二"));
 	}
 }

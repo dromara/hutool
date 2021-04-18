@@ -19,11 +19,11 @@ public class NumberChineseFormatter {
 	/**
 	 * 简体中文形式
 	 **/
-	private static final String[] SIMPLE_DIGITS = {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
+	private static final char[] SIMPLE_DIGITS = {'零', '一', '二', '三', '四', '五', '六', '七', '八', '九'};
 	/**
 	 * 繁体中文形式
 	 **/
-	private static final String[] TRADITIONAL_DIGITS = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
+	private static final char[] TRADITIONAL_DIGITS = {'零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'};
 
 	/**
 	 * 简体中文单位
@@ -66,7 +66,7 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 */
 	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
-		final String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
+		final char[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 
 		if (amount > 99999999999999.99 || amount < -99999999999999.99) {
 			throw new IllegalArgumentException("Number support only: (-99999999999999.99 ～ 99999999999999.99)！");
@@ -127,7 +127,7 @@ public class NumberChineseFormatter {
 
 		// 整数部分为 0, 则表达为"零"
 		if (StrUtil.EMPTY.equals(chineseStr.toString())) {
-			chineseStr = new StringBuilder(numArray[0]);
+			chineseStr = new StringBuilder(String.valueOf(numArray[0]));
 		}
 		//负数
 		if (negative) { // 整数部分不为 0
@@ -163,12 +163,12 @@ public class NumberChineseFormatter {
 	 * @since 5.3.9
 	 */
 	public static String numberCharToChinese(char c, boolean isUseTraditional) {
-		String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
+		char[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 		int index = c - 48;
 		if (index < 0 || index >= numArray.length) {
 			return String.valueOf(c);
 		}
-		return numArray[index];
+		return String.valueOf(numArray[index]);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class NumberChineseFormatter {
 	 * @return 转换后的汉字
 	 */
 	private static String toChinese(int amountPart, boolean isUseTraditional) {
-		String[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
+		final char[] numArray = isUseTraditional ? TRADITIONAL_DIGITS : SIMPLE_DIGITS;
 		String[] units = isUseTraditional ? TRADITIONAL_UNITS : SIMPLE_UNITS;
 
 		int temp = amountPart;
@@ -223,16 +223,19 @@ public class NumberChineseFormatter {
 		boolean secUnit = false;
 		final int length = chinese.length();
 		while (pos < length) {
-			int num = ArrayUtil.indexOf(SIMPLE_DIGITS, chinese.substring(pos, pos + 1));
+			final int num = ArrayUtil.indexOf(SIMPLE_DIGITS, chinese.charAt(pos));
 			if (num >= 0) {
+				// 普通数字
 				number = num;
 				pos += 1;
 				if (pos >= length) {
+					// 末尾是数字
 					section += number;
 					rtn += section;
 					break;
 				}
 			} else {
+				//单位
 				int unit = 1;
 				int tmp = chineseToUnit(chinese.substring(pos, pos + 1));
 				if (tmp != -1) {
