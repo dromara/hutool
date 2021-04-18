@@ -3,11 +3,12 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.4 (2021-04-14)
+# 5.6.4 (2021-04-18)
 
 ### 新特性
 * 【core   】     DatePattern补充DateTimeFormatter（pr#308@Gitee）
 * 【core   】     DateUtil.compare增加支持给定格式比较（pr#310@Gitee）
+* 【core   】     BeanUtil增加edit方法（issue#I3J6BG@Gitee）
 
 ### Bug修复
 * 【db     】     修复SQL分页时未使用别名导致的错误，同时count时取消order by子句（issue#I3IJ8X@Gitee）

@@ -730,6 +730,31 @@ public class BeanUtil {
 	}
 
 	/**
+	 * 编辑Bean的字段，static字段不会处理<br>
+	 * 例如需要对指定的字段做判空操作、null转""操作等等。
+	 *
+	 * @param bean bean
+	 * @param editor 编辑器函数
+	 * @param <T> 被编辑的Bean类型
+	 * @return bean
+	 * @since 5.6.4
+	 */
+	public static <T> T edit(T bean, Editor<Field> editor){
+		if (bean == null) {
+			return null;
+		}
+
+		final Field[] fields = ReflectUtil.getFields(bean.getClass());
+		for (Field field : fields) {
+			if (ModifierUtil.isStatic(field)) {
+				continue;
+			}
+			editor.edit(field);
+		}
+		return bean;
+	}
+
+	/**
 	 * 把Bean里面的String属性做trim操作。此方法直接对传入的Bean做修改。
 	 * <p>
 	 * 通常bean直接用来绑定页面的input，用户的输入可能首尾存在空格，通常保存数据库前需要把首尾空格去掉
@@ -740,18 +765,10 @@ public class BeanUtil {
 	 * @return 处理后的Bean对象
 	 */
 	public static <T> T trimStrFields(T bean, String... ignoreFields) {
-		if (bean == null) {
-			return null;
-		}
-
-		final Field[] fields = ReflectUtil.getFields(bean.getClass());
-		for (Field field : fields) {
-			if (ModifierUtil.isStatic(field)) {
-				continue;
-			}
+		return edit(bean, (field)->{
 			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
 				// 不处理忽略的Fields
-				continue;
+				return field;
 			}
 			if (String.class.equals(field.getType())) {
 				// 只有String的Field才处理
@@ -764,9 +781,8 @@ public class BeanUtil {
 					}
 				}
 			}
-		}
-
-		return bean;
+			return field;
+		});
 	}
 
 	/**
