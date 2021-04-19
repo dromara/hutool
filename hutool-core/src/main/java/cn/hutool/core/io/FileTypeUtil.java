@@ -39,7 +39,7 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("4749463839", "gif"); // GIF (gif)
 		FILE_TYPE_MAP.put("49492a00227105008037", "tif"); // TIFF (tif)
 		FILE_TYPE_MAP.put("424d228c010000000000", "bmp"); // 16色位图(bmp)
-		FILE_TYPE_MAP.put("424d8240090000000000", "bmp"); // 24位位图(bmp)
+		FILE_TYPE_MAP.put("424d8240090000000000", "bmp"); // 24色位图(bmp)
 		FILE_TYPE_MAP.put("424d8e1b030000000000", "bmp"); // 256色位图(bmp)
 		FILE_TYPE_MAP.put("41433130313500000000", "dwg"); // CAD (dwg)
 		FILE_TYPE_MAP.put("7b5c727466315c616e73", "rtf"); // Rich Text Format (rtf)
