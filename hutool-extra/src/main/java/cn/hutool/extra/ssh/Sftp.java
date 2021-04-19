@@ -172,8 +172,14 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public Sftp reconnectIfTimeout() {
-		if (false == this.cd("/") && StrUtil.isNotBlank(this.ftpConfig.getHost())) {
-			init(this.ftpConfig);
+		if(StrUtil.isBlank(this.ftpConfig.getHost())){
+			throw new FtpException("Host is blank!");
+		}
+		try{
+			this.cd(StrUtil.SLASH);
+		} catch (FtpException e){
+			close();
+			init();
 		}
 		return this;
 	}
