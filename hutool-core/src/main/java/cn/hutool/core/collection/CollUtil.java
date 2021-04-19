@@ -331,7 +331,7 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> disjunction(Collection<T> coll1, Collection<T> coll2) {
 		if (isEmpty(coll1)) {
-			return coll2;
+			return coll1;
 		}
 		if (isEmpty(coll2)) {
 			return coll1;
