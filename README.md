@@ -36,9 +36,6 @@
 	<a target="_blank" href='https://github.com/dromara/hutool'>
 		<img src="https://img.shields.io/github/stars/dromara/hutool.svg?style=social" alt="github star"/>
 	</a>
-	<a target="_blank" href='https://app.netlify.com/sites/hutool/deploys'>
-		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"/>
-	</a>
 </p>
 
 <br/>
