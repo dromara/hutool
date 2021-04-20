@@ -48,35 +48,35 @@
 
 -------------------------------------------------------------------------------
 
-[**English Documentation**](README-EN.md)
+[**🌎English Documentation**](README-EN.md)
 
 -------------------------------------------------------------------------------
 
-## 简介
+## 📚简介
 Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。
 
 Hutool中的工具方法来自每个用户的精雕细琢，它涵盖了Java开发底层代码中的方方面面，它既是大型项目开发中解决小问题的利器，也是小型项目中的效率担当；
 
 Hutool是项目中“util”包友好的替代，它节省了开发人员对项目中公用类和公用工具方法的封装时间，使开发专注于业务，同时可以最大限度的避免封装不完善带来的bug。
 
-### Hutool名称的由来
+### 🎁Hutool名称的由来
 
 Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu”是公司名称的表示，tool表示工具。Hutool谐音“糊涂”，一方面简洁易懂，一方面寓意“难得糊涂”。
 
-### Hutool如何改变我们的coding方式
+### 🍺Hutool如何改变我们的coding方式
 
 Hutool的目标是使用一个工具方法代替一段复杂代码，从而最大限度的避免“复制粘贴”代码的问题，彻底改变我们写代码的方式。
 
 以计算MD5为例：
 
-- 【以前】打开搜索引擎 -> 搜“Java MD5加密” -> 打开某篇博客-> 复制粘贴 -> 改改好用
-- 【现在】引入Hutool -> SecureUtil.md5()
+- 👴【以前】打开搜索引擎 -> 搜“Java MD5加密” -> 打开某篇博客-> 复制粘贴 -> 改改好用
+- 👦【现在】引入Hutool  -> SecureUtil.md5()
 
 Hutool的存在就是为了减少代码搜索成本，避免网络上参差不齐的代码出现导致的bug。
 
 -------------------------------------------------------------------------------
 
-## 包含组件
+## 🛠️包含组件
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
 
 | 模块                |     介绍                                                                          |
@@ -104,17 +104,17 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 -------------------------------------------------------------------------------
 
-## 文档 
+## 📝文档 
 
-[中文文档](https://www.hutool.cn/docs/)
+[📘中文文档](https://www.hutool.cn/docs/)
 
-[参考API](https://apidoc.gitee.com/dromara/hutool/)
+[📙参考API](https://apidoc.gitee.com/dromara/hutool/)
 
-[视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
+[🎬视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
 
 -------------------------------------------------------------------------------
 
-## 安装
+## 📦安装
 
 ### Maven
 在项目的pom.xml的dependencies中加入以下内容:
@@ -138,7 +138,7 @@ compile 'cn.hutool:hutool-all:5.6.4'
 
 - [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.6.4/)
 
-> 注意
+> 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
 > 如果你的项目使用JDK7，请使用Hutool 4.x版本
 
@@ -154,9 +154,9 @@ compile 'cn.hutool:hutool-all:5.6.4'
 
 -------------------------------------------------------------------------------
 
-## 添砖加瓦
+## 🏗️添砖加瓦
 
-### 分支说明
+### 🎋分支说明
 
 Hutool的源码分为两个分支，功能如下：
 
@@ -165,7 +165,7 @@ Hutool的源码分为两个分支，功能如下：
 | v5-master | 主分支，release版本使用的分支，与中央库提交的jar一致，不接收任何pr或修改 |
 | v5-dev    | 开发分支，默认为下个版本的SNAPSHOT版本，接受修改或pr                 |
 
-### 提供bug反馈或建议
+### 🐞提供bug反馈或建议
 
 提交问题反馈请说明正在使用的JDK版本呢、Hutool版本和相关依赖库版本。
 
@@ -173,7 +173,7 @@ Hutool的源码分为两个分支，功能如下：
 - [Github issue](https://github.com/dromara/hutool/issues)
 
 
-### 贡献代码的步骤
+### 🧬贡献代码的步骤
 
 1. 在Gitee或者Github上fork项目到自己的repo
 2. 把fork过去的项目也就是你的项目clone到你的本地
@@ -182,7 +182,7 @@ Hutool的源码分为两个分支，功能如下：
 5. 登录Gitee或Github在你首页可以看到一个 pull request 按钮，点击它，填写一些说明信息，然后提交即可。
 6. 等待维护者合并
 
-### PR遵照的原则
+### 📐PR遵照的原则
 
 Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合一些规范，规范如下：
 
@@ -193,13 +193,13 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 -------------------------------------------------------------------------------
 
-## Star Hutool
+## ⭐Star Hutool
 
 [![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
-## 捐赠
+## 💳捐赠
 
 如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
 
@@ -209,7 +209,7 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 [捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
 
-## 公众号
+## 📌公众号
 
 #### 欢迎关注Hutool合作的公众号
 
