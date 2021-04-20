@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Bean工具类
@@ -715,6 +716,25 @@ public class BeanUtil {
 	}
 
 	/**
+	 * 复制集合中的Bean属性<br>
+	 * 此方法遍历集合中每个Bean，复制其属性后加入一个新的{@link List}中。
+	 *
+	 * @param collection 原Bean集合
+	 * @param targetType 目标Bean类型
+	 * @param copyOptions 拷贝选项
+	 * @param <T> Bean类型
+	 * @return 复制后的List
+	 * @since 5.6.4
+	 */
+	public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetType, CopyOptions copyOptions){
+		return collection.stream().map((source)->{
+			final T target = ReflectUtil.newInstanceIfPossible(targetType);
+			copyProperties(source, target, copyOptions);
+			return target;
+		}).collect(Collectors.toList());
+	}
+
+	/**
 	 * 给定的Bean的类名是否匹配指定类名字符串<br>
 	 * 如果isSimple为{@code false}，则只匹配类名而忽略包名，例如：cn.hutool.TestEntity只匹配TestEntity<br>
 	 * 如果isSimple为{@code true}，则匹配包括包名的全类名，例如：cn.hutool.TestEntity匹配cn.hutool.TestEntity
@@ -845,4 +865,5 @@ public class BeanUtil {
 		}
 		return false;
 	}
+
 }
