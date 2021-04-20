@@ -15,6 +15,7 @@ import cn.hutool.core.util.StrUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
@@ -116,7 +117,7 @@ public class DateUtil extends CalendarUtil {
 	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
 	 *
-	 * @param temporalAccessor {@link TemporalAccessor}
+	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 {@link LocalDate}
 	 * @return 时间对象
 	 * @since 5.0.0
 	 */

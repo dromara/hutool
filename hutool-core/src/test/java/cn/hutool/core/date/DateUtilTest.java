@@ -754,9 +754,16 @@ public class DateUtilTest {
 
 	@Test
 	public void dateTest(){
+		//LocalDateTime ==> date
 		LocalDateTime localDateTime = LocalDateTime.parse("2017-05-06T08:30:00", DateTimeFormatter.ISO_DATE_TIME);
 		DateTime date = DateUtil.date(localDateTime);
 		Assert.assertEquals("2017-05-06 08:30:00", date.toString());
+
+		//LocalDate ==> date
+		LocalDate localDate = localDateTime.toLocalDate();
+		DateTime date2 = DateUtil.date(localDate);
+		Assert.assertEquals("2017-05-06",
+		DateUtil.format(date2, DatePattern.NORM_DATE_PATTERN));
 	}
 
 	@Test
