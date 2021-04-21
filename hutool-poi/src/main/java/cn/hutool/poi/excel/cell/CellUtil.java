@@ -148,7 +148,7 @@ public class CellUtil {
 	 *
 	 * @param cell     单元格
 	 * @param value    值
-	 * @param styleSet 单元格样式集，包括日期等样式
+	 * @param styleSet 单元格样式集，包括日期等样式，null表示无样式
 	 * @param isHeader 是否为标题单元格
 	 */
 	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
@@ -166,25 +166,21 @@ public class CellUtil {
 			}
 		}
 
-		if (value instanceof Date) {
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
-		} else if (value instanceof TemporalAccessor) {
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
-		} else if (value instanceof Calendar) {
+		if (value instanceof Date
+				|| value instanceof TemporalAccessor
+				|| value instanceof Calendar) {
+			// 日期单独定义格式
 			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
 				cell.setCellStyle(styleSet.getCellStyleForDate());
 			}
 		} else if (value instanceof Number) {
+			// 数字单独定义格式
 			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
 				cell.setCellStyle(styleSet.getCellStyleForNumber());
 			}
 		}
 
-		setCellValue(cell, value, null);
+		setCellValue(cell, value);
 	}
 
 	/**
@@ -203,6 +199,23 @@ public class CellUtil {
 
 		if (null != style) {
 			cell.setCellStyle(style);
+		}
+
+		setCellValue(cell, value);
+	}
+
+	/**
+	 * 设置单元格值<br>
+	 * 根据传入的styleSet自动匹配样式<br>
+	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
+	 *
+	 * @param cell  单元格
+	 * @param value 值
+	 * @since 5.6.4
+	 */
+	public static void setCellValue(Cell cell, Object value) {
+		if (null == cell) {
+			return;
 		}
 
 		if (null == value) {
@@ -318,7 +331,21 @@ public class CellUtil {
 	 * @param lastRow     结束行，0开始
 	 * @param firstColumn 起始列，0开始
 	 * @param lastColumn  结束列，0开始
-	 * @param cellStyle   单元格样式，只提取边框样式
+	 * @return 合并后的单元格号
+	 */
+	public static int mergingCells(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn) {
+		return mergingCells(sheet, firstRow, lastRow, firstColumn, lastColumn, null);
+	}
+
+	/**
+	 * 合并单元格，可以根据设置的值来合并行和列
+	 *
+	 * @param sheet       表对象
+	 * @param firstRow    起始行，0开始
+	 * @param lastRow     结束行，0开始
+	 * @param firstColumn 起始列，0开始
+	 * @param lastColumn  结束列，0开始
+	 * @param cellStyle   单元格样式，只提取边框样式，null表示无样式
 	 * @return 合并后的单元格号
 	 */
 	public static int mergingCells(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn, CellStyle cellStyle) {
