@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.4 (2021-04-22)
+# 5.6.4 (2021-04-23)
 
 ### 🐣新特性
 * 【core   】     DatePattern补充DateTimeFormatter（pr#308@Gitee）
@@ -11,6 +11,7 @@
 * 【core   】     BeanUtil增加edit方法（issue#I3J6BG@Gitee）
 * 【db     】     Column中加入columnDef字段默认值（issue#I3J6BG@Gitee）
 * 【core   】     BeanUtil增加copyToList方法（issue#1526@Github）
+* 【extra  】     MailAccount增加customProperty可以用户自定义属性（pr#317@Gitee）
 
 ### 🐞Bug修复
 * 【db     】     修复SQL分页时未使用别名导致的错误，同时count时取消order by子句（issue#I3IJ8X@Gitee）

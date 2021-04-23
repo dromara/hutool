@@ -39,9 +39,6 @@ public class MailAccount implements Serializable {
 
 	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
-	// 允许使用自定义属性
-	private final Map<String, Object> customProperty = new HashMap<>();
-
 	/**
 	 * SMTP服务器域名
 	 */
@@ -115,6 +112,11 @@ public class MailAccount implements Serializable {
 	 * Socket连接超时值，单位毫秒，缺省值不超时
 	 */
 	private long connectionTimeout;
+
+	/**
+	 * 自定义的其他属性，此自定义属性会覆盖默认属性
+	 */
+	private final Map<String, Object> customProperty = new HashMap<>();
 
 	// -------------------------------------------------------------- Constructor start
 
@@ -477,6 +479,7 @@ public class MailAccount implements Serializable {
 	 * 获取自定义属性列表
 	 *
 	 * @return 自定义参数列表
+	 * @since 5.6.4
 	 */
 	public Map<String, Object> getCustomProperty() {
 		return customProperty;
@@ -485,12 +488,13 @@ public class MailAccount implements Serializable {
 	/**
 	 * 设置自定义属性，如mail.smtp.ssl.socketFactory
 	 *
-	 * @param key   属性名
-	 * @param value 属性值
+	 * @param key   属性名，空白被忽略
+	 * @param value 属性值， null被忽略
 	 * @return this
+	 * @since 5.6.4
 	 */
 	public MailAccount setCustomProperty(String key, Object value) {
-		if (ObjectUtil.isNotNull(key) && ObjectUtil.isNotNull(value)) {
+		if (StrUtil.isNotBlank(key) && ObjectUtil.isNotNull(value)) {
 			this.customProperty.put(key, value);
 		}
 		return this;
@@ -542,9 +546,7 @@ public class MailAccount implements Serializable {
 		}
 
 		// 补充自定义属性，允许自定属性覆盖已经设置的值
-		for (String key : customProperty.keySet()) {
-			p.put(key, customProperty.get(key));
-		}
+		p.putAll(this.customProperty);
 
 		return p;
 	}
