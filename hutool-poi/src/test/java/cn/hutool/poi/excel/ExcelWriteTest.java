@@ -1,12 +1,14 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
@@ -505,6 +507,17 @@ public class ExcelWriteTest {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
 		final CellStyle cellStyle = writer.createCellStyle(0, 0);
 		cellStyle.setDataFormat(writer.getWorkbook().createDataFormat().getFormat("yyyy-mm-dd"));
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeNumberFormatTest(){
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
+		writer.disableDefaultStyle();
+		writer.writeRow(ListUtil.toList(51.33333333, 90.111111111));
+		final CellStyle columnStyle = writer.createCellStyle(0, 0);
+		columnStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0.00"));
 		writer.close();
 	}
 }
