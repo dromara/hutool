@@ -1,5 +1,8 @@
 package cn.hutool.system;
 
+import cn.hutool.core.util.StrUtil;
+
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -8,22 +11,37 @@ import java.io.Serializable;
 public class UserInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String USER_NAME = SystemUtil.get("user.name", false);
-	private final String USER_HOME = SystemUtil.get("user.home", false);
-	private final String USER_DIR = SystemUtil.get("user.dir", false);
-	private final String USER_LANGUAGE = SystemUtil.get("user.language", false);
-	private final String USER_COUNTRY = ((SystemUtil.get("user.country", false) == null) ? SystemUtil.get("user.region", false) : SystemUtil.get("user.country", false));
-	private final String JAVA_IO_TMPDIR = SystemUtil.get("java.io.tmpdir", false);
+	private final String USER_NAME;
+	private final String USER_HOME;
+	private final String USER_DIR;
+	private final String JAVA_IO_TMPDIR;
+	private final String USER_LANGUAGE;
+	private final String USER_COUNTRY;
+
+	public UserInfo(){
+		USER_NAME = fixPath(SystemUtil.get("user.name", false));
+		USER_HOME = fixPath(SystemUtil.get("user.home", false));
+		USER_DIR = fixPath(SystemUtil.get("user.dir", false));
+		JAVA_IO_TMPDIR = fixPath(SystemUtil.get("java.io.tmpdir", false));
+		USER_LANGUAGE = SystemUtil.get("user.language", false);
+
+		// JDK1.4 {@code user.country}，JDK1.2 {@code user.region}
+		String userCountry = SystemUtil.get("user.country", false);
+		if(null == userCountry){
+			userCountry = SystemUtil.get("user.country", false);
+		}
+		USER_COUNTRY = userCountry;
+	}
 
 	/**
-	 * 取得当前登录用户的名字（取自系统属性：<code>user.name</code>）。
-	 * 
+	 * 取得当前登录用户的名字（取自系统属性：{@code user.name}）。
+	 *
 	 * <p>
-	 * 例如：<code>"admin"</code>
+	 * 例如：{@code "admin"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getName() {
@@ -31,14 +49,14 @@ public class UserInfo implements Serializable{
 	}
 
 	/**
-	 * 取得当前登录用户的home目录（取自系统属性：<code>user.home</code>）。
-	 * 
+	 * 取得当前登录用户的home目录（取自系统属性：{@code user.home}）。
+	 *
 	 * <p>
-	 * 例如：<code>"/home/admin"</code>
+	 * 例如：{@code "/home/admin/"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getHomeDir() {
@@ -46,14 +64,14 @@ public class UserInfo implements Serializable{
 	}
 
 	/**
-	 * 取得当前目录（取自系统属性：<code>user.dir</code>）。
-	 * 
+	 * 取得当前目录（取自系统属性：{@code user.dir}）。
+	 *
 	 * <p>
-	 * 例如：<code>"/home/admin/working"</code>
+	 * 例如：{@code "/home/admin/working/"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getCurrentDir() {
@@ -61,43 +79,43 @@ public class UserInfo implements Serializable{
 	}
 
 	/**
-	 * 取得临时目录（取自系统属性：<code>java.io.tmpdir</code>）。
-	 * 
+	 * 取得临时目录（取自系统属性：{@code java.io.tmpdir}）。
+	 *
 	 * <p>
-	 * 例如：<code>"/tmp"</code>
+	 * 例如：{@code "/tmp/"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
+	 *
 	 */
 	public final String getTempDir() {
 		return JAVA_IO_TMPDIR;
 	}
 
 	/**
-	 * 取得当前登录用户的语言设置（取自系统属性：<code>user.language</code>）。
-	 * 
+	 * 取得当前登录用户的语言设置（取自系统属性：{@code user.language}）。
+	 *
 	 * <p>
-	 * 例如：<code>"zh"</code>、<code>"en"</code>等
+	 * 例如：{@code "zh"}、{@code "en"}等
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 */
 	public final String getLanguage() {
 		return USER_LANGUAGE;
 	}
 
 	/**
-	 * 取得当前登录用户的国家或区域设置（取自系统属性：JDK1.4 <code>user.country</code>或JDK1.2 <code>user.region</code>）。
-	 * 
+	 * 取得当前登录用户的国家或区域设置（取自系统属性：JDK1.4 {@code user.country}或JDK1.2 {@code user.region}）。
+	 *
 	 * <p>
-	 * 例如：<code>"CN"</code>、<code>"US"</code>等
+	 * 例如：{@code "CN"}、{@code "US"}等
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 */
 	public final String getCountry() {
 		return USER_COUNTRY;
@@ -105,7 +123,7 @@ public class UserInfo implements Serializable{
 
 	/**
 	 * 将当前用户的信息转换成字符串。
-	 * 
+	 *
 	 * @return 用户信息的字符串表示
 	 */
 	@Override
@@ -122,4 +140,17 @@ public class UserInfo implements Serializable{
 		return builder.toString();
 	}
 
+	/**
+	 * 修正路径，包括：
+	 *
+	 * <ul>
+	 *     <li>1. 末尾补充 /</li>
+	 * </ul>
+	 * @param path 路径
+	 * @return 修正后的路径
+	 * @since 5.6.4
+	 */
+	private static String fixPath(String path){
+		return StrUtil.addSuffixIfNot(path, File.separator);
+	}
 }

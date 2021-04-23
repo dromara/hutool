@@ -1607,18 +1607,10 @@ public class CharSequenceUtil {
 	 * @param str    字符串
 	 * @param prefix 前缀
 	 * @return 补充后的字符串
+	 * @see #prependIfMissing(CharSequence, CharSequence, CharSequence...)
 	 */
 	public static String addPrefixIfNot(CharSequence str, CharSequence prefix) {
-		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		final String prefix2 = prefix.toString();
-		if (false == str2.startsWith(prefix2)) {
-			return prefix2.concat(str2);
-		}
-		return str2;
+		return prependIfMissing(str, prefix, prefix);
 	}
 
 	/**
@@ -1627,18 +1619,10 @@ public class CharSequenceUtil {
 	 * @param str    字符串
 	 * @param suffix 后缀
 	 * @return 补充后的字符串
+	 * @see #appendIfMissing(CharSequence, CharSequence, CharSequence...)
 	 */
 	public static String addSuffixIfNot(CharSequence str, CharSequence suffix) {
-		if (isEmpty(str) || isEmpty(suffix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		final String suffix2 = suffix.toString();
-		if (false == str2.endsWith(suffix2)) {
-			return str2.concat(suffix2);
-		}
-		return str2;
+		return appendIfMissing(str, suffix, suffix);
 	}
 
 	// ------------------------------------------------------------------------ split
@@ -3363,7 +3347,7 @@ public class CharSequenceUtil {
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
+	public static String appendIfMissing(CharSequence str, CharSequence suffix, CharSequence... suffixes) {
 		return appendIfMissing(str, suffix, false, suffixes);
 	}
 
@@ -3377,27 +3361,27 @@ public class CharSequenceUtil {
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String appendIfMissingIgnoreCase(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
+	public static String appendIfMissingIgnoreCase(CharSequence str, CharSequence suffix, CharSequence... suffixes) {
 		return appendIfMissing(str, suffix, true, suffixes);
 	}
 
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串
 	 *
-	 * @param str        被检查的字符串
-	 * @param suffix     需要添加到结尾的字符串
-	 * @param ignoreCase 检查结尾时是否忽略大小写
-	 * @param suffixes   需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+	 * @param str          被检查的字符串
+	 * @param suffix       需要添加到结尾的字符串，不参与检查匹配
+	 * @param ignoreCase   检查结尾时是否忽略大小写
+	 * @param testSuffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final CharSequence... suffixes) {
+	public static String appendIfMissing(CharSequence str, CharSequence suffix, boolean ignoreCase, CharSequence... testSuffixes) {
 		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
 			return str(str);
 		}
-		if (suffixes != null && suffixes.length > 0) {
-			for (final CharSequence s : suffixes) {
-				if (endWith(str, s, ignoreCase)) {
+		if (ArrayUtil.isNotEmpty(testSuffixes)) {
+			for (final CharSequence testSuffix : testSuffixes) {
+				if (endWith(str, testSuffix, ignoreCase)) {
 					return str.toString();
 				}
 			}
@@ -3415,7 +3399,7 @@ public class CharSequenceUtil {
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
+	public static String prependIfMissing(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, false, prefixes);
 	}
 
@@ -3429,7 +3413,7 @@ public class CharSequenceUtil {
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String prependIfMissingIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
+	public static String prependIfMissingIgnoreCase(CharSequence str, CharSequence prefix, CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, true, prefixes);
 	}
 
@@ -3443,7 +3427,7 @@ public class CharSequenceUtil {
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
 	 * @since 3.0.7
 	 */
-	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final CharSequence... prefixes) {
+	public static String prependIfMissing(CharSequence str, CharSequence prefix, boolean ignoreCase, CharSequence... prefixes) {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
 			return str(str);
 		}

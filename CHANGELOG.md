@@ -12,6 +12,7 @@
 * 【db     】     Column中加入columnDef字段默认值（issue#I3J6BG@Gitee）
 * 【core   】     BeanUtil增加copyToList方法（issue#1526@Github）
 * 【extra  】     MailAccount增加customProperty可以用户自定义属性（pr#317@Gitee）
+* 【system 】     SystemUtil.getUserInfo()中所有平台路径统一末尾加/（issue#I3NM39@Gitee）
 
 ### 🐞Bug修复
 * 【db     】     修复SQL分页时未使用别名导致的错误，同时count时取消order by子句（issue#I3IJ8X@Gitee）

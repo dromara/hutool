@@ -78,6 +78,17 @@ public class FileUtil extends PathUtil {
 	 * 当Path为文件形式时, path会加入一个表示文件的前缀
 	 */
 	public static final String PATH_FILE_PRE = URLUtil.FILE_URL_PREFIX;
+	/**
+	 * 文件路径分隔符<br>
+	 * 在Unix和Linux下 是{@code '/'}; 在Windows下是 {@code '\'}
+	 */
+	public static final String FILE_SEPARATOR = File.separator;
+	/**
+	 * 多个PATH之间的分隔符<br>
+	 * 在Unix和Linux下 是{@code ':'}; 在Windows下是 {@code ';'}
+	 */
+	public static final String PATH_SEPARATOR = File.pathSeparator;
+
 
 	/**
 	 * 是否为Windows环境
