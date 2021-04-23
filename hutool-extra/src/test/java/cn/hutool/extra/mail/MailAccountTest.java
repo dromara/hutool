@@ -47,10 +47,11 @@ public class MailAccountTest {
 		mailAccount.setAuth(true);
 		mailAccount.setSslEnable(true);
 
-		Mail mail = Mail.create(mailAccount).setTos("xx@xx.com");
-		mail.setTitle("邮箱验证");
-		mail.setContent("您的验证码是：<h3>2333</h3>");
-		mail.setHtml(true);
+		Mail mail = Mail.create(mailAccount)
+				.setTos("xx@xx.com")
+				.setTitle("邮箱验证")
+				.setContent("您的验证码是：<h3>2333</h3>")
+				.setHtml(true);
 
 		mail.send();
 	}
