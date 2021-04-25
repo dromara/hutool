@@ -205,4 +205,13 @@ public class JSONUtilTest {
 		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
 		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
+	@Test
+	public void TestIsJson(){
+		String str = "{\"最小日期\":\"2001-01-01\",\"最大日期\"}";
+		String str2 = "{\"最小日期\":\"2001-01-01\",\"最大日期\":\"2001-02-01\"}";
+		boolean strIsJson = JSONUtil.isJson(str);
+		boolean str2IsJson = JSONUtil.isJson(str2);
+		Assert.assertFalse(strIsJson);
+		Assert.assertTrue(str2IsJson);
+	}
 }

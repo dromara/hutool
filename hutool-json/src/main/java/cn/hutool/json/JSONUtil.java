@@ -834,7 +834,7 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 是否为JSONObject字符串，首尾都为大括号判定为JSONObject字符串
+	 * 是否为JSONObject字符串，首尾都为大括号并且能正确转换的判定为JSONObject字符串
 	 *
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
@@ -844,11 +844,19 @@ public class JSONUtil {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		return StrUtil.isWrap(StrUtil.trim(str), '{', '}');
+		if (StrUtil.isWrap(StrUtil.trim(str), '{', '}')) {
+			try {
+				parse(str);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	/**
-	 * 是否为JSONArray字符串，首尾都为中括号判定为JSONArray字符串
+	 * 是否为JSONArray字符串，首尾为中括号并且能正确转换的判定为JSONArray字符串
 	 *
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
@@ -858,7 +866,15 @@ public class JSONUtil {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
+		if (StrUtil.isWrap(StrUtil.trim(str), '[', ']')) {
+			try {
+				parseArray(str);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	/**
