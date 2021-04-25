@@ -1,6 +1,8 @@
 package cn.hutool.core.util;
 
 /**
+ * 进制转换工具类，可以转换为任意进制
+ * <p>
  * 把一个十进制整数根据自己定义的进制规则进行转换<br>
  * from：https://gitee.com/loolly/hutool/pulls/260
  * <p>
@@ -107,7 +109,7 @@ public class RadixUtil {
 	/**
 	 * 把转换后进制的字符还原成long 值
 	 *
-	 * @param radixs 自定进制,需要和encode的保持一致
+	 * @param radixs    自定进制,需要和encode的保持一致
 	 * @param encodeStr 需要转换成十进制的字符串
 	 * @return long
 	 */

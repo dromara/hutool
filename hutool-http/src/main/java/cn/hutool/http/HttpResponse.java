@@ -278,10 +278,27 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		Assert.notNull(destFile, "[destFile] is null!");
 
 		final File outFile = completeFileNameFromHeader(destFile);
-		final OutputStream outputStream = FileUtil.getOutputStream(outFile);
-		return writeBody(outputStream, true, streamProgress);
+		return writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
 	}
 
+	/**
+	 * 将响应内容写出到文件<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 *
+	 * @param destFile       写出到的文件
+	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @return 写出的文件
+	 * @since 5.6.4
+	 */
+	public File writeBodyForFile(File destFile, StreamProgress streamProgress) {
+		Assert.notNull(destFile, "[destFile] is null!");
+
+		final File outFile = completeFileNameFromHeader(destFile);
+		writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
+
+		return outFile;
+	}
 
 	/**
 	 * 将响应内容写出到文件<br>

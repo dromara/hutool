@@ -130,8 +130,7 @@ public class DesensitizedUtil {
 		if (StrUtil.isBlank(fullName)) {
 			return StrUtil.EMPTY;
 		}
-		final String name = StrUtil.subPre(fullName, 1);
-		return StrUtil.padAfter(name, StrUtil.length(fullName), "*");
+		return StrUtil.hide(fullName, 1, fullName.length());
 	}
 
 	/**

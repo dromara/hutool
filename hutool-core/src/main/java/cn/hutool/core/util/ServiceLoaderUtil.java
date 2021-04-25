@@ -23,7 +23,7 @@ import java.util.ServiceLoader;
 public class ServiceLoaderUtil {
 
 	/**
-	 * 加载第一个可用服务，如果用户定义了多个接口实现类，只获取第一个不报错的服务。
+	 * 。加载第一个可用服务，如果用户定义了多个接口实现类，只获取第一个不报错的服务
 	 *
 	 * @param <T>   接口类型
 	 * @param clazz 服务接口
