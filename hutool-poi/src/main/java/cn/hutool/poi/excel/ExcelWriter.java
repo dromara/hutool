@@ -744,7 +744,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param cellStyle        合并后单元格使用的样式，可以为null
 	 * @return this
 	 */
-	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, CellStyle cellStyle){
+	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, CellStyle cellStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
 		CellUtil.mergingCells(this.getSheet(), firstRow, lastRow, firstColumn, lastColumn, cellStyle);
@@ -883,16 +883,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeSecHeadRow(Iterable<?> rowData){
 		final Row row = RowUtil.getOrCreateRow(this.sheet,this.currentRow.getAndIncrement());
 		Iterator<?> iterator = rowData.iterator();
-		if (row.getLastCellNum() != 0){
+		if (row.getLastCellNum() != 0) {
 			for (int i = 0; i < this.workbook.getSpreadsheetVersion().getMaxColumns(); i++) {
 				Cell cell = row.getCell(i);
-				if (cell == null) {
-					if(iterator.hasNext()){
-						cell = row.createCell(i);
-						CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true);
-					}else{
-						break;
-					}
+				if (cell != null) {
+					continue;
+				}
+				if (iterator.hasNext()) {
+					cell = row.createCell(i);
+					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true);
+				} else {
+					break;
 				}
 			}
 		} else {
