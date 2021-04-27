@@ -883,6 +883,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeSecHeadRow(Iterable<?> rowData){
 		final Row row = RowUtil.getOrCreateRow(this.sheet,this.currentRow.getAndIncrement());
 		Iterator<?> iterator = rowData.iterator();
+		//如果获取的row存在单元格，则执行复杂表头逻辑，否则直接调用writeHeadRow(Iterable<?> rowData)
 		if (row.getLastCellNum() != 0) {
 			for (int i = 0; i < this.workbook.getSpreadsheetVersion().getMaxColumns(); i++) {
 				Cell cell = row.getCell(i);
