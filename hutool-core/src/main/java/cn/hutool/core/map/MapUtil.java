@@ -11,23 +11,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Map相关工具类
@@ -1347,5 +1334,35 @@ public class MapUtil {
 				map.clear();
 			}
 		}
+	}
+
+	/**
+	 * 将一个集合对象按照 {@code function}, 转换为map对象
+	 * <pre>
+	 *     使用示例:
+	 *     class User {
+	 *         private Integer id;
+	 *         private String nickname;
+	 *         ...
+	 *         public Integer getId(){...}
+	 *         public Integer getNickName(){...}
+	 *     }
+	 *     List<User> userList = ... ;
+	 *     Map<Integer, User> idTOUserMap = MapUtil.collectionToMap(userList, User::getId);
+	 *     ...
+	 * </pre>
+	 *
+	 * @param collection 待转换的集合对象, eg: {@code List<User>}
+	 * @param function 给定的转换方法, eg: User.getId
+	 * @param <M> {@code function}对应的返回值类型
+	 * @param <T> 集合对应的泛型
+	 * @return 集合转换后的map对象
+	 */
+	public static <M, T> Map<M, T> collectionToMap(Collection<T> collection, Function<T, M> function) {
+		Map<M, T> map = new HashMap<>(collection.size(), 1);
+		for (T t : collection) {
+			map.put(function.apply(t), t);
+		}
+		return map;
 	}
 }
