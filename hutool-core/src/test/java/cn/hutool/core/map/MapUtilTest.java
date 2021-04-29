@@ -7,12 +7,14 @@ import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class MapUtilTest {
-	
+
 	@Test
 	public void filterTest() {
 		Map<String, String> map = MapUtil.newHashMap();
@@ -74,7 +76,7 @@ public class MapUtilTest {
 		map.put("b", "2");
 		map.put("c", "3");
 		map.put("d", "4");
-		
+
 		Object[][] objectArray = MapUtil.toObjectArray(map);
 		Assert.assertEquals("a", objectArray[0][0]);
 		Assert.assertEquals("1", objectArray[0][1]);
@@ -101,5 +103,35 @@ public class MapUtilTest {
 
 		String join3 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123", "abc");
 		Assert.assertEquals("key1value1key2value2key3value3123abc", join3);
+	}
+
+	@Test
+	public void collectionToMap() {
+		List<TestUser> list = new ArrayList<>();
+		for (int i = 0; i < 10; i++) {
+			list.add(new TestUser(i, "name" + i));
+		}
+		Map<Integer, TestUser> id2UserMap = MapUtil.collectionToMap(list, TestUser::getId);
+		for (TestUser testUser : list) {
+			Assert.assertEquals(testUser.getNickname(), id2UserMap.get(testUser.getId()).getNickname());
+		}
+	}
+
+	private static class TestUser {
+		private final Integer id;
+		private final String nickname;
+
+		public TestUser(Integer id, String nickname) {
+			this.id = id;
+			this.nickname = nickname;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public String getNickname() {
+			return nickname;
+		}
 	}
 }
