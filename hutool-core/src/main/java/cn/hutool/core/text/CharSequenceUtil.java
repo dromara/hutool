@@ -4,6 +4,7 @@ import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -765,6 +766,50 @@ public class CharSequenceUtil {
 		return false;
 	}
 
+	/**
+	 * 字符串是否以(数字)开始
+	 *
+	 * @param str 字符串
+	 * @return 是否数字开始
+	 * @since 5.6.5
+	 */
+	public static boolean startWithNumber(CharSequence str) {
+		return isNotBlank(str) && PatternPool.NUMBERS.matcher(str.subSequence(0, 1)).find();
+	}
+
+	/**
+	 * 字符串是否以(英文字母 、数字和下划线)开始
+	 *
+	 * @param str 字符串
+	 * @return 是否英文字母 、数字和下划线开始
+	 * @since 5.6.5
+	 */
+	public static boolean startWithGeneral(CharSequence str) {
+		return isNotBlank(str) && PatternPool.GENERAL.matcher(str.subSequence(0, 1)).find();
+	}
+
+	/**
+	 * 字符串是否以(字母)开始
+	 *
+	 * @param str 字符串
+	 * @return 是否字母开始
+	 * @since 5.6.5
+	 */
+	public static boolean startWithWord(CharSequence str) {
+		return isNotBlank(str) && PatternPool.WORD.matcher(str.subSequence(0, 1)).find();
+	}
+
+	/**
+	 * 字符串是否以(中文汉字)开始
+	 *
+	 * @param str 字符串
+	 * @return 是否中文汉字开始
+	 * @since 5.6.5
+	 */
+	public static boolean startWithChinese(CharSequence str) {
+		return isNotBlank(str) && PatternPool.CHINESES.matcher(str.subSequence(0, 1)).find();
+	}
+
 	// ------------------------------------------------------------------------ endWith
 
 	/**
@@ -866,6 +911,50 @@ public class CharSequenceUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 字符串是否以(数字)结束
+	 *
+	 * @param str 字符串
+	 * @return 是否数字结束
+	 * @since 5.6.5
+	 */
+	public static boolean endWithNumber(CharSequence str) {
+		return isNotBlank(str) && PatternPool.NUMBERS.matcher(str.subSequence(str.length() - 1, str.length())).find();
+	}
+
+	/**
+	 * 字符串是否以(英文字母 、数字和下划线)结束
+	 *
+	 * @param str 字符串
+	 * @return 是否英文字母 、数字和下划线结束
+	 * @since 5.6.5
+	 */
+	public static boolean endWithGeneral(CharSequence str) {
+		return isNotBlank(str) && PatternPool.GENERAL.matcher(str.subSequence(str.length() - 1, str.length())).find();
+	}
+
+	/**
+	 * 字符串是否以(字母)结束
+	 *
+	 * @param str 字符串
+	 * @return 是否字母结束
+	 * @since 5.6.5
+	 */
+	public static boolean endWithWord(CharSequence str) {
+		return isNotBlank(str) && PatternPool.WORD.matcher(str.subSequence(str.length() - 1, str.length())).find();
+	}
+
+	/**
+	 * 字符串是否以(中文汉字)结束
+	 *
+	 * @param str 字符串
+	 * @return 是否中文汉字结束
+	 * @since 5.6.5
+	 */
+	public static boolean endWithChinese(CharSequence str) {
+		return isNotBlank(str) && PatternPool.CHINESES.matcher(str.subSequence(str.length() - 1, str.length())).find();
 	}
 
 	// ------------------------------------------------------------------------ contains
@@ -1503,6 +1592,28 @@ public class CharSequenceUtil {
 			return subPre(str2, str2.length() - suffix.length());
 		}
 		return str2;
+	}
+
+	/**
+	 * 剔除/移除字符串中的所有数字
+	 *
+	 * @param str 当前字符串
+	 * @return 移除数字后的字符串
+	 * @since 5.6.5
+	 */
+	public static String removeNumbers(CharSequence str) {
+		return ReUtil.delAll(PatternPool.NUMBERS, str);
+	}
+
+	/**
+	 * 剔除/移除字符串中的所有中文
+	 *
+	 * @param str 当前字符串
+	 * @return 移除中文后的字符串
+	 * @since 5.6.5
+	 */
+	public static String removeChinese(CharSequence str) {
+		return ReUtil.delAll(PatternPool.CHINESES, str);
 	}
 
 	/**
