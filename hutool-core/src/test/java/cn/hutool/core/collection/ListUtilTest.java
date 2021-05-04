@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ListUtilTest {
 
@@ -44,6 +45,27 @@ public class ListUtilTest {
 		Assert.assertEquals("edit1", filter.get(0));
 		Assert.assertEquals("edit2", filter.get(1));
 		Assert.assertEquals("edit3", filter.get(2));
+	}
+
+	@Test
+	@Ignore
+	public void countMapTest(){
+		List<String> list = new ArrayList<>();
+		list.add("AAA");
+		list.add("BBB");
+		list.add("AAA");
+		list.add("CCC");
+		list.add("DDD");
+		list.add("DDD");
+		//统计不排序
+		Map<?, Long> countMap = ListUtil.countMap(list);
+		Console.log(countMap);
+		//统计倒序排列
+		Map<String, Long> descCountMap = ListUtil.countMap(list, Boolean.TRUE);
+		Console.log(descCountMap);
+		//统计正序排列
+		Map<String, Long> ascCountMap= ListUtil.countMap(list, Boolean.FALSE);
+		Console.log(ascCountMap);
 	}
 
 	@Test
