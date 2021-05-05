@@ -313,6 +313,11 @@ public class OsInfo implements Serializable{
 	 *
 	 * @return 如果当前OS类型为Windows 8，则返回<code>true</code>
 	 */
+	public final boolean isWindows8() {
+		return IS_OS_WINDOWS_8;
+	}
+
+	@Deprecated
 	public final boolean isWindoows8() {
 		return IS_OS_WINDOWS_8;
 	}
