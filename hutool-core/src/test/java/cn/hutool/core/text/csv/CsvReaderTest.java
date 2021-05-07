@@ -13,7 +13,17 @@ import java.util.List;
 import java.util.Map;
 
 public class CsvReaderTest {
-	
+
+
+	@Test
+	public void readRowCountTest() {
+		CsvReader reader = CsvUtil.getReader();
+		CsvData data = reader.read(ResourceUtil.getUtf8Reader("test_bean.csv"));
+		Assert.assertEquals(4,data.getRowCount());
+	}
+
+
+
 	@Test
 	public void readTest() {
 		CsvReader reader = new CsvReader();

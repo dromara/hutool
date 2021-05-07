@@ -220,8 +220,8 @@ public final class CsvParser implements Closeable, Serializable {
 			}
 
 			if (inQuotes) {
-				//引号内，作为内容，直到引号结束
-				if (c == config.textDelimiter) {
+				//引号内，作为内容，直到引号结束；或者遇到分隔符，可以跳出inQuotes
+				if (c == config.textDelimiter|| c== config.fieldSeparator) {
 					// End of quoted text
 					inQuotes = false;
 				} else {
