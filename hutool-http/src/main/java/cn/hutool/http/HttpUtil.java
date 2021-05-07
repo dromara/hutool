@@ -13,11 +13,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -837,5 +839,15 @@ public class HttpUtil {
 	public static String buildBasicAuth(String username, String password, Charset charset) {
 		final String data = username.concat(":").concat(password);
 		return "Basic " + Base64.encode(data, charset);
+	}
+
+	/**
+	 * 关闭Cookie
+	 *
+	 * @see GlobalCookieManager#setCookieManager(CookieManager)
+	 * @since 5.6.5
+	 */
+	public static void closeCookie() {
+		GlobalCookieManager.setCookieManager(null);
 	}
 }
