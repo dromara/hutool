@@ -321,5 +321,16 @@ public class WordTree extends HashMap<Character, WordTree> {
 			this.endCharacterSet.add(c);
 		}
 	}
+
+	/**
+	 * 清除所有的词,
+	 * 此方法调用后, wordTree 将被清空
+	 * endCharacterSet 也将清空
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		this.endCharacterSet.clear();
+	}
 	//--------------------------------------------------------------------------------------- Private method end
 }
