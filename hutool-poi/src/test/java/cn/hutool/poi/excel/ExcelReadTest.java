@@ -217,4 +217,11 @@ public class ExcelReadTest {
 		Assert.assertEquals("#", read.get(3).get(0));
 		Assert.assertEquals("#", read.get(3).get(1));
 	}
+
+	@Test
+	public void readEmptyTest(){
+		final ExcelReader reader = ExcelUtil.getReader("d:/test/issue.xlsx");
+		final List<Map<String, Object>> maps = reader.readAll();
+		Console.log(maps);
+	}
 }

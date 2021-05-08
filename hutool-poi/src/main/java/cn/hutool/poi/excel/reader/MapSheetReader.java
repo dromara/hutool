@@ -2,6 +2,7 @@ package cn.hutool.poi.excel.reader;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -36,6 +37,10 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
+		if(lastRowNum < 0){
+			return ListUtil.empty();
+		}
+
 		if (headerRowIndex < firstRowNum) {
 			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is lower than first row index {}.", headerRowIndex, firstRowNum));
 		} else if (headerRowIndex > lastRowNum) {
