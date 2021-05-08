@@ -11,6 +11,7 @@
 * 【extra  】     Ftp的remoteVerificationEnabled改为false（issue#I3OSA2@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复createScheduledExecutor单位不是毫秒的问题（issue#I3OYIW@Gitee）
+* 【core   】     修复Tailer无stop问题（issue#I3PQLQ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
