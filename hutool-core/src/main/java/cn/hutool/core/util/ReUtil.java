@@ -300,6 +300,46 @@ public class ReUtil {
 	}
 
 	/**
+	 * 删除匹配的最后一个内容
+	 *
+	 * @param regex 正则
+	 * @param str   被匹配的内容
+	 * @return 删除后剩余的内容
+	 * @since 5.6.5
+	 */
+	public static String delLast(String regex, CharSequence str) {
+		if (StrUtil.hasBlank(regex, str)) {
+			return StrUtil.str(str);
+		}
+
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return delLast(pattern, str);
+	}
+
+	/**
+	 * 删除匹配的最后一个内容
+	 *
+	 * @param pattern 正则
+	 * @param str     被匹配的内容
+	 * @return 删除后剩余的内容
+	 * @since 5.6.5
+	 */
+	public static String delLast(Pattern pattern, CharSequence str) {
+		if (null != pattern && StrUtil.isNotBlank(str)) {
+			String last = "";
+			for (Matcher matcher = pattern.matcher(str); matcher.find(); ) {
+				last = matcher.group();
+			}
+
+			if (StrUtil.isNotBlank(last)){
+				return StrUtil.subBefore(str, last, Boolean.TRUE) + StrUtil.subAfter(str, last, Boolean.TRUE);
+			}
+		}
+
+		return StrUtil.str(str);
+	}
+
+	/**
 	 * 删除匹配的全部内容
 	 *
 	 * @param regex   正则

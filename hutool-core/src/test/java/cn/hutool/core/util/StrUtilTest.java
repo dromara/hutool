@@ -4,7 +4,9 @@ import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字符串工具类单元测试
@@ -508,4 +510,21 @@ public class StrUtilTest {
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 16));
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 17));
 	}
+
+	@Test
+	public void wordCountTest(){
+		List<String> list = new ArrayList<>();
+		list.add("Word Count");
+		list.add("Hello world");
+		list.add("Hello java");
+		list.add("Hello Hutool");
+		list.add("A set of tools that keep Java sweet");
+		Map<String, Long> listCountMap = StrUtil.wordCount(list, " ");
+		Assert.assertEquals(3L, listCountMap.get("Hello").longValue());
+
+		String singleton = "Can you can a can as a canner can can a can ?";
+		Map<String, Long> strCountMap = StrUtil.wordCount(singleton, " ");
+		Assert.assertEquals(5L, strCountMap.get("can").longValue());
+	}
+
 }

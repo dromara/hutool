@@ -101,6 +101,30 @@ public class DfaTest {
 		Assert.assertEquals("[women]", matchAll.toString());
 	}
 
+	@Test
+	public void clearTest(){
+		WordTree tree = new WordTree();
+		tree.addWord("黑");
+		Assert.assertTrue(tree.matchAll("黑大衣").contains("黑"));
+		//clear时直接调用Map的clear并没有把endCharacterSet清理掉
+		tree.clear();
+		tree.addWords("黑大衣","红色大衣");
+
+		//clear() 覆写前 这里想匹配到黑大衣，但是却匹配到了黑
+//		Assert.assertFalse(tree.matchAll("黑大衣").contains("黑大衣"));
+//		Assert.assertTrue(tree.matchAll("黑大衣").contains("黑"));
+		//clear() 覆写后
+		Assert.assertTrue(tree.matchAll("黑大衣").contains("黑大衣"));
+		Assert.assertFalse(tree.matchAll("黑大衣").contains("黑"));
+		Assert.assertTrue(tree.matchAll("红色大衣").contains("红色大衣"));
+
+		//如果不覆写只能通过new出新对象才不会有问题
+		tree = new WordTree();
+		tree.addWords("黑大衣","红色大衣");
+		Assert.assertTrue(tree.matchAll("黑大衣").contains("黑大衣"));
+		Assert.assertTrue(tree.matchAll("红色大衣").contains("红色大衣"));
+	}
+
 	// ----------------------------------------------------------------------------------------------------------
 	/**
 	 * 构建查找树

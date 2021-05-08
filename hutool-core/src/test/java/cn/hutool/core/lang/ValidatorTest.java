@@ -21,6 +21,18 @@ public class ValidatorTest {
 	}
 
 	@Test
+	public void hasNumberTest() throws Exception {
+		String var1 = "";
+		String var2 = "str";
+		String var3 = "180";
+		String var4 = "身高180体重180";
+		Assert.assertFalse(Validator.hasNumber(var1));
+		Assert.assertFalse(Validator.hasNumber(var2));
+		Assert.assertTrue(Validator.hasNumber(var3));
+		Assert.assertTrue(Validator.hasNumber(var4));
+	}
+
+	@Test
 	public void isLetterTest() {
 		Assert.assertTrue(Validator.isLetter("asfdsdsfds"));
 		Assert.assertTrue(Validator.isLetter("asfdsdfdsfVCDFDFGdsfds"));

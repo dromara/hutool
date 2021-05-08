@@ -765,6 +765,18 @@ public class NumberUtil {
 		return (int) Math.ceil((double) v1 / v2);
 	}
 
+	/**
+	 * 求百分比(取整)  (3,10) => 30
+	 *
+	 * @param num   当前num
+	 * @param total 总长度
+	 * @return int 百分比(取整)
+	 * @since 5.6.5
+	 */
+	public static int percent(int num, int total) {
+		return (int) ((float) num / (float) total * 100);
+	}
+
 	// ------------------------------------------------------------------------------------------- round
 
 	/**
@@ -1108,6 +1120,19 @@ public class NumberUtil {
 		final NumberFormat format = NumberFormat.getPercentInstance();
 		format.setMaximumFractionDigits(scale);
 		return format.format(number);
+	}
+
+	/**
+	 * 求百分比(带精度)(带百分号后缀)  (3,10,0) => 30%
+	 *
+	 * @param num   当前num
+	 * @param total 总长度
+	 * @param scale 精度(保留小数点后几位)
+	 * @return String 百分比(带百分号后缀)
+	 * @since 5.6.5
+	 */
+	public static String formatPercent(Number num, Number total, int scale) {
+		return formatPercent(num.doubleValue() / total.doubleValue(), scale);
 	}
 
 	// ------------------------------------------------------------------------------------------- isXXX
