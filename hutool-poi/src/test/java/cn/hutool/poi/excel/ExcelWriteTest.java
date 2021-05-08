@@ -4,18 +4,19 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -553,13 +554,15 @@ public class ExcelWriteTest {
 
 		// 合并单元格后的标题行，使用设置好的样式
 		writer.merge(0,1,0,row1.size() - 1, "标题XXXXXXXX",cellStyle);
-		System.out.println(writer.getCurrentRow());
+		Console.log(writer.getCurrentRow());
+
 		//设置复杂表头
 		writer.merge(2,3,0,0,"序号",true);
 		writer.merge(2,2,1,2,"AABB",true);
 		writer.merge(2,3,3,3,"CCCC",true);
 		writer.merge(2,2,4,5,"DDEE",true);
 		writer.setCurrentRow(3);
+
 		List<String> sechead = CollUtil.newArrayList("AA","BB","DD","EE");
 		writer.writeSecHeadRow(sechead);
 		// 一次性写出内容，使用默认样式

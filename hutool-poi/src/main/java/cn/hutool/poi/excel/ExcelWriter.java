@@ -722,14 +722,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (null != this.styleSet) {
 			style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
 		}
-		CellUtil.mergingCells(this.sheet, firstRow, lastRow, firstColumn, lastColumn, style);
 
-		// 设置内容
-		if (null != content) {
-			final Cell cell = getOrCreateCell(firstColumn, firstRow);
-			CellUtil.setCellValue(cell, content, this.styleSet, isSetHeaderStyle);
-		}
-		return this;
+		return merge(firstRow, lastRow, firstColumn, lastColumn, content, style);
 	}
 
 	/**
@@ -743,6 +737,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param content          合并单元格后的内容
 	 * @param cellStyle        合并后单元格使用的样式，可以为null
 	 * @return this
+	 * @since 5.6.5
 	 */
 	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, CellStyle cellStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
@@ -876,6 +871,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 *
+	 * <p>
+	 *     此方法的逻辑是：将一行数据写出到当前行，遇到已存在的单元格跳过，不存在的创建并赋值。
+	 * </p>
 	 *
 	 * @param rowData 一行的数据
 	 * @return this

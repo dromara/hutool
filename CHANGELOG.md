@@ -9,8 +9,9 @@
 * 【http   】     HttpUtil增加closeCookie方法
 * 【core   】     NumberUtil增加方法decimalFormat重载（issue#I3OSA2@Gitee）
 * 【extra  】     Ftp的remoteVerificationEnabled改为false（issue#I3OSA2@Gitee）
-* 【core  】      MaskBit增加掩码反向转换的方法getMaskBit()（pr#1563@Github）
-* 【core  】      ReUtil等增加indexOf、delLast等方法（pr#1555@Github）
+* 【core   】     MaskBit增加掩码反向转换的方法getMaskBit()（pr#1563@Github）
+* 【core   】     ReUtil等增加indexOf、delLast等方法（pr#1555@Github）
+* 【poi    】     ExcelWriter增加writeSecHeadRow，增加合并单元格边框颜色样式（pr#318@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复createScheduledExecutor单位不是毫秒的问题（issue#I3OYIW@Gitee）
