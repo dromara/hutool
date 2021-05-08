@@ -175,6 +175,9 @@ public class Ftp extends AbstractFtp {
 	 */
 	public Ftp init(FtpConfig config, FtpMode mode) {
 		final FTPClient client = new FTPClient();
+		// issue#I3O81Y@Gitee
+		client.setRemoteVerificationEnabled(false);
+
 		final Charset charset = config.getCharset();
 		if (null != charset) {
 			client.setControlEncoding(charset.toString());
@@ -190,6 +193,7 @@ public class Ftp extends AbstractFtp {
 			client.configure(conf);
 		}
 
+		// connect
 		try {
 			// 连接ftp服务器
 			client.connect(config.getHost(), config.getPort());
