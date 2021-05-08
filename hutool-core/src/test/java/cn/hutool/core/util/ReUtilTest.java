@@ -56,8 +56,10 @@ public class ReUtilTest {
 		Assert.assertEquals("180",ReUtil.delLast(PatternPool.CHINESES, word));
 
 		//多个匹配删除最后一个 判断是否不在包含最后的数字
-		Assert.assertFalse(ReUtil.delLast("\\d+", sentence).contains("130"));
-		Assert.assertFalse(ReUtil.delLast(PatternPool.NUMBERS, sentence).contains("130"));
+		String s = ReUtil.delLast("\\d+", sentence);
+		Assert.assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
+		s = ReUtil.delLast(PatternPool.NUMBERS, sentence);
+		Assert.assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
 
 		//多个匹配删除最后一个 判断是否不在包含最后的数字
 		Assert.assertFalse(ReUtil.delLast("[\u4E00-\u9FFF]+", sentence).contains("斤的用户"));

@@ -162,16 +162,10 @@ public class IterUtil {
 	public static <T> Map<T, Integer> countMap(Iterator<T> iter) {
 		final HashMap<T, Integer> countMap = new HashMap<>();
 		if (null != iter) {
-			Integer count;
 			T t;
 			while (iter.hasNext()) {
 				t = iter.next();
-				count = countMap.get(t);
-				if (null == count) {
-					countMap.put(t, 1);
-				} else {
-					countMap.put(t, count + 1);
-				}
+				countMap.put(t, countMap.getOrDefault(t, 0) + 1);
 			}
 		}
 		return countMap;

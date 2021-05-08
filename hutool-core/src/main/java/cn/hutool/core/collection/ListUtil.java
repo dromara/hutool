@@ -5,14 +5,25 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Matcher;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * List相关工具类
+ *
+ * @author looly
+ */
 public class ListUtil {
 	/**
 	 * 新建一个空List
@@ -442,33 +453,6 @@ public class ListUtil {
 			}
 		}
 		return list2;
-	}
-
-	/**
-	 * 统计list中元素出现次数
-	 *
-	 * @param list list容器
-	 * @return Map<T, Long>    统计次数 如: {"hello":10}
-	 * @since 5.6.5
-	 */
-	public static <T> Map<T, Long> countMap(List<T> list) {
-		Map<T, Long> countMap = MapUtil.newHashMap();
-		for (T o : list) {
-			countMap.put(o, countMap.getOrDefault(o, 0L) + 1);
-		}
-		return countMap;
-		//return list.stream().collect(Collectors.groupingBy(o -> o, Collectors.counting()));//stream方式
-	}
-
-	/**
-	 * 统计list中元素出现次数
-	 *
-	 * @param list list容器
-	 * @return Map<T, Long>    统计次数 如: {"hello":10}
-	 * @since 5.6.5
-	 */
-	public static <T> Map<T, Long> countMap(List<T> list, boolean isValueDesc) {
-		return MapUtil.sortByValue(countMap(list), isValueDesc);
 	}
 
 	/**
