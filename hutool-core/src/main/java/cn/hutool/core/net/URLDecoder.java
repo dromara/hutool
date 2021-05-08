@@ -25,11 +25,12 @@ public class URLDecoder implements Serializable {
 
 	/**
 	 * 解码，不对+解码
-	 * <pre>
-	 *   1. 将%20转换为空格 ;
-	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
-	 *   3. 跳过不符合规范的%形式，直接输出
-	 * </pre>
+	 *
+	 * <ol>
+	 *     <li>将%20转换为空格</li>
+	 *     <li>将 "%xy"转换为文本形式,xy是两位16进制的数值</li>
+	 *     <li>跳过不符合规范的%形式，直接输出</li>
+	 * </ol>
 	 *
 	 * @param str     包含URL编码后的字符串
 	 * @param charset 编码

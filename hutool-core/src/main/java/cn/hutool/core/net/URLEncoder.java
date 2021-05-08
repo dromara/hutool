@@ -30,12 +30,24 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@" / "/"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
 	 */
 	public static final URLEncoder DEFAULT = createDefault();
+
+	/**
+	 * URL的Path的每一个Segment URLEncoder<br>
+	 * 默认的编码器针对URI路径编码，定义如下：
+	 *
+	 * <pre>
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
+	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 */
+	public static final URLEncoder PATH_SEGMENT = createPathSegment();
 
 	/**
 	 * 用于查询语句的URLEncoder<br>
@@ -55,10 +67,10 @@ public class URLEncoder implements Serializable {
 	/**
 	 * 全编码的URLEncoder<br>
 	 * <pre>
-	 * 	 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
-	 * 	 '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
-	 * 	 其它编码为 %nn 形式
-	 * 	 </pre>
+	 *  0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is
+	 *  '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' 不编码
+	 *  其它编码为 %nn 形式
+	 * </pre>
 	 */
 	public static final URLEncoder ALL = createAll();
 
@@ -67,7 +79,7 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@" / "/"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
@@ -97,6 +109,42 @@ public class URLEncoder implements Serializable {
 		encoder.addSafeCharacter('@');
 		// Add '/' so it isn't encoded when we encode a path
 		encoder.addSafeCharacter('/');
+
+		return encoder;
+	}
+
+	/**
+	 * URL的Path的每一个Segment URLEncoder<br>
+	 * 默认的编码器针对URI路径的每一段编码，定义如下：
+	 *
+	 * <pre>
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
+	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 *
+	 * @return URLEncoder
+	 */
+	public static URLEncoder createPathSegment() {
+		final URLEncoder encoder = new URLEncoder();
+		encoder.addSafeCharacter('-');
+		encoder.addSafeCharacter('.');
+		encoder.addSafeCharacter('_');
+		encoder.addSafeCharacter('~');
+		// Add the sub-delims
+		encoder.addSafeCharacter('!');
+		encoder.addSafeCharacter('$');
+		encoder.addSafeCharacter('&');
+		encoder.addSafeCharacter('\'');
+		encoder.addSafeCharacter('(');
+		encoder.addSafeCharacter(')');
+		encoder.addSafeCharacter('*');
+		encoder.addSafeCharacter('+');
+		encoder.addSafeCharacter(',');
+		encoder.addSafeCharacter(';');
+		encoder.addSafeCharacter('=');
+		// Add the remaining literals
+		encoder.addSafeCharacter('@');
 
 		return encoder;
 	}

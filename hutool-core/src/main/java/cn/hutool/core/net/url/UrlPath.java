@@ -127,7 +127,7 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(URLUtil.encode(segment, charset));
+			builder.append(CharUtil.SLASH).append(URLUtil.encodePathSegment(segment, charset));
 		}
 		if (withEngTag || StrUtil.isEmpty(builder)) {
 			builder.append(CharUtil.SLASH);
