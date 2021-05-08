@@ -9,6 +9,8 @@
 * 【http   】     HttpUtil增加closeCookie方法
 * 【core   】     NumberUtil增加方法decimalFormat重载（issue#I3OSA2@Gitee）
 * 【extra  】     Ftp的remoteVerificationEnabled改为false（issue#I3OSA2@Gitee）
+* 【core  】      MaskBit增加掩码反向转换的方法getMaskBit()（pr#1563@Github）
+
 ### 🐞Bug修复
 * 【core   】     修复createScheduledExecutor单位不是毫秒的问题（issue#I3OYIW@Gitee）
 * 【core   】     修复Tailer无stop问题（issue#I3PQLQ@Gitee）
