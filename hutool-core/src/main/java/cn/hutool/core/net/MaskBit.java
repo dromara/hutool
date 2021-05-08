@@ -1,7 +1,7 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.map.BiMap;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 掩码位和掩码之间的Map对应
@@ -11,9 +11,12 @@ import java.util.Map;
  */
 public class MaskBit {
 
-	private static final Map<Integer, String> MASK_BIT_MAP;
+	/**
+	 * 掩码位与掩码的点分十进制的双向对应关系
+	 */
+	private static final BiMap<Integer, String> MASK_BIT_MAP;
 	static {
-		MASK_BIT_MAP = new HashMap<>(32);
+		MASK_BIT_MAP = new BiMap<>(new HashMap<>(32));
 		MASK_BIT_MAP.put(1, "128.0.0.0");
 		MASK_BIT_MAP.put(2, "192.0.0.0");
 		MASK_BIT_MAP.put(3, "224.0.0.0");
@@ -57,4 +60,16 @@ public class MaskBit {
 	public static String get(int maskBit) {
 		return MASK_BIT_MAP.get(maskBit);
 	}
+
+	/**
+	 * 根据掩码获取掩码位
+	 *
+	 * @param mask 掩码的点分十进制表示，如 255.255.255.0
+	 *
+	 * @return 掩码位，如 24；如果掩码不合法，则返回null
+	 */
+	public static Integer getMaskBit(String mask) {
+		return MASK_BIT_MAP.getKey(mask);
+	}
+
 }

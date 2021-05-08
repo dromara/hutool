@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import org.junit.function.ThrowingRunnable;
 
 public class Ipv4UtilTest {
 
@@ -12,6 +13,12 @@ public class Ipv4UtilTest {
 	public void getMaskBitByMaskTest(){
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		Assert.assertEquals(24, maskBitByMask);
+	}
+
+	@Test
+	public void getMaskBitByIllegalMaskTest() {
+		ThrowingRunnable getMaskBitByMaskRunnable = () -> Ipv4Util.getMaskBitByMask("255.255.0.255");
+		Assert.assertThrows("非法掩码测试", IllegalArgumentException.class, getMaskBitByMaskRunnable);
 	}
 
 	@Test
@@ -41,5 +48,31 @@ public class Ipv4UtilTest {
 		int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final List<String> list = Ipv4Util.list("192.168.100.2", maskBit, false);
 		Assert.assertEquals(254, list.size());
+	}
+
+	@Test
+	public void isMaskValidTest() {
+		boolean maskValid = Ipv4Util.isMaskValid("255.255.255.0");
+		Assert.assertTrue("掩码合法检验", maskValid);
+	}
+
+	@Test
+	public void isMaskInvalidTest() {
+		Assert.assertFalse("掩码非法检验 - 255.255.0.255", Ipv4Util.isMaskValid("255.255.0.255"));
+		Assert.assertFalse("掩码非法检验 - null值", Ipv4Util.isMaskValid(null));
+		Assert.assertFalse("掩码非法检验 - 空字符串", Ipv4Util.isMaskValid(""));
+		Assert.assertFalse("掩码非法检验 - 空白字符串", Ipv4Util.isMaskValid(" "));
+	}
+
+	@Test
+	public void isMaskBitValidTest() {
+		boolean maskBitValid = Ipv4Util.isMaskBitValid(32);
+		Assert.assertTrue("掩码位合法检验", maskBitValid);
+	}
+
+	@Test
+	public void isMaskBitInvalidTest() {
+		boolean maskBitValid = Ipv4Util.isMaskBitValid(33);
+		Assert.assertFalse("掩码位非法检验", maskBitValid);
 	}
 }
