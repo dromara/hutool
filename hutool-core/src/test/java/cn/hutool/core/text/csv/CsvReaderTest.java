@@ -8,7 +8,7 @@ import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.junit.Ignore;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +77,7 @@ public class CsvReaderTest {
 	}
 
 	@Test
+	@Ignore
 	public void readTest2(){
 		final CsvReader reader = CsvUtil.getReader();
 		final CsvData read = reader.read(FileUtil.file("d:/test/test.csv"));
