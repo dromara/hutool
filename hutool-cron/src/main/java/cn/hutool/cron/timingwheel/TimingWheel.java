@@ -1,30 +1,40 @@
 package cn.hutool.cron.timingwheel;
 
+import cn.hutool.log.StaticLog;
+
 import java.util.concurrent.DelayQueue;
 
+/**
+ * 多层时间轮，常用于延时任务。<br>
+ * 时间轮是一种环形数据结构，由多个槽组成，每个槽中存放任务集合。<br>
+ * 一个单独的线程推进时间一槽一槽的移动，并执行槽中的任务。
+ *
+ * @author eliasyaoyc, looly
+ */
 public class TimingWheel {
+
 	/**
 	 * 一个时间槽的范围
 	 */
-	private long tickMs;
+	private final long tickMs;
 
 	/**
-	 * 时间轮大小
+	 * 时间轮大小，时间轮中时间槽的个数
 	 */
-	private int wheelSize;
+	private final int wheelSize;
 
 	/**
-	 * 时间跨度
+	 * 时间跨度，当前时间轮总间隔，即单个槽的跨度*槽个数
 	 */
-	private long interval;
+	private final long interval;
 
 	/**
 	 * 时间槽
 	 */
-	private TimerTaskList[] timerTaskLists;
+	private final TimerTaskList[] timerTaskLists;
 
 	/**
-	 * 当前时间
+	 * 当前时间，指向当前操作的时间格，代表当前时间
 	 */
 	private long currentTime;
 
@@ -34,10 +44,18 @@ public class TimingWheel {
 	private volatile TimingWheel overflowWheel;
 
 	/**
-	 * 一个Timer只有一个delayQueue
+	 * 执行等待列表
 	 */
-	private DelayQueue<TimerTaskList> delayQueue;
+	private final DelayQueue<TimerTaskList> delayQueue;
 
+	/**
+	 * 构造
+	 *
+	 * @param tickMs 一个时间槽的范围，单位毫秒
+	 * @param wheelSize 时间轮大小
+	 * @param currentTime 当前时间
+	 * @param delayQueue 执行等待链表
+	 */
 	public TimingWheel(long tickMs, int wheelSize, long currentTime, DelayQueue<TimerTaskList> delayQueue) {
 		this.currentTime = currentTime;
 		this.tickMs = tickMs;
@@ -47,27 +65,12 @@ public class TimingWheel {
 		//currentTime为tickMs的整数倍 这里做取整操作
 		this.currentTime = currentTime - (currentTime % tickMs);
 		this.delayQueue = delayQueue;
-		for (int i = 0; i < wheelSize; i++) {
-			timerTaskLists[i] = new TimerTaskList();
-		}
-	}
-
-	/**
-	 * 创建或者获取上层时间轮
-	 */
-	private TimingWheel getOverflowWheel() {
-		if (overflowWheel == null) {
-			synchronized (this) {
-				if (overflowWheel == null) {
-					overflowWheel = new TimingWheel(interval, wheelSize, currentTime, delayQueue);
-				}
-			}
-		}
-		return overflowWheel;
 	}
 
 	/**
 	 * 添加任务到时间轮
+	 *
+	 * @param timerTask 任务
 	 */
 	public boolean addTask(TimerTask timerTask) {
 		long expiration = timerTask.getDelayMs();
@@ -76,10 +79,15 @@ public class TimingWheel {
 			return false;
 		} else if (expiration < currentTime + interval) {
 			//当前时间轮可以容纳该任务 加入时间槽
-			Long virtualId = expiration / tickMs;
+			long virtualId = expiration / tickMs;
 			int index = (int) (virtualId % wheelSize);
-			System.out.println("tickMs:" + tickMs + "------index:" + index + "------expiration:" + expiration);
+			StaticLog.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
+
 			TimerTaskList timerTaskList = timerTaskLists[index];
+			if(null == timerTaskList){
+				timerTaskList = new TimerTaskList();
+				timerTaskLists[index] = timerTaskList;
+			}
 			timerTaskList.addTask(timerTask);
 			if (timerTaskList.setExpiration(virtualId * tickMs)) {
 				//添加到delayQueue中
@@ -95,6 +103,7 @@ public class TimingWheel {
 
 	/**
 	 * 推进时间
+	 * @param timestamp 推进的时间
 	 */
 	public void advanceClock(long timestamp) {
 		if (timestamp >= currentTime + tickMs) {
@@ -104,5 +113,19 @@ public class TimingWheel {
 				this.getOverflowWheel().advanceClock(timestamp);
 			}
 		}
+	}
+
+	/**
+	 * 创建或者获取上层时间轮
+	 */
+	private TimingWheel getOverflowWheel() {
+		if (overflowWheel == null) {
+			synchronized (this) {
+				if (overflowWheel == null) {
+					overflowWheel = new TimingWheel(interval, wheelSize, currentTime, delayQueue);
+				}
+			}
+		}
+		return overflowWheel;
 	}
 }

@@ -6,6 +6,9 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 系统计时器，
+ */
 public class SystemTimer {
 	/**
 	 * 底层时间轮
@@ -25,10 +28,11 @@ public class SystemTimer {
 	/**
 	 * 轮询delayQueue获取过期任务线程
 	 */
-	private ExecutorService bossThreadPool;
+	private final ExecutorService bossThreadPool;
 
 	/**
 	 * 构造函数
+	 * @param timeout 超时时长
 	 */
 	public SystemTimer(int timeout) {
 		timeWheel = new TimingWheel(1, 20, System.currentTimeMillis(), delayQueue);
@@ -59,7 +63,7 @@ public class SystemTimer {
 			TimerTaskList timerTaskList = delayQueue.poll(timeout, TimeUnit.MILLISECONDS);
 			if (timerTaskList != null) {
 				//推进时间
-				timeWheel.advanceClock(timerTaskList.getExpiration());
+				timeWheel.advanceClock(timerTaskList.getExpire());
 				//执行过期任务（包含降级操作）
 				timerTaskList.flush(this::addTask);
 			}
