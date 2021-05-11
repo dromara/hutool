@@ -4,8 +4,10 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -501,6 +503,12 @@ public class BeanUtilTest {
 		Assert.assertEquals("{codeList={0={name=张三}}}", resultMap.toString());
 	}
 
+	@Data
+	public static class Student{
+		String name;
+		int age;
+		Long no;
+	}
 	@Test
 	public void beanCopyTest() {
 		final Station station = new Station();
@@ -512,6 +520,26 @@ public class BeanUtilTest {
 		Assert.assertEquals(new Long(123456L), station2.getId());
 	}
 
+	@Test
+	public void copyListTest(){
+
+		Student student = ReflectUtil.newInstance(Student.class);
+		student.setName("张三");
+		student.setAge(123);
+		student.setNo(3158L);
+		Student student2 = ReflectUtil.newInstance(Student.class);
+		student.setName("李四");
+		student.setAge(125);
+		student.setNo(8848L);
+		List<Student> studentList = ListUtil.of(student, student2);
+		List<Person> people = BeanUtil.copyToList(studentList, Person.class);
+		Assert.assertEquals(studentList.size(),people.size());
+		for (int i = 0; i < studentList.size(); i++) {
+			Assert.assertEquals(studentList.get(i).getName(),people.get(i).getName());
+			Assert.assertEquals(studentList.get(i).getAge(),people.get(i).getAge());
+		}
+
+	}
 	public static class Station extends Tree<Station, Long> {
 
 	}
