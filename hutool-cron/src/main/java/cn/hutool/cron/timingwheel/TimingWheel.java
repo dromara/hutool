@@ -2,7 +2,7 @@ package cn.hutool.cron.timingwheel;
 
 import cn.hutool.log.StaticLog;
 
-import java.util.concurrent.DelayQueue;
+import java.util.function.Consumer;
 
 /**
  * 多层时间轮，常用于延时任务。<br>
@@ -44,9 +44,20 @@ public class TimingWheel {
 	private volatile TimingWheel overflowWheel;
 
 	/**
-	 * 执行等待列表
+	 * 任务处理器
 	 */
-	private final DelayQueue<TimerTaskList> delayQueue;
+	private final Consumer<TimerTaskList> consumer;
+
+	/**
+	 * 构造
+	 *
+	 * @param tickMs 一个时间槽的范围，单位毫秒
+	 * @param wheelSize 时间轮大小
+	 * @param consumer 任务处理器
+	 */
+	public TimingWheel(long tickMs, int wheelSize, Consumer<TimerTaskList> consumer) {
+		this(tickMs, wheelSize, System.currentTimeMillis(), consumer);
+	}
 
 	/**
 	 * 构造
@@ -54,9 +65,9 @@ public class TimingWheel {
 	 * @param tickMs 一个时间槽的范围，单位毫秒
 	 * @param wheelSize 时间轮大小
 	 * @param currentTime 当前时间
-	 * @param delayQueue 执行等待链表
+	 * @param consumer 任务处理器
 	 */
-	public TimingWheel(long tickMs, int wheelSize, long currentTime, DelayQueue<TimerTaskList> delayQueue) {
+	public TimingWheel(long tickMs, int wheelSize, long currentTime, Consumer<TimerTaskList> consumer) {
 		this.currentTime = currentTime;
 		this.tickMs = tickMs;
 		this.wheelSize = wheelSize;
@@ -64,7 +75,7 @@ public class TimingWheel {
 		this.timerTaskLists = new TimerTaskList[wheelSize];
 		//currentTime为tickMs的整数倍 这里做取整操作
 		this.currentTime = currentTime - (currentTime % tickMs);
-		this.delayQueue = delayQueue;
+		this.consumer = consumer;
 	}
 
 	/**
@@ -91,7 +102,7 @@ public class TimingWheel {
 			timerTaskList.addTask(timerTask);
 			if (timerTaskList.setExpiration(virtualId * tickMs)) {
 				//添加到delayQueue中
-				delayQueue.offer(timerTaskList);
+				consumer.accept(timerTaskList);
 			}
 		} else {
 			//放到上一层的时间轮
@@ -122,7 +133,7 @@ public class TimingWheel {
 		if (overflowWheel == null) {
 			synchronized (this) {
 				if (overflowWheel == null) {
-					overflowWheel = new TimingWheel(interval, wheelSize, currentTime, delayQueue);
+					overflowWheel = new TimingWheel(interval, wheelSize, currentTime, consumer);
 				}
 			}
 		}
