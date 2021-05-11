@@ -3,6 +3,7 @@ package cn.hutool.poi.excel;
 import cn.hutool.poi.excel.cell.CellLocation;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Ignore;
 
 public class ExcelUtilTest {
 
@@ -44,6 +45,7 @@ public class ExcelUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void readAndWriteTest(){
 		ExcelReader reader = ExcelUtil.getReader("d:\\test/select.xls");
 		ExcelWriter writer = reader.getWriter();

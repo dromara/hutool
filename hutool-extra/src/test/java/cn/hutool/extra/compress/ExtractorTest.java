@@ -9,7 +9,7 @@ import org.junit.Test;
 public class ExtractorTest {
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void zipTest(){
 		Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
