@@ -8,22 +8,12 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.net.DatagramSocket;
-import java.net.HttpCookie;
-import java.net.IDN;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
@@ -34,6 +24,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 网络相关工具
@@ -779,6 +771,48 @@ public class NetUtil {
 			return false;
 		}
 	}
+
+	/**
+	 * 获取公网ip（jsonip.com）
+	 *
+	 * @return 公网ip
+	 */
+	public static String publicIp() {
+		String jsonIp = "https://jsonip.com";
+		StringBuilder result = new StringBuilder();
+		BufferedReader in = null;
+		try {
+			URL url = new URL(jsonIp);
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestMethod("GET");
+			urlConnection.connect();
+			in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+			String line;
+			while ((line = in.readLine()) != null) {
+				result.append(line);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		String rexp = "(\\d{1,3}\\.){3}\\d{1,3}";
+		Pattern pat = Pattern.compile(rexp);
+		Matcher mat = pat.matcher(result.toString());
+		String res = "";
+		while (mat.find()) {
+			res = mat.group();
+			break;
+		}
+		return res;
+	}
+
 	// ----------------------------------------------------------------------------------------- Private method start
 
 	/**
