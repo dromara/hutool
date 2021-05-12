@@ -777,7 +777,7 @@ public class NetUtil {
 	 *
 	 * @return 公网ip
 	 */
-	public static String publicIp() {
+	public static String getPublicIp() {
 		String jsonIp = "https://jsonip.com";
 		StringBuilder result = new StringBuilder();
 		BufferedReader in = null;

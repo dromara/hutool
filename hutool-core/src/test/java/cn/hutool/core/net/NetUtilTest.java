@@ -13,9 +13,8 @@ import java.util.List;
 
 /**
  * NetUtil单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class NetUtilTest {
 
@@ -58,12 +57,12 @@ public class NetUtilTest {
 
 	@Test
 	@Ignore
-	public void isUsableLocalPortTest(){
+	public void isUsableLocalPortTest() {
 		Assert.assertTrue(NetUtil.isUsableLocalPort(80));
 	}
 
 	@Test
-	public void parseCookiesTest(){
+	public void parseCookiesTest() {
 		String cookieStr = "cookieName=\"cookieValue\";Path=\"/\";Domain=\"cookiedomain.com\"";
 		final List<HttpCookie> httpCookies = NetUtil.parseCookies(cookieStr);
 		Assert.assertEquals(1, httpCookies.size());
@@ -82,15 +81,21 @@ public class NetUtilTest {
 	}
 
 	@Test
-	public void pingTest(){
+	public void pingTest() {
 		Assert.assertTrue(NetUtil.ping("127.0.0.1"));
 	}
 
 	@Test
 	@Ignore
-	public void isOpenTest(){
+	public void isOpenTest() {
 		InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
 		Assert.assertTrue(NetUtil.isOpen(address, 200));
 	}
 
+
+	@Test
+	public void publicIpTest() {
+		String publicIp = NetUtil.getPublicIp();
+		Assert.assertTrue(!publicIp.isEmpty());
+	}
 }
