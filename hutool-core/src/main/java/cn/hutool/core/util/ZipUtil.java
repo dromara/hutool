@@ -1068,13 +1068,14 @@ public class ZipUtil {
 		final String subPath = FileUtil.subPath(srcRootDir, file); // 获取文件相对于压缩文件夹根目录的子路径
 		if (file.isDirectory()) {// 如果是目录，则压缩压缩目录中的文件或子目录
 			final File[] files = file.listFiles();
-			if (ArrayUtil.isEmpty(files) && StrUtil.isNotEmpty(subPath)) {
+			if (ArrayUtil.isEmpty(files)) {
 				// 加入目录，只有空目录时才加入目录，非空时会在创建文件时自动添加父级目录
 				addDir(subPath, out);
-			}
-			// 压缩目录下的子文件或目录
-			for (File childFile : files) {
-				zip(childFile, srcRootDir, out, filter);
+			} else{
+				// 压缩目录下的子文件或目录
+				for (File childFile : files) {
+					zip(childFile, srcRootDir, out, filter);
+				}
 			}
 		} else {// 如果是文件或其它符号，则直接压缩该文件
 			add(file, subPath, out);
@@ -1125,6 +1126,11 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	private static void addDir(String path, ZipOutputStream out) throws UtilException {
+		if(StrUtil.isEmpty(path)){
+			// 空路径不处理
+			return;
+		}
+
 		path = StrUtil.addSuffixIfNot(path, StrUtil.SLASH);
 		try {
 			out.putNextEntry(new ZipEntry(path));
