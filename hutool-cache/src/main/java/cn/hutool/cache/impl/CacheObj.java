@@ -38,34 +38,6 @@ public class CacheObj<K, V> implements Serializable{
 	}
 
 	/**
-	 * 判断是否过期
-	 *
-	 * @return 是否过期
-	 */
-	boolean isExpired() {
-		if(this.ttl > 0) {
-			// 此处不考虑时间回拨
-			return (System.currentTimeMillis() - this.lastAccess) > this.ttl;
-		}
-		return false;
-	}
-
-	/**
-	 * 获取值
-	 *
-	 * @param isUpdateLastAccess 是否更新最后访问时间
-	 * @return 获得对象
-	 * @since 4.0.10
-	 */
-	V get(boolean isUpdateLastAccess) {
-		if(isUpdateLastAccess) {
-			lastAccess = System.currentTimeMillis();
-		}
-		accessCount.getAndIncrement();
-		return this.obj;
-	}
-
-	/**
 	 * 获取键
 	 * @return 键
 	 * @since 4.0.10
@@ -86,5 +58,33 @@ public class CacheObj<K, V> implements Serializable{
 	@Override
 	public String toString() {
 		return "CacheObj [key=" + key + ", obj=" + obj + ", lastAccess=" + lastAccess + ", accessCount=" + accessCount + ", ttl=" + ttl + "]";
+	}
+
+	/**
+	 * 判断是否过期
+	 *
+	 * @return 是否过期
+	 */
+	protected boolean isExpired() {
+		if(this.ttl > 0) {
+			// 此处不考虑时间回拨
+			return (System.currentTimeMillis() - this.lastAccess) > this.ttl;
+		}
+		return false;
+	}
+
+	/**
+	 * 获取值
+	 *
+	 * @param isUpdateLastAccess 是否更新最后访问时间
+	 * @return 获得对象
+	 * @since 4.0.10
+	 */
+	protected V get(boolean isUpdateLastAccess) {
+		if(isUpdateLastAccess) {
+			lastAccess = System.currentTimeMillis();
+		}
+		accessCount.getAndIncrement();
+		return this.obj;
 	}
 }
