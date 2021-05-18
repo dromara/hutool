@@ -10,6 +10,7 @@
 * 【core   】     BeanUtil.copyToList增加重载（pr#321@Gitee）
 * 【core   】     SyncFinisher增加stop方法（issue#1578@Github）
 * 【cache  】     CacheObj默认方法改为protected（issue#I3RIEI@Gitee）
+* 【core   】     FileUtil.isEmpty不存在时返回true（issue#1582@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
