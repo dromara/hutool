@@ -34,7 +34,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	// 乐观锁，此处使用乐观锁解决读多写少的场景
 	// get时乐观读，再检查是否修改，修改则转入悲观读重新读一遍，可以有效解决在写时阻塞大量读操作的情况。
 	// see: https://www.cnblogs.com/jiagoushijuzi/p/13721319.html
-	private final StampedLock lock = new StampedLock();
+	protected final StampedLock lock = new StampedLock();
 
 	/**
 	 * 写的时候每个key一把锁，降低锁的粒度
