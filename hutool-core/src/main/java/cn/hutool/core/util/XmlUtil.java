@@ -1185,7 +1185,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean isPretty, boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty);
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty, omitXmlDeclaration);
 	}
 
 	/**
