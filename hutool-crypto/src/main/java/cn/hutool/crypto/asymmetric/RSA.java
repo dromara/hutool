@@ -272,7 +272,7 @@ public class RSA extends AsymmetricCrypto {
 	/**
 	 * 获得公钥指数exponent
 	 * 
-	 * @return 公钥指数Base64
+	 * @return 公钥指数Base64编码
 	 */
 	public String getPublicKeyExponentBase64() {
 		return Base64.encode(getPublicKeyExponent());
@@ -299,7 +299,7 @@ public class RSA extends AsymmetricCrypto {
 	/**
 	 * 获得私钥模数modulus
 	 * 
-	 * @return 私钥模数Base64
+	 * @return 私钥模数Base64编码
 	 */
 	public String getPrivateKeyModulusBase64() {
 		return Base64.encode(getPrivateKeyModulus());
@@ -326,7 +326,7 @@ public class RSA extends AsymmetricCrypto {
 	/**
 	 * 获得私钥指数exponent
 	 * 
-	 * @return 私钥指数Base64
+	 * @return 私钥指数Base64编码
 	 */
 	public String getPrivateKeyExponentBase64() {
 		return Base64.encode(getPrivateKeyExponent());

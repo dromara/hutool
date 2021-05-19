@@ -251,9 +251,18 @@ public class RSATest {
 		String decStr = rsa.decryptStr(encStr, KeyType.PrivateKey);
 		Assert.assertEquals(test, decStr);
 		String hexModulus = rsa.getPublicKeyModulusHex();
+		rsa.getPublicKeyModulus();
+		rsa.getPublicKeyModulusBase64();
 		String hexExponent = rsa.getPublicKeyExponentHex();
+		rsa.getPublicKeyExponent();
+		rsa.getPublicKeyExponentBase64();
 		String hexPrivateExponent = rsa.getPrivateKeyExponentHex();
-
+		rsa.getPrivateKeyExponent();
+		rsa.getPrivateKeyExponentBase64();
+		rsa.getPrivateKeyModulus();
+		rsa.getPrivateKeyModulusHex();
+		rsa.getPrivateKeyModulusBase64();
+		
 		RSA rsaME = new RSA(new BigInteger(hexModulus, 16), new BigInteger(hexPrivateExponent, 16),
 				new BigInteger(hexExponent, 16));
 		String encMeStr = rsaME.encryptBase64(test, KeyType.PublicKey);
