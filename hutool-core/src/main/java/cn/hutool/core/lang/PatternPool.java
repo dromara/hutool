@@ -63,10 +63,22 @@ public class PatternPool {
 	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+13位数字
 	 * 中国大陆 +86 Mainland China
 	 * 中国香港 +852 Hong Kong
-	 * 中国澳门 +853 Macau
+	 * 中国澳门 +853 Macao
 	 * 中国台湾 +886 Taiwan
 	 */
 	public final static Pattern MOBILE_HK = Pattern.compile("(?:0|852|\\+852)?\\d{8}");
+	/**
+	 * 中国台湾移动电话
+	 * eg: 中国台湾： +886 09 60 000000， 三位区域码+号码以数字09开头 + 8位数字, 中国台湾手机号码10位数
+	 * 中国台湾 +886 Taiwan 国际域名缩写：TW
+	 */
+	public final static Pattern MOBILE_TW = Pattern.compile("(?:0|886|\\+886)?(?:|-)09\\d{8}");
+	/**
+	 * 中国澳门移动电话
+	 * eg: 中国台湾： +853 68 00000， 三位区域码 +号码以数字6开头 + 7位数字, 中国台湾手机号码8位数
+	 * 中国澳门 +853 Macao 国际域名缩写：MO
+	 */
+	public final static Pattern MOBILE_MO = Pattern.compile("(?:0|853|\\+853)?(?:|-)6\\d{7}");
 	/**
 	 * 座机号码
 	 */
