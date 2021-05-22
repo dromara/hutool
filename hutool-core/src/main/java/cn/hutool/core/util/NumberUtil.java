@@ -1082,7 +1082,7 @@ public class NumberUtil {
 		if(null != roundingMode){
 			decimalFormat.setRoundingMode(roundingMode);
 		}
-		return decimalFormat.format(roundingMode);
+		return decimalFormat.format(value);
 	}
 
 	/**

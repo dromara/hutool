@@ -162,6 +162,14 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void decimalFormatDoubleTest() {
+		Double c = 467.8101;
+
+		String format = NumberUtil.decimalFormat("0.00", c);
+		Assert.assertEquals("467.81", format);
+	}
+
+	@Test
 	public void decimalFormatMoneyTest() {
 		double c = 299792400.543534534;
 
