@@ -50,6 +50,7 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("255044462d312e", "pdf"); // Adobe Acrobat (pdf)
 		FILE_TYPE_MAP.put("2e524d46000000120001", "rmvb"); // rmvb/rm相同
 		FILE_TYPE_MAP.put("464c5601050000000900", "flv"); // flv与f4v相同
+		FILE_TYPE_MAP.put("0000001C66747970", "mp4");
 		FILE_TYPE_MAP.put("00000020667479706", "mp4");
 		FILE_TYPE_MAP.put("00000018667479706D70", "mp4");
 		FILE_TYPE_MAP.put("49443303000000002176", "mp3");
