@@ -673,7 +673,22 @@ public abstract class AbstractDb implements Serializable {
 
 	/**
 	 * 结果的条目数
-	 *
+	 * @param sql sql构造器
+	 * @return 复合条件的结果数
+	 * @throws SQLException SQL执行异常
+	 */
+	public long count(SqlBuilder sql) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.count(conn, sql.build(),sql.getParamValueArray());
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 结果的条目数
 	 * @param selectSql 查询SQL语句
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
@@ -683,6 +698,22 @@ public abstract class AbstractDb implements Serializable {
 		try {
 			conn = this.getConnection();
 			return runner.count(conn, selectSql);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	/**
+	 * 结果的条目数
+	 * @param selectSql 查询SQL语句
+	 * @param params 查询参数
+	 * @return 复合条件的结果数
+	 * @throws SQLException SQL执行异常
+	 */
+	public long count(CharSequence selectSql,Object ...params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.count(conn, selectSql,params);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -817,6 +848,44 @@ public abstract class AbstractDb implements Serializable {
 	}
 
 	/**
+	 * 分页查询<br>
+	 * @param <T>  结果对象类型
+	 * @param sql  SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page 分页对象
+	 * @param rsh  结果集处理对象
+	 * @param params  参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public <T> T page(CharSequence sql, Page page, RsHandler<T> rsh,Object ...params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, SqlBuilder.of(sql).addParams(params), page, rsh);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 分页查询
+	 * @param sql  SQL构建器
+	 * @param page 分页对象
+	 * @param rsh  结果集处理对象
+	 * @return: 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public <T> T page(SqlBuilder sql, Page page, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, sql, page, rsh);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
 	 * 分页查询
 	 *
 	 * @param sql  SQL语句字符串
@@ -830,6 +899,24 @@ public abstract class AbstractDb implements Serializable {
 		try {
 			conn = this.getConnection();
 			return runner.page(conn, SqlBuilder.of(sql), page);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 分页查询
+	 * @param sql  SQL语句字符串
+	 * @param page 分页对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
+	 */
+	public PageResult<Entity> page(CharSequence sql, Page page ,Object ...params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, SqlBuilder.of(sql).addParams(params), page);
 		} finally {
 			this.closeConnection(conn);
 		}
