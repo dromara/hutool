@@ -11,6 +11,7 @@
 * 【core   】     SyncFinisher增加stop方法（issue#1578@Github）
 * 【cache  】     CacheObj默认方法改为protected（issue#I3RIEI@Gitee）
 * 【core   】     FileUtil.isEmpty不存在时返回true（issue#1582@Github）
+* 【core   】     PhoneUtil增加中国澳门和中国台湾手机号校检方法（pr#331@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
