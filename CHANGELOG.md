@@ -12,6 +12,7 @@
 * 【cache  】     CacheObj默认方法改为protected（issue#I3RIEI@Gitee）
 * 【core   】     FileUtil.isEmpty不存在时返回true（issue#1582@Github）
 * 【core   】     PhoneUtil增加中国澳门和中国台湾手机号校检方法（pr#331@Gitee）
+* 【db     】     分页查询，自定义sql查询，添加参数（pr#332@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）

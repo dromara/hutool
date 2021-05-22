@@ -285,26 +285,15 @@ public class SqlConnRunner extends DialectRunner {
 	 *
 	 * @param conn      数据库连接对象
 	 * @param selectSql 查询语句
+	 * @param params    查询参数
 	 * @return 结果数
 	 * @throws SQLException SQL异常
+	 * @since 5.6.6
 	 */
-	public long count(Connection conn, CharSequence selectSql) throws SQLException {
-		return this.count(conn,selectSql,null);
-	}
-
-	/**
-	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) as _count
-	 *
-	 * @param conn      数据库连接对象
-	 * @param selectSql 查询语句
-	 * @param params   查询参数
-	 * @return 结果数
-	 * @throws SQLException SQL异常
-	 */
-	public long count(Connection conn, CharSequence selectSql,Object ...params) throws SQLException {
+	public long count(Connection conn, CharSequence selectSql, Object... params) throws SQLException {
 		Assert.notBlank(selectSql, "Select SQL must be not blank!");
 		final int orderByIndex = StrUtil.indexOfIgnoreCase(selectSql, " order by");
-		if(orderByIndex > 0){
+		if (orderByIndex > 0) {
 			selectSql = StrUtil.subPre(selectSql, orderByIndex);
 		}
 
