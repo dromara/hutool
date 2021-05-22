@@ -10,5 +10,6 @@
  *
  * @author liangbaikai（https://gitee.com/liangbaikai00/）
  * @since 5.2.1
+ * @author Pluto-Whong (https://github.com/Pluto-Whong), modify since 5.6.6
  */
 package cn.hutool.core.lang.tree;

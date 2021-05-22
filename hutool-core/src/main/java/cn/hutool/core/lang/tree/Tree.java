@@ -3,8 +3,10 @@ package cn.hutool.core.lang.tree;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 通过转换器将你的实体转化为TreeNodeMap节点实体 属性都存在此处,属性有序，可支持排序
@@ -18,6 +20,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 
 	private final TreeNodeConfig treeNodeConfig;
 	private Tree<T> parent;
+	private List<Tree<T>> children;
 
 	public Tree() {
 		this(null);
@@ -29,8 +32,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @param treeNodeConfig TreeNode配置
 	 */
 	public Tree(TreeNodeConfig treeNodeConfig) {
-		this.treeNodeConfig = ObjectUtil.defaultIfNull(
-				treeNodeConfig, TreeNodeConfig.DEFAULT_CONFIG);
+		this.treeNodeConfig = ObjectUtil.defaultIfNull(treeNodeConfig, TreeNodeConfig.DEFAULT_CONFIG);
 	}
 
 	/**
@@ -147,13 +149,20 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Tree<T>> getChildren() {
-		return (List<Tree<T>>) this.get(treeNodeConfig.getChildrenKey());
+		return this.children;
 	}
 
 	public void setChildren(List<Tree<T>> children) {
+		this.children = children;
 		this.put(treeNodeConfig.getChildrenKey(), children);
+	}
+
+	public void addChildren(Tree<T> children) {
+		if(Objects.isNull(this.children)) {
+			this.children = new ArrayList<>();
+		}
+		this.children.add(children);
 	}
 
 	/**
