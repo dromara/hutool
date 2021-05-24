@@ -14,10 +14,13 @@
 * 【core   】     PhoneUtil增加中国澳门和中国台湾手机号校检方法（pr#331@Gitee）
 * 【db     】     分页查询，自定义sql查询，添加参数（pr#332@Gitee）
 * 【core   】     IdCardUtil.isValidCard增加非空判断
+* 【json   】     JSONObject构造增加SortedMap判断（pr#333@Gitee）
+* 【core   】     Tuple增加部分方法（pr#333@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
 * 【core   】     修复NumberUtil.decimalFormat参数传错的问题（issue#I3SDS3@Gitee）
+* 【json   】     修复JSONArray.put方法不能覆盖值的问题
 
 -------------------------------------------------------------------------------------------------------------
 # 5.6.5 (2021-05-08)

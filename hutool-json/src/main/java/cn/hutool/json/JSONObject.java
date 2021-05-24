@@ -25,10 +25,10 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.SortedMap;
 
 /**
  * JSON对象<br>
@@ -158,7 +158,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(source, ignoreNullValue, (source instanceof LinkedHashMap) || (source instanceof TreeMap));
+		this(source, ignoreNullValue, (source instanceof LinkedHashMap) || (source instanceof SortedMap));
 	}
 
 	/**
