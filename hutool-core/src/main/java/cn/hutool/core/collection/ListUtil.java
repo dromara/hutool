@@ -2,7 +2,6 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.util.ArrayUtil;
@@ -456,6 +455,30 @@ public class ListUtil {
 	}
 
 	/**
+	 * 获取匹配规则定义中匹配到元素的最后位置<br>
+	 * 此方法对于某些无序集合的位置信息，以转换为数组后的位置为准。
+	 *
+	 * @param <T>     元素类型
+	 * @param list    List集合
+	 * @param matcher 匹配器，为空则全部匹配
+	 * @return 最后一个位置
+	 * @since 5.6.6
+	 */
+	public static <T> int lastIndexOf(List<T> list, Matcher<T> matcher) {
+		if (null != list) {
+			final int size = list.size();
+			if(size > 0){
+				for(int i = size -1; i >= 0; i--){
+					if (null == matcher || matcher.match(list.get(i))) {
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
 	 * 获取匹配规则定义中匹配到元素的所有位置
 	 *
 	 * @param <T>     元素类型
@@ -465,17 +488,7 @@ public class ListUtil {
 	 * @since 5.2.5
 	 */
 	public static <T> int[] indexOfAll(List<T> list, Matcher<T> matcher) {
-		final List<Integer> indexList = new ArrayList<>();
-		if (null != list) {
-			int index = 0;
-			for (T t : list) {
-				if (null == matcher || matcher.match(t)) {
-					indexList.add(index);
-				}
-				index++;
-			}
-		}
-		return Convert.convert(int[].class, indexList);
+		return CollUtil.indexOfAll(list, matcher);
 	}
 
 	/**

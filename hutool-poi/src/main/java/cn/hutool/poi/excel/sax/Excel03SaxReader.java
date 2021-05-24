@@ -80,9 +80,19 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * 自定义需要处理的sheet编号，如果-1表示处理所有sheet
 	 */
 	private int rid = -1;
-	// 当前rid索引
+	/**
+	 * sheet名称，主要用于使用sheet名读取的情况
+	 */
+	private String sheetName;
+
+	/**
+	 * 当前rid索引
+ 	 */
 	private int curRid = -1;
 
+	/**
+	 * 行处理器
+	 */
 	private final RowHandler rowHandler;
 
 	/**
@@ -159,9 +169,14 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * @return Sheet名
 	 */
 	public String getSheetName() {
+		if(null != this.sheetName){
+			return this.sheetName;
+		}
+
 		if (this.boundSheetRecords.size() > this.rid) {
 			return this.boundSheetRecords.get(this.rid > -1 ? this.rid : this.curRid).getSheetname();
 		}
+
 		return null;
 	}
 
@@ -179,7 +194,11 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 
 		if (record instanceof BoundSheetRecord) {
 			// Sheet边界记录，此Record中可以获得Sheet名
-			boundSheetRecords.add((BoundSheetRecord) record);
+			final BoundSheetRecord boundSheetRecord = (BoundSheetRecord) record;
+			boundSheetRecords.add(boundSheetRecord);
+			if(this.rid < 0 && null != this.sheetName && StrUtil.equals(this.sheetName, boundSheetRecord.getSheetname())){
+				this.rid = this.boundSheetRecords.size() -1;
+			}
 		} else if (record instanceof SSTRecord) {
 			// 静态字符串表
 			sstRecord = (SSTRecord) record;
@@ -193,6 +212,9 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 				curRid++;
 			}
 		} else if (record instanceof EOFRecord){
+			if(this.rid < 0 && null != this.sheetName){
+				throw new POIException("Sheet [{}] not exist!", this.sheetName);
+			}
 			processLastCellSheet();
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
@@ -340,7 +362,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * @return 是否处理当前sheet
 	 */
 	private boolean isProcessCurrentSheet() {
-		return this.rid < 0 || this.curRid == this.rid;
+		// rid < 0 且 sheet名称存在，说明没有匹配到sheet名称
+		return (this.rid < 0 && null == this.sheetName) || this.rid == this.curRid;
 	}
 
 	/**
@@ -365,31 +388,11 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 		final int sheetIndex;
 		try {
 			return Integer.parseInt(idOrRidOrSheetName);
-		} catch (NumberFormatException e) {
-			// 非数字，可能为sheet名称
-			sheetIndex = getSheetIndexByName(idOrRidOrSheetName);
-			if(sheetIndex > 0){
-				return sheetIndex;
-			}
+		} catch (NumberFormatException ignore) {
+			// 如果用于传入非数字，按照sheet名称对待
+			this.sheetName = idOrRidOrSheetName;
 		}
 
-		throw new IllegalArgumentException("Invalid rId or id or sheetName: " + idOrRidOrSheetName);
-	}
-
-	/**
-	 * 通过sheet名称获取其位置（rid）
-	 * @param sheetName sheet名称
-	 * @return 位置，-1表示未找到
-	 * @since 5.6.6
-	 */
-	private int getSheetIndexByName(String sheetName){
-		final List<BoundSheetRecord> boundSheetRecords = this.boundSheetRecords;
-		final int size = boundSheetRecords.size();
-		for(int i = 0; i < size; i++){
-			if(StrUtil.equals(sheetName, boundSheetRecords.get(i).getSheetname())){
-				return i;
-			}
-		}
 		return -1;
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end

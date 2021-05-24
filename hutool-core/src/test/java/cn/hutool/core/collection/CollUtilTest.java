@@ -687,6 +687,29 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void indexOfTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final int i = CollUtil.indexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(2, i);
+	}
+
+	@Test
+	public void lastIndexOfTest() {
+		// List有优化
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(3, i);
+	}
+
+	@Test
+	public void lastIndexOfSetTest() {
+		Set<String> list = CollUtil.set(true, "a", "b", "c", "c", "a", "b", "d");
+		// 去重后c排第三
+		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(2, i);
+	}
+
+	@Test
 	public void pageTest(){
 		List<Dict> objects = CollUtil.newArrayList();
 		for (int i = 0; i < 10; i++) {

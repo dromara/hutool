@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -41,8 +42,22 @@ public class ExcelSaxReadTest {
 	public void excel03Test() {
 		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", 1);
+
 		// Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
 		ExcelUtil.readBySax("aaa.xls", 1, createRowHandler());
+	}
+
+	@Test
+	public void excel03ByNameTest() {
+		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		reader.read("aaa.xls", "校园入学");
+	}
+
+	@Test(expected = POIException.class)
+	public void excel03ByNameErrorTest() {
+		// sheet名称不存在则报错
+		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		reader.read("aaa.xls", "校园入学1");
 	}
 
 	@Test
@@ -124,7 +139,6 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void formulaRead03Test() {
-		Console.log(FileUtil.file("data_for_sax_test.xls"));
 		List<Object> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xls", -1, (i, i1, list) -> {
 			if(list.size() > 1){
