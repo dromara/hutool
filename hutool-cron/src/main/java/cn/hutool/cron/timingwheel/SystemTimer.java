@@ -75,6 +75,8 @@ public class SystemTimer {
 
 	/**
 	 * 添加任务
+	 *
+	 * @param timerTask 任务
 	 */
 	public void addTask(TimerTask timerTask) {
 		//添加失败任务直接执行

@@ -51,9 +51,9 @@ public class TimingWheel {
 	/**
 	 * 构造
 	 *
-	 * @param tickMs 一个时间槽的范围，单位毫秒
+	 * @param tickMs    一个时间槽的范围，单位毫秒
 	 * @param wheelSize 时间轮大小
-	 * @param consumer 任务处理器
+	 * @param consumer  任务处理器
 	 */
 	public TimingWheel(long tickMs, int wheelSize, Consumer<TimerTaskList> consumer) {
 		this(tickMs, wheelSize, System.currentTimeMillis(), consumer);
@@ -62,10 +62,10 @@ public class TimingWheel {
 	/**
 	 * 构造
 	 *
-	 * @param tickMs 一个时间槽的范围，单位毫秒
-	 * @param wheelSize 时间轮大小
+	 * @param tickMs      一个时间槽的范围，单位毫秒
+	 * @param wheelSize   时间轮大小
 	 * @param currentTime 当前时间
-	 * @param consumer 任务处理器
+	 * @param consumer    任务处理器
 	 */
 	public TimingWheel(long tickMs, int wheelSize, long currentTime, Consumer<TimerTaskList> consumer) {
 		this.currentTime = currentTime;
@@ -82,6 +82,7 @@ public class TimingWheel {
 	 * 添加任务到时间轮
 	 *
 	 * @param timerTask 任务
+	 * @return 是否成功
 	 */
 	public boolean addTask(TimerTask timerTask) {
 		long expiration = timerTask.getDelayMs();
@@ -95,7 +96,7 @@ public class TimingWheel {
 			StaticLog.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
 
 			TimerTaskList timerTaskList = timerTaskLists[index];
-			if(null == timerTaskList){
+			if (null == timerTaskList) {
 				timerTaskList = new TimerTaskList();
 				timerTaskLists[index] = timerTaskList;
 			}
@@ -114,6 +115,7 @@ public class TimingWheel {
 
 	/**
 	 * 推进时间
+	 *
 	 * @param timestamp 推进的时间
 	 */
 	public void advanceClock(long timestamp) {

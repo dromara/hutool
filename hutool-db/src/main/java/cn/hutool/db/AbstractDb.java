@@ -839,6 +839,7 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 分页查询
 	 *
+	 * @param <T> 处理结果类型，可以将ResultSet转换为给定类型
 	 * @param sql  SQL构建器
 	 * @param page 分页对象
 	 * @param rsh  结果集处理对象
@@ -879,6 +880,7 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param sql  SQL语句字符串
 	 * @param page 分页对象
+	 * @param params 参数列表
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
