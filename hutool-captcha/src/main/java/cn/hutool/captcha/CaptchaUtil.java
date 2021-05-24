@@ -87,7 +87,7 @@ public class CaptchaUtil {
 	/**
 	 * 创建GIF验证码
 	 *
-	 * @param width 宽
+	 * @param width  宽
 	 * @param height 高
 	 * @return {@link GifCaptcha}
 	 */
@@ -98,12 +98,36 @@ public class CaptchaUtil {
 	/**
 	 * 创建GIF验证码
 	 *
-	 * @param width 宽
-	 * @param height 高
+	 * @param width     宽
+	 * @param height    高
 	 * @param codeCount 字符个数
 	 * @return {@link GifCaptcha}
 	 */
 	public static GifCaptcha createGifCaptcha(int width, int height, int codeCount) {
 		return new GifCaptcha(width, height, codeCount);
+	}
+
+	/**
+	 * 创建简单清爽的验证码
+	 * @param width 宽
+	 * @param height 高
+	 * @return {@link GifCaptcha}
+	 */
+	public static SimpleCaptcha createSimpleCaptcha(int width, int height) {
+
+		return new SimpleCaptcha(width, height);
+	}
+
+	/**
+	 * 创建简单清爽的验证码
+	 *
+	 * @param width     宽
+	 * @param height    高
+	 * @param codeCount 字符个数
+	 * @return {@link GifCaptcha}
+	 */
+	public static SimpleCaptcha createSimpleCaptcha(int width, int height, int codeCount) {
+
+		return new SimpleCaptcha(width, height, codeCount);
 	}
 }

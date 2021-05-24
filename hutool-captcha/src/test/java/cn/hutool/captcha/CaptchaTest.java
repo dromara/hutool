@@ -116,4 +116,14 @@ public class CaptchaTest {
 		captcha.setBackground(Color.WHITE);
 		captcha.write("d:/test/test.jpg");
 	}
+
+	@Test
+//	@Ignore
+	public void simpleCaptchaTest1() {
+		SimpleCaptcha simpleCaptcha = CaptchaUtil.createSimpleCaptcha(250, 100);
+		Assert.assertNotNull(simpleCaptcha.getCode());
+		Assert.assertTrue(simpleCaptcha.verify(simpleCaptcha.getCode()));
+
+		simpleCaptcha.write("/Users/wangxudong/test.jpg");
+	}
 }
