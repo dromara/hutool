@@ -494,10 +494,11 @@ public class ListUtil {
 	}
 
 	/**
-	 * 获取一个空List
+	 * 获取一个空List，这个空List不可变
 	 *
 	 * @param <T> 元素类型
 	 * @return 空的List
+	 * @see Collections#emptyList()
 	 * @since 5.2.6
 	 */
 	public static <T> List<T> empty() {

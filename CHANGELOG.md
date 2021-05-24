@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.6 (2021-05-22)
+# 5.6.6 (2021-05-24)
 
 ### 🐣新特性
 * 【cron   】     增加时间轮简单实现
@@ -13,6 +13,7 @@
 * 【core   】     FileUtil.isEmpty不存在时返回true（issue#1582@Github）
 * 【core   】     PhoneUtil增加中国澳门和中国台湾手机号校检方法（pr#331@Gitee）
 * 【db     】     分页查询，自定义sql查询，添加参数（pr#332@Gitee）
+* 【core   】     IdCardUtil.isValidCard增加非空判断
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）

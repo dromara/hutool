@@ -153,6 +153,10 @@ public class IdcardUtil {
 	 * @return 是否有效
 	 */
 	public static boolean isValidCard(String idCard) {
+		if(StrUtil.isBlank(idCard)){
+			return false;
+		}
+
 		idCard = idCard.trim();
 		int length = idCard.length();
 		switch (length) {
