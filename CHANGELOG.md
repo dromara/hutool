@@ -21,6 +21,7 @@
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
 * 【core   】     修复NumberUtil.decimalFormat参数传错的问题（issue#I3SDS3@Gitee）
 * 【json   】     修复JSONArray.put方法不能覆盖值的问题
+* 【poi    】     修复sax方式读取xls无法根据sheet名称获取数据（issue#I3S4NH@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.6.5 (2021-05-08)

@@ -96,18 +96,18 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 
 	// ------------------------------------------------------------------------------ Read start
 	@Override
-	public Excel03SaxReader read(File file, String idOrRid) throws POIException {
+	public Excel03SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
 		try {
-			return read(new POIFSFileSystem(file), idOrRid);
+			return read(new POIFSFileSystem(file), idOrRidOrSheetName);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
-	public Excel03SaxReader read(InputStream excelStream, String idOrRid) throws POIException {
+	public Excel03SaxReader read(InputStream excelStream, String idOrRidOrSheetName) throws POIException {
 		try {
-			return read(new POIFSFileSystem(excelStream), idOrRid);
+			return read(new POIFSFileSystem(excelStream), idOrRidOrSheetName);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
@@ -117,12 +117,12 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * 读取
 	 *
 	 * @param fs  {@link POIFSFileSystem}
-	 * @param id sheet序号，从0开始
+	 * @param idOrRidOrSheetName sheet id或者rid编号或sheet名称，从0开始，rid必须加rId前缀，例如rId0，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException IO异常包装
 	 */
-	public Excel03SaxReader read(POIFSFileSystem fs, String id) throws POIException {
-		this.rid = getSheetIndex(id);
+	public Excel03SaxReader read(POIFSFileSystem fs, String idOrRidOrSheetName) throws POIException {
+		this.rid = getSheetIndex(idOrRidOrSheetName);
 
 		formatListener = new FormatTrackingHSSFListener(new MissingRecordAwareHSSFListener(this));
 		final HSSFRequest request = new HSSFRequest();
@@ -365,9 +365,32 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 		final int sheetIndex;
 		try {
 			return Integer.parseInt(idOrRidOrSheetName);
-		} catch (NumberFormatException ignore) {
-			throw new IllegalArgumentException("Invalid sheet id: " + idOrRidOrSheetName);
+		} catch (NumberFormatException e) {
+			// 非数字，可能为sheet名称
+			sheetIndex = getSheetIndexByName(idOrRidOrSheetName);
+			if(sheetIndex > 0){
+				return sheetIndex;
+			}
 		}
+
+		throw new IllegalArgumentException("Invalid rId or id or sheetName: " + idOrRidOrSheetName);
+	}
+
+	/**
+	 * 通过sheet名称获取其位置（rid）
+	 * @param sheetName sheet名称
+	 * @return 位置，-1表示未找到
+	 * @since 5.6.6
+	 */
+	private int getSheetIndexByName(String sheetName){
+		final List<BoundSheetRecord> boundSheetRecords = this.boundSheetRecords;
+		final int size = boundSheetRecords.size();
+		for(int i = 0; i < size; i++){
+			if(StrUtil.equals(sheetName, boundSheetRecords.get(i).getSheetname())){
+				return i;
+			}
+		}
+		return -1;
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end
 }

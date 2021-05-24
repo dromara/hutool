@@ -22,21 +22,21 @@ public interface ExcelSaxReader<T> {
 	 * 开始读取Excel
 	 *
 	 * @param file Excel文件
-	 * @param idOrRid Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	T read(File file, String idOrRid) throws POIException;
+	T read(File file, String idOrRidOrSheetName) throws POIException;
 
 	/**
 	 * 开始读取Excel，读取结束后并不关闭流
 	 *
 	 * @param in Excel流
-	 * @param idOrRid Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	T read(InputStream in, String idOrRid) throws POIException;
+	T read(InputStream in, String idOrRidOrSheetName) throws POIException;
 
 	/**
 	 * 开始读取Excel，读取所有sheet
