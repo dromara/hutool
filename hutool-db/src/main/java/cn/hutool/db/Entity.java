@@ -1,13 +1,5 @@
 package cn.hutool.db;
 
-import java.nio.charset.Charset;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.RowId;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ArrayUtil;
@@ -16,22 +8,33 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.sql.SqlUtil;
 
+import java.nio.charset.Charset;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.RowId;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
+
 /**
  * 数据实体对象<br>
  * 数据实体类充当两个角色：<br>
  * 1. 数据的载体，一个Entity对应数据库中的一个row<br>
  * 2. SQL条件，Entity中的每一个字段对应一个条件，字段值对应条件的值
- * 
- * @author loolly
  *
+ * @author loolly
  */
 public class Entity extends Dict {
 	private static final long serialVersionUID = -1951012511464327448L;
 
 	// --------------------------------------------------------------- Static method start
+
 	/**
 	 * 创建Entity
-	 * 
+	 *
 	 * @return Entity
 	 */
 	public static Entity create() {
@@ -40,7 +43,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 创建Entity
-	 * 
+	 *
 	 * @param tableName 表名
 	 * @return Entity
 	 */
@@ -50,8 +53,8 @@ public class Entity extends Dict {
 
 	/**
 	 * 将PO对象转为Entity
-	 * 
-	 * @param <T> Bean对象类型
+	 *
+	 * @param <T>  Bean对象类型
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
@@ -61,11 +64,11 @@ public class Entity extends Dict {
 
 	/**
 	 * 将PO对象转为Entity
-	 * 
-	 * @param <T> Bean对象类型
-	 * @param bean Bean对象
+	 *
+	 * @param <T>               Bean对象类型
+	 * @param bean              Bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
-	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return Entity
 	 */
 	public static <T> Entity parse(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
@@ -74,8 +77,8 @@ public class Entity extends Dict {
 
 	/**
 	 * 将PO对象转为Entity,并采用下划线法转换字段
-	 * 
-	 * @param <T> Bean对象类型
+	 *
+	 * @param <T>  Bean对象类型
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
@@ -95,18 +98,18 @@ public class Entity extends Dict {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param tableName 数据表名
 	 */
 
 	public Entity(String tableName) {
 		this.tableName = tableName;
 	}
-	
+
 	/**
 	 * 构造
-	 * 
-	 * @param tableName 数据表名
+	 *
+	 * @param tableName       数据表名
 	 * @param caseInsensitive 是否大小写不敏感
 	 * @since 4.5.16
 	 */
@@ -117,6 +120,7 @@ public class Entity extends Dict {
 	// --------------------------------------------------------------- Constructor end
 
 	// --------------------------------------------------------------- Getters and Setters start
+
 	/**
 	 * @return 获得表名
 	 */
@@ -126,7 +130,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 设置表名
-	 * 
+	 *
 	 * @param tableName 表名
 	 * @return 本身
 	 */
@@ -136,7 +140,6 @@ public class Entity extends Dict {
 	}
 
 	/**
-	 * 
 	 * @return 字段集合
 	 */
 	public Set<String> getFieldNames() {
@@ -145,7 +148,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 设置字段列表，用于限制加入的字段的值
-	 * 
+	 *
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
@@ -158,7 +161,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 设置字段列表，用于限制加入的字段的值
-	 * 
+	 *
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
@@ -171,7 +174,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 添加字段列表
-	 * 
+	 *
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
@@ -187,11 +190,12 @@ public class Entity extends Dict {
 	}
 
 	// --------------------------------------------------------------- Getters and Setters end
+
 	/**
 	 * 将值对象转换为Entity<br>
 	 * 类名会被当作表名，小写第一个字母
-	 * 
-	 * @param <T> Bean对象类型
+	 *
+	 * @param <T>  Bean对象类型
 	 * @param bean Bean对象
 	 * @return 自己
 	 */
@@ -207,10 +211,10 @@ public class Entity extends Dict {
 	 * 将值对象转换为Entity<br>
 	 * 类名会被当作表名，小写第一个字母
 	 *
-	 * @param <T> Bean对象类型
-	 * @param bean Bean对象
+	 * @param <T>               Bean对象类型
+	 * @param bean              Bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
-	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return 自己
 	 */
 	@Override
@@ -221,10 +225,10 @@ public class Entity extends Dict {
 		}
 		return (Entity) super.parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
-	
+
 	/**
 	 * 过滤Map保留指定键值对，如果键不存在跳过
-	 * 
+	 *
 	 * @param keys 键列表
 	 * @return Dict 结果
 	 * @since 4.0.10
@@ -235,7 +239,7 @@ public class Entity extends Dict {
 		result.setFieldNames(this.fieldNames);
 
 		for (String key : keys) {
-			if(this.containsKey(key)) {
+			if (this.containsKey(key)) {
 				result.put(key, this.get(key));
 			}
 		}
@@ -258,7 +262,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 获得Clob类型结果
-	 * 
+	 *
 	 * @param field 参数
 	 * @return Clob
 	 */
@@ -268,7 +272,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 获得Blob类型结果
-	 * 
+	 *
 	 * @param field 参数
 	 * @return Blob
 	 * @since 3.0.6
@@ -330,8 +334,8 @@ public class Entity extends Dict {
 	/**
 	 * 获得字符串值<br>
 	 * 支持Clob、Blob、RowId
-	 * 
-	 * @param field 字段名
+	 *
+	 * @param field   字段名
 	 * @param charset 编码
 	 * @return 字段对应值
 	 * @since 3.0.6
@@ -351,7 +355,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 获得rowid
-	 * 
+	 *
 	 * @return RowId
 	 */
 	public RowId getRowId() {
@@ -360,7 +364,7 @@ public class Entity extends Dict {
 
 	/**
 	 * 获得rowid
-	 * 
+	 *
 	 * @param field rowid属性名
 	 * @return RowId
 	 */
