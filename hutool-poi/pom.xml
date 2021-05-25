@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.7.4</version>
+			<version>1.9.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

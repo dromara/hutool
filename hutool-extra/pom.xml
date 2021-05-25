@@ -22,7 +22,7 @@
 		<beetl.version>3.3.2.RELEASE</beetl.version>
 		<rythm.version>1.4.0</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<enjoy.version>4.9.08</enjoy.version>
+		<enjoy.version>4.9.10</enjoy.version>
 		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
@@ -241,7 +241,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.8.1</version>
+			<version>8.8.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -326,7 +326,7 @@
 		<dependency>
 			<groupId>com.github.houbb</groupId>
 			<artifactId>pinyin</artifactId>
-			<version>0.2.0</version>
+			<version>0.2.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
