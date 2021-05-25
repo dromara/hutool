@@ -45,6 +45,7 @@ public class PathUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void getMimeTypeTest(){
 		String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
 		Assert.assertEquals("image/jpeg", mimeType);
