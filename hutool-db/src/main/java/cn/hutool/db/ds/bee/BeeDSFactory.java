@@ -2,11 +2,13 @@ package cn.hutool.db.ds.bee;
 
 import cn.beecp.BeeDataSource;
 import cn.beecp.BeeDataSourceConfig;
+import cn.beecp.TransactionIsolationLevel;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 
 /**
  * BeeCP数据源工厂类
@@ -39,6 +41,17 @@ public class BeeDSFactory extends AbstractDSFactory {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				beeConfig.addConnectProperty(key, connValue);
+			}
+		}
+
+		// since BeepCP 3.2.1 bug，Sqlite下默认Transaction Isolation不支持，在此判断修正
+		if(StrUtil.containsIgnoreCase(jdbcUrl, "sqlite")){
+			final int isolationCode = beeConfig.getDefaultTransactionIsolationCode();
+			if(Connection.TRANSACTION_READ_UNCOMMITTED != isolationCode
+					&& Connection.TRANSACTION_SERIALIZABLE != isolationCode){
+				// SQLite只支持这两种事务
+				beeConfig.setDefaultTransactionIsolation(TransactionIsolationLevel.LEVEL_READ_UNCOMMITTED);
+				beeConfig.setDefaultTransactionIsolationCode(Connection.TRANSACTION_READ_UNCOMMITTED);
 			}
 		}
 

@@ -25,7 +25,7 @@
 		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.12.8</mongo.version>
 		<sqlite.version>3.34.0</sqlite.version>
-		<hsqldb.version>2.6.0</hsqldb.version>
+		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>3.6.0</jedis.version>
 	</properties>
 
@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.2.1</version>
+			<version>3.1.2</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
