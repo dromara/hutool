@@ -25,6 +25,7 @@ remarks = true
 [test]
 url = jdbc:sqlite:test.db
 remarks = true
+defaultTransactionIsolation = READ_UNCOMMITTED
 
 # 测试用HSQLDB数据库
 [hsqldb]
