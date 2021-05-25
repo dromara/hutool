@@ -110,6 +110,7 @@ public class CaptchaTest {
 	}
 
 	@Test
+	@Ignore
 	public void bgTest(){
 		LineCaptcha captcha = CaptchaUtil.createLineCaptcha(200, 100, 4, 1);
 		captcha.setBackground(Color.WHITE);
