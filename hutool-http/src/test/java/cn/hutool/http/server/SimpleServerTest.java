@@ -50,7 +50,7 @@ public class SimpleServerTest {
 						}
 				)
 				// 测试输出响应内容是否能正常返回Content-Length头信息
-				.addAction("test/zeroStr", (req, res) -> {
+				.addAction("test/zeroStr", (req, res)-> {
 					res.write("0");
 					Console.log("Write 0 OK");
 				})
