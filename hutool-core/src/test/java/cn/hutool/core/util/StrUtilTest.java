@@ -519,6 +519,7 @@ public class StrUtilTest {
 		Assert.assertEquals("Hello", StrUtil.capWords("hello "));
 		Assert.assertEquals("Hello", StrUtil.capWords("hello  "));
 		Assert.assertEquals("Hello World", StrUtil.capWords("hello      world"));
+		Assert.assertEquals("Hello Vdfer Cx A World", StrUtil.capWords("hello  vdfer  cx a world"));
 
 	}
 
