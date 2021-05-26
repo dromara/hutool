@@ -17,7 +17,7 @@ public class CRC16 implements Checksum, Serializable {
 
 	private final CRC16Checksum crc16;
 
-	CRC16(){
+	public CRC16(){
 		this(new CRC16IBM());
 	}
 
@@ -26,7 +26,7 @@ public class CRC16 implements Checksum, Serializable {
 	 *
 	 * @param crc16Checksum {@link CRC16Checksum} 实现
 	 */
-	CRC16(CRC16Checksum crc16Checksum){
+	public CRC16(CRC16Checksum crc16Checksum){
 		this.crc16 = crc16Checksum;
 	}
 
