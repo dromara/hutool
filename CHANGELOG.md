@@ -17,6 +17,7 @@
 * 【json   】     JSONObject构造增加SortedMap判断（pr#333@Gitee）
 * 【core   】     Tuple增加部分方法（pr#333@Gitee）
 * 【log    】     增加LogTube支持
+* 【core   】     增加BitStatusUtil（pr#1600@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
