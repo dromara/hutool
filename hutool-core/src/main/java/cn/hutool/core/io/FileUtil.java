@@ -1423,7 +1423,7 @@ public class FileUtil extends PathUtil {
 
 		// 识别home目录形式，并转换为绝对路径
 		if (pathToUse.startsWith("~")) {
-			pathToUse = pathToUse.replace("~", getUserHomePath());
+			pathToUse = pathToUse.replaceFirst("~", getUserHomePath());
 		}
 
 		// 统一使用斜杠
