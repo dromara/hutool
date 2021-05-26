@@ -150,7 +150,25 @@ public class ExceptionUtil {
 	 * @since 4.1.4
 	 */
 	public static StackTraceElement getStackElement(int i) {
-		return getStackElements()[i];
+		return Thread.currentThread().getStackTrace()[i];
+	}
+
+	/**
+	 * 获取指定层的堆栈信息
+	 *
+	 * @param fqcn 指定类名为基础
+	 * @param i 指定类名的类堆栈相对层数
+	 * @return 指定层的堆栈信息
+	 * @since 5.6.6
+	 */
+	public static StackTraceElement getStackElement(String fqcn, int i) {
+		final StackTraceElement[] stackTraceArray = Thread.currentThread().getStackTrace();
+		final int index = ArrayUtil.matchIndex((ele) -> StrUtil.equals(fqcn, ele.getClassName()), stackTraceArray);
+		if(index > 0){
+			return stackTraceArray[index + i];
+		}
+
+		return null;
 	}
 
 	/**
@@ -160,8 +178,8 @@ public class ExceptionUtil {
 	 * @since 4.1.4
 	 */
 	public static StackTraceElement getRootStackElement() {
-		final StackTraceElement[] stackElements = getStackElements();
-		return stackElements[stackElements.length - 1];
+		final StackTraceElement[] stackElements = Thread.currentThread().getStackTrace();
+		return Thread.currentThread().getStackTrace()[stackElements.length - 1];
 	}
 
 	/**

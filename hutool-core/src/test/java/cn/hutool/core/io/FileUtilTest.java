@@ -169,6 +169,13 @@ public class FileUtilTest {
 	}
 
 	@Test
+	public void normalizeHomePathTest2() {
+		String home = FileUtil.getUserHomePath().replace('\\', '/');
+		// 多个~应该只替换开头的
+		Assert.assertEquals(home + "/~bar/", FileUtil.normalize("~/foo/../~bar/"));
+	}
+
+	@Test
 	public void normalizeClassPathTest() {
 		Assert.assertEquals("", FileUtil.normalize("classpath:"));
 	}

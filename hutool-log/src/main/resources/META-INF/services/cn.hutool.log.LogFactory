@@ -1,3 +1,4 @@
+cn.hutool.log.dialect.logtube.LogTubeLogFactory
 cn.hutool.log.dialect.slf4j.Slf4jLogFactory
 cn.hutool.log.dialect.log4j2.Log4j2LogFactory
 cn.hutool.log.dialect.log4j.Log4jLogFactory

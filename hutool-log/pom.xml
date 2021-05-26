@@ -84,6 +84,12 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>io.github.logtube</groupId>
+			<artifactId>logtube</artifactId>
+			<version>0.39.1</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>

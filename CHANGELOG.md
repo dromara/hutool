@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.6 (2021-05-24)
+# 5.6.6 (2021-05-26)
 
 ### 🐣新特性
 * 【cron   】     增加时间轮简单实现
@@ -16,12 +16,14 @@
 * 【core   】     IdCardUtil.isValidCard增加非空判断
 * 【json   】     JSONObject构造增加SortedMap判断（pr#333@Gitee）
 * 【core   】     Tuple增加部分方法（pr#333@Gitee）
+* 【log    】     增加LogTube支持
 
 ### 🐞Bug修复
 * 【core   】     修复XmlUtil中omitXmlDeclaration参数无效问题（issue#1581@Github）
 * 【core   】     修复NumberUtil.decimalFormat参数传错的问题（issue#I3SDS3@Gitee）
 * 【json   】     修复JSONArray.put方法不能覆盖值的问题
 * 【poi    】     修复sax方式读取xls无法根据sheet名称获取数据（issue#I3S4NH@Gitee）
+* 【core   】     修复路径中多个~都被替换的问题（pr#1599@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.6.5 (2021-05-08)
