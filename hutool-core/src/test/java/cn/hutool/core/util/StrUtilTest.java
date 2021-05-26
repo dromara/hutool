@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 字符串工具类单元测试
@@ -507,6 +508,18 @@ public class StrUtilTest {
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 3, 2));
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 16));
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 17));
+	}
+	@Test
+	public void testCapilize(){
+		Assert.assertNull(StrUtil.capitalize(null));
+		Assert.assertEquals("Hello",StrUtil.capitalize("hello"));
+		Assert.assertEquals("Hello",StrUtil.capitalize("hello   "));
+		Assert.assertEquals("Hello   world",StrUtil.capitalize("hello   world"));
+		Assert.assertEquals("Hello Aorld", StrUtil.capWords("hello aorld"));
+		Assert.assertEquals("Hello", StrUtil.capWords("hello "));
+		Assert.assertEquals("Hello", StrUtil.capWords("hello  "));
+		Assert.assertEquals("Hello World", StrUtil.capWords("hello      world"));
+
 	}
 
 }

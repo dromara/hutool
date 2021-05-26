@@ -9,7 +9,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 字符串工具类
@@ -103,6 +105,37 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 			}
 		}
 	}
+
+	/**
+	 * 首字母大写
+	 * @param strs
+	 * @return
+	 */
+	public static String capitalize(String strs) {
+		if (strs == null) return null;
+		strs = strs.trim();
+		if (strs.isEmpty()) return strs;
+		return strs.substring(0,1).toUpperCase(Locale.ROOT) + strs.substring(1);
+	}
+
+	public static String capWords(String strs){
+		if (strs == null) return null;
+		strs = strs.trim();
+		if (strs.isEmpty()) return strs;
+		String[] strings = strs.split("\\s+");
+		StringBuilder sb = new StringBuilder(strs.length());
+		for(int i=0; i<strings.length; i++){
+			if (i!= strings.length -1){
+				sb.append(strings[i].substring(0,1).toUpperCase(Locale.ROOT))
+						.append(strings[i].substring(1)).append(" ");
+			}else{
+				sb.append(strings[i].substring(0,1).toUpperCase(Locale.ROOT))
+						.append(strings[i].substring(1));
+			}
+		}
+		return sb.toString();
+	}
+
 
 	/**
 	 * 将对象转为字符串<br>
