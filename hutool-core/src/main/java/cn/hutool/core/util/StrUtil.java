@@ -107,9 +107,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 首字母大写
-	 * @param strs
-	 * @return
+	 * 字符串首字母大写
+	 * @param strs 传入字符串
+	 * @return 变更为首字母大写的字符传
 	 */
 	public static String capitalize(String strs) {
 		if (strs == null) return null;
@@ -118,6 +118,11 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		return strs.substring(0,1).toUpperCase(Locale.ROOT) + strs.substring(1);
 	}
 
+	/**
+	 * 单词首字母大写， 比如 hello world => Hello World
+	 * @param strs 传入的字符串
+	 * @return 首字母大写的单词字符串
+ 	 */
 	public static String capWords(String strs){
 		if (strs == null) return null;
 		strs = strs.trim();
