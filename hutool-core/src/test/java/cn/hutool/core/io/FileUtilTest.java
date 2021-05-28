@@ -158,8 +158,12 @@ public class FileUtilTest {
 		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 		Assert.assertEquals("C:", FileUtil.normalize("C:"));
-
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
+	}
+
+	@Test
+	public void normalizeBlankTest() {
+		Assert.assertEquals("C:/aaa ", FileUtil.normalize("C:\\aaa "));
 	}
 
 	@Test

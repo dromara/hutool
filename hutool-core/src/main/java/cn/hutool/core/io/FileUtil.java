@@ -1415,7 +1415,6 @@ public class FileUtil extends PathUtil {
 			return null;
 		}
 
-
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
 		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
@@ -1427,13 +1426,15 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 统一使用斜杠
-		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH).trim();
+		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
+		// 去除开头空白符，末尾空白符合法，不去除
+		pathToUse = StrUtil.trimStart(pathToUse);
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
 		if (path.startsWith("\\\\")) {
 			pathToUse = "\\" + pathToUse;
 		}
 
-		String prefix = "";
+		String prefix = StrUtil.EMPTY;
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		if (prefixIndex > -1) {
 			// 可能Windows风格路径
