@@ -1,5 +1,6 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
@@ -4231,6 +4232,19 @@ public class CharSequenceUtil {
 	 */
 	public static String join(CharSequence conjunction, Object... objs) {
 		return ArrayUtil.join(objs, conjunction);
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将多个对象转换为字符串
+	 *
+	 * @param conjunction 分隔符
+	 * @param iterable    集合
+	 * @return 连接后的字符串
+	 * @see CollUtil#join(Iterable, CharSequence)
+	 * @since 5.6.6
+	 */
+	public static <T> String join(CharSequence conjunction, Iterable<T> iterable) {
+		return CollUtil.join(iterable, conjunction);
 	}
 
 	/**

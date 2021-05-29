@@ -27,6 +27,13 @@ public class RuntimeUtilTest {
 	}
 
 	@Test
+	@Ignore
+	public void execCmdTest2() {
+		String str = RuntimeUtil.execForStr("cmd /c cd C:\\Program Files (x86)");
+		Console.log(str);
+	}
+
+	@Test
 	public void getUsableMemoryTest(){
 		Assert.assertTrue(RuntimeUtil.getUsableMemory() > 0);
 	}
