@@ -13,6 +13,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class ImgUtilTest {
 
@@ -47,7 +49,7 @@ public class ImgUtilTest {
 	public void cutTest() {
 		ImgUtil.cut(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), new Rectangle(200, 200, 100, 100));
 	}
-	
+
 	@Test
 	@Ignore
 	public void rotateTest() throws IOException {
@@ -88,27 +90,27 @@ public class ImgUtilTest {
 	public void sliceByRowsAndColsTest() {
 		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
 	}
-	
+
 	@Test
 	@Ignore
 	public void convertTest() {
 		ImgUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeTest() {
 		final byte[] bytes = ImgUtil.toBytes(ImgUtil.read("d:/test/logo_484.png"), "png");
 		FileUtil.writeBytes(bytes, "d:/test/result.png");
 	}
-	
+
 	@Test
 	@Ignore
 	public void compressTest() {
 		ImgUtil.compress(FileUtil.file("d:/test/dest.png"),
 				FileUtil.file("d:/test/1111_target.jpg"), 0.1f);
 	}
-	
+
 	@Test
 	@Ignore
 	public void copyTest() {
@@ -135,5 +137,12 @@ public class ImgUtilTest {
 				"d:/test/617180969474805871.jpg"),
 				new File("d:/test/3.jpg"),
 				new Color(200, 0, 0), 10);
+	}
+
+	@Test
+	public void getMainColor() throws MalformedURLException {
+		BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
+		String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
+		System.out.println(mainColor);
 	}
 }
