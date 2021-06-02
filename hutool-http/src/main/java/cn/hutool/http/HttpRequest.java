@@ -556,6 +556,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param formMapStr 表单内容
 	 * @return this
+	 * @since 5.6.7
 	 */
 	public HttpRequest formStr(Map<String, String> formMapStr) {
 		if (MapUtil.isNotEmpty(formMapStr)) {
