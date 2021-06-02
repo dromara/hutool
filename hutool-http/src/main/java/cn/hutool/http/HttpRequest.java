@@ -552,6 +552,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 设置map<String, String>类型表单数据
+	 *
+	 * @param formMapStr 表单内容
+	 * @return this
+	 */
+	public HttpRequest formStr(Map<String, String> formMapStr) {
+		if (MapUtil.isNotEmpty(formMapStr)) {
+			formMapStr.forEach(this::form);
+		}
+		return this;
+	}
+
+	/**
 	 * 文件表单项<br>
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 *
