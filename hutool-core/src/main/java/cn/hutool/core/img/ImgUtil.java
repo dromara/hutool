@@ -43,9 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 图片处理工具类：<br>
@@ -2000,6 +1998,56 @@ public class ImgUtil {
 				rectangle.x + (Math.abs(backgroundWidth - rectangle.width) / 2), //
 				rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
 		);
+	}
+
+	/**
+	 * 获取给定图片的主色调，背景填充用
+	 *
+	 * @param image      {@link BufferedImage}
+	 * @param rgbFilters 过滤多种颜色
+	 * @return {@link String} #ffffff
+	 */
+	public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
+		int r, g, b;
+		Map<String, Long> countMap = new HashMap<>();
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int minx = image.getMinX();
+		int miny = image.getMinY();
+		for (int i = minx; i < width; i++) {
+			for (int j = miny; j < height; j++) {
+				int pixel = image.getRGB(i, j);
+				r = (pixel & 0xff0000) >> 16;
+				g = (pixel & 0xff00) >> 8;
+				b = (pixel & 0xff);
+				if (rgbFilters != null && rgbFilters.length > 0) {
+					for (int[] rgbFilter : rgbFilters) {
+						if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
+							break;
+						}
+					}
+				}
+				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
+			}
+		}
+		String maxColor = null;
+		long maxCount = 0;
+		for (Map.Entry<String, Long> entry : countMap.entrySet()) {
+			String key = entry.getKey();
+			Long count = entry.getValue();
+			if (count > maxCount) {
+				maxColor = key;
+				maxCount = count;
+			}
+		}
+		String[] splitRgbStr = maxColor.split("-");
+		String rHex = Integer.toHexString(Integer.valueOf(splitRgbStr[0]));
+		String gHex = Integer.toHexString(Integer.valueOf(splitRgbStr[1]));
+		String bHex = Integer.toHexString(Integer.valueOf(splitRgbStr[2]));
+		rHex = rHex.length() == 1 ? "0" + rHex : rHex;
+		gHex = gHex.length() == 1 ? "0" + gHex : gHex;
+		bHex = bHex.length() == 1 ? "0" + bHex : bHex;
+		return "#" + rHex + gHex + bHex;
 	}
 
 	// ------------------------------------------------------------------------------------------------------ 背景图换算
