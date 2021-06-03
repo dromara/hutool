@@ -43,7 +43,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * 图片处理工具类：<br>
@@ -1722,7 +1726,7 @@ public class ImgUtil {
 		}
 
 		if (null == result) {
-			throw new IllegalArgumentException("Image type of [" + imageUrl.toString() + "] is not supported!");
+			throw new IllegalArgumentException("Image type of [" + imageUrl + "] is not supported!");
 		}
 
 		return result;
@@ -2006,6 +2010,7 @@ public class ImgUtil {
 	 * @param image      {@link BufferedImage}
 	 * @param rgbFilters 过滤多种颜色
 	 * @return {@link String} #ffffff
+	 * @since 5.6.7
 	 */
 	public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
 		int r, g, b;
@@ -2040,10 +2045,10 @@ public class ImgUtil {
 				maxCount = count;
 			}
 		}
-		String[] splitRgbStr = maxColor.split("-");
-		String rHex = Integer.toHexString(Integer.valueOf(splitRgbStr[0]));
-		String gHex = Integer.toHexString(Integer.valueOf(splitRgbStr[1]));
-		String bHex = Integer.toHexString(Integer.valueOf(splitRgbStr[2]));
+		final String[] splitRgbStr = StrUtil.splitToArray(maxColor, '-');
+		String rHex = Integer.toHexString(Integer.parseInt(splitRgbStr[0]));
+		String gHex = Integer.toHexString(Integer.parseInt(splitRgbStr[1]));
+		String bHex = Integer.toHexString(Integer.parseInt(splitRgbStr[2]));
 		rHex = rHex.length() == 1 ? "0" + rHex : rHex;
 		gHex = gHex.length() == 1 ? "0" + gHex : gHex;
 		bHex = bHex.length() == 1 ? "0" + bHex : bHex;
