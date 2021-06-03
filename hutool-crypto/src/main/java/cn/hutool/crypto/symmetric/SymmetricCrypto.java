@@ -219,7 +219,7 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 加密，针对大数据量，结束后不关闭流
+	 * 加密，针对大数据量，可选结束后是否关闭流
 	 *
 	 * @param data 被加密的字符串
 	 * @param out 输出流，可以是文件或网络位置

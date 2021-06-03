@@ -356,11 +356,11 @@ public class ObjectUtil {
 	 * 如果给定对象为{@code null}或者""或者空白符返回默认值
 	 *
 	 * <pre>
-	 * ObjectUtil.defaultIfEmpty(null, null)      = null
-	 * ObjectUtil.defaultIfEmpty(null, "")        = ""
-	 * ObjectUtil.defaultIfEmpty("", "zz")      = "zz"
-	 * ObjectUtil.defaultIfEmpty(" ", "zz")      = "zz"
-	 * ObjectUtil.defaultIfEmpty("abc", *)        = "abc"
+	 * ObjectUtil.defaultIfBlank(null, null)      = null
+	 * ObjectUtil.defaultIfBlank(null, "")        = ""
+	 * ObjectUtil.defaultIfBlank("", "zz")      = "zz"
+	 * ObjectUtil.defaultIfBlank(" ", "zz")      = "zz"
+	 * ObjectUtil.defaultIfBlank("abc", *)        = "abc"
 	 * </pre>
 	 *
 	 * @param <T>          对象类型（必须实现CharSequence接口）
