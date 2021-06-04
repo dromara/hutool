@@ -9,6 +9,7 @@
 * 【core   】     CharSequenceUtil增加join重载（issue#I3TFJ5@Gitee）
 * 【http   】     HttpRequest增加form方法重载（pr#337@Gitee）
 * 【http   】     ImgUtil增加getMainColor方法（pr#338@Gitee）
+* 【core   】     改进TreeUtil.buid算法性能（pr#1594@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize去掉末尾空格问题（issue#1603@Github）
