@@ -4,7 +4,7 @@ import java.awt.Image;
 
 /**
  * 图片缩略算法类型
- * 
+ *
  * @author looly
  * @since 4.5.8
  */
@@ -23,7 +23,7 @@ public enum ScaleType {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param value 缩放方式
 	 * @see Image#SCALE_DEFAULT
 	 * @see Image#SCALE_FAST

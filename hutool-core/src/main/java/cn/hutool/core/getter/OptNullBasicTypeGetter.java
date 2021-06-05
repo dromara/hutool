@@ -16,11 +16,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Object getObj(K key) {
 		return getObj(key, null);
 	}
-	
+
 	/**
 	 * 获取字符串型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -28,11 +28,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default String getStr(K key){
 		return this.getStr(key, null);
 	}
-	
+
 	/**
 	 * 获取int型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -40,11 +40,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Integer getInt(K key) {
 		return this.getInt(key, null);
 	}
-	
+
 	/**
 	 * 获取short型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -52,11 +52,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Short getShort(K key){
 		return this.getShort(key, null);
 	}
-	
+
 	/**
 	 * 获取boolean型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -64,11 +64,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Boolean getBool(K key){
 		return this.getBool(key, null);
 	}
-	
+
 	/**
 	 * 获取long型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -76,11 +76,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Long getLong(K key){
 		return this.getLong(key, null);
 	}
-	
+
 	/**
 	 * 获取char型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -88,11 +88,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Character getChar(K key){
 		return this.getChar(key, null);
 	}
-	
+
 	/**
 	 * 获取float型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -100,11 +100,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Float getFloat(K key){
 		return this.getFloat(key, null);
 	}
-	
+
 	/**
 	 * 获取double型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -116,7 +116,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	/**
 	 * 获取byte型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -124,11 +124,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default Byte getByte(K key){
 		return this.getByte(key, null);
 	}
-	
+
 	/**
 	 * 获取BigDecimal型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -136,11 +136,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default BigDecimal getBigDecimal(K key){
 		return this.getBigDecimal(key, null);
 	}
-	
+
 	/**
 	 * 获取BigInteger型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
@@ -148,11 +148,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default BigInteger getBigInteger(K key){
 		return this.getBigInteger(key, null);
 	}
-	
+
 	/**
 	 * 获取Enum型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param clazz Enum 的 Class
 	 * @param key 属性名
 	 * @return 属性值
@@ -161,11 +161,11 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	default <E extends Enum<E>> E getEnum(Class<E> clazz, K key) {
 		return this.getEnum(clazz, key, null);
 	}
-	
+
 	/**
 	 * 获取Date型属性值<br>
 	 * 无值或获取错误返回null
-	 * 
+	 *
 	 * @param key 属性名
 	 * @return 属性值
 	 */
