@@ -14,16 +14,16 @@ import cn.hutool.core.util.StrUtil;
 /**
  * MongoDB ID生成策略实现<br>
  * ObjectId由以下几部分组成：
- * 
+ *
  * <pre>
  * 1. Time 时间戳。
  * 2. Machine 所在主机的唯一标识符，一般是机器主机名的散列值。
  * 3. PID 进程ID。确保同一机器中不冲突
  * 4. INC 自增计数器。确保同一秒内产生objectId的唯一性。
  * </pre>
- * 
+ *
  * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
- * 
+ *
  * @author looly
  * @since 4.0.0
  *
@@ -37,7 +37,7 @@ public class ObjectId {
 
 	/**
 	 * 给定的字符串是否为有效的ObjectId
-	 * 
+	 *
 	 * @param s 字符串
 	 * @return 是否为有效的ObjectId
 	 */
@@ -70,7 +70,7 @@ public class ObjectId {
 
 	/**
 	 * 获取一个objectId的bytes表现形式
-	 * 
+	 *
 	 * @return objectId
 	 * @since 4.1.15
 	 */
@@ -85,7 +85,7 @@ public class ObjectId {
 
 	/**
 	 * 获取一个objectId用下划线分割
-	 * 
+	 *
 	 * @return objectId
 	 */
 	public static String next() {
@@ -94,7 +94,7 @@ public class ObjectId {
 
 	/**
 	 * 获取一个objectId
-	 * 
+	 *
 	 * @param withHyphen 是否包含分隔符
 	 * @return objectId
 	 */
@@ -119,7 +119,7 @@ public class ObjectId {
 	// ----------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取机器码片段
-	 * 
+	 *
 	 * @return 机器码片段
 	 */
 	private static int getMachinePiece() {
@@ -146,7 +146,7 @@ public class ObjectId {
 
 	/**
 	 * 获取进程码片段
-	 * 
+	 *
 	 * @return 进程码片段
 	 */
 	private static int getProcessPiece() {

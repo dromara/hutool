@@ -16,10 +16,10 @@ import java.net.URL;
  */
 public class UrlResource implements Resource, Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	protected URL url;
 	protected String name;
-	
+
 	//-------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -28,7 +28,7 @@ public class UrlResource implements Resource, Serializable{
 	public UrlResource(URL url) {
 		this(url, null);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param url URL，允许为空
@@ -38,7 +38,7 @@ public class UrlResource implements Resource, Serializable{
 		this.url = url;
 		this.name = ObjectUtil.defaultIfNull(name, (null != url) ? FileUtil.getName(url.getPath()) : null);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param file 文件路径
@@ -49,17 +49,17 @@ public class UrlResource implements Resource, Serializable{
 		this.url = URLUtil.getURL(file);
 	}
 	//-------------------------------------------------------------------------------------- Constructor end
-	
+
 	@Override
 	public String getName() {
 		return this.name;
 	}
-	
+
 	@Override
 	public URL getUrl(){
 		return this.url;
 	}
-	
+
 	@Override
 	public InputStream getStream() throws NoResourceException{
 		if(null == this.url){
@@ -67,7 +67,7 @@ public class UrlResource implements Resource, Serializable{
 		}
 		return URLUtil.getStream(url);
 	}
-	
+
 	/**
 	 * 获得File
 	 * @return {@link File}
@@ -75,7 +75,7 @@ public class UrlResource implements Resource, Serializable{
 	public File getFile(){
 		return FileUtil.file(this.url);
 	}
-	
+
 	/**
 	 * 返回路径
 	 * @return 返回URL路径

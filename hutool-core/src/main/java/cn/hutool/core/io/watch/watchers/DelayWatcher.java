@@ -17,19 +17,19 @@ import java.util.Set;
  * 在监听目录或文件时，如果这个文件有修改操作，会多次触发modify方法。<br>
  * 此类通过维护一个Set将短时间内相同文件多次modify的事件合并处理触发，从而避免以上问题。<br>
  * 注意：延迟只针对modify事件，其它事件无效
- * 
+ *
  * @author Looly
  * @since 3.1.0
  */
 public class DelayWatcher implements Watcher {
-	
+
 	/** Path集合。此集合用于去重在指定delay内多次触发的文件Path */
 	private final Set<Path> eventSet = new ConcurrentHashSet<>();
 	/** 实际处理 */
 	private final Watcher watcher;
 	/** 延迟，单位毫秒 */
 	private final long delay;
-	
+
 	//---------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -45,7 +45,7 @@ public class DelayWatcher implements Watcher {
 		this.delay = delay;
 	}
 	//---------------------------------------------------------------------------------------------------------- Constructor end
-	
+
 	@Override
 	public void onModify(WatchEvent<?> event, Path currentPath) {
 		if(this.delay < 1) {
@@ -54,22 +54,22 @@ public class DelayWatcher implements Watcher {
 			onDelayModify(event, currentPath);
 		}
 	}
-	
+
 	@Override
 	public void onCreate(WatchEvent<?> event, Path currentPath) {
 		watcher.onCreate(event, currentPath);
 	}
-	
+
 	@Override
 	public void onDelete(WatchEvent<?> event, Path currentPath) {
 		watcher.onDelete(event, currentPath);
 	}
-	
+
 	@Override
 	public void onOverflow(WatchEvent<?> event, Path currentPath) {
 		watcher.onOverflow(event, currentPath);
 	}
-	
+
 	//---------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 触发延迟修改
@@ -82,15 +82,15 @@ public class DelayWatcher implements Watcher {
 			//此事件已经被触发过，后续事件忽略，等待统一处理。
 			return;
 		}
-		
+
 		//事件第一次触发，此时标记事件，并启动处理线程延迟处理，处理结束后会删除标记
 		eventSet.add(eventPath);
 		startHandleModifyThread(event, currentPath);
 	}
-	
+
 	/**
 	 * 开启处理线程
-	 * 
+	 *
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */

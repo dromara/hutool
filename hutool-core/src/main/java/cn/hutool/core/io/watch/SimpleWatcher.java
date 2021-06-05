@@ -9,5 +9,5 @@ import cn.hutool.core.io.watch.watchers.IgnoreWatcher;
  *
  */
 public class SimpleWatcher extends IgnoreWatcher{
-	
+
 }
