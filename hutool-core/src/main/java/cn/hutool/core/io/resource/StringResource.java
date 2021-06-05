@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 
 /**
  * 字符串资源，字符串做为资源
- * 
+ *
  * @author looly
  * @since 4.1.0
  * @see CharSequenceResource

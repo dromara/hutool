@@ -9,20 +9,20 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * {@link ParameterizedType} 接口实现，用于重新定义泛型类型
- * 
+ *
  * @author looly
  * @since 4.5.7
  */
 public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Type[] actualTypeArguments;
 	private final Type ownerType;
 	private final Type rawType;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param actualTypeArguments 实际的泛型参数类型
 	 * @param ownerType 拥有者类型
 	 * @param rawType 原始类型
@@ -71,7 +71,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 
 	/**
 	 * 追加 {@code types} 到 @{code buf}，使用 {@code sep} 分隔
-	 * 
+	 *
 	 * @param buf 目标
 	 * @param sep 分隔符
 	 * @param types 加入的类型
@@ -86,14 +86,14 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 				} else {
 					buf.append(sep);
 				}
-				
+
 				String typeStr;
 				if(type instanceof Class) {
 					typeStr = ((Class<?>)type).getName();
 				}else {
 					typeStr = StrUtil.toString(type);
 				}
-				
+
 				buf.append(typeStr);
 			}
 		}
