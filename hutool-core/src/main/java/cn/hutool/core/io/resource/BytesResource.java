@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 /**
  * 基于byte[]的资源获取器<br>
  * 注意：此对象中getUrl方法始终返回null
- * 
+ *
  * @author looly
  * @since 4.0.9
  */
@@ -24,16 +24,16 @@ public class BytesResource implements Resource, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param bytes 字节数组
 	 */
 	public BytesResource(byte[] bytes) {
 		this(bytes, null);
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param bytes 字节数组
 	 * @param name 资源名称
 	 */
@@ -41,7 +41,7 @@ public class BytesResource implements Resource, Serializable {
 		this.bytes = bytes;
 		this.name = name;
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;

@@ -11,7 +11,7 @@ import java.nio.file.Path;
 
 /**
  * 文件资源访问对象，支持{@link Path} 和 {@link File} 访问
- * 
+ *
  * @author looly
  */
 public class FileResource implements Resource, Serializable {
@@ -22,7 +22,7 @@ public class FileResource implements Resource, Serializable {
 	// ----------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param path 文件
 	 * @since 4.4.1
 	 */
@@ -32,7 +32,7 @@ public class FileResource implements Resource, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param file 文件
 	 */
 	public FileResource(File file) {
@@ -41,7 +41,7 @@ public class FileResource implements Resource, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param file 文件
 	 * @param fileName 文件名，如果为null获取文件本身的文件名
 	 */
@@ -51,7 +51,7 @@ public class FileResource implements Resource, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param path 文件绝对路径或相对ClassPath路径，但是这个路径不能指向一个jar包中的文件
 	 */
 	public FileResource(String path) {

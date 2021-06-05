@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 多资源组合资源<br>
  * 此资源为一个利用游标自循环资源，只有调用{@link #next()} 方法才会获取下一个资源，使用完毕后调用{@link #reset()}方法重置游标
- * 
+ *
  * @author looly
  * @since 4.1.0
  */
@@ -25,10 +25,10 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 
 	private final List<Resource> resources;
 	private int cursor;
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param resources 资源数组
 	 */
 	public MultiResource(Resource... resources) {
@@ -37,7 +37,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param resources 资源列表
 	 */
 	public MultiResource(Collection<Resource> resources) {
@@ -113,7 +113,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	public synchronized void reset() {
 		this.cursor = 0;
 	}
-	
+
 	/**
 	 * 增加资源
 	 * @param resource 资源
