@@ -46,7 +46,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 
 	@Override
 	public Double get() {
-		return Double.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
