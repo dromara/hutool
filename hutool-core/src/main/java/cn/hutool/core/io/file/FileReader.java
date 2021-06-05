@@ -20,13 +20,13 @@ import java.util.List;
 
 /**
  * 文件读取器
- * 
+ *
  * @author Looly
  *
  */
 public class FileReader extends FileWrapper {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 创建 FileReader
 	 * @param file 文件
@@ -36,7 +36,7 @@ public class FileReader extends FileWrapper {
 	public static FileReader create(File file, Charset charset){
 		return new FileReader(file, charset);
 	}
-	
+
 	/**
 	 * 创建 FileReader, 编码：{@link FileWrapper#DEFAULT_CHARSET}
 	 * @param file 文件
@@ -45,7 +45,7 @@ public class FileReader extends FileWrapper {
 	public static FileReader create(File file){
 		return new FileReader(file);
 	}
-	
+
 	// ------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -106,7 +106,7 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 读取文件所有数据<br>
 	 * 文件的长度不能超过 {@link Integer#MAX_VALUE}
-	 * 
+	 *
 	 * @return 字节码
 	 * @throws IORuntimeException IO异常
 	 */
@@ -136,7 +136,7 @@ public class FileReader extends FileWrapper {
 
 	/**
 	 * 读取文件内容
-	 * 
+	 *
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
@@ -146,7 +146,7 @@ public class FileReader extends FileWrapper {
 
 	/**
 	 * 从文件中读取每一行数据
-	 * 
+	 *
 	 * @param <T> 集合类型
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
@@ -171,10 +171,10 @@ public class FileReader extends FileWrapper {
 			IoUtil.close(reader);
 		}
 	}
-	
+
 	/**
 	 * 按照行处理文件内容
-	 * 
+	 *
 	 * @param lineHandler 行处理器
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
@@ -188,10 +188,10 @@ public class FileReader extends FileWrapper {
 			IoUtil.close(reader);
 		}
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
-	 * 
+	 *
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
 	 */
@@ -201,7 +201,7 @@ public class FileReader extends FileWrapper {
 
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
-	 * 
+	 *
 	 * @param <T> 读取的结果对象类型
 	 * @param readerHandler Reader处理类
 	 * @return 从文件中read出的数据
@@ -223,7 +223,7 @@ public class FileReader extends FileWrapper {
 
 	/**
 	 * 获得一个文件读取器
-	 * 
+	 *
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
 	 */
@@ -233,7 +233,7 @@ public class FileReader extends FileWrapper {
 
 	/**
 	 * 获得输入流
-	 * 
+	 *
 	 * @return 输入流
 	 * @throws IORuntimeException IO异常
 	 */
@@ -255,10 +255,10 @@ public class FileReader extends FileWrapper {
 	public long writeToStream(OutputStream out) throws IORuntimeException {
 		return writeToStream(out, false);
 	}
-	
+
 	/**
 	 * 将文件写入流中
-	 * 
+	 *
 	 * @param out 流
 	 * @param isCloseOut 是否关闭输出流
 	 * @return 写出的流byte数
@@ -280,7 +280,7 @@ public class FileReader extends FileWrapper {
 	// -------------------------------------------------------------------------- Interface start
 	/**
 	 * Reader处理接口
-	 * 
+	 *
 	 * @author Luxiaolei
 	 *
 	 * @param <T> Reader处理返回结果类型
@@ -289,10 +289,10 @@ public class FileReader extends FileWrapper {
 		T handle(BufferedReader reader) throws IOException;
 	}
 	// -------------------------------------------------------------------------- Interface end
-	
+
 	/**
 	 * 检查文件
-	 * 
+	 *
 	 * @throws IORuntimeException IO异常
 	 */
 	private void checkFile() throws IORuntimeException {

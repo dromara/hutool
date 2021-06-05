@@ -2,7 +2,7 @@ package cn.hutool.core.io.file;
 
 /**
  * 文件读写模式，常用于RandomAccessFile
- * 
+ *
  * @author looly
  * @since 4.5.2
  */
