@@ -7,7 +7,7 @@ import java.math.BigInteger;
  * 可选默认值的数组类型的Get接口
  * 提供一个统一的接口定义返回不同类型的值（基本类型）<br>
  * 如果值不存在或获取错误，返回默认值
- * 
+ *
  * @author Looly
  * @since 4.0.2
  *
@@ -17,7 +17,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Object型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -26,7 +26,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取String型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -35,7 +35,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Integer型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -44,7 +44,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Short型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -53,7 +53,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Boolean型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -62,7 +62,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Long型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -71,7 +71,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Character型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -80,7 +80,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Double型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -89,7 +89,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取Byte型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -98,7 +98,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取BigInteger型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表
@@ -107,7 +107,7 @@ public interface OptArrayTypeGetter {
 
 	/**
 	 * 获取BigDecimal型属性值数组
-	 * 
+	 *
 	 * @param key 属性名
 	 * @param defaultValue 默认数组值
 	 * @return 属性值列表

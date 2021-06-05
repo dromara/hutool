@@ -6,7 +6,7 @@ import java.io.OutputStream;
 /**
  * 此OutputStream写出数据到<b>/dev/null</b>，即忽略所有数据<br>
  * 来自 Apache Commons io
- * 
+ *
  * @author looly
  * @since 4.0.6
  */
@@ -19,7 +19,7 @@ public class NullOutputStream extends OutputStream {
 
 	/**
 	 * 什么也不做，写出到<code>/dev/null</code>.
-	 * 
+	 *
 	 * @param b 写出的数据
 	 * @param off 开始位置
 	 * @param len 长度
@@ -31,7 +31,7 @@ public class NullOutputStream extends OutputStream {
 
 	/**
 	 * 什么也不做，写出到 <code>/dev/null</code>.
-	 * 
+	 *
 	 * @param b 写出的数据
 	 */
 	@Override
@@ -41,7 +41,7 @@ public class NullOutputStream extends OutputStream {
 
 	/**
 	 * 什么也不做，写出到 <code>/dev/null</code>.
-	 * 
+	 *
 	 * @param b 写出的数据
 	 * @throws IOException 不抛出
 	 */

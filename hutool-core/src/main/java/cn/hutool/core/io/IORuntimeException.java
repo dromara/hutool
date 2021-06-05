@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * IO运行时异常，常用于对IOException的包装
- * 
+ *
  * @author xiaoleilu
  */
 public class IORuntimeException extends RuntimeException {
@@ -33,7 +33,7 @@ public class IORuntimeException extends RuntimeException {
 
 	/**
 	 * 导致这个异常的异常是否是指定类型的异常
-	 * 
+	 *
 	 * @param clazz 异常类
 	 * @return 是否为指定类型异常
 	 */

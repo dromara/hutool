@@ -125,7 +125,7 @@ class LZWEncoder {
 		pixAry = pixels;
 		initCodeSize = Math.max(2, color_depth);
 	}
-	
+
 	// Add a character to the end of the current packet, and if it is 254
 	// characters, flush the packet to disk.
 	void char_out(byte c, OutputStream outs) throws IOException {
@@ -133,7 +133,7 @@ class LZWEncoder {
 		if (a_count >= 254)
 			flush_char(outs);
 	}
-	
+
 	// Clear out the hash table
 
 	// table clear for block compress
@@ -144,13 +144,13 @@ class LZWEncoder {
 
 		output(ClearCode, outs);
 	}
-	
+
 	// reset code table
 	void cl_hash(int hsize) {
 		for (int i = 0; i < hsize; ++i)
 			htab[i] = -1;
 	}
-	
+
 	void compress(int init_bits, OutputStream outs) throws IOException {
 		int fcode;
 		int i /* = 0 */;
@@ -220,7 +220,7 @@ class LZWEncoder {
 		output(ent, outs);
 		output(EOFCode, outs);
 	}
-	
+
 	//----------------------------------------------------------------------------
 	void encode(OutputStream os) throws IOException {
 		os.write(initCodeSize); // write "initial code size" byte
@@ -232,7 +232,7 @@ class LZWEncoder {
 
 		os.write(0); // write block terminator
 	}
-	
+
 	// Flush the packet to disk, and reset the accumulator
 	void flush_char(OutputStream outs) throws IOException {
 		if (a_count > 0) {
@@ -241,11 +241,11 @@ class LZWEncoder {
 			a_count = 0;
 		}
 	}
-	
+
 	final int MAXCODE(int n_bits) {
 		return (1 << n_bits) - 1;
 	}
-	
+
 	//----------------------------------------------------------------------------
 	// Return the next pixel from the image
 	//----------------------------------------------------------------------------
@@ -259,7 +259,7 @@ class LZWEncoder {
 
 		return pix & 0xff;
 	}
-	
+
 	void output(int code, OutputStream outs) throws IOException {
 		cur_accum &= masks[cur_bits];
 
