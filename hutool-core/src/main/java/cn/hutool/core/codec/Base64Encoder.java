@@ -132,7 +132,7 @@ public class Base64Encoder {
 	 *
 	 * @param arr 被编码的数组
 	 * @param isMultiLine 在76个char之后是CRLF还是EOF
-	 * @param isUrlSafe 是否使用URL安全字符，一般为{@code false}
+	 * @param isUrlSafe 是否使用URL安全字符，在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉，一般为{@code false}
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
