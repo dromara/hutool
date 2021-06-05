@@ -113,7 +113,7 @@ abstract class FormatCache<F extends Format> {
 	 */
 	// package protected, for access from FastDateFormat; do not make public or protected
 	F getDateTimeInstance(final int dateStyle, final int timeStyle, final TimeZone timeZone, final Locale locale) {
-		return getDateTimeInstance(Integer.valueOf(dateStyle), Integer.valueOf(timeStyle), timeZone, locale);
+		return getDateTimeInstance(dateStyle, timeStyle, timeZone, locale);
 	}
 
 	/**

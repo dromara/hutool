@@ -27,8 +27,8 @@ public class Morse {
 	 * @param dict 二进制
 	 */
 	private static void registerMorse(Character abc, String dict) {
-		ALPHABETS.put(Integer.valueOf(abc), dict);
-		DICTIONARIES.put(dict, Integer.valueOf(abc));
+		ALPHABETS.put((int) abc, dict);
+		DICTIONARIES.put(dict, (int) abc);
 	}
 
 	static {
