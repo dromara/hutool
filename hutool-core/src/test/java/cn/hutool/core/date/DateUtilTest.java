@@ -3,7 +3,6 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
