@@ -164,7 +164,7 @@ public class BeanUtilTest {
 	public void mapToBeanWinErrorTest() {
 		Map<String, String> map = new HashMap<>();
 		map.put("age", "哈哈");
-		Person user = BeanUtil.toBean(map, Person.class);
+		BeanUtil.toBean(map, Person.class);
 	}
 
 	@Test
@@ -559,7 +559,6 @@ public class BeanUtilTest {
 	@Test
 	public void toMapTest() {
 		// 测试转map的时候返回key
-		String name = null;
 		PrivilegeIClassification a = new PrivilegeIClassification();
 		a.setId("1");
 		a.setName("2");

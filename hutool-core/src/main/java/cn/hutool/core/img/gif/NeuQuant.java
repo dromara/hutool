@@ -350,10 +350,7 @@ public class NeuQuant {
 	/* Unbias network to give byte values 0..255 and record position i to prepare for sort
 	   ----------------------------------------------------------------------------------- */
 	public void unbiasnet() {
-
-		int i, j;
-
-		for (i = 0; i < NETSIZE; i++) {
+		for (int i = 0; i < NETSIZE; i++) {
 			network[i][0] >>= NETBIASSHIFT;
 			network[i][1] >>= NETBIASSHIFT;
 			network[i][2] >>= NETBIASSHIFT;

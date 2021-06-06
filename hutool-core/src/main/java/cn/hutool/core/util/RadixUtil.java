@@ -54,8 +54,7 @@ public class RadixUtil {
 	public static String encode(final String radixs, final int num) {
 		//考虑到负数问题
 		long tmpNum = (num >= 0 ? num : (0x100000000L - (~num + 1)));
-
-		return encode(radixs, num, 32);
+		return encode(radixs, tmpNum, 32);
 	}
 
 	/**
@@ -73,7 +72,7 @@ public class RadixUtil {
 		return encode(radixs, num, 64);
 	}
 
-	private static String encode(final String radixs, final long num, int maxLength) {
+	private static String encode(final String radixs, long num, int maxLength) {
 		if (radixs.length() < 2) {
 			throw new RuntimeException("自定义进制最少两个字符哦！");
 		}

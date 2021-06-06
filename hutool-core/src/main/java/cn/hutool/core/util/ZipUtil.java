@@ -660,7 +660,6 @@ public class ZipUtil {
 	public static void read(ZipInputStream zipStream, Consumer<ZipEntry> consumer) {
 		try {
 			ZipEntry zipEntry;
-			File outItemFile;
 			while (null != (zipEntry = zipStream.getNextEntry())) {
 				consumer.accept(zipEntry);
 			}
