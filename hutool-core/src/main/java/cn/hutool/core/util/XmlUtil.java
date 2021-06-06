@@ -1508,7 +1508,7 @@ public class XmlUtil {
 		 */
 		@Override
 		public String getNamespaceURI(String prefix) {
-			if (prefix == null || prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
+			if (prefix == null || XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
 				return prefixUri.get(DEFAULT_NS);
 			} else {
 				return prefixUri.get(prefix);

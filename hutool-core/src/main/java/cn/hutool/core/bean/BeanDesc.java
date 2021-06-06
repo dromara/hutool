@@ -273,19 +273,19 @@ public class BeanDesc implements Serializable {
 			if (fieldName.startsWith("is")) {
 				// 字段已经是is开头
 				if (methodName.equals(fieldName) // isName -》 isName
-						|| methodName.equals("get" + handledFieldName)// isName -》 getIsName
-						|| methodName.equals("is" + handledFieldName)// isName -》 isIsName
+						|| ("get" + handledFieldName).equals(methodName)// isName -》 getIsName
+						|| ("is" + handledFieldName).equals(methodName)// isName -》 isIsName
 				) {
 					return true;
 				}
-			} else if (methodName.equals("is" + handledFieldName)) {
+			} else if (("is" + handledFieldName).equals(methodName)) {
 				// 字段非is开头， name -》 isName
 				return true;
 			}
 		}
 
 		// 包括boolean的任何类型只有一种匹配情况：name -》 getName
-		return methodName.equals("get" + handledFieldName);
+		return ("get" + handledFieldName).equals(methodName);
 	}
 
 	/**
@@ -324,15 +324,15 @@ public class BeanDesc implements Serializable {
 		// 针对Boolean类型特殊检查
 		if (isBooleanField && fieldName.startsWith("is")) {
 			// 字段是is开头
-			if (methodName.equals("set" + StrUtil.removePrefix(fieldName, "is"))// isName -》 setName
-					|| methodName.equals("set" + handledFieldName)// isName -》 setIsName
+			if (("set" + StrUtil.removePrefix(fieldName, "is")).equals(methodName)// isName -》 setName
+					|| ("set" + handledFieldName).equals(methodName)// isName -》 setIsName
 			) {
 				return true;
 			}
 		}
 
 		// 包括boolean的任何类型只有一种匹配情况：name -》 setName
-		return methodName.equals("set" + fieldName);
+		return ("set" + fieldName).equals(methodName);
 	}
 	// ------------------------------------------------------------------------------------------------------ Private method end
 }

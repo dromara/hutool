@@ -76,7 +76,7 @@ public class TimerTaskList implements Delayed {
 	 */
 	public void removeTask(TimerTask timerTask) {
 		synchronized (this) {
-			if (timerTask.timerTaskList.equals(this)) {
+			if (this.equals(timerTask.timerTaskList)) {
 				timerTask.next.prev = timerTask.prev;
 				timerTask.prev.next = timerTask.next;
 				timerTask.timerTaskList = null;
