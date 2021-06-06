@@ -17,7 +17,7 @@ import java.util.Set;
 
 /**
  * Map代理，提供各种getXXX方法，并提供默认值支持
- * 
+ *
  * @author looly
  * @since 3.2.0
  */
@@ -30,7 +30,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	/**
 	 * 创建代理Map<br>
 	 * 此类对Map做一次包装，提供各种getXXX方法
-	 * 
+	 *
 	 * @param map 被代理的Map
 	 * @return {@link MapProxy}
 	 */
@@ -40,7 +40,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param map 被代理的Map
 	 */
 	public MapProxy(Map<?, ?> map) {
@@ -138,7 +138,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 				} else if ("toString".equals(methodName)) {
 					return this.toString();
 				}
-				
+
 				if (StrUtil.isNotBlank(fieldName)) {
 					if (false == this.containsKey(fieldName)) {
 						// 驼峰不存在转下划线尝试
@@ -163,7 +163,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 
 		throw new UnsupportedOperationException(method.toGenericString());
 	}
-	
+
 	/**
 	 * 将Map代理为指定接口的动态代理对象
 	 *
