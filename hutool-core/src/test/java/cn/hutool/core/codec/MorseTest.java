@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class MorseTest {
-	
+
 	private final Morse morseCoder = new Morse();
 
 	@Test

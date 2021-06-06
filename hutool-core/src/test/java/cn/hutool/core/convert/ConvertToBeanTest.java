@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 类型转换工具单元测试<br>
  * 转换为数组
- * 
+ *
  * @author Looly
  *
  */
@@ -25,7 +25,7 @@ public class ConvertToBeanTest {
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
-		
+
 		Map<?, ?> map = Convert.convert(Map.class, person);
 		Assert.assertEquals(map.get("name"), "测试A11");
 		Assert.assertEquals(map.get("age"), 14);
@@ -67,7 +67,7 @@ public class ConvertToBeanTest {
 		Assert.assertEquals("3", map2.get("key3"));
 		Assert.assertEquals("4", map2.get("key4"));
 	}
-	
+
 	@Test
 	public void mapToBeanTest() {
 		HashMap<String, Object> map = new HashMap<>();
@@ -76,7 +76,7 @@ public class ConvertToBeanTest {
 		map.put("openid", "11213232");
 		map.put("name", "测试A11");
 		map.put("subName", "sub名字");
-		
+
 		SubPerson subPerson = Convert.convert(SubPerson.class, map);
 		Assert.assertEquals("88dc4b28-91b1-4a1a-bab5-444b795c7ecd", subPerson.getId().toString());
 		Assert.assertEquals(14, subPerson.getAge());

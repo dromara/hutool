@@ -14,7 +14,7 @@ import cn.hutool.core.lang.test.bean.UserInfoDict;
 
 /**
  * {@link BeanPath} 单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -66,7 +66,7 @@ public class BeanPathTest {
 		Assert.assertEquals("id", pattern.patternParts.get(3));
 
 	}
-	
+
 	@Test
 	public void beanPathTest2() {
 		BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
@@ -75,7 +75,7 @@ public class BeanPathTest {
 		Assert.assertEquals("0", pattern.patternParts.get(2));
 		Assert.assertEquals("id", pattern.patternParts.get(3));
 	}
-	
+
 	@Test
 	public void beanPathTest3() {
 		BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
