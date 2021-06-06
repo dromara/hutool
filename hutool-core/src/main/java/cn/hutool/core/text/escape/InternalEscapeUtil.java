@@ -9,7 +9,7 @@ class InternalEscapeUtil {
 
 	/**
 	 * 将数组中的0和1位置的值互换，即键值转换
-	 * 
+	 *
 	 * @param array String[][] 被转换的数组
 	 * @return String[][] 转换后的数组
 	 */

@@ -5,10 +5,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 线程拒绝策略枚举
- * 
+ *
  * <p>
  * 如果设置了maxSize, 当总线程数达到上限, 会调用RejectedExecutionHandler进行处理，此枚举为JDK预定义的几种策略枚举表示
- * 
+ *
  * @author looly
  * @since 4.1.13
  */
@@ -31,7 +31,7 @@ public enum RejectPolicy {
 
 	/**
 	 * 获取RejectedExecutionHandler枚举值
-	 * 
+	 *
 	 * @return RejectedExecutionHandler
 	 */
 	public RejectedExecutionHandler getValue() {
