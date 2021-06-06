@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 字符串格式化工具
- * 
+ *
  * @author Looly
  *
  */
@@ -19,7 +19,7 @@ public class StrFormatter {
 	 * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
 	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
 	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
-	 * 
+	 *
 	 * @param strPattern 字符串模板
 	 * @param argArray 参数列表
 	 * @return 结果
@@ -66,7 +66,7 @@ public class StrFormatter {
 				handledPosition = delimIndex + 2;
 			}
 		}
-		
+
 		// append the characters following the last {} pair.
 		// 加入最后一个占位符后所有的字符
 		sbuf.append(strPattern, handledPosition, strPattern.length());
