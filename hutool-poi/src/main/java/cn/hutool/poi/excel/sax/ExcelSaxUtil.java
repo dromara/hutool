@@ -247,7 +247,6 @@ public class ExcelSaxUtil {
 	 * @since 5.5.0
 	 */
 	public static Object getNumberOrDateValue(CellValueRecordInterface cell, double value, FormatTrackingHSSFListener formatListener) {
-		Object result;
 		if (isDateFormat(cell, formatListener)) {
 			// 可能为日期格式
 			return getDateValue(value);

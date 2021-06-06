@@ -385,7 +385,6 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			return Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, RID_PREFIX));
 		}
 
-		final int sheetIndex;
 		try {
 			return Integer.parseInt(idOrRidOrSheetName);
 		} catch (NumberFormatException ignore) {
