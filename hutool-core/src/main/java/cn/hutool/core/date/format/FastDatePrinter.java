@@ -299,7 +299,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		} else if (obj instanceof Calendar) {
 			return format((Calendar) obj);
 		} else if (obj instanceof Long) {
-			return format(((Long) obj).longValue());
+			return format(((Long) obj));
 		} else {
 			throw new IllegalArgumentException("Unknown class: " + (obj == null ? "<null>" : obj.getClass().getName()));
 		}
