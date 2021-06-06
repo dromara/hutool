@@ -47,7 +47,7 @@ public class TaskListenerManager implements Serializable {
 	 */
 	public void notifyTaskStart(TaskExecutor executor) {
 		synchronized (listeners) {
-			int size = listeners.size();
+			listeners.size();
 			TaskListener listener;
 			for (TaskListener taskListener : listeners) {
 				listener = taskListener;
@@ -64,7 +64,7 @@ public class TaskListenerManager implements Serializable {
 	 */
 	public void notifyTaskSucceeded(TaskExecutor executor) {
 		synchronized (listeners) {
-			int size = listeners.size();
+			listeners.size();
 			for (TaskListener listener : listeners) {
 				listener.onSucceeded(executor);
 			}

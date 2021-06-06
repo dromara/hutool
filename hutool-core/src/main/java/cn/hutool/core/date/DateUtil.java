@@ -931,7 +931,7 @@ public class DateUtil extends CalendarUtil {
 
 		//标准日期格式（包括单个数字的日期时间）
 		dateStr = normalize(dateStr);
-		final Matcher matcher = DatePattern.REGEX_NORM.matcher(dateStr);
+		DatePattern.REGEX_NORM.matcher(dateStr);
 		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
 			final int colonCount = StrUtil.count(dateStr, CharUtil.COLON);
 			switch (colonCount) {

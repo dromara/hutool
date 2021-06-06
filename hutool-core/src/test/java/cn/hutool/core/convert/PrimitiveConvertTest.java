@@ -13,6 +13,6 @@ public class PrimitiveConvertTest {
 
 	@Test(expected = NumberFormatException.class)
 	public void toIntErrorTest(){
-		final int convert = Convert.convert(int.class, "aaaa");
+		Convert.convert(int.class, "aaaa");
 	}
 }

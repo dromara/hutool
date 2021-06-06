@@ -59,7 +59,7 @@ public class SnowflakeTest {
 		Snowflake snowflake = IdUtil.createSnowflake(0, 0);
 
 		Set<Long> ids = new ConcurrentHashSet<>();
-		ConcurrencyTester tester = ThreadUtil.concurrencyTest(100, () -> {
+		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 5000; i++) {
 				if(false == ids.add(snowflake.nextId())){
 					throw new UtilException("重复ID！");

@@ -126,7 +126,7 @@ public class HttpRequestTest {
 		map.put("size", "2");
 		map.put("sizes", list);
 
-		String s = JSONUtil.toJsonStr(map);
+		JSONUtil.toJsonStr(map);
 		HttpRequest request = HttpUtil.createGet("http://localhost:8888/get");
 		Console.log(request.execute().body());
 	}

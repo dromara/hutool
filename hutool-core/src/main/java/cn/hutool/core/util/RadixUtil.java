@@ -52,9 +52,6 @@ public class RadixUtil {
 	 * @return 自定义进制字符串
 	 */
 	public static String encode(final String radixs, final int num) {
-		//考虑到负数问题
-		long tmpNum = (num >= 0 ? num : (0x100000000L - (~num + 1)));
-
 		return encode(radixs, num, 32);
 	}
 

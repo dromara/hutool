@@ -18,7 +18,7 @@ public class HttpsTest {
 		final AtomicInteger count = new AtomicInteger();
 		for(int i =0; i < 100; i++){
 			ThreadUtil.execute(()->{
-				final String s = HttpUtil.get("https://www.baidu.com/");
+				HttpUtil.get("https://www.baidu.com/");
 				Console.log(count.incrementAndGet());
 			});
 		}

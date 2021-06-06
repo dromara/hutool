@@ -192,8 +192,7 @@ public class JSONUtilTest {
 
 	@Test
 	public void parseObjTest() {
-		// 测试转义
-		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
+		JSONUtil.parseObj("{\n" +
 				"    \"test\": \"\\\\地库地库\",\n" +
 				"}");
 	}

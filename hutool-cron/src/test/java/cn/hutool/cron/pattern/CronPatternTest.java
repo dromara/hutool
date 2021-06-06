@@ -143,8 +143,7 @@ public class CronPatternTest {
 
 	@Test(expected = CronException.class)
 	public void rangeYearTest() {
-		// year的范围是1970~2099年，超出报错
-		CronPattern pattern = new CronPattern("0/1 * * * 1/1 ? 2020-2120");
+		new CronPattern("0/1 * * * 1/1 ? 2020-2120");
 	}
 
 	/**

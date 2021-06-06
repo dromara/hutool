@@ -174,7 +174,7 @@ public class JSONArrayTest {
 		String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
 		JSONArray ja = JSONUtil.parseArray(json);
 
-		List<List<KeyBean>> list = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
+		ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
 	}
 
 	@Test

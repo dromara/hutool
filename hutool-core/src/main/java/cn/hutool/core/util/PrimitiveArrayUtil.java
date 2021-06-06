@@ -2038,7 +2038,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		long tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2073,7 +2072,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		int tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2108,7 +2106,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		short tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2143,7 +2140,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		char tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2178,7 +2174,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		byte tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2213,7 +2208,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		double tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2248,7 +2242,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		float tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2283,7 +2276,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		boolean tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;

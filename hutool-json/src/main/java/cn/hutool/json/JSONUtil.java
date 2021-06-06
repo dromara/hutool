@@ -675,7 +675,6 @@ public class JSONUtil {
 			return writer;
 		}
 
-		char b; // 前一个字符
 		char c; // 当前字符
 		int len = str.length();
 		if (isWrap) {

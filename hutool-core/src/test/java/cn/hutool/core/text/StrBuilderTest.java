@@ -100,7 +100,7 @@ public class StrBuilderTest {
 	public void delTest2() {
 		// 删除中间部分测试
 		StrBuilder strBuilder = new StrBuilder("ABCDEFG");
-		int length = strBuilder.length();
+		strBuilder.length();
 		StrBuilder builder = strBuilder.del(2,6);
 		Assert.assertEquals("ABG", builder.toString());
 	}
