@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class CaesarTest {
-	
+
 	@Test
 	public void caesarTest() {
 		String str = "1f2e9df6131b480b9fdddc633cf24996";

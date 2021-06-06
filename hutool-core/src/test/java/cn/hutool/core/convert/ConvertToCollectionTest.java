@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * 转换为集合测试
- * 
+ *
  * @author looly
  *
  */
@@ -41,7 +41,7 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals("", list.get(3));
 		Assert.assertEquals(1, list.get(4));
 	}
-	
+
 	@Test
 	public void toListTest2() {
 		Object[] a = { "a", "你", "好", "", 1 };
@@ -52,7 +52,7 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals("", list.get(3));
 		Assert.assertEquals("1", list.get(4));
 	}
-	
+
 	@Test
 	public void toListTest3() {
 		Object[] a = { "a", "你", "好", "", 1 };
@@ -63,7 +63,7 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals("", list.get(3));
 		Assert.assertEquals("1", list.get(4));
 	}
-	
+
 	@Test
 	public void toListTest4() {
 		Object[] a = { "a", "你", "好", "", 1 };
@@ -90,7 +90,7 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("a", list2.get(0));
 	}
-	
+
 	@Test
 	public void strToListTest2() {
 		String a = "a,你,好,123";
