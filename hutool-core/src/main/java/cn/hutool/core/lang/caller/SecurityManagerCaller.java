@@ -6,12 +6,12 @@ import cn.hutool.core.util.ArrayUtil;
 
 /**
  * {@link SecurityManager} 方式获取调用者
- * 
+ *
  * @author Looly
  */
 public class SecurityManagerCaller extends SecurityManager implements Caller, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final int OFFSET = 1;
 
 	@Override
