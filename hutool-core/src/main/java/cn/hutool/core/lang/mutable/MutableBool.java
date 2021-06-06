@@ -51,7 +51,7 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 
 	@Override
 	public void set(final Boolean value) {
-		this.value = value.booleanValue();
+		this.value = value;
 	}
 
 	// -----------------------------------------------------------------------
