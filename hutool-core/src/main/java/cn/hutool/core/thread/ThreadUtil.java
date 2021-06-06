@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * 线程池工具
@@ -367,6 +368,19 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 创建本地线程对象
+	 *
+	 * @param <T>      持有对象类型
+	 * @param supplier 初始化线程对象函数
+	 * @return 本地线程
+	 * @see ThreadLocal#withInitial(Supplier)
+	 * @since 5.6.7
+	 */
+	public static <T> ThreadLocal<T> createThreadLocal(Supplier<? extends T> supplier) {
+		return ThreadLocal.withInitial(supplier);
+	}
+
+	/**
 	 * 创建ThreadFactoryBuilder
 	 *
 	 * @return ThreadFactoryBuilder
@@ -562,20 +576,19 @@ public class ThreadUtil {
 	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
 	 * </ul>
 	 *
-	 *
-	 * @param executor 定时任务线程池，{@code null}新建一个默认线程池
-	 * @param command 需要定时执行的逻辑
-	 * @param initialDelay 初始延迟，单位毫秒
-	 * @param period 执行周期，单位毫秒
+	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
+	 * @param command               需要定时执行的逻辑
+	 * @param initialDelay          初始延迟，单位毫秒
+	 * @param period                执行周期，单位毫秒
 	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
 	 * @return {@link ScheduledThreadPoolExecutor}
 	 * @since 5.5.8
 	 */
 	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
-								Runnable command,
-								long initialDelay,
-								long period,
-								boolean fixedRateOrFixedDelay){
+													   Runnable command,
+													   long initialDelay,
+													   long period,
+													   boolean fixedRateOrFixedDelay) {
 		return schedule(executor, command, initialDelay, period, TimeUnit.MILLISECONDS, fixedRateOrFixedDelay);
 	}
 
@@ -587,12 +600,11 @@ public class ThreadUtil {
 	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
 	 * </ul>
 	 *
-	 *
-	 * @param executor 定时任务线程池，{@code null}新建一个默认线程池
-	 * @param command 需要定时执行的逻辑
-	 * @param initialDelay 初始延迟
-	 * @param period 执行周期
-	 * @param timeUnit 时间单位
+	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
+	 * @param command               需要定时执行的逻辑
+	 * @param initialDelay          初始延迟
+	 * @param period                执行周期
+	 * @param timeUnit              时间单位
 	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
 	 * @return {@link ScheduledThreadPoolExecutor}
 	 * @since 5.6.5
@@ -602,13 +614,13 @@ public class ThreadUtil {
 													   long initialDelay,
 													   long period,
 													   TimeUnit timeUnit,
-													   boolean fixedRateOrFixedDelay){
-		if(null == executor){
+													   boolean fixedRateOrFixedDelay) {
+		if (null == executor) {
 			executor = createScheduledExecutor(2);
 		}
-		if(fixedRateOrFixedDelay){
+		if (fixedRateOrFixedDelay) {
 			executor.scheduleAtFixedRate(command, initialDelay, period, timeUnit);
-		} else{
+		} else {
 			executor.scheduleWithFixedDelay(command, initialDelay, period, timeUnit);
 		}
 
