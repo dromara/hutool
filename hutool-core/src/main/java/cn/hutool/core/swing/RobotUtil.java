@@ -14,7 +14,7 @@ import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 /**
  * {@link Robot} 封装工具类，提供截屏等工具
- * 
+ *
  * @author looly
  * @since 4.1.14
  */
@@ -34,7 +34,7 @@ public class RobotUtil {
 	/**
 	 * 设置默认的延迟时间<br>
 	 * 当按键执行完后的等待时间，也可以用ThreadUtil.sleep方法代替
-	 * 
+	 *
 	 * @param delayMillis 等待毫秒数
 	 * @since 4.5.7
 	 */
@@ -44,7 +44,7 @@ public class RobotUtil {
 
 	/**
 	 * 模拟鼠标移动
-	 * 
+	 *
 	 * @param x 移动到的x坐标
 	 * @param y 移动到的y坐标
 	 * @since 4.5.7
@@ -56,7 +56,7 @@ public class RobotUtil {
 	/**
 	 * 模拟单击<br>
 	 * 鼠标单击包括鼠标左键的按下和释放
-	 * 
+	 *
 	 * @since 4.5.7
 	 */
 	public static void click() {
@@ -68,7 +68,7 @@ public class RobotUtil {
 	/**
 	 * 模拟右键单击<br>
 	 * 鼠标单击包括鼠标右键的按下和释放
-	 * 
+	 *
 	 * @since 4.5.7
 	 */
 	public static void rightClick() {
@@ -79,7 +79,7 @@ public class RobotUtil {
 
 	/**
 	 * 模拟鼠标滚轮滚动
-	 * 
+	 *
 	 * @param wheelAmt 滚动数，负数表示向前滚动，正数向后滚动
 	 * @since 4.5.7
 	 */
@@ -91,7 +91,7 @@ public class RobotUtil {
 	/**
 	 * 模拟键盘点击<br>
 	 * 包括键盘的按下和释放
-	 * 
+	 *
 	 * @param keyCodes 按键码列表，见{@link java.awt.event.KeyEvent}
 	 * @since 4.5.7
 	 */
@@ -105,7 +105,7 @@ public class RobotUtil {
 
 	/**
 	 * 打印输出指定字符串（借助剪贴板）
-	 * 
+	 *
 	 * @param str 字符串
 	 */
 	public static void keyPressString(String str) {
@@ -116,7 +116,7 @@ public class RobotUtil {
 
 	/**
 	 * shift+ 按键
-	 * 
+	 *
 	 * @param key 按键
 	 */
 	public static void keyPressWithShift(int key) {
@@ -129,7 +129,7 @@ public class RobotUtil {
 
 	/**
 	 * ctrl+ 按键
-	 * 
+	 *
 	 * @param key 按键
 	 */
 	public static void keyPressWithCtrl(int key) {
@@ -142,7 +142,7 @@ public class RobotUtil {
 
 	/**
 	 * alt+ 按键
-	 * 
+	 *
 	 * @param key 按键
 	 */
 	public static void keyPressWithAlt(int key) {
@@ -155,7 +155,7 @@ public class RobotUtil {
 
 	/**
 	 * 截取全屏
-	 * 
+	 *
 	 * @return 截屏的图片
 	 */
 	public static BufferedImage captureScreen() {
@@ -164,7 +164,7 @@ public class RobotUtil {
 
 	/**
 	 * 截取全屏到文件
-	 * 
+	 *
 	 * @param outFile 写出到的文件
 	 * @return 写出到的文件
 	 */
@@ -175,7 +175,7 @@ public class RobotUtil {
 
 	/**
 	 * 截屏
-	 * 
+	 *
 	 * @param screenRect 截屏的矩形区域
 	 * @return 截屏的图片
 	 */
@@ -185,7 +185,7 @@ public class RobotUtil {
 
 	/**
 	 * 截屏
-	 * 
+	 *
 	 * @param screenRect 截屏的矩形区域
 	 * @param outFile 写出到的文件
 	 * @return 写出到的文件

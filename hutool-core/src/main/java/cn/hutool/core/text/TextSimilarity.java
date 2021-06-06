@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 文本相似度计算<br>
  * 工具类提供者：【杭州】fineliving
- * 
+ *
  * @author fanqun
  * @since 3.2.3
  **/
@@ -14,7 +14,7 @@ public class TextSimilarity {
 
 	/**
 	 * 计算相似度，两个都是空串相似度为1，被认为是相同的串
-	 * 
+	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2
 	 * @return 相似度
@@ -35,14 +35,14 @@ public class TextSimilarity {
 			// 两个都是空串相似度为1，被认为是相同的串
 			return 1;
 		}
-		
+
 		int temp2 = longestCommonSubstring(newStrA, newStrB).length();
 		return NumberUtil.div(temp2, temp);
 	}
 
 	/**
 	 * 计算相似度百分比
-	 * 
+	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2
 	 * @param scale 保留小数
@@ -55,7 +55,7 @@ public class TextSimilarity {
 	// --------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将字符串的所有数据依次写成一行，去除无意义字符串
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 处理后的字符串
 	 */
@@ -70,13 +70,13 @@ public class TextSimilarity {
 				sb.append(c);
 			}
 		}
-		
+
 		return sb.toString();
 	}
 
 	/**
 	 * 判断字符是否为汉字，数字和字母， 因为对符号进行相似度比较没有实际意义，故符号不加入考虑范围。
-	 * 
+	 *
 	 * @param charValue 字符
 	 * @return true表示为非汉字，数字和字母，false反之
 	 */
@@ -89,7 +89,7 @@ public class TextSimilarity {
 
 	/**
 	 * 求公共子串，采用动态规划算法。 其不要求所求得的字符在所给的字符串中是连续的。
-	 * 
+	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2
 	 * @return 公共子串
