@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * 字符串替换链，用于组合多个字符串替换逻辑
- * 
+ *
  * @author looly
  * @since 4.1.5
  */
@@ -20,7 +20,7 @@ public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, Rep
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param strReplacers 字符串替换器
 	 */
 	public ReplacerChain(StrReplacer... strReplacers) {

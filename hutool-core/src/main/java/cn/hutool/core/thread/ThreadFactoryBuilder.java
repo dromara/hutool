@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * ThreadFactory创建器<br>
  * 参考：Guava的ThreadFactoryBuilder
- * 
+ *
  * @author looly
  * @since 4.1.9
  */
@@ -31,7 +31,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 创建{@link ThreadFactoryBuilder}
-	 * 
+	 *
 	 * @return {@link ThreadFactoryBuilder}
 	 */
 	public static ThreadFactoryBuilder create() {
@@ -51,7 +51,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 设置线程名前缀，例如设置前缀为hutool-thread-，则线程名为hutool-thread-1之类。
-	 * 
+	 *
 	 * @param namePrefix 线程名前缀
 	 * @return this
 	 */
@@ -62,7 +62,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 设置是否守护线程
-	 * 
+	 *
 	 * @param daemon 是否守护线程
 	 * @return this
 	 */
@@ -73,7 +73,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 设置线程优先级
-	 * 
+	 *
 	 * @param priority 优先级
 	 * @return this
 	 * @see Thread#MIN_PRIORITY
@@ -93,7 +93,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 设置未捕获异常的处理方式
-	 * 
+	 *
 	 * @param uncaughtExceptionHandler {@link UncaughtExceptionHandler}
 	 * @return this
 	 */
@@ -104,7 +104,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 构建{@link ThreadFactory}
-	 * 
+	 *
 	 * @return {@link ThreadFactory}
 	 */
 	@Override
@@ -114,7 +114,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 
 	/**
 	 * 构建
-	 * 
+	 *
 	 * @param builder {@link ThreadFactoryBuilder}
 	 * @return {@link ThreadFactory}
 	 */
