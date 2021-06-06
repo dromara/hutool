@@ -387,7 +387,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public boolean isKeepAlive() {
 		String connection = header(Header.CONNECTION);
 		if (connection == null) {
-			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
+			return !HTTP_1_0.equalsIgnoreCase(httpVersion);
 		}
 
 		return false == "close".equalsIgnoreCase(connection);

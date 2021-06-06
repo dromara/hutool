@@ -1166,7 +1166,7 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static BufferedImage toBufferedImage(Image image, String imageType) {
-		final int type = imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)
+		final int type = IMAGE_TYPE_PNG.equalsIgnoreCase(imageType)
 				 ? BufferedImage.TYPE_INT_ARGB
 				 : BufferedImage.TYPE_INT_RGB;
 		return toBufferedImage(image, type);

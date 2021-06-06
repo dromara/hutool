@@ -243,7 +243,7 @@ public class NetUtil {
 		long cBegin = NetUtil.ipv4ToLong("192.168.0.0");
 		long cEnd = NetUtil.ipv4ToLong("192.168.255.255");
 
-		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || ipAddress.equals(LOCAL_IP);
+		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
 		return isInnerIp;
 	}
 
