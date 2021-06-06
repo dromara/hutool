@@ -511,6 +511,24 @@ public class CollUtil {
 	}
 
 	/**
+	 * 以 conjunction 为分隔符将集合转换为字符串
+	 *
+	 * @param <T>         集合元素类型
+	 * @param iterable    {@link Iterable}
+	 * @param conjunction 分隔符
+	 * @param func        集合元素转换器，将元素转换为字符串
+	 * @return 连接后的字符串
+	 * @see IterUtil#join(Iterator, CharSequence, Function)
+	 * @since 5.6.7
+	 */
+	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, Function<T, ? extends CharSequence> func) {
+		if (null == iterable) {
+			return null;
+		}
+		return IterUtil.join(iterable.iterator(), conjunction, func);
+	}
+
+	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串<br>
 	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
 	 *
@@ -1617,9 +1635,9 @@ public class CollUtil {
 	 * @since 5.6.6
 	 */
 	public static <T> int lastIndexOf(Collection<T> collection, Matcher<T> matcher) {
-		if(collection instanceof List){
+		if (collection instanceof List) {
 			// List的查找最后一个有优化算法
-			return ListUtil.lastIndexOf((List<T>)collection, matcher);
+			return ListUtil.lastIndexOf((List<T>) collection, matcher);
 		}
 		int matchIndex = -1;
 		if (isNotEmpty(collection)) {
@@ -2612,7 +2630,7 @@ public class CollUtil {
 	 * @since 5.4.7
 	 */
 	public static <T> void forEach(Iterable<T> iterable, Consumer<T> consumer) {
-		if(iterable == null){
+		if (iterable == null) {
 			return;
 		}
 		forEach(iterable.iterator(), consumer);
@@ -2626,7 +2644,7 @@ public class CollUtil {
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer) {
-		if(iterator == null){
+		if (iterator == null) {
 			return;
 		}
 		int index = 0;
@@ -2644,7 +2662,7 @@ public class CollUtil {
 	 * @param consumer    {@link Consumer} 遍历的每条数据处理器
 	 */
 	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer) {
-		if(enumeration == null){
+		if (enumeration == null) {
 			return;
 		}
 		int index = 0;
@@ -2664,7 +2682,7 @@ public class CollUtil {
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
-		if(map == null){
+		if (map == null) {
 			return;
 		}
 		int index = 0;
@@ -2986,7 +3004,7 @@ public class CollUtil {
 	 * @author Looly
 	 */
 	@FunctionalInterface
-	public interface KVConsumer<K, V> extends Serializable{
+	public interface KVConsumer<K, V> extends Serializable {
 		/**
 		 * 接受并处理一对参数
 		 *
