@@ -73,7 +73,8 @@ public class NullCell implements Cell {
 		return null;
 	}
 
-	public CellType getCellTypeEnum() {
+    @Override
+    public CellType getCellTypeEnum() {
 		return null;
 	}
 
@@ -82,7 +83,8 @@ public class NullCell implements Cell {
 		return null;
 	}
 
-	public CellType getCachedFormulaResultTypeEnum() {
+    @Override
+    public CellType getCachedFormulaResultTypeEnum() {
 		return null;
 	}
 
