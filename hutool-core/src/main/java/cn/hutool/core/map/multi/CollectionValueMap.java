@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * 值作为集合的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
- * 
+ *
  * @author looly
  *
  * @param <K> 键类型
@@ -33,7 +33,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 */
 	public CollectionValueMap(int initialCapacity) {
@@ -42,7 +42,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param m Map
 	 */
 	public CollectionValueMap(Map<? extends K, ? extends Collection<V>> m) {
@@ -51,7 +51,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param loadFactor 加载因子
 	 * @param m Map
 	 */
@@ -62,7 +62,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
@@ -74,7 +74,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 	/**
 	 * 放入Value<br>
 	 * 如果键对应值列表有值，加入，否则创建一个新列表后加入
-	 * 
+	 *
 	 * @param key 键
 	 * @param value 值
 	 */
@@ -89,7 +89,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 
 	/**
 	 * 获取值
-	 * 
+	 *
 	 * @param key 键
 	 * @param index 第几个值的索引，越界返回null
 	 * @return 值或null
@@ -102,7 +102,7 @@ public abstract class CollectionValueMap<K, V> extends MapWrapper<K, Collection<
 	/**
 	 * 创建集合<br>
 	 * 此方法用于创建在putValue后追加值所在的集合，子类实现此方法创建不同类型的集合
-	 * 
+	 *
 	 * @return {@link Collection}
 	 */
 	protected abstract Collection<V> createCollection();
