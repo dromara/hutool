@@ -14,7 +14,6 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,18 +34,16 @@ public class StrUtilJmh {
 	@Benchmark
 	public void joinJmh2() {
 		final List<Org> orgs = initSize(20);
-		final Iterator<Org> iterator = orgs.iterator();
-
 		final StringBuilder sb = new StringBuilder();
+		final int size = orgs.size();
 		boolean isFirst = true;
-		while (iterator.hasNext()) {
+		for(int i = 0; i < size; i++){
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				sb.append(",");
 			}
-
-			sb.append(iterator.next().getProvinceId());
+			sb.append(orgs.get(i).getProvinceId());
 		}
 		sb.toString();
 	}
