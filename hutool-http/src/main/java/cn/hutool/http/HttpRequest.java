@@ -552,7 +552,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置map<String, String>类型表单数据
+	 * 设置map&lt;String, String&gt;类型表单数据
 	 *
 	 * @param formMapStr 表单内容
 	 * @return this
