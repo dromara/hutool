@@ -2,7 +2,6 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.StrBuilder;
 
 import java.io.File;
@@ -297,7 +296,6 @@ public class RuntimeUtil {
 				throw new NullPointerException("Command is blank !");
 			}
 			cmds = cmdSplit(cmd);
-			Console.log(cmds);
 		}
 		return cmds;
 	}
