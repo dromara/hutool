@@ -1629,17 +1629,6 @@ public class CharSequenceUtil {
 	// ------------------------------------------------------------------------ split
 
 	/**
-	 * 切分字符串
-	 *
-	 * @param str       被切分的字符串
-	 * @param separator 分隔符字符
-	 * @return 切分后的数组
-	 */
-	public static String[] splitToArray(CharSequence str, char separator) {
-		return splitToArray(str, separator, 0);
-	}
-
-	/**
 	 * 切分字符串为long数组
 	 *
 	 * @param str       被切分的字符串
@@ -1698,6 +1687,33 @@ public class CharSequenceUtil {
 	 */
 	public static List<String> split(CharSequence str, char separator) {
 		return split(str, separator, 0);
+	}
+
+	/**
+	 * 切分字符串，如果分隔符不存在则返回原字符串
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符
+	 * @return 字符串
+	 * @since 5.6.7
+	 */
+	public static String[] splitToArray(CharSequence str, CharSequence separator) {
+		if (str == null) {
+			return new String[]{};
+		}
+
+		return StrSpliter.splitToArray(str.toString(), str(separator), 0, false, false);
+	}
+
+	/**
+	 * 切分字符串
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符字符
+	 * @return 切分后的数组
+	 */
+	public static String[] splitToArray(CharSequence str, char separator) {
+		return splitToArray(str, separator, 0);
 	}
 
 	/**
@@ -1814,6 +1830,20 @@ public class CharSequenceUtil {
 	 *
 	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符
+	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 5.6.7
+	 */
+	public static List<String> split(CharSequence str, CharSequence separator, boolean isTrim, boolean ignoreEmpty) {
+		return split(str, separator, 0, isTrim, ignoreEmpty);
+	}
+
+	/**
+	 * 切分字符串
+	 *
+	 * @param str         被切分的字符串
+	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
@@ -1834,14 +1864,11 @@ public class CharSequenceUtil {
 	 * @param str       被切分的字符串
 	 * @param separator 分隔符
 	 * @return 字符串
+	 * @deprecated 请使用 {@link #splitToArray(CharSequence, char)}
 	 */
+	@Deprecated
 	public static String[] split(CharSequence str, CharSequence separator) {
-		if (str == null) {
-			return new String[]{};
-		}
-
-		final String separatorStr = (null == separator) ? null : separator.toString();
-		return StrSpliter.splitToArray(str.toString(), separatorStr, 0, false, false);
+		return splitToArray(str, separator);
 	}
 
 	/**
