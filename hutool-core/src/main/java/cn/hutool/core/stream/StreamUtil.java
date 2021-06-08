@@ -59,7 +59,7 @@ public class StreamUtil {
 	/**
 	 * 按行读取文件为{@link Stream}
 	 *
-	 * @param file 路径
+	 * @param file 文件
 	 * @return {@link Stream}
 	 */
 	public static Stream<String> of(File file) {
@@ -79,6 +79,7 @@ public class StreamUtil {
 	/**
 	 * 按行读取文件为{@link Stream}
 	 *
+	 * @param file    文件
 	 * @param charset 编码
 	 * @return {@link Stream}
 	 */
