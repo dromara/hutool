@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.6.7 (2021-06-07)
+# 5.6.7 (2021-06-08)
 
 ### 🐣新特性
 * 【core   】     CharSequenceUtil增加join重载（issue#I3TFJ5@Gitee）
@@ -13,6 +13,7 @@
 * 【core   】     CsvConfig的setXXX返回this（issue#I3UIQF@Gitee）
 * 【all    】     增加jmh基准测试
 * 【core   】     增加StreamUtil和CollectorUtil
+* 【poi    】     增加content-type(pr#1639@Github)
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize去掉末尾空格问题（issue#1603@Github）
