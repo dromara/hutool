@@ -383,6 +383,19 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 获取Content-Type头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
+	 *
+	 * <pre>
+	 * response.setContentType(excelWriter.getContentType());
+	 * </pre>
+	 *
+	 * @return Content-Type值
+	 */
+	public String getContentType() {
+		return isXlsx() ? ExcelUtil.XLSX_CONTENT_TYPE : ExcelUtil.XLS_CONTENT_TYPE;
+	}
+
+	/**
 	 * 设置当前所在行
 	 *
 	 * @param rowIndex 行号
