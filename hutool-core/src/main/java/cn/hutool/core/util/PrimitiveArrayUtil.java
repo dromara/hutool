@@ -1620,6 +1620,31 @@ public class PrimitiveArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
+	public static String join(long[] array, CharSequence conjunction) {
+		if (null == array) {
+			return null;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (long item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 *
+	 * @param array       数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
 	public static String join(short[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -2038,7 +2063,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		long tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2073,7 +2097,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		int tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2108,7 +2131,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		short tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2143,7 +2165,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		char tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2178,7 +2199,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		byte tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2213,7 +2233,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		double tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2248,7 +2267,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		float tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;
@@ -2283,7 +2301,6 @@ public class PrimitiveArrayUtil {
 		}
 		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
-		boolean tmp;
 		while (j > i) {
 			swap(array, i, j);
 			j--;

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * 字符串切分器
- *
+ *x
  * @author Looly
  */
 public class StrSpliter {

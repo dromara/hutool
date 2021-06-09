@@ -4,13 +4,13 @@ import cn.hutool.core.util.NumberUtil;
 
 /**
  * 可变 <code>float</code> 类型
- * 
+ *
  * @see Float
  * @since 3.0.1
  */
 public class MutableFloat extends Number implements Comparable<MutableFloat>, Mutable<Number> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private float value;
 
 	/**
@@ -46,7 +46,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 
 	@Override
 	public Float get() {
-		return Float.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值
 	 * @return this
 	 */
@@ -116,7 +116,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值，非空
 	 * @return this
 	 * @throws NullPointerException if the object is null
@@ -155,7 +155,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 	<li>类型为 {@link MutableFloat}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param obj 比对的对象
 	 * @return 相同返回<code>true</code>，否则 <code>false</code>
 	 */
@@ -175,7 +175,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
-	 * 
+	 *
 	 * @param other 其它 {@link MutableFloat} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */

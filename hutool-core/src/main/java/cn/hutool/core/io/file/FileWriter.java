@@ -27,7 +27,7 @@ import java.util.Map.Entry;
  */
 public class FileWriter extends FileWrapper{
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * 创建 FileWriter
 	 * @param file 文件
@@ -37,7 +37,7 @@ public class FileWriter extends FileWrapper{
 	public static FileWriter create(File file, Charset charset){
 		return new FileWriter(file, charset);
 	}
-	
+
 	/**
 	 * 创建 FileWriter, 编码：{@link FileWrapper#DEFAULT_CHARSET}
 	 * @param file 文件
@@ -46,7 +46,7 @@ public class FileWriter extends FileWrapper{
 	public static FileWriter create(File file){
 		return new FileWriter(file);
 	}
-	
+
 	// ------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -103,10 +103,10 @@ public class FileWriter extends FileWrapper{
 		this(filePath, DEFAULT_CHARSET);
 	}
 	// ------------------------------------------------------- Constructor end
-	
+
 	/**
 	 * 将String写入文件
-	 * 
+	 *
 	 * @param content 写入的内容
 	 * @param isAppend 是否追加
 	 * @return 目标文件
@@ -125,10 +125,10 @@ public class FileWriter extends FileWrapper{
 		}
 		return file;
 	}
-	
+
 	/**
 	 * 将String写入文件，覆盖模式
-	 * 
+	 *
 	 * @param content 写入的内容
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
@@ -139,7 +139,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将String写入文件，追加模式
-	 * 
+	 *
 	 * @param content 写入的内容
 	 * @return 写入的文件
 	 * @throws IORuntimeException IO异常
@@ -150,7 +150,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将列表写入文件，覆盖模式
-	 * 
+	 *
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @return 目标文件
@@ -162,7 +162,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将列表写入文件，追加模式
-	 * 
+	 *
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @return 目标文件
@@ -174,7 +174,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将列表写入文件
-	 * 
+	 *
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param isAppend 是否追加
@@ -184,10 +184,10 @@ public class FileWriter extends FileWrapper{
 	public <T> File writeLines(Collection<T> list, boolean isAppend) throws IORuntimeException {
 		return writeLines(list, null, isAppend);
 	}
-	
+
 	/**
 	 * 将列表写入文件
-	 * 
+	 *
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param lineSeparator 换行符枚举（Windows、Mac或Linux换行符）
@@ -208,10 +208,10 @@ public class FileWriter extends FileWrapper{
 		}
 		return this.file;
 	}
-	
+
 	/**
 	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
-	 * 
+	 *
 	 * @param map Map
 	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
 	 * @param isAppend 是否追加
@@ -222,10 +222,10 @@ public class FileWriter extends FileWrapper{
 	public File writeMap(Map<?, ?> map, String kvSeparator, boolean isAppend) throws IORuntimeException {
 		return writeMap(map, null, kvSeparator, isAppend);
 	}
-	
+
 	/**
 	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
-	 * 
+	 *
 	 * @param map Map
 	 * @param lineSeparator 换行符枚举（Windows、Mac或Linux换行符）
 	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
@@ -249,10 +249,10 @@ public class FileWriter extends FileWrapper{
 		}
 		return this.file;
 	}
-	
+
 	/**
 	 * 写入数据到文件
-	 * 
+	 *
 	 * @param data 数据
 	 * @param off 数据开始位置
 	 * @param len 数据长度
@@ -262,10 +262,10 @@ public class FileWriter extends FileWrapper{
 	public File write(byte[] data, int off, int len) throws IORuntimeException {
 		return write(data, off, len, false);
 	}
-	
+
 	/**
 	 * 追加数据到文件
-	 * 
+	 *
 	 * @param data 数据
 	 * @param off 数据开始位置
 	 * @param len 数据长度
@@ -278,7 +278,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 写入数据到文件
-	 * 
+	 *
 	 * @param data 数据
 	 * @param off 数据开始位置
 	 * @param len 数据长度
@@ -314,7 +314,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 将流的内容写入文件
-	 * 
+	 *
 	 * @param in 输入流，不关闭
 	 * @param isCloseIn 是否关闭输入流
 	 * @return dest
@@ -339,7 +339,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 获得一个输出流对象
-	 * 
+	 *
 	 * @return 输出流对象
 	 * @throws IORuntimeException IO异常
 	 */
@@ -353,7 +353,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 获得一个带缓存的写入对象
-	 * 
+	 *
 	 * @param isAppend 是否追加
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
@@ -368,7 +368,7 @@ public class FileWriter extends FileWrapper{
 
 	/**
 	 * 获得一个打印写入对象，可以有print
-	 * 
+	 *
 	 * @param isAppend 是否追加
 	 * @return 打印对象
 	 * @throws IORuntimeException  IO异常
@@ -376,10 +376,10 @@ public class FileWriter extends FileWrapper{
 	public PrintWriter getPrintWriter(boolean isAppend) throws IORuntimeException {
 		return new PrintWriter(getWriter(isAppend));
 	}
-	
+
 	/**
 	 * 检查文件
-	 * 
+	 *
 	 * @throws IORuntimeException  IO异常
 	 */
 	private void checkFile() throws IORuntimeException {
@@ -388,7 +388,7 @@ public class FileWriter extends FileWrapper{
 			throw new IORuntimeException("File [{}] is not a file !", this.file.getAbsoluteFile());
 		}
 	}
-	
+
 	/**
 	 * 打印新行
 	 * @param writer Writer

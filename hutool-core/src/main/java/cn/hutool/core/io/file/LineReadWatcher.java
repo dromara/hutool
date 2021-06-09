@@ -13,7 +13,7 @@ import java.nio.file.WatchEvent;
 
 /**
  * 行处理的Watcher实现
- * 
+ *
  * @author looly
  * @since 4.5.2
  */
@@ -25,7 +25,7 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param randomAccessFile {@link RandomAccessFile}
 	 * @param charset 编码
 	 * @param lineHandler 行处理器{@link LineHandler}实现

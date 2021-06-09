@@ -16,7 +16,7 @@ public class TaskListenerManager implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final List<TaskListener> listeners = new ArrayList<>();
-	
+
 	/**
 	 * 增加监听器
 	 * @param listener {@link TaskListener}
@@ -28,7 +28,7 @@ public class TaskListenerManager implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 移除监听器
 	 * @param listener {@link TaskListener}
@@ -40,14 +40,13 @@ public class TaskListenerManager implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 通知所有监听任务启动器启动
 	 * @param executor {@link TaskExecutor}
 	 */
 	public void notifyTaskStart(TaskExecutor executor) {
 		synchronized (listeners) {
-			int size = listeners.size();
 			TaskListener listener;
 			for (TaskListener taskListener : listeners) {
 				listener = taskListener;
@@ -57,20 +56,19 @@ public class TaskListenerManager implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * 通知所有监听任务启动器成功结束
 	 * @param executor {@link TaskExecutor}
 	 */
 	public void notifyTaskSucceeded(TaskExecutor executor) {
 		synchronized (listeners) {
-			int size = listeners.size();
 			for (TaskListener listener : listeners) {
 				listener.onSucceeded(executor);
 			}
 		}
 	}
-	
+
 	/**
 	 * 通知所有监听任务启动器结束并失败<br>
 	 * 无监听将打印堆栈到命令行

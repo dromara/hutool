@@ -43,8 +43,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -1164,7 +1166,7 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static BufferedImage toBufferedImage(Image image, String imageType) {
-		final int type = imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)
+		final int type = IMAGE_TYPE_PNG.equalsIgnoreCase(imageType)
 				 ? BufferedImage.TYPE_INT_ARGB
 				 : BufferedImage.TYPE_INT_RGB;
 		return toBufferedImage(image, type);
@@ -1724,7 +1726,7 @@ public class ImgUtil {
 		}
 
 		if (null == result) {
-			throw new IllegalArgumentException("Image type of [" + imageUrl.toString() + "] is not supported!");
+			throw new IllegalArgumentException("Image type of [" + imageUrl + "] is not supported!");
 		}
 
 		return result;
@@ -2000,6 +2002,57 @@ public class ImgUtil {
 				rectangle.x + (Math.abs(backgroundWidth - rectangle.width) / 2), //
 				rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
 		);
+	}
+
+	/**
+	 * 获取给定图片的主色调，背景填充用
+	 *
+	 * @param image      {@link BufferedImage}
+	 * @param rgbFilters 过滤多种颜色
+	 * @return {@link String} #ffffff
+	 * @since 5.6.7
+	 */
+	public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
+		int r, g, b;
+		Map<String, Long> countMap = new HashMap<>();
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int minx = image.getMinX();
+		int miny = image.getMinY();
+		for (int i = minx; i < width; i++) {
+			for (int j = miny; j < height; j++) {
+				int pixel = image.getRGB(i, j);
+				r = (pixel & 0xff0000) >> 16;
+				g = (pixel & 0xff00) >> 8;
+				b = (pixel & 0xff);
+				if (rgbFilters != null && rgbFilters.length > 0) {
+					for (int[] rgbFilter : rgbFilters) {
+						if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
+							break;
+						}
+					}
+				}
+				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
+			}
+		}
+		String maxColor = null;
+		long maxCount = 0;
+		for (Map.Entry<String, Long> entry : countMap.entrySet()) {
+			String key = entry.getKey();
+			Long count = entry.getValue();
+			if (count > maxCount) {
+				maxColor = key;
+				maxCount = count;
+			}
+		}
+		final String[] splitRgbStr = StrUtil.splitToArray(maxColor, '-');
+		String rHex = Integer.toHexString(Integer.parseInt(splitRgbStr[0]));
+		String gHex = Integer.toHexString(Integer.parseInt(splitRgbStr[1]));
+		String bHex = Integer.toHexString(Integer.parseInt(splitRgbStr[2]));
+		rHex = rHex.length() == 1 ? "0" + rHex : rHex;
+		gHex = gHex.length() == 1 ? "0" + gHex : gHex;
+		bHex = bHex.length() == 1 ? "0" + bHex : bHex;
+		return "#" + rHex + gHex + bHex;
 	}
 
 	// ------------------------------------------------------------------------------------------------------ 背景图换算

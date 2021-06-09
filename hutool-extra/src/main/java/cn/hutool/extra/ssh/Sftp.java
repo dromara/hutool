@@ -339,7 +339,7 @@ public class Sftp extends AbstractFtp {
 			return true;
 		}
 		try {
-			channel.cd(directory.replaceAll("\\\\", "/"));
+			channel.cd(directory.replace('\\', '/'));
 			return true;
 		} catch (SftpException e) {
 			throw new FtpException(e);

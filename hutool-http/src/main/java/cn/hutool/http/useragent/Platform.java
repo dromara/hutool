@@ -109,7 +109,7 @@ public class Platform extends UserAgentInfo {
 	 * @since 5.2.3
 	 */
 	public boolean isIPhoneOrIPod() {
-		return IPHONE.equals(this) || IPOD.equals(this);
+		return this.equals(IPHONE) || this.equals(IPOD);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Platform extends UserAgentInfo {
 	 * @since 5.2.3
 	 */
 	public boolean isIPad() {
-		return IPAD.equals(this);
+		return this.equals(IPAD);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Platform extends UserAgentInfo {
 	 * @since 5.2.3
 	 */
 	public boolean isAndroid() {
-		return ANDROID.equals(this) || GOOGLE_TV.equals(this);
+		return this.equals(ANDROID) || this.equals(GOOGLE_TV);
 	}
 
 }

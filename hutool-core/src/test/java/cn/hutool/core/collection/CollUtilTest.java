@@ -102,7 +102,7 @@ public class CollUtilTest {
 
 		Collection<String> union = CollUtil.union(list1, list2);
 
-		Assert.assertEquals(3, CollUtil.count(union, t -> t.equals("b")));
+		Assert.assertEquals(3, CollUtil.count(union, t -> "b".equals(t)));
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class CollUtilTest {
 		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> intersection = CollUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollUtil.count(intersection, t -> t.equals("b")));
+		Assert.assertEquals(2, CollUtil.count(intersection, t -> "b".equals(t)));
 	}
 
 	@Test
@@ -236,7 +236,7 @@ public class CollUtilTest {
 
 		final String[] result = new String[1];
 		CollUtil.forEach(map, (key, value, index) -> {
-			if (key.equals("a")) {
+			if ("a".equals(key)) {
 				result[0] = value;
 			}
 		});

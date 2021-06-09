@@ -938,7 +938,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      */
     @Override
     public Integer build() {
-        return Integer.valueOf(toHashCode());
+        return toHashCode();
     }
 
     /**

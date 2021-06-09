@@ -11,7 +11,7 @@ import cn.hutool.core.util.NumberUtil;
 /**
  * 排列A(n, m)<br>
  * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
- * 
+ *
  * @author looly
  * @since 4.0.7
  */
@@ -22,7 +22,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param datas 用于排列的数据
 	 */
 	public Arrangement(String[] datas) {
@@ -31,7 +31,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 计算排列数，即A(n, n) = n!
-	 * 
+	 *
 	 * @param n 总数
 	 * @return 排列数
 	 */
@@ -41,7 +41,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 计算排列数，即A(n, m) = n!/(n-m)!
-	 * 
+	 *
 	 * @param n 总数
 	 * @param m 选择的个数
 	 * @return 排列数
@@ -55,7 +55,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 计算排列总数，即A(n, 1) + A(n, 2) + A(n, 3)...
-	 * 
+	 *
 	 * @param n 总数
 	 * @return 排列数
 	 */
@@ -69,7 +69,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 全排列选择（列表全部参与排列）
-	 * 
+	 *
 	 * @return 所有排列列表
 	 */
 	public List<String[]> select() {
@@ -78,7 +78,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 排列选择（从列表中选择m个排列）
-	 * 
+	 *
 	 * @param m 选择个数
 	 * @return 所有排列列表
 	 */
@@ -90,7 +90,7 @@ public class Arrangement implements Serializable {
 
 	/**
 	 * 排列所有组合，即A(n, 1) + A(n, 2) + A(n, 3)...
-	 * 
+	 *
 	 * @return 全排列结果
 	 */
 	public List<String[]> selectAll() {
@@ -104,7 +104,7 @@ public class Arrangement implements Serializable {
 	/**
 	 * 排列选择<br>
 	 * 排列方式为先从数据数组中取出一个元素，再把剩余的元素作为新的基数，依次列推，直到选择到足够的元素
-	 * 
+	 *
 	 * @param datas 选择的基数
 	 * @param resultList 前面（resultIndex-1）个的排列结果
 	 * @param resultIndex 选择索引，从0开始

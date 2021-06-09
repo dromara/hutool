@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * 查找替换器，通过查找指定关键字，替换对应的值
- * 
+ *
  * @author looly
  * @since 4.1.5
  */
@@ -23,7 +23,7 @@ public class LookupReplacer extends StrReplacer {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param lookup 被查找的键值对
 	 */
 	public LookupReplacer(String[]... lookup) {

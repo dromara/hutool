@@ -1,8 +1,15 @@
 package cn.hutool.core.lang.tree;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -152,8 +159,32 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 		return (List<Tree<T>>) this.get(treeNodeConfig.getChildrenKey());
 	}
 
-	public void setChildren(List<Tree<T>> children) {
+	public Tree<T> setChildren(List<Tree<T>> children) {
 		this.put(treeNodeConfig.getChildrenKey(), children);
+		return this;
+	}
+
+	/**
+	 * 增加子节点，同时关联子节点的父节点为当前节点
+	 *
+	 * @param children 子节点列表
+	 * @return this
+	 * @since 5.6.7
+	 */
+	@SafeVarargs
+	public final Tree<T> addChildren(Tree<T>... children){
+		if(ArrayUtil.isNotEmpty(children)){
+			List<Tree<T>> childrenList = this.getChildren();
+			if(null == childrenList){
+				childrenList = new ArrayList<>();
+				setChildren(childrenList);
+			}
+			for (Tree<T> child : children) {
+				child.setParent(this);
+				childrenList.add(child);
+			}
+		}
+		return this;
 	}
 
 	/**
@@ -165,5 +196,30 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	public void putExtra(String key, Object value) {
 		Assert.notEmpty(key, "Key must be not empty !");
 		this.put(key, value);
+	}
+
+	@Override
+	public String toString() {
+		final StringWriter stringWriter = new StringWriter();
+		printTree(this, new PrintWriter(stringWriter), 0);
+		return stringWriter.toString();
+	}
+
+	/**
+	 * 打印
+	 * @param tree 树
+	 * @param writer Writer
+	 * @param intent 缩进量
+	 */
+	private static void printTree(Tree<?> tree, PrintWriter writer, int intent){
+		writer.println(StrUtil.format("{}{}[{}]", StrUtil.repeat(CharUtil.SPACE, intent), tree.getName(), tree.getId()));
+		writer.flush();
+
+		final List<? extends Tree<?>> children = tree.getChildren();
+		if(CollUtil.isNotEmpty(children)){
+			for (Tree<?> child : children) {
+				printTree(child, writer, intent + 2);
+			}
+		}
 	}
 }

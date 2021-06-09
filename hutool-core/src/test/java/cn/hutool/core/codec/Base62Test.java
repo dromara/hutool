@@ -5,7 +5,7 @@ import org.junit.Test;
 
 /**
  * Base62单元测试
- * 
+ *
  * @author looly
  *
  */

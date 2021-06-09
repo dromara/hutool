@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 
 /**
  * {@link CharSequence}资源，字符串做为资源
- * 
+ *
  * @author looly
  * @since 5.5.2
  */

@@ -6,7 +6,7 @@ import cn.hutool.core.util.CharUtil;
 
 /**
  * 形如&#39;的反转义器
- * 
+ *
  * @author looly
  *
  */

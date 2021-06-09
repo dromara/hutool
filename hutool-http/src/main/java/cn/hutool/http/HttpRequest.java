@@ -387,7 +387,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public boolean isKeepAlive() {
 		String connection = header(Header.CONNECTION);
 		if (connection == null) {
-			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
+			return !HTTP_1_0.equalsIgnoreCase(httpVersion);
 		}
 
 		return false == "close".equalsIgnoreCase(connection);
@@ -552,7 +552,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置map<String, String>类型表单数据
+	 * 设置map&lt;String, String&gt;类型表单数据
 	 *
 	 * @param formMapStr 表单内容
 	 * @return this

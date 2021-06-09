@@ -383,6 +383,20 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 获取Content-Type头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
+	 *
+	 * <pre>
+	 * response.setContentType(excelWriter.getContentType());
+	 * </pre>
+	 *
+	 * @return Content-Type值
+	 * @since 5.6.7
+	 */
+	public String getContentType() {
+		return isXlsx() ? ExcelUtil.XLSX_CONTENT_TYPE : ExcelUtil.XLS_CONTENT_TYPE;
+	}
+
+	/**
 	 * 设置当前所在行
 	 *
 	 * @param rowIndex 行号
@@ -395,10 +409,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 定位到最后一行的后边，用于追加数据
+	 *
 	 * @return this
 	 * @since 5.5.0
 	 */
-	public ExcelWriter setCurrentRowToEnd(){
+	public ExcelWriter setCurrentRowToEnd() {
 		return setCurrentRow(getRowCount());
 	}
 
@@ -730,12 +745,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 合并单元格，并写入对象到单元格,使用指定的样式<br>
 	 * 指定样式传入null，则不使用任何样式
 	 *
-	 * @param firstRow         起始行，0开始
-	 * @param lastRow          结束行，0开始
-	 * @param firstColumn      起始列，0开始
-	 * @param lastColumn       结束列，0开始
-	 * @param content          合并单元格后的内容
-	 * @param cellStyle        合并后单元格使用的样式，可以为null
+	 * @param firstRow    起始行，0开始
+	 * @param lastRow     结束行，0开始
+	 * @param firstColumn 起始列，0开始
+	 * @param lastColumn  结束列，0开始
+	 * @param content     合并单元格后的内容
+	 * @param cellStyle   合并后单元格使用的样式，可以为null
 	 * @return this
 	 * @since 5.6.5
 	 */
@@ -873,14 +888,14 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 *
 	 * <p>
-	 *     此方法的逻辑是：将一行数据写出到当前行，遇到已存在的单元格跳过，不存在的创建并赋值。
+	 * 此方法的逻辑是：将一行数据写出到当前行，遇到已存在的单元格跳过，不存在的创建并赋值。
 	 * </p>
 	 *
 	 * @param rowData 一行的数据
 	 * @return this
 	 */
-	public ExcelWriter writeSecHeadRow(Iterable<?> rowData){
-		final Row row = RowUtil.getOrCreateRow(this.sheet,this.currentRow.getAndIncrement());
+	public ExcelWriter writeSecHeadRow(Iterable<?> rowData) {
+		final Row row = RowUtil.getOrCreateRow(this.sheet, this.currentRow.getAndIncrement());
 		Iterator<?> iterator = rowData.iterator();
 		//如果获取的row存在单元格，则执行复杂表头逻辑，否则直接调用writeHeadRow(Iterable<?> rowData)
 		if (row.getLastCellNum() != 0) {
@@ -1093,12 +1108,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 设置列的默认样式
 	 *
-	 * @param x 列号，从0开始
+	 * @param x     列号，从0开始
 	 * @param style 样式
 	 * @return this
 	 * @since 5.6.4
 	 */
-	public ExcelWriter setColumnStyle(int x, CellStyle style){
+	public ExcelWriter setColumnStyle(int x, CellStyle style) {
 		this.sheet.setDefaultColumnStyle(x, style);
 		return this;
 	}

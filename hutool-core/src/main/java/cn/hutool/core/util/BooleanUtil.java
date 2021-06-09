@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  * Boolean类型相关工具类
- * 
+ *
  * @author looly
  * @since 4.1.16
  */
@@ -18,7 +18,7 @@ public class BooleanUtil {
 
 	/**
 	 * 取相反值
-	 * 
+	 *
 	 * @param bool Boolean值
 	 * @return 相反的Boolean值
 	 */
@@ -63,7 +63,7 @@ public class BooleanUtil {
 
 	/**
 	 * 取相反值
-	 * 
+	 *
 	 * @param bool Boolean值
 	 * @return 相反的Boolean值
 	 */
@@ -73,7 +73,7 @@ public class BooleanUtil {
 
 	/**
 	 * 转换字符串为boolean值
-	 * 
+	 *
 	 * @param valueStr 字符串
 	 * @return boolean值
 	 */
@@ -87,7 +87,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为int
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return int值
 	 */
@@ -97,7 +97,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Integer
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return Integer值
 	 */
@@ -107,7 +107,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为char
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return char值
 	 */
@@ -117,7 +117,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Character
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return Character值
 	 */
@@ -127,7 +127,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为byte
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return byte值
 	 */
@@ -137,7 +137,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Byte
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return Byte值
 	 */
@@ -147,7 +147,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为long
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return long值
 	 */
@@ -157,7 +157,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Long
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return Long值
 	 */
@@ -167,7 +167,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为short
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return short值
 	 */
@@ -177,7 +177,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Short
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return Short值
 	 */
@@ -187,7 +187,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为float
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return float值
 	 */
@@ -197,7 +197,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为Float
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return float值
 	 */
@@ -207,7 +207,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为double
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return double值
 	 */
@@ -217,7 +217,7 @@ public class BooleanUtil {
 
 	/**
 	 * boolean值转为double
-	 * 
+	 *
 	 * @param value Boolean值
 	 * @return double值
 	 */
@@ -437,7 +437,7 @@ public class BooleanUtil {
 
 	/**
 	 * 给定类是否为Boolean或者boolean
-	 * 
+	 *
 	 * @param clazz 类
 	 * @return 是否为Boolean或者boolean
 	 * @since 4.5.2
