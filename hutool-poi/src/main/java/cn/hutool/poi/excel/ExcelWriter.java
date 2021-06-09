@@ -32,13 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -811,6 +806,13 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter write(Iterable<?> data, boolean isWriteKeyAsHead) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+
+		// 数据为空，但需要强制写出标题行时，写出标题
+		if (CollUtil.isEmpty(data) && isWriteKeyAsHead) {
+			writeHeadRow(headerAlias.values());
+			return this;
+		}
+
 		boolean isFirst = true;
 		for (Object object : data) {
 			writeRow(object, isFirst && isWriteKeyAsHead);
