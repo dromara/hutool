@@ -219,6 +219,34 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
+	 * 更新数据，分组加密中间结果可以当作随机数
+	 *
+	 * @param data 被加密的bytes
+	 * @return update之后的bytes
+	 */
+	public byte[] update(byte[] data) {
+		lock.lock();
+		try {
+			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
+			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * 更新数据，分组加密中间结果可以当作随机数
+	 *
+	 * @param data 被加密的bytes
+	 * @return update之后的hex数据
+	 */
+	public String updateHex(byte[] data) {
+		return HexUtil.encodeHexStr(update(data));
+	}
+
+	/**
 	 * 加密，针对大数据量，结束后不关闭流
 	 *
 	 * @param data 被加密的字符串

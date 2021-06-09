@@ -14,6 +14,7 @@ import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import cn.hutool.crypto.symmetric.Vigenere;
+import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -107,6 +108,19 @@ public class SymmetricTest {
 
 		Assert.assertEquals("cd0e3a249eaf0ed80c330338508898c4bddcfd665a1b414622164a273ca5daf7b4ebd2c00aaa66b84dd0a237708dac8e", encryptHex);
 	}
+
+	@Test
+	public void aesUpdateTest() {
+		String content = "4321c9a2db2e6b08987c3b903d8d11ff";
+		AES aes = new AES(Mode.CBC, Padding.PKCS5Padding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
+
+		// 加密为16进制表示
+		String randomData = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
+		String randomData2 = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
+		Assert.assertEquals(randomData2, randomData);
+		Assert.assertEquals(randomData, "cd0e3a249eaf0ed80c330338508898c4");
+	}
+
 
 	@Test
 	public void aesZeroPaddingTest() {
