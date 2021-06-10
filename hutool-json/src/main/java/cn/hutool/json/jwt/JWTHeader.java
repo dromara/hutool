@@ -34,7 +34,7 @@ public class JWTHeader extends Claims {
 	 * @param keyId kid
 	 * @return this
 	 */
-	public JWTHeader addKeyId(String keyId) {
+	public JWTHeader setKeyId(String keyId) {
 		setClaim(KEY_ID, keyId);
 		return this;
 	}

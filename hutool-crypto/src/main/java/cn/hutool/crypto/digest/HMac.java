@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.security.Key;
+import java.security.MessageDigest;
 
 /**
  * HMAC摘要算法<br>
@@ -28,9 +29,9 @@ import java.security.Key;
  */
 public class HMac implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final MacEngine engine;
-	
+
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，自动生成密钥
@@ -39,7 +40,7 @@ public class HMac implements Serializable {
 	public HMac(HmacAlgorithm algorithm) {
 		this(algorithm, (Key)null);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param algorithm 算法 {@link HmacAlgorithm}
@@ -48,7 +49,7 @@ public class HMac implements Serializable {
 	public HMac(HmacAlgorithm algorithm, byte[] key) {
 		this(algorithm.getValue(), key);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param algorithm 算法 {@link HmacAlgorithm}
@@ -57,7 +58,7 @@ public class HMac implements Serializable {
 	public HMac(HmacAlgorithm algorithm, Key key) {
 		this(algorithm.getValue(), key);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param algorithm 算法
@@ -67,7 +68,7 @@ public class HMac implements Serializable {
 	public HMac(String algorithm, byte[] key) {
 		this(algorithm, new SecretKeySpec(key, algorithm));
 	}
-	
+
 	/**
 	 * 构造
 	 * @param algorithm 算法
@@ -77,7 +78,7 @@ public class HMac implements Serializable {
 	public HMac(String algorithm, Key key) {
 		this(MacEngineFactory.createEngine(algorithm, key));
 	}
-	
+
 	/**
 	 * 构造
 	 * @param engine MAC算法实现引擎
@@ -87,11 +88,11 @@ public class HMac implements Serializable {
 		this.engine = engine;
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
-	
+
 	// ------------------------------------------------------------------------------------------- Digest
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
@@ -99,20 +100,20 @@ public class HMac implements Serializable {
 	public byte[] digest(String data, String charset) {
 		return digest(StrUtil.bytes(data, charset));
 	}
-	
+
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
 	public byte[] digest(String data) {
 		return digest(data, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * 生成文件摘要，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
@@ -120,21 +121,21 @@ public class HMac implements Serializable {
 	public String digestHex(String data, String charset) {
 		return HexUtil.encodeHexStr(digest(data, charset));
 	}
-	
+
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
 	public String digestHex(String data) {
 		return digestHex(data, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * 生成文件摘要<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
@@ -148,52 +149,52 @@ public class HMac implements Serializable {
 			IoUtil.close(in);
 		}
 	}
-	
+
 	/**
 	 * 生成文件摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return 摘要
 	 */
 	public String digestHex(File file) {
 		return HexUtil.encodeHexStr(digest(file));
 	}
-	
+
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param data 数据bytes
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(byte[] data) {
 		return digest(new ByteArrayInputStream(data), -1);
 	}
-	
+
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
 	public String digestHex(byte[] data) {
 		return HexUtil.encodeHexStr(digest(data));
 	}
-	
+
 	/**
 	 * 生成摘要，使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(InputStream data) {
 		return digest(data, IoUtil.DEFAULT_BUFFER_SIZE);
 	}
-	
+
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
@@ -203,7 +204,7 @@ public class HMac implements Serializable {
 
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
@@ -211,17 +212,31 @@ public class HMac implements Serializable {
 	public byte[] digest(InputStream data, int bufferLength) {
 		return this.engine.digest(data, bufferLength);
 	}
-	
+
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要
 	 */
 	public String digestHex(InputStream data, int bufferLength) {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
+	}
+
+	/**
+	 * 验证生成的摘要与给定的摘要比较是否一致<br>
+	 * 简单比较每个byte位是否相同
+	 *
+	 * @param digest 生成的摘要
+	 * @param digestToCompare 需要比较的摘要
+	 * @return 是否一致
+	 * @since 5.6.8
+	 * @see MessageDigest#isEqual(byte[], byte[])
+	 */
+	public boolean verify(byte[] digest, byte[] digestToCompare){
+		return MessageDigest.isEqual(digest, digestToCompare);
 	}
 
 	/**
