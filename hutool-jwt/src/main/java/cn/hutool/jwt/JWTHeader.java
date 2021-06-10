@@ -1,4 +1,4 @@
-package cn.hutool.json.jwt;
+package cn.hutool.jwt;
 
 import java.util.Map;
 

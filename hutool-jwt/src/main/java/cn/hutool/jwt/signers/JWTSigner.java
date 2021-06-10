@@ -1,4 +1,4 @@
-package cn.hutool.json.jwt.signers;
+package cn.hutool.jwt.signers;
 
 /**
  * JWT签名接口封装，通过实现此接口，完成不同算法的签名功能

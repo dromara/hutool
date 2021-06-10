@@ -1,9 +1,9 @@
-package cn.hutool.json.jwt;
+package cn.hutool.jwt;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.jwt.signers.JWTSigner;
+import cn.hutool.jwt.signers.JWTSigner;
 
 import java.nio.charset.Charset;
 

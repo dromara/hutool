@@ -1,4 +1,4 @@
-package cn.hutool.json.jwt;
+package cn.hutool.jwt;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONObject;
@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import java.io.Serializable;
 
 /**
- * Claims 认证
+ * Claims 认证，简单的JSONObject包装
  *
  * @author looly
  */
