@@ -6,6 +6,7 @@ import java.util.Map;
  * JWT头部信息
  *
  * @author looly
+ * @since 5.7.0
  */
 public class JWTHeader extends Claims {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +30,13 @@ public class JWTHeader extends Claims {
 	public static String KEY_ID = "kid";
 
 	/**
+	 * 构造，初始化默认(typ=JWT)
+	 */
+	public JWTHeader() {
+		setClaim(TYPE, "JWT");
+	}
+
+	/**
 	 * 增加“kid”头信息
 	 *
 	 * @param keyId kid
@@ -46,14 +54,7 @@ public class JWTHeader extends Claims {
 	 * @return this
 	 */
 	public JWTHeader addHeaders(Map<String, ?> headerClaims) {
-		if (headerClaims == null) {
-			return this;
-		}
-
-		for (Map.Entry<String, ?> entry : headerClaims.entrySet()) {
-			setClaim(entry.getKey(), entry.getValue());
-		}
-
+		putAll(headerClaims);
 		return this;
 	}
 }

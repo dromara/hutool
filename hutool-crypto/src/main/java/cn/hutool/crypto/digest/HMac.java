@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.MessageDigest;
 
@@ -89,6 +90,15 @@ public class HMac implements Serializable {
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
 
+	/**
+	 * 获得MAC算法引擎
+	 *
+	 * @return MAC算法引擎
+	 */
+	public MacEngine getEngine(){
+		return this.engine;
+	}
+
 	// ------------------------------------------------------------------------------------------- Digest
 	/**
 	 * 生成文件摘要
@@ -97,7 +107,7 @@ public class HMac implements Serializable {
 	 * @param charset 编码
 	 * @return 摘要
 	 */
-	public byte[] digest(String data, String charset) {
+	public byte[] digest(String data, Charset charset) {
 		return digest(StrUtil.bytes(data, charset));
 	}
 
@@ -108,7 +118,7 @@ public class HMac implements Serializable {
 	 * @return 摘要
 	 */
 	public byte[] digest(String data) {
-		return digest(data, CharsetUtil.UTF_8);
+		return digest(data, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -118,7 +128,7 @@ public class HMac implements Serializable {
 	 * @param charset 编码
 	 * @return 摘要
 	 */
-	public String digestHex(String data, String charset) {
+	public String digestHex(String data, Charset charset) {
 		return HexUtil.encodeHexStr(digest(data, charset));
 	}
 
@@ -129,7 +139,7 @@ public class HMac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(String data) {
-		return digestHex(data, CharsetUtil.UTF_8);
+		return digestHex(data, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**

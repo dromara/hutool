@@ -14,6 +14,11 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool JWT生成、解析和验证实现</description>
 
+	<properties>
+		<!-- versions -->
+		<bouncycastle.version>1.68</bouncycastle.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -24,6 +29,12 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-crypto</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15to18</artifactId>
+			<version>${bouncycastle.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

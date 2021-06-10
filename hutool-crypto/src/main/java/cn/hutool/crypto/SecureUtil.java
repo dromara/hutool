@@ -1073,6 +1073,26 @@ public class SecureUtil {
 	}
 
 	/**
+	 * 创建{@link Signature}
+	 *
+	 * @param algorithm 算法
+	 * @return {@link Signature}
+	 * @since 5.7.0
+	 */
+	public static Signature createSignature(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		Signature signature;
+		try {
+			signature = (null == provider) ? Signature.getInstance(algorithm) : Signature.getInstance(algorithm, provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+
+		return signature;
+	}
+
+	/**
 	 * RC4算法
 	 *
 	 * @param key 密钥

@@ -367,6 +367,7 @@ public class KeyUtil {
 			// ECIES算法对KEY的长度有要求，此处默认256
 			keySize = 256;
 		}
+
 		return generateKeyPair(algorithm, keySize);
 	}
 
@@ -622,6 +623,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static String getMainAlgorithm(String algorithm) {
+		Assert.notBlank(algorithm, "Algorithm must be not blank!");
 		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
 		if (slashIndex > 0) {
 			return algorithm.substring(0, slashIndex);

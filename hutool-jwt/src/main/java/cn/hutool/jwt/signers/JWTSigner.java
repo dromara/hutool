@@ -9,9 +9,27 @@ public interface JWTSigner {
 
 	/**
 	 * 签名
-	 * @param header JWT头的JSON字符串
-	 * @param payload JWT载荷的JSON字符串
+	 *
+	 * @param headerBase64  JWT头的JSON字符串的Base64表示
+	 * @param payloadBase64 JWT载荷的JSON字符串Base64表示
 	 * @return 签名结果，即JWT的第三部分
 	 */
-	String sign(String header, String payload);
+	String sign(String headerBase64, String payloadBase64);
+
+	/**
+	 * 验签
+	 *
+	 * @param headerBase64  JWT头的JSON字符串Base64表示
+	 * @param payloadBase64 JWT载荷的JSON字符串Base64表示
+	 * @param signBase64 被验证的签名Base64表示
+	 * @return 签名是否一致
+	 */
+	boolean verify(String headerBase64, String payloadBase64, String signBase64);
+
+	/**
+	 * 获取算法
+	 *
+	 * @return 算法
+	 */
+	String getAlgorithm();
 }

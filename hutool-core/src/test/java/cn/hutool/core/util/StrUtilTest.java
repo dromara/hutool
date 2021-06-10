@@ -55,6 +55,15 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void splitTest2() {
+		String str = "a.b.";
+		List<String> split = StrUtil.split(str, '.');
+		Assert.assertEquals(3, split.size());
+		Assert.assertEquals("b", split.get(1));
+		Assert.assertEquals("", split.get(2));
+	}
+
+	@Test
 	public void splitToLongTest() {
 		String str = "1,2,3,4, 5";
 		long[] longArray = StrUtil.splitToLong(str, ',');

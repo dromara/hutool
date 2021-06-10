@@ -16,6 +16,7 @@ import java.util.Map;
  * 详细介绍见：https://www.jianshu.com/p/576dbf44b2ae
  *
  * @author looly
+ * @since 5.7.0
  */
 public class JWTPayload extends Claims {
 	private static final long serialVersionUID = 1L;
@@ -134,15 +135,8 @@ public class JWTPayload extends Claims {
 	 * @param payloadClaims 载荷信息
 	 * @return this
 	 */
-	public JWTPayload addPayload(Map<String, ?> payloadClaims) {
-		if (payloadClaims == null) {
-			return this;
-		}
-
-		for (Map.Entry<String, ?> entry : payloadClaims.entrySet()) {
-			setClaim(entry.getKey(), entry.getValue());
-		}
-
+	public JWTPayload addPayloads(Map<String, ?> payloadClaims) {
+		putAll(payloadClaims);
 		return this;
 	}
 }

@@ -6,7 +6,9 @@
 # 5.7.0 (2021-06-10)
 
 ### 🐣新特性
+* 【jwt    】     添加JWT模块，实现了JWT的创建、解析和验证
 * 【crypto 】     SymmetricCrypto增加update方法（pr#1642@Github）
+* 【crypto 】     MacEngine增加接口update,doFinal,reset等接口
 
 ### 🐞Bug修复
 
