@@ -198,31 +198,14 @@ public class SymmetricCrypto implements Serializable {
 		return this;
 	}
 
-	// --------------------------------------------------------------------------------- Encrypt
-
-	/**
-	 * 加密
-	 *
-	 * @param data 被加密的bytes
-	 * @return 加密后的bytes
-	 */
-	public byte[] encrypt(byte[] data) {
-		lock.lock();
-		try {
-			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
-			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		} finally {
-			lock.unlock();
-		}
-	}
+	// --------------------------------------------------------------------------------- Update
 
 	/**
 	 * 更新数据，分组加密中间结果可以当作随机数
 	 *
 	 * @param data 被加密的bytes
 	 * @return update之后的bytes
+	 * @since 5.6.8
 	 */
 	public byte[] update(byte[] data) {
 		lock.lock();
@@ -241,9 +224,30 @@ public class SymmetricCrypto implements Serializable {
 	 *
 	 * @param data 被加密的bytes
 	 * @return update之后的hex数据
+	 * @since 5.6.8
 	 */
 	public String updateHex(byte[] data) {
 		return HexUtil.encodeHexStr(update(data));
+	}
+
+	// --------------------------------------------------------------------------------- Encrypt
+
+	/**
+	 * 加密
+	 *
+	 * @param data 被加密的bytes
+	 * @return 加密后的bytes
+	 */
+	public byte[] encrypt(byte[] data) {
+		lock.lock();
+		try {
+			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
+			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
