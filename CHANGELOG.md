@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.0 (2021-06-11)
+# 5.7.0 (2021-06-12)
 
 ### 🐣新特性
 * 【jwt    】     添加JWT模块，实现了JWT的创建、解析和验证
@@ -11,7 +11,8 @@
 * 【crypto 】     MacEngine增加接口update,doFinal,reset等接口
 * 【core   】     StrSpliter更名为StrSplitter
 * 【core   】     NumberUtil的decimalFormat增加数字检查
-* 【http   】     HttpBase的httpVersion方法设置为无效(issue#1644)
+* 【http   】     HttpBase的httpVersion方法设置为无效(issue#1644@Github)
+* 【extra  】     Sftp增加download重载(issue#I3VBSL@Gitee)
 
 ### 🐞Bug修复
 

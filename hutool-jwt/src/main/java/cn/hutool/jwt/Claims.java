@@ -67,8 +67,8 @@ public class Claims implements Serializable {
 	 *
 	 * @return JSON字符串
 	 */
-	public String getClaimsJson() {
-		return this.claimJSON.toString();
+	public JSONObject getClaimsJson() {
+		return this.claimJSON;
 	}
 
 	/**
@@ -79,5 +79,10 @@ public class Claims implements Serializable {
 	 */
 	public void parse(String tokenPart, Charset charset) {
 		this.claimJSON = JSONUtil.parseObj(Base64.decodeStr(tokenPart, charset));
+	}
+
+	@Override
+	public String toString() {
+		return this.claimJSON.toString();
 	}
 }

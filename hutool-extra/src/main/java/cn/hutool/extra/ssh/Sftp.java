@@ -16,6 +16,7 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,12 +173,12 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public Sftp reconnectIfTimeout() {
-		if(StrUtil.isBlank(this.ftpConfig.getHost())){
+		if (StrUtil.isBlank(this.ftpConfig.getHost())) {
 			throw new FtpException("Host is blank!");
 		}
-		try{
+		try {
 			this.cd(StrUtil.SLASH);
-		} catch (FtpException e){
+		} catch (FtpException e) {
 			close();
 			init();
 		}
@@ -333,7 +334,7 @@ public class Sftp extends AbstractFtp {
 	 * @throws FtpException 进入目录失败异常
 	 */
 	@Override
-	synchronized public boolean cd(String directory) throws FtpException{
+	synchronized public boolean cd(String directory) throws FtpException {
 		if (StrUtil.isBlank(directory)) {
 			// 当前目录
 			return true;
@@ -460,6 +461,17 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
+	 * 下载文件到{@link OutputStream}中
+	 *
+	 * @param src 源文件路径，包括文件名
+	 * @param out 目标流
+	 * @see #get(String, OutputStream)
+	 */
+	public void download(String src, OutputStream out) {
+		get(src, out);
+	}
+
+	/**
 	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步)
 	 *
 	 * @param sourcePath ftp服务器目录，必须为目录
@@ -500,6 +512,23 @@ public class Sftp extends AbstractFtp {
 	public Sftp get(String src, String dest) {
 		try {
 			channel.get(src, dest);
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
+		return this;
+	}
+
+	/**
+	 * 获取远程文件
+	 *
+	 * @param src 远程文件路径
+	 * @param out 目标流
+	 * @return this
+	 * @since 5.7.0
+	 */
+	public Sftp get(String src, OutputStream out) {
+		try {
+			channel.get(src, out);
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}

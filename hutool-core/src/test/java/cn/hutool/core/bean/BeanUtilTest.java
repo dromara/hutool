@@ -303,6 +303,24 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyPropertiesIgnoreNullTest() {
+		SubPerson p1 = new SubPerson();
+		p1.setSlow(true);
+		p1.setName(null);
+
+		SubPerson2 p2 = new SubPerson2();
+		p2.setName("oldName");
+
+		// null值不覆盖目标属性
+		BeanUtil.copyProperties(p1, p2, CopyOptions.create().ignoreNullValue());
+		Assert.assertEquals("oldName", p2.getName());
+
+		// null覆盖目标属性
+		BeanUtil.copyProperties(p1, p2);
+		Assert.assertNull(p2.getName());
+	}
+
+	@Test
 	public void copyPropertiesBeanToMapTest() {
 		// 测试BeanToMap
 		SubPerson p1 = new SubPerson();

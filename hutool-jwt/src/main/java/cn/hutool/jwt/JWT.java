@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
@@ -103,7 +104,7 @@ public class JWT {
 	/**
 	 * 设置密钥，默认算法是：HS256(HmacSHA256)
 	 *
-	 * @param key         密钥
+	 * @param key 密钥
 	 * @return this
 	 */
 	public JWT setKey(byte[] key) {
@@ -133,6 +134,15 @@ public class JWT {
 	}
 
 	/**
+	 * 获取所有头信息
+	 *
+	 * @return 头信息
+	 */
+	public JSONObject getHeaders() {
+		return this.header.getClaimsJson();
+	}
+
+	/**
 	 * 获取头信息
 	 *
 	 * @param name 头信息名称
@@ -140,6 +150,16 @@ public class JWT {
 	 */
 	public Object getHeader(String name) {
 		return this.header.getClaim(name);
+	}
+
+	/**
+	 * 获取算法ID(alg)头信息
+	 *
+	 * @return 算法头信息
+	 * @see JWTHeader#ALGORITHM
+	 */
+	public String getAlgorithm() {
+		return (String) this.header.getClaim(JWTHeader.ALGORITHM);
 	}
 
 	/**
@@ -161,8 +181,17 @@ public class JWT {
 	 * @return this
 	 */
 	public JWT addHeaders(Map<String, ?> headers) {
-			this.header.addHeaders(headers);
+		this.header.addHeaders(headers);
 		return this;
+	}
+
+	/**
+	 * 获取所有载荷信息
+	 *
+	 * @return 载荷信息
+	 */
+	public JSONObject getPayloads() {
+		return this.payload.getClaimsJson();
 	}
 
 	/**
@@ -223,8 +252,8 @@ public class JWT {
 					AlgorithmUtil.getId(signer.getAlgorithm()));
 		}
 
-		final String headerBase64 = Base64.encodeUrlSafe(this.header.getClaimsJson(), charset);
-		final String payloadBase64 = Base64.encodeUrlSafe(this.payload.getClaimsJson(), charset);
+		final String headerBase64 = Base64.encodeUrlSafe(this.header.toString(), charset);
+		final String payloadBase64 = Base64.encodeUrlSafe(this.payload.toString(), charset);
 		final String sign = signer.sign(headerBase64, payloadBase64);
 
 		return StrUtil.format("{}.{}.{}", headerBase64, payloadBase64, sign);
@@ -249,7 +278,7 @@ public class JWT {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
 
 		final List<String> tokens = this.tokens;
-		if(CollUtil.isEmpty(tokens)){
+		if (CollUtil.isEmpty(tokens)) {
 			throw new JWTException("No token to verify!");
 		}
 		return signer.verify(tokens.get(0), tokens.get(1), tokens.get(2));
