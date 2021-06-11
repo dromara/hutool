@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -159,6 +160,23 @@ public class NumberUtilTest {
 
 		String format = NumberUtil.decimalFormat(",###", c);
 		Assert.assertEquals("299,792,458", format);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void decimalFormatNaNTest(){
+		Double a = 0D;
+		Double b = 0D;
+
+		Double c = a / b;
+		Console.log(NumberUtil.decimalFormat("#%", c));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void decimalFormatNaNTest2(){
+		Double a = 0D;
+		Double b = 0D;
+
+		Console.log(NumberUtil.decimalFormat("#%", a / b));
 	}
 
 	@Test

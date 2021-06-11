@@ -1702,7 +1702,7 @@ public class CharSequenceUtil {
 			return new String[]{};
 		}
 
-		return StrSpliter.splitToArray(str.toString(), str(separator), 0, false, false);
+		return StrSplitter.splitToArray(str.toString(), str(separator), 0, false, false);
 	}
 
 	/**
@@ -1728,7 +1728,7 @@ public class CharSequenceUtil {
 		if (null == str) {
 			return new String[]{};
 		}
-		return StrSpliter.splitToArray(str.toString(), separator, limit, false, false);
+		return StrSplitter.splitToArray(str.toString(), separator, limit, false, false);
 	}
 
 	/**
@@ -1822,7 +1822,7 @@ public class CharSequenceUtil {
 		if (null == str) {
 			return new ArrayList<>(0);
 		}
-		return StrSpliter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
+		return StrSplitter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1855,7 +1855,7 @@ public class CharSequenceUtil {
 			return new ArrayList<>(0);
 		}
 		final String separatorStr = (null == separator) ? null : separator.toString();
-		return StrSpliter.split(str.toString(), separatorStr, limit, isTrim, ignoreEmpty);
+		return StrSplitter.split(str.toString(), separatorStr, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1877,13 +1877,13 @@ public class CharSequenceUtil {
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
-	 * @see StrSpliter#splitByLength(String, int)
+	 * @see StrSplitter#splitByLength(String, int)
 	 */
 	public static String[] split(CharSequence str, int len) {
 		if (null == str) {
 			return new String[]{};
 		}
-		return StrSpliter.splitByLength(str.toString(), len);
+		return StrSplitter.splitByLength(str.toString(), len);
 	}
 
 	/**

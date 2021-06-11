@@ -145,4 +145,5 @@ public class ImgUtilTest {
 		String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
 		System.out.println(mainColor);
 	}
+
 }

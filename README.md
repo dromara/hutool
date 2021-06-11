@@ -89,13 +89,14 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 | hutool-extra       |     扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码、Emoji、FTP、分词等）            |
 | hutool-http        |     基于HttpUrlConnection的Http客户端封装                                            |
 | hutool-log         |     自动识别日志实现的日志门面                                                         |
-| hutool-script      |     脚本执行封装，例如Javascript                                                     |
+| hutool-script      |     脚本执行封装，例如Javascript                                                      |
 | hutool-setting     |     功能更强大的Setting配置文件和Properties封装                                        |
 | hutool-system      |     系统参数调用封装（JVM信息等）                                                      |
 | hutool-json        |     JSON实现                                                                       |
 | hutool-captcha     |     图片验证码实现                                                                   |
 | hutool-poi         |     针对POI中Excel和Word的封装                                                       |
 | hutool-socket      |     基于Java的NIO和AIO的Socket封装                                                   |
+| hutool-jwt         |     JSON Web Token (JWT)封装实现                                                    |
 
 可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
 
