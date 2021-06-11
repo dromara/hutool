@@ -11,6 +11,7 @@
 * 【crypto 】     MacEngine增加接口update,doFinal,reset等接口
 * 【core   】     StrSpliter更名为StrSplitter
 * 【core   】     NumberUtil的decimalFormat增加数字检查
+* 【http   】     HttpBase的httpVersion方法设置为无效(issue#1644)
 
 ### 🐞Bug修复
 

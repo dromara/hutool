@@ -42,9 +42,6 @@ import java.util.Map;
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
 
-	private static final String CONTENT_TYPE_MULTIPART_PREFIX = ContentType.MULTIPART.getValue() + "; boundary=";
-	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
-
 	/**
 	 * 设置全局默认的连接和读取超时时长
 	 *
@@ -387,7 +384,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public boolean isKeepAlive() {
 		String connection = header(Header.CONNECTION);
 		if (connection == null) {
-			return !HTTP_1_0.equalsIgnoreCase(httpVersion);
+			return false == HTTP_1_0.equalsIgnoreCase(httpVersion);
 		}
 
 		return false == "close".equalsIgnoreCase(connection);
