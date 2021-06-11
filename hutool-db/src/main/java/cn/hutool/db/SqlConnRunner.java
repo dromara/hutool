@@ -283,6 +283,19 @@ public class SqlConnRunner extends DialectRunner {
 	/**
 	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) as _count
 	 *
+	 * @param conn       数据库连接对象
+	 * @param sqlBuilder SQL构建器，包括SQL和参数
+	 * @return 结果数
+	 * @throws SQLException SQL异常
+	 * @since 5.7.0
+	 */
+	public long count(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+		return count(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
+	}
+
+	/**
+	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) as _count
+	 *
 	 * @param conn      数据库连接对象
 	 * @param selectSql 查询语句
 	 * @param params    查询参数
@@ -337,7 +350,7 @@ public class SqlConnRunner extends DialectRunner {
 	 */
 	public PageResult<Entity> page(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException {
 		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder.build())),
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder)),
 				this.caseInsensitive);
 		return page(conn, sqlBuilder, page, pageResultHandler);
 	}

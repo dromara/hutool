@@ -682,7 +682,7 @@ public abstract class AbstractDb implements Serializable {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.count(conn, sql.build(), sql.getParamValueArray());
+			return runner.count(conn, sql);
 		} finally {
 			this.closeConnection(conn);
 		}

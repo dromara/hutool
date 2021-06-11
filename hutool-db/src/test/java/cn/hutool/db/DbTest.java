@@ -51,6 +51,17 @@ public class DbTest {
 	}
 
 	@Test
+	public void pageWithParamsTest() throws SQLException {
+		String sql = "select * from user where name = ?";
+		PageResult<Entity> result = Db.use().page(
+				sql, Page.of(0, 3), "张三");
+
+		Assert.assertEquals(2, result.getTotal());
+		Assert.assertEquals(1, result.getTotalPage());
+		Assert.assertEquals(2, result.size());
+	}
+
+	@Test
 	public void countTest() throws SQLException {
 		final long count = Db.use().count("select * from user");
 		Assert.assertEquals(4, count);
