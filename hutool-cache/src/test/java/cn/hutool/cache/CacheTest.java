@@ -1,10 +1,9 @@
-package cn.hutool.cache.test;
+package cn.hutool.cache;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,6 +31,15 @@ public class CacheTest {
 		//由于缓存容量只有3，当加入第四个元素的时候，根据FIFO规则，最先放入的对象将被移除
 		String value1 = fifoCache.get("key1");
 		Assert.assertNull(value1);
+	}
+
+	@Test
+	public void fifoCacheCapacityTest(){
+		Cache<String,String> fifoCache = CacheUtil.newFIFOCache(100);
+		for (int i = 0; i < RandomUtil.randomInt(100, 1000); i++) {
+			fifoCache.put("key" + i, "value" + i);
+		}
+		Assert.assertEquals(100, fifoCache.size());
 	}
 
 	@Test

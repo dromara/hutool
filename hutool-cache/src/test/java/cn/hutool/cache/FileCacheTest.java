@@ -1,4 +1,4 @@
-package cn.hutool.cache.test;
+package cn.hutool.cache;
 
 import org.junit.Assert;
 import org.junit.Test;

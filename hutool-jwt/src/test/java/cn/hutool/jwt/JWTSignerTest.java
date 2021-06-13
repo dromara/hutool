@@ -116,6 +116,6 @@ public class JWTSignerTest {
 				.setSigner(signer);
 
 		String token = jwt.sign();
-		Assert.assertTrue(JWT.of(token).setSigner(signer).verify());
+		Assert.assertTrue(JWT.of(token).verify(signer));
 	}
 }

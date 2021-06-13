@@ -1,6 +1,5 @@
-package cn.hutool.cache.test;
+package cn.hutool.cache;
 
-import cn.hutool.cache.Cache;
 import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.cache.impl.LRUCache;
 import cn.hutool.cache.impl.WeakCache;

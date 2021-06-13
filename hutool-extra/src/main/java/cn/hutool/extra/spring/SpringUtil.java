@@ -3,6 +3,7 @@ package cn.hutool.extra.spring;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -29,10 +30,13 @@ import java.util.Map;
 public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextAware {
 
 	/**
-	 * Spring应用上下文环境
+	 * "@PostConstruct"注解标记的类中，由于ApplicationContext还未加载，导致空指针<br>
+	 * 因此实现BeanFactoryPostProcessor注入ConfigurableListableBeanFactory实现bean的操作
 	 */
 	private static ConfigurableListableBeanFactory beanFactory;
-
+	/**
+	 * Spring应用上下文环境
+	 */
 	private static ApplicationContext applicationContext;
 
 	@Override
@@ -46,12 +50,22 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	}
 
 	/**
-	 * 获取applicationContext
+	 * 获取{@link ApplicationContext}
 	 *
-	 * @return ApplicationContext
+	 * @return {@link ApplicationContext}
 	 */
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
+	}
+
+	/**
+	 * 获取{@link ListableBeanFactory}，可能为{@link ConfigurableListableBeanFactory} 或 {@link ApplicationContextAware}
+	 *
+	 * @return {@link ListableBeanFactory}
+	 * @since 5.7.0
+	 */
+	public static ListableBeanFactory getBeanFactory() {
+		return null == beanFactory ? applicationContext : beanFactory;
 	}
 
 	//通过name获取 Bean.
@@ -65,7 +79,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
-		return (T) beanFactory.getBean(name);
+		return (T) getBeanFactory().getBean(name);
 	}
 
 	/**
@@ -76,7 +90,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return Bean对象
 	 */
 	public static <T> T getBean(Class<T> clazz) {
-		return beanFactory.getBean(clazz);
+		return getBeanFactory().getBean(clazz);
 	}
 
 	/**
@@ -88,7 +102,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return Bean对象
 	 */
 	public static <T> T getBean(String name, Class<T> clazz) {
-		return beanFactory.getBean(name, clazz);
+		return getBeanFactory().getBean(name, clazz);
 	}
 
 	/**
@@ -104,7 +118,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 		final ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
 		final Class<T> rawType = (Class<T>) parameterizedType.getRawType();
 		final Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
-		final String[] beanNames = beanFactory.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
+		final String[] beanNames = getBeanFactory().getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
 		return getBean(beanNames[0], rawType);
 	}
 
@@ -117,7 +131,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static <T> Map<String, T> getBeansOfType(Class<T> type) {
-		return beanFactory.getBeansOfType(type);
+		return getBeanFactory().getBeansOfType(type);
 	}
 
 	/**
@@ -128,7 +142,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String[] getBeanNamesForType(Class<?> type) {
-		return beanFactory.getBeanNamesForType(type);
+		return getBeanFactory().getBeanNamesForType(type);
 	}
 
 	/**
@@ -139,6 +153,9 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String getProperty(String key) {
+		if(null == applicationContext){
+			return null;
+		}
 		return applicationContext.getEnvironment().getProperty(key);
 	}
 
@@ -149,6 +166,9 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String[] getActiveProfiles() {
+		if(null == applicationContext){
+			return null;
+		}
 		return applicationContext.getEnvironment().getActiveProfiles();
 	}
 
@@ -175,7 +195,12 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.4.2
 	 */
 	public static <T> void registerBean(String beanName, T bean) {
-		beanFactory.registerSingleton(beanName, bean);
+		if(null != beanFactory){
+			beanFactory.registerSingleton(beanName, bean);
+		} else if(applicationContext instanceof ConfigurableApplicationContext){
+			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+			context.getBeanFactory().registerSingleton(beanName, bean);
+		}
 	}
 }
 
