@@ -26,7 +26,8 @@ public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T
 	}
 
 	/**
-	 * Creates new composite iterator with provided iterators.
+	 * 构造
+	 * @param iterators 多个{@link Iterator}
 	 */
 	@SafeVarargs
 	public IterChain(Iterator<T>... iterators) {

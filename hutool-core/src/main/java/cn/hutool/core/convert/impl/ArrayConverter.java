@@ -5,6 +5,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -124,7 +125,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 			}
 
 			// 单纯字符串情况下按照逗号分隔后劈开
-			final String[] strings = StrUtil.split(value.toString(), StrUtil.COMMA);
+			final String[] strings = StrUtil.splitToArray(value.toString(), CharUtil.COMMA);
 			return convertArrayToArray(strings);
 		}
 

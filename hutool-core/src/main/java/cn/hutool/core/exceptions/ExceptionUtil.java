@@ -1,7 +1,7 @@
 package cn.hutool.core.exceptions;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -246,7 +246,7 @@ public class ExceptionUtil {
 			length = limit;
 		}
 
-		if (CollUtil.isNotEmpty(replaceCharToStrMap)) {
+		if (MapUtil.isNotEmpty(replaceCharToStrMap)) {
 			final StringBuilder sb = StrUtil.builder();
 			char c;
 			String value;

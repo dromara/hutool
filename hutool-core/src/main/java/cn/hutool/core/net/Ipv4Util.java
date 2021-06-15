@@ -56,11 +56,11 @@ public class Ipv4Util {
 	public static List<String> list(String ipRange, boolean isAll) {
 		if (ipRange.contains(IP_SPLIT_MARK)) {
 			// X.X.X.X-X.X.X.X
-			final String[] range = StrUtil.split(ipRange, IP_SPLIT_MARK);
+			final String[] range = StrUtil.splitToArray(ipRange, IP_SPLIT_MARK);
 			return list(range[0], range[1]);
 		} else if (ipRange.contains(IP_MASK_SPLIT_MARK)) {
 			// X.X.X.X/X
-			final String[] param = StrUtil.split(ipRange, IP_MASK_SPLIT_MARK);
+			final String[] param = StrUtil.splitToArray(ipRange, IP_MASK_SPLIT_MARK);
 			return list(param[0], Integer.parseInt(param[1]), isAll);
 		} else {
 			return ListUtil.toList(ipRange);
@@ -314,17 +314,6 @@ public class Ipv4Util {
 	private static Long getEndIpLong(String ip, int maskBit) {
 		return getBeginIpLong(ip, maskBit)
 				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
-	}
-
-	private static StringBuffer toBin(int x) {
-		StringBuffer result = new StringBuffer();
-		result.append(x % 2);
-		x /= 2;
-		while (x > 0) {
-			result.append(x % 2);
-			x /= 2;
-		}
-		return result;
 	}
 	//-------------------------------------------------------------------------------- Private method end
 }

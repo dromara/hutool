@@ -50,12 +50,6 @@ public class CharSequenceUtil {
 	public static final String SPACE = " ";
 
 	/**
-	 * <p>The maximum size to which the padding constant(s) can expand.</p>
-	 * <p>填充常量可以最大填充的数量</p>
-	 */
-	private static final int PAD_LIMIT = 8192;
-
-	/**
 	 * <p>字符串是否为空白，空白的定义如下：</p>
 	 * <ol>
 	 *     <li>{@code null}</li>
@@ -2325,7 +2319,7 @@ public class CharSequenceUtil {
 		}
 
 		final List<String> result = new LinkedList<>();
-		final String[] split = split(str, prefix);
+		final String[] split = splitToArray(str, prefix);
 		if (prefix.equals(suffix)) {
 			// 前后缀字符相同，单独处理
 			for (int i = 1, length = split.length - 1; i < length; i += 2) {
