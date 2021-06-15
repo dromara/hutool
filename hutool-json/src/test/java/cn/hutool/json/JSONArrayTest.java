@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * JSONArray单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -112,34 +112,34 @@ public class JSONArrayTest {
 	@Test
 	public void toListTest2() {
 		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
-		
+
 		JSONArray array = JSONUtil.parseArray(jsonArr);
 		List<User> userList = JSONUtil.toList(array, User.class);
-		
+
 		Assert.assertFalse(userList.isEmpty());
 		Assert.assertSame(User.class, userList.get(0).getClass());
-		
+
 		Assert.assertEquals(Integer.valueOf(111), userList.get(0).getId());
 		Assert.assertEquals(Integer.valueOf(112), userList.get(1).getId());
-		
+
 		Assert.assertEquals("test1", userList.get(0).getName());
 		Assert.assertEquals("test2", userList.get(1).getName());
 	}
-	
+
 	@Test
 	public void toDictListTest() {
 		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
-		
+
 		JSONArray array = JSONUtil.parseArray(jsonArr);
-		
+
 		List<Dict> list = JSONUtil.toList(array, Dict.class);
-		
+
 		Assert.assertFalse(list.isEmpty());
 		Assert.assertSame(Dict.class, list.get(0).getClass());
-		
+
 		Assert.assertEquals(Integer.valueOf(111), list.get(0).getInt("id"));
 		Assert.assertEquals(Integer.valueOf(112), list.get(1).getInt("id"));
-		
+
 		Assert.assertEquals("test1", list.get(0).getStr("name"));
 		Assert.assertEquals("test2", list.get(1).getStr("name"));
 	}
@@ -174,7 +174,7 @@ public class JSONArrayTest {
 		String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
 		JSONArray ja = JSONUtil.parseArray(json);
 
-		List<List<KeyBean>> list = ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
+		ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
 	}
 
 	@Test
@@ -209,6 +209,14 @@ public class JSONArrayTest {
 		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
 		Assert.assertEquals("b", jsonArray.getByPath("[1].name"));
 		Assert.assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
+	}
+
+	@Test
+	public void putTest(){
+		final JSONArray jsonArray = new JSONArray();
+		jsonArray.put(3, "test");
+		// 第三个位置插入值，0~2都是null
+		Assert.assertEquals(4, jsonArray.size());
 	}
 
 	private static Map<String, String> buildMap(String id, String parentId, String name) {

@@ -457,6 +457,9 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	@Override
 	public Object set(int index, Object element) {
+		if(index > size()){
+			add(index, element);
+		}
 		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
 	}
 

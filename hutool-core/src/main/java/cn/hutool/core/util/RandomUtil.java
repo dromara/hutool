@@ -93,8 +93,8 @@ public class RandomUtil {
 	 *
 	 * @param seed 随机数种子
 	 * @return {@link SecureRandom}
-	 * @since 5.5.2
 	 * @see #createSecureRandom(byte[])
+	 * @since 5.5.2
 	 */
 	public static SecureRandom getSecureRandom(byte[] seed) {
 		return createSecureRandom(seed);
@@ -119,7 +119,7 @@ public class RandomUtil {
 		} catch (NoSuchAlgorithmException e) {
 			throw new UtilException(e);
 		}
-		if(null != seed){
+		if (null != seed) {
 			random.setSeed(seed);
 		}
 		return random;
@@ -163,6 +163,7 @@ public class RandomUtil {
 	 * 获得随机数int值
 	 *
 	 * @return 随机数
+	 * @see Random#nextInt()
 	 */
 	public static int randomInt() {
 		return getRandom().nextInt();
@@ -173,6 +174,7 @@ public class RandomUtil {
 	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
+	 * @see Random#nextInt(int)
 	 */
 	public static int randomInt(int limit) {
 		return getRandom().nextInt(limit);
@@ -184,6 +186,7 @@ public class RandomUtil {
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextLong(long, long)
 	 * @since 3.3.0
 	 */
 	public static long randomLong(long min, long max) {
@@ -194,6 +197,7 @@ public class RandomUtil {
 	 * 获得随机数
 	 *
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextLong()
 	 * @since 3.3.0
 	 */
 	public static long randomLong() {
@@ -205,6 +209,7 @@ public class RandomUtil {
 	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextLong(long)
 	 */
 	public static long randomLong(long limit) {
 		return getRandom().nextLong(limit);
@@ -216,6 +221,7 @@ public class RandomUtil {
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextDouble(double, double)
 	 * @since 3.3.0
 	 */
 	public static double randomDouble(double min, double max) {
@@ -240,6 +246,7 @@ public class RandomUtil {
 	 * 获得随机数[0, 1)
 	 *
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextDouble()
 	 * @since 3.3.0
 	 */
 	public static double randomDouble() {
@@ -263,6 +270,7 @@ public class RandomUtil {
 	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
+	 * @see ThreadLocalRandom#nextDouble(double)
 	 * @since 3.3.0
 	 */
 	public static double randomDouble(double limit) {
