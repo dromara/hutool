@@ -623,7 +623,7 @@ public class MapUtil {
 	 * @param editor 编辑器接口
 	 * @return 过滤后的Map
 	 */
-	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
+	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
@@ -716,7 +716,7 @@ public class MapUtil {
 	 * @since 3.2.2
 	 */
 	public static <T> Map<T, T> reverse(Map<T, T> map) {
-		return filter(map, (Editor<Entry<T, T>>) t -> new Entry<T, T>() {
+		return edit(map, t -> new Entry<T, T>() {
 
 			@Override
 			public T getKey() {
@@ -905,7 +905,7 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> getAny(Map<K, V> map, final K... keys) {
-		return filter(map, (Filter<Entry<K, V>>) entry -> ArrayUtil.contains(keys, entry.getKey()));
+		return filter(map, entry -> ArrayUtil.contains(keys, entry.getKey()));
 	}
 
 	/**

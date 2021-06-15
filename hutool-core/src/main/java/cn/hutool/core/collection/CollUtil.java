@@ -1554,10 +1554,10 @@ public class CollUtil {
 	 * @param map    Map
 	 * @param editor 编辑器接口
 	 * @return 过滤后的Map
-	 * @see MapUtil#filter(Map, Editor)
+	 * @see MapUtil#edit(Map, Editor)
 	 */
-	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
-		return MapUtil.filter(map, editor);
+	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
+		return MapUtil.edit(map, editor);
 	}
 
 	/**
@@ -1830,7 +1830,7 @@ public class CollUtil {
 	 * @since 3.0.4
 	 */
 	public static Map<String, String> zip(String keys, String values, String delimiter, boolean isOrder) {
-		return ArrayUtil.zip(StrUtil.split(keys, delimiter), StrUtil.split(values, delimiter), isOrder);
+		return ArrayUtil.zip(StrUtil.splitToArray(keys, delimiter), StrUtil.splitToArray(values, delimiter), isOrder);
 	}
 
 	/**
