@@ -9,6 +9,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -721,7 +722,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		final int size = Math.min(keys.length, values.length);
-		final Map<K, V> map = CollUtil.newHashMap(size, isOrder);
+		final Map<K, V> map = MapUtil.newHashMap(size, isOrder);
 		for (int i = 0; i < size; i++) {
 			map.put(keys[i], values[i]);
 		}
