@@ -27,10 +27,6 @@ public class ExceptionUtilTest {
 	}
 
 	@Test
-	public void getStackElementTest(){
-	}
-
-	@Test
 	public void convertTest() {
 		// RuntimeException e = new RuntimeException();
 		IOException ioException = new IOException();
