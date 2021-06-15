@@ -680,12 +680,17 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
-		final Map<K, V> map2 = ObjectUtil.clone(map);
+		Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;
 		}
+		try {
+			map2.clear();
+		} catch (UnsupportedOperationException e) {
+			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
+			map2 = new HashMap<>();
+		}
 
-		map2.clear();
 		for (K key : keys) {
 			if (map.containsKey(key)) {
 				map2.put(key, map.get(key));
