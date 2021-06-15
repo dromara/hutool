@@ -1,8 +1,5 @@
 package cn.hutool.setting;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
@@ -13,6 +10,9 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Type;
 
 /**
  * Setting抽象类
@@ -156,7 +156,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 		if (StrUtil.isBlank(value)) {
 			return null;
 		}
-		return StrUtil.split(value, delimiter);
+		return StrUtil.splitToArray(value, delimiter);
 	}
 
 	// --------------------------------------------------------------- Get int

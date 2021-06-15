@@ -19,7 +19,7 @@ public class TransientTest {
 		detailBill.setBizNo("bizNo");
 
 		final JSONObject jsonObject = new JSONObject(detailBill,
-				JSONConfig.create().setIgnoreTransient(true));
+				JSONConfig.create().setTransientSupport(false));
 		Assert.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 }

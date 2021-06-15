@@ -73,7 +73,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		HashMap<String, Object> map = CollUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 		map.put("openId", "DFDFSDFWERWER");
@@ -104,7 +104,7 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void toBeanIgnoreErrorTest() {
-		HashMap<String, Object> map = CollUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("name", "Joe");
 		// 错误的类型，此处忽略
 		map.put("age", "aaaaaa");
@@ -117,7 +117,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void mapToBeanIgnoreCaseTest() {
-		HashMap<String, Object> map = CollUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
@@ -128,12 +128,12 @@ public class BeanUtilTest {
 
 	@Test
 	public void mapToBeanTest() {
-		HashMap<String, Object> map = CollUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("a_name", "Joe");
 		map.put("b_age", 12);
 
 		// 别名，用于对应bean的字段名
-		HashMap<String, String> mapping = CollUtil.newHashMap();
+		HashMap<String, String> mapping = MapUtil.newHashMap();
 		mapping.put("a_name", "name");
 		mapping.put("b_age", "age");
 
@@ -147,7 +147,7 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void mapToBeanTest2() {
-		HashMap<String, Object> map = CollUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("name", "Joe");
 		map.put("age", 12);
 

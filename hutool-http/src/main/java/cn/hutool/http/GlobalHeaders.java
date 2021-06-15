@@ -1,5 +1,9 @@
 package cn.hutool.http;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,13 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * 全局头部信息<br>
  * 所有Http请求将共用此全局头部信息，除非在{@link HttpRequest}中自定义头部信息覆盖之
- * 
+ *
  * @author looly
  *
  */
@@ -32,7 +33,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 加入默认的头部信息
-	 * 
+	 *
 	 * @param isReset 是否重置所有头部信息（删除自定义保留默认）
 	 * @return this
 	 */
@@ -40,7 +41,7 @@ public enum GlobalHeaders {
 		// 解决HttpURLConnection中无法自定义Host等头信息的问题
 		// https://stackoverflow.com/questions/9096987/how-to-overwrite-http-header-host-in-a-httpurlconnection/9098440
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
-		
+
 		if (isReset) {
 			this.headers.clear();
 		}
@@ -57,7 +58,7 @@ public enum GlobalHeaders {
 	// ---------------------------------------------------------------- Headers start
 	/**
 	 * 根据name获取头信息
-	 * 
+	 *
 	 * @param name Header名
 	 * @return Header值
 	 */
@@ -71,7 +72,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 根据name获取头信息列表
-	 * 
+	 *
 	 * @param name Header名
 	 * @return Header值
 	 * @since 3.1.1
@@ -86,7 +87,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 根据name获取头信息
-	 * 
+	 *
 	 * @param name Header名
 	 * @return Header值
 	 */
@@ -100,7 +101,7 @@ public enum GlobalHeaders {
 	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
-	 * 
+	 *
 	 * @param name Header名
 	 * @param value Header值
 	 * @param isOverride 是否覆盖已有值
@@ -123,7 +124,7 @@ public enum GlobalHeaders {
 	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
-	 * 
+	 *
 	 * @param name Header名
 	 * @param value Header值
 	 * @param isOverride 是否覆盖已有值
@@ -136,7 +137,7 @@ public enum GlobalHeaders {
 	/**
 	 * 设置一个header<br>
 	 * 覆盖模式，则替换之前的值
-	 * 
+	 *
 	 * @param name Header名
 	 * @param value Header值
 	 * @return this
@@ -148,7 +149,7 @@ public enum GlobalHeaders {
 	/**
 	 * 设置一个header<br>
 	 * 覆盖模式，则替换之前的值
-	 * 
+	 *
 	 * @param name Header名
 	 * @param value Header值
 	 * @return this
@@ -160,12 +161,12 @@ public enum GlobalHeaders {
 	/**
 	 * 设置请求头<br>
 	 * 不覆盖原有请求头
-	 * 
+	 *
 	 * @param headers 请求头
 	 * @return this
 	 */
 	public GlobalHeaders header(Map<String, List<String>> headers) {
-		if (CollectionUtil.isEmpty(headers)) {
+		if (MapUtil.isEmpty(headers)) {
 			return this;
 		}
 
@@ -181,7 +182,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 移除一个头信息
-	 * 
+	 *
 	 * @param name Header名
 	 * @return this
 	 */
@@ -194,7 +195,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 移除一个头信息
-	 * 
+	 *
 	 * @param name Header名
 	 * @return this
 	 */
@@ -204,7 +205,7 @@ public enum GlobalHeaders {
 
 	/**
 	 * 获取headers
-	 * 
+	 *
 	 * @return Headers Map
 	 */
 	public Map<String, List<String>> headers() {

@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
@@ -99,7 +99,7 @@ public class DialectRunner implements Serializable {
 	 */
 	public <T> T insert(Connection conn, Entity record, RsHandler<T> generatedKeysHandler) throws SQLException {
 		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
+		if (MapUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
 
@@ -127,7 +127,7 @@ public class DialectRunner implements Serializable {
 	 */
 	public int del(Connection conn, Entity where) throws SQLException {
 		checkConn(conn);
-		if (CollUtil.isEmpty(where)) {
+		if (MapUtil.isEmpty(where)) {
 			//不允许做全表删除
 			throw new SQLException("Empty entity provided!");
 		}
@@ -153,10 +153,10 @@ public class DialectRunner implements Serializable {
 	 */
 	public int update(Connection conn, Entity record, Entity where) throws SQLException {
 		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
+		if (MapUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
-		if (CollUtil.isEmpty(where)) {
+		if (MapUtil.isEmpty(where)) {
 			//不允许做全表更新
 			throw new SQLException("Empty where provided!");
 		}

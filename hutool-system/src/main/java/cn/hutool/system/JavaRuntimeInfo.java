@@ -1,8 +1,8 @@
 package cn.hutool.system;
 
-import java.io.Serializable;
-
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * 代表当前运行的JRE的信息。
@@ -29,7 +29,7 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * JVM is 32M <code>or</code> 64M
-	 * 
+	 *
 	 * @return 32 <code>or</code> 64
 	 */
 	public final String getSunArchDataModel() {
@@ -38,13 +38,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的名称（取自系统属性：<code>java.runtime.name</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2： <code>"Java(TM) 2 Runtime Environment, Standard Edition"</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.3
 	 */
 	public final String getName() {
@@ -53,13 +53,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的版本（取自系统属性：<code>java.runtime.version</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"1.4.2-b28"</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.3
 	 */
 	public final String getVersion() {
@@ -68,13 +68,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的安装目录（取自系统属性：<code>java.home</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"/opt/jdk1.4.2/jre"</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getHomeDir() {
@@ -83,13 +83,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的扩展目录列表（取自系统属性：<code>java.ext.dirs</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"/opt/jdk1.4.2/jre/lib/ext:..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.3
 	 */
 	public final String getExtDirs() {
@@ -98,13 +98,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的endorsed目录列表（取自系统属性：<code>java.endorsed.dirs</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"/opt/jdk1.4.2/jre/lib/endorsed:..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.4
 	 */
 	public final String getEndorsedDirs() {
@@ -113,13 +113,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的系统classpath（取自系统属性：<code>java.class.path</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如：<code>"/home/admin/myclasses:/home/admin/..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getClassPath() {
@@ -128,28 +128,28 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的系统classpath（取自系统属性：<code>java.class.path</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如：<code>"/home/admin/myclasses:/home/admin/..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.1
 	 */
 	public final String[] getClassPathArray() {
-		return StrUtil.split(getClassPath(), SystemUtil.get("path.separator", false));
+		return StrUtil.splitToArray(getClassPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
 	 * 取得当前JRE的class文件格式的版本（取自系统属性：<code>java.class.version</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"48.0"</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getClassVersion() {
@@ -158,13 +158,13 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的library搜索路径（取自系统属性：<code>java.library.path</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"/opt/jdk1.4.2/bin:..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
 	 */
 	public final String getLibraryPath() {
 		return JAVA_LIBRARY_PATH;
@@ -172,29 +172,29 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 取得当前JRE的library搜索路径（取自系统属性：<code>java.library.path</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"/opt/jdk1.4.2/bin:..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public final String[] getLibraryPathArray() {
-		return StrUtil.split(getLibraryPath(), SystemUtil.get("path.separator", false));
+		return StrUtil.splitToArray(getLibraryPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
 	 * 取得当前JRE的URL协议packages列表（取自系统属性：<code>java.library.path</code>）。
-	 * 
+	 *
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"sun.net.www.protocol|..."</code>
 	 * </p>
-	 * 
+	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public final String getProtocolPackages() {
 		return SystemUtil.get("java.protocol.handler.pkgs", true);
@@ -202,7 +202,7 @@ public class JavaRuntimeInfo implements Serializable{
 
 	/**
 	 * 将当前运行的JRE信息转换成字符串。
-	 * 
+	 *
 	 * @return JRE信息的字符串表示
 	 */
 	@Override

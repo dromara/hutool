@@ -1,6 +1,5 @@
 package cn.hutool.db.ds.simple;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
@@ -16,7 +15,7 @@ import java.util.Properties;
 
 /***
  * 简易数据源，没有使用连接池，仅供测试或打开关闭连接非常少的场合使用！
- * 
+ *
  * @author loolly
  *
  */
@@ -37,7 +36,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 获得一个数据源
-	 * 
+	 *
 	 * @param group 数据源分组
 	 * @return {@link SimpleDataSource}
 	 */
@@ -47,7 +46,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 获得一个数据源，无分组
-	 * 
+	 *
 	 * @return {@link SimpleDataSource}
 	 */
 	synchronized public static SimpleDataSource getDataSource() {
@@ -64,7 +63,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param group 数据库配置文件中的分组
 	 */
 	public SimpleDataSource(String group) {
@@ -73,7 +72,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param setting 数据库配置
 	 * @param group 数据库配置文件中的分组
 	 */
@@ -82,7 +81,7 @@ public class SimpleDataSource extends AbstractDataSource {
 			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		}
 		final Setting config = setting.getSetting(group);
-		if (CollectionUtil.isEmpty(config)) {
+		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No DataSource config for group: [{}]", group);
 		}
 
@@ -99,7 +98,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
@@ -110,7 +109,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
@@ -124,7 +123,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
@@ -135,7 +134,7 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码

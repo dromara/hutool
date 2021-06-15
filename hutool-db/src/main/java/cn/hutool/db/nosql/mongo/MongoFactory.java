@@ -1,6 +1,6 @@
 package cn.hutool.db.nosql.mongo;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.setting.Setting;
@@ -15,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class MongoFactory {
-	
+
 	/** 各分组做组合key的时候分隔符 */
 	private final static String GROUP_SEPRATER = ",";
-	
+
 	/** 数据源池 */
 	private static final Map<String, MongoDS> DS_MAP = new ConcurrentHashMap<>();
 
@@ -30,7 +30,7 @@ public class MongoFactory {
 	// ------------------------------------------------------------------------ Get DS start
 	/**
 	 * 获取MongoDB数据源<br>
-	 * 
+	 *
 	 * @param host 主机
 	 * @param port 端口
 	 * @return MongoDB连接
@@ -50,7 +50,7 @@ public class MongoFactory {
 	/**
 	 * 获取MongoDB数据源<br>
 	 * 多个分组名对应的连接组成集群
-	 * 
+	 *
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
@@ -68,7 +68,7 @@ public class MongoFactory {
 
 	/**
 	 * 获取MongoDB数据源<br>
-	 * 
+	 *
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
@@ -78,7 +78,7 @@ public class MongoFactory {
 
 	/**
 	 * 获取MongoDB数据源<br>
-	 * 
+	 *
 	 * @param setting 设定文件
 	 * @param groups 分组列表
 	 * @return MongoDB连接
@@ -97,7 +97,7 @@ public class MongoFactory {
 
 	/**
 	 * 获取MongoDB数据源<br>
-	 * 
+	 *
 	 * @param setting 配置文件
 	 * @param groups 分组列表
 	 * @return MongoDB连接
@@ -106,12 +106,12 @@ public class MongoFactory {
 		return getDS(setting, groups.toArray(new String[0]));
 	}
 	// ------------------------------------------------------------------------ Get DS ends
-	
+
 	/**
 	 * 关闭全部连接
 	 */
 	public static void closeAll() {
-		if(CollectionUtil.isNotEmpty(DS_MAP)){
+		if(MapUtil.isNotEmpty(DS_MAP)){
 			for(MongoDS ds : DS_MAP.values()) {
 				ds.close();
 			}

@@ -1,7 +1,9 @@
 package cn.hutool.extra.pinyin;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.List;
 
 /**
  * 拼音引擎接口，具体的拼音实现通过实现此接口，完成具体实现功能
@@ -47,7 +49,7 @@ public interface PinyinEngine {
 	 */
 	default String getFirstLetter(String str, String separator) {
 		final String splitSeparator = StrUtil.isEmpty(separator) ? "#" : separator;
-		final String[] split = StrUtil.split(getPinyin(str, splitSeparator), splitSeparator);
-		return ArrayUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : ""));
+		final List<String> split = StrUtil.split(getPinyin(str, splitSeparator), splitSeparator);
+		return CollUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : StrUtil.EMPTY));
 	}
 }

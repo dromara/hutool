@@ -570,7 +570,8 @@ public class ServletUtil {
 	 */
 	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
 		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
-		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
+		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}",
+				URLUtil.encode(fileName, CharsetUtil.charset(charset))));
 		response.setContentType(contentType);
 		write(response, in);
 	}

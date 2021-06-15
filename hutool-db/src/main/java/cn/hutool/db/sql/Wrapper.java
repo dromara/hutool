@@ -2,8 +2,8 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Editor;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 
@@ -18,15 +18,15 @@ import java.util.Map.Entry;
  *
  */
 public class Wrapper {
-	
+
 	/** 前置包装符号 */
 	private Character preWrapQuote;
 	/** 后置包装符号 */
 	private Character sufWrapQuote;
-	
+
 	public Wrapper() {
 	}
-	
+
 	/**
 	 * 构造
 	 * @param wrapQuote 单包装字符
@@ -35,7 +35,7 @@ public class Wrapper {
 		this.preWrapQuote = wrapQuote;
 		this.sufWrapQuote = wrapQuote;
 	}
-	
+
 	/**
 	 * 包装符号
 	 * @param preWrapQuote 前置包装符号
@@ -45,7 +45,7 @@ public class Wrapper {
 		this.preWrapQuote = preWrapQuote;
 		this.sufWrapQuote = sufWrapQuote;
 	}
-	
+
 	//--------------------------------------------------------------- Getters and Setters start
 	/**
 	 * @return 前置包装符号
@@ -60,7 +60,7 @@ public class Wrapper {
 	public void setPreWrapQuote(Character preWrapQuote) {
 		this.preWrapQuote = preWrapQuote;
 	}
-	
+
 	/**
 	 * @return 后置包装符号
 	 */
@@ -75,7 +75,7 @@ public class Wrapper {
 		this.sufWrapQuote = sufWrapQuote;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -86,26 +86,26 @@ public class Wrapper {
 		if(preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
-		
+
 		//如果已经包含包装的引号，返回原字符
 		if(StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)){
 			return field;
 		}
-		
+
 		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
 		if(StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
 			return field;
 		}
-		
+
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
 		if(field.contains(StrUtil.DOT)){
-			final Collection<String> target = CollUtil.filter(StrUtil.split(field, StrUtil.C_DOT, 2), (Editor<String>) t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
+			final Collection<String> target = CollUtil.edit(StrUtil.split(field, CharUtil.DOT, 2), t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
 			return CollectionUtil.join(target, StrUtil.DOT);
 		}
-		
+
 		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
 	}
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -116,15 +116,15 @@ public class Wrapper {
 		if(ArrayUtil.isEmpty(fields)) {
 			return fields;
 		}
-		
+
 		String[] wrappedFields = new String[fields.length];
 		for(int i = 0; i < fields.length; i++) {
 			wrappedFields[i] = wrap(fields[i]);
 		}
-		
+
 		return wrappedFields;
 	}
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -135,10 +135,10 @@ public class Wrapper {
 		if(CollectionUtil.isEmpty(fields)) {
 			return fields;
 		}
-		
+
 		return Arrays.asList(wrap(fields.toArray(new String[0])));
 	}
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -149,20 +149,20 @@ public class Wrapper {
 		if(null == entity) {
 			return null;
 		}
-		
+
 		final Entity wrapedEntity = new Entity();
-		
+
 		//wrap table name
 		wrapedEntity.setTableName(wrap(entity.getTableName()));
-		
+
 		//wrap fields
 		for (Entry<String, Object> entry : entity.entrySet()) {
 			wrapedEntity.set(wrap(entry.getKey()), entry.getValue());
 		}
-		
+
 		return wrapedEntity;
 	}
-	
+
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -179,7 +179,7 @@ public class Wrapper {
 				clonedConditions[i] = clonedCondition;
 			}
 		}
-		
+
 		return clonedConditions;
 	}
 }

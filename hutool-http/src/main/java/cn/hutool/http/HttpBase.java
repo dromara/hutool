@@ -3,6 +3,7 @@ package cn.hutool.http;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -144,7 +145,7 @@ public abstract class HttpBase<T> {
 	 * @since 4.6.3
 	 */
 	public T headerMap(Map<String, String> headers, boolean isOverride) {
-		if(CollectionUtil.isEmpty(headers)) {
+		if(MapUtil.isEmpty(headers)) {
 			return (T)this;
 		}
 
@@ -174,7 +175,7 @@ public abstract class HttpBase<T> {
 	 * @since 4.0.8
 	 */
 	public T header(Map<String, List<String>> headers, boolean isOverride) {
-		if(CollectionUtil.isEmpty(headers)) {
+		if(MapUtil.isEmpty(headers)) {
 			return (T)this;
 		}
 
@@ -197,7 +198,7 @@ public abstract class HttpBase<T> {
 	 * @since 4.0.3
 	 */
 	public T addHeaders(Map<String, String> headers) {
-		if(CollectionUtil.isEmpty(headers)) {
+		if(MapUtil.isEmpty(headers)) {
 			return (T)this;
 		}
 

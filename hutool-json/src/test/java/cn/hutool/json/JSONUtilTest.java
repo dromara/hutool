@@ -59,7 +59,7 @@ public class JSONUtilTest {
 		a2.setName("AAAA222Name");
 
 		ArrayList<UserA> list = CollectionUtil.newArrayList(a1, a2);
-		HashMap<String, Object> map = CollectionUtil.newHashMap();
+		HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("total", 13);
 		map.put("rows", list);
 

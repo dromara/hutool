@@ -47,9 +47,9 @@ public class SettingTest {
 	public void settingTestForCustom() {
 		Setting setting = new Setting();
 
-		setting.put("group1", "user", "root");
-		setting.put("group2", "user", "root2");
-		setting.put("group3", "user", "root3");
+		setting.setByGroup("user", "group1", "root");
+		setting.setByGroup("user", "group2", "root2");
+		setting.setByGroup("user", "group3", "root3");
 		setting.set("user", "root4");
 
 		Assert.assertEquals("root", setting.getByGroup("user", "group1"));

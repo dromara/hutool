@@ -1,6 +1,6 @@
 package cn.hutool.cron;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
@@ -180,7 +180,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler schedule(Setting cronSetting) {
-		if (CollUtil.isNotEmpty(cronSetting)) {
+		if (MapUtil.isNotEmpty(cronSetting)) {
 			String group;
 			for (Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
 				group = groupedEntry.getKey();

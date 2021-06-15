@@ -1820,6 +1820,18 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 切分字符串，如果分隔符不存在则返回原字符串
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符
+	 * @return 字符串
+	 * @since 5.7.1
+	 */
+	public static List<String> split(CharSequence str, CharSequence separator) {
+		return split(str, separator, false, false);
+	}
+
+	/**
 	 * 切分字符串
 	 *
 	 * @param str         被切分的字符串

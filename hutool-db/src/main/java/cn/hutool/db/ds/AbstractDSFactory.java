@@ -1,8 +1,8 @@
 package cn.hutool.db.ds;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
@@ -18,13 +18,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * 抽象数据源工厂<br>
  * 此工厂抽象类用于实现数据源的缓存，当用户多次调用{@link #getDataSource(String)} 时，工厂只需创建一次即可。<br>
  * 数据源是与配置文件中的分组相关的，每个分组的数据源相互独立，也就是每个分组的数据源是单例存在的。
- * 
+ *
  * @author looly
  *
  */
 public abstract class AbstractDSFactory extends DSFactory {
 	private static final long serialVersionUID = -6407302276272379881L;
-	
+
 	/** 数据库配置文件可选路径1 */
 	private static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
 	/** 数据库配置文件可选路径2 */
@@ -37,7 +37,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param dataSourceName 数据源名称
 	 * @param dataSourceClass 数据库连接池实现类，用于检测所提供的DataSource类是否存在，当传入的DataSource类不存在时抛出ClassNotFoundException<br>
 	 *            此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
@@ -69,7 +69,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 
 	/**
 	 * 获取配置，用于自定义添加配置项
-	 * 
+	 *
 	 * @return Setting
 	 * @since 4.0.3
 	 */
@@ -97,7 +97,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 
 	/**
 	 * 创建数据源
-	 * 
+	 *
 	 * @param group 分组
 	 * @return {@link DataSourceWrapper} 数据源包装
 	 */
@@ -107,7 +107,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 		}
 
 		final Setting config = setting.getSetting(group);
-		if (CollectionUtil.isEmpty(config)) {
+		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No config for group: [{}]", group);
 		}
 
@@ -129,7 +129,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 
 	/**
 	 * 创建新的{@link DataSource}<br>
-	 * 
+	 *
 	 * @param jdbcUrl JDBC连接字符串
 	 * @param driver 数据库驱动类名
 	 * @param user 用户名
@@ -154,7 +154,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 
 	@Override
 	public void destroy() {
-		if (CollectionUtil.isNotEmpty(dsMap)) {
+		if (MapUtil.isNotEmpty(dsMap)) {
 			Collection<DataSourceWrapper> values = dsMap.values();
 			for (DataSourceWrapper ds : values) {
 				ds.close();

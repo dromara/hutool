@@ -386,7 +386,6 @@ public class IdcardUtil {
 		}
 
 		// 首字母A-Z，A表示1，以此类推
-		char start = idcard.charAt(0);
 		String mid = card.substring(1, 7);
 		String end = card.substring(7, 8);
 		char[] chars = mid.toCharArray();
