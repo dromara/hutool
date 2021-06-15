@@ -29,6 +29,7 @@ public class JWTSignerUtil {
 	/**
 	 * HS256(HmacSHA256)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner hs256(byte[] key) {
@@ -38,6 +39,7 @@ public class JWTSignerUtil {
 	/**
 	 * HS384(HmacSHA384)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner hs384(byte[] key) {
@@ -47,6 +49,7 @@ public class JWTSignerUtil {
 	/**
 	 * HS512(HmacSHA512)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner hs512(byte[] key) {
@@ -58,6 +61,7 @@ public class JWTSignerUtil {
 	/**
 	 * RS256(SHA256withRSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner rs256(Key key) {
@@ -67,6 +71,7 @@ public class JWTSignerUtil {
 	/**
 	 * RS384(SHA384withRSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner rs384(Key key) {
@@ -76,6 +81,7 @@ public class JWTSignerUtil {
 	/**
 	 * RS512(SHA512withRSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner rs512(Key key) {
@@ -87,6 +93,7 @@ public class JWTSignerUtil {
 	/**
 	 * ES256(SHA256withECDSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner es256(Key key) {
@@ -96,6 +103,7 @@ public class JWTSignerUtil {
 	/**
 	 * ES384(SHA383withECDSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner es384(Key key) {
@@ -105,6 +113,7 @@ public class JWTSignerUtil {
 	/**
 	 * ES512(SHA512withECDSA)签名器
 	 *
+	 * @param key 密钥
 	 * @return 签名器
 	 */
 	public static JWTSigner es512(Key key) {

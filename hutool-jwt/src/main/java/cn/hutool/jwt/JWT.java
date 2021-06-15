@@ -53,6 +53,7 @@ public class JWT {
 	/**
 	 * 创建并解析JWT对象
 	 *
+	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 * @return {@link JWT}
 	 */
 	public static JWT of(String token) {
@@ -70,6 +71,8 @@ public class JWT {
 
 	/**
 	 * 构造
+	 *
+	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 */
 	public JWT(String token) {
 		this();
@@ -79,7 +82,7 @@ public class JWT {
 	/**
 	 * 解析JWT内容
 	 *
-	 * @param token JWT token
+	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 * @return this
 	 */
 	public JWT parse(String token) {
