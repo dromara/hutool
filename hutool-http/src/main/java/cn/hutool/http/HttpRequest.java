@@ -343,13 +343,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 */
 	public HttpRequest method(Method method) {
-//		if (Method.PATCH == method) {
-//			this.method = Method.POST;
-//			this.header("X-HTTP-Method-Override", "PATCH");
-//		} else {
-//			this.method = method;
-//		}
-
 		this.method = method;
 		return this;
 	}
