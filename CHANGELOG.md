@@ -10,6 +10,7 @@
 * 【all    】     JWT模块加入到all和bom包中(issue#1654@Github)
 * 【core   】     CollUtil删除所有Map相关操作
 * 【all    】     **重要！** 删除过期方法
+* 【core   】     增加IterChian类
 
 ### 🐞Bug修复
 
