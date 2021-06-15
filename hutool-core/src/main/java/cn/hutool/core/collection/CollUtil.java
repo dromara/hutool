@@ -1141,6 +1141,9 @@ public class CollUtil {
 		}
 
 		Collection<T> collection2 = ObjectUtil.clone(collection);
+		if (isEmpty(collection2)) {
+			return collection2;
+		}
 		try {
 			collection2.clear();
 		} catch (UnsupportedOperationException e) {
@@ -1174,24 +1177,6 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> filterNew(Collection<T> collection, Filter<T> filter) {
 		return edit(collection, t -> filter.accept(t) ? t : null);
-	}
-
-	/**
-	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
-	 *
-	 * <pre>
-	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
-	 * </pre>
-	 *
-	 * @param <T>    集合元素类型
-	 * @param list   集合
-	 * @param filter 过滤器
-	 * @return 过滤后的数组
-	 * @since 4.1.8
-	 */
-	public static <T> List<T> filterNew(List<T> list, Filter<T> filter) {
-		return ListUtil.editNew(list, t -> filter.accept(t) ? t : null);
 	}
 
 	/**

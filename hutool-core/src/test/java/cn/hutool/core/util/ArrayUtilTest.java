@@ -1,8 +1,6 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -79,23 +77,23 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void filterTest() {
+	public void filterEditTest() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, (Editor<Integer>) t -> (t % 2 == 0) ? t : null);
+		Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t : null);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
 	public void filterTestForFilter() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, (Filter<Integer>) t -> t % 2 == 0);
+		Integer[] filter = ArrayUtil.filter(a, t -> t % 2 == 0);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
-	public void filterTestForEditor() {
+	public void editTest() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, (Editor<Integer>) t -> (t % 2 == 0) ? t * 10 : t);
+		Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t * 10 : t);
 		Assert.assertArrayEquals(filter, new Integer[]{1, 20, 3, 40, 5, 60});
 	}
 

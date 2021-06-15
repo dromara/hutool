@@ -609,11 +609,11 @@ public class MapUtil {
 	// ----------------------------------------------------------------------------------------------- filter
 
 	/**
-	 * 过滤<br>
-	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 编辑Map<br>
+	 * 编辑过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
 	 *
 	 * <pre>
-	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 1、过滤出需要的对象，如果返回{@code null}表示这个元素对象抛弃
 	 * 2、修改元素对象，返回集合中为修改后的对象
 	 * </pre>
 	 *
@@ -621,19 +621,24 @@ public class MapUtil {
 	 * @param <V>    Value类型
 	 * @param map    Map
 	 * @param editor 编辑器接口
-	 * @return 过滤后的Map
+	 * @return 编辑后的Map
 	 */
 	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
 
-		final Map<K, V> map2 = ObjectUtil.clone(map);
+		Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;
 		}
+		try {
+			map2.clear();
+		} catch (UnsupportedOperationException e) {
+			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
+			map2 = new HashMap<>();
+		}
 
-		map2.clear();
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
