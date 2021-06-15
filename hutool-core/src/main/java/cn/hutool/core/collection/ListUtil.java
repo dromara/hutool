@@ -424,13 +424,14 @@ public class ListUtil {
 	}
 
 	/**
-	 * 过滤<br>
+	 * 编辑列表<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
 	 *
 	 * <pre>
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
 	 * 2、修改元素对象，返回集合中为修改后的对象
 	 * </pre>
+	 * 注意：此方法会修改原List！！
 	 *
 	 * @param <T>    集合元素类型
 	 * @param list   集合
@@ -438,20 +439,41 @@ public class ListUtil {
 	 * @return 过滤后的数组
 	 * @since 4.1.8
 	 */
-	public static <T> List<T> filter(List<T> list, Editor<T> editor) {
+	public static <T> List<T> editNew(List<T> list, Editor<T> editor) {
+		return (List<T>) CollUtil.edit(list, editor);
+	}
+
+	/**
+	 * 编辑列表<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 *
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 * 注意：此方法会修改原List！！
+	 *
+	 * @param <T>    集合元素类型
+	 * @param list   集合
+	 * @param editor 编辑器接口
+	 * @return 过滤后的数组
+	 * @since 4.1.8
+	 */
+	public static <T> List<T> edit(List<T> list, Editor<T> editor) {
 		if (null == list || null == editor) {
 			return list;
 		}
 
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
-		T modified;
-		for (T t : list) {
-			modified = editor.edit(t);
-			if (null != modified) {
-				list2.add(modified);
+		final int size = list.size();
+		T ele;
+		for (int i = 0; i < size; i++) {
+			ele = list.get(i);
+			ele = editor.edit(ele);
+			if(null != ele){
+				list.set(i, ele);
 			}
 		}
-		return list2;
+		return list;
 	}
 
 	/**

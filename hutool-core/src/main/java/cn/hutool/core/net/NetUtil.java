@@ -705,19 +705,6 @@ public class NetUtil {
 	 *
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
-	 * @since 4.4.1
-	 * @deprecated 拼写错误，请使用{@link #isUnknown(String)}
-	 */
-	@Deprecated
-	public static boolean isUnknow(String checkString) {
-		return isUnknown(checkString);
-	}
-
-	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 *
-	 * @param checkString 被检测的字符串
-	 * @return 是否未知
 	 * @since 5.2.6
 	 */
 	public static boolean isUnknown(String checkString) {

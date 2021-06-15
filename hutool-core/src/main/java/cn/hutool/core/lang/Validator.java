@@ -362,32 +362,6 @@ public class Validator {
 	 * @param pattern 正则模式
 	 * @param value   值
 	 * @return 是否匹配正则
-	 * @deprecated 请使用 {@link #isMatchRegex(Pattern, CharSequence)}
-	 */
-	@Deprecated
-	public static boolean isMactchRegex(Pattern pattern, CharSequence value) {
-		return ReUtil.isMatch(pattern, value);
-	}
-
-	/**
-	 * 通过正则表达式验证
-	 *
-	 * @param regex 正则
-	 * @param value 值
-	 * @return 是否匹配正则
-	 * @deprecated 拼写错误，请使用{@link #isMatchRegex(String, CharSequence)}
-	 */
-	@Deprecated
-	public static boolean isMactchRegex(String regex, CharSequence value) {
-		return ReUtil.isMatch(regex, value);
-	}
-
-	/**
-	 * 通过正则表达式验证
-	 *
-	 * @param pattern 正则模式
-	 * @param value   值
-	 * @return 是否匹配正则
 	 */
 	public static boolean isMatchRegex(Pattern pattern, CharSequence value) {
 		return ReUtil.isMatch(pattern, value);

@@ -72,21 +72,4 @@ public class TaskExecutorManager implements Serializable {
 		}
 		return this;
 	}
-
-	/**
-	 * 停止所有TaskExecutor
-	 *
-	 * @return this
-	 * @deprecated 作业执行器只是执行给定的定时任务线程，无法强制关闭，可通过deamon线程方式关闭之
-	 */
-	@Deprecated
-	public TaskExecutorManager destroy() {
-		// synchronized (this.executors) {
-		// for (TaskExecutor taskExecutor : executors) {
-		// ThreadUtil.interupt(taskExecutor, false);
-		// }
-		// }
-		this.executors.clear();
-		return this;
-	}
 }

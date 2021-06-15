@@ -373,7 +373,7 @@ public class Condition extends CloneSupport<Condition> {
 		}
 
 		// 处理 AND y
-		conditionStrBuilder.append(StrUtil.SPACE).append(LogicalOperator.AND.toString());
+		conditionStrBuilder.append(StrUtil.SPACE).append(LogicalOperator.AND);
 		if (isPlaceHolder()) {
 			// 使用条件表达式占位符
 			conditionStrBuilder.append(" ?");

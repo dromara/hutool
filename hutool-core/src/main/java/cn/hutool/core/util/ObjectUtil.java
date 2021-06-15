@@ -454,21 +454,6 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 反序列化<br>
-	 * 对象必须实现Serializable接口
-	 *
-	 * @param <T>   对象类型
-	 * @param bytes 反序列化的字节码
-	 * @return 反序列化后的对象
-	 * @see #deserialize(byte[])
-	 * @deprecated 请使用 {@link #deserialize(byte[])}
-	 */
-	@Deprecated
-	public static <T> T unserialize(byte[] bytes) {
-		return deserialize(bytes);
-	}
-
-	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
 	 *
 	 * @param object 被检查对象

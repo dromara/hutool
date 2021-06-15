@@ -1040,20 +1040,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 为指定单元格创建样式
-	 *
-	 * @param x X坐标，从0计数，即列号
-	 * @param y Y坐标，从0计数，即行号
-	 * @return {@link CellStyle}
-	 * @since 4.0.9
-	 * @deprecated 请使用 {@link #createCellStyle(int, int)}
-	 */
-	@Deprecated
-	public CellStyle createStyleForCell(int x, int y) {
-		return createCellStyle(x, y);
-	}
-
-	/**
 	 * 设置某个单元格的样式<br>
 	 * 此方法用于多个单元格共享样式的情况<br>
 	 * 可以调用{@link #getOrCreateCellStyle(int, int)} 方法创建或取得一个样式对象。

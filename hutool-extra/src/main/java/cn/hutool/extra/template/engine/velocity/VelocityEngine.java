@@ -67,18 +67,6 @@ public class VelocityEngine implements TemplateEngine {
 	 * 获取原始的引擎对象
 	 *
 	 * @return 原始引擎对象
-	 * @since 4.3.0
-	 * @deprecated 拼写错误了，请使用{@link #getRawEngine()}
-	 */
-	@Deprecated
-	public org.apache.velocity.app.VelocityEngine getRowEngine() {
-		return getRawEngine();
-	}
-
-	/**
-	 * 获取原始的引擎对象
-	 *
-	 * @return 原始引擎对象
 	 * @since 5.5.8
 	 */
 	public org.apache.velocity.app.VelocityEngine getRawEngine() {

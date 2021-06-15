@@ -17,7 +17,7 @@ import java.util.Map;
  * 2、@name
  * 3、?name
  * </pre>
- * 
+ *
  * @author looly
  * @since 4.0.10
  */
@@ -30,7 +30,7 @@ public class NamedSql {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param namedSql 命名占位符的SQL
 	 * @param paramMap 名和参数的对应Map
 	 */
@@ -41,16 +41,16 @@ public class NamedSql {
 
 	/**
 	 * 获取SQL
-	 * 
+	 *
 	 * @return SQL
 	 */
 	public String getSql() {
 		return this.sql;
 	}
-	
+
 	/**
 	 * 获取参数列表，按照占位符顺序
-	 * 
+	 *
 	 * @return 参数数组
 	 */
 	public Object[] getParams() {
@@ -59,7 +59,7 @@ public class NamedSql {
 
 	/**
 	 * 获取参数列表，按照占位符顺序
-	 * 
+	 *
 	 * @return 参数列表
 	 */
 	public List<Object> getParamList() {
@@ -68,7 +68,7 @@ public class NamedSql {
 
 	/**
 	 * 解析命名占位符的SQL
-	 * 
+	 *
 	 * @param namedSql 命名占位符的SQL
 	 * @param paramMap 名和参数的对应Map
 	 */
@@ -138,8 +138,20 @@ public class NamedSql {
 		if(paramMap.containsKey(nameStr)) {
 			// 有变量对应值（值可以为null），替换占位符为?，变量值放入相应index位置
 			final Object paramValue = paramMap.get(nameStr);
-			sqlBuilder.append('?');
-			this.params.add(paramValue);
+			if(ArrayUtil.isArray(paramValue) && StrUtil.contains(sqlBuilder, "in")){
+				// 可能为select in (xxx)语句，则拆分参数为多个参数，变成in (?,?,?)
+				final int length = ArrayUtil.length(paramValue);
+				for (int i = 0; i < length; i++) {
+					if(0 != i){
+						sqlBuilder.append(',');
+					}
+					sqlBuilder.append('?');
+					this.params.add(ArrayUtil.get(paramValue, i));
+				}
+			} else{
+				sqlBuilder.append('?');
+				this.params.add(paramValue);
+			}
 		} else {
 			// 无变量对应值，原样输出
 			sqlBuilder.append(nameStartChar).append(name);
@@ -151,7 +163,7 @@ public class NamedSql {
 
 	/**
 	 * 是否为标准的字符，包括大小写字母、下划线和数字
-	 * 
+	 *
 	 * @param c 字符
 	 * @return 是否标准字符
 	 */

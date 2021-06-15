@@ -1859,19 +1859,6 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 切分字符串，如果分隔符不存在则返回原字符串
-	 *
-	 * @param str       被切分的字符串
-	 * @param separator 分隔符
-	 * @return 字符串
-	 * @deprecated 请使用 {@link #splitToArray(CharSequence, char)}
-	 */
-	@Deprecated
-	public static String[] split(CharSequence str, CharSequence separator) {
-		return splitToArray(str, separator);
-	}
-
-	/**
 	 * 根据给定长度，将给定字符串截取为多个部分
 	 *
 	 * @param str 字符串

@@ -1,7 +1,6 @@
 package cn.hutool.extra.template;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.extra.template.engine.beetl.BeetlUtil;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
@@ -13,7 +12,7 @@ import java.io.IOException;
 
 /**
  * BeetlUtil单元测试
- * 
+ *
  * @author looly
  *
  */

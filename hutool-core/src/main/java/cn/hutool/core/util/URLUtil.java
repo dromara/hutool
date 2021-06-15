@@ -280,20 +280,6 @@ public class URLUtil {
 	 * @param relativePath 相对URL
 	 * @return 相对路径
 	 * @throws UtilException MalformedURLException
-	 * @deprecated 拼写错误，请使用{@link #completeUrl(String, String)}
-	 */
-	@Deprecated
-	public static String complateUrl(String baseUrl, String relativePath) {
-		return completeUrl(baseUrl, relativePath);
-	}
-
-	/**
-	 * 补全相对路径
-	 *
-	 * @param baseUrl      基准URL
-	 * @param relativePath 相对URL
-	 * @return 相对路径
-	 * @throws UtilException MalformedURLException
 	 */
 	public static String completeUrl(String baseUrl, String relativePath) {
 		baseUrl = normalize(baseUrl, false);
@@ -374,25 +360,6 @@ public class URLUtil {
 	}
 
 	/**
-	 * 编码URL字符为 application/x-www-form-urlencoded<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 *
-	 * @param url     URL
-	 * @param charset 编码
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @deprecated 请使用 {@link #encode(String, Charset)}
-	 */
-	@Deprecated
-	public static String encode(String url, String charset) throws UtilException {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		return encode(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
-	}
-
-	/**
 	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
@@ -424,22 +391,6 @@ public class URLUtil {
 			charset = CharsetUtil.defaultCharset();
 		}
 		return URLEncoder.QUERY.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 *
-	 * @param url     URL
-	 * @param charset 编码
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @deprecated 请使用 {@link #encodeQuery(String, Charset)}
-	 */
-	@Deprecated
-	public static String encodeQuery(String url, String charset) throws UtilException {
-		return encodeQuery(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
 	}
 
 	/**

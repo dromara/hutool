@@ -795,19 +795,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 是否对URL中的参数进行编码
-	 *
-	 * @param isEncodeUrlParams 是否对URL中的参数进行编码
-	 * @return this
-	 * @since 4.4.1
-	 * @deprecated 编码自动完成，无需设置
-	 */
-	@Deprecated
-	public HttpRequest setEncodeUrlParams(boolean isEncodeUrlParams) {
-		return this;
-	}
-
-	/**
 	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
 	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
 	 *

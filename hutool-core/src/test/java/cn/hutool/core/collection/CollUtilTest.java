@@ -2,7 +2,6 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
@@ -247,7 +246,7 @@ public class CollUtilTest {
 	public void filterTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
-		Collection<String> filtered = CollUtil.filter(list, (Editor<String>) t -> t + 1);
+		Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
 
 		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
 	}

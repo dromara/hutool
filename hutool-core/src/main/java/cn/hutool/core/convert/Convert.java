@@ -853,20 +853,6 @@ public class Convert {
 	 * @param charset 编码 {@link Charset}
 	 * @return 对应的字符串
 	 * @see HexUtil#decodeHexStr(String, Charset)
-	 * @deprecated 请使用 {@link #hexToStr(String, Charset)}
-	 */
-	@Deprecated
-	public static String hexStrToStr(String hexStr, Charset charset) {
-		return hexToStr(hexStr, charset);
-	}
-
-	/**
-	 * 十六进制转换字符串
-	 *
-	 * @param hexStr Byte字符串(Byte之间无分隔符 如:[616C6B])
-	 * @param charset 编码 {@link Charset}
-	 * @return 对应的字符串
-	 * @see HexUtil#decodeHexStr(String, Charset)
 	 * @since 4.1.11
 	 */
 	public static String hexToStr(String hexStr, Charset charset) {

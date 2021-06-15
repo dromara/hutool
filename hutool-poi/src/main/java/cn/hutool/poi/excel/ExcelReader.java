@@ -80,35 +80,9 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 *
 	 * @param bookStream     Excel文件的流
 	 * @param sheetIndex     sheet序号，0表示第一个sheet
-	 * @param closeAfterRead 读取结束是否关闭流
-	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义。
-	 */
-	@Deprecated
-	public ExcelReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
-		this(WorkbookUtil.createBook(bookStream), sheetIndex);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param bookStream     Excel文件的流
-	 * @param sheetIndex     sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(InputStream bookStream, int sheetIndex) {
 		this(WorkbookUtil.createBook(bookStream), sheetIndex);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param bookStream     Excel文件的流
-	 * @param sheetName      sheet名，第一个默认是sheet1
-	 * @param closeAfterRead 读取结束是否关闭流
-	 * @deprecated 使用完毕无论是否closeAfterRead，poi会关闭流，此参数无意义。
-	 */
-	@Deprecated
-	public ExcelReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
-		this(WorkbookUtil.createBook(bookStream), sheetName);
 	}
 
 	/**

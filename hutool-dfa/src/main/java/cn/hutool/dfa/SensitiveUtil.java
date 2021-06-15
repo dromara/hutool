@@ -117,18 +117,6 @@ public final class SensitiveUtil {
 	 *
 	 * @param text 文本
 	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundFirstSensitive(String)}
-	 */
-	@Deprecated
-	public static String getFindedFirstSensitive(String text) {
-		return sensitiveTree.match(text);
-	}
-
-	/**
-	 * 查找敏感词，返回找到的第一个敏感词
-	 *
-	 * @param text 文本
-	 * @return 敏感词
 	 * @since 5.5.3
 	 */
 	public static FoundWord getFoundFirstSensitive(String text) {
@@ -140,33 +128,9 @@ public final class SensitiveUtil {
 	 *
 	 * @param obj bean，会被转为JSON字符串
 	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundFirstSensitive(Object)}
-	 */
-	@Deprecated
-	public static String getFindedFirstSensitive(Object obj) {
-		return sensitiveTree.match(JSONUtil.toJsonStr(obj));
-	}
-
-	/**
-	 * 查找敏感词，返回找到的第一个敏感词
-	 *
-	 * @param obj bean，会被转为JSON字符串
-	 * @return 敏感词
 	 */
 	public static FoundWord getFoundFirstSensitive(Object obj) {
 		return sensitiveTree.matchWord(JSONUtil.toJsonStr(obj));
-	}
-
-	/**
-	 * 查找敏感词，返回找到的所有敏感词
-	 *
-	 * @param text 文本
-	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundAllSensitive(String)}
-	 */
-	@Deprecated
-	public static List<String> getFindedAllSensitive(String text) {
-		return sensitiveTree.matchAll(text);
 	}
 
 	/**
@@ -189,37 +153,9 @@ public final class SensitiveUtil {
 	 * @param isDensityMatch 是否使用密集匹配原则
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundAllSensitive(String, boolean, boolean)}
-	 */
-	@Deprecated
-	public static List<String> getFindedAllSensitive(String text, boolean isDensityMatch, boolean isGreedMatch) {
-		return sensitiveTree.matchAll(text, -1, isDensityMatch, isGreedMatch);
-	}
-
-	/**
-	 * 查找敏感词，返回找到的所有敏感词<br>
-	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
-	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
-	 *
-	 * @param text           文本
-	 * @param isDensityMatch 是否使用密集匹配原则
-	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
-	 * @return 敏感词
 	 */
 	public static List<FoundWord> getFoundAllSensitive(String text, boolean isDensityMatch, boolean isGreedMatch) {
 		return sensitiveTree.matchAllWords(text, -1, isDensityMatch, isGreedMatch);
-	}
-
-	/**
-	 * 查找敏感词，返回找到的所有敏感词
-	 *
-	 * @param bean 对象，会被转为JSON
-	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundAllSensitive(Object)}
-	 */
-	@Deprecated
-	public static List<String> getFindedAllSensitive(Object bean) {
-		return sensitiveTree.matchAll(JSONUtil.toJsonStr(bean));
 	}
 
 	/**
@@ -231,22 +167,6 @@ public final class SensitiveUtil {
 	 */
 	public static List<FoundWord> getFoundAllSensitive(Object bean) {
 		return sensitiveTree.matchAllWords(JSONUtil.toJsonStr(bean));
-	}
-
-	/**
-	 * 查找敏感词，返回找到的所有敏感词<br>
-	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
-	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
-	 *
-	 * @param bean           对象，会被转为JSON
-	 * @param isDensityMatch 是否使用密集匹配原则
-	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
-	 * @return 敏感词
-	 * @deprecated 请使用 {@link #getFoundAllSensitive(Object, boolean, boolean)}
-	 */
-	@Deprecated
-	public static List<String> getFindedAllSensitive(Object bean, boolean isDensityMatch, boolean isGreedMatch) {
-		return sensitiveTree.matchAll(JSONUtil.toJsonStr(bean), -1, isDensityMatch, isGreedMatch);
 	}
 
 	/**

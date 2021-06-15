@@ -291,17 +291,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 获得加密或解密器
 	 *
 	 * @return 加密或解密
-	 * @deprecated 拼写错误，请使用{@link #getCipher()}
-	 */
-	@Deprecated
-	public Cipher getClipher() {
-		return cipher;
-	}
-
-	/**
-	 * 获得加密或解密器
-	 *
-	 * @return 加密或解密
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {

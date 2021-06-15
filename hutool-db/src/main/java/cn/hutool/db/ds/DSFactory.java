@@ -112,18 +112,6 @@ public abstract class DSFactory implements Closeable, Serializable{
 	}
 
 	/**
-	 * 根据Setting获取当前数据源工厂对象
-	 *
-	 * @param setting 数据源配置文件
-	 * @return 当前使用的数据源工厂
-	 * @deprecated 此方法容易引起歧义，应使用{@link #create(Setting)} 方法代替之
-	 */
-	@Deprecated
-	public static DSFactory getCurrentDSFactory(Setting setting) {
-		return create(setting);
-	}
-
-	/**
 	 * 设置全局的数据源工厂<br>
 	 * 在项目中存在多个连接池库的情况下，我们希望使用低优先级的库时使用此方法自定义之<br>
 	 * 重新定义全局的数据源工厂此方法可在以下两种情况下调用：

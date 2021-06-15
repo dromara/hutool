@@ -317,18 +317,6 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param date 日期
 	 * @return 毫秒数
-	 * @deprecated 拼写错误，请使用{@link #millisecond(Date)}
-	 */
-	@Deprecated
-	public static int millsecond(Date date) {
-		return DateTime.of(date).millisecond();
-	}
-
-	/**
-	 * 获得指定日期的毫秒数部分<br>
-	 *
-	 * @param date 日期
-	 * @return 毫秒数
 	 */
 	public static int millisecond(Date date) {
 		return DateTime.of(date).millisecond();
@@ -430,15 +418,6 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static int thisSecond() {
 		return second(date());
-	}
-
-	/**
-	 * @return 当前日期的毫秒数部分<br>
-	 * @deprecated 拼写错误，请使用{@link #thisMillisecond()}
-	 */
-	@Deprecated
-	public static int thisMillsecond() {
-		return millisecond(date());
 	}
 
 	/**
@@ -1326,19 +1305,6 @@ public class DateUtil extends CalendarUtil {
 		return dateNew(date).offset(dateField, offset);
 	}
 
-	/**
-	 * 获取指定日期偏移指定时间后的时间
-	 *
-	 * @param date      基准日期
-	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
-	 * @param offset    偏移量，正数为向后偏移，负数为向前偏移
-	 * @return 偏移后的日期
-	 * @deprecated please use {@link DateUtil#offset(Date, DateField, int)}
-	 */
-	@Deprecated
-	public static DateTime offsetDate(Date date, DateField dateField, int offset) {
-		return offset(date, dateField, offset);
-	}
 	// ------------------------------------ Offset end ----------------------------------------------
 
 	/**
@@ -1583,19 +1549,6 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static int toIntSecond(Date date) {
 		return Integer.parseInt(DateUtil.format(date, "yyMMddHHmm"));
-	}
-
-	/**
-	 * 计算指定指定时间区间内的周数
-	 *
-	 * @param start 开始时间
-	 * @param end   结束时间
-	 * @return 周数
-	 * @deprecated 请使用 {@link #betweenWeek(Date, Date, boolean)}
-	 */
-	@Deprecated
-	public static int weekCount(Date start, Date end) {
-		return (int) betweenWeek(start, end, true);
 	}
 
 	/**

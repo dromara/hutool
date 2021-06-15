@@ -660,22 +660,7 @@ public class MapUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
-		if (null == map || null == filter) {
-			return map;
-		}
-
-		final Map<K, V> map2 = ObjectUtil.clone(map);
-		if (isEmpty(map2)) {
-			return map2;
-		}
-
-		map2.clear();
-		for (Entry<K, V> entry : map.entrySet()) {
-			if (filter.accept(entry)) {
-				map2.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return map2;
+		return edit(map, t -> filter.accept(t) ? t : null);
 	}
 
 	/**

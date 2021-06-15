@@ -317,11 +317,6 @@ public class OsInfo implements Serializable{
 		return IS_OS_WINDOWS_8;
 	}
 
-	@Deprecated
-	public final boolean isWindoows8() {
-		return IS_OS_WINDOWS_8;
-	}
-
 	/**
 	 * 判断当前OS的类型。
 	 *

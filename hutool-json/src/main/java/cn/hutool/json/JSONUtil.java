@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * JSON工具类
@@ -247,29 +246,6 @@ public class JSONUtil {
 		return XML.toJSONObject(xmlStr);
 	}
 
-	/**
-	 * Map转化为JSONObject
-	 *
-	 * @param map {@link Map}
-	 * @return JSONObjec
-	 * @deprecated 请直接使用 {@link #parseObj(Object)}
-	 */
-	@Deprecated
-	public static JSONObject parseFromMap(Map<?, ?> map) {
-		return new JSONObject(map);
-	}
-
-	/**
-	 * ResourceBundle转化为JSONObject
-	 *
-	 * @param bundle ResourceBundle文件
-	 * @return JSONObject
-	 * @deprecated 请直接使用 {@link #parseObj(Object)}
-	 */
-	@Deprecated
-	public static JSONObject parseFromResourceBundle(ResourceBundle bundle) {
-		return new JSONObject(bundle);
-	}
 	// -------------------------------------------------------------------- Pause end
 
 	// -------------------------------------------------------------------- Read start

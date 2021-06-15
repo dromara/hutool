@@ -98,26 +98,6 @@ public class Page implements Segment<Integer>, Serializable {
 
 	/**
 	 * @return 每页结果数
-	 * @deprecated 使用 {@link #getPageSize()} 代替
-	 */
-	@Deprecated
-	public int getNumPerPage() {
-		return getPageSize();
-	}
-
-	/**
-	 * 设置每页结果数
-	 *
-	 * @param pageSize 每页结果数
-	 * @deprecated 使用 {@link #setPageSize(int)} 代替
-	 */
-	@Deprecated
-	public void setNumPerPage(int pageSize) {
-		setPageSize(pageSize);
-	}
-
-	/**
-	 * @return 每页结果数
 	 */
 	public int getPageSize() {
 		return pageSize;

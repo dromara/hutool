@@ -65,19 +65,6 @@ public class Column implements Serializable, Cloneable {
 	/**
 	 * 创建列对象
 	 *
-	 * @param tableName    表名
-	 * @param columnMetaRs 列元信息的ResultSet
-	 * @return 列对象
-	 * @deprecated 请使用 {@link #create(Table, ResultSet)}
-	 */
-	@Deprecated
-	public static Column create(String tableName, ResultSet columnMetaRs) {
-		return new Column(tableName, columnMetaRs);
-	}
-
-	/**
-	 * 创建列对象
-	 *
 	 * @param columnMetaRs 列元信息的ResultSet
 	 * @param table        表信息
 	 * @return 列对象
@@ -98,22 +85,6 @@ public class Column implements Serializable, Cloneable {
 	/**
 	 * 构造
 	 *
-	 * @param tableName    表名
-	 * @param columnMetaRs Meta信息的ResultSet
-	 * @deprecated 请使用 {@link #Column(Table, ResultSet)}
-	 */
-	@Deprecated
-	public Column(String tableName, ResultSet columnMetaRs) {
-		try {
-			init(tableName, columnMetaRs);
-		} catch (SQLException e) {
-			throw new DbRuntimeException(StrUtil.format("Get table [{}] meta info error!", tableName));
-		}
-	}
-
-	/**
-	 * 构造
-	 *
 	 * @param table        表信息
 	 * @param columnMetaRs Meta信息的ResultSet
 	 * @since 5.4.3
@@ -126,19 +97,6 @@ public class Column implements Serializable, Cloneable {
 		}
 	}
 	// ----------------------------------------------------- Constructor end
-
-	/**
-	 * 初始化
-	 *
-	 * @param tableName    表名
-	 * @param columnMetaRs 列的meta ResultSet
-	 * @throws SQLException SQL执行异常
-	 * @deprecated 请使用 {@link #init(Table, ResultSet)}
-	 */
-	@Deprecated
-	public void init(String tableName, ResultSet columnMetaRs) throws SQLException {
-		init(Table.create(tableName), columnMetaRs);
-	}
 
 	/**
 	 * 初始化

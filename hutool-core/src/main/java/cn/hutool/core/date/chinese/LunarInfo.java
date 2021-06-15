@@ -51,17 +51,6 @@ public class LunarInfo {
 	public static final int MAX_YEAR = BASE_YEAR + LUNAR_CODE.length - 1;
 
 	/**
-	 * 获取支持的最大年（包括）
-	 *
-	 * @return 最大年（包括）
-	 * @deprecated 使用 {@link #MAX_YEAR}
-	 */
-	@Deprecated
-	public static int getMaxYear() {
-		return MAX_YEAR;
-	}
-
-	/**
 	 * 传回农历 y年的总天数
 	 *
 	 * @param y 年

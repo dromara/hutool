@@ -5,7 +5,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -967,19 +966,6 @@ public class SecureUtil {
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
 	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
 		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
-	}
-
-	// ------------------------------------------------------------------- UUID
-
-	/**
-	 * 简化的UUID，去掉了横线
-	 *
-	 * @return 简化的UUID，去掉了横线
-	 * @deprecated 请使用 {@link IdUtil#simpleUUID()}
-	 */
-	@Deprecated
-	public static String simpleUUID() {
-		return IdUtil.simpleUUID();
 	}
 
 	/**

@@ -292,32 +292,6 @@ public class Base64 {
 	}
 
 	/**
-	 * base64解码
-	 *
-	 * @param source  被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static byte[] decode(CharSequence source, String charset) {
-		return Base64Decoder.decode(source);
-	}
-
-	/**
-	 * base64解码
-	 *
-	 * @param source  被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @deprecated 编码参数无意义，作废
-	 */
-	@Deprecated
-	public static byte[] decode(CharSequence source, Charset charset) {
-		return Base64Decoder.decode(source);
-	}
-
-	/**
 	 * 解码Base64
 	 *
 	 * @param in 输入

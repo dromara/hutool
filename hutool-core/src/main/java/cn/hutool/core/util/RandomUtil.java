@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
 
@@ -603,29 +602,6 @@ public class RandomUtil {
 	 */
 	public static <T> WeightRandom<T> weightRandom(Iterable<WeightObj<T>> weightObjs) {
 		return new WeightRandom<>(weightObjs);
-	}
-
-	// ------------------------------------------------------------------- UUID
-
-	/**
-	 * @return 随机UUID
-	 * @deprecated 请使用{@link IdUtil#randomUUID()}
-	 */
-	@Deprecated
-	public static String randomUUID() {
-		return UUID.randomUUID().toString();
-	}
-
-	/**
-	 * 简化的UUID，去掉了横线
-	 *
-	 * @return 简化的UUID，去掉了横线
-	 * @since 3.2.2
-	 * @deprecated 请使用{@link IdUtil#simpleUUID()}
-	 */
-	@Deprecated
-	public static String simpleUUID() {
-		return UUID.randomUUID().toString(true);
 	}
 
 	/**

@@ -163,13 +163,6 @@ public class BetweenFormatter implements Serializable {
 		SECOND("秒"),
 		/**
 		 * 毫秒
-		 *
-		 * @deprecated 拼写错误，请使用{@link #MILLISECOND}
-		 */
-		@Deprecated
-		MILLSECOND("毫秒"),
-		/**
-		 * 毫秒
 		 */
 		MILLISECOND("毫秒");
 
