@@ -1171,11 +1171,14 @@ public class CollUtil {
 	 *
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
-	 * @param filter     过滤器
+	 * @param filter     过滤器，{@link null}返回原集合
 	 * @return 过滤后的数组
 	 * @since 3.1.0
 	 */
 	public static <T> Collection<T> filterNew(Collection<T> collection, Filter<T> filter) {
+		if(null == collection || null == filter){
+			return collection;
+		}
 		return edit(collection, t -> filter.accept(t) ? t : null);
 	}
 

@@ -660,11 +660,14 @@ public class MapUtil {
 	 * @param <K>    Key类型
 	 * @param <V>    Value类型
 	 * @param map    Map
-	 * @param filter 编辑器接口
+	 * @param filter 编辑器接口，{@link null}返回原Map
 	 * @return 过滤后的Map
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+		if(null == map || null == filter){
+			return map;
+		}
 		return edit(map, t -> filter.accept(t) ? t : null);
 	}
 
@@ -674,12 +677,15 @@ public class MapUtil {
 	 * @param <K>  Key类型
 	 * @param <V>  Value类型
 	 * @param map  原始Map
-	 * @param keys 键列表
+	 * @param keys 键列表，{@link null}返回原Map
 	 * @return Map 结果，结果的Map类型与原Map保持一致
 	 * @since 4.0.10
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
+		if(null == map || null == keys){
+			return map;
+		}
 		Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;

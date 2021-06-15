@@ -621,6 +621,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.1
 	 */
 	public static <T> T[] filter(T[] array, Filter<T> filter) {
+		if(null == array || null == filter){
+			return array;
+		}
 		return edit(array, t -> filter.accept(t) ? t : null);
 	}
 
