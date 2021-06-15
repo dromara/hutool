@@ -24,11 +24,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.SortedMap;
 
 /**
  * JSON对象<br>
@@ -158,7 +156,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(source, ignoreNullValue, (source instanceof LinkedHashMap) || (source instanceof SortedMap));
+		this(source, ignoreNullValue, InternalJSONUtil.isOrder(source));
 	}
 
 	/**
@@ -653,7 +651,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			return;
 		}
 
-		if(ArrayUtil.isArray(source) || source instanceof JSONArray){
+		if (ArrayUtil.isArray(source) || source instanceof JSONArray) {
 			// 不支持集合类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
@@ -663,7 +661,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 				this.set(Convert.toStr(e.getKey()), e.getValue());
 			}
-		}else if (source instanceof Map.Entry) {
+		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
 			this.set(Convert.toStr(entry.getKey()), entry.getValue());
 		} else if (source instanceof CharSequence) {

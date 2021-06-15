@@ -194,7 +194,15 @@ public class JSONUtil {
 	 * @return JSON
 	 */
 	public static JSON parse(Object obj) {
-		return parse(obj, JSONConfig.create());
+		if(obj instanceof JSON){
+			return (JSON) obj;
+		}
+
+		final JSONConfig config = JSONConfig.create();
+		if(InternalJSONUtil.isOrder(obj)){
+			config.setOrder(true);
+		}
+		return parse(obj, config);
 	}
 
 	/**

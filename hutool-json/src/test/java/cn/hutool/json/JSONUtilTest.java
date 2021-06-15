@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class JSONUtilTest {
 
@@ -100,6 +102,20 @@ public class JSONUtilTest {
 
 		JSONObject json2 = JSONUtil.parseObj(json.toString());
 		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"</\"}", json2.get("user"));
+	}
+
+	@Test
+	public void toJsonStrFromSortedTest() {
+		SortedMap<Object, Object> sortedMap = new TreeMap<Object, Object>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+			put("attributes", "a");
+			put("b", "b");
+			put("c", "c");
+		}};
+
+		Assert.assertEquals("{\"attributes\":\"a\",\"b\":\"b\",\"c\":\"c\"}", JSONUtil.toJsonStr(sortedMap));
 	}
 
 	/**
@@ -196,6 +212,8 @@ public class JSONUtilTest {
 		final JSONObject jsonObject = JSONUtil.parseObj("{\n" +
 				"    \"test\": \"\\\\地库地库\",\n" +
 				"}");
+
+		Assert.assertEquals("\\地库地库", jsonObject.getObj("test"));
 	}
 
 	@Test

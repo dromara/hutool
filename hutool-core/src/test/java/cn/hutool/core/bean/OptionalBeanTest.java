@@ -13,7 +13,7 @@ public class OptionalBeanTest {
 		String value1 = OptionalBean.ofNullable(user)
 				.getBean(User::getSchool)
 				.getBean(User.School::getAddress).get();
-        Assert.assertNull(value1);
+		Assert.assertNull(value1);
 
 		boolean present = OptionalBean.ofNullable(user)
 				.getBean(User::getSchool)

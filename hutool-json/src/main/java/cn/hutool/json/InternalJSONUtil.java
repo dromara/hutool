@@ -16,7 +16,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -198,7 +200,7 @@ final class InternalJSONUtil {
 	 * @return JSONObject
 	 */
 	protected static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value) {
-		final String[] path = StrUtil.split(Convert.toStr(key), StrUtil.DOT);
+		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
@@ -231,6 +233,31 @@ final class InternalJSONUtil {
 		return (false == (obj instanceof CharSequence))//
 				&& (false == (obj instanceof JSONTokener))//
 				&& (false == (obj instanceof Map));
+	}
+
+	/**
+	 * 判断给定对象是否有序，用于辅助创建{@link JSONObject}时是否有序
+	 *
+	 * <ul>
+	 *     <li>对象为{@link LinkedHashMap}子类或{@link LinkedHashMap}子类</li>
+	 *     <li>对象实现</li>
+	 * </ul>
+	 *
+	 * @param value 被转换的对象
+	 * @return 是否有序
+	 * @since 5.7.0
+	 */
+	protected static boolean isOrder(Object value){
+		if(value instanceof LinkedHashMap || value instanceof SortedMap){
+			return true;
+		} else if(value instanceof JSONGetter){
+			final JSONConfig config = ((JSONGetter<?>) value).getConfig();
+			if(null != config){
+				return config.isOrder();
+			}
+		}
+
+		return false;
 	}
 
 	/**

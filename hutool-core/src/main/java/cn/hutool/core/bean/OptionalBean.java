@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /**
  * optional对象判空，参考：https://mp.weixin.qq.com/s/0c8iC0OTtx5LqPkhvkK0tw<br>
- * from：https://github.com/looly/hutool/pull/1182
+ * from：https://github.com/dromara/hutool/pull/1182
  *
  * @param <T> Bean类型
  * @author totalo
