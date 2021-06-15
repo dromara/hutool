@@ -660,7 +660,7 @@ public class MapUtil {
 	 * @param <K>    Key类型
 	 * @param <V>    Value类型
 	 * @param map    Map
-	 * @param filter 编辑器接口，{@link null}返回原Map
+	 * @param filter 过滤器接口，{@code null}返回原Map
 	 * @return 过滤后的Map
 	 * @since 3.1.0
 	 */
@@ -677,7 +677,7 @@ public class MapUtil {
 	 * @param <K>  Key类型
 	 * @param <V>  Value类型
 	 * @param map  原始Map
-	 * @param keys 键列表，{@link null}返回原Map
+	 * @param keys 键列表，{@code null}返回原Map
 	 * @return Map 结果，结果的Map类型与原Map保持一致
 	 * @since 4.0.10
 	 */

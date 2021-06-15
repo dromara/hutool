@@ -586,7 +586,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param <T>    数组元素类型
 	 * @param array  数组
-	 * @param editor 编辑器接口
+	 * @param editor 编辑器接口，{@code null}返回原集合
 	 * @since 5.3.3
 	 */
 	public static <T> T[] edit(T[] array, Editor<T> editor) {
@@ -616,7 +616,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param <T>    数组元素类型
 	 * @param array  数组
-	 * @param filter 过滤器接口，用于定义过滤规则，null表示不过滤，返回原数组
+	 * @param filter 过滤器接口，用于定义过滤规则，{@code null}返回原集合
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */

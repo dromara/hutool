@@ -1132,7 +1132,7 @@ public class CollUtil {
 	 *
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
-	 * @param editor     编辑器接口
+	 * @param editor     编辑器接口，{@code null}返回原集合
 	 * @return 过滤后的集合
 	 */
 	public static <T> Collection<T> edit(Collection<T> collection, Editor<T> editor) {
@@ -1171,7 +1171,7 @@ public class CollUtil {
 	 *
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
-	 * @param filter     过滤器，{@link null}返回原集合
+	 * @param filter     过滤器，{@code null}返回原集合
 	 * @return 过滤后的数组
 	 * @since 3.1.0
 	 */
