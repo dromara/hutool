@@ -8,6 +8,8 @@ import cn.hutool.core.lang.SimpleCache;
 
 import java.io.File;
 import java.lang.reflect.Array;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,18 +23,30 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ClassLoaderUtil {
 
-	/** 数组类的结尾符: "[]" */
+	/**
+	 * 数组类的结尾符: "[]"
+	 */
 	private static final String ARRAY_SUFFIX = "[]";
-	/** 内部数组类名前缀: "[" */
+	/**
+	 * 内部数组类名前缀: "["
+	 */
 	private static final String INTERNAL_ARRAY_PREFIX = "[";
-	/** 内部非原始类型类名前缀: "[L" */
+	/**
+	 * 内部非原始类型类名前缀: "[L"
+	 */
 	private static final String NON_PRIMITIVE_ARRAY_PREFIX = "[L";
-	/** 包名分界符: '.' */
+	/**
+	 * 包名分界符: '.'
+	 */
 	private static final char PACKAGE_SEPARATOR = StrUtil.C_DOT;
-	/** 内部类分界符: '$' */
+	/**
+	 * 内部类分界符: '$'
+	 */
 	private static final char INNER_CLASS_SEPARATOR = '$';
 
-	/** 原始类型名和其class对应表，例如：int =》 int.class */
+	/**
+	 * 原始类型名和其class对应表，例如：int =》 int.class
+	 */
 	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new ConcurrentHashMap<>(32);
 	private static final SimpleCache<String, Class<?>> CLASS_CACHE = new SimpleCache<>();
 
@@ -62,8 +76,32 @@ public class ClassLoaderUtil {
 	 * @see Thread#getContextClassLoader()
 	 */
 	public static ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
+		if (System.getSecurityManager() == null) {
+			return Thread.currentThread().getContextClassLoader();
+		} else {
+			// 绕开权限检查
+			return AccessController.doPrivileged(
+					(PrivilegedAction<ClassLoader>) () -> Thread.currentThread().getContextClassLoader());
+		}
 	}
+
+	/**
+	 * 获取系统{@link ClassLoader}
+	 *
+	 * @return 系统{@link ClassLoader}
+	 * @see ClassLoader#getSystemClassLoader()
+	 * @since 5.7.0
+	 */
+	public static ClassLoader getSystemClassLoader() {
+		if (System.getSecurityManager() == null) {
+			return ClassLoader.getSystemClassLoader();
+		} else {
+			// 绕开权限检查
+			return AccessController.doPrivileged(
+					(PrivilegedAction<ClassLoader>) ClassLoader::getSystemClassLoader);
+		}
+	}
+
 
 	/**
 	 * 获取{@link ClassLoader}<br>
@@ -82,13 +120,14 @@ public class ClassLoaderUtil {
 		if (classLoader == null) {
 			classLoader = ClassLoaderUtil.class.getClassLoader();
 			if (null == classLoader) {
-				classLoader = ClassLoader.getSystemClassLoader();
+				classLoader = getSystemClassLoader();
 			}
 		}
 		return classLoader;
 	}
 
 	// ----------------------------------------------------------------------------------- loadClass
+
 	/**
 	 * 加载类，通过传入类的字符串，返回其对应的类名，使用默认ClassLoader并初始化类（调用static模块内容和初始化static属性）<br>
 	 * 扩展{@link Class#forName(String, boolean, ClassLoader)}方法，支持以下几类类名的加载：
@@ -117,7 +156,7 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
-	 * @param name 类名
+	 * @param name          类名
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
@@ -138,8 +177,8 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
-	 * @param name 类名
-	 * @param classLoader {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
+	 * @param name          类名
+	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
@@ -223,7 +262,7 @@ public class ClassLoaderUtil {
 	 * 加载外部类
 	 *
 	 * @param jarOrDir jar文件或者包含jar和class文件的目录
-	 * @param name 类名
+	 * @param name     类名
 	 * @return 类
 	 * @since 4.4.2
 	 */
@@ -236,6 +275,7 @@ public class ClassLoaderUtil {
 	}
 
 	// ----------------------------------------------------------------------------------- isPresent
+
 	/**
 	 * 指定类是否被提供，使用默认ClassLoader<br>
 	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
@@ -253,7 +293,7 @@ public class ClassLoaderUtil {
 	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
 	 * 加载失败的原因可能是此类不存在或其关联引用类不存在
 	 *
-	 * @param className 类名
+	 * @param className   类名
 	 * @param classLoader {@link ClassLoader}
 	 * @return 是否被提供
 	 */
@@ -267,11 +307,12 @@ public class ClassLoaderUtil {
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 尝试转换并加载内部类，例如java.lang.Thread.State =》java.lang.Thread$State
 	 *
-	 * @param name 类名
-	 * @param classLoader {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
+	 * @param name          类名
+	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @since 4.1.20

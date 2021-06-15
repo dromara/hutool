@@ -13,6 +13,7 @@
 * 【core   】     NumberUtil的decimalFormat增加数字检查
 * 【http   】     HttpBase的httpVersion方法设置为无效(issue#1644@Github)
 * 【extra  】     Sftp增加download重载(issue#I3VBSL@Gitee)
+* 【cache  】     修改FIFOCache初始大小(issue#1647@Github)
 
 ### 🐞Bug修复
 * 【db     】     修复count方法丢失参数问题(issue#I3VBSL@Gitee)
