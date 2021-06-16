@@ -197,6 +197,9 @@ public class SyncFinisher {
 			}
 		}
 
+		/**
+		 * 任务内容
+		 */
 		public abstract void work();
 	}
 }
