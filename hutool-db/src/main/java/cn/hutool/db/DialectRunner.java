@@ -209,6 +209,30 @@ public class DialectRunner implements Serializable {
 	}
 
 	/**
+	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) hutool_alias_count_<br>
+	 * 此方法会重新构建{@link SqlBuilder}，并去除末尾的order by子句
+	 *
+	 * @param conn  数据库连接对象
+	 * @param sqlBuilder 查询语句
+	 * @return 复合条件的结果数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.7.2
+	 */
+	public long count(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+		checkConn(conn);
+
+		String selectSql = sqlBuilder.build();
+		// 去除order by 子句
+		final int orderByIndex = StrUtil.indexOfIgnoreCase(selectSql, " order by");
+		if (orderByIndex > 0) {
+			selectSql = StrUtil.subPre(selectSql, orderByIndex);
+		}
+		return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
+				SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
+				new NumberHandler()).longValue();
+	}
+
+	/**
 	 * 分页查询<br>
 	 * 此方法不会关闭Connection
 	 *

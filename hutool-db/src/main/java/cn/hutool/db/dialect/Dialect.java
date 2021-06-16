@@ -127,6 +127,23 @@ public interface Dialect extends Serializable {
 	}
 
 	/**
+	 * 构建用于查询行数的PreparedStatement
+	 *
+	 * @param conn  数据库连接对象
+	 * @param sqlBuilder 查询语句，应该包含分页等信息
+	 * @return PreparedStatement
+	 * @throws SQLException SQL执行异常
+	 * @since 5.7.2
+	 */
+	default PreparedStatement psForCount(Connection conn, SqlBuilder sqlBuilder) throws SQLException{
+		sqlBuilder = sqlBuilder
+				.insertPreFragment("SELECT count(1) from(")
+				// issue#I3IJ8X@Gitee，在子查询时需设置单独别名，此处为了防止和用户的表名冲突，使用自定义的较长别名
+				.append(") hutool_alias_count_");
+		return psForPage(conn, sqlBuilder, null);
+	}
+
+	/**
 	 * 方言名
 	 *
 	 * @return 方言名
