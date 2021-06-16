@@ -3,6 +3,7 @@ package cn.hutool.extra.mail;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import javax.mail.Authenticator;
@@ -427,8 +428,8 @@ public class MailUtil {
 		}
 
 		List<String> result;
-		if (StrUtil.contains(addresses, ',')) {
-			result = StrUtil.splitTrim(addresses, ',');
+		if (StrUtil.contains(addresses, CharUtil.COMMA)) {
+			result = StrUtil.splitTrim(addresses, CharUtil.COMMA);
 		} else if (StrUtil.contains(addresses, ';')) {
 			result = StrUtil.splitTrim(addresses, ';');
 		} else {
