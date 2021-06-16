@@ -223,4 +223,11 @@ public class JSONUtilTest {
 		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
 		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
 	}
+
+	@Test
+	public void parseBigNumberTest(){
+		// 科学计数法使用BigDecimal处理，默认输出非科学计数形式
+		String str = "{\"test\":100000054128897953e4}";
+		Assert.assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
+	}
 }
