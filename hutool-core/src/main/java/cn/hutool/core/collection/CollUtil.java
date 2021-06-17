@@ -1371,7 +1371,7 @@ public class CollUtil {
 	 * @since 5.0.6
 	 */
 	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iterable, String fieldName) {
-		return IterUtil.fieldValueMap(null == iterable ? null : iterable.iterator(), fieldName);
+		return IterUtil.fieldValueMap(IterUtil.getIter(iterable), fieldName);
 	}
 
 	/**
@@ -1386,7 +1386,7 @@ public class CollUtil {
 	 * @since 5.0.6
 	 */
 	public static <K, V> Map<K, V> fieldValueAsMap(Iterable<?> iterable, String fieldNameForKey, String fieldNameForValue) {
-		return IterUtil.fieldValueAsMap(null == iterable ? null : iterable.iterator(), fieldNameForKey, fieldNameForValue);
+		return IterUtil.fieldValueAsMap(IterUtil.getIter(iterable), fieldNameForKey, fieldNameForValue);
 	}
 
 	/**

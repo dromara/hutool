@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -29,6 +30,18 @@ import java.util.function.Function;
  * @since 3.1.0
  */
 public class IterUtil {
+
+	/**
+	 * 获取{@link Iterator}
+	 *
+	 * @param iterable {@link Iterable}
+	 * @param <T>      元素类型
+	 * @return 当iterable为null返回{@code null}，否则返回对应的{@link Iterator}
+	 * @since 5.7.2
+	 */
+	public static <T> Iterator<T> getIter(Iterable<T> iterable) {
+		return null == iterable ? null : iterable.iterator();
+	}
 
 	/**
 	 * Iterable是否为空
@@ -199,7 +212,7 @@ public class IterUtil {
 	 * @since 4.6.2
 	 */
 	public static <V> List<Object> fieldValueList(Iterable<V> iterable, String fieldName) {
-		return fieldValueList(null == iterable ? null : iterable.iterator(), fieldName);
+		return fieldValueList(getIter(iterable), fieldName);
 	}
 
 	/**
@@ -252,9 +265,9 @@ public class IterUtil {
 		return join(iterator, conjunction, (item) -> {
 			if (ArrayUtil.isArray(item)) {
 				return ArrayUtil.join(ArrayUtil.wrap(item), conjunction, prefix, suffix);
-			} else if (item instanceof Iterable<?>) {
+			} else if (item instanceof Iterable) {
 				return CollUtil.join((Iterable<?>) item, conjunction, prefix, suffix);
-			} else if (item instanceof Iterator<?>) {
+			} else if (item instanceof Iterator) {
 				return join((Iterator<?>) item, conjunction, prefix, suffix);
 			} else {
 				return StrUtil.wrap(String.valueOf(item), prefix, suffix);
@@ -278,20 +291,7 @@ public class IterUtil {
 			return null;
 		}
 
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		T item;
-		while (iterator.hasNext()) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-
-			item = iterator.next();
-			sb.append(func.apply(item));
-		}
-		return sb.toString();
+		return new StrJoiner(conjunction).append(iterator, func).toString();
 	}
 
 	/**

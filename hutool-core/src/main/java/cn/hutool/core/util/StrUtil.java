@@ -130,7 +130,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param obj         对象
 	 * @param charsetName 字符集
 	 * @return 字符串
+	 * @deprecated 请使用 {@link #str(Object, Charset)}
 	 */
+	@Deprecated
 	public static String str(Object obj, String charsetName) {
 		return str(obj, Charset.forName(charsetName));
 	}
@@ -263,9 +265,10 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param obj 对象
 	 * @return 字符串
 	 * @since 4.1.3
+	 * @see String#valueOf(Object)
 	 */
 	public static String toString(Object obj) {
-		return null == obj ? NULL : obj.toString();
+		return String.valueOf(obj);
 	}
 
 	/**

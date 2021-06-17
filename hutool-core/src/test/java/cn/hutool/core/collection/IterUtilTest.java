@@ -38,6 +38,13 @@ public class IterUtilTest {
 	}
 
 	@Test
+	public void joinWithFuncTest() {
+		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
+		String join = IterUtil.join(list.iterator(), ":", String::valueOf);
+		Assert.assertEquals("1:2:3:4", join);
+	}
+
+	@Test
 	public void testToListMap() {
 		Map<String, List<String>> expectedMap = new HashMap<>();
 		expectedMap.put("a", Collections.singletonList("and"));
