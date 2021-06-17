@@ -116,6 +116,11 @@ public abstract class AbstractDSFactory extends DSFactory {
 		if (StrUtil.isBlank(url)) {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
+
+		// 移除用户可能误加入的show sql配置项
+		// issue#I3VW0R@Gitee
+		DbUtil.removeShowSqlParams(config);
+
 		// 自动识别Driver
 		String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
 		if (StrUtil.isBlank(driver)) {

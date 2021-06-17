@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
@@ -168,17 +169,31 @@ public final class DbUtil {
 	}
 
 	/**
-	 * 从配置文件中读取SQL打印选项
+	 * 移除配置文件中的Show SQL相关配置项<br>
+	 * 此方法用于移除用户配置在分组下的配置项目
+	 *
+	 * @param setting 配置项
+	 * @since 5.7.2
+	 */
+	public static void removeShowSqlParams(Setting setting){
+		setting.remove(SqlLog.KEY_SHOW_SQL);
+		setting.remove(SqlLog.KEY_FORMAT_SQL);
+		setting.remove(SqlLog.KEY_SHOW_PARAMS);
+		setting.remove(SqlLog.KEY_SQL_LEVEL);
+	}
+
+	/**
+	 * 从配置文件中读取SQL打印选项，读取后会去除相应属性
 	 *
 	 * @param setting 配置文件
 	 * @since 4.1.7
 	 */
 	public static void setShowSqlGlobal(Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBool(setting.remove("showSql"), false);
-		final boolean isFormatSql = Convert.toBool(setting.remove("formatSql"), false);
-		final boolean isShowParams = Convert.toBool(setting.remove("showParams"), false);
-		String sqlLevelStr = setting.remove("sqlLevel");
+		final boolean isShowSql = Convert.toBool(setting.remove(SqlLog.KEY_SHOW_SQL), false);
+		final boolean isFormatSql = Convert.toBool(setting.remove(SqlLog.KEY_FORMAT_SQL), false);
+		final boolean isShowParams = Convert.toBool(setting.remove(SqlLog.KEY_SHOW_PARAMS), false);
+		String sqlLevelStr = setting.remove(SqlLog.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();
 		}

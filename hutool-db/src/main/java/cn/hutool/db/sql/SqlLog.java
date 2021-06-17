@@ -6,13 +6,30 @@ import cn.hutool.log.level.Level;
 
 /**
  * SQL在日志中打印配置
- * 
+ *
  * @author looly
  * @since 4.1.0
  */
 public enum SqlLog {
 	INSTANCE;
-	
+
+	/**
+	 * 配置文件中配置属性名：是否显示SQL
+	 */
+	public static final String KEY_SHOW_SQL = "showSql";
+	/**
+	 * 配置文件中配置属性名：是否格式化SQL
+	 */
+	public static final String KEY_FORMAT_SQL = "formatSql";
+	/**
+	 * 配置文件中配置属性名：是否显示参数
+	 */
+	public static final String KEY_SHOW_PARAMS = "showParams";
+	/**
+	 * 配置文件中配置属性名：显示的日志级别
+	 */
+	public static final String KEY_SQL_LEVEL = "sqlLevel";
+
 	private final static Log log = LogFactory.get();
 
 	/** 是否debugSQL */
@@ -23,10 +40,10 @@ public enum SqlLog {
 	private boolean showParams;
 	/** 默认日志级别 */
 	private Level level = Level.DEBUG;
-	
+
 	/**
 	 * 设置全局配置：是否通过debug日志显示SQL
-	 * 
+	 *
 	 * @param isShowSql 是否显示SQL
 	 * @param isFormatSql 是否格式化显示的SQL
 	 * @param isShowParams 是否打印参数
