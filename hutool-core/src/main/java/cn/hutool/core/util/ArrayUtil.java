@@ -2,7 +2,6 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -10,6 +9,7 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrJoiner;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -165,7 +165,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T firstMatch(Matcher<T> matcher, T... array) {
 		final int index = matchIndex(matcher, array);
-		if(index < 0){
+		if (index < 0) {
 			return null;
 		}
 
@@ -184,8 +184,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> int matchIndex(Matcher<T> matcher, T... array) {
 		if (isNotEmpty(array)) {
-			for(int i = 0; i < array.length; i++){
-				if(matcher.match(array[i])){
+			for (int i = 0; i < array.length; i++) {
+				if (matcher.match(array[i])) {
 					return i;
 				}
 			}
@@ -621,7 +621,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.1
 	 */
 	public static <T> T[] filter(T[] array, Filter<T> filter) {
-		if(null == array || null == filter){
+		if (null == array || null == filter) {
 			return array;
 		}
 		return edit(array, t -> filter.accept(t) ? t : null);
@@ -737,7 +737,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(T[] array, Object value) {
-		return matchIndex((obj)-> ObjectUtil.equal(value, obj), array);
+		return matchIndex((obj) -> ObjectUtil.equal(value, obj), array);
 	}
 
 	/**
@@ -1114,38 +1114,24 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 *
-	 * @param <T>         被处理的集合
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @param prefix      每个元素添加的前缀，null表示不添加
-	 * @param suffix      每个元素添加的后缀，null表示不添加
+	 * @param <T>       被处理的集合
+	 * @param array     数组
+	 * @param delimiter 分隔符
+	 * @param prefix    每个元素添加的前缀，null表示不添加
+	 * @param suffix    每个元素添加的后缀，null表示不添加
 	 * @return 连接后的字符串
 	 * @since 4.0.10
 	 */
-	public static <T> String join(T[] array, CharSequence conjunction, String prefix, String suffix) {
+	public static <T> String join(T[] array, CharSequence delimiter, String prefix, String suffix) {
 		if (null == array) {
 			return null;
 		}
 
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (T item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			if (ArrayUtil.isArray(item)) {
-				sb.append(join(ArrayUtil.wrap(item), conjunction, prefix, suffix));
-			} else if (item instanceof Iterable<?>) {
-				sb.append(CollUtil.join((Iterable<?>) item, conjunction, prefix, suffix));
-			} else if (item instanceof Iterator<?>) {
-				sb.append(IterUtil.join((Iterator<?>) item, conjunction, prefix, suffix));
-			} else {
-				sb.append(StrUtil.wrap(StrUtil.toString(item), prefix, suffix));
-			}
-		}
-		return sb.toString();
+		return StrJoiner.of(delimiter, prefix, suffix)
+				// 每个元素都添加前后缀
+				.setWrapElement(true)
+				.append(array)
+				.toString();
 	}
 
 	/**
@@ -1159,26 +1145,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.3.3
 	 */
 	public static <T> String join(T[] array, CharSequence conjunction, Editor<T> editor) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (T item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			if (null != editor) {
-				item = editor.edit(item);
-			}
-			if (null != item) {
-				sb.append(StrUtil.toString(item));
-			}
-		}
-		return sb.toString();
+		return StrJoiner.of(conjunction).append(array, (t)-> String.valueOf(editor.edit(t))).toString();
 	}
 
 	/**
@@ -1189,39 +1156,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(Object array, CharSequence conjunction) {
-		if(null == array){
-			throw new NullPointerException("Array must be not null!");
+		if (null == array) {
+			return null;
 		}
 		if (false == isArray(array)) {
 			throw new IllegalArgumentException(StrUtil.format("[{}] is not a Array!", array.getClass()));
 		}
 
-		final Class<?> componentType = array.getClass().getComponentType();
-		if (componentType.isPrimitive()) {
-			final String componentTypeName = componentType.getName();
-			switch (componentTypeName) {
-				case "long":
-					return join((long[]) array, conjunction);
-				case "int":
-					return join((int[]) array, conjunction);
-				case "short":
-					return join((short[]) array, conjunction);
-				case "char":
-					return join((char[]) array, conjunction);
-				case "byte":
-					return join((byte[]) array, conjunction);
-				case "boolean":
-					return join((boolean[]) array, conjunction);
-				case "float":
-					return join((float[]) array, conjunction);
-				case "double":
-					return join((double[]) array, conjunction);
-				default:
-					throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
-			}
-		} else {
-			return join((Object[]) array, conjunction);
-		}
+		return StrJoiner.of(conjunction).append(array).toString();
 	}
 
 	/**

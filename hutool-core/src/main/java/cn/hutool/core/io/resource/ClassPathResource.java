@@ -1,13 +1,13 @@
 package cn.hutool.core.io.resource;
 
-import java.net.URL;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+
+import java.net.URL;
 
 /**
  * ClassPath单一资源访问类<br>

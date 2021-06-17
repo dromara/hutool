@@ -1593,8 +1593,9 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(int[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1618,8 +1619,9 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(long[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1643,8 +1645,9 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(short[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1668,8 +1671,9 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(char[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1693,8 +1697,9 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(byte[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1719,7 +1724,9 @@ public class PrimitiveArrayUtil {
 	 * @param array       数组
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(boolean[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1744,7 +1751,9 @@ public class PrimitiveArrayUtil {
 	 * @param array       数组
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(float[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
@@ -1769,7 +1778,9 @@ public class PrimitiveArrayUtil {
 	 * @param array       数组
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
+	@Deprecated
 	public static String join(double[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;

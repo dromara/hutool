@@ -6,10 +6,8 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -246,7 +244,7 @@ public class IterUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
-		return join(iterator, conjunction, null, null);
+		return StrJoiner.of(conjunction).append(iterator).toString();
 	}
 
 	/**
@@ -262,17 +260,11 @@ public class IterUtil {
 	 * @since 4.0.10
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction, String prefix, String suffix) {
-		return join(iterator, conjunction, (item) -> {
-			if (ArrayUtil.isArray(item)) {
-				return ArrayUtil.join(ArrayUtil.wrap(item), conjunction, prefix, suffix);
-			} else if (item instanceof Iterable) {
-				return CollUtil.join((Iterable<?>) item, conjunction, prefix, suffix);
-			} else if (item instanceof Iterator) {
-				return join((Iterator<?>) item, conjunction, prefix, suffix);
-			} else {
-				return StrUtil.wrap(String.valueOf(item), prefix, suffix);
-			}
-		});
+		return StrJoiner.of(conjunction, prefix, suffix)
+				// 每个元素都添加前后缀
+				.setWrapElement(true)
+				.append(iterator)
+				.toString();
 	}
 
 	/**
@@ -291,7 +283,7 @@ public class IterUtil {
 			return null;
 		}
 
-		return new StrJoiner(conjunction).append(iterator, func).toString();
+		return StrJoiner.of(conjunction).append(iterator, func).toString();
 	}
 
 	/**

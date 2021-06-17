@@ -32,6 +32,7 @@ public class IterUtilTest {
 		String join1 = IterUtil.join(list1.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join1);
 
+		// 包装每个节点
 		ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
 		String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
 		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
@@ -42,6 +43,13 @@ public class IterUtilTest {
 		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
 		String join = IterUtil.join(list.iterator(), ":", String::valueOf);
 		Assert.assertEquals("1:2:3:4", join);
+	}
+
+	@Test
+	public void joinWithNullTest() {
+		ArrayList<String> list = CollUtil.newArrayList("1", null, "3", "4");
+		String join = IterUtil.join(list.iterator(), ":", String::valueOf);
+		Assert.assertEquals("1:null:3:4", join);
 	}
 
 	@Test
