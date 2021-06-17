@@ -1,15 +1,14 @@
 package cn.hutool.cron.pattern;
 
-import java.util.Date;
-import java.util.List;
-
+import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.date.DateUtil;
+import java.util.Date;
+import java.util.List;
 
 public class CronPatternUtilTest {
-	
+
 	@Test
 	public void matchedDatesTest() {
 		//测试每30秒执行
@@ -21,7 +20,7 @@ public class CronPatternUtilTest {
 		Assert.assertEquals("2018-10-15 14:35:00", matchedDates.get(3).toString());
 		Assert.assertEquals("2018-10-15 14:35:30", matchedDates.get(4).toString());
 	}
-	
+
 	@Test
 	public void matchedDatesTest2() {
 		//测试每小时执行
@@ -33,7 +32,7 @@ public class CronPatternUtilTest {
 		Assert.assertEquals("2018-10-15 18:00:00", matchedDates.get(3).toString());
 		Assert.assertEquals("2018-10-15 19:00:00", matchedDates.get(4).toString());
 	}
-	
+
 	@Test
 	public void matchedDatesTest3() {
 		//测试最后一天

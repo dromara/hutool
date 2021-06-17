@@ -6,7 +6,6 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -198,7 +197,7 @@ public class BeanUtil {
 		} catch (IntrospectionException e) {
 			throw new BeanException(e);
 		}
-		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), (Filter<PropertyDescriptor>) t -> {
+		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), t -> {
 			// 过滤掉getClass方法
 			return false == "class".equals(t.getName());
 		});

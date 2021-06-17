@@ -255,7 +255,7 @@ public class CollUtil {
 	 * @param coll1      集合1
 	 * @param coll2      集合2
 	 * @param otherColls 其它集合
-	 * @return 并集的集合，返回 {@link ArrayList}
+	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
 	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
@@ -282,7 +282,7 @@ public class CollUtil {
 	 * @param coll1      集合1
 	 * @param coll2      集合2
 	 * @param otherColls 其它集合
-	 * @return 并集的集合，返回 {@link LinkedHashSet}
+	 * @return 交集的集合，返回 {@link LinkedHashSet}
 	 * @since 5.3.9
 	 */
 	@SafeVarargs
