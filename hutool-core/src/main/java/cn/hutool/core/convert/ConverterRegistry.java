@@ -364,10 +364,8 @@ public class ConverterRegistry implements Serializable {
 
 	/**
 	 * 注册默认转换器
-	 *
-	 * @return 转换器
 	 */
-	private ConverterRegistry defaultConverter() {
+	private void defaultConverter() {
 		defaultConverterMap = new ConcurrentHashMap<>();
 
 		// 原始类型转换器
@@ -441,8 +439,6 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
-
-		return this;
 	}
 	// ----------------------------------------------------------- Private method end
 }
