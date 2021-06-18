@@ -564,6 +564,21 @@ public class IterUtil {
 	}
 
 	/**
+	 * 获取集合的第一个非空元素
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素
+	 * @since 5.7.2
+	 */
+	public static <T> T getFirstNoneNull(Iterable<T> iterable) {
+		if (null == iterable) {
+			return null;
+		}
+		return getFirstNoneNull(iterable.iterator());
+	}
+
+	/**
 	 * 获取集合的第一个元素
 	 *
 	 * @param <T>      集合元素类型
@@ -573,6 +588,26 @@ public class IterUtil {
 	public static <T> T getFirst(Iterator<T> iterator) {
 		if (null != iterator && iterator.hasNext()) {
 			return iterator.next();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取集合的第一个非空元素
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterator {@link Iterator}
+	 * @return 第一个非空元素，null表示未找到
+	 * @since 5.7.2
+	 */
+	public static <T> T getFirstNoneNull(Iterator<T> iterator) {
+		if (null != iterator) {
+			while(iterator.hasNext()){
+				final T next = iterator.next();
+				if(null != next){
+					return next;
+				}
+			}
 		}
 		return null;
 	}

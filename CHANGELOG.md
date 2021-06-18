@@ -9,6 +9,7 @@
 * 【core   】     增加UserPassAuthenticator
 * 【db     】     获取分组数据源时，移除公共属性项
 * 【core   】     增加StrJoiner
+* 【core   】     增加TreeBuilder
 
 ### 🐞Bug修复
 * 【db     】     修复Oracle下别名错误造成的SQL语法啊错误（issue#I3VTQW@Gitee）

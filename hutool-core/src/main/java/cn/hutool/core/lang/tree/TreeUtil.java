@@ -1,13 +1,11 @@
 package cn.hutool.core.lang.tree;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.lang.tree.parser.DefaultNodeParser;
 import cn.hutool.core.lang.tree.parser.NodeParser;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +15,17 @@ import java.util.Map;
  * @author liangbaikai
  */
 public class TreeUtil {
+
+	/**
+	 * 构建单root节点树
+	 *
+	 * @param list 源数据集合
+	 * @return List
+	 * @since 5.7.2
+	 */
+	public static Tree<Integer> buildSingle(List<TreeNode<Integer>> list) {
+		return buildSingle(list, 0);
+	}
 
 	/**
 	 * 树构建
@@ -29,6 +38,19 @@ public class TreeUtil {
 	}
 
 	/**
+	 * 构建单root节点树
+	 *
+	 * @param <E>      ID类型
+	 * @param list     源数据集合
+	 * @param parentId 最顶层父id值 一般为 0 之类
+	 * @return List
+	 * @since 5.7.2
+	 */
+	public static <E> Tree<E> buildSingle(List<TreeNode<E>> list, E parentId) {
+		return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
+	}
+
+	/**
 	 * 树构建
 	 *
 	 * @param <E>      ID类型
@@ -38,6 +60,21 @@ public class TreeUtil {
 	 */
 	public static <E> List<Tree<E>> build(List<TreeNode<E>> list, E parentId) {
 		return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
+	}
+
+	/**
+	 * 构建单root节点树
+	 *
+	 * @param <T>        转换的实体 为数据源里的对象类型
+	 * @param <E>        ID类型
+	 * @param list       源数据集合
+	 * @param parentId   最顶层父id值 一般为 0 之类
+	 * @param nodeParser 转换器
+	 * @return List
+	 * @since 5.7.2
+	 */
+	public static <T, E> Tree<E> buildSingle(List<T> list, E parentId, NodeParser<T, E> nodeParser) {
+		return buildSingle(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
 	}
 
 	/**
@@ -66,37 +103,24 @@ public class TreeUtil {
 	 * @return List
 	 */
 	public static <T, E> List<Tree<E>> build(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
-		final Map<E, Tree<E>> map = new LinkedHashMap<>(list.size(), 1);
-		Tree<E> node;
-		for (T t : list) {
-			node = new Tree<>(treeNodeConfig);
-			nodeParser.parse(t, node);
-			map.put(node.getId(), node);
-		}
-
-		return build(map, rootId);
+		return buildSingle(list, rootId, treeNodeConfig, nodeParser).getChildren();
 	}
 
 	/**
-	 * 单点树构建，按照权重排序
+	 * 构建单root节点树
 	 *
-	 * @param <E>    ID类型
-	 * @param map    源数据Map
-	 * @param rootId 根节点id值 一般为 0 之类
-	 * @return {@link Tree}
+	 * @param <T>            转换的实体 为数据源里的对象类型
+	 * @param <E>            ID类型
+	 * @param list           源数据集合
+	 * @param rootId         最顶层父id值 一般为 0 之类
+	 * @param treeNodeConfig 配置
+	 * @param nodeParser     转换器
+	 * @return List
 	 * @since 5.7.2
 	 */
-	public static <E> Tree<E> buildSingle(Map<E, Tree<E>> map, E rootId) {
-		final List<Tree<E>> list = build(map, rootId);
-		if (CollUtil.isNotEmpty(list)) {
-			final TreeNodeConfig config = list.get(0).getConfig();
-			final Tree<E> root = new Tree<>(config);
-			root.setId(rootId);
-			root.setChildren(list);
-			return root;
-		}
-
-		return new Tree<E>(null).setId(rootId);
+	public static <T, E> Tree<E> buildSingle(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
+		return TreeBuilder.of(rootId, treeNodeConfig)
+				.append(list, nodeParser).build();
 	}
 
 	/**
@@ -109,22 +133,28 @@ public class TreeUtil {
 	 * @since 5.6.7
 	 */
 	public static <E> List<Tree<E>> build(Map<E, Tree<E>> map, E rootId) {
-		final Map<E, Tree<E>> eTreeMap = MapUtil.sortByValue(map, false);
-		List<Tree<E>> rootTreeList = CollUtil.newArrayList();
-		E parentId;
-		for (Tree<E> node : eTreeMap.values()) {
-			parentId = node.getParentId();
-			if (ObjectUtil.equals(rootId, parentId)) {
-				rootTreeList.add(node);
-				continue;
-			}
+		return buildSingle(map, rootId).getChildren();
+	}
 
-			final Tree<E> parentNode = map.get(parentId);
-			if (null != parentNode) {
-				parentNode.addChildren(node);
-			}
+	/**
+	 * 单点树构建，按照权重排序
+	 *
+	 * @param <E>    ID类型
+	 * @param map    源数据Map
+	 * @param rootId 根节点id值 一般为 0 之类
+	 * @return {@link Tree}
+	 * @since 5.7.2
+	 */
+	public static <E> Tree<E> buildSingle(Map<E, Tree<E>> map, E rootId) {
+		final Tree<E> tree = IterUtil.getFirstNoneNull(map.values());
+		if (null != tree) {
+			final TreeNodeConfig config = tree.getConfig();
+			return TreeBuilder.of(rootId, config)
+					.append(map)
+					.build();
 		}
-		return rootTreeList;
+
+		return createEmptyNode(rootId);
 	}
 
 	/**
@@ -189,5 +219,17 @@ public class TreeUtil {
 			parent = parent.getParent();
 		}
 		return result;
+	}
+
+	/**
+	 * 创建空Tree的节点
+	 *
+	 * @param id  节点ID
+	 * @param <E> 节点ID类型
+	 * @return {@link Tree}
+	 * @since 5.7.2
+	 */
+	public static <E> Tree<E> createEmptyNode(E id) {
+		return new Tree<E>().setId(id);
 	}
 }
