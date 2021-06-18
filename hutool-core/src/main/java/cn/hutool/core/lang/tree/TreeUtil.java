@@ -60,7 +60,7 @@ public class TreeUtil {
 	 * @param <T>            转换的实体 为数据源里的对象类型
 	 * @param <E>            ID类型
 	 * @param list           源数据集合
-	 * @param rootId       最顶层父id值 一般为 0 之类
+	 * @param rootId         最顶层父id值 一般为 0 之类
 	 * @param treeNodeConfig 配置
 	 * @param nodeParser     转换器
 	 * @return List
@@ -78,11 +78,33 @@ public class TreeUtil {
 	}
 
 	/**
+	 * 单点树构建，按照权重排序
+	 *
+	 * @param <E>    ID类型
+	 * @param map    源数据Map
+	 * @param rootId 根节点id值 一般为 0 之类
+	 * @return {@link Tree}
+	 * @since 5.7.2
+	 */
+	public static <E> Tree<E> buildSingle(Map<E, Tree<E>> map, E rootId) {
+		final List<Tree<E>> list = build(map, rootId);
+		if (CollUtil.isNotEmpty(list)) {
+			final TreeNodeConfig config = list.get(0).getConfig();
+			final Tree<E> root = new Tree<>(config);
+			root.setId(rootId);
+			root.setChildren(list);
+			return root;
+		}
+
+		return new Tree<E>(null).setId(rootId);
+	}
+
+	/**
 	 * 树构建，按照权重排序
 	 *
-	 * @param <E>            ID类型
-	 * @param map           源数据Map
-	 * @param rootId       最顶层父id值 一般为 0 之类
+	 * @param <E>    ID类型
+	 * @param map    源数据Map
+	 * @param rootId 最顶层父id值 一般为 0 之类
 	 * @return List
 	 * @since 5.6.7
 	 */
@@ -92,13 +114,13 @@ public class TreeUtil {
 		E parentId;
 		for (Tree<E> node : eTreeMap.values()) {
 			parentId = node.getParentId();
-			if(ObjectUtil.equals(rootId, parentId)){
+			if (ObjectUtil.equals(rootId, parentId)) {
 				rootTreeList.add(node);
 				continue;
 			}
 
 			final Tree<E> parentNode = map.get(parentId);
-			if(null != parentNode){
+			if (null != parentNode) {
 				parentNode.addChildren(node);
 			}
 		}
@@ -109,9 +131,9 @@ public class TreeUtil {
 	 * 获取ID对应的节点，如果有多个ID相同的节点，只返回第一个。<br>
 	 * 此方法只查找此节点及子节点，采用递归深度优先遍历。
 	 *
-	 * @param <T> ID类型
+	 * @param <T>  ID类型
 	 * @param node 节点
-	 * @param id ID
+	 * @param id   ID
 	 * @return 节点
 	 * @since 5.2.4
 	 */
@@ -121,7 +143,7 @@ public class TreeUtil {
 		}
 
 		final List<Tree<T>> children = node.getChildren();
-		if(null == children) {
+		if (null == children) {
 			return null;
 		}
 
@@ -145,15 +167,15 @@ public class TreeUtil {
 	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
 	 * 返回结果就是：[研发一部, 研发中心, 技术中心]
 	 *
-	 * @param <T> 节点ID类型
-	 * @param node 节点
+	 * @param <T>                节点ID类型
+	 * @param node               节点
 	 * @param includeCurrentNode 是否包含当前节点的名称
 	 * @return 所有父节点名称列表，node为null返回空List
 	 * @since 5.2.4
 	 */
 	public static <T> List<CharSequence> getParentsName(Tree<T> node, boolean includeCurrentNode) {
 		final List<CharSequence> result = new ArrayList<>();
-		if(null == node){
+		if (null == node) {
 			return result;
 		}
 

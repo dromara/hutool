@@ -12,6 +12,8 @@ import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 
 import java.nio.charset.Charset;
+import java.security.Key;
+import java.security.KeyPair;
 import java.util.List;
 import java.util.Map;
 
@@ -123,6 +125,30 @@ public class JWT {
 	 */
 	public JWT setSigner(String algorithmId, byte[] key) {
 		return setSigner(JWTSignerUtil.createSigner(algorithmId, key));
+	}
+
+	/**
+	 * 设置签名算法
+	 *
+	 * @param algorithmId 签名算法ID，如HS256
+	 * @param key         密钥
+	 * @return this
+	 * @since 5.7.2
+	 */
+	public JWT setSigner(String algorithmId, Key key) {
+		return setSigner(JWTSignerUtil.createSigner(algorithmId, key));
+	}
+
+	/**
+	 * 设置非对称签名算法
+	 *
+	 * @param algorithmId 签名算法ID，如HS256
+	 * @param keyPair     密钥对
+	 * @return this
+	 * @since 5.7.2
+	 */
+	public JWT setSigner(String algorithmId, KeyPair keyPair) {
+		return setSigner(JWTSignerUtil.createSigner(algorithmId, keyPair));
 	}
 
 	/**

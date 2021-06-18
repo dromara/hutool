@@ -41,6 +41,16 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	}
 
 	/**
+	 * 获取节点配置
+	 *
+	 * @return 节点配置
+	 * @since 5.7.2
+	 */
+	public TreeNodeConfig getConfig() {
+		return this.treeNodeConfig;
+	}
+
+	/**
 	 * 获取父节点
 	 *
 	 * @return 父节点
@@ -172,10 +182,10 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @since 5.6.7
 	 */
 	@SafeVarargs
-	public final Tree<T> addChildren(Tree<T>... children){
-		if(ArrayUtil.isNotEmpty(children)){
+	public final Tree<T> addChildren(Tree<T>... children) {
+		if (ArrayUtil.isNotEmpty(children)) {
 			List<Tree<T>> childrenList = this.getChildren();
-			if(null == childrenList){
+			if (null == childrenList) {
 				childrenList = new ArrayList<>();
 				setChildren(childrenList);
 			}
@@ -207,16 +217,17 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 
 	/**
 	 * 打印
-	 * @param tree 树
+	 *
+	 * @param tree   树
 	 * @param writer Writer
 	 * @param intent 缩进量
 	 */
-	private static void printTree(Tree<?> tree, PrintWriter writer, int intent){
+	private static void printTree(Tree<?> tree, PrintWriter writer, int intent) {
 		writer.println(StrUtil.format("{}{}[{}]", StrUtil.repeat(CharUtil.SPACE, intent), tree.getName(), tree.getId()));
 		writer.flush();
 
 		final List<? extends Tree<?>> children = tree.getChildren();
-		if(CollUtil.isNotEmpty(children)){
+		if (CollUtil.isNotEmpty(children)) {
 			for (Tree<?> child : children) {
 				printTree(child, writer, intent + 2);
 			}

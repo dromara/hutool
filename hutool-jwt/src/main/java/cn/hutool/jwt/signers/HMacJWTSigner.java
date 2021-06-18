@@ -51,7 +51,7 @@ public class HMacJWTSigner implements JWTSigner {
 
 	@Override
 	public String sign(String headerBase64, String payloadBase64) {
-		return hMac.digestHex(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset);
+		return hMac.digestBase64(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset, true);
 	}
 
 	@Override

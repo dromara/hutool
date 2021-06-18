@@ -200,6 +200,20 @@ public class Base64 {
 	}
 
 	/**
+	 * 编码为Base64字符串<br>
+	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
+	 *
+	 * @param arr         被编码的数组
+	 * @param isMultiLine 在76个char之后是CRLF还是EOF
+	 * @param isUrlSafe   是否使用URL安全字符，一般为{@code false}
+	 * @return 编码后的bytes
+	 * @since 5.7.2
+	 */
+	public static String encodeStr(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
+		return Base64Encoder.encodeStr(arr, isMultiLine, isUrlSafe);
+	}
+
+	/**
 	 * 编码为Base64<br>
 	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
 	 *

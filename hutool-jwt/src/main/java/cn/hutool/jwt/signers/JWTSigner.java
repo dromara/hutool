@@ -12,7 +12,7 @@ public interface JWTSigner {
 	 *
 	 * @param headerBase64  JWT头的JSON字符串的Base64表示
 	 * @param payloadBase64 JWT载荷的JSON字符串Base64表示
-	 * @return 签名结果，即JWT的第三部分
+	 * @return 签名结果Base64，即JWT的第三部分
 	 */
 	String sign(String headerBase64, String payloadBase64);
 
