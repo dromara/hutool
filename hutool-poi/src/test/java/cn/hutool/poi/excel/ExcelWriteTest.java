@@ -21,7 +21,10 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -569,5 +572,32 @@ public class ExcelWriteTest {
 		writer.write(rows);
 		// 关闭writer，释放内存
 		writer.close();
+	}
+
+	/**
+	 * issue#1659@Github
+	 * 测试使用BigWriter写出，ExcelWriter修改失败
+	 */
+	@Test
+	@Ignore
+	public void editTest(){
+		// 生成文件
+		File file = new File("d:/test/100_.xlsx");
+		FileUtil.del(file);
+
+		BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+		writer.disableDefaultStyle();
+		List<List<String>> rows = Collections.singletonList(Arrays.asList("哈哈", "嘿嘿"));
+		writer.write(rows);
+		writer.close();
+
+		// 修改文件
+		ExcelWriter writer2 = ExcelUtil.getWriter(file);
+		writer2.disableDefaultStyle();
+		writer2.writeCellValue(0, 0, "a");
+		writer2.close();
+
+		final ExcelReader reader = ExcelUtil.getReader(file);
+		Console.log(reader.read());
 	}
 }
