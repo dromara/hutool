@@ -158,10 +158,10 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
+		BigDecimal result = StrUtil.isBlank(value) ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			if (null != value) {
+			if (StrUtil.isNotBlank(value)) {
 				result = result.add(new BigDecimal(value));
 			}
 		}
@@ -298,10 +298,10 @@ public class NumberUtil {
 		}
 
 		String value = values[0];
-		BigDecimal result = null == value ? BigDecimal.ZERO : new BigDecimal(value);
+		BigDecimal result = StrUtil.isBlank(value) ? BigDecimal.ZERO : new BigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			if (null != value) {
+			if (StrUtil.isNotBlank(value)) {
 				result = result.subtract(new BigDecimal(value));
 			}
 		}
@@ -729,7 +729,9 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
-		return div(new BigDecimal(v1), new BigDecimal(v2), scale, roundingMode);
+		final BigDecimal bd1 = StrUtil.isBlank(v1) ? BigDecimal.ZERO : new BigDecimal(v1);
+		final BigDecimal bd2 = StrUtil.isBlank(v2) ? BigDecimal.ZERO : new BigDecimal(v2);
+		return div(bd1, bd2, scale, roundingMode);
 	}
 
 	/**

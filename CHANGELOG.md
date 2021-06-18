@@ -11,6 +11,7 @@
 * 【core   】     增加StrJoiner
 * 【core   】     增加TreeBuilder
 * 【core   】     IterUtil增加getFirstNonNull方法
+* 【core   】     NumberUtil判空改为isBlank（issue#1664@Github）
 
 ### 🐞Bug修复
 * 【db     】     修复Oracle下别名错误造成的SQL语法啊错误（issue#I3VTQW@Gitee）
