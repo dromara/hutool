@@ -13,6 +13,7 @@
 * 【core   】     IterUtil增加getFirstNonNull方法
 * 【core   】     NumberUtil判空改为isBlank（issue#1664@Github）
 * 【jwt    】     增加JWTValidator、RegisteredPayload
+* 【db     】     增加Phoenix方言（issue#1656@Github）
 
 ### 🐞Bug修复
 * 【db     】     修复Oracle下别名错误造成的SQL语法啊错误（issue#I3VTQW@Gitee）

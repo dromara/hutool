@@ -151,7 +151,7 @@ public class SqlBuilder implements Builder<String> {
 			entity.setTableName(wrapper.wrap(entity.getTableName()));
 		}
 
-		final boolean isOracle = StrUtil.equalsAnyIgnoreCase(dialectName, DialectName.ORACLE.name());// 对Oracle的特殊处理
+		final boolean isOracle = DialectName.ORACLE.match(dialectName);// 对Oracle的特殊处理
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
 
@@ -181,8 +181,16 @@ public class SqlBuilder implements Builder<String> {
 				}
 			}
 		}
-		sql.append("INSERT INTO ")//
-				.append(entity.getTableName()).append(" (").append(fieldsPart).append(") VALUES (")//
+
+		// issue#1656@Github Phoenix兼容
+		if (DialectName.PHOENIX.match(dialectName)) {
+			sql.append("UPSERT INTO ");
+		} else {
+			sql.append("INSERT INTO ");
+		}
+
+		sql.append(entity.getTableName())
+				.append(" (").append(fieldsPart).append(") VALUES (")//
 				.append(placeHolder).append(")");
 
 		return this;

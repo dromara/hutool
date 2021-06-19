@@ -7,6 +7,7 @@ import cn.hutool.db.dialect.impl.AnsiSqlDialect;
 import cn.hutool.db.dialect.impl.H2Dialect;
 import cn.hutool.db.dialect.impl.MysqlDialect;
 import cn.hutool.db.dialect.impl.OracleDialect;
+import cn.hutool.db.dialect.impl.PhoenixDialect;
 import cn.hutool.db.dialect.impl.PostgresqlDialect;
 import cn.hutool.db.dialect.impl.SqlServer2012Dialect;
 import cn.hutool.db.dialect.impl.Sqlite3Dialect;
@@ -64,6 +65,8 @@ public class DialectFactory implements DriverNamePool{
 				return new H2Dialect();
 			} else if (DRIVER_SQLSERVER.equalsIgnoreCase(driverName)) {
 				return new SqlServer2012Dialect();
+			} else if (DRIVER_PHOENIX.equalsIgnoreCase(driverName)) {
+				return new PhoenixDialect();
 			}
 		}
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
