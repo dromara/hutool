@@ -133,7 +133,8 @@ public class HMac implements Serializable {
 	/**
 	 * 生成文件摘要，并转为Base64
 	 *
-	 * @param data 被摘要数据
+	 * @param data      被摘要数据
+	 * @param isUrlSafe 是否使用URL安全字符
 	 * @return 摘要
 	 */
 	public String digestBase64(String data, boolean isUrlSafe) {
