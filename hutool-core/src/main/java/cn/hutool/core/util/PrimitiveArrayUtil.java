@@ -1593,6 +1593,7 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
 	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
 	@Deprecated
@@ -1619,6 +1620,7 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
 	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
 	@Deprecated
@@ -1645,6 +1647,7 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
 	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
 	@Deprecated
@@ -1671,6 +1674,7 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
 	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
 	@Deprecated
@@ -1697,6 +1701,7 @@ public class PrimitiveArrayUtil {
 	 *
 	 * @param array       数组
 	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
 	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
 	 */
 	@Deprecated
