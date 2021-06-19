@@ -587,6 +587,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>    数组元素类型
 	 * @param array  数组
 	 * @param editor 编辑器接口，{@code null}返回原集合
+	 * @return 编辑后的数组
 	 * @since 5.3.3
 	 */
 	public static <T> T[] edit(T[] array, Editor<T> editor) {
