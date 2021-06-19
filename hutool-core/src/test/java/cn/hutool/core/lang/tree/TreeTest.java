@@ -50,7 +50,7 @@ public class TreeTest {
 		// 自定义属性名 都要默认值的
 		treeNodeConfig.setWeightKey("order");
 		treeNodeConfig.setIdKey("rid");
-		treeNodeConfig.setDeep(3);
+		treeNodeConfig.setDeep(2);
 
 		//转换器
 		List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
@@ -66,4 +66,5 @@ public class TreeTest {
 
 		Assert.assertEquals(treeNodes.size(), 2);
 	}
+
 }

@@ -14,7 +14,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 字段验证器
+ * 字段验证器（验证器），分两种类型的验证：
+ *
+ * <ul>
+ *     <li>isXXX：通过返回boolean值判断是否满足给定格式。</li>
+ *     <li>validateXXX：通过抛出异常{@link ValidateException}检查是否满足给定格式。</li>
+ * </ul>
+ *
+ * 主要验证字段非空、是否为满足指定格式等（如是否为Email、电话等）
  *
  * @author Looly
  */

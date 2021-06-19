@@ -88,7 +88,7 @@ public class PatternPool {
 	 *
 	 * @see <a href="https://baike.baidu.com/item/800">800</a>
 	 */
-	public final static Pattern TEL_400_800 = Pattern.compile("(?:(?:0\\d{2,3}[\\- ]?[1-9]\\d{6,7})|(?:[48]00[\\- ]?[1-9]\\d{6}))");
+	public final static Pattern TEL_400_800 = Pattern.compile("0\\d{2,3}[\\- ]?[1-9]\\d{6,7}|[48]00[\\- ]?[1-9]\\d{6}");
 	/**
 	 * 18位身份证号码
 	 */
@@ -124,7 +124,7 @@ public class PatternPool {
 	/**
 	 * MAC地址正则
 	 */
-	public static final Pattern MAC_ADDRESS = Pattern.compile("((?:[A-F0-9]{1,2}[:-]){5}[A-F0-9]{1,2})|(?:0x)(\\d{12})(?:.+ETHER)", Pattern.CASE_INSENSITIVE);
+	public static final Pattern MAC_ADDRESS = Pattern.compile("((?:[A-F0-9]{1,2}[:-]){5}[A-F0-9]{1,2})|0x(\\d{12}).+ETHER", Pattern.CASE_INSENSITIVE);
 	/**
 	 * 16进制字符串
 	 */

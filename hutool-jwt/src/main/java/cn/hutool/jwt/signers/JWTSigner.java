@@ -21,7 +21,7 @@ public interface JWTSigner {
 	 *
 	 * @param headerBase64  JWT头的JSON字符串Base64表示
 	 * @param payloadBase64 JWT载荷的JSON字符串Base64表示
-	 * @param signBase64 被验证的签名Base64表示
+	 * @param signBase64    被验证的签名Base64表示
 	 * @return 签名是否一致
 	 */
 	boolean verify(String headerBase64, String payloadBase64, String signBase64);
@@ -32,4 +32,14 @@ public interface JWTSigner {
 	 * @return 算法
 	 */
 	String getAlgorithm();
+
+	/**
+	 * 获取算法ID，即算法的简写形式，如HS256
+	 *
+	 * @return 算法ID
+	 * @since 5.7.2
+	 */
+	default String getAlgorithmId() {
+		return AlgorithmUtil.getId(getAlgorithm());
+	}
 }

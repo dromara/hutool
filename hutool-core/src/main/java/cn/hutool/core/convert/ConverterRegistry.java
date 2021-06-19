@@ -118,6 +118,9 @@ public class ConverterRegistry implements Serializable {
 		return SingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 构造
+	 */
 	public ConverterRegistry() {
 		defaultConverter();
 		putCustomBySpi();

@@ -10,6 +10,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import cn.hutool.jwt.signers.NoneJWTSigner;
 
 import java.nio.charset.Charset;
 import java.security.Key;
@@ -20,11 +21,11 @@ import java.util.Map;
 /**
  * JSON Web Token (JWT)，基于JSON的开放标准（(RFC 7519)用于在网络应用环境间传递声明。<br>
  * <p>
- * 结构：xxxxx.yyyyy.zzzzz
+ * 结构：header.payload.signature
  * <ul>
  *     <li>header：主要声明了JWT的签名算法</li>
  *     <li>payload：主要承载了各种声明并传递明文数据</li>
- *     <li>signture：拥有该部分的JWT被称为JWS，也就是签了名的JWS</li>
+ *     <li>signature：拥有该部分的JWT被称为JWS，也就是签了名的JWS</li>
  * </ul>
  *
  * <p>
@@ -32,8 +33,9 @@ import java.util.Map;
  * </p>
  *
  * @author looly
+ * @since 5.7.0
  */
-public class JWT {
+public class JWT implements RegisteredPayload<JWT>{
 
 	private final JWTHeader header;
 	private final JWTPayload payload;
@@ -163,12 +165,31 @@ public class JWT {
 	}
 
 	/**
+	 * 获取JWT算法签名器
+	 *
+	 * @return JWT算法签名器
+	 */
+	public JWTSigner getSigner(){
+		return this.signer;
+	}
+
+	/**
 	 * 获取所有头信息
 	 *
 	 * @return 头信息
 	 */
 	public JSONObject getHeaders() {
 		return this.header.getClaimsJson();
+	}
+
+	/**
+	 * 获取头
+	 *
+	 * @return 头信息
+	 * @since 5.7.2
+	 */
+	public JWTHeader getHeader() {
+		return this.header;
 	}
 
 	/**
@@ -224,13 +245,23 @@ public class JWT {
 	}
 
 	/**
+	 * 获取载荷对象
+	 *
+	 * @return 载荷信息
+	 * @since 5.7.2
+	 */
+	public JWTPayload getPayload() {
+		return this.payload;
+	}
+
+	/**
 	 * 获取载荷信息
 	 *
 	 * @param name 载荷信息名称
 	 * @return 载荷信息
 	 */
 	public Object getPayload(String name) {
-		return this.payload.getClaim(name);
+		return getPayload().getClaim(name);
 	}
 
 	/**
@@ -240,6 +271,7 @@ public class JWT {
 	 * @param value 头
 	 * @return this
 	 */
+	@Override
 	public JWT setPayload(String name, Object value) {
 		this.payload.setClaim(name, value);
 		return this;
@@ -304,7 +336,10 @@ public class JWT {
 	 * @return 是否有效
 	 */
 	public boolean verify(JWTSigner signer) {
-		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
+		if(null == signer){
+			// 如果无签名器提供，默认认为是无签名JWT信息
+			signer = NoneJWTSigner.NONE;
+		}
 
 		final List<String> tokens = this.tokens;
 		if (CollUtil.isEmpty(tokens)) {

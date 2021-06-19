@@ -724,8 +724,8 @@ public class DateTime extends Date {
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
 	 *
-	 * @param beginDate 起始日期
-	 * @param endDate   结束日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
 	 * @return 是否在范围内
 	 * @since 3.0.8
 	 */

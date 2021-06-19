@@ -1464,8 +1464,8 @@ public class DateUtil extends CalendarUtil {
 	 * 起始日期和结束日期可以互换
 	 *
 	 * @param date      被检查的日期
-	 * @param beginDate 起始日期
-	 * @param endDate   结束日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
 	 * @return 是否在范围内
 	 * @since 3.0.8
 	 */

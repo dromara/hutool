@@ -164,11 +164,22 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 		return this;
 	}
 
+	/**
+	 * 获取所有子节点
+	 *
+	 * @return 所有子节点
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Tree<T>> getChildren() {
 		return (List<Tree<T>>) this.get(treeNodeConfig.getChildrenKey());
 	}
 
+	/**
+	 * 设置子节点，设置后会覆盖所有原有子节点
+	 *
+	 * @param children 子节点列表
+	 * @return this
+	 */
 	public Tree<T> setChildren(List<Tree<T>> children) {
 		this.put(treeNodeConfig.getChildrenKey(), children);
 		return this;
