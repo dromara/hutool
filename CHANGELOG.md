@@ -20,6 +20,7 @@
 * 【poi    】     修复使用BigWriter写出，ExcelWriter修改单元格值失败的问题（issue#I3VSDO@Gitee）
 * 【jwt    】     修复Hmac算法下生成签名是hex的问题（issue#I3W6IP@Gitee）
 * 【core   】     修复TreeUtil.build中deep失效问题（issue#1661@Github）
+* 【json   】     修复XmlUtil.xmlToBean判断问题（issue#1663@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
