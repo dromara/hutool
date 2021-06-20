@@ -188,4 +188,46 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
+
+	/**
+	 * https://github.com/looly/hutool/issues/1177
+	 */
+	@Test
+	public void parseMicroMessengerTest() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Mobile/15A372 MicroMessenger/7.0.17(0x17001127) NetType/WIFI Language/zh_CN";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("MicroMessenger", ua.getBrowser().toString());
+		Assert.assertEquals("7.0.17", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("604.1.38", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseWorkWxTest() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 wxwork/3.0.31 MicroMessenger/7.0.1 Language/zh";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("wxwork", ua.getBrowser().toString());
+		Assert.assertEquals("3.0.31", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("605.1.15", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseDingTalkTest() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/18A373 AliApp(DingTalk/5.1.33) com.laiwang.DingTalk/13976299 Channel/201200 language/zh-Hans-CN WK";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("DingTalk", ua.getBrowser().toString());
+		Assert.assertEquals("5.1.33", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("605.1.15", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
 }

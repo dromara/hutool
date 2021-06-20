@@ -9,12 +9,12 @@ import java.nio.charset.Charset;
 /**
  * Murmur3 32bit、64bit、128bit 哈希算法实现<br>
  * 此算法来自于：https://github.com/xlturing/Simhash4J/blob/master/src/main/java/bee/simhash/main/Murmur3.java
- * 
+ *
  * <p>
  * 32-bit Java port of https://code.google.com/p/smhasher/source/browse/trunk/MurmurHash3.cpp#94 <br>
  * 128-bit Java port of https://code.google.com/p/smhasher/source/browse/trunk/MurmurHash3.cpp#255
  * </p>
- * 
+ *
  * @author looly,Simhash4J
  * @since 4.3.3
  */
@@ -41,7 +41,7 @@ public class MurmurHash implements Serializable{
 
 	private static final int DEFAULT_SEED = 0;
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
-	
+
 	/**
 	 * Murmur3 32-bit Hash值计算
 	 *
@@ -118,7 +118,7 @@ public class MurmurHash implements Serializable{
 
 		return hash;
 	}
-	
+
 	/**
 	 * Murmur3 64-bit Hash值计算
 	 *
@@ -132,7 +132,7 @@ public class MurmurHash implements Serializable{
 	/**
 	 * Murmur3 64-bit 算法<br>
 	 * This is essentially MSB 8 bytes of Murmur3 128-bit variant.
-	 * 
+	 *
 	 *
 	 * @param data 数据
 	 * @return Hash值
@@ -204,7 +204,7 @@ public class MurmurHash implements Serializable{
 
 		return hash;
 	}
-	
+
 	/**
 	 * Murmur3 128-bit Hash值计算
 	 *

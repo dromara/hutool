@@ -19,7 +19,6 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import java.io.IOException;
@@ -55,8 +54,12 @@ public class SoapClient extends HttpBase<SoapClient> {
 
 	/**
 	 * XML消息体的Content-Type
+	 * soap1.1 : text/xml
+	 * soap1.2 : application/soap+xml
+	 * soap1.1与soap1.2区别:  https://www.cnblogs.com/qlqwjy/p/7577147.html
 	 */
-	private static final String TEXT_XML_CONTENT_TYPE = "text/xml;charset=";
+	private static final String CONTENT_TYPE_SOAP11_TEXT_XML = "text/xml;charset=";
+	private static final String CONTENT_TYPE_SOAP12_SOAP_XML = "application/soap+xml;charset=";
 
 	/**
 	 * 请求的URL地址
@@ -88,12 +91,18 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * 应用于方法上的命名空间URI
 	 */
 	private final String namespaceURI;
+	/**
+	 * Soap协议
+	 * soap1.1 : text/xml
+	 * soap1.2 : application/soap+xml
+	 */
+	private final SoapProtocol protocol;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
 	 *
 	 * @param url WS的URL地址
-	 * @return {@link SoapClient}
+	 * @return this
 	 */
 	public static SoapClient create(String url) {
 		return new SoapClient(url);
@@ -104,7 +113,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 *
 	 * @param url      WS的URL地址
 	 * @param protocol 协议，见{@link SoapProtocol}
-	 * @return {@link SoapClient}
+	 * @return this
 	 */
 	public static SoapClient create(String url, SoapProtocol protocol) {
 		return new SoapClient(url, protocol);
@@ -116,7 +125,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @param url          WS的URL地址
 	 * @param protocol     协议，见{@link SoapProtocol}
 	 * @param namespaceURI 方法上的命名空间URI
-	 * @return {@link SoapClient}
+	 * @return this
 	 * @since 4.5.6
 	 */
 	public static SoapClient create(String url, SoapProtocol protocol, String namespaceURI) {
@@ -153,6 +162,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	public SoapClient(String url, SoapProtocol protocol, String namespaceURI) {
 		this.url = url;
 		this.namespaceURI = namespaceURI;
+		this.protocol = protocol;
 		init(protocol);
 	}
 
@@ -231,59 +241,19 @@ public class SoapClient extends HttpBase<SoapClient> {
 	}
 
 	/**
-	 * 设置SOAP头信息
-	 *
-	 * @param name 头信息标签名
-	 * @return this
-	 * @deprecated 为了和Http Hrader区分，请使用{@link #setSOAPHeader(QName)}
-	 */
-	@Deprecated
-	public SoapClient setHeader(QName name) {
-		return setSOAPHeader(name, null, null, null, null);
-	}
-
-	/**
-	 * 设置SOAP头信息
-	 *
-	 * @param name 头信息标签名
-	 * @return this
-	 */
-	public SoapClient setSOAPHeader(QName name) {
-		return setSOAPHeader(name, null, null, null, null);
-	}
-
-	/**
-	 * 设置SOAP头信息
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
 	 *
 	 * @param name           头信息标签名
 	 * @param actorURI       中间的消息接收者
 	 * @param roleUri        Role的URI
 	 * @param mustUnderstand 标题项对于要对其进行处理的接收者来说是强制的还是可选的
 	 * @param relay          relay属性
-	 * @return this
-	 * @deprecated 为了和Http Hrader区分，请使用{@link #setSOAPHeader(QName, String, String, Boolean, Boolean)}
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.4
 	 */
-	@Deprecated
-	public SoapClient setHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
-		return setSOAPHeader(name, actorURI, roleUri, mustUnderstand, relay);
-	}
-
-	/**
-	 * 设置SOAP头信息
-	 *
-	 * @param name           头信息标签名
-	 * @param actorURI       中间的消息接收者
-	 * @param roleUri        Role的URI
-	 * @param mustUnderstand 标题项对于要对其进行处理的接收者来说是强制的还是可选的
-	 * @param relay          relay属性
-	 * @return this
-	 */
-	public SoapClient setSOAPHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
-		SOAPHeader header;
-		SOAPHeaderElement ele;
+	public SOAPHeaderElement addSOAPHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
+		final SOAPHeaderElement ele = addSOAPHeader(name);
 		try {
-			header = this.message.getSOAPHeader();
-			ele = header.addHeaderElement(name);
 			if (StrUtil.isNotBlank(roleUri)) {
 				ele.setRole(roleUri);
 			}
@@ -301,7 +271,49 @@ public class SoapClient extends HttpBase<SoapClient> {
 			ele.setMustUnderstand(mustUnderstand);
 		}
 
-		return this;
+		return ele;
+	}
+
+	/**
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
+	 *
+	 * @param localName 头节点名称
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.7
+	 */
+	public SOAPHeaderElement addSOAPHeader(String localName) {
+		return addSOAPHeader(new QName(localName));
+	}
+
+	/**
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
+	 *
+	 * @param localName 头节点名称
+	 * @param value     头节点的值
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.7
+	 */
+	public SOAPHeaderElement addSOAPHeader(String localName, String value) {
+		final SOAPHeaderElement soapHeaderElement = addSOAPHeader(localName);
+		soapHeaderElement.setTextContent(value);
+		return soapHeaderElement;
+	}
+
+	/**
+	 * 增加SOAP头信息，方法返回{@link SOAPHeaderElement}可以设置具体属性和子节点
+	 *
+	 * @param name 头节点名称
+	 * @return {@link SOAPHeaderElement}
+	 * @since 5.4.4
+	 */
+	public SOAPHeaderElement addSOAPHeader(QName name) {
+		SOAPHeaderElement ele;
+		try {
+			ele = this.message.getSOAPHeader().addHeaderElement(name);
+		} catch (SOAPException e) {
+			throw new SoapRuntimeException(e);
+		}
+		return ele;
 	}
 
 	/**
@@ -590,7 +602,14 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 请求的Content-Type
 	 */
 	private String getXmlContentType() {
-		return TEXT_XML_CONTENT_TYPE.concat(this.charset.toString());
+		switch (this.protocol){
+			case SOAP_1_1:
+				return CONTENT_TYPE_SOAP11_TEXT_XML.concat(this.charset.toString());
+			case SOAP_1_2:
+				return CONTENT_TYPE_SOAP12_SOAP_XML.concat(this.charset.toString());
+			default:
+				throw new SoapRuntimeException("Unsupported protocol: {}", this.protocol);
+		}
 	}
 
 	/**

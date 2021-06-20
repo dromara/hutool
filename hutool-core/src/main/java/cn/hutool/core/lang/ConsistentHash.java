@@ -18,14 +18,14 @@ import java.util.TreeMap;
  */
 public class ConsistentHash<T> implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Hash计算对象，用于自定义hash算法 */
 	Hash32<Object> hashFunc;
 	/** 复制的节点个数 */
 	private final int numberOfReplicas;
 	/** 一致性Hash环 */
 	private final SortedMap<Integer, T> circle = new TreeMap<>();
-	
+
 	/**
 	 * 构造，使用Java默认的Hash算法
 	 * @param numberOfReplicas 复制的节点个数，增加每个节点的复制节点有利于负载均衡

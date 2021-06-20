@@ -80,7 +80,7 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr Date字符串
 	 * @param format  格式
-	 * @return {@link DateTime}
+	 * @return this
 	 * @see DatePattern
 	 */
 	public static DateTime of(String dateStr, String format) {
@@ -122,7 +122,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(Date date) {
 		this(
-				date.getTime(),//
+				date,//
 				(date instanceof DateTime) ? ((DateTime) date).timeZone : TimeZone.getDefault()
 		);
 	}
@@ -135,7 +135,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(Date date, TimeZone timeZone) {
-		this(date.getTime(), timeZone);
+		this(ObjectUtil.defaultIfNull(date, new Date()).getTime(), timeZone);
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class DateTime extends Date {
 	/**
 	 * 给定日期Instant的构造
 	 *
-	 * @param instant  {@link Instant} 对象
-	 * @param zoneId 时区ID
+	 * @param instant {@link Instant} 对象
+	 * @param zoneId  时区ID
 	 * @since 5.0.5
 	 */
 	public DateTime(Instant instant, ZoneId zoneId) {
@@ -212,6 +212,38 @@ public class DateTime extends Date {
 	}
 
 	/**
+	 * 构造格式：<br>
+	 * <ol>
+	 * <li>yyyy-MM-dd HH:mm:ss</li>
+	 * <li>yyyy/MM/dd HH:mm:ss</li>
+	 * <li>yyyy.MM.dd HH:mm:ss</li>
+	 * <li>yyyy年MM月dd日 HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd</li>
+	 * <li>yyyy/MM/dd</li>
+	 * <li>yyyy.MM.dd</li>
+	 * <li>HH:mm:ss</li>
+	 * <li>HH时mm分ss秒</li>
+	 * <li>yyyy-MM-dd HH:mm</li>
+	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * <li>yyyyMMddHHmmss</li>
+	 * <li>yyyyMMddHHmmssSSS</li>
+	 * <li>yyyyMMdd</li>
+	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
+	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * </ol>
+	 *
+	 * @param dateStr Date字符串
+	 * @since 5.6.2
+	 */
+	public DateTime(CharSequence dateStr) {
+		this(DateUtil.parse(dateStr));
+	}
+
+	/**
 	 * 构造
 	 *
 	 * @param dateStr Date字符串
@@ -219,7 +251,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, String format) {
-		this(dateStr, new SimpleDateFormat(format));
+		this(dateStr, DateUtil.newSimpleFormat(format));
 	}
 
 	/**
@@ -268,7 +300,7 @@ public class DateTime extends Date {
 	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 */
 	public DateTime offset(DateField datePart, int offset) {
-		if(DateField.ERA == datePart){
+		if (DateField.ERA == datePart) {
 			throw new IllegalArgumentException("ERA is not support offset!");
 		}
 
@@ -282,7 +314,7 @@ public class DateTime extends Date {
 
 	/**
 	 * 调整日期和时间<br>
-	 * 返回调整后的新{@link DateTime}，不影响原对象
+	 * 返回调整后的新DateTime，不影响原对象
 	 *
 	 * @param datePart 调整的部分 {@link DateField}
 	 * @param offset   偏移量，正数为向后偏移，负数为向前偏移
@@ -329,7 +361,7 @@ public class DateTime extends Date {
 	 *
 	 * @param field 表示日期的哪个部分的枚举 {@link DateField}
 	 * @param value 值
-	 * @return {@link DateTime}
+	 * @return this
 	 */
 	public DateTime setField(DateField field, int value) {
 		return setField(field.getValue(), value);
@@ -341,7 +373,7 @@ public class DateTime extends Date {
 	 *
 	 * @param field 表示日期的哪个部分的int值 {@link Calendar}
 	 * @param value 值
-	 * @return {@link DateTime}
+	 * @return this
 	 */
 	public DateTime setField(int field, int value) {
 		final Calendar calendar = toCalendar();
@@ -401,10 +433,11 @@ public class DateTime extends Date {
 
 	/**
 	 * 获取月，从1开始计数
+	 *
 	 * @return 月份，1表示一月
 	 * @since 5.4.1
 	 */
-	public int monthBaseOne(){
+	public int monthBaseOne() {
 		return month() + 1;
 	}
 
@@ -535,17 +568,6 @@ public class DateTime extends Date {
 	 * @return 毫秒数
 	 */
 	public int millisecond() {
-		return getField(DateField.MILLISECOND);
-	}
-
-	/**
-	 * 获得指定日期的毫秒数部分<br>
-	 *
-	 * @return 毫秒数
-	 * @deprecated 拼写错误，请使用{@link #millisecond()}
-	 */
-	@Deprecated
-	public int millsecond() {
 		return getField(DateField.MILLISECOND);
 	}
 
@@ -694,7 +716,7 @@ public class DateTime extends Date {
 	 * @param formatLevel 格式化级别
 	 * @return 相差时长
 	 */
-	public String between(Date date, DateUnit unit, BetweenFormater.Level formatLevel) {
+	public String between(Date date, DateUnit unit, BetweenFormatter.Level formatLevel) {
 		return new DateBetween(this, date).toString(formatLevel);
 	}
 
@@ -702,8 +724,8 @@ public class DateTime extends Date {
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
 	 *
-	 * @param beginDate 起始日期
-	 * @param endDate   结束日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
 	 * @return 是否在范围内
 	 * @since 3.0.8
 	 */
@@ -834,7 +856,7 @@ public class DateTime extends Date {
 	 * @return 时区
 	 * @since 5.0.5
 	 */
-	public TimeZone getTimeZone(){
+	public TimeZone getTimeZone() {
 		return this.timeZone;
 	}
 
@@ -844,7 +866,7 @@ public class DateTime extends Date {
 	 * @return 时区ID
 	 * @since 5.0.5
 	 */
-	public ZoneId getZoneId(){
+	public ZoneId getZoneId() {
 		return this.timeZone.toZoneId();
 	}
 
@@ -894,9 +916,7 @@ public class DateTime extends Date {
 	 */
 	public String toString(TimeZone timeZone) {
 		if (null != timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-			simpleDateFormat.setTimeZone(timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATETIME_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_DATETIME_FORMAT);
 	}
@@ -909,9 +929,7 @@ public class DateTime extends Date {
 	 */
 	public String toDateStr() {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATE_PATTERN);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_DATE_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_DATE_FORMAT);
 	}
@@ -924,9 +942,7 @@ public class DateTime extends Date {
 	 */
 	public String toTimeStr() {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_TIME_PATTERN);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(DatePattern.NORM_TIME_PATTERN, null, timeZone));
 		}
 		return toString(DatePattern.NORM_TIME_FORMAT);
 	}
@@ -939,9 +955,7 @@ public class DateTime extends Date {
 	 */
 	public String toString(String format) {
 		if (null != this.timeZone) {
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-			simpleDateFormat.setTimeZone(this.timeZone);
-			return toString(simpleDateFormat);
+			return toString(DateUtil.newSimpleFormat(format, null, timeZone));
 		}
 		return toString(FastDateFormat.getInstance(format));
 	}

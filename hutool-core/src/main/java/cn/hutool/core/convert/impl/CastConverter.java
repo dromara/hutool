@@ -5,7 +5,7 @@ import cn.hutool.core.convert.ConvertException;
 
 /**
  * 强转转换器
- * 
+ *
  * @author Looly
  * @param <T> 强制转换到的类型
  * @since 4.0.2

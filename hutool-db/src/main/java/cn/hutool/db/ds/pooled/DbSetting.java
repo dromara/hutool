@@ -1,6 +1,6 @@
 package cn.hutool.db.ds.pooled;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
@@ -9,7 +9,7 @@ import cn.hutool.setting.Setting;
 
 /**
  * 数据库配置文件类，此类对应一个数据库配置文件
- * 
+ *
  * @author Looly
  *
  */
@@ -28,7 +28,7 @@ public class DbSetting {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param setting 数据库配置
 	 */
 	public DbSetting(Setting setting) {
@@ -41,13 +41,13 @@ public class DbSetting {
 
 	/**
 	 * 获得数据库连接信息
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 分组
 	 */
 	public DbConfig getDbConfig(String group) {
 		final Setting config = setting.getSetting(group);
-		if (CollectionUtil.isEmpty(config)) {
+		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No Hutool pool config for group: [{}]", group);
 		}
 

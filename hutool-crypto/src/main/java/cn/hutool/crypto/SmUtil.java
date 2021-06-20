@@ -1,6 +1,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
@@ -9,13 +10,13 @@ import cn.hutool.crypto.digest.mac.BCHMacEngine;
 import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.symmetric.SM4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -23,16 +24,26 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * SM国密算法工具类<br>
- * 此工具类依赖org.bouncycastle:bcpkix-jdk15on
+ * 此工具类依赖org.bouncycastle:bcprov-jdk15to18
+ *
+ * <p>封装包括：</p>
+ * <ul>
+ *     <li>SM2 椭圆曲线非对称加密和签名</li>
+ *     <li>SM3 杂凑算法</li>
+ *     <li>SM4 对称加密</li>
+ * </ul>
  *
  * @author looly
  * @since 4.3.2
  */
 public class SmUtil {
 
+	private final static int RS_LEN = 32;
 	/**
 	 * SM2默认曲线
 	 */
@@ -40,13 +51,11 @@ public class SmUtil {
 	/**
 	 * SM2推荐曲线参数（来自https://github.com/ZZMarquis/gmhelper）
 	 */
-	public static final ECDomainParameters SM2_DOMAIN_PARAMS;
-
-	private final static int RS_LEN = 32;
-
-	static {
-		SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
-	}
+	public static final ECDomainParameters SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
+	/**
+	 * SM2国密算法公钥参数的Oid标识
+ 	 */
+	public static final ASN1ObjectIdentifier ID_SM2_PUBLIC_KEY_PARAM = new ASN1ObjectIdentifier("1.2.156.10197.1.301");
 
 	/**
 	 * 创建SM2算法对象<br>
@@ -76,12 +85,40 @@ public class SmUtil {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey 私钥
-	 * @param publicKey  公钥
+	 * @param privateKey 私钥，必须使用PKCS#8规范
+	 * @param publicKey  公钥，必须使用X509规范
 	 * @return {@link SM2}
 	 */
 	public static SM2 sm2(byte[] privateKey, byte[] publicKey) {
 		return new SM2(privateKey, publicKey);
+	}
+
+	/**
+	 * 创建SM2算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 *
+	 * @param privateKey 私钥
+	 * @param publicKey  公钥
+	 * @return {@link SM2}
+	 * @since 5.5.9
+	 */
+	public static SM2 sm2(PrivateKey privateKey, PublicKey publicKey) {
+		return new SM2(privateKey, publicKey);
+	}
+
+	/**
+	 * 创建SM2算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 *
+	 * @param privateKeyParams 私钥参数
+	 * @param publicKeyParams  公钥参数
+	 * @return {@link SM2}
+	 * @since 5.5.9
+	 */
+	public static SM2 sm2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
+		return new SM2(privateKeyParams, publicKeyParams);
 	}
 
 	/**
@@ -194,27 +231,28 @@ public class SmUtil {
 	}
 
 	/**
-	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s<br>
-	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
+	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s
 	 *
 	 * @param rsDer rs in asn1 format
 	 * @return sign result in plain byte array
 	 * @since 4.5.0
 	 */
 	public static byte[] rsAsn1ToPlain(byte[] rsDer) {
-		ASN1Sequence seq = ASN1Sequence.getInstance(rsDer);
-		byte[] r = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
-		byte[] s = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
-		byte[] result = new byte[RS_LEN * 2];
-		System.arraycopy(r, 0, result, 0, r.length);
-		System.arraycopy(s, 0, result, RS_LEN, s.length);
+		final BigInteger[] decode;
+		try {
+			decode = StandardDSAEncoding.INSTANCE.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 
-		return result;
+		final byte[] r = bigIntToFixedLengthBytes(decode[0]);
+		final byte[] s = bigIntToFixedLengthBytes(decode[1]);
+
+		return ArrayUtil.addAll(r, s);
 	}
 
 	/**
-	 * BC的SM3withSM2验签需要的rs是asn1格式的，这个方法将直接拼接r||s的字节数组转化成asn1格式<br>
-	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
+	 * BC的SM3withSM2验签需要的rs是asn1格式的，这个方法将直接拼接r||s的字节数组转化成asn1格式
 	 *
 	 * @param sign in plain byte array
 	 * @return rs result in asn1 format
@@ -226,11 +264,8 @@ public class SmUtil {
 		}
 		BigInteger r = new BigInteger(1, Arrays.copyOfRange(sign, 0, RS_LEN));
 		BigInteger s = new BigInteger(1, Arrays.copyOfRange(sign, RS_LEN, RS_LEN * 2));
-		ASN1EncodableVector v = new ASN1EncodableVector();
-		v.add(new ASN1Integer(r));
-		v.add(new ASN1Integer(s));
 		try {
-			return new DERSequence(v).getEncoded("DER");
+			return StandardDSAEncoding.INSTANCE.encode(SM2_DOMAIN_PARAMS.getN(), r, s);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

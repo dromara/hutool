@@ -9,9 +9,19 @@ public enum Header {
 
 	//------------------------------------------------------------- 通用头域
 	/**
-	 * 提供验证头
+	 * 提供验证头，例如：
+	 * <pre>
+	 * Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
 	 */
 	AUTHORIZATION("Authorization"),
+	/**
+	 * 提供给代理服务器的用于身份验证的凭证，例如：
+	 * <pre>
+	 * Proxy-Authorization: Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 */
+	PROXY_AUTHORIZATION("Proxy-Authorization"),
 	/**
 	 * 提供日期和时间标志,说明报文是什么时间创建的
 	 */

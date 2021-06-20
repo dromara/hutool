@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.text.ASCIIStrCache;
+import cn.hutool.core.text.CharPool;
 
 /**
  * 字符工具类<br>
@@ -9,26 +10,7 @@ import cn.hutool.core.text.ASCIIStrCache;
  * @author looly
  * @since 4.0.1
  */
-public class CharUtil {
-
-	public static final char SPACE = ' ';
-	public static final char TAB = '	';
-	public static final char DOT = '.';
-	public static final char SLASH = '/';
-	public static final char BACKSLASH = '\\';
-	public static final char CR = '\r';
-	public static final char LF = '\n';
-	public static final char UNDERLINE = '_';
-	public static final char DASHED = '-';
-	public static final char COMMA = ',';
-	public static final char DELIM_START = '{';
-	public static final char DELIM_END = '}';
-	public static final char BRACKET_START = '[';
-	public static final char BRACKET_END = ']';
-	public static final char COLON = ':';
-	public static final char DOUBLE_QUOTES = '"';
-	public static final char SINGLE_QUOTE = '\'';
-	public static final char AMP = '&';
+public class CharUtil implements CharPool {
 
 	/**
 	 * 是否为ASCII字符，ASCII字符位于0~127之间
@@ -187,7 +169,7 @@ public class CharUtil {
 	}
 
 	/**
-	 * 是否为字符或数字，包括A~Z、a~z、0~9
+	 * 是否为字母或数字，包括A~Z、a~z、0~9
 	 *
 	 * <pre>
 	 *   CharUtil.isLetterOrNumber('a')  = true
@@ -199,7 +181,7 @@ public class CharUtil {
 	 * </pre>
 	 *
 	 * @param ch 被检查的字符
-	 * @return true表示为字符或数字，包括A~Z、a~z、0~9
+	 * @return true表示为字母或数字，包括A~Z、a~z、0~9
 	 */
 	public static boolean isLetterOrNumber(final char ch) {
 		return isLetter(ch) || isNumber(ch);
@@ -276,7 +258,8 @@ public class CharUtil {
 		return Character.isWhitespace(c)
 				|| Character.isSpaceChar(c)
 				|| c == '\ufeff'
-				|| c == '\u202a';
+				|| c == '\u202a'
+				|| c == '\u0000';
 	}
 
 	/**
@@ -345,5 +328,58 @@ public class CharUtil {
 	 */
 	public static int digit16(int b) {
 		return Character.digit(b, 16);
+	}
+
+	/**
+	 * 将字母、数字转换为带圈的字符：
+	 * <pre>
+	 *     '1' -》 '①'
+	 *     'A' -》 'Ⓐ'
+	 *     'a' -》 'ⓐ'
+	 * </pre>
+	 * <p>
+	 * 获取带圈数字 /封闭式字母数字 ，从1-20,超过1-20报错
+	 *
+	 * @param c 被转换的字符，如果字符不支持转换，返回原字符
+	 * @return 转换后的字符
+	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">Unicode_symbols</a>
+	 * @see <a href="https://en.wikipedia.org/wiki/Enclosed_Alphanumerics">Alphanumerics</a>
+	 * @since 5.6.2
+	 */
+	public static char toCloseChar(char c) {
+		int result = c;
+		if (c >= '1' && c <= '9') {
+			result = '①' + c - '1';
+		} else if (c >= 'A' && c <= 'Z') {
+			result = 'Ⓐ' + c - 'A';
+		} else if (c >= 'a' && c <= 'z') {
+			result = 'ⓐ' + c - 'a';
+		}
+		return (char) result;
+	}
+
+	/**
+	 * 将[1-20]数字转换为带圈的字符：
+	 * <pre>
+	 *     1 -》 '①'
+	 *     12 -》 '⑫'
+	 *     20 -》 '⑳'
+	 * </pre>
+	 * 也称作：封闭式字符，英文：Enclosed Alphanumerics
+	 *
+	 * @param number 被转换的数字
+	 * @return 转换后的字符
+	 * @author dazer
+	 * @see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Unicode_symbols">维基百科wikipedia-Unicode_symbols</a>
+	 * @see <a href="https://zh.wikipedia.org/wiki/Unicode%E5%AD%97%E7%AC%A6%E5%88%97%E8%A1%A8">维基百科wikipedia-Unicode字符列表</a>
+	 * @see <a href="https://coolsymbol.com/">coolsymbol</a>
+	 * @see <a href="https://baike.baidu.com/item/%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/112715?fr=aladdin">百度百科 特殊字符</a>
+	 * @since 5.6.2
+	 */
+	public static char toCloseByNumber(int number) {
+		if (number > 20) {
+			throw new IllegalArgumentException("Number must be [1-20]");
+		}
+		return (char) ('①' + number - 1);
 	}
 }

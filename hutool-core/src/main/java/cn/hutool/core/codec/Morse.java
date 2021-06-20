@@ -11,24 +11,24 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 莫尔斯电码的编码和解码实现<br>
  * 参考：https://github.com/TakWolf/Java-MorseCoder
- * 
+ *
  * @author looly, TakWolf
  * @since 4.4.1
  */
 public class Morse {
 
-	private static final Map<Integer, String> alphabets = new HashMap<>(); // code point -> morse
-	private static final Map<String, Integer> dictionaries = new HashMap<>(); // morse -> code point
+	private static final Map<Integer, String> ALPHABETS = new HashMap<>(); // code point -> morse
+	private static final Map<String, Integer> DICTIONARIES = new HashMap<>(); // morse -> code point
 
 	/**
 	 * 注册莫尔斯电码表
-	 * 
+	 *
 	 * @param abc 字母和字符
 	 * @param dict 二进制
 	 */
 	private static void registerMorse(Character abc, String dict) {
-		alphabets.put(Integer.valueOf(abc), dict);
-		dictionaries.put(dict, Integer.valueOf(abc));
+		ALPHABETS.put((int) abc, dict);
+		DICTIONARIES.put(dict, (int) abc);
 	}
 
 	static {
@@ -104,7 +104,7 @@ public class Morse {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param dit 点表示的字符
 	 * @param dah 横线表示的字符
 	 * @param split 分隔符
@@ -117,19 +117,19 @@ public class Morse {
 
 	/**
 	 * 编码
-	 * 
+	 *
 	 * @param text 文本
 	 * @return 密文
 	 */
 	public String encode(String text) {
 		Assert.notNull(text, "Text should not be null.");
-		
+
 		text = text.toUpperCase();
 		final StringBuilder morseBuilder = new StringBuilder();
 		final int len = text.codePointCount(0, text.length());
 		for (int i = 0; i < len; i++) {
 			int codePoint = text.codePointAt(i);
-			String word = alphabets.get(codePoint);
+			String word = ALPHABETS.get(codePoint);
 			if (word == null) {
 				word = Integer.toBinaryString(codePoint);
 			}
@@ -140,7 +140,7 @@ public class Morse {
 
 	/**
 	 * 解码
-	 * 
+	 *
 	 * @param morse 莫尔斯电码
 	 * @return 明文
 	 */
@@ -161,7 +161,7 @@ public class Morse {
 				continue;
 			}
 			word = word.replace(dit, '0').replace(dah, '1');
-			codePoint = dictionaries.get(word);
+			codePoint = DICTIONARIES.get(word);
 			if (codePoint == null) {
 				codePoint = Integer.valueOf(word, 2);
 			}

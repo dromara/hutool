@@ -8,7 +8,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 驼峰Key风格的Map<br>
  * 对KEY转换为驼峰，get("int_value")和get("intValue")获得的值相同，put进入的值也会被覆盖
- * 
+ *
  * @author Looly
  *
  * @param <K> 键类型
@@ -28,7 +28,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 */
 	public CamelCaseMap(int initialCapacity) {
@@ -37,7 +37,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param m Map
 	 */
 	public CamelCaseMap(Map<? extends K, ? extends V> m) {
@@ -46,7 +46,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param loadFactor 加载因子
 	 * @param m Map
 	 */
@@ -57,7 +57,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
@@ -68,7 +68,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 
 	/**
 	 * 将Key转为驼峰风格，如果key为字符串的话
-	 * 
+	 *
 	 * @param key KEY
 	 * @return 驼峰Key
 	 */

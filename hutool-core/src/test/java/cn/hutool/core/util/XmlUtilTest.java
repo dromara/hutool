@@ -1,7 +1,9 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
@@ -9,10 +11,15 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.xpath.XPathConstants;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link XmlUtil} 工具类
@@ -149,6 +156,18 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	public void readBySaxTest(){
+		final Set<String> eles = CollUtil.newHashSet(
+				"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
+		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler(){
+			@Override
+			public void startElement(String uri, String localName, String qName, Attributes attributes) {
+				Assert.assertTrue(eles.contains(localName));
+			}
+		});
+	}
+
+	@Test
 	public void mapToXmlTestWithOmitXmlDeclaration() {
 
 		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
@@ -196,6 +215,36 @@ public class XmlUtilTest {
 		Assert.assertEquals(testBean.getBankCode(), testBean2.getBankCode());
 	}
 
+	@Test
+	public void xmlToBeanTest2(){
+		//issue#1663@Github
+		String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code></response>";
+
+		Document doc = XmlUtil.parseXml(xmlStr);
+
+		// 标准方式
+		Map<String, Object> map = XmlUtil.xmlToMap(doc.getFirstChild());
+		SmsRes res = new SmsRes();
+		BeanUtil.fillBeanWithMap(map, res, true);
+
+		// toBean方式
+		SmsRes res1 = XmlUtil.xmlToBean(doc.getFirstChild(), SmsRes.class);
+
+		Assert.assertEquals(res.toString(), res1.toString());
+	}
+
+	@Data
+	static class SmsRes {
+		private String code;
+	}
+
+	@Test
+	public void cleanCommentTest() {
+		final String xmlContent = "<info><title>hutool</title><!-- 这是注释 --><lang>java</lang></info>";
+		final String ret = XmlUtil.cleanComment(xmlContent);
+		Assert.assertEquals("<info><title>hutool</title><lang>java</lang></info>", ret);
+	}
+
 	@Data
 	public static class TestBean {
 		private String ReqCode;
@@ -203,5 +252,39 @@ public class XmlUtilTest {
 		private String Operator;
 		private String ProjectCode;
 		private String BankCode;
+	}
+
+
+	@Test
+	@Ignore
+	public void formatTest(){
+		// https://github.com/looly/hutool/pull/1234
+		Document xml = XmlUtil.createXml("NODES");
+		xml.setXmlStandalone(true);
+
+		NodeList parentNode = xml.getElementsByTagName("NODES");
+
+		Element parent1Node = xml.createElement("NODE");
+
+		Element node1 = xml.createElement("NODENAME");
+		node1.setTextContent("走位");
+		Element node2 = xml.createElement("STEP");
+		node2.setTextContent("1");
+		Element node3 = xml.createElement("STATE");
+		node3.setTextContent("2");
+		Element node4 = xml.createElement("TIMELIMIT");
+		node4.setTextContent("");
+		Element node5 = xml.createElement("STARTTIME");
+
+		parent1Node.appendChild(node1);
+		parent1Node.appendChild(node2);
+		parent1Node.appendChild(node3);
+		parent1Node.appendChild(node4);
+		parent1Node.appendChild(node5);
+
+		parentNode.item(0).appendChild(parent1Node);
+
+		String format = XmlUtil.toStr(xml,"GBK",true);
+		Console.log(format);
 	}
 }

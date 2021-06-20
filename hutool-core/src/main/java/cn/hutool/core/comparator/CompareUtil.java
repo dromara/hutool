@@ -1,6 +1,8 @@
 package cn.hutool.core.comparator;
 
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * 比较工具类
@@ -107,5 +109,35 @@ public class CompareUtil {
 		}
 
 		return result;
+	}
+
+	/**
+	 * 中文比较器
+	 *
+	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
+	 * @param <T>          对象类型
+	 * @return 中文比较器
+	 * @since 5.4.3
+	 */
+	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor) {
+		return comparingPinyin(keyExtractor, false);
+	}
+
+	/**
+	 * 中文比较器
+	 *
+	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
+	 * @param reverse      是否反序
+	 * @param <T>          对象类型
+	 * @return 中文比较器
+	 * @since 5.4.3
+	 */
+	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor, boolean reverse) {
+		Objects.requireNonNull(keyExtractor);
+		PinyinComparator pinyinComparator = new PinyinComparator();
+		if (reverse) {
+			return (o1, o2) -> pinyinComparator.compare(keyExtractor.apply(o2), keyExtractor.apply(o1));
+		}
+		return (o1, o2) -> pinyinComparator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
 	}
 }

@@ -11,22 +11,22 @@ import java.security.SecureRandom;
  * <p>
  * 使用方法如下：
  * <p>
- * <code>
+ * {@code
  * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt());
- * </code>
+ * }
  * <p>
  * 使用checkpw方法检查被加密的字符串是否与原始字符串匹配：
  * <p>
- * <code>
+ * {@code
  * BCrypt.checkpw(candidate_password, stored_hash);
- * </code>
+ * }
  * <p>
  * gensalt方法提供了可选参数 (log_rounds) 来定义加盐多少，也决定了加密的复杂度:
  * <p>
- * <code>
+ * {@code
  * String strong_salt = BCrypt.gensalt(10);
  * String stronger_salt = BCrypt.gensalt(12);
- * </code>
+ * }
  *
  * @author Damien Miller
  * @since 4.1.1
@@ -179,7 +179,7 @@ public class BCrypt {
 	private static byte char64(char x) {
 		if ((int) x > index_64.length)
 			return -1;
-		return index_64[(int) x];
+		return index_64[x];
 	}
 
 	/**
@@ -424,7 +424,9 @@ public class BCrypt {
 			off = 3;
 		else {
 			minor = salt.charAt(2);
-			if (minor != 'a' || salt.charAt(3) != '$')
+			// pr#1560@Github
+			// 修正一个在Blowfish实现上的安全风险
+			if ((minor != 'a' && minor != 'x' && minor != 'y' && minor != 'b') || salt.charAt(3) != '$')
 				throw new IllegalArgumentException("Invalid salt revision");
 			off = 4;
 		}
@@ -511,7 +513,14 @@ public class BCrypt {
 	public static boolean checkpw(String plaintext, String hashed) {
 		byte[] hashed_bytes;
 		byte[] try_bytes;
-		String try_pw = hashpw(plaintext, hashed);
+
+		String try_pw;
+		try{
+			try_pw = hashpw(plaintext, hashed);
+		} catch (Exception ignore){
+			// 生成密文时错误直接返回false issue#1377@Github
+			return false;
+		}
 		hashed_bytes = hashed.getBytes(CharsetUtil.CHARSET_UTF_8);
 		try_bytes = try_pw.getBytes(CharsetUtil.CHARSET_UTF_8);
 		if (hashed_bytes.length != try_bytes.length) {

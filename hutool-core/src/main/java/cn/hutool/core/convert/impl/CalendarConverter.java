@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 日期转换器
- * 
+ *
  * @author Looly
  *
  */
@@ -21,7 +21,7 @@ public class CalendarConverter extends AbstractConverter<Calendar> {
 
 	/**
 	 * 获取日期格式
-	 * 
+	 *
 	 * @return 设置日期格式
 	 */
 	public String getFormat() {
@@ -30,7 +30,7 @@ public class CalendarConverter extends AbstractConverter<Calendar> {
 
 	/**
 	 * 设置日期格式
-	 * 
+	 *
 	 * @param format 日期格式
 	 */
 	public void setFormat(String format) {

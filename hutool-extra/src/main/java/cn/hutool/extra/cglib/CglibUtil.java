@@ -8,6 +8,7 @@ import net.sf.cglib.core.Converter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -134,7 +135,7 @@ public class CglibUtil {
 	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter, BiConsumer<S, T> callback) {
 		return source.stream().map(s -> {
 			T t = target.get();
-			copy(source, t, converter);
+			copy(s, t, converter);
 			if (callback != null) {
 				callback.accept(s, t);
 			}
@@ -151,5 +152,32 @@ public class CglibUtil {
 	 */
 	public static BeanMap toMap(Object bean) {
 		return BeanMap.create(bean);
+	}
+
+	/**
+	 * 将Map中的内容填充至Bean中
+	 * @param map Map
+	 * @param bean Bean
+	 * @param <T> Bean类型
+	 * @return bean
+	 * @since 5.6.3
+	 */
+	@SuppressWarnings("rawtypes")
+	public static <T> T fillBean(Map map, T bean){
+		BeanMap.create(bean).putAll(map);
+		return bean;
+	}
+
+	/**
+	 * 将Map转换为Bean
+	 * @param map Map
+	 * @param beanClass Bean类
+	 * @param <T> Bean类型
+	 * @return bean
+	 * @since 5.6.3
+	 */
+	@SuppressWarnings("rawtypes")
+	public static <T> T toBean(Map map, Class<T> beanClass){
+		return fillBean(map, ReflectUtil.newInstanceIfPossible(beanClass));
 	}
 }

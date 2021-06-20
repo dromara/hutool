@@ -10,6 +10,7 @@ package cn.hutool.cron.task;
  *
  * @author Looly
  */
+@FunctionalInterface
 public interface Task {
 
 	/**

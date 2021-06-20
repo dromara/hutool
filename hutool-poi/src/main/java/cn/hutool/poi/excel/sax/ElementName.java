@@ -12,9 +12,17 @@ public enum ElementName {
 	 */
 	row,
 	/**
-	 * 单元格标签名，表示一个单元格
+	 * Cell单元格标签名，表示一个单元格
 	 */
-	c;
+	c,
+	/**
+	 * Value单元格值的标签，表示单元格内的值
+	 */
+	v,
+	/**
+	 * Formula公式，表示一个存放公式的单元格
+	 */
+	f;
 
 	/**
 	 * 给定标签名是否匹配当前标签
@@ -24,5 +32,18 @@ public enum ElementName {
 	 */
 	public boolean match(String elementName){
 		return this.name().equals(elementName);
+	}
+
+	/**
+	 * 解析支持的节点名枚举
+	 * @param elementName 节点名
+	 * @return 节点名枚举
+	 */
+	public static ElementName of(String elementName){
+		try {
+			return valueOf(elementName);
+		} catch (Exception ignore){
+		}
+		return null;
 	}
 }

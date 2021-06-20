@@ -1,16 +1,22 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
@@ -245,7 +251,29 @@ public class LocalDateTimeUtil {
 		if (null == text) {
 			return null;
 		}
-		return parse(text, DateTimeFormatter.ofPattern(format));
+
+		DateTimeFormatter formatter = null;
+		if(StrUtil.isNotBlank(format)){
+			// 修复yyyyMMddHHmmssSSS格式不能解析的问题
+			// fix issue#1082
+			//see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
+			// jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
+			if(StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN)){
+				final String fraction = StrUtil.removePrefix(format, DatePattern.PURE_DATETIME_PATTERN);
+				if(ReUtil.isMatch("[S]{1,2}", fraction)){
+					//将yyyyMMddHHmmssS、yyyyMMddHHmmssSS的日期统一替换为yyyyMMddHHmmssSSS格式，用0补
+					text += StrUtil.repeat('0', 3-fraction.length());
+				}
+				formatter = new DateTimeFormatterBuilder()
+						.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
+						.appendValue(ChronoField.MILLI_OF_SECOND, 3)
+						.toFormatter();
+			} else{
+				formatter = DateTimeFormatter.ofPattern(format);
+			}
+		}
+
+		return parse(text, formatter);
 	}
 
 	/**
@@ -371,7 +399,7 @@ public class LocalDateTimeUtil {
 	 *
 	 * @param time   {@link LocalDateTime}
 	 * @param number 偏移量，正数为向后偏移，负数为向前偏移
-	 * @param field  偏移单位，见{@link ChronoField}，不能为null
+	 * @param field  偏移单位，见{@link ChronoUnit}，不能为null
 	 * @return 偏移后的日期时间
 	 */
 	public static LocalDateTime offset(LocalDateTime time, long number, TemporalUnit field) {
@@ -387,14 +415,43 @@ public class LocalDateTimeUtil {
 	 * <p>
 	 * 返回结果为{@link Duration}对象，通过调用toXXX方法返回相差单位
 	 *
-	 * @param startTime 开始时间
-	 * @param endTime   结束时间
+	 * @param startTimeInclude 开始时间（包含）
+	 * @param endTimeExclude   结束时间（不包含）
 	 * @return 时间差 {@link Duration}对象
+	 * @see TemporalUtil#between(Temporal, Temporal)
 	 */
-	public static Duration between(LocalDateTime startTime, LocalDateTime endTime) {
-		return Duration.between(startTime, endTime);
+	public static Duration between(LocalDateTime startTimeInclude, LocalDateTime endTimeExclude) {
+		return TemporalUtil.between(startTimeInclude, endTimeExclude);
 	}
 
+	/**
+	 * 获取两个日期的差，如果结束时间早于开始时间，获取结果为负。
+	 * <p>
+	 * 返回结果为时间差的long值
+	 *
+	 * @param startTimeInclude 开始时间（包括）
+	 * @param endTimeExclude   结束时间（不包括）
+	 * @param unit             时间差单位
+	 * @return 时间差
+	 * @since 5.4.5
+	 */
+	public static long between(LocalDateTime startTimeInclude, LocalDateTime endTimeExclude, ChronoUnit unit) {
+		return TemporalUtil.between(startTimeInclude, endTimeExclude, unit);
+	}
+
+	/**
+	 * 获取两个日期的表象时间差，如果结束时间早于开始时间，获取结果为负。
+	 * <p>
+	 * 比如2011年2月1日，和2021年8月11日，日相差了10天，月相差6月
+	 *
+	 * @param startTimeInclude 开始时间（包括）
+	 * @param endTimeExclude   结束时间（不包括）
+	 * @return 时间差
+	 * @since 5.4.5
+	 */
+	public static Period betweenPeriod(LocalDate startTimeInclude, LocalDate endTimeExclude) {
+		return Period.between(startTimeInclude, endTimeExclude);
+	}
 
 	/**
 	 * 修改为一天的开始时间，例如：2020-02-02 00:00:00,000
@@ -403,7 +460,7 @@ public class LocalDateTimeUtil {
 	 * @return 一天的开始时间
 	 */
 	public static LocalDateTime beginOfDay(LocalDateTime time) {
-		return time.with(LocalTime.of(0, 0, 0, 0));
+		return time.with(LocalTime.MIN);
 	}
 
 	/**
@@ -413,7 +470,7 @@ public class LocalDateTimeUtil {
 	 * @return 一天的结束时间
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time) {
-		return time.with(LocalTime.of(23, 59, 59, 999_999_999));
+		return time.with(LocalTime.MAX);
 	}
 
 	/**

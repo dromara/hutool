@@ -42,10 +42,11 @@ public enum BeanCopierCache {
 	 * @return 属性名和Map映射的key
 	 */
 	private String genKey(Class<?> srcClass, Class<?> targetClass, Converter converter) {
-		String key = StrUtil.format("{}#{}", srcClass.getName(), targetClass.getName());
+		final StringBuilder key = StrUtil.builder()
+				.append(srcClass.getName()).append('#').append(targetClass.getName());
 		if(null != converter){
-			key += "#" + converter.getClass().getName();
+			key.append('#').append(converter.getClass().getName());
 		}
-		return key;
+		return key.toString();
 	}
 }

@@ -8,7 +8,14 @@ package cn.hutool.core.date.chinese;
  */
 public class LunarInfo {
 
+	/**
+	 * 1900年
+	 */
 	public static final int BASE_YEAR = 1900;
+	/**
+	 * 1900-01-31
+	 */
+	public static final long BASE_DAY = -25538;
 
 	/**
 	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js
@@ -40,14 +47,8 @@ public class LunarInfo {
 			0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252,//2090-2099
 	};
 
-	/**
-	 * 获取支持的最大年（包括）
-	 *
-	 * @return 最大年（包括）
-	 */
-	public static int getMaxYear() {
-		return BASE_YEAR + LUNAR_CODE.length - 1;
-	}
+	// 支持的最大年限
+	public static final int MAX_YEAR = BASE_YEAR + LUNAR_CODE.length - 1;
 
 	/**
 	 * 传回农历 y年的总天数

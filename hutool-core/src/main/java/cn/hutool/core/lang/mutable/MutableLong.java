@@ -4,20 +4,19 @@ import cn.hutool.core.util.NumberUtil;
 
 /**
  * 可变 <code>long</code> 类型
- * 
+ *
  * @see Long
  * @since 3.0.1
  */
 public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private long value;
 
 	/**
 	 * 构造，默认值0
 	 */
 	public MutableLong() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @param value 值
 	 */
 	public MutableLong(final long value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,13 +41,12 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @throws NumberFormatException 数字转换错误
 	 */
 	public MutableLong(final String value) throws NumberFormatException {
-		super();
 		this.value = Long.parseLong(value);
 	}
 
 	@Override
 	public Long get() {
-		return Long.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值
 	 * @return this
 	 */
@@ -119,7 +116,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值，非空
 	 * @return this
 	 * @throws NullPointerException if the object is null
@@ -158,7 +155,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 	<li>类型为 {@link MutableLong}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param obj 比对的对象
 	 * @return 相同返回<code>true</code>，否则 <code>false</code>
 	 */
@@ -178,7 +175,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
-	 * 
+	 *
 	 * @param other 其它 {@link MutableLong} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */

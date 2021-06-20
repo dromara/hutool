@@ -7,9 +7,9 @@ import cn.hutool.core.util.StrUtil;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 
 /**
  * 上传的文件对象
@@ -24,7 +24,7 @@ public class UploadFile {
 	private final UploadFileHeader header;
 	private final UploadSetting setting;
 
-	private int size = -1;
+	private long size = -1;
 
 	// 文件流（小文件位于内存中）
 	private byte[] data;
@@ -87,12 +87,19 @@ public class UploadFile {
 			destination = new File(destination, this.header.getFileName());
 		}
 		if (data != null) {
+			// 内存中
 			FileUtil.writeBytes(data, destination);
 			data = null;
 		} else {
-			if (tempFile != null) {
-				FileUtil.move(tempFile, destination, true);
+			// 临时文件
+			if(null == this.tempFile){
+				throw new NullPointerException("Temp file is null !");
 			}
+			if(false == this.tempFile.exists()){
+				throw new NoSuchFileException("Temp file: [" + this.tempFile.getAbsolutePath() + "] not exist!");
+			}
+
+			FileUtil.move(tempFile, destination, true);
 		}
 		return destination;
 	}
@@ -150,7 +157,7 @@ public class UploadFile {
 	/**
 	 * @return 上传文件的大小，&gt; 0 表示未上传
 	 */
-	public int size() {
+	public long size() {
 		return size;
 	}
 
@@ -200,13 +207,13 @@ public class UploadFile {
 
 		// 处理硬盘文件
 		tempFile = FileUtil.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, FileUtil.touch(setting.tmpUploadPath), false);
-		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
+		final BufferedOutputStream out = FileUtil.getOutputStream(this.tempFile);
 		if (data != null) {
 			size = data.length;
 			out.write(data);
 			data = null; // not needed anymore
 		}
-		int maxFileSize = setting.maxFileSize;
+		final long maxFileSize = setting.maxFileSize;
 		try {
 			if (maxFileSize == -1) {
 				size += input.copy(out);
@@ -236,14 +243,14 @@ public class UploadFile {
 	 * @return 是否为允许的扩展名
 	 */
 	private boolean isAllowedExtension() {
-		String[] exts = setting.fileExts;
+		final String[] exts = setting.fileExts;
 		boolean isAllow = setting.isAllowFileExts;
 		if (exts == null || exts.length == 0) {
 			// 如果给定扩展名列表为空，当允许扩展名时全部允许，否则全部禁止
 			return isAllow;
 		}
 
-		String fileNameExt = FileUtil.extName(this.getFileName());
+		final String fileNameExt = FileUtil.extName(this.getFileName());
 		for (String fileExtension : setting.fileExts) {
 			if (fileNameExt.equalsIgnoreCase(fileExtension)) {
 				return isAllow;

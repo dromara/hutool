@@ -6,12 +6,23 @@ import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+
 public class UrlBuilderTest {
 
 	@Test
 	public void buildTest() {
 		String buildUrl = UrlBuilder.create().setHost("www.hutool.cn").build();
 		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
+	}
+
+	@Test
+	public void buildTest2() {
+		// path中的+不做处理
+		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.CHARSET_UTF_8).build();
+		Assert.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
 	}
 
 	@Test
@@ -203,5 +214,49 @@ public class UrlBuilderTest {
 	public void blankEncodeTest(){
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
+	}
+
+	@Test
+	public void dotEncodeTest(){
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
+	}
+
+	@Test
+	public void multiSlashTest(){
+		//issue#I25MZL，某些URL中有多个斜杠，此为合法路径
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
+	}
+
+	@Test
+	public void toURITest() throws URISyntaxException {
+		String webUrl = "http://exmple.com/patha/pathb?a=123"; // 报错数据
+		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
+		Assert.assertEquals(new URI(webUrl), urlBuilder.toURI());
+	}
+
+	@Test
+	public void testEncodeInQuery() {
+		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
+		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
+		Assert.assertEquals("a=123&b=4%3F6&c=789", urlBuilder.getQueryStr());
+	}
+
+	@Test
+	public void encodePathTest(){
+		// Path中的某些符号无需转义，比如=
+		final String urlStr = "http://hq.sinajs.cn/list=sh600519";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(urlStr, urlBuilder.toString());
+	}
+
+	@Test
+	public void gimg2Test(){
+		String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
+		final UrlBuilder urlBuilder = UrlBuilder.of(url);
+
+
+		Assert.assertEquals(url, urlBuilder.toString());
 	}
 }

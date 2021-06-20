@@ -31,4 +31,19 @@ public class KeyUtilTest {
 		final PublicKey rsaPublicKey = KeyUtil.getRSAPublicKey(aPrivate);
 		Assert.assertEquals(rsaPublicKey, keyPair.getPublic());
 	}
+
+	/**
+	 * 测试EC和ECIES算法生成的KEY是一致的
+	 */
+	@Test
+	public void generateECIESKeyTest(){
+		final KeyPair ecies = KeyUtil.generateKeyPair("ECIES");
+		Assert.assertNotNull(ecies.getPrivate());
+		Assert.assertNotNull(ecies.getPublic());
+
+		byte[] privateKeyBytes = ecies.getPrivate().getEncoded();
+
+		final PrivateKey privateKey = KeyUtil.generatePrivateKey("EC", privateKeyBytes);
+		Assert.assertEquals(ecies.getPrivate(), privateKey);
+	}
 }

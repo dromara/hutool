@@ -6,13 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,7 +133,7 @@ public class JschUtil {
 	 * @return SSH会话
 	 * @since 4.5.2
 	 */
-	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+		public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
 		final JSch jsch = new JSch();
 		final Session session = createSession(jsch, sshHost, sshPort, sshUser);
 
@@ -231,6 +225,31 @@ public class JschUtil {
 		}
 		return false;
 	}
+
+	/**
+	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
+	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
+	 *
+	 * @param session  与ssh服务端建立的会话
+	 * @param bindPort ssh服务端上要被绑定的端口
+	 * @param host     转发到的host
+	 * @param port     host上的端口
+	 * @return 成功与否
+	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @since 5.4.2
+	 */
+	public static boolean bindRemotePort(Session session, int bindPort, String host, int port) throws JschRuntimeException {
+		if (session != null && session.isConnected()) {
+			try {
+				session.setPortForwardingR(bindPort, host, port);
+			} catch (JSchException e) {
+				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", bindPort, port);
+			}
+			return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * 解除端口映射
@@ -398,7 +417,7 @@ public class JschUtil {
 	 * @param cmd       命令
 	 * @param charset   发送和读取内容的编码
 	 * @param errStream 错误信息输出到的位置
-	 * @return {@link ChannelExec}
+	 * @return 执行结果内容
 	 * @since 4.3.1
 	 */
 	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
@@ -413,7 +432,7 @@ public class JschUtil {
 		try {
 			channel.connect();
 			in = channel.getInputStream();
-			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
+			return IoUtil.read(in, charset);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (JSchException e) {
@@ -427,8 +446,7 @@ public class JschUtil {
 	/**
 	 * 执行Shell命令
 	 * <p>
-	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。<br>
-	 * 此方法返回数据中可能
+	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。
 	 * </p>
 	 *
 	 * @param session Session会话
@@ -443,7 +461,6 @@ public class JschUtil {
 		shell.setPty(true);
 		OutputStream out = null;
 		InputStream in = null;
-		final StringBuilder result = StrUtil.builder();
 		try {
 			out = shell.getOutputStream();
 			in = shell.getInputStream();
@@ -451,9 +468,7 @@ public class JschUtil {
 			out.write(StrUtil.bytes(cmd, charset));
 			out.flush();
 
-			while (in.available() > 0) {
-				result.append(IoUtil.read(in, charset));
-			}
+			return IoUtil.read(in, charset);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -461,7 +476,6 @@ public class JschUtil {
 			IoUtil.close(in);
 			close(shell);
 		}
-		return result.toString();
 	}
 
 	/**

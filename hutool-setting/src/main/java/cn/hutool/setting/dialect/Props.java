@@ -1,7 +1,6 @@
 package cn.hutool.setting.dialect;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.BasicTypeGetter;
 import cn.hutool.core.getter.OptBasicTypeGetter;
@@ -17,6 +16,7 @@ import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -39,7 +39,7 @@ import java.util.Properties;
 
 /**
  * Properties文件读取封装类
- * 
+ *
  * @author loolly
  */
 public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String> {
@@ -49,6 +49,16 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 默认配置文件扩展名
 	 */
 	public final static String EXT_NAME = "properties";
+
+	/**
+	 * 构建一个空的Props，用于手动加入参数
+	 *
+	 * @return Setting
+	 * @since 5.4.3
+	 */
+	public static Props create() {
+		return new Props();
+	}
 
 	// ----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
@@ -60,7 +70,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 获得Classpath下的Properties文件
-	 * 
+	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return Props
 	 */
@@ -70,7 +80,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 获得Classpath下的Properties文件
-	 * 
+	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @param charsetName 字符集
 	 * @return Properties
@@ -81,7 +91,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 获得Classpath下的Properties文件
-	 * 
+	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @param charset 字符集
 	 * @return Properties
@@ -95,12 +105,11 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 构造
 	 */
 	public Props() {
-		super();
 	}
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
-	 * 
+	 *
 	 * @param path 配置文件路径，相对于ClassPath，或者使用绝对路径
 	 */
 	public Props(String path) {
@@ -109,7 +118,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
-	 * 
+	 *
 	 * @param path 相对或绝对路径
 	 * @param charsetName 字符集
 	 */
@@ -119,7 +128,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
-	 * 
+	 *
 	 * @param path 相对或绝对路径
 	 * @param charset 字符集
 	 */
@@ -133,7 +142,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param propertiesFile 配置文件对象
 	 */
 	public Props(File propertiesFile) {
@@ -142,7 +151,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param propertiesFile 配置文件对象
 	 * @param charsetName 字符集
 	 */
@@ -152,7 +161,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param propertiesFile 配置文件对象
 	 * @param charset 字符集
 	 */
@@ -164,7 +173,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，相对于classes读取文件
-	 * 
+	 *
 	 * @param path 相对路径
 	 * @param clazz 基准类
 	 */
@@ -174,7 +183,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，相对于classes读取文件
-	 * 
+	 *
 	 * @param path 相对路径
 	 * @param clazz 基准类
 	 * @param charsetName 字符集
@@ -185,7 +194,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，相对于classes读取文件
-	 * 
+	 *
 	 * @param path 相对路径
 	 * @param clazz 基准类
 	 * @param charset 字符集
@@ -200,7 +209,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，使用URL读取
-	 * 
+	 *
 	 * @param propertiesUrl 属性文件路径
 	 */
 	public Props(URL propertiesUrl) {
@@ -209,7 +218,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，使用URL读取
-	 * 
+	 *
 	 * @param propertiesUrl 属性文件路径
 	 * @param charsetName 字符集
 	 */
@@ -219,7 +228,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 构造，使用URL读取
-	 * 
+	 *
 	 * @param propertiesUrl 属性文件路径
 	 * @param charset 字符集
 	 */
@@ -228,16 +237,16 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		if (null != charset) {
 			this.charset = charset;
 		}
-		this.load(new UrlResource(propertiesUrl));
+		this.load(propertiesUrl);
 	}
 
 	/**
 	 * 构造，使用URL读取
-	 * 
+	 *
 	 * @param properties 属性文件路径
 	 */
 	public Props(Properties properties) {
-		if (CollectionUtil.isNotEmpty(properties)) {
+		if (MapUtil.isNotEmpty(properties)) {
 			this.putAll(properties);
 		}
 	}
@@ -246,16 +255,26 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 初始化配置文件
-	 * 
-	 * @param urlResource {@link UrlResource}
+	 *
+	 * @param url {@link URL}
+	 * @since 5.5.2
 	 */
-	public void load(Resource urlResource) {
-		this.propertiesFileUrl = urlResource.getUrl();
+	public void load(URL url) {
+		load(new UrlResource(url));
+	}
+
+	/**
+	 * 初始化配置文件
+	 *
+	 * @param resource {@link Resource}
+	 */
+	public void load(Resource resource) {
+		this.propertiesFileUrl = resource.getUrl();
 		if (null == this.propertiesFileUrl) {
-			throw new SettingRuntimeException("Can not find properties file: [{}]", urlResource);
+			throw new SettingRuntimeException("Can not find properties file: [{}]", resource);
 		}
 
-		try (final BufferedReader reader = urlResource.getReader(charset)) {
+		try (final BufferedReader reader = resource.getReader(charset)) {
 			super.load(reader);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
@@ -266,12 +285,12 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 重新加载配置文件
 	 */
 	public void load() {
-		this.load(new UrlResource(this.propertiesFileUrl));
+		this.load(this.propertiesFileUrl);
 	}
 
 	/**
 	 * 在配置文件变更时自动加载
-	 * 
+	 *
 	 * @param autoReload 是否自动加载
 	 */
 	public void autoLoad(boolean autoReload) {
@@ -459,7 +478,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
-	 * 
+	 *
 	 * @param keys 键列表，常用于别名
 	 * @return 字符串值
 	 * @since 4.1.21
@@ -474,11 +493,11 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		}
 		return (String) value;
 	}
-	
+
 	/**
 	 * 将配置文件转换为Bean，支持嵌套Bean<br>
 	 * 支持的表达式：
-	 * 
+	 *
 	 * <pre>
 	 * persion
 	 * persion.name
@@ -499,7 +518,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	/**
 	 * 将配置文件转换为Bean，支持嵌套Bean<br>
 	 * 支持的表达式：
-	 * 
+	 *
 	 * <pre>
 	 * persion
 	 * persion.name
@@ -518,11 +537,11 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
 		return fillBean(bean, prefix);
 	}
-	
+
 	/**
 	 * 将配置文件转换为Bean，支持嵌套Bean<br>
 	 * 支持的表达式：
-	 * 
+	 *
 	 * <pre>
 	 * persion
 	 * persion.name
@@ -563,7 +582,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	// ----------------------------------------------------------------------- Set start
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
-	 * 
+	 *
 	 * @param key 属性键
 	 * @param value 属性值
 	 */
@@ -573,7 +592,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置
-	 * 
+	 *
 	 * @param absolutePath 设置文件的绝对路径
 	 * @throws IORuntimeException IO异常，可能为文件未找到
 	 */
@@ -591,7 +610,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	/**
 	 * 存储当前设置，会覆盖掉以前的设置
-	 * 
+	 *
 	 * @param path 相对路径
 	 * @param clazz 相对的类
 	 */

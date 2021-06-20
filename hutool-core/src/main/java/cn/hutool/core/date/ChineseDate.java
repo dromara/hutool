@@ -8,20 +8,23 @@ import cn.hutool.core.date.chinese.LunarInfo;
 import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
 /**
- * 农历日期工具，最大支持到2055年
+ * 农历日期工具，最大支持到2055年，支持：
+ *
+ * <ul>
+ *     <li>通过公历日期构造获取对应农历</li>
+ *     <li>通过农历日期直接构造</li>
+ * </ul>
  *
  * @author zjw, looly
  * @since 5.1.1
  */
 public class ChineseDate {
-	/**
-	 * 1900-01-31
-	 */
-	private static final long baseDate = -2206425943000L;
+
 	//农历年
 	private final int year;
 	//农历月
@@ -33,26 +36,25 @@ public class ChineseDate {
 	private final int gyear;
 	//公历月
 	private final int gmonth;
-	//公里日
+	//公历日
 	private final int gday;
 
 	//是否闰年
 	private boolean leap;
 
 	/**
-	 * 构造方法传入日期
+	 * 通过公历日期构造
 	 *
-	 * @param date 日期
+	 * @param date 公历日期
 	 */
 	public ChineseDate(Date date) {
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((date.getTime() - baseDate) / DateUnit.DAY.getMillis());
+		int offset = (int) ((DateUtil.beginOfDay(date).getTime() / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;
 		int iYear = LunarInfo.BASE_YEAR;
-		final int maxYear = LunarInfo.getMaxYear();
-		for (; iYear <= maxYear; iYear++) {
+		for (; iYear <= LunarInfo.MAX_YEAR; iYear++) {
 			daysOfYear = LunarInfo.yearDays(iYear);
 			if (offset < daysOfYear) {
 				break;
@@ -152,6 +154,16 @@ public class ChineseDate {
 	}
 
 	/**
+	 * 获取公历的年
+	 *
+	 * @return 公历年
+	 * @since 5.6.1
+	 */
+	public int getGregorianYear(){
+		return this.gyear;
+	}
+
+	/**
 	 * 获取农历的月，从1开始计数
 	 *
 	 * @return 农历的月
@@ -161,6 +173,36 @@ public class ChineseDate {
 		return this.month;
 	}
 
+	/**
+	 * 获取公历的月，从1开始计数
+	 *
+	 * @return 公历月
+	 * @since 5.6.1
+	 */
+	public int getGregorianMonthBase1(){
+		return this.gmonth;
+	}
+
+	/**
+	 * 获取公历的月，从0开始计数
+	 *
+	 * @return 公历月
+	 * @since 5.6.1
+	 */
+	public int getGregorianMonth(){
+		return this.gmonth -1;
+	}
+
+	/**
+	 * 当前农历月份是否为闰月
+	 *
+	 * @return 是否为闰月
+	 * @since 5.4.2
+	 */
+	public boolean isLeapMonth() {
+		return ChineseMonth.isLeapMonth(this.year, this.month);
+	}
+
 
 	/**
 	 * 获得农历月份（中文，例如二月，十二月，或者润一月）
@@ -168,7 +210,7 @@ public class ChineseDate {
 	 * @return 返回农历月份
 	 */
 	public String getChineseMonth() {
-		return ChineseMonth.getChineseMonthName(this.leap, this.month, false);
+		return ChineseMonth.getChineseMonthName(isLeapMonth(), this.month, false);
 	}
 
 	/**
@@ -177,7 +219,7 @@ public class ChineseDate {
 	 * @return 返回农历月份称呼
 	 */
 	public String getChineseMonthName() {
-		return ChineseMonth.getChineseMonthName(this.leap, this.month, true);
+		return ChineseMonth.getChineseMonthName(isLeapMonth(), this.month, true);
 	}
 
 	/**
@@ -188,6 +230,16 @@ public class ChineseDate {
 	 */
 	public int getDay() {
 		return this.day;
+	}
+
+	/**
+	 * 获取公历的日
+	 *
+	 * @return 公历日
+	 * @since 5.6.1
+	 */
+	public int getGregorianDay(){
+		return this.gday;
 	}
 
 	/**
@@ -213,6 +265,28 @@ public class ChineseDate {
 		}
 	}
 
+	/**
+	 * 获取公历的Date
+	 *
+	 * @return 公历Date
+	 * @since 5.6.1
+	 */
+	public Date getGregorianDate(){
+		return DateUtil.date(getGregorianCalendar());
+	}
+
+	/**
+	 * 获取公历的Calendar
+	 *
+	 * @return 公历Calendar
+	 * @since 5.6.1
+	 */
+	public Calendar getGregorianCalendar(){
+		final Calendar calendar = CalendarUtil.calendar();
+		//noinspection MagicConstant
+		calendar.set(this.gyear, getGregorianMonth(), this.gday, 0, 0, 0);
+		return calendar;
+	}
 
 	/**
 	 * 获得节日
@@ -220,7 +294,7 @@ public class ChineseDate {
 	 * @return 获得农历节日
 	 */
 	public String getFestivals() {
-		return StrUtil.join(",", LunarFestival.getFestivals(this.month, this.day));
+		return StrUtil.join(",", LunarFestival.getFestivals(this.year, this.month, day));
 	}
 
 	/**
@@ -234,12 +308,12 @@ public class ChineseDate {
 
 
 	/**
-	 * 获得天干地支
+	 * 获得年的天干地支
 	 *
 	 * @return 获得天干地支
 	 */
 	public String getCyclical() {
-		return GanZhi.cyclicalm(year - LunarInfo.BASE_YEAR + 36);
+		return GanZhi.getGanzhiOfYear(this.year);
 	}
 
 	/**
@@ -248,10 +322,20 @@ public class ChineseDate {
 	 * @return 获得天干地支的年月日信息
 	 */
 	public String getCyclicalYMD() {
-		if (gyear >= LunarInfo.BASE_YEAR && gmonth > 0 && gday > 0){
-			return (cyclicalm(gyear, gmonth, gday));
+		if (gyear >= LunarInfo.BASE_YEAR && gmonth > 0 && gday > 0) {
+			return cyclicalm(gyear, gmonth, gday);
 		}
 		return null;
+	}
+
+
+	/**
+	 * 获得节气
+	 * @return 获得节气
+	 * @since 5.6.3
+	 */
+	public String getTerm() {
+		return SolarTerms.getTerm(gyear, gmonth, gday);
 	}
 
 	/**
@@ -274,24 +358,16 @@ public class ChineseDate {
 	/**
 	 * 这里同步处理年月日的天干地支信息
 	 *
-	 * @param Y 年
-	 * @param M 月
-	 * @param D 日
+	 * @param year  公历年
+	 * @param month 公历月，从1开始
+	 * @param day   公历日
 	 * @return 天干地支信息
 	 */
-	private String cyclicalm(int Y, int M, int D) {
-		String gzyear = GanZhi.cyclicalm(year - LunarInfo.BASE_YEAR + 36);
-		//天干地支处理
-		//返回当月「节」为几日开始
-		int firstNode = SolarTerms.getTerm(Y, (M * 2 - 1));
-		// 依据12节气修正干支月
-		String gzM = GanZhi.cyclicalm((Y - LunarInfo.BASE_YEAR) * 12 + M + 11);
-		if (D >= firstNode) {
-			gzM = GanZhi.cyclicalm((Y - LunarInfo.BASE_YEAR) * 12 + M + 12);
-		}
-		int dayCyclical = (int) ((DateUtil.parseDate(Y + "-" + M + "-" + "1").getTime() - baseDate + 2592000000L) / DateUnit.DAY.getMillis()) + 10;
-		String gzD = GanZhi.cyclicalm(dayCyclical + D - 1);
-		return gzyear + "年" + gzM + "月" + gzD + "日";
+	private String cyclicalm(int year, int month, int day) {
+		return StrUtil.format("{}年{}月{}日",
+				GanZhi.getGanzhiOfYear(this.year),
+				GanZhi.getGanzhiOfMonth(year, month, day),
+				GanZhi.getGanzhiOfDay(year, month, day));
 	}
 
 	/**

@@ -11,10 +11,10 @@ import org.junit.Test;
  *
  */
 public class CloneTest {
-	
+
 	@Test
 	public void cloneTest(){
-		
+
 		//实现Cloneable接口
 		Cat cat = new Cat();
 		Cat cat2 = cat.clone();
@@ -28,7 +28,7 @@ public class CloneTest {
 		Dog dog2 = dog.clone();
 		Assert.assertEquals(dog, dog2);
 	}
-	
+
 	//------------------------------------------------------------------------------- private Class for test
 	/**
 	 * 猫猫类，使用实现Cloneable方式
@@ -39,7 +39,7 @@ public class CloneTest {
 	static class Cat implements Cloneable<Cat>{
 		private String name = "miaomiao";
 		private int age = 2;
-		
+
 		@Override
 		public Cat clone() {
 			try {
@@ -49,7 +49,7 @@ public class CloneTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * 狗狗类，用于继承CloneSupport类
 	 * @author Looly

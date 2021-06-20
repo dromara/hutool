@@ -13,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +60,18 @@ public class AnnotationUtil {
 	 */
 	public static <A extends Annotation> A getAnnotation(AnnotatedElement annotationEle, Class<A> annotationType) {
 		return (null == annotationEle) ? null : toCombination(annotationEle).getAnnotation(annotationType);
+	}
+
+	/**
+	 * 检查是否包含指定注解指定注解
+	 *
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类型
+	 * @return 是否包含指定注解
+	 * @since 5.4.2
+	 */
+	public static boolean hasAnnotation(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) {
+		return null != getAnnotation(annotationEle, annotationType);
 	}
 
 	/**
@@ -187,5 +200,19 @@ public class AnnotationUtil {
 	 */
 	public static boolean isInherited(Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Inherited.class);
+	}
+
+	/**
+	 * 设置新的注解的属性（字段）值
+	 *
+	 * @param annotation 注解对象
+	 * @param annotationField 注解属性（字段）名称
+	 * @param value 要更新的属性值
+	 * @since 5.5.2
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void setValue(Annotation annotation, String annotationField, Object value) {
+		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+		memberValues.put(annotationField, value);
 	}
 }

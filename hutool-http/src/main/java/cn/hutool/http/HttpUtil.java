@@ -1,11 +1,10 @@
 package cn.hutool.http;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrBuilder;
@@ -14,11 +13,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -50,18 +51,18 @@ public class HttpUtil {
 	 * @return 是否https
 	 */
 	public static boolean isHttps(String url) {
-		return url.toLowerCase().startsWith("https");
+		return url.toLowerCase().startsWith("https:");
 	}
 
 	/**
 	 * 检测是否http
 	 *
 	 * @param url URL
-	 * @return 是否https
+	 * @return 是否http
 	 * @since 5.3.8
 	 */
 	public static boolean isHttp(String url) {
-		return url.toLowerCase().startsWith("http");
+		return url.toLowerCase().startsWith("http:");
 	}
 
 	/**
@@ -84,7 +85,19 @@ public class HttpUtil {
 	 * @since 3.2.0
 	 */
 	public static HttpRequest createGet(String url) {
-		return HttpRequest.get(url);
+		return createGet(url, false);
+	}
+
+	/**
+	 * 创建Http GET请求对象
+	 *
+	 * @param url               请求的URL，可以使HTTP或者HTTPS
+	 * @param isFollowRedirects 是否打开重定向
+	 * @return {@link HttpRequest}
+	 * @since 5.6.4
+	 */
+	public static HttpRequest createGet(String url, boolean isFollowRedirects) {
+		return HttpRequest.get(url).setFollowRedirects(isFollowRedirects);
 	}
 
 	/**
@@ -248,13 +261,7 @@ public class HttpUtil {
 	 * @return 文本
 	 */
 	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
-		if (StrUtil.isBlank(url)) {
-			throw new NullPointerException("[url] is null!");
-		}
-
-		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		download(url, out, true, streamPress);
-		return null == customCharset ? out.toString() : out.toString(customCharset);
+		return HttpDownloader.downloadString(url, customCharset, streamPress);
 	}
 
 	/**
@@ -315,63 +322,59 @@ public class HttpUtil {
 	 * @since 4.0.4
 	 */
 	public static long downloadFile(String url, File destFile, int timeout, StreamProgress streamProgress) {
-		return requestDownloadFile(url, destFile, timeout).writeBody(destFile, streamProgress);
+		return HttpDownloader.downloadFile(url, destFile, timeout, streamProgress);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url  请求的url
 	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 *
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
 	public static File downloadFileFromUrl(String url, String dest) {
 		return downloadFileFromUrl(url, FileUtil.file(dest));
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 *
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
 	public static File downloadFileFromUrl(String url, File destFile) {
 		return downloadFileFromUrl(url, destFile, null);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout  超时，单位毫秒，-1表示默认超时
-	 *
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
 	public static File downloadFileFromUrl(String url, File destFile, int timeout) {
 		return downloadFileFromUrl(url, destFile, timeout, null);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url            请求的url
 	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param streamProgress 进度条
-	 *
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
 	public static File downloadFileFromUrl(String url, File destFile, StreamProgress streamProgress) {
 		return downloadFileFromUrl(url, destFile, -1, streamProgress);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 *
@@ -379,47 +382,19 @@ public class HttpUtil {
 	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout        超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress 进度条
-	 *
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
 	public static File downloadFileFromUrl(String url, File destFile, int timeout, StreamProgress streamProgress) {
-		HttpResponse response = requestDownloadFile(url, destFile, timeout);
-		
-		final File outFile = response.completeFileNameFromHeader(destFile);
-		long writeBytes = response.writeBody(outFile, streamProgress);
-		return outFile;
+		return HttpDownloader.downloadForFile(url, destFile, timeout, streamProgress);
 	}
-	
-	/**
-	 * 请求下载文件
-	 *
-	 * @param url      请求下载文件地址
-	 * @param destFile 目标目录或者目标文件
-	 * @param timeout  超时时间
-	 *
-	 * @return HttpResponse
-	 * @since 5.4.1
-	 */
-	private static HttpResponse requestDownloadFile(String url, File destFile, int timeout) {
-		Assert.notBlank(url, "[url] is blank !");
-		Assert.notNull(url, "[destFile] is null !");
 
-		final HttpResponse response = HttpRequest.get(url).timeout(timeout).executeAsync();
-		if (response.isOk()) {
-			return response;
-		}
-
-		throw new HttpException("Server response error with status code: [{}]", response.getStatus());
-	}
-	
 	/**
 	 * 下载远程文件
 	 *
 	 * @param url        请求的url
 	 * @param out        将下载内容写到输出流中 {@link OutputStream}
 	 * @param isCloseOut 是否关闭输出流
-	 *
 	 * @return 文件大小
 	 */
 	public static long download(String url, OutputStream out, boolean isCloseOut) {
@@ -436,40 +411,18 @@ public class HttpUtil {
 	 * @return 文件大小
 	 */
 	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
-		if (StrUtil.isBlank(url)) {
-			throw new NullPointerException("[url] is null!");
-		}
-		if (null == out) {
-			throw new NullPointerException("[out] is null!");
-		}
-		
-		final HttpResponse response = HttpRequest.get(url).executeAsync();
-		if (!response.isOk()) {
-			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
-		}
-		return response.writeBody(out, isCloseOut, streamProgress);
+		return HttpDownloader.download(url, out, isCloseOut, streamProgress);
 	}
-	
+
 	/**
 	 * 下载远程文件数据，支持30x跳转
 	 *
 	 * @param url 请求的url
-	 *
 	 * @return 文件数据
-	 *
 	 * @since 5.3.6
 	 */
 	public static byte[] downloadBytes(String url) {
-		if (StrUtil.isBlank(url)) {
-			throw new NullPointerException("[url] is null!");
-		}
-		
-		final HttpResponse response = HttpRequest.get(url)
-				.setFollowRedirects(true).executeAsync();
-		if (!response.isOk()) {
-			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
-		}
-		return response.bodyBytes();
+		return HttpDownloader.downloadBytes(url);
 	}
 
 	/**
@@ -608,20 +561,6 @@ public class HttpUtil {
 			builder.delTo(lastIndex);
 		}
 		return builder.toString();
-	}
-
-	/**
-	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
-	 *
-	 * @param paramsStr 参数字符串（或者带参数的Path）
-	 * @param charset   字符集
-	 * @return 参数Map
-	 * @since 4.0.2
-	 * @deprecated 请使用 {@link #decodeParamMap(String, Charset)}
-	 */
-	@Deprecated
-	public static Map<String, String> decodeParamMap(String paramsStr, String charset) {
-		return decodeParamMap(paramsStr, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -869,5 +808,32 @@ public class HttpUtil {
 	 */
 	public static SimpleServer createServer(int port) {
 		return new SimpleServer(port);
+	}
+
+	/**
+	 * 构建简单的账号秘密验证信息，构建后类似于：
+	 * <pre>
+	 *     Basic YWxhZGRpbjpvcGVuc2VzYW1l
+	 * </pre>
+	 *
+	 * @param username 账号
+	 * @param password 密码
+	 * @param charset  编码（如果账号或密码中有非ASCII字符适用）
+	 * @return 密码验证信息
+	 * @since 5.4.6
+	 */
+	public static String buildBasicAuth(String username, String password, Charset charset) {
+		final String data = username.concat(":").concat(password);
+		return "Basic " + Base64.encode(data, charset);
+	}
+
+	/**
+	 * 关闭Cookie
+	 *
+	 * @see GlobalCookieManager#setCookieManager(CookieManager)
+	 * @since 5.6.5
+	 */
+	public static void closeCookie() {
+		GlobalCookieManager.setCookieManager(null);
 	}
 }

@@ -15,7 +15,7 @@ import java.util.concurrent.locks.StampedLock;
  * Simhash是一种局部敏感hash，用于海量文本去重。<br>
  * 算法实现来自：https://github.com/xlturing/Simhash4J
  * </p>
- * 
+ *
  * <p>
  * 局部敏感hash定义：假定两个字符串具有一定的相似性，在hash之后，仍然能保持这种相似性，就称之为局部敏感hash。
  * </p>
@@ -31,7 +31,7 @@ public class Simhash {
 	private final int fracBitNum;
 	/** 汉明距离的衡量标准，小于此距离标准表示相似 */
 	private final int hammingThresh;
-	
+
 	/** 按照分段存储simhash，查找更快速 */
 	private final List<Map<String, List<Long>>> storage;
 	private final StampedLock lock = new StampedLock();
@@ -45,7 +45,7 @@ public class Simhash {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param fracCount 存储段数
 	 * @param hammingThresh 汉明距离的衡量标准
 	 */
@@ -121,7 +121,7 @@ public class Simhash {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 按照(frac, 《simhash, content》)索引进行存储
 	 *
@@ -131,7 +131,7 @@ public class Simhash {
 		final int fracCount = this.fracCount;
 		final List<Map<String, List<Long>>> storage = this.storage;
 		final List<String> lFrac = splitSimhash(simhash);
-		
+
 		String frac;
 		Map<String, List<Long>> fracMap;
 		final long stamp = this.lock.writeLock();
@@ -155,7 +155,7 @@ public class Simhash {
 	//------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 计算汉明距离
-	 * 
+	 *
 	 * @param s1 值1
 	 * @param s2 值2
 	 * @return 汉明距离
@@ -172,7 +172,7 @@ public class Simhash {
 
 	/**
 	 * 将simhash分成n段
-	 * 
+	 *
 	 * @param simhash Simhash值
 	 * @return N段Simhash
 	 */

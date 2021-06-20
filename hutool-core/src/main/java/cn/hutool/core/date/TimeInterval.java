@@ -1,18 +1,16 @@
 package cn.hutool.core.date;
 
-import java.io.Serializable;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 计时器<br>
- * 计算某个过程花费的时间，精确到毫秒
+ * 计算某个过程花费的时间，精确到毫秒或纳秒
  *
  * @author Looly
  */
-public class TimeInterval implements Serializable {
+public class TimeInterval extends GroupTimeInterval {
 	private static final long serialVersionUID = 1L;
-
-	private long time;
-	private final boolean isNano;
+	private static final String DEFAULT_ID = StrUtil.EMPTY;
 
 	/**
 	 * 构造，默认使用毫秒计数
@@ -23,10 +21,11 @@ public class TimeInterval implements Serializable {
 
 	/**
 	 * 构造
+	 *
 	 * @param isNano 是否使用纳秒计数，false则使用毫秒
 	 */
 	public TimeInterval(boolean isNano) {
-		this.isNano = isNano;
+		super(isNano);
 		start();
 	}
 
@@ -34,28 +33,25 @@ public class TimeInterval implements Serializable {
 	 * @return 开始计时并返回当前时间
 	 */
 	public long start() {
-		time = DateUtil.current(isNano);
-		return time;
+		return start(DEFAULT_ID);
 	}
 
 	/**
 	 * @return 重新计时并返回从开始到当前的持续时间
 	 */
 	public long intervalRestart() {
-		long now = DateUtil.current(isNano);
-		long d = now - time;
-		time = now;
-		return d;
+		return intervalRestart(DEFAULT_ID);
 	}
 
 	/**
 	 * 重新开始计算时间（重置开始时间）
 	 *
 	 * @return this
+	 * @see #start()
 	 * @since 3.0.1
 	 */
 	public TimeInterval restart() {
-		time = DateUtil.current(isNano);
+		start(DEFAULT_ID);
 		return this;
 	}
 
@@ -68,7 +64,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long interval() {
-		return DateUtil.current(isNano) - time;
+		return interval(DEFAULT_ID);
 	}
 
 	/**
@@ -78,7 +74,7 @@ public class TimeInterval implements Serializable {
 	 * @since 4.6.7
 	 */
 	public String intervalPretty() {
-		return DateUtil.formatBetween(intervalMs());
+		return intervalPretty(DEFAULT_ID);
 	}
 
 	/**
@@ -87,7 +83,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long intervalMs() {
-		return isNano ? interval() / 1000000L : interval();
+		return intervalMs(DEFAULT_ID);
 	}
 
 	/**
@@ -96,7 +92,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔秒数，取绝对值
 	 */
 	public long intervalSecond() {
-		return intervalMs() / DateUnit.SECOND.getMillis();
+		return intervalSecond(DEFAULT_ID);
 	}
 
 	/**
@@ -105,7 +101,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔分钟数，取绝对值
 	 */
 	public long intervalMinute() {
-		return intervalMs() / DateUnit.MINUTE.getMillis();
+		return intervalMinute(DEFAULT_ID);
 	}
 
 	/**
@@ -114,7 +110,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔小时数，取绝对值
 	 */
 	public long intervalHour() {
-		return intervalMs() / DateUnit.HOUR.getMillis();
+		return intervalHour(DEFAULT_ID);
 	}
 
 	/**
@@ -123,7 +119,7 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔天数，取绝对值
 	 */
 	public long intervalDay() {
-		return intervalMs() / DateUnit.DAY.getMillis();
+		return intervalDay(DEFAULT_ID);
 	}
 
 	/**
@@ -132,7 +128,6 @@ public class TimeInterval implements Serializable {
 	 * @return 从开始到当前的间隔周数，取绝对值
 	 */
 	public long intervalWeek() {
-		return intervalMs() / DateUnit.WEEK.getMillis();
+		return intervalWeek(DEFAULT_ID);
 	}
-
 }

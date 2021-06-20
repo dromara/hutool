@@ -32,9 +32,14 @@ public class JSONConfig implements Serializable {
 	 */
 	private boolean ignoreNullValue = true;
 	/**
-	 * 是否忽略transient关键字修饰的字段
+	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 */
-	private boolean ignoreTransient = true;
+	private boolean transientSupport = true;
+
+	/**
+	 * 是否去除末尾多余0，例如如果为true,5.0返回5
+	 */
+	private boolean stripTrailingZeros = true;
 
 	/**
 	 * 创建默认的配置项
@@ -115,7 +120,8 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 设置日期格式，null表示默认的时间戳
+	 * 设置日期格式，null表示默认的时间戳<br>
+	 * 此方法设置的日期格式仅对转换为JSON字符串有效，对解析JSON为bean无效。
 	 *
 	 * @param dateFormat 日期格式，null表示默认的时间戳
 	 * @return this
@@ -146,24 +152,44 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 是否忽略transient关键字修饰的字段
+	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 *
-	 * @return 是否忽略transient关键字修饰的字段
-	 * @since 5.3.11
+	 * @return 是否支持
+	 * @since 5.4.2
 	 */
-	public boolean isIgnoreTransient() {
-		return this.ignoreTransient;
+	public boolean isTransientSupport() {
+		return this.transientSupport;
 	}
 
 	/**
-	 * 设置是否忽略transient关键字修饰的字段
+	 * 设置是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 *
-	 * @param ignoreTransient 是否忽略transient关键字修饰的字段
+	 * @param transientSupport 是否支持
 	 * @return this
-	 * @since 5.3.11
+	 * @since 5.4.2
 	 */
-	public JSONConfig setIgnoreTransient(boolean ignoreTransient) {
-		this.ignoreTransient = ignoreTransient;
+	public JSONConfig setTransientSupport(boolean transientSupport) {
+		this.transientSupport = transientSupport;
+		return this;
+	}
+
+	/**
+	 * 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @return 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @since 5.6.2
+	 */
+	public boolean isStripTrailingZeros() {
+		return stripTrailingZeros;
+	}
+
+	/**
+	 * 设置是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @param stripTrailingZeros 是否去除末尾多余0，例如如果为true,5.0返回5
+	 * @return this
+	 * @since 5.6.2
+	 */
+	public JSONConfig setStripTrailingZeros(boolean stripTrailingZeros) {
+		this.stripTrailingZeros = stripTrailingZeros;
 		return this;
 	}
 }

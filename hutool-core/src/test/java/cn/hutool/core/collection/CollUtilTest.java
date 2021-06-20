@@ -2,15 +2,27 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * 集合工具类单元测试
@@ -88,7 +100,7 @@ public class CollUtilTest {
 
 		Collection<String> union = CollUtil.union(list1, list2);
 
-		Assert.assertEquals(3, CollUtil.count(union, t -> t.equals("b")));
+		Assert.assertEquals(3, CollUtil.count(union, "b"::equals));
 	}
 
 	@Test
@@ -97,7 +109,7 @@ public class CollUtilTest {
 		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> intersection = CollUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollUtil.count(intersection, t -> t.equals("b")));
+		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
 	}
 
 	@Test
@@ -221,8 +233,9 @@ public class CollUtilTest {
 		map.put("c", "3");
 
 		final String[] result = new String[1];
+		String a = "a";
 		CollUtil.forEach(map, (key, value, index) -> {
-			if (key.equals("a")) {
+			if (a.equals(key)) {
 				result[0] = value;
 			}
 		});
@@ -233,7 +246,7 @@ public class CollUtilTest {
 	public void filterTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
-		Collection<String> filtered = CollUtil.filter(list, (Editor<String>) t -> t + 1);
+		Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
 
 		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
 	}
@@ -242,7 +255,7 @@ public class CollUtilTest {
 	public void filterTest2() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
-		ArrayList<String> filtered = CollUtil.filter(list, (Filter<String>) t -> false == "a".equals(t));
+		ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -673,6 +686,29 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void indexOfTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final int i = CollUtil.indexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(2, i);
+	}
+
+	@Test
+	public void lastIndexOfTest() {
+		// List有优化
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(3, i);
+	}
+
+	@Test
+	public void lastIndexOfSetTest() {
+		Set<String> list = CollUtil.set(true, "a", "b", "c", "c", "a", "b", "d");
+		// 去重后c排第三
+		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
+		Assert.assertEquals(2, i);
+	}
+
+	@Test
 	public void pageTest(){
 		List<Dict> objects = CollUtil.newArrayList();
 		for (int i = 0; i < 10; i++) {
@@ -680,5 +716,15 @@ public class CollUtilTest {
 		}
 
 		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());
+	}
+
+	@Test
+	public void subtractToListTest(){
+		List<Long> list1 = Arrays.asList(1L, 2L, 3L);
+		List<Long> list2 = Arrays.asList(2L, 3L);
+
+		List<Long> result = CollUtil.subtractToList(list1, list2);
+		Assert.assertEquals(1, result.size());
+		Assert.assertEquals(1L, result.get(0), 1);
 	}
 }

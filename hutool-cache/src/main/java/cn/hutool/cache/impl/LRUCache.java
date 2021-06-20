@@ -40,7 +40,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 
 		this.capacity = capacity;
 		this.timeout = timeout;
-		
+
 		//链表key按照访问顺序排序，调用get方法后，会将这次访问的元素移至头部
 		cacheMap = new FixedLinkedHashMap<>(capacity);
 	}
@@ -48,7 +48,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 	// ---------------------------------------------------------------- prune
 
 	/**
-	 * 只清理超时对象，LRU的实现会交给<code>LinkedHashMap</code>
+	 * 只清理超时对象，LRU的实现会交给{@code LinkedHashMap}
 	 */
 	@Override
 	protected int pruneCache() {

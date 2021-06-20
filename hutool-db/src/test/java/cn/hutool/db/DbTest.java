@@ -21,7 +21,7 @@ public class DbTest {
 		List<Entity> find = Db.use().query("select * from user where age = ?", 18);
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
-	
+
 	@Test
 	public void findTest() throws SQLException {
 		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
@@ -35,6 +35,42 @@ public class DbTest {
 		Assert.assertEquals(3, page0.size());
 		List<Entity> page1 = Db.use().page(Entity.create("user"), 1, 3);
 		Assert.assertEquals(1, page1.size());
+	}
+
+	@Test
+	public void pageTest2() throws SQLException {
+		String sql = "select * from user order by name";
+		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
+		List<Entity> page0 = Db.use().page(
+				sql, Page.of(0, 3));
+		Assert.assertEquals(3, page0.size());
+
+		List<Entity> page1 = Db.use().page(
+				sql, Page.of(1, 3));
+		Assert.assertEquals(1, page1.size());
+	}
+
+	@Test
+	public void pageWithParamsTest() throws SQLException {
+		String sql = "select * from user where name = ?";
+		PageResult<Entity> result = Db.use().page(
+				sql, Page.of(0, 3), "张三");
+
+		Assert.assertEquals(2, result.getTotal());
+		Assert.assertEquals(1, result.getTotalPage());
+		Assert.assertEquals(2, result.size());
+	}
+
+	@Test
+	public void countTest() throws SQLException {
+		final long count = Db.use().count("select * from user");
+		Assert.assertEquals(4, count);
+	}
+
+	@Test
+	public void countTest2() throws SQLException {
+		final long count = Db.use().count("select * from user order by name DESC");
+		Assert.assertEquals(4, count);
 	}
 
 	@Test
@@ -55,7 +91,7 @@ public class DbTest {
 	@Test
 	public void findByTest() throws SQLException {
 		List<Entity> find = Db.use().findBy("user",
-				Condition.parse("age", "> 18"), 
+				Condition.parse("age", "> 18"),
 				Condition.parse("age", "< 100")
 		);
 		for (Entity entity : find) {
@@ -63,7 +99,7 @@ public class DbTest {
 		}
 		Assert.assertEquals("unitTestUser", find.get(0).get("name"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {

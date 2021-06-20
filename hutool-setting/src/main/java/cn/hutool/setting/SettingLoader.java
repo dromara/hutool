@@ -2,7 +2,8 @@ package cn.hutool.setting;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.UrlResource;
+import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
@@ -10,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -68,17 +70,17 @@ public class SettingLoader {
 	/**
 	 * 加载设置文件
 	 * 
-	 * @param urlResource 配置文件URL
+	 * @param resource 配置文件URL
 	 * @return 加载是否成功
 	 */
-	public boolean load(UrlResource urlResource) {
-		if (urlResource == null) {
+	public boolean load(Resource resource) {
+		if (resource == null) {
 			throw new NullPointerException("Null setting url define!");
 		}
-		log.debug("Load setting file [{}]", urlResource);
+		log.debug("Load setting file [{}]", resource);
 		InputStream settingStream = null;
 		try {
-			settingStream = urlResource.getStream();
+			settingStream = resource.getStream();
 			load(settingStream);
 		} catch (Exception e) {
 			log.error(e, "Load setting error!");
@@ -168,9 +170,22 @@ public class SettingLoader {
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
+		store(FileUtil.touch(absolutePath));
+	}
+
+	/**
+	 * 持久化当前设置，会覆盖掉之前的设置<br>
+	 * 持久化会不会保留之前的分组
+	 *
+	 * @param file 设置文件
+	 * @since 5.4.3
+	 */
+	public void store(File file) {
+		Assert.notNull(file, "File to store must be not null !");
+		log.debug("Store Setting to [{}]...", file.getAbsolutePath());
 		PrintWriter writer = null;
 		try {
-			writer = FileUtil.getPrintWriter(absolutePath, charset, false);
+			writer = FileUtil.getPrintWriter(file, charset, false);
 			store(writer);
 		} finally {
 			IoUtil.close(writer);

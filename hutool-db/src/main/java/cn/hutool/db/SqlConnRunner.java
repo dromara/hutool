@@ -1,26 +1,20 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.db.handler.NumberHandler;
+import cn.hutool.db.handler.HandleHelper;
 import cn.hutool.db.handler.PageResultHandler;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.Query;
-import cn.hutool.db.sql.SqlExecutor;
+import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlUtil;
-import cn.hutool.db.sql.Wrapper;
 
 import javax.sql.DataSource;
-import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -32,14 +26,8 @@ import java.util.List;
  *
  * @author Luxiaolei
  */
-public class SqlConnRunner implements Serializable {
+public class SqlConnRunner extends DialectRunner {
 	private static final long serialVersionUID = 1L;
-
-	private Dialect dialect;
-	/**
-	 * 是否大小写不敏感（默认大小写不敏感）
-	 */
-	protected boolean caseInsensitive = GlobalDbConfig.caseInsensitive;
 
 	/**
 	 * 实例化一个新的SQL运行对象
@@ -79,7 +67,7 @@ public class SqlConnRunner implements Serializable {
 	 * @param dialect 方言
 	 */
 	public SqlConnRunner(Dialect dialect) {
-		this.dialect = dialect;
+		super(dialect);
 	}
 
 	/**
@@ -88,34 +76,11 @@ public class SqlConnRunner implements Serializable {
 	 * @param driverClassName 驱动类名，，用于识别方言
 	 */
 	public SqlConnRunner(String driverClassName) {
-		this(DialectFactory.newDialect(driverClassName));
+		super(driverClassName);
 	}
 	//------------------------------------------------------- Constructor end
 
 	//---------------------------------------------------------------------------- CRUD start
-
-	/**
-	 * 插入数据<br>
-	 * 此方法不会关闭Connection
-	 *
-	 * @param conn   数据库连接
-	 * @param record 记录
-	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
-	 */
-	public int insert(Connection conn, Entity record) throws SQLException {
-		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
-		}
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForInsert(conn, record);
-			return ps.executeUpdate();
-		} finally {
-			DbUtil.close(ps);
-		}
-	}
 
 	/**
 	 * 插入或更新数据<br>
@@ -152,33 +117,16 @@ public class SqlConnRunner implements Serializable {
 	}
 
 	/**
-	 * 批量插入数据<br>
-	 * 批量插入必须严格保持Entity的结构一致，不一致会导致插入数据出现不可预知的结果<br>
+	 * 插入数据<br>
 	 * 此方法不会关闭Connection
 	 *
-	 * @param conn    数据库连接
-	 * @param records 记录列表，记录KV必须严格一致
+	 * @param conn   数据库连接
+	 * @param record 记录
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int[] insert(Connection conn, Entity... records) throws SQLException {
-		checkConn(conn);
-		if (ArrayUtil.isEmpty(records)) {
-			return new int[]{0};
-		}
-
-		//单条单独处理
-		if (1 == records.length) {
-			return new int[]{insert(conn, records[0])};
-		}
-
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForInsertBatch(conn, records);
-			return ps.executeBatch();
-		} finally {
-			DbUtil.close(ps);
-		}
+	public int insert(Connection conn, Entity record) throws SQLException {
+		return insert(conn, new Entity[]{record})[0];
 	}
 
 	/**
@@ -191,19 +139,7 @@ public class SqlConnRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Object> insertForGeneratedKeys(Connection conn, Entity record) throws SQLException {
-		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
-		}
-
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForInsert(conn, record);
-			ps.executeUpdate();
-			return StatementUtil.getGeneratedKeys(ps);
-		} finally {
-			DbUtil.close(ps);
-		}
+		return insert(conn, record, HandleHelper::handleRowToList);
 	}
 
 	/**
@@ -216,106 +152,17 @@ public class SqlConnRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Long insertForGeneratedKey(Connection conn, Entity record) throws SQLException {
-		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
-		}
-
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForInsert(conn, record);
-			ps.executeUpdate();
-			return StatementUtil.getGeneratedKeyOfLong(ps);
-		} finally {
-			DbUtil.close(ps);
-		}
-	}
-
-	/**
-	 * 删除数据<br>
-	 * 此方法不会关闭Connection
-	 *
-	 * @param conn  数据库连接
-	 * @param where 条件
-	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
-	 */
-	public int del(Connection conn, Entity where) throws SQLException {
-		checkConn(conn);
-		if (CollUtil.isEmpty(where)) {
-			//不允许做全表删除
-			throw new SQLException("Empty entity provided!");
-		}
-
-		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForDelete(conn, query);
-			return ps.executeUpdate();
-		} finally {
-			DbUtil.close(ps);
-		}
-	}
-
-	/**
-	 * 更新数据<br>
-	 * 此方法不会关闭Connection
-	 *
-	 * @param conn   数据库连接
-	 * @param record 记录
-	 * @param where  条件
-	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
-	 */
-	public int update(Connection conn, Entity record, Entity where) throws SQLException {
-		checkConn(conn);
-		if (CollUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
-		}
-		if (CollUtil.isEmpty(where)) {
-			//不允许做全表更新
-			throw new SQLException("Empty where provided!");
-		}
-
-		//表名可以从被更新记录的Entity中获得，也可以从Where中获得
-		String tableName = record.getTableName();
-		if (StrUtil.isBlank(tableName)) {
-			tableName = where.getTableName();
-			record.setTableName(tableName);
-		}
-
-		final Query query = new Query(SqlUtil.buildConditions(where), tableName);
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForUpdate(conn, record, query);
-			return ps.executeUpdate();
-		} finally {
-			DbUtil.close(ps);
-		}
-	}
-
-	/**
-	 * 查询<br>
-	 * 此方法不会关闭Connection
-	 *
-	 * @param <T>   结果对象类型
-	 * @param conn  数据库连接对象
-	 * @param query {@link Query}
-	 * @param rsh   结果集处理对象
-	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
-	 */
-	public <T> T find(Connection conn, Query query, RsHandler<T> rsh) throws SQLException {
-		checkConn(conn);
-		Assert.notNull(query, "[query] is null !");
-
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForFind(conn, query);
-			return SqlExecutor.query(ps, rsh);
-		} finally {
-			DbUtil.close(ps);
-		}
+		return insert(conn, record, (rs) -> {
+			Long generatedKey = null;
+			if (rs != null && rs.next()) {
+				try {
+					generatedKey = rs.getLong(1);
+				} catch (SQLException e) {
+					// 自增主键不为数字或者为Oracle的rowid，跳过
+				}
+			}
+			return generatedKey;
+		});
 	}
 
 	/**
@@ -331,9 +178,7 @@ public class SqlConnRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
-		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
-		query.setFields(fields);
-		return find(conn, query, rsh);
+		return find(conn, Query.of(where).setFields(fields), rsh);
 	}
 
 	/**
@@ -433,24 +278,17 @@ public class SqlConnRunner implements Serializable {
 	}
 
 	/**
-	 * 结果的条目数
+	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) as _count
 	 *
-	 * @param conn  数据库连接对象
-	 * @param where 查询条件
-	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @param conn      数据库连接对象
+	 * @param selectSql 查询语句
+	 * @param params    查询参数
+	 * @return 结果数
+	 * @throws SQLException SQL异常
+	 * @since 5.6.6
 	 */
-	public int count(Connection conn, Entity where) throws SQLException {
-		checkConn(conn);
-
-		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForCount(conn, query);
-			return SqlExecutor.query(ps, new NumberHandler()).intValue();
-		} finally {
-			DbUtil.close(ps);
-		}
+	public long count(Connection conn, CharSequence selectSql, Object... params) throws SQLException {
+		return count(conn, SqlBuilder.of(selectSql).addParams(params));
 	}
 
 	/**
@@ -468,32 +306,25 @@ public class SqlConnRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T page(Connection conn, Collection<String> fields, Entity where, int pageNumber, int numPerPage, RsHandler<T> rsh) throws SQLException {
-		return page(conn, fields, where, new Page(pageNumber, numPerPage), rsh);
+		return page(conn, Query.of(where).setFields(fields).setPage(new Page(pageNumber, numPerPage)), rsh);
 	}
 
 	/**
 	 * 分页查询<br>
 	 * 此方法不会关闭Connection
 	 *
-	 * @param <T>    结果对象类型
-	 * @param conn   数据库连接对象
-	 * @param fields 返回的字段列表，null则返回所有字段
-	 * @param where  条件实体类（包含表名）
-	 * @param page   分页对象
-	 * @param rsh    结果集处理对象
+	 * @param conn       数据库连接对象
+	 * @param sqlBuilder SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page       分页对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
 	 */
-	public <T> T page(Connection conn, Collection<String> fields, Entity where, Page page, RsHandler<T> rsh) throws SQLException {
-		checkConn(conn);
-		if (null == page) {
-			return this.find(conn, fields, where, rsh);
-		}
-
-		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
-		query.setFields(fields);
-		query.setPage(page);
-		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);
+	public PageResult<Entity> page(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException {
+		final PageResultHandler pageResultHandler = new PageResultHandler(
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder)),
+				this.caseInsensitive);
+		return page(conn, sqlBuilder, page, pageResultHandler);
 	}
 
 	/**
@@ -509,38 +340,7 @@ public class SqlConnRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
-		checkConn(conn);
-
-		final int count = count(conn, where);
-		final PageResultHandler pageResultHandler = new PageResultHandler(new PageResult<>(page, numPerPage, count), this.caseInsensitive);
-		return this.page(conn, fields, where, page, numPerPage, pageResultHandler);
-	}
-
-	/**
-	 * 分页查询<br>
-	 * 此方法不会关闭Connection
-	 *
-	 * @param conn   数据库连接对象
-	 * @param fields 返回的字段列表，null则返回所有字段
-	 * @param where  条件实体类（包含表名）
-	 * @param page   分页对象
-	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
-	 */
-	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
-		checkConn(conn);
-
-		//查询全部
-		if (null == page) {
-			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler(GlobalDbConfig.caseInsensitive));
-			final PageResult<Entity> pageResult = new PageResult<>(0, entityList.size(), entityList.size());
-			pageResult.addAll(entityList);
-			return pageResult;
-		}
-
-		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = new PageResultHandler(new PageResult<>(page.getPageNumber(), page.getPageSize(), count), this.caseInsensitive);
-		return this.page(conn, fields, where, page, pageResultHandler);
+		return page(conn, fields, where, new Page(page, numPerPage));
 	}
 
 	/**
@@ -556,68 +356,40 @@ public class SqlConnRunner implements Serializable {
 	public PageResult<Entity> page(Connection conn, Entity where, Page page) throws SQLException {
 		return this.page(conn, null, where, page);
 	}
+
+	/**
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param conn   数据库连接对象
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where  条件实体类（包含表名）
+	 * @param page   分页对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
+		final PageResultHandler pageResultHandler = new PageResultHandler(
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, where)),
+				this.caseInsensitive);
+		return page(conn, fields, where, page, pageResultHandler);
+	}
+
+	/**
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param <T>     结果类型，取决于 {@link RsHandler} 的处理逻辑
+	 * @param conn    数据库连接对象
+	 * @param fields  返回的字段列表，null则返回所有字段
+	 * @param where   条件实体类（包含表名）
+	 * @param page    分页对象
+	 * @param handler 结果集处理器
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public <T> T page(Connection conn, Collection<String> fields, Entity where, Page page, RsHandler<T> handler) throws SQLException {
+		return this.page(conn, Query.of(where).setFields(fields).setPage(page), handler);
+	}
 	//---------------------------------------------------------------------------- CRUD end
-
-	//---------------------------------------------------------------------------- Getters and Setters end
-
-	/**
-	 * 设置是否在结果中忽略大小写<br>
-	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
-	 *
-	 * @param caseInsensitive 否在结果中忽略大小写
-	 * @since 5.2.4
-	 */
-	public void setCaseInsensitive(boolean caseInsensitive) {
-		this.caseInsensitive = caseInsensitive;
-	}
-
-	/**
-	 * @return SQL方言
-	 */
-	public Dialect getDialect() {
-		return dialect;
-	}
-
-	/**
-	 * 设置SQL方言
-	 *
-	 * @param dialect 方言
-	 * @return this
-	 */
-	public SqlConnRunner setDialect(Dialect dialect) {
-		this.dialect = dialect;
-		return this;
-	}
-
-	/**
-	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
-	 *
-	 * @param wrapperChar 包装字符，字符会在SQL生成时位于表名和字段名两边，null时表示取消包装
-	 * @return this
-	 * @since 4.0.0
-	 */
-	public SqlConnRunner setWrapper(Character wrapperChar) {
-		return setWrapper(new Wrapper(wrapperChar));
-	}
-
-	/**
-	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
-	 *
-	 * @param wrapper 包装器，null表示取消包装
-	 * @return this
-	 * @since 4.0.0
-	 */
-	public SqlConnRunner setWrapper(Wrapper wrapper) {
-		this.dialect.setWrapper(wrapper);
-		return this;
-	}
-	//---------------------------------------------------------------------------- Getters and Setters end
-
-	//---------------------------------------------------------------------------- Private method start
-	private void checkConn(Connection conn) {
-		if (null == conn) {
-			throw new NullPointerException("Connection object is null!");
-		}
-	}
-	//---------------------------------------------------------------------------- Private method start
 }

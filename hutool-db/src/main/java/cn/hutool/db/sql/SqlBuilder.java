@@ -3,7 +3,6 @@ package cn.hutool.db.sql;
 import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
@@ -12,6 +11,7 @@ import cn.hutool.db.dialect.DialectName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -19,17 +19,17 @@ import java.util.Map.Entry;
  * SQL构建器<br>
  * 首先拼接SQL语句，值使用 ? 占位<br>
  * 调用getParamValues()方法获得占位符对应的值
- * 
- * @author Looly
  *
+ * @author Looly
  */
-public class SqlBuilder implements Builder<String>{
+public class SqlBuilder implements Builder<String> {
 	private static final long serialVersionUID = 1L;
 
 	// --------------------------------------------------------------- Static methods start
+
 	/**
 	 * 创建SQL构建器
-	 * 
+	 *
 	 * @return SQL构建器
 	 */
 	public static SqlBuilder create() {
@@ -38,7 +38,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 创建SQL构建器
-	 * 
+	 *
 	 * @param wrapper 包装器
 	 * @return SQL构建器
 	 */
@@ -46,33 +46,58 @@ public class SqlBuilder implements Builder<String>{
 		return new SqlBuilder(wrapper);
 	}
 
+	/**
+	 * 从已有的SQL中构建一个SqlBuilder
+	 *
+	 * @param sql SQL语句
+	 * @return SqlBuilder
+	 * @since 5.5.3
+	 */
+	public static SqlBuilder of(CharSequence sql) {
+		return create().append(sql);
+	}
+
 	// --------------------------------------------------------------- Static methods end
 
 	// --------------------------------------------------------------- Enums start
+
 	/**
 	 * SQL中多表关联用的关键字
-	 * 
-	 * @author Looly
 	 *
+	 * @author Looly
 	 */
 	public enum Join {
-		/** 如果表中有至少一个匹配，则返回行 */
+		/**
+		 * 如果表中有至少一个匹配，则返回行
+		 */
 		INNER,
-		/** 即使右表中没有匹配，也从左表返回所有的行 */
+		/**
+		 * 即使右表中没有匹配，也从左表返回所有的行
+		 */
 		LEFT,
-		/** 即使左表中没有匹配，也从右表返回所有的行 */
+		/**
+		 * 即使左表中没有匹配，也从右表返回所有的行
+		 */
 		RIGHT,
-		/** 只要其中一个表中存在匹配，就返回行 */
+		/**
+		 * 只要其中一个表中存在匹配，就返回行
+		 */
 		FULL
 	}
 	// --------------------------------------------------------------- Enums end
 
-	final private StringBuilder sql = new StringBuilder();
-	/** 字段列表（仅用于插入和更新） */
-	final private List<String> fields = new ArrayList<>();
-	/** 占位符对应的值列表 */
-	final private List<Object> paramValues = new ArrayList<>();
-	/** 包装器 */
+	private final StringBuilder sql = new StringBuilder();
+	/**
+	 * 字段列表（仅用于插入和更新）
+	 */
+	private final List<String> fields = new ArrayList<>();
+	/**
+	 * 占位符对应的值列表
+	 */
+	private final List<Object> paramValues = new ArrayList<>();
+	/**
+	 * 包装器
+	 */
 	private Wrapper wrapper;
 
 	// --------------------------------------------------------------- Constructor start
@@ -88,7 +113,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 插入，使用默认的ANSI方言
-	 * 
+	 *
 	 * @param entity 实体
 	 * @return 自己
 	 */
@@ -99,22 +124,34 @@ public class SqlBuilder implements Builder<String>{
 	/**
 	 * 插入<br>
 	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
-	 * 
-	 * @param entity 实体
-	 * @param dialectName 方言名
+	 *
+	 * @param entity      实体
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
 	 * @return 自己
 	 */
 	public SqlBuilder insert(Entity entity, DialectName dialectName) {
+		return insert(entity, dialectName.name());
+	}
+
+	/**
+	 * 插入<br>
+	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
+	 *
+	 * @param entity      实体
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
+	 * @return 自己
+	 * @since 5.5.3
+	 */
+	public SqlBuilder insert(Entity entity, String dialectName) {
 		// 验证
 		validateEntity(entity);
 
 		if (null != wrapper) {
-			// 包装表名
-			// entity = wrapper.wrap(entity);
+			// 包装表名 entity = wrapper.wrap(entity);
 			entity.setTableName(wrapper.wrap(entity.getTableName()));
 		}
 
-		final boolean isOracle = ObjectUtil.equal(dialectName, DialectName.ORACLE);// 对Oracle的特殊处理
+		final boolean isOracle = DialectName.ORACLE.match(dialectName);// 对Oracle的特殊处理
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
 
@@ -144,16 +181,24 @@ public class SqlBuilder implements Builder<String>{
 				}
 			}
 		}
-		sql.append("INSERT INTO ")//
-				.append(entity.getTableName()).append(" (").append(fieldsPart).append(") VALUES (")//
-				.append(placeHolder.toString()).append(")");
+
+		// issue#1656@Github Phoenix兼容
+		if (DialectName.PHOENIX.match(dialectName)) {
+			sql.append("UPSERT INTO ");
+		} else {
+			sql.append("INSERT INTO ");
+		}
+
+		sql.append(entity.getTableName())
+				.append(" (").append(fieldsPart).append(") VALUES (")//
+				.append(placeHolder).append(")");
 
 		return this;
 	}
 
 	/**
 	 * 删除
-	 * 
+	 *
 	 * @param tableName 表名
 	 * @return 自己
 	 */
@@ -174,7 +219,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 更新
-	 * 
+	 *
 	 * @param entity 要更新的实体
 	 * @return 自己
 	 */
@@ -207,9 +252,9 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 查询
-	 * 
+	 *
 	 * @param isDistinct 是否添加DISTINCT关键字（查询唯一结果）
-	 * @param fields 查询的字段
+	 * @param fields     查询的字段
 	 * @return 自己
 	 */
 	public SqlBuilder select(boolean isDistinct, String... fields) {
@@ -218,9 +263,9 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 查询
-	 * 
+	 *
 	 * @param isDistinct 是否添加DISTINCT关键字（查询唯一结果）
-	 * @param fields 查询的字段
+	 * @param fields     查询的字段
 	 * @return 自己
 	 */
 	public SqlBuilder select(boolean isDistinct, Collection<String> fields) {
@@ -244,7 +289,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 查询（非Distinct）
-	 * 
+	 *
 	 * @param fields 查询的字段
 	 * @return 自己
 	 */
@@ -254,7 +299,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 查询（非Distinct）
-	 * 
+	 *
 	 * @param fields 查询的字段
 	 * @return 自己
 	 */
@@ -264,7 +309,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 添加 from语句
-	 * 
+	 *
 	 * @param tableNames 表名列表（多个表名用于多表查询）
 	 * @return 自己
 	 */
@@ -282,33 +327,17 @@ public class SqlBuilder implements Builder<String>{
 
 		return this;
 	}
-	
+
 	/**
-	 * 添加Where语句，所有逻辑之间为AND的关系
-	 * 
+	 * 添加Where语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
+	 *
 	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
 	 * @return 自己
 	 * @since 4.4.4
 	 */
 	public SqlBuilder where(Condition... conditions) {
-		return where(LogicalOperator.AND, conditions);
-	}
-
-	/**
-	 * 添加Where语句<br>
-	 * 只支持单一的逻辑运算符（例如多个条件之间）
-	 * 
-	 * @param logicalOperator 逻辑运算符
-	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
-	 * @return 自己
-	 */
-	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			where(buildCondition(logicalOperator, conditions));
+			where(buildCondition(conditions));
 		}
 
 		return this;
@@ -316,7 +345,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 添加Where语句<br>
-	 * 
+	 *
 	 * @param where WHERE语句之后跟的条件语句字符串
 	 * @return 自己
 	 */
@@ -329,9 +358,9 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 多值选择
-	 * 
-	 * @param <T> 值类型
-	 * @param field 字段名
+	 *
+	 * @param <T>    值类型
+	 * @param field  字段名
 	 * @param values 值列表
 	 * @return 自身
 	 */
@@ -343,7 +372,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 分组
-	 * 
+	 *
 	 * @param fields 字段
 	 * @return 自己
 	 */
@@ -361,19 +390,15 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	/**
-	 * 添加Having语句
-	 * 
-	 * @param logicalOperator 逻辑运算符
+	 * 添加Having语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
+	 *
 	 * @param conditions 条件
-	 * @return 自己
+	 * @return this
+	 * @since 5.4.3
 	 */
-	public SqlBuilder having(LogicalOperator logicalOperator, Condition... conditions) {
+	public SqlBuilder having(Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			having(buildCondition(logicalOperator, conditions));
+			having(buildCondition(conditions));
 		}
 
 		return this;
@@ -381,7 +406,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 添加Having语句
-	 * 
+	 *
 	 * @param having 条件语句
 	 * @return 自己
 	 */
@@ -394,7 +419,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 排序
-	 * 
+	 *
 	 * @param orders 排序对象
 	 * @return 自己
 	 */
@@ -433,9 +458,9 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 多表关联
-	 * 
+	 *
 	 * @param tableName 被关联的表名
-	 * @param join 内联方式
+	 * @param join      内联方式
 	 * @return 自己
 	 */
 	public SqlBuilder join(String tableName, Join join) {
@@ -455,20 +480,15 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	/**
-	 * 配合JOIN的 ON语句，多表关联的条件语句<br>
-	 * 只支持单一的逻辑运算符（例如多个条件之间）
-	 * 
-	 * @param logicalOperator 逻辑运算符
+	 * 配合JOIN的 ON语句，多表关联的条件语句，所有逻辑之间关系使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
+	 *
 	 * @param conditions 条件
-	 * @return 自己
+	 * @return this
+	 * @since 5.4.3
 	 */
-	public SqlBuilder on(LogicalOperator logicalOperator, Condition... conditions) {
+	public SqlBuilder on(Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
-			if (null != wrapper) {
-				// 包装字段名
-				conditions = wrapper.wrap(conditions);
-			}
-			on(buildCondition(logicalOperator, conditions));
+			on(buildCondition(conditions));
 		}
 
 		return this;
@@ -477,7 +497,7 @@ public class SqlBuilder implements Builder<String>{
 	/**
 	 * 配合JOIN的 ON语句，多表关联的条件语句<br>
 	 * 只支持单一的逻辑运算符（例如多个条件之间）
-	 * 
+	 *
 	 * @param on 条件
 	 * @return 自己
 	 */
@@ -490,7 +510,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 在SQL的开头补充SQL片段
-	 * 
+	 *
 	 * @param sqlFragment SQL片段
 	 * @return this
 	 * @since 4.1.3
@@ -503,8 +523,15 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	/**
-	 * 追加SQL其它部分片段
-	 * 
+	 * 追加SQL其它部分片段，此方法只是简单的追加SQL字符串，空格需手动加入，例如：
+	 *
+	 * <pre>
+	 *     SqlBuilder builder = SqlBuilder.of("select *");
+	 *     builder.append(" from ").append("user");
+	 * </pre>
+	 * <p>
+	 * 如果需要追加带占位符的片段，需调用{@link #addParams(Object...)} 方法加入对应参数值。
+	 *
 	 * @param sqlFragment SQL其它部分片段
 	 * @return this
 	 */
@@ -516,13 +543,33 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	/**
+	 * 手动增加参数，调用此方法前需确认SQL中有对应占位符，主要用于自定义SQL片段中有占位符的情况，例如：
+	 *
+	 * <pre>
+	 *     SqlBuilder builder = SqlBuilder.of("select * from user where id=?");
+	 *     builder.append(" and name=?")
+	 *     builder.addParams(1, "looly");
+	 * </pre>
+	 *
+	 * @param params 参数列表
+	 * @return this
+	 * @since 5.5.3
+	 */
+	public SqlBuilder addParams(Object... params) {
+		if (ArrayUtil.isNotEmpty(params)) {
+			Collections.addAll(this.paramValues, params);
+		}
+		return this;
+	}
+
+	/**
 	 * 构建查询SQL
-	 * 
+	 *
 	 * @param query {@link Query}
 	 * @return this
 	 */
 	public SqlBuilder query(Query query) {
-		return this.select(query.getFields()).from(query.getTableNames()).where(LogicalOperator.AND, query.getWhere());
+		return this.select(query.getFields()).from(query.getTableNames()).where(query.getWhere());
 	}
 	// --------------------------------------------------------------- Builder end
 
@@ -546,7 +593,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 获得占位符对应的值列表<br>
-	 * 
+	 *
 	 * @return 占位符对应的值列表
 	 */
 	public List<Object> getParamValues() {
@@ -555,7 +602,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 获得占位符对应的值列表<br>
-	 * 
+	 *
 	 * @return 占位符对应的值列表
 	 */
 	public Object[] getParamValueArray() {
@@ -564,7 +611,7 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 构建，默认打印SQL日志
-	 * 
+	 *
 	 * @return 构建好的SQL语句
 	 */
 	@Override
@@ -578,43 +625,30 @@ public class SqlBuilder implements Builder<String>{
 	}
 
 	// --------------------------------------------------------------- private method start
+
 	/**
 	 * 构建组合条件<br>
 	 * 例如：name = ? AND type IN (?, ?) AND other LIKE ?
-	 * 
-	 * @param logicalOperator 逻辑运算符
+	 *
 	 * @param conditions 条件对象
 	 * @return 构建后的SQL语句条件部分
 	 */
-	private String buildCondition(LogicalOperator logicalOperator, Condition... conditions) {
+	private String buildCondition(Condition... conditions) {
 		if (ArrayUtil.isEmpty(conditions)) {
 			return StrUtil.EMPTY;
 		}
-		if (null == logicalOperator) {
-			logicalOperator = LogicalOperator.AND;
+
+		if (null != wrapper) {
+			// 包装字段名
+			conditions = wrapper.wrap(conditions);
 		}
 
-		final StringBuilder conditionStrBuilder = new StringBuilder();
-		boolean isFirst = true;
-		for (Condition condition : conditions) {
-			// 添加逻辑运算符
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				// " AND " 或者 " OR "
-				conditionStrBuilder.append(StrUtil.SPACE).append(logicalOperator).append(StrUtil.SPACE);
-			}
-
-			// 构建条件部分："name = ?"、"name IN (?,?,?)"、"name BETWEEN ？AND ？"、"name LIKE ?"
-			conditionStrBuilder.append(condition.toString(this.paramValues));
-		}
-
-		return conditionStrBuilder.toString();
+		return ConditionBuilder.of(conditions).build(this.paramValues);
 	}
 
 	/**
 	 * 验证实体类对象的有效性
-	 * 
+	 *
 	 * @param entity 实体类对象
 	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */

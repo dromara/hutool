@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 可变<code>Object</code>
- * 
+ *
  * @param <T> 可变的类型
  * @since 3.0.1
  */
@@ -17,16 +17,14 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 	 * 构造，空值
 	 */
 	public MutableObj() {
-		super();
 	}
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param value 值
 	 */
 	public MutableObj(final T value) {
-		super();
 		this.value = value;
 	}
 

@@ -3,7 +3,7 @@ package cn.hutool.core.codec;
 /**
  * RotN（rotate by N places），回转N位密码，是一种简易的替换式密码，也是过去在古罗马开发的凯撒加密的一种变体。<br>
  * 代码来自：https://github.com/orclight/jencrypt
- * 
+ *
  * @author looly,shuzhilong
  * @since 4.4.1
  */
@@ -18,7 +18,7 @@ public class Rot {
 
 	/**
 	 * Rot-13编码，同时编码数字
-	 * 
+	 *
 	 * @param message 被编码的消息
 	 * @return 编码后的字符串
 	 */
@@ -28,7 +28,7 @@ public class Rot {
 
 	/**
 	 * Rot-13编码
-	 * 
+	 *
 	 * @param message 被编码的消息
 	 * @param isEnocdeNumber 是否编码数字
 	 * @return 编码后的字符串
@@ -39,7 +39,7 @@ public class Rot {
 
 	/**
 	 * RotN编码
-	 * 
+	 *
 	 * @param message 被编码的消息
 	 * @param offset 位移，常用位移13
 	 * @param isEnocdeNumber 是否编码数字
@@ -57,7 +57,7 @@ public class Rot {
 
 	/**
 	 * Rot-13解码，同时解码数字
-	 * 
+	 *
 	 * @param rot 被解码的消息密文
 	 * @return 解码后的字符串
 	 */
@@ -67,7 +67,7 @@ public class Rot {
 
 	/**
 	 * Rot-13解码
-	 * 
+	 *
 	 * @param rot 被解码的消息密文
 	 * @param isDecodeNumber 是否解码数字
 	 * @return 解码后的字符串
@@ -78,7 +78,7 @@ public class Rot {
 
 	/**
 	 * RotN解码
-	 * 
+	 *
 	 * @param rot 被解码的消息密文
 	 * @param offset 位移，常用位移13
 	 * @param isDecodeNumber 是否解码数字
@@ -97,7 +97,7 @@ public class Rot {
 	// ------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 解码字符
-	 * 
+	 *
 	 * @param c 字符
 	 * @param offset 位移
 	 * @param isDecodeNumber 是否解码数字
@@ -129,7 +129,7 @@ public class Rot {
 
 	/**
 	 * 编码字符
-	 * 
+	 *
 	 * @param c 字符
 	 * @param offset 位移
 	 * @param isDecodeNumber 是否编码数字

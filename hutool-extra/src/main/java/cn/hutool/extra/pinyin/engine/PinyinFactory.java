@@ -3,9 +3,10 @@ package cn.hutool.extra.pinyin.engine;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.pinyin.PinyinEngine;
-import cn.hutool.extra.template.TemplateException;
 import cn.hutool.log.StaticLog;
+
+import cn.hutool.extra.pinyin.PinyinEngine;
+import cn.hutool.extra.pinyin.PinyinException;
 
 /**
  * 简单拼音引擎工厂，用于根据用户引入的拼音库jar，自动创建对应的拼音引擎对象
@@ -47,6 +48,6 @@ public class PinyinFactory {
 			return engine;
 		}
 
-		throw new TemplateException("No pinyin jar found ! Please add one of it to your project !");
+		throw new PinyinException("No pinyin jar found ! Please add one of it to your project !");
 	}
 }

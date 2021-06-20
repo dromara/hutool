@@ -12,19 +12,19 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Base62工具类，提供Base62的编码和解码方案<br>
- * 
+ *
  * @author Looly
  * @since 4.5.9
  */
 public class Base62 {
 
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
-	private static final Base62Codec codec = Base62Codec.createGmp();
+	private static final Base62Codec CODEC = Base62Codec.createGmp();
 
 	// -------------------------------------------------------------------- encode
 	/**
 	 * Base62编码
-	 * 
+	 *
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
@@ -34,7 +34,7 @@ public class Base62 {
 
 	/**
 	 * Base62编码
-	 * 
+	 *
 	 * @param source 被编码的Base62字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -45,17 +45,17 @@ public class Base62 {
 
 	/**
 	 * Base62编码
-	 * 
+	 *
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(byte[] source) {
-		return new String(codec.encode(source));
+		return new String(CODEC.encode(source));
 	}
 
 	/**
 	 * Base62编码
-	 * 
+	 *
 	 * @param in 被编码Base62的流（一般为图片流或者文件流）
 	 * @return 被加密后的字符串
 	 */
@@ -65,7 +65,7 @@ public class Base62 {
 
 	/**
 	 * Base62编码
-	 * 
+	 *
 	 * @param file 被编码Base62的文件
 	 * @return 被加密后的字符串
 	 */
@@ -76,7 +76,7 @@ public class Base62 {
 	// -------------------------------------------------------------------- decode
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
@@ -86,7 +86,7 @@ public class Base62 {
 
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
@@ -96,7 +96,7 @@ public class Base62 {
 
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param source 被解码的Base62字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -107,7 +107,7 @@ public class Base62 {
 
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param Base62 被解码的Base62字符串
 	 * @param destFile 目标文件
 	 * @return 目标文件
@@ -118,7 +118,7 @@ public class Base62 {
 
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param base62Str 被解码的Base62字符串
 	 * @param out 写出到的流
 	 * @param isCloseOut 是否关闭输出流
@@ -129,7 +129,7 @@ public class Base62 {
 
 	/**
 	 * Base62解码
-	 * 
+	 *
 	 * @param base62Str 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
@@ -139,11 +139,11 @@ public class Base62 {
 
 	/**
 	 * 解码Base62
-	 * 
+	 *
 	 * @param base62bytes Base62输入
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(byte[] base62bytes) {
-		return codec.decode(base62bytes);
+		return CODEC.decode(base62bytes);
 	}
 }

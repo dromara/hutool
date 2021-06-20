@@ -17,7 +17,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * {@link IdUtil} 单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -31,12 +31,12 @@ public class IdUtilTest {
 		String randomUUID = IdUtil.randomUUID();
 		Assert.assertEquals(36, randomUUID.length());
 	}
-	
+
 	@Test
 	public void fastUUIDTest() {
 		String simpleUUID = IdUtil.fastSimpleUUID();
 		Assert.assertEquals(32, simpleUUID.length());
-		
+
 		String randomUUID = IdUtil.fastUUID();
 		Assert.assertEquals(36, randomUUID.length());
 	}
@@ -60,25 +60,26 @@ public class IdUtilTest {
 		}
 		Console.log(timer.interval());
 	}
-	
+
 	@Test
 	public void objectIdTest() {
 		String id = IdUtil.objectId();
 		Assert.assertEquals(24, id.length());
 	}
-	
+
 	@Test
 	public void createSnowflakeTest() {
 		Snowflake snowflake = IdUtil.createSnowflake(1, 1);
 		long id = snowflake.nextId();
 		Assert.assertTrue(id > 0);
 	}
-	
+
 	@Test
+	@Ignore
 	public void snowflakeBenchTest() {
 		final Set<Long> set = new ConcurrentHashSet<>();
 		final Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-		
+
 		//线程数
 		int threadCount = 100;
 		//每个线程生成的ID数
@@ -94,7 +95,7 @@ public class IdUtilTest {
 				latch.countDown();
 			});
 		}
-		
+
 		//等待全部线程结束
 		try {
 			latch.await();
@@ -103,11 +104,12 @@ public class IdUtilTest {
 		}
 		Assert.assertEquals(threadCount * idCountPerThread, set.size());
 	}
-	
+
 	@Test
+	@Ignore
 	public void snowflakeBenchTest2() {
 		final Set<Long> set = new ConcurrentHashSet<>();
-		
+
 		//线程数
 		int threadCount = 100;
 		//每个线程生成的ID数
@@ -123,7 +125,7 @@ public class IdUtilTest {
 				latch.countDown();
 			});
 		}
-		
+
 		//等待全部线程结束
 		try {
 			latch.await();

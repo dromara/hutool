@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 观察者链<br>
  * 用于加入多个观察者
- * 
+ *
  * @author Looly
  * @since 3.1.0
  */
@@ -20,7 +20,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 
 	/** 观察者列表 */
 	final private List<Watcher> chain;
-	
+
 	/**
 	 * 创建观察者链{@link WatcherChain}
 	 * @param watchers  观察者列表
@@ -29,7 +29,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	public static WatcherChain create(Watcher... watchers) {
 		return new WatcherChain(watchers);
 	}
-	
+
 	/**
 	 * 构造
 	 * @param watchers 观察者列表
@@ -37,7 +37,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	public WatcherChain(Watcher... watchers) {
 		chain = CollUtil.newArrayList(watchers);
 	}
-	
+
 	@Override
 	public void onCreate(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {

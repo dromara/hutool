@@ -18,5 +18,46 @@ public class DataSizeUtilTest {
 
 		parse = DataSizeUtil.parse("3mb");
 		Assert.assertEquals(3145728, parse);
+
+		parse = DataSizeUtil.parse("3.1M");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1m");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1MB");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("-3.1MB");
+		Assert.assertEquals(-3250585, parse);
+
+		parse = DataSizeUtil.parse("+3.1MB");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1mb");
+		Assert.assertEquals(3250585, parse);
+
+		parse = DataSizeUtil.parse("3.1");
+		Assert.assertEquals(3, parse);
+
+		try {
+			DataSizeUtil.parse("3.1.3");
+		} catch (IllegalArgumentException ie) {
+			Assert.assertEquals("'3.1.3' is not a valid data size", ie.getMessage());
+		}
+
+
+	}
+
+	@Test
+	public void formatTest(){
+		String format = DataSizeUtil.format(Long.MAX_VALUE);
+		Assert.assertEquals("8 EB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024 * 1024);
+		Assert.assertEquals("1 PB", format);
+
+		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024);
+		Assert.assertEquals("1 TB", format);
 	}
 }

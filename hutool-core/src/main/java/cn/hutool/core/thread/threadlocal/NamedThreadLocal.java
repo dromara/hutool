@@ -13,7 +13,7 @@ public class NamedThreadLocal<T> extends ThreadLocal<T> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 名字
 	 */
 	public NamedThreadLocal(String name) {

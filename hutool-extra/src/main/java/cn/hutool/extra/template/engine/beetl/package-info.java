@@ -1,6 +1,6 @@
 /**
- * Beetl实现
- * 
+ * Beetl实现，模板引擎介绍见：http://ibeetl.com/
+ *
  * @author looly
  *
  */

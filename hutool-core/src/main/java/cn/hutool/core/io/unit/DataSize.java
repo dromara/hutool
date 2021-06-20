@@ -3,6 +3,7 @@ package cn.hutool.core.io.unit;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public final class DataSize implements Comparable<DataSize> {
 	/**
 	 * The pattern for parsing.
 	 */
-	private static final Pattern PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
+	private static final Pattern PATTERN = Pattern.compile("^([+-]?\\d+(\\.\\d+)?)([a-zA-Z]{0,2})$");
 
 	/**
 	 * Bytes per Kilobyte(KB).
@@ -67,61 +68,61 @@ public final class DataSize implements Comparable<DataSize> {
 
 
 	/**
-	 * 获得对应bytes的{@link DataSize}
+	 * 获得对应bytes的DataSize
 	 *
 	 * @param bytes bytes大小，可正可负
-	 * @return a {@link DataSize}
+	 * @return this
 	 */
 	public static DataSize ofBytes(long bytes) {
 		return new DataSize(bytes);
 	}
 
 	/**
-	 * 获得对应kilobytes的{@link DataSize}
+	 * 获得对应kilobytes的DataSize
 	 *
 	 * @param kilobytes kilobytes大小，可正可负
-	 * @return a {@link DataSize}
+	 * @return a DataSize
 	 */
 	public static DataSize ofKilobytes(long kilobytes) {
 		return new DataSize(Math.multiplyExact(kilobytes, BYTES_PER_KB));
 	}
 
 	/**
-	 * 获得对应megabytes的{@link DataSize}
+	 * 获得对应megabytes的DataSize
 	 *
 	 * @param megabytes megabytes大小，可正可负
-	 * @return a {@link DataSize}
+	 * @return a DataSize
 	 */
 	public static DataSize ofMegabytes(long megabytes) {
 		return new DataSize(Math.multiplyExact(megabytes, BYTES_PER_MB));
 	}
 
 	/**
-	 * 获得对应gigabytes的{@link DataSize}
+	 * 获得对应gigabytes的DataSize
 	 *
 	 * @param gigabytes gigabytes大小，可正可负
-	 * @return a {@link DataSize}
+	 * @return a DataSize
 	 */
 	public static DataSize ofGigabytes(long gigabytes) {
 		return new DataSize(Math.multiplyExact(gigabytes, BYTES_PER_GB));
 	}
 
 	/**
-	 * 获得对应terabytes的{@link DataSize}
+	 * 获得对应terabytes的DataSize
 	 *
 	 * @param terabytes terabytes大小，可正可负
-	 * @return a {@link DataSize}
+	 * @return a DataSize
 	 */
 	public static DataSize ofTerabytes(long terabytes) {
 		return new DataSize(Math.multiplyExact(terabytes, BYTES_PER_TB));
 	}
 
 	/**
-	 * 获得指定{@link DataUnit}对应的{@link DataSize}
+	 * 获得指定{@link DataUnit}对应的DataSize
 	 *
 	 * @param amount 大小
 	 * @param unit 数据大小单位，null表示默认的BYTES
-	 * @return {@link DataSize}
+	 * @return DataSize
 	 */
 	public static DataSize of(long amount, DataUnit unit) {
 		if(null == unit){
@@ -131,7 +132,22 @@ public final class DataSize implements Comparable<DataSize> {
 	}
 
 	/**
-	 * 获取指定数据大小文本对应的{@link DataSize}对象，如果无单位指定，默认获取{@link DataUnit#BYTES}
+	 * 获得指定{@link DataUnit}对应的DataSize
+	 *
+	 * @param amount 大小
+	 * @param unit 数据大小单位，null表示默认的BYTES
+	 * @return DataSize
+	 * @since 5.4.5
+	 */
+	public static DataSize of(BigDecimal amount, DataUnit unit) {
+		if(null == unit){
+			unit = DataUnit.BYTES;
+		}
+		return new DataSize(amount.multiply(new BigDecimal(unit.size().toBytes())).longValue());
+	}
+
+	/**
+	 * 获取指定数据大小文本对应的DataSize对象，如果无单位指定，默认获取{@link DataUnit#BYTES}
 	 * <p>
 	 * 例如：
 	 * <pre>
@@ -141,7 +157,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * </pre>
 	 *
 	 * @param text the text to parse
-	 * @return the parsed {@link DataSize}
+	 * @return the parsed DataSize
 	 * @see #parse(CharSequence, DataUnit)
 	 */
 	public static DataSize parse(CharSequence text) {
@@ -149,7 +165,7 @@ public final class DataSize implements Comparable<DataSize> {
 	}
 
 	/**
-	 * Obtain a {@link DataSize} from a text string such as {@code 12MB} using
+	 * Obtain a DataSize from a text string such as {@code 12MB} using
 	 * the specified default {@link DataUnit} if no unit is specified.
 	 * <p>
 	 * The string starts with a number followed optionally by a unit matching one of the
@@ -164,16 +180,16 @@ public final class DataSize implements Comparable<DataSize> {
 	 *
 	 * @param text the text to parse
 	 * @param defaultUnit 默认的数据单位
-	 * @return the parsed {@link DataSize}
+	 * @return the parsed DataSize
 	 */
 	public static DataSize parse(CharSequence text, DataUnit defaultUnit) {
 		Assert.notNull(text, "Text must not be null");
 		try {
-			Matcher matcher = PATTERN.matcher(text);
+			final Matcher matcher = PATTERN.matcher(text);
 			Assert.state(matcher.matches(), "Does not match data size pattern");
-			DataUnit unit = determineDataUnit(matcher.group(2), defaultUnit);
-			long amount = Long.parseLong(matcher.group(1));
-			return DataSize.of(amount, unit);
+
+			final DataUnit unit = determineDataUnit(matcher.group(3), defaultUnit);
+			return DataSize.of(new BigDecimal(matcher.group(1)), unit);
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("'" + text + "' is not a valid data size", ex);
 		}

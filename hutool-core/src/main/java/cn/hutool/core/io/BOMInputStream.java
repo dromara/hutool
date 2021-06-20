@@ -1,13 +1,13 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 
-import cn.hutool.core.util.CharsetUtil;
-
 /**
- * 读取带BOM头的流内容，<code>getCharset()</code>方法调用后会得到BOM头的编码，且会去除BOM头<br>
+ * 读取带BOM头的流内容，{@code getCharset()}方法调用后会得到BOM头的编码，且会去除BOM头<br>
  * BOM定义：http://www.unicode.org/unicode/faq/utf_bom.html<br>
  * <ul>
  * <li>00 00 FE FF = UTF-32, big-endian</li>
@@ -46,10 +46,20 @@ public class BOMInputStream extends InputStream {
 	}
 	// ----------------------------------------------------------------- Constructor end
 
+	/**
+	 * 获取默认编码
+	 *
+	 * @return 默认编码
+	 */
 	public String getDefaultCharset() {
 		return defaultCharset;
 	}
 
+	/**
+	 * 获取BOM头中的编码
+	 *
+	 * @return 编码
+	 */
 	public String getCharset() {
 		if (!isInited) {
 			try {

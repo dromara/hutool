@@ -2,6 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.pojo.User;
 import cn.hutool.db.sql.Condition;
@@ -188,5 +189,12 @@ public class CRUDTest {
 
 		int[] result = db.insert(CollUtil.newArrayList(data1));
 		Console.log(result);
+	}
+
+	@Test
+	public void selectInTest() throws SQLException {
+		final List<Entity> results = db.query("select * from user where id in (:ids)",
+				MapUtil.of("ids", new int[]{1, 2, 3}));
+		Assert.assertEquals(2, results.size());
 	}
 }

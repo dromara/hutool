@@ -10,7 +10,9 @@ import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
+import cn.hutool.db.sql.LogicalOperator;
 import cn.hutool.db.sql.Query;
+import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
@@ -251,12 +253,49 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 批量执行非查询语句
 	 *
+	 * @param sql         SQL
+	 * @param paramsBatch 批量的参数
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.4.2
+	 */
+	public int[] executeBatch(String sql, Iterable<Object[]> paramsBatch) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 批量执行非查询语句
+	 *
 	 * @param sqls SQL列表
 	 * @return 每个SQL执行影响的行数
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.6
 	 */
 	public int[] executeBatch(String... sqls) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return SqlExecutor.executeBatch(conn, sqls);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 批量执行非查询语句
+	 *
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.4.2
+	 */
+	public int[] executeBatch(Iterable<String> sqls) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -591,7 +630,7 @@ public abstract class AbstractDb implements Serializable {
 	 * 根据多个条件查询数据列表，返回所有字段
 	 *
 	 * @param tableName 表名
-	 * @param wheres    字段名
+	 * @param wheres    条件，多个条件的连接逻辑使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.0
@@ -622,11 +661,47 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int count(Entity where) throws SQLException {
+	public long count(Entity where) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
 			return runner.count(conn, where);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 结果的条目数
+	 *
+	 * @param sql sql构造器
+	 * @return 复合条件的结果数
+	 * @throws SQLException SQL执行异常
+	 */
+	public long count(SqlBuilder sql) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.count(conn, sql);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 结果的条目数
+	 *
+	 * @param selectSql 查询SQL语句
+	 * @param params    查询参数
+	 * @return 复合条件的结果数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.6.6
+	 */
+	public long count(CharSequence selectSql, Object... params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.count(conn, selectSql, params);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -741,23 +816,79 @@ public abstract class AbstractDb implements Serializable {
 
 	/**
 	 * 分页查询<br>
+	 *
+	 * @param <T>    结果对象类型
+	 * @param sql    SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page   分页对象
+	 * @param rsh    结果集处理对象
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.6.6
+	 */
+	public <T> T page(CharSequence sql, Page page, RsHandler<T> rsh, Object... params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, SqlBuilder.of(sql).addParams(params), page, rsh);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 分页查询
+	 *
+	 * @param <T> 处理结果类型，可以将ResultSet转换为给定类型
+	 * @param sql  SQL构建器
+	 * @param page 分页对象
+	 * @param rsh  结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public <T> T page(SqlBuilder sql, Page page, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, sql, page, rsh);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 分页查询
+	 *
+	 * @param sql  SQL语句字符串
+	 * @param page 分页对象
+	 * @param params 参数列表
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
+	 */
+	public PageResult<Entity> page(CharSequence sql, Page page, Object... params) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.page(conn, SqlBuilder.of(sql).addParams(params), page);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 分页查询<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 *
 	 * @param fields     返回的字段列表，null则返回所有字段
 	 * @param where      条件实体类（包含表名）
-	 * @param page       分页对象
-	 * @param numPerPage 每页条目数
+	 * @param pageNumber 页码
+	 * @param pageSize   每页结果数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			return runner.page(conn, fields, where, page, numPerPage);
-		} finally {
-			this.closeConnection(conn);
-		}
+	public PageResult<Entity> page(Collection<String> fields, Entity where, int pageNumber, int pageSize) throws SQLException {
+		return page(fields, where, new Page(pageNumber, pageSize));
 	}
 
 	/**

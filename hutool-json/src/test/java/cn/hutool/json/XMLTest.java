@@ -13,4 +13,5 @@ public class XMLTest {
 		final String s = JSONUtil.toXmlStr(put);
 		Assert.assertEquals("<aaa>你好</aaa><键2>test</键2>", s);
 	}
+
 }

@@ -14,7 +14,7 @@ public class CaseReport {
 	/**
 	 * 包含的测试步骤报告
 	 */
-	private List<StepReport> stepReports = new ArrayList<StepReport>();
+	private List<StepReport> stepReports = new ArrayList<>();
 	
 	public List<StepReport> getStepReports() {
 		return stepReports;

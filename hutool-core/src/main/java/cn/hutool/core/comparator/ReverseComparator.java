@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 /**
  * 反转比较器
- * 
+ *
  * @author Looly
  *
  * @param <E> 被比较对象类型

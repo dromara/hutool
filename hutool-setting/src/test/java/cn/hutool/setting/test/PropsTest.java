@@ -30,6 +30,7 @@ public class PropsTest {
 
 	@Test
 	public void propTest() {
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		Props props = new Props("test.properties");
 		String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
@@ -41,6 +42,7 @@ public class PropsTest {
 	@Test
 	@Ignore
 	public void propTestForAbsPAth() {
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		Props props = new Props("d:/test.properties");
 		String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");

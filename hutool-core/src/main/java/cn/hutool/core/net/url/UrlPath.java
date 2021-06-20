@@ -1,6 +1,8 @@
 package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -8,7 +10,6 @@ import cn.hutool.core.util.URLUtil;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * URL中Path部分的封装
@@ -17,6 +18,7 @@ import java.util.StringTokenizer;
  * @since 5.3.1
  */
 public class UrlPath {
+
 	private List<String> segments;
 	private boolean withEngTag;
 
@@ -25,7 +27,7 @@ public class UrlPath {
 	 *
 	 * @param pathStr 初始化的路径字符串
 	 * @param charset decode用的编码，null表示不做decode
-	 * @return {@link UrlPath}
+	 * @return UrlPath
 	 */
 	public static UrlPath of(String pathStr, Charset charset) {
 		final UrlPath urlPath = new UrlPath();
@@ -73,7 +75,7 @@ public class UrlPath {
 	 * @return this
 	 */
 	public UrlPath add(CharSequence segment) {
-		add(segment, false);
+		addInternal(fixPath(segment), false);
 		return this;
 	}
 
@@ -84,35 +86,32 @@ public class UrlPath {
 	 * @return this
 	 */
 	public UrlPath addBefore(CharSequence segment) {
-		add(segment, true);
+		addInternal(fixPath(segment), true);
 		return this;
 	}
 
 	/**
 	 * 解析path
 	 *
-	 * @param path    路径，类似于aaa/bb/ccc
+	 * @param path    路径，类似于aaa/bb/ccc或/aaa/bbb/ccc
 	 * @param charset decode编码，null表示不解码
 	 * @return this
 	 */
 	public UrlPath parse(String path, Charset charset) {
-		UrlPath urlPath = new UrlPath();
-
 		if (StrUtil.isNotEmpty(path)) {
-			path = path.trim();
-
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 			if(StrUtil.endWith(path, CharUtil.SLASH)){
 				this.withEngTag = true;
 			}
 
-			final StringTokenizer tokenizer = new StringTokenizer(path, "/");
-			while (tokenizer.hasMoreTokens()) {
-				add(URLUtil.decode(tokenizer.nextToken(), charset));
+			path = fixPath(path);
+			final List<String> split = StrUtil.split(path, '/');
+			for (String seg : split) {
+				addInternal(URLDecoder.decodeForPath(seg, charset), false);
 			}
 		}
 
-		return urlPath;
+		return this;
 	}
 
 	/**
@@ -128,7 +127,7 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(URLUtil.encodeAll(segment, charset));
+			builder.append(CharUtil.SLASH).append(URLUtil.encodePathSegment(segment, charset));
 		}
 		if (withEngTag || StrUtil.isEmpty(builder)) {
 			builder.append(CharUtil.SLASH);
@@ -147,16 +146,12 @@ public class UrlPath {
 	 * @param segment 节点
 	 * @param before  是否在前面添加
 	 */
-	private void add(CharSequence segment, boolean before) {
-		final String seg = fixSegment(segment);
-		if (null == seg) {
-			return;
-		}
-
-
+	private void addInternal(CharSequence segment, boolean before) {
 		if (this.segments == null) {
 			this.segments = new LinkedList<>();
 		}
+
+		final String seg = StrUtil.str(segment);
 		if (before) {
 			this.segments.add(0, seg);
 		} else {
@@ -165,20 +160,20 @@ public class UrlPath {
 	}
 
 	/**
-	 * 修正节点，包括去掉前后的/，去掉空白符
+	 * 修正路径，包括去掉前后的/，去掉空白符
 	 *
-	 * @param segment 节点
-	 * @return 修正后的节点
+	 * @param path 节点或路径path
+	 * @return 修正后的路径
 	 */
-	private static String fixSegment(CharSequence segment) {
-		if (StrUtil.isEmpty(segment) || "/".contentEquals(segment)) {
-			return null;
+	private static String fixPath(CharSequence path) {
+		Assert.notNull(path, "Path segment must be not null!");
+		if ("/".contentEquals(path)) {
+			return StrUtil.EMPTY;
 		}
 
-		String segmentStr = StrUtil.str(segment);
-		segmentStr = StrUtil.trim(segmentStr);
-		segmentStr = StrUtil.removePrefix(segmentStr, "/");
-		segmentStr = StrUtil.removeSuffix(segmentStr, "/");
+		String segmentStr = StrUtil.trim(path);
+		segmentStr = StrUtil.removePrefix(segmentStr, StrUtil.SLASH);
+		segmentStr = StrUtil.removeSuffix(segmentStr, StrUtil.SLASH);
 		segmentStr = StrUtil.trim(segmentStr);
 		return segmentStr;
 	}

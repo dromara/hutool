@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -292,11 +293,60 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delFirst(Pattern pattern, CharSequence content) {
-		if (null == pattern || StrUtil.isBlank(content)) {
+		return replaceFirst(pattern, content, StrUtil.EMPTY);
+	}
+
+	/**
+	 * 替换匹配的第一个内容
+	 *
+	 * @param pattern 正则
+	 * @param content 被匹配的内容
+	 * @param replacement 替换的内容
+	 * @return 替换后剩余的内容
+	 * @since 5.6.5
+	 */
+	public static String replaceFirst(Pattern pattern, CharSequence content, String replacement) {
+		if (null == pattern || StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
 
-		return pattern.matcher(content).replaceFirst(StrUtil.EMPTY);
+		return pattern.matcher(content).replaceFirst(replacement);
+	}
+
+	/**
+	 * 删除匹配的最后一个内容
+	 *
+	 * @param regex 正则
+	 * @param str   被匹配的内容
+	 * @return 删除后剩余的内容
+	 * @since 5.6.5
+	 */
+	public static String delLast(String regex, CharSequence str) {
+		if (StrUtil.hasBlank(regex, str)) {
+			return StrUtil.str(str);
+		}
+
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return delLast(pattern, str);
+	}
+
+	/**
+	 * 删除匹配的最后一个内容
+	 *
+	 * @param pattern 正则
+	 * @param str     被匹配的内容
+	 * @return 删除后剩余的内容
+	 * @since 5.6.5
+	 */
+	public static String delLast(Pattern pattern, CharSequence str) {
+		if (null != pattern && StrUtil.isNotEmpty(str)) {
+			final MatchResult matchResult = lastIndexOf(pattern, str);
+			if(null != matchResult){
+				return StrUtil.subPre(str, matchResult.start()) + StrUtil.subSuf(str, matchResult.end());
+			}
+		}
+
+		return StrUtil.str(str);
 	}
 
 	/**
@@ -538,6 +588,79 @@ public class ReUtil {
 			return false;
 		}
 		return pattern.matcher(content).find();
+	}
+
+	/**
+	 * 找到指定正则匹配到字符串的开始位置
+	 *
+	 * @param regex 正则
+	 * @param content 字符串
+	 * @return 位置，{@code null}表示未找到
+	 * @since 5.6.5
+	 */
+	public static MatchResult indexOf(String regex, CharSequence content){
+		if (null == regex || null == content) {
+			return null;
+		}
+
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return indexOf(pattern, content);
+	}
+
+	/**
+	 * 找到指定模式匹配到字符串的开始位置
+	 *
+	 * @param pattern 模式
+	 * @param content 字符串
+	 * @return 位置，{@code null}表示未找到
+	 * @since 5.6.5
+	 */
+	public static MatchResult indexOf(Pattern pattern, CharSequence content){
+		if(null != pattern && null != content){
+			final Matcher matcher = pattern.matcher(content);
+			if(matcher.find()){
+				return matcher.toMatchResult();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 找到指定正则匹配到第一个字符串的位置
+	 *
+	 * @param regex 正则
+	 * @param content 字符串
+	 * @return 位置，{@code null}表示未找到
+	 * @since 5.6.5
+	 */
+	public static MatchResult lastIndexOf(String regex, CharSequence content){
+		if (null == regex || null == content) {
+			return null;
+		}
+
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return lastIndexOf(pattern, content);
+	}
+
+	/**
+	 * 找到指定模式匹配到最后一个字符串的位置
+	 *
+	 * @param pattern 模式
+	 * @param content 字符串
+	 * @return 位置，{@code null}表示未找到
+	 * @since 5.6.5
+	 */
+	public static MatchResult lastIndexOf(Pattern pattern, CharSequence content){
+		MatchResult result = null;
+		if(null != pattern && null != content){
+			final Matcher matcher = pattern.matcher(content);
+			while(matcher.find()){
+				result = matcher.toMatchResult();
+			}
+		}
+
+		return result;
 	}
 
 	/**

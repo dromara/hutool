@@ -1,0 +1,19 @@
+# http://editorconfig.org
+# 配置修改自：https://gitee.com/596392912/mica/blob/master/.editorconfig
+
+root = true
+
+[*]
+indent_style = tab
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{json,yml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+insert_final_newline = false
+trim_trailing_whitespace = false

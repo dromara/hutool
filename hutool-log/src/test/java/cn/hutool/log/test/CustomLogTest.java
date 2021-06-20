@@ -1,7 +1,5 @@
 package cn.hutool.log.test;
 
-import org.junit.Test;
-
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
@@ -11,7 +9,9 @@ import cn.hutool.log.dialect.jdk.JdkLogFactory;
 import cn.hutool.log.dialect.log4j.Log4jLogFactory;
 import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
 import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
+import cn.hutool.log.dialect.tinylog.TinyLog2Factory;
 import cn.hutool.log.dialect.tinylog.TinyLogFactory;
+import org.junit.Test;
 
 /**
  * 日志门面单元测试
@@ -28,8 +28,17 @@ public class CustomLogTest {
 		LogFactory.setCurrentLogFactory(factory);
 		Log log = LogFactory.get();
 		
-		log.info(null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+	}
+
+	@Test
+	public void consoleLogNullTest(){
+		LogFactory factory = new ConsoleLogFactory();
+		LogFactory.setCurrentLogFactory(factory);
+		Log log = LogFactory.get();
+
+		log.info(null);
+		log.info((String)null);
 	}
 	
 	@Test
@@ -39,6 +48,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -49,6 +59,18 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
+		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+	}
+
+	@Test
+	public void tinyLog2Test(){
+		LogFactory factory = new TinyLog2Factory();
+		LogFactory.setCurrentLogFactory(factory);
+		Log log = LogFactory.get();
+
+		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -61,6 +83,7 @@ public class CustomLogTest {
 		log.debug(null);
 		log.debug("This is custom '{}' log\n{}", factory.getName(), LINE);
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -71,6 +94,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 		
 	}
@@ -82,6 +106,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -92,6 +117,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 	
@@ -102,6 +128,7 @@ public class CustomLogTest {
 		Log log = LogFactory.get();
 		
 		log.info(null);
+		log.info((String)null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}
 }

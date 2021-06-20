@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -24,6 +27,10 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	private final Map<K, V> cache;
 	// 乐观读写锁
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	/**
+	 * 写的时候每个key一把锁，降低锁的粒度
+	 */
+	protected final Map<K, Lock> keyLockMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 构造，默认使用{@link WeakHashMap}实现缓存自动清理
@@ -70,22 +77,24 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	public V get(K key, Func0<V> supplier) {
 		V v = get(key);
-
 		if(null == v && null != supplier){
-			lock.writeLock().lock();
-			try{
-				v = cache.get(key);
+			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
+			final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
+			keyLock.lock();
+			try {
 				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
+				v = cache.get(key);
 				if (null == v) {
 					try {
 						v = supplier.call();
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
-					cache.put(key, v);
+					put(key, v);
 				}
-			} finally{
-				lock.writeLock().unlock();
+			} finally {
+				keyLock.unlock();
+				keyLockMap.remove(key);
 			}
 		}
 

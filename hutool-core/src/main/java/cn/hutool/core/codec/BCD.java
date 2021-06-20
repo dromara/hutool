@@ -1,5 +1,7 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * BCD码（Binary-Coded Decimal‎）亦称二进码十进数或二-十进制代码<br>
  * BCD码这种编码形式利用了四个位元来储存一个十进制的数码，使二进制和十进制之间的转换得以快捷的进行<br>
@@ -8,7 +10,7 @@ package cn.hutool.core.codec;
  *
  */
 public class BCD {
-	
+
 	/**
 	 * 字符串转BCD码
 	 * @param asc ASCII字符串
@@ -51,13 +53,14 @@ public class BCD {
 		}
 		return bbt;
 	}
-	
+
 	/**
 	 * ASCII转BCD
 	 * @param ascii ASCII byte数组
 	 * @return BCD
 	 */
 	public static byte[] ascToBcd(byte[] ascii) {
+		Assert.notNull(ascii, "Ascii must be not null!");
 		return ascToBcd(ascii, ascii.length);
 	}
 
@@ -68,6 +71,7 @@ public class BCD {
 	 * @return BCD
 	 */
 	public static byte[] ascToBcd(byte[] ascii, int ascLength) {
+		Assert.notNull(ascii, "Ascii must be not null!");
 		byte[] bcd = new byte[ascLength / 2];
 		int j = 0;
 		for (int i = 0; i < (ascLength + 1) / 2; i++) {
@@ -83,6 +87,7 @@ public class BCD {
 	 * @return ASCII字符串
 	 */
 	public static String bcdToStr(byte[] bytes) {
+		Assert.notNull(bytes, "Bcd bytes must be not null!");
 		char[] temp = new char[bytes.length * 2];
 		char val;
 
@@ -95,8 +100,8 @@ public class BCD {
 		}
 		return new String(temp);
 	}
-	
-	
+
+
 	//----------------------------------------------------------------- Private method start
 	/**
 	 * 转换单个byte为BCD

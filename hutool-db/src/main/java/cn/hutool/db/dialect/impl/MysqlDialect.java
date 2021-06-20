@@ -23,7 +23,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	}
 	
 	@Override
-	public DialectName dialectName() {
-		return DialectName.MYSQL;
+	public String dialectName() {
+		return DialectName.MYSQL.toString();
 	}
 }

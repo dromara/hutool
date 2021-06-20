@@ -30,7 +30,8 @@ public class EnumUtilTest {
 	@Test
 	public void getFieldNamesTest() {
 		List<String> names = EnumUtil.getFieldNames(TestEnum.class);
-		Assert.assertEquals(CollUtil.newArrayList("type", "name"), names);
+		Assert.assertTrue(names.contains("type"));
+		Assert.assertTrue(names.contains("name"));
 	}
 	
 	@Test

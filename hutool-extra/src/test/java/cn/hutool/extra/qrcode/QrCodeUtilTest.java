@@ -4,24 +4,26 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
  * 二维码工具类单元测试
- * 
+ *
  * @author looly
  *
  */
 public class QrCodeUtilTest {
 
 	@Test
-	@Ignore
 	public void generateTest() {
-		QrCodeUtil.generate("https://hutool.cn/", 300, 300, FileUtil.file("e:/qrcode.jpg"));
+		final BufferedImage image = QrCodeUtil.generate("https://hutool.cn/", 300, 300);
+		Assert.assertNotNull(image);
 	}
 
 	@Test
@@ -49,6 +51,14 @@ public class QrCodeUtilTest {
 	@Ignore
 	public void decodeTest() {
 		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
+		Console.log(decode);
+	}
+
+	@Test
+	@Ignore
+	public void decodeTest2() {
+		// 条形码
+		String decode = QrCodeUtil.decode(FileUtil.file("d:/test/90.png"));
 		Console.log(decode);
 	}
 

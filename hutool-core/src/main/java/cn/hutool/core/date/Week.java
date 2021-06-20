@@ -5,7 +5,7 @@ import java.util.Calendar;
 /**
  * 星期枚举<br>
  * 与Calendar中的星期int值对应
- * 
+ *
  * @see #SUNDAY
  * @see #MONDAY
  * @see #TUESDAY
@@ -13,7 +13,7 @@ import java.util.Calendar;
  * @see #THURSDAY
  * @see #FRIDAY
  * @see #SATURDAY
- * 
+ *
  * @author Looly
  *
  */
@@ -40,7 +40,7 @@ public enum Week {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param value 星期对应{@link Calendar} 中的Week值
 	 */
 	Week(int value) {
@@ -49,16 +49,16 @@ public enum Week {
 
 	/**
 	 * 获得星期对应{@link Calendar} 中的Week值
-	 * 
+	 *
 	 * @return 星期对应{@link Calendar} 中的Week值
 	 */
 	public int getValue() {
 		return this.value;
 	}
-	
+
 	/**
 	 * 转换为中文名
-	 * 
+	 *
 	 * @return 星期的中文名
 	 * @since 3.3.0
 	 */
@@ -68,7 +68,7 @@ public enum Week {
 
 	/**
 	 * 转换为中文名
-	 * 
+	 *
 	 * @param weekNamePre 表示星期的前缀，例如前缀为“星期”，则返回结果为“星期一”；前缀为”周“，结果为“周一”
 	 * @return 星期的中文名
 	 * @since 4.0.11
@@ -96,7 +96,7 @@ public enum Week {
 
 	/**
 	 * 将 {@link Calendar}星期相关值转换为Week枚举对象<br>
-	 * 
+	 *
 	 * @see #SUNDAY
 	 * @see #MONDAY
 	 * @see #TUESDAY
@@ -104,7 +104,7 @@ public enum Week {
 	 * @see #THURSDAY
 	 * @see #FRIDAY
 	 * @see #SATURDAY
-	 * 
+	 *
 	 * @param calendarWeekIntValue Calendar中关于Week的int值
 	 * @return {@link Week}
 	 */

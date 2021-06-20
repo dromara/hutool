@@ -196,6 +196,6 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 				}
 				return this.publicKey;
 		}
-		throw new CryptoException("Uknown key type: " + type);
+		throw new CryptoException("Unsupported key type: " + type);
 	}
 }

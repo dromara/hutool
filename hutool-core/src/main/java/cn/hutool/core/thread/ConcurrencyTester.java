@@ -21,6 +21,10 @@ public class ConcurrencyTester {
 	private final TimeInterval timeInterval;
 	private long interval;
 
+	/**
+	 * 构造
+	 * @param threadSize 线程数
+	 */
 	public ConcurrencyTester(int threadSize) {
 		this.sf = new SyncFinisher(threadSize);
 		this.timeInterval = new TimeInterval();
@@ -33,6 +37,8 @@ public class ConcurrencyTester {
 	 * @return this
 	 */
 	public ConcurrencyTester test(Runnable runnable) {
+		this.sf.clearWorker();
+
 		timeInterval.start();
 		this.sf//
 				.addRepeatWorker(runnable)//
@@ -40,6 +46,23 @@ public class ConcurrencyTester {
 				.start();
 
 		this.interval = timeInterval.interval();
+		return this;
+	}
+
+	/**
+	 * 重置测试器，重置包括：
+	 *
+	 * <ul>
+	 *     <li>清空worker</li>
+	 *     <li>重置计时器</li>
+	 * </ul>
+	 *
+	 * @return this
+	 * @since 5.7.2
+	 */
+	public ConcurrencyTester reset(){
+		this.sf.clearWorker();
+		this.timeInterval.restart();
 		return this;
 	}
 

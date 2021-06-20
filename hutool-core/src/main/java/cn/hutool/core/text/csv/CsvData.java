@@ -18,7 +18,7 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param header 头信息
 	 * @param rows 行
 	 */
@@ -58,7 +58,7 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 
 	/**
 	 * 获取所有行
-	 * 
+	 *
 	 * @return 所有行
 	 */
 	public List<CsvRow> getRows() {

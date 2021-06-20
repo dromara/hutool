@@ -2,6 +2,8 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.visitor.CopyVisitor;
+import cn.hutool.core.io.file.visitor.DelVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -66,7 +68,7 @@ public class PathUtil {
 
 		if (null == path || false == Files.exists(path)) {
 			return fileList;
-		} else if (false == Files.isDirectory(path)) {
+		} else if (false == isDirectory(path)) {
 			final File file = path.toFile();
 			if (null == fileFilter || fileFilter.accept(file)) {
 				fileList.add(file);
@@ -92,6 +94,18 @@ public class PathUtil {
 	/**
 	 * 遍历指定path下的文件并做处理
 	 *
+	 * @param start   起始路径，必须为目录
+	 * @param visitor {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
+	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
+	 * @since 5.5.2
+	 */
+	public static void walkFiles(Path start, FileVisitor<? super Path> visitor) {
+		walkFiles(start, -1, visitor);
+	}
+
+	/**
+	 * 遍历指定path下的文件并做处理
+	 *
 	 * @param start    起始路径，必须为目录
 	 * @param maxDepth 最大遍历深度，-1表示不限制深度
 	 * @param visitor  {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
@@ -112,7 +126,7 @@ public class PathUtil {
 	}
 
 	/**
-	 * 删除文件或者文件夹<br>
+	 * 删除文件或者文件夹，不追踪软链<br>
 	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作
 	 *
@@ -127,25 +141,8 @@ public class PathUtil {
 		}
 
 		try {
-			if (Files.isDirectory(path)) {
-				Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-
-					@Override
-					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-						Files.delete(file);
-						return FileVisitResult.CONTINUE;
-					}
-
-					@Override
-					public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-						if (e == null) {
-							Files.delete(dir);
-							return FileVisitResult.CONTINUE;
-						} else {
-							throw e;
-						}
-					}
-				});
+			if (isDirectory(path)) {
+				Files.walkFileTree(path, DelVisitor.INSTANCE);
 			} else {
 				Files.delete(path);
 			}
@@ -156,9 +153,10 @@ public class PathUtil {
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
+	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
 	 *
-	 * @param src     源文件路径
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
 	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
@@ -169,25 +167,86 @@ public class PathUtil {
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
+	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
 	 *
-	 * @param src     源文件路径
-	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
 	 * @since 5.4.1
 	 */
-	public static Path copyFile(Path src, Path dest, CopyOption... options) throws IORuntimeException {
+	public static Path copyFile(Path src, Path target, CopyOption... options) throws IORuntimeException {
 		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(dest, "Destination File or directiory is null !");
+		Assert.notNull(target, "Destination File or directiory is null !");
 
-		Path destPath = dest.toFile().isDirectory() ? dest.resolve(src.getFileName()) : dest;
+		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
+		// 创建级联父目录
+		mkParentDirs(targetPath);
 		try {
-			return Files.copy(src, destPath, options);
+			return Files.copy(src, targetPath, options);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 拷贝文件或目录，拷贝规则为：
+	 *
+	 * <ul>
+	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝整个目录到目标目录下</li>
+	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
+	 *     <li>源文件为文件，目标也为文件，则在{@link StandardCopyOption#REPLACE_EXISTING}情况下覆盖之</li>
+	 * </ul>
+	 *
+	 * @param src     源文件路径，如果为目录会在目标中创建新目录
+	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.1
+	 */
+	public static Path copy(Path src, Path target, CopyOption... options) throws IORuntimeException {
+		if (isDirectory(src)) {
+			return copyContent(src, target.resolve(src.getFileName()), options);
+		}
+		return copyFile(src, target, options);
+	}
+
+	/**
+	 * 拷贝目录下的所有文件或目录到目标目录中，此方法不支持文件对文件的拷贝。
+	 * <ul>
+	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝目录下所有文件和目录到目标目录下</li>
+	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
+	 * </ul>
+	 *
+	 * @param src     源文件路径，如果为目录只在目标中创建新目录
+	 * @param target  目标目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return Path
+	 * @throws IORuntimeException IO异常
+	 * @since 5.5.1
+	 */
+	public static Path copyContent(Path src, Path target, CopyOption... options) throws IORuntimeException {
+		try {
+			Files.walkFileTree(src, new CopyVisitor(src, target));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return target;
+	}
+
+	/**
+	 * 判断是否为目录，如果file为null，则返回false<br>
+	 * 此方法不会追踪到软链对应的真实地址，即软链被当作文件
+	 *
+	 * @param path {@link Path}
+	 * @return 如果为目录true
+	 * @since 5.5.1
+	 */
+	public static boolean isDirectory(Path path) {
+		return isDirectory(path, false);
 	}
 
 	/**
@@ -339,6 +398,21 @@ public class PathUtil {
 	}
 
 	/**
+	 * 读取文件的所有内容为byte数组
+	 *
+	 * @param path 文件
+	 * @return byte数组
+	 * @since 5.5.4
+	 */
+	public static byte[] readBytes(Path path){
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
 	 * 获得输出流
 	 *
 	 * @param path Path
@@ -370,9 +444,30 @@ public class PathUtil {
 	 * @since 5.4.1
 	 */
 	public static Path rename(Path path, String newName, boolean isOverride) {
+		return move(path, path.resolveSibling(newName), isOverride);
+	}
+
+	/**
+	 * 移动文件或目录<br>
+	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下
+	 *
+	 * @param src        源文件或目录路径
+	 * @param target     目标路径，如果为目录，则移动到此目录下
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标文件Path
+	 * @since 5.5.1
+	 */
+	public static Path move(Path src, Path target, boolean isOverride) {
+		Assert.notNull(src, "Src path must be not null !");
+		Assert.notNull(target, "Target path must be not null !");
 		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
+		if (isDirectory(target)) {
+			target = target.resolve(src.getFileName());
+		}
+		// 自动创建目标的父目录
+		mkParentDirs(target);
 		try {
-			return Files.move(path, path.resolveSibling(newName), options);
+			return Files.move(src, target, options);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -422,5 +517,87 @@ public class PathUtil {
 	 */
 	public static boolean isSymlink(Path path) {
 		return Files.isSymbolicLink(path);
+	}
+
+	/**
+	 * 判断文件或目录是否存在
+	 *
+	 * @param path          文件
+	 * @param isFollowLinks 是否跟踪软链（快捷方式）
+	 * @return 是否存在
+	 * @since 5.5.3
+	 */
+	public static boolean exists(Path path, boolean isFollowLinks) {
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
+		return Files.exists(path, options);
+	}
+
+	/**
+	 * 判断给定的目录是否为给定文件或文件夹的子目录
+	 *
+	 * @param parent 父目录
+	 * @param sub    子目录
+	 * @return 子目录是否为父目录的子目录
+	 * @since 5.5.5
+	 */
+	public static boolean isSub(Path parent, Path sub) {
+		return toAbsNormal(sub).startsWith(toAbsNormal(parent));
+	}
+
+	/**
+	 * 将Path路径转换为标准的绝对路径
+	 *
+	 * @param path 文件或目录Path
+	 * @return 转换后的Path
+	 * @since 5.5.5
+	 */
+	public static Path toAbsNormal(Path path){
+		Assert.notNull(path);
+		return path.toAbsolutePath().normalize();
+	}
+
+	/**
+	 * 获得文件的MimeType
+	 *
+	 * @param file 文件
+	 * @return MimeType
+	 * @since 5.5.5
+	 * @see Files#probeContentType(Path)
+	 */
+	public static String getMimeType(Path file) {
+		try {
+			return Files.probeContentType(file);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 创建所给目录及其父目录
+	 *
+	 * @param dir 目录
+	 * @return 目录
+	 * @since 5.5.7
+	 */
+	public static Path mkdir(Path dir) {
+		if (null != dir && false == exists(dir, false)) {
+			try {
+				Files.createDirectories(dir);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+		return dir;
+	}
+
+	/**
+	 * 创建所给文件或目录的父目录
+	 *
+	 * @param path 文件或目录
+	 * @return 父目录
+	 * @since 5.5.7
+	 */
+	public static Path mkParentDirs(Path path) {
+		return mkdir(path.getParent());
 	}
 }

@@ -1,11 +1,13 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.ArrayIter;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.handler.HandleHelper;
+import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.NamedSql;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlLog;
@@ -13,8 +15,18 @@ import cn.hutool.db.sql.SqlUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.*;
-import java.util.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Statement和PreparedStatement工具类
@@ -163,8 +175,9 @@ public class StatementUtil {
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, paramsBatch);
 		PreparedStatement ps = conn.prepareStatement(sql);
+		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Object[] params : paramsBatch) {
-			StatementUtil.fillParams(ps, params);
+			fillParams(ps, new ArrayIter<>(params), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
@@ -190,7 +203,7 @@ public class StatementUtil {
 		//null参数的类型缓存，避免循环中重复获取类型
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (Entity entity : entities) {
-			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, fields), nullTypeMap);
+			fillParams(ps, CollUtil.valuesOfKeys(entity, fields), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
@@ -218,14 +231,14 @@ public class StatementUtil {
 
 	/**
 	 * 获得自增键的值<br>
-	 * 此方法对于Oracle无效
+	 * 此方法对于Oracle无效（返回null）
 	 *
 	 * @param ps PreparedStatement
-	 * @return 自增键的值
+	 * @return 自增键的值，不存在返回null
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Long getGeneratedKeyOfLong(Statement ps) throws SQLException {
-		try (final ResultSet rs = ps.getGeneratedKeys()) {
+		return getGeneratedKeys(ps, (rs)->{
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
@@ -235,7 +248,7 @@ public class StatementUtil {
 				}
 			}
 			return generatedKey;
-		}
+		});
 	}
 
 	/**
@@ -246,15 +259,21 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static List<Object> getGeneratedKeys(Statement ps) throws SQLException {
-		final List<Object> keys = new ArrayList<>();
-		try (final ResultSet rs = ps.getGeneratedKeys()) {
-			if (null != rs) {
-				int i = 1;
-				while (rs.next()) {
-					keys.add(rs.getObject(i++));
-				}
-			}
-			return keys;
+		return getGeneratedKeys(ps, HandleHelper::handleRowToList);
+	}
+
+	/**
+	 * 获取主键，并使用{@link RsHandler} 处理后返回
+	 * @param statement {@link Statement}
+	 * @param rsHandler 主键结果集处理器
+	 * @param <T> 自定义主键类型
+	 * @return 主键
+	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
+	 */
+	public static <T> T getGeneratedKeys(Statement statement, RsHandler<T> rsHandler) throws SQLException {
+		try (final ResultSet rs = statement.getGeneratedKeys()) {
+			return rsHandler.handle(rs);
 		}
 	}
 

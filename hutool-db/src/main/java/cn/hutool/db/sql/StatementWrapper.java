@@ -26,19 +26,27 @@ import java.util.Calendar;
 /**
  * {@link PreparedStatement} 包装类，用于添加拦截方法功能<br>
  * 拦截方法包括：
- * 
+ *
  * <pre>
  * 1. 提供参数注入
  * 2. 提供SQL打印日志拦截
  * </pre>
- * 
+ *
  * @author looly
  * @since 4.1.0
  */
 public class StatementWrapper implements PreparedStatement {
+
 	private PreparedStatement rawStatement;
-	
-	
+
+	/**
+	 * 构造
+	 *
+	 * @param rawStatement {@link PreparedStatement}
+	 */
+	public StatementWrapper(PreparedStatement rawStatement) {
+		this.rawStatement = rawStatement;
+	}
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {

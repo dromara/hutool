@@ -10,7 +10,7 @@
 			<!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
 			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
 			<!-- 输出日志的格式 -->
-			<PatternLayout pattern="[%d{HH:mm:ss.SSS}][%-5level] %class{36}:%L %M - %msg%xEx%n" />
+			<PatternLayout pattern="[%d{HH:mm:ss.SSS}][%highlight{%-5level}] %class{36}:%L %M - %msg%xEx%n" disableAnsi="false" />
 		</Console>
 	</Appenders>
 

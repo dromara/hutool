@@ -5,11 +5,16 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.multipart.UploadFile;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 
 public class SimpleServerTest {
 
 	public static void main(String[] args) {
 		HttpUtil.createServer(8888)
+				.addFilter(((req, res, chain) -> {
+					Console.log("Filter: " + req.getPath());
+					chain.doFilter(req.getHttpExchange());
+				}))
 				// 设置默认根目录，classpath/html
 				.setRoot(FileUtil.file("html"))
 				// get数据测试，返回请求的PATH
@@ -17,9 +22,13 @@ public class SimpleServerTest {
 						response.write(request.getURI().toString(), ContentType.TEXT_PLAIN.toString())
 				)
 				// 返回JSON数据测试
-				.addAction("/restTest", (request, response) ->
-						response.write("{\"id\": 1, \"msg\": \"OK\"}", ContentType.JSON.toString())
-				)
+				.addAction("/restTest", (request, response) -> {
+					String res = JSONUtil.createObj()
+							.set("id", 1)
+							.set("method", request.getMethod())
+							.toStringPretty();
+					response.write(res, ContentType.JSON.toString());
+				})
 				// 获取表单数据测试
 				// http://localhost:8888/formTest?a=1&a=2&b=3
 				.addAction("/formTest", (request, response) ->
@@ -40,6 +49,11 @@ public class SimpleServerTest {
 							response.write(request.getMultipart().getParamMap().toString(), ContentType.TEXT_PLAIN.toString());
 						}
 				)
+				// 测试输出响应内容是否能正常返回Content-Length头信息
+				.addAction("test/zeroStr", (req, res)-> {
+					res.write("0");
+					Console.log("Write 0 OK");
+				})
 				.start();
 	}
 }

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.4.1</version>
+		<version>5.7.2</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -19,14 +19,14 @@
 	<properties>
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
-		<dbcp2.version>2.7.0</dbcp2.version>
+		<dbcp2.version>2.8.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
-		<druid.version>1.1.23</druid.version>
+		<druid.version>1.2.6</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.4</mongo.version>
-		<sqlite.version>3.32.3</sqlite.version>
-		<hsqldb.version>2.5.1</hsqldb.version>
-		<jedis.version>3.3.0</jedis.version>
+		<mongo.version>3.12.8</mongo.version>
+		<sqlite.version>3.34.0</sqlite.version>
+		<hsqldb.version>2.5.2</hsqldb.version>
+		<jedis.version>3.6.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -63,6 +63,12 @@
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP-java7</artifactId>
 			<version>${hikariCP.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -73,8 +79,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
-			<artifactId>BeeCP</artifactId>
-			<version>2.5.3</version>
+			<artifactId>beecp</artifactId>
+			<version>3.1.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -95,6 +107,16 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -120,13 +142,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.20</version>
+			<version>8.0.25</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.12.jre7</version>
+			<version>42.2.20.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -138,7 +160,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.26</version>
+			<version>1.7.30</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

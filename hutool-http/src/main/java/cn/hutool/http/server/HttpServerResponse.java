@@ -46,7 +46,7 @@ public class HttpServerResponse extends HttpServerBase {
 	}
 
 	/**
-	 * 发送HTTP状态码
+	 * 发送HTTP状态码，Content-Length为0不定长度，会输出Transfer-encoding: chunked
 	 *
 	 * @param httpStatusCode HTTP状态码，见HttpStatus
 	 * @return this
@@ -62,6 +62,17 @@ public class HttpServerResponse extends HttpServerBase {
 	 */
 	public HttpServerResponse sendOk() {
 		return send(HttpStatus.HTTP_OK);
+	}
+
+	/**
+	 * 发送成功状态码
+	 *
+	 * @param bodyLength 响应体长度，默认0表示不定长度，会输出Transfer-encoding: chunked
+	 * @return this
+	 * @since 5.5.7
+	 */
+	public HttpServerResponse sendOk(int bodyLength) {
+		return send(HttpStatus.HTTP_OK, bodyLength);
 	}
 
 	/**
@@ -91,7 +102,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * 发送HTTP状态码
 	 *
 	 * @param httpStatusCode HTTP状态码，见HttpStatus
-	 * @param bodyLength     响应体长度，默认0
+	 * @param bodyLength     响应体长度，默认0表示不定长度，会输出Transfer-encoding: chunked
 	 * @return this
 	 */
 	public HttpServerResponse send(int httpStatusCode, long bodyLength) {
@@ -290,7 +301,8 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(byte[] data) {
-		return write(new ByteArrayInputStream(data));
+		final ByteArrayInputStream in = new ByteArrayInputStream(data);
+		return write(in, in.available());
 	}
 
 	/**
@@ -302,8 +314,21 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @since 5.2.6
 	 */
 	public HttpServerResponse write(InputStream in, String contentType) {
+		return write(in, 0, contentType);
+	}
+
+	/**
+	 * 返回数据给客户端
+	 *
+	 * @param in          需要返回客户端的内容
+	 * @param length 内容长度，默认0表示不定长度，会输出Transfer-encoding: chunked
+	 * @param contentType 返回的类型
+	 * @return this
+	 * @since 5.2.7
+	 */
+	public HttpServerResponse write(InputStream in, int length, String contentType) {
 		setContentType(contentType);
-		return write(in);
+		return write(in, length);
 	}
 
 	/**
@@ -313,9 +338,23 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(InputStream in) {
+		return write(in, 0);
+	}
+
+	/**
+	 * 写出数据到客户端
+	 *
+	 * @param in     数据流
+	 * @param length 指定响应内容长度，默认0表示不定长度，会输出Transfer-encoding: chunked
+	 * @return this
+	 */
+	public HttpServerResponse write(InputStream in, int length) {
+		if (false == isSendCode) {
+			sendOk(Math.max(0, length));
+		}
 		OutputStream out = null;
 		try {
-			out = getOut();
+			out = this.httpExchange.getResponseBody();
 			IoUtil.copy(in, out);
 		} finally {
 			IoUtil.close(out);
@@ -332,12 +371,31 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @since 5.2.6
 	 */
 	public HttpServerResponse write(File file) {
-		final String fileName = file.getName();
+		return write(file, null);
+	}
+
+	/**
+	 * 返回文件给客户端（文件下载）
+	 *
+	 * @param file 写出的文件对象
+	 * @param fileName 文件名
+	 * @return this
+	 * @since 5.5.8
+	 */
+	public HttpServerResponse write(File file, String fileName) {
+		final long fileSize = file.length();
+		if(fileSize > Integer.MAX_VALUE){
+			throw new IllegalArgumentException("File size is too bigger than " + Integer.MAX_VALUE);
+		}
+
+		if(StrUtil.isBlank(fileName)){
+			fileName = file.getName();
+		}
 		final String contentType = ObjectUtil.defaultIfNull(HttpUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
-			write(in, contentType, fileName);
+			write(in, (int)fileSize, contentType, fileName);
 		} finally {
 			IoUtil.close(in);
 		}
@@ -352,13 +410,27 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param fileName    文件名
 	 * @since 5.2.6
 	 */
-		public void write(InputStream in, String contentType, String fileName) {
+	public void write(InputStream in, String contentType, String fileName) {
+		write(in, 0, contentType, fileName);
+	}
+
+	/**
+	 * 返回文件数据给客户端（文件下载）
+	 *
+	 * @param in          需要返回客户端的内容
+	 * @param length 长度
+	 * @param contentType 返回的类型
+	 * @param fileName    文件名
+	 * @return this
+	 * @since 5.2.7
+	 */
+	public HttpServerResponse write(InputStream in, int length, String contentType, String fileName) {
 		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 
-		if(false == contentType.startsWith("text/")){
+		if (false == contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
 			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
 		}
-		write(in, contentType);
+		return write(in, length, contentType);
 	}
 }

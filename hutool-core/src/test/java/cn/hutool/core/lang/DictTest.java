@@ -30,4 +30,17 @@ public class DictTest {
 		Assert.assertEquals(1, dict.get("A"));
 		Assert.assertEquals(1, dict.get("a"));
 	}
+
+	@Test
+	public void ofTest(){
+		Dict dict = Dict.of(
+				"RED", "#FF0000",
+				"GREEN", "#00FF00",
+				"BLUE", "#0000FF"
+		);
+
+		Assert.assertEquals("#FF0000", dict.get("RED"));
+		Assert.assertEquals("#00FF00", dict.get("GREEN"));
+		Assert.assertEquals("#0000FF", dict.get("BLUE"));
+	}
 }

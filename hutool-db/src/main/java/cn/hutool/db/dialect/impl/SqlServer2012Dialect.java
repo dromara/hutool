@@ -34,7 +34,7 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	public DialectName dialectName() {
-		return DialectName.SQLSERVER2012;
+	public String dialectName() {
+		return DialectName.SQLSERVER2012.name();
 	}
 }

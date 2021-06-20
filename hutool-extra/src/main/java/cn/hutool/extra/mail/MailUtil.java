@@ -3,8 +3,11 @@ package cn.hutool.extra.mail;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
+import javax.mail.Authenticator;
+import javax.mail.Session;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
@@ -346,6 +349,24 @@ public class MailUtil {
 		return send(mailAccount, false, tos, ccs, bccs, subject, content, imageMap, isHtml, files);
 	}
 
+	/**
+	 * 根据配置文件，获取邮件客户端会话
+	 *
+	 * @param mailAccount 邮件账户配置
+	 * @param isSingleton 是否单例（全局共享会话）
+	 * @return {@link Session}
+	 * @since 5.5.7
+	 */
+	public static Session getSession(MailAccount mailAccount, boolean isSingleton){
+		Authenticator authenticator = null;
+		if (mailAccount.isAuth()) {
+			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
+		}
+
+		return isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
+				: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------------ Private method start
 
 	/**
@@ -407,8 +428,8 @@ public class MailUtil {
 		}
 
 		List<String> result;
-		if (StrUtil.contains(addresses, ',')) {
-			result = StrUtil.splitTrim(addresses, ',');
+		if (StrUtil.contains(addresses, CharUtil.COMMA)) {
+			result = StrUtil.splitTrim(addresses, CharUtil.COMMA);
 		} else if (StrUtil.contains(addresses, ';')) {
 			result = StrUtil.splitTrim(addresses, ';');
 		} else {

@@ -35,7 +35,7 @@ public class JSONSupport implements JSONString{
 	 * @return 美化的JSON
 	 */
 	public String toPrettyString() {
-		return toJSON().toJSONString(4);
+		return toJSON().toStringPretty();
 	}
 
 	@Override

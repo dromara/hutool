@@ -8,6 +8,12 @@ import java.util.concurrent.ExecutorService;
  * @author loolly
  */
 public class FinalizableDelegatedExecutorService extends DelegatedExecutorService {
+
+	/**
+	 * 构造
+	 *
+	 * @param executor {@link ExecutorService}
+	 */
 	FinalizableDelegatedExecutorService(ExecutorService executor) {
 		super(executor);
 	}

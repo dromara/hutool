@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * MongoDB工具类
- * 
+ *
  * @author xiaoleilu
  *
  */
@@ -44,7 +44,7 @@ public class MongoDS implements Closeable {
 	/**
 	 * 构造MongoDB数据源<br>
 	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！
-	 * 
+	 *
 	 * @param host 主机（域名或者IP）
 	 * @param port 端口
 	 */
@@ -56,7 +56,7 @@ public class MongoDS implements Closeable {
 	/**
 	 * 构造MongoDB数据源<br>
 	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！
-	 * 
+	 *
 	 * @param mongoSetting MongoDB的配置文件，如果是null则读取默认配置文件或者使用MongoDB默认客户端配置
 	 * @param host 主机（域名或者IP）
 	 * @param port 端口
@@ -71,7 +71,7 @@ public class MongoDS implements Closeable {
 	 * 构造MongoDB数据源<br>
 	 * 当提供多个数据源时，这些数据源将为一个副本集或者多个mongos<br>
 	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！ 官方文档： http://docs.mongodb.org/manual/administration/replica-sets/
-	 * 
+	 *
 	 * @param groups 分组列表，当为null或空时使用无分组配置，一个分组使用单一模式，否则使用副本集模式
 	 */
 	public MongoDS(String... groups) {
@@ -84,7 +84,7 @@ public class MongoDS implements Closeable {
 	 * 当提供多个数据源时，这些数据源将为一个副本集或者mongos<br>
 	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！<br>
 	 * 官方文档： http://docs.mongodb.org/manual/administration/replica-sets/
-	 * 
+	 *
 	 * @param mongoSetting MongoDB的配置文件，必须有
 	 * @param groups 分组列表，当为null或空时使用无分组配置，一个分组使用单一模式，否则使用副本集模式
 	 */
@@ -112,16 +112,16 @@ public class MongoDS implements Closeable {
 	/**
 	 * 初始化<br>
 	 * 设定文件中的host和端口有三种形式：
-	 * 
+	 *
 	 * <pre>
 	 * host = host:port
 	 * </pre>
-	 * 
+	 *
 	 * <pre>
 	 * host = host
 	 * port = port
 	 * </pre>
-	 * 
+	 *
 	 * <pre>
 	 * host = host
 	 * </pre>
@@ -162,15 +162,15 @@ public class MongoDS implements Closeable {
 	 * 初始化集群<br>
 	 * 集群的其它客户端设定参数使用全局设定<br>
 	 * 集群中每一个实例成员用一个group表示，例如：
-	 * 
+	 *
 	 * <pre>
 	 * user = test1
 	 * pass = 123456
 	 * database = test
 	 * [db0]
-	 * host = 192.168.1.1:27117 
+	 * host = 192.168.1.1:27117
 	 * [db1]
-	 * host = 192.168.1.1:27118 
+	 * host = 192.168.1.1:27118
 	 * [db2]
 	 * host = 192.168.1.1:27119
 	 * </pre>
@@ -207,7 +207,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 设定MongoDB配置文件
-	 * 
+	 *
 	 * @param setting 配置文件
 	 */
 	public void setSetting(Setting setting) {
@@ -223,7 +223,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 获得DB
-	 * 
+	 *
 	 * @param dbName DB
 	 * @return DB
 	 */
@@ -233,7 +233,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 获得MongoDB中指定集合对象
-	 * 
+	 *
 	 * @param dbName 库名
 	 * @param collectionName 集合名
 	 * @return DBCollection
@@ -250,8 +250,8 @@ public class MongoDS implements Closeable {
 	// --------------------------------------------------------------------------- Private method start
 	/**
 	 * 创建ServerAddress对象，会读取配置文件中的相关信息
-	 * 
-	 * @param group 分组，如果为null默认为无分组
+	 *
+	 * @param group 分组，如果为{@code null}或者""默认为无分组
 	 * @return ServerAddress
 	 */
 	private ServerAddress createServerAddress(String group) {
@@ -272,7 +272,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 创建ServerAddress对象
-	 * 
+	 *
 	 * @param host 主机域名或者IP（如果为空默认127.0.0.1）
 	 * @param port 端口（如果为空默认为）
 	 * @return ServerAddress
@@ -284,7 +284,7 @@ public class MongoDS implements Closeable {
 	/**
 	 * 创建{@link MongoCredential}，用于服务端验证<br>
 	 * 此方法会首先读取指定分组下的属性，用户没有定义则读取空分组下的属性
-	 * 
+	 *
 	 * @param group 分组
 	 * @return {@link MongoCredential}，如果用户未指定用户名密码返回null
 	 * @since 4.1.20
@@ -302,7 +302,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 创建{@link MongoCredential}，用于服务端验证
-	 * 
+	 *
 	 * @param userName 用户名
 	 * @param database 数据库名
 	 * @param password 密码
@@ -318,7 +318,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 构件MongoDB连接选项<br>
-	 * 
+	 *
 	 * @param group 分组,当分组对应的选项不存在时会读取根选项，如果也不存在使用默认值
 	 * @return MongoClientOptions
 	 */
@@ -328,7 +328,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 构件MongoDB连接选项<br>
-	 * 
+	 *
 	 * @param group 分组，当分组对应的选项不存在时会读取根选项，如果也不存在使用默认值
 	 * @return Builder
 	 */
@@ -337,7 +337,7 @@ public class MongoDS implements Closeable {
 			return builder;
 		}
 
-		if (group == null) {
+		if (StrUtil.isEmpty(group)) {
 			group = StrUtil.EMPTY;
 		} else {
 			group = group + StrUtil.DOT;
@@ -378,7 +378,7 @@ public class MongoDS implements Closeable {
 
 	/**
 	 * 检查Setting配置文件
-	 * 
+	 *
 	 * @return Setting配置文件
 	 */
 	private Setting checkSetting() {

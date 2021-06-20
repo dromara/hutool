@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
@@ -144,7 +145,14 @@ public class ClassUtil {
 		Object obj;
 		for (int i = 0; i < objects.length; i++) {
 			obj = objects[i];
-			classes[i] = (null == obj) ? Object.class : obj.getClass();
+			if (obj instanceof NullWrapperBean) {
+				// 自定义null值的参数类型
+				classes[i] = ((NullWrapperBean<?>) obj).getWrappedClass();
+			} else if (null == obj) {
+				classes[i] = Object.class;
+			} else {
+				classes[i] = obj.getClass();
+			}
 		}
 		return classes;
 	}
@@ -286,7 +294,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回<code>null</code>
+	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回{@code null}
 	 *
 	 * @param clazz      类
 	 * @param methodName 方法名
@@ -333,7 +341,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回<code>null</code>
+	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回{@code null}
 	 *
 	 * @param clazz          被查找的类
 	 * @param methodName     方法名
@@ -348,7 +356,7 @@ public class ClassUtil {
 	// ----------------------------------------------------------------------------------------- Field
 
 	/**
-	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回<code>null</code>
+	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回{@code null}
 	 *
 	 * @param clazz     被查找字段的类
 	 * @param fieldName 字段名
@@ -539,7 +547,7 @@ public class ClassUtil {
 	 *
 	 * <pre>
 	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取{@link ClassUtil}类对应的ClassLoader
+	 * 2、获取{@link ClassLoaderUtil}类对应的ClassLoader
 	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
 	 * </pre>
 	 *
@@ -550,7 +558,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回<code>true</code>
+	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回{@code true}
 	 *
 	 * @param types1 类组1
 	 * @param types2 类组2
@@ -618,7 +626,7 @@ public class ClassUtil {
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 *
 	 * @param <T>                     对象类型
-	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
+	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用{@code .}或{@code #}连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
 	 * @param args                    参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
@@ -713,7 +721,7 @@ public class ClassUtil {
 		if (null == clazz) {
 			return false;
 		}
-		return BasicType.wrapperPrimitiveMap.containsKey(clazz);
+		return BasicType.WRAPPER_PRIMITIVE_MAP.containsKey(clazz);
 	}
 
 	/**
@@ -798,11 +806,11 @@ public class ClassUtil {
 		// 基本类型
 		if (targetType.isPrimitive()) {
 			// 原始类型
-			Class<?> resolvedPrimitive = BasicType.wrapperPrimitiveMap.get(sourceType);
+			Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
 			return targetType.equals(resolvedPrimitive);
 		} else {
 			// 包装类型
-			Class<?> resolvedWrapper = BasicType.primitiveWrapperMap.get(sourceType);
+			Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
 			return resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper);
 		}
 	}
@@ -942,10 +950,7 @@ public class ClassUtil {
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
 		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
-		if (argumentType instanceof Class) {
-			return (Class<?>) argumentType;
-		}
-		return null;
+		return TypeUtil.getClass(argumentType);
 	}
 
 	/**

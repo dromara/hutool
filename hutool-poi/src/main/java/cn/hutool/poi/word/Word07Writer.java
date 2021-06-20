@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Word生成器
+ * Word docx生成器
  *
  * @author looly
  * @since 4.4.1

@@ -108,18 +108,14 @@ public enum Month {
 	 * @return 此月份最后一天的值
 	 */
 	public int getLastDay(boolean isLeapYear) {
-		int lastDay = DAYS_OF_MONTH[value];
-		if (isLeapYear && Calendar.FEBRUARY == value){
-			lastDay += 1;
-		}
-		return lastDay;
+		return getLastDay(this.value, isLeapYear);
 	}
 
 	/**
 	 * 将 {@link Calendar}月份相关值转换为Month枚举对象<br>
 	 *
 	 * @param calendarMonthIntValue Calendar中关于Month的int值
-	 * @return {@link Month}
+	 * @return Month
 	 * @see Calendar#JANUARY
 	 * @see Calendar#FEBRUARY
 	 * @see Calendar#MARCH
@@ -165,5 +161,21 @@ public enum Month {
 			default:
 				return null;
 		}
+	}
+
+	/**
+	 * 获得指定月的最后一天
+	 * @param month 月份，从0开始
+	 * @param isLeapYear 是否为闰年，闰年只对二月有影响
+	 * @return 最后一天，可能为28,29,30,31
+	 * @since 5.4.7
+	 */
+	public static int getLastDay(int month, boolean isLeapYear){
+		int lastDay = DAYS_OF_MONTH[month];
+		if (isLeapYear && Calendar.FEBRUARY == month){
+			// 二月
+			lastDay += 1;
+		}
+		return lastDay;
 	}
 }

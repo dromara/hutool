@@ -2,7 +2,7 @@ package cn.hutool.core.lang.mutable;
 
 /**
  * 提供可变值类型接口
- * 
+ *
  * @param <T> 值得类型
  * @since 3.0.1
  */

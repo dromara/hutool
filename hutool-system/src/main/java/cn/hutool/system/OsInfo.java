@@ -39,14 +39,14 @@ public class OsInfo implements Serializable{
 	private final String PATH_SEPARATOR = SystemUtil.get("path.separator", false);
 
 	/**
-	 * 取得当前OS的架构（取自系统属性：<code>os.arch</code>）。
-	 * 
+	 * 取得当前OS的架构（取自系统属性：{@code os.arch}）。
+	 *
 	 * <p>
-	 * 例如：<code>"x86"</code>
+	 * 例如：{@code "x86"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getArch() {
@@ -54,14 +54,14 @@ public class OsInfo implements Serializable{
 	}
 
 	/**
-	 * 取得当前OS的名称（取自系统属性：<code>os.name</code>）。
-	 * 
+	 * 取得当前OS的名称（取自系统属性：{@code os.name}）。
+	 *
 	 * <p>
-	 * 例如：<code>"Windows XP"</code>
+	 * 例如：{@code "Windows XP"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getName() {
@@ -69,14 +69,14 @@ public class OsInfo implements Serializable{
 	}
 
 	/**
-	 * 取得当前OS的版本（取自系统属性：<code>os.version</code>）。
-	 * 
+	 * 取得当前OS的版本（取自系统属性：{@code os.version}）。
+	 *
 	 * <p>
-	 * 例如：<code>"5.1"</code>
+	 * 例如：{@code "5.1"}
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getVersion() {
@@ -85,12 +85,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为AIX，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为AIX，则返回{@code true}
 	 */
 	public final boolean isAix() {
 		return IS_OS_AIX;
@@ -98,12 +98,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为HP-UX，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为HP-UX，则返回{@code true}
 	 */
 	public final boolean isHpUx() {
 		return IS_OS_HP_UX;
@@ -111,12 +111,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为IRIX，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为IRIX，则返回{@code true}
 	 */
 	public final boolean isIrix() {
 		return IS_OS_IRIX;
@@ -124,12 +124,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Linux，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Linux，则返回{@code true}
 	 */
 	public final boolean isLinux() {
 		return IS_OS_LINUX;
@@ -137,12 +137,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Mac，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Mac，则返回{@code true}
 	 */
 	public final boolean isMac() {
 		return IS_OS_MAC;
@@ -150,12 +150,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为MacOS X，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为MacOS X，则返回{@code true}
 	 */
 	public final boolean isMacOsX() {
 		return IS_OS_MAC_OSX;
@@ -163,12 +163,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为OS2，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为OS2，则返回{@code true}
 	 */
 	public final boolean isOs2() {
 		return IS_OS_OS2;
@@ -176,12 +176,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Solaris，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Solaris，则返回{@code true}
 	 */
 	public final boolean isSolaris() {
 		return IS_OS_SOLARIS;
@@ -189,12 +189,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Sun OS，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Sun OS，则返回{@code true}
 	 */
 	public final boolean isSunOS() {
 		return IS_OS_SUN_OS;
@@ -202,12 +202,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows，则返回{@code true}
 	 */
 	public final boolean isWindows() {
 		return IS_OS_WINDOWS;
@@ -215,12 +215,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows 2000，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows 2000，则返回{@code true}
 	 */
 	public final boolean isWindows2000() {
 		return IS_OS_WINDOWS_2000;
@@ -228,12 +228,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows 95，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows 95，则返回{@code true}
 	 */
 	public final boolean isWindows95() {
 		return IS_OS_WINDOWS_95;
@@ -241,12 +241,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows 98，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows 98，则返回{@code true}
 	 */
 	public final boolean isWindows98() {
 		return IS_OS_WINDOWS_98;
@@ -254,12 +254,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows ME，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows ME，则返回{@code true}
 	 */
 	public final boolean isWindowsME() {
 		return IS_OS_WINDOWS_ME;
@@ -267,12 +267,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows NT，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows NT，则返回{@code true}
 	 */
 	public final boolean isWindowsNT() {
 		return IS_OS_WINDOWS_NT;
@@ -280,12 +280,12 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 判断当前OS的类型。
-	 * 
+	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
-	 * 
-	 * @return 如果当前OS类型为Windows XP，则返回<code>true</code>
+	 *
+	 * @return 如果当前OS类型为Windows XP，则返回{@code true}
 	 */
 	public final boolean isWindowsXP() {
 		return IS_OS_WINDOWS_XP;
@@ -295,10 +295,10 @@ public class OsInfo implements Serializable{
 	 * 判断当前OS的类型。
 	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
 	 *
-	 * @return 如果当前OS类型为Windows 7，则返回<code>true</code>
+	 * @return 如果当前OS类型为Windows 7，则返回{@code true}
 	 */
 	public final boolean isWindows7() {
 		return IS_OS_WINDOWS_7;
@@ -308,12 +308,12 @@ public class OsInfo implements Serializable{
 	 * 判断当前OS的类型。
 	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
 	 *
-	 * @return 如果当前OS类型为Windows 8，则返回<code>true</code>
+	 * @return 如果当前OS类型为Windows 8，则返回{@code true}
 	 */
-	public final boolean isWindoows8() {
+	public final boolean isWindows8() {
 		return IS_OS_WINDOWS_8;
 	}
 
@@ -321,10 +321,10 @@ public class OsInfo implements Serializable{
 	 * 判断当前OS的类型。
 	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
 	 *
-	 * @return 如果当前OS类型为Windows 8.1，则返回<code>true</code>
+	 * @return 如果当前OS类型为Windows 8.1，则返回{@code true}
 	 */
 	public final boolean isWindows8_1() {
 		return IS_OS_WINDOWS_8_1;
@@ -334,10 +334,10 @@ public class OsInfo implements Serializable{
 	 * 判断当前OS的类型。
 	 *
 	 * <p>
-	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * 如果不能取得系统属性{@code os.name}（因为Java安全限制），则总是返回{@code false}
 	 * </p>
 	 *
-	 * @return 如果当前OS类型为Windows 10，则返回<code>true</code>
+	 * @return 如果当前OS类型为Windows 10，则返回{@code true}
 	 */
 	public final boolean isWindows10() {
 		return IS_OS_WINDOWS_10;
@@ -345,10 +345,10 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 匹配OS名称。
-	 * 
+	 *
 	 * @param osNamePrefix OS名称前缀
-	 * 
-	 * @return 如果匹配，则返回<code>true</code>
+	 *
+	 * @return 如果匹配，则返回{@code true}
 	 */
 	private boolean getOSMatches(String osNamePrefix) {
 		if (OS_NAME == null) {
@@ -360,11 +360,11 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 匹配OS名称。
-	 * 
+	 *
 	 * @param osNamePrefix OS名称前缀
 	 * @param osVersionPrefix OS版本前缀
-	 * 
-	 * @return 如果匹配，则返回<code>true</code>
+	 *
+	 * @return 如果匹配，则返回{@code true}
 	 */
 	private boolean getOSMatches(String osNamePrefix, String osVersionPrefix) {
 		if ((OS_NAME == null) || (OS_VERSION == null)) {
@@ -375,14 +375,14 @@ public class OsInfo implements Serializable{
 	}
 
 	/**
-	 * 取得OS的文件路径的分隔符（取自系统属性：<code>file.separator</code>）。
-	 * 
+	 * 取得OS的文件路径的分隔符（取自系统属性：{@code file.separator}）。
+	 *
 	 * <p>
-	 * 例如：Unix为<code>"/"</code>，Windows为<code>"\\"</code>。
+	 * 例如：Unix为{@code "/"}，Windows为{@code "\\"}。
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getFileSeparator() {
@@ -390,14 +390,14 @@ public class OsInfo implements Serializable{
 	}
 
 	/**
-	 * 取得OS的文本文件换行符（取自系统属性：<code>line.separator</code>）。
-	 * 
+	 * 取得OS的文本文件换行符（取自系统属性：{@code line.separator}）。
+	 *
 	 * <p>
-	 * 例如：Unix为<code>"\n"</code>，Windows为<code>"\r\n"</code>。
+	 * 例如：Unix为{@code "\n"}，Windows为{@code "\r\n"}。
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getLineSeparator() {
@@ -405,14 +405,14 @@ public class OsInfo implements Serializable{
 	}
 
 	/**
-	 * 取得OS的搜索路径分隔符（取自系统属性：<code>path.separator</code>）。
-	 * 
+	 * 取得OS的搜索路径分隔符（取自系统属性：{@code path.separator}）。
+	 *
 	 * <p>
-	 * 例如：Unix为<code>":"</code>，Windows为<code>";"</code>。
+	 * 例如：Unix为{@code ":"}，Windows为{@code ";"}。
 	 * </p>
-	 * 
-	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
-	 * 
+	 *
+	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
+	 *
 	 * @since Java 1.1
 	 */
 	public final String getPathSeparator() {
@@ -421,7 +421,7 @@ public class OsInfo implements Serializable{
 
 	/**
 	 * 将OS的信息转换成字符串。
-	 * 
+	 *
 	 * @return OS的字符串表示
 	 */
 	@Override

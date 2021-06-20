@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * 值作为集合Set（LinkedHashSet）的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
- * 
+ *
  * @author looly
  *
  * @param <K> 键类型
@@ -28,7 +28,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 */
 	public SetValueMap(int initialCapacity) {
@@ -37,7 +37,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param m Map
 	 */
 	public SetValueMap(Map<? extends K, ? extends Collection<V>> m) {
@@ -46,7 +46,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param loadFactor 加载因子
 	 * @param m Map
 	 */
@@ -57,7 +57,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
@@ -70,7 +70,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 	public Set<V> get(Object key) {
 		return (Set<V>) super.get(key);
 	}
-	
+
 	@Override
 	protected Collection<V> createCollection() {
 		return new LinkedHashSet<>(DEFAULT_COLLCTION_INITIAL_CAPACITY);

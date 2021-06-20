@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 组合，即C(n, m)<br>
@@ -53,11 +54,10 @@ public class Combination implements Serializable {
 	 * @return 组合数
 	 */
 	public static long countAll(int n) {
-		long total = 0;
-		for (int i = 1; i <= n; i++) {
-			total += count(n, i);
+		if (n < 0 || n > 63) {
+			throw new IllegalArgumentException(StrUtil.format("countAll must have n >= 0 and n <= 63, but got n={}", n));
 		}
-		return total;
+		return n == 63 ? Long.MAX_VALUE : (1L << n) - 1;
 	}
 
 	/**

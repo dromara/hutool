@@ -17,8 +17,8 @@ public class H2Dialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	public DialectName dialectName() {
-		return DialectName.H2;
+	public String dialectName() {
+		return DialectName.H2.name();
 	}
 
 	@Override

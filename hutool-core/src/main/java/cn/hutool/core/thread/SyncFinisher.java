@@ -1,6 +1,5 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.exceptions.NotInitedException;
 import cn.hutool.core.exceptions.UtilException;
 
 import java.util.LinkedHashSet;
@@ -11,17 +10,18 @@ import java.util.concurrent.ExecutorService;
 /**
  * 线程同步结束器<br>
  * 在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。
- * 
+ *
  * <pre>
  * ps:
  * //模拟1000个线程并发
  * SyncFinisher sf = new SyncFinisher(1000);
- * concurrencyTestUtil.run(() -&gt; {
+ * sf.addWorker(() -&gt; {
  *      // 需要并发测试的业务代码
  * });
+ * sf.start()
  * </pre>
- * 
- * 
+ *
+ *
  * @author Looly
  * @since 4.1.15
  */
@@ -29,7 +29,7 @@ public class SyncFinisher {
 
 	private final Set<Worker> workers;
 	private final int threadSize;
-	private final ExecutorService executorService;
+	private ExecutorService executorService;
 
 	private boolean isBeginAtSameTime;
 	/** 启动同步器，用于保证所有worker线程同时开始 */
@@ -39,19 +39,18 @@ public class SyncFinisher {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param threadSize 线程数
 	 */
 	public SyncFinisher(int threadSize) {
 		this.beginLatch = new CountDownLatch(1);
 		this.threadSize = threadSize;
-		this.executorService = ThreadUtil.newExecutor(threadSize);
 		this.workers = new LinkedHashSet<>();
 	}
 
 	/**
 	 * 设置是否所有worker线程同时开始
-	 * 
+	 *
 	 * @param isBeginAtSameTime 是否所有worker线程同时开始
 	 * @return this
 	 */
@@ -62,7 +61,7 @@ public class SyncFinisher {
 
 	/**
 	 * 增加定义的线程数同等数量的worker
-	 * 
+	 *
 	 * @param runnable 工作线程
 	 * @return this
 	 */
@@ -80,7 +79,7 @@ public class SyncFinisher {
 
 	/**
 	 * 增加工作线程
-	 * 
+	 *
 	 * @param runnable 工作线程
 	 * @return this
 	 */
@@ -95,7 +94,7 @@ public class SyncFinisher {
 
 	/**
 	 * 增加工作线程
-	 * 
+	 *
 	 * @param worker 工作线程
 	 * @return this
 	 */
@@ -105,20 +104,26 @@ public class SyncFinisher {
 	}
 
 	/**
-	 * 开始工作
+	 * 开始工作<br>
+	 * 执行此方法后如果不再重复使用此对象，需调用{@link #stop()}关闭回收资源。
 	 */
 	public void start() {
 		start(true);
 	}
 
 	/**
-	 * 开始工作
-	 * 
+	 * 开始工作<br>
+	 * 执行此方法后如果不再重复使用此对象，需调用{@link #stop()}关闭回收资源。
+	 *
 	 * @param sync 是否阻塞等待
 	 * @since 4.5.8
 	 */
 	public void start(boolean sync) {
 		endLatch = new CountDownLatch(workers.size());
+
+		if(null == this.executorService || this.executorService.isShutdown()){
+			this.executorService = ThreadUtil.newExecutor(threadSize);
+		}
 		for (Worker worker : workers) {
 			executorService.submit(worker);
 		}
@@ -135,18 +140,21 @@ public class SyncFinisher {
 	}
 
 	/**
-	 * 等待所有Worker工作结束，否则阻塞
-	 * 
-	 * @throws InterruptedException 用户中断
-	 * @deprecated 使用start方法指定是否阻塞等待
+	 * 结束线程池。此方法执行两种情况：
+	 * <ol>
+	 *     <li>执行start(true)后，调用此方法结束线程池回收资源</li>
+	 *     <li>执行start(false)后，用户自行判断结束点执行此方法</li>
+	 * </ol>
+	 *
+	 * @since 5.6.6
 	 */
-	@Deprecated
-	public void await() throws InterruptedException {
-		if (endLatch == null) {
-			throw new NotInitedException("Please call start() method first!");
+	public void stop(){
+		if(null != this.executorService){
+			this.executorService.shutdown();
 		}
+		this.executorService = null;
 
-		endLatch.await();
+		clearWorker();
 	}
 
 	/**
@@ -158,7 +166,7 @@ public class SyncFinisher {
 
 	/**
 	 * 剩余任务数
-	 * 
+	 *
 	 * @return 剩余任务数
 	 */
 	public long count() {
@@ -167,7 +175,7 @@ public class SyncFinisher {
 
 	/**
 	 * 工作者，为一个线程
-	 * 
+	 *
 	 * @author xiaoleilu
 	 *
 	 */
@@ -189,6 +197,9 @@ public class SyncFinisher {
 			}
 		}
 
+		/**
+		 * 任务内容
+		 */
 		public abstract void work();
 	}
 }

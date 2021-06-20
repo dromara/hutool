@@ -1,14 +1,5 @@
 package cn.hutool.crypto.digest;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -18,6 +9,15 @@ import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 
 /**
  * 摘要算法<br>
@@ -84,7 +84,7 @@ public class Digester implements Serializable {
 	 * 
 	 * @param algorithm 算法
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
-	 * @return {@link Digester}
+	 * @return Digester
 	 * @throws CryptoException Cause by IOException
 	 */
 	public Digester init(String algorithm, Provider provider) {

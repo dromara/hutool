@@ -1,28 +1,28 @@
 package cn.hutool.core.comparator;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Bean属性排序器<br>
  * 支持读取Bean多层次下的属性
- * 
+ *
  * @author Looly
  *
  * @param <T> 被比较的Bean
  */
 public class PropertyComparator<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 9157326766723846313L;
-	
+
 	private final String property;
 	private final boolean isNullGreater;
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param property 属性名
 	 */
 	public PropertyComparator(String property) {
@@ -31,7 +31,7 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param property 属性名
 	 * @param isNullGreater null值是否排在后（从小到大排序）
 	 */
@@ -53,8 +53,8 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 		Comparable<?> v1;
 		Comparable<?> v2;
 		try {
-			v1 = (Comparable<?>) BeanUtil.getProperty(o1, property);
-			v2 = (Comparable<?>) BeanUtil.getProperty(o2, property);
+			v1 = BeanUtil.getProperty(o1, property);
+			v2 = BeanUtil.getProperty(o2, property);
 		} catch (Exception e) {
 			throw new ComparatorException(e);
 		}

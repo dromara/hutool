@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,4 +57,27 @@ public class TypeUtilTest {
 		public void service(String string) {
 		}
 	}
+
+	@Test
+	public void getActualTypesTest(){
+		// 测试多层级泛型参数是否能获取成功
+		Type idType = TypeUtil.getActualType(Level3.class,
+				ReflectUtil.getField(Level3.class, "id"));
+
+		Assert.assertEquals(Long.class, idType);
+	}
+
+	public static class Level3 extends Level2<Level3>{
+
+	}
+
+	public static class Level2<E> extends Level1<Long>{
+
+	}
+
+	@Data
+	public static class Level1<T>{
+		private T id;
+	}
+
 }

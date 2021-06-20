@@ -4,20 +4,19 @@ import java.io.Serializable;
 
 /**
  * 可变 <code>boolean</code> 类型
- * 
+ *
  * @see Boolean
  * @since 3.0.1
  */
 public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean value;
 
 	/**
 	 * 构造，默认值0
 	 */
 	public MutableBool() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 	 * @param value 值
 	 */
 	public MutableBool(final boolean value) {
-		super();
 		this.value = value;
 	}
 
@@ -35,13 +33,12 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 	 * @throws NumberFormatException 转为Boolean错误
 	 */
 	public MutableBool(final String value) throws NumberFormatException {
-		super();
 		this.value = Boolean.parseBoolean(value);
 	}
 
 	@Override
 	public Boolean get() {
-		return Boolean.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
@@ -54,7 +51,7 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 
 	@Override
 	public void set(final Boolean value) {
-		this.value = value.booleanValue();
+		this.value = value;
 	}
 
 	// -----------------------------------------------------------------------
@@ -65,7 +62,7 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 	 * 	<li>类型为 {@link MutableBool}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param obj 比对的对象
 	 * @return 相同返回<code>true</code>，否则 <code>false</code>
 	 */
@@ -85,7 +82,7 @@ public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, S
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
-	 * 
+	 *
 	 * @param other 其它 {@link MutableBool} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */

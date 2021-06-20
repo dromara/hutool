@@ -91,26 +91,6 @@ public class PageResult<T> extends ArrayList<T> {
 
 	/**
 	 * @return 每页结果数
-	 * @deprecated 请使用{@link #getPageSize()}
-	 */
-	@Deprecated
-	public int getNumPerPage() {
-		return pageSize;
-	}
-
-	/**
-	 * 设置每页结果数
-	 *
-	 * @param pageSize 每页结果数
-	 * @deprecated 请使用 {@link #setPageSize(int)}
-	 */
-	@Deprecated
-	public void setNumPerPage(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	/**
-	 * @return 每页结果数
 	 */
 	public int getPageSize() {
 		return pageSize;

@@ -71,6 +71,29 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
+	 * 使用URL字符串构建UrlBuilder，当传入的URL没有协议时，按照http协议对待<br>
+	 * 此方法不对URL编码
+	 *
+	 * @param httpUrl URL字符串
+	 * @return UrlBuilder
+	 * @since 5.4.3
+	 */
+	public static UrlBuilder ofHttpWithoutEncode(String httpUrl) {
+		return ofHttp(httpUrl, null);
+	}
+
+	/**
+	 * 使用URL字符串构建UrlBuilder，当传入的URL没有协议时，按照http协议对待，编码默认使用UTF-8
+	 *
+	 * @param httpUrl URL字符串
+	 * @return UrlBuilder
+	 * @since 5.6.3
+	 */
+	public static UrlBuilder ofHttp(String httpUrl) {
+		return ofHttp(httpUrl, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
 	 * 使用URL字符串构建UrlBuilder，当传入的URL没有协议时，按照http协议对待。
 	 *
 	 * @param httpUrl URL字符串
@@ -85,6 +108,16 @@ public final class UrlBuilder implements Serializable {
 			httpUrl = "http://" + httpUrl.trim();
 		}
 		return of(httpUrl, charset);
+	}
+
+	/**
+	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码
+	 *
+	 * @param url     URL字符串
+	 * @return UrlBuilder
+	 */
+	public static UrlBuilder of(String url) {
+		return of(url, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -123,7 +156,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(String scheme, String host, int port, String path, String query, String fragment, Charset charset) {
-		return of(scheme, host, port, UrlPath.of(path, charset), UrlQuery.of(query, charset), fragment, charset);
+		return of(scheme, host, port, UrlPath.of(path, charset), UrlQuery.of(query, charset, false), fragment, charset);
 	}
 
 	/**

@@ -1,13 +1,13 @@
 package cn.hutool.core.codec;
 
-import java.nio.charset.Charset;
-
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.nio.charset.Charset;
+
 /**
  * Base64编码
- * 
+ *
  * @author looly
  * @since 3.2.0
  */
@@ -40,7 +40,7 @@ public class Base64Encoder {
 	// -------------------------------------------------------------------- encode
 	/**
 	 * 编码为Base64，非URL安全的
-	 * 
+	 *
 	 * @param arr 被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
@@ -51,7 +51,7 @@ public class Base64Encoder {
 
 	/**
 	 * 编码为Base64，URL安全的
-	 * 
+	 *
 	 * @param arr 被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
@@ -63,7 +63,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -73,7 +73,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码，URL安全
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -84,7 +84,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -95,7 +95,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码，URL安全的
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -107,7 +107,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
@@ -117,7 +117,7 @@ public class Base64Encoder {
 
 	/**
 	 * base64编码,URL安全的
-	 * 
+	 *
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
@@ -127,12 +127,26 @@ public class Base64Encoder {
 	}
 
 	/**
-	 * 编码为Base64<br>
-	 * 如果isMultiLine为<code>true</code>，则每76个字符一个换行符，否则在一行显示
-	 * 
+	 * 编码为Base64字符串<br>
+	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
+	 *
 	 * @param arr 被编码的数组
 	 * @param isMultiLine 在76个char之后是CRLF还是EOF
-	 * @param isUrlSafe 是否使用URL安全字符，一般为<code>false</code>
+	 * @param isUrlSafe 是否使用URL安全字符，在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉，一般为{@code false}
+	 * @return 编码后的bytes
+	 * @since 5.7.2
+	 */
+	public static String encodeStr(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
+		return StrUtil.str(encode(arr, isMultiLine, isUrlSafe), DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 编码为Base64<br>
+	 * 如果isMultiLine为{@code true}，则每76个字符一个换行符，否则在一行显示
+	 *
+	 * @param arr 被编码的数组
+	 * @param isMultiLine 在76个char之后是CRLF还是EOF
+	 * @param isUrlSafe 是否使用URL安全字符，在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉，一般为{@code false}
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {

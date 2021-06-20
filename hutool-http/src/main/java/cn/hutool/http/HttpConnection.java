@@ -444,9 +444,21 @@ public class HttpConnection {
 			throw new IOException("HttpURLConnection has not been initialized.");
 		}
 
+		final Method method = getMethod();
+
 		// 当有写出需求时，自动打开之
 		this.conn.setDoOutput(true);
-		return this.conn.getOutputStream();
+		final OutputStream out = this.conn.getOutputStream();
+
+		// 解决在Rest请求中，GET请求附带body导致GET请求被强制转换为POST
+		// 在sun.net.www.protocol.http.HttpURLConnection.getOutputStream0方法中，会把GET方法
+		// 修改为POST，而且无法调用setRequestMethod方法修改，因此此处使用反射强制修改字段属性值
+		// https://stackoverflow.com/questions/978061/http-get-with-request-body/983458
+		if(method == Method.GET && method != getMethod()){
+			ReflectUtil.setFieldValue(this.conn, "method", Method.GET.name());
+		}
+
+		return out;
 	}
 
 	/**
@@ -519,7 +531,7 @@ public class HttpConnection {
 		final URLConnection conn = openConnection();
 		if (false == conn instanceof HttpURLConnection) {
 			// 防止其它协议造成的转换异常
-			throw new HttpException("'{}' is not a http connection, make sure URL is format for http.", conn.getClass().getName());
+			throw new HttpException("'{}' of URL [{}] is not a http connection, make sure URL is format for http.", conn.getClass().getName(), this.url);
 		}
 
 		return (HttpURLConnection) conn;

@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+
 import java.awt.Color;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -26,7 +28,7 @@ public class HexUtil {
 
 	/**
 	 * 判断给定字符串是否为16进制数<br>
-	 * 如果是，需要使用对应数字类型对象的<code>decode</code>方法解码<br>
+	 * 如果是，需要使用对应数字类型对象的{@code decode}方法解码<br>
 	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
 	 *
 	 * @param value 值
@@ -74,7 +76,7 @@ public class HexUtil {
 	 * 将字节数组转换为十六进制字符数组
 	 *
 	 * @param data        byte[]
-	 * @param toLowerCase <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制char[]
 	 */
 	public static char[] encodeHex(byte[] data, boolean toLowerCase) {
@@ -116,7 +118,7 @@ public class HexUtil {
 	 * 将字节数组转换为十六进制字符串
 	 *
 	 * @param data        byte[]
-	 * @param toLowerCase <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制String
 	 */
 	public static String encodeHexStr(byte[] data, boolean toLowerCase) {
@@ -161,6 +163,16 @@ public class HexUtil {
 	}
 
 	/**
+	 * 将十六进制字符串解码为byte[]
+	 *
+	 * @param hexStr 十六进制String
+	 * @return byte[]
+	 */
+	public static byte[] decodeHex(String hexStr) {
+		return decodeHex((CharSequence) hexStr);
+	}
+
+	/**
 	 * 将十六进制字符数组转换为字节数组
 	 *
 	 * @param hexData 十六进制char[]
@@ -168,39 +180,42 @@ public class HexUtil {
 	 * @throws RuntimeException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 */
 	public static byte[] decodeHex(char[] hexData) {
+		return decodeHex(String.valueOf(hexData));
+	}
 
-		int len = hexData.length;
-
-		if ((len & 0x01) != 0) {
-			throw new RuntimeException("Odd number of characters.");
+	/**
+	 * 将十六进制字符数组转换为字节数组
+	 *
+	 * @param hexData 十六进制字符串
+	 * @return byte[]
+	 * @throws UtilException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
+	 * @since 5.6.6
+	 */
+	public static byte[] decodeHex(CharSequence hexData) {
+		if (StrUtil.isEmpty(hexData)) {
+			return null;
 		}
 
-		byte[] out = new byte[len >> 1];
+		hexData = StrUtil.cleanBlank(hexData);
+
+		final int len = hexData.length();
+
+		if ((len & 0x01) != 0) {
+			throw new UtilException("Odd number of characters.");
+		}
+
+		final byte[] out = new byte[len >> 1];
 
 		// two characters form the hex value.
 		for (int i = 0, j = 0; j < len; i++) {
-			int f = toDigit(hexData[j], j) << 4;
+			int f = toDigit(hexData.charAt(j), j) << 4;
 			j++;
-			f = f | toDigit(hexData[j], j);
+			f = f | toDigit(hexData.charAt(j), j);
 			j++;
 			out[i] = (byte) (f & 0xFF);
 		}
 
 		return out;
-	}
-
-	/**
-	 * 将十六进制字符串解码为byte[]
-	 *
-	 * @param hexStr 十六进制String
-	 * @return byte[]
-	 */
-	public static byte[] decodeHex(String hexStr) {
-		if (StrUtil.isEmpty(hexStr)) {
-			return null;
-		}
-		hexStr = StrUtil.removeAll(hexStr, ' ');
-		return decodeHex(hexStr.toCharArray());
 	}
 
 	// ---------------------------------------------------------------------------------------- Color
@@ -261,7 +276,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '我' =》\u4f60
+	 * '你' =》\u4f60
 	 * </pre>
 	 *
 	 * @param value int值，也可以是char
@@ -286,7 +301,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '我' =》\u4f60
+	 * '你' =》'\u4f60'
 	 * </pre>
 	 *
 	 * @param ch char值
@@ -342,15 +357,35 @@ public class HexUtil {
 
 	/**
 	 * Hex（16进制）字符串转为BigInteger
+	 *
 	 * @param hexStr Hex(16进制字符串)
 	 * @return {@link BigInteger}
 	 * @since 5.2.0
 	 */
-	public static BigInteger toBigInteger(String hexStr){
-		if(null == hexStr){
+	public static BigInteger toBigInteger(String hexStr) {
+		if (null == hexStr) {
 			return null;
 		}
 		return new BigInteger(hexStr, 16);
+	}
+
+	/**
+	 * 格式化Hex字符串，结果为每2位加一个空格，类似于：
+	 * <pre>
+	 *     e8 8c 67 03 80 cb 22 00 95 26 8f
+	 * </pre>
+	 *
+	 * @param hexStr Hex字符串
+	 * @return 格式化后的字符串
+	 */
+	public static String format(String hexStr) {
+		final int length = hexStr.length();
+		final StringBuilder builder = StrUtil.builder(length + length / 2);
+		builder.append(hexStr.charAt(0)).append(hexStr.charAt(1));
+		for (int i = 2; i < length - 1; i += 2) {
+			builder.append(CharUtil.SPACE).append(hexStr.charAt(i)).append(hexStr.charAt(i + 1));
+		}
+		return builder.toString();
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
@@ -390,12 +425,12 @@ public class HexUtil {
 	 * @param ch    十六进制char
 	 * @param index 十六进制字符在字符数组中的位置
 	 * @return 一个整数
-	 * @throws RuntimeException 当ch不是一个合法的十六进制字符时，抛出运行时异常
+	 * @throws UtilException 当ch不是一个合法的十六进制字符时，抛出运行时异常
 	 */
 	private static int toDigit(char ch, int index) {
 		int digit = Character.digit(ch, 16);
-		if (digit == -1) {
-			throw new RuntimeException("Illegal hexadecimal character " + ch + " at index " + index);
+		if (digit < 0) {
+			throw new UtilException("Illegal hexadecimal character {} at index {}", ch, index);
 		}
 		return digit;
 	}

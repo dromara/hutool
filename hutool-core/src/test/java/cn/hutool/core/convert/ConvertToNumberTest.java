@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConvertToNumberTest {
@@ -30,5 +31,14 @@ public class ConvertToNumberTest {
 		final AtomicLong dateLong = Convert.convert(AtomicLong.class, date);
 		assert date != null;
 		Assert.assertEquals(date.getTime(), dateLong.longValue());
+	}
+
+	@Test
+	public void toBigDecimalTest(){
+		BigDecimal bigDecimal = Convert.toBigDecimal("1.1f");
+		Assert.assertEquals(1.1f, bigDecimal.floatValue(), 1);
+
+		bigDecimal = Convert.toBigDecimal("1L");
+		Assert.assertEquals(1L, bigDecimal.longValue());
 	}
 }

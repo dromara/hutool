@@ -9,6 +9,8 @@ import cn.hutool.extra.template.TemplateConfig.ResourceMode;
 import cn.hutool.extra.template.TemplateEngine;
 import com.jfinal.template.source.FileSourceFactory;
 
+import java.io.File;
+
 /**
  * Enjoy库的引擎包装
  *
@@ -99,7 +101,8 @@ public class EnjoyEngine implements TemplateEngine {
 				break;
 			case WEB_ROOT:
 				engine.setSourceFactory(new FileSourceFactory());
-				engine.setBaseTemplatePath(FileUtil.getAbsolutePath(FileUtil.getWebRoot()));
+				final File root = FileUtil.file(FileUtil.getWebRoot(), config.getPath());
+				engine.setBaseTemplatePath(FileUtil.getAbsolutePath(root));
 				break;
 			default:
 				break;

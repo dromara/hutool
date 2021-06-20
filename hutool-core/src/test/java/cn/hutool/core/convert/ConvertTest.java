@@ -1,14 +1,23 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateException;
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.ByteUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
  * 类型转换工具单元测试
@@ -186,8 +195,8 @@ public class ConvertTest {
 	}
 
 	@Test
-	public void toListTest(){
-		List<String> list = Arrays.asList("1","2");
+	public void toListTest() {
+		List<String> list = Arrays.asList("1", "2");
 		String str = Convert.toStr(list);
 		List<String> list2 = Convert.toList(String.class, str);
 		Assert.assertEquals("1", list2.get(0));
@@ -222,6 +231,33 @@ public class ConvertTest {
 		Assert.assertEquals("5.1.1", product.getVersion());
 	}
 
+	@Test
+	public void numberToByteArrayTest(){
+		// 测试Serializable转换为bytes，调用序列化转换
+		final byte[] bytes = Convert.toPrimitiveByteArray(12L);
+		Assert.assertArrayEquals(ByteUtil.longToBytes(12L), bytes);
+	}
+
+	@Test
+	public void toAtomicIntegerArrayTest(){
+		String str = "1,2";
+		final AtomicIntegerArray atomicIntegerArray = Convert.convert(AtomicIntegerArray.class, str);
+		Assert.assertEquals("[1, 2]", atomicIntegerArray.toString());
+	}
+
+	@Test
+	public void toAtomicLongArrayTest(){
+		String str = "1,2";
+		final AtomicLongArray atomicLongArray = Convert.convert(AtomicLongArray.class, str);
+		Assert.assertEquals("[1, 2]", atomicLongArray.toString());
+	}
+
+	@Test
+	public void toClassTest(){
+		final Class<?> convert = Convert.convert(Class.class, "cn.hutool.core.convert.ConvertTest.Product");
+		Assert.assertSame(Product.class, convert);
+	}
+
 	@Data
 	@AllArgsConstructor
 	public static class Product implements Serializable {
@@ -230,5 +266,42 @@ public class ConvertTest {
 		private String name;
 		private String cName;
 		private String version;
+	}
+
+	@Test
+	public void enumToIntTest(){
+		final Integer integer = Convert.toInt(BuildingType.CUO);
+		Assert.assertEquals(1, integer.intValue());
+	}
+
+	@Test
+	public void toSetTest(){
+		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
+		}, "1,2,3");
+		Assert.assertEquals(CollUtil.set(false, 1,2,3), result);
+	}
+
+	@Getter
+	public enum BuildingType {
+		PING(1, "平层"),
+		CUO(2, "错层"),
+		YUE(3, "跃层"),
+		FUSHI(4, "复式"),
+		KAIJIAN(5, "开间"),
+		OTHER(6, "其他");
+
+		private final int id;
+		private final String name;
+
+		BuildingType(int id, String name){
+			this.id = id;
+			this.name = name;
+		}
+	}
+
+	@Test(expected = DateException.class)
+	public void toDateTest(){
+		// 默认转换失败报错而不是返回null
+		Convert.convert(Date.class, "aaaa");
 	}
 }

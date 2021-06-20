@@ -1,0 +1,4 @@
+<%
+var name;
+%>
+hello,${name}

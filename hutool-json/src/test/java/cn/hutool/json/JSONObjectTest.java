@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
@@ -8,6 +9,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.ResultDto;
@@ -26,9 +28,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * JSONObject单元测试
@@ -210,7 +216,6 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanWithNullTest() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
-		Console.log(JSONUtil.parseObj(jsonStr));
 		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
 		Assert.assertTrue(user.getData().containsKey("password"));
 	}
@@ -268,7 +273,9 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toBeanTest7() {
-		String jsonStr = " {\"result\":{\"phone\":\"15926297342\",\"appKey\":\"e1ie12e1ewsdqw1\",\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"message\":\"validate message\"}";
+		String jsonStr = " {\"result\":{\"phone\":\"15926297342\",\"appKey\":\"e1ie12e1ewsdqw1\"," +
+				"\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"" +
+				"message\":\"validate message\"}";
 		ResultDto<?> dto = JSONUtil.toBean(jsonStr, ResultDto.class);
 		Assert.assertEquals("validate message", dto.getMessage());
 	}
@@ -422,6 +429,14 @@ public class JSONObjectTest {
 		Assert.assertEquals("{\"date\":[\"2020-06-05 11:16:11\"],\"bbb\":[\"222\"],\"aaa\":[\"123\"]}", json.toString());
 	}
 
+	@Test
+	public void getTimestampTest(){
+		String timeStr = "1970-01-01 00:00:00";
+		final JSONObject jsonObject = JSONUtil.createObj().set("time", timeStr);
+		final Timestamp time = jsonObject.get("time", Timestamp.class);
+		Assert.assertEquals("1970-01-01 00:00:00.0", time.toString());
+	}
+
 	public enum TestEnum {
 		TYPE_A, TYPE_B
 	}
@@ -466,6 +481,9 @@ public class JSONObjectTest {
 		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
 		Assert.assertEquals("123", parse.getStr("username"));
 		Assert.assertEquals("abc", parse.getStr("userName"));
+
+		// 测试ignore注解是否有效
+		Assert.assertNull(parse.getStr("fieldToIgnore"));
 	}
 
 	/**
@@ -477,14 +495,55 @@ public class JSONObjectTest {
 	public static class SameNameBean {
 		private final String username = "123";
 		private final String userName = "abc";
-
 		public String getUsername() {
 			return username;
 		}
+		@PropIgnore
+		private final String fieldToIgnore = "sfdsdads";
 
 		public String getUserName() {
 			return userName;
 		}
 
+		public String getFieldToIgnore(){
+			return this.fieldToIgnore;
+		}
+	}
+
+	@Test
+	public void setEntryTest(){
+		final HashMap<String, String> of = MapUtil.of("test", "testValue");
+		final Set<Map.Entry<String, String>> entries = of.entrySet();
+		final Map.Entry<String, String> next = entries.iterator().next();
+
+		final JSONObject jsonObject = JSONUtil.parseObj(next);
+		Assert.assertEquals("{\"test\":\"testValue\"}", jsonObject.toString());
+	}
+
+	@Test(expected = JSONException.class)
+	public void createJSONObjectTest(){
+		// 集合类不支持转为JSONObject
+		new JSONObject(new JSONArray(), JSONConfig.create());
+	}
+
+	@Test
+	public void floatTest(){
+		Map<String, Object> map = new HashMap<>();
+		map.put("c", 2.0F);
+
+		final String s = JSONUtil.toJsonStr(map);
+		Assert.assertEquals("{\"c\":2}", s);
+	}
+
+	@Test
+	public void accumulateTest(){
+		final JSONObject jsonObject = JSONUtil.createObj().accumulate("key1", "value1");
+		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value2");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
+
+		jsonObject.accumulate("key1", "value3");
+		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
 	}
 }

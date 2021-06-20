@@ -8,6 +8,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import org.junit.Assert;
@@ -54,6 +55,50 @@ public class RSATest {
 	@Test
 	public void rsaTest() {
 		final RSA rsa = new RSA();
+
+		// 获取私钥和公钥
+		Assert.assertNotNull(rsa.getPrivateKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assert.assertNotNull(rsa.getPublicKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+
+		// 公钥加密，私钥解密
+		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
+
+		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+
+		// 私钥加密，公钥解密
+		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
+		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+	}
+
+	@Test
+	public void rsaECBTest() {
+		final RSA rsa = new RSA(AsymmetricAlgorithm.RSA_ECB.getValue());
+
+		// 获取私钥和公钥
+		Assert.assertNotNull(rsa.getPrivateKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assert.assertNotNull(rsa.getPublicKey());
+		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+
+		// 公钥加密，私钥解密
+		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
+
+		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+
+		// 私钥加密，公钥解密
+		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
+		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
+		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+	}
+
+	@Test
+	public void rsaNoneTest() {
+		final RSA rsa = new RSA(AsymmetricAlgorithm.RSA_None.getValue());
 
 		// 获取私钥和公钥
 		Assert.assertNotNull(rsa.getPrivateKey());

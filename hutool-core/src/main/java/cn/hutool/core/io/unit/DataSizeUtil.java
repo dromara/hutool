@@ -31,7 +31,7 @@ public class DataSizeUtil {
 		if (size <= 0) {
 			return "0";
 		}
-		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		int digitGroups = Math.min(DataUnit.UNIT_NAMES.length-1, (int) (Math.log10(size) / Math.log10(1024)));
 		return new DecimalFormat("#,##0.##")
 				.format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
 	}

@@ -13,19 +13,19 @@ public class ComparatorException extends RuntimeException{
 	public ComparatorException(Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
-	
+
 	public ComparatorException(String message) {
 		super(message);
 	}
-	
+
 	public ComparatorException(String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
-	
+
 	public ComparatorException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
-	
+
 	public ComparatorException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}

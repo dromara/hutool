@@ -8,12 +8,12 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 线程创建工厂类，此工厂可选配置：
- * 
+ *
  * <pre>
  * 1. 自定义线程命名前缀
  * 2. 自定义是否守护线程
  * </pre>
- * 
+ *
  * @author looly
  * @since 4.0.0
  */
@@ -32,17 +32,17 @@ public class NamedThreadFactory implements ThreadFactory {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param prefix 线程名前缀
 	 * @param isDaemon 是否守护线程
 	 */
 	public NamedThreadFactory(String prefix, boolean isDaemon) {
 		this(prefix, null, isDaemon);
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param prefix 线程名前缀
 	 * @param threadGroup 线程组，可以为null
 	 * @param isDaemon 是否守护线程
@@ -53,7 +53,7 @@ public class NamedThreadFactory implements ThreadFactory {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param prefix 线程名前缀
 	 * @param threadGroup 线程组，可以为null
 	 * @param isDaemon 是否守护线程
@@ -72,7 +72,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	@Override
 	public Thread newThread(Runnable r) {
 		final Thread t = new Thread(this.group, r, StrUtil.format("{}{}", prefix, threadNumber.getAndIncrement()));
-		
+
 		//守护线程
 		if (false == t.isDaemon()) {
 			if (isDaemon) {

@@ -2,15 +2,15 @@ package cn.hutool.http;
 
 /**
  * HTTP状态码
- * 
+ *
  * @author Looly
  * @see java.net.HttpURLConnection
  *
  */
 public class HttpStatus {
-	
+
 	/* 2XX: generally "OK" */
-	
+
 	/**
 	 * HTTP Status-Code 200: OK.
 	 */
@@ -77,6 +77,18 @@ public class HttpStatus {
 	 * HTTP Status-Code 305: Use Proxy.
 	 */
 	public static final int HTTP_USE_PROXY = 305;
+
+	/**
+	 * HTTP 1.1 Status-Code 307: Temporary Redirect.<br>
+	 * 见：RFC-7231
+	 */
+	public static final int HTTP_TEMP_REDIRECT = 307;
+
+	/**
+	 * HTTP 1.1 Status-Code 308: Permanent Redirect 永久重定向<br>
+	 * 见：RFC-7231
+	 */
+	public static final int HTTP_PERMANENT_REDIRECT = 308;
 
 	/* 4XX: client error */
 
@@ -191,4 +203,20 @@ public class HttpStatus {
 	 * HTTP Status-Code 505: HTTP Version Not Supported.
 	 */
 	public static final int HTTP_VERSION = 505;
+
+	/**
+	 * 是否为重定向状态码
+	 * @param responseCode 被检查的状态码
+	 * @return 是否为重定向状态码
+	 * @since 5.6.3
+	 */
+	public static boolean isRedirected(int responseCode){
+		return responseCode == HTTP_MOVED_PERM
+				|| responseCode == HTTP_MOVED_TEMP
+				|| responseCode == HTTP_SEE_OTHER
+				// issue#1504@Github，307和308是RFC 7538中http 1.1定义的规范
+				|| responseCode == HTTP_TEMP_REDIRECT
+				|| responseCode == HTTP_PERMANENT_REDIRECT;
+
+	}
 }

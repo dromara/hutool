@@ -8,9 +8,11 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * 线程池工具
@@ -31,7 +33,7 @@ public class ThreadUtil {
 	 * @param corePoolSize 同时执行的线程数大小
 	 * @return ExecutorService
 	 */
-		public static ExecutorService newExecutor(int corePoolSize) {
+	public static ExecutorService newExecutor(int corePoolSize) {
 		ExecutorBuilder builder = ExecutorBuilder.create();
 		if (corePoolSize > 0) {
 			builder.setCorePoolSize(corePoolSize);
@@ -144,7 +146,7 @@ public class ThreadUtil {
 	 * @param isDaemon 是否守护线程。守护线程会在主线程结束后自动结束
 	 * @return 执行的方法体
 	 */
-	public static Runnable execAsync(final Runnable runnable, boolean isDaemon) {
+	public static Runnable execAsync(Runnable runnable, boolean isDaemon) {
 		Thread thread = new Thread(runnable);
 		thread.setDaemon(isDaemon);
 		thread.start();
@@ -366,6 +368,19 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 创建本地线程对象
+	 *
+	 * @param <T>      持有对象类型
+	 * @param supplier 初始化线程对象函数
+	 * @return 本地线程
+	 * @see ThreadLocal#withInitial(Supplier)
+	 * @since 5.6.7
+	 */
+	public static <T> ThreadLocal<T> createThreadLocal(Supplier<? extends T> supplier) {
+		return ThreadLocal.withInitial(supplier);
+	}
+
+	/**
 	 * 创建ThreadFactoryBuilder
 	 *
 	 * @return ThreadFactoryBuilder
@@ -539,5 +554,76 @@ public class ThreadUtil {
 	 */
 	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
+	}
+
+	/**
+	 * 创建{@link ScheduledThreadPoolExecutor}
+	 *
+	 * @param corePoolSize 初始线程池大小
+	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @since 5.5.8
+	 */
+	public static ScheduledThreadPoolExecutor createScheduledExecutor(int corePoolSize) {
+		return new ScheduledThreadPoolExecutor(corePoolSize);
+	}
+
+	/**
+	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。<br>
+	 * 注意：此方法的延迟和周期的单位均为毫秒。
+	 *
+	 * <ul>
+	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
+	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 * </ul>
+	 *
+	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
+	 * @param command               需要定时执行的逻辑
+	 * @param initialDelay          初始延迟，单位毫秒
+	 * @param period                执行周期，单位毫秒
+	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
+	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @since 5.5.8
+	 */
+	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
+													   Runnable command,
+													   long initialDelay,
+													   long period,
+													   boolean fixedRateOrFixedDelay) {
+		return schedule(executor, command, initialDelay, period, TimeUnit.MILLISECONDS, fixedRateOrFixedDelay);
+	}
+
+	/**
+	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。
+	 *
+	 * <ul>
+	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
+	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 * </ul>
+	 *
+	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
+	 * @param command               需要定时执行的逻辑
+	 * @param initialDelay          初始延迟
+	 * @param period                执行周期
+	 * @param timeUnit              时间单位
+	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
+	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @since 5.6.5
+	 */
+	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
+													   Runnable command,
+													   long initialDelay,
+													   long period,
+													   TimeUnit timeUnit,
+													   boolean fixedRateOrFixedDelay) {
+		if (null == executor) {
+			executor = createScheduledExecutor(2);
+		}
+		if (fixedRateOrFixedDelay) {
+			executor.scheduleAtFixedRate(command, initialDelay, period, timeUnit);
+		} else {
+			executor.scheduleWithFixedDelay(command, initialDelay, period, timeUnit);
+		}
+
+		return executor;
 	}
 }

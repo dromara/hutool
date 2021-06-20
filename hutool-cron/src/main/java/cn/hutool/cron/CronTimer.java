@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * 定时任务计时器<br>
- * 计时器线程每隔一分钟检查一次任务列表，一旦匹配到执行对应的Task
+ * 计时器线程每隔一分钟（一秒钟）检查一次任务列表，一旦匹配到执行对应的Task
  * @author Looly
  *
  */
@@ -37,7 +37,7 @@ public class CronTimer extends Thread implements Serializable {
 	
 	@Override
 	public void run() {
-		final long timerUnit = this.scheduler.matchSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
+		final long timerUnit = this.scheduler.config.matchSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
 		
 		long thisTime = System.currentTimeMillis();
 		long nextTime;
@@ -55,9 +55,12 @@ public class CronTimer extends Thread implements Serializable {
 				//执行点，时间记录为执行开始的时间，而非结束时间
 				thisTime = System.currentTimeMillis();
 				spawnLauncher(thisTime);
+			} else{
+				// 非正常时间重新计算（issue#1224@Github）
+				thisTime = System.currentTimeMillis();
 			}
 		}
-		log.debug("Hutool-cron timer stoped.");
+		log.debug("Hutool-cron timer stopped.");
 	}
 	
 	/**

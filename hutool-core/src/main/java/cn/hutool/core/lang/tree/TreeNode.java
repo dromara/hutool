@@ -2,6 +2,7 @@ package cn.hutool.core.lang.tree;
 
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 树节点 每个属性都可以在{@link TreeNodeConfig}中被重命名<br>
@@ -128,5 +129,22 @@ public class TreeNode<T> implements Node<T> {
 	public TreeNode<T> setExtra(Map<String, Object> extra) {
 		this.extra = extra;
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		TreeNode<?> treeNode = (TreeNode<?>) o;
+		return Objects.equals(id, treeNode.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

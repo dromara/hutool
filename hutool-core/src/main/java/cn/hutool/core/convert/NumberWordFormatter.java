@@ -1,12 +1,13 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
  * 将浮点数类型的number转换成英语的表达方式 <br>
  * 参考博客：http://blog.csdn.net/eric_sunah/article/details/8713226
  *
- * @author Looly
+ * @author Looly,totalo
  * @since 3.0.9
  */
 public class NumberWordFormatter {
@@ -19,6 +20,8 @@ public class NumberWordFormatter {
 			"SEVENTY", "EIGHTY", "NINETY"};
 	private static final String[] NUMBER_MORE = new String[]{"", "THOUSAND", "MILLION", "BILLION"};
 
+	private static final String[] NUMBER_SUFFIX = new String[]{"k", "w", "", "m", "", "", "b", "", "", "t", "", "", "p", "", "", "e"};
+
 	/**
 	 * 将阿拉伯数字转为英文表达式
 	 *
@@ -29,8 +32,47 @@ public class NumberWordFormatter {
 		if (x != null) {
 			return format(x.toString());
 		} else {
-			return "";
+			return StrUtil.EMPTY;
 		}
+	}
+
+	/**
+	 * 将阿拉伯数字转化为简洁计数单位，例如 2100 =》 2.1k
+	 * 范围默认只到w
+	 *
+	 * @param value 被格式化的数字
+	 * @return 格式化后的数字
+	 * @since 5.5.9
+	 */
+	public static String formatSimple(long value) {
+		return formatSimple(value, true);
+	}
+
+	/**
+	 * 将阿拉伯数字转化为简介计数单位，例如 2100 =》 2.1k
+	 *
+	 * @param value 对应数字的值
+	 * @param isTwo 控制是否为只为k、w，例如当为{@code false}时返回4.38m，{@code true}返回438.43w
+	 * @return 格式化后的数字
+	 * @since 5.5.9
+	 */
+	public static String formatSimple(long value, boolean isTwo) {
+		if (value < 1000) {
+			return String.valueOf(value);
+		}
+		int index = -1;
+		double res = value;
+		while (res > 10 && (false == isTwo || index < 1)) {
+			if (res > 1000) {
+				res = res / 1000;
+				index++;
+			}
+			if (res > 10) {
+				res = res / 10;
+				index++;
+			}
+		}
+		return String.format("%s%s", NumberUtil.decimalFormat("#.##", res), NUMBER_SUFFIX[index]);
 	}
 
 	/**

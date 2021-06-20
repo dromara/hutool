@@ -1,5 +1,8 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.DefaultSegment;
+import cn.hutool.core.lang.Segment;
+
 /**
  * 分页工具类
  *
@@ -136,6 +139,35 @@ public class PageUtil {
 	}
 
 	/**
+	 * 将页数和每页条目数转换为开始位置和结束位置<br>
+	 * 此方法用于包括结束位置的分页方法<br>
+	 * 例如：
+	 *
+	 * <pre>
+	 * 页码：0，每页10 =》 [0, 10]
+	 * 页码：1，每页10 =》 [10, 20]
+	 * ……
+	 * </pre>
+	 *
+	 * <p>
+	 * 当{@link #setFirstPageNo(int)}设置为1时：
+	 * <pre>
+	 * 页码：1，每页10 =》 [0, 10]
+	 * 页码：2，每页10 =》 [10, 20]
+	 * ……
+	 * </pre>
+	 *
+	 * @param pageNo   页码（从0计数）
+	 * @param pageSize 每页条目数
+	 * @return {@link Segment}
+	 * @since 5.5.3
+	 */
+	public static Segment<Integer> toSegment(int pageNo, int pageSize) {
+		final int[] startEnd = transToStartEnd(pageNo, pageSize);
+		return new DefaultSegment<>(startEnd[0], startEnd[1]);
+	}
+
+	/**
 	 * 根据总数计算总页数
 	 *
 	 * @param totalCount 总数
@@ -160,9 +192,10 @@ public class PageUtil {
 	 * @return 分页条
 	 */
 	public static int[] rainbow(int pageNo, int totalPage, int displayCount) {
-		boolean isEven = displayCount % 2 == 0;
-		int left = displayCount / 2;
-		int right = displayCount / 2;
+		// displayCount % 2
+		boolean isEven = (displayCount & 1) == 0;
+		int left = displayCount >> 1;
+		int right = displayCount >> 1;
 
 		int length = displayCount;
 		if (isEven) {

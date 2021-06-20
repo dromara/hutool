@@ -26,6 +26,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -296,6 +297,32 @@ public class HttpServerRequest extends HttpServerBase {
 		return this.httpExchange.getRequestBody();
 	}
 
+	/**
+	 * 获取指定名称的参数值，取第一个值
+	 * @param name 参数名
+	 * @return 参数值
+	 * @since 5.5.8
+	 */
+	public String getParam(String name){
+		return getParams().get(name, 0);
+	}
+
+	/**
+	 * 获取指定名称的参数值
+	 *
+	 * @param name 参数名
+	 * @return 参数值
+	 * @since 5.5.8
+	 */
+	public List<String> getParams(String name){
+		return getParams().get(name);
+	}
+
+	/**
+	 * 获取参数Map
+	 *
+	 * @return 参数map
+	 */
 	public ListValueMap<String, String> getParams() {
 		if (null == this.paramsCache) {
 			this.paramsCache = new ListValueMap<>();

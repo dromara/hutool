@@ -12,6 +12,7 @@ public class PageUtilTest {
 	
 	@Test
 	public void transToStartEndTest(){
+		PageUtil.setFirstPageNo(0);
 		int[] startEnd1 = PageUtil.transToStartEnd(0, 10);
 		Assert.assertEquals(0, startEnd1[0]);
 		Assert.assertEquals(10, startEnd1[1]);

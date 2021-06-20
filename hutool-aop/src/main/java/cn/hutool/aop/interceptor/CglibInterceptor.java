@@ -1,7 +1,6 @@
 package cn.hutool.aop.interceptor;
 
 import cn.hutool.aop.aspects.Aspect;
-import cn.hutool.core.lang.Console;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
@@ -43,7 +42,6 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 		if (aspect.before(target, method, args)) {
 			try {
 //				result = proxy.invokeSuper(obj, args);
-				Console.log(target);
 				result = proxy.invoke(target, args);
 			} catch (InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）

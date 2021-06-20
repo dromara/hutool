@@ -1,18 +1,15 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class MapUtilTest {
-	
+
 	@Test
 	public void filterTest() {
 		Map<String, String> map = MapUtil.newHashMap();
@@ -21,7 +18,7 @@ public class MapUtilTest {
 		map.put("c", "3");
 		map.put("d", "4");
 
-		Map<String, String> map2 = MapUtil.filter(map, (Filter<Entry<String, String>>) t -> Convert.toInt(t.getValue()) % 2 == 0);
+		Map<String, String> map2 = MapUtil.filter(map, t -> Convert.toInt(t.getValue()) % 2 == 0);
 
 		Assert.assertEquals(2, map2.size());
 
@@ -30,14 +27,28 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void filterForEditorTest() {
+	public void filterContainsTest() {
+		Map<String, String> map = MapUtil.newHashMap();
+		map.put("abc", "1");
+		map.put("bcd", "2");
+		map.put("def", "3");
+		map.put("fgh", "4");
+
+		Map<String, String> map2 = MapUtil.filter(map, t -> StrUtil.contains(t.getKey(), "bc"));
+		Assert.assertEquals(2, map2.size());
+		Assert.assertEquals("1", map2.get("abc"));
+		Assert.assertEquals("2", map2.get("bcd"));
+	}
+
+	@Test
+	public void editTest() {
 		Map<String, String> map = MapUtil.newHashMap();
 		map.put("a", "1");
 		map.put("b", "2");
 		map.put("c", "3");
 		map.put("d", "4");
 
-		Map<String, String> map2 = MapUtil.filter(map, (Editor<Entry<String, String>>) t -> {
+		Map<String, String> map2 = MapUtil.edit(map, t -> {
 			// 修改每个值使之*10
 			t.setValue(t.getValue() + "0");
 			return t;
@@ -74,7 +85,7 @@ public class MapUtilTest {
 		map.put("b", "2");
 		map.put("c", "3");
 		map.put("d", "4");
-		
+
 		Object[][] objectArray = MapUtil.toObjectArray(map);
 		Assert.assertEquals("a", objectArray[0][0]);
 		Assert.assertEquals("1", objectArray[0][1]);

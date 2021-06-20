@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Resource资源工具类
- * 
+ *
  * @author Looly
  *
  */
@@ -27,7 +27,7 @@ public class ResourceUtil {
 
 	/**
 	 * 读取Classpath下的资源为字符串，使用UTF-8编码
-	 * 
+	 *
 	 * @param resource 资源路径，使用相对ClassPath的路径
 	 * @return 资源内容
 	 * @since 3.1.1
@@ -38,7 +38,7 @@ public class ResourceUtil {
 
 	/**
 	 * 读取Classpath下的资源为字符串
-	 * 
+	 *
 	 * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
 	 * @param charset 编码
 	 * @return 资源内容
@@ -47,10 +47,10 @@ public class ResourceUtil {
 	public static String readStr(String resource, Charset charset) {
 		return getResourceObj(resource).readStr(charset);
 	}
-	
+
 	/**
 	 * 读取Classpath下的资源为byte[]
-	 * 
+	 *
 	 * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
 	 * @return 资源内容
 	 * @since 4.5.19
@@ -61,7 +61,7 @@ public class ResourceUtil {
 
 	/**
 	 * 从ClassPath资源中获取{@link InputStream}
-	 * 
+	 *
 	 * @param resource ClassPath资源
 	 * @return {@link InputStream}
 	 * @throws NoResourceException 资源不存在异常
@@ -73,7 +73,7 @@ public class ResourceUtil {
 
 	/**
 	 * 从ClassPath资源中获取{@link InputStream}，当资源不存在时返回null
-	 * 
+	 *
 	 * @param resource ClassPath资源
 	 * @return {@link InputStream}
 	 * @since 4.0.3
@@ -100,7 +100,7 @@ public class ResourceUtil {
 
 	/**
 	 * 从ClassPath资源中获取{@link BufferedReader}
-	 * 
+	 *
 	 * @param resource ClassPath资源
 	 * @param charset 编码
 	 * @return {@link InputStream}
@@ -113,12 +113,12 @@ public class ResourceUtil {
 	/**
 	 * 获得资源的URL<br>
 	 * 路径用/分隔，例如:
-	 * 
+	 *
 	 * <pre>
 	 * config/a/db.config
 	 * spring/xml/test.xml
 	 * </pre>
-	 * 
+	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
 	 */
@@ -129,12 +129,12 @@ public class ResourceUtil {
 	/**
 	 * 获取指定路径下的资源列表<br>
 	 * 路径格式必须为目录格式,用/分隔，例如:
-	 * 
+	 *
 	 * <pre>
 	 * config/a
 	 * spring/xml
 	 * </pre>
-	 * 
+	 *
 	 * @param resource 资源路径
 	 * @return 资源列表
 	 */
@@ -151,12 +151,12 @@ public class ResourceUtil {
 	/**
 	 * 获取指定路径下的资源Iterator<br>
 	 * 路径格式必须为目录格式,用/分隔，例如:
-	 * 
+	 *
 	 * <pre>
 	 * config/a
 	 * spring/xml
 	 * </pre>
-	 * 
+	 *
 	 * @param resource 资源路径
 	 * @return 资源列表
 	 * @since 4.1.5
@@ -173,7 +173,7 @@ public class ResourceUtil {
 
 	/**
 	 * 获得资源相对路径对应的URL
-	 * 
+	 *
 	 * @param resource 资源相对路径
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
@@ -185,7 +185,7 @@ public class ResourceUtil {
 	/**
 	 * 获取{@link Resource} 资源对象<br>
 	 * 如果提供路径为绝对路径或路径以file:开头，返回{@link FileResource}，否则返回{@link ClassPathResource}
-	 * 
+	 *
 	 * @param path 路径，可以是绝对路径，也可以是相对路径（相对ClassPath）
 	 * @return {@link Resource} 资源对象
 	 * @since 3.2.1

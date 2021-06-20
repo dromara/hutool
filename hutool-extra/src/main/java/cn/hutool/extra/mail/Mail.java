@@ -11,9 +11,10 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
-import javax.mail.Authenticator;
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
@@ -23,6 +24,7 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -76,10 +78,15 @@ public class Mail {
 	private boolean useGlobalSession = false;
 
 	/**
+	 * debug输出位置，可以自定义debug日志
+	 */
+	private PrintStream debugOutput;
+
+	/**
 	 * 创建邮件客户端
 	 *
 	 * @param mailAccount 邮件帐号
-	 * @return {@link Mail}
+	 * @return Mail
 	 */
 	public static Mail create(MailAccount mailAccount) {
 		return new Mail(mailAccount);
@@ -88,7 +95,7 @@ public class Mail {
 	/**
 	 * 创建邮件客户端，使用全局邮件帐户
 	 *
-	 * @return {@link Mail}
+	 * @return Mail
 	 */
 	public static Mail create() {
 		return new Mail();
@@ -343,6 +350,18 @@ public class Mail {
 		this.useGlobalSession = isUseGlobalSession;
 		return this;
 	}
+
+	/**
+	 * 设置debug输出位置，可以自定义debug日志
+	 *
+	 * @param debugOutput debug输出位置
+	 * @return this
+	 * @since 5.5.6
+	 */
+	public Mail setDebugOutput(PrintStream debugOutput) {
+		this.debugOutput = debugOutput;
+		return this;
+	}
 	// --------------------------------------------------------------- Getters and Setters end
 
 	/**
@@ -355,6 +374,12 @@ public class Mail {
 		try {
 			return doSend();
 		} catch (MessagingException e) {
+			if(e instanceof SendFailedException){
+				// 当地址无效时，显示更加详细的无效地址信息
+				final Address[] invalidAddresses = ((SendFailedException) e).getInvalidAddresses();
+				final String msg = StrUtil.format("Invalid Addresses: {}", ArrayUtil.toString(invalidAddresses));
+				throw new MailException(msg, e);
+			}
 			throw new MailException(e);
 		}
 	}
@@ -381,7 +406,7 @@ public class Mail {
 	 */
 	private MimeMessage buildMsg() throws MessagingException {
 		final Charset charset = this.mailAccount.getCharset();
-		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
+		final MimeMessage msg = new MimeMessage(getSession());
 		// 发件人
 		final String from = this.mailAccount.getFrom();
 		if (StrUtil.isEmpty(from)) {
@@ -434,19 +459,16 @@ public class Mail {
 	 * 获取默认邮件会话<br>
 	 * 如果为全局单例的会话，则全局只允许一个邮件帐号，否则每次发送邮件会新建一个新的会话
 	 *
-	 * @param isSingleton 是否使用单例Session
 	 * @return 邮件会话 {@link Session}
-	 * @since 4.0.2
 	 */
-	private Session getSession(boolean isSingleton) {
-		final MailAccount mailAccount = this.mailAccount;
-		Authenticator authenticator = null;
-		if (mailAccount.isAuth()) {
-			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
+	private Session getSession() {
+		final Session session = MailUtil.getSession(this.mailAccount, this.useGlobalSession);
+
+		if(null != this.debugOutput){
+			session.setDebugOut(debugOutput);
 		}
 
-		return isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
-				: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
+		return session;
 	}
 	// --------------------------------------------------------------- Private method end
 }

@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>5.4.1</version>
+	<version>5.7.2</version>
 	<name>hutool</name>
 	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
 	<url>https://github.com/looly/hutool</url>
@@ -34,6 +34,7 @@
 		<module>hutool-poi</module>
 		<module>hutool-captcha</module>
 		<module>hutool-socket</module>
+		<module>hutool-jwt</module>
 	</modules>
 
 	<properties>
@@ -42,8 +43,8 @@
 
 		<!-- versions -->
 		<compile.version>8</compile.version>
-		<junit.version>4.13</junit.version>
-		<lombok.version>1.18.12</lombok.version>
+		<junit.version>4.13.2</junit.version>
+		<lombok.version>1.18.20</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -64,13 +65,13 @@
 
 	<issueManagement>
 		<system>Github Issue</system>
-		<url>https://github.com/looly/hutool/issues</url>
+		<url>https://github.com/dromara/hutool/issues</url>
 	</issueManagement>
 
 	<licenses>
 		<license>
 			<name>Mulan Permissive Software License，Version 1</name>
-			<url>http://license.coscl.org.cn/MulanPSL</url>
+			<url>https://license.coscl.org.cn/MulanPSL2</url>
 		</license>
 	</licenses>
 
@@ -82,9 +83,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git@github.com:looly/hutool.git</connection>
-		<developerConnection>scm:git@github.com:looly/hutool.git</developerConnection>
-		<url>git@github.com:looly/hutool.git</url>
+		<connection>scm:git@github.com:dromara/hutool.git</connection>
+		<developerConnection>scm:git@github.com:dromara/hutool.git</developerConnection>
+		<url>git@github.com:dromara/hutool.git</url>
 	</scm>
 
 	<build>
@@ -112,6 +113,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 
@@ -145,6 +147,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- 测试覆盖度 -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>

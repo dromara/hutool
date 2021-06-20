@@ -33,11 +33,11 @@ public class Snowflake implements Serializable {
 
 	private final long twepoch;
 	private final long workerIdBits = 5L;
-	private final long dataCenterIdBits = 5L;
-	//// 最大支持机器节点数0~31，一共32个
-	// 最大支持数据中心节点数0~31，一共32个
+	// 最大支持机器节点数0~31，一共32个
 	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
 	private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+	private final long dataCenterIdBits = 5L;
+	// 最大支持数据中心节点数0~31，一共32个
 	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
 	private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
 	// 序列号12位
@@ -48,8 +48,9 @@ public class Snowflake implements Serializable {
 	private final long dataCenterIdShift = sequenceBits + workerIdBits;
 	// 时间毫秒数左移22位
 	private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
-	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-	private final long sequenceMask = -1L ^ (-1L << sequenceBits);// 4095
+	// 序列掩码，用于限定序列最大值不能超过4095
+	@SuppressWarnings("FieldCanBeLocal")
+	private final long sequenceMask = ~(-1L << sequenceBits);// 4095
 
 	private final long workerId;
 	private final long dataCenterId;
@@ -140,8 +141,8 @@ public class Snowflake implements Serializable {
 	 */
 	public synchronized long nextId() {
 		long timestamp = genTime();
-		if (timestamp < lastTimestamp) {
-			if(lastTimestamp - timestamp < 2000){
+		if (timestamp < this.lastTimestamp) {
+			if(this.lastTimestamp - timestamp < 2000){
 				// 容忍2秒内的回拨，避免NTP校时造成的异常
 				timestamp = lastTimestamp;
 			} else{
@@ -150,11 +151,12 @@ public class Snowflake implements Serializable {
 			}
 		}
 
-		if (timestamp == lastTimestamp) {
-			sequence = (sequence + 1) & sequenceMask;
+		if (timestamp == this.lastTimestamp) {
+			final long sequence = (this.sequence + 1) & sequenceMask;
 			if (sequence == 0) {
 				timestamp = tilNextMillis(lastTimestamp);
 			}
+			this.sequence = sequence;
 		} else {
 			sequence = 0L;
 		}

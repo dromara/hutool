@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 文件内容跟随器，实现类似Linux下"tail -f"命令功能
- * 
+ *
  * @author looly
  * @since 4.5.2
  */
@@ -46,7 +46,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 构造，默认UTF-8编码
-	 * 
+	 *
 	 * @param file 文件
 	 * @param lineHandler 行处理器
 	 */
@@ -56,7 +56,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 构造，默认UTF-8编码
-	 * 
+	 *
 	 * @param file 文件
 	 * @param lineHandler 行处理器
 	 * @param initReadLine 启动时预读取的行数
@@ -67,7 +67,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param file 文件
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
@@ -78,7 +78,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param file 文件
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
@@ -104,7 +104,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 开始监听
-	 * 
+	 *
 	 * @param async 是否异步执行
 	 */
 	public void start(boolean async) {
@@ -133,10 +133,17 @@ public class Tailer implements Serializable {
 		}
 	}
 
+	/**
+	 * 结束，此方法需在异步模式或
+	 */
+	public void stop(){
+		this.executorService.shutdown();
+	}
+
 	// ---------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 预读取行
-	 * 
+	 *
 	 * @throws IOException IO异常
 	 */
 	private void readTail() throws IOException {
@@ -195,7 +202,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 检查文件有效性
-	 * 
+	 *
 	 * @param file 文件
 	 */
 	private static void checkFile(File file) {
@@ -210,7 +217,7 @@ public class Tailer implements Serializable {
 
 	/**
 	 * 命令行打印的行处理器
-	 * 
+	 *
 	 * @author looly
 	 * @since 4.5.2
 	 */
@@ -220,4 +227,5 @@ public class Tailer implements Serializable {
 			Console.log(line);
 		}
 	}
+
 }

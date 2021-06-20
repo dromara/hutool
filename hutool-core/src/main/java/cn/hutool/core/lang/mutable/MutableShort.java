@@ -4,20 +4,19 @@ import cn.hutool.core.util.NumberUtil;
 
 /**
  * 可变 <code>short</code> 类型
- * 
+ *
  * @see Short
  * @since 3.0.1
  */
 public class MutableShort extends Number implements Comparable<MutableShort>, Mutable<Number> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private short value;
 
 	/**
 	 * 构造，默认值0
 	 */
 	public MutableShort() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @param value 值
 	 */
 	public MutableShort(final short value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,13 +41,12 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @throws NumberFormatException 转为Short错误
 	 */
 	public MutableShort(final String value) throws NumberFormatException {
-		super();
 		this.value = Short.parseShort(value);
 	}
 
 	@Override
 	public Short get() {
-		return Short.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值
 	 * @return this
 	 */
@@ -119,7 +116,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值，非空
 	 * @return this
 	 * @throws NullPointerException if the object is null
@@ -163,7 +160,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 	<li>类型为 {@link MutableShort}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param obj 比对的对象
 	 * @return 相同返回<code>true</code>，否则 <code>false</code>
 	 */
@@ -183,7 +180,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
-	 * 
+	 *
 	 * @param other 其它 {@link MutableShort} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */

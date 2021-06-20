@@ -6,7 +6,7 @@ import net.sf.cglib.proxy.Enhancer;
 
 /**
  * 基于Cglib的切面代理工厂
- * 
+ *
  * @author looly
  *
  */

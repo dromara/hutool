@@ -5,7 +5,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
@@ -108,22 +107,43 @@ public class KeyUtil {
 	}
 
 	/**
-	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成<br>
+	 * 当指定keySize&lt;0时，AES默认长度为128，其它算法不指定。
 	 *
 	 * @param algorithm 算法，支持PBE算法
-	 * @param keySize   密钥长度
+	 * @param keySize   密钥长度，&lt;0表示不设定密钥长度，即使用默认长度
 	 * @return {@link SecretKey}
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
+		return generateKey(algorithm, keySize, null);
+	}
+
+	/**
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成<br>
+	 * 当指定keySize&lt;0时，AES默认长度为128，其它算法不指定。
+	 *
+	 * @param algorithm 算法，支持PBE算法
+	 * @param keySize   密钥长度，&lt;0表示不设定密钥长度，即使用默认长度
+	 * @param random 随机数生成器，null表示默认
+	 * @return {@link SecretKey}
+	 * @since 5.5.2
+	 */
+	public static SecretKey generateKey(String algorithm, int keySize, SecureRandom random) {
 		algorithm = getMainAlgorithm(algorithm);
 
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
-		if (keySize > 0) {
-			keyGenerator.init(keySize);
-		} else if (SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
+		if (keySize <= 0 && SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
 			// 对于AES的密钥，除非指定，否则强制使用128位
-			keyGenerator.init(128);
+			keySize = 128;
+		}
+
+		if(keySize > 0){
+			if (null == random) {
+				keyGenerator.init(keySize);
+			} else {
+				keyGenerator.init(keySize, random);
+			}
 		}
 		return keyGenerator.generateKey();
 	}
@@ -140,7 +160,7 @@ public class KeyUtil {
 		SecretKey secretKey;
 		if (algorithm.startsWith("PBE")) {
 			// PBE密钥
-			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.str(key, CharsetUtil.CHARSET_UTF_8).toCharArray());
+			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.utf8Str(key).toCharArray());
 		} else if (algorithm.startsWith("DES")) {
 			// DES密钥
 			secretKey = generateDESKey(algorithm, key);
@@ -236,8 +256,8 @@ public class KeyUtil {
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 *
-	 * @param algorithm 算法
-	 * @param key       密钥，必须为DER编码存储
+	 * @param algorithm 算法，如RSA、EC、SM2等
+	 * @param key       密钥，PKCS#8格式
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
@@ -251,7 +271,7 @@ public class KeyUtil {
 	 * 生成私钥，仅用于非对称加密<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 *
-	 * @param algorithm 算法
+	 * @param algorithm 算法，如RSA、EC、SM2等
 	 * @param keySpec   {@link KeySpec}
 	 * @return 私钥 {@link PrivateKey}
 	 * @since 3.1.1
@@ -347,6 +367,7 @@ public class KeyUtil {
 			// ECIES算法对KEY的长度有要求，此处默认256
 			keySize = 256;
 		}
+
 		return generateKeyPair(algorithm, keySize);
 	}
 
@@ -602,6 +623,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static String getMainAlgorithm(String algorithm) {
+		Assert.notBlank(algorithm, "Algorithm must be not blank!");
 		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
 		if (slashIndex > 0) {
 			return algorithm.substring(0, slashIndex);
@@ -618,11 +640,19 @@ public class KeyUtil {
 	 */
 	public static String getAlgorithmAfterWith(String algorithm) {
 		Assert.notNull(algorithm, "algorithm must be not null !");
+
+		if(StrUtil.startWithIgnoreCase(algorithm, "ECIESWith")){
+			return "EC";
+		}
+
 		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
 		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
-		if ("ECDSA".equalsIgnoreCase(algorithm) || "SM2".equalsIgnoreCase(algorithm)) {
+		if ("ECDSA".equalsIgnoreCase(algorithm)
+				|| "SM2".equalsIgnoreCase(algorithm)
+				|| "ECIES".equalsIgnoreCase(algorithm)
+		) {
 			algorithm = "EC";
 		}
 		return algorithm;

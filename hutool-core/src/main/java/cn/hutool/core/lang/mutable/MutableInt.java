@@ -4,20 +4,19 @@ import cn.hutool.core.util.NumberUtil;
 
 /**
  * 可变 <code>int</code> 类型
- * 
+ *
  * @see Integer
  * @since 3.0.1
  */
 public class MutableInt extends Number implements Comparable<MutableInt>, Mutable<Number> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int value;
 
 	/**
 	 * 构造，默认值0
 	 */
 	public MutableInt() {
-		super();
 	}
 
 	/**
@@ -25,7 +24,6 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * @param value 值
 	 */
 	public MutableInt(final int value) {
-		super();
 		this.value = value;
 	}
 
@@ -43,13 +41,12 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * @throws NumberFormatException 数字转换错误
 	 */
 	public MutableInt(final String value) throws NumberFormatException {
-		super();
 		this.value = Integer.parseInt(value);
 	}
 
 	@Override
 	public Integer get() {
-		return Integer.valueOf(this.value);
+		return this.value;
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值
 	 * @return this
 	 */
@@ -119,7 +116,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 
 	/**
 	 * 减去值
-	 * 
+	 *
 	 * @param operand 被减的值，非空
 	 * @return this
 	 * @throws NullPointerException if the object is null
@@ -158,7 +155,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * 	<li>类型为 {@link MutableInt}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param obj 比对的对象
 	 * @return 相同返回<code>true</code>，否则 <code>false</code>
 	 */
@@ -178,7 +175,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
-	 * 
+	 *
 	 * @param other 其它 {@link MutableInt} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */

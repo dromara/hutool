@@ -8,7 +8,7 @@ package cn.hutool.core.io.file;
  * Linux系统换行符："\n"
  * Windows系统换行符："\r\n"
  * </pre>
- * 
+ *
  * @see #MAC
  * @see #LINUX
  * @see #WINDOWS
@@ -19,7 +19,7 @@ public enum LineSeparator {
 	/** Mac系统换行符："\r" */
 	MAC("\r"),
 	/** Linux系统换行符："\n" */
-	LINUX("\n"), 
+	LINUX("\n"),
 	/** Windows系统换行符："\r\n" */
 	WINDOWS("\r\n");
 

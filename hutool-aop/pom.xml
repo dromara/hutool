@@ -9,17 +9,17 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.4.1</version>
+		<version>5.7.2</version>
 	</parent>
 
 	<artifactId>hutool-aop</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 动态代理（AOP）</description>
-	
+
 	<properties>
 		<!-- versions -->
 		<cglib.version>3.3.0</cglib.version>
-		<spring.version>5.2.7.RELEASE</spring.version>
+		<spring.version>5.3.8</spring.version>
 	</properties>
 
 	<dependencies>

@@ -1,5 +1,6 @@
 package cn.hutool.dfa;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.text.StrBuilder;
@@ -31,7 +32,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	private static final long serialVersionUID = -4646423269465809276L;
 
 	/**
-	 * 敏感词字符末尾标识，用于标识单词末尾字符
+	 * 单词字符末尾标识，用于标识单词末尾字符
 	 */
 	private final Set<Character> endCharacterSet = new HashSet<>();
 	/**
@@ -67,34 +68,39 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 增加一组单词
 	 *
 	 * @param words 单词集合
+	 * @return this
 	 */
-	public void addWords(Collection<String> words) {
+	public WordTree addWords(Collection<String> words) {
 		if (false == (words instanceof Set)) {
 			words = new HashSet<>(words);
 		}
 		for (String word : words) {
 			addWord(word);
 		}
+		return this;
 	}
 
 	/**
 	 * 增加一组单词
 	 *
 	 * @param words 单词数组
+	 *              @return this
 	 */
-	public void addWords(String... words) {
+	public WordTree addWords(String... words) {
 		HashSet<String> wordsSet = CollectionUtil.newHashSet(words);
 		for (String word : wordsSet) {
 			addWord(word);
 		}
+		return this;
 	}
 
 	/**
 	 * 添加单词，使用默认类型
 	 *
 	 * @param word 单词
+	 * @return this
 	 */
-	public void addWord(String word) {
+	public WordTree addWord(String word) {
 		final Filter<Character> charFilter = this.charFilter;
 		WordTree parent = null;
 		WordTree current = this;
@@ -117,8 +123,8 @@ public class WordTree extends HashMap<Character, WordTree> {
 		if (null != parent) {
 			parent.setEnd(currentChar);
 		}
+		return this;
 	}
-
 	//------------------------------------------------------------------------------- match
 
 	/**
@@ -131,7 +137,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 		if (null == text) {
 			return false;
 		}
-		return null != match(text);
+		return null != matchWord(text);
 	}
 
 	/**
@@ -141,14 +147,23 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配到的关键字
 	 */
 	public String match(String text) {
+		final FoundWord foundWord = matchWord(text);
+		return null != foundWord ? foundWord.toString() : null;
+	}
+
+	/**
+	 * 获得第一个匹配的关键字
+	 *
+	 * @param text 被检查的文本
+	 * @return 匹配到的关键字
+	 * @since 5.5.3
+	 */
+	public FoundWord matchWord(String text) {
 		if (null == text) {
 			return null;
 		}
-		List<String> matchAll = matchAll(text, 1);
-		if (CollectionUtil.isNotEmpty(matchAll)) {
-			return matchAll.get(0);
-		}
-		return null;
+		final List<FoundWord> matchAll = matchAllWords(text, 1);
+		return CollUtil.get(matchAll, 0);
 	}
 
 	//------------------------------------------------------------------------------- match all
@@ -166,12 +181,35 @@ public class WordTree extends HashMap<Character, WordTree> {
 	/**
 	 * 找出所有匹配的关键字
 	 *
+	 * @param text 被检查的文本
+	 * @return 匹配的词列表
+	 * @since 5.5.3
+	 */
+	public List<FoundWord> matchAllWords(String text) {
+		return matchAllWords(text, -1);
+	}
+
+	/**
+	 * 找出所有匹配的关键字
+	 *
 	 * @param text  被检查的文本
 	 * @param limit 限制匹配个数
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(String text, int limit) {
 		return matchAll(text, limit, false, false);
+	}
+
+	/**
+	 * 找出所有匹配的关键字
+	 *
+	 * @param text  被检查的文本
+	 * @param limit 限制匹配个数
+	 * @return 匹配的词列表
+	 * @since 5.5.3
+	 */
+	public List<FoundWord> matchAllWords(String text, int limit) {
+		return matchAllWords(text, limit, false, false);
 	}
 
 	/**
@@ -186,19 +224,38 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
+		final List<FoundWord> matchAllWords = matchAllWords(text, limit, isDensityMatch, isGreedMatch);
+		return CollUtil.map(matchAllWords, FoundWord::toString, true);
+	}
+
+	/**
+	 * 找出所有匹配的关键字<br>
+	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 *
+	 * @param text           被检查的文本
+	 * @param limit          限制匹配个数
+	 * @param isDensityMatch 是否使用密集匹配原则
+	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
+	 * @return 匹配的词列表
+	 * @since 5.5.3
+	 */
+	public List<FoundWord> matchAllWords(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
 		if (null == text) {
 			return null;
 		}
 
-		List<String> foundWords = new ArrayList<>();
+		List<FoundWord> foundWords = new ArrayList<>();
 		WordTree current = this;
 		int length = text.length();
 		final Filter<Character> charFilter = this.charFilter;
 		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
 		final StrBuilder wordBuffer = StrUtil.strBuilder();
+		final StrBuilder keyBuffer = StrUtil.strBuilder();
 		char currentChar;
 		for (int i = 0; i < length; i++) {
 			wordBuffer.reset();
+			keyBuffer.reset();
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 //				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
@@ -216,9 +273,10 @@ public class WordTree extends HashMap<Character, WordTree> {
 					break;
 				}
 				wordBuffer.append(currentChar);
+				keyBuffer.append(currentChar);
 				if (current.isEnd(currentChar)) {
 					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-					foundWords.add(wordBuffer.toString());
+					foundWords.add(new FoundWord(keyBuffer.toString(), wordBuffer.toString(), i, j));
 					if (limit > 0 && foundWords.size() >= limit) {
 						//超过匹配限制个数，直接返回
 						return foundWords;
@@ -241,8 +299,6 @@ public class WordTree extends HashMap<Character, WordTree> {
 		}
 		return foundWords;
 	}
-
-
 	//--------------------------------------------------------------------------------------- Private method start
 
 	/**
@@ -264,6 +320,17 @@ public class WordTree extends HashMap<Character, WordTree> {
 		if (null != c) {
 			this.endCharacterSet.add(c);
 		}
+	}
+
+	/**
+	 * 清除所有的词,
+	 * 此方法调用后, wordTree 将被清空
+	 * endCharacterSet 也将清空
+	 */
+	@Override
+	public void clear() {
+		super.clear();
+		this.endCharacterSet.clear();
 	}
 	//--------------------------------------------------------------------------------------- Private method end
 }

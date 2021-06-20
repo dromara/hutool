@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class NumberChineseFormatterTest {
-	
+
 	@Test
 	public void formatTest() {
 		String f1 = NumberChineseFormatter.format(10889.72356, false);
@@ -24,7 +24,7 @@ public class NumberChineseFormatterTest {
 		f1 = NumberChineseFormatter.format(0.05, false);
 		Assert.assertEquals("零点零五", f1);
 	}
-	
+
 	@Test
 	public void formatTest2() {
 		String f1 = NumberChineseFormatter.format(-0.3, false, false);
@@ -33,7 +33,7 @@ public class NumberChineseFormatterTest {
 		f1 = NumberChineseFormatter.format(10, false, false);
 		Assert.assertEquals("一十", f1);
 	}
-	
+
 	@Test
 	public void formatTraditionalTest() {
 		String f1 = NumberChineseFormatter.format(10889.72356, true);
@@ -53,15 +53,15 @@ public class NumberChineseFormatterTest {
 		f1 = NumberChineseFormatter.format(0.05, true);
 		Assert.assertEquals("零点零伍", f1);
 	}
-	
+
 	@Test
 	public void digitToChineseTest() {
 		String digitToChinese = Convert.digitToChinese(12412412412421.12);
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
-		
+
 		String digitToChinese2 = Convert.digitToChinese(12412412412421D);
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese2);
-		
+
 		String digitToChinese3 = Convert.digitToChinese(2421.02);
 		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese3);
 	}
@@ -78,5 +78,36 @@ public class NumberChineseFormatterTest {
 		// 非数字字符原样返回
 		s = NumberChineseFormatter.numberCharToChinese('A', false);
 		Assert.assertEquals("A", s);
+	}
+
+	@Test
+	public void chineseToNumberTest(){
+		Assert.assertEquals(0, NumberChineseFormatter.chineseToNumber("零"));
+		Assert.assertEquals(102, NumberChineseFormatter.chineseToNumber("一百零二"));
+		Assert.assertEquals(112, NumberChineseFormatter.chineseToNumber("一百一十二"));
+		Assert.assertEquals(1012, NumberChineseFormatter.chineseToNumber("一千零一十二"));
+		Assert.assertEquals(1000000, NumberChineseFormatter.chineseToNumber("一百万"));
+		Assert.assertEquals(2000100112, NumberChineseFormatter.chineseToNumber("二十亿零一十万零一百一十二"));
+	}
+
+	@Test
+	public void chineseToNumberTest2(){
+		Assert.assertEquals(120, NumberChineseFormatter.chineseToNumber("一百二"));
+		Assert.assertEquals(1200, NumberChineseFormatter.chineseToNumber("一千二"));
+		Assert.assertEquals(22000, NumberChineseFormatter.chineseToNumber("两万二"));
+		Assert.assertEquals(22003, NumberChineseFormatter.chineseToNumber("两万二零三"));
+		Assert.assertEquals(22010, NumberChineseFormatter.chineseToNumber("两万二零一十"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void badNumberTest(){
+		// 连续数字检查
+		NumberChineseFormatter.chineseToNumber("一百一二三");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void badNumberTest2(){
+		// 非法字符
+		NumberChineseFormatter.chineseToNumber("一百你三");
 	}
 }
