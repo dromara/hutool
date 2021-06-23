@@ -1,5 +1,6 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
@@ -18,7 +19,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CSV数据写出器
@@ -201,6 +205,25 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 				appendLine(Convert.toStrArray(values));
 			}
 			flush();
+		}
+		return this;
+	}
+
+	/**
+	 * 将一个Bean集合写出到Writer，并自动生成表头
+	 *
+	 * @param beans Bean集合
+	 * @return this
+	 */
+	public CsvWriter writeBeans(Collection<?> beans) {
+		if (CollUtil.isNotEmpty(beans)) {
+			List<Collection<Object>> res = new ArrayList<>();
+			for (Object bean : beans) {
+				res.add(BeanUtil.beanToMap(bean).keySet().stream().map(k -> (Object) k).collect(Collectors.toList()));
+				break;
+			}
+			res.addAll(beans.stream().map(bean -> BeanUtil.beanToMap(bean).values()).collect(Collectors.toList()));
+			write(res);
 		}
 		return this;
 	}
