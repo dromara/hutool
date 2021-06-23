@@ -986,7 +986,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static String escape(String string) {
-		return EscapeUtil.escape(string);
+		return EscapeUtil.escapeHtml4(string);
 	}
 
 	/**
@@ -998,7 +998,7 @@ public class XmlUtil {
 	 * @since 5.0.6
 	 */
 	public static String unescape(String string) {
-		return EscapeUtil.unescape(string);
+		return EscapeUtil.unescapeHtml4(string);
 	}
 
 	/**

@@ -287,4 +287,11 @@ public class XmlUtilTest {
 		String format = XmlUtil.toStr(xml,"GBK",true);
 		Console.log(format);
 	}
+
+	@Test
+	public void escapeTest(){
+		String a = "<>";
+		final String escape = XmlUtil.escape(a);
+		Console.log(escape);
+	}
 }

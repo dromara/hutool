@@ -4,12 +4,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class EscapeUtilTest {
-	
+
 	@Test
 	public void escapeHtml4Test() {
 		String escapeHtml4 = EscapeUtil.escapeHtml4("<a>你好</a>");
 		Assert.assertEquals("&lt;a&gt;你好&lt;/a&gt;", escapeHtml4);
-		
+
 		String result = EscapeUtil.unescapeHtml4("&#25391;&#33633;&#22120;&#31867;&#22411;");
 		Assert.assertEquals("振荡器类型", result);
 
@@ -39,9 +39,9 @@ public class EscapeUtilTest {
 	}
 
 	@Test
-	public void escapeSinleQuotesTest(){
+	public void escapeSingleQuotesTest(){
 		String str = "'some text with single quotes'";
 		final String s = EscapeUtil.escapeHtml4(str);
-		Assert.assertEquals(str, s);
+		Assert.assertEquals("&apos;some text with single quotes&apos;", s);
 	}
 }

@@ -1,7 +1,6 @@
 package cn.hutool.core.text.escape;
 
 import cn.hutool.core.text.replacer.LookupReplacer;
-import cn.hutool.core.text.replacer.ReplacerChain;
 
 /**
  * HTML4的ESCAPE
@@ -10,15 +9,8 @@ import cn.hutool.core.text.replacer.ReplacerChain;
  * @author looly
  *
  */
-public class Html4Escape extends ReplacerChain {
+public class Html4Escape extends XmlEscape {
 	private static final long serialVersionUID = 1L;
-
-	protected static final String[][] BASIC_ESCAPE = { //
-			{ "\"", "&quot;" }, // " - double-quote
-			{ "&", "&amp;" }, // & - ampersand
-			{ "<", "&lt;" }, // < - less-than
-			{ ">", "&gt;" }, // > - greater-than
-	};
 
 	protected static final String[][] ISO8859_1_ESCAPE = { //
 			{ "\u00A0", "&nbsp;" }, // non-breaking space
@@ -317,7 +309,7 @@ public class Html4Escape extends ReplacerChain {
 	};
 
 	public Html4Escape() {
-		addChain(new LookupReplacer(BASIC_ESCAPE));
+		super();
 		addChain(new LookupReplacer(ISO8859_1_ESCAPE));
 		addChain(new LookupReplacer(HTML40_EXTENDED_ESCAPE));
 	}

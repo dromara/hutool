@@ -331,11 +331,11 @@ public class XML {
 							if (i > 0) {
 								sb.append('\n');
 							}
-							sb.append(EscapeUtil.escapeHtml4(val.toString()));
+							sb.append(EscapeUtil.escapeXml(val.toString()));
 							i++;
 						}
 					} else {
-						sb.append(EscapeUtil.escapeHtml4(value.toString()));
+						sb.append(EscapeUtil.escapeXml(value.toString()));
 					}
 
 					// Emit an array of similar keys
@@ -377,7 +377,7 @@ public class XML {
 
 		}
 
-		if (object.getClass().isArray()) {
+		if (ArrayUtil.isArray(object)) {
 			object = new JSONArray(object);
 		}
 
@@ -392,10 +392,12 @@ public class XML {
 			return sb.toString();
 		}
 
-		String string = EscapeUtil.escapeHtml4(object.toString());
+		String string = EscapeUtil.escapeXml(object.toString());
 		return (tagName == null) ?
 				"\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>"
 				: "<" + tagName + ">" + string + "</" + tagName + ">";
 
 	}
+
+
 }
