@@ -533,16 +533,30 @@ public class IdcardUtil {
 	}
 
 	/**
+	 * 根据身份编号获取户籍省份编码，只支持15或18位身份证号码
+	 *
+	 * @param idcard 身份编码
+	 * @return 省份编码
+	 * @since 5.7.2
+	 */
+	public static String getProvinceCodeByIdCard(String idcard) {
+		int len = idcard.length();
+		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
+			return idcard.substring(0, 2);
+		}
+		return null;
+	}
+
+	/**
 	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
 	 *
 	 * @param idcard 身份编码
 	 * @return 省份名称。
 	 */
 	public static String getProvinceByIdCard(String idcard) {
-		int len = idcard.length();
-		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
-			String sProvinNum = idcard.substring(0, 2);
-			return CITY_CODES.get(sProvinNum);
+		final String code = getProvinceCodeByIdCard(idcard);
+		if(StrUtil.isNotBlank(code)){
+			return CITY_CODES.get(code);
 		}
 		return null;
 	}
@@ -672,7 +686,7 @@ public class IdcardUtil {
 		 * @param idcard 身份证号码
 		 */
 		public Idcard(String idcard) {
-			this.provinceCode = IdcardUtil.getProvinceByIdCard(idcard);
+			this.provinceCode = IdcardUtil.getProvinceCodeByIdCard(idcard);
 			this.cityCode = IdcardUtil.getCityCodeByIdCard(idcard);
 			this.birthDate = IdcardUtil.getBirthDate(idcard);
 			this.gender = IdcardUtil.getGenderByIdCard(idcard);
