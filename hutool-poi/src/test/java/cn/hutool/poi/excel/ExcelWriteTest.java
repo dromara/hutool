@@ -39,7 +39,7 @@ import java.util.TreeMap;
  */
 public class ExcelWriteTest {
 	@Test
-	@Ignore
+//	@Ignore
 	public void testRowOrColumnCellStyle(){
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
@@ -60,10 +60,15 @@ public class ExcelWriteTest {
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);
 		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
+		//原设置行、列样式的方法
+//		overtimeWriter.setRowStyle(2,cellStyle);
+//		overtimeWriter.setColumnStyle(1,cellStyle);
+
+		//现增加的设置行、列样式的方法
 		//给第三行加背景色
 		overtimeWriter.setRowStyleIfRowData(2,cellStyle);
 		//给第二列加背景色 从第一行开始加（用于控制有表头时）
-		overtimeWriter.setColumnStyleIfColumnDate(1,0,cellStyle);
+		overtimeWriter.setColumnStyleIfColumnData(1,0,cellStyle);
 
 		CellStyle cellStyle1 = overtimeWriter.getWorkbook().createCellStyle();
 		StyleUtil.setBorder(cellStyle1, BorderStyle.THIN, IndexedColors.BLACK);

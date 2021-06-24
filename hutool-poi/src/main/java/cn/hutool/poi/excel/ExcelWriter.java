@@ -1092,7 +1092,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 对数据行整行加自定义样式 write后调用
+	 * 对数据行整行加自定义样式 仅对数据单元格设置 write后调用
 	 *
 	 * {@link cn.hutool.poi.excel.ExcelWriter#setRowStyle(int, org.apache.poi.ss.usermodel.CellStyle)}
 	 * 这个方法加的样式会使整行没有数据的单元格也有样式
@@ -1127,7 +1127,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 设置整个列的样式 write后调用
+	 * 设置整个列的样式 仅对数据单元格设置 write后调用
 	 *
 	 * {@link cn.hutool.poi.excel.ExcelWriter#setColumnStyle(int, org.apache.poi.ss.usermodel.CellStyle)}
 	 * 这个方法加的样式会使整列没有数据的单元格也有样式
@@ -1138,7 +1138,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return
 	 * @since
 	 */
-	public ExcelWriter setColumnStyleIfColumnDate(int x,int y, CellStyle style) {
+	public ExcelWriter setColumnStyleIfColumnData(int x,int y, CellStyle style) {
 		if(x < 0) {
 			throw new IllegalArgumentException("Invalid column number (" + x + ")");
 		}
