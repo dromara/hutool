@@ -304,4 +304,10 @@ public class ConvertTest {
 		// 默认转换失败报错而不是返回null
 		Convert.convert(Date.class, "aaaa");
 	}
+
+	@Test
+	public void toDateTest2(){
+		final Date date = Convert.toDate("2021-01");
+		Assert.assertNull(date);
+	}
 }
