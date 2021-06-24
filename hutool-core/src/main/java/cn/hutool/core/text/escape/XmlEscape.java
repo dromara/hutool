@@ -12,7 +12,7 @@ import cn.hutool.core.text.replacer.ReplacerChain;
  * 	 &lt; (less than) 替换为 &amp;lt;
  * 	 &gt; (greater than) 替换为 &amp;gt;
  * 	 &quot; (double quote) 替换为 &amp;quot;
- * 	 &apos; (single quote / apostrophe) 替换为 &amp;apos;
+ * 	 ' (single quote / apostrophe) 替换为 &amp;apos;
  * </pre>
  *
  * @author looly
