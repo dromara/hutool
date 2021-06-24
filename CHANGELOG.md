@@ -8,11 +8,13 @@
 ### 🐣新特性
 * 【core   】     增加Convert.toSet方法（issue#I3XFG2@Gitee）
 * 【core   】     CsvWriter增加writeBeans方法（pr#345@Gitee）
+* 【core   】     新增JAXBUtil（pr#346@Gitee）
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）
 * 【core   】     修复FormatCache中循环引用异常（pr#1673@Github）
 * 【core   】     修复IdcardUtil.getIdcardInfo.getProvinceCode获取为汉字的问题（issue#I3XP4Q@Gitee）
+* 【core   】     修复CollUtil.subtract使用非标准Set等空指针问题（issue#I3XN1Z@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
