@@ -365,7 +365,11 @@ public class CollUtil {
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
-		final Collection<T> result = ObjectUtil.clone(coll1);
+		Collection<T> result = ObjectUtil.clone(coll1);
+		if(null == result){
+			result = CollUtil.create(coll1.getClass());
+			result.addAll(coll1);
+		}
 		result.removeAll(coll2);
 		return result;
 	}
@@ -995,6 +999,11 @@ public class CollUtil {
 			try {
 				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
 			} catch (Exception e) {
+				// 无法创建当前类型的对象，尝试创建父类型对象
+				final Class<?> superclass = collectionType.getSuperclass();
+				if(null != superclass && collectionType != superclass){
+					return create(superclass);
+				}
 				throw new UtilException(e);
 			}
 		}
@@ -1141,6 +1150,10 @@ public class CollUtil {
 		}
 
 		Collection<T> collection2 = ObjectUtil.clone(collection);
+		if(null == collection2){
+			// 不支持clone
+			collection2 = create(collection.getClass());
+		}
 		if (isEmpty(collection2)) {
 			return collection2;
 		}

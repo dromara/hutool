@@ -332,7 +332,11 @@ public class ListUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverseNew(List<T> list) {
-		final List<T> list2 = ObjectUtil.clone(list);
+		List<T> list2 = ObjectUtil.clone(list);
+		if(null == list2){
+			// 不支持clone
+			list2 = new ArrayList<>(list);
+		}
 		return reverse(list2);
 	}
 

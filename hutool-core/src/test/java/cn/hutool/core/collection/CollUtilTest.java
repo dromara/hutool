@@ -185,6 +185,28 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void subtractSetTest() {
+		HashMap<String, Object> map1 = MapUtil.newHashMap();
+		HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map1.put("1", "v1");
+		map1.put("2", "v2");
+		map2.put("2", "v2");
+		Collection<String> r2 = CollUtil.subtract(map1.keySet(), map2.keySet());
+		Assert.assertEquals("[1]", r2.toString());
+	}
+
+	@Test
+	public void subtractSetToListTest() {
+		HashMap<String, Object> map1 = MapUtil.newHashMap();
+		HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map1.put("1", "v1");
+		map1.put("2", "v2");
+		map2.put("2", "v2");
+		List<String> r2 = CollUtil.subtractToList(map1.keySet(), map2.keySet());
+		Assert.assertEquals("[1]", r2.toString());
+	}
+
+	@Test
 	public void toMapListAndToListMapTest() {
 		HashMap<String, String> map1 = new HashMap<>();
 		map1.put("a", "值1");
@@ -709,7 +731,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void pageTest(){
+	public void pageTest() {
 		List<Dict> objects = CollUtil.newArrayList();
 		for (int i = 0; i < 10; i++) {
 			objects.add(Dict.create().set("name", "姓名：" + i));
@@ -719,7 +741,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void subtractToListTest(){
+	public void subtractToListTest() {
 		List<Long> list1 = Arrays.asList(1L, 2L, 3L);
 		List<Long> list2 = Arrays.asList(2L, 3L);
 

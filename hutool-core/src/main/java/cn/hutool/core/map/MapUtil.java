@@ -629,6 +629,10 @@ public class MapUtil {
 		}
 
 		Map<K, V> map2 = ObjectUtil.clone(map);
+		if(null == map2){
+			// 不支持clone
+			map2 = new HashMap<>(map.size(), 1f);
+		}
 		if (isEmpty(map2)) {
 			return map2;
 		}
@@ -636,7 +640,7 @@ public class MapUtil {
 			map2.clear();
 		} catch (UnsupportedOperationException e) {
 			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>();
+			map2 = new HashMap<>(map.size(), 1f);
 		}
 
 		Entry<K, V> modified;
@@ -687,6 +691,10 @@ public class MapUtil {
 			return map;
 		}
 		Map<K, V> map2 = ObjectUtil.clone(map);
+		if(null == map2){
+			// 不支持clone
+			map2 = new HashMap<>(map.size(), 1f);
+		}
 		if (isEmpty(map2)) {
 			return map2;
 		}
