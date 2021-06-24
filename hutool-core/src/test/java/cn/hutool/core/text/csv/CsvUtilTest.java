@@ -3,6 +3,7 @@ package cn.hutool.core.text.csv;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -64,49 +65,27 @@ public class CsvUtilTest {
 	@Test
 	@Ignore
 	public void writeBeansTest() {
+
+		@Data
 		class Student {
 			Integer id;
 			String name;
 			Integer age;
-
-			public Integer getId() {
-				return id;
-			}
-
-			public void setId(Integer id) {
-				this.id = id;
-			}
-
-			public String getName() {
-				return name;
-			}
-
-			public void setName(String name) {
-				this.name = name;
-			}
-
-			public Integer getAge() {
-				return age;
-			}
-
-			public void setAge(Integer age) {
-				this.age = age;
-			}
 		}
+
 		CsvWriter writer = CsvUtil.getWriter("d:/test/testWriteBeans.csv", CharsetUtil.CHARSET_UTF_8);
 		List<Student> students = new ArrayList<>();
 		Student student1 = new Student();
-		Student student2 = new Student();
-		Student student3 = new Student();
-
 		student1.setId(1);
 		student1.setName("张三");
 		student1.setAge(18);
 
+		Student student2 = new Student();
 		student2.setId(2);
 		student2.setName("李四");
 		student2.setAge(22);
 
+		Student student3 = new Student();
 		student3.setId(3);
 		student3.setName("王五");
 		student3.setAge(31);
@@ -115,6 +94,7 @@ public class CsvUtilTest {
 		students.add(student2);
 		students.add(student3);
 		writer.writeBeans(students);
+		writer.close();
 	}
 
 	@Test

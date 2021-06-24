@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core   】     增加Convert.toSet方法（issue#I3XFG2@Gitee）
+* 【core   】     CsvWriter增加writeBeans方法（pr#345@Gitee）
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）

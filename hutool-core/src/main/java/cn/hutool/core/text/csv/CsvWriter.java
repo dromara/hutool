@@ -19,10 +19,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * CSV数据写出器
@@ -217,13 +215,17 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	public CsvWriter writeBeans(Collection<?> beans) {
 		if (CollUtil.isNotEmpty(beans)) {
-			List<Collection<Object>> res = new ArrayList<>();
+			boolean isFirst = true;
+			Map<String, Object> map;
 			for (Object bean : beans) {
-				res.add(BeanUtil.beanToMap(bean).keySet().stream().map(k -> (Object) k).collect(Collectors.toList()));
-				break;
+				map = BeanUtil.beanToMap(bean);
+				if(isFirst){
+					writeLine(map.keySet().toArray(new String[0]));
+					isFirst = false;
+				}
+				writeLine(Convert.toStrArray(map.values()));
 			}
-			res.addAll(beans.stream().map(bean -> BeanUtil.beanToMap(bean).values()).collect(Collectors.toList()));
-			write(res);
+			flush();
 		}
 		return this;
 	}
