@@ -38,6 +38,44 @@ import java.util.TreeMap;
  * @author looly
  */
 public class ExcelWriteTest {
+	@Test
+	@Ignore
+	public void testRowOrColumnCellStyle(){
+		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+
+		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/excel/single_line.xlsx");
+
+		overtimeWriter.write(rows,true);
+
+		CellStyle cellStyle = overtimeWriter.getWorkbook().createCellStyle();
+		StyleUtil.setBorder(cellStyle, BorderStyle.THIN, IndexedColors.BLACK);
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		cellStyle.setFillForegroundColor((short)13);
+		cellStyle.setDataFormat((short)22);//时间格式
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		//给第三行加背景色
+		overtimeWriter.setRowStyleIfRowData(2,cellStyle);
+		//给第二列加背景色 从第一行开始加（用于控制有表头时）
+		overtimeWriter.setColumnStyleIfColumnDate(1,0,cellStyle);
+
+		CellStyle cellStyle1 = overtimeWriter.getWorkbook().createCellStyle();
+		StyleUtil.setBorder(cellStyle1, BorderStyle.THIN, IndexedColors.BLACK);
+		cellStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		cellStyle1.setFillForegroundColor((short)13);
+		cellStyle1.setDataFormat((short)2);//小数保留两位
+		cellStyle1.setAlignment(HorizontalAlignment.CENTER);
+		cellStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		overtimeWriter.setStyle(cellStyle1,5,2);//由于第6列是数字 上面应用了日期格式会错乱，这里单独设置下第六列的格式
+
+		overtimeWriter.close();
+	}
 
 	@Test
 	@Ignore
