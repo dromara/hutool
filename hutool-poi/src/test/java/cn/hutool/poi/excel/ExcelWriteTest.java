@@ -40,7 +40,7 @@ import java.util.TreeMap;
 public class ExcelWriteTest {
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void testRowOrColumnCellStyle() {
 		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
