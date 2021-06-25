@@ -10,6 +10,7 @@
 * 【core   】     CsvWriter增加writeBeans方法（pr#345@Gitee）
 * 【core   】     新增JAXBUtil（pr#346@Gitee）
 * 【poi    】     ExcelWriter新增setColumnStyleIfHasData和setRowStyleIfHasData（pr#347@Gitee）
+* 【json   】     用户自定义日期时间格式时，解析也读取此格式
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）

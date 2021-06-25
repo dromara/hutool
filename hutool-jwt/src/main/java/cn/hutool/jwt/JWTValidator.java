@@ -85,6 +85,25 @@ public class JWTValidator {
 	 * <p>
 	 * 如果某个时间没有设置，则不检查（表示无限制）
 	 *
+	 * @return this
+	 * @throws ValidateException 验证失败的异常
+	 * @since 5.7.3
+	 */
+	public JWTValidator validateDate() throws ValidateException {
+		return validateDate(DateUtil.beginOfSecond(DateUtil.date()));
+	}
+
+	/**
+	 * 检查JWT的以下三两个时间：
+	 *
+	 * <ul>
+	 *     <li>{@link JWTPayload#NOT_BEFORE}：被检查时间必须晚于生效时间</li>
+	 *     <li>{@link JWTPayload#EXPIRES_AT}：被检查时间必须早于失效时间</li>
+	 *     <li>{@link JWTPayload#ISSUED_AT}：签发时间必须早于失效时间</li>
+	 * </ul>
+	 * <p>
+	 * 如果某个时间没有设置，则不检查（表示无限制）
+	 *
 	 * @param dateToCheck 被检查的时间，一般为当前时间
 	 * @return this
 	 * @throws ValidateException 验证失败的异常
