@@ -73,6 +73,30 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void formatAndParseCustomTest() {
+		String dateStr = "2017-03-01";
+		Date date = DateUtil.parse(dateStr);
+
+		String format = DateUtil.format(date, "#sss");
+		Assert.assertEquals("1488297600", format);
+
+		final DateTime parse = DateUtil.parse(format, "#sss");
+		Assert.assertEquals(date, parse);
+	}
+
+	@Test
+	public void formatAndParseCustomTest2() {
+		String dateStr = "2017-03-01";
+		Date date = DateUtil.parse(dateStr);
+
+		String format = DateUtil.format(date, "#SSS");
+		Assert.assertEquals("1488297600000", format);
+
+		final DateTime parse = DateUtil.parse(format, "#SSS");
+		Assert.assertEquals(date, parse);
+	}
+
+	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 00:33:23";
 		Date date = DateUtil.parse(dateStr);
@@ -883,6 +907,6 @@ public class DateUtilTest {
 	public void parseNotFitTest(){
 		//https://github.com/looly/hutool/issues/1332
 		// 在日期格式不匹配的时候，测试是否正常报错
-		final DateTime parse = DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+		DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
 	}
 }

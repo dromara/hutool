@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -139,7 +140,7 @@ public class LocalDateTimeUtil {
 	 * 毫秒转{@link LocalDateTime}，结果会产生时间偏移
 	 *
 	 * @param epochMilli 从1970-01-01T00:00:00Z开始计数的毫秒数
-	 * @param timeZone     时区
+	 * @param timeZone   时区
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime of(long epochMilli, TimeZone timeZone) {
@@ -174,8 +175,8 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		if(temporalAccessor instanceof LocalDate){
-			return ((LocalDate)temporalAccessor).atStartOfDay();
+		if (temporalAccessor instanceof LocalDate) {
+			return ((LocalDate) temporalAccessor).atStartOfDay();
 		}
 
 		return LocalDateTime.of(
@@ -201,8 +202,8 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		if(temporalAccessor instanceof LocalDateTime){
-			return ((LocalDateTime)temporalAccessor).toLocalDate();
+		if (temporalAccessor instanceof LocalDateTime) {
+			return ((LocalDateTime) temporalAccessor).toLocalDate();
 		}
 
 		return LocalDate.of(
@@ -215,11 +216,11 @@ public class LocalDateTimeUtil {
 	/**
 	 * 解析日期时间字符串为{@link LocalDateTime}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30
 	 *
-	 * @param text      日期时间字符串
+	 * @param text 日期时间字符串
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime parse(CharSequence text) {
-		return parse(text, (DateTimeFormatter)null);
+		return parse(text, (DateTimeFormatter) null);
 	}
 
 	/**
@@ -252,23 +253,27 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
+		if(GlobalCustomFormat.isCustomFormat(format)){
+			return of(GlobalCustomFormat.parse(text, format));
+		}
+
 		DateTimeFormatter formatter = null;
-		if(StrUtil.isNotBlank(format)){
+		if (StrUtil.isNotBlank(format)) {
 			// 修复yyyyMMddHHmmssSSS格式不能解析的问题
 			// fix issue#1082
 			//see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
 			// jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
-			if(StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN)){
+			if (StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN)) {
 				final String fraction = StrUtil.removePrefix(format, DatePattern.PURE_DATETIME_PATTERN);
-				if(ReUtil.isMatch("[S]{1,2}", fraction)){
+				if (ReUtil.isMatch("[S]{1,2}", fraction)) {
 					//将yyyyMMddHHmmssS、yyyyMMddHHmmssSS的日期统一替换为yyyyMMddHHmmssSSS格式，用0补
-					text += StrUtil.repeat('0', 3-fraction.length());
+					text += StrUtil.repeat('0', 3 - fraction.length());
 				}
 				formatter = new DateTimeFormatterBuilder()
 						.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
 						.appendValue(ChronoField.MILLI_OF_SECOND, 3)
 						.toFormatter();
-			} else{
+			} else {
 				formatter = DateTimeFormatter.ofPattern(format);
 			}
 		}
@@ -279,12 +284,12 @@ public class LocalDateTimeUtil {
 	/**
 	 * 解析日期时间字符串为{@link LocalDate}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30
 	 *
-	 * @param text      日期时间字符串
+	 * @param text 日期时间字符串
 	 * @return {@link LocalDate}
 	 * @since 5.3.10
 	 */
 	public static LocalDate parseDate(CharSequence text) {
-		return parseDate(text, (DateTimeFormatter)null);
+		return parseDate(text, (DateTimeFormatter) null);
 	}
 
 	/**
@@ -323,7 +328,7 @@ public class LocalDateTimeUtil {
 	/**
 	 * 格式化日期时间为yyyy-MM-dd HH:mm:ss格式
 	 *
-	 * @param time      {@link LocalDateTime}
+	 * @param time {@link LocalDateTime}
 	 * @return 格式化后的字符串
 	 * @since 5.3.11
 	 */
@@ -350,16 +355,13 @@ public class LocalDateTimeUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(LocalDateTime time, String format) {
-		if (null == time) {
-			return null;
-		}
-		return format(time, DateTimeFormatter.ofPattern(format));
+		return TemporalAccessorUtil.format(time, format);
 	}
 
 	/**
 	 * 格式化日期时间为yyyy-MM-dd格式
 	 *
-	 * @param date      {@link LocalDate}
+	 * @param date {@link LocalDate}
 	 * @return 格式化后的字符串
 	 * @since 5.3.11
 	 */
@@ -478,8 +480,8 @@ public class LocalDateTimeUtil {
 	 *
 	 * @param temporalAccessor Date对象
 	 * @return {@link Instant}对象
-	 * @since 5.4.1
 	 * @see TemporalAccessorUtil#toEpochMilli(TemporalAccessor)
+	 * @since 5.4.1
 	 */
 	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
 		return TemporalAccessorUtil.toEpochMilli(temporalAccessor);

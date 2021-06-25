@@ -1,5 +1,6 @@
 package cn.hutool.jwt;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.jwt.signers.AlgorithmUtil;
 import cn.hutool.jwt.signers.JWTSigner;
@@ -113,6 +114,7 @@ public class JWTSignerTest {
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
+				.setExpiresAt(DateUtil.tomorrow())
 				.setSigner(signer);
 
 		String token = jwt.sign();

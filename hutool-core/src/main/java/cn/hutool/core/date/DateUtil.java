@@ -5,6 +5,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharUtil;
@@ -488,6 +489,11 @@ public class DateUtil extends CalendarUtil {
 			return null;
 		}
 
+		// 检查自定义格式
+		if(GlobalCustomFormat.isCustomFormat(format)){
+			return GlobalCustomFormat.format(date, format);
+		}
+
 		TimeZone timeZone = null;
 		if (date instanceof DateTime) {
 			timeZone = ((DateTime) date).getTimeZone();
@@ -696,6 +702,10 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
+		if(GlobalCustomFormat.isCustomFormat(format)){
+			// 自定义格式化器忽略Locale
+			return new DateTime(GlobalCustomFormat.parse(dateStr, format));
+		}
 		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
 	}
 

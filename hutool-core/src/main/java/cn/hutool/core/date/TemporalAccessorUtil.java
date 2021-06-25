@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.StrUtil;
 
 import java.time.Instant;
@@ -81,6 +82,11 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	public static String format(TemporalAccessor time, String format) {
 		if (null == time) {
 			return null;
+		}
+
+		// 检查自定义格式
+		if(GlobalCustomFormat.isCustomFormat(format)){
+			return GlobalCustomFormat.format(time, format);
 		}
 
 		final DateTimeFormatter formatter = StrUtil.isBlank(format)

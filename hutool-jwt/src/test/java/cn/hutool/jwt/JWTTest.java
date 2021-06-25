@@ -1,5 +1,6 @@
 package cn.hutool.jwt;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import org.junit.Assert;
@@ -14,11 +15,12 @@ public class JWTTest {
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
+				.setPayload(RegisteredPayload.EXPIRES_AT, DateUtil.parse("2022-01-01"))
 				.setKey(key);
 
 		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-				"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9." +
-				"U2aQkC2THYV9L0fTN-yBBI7gmo5xhmvMhATtu8v0zEA";
+				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWUsImV4cCI6IjE2NDA5NjY0MDAifQ." +
+				"c9qo9Z9vdN2gulvOEReU9iEi0bqgyVqjaNKbP1DmTL4";
 
 		String token = jwt.sign();
 		Assert.assertEquals(token, rightToken);

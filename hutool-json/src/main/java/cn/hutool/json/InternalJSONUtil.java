@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -167,10 +168,6 @@ final class InternalJSONUtil {
 			try {
 				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
 					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
-					//double d = Double.parseDouble(string);
-					//if (false == Double.isInfinite(d) && false == Double.isNaN(d)) {
-					//	return d;
-					//}
 					return new BigDecimal(string);
 				} else {
 					final long myLong = Long.parseLong(string);
@@ -274,6 +271,12 @@ final class InternalJSONUtil {
 				dateStr = TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
 			} else{
 				dateStr = DateUtil.format(Convert.toDate(dateObj), format);
+			}
+
+			if(GlobalCustomFormat.FORMAT_SECONDS.equals(format)
+					|| GlobalCustomFormat.FORMAT_MILLISECONDS.equals(format)){
+				// Hutool自定义的秒和毫秒表示，默认不包装双引号
+				return dateStr;
 			}
 			//用户定义了日期格式
 			return JSONUtil.quote(dateStr);

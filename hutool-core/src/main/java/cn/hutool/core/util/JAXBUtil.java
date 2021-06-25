@@ -62,6 +62,7 @@ public class JAXBUtil {
 	/**
 	 * xml转换成JavaBean
 	 *
+	 * @param <T> Bean类型
 	 * @param xml XML字符串
 	 * @param c   Bean类型
 	 * @return bean

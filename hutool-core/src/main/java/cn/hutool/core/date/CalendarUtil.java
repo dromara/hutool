@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.NumberChineseFormatter;
 import cn.hutool.core.date.format.FastDateParser;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -654,6 +655,15 @@ public class CalendarUtil {
 		calendar.setLenient(lenient);
 
 		for (final String parsePattern : parsePatterns) {
+			if(GlobalCustomFormat.isCustomFormat(parsePattern)){
+				final Date parse = GlobalCustomFormat.parse(str, parsePattern);
+				if(null == parse){
+					continue;
+				}
+				calendar.setTime(parse);
+				return calendar;
+			}
+
 			final FastDateParser fdp = new FastDateParser(parsePattern, tz, lcl);
 			calendar.clear();
 			try {
