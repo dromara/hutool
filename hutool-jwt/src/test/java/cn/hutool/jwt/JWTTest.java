@@ -19,11 +19,11 @@ public class JWTTest {
 				.setKey(key);
 
 		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWUsImV4cCI6IjE2NDA5NjY0MDAifQ." +
-				"c9qo9Z9vdN2gulvOEReU9iEi0bqgyVqjaNKbP1DmTL4";
+				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWUsImV4cCI6MTY0MDk2NjQwMH0." +
+				"bXlSnqVeJXWqUIt7HyEhgKNVlIPjkumHlAwFY-5YCtk";
 
 		String token = jwt.sign();
-		Assert.assertEquals(token, rightToken);
+		Assert.assertEquals(rightToken, token);
 
 		Assert.assertTrue(JWT.of(rightToken).setKey(key).verify());
 	}
