@@ -33,7 +33,7 @@ import java.util.Map;
  * @author looly
  * @since 5.7.3
  */
-public class JSONWriter {
+public class JSONWriter extends Writer {
 
 	/**
 	 * 缩进因子，定义每一级别增加的缩进量
@@ -62,11 +62,24 @@ public class JSONWriter {
 	private boolean arrayMode;
 
 	/**
-	 * 构造
-	 * @param writer {@link Writer}
+	 * 创建{@link JSONWriter}
+	 *
+	 * @param writer       {@link Writer}
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent 本级别缩进量
-	 * @param config JSON选项
+	 * @param indent       本级别缩进量
+	 * @param config       JSON选项
+	 */
+	public static JSONWriter of(Writer writer, int indentFactor, int indent, JSONConfig config) {
+		return new JSONWriter(writer, indentFactor, indent, config);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param writer       {@link Writer}
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent       本级别缩进量
+	 * @param config       JSON选项
 	 */
 	public JSONWriter(Writer writer, int indentFactor, int indent, JSONConfig config) {
 		this.writer = writer;
@@ -105,11 +118,7 @@ public class JSONWriter {
 		// 换行缩进
 		writeLF().writeSpace(indent);
 		writeRaw(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
-		try {
-			writer.flush();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		flush();
 		arrayMode = false;
 		// 当前对象或数组结束，当新的
 		needSeparator = true;
@@ -118,6 +127,7 @@ public class JSONWriter {
 
 	/**
 	 * 写出键，自动处理分隔符和缩进，并包装键名
+	 *
 	 * @param key 键名
 	 * @return this
 	 */
@@ -150,7 +160,27 @@ public class JSONWriter {
 		return writeObjValue(value);
 	}
 
+	@Override
+	public void write(char[] cbuf, int off, int len) throws IOException {
+		this.writer.write(cbuf, off, len);
+	}
+
+	@Override
+	public void flush() {
+		try {
+			this.writer.flush();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		this.writer.close();
+	}
+
 	// ------------------------------------------------------------------------------ Private methods
+
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *

@@ -554,8 +554,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		final JSONWriter jsonWriter = new JSONWriter(writer, indentFactor, indent, this.config);
-		jsonWriter.beginObj();
+		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
+				.beginObj();
 		this.forEach((key, value)-> jsonWriter.writeKey(key).writeValue(value));
 		jsonWriter.end();
 

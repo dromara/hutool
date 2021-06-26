@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -220,16 +221,8 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
-		int len = this.rawList.size();
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < len; i += 1) {
-			if (i > 0) {
-				sb.append(separator);
-			}
-			sb.append(InternalJSONUtil.valueToString(this.rawList.get(i)));
-		}
-		return sb.toString();
+		return StrJoiner.of(separator)
+				.append(this, InternalJSONUtil::valueToString).toString();
 	}
 
 	@Override
@@ -537,10 +530,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		final JSONWriter jsonWriter = new JSONWriter(writer, indentFactor, indent, config);
-		jsonWriter.beginArray();
+		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
+				.beginArray();
 		this.forEach(jsonWriter::writeValue);
 		jsonWriter.end();
+		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
 	}
 
