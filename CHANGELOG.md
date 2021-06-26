@@ -13,6 +13,7 @@
 * 【json   】     用户自定义日期时间格式时，解析也读取此格式
 * 【core   】     增加可自定义日期格式GlobalCustomFormat
 * 【jwt    】     JWT修改默认有序，并规定payload日期格式为秒数
+* 【json   】     增加JSONWriter
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）

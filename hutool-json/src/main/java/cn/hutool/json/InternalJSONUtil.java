@@ -78,13 +78,13 @@ final class InternalJSONUtil {
 	/**
 	 * 缩进，使用空格符
 	 *
-	 * @param writer writer
+	 * @param appendable writer
 	 * @param indent 缩进空格数
 	 * @throws IOException IO异常
 	 */
-	protected static void indent(Writer writer, int indent) throws IOException {
+	protected static void indent(Appendable appendable, int indent) throws IOException {
 		for (int i = 0; i < indent; i += 1) {
-			writer.write(CharUtil.SPACE);
+			appendable.append(CharUtil.SPACE);
 		}
 	}
 
