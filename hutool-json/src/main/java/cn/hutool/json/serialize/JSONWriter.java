@@ -61,6 +61,13 @@ public class JSONWriter {
 	 */
 	private boolean arrayMode;
 
+	/**
+	 * 构造
+	 * @param writer {@link Writer}
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent 本级别缩进量
+	 * @param config JSON选项
+	 */
 	public JSONWriter(Writer writer, int indentFactor, int indent, JSONConfig config) {
 		this.writer = writer;
 		this.indentFactor = indentFactor;
@@ -104,6 +111,7 @@ public class JSONWriter {
 			throw new IORuntimeException(e);
 		}
 		arrayMode = false;
+		// 当前对象或数组结束，当新的
 		needSeparator = true;
 		return this;
 	}
