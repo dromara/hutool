@@ -641,4 +641,49 @@ public class BeanUtilTest {
 		int age;
 		Long no;
 	}
+
+	/**
+	 * @author dazer
+	 *  copyProperties(Object source, Object target, CopyOptions copyOptions)
+	 *  当：copyOptions的 setFieldNameEditor 不为空的时候，有bug,这里进行修复；
+	 */
+	@Test
+	public void beanToBeanCopyOptionsTest() {
+		ChildVo1 childVo1 = new ChildVo1();
+		childVo1.setChild_address("中国北京天安门");
+		childVo1.setChild_name("张北京");
+		childVo1.setChild_father_name("张无忌");
+		childVo1.setChild_mother_name("赵敏敏");
+
+		CopyOptions copyOptions = CopyOptions.create().
+				//setIgnoreNullValue(true).
+				//setIgnoreCase(false).
+						setFieldNameEditor(StrUtil::toUnderlineCase);
+
+		ChildVo2 childVo2 = new ChildVo2();
+		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);
+
+		Assert.assertEquals(childVo1.getChild_address(), childVo2.getChildAddress());
+		Assert.assertEquals(childVo1.getChild_name(), childVo2.getChildName());
+		Assert.assertEquals(childVo1.getChild_father_name(), childVo2.getChildFatherName());
+		Assert.assertEquals(childVo1.getChild_mother_name(), childVo2.getChildMotherName());
+	}
+
+	@Getter
+	@Setter
+	public static class ChildVo1 {
+		String child_name;
+		String child_address;
+		String child_mother_name;
+		String child_father_name;
+	}
+
+	@Getter
+	@Setter
+	public static class ChildVo2 {
+		String childName;
+		String childAddress;
+		String childMotherName;
+		String childFatherName;
+	}
 }
