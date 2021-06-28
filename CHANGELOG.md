@@ -24,6 +24,7 @@
 * 【core   】     修复SqlFormatter部分SQL空指针问题（issue#I3XS44@Gitee）
 * 【core   】     修复DateRange计算问题（issue#I3Y1US@Gitee）
 * 【core   】     修复BeanCopier中setFieldNameEditor失效问题（pr#349@Gitee）
+* 【core   】     修复ArrayUtil.indexOfSub查找bug（pr#349@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
