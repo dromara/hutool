@@ -518,4 +518,16 @@ public class StrUtilTest {
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 17));
 	}
 
+
+	@Test
+	public void isCharEqualsTest(){
+		String a = "aaaaaaaaa";
+		Assert.assertTrue(StrUtil.isCharEquals(a));
+	}
+
+	@Test
+	public void isNumericTest(){
+		String a = "2142342422423423";
+		Assert.assertTrue(StrUtil.isNumeric(a));
+	}
 }
