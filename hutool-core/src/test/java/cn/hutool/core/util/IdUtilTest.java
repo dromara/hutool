@@ -134,4 +134,10 @@ public class IdUtilTest {
 		}
 		Assert.assertEquals(threadCount * idCountPerThread, set.size());
 	}
+
+	@Test
+	public void getDataCenterIdTest(){
+		final long dataCenterId = IdUtil.getDataCenterId(Long.MAX_VALUE);
+		Assert.assertTrue(dataCenterId > 1);
+	}
 }

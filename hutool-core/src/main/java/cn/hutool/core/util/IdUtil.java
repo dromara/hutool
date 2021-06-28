@@ -1,9 +1,11 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.ObjectId;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.net.NetUtil;
 
 /**
  * ID生成器工具类，此工具类中主要封装：
@@ -133,5 +135,54 @@ public class IdUtil {
 	 */
 	public static Snowflake getSnowflake(long workerId, long datacenterId) {
 		return Singleton.get(Snowflake.class, workerId, datacenterId);
+	}
+
+	/**
+	 * 获取数据中心ID<br>
+	 * 数据中心ID依赖于本地网卡MAC地址。
+	 * <p>
+	 * 此算法来自于mybatis-plus#Sequence
+	 * </p>
+	 *
+	 * @param maxDatacenterId 最大的中心ID
+	 * @return 数据中心ID
+	 * @since 5.7.3
+	 */
+	public static long getDataCenterId(long maxDatacenterId) {
+		long id = 1L;
+		final byte[] mac = NetUtil.getLocalHardwareAddress();
+		if (null != mac) {
+			id = ((0x000000FF & (long) mac[mac.length - 2])
+					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
+			id = id % (maxDatacenterId + 1);
+		}
+
+		return id;
+	}
+
+	/**
+	 * 获取机器ID，使用进程ID配合数据中心ID生成<br>
+	 * 机器依赖于本进程ID或进程名的Hash值。
+	 *
+	 * <p>
+	 * 此算法来自于mybatis-plus#Sequence
+	 * </p>
+	 *
+	 * @param datacenterId 数据中心ID
+	 * @param maxWorkerId  最大的机器节点ID
+	 * @since 5.7.3
+	 */
+	public static long getWorkerId(long datacenterId, long maxWorkerId) {
+		final StringBuilder mpid = new StringBuilder();
+		mpid.append(datacenterId);
+		try {
+			mpid.append(RuntimeUtil.getPid());
+		} catch (UtilException igonre) {
+			//ignore
+		}
+		/*
+		 * MAC + PID 的 hashcode 获取16个低位
+		 */
+		return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
 	}
 }

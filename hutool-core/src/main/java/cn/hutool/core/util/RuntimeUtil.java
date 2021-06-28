@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrBuilder;
@@ -7,6 +8,7 @@ import cn.hutool.core.text.StrBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -280,11 +282,32 @@ public class RuntimeUtil {
 	}
 
 	/**
+	 * 获取当前进程ID，首先获取进程名称，读取@前的ID值，如果不存在，则读取进程名的hash值
+	 *
+	 * @return 进程ID
+	 * @throws UtilException 进程名称为空
+	 * @since 5.7.3
+	 */
+	public static int getPid() throws UtilException {
+		final String processName = ManagementFactory.getRuntimeMXBean().getName();
+		if (StrUtil.isBlank(processName)) {
+			throw new UtilException("Process name is blank!");
+		}
+		final int atIndex = processName.indexOf('@');
+		if (atIndex > 0) {
+			return Integer.parseInt(processName.substring(0, atIndex));
+		} else {
+			return processName.hashCode();
+		}
+	}
+
+	/**
 	 * 处理命令，多行命令原样返回，单行命令拆分处理
+	 *
 	 * @param cmds 命令
 	 * @return 处理后的命令
 	 */
-	private static String[] handleCmds(String... cmds){
+	private static String[] handleCmds(String... cmds) {
 		if (ArrayUtil.isEmpty(cmds)) {
 			throw new NullPointerException("Command is empty !");
 		}
@@ -306,7 +329,7 @@ public class RuntimeUtil {
 	 * @param cmd 命令，如 git commit -m 'test commit'
 	 * @return 分割后的命令
 	 */
-	private static String[] cmdSplit(String cmd){
+	private static String[] cmdSplit(String cmd) {
 		final List<String> cmds = new ArrayList<>();
 
 		final int length = cmd.length();
@@ -317,27 +340,27 @@ public class RuntimeUtil {
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = cmd.charAt(i);
-			switch (c){
+			switch (c) {
 				case CharUtil.SINGLE_QUOTE:
 				case CharUtil.DOUBLE_QUOTES:
-					if(inWrap){
-						if(c == stack.peek()){
+					if (inWrap) {
+						if (c == stack.peek()) {
 							//结束包装
 							stack.pop();
 							inWrap = false;
 						}
 						cache.append(c);
-					} else{
+					} else {
 						stack.push(c);
 						cache.append(c);
 						inWrap = true;
 					}
 					break;
 				case CharUtil.SPACE:
-					if(inWrap){
+					if (inWrap) {
 						// 处于包装内
 						cache.append(c);
-					} else{
+					} else {
 						cmds.add(cache.toString());
 						cache.reset();
 					}
@@ -348,7 +371,7 @@ public class RuntimeUtil {
 			}
 		}
 
-		if(cache.hasContent()){
+		if (cache.hasContent()) {
 			cmds.add(cache.toString());
 		}
 

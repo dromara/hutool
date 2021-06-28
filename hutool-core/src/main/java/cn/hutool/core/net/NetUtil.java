@@ -544,15 +544,7 @@ public class NetUtil {
 			return null;
 		}
 
-		byte[] mac = null;
-		try {
-			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-			if (null != networkInterface) {
-				mac = networkInterface.getHardwareAddress();
-			}
-		} catch (SocketException e) {
-			throw new UtilException(e);
-		}
+		final byte[] mac = getHardwareAddress(inetAddress);
 		if (null != mac) {
 			final StringBuilder sb = new StringBuilder();
 			String s;
@@ -567,6 +559,39 @@ public class NetUtil {
 			return sb.toString();
 		}
 
+		return null;
+	}
+
+	/**
+	 * 获得本机物理地址
+	 *
+	 * @return 本机物理地址
+	 * @since 5.7.3
+	 */
+	public static byte[] getLocalHardwareAddress() {
+		return getHardwareAddress(getLocalhost());
+	}
+
+	/**
+	 * 获得指定地址信息中的硬件地址
+	 *
+	 * @param inetAddress {@link InetAddress}
+	 * @return 硬件地址
+	 * @since 5.7.3
+	 */
+	public static byte[] getHardwareAddress(InetAddress inetAddress) {
+		if (null == inetAddress) {
+			return null;
+		}
+
+		try {
+			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+			if (null != networkInterface) {
+				return networkInterface.getHardwareAddress();
+			}
+		} catch (SocketException e) {
+			throw new UtilException(e);
+		}
 		return null;
 	}
 
