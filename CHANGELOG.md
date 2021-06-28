@@ -22,6 +22,7 @@
 * 【core   】     修复IdcardUtil.getIdcardInfo.getProvinceCode获取为汉字的问题（issue#I3XP4Q@Gitee）
 * 【core   】     修复CollUtil.subtract使用非标准Set等空指针问题（issue#I3XN1Z@Gitee）
 * 【core   】     修复SqlFormatter部分SQL空指针问题（issue#I3XS44@Gitee）
+* 【core   】     修复DateRange计算问题（issue#I3Y1US@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

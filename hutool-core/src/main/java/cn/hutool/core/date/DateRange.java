@@ -16,8 +16,8 @@ public class DateRange extends Range<DateTime> {
 	/**
 	 * 构造，包含开始和结束日期时间
 	 *
-	 * @param start 起始日期时间
-	 * @param end 结束日期时间
+	 * @param start 起始日期时间（包括）
+	 * @param end 结束日期时间（包括）
 	 * @param unit 步进单位
 	 */
 	public DateRange(Date start, Date end, final DateField unit) {
@@ -27,8 +27,8 @@ public class DateRange extends Range<DateTime> {
 	/**
 	 * 构造，包含开始和结束日期时间
 	 *
-	 * @param start 起始日期时间
-	 * @param end 结束日期时间
+	 * @param start 起始日期时间（包括）
+	 * @param end 结束日期时间（包括）
 	 * @param unit 步进单位
 	 * @param step 步进数
 	 */
@@ -48,11 +48,12 @@ public class DateRange extends Range<DateTime> {
 	 */
 	public DateRange(Date start, Date end, final DateField unit, final int step, boolean isIncludeStart, boolean isIncludeEnd) {
 		super(DateUtil.date(start), DateUtil.date(end), (current, end1, index) -> {
-			DateTime dt = current.offsetNew(unit, step);
+			final DateTime dt = DateUtil.date(start).offsetNew(unit, (index + 1) * step);
 			if (dt.isAfter(end1)) {
 				return null;
 			}
-			return current.offsetNew(unit, step);
+
+			return dt;
 		}, isIncludeStart, isIncludeEnd);
 	}
 

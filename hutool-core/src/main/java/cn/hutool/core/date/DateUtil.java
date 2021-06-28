@@ -1788,7 +1788,7 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 创建日期范围生成器
 	 *
-	 * @param start 起始日期时间
+	 * @param start 起始日期时间（包括）
 	 * @param end   结束日期时间
 	 * @param unit  步进单位
 	 * @return {@link DateRange}

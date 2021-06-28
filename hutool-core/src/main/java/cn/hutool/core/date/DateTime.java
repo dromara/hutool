@@ -329,8 +329,7 @@ public class DateTime extends Date {
 		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
-		DateTime dt = ObjectUtil.clone(this);
-		return dt.setTimeInternal(cal.getTimeInMillis());
+		return ObjectUtil.clone(this).setTimeInternal(cal.getTimeInMillis());
 	}
 	// -------------------------------------------------------------------- offset end
 
