@@ -241,4 +241,28 @@ public class RSATest {
 		final String encryptBase64 = rsa.encryptBase64("测试内容", KeyType.PublicKey);
 		Assert.assertNotNull(encryptBase64);
 	}
+
+	@Test
+	public void decryptFromJsTest(){
+		// https://oktools.net/rsa
+		RSA rsa = new RSA("RSA/ECB/PKCS1Padding",
+				"MIICXQIBAAKBgQDtYB02dwR2upvBiTw9tjpNiOsh3E1JnD9V7xJieJ+pG1jPgUF5\n" +
+						"XDT2OvsZq18d0Wp3O2byiNLbl3n53nWboPwx36aqE3zQRVn9lqyIFE30qsc2ojFz\n" +
+						"XUsI1JbtM+uy8Z4cceH9YcogHbLO8JXuOmxGBvCQcQmUB8V+ZaId1TArwQIDAQAB\n" +
+						"AoGAdh0XLBy4qeNc0UZaJVLhW+c/KJAYHQKUOUxGV50xxNGItWfZjmulJsheXX16\n" +
+						"TLoBQeba6N/QG9gZp41b89583dbUOzF7ZFmJJq5kEgAhAxZp7c6swnH1kRbC3hVn\n" +
+						"Lb4CeVgF9Qpjrtz3YYOnAeqQqUOdvH6G8eKgMPMGvtobxgECQQD6E3Bzlrb3lOVY\n" +
+						"6wvzOBhAZ8gIOOoXp+LfydV265UlpTB0MvEGVJ9iOfNCKMbqpRcJBOlhjv+TwXuO\n" +
+						"n1VGYMfRAkEA8v+nbADer47MyYiFB6x3427VK17hXO/ilPrml8uqw5ooTyT/00v6\n" +
+						"+RBlxtI47mHOMeHKqueOJRZubWEBGucQ8QJBAKsXvan3hXriDf/F4EkpKb52wq6N\n" +
+						"cet5W4lMp5VTHJnC6OG3MJvqLZmgmEO9bkp/ZMEw8RNkKIvIpmYvsMIT2OECQQC/\n" +
+						"U53uAu1TCzug/rXHqfsnfq+nG2iUNWiQ5tBC+qB0rF9KmZY4Nx3flxKbrhAXWbjx\n" +
+						"O5fIYtNfzj6aLoOhPAfxAkA2l87oSAYfH0ye2GYj1gyJRJBXk6NDigN5cKhfls+A\n" +
+						"Z4TmIew5JbI0iQiDvL4XavF3lNFwQAMA5vdN1orZWGGk",null);
+
+		Assert.assertEquals("123", rsa.decryptStr("z4mJQnkh1gjPp9f4t2ufsM0dFW2d98l" +
+						"+mpCsZQYYhe5d/E6IrKuOe0KOiz8vbfJi9rqnBZhH+I7DEfSrm0nqGA+jtRCkA6wJHeAnI" +
+						"p9PMoDBsTY2EZr4NXBgfsbcms+vtTQiPMlay/TmGJ1ZTQFH2FNUl2ACOhchhqheh6l/Tuw=",
+				KeyType.PrivateKey));
+	}
 }
