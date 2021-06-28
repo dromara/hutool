@@ -12,5 +12,4 @@ public class TreeBuilderTest {
 		of.build();
 		of.append(new ArrayList<>());
 	}
-
 }

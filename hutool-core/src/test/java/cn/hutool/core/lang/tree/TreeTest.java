@@ -28,7 +28,7 @@ public class TreeTest {
 
 
 	@Test
-	public void sampleTree() {
+	public void sampleTreeTest() {
 		List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
 		for (Tree<String> tree : treeList) {
 			Assert.assertNotNull(tree);
@@ -43,7 +43,7 @@ public class TreeTest {
 	}
 
 	@Test
-	public void tree() {
+	public void treeTest() {
 
 		//配置
 		TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
@@ -66,5 +66,4 @@ public class TreeTest {
 
 		Assert.assertEquals(treeNodes.size(), 2);
 	}
-
 }
