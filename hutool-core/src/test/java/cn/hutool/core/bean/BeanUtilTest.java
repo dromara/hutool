@@ -538,6 +538,14 @@ public class BeanUtilTest {
 		Assert.assertEquals(new Long(123456L), station2.getId());
 	}
 
+	static class Station extends Tree<Long> {}
+	static class Tree<T> extends Entity<T> {}
+
+	@Data
+	public static class Entity<T> {
+		private T id;
+	}
+
 	@Test
 	public void copyListTest() {
 		Student student = new Student();
@@ -559,19 +567,6 @@ public class BeanUtilTest {
 			Assert.assertEquals(studentList.get(i).getAge(), people.get(i).getAge());
 		}
 
-	}
-
-	public static class Station extends Tree<Station, Long> {
-
-	}
-
-	public static class Tree<E, T> extends Entity<T> {
-
-	}
-
-	@Data
-	public static class Entity<T> {
-		private T id;
 	}
 
 	@Test
@@ -650,8 +645,8 @@ public class BeanUtilTest {
 	@Test
 	public void beanToBeanCopyOptionsTest() {
 		ChildVo1 childVo1 = new ChildVo1();
-		childVo1.setChild_address("中国北京天安门");
-		childVo1.setChild_name("张北京");
+		childVo1.setChild_address("中国北京五道口");
+		childVo1.setChild_name("张三");
 		childVo1.setChild_father_name("张无忌");
 		childVo1.setChild_mother_name("赵敏敏");
 
@@ -669,8 +664,7 @@ public class BeanUtilTest {
 		Assert.assertEquals(childVo1.getChild_mother_name(), childVo2.getChildMotherName());
 	}
 
-	@Getter
-	@Setter
+	@Data
 	public static class ChildVo1 {
 		String child_name;
 		String child_address;
@@ -678,8 +672,7 @@ public class BeanUtilTest {
 		String child_father_name;
 	}
 
-	@Getter
-	@Setter
+	@Data
 	public static class ChildVo2 {
 		String childName;
 		String childAddress;

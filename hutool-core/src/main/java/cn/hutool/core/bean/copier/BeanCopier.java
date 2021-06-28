@@ -239,7 +239,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 
 			// 对key做映射，映射后为null的忽略之
 			// 这里 copyOptions.editFieldName() 不能少，否则导致 CopyOptions setFieldNameEditor 失效
-			String providerKey = copyOptions.editFieldName(copyOptions.getMappedFieldName(fieldName, false));
+			final String providerKey = copyOptions.editFieldName(copyOptions.getMappedFieldName(fieldName, false));
 			if(null == providerKey){
 				return;
 			}
