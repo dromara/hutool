@@ -61,7 +61,7 @@ import java.util.Map;
  * 此工具使用w3c dom工具，不需要依赖第三方包。<br>
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作
  *
- * @see JAXBUtil
+ * @see JAXBUtil  bean<==> xml互转，请用该JAXBUtil, XmlUtil只转换了最外层；
  *
  * @author xiaoleilu
  */
@@ -1017,6 +1017,8 @@ public class XmlUtil {
 	/**
 	 * XML转Java Bean
 	 *
+	 * @see JAXBUtil#xmlToBean(String, Class) 可以解析多层xml;
+	 *
 	 * @param <T>  bean类型
 	 * @param node XML节点
 	 * @param bean bean类
@@ -1120,6 +1122,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
+	 *
 	 * @param data Map类型数据
 	 * @return XML格式的字符串
 	 * @since 5.1.2
@@ -1130,6 +1134,8 @@ public class XmlUtil {
 
 	/**
 	 * 将Map转换为XML格式的字符串
+	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 *
 	 * @param data               Map类型数据
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
@@ -1143,6 +1149,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
+	 *
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML格式的字符串
@@ -1154,6 +1162,8 @@ public class XmlUtil {
 
 	/**
 	 * 将Map转换为XML格式的字符串
+	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 *
 	 * @param data      Map类型数据
 	 * @param rootName  根节点名
@@ -1168,6 +1178,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
+	 *
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
@@ -1181,6 +1193,8 @@ public class XmlUtil {
 
 	/**
 	 * 将Map转换为XML格式的字符串
+	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 *
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
@@ -1197,6 +1211,7 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
@@ -1213,6 +1228,7 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML
@@ -1225,6 +1241,7 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 * @param data      Map类型数据
 	 * @param rootName  根节点名
 	 * @param namespace 命名空间，可以为null
@@ -1242,6 +1259,7 @@ public class XmlUtil {
 	/**
 	 * 将Bean转换为XML
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 * @param bean Bean对象
 	 * @return XML
 	 * @since 5.3.4
@@ -1253,6 +1271,7 @@ public class XmlUtil {
 	/**
 	 * 将Bean转换为XML
 	 *
+	 * @see JAXBUtil#beanToXml(Object) 可以解析多层xml;
 	 * @param bean      Bean对象
 	 * @param namespace 命名空间，可以为null
 	 * @return XML
