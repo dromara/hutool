@@ -52,7 +52,6 @@ public class DateRange extends Range<DateTime> {
 			if (dt.isAfter(end1)) {
 				return null;
 			}
-
 			return dt;
 		}, isIncludeStart, isIncludeEnd);
 	}
