@@ -22,7 +22,7 @@ public class XmlEscape extends ReplacerChain {
 	private static final long serialVersionUID = 1L;
 
 	protected static final String[][] BASIC_ESCAPE = { //
-			{"'", "&apos;"}, // " - single-quote
+//			{"'", "&apos;"}, // " - single-quote
 			{"\"", "&quot;"}, // " - double-quote
 			{"&", "&amp;"}, // & - ampersand
 			{"<", "&lt;"}, // < - less-than

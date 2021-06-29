@@ -40,8 +40,16 @@ public class EscapeUtilTest {
 
 	@Test
 	public void escapeSingleQuotesTest(){
+		// 单引号不做转义
 		String str = "'some text with single quotes'";
 		final String s = EscapeUtil.escapeHtml4(str);
-		Assert.assertEquals("&apos;some text with single quotes&apos;", s);
+		Assert.assertEquals("'some text with single quotes'", s);
+	}
+
+	@Test
+	public void unescapeSingleQuotesTest(){
+		String str = "&apos;some text with single quotes&apos;";
+		final String s = EscapeUtil.unescapeHtml4(str);
+		Assert.assertEquals("'some text with single quotes'", s);
 	}
 }
