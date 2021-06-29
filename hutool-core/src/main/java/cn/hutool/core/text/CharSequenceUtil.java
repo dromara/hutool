@@ -5,6 +5,7 @@ import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -4276,17 +4277,27 @@ public class CharSequenceUtil {
 	 * @return 是否全部匹配
 	 * @since 3.2.3
 	 */
-	public static boolean isAllCharMatch(CharSequence value, cn.hutool.core.lang.Matcher<Character> matcher) {
+	public static boolean isAllCharMatch(CharSequence value, Matcher<Character> matcher) {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
-		int len = value.length();
-		for (int i = 0; i < len; i++) {
+		for (int i = value.length(); --i >= 0;) {
 			if (false == matcher.match(value.charAt(i))) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 检查字符串是否都为数字组成
+	 *
+	 * @param str 字符串
+	 * @return 是否都为数字组成
+	 * @since 5.7.3
+	 */
+	public static boolean isNumeric(CharSequence str) {
+		return isAllCharMatch(str, Character::isDigit);
 	}
 
 	/**
@@ -4329,4 +4340,14 @@ public class CharSequenceUtil {
 		return strBuilder.toString();
 	}
 
+	/**
+	 * 检查给定字符串的所有字符是否都一样
+	 *
+	 * @param str 字符出啊
+	 * @return 给定字符串的所有字符是否都一样
+	 * @since 5.7.3
+	 */
+	public static boolean isCharEquals(String str) {
+		return isBlank(str.replace(str.charAt(0), CharUtil.SPACE));
+	}
 }

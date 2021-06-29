@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.tree;
 
+import cn.hutool.core.comparator.CompareUtil;
+
 import java.io.Serializable;
 
 /**
@@ -74,11 +76,11 @@ public interface Node<T> extends Comparable<Node<T>>, Serializable {
 	@SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
 	@Override
 	default int compareTo(Node node) {
-		final Comparable weight = this.getWeight();
-		if (null != weight) {
-			final Comparable weightOther = node.getWeight();
-			return weight.compareTo(weightOther);
+		if(null == node){
+			return 1;
 		}
-		return 0;
+		final Comparable weight = this.getWeight();
+		final Comparable weightOther = node.getWeight();
+		return CompareUtil.compare(weight, weightOther);
 	}
 }
