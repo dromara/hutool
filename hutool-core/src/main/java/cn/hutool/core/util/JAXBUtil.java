@@ -21,6 +21,8 @@ import java.nio.charset.Charset;
  *   <li>https://my.oschina.net/u/4266515/blog/3330113</li>
  * </ul>
  *
+ * @see XmlUtil
+ *
  * @author dazer
  * @since 5.7.3
  */
