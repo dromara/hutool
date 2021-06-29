@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
 
@@ -29,11 +30,11 @@ public class ReUtil {
 	/**
 	 * 正则表达式匹配中文汉字
 	 */
-	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
+	public final static String RE_CHINESE = RegexPool.CHINESE;
 	/**
 	 * 正则表达式匹配中文字符串
 	 */
-	public final static String RE_CHINESES = RE_CHINESE + "+";
+	public final static String RE_CHINESES = RegexPool.CHINESES;
 
 	/**
 	 * 正则中需要被转义的关键字

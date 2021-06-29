@@ -16,6 +16,7 @@
 * 【json   】     增加JSONWriter
 * 【core   】     IdUtil增加getWorkerId和getDataCenterId（issueI3Y5NI@Gitee）
 * 【core   】     JWTValidator增加leeway重载
+* 【core   】     增加RegexPool（issue#I3W9ZF@gitee）
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）
