@@ -1710,9 +1710,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 查找子数组的位置
 	 *
-	 * @param array    数组
-	 * @param subArray 子数组
-	 * @param <T>      数组元素类型
+	 * @param array        数组
+	 * @param beginInclude 查找开始的位置（包含）
+	 * @param subArray     子数组
+	 * @param <T>          数组元素类型
 	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
@@ -1754,6 +1755,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 查找最后一个子数组的开始位置
 	 *
 	 * @param array    数组
+	 * @param endInclude 查找结束的位置（包含）
 	 * @param subArray 子数组
 	 * @param <T>      数组元素类型
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
