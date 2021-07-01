@@ -1186,7 +1186,7 @@ public class MapUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
-		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1201,7 +1201,7 @@ public class MapUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
-		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1230,7 +1230,7 @@ public class MapUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
-		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1245,7 +1245,7 @@ public class MapUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
-		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**
