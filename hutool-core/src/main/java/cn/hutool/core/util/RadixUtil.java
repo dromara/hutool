@@ -100,7 +100,7 @@ public class RadixUtil {
 	 * @param encodeStr 需要转换成十进制的字符串
 	 * @return int
 	 */
-	public int decodeToInt(final String radixs, final String encodeStr) {
+	public static int decodeToInt(final String radixs, final String encodeStr) {
 		//还原负数
 		return (int) decode(radixs, encodeStr);
 	}
@@ -112,7 +112,7 @@ public class RadixUtil {
 	 * @param encodeStr 需要转换成十进制的字符串
 	 * @return long
 	 */
-	public long decode(final String radixs, final String encodeStr) {
+	public static long decode(final String radixs, final String encodeStr) {
 		//目标是多少进制
 		int rl = radixs.length();
 		long res = 0L;
