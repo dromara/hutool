@@ -1273,6 +1273,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				filteredMap.put(entry.getKey(), entry.getValue());
 			}
 		}
+		// 补全'this.headerAlias'存在且未包含在'filteredMap'的header信息
+		for (String value : this.headerAlias.values()) {
+			filteredMap.putIfAbsent(value, null);
+		}
 		return filteredMap;
 	}
 
