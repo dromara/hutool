@@ -190,7 +190,7 @@ public class SmUtil {
 	 * @param key 密钥
 	 * @return {@link SymmetricCrypto}
 	 */
-	public static SymmetricCrypto sm4(byte[] key) {
+	public static SM4 sm4(byte[] key) {
 		return new SM4(key);
 	}
 
