@@ -7,6 +7,10 @@ import cn.hutool.core.io.IoUtil;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.File;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -29,6 +33,12 @@ public class JAXBUtil {
 
 	/**
 	 * JavaBean转换成xml
+	 *
+	 * bean上面用的常用注解
+	 * @see XmlRootElement <code>@XmlRootElement(name = "school")</code>
+	 * @see XmlElement <code>@XmlElement(name = "school_name", required = true)</code>
+	 * @see XmlElementWrapper <code>@XmlElementWrapper(name="schools")</code>
+	 * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
 	 *
 	 * @param bean Bean对象
 	 * @return 输出的XML字符串
