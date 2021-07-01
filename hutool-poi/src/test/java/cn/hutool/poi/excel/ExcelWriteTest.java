@@ -317,8 +317,9 @@ public class ExcelWriteTest {
 		writer.addHeaderAlias("score", "分数");
 		writer.addHeaderAlias("isPass", "是否通过");
 		writer.addHeaderAlias("examDate", "考试时间");
+		writer.addHeaderAlias("other", "其他");
 		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(4, "一班成绩单");
+		writer.merge(5, "一班成绩单");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
 		// 关闭writer，释放内存
