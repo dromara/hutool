@@ -381,7 +381,8 @@ public class EqualsBuilder implements Builder<Boolean> {
 		final Class<?> lhsClass = lhs.getClass();
 		if (false == lhsClass.isArray()) {
 			// The simple case, not an array, just test the element
-			isEquals = lhs.equals(rhs);
+			this.setEquals(lhs.equals(rhs));
+			return this;
 		}
 
 		// 判断数组的equals
