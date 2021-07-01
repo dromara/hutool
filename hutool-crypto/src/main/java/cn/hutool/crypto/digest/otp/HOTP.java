@@ -1,7 +1,11 @@
 package cn.hutool.crypto.digest.otp;
 
+import cn.hutool.core.codec.Base32;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
+
+import java.util.Arrays;
 
 /**
  * <p>HMAC-based one-time passwords (HOTP) 一次性密码生成器，
@@ -86,9 +90,19 @@ public class HOTP {
 		this.buffer[6] = (byte) ((counter & 0x000000000000ff00L) >>> 8);
 		this.buffer[7] = (byte) (counter & 0x00000000000000ffL);
 
-		final byte[] digest = this.mac.digest(this.buffer);
+		final byte[] digest = this.mac.digest(Arrays.copyOfRange(this.buffer,0,8));
 
 		return truncate(digest);
+	}
+
+	/**
+	 * 生成共享密钥
+	 *
+	 * @param numBytes 将生成的种子字节数量。
+	 * @return 共享密钥
+	 */
+	public static String generateSecretKey(final int numBytes) {
+		return Base32.encode(RandomUtil.getSHA1PRNGRandom(RandomUtil.randomBytes(256)).generateSeed(numBytes));
 	}
 
 	/**
