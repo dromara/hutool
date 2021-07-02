@@ -8,6 +8,7 @@
 ### 🐣新特性
 * 【crypto 】     SmUtil.sm4统一返回类型（issue#I3YKD4@Gitee）
 * 【core   】     修改MapUtil.get传入null返回默认值而非null（issue#I3YKBC@Gitee）
+* 【core   】     HexUtil增加hexToLong、hexToInt（issue#I3YQEV@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RadixUtil.decode非static问题（issue#I3YPEH@Gitee）
