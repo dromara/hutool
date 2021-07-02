@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.*;
  */
 public class JAXBUtilTest {
 
-	private String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+	private final String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
 			"<school>\n" +
 			"    <school_name>西安市第一中学</school_name>\n" +
 			"    <school_address>西安市雁塔区长安堡一号</school_address>\n" +

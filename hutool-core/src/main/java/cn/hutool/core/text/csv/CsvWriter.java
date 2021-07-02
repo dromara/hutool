@@ -208,6 +208,25 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	}
 
 	/**
+	 * 将一个 CsvData 集合写出到Writer
+	 *
+	 * @param csvData CsvData
+	 * @return this
+	 */
+	public CsvWriter write(CsvData csvData) {
+		if (csvData != null) {
+			// 1、写header
+			if (CollUtil.isNotEmpty(csvData.getHeader())) {
+				this.writeLine(csvData.getHeader().toArray(new String[0]));
+			}
+			// 2、写内容
+			this.write(csvData.getRows());
+			flush();
+		}
+		return this;
+	}
+
+	/**
 	 * 将一个Bean集合写出到Writer，并自动生成表头
 	 *
 	 * @param beans Bean集合

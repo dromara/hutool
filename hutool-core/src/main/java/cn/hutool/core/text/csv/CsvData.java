@@ -19,7 +19,7 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param header 头信息
+	 * @param header 头信息, 可以为null
 	 * @param rows 行
 	 */
 	public CsvData(final List<String> header, final List<CsvRow> rows) {
