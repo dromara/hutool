@@ -11,7 +11,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CsvUtilTest {
@@ -160,10 +163,10 @@ public class CsvUtilTest {
 		headMap.put("username", 1);
 		headMap.put("mobile", 2);
 
-		for (int i = 0; i < datas.size(); i++) {
-			User user = datas.get(i);
+		for (User user : datas) {
 			// row.size() + 1, 表示从第2行开始，第一行是标题栏
-			row.add(new CsvRow(row.size() + 1, headMap, ListUtil.toList(BeanUtil.beanToMap(user).values()).stream().map(Object::toString).collect(Collectors.toList())));
+			row.add(new CsvRow(row.size() + 1, headMap,
+					BeanUtil.beanToMap(user).values().stream().map(Object::toString).collect(Collectors.toList())));
 		}
 
 		CsvData csvData = new CsvData(header, row);

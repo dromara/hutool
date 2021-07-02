@@ -33,15 +33,15 @@ public class JAXBUtil {
 
 	/**
 	 * JavaBean转换成xml
-	 *
+	 * <p>
 	 * bean上面用的常用注解
+	 *
+	 * @param bean Bean对象
+	 * @return 输出的XML字符串
 	 * @see XmlRootElement <code>@XmlRootElement(name = "school")</code>
 	 * @see XmlElement <code>@XmlElement(name = "school_name", required = true)</code>
 	 * @see XmlElementWrapper <code>@XmlElementWrapper(name="schools")</code>
 	 * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
-	 *
-	 * @param bean Bean对象
-	 * @return 输出的XML字符串
 	 */
 	public static String beanToXml(Object bean) {
 		return beanToXml(bean, CharsetUtil.CHARSET_UTF_8, true);

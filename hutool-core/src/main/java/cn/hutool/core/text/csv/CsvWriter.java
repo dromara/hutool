@@ -212,6 +212,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 *
 	 * @param csvData CsvData
 	 * @return this
+	 * @since 5.7.4
 	 */
 	public CsvWriter write(CsvData csvData) {
 		if (csvData != null) {
