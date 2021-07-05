@@ -20,7 +20,7 @@ import java.util.List;
  * @author liangbaikai
  * @since 5.2.1
  */
-public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
+	public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	private static final long serialVersionUID = 1L;
 
 	private final TreeNodeConfig treeNodeConfig;
