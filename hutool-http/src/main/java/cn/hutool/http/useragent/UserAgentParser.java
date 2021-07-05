@@ -24,7 +24,7 @@ public class UserAgentParser {
 
 		// 浏览器
 		final Browser browser = parseBrowser(userAgentString);
-		userAgent.setBrowser(parseBrowser(userAgentString));
+		userAgent.setBrowser(browser);
 		userAgent.setVersion(browser.getVersion(userAgentString));
 
 		// 浏览器引擎
