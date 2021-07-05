@@ -26,7 +26,7 @@ public class UserAgentParser {
 		final UserAgent userAgent = new UserAgent();
 		
 		final Browser browser = parseBrowser(userAgentString);
-		userAgent.setBrowser(parseBrowser(userAgentString));
+		userAgent.setBrowser(browser);
 		userAgent.setVersion(browser.getVersion(userAgentString));
 		
 		final Engine engine = parseEngine(userAgentString);
