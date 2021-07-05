@@ -78,17 +78,19 @@ public class TOTP extends HOTP {
 
 	/**
 	 * 用于验证code是否正确
+	 *
 	 * @param timestamp  验证时间戳
 	 * @param offsetSize 误差范围
 	 * @param code       code
-	 * @return 			 是否通过
+	 * @return 是否通过
+	 * @since 5.7.4
 	 */
-	public boolean validate(Instant timestamp, final int offsetSize, final int code) {
-		if(offsetSize == 0){
+	public boolean validate(Instant timestamp, int offsetSize, int code) {
+		if (offsetSize == 0) {
 			return generate(timestamp) == code;
 		}
 		for (int i = -offsetSize; i <= offsetSize; i++) {
-			if(generate(timestamp.plus(getTimeStep().multipliedBy(i))) == code){
+			if (generate(timestamp.plus(getTimeStep().multipliedBy(i))) == code) {
 				return true;
 			}
 		}
@@ -99,12 +101,13 @@ public class TOTP extends HOTP {
 	 * 生成谷歌认证器的字符串（扫码字符串）
 	 * 基于时间的，计数器不适合
 	 *
-	 * @param account 账户名。
+	 * @param account  账户名。
 	 * @param numBytes 将生成的种子字节数量。
 	 * @return 共享密钥
+	 * @since 5.7.4
 	 */
-	public static String generateGoogleSecretKey(final String account,final int numBytes) {
-		return StrUtil.format("otpauth://totp/{}?secret={}",account,generateSecretKey(numBytes));
+	public static String generateGoogleSecretKey(String account, int numBytes) {
+		return StrUtil.format("otpauth://totp/{}?secret={}", account, generateSecretKey(numBytes));
 	}
 
 	/**
