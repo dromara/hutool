@@ -15,7 +15,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 4.3.3
  */
-public class ListValueMap<K, V> extends CollectionValueMap<K, V> {
+public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
 	private static final long serialVersionUID = 6044017508487827899L;
 
 	// ------------------------------------------------------------------------- Constructor start
@@ -52,7 +52,7 @@ public class ListValueMap<K, V> extends CollectionValueMap<K, V> {
 	 */
 	public ListValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m) {
 		this(m.size(), loadFactor);
-		this.putAll(m);
+		this.putAllValues(m);
 	}
 
 	/**
@@ -67,12 +67,7 @@ public class ListValueMap<K, V> extends CollectionValueMap<K, V> {
 	// ------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public List<V> get(Object key) {
-		return (List<V>) super.get(key);
-	}
-
-	@Override
-	protected Collection<V> createCollection() {
+	protected List<V> createCollection() {
 		return new ArrayList<>(DEFAULT_COLLCTION_INITIAL_CAPACITY);
 	}
 }

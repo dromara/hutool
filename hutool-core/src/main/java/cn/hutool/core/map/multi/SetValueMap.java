@@ -15,7 +15,7 @@ import java.util.Set;
  * @param <V> 值类型
  * @since 4.3.3
  */
-public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
+public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 	private static final long serialVersionUID = 6044017508487827899L;
 
 	// ------------------------------------------------------------------------- Constructor start
@@ -52,7 +52,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 	 */
 	public SetValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m) {
 		this(m.size(), loadFactor);
-		this.putAll(m);
+		this.putAllValues(m);
 	}
 
 	/**
@@ -67,12 +67,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 	// ------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public Set<V> get(Object key) {
-		return (Set<V>) super.get(key);
-	}
-
-	@Override
-	protected Collection<V> createCollection() {
+	protected Set<V> createCollection() {
 		return new LinkedHashSet<>(DEFAULT_COLLCTION_INITIAL_CAPACITY);
 	}
 }
