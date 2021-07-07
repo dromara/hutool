@@ -9,13 +9,13 @@ import java.awt.Font;
 import java.awt.Rectangle;
 
 public class ImgTest {
-	
+
 	@Test
 	@Ignore
 	public void cutTest1() {
 		Img.from(FileUtil.file("e:/pic/face.jpg")).cut(0, 0, 200).write(FileUtil.file("e:/pic/face_radis.png"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void compressTest() {
@@ -28,7 +28,7 @@ public class ImgTest {
 		final Img from = Img.from(FileUtil.file("d:/test/81898311-001d6100-95eb-11ea-83c2-a14d7b1010bd.png"));
 		ImgUtil.write(from.getImg(), FileUtil.file("d:/test/dest.jpg"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void roundTest() {

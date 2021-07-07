@@ -35,6 +35,15 @@ public class NumberChineseFormatterTest {
 	}
 
 	@Test
+	public void formatTest3() {
+		String f1 = NumberChineseFormatter.format(50008000, false, false);
+		Assert.assertEquals("五千万零八千", f1);
+
+		f1 = NumberChineseFormatter.format(100350089, false, false);
+		Assert.assertEquals("一亿零三十五万零八十九\"", f1);
+	}
+
+	@Test
 	public void formatTraditionalTest() {
 		String f1 = NumberChineseFormatter.format(10889.72356, true);
 		Assert.assertEquals("壹万零捌佰捌拾玖点柒贰", f1);
