@@ -39,11 +39,13 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	private static ApplicationContext applicationContext;
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		SpringUtil.beanFactory = beanFactory;
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		SpringUtil.applicationContext = applicationContext;
