@@ -12,7 +12,7 @@ import java.util.zip.InflaterInputStream;
 
 /**
  * HTTP输入流，此流用于包装Http请求响应内容的流，用于解析各种压缩、分段的响应流内容
- * 
+ *
  * @author Looly
  *
  */
@@ -23,7 +23,7 @@ public class HttpInputStream extends InputStream {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param response 响应对象
 	 */
 	public HttpInputStream(HttpResponse response) {
@@ -34,37 +34,38 @@ public class HttpInputStream extends InputStream {
 	public int read() throws IOException {
 		return this.in.read();
 	}
-	
+
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		return this.in.read(b, off, len);
 	}
-	
+
 	@Override
 	public long skip(long n) throws IOException {
 		return this.in.skip(n);
 	}
-	
+
 	@Override
 	public int available() throws IOException {
 		return this.in.available();
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		this.in.close();
 	}
-	
+
 	@Override
 	public synchronized void mark(int readlimit) {
 		this.in.mark(readlimit);
 	}
-	
+
 	@Override
 	public synchronized void reset() throws IOException {
 		this.in.reset();
 	}
-	
+
 	@Override
 	public boolean markSupported() {
 		return this.in.markSupported();
@@ -72,7 +73,7 @@ public class HttpInputStream extends InputStream {
 
 	/**
 	 * 初始化流
-	 * 
+	 *
 	 * @param response 响应对象
 	 */
 	private void init(HttpResponse response) {
@@ -84,13 +85,13 @@ public class HttpInputStream extends InputStream {
 			}
 			// 服务器无返回内容，忽略之
 		}
-		
+
 		// 在一些情况下，返回的流为null，此时提供状态码说明
 		if (null == this.in) {
 			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", response.status).getBytes());
 			return;
 		}
-		
+
 		if (response.isGzip() && false == (response.in instanceof GZIPInputStream)) {
 			// Accept-Encoding: gzip
 			try {
