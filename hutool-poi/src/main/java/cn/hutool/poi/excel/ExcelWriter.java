@@ -7,6 +7,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
@@ -33,12 +34,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -763,6 +764,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
 			CellUtil.setCellValue(cell, content, cellStyle);
+			Console.log("{} {} {}", firstColumn, firstRow, cell.getStringCellValue());
 		}
 		return this;
 	}

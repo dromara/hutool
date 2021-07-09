@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -677,5 +678,35 @@ public class ExcelWriteTest {
 
 		final ExcelReader reader = ExcelUtil.getReader(file);
 		Console.log(reader.read());
+	}
+
+	@Test
+	@Ignore
+	public void mergeTest3(){
+		// https://github.com/dromara/hutool/issues/1696
+
+		List<Map<String,Object>> list = new ArrayList<>();
+		Map<String,Object> map = new HashMap<>();
+		map.put("xmnf","2021");
+		list.add(map);
+
+		Map<String,Object> map1 = new HashMap<>();
+		map1.put("xmnf",new XSSFRichTextString("9999"));
+		list.add(map1);
+
+		Map<String,Object> map2 = new HashMap<>();
+		map2.put("xmnf","2019");
+		list.add(map2);
+
+		//通过工具类创建writer
+		FileUtil.del("d:/test/writeTest2123.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeTest2123.xlsx");
+		writer.addHeaderAlias("xmnf", "项目年份");//1
+
+		//合并单元格后的标题行，使用默认标题样式
+		writer.merge(7, "测试标题");
+		writer.merge(3, 4, 0, 0, new XSSFRichTextString("9999"), true);
+		writer.write(list, true);
+		writer.close();
 	}
 }
