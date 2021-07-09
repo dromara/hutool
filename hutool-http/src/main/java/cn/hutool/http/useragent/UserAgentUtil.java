@@ -18,5 +18,4 @@ public class UserAgentUtil {
 		return UserAgentParser.parse(userAgentString);
 	}
 
-
 }

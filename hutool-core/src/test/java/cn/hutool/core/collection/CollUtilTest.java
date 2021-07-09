@@ -343,7 +343,8 @@ public class CollUtilTest {
 
 	@Test
 	public void sortByPropertyTest() {
-		List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+		List<TestBean> list = CollUtil.newArrayList(
+				new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
 				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
 				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
 		);
@@ -352,6 +353,20 @@ public class CollUtilTest {
 		Assert.assertEquals("李四", list.get(0).getName());
 		Assert.assertEquals("王五", list.get(1).getName());
 		Assert.assertEquals("张三", list.get(2).getName());
+	}
+
+	@Test
+	public void sortByPropertyTest2() {
+		List<TestBean> list = CollUtil.newArrayList(
+				new TestBean("张三", 0, DateUtil.parse("2018-05-01")), //
+				new TestBean("李四", -12, DateUtil.parse("2018-03-01")), //
+				new TestBean("王五", 23, DateUtil.parse("2018-04-01"))//
+		);
+
+		CollUtil.sortByProperty(list, "age");
+		Assert.assertEquals("李四", list.get(0).getName());
+		Assert.assertEquals("张三", list.get(1).getName());
+		Assert.assertEquals("王五", list.get(2).getName());
 	}
 
 	@Test

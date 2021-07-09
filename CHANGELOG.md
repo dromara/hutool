@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.4 (2021-07-08)
+# 5.7.4 (2021-07-09)
 
 ### 🐣新特性
 * 【crypto 】     SmUtil.sm4统一返回类型（issue#I3YKD4@Gitee）
@@ -11,8 +11,10 @@
 * 【core   】     HexUtil增加hexToLong、hexToInt（issue#I3YQEV@Gitee）
 * 【core   】     CsvWriter增加writer.write(csvData)的方法重载（pr#353@Gitee）
 * 【core   】     新增AbsCollValueMap（issue#I3YXF0@Gitee）
-* 【crypto 】     HOPT缓存改为8位，新增方法（pr#356@Gitee）
+* 【crypto 】     HOTP缓存改为8位，新增方法（pr#356@Gitee）
 * 【setting】     Props增加toProperties方法（issue#1701@Github）
+* 【http   】     UserAgent增加getOsVersion方法（issue#I3YZUQ@Gitee）
+* 【jwt    】     JWT增加validate方法（issue#I3YDM4@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RadixUtil.decode非static问题（issue#I3YPEH@Gitee）

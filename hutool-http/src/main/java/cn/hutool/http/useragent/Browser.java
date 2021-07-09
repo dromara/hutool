@@ -13,10 +13,15 @@ import java.util.regex.Pattern;
  * @since 4.2.1
  */
 public class Browser extends UserAgentInfo {
+	private static final long serialVersionUID = 1L;
 
-	/** 未知 */
+	/**
+	 * 未知
+	 */
 	public static final Browser Unknown = new Browser(NameUnknown, null, null);
-	/** 其它版本 */
+	/**
+	 * 其它版本
+	 */
 	public static final String Other_Version = "[\\/ ]([\\d\\w\\.\\-]+)";
 
 	/**
@@ -56,14 +61,25 @@ public class Browser extends UserAgentInfo {
 			new Browser("DingTalk", "DingTalk", "AliApp\\(DingTalk\\/([\\d\\w\\.\\-]+)\\)")
 	);
 
-	private Pattern versionPattern;
+	/**
+	 * 添加自定义的浏览器类型
+	 *
+	 * @param name         浏览器名称
+	 * @param regex        关键字或表达式
+	 * @param versionRegex 匹配版本的正则
+	 * @since 5.7.4
+	 */
+	synchronized public static void addCustomBrowser(String name, String regex, String versionRegex) {
+		browers.add(new Browser(name, regex, versionRegex));
+	}
 
+	private Pattern versionPattern;
 
 	/**
 	 * 构造
 	 *
-	 * @param name 浏览器名称
-	 * @param regex 关键字或表达式
+	 * @param name         浏览器名称
+	 * @param regex        关键字或表达式
 	 * @param versionRegex 匹配版本的正则
 	 */
 	public Browser(String name, String regex, String versionRegex) {
@@ -83,6 +99,9 @@ public class Browser extends UserAgentInfo {
 	 * @return 版本
 	 */
 	public String getVersion(String userAgentString) {
+		if(isUnknown()){
+			return null;
+		}
 		return ReUtil.getGroup1(this.versionPattern, userAgentString);
 	}
 
@@ -92,6 +111,13 @@ public class Browser extends UserAgentInfo {
 	 * @return 是否移动浏览器
 	 */
 	public boolean isMobile() {
-		return "PSP".equals(this.getName());
+		final String name = this.getName();
+		return "PSP".equals(name) ||
+				"Yammer Mobile".equals(name) ||
+				"Android Browser".equals(name) ||
+				"IEMobile".equals(name) ||
+				"MicroMessenger".equals(name) ||
+				"miniProgram".equals(name) ||
+				"DingTalk".equals(name);
 	}
 }

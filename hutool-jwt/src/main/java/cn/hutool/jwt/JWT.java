@@ -2,6 +2,8 @@ package cn.hutool.jwt;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -35,7 +37,7 @@ import java.util.Map;
  * @author looly
  * @since 5.7.0
  */
-public class JWT implements RegisteredPayload<JWT>{
+public class JWT implements RegisteredPayload<JWT> {
 
 	private final JWTHeader header;
 	private final JWTPayload payload;
@@ -169,7 +171,7 @@ public class JWT implements RegisteredPayload<JWT>{
 	 *
 	 * @return JWT算法签名器
 	 */
-	public JWTSigner getSigner(){
+	public JWTSigner getSigner() {
 		return this.signer;
 	}
 
@@ -330,13 +332,42 @@ public class JWT implements RegisteredPayload<JWT>{
 	}
 
 	/**
+	 * 验证JWT是否有效，验证包括：
+	 *
+	 * <ul>
+	 *     <li>Token是否正确</li>
+	 *     <li>{@link JWTPayload#NOT_BEFORE}：生效时间不能晚于当前时间</li>
+	 *     <li>{@link JWTPayload#EXPIRES_AT}：失效时间不能早于当前时间</li>
+	 *     <li>{@link JWTPayload#ISSUED_AT}： 签发时间不能晚于当前时间</li>
+	 * </ul>
+	 *
+	 * @return 是否有效
+	 * @see JWTValidator
+	 * @since 5.7.4
+	 */
+	public boolean validate(long leeway) {
+		if (false == verify()) {
+			return false;
+		}
+
+		// 校验时间字段
+		try {
+			JWTValidator.of(tokens.get(2)).validateDate(DateUtil.date(), leeway);
+		} catch (ValidateException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * 验证JWT Token是否有效
 	 *
 	 * @param signer 签名器（签名算法）
 	 * @return 是否有效
 	 */
 	public boolean verify(JWTSigner signer) {
-		if(null == signer){
+		if (null == signer) {
 			// 如果无签名器提供，默认认为是无签名JWT信息
 			signer = NoneJWTSigner.NONE;
 		}

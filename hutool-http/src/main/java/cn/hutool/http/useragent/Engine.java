@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * @since 4.2.1
  */
 public class Engine extends UserAgentInfo {
+	private static final long serialVersionUID = 1L;
 
 	/** 未知 */
 	public static final Engine Unknown = new Engine(NameUnknown, null);
@@ -32,6 +33,8 @@ public class Engine extends UserAgentInfo {
 			new Engine("MIDP", "MIDP")//
 	);
 
+	private final Pattern versionPattern;
+
 	/**
 	 * 构造
 	 *
@@ -40,6 +43,7 @@ public class Engine extends UserAgentInfo {
 	 */
 	public Engine(String name, String regex) {
 		super(name, regex);
+		this.versionPattern = Pattern.compile(name + "[/\\- ]([\\d\\w.\\-]+)", Pattern.CASE_INSENSITIVE);
 	}
 
 	/**
@@ -50,8 +54,9 @@ public class Engine extends UserAgentInfo {
 	 * @since 5.7.4
 	 */
 	public String getVersion(String userAgentString) {
-		final String regexp = getName() + "[/\\- ]([\\d\\w.\\-]+)";
-		final Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-		return ReUtil.getGroup1(pattern, userAgentString);
+		if(isUnknown()){
+			return null;
+		}
+		return ReUtil.getGroup1(this.versionPattern, userAgentString);
 	}
 }

@@ -30,12 +30,12 @@ public class UserAgentParser {
 		// 浏览器引擎
 		final Engine engine = parseEngine(userAgentString);
 		userAgent.setEngine(engine);
-		if (false == engine.isUnknown()) {
-			userAgent.setEngineVersion(engine.getVersion(userAgentString));
-		}
+		userAgent.setEngineVersion(engine.getVersion(userAgentString));
 
 		// 操作系统
-		userAgent.setOs(parseOS(userAgentString));
+		final OS os = parseOS(userAgentString);
+		userAgent.setOs(os);
+		userAgent.setOsVersion(os.getVersion(userAgentString));
 
 		// 平台
 		final Platform platform = parsePlatform(userAgentString);

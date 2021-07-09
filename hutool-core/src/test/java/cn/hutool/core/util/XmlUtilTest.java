@@ -293,4 +293,15 @@ public class XmlUtilTest {
 		final String escape = XmlUtil.escape(a);
 		Console.log(escape);
 	}
+
+	@Test
+	public void getParamTest(){
+		String xml = "<Config name=\"aaaa\">\n" +
+				"    <url>222222</url>\n" +
+				"</Config>";
+
+		final Document doc = XmlUtil.parseXml(xml);
+		final String name = doc.getDocumentElement().getAttribute("name");
+		Assert.assertEquals("aaaa", name);
+	}
 }

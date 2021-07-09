@@ -2,15 +2,17 @@ package cn.hutool.http.useragent;
 
 import cn.hutool.core.util.ReUtil;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  * User-agent信息
- * 
+ *
  * @author looly
  * @since 4.2.1
  */
-public class UserAgentInfo {
+public class UserAgentInfo implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public static final String NameUnknown = "Unknown";
 
@@ -21,7 +23,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 名字
 	 * @param regex 表达式
 	 */
@@ -31,7 +33,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 名字
 	 * @param pattern 匹配模式
 	 */
@@ -42,7 +44,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 获取信息名称
-	 * 
+	 *
 	 * @return 信息名称
 	 */
 	public String getName() {
@@ -51,7 +53,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 获取匹配模式
-	 * 
+	 *
 	 * @return 匹配模式
 	 */
 	public Pattern getPattern() {
@@ -60,7 +62,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 指定内容中是否包含匹配此信息的内容
-	 * 
+	 *
 	 * @param content User-Agent字符串
 	 * @return 是否包含匹配此信息的内容
 	 */
@@ -70,7 +72,7 @@ public class UserAgentInfo {
 
 	/**
 	 * 是否为Unknown
-	 * 
+	 *
 	 * @return 是否为Unknown
 	 */
 	public boolean isUnknown() {
