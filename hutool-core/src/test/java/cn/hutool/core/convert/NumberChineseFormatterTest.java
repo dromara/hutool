@@ -16,7 +16,7 @@ public class NumberChineseFormatterTest {
 		f1 = NumberChineseFormatter.format(1024, false);
 		Assert.assertEquals("一千零二十四", f1);
 		f1 = NumberChineseFormatter.format(100350089, false);
-		Assert.assertEquals("一亿三十五万零八十九", f1);
+		Assert.assertEquals("一亿零三十五万零八十九", f1);
 		f1 = NumberChineseFormatter.format(1200, false);
 		Assert.assertEquals("一千二百", f1);
 		f1 = NumberChineseFormatter.format(12, false);
@@ -36,11 +36,17 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void formatTest3() {
-		String f1 = NumberChineseFormatter.format(50008000, false, false);
-		Assert.assertEquals("五千万零八千", f1);
+//		String f1 = NumberChineseFormatter.format(5000_8000, false, false);
+//		Assert.assertEquals("五千万零八千", f1);
 
-		f1 = NumberChineseFormatter.format(100350089, false, false);
-		Assert.assertEquals("一亿零三十五万零八十九\"", f1);
+		String f2 = NumberChineseFormatter.format(1_0035_0089, false, false);
+		Assert.assertEquals("一亿零三十五万零八十九", f2);
+	}
+
+	@Test
+	public void formatMaxTest() {
+		String f3 = NumberChineseFormatter.format(99_9999_9999_9999L, false, false);
+		Assert.assertEquals("九十九万九千九百九十九亿九千九百九十九万九千九百九十九", f3);
 	}
 
 	@Test
@@ -54,7 +60,7 @@ public class NumberChineseFormatterTest {
 		f1 = NumberChineseFormatter.format(1024, true);
 		Assert.assertEquals("壹仟零贰拾肆", f1);
 		f1 = NumberChineseFormatter.format(100350089, true);
-		Assert.assertEquals("壹亿叁拾伍万零捌拾玖", f1);
+		Assert.assertEquals("壹亿零叁拾伍万零捌拾玖", f1);
 		f1 = NumberChineseFormatter.format(1200, true);
 		Assert.assertEquals("壹仟贰佰", f1);
 		f1 = NumberChineseFormatter.format(12, true);

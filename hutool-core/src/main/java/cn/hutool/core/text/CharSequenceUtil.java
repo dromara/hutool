@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * {@link CharSequence} 相关工具类封装
@@ -617,6 +618,19 @@ public class CharSequenceUtil {
 	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
 	 */
 	public static String trim(CharSequence str, int mode) {
+		return trim(str, mode, CharUtil::isBlankChar);
+	}
+
+	/**
+	 * 按照断言，除去字符串头尾部的断言为真的字符，如果字符串是{@code null}，依然返回{@code null}。
+	 *
+	 * @param str  要处理的字符串
+	 * @param mode {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+	 * @param predicate 断言是否过掉字符，返回{@code true}表述过滤掉，{@code false}表示不过滤
+	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
+	 * @since 5.7.4
+	 */
+	public static String trim(CharSequence str, int mode, Predicate<Character> predicate) {
 		String result;
 		if (str == null) {
 			result = null;
@@ -625,12 +639,12 @@ public class CharSequenceUtil {
 			int start = 0;
 			int end = length;// 扫描字符串头部
 			if (mode <= 0) {
-				while ((start < end) && (CharUtil.isBlankChar(str.charAt(start)))) {
+				while ((start < end) && (predicate.test(str.charAt(start)))) {
 					start++;
 				}
 			}// 扫描字符串尾部
 			if (mode >= 0) {
-				while ((start < end) && (CharUtil.isBlankChar(str.charAt(end - 1)))) {
+				while ((start < end) && (predicate.test(str.charAt(end - 1)))) {
 					end--;
 				}
 			}
@@ -3878,7 +3892,7 @@ public class CharSequenceUtil {
 	 * 过滤字符串
 	 *
 	 * @param str    字符串
-	 * @param filter 过滤器
+	 * @param filter 过滤器，{@link Filter#accept(Object)}返回为{@code true}的保留字符
 	 * @return 过滤后的字符串
 	 * @since 5.4.0
 	 */

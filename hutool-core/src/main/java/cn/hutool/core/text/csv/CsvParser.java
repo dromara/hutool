@@ -324,6 +324,10 @@ public final class CsvParser implements Closeable, Serializable {
 	 */
 	private void addField(List<String> currentFields, String field) {
 		final char textDelimiter = this.config.textDelimiter;
+
+		// 忽略多余引号后的换行符
+		field = StrUtil.trim(field, 1, (c-> c == CharUtil.LF || c == CharUtil.CR));
+
 		field = StrUtil.unWrap(field, textDelimiter);
 		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
 		currentFields.add(field);
