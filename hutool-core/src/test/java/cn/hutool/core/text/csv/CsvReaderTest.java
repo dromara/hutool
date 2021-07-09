@@ -1,6 +1,7 @@
 package cn.hutool.core.text.csv;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
@@ -19,6 +20,7 @@ public class CsvReaderTest {
 		CsvReader reader = new CsvReader();
 		CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.CHARSET_UTF_8));
 		Assert.assertEquals("sss,sss", data.getRow(0).get(0));
+		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
 		Assert.assertEquals("性别", data.getRow(0).get(2));
 		Assert.assertEquals("关注\"对象\"", data.getRow(0).get(3));
 	}
@@ -96,5 +98,51 @@ public class CsvReaderTest {
 		for (CsvRow row : read) {
 			Console.log(row.getByName("案件ID"));
 		}
+	}
+
+	@Test
+	public void lineNoTest(){
+		CsvReader reader = new CsvReader();
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
+		Assert.assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
+
+		Assert.assertEquals(4, data.getRow(2).getOriginalLineNumber());
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(2), ","));
+
+		// 文件中第3行数据，对应原始行号是6（从0开始）
+		Assert.assertEquals(6, data.getRow(3).getOriginalLineNumber());
+		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(3), ","));
+	}
+
+	@Test
+	public void lineLimitTest(){
+		// 从原始第2行开始读取
+		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2));
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+
+		Assert.assertEquals(2, data.getRow(0).getOriginalLineNumber());
+		Assert.assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
+
+		Assert.assertEquals(4, data.getRow(1).getOriginalLineNumber());
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(1), ","));
+
+		// 文件中第3行数据，对应原始行号是6（从0开始）
+		Assert.assertEquals(6, data.getRow(2).getOriginalLineNumber());
+		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(2), ","));
+	}
+
+	@Test
+	public void lineLimitWithHeaderTest(){
+		// 从原始第2行开始读取
+		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2).setContainsHeader(true));
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+
+		Assert.assertEquals(4, data.getRow(0).getOriginalLineNumber());
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(0), ","));
+
+		// 文件中第3行数据，对应原始行号是6（从0开始）
+		Assert.assertEquals(6, data.getRow(1).getOriginalLineNumber());
+		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(1), ","));
 	}
 }

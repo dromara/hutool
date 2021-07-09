@@ -69,4 +69,12 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 	public Iterator<CsvRow> iterator() {
 		return this.rows.iterator();
 	}
+
+	@Override
+	public String toString() {
+		return "CsvData{" +
+				"header=" + header +
+				", rows=" + rows +
+				'}';
+	}
 }

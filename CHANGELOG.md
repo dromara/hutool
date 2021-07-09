@@ -15,6 +15,7 @@
 * 【setting】     Props增加toProperties方法（issue#1701@Github）
 * 【http   】     UserAgent增加getOsVersion方法（issue#I3YZUQ@Gitee）
 * 【jwt    】     JWT增加validate方法（issue#I3YDM4@Gitee）
+* 【core   】     CscReader支持指定读取开始行号和结束行号（issue#I3ZMZL@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RadixUtil.decode非static问题（issue#I3YPEH@Gitee）
