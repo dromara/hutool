@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
@@ -83,14 +84,23 @@ public class HttpGlobalConfig implements Serializable {
 			return;
 		}
 		final Field methodsField = ReflectUtil.getField(HttpURLConnection.class, "methods");
-		if (null != methodsField) {
-			// 去除final修饰
-			ReflectUtil.setFieldValue(methodsField, "modifiers", methodsField.getModifiers() & ~Modifier.FINAL);
-			final String[] methods = {
-					"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
-			};
-			ReflectUtil.setFieldValue(null, methodsField, methods);
-			isAllowPatch = true;
+		if (null == methodsField) {
+			throw new HttpException("None static field [methods] with Java version: [{}]", System.getProperty("java.version"));
 		}
+
+		// 去除final修饰
+		ReflectUtil.setFieldValue(methodsField, "modifiers", methodsField.getModifiers() & ~Modifier.FINAL);
+		final String[] methods = {
+				"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
+		};
+		ReflectUtil.setFieldValue(null, methodsField, methods);
+
+		// 检查注入是否成功
+		final Object staticFieldValue = ReflectUtil.getStaticFieldValue(methodsField);
+		if(false == ArrayUtil.equals(methods, staticFieldValue)){
+			throw new HttpException("Inject value to field [methods] failed!");
+		}
+
+		isAllowPatch = true;
 	}
 }

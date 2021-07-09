@@ -248,6 +248,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void patchTest() {
+		// 验证patch请求是否可用
 		String body = HttpRequest.patch("https://www.baidu.com").execute().body();
 		Console.log(body);
 	}
