@@ -62,4 +62,13 @@ public class Base64Test {
 		String decodeStr = Base64.decodeStr(encode);
 		Assert.assertEquals(a, decodeStr);
 	}
+
+	@Test
+	public void encodeAndDecodeGbkTest(){
+		String orderDescription = "订购成功立即生效，30天内可观看专区中除单独计费影片外的所有内容，到期自动取消。";
+		String result = Base64.encode(orderDescription, "gbk");
+
+		final String s = Base64.decodeStr(result, "gbk");
+		Assert.assertEquals(orderDescription, s);
+	}
 }
