@@ -343,7 +343,7 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidTWCard(String idcard) {
-		if (StrUtil.isEmpty(idcard)) {
+		if (StrUtil.isEmpty(idcard) || idcard.length() != 10) {
 			return false;
 		}
 		String start = idcard.substring(0, 1);

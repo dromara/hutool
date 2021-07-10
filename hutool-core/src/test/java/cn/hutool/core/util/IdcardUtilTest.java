@@ -7,7 +7,7 @@ import org.junit.Test;
 
 /**
  * 身份证单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -110,5 +110,18 @@ public class IdcardUtilTest {
 		String hkCard="P174468(6)";
 		boolean flag=IdcardUtil.isValidHKCard(hkCard);
 		Assert.assertTrue(flag);
+	}
+
+	@Test
+	public void isValidTWCardIdTest() {
+		String twCard = "B221690311";
+		boolean flag = IdcardUtil.isValidTWCard(twCard);
+		Assert.assertTrue(flag);
+		String errTwCard1 = "M517086311";
+		flag = IdcardUtil.isValidTWCard(errTwCard1);
+		Assert.assertFalse(flag);
+		String errTwCard2 = "B2216903112";
+		flag = IdcardUtil.isValidTWCard(errTwCard2);
+		Assert.assertFalse(flag);
 	}
 }
