@@ -68,6 +68,10 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 */
 	public void writeTo(OutputStream out) throws IORuntimeException {
 		final int index = buffer.index();
+		if(index < 0){
+			// 无数据写出
+			return;
+		}
 		byte[] buf;
 		try {
 			for (int i = 0; i < index; i++) {

@@ -23,6 +23,7 @@
 * 【setting】     修复Props中Charset对象无法序列化的问题（pr#1694@Github）
 * 【db     】     修复PageResult首页判断逻辑问题（issue#1699@Github）
 * 【core   】     修复IdcardUtil可能数组越界问题（pr#1702@Github）
+* 【core   】     修复FastByteArrayOutputStream索引越界问题（issue#I402ZP@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

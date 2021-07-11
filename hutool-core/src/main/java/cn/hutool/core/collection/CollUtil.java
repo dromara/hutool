@@ -1602,6 +1602,18 @@ public class CollUtil {
 		return null == enumeration || false == enumeration.hasMoreElements();
 	}
 
+	/**
+	 * Map是否为空
+	 *
+	 * @param map 集合
+	 * @return 是否为空
+	 * @see MapUtil#isEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isEmpty(Map<?, ?> map) {
+		return MapUtil.isEmpty(map);
+	}
+
 	// ---------------------------------------------------------------------- isNotEmpty
 
 	/**
@@ -1656,6 +1668,18 @@ public class CollUtil {
 	 */
 	public static boolean hasNull(Iterable<?> iterable) {
 		return IterUtil.hasNull(iterable);
+	}
+
+	/**
+	 * Map是否为非空
+	 *
+	 * @param map 集合
+	 * @return 是否为非空
+	 * @see MapUtil#isNotEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isNotEmpty(Map<?, ?> map) {
+		return MapUtil.isNotEmpty(map);
 	}
 
 	// ---------------------------------------------------------------------- zip
