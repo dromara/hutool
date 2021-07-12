@@ -155,10 +155,13 @@ public class FileUtilTest {
 		Assert.assertEquals("/bar", FileUtil.normalize("//server/../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
-		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
+		Assert.assertEquals("../../bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 		Assert.assertEquals("C:", FileUtil.normalize("C:"));
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
+		Assert.assertEquals("../foo/", FileUtil.normalize("../foo/"));
+		Assert.assertEquals("..", FileUtil.normalize("../foo/.."));
+		Assert.assertEquals("../..", FileUtil.normalize("../.."));
 	}
 
 	@Test

@@ -43,13 +43,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.zip.CRC32;
@@ -1454,31 +1448,39 @@ public class FileUtil extends PathUtil {
 			prefix += StrUtil.SLASH;
 			pathToUse = pathToUse.substring(1);
 		}
-
-		List<String> pathList = StrUtil.split(pathToUse, StrUtil.C_SLASH);
-		List<String> pathElements = new LinkedList<>();
-		int tops = 0;
-
-		String element;
-		for (int i = pathList.size() - 1; i >= 0; i--) {
-			element = pathList.get(i);
-			// 只处理非.的目录，即只处理非当前目录
-			if (false == StrUtil.DOT.equals(element)) {
-				if (StrUtil.DOUBLE_DOT.equals(element)) {
-					tops++;
-				} else {
-					if (tops > 0) {
-						// 有上级目录标记时按照个数依次跳过
-						tops--;
-					} else {
-						// Normal path element found.
-						pathElements.add(0, element);
-					}
-				}
-			}
+		if (StrUtil.isBlank(pathToUse)){
+			return prefix;
 		}
 
-		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
+		Stack<String> stringStack  = new Stack<>();
+		String[] arr = pathToUse.split(StrUtil.SLASH);
+		boolean isFirst = true;
+		for(String str : arr) {
+			if(str.equals(StrUtil.EMPTY)||str.equals(StrUtil.DOT))
+				continue;
+			if(str.equals(StrUtil.DOUBLE_DOT)) {
+				//只有以..开头的路径才会把连续的..添加进栈中（如: ../..）
+				if (isFirst && prefix.length() == 0 && (stringStack.empty() || stringStack.peek().equals(StrUtil.DOUBLE_DOT))){
+					stringStack.push(str);
+					continue;
+				}
+				if(!stringStack.empty()){
+					stringStack.pop();
+					isFirst = false;
+				}
+			}
+			else
+				stringStack.push(str);
+		}
+
+		StringBuilder ans = new StringBuilder();
+		while (!stringStack.empty()) {
+			ans.insert(0, stringStack.pop() + StrUtil.SLASH);
+		}
+		//如果原路径不以/结尾则删除
+		if (!pathToUse.endsWith(StrUtil.SLASH))
+			ans.deleteCharAt(ans.length()-1);
+		return prefix + ans;
 	}
 
 	/**
