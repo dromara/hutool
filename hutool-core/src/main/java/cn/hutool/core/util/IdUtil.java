@@ -223,6 +223,7 @@ public class IdUtil {
 	 *
 	 * @param datacenterId 数据中心ID
 	 * @param maxWorkerId  最大的机器节点ID
+	 * @return ID
 	 * @since 5.7.3
 	 */
 	public static long getWorkerId(long datacenterId, long maxWorkerId) {
