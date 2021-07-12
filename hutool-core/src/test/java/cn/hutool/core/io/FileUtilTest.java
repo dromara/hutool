@@ -147,15 +147,16 @@ public class FileUtilTest {
 		Assert.assertEquals("/bar", FileUtil.normalize("/foo/../bar"));
 		Assert.assertEquals("/bar/", FileUtil.normalize("/foo/../bar/"));
 		Assert.assertEquals("/baz", FileUtil.normalize("/foo/../bar/../baz"));
-		Assert.assertEquals("/", FileUtil.normalize("/../"));
+		Assert.assertEquals("/../", FileUtil.normalize("/../"));
 		Assert.assertEquals("foo", FileUtil.normalize("foo/bar/.."));
-		Assert.assertEquals("bar", FileUtil.normalize("foo/../../bar"));
+		Assert.assertEquals("../bar", FileUtil.normalize("foo/../../bar"));
 		Assert.assertEquals("bar", FileUtil.normalize("foo/../bar"));
 		Assert.assertEquals("/server/bar", FileUtil.normalize("//server/foo/../bar"));
 		Assert.assertEquals("/bar", FileUtil.normalize("//server/../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
-		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
-		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
+		//
+		Assert.assertEquals("C:/../bar", FileUtil.normalize("C:\\..\\bar"));
+		Assert.assertEquals("../../bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 		Assert.assertEquals("C:", FileUtil.normalize("C:"));
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
@@ -182,6 +183,12 @@ public class FileUtilTest {
 	@Test
 	public void normalizeClassPathTest() {
 		Assert.assertEquals("", FileUtil.normalize("classpath:"));
+	}
+
+	@Test
+	public void normalizeClassPathTest2() {
+		Assert.assertEquals("../a/b.csv", FileUtil.normalize("../a/b.csv"));
+		Assert.assertEquals("../../../a/b.csv", FileUtil.normalize("../../../a/b.csv"));
 	}
 
 	@Test

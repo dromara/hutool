@@ -1456,9 +1456,9 @@ public class FileUtil extends PathUtil {
 		}
 
 		List<String> pathList = StrUtil.split(pathToUse, StrUtil.C_SLASH);
+
 		List<String> pathElements = new LinkedList<>();
 		int tops = 0;
-
 		String element;
 		for (int i = pathList.size() - 1; i >= 0; i--) {
 			element = pathList.get(i);
@@ -1475,6 +1475,15 @@ public class FileUtil extends PathUtil {
 						pathElements.add(0, element);
 					}
 				}
+			}
+		}
+
+		// issue#1703@Github
+		if(tops > 0){
+			while (tops-- > 0){
+				//遍历完节点发现还有上级标注（即开头有一个或多个..），补充之
+				// Normal path element found.
+				pathElements.add(0, StrUtil.DOUBLE_DOT);
 			}
 		}
 
