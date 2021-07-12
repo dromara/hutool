@@ -114,6 +114,23 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * 修改日期为某个时间字段结束时间<br>
+	 * 可选是否归零毫秒。
+	 *
+	 * <p>
+	 * 有时候由于毫秒部分必须为0（如MySQL数据库中），因此在此加上选项。
+	 * </p>
+	 *
+	 * @param calendar            {@link Calendar}
+	 * @param dateField           时间字段
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 原{@link Calendar}
+	 */
+	public static Calendar ceiling(Calendar calendar, DateField dateField, boolean truncateMillisecond) {
+		return DateModifier.modify(calendar, dateField.getValue(), DateModifier.ModifyType.CEILING, truncateMillisecond);
+	}
+
+	/**
 	 * 获取秒级别的开始时间，即忽略毫秒部分
 	 *
 	 * @param calendar 日期 {@link Calendar}
@@ -655,9 +672,9 @@ public class CalendarUtil {
 		calendar.setLenient(lenient);
 
 		for (final String parsePattern : parsePatterns) {
-			if(GlobalCustomFormat.isCustomFormat(parsePattern)){
+			if (GlobalCustomFormat.isCustomFormat(parsePattern)) {
 				final Date parse = GlobalCustomFormat.parse(str, parsePattern);
-				if(null == parse){
+				if (null == parse) {
 					continue;
 				}
 				calendar.setTime(parse);

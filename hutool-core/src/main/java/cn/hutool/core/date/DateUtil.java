@@ -490,7 +490,7 @@ public class DateUtil extends CalendarUtil {
 		}
 
 		// 检查自定义格式
-		if(GlobalCustomFormat.isCustomFormat(format)){
+		if (GlobalCustomFormat.isCustomFormat(format)) {
 			return GlobalCustomFormat.format(date, format);
 		}
 
@@ -702,7 +702,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
-		if(GlobalCustomFormat.isCustomFormat(format)){
+		if (GlobalCustomFormat.isCustomFormat(format)) {
 			// 自定义格式化器忽略Locale
 			return new DateTime(GlobalCustomFormat.parse(dateStr, format));
 		}
@@ -828,7 +828,7 @@ public class DateUtil extends CalendarUtil {
 			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
-			} else if (StrUtil.contains(utcString, CharUtil.DOT)){
+			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
 			}
@@ -983,7 +983,25 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，即忽略毫秒部分
+	 * 修改日期为某个时间字段结束时间<br>
+	 * 可选是否归零毫秒。
+	 *
+	 * <p>
+	 * 有时候由于毫秒部分必须为0（如MySQL数据库中），因此在此加上选项。
+	 * </p>
+	 *
+	 * @param date                {@link Date}
+	 * @param dateField           时间字段
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return {@link DateTime}
+	 * @since 4.5.7
+	 */
+	public static DateTime ceiling(Date date, DateField dateField, boolean truncateMillisecond) {
+		return new DateTime(ceiling(calendar(date), dateField, truncateMillisecond));
+	}
+
+	/**
+	 * 获取秒级别的开始时间，即毫秒部分设置为0
 	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -1847,13 +1865,12 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * {@code null}安全的日期比较，并只比较指定格式； {@code null}对象排在末尾, 并指定日期格式；
 	 *
-	 *
-	 * @param date1 日期1
-	 * @param date2 日期2
+	 * @param date1  日期1
+	 * @param date2  日期2
 	 * @param format 日期格式，常用格式见： {@link DatePattern}; 允许为空； date1 date2; eg: yyyy-MM-dd
 	 * @return 比较结果，如果date1 &lt; date2，返回数小于0，date1==date2返回0，date1 &gt; date2 大于0
-	 * @since 5.6.4
 	 * @author dazer
+	 * @since 5.6.4
 	 */
 	public static int compare(Date date1, Date date2, String format) {
 		if (format != null) {

@@ -6,6 +6,7 @@
 # 5.7.5 (2021-07-12)
 
 ### 🐣新特性
+* 【core   】     DateUtil增加ceiling重载，可选是否归零毫秒
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）

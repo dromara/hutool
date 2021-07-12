@@ -123,6 +123,32 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void ceilingMinuteTest(){
+		String dateStr2 = "2020-02-29 12:59:34";
+		Date date2 = DateUtil.parse(dateStr2);
+
+
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.MINUTE);
+		Assert.assertEquals("2020-02-29 12:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		dateTime = DateUtil.ceiling(date2, DateField.MINUTE, true);
+		Assert.assertEquals("2020-02-29 12:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
+
+	@Test
+	public void ceilingDayTest(){
+		String dateStr2 = "2020-02-29 12:59:34";
+		Date date2 = DateUtil.parse(dateStr2);
+
+
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH);
+		Assert.assertEquals("2020-02-29 23:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, true);
+		Assert.assertEquals("2020-02-29 23:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
+
+	@Test
 	public void beginOfWeekTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		DateTime date = DateUtil.parse(dateStr);
