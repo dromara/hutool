@@ -33,7 +33,8 @@ public class ClassScanner implements Serializable {
 	 */
 	private final String packageName;
 	/**
-	 * 包名，最后跟一个点，表示包名，避免在检查前缀时的歧义
+	 * 包名，最后跟一个点，表示包名，避免在检查前缀时的歧义<br>
+	 * 如果包名指定为空，不跟点
 	 */
 	private final String packageNameWithDot;
 	/**
@@ -66,29 +67,63 @@ public class ClassScanner implements Serializable {
 	private final Set<Class<?>> classes = new HashSet<>();
 
 	/**
-	 * 扫描指定包路径下所有包含指定注解的类
+	 * 扫描指定包路径下所有包含指定注解的类，包括其他加载的jar或者类
 	 *
 	 * @param packageName     包路径
 	 * @param annotationClass 注解类
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
+	public static Set<Class<?>> scanAllPackageByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
+		return scanAllPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
+	}
+
+	/**
+	 * 扫描指定包路径下所有包含指定注解的类<br>
+	 * 如果classpath下已经有类，不再扫描其他加载的jar或者类
+	 *
+	 * @param packageName     包路径
+	 * @param annotationClass 注解类
+	 * @return 类集合
+	 */
+	public static Set<Class<?>> scanPackageByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
 		return scanPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
 	}
 
 	/**
-	 * 扫描指定包路径下所有指定类或接口的子类或实现类，不包括指定父类本身
+	 * 扫描指定包路径下所有指定类或接口的子类或实现类，不包括指定父类本身，包括其他加载的jar或者类
 	 *
 	 * @param packageName 包路径
 	 * @param superClass  父类或接口（不包括）
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
+	public static Set<Class<?>> scanAllPackageBySuper(String packageName, Class<?> superClass) {
+		return scanAllPackage(packageName, clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz));
+	}
+
+	/**
+	 * 扫描指定包路径下所有指定类或接口的子类或实现类，不包括指定父类本身<br>
+	 * 如果classpath下已经有类，不再扫描其他加载的jar或者类
+	 *
+	 * @param packageName 包路径
+	 * @param superClass  父类或接口（不包括）
+	 * @return 类集合
+	 */
+	public static Set<Class<?>> scanPackageBySuper(String packageName, Class<?> superClass) {
 		return scanPackage(packageName, clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz));
 	}
 
 	/**
-	 * 扫描该包路径下所有class文件
+	 * 扫描该包路径下所有class文件，包括其他加载的jar或者类
+	 *
+	 * @return 类集合
+	 * @since 5.7.5
+	 */
+	public static Set<Class<?>> scanAllPackage() {
+		return scanAllPackage(StrUtil.EMPTY, null);
+	}
+
+	/**
+	 * 扫描classpath下所有class文件，如果classpath下已经有类，不再扫描其他加载的jar或者类
 	 *
 	 * @return 类集合
 	 */
@@ -104,6 +139,20 @@ public class ClassScanner implements Serializable {
 	 */
 	public static Set<Class<?>> scanPackage(String packageName) {
 		return scanPackage(packageName, null);
+	}
+
+	/**
+	 * 扫描包路径下和所有在classpath中加载的类，满足class过滤器条件的所有class文件，<br>
+	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
+	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理<br>
+	 *
+	 * @param packageName 包路径 com | com. | com.abs | com.abs.
+	 * @param classFilter class过滤器，过滤掉不需要的class
+	 * @return 类集合
+	 * @since 5.7.5
+	 */
+	public static Set<Class<?>> scanAllPackage(String packageName, Filter<Class<?>> classFilter) {
+		return new ClassScanner(packageName, classFilter).scan(true);
 	}
 
 	/**
@@ -163,11 +212,23 @@ public class ClassScanner implements Serializable {
 	}
 
 	/**
-	 * 扫描包路径下满足class过滤器条件的所有class文件
+	 * 扫描包路径下满足class过滤器条件的所有class文件<br>
+	 * 此方法首先扫描指定包名下的资源目录，如果未扫描到，则扫描整个classpath中所有加载的类
 	 *
 	 * @return 类集合
 	 */
 	public Set<Class<?>> scan() {
+		return scan(false);
+	}
+
+	/**
+	 * 扫描包路径下满足class过滤器条件的所有class文件
+	 *
+	 * @param forceScanJavaClassPaths 是否强制扫描其他位于classpath关联jar中的类
+	 * @return 类集合
+	 * @since 5.7.5
+	 */
+	public Set<Class<?>> scan(boolean forceScanJavaClassPaths) {
 		for (URL url : ResourceUtil.getResourceIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
@@ -179,7 +240,8 @@ public class ClassScanner implements Serializable {
 			}
 		}
 
-		if (CollUtil.isEmpty(this.classes)) {
+		// classpath下未找到，则扫描其他jar包下的类
+		if (forceScanJavaClassPaths || CollUtil.isEmpty(this.classes)) {
 			scanJavaClassPaths();
 		}
 
@@ -245,7 +307,7 @@ public class ClassScanner implements Serializable {
 			}
 		} else if (file.isDirectory()) {
 			final File[] files = file.listFiles();
-			if(null != files){
+			if (null != files) {
 				for (File subFile : files) {
 					scanFile(subFile, (null == rootDir) ? subPathBeforePackage(file) : rootDir);
 				}
@@ -262,7 +324,7 @@ public class ClassScanner implements Serializable {
 		String name;
 		for (JarEntry entry : new EnumerationIter<>(jar.entries())) {
 			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
-			if (name.startsWith(this.packagePath)) {
+			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
 				if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
 					final String className = name//
 							.substring(0, name.length() - 6)//
@@ -289,13 +351,12 @@ public class ClassScanner implements Serializable {
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName(className, this.initialize, loader);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | ClassNotFoundException e) {
 			// 由于依赖库导致的类无法加载，直接跳过此类
 		} catch (UnsupportedClassVersionError e) {
 			// 版本导致的不兼容的类，跳过
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-			// Console.error(e);
 		}
 		return clazz;
 	}
@@ -318,7 +379,7 @@ public class ClassScanner implements Serializable {
 			}
 		} else if (classLen > packageLen) {
 			//检查类名是否以指定包名为前缀，包名后加.（避免类似于cn.hutool.A和cn.hutool.ATest这类类名引起的歧义）
-			if (className.startsWith(this.packageNameWithDot)) {
+			if (".".equals(this.packageNameWithDot) || className.startsWith(this.packageNameWithDot)) {
 				addIfAccept(loadClass(className));
 			}
 		}
