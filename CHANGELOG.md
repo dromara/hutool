@@ -8,6 +8,7 @@
 ### 🐣新特性
 * 【core   】     DateUtil增加ceiling重载，可选是否归零毫秒
 * 【core   】     IterUtil增加firstMatch方法
+* 【core   】     增加NanoId
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）

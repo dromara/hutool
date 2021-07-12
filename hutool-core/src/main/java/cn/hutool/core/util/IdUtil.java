@@ -1,13 +1,12 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.*;
+import cn.hutool.core.lang.ObjectId;
+import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.net.NetUtil;
-
-import java.util.Random;
-
-import static cn.hutool.core.lang.NanoId.DEFAULT_ALPHABET;
-import static cn.hutool.core.lang.NanoId.DEFAULT_NUMBER_GENERATOR;
 
 /**
  * ID生成器工具类，此工具类中主要封装：
@@ -241,24 +240,26 @@ public class IdUtil {
 		 */
 		return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
 	}
-    // ------------------------------------------------------------------- NanoId
+
+	// ------------------------------------------------------------------- NanoId
 	/**
 	 * 获取随机NanoId
 	 *
 	 * @return 随机NanoId
+	 * @since 5.7.5
 	 */
-	public static String randomNanoId() {
+	public static String nanoId() {
 		return NanoId.randomNanoId();
 	}
+
 	/**
-	 * Static factory to retrieve a NanoId String.
+	 * 获取随机NanoId
 	 *
-	 * The string is generated using the given random number generator.
-	 *
-	 * @param size  The number of symbols in the NanoId String.
-	 * @return A randomly generated NanoId String.
+	 * @param size ID中的字符数量
+	 * @return 随机NanoId
+	 * @since 5.7.5
 	 */
-	public static String randomNanoId(final int size){
-		return NanoId.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, size);
+	public static String nanoId(int size){
+		return NanoId.randomNanoId(size);
 	}
 }
