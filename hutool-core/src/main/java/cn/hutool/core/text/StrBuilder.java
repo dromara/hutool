@@ -177,7 +177,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if(index < 0){
 			index = this.position + index;
 		}
-		if ((index < 0) || (index > this.position)) {
+		if ((index < 0)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}
 
@@ -221,7 +221,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if(index < 0){
 			index = this.position + index;
 		}
-		if ((index < 0) || (index > this.position)) {
+		if ((index < 0)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}
 
@@ -252,7 +252,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if(index < 0){
 			index = this.position + index;
 		}
-		if ((index < 0) || (index > this.position)) {
+		if ((index < 0)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}
 
@@ -309,7 +309,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if(index < 0){
 			index = this.position + index;
 		}
-		if ((index < 0) || (index > this.position)) {
+		if ((index < 0)) {
 			throw new StringIndexOutOfBoundsException(index);
 		}
 
