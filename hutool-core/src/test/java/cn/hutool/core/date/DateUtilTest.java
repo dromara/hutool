@@ -897,4 +897,14 @@ public class DateUtilTest {
 		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMAT));
 		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN));
 	}
+
+	@Test
+	public void formatNormDateTimeFormatterTest(){
+		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DatePattern.NORM_DATETIME_FORMATTER);
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+
+		format = DateUtil.format(LocalDateTimeUtil.parse("2021-07-14T10:05:38"),
+				"yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+	}
 }

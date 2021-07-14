@@ -37,7 +37,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param timeZone 非空时区{@link TimeZone}
 	 * @param locale 非空{@link Locale} 日期地理位置
 	 */
-	public FastDatePrinter(final String pattern, final TimeZone timeZone, final Locale locale) {
+	public FastDatePrinter(String pattern, TimeZone timeZone, Locale locale) {
 		super(pattern, timeZone, locale);
 		init();
 	}
@@ -211,7 +211,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param indexRef index references
 	 * @return parsed token
 	 */
-	protected String parseToken(final String pattern, final int[] indexRef) {
+	protected String parseToken(String pattern, int[] indexRef) {
 		final StringBuilder buf = new StringBuilder();
 
 		int i = indexRef[0];
@@ -271,7 +271,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param padding the padding required
 	 * @return a new rule with the correct padding
 	 */
-	protected NumberRule selectNumberRule(final int field, final int padding) {
+	protected NumberRule selectNumberRule(int field, int padding) {
 		switch (padding) {
 			case 1:
 				return new UnpaddedNumberField(field);
@@ -293,53 +293,53 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param obj the object to format
 	 * @return The formatted value.
 	 */
-	String format(final Object obj) {
+	String format(Object obj) {
 		if (obj instanceof Date) {
 			return format((Date) obj);
 		} else if (obj instanceof Calendar) {
 			return format((Calendar) obj);
 		} else if (obj instanceof Long) {
-			return format(((Long) obj));
+			return format(((Long) obj).longValue());
 		} else {
 			throw new IllegalArgumentException("Unknown class: " + (obj == null ? "<null>" : obj.getClass().getName()));
 		}
 	}
 
 	@Override
-	public String format(final long millis) {
+	public String format(long millis) {
 		final Calendar c = Calendar.getInstance(timeZone, locale);
 		c.setTimeInMillis(millis);
 		return applyRulesToString(c);
 	}
 
 	@Override
-	public String format(final Date date) {
+	public String format(Date date) {
 		final Calendar c = Calendar.getInstance(timeZone, locale);
 		c.setTime(date);
 		return applyRulesToString(c);
 	}
 
 	@Override
-	public String format(final Calendar calendar) {
+	public String format(Calendar calendar) {
 		return format(calendar, new StringBuilder(mMaxLengthEstimate)).toString();
 	}
 
 	@Override
-	public <B extends Appendable> B format(final long millis, final B buf) {
+	public <B extends Appendable> B format(long millis, B buf) {
 		final Calendar c = Calendar.getInstance(timeZone, locale);
 		c.setTimeInMillis(millis);
 		return applyRules(c, buf);
 	}
 
 	@Override
-	public <B extends Appendable> B format(final Date date, final B buf) {
+	public <B extends Appendable> B format(Date date, B buf) {
 		final Calendar c = Calendar.getInstance(timeZone, locale);
 		c.setTime(date);
 		return applyRules(c, buf);
 	}
 
 	@Override
-	public <B extends Appendable> B format(Calendar calendar, final B buf) {
+	public <B extends Appendable> B format(Calendar calendar, B buf) {
 		// do not pass in calendar directly, this will cause TimeZone of FastDatePrinter to be ignored
 		if (!calendar.getTimeZone().equals(timeZone)) {
 			calendar = (Calendar) calendar.clone();
@@ -354,7 +354,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param c the Calender to apply the rules to.
 	 * @return a String representation of the given Calendar.
 	 */
-	private String applyRulesToString(final Calendar c) {
+	private String applyRulesToString(Calendar c) {
 		return applyRules(c, new StringBuilder(mMaxLengthEstimate)).toString();
 	}
 
@@ -368,7 +368,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param <B> the Appendable class type, usually StringBuilder or StringBuffer.
 	 * @return the specified string buffer
 	 */
-	private <B extends Appendable> B applyRules(final Calendar calendar, final B buf) {
+	private <B extends Appendable> B applyRules(Calendar calendar, B buf) {
 		try {
 			for (final Rule rule : this.rules) {
 				rule.appendTo(buf, calendar);
@@ -398,7 +398,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @throws IOException if there is an IO issue.
 	 * @throws ClassNotFoundException if a class cannot be found.
 	 */
-	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		init();
 	}
@@ -409,7 +409,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param buffer the buffer to append to.
 	 * @param value the value to append digits from.
 	 */
-	private static void appendDigits(final Appendable buffer, final int value) throws IOException {
+	private static void appendDigits(Appendable buffer, int value) throws IOException {
 		buffer.append((char) (value / 10 + '0'));
 		buffer.append((char) (value % 10 + '0'));
 	}
@@ -422,7 +422,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param buffer the buffer to append to.
 	 * @param value the value to append digits from.
 	 */
-	private static void appendFullDigits(final Appendable buffer, int value, int minFieldWidth) throws IOException {
+	private static void appendFullDigits(Appendable buffer, int value, int minFieldWidth) throws IOException {
 		// specialized paths for 1 to 4 digits -> avoid the memory allocation from the temporary work array
 		// see LANG-1248
 		if (value < 10000) {
@@ -568,7 +568,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param value the string literal
 		 */
-		StringLiteral(final String value) {
+		StringLiteral(String value) {
 			mValue = value;
 		}
 
@@ -584,7 +584,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			buffer.append(mValue);
 		}
 	}
@@ -604,7 +604,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * @param field the field
 		 * @param values the field values
 		 */
-		TextField(final int field, final String[] values) {
+		TextField(int field, String[] values) {
 			mField = field;
 			mValues = values;
 		}
@@ -628,7 +628,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			buffer.append(mValues[calendar.get(mField)]);
 		}
 	}
@@ -646,7 +646,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param field the field
 		 */
-		UnpaddedNumberField(final int field) {
+		UnpaddedNumberField(int field) {
 			mField = field;
 		}
 
@@ -662,7 +662,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
@@ -670,7 +670,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			if (value < 10) {
 				buffer.append((char) (value + '0'));
 			} else if (value < 100) {
@@ -708,7 +708,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.MONTH) + 1);
 		}
 
@@ -716,7 +716,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			if (value < 10) {
 				buffer.append((char) (value + '0'));
 			} else {
@@ -740,7 +740,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * @param field the field
 		 * @param size size of the output field
 		 */
-		PaddedNumberField(final int field, final int size) {
+		PaddedNumberField(int field, int size) {
 			if (size < 3) {
 				// Should use UnpaddedNumberField or TwoDigitNumberField.
 				throw new IllegalArgumentException();
@@ -761,7 +761,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
@@ -769,7 +769,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			appendFullDigits(buffer, value, mSize);
 		}
 	}
@@ -787,7 +787,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param field the field
 		 */
-		TwoDigitNumberField(final int field) {
+		TwoDigitNumberField(int field) {
 			mField = field;
 		}
 
@@ -803,7 +803,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
@@ -811,7 +811,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			if (value < 100) {
 				appendDigits(buffer, value);
 			} else {
@@ -846,7 +846,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.YEAR) % 100);
 		}
 
@@ -854,7 +854,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			appendDigits(buffer, value);
 		}
 	}
@@ -885,7 +885,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.MONTH) + 1);
 		}
 
@@ -893,7 +893,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public final void appendTo(final Appendable buffer, final int value) throws IOException {
+		public final void appendTo(Appendable buffer, int value) throws IOException {
 			appendDigits(buffer, value);
 		}
 	}
@@ -927,7 +927,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			int value = calendar.get(Calendar.HOUR);
 			if (value == 0) {
 				value = calendar.getLeastMaximum(Calendar.HOUR) + 1;
@@ -939,7 +939,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final int value) throws IOException {
+		public void appendTo(Appendable buffer, int value) throws IOException {
 			mRule.appendTo(buffer, value);
 		}
 	}
@@ -957,7 +957,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param rule the rule
 		 */
-		TwentyFourHourField(final NumberRule rule) {
+		TwentyFourHourField(NumberRule rule) {
 			mRule = rule;
 		}
 
@@ -973,7 +973,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			int value = calendar.get(Calendar.HOUR_OF_DAY);
 			if (value == 0) {
 				value = calendar.getMaximum(Calendar.HOUR_OF_DAY) + 1;
@@ -985,7 +985,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final int value) throws IOException {
+		public void appendTo(Appendable buffer, int value) throws IOException {
 			mRule.appendTo(buffer, value);
 		}
 	}
@@ -998,7 +998,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	private static class DayInWeekField implements NumberRule {
 		private final NumberRule mRule;
 
-		DayInWeekField(final NumberRule rule) {
+		DayInWeekField(NumberRule rule) {
 			mRule = rule;
 		}
 
@@ -1008,13 +1008,13 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		}
 
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			final int value = calendar.get(Calendar.DAY_OF_WEEK);
 			mRule.appendTo(buffer, value != Calendar.SUNDAY ? value - 1 : 7);
 		}
 
 		@Override
-		public void appendTo(final Appendable buffer, final int value) throws IOException {
+		public void appendTo(Appendable buffer, int value) throws IOException {
 			mRule.appendTo(buffer, value);
 		}
 	}
@@ -1037,12 +1037,12 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		}
 
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			mRule.appendTo(buffer, calendar.getWeekYear());
 		}
 
 		@Override
-		public void appendTo(final Appendable buffer, final int value) throws IOException {
+		public void appendTo(Appendable buffer, int value) throws IOException {
 			mRule.appendTo(buffer, value);
 		}
 	}
@@ -1062,7 +1062,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 	 * @param locale the locale to use
 	 * @return the textual name of the time zone
 	 */
-	static String getTimeZoneDisplay(final TimeZone tz, final boolean daylight, final int style, final Locale locale) {
+	static String getTimeZoneDisplay(TimeZone tz, boolean daylight, int style, Locale locale) {
 		final TimeZoneDisplayKey key = new TimeZoneDisplayKey(tz, daylight, style, locale);
 		String value = C_TIME_ZONE_DISPLAY_CACHE.get(key);
 		if (value == null) {
@@ -1094,7 +1094,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * @param locale the locale
 		 * @param style the style
 		 */
-		TimeZoneNameRule(final TimeZone timeZone, final Locale locale, final int style) {
+		TimeZoneNameRule(TimeZone timeZone, Locale locale, int style) {
 			mLocale = locale;
 			mStyle = style;
 
@@ -1117,7 +1117,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 			final TimeZone zone = calendar.getTimeZone();
 			if (calendar.get(Calendar.DST_OFFSET) != 0) {
 				buffer.append(getTimeZoneDisplay(zone, true, mStyle, mLocale));
@@ -1143,7 +1143,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param colon add colon between HH and MM in the output if {@code true}
 		 */
-		TimeZoneNumberRule(final boolean colon) {
+		TimeZoneNumberRule(boolean colon) {
 			mColon = colon;
 		}
 
@@ -1159,7 +1159,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
+		public void appendTo(Appendable buffer, Calendar calendar) throws IOException {
 
 			int offset = calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET);
 
@@ -1202,7 +1202,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 * @param tokenLen a token indicating the length of the TimeZone String to be formatted.
 		 * @return a Iso8601_Rule that can format TimeZone String of length {@code tokenLen}. If no such rule exists, an IllegalArgumentException will be thrown.
 		 */
-		static Iso8601_Rule getRule(final int tokenLen) {
+		static Iso8601_Rule getRule(int tokenLen) {
 			switch (tokenLen) {
 				case 1:
 					return Iso8601_Rule.ISO8601_HOURS;
@@ -1222,7 +1222,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 		 *
 		 * @param length The number of characters in output (unless Z is output)
 		 */
-		Iso8601_Rule(final int length) {
+		Iso8601_Rule(int length) {
 			this.length = length;
 		}
 

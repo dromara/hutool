@@ -546,7 +546,8 @@ public class DateUtil extends CalendarUtil {
 		if (format.getZone() == null) {
 			format = format.withZone(ZoneId.systemDefault());
 		}
-		return format.format(date.toInstant());
+		/// return format.format(date.toInstant());
+		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}
 
 	/**
