@@ -542,10 +542,7 @@ public class DateUtil extends CalendarUtil {
 		if (null == format || null == date) {
 			return null;
 		}
-		// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
-		if (format.getZone() == null) {
-			format = format.withZone(ZoneId.systemDefault());
-		}
+		/// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
 		/// return format.format(date.toInstant());
 		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}

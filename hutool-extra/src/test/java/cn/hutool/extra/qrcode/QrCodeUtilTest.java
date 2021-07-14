@@ -35,16 +35,22 @@ public class QrCodeUtilTest {
 		// 背景色透明
 		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);
-		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file("d:/qrcodeCustom.png"));
+		String path = FileUtil.isWindows() ? "d:/hutool/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
+		if (!FileUtil.file(path).getParentFile().exists()) {
+			FileUtil.file(path).getParentFile().mkdirs();
+		}
+		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file(path));
 	}
 
 	@Test
 	@Ignore
 	public void generateWithLogoTest() {
+		String icon = FileUtil.isWindows() ? "d:/hutool/pic/face.jpg" : "~/Desktop/hutool/pic/face.jpg";
+		String targetPath = FileUtil.isWindows() ? "d:/hutool/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
 		QrCodeUtil.generate(//
 				"http://hutool.cn/", //
-				QrConfig.create().setImg("e:/pic/face.jpg"), //
-				FileUtil.file("e:/qrcodeWithLogo.jpg"));
+				QrConfig.create().setImg(icon), //
+				FileUtil.file(targetPath));
 	}
 
 	@Test
