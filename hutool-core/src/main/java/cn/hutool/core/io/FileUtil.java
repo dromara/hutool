@@ -1479,7 +1479,8 @@ public class FileUtil extends PathUtil {
 		}
 
 		// issue#1703@Github
-		if(tops > 0){
+		if(tops > 0 && StrUtil.isEmpty(prefix)){
+			// 只有相对路径补充开头的..，绝对路径直接忽略之
 			while (tops-- > 0){
 				//遍历完节点发现还有上级标注（即开头有一个或多个..），补充之
 				// Normal path element found.
