@@ -78,18 +78,6 @@ public class MapBuilder<K, V> implements Serializable {
 	/**
 	 * 链式Map创建
 	 *
-	 * @param k        Key类型
-	 * @param supplier Value类型结果提供方
-	 * @return 当前类
-	 * @since 5.7.5
-	 */
-	public MapBuilder<K, V> put(K k, Supplier<V> supplier) {
-		return put(k, supplier.get());
-	}
-
-	/**
-	 * 链式Map创建
-	 *
 	 * @param condition put条件
 	 * @param k         Key类型
 	 * @param v         Value类型
@@ -114,7 +102,7 @@ public class MapBuilder<K, V> implements Serializable {
 	 */
 	public MapBuilder<K, V> put(boolean condition, K k, Supplier<V> supplier) {
 		if (condition) {
-			put(k, supplier);
+			put(k, supplier.get());
 		}
 		return this;
 	}
