@@ -10,12 +10,16 @@
 * 【core   】     IterUtil增加firstMatch方法
 * 【core   】     增加NanoId
 * 【core   】     MapBuilder增加put方法（pr#367@Gitee）
+* 【core   】     StrUtil.insert支持负数index
+* 【core   】     Calculator类支持取模运算（issue#I40DUW@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）
 * 【core   】     修复ClassScanner扫描空包遗漏问题
 * 【core   】     修复FastDatePrinter歧义问题（pr#366@Gitee）
 * 【core   】     修复DateUtil.format格式化Instant报错问题（issue#I40CY2@Gitee）
+* 【core   】     修复StrUtil.toUnderlineCase大写问题（issue#I40CGS@Gitee）
+* 【jwt    】     修复JWT.validate报错问题（issue#I40MR2@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

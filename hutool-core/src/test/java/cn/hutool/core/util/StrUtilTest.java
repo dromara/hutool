@@ -364,10 +364,17 @@ public class StrUtilTest {
 				.set("Table_Test_Of_day", "table_test_of_day")
 				.set("_Table_Test_Of_day_", "_table_test_of_day_")
 				.set("_Table_Test_Of_DAY_", "_table_test_of_DAY_")
-				.set("_TableTestOfDAYtoday", "_table_test_of_DAY_today")
+				.set("_TableTestOfDAYToday", "_table_test_of_DAY_today")
 				.set("HelloWorld_test", "hello_world_test")
 				.set("H2", "H2")
 				.set("H#case", "H#case")
+				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
+	}
+
+	@Test
+	public void toUnderLineCaseTest2() {
+		Dict.create()
+				.set("PNLabel", "PN_label")
 				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
 	}
 
