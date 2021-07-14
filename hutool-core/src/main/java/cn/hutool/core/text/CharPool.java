@@ -2,7 +2,7 @@ package cn.hutool.core.text;
 
 /**
  * 常用字符常量
- *
+ * @see StrPool
  * @author looly
  * @since 5.6.3
  */

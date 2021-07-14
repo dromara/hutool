@@ -373,7 +373,7 @@ public class LocalDateTimeUtil {
 	 * 格式化日期时间为指定格式
 	 *
 	 * @param date      {@link LocalDate}
-	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
+	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}; 常量如： {@link DatePattern#NORM_DATE_FORMATTER}, {@link DatePattern#NORM_DATETIME_FORMATTER}
 	 * @return 格式化后的字符串
 	 * @since 5.3.10
 	 */
@@ -385,7 +385,7 @@ public class LocalDateTimeUtil {
 	 * 格式化日期时间为指定格式
 	 *
 	 * @param date   {@link LocalDate}
-	 * @param format 日期格式，类似于yyyy-MM-dd
+	 * @param format 日期格式，类似于yyyy-MM-dd, 常量如 {@link DatePattern#NORM_DATE_PATTERN}, {@link DatePattern#NORM_DATETIME_PATTERN}
 	 * @return 格式化后的字符串
 	 * @since 5.3.10
 	 */
