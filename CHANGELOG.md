@@ -15,6 +15,7 @@
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）
 * 【core   】     修复ClassScanner扫描空包遗漏问题
 * 【core   】     修复FastDatePrinter歧义问题（pr#366@Gitee）
+* 【core   】     修复DateUtil.format格式化Instant报错问题（issue#I40CY2@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

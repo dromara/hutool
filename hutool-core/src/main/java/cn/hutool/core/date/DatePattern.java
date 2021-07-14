@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.FastDateFormat;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -39,7 +40,7 @@ public class DatePattern {
 	/**
 	 * 年月格式 {@link FastDateFormat}：yyyy-MM
 	 */
-	public static final DateTimeFormatter NORM_MONTH_FORMATTER = DateTimeFormatter.ofPattern(NORM_MONTH_PATTERN);
+	public static final DateTimeFormatter NORM_MONTH_FORMATTER = createFormatter(NORM_MONTH_PATTERN);
 
 	/**
 	 * 简单年月格式：yyyyMM
@@ -52,7 +53,7 @@ public class DatePattern {
 	/**
 	 * 简单年月格式 {@link FastDateFormat}：yyyyMM
 	 */
-	public static final DateTimeFormatter SIMPLE_MONTH_FORMATTER = DateTimeFormatter.ofPattern(SIMPLE_MONTH_PATTERN);
+	public static final DateTimeFormatter SIMPLE_MONTH_FORMATTER = createFormatter(SIMPLE_MONTH_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyy-MM-dd
@@ -65,7 +66,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd
 	 */
-	public static final DateTimeFormatter NORM_DATE_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATE_PATTERN);
+	public static final DateTimeFormatter NORM_DATE_FORMATTER = createFormatter(NORM_DATE_PATTERN);
 
 	/**
 	 * 标准时间格式：HH:mm:ss
@@ -78,7 +79,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：HH:mm:ss
 	 */
-	public static final DateTimeFormatter NORM_TIME_FORMATTER = DateTimeFormatter.ofPattern(NORM_TIME_PATTERN);
+	public static final DateTimeFormatter NORM_TIME_FORMATTER = createFormatter(NORM_TIME_PATTERN);
 
 	/**
 	 * 标准日期时间格式，精确到分：yyyy-MM-dd HH:mm
@@ -91,7 +92,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd HH:mm
 	 */
-	public static final DateTimeFormatter NORM_DATETIME_MINUTE_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATETIME_MINUTE_PATTERN);
+	public static final DateTimeFormatter NORM_DATETIME_MINUTE_FORMATTER = createFormatter(NORM_DATETIME_MINUTE_PATTERN);
 
 	/**
 	 * 标准日期时间格式，精确到秒：yyyy-MM-dd HH:mm:ss
@@ -104,7 +105,7 @@ public class DatePattern {
 	/**
 	 * 标准日期时间格式，精确到秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss
 	 */
-	public static final DateTimeFormatter NORM_DATETIME_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN);
+	public static final DateTimeFormatter NORM_DATETIME_FORMATTER = createFormatter(NORM_DATETIME_PATTERN);
 
 	/**
 	 * 标准日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss.SSS
@@ -117,7 +118,7 @@ public class DatePattern {
 	/**
 	 * 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSS
 	 */
-	public static final DateTimeFormatter NORM_DATETIME_MS_FORMATTER = DateTimeFormatter.ofPattern(NORM_DATETIME_MS_PATTERN);
+	public static final DateTimeFormatter NORM_DATETIME_MS_FORMATTER = createFormatter(NORM_DATETIME_MS_PATTERN);
 
 	/**
 	 * ISO8601日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss,SSS
@@ -130,7 +131,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss,SSS
 	 */
-	public static final DateTimeFormatter ISO8601_FORMATTER = DateTimeFormatter.ofPattern(ISO8601_PATTERN);
+	public static final DateTimeFormatter ISO8601_FORMATTER = createFormatter(ISO8601_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyy年MM月dd日
@@ -143,7 +144,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日
 	 */
-	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = DateTimeFormatter.ofPattern(ISO8601_PATTERN);
+	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(ISO8601_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyy年MM月dd日 HH时mm分ss秒
@@ -156,7 +157,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日HH时mm分ss秒
 	 */
-	public static final DateTimeFormatter CHINESE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(CHINESE_DATE_TIME_PATTERN);
+	public static final DateTimeFormatter CHINESE_DATE_TIME_FORMATTER = createFormatter(CHINESE_DATE_TIME_PATTERN);
 
 	//-------------------------------------------------------------------------------------------------------------------------------- Pure
 	/**
@@ -170,7 +171,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyyMMdd
 	 */
-	public static final DateTimeFormatter PURE_DATE_FORMATTER = DateTimeFormatter.ofPattern(PURE_DATE_PATTERN);
+	public static final DateTimeFormatter PURE_DATE_FORMATTER = createFormatter(PURE_DATE_PATTERN);
 
 	/**
 	 * 标准日期格式：HHmmss
@@ -183,7 +184,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：HHmmss
 	 */
-	public static final DateTimeFormatter PURE_TIME_FORMATTER = DateTimeFormatter.ofPattern(PURE_TIME_PATTERN);
+	public static final DateTimeFormatter PURE_TIME_FORMATTER = createFormatter(PURE_TIME_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyyMMddHHmmss
@@ -196,7 +197,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmss
 	 */
-	public static final DateTimeFormatter PURE_DATETIME_FORMATTER = DateTimeFormatter.ofPattern(PURE_DATETIME_PATTERN);
+	public static final DateTimeFormatter PURE_DATETIME_FORMATTER = createFormatter(PURE_DATETIME_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyyMMddHHmmssSSS
@@ -209,7 +210,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmssSSS
 	 */
-	public static final DateTimeFormatter PURE_DATETIME_MS_FORMATTER = DateTimeFormatter.ofPattern(PURE_DATETIME_MS_PATTERN);
+	public static final DateTimeFormatter PURE_DATETIME_MS_FORMATTER = createFormatter(PURE_DATETIME_MS_PATTERN);
 
 	//-------------------------------------------------------------------------------------------------------------------------------- Others
 	/**
@@ -283,4 +284,16 @@ public class DatePattern {
 	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssZ
 	 */
 	public static final FastDateFormat UTC_MS_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
+
+	/**
+	 * 创建并为 {@link DateTimeFormatter} 赋予默认时区和位置信息，默认值为系统默认值。
+	 *
+	 * @param pattern 日期格式
+	 * @return {@link DateTimeFormatter}
+	 * @since 5.7.5
+	 */
+	private static DateTimeFormatter createFormatter(String pattern) {
+		return DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
+				.withZone(ZoneId.systemDefault());
+	}
 }

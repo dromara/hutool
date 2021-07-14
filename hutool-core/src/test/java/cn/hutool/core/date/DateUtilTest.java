@@ -893,4 +893,14 @@ public class DateUtilTest {
 		// 在日期格式不匹配的时候，测试是否正常报错
 		DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
 	}
+
+	@Test
+	public void formatNormDateTimeFormatterTest(){
+		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DatePattern.NORM_DATETIME_FORMATTER);
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+
+		format = DateUtil.format(LocalDateTimeUtil.parse("2021-07-14T10:05:38"),
+				"yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+	}
 }

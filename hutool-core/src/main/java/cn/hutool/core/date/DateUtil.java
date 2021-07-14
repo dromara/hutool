@@ -541,7 +541,7 @@ public class DateUtil extends CalendarUtil {
 		if (null == format || null == date) {
 			return null;
 		}
-		return format.format(date.toInstant());
+		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}
 
 	/**

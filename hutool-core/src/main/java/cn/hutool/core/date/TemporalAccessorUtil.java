@@ -56,7 +56,6 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 		}
 
-
 		try {
 			return formatter.format(time);
 		} catch (UnsupportedTemporalTypeException e){
@@ -66,6 +65,9 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			}else if(time instanceof LocalTime && e.getMessage().contains("YearOfEra")){
 				// 用户传入LocalTime，但是要求格式化带有日期部分，转换为LocalDateTime重试
 				return formatter.format(((LocalTime) time).atDate(LocalDate.now()));
+			} else if(time instanceof Instant){
+				// 时间戳没有时区信息，赋予默认时区
+				return formatter.format(((Instant) time).atZone(ZoneId.systemDefault()));
 			}
 			throw e;
 		}
