@@ -23,7 +23,6 @@ public class MapBuilderTest {
 	}
 
 	public String getValue(int value) {
-		System.out.println("getValue: " + value);
 		return String.valueOf(value);
 	}
 }
