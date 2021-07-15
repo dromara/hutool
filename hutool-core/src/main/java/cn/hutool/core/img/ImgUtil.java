@@ -1544,6 +1544,7 @@ public class ImgUtil {
 	 * @since 3.1.0
 	 */
 	public static void write(Image image, File targetFile) throws IORuntimeException {
+		FileUtil.touch(targetFile);
 		ImageOutputStream out = null;
 		try {
 			out = getImageOutputStream(targetFile);

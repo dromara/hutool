@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -542,8 +541,8 @@ public class DateUtil extends CalendarUtil {
 		if (null == format || null == date) {
 			return null;
 		}
-		/// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
-		/// return format.format(date.toInstant());
+		// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
+		// 出现以上报错时，表示Instant时间戳没有时区信息，赋予默认时区
 		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}
 

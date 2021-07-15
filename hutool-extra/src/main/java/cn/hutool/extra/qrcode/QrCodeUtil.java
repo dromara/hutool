@@ -27,9 +27,12 @@ import java.io.OutputStream;
 import java.util.HashMap;
 
 /**
- * 基于Zxing的二维码工具类
- * 参见二维码网站：
- * <p>https://cli.im/text</p>
+ * 基于Zxing的二维码工具类，支持：
+ * <ul>
+ *     <li>二维码生成和识别，见{@link BarcodeFormat#QR_CODE}</li>
+ *     <li>条形码生成和识别，见{@link BarcodeFormat#CODE_39}等很多标准格式</li>
+ * </ul>
+ *
  * @author looly
  * @since 4.0.2
  */
@@ -79,7 +82,7 @@ public class QrCodeUtil {
 	 * 生成 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * <p>
-	 *     输出格式为: data:image/[type];base64,[data]
+	 * 输出格式为: data:image/[type];base64,[data]
 	 * </p>
 	 *
 	 * @param content   内容
