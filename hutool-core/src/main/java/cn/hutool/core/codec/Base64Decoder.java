@@ -1,10 +1,10 @@
 package cn.hutool.core.codec;
 
-import java.nio.charset.Charset;
-
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.nio.charset.Charset;
 
 /**
  * Base64解码实现
@@ -128,6 +128,17 @@ public class Base64Decoder {
 			// 如果有非Base64字符混入，则实际结果比解析的要短，截取之
 			return (byte[]) ArrayUtil.copy(octet, new byte[octetId], octetId);
 		}
+	}
+
+	/**
+	 * 给定的字符是否为Base64字符
+	 *
+	 * @param octet 被检查的字符
+	 * @return 是否为Base64字符
+	 * @since 5.7.5
+	 */
+	public static boolean isBase64Code(byte octet) {
+		return octet == '=' || (octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1);
 	}
 
 	// ----------------------------------------------------------------------------------------------- Private start

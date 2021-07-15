@@ -12,6 +12,7 @@
 * 【core   】     MapBuilder增加put方法（pr#367@Gitee）
 * 【core   】     StrUtil.insert支持负数index
 * 【core   】     Calculator类支持取模运算（issue#I40DUW@Gitee）
+* 【core   】     增加Base64.isBase64方法（issue#1710@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）

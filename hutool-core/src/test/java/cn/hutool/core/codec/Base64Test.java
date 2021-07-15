@@ -1,6 +1,7 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +13,11 @@ import org.junit.Test;
  *
  */
 public class Base64Test {
+
+	@Test
+	public void isBase64Test(){
+		Assert.assertTrue(Base64.isBase64(Base64.encode(RandomUtil.randomString(100))));
+	}
 
 	@Test
 	public void encodeAndDecodeTest() {
