@@ -7,6 +7,8 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void formatTest() {
+		String f0 = NumberChineseFormatter.format(50008000, false);
+		Assert.assertEquals("五千万零八千", f0);
 		String f1 = NumberChineseFormatter.format(10889.72356, false);
 		Assert.assertEquals("一万零八百八十九点七二", f1);
 		f1 = NumberChineseFormatter.format(12653, false);

@@ -28,7 +28,8 @@ import java.util.HashMap;
 
 /**
  * 基于Zxing的二维码工具类
- *
+ * 参见二维码网站：
+ * <p>https://cli.im/text</p>
  * @author looly
  * @since 4.0.2
  */

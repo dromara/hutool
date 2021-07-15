@@ -13,14 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.GregorianCalendar;
 
 /**
  * 时间工具单元测试<br>
@@ -892,6 +893,17 @@ public class DateUtilTest {
 		//https://github.com/looly/hutool/issues/1332
 		// 在日期格式不匹配的时候，测试是否正常报错
 		DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+	}
+
+	@Test
+	public void formatTest(){
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(2021, Calendar.JULY, 14, 23, 59, 59);
+		Date date = new DateTime(calendar);
+
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMATTER));
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMAT));
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN));
 	}
 
 	@Test

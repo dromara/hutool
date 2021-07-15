@@ -4266,7 +4266,7 @@ public class CharSequenceUtil {
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
-	 * @param conjunction 分隔符
+	 * @param conjunction 分隔符 {@link StrPool#COMMA}
 	 * @param objs        数组
 	 * @return 连接后的字符串
 	 * @see ArrayUtil#join(Object, CharSequence)
@@ -4278,8 +4278,8 @@ public class CharSequenceUtil {
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
-	 * @param <T>         元素类型
-	 * @param conjunction 分隔符
+	 * @param <T> 元素类型
+	 * @param conjunction 分隔符 {@link StrPool#COMMA}
 	 * @param iterable    集合
 	 * @return 连接后的字符串
 	 * @see CollUtil#join(Iterable, CharSequence)
@@ -4301,7 +4301,7 @@ public class CharSequenceUtil {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
-		for (int i = value.length(); --i >= 0; ) {
+		for (int i = value.length(); --i >= 0;) {
 			if (false == matcher.match(value.charAt(i))) {
 				return false;
 			}

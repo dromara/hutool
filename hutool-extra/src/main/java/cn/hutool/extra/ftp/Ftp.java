@@ -26,6 +26,10 @@ import java.util.List;
  * FTP客户端封装<br>
  * 此客户端基于Apache-Commons-Net
  *
+ * 常见搭建ftp的工具有
+ * 1、filezila server ;根目录一般都是空
+ * 2、linux vsftpd ; 使用的 系统用户的目录，这里往往都是不是根目录，如：/home/ftpuser/ftp
+ *
  * @author looly
  * @since 4.1.8
  */

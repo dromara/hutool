@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -481,7 +482,7 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format 日期格式，常用格式见： {@link DatePattern}
+	 * @param format 日期格式，常用格式见： {@link DatePattern} {@link DatePattern#NORM_DATETIME_PATTERN}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
@@ -505,7 +506,7 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link DatePrinter} 或 {@link FastDateFormat}
+	 * @param format {@link DatePrinter} 或 {@link FastDateFormat} {@link DatePattern#NORM_DATETIME_FORMAT}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DatePrinter format) {
@@ -533,7 +534,7 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link SimpleDateFormat}
+	 * @param format {@link SimpleDateFormat} {@link DatePattern#NORM_DATETIME_FORMATTER}
 	 * @return 格式化后的字符串
 	 * @since 5.0.0
 	 */
@@ -541,6 +542,8 @@ public class DateUtil extends CalendarUtil {
 		if (null == format || null == date) {
 			return null;
 		}
+		/// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
+		/// return format.format(date.toInstant());
 		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}
 
