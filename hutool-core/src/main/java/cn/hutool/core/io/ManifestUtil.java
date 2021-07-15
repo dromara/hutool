@@ -1,8 +1,13 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.ClassUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -16,6 +21,34 @@ import java.util.jar.Manifest;
 public class ManifestUtil {
 	private static final String[] MANIFEST_NAMES = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
+	/**
+	 * 根据 class 获取 jar 包文件的 Manifest
+	 *
+	 * @param cls 类
+	 * @return Manifest
+	 */
+	public static Manifest getManifest(Class<?> cls) throws IOException {
+		URL url = ClassUtil.getResourceUrl("", cls);
+		JarFile jarFile = null;
+		try {
+			URLConnection connection = url.openConnection();
+			if (connection instanceof JarURLConnection) {
+				JarURLConnection urlConnection = (JarURLConnection) connection;
+				jarFile = urlConnection.getJarFile();
+				return jarFile.getManifest();
+			}
+		} finally {
+			IoUtil.close(jarFile);
+		}
+		return null;
+	}
+
+	/**
+	 * 获取 jar 包文件的 Manifest
+	 *
+	 * @param classpathItem 文件路径
+	 * @return Manifest
+	 */
 	public static Manifest getManifest(File classpathItem) {
 		Manifest manifest = null;
 
@@ -46,8 +79,7 @@ public class ManifestUtil {
 					fis = new FileInputStream(manifestFile);
 					manifest = new Manifest(fis);
 				} catch (final IOException ignore) {
-				}
-				finally {
+				} finally {
 					IoUtil.close(fis);
 				}
 			}
