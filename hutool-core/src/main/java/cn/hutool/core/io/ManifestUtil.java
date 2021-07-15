@@ -1,6 +1,6 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,44 +22,45 @@ public class ManifestUtil {
 	private static final String[] MANIFEST_NAMES = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
 	/**
-	 * 根据 class 获取 jar 包文件的 Manifest
+	 * 根据 class 获取 所在 jar 包文件的 Manifest<br>
+	 * 此方法主要利用class定位jar包，如引入hutool-all，则传入hutool中任意一个类即可获取这个jar的Manifest信息<br>
+	 * 如果这个类不在jar包中，返回{@code null}
 	 *
 	 * @param cls 类
 	 * @return Manifest
+	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(Class<?> cls) throws IOException {
-		URL url = ClassUtil.getResourceUrl("", cls);
-		JarFile jarFile = null;
+	public static Manifest getManifest(Class<?> cls) throws IORuntimeException {
+		URL url = ResourceUtil.getResource(null, cls);
+		URLConnection connection;
 		try {
-			URLConnection connection = url.openConnection();
-			if (connection instanceof JarURLConnection) {
-				JarURLConnection urlConnection = (JarURLConnection) connection;
-				jarFile = urlConnection.getJarFile();
-				return jarFile.getManifest();
-			}
-		} finally {
-			IoUtil.close(jarFile);
+			connection = url.openConnection();
+		}catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		if (connection instanceof JarURLConnection) {
+			JarURLConnection conn = (JarURLConnection) connection;
+			return getManifest(conn);
 		}
 		return null;
 	}
 
 	/**
-	 * 获取 jar 包文件的 Manifest
+	 * 获取 jar 包文件或项目目录下的 Manifest
 	 *
 	 * @param classpathItem 文件路径
 	 * @return Manifest
+	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(File classpathItem) {
+	public static Manifest getManifest(File classpathItem) throws IORuntimeException{
 		Manifest manifest = null;
 
 		if (classpathItem.isFile()) {
-			JarFile jar = null;
-			try {
-				jar = new JarFile(classpathItem);
-				manifest = jar.getManifest();
-			} catch (final IOException ignore) {
-			} finally {
-				IoUtil.close(jar);
+			try (JarFile jarFile = new JarFile(classpathItem)){
+				manifest = getManifest(jarFile);
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
 			}
 		} else {
 			final File metaDir = new File(classpathItem, "META-INF");
@@ -73,18 +74,47 @@ public class ManifestUtil {
 					}
 				}
 			}
-			if (manifestFile != null) {
-				FileInputStream fis = null;
-				try {
-					fis = new FileInputStream(manifestFile);
+			if (null != manifestFile) {
+				try(FileInputStream fis = new FileInputStream(manifestFile)){
 					manifest = new Manifest(fis);
-				} catch (final IOException ignore) {
-				} finally {
-					IoUtil.close(fis);
+				} catch (final IOException e) {
+					throw new IORuntimeException(e);
 				}
 			}
 		}
 
 		return manifest;
+	}
+
+	/**
+	 * 根据 {@link JarURLConnection} 获取 jar 包文件的 Manifest
+	 *
+	 * @param connection {@link JarURLConnection}
+	 * @return Manifest
+	 * @throws IORuntimeException IO异常
+	 */
+	public static Manifest getManifest(JarURLConnection connection) throws IORuntimeException{
+		final JarFile jarFile;
+		try {
+			jarFile = connection.getJarFile();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return getManifest(jarFile);
+	}
+
+	/**
+	 * 根据 {@link JarURLConnection} 获取 jar 包文件的 Manifest
+	 *
+	 * @param jarFile {@link JarURLConnection}
+	 * @return Manifest
+	 * @throws IORuntimeException IO异常
+	 */
+	public static Manifest getManifest(JarFile jarFile) throws IORuntimeException {
+		try {
+			return jarFile.getManifest();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

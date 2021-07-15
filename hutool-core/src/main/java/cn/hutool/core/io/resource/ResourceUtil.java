@@ -174,11 +174,12 @@ public class ResourceUtil {
 	/**
 	 * 获得资源相对路径对应的URL
 	 *
-	 * @param resource 资源相对路径
+	 * @param resource 资源相对路径，{@code null}和""都表示classpath根路径
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
 	 */
 	public static URL getResource(String resource, Class<?> baseClass) {
+		resource = StrUtil.nullToEmpty(resource);
 		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
 	}
 
