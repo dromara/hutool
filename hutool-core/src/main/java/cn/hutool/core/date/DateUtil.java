@@ -883,7 +883,7 @@ public class DateUtil extends CalendarUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
 	 * </ol>
 	 *
-	 * @param dateCharSequence 日期字符串; 常量如 {@link DatePattern#NORM_DATE_PATTERN}, {@link DatePattern#NORM_DATETIME_PATTERN}
+	 * @param dateCharSequence 日期字符串
 	 * @return 日期
 	 */
 	public static DateTime parse(CharSequence dateCharSequence) {

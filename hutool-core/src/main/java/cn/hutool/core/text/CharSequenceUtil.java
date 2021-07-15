@@ -624,8 +624,8 @@ public class CharSequenceUtil {
 	/**
 	 * 按照断言，除去字符串头尾部的断言为真的字符，如果字符串是{@code null}，依然返回{@code null}。
 	 *
-	 * @param str  要处理的字符串
-	 * @param mode {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+	 * @param str       要处理的字符串
+	 * @param mode      {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
 	 * @param predicate 断言是否过掉字符，返回{@code true}表述过滤掉，{@code false}表示不过滤
 	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
 	 * @since 5.7.4
@@ -4033,39 +4033,45 @@ public class CharSequenceUtil {
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);
-			final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
 			if (Character.isUpperCase(c)) {
-				// 遇到大写字母处理
+				final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
 				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
-				if (null != preChar && Character.isUpperCase(preChar)) {
-					// 前一个字符为大写，则按照一个词对待，例如AB
-					sb.append(c);
-				} else if (null != nextChar && (false == Character.isLowerCase(nextChar))) {
-					// 后一个为非小写字母，按照一个词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个是非大写时按照新词对待，加连接符，例如xAB
+
+				if (null != preChar) {
+					if (symbol == preChar) {
+						// 前一个为分隔符
+						if (null == nextChar || Character.isLowerCase(nextChar)) {
+							//普通首字母大写，如_Abb -> _abb
+							c = Character.toLowerCase(c);
+						}
+						//后一个为大写，按照专有名词对待，如_AB -> _AB
+					} else if (Character.isLowerCase(preChar)) {
+						// 前一个为小写
 						sb.append(symbol);
+						if (null == nextChar || Character.isLowerCase(nextChar)) {
+							//普通首字母大写，如aBcc -> a_bcc
+							c = Character.toLowerCase(c);
+						}
+						// 后一个为大写，按照专有名词对待，如aBC -> a_BC
+					} else {
+						//前一个为大写
+						if (null == nextChar || Character.isLowerCase(nextChar)) {
+							// 普通首字母大写，如ABcc -> A_bcc
+							sb.append(symbol);
+							c = Character.toLowerCase(c);
+						}
+						// 后一个为大写，按照专有名词对待，如ABC -> ABC
 					}
-					sb.append(c);
 				} else {
-					// 前后都为非大写按照新词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个非连接符，补充连接符
-						sb.append(symbol);
+					// 首字母，需要根据后一个判断是否转为小写
+					if (null == nextChar || Character.isLowerCase(nextChar)) {
+						// 普通首字母大写，如Abc -> abc
+						c = Character.toLowerCase(c);
 					}
-					sb.append(Character.toLowerCase(c));
+					// 后一个为大写，按照专有名词对待，如ABC -> ABC
 				}
-			} else {
-				if (symbol != c
-						&& sb.length() > 0
-						&& Character.isUpperCase(sb.charAt(-1))
-						&& Character.isLowerCase(c)) {
-					// 当结果中前一个字母为大写，当前为小写(非数字或字符)，说明此字符为新词开始（连接符也表示新词）
-					sb.append(symbol);
-				}
-				// 小写或符号
-				sb.append(c);
 			}
+			sb.append(c);
 		}
 		return sb.toString();
 	}
