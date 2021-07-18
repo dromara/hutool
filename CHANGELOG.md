@@ -15,6 +15,7 @@
 * 【core   】     增加Base64.isBase64方法（issue#1710@Github）
 * 【core   】     ManifestUtil新增方法getManifest(Class<?> cls)（pr#370@Gitee）
 * 【extra  】     AbstractFtp增加isDir方法（issue#1716@Github）
+* 【core   】     修改FileUtil异常信息内容（pr#1713@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）
