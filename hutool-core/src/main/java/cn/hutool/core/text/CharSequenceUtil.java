@@ -4245,22 +4245,42 @@ public class CharSequenceUtil {
 	/**
 	 * 将给定字符串，变成 "xxx...xxx" 形式的字符串
 	 *
+	 * <ul>
+	 *     <li>abcdef 5 -》 a...f</li>
+	 *     <li>abcdef 4 -》 a..f</li>
+	 *     <li>abcdef 3 -》 a.f</li>
+	 *     <li>abcdef 2 -》 a.</li>
+	 *     <li>abcdef 1 -》 a</li>
+	 * </ul>
+	 *
 	 * @param str       字符串
-	 * @param maxLength 最大长度
+	 * @param maxLength 结果的最大长度
 	 * @return 截取后的字符串
 	 */
 	public static String brief(CharSequence str, int maxLength) {
 		if (null == str) {
 			return null;
 		}
-		if (maxLength <= 0 || str.length() <= maxLength) {
+		final int strLength = str.length();
+		if (maxLength <= 0 || strLength <= maxLength) {
 			return str.toString();
 		}
-		int w = maxLength / 2;
-		int l = str.length() + 3;
 
+		// since 5.7.5，特殊长度
+		switch (maxLength){
+			case 1:
+				return String.valueOf(str.charAt(0));
+			case 2:
+				return str.charAt(0) + ".";
+			case 3:
+				return str.charAt(0) + "." + str.charAt(str.length() - 1);
+		}
+
+		final int w = maxLength / 2;
 		final String str2 = str.toString();
-		return format("{}...{}", str2.substring(0, maxLength - w), str2.substring(l - w));
+		return format("{}...{}",
+				str2.substring(0, maxLength - w),
+				str2.substring(strLength - w + 3));
 	}
 
 	/**

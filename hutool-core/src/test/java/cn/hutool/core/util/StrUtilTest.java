@@ -483,6 +483,38 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void briefTest2() {
+		String str = "123";
+		int maxLength = 3;
+		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("123", brief);
+
+		maxLength = 2;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.", brief);
+
+		maxLength = 1;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1", brief);
+	}
+
+	@Test
+	public void briefTest3() {
+		String str = "123abc";
+		int maxLength = 3;
+		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.c", brief);
+
+		maxLength = 2;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.", brief);
+
+		maxLength = 1;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1", brief);
+	}
+
+	@Test
 	public void filterTest() {
 		final String filterNumber = StrUtil.filter("hutool678", CharUtil::isNumber);
 		Assert.assertEquals("678", filterNumber);
