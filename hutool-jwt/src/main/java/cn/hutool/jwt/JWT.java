@@ -341,6 +341,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *     <li>{@link JWTPayload#ISSUED_AT}： 签发时间不能晚于当前时间</li>
 	 * </ul>
 	 *
+	 * @param leeway 容忍空间，单位：秒。当不能晚于当前时间时，向后容忍；不能早于向前容忍。
 	 * @return 是否有效
 	 * @see JWTValidator
 	 * @since 5.7.4

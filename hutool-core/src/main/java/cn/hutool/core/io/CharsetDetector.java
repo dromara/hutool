@@ -83,25 +83,6 @@ public class CharsetDetector {
 	}
 
 	/**
-	 * 判断编码，判断后会关闭流
-	 *
-	 * @param in      流
-	 * @param charset 编码
-	 * @return 编码
-	 */
-	private static Charset detectCharset(InputStream in, Charset charset) throws IOException {
-		CharsetDecoder decoder = charset.newDecoder();
-
-		final byte[] buffer = new byte[512];
-		while (in.read(buffer) > -1) {
-			if (identify(buffer, decoder)) {
-				return charset;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * 通过try的方式测试指定bytes是否可以被解码，从而判断是否为指定编码
 	 *
 	 * @param bytes   测试的bytes
