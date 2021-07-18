@@ -348,7 +348,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.6
 	 */
 	public static File file(File directory, String... names) {
-		Assert.notNull(directory, "directorydirectory must not be null");
+		Assert.notNull(directory, "directory must not be null");
 		if (ArrayUtil.isEmpty(names)) {
 			return directory;
 		}
