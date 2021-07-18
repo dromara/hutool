@@ -2163,7 +2163,8 @@ public class NumberUtil {
 		} catch (Exception ignore) {
 			// 忽略解析错误
 		}
-		return StrUtil.isBlank(number) ? BigDecimal.ZERO : new BigDecimal(number);
+		return StrUtil.isBlank(number) ? BigDecimal.ZERO : new
+				BigDecimal(number);
 	}
 
 	/**

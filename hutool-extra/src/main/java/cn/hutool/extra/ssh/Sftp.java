@@ -12,6 +12,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
@@ -318,12 +319,27 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public boolean mkdir(String dir) {
+		if(isDir(dir)){
+			// 目录已经存在，创建直接返回
+			return true;
+		}
 		try {
 			this.channel.mkdir(dir);
 			return true;
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isDir(String dir){
+		final SftpATTRS sftpATTRS;
+		try {
+			sftpATTRS = this.channel.stat(dir);
+		} catch (SftpException e) {
+			throw new FtpException(e);
+		}
+		return sftpATTRS.isDir();
 	}
 
 	/**

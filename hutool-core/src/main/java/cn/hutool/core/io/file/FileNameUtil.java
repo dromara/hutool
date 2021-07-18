@@ -57,7 +57,11 @@ public class FileNameUtil {
 	}
 
 	/**
-	 * 返回文件名
+	 * 返回文件名<br>
+	 * <pre>
+	 * "d:/test/aaa" 返回 "aaa"
+	 * "/test/aaa.jpg" 返回 "aaa.jpg"
+	 * </pre>
 	 *
 	 * @param filePath 文件
 	 * @return 文件名

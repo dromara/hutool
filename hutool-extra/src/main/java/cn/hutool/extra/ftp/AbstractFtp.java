@@ -66,6 +66,17 @@ public abstract class AbstractFtp implements Closeable {
 	public abstract String pwd();
 
 	/**
+	 * 判断给定路径是否为目录
+	 *
+	 * @param dir 被判断的路径
+	 * @return 是否为目录
+	 * @since 5.7.5
+	 */
+	public boolean isDir(String dir) {
+		return cd(dir);
+	}
+
+	/**
 	 * 在当前远程目录（工作目录）下创建新的目录
 	 *
 	 * @param dir 目录名
@@ -83,9 +94,9 @@ public abstract class AbstractFtp implements Closeable {
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		final List<String> names;
-		try{
+		try {
 			names = ls(dir);
-		} catch (FtpException ignore){
+		} catch (FtpException ignore) {
 			return false;
 		}
 		return containsIgnoreCase(names, fileName);
@@ -131,14 +142,14 @@ public abstract class AbstractFtp implements Closeable {
 		for (String s : dirs) {
 			if (StrUtil.isNotEmpty(s)) {
 				boolean exist = true;
-				try{
+				try {
 					if (false == cd(s)) {
 						exist = false;
 					}
-				} catch (FtpException e){
+				} catch (FtpException e) {
 					exist = false;
 				}
-				if(false == exist){
+				if (false == exist) {
 					//目录不存在时创建
 					mkdir(s);
 					cd(s);
