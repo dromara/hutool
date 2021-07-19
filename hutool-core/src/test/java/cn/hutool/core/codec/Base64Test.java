@@ -16,7 +16,19 @@ public class Base64Test {
 
 	@Test
 	public void isBase64Test(){
-		Assert.assertTrue(Base64.isBase64(Base64.encode(RandomUtil.randomString(100))));
+		Assert.assertTrue(Base64.isBase64(Base64.encode(RandomUtil.randomString(1000))));
+	}
+
+	@Test
+	public void isBase64Test2(){
+		String base64 = "dW1kb3MzejR3bmljM2J6djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
+				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ==";
+		Assert.assertTrue(Base64.isBase64(base64));
+
+		// '=' 不位于末尾
+		base64 = "dW1kb3MzejR3bmljM2J6=djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
+				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ=";
+		Assert.assertFalse(Base64.isBase64(base64));
 	}
 
 	@Test

@@ -322,7 +322,7 @@ public class Base64 {
 	 * @return 是否为Base64
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64(String base64){
+	public static boolean isBase64(CharSequence base64){
 		return isBase64(StrUtil.utf8Bytes(base64));
 	}
 
@@ -334,7 +334,17 @@ public class Base64 {
 	 * @since 5.7.5
 	 */
 	public static boolean isBase64(byte[] base64Bytes){
+		boolean hasPadding = false;
 		for (byte base64Byte : base64Bytes) {
+			if(hasPadding){
+				if('=' != base64Byte){
+					// 前一个字符是'='，则后边的字符都必须是'='，即'='只能都位于结尾
+					return false;
+				}
+			} else if('=' == base64Byte){
+				// 发现'=' 标记之
+				hasPadding = true;
+			}
 			if (false == (Base64Decoder.isBase64Code(base64Byte) || isWhiteSpace(base64Byte))) {
 				return false;
 			}
