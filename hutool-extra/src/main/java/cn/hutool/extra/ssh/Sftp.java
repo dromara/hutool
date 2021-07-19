@@ -430,7 +430,7 @@ public class Sftp extends AbstractFtp {
 	 * @param file       文件或者文件夹
 	 * @param remotePath 远程路径
 	 */
-	public void syncPath(File file, String remotePath) {
+	public void syncUpload(File file, String remotePath) {
 		if (!FileUtil.exist(file)) {
 			return;
 		}
@@ -442,9 +442,9 @@ public class Sftp extends AbstractFtp {
 			for (File fileItem : files) {
 				if (fileItem.isDirectory()) {
 					String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
-					this.syncPath(fileItem, mkdir);
+					this.syncUpload(fileItem, mkdir);
 				} else {
-					this.syncPath(fileItem, remotePath);
+					this.syncUpload(fileItem, remotePath);
 				}
 			}
 		} else {
