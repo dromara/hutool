@@ -40,6 +40,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -686,9 +687,15 @@ public class FileUtil extends PathUtil {
 	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作
 	 *
+	 * <p>
+	 *     从5.7.6开始，删除文件使用{@link Files#delete(Path)}代替 {@link File#delete()}<br>
+	 *     因为前者遇到文件被占用等原因时，抛出异常，而非返回false，异常会指明具体的失败原因。
+	 * </p>
+	 *
 	 * @param file 文件对象
 	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
+	 * @see Files#delete(Path)
 	 */
 	public static boolean del(File file) throws IORuntimeException {
 		if (file == null || false == file.exists()) {
@@ -705,7 +712,13 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 删除文件或清空后的目录
-		return file.delete();
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return true;
 	}
 
 	/**

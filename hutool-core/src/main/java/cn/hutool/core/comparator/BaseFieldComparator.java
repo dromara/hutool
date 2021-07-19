@@ -12,21 +12,19 @@ import java.util.Comparator;
  * 参阅feilong-core中的PropertyComparator
  *
  * @param <T> 被比较的Bean
- * @author Looly
+ * @author jiangzeyin
  */
 public abstract class BaseFieldComparator<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = -3482464782340308755L;
 
 	/**
-	 * 比较器方法
+	 * 比较两个对象的同一个字段值
 	 *
-	 * @param o1 对象1
-	 * @param o2 对象2
-	 * @return -1 0 1
+	 * @param o1    对象1
+	 * @param o2    对象2
+	 * @param field 字段
+	 * @return 比较结果
 	 */
-	@Override
-	public abstract int compare(T o1, T o2);
-
 	protected int compareItem(T o1, T o2, Field field) {
 		if (o1 == o2) {
 			return 0;

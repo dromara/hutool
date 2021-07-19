@@ -30,6 +30,15 @@ public class FieldComparator<T> extends BaseFieldComparator<T> {
 		}
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param field 字段
+	 */
+	public FieldComparator(Field field) {
+		this.field = field;
+	}
+
 	@Override
 	public int compare(T o1, T o2) {
 		return compareItem(o1, o2, this.field);

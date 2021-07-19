@@ -6,6 +6,8 @@
 # 5.7.6 (2021-07-19)
 
 ### 🐣新特性
+* 【core   】     增加FieldsComparator（pr#374@Gitee）
+* 【core   】     FileUtil.del采用Files.delete实现
 
 ### 🐞Bug修复
 
