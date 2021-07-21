@@ -1382,6 +1382,7 @@ public class FileUtil extends PathUtil {
 	 * @param file           文件对象
 	 * @param lastModifyTime 上次的改动时间
 	 * @return 是否被改动
+	 * @deprecated 拼写错误，请使用{@link #isModified(File, long)}
 	 */
 	@Deprecated
 	public static boolean isModifed(File file, long lastModifyTime) {

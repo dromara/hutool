@@ -17,7 +17,6 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -429,9 +428,10 @@ public class Sftp extends AbstractFtp {
 	 *
 	 * @param file       文件或者文件夹
 	 * @param remotePath 远程路径
+	 * @since 5.7.6
 	 */
 	public void syncUpload(File file, String remotePath) {
-		if (!FileUtil.exist(file)) {
+		if (false == FileUtil.exist(file)) {
 			return;
 		}
 		if (file.isDirectory()) {
