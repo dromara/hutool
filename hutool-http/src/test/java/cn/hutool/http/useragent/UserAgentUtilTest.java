@@ -291,15 +291,44 @@ public class UserAgentUtilTest {
 
 	@Test
 	public void parseUCTest() {
-		String uaString = "Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; FRD-AL00 Build/HUAWEIFRD-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/40.0.2214.89 UCBrowser/11.3.8.909 UWS/2.10.2.5 Mobile Safari/537.36 UCBS/2.10.2.5 Nebula AlipayDefined(nt:WIFI,ws:360|0|3.0) AliApp(AP/10.0.18.062203) AlipayClient/10.0.18.062203 Language/zh-Hans useStatusBar/true";
+		String uaString = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 UBrowser/4.0.3214.0 Safari/537.36";
 		UserAgent ua = UserAgentUtil.parse(uaString);
 		Assert.assertEquals("UCBrowser", ua.getBrowser().toString());
-		Assert.assertEquals("11.3.8.909", ua.getVersion());
+		Assert.assertEquals("4.0.3214.0", ua.getVersion());
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Android", ua.getOs().toString());
-		Assert.assertEquals("7.0", ua.getOsVersion());
-		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+		Assert.assertEquals("6.1", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
+
+	@Test
+	public void parseUCTest2() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X; zh-CN) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/16G102 UCBrowser/12.7.6.1251 Mobile AliApp(TUnionSDK/0.1.20.3)";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("UCBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("12.7.6.1251", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.51.1", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("12_4_1", ua.getOsVersion());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
+
+	@Test
+	public void parseQuarkTest() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X; zh-cn) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/16G102 Quark/3.6.2.993 Mobile";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Quark", ua.getBrowser().toString());
+		Assert.assertEquals("3.6.2.993", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("601.1.46", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("12_4_1", ua.getOsVersion());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
 }

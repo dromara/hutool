@@ -44,7 +44,9 @@ public class Browser extends UserAgentInfo {
 			// 淘宝内置浏览器
 			new Browser("Taobao", "taobao", "AliApp\\(TB\\/([\\d\\w\\.\\-]+)\\)"),
 			// UC浏览器
-			new Browser("UCBrowser", "UCBrowser", "UCBrowser\\/([\\d\\w\\.\\-]+)"),
+			new Browser("UCBrowser", "UC?Browser", "UC?Browser\\/([\\d\\w\\.\\-]+)"),
+			// 夸克浏览器
+			new Browser("Quark", "Quark", "Quark\\/([\\d\\w\\.\\-]+)"),
 
 			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"),
