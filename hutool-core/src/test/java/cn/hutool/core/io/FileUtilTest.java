@@ -370,17 +370,21 @@ public class FileUtilTest {
 
 	@Test
 	public void extNameTest() {
-		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
+		String path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
 		String mainName = FileUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
-		path = "d:\\aaa\\bbb\\cc\\ddd";
+		path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
-		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/hutool/ddd.jpg";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("jpg", mainName);
+
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/hutool/fff.xlsx";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("xlsx", mainName);
 	}
 
 	@Test
