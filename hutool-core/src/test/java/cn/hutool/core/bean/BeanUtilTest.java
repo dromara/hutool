@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -678,5 +679,25 @@ public class BeanUtilTest {
 		String childAddress;
 		String childMotherName;
 		String childFatherName;
+	}
+
+	@Test
+	public void issueI41WKPTest(){
+		Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
+		Test2 t2_hu = new Test2();
+		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
+		Assert.assertNull(t2_hu.getStrList());
+	}
+
+	@Data
+	@Accessors(chain = true)
+	public static class Test1 {
+		private List<String> strList;
+	}
+
+	@Data
+	@Accessors(chain = true)
+	public static class Test2 {
+		private List<Integer> strList;
 	}
 }

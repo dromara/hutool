@@ -180,11 +180,10 @@ public class PropDesc {
 		}
 
 		if (null != result && null != targetType) {
-			// 尝试将结果转换为目标类型，如果转换失败，返回原类型。
-			final Object convertValue = Convert.convertWithCheck(targetType, result, null, ignoreError);
-			if (null != convertValue) {
-				result = convertValue;
-			}
+			// 尝试将结果转换为目标类型，如果转换失败，返回null，即跳过此属性值。
+			// 来自：issues#I41WKP@Gitee，当忽略错误情况下，目标类型转换失败应返回null
+			// 如果返回原值，在集合注入时会成功，但是集合取值时会报类型转换错误
+			return Convert.convertWithCheck(targetType, result, null, ignoreError);
 		}
 		return result;
 	}

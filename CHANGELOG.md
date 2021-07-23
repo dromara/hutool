@@ -17,6 +17,7 @@
 * 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）
 * 【core   】     修复FileTypeUtil判断wps修改过的xlsx误判为jar的问题（pr#380@Gitee）
 * 【core   】     修复Sftp.isDir异常bug（pr#378@Gitee）
+* 【core   】     修复BeanUtil.copyProperties集合元素复制成功，读取失败的问题（issue#I41WKP@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
