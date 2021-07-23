@@ -72,8 +72,8 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void rightClick() {
-		ROBOT.mousePress(InputEvent.BUTTON1_MASK);
-		ROBOT.mouseRelease(InputEvent.BUTTON1_MASK);
+		ROBOT.mousePress(InputEvent.BUTTON3_MASK);
+		ROBOT.mouseRelease(InputEvent.BUTTON3_MASK);
 		delay();
 	}
 
