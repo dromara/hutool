@@ -493,9 +493,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 普通值
 		String strValue;
-		if (value instanceof List) {
+		if (value instanceof Iterable) {
 			// 列表对象
-			strValue = CollUtil.join((List<?>) value, ",");
+			strValue = CollUtil.join((Iterable<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
 			if (File.class == ArrayUtil.getComponentType(value)) {
 				// 多文件

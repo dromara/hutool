@@ -12,6 +12,7 @@
 * 【core   】     Sftp增加syncUpload方法（pr#375@Gitee）
 * 【core   】     改进NetUtil.getLocalHost逻辑（issue#1717@Github）
 * 【core   】     UseragentUtil增加QQ、alipay、taobao、uc等浏览器识别支持（issue#1719@Github）
+* 【http   】     HttpRequest.form方法判断集合增强（pr#381@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）
