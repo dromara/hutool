@@ -11,6 +11,7 @@
 * 【core   】     改进Base64.isBase64方法增加等号判断（issue#1710@Github）
 * 【core   】     Sftp增加syncUpload方法（pr#375@Gitee）
 * 【core   】     改进NetUtil.getLocalHost逻辑（issue#1717@Github）
+* 【core   】     UseragentUtil增加QQ、alipay、taobao、uc等浏览器识别支持（issue#1719@Github）
 
 ### 🐞Bug修复
 

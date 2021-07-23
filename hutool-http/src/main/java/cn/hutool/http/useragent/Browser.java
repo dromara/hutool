@@ -28,6 +28,24 @@ public class Browser extends UserAgentInfo {
 	 * 支持的浏览器类型
 	 */
 	public static final List<Browser> browers = CollUtil.newArrayList(
+			// 部分特殊浏览器是基于安卓、Iphone等的，需要优先判断
+			// 企业微信 企业微信使用微信浏览器内核,会包含 MicroMessenger 所以要放在前面
+			new Browser("wxwork", "wxwork", "wxwork\\/([\\d\\w\\.\\-]+)"),
+			// 微信
+			new Browser("MicroMessenger", "MicroMessenger", "MicroMessenger\\/([\\d\\w\\.\\-]+)"),
+			// 微信小程序
+			new Browser("miniProgram", "miniProgram", "miniProgram\\/([\\d\\w\\.\\-]+)"),
+			// QQ浏览器
+			new Browser("QQBrowser", "MQQBrowser", "MQQBrowser\\/([\\d\\w\\.\\-]+)"),
+			// 钉钉内置浏览器
+			new Browser("DingTalk", "DingTalk", "AliApp\\(DingTalk\\/([\\d\\w\\.\\-]+)\\)"),
+			// 支付宝内置浏览器
+			new Browser("Alipay", "AlipayClient", "AliApp\\(AP\\/([\\d\\w\\.\\-]+)\\)"),
+			// 淘宝内置浏览器
+			new Browser("Taobao", "taobao", "AliApp\\(TB\\/([\\d\\w\\.\\-]+)\\)"),
+			// UC浏览器
+			new Browser("UCBrowser", "UCBrowser", "UCBrowser\\/([\\d\\w\\.\\-]+)"),
+
 			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Firefox", "firefox", Other_Version),
@@ -50,15 +68,7 @@ public class Browser extends UserAgentInfo {
 			new Browser("Yammer Desktop", "AdobeAir", "([\\d\\w\\.\\-]+)\\/Yammer"),
 			new Browser("Yammer Mobile", "Yammer[\\s]+([\\d\\w\\.\\-]+)", "Yammer[\\s]+([\\d\\w\\.\\-]+)"),
 			new Browser("Apache HTTP Client", "Apache\\\\-HttpClient", "Apache\\-HttpClient\\/([\\d\\w\\.\\-]+)"),
-			new Browser("BlackBerry", "BlackBerry", "BlackBerry[\\d]+\\/([\\d\\w\\.\\-]+)"),
-			// 企业微信 企业微信使用微信浏览器内核,会包含 MicroMessenger 所以要放在前面
-			new Browser("wxwork", "wxwork", "wxwork\\/([\\d\\w\\.\\-]+)"),
-			// 微信
-			new Browser("MicroMessenger", "MicroMessenger", "MicroMessenger\\/([\\d\\w\\.\\-]+)"),
-			// 微信小程序
-			new Browser("miniProgram", "miniProgram", "miniProgram\\/([\\d\\w\\.\\-]+)"),
-			// 钉钉
-			new Browser("DingTalk", "DingTalk", "AliApp\\(DingTalk\\/([\\d\\w\\.\\-]+)\\)")
+			new Browser("BlackBerry", "BlackBerry", "BlackBerry[\\d]+\\/([\\d\\w\\.\\-]+)")
 	);
 
 	/**
