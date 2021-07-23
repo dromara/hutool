@@ -337,6 +337,11 @@ public class Sftp extends AbstractFtp {
 		try {
 			sftpATTRS = this.channel.stat(dir);
 		} catch (SftpException e) {
+			if(e.getMessage().contains("No such file")){
+				// 文件不存在直接返回false
+				// pr#378@Gitee
+				return false;
+			}
 			throw new FtpException(e);
 		}
 		return sftpATTRS.isDir();
