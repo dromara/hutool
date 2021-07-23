@@ -494,14 +494,24 @@ public class NetUtil {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(address -> {
 			// 非loopback地址，指127.*.*.*的地址
 			return false == address.isLoopbackAddress()
-					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
-					&& false == address.isSiteLocalAddress()
 					// 需为IPV4地址
 					&& address instanceof Inet4Address;
 		});
 
 		if (CollUtil.isNotEmpty(localAddressList)) {
-			return CollUtil.get(localAddressList, 0);
+			InetAddress address2 = null;
+			for (InetAddress inetAddress : localAddressList) {
+				if (false == inetAddress.isSiteLocalAddress()) {
+					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
+					return inetAddress;
+				} else if (null == address2) {
+					address2 = inetAddress;
+				}
+			}
+
+			if (null != address2) {
+				return address2;
+			}
 		}
 
 		try {

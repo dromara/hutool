@@ -9,6 +9,7 @@
 * 【core   】     增加FieldsComparator（pr#374@Gitee）
 * 【core   】     FileUtil.del采用Files.delete实现
 * 【core   】     改进Base64.isBase64方法增加等号判断（issue#1710@Github）
+* 【core   】     改进NetUtil.getLocalHost逻辑（issue#1717@Github）
 
 ### 🐞Bug修复
 
