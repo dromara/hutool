@@ -68,6 +68,7 @@ public class JSONWriter extends Writer {
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
 	 * @param config       JSON选项
+	 * @return {@link JSONWriter}
 	 */
 	public static JSONWriter of(Writer writer, int indentFactor, int indent, JSONConfig config) {
 		return new JSONWriter(writer, indentFactor, indent, config);
