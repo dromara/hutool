@@ -1382,8 +1382,23 @@ public class FileUtil extends PathUtil {
 	 * @param file           文件对象
 	 * @param lastModifyTime 上次的改动时间
 	 * @return 是否被改动
+	 * @deprecated 拼写错误，请使用{@link #isModified(File, long)}
 	 */
+	@Deprecated
 	public static boolean isModifed(File file, long lastModifyTime) {
+		return isModified(file,lastModifyTime);
+	}
+
+
+	/**
+	 * 判断文件是否被改动<br>
+	 * 如果文件对象为 null 或者文件不存在，被视为改动
+	 *
+	 * @param file           文件对象
+	 * @param lastModifyTime 上次的改动时间
+	 * @return 是否被改动
+	 */
+	public static boolean isModified(File file, long lastModifyTime) {
 		if (null == file || false == file.exists()) {
 			return true;
 		}

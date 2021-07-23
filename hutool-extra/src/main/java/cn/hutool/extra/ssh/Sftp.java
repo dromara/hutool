@@ -319,7 +319,7 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public boolean mkdir(String dir) {
-		if(isDir(dir)){
+		if (isDir(dir)) {
 			// 目录已经存在，创建直接返回
 			return true;
 		}
@@ -332,7 +332,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean isDir(String dir){
+	public boolean isDir(String dir) {
 		final SftpATTRS sftpATTRS;
 		try {
 			sftpATTRS = this.channel.stat(dir);
@@ -420,6 +420,36 @@ public class Sftp extends AbstractFtp {
 			return true;
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
+		}
+	}
+
+	/**
+	 * 将本地文件或者文件夹同步（覆盖）上传到远程路径
+	 *
+	 * @param file       文件或者文件夹
+	 * @param remotePath 远程路径
+	 * @since 5.7.6
+	 */
+	public void syncUpload(File file, String remotePath) {
+		if (false == FileUtil.exist(file)) {
+			return;
+		}
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files == null) {
+				return;
+			}
+			for (File fileItem : files) {
+				if (fileItem.isDirectory()) {
+					String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
+					this.syncUpload(fileItem, mkdir);
+				} else {
+					this.syncUpload(fileItem, remotePath);
+				}
+			}
+		} else {
+			this.mkDirs(remotePath);
+			this.upload(remotePath, file);
 		}
 	}
 
