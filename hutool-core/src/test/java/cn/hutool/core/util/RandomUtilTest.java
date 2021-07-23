@@ -41,4 +41,16 @@ public class RandomUtilTest {
 		final char c = RandomUtil.randomNumber();
 		Assert.assertTrue(c <= '9');
 	}
+
+	@Test
+	public void randomIntTest() {
+		final int c = RandomUtil.randomInt(10, 100);
+		Assert.assertTrue(c >= 10 && c < 100);
+	}
+
+	@Test
+	public void randomBytesTest() {
+		final byte[] c = RandomUtil.randomBytes(10);
+		Assert.assertNotNull(c);
+	}
 }
