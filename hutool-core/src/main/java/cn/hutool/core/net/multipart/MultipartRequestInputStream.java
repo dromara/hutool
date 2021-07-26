@@ -41,7 +41,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @param i 跳过的byte数
 	 * @throws IOException IO异常
 	 */
-	public void skipBytes(int i) throws IOException {
+	public void skipBytes(long i) throws IOException {
 		long len = super.skip(i);
 		if (len != i) {
 			throw new IOException("Unable to skip data in HTTP request");
@@ -165,8 +165,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public int copy(OutputStream out) throws IOException {
-		int count = 0;
+	public long copy(OutputStream out) throws IOException {
+		long count = 0;
 		while (true) {
 			byte b = readByte();
 			if (isBoundary(b)) {
@@ -186,8 +186,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public int copy(OutputStream out, long limit) throws IOException {
-		int count = 0;
+	public long copy(OutputStream out, long limit) throws IOException {
+		long count = 0;
 		while (true) {
 			byte b = readByte();
 			if (isBoundary(b)) {
@@ -208,8 +208,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 跳过的字节数
 	 * @throws IOException 读取异常
 	 */
-	public int skipToBoundary() throws IOException {
-		int count = 0;
+	public long skipToBoundary() throws IOException {
+		long count = 0;
 		while (true) {
 			byte b = readByte();
 			count++;
