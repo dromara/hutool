@@ -116,6 +116,16 @@ public class NumberChineseFormatterTest {
 		Assert.assertEquals(22010, NumberChineseFormatter.chineseToNumber("两万二零一十"));
 	}
 
+	@Test
+	public void chineseToNumberTest3(){
+		// issue#1726，对于单位开头的数组，默认赋予1
+		// 十二 -> 一十二
+		// 百二 -> 一百二
+		Assert.assertEquals(12, NumberChineseFormatter.chineseToNumber("十二"));
+		Assert.assertEquals(120, NumberChineseFormatter.chineseToNumber("百二"));
+		Assert.assertEquals(1300, NumberChineseFormatter.chineseToNumber("千三"));
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void badNumberTest(){
 		// 连续数字检查

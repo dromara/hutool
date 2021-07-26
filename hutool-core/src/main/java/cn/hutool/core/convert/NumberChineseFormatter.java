@@ -249,7 +249,14 @@ public class NumberChineseFormatter {
 					section = 0;
 				} else {
 					// 非节单位，和单位前的单数字组合为值
-					section += (number * unit.value);
+					int unitNumber = number;
+					if(0 == number && 0 == i){
+						// issue#1726，对于单位开头的数组，默认赋予1
+						// 十二 -> 一十二
+						// 百二 -> 一百二
+						unitNumber = 1;
+					}
+					section += (unitNumber * unit.value);
 				}
 				number = 0;
 			}
