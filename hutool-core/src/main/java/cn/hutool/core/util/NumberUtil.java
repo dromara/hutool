@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.math.Calculator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -2655,6 +2656,21 @@ public class NumberUtil {
 	 */
 	public static boolean isValid(float number) {
 		return false == (Float.isNaN(number) || Float.isInfinite(number));
+	}
+
+	/**
+	 * 计算数学表达式的值，只支持加减乘除和取余<br>
+	 * 如：
+	 * <pre class="code">
+	 *   calculate("(0*1--3)-5/-4-(3*(-2.13))") -》 10.64
+	 * </pre>
+	 *
+	 * @param expression 数学表达式
+	 * @return 结果
+	 * @since 5.7.6
+	 */
+	public static double calculate(String expression){
+		return Calculator.conversion(expression);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.6 (2021-07-23)
+# 5.7.6 (2021-07-26)
 
 ### 🐣新特性
 * 【core   】     增加FieldsComparator（pr#374@Gitee）
@@ -13,6 +13,8 @@
 * 【core   】     改进NetUtil.getLocalHost逻辑（issue#1717@Github）
 * 【core   】     UseragentUtil增加QQ、alipay、taobao、uc等浏览器识别支持（issue#1719@Github）
 * 【http   】     HttpRequest.form方法判断集合增强（pr#381@Gitee）
+* 【core   】     NumberUtil增加calculate方法
+* 【core   】     优化TextSimilarity.longestCommonSubstring性能（issue#I42A6V@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）
