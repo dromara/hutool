@@ -410,6 +410,13 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void reverseTest2s(){
+		Object[] a = {"1",'2',"3",4};
+		final Object[] reverse = ArrayUtil.reverse(a);
+		Assert.assertArrayEquals(new Object[]{4,"3",'2',"1"}, reverse);
+	}
+
+	@Test
 	public void removeEmptyTest() {
 		String[] a = {"a", "b", "", null, " ", "c"};
 		String[] resultA = {"a", "b", " ", "c"};
