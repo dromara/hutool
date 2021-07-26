@@ -53,8 +53,9 @@ public class RobotUtil {
 	}
 
 	/**
-	 * 获取默认的延迟时间
+	 * 获取全局默认的延迟时间
 	 *
+	 * @return 全局默认的延迟时间
 	 * @since 5.7.6
 	 */
 	public static int getDelay() {
