@@ -3,10 +3,12 @@ package cn.hutool.core.text;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.regex.Pattern;
+
 public class CharSequenceUtilTest {
 
 	@Test
-	public void replace() {
+	public void replaceTest() {
 		String actual = CharSequenceUtil.replace("SSM15930297701BeryAllen", Pattern.compile("[0-9]"), matcher -> "");
 		Assert.assertEquals("SSMBeryAllen", actual);
 	}

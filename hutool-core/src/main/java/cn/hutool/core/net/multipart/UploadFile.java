@@ -196,7 +196,7 @@ public class UploadFile {
 		int memoryThreshold = setting.memoryThreshold;
 		if (memoryThreshold > 0) {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
-			int written = input.copy(baos, memoryThreshold);
+			final long written = input.copy(baos, memoryThreshold);
 			data = baos.toByteArray();
 			if (written <= memoryThreshold) {
 				// 文件存放于内存
