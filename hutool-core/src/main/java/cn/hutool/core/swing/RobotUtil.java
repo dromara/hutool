@@ -32,6 +32,13 @@ public class RobotUtil {
 	}
 
 	/**
+	 * 获取 Robot 实例
+	 */
+	public static Robot getRobot() {
+		return ROBOT;
+	}
+	
+	/**
 	 * 设置默认的延迟时间<br>
 	 * 当按键执行完后的等待时间，也可以用ThreadUtil.sleep方法代替
 	 *
@@ -198,7 +205,7 @@ public class RobotUtil {
 	/**
 	 * 等待指定毫秒数
 	 */
-	private static void delay() {
+	public static void delay() {
 		if (delay > 0) {
 			ROBOT.delay(delay);
 		}
