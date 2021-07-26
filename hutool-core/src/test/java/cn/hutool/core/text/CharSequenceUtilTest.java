@@ -6,6 +6,12 @@ import org.junit.Test;
 public class CharSequenceUtilTest {
 
 	@Test
+	public void replace() {
+		String actual = CharSequenceUtil.replace("SSM15930297701BeryAllen", Pattern.compile("[0-9]"), matcher -> "");
+		Assert.assertEquals("SSMBeryAllen", actual);
+	}
+
+	@Test
 	public void addPrefixIfNotTest(){
 		String str = "hutool";
 		String result = CharSequenceUtil.addPrefixIfNot(str, "hu");
