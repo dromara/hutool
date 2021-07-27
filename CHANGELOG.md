@@ -18,6 +18,7 @@
 * 【core   】     MultipartRequestInputStream改为使用long以支持大文件（issue#I428AN@Gitee）
 * 【core   】     RobotUtl增加getDelay、getRobot方法（pr#1725@Github）
 * 【json   】     JSON输出支持ignoreNull（issue#1728@Github）
+* 【core   】     DateUtil和LocalDateTimeUtil增加isWeekend方法（issue#I42N5A@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）
@@ -28,6 +29,7 @@
 * 【poi    】     修复BeanSheetReader.read中字段对象为空导致的报错（issue#1729@Github）
 * 【core   】     修复DateConverter转换java.sql.Date问题（issue#1729@Github）
 * 【extra  】     修复CompressUtil中部分方法非static的问题（pr#385@Gitee）
+* 【core   】     修复ByteUtil转换端序错误问题（pr#384@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

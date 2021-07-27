@@ -282,6 +282,18 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 是否为周末（周六或周日）
+	 *
+	 * @param date 判定的日期{@link Date}
+	 * @return 是否为周末（周六或周日）
+	 * @since 5.7.6
+	 */
+	public static boolean isWeekend(Date date) {
+		final Week week = dayOfWeekEnum(date);
+		return Week.SATURDAY == week || Week.SUNDAY == week;
+	}
+
+	/**
 	 * 获得指定日期的小时数部分<br>
 	 *
 	 * @param date          日期

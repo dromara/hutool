@@ -915,4 +915,15 @@ public class DateUtilTest {
 				"yyyy-MM-dd HH:mm:ss");
 		Assert.assertEquals("2021-07-14 10:05:38", format);
 	}
+
+	@Test
+	public void isWeekendTest(){
+		DateTime parse = DateUtil.parse("2021-07-28");
+		Assert.assertFalse(DateUtil.isWeekend(parse));
+
+		parse = DateUtil.parse("2021-07-25");
+		Assert.assertTrue(DateUtil.isWeekend(parse));
+		parse = DateUtil.parse("2021-07-24");
+		Assert.assertTrue(DateUtil.isWeekend(parse));
+	}
 }

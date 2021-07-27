@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -485,5 +486,28 @@ public class LocalDateTimeUtil {
 	 */
 	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
 		return TemporalAccessorUtil.toEpochMilli(temporalAccessor);
+	}
+
+	/**
+	 * 是否为周末（周六或周日）
+	 *
+	 * @param localDateTime 判定的日期{@link LocalDateTime}
+	 * @return 是否为周末（周六或周日）
+	 * @since 5.7.6
+	 */
+	public static boolean isWeekend(LocalDateTime localDateTime){
+		return isWeekend(localDateTime.toLocalDate());
+	}
+
+	/**
+	 * 是否为周末（周六或周日）
+	 *
+	 * @param localDate 判定的日期{@link LocalDate}
+	 * @return 是否为周末（周六或周日）
+	 * @since 5.7.6
+	 */
+	public static boolean isWeekend(LocalDate localDate){
+		final DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+		return DayOfWeek.SATURDAY == dayOfWeek || DayOfWeek.SUNDAY == dayOfWeek;
 	}
 }
