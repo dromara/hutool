@@ -27,6 +27,7 @@
 * 【core   】     修复NumberChineseFormatter.chineseToNumber十位数错误（issue#1726@github）
 * 【poi    】     修复BeanSheetReader.read中字段对象为空导致的报错（issue#1729@Github）
 * 【core   】     修复DateConverter转换java.sql.Date问题（issue#1729@Github）
+* 【extra  】     修复CompressUtil中部分方法非static的问题（pr#385@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
