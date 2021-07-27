@@ -331,4 +331,32 @@ public class UserAgentUtilTest {
 		Assert.assertTrue(ua.isMobile());
 	}
 
+	@Test
+	public void parseWxworkTest() {
+		String uaString = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 QBCore/4.0.1326.400 QQBrowser/9.0.2524.400 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 wxwork/3.1.10 (MicroMessenger/6.2) WindowsWechat";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("wxwork", ua.getBrowser().toString());
+		Assert.assertEquals("3.1.10", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
+
+	@Test
+	public void parseWxworkMobileTest() {
+		String uaString = "Mozilla/5.0 (Linux; Android 10; JSN-AL00 Build/HONORJSN-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045710 Mobile Safari/537.36 wxwork/3.1.10 ColorScheme/Light MicroMessenger/7.0.1 NetType/WIFI Language/zh Lang/zh";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("wxwork", ua.getBrowser().toString());
+		Assert.assertEquals("3.1.10", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("10", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
 }

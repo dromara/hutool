@@ -30,6 +30,7 @@
 * 【core   】     修复DateConverter转换java.sql.Date问题（issue#1729@Github）
 * 【extra  】     修复CompressUtil中部分方法非static的问题（pr#385@Gitee）
 * 【core   】     修复ByteUtil转换端序错误问题（pr#384@Gitee）
+* 【core   】     修复UserAgentUtil判断浏览器顺序问题（issue#I42LYW@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
