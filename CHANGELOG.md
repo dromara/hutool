@@ -17,6 +17,7 @@
 * 【core   】     优化TextSimilarity.longestCommonSubstring性能（issue#I42A6V@Gitee）
 * 【core   】     MultipartRequestInputStream改为使用long以支持大文件（issue#I428AN@Gitee）
 * 【core   】     RobotUtl增加getDelay、getRobot方法（pr#1725@Github）
+* 【json   】     JSON输出支持ignoreNull（issue#1728@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）

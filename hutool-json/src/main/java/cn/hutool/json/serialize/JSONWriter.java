@@ -142,23 +142,33 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
+	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值<br>
+	 * 如果写出的值为{@code null}或者{@link JSONNull}，且配置忽略null，则跳过。
 	 *
 	 * @param value 值
 	 * @return this
 	 */
 	public JSONWriter writeValue(Object value) {
-		if (arrayMode) {
-			if (needSeparator) {
-				writeRaw(CharUtil.COMMA);
-			}
-			// 换行缩进
-			writeLF().writeSpace(indentFactor + indent);
-		} else {
-			writeRaw(CharUtil.COLON).writeSpace(1);
+		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
+			return this;
 		}
-		needSeparator = true;
-		return writeObjValue(value);
+		return writeValueDirect(value);
+	}
+
+	/**
+	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
+	 *
+	 * @param key 字段名
+	 * @param value 字段值
+	 * @return this
+	 * @since 5.7.6
+	 */
+	public JSONWriter writeField(String key, Object value){
+		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
+			return this;
+		}
+
+		return writeKey(key).writeValueDirect(value);
 	}
 
 	@Override
@@ -181,6 +191,25 @@ public class JSONWriter extends Writer {
 	}
 
 	// ------------------------------------------------------------------------------ Private methods
+	/**
+	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
+	 *
+	 * @param value 值
+	 * @return this
+	 */
+	private JSONWriter writeValueDirect(Object value) {
+		if (arrayMode) {
+			if (needSeparator) {
+				writeRaw(CharUtil.COMMA);
+			}
+			// 换行缩进
+			writeLF().writeSpace(indentFactor + indent);
+		} else {
+			writeRaw(CharUtil.COLON).writeSpace(1);
+		}
+		needSeparator = true;
+		return writeObjValue(value);
+	}
 
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
