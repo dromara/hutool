@@ -24,9 +24,18 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
- * 国密SM2算法实现，基于BC库<br>
+ * 国密SM2非对称算法实现，基于BC库<br>
  * SM2算法只支持公钥加密，私钥解密<br>
  * 参考：https://blog.csdn.net/pridas/article/details/86118774
+ *
+ * <p>
+ * 国密算法包括：
+ * <ol>
+ *     <li>非对称加密和签名：SM2</li>
+ *     <li>摘要签名算法：SM3</li>
+ *     <li>对称加密：SM4</li>
+ * </ol>
+ * </p>
  *
  * @author looly
  * @since 4.3.2
@@ -275,7 +284,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 
 	/**
 	 * 用私钥对信息生成数字签名，签名格式为ASN1<br>
-	 * 	 * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
+	 * * 在硬件签名中，返回结果为R+S，可以通过调用{@link cn.hutool.crypto.SmUtil#rsAsn1ToPlain(byte[])}方法转换之。
 	 *
 	 * @param data 加密数据
 	 * @return 签名
