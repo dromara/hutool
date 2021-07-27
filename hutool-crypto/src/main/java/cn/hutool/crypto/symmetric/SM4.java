@@ -12,6 +12,11 @@ import javax.crypto.spec.IvParameterSpec;
 /**
  * SM4实现
  *
+ * 国密算法
+ * 1、非对称加密和签名：SM2
+ * 2、摘要签名算法：SM3
+ * 3、对称加密：SM4
+ *
  * @author Looly
  * @since 4.6.8
  */
