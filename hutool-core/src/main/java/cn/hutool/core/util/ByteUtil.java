@@ -64,9 +64,10 @@ public class ByteUtil {
 	 */
 	public static short bytesToShort(byte[] bytes, ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
-		} else {
+			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
 			return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
+		} else {
+			return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
 		}
 	}
 
@@ -92,11 +93,11 @@ public class ByteUtil {
 	public static byte[] shortToBytes(short shortValue, ByteOrder byteOrder) {
 		byte[] b = new byte[Short.BYTES];
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			b[1] = (byte) (shortValue & 0xff);
-			b[0] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
-		} else {
 			b[0] = (byte) (shortValue & 0xff);
 			b[1] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
+		} else {
+			b[1] = (byte) (shortValue & 0xff);
+			b[0] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
 		}
 		return b;
 	}
@@ -122,15 +123,15 @@ public class ByteUtil {
 	 */
 	public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return bytes[3] & 0xFF | //
-					(bytes[2] & 0xFF) << 8 | //
-					(bytes[1] & 0xFF) << 16 | //
-					(bytes[0] & 0xFF) << 24; //
-		} else {
 			return bytes[0] & 0xFF | //
 					(bytes[1] & 0xFF) << 8 | //
 					(bytes[2] & 0xFF) << 16 | //
 					(bytes[3] & 0xFF) << 24; //
+		} else {
+			return bytes[3] & 0xFF | //
+					(bytes[2] & 0xFF) << 8 | //
+					(bytes[1] & 0xFF) << 16 | //
+					(bytes[0] & 0xFF) << 24; //
 		}
 
 	}
@@ -158,21 +159,20 @@ public class ByteUtil {
 
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			return new byte[]{ //
-					(byte) ((intValue >> 24) & 0xFF), //
-					(byte) ((intValue >> 16) & 0xFF), //
-					(byte) ((intValue >> 8) & 0xFF), //
-					(byte) (intValue & 0xFF) //
-			};
-
-		} else {
-			return new byte[]{ //
 					(byte) (intValue & 0xFF), //
 					(byte) ((intValue >> 8) & 0xFF), //
 					(byte) ((intValue >> 16) & 0xFF), //
 					(byte) ((intValue >> 24) & 0xFF) //
 			};
-		}
 
+		} else {
+			return new byte[]{ //
+					(byte) ((intValue >> 24) & 0xFF), //
+					(byte) ((intValue >> 16) & 0xFF), //
+					(byte) ((intValue >> 8) & 0xFF), //
+					(byte) (intValue & 0xFF) //
+			};
+		}
 
 	}
 
@@ -200,17 +200,16 @@ public class ByteUtil {
 	public static byte[] longToBytes(long longValue, ByteOrder byteOrder) {
 		byte[] result = new byte[Long.BYTES];
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			for (int i = (result.length - 1); i >= 0; i--) {
-				result[i] = (byte) (longValue & 0xFF);
-				longValue >>= Byte.SIZE;
-			}
-		} else {
 			for (int i = 0; i < result.length; i++) {
 				result[i] = (byte) (longValue & 0xFF);
 				longValue >>= Byte.SIZE;
 			}
+		} else {
+			for (int i = (result.length - 1); i >= 0; i--) {
+				result[i] = (byte) (longValue & 0xFF);
+				longValue >>= Byte.SIZE;
+			}
 		}
-
 		return result;
 	}
 
@@ -238,12 +237,12 @@ public class ByteUtil {
 	public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
 		long values = 0;
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			for (int i = 0; i < Long.BYTES; i++) {
+			for (int i = (Long.BYTES - 1); i >= 0; i--) {
 				values <<= Byte.SIZE;
 				values |= (bytes[i] & 0xff);
 			}
 		} else {
-			for (int i = (Long.BYTES - 1); i >= 0; i--) {
+			for (int i = 0; i < Long.BYTES; i++) {
 				values <<= Byte.SIZE;
 				values |= (bytes[i] & 0xff);
 			}
@@ -269,7 +268,7 @@ public class ByteUtil {
 	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
 	 *
 	 * @param doubleValue double值
-	 * @param byteOrder 端序
+	 * @param byteOrder   端序
 	 * @return byte数组
 	 */
 	public static byte[] doubleToBytes(double doubleValue, ByteOrder byteOrder) {
@@ -301,29 +300,31 @@ public class ByteUtil {
 
 	/**
 	 * 将{@link Number}转换为
+	 *
 	 * @param number 数字
 	 * @return bytes
 	 */
-	public static byte[] numberToBytes(Number number){
+	public static byte[] numberToBytes(Number number) {
 		return numberToBytes(number, ByteOrder.LITTLE_ENDIAN);
 	}
 
 	/**
 	 * 将{@link Number}转换为
-	 * @param number 数字
+	 *
+	 * @param number    数字
 	 * @param byteOrder 端序
 	 * @return bytes
 	 */
-	public static byte[] numberToBytes(Number number, ByteOrder byteOrder){
-		if(number instanceof Double){
+	public static byte[] numberToBytes(Number number, ByteOrder byteOrder) {
+		if (number instanceof Double) {
 			return doubleToBytes((Double) number, byteOrder);
-		} else if(number instanceof Long){
+		} else if (number instanceof Long) {
 			return longToBytes((Long) number, byteOrder);
-		} else if(number instanceof Integer){
+		} else if (number instanceof Integer) {
 			return intToBytes((Integer) number, byteOrder);
-		} else if(number instanceof Short){
+		} else if (number instanceof Short) {
 			return shortToBytes((Short) number, byteOrder);
-		} else{
+		} else {
 			return doubleToBytes(number.doubleValue(), byteOrder);
 		}
 	}
