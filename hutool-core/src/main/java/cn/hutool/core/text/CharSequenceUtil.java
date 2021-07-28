@@ -315,10 +315,10 @@ public class CharSequenceUtil {
 	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
-	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+	 * blankToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+	 * blankToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+	 * blankToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
+	 * blankToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
 	 * </pre>
 	 *
 	 * @param str        要转换的字符串
