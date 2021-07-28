@@ -944,9 +944,12 @@ public class ReflectUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> T invoke(Object obj, String methodName, Object... args) throws UtilException {
+		Assert.notNull(obj, "Object to get method must be not null!");
+		Assert.notBlank(methodName, "Method name must be not blank!");
+
 		final Method method = getMethodOfObj(obj, methodName, args);
 		if (null == method) {
-			throw new UtilException(StrUtil.format("No such method: [{}]", methodName));
+			throw new UtilException("No such method: [{}] from [{}]", methodName, obj.getClass());
 		}
 		return invoke(obj, method, args);
 	}
