@@ -45,5 +45,4 @@ public class SSLUtil {
 				.setKeyManagers(keyManagers)
 				.setTrustManagers(trustManagers).buildQuietly();
 	}
-
 }
