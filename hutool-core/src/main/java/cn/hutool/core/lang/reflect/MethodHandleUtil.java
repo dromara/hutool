@@ -43,7 +43,7 @@ public class MethodHandleUtil {
 	 * </ul>
 	 *
 	 * @param callerClass 方法所在类或接口
-	 * @param name        方法名称，{@link null}或者空则查找构造方法
+	 * @param name        方法名称，{@code null}或者空则查找构造方法
 	 * @param type        返回类型和参数类型
 	 * @return 方法句柄 {@link MethodHandle}，{@code null}表示未找到方法
 	 */
@@ -128,6 +128,7 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invokeDefault);
 	 * </pre>
 	 *
+	 * @param <T> 返回结果类型
 	 * @param obj        接口的子对象或代理对象
 	 * @param methodName 方法名称
 	 * @param args       参数
@@ -147,6 +148,7 @@ public class MethodHandleUtil {
 	/**
 	 * 执行接口或对象中的方法
 	 *
+	 * @param <T> 返回结果类型
 	 * @param obj    接口的子对象或代理对象
 	 * @param method 方法
 	 * @param args   参数
@@ -172,6 +174,7 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
+	 * @param <T> 返回结果类型
 	 * @param obj    接口的子对象或代理对象
 	 * @param method 方法
 	 * @param args   参数
@@ -197,6 +200,7 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
+	 * @param <T> 返回结果类型
 	 * @param obj    接口的子对象或代理对象
 	 * @param method 方法
 	 * @param args   参数
