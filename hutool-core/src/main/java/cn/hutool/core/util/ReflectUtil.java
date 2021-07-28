@@ -920,7 +920,7 @@ public class ReflectUtil {
 		if(method.isDefault()){
 			// 当方法是default方法时，尤其对象是代理对象，需使用句柄方式执行
 			// 代理对象情况下调用method.invoke会导致循环引用执行，最终栈溢出
-			return MethodHandleUtil.invoke(obj, method, args);
+			return MethodHandleUtil.invokeSpecial(obj, method, args);
 		}
 
 		try {

@@ -17,13 +17,13 @@ public class MethodHandleUtilTest {
 		Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
-				MethodHandleUtil::invoke);
+				MethodHandleUtil::invokeSpecial);
 
 		Assert.assertEquals("Quack", duck.quack());
 
 		// 测试子类执行default方法
 		final Method quackMethod = ReflectUtil.getMethod(Duck.class, "quack");
-		String quack = MethodHandleUtil.invoke(new BigDuck(), quackMethod);
+		String quack = MethodHandleUtil.invokeSpecial(new BigDuck(), quackMethod);
 		Assert.assertEquals("Quack", quack);
 
 		// 测试反射执行默认方法
@@ -42,7 +42,7 @@ public class MethodHandleUtilTest {
 	}
 
 	@Test
-	public void invokeStaticTest(){
+	public void invokeStaticByProxyTest(){
 		Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
@@ -54,9 +54,17 @@ public class MethodHandleUtilTest {
 	@Test
 	public void invokeTest(){
 		// 测试执行普通方法
-		final int size = MethodHandleUtil.invoke(new BigDuck(),
+		final int size = MethodHandleUtil.invokeSpecial(new BigDuck(),
 				ReflectUtil.getMethod(BigDuck.class, "getSize"));
 		Assert.assertEquals(36, size);
+	}
+
+	@Test
+	public void invokeStaticTest(){
+		// 测试执行普通方法
+		final String result = MethodHandleUtil.invoke(null,
+				ReflectUtil.getMethod(Duck.class, "getDuck", int.class), 78);
+		Assert.assertEquals("Duck 78", result);
 	}
 
 	@Test
