@@ -69,7 +69,7 @@ public class JWTUtil {
 	 * @param token token
 	 * @return {@link JWT}
 	 */
-	public JWT parseToken(String token) {
+	public static JWT parseToken(String token) {
 		return JWT.of(token);
 	}
 
@@ -80,7 +80,7 @@ public class JWTUtil {
 	 * @param key   HS256(HmacSHA256)密钥
 	 * @return 是否有效
 	 */
-	public boolean verify(String token, byte[] key) {
+	public static boolean verify(String token, byte[] key) {
 		return JWT.of(token).setKey(key).verify();
 	}
 
@@ -91,7 +91,7 @@ public class JWTUtil {
 	 * @param signer 签名器
 	 * @return 是否有效
 	 */
-	public boolean verify(String token, JWTSigner signer) {
+	public static boolean verify(String token, JWTSigner signer) {
 		return JWT.of(token).verify(signer);
 	}
 }
