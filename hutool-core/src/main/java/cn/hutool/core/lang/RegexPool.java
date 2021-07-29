@@ -78,7 +78,7 @@ public interface RegexPool {
 	/**
 	 * 座机号码
 	 */
-	String TEL = "0\\d{2,3}-[1-9]\\d{6,7}";
+	String TEL = "(010|02\\d|0[3-9]\\d{2})-?(\\d{6,8})";
 	/**
 	 * 座机号码+400+800电话
 	 *
