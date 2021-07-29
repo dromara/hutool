@@ -167,7 +167,7 @@ public class PhoneUtil {
 	 *
 	 * @param value 完整的固话号码
 	 * @return 固话号码的区号部分
-	 * @since 5.7.6
+	 * @since 5.7.7
 	 */
 	public static CharSequence subTelBefore(CharSequence value)
 	{
@@ -179,7 +179,7 @@ public class PhoneUtil {
 	 *
 	 * @param value 完整的固话号码
 	 * @return 固话号码的号码部分
-	 * @since 5.7.6
+	 * @since 5.7.7
 	 */
 	public static CharSequence subTelAfter(CharSequence value)
 	{
