@@ -3,15 +3,17 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.6 (2021-07-29)
+# 5.7.6 (2021-07-30)
 
 ### 🐣新特性
 * 【core   】     增加LookupFactory和MethodHandleUtil（issue#I42TVY@Gitee）
 * 【core   】     改进RegexPool.TEL支持无-号码（pr#387@Gitee）
 * 【core   】     PhoneUtil中新增获取固话号码中区号,以及固话号码中号码的方法（pr#387@Gitee）
+* 【json   】     JSONGetter增加getLocalDateTime方法（pr#387@Gitee）
+* 【core   】     增加JNDIUtil（issue#1727@Github）
 
 ### 🐞Bug修复
-* 【jwt    】     修复JWTUtil中几个方法非static的问题（pr#386@Gitee）
+* 【jwt    】     修复JWTUtil中几个方法非static的问题（issue#1735@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
