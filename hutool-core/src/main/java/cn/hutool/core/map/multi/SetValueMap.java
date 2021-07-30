@@ -68,6 +68,6 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 
 	@Override
 	protected Set<V> createCollection() {
-		return new LinkedHashSet<>(DEFAULT_COLLCTION_INITIAL_CAPACITY);
+		return new LinkedHashSet<>(DEFAULT_COLLECTION_INITIAL_CAPACITY);
 	}
 }
