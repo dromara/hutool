@@ -28,7 +28,7 @@
 * 【core   】     NumberUtil增加calculate方法
 * 【core   】     优化TextSimilarity.longestCommonSubstring性能（issue#I42A6V@Gitee）
 * 【core   】     MultipartRequestInputStream改为使用long以支持大文件（issue#I428AN@Gitee）
-* 【core   】     RobotUtl增加getDelay、getRobot方法（pr#1725@Github）
+* 【core   】     RobotUtil增加getDelay、getRobot方法（pr#1725@Github）
 * 【json   】     JSON输出支持ignoreNull（issue#1728@Github）
 * 【core   】     DateUtil和LocalDateTimeUtil增加isWeekend方法（issue#I42N5A@Gitee）
 
