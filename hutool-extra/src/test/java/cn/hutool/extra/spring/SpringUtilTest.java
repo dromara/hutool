@@ -34,13 +34,29 @@ public class SpringUtilTest {
 		Demo2 registerBean2 = SpringUtil.getBean("registerBean");
 		Assert.assertEquals(123, registerBean2.getId());
 		Assert.assertEquals("222", registerBean2.getName());
+
+
+	}
+
+	/**
+	 * 测试注销bean
+	 */
+	@Test
+	public void unregisterBeanTest() {
+		registerTestAutoWired();
+		Assert.assertNotNull(SpringUtil.getBean("testAutoWired"));
+		SpringUtil.unregisterBean("testAutoWired1");
+		try {
+			SpringUtil.getBean("testAutoWired");
+		} catch (NoSuchBeanDefinitionException e) {
+			Assert.assertEquals(e.getClass(), NoSuchBeanDefinitionException.class);
+		}
 	}
 
 	/**
 	 * 测试自动注入
 	 */
-	@Test
-	public void registerBeanTest2() {
+	private void registerTestAutoWired() {
 		TestAutoWired testAutoWired = new TestAutoWired();
 		TestBean testBean = new TestBean();
 		testBean.setId("123");
@@ -50,43 +66,11 @@ public class SpringUtilTest {
 		testAutoWired = SpringUtil.getBean("testAutoWired");
 		Assert.assertNotNull(testAutoWired);
 		Assert.assertNotNull(testAutoWired.getAutowiredBean());
+		Assert.assertNotNull(testAutoWired.getResourceBean());
 		Assert.assertEquals("123", testAutoWired.getAutowiredBean().getId());
 
 	}
 
-	/**
-	 * 测试注销bean
-	 */
-	@Test
-	public void unRegisterBeanTest() {
-		registerBeanTest2();
-		Assert.assertNotNull(SpringUtil.getBean("testAutoWired"));
-		SpringUtil.unRegisterBean("testAutoWired1");
-		try {
-			SpringUtil.getBean("testAutoWired");
-		} catch (NoSuchBeanDefinitionException e) {
-			Assert.assertEquals(e.getClass(), NoSuchBeanDefinitionException.class);
-		}
-	}
-
-	/**
-	 * 测试替换bean
-
-	@Test
-	public void replaceBeanTest() {
-		registerBeanTest2();
-		TestAutoWired testAutoWired = new TestAutoWired();
-		TestBean testBean = new TestBean();
-		testBean.setId("222");
-		Assert.assertEquals("123", SpringUtil.getBean("testBean", TestBean.class).getId());
-		SpringUtil.replaceBean("testBean", testBean);
-		SpringUtil.replaceBean("testAutoWired", testAutoWired);
-		testAutoWired = SpringUtil.getBean("testAutoWired");
-		TestBean testBean1 = testAutoWired.getAutowiredBean();
-		Assert.assertEquals("222", testAutoWired.getAutowiredBean().getId());
-		Assert.assertEquals("222", testBean1.getId());
-
-	}*/
 	@Test
 	public void getBeanTest(){
 		final Demo2 testDemo = SpringUtil.getBean("testDemo");
@@ -130,6 +114,9 @@ public class SpringUtilTest {
 		@Autowired
 		// @Resource
 		private TestBean autowiredBean;
+
+		 @Resource
+		private TestBean resourceBean;
 	}
 
 	@Data

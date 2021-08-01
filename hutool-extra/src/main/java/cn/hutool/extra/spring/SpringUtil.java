@@ -1,10 +1,10 @@
 package cn.hutool.extra.spring;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
@@ -21,9 +21,10 @@ import java.util.Map;
 /**
  * Spring(Spring boot)工具封装，包括：
  *
- * <pre>
- *     1、Spring IOC容器中的bean对象获取
- * </pre>
+ * <ol>
+ *     <li>Spring IOC容器中的bean对象获取</li>
+ *     <li>注册和注销Bean</li>
+ * </ol>
  *
  * @author loolly
  * @since 5.1.0
@@ -70,6 +71,25 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	public static ListableBeanFactory getBeanFactory() {
 		return null == beanFactory ? applicationContext : beanFactory;
+	}
+
+	/**
+	 * 获取{@link ConfigurableListableBeanFactory}
+	 *
+	 * @return {@link ConfigurableListableBeanFactory}
+	 * @since 5.7.7
+	 * @throws UtilException 当上下文非ConfigurableListableBeanFactory抛出异常
+	 */
+	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws UtilException{
+		final ConfigurableListableBeanFactory factory;
+		if (null != beanFactory) {
+			factory = beanFactory;
+		} else if (applicationContext instanceof ConfigurableApplicationContext) {
+			factory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
+		} else {
+			throw new UtilException("No ConfigurableListableBeanFactory from context!");
+		}
+		return factory;
 	}
 
 	//通过name获取 Bean.
@@ -201,15 +221,9 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.4.2
 	 */
 	public static <T> void registerBean(String beanName, T bean) {
-		if (null != beanFactory) {
-			beanFactory.autowireBean(bean);
-			beanFactory.registerSingleton(beanName, bean);
-		} else if (applicationContext instanceof ConfigurableApplicationContext) {
-			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
-			AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
-			factory.autowireBean(bean);
-			context.getBeanFactory().registerSingleton(beanName, bean);
-		}
+		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
+		factory.autowireBean(bean);
+		factory.registerSingleton(beanName, bean);
 	}
 
 	/**
@@ -221,32 +235,15 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @author shadow
 	 * @since 5.7.7
 	 */
-	public static void unRegisterBean(String beanName) {
-		if (applicationContext instanceof ConfigurableApplicationContext) {
-			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
-			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) context.getBeanFactory();
+	public static void unregisterBean(String beanName) {
+		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
+		if(factory instanceof DefaultSingletonBeanRegistry){
+			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
 			registry.destroySingleton(beanName);
+		} else {
+			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
 		}
 	}
-
-	/**
-	 *
-	 * 替换Bean
-	 * 组合{@link SpringUtil#unRegisterBean(String)} 和 {@link SpringUtil#replaceBean(String, Object)}
-	 * 将Spring持有bean先注销再注册
-	 * 需要注意的替换Bean的内部对象的指针指向并不会变化
-	 * 所有替换的bean被持有的情况下，需要有下至上逐步替换
-	 *
-	 * @param beanName bean名称
-	 * @param bean     bean
-	 * @param <T>      泛型
-	 * @author shadow
-	 * @since 5.7.7
-	 */
-	/*public static <T> void replaceBean(String beanName, T bean) {
-		unRegisterBean(beanName);
-		registerBean(beanName, bean);
-	}*/
 }
 
 
