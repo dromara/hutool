@@ -12,6 +12,7 @@
 * 【json   】     JSONGetter增加getLocalDateTime方法（pr#387@Gitee）
 * 【core   】     增加JNDIUtil（issue#1727@Github）
 * 【core   】     SpringUtil增加unregisterBean方法（pr#388@Gitee）
+* 【core   】     优化TextSimilarity公共子串算法（issue#I42A6V@Gitee）
 
 ### 🐞Bug修复
 * 【jwt    】     修复JWTUtil中几个方法非static的问题（issue#1735@Github）

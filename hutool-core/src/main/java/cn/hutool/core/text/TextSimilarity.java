@@ -13,7 +13,12 @@ import cn.hutool.core.util.StrUtil;
 public class TextSimilarity {
 
 	/**
-	 * 计算相似度，两个都是空串相似度为1，被认为是相同的串
+	 * 计算相似度，两个都是空串相似度为1，被认为是相同的串<br>
+	 * 比较方法为：
+	 * <ul>
+	 *     <li>只比较两个字符串字母、数字、汉字部分，其他符号去除</li>
+	 *     <li>计算出两个字符串最大子串，除以最长的字符串，结果即为相似度</li>
+	 * </ul>
 	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2
@@ -36,8 +41,8 @@ public class TextSimilarity {
 			return 1;
 		}
 
-		int temp2 = longestCommonSubstring(newStrA, newStrB).length();
-		return NumberUtil.div(temp2, temp);
+		final int commonLength = longestCommonSubstringLength(newStrA, newStrB);
+		return NumberUtil.div(commonLength, temp);
 	}
 
 	/**
@@ -50,6 +55,40 @@ public class TextSimilarity {
 	 */
 	public static String similar(String strA, String strB, int scale) {
 		return NumberUtil.formatPercent(similar(strA, strB), scale);
+	}
+
+	/**
+	 * 最长公共子串，采用动态规划算法。 其不要求所求得的字符在所给的字符串中是连续的。<br>
+	 * 算法解析见：https://leetcode-cn.com/problems/longest-common-subsequence/solution/zui-chang-gong-gong-zi-xu-lie-by-leetcod-y7u0/
+	 *
+	 * @param strA 字符串1
+	 * @param strB 字符串2
+	 * @return 最长公共子串
+	 */
+	public static String longestCommonSubstring(String strA, String strB) {
+		// 初始化矩阵数据,matrix[0][0]的值为0， 如果字符数组chars_strA和chars_strB的对应位相同，则matrix[i][j]的值为左上角的值加1，
+		// 否则，matrix[i][j]的值等于左上方最近两个位置的较大值， 矩阵中其余各点的值为0.
+		final int[][] matrix = generateMatrix(strA, strB);
+
+		int m = strA.length();
+		int n = strB.length();
+		// 矩阵中，如果matrix[m][n]的值不等于matrix[m-1][n]的值也不等于matrix[m][n-1]的值，
+		// 则matrix[m][n]对应的字符为相似字符元，并将其存入result数组中。
+		char[] result = new char[matrix[m][n]];
+		int currentIndex = result.length - 1;
+		while (matrix[m][n] != 0) {
+			if (matrix[m][n] == matrix[m][n - 1]) {
+				n--;
+			} else if (matrix[m][n] == matrix[m - 1][n]) {
+				m--;
+			} else {
+				result[currentIndex] = strA.charAt(m - 1);
+				currentIndex--;
+				n--;
+				m--;
+			}
+		}
+		return new String(result);
 	}
 
 	// --------------------------------------------------------------------------------------------------- Private method start
@@ -94,7 +133,20 @@ public class TextSimilarity {
 	 * @param strB 字符串2
 	 * @return 公共子串
 	 */
-	private static String longestCommonSubstring(String strA, String strB) {
+	private static int longestCommonSubstringLength(String strA, String strB) {
+		final int m = strA.length();
+		final int n = strB.length();
+		return generateMatrix(strA, strB)[m][n];
+	}
+
+	/**
+	 * 求公共子串，采用动态规划算法。 其不要求所求得的字符在所给的字符串中是连续的。
+	 *
+	 * @param strA 字符串1
+	 * @param strB 字符串2
+	 * @return 公共串矩阵
+	 */
+	private static int[][] generateMatrix(String strA, String strB) {
 		int m = strA.length();
 		int n = strB.length();
 
@@ -111,23 +163,7 @@ public class TextSimilarity {
 			}
 		}
 
-		// 矩阵中，如果matrix[m][n]的值不等于matrix[m-1][n]的值也不等于matrix[m][n-1]的值，
-		// 则matrix[m][n]对应的字符为相似字符元，并将其存入result数组中。
-		char[] result = new char[matrix[m][n]];
-		int currentIndex = result.length - 1;
-		while (matrix[m][n] != 0) {
-			if (matrix[m][n] == matrix[m][n - 1]) {
-				n--;
-			} else if (matrix[m][n] == matrix[m - 1][n]) {
-				m--;
-			} else {
-				result[currentIndex] = strA.charAt(m - 1);
-				currentIndex--;
-				n--;
-				m--;
-			}
-		}
-		return new String(result);
+		return matrix;
 	}
 	// --------------------------------------------------------------------------------------------------- Private method end
 }
