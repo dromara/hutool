@@ -4,8 +4,10 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -189,6 +191,8 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * 动态向Spring注册Bean
 	 * <p>
 	 * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
+	 * <p>
+	 * 更新: shadow 2021-07-29 17:20:44 增加自动注入，修复注册bean无法反向注入的问题
 	 *
 	 * @param <T>      Bean类型
 	 * @param beanName 名称
@@ -197,13 +201,52 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.4.2
 	 */
 	public static <T> void registerBean(String beanName, T bean) {
-		if(null != beanFactory){
+		if (null != beanFactory) {
+			beanFactory.autowireBean(bean);
 			beanFactory.registerSingleton(beanName, bean);
-		} else if(applicationContext instanceof ConfigurableApplicationContext){
+		} else if (applicationContext instanceof ConfigurableApplicationContext) {
 			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+			AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
+			factory.autowireBean(bean);
 			context.getBeanFactory().registerSingleton(beanName, bean);
 		}
 	}
+
+	/**
+	 * 注销bean
+	 * <p>
+	 * 将Spring中的bean注销，请谨慎使用
+	 *
+	 * @param beanName bean名称
+	 * @author shadow
+	 * @since 5.7.7
+	 */
+	public static void unRegisterBean(String beanName) {
+		if (applicationContext instanceof ConfigurableApplicationContext) {
+			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) context.getBeanFactory();
+			registry.destroySingleton(beanName);
+		}
+	}
+
+	/**
+	 *
+	 * 替换Bean
+	 * 组合{@link SpringUtil#unRegisterBean(String)} 和 {@link SpringUtil#replaceBean(String, Object)}
+	 * 将Spring持有bean先注销再注册
+	 * 需要注意的替换Bean的内部对象的指针指向并不会变化
+	 * 所有替换的bean被持有的情况下，需要有下至上逐步替换
+	 *
+	 * @param beanName bean名称
+	 * @param bean     bean
+	 * @param <T>      泛型
+	 * @author shadow
+	 * @since 5.7.7
+	 */
+	/*public static <T> void replaceBean(String beanName, T bean) {
+		unRegisterBean(beanName);
+		registerBean(beanName, bean);
+	}*/
 }
 
 
