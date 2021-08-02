@@ -710,10 +710,7 @@ public class FileUtil extends PathUtil {
 
 		// 删除文件或清空后的目录
 		try {
-			Files.delete(file.toPath());
-		} catch (AccessDeniedException access) {
-			// 可能遇到只读文件，无法删除.使用 file 方法删除
-			return file.delete();
+			delFile(file.toPath());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

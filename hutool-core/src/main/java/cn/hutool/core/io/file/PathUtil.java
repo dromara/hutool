@@ -135,12 +135,7 @@ public class PathUtil {
 			if (isDirectory(path)) {
 				Files.walkFileTree(path, DelVisitor.INSTANCE);
 			} else {
-				try {
-					Files.delete(path);
-				} catch (AccessDeniedException access) {
-					// 可能遇到只读文件，无法删除.使用 file 方法删除
-					return path.toFile().delete();
-				}
+				delFile(path);
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
@@ -595,5 +590,23 @@ public class PathUtil {
 	 */
 	public static Path mkParentDirs(Path path) {
 		return mkdir(path.getParent());
+	}
+
+	/**
+	 * 删除文件，不追踪软链
+	 *
+	 * @param path 文件对象
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.7
+	 */
+	protected static void delFile(Path path) throws IOException {
+		try {
+			Files.delete(path);
+		}catch (AccessDeniedException e) {
+			// 可能遇到只读文件，无法删除.使用 file 方法删除
+			if(false == path.toFile().delete()) {
+				throw e;
+			}
+		}
 	}
 }
