@@ -97,7 +97,7 @@ public class NumberChineseFormatter {
 			// TODO 此处逻辑过于复杂，等待整理重构
 			if (i != 0) {
 				if (i % 2 == 0) {
-					if (parts[i - 1] < 1000) {
+					if (parts[i - 1] < 1000 && parts[i - 1] > 0) {
 						// 如果"亿"的部分不为 0, 而"亿"以下的部分小于 1000，则亿后面应该跟“零”，如一亿零三十五万
 						chineseStr.insert(0, "零");
 					}

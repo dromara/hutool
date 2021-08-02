@@ -11,6 +11,7 @@
 * 【core   】     PhoneUtil中新增获取固话号码中区号,以及固话号码中号码的方法（pr#387@Gitee）
 * 【json   】     JSONGetter增加getLocalDateTime方法（pr#387@Gitee）
 * 【core   】     增加JNDIUtil（issue#1727@Github）
+* 【core   】     NetUtil增加getDnsInfo方法（issue#1727@Github）
 * 【core   】     SpringUtil增加unregisterBean方法（pr#388@Gitee）
 * 【core   】     优化TextSimilarity公共子串算法（issue#I42A6V@Gitee）
 * 【core   】     优化DateUtil.parse对UTC附带时区字符串解析（issue#I437AP@Gitee）
@@ -20,6 +21,9 @@
 * 【core   】     修复SpringUtil无法处理autowired问题（pr#388@Gitee）
 * 【core   】     修复AbsCollValueMap中常量拼写错误（pr#1736@Github）
 * 【core   】     修复FileUtil.del在文件只读情况下无法删除的问题（pr#389@Gitee）
+* 【core   】     修复FileUtil.move在不同分区下失败的问题（pr#390@Gitee）
+* 【core   】     修复FileUtil.copy强制覆盖参数无效问题
+* 【core   】     修复NumberChineseFormatter转换金额多零问题（issue#1739@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

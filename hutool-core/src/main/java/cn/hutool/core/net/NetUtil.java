@@ -1,13 +1,18 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.JNDIUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
@@ -823,6 +828,34 @@ public class NetUtil {
 	public static void setGlobalAuthenticator(Authenticator authenticator) {
 		Authenticator.setDefault(authenticator);
 	}
+
+	/**
+	 * 获取DNS信息，如TXT信息：
+	 *
+	 * <pre class="code">
+	 *     NetUtil.attrNames("hutool.cn", "TXT")
+	 * </pre>
+	 *
+	 * @param hostName 主机域名
+	 * @param attrNames 属性
+	 * @since 5.7.7
+	 * @return DNS信息
+	 */
+	public static List<String> getDnsInfo(String hostName, String... attrNames){
+		final String uri = StrUtil.addPrefixIfNot(hostName, "dns:");
+		final Attributes attributes = JNDIUtil.getAttributes(uri, attrNames);
+
+		final List<String> infos = new ArrayList<>();
+		for (Attribute attribute: new EnumerationIter<>(attributes.getAll())){
+			try {
+				infos.add((String) attribute.get());
+			} catch (NamingException ignore) {
+				//ignore
+			}
+		}
+		return infos;
+	}
+
 	// ----------------------------------------------------------------------------------------- Private method start
 
 	/**

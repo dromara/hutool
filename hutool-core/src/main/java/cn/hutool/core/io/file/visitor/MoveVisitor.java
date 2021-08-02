@@ -12,13 +12,13 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * 文件拷贝的FileVisitor实现，用于递归遍历拷贝目录，此类非线程安全<br>
- * 此类在遍历源目录并复制过程中会自动创建目标目录中不存在的上级目录。
+ * 文件移动操作的FileVisitor实现，用于递归遍历移动目录和文件，此类非线程安全<br>
+ * 此类在遍历源目录并移动过程中会自动创建目标目录中不存在的上级目录。
  *
  * @author looly
- * @since 5.5.1
+ * @since 5.7.7
  */
-public class CopyVisitor extends SimpleFileVisitor<Path> {
+public class MoveVisitor extends SimpleFileVisitor<Path> {
 
 	private final Path source;
 	private final Path target;
@@ -30,9 +30,8 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 *
 	 * @param source 源Path
 	 * @param target 目标Path
-	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
-	public CopyVisitor(Path source, Path target, CopyOption... copyOptions) {
+	public MoveVisitor(Path source, Path target, CopyOption... copyOptions) {
 		if(PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)){
 			throw new IllegalArgumentException("Target must be a directory");
 		}
@@ -47,11 +46,10 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 		initTarget();
 		// 将当前目录相对于源路径转换为相对于目标路径
 		final Path targetDir = target.resolve(source.relativize(dir));
-		try {
-			Files.copy(dir, targetDir, copyOptions);
-		} catch (FileAlreadyExistsException e) {
-			if (false == Files.isDirectory(targetDir))
-				throw e;
+		if(false == Files.exists(targetDir)){
+			Files.createDirectories(targetDir);
+		} else if(false == Files.isDirectory(targetDir)){
+			throw new FileAlreadyExistsException(targetDir.toString());
 		}
 		return FileVisitResult.CONTINUE;
 	}
@@ -60,7 +58,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
 			throws IOException {
 		initTarget();
-		Files.copy(file, target.resolve(source.relativize(file)), copyOptions);
+		Files.move(file, target.resolve(source.relativize(file)), copyOptions);
 		return FileVisitResult.CONTINUE;
 	}
 

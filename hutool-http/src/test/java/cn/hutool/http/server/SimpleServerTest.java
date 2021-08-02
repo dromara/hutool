@@ -26,6 +26,7 @@ public class SimpleServerTest {
 					String res = JSONUtil.createObj()
 							.set("id", 1)
 							.set("method", request.getMethod())
+							.set("request", request.getBody())
 							.toStringPretty();
 					response.write(res, ContentType.JSON.toString());
 				})

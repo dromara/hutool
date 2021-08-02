@@ -46,6 +46,18 @@ public class PathUtilTest {
 
 	@Test
 	@Ignore
+	public void moveDirTest(){
+		PathUtil.move(Paths.get("c:\\aaa"), Paths.get("d:/test/looly"), false);
+	}
+
+	@Test
+	@Ignore
+	public void delDirTest(){
+		PathUtil.del(Paths.get("d:/test/looly"));
+	}
+
+	@Test
+	@Ignore
 	public void getMimeTypeTest(){
 		String mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.jpg"));
 		Assert.assertEquals("image/jpeg", mimeType);

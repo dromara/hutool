@@ -4,6 +4,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.file.visitor.DelVisitor;
+import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -16,7 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -221,7 +232,7 @@ public class PathUtil {
 	 */
 	public static Path copyContent(Path src, Path target, CopyOption... options) throws IORuntimeException {
 		try {
-			Files.walkFileTree(src, new CopyVisitor(src, target));
+			Files.walkFileTree(src, new CopyVisitor(src, target, options));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -440,7 +451,8 @@ public class PathUtil {
 
 	/**
 	 * 移动文件或目录<br>
-	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下
+	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下<br>
+	 * 例如：move("/usr/aaa", "/usr/bbb")结果为："/usr/bbb/aaa"
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
@@ -460,7 +472,15 @@ public class PathUtil {
 		try {
 			return Files.move(src, target, options);
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
+			try {
+				Files.walkFileTree(src, new MoveVisitor(src, target, options));
+				// 移动后空目录没有删除，
+				del(src);
+			} catch (IOException e2) {
+				throw new IORuntimeException(e2);
+			}
+			return target;
 		}
 	}
 
