@@ -712,12 +712,8 @@ public class FileUtil extends PathUtil {
 		try {
 			Files.delete(file.toPath());
 		} catch (AccessDeniedException access) {
-			// 可能遇到只读文件，无法删除，先尝试处理权限
-			try {
-				file.setWritable(true);
-			} catch (Exception exception) {
-				throw new IORuntimeException(access);
-			}
+			// 可能遇到只读文件，无法删除.使用 file 方法删除
+			return file.delete();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
