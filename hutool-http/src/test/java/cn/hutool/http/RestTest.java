@@ -57,6 +57,7 @@ public class RestTest {
 	@Ignore
 	public void getWithBodyTest2() {
 		HttpRequest request = HttpRequest.get("https://ad.oceanengine.com/open_api/2/advertiser/info/")//
+				// Charles代理
 				.setHttpProxy("localhost", 8888)
 				.header("Access-Token","")
 				.body(JSONUtil.createObj()
