@@ -128,7 +128,7 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invokeDefault);
 	 * </pre>
 	 *
-	 * @param <T> 返回结果类型
+	 * @param <T>        返回结果类型
 	 * @param obj        接口的子对象或代理对象
 	 * @param methodName 方法名称
 	 * @param args       参数
@@ -148,7 +148,7 @@ public class MethodHandleUtil {
 	/**
 	 * 执行接口或对象中的方法
 	 *
-	 * @param <T> 返回结果类型
+	 * @param <T>    返回结果类型
 	 * @param obj    接口的子对象或代理对象
 	 * @param method 方法
 	 * @param args   参数
@@ -174,7 +174,7 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
-	 * @param <T> 返回结果类型
+	 * @param <T>    返回结果类型
 	 * @param obj    接口的子对象或代理对象
 	 * @param method 方法
 	 * @param args   参数
@@ -200,10 +200,11 @@ public class MethodHandleUtil {
 	 *         MethodHandleUtil::invoke);
 	 * </pre>
 	 *
-	 * @param <T> 返回结果类型
-	 * @param obj    接口的子对象或代理对象
-	 * @param method 方法
-	 * @param args   参数
+	 * @param <T>       返回结果类型
+	 * @param isSpecial 是否为特殊方法（private、static等）
+	 * @param obj       接口的子对象或代理对象
+	 * @param method    方法
+	 * @param args      参数
 	 * @return 结果
 	 */
 	@SuppressWarnings("unchecked")
@@ -214,7 +215,7 @@ public class MethodHandleUtil {
 		try {
 			MethodHandle handle = isSpecial ? lookup.unreflectSpecial(method, declaringClass)
 					: lookup.unreflect(method);
-			if(null != obj){
+			if (null != obj) {
 				handle = handle.bindTo(obj);
 			}
 			return (T) handle.invokeWithArguments(args);

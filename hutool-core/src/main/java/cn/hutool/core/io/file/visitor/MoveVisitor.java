@@ -30,6 +30,7 @@ public class MoveVisitor extends SimpleFileVisitor<Path> {
 	 *
 	 * @param source 源Path
 	 * @param target 目标Path
+	 * @param copyOptions 拷贝（移动）选项
 	 */
 	public MoveVisitor(Path source, Path target, CopyOption... copyOptions) {
 		if(PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)){
