@@ -16,16 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -144,7 +135,12 @@ public class PathUtil {
 			if (isDirectory(path)) {
 				Files.walkFileTree(path, DelVisitor.INSTANCE);
 			} else {
-				Files.delete(path);
+				try {
+					Files.delete(path);
+				} catch (AccessDeniedException access) {
+					// 可能遇到只读文件，无法删除.使用 file 方法删除
+					return path.toFile().delete();
+				}
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
