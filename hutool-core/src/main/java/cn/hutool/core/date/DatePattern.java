@@ -268,6 +268,15 @@ public class DatePattern {
 	public static final FastDateFormat UTC_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
 
 	/**
+	 * UTC时间：yyyy-MM-dd'T'HH:mm:ssXXX
+	 */
+	public static final String UTC_WITH_XXX_OFFSET_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX";
+	/**
+	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssXXX
+	 */
+	public static final FastDateFormat UTC_WITH_XXX_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_WITH_XXX_OFFSET_PATTERN);
+
+	/**
 	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
 	 */
 	public static final String UTC_MS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -284,6 +293,15 @@ public class DatePattern {
 	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssZ
 	 */
 	public static final FastDateFormat UTC_MS_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
+
+	/**
+	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+	 */
+	public static final String UTC_MS_WITH_XXX_OFFSET_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+	/**
+	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+	 */
+	public static final FastDateFormat UTC_MS_WITH_XXX_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_XXX_OFFSET_PATTERN);
 
 	/**
 	 * 创建并为 {@link DateTimeFormatter} 赋予默认时区和位置信息，默认值为系统默认值。

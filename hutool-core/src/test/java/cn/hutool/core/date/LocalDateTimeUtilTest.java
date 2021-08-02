@@ -30,6 +30,12 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void parseOffsetTest() {
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2021-07-30T16:27:27+08:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		Assert.assertEquals("2021-07-30T16:27:27", localDateTime.toString());
+	}
+
+	@Test
 	public void parseTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
 		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());

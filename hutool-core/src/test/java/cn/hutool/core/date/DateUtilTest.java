@@ -438,7 +438,13 @@ public class DateUtilTest {
 	@Test
 	public void parseTest7() {
 		String str = "2019-06-01T19:45:43.000 +0800";
-		DateTime dateTime = DateUtil.parse(str, "yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+
+		str = "2019-06-01T19:45:43 +08:00";
+		dateTime = DateUtil.parse(str);
+		assert dateTime != null;
 		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
@@ -448,6 +454,20 @@ public class DateUtilTest {
 		DateTime dateTime = DateUtil.parse(str);
 		assert dateTime != null;
 		Assert.assertEquals("2020-06-28 02:14:13", dateTime.toString());
+	}
+
+	@Test
+	public void parseUTCOffsetTest() {
+		// issue#I437AP@Gitee
+		String str = "2019-06-01T19:45:43+08:00";
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+
+		str = "2019-06-01T19:45:43 +08:00";
+		dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
 	@Test

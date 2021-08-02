@@ -13,6 +13,7 @@
 * 【core   】     增加JNDIUtil（issue#1727@Github）
 * 【core   】     SpringUtil增加unregisterBean方法（pr#388@Gitee）
 * 【core   】     优化TextSimilarity公共子串算法（issue#I42A6V@Gitee）
+* 【core   】     优化DateUtil.parse对UTC附带时区字符串解析（issue#I437AP@Gitee）
 
 ### 🐞Bug修复
 * 【jwt    】     修复JWTUtil中几个方法非static的问题（issue#1735@Github）

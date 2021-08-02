@@ -809,6 +809,8 @@ public class DateUtil extends CalendarUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss+0800</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss+08:00</li>
 	 * </ol>
 	 *
 	 * @param utcString UTC时间
@@ -832,14 +834,28 @@ public class DateUtil extends CalendarUtil {
 			if (length <= patternLength - 4 && length >= patternLength - 6) {
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
+		} else if(StrUtil.contains(utcString, '+')){
+			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
+			utcString = utcString.replace(" +", "+");
+			final String zoneOffset = StrUtil.subAfter(utcString, '+', true);
+			if(StrUtil.isBlank(zoneOffset)){
+				throw new DateException("Invalid format: [{}]", utcString);
+			}
+			if(false == StrUtil.contains(zoneOffset, ':')){
+				// +0800转换为+08:00
+				final String pre = StrUtil.subBefore(utcString, '+', true);
+				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
+			}
+
+			if(StrUtil.contains(utcString, CharUtil.DOT)) {
+				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
+				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+			} else {
+				// 格式类似：2018-09-13T05:34:31+08:00
+				return parse(utcString, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+			}
 		} else {
-			if (length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
-				// 格式类似：2018-09-13T05:34:31+0800 或 2018-09-13T05:34:31+08:00
-				return parse(utcString, DatePattern.UTC_WITH_ZONE_OFFSET_FORMAT);
-			} else if (length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
-				// 格式类似：2018-09-13T05:34:31.999+0800 或 2018-09-13T05:34:31.999+08:00
-				return parse(utcString, DatePattern.UTC_MS_WITH_ZONE_OFFSET_FORMAT);
-			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
+			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
