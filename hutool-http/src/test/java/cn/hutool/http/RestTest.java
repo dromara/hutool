@@ -58,7 +58,7 @@ public class RestTest {
 	public void getWithBodyTest2() {
 		HttpRequest request = HttpRequest.get("https://ad.oceanengine.com/open_api/2/advertiser/info/")//
 				.setHttpProxy("localhost", 8888)
-				.header("Access-Token","b91e44f37ff2544079ceabcfafaf02bd3db9b769")
+				.header("Access-Token","")
 				.body(JSONUtil.createObj()
 						.set("advertiser_ids", new Long[] {1690657248243790L})
 						.set("fields", new String[] {"id", "name", "status"}).toString());
