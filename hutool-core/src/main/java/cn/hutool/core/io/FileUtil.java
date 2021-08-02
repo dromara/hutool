@@ -40,10 +40,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -714,6 +711,13 @@ public class FileUtil extends PathUtil {
 		// 删除文件或清空后的目录
 		try {
 			Files.delete(file.toPath());
+		} catch (AccessDeniedException access) {
+			// 可能遇到只读文件，无法删除，先尝试处理权限
+			try {
+				file.setWritable(true);
+			} catch (Exception exception) {
+				throw new IORuntimeException(access);
+			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
