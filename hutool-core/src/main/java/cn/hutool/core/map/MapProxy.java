@@ -155,7 +155,10 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 				final String fieldName = StrUtil.removePreAndLowerFirst(methodName, 3);
 				if (StrUtil.isNotBlank(fieldName)) {
 					this.put(fieldName, args[0]);
-					return proxy;
+					final Class<?> returnType = method.getReturnType();
+					if(returnType.isInstance(proxy)){
+						return proxy;
+					}
 				}
 			} else if ("equals".equals(methodName)) {
 				return this.equals(args[0]);
