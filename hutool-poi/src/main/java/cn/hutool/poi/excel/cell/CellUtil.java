@@ -248,7 +248,13 @@ public class CellUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			cell.setCellValue(((Number) value).doubleValue());
+			// issue https://gitee.com/dromara/hutool/issues/I43U9G
+			// 避免float到double的精度问题
+			if (value instanceof Float) {
+				cell.setCellValue(((Number) value).floatValue());
+			} else {
+				cell.setCellValue(((Number) value).doubleValue());
+			}
 		} else {
 			cell.setCellValue(value.toString());
 		}
