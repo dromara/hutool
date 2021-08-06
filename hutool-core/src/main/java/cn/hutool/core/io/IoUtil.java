@@ -357,7 +357,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取内容，读取完毕后并不关闭流
+	 * 从流中读取内容，读取完毕后关闭流
 	 *
 	 * @param in      输入流，读取完毕后并不关闭流
 	 * @param charset 字符集
@@ -369,7 +369,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取内容，读到输出流中，读取完毕后并不关闭流
+	 * 从流中读取内容，读到输出流中，读取完毕后关闭流
 	 *
 	 * @param in 输入流
 	 * @return 输出流
@@ -380,7 +380,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取内容，读到输出流中，读取完毕后并不关闭流
+	 * 从流中读取内容，读到输出流中，读取完毕后可选是否关闭流
 	 *
 	 * @param in      输入流
 	 * @param isClose 读取完毕后是否关闭流
