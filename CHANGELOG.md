@@ -8,6 +8,7 @@
 ### 🐣新特性
 * 【core   】     MapProxy支持return this的setter方法（pr#392@Gitee）
 * 【core   】     BeeDSFactory移除sqlite事务修复代码，新版本BeeCP已修复
+* 【core   】     增加compress包，扩充Zip操作灵活性
 
 ### 🐞Bug修复
 
