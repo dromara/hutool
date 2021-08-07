@@ -19,14 +19,14 @@
 	<properties>
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
-		<dbcp2.version>2.8.0</dbcp2.version>
+		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
 		<druid.version>1.2.6</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.8</mongo.version>
-		<sqlite.version>3.34.0</sqlite.version>
-		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>3.6.1</jedis.version>
+		<mongo.version>3.12.10</mongo.version>
+		<sqlite.version>3.36.0.1</sqlite.version>
+		<hsqldb.version>2.6.0</hsqldb.version>
+		<jedis.version>3.6.3</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.1.2</version>
+			<version>3.2.5</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -142,13 +142,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.25</version>
+			<version>8.0.26</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.20.jre7</version>
+			<version>42.2.23.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

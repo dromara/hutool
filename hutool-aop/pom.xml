@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<cglib.version>3.3.0</cglib.version>
-		<spring.version>5.3.8</spring.version>
+		<spring.version>5.3.9</spring.version>
 	</properties>
 
 	<dependencies>
