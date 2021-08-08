@@ -5,11 +5,115 @@ import org.junit.Test;
 
 public class NumberChineseFormatterTest {
 
+	// 测试千
+	@Test
+	public void formatThousandLongTest(){
+		String f = NumberChineseFormatter.format(0, false);
+		Assert.assertEquals("零", f);
+		f = NumberChineseFormatter.format(1, false);
+		Assert.assertEquals("一", f);
+		f = NumberChineseFormatter.format(10, false);
+		Assert.assertEquals("一十", f);
+		f = NumberChineseFormatter.format(12, false);
+		Assert.assertEquals("一十二", f);
+		f = NumberChineseFormatter.format(100, false);
+		Assert.assertEquals("一百", f);
+		f = NumberChineseFormatter.format(101, false);
+		Assert.assertEquals("一百零一", f);
+		f = NumberChineseFormatter.format(110, false);
+		Assert.assertEquals("一百一十", f);
+		f = NumberChineseFormatter.format(112, false);
+		Assert.assertEquals("一百一十二", f);
+		f = NumberChineseFormatter.format(1000, false);
+		Assert.assertEquals("一千", f);
+		f = NumberChineseFormatter.format(1001, false);
+		Assert.assertEquals("一千零一", f);
+		f = NumberChineseFormatter.format(1010, false);
+		Assert.assertEquals("一千零一十", f);
+		f = NumberChineseFormatter.format(1100, false);
+		Assert.assertEquals("一千一百", f);
+		f = NumberChineseFormatter.format(1101, false);
+		Assert.assertEquals("一千一百零一", f);
+		f = NumberChineseFormatter.format(9999, false);
+		Assert.assertEquals("九千九百九十九", f);
+	}
+
+	// 测试万
+	@Test
+	public void formatTenThousandLongTest(){
+		String f = NumberChineseFormatter.format(1_0000, false);
+		Assert.assertEquals("一万", f);
+		f = NumberChineseFormatter.format(1_0001, false);
+		Assert.assertEquals("一万零一", f);
+		f = NumberChineseFormatter.format(1_0010, false);
+		Assert.assertEquals("一万零一十", f);
+		f = NumberChineseFormatter.format(1_0100, false);
+		Assert.assertEquals("一万零一百", f);
+		f = NumberChineseFormatter.format(1_1000, false);
+		Assert.assertEquals("一万一千", f);
+		f = NumberChineseFormatter.format(10_1000, false);
+		Assert.assertEquals("一十万零一千", f);
+		f = NumberChineseFormatter.format(10_0100, false);
+		Assert.assertEquals("一十万零一百", f);
+		f = NumberChineseFormatter.format(100_1000, false);
+		Assert.assertEquals("一百万零一千", f);
+		f = NumberChineseFormatter.format(100_0100, false);
+		Assert.assertEquals("一百万零一百", f);
+		f = NumberChineseFormatter.format(1000_1000, false);
+		Assert.assertEquals("一千万零一千", f);
+		f = NumberChineseFormatter.format(1000_0100, false);
+		Assert.assertEquals("一千万零一百", f);
+		f = NumberChineseFormatter.format(9999_0000, false);
+		Assert.assertEquals("九千九百九十九万", f);
+	}
+
+	// 测试亿
+	@Test
+	public void formatHundredMillionLongTest(){
+		String f = NumberChineseFormatter.format(1_0000_0000L, false);
+		Assert.assertEquals("一亿", f);
+		f = NumberChineseFormatter.format(1_0000_0001L, false);
+		Assert.assertEquals("一亿零一", f);
+		f = NumberChineseFormatter.format(1_0000_1000L, false);
+		Assert.assertEquals("一亿零一千", f);
+		f = NumberChineseFormatter.format(1_0001_0000L, false);
+		Assert.assertEquals("一亿零一万", f);
+		f = NumberChineseFormatter.format(1_0010_0000L, false);
+		Assert.assertEquals("一亿零一十万", f);
+		f = NumberChineseFormatter.format(1_0010_0000L, false);
+		Assert.assertEquals("一亿零一十万", f);
+		f = NumberChineseFormatter.format(1_0100_0000L, false);
+		Assert.assertEquals("一亿零一百万", f);
+		f = NumberChineseFormatter.format(1_1000_0000L, false);
+		Assert.assertEquals("一亿一千万", f);
+		f = NumberChineseFormatter.format(10_1000_0000L, false);
+		Assert.assertEquals("一十亿零一千万", f);
+		f = NumberChineseFormatter.format(100_1000_0000L, false);
+		Assert.assertEquals("一百亿零一千万", f);
+		f = NumberChineseFormatter.format(1000_1000_0000L, false);
+		Assert.assertEquals("一千亿零一千万", f);
+		f = NumberChineseFormatter.format(1100_1000_0000L, false);
+		Assert.assertEquals("一千一百亿零一千万", f);
+		f = NumberChineseFormatter.format(9999_0000_0000L, false);
+		Assert.assertEquals("九千九百九十九亿", f);
+	}
+
+	// 测试万亿
+	@Test
+	public void formatTrillionsLongTest(){
+		String f = NumberChineseFormatter.format(1_0000_0000_0000L, false);
+		Assert.assertEquals("一万亿", f);
+		f = NumberChineseFormatter.format(1_0000_1000_0000L, false);
+		Assert.assertEquals("一万亿零一千万", f);
+		f = NumberChineseFormatter.format(1_0010_0000_0000L, false);
+		Assert.assertEquals("一万零一十亿", f);
+	}
+
 	@Test
 	public void formatTest() {
-		String f0 = NumberChineseFormatter.format(50008000, false);
+		String f0 = NumberChineseFormatter.format(5000_8000, false);
 		Assert.assertEquals("五千万零八千", f0);
-		String f1 = NumberChineseFormatter.format(10889.72356, false);
+		String f1 = NumberChineseFormatter.format(1_0889.72356, false);
 		Assert.assertEquals("一万零八百八十九点七二", f1);
 		f1 = NumberChineseFormatter.format(12653, false);
 		Assert.assertEquals("一万二千六百五十三", f1);
@@ -73,14 +177,20 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void digitToChineseTest() {
-		String digitToChinese = Convert.digitToChinese(12412412412421.12);
+		String digitToChinese = Convert.digitToChinese(12_4124_1241_2421.12);
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
 
-		String digitToChinese2 = Convert.digitToChinese(12412412412421D);
-		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese2);
+		digitToChinese = Convert.digitToChinese(12_0000_1241_2421L);
+		Assert.assertEquals("壹拾贰万亿零壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese);
 
-		String digitToChinese3 = Convert.digitToChinese(2421.02);
-		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese3);
+		digitToChinese = Convert.digitToChinese(12_0000_0000_2421L);
+		Assert.assertEquals("壹拾贰万亿零贰仟肆佰贰拾壹元整", digitToChinese);
+
+		digitToChinese = Convert.digitToChinese(12_4124_1241_2421D);
+		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese);
+
+		digitToChinese = Convert.digitToChinese(2421.02);
+		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese);
 	}
 
 	@Test
@@ -93,8 +203,8 @@ public class NumberChineseFormatterTest {
 		digitUppercase = Convert.digitToChinese(a);
 		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 
-		a = 1024;
-		digitUppercase = Convert.digitToChinese(a);
+		double b = 1024;
+		digitUppercase = Convert.digitToChinese(b);
 		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 	}
 
@@ -106,6 +216,12 @@ public class NumberChineseFormatterTest {
 		Assert.assertEquals("贰万元整", digitToChinese);
 		digitToChinese = Convert.digitToChinese(2_0000_0000_0000.00);
 		Assert.assertEquals("贰万亿元整", digitToChinese);
+	}
+
+	@Test
+	public void digitToChineseTest4() {
+		String digitToChinese = Convert.digitToChinese(400_0000.00);
+		Assert.assertEquals("肆佰万元整", digitToChinese);
 	}
 
 	@Test
