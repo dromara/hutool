@@ -53,6 +53,7 @@ public class ZipWriter implements Closeable {
 	 * 构造
 	 *
 	 * @param zipFile 生成的Zip文件
+	 * @param charset 编码
 	 */
 	public ZipWriter(File zipFile, Charset charset) {
 		this.out = getZipOutputStream(zipFile, charset);
@@ -61,7 +62,8 @@ public class ZipWriter implements Closeable {
 	/**
 	 * 构造
 	 *
-	 * @param out {@link ZipOutputStream}
+	 * @param out     {@link ZipOutputStream}
+	 * @param charset 编码
 	 */
 	public ZipWriter(OutputStream out, Charset charset) {
 		this.out = getZipOutputStream(out, charset);
@@ -113,6 +115,7 @@ public class ZipWriter implements Closeable {
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
 	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩），{@code null}表示不过滤
 	 * @param files      要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 * @since 5.1.1
 	 */
@@ -139,6 +142,7 @@ public class ZipWriter implements Closeable {
 	 * 添加资源到压缩包，添加后关闭资源流
 	 *
 	 * @param resources 需要压缩的资源，资源的路径为{@link Resource#getName()}
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public ZipWriter add(Resource... resources) throws IORuntimeException {
@@ -156,6 +160,7 @@ public class ZipWriter implements Closeable {
 	 *
 	 * @param path 压缩的路径, {@code null}和""表示根目录下
 	 * @param in   需要压缩的输入流，使用完后自动关闭，{@code null}表示加入空目录
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public ZipWriter add(String path, InputStream in) throws IORuntimeException {

@@ -53,6 +53,7 @@ public class ZipReader implements Closeable {
 	 * 构造
 	 *
 	 * @param zipFile 读取的的Zip文件
+	 * @param charset 编码
 	 */
 	public ZipReader(File zipFile, Charset charset) {
 		this.zipFile = ZipUtil.toZipFile(zipFile, charset);
@@ -71,6 +72,7 @@ public class ZipReader implements Closeable {
 	 * 构造
 	 *
 	 * @param in 读取的的Zip文件流
+	 * @param charset 编码
 	 */
 	public ZipReader(InputStream in, Charset charset) {
 		this.in = new ZipInputStream(in, charset);
@@ -139,6 +141,7 @@ public class ZipReader implements Closeable {
 	 *
 	 * @param consumer {@link ZipEntry}处理器
 	 * @throws IORuntimeException IO异常
+	 * @return this
 	 */
 	public ZipReader read(Consumer<ZipEntry> consumer) throws IORuntimeException {
 		if (null != this.zipFile) {

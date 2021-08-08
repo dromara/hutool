@@ -31,6 +31,7 @@ public class Deflate implements Closeable {
 	 * @param source 源流
 	 * @param target 目标流
 	 * @param nowrap {@code true}表示兼容Gzip压缩
+	 * @return this
 	 */
 	public static Deflate of(InputStream source, OutputStream target, boolean nowrap) {
 		return new Deflate(source, target, nowrap);
@@ -62,6 +63,7 @@ public class Deflate implements Closeable {
 	 * 将普通数据流压缩
 	 *
 	 * @param level 压缩级别，0~9
+	 * @return this
 	 */
 	public Deflate deflater(int level) {
 		target= (target instanceof DeflaterOutputStream) ?
@@ -77,6 +79,8 @@ public class Deflate implements Closeable {
 
 	/**
 	 * 将压缩流解压到target中
+	 *
+	 * @return this
 	 */
 	public Deflate inflater() {
 		target = (target instanceof InflaterOutputStream) ?

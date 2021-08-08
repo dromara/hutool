@@ -27,6 +27,7 @@ public class Gzip implements Closeable {
 	 *
 	 * @param source 源流
 	 * @param target 目标流
+	 * @return Gzip
 	 */
 	public static Gzip of(InputStream source, OutputStream target) {
 		return new Gzip(source, target);
@@ -54,13 +55,15 @@ public class Gzip implements Closeable {
 
 	/**
 	 * 将普通数据流压缩
+	 *
+	 * @return Gzip
 	 */
 	public Gzip gzip() {
 		try {
 			target = (target instanceof GZIPOutputStream) ?
 					(GZIPOutputStream) target : new GZIPOutputStream(target);
 			IoUtil.copy(source, target);
-			((GZIPOutputStream)target).finish();
+			((GZIPOutputStream) target).finish();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -69,6 +72,8 @@ public class Gzip implements Closeable {
 
 	/**
 	 * 将压缩流解压到target中
+	 *
+	 * @return Gzip
 	 */
 	public Gzip unGzip() {
 		try {
