@@ -721,4 +721,16 @@ public class ExcelWriteTest {
 
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void writeFloatTest(){
+		//issue https://gitee.com/dromara/hutool/issues/I43U9G
+		String path = "d:/test/floatTest.xlsx";
+		FileUtil.del(path);
+
+		final ExcelWriter writer = ExcelUtil.getWriter(path);
+		writer.writeRow(ListUtil.of(22.9f));
+		writer.close();
+	}
 }

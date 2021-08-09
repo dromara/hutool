@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.cell.setters;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.poi.excel.cell.CellSetter;
 import org.apache.poi.ss.usermodel.Cell;
 
@@ -26,10 +27,6 @@ public class NumberCellSetter implements CellSetter {
 	public void setValue(Cell cell) {
 		// issue https://gitee.com/dromara/hutool/issues/I43U9G
 		// 避免float到double的精度问题
-		if (value instanceof Float) {
-			cell.setCellValue(value.floatValue());
-		} else {
-			cell.setCellValue(value.doubleValue());
-		}
+		cell.setCellValue(NumberUtil.toDouble(value));
 	}
 }

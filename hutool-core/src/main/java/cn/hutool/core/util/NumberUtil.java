@@ -1063,28 +1063,28 @@ public class NumberUtil {
 	 * 格式化double<br>
 	 * 对 {@link DecimalFormat} 做封装<br>
 	 *
-	 * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
-	 *                <ul>
-	 *                <li>0 =》 取一位整数</li>
-	 *                <li>0.00 =》 取一位整数和两位小数</li>
-	 *                <li>00.000 =》 取两位整数和三位小数</li>
-	 *                <li># =》 取所有整数部分</li>
-	 *                <li>#.##% =》 以百分比方式计数，并取两位小数</li>
-	 *                <li>#.#####E0 =》 显示为科学计数法，并取五位小数</li>
-	 *                <li>,### =》 每三位以逗号进行分隔，例如：299,792,458</li>
-	 *                <li>光速大小为每秒,###米 =》 将格式嵌入文本</li>
-	 *                </ul>
-	 * @param value   值，支持BigDecimal、BigInteger、Number等类型
+	 * @param pattern      格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
+	 *                     <ul>
+	 *                     <li>0 =》 取一位整数</li>
+	 *                     <li>0.00 =》 取一位整数和两位小数</li>
+	 *                     <li>00.000 =》 取两位整数和三位小数</li>
+	 *                     <li># =》 取所有整数部分</li>
+	 *                     <li>#.##% =》 以百分比方式计数，并取两位小数</li>
+	 *                     <li>#.#####E0 =》 显示为科学计数法，并取五位小数</li>
+	 *                     <li>,### =》 每三位以逗号进行分隔，例如：299,792,458</li>
+	 *                     <li>光速大小为每秒,###米 =》 将格式嵌入文本</li>
+	 *                     </ul>
+	 * @param value        值，支持BigDecimal、BigInteger、Number等类型
 	 * @param roundingMode 保留小数的方式枚举
 	 * @return 格式化后的值
 	 * @since 5.6.5
 	 */
 	public static String decimalFormat(String pattern, Object value, RoundingMode roundingMode) {
-		if(value instanceof Number){
+		if (value instanceof Number) {
 			Assert.isTrue(isValidNumber((Number) value), "value is NaN or Infinite!");
 		}
 		final DecimalFormat decimalFormat = new DecimalFormat(pattern);
-		if(null != roundingMode){
+		if (null != roundingMode) {
 			decimalFormat.setRoundingMode(roundingMode);
 		}
 		return decimalFormat.format(value);
@@ -1472,7 +1472,7 @@ public class NumberUtil {
 	 * @since 5.6.0
 	 */
 	public static BigInteger factorial(BigInteger n) {
-		if(n.equals(BigInteger.ZERO)){
+		if (n.equals(BigInteger.ZERO)) {
 			return BigInteger.ONE;
 		}
 		return factorial(n, BigInteger.ZERO);
@@ -1492,21 +1492,21 @@ public class NumberUtil {
 	public static BigInteger factorial(BigInteger start, BigInteger end) {
 		Assert.notNull(start, "Factorial start must be not null!");
 		Assert.notNull(end, "Factorial end must be not null!");
-		if(start.compareTo(BigInteger.ZERO) < 0 || end.compareTo(BigInteger.ZERO) < 0){
+		if (start.compareTo(BigInteger.ZERO) < 0 || end.compareTo(BigInteger.ZERO) < 0) {
 			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be > 0, but got start={}, end={}", start, end));
 		}
 
-		if (start.equals(BigInteger.ZERO)){
+		if (start.equals(BigInteger.ZERO)) {
 			start = BigInteger.ONE;
 		}
 
-		if(end.compareTo(BigInteger.ONE) < 0){
+		if (end.compareTo(BigInteger.ONE) < 0) {
 			end = BigInteger.ONE;
 		}
 
 		BigInteger result = start;
 		end = end.add(BigInteger.ONE);
-		while(start.compareTo(end) > 0) {
+		while (start.compareTo(end) > 0) {
 			start = start.subtract(BigInteger.ONE);
 			result = result.multiply(start);
 		}
@@ -2116,7 +2116,7 @@ public class NumberUtil {
 	 */
 	public static String toStr(BigDecimal bigDecimal, boolean isStripTrailingZeros) {
 		Assert.notNull(bigDecimal, "BigDecimal is null !");
-		if(isStripTrailingZeros){
+		if (isStripTrailingZeros) {
 			bigDecimal = bigDecimal.stripTrailingZeros();
 		}
 		return bigDecimal.toPlainString();
@@ -2669,8 +2669,24 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 5.7.6
 	 */
-	public static double calculate(String expression){
+	public static double calculate(String expression) {
 		return Calculator.conversion(expression);
+	}
+
+	/**
+	 * Number值转换为double<br>
+	 * float强制转换存在精度问题，此方法避免精度丢失
+	 *
+	 * @param value 被转换的float值
+	 * @return double值
+	 * @since 5.7.8
+	 */
+	public static double toDouble(Number value) {
+		if(value instanceof Float){
+			return Double.parseDouble(value.toString());
+		}else{
+			return value.doubleValue();
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
