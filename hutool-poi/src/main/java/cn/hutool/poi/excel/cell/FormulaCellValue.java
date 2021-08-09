@@ -1,12 +1,19 @@
 package cn.hutool.poi.excel.cell;
 
+import org.apache.poi.ss.usermodel.Cell;
+
 /**
- * 公式类型的值
+ * 公式类型的值<br>
+ *
+ * <ul>
+ *     <li>在Sax读取模式时，此对象用于接收单元格的公式以及公式结果值信息</li>
+ *     <li>在写出模式时，用于定义写出的单元格类型为公式</li>
+ * </ul>
  *
  * @author looly
  * @since 4.0.11
  */
-public class FormulaCellValue implements CellValue<String> {
+public class FormulaCellValue implements CellValue<String>, CellSetter {
 
 	/**
 	 * 公式
@@ -40,6 +47,11 @@ public class FormulaCellValue implements CellValue<String> {
 	@Override
 	public String getValue() {
 		return this.formula;
+	}
+
+	@Override
+	public void setValue(Cell cell) {
+		cell.setCellFormula(this.formula);
 	}
 
 	/**
