@@ -59,6 +59,36 @@ public class CsvUtilTest {
 	}
 
 	@Test
+	public void readCsvStr1(){
+		CsvData data = CsvUtil.getReader().read("# 这是一行注释，读取时应忽略\n" +
+				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n");
+		List<CsvRow> rows = data.getRows();
+		final CsvRow row0 = rows.get(0);
+		Assert.assertEquals("sss,sss", row0.get(0));
+		Assert.assertEquals("姓名", row0.get(1));
+		Assert.assertEquals("性别", row0.get(2));
+		Assert.assertEquals("关注\"对象\"", row0.get(3));
+		Assert.assertEquals("年龄", row0.get(4));
+		Assert.assertEquals("", row0.get(5));
+		Assert.assertEquals("\"", row0.get(6));
+	}
+
+	@Test
+	public void readCsvStr2(){
+		CsvUtil.getReader().read("# 这是一行注释，读取时应忽略\n" +
+				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n",(csvRow)-> {
+			// 只有一行，所以直接判断
+			Assert.assertEquals("sss,sss", csvRow.get(0));
+			Assert.assertEquals("姓名", csvRow.get(1));
+			Assert.assertEquals("性别", csvRow.get(2));
+			Assert.assertEquals("关注\"对象\"", csvRow.get(3));
+			Assert.assertEquals("年龄", csvRow.get(4));
+			Assert.assertEquals("", csvRow.get(5));
+			Assert.assertEquals("\"", csvRow.get(6));
+		});
+	}
+
+	@Test
 	@Ignore
 	public void writeTest() {
 		String path = FileUtil.isWindows() ? "d:/test/testWrite.csv" : "~/test/testWrite.csv";
