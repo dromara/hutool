@@ -23,6 +23,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -724,6 +725,12 @@ public class BeanUtil {
 	 * @since 5.6.4
 	 */
 	public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetType, CopyOptions copyOptions){
+		if(null == collection){
+			return null;
+		}
+		if(collection.isEmpty()){
+			return new ArrayList<>(0);
+		}
 		return collection.stream().map((source)->{
 			final T target = ReflectUtil.newInstanceIfPossible(targetType);
 			copyProperties(source, target, copyOptions);
