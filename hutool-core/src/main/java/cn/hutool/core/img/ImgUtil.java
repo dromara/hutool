@@ -39,6 +39,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -2189,5 +2191,18 @@ public class ImgUtil {
 	 */
 	public static BufferedImage filter(BufferedImageOp op, BufferedImage image) {
 		return op.filter(image, null);
+	}
+
+	/**
+	 * 图片滤镜，借助 {@link ImageFilter}实现，实现不同的图片滤镜
+	 *
+	 * @param filter 滤镜实现
+	 * @param image 图片
+	 * @return 滤镜后的图片
+	 * @since 5.7.8
+	 */
+	public static Image filter(ImageFilter filter, Image image){
+		return Toolkit.getDefaultToolkit().createImage(
+				new FilteredImageSource(image.getSource(), filter));
 	}
 }
