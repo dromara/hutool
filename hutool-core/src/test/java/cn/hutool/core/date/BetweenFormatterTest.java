@@ -4,7 +4,7 @@ import cn.hutool.core.date.BetweenFormatter.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BetweenFormaterTest {
+public class BetweenFormatterTest {
 
 	@Test
 	public void formatTest(){
