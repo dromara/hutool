@@ -27,9 +27,7 @@ import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
@@ -230,19 +228,19 @@ public class Img implements Serializable {
 			// 自动修正负数
 			scale = -scale;
 		}
-
 		final Image srcImg = getValidSrcImg();
 
 		// PNG图片特殊处理
 		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
-			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(scale, scale), null);
-			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+			// 修正float转double导致的精度丢失
+			final double scaleDouble = NumberUtil.toDouble(scale);
+			this.targetImage = ImgUtil.transform(AffineTransform.getScaleInstance(scaleDouble, scaleDouble),
+					ImgUtil.toBufferedImage(srcImg, this.targetImageType));
 		} else {
-			final String scaleStr = Float.toString(scale);
 			// 缩放后的图片宽
-			int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), scaleStr).intValue();
+			final int width = NumberUtil.mul((Number) srcImg.getWidth(null), scale).intValue();
 			// 缩放后的图片高
-			int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), scaleStr).intValue();
+			final int height = NumberUtil.mul((Number) srcImg.getHeight(null), scale).intValue();
 			scale(width, height);
 		}
 		return this;
@@ -277,8 +275,8 @@ public class Img implements Serializable {
 		double sy = NumberUtil.div(height, srcHeight);
 
 		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
-			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(sx, sy), null);
-			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+			this.targetImage = ImgUtil.transform(AffineTransform.getScaleInstance(sx, sy),
+					ImgUtil.toBufferedImage(srcImg, this.targetImageType));
 		} else {
 			this.targetImage = srcImg.getScaledInstance(width, height, scaleType);
 		}
@@ -347,8 +345,7 @@ public class Img implements Serializable {
 		fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
 
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
-		this.targetImage = ImgUtil.toBufferedImage(image);
+		this.targetImage = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
 		return this;
 	}
 
@@ -428,8 +425,7 @@ public class Img implements Serializable {
 	 * @return this
 	 */
 	public Img gray() {
-		final ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-		this.targetImage = op.filter(ImgUtil.toBufferedImage(getValidSrcImg()), null);
+		this.targetImage = ImgUtil.colorConvert(ColorSpace.getInstance(ColorSpace.CS_GRAY), getValidSrcBufferedImg());
 		return this;
 	}
 
@@ -456,7 +452,7 @@ public class Img implements Serializable {
 	 * @return 处理后的图像
 	 */
 	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
-		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg());
+		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
 		final Graphics2D g = targetImage.createGraphics();
 
 		if (null == font) {
@@ -477,6 +473,7 @@ public class Img implements Serializable {
 					new Point(x, y));
 		}
 
+		// 收笔
 		g.dispose();
 		this.targetImage = targetImage;
 
@@ -579,7 +576,7 @@ public class Img implements Serializable {
 	 * @since 5.4.1
 	 */
 	public Img stroke(Color color, Stroke stroke){
-		final BufferedImage image = ImgUtil.toBufferedImage(getValidSrcImg());
+		final BufferedImage image = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
 		Graphics2D g = image.createGraphics();
@@ -715,6 +712,16 @@ public class Img implements Serializable {
 	 */
 	private Image getValidSrcImg() {
 		return ObjectUtil.defaultIfNull(this.targetImage, this.srcImage);
+	}
+
+	/**
+	 * 获取有效的源{@link BufferedImage}图片，首先检查上一次处理的结果图片，如无则使用用户传入的源图片
+	 *
+	 * @return 有效的源图片
+	 * @since 5.7.8
+	 */
+	private BufferedImage getValidSrcBufferedImg() {
+		return ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
 	}
 
 	/**
