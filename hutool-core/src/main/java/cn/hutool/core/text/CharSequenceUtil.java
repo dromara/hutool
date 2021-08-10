@@ -3639,7 +3639,7 @@ public class CharSequenceUtil {
 
 	/**
 	 * 替换指定字符串的指定区间内字符为"*"
-	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtils(脱敏工具类)
+	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtil(脱敏工具类)
 	 *
 	 * <pre>
 	 * StrUtil.hide(null,*,*)=null
@@ -3665,15 +3665,15 @@ public class CharSequenceUtil {
 	 * 脱敏，使用默认的脱敏策略
 	 *
 	 * <pre>
-	 * StrUtil.desensitized("100", DesensitizedUtils.DesensitizedType.USER_ID)) =  "0"
-	 * StrUtil.desensitized("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME)) = "段**"
-	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD)) = "5***************1X"
-	 * StrUtil.desensitized("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE)) = "0915*****79"
-	 * StrUtil.desensitized("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
-	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
-	 * StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
-	 * StrUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
+	 * StrUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
+	 * StrUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
+	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
+	 * StrUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+	 * StrUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+	 * StrUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
+	 * StrUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
 	 * StrUtil.desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
 	 * </pre>
 	 *

@@ -11,6 +11,7 @@
 * 【core   】     增加compress包，扩充Zip操作灵活性
 * 【json   】     增加JSONBeanParser
 * 【poi    】     增加CellSetter，可以自定义单元格值写出
+* 【poi    】     CsvReader增加readFromStr（pr#1755@Github）
 
 ### 🐞Bug修复
 * 【core   】     改进NumberChineseFormatter算法，补充完整单元测试，解决零问题

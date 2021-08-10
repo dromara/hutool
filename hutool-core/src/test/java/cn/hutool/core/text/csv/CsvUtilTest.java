@@ -60,7 +60,7 @@ public class CsvUtilTest {
 
 	@Test
 	public void readCsvStr1(){
-		CsvData data = CsvUtil.getReader().read("# 这是一行注释，读取时应忽略\n" +
+		CsvData data = CsvUtil.getReader().readFromStr("# 这是一行注释，读取时应忽略\n" +
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n");
 		List<CsvRow> rows = data.getRows();
 		final CsvRow row0 = rows.get(0);
@@ -75,7 +75,7 @@ public class CsvUtilTest {
 
 	@Test
 	public void readCsvStr2(){
-		CsvUtil.getReader().read("# 这是一行注释，读取时应忽略\n" +
+		CsvUtil.getReader().readFromStr("# 这是一行注释，读取时应忽略\n" +
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n",(csvRow)-> {
 			// 只有一行，所以直接判断
 			Assert.assertEquals("sss,sss", csvRow.get(0));
