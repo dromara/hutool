@@ -7,8 +7,11 @@ import java.time.Duration;
 import java.time.Instant;
 
 /**
- * <p>time-based one-time passwords (TOTP) 一次性密码生成器，
+ * <p>time-based one-time passwords (TOTP) 基于时间戳算法的一次性密码生成器，
  * 规范见：<a href="https://tools.ietf.org/html/rfc6238">RFC&nbsp;6238</a>.</p>
+ *
+ * <p>时间同步，基于客户端的动态口令和动态口令验证服务器的时间比对，一般每30秒产生一个新口令，
+ * 要求客户端和服务器能够十分精确的保持正确的时钟，客户端和服务端基于时间计算的动态口令才能一致。</p>
  *
  * <p>参考：https://github.com/jchambers/java-otp</p>
  *

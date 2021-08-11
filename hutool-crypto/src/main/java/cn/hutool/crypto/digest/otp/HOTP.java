@@ -6,8 +6,10 @@ import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
 /**
- * <p>HMAC-based one-time passwords (HOTP) 一次性密码生成器，
+ * <p>HMAC-based one-time passwords (HOTP) 基于HMAC算法一次性密码生成器，
  * 规范见：<a href="https://tools.ietf.org/html/rfc4226">RFC&nbsp;4226</a>.</p>
+ *
+ * <p>基于事件同步，通过某一特定的事件次序及相同的种子值作为输入，通过HASH算法运算出一致的密码。</p>
  *
  * <p>参考：https://github.com/jchambers/java-otp</p>
  *
