@@ -52,6 +52,6 @@ public abstract class IoCopier<S, T> {
 	 * @return 缓存大小
 	 */
 	protected int bufferSize(long count) {
-		return Math.min(this.bufferSize, (int)count);
+		return (int)Math.min(this.bufferSize, count);
 	}
 }
