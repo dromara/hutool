@@ -15,6 +15,7 @@
 * 【socket 】     SocketUtil增加connection方法
 * 【extra  】     JschUtil增加bindPort重载方法（issue#I44UTH@Github）
 * 【core   】     DefaultTrustManager改为继承X509ExtendedTrustManager
+* 【core   】     增加IoCopier
 
 ### 🐞Bug修复
 * 【core   】     改进NumberChineseFormatter算法，补充完整单元测试，解决零问题

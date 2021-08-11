@@ -1,5 +1,7 @@
 package cn.hutool.http.ssl;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 import javax.net.ssl.SSLSocket;
@@ -7,8 +9,6 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * 自定义支持协议类型的SSLSocketFactory
@@ -24,12 +24,11 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 * 构造
 	 *
 	 * @param protocols 支持协议列表
-	 * @throws KeyManagementException KeyManagementException
-	 * @throws NoSuchAlgorithmException 无此算法
+	 * @throws IORuntimeException IO异常
 	 */
-	public CustomProtocolsSSLFactory(String... protocols) throws KeyManagementException, NoSuchAlgorithmException {
+	public CustomProtocolsSSLFactory(String... protocols) throws IORuntimeException {
 		this.protocols = protocols;
-		this.base = SSLSocketFactoryBuilder.create().build();
+		this.base = SSLUtil.createSSLContext(null).getSocketFactory();
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 * @param socket SSLSocket
 	 */
 	private void resetProtocols(SSLSocket socket) {
-		if(ArrayUtil.isNotEmpty(this.protocols)){
+		if (ArrayUtil.isNotEmpty(this.protocols)) {
 			socket.setEnabledProtocols(this.protocols);
 		}
 	}

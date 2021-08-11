@@ -3,6 +3,8 @@ package cn.hutool.core.io;
 import cn.hutool.core.collection.LineIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.copy.ReaderWriterCopier;
+import cn.hutool.core.io.copy.StreamCopier;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
@@ -86,28 +88,21 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long copy(Reader reader, Writer writer, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		char[] buffer = new char[bufferSize];
-		long size = 0;
-		int readSize;
-		if (null != streamProgress) {
-			streamProgress.start();
-		}
-		try {
-			while ((readSize = reader.read(buffer, 0, bufferSize)) != EOF) {
-				writer.write(buffer, 0, readSize);
-				size += readSize;
-				writer.flush();
-				if (null != streamProgress) {
-					streamProgress.progress(size);
-				}
-			}
-		} catch (Exception e) {
-			throw new IORuntimeException(e);
-		}
-		if (null != streamProgress) {
-			streamProgress.finish();
-		}
-		return size;
+		return copy(reader, writer, bufferSize, -1, streamProgress);
+	}
+
+	/**
+	 * 将Reader中的内容复制到Writer中，拷贝后不关闭Reader
+	 *
+	 * @param reader         Reader
+	 * @param writer         Writer
+	 * @param bufferSize     缓存大小
+	 * @param streamProgress 进度处理器
+	 * @return 传输的byte数
+	 * @throws IORuntimeException IO异常
+	 */
+	public static long copy(Reader reader, Writer writer, int bufferSize, int count, StreamProgress streamProgress) throws IORuntimeException {
+		return new ReaderWriterCopier(bufferSize, count, streamProgress).copy(reader, writer);
 	}
 
 	/**
@@ -146,33 +141,23 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long copy(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		Assert.notNull(in, "InputStream is null !");
-		Assert.notNull(out, "OutputStream is null !");
-		if (bufferSize <= 0) {
-			bufferSize = DEFAULT_BUFFER_SIZE;
-		}
+		return copy(in, out, bufferSize, -1, streamProgress);
+	}
 
-		byte[] buffer = new byte[bufferSize];
-		if (null != streamProgress) {
-			streamProgress.start();
-		}
-		long size = 0;
-		try {
-			for (int readSize; (readSize = in.read(buffer)) != EOF; ) {
-				out.write(buffer, 0, readSize);
-				size += readSize;
-				if (null != streamProgress) {
-					streamProgress.progress(size);
-				}
-			}
-			out.flush();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (null != streamProgress) {
-			streamProgress.finish();
-		}
-		return size;
+	/**
+	 * 拷贝流，拷贝后不关闭流
+	 *
+	 * @param in             输入流
+	 * @param out            输出流
+	 * @param bufferSize     缓存大小
+	 * @param count          总拷贝长度
+	 * @param streamProgress 进度条
+	 * @return 传输的byte数
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.8
+	 */
+	public static long copy(InputStream in, OutputStream out, int bufferSize, int count, StreamProgress streamProgress) throws IORuntimeException {
+		return new StreamCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 
 	/**
@@ -390,14 +375,14 @@ public class IoUtil extends NioUtil {
 	 */
 	public static FastByteArrayOutputStream read(InputStream in, boolean isClose) throws IORuntimeException {
 		final FastByteArrayOutputStream out;
-		if(in instanceof FileInputStream){
+		if (in instanceof FileInputStream) {
 			// 文件流的长度是可预见的，此时直接读取效率更高
 			try {
 				out = new FastByteArrayOutputStream(in.available());
 			} catch (IOException e) {
 				throw new IORuntimeException(e);
 			}
-		} else{
+		} else {
 			out = new FastByteArrayOutputStream();
 		}
 		try {
@@ -434,7 +419,7 @@ public class IoUtil extends NioUtil {
 		final CharBuffer buffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE);
 		try {
 			while (-1 != reader.read(buffer)) {
-				builder.append(buffer.flip().toString());
+				builder.append(buffer.flip());
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
@@ -828,7 +813,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 转换为{@link BufferedInputStream}
 	 *
-	 * @param in {@link InputStream}
+	 * @param in         {@link InputStream}
 	 * @param bufferSize buffer size
 	 * @return {@link BufferedInputStream}
 	 * @since 5.6.1
@@ -853,7 +838,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 转换为{@link BufferedOutputStream}
 	 *
-	 * @param out {@link OutputStream}
+	 * @param out        {@link OutputStream}
 	 * @param bufferSize buffer size
 	 * @return {@link BufferedOutputStream}
 	 * @since 5.6.1
@@ -878,7 +863,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 转换为{@link BufferedReader}
 	 *
-	 * @param reader {@link Reader}
+	 * @param reader     {@link Reader}
 	 * @param bufferSize buffer size
 	 * @return {@link BufferedReader}
 	 * @since 5.6.1
@@ -903,7 +888,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 转换为{@link BufferedWriter}
 	 *
-	 * @param writer {@link Writer}
+	 * @param writer     {@link Writer}
 	 * @param bufferSize buffer size
 	 * @return {@link BufferedWriter}
 	 * @since 5.6.1
@@ -1291,7 +1276,7 @@ public class IoUtil extends NioUtil {
 	 * 	while (it.hasNext()) {
 	 * 		String line = it.nextLine();
 	 * 		// do something with line
-	 * 	}
+	 *    }
 	 * } finally {
 	 * 		it.close();
 	 * }
@@ -1301,7 +1286,7 @@ public class IoUtil extends NioUtil {
 	 * @return {@link LineIter}
 	 * @since 5.6.1
 	 */
-	public static LineIter lineIter(Reader reader){
+	public static LineIter lineIter(Reader reader) {
 		return new LineIter(reader);
 	}
 
@@ -1314,18 +1299,18 @@ public class IoUtil extends NioUtil {
 	 * 	while (it.hasNext()) {
 	 * 		String line = it.nextLine();
 	 * 		// do something with line
-	 * 	}
+	 *    }
 	 * } finally {
 	 * 		it.close();
 	 * }
 	 * </pre>
 	 *
-	 * @param in {@link InputStream}
+	 * @param in      {@link InputStream}
 	 * @param charset 编码
 	 * @return {@link LineIter}
 	 * @since 5.6.1
 	 */
-	public static LineIter lineIter(InputStream in, Charset charset){
+	public static LineIter lineIter(InputStream in, Charset charset) {
 		return new LineIter(in, charset);
 	}
 }

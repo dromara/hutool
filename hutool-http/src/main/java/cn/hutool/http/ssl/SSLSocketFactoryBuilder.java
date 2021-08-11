@@ -1,6 +1,7 @@
 package cn.hutool.http.ssl;
 
 import cn.hutool.core.net.SSLContextBuilder;
+import cn.hutool.core.net.SSLProtocols;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLSocketFactory;
@@ -14,38 +15,10 @@ import java.security.SecureRandom;
  *
  * @author Looly
  * @see SSLContextBuilder
+ * @deprecated 请使用 {@link SSLContextBuilder}
  */
-public class SSLSocketFactoryBuilder {
-
-	/**
-	 * Supports some version of SSL; may support other versions
-	 */
-	public static final String SSL = SSLContextBuilder.SSL;
-	/**
-	 * Supports SSL version 2 or later; may support other versions
-	 */
-	public static final String SSLv2 = SSLContextBuilder.SSLv2;
-	/**
-	 * Supports SSL version 3; may support other versions
-	 */
-	public static final String SSLv3 = SSLContextBuilder.SSLv3;
-
-	/**
-	 * Supports some version of TLS; may support other versions
-	 */
-	public static final String TLS = SSLContextBuilder.TLS;
-	/**
-	 * Supports RFC 2246: TLS version 1.0 ; may support other versions
-	 */
-	public static final String TLSv1 = SSLContextBuilder.TLSv1;
-	/**
-	 * Supports RFC 4346: TLS version 1.1 ; may support other versions
-	 */
-	public static final String TLSv11 = SSLContextBuilder.TLSv11;
-	/**
-	 * Supports RFC 5246: TLS version 1.2 ; may support other versions
-	 */
-	public static final String TLSv12 = SSLContextBuilder.TLSv12;
+@Deprecated
+public class SSLSocketFactoryBuilder implements SSLProtocols {
 
 	SSLContextBuilder sslContextBuilder;
 

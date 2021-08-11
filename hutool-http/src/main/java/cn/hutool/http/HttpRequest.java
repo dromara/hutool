@@ -10,6 +10,7 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -887,11 +888,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
-		try {
-			setSSLSocketFactory(SSLSocketFactoryBuilder.create().setProtocol(protocol).build());
-		} catch (Exception e) {
-			throw new HttpException(e);
-		}
+		setSSLSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
 		return this;
 	}
 

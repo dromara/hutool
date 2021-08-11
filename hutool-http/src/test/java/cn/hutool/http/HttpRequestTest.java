@@ -3,8 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -98,7 +98,7 @@ public class HttpRequestTest {
 				// 禁用缓存
 				.disableCache()
 				// 自定义SSL版本
-				.setSSLProtocol(SSLSocketFactoryBuilder.TLSv12);
+				.setSSLProtocol(SSLProtocols.TLSv12);
 		Console.log(request.execute().body());
 	}
 

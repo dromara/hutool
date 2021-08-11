@@ -78,8 +78,7 @@ public class Snowflake implements Serializable {
 	 * 构造，使用自动生成的工作节点ID和数据中心ID
 	 */
 	public Snowflake() {
-		this(IdUtil.getWorkerId(IdUtil.getDataCenterId(MAX_DATA_CENTER_ID), MAX_WORKER_ID)
-				, IdUtil.getDataCenterId(MAX_DATA_CENTER_ID));
+		this(IdUtil.getWorkerId(IdUtil.getDataCenterId(MAX_DATA_CENTER_ID), MAX_WORKER_ID));
 	}
 
 	/**

@@ -14,6 +14,12 @@ import java.security.cert.X509Certificate;
  */
 public class DefaultTrustManager extends X509ExtendedTrustManager {
 
+	/**
+	 * 默认的全局单例默认信任管理器，，默认信任所有客户端和服务端证书
+	 * @since 5.7.8
+	 */
+	public static DefaultTrustManager INSTANCE = new DefaultTrustManager();
+
 	@Override
 	public X509Certificate[] getAcceptedIssuers() {
 		return null;

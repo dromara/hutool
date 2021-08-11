@@ -1,8 +1,5 @@
 package cn.hutool.http.ssl;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
 /**
  * 默认的SSLSocketFactory
  *
@@ -11,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class DefaultSSLFactory extends CustomProtocolsSSLFactory {
 
-	public DefaultSSLFactory() throws KeyManagementException, NoSuchAlgorithmException {
+	public DefaultSSLFactory() {
 	}
 
 }
