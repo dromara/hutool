@@ -17,7 +17,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.body.MultipartBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
-import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -883,7 +882,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param protocol 协议
 	 * @return this
-	 * @see SSLSocketFactoryBuilder
+	 * @see SSLUtil#createSSLContext(String)
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {

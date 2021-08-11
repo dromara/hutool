@@ -467,7 +467,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		final FastByteArrayOutputStream out = contentLength > 0 ?
 				new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
-			IoUtil.copy(in, out, -1, -1, null);
+			IoUtil.copy(in, out, -1, contentLength, null);
 		} catch (IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {

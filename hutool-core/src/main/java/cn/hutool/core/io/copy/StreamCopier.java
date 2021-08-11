@@ -74,6 +74,7 @@ public class StreamCopier extends IoCopier<InputStream, OutputStream> {
 		if (null != progress) {
 			progress.finish();
 		}
+
 		return size;
 	}
 

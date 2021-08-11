@@ -56,7 +56,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void getTest3() {
 		// 测试url中带有空格的情况
-		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf?abc= d");
+		String result1 = HttpUtil.get("http://hutool.cn:5000/kf?abc= d");
 		Console.log(result1);
 	}
 
@@ -84,8 +84,9 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void get12306Test() {
-		String result = HttpUtil.get("https://kyfw.12306.cn/otn/");
-		Console.log(result);
+		HttpRequest.get("https://kyfw.12306.cn/otn/")
+				.setFollowRedirects(true)
+				.then(response -> Console.log(response.body()));
 	}
 
 	@Test
