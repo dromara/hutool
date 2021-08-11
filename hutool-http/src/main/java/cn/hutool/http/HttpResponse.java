@@ -254,8 +254,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		if (null == out) {
 			throw new NullPointerException("[out] is null!");
 		}
+		final int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), -1);
 		try {
-			return IoUtil.copyByNIO(bodyStream(), out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
+			return IoUtil.copyByNIO(bodyStream(), out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
 		} finally {
 			IoUtil.close(this);
 			if (isCloseOut) {
@@ -462,10 +463,11 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			return;
 		}
 
-		int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
-		final FastByteArrayOutputStream out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
+		final int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), -1);
+		final FastByteArrayOutputStream out = contentLength > 0 ?
+				new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
-			IoUtil.copy(in, out);
+			IoUtil.copy(in, out, -1, -1, null);
 		} catch (IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
