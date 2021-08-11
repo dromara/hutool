@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * 自定义支持协议类型的SSLSocketFactory
- * 
+ *
  * @author looly
  */
 public class CustomProtocolsSSLFactory extends SSLSocketFactory {
@@ -22,10 +22,10 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param protocols 支持协议列表
 	 * @throws KeyManagementException KeyManagementException
-	 * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+	 * @throws NoSuchAlgorithmException 无此算法
 	 */
 	public CustomProtocolsSSLFactory(String... protocols) throws KeyManagementException, NoSuchAlgorithmException {
 		this.protocols = protocols;
@@ -86,7 +86,7 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 
 	/**
 	 * 重置可用策略
-	 * 
+	 *
 	 * @param socket SSLSocket
 	 */
 	private void resetProtocols(SSLSocket socket) {
