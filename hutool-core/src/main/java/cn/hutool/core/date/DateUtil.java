@@ -834,20 +834,20 @@ public class DateUtil extends CalendarUtil {
 			if (length <= patternLength - 4 && length >= patternLength - 6) {
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
-		} else if(StrUtil.contains(utcString, '+')){
+		} else if (StrUtil.contains(utcString, '+')) {
 			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
 			utcString = utcString.replace(" +", "+");
 			final String zoneOffset = StrUtil.subAfter(utcString, '+', true);
-			if(StrUtil.isBlank(zoneOffset)){
+			if (StrUtil.isBlank(zoneOffset)) {
 				throw new DateException("Invalid format: [{}]", utcString);
 			}
-			if(false == StrUtil.contains(zoneOffset, ':')){
+			if (false == StrUtil.contains(zoneOffset, ':')) {
 				// +0800转换为+08:00
 				final String pre = StrUtil.subBefore(utcString, '+', true);
 				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
 			}
 
-			if(StrUtil.contains(utcString, CharUtil.DOT)) {
+			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
 				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
@@ -2037,6 +2037,25 @@ public class DateUtil extends CalendarUtil {
 		}
 		format.setLenient(false);
 		return format;
+	}
+
+	/**
+	 * 比较第一个日期是否在第二个日期之后
+	 * @param selectDate 选择的日期
+	 * @param compareDate 用做比较的日期
+	 * @return 是/否
+	 */
+	public static boolean isAfter(Date selectDate, Date compareDate) {
+		return selectDate.getTime() > compareDate.getTime();
+	}
+	/**
+	 * 比较第一个日期是否在第二个日期之前
+	 * @param selectDate 选择的日期
+	 * @param compareDate 用做比较的日期
+	 * @return 是/否
+	 */
+	public static boolean isBefore(Date selectDate, Date compareDate){
+		return selectDate.getTime() < compareDate.getTime();
 	}
 
 	// ------------------------------------------------------------------------ Private method start
