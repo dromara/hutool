@@ -28,9 +28,9 @@ public abstract class IoCopier<S, T> {
 	/**
 	 * 构造
 	 *
-	 * @param bufferSize   缓存大小，&lt; 0 表示默认{@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * @param count    拷贝总数，-1表示无限制
-	 * @param progress 进度条
+	 * @param bufferSize 缓存大小，&lt; 0 表示默认{@link IoUtil#DEFAULT_BUFFER_SIZE}
+	 * @param count      拷贝总数，-1表示无限制
+	 * @param progress   进度条
 	 */
 	public IoCopier(int bufferSize, long count, StreamProgress progress) {
 		this.bufferSize = bufferSize > 0 ? bufferSize : IoUtil.DEFAULT_BUFFER_SIZE;
@@ -49,9 +49,11 @@ public abstract class IoCopier<S, T> {
 
 	/**
 	 * 缓存大小，取默认缓存和目标长度最小值
+	 *
+	 * @param count 目标长度
 	 * @return 缓存大小
 	 */
 	protected int bufferSize(long count) {
-		return (int)Math.min(this.bufferSize, count);
+		return (int) Math.min(this.bufferSize, count);
 	}
 }

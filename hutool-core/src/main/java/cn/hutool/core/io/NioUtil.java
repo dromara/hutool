@@ -63,6 +63,7 @@ public class NioUtil {
 	 * @param in             输入流
 	 * @param out            输出流
 	 * @param bufferSize     缓存大小
+	 * @param count          最大长度
 	 * @param streamProgress 进度条
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常

@@ -97,6 +97,7 @@ public class IoUtil extends NioUtil {
 	 * @param reader         Reader
 	 * @param writer         Writer
 	 * @param bufferSize     缓存大小
+	 * @param count          最大长度
 	 * @param streamProgress 进度处理器
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
