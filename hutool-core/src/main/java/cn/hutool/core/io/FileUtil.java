@@ -1005,6 +1005,22 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 移动文件或者目录
+	 *
+	 * @param src        源文件或者目录
+	 * @param target     目标文件或者目录
+	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
+	 * @throws IORuntimeException IO异常
+	 * @see PathUtil#moveContent(Path, Path, boolean)
+	 * @since 5.7.9
+	 */
+	public static void moveContent(File src, File target, boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
+		moveContent(src.toPath(), target.toPath(), isOverride);
+	}
+
+	/**
 	 * 修改文件或目录的文件名，不变更路径，只是简单修改文件名，不保留扩展名。<br>
 	 *
 	 * <pre>
