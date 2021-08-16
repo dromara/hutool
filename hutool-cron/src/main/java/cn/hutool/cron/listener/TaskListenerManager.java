@@ -79,8 +79,8 @@ public class TaskListenerManager implements Serializable {
 		synchronized (listeners) {
 			int size = listeners.size();
 			if(size > 0){
-				for (TaskListener listenerl : listeners) {
-					listenerl.onFailed(executor, exception);
+				for (TaskListener listener : listeners) {
+					listener.onFailed(executor, exception);
 				}
 			}else{
 				StaticLog.error(exception, exception.getMessage());
