@@ -338,4 +338,12 @@ public class HttpUtilTest {
 		byte[] bytes = HttpUtil.downloadBytes("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea");
 		Console.log(Base64.encode(bytes));
 	}
+
+	@Test
+	@Ignore
+	public void acplayTest(){
+		final String body = HttpRequest.get("https://api.acplay.net/api/v2/bangumi/9541")
+				.execute().body();
+		Console.log(body);
+	}
 }

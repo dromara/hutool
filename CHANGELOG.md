@@ -11,7 +11,7 @@
 * 
 ### 🐞Bug修复
 * 【extra  】    修复TinyPinyinEngine空构造造成可能的误判问题
-* 【http   】    修复在gzip模式下Content-Length服务端设置异常导致的阶段
+* 【http   】    修复在gzip模式下Content-Length服务端设置异常导致的问题（issue#1766@Github）
 * 【db     】    修复PooledDataSource关闭逻辑错误问题
 
 -------------------------------------------------------------------------------------------------------------
