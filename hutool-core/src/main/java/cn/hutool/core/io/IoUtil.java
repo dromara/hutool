@@ -102,7 +102,7 @@ public class IoUtil extends NioUtil {
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public static long copy(Reader reader, Writer writer, int bufferSize, int count, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copy(Reader reader, Writer writer, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
 		return new ReaderWriterCopier(bufferSize, count, streamProgress).copy(reader, writer);
 	}
 
@@ -157,7 +157,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static long copy(InputStream in, OutputStream out, int bufferSize, int count, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copy(InputStream in, OutputStream out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
 		return new StreamCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 

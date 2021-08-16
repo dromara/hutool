@@ -19,7 +19,9 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void postTest() {
-		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
+		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506")
+				.charset(CharsetUtil.UTF_8)
+				.execute().body();
 		Console.log(result);
 	}
 
@@ -45,6 +47,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getTest2() {
+		// 此链接较为特殊，User-Agent去掉后进入一个JS跳转页面，如果设置了，需要开启302跳转
 		// 自定义的默认header无效
 		String result = HttpRequest
 				.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")

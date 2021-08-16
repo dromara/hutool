@@ -118,6 +118,26 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
+	 * 获取内容长度，以下情况长度无效：
+	 * <ul>
+	 *     <li>Transfer-Encoding: Chunked</li>
+	 *     <li>Content-Encoding: XXX</li>
+	 * </ul>
+	 * 参考：https://blog.csdn.net/jiang7701037/article/details/86304302
+	 *
+	 * @return 长度，-1表示服务端未返回或长度无效
+	 * @since 5.7.9
+	 */
+	public long contentLength() {
+		long contentLength = Convert.toLong(header(Header.CONTENT_LENGTH), -1L);
+		if (contentLength > 0 && (isChunked() || StrUtil.isNotBlank(contentEncoding()))) {
+			//按照HTTP协议规范，在 Transfer-Encoding和Content-Encoding设置后 Content-Length 无效。
+			contentLength = -1;
+		}
+		return contentLength;
+	}
+
+	/**
 	 * 是否为gzip压缩过的内容
 	 *
 	 * @return 是否为gzip压缩过的内容
@@ -254,9 +274,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		if (null == out) {
 			throw new NullPointerException("[out] is null!");
 		}
-		final int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), -1);
+		final long contentLength = contentLength();
 		try {
-			return IoUtil.copyByNIO(bodyStream(), out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
+			return copyBody(bodyStream(), out, contentLength, streamProgress);
 		} finally {
 			IoUtil.close(this);
 			if (isCloseOut) {
@@ -453,33 +473,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
-	 * 读取主体，忽略EOFException异常
-	 *
-	 * @param in 输入流
-	 * @throws IORuntimeException IO异常
-	 */
-	private void readBody(InputStream in) throws IORuntimeException {
-		if (ignoreBody) {
-			return;
-		}
-
-		final int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), -1);
-		final FastByteArrayOutputStream out = contentLength > 0 ?
-				new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
-		try {
-			IoUtil.copy(in, out, -1, contentLength, null);
-		} catch (IORuntimeException e) {
-			//noinspection StatementWithEmptyBody
-			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
-				// 忽略读取HTTP流中的EOF错误
-			} else {
-				throw e;
-			}
-		}
-		this.bodyBytes = out.toByteArray();
-	}
-
-	/**
 	 * 强制同步，用于初始化<br>
 	 * 强制同步后变化如下：
 	 *
@@ -510,6 +503,53 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			this.close();
 		}
 		return this;
+	}
+
+	/**
+	 * 读取主体，忽略EOFException异常
+	 *
+	 * @param in 输入流
+	 * @throws IORuntimeException IO异常
+	 */
+	private void readBody(InputStream in) throws IORuntimeException {
+		if (ignoreBody) {
+			return;
+		}
+
+		final long contentLength = contentLength();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream((int)contentLength);
+		copyBody(in, out, contentLength, null);
+		this.bodyBytes = out.toByteArray();
+	}
+
+	/**
+	 * 将响应内容写出到{@link OutputStream}<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 *
+	 * @param in             输入流
+	 * @param out            写出的流
+	 * @param contentLength  总长度，-1表示未知
+	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @return 拷贝长度
+	 */
+	private static long copyBody(InputStream in, OutputStream out, long contentLength, StreamProgress streamProgress) {
+		if (null == out) {
+			throw new NullPointerException("[out] is null!");
+		}
+
+		long copyLength = -1;
+		try {
+			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
+		} catch (IORuntimeException e) {
+			//noinspection StatementWithEmptyBody
+			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
+				// 忽略读取HTTP流中的EOF错误
+			} else {
+				throw e;
+			}
+		}
+		return copyLength;
 	}
 
 	/**

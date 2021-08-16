@@ -22,6 +22,9 @@ public class FastByteArrayOutputStream extends OutputStream {
 
 	private final FastByteBuffer buffer;
 
+	/**
+	 * 构造
+	 */
 	public FastByteArrayOutputStream() {
 		this(1024);
 	}
