@@ -27,6 +27,24 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void trimNewLineTest() {
+		String str = "\r\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\raaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\r\n\r\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+	}
+
+	@Test
+	public void trimTabTest() {
+		String str = "\taaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+	}
+
+	@Test
 	public void cleanBlankTest() {
 		// 包含：制表符、英文空格、不间断空白符、全角空格
 		String str = "	 你 好　";

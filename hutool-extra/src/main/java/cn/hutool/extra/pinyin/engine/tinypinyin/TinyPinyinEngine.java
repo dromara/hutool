@@ -30,6 +30,7 @@ public class TinyPinyinEngine implements PinyinEngine {
 	 * 构造
 	 */
 	public TinyPinyinEngine(){
+		this(null);
 	}
 
 	/**
