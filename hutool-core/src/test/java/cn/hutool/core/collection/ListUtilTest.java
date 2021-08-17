@@ -100,6 +100,25 @@ public class ListUtilTest {
 		PageUtil.setFirstPageNo(1);
 		int[] d1 = ListUtil.page(0,8,a).stream().mapToInt(Integer::valueOf).toArray();
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5},d1);
+
+
+		List<List<Integer>> pageListData = new ArrayList<>();
+		ListUtil.page(a, 2, pageListData::add);
+		Assert.assertArrayEquals(new int[]{1, 2}, pageListData.get(0).stream().mapToInt(Integer::valueOf).toArray());
+		Assert.assertArrayEquals(new int[]{3, 4}, pageListData.get(1).stream().mapToInt(Integer::valueOf).toArray());
+		Assert.assertArrayEquals(new int[]{5}, pageListData.get(2).stream().mapToInt(Integer::valueOf).toArray());
+
+
+		pageListData.clear();
+		ListUtil.page(a, 2, pageList -> {
+			pageListData.add(pageList);
+			if (pageList.get(0).equals(1)) {
+				pageList.clear();
+			}
+		});
+		Assert.assertArrayEquals(new int[]{}, pageListData.get(0).stream().mapToInt(Integer::valueOf).toArray());
+		Assert.assertArrayEquals(new int[]{3, 4}, pageListData.get(1).stream().mapToInt(Integer::valueOf).toArray());
+		Assert.assertArrayEquals(new int[]{5}, pageListData.get(2).stream().mapToInt(Integer::valueOf).toArray());
 	}
 
 	@Test

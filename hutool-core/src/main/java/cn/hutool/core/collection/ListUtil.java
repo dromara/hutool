@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 /**
  * List相关工具类
@@ -270,6 +271,39 @@ public class ListUtil {
 		}
 
 		return sub(list, startEnd[0], startEnd[1]);
+	}
+
+	/**
+	 * 对指定List进行分页，逐页返回数据
+	 *
+	 * @param <T>              集合元素类型
+	 * @param list             源数据列表
+	 * @param pageSize         每页的条目数
+	 * @param pageListConsumer 单页数据函数式返回
+	 */
+	public static <T> void page(List<T> list, int pageSize, Consumer<List<T>> pageListConsumer) {
+		if (CollUtil.isEmpty(list)) {
+			return;
+		}
+		if (pageSize <= 0) {
+			return;
+		}
+		PageUtil.setFirstPageNo(0);
+		int size = list.size();
+		int page = PageUtil.totalPage(size, pageSize);
+		for (int pageNo = PageUtil.getFirstPageNo(); pageNo < page; pageNo++) {
+			// 获取当前页在列表中对应的起止序号
+			int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
+			int start = startEnd[0];
+			int end = startEnd[1];
+			if (end > size) {
+				end = size;
+			}
+			// 使用拷贝，防止对返回分页数据进行增删操作时影响源数据的分页结果
+			CopyOnWriteArrayList<T> pageList = ListUtil.toCopyOnWriteArrayList(list.subList(start, end));
+			// 返回数据
+			pageListConsumer.accept(pageList);
+		}
 	}
 
 	/**
