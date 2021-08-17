@@ -19,10 +19,10 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.5.0.RELEASE</beetl.version>
+		<beetl.version>3.5.1.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<enjoy.version>4.9.15</enjoy.version>
+		<enjoy.version>4.9.16</enjoy.version>
 		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
@@ -235,7 +235,7 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.7.8</version>
+			<version>portable-1.8.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -384,7 +384,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>1.2.5</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
