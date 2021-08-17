@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 /**
  * 二维码设置
- * 
+ *
  * @author looly
  * @since 4.1.2
  */
@@ -33,7 +33,7 @@ public class QrConfig {
 	protected Integer backColor = WHITE;
 	/** 边距1~4 */
 	protected Integer margin = 2;
-	/** 设置二维码中的信息量，可设置1-40的整数 */
+	/** 设置二维码中的信息量，可设置0-40的整数 */
 	protected Integer qrVersion;
 	/** 纠错级别 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
@@ -43,7 +43,7 @@ public class QrConfig {
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
 	protected int ratio = 6;
-	
+
 	/**
 	 * 创建QrConfig
 	 * @return QrConfig
@@ -62,7 +62,7 @@ public class QrConfig {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param width 宽
 	 * @param height 长
 	 */
@@ -73,7 +73,7 @@ public class QrConfig {
 
 	/**
 	 * 获取宽度
-	 * 
+	 *
 	 * @return 宽度
 	 */
 	public int getWidth() {
@@ -82,7 +82,7 @@ public class QrConfig {
 
 	/**
 	 * 设置宽度
-	 * 
+	 *
 	 * @param width 宽度
 	 * @return this
 	 */
@@ -93,7 +93,7 @@ public class QrConfig {
 
 	/**
 	 * 获取高度
-	 * 
+	 *
 	 * @return 高度
 	 */
 	public int getHeight() {
@@ -102,7 +102,7 @@ public class QrConfig {
 
 	/**
 	 * 设置高度
-	 * 
+	 *
 	 * @param height 高度
 	 * @return this;
 	 */
@@ -113,7 +113,7 @@ public class QrConfig {
 
 	/**
 	 * 获取前景色
-	 * 
+	 *
 	 * @return 前景色
 	 */
 	public int getForeColor() {
@@ -122,7 +122,7 @@ public class QrConfig {
 
 	/**
 	 * 设置前景色，例如：Color.BLUE.getRGB()
-	 * 
+	 *
 	 * @param foreColor 前景色
 	 * @return this
 	 * @deprecated 请使用 {@link #setForeColor(Color)}
@@ -149,7 +149,7 @@ public class QrConfig {
 
 	/**
 	 * 获取背景色
-	 * 
+	 *
 	 * @return 背景色
 	 */
 	public int getBackColor() {
@@ -158,7 +158,7 @@ public class QrConfig {
 
 	/**
 	 * 设置背景色，例如：Color.BLUE.getRGB()
-	 * 
+	 *
 	 * @param backColor 背景色
 	 * @return this
 	 * @deprecated 请使用 {@link #setBackColor(Color)}
@@ -187,7 +187,7 @@ public class QrConfig {
 
 	/**
 	 * 获取边距
-	 * 
+	 *
 	 * @return 边距
 	 */
 	public Integer getMargin() {
@@ -196,7 +196,7 @@ public class QrConfig {
 
 	/**
 	 * 设置边距
-	 * 
+	 *
 	 * @param margin 边距
 	 * @return this
 	 */
@@ -227,7 +227,7 @@ public class QrConfig {
 
 	/**
 	 * 获取纠错级别
-	 * 
+	 *
 	 * @return 纠错级别
 	 */
 	public ErrorCorrectionLevel getErrorCorrection() {
@@ -236,7 +236,7 @@ public class QrConfig {
 
 	/**
 	 * 设置纠错级别
-	 * 
+	 *
 	 * @param errorCorrection 纠错级别
 	 * @return this
 	 */
@@ -247,7 +247,7 @@ public class QrConfig {
 
 	/**
 	 * 获取编码
-	 * 
+	 *
 	 * @return 编码
 	 */
 	public Charset getCharset() {
@@ -256,7 +256,7 @@ public class QrConfig {
 
 	/**
 	 * 设置编码
-	 * 
+	 *
 	 * @param charset 编码
 	 * @return this
 	 */
@@ -267,26 +267,26 @@ public class QrConfig {
 
 	/**
 	 * 获取二维码中的Logo
-	 * 
+	 *
 	 * @return Logo图片
 	 */
 	public Image getImg() {
 		return img;
 	}
-	
+
 	/**
 	 * 设置二维码中的Logo文件
-	 * 
+	 *
 	 * @param imgPath 二维码中的Logo路径
 	 * @return this;
 	 */
 	public QrConfig setImg(String imgPath) {
 		return setImg(FileUtil.file(imgPath));
 	}
-	
+
 	/**
 	 * 设置二维码中的Logo文件
-	 * 
+	 *
 	 * @param imgFile 二维码中的Logo
 	 * @return this;
 	 */
@@ -296,7 +296,7 @@ public class QrConfig {
 
 	/**
 	 * 设置二维码中的Logo
-	 * 
+	 *
 	 * @param img 二维码中的Logo
 	 * @return this;
 	 */
@@ -307,7 +307,7 @@ public class QrConfig {
 
 	/**
 	 * 获取二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
-	 * 
+	 *
 	 * @return 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 */
 	public int getRatio() {
@@ -316,7 +316,7 @@ public class QrConfig {
 
 	/**
 	 * 设置二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
-	 * 
+	 *
 	 * @param ratio 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 * @return this;
 	 */
@@ -327,7 +327,7 @@ public class QrConfig {
 
 	/**
 	 * 转换为Zxing的二维码配置
-	 * 
+	 *
 	 * @return 配置
 	 */
 	public HashMap<EncodeHintType, Object> toHints() {
