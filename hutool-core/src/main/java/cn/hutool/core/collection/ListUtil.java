@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -280,29 +281,24 @@ public class ListUtil {
 	 * @param list             源数据列表
 	 * @param pageSize         每页的条目数
 	 * @param pageListConsumer 单页数据函数式返回
+	 * @since 5.7.10
 	 */
 	public static <T> void page(List<T> list, int pageSize, Consumer<List<T>> pageListConsumer) {
-		if (CollUtil.isEmpty(list)) {
+		if (CollUtil.isEmpty(list) || pageSize <= 0) {
 			return;
 		}
-		if (pageSize <= 0) {
-			return;
-		}
-		PageUtil.setFirstPageNo(0);
-		int size = list.size();
-		int page = PageUtil.totalPage(size, pageSize);
-		for (int pageNo = PageUtil.getFirstPageNo(); pageNo < page; pageNo++) {
+
+		final int total = list.size();
+		final int totalPage = PageUtil.totalPage(total, pageSize);
+		for (int pageNo = PageUtil.getFirstPageNo(); pageNo < totalPage + PageUtil.getFirstPageNo(); pageNo++) {
 			// 获取当前页在列表中对应的起止序号
-			int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
-			int start = startEnd[0];
-			int end = startEnd[1];
-			if (end > size) {
-				end = size;
+			final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
+			if (startEnd[1] > total) {
+				startEnd[1] = total;
 			}
-			// 使用拷贝，防止对返回分页数据进行增删操作时影响源数据的分页结果
-			CopyOnWriteArrayList<T> pageList = ListUtil.toCopyOnWriteArrayList(list.subList(start, end));
+
 			// 返回数据
-			pageListConsumer.accept(pageList);
+			pageListConsumer.accept(sub(list, startEnd[0], startEnd[1]));
 		}
 	}
 

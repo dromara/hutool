@@ -101,7 +101,7 @@ public class ListUtilTest {
 		int[] d1 = ListUtil.page(0,8,a).stream().mapToInt(Integer::valueOf).toArray();
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5},d1);
 
-
+		// page with consumer
 		List<List<Integer>> pageListData = new ArrayList<>();
 		ListUtil.page(a, 2, pageListData::add);
 		Assert.assertArrayEquals(new int[]{1, 2}, pageListData.get(0).stream().mapToInt(Integer::valueOf).toArray());
