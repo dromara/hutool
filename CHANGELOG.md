@@ -9,6 +9,7 @@
 * 【core   】     增加NamingCase类
 * 【core   】     ListUtil增加page方法重载（pr#1761@Github）
 * 【crypto 】     增加ASN1Util
+* 【core   】     CsvConfig改为泛型形式
 
 ### 🐞Bug修复
 

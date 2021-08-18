@@ -7,10 +7,11 @@ import java.io.Serializable;
 /**
  * CSV基础配置项，此配置项可用于读取和写出CSV，定义了包括字段分隔符、文本包装符等符号
  *
+ * @param <T> 继承子类类型，用于this返回
  * @author looly
  * @since 4.0.5
  */
-public class CsvConfig implements Serializable {
+public class CsvConfig<T extends CsvConfig<?>> implements Serializable {
 	private static final long serialVersionUID = -8069578249066158459L;
 
 	/**
@@ -32,9 +33,10 @@ public class CsvConfig implements Serializable {
 	 * @param fieldSeparator 字段分隔符，默认逗号','
 	 * @return this
 	 */
-	public CsvConfig setFieldSeparator(final char fieldSeparator) {
+	@SuppressWarnings("unchecked")
+	public T setFieldSeparator(final char fieldSeparator) {
 		this.fieldSeparator = fieldSeparator;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -43,9 +45,10 @@ public class CsvConfig implements Serializable {
 	 * @param textDelimiter 文本分隔符，文本包装符，默认双引号'"'
 	 * @return this
 	 */
-	public CsvConfig setTextDelimiter(char textDelimiter) {
+	@SuppressWarnings("unchecked")
+	public T setTextDelimiter(char textDelimiter) {
 		this.textDelimiter = textDelimiter;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -55,8 +58,9 @@ public class CsvConfig implements Serializable {
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public CsvConfig setCommentCharacter(char commentCharacter) {
+	@SuppressWarnings("unchecked")
+	public T setCommentCharacter(char commentCharacter) {
 		this.commentCharacter = commentCharacter;
-		return this;
+		return (T) this;
 	}
 }

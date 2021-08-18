@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * @author looly
  */
-public class CsvWriteConfig extends CsvConfig implements Serializable {
+public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Serializable {
 	private static final long serialVersionUID = 5396453565371560052L;
 
 	/**

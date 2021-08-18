@@ -145,4 +145,17 @@ public class CsvReaderTest {
 		Assert.assertEquals(6, data.getRow(1).getOriginalLineNumber());
 		Assert.assertEquals("a,s,d,f", CollUtil.join(data.getRow(1), ","));
 	}
+
+	@Test
+	public void customConfigTest(){
+		final CsvReader reader = CsvUtil.getReader(
+				CsvReadConfig.defaultConfig()
+						.setTextDelimiter('\'')
+						.setFieldSeparator(';'));
+		final CsvData csvRows = reader.readFromStr("123;456;'789;0'abc;");
+		final CsvRow row = csvRows.getRow(0);
+		Assert.assertEquals("123", row.get(0));
+		Assert.assertEquals("456", row.get(1));
+		Assert.assertEquals("'789;0'abc", row.get(2));
+	}
 }

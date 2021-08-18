@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author looly
  *
  */
-public class CsvReadConfig extends CsvConfig implements Serializable {
+public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializable {
 	private static final long serialVersionUID = 5396453565371560052L;
 
 	/** 是否首行做为标题行，默认false */
