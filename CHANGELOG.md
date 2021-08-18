@@ -11,6 +11,8 @@
 * 【crypto 】     增加ASN1Util
 * 【core   】     CsvConfig改为泛型形式
 * 【core   】     增加Partition
+* 【http   】     SoapClient.sendForResponse改为public（issue#I466NN@Gitee）
+* 【core   】     XmlUtil增加append重载（issue#I466ZZ@Gitee）
 
 ### 🐞Bug修复
 

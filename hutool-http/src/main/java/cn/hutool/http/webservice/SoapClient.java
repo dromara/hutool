@@ -585,7 +585,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 *
 	 * @return 响应对象
 	 */
-	private HttpResponse sendForResponse() {
+	public HttpResponse sendForResponse() {
 		return HttpRequest.post(this.url)//
 				.setFollowRedirects(true)//
 				.setConnectionTimeout(this.connectionTimeout)

@@ -1326,6 +1326,17 @@ public class XmlUtil {
 	public static Node appendText(Node node, CharSequence text) {
 		return appendText(getOwnerDocument(node), node, text);
 	}
+
+	/**
+	 * 追加数据子节点，可以是Map、集合、文本
+	 *
+	 * @param node 节点
+	 * @param data 数据
+	 * @since 5.7.10
+	 */
+	public static void append(Node node, Object data) {
+		append(getOwnerDocument(node), node, data);
+	}
 	// ---------------------------------------------------------------------------------------- Private method start
 
 	/**
