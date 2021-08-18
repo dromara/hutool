@@ -71,6 +71,6 @@ public class AlgorithmUtil {
 	 * @return JWT算法ID
 	 */
 	private static String getIdByAlgorithm(String algorithm) {
-		return map.getInverse().get(algorithm);
+		return map.getKey(algorithm);
 	}
 }
