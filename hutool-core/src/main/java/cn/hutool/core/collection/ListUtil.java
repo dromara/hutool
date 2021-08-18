@@ -2,7 +2,6 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -16,6 +15,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.RandomAccess;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
@@ -521,7 +521,8 @@ public class ListUtil {
 	}
 
 	/**
-	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 * 通过传入分区长度，将指定列表分区为不同的块，每块区域的长度相同（最后一块可能小于长度）<br>
+	 * 分区是在原List的基础上进行的，返回的分区是不可变的抽象列表，原列表元素变更，分区中元素也会变更。
 	 *
 	 * <p>
 	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
@@ -534,20 +535,32 @@ public class ListUtil {
 	 * @return 分段列表
 	 * @since 5.4.5
 	 */
-	public static <T> List<List<T>> split(List<T> list, int size) {
+	public static <T> List<List<T>> partition(List<T> list, int size) {
 		if (CollUtil.isEmpty(list)) {
 			return Collections.emptyList();
 		}
 
-		final int listSize = list.size();
-		final List<List<T>> result = new ArrayList<>(listSize / size + 1);
-		int offset = 0;
-		for (int toIdx = size; toIdx <= listSize; offset = toIdx, toIdx += size) {
-			result.add(list.subList(offset, toIdx));
-		}
-		if (offset < listSize) {
-			result.add(list.subList(offset, listSize));
-		}
-		return result;
+		return (list instanceof RandomAccess)
+				? new RandomAccessPartition<>(list, size)
+				: new Partition<>(list, size);
+	}
+
+	/**
+	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 *
+	 * <p>
+	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
+	 * 此方法返回的是原List的视图，也就是说原List有变更，切分后的结果也会变更。
+	 * </p>
+	 *
+	 * @param <T>  集合元素类型
+	 * @param list 列表
+	 * @param size 每个段的长度
+	 * @return 分段列表
+	 * @since 5.4.5
+	 * @see #partition(List, int)
+	 */
+	public static <T> List<List<T>> split(List<T> list, int size) {
+		return partition(list, size);
 	}
 }

@@ -828,7 +828,7 @@ public class BeanUtil {
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
-	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
+	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
 	 * @since 5.0.7
 	 */
 	public static boolean isNotEmpty(Object bean, String... ignoreFiledNames) {
