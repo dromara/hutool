@@ -460,18 +460,34 @@ public class DateUtilTest {
 	 * 测试支持：yyyy-MM-dd HH:mm:ss.SSSSSS 格式
 	 */
 	@Test
-	public void parseTest9() {
+	public void parseNormFullTest() {
 		String str = "2020-02-06 01:58:00.000020";
 		DateTime dateTime = DateUtil.parse(str);
-		assert dateTime != null;
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.00002";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.111000";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.111";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
 
 	/**
 	 * 测试字符串是空，返回null, 而不是直接报错；
 	 */
 	@Test
-	public void parseTest10() {
-		String str = "";
+	public void parseEmptyTest() {
+		String str = " ";
 		DateTime dateTime = DateUtil.parse(str);
 		Assert.assertNull(dateTime);
 	}

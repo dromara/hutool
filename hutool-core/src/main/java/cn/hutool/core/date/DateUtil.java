@@ -960,14 +960,15 @@ public class DateUtil extends CalendarUtil {
 					// yyyy-MM-dd HH:mm
 					return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 				case 2:
-					if (StrUtil.contains(dateStr, CharUtil.DOT)) {
-						if (dateStr.length() == DatePattern.NORM_DATETIME_MS_PATTERN.length()) {
-							// yyyy-MM-dd HH:mm:ss.SSS
-							return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
-						} else {
-							// yyyy-MM-dd HH:mm:ss.SSSSSS
-							return parse(dateStr, DatePattern.NORM_DATETIME_MS_FULL_FORMAT);
+					final int indexOfDot = StrUtil.indexOf(dateStr, CharUtil.DOT);
+					if (indexOfDot > 0) {
+						final int length1 = dateStr.length();
+						// yyyy-MM-dd HH:mm:ss.SSS 或者 yyyy-MM-dd HH:mm:ss.SSSSSS
+						if(length1 - indexOfDot > 4) {
+							// 类似yyyy-MM-dd HH:mm:ss.SSSSSS，采取截断操作
+							dateStr = StrUtil.subPre(dateStr, indexOfDot + 4);
 						}
+						return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
 					}
 					// yyyy-MM-dd HH:mm:ss
 					return parse(dateStr, DatePattern.NORM_DATETIME_FORMAT);

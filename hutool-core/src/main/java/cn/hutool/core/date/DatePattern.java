@@ -122,19 +122,6 @@ public class DatePattern {
 	public static final DateTimeFormatter NORM_DATETIME_MS_FORMATTER = createFormatter(NORM_DATETIME_MS_PATTERN);
 
 	/**
-	 * 标准日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss.SSSSSS
-	 */
-	public static final String NORM_DATETIME_MS_FULL_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSS";
-	/**
-	 * 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSSSSS
-	 */
-	public static final FastDateFormat NORM_DATETIME_MS_FULL_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MS_PATTERN);
-	/**
-	 * 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSSSSS
-	 */
-	public static final DateTimeFormatter NORM_DATETIME_MS_FULL_FORMATTER = createFormatter(NORM_DATETIME_MS_PATTERN);
-
-	/**
 	 * ISO8601日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss,SSS
 	 */
 	public static final String ISO8601_PATTERN = "yyyy-MM-dd HH:mm:ss,SSS";
