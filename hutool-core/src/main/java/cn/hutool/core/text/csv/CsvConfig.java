@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author looly
  * @since 4.0.5
  */
-public class CsvConfig<T extends CsvConfig<?>> implements Serializable {
+public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	private static final long serialVersionUID = -8069578249066158459L;
 
 	/**
