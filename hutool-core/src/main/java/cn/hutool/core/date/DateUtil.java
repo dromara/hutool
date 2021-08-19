@@ -20,13 +20,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -2104,4 +2098,64 @@ public class DateUtil extends CalendarUtil {
 		return builder.toString();
 	}
 	// ------------------------------------------------------------------------ Private method end
+
+
+	/**
+	 *
+	 * 判断一个时间点 是否在一个时间范围内,可以分别选择两个端点值是否有效 (如: 左闭右闭(默认)、左开右闭、左闭右开、左开右开)
+	 * 参考帮助文档:compareTo()方法的返回值，date1小于date2返回-1，date1大于date2返回1，相等返回0
+	 * @Author 康一凡(yeafel)   2021-08-19 (若有bug，欢迎指正！)
+	 * @param sourceDate   {@link Date} 被比较判断的日期
+	 * @param startTime    {@link Date} 开始时间
+	 * @param endTime      {@link Date} 结束时间
+	 * @param endPoints    {@link Boolean}   可传1个、2个 Boolean类型的参数,下标位0为左端点,下标位1为右端点
+	 *                                       也可不传,不传默认两个端点都会被判断为有效范围,
+	 *                                       也可只传一个左端点,那么右端点默认为true(不建议只传一个参数)。
+	 *                                       推荐传参:  如果要传参,最好两个端点都传值,便于自己以后阅读代码。  --yeafel
+	 * @return
+	 */
+	public static Boolean isInDateRange(
+			Date sourceDate,
+			Date startTime,
+			Date endTime,
+			Boolean... endPoints
+			) {
+		Assert.notNull(sourceDate, "sourceDate can not be null !");
+		Assert.notNull(startTime, "startTime can not be null !");
+		Assert.notNull(endTime, "endTime can not be null !");
+
+		boolean leftEndpoint;
+		boolean rightEndpoint;
+		if (endPoints.length == 0) {
+			leftEndpoint = true;
+			rightEndpoint = true;
+		}else if (endPoints.length == 1){
+			leftEndpoint = endPoints[0];
+			rightEndpoint = true;
+		} else {
+			//无论是正好传两个参数,还是超过两个参数,都只有前两个参数有效.
+			leftEndpoint = endPoints[0];
+			rightEndpoint = endPoints[1];
+		}
+
+		//场景一:  leftEndpoint和rightEndpoint都为true (左闭右闭)
+		if (leftEndpoint && rightEndpoint) {
+			if (sourceDate.compareTo(startTime) < 0) {
+				//sourceDate < 开始时间
+				return false;
+			} else {
+				//  开始时间 <= sourceDate <= 结束时间 为true,否则为false
+				return sourceDate.compareTo(endTime) <= 0;
+			}
+		} else if (!leftEndpoint && rightEndpoint) {
+			//场景二:  左开右闭
+			return sourceDate.compareTo(startTime) > 0 && sourceDate.compareTo(endTime) <= 0;
+		} else if (leftEndpoint) {
+			//场景三: 左闭右开
+			return sourceDate.compareTo(startTime) >= 0 && sourceDate.compareTo(endTime) < 0;
+		} else {
+			//场景四: 左开右开
+			return sourceDate.compareTo(startTime) > 0 && sourceDate.compareTo(endTime) < 0;
+		}
+	}
 }
