@@ -217,7 +217,7 @@ public class ObjectUtil {
 	 */
 	public static boolean isNotNull(Object obj) {
 		//noinspection ConstantConditions
-		return null != obj && false == obj.equals(null);
+		return false == isNull(obj);
 	}
 
 	/**
