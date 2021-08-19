@@ -2114,12 +2114,7 @@ public class DateUtil extends CalendarUtil {
 	 *                                       推荐传参:  如果要传参,最好两个端点都传值,便于自己以后阅读代码。  --yeafel
 	 * @return
 	 */
-	public static Boolean isInDateRange(
-			Date sourceDate,
-			Date startTime,
-			Date endTime,
-			Boolean... endPoints
-			) {
+	public static Boolean isInDateRange(Date sourceDate, Date startTime, Date endTime, Boolean... endPoints) {
 		Assert.notNull(sourceDate, "sourceDate can not be null !");
 		Assert.notNull(startTime, "startTime can not be null !");
 		Assert.notNull(endTime, "endTime can not be null !");
