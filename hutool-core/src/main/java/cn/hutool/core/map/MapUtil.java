@@ -791,18 +791,15 @@ public class MapUtil {
 			return null;
 		}
 
-		TreeMap<K, V> result;
 		if (map instanceof TreeMap) {
 			// 已经是可排序Map，此时只有比较器一致才返回原map
-			result = (TreeMap<K, V>) map;
+			TreeMap<K, V> result = (TreeMap<K, V>) map;
 			if (null == comparator || comparator.equals(result.comparator())) {
 				return result;
 			}
-		} else {
-			result = newTreeMap(map, comparator);
 		}
 
-		return result;
+		return newTreeMap(map, comparator);
 	}
 
 	/**

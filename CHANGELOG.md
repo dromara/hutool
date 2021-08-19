@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.10 (2021-08-18)
+# 5.7.10 (2021-08-19)
 
 ### 🐣新特性
 * 【core   】     增加NamingCase类
@@ -15,6 +15,7 @@
 * 【core   】     XmlUtil增加append重载（issue#I466Q0@Gitee）
 * 【poi    】     增加EscapeStrCellSetter（issue#I466ZZ@Gitee）
 * 【poi    】     ExcelBase增加renameSheet、cloneSheet（issue#I466ZZ@Gitee）
+* 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
 
 ### 🐞Bug修复
 
