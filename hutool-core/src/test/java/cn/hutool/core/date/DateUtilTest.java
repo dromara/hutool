@@ -946,4 +946,52 @@ public class DateUtilTest {
 		parse = DateUtil.parse("2021-07-24");
 		Assert.assertTrue(DateUtil.isWeekend(parse));
 	}
+
+
+	@Test
+	public void isInDateRangeTest() {
+		//测试左闭右闭 和 左开右开 --start =======================================================
+		Calendar calendar = CalendarUtil.calendar();
+		Date now = calendar.getTime();
+		calendar.add(Calendar.SECOND, -2);
+		Date startTime = calendar.getTime();
+
+		calendar.add(Calendar.SECOND, 2);
+		//滑动回now的时间点，这时now时间点与endTime时间点重合, sourceTime在右端点上, 其他条件测试可以修改上述的滑动值进行覆盖测试
+		Date endTime = calendar.getTime();
+		//两个端点值不传默认左闭右闭,应该返回输出true
+		Assert.assertTrue(DateUtil.isInDateRange(now, startTime, endTime));
+
+		//传值左开有开,那么应该返回false
+		Assert.assertFalse(DateUtil.isInDateRange(now, startTime, endTime, false, false));
+		//测试左闭右闭 和 左开右开 --end =======================================================
+
+
+		//测试左闭右开 --start =======================================================
+		Calendar calendar2 = CalendarUtil.calendar();
+		Date now2 = calendar.getTime();
+		calendar.add(Calendar.SECOND, 0);
+		Date startTime2 = calendar.getTime();
+
+		calendar.add(Calendar.SECOND, 2);
+		//这时now2时间点与startTime2时间点重合, sourceTime在左端点上, 其他条件测试可以修改上述的滑动值进行覆盖测试
+		Date endTime2 = calendar.getTime();
+		//传值左闭右开, 此时应该返回true
+		Assert.assertTrue(DateUtil.isInDateRange(now2, startTime2, endTime2, true, false));
+		//测试左闭右开 --end =======================================================
+
+
+		//测试左开右闭 --start =======================================================
+		Calendar calendar3 = CalendarUtil.calendar();
+		Date now3 = calendar.getTime();
+		calendar.add(Calendar.SECOND, -2);
+		Date startTime3 = calendar.getTime();
+
+		calendar.add(Calendar.SECOND, 2);
+		//这时now3时间点与endTime3时间点重合, sourceTime在右端点上, 其他条件测试可以修改上述的滑动值进行覆盖测试
+		Date endTime3 = calendar.getTime();
+		//传值左开右闭, 此时应该返回true
+		Assert.assertTrue(DateUtil.isInDateRange(now3, startTime3, endTime3, false, true));
+		//测试左开右闭 --end =======================================================
+	}
 }
