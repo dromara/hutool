@@ -456,6 +456,26 @@ public class DateUtilTest {
 		Assert.assertEquals("2020-06-28 02:14:13", dateTime.toString());
 	}
 
+	/**
+	 * 测试支持：yyyy-MM-dd HH:mm:ss.SSSSSS 格式
+	 */
+	@Test
+	public void parseTest9() {
+		String str = "2020-02-06 01:58:00.000020";
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+	}
+
+	/**
+	 * 测试字符串是空，返回null, 而不是直接报错；
+	 */
+	@Test
+	public void parseTest10() {
+		String str = "";
+		DateTime dateTime = DateUtil.parse(str);
+		Assert.assertNull(dateTime);
+	}
+
 	@Test
 	public void parseUTCOffsetTest() {
 		// issue#I437AP@Gitee

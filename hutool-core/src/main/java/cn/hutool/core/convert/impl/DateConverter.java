@@ -62,6 +62,9 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 
 	@Override
 	protected java.util.Date convertInternal(Object value) {
+		if (value == null || (value instanceof CharSequence && StrUtil.isBlank(value.toString()))) {
+			return null;
+		}
 		if (value instanceof TemporalAccessor) {
 			return wrap(DateUtil.date((TemporalAccessor) value));
 		} else if (value instanceof Calendar) {
