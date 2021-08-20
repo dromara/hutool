@@ -1,13 +1,9 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Comparator;
 
 /**
  * Bean字段排序器<br>
