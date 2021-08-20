@@ -644,7 +644,7 @@ public class PathUtil {
 	}
 
 	/**
-	 * 删除文件，不追踪软链
+	 * 删除文件或空目录，不追踪软链
 	 *
 	 * @param path 文件对象
 	 * @throws IOException IO异常

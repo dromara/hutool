@@ -709,8 +709,12 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 删除文件或清空后的目录
+		final Path path = file.toPath();
 		try {
-			delFile(file.toPath());
+			delFile(path);
+		} catch (DirectoryNotEmptyException e){
+			// 遍历清空目录没有成功，此时补充删除一次（可能存在部分软链）
+			del(path);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -749,10 +753,8 @@ public class FileUtil extends PathUtil {
 
 		final File[] files = directory.listFiles();
 		if (null != files) {
-			boolean isOk;
 			for (File childFile : files) {
-				isOk = del(childFile);
-				if (isOk == false) {
+				if(false == del(childFile)){
 					// 删除一个出错则本次删除任务失败
 					return false;
 				}

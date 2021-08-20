@@ -23,6 +23,15 @@ public class DelVisitor extends SimpleFileVisitor<Path> {
 		return FileVisitResult.CONTINUE;
 	}
 
+	/**
+	 * 访问目录结束后删除目录，当执行此方法时，子文件或目录都已访问（删除）完毕<br>
+	 * 理论上当执行到此方法时，目录下已经被清空了
+	 *
+	 * @param dir 目录
+	 * @param e   异常
+	 * @return {@link FileVisitResult}
+	 * @throws IOException IO异常
+	 */
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
 		if (e == null) {
