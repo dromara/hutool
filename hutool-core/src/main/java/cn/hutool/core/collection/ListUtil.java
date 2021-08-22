@@ -8,6 +8,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -562,5 +563,45 @@ public class ListUtil {
 	 */
 	public static <T> List<List<T>> split(List<T> list, int size) {
 		return partition(list, size);
+	}
+
+	/**
+	 * 将集合平均分成多个list，返回这个集合的列表
+	 * <p>例：</p>
+	 * <blockquote><pre>
+	 *     ListUtil.splitAvg(null, 3);	// [[], [], []]
+	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 2);	// [[1, 2], [3, 4]]
+	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);	// [[1], [2], [3], [], []]
+	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);	// [[1, 2], [3]]
+	 * </pre></blockquote>
+	 *
+	 * @param <T>        集合元素类型
+	 * @param list 集合
+	 * @param limit      要均分成几个list
+	 * @return 分段列表
+	 */
+	public static <T> List<List<T>> splitAvg(List<T> list, int limit) {
+		final List<List<T>> result = new ArrayList<>();
+		if (CollUtil.isEmpty(list)) {
+			for (int i = 0; i < limit; i++) {
+				result.add(new ArrayList<>());
+			}
+			return result;
+		}
+		int remainder = list.size() % limit;
+		int number = list.size() / limit;
+		int offset = 0;
+		for (int i = 0; i < limit; i++) {
+			List<T> value;
+			if (remainder > 0) {
+				value = list.subList(i * number + offset, (i + 1) * number + offset + 1);
+				remainder--;
+				offset++;
+			} else {
+				value = list.subList(i * number + offset, (i + 1) * number + offset);
+			}
+			result.add(value);
+		}
+		return result;
 	}
 }
