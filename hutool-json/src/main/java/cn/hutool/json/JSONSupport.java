@@ -26,7 +26,7 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	 */
 	@Override
 	public void parse(JSON json) {
-		final JSONSupport support = json.toBean(this.getClass());
+		final JSONSupport support = JSONConverter.jsonToBean(getClass(), json, false);
 		BeanUtil.copyProperties(support, this);
 	}
 

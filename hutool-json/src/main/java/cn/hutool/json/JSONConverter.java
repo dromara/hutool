@@ -85,10 +85,30 @@ public class JSONConverter implements Converter<JSON> {
 			}
 		}
 
-		if(value instanceof JSON) {
+		return jsonToBean(targetType, value, ignoreError);
+	}
+
+	/**
+	 * JSON递归转换<br>
+	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
+	 *
+	 * @param <T> 转换后的对象类型
+	 * @param targetType 目标类型
+	 * @param value 值，JSON格式
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 目标类型的值
+	 * @throws ConvertException 转换失败
+	 */
+	protected static <T> T jsonToBean(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+		if (JSONUtil.isNull(value)) {
+			return null;
+		}
+
+		if(value instanceof JSON){
 			final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
 			if(null != deserializer) {
-				return (T) deserializer.deserialize((JSON)value);
+				//noinspection unchecked
+				return (T) deserializer.deserialize((JSON) value);
 			}
 		}
 
@@ -111,5 +131,4 @@ public class JSONConverter implements Converter<JSON> {
 	public JSON convert(Object value, JSON defaultValue) throws IllegalArgumentException {
 		return JSONUtil.parse(value);
 	}
-
 }
