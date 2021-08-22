@@ -1270,10 +1270,25 @@ public class XmlUtil {
 	 * @since 5.2.4
 	 */
 	public static Document beanToXml(Object bean, String namespace) {
+		return beanToXml(bean, namespace, false);
+	}
+
+	/**
+	 * 将Bean转换为XML
+	 *
+	 * @param bean       Bean对象
+	 * @param namespace  命名空间，可以为null
+	 * @param ignoreNull 时候忽略值为{@code null}的属性
+	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
+	 * @since 5.7.10
+	 */
+	public static Document beanToXml(Object bean, String namespace, boolean ignoreNull) {
 		if (null == bean) {
 			return null;
 		}
-		return mapToXml(BeanUtil.beanToMap(bean), bean.getClass().getSimpleName(), namespace);
+		return mapToXml(BeanUtil.beanToMap(bean, false, ignoreNull),
+				bean.getClass().getSimpleName(), namespace);
 	}
 
 	/**
