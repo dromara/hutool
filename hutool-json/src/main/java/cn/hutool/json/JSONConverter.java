@@ -56,7 +56,8 @@ public class JSONConverter implements Converter<JSON> {
 
 	/**
 	 * JSON递归转换<br>
-	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
+	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean<br>
+	 * 如果遇到{@link JSONBeanParser}，则调用其{@link JSONBeanParser#parse(Object)}方法转换。
 	 *
 	 * @param <T> 转换后的对象类型
 	 * @param targetType 目标类型
@@ -98,6 +99,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
+	 * @since 5.7.10
 	 */
 	protected static <T> T jsonToBean(Type targetType, Object value, boolean ignoreError) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
