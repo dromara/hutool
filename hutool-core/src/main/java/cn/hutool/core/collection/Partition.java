@@ -14,6 +14,7 @@ import java.util.List;
  * @since 5.7.10
  */
 public class Partition<T> extends AbstractList<List<T>> {
+
 	final List<T> list;
 	final int size;
 

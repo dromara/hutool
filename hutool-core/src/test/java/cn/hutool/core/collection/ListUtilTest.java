@@ -9,13 +9,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListUtilTest {
 
 	@Test
 	@Ignore
-	public void split() {
+	public void splitBenchTest() {
 		List<String> list = new ArrayList<>();
 		CollUtil.padRight(list, RandomUtil.randomInt(1000_0000, 1_0000_0000), "test");
 
@@ -35,6 +36,32 @@ public class ListUtilTest {
 		Assert.assertEquals(CollSplitResult, ListSplitResult);
 
 		Console.log(stopWatch.prettyPrint());
+	}
+
+	@Test
+	public void splitAvgTest(){
+		List<List<Object>> lists = ListUtil.splitAvg(null, 3);
+		Assert.assertEquals(ListUtil.empty(), lists);
+
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 1);
+		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 2);
+		Assert.assertEquals("[[1, 2], [3, 4]]", lists.toString());
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 3);
+		Assert.assertEquals("[[1, 2], [3], [4]]", lists.toString());
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 4);
+		Assert.assertEquals("[[1], [2], [3], [4]]", lists.toString());
+
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);
+		Assert.assertEquals("[[1], [2], [3], [], []]", lists.toString());
+		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);
+		Assert.assertEquals("[[1, 2], [3]]", lists.toString());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void splitAvgNotZero(){
+		// limit不能小于等于0
+		ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 0);
 	}
 
 	@Test

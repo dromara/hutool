@@ -15,9 +15,10 @@
 * 【core   】     XmlUtil增加append重载（issue#I466Q0@Gitee）
 * 【poi    】     增加EscapeStrCellSetter（issue#I466ZZ@Gitee）
 * 【poi    】     ExcelBase增加renameSheet、cloneSheet（issue#I466ZZ@Gitee）
-* 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
+* 【core   】     ListUtil增加splitAvg方法（pr#397@Gitee）
 
 ### 🐞Bug修复
+* 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
 * 【core   】     修复JSONSupport默认循环引用导致的问题（issue#1779@Github）
 
 -------------------------------------------------------------------------------------------------------------

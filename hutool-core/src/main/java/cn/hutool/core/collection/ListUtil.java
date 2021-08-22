@@ -8,7 +8,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -364,7 +363,7 @@ public class ListUtil {
 	 */
 	public static <T> List<T> reverseNew(List<T> list) {
 		List<T> list2 = ObjectUtil.clone(list);
-		if(null == list2){
+		if (null == list2) {
 			// 不支持clone
 			list2 = new ArrayList<>(list);
 		}
@@ -470,8 +469,8 @@ public class ListUtil {
 	public static <T> int lastIndexOf(List<T> list, Matcher<T> matcher) {
 		if (null != list) {
 			final int size = list.size();
-			if(size > 0){
-				for(int i = size -1; i >= 0; i--){
+			if (size > 0) {
+				for (int i = size - 1; i >= 0; i--) {
 					if (null == matcher || matcher.match(list.get(i))) {
 						return i;
 					}
@@ -538,7 +537,7 @@ public class ListUtil {
 	 */
 	public static <T> List<List<T>> partition(List<T> list, int size) {
 		if (CollUtil.isEmpty(list)) {
-			return Collections.emptyList();
+			return empty();
 		}
 
 		return (list instanceof RandomAccess)
@@ -558,8 +557,8 @@ public class ListUtil {
 	 * @param list 列表
 	 * @param size 每个段的长度
 	 * @return 分段列表
-	 * @since 5.4.5
 	 * @see #partition(List, int)
+	 * @since 5.4.5
 	 */
 	public static <T> List<List<T>> split(List<T> list, int size) {
 		return partition(list, size);
@@ -568,40 +567,27 @@ public class ListUtil {
 	/**
 	 * 将集合平均分成多个list，返回这个集合的列表
 	 * <p>例：</p>
-	 * <blockquote><pre>
-	 *     ListUtil.splitAvg(null, 3);	// [[], [], []]
+	 * <pre>
+	 *     ListUtil.splitAvg(null, 3);	// []
 	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 2);	// [[1, 2], [3, 4]]
 	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);	// [[1], [2], [3], [], []]
 	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);	// [[1, 2], [3]]
-	 * </pre></blockquote>
+	 * </pre>
 	 *
-	 * @param <T>        集合元素类型
-	 * @param list 集合
-	 * @param limit      要均分成几个list
+	 * @param <T>   集合元素类型
+	 * @param list  集合
+	 * @param limit 要均分成几个list
 	 * @return 分段列表
+	 * @author lileming
+	 * @since 5.7.10
 	 */
 	public static <T> List<List<T>> splitAvg(List<T> list, int limit) {
-		final List<List<T>> result = new ArrayList<>();
 		if (CollUtil.isEmpty(list)) {
-			for (int i = 0; i < limit; i++) {
-				result.add(new ArrayList<>());
-			}
-			return result;
+			return empty();
 		}
-		int remainder = list.size() % limit;
-		int number = list.size() / limit;
-		int offset = 0;
-		for (int i = 0; i < limit; i++) {
-			List<T> value;
-			if (remainder > 0) {
-				value = list.subList(i * number + offset, (i + 1) * number + offset + 1);
-				remainder--;
-				offset++;
-			} else {
-				value = list.subList(i * number + offset, (i + 1) * number + offset);
-			}
-			result.add(value);
-		}
-		return result;
+
+		return (list instanceof RandomAccess)
+				? new RandomAccessAvgPartition<>(list, limit)
+				: new AvgPartition<>(list, limit);
 	}
 }
