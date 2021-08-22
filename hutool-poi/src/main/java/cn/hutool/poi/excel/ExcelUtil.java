@@ -23,7 +23,7 @@ import java.io.InputStream;
 public class ExcelUtil {
 
 	/**
-	 * xlx的ContentType
+	 * xls的ContentType
 	 */
 	public static final String XLS_CONTENT_TYPE = "application/vnd.ms-excel";
 
