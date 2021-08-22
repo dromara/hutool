@@ -16,6 +16,7 @@
 * 【poi    】     增加EscapeStrCellSetter（issue#I466ZZ@Gitee）
 * 【poi    】     ExcelBase增加renameSheet、cloneSheet（issue#I466ZZ@Gitee）
 * 【core   】     ListUtil增加splitAvg方法（pr#397@Gitee）
+* 【poi    】     Excel07SaxReader支持数字类型sheet名称、支持sheetName:名称前缀（issue#I46OMA@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）

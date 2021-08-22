@@ -17,6 +17,8 @@ public interface ExcelSaxReader<T> {
 
 	// sheet r:Id前缀
 	String RID_PREFIX = "rId";
+	// sheet name前缀
+	String SHEET_NAME_PREFIX = "sheetName:";
 
 	/**
 	 * 开始读取Excel
