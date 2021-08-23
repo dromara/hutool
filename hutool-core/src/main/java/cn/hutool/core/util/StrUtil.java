@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 字符串工具类
@@ -456,5 +457,77 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
+	}
+
+	/**
+	 * kmp算法重写String类的indexOf方法
+	 * @param master     主字符串
+	 * @param pattern	 要查找的字符串
+	 * @return           索引值，未找到返回-1
+	 */
+	public static int indexOf(String master, String pattern) {
+		if (pattern.length() > master.length()) return -1; //与jdk保持一致，此处忽略空判断
+
+		char[] masterChars = master.toCharArray(), patternChars = pattern.toCharArray();
+
+		if (patternChars.length == 1) {
+			for (int i = 0; i < masterChars.length; i++) {
+				if (masterChars[i] == patternChars[0]) return i;
+			}
+			return -1;
+		}
+
+		int i = 0, j = 0;
+
+		int[] next = getNext(pattern);
+
+		while (i < masterChars.length && j < patternChars.length) {
+			if (j == -1 || masterChars[i] == patternChars[j]) {
+				i++;
+				j++;
+			} else {
+				j = next[j];
+			}
+		}
+
+		if (j == patternChars.length) {
+			return i - j;
+		} else {
+			return -1;
+		}
+	}
+
+	private static int[] getNext(String s) {
+		char[] chars = s.toCharArray();
+
+		int[] next = new int[chars.length];
+
+		next[0] = -1;
+		int j = 0;
+		int k = -1;
+
+		while (j < chars.length - 1) {
+			if (k == -1 || chars[j] == chars[k]) {
+				if (chars[++j] == chars[++k]) {
+					next[j] = next[k];
+				} else {
+					next[j] = k;
+				}
+			} else {
+				k = next[k];
+			}
+		}
+
+		return next;
+	}
+
+	/**
+	 * 计算包含
+	 * @param master 	主字符串
+	 * @param pattern	要包含的字符串
+	 * @return	是否包含
+	 */
+	public static boolean contains(String master, String pattern) {
+		return -1 != indexOf(master, pattern);
 	}
 }

@@ -587,4 +587,24 @@ public class StrUtilTest {
 		String a = "2142342422423423";
 		Assert.assertTrue(StrUtil.isNumeric(a));
 	}
+
+	@Test
+	public void indexOf() {
+		String s = "12345678", t = "45";
+		int i = StrUtil.indexOf(s, t);
+		int j = s.indexOf(t);
+		Assert.assertEquals(i, j);
+
+//		String t1 = null;
+//		Assert.assertEquals(-1, StrUtil.indexOf(s, t1));
+
+		String t2 = "90";
+		Assert.assertEquals(s.indexOf(t2), StrUtil.indexOf(s, t2));
+
+		String t3 = "245";
+		Assert.assertEquals(s.indexOf(t3), StrUtil.indexOf(s, t3));
+
+		String t4 = "234567890";
+		Assert.assertEquals(s.indexOf(t4), StrUtil.indexOf(s,t4));
+	}
 }
