@@ -1,6 +1,8 @@
 package cn.hutool.core.comparator;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Field;
@@ -12,10 +14,8 @@ import java.lang.reflect.Field;
  * @param <T> 被比较的Bean
  * @author Looly
  */
-public class FieldComparator<T> extends BaseFieldComparator<T> {
+public class FieldComparator<T> extends FuncComparator<T> {
 	private static final long serialVersionUID = 9157326766723846313L;
-
-	private final Field field;
 
 	/**
 	 * 构造
@@ -24,10 +24,7 @@ public class FieldComparator<T> extends BaseFieldComparator<T> {
 	 * @param fieldName 字段名
 	 */
 	public FieldComparator(Class<T> beanClass, String fieldName) {
-		this.field = ClassUtil.getDeclaredField(beanClass, fieldName);
-		if (this.field == null) {
-			throw new IllegalArgumentException(StrUtil.format("Field [{}] not found in Class [{}]", fieldName, beanClass.getName()));
-		}
+		this(getNonNullField(beanClass, fieldName));
 	}
 
 	/**
@@ -36,11 +33,33 @@ public class FieldComparator<T> extends BaseFieldComparator<T> {
 	 * @param field 字段
 	 */
 	public FieldComparator(Field field) {
-		this.field = field;
+		this(true, field);
 	}
 
-	@Override
-	public int compare(T o1, T o2) {
-		return compareItem(o1, o2, this.field);
+	/**
+	 * 构造
+	 *
+	 * @param nullGreater 是否{@code null}在后
+	 * @param field       字段
+	 */
+	public FieldComparator(boolean nullGreater, Field field) {
+		super(nullGreater, (bean) ->
+				(Comparable<?>) ReflectUtil.getFieldValue(bean,
+						Assert.notNull(field, "Field must be not null!")));
+	}
+
+	/**
+	 * 获取字段，附带检查字段不存在的问题。
+	 *
+	 * @param beanClass Bean类
+	 * @param fieldName 字段名
+	 * @return 非null字段
+	 */
+	private static Field getNonNullField(Class<?> beanClass, String fieldName) {
+		final Field field = ClassUtil.getDeclaredField(beanClass, fieldName);
+		if (field == null) {
+			throw new IllegalArgumentException(StrUtil.format("Field [{}] not found in Class [{}]", fieldName, beanClass.getName()));
+		}
+		return field;
 	}
 }

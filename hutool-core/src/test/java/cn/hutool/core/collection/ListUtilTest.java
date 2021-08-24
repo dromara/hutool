@@ -4,6 +4,8 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.RandomUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -157,5 +159,30 @@ public class ListUtilTest {
 		// 对子列表操作不影响原列表
 		Assert.assertEquals(4, of.size());
 		Assert.assertEquals(1, sub.size());
+	}
+
+	@Test
+	public void sortByPropertyTest(){
+		@Data
+		@AllArgsConstructor
+		class TestBean{
+			private int order;
+			private String name;
+		}
+
+		final List<TestBean> beanList = ListUtil.toList(
+				new TestBean(2, "test2"),
+				new TestBean(1, "test1"),
+				new TestBean(5, "test5"),
+				new TestBean(4, "test4"),
+				new TestBean(3, "test3")
+				);
+
+		final List<TestBean> order = ListUtil.sortByProperty(beanList, "order");
+		Assert.assertEquals("test1", order.get(0).getName());
+		Assert.assertEquals("test2", order.get(1).getName());
+		Assert.assertEquals("test3", order.get(2).getName());
+		Assert.assertEquals("test4", order.get(3).getName());
+		Assert.assertEquals("test5", order.get(4).getName());
 	}
 }

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.10 (2021-08-22)
+# 5.7.10 (2021-08-24)
 
 ### 🐣新特性
 * 【core   】     增加NamingCase类
@@ -19,6 +19,7 @@
 * 【poi    】     Excel07SaxReader支持数字类型sheet名称、支持sheetName:名称前缀（issue#I46OMA@Gitee）
 * 【extra  】     Mail增加build方法（issue#I46LGE@Gitee）
 * 【core   】     XmlUtil增加beanToXml重载，支持忽略null
+* 【core   】     添加NullComparator、FuncComparator（issue#I471X7@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）

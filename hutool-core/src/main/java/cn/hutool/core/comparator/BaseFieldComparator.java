@@ -13,7 +13,9 @@ import java.util.Comparator;
  *
  * @param <T> 被比较的Bean
  * @author jiangzeyin
+ * @deprecated 此类不再需要，使用FuncComparator代替更加灵活
  */
+@Deprecated
 public abstract class BaseFieldComparator<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = -3482464782340308755L;
 

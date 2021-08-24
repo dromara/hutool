@@ -53,7 +53,7 @@ public class CompareUtil {
 	 * @param <T>           被比较对象类型（必须实现Comparable接口）
 	 * @param c1            对象1，可以为{@code null}
 	 * @param c2            对象2，可以为{@code null}
-	 * @param isNullGreater 当被比较对象为null时是否排在前面，true表示null大于任何对象，false反之
+	 * @param isNullGreater 当被比较对象为null时是否排在后面，true表示null大于任何对象，false反之
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */

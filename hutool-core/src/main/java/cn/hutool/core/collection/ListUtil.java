@@ -312,6 +312,9 @@ public class ListUtil {
 	 * @see Collections#sort(List, Comparator)
 	 */
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
+		if(CollUtil.isEmpty(list)){
+			return list;
+		}
 		list.sort(c);
 		return list;
 	}
