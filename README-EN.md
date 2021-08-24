@@ -202,7 +202,7 @@ If you think Hutool is good, you can donate to buy tshe author a pack of chili~,
 
 #### 🐧Welcome to the official account of Hutool cooperation.
 
-![Java2B](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qrcode.jpg)
+![Tuling](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg)
 
 #### 🐧Welcome to organization Dromara
 

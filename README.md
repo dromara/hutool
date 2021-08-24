@@ -211,7 +211,7 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 #### 🧡欢迎关注Hutool合作的公众号
 
-![Java2B](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qrcode.jpg)
+![图灵学院](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg)
 
 #### 🧡Dromara开源组织公众号
 
