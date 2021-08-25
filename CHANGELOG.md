@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.10 (2021-08-24)
+# 5.7.10 (2021-08-25)
 
 ### 🐣新特性
 * 【core   】     增加NamingCase类
@@ -20,6 +20,7 @@
 * 【extra  】     Mail增加build方法（issue#I46LGE@Gitee）
 * 【core   】     XmlUtil增加beanToXml重载，支持忽略null
 * 【core   】     添加NullComparator、FuncComparator（issue#I471X7@Gitee）
+* 【core   】     LambdaUtil添加getFieldName（issue#I4750U@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
