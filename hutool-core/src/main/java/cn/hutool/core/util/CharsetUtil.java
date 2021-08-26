@@ -1,8 +1,10 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.io.CharsetDetector;
 import cn.hutool.core.io.FileUtil;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -65,7 +67,7 @@ public class CharsetUtil {
 	/**
 	 * 解析字符串编码为Charset对象，解析失败返回系统默认编码
 	 *
-	 * @param charsetName    字符集，为空则返回默认字符集
+	 * @param charsetName 字符集，为空则返回默认字符集
 	 * @return Charset
 	 * @since 5.2.6
 	 */
@@ -191,5 +193,34 @@ public class CharsetUtil {
 	 */
 	public static Charset defaultCharset() {
 		return Charset.defaultCharset();
+	}
+
+	/**
+	 * 探测编码<br>
+	 * 注意：此方法会读取流的一部分，然后关闭流，如重复使用流，请使用使用支持reset方法的流
+	 *
+	 * @param in       流，使用后关闭此流
+	 * @param charsets 需要测试用的编码，null或空使用默认的编码数组
+	 * @return 编码
+	 * @see CharsetDetector#detect(InputStream, Charset...)
+	 * @since 5.7.10
+	 */
+	public static Charset defaultCharset(InputStream in, Charset... charsets) {
+		return CharsetDetector.detect(in, charsets);
+	}
+
+	/**
+	 * 探测编码<br>
+	 * 注意：此方法会读取流的一部分，然后关闭流，如重复使用流，请使用使用支持reset方法的流
+	 *
+	 * @param bufferSize 自定义缓存大小，即每次检查的长度
+	 * @param in         流，使用后关闭此流
+	 * @param charsets   需要测试用的编码，null或空使用默认的编码数组
+	 * @return 编码
+	 * @see CharsetDetector#detect(int, InputStream, Charset...)
+	 * @since 5.7.10
+	 */
+	public static Charset defaultCharset(int bufferSize, InputStream in, Charset... charsets) {
+		return CharsetDetector.detect(bufferSize, in, charsets);
 	}
 }

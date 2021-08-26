@@ -42,7 +42,7 @@ public class CharsetDetector {
 	/**
 	 * 探测文件编码
 	 *
-	 * @param file       文件
+	 * @param file     文件
 	 * @param charsets 需要测试用的编码，null或空使用默认的编码数组
 	 * @return 编码
 	 * @since 5.6.7
@@ -60,11 +60,25 @@ public class CharsetDetector {
 	 * @return 编码
 	 */
 	public static Charset detect(InputStream in, Charset... charsets) {
+		return detect(IoUtil.DEFAULT_BUFFER_SIZE, in, charsets);
+	}
+
+	/**
+	 * 探测编码<br>
+	 * 注意：此方法会读取流的一部分，然后关闭流，如重复使用流，请使用使用支持reset方法的流
+	 *
+	 * @param bufferSize 自定义缓存大小，即每次检查的长度
+	 * @param in         流，使用后关闭此流
+	 * @param charsets   需要测试用的编码，null或空使用默认的编码数组
+	 * @return 编码
+	 * @since 5.7.10
+	 */
+	public static Charset detect(int bufferSize, InputStream in, Charset... charsets) {
 		if (ArrayUtil.isEmpty(charsets)) {
 			charsets = DEFAULT_CHARSETS;
 		}
 
-		final byte[] buffer = new byte[512];
+		final byte[] buffer = new byte[bufferSize];
 		try {
 			while (in.read(buffer) > -1) {
 				for (Charset charset : charsets) {
