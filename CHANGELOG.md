@@ -26,6 +26,7 @@
 * 【core   】     增加PartitionIter（pr#402@Gitee）
 * 【all    】     增加异常爬栈开关（pr#403@Gitee）
 * 【core   】     优化Combination中C(n,n)的逻辑（pr#1792@Github）
+* 【core   】     Csv读写支持别名（issue#1791@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）

@@ -48,6 +48,31 @@ public class CsvReaderTest {
 	}
 
 	@Test
+	public void readAliasMapListTest(){
+		final CsvReadConfig csvReadConfig = CsvReadConfig.defaultConfig();
+		csvReadConfig.addHeaderAlias("姓名", "name");
+
+		final CsvReader reader = CsvUtil.getReader(csvReadConfig);
+		final List<Map<String, String>> result = reader.readMapList(
+				ResourceUtil.getUtf8Reader("test_bean.csv"));
+
+		Assert.assertEquals("张三", result.get(0).get("name"));
+		Assert.assertEquals("男", result.get(0).get("gender"));
+		Assert.assertEquals("无", result.get(0).get("focus"));
+		Assert.assertEquals("33", result.get(0).get("age"));
+
+		Assert.assertEquals("李四", result.get(1).get("name"));
+		Assert.assertEquals("男", result.get(1).get("gender"));
+		Assert.assertEquals("好对象", result.get(1).get("focus"));
+		Assert.assertEquals("23", result.get(1).get("age"));
+
+		Assert.assertEquals("王妹妹", result.get(2).get("name"));
+		Assert.assertEquals("女", result.get(2).get("gender"));
+		Assert.assertEquals("特别关注", result.get(2).get("focus"));
+		Assert.assertEquals("22", result.get(2).get("age"));
+	}
+
+	@Test
 	public void readBeanListTest(){
 		final CsvReader reader = CsvUtil.getReader();
 		final List<TestBean> result = reader.read(

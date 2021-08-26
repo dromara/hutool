@@ -2,6 +2,7 @@ package cn.hutool.core.text.csv;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -165,7 +166,11 @@ public final class CsvParser implements Closeable, Serializable {
 	private void initHeader(final List<String> currentFields) {
 		final Map<String, Integer> localHeaderMap = new LinkedHashMap<>(currentFields.size());
 		for (int i = 0; i < currentFields.size(); i++) {
-			final String field = currentFields.get(i);
+			String field = currentFields.get(i);
+			if (MapUtil.isNotEmpty(this.config.headerAlias)) {
+				// 自定义别名
+				field = ObjectUtil.defaultIfNull(this.config.headerAlias.get(field), field);
+			}
 			if (StrUtil.isNotEmpty(field) && false == localHeaderMap.containsKey(field)) {
 				localHeaderMap.put(field, i);
 			}
