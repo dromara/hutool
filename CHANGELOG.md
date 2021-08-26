@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.10 (2021-08-25)
+# 5.7.10 (2021-08-26)
 
 ### 🐣新特性
 * 【core   】     增加NamingCase类
@@ -21,6 +21,7 @@
 * 【core   】     XmlUtil增加beanToXml重载，支持忽略null
 * 【core   】     添加NullComparator、FuncComparator（issue#I471X7@Gitee）
 * 【core   】     LambdaUtil添加getFieldName（issue#I4750U@Gitee）
+* 【cron   】     Scheduler增加setThreadExecutor（issue#I47A6N@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
