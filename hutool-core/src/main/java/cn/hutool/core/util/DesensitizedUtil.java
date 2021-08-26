@@ -219,7 +219,7 @@ public class DesensitizedUtil {
 	 * 【密码】密码的全部字符都用*代替，比如：******
 	 *
 	 * @param password 密码
-	 * @return 脱敏后的邮箱
+	 * @return 脱敏后的密码
 	 */
 	public static String password(String password) {
 		if (StrUtil.isBlank(password)) {
