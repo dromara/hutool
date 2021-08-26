@@ -25,6 +25,10 @@ public class UtilException extends RuntimeException{
 		super(message, throwable);
 	}
 
+	public UtilException( String message, Throwable throwable,boolean enableSuppression,boolean writableStackTrace) {
+		super(message, throwable,enableSuppression,writableStackTrace);
+	}
+
 	public UtilException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
