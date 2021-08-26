@@ -9,6 +9,7 @@ import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 
 import java.io.File;
@@ -55,9 +56,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	@Override
 	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try {
-			return read(OPCPackage.open(file), idOrRidOrSheetName);
-		} catch (InvalidFormatException e) {
+		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ);){
+			return read(open, idOrRidOrSheetName);
+		} catch (InvalidFormatException | IOException e) {
 			throw new POIException(e);
 		}
 	}

@@ -107,8 +107,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	// ------------------------------------------------------------------------------ Read start
 	@Override
 	public Excel03SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try {
-			return read(new POIFSFileSystem(file), idOrRidOrSheetName);
+		try (POIFSFileSystem poifsFileSystem = new POIFSFileSystem(file, true)) {
+			return read(poifsFileSystem, idOrRidOrSheetName);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}

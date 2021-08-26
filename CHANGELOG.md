@@ -30,6 +30,7 @@
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
 * 【core   】     修复JSONSupport默认循环引用导致的问题（issue#1779@Github）
+* 【poi    】     修复ExcelUtil.readBySax资源没有释放问题（issue#1789@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
