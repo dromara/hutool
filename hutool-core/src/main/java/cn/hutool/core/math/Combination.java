@@ -38,11 +38,8 @@ public class Combination implements Serializable {
 	 * @return 组合数
 	 */
 	public static long count(int n, int m) {
-		if (0 == m) {
+		if (0 == m || n == m) {
 			return 1;
-		}
-		if (n == m) {
-			return NumberUtil.factorial(n) / NumberUtil.factorial(m);
 		}
 		return (n > m) ? NumberUtil.factorial(n, n - m) / NumberUtil.factorial(m) : 0;
 	}
