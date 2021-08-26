@@ -33,6 +33,10 @@ public class StatefulException extends RuntimeException {
 		super(msg, throwable);
 	}
 
+	public StatefulException( String message, Throwable throwable,boolean enableSuppression,boolean writableStackTrace) {
+		super(message, throwable,enableSuppression,writableStackTrace);
+	}
+
 	public StatefulException(int status, String msg) {
 		super(msg);
 		this.status = status;
