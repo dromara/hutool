@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 模板异常
- * 
+ *
  * @author xiaoleilu
  */
 public class TemplateException extends RuntimeException {
@@ -25,6 +25,10 @@ public class TemplateException extends RuntimeException {
 
 	public TemplateException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public TemplateException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public TemplateException(Throwable throwable, String messageTemplate, Object... params) {

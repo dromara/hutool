@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 表达式语言异常
- * 
+ *
  * @author Looly
  */
 public class ExpressionException extends RuntimeException {
@@ -25,6 +25,10 @@ public class ExpressionException extends RuntimeException {
 
 	public ExpressionException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public ExpressionException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public ExpressionException(Throwable throwable, String messageTemplate, Object... params) {

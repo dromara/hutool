@@ -27,8 +27,8 @@ public class DependencyException extends RuntimeException {
 		super(message, throwable);
 	}
 
-	public DependencyException( String message, Throwable throwable,boolean enableSuppression,boolean writableStackTrace) {
-		super(message, throwable,enableSuppression,writableStackTrace);
+	public DependencyException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public DependencyException(Throwable throwable, String messageTemplate, Object... params) {

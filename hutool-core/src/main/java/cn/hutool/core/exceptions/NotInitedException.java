@@ -26,8 +26,8 @@ public class NotInitedException extends RuntimeException {
 		super(message, throwable);
 	}
 
-	public NotInitedException( String message, Throwable throwable,boolean enableSuppression,boolean writableStackTrace) {
-		super(message, throwable,enableSuppression,writableStackTrace);
+	public NotInitedException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public NotInitedException(Throwable throwable, String messageTemplate, Object... params) {

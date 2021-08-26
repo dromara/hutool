@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 分词异常
- * 
+ *
  * @author Looly
  */
 public class TokenizerException extends RuntimeException {
@@ -25,6 +25,10 @@ public class TokenizerException extends RuntimeException {
 
 	public TokenizerException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public TokenizerException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public TokenizerException(Throwable throwable, String messageTemplate, Object... params) {

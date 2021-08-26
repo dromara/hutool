@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 压缩解压异常语言异常
- * 
+ *
  * @author Looly
  */
 public class CompressException extends RuntimeException {
@@ -25,6 +25,10 @@ public class CompressException extends RuntimeException {
 
 	public CompressException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public CompressException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public CompressException(Throwable throwable, String messageTemplate, Object... params) {

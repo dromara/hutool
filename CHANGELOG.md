@@ -24,6 +24,7 @@
 * 【cron   】     Scheduler增加setThreadExecutor（issue#I47A6N@Gitee）
 * 【core   】     CharsetDetector增加detect重载，支持自定义缓存大小（issue#I478E5@Gitee）
 * 【core   】     增加PartitionIter（pr#402@Gitee）
+* 【all    】     增加异常爬栈开关（pr#403@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）

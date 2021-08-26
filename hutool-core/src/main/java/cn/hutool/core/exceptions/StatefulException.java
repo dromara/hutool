@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
  * 带有状态码的异常
  *
  * @author xiaoleilu
- *
  */
 public class StatefulException extends RuntimeException {
 	private static final long serialVersionUID = 6057602589533840889L;
@@ -33,8 +32,8 @@ public class StatefulException extends RuntimeException {
 		super(msg, throwable);
 	}
 
-	public StatefulException( String message, Throwable throwable,boolean enableSuppression,boolean writableStackTrace) {
-		super(message, throwable,enableSuppression,writableStackTrace);
+	public StatefulException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public StatefulException(int status, String msg) {
