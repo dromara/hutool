@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class Partition<T> extends AbstractList<List<T>> {
 
-	final List<T> list;
-	final int size;
+	protected final List<T> list;
+	protected final int size;
 
 	/**
 	 * 列表分区

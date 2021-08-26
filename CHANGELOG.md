@@ -23,6 +23,7 @@
 * 【core   】     LambdaUtil添加getFieldName（issue#I4750U@Gitee）
 * 【cron   】     Scheduler增加setThreadExecutor（issue#I47A6N@Gitee）
 * 【core   】     CharsetDetector增加detect重载，支持自定义缓存大小（issue#I478E5@Gitee）
+* 【core   】     增加PartitionIter（pr#402@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）

@@ -685,8 +685,8 @@ public class FileUtil extends PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * <p>
-	 *     从5.7.6开始，删除文件使用{@link Files#delete(Path)}代替 {@link File#delete()}<br>
-	 *     因为前者遇到文件被占用等原因时，抛出异常，而非返回false，异常会指明具体的失败原因。
+	 * 从5.7.6开始，删除文件使用{@link Files#delete(Path)}代替 {@link File#delete()}<br>
+	 * 因为前者遇到文件被占用等原因时，抛出异常，而非返回false，异常会指明具体的失败原因。
 	 * </p>
 	 *
 	 * @param file 文件对象
@@ -712,7 +712,7 @@ public class FileUtil extends PathUtil {
 		final Path path = file.toPath();
 		try {
 			delFile(path);
-		} catch (DirectoryNotEmptyException e){
+		} catch (DirectoryNotEmptyException e) {
 			// 遍历清空目录没有成功，此时补充删除一次（可能存在部分软链）
 			del(path);
 		} catch (IOException e) {
@@ -754,7 +754,7 @@ public class FileUtil extends PathUtil {
 		final File[] files = directory.listFiles();
 		if (null != files) {
 			for (File childFile : files) {
-				if(false == del(childFile)){
+				if (false == del(childFile)) {
 					// 删除一个出错则本次删除任务失败
 					return false;
 				}
@@ -1401,7 +1401,7 @@ public class FileUtil extends PathUtil {
 	 */
 	@Deprecated
 	public static boolean isModifed(File file, long lastModifyTime) {
-		return isModified(file,lastModifyTime);
+		return isModified(file, lastModifyTime);
 	}
 
 
@@ -1815,9 +1815,11 @@ public class FileUtil extends PathUtil {
 	 * @param charsetName 字符集
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #getReader(File, Charset)}
 	 */
+	@Deprecated
 	public static BufferedReader getReader(File file, String charsetName) throws IORuntimeException {
-		return IoUtil.getReader(getInputStream(file), charsetName);
+		return IoUtil.getReader(getInputStream(file), CharsetUtil.charset(charsetName));
 	}
 
 	/**
@@ -1839,9 +1841,11 @@ public class FileUtil extends PathUtil {
 	 * @param charsetName 字符集
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #getReader(String, Charset)}
 	 */
+	@Deprecated
 	public static BufferedReader getReader(String path, String charsetName) throws IORuntimeException {
-		return getReader(file(path), charsetName);
+		return getReader(path, CharsetUtil.charset(charsetName));
 	}
 
 	/**
@@ -1912,7 +1916,9 @@ public class FileUtil extends PathUtil {
 	 * @param charsetName 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #readString(File, Charset)}
 	 */
+	@Deprecated
 	public static String readString(File file, String charsetName) throws IORuntimeException {
 		return readString(file, CharsetUtil.charset(charsetName));
 	}
@@ -1936,9 +1942,11 @@ public class FileUtil extends PathUtil {
 	 * @param charsetName 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #readString(String, Charset)}
 	 */
+	@Deprecated
 	public static String readString(String path, String charsetName) throws IORuntimeException {
-		return readString(file(path), charsetName);
+		return readString(path, CharsetUtil.charset(charsetName));
 	}
 
 	/**
@@ -1956,12 +1964,27 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 读取文件内容
 	 *
+	 * @param url         文件URL
+	 * @param charsetName 字符集
+	 * @return 内容
+	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #readString(URL, Charset)}
+	 */
+	@Deprecated
+	public static String readString(URL url, String charsetName) throws IORuntimeException {
+		return readString(url, CharsetUtil.charset(charsetName));
+	}
+
+	/**
+	 * 读取文件内容
+	 *
 	 * @param url     文件URL
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
+	 * @since 5.7.10
 	 */
-	public static String readString(URL url, String charset) throws IORuntimeException {
+	public static String readString(URL url, Charset charset) throws IORuntimeException {
 		if (url == null) {
 			throw new NullPointerException("Empty url provided!");
 		}
@@ -2083,7 +2106,9 @@ public class FileUtil extends PathUtil {
 	 * @param collection  集合
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #readLines(URL, Charset, Collection)}
 	 */
+	@Deprecated
 	public static <T extends Collection<String>> T readLines(URL url, String charsetName, T collection) throws IORuntimeException {
 		return readLines(url, CharsetUtil.charset(charsetName), collection);
 	}
@@ -2125,13 +2150,15 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 从文件中读取每一行数据
 	 *
-	 * @param url     文件的URL
-	 * @param charset 字符集
+	 * @param url         文件的URL
+	 * @param charsetName 字符集
 	 * @return 文件中的每行内容的集合List
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #readLines(URL, Charset)}
 	 */
-	public static List<String> readLines(URL url, String charset) throws IORuntimeException {
-		return readLines(url, charset, new ArrayList<>());
+	@Deprecated
+	public static List<String> readLines(URL url, String charsetName) throws IORuntimeException {
+		return readLines(url, CharsetUtil.charset(charsetName));
 	}
 
 	/**
@@ -2412,9 +2439,11 @@ public class FileUtil extends PathUtil {
 	 * @param isAppend    是否追加
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #getWriter(String, Charset, boolean)}
 	 */
+	@Deprecated
 	public static BufferedWriter getWriter(String path, String charsetName, boolean isAppend) throws IORuntimeException {
-		return getWriter(touch(path), Charset.forName(charsetName), isAppend);
+		return getWriter(path, Charset.forName(charsetName), isAppend);
 	}
 
 	/**
@@ -2438,7 +2467,9 @@ public class FileUtil extends PathUtil {
 	 * @param isAppend    是否追加
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 请使用 {@link #getWriter(File, Charset, boolean)}
 	 */
+	@Deprecated
 	public static BufferedWriter getWriter(File file, String charsetName, boolean isAppend) throws IORuntimeException {
 		return getWriter(file, Charset.forName(charsetName), isAppend);
 	}

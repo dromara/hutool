@@ -81,6 +81,7 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(map, compare);
 	}
 
+	@Test
 	public void testGroupBy2Key() {
 		Map<Long, Map<Long, List<Student>>> map = CollStreamUtil.groupBy2Key(null, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
