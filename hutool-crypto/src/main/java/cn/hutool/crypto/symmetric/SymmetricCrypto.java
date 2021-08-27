@@ -132,9 +132,7 @@ public class SymmetricCrypto implements Serializable {
 	 */
 	public SymmetricCrypto(String algorithm, SecretKey key, AlgorithmParameterSpec paramsSpec) {
 		init(algorithm, key);
-		if (null != paramsSpec) {
-			setParams(paramsSpec);
-		}
+		initParams(algorithm, paramsSpec);
 	}
 
 	// ------------------------------------------------------------------ Constructor end
@@ -149,11 +147,6 @@ public class SymmetricCrypto implements Serializable {
 	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		Assert.notBlank(algorithm, "'algorithm' must be not blank !");
 		this.secretKey = key;
-
-		// 对于PBE算法使用随机数加盐
-		if (algorithm.startsWith("PBE")) {
-			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);
-		}
 
 		// 检查是否为ZeroPadding，是则替换为NoPadding，并标记以便单独处理
 		if (algorithm.contains(Padding.ZeroPadding.name())) {
@@ -253,8 +246,8 @@ public class SymmetricCrypto implements Serializable {
 	/**
 	 * 加密，针对大数据量，可选结束后是否关闭流
 	 *
-	 * @param data 被加密的字符串
-	 * @param out 输出流，可以是文件或网络位置
+	 * @param data    被加密的字符串
+	 * @param out     输出流，可以是文件或网络位置
 	 * @param isClose 是否关闭流
 	 * @throws IORuntimeException IO异常
 	 * @since 5.6.3
@@ -266,9 +259,9 @@ public class SymmetricCrypto implements Serializable {
 			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
 			cipherOutputStream = new CipherOutputStream(out, cipher);
 			long length = IoUtil.copy(data, cipherOutputStream);
-			if(this.isZeroPadding){
+			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
-				if(blockSize > 0){
+				if (blockSize > 0) {
 					// 按照块拆分后的数据中多余的数据
 					final int remainLength = (int) (length % blockSize);
 					if (remainLength > 0) {
@@ -284,7 +277,7 @@ public class SymmetricCrypto implements Serializable {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
-			if(isClose){
+			if (isClose) {
 				IoUtil.close(data);
 				IoUtil.close(cipherOutputStream);
 			}
@@ -471,8 +464,8 @@ public class SymmetricCrypto implements Serializable {
 	/**
 	 * 解密，针对大数据量，结束后不关闭流
 	 *
-	 * @param data 加密的字符串
-	 * @param out 输出流，可以是文件或网络位置
+	 * @param data    加密的字符串
+	 * @param out     输出流，可以是文件或网络位置
 	 * @param isClose 是否关闭流，包括输入和输出流
 	 * @throws IORuntimeException IO异常
 	 * @since 5.6.3
@@ -483,9 +476,9 @@ public class SymmetricCrypto implements Serializable {
 		try {
 			final Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
 			cipherInputStream = new CipherInputStream(data, cipher);
-			if(this.isZeroPadding){
+			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
-				if(blockSize > 0){
+				if (blockSize > 0) {
 					copyForZeroPadding(cipherInputStream, out, blockSize);
 					return;
 				}
@@ -499,7 +492,7 @@ public class SymmetricCrypto implements Serializable {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
-			if(isClose){
+			if (isClose) {
 				IoUtil.close(data);
 				IoUtil.close(cipherInputStream);
 			}
@@ -613,11 +606,45 @@ public class SymmetricCrypto implements Serializable {
 	// --------------------------------------------------------------------------------- Private method start
 
 	/**
+	 * 初始化加密解密参数，如IV等
+	 *
+	 * @param algorithm  算法
+	 * @param paramsSpec 用户定义的{@link AlgorithmParameterSpec}
+	 * @return this
+	 * @since 5.7.11
+	 */
+	private SymmetricCrypto initParams(String algorithm, AlgorithmParameterSpec paramsSpec) {
+		if (null == paramsSpec) {
+			byte[] iv = null;
+			final Cipher cipher = this.cipher;
+			if (null != cipher) {
+				iv = cipher.getIV();
+			}
+
+			// 随机IV
+			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {
+				// 对于PBE算法使用随机数加盐
+				if (null == iv) {
+					iv = RandomUtil.randomBytes(8);
+				}
+				paramsSpec = new PBEParameterSpec(iv, 100);
+			} else if (StrUtil.startWithIgnoreCase(algorithm, "AES")) {
+				if (null != iv) {
+					//AES使用Cipher默认的随机盐
+					paramsSpec = new IvParameterSpec(iv);
+				}
+			}
+		}
+
+		return setParams(paramsSpec);
+	}
+
+	/**
 	 * 初始化{@link Cipher}为加密或者解密模式
 	 *
 	 * @param mode 模式，见{@link Cipher#ENCRYPT_MODE} 或 {@link Cipher#DECRYPT_MODE}
 	 * @return {@link Cipher}
-	 * @throws InvalidKeyException 无效key
+	 * @throws InvalidKeyException                无效key
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
 	private Cipher initCipher(int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
@@ -686,14 +713,15 @@ public class SymmetricCrypto implements Serializable {
 
 	/**
 	 * 拷贝解密后的流
-	 * @param in {@link CipherInputStream}
-	 * @param out 输出流
+	 *
+	 * @param in        {@link CipherInputStream}
+	 * @param out       输出流
 	 * @param blockSize 块大小
 	 * @throws IOException IO异常
 	 */
 	private void copyForZeroPadding(CipherInputStream in, OutputStream out, int blockSize) throws IOException {
 		int n = 1;
-		if(IoUtil.DEFAULT_BUFFER_SIZE > blockSize){
+		if (IoUtil.DEFAULT_BUFFER_SIZE > blockSize) {
 			n = Math.max(n, IoUtil.DEFAULT_BUFFER_SIZE / blockSize);
 		}
 		// 此处缓存buffer使用blockSize的整数倍，方便读取时可以正好将补位的0读在一个buffer中
@@ -704,9 +732,9 @@ public class SymmetricCrypto implements Serializable {
 		boolean isFirst = true;
 		int preReadSize = 0;
 		for (int readSize; (readSize = in.read(buffer)) != IoUtil.EOF; ) {
-			if(isFirst){
+			if (isFirst) {
 				isFirst = false;
-			} else{
+			} else {
 				// 将前一批数据写出
 				out.write(preBuffer, 0, preReadSize);
 			}
@@ -718,7 +746,7 @@ public class SymmetricCrypto implements Serializable {
 		while (i >= 0 && 0 == preBuffer[i]) {
 			i--;
 		}
-		out.write(preBuffer, 0, i+1);
+		out.write(preBuffer, 0, i + 1);
 		out.flush();
 	}
 	// --------------------------------------------------------------------------------- Private method end

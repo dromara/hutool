@@ -16,7 +16,7 @@ import java.security.SecureRandom;
 public class AESTest {
 
 	@Test
-	public void encryptTest() {
+	public void encryptCBCTest() {
 		// 构建
 		AES aes = new AES(Mode.CBC, Padding.PKCS5Padding,
 				"1234567890123456".getBytes(), "1234567890123456".getBytes());
@@ -25,7 +25,7 @@ public class AESTest {
 	}
 
 	@Test
-	public void encryptTest2() {
+	public void encryptCTSTest() {
 		String content = "test中文";
 		AES aes = new AES(Mode.CTS, Padding.PKCS5Padding,
 				"0CoJUm6Qyw8W8jue".getBytes(), "0102030405060708".getBytes());

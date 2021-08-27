@@ -14,11 +14,11 @@ import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import cn.hutool.crypto.symmetric.Vigenere;
-import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 对称加密算法单元测试
@@ -107,6 +107,19 @@ public class SymmetricTest {
 		String encryptHex = aes.encryptHex(content);
 
 		Assert.assertEquals("cd0e3a249eaf0ed80c330338508898c4bddcfd665a1b414622164a273ca5daf7b4ebd2c00aaa66b84dd0a237708dac8e", encryptHex);
+	}
+
+	@Test
+	public void pbeWithoutIvTest() {
+		String content = "4321c9a2db2e6b08987c3b903d8d11ff";
+		SymmetricCrypto crypto = new SymmetricCrypto(SymmetricAlgorithm.PBEWithMD5AndDES,
+				"0123456789ABHAEQ".getBytes());
+
+		// 加密为16进制表示
+		String encryptHex = crypto.encryptHex(content);
+		final String data = crypto.decryptStr(encryptHex);
+
+		Assert.assertEquals(content, data);
 	}
 
 	@Test
