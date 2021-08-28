@@ -177,6 +177,12 @@ public class FileTypeUtil {
 			} else if ("ofd".equalsIgnoreCase(extName)) {
 				typeName = "ofd";
 			}
+		} else if ("jar".equals(typeName)) {
+			// wps编辑过的.xlsx文件与.jar的开头相同,通过扩展名判断
+			final String extName = FileUtil.extName(filename);
+			if ("xlsx".equalsIgnoreCase(extName)) {
+				typeName = "xlsx";
+			}
 		}
 		return typeName;
 	}

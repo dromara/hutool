@@ -27,6 +27,12 @@ public class SystemUtilTest {
 	}
 
 	@Test
+	public void getJavaRuntimeInfoTest() {
+		JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
+		Assert.assertNotNull(info);
+	}
+
+	@Test
 	public void getOsInfoTest() {
 		OsInfo osInfo = SystemUtil.getOsInfo();
 		Assert.assertNotNull(osInfo);

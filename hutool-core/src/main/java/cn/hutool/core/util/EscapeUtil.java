@@ -3,6 +3,8 @@ package cn.hutool.core.util;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.text.escape.Html4Escape;
 import cn.hutool.core.text.escape.Html4Unescape;
+import cn.hutool.core.text.escape.XmlEscape;
+import cn.hutool.core.text.escape.XmlUnescape;
 
 /**
  * 转义和反转义工具类Escape / Unescape<br>
@@ -23,6 +25,37 @@ public class EscapeUtil {
 					|| Character.isUpperCase(c)
 					|| StrUtil.contains(NOT_ESCAPE_CHARS, c)
 	);
+
+	/**
+	 * 转义XML中的特殊字符<br>
+	 * <pre>
+	 * 	 &amp; (ampersand) 替换为 &amp;amp;
+	 * 	 &lt; (less than) 替换为 &amp;lt;
+	 * 	 &gt; (greater than) 替换为 &amp;gt;
+	 * 	 &quot; (double quote) 替换为 &amp;quot;
+	 * 	 ' (single quote / apostrophe) 替换为 &amp;apos;
+	 * </pre>
+	 *
+	 * @param xml XML文本
+	 * @return 转义后的文本
+	 * @since 5.7.2
+	 */
+	public static String escapeXml(CharSequence xml) {
+		XmlEscape escape = new XmlEscape();
+		return escape.replace(xml).toString();
+	}
+
+	/**
+	 * 反转义XML中的特殊字符
+	 *
+	 * @param xml XML文本
+	 * @return 转义后的文本
+	 * @since 5.7.2
+	 */
+	public static String unescapeXml(CharSequence xml) {
+		XmlUnescape unescape = new XmlUnescape();
+		return unescape.replace(xml).toString();
+	}
 
 	/**
 	 * 转义HTML4中的特殊字符

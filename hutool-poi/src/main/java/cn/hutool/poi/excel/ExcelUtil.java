@@ -23,7 +23,7 @@ import java.io.InputStream;
 public class ExcelUtil {
 
 	/**
-	 * xlx的ContentType
+	 * xls的ContentType
 	 */
 	public static final String XLS_CONTENT_TYPE = "application/vnd.ms-excel";
 
@@ -75,13 +75,13 @@ public class ExcelUtil {
 	 * 通过Sax方式读取Excel，同时支持03和07格式
 	 *
 	 * @param file       Excel文件
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName    Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @param rowHandler 行处理器
 	 * @since 5.4.4
 	 */
-	public static void readBySax(File file, String idOrRid, RowHandler rowHandler) {
+	public static void readBySax(File file, String idOrRidOrSheetName, RowHandler rowHandler) {
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(file), rowHandler);
-		reader.read(file, idOrRid);
+		reader.read(file, idOrRidOrSheetName);
 	}
 
 	/**
@@ -102,14 +102,14 @@ public class ExcelUtil {
 	 * 通过Sax方式读取Excel，同时支持03和07格式
 	 *
 	 * @param in         Excel流
-	 * @param idOrRid    Excel中的sheet id或者rid编号，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param idOrRidOrSheetName    Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @param rowHandler 行处理器
 	 * @since 5.4.4
 	 */
-	public static void readBySax(InputStream in, String idOrRid, RowHandler rowHandler) {
+	public static void readBySax(InputStream in, String idOrRidOrSheetName, RowHandler rowHandler) {
 		in = IoUtil.toMarkSupportStream(in);
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
-		reader.read(in, idOrRid);
+		reader.read(in, idOrRidOrSheetName);
 	}
 	// ------------------------------------------------------------------------------------ Read by Sax end
 

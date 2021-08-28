@@ -106,7 +106,7 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * @return 加密后的bytes
 	 */
 	public byte[] encrypt(String data, KeyType keyType) {
-		return encrypt(StrUtil.bytes(data, CharsetUtil.CHARSET_UTF_8), keyType);
+		return encrypt(StrUtil.utf8Bytes(data), keyType);
 	}
 
 	/**

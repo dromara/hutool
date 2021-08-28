@@ -13,15 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.GregorianCalendar;
 
 /**
  * 时间工具单元测试<br>
@@ -73,6 +73,30 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void formatAndParseCustomTest() {
+		String dateStr = "2017-03-01";
+		Date date = DateUtil.parse(dateStr);
+
+		String format = DateUtil.format(date, "#sss");
+		Assert.assertEquals("1488297600", format);
+
+		final DateTime parse = DateUtil.parse(format, "#sss");
+		Assert.assertEquals(date, parse);
+	}
+
+	@Test
+	public void formatAndParseCustomTest2() {
+		String dateStr = "2017-03-01";
+		Date date = DateUtil.parse(dateStr);
+
+		String format = DateUtil.format(date, "#SSS");
+		Assert.assertEquals("1488297600000", format);
+
+		final DateTime parse = DateUtil.parse(format, "#SSS");
+		Assert.assertEquals(date, parse);
+	}
+
+	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 00:33:23";
 		Date date = DateUtil.parse(dateStr);
@@ -97,6 +121,32 @@ public class DateUtilTest {
 		Date date2 = DateUtil.parse(dateStr2);
 		final DateTime dateTime = DateUtil.truncate(date2, DateField.MINUTE);
 		Assert.assertEquals("2020-02-29 12:59:00", dateTime.toString());
+	}
+
+	@Test
+	public void ceilingMinuteTest(){
+		String dateStr2 = "2020-02-29 12:59:34";
+		Date date2 = DateUtil.parse(dateStr2);
+
+
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.MINUTE);
+		Assert.assertEquals("2020-02-29 12:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		dateTime = DateUtil.ceiling(date2, DateField.MINUTE, true);
+		Assert.assertEquals("2020-02-29 12:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
+
+	@Test
+	public void ceilingDayTest(){
+		String dateStr2 = "2020-02-29 12:59:34";
+		Date date2 = DateUtil.parse(dateStr2);
+
+
+		DateTime dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH);
+		Assert.assertEquals("2020-02-29 23:59:59.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		dateTime = DateUtil.ceiling(date2, DateField.DAY_OF_MONTH, true);
+		Assert.assertEquals("2020-02-29 23:59:59.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
 
 	@Test
@@ -388,7 +438,13 @@ public class DateUtilTest {
 	@Test
 	public void parseTest7() {
 		String str = "2019-06-01T19:45:43.000 +0800";
-		DateTime dateTime = DateUtil.parse(str, "yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+
+		str = "2019-06-01T19:45:43 +08:00";
+		dateTime = DateUtil.parse(str);
+		assert dateTime != null;
 		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
@@ -398,6 +454,56 @@ public class DateUtilTest {
 		DateTime dateTime = DateUtil.parse(str);
 		assert dateTime != null;
 		Assert.assertEquals("2020-06-28 02:14:13", dateTime.toString());
+	}
+
+	/**
+	 * 测试支持：yyyy-MM-dd HH:mm:ss.SSSSSS 格式
+	 */
+	@Test
+	public void parseNormFullTest() {
+		String str = "2020-02-06 01:58:00.000020";
+		DateTime dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.00002";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.000", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.111000";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+
+		str = "2020-02-06 01:58:00.111";
+		dateTime = DateUtil.parse(str);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2020-02-06 01:58:00.111", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
+
+	/**
+	 * 测试字符串是空，返回null, 而不是直接报错；
+	 */
+	@Test
+	public void parseEmptyTest() {
+		String str = " ";
+		DateTime dateTime = DateUtil.parse(str);
+		Assert.assertNull(dateTime);
+	}
+
+	@Test
+	public void parseUTCOffsetTest() {
+		// issue#I437AP@Gitee
+		String str = "2019-06-01T19:45:43+08:00";
+		DateTime dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+
+		str = "2019-06-01T19:45:43 +08:00";
+		dateTime = DateUtil.parse(str);
+		assert dateTime != null;
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
 	@Test
@@ -658,47 +764,6 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void rangeTest() {
-		DateTime start = DateUtil.parse("2017-01-01");
-		DateTime end = DateUtil.parse("2017-01-03");
-
-		// 测试包含开始和结束情况下步进为1的情况
-		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
-		try {
-			range.next();
-			Assert.fail("已超过边界，下一个元素不应该存在！");
-		} catch (NoSuchElementException ignored) {
-		}
-
-		// 测试多步进的情况
-		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 2);
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
-
-		// 测试不包含开始结束时间的情况
-		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 1, false, false);
-		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
-		try {
-			range.next();
-			Assert.fail("不包含结束时间情况下，下一个元素不应该存在！");
-		} catch (NoSuchElementException ignored) {
-		}
-	}
-
-	@Test
-	public void rangeToListTest() {
-		DateTime start = DateUtil.parse("2017-01-01");
-		DateTime end = DateUtil.parse("2017-01-31");
-
-		List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
-		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
-		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));
-	}
-
-	@Test
 	public void compareTest() {
 		Date date1 = DateUtil.parse("2021-04-13 23:59:59.999");
 		Date date2 = DateUtil.parse("2021-04-13 23:59:10");
@@ -883,6 +948,38 @@ public class DateUtilTest {
 	public void parseNotFitTest(){
 		//https://github.com/looly/hutool/issues/1332
 		// 在日期格式不匹配的时候，测试是否正常报错
-		final DateTime parse = DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+		DateUtil.parse("2020-12-23", DatePattern.PURE_DATE_PATTERN);
+	}
+
+	@Test
+	public void formatTest(){
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(2021, Calendar.JULY, 14, 23, 59, 59);
+		Date date = new DateTime(calendar);
+
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMATTER));
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_FORMAT));
+		Assert.assertEquals("2021-07-14 23:59:59", DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN));
+	}
+
+	@Test
+	public void formatNormDateTimeFormatterTest(){
+		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DatePattern.NORM_DATETIME_FORMATTER);
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+
+		format = DateUtil.format(LocalDateTimeUtil.parse("2021-07-14T10:05:38"),
+				"yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals("2021-07-14 10:05:38", format);
+	}
+
+	@Test
+	public void isWeekendTest(){
+		DateTime parse = DateUtil.parse("2021-07-28");
+		Assert.assertFalse(DateUtil.isWeekend(parse));
+
+		parse = DateUtil.parse("2021-07-25");
+		Assert.assertTrue(DateUtil.isWeekend(parse));
+		parse = DateUtil.parse("2021-07-24");
+		Assert.assertTrue(DateUtil.isWeekend(parse));
 	}
 }

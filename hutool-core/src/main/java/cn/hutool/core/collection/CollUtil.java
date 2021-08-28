@@ -365,7 +365,11 @@ public class CollUtil {
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
-		final Collection<T> result = ObjectUtil.clone(coll1);
+		Collection<T> result = ObjectUtil.clone(coll1);
+		if (null == result) {
+			result = CollUtil.create(coll1.getClass());
+			result.addAll(coll1);
+		}
 		result.removeAll(coll2);
 		return result;
 	}
@@ -995,6 +999,11 @@ public class CollUtil {
 			try {
 				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
 			} catch (Exception e) {
+				// 无法创建当前类型的对象，尝试创建父类型对象
+				final Class<?> superclass = collectionType.getSuperclass();
+				if (null != superclass && collectionType != superclass) {
+					return create(superclass);
+				}
 				throw new UtilException(e);
 			}
 		}
@@ -1019,20 +1028,21 @@ public class CollUtil {
 	}
 
 	/**
-	 * 截取集合的部分
+	 * 截取列表的部分
 	 *
 	 * @param <T>   集合元素类型
 	 * @param list  被截取的数组
 	 * @param start 开始位置（包含）
 	 * @param end   结束位置（不包含）
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
+	 * @see ListUtil#sub(List, int, int)
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end) {
 		return ListUtil.sub(list, start, end);
 	}
 
 	/**
-	 * 截取集合的部分
+	 * 截取列表的部分
 	 *
 	 * @param <T>   集合元素类型
 	 * @param list  被截取的数组
@@ -1041,6 +1051,7 @@ public class CollUtil {
 	 * @param step  步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 * @since 4.0.6
+	 * @see ListUtil#sub(List, int, int, int)
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
 		return ListUtil.sub(list, start, end, step);
@@ -1063,19 +1074,20 @@ public class CollUtil {
 	 * 截取集合的部分
 	 *
 	 * @param <T>   集合元素类型
-	 * @param list  被截取的数组
+	 * @param collection  被截取的数组
 	 * @param start 开始位置（包含）
 	 * @param end   结束位置（不包含）
 	 * @param step  步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空集合
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sub(Collection<T> list, int start, int end, int step) {
-		if (list == null || list.isEmpty()) {
+	public static <T> List<T> sub(Collection<T> collection, int start, int end, int step) {
+		if (isEmpty(collection)) {
 			return ListUtil.empty();
 		}
 
-		return sub(new ArrayList<>(list), start, end, step);
+		final List<T> list = collection instanceof List ? (List<T>)collection : ListUtil.toList(collection);
+		return sub(list, start, end, step);
 	}
 
 	/**
@@ -1090,9 +1102,11 @@ public class CollUtil {
 	 * @param size 每个段的长度
 	 * @return 分段列表
 	 * @since 5.4.5
+	 * @deprecated 请使用 {@link ListUtil#partition(List, int)}
 	 */
+	@Deprecated
 	public static <T> List<List<T>> splitList(List<T> list, int size) {
-		return ListUtil.split(list, size);
+		return ListUtil.partition(list, size);
 	}
 
 	/**
@@ -1141,6 +1155,10 @@ public class CollUtil {
 		}
 
 		Collection<T> collection2 = ObjectUtil.clone(collection);
+		if (null == collection2) {
+			// 不支持clone
+			collection2 = create(collection.getClass());
+		}
 		if (isEmpty(collection2)) {
 			return collection2;
 		}
@@ -1176,7 +1194,7 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> Collection<T> filterNew(Collection<T> collection, Filter<T> filter) {
-		if(null == collection || null == filter){
+		if (null == collection || null == filter) {
 			return collection;
 		}
 		return edit(collection, t -> filter.accept(t) ? t : null);
@@ -1589,6 +1607,18 @@ public class CollUtil {
 		return null == enumeration || false == enumeration.hasMoreElements();
 	}
 
+	/**
+	 * Map是否为空
+	 *
+	 * @param map 集合
+	 * @return 是否为空
+	 * @see MapUtil#isEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isEmpty(Map<?, ?> map) {
+		return MapUtil.isEmpty(map);
+	}
+
 	// ---------------------------------------------------------------------- isNotEmpty
 
 	/**
@@ -1643,6 +1673,18 @@ public class CollUtil {
 	 */
 	public static boolean hasNull(Iterable<?> iterable) {
 		return IterUtil.hasNull(iterable);
+	}
+
+	/**
+	 * Map是否为非空
+	 *
+	 * @param map 集合
+	 * @return 是否为非空
+	 * @see MapUtil#isNotEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isNotEmpty(Map<?, ?> map) {
+		return MapUtil.isNotEmpty(map);
 	}
 
 	// ---------------------------------------------------------------------- zip

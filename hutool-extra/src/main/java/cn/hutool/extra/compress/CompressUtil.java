@@ -47,7 +47,7 @@ public class CompressUtil {
 	 * @param out            输出流，可以输出到内存、网络或文件
 	 * @return {@link CompressorOutputStream}
 	 */
-	public CompressorOutputStream getOut(String compressorName, OutputStream out) {
+	public static CompressorOutputStream getOut(String compressorName, OutputStream out) {
 		try {
 			return new CompressorStreamFactory().createCompressorOutputStream(compressorName, out);
 		} catch (CompressorException e) {
@@ -73,7 +73,7 @@ public class CompressUtil {
 	 * @param in            输出流，可以输出到内存、网络或文件
 	 * @return {@link CompressorOutputStream}
 	 */
-	public CompressorInputStream getIn(String compressorName, InputStream in) {
+	public static CompressorInputStream getIn(String compressorName, InputStream in) {
 		in = IoUtil.toMarkSupportStream(in);
 		try {
 			if(StrUtil.isBlank(compressorName)){

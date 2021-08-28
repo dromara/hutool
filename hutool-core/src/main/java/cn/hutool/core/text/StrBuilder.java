@@ -174,6 +174,13 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return this
 	 */
 	public StrBuilder insert(int index, char c) {
+		if(index < 0){
+			index = this.position + index;
+		}
+		if ((index < 0)) {
+			throw new StringIndexOutOfBoundsException(index);
+		}
+
 		moveDataAfterIndex(index, 1);
 		value[index] = c;
 		this.position = Math.max(this.position, index) + 1;
@@ -211,9 +218,13 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if (ArrayUtil.isEmpty(src) || srcPos > src.length || length <= 0) {
 			return this;
 		}
-		if (index < 0) {
-			index = 0;
+		if(index < 0){
+			index = this.position + index;
 		}
+		if ((index < 0)) {
+			throw new StringIndexOutOfBoundsException(index);
+		}
+
 		if (srcPos < 0) {
 			srcPos = 0;
 		} else if (srcPos + length > src.length) {
@@ -238,6 +249,13 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return this
 	 */
 	public StrBuilder insert(int index, CharSequence csq) {
+		if(index < 0){
+			index = this.position + index;
+		}
+		if ((index < 0)) {
+			throw new StringIndexOutOfBoundsException(index);
+		}
+
 		if (null == csq) {
 			csq = StrUtil.EMPTY;
 		}
@@ -288,8 +306,11 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if (start >= end) {
 			return this;
 		}
-		if (index < 0) {
-			index = 0;
+		if(index < 0){
+			index = this.position + index;
+		}
+		if ((index < 0)) {
+			throw new StringIndexOutOfBoundsException(index);
 		}
 
 		final int length = end - start;

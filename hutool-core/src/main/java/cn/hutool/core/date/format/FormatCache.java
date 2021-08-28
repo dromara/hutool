@@ -30,6 +30,7 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * 使用默认的pattern、timezone和locale获得缓存中的实例
+	 *
 	 * @return a date/time formatter
 	 */
 	public F getInstance() {
@@ -39,14 +40,14 @@ abstract class FormatCache<F extends Format> {
 	/**
 	 * 使用 pattern, time zone and locale 获得对应的 格式化器
 	 *
-	 * @param pattern 非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
+	 * @param pattern  非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
 	 * @param timeZone 时区，默认当前时区
-	 * @param locale 地区，默认使用当前地区
+	 * @param locale   地区，默认使用当前地区
 	 * @return 格式化器
 	 * @throws IllegalArgumentException pattern 无效或{@code null}
 	 */
 	public F getInstance(final String pattern, TimeZone timeZone, Locale locale) {
-		Assert.notBlank(pattern, "pattern must not be blank") ;
+		Assert.notBlank(pattern, "pattern must not be blank");
 		if (timeZone == null) {
 			timeZone = TimeZone.getDefault();
 		}
@@ -70,9 +71,9 @@ abstract class FormatCache<F extends Format> {
 	/**
 	 * 创建格式化器
 	 *
-	 * @param pattern 非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
+	 * @param pattern  非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
 	 * @param timeZone 时区，默认当前时区
-	 * @param locale 地区，默认使用当前地区
+	 * @param locale   地区，默认使用当前地区
 	 * @return 格式化器
 	 * @throws IllegalArgumentException pattern 无效或{@code null}
 	 */
@@ -85,13 +86,13 @@ abstract class FormatCache<F extends Format> {
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT, null indicates no date in format
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT, null indicates no time in format
-	 * @param timeZone optional time zone, overrides time zone of formatted date, null means use default Locale
-	 * @param locale optional locale, overrides system locale
+	 * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale
+	 * @param locale    optional locale, overrides system locale
 	 * @return a localized standard date/time formatter
 	 * @throws IllegalArgumentException if the Locale has no date/time pattern defined
 	 */
 	// This must remain private, see LANG-884
-	private F getDateTimeInstance(final Integer dateStyle, final Integer timeStyle, final TimeZone timeZone, Locale locale) {
+	F getDateTimeInstance(final Integer dateStyle, final Integer timeStyle, final TimeZone timeZone, Locale locale) {
 		if (locale == null) {
 			locale = Locale.getDefault();
 		}
@@ -101,29 +102,12 @@ abstract class FormatCache<F extends Format> {
 
 	/**
 	 * <p>
-	 * Gets a date/time formatter instance using the specified style, time zone and locale.
-	 * </p>
-	 *
-	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeZone optional time zone, overrides time zone of formatted date, null means use default Locale
-	 * @param locale optional locale, overrides system locale
-	 * @return a localized standard date/time formatter
-	 * @throws IllegalArgumentException if the Locale has no date/time pattern defined
-	 */
-	// package protected, for access from FastDateFormat; do not make public or protected
-	F getDateTimeInstance(final int dateStyle, final int timeStyle, final TimeZone timeZone, final Locale locale) {
-		return getDateTimeInstance(dateStyle, timeStyle, timeZone, locale);
-	}
-
-	/**
-	 * <p>
 	 * Gets a date formatter instance using the specified style, time zone and locale.
 	 * </p>
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeZone optional time zone, overrides time zone of formatted date, null means use default Locale
-	 * @param locale optional locale, overrides system locale
+	 * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale
+	 * @param locale    optional locale, overrides system locale
 	 * @return a localized standard date/time formatter
 	 * @throws IllegalArgumentException if the Locale has no date/time pattern defined
 	 */
@@ -138,8 +122,8 @@ abstract class FormatCache<F extends Format> {
 	 * </p>
 	 *
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
-	 * @param timeZone optional time zone, overrides time zone of formatted date, null means use default Locale
-	 * @param locale optional locale, overrides system locale
+	 * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale
+	 * @param locale    optional locale, overrides system locale
 	 * @return a localized standard date/time formatter
 	 * @throws IllegalArgumentException if the Locale has no date/time pattern defined
 	 */
@@ -155,7 +139,7 @@ abstract class FormatCache<F extends Format> {
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT, null indicates no date in format
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT, null indicates no time in format
-	 * @param locale The non-null locale of the desired format
+	 * @param locale    The non-null locale of the desired format
 	 * @return a localized standard date/time format
 	 * @throws IllegalArgumentException if the Locale has no date/time pattern defined
 	 */

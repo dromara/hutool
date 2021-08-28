@@ -17,7 +17,7 @@ public class CsvUtil {
 	/**
 	 * 获取CSV读取器
 	 *
-	 * @param config 配置
+	 * @param config 配置, 允许为空.
 	 * @return {@link CsvReader}
 	 */
 	public static CsvReader getReader(CsvReadConfig config) {

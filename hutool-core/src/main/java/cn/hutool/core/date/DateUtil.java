@@ -5,6 +5,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharUtil;
@@ -281,6 +282,18 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 是否为周末（周六或周日）
+	 *
+	 * @param date 判定的日期{@link Date}
+	 * @return 是否为周末（周六或周日）
+	 * @since 5.7.6
+	 */
+	public static boolean isWeekend(Date date) {
+		final Week week = dayOfWeekEnum(date);
+		return Week.SATURDAY == week || Week.SUNDAY == week;
+	}
+
+	/**
 	 * 获得指定日期的小时数部分<br>
 	 *
 	 * @param date          日期
@@ -480,12 +493,17 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format 日期格式，常用格式见： {@link DatePattern}
+	 * @param format 日期格式，常用格式见： {@link DatePattern} {@link DatePattern#NORM_DATETIME_PATTERN}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
 		if (null == date || StrUtil.isBlank(format)) {
 			return null;
+		}
+
+		// 检查自定义格式
+		if (GlobalCustomFormat.isCustomFormat(format)) {
+			return GlobalCustomFormat.format(date, format);
 		}
 
 		TimeZone timeZone = null;
@@ -499,7 +517,7 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link DatePrinter} 或 {@link FastDateFormat}
+	 * @param format {@link DatePrinter} 或 {@link FastDateFormat} {@link DatePattern#NORM_DATETIME_FORMAT}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DatePrinter format) {
@@ -527,7 +545,7 @@ public class DateUtil extends CalendarUtil {
 	 * 根据特定格式格式化日期
 	 *
 	 * @param date   被格式化的日期
-	 * @param format {@link SimpleDateFormat}
+	 * @param format {@link SimpleDateFormat} {@link DatePattern#NORM_DATETIME_FORMATTER}
 	 * @return 格式化后的字符串
 	 * @since 5.0.0
 	 */
@@ -535,7 +553,9 @@ public class DateUtil extends CalendarUtil {
 		if (null == format || null == date) {
 			return null;
 		}
-		return format.format(date.toInstant());
+		// java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: YearOfEra
+		// 出现以上报错时，表示Instant时间戳没有时区信息，赋予默认时区
+		return TemporalAccessorUtil.format(date.toInstant(), format);
 	}
 
 	/**
@@ -696,6 +716,10 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.5.18
 	 */
 	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
+		if (GlobalCustomFormat.isCustomFormat(format)) {
+			// 自定义格式化器忽略Locale
+			return new DateTime(GlobalCustomFormat.parse(dateStr, format));
+		}
 		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
 	}
 
@@ -785,6 +809,8 @@ public class DateUtil extends CalendarUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss+0800</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss+08:00</li>
 	 * </ol>
 	 *
 	 * @param utcString UTC时间
@@ -808,17 +834,31 @@ public class DateUtil extends CalendarUtil {
 			if (length <= patternLength - 4 && length >= patternLength - 6) {
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
+		} else if(StrUtil.contains(utcString, '+')){
+			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
+			utcString = utcString.replace(" +", "+");
+			final String zoneOffset = StrUtil.subAfter(utcString, '+', true);
+			if(StrUtil.isBlank(zoneOffset)){
+				throw new DateException("Invalid format: [{}]", utcString);
+			}
+			if(false == StrUtil.contains(zoneOffset, ':')){
+				// +0800转换为+08:00
+				final String pre = StrUtil.subBefore(utcString, '+', true);
+				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
+			}
+
+			if(StrUtil.contains(utcString, CharUtil.DOT)) {
+				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
+				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+			} else {
+				// 格式类似：2018-09-13T05:34:31+08:00
+				return parse(utcString, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+			}
 		} else {
-			if (length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
-				// 格式类似：2018-09-13T05:34:31+0800 或 2018-09-13T05:34:31+08:00
-				return parse(utcString, DatePattern.UTC_WITH_ZONE_OFFSET_FORMAT);
-			} else if (length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 2 || length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() + 3) {
-				// 格式类似：2018-09-13T05:34:31.999+0800 或 2018-09-13T05:34:31.999+08:00
-				return parse(utcString, DatePattern.UTC_MS_WITH_ZONE_OFFSET_FORMAT);
-			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
+			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
-			} else if (StrUtil.contains(utcString, CharUtil.DOT)){
+			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
 			}
@@ -859,6 +899,7 @@ public class DateUtil extends CalendarUtil {
 	 * <li>HH时mm分ss秒</li>
 	 * <li>yyyy-MM-dd HH:mm</li>
 	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * <li>yyyy-MM-dd HH:mm:ss.SSSSSS</li>
 	 * <li>yyyyMMddHHmmss</li>
 	 * <li>yyyyMMddHHmmssSSS</li>
 	 * <li>yyyyMMdd</li>
@@ -888,7 +929,7 @@ public class DateUtil extends CalendarUtil {
 				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
 			} else if (length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_MS_FORMAT);
-			} else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
+			}else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
 			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
@@ -919,8 +960,14 @@ public class DateUtil extends CalendarUtil {
 					// yyyy-MM-dd HH:mm
 					return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 				case 2:
-					if (StrUtil.contains(dateStr, CharUtil.DOT)) {
-						// yyyy-MM-dd HH:mm:ss.SSS
+					final int indexOfDot = StrUtil.indexOf(dateStr, CharUtil.DOT);
+					if (indexOfDot > 0) {
+						final int length1 = dateStr.length();
+						// yyyy-MM-dd HH:mm:ss.SSS 或者 yyyy-MM-dd HH:mm:ss.SSSSSS
+						if(length1 - indexOfDot > 4) {
+							// 类似yyyy-MM-dd HH:mm:ss.SSSSSS，采取截断操作
+							dateStr = StrUtil.subPre(dateStr, indexOfDot + 4);
+						}
 						return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
 					}
 					// yyyy-MM-dd HH:mm:ss
@@ -973,7 +1020,25 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，即忽略毫秒部分
+	 * 修改日期为某个时间字段结束时间<br>
+	 * 可选是否归零毫秒。
+	 *
+	 * <p>
+	 * 有时候由于毫秒部分必须为0（如MySQL数据库中），因此在此加上选项。
+	 * </p>
+	 *
+	 * @param date                {@link Date}
+	 * @param dateField           时间字段
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return {@link DateTime}
+	 * @since 4.5.7
+	 */
+	public static DateTime ceiling(Date date, DateField dateField, boolean truncateMillisecond) {
+		return new DateTime(ceiling(calendar(date), dateField, truncateMillisecond));
+	}
+
+	/**
+	 * 获取秒级别的开始时间，即毫秒部分设置为0
 	 *
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -1778,7 +1843,7 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 创建日期范围生成器
 	 *
-	 * @param start 起始日期时间
+	 * @param start 起始日期时间（包括）
 	 * @param end   结束日期时间
 	 * @param unit  步进单位
 	 * @return {@link DateRange}
@@ -1837,13 +1902,12 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * {@code null}安全的日期比较，并只比较指定格式； {@code null}对象排在末尾, 并指定日期格式；
 	 *
-	 *
-	 * @param date1 日期1
-	 * @param date2 日期2
+	 * @param date1  日期1
+	 * @param date2  日期2
 	 * @param format 日期格式，常用格式见： {@link DatePattern}; 允许为空； date1 date2; eg: yyyy-MM-dd
 	 * @return 比较结果，如果date1 &lt; date2，返回数小于0，date1==date2返回0，date1 &gt; date2 大于0
-	 * @since 5.6.4
 	 * @author dazer
+	 * @since 5.6.4
 	 */
 	public static int compare(Date date1, Date date2, String format) {
 		if (format != null) {

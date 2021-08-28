@@ -148,7 +148,7 @@ public class Ipv4Util {
 
 	/**
 	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据
-	 *
+	 * 方法别名：inet_aton
 	 * @param strIP IP V4 地址
 	 * @return long值
 	 */
@@ -160,7 +160,7 @@ public class Ipv4Util {
 
 	/**
 	 * 根据 ip/掩码位 计算IP段的起始IP（字符串型）
-	 *
+	 * 方法别名：inet_ntoa
 	 * @param ip      给定的IP，如218.240.38.69
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的字符串表示

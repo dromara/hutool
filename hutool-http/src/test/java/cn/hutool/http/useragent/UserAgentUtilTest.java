@@ -15,6 +15,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("535.1", ua.getEngineVersion());
 		Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+		Assert.assertEquals("6.1", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -29,6 +30,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("533.17.9", ua.getEngineVersion());
 		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("4_3_3", ua.getOsVersion());
 		Assert.assertEquals("iPhone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -42,6 +44,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("9", ua.getOsVersion());
 		Assert.assertEquals("Android", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -55,6 +58,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("10", ua.getOsVersion());
 		Assert.assertEquals("Android", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -68,6 +72,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Unknown", ua.getEngine().toString());
 		Assert.assertNull(ua.getEngineVersion());
 		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("9", ua.getOsVersion());
 		Assert.assertEquals("Android", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -81,6 +86,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -94,6 +100,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Trident", ua.getEngine().toString());
 		Assert.assertEquals("7.0", ua.getEngineVersion());
 		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -107,6 +114,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Trident", ua.getEngine().toString());
 		Assert.assertEquals("7.0", ua.getEngineVersion());
 		Assert.assertEquals("Windows Phone", ua.getOs().toString());
+		Assert.assertEquals("8.1", ua.getOsVersion());
 		Assert.assertEquals("Windows Phone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -120,6 +128,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Trident", ua.getEngine().toString());
 		Assert.assertEquals("4.0", ua.getEngineVersion());
 		Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+		Assert.assertEquals("6.1", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -133,6 +142,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -146,6 +156,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Windows Phone", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
 		Assert.assertEquals("Windows Phone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -159,6 +170,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Windows 8.1 or Winsows Server 2012R2", ua.getOs().toString());
+		Assert.assertEquals("6.3", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -172,6 +184,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Trident", ua.getEngine().toString());
 		Assert.assertEquals("7.0", ua.getEngineVersion());
 		Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+		Assert.assertEquals("6.1", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -185,6 +198,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
 		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -201,6 +215,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("604.1.38", ua.getEngineVersion());
 		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("11_0", ua.getOsVersion());
 		Assert.assertEquals("iPhone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
@@ -219,6 +234,20 @@ public class UserAgentUtilTest {
 	}
 
 	@Test
+	public void parseQQTest() {
+		String uaString = "User-Agent: MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("QQBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("26", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("533.1", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("2.3.7", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
 	public void parseDingTalkTest() {
 		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/18A373 AliApp(DingTalk/5.1.33) com.laiwang.DingTalk/13976299 Channel/201200 language/zh-Hans-CN WK";
 		UserAgent ua = UserAgentUtil.parse(uaString);
@@ -227,7 +256,107 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("605.1.15", ua.getEngineVersion());
 		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("14_0", ua.getOsVersion());
 		Assert.assertEquals("iPhone", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
+
+	@Test
+	public void parseAlipayTest() {
+		String uaString = "Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; FRD-AL00 Build/HUAWEIFRD-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/40.0.2214.89 UCBrowser/11.3.8.909 UWS/2.10.2.5 Mobile Safari/537.36 UCBS/2.10.2.5 Nebula AlipayDefined(nt:WIFI,ws:360|0|3.0) AliApp(AP/10.0.18.062203) AlipayClient/10.0.18.062203 Language/zh-Hans useStatusBar/true";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Alipay", ua.getBrowser().toString());
+		Assert.assertEquals("10.0.18.062203", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("7.0", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseTaobaoTest() {
+		String uaString = "Mozilla/5.0 (Linux; U; Android 4.4.4; zh-cn; MI 2C Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 AliApp(TB/4.9.2) WindVane/5.2.2 TBANDROID/700342@taobao_android_4.9.2 720X1280";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Taobao", ua.getBrowser().toString());
+		Assert.assertEquals("4.9.2", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("4.4.4", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseUCTest() {
+		String uaString = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 UBrowser/4.0.3214.0 Safari/537.36";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("UCBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("4.0.3214.0", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+		Assert.assertEquals("6.1", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
+
+	@Test
+	public void parseUCTest2() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X; zh-CN) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/16G102 UCBrowser/12.7.6.1251 Mobile AliApp(TUnionSDK/0.1.20.3)";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("UCBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("12.7.6.1251", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.51.1", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("12_4_1", ua.getOsVersion());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseQuarkTest() {
+		String uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X; zh-cn) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/16G102 Quark/3.6.2.993 Mobile";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("Quark", ua.getBrowser().toString());
+		Assert.assertEquals("3.6.2.993", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("601.1.46", ua.getEngineVersion());
+		Assert.assertEquals("iPhone", ua.getOs().toString());
+		Assert.assertEquals("12_4_1", ua.getOsVersion());
+		Assert.assertEquals("iPhone", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseWxworkTest() {
+		String uaString = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 QBCore/4.0.1326.400 QQBrowser/9.0.2524.400 Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 wxwork/3.1.10 (MicroMessenger/6.2) WindowsWechat";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("wxwork", ua.getBrowser().toString());
+		Assert.assertEquals("3.1.10", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
+
+	@Test
+	public void parseWxworkMobileTest() {
+		String uaString = "Mozilla/5.0 (Linux; Android 10; JSN-AL00 Build/HONORJSN-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045710 Mobile Safari/537.36 wxwork/3.1.10 ColorScheme/Light MicroMessenger/7.0.1 NetType/WIFI Language/zh Lang/zh";
+		UserAgent ua = UserAgentUtil.parse(uaString);
+		Assert.assertEquals("wxwork", ua.getBrowser().toString());
+		Assert.assertEquals("3.1.10", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("10", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
 }

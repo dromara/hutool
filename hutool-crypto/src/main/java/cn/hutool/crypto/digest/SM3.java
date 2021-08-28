@@ -1,7 +1,15 @@
 package cn.hutool.crypto.digest;
 
 /**
- * SM3杂凑算法
+ * 国密SM3杂凑（摘要）算法
+ *
+ * <p>
+ * 国密算法包括：
+ * <ol>
+ *     <li>非对称加密和签名：SM2</li>
+ *     <li>摘要签名算法：SM3</li>
+ *     <li>对称加密：SM4</li>
+ * </ol>
  *
  * @author looly
  * @since 4.6.8

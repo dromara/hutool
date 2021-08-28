@@ -80,7 +80,7 @@ public final class Singleton {
 	}
 
 	/**
-	 * 将已有对象放入单例中，其Class做为键
+	 * 将已有对象放入单例中，key做为键
 	 *
 	 * @param key 键
 	 * @param obj 对象

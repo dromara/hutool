@@ -13,19 +13,23 @@ public class JschRuntimeException extends RuntimeException{
 	public JschRuntimeException(Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
-	
+
 	public JschRuntimeException(String message) {
 		super(message);
 	}
-	
+
 	public JschRuntimeException(String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
-	
+
 	public JschRuntimeException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
-	
+
+	public JschRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
+	}
+
 	public JschRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}

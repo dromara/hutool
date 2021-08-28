@@ -14,7 +14,7 @@ import java.util.Queue;
 
 /**
  * 池化数据源
- * 
+ *
  * @author Looly
  *
  */
@@ -27,7 +27,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 获得一个数据源
-	 * 
+	 *
 	 * @param group 数据源分组
 	 * @return {@link PooledDataSource}
 	 */
@@ -37,7 +37,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 获得一个数据源，使用空分组
-	 * 
+	 *
 	 * @return {@link PooledDataSource}
 	 */
 	synchronized public static PooledDataSource getDataSource() {
@@ -54,7 +54,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造，读取默认的配置文件
-	 * 
+	 *
 	 * @param group 分组
 	 */
 	public PooledDataSource(String group) {
@@ -63,7 +63,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param setting 数据库配置文件对象
 	 * @param group 分组
 	 */
@@ -73,7 +73,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 数据库配置
 	 */
 	public PooledDataSource(DbConfig config) {
@@ -105,7 +105,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 释放连接，连接会被返回给连接池
-	 * 
+	 *
 	 * @param conn 连接
 	 * @return 释放成功与否
 	 */
@@ -116,7 +116,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 创建新连接
-	 * 
+	 *
 	 * @return 新连接
 	 * @throws SQLException SQL异常
 	 */
@@ -130,7 +130,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 获取连接对象
-	 * 
+	 *
 	 * @param wait 当池中无连接等待的毫秒数
 	 * @return 连接对象
 	 * @throws SQLException SQL异常
@@ -147,11 +147,9 @@ public class PooledDataSource extends AbstractDataSource {
 	@Override
 	synchronized public void close() {
 		if (CollectionUtil.isNotEmpty(this.freePool)) {
-			for (PooledConnection pooledConnection : freePool) {
-				pooledConnection.release();
-				this.freePool.clear();
-				this.freePool = null;
-			}
+			this.freePool.forEach(PooledConnection::release);
+			this.freePool.clear();
+			this.freePool = null;
 		}
 	}
 
@@ -162,7 +160,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	/**
 	 * 直接从连接池中获取连接，如果池中无连接直接抛出异常
-	 * 
+	 *
 	 * @return PooledConnection
 	 * @throws SQLException SQL异常
 	 */

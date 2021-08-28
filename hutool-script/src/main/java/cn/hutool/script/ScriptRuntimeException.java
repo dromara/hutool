@@ -7,7 +7,7 @@ import javax.script.ScriptException;
 
 /**
  * 脚本运行时异常
- * 
+ *
  * @author xiaoleilu
  */
 public class ScriptRuntimeException extends RuntimeException {
@@ -33,6 +33,10 @@ public class ScriptRuntimeException extends RuntimeException {
 		super(message, throwable);
 	}
 
+	public ScriptRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
+	}
+
 	public ScriptRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
@@ -40,10 +44,8 @@ public class ScriptRuntimeException extends RuntimeException {
 	/**
 	 * Creates a <code>ScriptException</code> with message, filename and linenumber to be used in error messages.
 	 *
-	 * @param message The string to use in the message
-	 *
-	 * @param fileName The file or resource name describing the location of a script error causing the <code>ScriptException</code> to be thrown.
-	 *
+	 * @param message    The string to use in the message
+	 * @param fileName   The file or resource name describing the location of a script error causing the <code>ScriptException</code> to be thrown.
 	 * @param lineNumber A line number describing the location of a script error causing the <code>ScriptException</code> to be thrown.
 	 */
 	public ScriptRuntimeException(String message, String fileName, int lineNumber) {
@@ -54,10 +56,10 @@ public class ScriptRuntimeException extends RuntimeException {
 
 	/**
 	 * <code>ScriptException</code> constructor specifying message, filename, line number and column number.
-	 * 
-	 * @param message The message.
-	 * @param fileName The filename
-	 * @param lineNumber the line number.
+	 *
+	 * @param message      The message.
+	 * @param fileName     The filename
+	 * @param lineNumber   the line number.
 	 * @param columnNumber the column number.
 	 */
 	public ScriptRuntimeException(String message, String fileName, int lineNumber, int columnNumber) {
@@ -66,7 +68,7 @@ public class ScriptRuntimeException extends RuntimeException {
 		this.lineNumber = lineNumber;
 		this.columnNumber = columnNumber;
 	}
-	
+
 	public ScriptRuntimeException(ScriptException e) {
 		super(e);
 		this.fileName = e.getFileName();
@@ -76,7 +78,7 @@ public class ScriptRuntimeException extends RuntimeException {
 
 	/**
 	 * Returns a message containing the String passed to a constructor as well as line and column numbers and filename if any of these are known.
-	 * 
+	 *
 	 * @return The error message.
 	 */
 	@Override
@@ -98,7 +100,7 @@ public class ScriptRuntimeException extends RuntimeException {
 
 	/**
 	 * Get the line number on which an error occurred.
-	 * 
+	 *
 	 * @return The line number. Returns -1 if a line number is unavailable.
 	 */
 	public int getLineNumber() {
@@ -107,7 +109,7 @@ public class ScriptRuntimeException extends RuntimeException {
 
 	/**
 	 * Get the column number on which an error occurred.
-	 * 
+	 *
 	 * @return The column number. Returns -1 if a column number is unavailable.
 	 */
 	public int getColumnNumber() {
@@ -116,9 +118,9 @@ public class ScriptRuntimeException extends RuntimeException {
 
 	/**
 	 * Get the source of the script causing the error.
-	 * 
+	 *
 	 * @return The file name of the script or some other string describing the script source. May return some implementation-defined string such as <i>&lt;unknown&gt;</i> if a description of the
-	 *         source is unavailable.
+	 * source is unavailable.
 	 */
 	public String getFileName() {
 		return fileName;

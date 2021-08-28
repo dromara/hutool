@@ -16,7 +16,7 @@ public class PageResult<T> extends ArrayList<T> {
 	public static final int DEFAULT_PAGE_SIZE = Page.DEFAULT_PAGE_SIZE;
 
 	/**
-	 * 页码，0表示第一页
+	 * 页码，{@link PageUtil#getFirstPageNo()}表示第一页
 	 */
 	private int page;
 	/**
@@ -142,7 +142,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @return 是否第一页
 	 */
 	public boolean isFirst() {
-		return this.page == 0;
+		return this.page == PageUtil.getFirstPageNo();
 	}
 
 	/**

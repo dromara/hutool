@@ -2,12 +2,14 @@ package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 
 import java.io.File;
@@ -54,9 +56,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	@Override
 	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try {
-			return read(OPCPackage.open(file), idOrRidOrSheetName);
-		} catch (InvalidFormatException e) {
+		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ);){
+			return read(open, idOrRidOrSheetName);
+		} catch (InvalidFormatException | IOException e) {
 			throw new POIException(e);
 		}
 	}
@@ -202,17 +204,27 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 		// sheetIndex需转换为rid
 		final SheetRidReader ridReader = new SheetRidReader().read(xssfReader);
 
-		final int sheetIndex;
-		Integer rid;
-		try {
-			sheetIndex = Integer.parseInt(idOrRidOrSheetName);
-			rid = ridReader.getRidBySheetIdBase0(sheetIndex);
-			return (null != rid) ? rid : sheetIndex;
-		} catch (NumberFormatException ignore) {
-			// 非数字，可能为sheet名称
-			rid = ridReader.getRidByNameBase0(idOrRidOrSheetName);
+		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX)) {
+			// name:开头的被认为是sheet名称直接处理
+			idOrRidOrSheetName = StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX);
+			final Integer rid = ridReader.getRidByNameBase0(idOrRidOrSheetName);
 			if (null != rid) {
 				return rid;
+			}
+		} else {
+			// 尝试查找名称
+			Integer rid = ridReader.getRidByNameBase0(idOrRidOrSheetName);
+			if (null != rid) {
+				return rid;
+			}
+
+			try {
+				final int sheetIndex = Integer.parseInt(idOrRidOrSheetName);
+				rid = ridReader.getRidBySheetIdBase0(sheetIndex);
+				// 如果查找不到对应index，则认为用户传入的直接是rid
+				return ObjectUtil.defaultIfNull(rid, sheetIndex);
+			} catch (NumberFormatException ignore) {
+				// 非数字，说明非index，且没有对应名称，抛出异常
 			}
 		}
 

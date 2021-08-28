@@ -1,6 +1,11 @@
 package cn.hutool.db.sql;
 
-import java.util.*;
+import cn.hutool.core.util.StrUtil;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * SQL格式化器 from Hibernate
@@ -303,6 +308,9 @@ public class SqlFormatter {
 		}
 
 		private static boolean isFunctionName(String tok) {
+			if(StrUtil.isEmpty(tok)){
+				return true;
+			}
 			char begin = tok.charAt(0);
 			boolean isIdentifier = (Character.isJavaIdentifierStart(begin)) || ('"' == begin);
 			return (isIdentifier) && (!LOGICAL.contains(tok)) && (!END_CLAUSES.contains(tok)) && (!QUANTIFIERS.contains(tok)) && (!DML.contains(tok)) && (!MISC.contains(tok));

@@ -23,6 +23,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -724,6 +725,12 @@ public class BeanUtil {
 	 * @since 5.6.4
 	 */
 	public static <T> List<T> copyToList(Collection<?> collection, Class<T> targetType, CopyOptions copyOptions){
+		if(null == collection){
+			return null;
+		}
+		if(collection.isEmpty()){
+			return new ArrayList<>(0);
+		}
 		return collection.stream().map((source)->{
 			final T target = ReflectUtil.newInstanceIfPossible(targetType);
 			copyProperties(source, target, copyOptions);
@@ -821,7 +828,7 @@ public class BeanUtil {
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFiledNames 忽略检查的字段名
-	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
+	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
 	 * @since 5.0.7
 	 */
 	public static boolean isNotEmpty(Object bean, String... ignoreFiledNames) {

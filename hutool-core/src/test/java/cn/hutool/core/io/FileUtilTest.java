@@ -149,13 +149,14 @@ public class FileUtilTest {
 		Assert.assertEquals("/baz", FileUtil.normalize("/foo/../bar/../baz"));
 		Assert.assertEquals("/", FileUtil.normalize("/../"));
 		Assert.assertEquals("foo", FileUtil.normalize("foo/bar/.."));
-		Assert.assertEquals("bar", FileUtil.normalize("foo/../../bar"));
+		Assert.assertEquals("../bar", FileUtil.normalize("foo/../../bar"));
 		Assert.assertEquals("bar", FileUtil.normalize("foo/../bar"));
 		Assert.assertEquals("/server/bar", FileUtil.normalize("//server/foo/../bar"));
 		Assert.assertEquals("/bar", FileUtil.normalize("//server/../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
+		//
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
-		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
+		Assert.assertEquals("../../bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 		Assert.assertEquals("C:", FileUtil.normalize("C:"));
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
@@ -182,6 +183,12 @@ public class FileUtilTest {
 	@Test
 	public void normalizeClassPathTest() {
 		Assert.assertEquals("", FileUtil.normalize("classpath:"));
+	}
+
+	@Test
+	public void normalizeClassPathTest2() {
+		Assert.assertEquals("../a/b.csv", FileUtil.normalize("../a/b.csv"));
+		Assert.assertEquals("../../../a/b.csv", FileUtil.normalize("../../../a/b.csv"));
 	}
 
 	@Test
@@ -363,17 +370,21 @@ public class FileUtilTest {
 
 	@Test
 	public void extNameTest() {
-		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
+		String path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
 		String mainName = FileUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
-		path = "d:\\aaa\\bbb\\cc\\ddd";
+		path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
-		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/hutool/ddd.jpg";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("jpg", mainName);
+
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/hutool/fff.xlsx";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("xlsx", mainName);
 	}
 
 	@Test

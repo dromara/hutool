@@ -20,4 +20,15 @@ public class TemporalAccessorUtilTest {
 		final String format = TemporalAccessorUtil.format(LocalTime.MIN, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(today + " 00:00:00", format);
 	}
+
+	@Test
+	public void formatCustomTest(){
+		final String today = TemporalAccessorUtil.format(
+				LocalDate.of(2021, 6, 26), "#sss");
+		Assert.assertEquals("1624636800", today);
+
+		final String today2 = TemporalAccessorUtil.format(
+				LocalDate.of(2021, 6, 26), "#SSS");
+		Assert.assertEquals("1624636800000", today2);
+	}
 }

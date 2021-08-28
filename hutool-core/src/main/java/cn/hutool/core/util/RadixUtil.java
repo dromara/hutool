@@ -51,7 +51,7 @@ public class RadixUtil {
 	 * @param num    要转换的数值
 	 * @return 自定义进制字符串
 	 */
-	public static String encode(final String radixs, final int num) {
+	public static String encode(String radixs, int num) {
 		//考虑到负数问题
 		long tmpNum = (num >= 0 ? num : (0x100000000L - (~num + 1)));
 		return encode(radixs, tmpNum, 32);
@@ -64,7 +64,7 @@ public class RadixUtil {
 	 * @param num    要转换的数值
 	 * @return 自定义进制字符串
 	 */
-	public static String encode(final String radixs, final long num) {
+	public static String encode(String radixs, long num) {
 		if (num < 0) {
 			throw new RuntimeException("暂不支持负数！");
 		}
@@ -72,7 +72,38 @@ public class RadixUtil {
 		return encode(radixs, num, 64);
 	}
 
-	private static String encode(final String radixs, long num, int maxLength) {
+	/**
+	 * 把转换后的进制字符还原成int 值
+	 *
+	 * @param radixs    自定进制,需要和encode的保持一致
+	 * @param encodeStr 需要转换成十进制的字符串
+	 * @return int
+	 */
+	public static int decodeToInt(String radixs, String encodeStr) {
+		//还原负数
+		return (int) decode(radixs, encodeStr);
+	}
+
+	/**
+	 * 把转换后进制的字符还原成long 值
+	 *
+	 * @param radixs    自定进制,需要和encode的保持一致
+	 * @param encodeStr 需要转换成十进制的字符串
+	 * @return long
+	 */
+	public static long decode(String radixs, String encodeStr) {
+		//目标是多少进制
+		int rl = radixs.length();
+		long res = 0L;
+
+		for (char c : encodeStr.toCharArray()) {
+			res = res * rl + radixs.indexOf(c);
+		}
+		return res;
+	}
+
+	// -------------------------------------------------------------------------------- Private methods
+	private static String encode(String radixs, long num, int maxLength) {
 		if (radixs.length() < 2) {
 			throw new RuntimeException("自定义进制最少两个字符哦！");
 		}
@@ -91,35 +122,5 @@ public class RadixUtil {
 		} while (tmpNum > 0);
 		//去掉前面的字符串，trim比较耗时
 		return new String(aa, i, aa.length - i);
-	}
-
-	/**
-	 * 把转换后的进制字符还原成int 值
-	 *
-	 * @param radixs    自定进制,需要和encode的保持一致
-	 * @param encodeStr 需要转换成十进制的字符串
-	 * @return int
-	 */
-	public int decodeToInt(final String radixs, final String encodeStr) {
-		//还原负数
-		return (int) decode(radixs, encodeStr);
-	}
-
-	/**
-	 * 把转换后进制的字符还原成long 值
-	 *
-	 * @param radixs    自定进制,需要和encode的保持一致
-	 * @param encodeStr 需要转换成十进制的字符串
-	 * @return long
-	 */
-	public long decode(final String radixs, final String encodeStr) {
-		//目标是多少进制
-		int rl = radixs.length();
-		long res = 0L;
-
-		for (char c : encodeStr.toCharArray()) {
-			res = res * rl + radixs.indexOf(c);
-		}
-		return res;
 	}
 }

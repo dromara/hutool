@@ -1,7 +1,15 @@
 package cn.hutool.json;
 
+import cn.hutool.core.bean.OptionalBean;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.util.StrUtil;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 用于JSON的Getter类，提供各种类型的Getter方法
@@ -103,6 +111,61 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	default <T> T getBean(K key, Class<T> beanType) {
 		final JSONObject obj = getJSONObject(key);
 		return (null == obj) ? null : obj.toBean(beanType);
+	}
+
+	@Override
+	default Date getDate(K key, Date defaultValue){
+		// 默认转换
+		final Object obj = getObj(key);
+		if (null == obj) {
+			return defaultValue;
+		}
+		if(obj instanceof Date){
+			return (Date) obj;
+		}
+
+		String format = OptionalBean.ofNullable(getConfig()).getBean(JSONConfig::getDateFormat).get();
+		if(StrUtil.isNotBlank(format)){
+			// 用户指定了日期格式，获取日期属性时使用对应格式
+			final String str = Convert.toStr(obj);
+			if(null == str){
+				return defaultValue;
+			}
+			return DateUtil.parse(str, format);
+		}
+
+		return Convert.toDate(obj, defaultValue);
+	}
+
+	/**
+	 * 获取{@link LocalDateTime}类型值
+	 *
+	 * @param key 键
+	 * @param defaultValue 默认值
+	 * @return {@link LocalDateTime}
+	 * @since 5.7.7
+	 */
+	default LocalDateTime getLocalDateTime(K key, LocalDateTime defaultValue){
+		// 默认转换
+		final Object obj = getObj(key);
+		if (null == obj) {
+			return defaultValue;
+		}
+		if(obj instanceof LocalDateTime){
+			return (LocalDateTime) obj;
+		}
+
+		String format = OptionalBean.ofNullable(getConfig()).getBean(JSONConfig::getDateFormat).get();
+		if(StrUtil.isNotBlank(format)){
+			// 用户指定了日期格式，获取日期属性时使用对应格式
+			final String str = Convert.toStr(obj);
+			if(null == str){
+				return defaultValue;
+			}
+			return LocalDateTimeUtil.parse(str, format);
+		}
+
+		return Convert.toLocalDateTime(obj, defaultValue);
 	}
 
 	/**

@@ -13,8 +13,6 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.Proxy;
@@ -122,7 +120,7 @@ public class HttpConnection {
 
 			// 增加PATCH方法支持
 			if (Method.PATCH.equals(method)) {
-				allowPatch();
+				HttpGlobalConfig.allowPatch();
 			}
 		}
 
@@ -545,24 +543,6 @@ public class HttpConnection {
 	 */
 	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
-	}
-
-	/**
-	 * 增加支持的METHOD方法
-	 * see: https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch
-	 *
-	 * @since 5.1.6
-	 */
-	private static void allowPatch() {
-		final Field methodsField = ReflectUtil.getField(HttpURLConnection.class, "methods");
-		if (null != methodsField) {
-			// 去除final修饰
-			ReflectUtil.setFieldValue(methodsField, "modifiers", methodsField.getModifiers() & ~Modifier.FINAL);
-			final String[] methods = {
-					"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
-			};
-			ReflectUtil.setFieldValue(null, methodsField, methods);
-		}
 	}
 	// --------------------------------------------------------------- Private Method end
 }

@@ -3,6 +3,7 @@ package cn.hutool.jwt;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class JWTValidatorTest {
@@ -59,5 +60,13 @@ public class JWTValidatorTest {
 
 		// 验证算法
 		JWTValidator.of(token).validateAlgorithm(JWTSignerUtil.hs256("123456".getBytes()));
+	}
+
+	@Test
+	public void validateTest(){
+		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJNb0xpIiwiZXhwIjoxNjI0OTU4MDk0NTI4LCJpYXQiOjE2MjQ5NTgwMzQ1MjAsInVzZXIiOiJ1c2VyIn0.L0uB38p9sZrivbmP0VlDe--j_11YUXTu3TfHhfQhRKc";
+		byte[] key = "1234567890".getBytes();
+		boolean validate = JWT.of(token).setKey(key).validate(0);
+		Assert.assertFalse(validate);
 	}
 }

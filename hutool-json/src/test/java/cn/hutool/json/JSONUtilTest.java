@@ -64,6 +64,7 @@ public class JSONUtilTest {
 		map.put("rows", list);
 
 		String str = JSONUtil.toJsonPrettyStr(map);
+		JSONUtil.parse(str);
 		Assert.assertNotNull(str);
 	}
 

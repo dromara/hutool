@@ -28,6 +28,10 @@ public class JWTException extends RuntimeException {
 		super(message, cause);
 	}
 
+	public JWTException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
+	}
+
 	public JWTException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}

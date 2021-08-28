@@ -39,7 +39,7 @@ public class SimpleCollector<T, A, R> implements Collector<T, A, R> {
 	 *     只有在并行流且收集器不具备此特性的情况下，combiner()返回的lambda表达式才会执行（中间结果容器只有一个就无需合并）。
 	 *     设置此特性时意味着多个线程可以对同一个结果容器调用，因此结果容器必须是线程安全的。</li>
 	 *     <li>UNORDERED：      表示流中的元素无序</li>
-	 *     <li>IDENTITY_FINISH：表示中间结果容器类型与最终结果类型一致。设置此特性时finiser()方法不会被调用</li>
+	 *     <li>IDENTITY_FINISH：表示中间结果容器类型与最终结果类型一致。设置此特性时finisher()方法不会被调用</li>
 	 * </ul>
 	 */
 	private final Set<Characteristics> characteristics;

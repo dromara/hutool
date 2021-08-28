@@ -3,6 +3,204 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.7.10 (2021-08-26)
+
+### 🐣新特性
+* 【core   】     增加NamingCase类
+* 【core   】     ListUtil增加page方法重载（pr#1761@Github）
+* 【crypto 】     增加ASN1Util
+* 【core   】     CsvConfig改为泛型形式
+* 【core   】     增加Partition
+* 【http   】     SoapClient.sendForResponse改为public（issue#I466NN@Gitee）
+* 【core   】     XmlUtil增加append重载（issue#I466Q0@Gitee）
+* 【poi    】     增加EscapeStrCellSetter（issue#I466ZZ@Gitee）
+* 【poi    】     ExcelBase增加renameSheet、cloneSheet（issue#I466ZZ@Gitee）
+* 【core   】     ListUtil增加splitAvg方法（pr#397@Gitee）
+* 【poi    】     Excel07SaxReader支持数字类型sheet名称、支持sheetName:名称前缀（issue#I46OMA@Gitee）
+* 【extra  】     Mail增加build方法（issue#I46LGE@Gitee）
+* 【core   】     XmlUtil增加beanToXml重载，支持忽略null
+* 【core   】     添加NullComparator、FuncComparator（issue#I471X7@Gitee）
+* 【core   】     LambdaUtil添加getFieldName（issue#I4750U@Gitee）
+* 【cron   】     Scheduler增加setThreadExecutor（issue#I47A6N@Gitee）
+* 【core   】     CharsetDetector增加detect重载，支持自定义缓存大小（issue#I478E5@Gitee）
+* 【core   】     增加PartitionIter（pr#402@Gitee）
+* 【all    】     增加异常爬栈开关（pr#403@Gitee）
+* 【core   】     优化Combination中C(n,n)的逻辑（pr#1792@Github）
+* 【core   】     Csv读写支持别名（issue#1791@Github）
+
+### 🐞Bug修复
+* 【core   】     修复MapUtil.sort比较器不一致返回原map的问题（issue#I46AQJ@Gitee）
+* 【core   】     修复JSONSupport默认循环引用导致的问题（issue#1779@Github）
+* 【poi    】     修复ExcelUtil.readBySax资源没有释放问题（issue#1789@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.9 (2021-08-16)
+
+### 🐣新特性
+* 【extra  】    FileUtil增加moveContent方法（issue#I45H30@Gitee）
+* 【extra  】    JschPool.getSession获取时检查是否连接状态（issue#I45N5I@Gitee）
+* 
+### 🐞Bug修复
+* 【extra  】    修复TinyPinyinEngine空构造造成可能的误判问题
+* 【http   】    修复在gzip模式下Content-Length服务端设置异常导致的问题（issue#1766@Github）
+* 【db     】    修复PooledDataSource关闭逻辑错误问题
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.8 (2021-08-11)
+
+### 🐣新特性
+* 【core   】     MapProxy支持return this的setter方法（pr#392@Gitee）
+* 【core   】     BeeDSFactory移除sqlite事务修复代码，新版本BeeCP已修复
+* 【core   】     增加compress包，扩充Zip操作灵活性
+* 【json   】     增加JSONBeanParser
+* 【poi    】     增加CellSetter，可以自定义单元格值写出
+* 【poi    】     CsvReader增加readFromStr（pr#1755@Github）
+* 【socket 】     SocketUtil增加connection方法
+* 【extra  】     JschUtil增加bindPort重载方法（issue#I44UTH@Github）
+* 【core   】     DefaultTrustManager改为继承X509ExtendedTrustManager
+* 【core   】     增加IoCopier
+
+### 🐞Bug修复
+* 【core   】     改进NumberChineseFormatter算法，补充完整单元测试，解决零问题
+* 【core   】     修复Img变换操作图片格式问题（issue#I44JRB@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.7 (2021-08-02)
+
+### 🐣新特性
+* 【core   】     增加LookupFactory和MethodHandleUtil（issue#I42TVY@Gitee）
+* 【core   】     改进RegexPool.TEL支持无-号码（pr#387@Gitee）
+* 【core   】     PhoneUtil中新增获取固话号码中区号,以及固话号码中号码的方法（pr#387@Gitee）
+* 【json   】     JSONGetter增加getLocalDateTime方法（pr#387@Gitee）
+* 【core   】     增加JNDIUtil（issue#1727@Github）
+* 【core   】     NetUtil增加getDnsInfo方法（issue#1727@Github）
+* 【core   】     SpringUtil增加unregisterBean方法（pr#388@Gitee）
+* 【core   】     优化TextSimilarity公共子串算法（issue#I42A6V@Gitee）
+* 【core   】     优化DateUtil.parse对UTC附带时区字符串解析（issue#I437AP@Gitee）
+
+### 🐞Bug修复
+* 【jwt    】     修复JWTUtil中几个方法非static的问题（issue#1735@Github）
+* 【core   】     修复SpringUtil无法处理autowired问题（pr#388@Gitee）
+* 【core   】     修复AbsCollValueMap中常量拼写错误（pr#1736@Github）
+* 【core   】     修复FileUtil.del在文件只读情况下无法删除的问题（pr#389@Gitee）
+* 【core   】     修复FileUtil.move在不同分区下失败的问题（pr#390@Gitee）
+* 【core   】     修复FileUtil.copy强制覆盖参数无效问题
+* 【core   】     修复NumberChineseFormatter转换金额多零问题（issue#1739@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.6 (2021-07-28)
+
+### 🐣新特性
+* 【core   】     增加FieldsComparator（pr#374@Gitee）
+* 【core   】     FileUtil.del采用Files.delete实现
+* 【core   】     改进Base64.isBase64方法增加等号判断（issue#1710@Github）
+* 【core   】     Sftp增加syncUpload方法（pr#375@Gitee）
+* 【core   】     改进NetUtil.getLocalHost逻辑（issue#1717@Github）
+* 【core   】     UseragentUtil增加QQ、alipay、taobao、uc等浏览器识别支持（issue#1719@Github）
+* 【http   】     HttpRequest.form方法判断集合增强（pr#381@Gitee）
+* 【core   】     NumberUtil增加calculate方法
+* 【core   】     优化TextSimilarity.longestCommonSubstring性能（issue#I42A6V@Gitee）
+* 【core   】     MultipartRequestInputStream改为使用long以支持大文件（issue#I428AN@Gitee）
+* 【core   】     RobotUtil增加getDelay、getRobot方法（pr#1725@Github）
+* 【json   】     JSON输出支持ignoreNull（issue#1728@Github）
+* 【core   】     DateUtil和LocalDateTimeUtil增加isWeekend方法（issue#I42N5A@Gitee）
+
+### 🐞Bug修复
+* 【core   】     修复RobotUtil双击右键问题（pr#1721@Github）
+* 【core   】     修复FileTypeUtil判断wps修改过的xlsx误判为jar的问题（pr#380@Gitee）
+* 【core   】     修复Sftp.isDir异常bug（pr#378@Gitee）
+* 【core   】     修复BeanUtil.copyProperties集合元素复制成功，读取失败的问题（issue#I41WKP@Gitee）
+* 【core   】     修复NumberChineseFormatter.chineseToNumber十位数错误（issue#1726@github）
+* 【poi    】     修复BeanSheetReader.read中字段对象为空导致的报错（issue#1729@Github）
+* 【core   】     修复DateConverter转换java.sql.Date问题（issue#1729@Github）
+* 【extra  】     修复CompressUtil中部分方法非static的问题（pr#385@Gitee）
+* 【core   】     修复ByteUtil转换端序错误问题（pr#384@Gitee）
+* 【core   】     修复UserAgentUtil判断浏览器顺序问题（issue#I42LYW@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.5 (2021-07-19)
+
+### 🐣新特性
+* 【core   】     DateUtil增加ceiling重载，可选是否归零毫秒
+* 【core   】     IterUtil增加firstMatch方法
+* 【core   】     增加NanoId
+* 【core   】     MapBuilder增加put方法（pr#367@Gitee）
+* 【core   】     StrUtil.insert支持负数index
+* 【core   】     Calculator类支持取模运算（issue#I40DUW@Gitee）
+* 【core   】     增加Base64.isBase64方法（issue#1710@Github）
+* 【core   】     ManifestUtil新增方法getManifest(Class<?> cls)（pr#370@Gitee）
+* 【extra  】     AbstractFtp增加isDir方法（issue#1716@Github）
+* 【core   】     修改FileUtil异常信息内容（pr#1713@Github）
+
+### 🐞Bug修复
+* 【core   】     修复FileUtil.normalize处理上级路径的问题（issue#I3YPEH@Gitee）
+* 【core   】     修复ClassScanner扫描空包遗漏问题
+* 【core   】     修复FastDatePrinter歧义问题（pr#366@Gitee）
+* 【core   】     修复DateUtil.format格式化Instant报错问题（issue#I40CY2@Gitee）
+* 【core   】     修复StrUtil.toUnderlineCase大写问题（issue#I40CGS@Gitee）
+* 【jwt    】     修复JWT.validate报错问题（issue#I40MR2@Gitee）
+* 【core   】     修复StrUtil.brief越界问题
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.4 (2021-07-10)
+
+### 🐣新特性
+* 【crypto 】     SmUtil.sm4统一返回类型（issue#I3YKD4@Gitee）
+* 【core   】     修改MapUtil.get传入null返回默认值而非null（issue#I3YKBC@Gitee）
+* 【core   】     HexUtil增加hexToLong、hexToInt（issue#I3YQEV@Gitee）
+* 【core   】     CsvWriter增加writer.write(csvData)的方法重载（pr#353@Gitee）
+* 【core   】     新增AbsCollValueMap（issue#I3YXF0@Gitee）
+* 【crypto 】     HOTP缓存改为8位，新增方法（pr#356@Gitee）
+* 【setting】     Props增加toProperties方法（issue#1701@Github）
+* 【http   】     UserAgent增加getOsVersion方法（issue#I3YZUQ@Gitee）
+* 【jwt    】     JWT增加validate方法（issue#I3YDM4@Gitee）
+* 【core   】     CscReader支持指定读取开始行号和结束行号（issue#I3ZMZL@Gitee）
+
+### 🐞Bug修复
+* 【core   】     修复RadixUtil.decode非static问题（issue#I3YPEH@Gitee）
+* 【core   】     修复EqualsBuilder数组判断问题（pr#1694@Github）
+* 【setting】     修复Props中Charset对象无法序列化的问题（pr#1694@Github）
+* 【db     】     修复PageResult首页判断逻辑问题（issue#1699@Github）
+* 【core   】     修复IdcardUtil可能数组越界问题（pr#1702@Github）
+* 【core   】     修复FastByteArrayOutputStream索引越界问题（issue#I402ZP@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.3 (2021-06-29)
+
+### 🐣新特性
+* 【core   】     增加Convert.toSet方法（issue#I3XFG2@Gitee）
+* 【core   】     CsvWriter增加writeBeans方法（pr#345@Gitee）
+* 【core   】     新增JAXBUtil（pr#346@Gitee）
+* 【poi    】     ExcelWriter新增setColumnStyleIfHasData和setRowStyleIfHasData（pr#347@Gitee）
+* 【json   】     用户自定义日期时间格式时，解析也读取此格式
+* 【core   】     增加可自定义日期格式GlobalCustomFormat
+* 【jwt    】     JWT修改默认有序，并规定payload日期格式为秒数
+* 【json   】     增加JSONWriter
+* 【core   】     IdUtil增加getWorkerId和getDataCenterId（issueI3Y5NI@Gitee）
+* 【core   】     JWTValidator增加leeway重载
+* 【core   】     增加RegexPool（issue#I3W9ZF@gitee）
+
+### 🐞Bug修复
+* 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）
+* 【core   】     修复FormatCache中循环引用异常（pr#1673@Github）
+* 【core   】     修复IdcardUtil.getIdcardInfo.getProvinceCode获取为汉字的问题（issue#I3XP4Q@Gitee）
+* 【core   】     修复CollUtil.subtract使用非标准Set等空指针问题（issue#I3XN1Z@Gitee）
+* 【core   】     修复SqlFormatter部分SQL空指针问题（issue#I3XS44@Gitee）
+* 【core   】     修复DateRange计算问题（issue#I3Y1US@Gitee）
+* 【core   】     修复BeanCopier中setFieldNameEditor失效问题（pr#349@Gitee）
+* 【core   】     修复ArrayUtil.indexOfSub查找bug（issue#1683@Github）
+* 【core   】     修复Node的权重比较空指针问题（issue#1681@Github）
+* 【core   】     修复UrlQuery传入无参数路径解析问题（issue#1688@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.7.2 (2021-06-20)
 
 ### 🐣新特性

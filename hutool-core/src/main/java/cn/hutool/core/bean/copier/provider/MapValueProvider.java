@@ -62,8 +62,7 @@ public class MapValueProvider implements ValueProvider<String> {
 			return null;
 		}
 
-		final Object value = map.get(key1);
-		return Convert.convertWithCheck(valueType, value, null, this.ignoreError);
+		return Convert.convertWithCheck(valueType, map.get(key1), null, this.ignoreError);
 	}
 
 	@Override

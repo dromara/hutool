@@ -144,7 +144,7 @@ public class Calculator {
 	 * @return 是否为算术符号
 	 */
 	private boolean isOperator(char c) {
-		return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')';
+		return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '%';
 	}
 
 	/**
@@ -155,11 +155,17 @@ public class Calculator {
 	 * @return 优先级
 	 */
 	public boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
-		boolean result = false;
-		if (operatPriority[(peek) - 40] >= operatPriority[(cur) - 40]) {
-			result = true;
+		final int offset = 40;
+		if(cur  == '%'){
+			// %优先级最高
+			cur = 47;
 		}
-		return result;
+		if(peek  == '%'){
+			// %优先级最高
+			peek = 47;
+		}
+
+		return operatPriority[(peek) - offset] >= operatPriority[(cur) - offset];
 	}
 
 	/**
@@ -167,7 +173,7 @@ public class Calculator {
 	 *
 	 * @param firstValue  第一个值
 	 * @param secondValue 第二个值
-	 * @param currentOp   算数符，只支持'+'、'-'、'*'、'/'
+	 * @param currentOp   算数符，只支持'+'、'-'、'*'、'/'、'%'
 	 * @return 结果
 	 */
 	private BigDecimal calculate(String firstValue, String secondValue, char currentOp) {
@@ -184,6 +190,9 @@ public class Calculator {
 				break;
 			case '/':
 				result = NumberUtil.div(firstValue, secondValue);
+				break;
+			case '%':
+				result = NumberUtil.toBigDecimal(firstValue).remainder(NumberUtil.toBigDecimal(secondValue));
 				break;
 			default:
 				throw new IllegalStateException("Unexpected value: " + currentOp);

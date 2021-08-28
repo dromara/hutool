@@ -13,19 +13,23 @@ public class DbRuntimeException extends RuntimeException{
 	public DbRuntimeException(Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
-	
+
 	public DbRuntimeException(String message) {
 		super(message);
 	}
-	
+
 	public DbRuntimeException(String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
-	
+
 	public DbRuntimeException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
-	
+
+	public DbRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
+	}
+
 	public DbRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}

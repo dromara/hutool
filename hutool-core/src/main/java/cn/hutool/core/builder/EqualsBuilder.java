@@ -39,7 +39,7 @@ import java.util.Set;
  *   return EqualsBuilder.reflectionEquals(this, obj);
  * }
  * </pre>
- *
+ * <p>
  * 来自Apache Commons Lang改造
  */
 public class EqualsBuilder implements Builder<Boolean> {
@@ -241,7 +241,7 @@ public class EqualsBuilder implements Builder<Boolean> {
 	 * @since 2.0
 	 */
 	public static boolean reflectionEquals(final Object lhs, final Object rhs, final boolean testTransients, final Class<?> reflectUpToClass,
-	                                       final String... excludeFields) {
+										   final String... excludeFields) {
 		if (lhs == rhs) {
 			return true;
 		}
@@ -375,18 +375,15 @@ public class EqualsBuilder implements Builder<Boolean> {
 			return this;
 		}
 		if (lhs == null || rhs == null) {
-			this.setEquals(false);
-			return this;
+			return setEquals(false);
 		}
-		final Class<?> lhsClass = lhs.getClass();
-		if (false == lhsClass.isArray()) {
-			// The simple case, not an array, just test the element
-			isEquals = lhs.equals(rhs);
+		if (ArrayUtil.isArray(lhs)) {
+			// 判断数组的equals
+			return setEquals(ArrayUtil.equals(lhs, rhs));
 		}
 
-		// 判断数组的equals
-		this.setEquals(ArrayUtil.equals(lhs, rhs));
-		return this;
+		// The simple case, not an array, just test the element
+		return setEquals(lhs.equals(rhs));
 	}
 
 	/**
@@ -548,10 +545,11 @@ public class EqualsBuilder implements Builder<Boolean> {
 	 * Sets the <code>isEquals</code> value.
 	 *
 	 * @param isEquals The value to set.
-	 * @since 2.1
+	 * @return this
 	 */
-	protected void setEquals(boolean isEquals) {
+	protected EqualsBuilder setEquals(boolean isEquals) {
 		this.isEquals = isEquals;
+		return this;
 	}
 
 	/**

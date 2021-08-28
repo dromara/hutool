@@ -3,9 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
-import cn.hutool.json.JSONUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -27,6 +26,14 @@ public class HttpRequestTest {
 	public void getHttpsTest() {
 		String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().body();
 		Console.log(body);
+	}
+
+	@Test
+	@Ignore
+	public void getHttpsThenTest() {
+		HttpRequest
+				.get("https://hutool.cn")
+				.then(response -> Console.log(response.body()));
 	}
 
 	@Test
@@ -91,7 +98,7 @@ public class HttpRequestTest {
 				// 禁用缓存
 				.disableCache()
 				// 自定义SSL版本
-				.setSSLProtocol(SSLSocketFactoryBuilder.TLSv12);
+				.setSSLProtocol(SSLProtocols.TLSv12);
 		Console.log(request.execute().body());
 	}
 
@@ -126,14 +133,15 @@ public class HttpRequestTest {
 		map.put("size", "2");
 		map.put("sizes", list);
 
-		String s = JSONUtil.toJsonStr(map);
-		HttpRequest request = HttpUtil.createGet("http://localhost:8888/get");
-		Console.log(request.execute().body());
+		HttpRequest
+				.get("http://localhost:8888/get")
+				.form(map)
+				.then(resp -> Console.log(resp.body()));
 	}
 
 	@Test
 	@Ignore
-	public void getWithoutEncodeTest(){
+	public void getWithoutEncodeTest() {
 		String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
 		HttpRequest get = HttpUtil.createGet(url);
 		Console.log(get.getUrl());

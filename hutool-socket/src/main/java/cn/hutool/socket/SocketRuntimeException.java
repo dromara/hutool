@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Socket异常
- * 
+ *
  * @author xiaoleilu
  */
 public class SocketRuntimeException extends RuntimeException {
@@ -25,6 +25,10 @@ public class SocketRuntimeException extends RuntimeException {
 
 	public SocketRuntimeException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public SocketRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public SocketRuntimeException(Throwable throwable, String messageTemplate, Object... params) {

@@ -31,7 +31,7 @@ public class PageUtil {
 	 *
 	 * @param customFirstPageNo 自定义的首页页码，为0或者1
 	 */
-	public static void setFirstPageNo(int customFirstPageNo) {
+	synchronized public static void setFirstPageNo(int customFirstPageNo) {
 		firstPageNo = customFirstPageNo;
 	}
 

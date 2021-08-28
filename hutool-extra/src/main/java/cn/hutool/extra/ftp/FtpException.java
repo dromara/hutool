@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Ftp异常
- * 
+ *
  * @author xiaoleilu
  */
 public class FtpException extends RuntimeException {
@@ -25,6 +25,10 @@ public class FtpException extends RuntimeException {
 
 	public FtpException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public FtpException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public FtpException(Throwable throwable, String messageTemplate, Object... params) {

@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.StrUtil;
 
 import java.time.Instant;
@@ -55,7 +56,6 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 		}
 
-
 		try {
 			return formatter.format(time);
 		} catch (UnsupportedTemporalTypeException e){
@@ -65,6 +65,9 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			}else if(time instanceof LocalTime && e.getMessage().contains("YearOfEra")){
 				// 用户传入LocalTime，但是要求格式化带有日期部分，转换为LocalDateTime重试
 				return formatter.format(((LocalTime) time).atDate(LocalDate.now()));
+			} else if(time instanceof Instant){
+				// 时间戳没有时区信息，赋予默认时区
+				return formatter.format(((Instant) time).atZone(ZoneId.systemDefault()));
 			}
 			throw e;
 		}
@@ -81,6 +84,11 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	public static String format(TemporalAccessor time, String format) {
 		if (null == time) {
 			return null;
+		}
+
+		// 检查自定义格式
+		if(GlobalCustomFormat.isCustomFormat(format)){
+			return GlobalCustomFormat.format(time, format);
 		}
 
 		final DateTimeFormatter formatter = StrUtil.isBlank(format)

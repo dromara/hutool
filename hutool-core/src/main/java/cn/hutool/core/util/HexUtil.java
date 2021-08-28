@@ -148,7 +148,7 @@ public class HexUtil {
 		if (StrUtil.isEmpty(hexStr)) {
 			return hexStr;
 		}
-		return decodeHexStr(hexStr.toCharArray(), charset);
+		return StrUtil.str(decodeHex(hexStr), charset);
 	}
 
 	/**
@@ -197,11 +197,12 @@ public class HexUtil {
 		}
 
 		hexData = StrUtil.cleanBlank(hexData);
-
-		final int len = hexData.length();
+		int len = hexData.length();
 
 		if ((len & 0x01) != 0) {
-			throw new UtilException("Odd number of characters.");
+			hexData = "0" + hexData;
+			len = hexData.length();
+//			throw new UtilException("Odd number of characters.");
 		}
 
 		final byte[] out = new byte[len >> 1];
@@ -328,6 +329,17 @@ public class HexUtil {
 	}
 
 	/**
+	 * 16进制字符串转为int
+	 *
+	 * @param value 16进制字符串
+	 * @return 16进制字符串int值
+	 * @since 5.7.4
+	 */
+	public static int hexToInt(String value) {
+		return Integer.parseInt(value, 16);
+	}
+
+	/**
 	 * 转为16进制字符串
 	 *
 	 * @param value int值
@@ -336,6 +348,17 @@ public class HexUtil {
 	 */
 	public static String toHex(long value) {
 		return Long.toHexString(value);
+	}
+
+	/**
+	 * 16进制字符串转为long
+	 *
+	 * @param value 16进制字符串
+	 * @return long值
+	 * @since 5.7.4
+	 */
+	public static long hexToLong(String value) {
+		return Long.parseLong(value, 16);
 	}
 
 	/**

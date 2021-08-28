@@ -13,6 +13,12 @@ import java.util.*;
 public class IterUtilTest {
 
 	@Test
+	public void getFirstNonNullTest(){
+		final ArrayList<String> strings = CollUtil.newArrayList(null, null, "123", "456", null);
+		Assert.assertEquals("123", IterUtil.getFirstNoneNull(strings));
+	}
+
+	@Test
 	public void fieldValueMapTest() {
 		ArrayList<Car> carList = CollUtil.newArrayList(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
 		Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");

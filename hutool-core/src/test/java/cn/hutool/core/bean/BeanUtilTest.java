@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -538,6 +539,14 @@ public class BeanUtilTest {
 		Assert.assertEquals(new Long(123456L), station2.getId());
 	}
 
+	static class Station extends Tree<Long> {}
+	static class Tree<T> extends Entity<T> {}
+
+	@Data
+	public static class Entity<T> {
+		private T id;
+	}
+
 	@Test
 	public void copyListTest() {
 		Student student = new Student();
@@ -559,19 +568,6 @@ public class BeanUtilTest {
 			Assert.assertEquals(studentList.get(i).getAge(), people.get(i).getAge());
 		}
 
-	}
-
-	public static class Station extends Tree<Station, Long> {
-
-	}
-
-	public static class Tree<E, T> extends Entity<T> {
-
-	}
-
-	@Data
-	public static class Entity<T> {
-		private T id;
 	}
 
 	@Test
@@ -640,5 +636,68 @@ public class BeanUtilTest {
 		String name;
 		int age;
 		Long no;
+	}
+
+	/**
+	 * @author dazer
+	 *  copyProperties(Object source, Object target, CopyOptions copyOptions)
+	 *  当：copyOptions的 setFieldNameEditor 不为空的时候，有bug,这里进行修复；
+	 */
+	@Test
+	public void beanToBeanCopyOptionsTest() {
+		ChildVo1 childVo1 = new ChildVo1();
+		childVo1.setChild_address("中国北京五道口");
+		childVo1.setChild_name("张三");
+		childVo1.setChild_father_name("张无忌");
+		childVo1.setChild_mother_name("赵敏敏");
+
+		CopyOptions copyOptions = CopyOptions.create().
+				//setIgnoreNullValue(true).
+				//setIgnoreCase(false).
+						setFieldNameEditor(StrUtil::toUnderlineCase);
+
+		ChildVo2 childVo2 = new ChildVo2();
+		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);
+
+		Assert.assertEquals(childVo1.getChild_address(), childVo2.getChildAddress());
+		Assert.assertEquals(childVo1.getChild_name(), childVo2.getChildName());
+		Assert.assertEquals(childVo1.getChild_father_name(), childVo2.getChildFatherName());
+		Assert.assertEquals(childVo1.getChild_mother_name(), childVo2.getChildMotherName());
+	}
+
+	@Data
+	public static class ChildVo1 {
+		String child_name;
+		String child_address;
+		String child_mother_name;
+		String child_father_name;
+	}
+
+	@Data
+	public static class ChildVo2 {
+		String childName;
+		String childAddress;
+		String childMotherName;
+		String childFatherName;
+	}
+
+	@Test
+	public void issueI41WKPTest(){
+		Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
+		Test2 t2_hu = new Test2();
+		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
+		Assert.assertNull(t2_hu.getStrList());
+	}
+
+	@Data
+	@Accessors(chain = true)
+	public static class Test1 {
+		private List<String> strList;
+	}
+
+	@Data
+	@Accessors(chain = true)
+	public static class Test2 {
+		private List<Integer> strList;
 	}
 }

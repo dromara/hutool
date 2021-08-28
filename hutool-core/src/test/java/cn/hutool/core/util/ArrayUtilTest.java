@@ -357,6 +357,14 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void indexOfSubTest2(){
+		Integer[] a = {0x12, 0x56, 0x34, 0x56, 0x78, 0x9A};
+		Integer[] b = {0x56, 0x78};
+		int i = ArrayUtil.indexOfSub(a, b);
+		Assert.assertEquals(3, i);
+	}
+
+	@Test
 	public void lastIndexOfSubTest() {
 		Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
 		Integer[] b = {0x56, 0x78};
@@ -387,10 +395,25 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void lastIndexOfSubTest2(){
+		Integer[] a = {0x12, 0x56, 0x78, 0x56, 0x21, 0x9A};
+		Integer[] b = {0x56, 0x78};
+		int i = ArrayUtil.indexOfSub(a, b);
+		Assert.assertEquals(1, i);
+	}
+
+	@Test
 	public void reverseTest(){
 		int[] a = {1,2,3,4};
 		final int[] reverse = ArrayUtil.reverse(a);
 		Assert.assertArrayEquals(new int[]{4,3,2,1}, reverse);
+	}
+
+	@Test
+	public void reverseTest2s(){
+		Object[] a = {"1",'2',"3",4};
+		final Object[] reverse = ArrayUtil.reverse(a);
+		Assert.assertArrayEquals(new Object[]{4,"3",'2',"1"}, reverse);
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -418,7 +419,7 @@ public class RandomUtil {
 	 */
 	public static <T> List<T> randomEleList(List<T> source, int count) {
 		if (count >= source.size()) {
-			return source;
+			return ListUtil.toList(source);
 		}
 		final int[] randomList = ArrayUtil.sub(randomInts(source.size()), 0, count);
 		List<T> result = new ArrayList<>();

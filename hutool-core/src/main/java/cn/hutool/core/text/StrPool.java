@@ -4,6 +4,7 @@ import cn.hutool.core.util.XmlUtil;
 
 /**
  * 常用字符串常量定义
+ * @see CharPool
  *
  * @author looly
  * @since 5.6.3

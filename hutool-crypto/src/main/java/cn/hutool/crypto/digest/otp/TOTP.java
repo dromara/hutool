@@ -1,13 +1,17 @@
 package cn.hutool.crypto.digest.otp;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
 import java.time.Duration;
 import java.time.Instant;
 
 /**
- * <p>time-based one-time passwords (TOTP) 一次性密码生成器，
+ * <p>time-based one-time passwords (TOTP) 基于时间戳算法的一次性密码生成器，
  * 规范见：<a href="https://tools.ietf.org/html/rfc6238">RFC&nbsp;6238</a>.</p>
+ *
+ * <p>时间同步，基于客户端的动态口令和动态口令验证服务器的时间比对，一般每30秒产生一个新口令，
+ * 要求客户端和服务器能够十分精确的保持正确的时钟，客户端和服务端基于时间计算的动态口令才能一致。</p>
  *
  * <p>参考：https://github.com/jchambers/java-otp</p>
  *
@@ -73,6 +77,40 @@ public class TOTP extends HOTP {
 	 */
 	public int generate(Instant timestamp) {
 		return this.generate(timestamp.toEpochMilli() / this.timeStep.toMillis());
+	}
+
+	/**
+	 * 用于验证code是否正确
+	 *
+	 * @param timestamp  验证时间戳
+	 * @param offsetSize 误差范围
+	 * @param code       code
+	 * @return 是否通过
+	 * @since 5.7.4
+	 */
+	public boolean validate(Instant timestamp, int offsetSize, int code) {
+		if (offsetSize == 0) {
+			return generate(timestamp) == code;
+		}
+		for (int i = -offsetSize; i <= offsetSize; i++) {
+			if (generate(timestamp.plus(getTimeStep().multipliedBy(i))) == code) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 生成谷歌认证器的字符串（扫码字符串）
+	 * 基于时间的，计数器不适合
+	 *
+	 * @param account  账户名。
+	 * @param numBytes 将生成的种子字节数量。
+	 * @return 共享密钥
+	 * @since 5.7.4
+	 */
+	public static String generateGoogleSecretKey(String account, int numBytes) {
+		return StrUtil.format("otpauth://totp/{}?secret={}", account, generateSecretKey(numBytes));
 	}
 
 	/**

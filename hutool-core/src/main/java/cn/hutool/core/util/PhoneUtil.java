@@ -161,4 +161,28 @@ public class PhoneUtil {
 	public static CharSequence subAfter(CharSequence phone) {
 		return StrUtil.sub(phone, 7, 11);
 	}
+
+	/**
+	 * 获取固话号码中的区号
+	 *
+	 * @param value 完整的固话号码
+	 * @return 固话号码的区号部分
+	 * @since 5.7.7
+	 */
+	public static CharSequence subTelBefore(CharSequence value)
+	{
+		return ReUtil.getGroup1(PatternPool.TEL, value);
+	}
+
+	/**
+	 * 获取固话号码中的号码
+	 *
+	 * @param value 完整的固话号码
+	 * @return 固话号码的号码部分
+	 * @since 5.7.7
+	 */
+	public static CharSequence subTelAfter(CharSequence value)
+	{
+		return ReUtil.get(PatternPool.TEL, value, 2);
+	}
 }

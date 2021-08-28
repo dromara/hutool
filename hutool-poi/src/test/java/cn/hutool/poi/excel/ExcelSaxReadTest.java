@@ -33,6 +33,17 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
+	public void excel07ByNameTest() {
+		// 工具化快速读取
+		// sheet名称是区分大小写的
+		ExcelUtil.readBySax("aaa.xlsx", "Sheet1", createRowHandler());
+		// 纯数字名称也支持
+		ExcelUtil.readBySax("aaa.xlsx", "12", createRowHandler());
+		// 前缀支持
+		ExcelUtil.readBySax("aaa.xlsx", "sheetName:12", createRowHandler());
+	}
+
+	@Test
 	public void excel07FromStreamTest() {
 		// issue#1225 非markSupport的流读取会错误
 		ExcelUtil.readBySax(IoUtil.toStream(FileUtil.file("aaa.xlsx")), 0, createRowHandler());
@@ -51,6 +62,7 @@ public class ExcelSaxReadTest {
 	public void excel03ByNameTest() {
 		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", "校园入学");
+		reader.read("aaa.xls", "sheetName:校园入学");
 	}
 
 	@Test(expected = POIException.class)

@@ -1,21 +1,13 @@
 package cn.hutool.json;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.math.BigDecimal;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -28,63 +20,6 @@ import java.util.SortedMap;
 final class InternalJSONUtil {
 
 	private InternalJSONUtil() {
-	}
-
-	/**
-	 * 写入值到Writer
-	 *
-	 * @param writer       Writer
-	 * @param value        值
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       缩进空格数
-	 * @param config       配置项
-	 * @return Writer
-	 * @throws JSONException JSON异常
-	 * @throws IOException   IO异常
-	 */
-	protected static Writer writeValue(Writer writer, Object value, int indentFactor, int indent, JSONConfig config) throws JSONException, IOException {
-		if (value == null || value instanceof JSONNull) {
-			writer.write(JSONNull.NULL.toString());
-		} else if (value instanceof JSON) {
-			((JSON) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Map) {
-			new JSONObject(value).write(writer, indentFactor, indent);
-		} else if (value instanceof Iterable || value instanceof Iterator || value.getClass().isArray()) {
-			new JSONArray(value).write(writer, indentFactor, indent);
-		} else if (value instanceof Number) {
-			// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
-			final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
-			writer.write(NumberUtil.toStr((Number) value, isStripTrailingZeros));
-		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
-			final String format = (null == config) ? null : config.getDateFormat();
-			writer.write(formatDate(value, format));
-		} else if (value instanceof Boolean) {
-			writer.write(value.toString());
-		} else if (value instanceof JSONString) {
-			String valueStr;
-			try {
-				valueStr = ((JSONString) value).toJSONString();
-			} catch (Exception e) {
-				throw new JSONException(e);
-			}
-			writer.write(valueStr != null ? valueStr : JSONUtil.quote(value.toString()));
-		} else {
-			JSONUtil.quote(value.toString(), writer);
-		}
-		return writer;
-	}
-
-	/**
-	 * 缩进，使用空格符
-	 *
-	 * @param writer writer
-	 * @param indent 缩进空格数
-	 * @throws IOException IO异常
-	 */
-	protected static void indent(Writer writer, int indent) throws IOException {
-		for (int i = 0; i < indent; i += 1) {
-			writer.write(CharUtil.SPACE);
-		}
 	}
 
 	/**
@@ -167,10 +102,6 @@ final class InternalJSONUtil {
 			try {
 				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
 					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
-					//double d = Double.parseDouble(string);
-					//if (false == Double.isInfinite(d) && false == Double.isNaN(d)) {
-					//	return d;
-					//}
 					return new BigDecimal(string);
 				} else {
 					final long myLong = Long.parseLong(string);
@@ -258,38 +189,5 @@ final class InternalJSONUtil {
 		}
 
 		return false;
-	}
-
-	/**
-	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
-	 *
-	 * @param dateObj Date或者Calendar对象
-	 * @param format  格式
-	 * @return 日期字符串
-	 */
-	private static String formatDate(Object dateObj, String format) {
-		if (StrUtil.isNotBlank(format)) {
-			final String dateStr;
-			if(dateObj instanceof TemporalAccessor){
-				dateStr = TemporalAccessorUtil.format((TemporalAccessor) dateObj, format);
-			} else{
-				dateStr = DateUtil.format(Convert.toDate(dateObj), format);
-			}
-			//用户定义了日期格式
-			return JSONUtil.quote(dateStr);
-		}
-
-		//默认使用时间戳
-		long timeMillis;
-		if (dateObj instanceof TemporalAccessor) {
-			timeMillis = TemporalAccessorUtil.toEpochMilli((TemporalAccessor) dateObj);
-		} else if (dateObj instanceof Date) {
-			timeMillis = ((Date) dateObj).getTime();
-		} else if (dateObj instanceof Calendar) {
-			timeMillis = ((Calendar) dateObj).getTimeInMillis();
-		} else {
-			throw new UnsupportedOperationException("Unsupported Date type: " + dateObj.getClass());
-		}
-		return String.valueOf(timeMillis);
 	}
 }

@@ -106,6 +106,17 @@ public class DateTimeTest {
 	}
 
 	@Test
+	public void toStringTest2() {
+		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+
+		String dateStr = dateTime.toString(DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN);
+		Assert.assertEquals("2017-01-05T12:34:23+0800", dateStr);
+
+		dateStr = dateTime.toString(DatePattern.UTC_WITH_XXX_OFFSET_PATTERN);
+		Assert.assertEquals("2017-01-05T12:34:23+08:00", dateStr);
+	}
+
+	@Test
 	public void monthTest() {
 		//noinspection ConstantConditions
 		int month = DateUtil.parse("2017-07-01").month();

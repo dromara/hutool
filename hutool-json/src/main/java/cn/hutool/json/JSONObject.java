@@ -10,15 +10,14 @@ import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import cn.hutool.json.serialize.JSONSerializer;
+import cn.hutool.json.serialize.JSONWriter;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -555,64 +554,15 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		try {
-			return doWrite(writer, indentFactor, indent);
-		} catch (IOException exception) {
-			throw new JSONException(exception);
-		}
-	}
+		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
+				.beginObj();
+		this.forEach(jsonWriter::writeField);
+		jsonWriter.end();
 
-	// ------------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 将JSON内容写入Writer
-	 *
-	 * @param writer       writer
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @return Writer
-	 * @throws JSONException JSON相关异常
-	 */
-	private Writer doWrite(Writer writer, int indentFactor, int indent) throws IOException {
-		writer.write(CharUtil.DELIM_START);
-		boolean isFirst = true;
-		final boolean isIgnoreNullValue = this.config.isIgnoreNullValue();
-		final int newIndent = indent + indentFactor;
-		for (Entry<String, Object> entry : this.entrySet()) {
-			if (ObjectUtil.isNull(entry.getKey()) || (ObjectUtil.isNull(entry.getValue()) && isIgnoreNullValue)) {
-				continue;
-			}
-
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				// 键值对分隔
-				writer.write(CharUtil.COMMA);
-			}
-			// 换行缩进
-			if (indentFactor > 0) {
-				writer.write(CharUtil.LF);
-			}
-
-			InternalJSONUtil.indent(writer, newIndent);
-			writer.write(JSONUtil.quote(entry.getKey()));
-			writer.write(CharUtil.COLON);
-			if (indentFactor > 0) {
-				// 冒号后的空格
-				writer.write(CharUtil.SPACE);
-			}
-			InternalJSONUtil.writeValue(writer, entry.getValue(), indentFactor, newIndent, this.config);
-		}
-
-		// 结尾符
-		if (indentFactor > 0) {
-			writer.write(CharUtil.LF);
-		}
-		InternalJSONUtil.indent(writer, indent);
-		writer.write(CharUtil.DELIM_END);
 		return writer;
 	}
 
+	// ------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * Bean对象转Map
 	 *

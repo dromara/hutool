@@ -1,6 +1,6 @@
 /**
- * 拼音工具封装，基于TinyPinyin
- * 
+ * 拼音工具封装，入口为PinyinUtil
+ *
  * @author looly
  *
  */

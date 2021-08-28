@@ -85,12 +85,52 @@ public class JWTValidator {
 	 * <p>
 	 * 如果某个时间没有设置，则不检查（表示无限制）
 	 *
+	 * @return this
+	 * @throws ValidateException 验证失败的异常
+	 * @since 5.7.3
+	 */
+	public JWTValidator validateDate() throws ValidateException {
+		return validateDate(DateUtil.beginOfSecond(DateUtil.date()));
+	}
+
+	/**
+	 * 检查JWT的以下三两个时间：
+	 *
+	 * <ul>
+	 *     <li>{@link JWTPayload#NOT_BEFORE}：生效时间不能晚于当前时间</li>
+	 *     <li>{@link JWTPayload#EXPIRES_AT}：失效时间不能早于当前时间</li>
+	 *     <li>{@link JWTPayload#ISSUED_AT}： 签发时间不能晚于当前时间</li>
+	 * </ul>
+	 * <p>
+	 * 如果某个时间没有设置，则不检查（表示无限制）
+	 *
 	 * @param dateToCheck 被检查的时间，一般为当前时间
 	 * @return this
 	 * @throws ValidateException 验证失败的异常
 	 */
 	public JWTValidator validateDate(Date dateToCheck) throws ValidateException {
-		validateDate(this.jwt.getPayload(), dateToCheck);
+		validateDate(this.jwt.getPayload(), dateToCheck, 0L);
+		return this;
+	}
+
+	/**
+	 * 检查JWT的以下三两个时间：
+	 *
+	 * <ul>
+	 *     <li>{@link JWTPayload#NOT_BEFORE}：生效时间不能晚于当前时间</li>
+	 *     <li>{@link JWTPayload#EXPIRES_AT}：失效时间不能早于当前时间</li>
+	 *     <li>{@link JWTPayload#ISSUED_AT}： 签发时间不能晚于当前时间</li>
+	 * </ul>
+	 * <p>
+	 * 如果某个时间没有设置，则不检查（表示无限制）
+	 *
+	 * @param dateToCheck 被检查的时间，一般为当前时间
+	 * @param leeway      容忍空间，单位：秒。当不能晚于当前时间时，向后容忍；不能早于向前容忍。
+	 * @return this
+	 * @throws ValidateException 验证失败的异常
+	 */
+	public JWTValidator validateDate(Date dateToCheck, long leeway) throws ValidateException {
+		validateDate(this.jwt.getPayload(), dateToCheck, leeway);
 		return this;
 	}
 
@@ -135,42 +175,77 @@ public class JWTValidator {
 	 * 检查JWT的以下三两个时间：
 	 *
 	 * <ul>
-	 *     <li>{@link JWTPayload#NOT_BEFORE}：被检查时间必须晚于生效时间</li>
-	 *     <li>{@link JWTPayload#EXPIRES_AT}：被检查时间必须早于失效时间</li>
-	 *     <li>{@link JWTPayload#ISSUED_AT}：签发时间必须早于失效时间</li>
+	 *     <li>{@link JWTPayload#NOT_BEFORE}：生效时间不能晚于当前时间</li>
+	 *     <li>{@link JWTPayload#EXPIRES_AT}：失效时间不能早于当前时间</li>
+	 *     <li>{@link JWTPayload#ISSUED_AT}： 签发时间不能晚于当前时间</li>
 	 * </ul>
 	 * <p>
 	 * 如果某个时间没有设置，则不检查（表示无限制）
 	 *
-	 * @param payload     {@link JWTPayload}
-	 * @param dateToCheck 被检查的时间，一般为当前时间
+	 * @param payload {@link JWTPayload}
+	 * @param now     当前时间
+	 * @param leeway  容忍空间，单位：秒。当不能晚于当前时间时，向后容忍；不能早于向前容忍。
 	 * @throws ValidateException 验证异常
 	 */
-	private static void validateDate(JWTPayload payload, Date dateToCheck) throws ValidateException {
-		if (null == dateToCheck) {
+	private static void validateDate(JWTPayload payload, Date now, long leeway) throws ValidateException {
+		if (null == now) {
 			// 默认当前时间
-			dateToCheck = DateUtil.date();
+			now = DateUtil.date();
+			// truncate millis
+			now.setTime(now.getTime() / 1000 * 1000);
 		}
 
-		// 检查生效时间（被检查时间必须晚于生效时间）
+		// 检查生效时间（生效时间不能晚于当前时间）
 		final Date notBefore = payload.getClaimsJson().getDate(JWTPayload.NOT_BEFORE);
-		if (null != notBefore && dateToCheck.before(notBefore)) {
-			throw new ValidateException("Current date [{}] is before 'nbf' [{}]",
-					dateToCheck, DateUtil.date(notBefore));
-		}
+		validateNotAfter(JWTPayload.NOT_BEFORE, notBefore, now, leeway);
 
-		// 检查失效时间（被检查时间必须早于失效时间）
+		// 检查失效时间（失效时间不能早于当前时间）
 		final Date expiresAt = payload.getClaimsJson().getDate(JWTPayload.EXPIRES_AT);
-		if (null != expiresAt && dateToCheck.after(expiresAt)) {
-			throw new ValidateException("Current date [{}] is after 'exp' [{}]",
-					dateToCheck, DateUtil.date(expiresAt));
-		}
+		validateNotBefore(JWTPayload.EXPIRES_AT, expiresAt, now, leeway);
 
-		// 检查签发时间（被检查时间必须晚于签发时间）
+		// 检查签发时间（签发时间不能晚于当前时间）
 		final Date issueAt = payload.getClaimsJson().getDate(JWTPayload.ISSUED_AT);
-		if (null != issueAt && dateToCheck.before(issueAt)) {
-			throw new ValidateException("Current date [{}] is before 'iat' [{}]",
-					dateToCheck, DateUtil.date(issueAt));
+		validateNotAfter(JWTPayload.ISSUED_AT, issueAt, now, leeway);
+	}
+
+	/**
+	 * 验证指定字段的时间不能晚于当前时间
+	 *
+	 * @param fieldName   字段名
+	 * @param dateToCheck 被检查的字段日期
+	 * @param now         当前时间
+	 * @param leeway      容忍空间，单位：秒。向后容忍
+	 * @throws ValidateException 验证异常
+	 */
+	private static void validateNotAfter(String fieldName, Date dateToCheck, Date now, long leeway) throws ValidateException {
+		if (null == dateToCheck) {
+			return;
+		}
+		now.setTime(now.getTime() + leeway * 1000);
+		if (dateToCheck.after(now)) {
+			throw new ValidateException("'{}':[{}] is after now:[{}]",
+					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));
+		}
+	}
+
+	/**
+	 * 验证指定字段的时间不能早于当前时间
+	 *
+	 * @param fieldName   字段名
+	 * @param dateToCheck 被检查的字段日期
+	 * @param now         当前时间
+	 * @param leeway      容忍空间，单位：秒。。向前容忍
+	 * @throws ValidateException 验证异常
+	 */
+	@SuppressWarnings("SameParameterValue")
+	private static void validateNotBefore(String fieldName, Date dateToCheck, Date now, long leeway) throws ValidateException {
+		if (null == dateToCheck) {
+			return;
+		}
+		now.setTime(now.getTime() - leeway * 1000);
+		if (dateToCheck.before(now)) {
+			throw new ValidateException("'{}':[{}] is before now:[{}]",
+					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));
 		}
 	}
 }

@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
@@ -8,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.2</version>
+		<version>5.7.10</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
@@ -44,7 +45,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.12.1</version>
+			<version>1.13.5</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

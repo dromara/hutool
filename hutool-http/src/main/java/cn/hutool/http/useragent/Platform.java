@@ -1,9 +1,9 @@
 package cn.hutool.http.useragent;
 
+import cn.hutool.core.collection.CollUtil;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.hutool.core.collection.CollUtil;
 
 /**
  * 平台对象
@@ -12,6 +12,7 @@ import cn.hutool.core.collection.CollUtil;
  * @since 4.2.1
  */
 public class Platform extends UserAgentInfo {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 未知

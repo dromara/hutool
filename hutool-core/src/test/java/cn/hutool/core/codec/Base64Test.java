@@ -1,6 +1,7 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +13,23 @@ import org.junit.Test;
  *
  */
 public class Base64Test {
+
+	@Test
+	public void isBase64Test(){
+		Assert.assertTrue(Base64.isBase64(Base64.encode(RandomUtil.randomString(1000))));
+	}
+
+	@Test
+	public void isBase64Test2(){
+		String base64 = "dW1kb3MzejR3bmljM2J6djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
+				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ==";
+		Assert.assertTrue(Base64.isBase64(base64));
+
+		// '=' 不位于末尾
+		base64 = "dW1kb3MzejR3bmljM2J6=djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
+				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ=";
+		Assert.assertFalse(Base64.isBase64(base64));
+	}
 
 	@Test
 	public void encodeAndDecodeTest() {
@@ -61,5 +79,14 @@ public class Base64Test {
 
 		String decodeStr = Base64.decodeStr(encode);
 		Assert.assertEquals(a, decodeStr);
+	}
+
+	@Test
+	public void encodeAndDecodeGbkTest(){
+		String orderDescription = "订购成功立即生效，30天内可观看专区中除单独计费影片外的所有内容，到期自动取消。";
+		String result = Base64.encode(orderDescription, "gbk");
+
+		final String s = Base64.decodeStr(result, "gbk");
+		Assert.assertEquals(orderDescription, s);
 	}
 }

@@ -12,6 +12,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
@@ -318,12 +319,32 @@ public class Sftp extends AbstractFtp {
 
 	@Override
 	public boolean mkdir(String dir) {
+		if (isDir(dir)) {
+			// 目录已经存在，创建直接返回
+			return true;
+		}
 		try {
 			this.channel.mkdir(dir);
 			return true;
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isDir(String dir) {
+		final SftpATTRS sftpATTRS;
+		try {
+			sftpATTRS = this.channel.stat(dir);
+		} catch (SftpException e) {
+			if(e.getMessage().contains("No such file")){
+				// 文件不存在直接返回false
+				// pr#378@Gitee
+				return false;
+			}
+			throw new FtpException(e);
+		}
+		return sftpATTRS.isDir();
 	}
 
 	/**
@@ -404,6 +425,36 @@ public class Sftp extends AbstractFtp {
 			return true;
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
+		}
+	}
+
+	/**
+	 * 将本地文件或者文件夹同步（覆盖）上传到远程路径
+	 *
+	 * @param file       文件或者文件夹
+	 * @param remotePath 远程路径
+	 * @since 5.7.6
+	 */
+	public void syncUpload(File file, String remotePath) {
+		if (false == FileUtil.exist(file)) {
+			return;
+		}
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files == null) {
+				return;
+			}
+			for (File fileItem : files) {
+				if (fileItem.isDirectory()) {
+					String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
+					this.syncUpload(fileItem, mkdir);
+				} else {
+					this.syncUpload(fileItem, remotePath);
+				}
+			}
+		} else {
+			this.mkDirs(remotePath);
+			this.upload(remotePath, file);
 		}
 	}
 

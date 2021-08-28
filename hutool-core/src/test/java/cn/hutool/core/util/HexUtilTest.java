@@ -49,4 +49,11 @@ public class HexUtilTest {
 		String formatHex = HexUtil.format(hex);
 		Assert.assertEquals("e8 c6 70 38 0c b2 20 09 52 68 f4 02 21 fc 74 8f a6 ac 39 d6 e9 30 e6 3c 30 da 68 ba d9 7f 88 5d", formatHex);
 	}
+
+	@Test
+	public void decodeHexTest(){
+		String s = HexUtil.encodeHexStr("6");
+		final String s1 = HexUtil.decodeHexStr(s);
+		Assert.assertEquals("6", s1);
+	}
 }

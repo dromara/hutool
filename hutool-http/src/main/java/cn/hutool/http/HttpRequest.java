@@ -10,13 +10,13 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.body.MultipartBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
-import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -31,8 +31,8 @@ import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * http请求类<br>
@@ -487,15 +487,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return this.form(name, (File) value);
 		}
 
-		if(value instanceof Resource){
-			return form(name, (Resource)value);
+		if (value instanceof Resource) {
+			return form(name, (Resource) value);
 		}
 
 		// 普通值
 		String strValue;
-		if (value instanceof List) {
+		if (value instanceof Iterable) {
 			// 列表对象
-			strValue = CollUtil.join((List<?>) value, ",");
+			strValue = CollUtil.join((Iterable<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
 			if (File.class == ArrayUtil.getComponentType(value)) {
 				// 多文件
@@ -564,7 +564,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest form(String name, File... files) {
-		if(ArrayUtil.isEmpty(files)){
+		if (ArrayUtil.isEmpty(files)) {
 			return this;
 		}
 		if (1 == files.length) {
@@ -657,9 +657,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public Map<String, Resource> fileForm() {
 		final Map<String, Resource> result = MapUtil.newHashMap();
-		this.form.forEach((key, value)->{
-			if(value instanceof Resource){
-				result.put(key, (Resource)value);
+		this.form.forEach((key, value) -> {
+			if (value instanceof Resource) {
+				result.put(key, (Resource) value);
 			}
 		});
 		return result;
@@ -882,16 +882,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param protocol 协议
 	 * @return this
-	 * @see SSLSocketFactoryBuilder
+	 * @see SSLUtil#createSSLContext(String)
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
-		try {
-			setSSLSocketFactory(SSLSocketFactoryBuilder.create().setProtocol(protocol).build());
-		} catch (Exception e) {
-			throw new HttpException(e);
-		}
+		setSSLSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
 		return this;
 	}
 
@@ -967,6 +963,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		return httpResponse;
+	}
+
+	/**
+	 * 执行Request请求后，对响应内容后续处理<br>
+	 * 处理结束后关闭连接
+	 *
+	 * @param consumer 响应内容处理函数
+	 * @since 5.7.8
+	 */
+	public void then(Consumer<HttpResponse> consumer) {
+		try (HttpResponse response = execute(true)) {
+			consumer.accept(response);
+		}
 	}
 
 	/**
@@ -1169,9 +1178,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		byte[] content;
-		if(ArrayUtil.isNotEmpty(this.bodyBytes)){
+		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 			content = this.bodyBytes;
-		} else{
+		} else {
 			content = StrUtil.bytes(getFormUrlEncoded(), this.charset);
 		}
 		IoUtil.write(this.httpConnection.getOutputStream(), true, content);
@@ -1229,11 +1238,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *     1. 存在资源对象（fileForm非空）
 	 *     2. 用户自定义头为multipart/form-data开头
 	 * </pre>
+	 *
 	 * @return 是否为multipart/form-data表单
 	 * @since 5.3.5
 	 */
-	private boolean isMultipart(){
-		if(this.isMultiPart){
+	private boolean isMultipart() {
+		if (this.isMultiPart) {
 			return true;
 		}
 
@@ -1245,15 +1255,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 将参数加入到form中，如果form为空，新建之。
 	 *
-	 * @param name 表单属性名
+	 * @param name  表单属性名
 	 * @param value 属性值
 	 * @return this
 	 */
-	private HttpRequest putToForm(String name, Object value){
-		if(null == name || null == value){
+	private HttpRequest putToForm(String name, Object value) {
+		if (null == name || null == value) {
 			return this;
 		}
-		if(null == this.form){
+		if (null == this.form) {
 			this.form = new LinkedHashMap<>();
 		}
 		this.form.put(name, value);

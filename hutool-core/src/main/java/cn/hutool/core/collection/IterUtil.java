@@ -1,8 +1,10 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
@@ -129,16 +131,7 @@ public class IterUtil {
 	 * @since 3.3.0
 	 */
 	public static boolean isAllNull(Iterator<?> iter) {
-		if (null == iter) {
-			return true;
-		}
-
-		while (iter.hasNext()) {
-			if (null != iter.next()) {
-				return false;
-			}
-		}
-		return true;
+		return null == getFirstNoneNull(iter);
 	}
 
 	/**
@@ -601,10 +594,24 @@ public class IterUtil {
 	 * @since 5.7.2
 	 */
 	public static <T> T getFirstNoneNull(Iterator<T> iterator) {
+		return firstMatch(iterator, Objects::nonNull);
+	}
+
+	/**
+	 * 返回{@link Iterator}中第一个匹配规则的值
+	 *
+	 * @param <T>     数组元素类型
+	 * @param iterator  {@link Iterator}
+	 * @param matcher 匹配接口，实现此接口自定义匹配规则
+	 * @return 匹配元素，如果不存在匹配元素或{@link Iterator}为空，返回 {@code null}
+	 * @since 5.7.5
+	 */
+	public static <T> T firstMatch(Iterator<T> iterator, Matcher<T> matcher) {
+		Assert.notNull(matcher, "Matcher must be not null !");
 		if (null != iterator) {
 			while(iterator.hasNext()){
 				final T next = iterator.next();
-				if(null != next){
+				if(matcher.match(next)){
 					return next;
 				}
 			}

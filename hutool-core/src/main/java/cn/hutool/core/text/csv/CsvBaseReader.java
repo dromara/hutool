@@ -10,6 +10,7 @@ import cn.hutool.core.util.ObjectUtil;
 import java.io.File;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -109,6 +110,27 @@ public class CsvBaseReader implements Serializable {
 	}
 
 	/**
+	 * 从字符串中读取CSV数据
+	 *
+	 * @param csvStr CSV字符串
+	 * @return {@link CsvData}，包含数据列表和行信息
+	 */
+	public CsvData readFromStr(String csvStr) {
+		return read(new StringReader(csvStr));
+	}
+
+	/**
+	 * 从字符串中读取CSV数据
+	 *
+	 * @param csvStr     CSV字符串
+	 * @param rowHandler 行处理器，用于一行一行的处理数据
+	 */
+	public void readFromStr(String csvStr, CsvRowHandler rowHandler) {
+		read(parse(new StringReader(csvStr)), rowHandler);
+	}
+
+
+	/**
 	 * 读取CSV文件
 	 *
 	 * @param file    CSV文件
@@ -192,6 +214,24 @@ public class CsvBaseReader implements Serializable {
 
 		final List<T> result = new ArrayList<>();
 		read(reader, (row) -> result.add(row.toBean(clazz)));
+		return result;
+	}
+
+	/**
+	 * 从字符串中读取CSV数据并转换为Bean列表，读取后关闭Reader。<br>
+	 * 此方法默认识别首行为标题行。
+	 *
+	 * @param <T>    Bean类型
+	 * @param csvStr csv字符串
+	 * @param clazz  Bean类型
+	 * @return Bean列表
+	 */
+	public <T> List<T> read(String csvStr, Class<T> clazz) {
+		// 此方法必须包含标题
+		this.config.setContainsHeader(true);
+
+		final List<T> result = new ArrayList<>();
+		read(new StringReader(csvStr), (row) -> result.add(row.toBean(clazz)));
 		return result;
 	}
 

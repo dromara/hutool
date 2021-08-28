@@ -107,8 +107,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	// ------------------------------------------------------------------------------ Read start
 	@Override
 	public Excel03SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try {
-			return read(new POIFSFileSystem(file), idOrRidOrSheetName);
+		try (POIFSFileSystem poifsFileSystem = new POIFSFileSystem(file, true)) {
+			return read(poifsFileSystem, idOrRidOrSheetName);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
@@ -196,7 +196,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			// Sheet边界记录，此Record中可以获得Sheet名
 			final BoundSheetRecord boundSheetRecord = (BoundSheetRecord) record;
 			boundSheetRecords.add(boundSheetRecord);
-			if(this.rid < 0 && null != this.sheetName && StrUtil.equals(this.sheetName, boundSheetRecord.getSheetname())){
+			final String currentSheetName = boundSheetRecord.getSheetname();
+			if(null != this.sheetName && StrUtil.equals(this.sheetName, currentSheetName)){
 				this.rid = this.boundSheetRecords.size() -1;
 			}
 		} else if (record instanceof SSTRecord) {
@@ -383,13 +384,16 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 		// rid直接处理
 		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, RID_PREFIX)) {
 			return Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, RID_PREFIX));
-		}
-
-		try {
-			return Integer.parseInt(idOrRidOrSheetName);
-		} catch (NumberFormatException ignore) {
-			// 如果用于传入非数字，按照sheet名称对待
-			this.sheetName = idOrRidOrSheetName;
+		} else if(StrUtil.startWithIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX)){
+			// since 5.7.10，支持任意名称
+			this.sheetName = StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX);
+		} else {
+			try {
+				return Integer.parseInt(idOrRidOrSheetName);
+			} catch (NumberFormatException ignore) {
+				// 如果用于传入非数字，按照sheet名称对待
+				this.sheetName = idOrRidOrSheetName;
+			}
 		}
 
 		return -1;

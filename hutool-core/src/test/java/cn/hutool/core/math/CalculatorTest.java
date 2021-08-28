@@ -22,4 +22,10 @@ public class CalculatorTest {
 		final double conversion = Calculator.conversion("1");
 		Assert.assertEquals(1, conversion, 2);
 	}
+
+	@Test
+	public void conversationTest4(){
+		final double conversion = Calculator.conversion("(88*66/23)%26+45%9");
+		Assert.assertEquals((88D * 66 / 23) % 26, conversion, 2);
+	}
 }

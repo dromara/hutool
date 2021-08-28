@@ -1,5 +1,6 @@
 package cn.hutool.extra.mail;
 
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -34,7 +35,7 @@ import java.util.Date;
  * @author looly
  * @since 3.2.0
  */
-public class Mail {
+public class Mail implements Builder<MimeMessage> {
 
 	/**
 	 * 邮箱帐户信息以及一些客户端配置信息
@@ -363,6 +364,15 @@ public class Mail {
 		return this;
 	}
 	// --------------------------------------------------------------- Getters and Setters end
+
+	@Override
+	public MimeMessage build() {
+		try {
+			return buildMsg();
+		} catch (MessagingException e) {
+			throw new MailException(e);
+		}
+	}
 
 	/**
 	 * 发送

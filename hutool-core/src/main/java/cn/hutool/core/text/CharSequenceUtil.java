@@ -5,6 +5,7 @@ import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * {@link CharSequence} 相关工具类封装
@@ -313,10 +315,10 @@ public class CharSequenceUtil {
 	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
-	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+	 * blankToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+	 * blankToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+	 * blankToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
+	 * blankToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
 	 * </pre>
 	 *
 	 * @param str        要转换的字符串
@@ -616,6 +618,19 @@ public class CharSequenceUtil {
 	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
 	 */
 	public static String trim(CharSequence str, int mode) {
+		return trim(str, mode, CharUtil::isBlankChar);
+	}
+
+	/**
+	 * 按照断言，除去字符串头尾部的断言为真的字符，如果字符串是{@code null}，依然返回{@code null}。
+	 *
+	 * @param str       要处理的字符串
+	 * @param mode      {@code -1}表示trimStart，{@code 0}表示trim全部， {@code 1}表示trimEnd
+	 * @param predicate 断言是否过掉字符，返回{@code true}表述过滤掉，{@code false}表示不过滤
+	 * @return 除去指定字符后的的字符串，如果原字串为{@code null}，则返回{@code null}
+	 * @since 5.7.4
+	 */
+	public static String trim(CharSequence str, int mode, Predicate<Character> predicate) {
 		String result;
 		if (str == null) {
 			result = null;
@@ -624,12 +639,12 @@ public class CharSequenceUtil {
 			int start = 0;
 			int end = length;// 扫描字符串头部
 			if (mode <= 0) {
-				while ((start < end) && (CharUtil.isBlankChar(str.charAt(start)))) {
+				while ((start < end) && (predicate.test(str.charAt(start)))) {
 					start++;
 				}
 			}// 扫描字符串尾部
 			if (mode >= 0) {
-				while ((start < end) && (CharUtil.isBlankChar(str.charAt(end - 1)))) {
+				while ((start < end) && (predicate.test(str.charAt(end - 1)))) {
 					end--;
 				}
 			}
@@ -3589,7 +3604,13 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
+	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
+	 *
+	 * <pre class="code">
+	 *     replace(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
+	 *     // 结果为："ZZZaaabbbccc中文-1234-"
+	 * </pre>
 	 *
 	 * @param str        要替换的字符串
 	 * @param pattern    用于匹配的正则式
@@ -3618,7 +3639,7 @@ public class CharSequenceUtil {
 
 	/**
 	 * 替换指定字符串的指定区间内字符为"*"
-	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtils(脱敏工具类)
+	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtil(脱敏工具类)
 	 *
 	 * <pre>
 	 * StrUtil.hide(null,*,*)=null
@@ -3644,15 +3665,15 @@ public class CharSequenceUtil {
 	 * 脱敏，使用默认的脱敏策略
 	 *
 	 * <pre>
-	 * StrUtil.desensitized("100", DesensitizedUtils.DesensitizedType.USER_ID)) =  "0"
-	 * StrUtil.desensitized("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME)) = "段**"
-	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD)) = "5***************1X"
-	 * StrUtil.desensitized("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE)) = "0915*****79"
-	 * StrUtil.desensitized("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
-	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
-	 * StrUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
-	 * StrUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
+	 * StrUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
+	 * StrUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
+	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
+	 * StrUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+	 * StrUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+	 * StrUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
+	 * StrUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
 	 * StrUtil.desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
 	 * </pre>
 	 *
@@ -3877,7 +3898,7 @@ public class CharSequenceUtil {
 	 * 过滤字符串
 	 *
 	 * @param str    字符串
-	 * @param filter 过滤器
+	 * @param filter 过滤器，{@link Filter#accept(Object)}返回为{@code true}的保留字符
 	 * @return 过滤后的字符串
 	 * @since 5.4.0
 	 */
@@ -3995,9 +4016,10 @@ public class CharSequenceUtil {
 	 *
 	 * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
 	 * @return 转换后下划线方式命名的字符串
+	 * @see NamingCase#toUnderlineCase(CharSequence)
 	 */
 	public static String toUnderlineCase(CharSequence str) {
-		return toSymbolCase(str, CharUtil.UNDERLINE);
+		return NamingCase.toUnderlineCase(str);
 	}
 
 	/**
@@ -4007,52 +4029,10 @@ public class CharSequenceUtil {
 	 * @param symbol 连接符
 	 * @return 转换后符号连接方式命名的字符串
 	 * @since 4.0.10
+	 * @see NamingCase#toSymbolCase(CharSequence, char)
 	 */
 	public static String toSymbolCase(CharSequence str, char symbol) {
-		if (str == null) {
-			return null;
-		}
-
-		final int length = str.length();
-		final StrBuilder sb = new StrBuilder();
-		char c;
-		for (int i = 0; i < length; i++) {
-			c = str.charAt(i);
-			final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
-			if (Character.isUpperCase(c)) {
-				// 遇到大写字母处理
-				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
-				if (null != preChar && Character.isUpperCase(preChar)) {
-					// 前一个字符为大写，则按照一个词对待，例如AB
-					sb.append(c);
-				} else if (null != nextChar && (false == Character.isLowerCase(nextChar))) {
-					// 后一个为非小写字母，按照一个词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个是非大写时按照新词对待，加连接符，例如xAB
-						sb.append(symbol);
-					}
-					sb.append(c);
-				} else {
-					// 前后都为非大写按照新词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个非连接符，补充连接符
-						sb.append(symbol);
-					}
-					sb.append(Character.toLowerCase(c));
-				}
-			} else {
-				if (symbol != c
-						&& sb.length() > 0
-						&& Character.isUpperCase(sb.charAt(-1))
-						&& Character.isLowerCase(c)) {
-					// 当结果中前一个字母为大写，当前为小写(非数字或字符)，说明此字符为新词开始（连接符也表示新词）
-					sb.append(symbol);
-				}
-				// 小写或符号
-				sb.append(c);
-			}
-		}
-		return sb.toString();
+		return NamingCase.toSymbolCase(str, symbol);
 	}
 
 	/**
@@ -4061,33 +4041,10 @@ public class CharSequenceUtil {
 	 *
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
+	 * @see NamingCase#toCamelCase(CharSequence)
 	 */
 	public static String toCamelCase(CharSequence name) {
-		if (null == name) {
-			return null;
-		}
-
-		final String name2 = name.toString();
-		if (contains(name2, CharUtil.UNDERLINE)) {
-			final int length = name2.length();
-			final StringBuilder sb = new StringBuilder(length);
-			boolean upperCase = false;
-			for (int i = 0; i < length; i++) {
-				char c = name2.charAt(i);
-
-				if (c == CharUtil.UNDERLINE) {
-					upperCase = true;
-				} else if (upperCase) {
-					sb.append(Character.toUpperCase(c));
-					upperCase = false;
-				} else {
-					sb.append(Character.toLowerCase(c));
-				}
-			}
-			return sb.toString();
-		} else {
-			return name2;
-		}
+		return NamingCase.toCamelCase(name);
 	}
 
 	// ------------------------------------------------------------------------ isSurround
@@ -4224,28 +4181,48 @@ public class CharSequenceUtil {
 	/**
 	 * 将给定字符串，变成 "xxx...xxx" 形式的字符串
 	 *
+	 * <ul>
+	 *     <li>abcdef 5 -》 a...f</li>
+	 *     <li>abcdef 4 -》 a..f</li>
+	 *     <li>abcdef 3 -》 a.f</li>
+	 *     <li>abcdef 2 -》 a.</li>
+	 *     <li>abcdef 1 -》 a</li>
+	 * </ul>
+	 *
 	 * @param str       字符串
-	 * @param maxLength 最大长度
+	 * @param maxLength 结果的最大长度
 	 * @return 截取后的字符串
 	 */
 	public static String brief(CharSequence str, int maxLength) {
 		if (null == str) {
 			return null;
 		}
-		if (maxLength <= 0 || str.length() <= maxLength) {
+		final int strLength = str.length();
+		if (maxLength <= 0 || strLength <= maxLength) {
 			return str.toString();
 		}
-		int w = maxLength / 2;
-		int l = str.length() + 3;
 
+		// since 5.7.5，特殊长度
+		switch (maxLength){
+			case 1:
+				return String.valueOf(str.charAt(0));
+			case 2:
+				return str.charAt(0) + ".";
+			case 3:
+				return str.charAt(0) + "." + str.charAt(str.length() - 1);
+		}
+
+		final int w = maxLength / 2;
 		final String str2 = str.toString();
-		return format("{}...{}", str2.substring(0, maxLength - w), str2.substring(l - w));
+		return format("{}...{}",
+				str2.substring(0, maxLength - w),
+				str2.substring(strLength - w + 3));
 	}
 
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
-	 * @param conjunction 分隔符
+	 * @param conjunction 分隔符 {@link StrPool#COMMA}
 	 * @param objs        数组
 	 * @return 连接后的字符串
 	 * @see ArrayUtil#join(Object, CharSequence)
@@ -4258,7 +4235,7 @@ public class CharSequenceUtil {
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
 	 * @param <T> 元素类型
-	 * @param conjunction 分隔符
+	 * @param conjunction 分隔符 {@link StrPool#COMMA}
 	 * @param iterable    集合
 	 * @return 连接后的字符串
 	 * @see CollUtil#join(Iterable, CharSequence)
@@ -4276,17 +4253,27 @@ public class CharSequenceUtil {
 	 * @return 是否全部匹配
 	 * @since 3.2.3
 	 */
-	public static boolean isAllCharMatch(CharSequence value, cn.hutool.core.lang.Matcher<Character> matcher) {
+	public static boolean isAllCharMatch(CharSequence value, Matcher<Character> matcher) {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
-		int len = value.length();
-		for (int i = 0; i < len; i++) {
+		for (int i = value.length(); --i >= 0;) {
 			if (false == matcher.match(value.charAt(i))) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 检查字符串是否都为数字组成
+	 *
+	 * @param str 字符串
+	 * @return 是否都为数字组成
+	 * @since 5.7.3
+	 */
+	public static boolean isNumeric(CharSequence str) {
+		return isAllCharMatch(str, Character::isDigit);
 	}
 
 	/**
@@ -4329,4 +4316,14 @@ public class CharSequenceUtil {
 		return strBuilder.toString();
 	}
 
+	/**
+	 * 检查给定字符串的所有字符是否都一样
+	 *
+	 * @param str 字符出啊
+	 * @return 给定字符串的所有字符是否都一样
+	 * @since 5.7.3
+	 */
+	public static boolean isCharEquals(String str) {
+		return isBlank(str.replace(str.charAt(0), CharUtil.SPACE));
+	}
 }

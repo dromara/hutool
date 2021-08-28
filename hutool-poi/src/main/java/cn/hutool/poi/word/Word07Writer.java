@@ -140,6 +140,7 @@ public class Word07Writer implements Closeable {
 	 * @param data 表格数据，多行数据。元素表示一行数据，当为集合或者数组时，为一行；当为Map或者Bean时key表示标题，values为数据
 	 * @return this
 	 * @since 4.5.16
+	 * @see TableUtil#createTable(XWPFDocument, Iterable)
 	 */
 	public Word07Writer addTable(Iterable<?> data) {
 		TableUtil.createTable(this.doc, data);

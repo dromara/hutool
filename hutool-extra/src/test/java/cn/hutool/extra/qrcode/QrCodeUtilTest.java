@@ -16,7 +16,6 @@ import java.io.File;
  * 二维码工具类单元测试
  *
  * @author looly
- *
  */
 public class QrCodeUtilTest {
 
@@ -27,7 +26,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void generateCustomTest() {
 		QrConfig config = new QrConfig();
 		config.setMargin(0);
@@ -35,22 +34,25 @@ public class QrCodeUtilTest {
 		// 背景色透明
 		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);
-		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file("d:/qrcodeCustom.png"));
+		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
+		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
 	}
 
 	@Test
 	@Ignore
 	public void generateWithLogoTest() {
+		String icon = FileUtil.isWindows() ? "d:/test/pic/face.jpg" : "~/Desktop/hutool/pic/face.jpg";
+		String targetPath = FileUtil.isWindows() ? "d:/test/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
 		QrCodeUtil.generate(//
-				"http://hutool.cn/", //
-				QrConfig.create().setImg("e:/pic/face.jpg"), //
-				FileUtil.file("e:/qrcodeWithLogo.jpg"));
+				"https://hutool.cn/", //
+				QrConfig.create().setImg(icon), //
+				FileUtil.touch(targetPath));
 	}
 
 	@Test
 	@Ignore
 	public void decodeTest() {
-		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
+		String decode = QrCodeUtil.decode(FileUtil.file("d:/test/pic/qr.png"));
 		Console.log(decode);
 	}
 
@@ -63,17 +65,19 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
+	public void generateAsBase64Test() {
+		String base64 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png");
+		Assert.assertNotNull(base64);
+	}
+
+	@Test
 	@Ignore
-	public void generateAsBase64Test(){
-		String base64 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png");
-		System.out.println(base64);
-
+	public void generateAsBase64Test2() {
 		byte[] bytes = FileUtil.readBytes(
-			new File("d:/test/qr.png"));
+				new File("d:/test/qr.png"));
 		String encode = Base64.encode(bytes);
-		String base641 = QrCodeUtil.generateAsBase64("http://hutool.cn/", new QrConfig(400, 400), "png", encode);
-		System.out.println(base641);
-
+		String base641 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png", encode);
+		Assert.assertNotNull(base641);
 	}
 
 }

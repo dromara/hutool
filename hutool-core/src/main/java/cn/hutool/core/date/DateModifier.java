@@ -1,8 +1,8 @@
 package cn.hutool.core.date;
 
-import java.util.Calendar;
-
 import cn.hutool.core.util.ArrayUtil;
+
+import java.util.Calendar;
 
 /**
  * 日期修改器<br>
@@ -15,12 +15,13 @@ import cn.hutool.core.util.ArrayUtil;
  * </pre>
  *
  * @author looly
- *
  */
 public class DateModifier {
 
-	/** 忽略的计算的字段 */
-	private static final int[] IGNORE_FIELDS = new int[] { //
+	/**
+	 * 忽略的计算的字段
+	 */
+	private static final int[] IGNORE_FIELDS = new int[]{ //
 			Calendar.HOUR_OF_DAY, // 与HOUR同名
 			Calendar.AM_PM, // 此字段单独处理，不参与计算起始和结束
 			Calendar.DAY_OF_WEEK_IN_MONTH, // 不参与计算
@@ -32,36 +33,58 @@ public class DateModifier {
 	/**
 	 * 修改日期
 	 *
-	 * @param calendar {@link Calendar}
-	 * @param dateField 日期字段，即保留到哪个日期字段
+	 * @param calendar   {@link Calendar}
+	 * @param dateField  日期字段，即保留到哪个日期字段
 	 * @param modifyType 修改类型，包括舍去、四舍五入、进一等
 	 * @return 修改后的{@link Calendar}
 	 */
 	public static Calendar modify(Calendar calendar, int dateField, ModifyType modifyType) {
+		return modify(calendar, dateField, modifyType, false);
+	}
+
+	/**
+	 * 修改日期，取起始值或者结束值<br>
+	 * 可选是否归零毫秒。
+	 *
+	 * <p>
+	 * 在{@link ModifyType#TRUNCATE}模式下，毫秒始终要归零,
+	 * 但是在{@link ModifyType#CEILING}和{@link ModifyType#ROUND}模式下，
+	 * 有时候由于毫秒部分必须为0（如MySQL数据库中），因此在此加上选项。
+	 * </p>
+	 *
+	 * @param calendar            {@link Calendar}
+	 * @param dateField           日期字段，即保留到哪个日期字段
+	 * @param modifyType          修改类型，包括舍去、四舍五入、进一等
+	 * @param truncateMillisecond 是否归零毫秒
+	 * @return 修改后的{@link Calendar}
+	 * @since 5.7.5
+	 */
+	public static Calendar modify(Calendar calendar, int dateField, ModifyType modifyType, boolean truncateMillisecond) {
 		// AM_PM上下午特殊处理
 		if (Calendar.AM_PM == dateField) {
 			boolean isAM = DateUtil.isAM(calendar);
 			switch (modifyType) {
-			case TRUNCATE:
-				calendar.set(Calendar.HOUR_OF_DAY, isAM ? 0 : 12);
-				break;
-			case CEILING:
-				calendar.set(Calendar.HOUR_OF_DAY, isAM ? 11 : 23);
-				break;
-			case ROUND:
-				int min = isAM ? 0 : 12;
-				int max = isAM ? 11 : 23;
-				int href = (max - min) / 2 + 1;
-				int value = calendar.get(Calendar.HOUR_OF_DAY);
-				calendar.set(Calendar.HOUR_OF_DAY, (value < href) ? min : max);
-				break;
+				case TRUNCATE:
+					calendar.set(Calendar.HOUR_OF_DAY, isAM ? 0 : 12);
+					break;
+				case CEILING:
+					calendar.set(Calendar.HOUR_OF_DAY, isAM ? 11 : 23);
+					break;
+				case ROUND:
+					int min = isAM ? 0 : 12;
+					int max = isAM ? 11 : 23;
+					int href = (max - min) / 2 + 1;
+					int value = calendar.get(Calendar.HOUR_OF_DAY);
+					calendar.set(Calendar.HOUR_OF_DAY, (value < href) ? min : max);
+					break;
 			}
 			// 处理下一级别字段
 			return modify(calendar, dateField + 1, modifyType);
 		}
 
+		final int endField = truncateMillisecond ? Calendar.SECOND : Calendar.MILLISECOND;
 		// 循环处理各级字段，精确到毫秒字段
-		for (int i = dateField + 1; i <= Calendar.MILLISECOND; i++) {
+		for (int i = dateField + 1; i <= endField; i++) {
 			if (ArrayUtil.contains(IGNORE_FIELDS, i)) {
 				// 忽略无关字段（WEEK_OF_MONTH）始终不做修改
 				continue;
@@ -81,15 +104,21 @@ public class DateModifier {
 
 			modifyField(calendar, i, modifyType);
 		}
+
+		if (truncateMillisecond) {
+			calendar.set(Calendar.MILLISECOND, 0);
+		}
+
 		return calendar;
 	}
 
 	// -------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 修改日期字段值
 	 *
-	 * @param calendar {@link Calendar}
-	 * @param field 字段，见{@link Calendar}
+	 * @param calendar   {@link Calendar}
+	 * @param field      字段，见{@link Calendar}
 	 * @param modifyType {@link ModifyType}
 	 */
 	private static void modifyField(Calendar calendar, int field, ModifyType modifyType) {
@@ -99,25 +128,25 @@ public class DateModifier {
 		}
 
 		switch (modifyType) {
-		case TRUNCATE:
-			calendar.set(field, DateUtil.getBeginValue(calendar, field));
-			break;
-		case CEILING:
-			calendar.set(field, DateUtil.getEndValue(calendar, field));
-			break;
-		case ROUND:
-			int min = DateUtil.getBeginValue(calendar, field);
-			int max = DateUtil.getEndValue(calendar, field);
-			int href;
-			if (Calendar.DAY_OF_WEEK == field) {
-				// 星期特殊处理，假设周一是第一天，中间的为周四
-				href = (min + 3) % 7;
-			} else {
-				href = (max - min) / 2 + 1;
-			}
-			int value = calendar.get(field);
-			calendar.set(field, (value < href) ? min : max);
-			break;
+			case TRUNCATE:
+				calendar.set(field, DateUtil.getBeginValue(calendar, field));
+				break;
+			case CEILING:
+				calendar.set(field, DateUtil.getEndValue(calendar, field));
+				break;
+			case ROUND:
+				int min = DateUtil.getBeginValue(calendar, field);
+				int max = DateUtil.getEndValue(calendar, field);
+				int href;
+				if (Calendar.DAY_OF_WEEK == field) {
+					// 星期特殊处理，假设周一是第一天，中间的为周四
+					href = (min + 3) % 7;
+				} else {
+					href = (max - min) / 2 + 1;
+				}
+				int value = calendar.get(field);
+				calendar.set(field, (value < href) ? min : max);
+				break;
 		}
 		// Console.log("# {} -> {}", DateField.of(field), calendar.get(field));
 	}
@@ -127,7 +156,6 @@ public class DateModifier {
 	 * 修改类型
 	 *
 	 * @author looly
-	 *
 	 */
 	public enum ModifyType {
 		/**

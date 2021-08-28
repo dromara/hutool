@@ -1,7 +1,6 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.io.IORuntimeException;
-import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.sec.ECPrivateKey;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
@@ -300,7 +299,7 @@ public class ECKeyUtil {
 		try {
 			final PrivateKeyInfo info = new PrivateKeyInfo(
 					new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, SmUtil.ID_SM2_PUBLIC_KEY_PARAM), privateKey);
-			return KeyUtil.generatePrivateKey("SM2", info.getEncoded(ASN1Encoding.DER));
+			return KeyUtil.generatePrivateKey("SM2", info.getEncoded());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

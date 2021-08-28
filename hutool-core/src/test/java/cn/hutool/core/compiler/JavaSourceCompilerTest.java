@@ -38,7 +38,6 @@ public class JavaSourceCompilerTest {
 		final Class<?> clazz = classLoader.loadClass("c.C");
 		Object obj = ReflectUtil.newInstance(clazz);
 		Assert.assertTrue(String.valueOf(obj).startsWith("c.C@"));
-		FileUtil.del(libFile);
 	}
 
 }

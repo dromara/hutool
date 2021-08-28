@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.text.TextSimilarity;
 
@@ -454,22 +455,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @since 5.4.3
 	 */
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
-		if (null == template) {
-			return null;
-		}
-		if (null == map || map.isEmpty()) {
-			return template.toString();
-		}
-
-		String template2 = template.toString();
-		String value;
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			value = utf8Str(entry.getValue());
-			if (null == value && ignoreNull) {
-				continue;
-			}
-			template2 = replace(template2, "{" + entry.getKey() + "}", value);
-		}
-		return template2;
+		return StrFormatter.format(template, map, ignoreNull);
 	}
 }

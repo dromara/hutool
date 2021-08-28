@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -251,7 +252,9 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, String format) {
-		this(dateStr, DateUtil.newSimpleFormat(format));
+		this(GlobalCustomFormat.isCustomFormat(format)
+				? GlobalCustomFormat.parse(dateStr, format)
+				: parse(dateStr, DateUtil.newSimpleFormat(format)));
 	}
 
 	/**
@@ -326,8 +329,7 @@ public class DateTime extends Date {
 		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
-		DateTime dt = ObjectUtil.clone(this);
-		return dt.setTimeInternal(cal.getTimeInMillis());
+		return ObjectUtil.clone(this).setTimeInternal(cal.getTimeInMillis());
 	}
 	// -------------------------------------------------------------------- offset end
 

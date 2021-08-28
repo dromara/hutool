@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.2</version>
+		<version>5.7.10</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -19,14 +19,15 @@
 	<properties>
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
-		<dbcp2.version>2.8.0</dbcp2.version>
+		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
 		<druid.version>1.2.6</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.8</mongo.version>
-		<sqlite.version>3.34.0</sqlite.version>
+		<mongo.version>3.12.10</mongo.version>
+		<sqlite.version>3.36.0.1</sqlite.version>
+		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>3.6.1</jedis.version>
+		<jedis.version>3.6.3</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -80,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.1.2</version>
+			<version>3.2.6</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -142,13 +143,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.25</version>
+			<version>8.0.26</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.20.jre7</version>
+			<version>42.2.23.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -160,7 +161,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.30</version>
+			<version>1.7.32</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

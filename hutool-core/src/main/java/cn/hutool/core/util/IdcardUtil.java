@@ -46,7 +46,7 @@ public class IdcardUtil {
 	/**
 	 * 台湾身份首字母对应数字
 	 */
-	private static final Map<String, Integer> TW_FIRST_CODE = new HashMap<>();
+	private static final Map<Character, Integer> TW_FIRST_CODE = new HashMap<>();
 
 	static {
 		CITY_CODES.put("11", "北京");
@@ -87,32 +87,32 @@ public class IdcardUtil {
 		CITY_CODES.put("83", "台湾");
 		CITY_CODES.put("91", "国外");
 
-		TW_FIRST_CODE.put("A", 10);
-		TW_FIRST_CODE.put("B", 11);
-		TW_FIRST_CODE.put("C", 12);
-		TW_FIRST_CODE.put("D", 13);
-		TW_FIRST_CODE.put("E", 14);
-		TW_FIRST_CODE.put("F", 15);
-		TW_FIRST_CODE.put("G", 16);
-		TW_FIRST_CODE.put("H", 17);
-		TW_FIRST_CODE.put("J", 18);
-		TW_FIRST_CODE.put("K", 19);
-		TW_FIRST_CODE.put("L", 20);
-		TW_FIRST_CODE.put("M", 21);
-		TW_FIRST_CODE.put("N", 22);
-		TW_FIRST_CODE.put("P", 23);
-		TW_FIRST_CODE.put("Q", 24);
-		TW_FIRST_CODE.put("R", 25);
-		TW_FIRST_CODE.put("S", 26);
-		TW_FIRST_CODE.put("T", 27);
-		TW_FIRST_CODE.put("U", 28);
-		TW_FIRST_CODE.put("V", 29);
-		TW_FIRST_CODE.put("X", 30);
-		TW_FIRST_CODE.put("Y", 31);
-		TW_FIRST_CODE.put("W", 32);
-		TW_FIRST_CODE.put("Z", 33);
-		TW_FIRST_CODE.put("I", 34);
-		TW_FIRST_CODE.put("O", 35);
+		TW_FIRST_CODE.put('A', 10);
+		TW_FIRST_CODE.put('B', 11);
+		TW_FIRST_CODE.put('C', 12);
+		TW_FIRST_CODE.put('D', 13);
+		TW_FIRST_CODE.put('E', 14);
+		TW_FIRST_CODE.put('F', 15);
+		TW_FIRST_CODE.put('G', 16);
+		TW_FIRST_CODE.put('H', 17);
+		TW_FIRST_CODE.put('J', 18);
+		TW_FIRST_CODE.put('K', 19);
+		TW_FIRST_CODE.put('L', 20);
+		TW_FIRST_CODE.put('M', 21);
+		TW_FIRST_CODE.put('N', 22);
+		TW_FIRST_CODE.put('P', 23);
+		TW_FIRST_CODE.put('Q', 24);
+		TW_FIRST_CODE.put('R', 25);
+		TW_FIRST_CODE.put('S', 26);
+		TW_FIRST_CODE.put('T', 27);
+		TW_FIRST_CODE.put('U', 28);
+		TW_FIRST_CODE.put('V', 29);
+		TW_FIRST_CODE.put('X', 30);
+		TW_FIRST_CODE.put('Y', 31);
+		TW_FIRST_CODE.put('W', 32);
+		TW_FIRST_CODE.put('Z', 33);
+		TW_FIRST_CODE.put('I', 34);
+		TW_FIRST_CODE.put('O', 35);
 	}
 
 	/**
@@ -343,23 +343,24 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidTWCard(String idcard) {
-		if (StrUtil.isEmpty(idcard)) {
+		if (null == idcard || idcard.length() != 10) {
 			return false;
 		}
-		String start = idcard.substring(0, 1);
-		Integer iStart = TW_FIRST_CODE.get(start);
+		final Integer iStart = TW_FIRST_CODE.get(idcard.charAt(0));
 		if (null == iStart) {
 			return false;
 		}
-		String mid = idcard.substring(1, 9);
-		String end = idcard.substring(9, 10);
 		int sum = iStart / 10 + (iStart % 10) * 9;
+
+		final String mid = idcard.substring(1, 9);
 		final char[] chars = mid.toCharArray();
 		int iflag = 8;
 		for (char c : chars) {
 			sum += Integer.parseInt(String.valueOf(c)) * iflag;
 			iflag--;
 		}
+
+		final String end = idcard.substring(9, 10);
 		return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.parseInt(end);
 	}
 
@@ -533,16 +534,30 @@ public class IdcardUtil {
 	}
 
 	/**
+	 * 根据身份编号获取户籍省份编码，只支持15或18位身份证号码
+	 *
+	 * @param idcard 身份编码
+	 * @return 省份编码
+	 * @since 5.7.2
+	 */
+	public static String getProvinceCodeByIdCard(String idcard) {
+		int len = idcard.length();
+		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
+			return idcard.substring(0, 2);
+		}
+		return null;
+	}
+
+	/**
 	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
 	 *
 	 * @param idcard 身份编码
 	 * @return 省份名称。
 	 */
 	public static String getProvinceByIdCard(String idcard) {
-		int len = idcard.length();
-		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
-			String sProvinNum = idcard.substring(0, 2);
-			return CITY_CODES.get(sProvinNum);
+		final String code = getProvinceCodeByIdCard(idcard);
+		if(StrUtil.isNotBlank(code)){
+			return CITY_CODES.get(code);
 		}
 		return null;
 	}
@@ -672,7 +687,7 @@ public class IdcardUtil {
 		 * @param idcard 身份证号码
 		 */
 		public Idcard(String idcard) {
-			this.provinceCode = IdcardUtil.getProvinceByIdCard(idcard);
+			this.provinceCode = IdcardUtil.getProvinceCodeByIdCard(idcard);
 			this.cityCode = IdcardUtil.getCityCodeByIdCard(idcard);
 			this.birthDate = IdcardUtil.getBirthDate(idcard);
 			this.gender = IdcardUtil.getGenderByIdCard(idcard);

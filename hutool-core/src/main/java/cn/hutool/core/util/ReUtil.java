@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
 
@@ -29,11 +30,11 @@ public class ReUtil {
 	/**
 	 * 正则表达式匹配中文汉字
 	 */
-	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
+	public final static String RE_CHINESE = RegexPool.CHINESE;
 	/**
 	 * 正则表达式匹配中文字符串
 	 */
-	public final static String RE_CHINESES = RE_CHINESE + "+";
+	public final static String RE_CHINESES = RegexPool.CHINESES;
 
 	/**
 	 * 正则中需要被转义的关键字
@@ -770,7 +771,13 @@ public class ReUtil {
 	}
 
 	/**
-	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
+	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
+	 *
+	 * <pre class="code">
+	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
+	 *     // 结果为："ZZZaaabbbccc中文-1234-"
+	 * </pre>
 	 *
 	 * @param str        要替换的字符串
 	 * @param regex      用于匹配的正则式
@@ -783,7 +790,13 @@ public class ReUtil {
 	}
 
 	/**
-	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
+	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
+	 *
+	 * <pre class="code">
+	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
+	 *     // 结果为："ZZZaaabbbccc中文-1234-"
+	 * </pre>
 	 *
 	 * @param str        要替换的字符串
 	 * @param pattern    用于匹配的正则式

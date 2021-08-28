@@ -1,5 +1,9 @@
 package cn.hutool.core.swing;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.swing.clipboard.ClipboardUtil;
+
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -7,10 +11,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 /**
  * {@link Robot} 封装工具类，提供截屏等工具
@@ -32,6 +32,16 @@ public class RobotUtil {
 	}
 
 	/**
+	 * 获取 Robot 单例实例
+	 *
+	 * @return {@link Robot}单例对象
+	 * @since 5.7.6
+	 */
+	public static Robot getRobot() {
+		return ROBOT;
+	}
+
+	/**
 	 * 设置默认的延迟时间<br>
 	 * 当按键执行完后的等待时间，也可以用ThreadUtil.sleep方法代替
 	 *
@@ -40,6 +50,16 @@ public class RobotUtil {
 	 */
 	public static void setDelay(int delayMillis) {
 		delay = delayMillis;
+	}
+
+	/**
+	 * 获取全局默认的延迟时间
+	 *
+	 * @return 全局默认的延迟时间
+	 * @since 5.7.6
+	 */
+	public static int getDelay() {
+		return delay;
 	}
 
 	/**
@@ -72,8 +92,8 @@ public class RobotUtil {
 	 * @since 4.5.7
 	 */
 	public static void rightClick() {
-		ROBOT.mousePress(InputEvent.BUTTON1_MASK);
-		ROBOT.mouseRelease(InputEvent.BUTTON1_MASK);
+		ROBOT.mousePress(InputEvent.BUTTON3_MASK);
+		ROBOT.mouseRelease(InputEvent.BUTTON3_MASK);
 		delay();
 	}
 
@@ -198,7 +218,7 @@ public class RobotUtil {
 	/**
 	 * 等待指定毫秒数
 	 */
-	private static void delay() {
+	public static void delay() {
 		if (delay > 0) {
 			ROBOT.delay(delay);
 		}

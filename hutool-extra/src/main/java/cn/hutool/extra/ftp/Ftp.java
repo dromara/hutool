@@ -26,6 +26,10 @@ import java.util.List;
  * FTP客户端封装<br>
  * 此客户端基于Apache-Commons-Net
  *
+ * 常见搭建ftp的工具有
+ * 1、filezila server ;根目录一般都是空
+ * 2、linux vsftpd ; 使用的 系统用户的目录，这里往往都是不是根目录，如：/home/ftpuser/ftp
+ *
  * @author looly
  * @since 4.1.8
  */
@@ -351,7 +355,7 @@ public class Ftp extends AbstractFtp {
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			if (false == cd(path)) {
+			if (false == isDir(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
 			}
 		}
@@ -415,7 +419,7 @@ public class Ftp extends AbstractFtp {
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		if (false == cd(dir)) {
+		if (false == isDir(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
@@ -533,7 +537,7 @@ public class Ftp extends AbstractFtp {
 
 		if (StrUtil.isNotBlank(path)) {
 			mkDirs(path);
-			if (false == cd(path)) {
+			if (false == isDir(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 			}
 		}
@@ -641,7 +645,7 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (false == cd(path)) {
+		if (false == isDir(path)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 

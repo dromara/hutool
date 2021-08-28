@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.2</version>
+		<version>5.7.10</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -19,10 +19,10 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.3.2.RELEASE</beetl.version>
+		<beetl.version>3.5.1.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<enjoy.version>4.9.10</enjoy.version>
+		<enjoy.version>4.9.16</enjoy.version>
 		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
@@ -30,7 +30,7 @@
 		<net.version>3.7.2</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.5.1</spring-boot.version>
+		<spring-boot.version>2.5.3</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -235,7 +235,7 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.7.8</version>
+			<version>portable-1.8.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -384,7 +384,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>1.2.5</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -397,7 +397,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.2.5</version>
+			<version>5.2.7</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -411,7 +411,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-jexl3</artifactId>
-			<version>3.2</version>
+			<version>3.2.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -432,7 +432,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.8</version>
+			<version>5.3.9</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -447,7 +447,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.20</version>
+			<version>1.21</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

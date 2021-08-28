@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class ByteUtilTest {
@@ -88,5 +89,48 @@ public class ByteUtilTest {
 		short short2 = ByteUtil.bytesToShort(bytes, ByteOrder.BIG_ENDIAN);
 
 		Assert.assertEquals(short2, short1);
+	}
+
+	@Test
+	public void bytesToLongTest(){
+		long a = RandomUtil.randomLong(0, Long.MAX_VALUE);
+		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.longToBytes(a));
+		wrap.order(ByteOrder.LITTLE_ENDIAN);
+		long aLong = wrap.getLong();
+		Assert.assertEquals(a, aLong);
+
+		wrap = ByteBuffer.wrap(ByteUtil.longToBytes(a, ByteOrder.BIG_ENDIAN));
+		wrap.order(ByteOrder.BIG_ENDIAN);
+		aLong = wrap.getLong();
+		Assert.assertEquals(a, aLong);
+	}
+
+	@Test
+	public void bytesToIntTest(){
+		int a = RandomUtil.randomInt(0, Integer.MAX_VALUE);
+		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.intToBytes(a));
+		wrap.order(ByteOrder.LITTLE_ENDIAN);
+		int aInt = wrap.getInt();
+		Assert.assertEquals(a, aInt);
+
+		wrap = ByteBuffer.wrap(ByteUtil.intToBytes(a, ByteOrder.BIG_ENDIAN));
+		wrap.order(ByteOrder.BIG_ENDIAN);
+		aInt = wrap.getInt();
+		Assert.assertEquals(a, aInt);
+	}
+
+	@Test
+	public void bytesToShortTest(){
+		short a = (short) RandomUtil.randomInt(0, Short.MAX_VALUE);
+
+		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.shortToBytes(a));
+		wrap.order(ByteOrder.LITTLE_ENDIAN);
+		short aShort = wrap.getShort();
+		Assert.assertEquals(a, aShort);
+
+		wrap = ByteBuffer.wrap(ByteUtil.shortToBytes(a, ByteOrder.BIG_ENDIAN));
+		wrap.order(ByteOrder.BIG_ENDIAN);
+		aShort = wrap.getShort();
+		Assert.assertEquals(a, aShort);
 	}
 }

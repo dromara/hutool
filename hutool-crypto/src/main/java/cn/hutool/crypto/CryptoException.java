@@ -27,6 +27,10 @@ public class CryptoException extends RuntimeException {
 		super(message, throwable);
 	}
 
+	public CryptoException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
+	}
+
 	public CryptoException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}

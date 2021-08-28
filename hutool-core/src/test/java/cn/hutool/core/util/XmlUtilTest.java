@@ -196,7 +196,43 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	public void beanToXmlIgnoreNullTest() {
+		@Data
+		class TestBean {
+			private String ReqCode;
+			private String AccountName;
+			private String Operator;
+			private String ProjectCode;
+			private String BankCode;
+		}
+
+		final TestBean testBean = new TestBean();
+		testBean.setReqCode("1111");
+		testBean.setAccountName("账户名称");
+		testBean.setOperator("cz");
+		testBean.setProjectCode(null);
+		testBean.setBankCode("00001");
+
+		// 不忽略空字段情况下保留自闭标签
+		Document doc = XmlUtil.beanToXml(testBean, null, false);
+		Assert.assertNotNull(XmlUtil.getElement(doc.getDocumentElement(), "ProjectCode"));
+
+		// 忽略空字段情况下无自闭标签
+		doc = XmlUtil.beanToXml(testBean, null, true);
+		Assert.assertNull(XmlUtil.getElement(doc.getDocumentElement(), "ProjectCode"));
+	}
+
+	@Test
 	public void xmlToBeanTest() {
+		@Data
+		class TestBean {
+			private String ReqCode;
+			private String AccountName;
+			private String Operator;
+			private String ProjectCode;
+			private String BankCode;
+		}
+
 		final TestBean testBean = new TestBean();
 		testBean.setReqCode("1111");
 		testBean.setAccountName("账户名称");
@@ -217,6 +253,11 @@ public class XmlUtilTest {
 
 	@Test
 	public void xmlToBeanTest2(){
+		@Data
+		class SmsRes {
+			private String code;
+		}
+
 		//issue#1663@Github
 		String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code></response>";
 
@@ -233,27 +274,12 @@ public class XmlUtilTest {
 		Assert.assertEquals(res.toString(), res1.toString());
 	}
 
-	@Data
-	static class SmsRes {
-		private String code;
-	}
-
 	@Test
 	public void cleanCommentTest() {
 		final String xmlContent = "<info><title>hutool</title><!-- 这是注释 --><lang>java</lang></info>";
 		final String ret = XmlUtil.cleanComment(xmlContent);
 		Assert.assertEquals("<info><title>hutool</title><lang>java</lang></info>", ret);
 	}
-
-	@Data
-	public static class TestBean {
-		private String ReqCode;
-		private String AccountName;
-		private String Operator;
-		private String ProjectCode;
-		private String BankCode;
-	}
-
 
 	@Test
 	@Ignore
@@ -286,5 +312,23 @@ public class XmlUtilTest {
 
 		String format = XmlUtil.toStr(xml,"GBK",true);
 		Console.log(format);
+	}
+
+	@Test
+	public void escapeTest(){
+		String a = "<>";
+		final String escape = XmlUtil.escape(a);
+		Console.log(escape);
+	}
+
+	@Test
+	public void getParamTest(){
+		String xml = "<Config name=\"aaaa\">\n" +
+				"    <url>222222</url>\n" +
+				"</Config>";
+
+		final Document doc = XmlUtil.parseXml(xml);
+		final String name = doc.getDocumentElement().getAttribute("name");
+		Assert.assertEquals("aaaa", name);
 	}
 }

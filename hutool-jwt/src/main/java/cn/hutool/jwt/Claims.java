@@ -3,6 +3,7 @@ package cn.hutool.jwt;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
@@ -19,11 +20,10 @@ import java.util.Map;
 public class Claims implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private JSONObject claimJSON;
+	// 时间使用秒级时间戳表示
+	private final JSONConfig CONFIG = JSONConfig.create().setDateFormat("#sss").setOrder(true);
 
-	public Claims() {
-		this.claimJSON = new JSONObject();
-	}
+	private JSONObject claimJSON;
 
 	/**
 	 * 增加Claims属性，如果属性值为{@code null}，则移除这个属性
@@ -32,6 +32,7 @@ public class Claims implements Serializable {
 	 * @param value 属性值
 	 */
 	protected void setClaim(String name, Object value) {
+		init();
 		Assert.notNull(name, "Name must be not null!");
 		if (value == null) {
 			claimJSON.remove(name);
@@ -59,6 +60,7 @@ public class Claims implements Serializable {
 	 * @return 属性
 	 */
 	public Object getClaim(String name) {
+		init();
 		return this.claimJSON.getObj(name);
 	}
 
@@ -68,6 +70,7 @@ public class Claims implements Serializable {
 	 * @return JSON字符串
 	 */
 	public JSONObject getClaimsJson() {
+		init();
 		return this.claimJSON;
 	}
 
@@ -78,11 +81,18 @@ public class Claims implements Serializable {
 	 * @param charset   编码
 	 */
 	public void parse(String tokenPart, Charset charset) {
-		this.claimJSON = JSONUtil.parseObj(Base64.decodeStr(tokenPart, charset));
+		this.claimJSON = JSONUtil.parseObj(Base64.decodeStr(tokenPart, charset), CONFIG);
 	}
 
 	@Override
 	public String toString() {
+		init();
 		return this.claimJSON.toString();
+	}
+
+	private void init(){
+		if(null == this.claimJSON){
+			this.claimJSON = new JSONObject(CONFIG);
+		}
 	}
 }

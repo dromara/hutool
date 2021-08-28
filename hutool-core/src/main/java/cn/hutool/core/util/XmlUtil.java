@@ -62,6 +62,7 @@ import java.util.Map;
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作
  *
  * @author xiaoleilu
+ * @see JAXBUtil
  */
 public class XmlUtil {
 
@@ -233,13 +234,13 @@ public class XmlUtil {
 	 * 使用Sax方式读取指定的XML<br>
 	 * 如果用户传入的contentHandler为{@link DefaultHandler}，则其接口都会被处理
 	 *
-	 * @param file         XML源文件,使用后自动关闭
+	 * @param file           XML源文件,使用后自动关闭
 	 * @param contentHandler XML流处理器，用于按照Element处理xml
 	 * @since 5.4.4
 	 */
 	public static void readBySax(File file, ContentHandler contentHandler) {
 		InputStream in = null;
-		try{
+		try {
 			in = FileUtil.getInputStream(file);
 			readBySax(new InputSource(in), contentHandler);
 		} finally {
@@ -256,7 +257,7 @@ public class XmlUtil {
 	 * @since 5.4.4
 	 */
 	public static void readBySax(Reader reader, ContentHandler contentHandler) {
-		try{
+		try {
 			readBySax(new InputSource(reader), contentHandler);
 		} finally {
 			IoUtil.close(reader);
@@ -272,7 +273,7 @@ public class XmlUtil {
 	 * @since 5.4.4
 	 */
 	public static void readBySax(InputStream source, ContentHandler contentHandler) {
-		try{
+		try {
 			readBySax(new InputSource(source), contentHandler);
 		} finally {
 			IoUtil.close(source);
@@ -397,7 +398,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 */
 	public static String toStr(Document doc) {
-		return toStr((Node)doc);
+		return toStr((Node) doc);
 	}
 
 	/**
@@ -423,7 +424,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, boolean isPretty) {
-		return toStr((Node)doc, isPretty);
+		return toStr((Node) doc, isPretty);
 	}
 
 	/**
@@ -451,7 +452,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
-		return toStr((Node)doc, charset, isPretty);
+		return toStr((Node) doc, charset, isPretty);
 	}
 
 	/**
@@ -986,7 +987,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static String escape(String string) {
-		return EscapeUtil.escape(string);
+		return EscapeUtil.escapeHtml4(string);
 	}
 
 	/**
@@ -998,7 +999,7 @@ public class XmlUtil {
 	 * @since 5.0.6
 	 */
 	public static String unescape(String string) {
-		return EscapeUtil.unescape(string);
+		return EscapeUtil.unescapeHtml4(string);
 	}
 
 	/**
@@ -1019,13 +1020,14 @@ public class XmlUtil {
 	 * @param node XML节点
 	 * @param bean bean类
 	 * @return bean
+	 * @see JAXBUtil#xmlToBean(String, Class)
 	 * @since 5.2.4
 	 */
 	public static <T> T xmlToBean(Node node, Class<T> bean) {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
 			final String simpleName = bean.getSimpleName();
-			if(map.containsKey(simpleName)){
+			if (map.containsKey(simpleName)) {
 				// 只有key和bean的名称匹配时才做单一对象转换
 				return BeanUtil.toBean(map.get(simpleName), bean);
 			}
@@ -1120,6 +1122,7 @@ public class XmlUtil {
 	 *
 	 * @param data Map类型数据
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data) {
@@ -1132,6 +1135,7 @@ public class XmlUtil {
 	 * @param data               Map类型数据
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, boolean omitXmlDeclaration) {
@@ -1144,6 +1148,7 @@ public class XmlUtil {
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.8
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName) {
@@ -1157,6 +1162,7 @@ public class XmlUtil {
 	 * @param rootName  根节点名
 	 * @param namespace 命名空间，可以为null
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace) {
@@ -1171,6 +1177,7 @@ public class XmlUtil {
 	 * @param namespace          命名空间，可以为null
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean omitXmlDeclaration) {
@@ -1186,6 +1193,7 @@ public class XmlUtil {
 	 * @param isPretty           是否格式化输出
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean isPretty, boolean omitXmlDeclaration) {
@@ -1202,6 +1210,7 @@ public class XmlUtil {
 	 * @param isPretty           是否格式化输出
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, String charset, boolean isPretty, boolean omitXmlDeclaration) {
@@ -1214,6 +1223,7 @@ public class XmlUtil {
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.9
 	 */
 	public static Document mapToXml(Map<?, ?> data, String rootName) {
@@ -1227,6 +1237,7 @@ public class XmlUtil {
 	 * @param rootName  根节点名
 	 * @param namespace 命名空间，可以为null
 	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
 	public static Document mapToXml(Map<?, ?> data, String rootName, String namespace) {
@@ -1242,6 +1253,7 @@ public class XmlUtil {
 	 *
 	 * @param bean Bean对象
 	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.3.4
 	 */
 	public static Document beanToXml(Object bean) {
@@ -1254,13 +1266,29 @@ public class XmlUtil {
 	 * @param bean      Bean对象
 	 * @param namespace 命名空间，可以为null
 	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.2.4
 	 */
 	public static Document beanToXml(Object bean, String namespace) {
+		return beanToXml(bean, namespace, false);
+	}
+
+	/**
+	 * 将Bean转换为XML
+	 *
+	 * @param bean       Bean对象
+	 * @param namespace  命名空间，可以为null
+	 * @param ignoreNull 时候忽略值为{@code null}的属性
+	 * @return XML
+	 * @see JAXBUtil#beanToXml(Object)
+	 * @since 5.7.10
+	 */
+	public static Document beanToXml(Object bean, String namespace, boolean ignoreNull) {
 		if (null == bean) {
 			return null;
 		}
-		return mapToXml(BeanUtil.beanToMap(bean), bean.getClass().getSimpleName(), namespace);
+		return mapToXml(BeanUtil.beanToMap(bean, false, ignoreNull),
+				bean.getClass().getSimpleName(), namespace);
 	}
 
 	/**
@@ -1312,6 +1340,17 @@ public class XmlUtil {
 	 */
 	public static Node appendText(Node node, CharSequence text) {
 		return appendText(getOwnerDocument(node), node, text);
+	}
+
+	/**
+	 * 追加数据子节点，可以是Map、集合、文本
+	 *
+	 * @param node 节点
+	 * @param data 数据
+	 * @since 5.7.10
+	 */
+	public static void append(Node node, Object data) {
+		append(getOwnerDocument(node), node, data);
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
 

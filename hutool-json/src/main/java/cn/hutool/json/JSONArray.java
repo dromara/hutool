@@ -3,15 +3,14 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONSerializer;
+import cn.hutool.json.serialize.JSONWriter;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -222,16 +221,8 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
-		int len = this.rawList.size();
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < len; i += 1) {
-			if (i > 0) {
-				sb.append(separator);
-			}
-			sb.append(InternalJSONUtil.valueToString(this.rawList.get(i)));
-		}
-		return sb.toString();
+		return StrJoiner.of(separator)
+				.append(this, InternalJSONUtil::valueToString).toString();
 	}
 
 	@Override
@@ -539,54 +530,15 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		try {
-			return doWrite(writer, indentFactor, indent);
-		} catch (IOException e) {
-			throw new JSONException(e);
-		}
-	}
-
-	// ------------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 将JSON内容写入Writer
-	 *
-	 * @param writer       writer
-	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
-	 * @param indent       本级别缩进量
-	 * @return Writer
-	 * @throws IOException IO相关异常
-	 */
-	private Writer doWrite(Writer writer, int indentFactor, int indent) throws IOException {
-		writer.write(CharUtil.BRACKET_START);
-		final int newindent = indent + indentFactor;
-		final boolean isIgnoreNullValue = this.config.isIgnoreNullValue();
-		boolean isFirst = true;
-		for (Object obj : this.rawList) {
-			if (ObjectUtil.isNull(obj) && isIgnoreNullValue) {
-				continue;
-			}
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				writer.write(CharUtil.COMMA);
-			}
-
-			if (indentFactor > 0) {
-				writer.write(CharUtil.LF);
-			}
-			InternalJSONUtil.indent(writer, newindent);
-			InternalJSONUtil.writeValue(writer, obj, indentFactor, newindent, this.config);
-		}
-
-		if (indentFactor > 0) {
-			writer.write(CharUtil.LF);
-		}
-		InternalJSONUtil.indent(writer, indent);
-		writer.write(CharUtil.BRACKET_END);
+		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
+				.beginArray();
+		this.forEach(jsonWriter::writeValue);
+		jsonWriter.end();
+		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
 	}
 
+	// ------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 初始化
 	 *

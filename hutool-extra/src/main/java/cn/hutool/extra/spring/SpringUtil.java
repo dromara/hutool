@@ -1,11 +1,13 @@
 package cn.hutool.extra.spring;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,9 +21,10 @@ import java.util.Map;
 /**
  * Spring(Spring boot)工具封装，包括：
  *
- * <pre>
- *     1、Spring IOC容器中的bean对象获取
- * </pre>
+ * <ol>
+ *     <li>Spring IOC容器中的bean对象获取</li>
+ *     <li>注册和注销Bean</li>
+ * </ol>
  *
  * @author loolly
  * @since 5.1.0
@@ -39,11 +42,13 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	private static ApplicationContext applicationContext;
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		SpringUtil.beanFactory = beanFactory;
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		SpringUtil.applicationContext = applicationContext;
@@ -66,6 +71,25 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	public static ListableBeanFactory getBeanFactory() {
 		return null == beanFactory ? applicationContext : beanFactory;
+	}
+
+	/**
+	 * 获取{@link ConfigurableListableBeanFactory}
+	 *
+	 * @return {@link ConfigurableListableBeanFactory}
+	 * @since 5.7.7
+	 * @throws UtilException 当上下文非ConfigurableListableBeanFactory抛出异常
+	 */
+	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws UtilException{
+		final ConfigurableListableBeanFactory factory;
+		if (null != beanFactory) {
+			factory = beanFactory;
+		} else if (applicationContext instanceof ConfigurableApplicationContext) {
+			factory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
+		} else {
+			throw new UtilException("No ConfigurableListableBeanFactory from context!");
+		}
+		return factory;
 	}
 
 	//通过name获取 Bean.
@@ -187,6 +211,8 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * 动态向Spring注册Bean
 	 * <p>
 	 * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
+	 * <p>
+	 * 更新: shadow 2021-07-29 17:20:44 增加自动注入，修复注册bean无法反向注入的问题
 	 *
 	 * @param <T>      Bean类型
 	 * @param beanName 名称
@@ -195,11 +221,27 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.4.2
 	 */
 	public static <T> void registerBean(String beanName, T bean) {
-		if(null != beanFactory){
-			beanFactory.registerSingleton(beanName, bean);
-		} else if(applicationContext instanceof ConfigurableApplicationContext){
-			ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
-			context.getBeanFactory().registerSingleton(beanName, bean);
+		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
+		factory.autowireBean(bean);
+		factory.registerSingleton(beanName, bean);
+	}
+
+	/**
+	 * 注销bean
+	 * <p>
+	 * 将Spring中的bean注销，请谨慎使用
+	 *
+	 * @param beanName bean名称
+	 * @author shadow
+	 * @since 5.7.7
+	 */
+	public static void unregisterBean(String beanName) {
+		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
+		if(factory instanceof DefaultSingletonBeanRegistry){
+			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
+			registry.destroySingleton(beanName);
+		} else {
+			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
 		}
 	}
 }

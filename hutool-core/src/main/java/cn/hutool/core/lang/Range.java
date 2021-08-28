@@ -11,81 +11,93 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 范围生成器。根据给定的初始值、结束值和步进生成一个步进列表生成器<br>
- * 由于用户自行实现{@link Steper}来定义步进，因此Range本身无法判定边界（是否达到end），需在step实现边界判定逻辑。
+ * 由于用户自行实现{@link Stepper}来定义步进，因此Range本身无法判定边界（是否达到end），需在step实现边界判定逻辑。
  *
  * <p>
  * 此类使用{@link ReentrantReadWriteLock}保证线程安全
  * </p>
  *
- * @author Looly
- *
  * @param <T> 生成范围对象的类型
+ * @author Looly
  */
 public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/** 锁保证线程安全 */
+	/**
+	 * 锁保证线程安全
+	 */
 	private Lock lock = new ReentrantLock();
-	/** 起始对象 */
+	/**
+	 * 起始对象
+	 */
 	private final T start;
-	/** 结束对象 */
+	/**
+	 * 结束对象
+	 */
 	private final T end;
-	/** 当前对象 */
-	private T current;
-	/** 下一个对象 */
+	/**
+	 * 下一个对象
+	 */
 	private T next;
-	/** 步进 */
-	private final Steper<T> steper;
-	/** 索引 */
+	/**
+	 * 步进
+	 */
+	private final Stepper<T> stepper;
+	/**
+	 * 索引
+	 */
 	private int index = 0;
-	/** 是否包含第一个元素 */
+	/**
+	 * 是否包含第一个元素
+	 */
 	private final boolean includeStart;
-	/** 是否包含最后一个元素 */
-	private boolean includeEnd;
+	/**
+	 * 是否包含最后一个元素
+	 */
+	private final boolean includeEnd;
 
 	/**
 	 * 构造
 	 *
-	 * @param start 起始对象
-	 * @param steper 步进
+	 * @param start   起始对象（包括）
+	 * @param stepper 步进
 	 */
-	public Range(T start, Steper<T> steper) {
-		this(start, null, steper);
+	public Range(T start, Stepper<T> stepper) {
+		this(start, null, stepper);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param start 起始对象（包含）
-	 * @param end 结束对象（包含）
-	 * @param steper 步进
+	 * @param start   起始对象（包含）
+	 * @param end     结束对象（包含）
+	 * @param stepper 步进
 	 */
-	public Range(T start, T end, Steper<T> steper) {
-		this(start, end, steper, true, true);
+	public Range(T start, T end, Stepper<T> stepper) {
+		this(start, end, stepper, true, true);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param start 起始对象
-	 * @param end 结束对象
-	 * @param steper 步进
+	 * @param start          起始对象
+	 * @param end            结束对象
+	 * @param stepper        步进
 	 * @param isIncludeStart 是否包含第一个元素
-	 * @param isIncludeEnd 是否包含最后一个元素
+	 * @param isIncludeEnd   是否包含最后一个元素
 	 */
-	public Range(T start, T end, Steper<T> steper, boolean isIncludeStart, boolean isIncludeEnd) {
+	public Range(T start, T end, Stepper<T> stepper, boolean isIncludeStart, boolean isIncludeEnd) {
+		Assert.notNull(start, "First element must be not null!");
 		this.start = start;
-		this.current = start;
 		this.end = end;
-		this.steper = steper;
-		this.next = safeStep(this.current);
+		this.stepper = stepper;
+		this.next = safeStep(this.start);
 		this.includeStart = isIncludeStart;
-		includeEnd = true;
 		this.includeEnd = isIncludeEnd;
 	}
 
 	/**
-	 * 禁用锁，调用此方法后不在 使用锁保护
+	 * 禁用锁，调用此方法后不再使用锁保护
 	 *
 	 * @return this
 	 * @since 4.3.1
@@ -99,7 +111,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	public boolean hasNext() {
 		lock.lock();
 		try {
-			if(0 == this.index && this.includeStart) {
+			if (0 == this.index && this.includeStart) {
 				return true;
 			}
 			if (null == this.next) {
@@ -130,30 +142,38 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 获取下一个元素，并将下下个元素准备好
 	 */
 	private T nextUncheck() {
-		if (0 != this.index || false == this.includeStart) {
-			// 非第一个元素或不包含第一个元素增加步进
-			this.current = this.next;
-			if (null != this.current) {
-				this.next = safeStep(this.next);
+		T current;
+		if(0 == this.index){
+			current = start;
+			if(false == this.includeStart){
+				// 获取下一组元素
+				index ++;
+				return nextUncheck();
 			}
+		} else {
+			current = next;
+			this.next = safeStep(this.next);
 		}
+
 		index++;
-		return this.current;
+		return current;
 	}
 
 	/**
 	 * 不抛异常的获取下一步进的元素，如果获取失败返回{@code null}
 	 *
-	 * @param base 上一个元素
+	 * @param base  上一个元素
 	 * @return 下一步进
 	 */
 	private T safeStep(T base) {
+		final int index = this.index;
 		T next = null;
 		try {
-			next = steper.step(base, this.end, this.index);
+			next = stepper.step(base, this.end, index);
 		} catch (Exception e) {
 			// ignore
 		}
+
 		return next;
 	}
 
@@ -175,8 +195,8 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	public Range<T> reset() {
 		lock.lock();
 		try {
-			this.current = this.start;
 			this.index = 0;
+			this.next = safeStep(this.start);
 		} finally {
 			lock.unlock();
 		}
@@ -193,19 +213,19 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 3、限制range个数，通过实现此接口，在实现类中定义一个对象属性，可灵活定义limit，限制range个数
 	 * </pre>
 	 *
-	 * @author Looly
-	 *
 	 * @param <T> 需要增加步进的对象
+	 * @author Looly
 	 */
-	public interface Steper<T> {
+	@FunctionalInterface
+	public interface Stepper<T> {
 		/**
 		 * 增加步进<br>
 		 * 增加步进后的返回值如果为{@code null}则表示步进结束<br>
 		 * 用户需根据end参数自行定义边界，当达到边界时返回null表示结束，否则Range中边界对象无效，会导致无限循环
 		 *
 		 * @param current 上一次增加步进后的基础对象
-		 * @param end 结束对象
-		 * @param index 当前索引（步进到第几个元素），从0开始计数
+		 * @param end     结束对象
+		 * @param index   当前索引（步进到第几个元素），从0开始计数
 		 * @return 增加步进后的对象
 		 */
 		T step(T current, T end, int index);

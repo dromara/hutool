@@ -40,10 +40,13 @@ public class FastByteBuffer {
 	private final int minChunkLen;
 
 	public FastByteBuffer() {
-		this.minChunkLen = 1024;
+		this(1024);
 	}
 
 	public FastByteBuffer(int size) {
+		if(size <= 0){
+			size = 1024;
+		}
 		this.minChunkLen = Math.abs(size);
 	}
 

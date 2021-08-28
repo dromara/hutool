@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Qrcode异常
- * 
+ *
  * @author xiaoleilu
  */
 public class QrCodeException extends RuntimeException {
@@ -25,6 +25,10 @@ public class QrCodeException extends RuntimeException {
 
 	public QrCodeException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+
+	public QrCodeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
 	public QrCodeException(Throwable throwable, String messageTemplate, Object... params) {

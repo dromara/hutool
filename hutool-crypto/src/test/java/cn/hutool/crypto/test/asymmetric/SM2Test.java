@@ -1,18 +1,23 @@
 package cn.hutool.crypto.test.asymmetric;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.ASN1Util;
 import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.jcajce.spec.OpenSSHPrivateKeySpec;
+import org.bouncycastle.math.ec.ECPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -310,5 +315,15 @@ public class SM2Test {
 
 		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
 		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
+	}
+
+	@Test
+	public void asn1DecryptTest(){
+		final SM2 sm2 = SmUtil.sm2("00dc7651c8473110a83215bfd26f37e306b2b99b02da9a4af9b9bd12e6360849bd", null);
+		final ASN1Sequence asn1 = (ASN1Sequence) ASN1Util.decode(ResourceUtil.getStream("asn1.key"));
+
+		ASN1Integer x = (ASN1Integer) asn1.getObjectAt(0);
+		ASN1Integer y = (ASN1Integer) asn1.getObjectAt(1);
+		final ECPoint point = SmUtil.SM2_DOMAIN_PARAMS.getCurve().createPoint(x.getValue(), y.getValue());
 	}
 }

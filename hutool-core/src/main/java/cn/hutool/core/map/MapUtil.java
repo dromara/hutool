@@ -629,6 +629,10 @@ public class MapUtil {
 		}
 
 		Map<K, V> map2 = ObjectUtil.clone(map);
+		if(null == map2){
+			// 不支持clone
+			map2 = new HashMap<>(map.size(), 1f);
+		}
 		if (isEmpty(map2)) {
 			return map2;
 		}
@@ -636,7 +640,7 @@ public class MapUtil {
 			map2.clear();
 		} catch (UnsupportedOperationException e) {
 			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>();
+			map2 = new HashMap<>(map.size(), 1f);
 		}
 
 		Entry<K, V> modified;
@@ -687,6 +691,10 @@ public class MapUtil {
 			return map;
 		}
 		Map<K, V> map2 = ObjectUtil.clone(map);
+		if(null == map2){
+			// 不支持clone
+			map2 = new HashMap<>(map.size(), 1f);
+		}
 		if (isEmpty(map2)) {
 			return map2;
 		}
@@ -783,18 +791,15 @@ public class MapUtil {
 			return null;
 		}
 
-		TreeMap<K, V> result;
 		if (map instanceof TreeMap) {
 			// 已经是可排序Map，此时只有比较器一致才返回原map
-			result = (TreeMap<K, V>) map;
+			TreeMap<K, V> result = (TreeMap<K, V>) map;
 			if (null == comparator || comparator.equals(result.comparator())) {
 				return result;
 			}
-		} else {
-			result = newTreeMap(map, comparator);
 		}
 
-		return result;
+		return newTreeMap(map, comparator);
 	}
 
 	/**
@@ -1178,7 +1183,7 @@ public class MapUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
-		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1193,7 +1198,7 @@ public class MapUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
-		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1222,7 +1227,7 @@ public class MapUtil {
 	 * @since 5.3.11
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
-		return null == map ? null : Convert.convert(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
 	/**
@@ -1237,7 +1242,7 @@ public class MapUtil {
 	 * @since 5.5.3
 	 */
 	public static <T> T getQuietly(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
-		return null == map ? null : Convert.convertQuietly(type, map.get(key), defaultValue);
+		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
 	/**

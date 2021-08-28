@@ -65,4 +65,35 @@ public class PhoneUtilTest {
 		Assert.assertEquals("1234", PhoneUtil.subBetween(mobile));
 		Assert.assertEquals("5678", PhoneUtil.subAfter(mobile));
 	}
+
+	@Test
+	public void testNewTel() {
+		ArrayList<String> tels = new ArrayList<>();
+		tels.add("010-12345678");
+		tels.add("01012345678");
+		tels.add("020-9999999");
+		tels.add("0209999999");
+		tels.add("0755-7654321");
+		tels.add("07557654321");
+		ArrayList<String> errTels = new ArrayList<>();
+		errTels.add("010 12345678");
+		errTels.add("A20-9999999");
+		errTels.add("0755-7654.321");
+		errTels.add("13619887123");
+		for (String s : tels) {
+			Assert.assertTrue(PhoneUtil.isTel(s));
+		}
+		for (String s : errTels) {
+			Assert.assertFalse(PhoneUtil.isTel(s));
+		}
+		Assert.assertEquals("010", PhoneUtil.subTelBefore("010-12345678"));
+		Assert.assertEquals("010", PhoneUtil.subTelBefore("01012345678"));
+		Assert.assertEquals("12345678", PhoneUtil.subTelAfter("010-12345678"));
+		Assert.assertEquals("12345678", PhoneUtil.subTelAfter("01012345678"));
+
+		Assert.assertEquals("0755", PhoneUtil.subTelBefore("0755-7654321"));
+		Assert.assertEquals("0755", PhoneUtil.subTelBefore("07557654321"));
+		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("0755-7654321"));
+		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("07557654321"));
+	}
 }

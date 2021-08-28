@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.NumberChineseFormatter;
 import cn.hutool.core.date.format.FastDateParser;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -110,6 +111,23 @@ public class CalendarUtil {
 	 */
 	public static Calendar ceiling(Calendar calendar, DateField dateField) {
 		return DateModifier.modify(calendar, dateField.getValue(), DateModifier.ModifyType.CEILING);
+	}
+
+	/**
+	 * 修改日期为某个时间字段结束时间<br>
+	 * 可选是否归零毫秒。
+	 *
+	 * <p>
+	 * 有时候由于毫秒部分必须为0（如MySQL数据库中），因此在此加上选项。
+	 * </p>
+	 *
+	 * @param calendar            {@link Calendar}
+	 * @param dateField           时间字段
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 原{@link Calendar}
+	 */
+	public static Calendar ceiling(Calendar calendar, DateField dateField, boolean truncateMillisecond) {
+		return DateModifier.modify(calendar, dateField.getValue(), DateModifier.ModifyType.CEILING, truncateMillisecond);
 	}
 
 	/**
@@ -654,6 +672,15 @@ public class CalendarUtil {
 		calendar.setLenient(lenient);
 
 		for (final String parsePattern : parsePatterns) {
+			if (GlobalCustomFormat.isCustomFormat(parsePattern)) {
+				final Date parse = GlobalCustomFormat.parse(str, parsePattern);
+				if (null == parse) {
+					continue;
+				}
+				calendar.setTime(parse);
+				return calendar;
+			}
+
 			final FastDateParser fdp = new FastDateParser(parsePattern, tz, lcl);
 			calendar.clear();
 			try {

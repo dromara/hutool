@@ -2,7 +2,9 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateException;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +16,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
@@ -303,5 +307,31 @@ public class ConvertTest {
 	public void toDateTest(){
 		// 默认转换失败报错而不是返回null
 		Convert.convert(Date.class, "aaaa");
+	}
+
+	@Test
+	public void toDateTest2(){
+		final Date date = Convert.toDate("2021-01");
+		Assert.assertNull(date);
+	}
+
+	@Test
+	public void toSqlDateTest(){
+		final java.sql.Date date = Convert.convert(java.sql.Date.class, DateUtil.parse("2021-07-28"));
+		Assert.assertEquals("2021-07-28", date.toString());
+	}
+
+	@Test
+	public void toHashtableTest(){
+		Map<String, String> map = MapUtil.newHashMap();
+		map.put("a1", "v1");
+		map.put("a2", "v2");
+		map.put("a3", "v3");
+
+		@SuppressWarnings("unchecked")
+		final Hashtable<String, String> hashtable = Convert.convert(Hashtable.class, map);
+		Assert.assertEquals("v1", hashtable.get("a1"));
+		Assert.assertEquals("v2", hashtable.get("a2"));
+		Assert.assertEquals("v3", hashtable.get("a3"));
 	}
 }

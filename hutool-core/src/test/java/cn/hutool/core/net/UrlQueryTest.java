@@ -1,11 +1,17 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
+import cn.hutool.core.util.URLUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class UrlQueryTest {
 
@@ -33,5 +39,28 @@ public class UrlQueryTest {
 		UrlQuery q = new UrlQuery();
 		UrlQuery parse = q.parse(requestUrl, Charset.defaultCharset());
 		Assert.assertEquals("=d52i5837i4ed=o39-ap9e19s5--=72e54*ll0lodl-f338868d2", parse.toString());
+	}
+
+	@Test
+	public void parseTest3(){
+		// issue#1688@Github
+		String u = "https://www.baidu.com/proxy";
+		final UrlQuery query = UrlQuery.of(u, Charset.defaultCharset());
+		Assert.assertTrue(MapUtil.isEmpty(query.getQueryMap()));
+	}
+
+	@Test
+	public void buildWithMapTest() {
+		Map<String, String> map = new LinkedHashMap<>();
+		map.put("username", "SSM");
+		map.put("password", "123456");
+		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("username=SSM&password=123456", query);
+
+		map = new TreeMap<>();
+		map.put("username", "SSM");
+		map.put("password", "123456");
+		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("password=123456&username=SSM", query);
 	}
 }

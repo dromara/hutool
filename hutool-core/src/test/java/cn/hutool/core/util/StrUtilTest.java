@@ -27,6 +27,24 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void trimNewLineTest() {
+		String str = "\r\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\raaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+		str = "\r\n\r\naaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+	}
+
+	@Test
+	public void trimTabTest() {
+		String str = "\taaa";
+		Assert.assertEquals("aaa", StrUtil.trim(str));
+	}
+
+	@Test
 	public void cleanBlankTest() {
 		// 包含：制表符、英文空格、不间断空白符、全角空格
 		String str = "	 你 好　";
@@ -364,10 +382,17 @@ public class StrUtilTest {
 				.set("Table_Test_Of_day", "table_test_of_day")
 				.set("_Table_Test_Of_day_", "_table_test_of_day_")
 				.set("_Table_Test_Of_DAY_", "_table_test_of_DAY_")
-				.set("_TableTestOfDAYtoday", "_table_test_of_DAY_today")
+				.set("_TableTestOfDAYToday", "_table_test_of_DAY_today")
 				.set("HelloWorld_test", "hello_world_test")
 				.set("H2", "H2")
 				.set("H#case", "H#case")
+				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
+	}
+
+	@Test
+	public void toUnderLineCaseTest2() {
+		Dict.create()
+				.set("PNLabel", "PN_label")
 				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
 	}
 
@@ -476,6 +501,38 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void briefTest2() {
+		String str = "123";
+		int maxLength = 3;
+		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("123", brief);
+
+		maxLength = 2;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.", brief);
+
+		maxLength = 1;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1", brief);
+	}
+
+	@Test
+	public void briefTest3() {
+		String str = "123abc";
+		int maxLength = 3;
+		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.c", brief);
+
+		maxLength = 2;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1.", brief);
+
+		maxLength = 1;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1", brief);
+	}
+
+	@Test
 	public void filterTest() {
 		final String filterNumber = StrUtil.filter("hutool678", CharUtil::isNumber);
 		Assert.assertEquals("678", filterNumber);
@@ -518,4 +575,16 @@ public class StrUtilTest {
 		Assert.assertEquals("jackduan@163.com", StrUtil.hide("jackduan@163.com", 16, 17));
 	}
 
+
+	@Test
+	public void isCharEqualsTest(){
+		String a = "aaaaaaaaa";
+		Assert.assertTrue(StrUtil.isCharEquals(a));
+	}
+
+	@Test
+	public void isNumericTest(){
+		String a = "2142342422423423";
+		Assert.assertTrue(StrUtil.isNumeric(a));
+	}
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -576,12 +577,26 @@ public class Convert {
 	 * @param <T> 元素类型
 	 * @param elementType 集合中元素类型
 	 * @param value 被转换的值
-	 * @return {@link List}
+	 * @return {@link ArrayList}
 	 * @since 4.1.20
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> toList(Class<T> elementType, Object value) {
 		return (List<T>) toCollection(ArrayList.class, elementType, value);
+	}
+
+	/**
+	 * 转换为HashSet
+	 *
+	 * @param <T> 元素类型
+	 * @param elementType 集合中元素类型
+	 * @param value 被转换的值
+	 * @return {@link HashSet}
+	 * @since 5.7.3
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> toSet(Class<T> elementType, Object value) {
+		return (Set<T>) toCollection(HashSet.class, elementType, value);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
@@ -33,12 +34,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -763,6 +764,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
 			CellUtil.setCellValue(cell, content, cellStyle);
+			Console.log("{} {} {}", firstColumn, firstRow, cell.getStringCellValue());
 		}
 		return this;
 	}
@@ -1092,6 +1094,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 对数据行整行加自定义样式 仅对数据单元格设置 write后调用
+	 * <p>
+	 * {@link cn.hutool.poi.excel.ExcelWriter#setRowStyle(int, org.apache.poi.ss.usermodel.CellStyle)}
+	 * 这个方法加的样式会使整行没有数据的单元格也有样式
+	 * 特别是加背景色时很不美观 且有数据的单元格样式会被StyleSet中的样式覆盖掉
+	 *
+	 * @param y     行坐标
+	 * @param style 自定义的样式
+	 * @return this
+	 * @since 5.7.3
+	 */
+	public ExcelWriter setRowStyleIfHasData(int y, CellStyle style) {
+		if (y < 0) {
+			throw new IllegalArgumentException("Invalid row number (" + y + ")");
+		}
+		int columnCount = this.getColumnCount();
+		for (int i = 0; i < columnCount; i++) {
+			this.setStyle(style, i, y);
+		}
+		return this;
+	}
+
+	/**
 	 * 设置列的默认样式
 	 *
 	 * @param x     列号，从0开始
@@ -1101,6 +1126,33 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter setColumnStyle(int x, CellStyle style) {
 		this.sheet.setDefaultColumnStyle(x, style);
+		return this;
+	}
+
+	/**
+	 * 设置整个列的样式 仅对数据单元格设置 write后调用
+	 * <p>
+	 * {@link cn.hutool.poi.excel.ExcelWriter#setColumnStyle(int, org.apache.poi.ss.usermodel.CellStyle)}
+	 * 这个方法加的样式会使整列没有数据的单元格也有样式
+	 * 特别是加背景色时很不美观 且有数据的单元格样式会被StyleSet中的样式覆盖掉
+	 *
+	 * @param x     列的索引
+	 * @param y     起始行
+	 * @param style 样式
+	 * @return this
+	 * @since 5.7.3
+	 */
+	public ExcelWriter setColumnStyleIfHasData(int x, int y, CellStyle style) {
+		if (x < 0) {
+			throw new IllegalArgumentException("Invalid column number (" + x + ")");
+		}
+		if (y < 0) {
+			throw new IllegalArgumentException("Invalid row number (" + y + ")");
+		}
+		int rowCount = this.getRowCount();
+		for (int i = y; i < rowCount; i++) {
+			this.setStyle(style, x, i);
+		}
 		return this;
 	}
 

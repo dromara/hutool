@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.io.copy.ChannelCopier;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,7 +8,6 @@ import cn.hutool.core.util.StrUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -53,7 +53,24 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, streamProgress);
+		return copyByNIO(in, out, bufferSize, -1, streamProgress);
+	}
+
+	/**
+	 * 拷贝流<br>
+	 * 本方法不会关闭流
+	 *
+	 * @param in             输入流
+	 * @param out            输出流
+	 * @param bufferSize     缓存大小
+	 * @param count          最大长度
+	 * @param streamProgress 进度条
+	 * @return 传输的byte数
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.8
+	 */
+	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
+		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
 	}
 
 	/**
@@ -114,31 +131,23 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
-		Assert.notNull(in, "InputStream is null !");
-		Assert.notNull(out, "OutputStream is null !");
+		return copy(in, out, bufferSize, -1, streamProgress);
+	}
 
-		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize <= 0 ? DEFAULT_BUFFER_SIZE : bufferSize);
-		long size = 0;
-		if (null != streamProgress) {
-			streamProgress.start();
-		}
-		try {
-			while (in.read(byteBuffer) != EOF) {
-				byteBuffer.flip();// 写转读
-				size += out.write(byteBuffer);
-				byteBuffer.clear();
-				if (null != streamProgress) {
-					streamProgress.progress(size);
-				}
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (null != streamProgress) {
-			streamProgress.finish();
-		}
-
-		return size;
+	/**
+	 * 拷贝流，使用NIO，不会关闭channel
+	 *
+	 * @param in             {@link ReadableByteChannel}
+	 * @param out            {@link WritableByteChannel}
+	 * @param bufferSize     缓冲大小，如果小于等于0，使用默认
+	 * @param count          读取总长度
+	 * @param streamProgress {@link StreamProgress}进度处理器
+	 * @return 拷贝的字节数
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.8
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
+		return new ChannelCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 
 	/**

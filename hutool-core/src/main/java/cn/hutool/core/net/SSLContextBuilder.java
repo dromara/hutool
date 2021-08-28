@@ -13,46 +13,24 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * {@link SSLContext}构建器
+ * {@link SSLContext}构建器，可以自定义：<br>
+ * <ul>
+ *     <li>协议（protocol），默认TLS</li>
+ *     <li>{@link KeyManager}，默认空</li>
+ *     <li>{@link TrustManager}，默认{@link DefaultTrustManager}，即信任全部</li>
+ *     <li>{@link SecureRandom}</li>
+ * </ul>
+ *
+ * 构建后可获得{@link SSLContext}，通过调用{@link SSLContext#getSocketFactory()}获取{@link javax.net.ssl.SSLSocketFactory}
  *
  * @author Looly
  * @since 5.5.2
  */
-public class SSLContextBuilder {
-
-	/**
-	 * Supports some version of SSL; may support other versions
-	 */
-	public static final String SSL = "SSL";
-	/**
-	 * Supports SSL version 2 or later; may support other versions
-	 */
-	public static final String SSLv2 = "SSLv2";
-	/**
-	 * Supports SSL version 3; may support other versions
-	 */
-	public static final String SSLv3 = "SSLv3";
-
-	/**
-	 * Supports some version of TLS; may support other versions
-	 */
-	public static final String TLS = "TLS";
-	/**
-	 * Supports RFC 2246: TLS version 1.0 ; may support other versions
-	 */
-	public static final String TLSv1 = "TLSv1";
-	/**
-	 * Supports RFC 4346: TLS version 1.1 ; may support other versions
-	 */
-	public static final String TLSv11 = "TLSv1.1";
-	/**
-	 * Supports RFC 5246: TLS version 1.2 ; may support other versions
-	 */
-	public static final String TLSv12 = "TLSv1.2";
+public class SSLContextBuilder implements SSLProtocols {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
-	private TrustManager[] trustManagers = {new DefaultTrustManager()};
+	private TrustManager[] trustManagers = {DefaultTrustManager.INSTANCE};
 	private SecureRandom secureRandom = new SecureRandom();
 
 
@@ -136,7 +114,7 @@ public class SSLContextBuilder {
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 */
-	public SSLContext buildQuietly() throws IORuntimeException{
+	public SSLContext buildQuietly() throws IORuntimeException {
 		try {
 			return build();
 		} catch (GeneralSecurityException e) {

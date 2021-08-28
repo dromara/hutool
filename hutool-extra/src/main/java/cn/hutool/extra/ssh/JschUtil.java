@@ -133,7 +133,7 @@ public class JschUtil {
 	 * @return SSH会话
 	 * @since 4.5.2
 	 */
-		public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
 		final JSch jsch = new JSch();
 		final Session session = createSession(jsch, sshHost, sshPort, sshUser);
 
@@ -215,16 +215,33 @@ public class JschUtil {
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 */
 	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JschRuntimeException {
+		return bindPort(session, remoteHost, remotePort, "127.0.0.1", localPort);
+	}
+
+	/**
+	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 *
+	 * @param session    需要绑定端口的SSH会话
+	 * @param remoteHost 远程主机
+	 * @param remotePort 远程端口
+	 * @param localHost  本地主机
+	 * @param localPort  本地端口
+	 * @return 成功与否
+	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @since 5.7.8
+	 */
+	public static boolean bindPort(Session session, String remoteHost, int remotePort, String localHost, int localPort) throws JschRuntimeException {
 		if (session != null && session.isConnected()) {
 			try {
-				session.setPortForwardingL(localPort, remoteHost, remotePort);
+				session.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
 			} catch (JSchException e) {
-				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", remoteHost, localPort);
+				throw new JschRuntimeException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
 			}
 			return true;
 		}
 		return false;
 	}
+
 
 	/**
 	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>

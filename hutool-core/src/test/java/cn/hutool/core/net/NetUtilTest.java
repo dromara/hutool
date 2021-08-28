@@ -1,5 +1,6 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
@@ -13,7 +14,7 @@ import java.util.List;
 
 /**
  * NetUtil单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -91,6 +92,13 @@ public class NetUtilTest {
 	public void isOpenTest(){
 		InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
 		Assert.assertTrue(NetUtil.isOpen(address, 200));
+	}
+
+	@Test
+	@Ignore
+	public void getDnsInfoTest(){
+		final List<String> txt = NetUtil.getDnsInfo("hutool.cn", "TXT");
+		Console.log(txt);
 	}
 
 }

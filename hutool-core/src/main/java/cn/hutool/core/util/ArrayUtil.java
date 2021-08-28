@@ -159,7 +159,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>     数组元素类型
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @param array   数组
-	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
+	 * @return 匹配元素，如果不存在匹配元素或数组为空，返回 {@code null}
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -183,8 +183,24 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> int matchIndex(Matcher<T> matcher, T... array) {
+		return matchIndex(matcher, 0, array);
+	}
+
+	/**
+	 * 返回数组中第一个匹配规则的值的位置
+	 *
+	 * @param <T>               数组元素类型
+	 * @param matcher           匹配接口，实现此接口自定义匹配规则
+	 * @param beginIndexInclude 检索开始的位置
+	 * @param array             数组
+	 * @return 匹配到元素的位置，-1表示未匹配到
+	 * @since 5.7.3
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> int matchIndex(Matcher<T> matcher, int beginIndexInclude, T... array) {
+		Assert.notNull(matcher, "Matcher must be not null !");
 		if (isNotEmpty(array)) {
-			for (int i = 0; i < array.length; i++) {
+			for (int i = beginIndexInclude; i < array.length; i++) {
 				if (matcher.match(array[i])) {
 					return i;
 				}
@@ -731,6 +747,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
+	 * @param <T>               数组类型
+	 * @param array             数组
+	 * @param value             被检查的元素
+	 * @param beginIndexInclude 检索开始的位置
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static <T> int indexOf(T[] array, Object value, int beginIndexInclude) {
+		return matchIndex((obj) -> ObjectUtil.equal(value, obj), beginIndexInclude, array);
+	}
+
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 *
 	 * @param <T>   数组类型
 	 * @param array 数组
 	 * @param value 被检查的元素
@@ -770,8 +800,25 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int lastIndexOf(T[] array, Object value) {
-		if (null != array) {
-			for (int i = array.length - 1; i >= 0; i--) {
+		if (isEmpty(array)) {
+			return INDEX_NOT_FOUND;
+		}
+		return lastIndexOf(array, value, array.length - 1);
+	}
+
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 *
+	 * @param <T>        数组类型
+	 * @param array      数组
+	 * @param value      被检查的元素
+	 * @param endInclude 查找方式为从后向前查找，查找的数组结束位置，一般为array.length-1
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 5.7.3
+	 */
+	public static <T> int lastIndexOf(T[] array, Object value, int endInclude) {
+		if (isNotEmpty(array)) {
+			for (int i = endInclude; i >= 0; i--) {
 				if (ObjectUtil.equal(value, array[i])) {
 					return i;
 				}
@@ -1146,7 +1193,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.3.3
 	 */
 	public static <T> String join(T[] array, CharSequence conjunction, Editor<T> editor) {
-		return StrJoiner.of(conjunction).append(array, (t)-> String.valueOf(editor.edit(t))).toString();
+		return StrJoiner.of(conjunction).append(array, (t) -> String.valueOf(editor.edit(t))).toString();
 	}
 
 	/**
@@ -1274,8 +1321,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[]
-	reverse(T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static <T> T[] reverse(T[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1658,17 +1704,31 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.8
 	 */
 	public static <T> int indexOfSub(T[] array, T[] subArray) {
+		return indexOfSub(array, 0, subArray);
+	}
+
+	/**
+	 * 查找子数组的位置
+	 *
+	 * @param array        数组
+	 * @param beginInclude 查找开始的位置（包含）
+	 * @param subArray     子数组
+	 * @param <T>          数组元素类型
+	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @since 5.4.8
+	 */
+	public static <T> int indexOfSub(T[] array, int beginInclude, T[] subArray) {
 		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
-		int firstIndex = indexOf(array, subArray[0]);
+		int firstIndex = indexOf(array, subArray[0], beginInclude);
 		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
 			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
-				return INDEX_NOT_FOUND;
+				return indexOfSub(array, firstIndex + 1, subArray);
 			}
 		}
 
@@ -1685,7 +1745,24 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.8
 	 */
 	public static <T> int lastIndexOfSub(T[] array, T[] subArray) {
-		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
+		if (isEmpty(array) || isEmpty(subArray)) {
+			return INDEX_NOT_FOUND;
+		}
+		return lastIndexOfSub(array, array.length - 1, subArray);
+	}
+
+	/**
+	 * 查找最后一个子数组的开始位置
+	 *
+	 * @param array    数组
+	 * @param endInclude 查找结束的位置（包含）
+	 * @param subArray 子数组
+	 * @param <T>      数组元素类型
+	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @since 5.4.8
+	 */
+	public static <T> int lastIndexOfSub(T[] array, int endInclude, T[] subArray) {
+		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length || endInclude < 0) {
 			return INDEX_NOT_FOUND;
 		}
 
@@ -1696,7 +1773,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		for (int i = 0; i < subArray.length; i++) {
 			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
-				return INDEX_NOT_FOUND;
+				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}
 

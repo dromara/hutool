@@ -1,15 +1,15 @@
 package cn.hutool.core.lang;
 
-import java.lang.management.ManagementFactory;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * MongoDB ID生成策略实现<br>
@@ -156,14 +156,7 @@ public class ObjectId {
 		// 进程ID初始化
 		int processId;
 		try {
-			// 获取进程ID
-			final String processName =ManagementFactory.getRuntimeMXBean().getName();
-			final int atIndex = processName.indexOf('@');
-			if (atIndex > 0) {
-				processId = Integer.parseInt(processName.substring(0, atIndex));
-			} else {
-				processId = processName.hashCode();
-			}
+			processId = RuntimeUtil.getPid();
 		} catch (Throwable t) {
 			processId = RandomUtil.randomInt();
 		}
