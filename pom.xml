@@ -11,7 +11,7 @@
 	<version>5.7.11-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
-	<url>https://github.com/looly/hutool</url>
+	<url>https://github.com/dromara/hutool</url>
 
 	<modules>
 		<module>hutool-all</module>
@@ -70,7 +70,7 @@
 
 	<licenses>
 		<license>
-			<name>Mulan Permissive Software License，Version 1</name>
+			<name>Mulan Permissive Software License，Version 2</name>
 			<url>https://license.coscl.org.cn/MulanPSL2</url>
 		</license>
 	</licenses>
