@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -506,11 +507,11 @@ public class DateUtil extends CalendarUtil {
 			return GlobalCustomFormat.format(date, format);
 		}
 
-		TimeZone timeZone = null;
+		ZoneId zoneId = null;
 		if (date instanceof DateTime) {
-			timeZone = ((DateTime) date).getTimeZone();
+			zoneId = ((DateTime) date).getTimeZone().toZoneId();
 		}
-		return format(date, newSimpleFormat(format, null, timeZone));
+		return format(date, newDateTimeFormatter(format, null, zoneId));
 	}
 
 	/**
@@ -629,7 +630,7 @@ public class DateUtil extends CalendarUtil {
 			return null;
 		}
 
-		if (false == isUppercase) {
+		if (!isUppercase) {
 			return (withTime ? DatePattern.CHINESE_DATE_TIME_FORMAT : DatePattern.CHINESE_DATE_FORMAT).format(date);
 		}
 
@@ -696,7 +697,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 将特定格式的日期转换为Date对象
+	 * 将特定格式的日期转换为DateTime对象
 	 *
 	 * @param dateStr 特定格式的日期
 	 * @param format  格式，例如yyyy-MM-dd
@@ -707,7 +708,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 将特定格式的日期转换为Date对象
+	 * 将特定格式的日期转换为DateTime对象
 	 *
 	 * @param dateStr 特定格式的日期
 	 * @param format  格式，例如yyyy-MM-dd
@@ -720,7 +721,7 @@ public class DateUtil extends CalendarUtil {
 			// 自定义格式化器忽略Locale
 			return new DateTime(GlobalCustomFormat.parse(dateStr, format));
 		}
-		return new DateTime(dateStr, DateUtil.newSimpleFormat(format, locale, null));
+		return new DateTime(dateStr, DateUtil.newDateTimeFormatter(format, locale, null));
 	}
 
 	/**
@@ -841,7 +842,7 @@ public class DateUtil extends CalendarUtil {
 			if(StrUtil.isBlank(zoneOffset)){
 				throw new DateException("Invalid format: [{}]", utcString);
 			}
-			if(false == StrUtil.contains(zoneOffset, ':')){
+			if(!StrUtil.contains(zoneOffset, ':')){
 				// +0800转换为+08:00
 				final String pre = StrUtil.subBefore(utcString, '+', true);
 				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
@@ -2020,6 +2021,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link SimpleDateFormat}
 	 * @since 5.5.5
 	 */
+	@Deprecated
 	public static SimpleDateFormat newSimpleFormat(String pattern) {
 		return newSimpleFormat(pattern, null, null);
 	}
@@ -2034,6 +2036,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link SimpleDateFormat}
 	 * @since 5.5.5
 	 */
+	@Deprecated
 	public static SimpleDateFormat newSimpleFormat(String pattern, Locale locale, TimeZone timeZone) {
 		if (null == locale) {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
@@ -2046,6 +2049,31 @@ public class DateUtil extends CalendarUtil {
 		return format;
 	}
 
+	/**
+	 * 创建{@link DateTimeFormatter}, 线程安全
+	 * @param pattern 表达式
+	 * @return {@link DateTimeFormatter}
+	 */
+	public static DateTimeFormatter newDateTimeFormatter(String pattern) {
+		return newDateTimeFormatter(pattern, null, null);
+	}
+
+	/**
+	 * 创建{@link DateTimeFormatter}, 线程安全
+	 * @param pattern 表达式
+	 * @param locale {@link Locale}，{@code null}表示默认
+	 * @return {@link DateTimeFormatter}
+	 */
+	public static DateTimeFormatter newDateTimeFormatter(String pattern, Locale locale, ZoneId zoneId) {
+		if (null == locale) {
+			locale = Locale.getDefault(Locale.Category.FORMAT);
+		}
+		final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern, locale);
+		if (null != zoneId) {
+			dateTimeFormatter.withZone(zoneId);
+		}
+		return dateTimeFormatter;
+	}
 	// ------------------------------------------------------------------------ Private method start
 
 	/**
