@@ -182,6 +182,9 @@ public class FileTypeUtil {
 			final String extName = FileUtil.extName(filename);
 			if ("xlsx".equalsIgnoreCase(extName)) {
 				typeName = "xlsx";
+			} else if ("docx".equalsIgnoreCase(extName)) {
+				// issue#I47JGH
+				typeName = "docx";
 			}
 		}
 		return typeName;
