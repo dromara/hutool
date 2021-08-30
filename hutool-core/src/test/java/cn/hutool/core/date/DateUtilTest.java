@@ -13,15 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.GregorianCalendar;
 
 /**
  * 时间工具单元测试<br>
@@ -981,5 +981,12 @@ public class DateUtilTest {
 		Assert.assertTrue(DateUtil.isWeekend(parse));
 		parse = DateUtil.parse("2021-07-24");
 		Assert.assertTrue(DateUtil.isWeekend(parse));
+	}
+
+	@Test
+	public void parseSingleMonthAndDayTest(){
+		final DateTime parse = DateUtil.parse("2021-1-1");
+		Assert.assertNotNull(parse);
+		Assert.assertEquals("2021-01-01 00:00:00", parse.toString());
 	}
 }
