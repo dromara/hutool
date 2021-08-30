@@ -97,7 +97,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * <p>
 	 * 创建一个具有金额<code>yuan</code>元<code>cent</code>分和缺省币种的货币对象。
 	 *
-	 * @param yuan 金额元数。
+	 * @param yuan 金额元数，0的情况下表示元的部分从分中截取
 	 * @param cent 金额分数。
 	 */
 	public Money(long yuan, int cent) {
@@ -110,14 +110,18 @@ public class Money implements Serializable, Comparable<Money> {
 	 * <p>
 	 * 创建一个具有金额<code>yuan</code>元<code>cent</code>分和指定币种的货币对象。
 	 *
-	 * @param yuan     金额元数。
+	 * @param yuan     金额元数，0的情况下表示元的部分从分中截取
 	 * @param cent     金额分数。
 	 * @param currency 货币单位
 	 */
 	public Money(long yuan, int cent, Currency currency) {
 		this.currency = currency;
 
-		this.cent = (yuan * getCentFactor()) + (cent % getCentFactor());
+		if(0 == yuan) {
+			this.cent = cent;
+		} else{
+			this.cent = (yuan * getCentFactor()) + (cent % getCentFactor());
+		}
 	}
 
 	/**

@@ -87,6 +87,12 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void parseSingleMonthAndDayTest() {
+		LocalDate localDate = LocalDateTimeUtil.parseDate("2020-1-1", "yyyy-M-d");
+		Assert.assertEquals("2020-01-01", localDate.toString());
+	}
+
+	@Test
 	public void formatTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		String format = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);

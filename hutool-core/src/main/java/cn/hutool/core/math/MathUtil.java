@@ -76,4 +76,28 @@ public class MathUtil {
 	public static List<String[]> combinationSelect(String[] datas, int m) {
 		return new Combination(datas).select(m);
 	}
+
+	/**
+	 * 金额元转换为分
+	 *
+	 * @param yuan 金额，单位元
+	 * @return 金额，单位分
+	 * @since 5.7.11
+	 */
+	public static long yuanToCent(double yuan) {
+		return new Money(yuan).getCent();
+	}
+
+	/**
+	 * 金额分转换为元
+	 *
+	 * @param cent 金额，单位分
+	 * @return 金额，单位元
+	 * @since 5.7.11
+	 */
+	public static double centToYuan(long cent) {
+		long yuan = cent / 100;
+		int centPart = (int) (cent % 100);
+		return new Money(yuan, centPart).getAmount().doubleValue();
+	}
 }
