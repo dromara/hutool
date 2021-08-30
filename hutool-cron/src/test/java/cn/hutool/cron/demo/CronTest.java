@@ -38,7 +38,7 @@ public class CronTest {
 		ThreadUtil.waitForDie();
 		CronUtil.stop();
 	}
-	
+
 	@Test
 	@Ignore
 	public void cronWithListenerTest() {
