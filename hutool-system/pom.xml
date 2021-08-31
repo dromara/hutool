@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>5.8.0</version>
+			<version>5.8.1</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

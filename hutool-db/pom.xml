@@ -24,7 +24,7 @@
 		<druid.version>1.2.6</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.12.10</mongo.version>
-		<sqlite.version>3.36.0.1</sqlite.version>
+		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>3.6.3</jedis.version>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.2.6</version>
+			<version>3.2.7</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
