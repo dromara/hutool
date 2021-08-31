@@ -1,6 +1,6 @@
 /**
- * 配置文件实现分装，例如Properties封装Props
- * 
+ * 配置环境封装，例如Profile可以自定义不同环境下的配置文件位置
+ *
  * @author looly
  *
  */

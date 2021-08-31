@@ -1,6 +1,6 @@
 /**
- * 配置文件实现分装，例如Properties封装Props
- * 
+ * 配置文件实现封装，例如Properties封装Props
+ *
  * @author looly
  *
  */
