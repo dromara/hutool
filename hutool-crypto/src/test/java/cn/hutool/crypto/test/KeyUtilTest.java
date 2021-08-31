@@ -46,4 +46,16 @@ public class KeyUtilTest {
 		final PrivateKey privateKey = KeyUtil.generatePrivateKey("EC", privateKeyBytes);
 		Assert.assertEquals(ecies.getPrivate(), privateKey);
 	}
+
+	@Test
+	public void generateDHTest(){
+		final KeyPair dh = KeyUtil.generateKeyPair("DH");
+		Assert.assertNotNull(dh.getPrivate());
+		Assert.assertNotNull(dh.getPublic());
+
+		byte[] privateKeyBytes = dh.getPrivate().getEncoded();
+
+		final PrivateKey privateKey = KeyUtil.generatePrivateKey("DH", privateKeyBytes);
+		Assert.assertEquals(dh.getPrivate(), privateKey);
+	}
 }
