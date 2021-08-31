@@ -970,18 +970,6 @@ public class ZipUtil {
 			}
 		}
 	}
-
-	/**
-	 * 从Zip中读取文件流并写出到文件
-	 *
-	 * @param zipFile     Zip文件
-	 * @param zipEntry    zip文件中的子文件
-	 * @param outItemFile 输出到的文件
-	 * @throws IORuntimeException IO异常
-	 */
-	private static void write(ZipFile zipFile, ZipEntry zipEntry, File outItemFile) throws IORuntimeException {
-		FileUtil.writeFromStream(getStream(zipFile, zipEntry), outItemFile);
-	}
 	// ---------------------------------------------------------------------------------------------- Private method end
 
 }
