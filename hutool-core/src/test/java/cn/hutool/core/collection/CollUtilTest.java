@@ -772,4 +772,21 @@ public class CollUtilTest {
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
 	}
+
+	@Test
+	public void combinationTest(){
+		List<String> of = CollUtil.newArrayList("a", "b");
+		List<String> combination = CollUtil.combination(of, 2, "-");
+
+		Assert.assertEquals("a-a,a-b,b-a,b-b", CollUtil.join(combination, ","));
+	}
+
+	@Test
+	public void combinationNoRepeatTest(){
+		List<String> of = CollUtil.newArrayList("a", "b");
+		List<String> combinationNoRepeat = CollUtil.combinationNoRepeat(of, 2, "-");
+
+		Assert.assertEquals("a-b,b-a", CollUtil.join(combinationNoRepeat, ","));
+	}
+
 }

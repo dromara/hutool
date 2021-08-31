@@ -13,46 +13,20 @@ import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 集合相关工具类
@@ -2954,4 +2928,49 @@ public class CollUtil {
 
 		return IterUtil.isEqualList(list1, list2);
 	}
+
+
+	/***
+	 * 一个列表中选出N个数的所有组合，允许字符重复排列<br>
+	 * 【内存占用】：需注意结果集大小对内存的占用（list:10位，length:8，结果集:[10 ^ 8 = 100000000]，内存占用:约7G）
+	 * 例如：集合list：[a, b]，生成长度length:2，conjunction分隔符："-"<br>
+	 * 结果：[a-a,a-b,b-a,b-b]<br>
+	 * @param list 待排列组合字符集合
+	 * @param length 排列组合生成长度
+	 * @param conjunction 分隔符
+	 * @return 指定长度的排列组合后的字符串集合
+	 */
+	public static List<String> combination(List<String> list, int length, String conjunction) {
+		if (CollUtil.isEmpty(list)) {
+			return ListUtil.empty();
+		}
+		Stream<String> stream = list.stream();
+		for (int n = 1; n < length; n++) {
+			stream = stream.flatMap(i -> list.stream().map(j -> i.concat(conjunction).concat(j)));
+		}
+		return stream.collect(Collectors.toList());
+	}
+
+
+	/***
+	 * 一个列表中选出N个数的所有组合(字符不重复排列)<br>
+	 * 【内存占用】：需注意结果集大小对内存的占用（list:10位，length:8，结果集:[10! / (10-8)! = 1814400]）
+	 * 例如：集合list：[a, b]，生成长度length:2，conjunction分隔符："-"<br>
+	 * 结果：[a-b,b-a]<br>
+	 * @param list 待排列组合字符集合
+	 * @param length 排列组合生成长度
+	 * @param conjunction 分隔符
+	 * @return 指定长度的排列组合后的字符串集合
+	 */
+	public static List<String> combinationNoRepeat(List<String> list, int length,String conjunction) {
+		if (CollUtil.isEmpty(list)) {
+			return ListUtil.empty();
+		}
+		Stream<String> stream = list.stream().distinct();
+		for (int n = 1; n < length; n++) {
+			stream = stream.flatMap(i -> list.stream().filter(j -> !i.contains(j)).map(j -> i.concat(conjunction).concat(j)));
+		}
+		return stream.collect(Collectors.toList());
+	}
+
 }
