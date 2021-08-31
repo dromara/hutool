@@ -16,6 +16,10 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool 系统调用（Runtime）、系统监控封装</description>
 
+	<properties>
+		<slf4j.version>1.7.32</slf4j.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -28,6 +32,12 @@
 			<artifactId>oshi-core</artifactId>
 			<version>5.8.1</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
