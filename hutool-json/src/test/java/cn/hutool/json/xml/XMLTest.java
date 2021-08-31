@@ -1,5 +1,8 @@
-package cn.hutool.json;
+package cn.hutool.json.xml;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.json.XML;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,4 +28,14 @@ public class XMLTest {
 		Assert.assertEquals(xml, xml2);
 	}
 
+	@Test
+	public void xmlContentTest(){
+		JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
+
+		String xml = XML.toXml(jsonObject);
+		Assert.assertEquals("123456", xml);
+
+		xml = XML.toXml(jsonObject, null, new String[0]);
+		Assert.assertEquals("<content>123456</content>", xml);
+	}
 }

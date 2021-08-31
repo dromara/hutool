@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.11 (2021-08-30)
+# 5.7.11 (2021-08-31)
 
 ### 🐣新特性
 * 【crypto 】     修改SymmetricCrypto初始化逻辑
 * 【core   】     FileTypeUtil增加对wps编辑的docx的识别（issue#I47JGH@Gitee）
 * 【core   】     Money修改构造，0表示读取所有分（issue#1796@Github）
-
+* 【json   】     增加JSONXMLParser和JSONXMLSerializer
+* 【json   】     XML支持自定义内容标签（issue#I47TV8@Gitee）
 ### 🐞Bug修复
 * 【cron   】     **重要**修复Scheduler启动默认线程池为null的bug（issue#I47PZW@Gitee）
 

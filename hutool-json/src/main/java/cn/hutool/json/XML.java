@@ -1,16 +1,15 @@
 package cn.hutool.json;
 
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.EscapeUtil;
-import cn.hutool.core.util.StrUtil;
-
-import java.util.Iterator;
+import cn.hutool.json.xml.JSONXMLParser;
+import cn.hutool.json.xml.JSONXMLSerializer;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
  *
- * @author JSON.org
+ * @author JSON.org, looly
+ * @see JSONXMLParser
+ * @see JSONXMLSerializer
  */
 public class XML {
 
@@ -92,189 +91,23 @@ public class XML {
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
 	 *
 	 * @param jo          JSONObject
-	 * @param string      XML字符串
-	 * @param keepStrings If true, then values will not be coerced into boolean or numeric values and will instead be left as strings
-	 * @return A JSONObject containing the structured data from the XML string.
-	 * @throws JSONException Thrown if there is an errors while parsing the string
+	 * @param xmlStr      XML字符串
+	 * @param keepStrings 如果为{@code true}，则值保持String类型，不转换为数字或boolean
+	 * @return A JSONObject 解析后的JSON对象，与传入的jo为同一对象
+	 * @throws JSONException 解析异常
 	 * @since 5.3.1
 	 */
-	public static JSONObject toJSONObject(JSONObject jo, String string, boolean keepStrings) throws JSONException {
-		XMLTokener x = new XMLTokener(string, jo.getConfig());
-		while (x.more() && x.skipPast("<")) {
-			parse(x, jo, null, keepStrings);
-		}
+	public static JSONObject toJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
+		JSONXMLParser.parseJSONObject(jo, xmlStr, keepStrings);
 		return jo;
 	}
 
 	/**
-	 * Scan the content following the named tag, attaching it to the context.
-	 *
-	 * @param x       The XMLTokener containing the source string.
-	 * @param context The JSONObject that will include the new material.
-	 * @param name    The tag name.
-	 * @return true if the close tag is processed.
-	 * @throws JSONException JSON异常
-	 */
-	private static boolean parse(XMLTokener x, JSONObject context, String name, boolean keepStrings) throws JSONException {
-		char c;
-		int i;
-		JSONObject jsonobject;
-		String string;
-		String tagName;
-		Object token;
-
-		// Test for and skip past these forms:
-		// <!-- ... -->
-		// <! ... >
-		// <![ ... ]]>
-		// <? ... ?>
-		// Report errors for these forms:
-		// <>
-		// <=
-		// <<
-
-		token = x.nextToken();
-
-		// <!
-
-		if (token == BANG) {
-			c = x.next();
-			if (c == '-') {
-				if (x.next() == '-') {
-					x.skipPast("-->");
-					return false;
-				}
-				x.back();
-			} else if (c == '[') {
-				token = x.nextToken();
-				if ("CDATA".equals(token)) {
-					if (x.next() == '[') {
-						string = x.nextCDATA();
-						if (string.length() > 0) {
-							context.accumulate("content", string);
-						}
-						return false;
-					}
-				}
-				throw x.syntaxError("Expected 'CDATA['");
-			}
-			i = 1;
-			do {
-				token = x.nextMeta();
-				if (token == null) {
-					throw x.syntaxError("Missing '>' after '<!'.");
-				} else if (token == LT) {
-					i += 1;
-				} else if (token == GT) {
-					i -= 1;
-				}
-			} while (i > 0);
-			return false;
-		} else if (token == QUEST) {
-
-			// <?
-			x.skipPast("?>");
-			return false;
-		} else if (token == SLASH) {
-
-			// Close tag </
-
-			token = x.nextToken();
-			if (name == null) {
-				throw x.syntaxError("Mismatched close tag " + token);
-			}
-			if (!token.equals(name)) {
-				throw x.syntaxError("Mismatched " + name + " and " + token);
-			}
-			if (x.nextToken() != GT) {
-				throw x.syntaxError("Misshaped close tag");
-			}
-			return true;
-
-		} else if (token instanceof Character) {
-			throw x.syntaxError("Misshaped tag");
-
-			// Open tag <
-
-		} else {
-			tagName = (String) token;
-			token = null;
-			jsonobject = new JSONObject();
-			for (; ; ) {
-				if (token == null) {
-					token = x.nextToken();
-				}
-
-				// attribute = value
-				if (token instanceof String) {
-					string = (String) token;
-					token = x.nextToken();
-					if (token == EQ) {
-						token = x.nextToken();
-						if (!(token instanceof String)) {
-							throw x.syntaxError("Missing value");
-						}
-						jsonobject.accumulate(string, keepStrings ? token : InternalJSONUtil.stringToValue((String) token));
-						token = null;
-					} else {
-						jsonobject.accumulate(string, "");
-					}
-
-				} else if (token == SLASH) {
-					// Empty tag <.../>
-					if (x.nextToken() != GT) {
-						throw x.syntaxError("Misshaped tag");
-					}
-					if (jsonobject.size() > 0) {
-						context.accumulate(tagName, jsonobject);
-					} else {
-						context.accumulate(tagName, "");
-					}
-					return false;
-
-				} else if (token == GT) {
-					// Content, between <...> and </...>
-					for (; ; ) {
-						token = x.nextContent();
-						if (token == null) {
-							if (tagName != null) {
-								throw x.syntaxError("Unclosed tag " + tagName);
-							}
-							return false;
-						} else if (token instanceof String) {
-							string = (String) token;
-							if (string.length() > 0) {
-								jsonobject.accumulate("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
-							}
-
-						} else if (token == LT) {
-							// Nested element
-							if (parse(x, jsonobject, tagName, keepStrings)) {
-								if (jsonobject.size() == 0) {
-									context.accumulate(tagName, "");
-								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
-									context.accumulate(tagName, jsonobject.get("content"));
-								} else {
-									context.accumulate(tagName, jsonobject);
-								}
-								return false;
-							}
-						}
-					}
-				} else {
-					throw x.syntaxError("Misshaped tag");
-				}
-			}
-		}
-	}
-
-	/**
 	 * 转换JSONObject为XML
-	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 *
-	 * @param object A JSONObject.
-	 * @return A string.
-	 * @throws JSONException Thrown if there is an error parsing the string
+	 * @param object JSON对象或数组
+	 * @return XML字符串
+	 * @throws JSONException JSON解析异常
 	 */
 	public static String toXml(Object object) throws JSONException {
 		return toXml(object, null);
@@ -282,122 +115,26 @@ public class XML {
 
 	/**
 	 * 转换JSONObject为XML
-	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 *
-	 * @param object  A JSONObject.
-	 * @param tagName The optional name of the enclosing tag.
+	 * @param object  JSON对象或数组
+	 * @param tagName 可选标签名称，名称为空时忽略标签
 	 * @return A string.
-	 * @throws JSONException Thrown if there is an error parsing the string
+	 * @throws JSONException JSON解析异常
 	 */
 	public static String toXml(Object object, String tagName) throws JSONException {
-		if (null == object) {
-			return null;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		JSONArray ja;
-		JSONObject jo;
-		String key;
-		Iterator<String> keys;
-		Object value;
-
-		if (object instanceof JSONObject) {
-
-			// Emit <tagName>
-			if (tagName != null) {
-				sb.append('<');
-				sb.append(tagName);
-				sb.append('>');
-			}
-
-			// Loop thru the keys.
-			jo = (JSONObject) object;
-			keys = jo.keySet().iterator();
-			while (keys.hasNext()) {
-				key = keys.next();
-				value = jo.get(key);
-				if (value == null) {
-					value = StrUtil.EMPTY;
-				} else if (ArrayUtil.isArray(value)) {
-					value = new JSONArray(value);
-				}
-
-				// Emit content in body
-				if ("content".equals(key)) {
-					if (value instanceof JSONArray) {
-						ja = (JSONArray) value;
-						int i = 0;
-						for (Object val : ja) {
-							if (i > 0) {
-								sb.append('\n');
-							}
-							sb.append(EscapeUtil.escapeXml(val.toString()));
-							i++;
-						}
-					} else {
-						sb.append(EscapeUtil.escapeXml(value.toString()));
-					}
-
-					// Emit an array of similar keys
-
-				} else if (value instanceof JSONArray) {
-					ja = (JSONArray) value;
-					for (Object val : ja) {
-						if (val instanceof JSONArray) {
-							sb.append('<');
-							sb.append(key);
-							sb.append('>');
-							sb.append(toXml(val));
-							sb.append("</");
-							sb.append(key);
-							sb.append('>');
-						} else {
-							sb.append(toXml(val, key));
-						}
-					}
-				} else if ("".equals(value)) {
-					sb.append('<');
-					sb.append(key);
-					sb.append("/>");
-
-					// Emit a new tag <k>
-
-				} else {
-					sb.append(toXml(value, key));
-				}
-			}
-			if (tagName != null) {
-
-				// Emit the </tagname> close tag
-				sb.append("</");
-				sb.append(tagName);
-				sb.append('>');
-			}
-			return sb.toString();
-
-		}
-
-		if (ArrayUtil.isArray(object)) {
-			object = new JSONArray(object);
-		}
-
-		if (object instanceof JSONArray) {
-			ja = (JSONArray) object;
-			for (Object val : ja) {
-				// XML does not have good support for arrays. If an array
-				// appears in a place where XML is lacking, synthesize an
-				// <array> element.
-				sb.append(toXml(val, tagName == null ? "array" : tagName));
-			}
-			return sb.toString();
-		}
-
-		String string = EscapeUtil.escapeXml(object.toString());
-		return (tagName == null) ?
-				"\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>"
-				: "<" + tagName + ">" + string + "</" + tagName + ">";
-
+		return toXml(object, tagName, "content");
 	}
 
-
+	/**
+	 * 转换JSONObject为XML
+	 *
+	 * @param object      JSON对象或数组
+	 * @param tagName     可选标签名称，名称为空时忽略标签
+	 * @param contentKeys 标识为内容的key,遇到此key直接解析内容而不增加对应名称标签
+	 * @return A string.
+	 * @throws JSONException JSON解析异常
+	 */
+	public static String toXml(Object object, String tagName, String... contentKeys) throws JSONException {
+		return JSONXMLSerializer.toXml(object, tagName, contentKeys);
+	}
 }
