@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
@@ -77,10 +78,10 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * 获取{@link ConfigurableListableBeanFactory}
 	 *
 	 * @return {@link ConfigurableListableBeanFactory}
-	 * @since 5.7.7
 	 * @throws UtilException 当上下文非ConfigurableListableBeanFactory抛出异常
+	 * @since 5.7.7
 	 */
-	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws UtilException{
+	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws UtilException {
 		final ConfigurableListableBeanFactory factory;
 		if (null != beanFactory) {
 			factory = beanFactory;
@@ -177,10 +178,20 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String getProperty(String key) {
-		if(null == applicationContext){
+		if (null == applicationContext) {
 			return null;
 		}
 		return applicationContext.getEnvironment().getProperty(key);
+	}
+
+	/**
+	 * 获取应用程序名称
+	 *
+	 * @return 应用程序名称
+	 * @since 5.7.12
+	 */
+	public static String getApplicationName() {
+		return getProperty("spring.application.name");
 	}
 
 	/**
@@ -190,7 +201,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String[] getActiveProfiles() {
-		if(null == applicationContext){
+		if (null == applicationContext) {
 			return null;
 		}
 		return applicationContext.getEnvironment().getActiveProfiles();
@@ -237,11 +248,23 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	public static void unregisterBean(String beanName) {
 		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
-		if(factory instanceof DefaultSingletonBeanRegistry){
+		if (factory instanceof DefaultSingletonBeanRegistry) {
 			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
 			registry.destroySingleton(beanName);
 		} else {
 			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
+		}
+	}
+
+	/**
+	 * 发布事件
+	 *
+	 * @param event the event to publish
+	 * @since 5.7.12
+	 */
+	public static void publishEvent(ApplicationEvent event) {
+		if (null != applicationContext) {
+			applicationContext.publishEvent(event);
 		}
 	}
 }

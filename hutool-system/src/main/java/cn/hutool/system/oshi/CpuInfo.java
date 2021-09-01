@@ -1,7 +1,6 @@
 package cn.hutool.system.oshi;
 
 import oshi.hardware.CentralProcessor;
-import oshi.util.Util;
 
 import java.text.DecimalFormat;
 
@@ -49,11 +48,19 @@ public class CpuInfo {
 	 */
 	private String cpuModel;
 
+	/**
+	 * CPU型号信息
+	 */
+	private CpuTicks ticks;
+
+	/**
+	 * 空构造
+	 */
 	public CpuInfo() {
 	}
 
 	/**
-	 * 构造
+	 * 构造，等待时间为用于计算在一定时长内的CPU负载情况，如传入1000表示最近1秒的负载情况
 	 *
 	 * @param processor   {@link CentralProcessor}
 	 * @param waitingTime 设置等待时间，单位毫秒
@@ -139,9 +146,16 @@ public class CpuInfo {
 		this.cpuModel = cpuModel;
 	}
 
+	public CpuTicks getTicks() {
+		return ticks;
+	}
+
+	public void setTicks(CpuTicks ticks) {
+		this.ticks = ticks;
+	}
+
 	@Override
 	public String toString() {
-		DecimalFormat format = new DecimalFormat("#.00");
 		return "CpuInfo{" +
 				"cpu核心数=" + cpuNum +
 				", CPU总的使用率=" + toTal +
@@ -149,7 +163,7 @@ public class CpuInfo {
 				", CPU用户使用率=" + used +
 				", CPU当前等待率=" + wait +
 				", CPU当前空闲率=" + free +
-				", CPU利用率=" + Double.parseDouble(format.format((100 - getFree()))) +
+				", CPU利用率=" + LOAD_FORMAT.format(100 - free) +
 				", CPU型号信息='" + cpuModel + '\'' +
 				'}';
 	}
@@ -162,43 +176,18 @@ public class CpuInfo {
 	 * @since 5.7.12
 	 */
 	private void init(CentralProcessor processor, long waitingTime) {
-		// CPU信息
-		final long[] prevTicks = processor.getSystemCpuLoadTicks();
-		// 这里必须要设置延迟
-		Util.sleep(waitingTime);
-		final long[] ticks = processor.getSystemCpuLoadTicks();
-		final long nice = tick(prevTicks, ticks, CentralProcessor.TickType.NICE);
-		final long irq = tick(prevTicks, ticks, CentralProcessor.TickType.IRQ);
-		final long softIrq = tick(prevTicks, ticks, CentralProcessor.TickType.SOFTIRQ);
-		final long steal = tick(prevTicks, ticks, CentralProcessor.TickType.STEAL);
-		final long cSys = tick(prevTicks, ticks, CentralProcessor.TickType.SYSTEM);
-		final long user = tick(prevTicks, ticks, CentralProcessor.TickType.USER);
-		final long ioWait = tick(prevTicks, ticks, CentralProcessor.TickType.IOWAIT);
-		// CPU闲置时间
-		final long idle = tick(prevTicks, ticks, CentralProcessor.TickType.IDLE);
+		final CpuTicks ticks = new CpuTicks(processor, waitingTime);
+		this.ticks = ticks;
 
 		this.cpuNum = processor.getLogicalProcessorCount();
-		final long totalCpu = Math.max(user + nice + cSys + idle + ioWait + irq + softIrq + steal, 0);
-		this.toTal = totalCpu;
-
-		this.sys = formatDouble(cSys, totalCpu);
-		this.used = formatDouble(user, totalCpu);
-		this.wait = formatDouble(ioWait, totalCpu);
-		this.free = formatDouble(idle, totalCpu);
 		this.cpuModel = processor.toString();
-	}
 
-	/**
-	 * 获取一段时间内的CPU负载标记差
-	 *
-	 * @param prevTicks 开始的ticks
-	 * @param ticks     结束的ticks
-	 * @param tickType  tick类型
-	 * @return 标记差
-	 * @since 5.7.12
-	 */
-	private static long tick(long[] prevTicks, long[] ticks, CentralProcessor.TickType tickType) {
-		return ticks[tickType.getIndex()] - prevTicks[tickType.getIndex()];
+		final long totalCpu = ticks.totalCpu();
+		this.toTal = totalCpu;
+		this.sys = formatDouble(ticks.cSys, totalCpu);
+		this.used = formatDouble(ticks.user, totalCpu);
+		this.wait = formatDouble(ticks.ioWait, totalCpu);
+		this.free = formatDouble(ticks.idle, totalCpu);
 	}
 
 	/**

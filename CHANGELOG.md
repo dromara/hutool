@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【system 】     OshiUtil增加getCurrentProcess方法
+* 【extra  】     SpringUtil增加getApplicationName、publishEvent方法（issue#I485NZ@Gitee）
 
 ### 🐞Bug修复
 
