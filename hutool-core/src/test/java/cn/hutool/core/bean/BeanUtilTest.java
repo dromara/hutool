@@ -258,6 +258,13 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	@SuppressWarnings("ConstantConditions")
+	public void getNullPropertyTest() {
+		final Object property = BeanUtil.getProperty(null, "name");
+		Assert.assertNull(property);
+	}
+
+	@Test
 	public void getPropertyDescriptorsTest() {
 		HashSet<Object> set = CollUtil.newHashSet();
 		PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
