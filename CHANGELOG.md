@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.12 (2021-09-01)
+# 5.7.12 (2021-09-02)
 
 ### 🐣新特性
 * 【system 】     OshiUtil增加getCurrentProcess方法
 * 【extra  】     SpringUtil增加getApplicationName、publishEvent方法（issue#I485NZ@Gitee）
 * 【core   】     BeanUtil.getProperty增加判空（issue#I488HA@Gitee）
+* 【core   】     OptionalBean弃用（pr#1182@Github）
 
 ### 🐞Bug修复
 

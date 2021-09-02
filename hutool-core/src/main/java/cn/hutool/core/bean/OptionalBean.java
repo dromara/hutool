@@ -15,7 +15,9 @@ import java.util.function.Supplier;
  * @param <T> Bean类型
  * @author totalo
  * @since 5.4.7
+ * @deprecated {@link java.util.Optional} 可以完成此类的所有功能。
  */
+@Deprecated
 public final class OptionalBean<T> {
 
 	private static final OptionalBean<?> EMPTY = new OptionalBean<>();
