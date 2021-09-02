@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.PatternPool;
 import org.junit.Assert;
 import org.junit.Test;
@@ -154,5 +155,12 @@ public class ReUtilTest {
 		Assert.assertEquals("192", allGroups.get(0));
 		Assert.assertEquals("168", allGroups.get(1));
 		Assert.assertEquals("1", allGroups.get(2));
+	}
+
+	@Test
+	public void matchTest(){
+		final boolean match = ReUtil.isMatch(
+				"(.+?)省(.+?)市(.+?)区", "广东省深圳市南山区");
+		Console.log(match);
 	}
 }
