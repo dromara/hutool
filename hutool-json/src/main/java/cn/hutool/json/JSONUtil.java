@@ -349,13 +349,24 @@ public class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(Object obj) {
+		return toJsonStr(obj, (JSONConfig) null);
+	}
+
+	/**
+	 * 转换为JSON字符串
+	 *
+	 * @param obj 被转为JSON的对象
+	 * @return JSON字符串
+	 * @since 5.7.12
+	 */
+	public static String toJsonStr(Object obj, JSONConfig jsonConfig) {
 		if (null == obj) {
 			return null;
 		}
 		if (obj instanceof CharSequence) {
 			return StrUtil.str((CharSequence) obj);
 		}
-		return toJsonStr(parse(obj));
+		return toJsonStr(parse(obj, jsonConfig));
 	}
 
 	/**

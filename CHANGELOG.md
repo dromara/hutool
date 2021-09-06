@@ -11,6 +11,7 @@
 * 【core   】     BeanUtil.getProperty增加判空（issue#I488HA@Gitee）
 * 【core   】     OptionalBean弃用（pr#1182@Github）
 * 【setting】     Setting、Props持有URL改为持有Resource（pr#1182@Github）
+* 【json   】     JSONUtil.toJsonStr增加重载，支持JSONConfig（issue#I48H5L@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ListUtil.split方法越界问题（issue#I48Q0P@Gitee）
