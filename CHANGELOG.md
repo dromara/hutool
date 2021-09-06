@@ -13,6 +13,7 @@
 * 【setting】     Setting、Props持有URL改为持有Resource（pr#1182@Github）
 * 【json   】     JSONUtil.toJsonStr增加重载，支持JSONConfig（issue#I48H5L@Gitee）
 * 【crypto 】     SymmetricCrypto增加setMode方法，update采用累加模式（pr#1642@Github）
+* 【core   】     ZipReader支持Filter
 
 ### 🐞Bug修复
 * 【core   】     修复ListUtil.split方法越界问题（issue#I48Q0P@Gitee）

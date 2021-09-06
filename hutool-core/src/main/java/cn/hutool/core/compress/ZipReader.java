@@ -3,6 +3,7 @@ package cn.hutool.core.compress;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ZipUtil;
 
 import java.io.Closeable;
@@ -71,7 +72,7 @@ public class ZipReader implements Closeable {
 	/**
 	 * 构造
 	 *
-	 * @param in 读取的的Zip文件流
+	 * @param in      读取的的Zip文件流
 	 * @param charset 编码
 	 */
 	public ZipReader(InputStream in, Charset charset) {
@@ -88,7 +89,8 @@ public class ZipReader implements Closeable {
 	}
 
 	/**
-	 * 获取指定路径的文件流
+	 * 获取指定路径的文件流<br>
+	 * 如果是文件模式，则直接获取Entry对应的流，如果是流模式，则遍历entry后，找到对应流返回
 	 *
 	 * @param path 路径
 	 * @return 文件流
@@ -101,7 +103,17 @@ public class ZipReader implements Closeable {
 				return ZipUtil.getStream(zipFile, entry);
 			}
 		} else {
-			throw new UnsupportedOperationException("Zip stream mode not support get!");
+			try {
+				this.in.reset();
+				ZipEntry zipEntry;
+				while (null != (zipEntry = in.getNextEntry())) {
+					if(zipEntry.getName().equals(path)){
+						return this.in;
+					}
+				}
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
 		}
 
 		return null;
@@ -115,22 +127,37 @@ public class ZipReader implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public File readTo(File outFile) throws IORuntimeException {
+		return readTo(outFile, null);
+	}
+
+	/**
+	 * 解压到指定目录中
+	 *
+	 * @param outFile     解压到的目录
+	 * @param entryFilter 过滤器，排除不需要的文件
+	 * @return 解压的目录
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.12
+	 */
+	public File readTo(File outFile, Filter<ZipEntry> entryFilter) throws IORuntimeException {
 		read((zipEntry) -> {
-			// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-			File outItemFile = FileUtil.file(outFile, zipEntry.getName());
-			if (zipEntry.isDirectory()) {
-				// 目录
-				//noinspection ResultOfMethodCallIgnored
-				outItemFile.mkdirs();
-			} else {
-				InputStream in;
-				if (null != this.zipFile) {
-					in = ZipUtil.getStream(this.zipFile, zipEntry);
+			if (null == entryFilter || entryFilter.accept(zipEntry)) {
+				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
+				final File outItemFile = FileUtil.file(outFile, zipEntry.getName());
+				if (zipEntry.isDirectory()) {
+					// 目录
+					//noinspection ResultOfMethodCallIgnored
+					outItemFile.mkdirs();
 				} else {
-					in = this.in;
+					InputStream in;
+					if (null != this.zipFile) {
+						in = ZipUtil.getStream(this.zipFile, zipEntry);
+					} else {
+						in = this.in;
+					}
+					// 文件
+					FileUtil.writeFromStream(in, outItemFile, false);
 				}
-				// 文件
-				FileUtil.writeFromStream(in, outItemFile, false);
 			}
 		});
 		return outFile;
@@ -140,8 +167,8 @@ public class ZipReader implements Closeable {
 	 * 读取并处理Zip文件中的每一个{@link ZipEntry}
 	 *
 	 * @param consumer {@link ZipEntry}处理器
-	 * @throws IORuntimeException IO异常
 	 * @return this
+	 * @throws IORuntimeException IO异常
 	 */
 	public ZipReader read(Consumer<ZipEntry> consumer) throws IORuntimeException {
 		if (null != this.zipFile) {
@@ -154,7 +181,7 @@ public class ZipReader implements Closeable {
 
 	@Override
 	public void close() throws IORuntimeException {
-		if(null != this.zipFile){
+		if (null != this.zipFile) {
 			IoUtil.close(this.zipFile);
 		} else {
 			IoUtil.close(this.in);
