@@ -1,6 +1,7 @@
 package cn.hutool.extra.qrcode;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -80,4 +81,10 @@ public class QrCodeUtilTest {
 		Assert.assertNotNull(base641);
 	}
 
+	@Test
+	@Ignore
+	public void decodeTest3(){
+		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), true, true);
+		Console.log(decode);
+	}
 }

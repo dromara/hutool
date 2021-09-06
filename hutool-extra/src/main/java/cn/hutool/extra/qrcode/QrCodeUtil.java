@@ -15,6 +15,7 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.awt.Image;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 基于Zxing的二维码工具类，支持：
@@ -354,7 +356,9 @@ public class QrCodeUtil {
 	}
 
 	/**
-	 * 将二维码或条形码图片解码为文本
+	 * 将二维码或条形码图片解码为文本<br>
+	 * 此方法会尝试使用{@link HybridBinarizer}和{@link GlobalHistogramBinarizer}两种模式解析<br>
+	 * 需要注意部分二维码如果不带logo，使用PureBarcode模式会解析失败，此时须设置此选项为false。
 	 *
 	 * @param image         {@link Image} 二维码图片
 	 * @param isTryHarder   是否优化精度
@@ -363,32 +367,31 @@ public class QrCodeUtil {
 	 * @since 4.3.1
 	 */
 	public static String decode(Image image, boolean isTryHarder, boolean isPureBarcode) {
+		return decode(image, buildHints(isTryHarder, isPureBarcode));
+	}
+
+	/**
+	 * 将二维码或条形码图片解码为文本<br>
+	 * 此方法会尝试使用{@link HybridBinarizer}和{@link GlobalHistogramBinarizer}两种模式解析<br>
+	 * 需要注意部分二维码如果不带logo，使用PureBarcode模式会解析失败，此时须设置此选项为false。
+	 *
+	 * @param image {@link Image} 二维码图片
+	 * @param hints 自定义扫码配置，包括算法、编码、复杂模式等
+	 * @return 解码后的文本
+	 * @since 5.7.12
+	 */
+	public static String decode(Image image, Map<DecodeHintType, Object> hints) {
 		final MultiFormatReader formatReader = new MultiFormatReader();
+		formatReader.setHints(hints);
 
 		final LuminanceSource source = new BufferedImageLuminanceSource(ImgUtil.toBufferedImage(image));
-		final Binarizer binarizer = new HybridBinarizer(source);
-		final BinaryBitmap binaryBitmap = new BinaryBitmap(binarizer);
 
-		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
-		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
-		// 优化精度
-		hints.put(DecodeHintType.TRY_HARDER, isTryHarder);
-		// 复杂模式，开启PURE_BARCODE模式
-		hints.put(DecodeHintType.PURE_BARCODE, isPureBarcode);
-		Result result;
-		try {
-			result = formatReader.decode(binaryBitmap, hints);
-		} catch (NotFoundException e) {
-			// 报错尝试关闭复杂模式
-			hints.remove(DecodeHintType.PURE_BARCODE);
-			try {
-				result = formatReader.decode(binaryBitmap, hints);
-			} catch (NotFoundException e1) {
-				throw new QrCodeException(e1);
-			}
+		Result result = _decode(formatReader, new HybridBinarizer(source));
+		if (null == result) {
+			result = _decode(formatReader, new GlobalHistogramBinarizer(source));
 		}
 
-		return result.getText();
+		return null != result ? result.getText() : null;
 	}
 
 	/**
@@ -414,5 +417,42 @@ public class QrCodeUtil {
 			}
 		}
 		return image;
+	}
+
+	/**
+	 * 创建解码选项
+	 *
+	 * @param isTryHarder   是否优化精度
+	 * @param isPureBarcode 是否使用复杂模式，扫描带logo的二维码设为true
+	 * @return 选项Map
+	 */
+	private static Map<DecodeHintType, Object> buildHints(boolean isTryHarder, boolean isPureBarcode) {
+		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
+		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
+
+		// 优化精度
+		if (isTryHarder) {
+			hints.put(DecodeHintType.TRY_HARDER, true);
+		}
+		// 复杂模式，开启PURE_BARCODE模式
+		if (isPureBarcode) {
+			hints.put(DecodeHintType.PURE_BARCODE, true);
+		}
+		return hints;
+	}
+
+	/**
+	 * 解码多种类型的码，包括二维码和条形码
+	 *
+	 * @param formatReader {@link MultiFormatReader}
+	 * @param binarizer    {@link Binarizer}
+	 * @return {@link Result}
+	 */
+	private static Result _decode(MultiFormatReader formatReader, Binarizer binarizer) {
+		try {
+			return formatReader.decodeWithState(new BinaryBitmap(binarizer));
+		} catch (NotFoundException e) {
+			return null;
+		}
 	}
 }
