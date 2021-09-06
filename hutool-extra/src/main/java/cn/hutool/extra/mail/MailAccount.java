@@ -37,6 +37,10 @@ public class MailAccount implements Serializable {
 	private static final String MAIL_DEBUG = "mail.debug";
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
 
+	/**
+	 * @deprecated 此公共配置没有公开必要，迁移至GlobalMailAccount#MAIL_SETTING_PATHS
+	 */
+	@Deprecated
 	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
 	/**
