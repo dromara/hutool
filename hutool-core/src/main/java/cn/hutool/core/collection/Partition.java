@@ -26,7 +26,7 @@ public class Partition<T> extends AbstractList<List<T>> {
 	 */
 	public Partition(List<T> list, int size) {
 		this.list = list;
-		this.size = size;
+		this.size = Math.min(size, list.size());
 	}
 
 	@Override

@@ -17,6 +17,15 @@ import java.util.List;
 public class ListUtilTest {
 
 	@Test
+	public void splitTest(){
+		List<String> listAll = new ArrayList<>();
+		listAll.add("1");
+		listAll.add("2");
+		List<List<String>> lists = ListUtil.split(listAll, 10);
+		Assert.assertEquals(1, lists.size());
+	}
+
+	@Test
 	@Ignore
 	public void splitBenchTest() {
 		List<String> list = new ArrayList<>();

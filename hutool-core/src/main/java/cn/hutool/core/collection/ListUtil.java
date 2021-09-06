@@ -533,8 +533,8 @@ public class ListUtil {
 	 * </p>
 	 *
 	 * @param <T>  集合元素类型
-	 * @param list 列表
-	 * @param size 每个段的长度
+	 * @param list 列表，为空时返回{@link #empty()}
+	 * @param size 每个段的长度，当长度超过list长度时，size按照list长度计算，即只返回一个节点
 	 * @return 分段列表
 	 * @since 5.4.5
 	 */
@@ -557,8 +557,8 @@ public class ListUtil {
 	 * </p>
 	 *
 	 * @param <T>  集合元素类型
-	 * @param list 列表
-	 * @param size 每个段的长度
+	 * @param list 列表，为空时返回{@link #empty()}
+	 * @param size 每个段的长度，当长度超过list长度时，size按照list长度计算，即只返回一个节点
 	 * @return 分段列表
 	 * @see #partition(List, int)
 	 * @since 5.4.5
