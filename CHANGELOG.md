@@ -10,6 +10,7 @@
 * 【extra  】     SpringUtil增加getApplicationName、publishEvent方法（issue#I485NZ@Gitee）
 * 【core   】     BeanUtil.getProperty增加判空（issue#I488HA@Gitee）
 * 【core   】     OptionalBean弃用（pr#1182@Github）
+* 【setting】     Setting、Props持有URL改为持有Resource（pr#1182@Github）
 
 ### 🐞Bug修复
 
