@@ -9,6 +9,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.CipherMode;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Padding;
@@ -194,7 +195,27 @@ public class SymmetricCrypto implements Serializable {
 	// --------------------------------------------------------------------------------- Update
 
 	/**
-	 * 更新数据，分组加密中间结果可以当作随机数
+	 * 初始化模式并清空数据
+	 *
+	 * @param mode 模式枚举
+	 * @return this
+	 * @since 5.7.12
+	 */
+	public SymmetricCrypto setMode(CipherMode mode){
+		lock.lock();
+		try {
+			initMode(mode.getValue());
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		} finally {
+			lock.unlock();
+		}
+		return this;
+	}
+
+	/**
+	 * 更新数据，分组加密中间结果可以当作随机数<br>
+	 * 第一次更新数据前需要调用{@link #setMode(CipherMode)}初始化加密或解密模式，然后每次更新数据都是累加模式
 	 *
 	 * @param data 被加密的bytes
 	 * @return update之后的bytes
@@ -203,7 +224,6 @@ public class SymmetricCrypto implements Serializable {
 	public byte[] update(byte[] data) {
 		lock.lock();
 		try {
-			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
 			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -213,7 +233,8 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
-	 * 更新数据，分组加密中间结果可以当作随机数
+	 * 更新数据，分组加密中间结果可以当作随机数<br>
+	 * 第一次更新数据前需要调用{@link #setMode(CipherMode)}初始化加密或解密模式，然后每次更新数据都是累加模式
 	 *
 	 * @param data 被加密的bytes
 	 * @return update之后的hex数据
@@ -234,7 +255,7 @@ public class SymmetricCrypto implements Serializable {
 	public byte[] encrypt(byte[] data) {
 		lock.lock();
 		try {
-			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
 			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -256,7 +277,7 @@ public class SymmetricCrypto implements Serializable {
 		lock.lock();
 		CipherOutputStream cipherOutputStream = null;
 		try {
-			final Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
 			cipherOutputStream = new CipherOutputStream(out, cipher);
 			long length = IoUtil.copy(data, cipherOutputStream);
 			if (this.isZeroPadding) {
@@ -449,7 +470,7 @@ public class SymmetricCrypto implements Serializable {
 
 		lock.lock();
 		try {
-			final Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
 			blockSize = cipher.getBlockSize();
 			decryptData = cipher.doFinal(bytes);
 		} catch (Exception e) {
@@ -474,7 +495,7 @@ public class SymmetricCrypto implements Serializable {
 		lock.lock();
 		CipherInputStream cipherInputStream = null;
 		try {
-			final Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
 			cipherInputStream = new CipherInputStream(data, cipher);
 			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
@@ -647,7 +668,7 @@ public class SymmetricCrypto implements Serializable {
 	 * @throws InvalidKeyException                无效key
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
-	private Cipher initCipher(int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
+	private Cipher initMode(int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
 		final Cipher cipher = this.cipher;
 		if (null == this.params) {
 			cipher.init(mode, secretKey);

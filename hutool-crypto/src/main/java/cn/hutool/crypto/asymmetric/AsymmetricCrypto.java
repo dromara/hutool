@@ -235,7 +235,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initCipher(Cipher.ENCRYPT_MODE, key);
+			initMode(Cipher.ENCRYPT_MODE, key);
 
 			if (this.encryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -267,7 +267,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initCipher(Cipher.DECRYPT_MODE, key);
+			initMode(Cipher.DECRYPT_MODE, key);
 
 			if (this.decryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
@@ -360,14 +360,14 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	}
 
 	/**
-	 * 初始化{@link Cipher}
+	 * 初始化{@link Cipher}的模式，如加密模式或解密模式
 	 *
 	 * @param mode 模式，可选{@link Cipher#ENCRYPT_MODE}或者{@link Cipher#DECRYPT_MODE}
 	 * @param key  密钥
 	 * @throws InvalidAlgorithmParameterException 异常算法错误
 	 * @throws InvalidKeyException                异常KEY错误
 	 */
-	private void initCipher(int mode, Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
+	private void initMode(int mode, Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
 		if (null != this.algorithmParameterSpec) {
 			cipher.init(mode, key, this.algorithmParameterSpec);
 		} else {
