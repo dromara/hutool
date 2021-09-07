@@ -1056,7 +1056,7 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param file        被修改的文件
-	 * @param newName     新的文件名，包括扩展名
+	 * @param newName     新的文件名，可选是否包括扩展名
 	 * @param isRetainExt 是否保留原文件的扩展名，如果保留，则newName不需要加扩展名
 	 * @param isOverride  是否覆盖目标文件
 	 * @return 目标文件

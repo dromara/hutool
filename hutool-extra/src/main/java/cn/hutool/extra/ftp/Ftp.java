@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * FTP客户端封装<br>
  * 此客户端基于Apache-Commons-Net
- *
+ * <p>
  * 常见搭建ftp的工具有
  * 1、filezila server ;根目录一般都是空
  * 2、linux vsftpd ; 使用的 系统用户的目录，这里往往都是不是根目录，如：/home/ftpuser/ftp
@@ -556,8 +556,8 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 下载文件
 	 *
-	 * @param path    文件路径
-	 * @param outFile 输出文件或目录
+	 * @param path    文件路径，包含文件名
+	 * @param outFile 输出文件或目录，当为目录时，使用服务端的文件名
 	 */
 	@Override
 	public void download(String path, File outFile) {
@@ -599,9 +599,9 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 下载文件
 	 *
-	 * @param path     文件路径
+	 * @param path     文件所在路径（远程目录），不包含文件名
 	 * @param fileName 文件名
-	 * @param outFile  输出文件或目录
+	 * @param outFile  输出文件或目录，当为目录时使用服务端文件名
 	 * @throws IORuntimeException IO异常
 	 */
 	public void download(String path, String fileName, File outFile) throws IORuntimeException {
@@ -632,10 +632,10 @@ public class Ftp extends AbstractFtp {
 	/**
 	 * 下载文件到输出流
 	 *
-	 * @param path            文件路径
-	 * @param fileName        文件名
-	 * @param out             输出位置
-	 * @param fileNameCharset 文件名编码
+	 * @param path            服务端的文件路径
+	 * @param fileName        服务端的文件名
+	 * @param out             输出流，下载的文件写出到这个流中
+	 * @param fileNameCharset 文件名编码，通过此编码转换文件名编码为ISO8859-1
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.7
 	 */

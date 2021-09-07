@@ -271,9 +271,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @since 3.3.2
 	 */
 	public long writeBody(OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
-		if (null == out) {
-			throw new NullPointerException("[out] is null!");
-		}
+		Assert.notNull(out, "[out] must be not null!");
 		final long contentLength = contentLength();
 		try {
 			return copyBody(bodyStream(), out, contentLength, streamProgress);
@@ -290,16 +288,61 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
 	 *
-	 * @param destFile       写出到的文件
-	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @param targetFileOrDir 写出到的文件或目录
+	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(File destFile, StreamProgress streamProgress) {
-		Assert.notNull(destFile, "[destFile] is null!");
+	public long writeBody(File targetFileOrDir, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
-		final File outFile = completeFileNameFromHeader(destFile);
+		final File outFile = completeFileNameFromHeader(targetFileOrDir);
 		return writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
+	}
+
+	/**
+	 * 将响应内容写出到文件-避免未完成的文件<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）<br>
+	 * 来自：https://gitee.com/dromara/hutool/pulls/407<br>
+	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
+	 *
+	 * @param targetFileOrDir 写出到的文件或目录
+	 * @param tempFileSuffix  临时文件后缀，默认".temp"
+	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
+	 * @return 写出bytes数
+	 * @since 5.7.12
+	 */
+	public long writeBody(File targetFileOrDir, String tempFileSuffix, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
+
+		File outFile = completeFileNameFromHeader(targetFileOrDir);
+
+		if (StrUtil.isBlank(tempFileSuffix)) {
+			tempFileSuffix = ".temp";
+		} else {
+			tempFileSuffix = StrUtil.addPrefixIfNot(tempFileSuffix, StrUtil.DOT);
+		}
+
+		// 目标文件真实名称
+		final String fileName = outFile.getName();
+		// 临时文件名称
+		final String tempFileName = fileName + tempFileSuffix;
+
+		// 临时文件
+		outFile = new File(outFile.getParentFile(), tempFileName);
+
+		long length;
+		try {
+			length = writeBody(outFile, streamProgress);
+			// 重命名下载好的临时文件
+			FileUtil.rename(outFile, fileName, true);
+		} catch (Throwable e) {
+			// 异常则删除临时文件
+			FileUtil.del(outFile);
+			throw new HttpException(e);
+		}
+		return length;
 	}
 
 	/**
@@ -307,15 +350,15 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
 	 *
-	 * @param destFile       写出到的文件
-	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @param targetFileOrDir 写出到的文件
+	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
 	 * @return 写出的文件
 	 * @since 5.6.4
 	 */
-	public File writeBodyForFile(File destFile, StreamProgress streamProgress) {
-		Assert.notNull(destFile, "[destFile] is null!");
+	public File writeBodyForFile(File targetFileOrDir, StreamProgress streamProgress) {
+		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
-		final File outFile = completeFileNameFromHeader(destFile);
+		final File outFile = completeFileNameFromHeader(targetFileOrDir);
 		writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
 
 		return outFile;
@@ -326,12 +369,12 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
 	 *
-	 * @param destFile 写出到的文件
+	 * @param targetFileOrDir 写出到的文件或目录
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(File destFile) {
-		return writeBody(destFile, null);
+	public long writeBody(File targetFileOrDir) {
+		return writeBody(targetFileOrDir, null);
 	}
 
 	/**
@@ -339,12 +382,12 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
 	 *
-	 * @param destFilePath 写出到的文件的路径
+	 * @param targetFileOrDir 写出到的文件或目录的路径
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(String destFilePath) {
-		return writeBody(FileUtil.file(destFilePath));
+	public long writeBody(String targetFileOrDir) {
+		return writeBody(FileUtil.file(targetFileOrDir));
 	}
 	// ---------------------------------------------------------------- Body end
 
@@ -373,14 +416,14 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/**
 	 * 从响应头补全下载文件名
 	 *
-	 * @param destFile 目标文件夹或者目标文件
+	 * @param targetFileOrDir 目标文件夹或者目标文件
 	 * @return File 保存的文件
 	 * @since 5.4.1
 	 */
-	public File completeFileNameFromHeader(File destFile) {
-		if (false == destFile.isDirectory()) {
+	public File completeFileNameFromHeader(File targetFileOrDir) {
+		if (false == targetFileOrDir.isDirectory()) {
 			// 非目录直接返回
-			return destFile;
+			return targetFileOrDir;
 		}
 
 		// 从头信息中获取文件名
@@ -394,7 +437,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 				fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
 			}
 		}
-		return FileUtil.file(destFile, fileName);
+		return FileUtil.file(targetFileOrDir, fileName);
 	}
 
 	// ---------------------------------------------------------------- Private method start
@@ -517,7 +560,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 
 		final long contentLength = contentLength();
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream((int)contentLength);
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream((int) contentLength);
 		copyBody(in, out, contentLength, null);
 		this.bodyBytes = out.toByteArray();
 	}

@@ -84,7 +84,7 @@ public class QrCodeUtilTest {
 	@Test
 	@Ignore
 	public void decodeTest3(){
-		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), true, true);
+		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		Console.log(decode);
 	}
 }
