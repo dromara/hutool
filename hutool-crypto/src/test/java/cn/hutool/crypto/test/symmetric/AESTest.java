@@ -7,10 +7,14 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
+import org.bouncycastle.crypto.util.BasicAlphabetMapper;
+import org.bouncycastle.jcajce.spec.FPEParameterSpec;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
 public class AESTest {
@@ -111,5 +115,52 @@ public class AESTest {
 
 		final String decryptStr = aes.decryptStr(result1);
 		Assert.assertEquals(content, decryptStr);
+	}
+
+	/**
+	 * 见：https://github.com/dromara/hutool/issues/1814
+	 */
+	@Test
+	public void fpeTest() {
+		// 映射字符表，规定了明文和密文的字符范围
+		BasicAlphabetMapper numberMapper = new BasicAlphabetMapper("0123456789");
+
+		// 初始化 aes 密钥
+		byte[] keyBytes = RandomUtil.randomBytes(16);
+
+		AES aes = new AES("FF1", "NoPadding",
+				new SecretKeySpec(keyBytes, "FF1"),
+				new FPEParameterSpec(numberMapper.getRadix(), new byte[]{}));
+
+		// 原始数据
+		String phone = "13534534567";
+		// 加密
+		byte[] inputDataByte = numberMapper.convertToIndexes(phone.toCharArray());
+		byte[] encrypt = aes.encrypt(inputDataByte);
+
+		// 通过 mapper 将密文输出处理为原始格式
+		char[] encryptChars = numberMapper.convertToChars(encrypt);
+		// 手机号码加密: 13534534567 -> 49725950626
+		Assert.assertEquals(phone.length(), encryptChars.length);
+	}
+
+	/**
+	 * 见：https://blog.csdn.net/weixin_42468911/article/details/114358682
+	 */
+	@Test
+	public void gcmTest() {
+		final SecretKey key = KeyUtil.generateKey("AES");
+		byte[] iv = RandomUtil.randomBytes(12);
+
+		AES aes = new AES("GCM", "NoPadding",
+				key,
+				new GCMParameterSpec(128, iv));
+
+		// 原始数据
+		String phone = "13534534567";
+		// 加密
+		byte[] encrypt = aes.encrypt(phone);
+		final String decryptStr = aes.decryptStr(encrypt);
+		Assert.assertEquals(phone, decryptStr);
 	}
 }

@@ -15,6 +15,7 @@
 * 【crypto 】     SymmetricCrypto增加setMode方法，update采用累加模式（pr#1642@Github）
 * 【core   】     ZipReader支持Filter
 * 【all    】     Sftp、Ftp、HttpDownloader增加download重载，支持避免传输文件损坏（pr#407@Gitee）
+* 【crypto 】     AES修改构造的IvParameterSpec为AlgorithmParameterSpec（issue#1814@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ListUtil.split方法越界问题（issue#I48Q0P@Gitee）

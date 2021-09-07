@@ -126,6 +126,21 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 获取algorithms/providers中提供的强安全随机生成器<br>
+	 * 注意：此方法可能造成阻塞或性能问题
+	 *
+	 * @return {@link SecureRandom}
+	 * @since 5.7.12
+	 */
+	public static SecureRandom getSecureRandomStrong() {
+		try {
+			return SecureRandom.getInstanceStrong();
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
 	 * 获取随机数产生器
 	 *
 	 * @param isSecure 是否为强随机数生成器 (RNG)
