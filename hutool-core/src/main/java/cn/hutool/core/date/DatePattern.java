@@ -145,7 +145,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日
 	 */
-	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(ISO8601_PATTERN);
+	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(CHINESE_DATE_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyy年MM月dd日 HH时mm分ss秒
