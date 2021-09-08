@@ -11,8 +11,6 @@ import cn.hutool.core.io.IORuntimeException;
 public enum GlobalMailAccount {
 	INSTANCE;
 
-	private static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
-
 	private final MailAccount mailAccount;
 
 	/**
@@ -37,7 +35,7 @@ public enum GlobalMailAccount {
 	 * @return MailAccount
 	 */
 	private MailAccount createDefaultAccount() {
-		for (String mailSettingPath : MAIL_SETTING_PATHS) {
+		for (String mailSettingPath : MailAccount.MAIL_SETTING_PATHS) {
 			try {
 				return new MailAccount(mailSettingPath);
 			} catch (IORuntimeException ignore) {

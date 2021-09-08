@@ -200,7 +200,7 @@ public class FileWriter extends FileWrapper{
 		try (PrintWriter writer = getPrintWriter(isAppend)){
 			for (T t : list) {
 				if (null != t) {
-					writer.print(t.toString());
+					writer.print(t);
 					printNewLine(writer, lineSeparator);
 					writer.flush();
 				}
