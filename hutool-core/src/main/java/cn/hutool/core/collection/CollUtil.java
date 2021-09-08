@@ -84,13 +84,13 @@ public class CollUtil {
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
 	 * 空集合使用{@link Collections#emptyList()}
 	 *
-	 * @param <T> 集合元素类型
-	 * @param set 提供的集合，可能为null
+	 * @param <T>  集合元素类型
+	 * @param list 提供的集合，可能为null
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
 	 */
-	public static <T> List<T> emptyIfNull(List<T> set) {
-		return (null == set) ? Collections.emptyList() : set;
+	public static <T> List<T> emptyIfNull(List<T> list) {
+		return (null == list) ? Collections.emptyList() : list;
 	}
 
 	/**
