@@ -96,7 +96,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(Object obj) {
-		return new JSONObject(obj);
+		return parseObj(obj, null);
 	}
 
 	/**
@@ -109,6 +109,13 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONObject parseObj(Object obj, JSONConfig config) {
+		// 默认配置，根据对象类型决定是否有序
+		if(null == config){
+			config = JSONConfig.create();
+			if(InternalJSONUtil.isOrder(obj)){
+				config.setOrder(true);
+			}
+		}
 		return new JSONObject(obj, config);
 	}
 
@@ -121,7 +128,7 @@ public class JSONUtil {
 	 * @since 3.0.9
 	 */
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
-		return new JSONObject(obj, ignoreNullValue);
+		return parseObj(obj, ignoreNullValue, InternalJSONUtil.isOrder(obj));
 	}
 
 	/**
@@ -155,7 +162,7 @@ public class JSONUtil {
 	 * @since 3.0.8
 	 */
 	public static JSONArray parseArray(Object arrayOrCollection) {
-		return new JSONArray(arrayOrCollection);
+		return parseArray(arrayOrCollection, null);
 	}
 
 	/**
@@ -183,36 +190,32 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 转换对象为JSON<br>
-	 * 支持的对象：<br>
-	 * String: 转换为相应的对象<br>
-	 * Array Collection：转换为JSONArray<br>
-	 * Bean对象：转为JSONObject
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>String: 转换为相应的对象</li>
+	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
+	 *     <li>Bean对象：转为JSONObject</li>
+	 * </ul>
 	 *
 	 * @param obj 对象
 	 * @return JSON
 	 */
 	public static JSON parse(Object obj) {
-		if(obj instanceof JSON){
-			return (JSON) obj;
-		}
-
-		final JSONConfig config = JSONConfig.create();
-		if(InternalJSONUtil.isOrder(obj)){
-			config.setOrder(true);
-		}
-		return parse(obj, config);
+		return parse(obj, null);
 	}
 
 	/**
-	 * 转换对象为JSON<br>
-	 * 支持的对象：<br>
-	 * String: 转换为相应的对象<br>
-	 * Array、Iterable、Iterator：转换为JSONArray<br>
-	 * Bean对象：转为JSONObject
+	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
+	 * 支持的对象：
+	 * <ul>
+	 *     <li>String: 转换为相应的对象</li>
+	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
+	 *     <li>Bean对象：转为JSONObject</li>
+	 * </ul>
 	 *
 	 * @param obj    对象
-	 * @param config JSON配置
+	 * @param config JSON配置，{@code null}使用默认配置
 	 * @return JSON
 	 * @since 5.3.1
 	 */
@@ -220,7 +223,6 @@ public class JSONUtil {
 		if (null == obj) {
 			return null;
 		}
-
 		JSON json;
 		if (obj instanceof JSON) {
 			json = (JSON) obj;
@@ -228,9 +230,9 @@ public class JSONUtil {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
 			json = isJsonArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
 		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
-			json = new JSONArray(obj, config);
+			json = parseArray(obj, config);
 		} else {// 对象
-			json = new JSONObject(obj, config);
+			json = parseObj(obj, config);
 		}
 
 		return json;

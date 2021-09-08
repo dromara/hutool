@@ -128,7 +128,7 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 ### 🍐Gradle
 ```
-compile 'cn.hutool:hutool-all:5.7.12'
+implementation 'cn.hutool:hutool-all:5.7.12'
 ```
 
 ### 📥下载jar

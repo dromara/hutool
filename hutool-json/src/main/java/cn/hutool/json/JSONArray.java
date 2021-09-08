@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
@@ -91,7 +92,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
-		this.config = config;
+		this.config = ObjectUtil.defaultIfNull(config, JSONConfig.create());
 	}
 
 	/**

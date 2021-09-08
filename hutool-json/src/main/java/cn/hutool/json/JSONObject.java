@@ -110,7 +110,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 构造
 	 *
 	 * @param capacity 初始大小
-	 * @param config   JSON配置项，null表示默认配置
+	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
@@ -192,7 +192,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 *
 	 * @param source JavaBean或者Map对象或者String
-	 * @param config JSON配置文件
+	 * @param config JSON配置文件，{@code null}则使用默认配置
 	 * @since 4.2.2
 	 */
 	public JSONObject(Object source, JSONConfig config) {

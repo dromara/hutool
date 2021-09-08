@@ -130,7 +130,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 ### 🍐Gradle
 ```
-compile 'cn.hutool:hutool-all:5.7.12'
+implementation 'cn.hutool:hutool-all:5.7.12'
 ```
 
 ## 📥Download
