@@ -99,7 +99,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 列出目录文件<br>
+	 * 列出指定路径下的目录和文件<br>
 	 * 给定的绝对路径不能是压缩包中的路径
 	 *
 	 * @param path 目录绝对路径或者相对路径

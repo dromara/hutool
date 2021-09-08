@@ -14,6 +14,7 @@ import java.security.PublicKey;
  * @since 5.3.10
  */
 public class ECIES extends AsymmetricCrypto{
+	private static final long serialVersionUID = 1L;
 
 	/** 默认的ECIES算法 */
 	private static final String ALGORITHM_ECIES = "ECIES";

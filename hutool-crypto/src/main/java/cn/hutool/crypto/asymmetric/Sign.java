@@ -29,6 +29,7 @@ import java.util.Set;
  * @since 3.3.0
  */
 public class Sign extends BaseAsymmetric<Sign> {
+	private static final long serialVersionUID = 1L;
 
 	/** 签名，用于签名和验证 */
 	protected Signature signature;

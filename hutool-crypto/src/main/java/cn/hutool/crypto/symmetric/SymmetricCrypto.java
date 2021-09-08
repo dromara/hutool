@@ -1,11 +1,9 @@
 package cn.hutool.crypto.symmetric;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -25,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.spec.AlgorithmParameterSpec;
@@ -40,7 +37,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Looly
  */
-public class SymmetricCrypto implements Serializable {
+public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -160,6 +157,24 @@ public class SymmetricCrypto implements Serializable {
 	}
 
 	/**
+	 * 获得对称密钥
+	 *
+	 * @return 获得对称密钥
+	 */
+	public SecretKey getSecretKey() {
+		return secretKey;
+	}
+
+	/**
+	 * 获得加密或解密器
+	 *
+	 * @return 加密或解密
+	 */
+	public Cipher getCipher() {
+		return cipher;
+	}
+
+	/**
 	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
 	 *
 	 * @param params {@link AlgorithmParameterSpec}
@@ -246,12 +261,7 @@ public class SymmetricCrypto implements Serializable {
 
 	// --------------------------------------------------------------------------------- Encrypt
 
-	/**
-	 * 加密
-	 *
-	 * @param data 被加密的bytes
-	 * @return 加密后的bytes
-	 */
+	@Override
 	public byte[] encrypt(byte[] data) {
 		lock.lock();
 		try {
@@ -264,15 +274,7 @@ public class SymmetricCrypto implements Serializable {
 		}
 	}
 
-	/**
-	 * 加密，针对大数据量，可选结束后是否关闭流
-	 *
-	 * @param data    被加密的字符串
-	 * @param out     输出流，可以是文件或网络位置
-	 * @param isClose 是否关闭流
-	 * @throws IORuntimeException IO异常
-	 * @since 5.6.3
-	 */
+	@Override
 	public void encrypt(InputStream data, OutputStream out, boolean isClose) throws IORuntimeException {
 		lock.lock();
 		CipherOutputStream cipherOutputStream = null;
@@ -305,165 +307,9 @@ public class SymmetricCrypto implements Serializable {
 		}
 	}
 
-	/**
-	 * 加密
-	 *
-	 * @param data 数据
-	 * @return 加密后的Hex
-	 */
-	public String encryptHex(byte[] data) {
-		return HexUtil.encodeHexStr(encrypt(data));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data 数据
-	 * @return 加密后的Base64
-	 * @since 4.0.1
-	 */
-	public String encryptBase64(byte[] data) {
-		return Base64.encode(encrypt(data));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的bytes
-	 */
-	public byte[] encrypt(String data, String charset) {
-		return encrypt(StrUtil.bytes(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的bytes
-	 */
-	public byte[] encrypt(String data, Charset charset) {
-		return encrypt(StrUtil.bytes(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Hex
-	 * @since 4.5.12
-	 */
-	public String encryptHex(String data, String charset) {
-		return HexUtil.encodeHexStr(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Hex
-	 * @since 4.5.12
-	 */
-	public String encryptHex(String data, Charset charset) {
-		return HexUtil.encodeHexStr(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Base64
-	 */
-	public String encryptBase64(String data, String charset) {
-		return Base64.encode(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Base64
-	 * @since 4.5.12
-	 */
-	public String encryptBase64(String data, Charset charset) {
-		return Base64.encode(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密，使用UTF-8编码
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的bytes
-	 */
-	public byte[] encrypt(String data) {
-		return encrypt(StrUtil.bytes(data, CharsetUtil.CHARSET_UTF_8));
-	}
-
-	/**
-	 * 加密，使用UTF-8编码
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的Hex
-	 */
-	public String encryptHex(String data) {
-		return HexUtil.encodeHexStr(encrypt(data));
-	}
-
-	/**
-	 * 加密，使用UTF-8编码
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的Base64
-	 */
-	public String encryptBase64(String data) {
-		return Base64.encode(encrypt(data));
-	}
-
-	/**
-	 * 加密，加密后关闭流
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的bytes
-	 * @throws IORuntimeException IO异常
-	 */
-	public byte[] encrypt(InputStream data) throws IORuntimeException {
-		return encrypt(IoUtil.readBytes(data));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的Hex
-	 */
-	public String encryptHex(InputStream data) {
-		return HexUtil.encodeHexStr(encrypt(data));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data 被加密的字符串
-	 * @return 加密后的Base64
-	 */
-	public String encryptBase64(InputStream data) {
-		return Base64.encode(encrypt(data));
-	}
-
 	// --------------------------------------------------------------------------------- Decrypt
 
-	/**
-	 * 解密
-	 *
-	 * @param bytes 被解密的bytes
-	 * @return 解密后的bytes
-	 */
+	@Override
 	public byte[] decrypt(byte[] bytes) {
 		final int blockSize;
 		final byte[] decryptData;
@@ -482,15 +328,7 @@ public class SymmetricCrypto implements Serializable {
 		return removePadding(decryptData, blockSize);
 	}
 
-	/**
-	 * 解密，针对大数据量，结束后不关闭流
-	 *
-	 * @param data    加密的字符串
-	 * @param out     输出流，可以是文件或网络位置
-	 * @param isClose 是否关闭流，包括输入和输出流
-	 * @throws IORuntimeException IO异常
-	 * @since 5.6.3
-	 */
+	@Override
 	public void decrypt(InputStream data, OutputStream out, boolean isClose) throws IORuntimeException {
 		lock.lock();
 		CipherInputStream cipherInputStream = null;
@@ -520,109 +358,7 @@ public class SymmetricCrypto implements Serializable {
 		}
 	}
 
-	/**
-	 * 解密为字符串
-	 *
-	 * @param bytes   被解密的bytes
-	 * @param charset 解密后的charset
-	 * @return 解密后的String
-	 */
-	public String decryptStr(byte[] bytes, Charset charset) {
-		return StrUtil.str(decrypt(bytes), charset);
-	}
-
-	/**
-	 * 解密为字符串，默认UTF-8编码
-	 *
-	 * @param bytes 被解密的bytes
-	 * @return 解密后的String
-	 */
-	public String decryptStr(byte[] bytes) {
-		return decryptStr(bytes, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 解密Hex（16进制）或Base64表示的字符串
-	 *
-	 * @param data 被解密的String，必须为16进制字符串或Base64表示形式
-	 * @return 解密后的bytes
-	 */
-	public byte[] decrypt(String data) {
-		return decrypt(SecureUtil.decode(data));
-	}
-
-	/**
-	 * 解密Hex（16进制）或Base64表示的字符串
-	 *
-	 * @param data    被解密的String
-	 * @param charset 解密后的charset
-	 * @return 解密后的String
-	 */
-	public String decryptStr(String data, Charset charset) {
-		return StrUtil.str(decrypt(data), charset);
-	}
-
-	/**
-	 * 解密Hex（16进制）或Base64表示的字符串，默认UTF-8编码
-	 *
-	 * @param data 被解密的String
-	 * @return 解密后的String
-	 */
-	public String decryptStr(String data) {
-		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 解密，会关闭流
-	 *
-	 * @param data 被解密的bytes
-	 * @return 解密后的bytes
-	 * @throws IORuntimeException IO异常
-	 */
-	public byte[] decrypt(InputStream data) throws IORuntimeException {
-		return decrypt(IoUtil.readBytes(data));
-	}
-
-	/**
-	 * 解密，不会关闭流
-	 *
-	 * @param data    被解密的InputStream
-	 * @param charset 解密后的charset
-	 * @return 解密后的String
-	 */
-	public String decryptStr(InputStream data, Charset charset) {
-		return StrUtil.str(decrypt(data), charset);
-	}
-
-	/**
-	 * 解密
-	 *
-	 * @param data 被解密的InputStream
-	 * @return 解密后的String
-	 */
-	public String decryptStr(InputStream data) {
-		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
-	}
-
 	// --------------------------------------------------------------------------------- Getters
-
-	/**
-	 * 获得对称密钥
-	 *
-	 * @return 获得对称密钥
-	 */
-	public SecretKey getSecretKey() {
-		return secretKey;
-	}
-
-	/**
-	 * 获得加密或解密器
-	 *
-	 * @return 加密或解密
-	 */
-	public Cipher getCipher() {
-		return cipher;
-	}
 
 	// --------------------------------------------------------------------------------- Private method start
 
@@ -740,7 +476,7 @@ public class SymmetricCrypto implements Serializable {
 	 * @param blockSize 块大小
 	 * @throws IOException IO异常
 	 */
-	private void copyForZeroPadding(CipherInputStream in, OutputStream out, int blockSize) throws IOException {
+	private static void copyForZeroPadding(CipherInputStream in, OutputStream out, int blockSize) throws IOException {
 		int n = 1;
 		if (IoUtil.DEFAULT_BUFFER_SIZE > blockSize) {
 			n = Math.max(n, IoUtil.DEFAULT_BUFFER_SIZE / blockSize);

@@ -21,6 +21,8 @@ import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.PBKDF2;
 import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.fpe.FPE;
+import org.bouncycastle.crypto.AlphabetMapper;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -889,7 +891,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
-	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
 		return crypto.encryptHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
 	}
 
@@ -964,7 +966,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
-	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
 		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
 	}
 
@@ -1101,11 +1103,25 @@ public class SecureUtil {
 	 * PBKDF2加密密码
 	 *
 	 * @param password 密码
-	 * @param salt 盐
+	 * @param salt     盐
 	 * @return 盐，一般为16位
 	 * @since 5.6.0
 	 */
-	public static String pbkdf2(char[] password, byte[] salt){
+	public static String pbkdf2(char[] password, byte[] salt) {
 		return new PBKDF2().encryptHex(password, salt);
+	}
+
+	/**
+	 * FPE(Format Preserving Encryption)实现，支持FF1和FF3-1模式。
+	 *
+	 * @param mode   FPE模式枚举，可选FF1或FF3-1
+	 * @param key    密钥，{@code null}表示随机密钥，长度必须是16bit、24bit或32bit
+	 * @param mapper Alphabet字典映射，被加密的字符范围和这个映射必须一致，例如手机号、银行卡号等字段可以采用数字字母字典表
+	 * @param tweak  Tweak是为了解决因局部加密而导致结果冲突问题，通常情况下将数据的不可变部分作为Tweak
+	 * @return {@link FPE}
+	 * @since 5.7.12
+	 */
+	public static FPE fpe(FPE.FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
+		return new FPE(mode, key, mapper, tweak);
 	}
 }

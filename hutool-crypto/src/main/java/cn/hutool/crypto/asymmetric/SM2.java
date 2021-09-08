@@ -40,6 +40,7 @@ import java.security.PublicKey;
  * @since 4.3.2
  */
 public class SM2 extends AbstractAsymmetricCrypto<SM2> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 算法EC

@@ -32,6 +32,7 @@ import java.security.spec.AlgorithmParameterSpec;
  * @author Looly
  */
 public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Cipher负责完成加密或解密工作
@@ -223,13 +224,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 	// --------------------------------------------------------------------------------- Encrypt
 
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的bytes
-	 * @param keyType 私钥或公钥 {@link KeyType}
-	 * @return 加密后的bytes
-	 */
 	@Override
 	public byte[] encrypt(byte[] data, KeyType keyType) {
 		final Key key = getKeyByType(keyType);
@@ -255,13 +249,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 	// --------------------------------------------------------------------------------- Decrypt
 
-	/**
-	 * 解密
-	 *
-	 * @param data    被解密的bytes
-	 * @param keyType 私钥或公钥 {@link KeyType}
-	 * @return 解密后的bytes
-	 */
 	@Override
 	public byte[] decrypt(byte[] data, KeyType keyType) {
 		final Key key = getKeyByType(keyType);

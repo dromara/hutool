@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 
+import java.io.Serializable;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -18,7 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Looly
  * @since 3.3.0
  */
-public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
+public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 算法
