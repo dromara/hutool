@@ -168,7 +168,7 @@ public class SymmetricTest {
 	public void aesPkcs7PaddingTest() {
 		String content = RandomUtil.randomString(RandomUtil.randomInt(200));
 		AES aes = new AES("CBC", "PKCS7Padding",
-				"0123456789ABHAEQ".getBytes(),
+				RandomUtil.randomBytes(32),
 				"DYgjCEIMVrj2W9xN".getBytes());
 
 		// 加密为16进制表示
