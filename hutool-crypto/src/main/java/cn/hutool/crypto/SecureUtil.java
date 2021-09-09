@@ -21,6 +21,7 @@ import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.PBKDF2;
 import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.ZUC;
 import cn.hutool.crypto.symmetric.fpe.FPE;
 import org.bouncycastle.crypto.AlphabetMapper;
 
@@ -1123,5 +1124,29 @@ public class SecureUtil {
 	 */
 	public static FPE fpe(FPE.FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
 		return new FPE(mode, key, mapper, tweak);
+	}
+
+	/**
+	 * 祖冲之算法集（ZUC-128算法）实现，基于BouncyCastle实现。
+	 *
+	 * @param key 密钥
+	 * @param iv  加盐，长度16bytes，{@code null}是随机加盐
+	 * @return {@link ZUC}
+	 * @since 5.7.12
+	 */
+	public static ZUC zuc128(byte[] key, byte[] iv) {
+		return new ZUC(ZUC.ZUCAlgorithm.ZUC_128, key, iv);
+	}
+
+	/**
+	 * 祖冲之算法集（ZUC-256算法）实现，基于BouncyCastle实现。
+	 *
+	 * @param key 密钥
+	 * @param iv  加盐，长度25bytes，{@code null}是随机加盐
+	 * @return {@link ZUC}
+	 * @since 5.7.12
+	 */
+	public static ZUC zuc256(byte[] key, byte[] iv) {
+		return new ZUC(ZUC.ZUCAlgorithm.ZUC_256, key, iv);
 	}
 }

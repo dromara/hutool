@@ -18,11 +18,19 @@ public class ListUtilTest {
 
 	@Test
 	public void splitTest(){
-		List<String> listAll = new ArrayList<>();
-		listAll.add("1");
-		listAll.add("2");
-		List<List<String>> lists = ListUtil.split(listAll, 10);
-		Assert.assertEquals(1, lists.size());
+		List<List<Object>> lists = ListUtil.split(null, 3);
+		Assert.assertEquals(ListUtil.empty(), lists);
+
+		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 1);
+		Assert.assertEquals("[[1], [2], [3], [4]]", lists.toString());
+		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 2);
+		Assert.assertEquals("[[1, 2], [3, 4]]", lists.toString());
+		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 3);
+		Assert.assertEquals("[[1, 2, 3], [4]]", lists.toString());
+		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 4);
+		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
+		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 5);
+		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
 	}
 
 	@Test

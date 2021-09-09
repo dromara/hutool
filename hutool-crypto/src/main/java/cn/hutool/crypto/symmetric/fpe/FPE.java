@@ -25,6 +25,8 @@ import java.io.Serializable;
  *     <li>加密过程可逆，加密后的数据可以通过密钥解密还原原始数据</li>
  * </ul>
  *
+ * 此类基于BouncyCastle实现。
+ *
  * @author looly
  * @since 5.7.12
  */
@@ -52,15 +54,15 @@ public class FPE implements Serializable {
 	 * @param mode   FPE模式枚举，可选FF1或FF3-1
 	 * @param key    密钥，{@code null}表示随机密钥，长度必须是16bit、24bit或32bit
 	 * @param mapper Alphabet字典映射，被加密的字符范围和这个映射必须一致，例如手机号、银行卡号等字段可以采用数字字母字典表
-	 * @param tweak  Tweak是为了解决因局部加密而导致结果冲突问题，通常情况下将数据的不可变部分作为Tweak
+	 * @param tweak  Tweak是为了解决因局部加密而导致结果冲突问题，通常情况下将数据的不可变部分作为Tweak，{@code null}使用默认长度全是0的bytes
 	 */
 	public FPE(FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
 		if (null == mode) {
 			mode = FPEMode.FF1;
 		}
 
-		if(null == tweak){
-			switch (mode){
+		if (null == tweak) {
+			switch (mode) {
 				case FF1:
 					tweak = new byte[0];
 					break;

@@ -2,21 +2,17 @@ package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.KeyUtil;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.ZUC;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 
 public class ZucTest {
 
 	@Test
 	public void zuc128Test(){
-		final SecretKey secretKey = KeyUtil.generateKey("zuc-128");
+		final byte[] secretKey = ZUC.generateKey(ZUC.ZUCAlgorithm.ZUC_128);
 		byte[] iv = RandomUtil.randomBytes(16);
-		final SymmetricCrypto zuc = new SymmetricCrypto("zuc-128", secretKey, new IvParameterSpec(iv));
+		final ZUC zuc = new ZUC(ZUC.ZUCAlgorithm.ZUC_128, secretKey, iv);
 
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);
@@ -26,9 +22,9 @@ public class ZucTest {
 
 	@Test
 	public void zuc256Test(){
-		final SecretKey secretKey = KeyUtil.generateKey("zuc-256");
+		final byte[] secretKey = ZUC.generateKey(ZUC.ZUCAlgorithm.ZUC_256);
 		byte[] iv = RandomUtil.randomBytes(25);
-		final SymmetricCrypto zuc = new SymmetricCrypto("zuc-256", secretKey, new IvParameterSpec(iv));
+		final ZUC zuc = new ZUC(ZUC.ZUCAlgorithm.ZUC_256, secretKey, iv);
 
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);

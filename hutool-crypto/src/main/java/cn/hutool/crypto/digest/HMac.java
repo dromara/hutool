@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.MessageDigest;
+import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * HMAC摘要算法<br>
@@ -84,7 +85,19 @@ public class HMac implements Serializable {
 	 * @since 4.5.13
 	 */
 	public HMac(String algorithm, Key key) {
-		this(MacEngineFactory.createEngine(algorithm, key));
+		this(algorithm, key, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param algorithm 算法
+	 * @param key       密钥
+	 * @param spec {@link AlgorithmParameterSpec}
+	 * @since 5.6.12
+	 */
+	public HMac(String algorithm, Key key, AlgorithmParameterSpec spec) {
+		this(MacEngineFactory.createEngine(algorithm, key, spec));
 	}
 
 	/**

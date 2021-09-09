@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.12 (2021-09-08)
+# 5.7.12 (2021-09-09)
 
 ### 🐣新特性
 * 【system 】     OshiUtil增加getCurrentProcess方法
@@ -16,12 +16,13 @@
 * 【core   】     ZipReader支持Filter
 * 【all    】     Sftp、Ftp、HttpDownloader增加download重载，支持避免传输文件损坏（pr#407@Gitee）
 * 【crypto 】     AES修改构造的IvParameterSpec为AlgorithmParameterSpec（issue#1814@Gitee）
-* 【crypto 】     增加FPE（issue#1814@Gitee）
+* 【crypto 】     增加FPE、ZUC（issue#1814@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ListUtil.split方法越界问题（issue#I48Q0P@Gitee）
 * 【core   】     修复QrCode的isTryHarder、isPureBarcode设置无效问题（issue#1815@Github）
 * 【core   】     修复DatePattern.CHINESE_DATE_FORMATTER错误问题（issue#I48ZE3@Gitee）
+* 【core   】     修复ListUtil.split错误问题
 
 -------------------------------------------------------------------------------------------------------------
 
