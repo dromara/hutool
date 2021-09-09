@@ -2160,7 +2160,9 @@ public class NumberUtil {
 	 */
 	public static BigDecimal toBigDecimal(String number) {
 		try {
-			number = parseNumber(number).toString();
+			DecimalFormat decimalFormat = new DecimalFormat();
+			decimalFormat.setParseBigDecimal(true);
+			number=decimalFormat.parse(number).toString();
 		} catch (Exception ignore) {
 			// 忽略解析错误
 		}
