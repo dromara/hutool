@@ -23,6 +23,7 @@
 * 【core   】     修复QrCode的isTryHarder、isPureBarcode设置无效问题（issue#1815@Github）
 * 【core   】     修复DatePattern.CHINESE_DATE_FORMATTER错误问题（issue#I48ZE3@Gitee）
 * 【core   】     修复ListUtil.split错误问题
+* 【core   】     修复NumberUtil.parseNumber长数字越界问题（issue#1818@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
