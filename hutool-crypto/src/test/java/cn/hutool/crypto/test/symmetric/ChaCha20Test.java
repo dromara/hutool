@@ -24,7 +24,7 @@ public class ChaCha20Test {
 		byte[] iv = RandomUtil.randomBytes(12);
 
 		final SymmetricCrypto chacha = new SymmetricCrypto("ChaCha20",
-				KeyUtil.generateKey("ChaCha", key),
+				KeyUtil.generateKey("ChaCha20", key),
 				new IvParameterSpec(iv)
 		);
 

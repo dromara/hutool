@@ -1,5 +1,6 @@
 package cn.hutool.core.exceptions;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,5 +34,16 @@ public class ExceptionUtilTest {
 		IllegalArgumentException argumentException = new IllegalArgumentException(ioException);
 		IOException ioException1 = ExceptionUtil.convertFromOrSuppressedThrowable(argumentException, IOException.class, true);
 		Assert.assertNotNull(ioException1);
+	}
+
+	@Test
+	public void bytesIntConvertTest(){
+		final String s = Convert.toStr(12);
+		final int integer = Convert.toInt(s);
+		Assert.assertEquals(12, integer);
+
+		final byte[] bytes = Convert.intToBytes(12);
+		final int i = Convert.bytesToInt(bytes);
+		Assert.assertEquals(12, i);
 	}
 }
