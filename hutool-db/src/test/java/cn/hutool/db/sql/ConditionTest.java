@@ -3,6 +3,8 @@ package cn.hutool.db.sql;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class ConditionTest {
 
 	@Test
@@ -58,7 +60,7 @@ public class ConditionTest {
 		final Condition age = Condition.parse("age", "< 10");
 		Assert.assertEquals("age < ?", age.toString());
 		// issue I38LTM
-		Assert.assertSame(Long.class, age.getValue().getClass());
+		Assert.assertSame(BigDecimal.class, age.getValue().getClass());
 	}
 
 	@Test
