@@ -2154,18 +2154,28 @@ public class NumberUtil {
 	 * 数字转{@link BigDecimal}<br>
 	 * null或""或空白符转换为0
 	 *
-	 * @param number 数字字符串
+	 * @param numberStr 数字字符串
 	 * @return {@link BigDecimal}
 	 * @since 4.0.9
 	 */
-	public static BigDecimal toBigDecimal(String number) {
+	public static BigDecimal toBigDecimal(String numberStr) {
+		if(StrUtil.isBlank(numberStr)){
+			return BigDecimal.ZERO;
+		}
+
 		try {
-			number = parseNumber(number).toString();
+			// 支持类似于 1,234.55 格式的数字
+			final Number number = parseNumber(numberStr);
+			if(number instanceof BigDecimal){
+				return (BigDecimal) number;
+			} else {
+				return new BigDecimal(number.toString());
+			}
 		} catch (Exception ignore) {
 			// 忽略解析错误
 		}
-		return StrUtil.isBlank(number) ? BigDecimal.ZERO : new
-				BigDecimal(number);
+
+		return new BigDecimal(numberStr);
 	}
 
 	/**
@@ -2500,7 +2510,13 @@ public class NumberUtil {
 	 */
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
 		try {
-			return NumberFormat.getInstance().parse(numberStr);
+			final NumberFormat format = NumberFormat.getInstance();
+			if(format instanceof DecimalFormat){
+				// issue#1818@Github
+				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
+				((DecimalFormat) format).setParseBigDecimal(true);
+			}
+			return format.parse(numberStr);
 		} catch (ParseException e) {
 			final NumberFormatException nfe = new NumberFormatException(e.getMessage());
 			nfe.initCause(e);

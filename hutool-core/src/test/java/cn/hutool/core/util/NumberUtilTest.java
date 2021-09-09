@@ -283,7 +283,7 @@ public class NumberUtilTest {
 		Assert.assertEquals(1482, v1);
 
 		Number v2 = NumberUtil.parseNumber("1,482.00D");
-		Assert.assertEquals(1482L, v2);
+		Assert.assertEquals(1482L, v2.longValue());
 	}
 
 	@Test

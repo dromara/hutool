@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -333,5 +334,13 @@ public class ConvertTest {
 		Assert.assertEquals("v1", hashtable.get("a1"));
 		Assert.assertEquals("v2", hashtable.get("a2"));
 		Assert.assertEquals("v3", hashtable.get("a3"));
+	}
+
+	@Test
+	public void toBigDecimalTest(){
+		// https://github.com/dromara/hutool/issues/1818
+		String str = "33020000210909112800000124";
+		final BigDecimal bigDecimal = Convert.toBigDecimal(str);
+		Assert.assertEquals(str, bigDecimal.toPlainString());
 	}
 }
