@@ -147,7 +147,7 @@ public class ConvertTest {
 	public void toNumberTest() {
 		Object a = "12.45";
 		Number number = Convert.toNumber(a);
-		Assert.assertEquals(12.45D, number);
+		Assert.assertEquals(12.45D, number.doubleValue(), 2);
 	}
 
 	@Test
