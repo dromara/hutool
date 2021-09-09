@@ -358,6 +358,7 @@ public class JSONUtil {
 	 * 转换为JSON字符串
 	 *
 	 * @param obj 被转为JSON的对象
+	 * @param jsonConfig JSON配置
 	 * @return JSON字符串
 	 * @since 5.7.12
 	 */
