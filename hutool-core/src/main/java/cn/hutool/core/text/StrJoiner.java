@@ -33,22 +33,38 @@ public class StrJoiner implements Appendable {
 	private boolean hasContent;
 
 	/**
-	 * 使用指定分隔符创建{@link StrJoiner}
+	 * 根据已有StrJoiner配置新建一个新的StrJoiner
+	 *
+	 * @param joiner 已有StrJoiner
+	 * @return 新的StrJoiner，配置相同
+	 * @since 5.7.12
+	 */
+	public static StrJoiner of(StrJoiner joiner) {
+		StrJoiner joinerNew = new StrJoiner(joiner.delimiter, joiner.prefix, joiner.suffix);
+		joinerNew.wrapElement = joiner.wrapElement;
+		joinerNew.nullMode = joiner.nullMode;
+		joinerNew.emptyResult = joiner.emptyResult;
+
+		return joinerNew;
+	}
+
+	/**
+	 * 使用指定分隔符创建StrJoiner
 	 *
 	 * @param delimiter 分隔符
-	 * @return {@link StrJoiner}
+	 * @return StrJoiner
 	 */
 	public static StrJoiner of(CharSequence delimiter) {
 		return new StrJoiner(delimiter);
 	}
 
 	/**
-	 * 使用指定分隔符创建{@link StrJoiner}
+	 * 使用指定分隔符创建StrJoiner
 	 *
 	 * @param delimiter 分隔符
 	 * @param prefix    前缀
 	 * @param suffix    后缀
-	 * @return {@link StrJoiner}
+	 * @return StrJoiner
 	 */
 	public static StrJoiner of(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
 		return new StrJoiner(delimiter, prefix, suffix);
@@ -200,7 +216,7 @@ public class StrJoiner implements Appendable {
 	 * @return this
 	 */
 	public <T> StrJoiner append(T[] array) {
-		if(null == array){
+		if (null == array) {
 			return this;
 		}
 		return append(new ArrayIter<>(array));
@@ -214,10 +230,10 @@ public class StrJoiner implements Appendable {
 	 * @return this
 	 */
 	public <T> StrJoiner append(Iterator<T> iterator) {
-		if(null == iterator){
+		if (null == iterator) {
 			return this;
 		}
-		return append(iterator, (t) -> StrJoiner.of(this.delimiter).append(t).toString());
+		return append(iterator, (t) -> StrJoiner.of(this).append(t).toString());
 	}
 
 	/**
@@ -301,7 +317,7 @@ public class StrJoiner implements Appendable {
 
 	@Override
 	public String toString() {
-		if(null == this.appendable){
+		if (null == this.appendable) {
 			return emptyResult;
 		}
 		if (false == wrapElement && StrUtil.isNotEmpty(this.suffix)) {
