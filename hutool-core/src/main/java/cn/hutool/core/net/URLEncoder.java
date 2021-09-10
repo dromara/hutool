@@ -174,6 +174,7 @@ public class URLEncoder implements Serializable {
 		encoder.addSafeCharacter('-');
 		encoder.addSafeCharacter('.');
 		encoder.addSafeCharacter('_');
+
 		encoder.addSafeCharacter('=');
 		encoder.addSafeCharacter('&');
 
@@ -216,21 +217,14 @@ public class URLEncoder implements Serializable {
 
 	/**
 	 * 构造<br>
-	 * <p>
 	 * [a-zA-Z0-9]默认不被编码
 	 */
 	public URLEncoder() {
 		this(new BitSet(256));
 
-		for (char i = 'a'; i <= 'z'; i++) {
-			addSafeCharacter(i);
-		}
-		for (char i = 'A'; i <= 'Z'; i++) {
-			addSafeCharacter(i);
-		}
-		for (char i = '0'; i <= '9'; i++) {
-			addSafeCharacter(i);
-		}
+		// unreserved
+		addAlpha();
+		addDigit();
 	}
 
 	/**
@@ -312,4 +306,27 @@ public class URLEncoder implements Serializable {
 		}
 		return rewrittenPath.toString();
 	}
+
+	/**
+	 * 增加安全字符[a-z][A-Z]
+	 */
+	private void addAlpha() {
+		for (char i = 'a'; i <= 'z'; i++) {
+			addSafeCharacter(i);
+		}
+		for (char i = 'A'; i <= 'Z'; i++) {
+			addSafeCharacter(i);
+		}
+	}
+
+	/**
+	 * 增加数字1-9
+	 */
+	private void addDigit() {
+		for (char i = '0'; i <= '9'; i++) {
+			addSafeCharacter(i);
+		}
+	}
+
+
 }
