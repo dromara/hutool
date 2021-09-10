@@ -231,9 +231,6 @@ public class UploadFile {
 		} finally {
 			IoUtil.close(out);
 		}
-		// if (getFileName().length() == 0 && size == 0) {
-		// size = -1;
-		// }
 		return true;
 	}
 
