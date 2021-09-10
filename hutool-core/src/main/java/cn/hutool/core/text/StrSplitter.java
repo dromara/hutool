@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @author Looly
  * @since 5.7.0
  */
-public class StrSplitter {
+public class StrSplitter{
 
 	//---------------------------------------------------------------------------------------------- Split by char
 

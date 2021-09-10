@@ -7,6 +7,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.function.Function;
 
@@ -16,8 +17,9 @@ import java.util.function.Function;
  * @author looly
  * @since 5.7.2
  */
-public class StrJoiner implements Appendable {
-
+public class StrJoiner implements Appendable, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private Appendable appendable;
 	private CharSequence delimiter;
 	private CharSequence prefix;
