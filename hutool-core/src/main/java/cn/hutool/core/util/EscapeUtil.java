@@ -118,20 +118,24 @@ public class EscapeUtil {
 		}
 
 		final StringBuilder tmp = new StringBuilder(content.length() * 6);
-		char j;
+		char c;
 		for (int i = 0; i < content.length(); i++) {
-			j = content.charAt(i);
-			if (false == filter.accept(j)) {
-				tmp.append(j);
-			} else if (j < 256) {
+			c = content.charAt(i);
+			if (false == filter.accept(c)) {
+				tmp.append(c);
+			} else if (c < 256) {
 				tmp.append("%");
-				if (j < 16) {
+				if (c < 16) {
 					tmp.append("0");
 				}
-				tmp.append(Integer.toString(j, 16));
+				tmp.append(Integer.toString(c, 16));
 			} else {
 				tmp.append("%u");
-				tmp.append(Integer.toString(j, 16));
+				if(c <= 0xfff){
+					// issue#I49JU8@Gitee
+					tmp.append("0");
+				}
+				tmp.append(Integer.toString(c, 16));
 			}
 		}
 		return tmp.toString();
