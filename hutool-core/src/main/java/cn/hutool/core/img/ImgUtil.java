@@ -22,10 +22,15 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -1194,9 +1199,10 @@ public class ImgUtil {
 			if (imageType != bufferedImage.getType()) {
 				bufferedImage = copyImage(image, imageType);
 			}
-		} else {
-			bufferedImage = copyImage(image, imageType);
+			return bufferedImage;
 		}
+
+		bufferedImage = copyImage(image, imageType);
 		return bufferedImage;
 	}
 
@@ -1247,12 +1253,33 @@ public class ImgUtil {
 	 * @since 4.5.17
 	 */
 	public static BufferedImage copyImage(Image img, int imageType, Color backgroundColor) {
-		final BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), imageType);
+		// ensures that all the pixels loaded
+		// issue#1821@Github
+		img = new ImageIcon(img).getImage();
+
+		final BufferedImage bimage = new BufferedImage(
+				img.getWidth(null), img.getHeight(null), imageType);
 		final Graphics2D bGr = GraphicsUtil.createGraphics(bimage, backgroundColor);
 		bGr.drawImage(img, 0, 0, null);
 		bGr.dispose();
 
 		return bimage;
+	}
+
+	/**
+	 * 创建与当前设备颜色模式兼容的 {@link BufferedImage}
+	 *
+	 * @param width        宽度
+	 * @param height       高度
+	 * @param transparency 透明模式，见 {@link java.awt.Transparency}
+	 * @return {@link BufferedImage}
+	 * @since 5.7.13
+	 */
+	public static BufferedImage createCompatibleImage(int width, int height, int transparency) throws HeadlessException {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gs = ge.getDefaultScreenDevice();
+		GraphicsConfiguration gc = gs.getDefaultConfiguration();
+		return gc.createCompatibleImage(width, height, transparency);
 	}
 
 	/**
@@ -2160,7 +2187,7 @@ public class ImgUtil {
 	 * 可以使用灰度 (gray)等
 	 *
 	 * @param colorSpace 颜色模式，如灰度等
-	 * @param image 被转换的图片
+	 * @param image      被转换的图片
 	 * @return 转换后的图片
 	 * @since 5.7.8
 	 */
@@ -2197,11 +2224,11 @@ public class ImgUtil {
 	 * 图片滤镜，借助 {@link ImageFilter}实现，实现不同的图片滤镜
 	 *
 	 * @param filter 滤镜实现
-	 * @param image 图片
+	 * @param image  图片
 	 * @return 滤镜后的图片
 	 * @since 5.7.8
 	 */
-	public static Image filter(ImageFilter filter, Image image){
+	public static Image filter(ImageFilter filter, Image image) {
 		return Toolkit.getDefaultToolkit().createImage(
 				new FilteredImageSource(image.getSource(), filter));
 	}

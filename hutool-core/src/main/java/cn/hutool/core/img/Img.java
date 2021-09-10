@@ -289,7 +289,7 @@ public class Img implements Serializable {
 	 *
 	 * @param width      缩放后的宽度
 	 * @param height     缩放后的高度
-	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
 	 * @return this
 	 */
 	public Img scale(int width, int height, Color fixedColor) {

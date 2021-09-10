@@ -14,7 +14,7 @@ import java.util.function.Function;
 public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	private static final long serialVersionUID = 1L;
 
-	private Function<Object, K> keyFunc;
+	private final Function<Object, K> keyFunc;
 
 	// ------------------------------------------------------------------------- Constructor start
 
@@ -26,11 +26,12 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	 */
 	public FuncKeyMap(Map<K, V> m, Function<Object, K> keyFunc) {
 		super(m);
+		this.keyFunc = keyFunc;
 	}
 	// ------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 将Key转为驼峰风格，如果key为字符串的话
+	 * 根据函数自定义键
 	 *
 	 * @param key KEY
 	 * @return 驼峰Key
