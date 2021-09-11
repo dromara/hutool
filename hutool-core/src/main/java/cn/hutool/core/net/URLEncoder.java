@@ -1,7 +1,6 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -318,16 +317,14 @@ public class URLEncoder implements Serializable {
 	 * 将URL中的字符串编码为%形式
 	 *
 	 * @param path    需要编码的字符串
-	 * @param charset 编码
+	 * @param charset 编码, {@code null}返回原字符串，表示不编码
 	 * @return 编码后的字符串
 	 */
 	public String encode(String path, Charset charset) {
-		if (StrUtil.isEmpty(path)) {
+		if (null == charset || StrUtil.isEmpty(path)) {
 			return path;
 		}
-		if(null == charset){
-			charset = CharsetUtil.CHARSET_UTF_8;
-		}
+
 		final StringBuilder rewrittenPath = new StringBuilder(path.length());
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		OutputStreamWriter writer = new OutputStreamWriter(buf, charset);

@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class StrJoiner implements Appendable, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Appendable appendable;
 	private CharSequence delimiter;
 	private CharSequence prefix;
@@ -232,10 +232,12 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @return this
 	 */
 	public <T> StrJoiner append(Iterator<T> iterator) {
-		if (null == iterator) {
-			return this;
+		if (null != iterator) {
+			while (iterator.hasNext()) {
+				append(iterator.next());
+			}
 		}
-		return append(iterator, (t) -> StrJoiner.of(this).append(t).toString());
+		return this;
 	}
 
 	/**
