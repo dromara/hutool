@@ -1,11 +1,9 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URI;
@@ -263,10 +261,14 @@ public class UrlBuilderTest {
 	}
 
 	@Test
-	@Ignore
 	public void fragmentEncodeTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL
+		// 见：https://stackoverflow.com/questions/26088849/url-fragment-allowed-characters
 		String url = "https://hutool.cn/docs/#/?id=简介";
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
-		Console.log(urlBuilder.toString());
+		UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals("https://hutool.cn/docs/#/?id=%E7%AE%80%E4%BB%8B", urlBuilder.toString());
+
+		urlBuilder = UrlBuilder.ofHttp(urlBuilder.toString());
+		Assert.assertEquals(urlBuilder.toString(), urlBuilder.toString());
 	}
 }

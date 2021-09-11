@@ -7,14 +7,21 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.net.url.UrlQuery;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.jar.JarFile;
@@ -33,7 +40,7 @@ import java.util.jar.JarFile;
  *
  * @author xiaoleilu
  */
-public class URLUtil {
+public class URLUtil extends URLEncodeUtil {
 
 	/**
 	 * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
@@ -295,150 +302,6 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 */
-	public static String encodeAll(String url) {
-		return encodeAll(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码URL<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 *
-	 * @param url     URL
-	 * @param charset 编码，为null表示不编码
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 */
-	public static String encodeAll(String url, Charset charset) throws UtilException {
-		if (null == charset || StrUtil.isEmpty(url)) {
-			return url;
-		}
-
-		return URLEncoder.ALL.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 3.1.2
-	 */
-	public static String encode(String url) throws UtilException {
-		return encode(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 4.4.1
-	 */
-	public static String encode(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.DEFAULT.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 3.1.2
-	 */
-	public static String encodeQuery(String url) throws UtilException {
-		return encodeQuery(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为URL中查询语句<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 4.4.1
-	 */
-	public static String encodeQuery(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.QUERY.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL的Segment中自动编码，转义大部分特殊字符
-	 *
-	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 5.6.5
-	 */
-	public static String encodePathSegment(String url) throws UtilException {
-		return encodePathSegment(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为URL中查询语句<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL的Segment中自动编码，转义大部分特殊字符
-	 *
-	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 5.6.5
-	 */
-	public static String encodePathSegment(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.PATH_SEGMENT.encode(url, charset);
-	}
-
 	//-------------------------------------------------------------------------- decode
 
 	/**

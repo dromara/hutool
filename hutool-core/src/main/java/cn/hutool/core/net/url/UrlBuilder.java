@@ -419,7 +419,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return 标识符，例如#后边的部分
 	 */
 	public String getFragmentEncoded() {
-		return URLUtil.encodeAll(this.fragment, this.charset);
+		return URLUtil.encodeFragment(this.fragment, this.charset);
 	}
 
 	/**

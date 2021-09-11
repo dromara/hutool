@@ -13,6 +13,7 @@
 * 【core   】     修复ImgUtil.copyImage读取网络URL后宽高报错问题（issue#1821@Github）
 * 【core   】     修复StrJoiner.append配置丢失问题（issue#I49K1L@Gitee）
 * 【core   】     修复EscapeUtil特殊字符的hex长度不足导致的问题（issue#I49JU8@Gitee）
+* 【core   】     修复UrlBuilder对Fragment部分编码问题（issue#I49KAL@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -1,7 +1,9 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,7 +32,8 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@" / "/"
+	 * default = pchar / "/"
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
@@ -42,12 +45,30 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
+	 * pchar = unreserved / pct-encoded / sub-delims / ":"（非空segment不包含:） / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
+	 *
+	 * 定义见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.3
 	 */
 	public static final URLEncoder PATH_SEGMENT = createPathSegment();
+
+	/**
+	 * URL的Fragment URLEncoder<br>
+	 * 默认的编码器针对Fragment，定义如下：
+	 *
+	 * <pre>
+	 * fragment    = *( pchar / "/" / "?" )
+	 * pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
+	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims  = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 *
+	 * 具体见：https://datatracker.ietf.org/doc/html/rfc3986#section-3.5
+	 * @since 5.7.13
+	 */
+	public static final URLEncoder FRAGMENT = createFragment();
 
 	/**
 	 * 用于查询语句的URLEncoder<br>
@@ -79,7 +100,8 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@" / "/"
+	 * default = pchar / "/"
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
@@ -92,21 +114,14 @@ public class URLEncoder implements Serializable {
 		encoder.addSafeCharacter('.');
 		encoder.addSafeCharacter('_');
 		encoder.addSafeCharacter('~');
+
 		// Add the sub-delims
-		encoder.addSafeCharacter('!');
-		encoder.addSafeCharacter('$');
-		encoder.addSafeCharacter('&');
-		encoder.addSafeCharacter('\'');
-		encoder.addSafeCharacter('(');
-		encoder.addSafeCharacter(')');
-		encoder.addSafeCharacter('*');
-		encoder.addSafeCharacter('+');
-		encoder.addSafeCharacter(',');
-		encoder.addSafeCharacter(';');
-		encoder.addSafeCharacter('=');
+		addSubDelims(encoder);
+
 		// Add the remaining literals
 		encoder.addSafeCharacter(':');
 		encoder.addSafeCharacter('@');
+
 		// Add '/' so it isn't encoded when we encode a path
 		encoder.addSafeCharacter('/');
 
@@ -118,33 +133,67 @@ public class URLEncoder implements Serializable {
 	 * 默认的编码器针对URI路径的每一段编码，定义如下：
 	 *
 	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
+	 * pchar = unreserved / pct-encoded / sub-delims / ":"（非空segment不包含:） / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
+	 *
+	 * 定义见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.3
 	 *
 	 * @return URLEncoder
 	 */
 	public static URLEncoder createPathSegment() {
 		final URLEncoder encoder = new URLEncoder();
+
+		// unreserved
 		encoder.addSafeCharacter('-');
 		encoder.addSafeCharacter('.');
 		encoder.addSafeCharacter('_');
 		encoder.addSafeCharacter('~');
+
 		// Add the sub-delims
-		encoder.addSafeCharacter('!');
-		encoder.addSafeCharacter('$');
-		encoder.addSafeCharacter('&');
-		encoder.addSafeCharacter('\'');
-		encoder.addSafeCharacter('(');
-		encoder.addSafeCharacter(')');
-		encoder.addSafeCharacter('*');
-		encoder.addSafeCharacter('+');
-		encoder.addSafeCharacter(',');
-		encoder.addSafeCharacter(';');
-		encoder.addSafeCharacter('=');
+		addSubDelims(encoder);
+
 		// Add the remaining literals
+		//non-zero-length segment without any colon ":"
+		//encoder.addSafeCharacter(':');
 		encoder.addSafeCharacter('@');
+
+		return encoder;
+	}
+
+	/**
+	 * URL的Fragment URLEncoder<br>
+	 * 默认的编码器针对Fragment，定义如下：
+	 *
+	 * <pre>
+	 * fragment    = *( pchar / "/" / "?" )
+	 * pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
+	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims  = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 *
+	 * 具体见：https://datatracker.ietf.org/doc/html/rfc3986#section-3.5
+	 *
+	 * @return URLEncoder
+	 * @since 5.7.13
+	 */
+	public static URLEncoder createFragment() {
+		final URLEncoder encoder = new URLEncoder();
+		encoder.addSafeCharacter('-');
+		encoder.addSafeCharacter('.');
+		encoder.addSafeCharacter('_');
+		encoder.addSafeCharacter('~');
+
+		// Add the sub-delims
+		addSubDelims(encoder);
+
+		// Add the remaining literals
+		encoder.addSafeCharacter(':');
+		encoder.addSafeCharacter('@');
+
+		encoder.addSafeCharacter('/');
+		encoder.addSafeCharacter('?');
 
 		return encoder;
 	}
@@ -273,6 +322,12 @@ public class URLEncoder implements Serializable {
 	 * @return 编码后的字符串
 	 */
 	public String encode(String path, Charset charset) {
+		if (StrUtil.isEmpty(path)) {
+			return path;
+		}
+		if(null == charset){
+			charset = CharsetUtil.CHARSET_UTF_8;
+		}
 		final StringBuilder rewrittenPath = new StringBuilder(path.length());
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
@@ -329,4 +384,23 @@ public class URLEncoder implements Serializable {
 	}
 
 
+	/**
+	 * 增加sub-delims<br>
+	 * sub-delims  = "!" / "$" / "&" / "'" / "(" / ") / "*" / "+" / "," / ";" / "="
+	 * 定义见：https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
+	 */
+	private static void addSubDelims(URLEncoder encoder){
+		// Add the sub-delims
+		encoder.addSafeCharacter('!');
+		encoder.addSafeCharacter('$');
+		encoder.addSafeCharacter('&');
+		encoder.addSafeCharacter('\'');
+		encoder.addSafeCharacter('(');
+		encoder.addSafeCharacter(')');
+		encoder.addSafeCharacter('*');
+		encoder.addSafeCharacter('+');
+		encoder.addSafeCharacter(',');
+		encoder.addSafeCharacter(';');
+		encoder.addSafeCharacter('=');
+	}
 }
