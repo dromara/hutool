@@ -63,6 +63,7 @@ public class HttpDownloader {
 	 * @param tempFileSuffix  临时文件后缀，默认".temp"
 	 * @param timeout         超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress  进度条
+	 * @return 下载大小
 	 * @since 5.7.12
 	 */
 	public long downloadFile(String url, File targetFileOrDir, String tempFileSuffix, int timeout, StreamProgress streamProgress) {
