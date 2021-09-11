@@ -1,9 +1,11 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URI;
@@ -258,5 +260,13 @@ public class UrlBuilderTest {
 
 
 		Assert.assertEquals(url, urlBuilder.toString());
+	}
+
+	@Test
+	@Ignore
+	public void fragmentEncodeTest(){
+		String url = "https://hutool.cn/docs/#/?id=简介";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
+		Console.log(urlBuilder.toString());
 	}
 }
