@@ -761,4 +761,13 @@ public class ExcelWriteTest {
 		writer.writeRow(row);
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void writeLongTest(){
+		//https://gitee.com/dromara/hutool/issues/I49R6U
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
+		writer.write(ListUtil.of(1427545395336093698L));
+		writer.close();
+	}
 }

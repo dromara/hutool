@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -199,7 +198,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvWriter write(Collection<?> lines) throws IORuntimeException {
+	public CsvWriter write(Iterable<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
 			for (Object values : lines) {
 				appendLine(Convert.toStrArray(values));
@@ -236,7 +235,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param beans Bean集合
 	 * @return this
 	 */
-	public CsvWriter writeBeans(Collection<?> beans) {
+	public CsvWriter writeBeans(Iterable<?> beans) {
 		if (CollUtil.isNotEmpty(beans)) {
 			boolean isFirst = true;
 			Map<String, Object> map;
