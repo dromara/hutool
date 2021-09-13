@@ -9,6 +9,7 @@
 * 【core   】     CsvReadConfig增加trimField选项（issue#I49M0C@Gitee）
 * 【http   】     HttpBase增加clearHeaders方法（issue#I49P23@Gitee）
 * 【core   】     CsvWriter的write和writeBeans参数改为Iterable（issue#I49O4S@Gitee）
+* 【core   】     BitStatusUtil添加来源声明（issue#1824@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FuncKey函数无效问题
