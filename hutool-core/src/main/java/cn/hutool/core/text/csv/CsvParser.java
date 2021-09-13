@@ -332,13 +332,13 @@ public final class CsvParser implements Closeable, Serializable {
 
 		// 忽略多余引号后的换行符
 		field = StrUtil.trim(field, 1, (c-> c == CharUtil.LF || c == CharUtil.CR));
+
+		field = StrUtil.unWrap(field, textDelimiter);
+		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
 		if(this.config.trimField){
 			// issue#I49M0C@Gitee
 			field = StrUtil.trim(field);
 		}
-
-		field = StrUtil.unWrap(field, textDelimiter);
-		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
 		currentFields.add(field);
 	}
 
