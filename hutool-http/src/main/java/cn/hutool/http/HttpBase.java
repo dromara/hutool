@@ -17,27 +17,41 @@ import java.util.Map.Entry;
 
 /**
  * http基类
- * @author Looly
+ *
  * @param <T> 子类类型，方便链式编程
+ * @author Looly
  */
 @SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
-	/**HTTP/1.0*/
+	/**
+	 * HTTP/1.0
+	 */
 	public static final String HTTP_1_0 = "HTTP/1.0";
-	/**HTTP/1.1*/
+	/**
+	 * HTTP/1.1
+	 */
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
-	/**存储头信息*/
+	/**
+	 * 存储头信息
+	 */
 	protected Map<String, List<String>> headers = new HashMap<>();
-	/**编码*/
+	/**
+	 * 编码
+	 */
 	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
-	/**http版本*/
+	/**
+	 * http版本
+	 */
 	protected String httpVersion = HTTP_1_1;
-	/**存储主体*/
+	/**
+	 * 存储主体
+	 */
 	protected byte[] bodyBytes;
 
 	// ---------------------------------------------------------------- Headers start
+
 	/**
 	 * 根据name获取头信息<br>
 	 * 根据RFC2616规范，header的name不区分大小写
@@ -47,7 +61,7 @@ public abstract class HttpBase<T> {
 	 */
 	public String header(String name) {
 		final List<String> values = headerList(name);
-		if(CollectionUtil.isEmpty(values)) {
+		if (CollectionUtil.isEmpty(values)) {
 			return null;
 		}
 		return values.get(0);
@@ -55,26 +69,28 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 根据name获取头信息列表
+	 *
 	 * @param name Header名
 	 * @return Header值
 	 * @since 3.1.1
 	 */
 	public List<String> headerList(String name) {
-		if(StrUtil.isBlank(name)) {
+		if (StrUtil.isBlank(name)) {
 			return null;
 		}
 
-		final CaseInsensitiveMap<String,List<String>> headersIgnoreCase = new CaseInsensitiveMap<>(this.headers);
+		final CaseInsensitiveMap<String, List<String>> headersIgnoreCase = new CaseInsensitiveMap<>(this.headers);
 		return headersIgnoreCase.get(name.trim());
 	}
 
 	/**
 	 * 根据name获取头信息
+	 *
 	 * @param name Header名
 	 * @return Header值
 	 */
 	public String header(Header name) {
-		if(null == name) {
+		if (null == name) {
 			return null;
 		}
 		return header(name.toString());
@@ -83,19 +99,20 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
-	 * @param name Header名
-	 * @param value Header值
+	 *
+	 * @param name       Header名
+	 * @param value      Header值
 	 * @param isOverride 是否覆盖已有值
 	 * @return T 本身
 	 */
 	public T header(String name, String value, boolean isOverride) {
-		if(null != name && null != value){
+		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
-			if(isOverride || CollectionUtil.isEmpty(values)) {
+			if (isOverride || CollectionUtil.isEmpty(values)) {
 				final ArrayList<String> valueList = new ArrayList<>();
 				valueList.add(value);
 				headers.put(name.trim(), valueList);
-			}else {
+			} else {
 				values.add(value.trim());
 			}
 		}
@@ -105,8 +122,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
-	 * @param name Header名
-	 * @param value Header值
+	 *
+	 * @param name       Header名
+	 * @param value      Header值
 	 * @param isOverride 是否覆盖已有值
 	 * @return T 本身
 	 */
@@ -117,7 +135,8 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置一个header<br>
 	 * 覆盖模式，则替换之前的值
-	 * @param name Header名
+	 *
+	 * @param name  Header名
 	 * @param value Header值
 	 * @return T 本身
 	 */
@@ -128,7 +147,8 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置一个header<br>
 	 * 覆盖模式，则替换之前的值
-	 * @param name Header名
+	 *
+	 * @param name  Header名
 	 * @param value Header值
 	 * @return T 本身
 	 */
@@ -139,20 +159,20 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置请求头
 	 *
-	 * @param headers 请求头
+	 * @param headers    请求头
 	 * @param isOverride 是否覆盖已有头信息
 	 * @return this
 	 * @since 4.6.3
 	 */
 	public T headerMap(Map<String, String> headers, boolean isOverride) {
-		if(MapUtil.isEmpty(headers)) {
-			return (T)this;
+		if (MapUtil.isEmpty(headers)) {
+			return (T) this;
 		}
 
 		for (Entry<String, String> entry : headers.entrySet()) {
 			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), isOverride);
 		}
-		return (T)this;
+		return (T) this;
 	}
 
 	/**
@@ -169,14 +189,14 @@ public abstract class HttpBase<T> {
 	/**
 	 * 设置请求头
 	 *
-	 * @param headers 请求头
+	 * @param headers    请求头
 	 * @param isOverride 是否覆盖已有头信息
 	 * @return this
 	 * @since 4.0.8
 	 */
 	public T header(Map<String, List<String>> headers, boolean isOverride) {
-		if(MapUtil.isEmpty(headers)) {
-			return (T)this;
+		if (MapUtil.isEmpty(headers)) {
+			return (T) this;
 		}
 
 		String name;
@@ -186,7 +206,7 @@ public abstract class HttpBase<T> {
 				this.header(name, StrUtil.nullToEmpty(value), isOverride);
 			}
 		}
-		return (T)this;
+		return (T) this;
 	}
 
 	/**
@@ -198,30 +218,32 @@ public abstract class HttpBase<T> {
 	 * @since 4.0.3
 	 */
 	public T addHeaders(Map<String, String> headers) {
-		if(MapUtil.isEmpty(headers)) {
-			return (T)this;
+		if (MapUtil.isEmpty(headers)) {
+			return (T) this;
 		}
 
-		for (Entry<String,String> entry : headers.entrySet()) {
+		for (Entry<String, String> entry : headers.entrySet()) {
 			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), false);
 		}
-		return (T)this;
+		return (T) this;
 	}
 
 	/**
 	 * 移除一个头信息
+	 *
 	 * @param name Header名
 	 * @return this
 	 */
 	public T removeHeader(String name) {
-		if(name != null) {
+		if (name != null) {
 			headers.remove(name.trim());
 		}
-		return (T)this;
+		return (T) this;
 	}
 
 	/**
 	 * 移除一个头信息
+	 *
 	 * @param name Header名
 	 * @return this
 	 */
@@ -231,15 +253,28 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 获取headers
+	 *
 	 * @return Headers Map
 	 */
 	public Map<String, List<String>> headers() {
 		return Collections.unmodifiableMap(headers);
 	}
+
+	/**
+	 * 清除所有头信息，包括全局头信息
+	 *
+	 * @return this
+	 * @since 5.7.13
+	 */
+	public T clearHeaders() {
+		this.headers.clear();
+		return (T) this;
+	}
 	// ---------------------------------------------------------------- Headers end
 
 	/**
 	 * 返回http版本
+	 *
 	 * @return String
 	 */
 	public String httpVersion() {
@@ -259,6 +294,7 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 返回字符集
+	 *
 	 * @return 字符集
 	 */
 	public String charset() {
@@ -267,12 +303,13 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 设置字符集
+	 *
 	 * @param charset 字符集
 	 * @return T 自己
 	 * @see CharsetUtil
 	 */
 	public T charset(String charset) {
-		if(StrUtil.isNotBlank(charset)){
+		if (StrUtil.isNotBlank(charset)) {
 			charset(Charset.forName(charset));
 		}
 		return (T) this;
@@ -280,12 +317,13 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 设置字符集
+	 *
 	 * @param charset 字符集
 	 * @return T 自己
 	 * @see CharsetUtil
 	 */
 	public T charset(Charset charset) {
-		if(null != charset){
+		if (null != charset) {
 			this.charset = charset;
 		}
 		return (T) this;
@@ -297,7 +335,7 @@ public abstract class HttpBase<T> {
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
 		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(
-					entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
+							entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
 					.append(StrUtil.CRLF);
 		}
 
