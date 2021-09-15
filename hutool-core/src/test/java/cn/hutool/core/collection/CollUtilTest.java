@@ -767,9 +767,30 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void sortComparableTest(){
+	public void sortComparableTest() {
 		final List<String> of = ListUtil.toList("a", "c", "b");
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
+	}
+
+	@Test
+	public void swapIndex() {
+		List<Integer> list = Arrays.asList(7, 2, 8, 9);
+		CollUtil.swapIndex(list, 8, 1);
+		Assert.assertTrue(list.get(1) == 8);
+	}
+
+	@Test
+	public void swapElement() {
+		Map<String, String> map1 = new HashMap<>();
+		map1.put("1", "张三");
+		Map<String, String> map2 = new HashMap<>();
+		map2.put("2", "李四");
+		Map<String, String> map3 = new HashMap<>();
+		map3.put("3", "王五");
+		List<Map<String, String>> list = Arrays.asList(map1, map2, map3);
+		CollUtil.swapElement(list, map2, map3);
+		Map<String, String> map = list.get(2);
+		Assert.assertTrue(map.get("2").equals("李四"));
 	}
 }
