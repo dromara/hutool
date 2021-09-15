@@ -1,5 +1,6 @@
+package cn.hutool.json;
+
 import cn.hutool.core.convert.Convert;
-import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.junit.Assert;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 public class IssueI49VZBTest {
 	public enum NBCloudKeyType {
 		/**
-		 * 指纹-视频云
+		 * 指纹
 		 */
 		fingerPrint,
 		/**
