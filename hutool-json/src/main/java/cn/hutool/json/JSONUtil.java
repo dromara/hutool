@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
@@ -229,6 +230,9 @@ public class JSONUtil {
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
 			json = isJsonArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
+		} else if (obj instanceof MapWrapper) {
+			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
+			json = parseObj(obj, config);
 		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
 			json = parseArray(obj, config);
 		} else {// 对象
