@@ -90,7 +90,7 @@ public class ListUtil {
 	}
 
 	/**
-	 * 新建一个ArrayList<br>
+	 * 新建一个List<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
 	 * @param <T>      集合元素类型
