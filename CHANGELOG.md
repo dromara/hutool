@@ -10,6 +10,7 @@
 * 【http   】     HttpBase增加clearHeaders方法（issue#I49P23@Gitee）
 * 【core   】     CsvWriter的write和writeBeans参数改为Iterable（issue#I49O4S@Gitee）
 * 【core   】     BitStatusUtil添加来源声明（issue#1824@Github）
+* 【core   】     UrlQuery.build增加重载，支持可选是否转义（issue#I4AIX1@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FuncKey函数无效问题

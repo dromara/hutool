@@ -173,9 +173,9 @@ public class UrlQuery {
 			}
 		}
 
-		if(i - pos == len){
+		if (i - pos == len) {
 			// 没有任何参数符号
-			if(queryStr.startsWith("http") || queryStr.contains("/")){
+			if (queryStr.startsWith("http") || queryStr.contains("/")) {
 				// 可能为url路径，忽略之
 				return this;
 			}
@@ -216,6 +216,18 @@ public class UrlQuery {
 	 * @return URL查询字符串
 	 */
 	public String build(Charset charset) {
+		return build(charset, true);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为key1=v1&amp;key2=&amp;key3=v3形式
+	 *
+	 * @param charset  encode编码，null表示不做encode编码
+	 * @param isEncode 是否转义键和值
+	 * @return URL查询字符串
+	 * @since 5.7.13
+	 */
+	public String build(Charset charset, boolean isEncode) {
 		if (MapUtil.isEmpty(this.query)) {
 			return StrUtil.EMPTY;
 		}
@@ -232,10 +244,10 @@ public class UrlQuery {
 			}
 			key = entry.getKey();
 			if (null != key) {
-				sb.append(URLUtil.encodeAll(StrUtil.str(key), charset));
+				sb.append(toStr(key, charset, isEncode));
 				value = entry.getValue();
 				if (null != value) {
-					sb.append("=").append(URLUtil.encodeAll(StrUtil.str(value), charset));
+					sb.append("=").append(toStr(value, charset, isEncode));
 				}
 			}
 		}
@@ -286,5 +298,22 @@ public class UrlQuery {
 			// name为空，value作为name，value赋值null
 			this.query.put(URLUtil.decode(value, charset), null);
 		}
+	}
+
+	/**
+	 * 键值对的{@link CharSequence}转换为String，可选是否转义
+	 *
+	 * @param str      原字符串
+	 * @param charset  编码，只用于encode中
+	 * @param isEncode 是否转义
+	 * @return 转换后的String
+	 * @since 5.7.13
+	 */
+	private static String toStr(CharSequence str, Charset charset, boolean isEncode) {
+		String result = StrUtil.str(str);
+		if (isEncode) {
+			result = URLUtil.encodeAll(result, charset);
+		}
+		return result;
 	}
 }

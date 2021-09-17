@@ -442,7 +442,9 @@ public class HttpUtil {
 	 * @param paramMap    表单数据
 	 * @param charsetName 编码
 	 * @return url参数
+	 * @deprecated 请使用 {@link #toParams(Map, Charset)}
 	 */
+	@Deprecated
 	public static String toParams(Map<String, Object> paramMap, String charsetName) {
 		return toParams(paramMap, CharsetUtil.charset(charsetName));
 	}
@@ -461,7 +463,26 @@ public class HttpUtil {
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
-		return URLUtil.buildQuery(paramMap, charset);
+		return toParams(paramMap, charset, true);
+	}
+
+	/**
+	 * 将Map形式的Form表单数据转换为Url参数形式<br>
+	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
+	 * 会自动url编码键和值
+	 *
+	 * <pre>
+	 * key1=v1&amp;key2=&amp;key3=v3
+	 * </pre>
+	 *
+	 * @param paramMap 表单数据
+	 * @param charset  编码，null表示不encode键值对
+	 * @param isEncode 是否转义键和值
+	 * @return url参数
+	 * @since 5.7.13
+	 */
+	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isEncode) {
+		return UrlQuery.of(paramMap).build(charset, isEncode);
 	}
 
 	/**
