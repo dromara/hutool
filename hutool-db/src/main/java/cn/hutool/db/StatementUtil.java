@@ -358,7 +358,7 @@ public class StatementUtil {
 				return;
 			}
 			if (param instanceof BigInteger) {
-				// BigInteger转为Long
+				// BigInteger转为BigDecimal
 				ps.setBigDecimal(paramIndex, new BigDecimal((BigInteger) param));
 				return;
 			}
