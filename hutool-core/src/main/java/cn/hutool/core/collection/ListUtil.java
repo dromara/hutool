@@ -312,7 +312,7 @@ public class ListUtil {
 	 * @see Collections#sort(List, Comparator)
 	 */
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
-		if(CollUtil.isEmpty(list)){
+		if (CollUtil.isEmpty(list)) {
 			return list;
 		}
 		list.sort(c);
@@ -592,5 +592,42 @@ public class ListUtil {
 		return (list instanceof RandomAccess)
 				? new RandomAccessAvgPartition<>(list, limit)
 				: new AvgPartition<>(list, limit);
+	}
+
+	/**
+	 * 将指定元素交换到指定索引位置,其他元素的索引值不变<br>
+	 * 交换会修改原List<br>
+	 * 如果集合中有多个相同元素，只交换第一个找到的元素
+	 *
+	 * @param list        列表
+	 * @param element     需交换元素
+	 * @param targetIndex 目标索引
+	 * @since 5.7.13
+	 */
+	public static <T> void swapTo(List<T> list, T element, Integer targetIndex) {
+		if (CollUtil.isNotEmpty(list)) {
+			final int index = list.indexOf(element);
+			if (index > 0) {
+				Collections.swap(list, index, targetIndex);
+			}
+		}
+	}
+
+	/**
+	 * 将指定元素交换到指定元素位置,其他元素的索引值不变<br>
+	 * 交换会修改原List<br>
+	 * 如果集合中有多个相同元素，只交换第一个找到的元素
+	 *
+	 * @param list          列表
+	 * @param element       需交换元素
+	 * @param targetElement 目标元素
+	 */
+	public static <T> void swapElement(List<T> list, T element, T targetElement) {
+		if (CollUtil.isNotEmpty(list)) {
+			final int targetIndex = list.indexOf(targetElement);
+			if (targetIndex > 0) {
+				swapTo(list, element, targetIndex);
+			}
+		}
 	}
 }

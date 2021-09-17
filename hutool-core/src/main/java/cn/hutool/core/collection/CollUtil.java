@@ -2954,34 +2954,4 @@ public class CollUtil {
 
 		return IterUtil.isEqualList(list1, list2);
 	}
-
-	/**
-	 * 将指定元素交换到指定索引位置,其他元素的索引值不变
-	 * 交换会修改原List
-	 *
-	 * @param list        列表
-	 * @param element     需交换元素
-	 * @param targetIndex 目标索引
-	 */
-	public static <T> void swapIndex(List<T> list, T element, Integer targetIndex) {
-		if (isEmpty(list) || !list.contains(element)) {
-			return;
-		}
-		Collections.swap(list, list.indexOf(element), targetIndex);
-	}
-
-	/**
-	 * 将指定元素交换到指定元素位置,其他元素的索引值不变
-	 * 交换会修改原List
-	 *
-	 * @param list          列表
-	 * @param element       需交换元素
-	 * @param targetElement 目标元素
-	 */
-	public static <T> void swapElement(List<T> list, T element, T targetElement) {
-		if (isEmpty(list) || !list.contains(targetElement)) {
-			return;
-		}
-		swapIndex(list, element, list.indexOf(targetElement));
-	}
 }

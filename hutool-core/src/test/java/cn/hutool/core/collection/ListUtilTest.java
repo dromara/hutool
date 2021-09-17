@@ -12,7 +12,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListUtilTest {
 
@@ -201,5 +203,26 @@ public class ListUtilTest {
 		Assert.assertEquals("test3", order.get(2).getName());
 		Assert.assertEquals("test4", order.get(3).getName());
 		Assert.assertEquals("test5", order.get(4).getName());
+	}
+
+	@Test
+	public void swapIndex() {
+		List<Integer> list = Arrays.asList(7, 2, 8, 9);
+		ListUtil.swapTo(list, 8, 1);
+		Assert.assertEquals(8, (int) list.get(1));
+	}
+
+	@Test
+	public void swapElement() {
+		Map<String, String> map1 = new HashMap<>();
+		map1.put("1", "张三");
+		Map<String, String> map2 = new HashMap<>();
+		map2.put("2", "李四");
+		Map<String, String> map3 = new HashMap<>();
+		map3.put("3", "王五");
+		List<Map<String, String>> list = Arrays.asList(map1, map2, map3);
+		ListUtil.swapElement(list, map2, map3);
+		Map<String, String> map = list.get(2);
+		Assert.assertEquals("李四", map.get("2"));
 	}
 }
