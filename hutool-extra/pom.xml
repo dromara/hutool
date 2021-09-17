@@ -432,7 +432,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.9</version>
+			<version>5.3.10</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
