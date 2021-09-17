@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -170,6 +171,11 @@ public class CellUtil {
 			// 数字单独定义格式
 			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
 				cell.setCellStyle(styleSet.getCellStyleForNumber());
+			}
+		} else if(value instanceof Hyperlink){
+			// 自定义超链接样式
+			if (null != styleSet && null != styleSet.getCellStyleForHyperlink()) {
+				cell.setCellStyle(styleSet.getCellStyleForHyperlink());
 			}
 		}
 

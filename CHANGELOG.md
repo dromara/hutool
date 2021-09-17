@@ -12,6 +12,7 @@
 * 【core   】     BitStatusUtil添加来源声明（issue#1824@Github）
 * 【core   】     UrlQuery.build增加重载，支持可选是否转义（issue#I4AIX1@Gitee）
 * 【core   】     ListUtil增加swapTo和swapElement方法（pr#416@Gitee）
+* 【poi    】     ExcelWriter支持Hyperlink（issue#I49QAL@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FuncKey函数无效问题

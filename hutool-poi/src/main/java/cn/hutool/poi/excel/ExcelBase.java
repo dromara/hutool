@@ -5,8 +5,10 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -388,6 +390,32 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		final CellStyle columnStyle = this.workbook.createCellStyle();
 		this.sheet.setDefaultColumnStyle(x, columnStyle);
 		return columnStyle;
+	}
+
+	/**
+	 * 创建 {@link Hyperlink}，默认内容（标签为链接地址本身）
+	 * @param type 链接类型
+	 * @param address 链接地址
+	 * @return 链接
+	 * @since 5.7.13
+	 */
+	public Hyperlink createHyperlink(HyperlinkType type, String address){
+		return createHyperlink(type, address, address);
+	}
+
+	/**
+	 * 创建 {@link Hyperlink}，默认内容
+	 * @param type 链接类型
+	 * @param address 链接地址
+	 * @param label 标签，即单元格中显示的内容
+	 * @return 链接
+	 * @since 5.7.13
+	 */
+	public Hyperlink createHyperlink(HyperlinkType type, String address, String label){
+		final Hyperlink hyperlink = this.workbook.getCreationHelper().createHyperlink(type);
+		hyperlink.setAddress(address);
+		hyperlink.setLabel(label);
+		return hyperlink;
 	}
 
 	/**

@@ -10,12 +10,14 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -768,6 +770,17 @@ public class ExcelWriteTest {
 		//https://gitee.com/dromara/hutool/issues/I49R6U
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
 		writer.write(ListUtil.of(1427545395336093698L));
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeHyperlinkTest(){
+			final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
+
+		final Hyperlink hyperlink = writer.createHyperlink(HyperlinkType.URL, "https://hutool.cn");
+
+		writer.write(ListUtil.of(hyperlink));
 		writer.close();
 	}
 }
