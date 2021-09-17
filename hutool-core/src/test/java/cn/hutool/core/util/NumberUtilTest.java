@@ -393,4 +393,11 @@ public class NumberUtilTest {
 		final Set<?> set = Convert.convert(Set.class, ints);
 		Assert.assertEquals(7, set.size());
 	}
+
+	@Test
+	public void toPlainNumberTest(){
+		String num = "5344.34234e3";
+		final String s = new BigDecimal(num).toPlainString();
+		Assert.assertEquals("5344342.34", s);
+	}
 }

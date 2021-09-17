@@ -2501,7 +2501,8 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 将指定字符串转换为{@link Number} 对象
+	 * 将指定字符串转换为{@link Number} 对象<br>
+	 * 此方法不支持科学计数法
 	 *
 	 * @param numberStr Number字符串
 	 * @return Number对象
