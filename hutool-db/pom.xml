@@ -170,5 +170,11 @@
 			<version>1.4.200</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>ru.yandex.clickhouse</groupId>
+			<artifactId>clickhouse-jdbc</artifactId>
+			<version>0.3.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
