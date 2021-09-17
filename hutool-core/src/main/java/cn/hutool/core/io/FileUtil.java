@@ -3057,7 +3057,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 将文件写入流中，此方法不会概念比输出流
+	 * 将文件写入流中，此方法不会关闭输出流
 	 *
 	 * @param file 文件
 	 * @param out  流
@@ -3069,7 +3069,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 将流的内容写入文件<br>
+	 * 将路径对应文件写入流中，此方法不会关闭输出流
 	 *
 	 * @param fullFilePath 文件绝对路径
 	 * @param out          输出流
