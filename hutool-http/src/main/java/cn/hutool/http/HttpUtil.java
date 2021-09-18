@@ -45,6 +45,11 @@ public class HttpUtil {
 	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 
 	/**
+	 * 构造方法,无需实例化
+	 */
+	private HttpUtil(){}
+	
+	/**
 	 * 检测是否https
 	 *
 	 * @param url URL
