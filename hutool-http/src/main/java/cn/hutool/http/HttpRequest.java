@@ -427,6 +427,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (ArrayUtil.isEmpty(cookies)) {
 			return disableCookie();
 		}
+		// 名称/值对之间用分号和空格 ('; ')
+		// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cookie
 		return cookie(ArrayUtil.join(cookies, "; "));
 	}
 
