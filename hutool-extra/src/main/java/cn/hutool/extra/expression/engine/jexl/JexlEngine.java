@@ -23,7 +23,15 @@ public class JexlEngine implements ExpressionEngine {
 
 	@Override
 	public Object eval(String expression, Map<String, Object> context) {
-		return engine.createExpression(expression).evaluate(new MapContext(context));
+		final MapContext mapContext = new MapContext(context);
+
+		try{
+			return engine.createExpression(expression).evaluate(mapContext);
+		} catch (Exception ignore){
+			// https://gitee.com/dromara/hutool/issues/I4B70D
+			// 支持脚本
+			return engine.createScript(expression).execute(mapContext);
+		}
 	}
 
 	/**

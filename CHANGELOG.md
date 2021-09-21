@@ -6,6 +6,8 @@
 # 5.7.14 (2021-09-22)
 
 ### 🐣新特性
+* 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
+
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
 
