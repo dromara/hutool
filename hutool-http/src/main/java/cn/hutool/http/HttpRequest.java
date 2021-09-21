@@ -427,7 +427,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (ArrayUtil.isEmpty(cookies)) {
 			return disableCookie();
 		}
-		return cookie(ArrayUtil.join(cookies, ";"));
+		return cookie(ArrayUtil.join(cookies, "; "));
 	}
 
 	/**
