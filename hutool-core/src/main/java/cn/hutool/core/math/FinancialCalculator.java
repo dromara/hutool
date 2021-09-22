@@ -7,8 +7,8 @@ package cn.hutool.core.math;
  * @since 2021/9/22
  */
 public class FinancialCalculator {
-	private static final double FINANCIAL_PRECISION = 0.0000001;
-	private static final int FINANCIAL_MAX_ITERATIONS = 20;
+	public static final double FINANCIAL_PRECISION = 0.0000001;
+	public static final int FINANCIAL_MAX_ITERATIONS = 20;
 
 	/**
 	 * 计算实际利率
@@ -74,7 +74,7 @@ public class FinancialCalculator {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(rate(24, 17018.59, -400000) * 12);
-		System.out.println(rate(12, 43200, -480000) * 12);
+		System.out.println(rate(24, 17018.59, -400000) );
+		System.out.println(rate(12, 43200, -480000));
 	}
 }
