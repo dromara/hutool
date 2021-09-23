@@ -1,16 +1,10 @@
 package cn.hutool.json.test.bean;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Price {
-
 	private List<List<ADT>> ADT;
-
-	public void setADT(List<List<ADT>> ADT) {
-		this.ADT = ADT;
-	}
-
-	public List<List<ADT>> getADT() {
-		return ADT;
-	}
 }

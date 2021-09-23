@@ -588,4 +588,11 @@ public class JSONObjectTest {
 		jsonObject.accumulate("key1", "value3");
 		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
 	}
+
+	@Test
+	public void putByPathTest() {
+		JSONObject json = new JSONObject();
+		json.putByPath("aa.bb", "BB");
+		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
+	}
 }

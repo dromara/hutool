@@ -144,13 +144,6 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void putByPathTest() {
-		JSONObject json = new JSONObject();
-		json.putByPath("aa.bb", "BB");
-		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
-	}
-
-	@Test
 	public void getStrTest() {
 		String html = "{\"name\":\"Something must have been changed since you leave\"}";
 		JSONObject jsonObject = JSONUtil.parseObj(html);

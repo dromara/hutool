@@ -20,6 +20,13 @@ public class JWTSignerTest {
 	}
 
 	@Test
+	public void hs256Test2(){
+		final JWTSigner signer = JWTSignerUtil.hs256("123456".getBytes());
+
+		signAndVerify(signer);
+	}
+
+	@Test
 	public void hs384Test(){
 		String id = "hs384";
 		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKey(AlgorithmUtil.getAlgorithm(id)));

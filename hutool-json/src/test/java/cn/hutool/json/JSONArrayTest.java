@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
@@ -13,7 +12,6 @@ import cn.hutool.json.test.bean.JsonNode;
 import cn.hutool.json.test.bean.KeyBean;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -84,7 +82,6 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	@Ignore
 	public void parseBeanListTest() {
 		KeyBean b1 = new KeyBean();
 		b1.setAkey("aValue1");
@@ -96,7 +93,8 @@ public class JSONArrayTest {
 		ArrayList<KeyBean> list = CollUtil.newArrayList(b1, b2);
 
 		JSONArray jsonArray = JSONUtil.parseArray(list);
-		Console.log(jsonArray);
+		Assert.assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));
+		Assert.assertEquals("bValue2", jsonArray.getJSONObject(1).getStr("bkey"));
 	}
 
 	@Test
