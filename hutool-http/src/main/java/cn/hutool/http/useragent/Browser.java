@@ -50,7 +50,7 @@ public class Browser extends UserAgentInfo {
 
 			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"),
-			new Browser("Firefox", "firefox", Other_Version),
+			new Browser("Firefox", "firefox", "firefox\\/([\\d\\w\\.\\-]+)"),
 			new Browser("IEMobile", "iemobile", Other_Version),
 			new Browser("Android Browser", "android", "version\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Safari", "safari", "version\\/([\\d\\w\\.\\-]+)"),
