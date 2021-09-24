@@ -10,6 +10,7 @@
 * 【http   】     优化Browser版本正则判断
 * 【setting】     增加YamlUtil
 * 【extra  】     SenvenZExtractor改名为SevenZExtractor，增加getFirst、get方法
+* 【core   】     DateConverter修改返回java.util.Date而非DateTime（issue#I4BOAP@Gitee）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）

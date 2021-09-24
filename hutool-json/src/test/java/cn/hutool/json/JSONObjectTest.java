@@ -595,4 +595,18 @@ public class JSONObjectTest {
 		json.putByPath("aa.bb", "BB");
 		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
 	}
+
+
+	@Test
+	public void bigDecimalTest(){
+		String jsonStr = "{\"orderId\":\"1704747698891333662002277\"}";
+		BigDecimalBean bigDecimalBean = JSONUtil.toBean(jsonStr, BigDecimalBean.class);
+		Assert.assertEquals("{\"orderId\":1704747698891333662002277}", JSONUtil.toJsonStr(bigDecimalBean));
+	}
+
+	@Data
+	static
+	class BigDecimalBean{
+		private BigDecimal orderId;
+	}
 }
