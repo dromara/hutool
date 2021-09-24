@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,6 +124,22 @@ public class StrSplitter {
 	}
 
 	/**
+	 * 切分字符串，大小写敏感
+	 *
+	 * @param str         被切分的字符串
+	 * @param separator   分隔符字符
+	 * @param limit       限制分片数，-1不限制
+	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @param mapping   切分后的字符串元素的转换方法
+	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
+	 * @since 5.7.14
+	 */
+	public static <R> List<R> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, Function<String, R> mapping) {
+		return split(str, separator, limit, isTrim, ignoreEmpty, false, mapping);
+	}
+
+	/**
 	 * 切分字符串，忽略大小写
 	 *
 	 * @param str         被切分的字符串
@@ -150,19 +167,36 @@ public class StrSplitter {
 	 * @since 3.2.1
 	 */
 	public static List<String> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
+		return split(str, separator, limit, isTrim, ignoreEmpty, ignoreCase, Function.identity());
+	}
+
+	/**
+	 * 切分字符串
+	 *
+	 * @param str         被切分的字符串
+	 * @param separator   分隔符字符
+	 * @param limit       限制分片数，-1不限制
+	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @param ignoreCase  是否忽略大小写
+	 * @param mapping   切分后的字符串元素的转换方法
+	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
+	 * @since 5.7.14
+	 */
+	public static <R> List<R> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase, Function<String, R> mapping) {
 		if (StrUtil.isEmpty(str)) {
 			return new ArrayList<>(0);
 		}
 		if (limit == 1) {
-			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty, mapping);
 		}
 
-		final ArrayList<String> list = new ArrayList<>(limit > 0 ? limit : 16);
+		final ArrayList<R> list = new ArrayList<>(limit > 0 ? limit : 16);
 		int len = str.length();
 		int start = 0;//切分后每个部分的起始
 		for (int i = 0; i < len; i++) {
 			if (NumberUtil.equals(separator, str.charAt(i), ignoreCase)) {
-				addToList(list, str.substring(start, i), isTrim, ignoreEmpty);
+				addToList(list, str.substring(start, i), isTrim, ignoreEmpty, mapping);
 				start = i + 1;//i+1同时将start与i保持一致
 
 				//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
@@ -171,7 +205,7 @@ public class StrSplitter {
 				}
 			}
 		}
-		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty);//收尾
+		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty, mapping);//收尾
 	}
 
 	/**
@@ -293,7 +327,7 @@ public class StrSplitter {
 			return new ArrayList<>(0);
 		}
 		if (limit == 1) {
-			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty, Function.identity());
 		}
 
 		if (StrUtil.isEmpty(separator)) {//分隔符为空时按照空白符切分
@@ -310,7 +344,7 @@ public class StrSplitter {
 		while (i < len) {
 			i = StrUtil.indexOf(str, separator, start, ignoreCase);
 			if (i > -1) {
-				addToList(list, str.substring(start, i), isTrim, ignoreEmpty);
+				addToList(list, str.substring(start, i), isTrim, ignoreEmpty, Function.identity());
 				start = i + separatorLen;
 
 				//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
@@ -321,7 +355,7 @@ public class StrSplitter {
 				break;
 			}
 		}
-		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty);
+		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty, Function.identity());
 	}
 
 	/**
@@ -355,7 +389,7 @@ public class StrSplitter {
 			return new ArrayList<>(0);
 		}
 		if (limit == 1) {
-			return addToList(new ArrayList<>(1), str, true, true);
+			return addToList(new ArrayList<>(1), str, true, true, Function.identity());
 		}
 
 		final ArrayList<String> list = new ArrayList<>();
@@ -363,7 +397,7 @@ public class StrSplitter {
 		int start = 0;//切分后每个部分的起始
 		for (int i = 0; i < len; i++) {
 			if (CharUtil.isBlankChar(str.charAt(i))) {
-				addToList(list, str.substring(start, i), true, true);
+				addToList(list, str.substring(start, i), true, true, Function.identity());
 				start = i + 1;//i+1同时将start与i保持一致
 
 				//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
@@ -372,7 +406,7 @@ public class StrSplitter {
 				}
 			}
 		}
-		return addToList(list, str.substring(start, len), true, true);//收尾
+		return addToList(list, str.substring(start, len), true, true, Function.identity());//收尾
 	}
 
 	/**
@@ -421,7 +455,7 @@ public class StrSplitter {
 			return new ArrayList<>(0);
 		}
 		if (limit == 1) {
-			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty);
+			return addToList(new ArrayList<>(1), str, isTrim, ignoreEmpty, Function.identity());
 		}
 
 		if (null == separatorPattern) {//分隔符为空时按照空白符切分
@@ -433,7 +467,7 @@ public class StrSplitter {
 		int len = str.length();
 		int start = 0;
 		while (matcher.find()) {
-			addToList(list, str.substring(start, matcher.start()), isTrim, ignoreEmpty);
+			addToList(list, str.substring(start, matcher.start()), isTrim, ignoreEmpty, Function.identity());
 			start = matcher.end();
 
 			//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
@@ -441,7 +475,7 @@ public class StrSplitter {
 				break;
 			}
 		}
-		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty);
+		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty, Function.identity());
 	}
 
 	/**
@@ -496,14 +530,15 @@ public class StrSplitter {
 	 * @param part        被加入的部分
 	 * @param isTrim      是否去除两端空白符
 	 * @param ignoreEmpty 是否略过空字符串（空字符串不做为一个元素）
-	 * @return 列表
+	 * @param mapping     part的类型转换方法
+	 * @return 列表集合
 	 */
-	private static List<String> addToList(List<String> list, String part, boolean isTrim, boolean ignoreEmpty) {
+	private static <R> List<R> addToList(List<R> list, String part, boolean isTrim, boolean ignoreEmpty, Function<String, R> mapping) {
 		if (isTrim) {
 			part = StrUtil.trim(part);
 		}
 		if (false == ignoreEmpty || false == part.isEmpty()) {
-			list.add(part);
+			list.add(mapping.apply(part));
 		}
 		return list;
 	}

@@ -82,6 +82,15 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void splitTest3() {
+		String str = "1.2.";
+		List<Long> split = StrUtil.split(str, '.', 0, true, true, Long::parseLong);
+		Assert.assertEquals(2, split.size());
+		Assert.assertEquals(Long.valueOf(1L), split.get(0));
+		Assert.assertEquals(Long.valueOf(2L), split.get(1));
+	}
+
+	@Test
 	public void splitToLongTest() {
 		String str = "1,2,3,4, 5";
 		long[] longArray = StrUtil.splitToLong(str, ',');
@@ -550,7 +559,7 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void startWithTest(){
+	public void startWithTest() {
 		String a = "123";
 		String b = "123";
 
@@ -577,13 +586,13 @@ public class StrUtilTest {
 
 
 	@Test
-	public void isCharEqualsTest(){
+	public void isCharEqualsTest() {
 		String a = "aaaaaaaaa";
 		Assert.assertTrue(StrUtil.isCharEquals(a));
 	}
 
 	@Test
-	public void isNumericTest(){
+	public void isNumericTest() {
 		String a = "2142342422423423";
 		Assert.assertTrue(StrUtil.isNumeric(a));
 	}

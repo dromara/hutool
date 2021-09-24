@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -1699,6 +1700,19 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 切分字符串，并根据指定的映射函数，进行切分后的元素类型转换
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param mapping   切分后的字符串元素的转换方法
+	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
+	 * @since 5.7.14
+	 */
+	public static <R> List<R> split(CharSequence str, char separator, Function<String, R> mapping) {
+		return split(str, separator, 0, mapping);
+	}
+
+	/**
 	 * 切分字符串，如果分隔符不存在则返回原字符串
 	 *
 	 * @param str       被切分的字符串
@@ -1750,6 +1764,20 @@ public class CharSequenceUtil {
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, false, false);
+	}
+
+	/**
+	 * 切分字符串，不去除切分后每个元素两边的空白符，不去除空白项，会根据指定的映射函数，进行切分后的元素类型转换
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit     限制分片数，-1不限制
+	 * @param mapping   切分后的字符串元素的转换方法
+	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
+	 * @since 5.7.14
+	 */
+	public static <R> List<R> split(CharSequence str, char separator, int limit, Function<String, R> mapping) {
+		return split(str, separator, limit, false, false, mapping);
 	}
 
 	/**
@@ -1828,10 +1856,26 @@ public class CharSequenceUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+		return split(str, separator, limit, isTrim, ignoreEmpty, Function.identity());
+	}
+
+	/**
+	 * 切分字符串
+	 *
+	 * @param str         被切分的字符串
+	 * @param separator   分隔符字符
+	 * @param limit       限制分片数，-1不限制
+	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @param mapping     切分后的字符串元素的转换方法
+	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
+	 * @since 5.7.14
+	 */
+	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, Function<String, R> mapping) {
 		if (null == str) {
 			return new ArrayList<>(0);
 		}
-		return StrSplitter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
+		return StrSplitter.split(str.toString(), separator, limit, isTrim, ignoreEmpty, mapping);
 	}
 
 	/**
@@ -4028,8 +4072,8 @@ public class CharSequenceUtil {
 	 * @param str    转换前的驼峰式命名的字符串，也可以为符号连接形式
 	 * @param symbol 连接符
 	 * @return 转换后符号连接方式命名的字符串
-	 * @since 4.0.10
 	 * @see NamingCase#toSymbolCase(CharSequence, char)
+	 * @since 4.0.10
 	 */
 	public static String toSymbolCase(CharSequence str, char symbol) {
 		return NamingCase.toSymbolCase(str, symbol);
@@ -4203,7 +4247,7 @@ public class CharSequenceUtil {
 		}
 
 		// since 5.7.5，特殊长度
-		switch (maxLength){
+		switch (maxLength) {
 			case 1:
 				return String.valueOf(str.charAt(0));
 			case 2:
@@ -4234,7 +4278,7 @@ public class CharSequenceUtil {
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 *
-	 * @param <T> 元素类型
+	 * @param <T>         元素类型
 	 * @param conjunction 分隔符 {@link StrPool#COMMA}
 	 * @param iterable    集合
 	 * @return 连接后的字符串
@@ -4257,7 +4301,7 @@ public class CharSequenceUtil {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
-		for (int i = value.length(); --i >= 0;) {
+		for (int i = value.length(); --i >= 0; ) {
 			if (false == matcher.match(value.charAt(i))) {
 				return false;
 			}
