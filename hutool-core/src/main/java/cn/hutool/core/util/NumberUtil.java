@@ -45,6 +45,11 @@ public class NumberUtil {
 	private static final int DEFAULT_DIV_SCALE = 10;
 
 	/**
+	 * 默认百分比精度
+	 */
+	private static final int DEFAULT_PERCENT_SCALE = 2;
+
+	/**
 	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
 	 */
 	private static final long[] FACTORIALS = new long[]{
@@ -1102,6 +1107,21 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 格式化金额输出，每三位用逗号分隔 (带前缀￥) <br>
+	 * eg:五万元 => ￥50,000  <br>
+	 * 如果不需要前缀 @see decimalFormatMoney
+	 *
+	 * @param money 金额
+	 * @return 格式化后的值
+	 * @since 5.7.14
+	 */
+	public static String formatMoney(Number money) {
+		final NumberFormat format = NumberFormat.getCurrencyInstance();
+		format.setMaximumFractionDigits(2);
+		return format.format(money);
+	}
+
+	/**
 	 * 格式化百分比，小数采用四舍五入方式
 	 *
 	 * @param number 值
@@ -1113,6 +1133,38 @@ public class NumberUtil {
 		final NumberFormat format = NumberFormat.getPercentInstance();
 		format.setMaximumFractionDigits(scale);
 		return format.format(number);
+	}
+
+	/**
+	 * 求百分比 不带%号 保留小数点后2位
+	 * 如需 %号，可自行追加%，或者再调用 formatPercent <br>
+	 * 如需类型转换，可使用Convert.toXXX方法转换 <br>
+	 *
+	 * @param num   当前num
+	 * @param total 总长度
+	 * @return String 百分比 (不带百分号后缀)
+	 * @since 5.7.14
+	 */
+	public static String percent(Number num, Number total) {
+		return percent(num, total, DEFAULT_PERCENT_SCALE);
+	}
+
+	/**
+	 * 求百分比 不带%号 可指定精度
+	 * 如需 %号，可自行追加%，或者再调用 formatPercent <br>
+	 * 如需类型转换，可使用Convert.toXXX方法转换 <br>
+	 *
+	 * @param num   当前num
+	 * @param total 总长度
+	 * @param scale 精度(保留小数点后几位)
+	 * @return String 百分比 (不带百分号后缀)
+	 * @since 5.7.14
+	 */
+	public static String percent(Number num, Number total, int scale) {
+		BigDecimal div = div(mul(num, 100), total, scale);
+		final NumberFormat format = NumberFormat.getNumberInstance();
+		format.setMaximumFractionDigits(scale);
+		return format.format(div);
 	}
 
 	// ------------------------------------------------------------------------------------------- isXXX
