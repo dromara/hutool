@@ -21,7 +21,7 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void sevenZTest(){
-		Extractor extractor = CompressUtil.createExtractor(
+		Extractor extractor = 	CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				FileUtil.file("d:/test/compress/test.7z"));
 

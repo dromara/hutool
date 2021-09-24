@@ -1,4 +1,4 @@
-package cn.hutool.setting.test;
+package cn.hutool.setting;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.log.LogFactory;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 /**
  * Setting单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -50,23 +50,23 @@ public class PropsTest {
 		String driver = props.getStr("driver");
 		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
 	}
-	
+
 	@Test
 	public void toBeanTest() {
 		Props props = Props.getProp("to_bean_test.properties");
-		
+
 		ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
 		Assert.assertEquals("mailer@mail.com", cfg.getHost());
 		Assert.assertEquals(9000, cfg.getPort());
 		Assert.assertEquals("mailer@mail.com", cfg.getFrom());
-		
+
 		Assert.assertEquals("john", cfg.getCredentials().getUsername());
 		Assert.assertEquals("password", cfg.getCredentials().getPassword());
 		Assert.assertEquals("SHA1", cfg.getCredentials().getAuthMethod());
-		
+
 		Assert.assertEquals("true", cfg.getAdditionalHeaders().get("redelivery"));
 		Assert.assertEquals("true", cfg.getAdditionalHeaders().get("secure"));
-		
+
 		Assert.assertEquals("admin@mail.com", cfg.getDefaultRecipients().get(0));
 		Assert.assertEquals("owner@mail.com", cfg.getDefaultRecipients().get(1));
 	}
@@ -98,7 +98,7 @@ public class PropsTest {
 		private List<String> defaultRecipients;
 		private Map<String, String> additionalHeaders;
 	}
-	
+
 	@Data
 	public static class Credentials {
 		private String authMethod;

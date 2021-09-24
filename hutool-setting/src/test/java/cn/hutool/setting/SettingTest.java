@@ -1,11 +1,9 @@
-package cn.hutool.setting.test;
+package cn.hutool.setting;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import cn.hutool.core.lang.Console;
-import cn.hutool.setting.Setting;
 
 /**
  * Setting单元测试

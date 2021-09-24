@@ -6,7 +6,7 @@ import cn.hutool.extra.compress.archiver.Archiver;
 import cn.hutool.extra.compress.archiver.SevenZArchiver;
 import cn.hutool.extra.compress.archiver.StreamArchiver;
 import cn.hutool.extra.compress.extractor.Extractor;
-import cn.hutool.extra.compress.extractor.SenvenZExtractor;
+import cn.hutool.extra.compress.extractor.SevenZExtractor;
 import cn.hutool.extra.compress.extractor.StreamExtractor;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.StreamingNotSupportedException;
@@ -168,14 +168,14 @@ public class CompressUtil {
 	 */
 	public static Extractor createExtractor(Charset charset, String archiverName, File file) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
-			return new SenvenZExtractor(file);
+			return new SevenZExtractor(file);
 		}
 		try {
 			return new StreamExtractor(charset, archiverName, file);
 		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
-				return new SenvenZExtractor(file);
+				return new SevenZExtractor(file);
 			}
 			throw e;
 		}
@@ -218,14 +218,15 @@ public class CompressUtil {
 	 */
 	public static Extractor createExtractor(Charset charset, String archiverName, InputStream in) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
-			return new SenvenZExtractor(in);
+			return new SevenZExtractor(in);
 		}
+
 		try {
 			return new StreamExtractor(charset, archiverName, in);
 		} catch (CompressException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
-				return new SenvenZExtractor(in);
+				return new SevenZExtractor(in);
 			}
 			throw e;
 		}

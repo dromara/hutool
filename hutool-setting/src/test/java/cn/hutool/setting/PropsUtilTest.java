@@ -1,4 +1,4 @@
-package cn.hutool.setting.test;
+package cn.hutool.setting;
 
 import cn.hutool.setting.dialect.PropsUtil;
 import org.junit.Assert;
@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.Objects;
 
 public class PropsUtilTest {
-	
+
 	@Test
 	public void getTest() {
 		String driver = PropsUtil.get("test").getStr("driver");

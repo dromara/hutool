@@ -25,6 +25,8 @@ import java.io.PushbackInputStream;
  * </code>
  * <br><br>
  * 参考： http://akini.mbnet.fi/java/unicodereader/UnicodeInputStream.java.txt
+ *
+ * @author looly
  */
 public class BOMInputStream extends InputStream {
 
@@ -36,10 +38,21 @@ public class BOMInputStream extends InputStream {
 	private static final int BOM_SIZE = 4;
 
 	// ----------------------------------------------------------------- Constructor start
+
+	/**
+	 * 构造
+	 * @param in 流
+	 */
 	public BOMInputStream(InputStream in) {
 		this(in, CharsetUtil.UTF_8);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param in 流
+	 * @param defaultCharset 默认编码
+	 */
 	public BOMInputStream(InputStream in, String defaultCharset) {
 		this.in = new PushbackInputStream(in, BOM_SIZE);
 		this.defaultCharset = defaultCharset;
@@ -61,7 +74,7 @@ public class BOMInputStream extends InputStream {
 	 * @return 编码
 	 */
 	public String getCharset() {
-		if (!isInited) {
+		if (false == isInited) {
 			try {
 				init();
 			} catch (IOException ex) {
@@ -117,7 +130,6 @@ public class BOMInputStream extends InputStream {
 			charset = defaultCharset;
 			unread = n;
 		}
-		// System.out.println("read=" + n + ", unread=" + unread);
 
 		if (unread > 0) {
 			in.unread(bom, (n - unread), unread);

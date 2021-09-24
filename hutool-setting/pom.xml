@@ -27,5 +27,11 @@
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.29</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

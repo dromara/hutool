@@ -225,6 +225,17 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * 从{@link InputStream}中获取{@link BomReader}
+	 *
+	 * @param in {@link InputStream}
+	 * @return {@link BomReader}
+	 * @since 5.7.14
+	 */
+	public static BomReader getBomReader(InputStream in) {
+		return new BomReader(in);
+	}
+
+	/**
 	 * 获得一个Reader
 	 *
 	 * @param in      输入流
