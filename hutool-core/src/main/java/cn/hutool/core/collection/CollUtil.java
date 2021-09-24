@@ -216,6 +216,63 @@ public class CollUtil {
 	}
 
 	/**
+	 * 多个集合的完全并集，类似于SQL中的“UNION ALL”<br>
+	 * 针对一个集合中存在多个相同元素的情况，保留全部元素<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c, c, c, a, b, c, c]
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 并集的集合，返回 {@link Collection}
+	 * @since 5.7.14
+	 */
+	public static <T> Collection<T> unionAll(Collection<? extends Collection<T>> coll) {
+		Collection<T> marge = coll.iterator().next();
+		for (Collection<T> next : coll) {
+			marge = union(marge, next);
+		}
+		return marge;
+	}
+
+	/**
+	 * 多个集合的完全并集，类似于SQL中的“UNION ALL”<br>
+	 * 针对一个集合中存在多个相同元素的情况，保留全部元素<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c, c, c, a, b, c, c]
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 并集的集合，返回 {@link ArrayList}
+	 * @since 5.7.14
+	 */
+	public static <T> List<T> unionAllToList(Collection<? extends Collection<T>> coll) {
+		List<T> marge = new ArrayList<>(coll.iterator().next());
+		for (Collection<T> next : coll) {
+			marge = new ArrayList<>(union(marge, next));
+		}
+		return marge;
+	}
+
+	/**
+	 * 多个集合的非重复并集，类似于SQL中的“UNION DISTINCT”<br>
+	 * 针对一个集合中存在多个相同元素的情况，只保留一个<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c]，此结果中只保留了一个c
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 并集的集合，返回 {@link LinkedHashSet}
+	 * @since 5.7.14
+	 */
+	public static <T> Set<T> unionAllDistinct(Collection<? extends Collection<T>> coll) {
+		Collection<T> marge = coll.iterator().next();
+		for (Collection<T> next : coll) {
+			marge = unionDistinct(marge, next);
+		}
+		return new LinkedHashSet<>(marge);
+	}
+
+	/**
 	 * 两个集合的交集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
@@ -309,6 +366,63 @@ public class CollUtil {
 		result.retainAll(coll2);
 
 		return result;
+	}
+
+	/**
+	 * 多个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c, c]，此结果中只保留了两个c
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 交集的集合，返回 {@link Collection}
+	 * @since 5.7.14
+	 */
+	public static <T> Collection<T> intersectionAll(Collection<? extends Collection<T>> coll) {
+		Collection<T> marge = coll.iterator().next();
+		for (Collection<T> next : coll) {
+			marge = intersection(marge, next);
+		}
+		return marge;
+	}
+
+	/**
+	 * 多个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c, c]，此结果中只保留了两个c
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 交集的集合，返回 {@link ArrayList}
+	 * @since 5.7.14
+	 */
+	public static <T> List<T> intersectionAllToList(Collection<? extends Collection<T>> coll) {
+		List<T> marge = new ArrayList<>(coll.iterator().next());
+		for (Collection<T> next : coll) {
+			marge = new ArrayList<>(intersection(marge, next));
+		}
+		return marge;
+	}
+
+	/**
+	 * 多个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，只保留一个<br>
+	 * 例如：2层集合：[[a, b, c, c, c],[a, b, c, c]]<br>
+	 * 结果：[a, b, c]，此结果中只保留了一个c
+	 *
+	 * @param <T>  集合元素类型
+	 * @param coll 2层集合
+	 * @return 交集的集合，返回 {@link LinkedHashSet}
+	 * @since 5.7.14
+	 */
+	public static <T> Set<T> intersectionAllDistinct(Collection<? extends Collection<T>> coll) {
+		Collection<T> marge = coll.iterator().next();
+		for (Collection<T> next : coll) {
+			marge = intersectionDistinct(marge, next);
+		}
+		return new LinkedHashSet<>(marge);
 	}
 
 	/**
