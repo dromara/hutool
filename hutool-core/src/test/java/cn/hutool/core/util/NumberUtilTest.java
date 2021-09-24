@@ -193,6 +193,21 @@ public class NumberUtilTest {
 		Assert.assertEquals("467.81", format);
 	}
 
+
+	@Test
+	public void formatMoneyTest() {
+		double money1 = 36.5;
+
+		//默认保留小数点后2位，即精确到分
+		Assert.assertEquals("36.50", NumberUtil.decimalFormatMoney(money1));
+		Assert.assertEquals("￥36.50", NumberUtil.formatMoney(money1));
+
+		//三位一分割
+		double money2 = 299792400.543534534;
+		Assert.assertEquals("299,792,400.54", NumberUtil.decimalFormatMoney(money2));
+		Assert.assertEquals("￥299,792,400.54", NumberUtil.formatMoney(money2));
+	}
+
 	@Test
 	public void decimalFormatMoneyTest() {
 		double c = 299792400.543534534;
@@ -203,6 +218,32 @@ public class NumberUtilTest {
 		double value = 0.5;
 		String money = NumberUtil.decimalFormatMoney(value);
 		Assert.assertEquals("0.50", money);
+	}
+
+
+	@Test
+	public void formatPercentTest() {
+		double percent1 = 0.8;
+		double percent2 = 0.88888888;
+
+		//默认保留小数点后2位，即精确到分
+		Assert.assertEquals("80%", NumberUtil.formatPercent(percent1, 2));
+		Assert.assertEquals("88.89%", NumberUtil.formatPercent(percent2, 2));
+	}
+
+	@Test
+	public void percentTest() {
+		double percent1 = 3;
+		double percent2 = 10;
+		double percent3 = 1;
+		double percent4 = 3;
+
+		//默认保留小数点后2位，即精确到分
+		Assert.assertEquals("30", NumberUtil.percent(percent1, percent2));
+		Assert.assertEquals("33.33", NumberUtil.percent(percent3, percent4));
+
+		//指定精度
+		Assert.assertEquals("33.333", NumberUtil.percent(percent3, percent4, 3));
 	}
 
 	@Test
