@@ -105,12 +105,66 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void unionAllTest() {
+		List<List<String>> allList1 = new ArrayList<>();
+		ArrayList<String> list1 = CollUtil.newArrayList("1", "3", "5", "7", "9");
+		ArrayList<String> list2 = CollUtil.newArrayList("3", "4", "5", "6", "7");
+		allList1.add(list1);
+		allList1.add(list2);
+		Collection<String> union1 = CollUtil.union(list1, list2);
+		Collection<String> union2 = CollUtil.unionAll(allList1);
+		Collection<String> union3 = CollUtil.unionDistinct(list1, list2);
+		Collection<String> union4 = CollUtil.unionAllDistinct(allList1);
+		Assert.assertEquals(union1.size(), union2.size());
+		Assert.assertEquals(union3.size(), union4.size());
+
+		List<List<String>> allList2 = new ArrayList<>();
+		ArrayList<String> list3 = CollUtil.newArrayList("a", "b", "c", "c", "c");
+		ArrayList<String> list4 = CollUtil.newArrayList("a", "b", "c", "c");
+		allList2.add(list3);
+		allList2.add(list4);
+		Collection<String> union5 = CollUtil.union(list3, list4);
+		Collection<String> union6 = CollUtil.unionAll(allList2);
+		Collection<String> union7 = CollUtil.unionDistinct(list3, list4);
+		Collection<String> union8 = CollUtil.unionAllDistinct(allList2);
+		Assert.assertEquals(union5.size(), union6.size());
+		Assert.assertEquals(union7.size(), union8.size());
+	}
+
+	@Test
 	public void intersectionTest() {
 		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
 		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> intersection = CollUtil.intersection(list1, list2);
 		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
+	}
+
+	@Test
+	public void intersectionAllTest() {
+		List<List<String>> allList1 = new ArrayList<>();
+		ArrayList<String> list1 = CollUtil.newArrayList("1", "3", "5", "7", "9");
+		ArrayList<String> list2 = CollUtil.newArrayList("3", "4", "5", "6", "7");
+		allList1.add(list1);
+		allList1.add(list2);
+		Collection<String> intersection1 = CollUtil.intersection(list1, list2);
+		Collection<String> intersection2 = CollUtil.intersectionAll(allList1);
+		Collection<String> intersection3 = CollUtil.intersectionDistinct(list1, list2);
+		Collection<String> intersection4 = CollUtil.intersectionAllDistinct(allList1);
+		Assert.assertEquals(intersection1.size(), intersection2.size());
+		Assert.assertEquals(intersection3.size(), intersection4.size());
+
+		List<List<String>> allList2 = new ArrayList<>();
+		ArrayList<String> list3 = CollUtil.newArrayList("a", "b", "c", "c", "c");
+		ArrayList<String> list4 = CollUtil.newArrayList("a", "b", "c", "c");
+		allList2.add(list3);
+		allList2.add(list4);
+		Collection<String> intersection5 = CollUtil.intersection(list3, list4);
+		Collection<String> intersection6 = CollUtil.intersectionAll(allList2);
+		Collection<String> intersection7 = CollUtil.intersectionDistinct(list3, list4);
+		Collection<String> intersection8 = CollUtil.intersectionAllDistinct(allList2);
+		Assert.assertEquals(intersection5.size(), intersection6.size());
+		Assert.assertEquals(intersection7.size(), intersection8.size());
 	}
 
 	@Test
