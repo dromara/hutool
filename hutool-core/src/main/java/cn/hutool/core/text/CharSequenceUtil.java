@@ -1700,19 +1700,6 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 切分字符串，并根据指定的映射函数，进行切分后的元素类型转换
-	 *
-	 * @param str       被切分的字符串
-	 * @param separator 分隔符字符
-	 * @param mapping   切分后的字符串元素的转换方法
-	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
-	 * @since 5.7.14
-	 */
-	public static <R> List<R> split(CharSequence str, char separator, Function<String, R> mapping) {
-		return split(str, separator, 0, mapping);
-	}
-
-	/**
 	 * 切分字符串，如果分隔符不存在则返回原字符串
 	 *
 	 * @param str       被切分的字符串
@@ -1764,20 +1751,6 @@ public class CharSequenceUtil {
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, false, false);
-	}
-
-	/**
-	 * 切分字符串，不去除切分后每个元素两边的空白符，不去除空白项，会根据指定的映射函数，进行切分后的元素类型转换
-	 *
-	 * @param str       被切分的字符串
-	 * @param separator 分隔符字符
-	 * @param limit     限制分片数，-1不限制
-	 * @param mapping   切分后的字符串元素的转换方法
-	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
-	 * @since 5.7.14
-	 */
-	public static <R> List<R> split(CharSequence str, char separator, int limit, Function<String, R> mapping) {
-		return split(str, separator, limit, false, false, mapping);
 	}
 
 	/**
@@ -1856,7 +1829,7 @@ public class CharSequenceUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		return split(str, separator, limit, isTrim, ignoreEmpty, Function.identity());
+		return StrSplitter.split(str, separator, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1865,17 +1838,16 @@ public class CharSequenceUtil {
 	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
 	 * @param mapping     切分后的字符串元素的转换方法
 	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
 	 * @since 5.7.14
 	 */
-	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, Function<String, R> mapping) {
+	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean ignoreEmpty, Function<String, R> mapping) {
 		if (null == str) {
 			return new ArrayList<>(0);
 		}
-		return StrSplitter.split(str.toString(), separator, limit, isTrim, ignoreEmpty, mapping);
+		return StrSplitter.split(str.toString(), separator, limit, ignoreEmpty, mapping);
 	}
 
 	/**

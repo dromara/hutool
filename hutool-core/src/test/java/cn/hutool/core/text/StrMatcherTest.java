@@ -12,7 +12,13 @@ public class StrMatcherTest {
 	public void matcherTest(){
 		final StrMatcher strMatcher = new StrMatcher("${name}-${age}-${gender}-${country}-${province}-${city}-${status}");
 		final Map<String, String> match = strMatcher.match("小明-19-男-中国-河南-郑州-已婚");
-		Console.log(match);
+		Assert.assertEquals("小明", match.get("name"));
+		Assert.assertEquals("19", match.get("age"));
+		Assert.assertEquals("男", match.get("gender"));
+		Assert.assertEquals("中国", match.get("country"));
+		Assert.assertEquals("河南", match.get("province"));
+		Assert.assertEquals("郑州", match.get("city"));
+		Assert.assertEquals("已婚", match.get("status"));
 	}
 
 	@Test

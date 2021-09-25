@@ -1,11 +1,10 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.text.split;
 
-import java.util.List;
-
+import cn.hutool.core.text.StrSplitter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.text.StrSplitter;
+import java.util.List;
 
 /**
  * {@link StrSplitter} 单元测试
@@ -18,6 +17,7 @@ public class StrSpliterTest {
 	public void splitByCharTest(){
 		String str1 = "a, ,efedsfs,   ddf";
 		List<String> split = StrSplitter.split(str1, ',', 0, true, true);
+
 		Assert.assertEquals("ddf", split.get(2));
 		Assert.assertEquals(3, split.size());
 	}
@@ -44,5 +44,14 @@ public class StrSpliterTest {
 		List<String> split = StrSplitter.splitPath(str1, 0);
 		Assert.assertEquals("bin", split.get(2));
 		Assert.assertEquals(3, split.size());
+	}
+
+	@Test
+	public void splitMappingTest() {
+		String str = "1.2.";
+		List<Long> split = StrSplitter.split(str, '.', 0, true, true, Long::parseLong);
+		Assert.assertEquals(2, split.size());
+		Assert.assertEquals(Long.valueOf(1L), split.get(0));
+		Assert.assertEquals(Long.valueOf(2L), split.get(1));
 	}
 }
