@@ -9,8 +9,39 @@ import org.junit.Test;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ObjectUtilTest {
+
+	@Test
+	public void equalsTest(){
+		Object a = null;
+		Object b = null;
+		Assert.assertTrue(ObjectUtil.equals(a, b));
+	}
+
+	@Test
+	public void lengthTest(){
+		int[] array = new int[]{1,2,3,4,5};
+		int length = ObjectUtil.length(array);
+		Assert.assertEquals(5, length);
+
+		Map<String, String> map = new HashMap<>();
+		map.put("a", "a1");
+		map.put("b", "b1");
+		map.put("c", "c1");
+		length = ObjectUtil.length(map);
+		Assert.assertEquals(3, length);
+	}
+
+	@Test
+	public void containsTest(){
+		int[] array = new int[]{1,2,3,4,5};
+
+		final boolean contains = ObjectUtil.contains(array, 1);
+		Assert.assertTrue(contains);
+	}
 
 	@Test
 	public void cloneTest() {
@@ -54,6 +85,12 @@ public class ObjectUtilTest {
 		Instant result2 = ObjectUtil.defaultIfEmpty(dateStr,
 				() -> DateUtil.parse(dateStr, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result2);
+	}
 
+	@Test
+	public void isBasicTypeTest(){
+		int a = 1;
+		final boolean basicType = ObjectUtil.isBasicType(a);
+		Assert.assertTrue(basicType);
 	}
 }
