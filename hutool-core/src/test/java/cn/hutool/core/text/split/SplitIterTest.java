@@ -26,6 +26,19 @@ public class SplitIterTest {
 	}
 
 	@Test
+	public void splitByCharIgnoreCaseTest(){
+		String str1 = "a, ,,eAedsas,   ddf,";
+
+		//不忽略""
+		SplitIter splitIter = new SplitIter(str1,
+				new CharFinder('a', true),
+				Integer.MAX_VALUE,
+				false
+		);
+		Assert.assertEquals(4, splitIter.toList(false).size());
+	}
+
+	@Test
 	public void splitByCharIgnoreEmptyTest(){
 		String str1 = "a, ,,efedsfs,   ddf,";
 
@@ -37,6 +50,23 @@ public class SplitIterTest {
 
 		final List<String> strings = splitIter.toList(false);
 		Assert.assertEquals(4, strings.size());
+	}
+
+	@Test
+	public void splitByCharTrimTest(){
+		String str1 = "a, ,,efedsfs,   ddf,";
+
+		SplitIter splitIter = new SplitIter(str1,
+				new CharFinder(',', false),
+				Integer.MAX_VALUE,
+				true
+		);
+
+		final List<String> strings = splitIter.toList(true);
+		Assert.assertEquals(3, strings.size());
+		Assert.assertEquals("a", strings.get(0));
+		Assert.assertEquals("efedsfs", strings.get(1));
+		Assert.assertEquals("ddf", strings.get(2));
 	}
 
 	@Test

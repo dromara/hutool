@@ -416,11 +416,7 @@ public class StrSplitter {
 	 * @return 截取后的字符串数组
 	 */
 	public static String[] splitByLength(String text, int len) {
-		SplitIter splitIter = new SplitIter(text,
-				new LengthFinder(len),
-				Integer.MAX_VALUE,
-				false
-		);
+		SplitIter splitIter = new SplitIter(text, new LengthFinder(len), -1, false);
 		return splitIter.toArray(false);
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method start
