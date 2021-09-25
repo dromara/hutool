@@ -11,7 +11,7 @@ import java.util.Iterator;
  * @param <E> 元素类型
  * @since 4.1.1
  */
-public class EnumerationIter<E> implements Iterator<E>, Iterable<E>, Serializable{
+public class EnumerationIter<E> implements IterableIter<E>, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private final Enumeration<E> e;
@@ -38,10 +38,4 @@ public class EnumerationIter<E> implements Iterator<E>, Iterable<E>, Serializabl
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public Iterator<E> iterator() {
-		return this;
-	}
-
 }

@@ -21,7 +21,7 @@ import java.util.List;
  * @author Looly
  * @since 3.0.7
  */
-public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
+public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final Iterator<E> listIterator;
@@ -57,10 +57,4 @@ public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
 	public void remove() throws UnsupportedOperationException{
 		throw new UnsupportedOperationException("This is a read-only iterator.");
 	}
-
-	@Override
-	public Iterator<E> iterator() {
-		return this;
-	}
-
 }

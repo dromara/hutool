@@ -17,7 +17,7 @@ import java.util.List;
  * @author qiqi.chen
  * @since 5.7.10
  */
-public class PartitionIter<T> implements Iterator<List<T>>, Iterable<List<T>>, Serializable {
+public class PartitionIter<T> implements IterableIter<List<T>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -38,11 +38,6 @@ public class PartitionIter<T> implements Iterator<List<T>>, Iterable<List<T>>, S
 	public PartitionIter(Iterator<T> iterator, int partitionSize) {
 		this.iterator = iterator;
 		this.partitionSize = partitionSize;
-	}
-
-	@Override
-	public Iterator<List<T>> iterator() {
-		return this;
 	}
 
 	@Override

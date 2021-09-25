@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Word分词结果实现<br>
  * 项目地址：https://github.com/ysc/word
- * 
+ *
  * @author looly
  *
  */
@@ -19,7 +19,7 @@ public class WordResult implements Result{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param result 分词结果
 	 */
 	public WordResult(List<org.apdplat.word.segmentation.Word> result) {
@@ -40,10 +40,4 @@ public class WordResult implements Result{
 	public void remove() {
 		this.wordIter.remove();
 	}
-
-	@Override
-	public Iterator<Word> iterator() {
-		return this;
-	}
-	
 }

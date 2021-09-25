@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * IKAnalyzer分词结果实现<br>
  * 项目地址：https://github.com/yozhao/IKAnalyzer
- * 
+ *
  * @author looly
  *
  */
@@ -21,7 +21,7 @@ public class IKAnalyzerResult extends AbstractResult {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param seg 分词结果
 	 */
 	public IKAnalyzerResult(IKSegmenter seg) {
@@ -36,9 +36,9 @@ public class IKAnalyzerResult extends AbstractResult {
 		} catch (IOException e) {
 			throw new TokenizerException(e);
 		}
-		if (null != next) {
-			return new IKAnalyzerWord(next);
+		if (null == next) {
+			return null;
 		}
-		return null;
+		return new IKAnalyzerWord(next);
 	}
 }

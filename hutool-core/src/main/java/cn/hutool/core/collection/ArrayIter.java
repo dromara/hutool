@@ -2,7 +2,6 @@ package cn.hutool.core.collection;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -12,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author Looly
  * @since 4.1.1
  */
-public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable {
+public class ArrayIter<E> implements IterableIter<E>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -130,10 +129,4 @@ public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable {
 	public void reset() {
 		this.index = this.startIndex;
 	}
-
-	@Override
-	public Iterator<E> iterator() {
-		return this;
-	}
-
 }

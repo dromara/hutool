@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.14 (2021-09-24)
+# 5.7.14 (2021-09-25)
 
 ### 🐣新特性
 * 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
@@ -11,6 +11,7 @@
 * 【setting】     增加YamlUtil
 * 【extra  】     SenvenZExtractor改名为SevenZExtractor，增加getFirst、get方法
 * 【core   】     DateConverter修改返回java.util.Date而非DateTime（issue#I4BOAP@Gitee）
+* 【core   】     增加IterableIter、ComputeIter
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）

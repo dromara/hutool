@@ -95,6 +95,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 
 	@Override
 	public boolean contains(Object o) {
+		//noinspection SuspiciousMethodCalls
 		return map.containsKey(o);
 	}
 
