@@ -1835,6 +1835,7 @@ public class CharSequenceUtil {
 	/**
 	 * 切分字符串
 	 *
+	 * @param <R>         切分后元素类型
 	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制

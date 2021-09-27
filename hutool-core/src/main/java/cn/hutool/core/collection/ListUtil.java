@@ -599,6 +599,7 @@ public class ListUtil {
 	 * 交换会修改原List<br>
 	 * 如果集合中有多个相同元素，只交换第一个找到的元素
 	 *
+	 * @param <T>         元素类型
 	 * @param list        列表
 	 * @param element     需交换元素
 	 * @param targetIndex 目标索引
@@ -618,6 +619,7 @@ public class ListUtil {
 	 * 交换会修改原List<br>
 	 * 如果集合中有多个相同元素，只交换第一个找到的元素
 	 *
+	 * @param <T>           元素类型
 	 * @param list          列表
 	 * @param element       需交换元素
 	 * @param targetElement 目标元素

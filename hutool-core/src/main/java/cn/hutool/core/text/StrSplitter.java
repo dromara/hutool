@@ -130,11 +130,12 @@ public class StrSplitter {
 	/**
 	 * 切分字符串，大小写敏感
 	 *
+	 * @param <R>         切分后的元素类型
 	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
 	 * @param ignoreEmpty 是否忽略空串
-	 * @param mapping   切分后的字符串元素的转换方法
+	 * @param mapping     切分后的字符串元素的转换方法
 	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
 	 * @since 5.7.14
 	 */
@@ -160,7 +161,7 @@ public class StrSplitter {
 	/**
 	 * 切分字符串
 	 *
-	 * @param text         被切分的字符串
+	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
@@ -176,12 +177,13 @@ public class StrSplitter {
 	/**
 	 * 切分字符串
 	 *
-	 * @param text         被切分的字符串
+	 * @param <R> 切分后的元素类型
+	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
 	 * @param ignoreEmpty 是否忽略空串
 	 * @param ignoreCase  是否忽略大小写
-	 * @param mapping   切分后的字符串元素的转换方法
+	 * @param mapping     切分后的字符串元素的转换方法
 	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
 	 * @since 5.7.14
 	 */
@@ -296,7 +298,7 @@ public class StrSplitter {
 	/**
 	 * 切分字符串
 	 *
-	 * @param text         被切分的字符串
+	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符串
 	 * @param limit       限制分片数
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
@@ -331,7 +333,7 @@ public class StrSplitter {
 	 * 使用空白符切分字符串<br>
 	 * 切分后的字符串两边不包含空白符，空串或空白符串并不做为元素之一
 	 *
-	 * @param text   被切分的字符串
+	 * @param text  被切分的字符串
 	 * @param limit 限制分片数
 	 * @return 切分后的集合
 	 * @since 3.0.8
@@ -376,7 +378,7 @@ public class StrSplitter {
 	/**
 	 * 通过正则切分字符串
 	 *
-	 * @param text              字符串
+	 * @param text             字符串
 	 * @param separatorPattern 分隔符正则{@link Pattern}
 	 * @param limit            限制分片数
 	 * @param isTrim           是否去除切分字符串后每个元素两边的空格
@@ -412,7 +414,7 @@ public class StrSplitter {
 	 * 根据给定长度，将给定字符串截取为多个部分
 	 *
 	 * @param text 字符串
-	 * @param len 每一个小节的长度
+	 * @param len  每一个小节的长度
 	 * @return 截取后的字符串数组
 	 */
 	public static String[] splitByLength(String text, int len) {
@@ -437,7 +439,7 @@ public class StrSplitter {
 	 * @param isTrim 是否trim
 	 * @return {@link Function}
 	 */
-	private static Function<String, String> trimFunc(boolean isTrim){
+	private static Function<String, String> trimFunc(boolean isTrim) {
 		return (str) -> isTrim ? StrUtil.trim(str) : str;
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end

@@ -522,6 +522,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * person.friends[5].name
 	 * </pre>
 	 *
+	 * @param <T> 目标类型
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see BeanPath#get(Object)
