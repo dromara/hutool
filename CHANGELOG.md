@@ -19,6 +19,7 @@
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
 * 【http   】     修复Extractor中filter无效问题
 * 【json   】     修复JSONGetter.getJSONArray判断null的问题（issue#I4C15H@Gitee）
+* 【db     】     修复Condition没占位符的情况下sql没引号问题（issue#1846@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

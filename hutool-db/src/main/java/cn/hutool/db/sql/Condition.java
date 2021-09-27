@@ -258,6 +258,16 @@ public class Condition extends CloneSupport<Condition> {
 	}
 
 	/**
+	 * 是否LIKE条件
+	 *
+	 * @return 是否LIKE条件
+	 * @since 5.7.14
+	 */
+	public boolean isOperatorLike() {
+		return OPERATOR_LIKE.equalsIgnoreCase(this.operator);
+	}
+
+	/**
 	 * 检查值是否为null，如果为null转换为 "IS NULL"形式
 	 *
 	 * @return this
@@ -343,7 +353,9 @@ public class Condition extends CloneSupport<Condition> {
 				}
 			} else {
 				// 直接使用条件值
-				conditionStrBuilder.append(" ").append(this.value);
+				final String valueStr = String.valueOf(this.value);
+				conditionStrBuilder.append(" ").append(isOperatorLike() ?
+						StrUtil.wrap(valueStr, "'") : valueStr);
 			}
 		}
 
@@ -536,14 +548,14 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param value 被转换的字符串值
 	 * @return 转换后的值
 	 */
-	private static Object tryToNumber(String value){
+	private static Object tryToNumber(String value) {
 		value = StrUtil.trim(value);
-		if(false == NumberUtil.isNumber(value)){
+		if (false == NumberUtil.isNumber(value)) {
 			return value;
 		}
-		try{
+		try {
 			return NumberUtil.parseNumber(value);
-		} catch (Exception ignore){
+		} catch (Exception ignore) {
 			return value;
 		}
 	}
