@@ -686,6 +686,19 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 构建DateTime对象
 	 *
+	 * @param dateStr Date字符串
+	 * @param parser  格式化器,{@link FastDateFormat}
+	 * @param lenient 是否宽容模式
+	 * @return DateTime对象
+	 * @since 5.7.14
+	 */
+	public static DateTime parse(CharSequence dateStr, DateParser parser, boolean lenient) {
+		return new DateTime(dateStr, parser);
+	}
+
+	/**
+	 * 构建DateTime对象
+	 *
 	 * @param dateStr   Date字符串
 	 * @param formatter 格式化器,{@link DateTimeFormatter}
 	 * @return DateTime对象
@@ -834,20 +847,20 @@ public class DateUtil extends CalendarUtil {
 			if (length <= patternLength - 4 && length >= patternLength - 6) {
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
-		} else if(StrUtil.contains(utcString, '+')){
+		} else if (StrUtil.contains(utcString, '+')) {
 			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
 			utcString = utcString.replace(" +", "+");
 			final String zoneOffset = StrUtil.subAfter(utcString, '+', true);
-			if(StrUtil.isBlank(zoneOffset)){
+			if (StrUtil.isBlank(zoneOffset)) {
 				throw new DateException("Invalid format: [{}]", utcString);
 			}
-			if(false == StrUtil.contains(zoneOffset, ':')){
+			if (false == StrUtil.contains(zoneOffset, ':')) {
 				// +0800转换为+08:00
 				final String pre = StrUtil.subBefore(utcString, '+', true);
 				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
 			}
 
-			if(StrUtil.contains(utcString, CharUtil.DOT)) {
+			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
 				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
@@ -929,7 +942,7 @@ public class DateUtil extends CalendarUtil {
 				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
 			} else if (length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_MS_FORMAT);
-			}else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
+			} else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
 			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
@@ -964,7 +977,7 @@ public class DateUtil extends CalendarUtil {
 					if (indexOfDot > 0) {
 						final int length1 = dateStr.length();
 						// yyyy-MM-dd HH:mm:ss.SSS 或者 yyyy-MM-dd HH:mm:ss.SSSSSS
-						if(length1 - indexOfDot > 4) {
+						if (length1 - indexOfDot > 4) {
 							// 类似yyyy-MM-dd HH:mm:ss.SSSSSS，采取截断操作
 							dateStr = StrUtil.subPre(dateStr, indexOfDot + 4);
 						}

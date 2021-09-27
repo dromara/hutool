@@ -287,7 +287,19 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, DateParser dateParser) {
-		this(parse(dateStr, dateParser));
+		this(dateStr, dateParser, true);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param dateStr    Date字符串
+	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
+	 * @param lenient    是否宽容模式
+	 * @see DatePattern
+	 */
+	public DateTime(CharSequence dateStr, DateParser dateParser, boolean lenient) {
+		this(parse(dateStr, dateParser, lenient));
 	}
 
 	// -------------------------------------------------------------------- Constructor end
@@ -1017,13 +1029,14 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr 日期字符串
 	 * @param parser  {@link FastDateFormat}
-	 * @return {@link Date}
+	 * @param lenient 是否宽容模式
+	 * @return {@link Calendar}
 	 */
-	private static Calendar parse(CharSequence dateStr, DateParser parser) {
+	private static Calendar parse(CharSequence dateStr, DateParser parser, boolean lenient) {
 		Assert.notNull(parser, "Parser or DateFromat must be not null !");
 		Assert.notBlank(dateStr, "Date String must be not blank !");
 
-		final Calendar calendar = CalendarUtil.parse(dateStr, true, parser);
+		final Calendar calendar = CalendarUtil.parse(dateStr, lenient, parser);
 		if (null == calendar) {
 			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern());
 		}

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.14 (2021-09-27)
+# 5.7.14 (2021-09-28)
 
 ### 🐣新特性
 * 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
@@ -13,6 +13,7 @@
 * 【core   】     DateConverter修改返回java.util.Date而非DateTime（issue#I4BOAP@Gitee）
 * 【core   】     增加IterableIter、ComputeIter
 * 【core   】     CsvConfig增加disableComment方法（issue#1842@Github）
+* 【core   】     DateTime构造和DateUtil.parse可选是否宽松模式（issue#1849@Github）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
