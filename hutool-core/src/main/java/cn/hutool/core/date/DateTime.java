@@ -1040,6 +1040,9 @@ public class DateTime extends Date {
 		if (null == calendar) {
 			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern());
 		}
+
+		//noinspection MagicConstant
+		calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
 		return calendar;
 	}
 
