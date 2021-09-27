@@ -1,9 +1,16 @@
 package cn.hutool.core.collection;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link IterUtil} 单元测试
@@ -83,29 +90,10 @@ public class IterUtilTest {
 		Assert.assertEquals(expectedMap, testMap);
 	}
 
+	@Data
+	@AllArgsConstructor
 	public static class Car {
 		private String carNumber;
 		private String carName;
-
-		public Car(String carNumber, String carName) {
-			this.carNumber = carNumber;
-			this.carName = carName;
-		}
-
-		public String getCarNumber() {
-			return carNumber;
-		}
-
-		public void setCarNumber(String carNumber) {
-			this.carNumber = carNumber;
-		}
-
-		public String getCarName() {
-			return carName;
-		}
-
-		public void setCarName(String carName) {
-			this.carName = carName;
-		}
 	}
 }
