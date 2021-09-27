@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -308,7 +309,8 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	}
 
 	/**
-	 * 写出一行注释，注释符号可自定义
+	 * 写出一行注释，注释符号可自定义<br>
+	 * 如果注释符不存在，则抛出异常
 	 *
 	 * @param comment 注释内容
 	 * @return this
@@ -316,6 +318,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @since 5.5.7
 	 */
 	public CsvWriter writeComment(String comment) {
+		Assert.notNull(this.config.commentCharacter, "Comment is disable!");
 		try {
 			writer.write(this.config.commentCharacter);
 			writer.write(comment);

@@ -234,7 +234,7 @@ public final class CsvParser implements Closeable, Serializable {
 			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
 				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
 				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
-				if(c == this.config.commentCharacter){
+				if(null != this.config.commentCharacter && c == this.config.commentCharacter){
 					inComment = true;
 				}
 			}

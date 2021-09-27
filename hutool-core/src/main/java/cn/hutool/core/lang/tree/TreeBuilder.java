@@ -29,7 +29,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 *
 	 * @param rootId 根节点ID
 	 * @param <T>    ID类型
-	 * @return {@link TreeBuilder}
+	 * @return TreeBuilder
 	 */
 	public static <T> TreeBuilder<T> of(T rootId) {
 		return of(rootId, null);
@@ -41,7 +41,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param rootId 根节点ID
 	 * @param config 配置
 	 * @param <T>    ID类型
-	 * @return {@link TreeBuilder}
+	 * @return TreeBuilder
 	 */
 	public static <T> TreeBuilder<T> of(T rootId, TreeNodeConfig config) {
 		return new TreeBuilder<>(rootId, config);

@@ -28,7 +28,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	/**
 	 * 注释符号，用于区分注释行，默认'#'
 	 */
-	protected char commentCharacter = '#';
+	protected Character commentCharacter = '#';
 	/**
 	 * 标题别名
 	 */
@@ -57,13 +57,25 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	}
 
 	/**
-	 * 设置 注释符号，用于区分注释行
+	 * 设置注释无效<br>
+	 * 当写出CSV时，{@link CsvWriter#writeComment(String)}将抛出异常<br>
+	 * 当读取CSV时，注释行按照正常行读取
+	 *
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public T disableComment() {
+		return setCommentCharacter(null);
+	}
+
+	/**
+	 * 设置 注释符号，用于区分注释行，{@code null}表示忽略注释
 	 *
 	 * @param commentCharacter 注释符号，用于区分注释行
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public T setCommentCharacter(char commentCharacter) {
+	public T setCommentCharacter(Character commentCharacter) {
 		this.commentCharacter = commentCharacter;
 		return (T) this;
 	}
