@@ -44,7 +44,7 @@ public class ConditionTest {
 
 		Condition conditionLike = new Condition("user", "like %aaa");
 		conditionLike.setPlaceHolder(false);
-		Assert.assertEquals("user LIKE %aaa", conditionLike.toString());
+		Assert.assertEquals("user LIKE '%aaa'", conditionLike.toString());
 
 		Condition conditionIn = new Condition("user", "in 1,2,3");
 		conditionIn.setPlaceHolder(false);
