@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.NumberChineseFormatter;
+import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.FastDateParser;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.ObjectUtil;
@@ -694,5 +695,22 @@ public class CalendarUtil {
 		}
 
 		throw new DateException("Unable to parse the date: {}", str);
+	}
+
+	/**
+	 * 使用指定{@link DateParser}解析字符串为{@link Calendar}
+	 *
+	 * @param str     日期字符串
+	 * @param lenient 是否宽容模式
+	 * @param parser  {@link DateParser}
+	 * @return 解析后的 {@link Calendar}，解析失败返回{@code null}
+	 * @since 5.7.14
+	 */
+	public static Calendar parse(CharSequence str, boolean lenient, DateParser parser) {
+		final Calendar calendar = Calendar.getInstance(parser.getTimeZone(), parser.getLocale());
+		calendar.clear();
+		calendar.setLenient(lenient);
+
+		return parser.parse(StrUtil.str(str), new ParsePosition(0), calendar) ? calendar : null;
 	}
 }

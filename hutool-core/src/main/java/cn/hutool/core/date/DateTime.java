@@ -287,7 +287,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, DateParser dateParser) {
-		this(parse(dateStr, dateParser), dateParser.getTimeZone());
+		this(parse(dateStr, dateParser));
 	}
 
 	// -------------------------------------------------------------------- Constructor end
@@ -1019,14 +1019,15 @@ public class DateTime extends Date {
 	 * @param parser  {@link FastDateFormat}
 	 * @return {@link Date}
 	 */
-	private static Date parse(CharSequence dateStr, DateParser parser) {
+	private static Calendar parse(CharSequence dateStr, DateParser parser) {
 		Assert.notNull(parser, "Parser or DateFromat must be not null !");
 		Assert.notBlank(dateStr, "Date String must be not blank !");
-		try {
-			return parser.parse(dateStr.toString());
-		} catch (Exception e) {
-			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern(), e);
+
+		final Calendar calendar = CalendarUtil.parse(dateStr, true, parser);
+		if (null == calendar) {
+			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern());
 		}
+		return calendar;
 	}
 
 	/**

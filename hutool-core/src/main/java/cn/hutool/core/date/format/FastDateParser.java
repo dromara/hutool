@@ -220,18 +220,14 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public Object parseObject(final String source) throws ParseException {
-		return parse(source);
-	}
-
-	@Override
-	public Date parse(final String source) throws ParseException {
+	public Date parse(String source) throws ParseException {
 		final ParsePosition pp = new ParsePosition(0);
 		final Date date = parse(source, pp);
 		if (date == null) {
 			// Add a note re supported date range
 			if (locale.equals(JAPANESE_IMPERIAL)) {
-				throw new ParseException("(The " + locale + " locale does not support dates before 1868 AD)\n" + "Unparseable date: \"" + source, pp.getErrorIndex());
+				throw new ParseException("(The " + locale + " locale does not support dates before 1868 AD)\n" +
+						"Unparseable date: \"" + source, pp.getErrorIndex());
 			}
 			throw new ParseException("Unparseable date: " + source, pp.getErrorIndex());
 		}
@@ -239,12 +235,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public Object parseObject(final String source, final ParsePosition pos) {
-		return parse(source, pos);
-	}
-
-	@Override
-	public Date parse(final String source, final ParsePosition pos) {
+	public Date parse(String source, ParsePosition pos) {
 		// timing tests indicate getting new instance is 19% faster than cloning
 		final Calendar cal = Calendar.getInstance(timeZone, locale);
 		cal.clear();
@@ -253,12 +244,12 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public boolean parse(final String source, final ParsePosition pos, final Calendar calendar) {
+	public boolean parse(String source, ParsePosition pos, Calendar calendar) {
 		final ListIterator<StrategyAndWidth> lt = patterns.listIterator();
 		while (lt.hasNext()) {
 			final StrategyAndWidth strategyAndWidth = lt.next();
 			final int maxWidth = strategyAndWidth.getMaxWidth(lt);
-			if (!strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
+			if (false == strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
 				return false;
 			}
 		}
@@ -500,9 +491,6 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 			this.formatField = formatField;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		boolean isNumber() {
 			return false;
@@ -575,9 +563,6 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 			this.field = field;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		boolean isNumber() {
 			return true;
@@ -637,9 +622,6 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	private static final Strategy ABBREVIATED_YEAR_STRATEGY = new NumberStrategy(Calendar.YEAR) {
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		int modify(final FastDateParser parser, final int iValue) {
 			return iValue < 100 ? parser.adjustYear(iValue) : iValue;
@@ -726,9 +708,6 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 			createPattern(sb);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		void setCalendar(final FastDateParser parser, final Calendar cal, final String value) {
 			if (value.charAt(0) == '+' || value.charAt(0) == '-') {
@@ -759,9 +738,6 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 			createPattern(pattern);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		void setCalendar(final FastDateParser parser, final Calendar cal, final String value) {
 			if (Objects.equals(value, "Z")) {

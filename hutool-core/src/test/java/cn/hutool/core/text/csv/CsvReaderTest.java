@@ -183,4 +183,12 @@ public class CsvReaderTest {
 		Assert.assertEquals("456", row.get(1));
 		Assert.assertEquals("'789;0'abc", row.get(2));
 	}
+
+	@Test
+	public void readDisableCommentTest(){
+		final CsvReader reader = CsvUtil.getReader(CsvReadConfig.defaultConfig().disableComment());
+		final CsvData read = reader.read(ResourceUtil.getUtf8Reader("test.csv"));
+		final CsvRow row = read.getRow(0);
+		Assert.assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
+	}
 }

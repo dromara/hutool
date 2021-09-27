@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -130,5 +131,12 @@ public class DateTimeTest {
 		Assert.assertEquals(2016, date.year());
 		//跨年的周返回的总是1
 		Assert.assertEquals(1, date.weekOfYear());
+	}
+
+	@Test
+	public void ofTest(){
+		String a = "2021-09-27 00:00:99";
+		final DateTime dateTime = new DateTime(a, DatePattern.NORM_DATETIME_FORMAT);
+		Console.log(dateTime);
 	}
 }
