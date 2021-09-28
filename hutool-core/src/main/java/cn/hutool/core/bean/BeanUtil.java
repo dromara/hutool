@@ -80,7 +80,7 @@ public class BeanUtil {
 
 	/**
 	 * 判断是否有Setter方法<br>
-	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 判定方法是否存在只有一个参数的setXXX方法
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
@@ -101,7 +101,7 @@ public class BeanUtil {
 
 	/**
 	 * 判断是否为Bean对象<br>
-	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 判定方法是否存在只有无参数的getXXX方法或者isXXX方法
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
@@ -302,7 +302,7 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
+	 * 设置字段值，通过反射设置字段值，并不调用setXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 *
 	 * @param bean             Bean
