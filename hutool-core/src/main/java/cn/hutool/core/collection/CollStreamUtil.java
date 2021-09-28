@@ -30,7 +30,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection.stream().collect(Collectors.toMap(key, Function.identity()));
+		return collection.stream().collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection.stream().collect(Collectors.toMap(key, value));
+		return collection.stream().collect(Collectors.toMap(key, value, (l, r) -> l));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class CollStreamUtil {
 		}
 		return collection
 				.stream()
-				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity())));
+				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l)));
 	}
 
 	/**
