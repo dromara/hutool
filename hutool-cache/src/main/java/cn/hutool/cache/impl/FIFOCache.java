@@ -55,7 +55,9 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
 			CacheObj<K, V> co = values.next();
 			if (co.isExpired()) {
 				values.remove();
+				onRemove(co.key, co.obj);
 				count++;
+				continue;
 			}
 			if (first == null) {
 				first = co;
