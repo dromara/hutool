@@ -60,6 +60,67 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	}
 
 	/**
+	 * 设置ID
+	 *
+	 * @param id ID
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setId(E id) {
+		this.root.setId(id);
+		return this;
+	}
+
+	/**
+	 * 设置父节点ID
+	 *
+	 * @param parentId 父节点ID
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setParentId(E parentId) {
+		this.root.setParentId(parentId);
+		return this;
+	}
+
+	/**
+	 * 设置节点标签名称
+	 *
+	 * @param name 节点标签名称
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setName(CharSequence name) {
+		this.root.setName(name);
+		return this;
+	}
+
+	/**
+	 * 设置权重
+	 *
+	 * @param weight 权重
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setWeight(Comparable<?> weight) {
+		this.root.setWeight(weight);
+		return this;
+	}
+
+	/**
+	 * 扩展属性
+	 *
+	 * @param key   键
+	 * @param value 扩展值
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> putExtra(String key, Object value) {
+		Assert.notEmpty(key, "Key must be not empty !");
+		this.root.put(key, value);
+		return this;
+	}
+
+	/**
 	 * 增加节点列表，增加的节点是不带子节点的
 	 *
 	 * @param map 节点列表

@@ -14,6 +14,7 @@
 * 【core   】     增加IterableIter、ComputeIter
 * 【core   】     CsvConfig增加disableComment方法（issue#1842@Github）
 * 【core   】     DateTime构造和DateUtil.parse可选是否宽松模式（issue#1849@Github）
+* 【core   】     TreeBuilder增加部分根节点set方法（issue#1848@Github）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
