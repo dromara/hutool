@@ -18,6 +18,7 @@ import java.util.Set;
  * CollectionStream测试方法
  */
 public class CollStreamUtilTest {
+
 	@Test
 	public void testToIdentityMap() {
 		Map<Long, Student> map = CollStreamUtil.toIdentityMap(null, Student::getStudentId);
