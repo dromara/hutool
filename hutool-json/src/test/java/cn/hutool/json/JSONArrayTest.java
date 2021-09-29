@@ -217,6 +217,15 @@ public class JSONArrayTest {
 		Assert.assertEquals(4, jsonArray.size());
 	}
 
+	// https://github.com/dromara/hutool/issues/1858
+	@Test
+	public void putTest2(){
+		final JSONArray jsonArray = new JSONArray();
+		jsonArray.put(0, 1);
+		Assert.assertEquals(1, jsonArray.size());
+		Assert.assertEquals(1, jsonArray.get(0));
+	}
+
 	private static Map<String, String> buildMap(String id, String parentId, String name) {
 		Map<String, String> map = new HashMap<>();
 		map.put("id", id);
