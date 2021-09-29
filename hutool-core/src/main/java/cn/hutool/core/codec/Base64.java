@@ -344,8 +344,7 @@ public class Base64 {
 			} else if('=' == base64Byte){
 				// 发现'=' 标记之
 				hasPadding = true;
-			}
-			if (false == (Base64Decoder.isBase64Code(base64Byte) || isWhiteSpace(base64Byte))) {
+			} else if (false == (Base64Decoder.isBase64Code(base64Byte) || isWhiteSpace(base64Byte))) {
 				return false;
 			}
 		}
