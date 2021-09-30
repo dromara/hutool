@@ -173,7 +173,12 @@ public class MetaUtil {
 	}
 
 	/**
-	 * 获得表的元信息
+	 * 获得表的元信息<br>
+	 * 注意如果需要获取注释，某些数据库如MySQL，需要在配置中添加:
+	 * <pre>
+	 *     remarks = true
+	 *     useInformationSchema = true
+	 * </pre>
 	 *
 	 * @param ds        数据源
 	 * @param tableName 表名
