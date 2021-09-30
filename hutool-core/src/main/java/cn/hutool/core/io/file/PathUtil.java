@@ -181,7 +181,7 @@ public class PathUtil {
 	 */
 	public static Path copyFile(Path src, Path target, CopyOption... options) throws IORuntimeException {
 		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(target, "Destination File or directiory is null !");
+		Assert.notNull(target, "Destination File or directory is null !");
 
 		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
 		// 创建级联父目录
