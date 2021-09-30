@@ -129,7 +129,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	public TreeBuilder<E> append(Map<E, Tree<E>> map) {
 		checkBuilt();
 
-		Assert.isFalse(isBuild, "Current tree has been built.");
 		this.idTreeMap.putAll(map);
 		return this;
 	}
