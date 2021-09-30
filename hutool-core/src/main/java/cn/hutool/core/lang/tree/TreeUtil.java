@@ -20,7 +20,7 @@ public class TreeUtil {
 	 * 构建单root节点树
 	 *
 	 * @param list 源数据集合
-	 * @return List
+	 * @return {@link Tree}
 	 * @since 5.7.2
 	 */
 	public static Tree<Integer> buildSingle(List<TreeNode<Integer>> list) {
@@ -43,7 +43,7 @@ public class TreeUtil {
 	 * @param <E>      ID类型
 	 * @param list     源数据集合
 	 * @param parentId 最顶层父id值 一般为 0 之类
-	 * @return List
+	 * @return {@link Tree}
 	 * @since 5.7.2
 	 */
 	public static <E> Tree<E> buildSingle(List<TreeNode<E>> list, E parentId) {
@@ -70,7 +70,7 @@ public class TreeUtil {
 	 * @param list       源数据集合
 	 * @param parentId   最顶层父id值 一般为 0 之类
 	 * @param nodeParser 转换器
-	 * @return List
+	 * @return {@link Tree}
 	 * @since 5.7.2
 	 */
 	public static <T, E> Tree<E> buildSingle(List<T> list, E parentId, NodeParser<T, E> nodeParser) {
@@ -115,7 +115,7 @@ public class TreeUtil {
 	 * @param rootId         最顶层父id值 一般为 0 之类
 	 * @param treeNodeConfig 配置
 	 * @param nodeParser     转换器
-	 * @return List
+	 * @return {@link Tree}
 	 * @since 5.7.2
 	 */
 	public static <T, E> Tree<E> buildSingle(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
