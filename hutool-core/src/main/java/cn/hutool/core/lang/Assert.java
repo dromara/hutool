@@ -54,7 +54,7 @@ public class Assert {
 	 * 断言是否为真，如果为 {@code false} 抛出 {@code IllegalArgumentException} 异常<br>
 	 *
 	 * <pre class="code">
-	 * Assert.isTrue(i &gt; 0, "The value must be greater than zero");
+	 * Assert.isTrue(i &gt; 0);
 	 * </pre>
 	 *
 	 * @param expression 布尔值
@@ -90,7 +90,7 @@ public class Assert {
 	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
 	 *
 	 * <pre class="code">
-	 * Assert.isFalse(i &lt; 0, "The value must be greater than zero");
+	 * Assert.isFalse(i &lt; 0, "The value must not be negative");
 	 * </pre>
 	 *
 	 * @param expression       布尔值
@@ -340,7 +340,7 @@ public class Assert {
 	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
 	 *
 	 * <pre class="code">
-	 * Assert.notBlank(name, "Name must not be blank");
+	 * Assert.notBlank(name);
 	 * </pre>
 	 *
 	 * @param <T>  字符串类型
@@ -402,7 +402,7 @@ public class Assert {
 	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
 	 *
 	 * <pre class="code">
-	 * Assert.notContain(name, "rod", "Name must not contain 'rod'");
+	 * Assert.notContain(name, "rod");
 	 * </pre>
 	 *
 	 * @param textToSearch 被搜索的字符串
@@ -505,7 +505,7 @@ public class Assert {
 	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
 	 *
 	 * <pre class="code">
-	 * Assert.noNullElements(array, "The array must have non-null elements");
+	 * Assert.noNullElements(array, "The array must not have null elements");
 	 * </pre>
 	 *
 	 * @param <T>              数组元素类型
@@ -686,7 +686,7 @@ public class Assert {
 	 * 断言给定对象是否是给定类的实例
 	 *
 	 * <pre class="code">
-	 * Assert.instanceOf(Foo.class, foo);
+	 * Assert.instanceOf(Foo.class, foo, "foo must be an instance of class Foo");
 	 * </pre>
 	 *
 	 * @param <T>              被检查对象泛型类型
@@ -725,7 +725,7 @@ public class Assert {
 	 * 断言 {@code superType.isAssignableFrom(subType)} 是否为 {@code true}.
 	 *
 	 * <pre class="code">
-	 * Assert.isAssignable(Number.class, myClass);
+	 * Assert.isAssignable(Number.class, myClass, "myClass must can be assignable to class Number");
 	 * </pre>
 	 *
 	 * @param superType        需要检查的父类或接口
