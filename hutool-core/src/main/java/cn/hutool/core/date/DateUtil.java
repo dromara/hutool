@@ -1448,7 +1448,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 计算指定指定时间区间内的周数
+	 * 计算指定时间区间内的周数
 	 *
 	 * @param beginDate 开始时间
 	 * @param endDate   结束时间
@@ -1666,7 +1666,7 @@ public class DateUtil extends CalendarUtil {
 	 * stopWatch.stop();
 	 *
 	 * // 任务2
-	 * stopWatch.start("任务一");
+	 * stopWatch.start("任务二");
 	 * Thread.sleep(2000);
 	 * stopWatch.stop();
 	 *
@@ -1696,7 +1696,7 @@ public class DateUtil extends CalendarUtil {
 	 * stopWatch.stop();
 	 *
 	 * // 任务2
-	 * stopWatch.start("任务一");
+	 * stopWatch.start("任务二");
 	 * Thread.sleep(2000);
 	 * stopWatch.stop();
 	 *
