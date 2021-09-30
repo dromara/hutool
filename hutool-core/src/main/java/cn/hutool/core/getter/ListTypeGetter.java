@@ -52,7 +52,7 @@ public interface ListTypeGetter {
 	List<Boolean> getBoolList(String key);
 
 	/**
-	 * 获取BigDecimal型属性值列表
+	 * 获取Long型属性值列表
 	 *
 	 * @param key 属性名
 	 * @return 属性值列表
