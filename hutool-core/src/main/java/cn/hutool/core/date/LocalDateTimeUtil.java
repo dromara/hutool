@@ -512,4 +512,15 @@ public class LocalDateTimeUtil {
 		final DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 		return DayOfWeek.SATURDAY == dayOfWeek || DayOfWeek.SUNDAY == dayOfWeek;
 	}
+
+	/**
+	 * 获取{@link LocalDate}对应的星期值
+	 *
+	 * @param localDate 日期{@link LocalDate}
+	 * @return {@link Week}
+	 * @since 5.7.14
+	 */
+	public static Week dayOfWeek(LocalDate localDate) {
+		return Week.of(localDate.getDayOfWeek());
+	}
 }
