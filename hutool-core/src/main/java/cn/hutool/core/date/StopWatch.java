@@ -27,7 +27,7 @@ import java.util.List;
  * stopWatch.stop();
  *
  * // 任务2
- * stopWatch.start("任务一");
+ * stopWatch.start("任务二");
  * Thread.sleep(2000);
  * stopWatch.stop();
  *
@@ -114,7 +114,7 @@ public class StopWatch {
 	/**
 	 * 获取StopWatch 的ID，用于多个秒表对象的区分
 	 *
-	 * @return the ID 空字符串为
+	 * @return the ID 默认为空字符串
 	 * @see #StopWatch(String)
 	 */
 	public String getId() {
