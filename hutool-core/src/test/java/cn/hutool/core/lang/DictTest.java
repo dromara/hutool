@@ -43,4 +43,19 @@ public class DictTest {
 		Assert.assertEquals("#00FF00", dict.get("GREEN"));
 		Assert.assertEquals("#0000FF", dict.get("BLUE"));
 	}
+
+	@Test
+	public void removeEqualTest(){
+		Dict dict = Dict.of(
+			"key1", null
+		);
+
+		Dict dict2 = Dict.of(
+			"key1", null
+		);
+
+		dict.removeEqual(dict2);
+
+		Assert.assertTrue(dict.isEmpty());
+	}
 }
