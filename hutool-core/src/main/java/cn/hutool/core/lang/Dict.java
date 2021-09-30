@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -74,7 +75,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * 根据给定的键值对数组创建Dict对象，传入参数必须为key,value,key,value...
 	 *
 	 * <p>奇数参数必须为key，key最后会转换为String类型。</p>
-	 * <p>奇数参数必须为value，可以为任意类型。</p>
+	 * <p>偶数参数必须为value，可以为任意类型。</p>
 	 *
 	 * <pre>
 	 * Dict dict = Dict.of(
@@ -291,7 +292,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 			}
 
 			final Object value = this.get(entry.getKey());
-			if (null != value && value.equals(entry.getValue())) {
+			if (Objects.equals(value, entry.getValue())) {
 				this.remove(entry.getKey());
 			}
 		}
