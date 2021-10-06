@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.json.XML;
 import org.junit.Assert;
 import org.junit.Test;
+import org.hamcrest.CoreMatchers;
 
 public class XMLTest {
 
@@ -14,7 +15,7 @@ public class XMLTest {
 				.set("aaa", "你好")
 				.set("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
-		Assert.assertEquals("<aaa>你好</aaa><键2>test</键2>", s);
+		Assert.assertThat(s, CoreMatchers.anyOf(CoreMatchers.is("<aaa>你好</aaa><键2>test</键2>"), CoreMatchers.is("<键2>test</键2><aaa>你好</aaa>")));
 	}
 
 	@Test
