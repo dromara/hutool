@@ -302,10 +302,11 @@ public class CsvBaseReader implements Serializable {
 	 * <pre>
 	 *     <code>
 	 *      // 获取一个 csvReader 后，通过 streamingRead 获取一个 parser，进行流式读取
-	 * 		CsvParser parser = CsvUtil.getReader().streamingRead(input_data_here);
-	 *   	CsvRow row;
-	 *     	while ((row = parser.nextRow()) != null) {
-	 *     	   // row 为要处理的行数据
+	 *      try(CsvParser parser = CsvUtil.getReader().streamingRead(input_data_here);) {
+	 *          CsvRow row;
+	 *          while ((row = parser.nextRow()) != null) {
+	 *          	// row 为要处理的行数据
+	 *          }
 	 *      }
 	 *     </code>
 	 * </pre>

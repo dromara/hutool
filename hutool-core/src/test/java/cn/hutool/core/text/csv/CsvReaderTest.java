@@ -11,8 +11,10 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -199,7 +201,7 @@ public class CsvReaderTest {
 	 * 从 InputStream 流式读取 csv - 成功
 	 */
 	@Test
-	public void streamingReadSuccessTest() {
+	public void streamingReadSuccessTest() throws IOException {
 		// mock - 指定列数、行数的 csv 测试数据到内存中
 		int columnCount = 16;
 		int lineCount = 100000;
@@ -209,20 +211,22 @@ public class CsvReaderTest {
 		CsvData originalRows = CsvUtil.getReader().read(IoUtil.getReader(IoUtil.toStream(csvMockData), CharsetUtil.CHARSET_UTF_8));
 
 		// 测试数据
-		CsvParser parser = CsvUtil.getReader().streamingRead(IoUtil.toStream(csvMockData));
-		CsvRow testRow;
-		int originalPointer = 0;
-		while ((testRow = parser.nextRow()) != null) {
-			// 断言 - 流式读取，断言每行每列与原始数据相等
-			CsvRow originalRow = originalRows.getRow(originalPointer++);
-			Assert.assertEquals(originalRow.size(), testRow.size());
-			for (int i = 0; i < originalRow.size(); i++) {
-				Assert.assertEquals(originalRow.get(i), testRow.get(i));
+		try (CsvParser parser = CsvUtil.getReader().streamingRead(IoUtil.toStream(csvMockData))){
+			CsvRow testRow;
+			int originalPointer = 0;
+			while ((testRow = parser.nextRow()) != null) {
+				// 断言 - 流式读取，断言每行每列与原始数据相等
+				CsvRow originalRow = originalRows.getRow(originalPointer++);
+				Assert.assertEquals(originalRow.size(), testRow.size());
+				for (int i = 0; i < originalRow.size(); i++) {
+					Assert.assertEquals(originalRow.get(i), testRow.get(i));
+				}
 			}
+
+			// 断言 - 流式读取的数据行数和原始数据行数相等（将 pointer 矫正前一位）
+			Assert.assertEquals(lineCount, originalPointer - 1);
 		}
 
-		// 断言 - 流式读取的数据行数和原始数据行数相等（将 pointer 矫正前一位）
-		Assert.assertEquals(lineCount, originalPointer - 1);
 	}
 
 	private byte[] mockCsvFileData(int columnCount, int lineCount) {
