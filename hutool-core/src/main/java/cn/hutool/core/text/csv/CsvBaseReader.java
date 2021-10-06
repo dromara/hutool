@@ -7,10 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 
-import java.io.File;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -246,6 +243,79 @@ public class CsvBaseReader implements Serializable {
 		read(parse(reader), rowHandler);
 	}
 
+	/**
+	 * 从 Path 中流式读取 CSV 数据，使用默认的 UTF-8 作为 Path 的编码
+	 *
+	 * @param path CSV 文件
+	 * @return {@link CsvParser}，流式读取的解析器，使用说明：{@link CsvBaseReader#streamingRead(Reader)}
+	 * @throws IORuntimeException IO 异常
+	 * @since 5.7.14
+	 */
+	public CsvParser streamingRead(Path path) {
+		return streamingRead(path, DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 从 Path 中流式读取 CSV 数据
+	 *
+	 * @param path    CSV 文件
+	 * @param charset 文件编码，默认系统编码
+	 * @return {@link CsvParser}，流式读取的解析器，使用说明：{@link CsvBaseReader#streamingRead(Reader)}
+	 * @throws IORuntimeException IO 异常
+	 * @since 5.7.14
+	 */
+	public CsvParser streamingRead(Path path, Charset charset) {
+		Assert.notNull(path, "path must not be null");
+		return streamingRead(FileUtil.getReader(path, charset));
+	}
+
+	/**
+	 * 从 InputStream 中流式读取 CSV 数据
+	 *
+	 * @param is      inputStream
+	 * @param charset inputStream 的编码
+	 * @return {@link CsvParser}，流式读取的解析器，使用说明：{@link CsvBaseReader#streamingRead(Reader)}
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.14
+	 */
+	public CsvParser streamingRead(InputStream is, Charset charset) {
+		return parse(is, charset);
+	}
+
+	/**
+	 * 从 InputStream 中流式读取 CSV 数据，使用默认的 UTF-8 作为 InputStream 的编码
+	 *
+	 * @param is inputStream
+	 * @return {@link CsvParser}，流式读取的解析器，使用说明：{@link CsvBaseReader#streamingRead(Reader)}
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.14
+	 */
+	public CsvParser streamingRead(InputStream is) {
+		return parse(is, DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 从 Reader 中流式读取 CSV 数据
+	 *
+	 * @param reader Reader
+	 * @return {@link CsvParser}，流式读取的解析器，使用参考：
+	 * <pre>
+	 *     <code>
+	 *      // 获取一个 csvReader 后，通过 streamingRead 获取一个 parser，进行流式读取
+	 * 		CsvParser parser = CsvUtil.getReader().streamingRead(input_data_here);
+	 *   	CsvRow row;
+	 *     	while ((row = parser.nextRow()) != null) {
+	 *     	   // row 为要处理的行数据
+	 *      }
+	 *     </code>
+	 * </pre>
+	 * @throws IORuntimeException IO 异常
+	 * @since 5.7.14
+	 */
+	public CsvParser streamingRead(Reader reader) {
+		return parse(reader);
+	}
+
 	//--------------------------------------------------------------------------------------------- Private method start
 
 	/**
@@ -276,6 +346,18 @@ public class CsvBaseReader implements Serializable {
 	 */
 	private CsvParser parse(Reader reader) throws IORuntimeException {
 		return new CsvParser(reader, this.config);
+	}
+
+	/**
+	 * 构建 {@link CsvParser}
+	 *
+	 * @param is InputStream
+	 * @return CsvParser
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.14
+	 */
+	private CsvParser parse(InputStream is, Charset charset) {
+		return new CsvParser(IoUtil.getReader(is, charset), this.config);
 	}
 	//--------------------------------------------------------------------------------------------- Private method start
 }

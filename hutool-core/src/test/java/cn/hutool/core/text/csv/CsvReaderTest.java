@@ -2,9 +2,12 @@ package cn.hutool.core.text.csv;
 
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.Data;
 import org.junit.Assert;
@@ -191,4 +194,60 @@ public class CsvReaderTest {
 		final CsvRow row = read.getRow(0);
 		Assert.assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
 	}
+
+	/**
+	 * 从 InputStream 流式读取 csv - 成功
+	 */
+	@Test
+	public void streamingReadSuccessTest() {
+		// mock - 指定列数、行数的 csv 测试数据到内存中
+		int columnCount = 16;
+		int lineCount = 100000;
+		byte[] csvMockData = mockCsvFileData(columnCount, lineCount);
+
+		// 原始数据
+		CsvData originalRows = CsvUtil.getReader().read(IoUtil.getReader(IoUtil.toStream(csvMockData), CharsetUtil.CHARSET_UTF_8));
+
+		// 测试数据
+		CsvParser parser = CsvUtil.getReader().streamingRead(IoUtil.toStream(csvMockData));
+		CsvRow testRow;
+		int originalPointer = 0;
+		while ((testRow = parser.nextRow()) != null) {
+			// 断言 - 流式读取，断言每行每列与原始数据相等
+			CsvRow originalRow = originalRows.getRow(originalPointer++);
+			Assert.assertEquals(originalRow.size(), testRow.size());
+			for (int i = 0; i < originalRow.size(); i++) {
+				Assert.assertEquals(originalRow.get(i), testRow.get(i));
+			}
+		}
+
+		// 断言 - 流式读取的数据行数和原始数据行数相等（将 pointer 矫正前一位）
+		Assert.assertEquals(lineCount, originalPointer - 1);
+	}
+
+	private byte[] mockCsvFileData(int columnCount, int lineCount) {
+		// output stream in memory
+		try (
+				FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
+				CsvWriter writer = CsvUtil.getWriter(IoUtil.getWriter(outputStream, CharsetUtil.CHARSET_UTF_8));
+		) {
+			// csv header
+			String[] headers = ArrayUtil.newArray(String.class, columnCount);
+			for (int i = 0; i < columnCount; i++) {
+				headers[i] = "header_" + (i + 1);
+			}
+			writer.write(headers);
+
+			// csv line data
+			String[] lineValues = ArrayUtil.newArray(String.class, columnCount);
+			for (int i = 0; i < lineCount; i++) {
+				for (int j = 0; j < columnCount; j++) {
+					lineValues[j] = "col_" + (j + 1) + "_line" + (i + 1);
+				}
+				writer.write(lineValues);
+			}
+			return outputStream.toByteArray();
+		}
+	}
+
 }
