@@ -246,12 +246,14 @@ public class Opt<T> {
 	 * 如果包裹里元素的值存在，就执行对应的操作，并返回本身
 	 * 如果不存在，返回一个空的{@code Opt}
 	 *
+	 * <p>属于 {@link #ifPresent}的链式拓展
+	 *
 	 * @param action 值存在时执行的操作
+	 * @return this
 	 * @throws NullPointerException 如果值存在，并且传入的操作为 {@code null}
-	 * @apiNote 属于 {@link #ifPresent}的链式拓展
 	 * @author VampireAchao
 	 */
-	public Opt<T> peek(Consumer<T> action) {
+	public Opt<T> peek(Consumer<T> action) throws NullPointerException {
 		Objects.requireNonNull(action);
 		if (isEmpty()) {
 			return Opt.empty();
