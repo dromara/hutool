@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.14 (2021-09-30)
+# 5.7.14 (2021-10-07)
 
 ### 🐣新特性
 * 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
@@ -18,6 +18,7 @@
 * 【core   】     优化Base64.isBase64方法：减少一次多余的判断（pr#1860@Github）
 * 【core   】     优化Base64.isBase64方法：减少一次多余的判断（pr#1860@Github）
 * 【cache  】     优化FIFOCache未设置过期策略时，无需遍历判断过期对象（pr#425@Gitee）
+* 【core   】     增加Opt类（pr#426@Gitee）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
