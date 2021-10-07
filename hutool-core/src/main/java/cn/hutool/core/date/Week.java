@@ -7,6 +7,7 @@ import java.util.Calendar;
  * 星期枚举<br>
  * 与Calendar中的星期int值对应
  *
+ * @author Looly
  * @see #SUNDAY
  * @see #MONDAY
  * @see #TUESDAY
@@ -14,29 +15,42 @@ import java.util.Calendar;
  * @see #THURSDAY
  * @see #FRIDAY
  * @see #SATURDAY
- *
- * @author Looly
- *
  */
 public enum Week {
 
-	/** 周日 */
+	/**
+	 * 周日
+	 */
 	SUNDAY(Calendar.SUNDAY),
-	/** 周一 */
+	/**
+	 * 周一
+	 */
 	MONDAY(Calendar.MONDAY),
-	/** 周二 */
+	/**
+	 * 周二
+	 */
 	TUESDAY(Calendar.TUESDAY),
-	/** 周三 */
+	/**
+	 * 周三
+	 */
 	WEDNESDAY(Calendar.WEDNESDAY),
-	/** 周四 */
+	/**
+	 * 周四
+	 */
 	THURSDAY(Calendar.THURSDAY),
-	/** 周五 */
+	/**
+	 * 周五
+	 */
 	FRIDAY(Calendar.FRIDAY),
-	/** 周六 */
+	/**
+	 * 周六
+	 */
 	SATURDAY(Calendar.SATURDAY);
 
 	// ---------------------------------------------------------------
-	/** 星期对应{@link Calendar} 中的Week值 */
+	/**
+	 * 星期对应{@link Calendar} 中的Week值
+	 */
 	private final int value;
 
 	/**
@@ -76,28 +90,30 @@ public enum Week {
 	 */
 	public String toChinese(String weekNamePre) {
 		switch (this) {
-		case SUNDAY:
-			return weekNamePre + "日";
-		case MONDAY:
-			return weekNamePre + "一";
-		case TUESDAY:
-			return weekNamePre + "二";
-		case WEDNESDAY:
-			return weekNamePre + "三";
-		case THURSDAY:
-			return weekNamePre + "四";
-		case FRIDAY:
-			return weekNamePre + "五";
-		case SATURDAY:
-			return weekNamePre + "六";
-		default:
-			return null;
+			case SUNDAY:
+				return weekNamePre + "日";
+			case MONDAY:
+				return weekNamePre + "一";
+			case TUESDAY:
+				return weekNamePre + "二";
+			case WEDNESDAY:
+				return weekNamePre + "三";
+			case THURSDAY:
+				return weekNamePre + "四";
+			case FRIDAY:
+				return weekNamePre + "五";
+			case SATURDAY:
+				return weekNamePre + "六";
+			default:
+				return null;
 		}
 	}
 
 	/**
 	 * 将 {@link Calendar}星期相关值转换为Week枚举对象<br>
 	 *
+	 * @param calendarWeekIntValue Calendar中关于Week的int值
+	 * @return Week
 	 * @see #SUNDAY
 	 * @see #MONDAY
 	 * @see #TUESDAY
@@ -105,34 +121,33 @@ public enum Week {
 	 * @see #THURSDAY
 	 * @see #FRIDAY
 	 * @see #SATURDAY
-	 *
-	 * @param calendarWeekIntValue Calendar中关于Week的int值
-	 * @return {@link Week}
 	 */
 	public static Week of(int calendarWeekIntValue) {
 		switch (calendarWeekIntValue) {
-		case Calendar.SUNDAY:
-			return SUNDAY;
-		case Calendar.MONDAY:
-			return MONDAY;
-		case Calendar.TUESDAY:
-			return TUESDAY;
-		case Calendar.WEDNESDAY:
-			return WEDNESDAY;
-		case Calendar.THURSDAY:
-			return THURSDAY;
-		case Calendar.FRIDAY:
-			return FRIDAY;
-		case Calendar.SATURDAY:
-			return SATURDAY;
-		default:
-			return null;
+			case Calendar.SUNDAY:
+				return SUNDAY;
+			case Calendar.MONDAY:
+				return MONDAY;
+			case Calendar.TUESDAY:
+				return TUESDAY;
+			case Calendar.WEDNESDAY:
+				return WEDNESDAY;
+			case Calendar.THURSDAY:
+				return THURSDAY;
+			case Calendar.FRIDAY:
+				return FRIDAY;
+			case Calendar.SATURDAY:
+				return SATURDAY;
+			default:
+				return null;
 		}
 	}
 
 	/**
 	 * 将 {@link DayOfWeek}星期相关值转换为Week枚举对象<br>
 	 *
+	 * @param dayOfWeek DayOfWeek星期值
+	 * @return Week
 	 * @see #SUNDAY
 	 * @see #MONDAY
 	 * @see #TUESDAY
@@ -140,9 +155,6 @@ public enum Week {
 	 * @see #THURSDAY
 	 * @see #FRIDAY
 	 * @see #SATURDAY
-	 *
-	 * @param dayOfWeek DayOfWeek星期值
-	 * @return {@link Week}
 	 * @since 5.7.14
 	 */
 	public static Week of(DayOfWeek dayOfWeek) {
