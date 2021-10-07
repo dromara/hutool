@@ -1,154 +1,416 @@
+/*
+ * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package cn.hutool.core.bean;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
- * optional对象判空，参考：https://mp.weixin.qq.com/s/0c8iC0OTtx5LqPkhvkK0tw<br>
- * from：https://github.com/dromara/hutool/pull/1182
+ * 复制jdk16中的Optional，以及自己进行了一点调整和新增，比jdk8中的Optional多了几个实用的函数
  *
- * @param <T> Bean类型
- * @author totalo
- * @since 5.4.7
- * @deprecated {@link java.util.Optional} 可以完成此类的所有功能。
+ * @author VampireAchao
+ * @see java.util.Optional
  */
-@Deprecated
 public final class OptionalBean<T> {
-
-	private static final OptionalBean<?> EMPTY = new OptionalBean<>();
+	/**
+	 * 一个空的{@code Opt}
+	 */
+	private static final OptionalBean<?> EMPTY = new OptionalBean<>(null);
 
 	/**
-	 * 空值常量
-	 *
-	 * @param <T> 对象类型
-	 * @return 空
+	 * 包裹里实际的元素
 	 */
-	public static <T> OptionalBean<T> empty() {
-		@SuppressWarnings("unchecked")
-		OptionalBean<T> none = (OptionalBean<T>) EMPTY;
-		return none;
-	}
-
 	private final T value;
 
 	/**
-	 * 构造
-	 */
-	private OptionalBean() {
-		this.value = null;
-	}
-
-	/**
-	 * 空值会抛出空指针
+	 * {@code Opt}的构造函数
 	 *
-	 * @param value Bean值
+	 * @param value 包裹里的元素
 	 */
 	private OptionalBean(T value) {
-		this.value = Objects.requireNonNull(value);
+		this.value = value;
 	}
 
 	/**
-	 * 包装一个不能为空的 bean
+	 * 返回一个空的{@code Opt}
+	 */
+	public static <T> OptionalBean<T> empty() {
+		@SuppressWarnings("unchecked")
+		OptionalBean<T> t = (OptionalBean<T>) EMPTY;
+		return t;
+	}
+
+	/**
+	 * 返回一个包裹里元素不可能为空的{@code Opt}
 	 *
-	 * @param <T>   bean类型
-	 * @param value Bean值
-	 * @return OptionalBean
+	 * @param value 包裹里的元素
+	 * @param <T>   包裹里元素的类型
+	 * @return 一个包裹里元素不可能为空的 {@code Opt}
+	 * @throws NullPointerException 如果传入的元素为空，抛出 {@code NPE}
 	 */
 	public static <T> OptionalBean<T> of(T value) {
-		return new OptionalBean<>(value);
+		return new OptionalBean<>(Objects.requireNonNull(value));
 	}
 
 	/**
-	 * 包装一个可能为空的 bean
+	 * 返回一个包裹里元素可能为空的{@code Opt}
 	 *
-	 * @param value Bean值
-	 * @param <T>   bean类型
-	 * @return OptionalBean
+	 * @param value 传入需要包裹的元素
+	 * @param <T>   包裹里元素的类型
+	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 */
 	public static <T> OptionalBean<T> ofNullable(T value) {
-		return value == null ? empty() : of(value);
+		return value == null ? empty()
+				: new OptionalBean<>(value);
 	}
 
 	/**
-	 * 取出具体的值
+	 * 返回一个包裹里元素可能为空的{@code Opt}，额外判断了空字符串的情况
 	 *
-	 * @return bean值
+	 * @param value 传入需要包裹的元素
+	 * @param <T>   包裹里元素的类型
+	 * @return 一个包裹里元素可能为空，或者为空字符串的 {@code Opt}
+	 */
+	public static <T> OptionalBean<T> ofBlankAble(T value) {
+		return StrUtil.isBlankIfStr(value) ? empty() : new OptionalBean<>(value);
+	}
+
+	/**
+	 * 返回包裹里的元素，取不到则为{@code null}，注意！！！此处和{@link Optional#get()}不同的一点是本方法并不会抛出{@code NoSuchElementException}
+	 * 如果元素为空，则返回{@code null}，如果需要一个绝对不能为{@code null}的值，则使用{@link #orElseThrow()}
+	 *
+	 * @return 包裹里的元素，有可能为{@code null}
+	 * @apiNote 如果需要一个绝对不能为 {@code null}的值，则使用{@link #orElseThrow()}
+	 * 做此处修改的原因是，有时候我们确实需要返回一个null给前端，并且这样的时候并不少见
+	 * 而使用 {@code .orElse(null)}需要写整整12个字符，用{@code .get()}就只需要6个啦
 	 */
 	public T get() {
 		return value;
 	}
 
 	/**
-	 * 取出一个可能为空的对象
+	 * 判断包裹里元素的值是否存在，存在为 {@code true}，否则为{@code false}
 	 *
-	 * @param <R> 对象类型
-	 * @param fn  从已有bean中获取新bean字段的函数
-	 * @return 新的bean
-	 */
-	public <R> OptionalBean<R> getBean(Function<? super T, ? extends R> fn) {
-		return Objects.isNull(value) ? OptionalBean.empty() : OptionalBean.ofNullable(fn.apply(value));
-	}
-
-	/**
-	 * 如果目标值为空 获取一个默认值
-	 *
-	 * @param other 默认值
-	 * @return 空返回默认值，否则返回原值
-	 */
-
-	public T orElse(T other) {
-		return ObjectUtil.defaultIfNull(this.value, other);
-	}
-
-	/**
-	 * 如果目标值为空 通过lambda表达式获取一个值
-	 *
-	 * @param other 默认值函数
-	 * @return 空返回默认值函数获得的值，否则返回原值
-	 */
-	public T orElseGet(Supplier<? extends T> other) {
-		return null != value ? value : other.get();
-	}
-
-	/**
-	 * 如果目标值为空 抛出一个异常
-	 *
-	 * @param exceptionSupplier 抛出的异常
-	 * @param <X>               异常类型
-	 * @return 非空值
-	 * @throws X 对象为空时抛出的异常
-	 */
-	public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-		return Assert.notNull(this.value, exceptionSupplier);
-	}
-
-	/**
-	 * 检查值是否为空
-	 *
-	 * @return 是否为空
+	 * @return 包裹里元素的值存在为 {@code true}，否则为{@code false}
 	 */
 	public boolean isPresent() {
-		return null != this.value;
+		return value != null;
 	}
 
 	/**
-	 * 如果值非空，则使用指定函数处理值
+	 * 判断包裹里元素的值是否不存在，不存在为 {@code true}，否则为{@code false}
 	 *
-	 * @param consumer 处理非空对象的函数
+	 * @return 包裹里元素的值不存在 则为 {@code true}，否则为{@code false}
+	 * @since 11 这是jdk11{@link Optional}中的新函数
 	 */
-	public void ifPresent(Consumer<? super T> consumer) {
+	public boolean isEmpty() {
+		return value == null;
+	}
+
+	/**
+	 * 如果包裹里的值存在，就执行传入的操作({@link Consumer#accept})
+	 *
+	 * @param action 你想要执行的操作
+	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
+	 * @apiNote 例如如果值存在就打印结果
+	 * <pre>{@code
+	 * Opt.ofNullable("Hello Hutool!").ifPresent(System.out::println);
+	 * }</pre>
+	 */
+	public void ifPresent(Consumer<? super T> action) {
 		if (value != null) {
-			consumer.accept(value);
+			action.accept(value);
 		}
 	}
 
+	/**
+	 * 如果包裹里的值存在，就执行传入的值存在时的操作({@link Consumer#accept})
+	 * 否则执行传入的值不存在时的操作({@link Runnable}中的{@link Runnable#run})
+	 *
+	 * @param action      包裹里的值存在时的操作
+	 * @param emptyAction 包裹里的值不存在时的操作
+	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
+	 * @apiNote 例如值存在就打印对应的值，不存在则用{@code System.err.println}打印另一句字符串
+	 * <pre>{@code
+	 * Opt.ofNullable("Hello Hutool!").ifPresentOrElse(System.out::println, () -> System.err.println("Ops!Something is wrong!"));
+	 * }</pre>
+	 * @since 9 这是jdk9{@link Optional}中的新函数
+	 */
+	public void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction) {
+		if (value != null) {
+			action.accept(value);
+		} else {
+			emptyAction.run();
+		}
+	}
+
+	/**
+	 * 判断包裹里的值存在并且与给定的条件是否满足 ({@link Predicate#test}执行结果是否为true)
+	 * 如果满足条件则返回本身
+	 * 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
+	 *
+	 * @param predicate 给定的条件
+	 * @return 如果满足条件则返回本身, 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
+	 * @throws NullPointerException 如果给定的条件为 {@code null}，抛出{@code NPE}
+	 */
+	public OptionalBean<T> filter(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
+		if (isEmpty()) {
+			return this;
+		} else {
+			return predicate.test(value) ? this : empty();
+		}
+	}
+
+	/**
+	 * 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回一个包裹了该操作返回值的{@code Opt}
+	 * 如果不存在，返回一个空的{@code Opt}
+	 *
+	 * @param mapper 值存在时执行的操作
+	 * @param <U>    操作返回值的类型
+	 * @return 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回一个包裹了该操作返回值的{@code Opt}，
+	 * 如果不存在，返回一个空的{@code Opt}
+	 * @throws NullPointerException 如果给定的操作为 {@code null}，抛出 {@code NPE}
+	 */
+	public <U> OptionalBean<U> map(Function<? super T, ? extends U> mapper) {
+		Objects.requireNonNull(mapper);
+		if (isEmpty()) {
+			return empty();
+		} else {
+			return OptionalBean.ofNullable(mapper.apply(value));
+		}
+	}
+
+	/**
+	 * 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回该操作返回值
+	 * 如果不存在，返回一个空的{@code Opt}
+	 * 和 {@link OptionalBean#map}的区别为 传入的操作返回值必须为 {@link OptionalBean}
+	 *
+	 * @param mapper 值存在时执行的操作
+	 * @param <U>    操作返回值的类型
+	 * @return 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回该操作返回值
+	 * 如果不存在，返回一个空的{@code Opt}
+	 * @throws NullPointerException 如果给定的操作为 {@code null}或者给定的操作执行结果为 {@code null}，抛出 {@code NPE}
+	 */
+	public <U> OptionalBean<U> flatMap(Function<? super T, ? extends OptionalBean<? extends U>> mapper) {
+		Objects.requireNonNull(mapper);
+		if (isEmpty()) {
+			return empty();
+		} else {
+			@SuppressWarnings("unchecked")
+			OptionalBean<U> r = (OptionalBean<U>) mapper.apply(value);
+			return Objects.requireNonNull(r);
+		}
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，就执行对应的操作，并返回本身
+	 * 如果不存在，返回一个空的{@code Opt}
+	 *
+	 * @param action 值存在时执行的操作
+	 * @throws NullPointerException 如果值存在，并且传入的操作为 {@code null}
+	 * @apiNote 属于 {@link #ifPresent}的链式拓展
+	 * @author VampireAchao
+	 */
+	public OptionalBean<T> peek(Consumer<T> action) {
+		Objects.requireNonNull(action);
+		if (isEmpty()) {
+			return OptionalBean.empty();
+		}
+		action.accept(value);
+		return this;
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，就返回本身，如果不存在，则使用传入的操作执行后获得的 {@code Opt}
+	 *
+	 * @return 如果包裹里元素的值存在，就返回本身，如果不存在，则使用传入的函数执行后获得的 {@code Opt}
+	 * @throws NullPointerException 如果传入的操作为空，或者传入的操作执行后返回值为空，则抛出 {@code NPE}
+	 * @since 9 这是jdk9{@link Optional}中的新函数
+	 */
+	public OptionalBean<T> or(Supplier<? extends OptionalBean<? extends T>> supplier) {
+		Objects.requireNonNull(supplier);
+		if (isPresent()) {
+			return this;
+		} else {
+			@SuppressWarnings("unchecked")
+			OptionalBean<T> r = (OptionalBean<T>) supplier.get();
+			return Objects.requireNonNull(r);
+		}
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，就返回一个包含该元素的 {@link Stream},
+	 * 否则返回一个空元素的 {@link Stream}
+	 *
+	 * @return 返回一个包含该元素的 {@link Stream}或空的 {@link Stream}
+	 * @apiNote 该方法能将 {@link OptionalBean} 中的元素传递给 {@link Stream}
+	 * <pre>{@code
+	 *     Stream<Opt<T>> os = ..
+	 *     Stream<T> s = os.flatMap(Opt::stream)
+	 * }</pre>
+	 * @since 9 这是jdk9{@link Optional}中的新函数
+	 */
+	public Stream<T> stream() {
+		if (isEmpty()) {
+			return Stream.empty();
+		} else {
+			return Stream.of(value);
+		}
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，则返回该值，否则返回传入的{@code other}
+	 *
+	 * @param other 元素为空时返回的值，有可能为 {@code null}.
+	 * @return 如果包裹里元素的值存在，则返回该值，否则返回传入的{@code other}
+	 */
+	public T orElse(T other) {
+		return value != null ? value : other;
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，则返回该值，否则返回传入的操作执行后的返回值
+	 *
+	 * @param supplier 值不存在时需要执行的操作，返回一个类型与 包裹里元素类型 相同的元素
+	 * @return 如果包裹里元素的值存在，则返回该值，否则返回传入的操作执行后的返回值
+	 * @throws NullPointerException 如果之不存在，并且传入的操作为空，则抛出 {@code NPE}
+	 */
+	public T orElseGet(Supplier<? extends T> supplier) {
+		return value != null ? value : supplier.get();
+	}
+
+	/**
+	 * 如果包裹里的值存在，则返回该值，否则抛出 {@code NoSuchElementException}
+	 *
+	 * @return 返回一个不为 {@code null} 的包裹里的值
+	 * @throws NoSuchElementException 如果包裹里的值不存在则抛出该异常
+	 * @since 10 这是jdk10{@link Optional}中的新函数
+	 */
+	public T orElseThrow() {
+		if (value == null) {
+			throw new NoSuchElementException("No value present");
+		}
+		return value;
+	}
+
+	/**
+	 * 如果包裹里的值存在，则返回该值，否则执行传入的操作，获取异常类型的返回值并抛出
+	 *
+	 * @param <X>               异常类型
+	 * @param exceptionSupplier 值不存在时执行的操作，返回值继承 {@link Throwable}
+	 * @return 包裹里不能为空的值
+	 * @throws X                    如果值不存在
+	 * @throws NullPointerException 如果值不存在并且 传入的操作为 {@code null}或者操作执行后的返回值为{@code null}
+	 * @apiNote 往往是一个包含无参构造器的异常 例如传入{@code IllegalStateException::new}
+	 */
+	public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+		if (value != null) {
+			return value;
+		} else {
+			throw exceptionSupplier.get();
+		}
+	}
+
+	/**
+	 * 如果包裹里的值存在，则返回该值，否则执行传入的操作，获取异常类型的返回值并抛出
+	 *
+	 * @param <X>               异常类型
+	 * @param exceptionFunction 值不存在时执行的操作，返回值继承 {@link Throwable}
+	 * @param message           作为传入操作执行时的参数，一般作为异常自定义提示语
+	 * @return 包裹里不能为空的值
+	 * @throws X                    如果值不存在
+	 * @throws NullPointerException 如果值不存在并且 传入的操作为 {@code null}或者操作执行后的返回值为{@code null}
+	 * @apiNote 往往是一个包含 自定义消息 构造器的异常 例如
+	 * <pre>{@code
+	 * 		Opt.ofNullable(null).orElseThrow(IllegalStateException::new, "Ops!Something is wrong!");
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	public <X extends Throwable> T orElseThrow(Function<String, ? extends X> exceptionFunction, String message) throws X {
+		if (value != null) {
+			return value;
+		} else {
+			throw exceptionFunction.apply(message);
+		}
+	}
+
+	/**
+	 * 判断传入参数是否与 {@code Opt}相等
+	 * 在以下情况下返回true
+	 * <ul>
+	 * <li>它也是一个 {@code Opt} 并且
+	 * <li>它们包裹住的元素都为空 或者
+	 * <li>它们包裹住的元素之间相互 {@code equals()}
+	 * </ul>
+	 *
+	 * @param obj 一个要用来判断是否相等的参数
+	 * @return 如果传入的参数也是一个 {@code Opt}并且它们包裹住的元素都为空
+	 * 或者它们包裹住的元素之间相互 {@code equals()} 就返回{@code true}
+	 * 否则返回 {@code false}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof OptionalBean)) {
+			return false;
+		}
+
+		OptionalBean<?> other = (OptionalBean<?>) obj;
+		return Objects.equals(value, other.value);
+	}
+
+	/**
+	 * 如果包裹内元素为空，则返回0，否则返回元素的 {@code hashcode}
+	 *
+	 * @return 如果包裹内元素为空，则返回0，否则返回元素的 {@code hashcode}
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(value);
+	}
+
+	/**
+	 * 返回包裹内元素调用{@code toString()}的结果，不存在则返回{@code null}
+	 * return 包裹内元素调用{@code toString()}的结果，不存在则返回{@code null}
+	 */
+	@Override
+	public String toString() {
+		return value != null
+				? value.toString()
+				: null;
 	}
 }
