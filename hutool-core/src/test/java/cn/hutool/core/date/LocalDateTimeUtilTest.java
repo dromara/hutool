@@ -149,4 +149,28 @@ public class LocalDateTimeUtilTest {
 		final LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
 	}
+
+	@Test
+	public void dayOfWeekTest() {
+		final Week one = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 20));
+		Assert.assertEquals(Week.MONDAY, one);
+
+		final Week two = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 21));
+		Assert.assertEquals(Week.TUESDAY, two);
+
+		final Week three = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 22));
+		Assert.assertEquals(Week.WEDNESDAY, three);
+
+		final Week four = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 23));
+		Assert.assertEquals(Week.THURSDAY, four);
+
+		final Week five = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 24));
+		Assert.assertEquals(Week.FRIDAY, five);
+
+		final Week six = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 25));
+		Assert.assertEquals(Week.SATURDAY, six);
+
+		final Week seven = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 26));
+		Assert.assertEquals(Week.SUNDAY, seven);
+	}
 }

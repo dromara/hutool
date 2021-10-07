@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import java.time.DayOfWeek;
 import java.util.Calendar;
 
 /**
@@ -127,5 +128,28 @@ public enum Week {
 		default:
 			return null;
 		}
+	}
+
+	/**
+	 * 将 {@link DayOfWeek}星期相关值转换为Week枚举对象<br>
+	 *
+	 * @see #SUNDAY
+	 * @see #MONDAY
+	 * @see #TUESDAY
+	 * @see #WEDNESDAY
+	 * @see #THURSDAY
+	 * @see #FRIDAY
+	 * @see #SATURDAY
+	 *
+	 * @param dayOfWeek DayOfWeek星期值
+	 * @return {@link Week}
+	 * @since 5.7.14
+	 */
+	public static Week of(DayOfWeek dayOfWeek) {
+		int week = dayOfWeek.ordinal() + 2;
+		if (week > 7) {
+			week = 1;
+		}
+		return of(week);
 	}
 }
