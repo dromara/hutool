@@ -20,6 +20,7 @@
 * 【cache  】     优化FIFOCache未设置过期策略时，无需遍历判断过期对象（pr#425@Gitee）
 * 【core   】     增加Opt类（pr#426@Gitee）
 * 【core   】     Week增加of重载，支持DayOfWek（pr#1872@Github）
+* 【poi    】     优化read，避免多次创建CopyOptions（issue#1875@Github）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
