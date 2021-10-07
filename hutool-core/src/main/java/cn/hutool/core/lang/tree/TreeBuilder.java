@@ -112,6 +112,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 *
 	 * @param key   键
 	 * @param value 扩展值
+	 * @return this
 	 * @since 5.7.14
 	 */
 	public TreeBuilder<E> putExtra(String key, Object value) {

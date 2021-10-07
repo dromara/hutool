@@ -133,14 +133,15 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	/**
 	 * 获取切分后的对象列表
 	 *
-	 * @param <T> 元素类型
+	 * @param <T>     元素类型
+	 * @param mapping 字符串映射函数
 	 * @return 切分后的列表
 	 */
 	public <T> List<T> toList(Function<String, T> mapping) {
 		final List<T> result = new ArrayList<>();
 		while (this.hasNext()) {
 			final T apply = mapping.apply(this.next());
-			if(ignoreEmpty && StrUtil.isEmptyIfStr(apply)){
+			if (ignoreEmpty && StrUtil.isEmptyIfStr(apply)) {
 				// 对于mapping之后依旧是String的情况，ignoreEmpty依旧有效
 				continue;
 			}
