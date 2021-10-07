@@ -21,7 +21,7 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
-		<druid.version>1.2.6</druid.version>
+		<druid.version>1.2.8</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.12.10</mongo.version>
 		<sqlite.version>3.36.0.3</sqlite.version>
