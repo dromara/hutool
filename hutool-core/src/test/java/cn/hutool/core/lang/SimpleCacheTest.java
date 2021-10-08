@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,5 +43,18 @@ public class SimpleCacheTest {
 		Assert.assertEquals("value4", cache.get("key4"));
 		Assert.assertEquals("value5", cache.get("key5"));
 		Assert.assertEquals("value6", cache.get("key6", ()-> "value6"));
+	}
+
+	@Test
+	public void getConcurrencyTest(){
+		final SimpleCache<String, String> cache = new SimpleCache<>();
+		final ConcurrencyTester tester = new ConcurrencyTester(9000);
+		tester.test(()-> cache.get("aaa", ()-> {
+			ThreadUtil.sleep(1000);
+			return "aaaValue";
+		}));
+
+		Assert.assertTrue(tester.getInterval() > 0);
+		Assert.assertEquals("aaaValue", cache.get("aaa"));
 	}
 }
