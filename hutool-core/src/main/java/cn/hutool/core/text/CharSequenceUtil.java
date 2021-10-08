@@ -7,22 +7,12 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.DesensitizedUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -41,6 +31,11 @@ public class CharSequenceUtil {
 	 * 注意：{@code "null" != null}
 	 */
 	public static final String NULL = "null";
+
+	/**
+	 * 字符串常量：{@code "undefined"}
+	 */
+	public static final String UNDEFINED = "undefined";
 
 	/**
 	 * 字符串常量：空字符串 {@code ""}
@@ -495,6 +490,17 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 检查字符串是否不为null、空白串、“null”、“undefined”
+	 *
+	 * @param str 被检查的字符串
+	 * @return 是否不为null、空白串、“null”、“undefined”
+	 * 不为null、空白串、“null”、“undefined”返回true，否则返回false
+	 */
+	public static boolean isNotBlankOrUndefined(CharSequence str) {
+		return !isBlankOrUndefined(str);
+	}
+
+	/**
 	 * 是否为“null”、“undefined”，不做空指针检查
 	 *
 	 * @param str 字符串
@@ -502,7 +508,18 @@ public class CharSequenceUtil {
 	 */
 	private static boolean isNullOrUndefinedStr(CharSequence str) {
 		String strString = str.toString().trim();
-		return NULL.equals(strString) || "undefined".equals(strString);
+		return NULL.equals(strString) || UNDEFINED.equals(strString);
+	}
+
+	/**
+	 * 是否不为“null”、“undefined”，不做空指针检查
+	 *
+	 * @param str 字符串
+	 * @return 是否不为“null”、“undefined”，不为“null”、“undefined”返回true，否则false
+	 */
+	private static boolean isNotNullAndNotUndefinedStr(CharSequence str) {
+		String strString = str.toString().trim();
+		return !NULL.equals(strString) && !UNDEFINED.equals(strString);
 	}
 
 	// ------------------------------------------------------------------------ Trim
