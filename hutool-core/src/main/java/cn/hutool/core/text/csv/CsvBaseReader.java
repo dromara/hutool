@@ -258,9 +258,8 @@ public class CsvBaseReader implements Serializable {
 	 */
 	private void read(CsvParser csvParser, CsvRowHandler rowHandler) throws IORuntimeException {
 		try {
-			CsvRow csvRow;
-			while ((csvRow = csvParser.nextRow()) != null) {
-				rowHandler.handle(csvRow);
+			while (csvParser.hasNext()){
+				rowHandler.handle(csvParser.next());
 			}
 		} finally {
 			IoUtil.close(csvParser);
@@ -274,7 +273,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return CsvParser
 	 * @throws IORuntimeException IO异常
 	 */
-	private CsvParser parse(Reader reader) throws IORuntimeException {
+	protected CsvParser parse(Reader reader) throws IORuntimeException {
 		return new CsvParser(reader, this.config);
 	}
 	//--------------------------------------------------------------------------------------------- Private method start

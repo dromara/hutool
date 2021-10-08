@@ -2,11 +2,17 @@ package cn.hutool.core.text.csv;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * CSV文件读取器，参考：FastCSV
@@ -14,7 +20,7 @@ import java.nio.file.Path;
  * @author Looly
  * @since 4.0.1
  */
-public class CsvReader extends CsvBaseReader {
+public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closeable {
 	private static final long serialVersionUID = 1L;
 
 	private final Reader reader;
@@ -116,5 +122,32 @@ public class CsvReader extends CsvBaseReader {
 	 */
 	public void read(CsvRowHandler rowHandler) throws IORuntimeException {
 		read(this.reader, rowHandler);
+	}
+
+	/**
+	 * 根据Reader创建{@link Stream}，以便使用stream方式读取csv行
+	 *
+	 * @return {@link Stream}
+	 * @since 5.7.14
+	 */
+	public Stream<CsvRow> stream() {
+		return StreamSupport.stream(spliterator(), false)
+				.onClose(() -> {
+					try {
+						close();
+					} catch (final IOException e) {
+						throw new IORuntimeException(e);
+					}
+				});
+	}
+
+	@Override
+	public Iterator<CsvRow> iterator() {
+		return parse(this.reader);
+	}
+
+	@Override
+	public void close() throws IOException {
+		IoUtil.close(this.reader);
 	}
 }

@@ -1,5 +1,6 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
@@ -24,7 +25,7 @@ import java.util.Objects;
  *
  * @author Looly
  */
-public final class CsvParser implements Closeable, Serializable {
+public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final int DEFAULT_ROW_CAPACITY = 10;
@@ -96,6 +97,11 @@ public final class CsvParser implements Closeable, Serializable {
 			throw new IllegalStateException("No header available - call nextRow() first");
 		}
 		return header.fields;
+	}
+
+	@Override
+	protected CsvRow computeNext() {
+		return nextRow();
 	}
 
 	/**

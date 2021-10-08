@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.14 (2021-10-07)
+# 5.7.14 (2021-10-08)
 
 ### 🐣新特性
 * 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
@@ -21,6 +21,7 @@
 * 【core   】     增加Opt类（pr#426@Gitee）
 * 【core   】     Week增加of重载，支持DayOfWek（pr#1872@Github）
 * 【poi    】     优化read，避免多次创建CopyOptions（issue#1875@Github）
+* 【core   】     优化CsvReader，实现可控遍历（pr#1873@Github）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）

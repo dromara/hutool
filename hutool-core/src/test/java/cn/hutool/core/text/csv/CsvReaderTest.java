@@ -191,4 +191,11 @@ public class CsvReaderTest {
 		final CsvRow row = read.getRow(0);
 		Assert.assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
 	}
+
+	@Test
+	@Ignore
+	public void streamTest(){
+		final CsvReader reader = CsvUtil.getReader(ResourceUtil.getUtf8Reader("test_bean.csv"));
+		reader.stream().limit(2).forEach(Console::log);
+	}
 }

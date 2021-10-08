@@ -1,6 +1,7 @@
 package cn.hutool.core.text.csv;
 
 import java.io.File;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
@@ -15,7 +16,7 @@ public class CsvUtil {
 	//----------------------------------------------------------------------------------------------------------- Reader
 
 	/**
-	 * 获取CSV读取器
+	 * 获取CSV读取器，调用此方法创建的Reader须自行指定读取的资源
 	 *
 	 * @param config 配置, 允许为空.
 	 * @return {@link CsvReader}
@@ -25,12 +26,35 @@ public class CsvUtil {
 	}
 
 	/**
-	 * 获取CSV读取器
+	 * 获取CSV读取器，调用此方法创建的Reader须自行指定读取的资源
 	 *
 	 * @return {@link CsvReader}
 	 */
 	public static CsvReader getReader() {
 		return new CsvReader();
+	}
+
+	/**
+	 * 获取CSV读取器
+	 *
+	 * @param reader {@link Reader}
+	 * @param config 配置, {@code null}表示默认配置
+	 * @return {@link CsvReader}
+	 * @since 5.7.14
+	 */
+	public static CsvReader getReader(Reader reader, CsvReadConfig config) {
+		return new CsvReader(reader, config);
+	}
+
+	/**
+	 * 获取CSV读取器
+	 *
+	 * @param reader {@link Reader}
+	 * @return {@link CsvReader}
+	 * @since 5.7.14
+	 */
+	public static CsvReader getReader(Reader reader) {
+		return getReader(reader, null);
 	}
 
 	//----------------------------------------------------------------------------------------------------------- Writer
