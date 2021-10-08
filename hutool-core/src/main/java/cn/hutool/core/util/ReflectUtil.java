@@ -15,7 +15,13 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 反射工具类
@@ -191,13 +197,10 @@ public class ReflectUtil {
 	 * @param fieldFilter field过滤器，过滤掉不需要的field
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
+	 * @since 5.7.14
 	 */
 	public static Field[] getFields(Class<?> beanClass, Filter<Field> fieldFilter) throws SecurityException {
-		final Field[] fields = getFields(beanClass);
-		if (ArrayUtil.isEmpty(fields)) {
-			return fields;
-		}
-		return ArrayUtil.filter(fields, fieldFilter);
+		return ArrayUtil.filter(getFields(beanClass), fieldFilter);
 	}
 
 	/**
