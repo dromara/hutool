@@ -22,6 +22,7 @@
 * 【core   】     Week增加of重载，支持DayOfWek（pr#1872@Github）
 * 【poi    】     优化read，避免多次创建CopyOptions（issue#1875@Github）
 * 【core   】     优化CsvReader，实现可控遍历（pr#1873@Github）
+* 【core   】     优化Base64.isBase64判断（pr#1879@Github）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
