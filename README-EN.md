@@ -199,6 +199,12 @@ If you think Hutool is good, you can donate to buy tshe author a pack of chili~,
 
 [Dromara donate](https://dromara.gitee.io/donate.html)
 
+## 👕shop
+
+We provide the T-Shirt with Hutool Logo, please visit the shop：
+
+[Hutool T-Shirt](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
+
 ## 📌WeChat Official Account
 
 #### 🐧Welcome to the official account of Hutool cooperation.
