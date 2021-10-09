@@ -31,6 +31,7 @@
 * 【db     】     修复Condition没占位符的情况下sql没引号问题（issue#1846@Github）
 * 【cache  】     修复FIFOCache中remove回调无效问题（pr#1856@Github）
 * 【json   】     修复JSONArray.set中，index为0报错问题（issue#1858@Github）
+* 【core   】     修复FileUtil.checkSlip中getCanonicalPath异常引起的问题（issue#1858@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
