@@ -207,10 +207,7 @@ We provide the T-Shirt with Hutool Logo, please visit the shop：
 
 ## 📌WeChat Official Account
 
-#### 🐧Welcome to the official account of Hutool cooperation.
-
-![Tuling](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg)
-
-#### 🐧Welcome to organization Dromara
-
-![Dromara](https://dromara.org/img/qrcode/qrcode_1.png)
+<div align="center">
+	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
+	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
+</div>
