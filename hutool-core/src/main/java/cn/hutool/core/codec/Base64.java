@@ -323,7 +323,18 @@ public class Base64 {
 	 * @since 5.7.5
 	 */
 	public static boolean isBase64(CharSequence base64){
-		return isBase64(StrUtil.utf8Bytes(base64));
+		if (base64 == null || base64.length() < 2) {
+			return false;
+		}
+
+		byte[] bytes = StrUtil.utf8Bytes(base64);
+
+		if (bytes.length != base64.length()) {
+			// 如果长度不相等，说明存在双字节字符，肯定不是Base64，直接返回false
+			return false;
+		}
+
+		return isBase64(bytes);
 	}
 
 	/**
