@@ -36,4 +36,19 @@ public class StrFormatterTest {
 		String result3 = StrFormatter.formatWith("this is \\\\? for ?", "?", "a", "b");
 		Assert.assertEquals("this is \\a for b", result3);
 	}
+
+	@Test
+	public void formatWithTest2() {
+		//通常使用
+		String result1 = StrFormatter.formatWith("this is $$$ for $$$", "$$$", "a", "b");
+		Assert.assertEquals("this is a for b", result1);
+
+		//转义?
+		String result2 = StrFormatter.formatWith("this is \\$$$ for $$$", "$$$", "a", "b");
+		Assert.assertEquals("this is $$$ for a", result2);
+
+		//转义\
+		String result3 = StrFormatter.formatWith("this is \\\\$$$ for $$$", "$$$", "a", "b");
+		Assert.assertEquals("this is \\a for b", result3);
+	}
 }
