@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.6.1.RELEASE</beetl.version>
+		<beetl.version>3.7.0.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.16</enjoy.version>
@@ -30,7 +30,7 @@
 		<net.version>3.7.2</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.5.4</spring-boot.version>
+		<spring-boot.version>2.5.5</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -241,7 +241,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.9.0</version>
+			<version>8.10.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
