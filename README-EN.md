@@ -206,7 +206,7 @@ We provide the T-Shirt with Hutool Logo, please visit the shop：
 [Hutool T-Shirt](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
 
 <div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/t_shirt.jpg" height="150">
+	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/t_shirt.jpg">
 </div>
 
 ## 📌WeChat Official Account
