@@ -10,7 +10,5 @@ public class ThreadUtilTest {
 		final boolean isValid = true;
 
 		ThreadUtil.execute(() -> Assert.assertTrue(isValid));
-
-
 	}
 }
