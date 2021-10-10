@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.hamcrest.CoreMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +34,9 @@ public class StrJoinerTest {
 	public void joinMultiArrayTest(){
 		final StrJoiner append = StrJoiner.of(",");
 		append.append(new Object[]{ListUtil.of("1", "2"),
-				CollUtil.newHashSet("3", "4")
+				CollUtil.newLinkedHashSet("3", "4")
 		});
-		Assert.assertThat(append.toString(), CoreMatchers.anyOf(CoreMatchers.is("1,2,3,4"), CoreMatchers.is("1,2,4,3")));
+		Assert.assertEquals("1,2,3,4", append.toString());
 	}
 
 	@Test
