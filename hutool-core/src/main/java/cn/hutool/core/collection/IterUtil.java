@@ -863,10 +863,6 @@ public class IterUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
-		if (list1 == list2) {
-			return true;
-		}
-
 		final Iterator<?> it1 = list1.iterator();
 		final Iterator<?> it2 = list2.iterator();
 		Object obj1;
@@ -875,12 +871,12 @@ public class IterUtil {
 			obj1 = it1.next();
 			obj2 = it2.next();
 
-			if (false == Objects.equals(obj1, obj2)) {
+			if (!Objects.equals(obj1, obj2)) {
 				return false;
 			}
 		}
 
 		// 当两个Iterable长度不一致时返回false
-		return false == (it1.hasNext() || it2.hasNext());
+		return !(it1.hasNext() || it2.hasNext());
 	}
 }

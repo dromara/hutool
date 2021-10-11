@@ -789,4 +789,11 @@ public class CollUtilTest {
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
 	}
+	@Test
+	public void isEqualListTest(){
+		List<?> list1 = null;
+		List<?> list2 = null;
+		Assert.assertTrue(CollUtil.isEqualList(list1,list2));
+
+	}
 }
