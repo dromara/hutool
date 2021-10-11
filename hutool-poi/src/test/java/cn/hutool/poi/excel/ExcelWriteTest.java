@@ -783,4 +783,15 @@ public class ExcelWriteTest {
 		writer.write(ListUtil.of(hyperlink));
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void mergeNumberTest(){
+		File tempFile=new File("d:/test/mergeNumber.xlsx");
+		FileUtil.del(tempFile);
+
+		BigExcelWriter writer= new BigExcelWriter(tempFile);
+		writer.merge(0,1,2,2,3.99,false);
+		writer.close();
+	}
 }
