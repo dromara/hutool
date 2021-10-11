@@ -2948,6 +2948,9 @@ public class CollUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
+		if (list1 == list2){
+			return  true;
+		}
 		if (list1 == null || list2 == null || list1.size() != list2.size()) {
 			return false;
 		}
