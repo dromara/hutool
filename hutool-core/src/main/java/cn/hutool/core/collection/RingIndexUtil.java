@@ -16,26 +16,6 @@ public class RingIndexUtil {
 	/**
 	 * 通过cas操作 实现对指定值内的回环累加
 	 *
-	 * @param object     集合
-	 *                   <ul>
-	 *                   <li>Collection - the collection size
-	 *                   <li>Map - the map size
-	 *                   <li>Array - the array size
-	 *                   <li>Iterator - the number of elements remaining in the iterator
-	 *                   <li>Enumeration - the number of elements remaining in the enumeration
-	 *                   </ul>
-	 * @param atomicLong 原子操作类
-	 * @return 索引位置
-	 */
-	public static long ringNextLongByObj(Object object, AtomicLong atomicLong) {
-		Assert.notNull(object);
-		int modulo = CollUtil.size(object);
-		return ringNextLong(modulo, atomicLong);
-	}
-
-	/**
-	 * 通过cas操作 实现对指定值内的回环累加
-	 *
 	 * @param object        集合
 	 *                      <ul>
 	 *                      <li>Collection - the collection size
@@ -63,7 +43,7 @@ public class RingIndexUtil {
 	public static int ringNextInt(int modulo, AtomicInteger atomicInteger) {
 		Assert.notNull(atomicInteger);
 		Assert.isTrue(modulo > 0);
-		if (modulo == 1) {
+		if (modulo <= 1) {
 			return 0;
 		}
 		for (; ; ) {
@@ -85,7 +65,7 @@ public class RingIndexUtil {
 	public static long ringNextLong(long modulo, AtomicLong atomicLong) {
 		Assert.notNull(atomicLong);
 		Assert.isTrue(modulo > 0);
-		if (modulo == 1) {
+		if (modulo <= 1) {
 			return 0;
 		}
 		for (; ; ) {
@@ -96,5 +76,4 @@ public class RingIndexUtil {
 			}
 		}
 	}
-
 }
