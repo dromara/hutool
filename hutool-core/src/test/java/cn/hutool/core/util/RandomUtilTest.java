@@ -53,4 +53,10 @@ public class RandomUtilTest {
 		final byte[] c = RandomUtil.randomBytes(10);
 		Assert.assertNotNull(c);
 	}
+
+	@Test
+	public void randomChineseTest(){
+		char c = RandomUtil.randomChinese();
+		Assert.assertTrue(c > 0);
+	}
 }

@@ -8,6 +8,7 @@
 ### 🐣新特性
 * 【db     】     Db.quietSetAutoCommit增加判空（issue#I4D75B@Gitee）
 * 【core   】     增加RingIndexUtil（pr#438@Gitee）
+* 【core   】     Assert增加checkBetween重载（pr#436@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）

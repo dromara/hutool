@@ -840,12 +840,12 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
 	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @throws X if value is out of bound
 	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
 	 * @since 5.7.15
 	 */
 	public static <X extends Throwable> int checkBetween(int value, int min, int max, Supplier<? extends X> errorSupplier) throws X {
@@ -885,12 +885,12 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
 	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @throws X if value is out of bound
 	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
 	 * @since 5.7.15
 	 */
 	public static <X extends Throwable> long checkBetween(long value, long min, long max, Supplier<? extends X> errorSupplier) throws X {
@@ -930,12 +930,12 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
 	 * @param errorSupplier 错误抛出异常附带的消息生产接口
-	 * @throws X if value is out of bound
 	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
 	 * @since 5.7.15
 	 */
 	public static <X extends Throwable> double checkBetween(double value, double min, double max, Supplier<? extends X> errorSupplier) throws X {
