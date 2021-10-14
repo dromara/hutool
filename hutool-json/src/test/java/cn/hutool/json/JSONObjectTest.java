@@ -609,4 +609,28 @@ public class JSONObjectTest {
 	class BigDecimalBean{
 		private BigDecimal orderId;
 	}
+
+	@Test
+	public void filterIncludeTest(){
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true))
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> pair.getKey().equals("b"));
+		Assert.assertEquals("{\"b\":\"value2\"}", s);
+	}
+
+	@Test
+	public void filterExcludeTest(){
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true))
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> false == pair.getKey().equals("b"));
+		Assert.assertEquals("{\"a\":\"value1\",\"c\":\"value3\",\"d\":true}", s);
+	}
 }

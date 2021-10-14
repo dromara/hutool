@@ -10,6 +10,7 @@
 * 【core   】     增加RingIndexUtil（pr#438@Gitee）
 * 【core   】     Assert增加checkBetween重载（pr#436@Gitee）
 * 【core   】     ReUtil增加命名分组重载（pr#439@Gitee）
+* 【json   】     toString和writer增加Filter（issue#I4DQNQ@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）

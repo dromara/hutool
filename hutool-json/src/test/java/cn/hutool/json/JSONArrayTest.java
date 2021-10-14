@@ -239,4 +239,28 @@ public class JSONArrayTest {
 		private Integer id;
 		private String name;
 	}
+
+	@Test
+	public void filterIncludeTest(){
+		JSONArray json1 = JSONUtil.createArray()
+				.set("value1")
+				.set("value2")
+				.set("value3")
+				.set(true);
+
+		final String s = json1.toJSONString(0, (pair) -> pair.getValue().equals("value2"));
+		Assert.assertEquals("[\"value2\"]", s);
+	}
+
+	@Test
+	public void filterExcludeTest(){
+		JSONArray json1 = JSONUtil.createArray()
+				.set("value1")
+				.set("value2")
+				.set("value3")
+				.set(true);
+
+		final String s = json1.toJSONString(0, (pair) -> false == pair.getValue().equals("value2"));
+		Assert.assertEquals("[\"value1\",\"value3\",true]", s);
+	}
 }
