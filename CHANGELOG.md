@@ -13,6 +13,7 @@
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
 * 【poi    】     修复ExcelWriter多余调试信息导致的问题（issue#1884@Github）
+* 【poi    】     修复TemporalAccessorUtil.toInstant使用DateTimeFormatter导致问题（issue#1891@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

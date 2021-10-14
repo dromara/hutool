@@ -989,4 +989,10 @@ public class DateUtilTest {
 		Assert.assertNotNull(parse);
 		Assert.assertEquals("2021-01-01 00:00:00", parse.toString());
 	}
+
+	@Test
+	public void parseByDateTimeFormatterTest(){
+		final DateTime parse = DateUtil.parse("2021-12-01", DatePattern.NORM_DATE_FORMATTER);
+		Assert.assertEquals("2021-12-01 00:00:00", parse.toString());
+	}
 }

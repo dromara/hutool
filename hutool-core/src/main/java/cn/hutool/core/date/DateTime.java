@@ -167,7 +167,7 @@ public class DateTime extends Date {
 	 * @since 5.0.5
 	 */
 	public DateTime(Instant instant, ZoneId zoneId) {
-		this(instant.toEpochMilli(), TimeZone.getTimeZone(ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault())));
+		this(instant.toEpochMilli(), ZoneUtil.toTimeZone(zoneId));
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class DateTime extends Date {
 	 * @since 5.0.0
 	 */
 	public DateTime(TemporalAccessor temporalAccessor) {
-		this(DateUtil.toInstant(temporalAccessor));
+		this(TemporalAccessorUtil.toInstant(temporalAccessor));
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class DateTime extends Date {
 	 * @since 5.0.0
 	 */
 	public DateTime(CharSequence dateStr, DateTimeFormatter formatter) {
-		this(Instant.from(formatter.parse(dateStr)), formatter.getZone());
+		this(TemporalAccessorUtil.toInstant(formatter.parse(dateStr)), formatter.getZone());
 	}
 
 	/**
