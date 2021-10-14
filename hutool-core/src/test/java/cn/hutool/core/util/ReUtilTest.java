@@ -169,11 +169,11 @@ public class ReUtilTest {
 	public void getByGroupNameTest() {
 		String content = "2021-10-11";
 		String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
-		String year = ReUtil.getByGroupName(regex, content, "year");
+		String year = ReUtil.get(regex, content, "year");
 		Assert.assertEquals("2021", year);
-		String month = ReUtil.getByGroupName(regex, content, "month");
+		String month = ReUtil.get(regex, content, "month");
 		Assert.assertEquals("10", month);
-		String day = ReUtil.getByGroupName(regex, content, "day");
+		String day = ReUtil.get(regex, content, "day");
 		Assert.assertEquals("11", day);
 	}
 
@@ -181,7 +181,7 @@ public class ReUtilTest {
 	public void getAllGroupNamesTest() {
 		String content = "2021-10-11";
 		String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
-		Map<String, String> map = ReUtil.getAllGroupNames(regex, content);
+		Map<String, String> map = ReUtil.getAllGroupNames(PatternPool.get(regex, Pattern.DOTALL), content);
 		Assert.assertEquals(map.get("year"), "2021");
 		Assert.assertEquals(map.get("month"), "10");
 		Assert.assertEquals(map.get("day"), "11");

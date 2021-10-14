@@ -8,16 +8,13 @@ import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.map.MapUtil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.MatchResult;
@@ -83,7 +80,6 @@ public class ReUtil {
 			return null;
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return get(pattern, content, groupIndex);
 	}
@@ -91,53 +87,18 @@ public class ReUtil {
 	/**
 	 * 获得匹配的字符串
 	 *
-	 * @param regex      匹配的正则
-	 * @param content    被匹配的内容
+	 * @param regex     匹配的正则
+	 * @param content   被匹配的内容
 	 * @param groupName 匹配正则的分组名称
 	 * @return 匹配后得到的字符串，未匹配返回null
 	 */
-	public static String getByGroupName(String regex, CharSequence content, String groupName) {
-		if (null == content || null == regex || null == groupName) {
-			return null;
-		}
-		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
-		Matcher m = pattern.matcher(content);
-		if (m.find()) {
-			return m.group(groupName);
-		}
-		return null;
-	}
-
-	/**
-	 * 获得匹配的字符串
-	 *
-	 * @param regex      匹配的正则
-	 * @param content    被匹配的内容
-	 * @return 命名捕获组
-	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String, String> getAllGroupNames(String regex, CharSequence content) {
+	public static String get(String regex, CharSequence content, String groupName) {
 		if (null == content || null == regex) {
 			return null;
 		}
-		Map<String, String> result = new HashMap<>();
-		try {
-			final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
-			Matcher m = pattern.matcher(content);
-			// 通过反射获取 namedGroups 方法
-			Method method = ReflectUtil.getMethod(Pattern.class, "namedGroups");
-			ReflectUtil.setAccessible(method);
-			Map<String, Integer> map = (Map<String, Integer>) method.invoke(pattern);
-			// 组合返回值
-			if (m.matches()) {
-				for (Entry<String, Integer> e : map.entrySet()) {
-					result.put(e.getKey(), m.group(e.getValue()));
-				}
-			}
-			return result;
-		} catch (InvocationTargetException | IllegalAccessException ex) {
-			throw new UtilException("call getAllGroupNames(...) method error: " + ex.getMessage());
-		}
+
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return get(pattern, content, groupName);
 	}
 
 	/**
@@ -185,6 +146,26 @@ public class ReUtil {
 	}
 
 	/**
+	 * 获得匹配的字符串
+	 *
+	 * @param pattern   匹配的正则
+	 * @param content   被匹配的内容
+	 * @param groupName 匹配正则的分组名称
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 * @since 5.7.15
+	 */
+	public static String get(Pattern pattern, CharSequence content, String groupName) {
+		if (null == content || null == pattern || null == groupName) {
+			return null;
+		}
+		final Matcher m = pattern.matcher(content);
+		if (m.find()) {
+			return m.group(groupName);
+		}
+		return null;
+	}
+
+	/**
 	 * 获得匹配的字符串匹配到的所有分组
 	 *
 	 * @param pattern 编译后的正则模式
@@ -218,6 +199,33 @@ public class ReUtil {
 			for (int i = startGroup; i <= groupCount; i++) {
 				result.add(matcher.group(i));
 			}
+		}
+		return result;
+	}
+
+	/**
+	 * 根据给定正则查找字符串中的匹配项，返回所有匹配的分组名对应分组值<br>
+	 * <pre>
+	 * pattern: (?&lt;year&gt;\\d+)-(?&lt;month&gt;\\d+)-(?&lt;day&gt;\\d+)
+	 * content: 2021-10-11
+	 * result : year: 2021, month: 10, day: 11
+	 * </pre>
+	 *
+	 * @param pattern 匹配的正则
+	 * @param content 被匹配的内容
+	 * @return 命名捕获组，key为分组名，value为对应值
+	 * @since 5.7.15
+	 */
+	public static Map<String, String> getAllGroupNames(Pattern pattern, CharSequence content) {
+		if (null == content || null == pattern) {
+			return null;
+		}
+		final Matcher m = pattern.matcher(content);
+		final Map<String, String> result = MapUtil.newHashMap(m.groupCount());
+		if (m.find()) {
+			// 通过反射获取 namedGroups 方法
+			final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
+			map.forEach((key, value)-> result.put(key, m.group(value)));
 		}
 		return result;
 	}
@@ -357,8 +365,8 @@ public class ReUtil {
 	/**
 	 * 替换匹配的第一个内容
 	 *
-	 * @param pattern 正则
-	 * @param content 被匹配的内容
+	 * @param pattern     正则
+	 * @param content     被匹配的内容
 	 * @param replacement 替换的内容
 	 * @return 替换后剩余的内容
 	 * @since 5.6.5
@@ -399,7 +407,7 @@ public class ReUtil {
 	public static String delLast(Pattern pattern, CharSequence str) {
 		if (null != pattern && StrUtil.isNotEmpty(str)) {
 			final MatchResult matchResult = lastIndexOf(pattern, str);
-			if(null != matchResult){
+			if (null != matchResult) {
 				return StrUtil.subPre(str, matchResult.start()) + StrUtil.subSuf(str, matchResult.end());
 			}
 		}
@@ -651,12 +659,12 @@ public class ReUtil {
 	/**
 	 * 找到指定正则匹配到字符串的开始位置
 	 *
-	 * @param regex 正则
+	 * @param regex   正则
 	 * @param content 字符串
 	 * @return 位置，{@code null}表示未找到
 	 * @since 5.6.5
 	 */
-	public static MatchResult indexOf(String regex, CharSequence content){
+	public static MatchResult indexOf(String regex, CharSequence content) {
 		if (null == regex || null == content) {
 			return null;
 		}
@@ -673,10 +681,10 @@ public class ReUtil {
 	 * @return 位置，{@code null}表示未找到
 	 * @since 5.6.5
 	 */
-	public static MatchResult indexOf(Pattern pattern, CharSequence content){
-		if(null != pattern && null != content){
+	public static MatchResult indexOf(Pattern pattern, CharSequence content) {
+		if (null != pattern && null != content) {
 			final Matcher matcher = pattern.matcher(content);
-			if(matcher.find()){
+			if (matcher.find()) {
 				return matcher.toMatchResult();
 			}
 		}
@@ -687,12 +695,12 @@ public class ReUtil {
 	/**
 	 * 找到指定正则匹配到第一个字符串的位置
 	 *
-	 * @param regex 正则
+	 * @param regex   正则
 	 * @param content 字符串
 	 * @return 位置，{@code null}表示未找到
 	 * @since 5.6.5
 	 */
-	public static MatchResult lastIndexOf(String regex, CharSequence content){
+	public static MatchResult lastIndexOf(String regex, CharSequence content) {
 		if (null == regex || null == content) {
 			return null;
 		}
@@ -709,11 +717,11 @@ public class ReUtil {
 	 * @return 位置，{@code null}表示未找到
 	 * @since 5.6.5
 	 */
-	public static MatchResult lastIndexOf(Pattern pattern, CharSequence content){
+	public static MatchResult lastIndexOf(Pattern pattern, CharSequence content) {
 		MatchResult result = null;
-		if(null != pattern && null != content){
+		if (null != pattern && null != content) {
 			final Matcher matcher = pattern.matcher(content);
-			while(matcher.find()){
+			while (matcher.find()) {
 				result = matcher.toMatchResult();
 			}
 		}
