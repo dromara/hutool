@@ -3,11 +3,13 @@ package cn.hutool.core.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -138,11 +141,9 @@ public class ReUtil {
 			return null;
 		}
 
-		final Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
-			return matcher.group(groupIndex);
-		}
-		return null;
+		final MutableObj<String> result = new MutableObj<>();
+		get(pattern, content, matcher -> result.set(matcher.group(groupIndex)));
+		return result.get();
 	}
 
 	/**
@@ -158,11 +159,29 @@ public class ReUtil {
 		if (null == content || null == pattern || null == groupName) {
 			return null;
 		}
+
+		final MutableObj<String> result = new MutableObj<>();
+		get(pattern, content, matcher -> result.set(matcher.group(groupName)));
+		return result.get();
+	}
+
+	/**
+	 * 在给定字符串中查找给定规则的字符，如果找到则使用{@link Consumer}处理之<br>
+	 * 如果内容中有多个匹配项，则只处理找到的第一个结果。
+	 *
+	 * @param pattern  匹配的正则
+	 * @param content  被匹配的内容
+	 * @param consumer 匹配到的内容处理器
+	 * @since 5.7.15
+	 */
+	public static void get(Pattern pattern, CharSequence content, Consumer<Matcher> consumer) {
+		if (null == content || null == pattern || null == consumer) {
+			return;
+		}
 		final Matcher m = pattern.matcher(content);
 		if (m.find()) {
-			return m.group(groupName);
+			consumer.accept(m);
 		}
-		return null;
 	}
 
 	/**
@@ -225,7 +244,7 @@ public class ReUtil {
 		if (m.find()) {
 			// 通过反射获取 namedGroups 方法
 			final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
-			map.forEach((key, value)-> result.put(key, m.group(value)));
+			map.forEach((key, value) -> result.put(key, m.group(value)));
 		}
 		return result;
 	}
@@ -278,7 +297,6 @@ public class ReUtil {
 			return null;
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return extractMulti(pattern, content, template);
 	}
@@ -329,7 +347,6 @@ public class ReUtil {
 			return null;
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return extractMultiAndDelPre(pattern, contentHolder, template);
 	}
@@ -346,7 +363,6 @@ public class ReUtil {
 			return StrUtil.str(content);
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return delFirst(pattern, content);
 	}
@@ -427,7 +443,6 @@ public class ReUtil {
 			return StrUtil.str(content);
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return delAll(pattern, content);
 	}
@@ -459,9 +474,23 @@ public class ReUtil {
 			return StrUtil.str(content);
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
-		Matcher matcher = pattern.matcher(content);
+		return delPre(pattern, content);
+	}
+
+	/**
+	 * 删除正则匹配到的内容之前的字符 如果没有找到，则返回原文
+	 *
+	 * @param pattern 定位正则模式
+	 * @param content 被查找的内容
+	 * @return 删除前缀后的新内容
+	 */
+	public static String delPre(Pattern pattern, CharSequence content) {
+		if (null == content || null == pattern) {
+			return StrUtil.str(content);
+		}
+
+		final Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			return StrUtil.sub(content, matcher.end(), content.length());
 		}
@@ -520,7 +549,7 @@ public class ReUtil {
 			return collection;
 		}
 
-		return findAll(Pattern.compile(regex, Pattern.DOTALL), content, group, collection);
+		return findAll(PatternPool.get(regex, Pattern.DOTALL), content, group, collection);
 	}
 
 	/**
@@ -574,16 +603,29 @@ public class ReUtil {
 		if (null == pattern || null == content) {
 			return null;
 		}
+		Assert.notNull(collection, "Collection must be not null !");
 
-		if (null == collection) {
-			throw new NullPointerException("Null collection param provided!");
+		findAll(pattern, content, (matcher) -> collection.add(matcher.group(group)));
+		return collection;
+	}
+
+	/**
+	 * 取得内容中匹配的所有结果，使用{@link Consumer}完成匹配结果处理
+	 *
+	 * @param pattern  编译后的正则模式
+	 * @param content  被查找的内容
+	 * @param consumer 匹配结果处理函数
+	 * @since 5.7.15
+	 */
+	public static void findAll(Pattern pattern, CharSequence content, Consumer<Matcher> consumer) {
+		if (null == pattern || null == content) {
+			return;
 		}
 
 		final Matcher matcher = pattern.matcher(content);
 		while (matcher.find()) {
-			collection.add(matcher.group(group));
+			consumer.accept(matcher);
 		}
-		return collection;
 	}
 
 	/**
@@ -598,7 +640,6 @@ public class ReUtil {
 			return 0;
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return count(pattern, content);
 	}

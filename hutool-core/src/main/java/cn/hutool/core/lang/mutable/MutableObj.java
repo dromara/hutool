@@ -3,7 +3,7 @@ package cn.hutool.core.lang.mutable;
 import java.io.Serializable;
 
 /**
- * 可变<code>Object</code>
+ * 可变{@code Object}
  *
  * @param <T> 可变的类型
  * @since 3.0.1
