@@ -9,10 +9,15 @@ import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.MatchResult;
@@ -81,6 +86,58 @@ public class ReUtil {
 		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return get(pattern, content, groupIndex);
+	}
+
+	/**
+	 * 获得匹配的字符串
+	 *
+	 * @param regex      匹配的正则
+	 * @param content    被匹配的内容
+	 * @param groupName 匹配正则的分组名称
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 */
+	public static String getByGroupName(String regex, CharSequence content, String groupName) {
+		if (null == content || null == regex || null == groupName) {
+			return null;
+		}
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		Matcher m = pattern.matcher(content);
+		if (m.find()) {
+			return m.group(groupName);
+		}
+		return null;
+	}
+
+	/**
+	 * 获得匹配的字符串
+	 *
+	 * @param regex      匹配的正则
+	 * @param content    被匹配的内容
+	 * @return 命名捕获组
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<String, String> getAllGroupNames(String regex, CharSequence content) {
+		if (null == content || null == regex) {
+			return null;
+		}
+		Map<String, String> result = new HashMap<>();
+		try {
+			final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+			Matcher m = pattern.matcher(content);
+			// 通过反射获取 namedGroups 方法
+			Method method = ReflectUtil.getMethod(Pattern.class, "namedGroups");
+			ReflectUtil.setAccessible(method);
+			Map<String, Integer> map = (Map<String, Integer>) method.invoke(pattern);
+			// 组合返回值
+			if (m.matches()) {
+				for (Entry<String, Integer> e : map.entrySet()) {
+					result.put(e.getKey(), m.group(e.getValue()));
+				}
+			}
+			return result;
+		} catch (InvocationTargetException | IllegalAccessException ex) {
+			throw new UtilException("call getAllGroupNames(...) method error: " + ex.getMessage());
+		}
 	}
 
 	/**
