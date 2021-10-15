@@ -9,17 +9,14 @@ import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileSystemUtil;
 import cn.hutool.core.io.resource.Resource;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +69,61 @@ public class ZipUtil {
 			return zipFile.getInputStream(zipEntry);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 在zip文件中添加新文件, 如果已经存在则不会有效果
+	 *
+	 * @param zipFilePathStr    zip文件存储路径
+	 * @param appendFilePathStr 待添加文件路径(可以是文件夹)
+	 */
+	public static void addFile(String zipFilePathStr, String appendFilePathStr) throws IOException {
+		Path zipPath = Paths.get(zipFilePathStr);
+		Path appendFilePath = Paths.get(appendFilePathStr);
+
+		try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
+			Path root = zipFileSystem.getPath("/");
+			Path dest = zipFileSystem.getPath(root.toString(), appendFilePath.getFileName().toString());
+			if (!Files.isDirectory(appendFilePath)) {
+				Files.copy(appendFilePath, dest, StandardCopyOption.COPY_ATTRIBUTES);
+			} else {
+				Files.walkFileTree(appendFilePath, new SimpleFileVisitor<Path>() {
+					/**
+					 * 用于保证文件夹拷贝后的效果跟常见压缩软件的效果相同
+					 */
+					private String dirRoot = null;
+
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						final Path dest;
+						if (dirRoot != null) {
+							dest = zipFileSystem.getPath(root.toString(), dirRoot, File.separator, StrUtil.subAfter(file.toString(), dirRoot, false));
+						} else {
+							dest = zipFileSystem.getPath(root.toString(), file.toString());
+						}
+						Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+						final Path dirToCreate;
+						if (dirRoot == null) {
+							dirToCreate = zipFileSystem.getPath(root.toString(), dir.getFileName().toString());
+							dirRoot = dir.getFileName().toString();
+						} else {
+							dirToCreate = zipFileSystem.getPath(root.toString(), dirRoot, File.separator, StrUtil.subAfter(dir.toString(), dirRoot, false));
+						}
+						if (Files.notExists(dirToCreate)) {
+							Files.createDirectories(dirToCreate);
+						}
+						return FileVisitResult.CONTINUE;
+					}
+				});
+			}
+		} catch (FileAlreadyExistsException ignored) {
+			// 文件已存在, 跳过
 		}
 	}
 
