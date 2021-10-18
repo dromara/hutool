@@ -141,15 +141,4 @@ public enum ContentType {
 	public static String build(String contentType, Charset charset) {
 		return StrUtil.format("{};charset={}", contentType, charset.name());
 	}
-
-	/**
-	 * 输出Content-Type字符串，附带编码信息
-	 *
-	 * @param contentType Content-Type 枚举类型
-	 * @param charset     编码
-	 * @return Content-Type字符串
-	 */
-	public static String build(ContentType contentType, Charset charset) {
-		this.build(contentType.getValue(),charset);
-	}
 }
