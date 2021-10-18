@@ -1,7 +1,11 @@
 package cn.hutool.core.io.file.visitor;
 
 import cn.hutool.core.io.file.PathUtil;
+import cn.hutool.core.util.StrUtil;
+import com.sun.nio.zipfs.ZipFileSystem;
+import com.sun.nio.zipfs.ZipPath;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileAlreadyExistsException;
@@ -23,6 +27,8 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	private final Path source;
 	private final Path target;
 	private boolean isTargetCreated;
+	private final boolean isZipFile;
+	private String dirRoot = null;
 	private final CopyOption[] copyOptions;
 
 	/**
@@ -38,15 +44,28 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 		}
 		this.source = source;
 		this.target = target;
+		this.isZipFile = target instanceof ZipPath;
 		this.copyOptions = copyOptions;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
 			throws IOException {
-		initTarget();
-		// 将当前目录相对于源路径转换为相对于目标路径
-		final Path targetDir = target.resolve(source.relativize(dir));
+		final Path targetDir;
+		if (isZipFile) {
+			ZipPath zipPath = (ZipPath) target;
+			ZipFileSystem fileSystem = zipPath.getFileSystem();
+			if (dirRoot == null) {
+				targetDir = fileSystem.getPath(dir.getFileName().toString());
+				dirRoot = dir.getFileName().toString() + File.separator;
+			} else {
+				targetDir = fileSystem.getPath(dirRoot, StrUtil.subAfter(dir.toString(), dirRoot, false));
+			}
+		} else {
+			initTarget();
+			// 将当前目录相对于源路径转换为相对于目标路径
+			targetDir = target.resolve(source.relativize(dir));
+		}
 		try {
 			Files.copy(dir, targetDir, copyOptions);
 		} catch (FileAlreadyExistsException e) {
@@ -59,8 +78,17 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
 			throws IOException {
-		initTarget();
-		Files.copy(file, target.resolve(source.relativize(file)), copyOptions);
+		if (isZipFile) {
+			if (dirRoot == null) {
+				Files.copy(file, target, copyOptions);
+			} else {
+				ZipPath zipPath = (ZipPath) target;
+				Files.copy(file, zipPath.getFileSystem().getPath(dirRoot, StrUtil.subAfter(file.toString(), dirRoot, false)), copyOptions);
+			}
+		} else {
+			initTarget();
+			Files.copy(file, target.resolve(source.relativize(file)), copyOptions);
+		}
 		return FileVisitResult.CONTINUE;
 	}
 
