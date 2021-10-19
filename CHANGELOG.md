@@ -19,6 +19,7 @@
 * 【poi    】     修复TemporalAccessorUtil.toInstant使用DateTimeFormatter导致问题（issue#1891@Github）
 * 【poi    】     修复sheet.getRow(y)为null导致的问题（issue#1893@Github）
 * 【cache  】     修复LRUCache线程安全问题（issue#1895@Github）
+* 【crypto 】     修复KeyUtil异常信息参数丢失问题（issue#1902@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

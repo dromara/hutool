@@ -180,7 +180,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generateDESKey(String algorithm, byte[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
-			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
+			throw new CryptoException("Algorithm [{}] is not a DES algorithm!", algorithm);
 		}
 
 		SecretKey secretKey;
@@ -212,7 +212,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generatePBEKey(String algorithm, char[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("PBE")) {
-			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!");
+			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!", algorithm);
 		}
 
 		if (null == key) {
