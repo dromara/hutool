@@ -15,6 +15,7 @@
 * 【bom    】     支持scope=import方式引入（issue#1561@Github）
 * 【core   】     新增Hash接口，HashXXX继承此接口
 * 【core   】     ZipUtil增加append方法（pr#441@Gitee）
+* 【core   】     CollUtil增加重载（issue#I4E9FS@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
