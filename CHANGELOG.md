@@ -13,6 +13,7 @@
 * 【json   】     toString和writer增加Filter（issue#I4DQNQ@Gitee）
 * 【core   】     ContentType增加build重载（pr#1898@Github）
 * 【bom    】     支持scope=import方式引入（issue#1561@Github）
+* 【core   】     新增Hash接口，HashXXX继承此接口
 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
