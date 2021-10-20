@@ -10,13 +10,24 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
+import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.resource.Resource;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,39 +99,7 @@ public class ZipUtil {
 			if (!Files.isDirectory(appendFilePath)) {
 				Files.copy(appendFilePath, dest, StandardCopyOption.COPY_ATTRIBUTES);
 			} else {
-				Files.walkFileTree(appendFilePath, new SimpleFileVisitor<Path>() {
-					/**
-					 * 用于保证文件夹拷贝后的效果跟常见压缩软件的效果相同
-					 */
-					private String dirRoot = null;
-
-					@Override
-					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-						final Path dest;
-						if (dirRoot != null) {
-							dest = zipFileSystem.getPath(root.toString(), dirRoot, File.separator, StrUtil.subAfter(file.toString(), dirRoot, false));
-						} else {
-							dest = zipFileSystem.getPath(root.toString(), file.toString());
-						}
-						Files.copy(file, dest, StandardCopyOption.COPY_ATTRIBUTES);
-						return FileVisitResult.CONTINUE;
-					}
-
-					@Override
-					public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-						final Path dirToCreate;
-						if (dirRoot == null) {
-							dirToCreate = zipFileSystem.getPath(root.toString(), dir.getFileName().toString());
-							dirRoot = dir.getFileName().toString();
-						} else {
-							dirToCreate = zipFileSystem.getPath(root.toString(), dirRoot, File.separator, StrUtil.subAfter(dir.toString(), dirRoot, false));
-						}
-						if (Files.notExists(dirToCreate)) {
-							Files.createDirectories(dirToCreate);
-						}
-						return FileVisitResult.CONTINUE;
-					}
-				});
+				Files.walkFileTree(appendFilePath, new CopyVisitor(appendFilePath, zipFileSystem.getPath(zipFilePathStr)));
 			}
 		} catch (FileAlreadyExistsException ignored) {
 			// 文件已存在, 跳过
