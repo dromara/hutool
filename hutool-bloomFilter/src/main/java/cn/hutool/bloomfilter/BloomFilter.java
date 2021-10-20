@@ -20,10 +20,10 @@ public interface BloomFilter extends Serializable{
 
 	/**
 	 * 在boolean的bitMap中增加一个字符串<br>
-	 * 如果存在就返回<code>false</code> .如果不存在.先增加这个字符串.再返回<code>true</code>
+	 * 如果存在就返回{@code false} .如果不存在.先增加这个字符串.再返回{@code true}
 	 *
 	 * @param str 字符串
-	 * @return 是否加入成功，如果存在就返回<code>false</code> .如果不存在返回<code>true</code>
+	 * @return 是否加入成功，如果存在就返回{@code false} .如果不存在返回{@code true}
 	 */
 	boolean add(String str);
 }
