@@ -1,5 +1,6 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.CharMatcherFinder;
@@ -146,7 +147,7 @@ public class StrSplitter {
 	/**
 	 * 切分字符串，忽略大小写
 	 *
-	 * @param str         被切分的字符串
+	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
@@ -154,8 +155,8 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitIgnoreCase(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		return split(str, separator, limit, isTrim, ignoreEmpty, true);
+	public static List<String> splitIgnoreCase(CharSequence text, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+		return split(text, separator, limit, isTrim, ignoreEmpty, true);
 	}
 
 	/**
@@ -177,7 +178,7 @@ public class StrSplitter {
 	/**
 	 * 切分字符串
 	 *
-	 * @param <R> 切分后的元素类型
+	 * @param <R>         切分后的元素类型
 	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符
 	 * @param limit       限制分片数，-1不限制
@@ -204,7 +205,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static String[] splitToArray(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
 		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
 	}
 
@@ -220,7 +221,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(String str, String separator, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(CharSequence str, String separator, boolean isTrim, boolean ignoreEmpty) {
 		return split(str, separator, -1, isTrim, ignoreEmpty, false);
 	}
 
@@ -233,7 +234,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrim(String str, String separator, boolean ignoreEmpty) {
+	public static List<String> splitTrim(CharSequence str, String separator, boolean ignoreEmpty) {
 		return split(str, separator, true, ignoreEmpty);
 	}
 
@@ -248,7 +249,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
 	}
 
@@ -262,7 +263,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrim(String str, String separator, int limit, boolean ignoreEmpty) {
+	public static List<String> splitTrim(CharSequence str, String separator, int limit, boolean ignoreEmpty) {
 		return split(str, separator, limit, true, ignoreEmpty);
 	}
 
@@ -277,7 +278,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitIgnoreCase(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> splitIgnoreCase(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, true);
 	}
 
@@ -291,7 +292,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrimIgnoreCase(String str, String separator, int limit, boolean ignoreEmpty) {
+	public static List<String> splitTrimIgnoreCase(CharSequence str, String separator, int limit, boolean ignoreEmpty) {
 		return split(str, separator, limit, true, ignoreEmpty, true);
 	}
 
@@ -307,7 +308,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> split(String text, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
+	public static List<String> split(CharSequence text, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
 		final SplitIter splitIter = new SplitIter(text, new StrFinder(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);
 	}
@@ -323,7 +324,7 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static String[] splitToArray(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
 		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
 	}
 
@@ -338,7 +339,8 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(String text, int limit) {
+	public static List<String> split(CharSequence text, int limit) {
+
 		if (StrUtil.isEmpty(text)) {
 			return new ArrayList<>(0);
 		}
@@ -362,7 +364,7 @@ public class StrSplitter {
 	/**
 	 * 通过正则切分字符串
 	 *
-	 * @param str            字符串
+	 * @param text           字符串
 	 * @param separatorRegex 分隔符正则
 	 * @param limit          限制分片数
 	 * @param isTrim         是否去除切分字符串后每个元素两边的空格
@@ -370,9 +372,9 @@ public class StrSplitter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitByRegex(String str, String separatorRegex, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> splitByRegex(String text, String separatorRegex, int limit, boolean isTrim, boolean ignoreEmpty) {
 		final Pattern pattern = PatternPool.get(separatorRegex);
-		return split(str, pattern, limit, isTrim, ignoreEmpty);
+		return split(text, pattern, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -387,7 +389,8 @@ public class StrSplitter {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(String text, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty) {
-		if (StrUtil.isEmpty(text)) {
+		Assert.notNull(text, "Text must be not null!");
+		if (text.length() < 1) {
 			return new ArrayList<>(0);
 		}
 		final SplitIter splitIter = new SplitIter(text, new PatternFinder(separatorPattern), limit, ignoreEmpty);
