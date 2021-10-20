@@ -24,7 +24,7 @@ import java.util.List;
 public class ZipUtilTest {
 
 	@Test
-	public void addFileTest() throws IOException {
+	public void appendTest() throws IOException {
 		File appendFile = FileUtil.file("test-zip/addFile.txt");
 		File zipFile = FileUtil.file("test-zip/test.zip");
 
@@ -34,23 +34,27 @@ public class ZipUtilTest {
 		FileUtil.copy(zipFile, tempZipFile, true);
 
 		// test file add
-		List<String> beforeNames = zipEntryNames(zipFile);
-		ZipUtil.addFile(zipFile.getAbsolutePath(), appendFile.getAbsolutePath());
-		List<String> afterNames = zipEntryNames(zipFile);
+		List<String> beforeNames = zipEntryNames(tempZipFile);
+		ZipUtil.append(tempZipFile.toPath(), appendFile.toPath());
+		List<String> afterNames = zipEntryNames(tempZipFile);
+
+		// 确认增加了文件
+		Assert.assertEquals(beforeNames.size() + 1, afterNames.size());
 		Assert.assertTrue(afterNames.containsAll(beforeNames));
 		Assert.assertTrue(afterNames.contains(appendFile.getName()));
 
 		// test dir add
-		beforeNames = afterNames;
+		beforeNames = zipEntryNames(tempZipFile);
 		File addDirFile = FileUtil.file("test-zip/test-add");
-		ZipUtil.addFile(zipFile.getAbsolutePath(), addDirFile.getAbsolutePath());
-		afterNames = zipEntryNames(zipFile);
+		ZipUtil.append(tempZipFile.toPath(), addDirFile.toPath());
+		afterNames = zipEntryNames(tempZipFile);
 
+		// 确认增加了文件和目录，增加目录和目录下一个文件，故此处+2
+		Assert.assertEquals(beforeNames.size() + 2, afterNames.size());
 		Assert.assertTrue(afterNames.containsAll(beforeNames));
 		Assert.assertTrue(afterNames.contains(appendFile.getName()));
 
 		// rollback
-		FileUtil.copy(tempZipFile, zipFile, true);
 		Assert.assertTrue(String.format("delete temp file %s failed", tempZipFile.getCanonicalPath()), tempZipFile.delete());
 	}
 

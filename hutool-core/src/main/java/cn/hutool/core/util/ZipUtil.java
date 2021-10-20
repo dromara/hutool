@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.compress.Deflate;
 import cn.hutool.core.compress.Gzip;
+import cn.hutool.core.compress.ZipCopyVisitor;
 import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.compress.ZipWriter;
 import cn.hutool.core.exceptions.UtilException;
@@ -10,7 +11,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
-import cn.hutool.core.io.file.visitor.CopyVisitor;
+import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
 
 import java.io.BufferedInputStream;
@@ -22,12 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.CopyOption;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +40,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * 压缩工具类
  *
- * @see cn.hutool.core.compress.ZipWriter
  * @author Looly
+ * @see cn.hutool.core.compress.ZipWriter
  */
 public class ZipUtil {
 
@@ -84,25 +84,29 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 在zip文件中添加新文件, 如果已经存在则不会有效果
+	 * 在zip文件中添加新文件或目录<br>
+	 * 新文件添加在zip根目录，文件夹包括其本身和内容<br>
+	 * 如果待添加文件夹是系统根路径（如/或c:/），则只复制文件夹下的内容
 	 *
-	 * @param zipFilePathStr    zip文件存储路径
-	 * @param appendFilePathStr 待添加文件路径(可以是文件夹)
+	 * @param zipPath        zip文件的Path
+	 * @param appendFilePath 待添加文件Path(可以是文件夹)
+	 * @param options        拷贝选项，可选是否覆盖等
+	 * @since 5.7.15
 	 */
-	public static void addFile(String zipFilePathStr, String appendFilePathStr) throws IOException {
-		Path zipPath = Paths.get(zipFilePathStr);
-		Path appendFilePath = Paths.get(appendFilePathStr);
-
+	public static void append(Path zipPath, Path appendFilePath, CopyOption... options) throws IOException {
 		try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
-			Path root = zipFileSystem.getPath("/");
-			Path dest = zipFileSystem.getPath(root.toString(), appendFilePath.getFileName().toString());
-			if (!Files.isDirectory(appendFilePath)) {
-				Files.copy(appendFilePath, dest, StandardCopyOption.COPY_ATTRIBUTES);
+			if (Files.isDirectory(appendFilePath)) {
+				Path source = appendFilePath.getParent();
+				if (null == source) {
+					// 如果用户提供的是根路径，则不复制目录，直接复制目录下的内容
+					source = appendFilePath;
+				}
+				Files.walkFileTree(appendFilePath, new ZipCopyVisitor(source, zipFileSystem, options));
 			} else {
-				Files.walkFileTree(appendFilePath, new CopyVisitor(appendFilePath, zipFileSystem.getPath(zipFilePathStr)));
+				Files.copy(appendFilePath, zipFileSystem.getPath(PathUtil.getName(appendFilePath)), options);
 			}
 		} catch (FileAlreadyExistsException ignored) {
-			// 文件已存在, 跳过
+			// 不覆盖情况下，文件已存在, 跳过
 		}
 	}
 
@@ -271,7 +275,7 @@ public class ZipUtil {
 	 */
 	@Deprecated
 	public static void zip(ZipOutputStream zipOutputStream, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
-		try(final ZipWriter zipWriter = new ZipWriter(zipOutputStream)){
+		try (final ZipWriter zipWriter = new ZipWriter(zipOutputStream)) {
 			zipWriter.add(withSrcDir, filter, srcFiles);
 		}
 	}
@@ -370,7 +374,7 @@ public class ZipUtil {
 			throw new IllegalArgumentException("Paths length is not equals to ins length !");
 		}
 
-		try(final ZipWriter zipWriter = ZipWriter.of(zipFile, charset)){
+		try (final ZipWriter zipWriter = ZipWriter.of(zipFile, charset)) {
 			for (int i = 0; i < paths.length; i++) {
 				zipWriter.add(paths[i], ins[i]);
 			}
@@ -395,7 +399,7 @@ public class ZipUtil {
 			throw new IllegalArgumentException("Paths length is not equals to ins length !");
 		}
 
-		try(final ZipWriter zipWriter = ZipWriter.of(out, DEFAULT_CHARSET)){
+		try (final ZipWriter zipWriter = ZipWriter.of(out, DEFAULT_CHARSET)) {
 			for (int i = 0; i < paths.length; i++) {
 				zipWriter.add(paths[i], ins[i]);
 			}
@@ -419,7 +423,7 @@ public class ZipUtil {
 			throw new IllegalArgumentException("Paths length is not equals to ins length !");
 		}
 
-		try(final ZipWriter zipWriter = new ZipWriter(zipOutputStream)){
+		try (final ZipWriter zipWriter = new ZipWriter(zipOutputStream)) {
 			for (int i = 0; i < paths.length; i++) {
 				zipWriter.add(paths[i], ins[i]);
 			}
@@ -559,7 +563,7 @@ public class ZipUtil {
 					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
 		}
 
-		try(final ZipReader reader = new ZipReader(zipFile)){
+		try (final ZipReader reader = new ZipReader(zipFile)) {
 			reader.readTo(outFile);
 		}
 		return outFile;
@@ -602,7 +606,7 @@ public class ZipUtil {
 	 * @since 5.5.2
 	 */
 	public static void read(ZipFile zipFile, Consumer<ZipEntry> consumer) {
-		try(final ZipReader reader = new ZipReader(zipFile)){
+		try (final ZipReader reader = new ZipReader(zipFile)) {
 			reader.read(consumer);
 		}
 	}
@@ -636,7 +640,7 @@ public class ZipUtil {
 	 * @since 4.5.8
 	 */
 	public static File unzip(ZipInputStream zipStream, File outFile) throws UtilException {
-		try(final ZipReader reader = new ZipReader(zipStream)){
+		try (final ZipReader reader = new ZipReader(zipStream)) {
 			reader.readTo(outFile);
 		}
 		return outFile;
@@ -650,7 +654,7 @@ public class ZipUtil {
 	 * @since 5.5.2
 	 */
 	public static void read(ZipInputStream zipStream, Consumer<ZipEntry> consumer) {
-		try(final ZipReader reader = new ZipReader(zipStream)){
+		try (final ZipReader reader = new ZipReader(zipStream)) {
 			reader.read(consumer);
 		}
 	}
@@ -702,7 +706,7 @@ public class ZipUtil {
 	 * @since 4.1.8
 	 */
 	public static byte[] unzipFileBytes(File zipFile, Charset charset, String name) {
-		try(final ZipReader reader = ZipReader.of(zipFile, charset)){
+		try (final ZipReader reader = ZipReader.of(zipFile, charset)) {
 			return IoUtil.readBytes(reader.get(name));
 		}
 	}

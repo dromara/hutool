@@ -1,10 +1,11 @@
-package cn.hutool.core.io.file.visitor;
+package cn.hutool.core.compress;
 
-import cn.hutool.core.io.file.PathUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,66 +13,56 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * 文件拷贝的FileVisitor实现，用于递归遍历拷贝目录，此类非线程安全<br>
+ * Zip文件拷贝的FileVisitor实现，zip中追加文件，此类非线程安全<br>
  * 此类在遍历源目录并复制过程中会自动创建目标目录中不存在的上级目录。
  *
  * @author looly
- * @since 5.5.1
+ * @since 5.7.15
  */
-public class CopyVisitor extends SimpleFileVisitor<Path> {
+public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 
 	/**
 	 * 源Path，或基准路径，用于计算被拷贝文件的相对路径
 	 */
 	private final Path source;
-	private final Path target;
+	private final FileSystem fileSystem;
 	private final CopyOption[] copyOptions;
-
-	/**
-	 * 标记目标目录是否创建，省略每次判断目标是否存在
-	 */
-	private boolean isTargetCreated;
 
 	/**
 	 * 构造
 	 *
-	 * @param source      源Path，或基准路径，用于计算被拷贝文件的相对路径
-	 * @param target      目标Path
+	 * @param source 源Path，或基准路径，用于计算被拷贝文件的相对路径
+	 * @param fileSystem 目标Zip文件
 	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
-	public CopyVisitor(Path source, Path target, CopyOption... copyOptions) {
-		if (PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)) {
-			throw new IllegalArgumentException("Target must be a directory");
-		}
+	public ZipCopyVisitor(Path source, FileSystem fileSystem, CopyOption... copyOptions) {
 		this.source = source;
-		this.target = target;
+		this.fileSystem = fileSystem;
 		this.copyOptions = copyOptions;
 	}
 
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		initTargetDir();
-		// 将当前目录相对于源路径转换为相对于目标路径
 		final Path targetDir = resolveTarget(dir);
-
-		// 在目录不存在的情况下，copy方法会创建新目录
-		try {
-			Files.copy(dir, targetDir, copyOptions);
-		} catch (FileAlreadyExistsException e) {
-			if (false == Files.isDirectory(targetDir)) {
-				// 目标文件存在抛出异常，目录忽略
-				throw e;
+		if(StrUtil.isNotEmpty(targetDir.toString())){
+			// 在目标的Zip文件中的相对位置创建目录
+			try {
+				Files.copy(dir, targetDir, copyOptions);
+			} catch (FileAlreadyExistsException e) {
+				if (false == Files.isDirectory(targetDir)) {
+					throw e;
+				}
 			}
 		}
+
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-			throws IOException {
-		initTargetDir();
+	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		// 如果目标存在，无论目录还是文件都抛出FileAlreadyExistsException异常，此处不做特别处理
 		Files.copy(file, resolveTarget(file), copyOptions);
+
 		return FileVisitResult.CONTINUE;
 	}
 
@@ -88,16 +79,6 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 * @return 目标Path
 	 */
 	private Path resolveTarget(Path file) {
-		return target.resolve(source.relativize(file));
-	}
-
-	/**
-	 * 初始化目标文件或目录
-	 */
-	private void initTargetDir() {
-		if (false == this.isTargetCreated) {
-			PathUtil.mkdir(this.target);
-			this.isTargetCreated = true;
-		}
+		return fileSystem.getPath(source.relativize(file).toString());
 	}
 }
