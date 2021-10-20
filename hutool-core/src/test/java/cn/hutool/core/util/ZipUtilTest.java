@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
@@ -12,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link ZipUtil}单元测试
@@ -20,6 +23,50 @@ import java.nio.charset.Charset;
  */
 public class ZipUtilTest {
 
+	@Test
+	public void addFileTest() throws IOException {
+		File appendFile = FileUtil.file("test-zip/addFile.txt");
+		File zipFile = FileUtil.file("test-zip/test.zip");
+
+		// 用于测试完成后将被测试文件恢复
+		File tempZipFile = FileUtil.createTempFile(FileUtil.file("test-zip"));
+		tempZipFile.deleteOnExit();
+		FileUtil.copy(zipFile, tempZipFile, true);
+
+		// test file add
+		List<String> beforeNames = zipEntryNames(zipFile);
+		ZipUtil.addFile(zipFile.getAbsolutePath(), appendFile.getAbsolutePath());
+		List<String> afterNames = zipEntryNames(zipFile);
+		Assert.assertTrue(afterNames.containsAll(beforeNames));
+		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+
+		// test dir add
+		beforeNames = afterNames;
+		File addDirFile = FileUtil.file("test-zip/test-add");
+		ZipUtil.addFile(zipFile.getAbsolutePath(), addDirFile.getAbsolutePath());
+		afterNames = zipEntryNames(zipFile);
+
+		Assert.assertTrue(afterNames.containsAll(beforeNames));
+		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+
+		// rollback
+		FileUtil.copy(tempZipFile, zipFile, true);
+		Assert.assertTrue(String.format("delete temp file %s failed", tempZipFile.getCanonicalPath()), tempZipFile.delete());
+	}
+
+	/**
+	 * 获取zip文件中所有一级文件/文件夹的name
+	 *
+	 * @param zipFile 待测试的zip文件
+	 * @return zip文件中一级目录下的所有文件/文件夹名
+	 */
+	private List<String> zipEntryNames(File zipFile) {
+		List<String> fileNames = new ArrayList<>();
+		ZipReader reader = ZipReader.of(zipFile, CharsetUtil.CHARSET_UTF_8);
+		reader.read(zipEntry -> fileNames.add(zipEntry.getName()));
+		reader.close();
+		return fileNames;
+	}
 
 	@Test
 	@Ignore
