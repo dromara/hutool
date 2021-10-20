@@ -12,7 +12,8 @@
 * 【core   】     ReUtil增加命名分组重载（pr#439@Gitee）
 * 【json   】     toString和writer增加Filter（issue#I4DQNQ@Gitee）
 * 【core   】     ContentType增加build重载（pr#1898@Github）
-* 
+* 【bom    】     支持scope=import方式引入（issue#1561@Github）
+
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
 * 【poi    】     修复ExcelWriter多余调试信息导致的问题（issue#1884@Github）
