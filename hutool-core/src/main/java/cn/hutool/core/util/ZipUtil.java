@@ -9,6 +9,8 @@ import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileSystemUtil;
+import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.resource.Resource;
 
 import java.io.BufferedInputStream;
@@ -20,6 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +80,29 @@ public class ZipUtil {
 			return zipFile.getInputStream(zipEntry);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 在zip文件中添加新文件, 如果已经存在则不会有效果
+	 *
+	 * @param zipFilePathStr    zip文件存储路径
+	 * @param appendFilePathStr 待添加文件路径(可以是文件夹)
+	 */
+	public static void addFile(String zipFilePathStr, String appendFilePathStr) throws IOException {
+		Path zipPath = Paths.get(zipFilePathStr);
+		Path appendFilePath = Paths.get(appendFilePathStr);
+
+		try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
+			Path root = zipFileSystem.getPath("/");
+			Path dest = zipFileSystem.getPath(root.toString(), appendFilePath.getFileName().toString());
+			if (!Files.isDirectory(appendFilePath)) {
+				Files.copy(appendFilePath, dest, StandardCopyOption.COPY_ATTRIBUTES);
+			} else {
+				Files.walkFileTree(appendFilePath, new CopyVisitor(appendFilePath, zipFileSystem.getPath(zipFilePathStr)));
+			}
+		} catch (FileAlreadyExistsException ignored) {
+			// 文件已存在, 跳过
 		}
 	}
 
