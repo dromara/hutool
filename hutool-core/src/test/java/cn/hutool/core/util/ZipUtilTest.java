@@ -160,4 +160,24 @@ public class ZipUtilTest {
 		}
 	}
 
+	@Test
+	@Ignore
+	public void zipStreamTest2(){
+		// https://github.com/dromara/hutool/issues/944
+		String file1 = "d:/test/a.txt";
+		String file2 = "d:/test/a.txt";
+		String file3 = "d:/test/asn1.key";
+
+		String zip = "d:/test/test2.zip";
+		try (OutputStream out = new FileOutputStream(zip)){
+			//实际应用中, out 为 HttpServletResponse.getOutputStream
+			ZipUtil.zip(out, Charset.defaultCharset(), false, null,
+					new File(file1),
+					new File(file2),
+					new File(file3)
+			);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
 }
