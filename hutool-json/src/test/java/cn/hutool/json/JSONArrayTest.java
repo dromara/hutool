@@ -263,4 +263,12 @@ public class JSONArrayTest {
 		final String s = json1.toJSONString(0, (pair) -> false == pair.getValue().equals("value2"));
 		Assert.assertEquals("[\"value1\",\"value3\",true]", s);
 	}
+
+	@Test
+	public void putNullTest(){
+		final JSONArray array = JSONUtil.createArray(JSONConfig.create().setIgnoreNullValue(false));
+		array.set(null);
+
+		Assert.assertEquals("[null]", array.toString());
+	}
 }
