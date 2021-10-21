@@ -271,4 +271,14 @@ public class UrlBuilderTest {
 		urlBuilder = UrlBuilder.ofHttp(urlBuilder.toString());
 		Assert.assertEquals(urlBuilder.toString(), urlBuilder.toString());
 	}
+
+	@Test
+	public void slashEncodeTest(){
+		// https://github.com/dromara/hutool/issues/1904
+		// 在query中，"/"是不可转义字符
+		// 见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.4
+		String url = "https://invoice.maycur.com/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx?download/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx&e=1630491088";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals(url, urlBuilder.toString());
+	}
 }
