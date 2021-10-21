@@ -7,8 +7,6 @@ import cn.hutool.extra.ssh.Sftp;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.List;
-
 public class FtpTest {
 
 	@Test
@@ -25,12 +23,9 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void uploadTest() {
-		Ftp ftp = new Ftp("looly.centos");
+		Ftp ftp = new Ftp("localhost");
 
-		List<String> ls = ftp.ls("/file");
-		Console.log(ls);
-
-		boolean upload = ftp.upload("/file/aaa", FileUtil.file("E:/qrcodeWithLogo.jpg"));
+		boolean upload = ftp.upload("/temp", FileUtil.file("d:/test/test.zip"));
 		Console.log(upload);
 
 		IoUtil.close(ftp);
