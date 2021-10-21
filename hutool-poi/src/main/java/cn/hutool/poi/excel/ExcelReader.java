@@ -281,11 +281,13 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		short columnSize;
 		for (int y = startRowIndex; y <= endRowIndex; y++) {
 			row = this.sheet.getRow(y);
-			columnSize = row.getLastCellNum();
-			Cell cell;
-			for (short x = 0; x < columnSize; x++) {
-				cell = row.getCell(x);
-				cellHandler.handle(cell, CellUtil.getCellValue(cell));
+			if(null != row){
+				columnSize = row.getLastCellNum();
+				Cell cell;
+				for (short x = 0; x < columnSize; x++) {
+					cell = row.getCell(x);
+					cellHandler.handle(cell, CellUtil.getCellValue(cell));
+				}
 			}
 		}
 	}

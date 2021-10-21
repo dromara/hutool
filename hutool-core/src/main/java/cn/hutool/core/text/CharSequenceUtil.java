@@ -1729,16 +1729,14 @@ public class CharSequenceUtil {
 	/**
 	 * 切分字符串
 	 *
-	 * @param str       被切分的字符串
+	 * @param text      被切分的字符串
 	 * @param separator 分隔符字符
 	 * @param limit     限制分片数
 	 * @return 切分后的数组
 	 */
-	public static String[] splitToArray(CharSequence str, char separator, int limit) {
-		if (null == str) {
-			return new String[]{};
-		}
-		return StrSplitter.splitToArray(str.toString(), separator, limit, false, false);
+	public static String[] splitToArray(CharSequence text, char separator, int limit) {
+		Assert.notNull(text, "Text must be not null!");
+		return StrSplitter.splitToArray(text.toString(), separator, limit, false, false);
 	}
 
 	/**

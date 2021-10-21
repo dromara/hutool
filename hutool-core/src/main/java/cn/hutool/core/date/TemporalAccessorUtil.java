@@ -138,7 +138,10 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			// 指定本地时间转换 为Instant，取当天日期
 			result = ((OffsetTime) temporalAccessor).atDate(LocalDate.now()).toInstant();
 		} else {
-			result = Instant.from(temporalAccessor);
+			// issue#1891@Github
+			// Instant.from不能完成日期转换
+			//result = Instant.from(temporalAccessor);
+			result = toInstant(LocalDateTimeUtil.of(temporalAccessor));
 		}
 
 		return result;

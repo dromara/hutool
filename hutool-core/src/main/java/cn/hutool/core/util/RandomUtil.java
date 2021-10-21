@@ -164,6 +164,16 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 随机汉字（'\u4E00'-'\u9FFF'）
+	 *
+	 * @return 随机的汉字字符
+	 * @since 5.7.15
+	 */
+	public static char randomChinese() {
+		return (char) randomInt('\u4E00', '\u9FFF');
+	}
+
+	/**
 	 * 获得指定范围内的随机数
 	 *
 	 * @param min 最小数（包含）

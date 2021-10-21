@@ -312,7 +312,7 @@ public class UrlQuery {
 	private static String toStr(CharSequence str, Charset charset, boolean isEncode) {
 		String result = StrUtil.str(str);
 		if (isEncode) {
-			result = URLUtil.encodeAll(result, charset);
+			result = URLUtil.encodeFragment(result, charset);
 		}
 		return result;
 	}

@@ -664,6 +664,32 @@ public class BeanUtil {
 		).copy();
 	}
 
+	/**
+	 * 对象转Map<br>
+	 * 通过自定义{@link CopyOptions} 完成抓换选项，以便实现：
+	 *
+	 * <pre>
+	 * 1. 字段筛选，可以去除不需要的字段
+	 * 2. 字段变换，例如实现驼峰转下划线
+	 * 3. 自定义字段前缀或后缀等等
+	 * 4. 字段值处理
+	 * ...
+	 * </pre>
+	 *
+	 * @param bean        bean对象
+	 * @param targetMap   目标的Map
+	 * @param copyOptions 拷贝选项
+	 * @return Map
+	 * @since 5.7.15
+	 */
+	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, CopyOptions copyOptions) {
+		if (null == bean) {
+			return null;
+		}
+
+		return BeanCopier.create(bean, targetMap, copyOptions).copy();
+	}
+
 	// --------------------------------------------------------------------------------------------- copyProperties
 
 	/**

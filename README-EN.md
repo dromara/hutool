@@ -117,6 +117,24 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 -------------------------------------------------------------------------------
 
+## 🪙Support Hutool
+
+### 💳Donate
+
+If you think Hutool is good, you can donate to buy the author a pack of chili~, thanks in advance ^_^.
+
+[Gitee donate](https://gitee.com/dromara/hutool)
+
+[Dromara donate](https://dromara.gitee.io/donate.html)
+
+### 👕Shop about Hutool
+
+We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
+
+👉 [Hutool Shop](https://m.tb.cn/h.fVxoBOm?sm=2756b2) 👈
+
+-------------------------------------------------------------------------------
+
 ## 📦Install
 
 ### 🍊Maven
@@ -124,18 +142,18 @@ Each module can be introduced individually, or all modules can be introduced by 
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.7.14</version>
+    <version>5.7.15</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.7.14'
+implementation 'cn.hutool:hutool-all:5.7.15'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.14/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.15/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -190,24 +208,6 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 [![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
-
-## 💳Donate
-
-If you think Hutool is good, you can donate to buy tshe author a pack of chili~, thanks in advance ^_^.
-
-[Gitee donate](https://gitee.com/dromara/hutool)
-
-[Dromara donate](https://dromara.gitee.io/donate.html)
-
-## 👕shop
-
-We provide the T-Shirt with Hutool Logo, please visit the shop：
-
-[Hutool T-Shirt](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
-
-<div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/t_shirt.jpg">
-</div>
 
 ## 📌WeChat Official Account
 

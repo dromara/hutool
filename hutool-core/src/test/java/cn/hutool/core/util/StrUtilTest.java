@@ -81,6 +81,16 @@ public class StrUtilTest {
 		Assert.assertEquals("", split.get(2));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void splitNullTest() {
+		StrUtil.split(null, '.');
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void splitToArrayNullTest() {
+		StrUtil.splitToArray(null, '.');
+	}
+
 	@Test
 	public void splitToLongTest() {
 		String str = "1,2,3,4, 5";

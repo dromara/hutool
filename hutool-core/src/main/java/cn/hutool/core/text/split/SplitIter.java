@@ -53,7 +53,6 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 
 	@Override
 	protected String computeNext() {
-		Assert.notNull(this.text, "Text to find must be not null!");
 		// 达到数量上限或末尾，结束
 		if (count >= limit || offset > text.length()) {
 			return null;

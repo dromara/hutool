@@ -53,6 +53,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * 集合相关工具类
@@ -1050,8 +1051,8 @@ public class CollUtil {
 	 * @param end   结束位置（不包含）
 	 * @param step  步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
-	 * @since 4.0.6
 	 * @see ListUtil#sub(List, int, int, int)
+	 * @since 4.0.6
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
 		return ListUtil.sub(list, start, end, step);
@@ -1073,11 +1074,11 @@ public class CollUtil {
 	/**
 	 * 截取集合的部分
 	 *
-	 * @param <T>   集合元素类型
-	 * @param collection  被截取的数组
-	 * @param start 开始位置（包含）
-	 * @param end   结束位置（不包含）
-	 * @param step  步进
+	 * @param <T>        集合元素类型
+	 * @param collection 被截取的数组
+	 * @param start      开始位置（包含）
+	 * @param end        结束位置（不包含）
+	 * @param step       步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空集合
 	 * @since 4.0.6
 	 */
@@ -1086,7 +1087,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 
-		final List<T> list = collection instanceof List ? (List<T>)collection : ListUtil.toList(collection);
+		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.toList(collection);
 		return sub(list, start, end, step);
 	}
 
@@ -1573,6 +1574,20 @@ public class CollUtil {
 	 */
 	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, T defaultCollection) {
 		return isEmpty(collection) ? defaultCollection : collection;
+	}
+
+	/**
+	 * 如果给定集合为空，返回默认集合
+	 *
+	 * @param <T>        集合类型
+	 * @param <E>        集合元素类型
+	 * @param collection 集合
+	 * @param supplier   默认值懒加载函数
+	 * @return 非空（empty）的原集合或默认集合
+	 * @since 5.7.15
+	 */
+	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, Supplier<? extends T> supplier) {
+		return isEmpty(collection) ? supplier.get() : collection;
 	}
 
 	/**
@@ -2948,6 +2963,9 @@ public class CollUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
+		if (list1 == list2) {
+			return true;
+		}
 		if (list1 == null || list2 == null || list1.size() != list2.size()) {
 			return false;
 		}

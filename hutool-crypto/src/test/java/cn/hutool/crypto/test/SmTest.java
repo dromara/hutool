@@ -81,4 +81,6 @@ public class SmTest {
 		String digest = hMac.digestHex(content);
 		Assert.assertEquals("493e3f9a1896b43075fbe54658076727960d69632ac6b6ed932195857a6840c6", digest);
 	}
+
+
 }

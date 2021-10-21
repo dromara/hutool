@@ -69,4 +69,14 @@ public class JWTValidatorTest {
 		boolean validate = JWT.of(token).setKey(key).validate(0);
 		Assert.assertFalse(validate);
 	}
+
+	@Test(expected = ValidateException.class)
+	public void validateDateTest(){
+		final JWT jwt = JWT.create()
+				.setPayload("id", 123)
+				.setPayload("username", "hutool")
+				.setExpiresAt(DateUtil.parse("2021-10-13 09:59:00"));
+
+		JWTValidator.of(jwt).validateDate(DateUtil.date());
+	}
 }
