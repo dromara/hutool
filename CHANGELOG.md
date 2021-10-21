@@ -25,6 +25,7 @@
 * 【cache  】     修复LRUCache线程安全问题（issue#1895@Github）
 * 【crypto 】     修复KeyUtil异常信息参数丢失问题（issue#1902@Github）
 * 【core   】     修复StrUtil.split和splittoArray不一致问题（issue#I4ELU5@Github）
+* 【core   】     修复SymmetricCrypto未关闭CipherOutputStream导致的问题（issue#I4EMST@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

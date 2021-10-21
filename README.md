@@ -202,21 +202,19 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
 
-点击以下链接，将页面拉到最下方点击“捐赠”即可。
-
 [Gitee上捐赠](https://gitee.com/dromara/hutool)
 
 [捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
 
 ## 👕周边
 
-我们提供了印有Hutool Logo的主题T恤，欢迎点击购买：
+你也可以通过购买Hutool的周边商品来支持Hutool维护哦！
 
-[HutoolT恤商店](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
+我们提供了印有Hutool Logo的周边商品，欢迎点击购买支持：
 
-<div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/t_shirt.jpg">
-</div>
+[Hutool周边商店-T恤](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
+
+[Hutool周边商店-卫衣](https://m.tb.cn/h.fUM4d6B?sm=4c0a5f)
 
 ## 📌公众号
 

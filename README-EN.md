@@ -201,13 +201,11 @@ If you think Hutool is good, you can donate to buy tshe author a pack of chili~,
 
 ## 👕shop
 
-We provide the T-Shirt with Hutool Logo, please visit the shop：
+We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 
 [Hutool T-Shirt](https://m.tb.cn/h.f47W8zc?sm=7d2b95)
 
-<div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/t_shirt.jpg">
-</div>
+[Hutool Sweater](https://m.tb.cn/h.fUM4d6B?sm=4c0a5f)
 
 ## 📌WeChat Official Account
 
