@@ -192,9 +192,9 @@ public class UrlBuilderTest {
 				"&amp;sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
 		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
-		// 原URL中的&amp;替换为&，value中的=被编码为%3D
+		// 原URL中的&amp;替换为&
 		Assert.assertEquals("https://mp.weixin.qq.com/s?" +
-				"__biz=MzI5NjkyNTIxMg%3D%3D" +
+				"__biz=MzI5NjkyNTIxMg==" +
 				"&mid=100000465&idx=1" +
 				"&sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7",
@@ -240,7 +240,7 @@ public class UrlBuilderTest {
 	public void testEncodeInQuery() {
 		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
-		Assert.assertEquals("a=123&b=4%3F6&c=789", urlBuilder.getQueryStr());
+		Assert.assertEquals("a=123&b=4?6&c=789", urlBuilder.getQueryStr());
 	}
 
 	@Test
