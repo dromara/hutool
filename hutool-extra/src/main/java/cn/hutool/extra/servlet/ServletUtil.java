@@ -86,7 +86,7 @@ public class ServletUtil {
 
 	/**
 	 * 获取请求体<br>
-	 * 调用该方法后，getParam方法将失效
+	 * 不要多次调用该方法
 	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体
@@ -102,7 +102,7 @@ public class ServletUtil {
 
 	/**
 	 * 获取请求体byte[]<br>
-	 * 调用该方法后，getParam方法将失效
+	 * 不要多次调用该方法
 	 *
 	 * @param request {@link ServletRequest}
 	 * @return 获得请求体byte[]
