@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -699,6 +700,16 @@ public class DateTime extends Date {
 	 */
 	public java.sql.Date toSqlDate() {
 		return new java.sql.Date(getTime());
+	}
+
+	/**
+	 * 转换为 {@link LocalDateTime}
+	 *
+	 * @return {@link LocalDateTime}
+	 * @since 5.7.16
+	 */
+	public LocalDateTime toLocalDateTime() {
+		return LocalDateTimeUtil.of(this);
 	}
 
 	/**

@@ -36,6 +36,7 @@ import java.util.Date;
  * @since 3.2.0
  */
 public class Mail implements Builder<MimeMessage> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 邮箱帐户信息以及一些客户端配置信息
@@ -262,7 +263,10 @@ public class Mail implements Builder<MimeMessage> {
 				for (DataSource attachment : attachments) {
 					bodyPart = new MimeBodyPart();
 					bodyPart.setDataHandler(new DataHandler(attachment));
-					nameEncoded = InternalMailUtil.encodeText(attachment.getName(), charset);
+					nameEncoded = attachment.getName();
+					if(this.mailAccount.isEncodefilename()){
+						nameEncoded = InternalMailUtil.encodeText(nameEncoded, charset);
+					}
 					// 普通附件文件名
 					bodyPart.setFileName(nameEncoded);
 					if (StrUtil.startWith(attachment.getContentType(), "image/")) {

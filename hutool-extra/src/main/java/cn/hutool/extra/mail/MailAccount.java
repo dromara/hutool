@@ -34,8 +34,10 @@ public class MailAccount implements Serializable {
 	private static final String SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKET_FACTORY_PORT = "smtp.socketFactory.port";
 
+	// 其他
 	private static final String MAIL_DEBUG = "mail.debug";
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
+	// private static final String ENCODE_FILE_NAME = "mail.mime.encodefilename";
 
 	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
@@ -75,7 +77,11 @@ public class MailAccount implements Serializable {
 	/**
 	 * 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
 	 */
-	private boolean splitlongparameters;
+	private boolean splitlongparameters = false;
+	/**
+	 * 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 */
+	private boolean encodefilename = true;
 
 	/**
 	 * 使用 STARTTLS安全连接，STARTTLS是对纯文本通信协议的扩展。它将纯文本连接升级为加密连接（TLS或SSL）， 而不是使用一个单独的加密通信端口。
@@ -330,6 +336,26 @@ public class MailAccount implements Serializable {
 	 */
 	public void setSplitlongparameters(boolean splitlongparameters) {
 		this.splitlongparameters = splitlongparameters;
+	}
+
+	/**
+	 * 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 *
+	 * @return 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 * @since 5.7.16
+	 */
+	public boolean isEncodefilename() {
+		return encodefilename;
+	}
+
+	/**
+	 * 设置对于文件名是否使用{@link #charset}编码
+	 *
+	 * @param encodefilename 对于文件名是否使用{@link #charset}编码
+	 * @since 5.7.16
+	 */
+	public void setEncodefilename(boolean encodefilename) {
+		this.encodefilename = encodefilename;
 	}
 
 	/**
