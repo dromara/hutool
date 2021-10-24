@@ -21,6 +21,7 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
 import java.io.IOException;
@@ -264,7 +265,7 @@ public class Mail implements Builder<MimeMessage> {
 					bodyPart = new MimeBodyPart();
 					bodyPart.setDataHandler(new DataHandler(attachment));
 					nameEncoded = attachment.getName();
-					if(this.mailAccount.isEncodefilename()){
+					if (this.mailAccount.isEncodefilename()) {
 						nameEncoded = InternalMailUtil.encodeText(nameEncoded, charset);
 					}
 					// 普通附件文件名
@@ -388,7 +389,7 @@ public class Mail implements Builder<MimeMessage> {
 		try {
 			return doSend();
 		} catch (MessagingException e) {
-			if(e instanceof SendFailedException){
+			if (e instanceof SendFailedException) {
 				// 当地址无效时，显示更加详细的无效地址信息
 				final Address[] invalidAddresses = ((SendFailedException) e).getInvalidAddresses();
 				final String msg = StrUtil.format("Invalid Addresses: {}", ArrayUtil.toString(invalidAddresses));
@@ -430,7 +431,7 @@ public class Mail implements Builder<MimeMessage> {
 			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
 		}
 		// 标题
-		msg.setSubject(this.title, charset.name());
+		msg.setSubject(this.title, (null == charset) ? null : charset.name());
 		// 发送时间
 		msg.setSentDate(new Date());
 		// 内容和附件
@@ -456,14 +457,15 @@ public class Mail implements Builder<MimeMessage> {
 	/**
 	 * 构建邮件信息主体
 	 *
-	 * @param charset 编码
+	 * @param charset 编码，{@code null}则使用{@link MimeUtility#getDefaultJavaCharset()}
 	 * @return 邮件信息主体
 	 * @throws MessagingException 消息异常
 	 */
 	private Multipart buildContent(Charset charset) throws MessagingException {
+		final String charsetStr = null != charset ? charset.name() : MimeUtility.getDefaultJavaCharset();
 		// 正文
 		final MimeBodyPart body = new MimeBodyPart();
-		body.setContent(content, StrUtil.format("text/{}; charset={}", isHtml ? "html" : "plain", charset));
+		body.setContent(content, StrUtil.format("text/{}; charset={}", isHtml ? "html" : "plain", charsetStr));
 		this.multipart.addBodyPart(body);
 
 		return this.multipart;
@@ -478,7 +480,7 @@ public class Mail implements Builder<MimeMessage> {
 	private Session getSession() {
 		final Session session = MailUtil.getSession(this.mailAccount, this.useGlobalSession);
 
-		if(null != this.debugOutput){
+		if (null != this.debugOutput) {
 			session.setDebugOut(debugOutput);
 		}
 
