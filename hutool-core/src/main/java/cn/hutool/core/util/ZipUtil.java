@@ -91,9 +91,10 @@ public class ZipUtil {
 	 * @param zipPath        zip文件的Path
 	 * @param appendFilePath 待添加文件Path(可以是文件夹)
 	 * @param options        拷贝选项，可选是否覆盖等
+	 * @throws IORuntimeException IO异常
 	 * @since 5.7.15
 	 */
-	public static void append(Path zipPath, Path appendFilePath, CopyOption... options) throws IOException {
+	public static void append(Path zipPath, Path appendFilePath, CopyOption... options) throws IORuntimeException {
 		try (FileSystem zipFileSystem = FileSystemUtil.createZip(zipPath.toString())) {
 			if (Files.isDirectory(appendFilePath)) {
 				Path source = appendFilePath.getParent();
@@ -107,6 +108,8 @@ public class ZipUtil {
 			}
 		} catch (FileAlreadyExistsException ignored) {
 			// 不覆盖情况下，文件已存在, 跳过
+		} catch (IOException e){
+			throw new IORuntimeException(e);
 		}
 	}
 

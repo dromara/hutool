@@ -16,7 +16,7 @@ public class RFC3986 {
 	public static final PercentCodec GEN_DELIMS = PercentCodec.of(":/?#[]&");
 
 	/**
-	 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * sub-delims = "!" / "$" / "{@code &}" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 */
 	public static final PercentCodec SUB_DELIMS = PercentCodec.of("!$&'()*+,;=");
 
