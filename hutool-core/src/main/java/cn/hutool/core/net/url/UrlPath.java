@@ -2,10 +2,10 @@ package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -127,7 +127,7 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(URLUtil.encodePathSegment(segment, charset));
+			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
 		}
 		if (withEngTag || StrUtil.isEmpty(builder)) {
 			builder.append(CharUtil.SLASH);

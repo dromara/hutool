@@ -346,5 +346,4 @@ public class HttpUtilTest {
 				.execute().body();
 		Console.log(body);
 	}
-
 }

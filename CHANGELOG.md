@@ -11,6 +11,7 @@
 * 【core   】     MailAccount增加setEncodefilename()方法，可选是否编码附件的文件名（issue#I4F160@Gitee）
 * 【core   】     MailAccount中charset增加null时的默认规则
 * 【core   】     NumberUtil.compare修正注释说明（issue#I4FAJ1@Gitee）
+* 【core   】     增加RFC3986类
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）

@@ -1,6 +1,7 @@
 package cn.hutool.core.net.url;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -425,7 +426,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return 标识符，例如#后边的部分
 	 */
 	public String getFragmentEncoded() {
-		return URLUtil.encodeFragment(this.fragment, this.charset);
+		return RFC3986.FRAGMENT.encode(this.fragment, this.charset);
 	}
 
 	/**
