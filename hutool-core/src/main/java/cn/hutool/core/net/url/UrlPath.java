@@ -29,7 +29,7 @@ public class UrlPath {
 	 * @param charset decode用的编码，null表示不做decode
 	 * @return UrlPath
 	 */
-	public static UrlPath of(String pathStr, Charset charset) {
+	public static UrlPath of(CharSequence pathStr, Charset charset) {
 		final UrlPath urlPath = new UrlPath();
 		urlPath.parse(pathStr, charset);
 		return urlPath;
@@ -97,7 +97,7 @@ public class UrlPath {
 	 * @param charset decode编码，null表示不解码
 	 * @return this
 	 */
-	public UrlPath parse(String path, Charset charset) {
+	public UrlPath parse(CharSequence path, Charset charset) {
 		if (StrUtil.isNotEmpty(path)) {
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 			if(StrUtil.endWith(path, CharUtil.SLASH)){

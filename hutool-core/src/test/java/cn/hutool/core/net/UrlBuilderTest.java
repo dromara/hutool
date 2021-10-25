@@ -281,4 +281,29 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals(url, urlBuilder.toString());
 	}
+
+	@Test
+	public void addPathEncodeTest(){
+		String url = UrlBuilder.create()
+				.setScheme("https")
+				.setHost("domain.cn")
+				.addPath("api")
+				.addPath("xxx")
+				.addPath("bbb")
+				.build();
+
+		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+	}
+
+	@Test
+	public void addPathEncodeTest2(){
+		// https://github.com/dromara/hutool/issues/1912
+		String url = UrlBuilder.create()
+				.setScheme("https")
+				.setHost("domain.cn")
+				.addPath("/api/xxx/bbb")
+				.build();
+
+		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+	}
 }
