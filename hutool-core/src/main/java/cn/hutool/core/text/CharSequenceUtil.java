@@ -2857,10 +2857,10 @@ public class CharSequenceUtil {
 			len += str.length();
 		}
 		if (isNotEmpty(prefix)) {
-			len += str.length();
+			len += prefix.length();
 		}
 		if (isNotEmpty(suffix)) {
-			len += str.length();
+			len += suffix.length();
 		}
 		StringBuilder sb = new StringBuilder(len);
 		if (isNotEmpty(prefix) && false == startWith(str, prefix)) {

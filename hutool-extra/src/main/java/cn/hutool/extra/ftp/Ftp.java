@@ -489,9 +489,9 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param file     文件
@@ -512,9 +512,9 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param destPath       服务端路径，可以为{@code null} 或者相对路径或绝对路径
