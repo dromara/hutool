@@ -736,7 +736,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 		CellStyle style = null;
 		if (null != this.styleSet) {
-			style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+			style = styleSet.getStyleByValueType(content, isSetHeaderStyle);
 		}
 
 		return merge(firstRow, lastRow, firstColumn, lastColumn, content, style);

@@ -729,6 +729,19 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void mergeForDateTest(){
+		// https://github.com/dromara/hutool/issues/1911
+
+		//通过工具类创建writer
+		String path = "d:/test/mergeForDate.xlsx";
+		FileUtil.del(path);
+		ExcelWriter writer = ExcelUtil.getWriter(path);
+		writer.merge(0, 3, 0, 2, DateUtil.date(), false);
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void changeHeaderStyleTest(){
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.of("姓名", "性别", "年龄"));
