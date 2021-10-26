@@ -579,7 +579,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	private static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
 		for (CharSequence str : strs) {
-			totalLength += (null == str ? 4 : str.length());
+			totalLength += (null == str ? 0 : str.length());
 		}
 		return totalLength;
 	}
