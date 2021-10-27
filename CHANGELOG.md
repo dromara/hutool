@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.16 (2021-10-27)
+# 5.7.16 (2021-10-28)
 
 ### 🐣新特性
 * 【core   】     增加DateTime.toLocalDateTime
@@ -13,6 +13,8 @@
 * 【core   】     NumberUtil.compare修正注释说明（issue#I4FAJ1@Gitee）
 * 【core   】     增加RFC3986类
 * 【extra  】     Sftp增加put和upload重载（issue#I4FGDH@Gitee）
+* 【core   】     TemporalUtil增加toChronoUnit、toTimeUnit方法（issue#I4FGDH@Gitee）
+* 【core   】     StopWatch增加prettyPrint重载（issue#1910@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
