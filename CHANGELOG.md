@@ -18,7 +18,8 @@
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
 * 【core   】     修复StrBuilder中总长度计算问题（issue#I4F9L7@Gitee）
 * 【core   】     修复CharSequenceUtil.wrapIfMissing预定义长度计算问题（issue#I4FDZ2@Gitee）
-* 【poi    】     修复合并单元格为日期时，导出单元格数据为数字问题（issue#1911@Gitee）
+* 【poi    】     修复合并单元格为日期时，导出单元格数据为数字问题（issue#1911@Github）
+* 【core   】     修复CompilerUtil.getFileManager参数没有使用的问题（issue#I4FIO6@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
