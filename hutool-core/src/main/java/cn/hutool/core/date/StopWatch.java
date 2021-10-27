@@ -335,6 +335,7 @@ public class StopWatch {
 	 *     StopWatch '[id]': running time = [total] [unit]
 	 * </pre>
 	 *
+	 * @param unit 时间单位，{@code null}则默认为{@link TimeUnit#NANOSECONDS}
 	 * @return 任务信息
 	 */
 	public String shortSummary(TimeUnit unit) {
