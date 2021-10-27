@@ -455,11 +455,14 @@ public class ObjectUtil {
 	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
 	 *
-	 * @param object 被检查对象
+	 * @param object 被检查对象，{@code null}返回{@code false}
 	 * @return 是否为基本类型
 	 * @see ClassUtil#isBasicType(Class)
 	 */
 	public static boolean isBasicType(Object object) {
+		if (null == object) {
+			return false;
+		}
 		return ClassUtil.isBasicType(object.getClass());
 	}
 
