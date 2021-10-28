@@ -27,7 +27,7 @@
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<zxing.version>3.4.1</zxing.version>
-		<net.version>3.7.2</net.version>
+		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.5.6</spring-boot.version>
