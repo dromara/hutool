@@ -699,14 +699,15 @@ public class NetUtil {
 	 * @since 4.0.6
 	 */
 	public static boolean isInRange(String ip, String cidr) {
-		String[] ips = StrUtil.splitToArray(ip, '.');
-		int ipAddr = (Integer.parseInt(ips[0]) << 24) | (Integer.parseInt(ips[1]) << 16) | (Integer.parseInt(ips[2]) << 8) | Integer.parseInt(ips[3]);
-		int type = Integer.parseInt(cidr.replaceAll(".*/", ""));
-		int mask = (int)((-1L << 32 - type) & 0XFFFFFFFF);
-		String cidrIp = cidr.replaceAll("/.*", "");
-		String[] cidrIps = cidrIp.split("\\.");
-		int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24) | (Integer.parseInt(cidrIps[1]) << 16) | (Integer.parseInt(cidrIps[2]) << 8) | Integer.parseInt(cidrIps[3]);
-		return (ipAddr & mask) == (cidrIpAddr & mask);
+		final int maskSplitMarkIndex = cidr.lastIndexOf(Ipv4Util.IP_MASK_SPLIT_MARK);
+		if(maskSplitMarkIndex < 0){
+			throw new IllegalArgumentException("Invalid cidr: " + cidr);
+		}
+
+		final long mask = (-1L << 32 - Integer.parseInt(cidr.substring(maskSplitMarkIndex + 1)));
+		long cidrIpAddr = ipv4ToLong(cidr.substring(0, maskSplitMarkIndex));
+
+		return (ipv4ToLong(ip) & mask) == (cidrIpAddr & mask);
 	}
 
 	/**
