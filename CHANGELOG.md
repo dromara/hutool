@@ -41,6 +41,8 @@
 * 【core   】     ZipUtil增加append方法（pr#441@Gitee）
 * 【core   】     CollUtil增加重载（issue#I4E9FS@Gitee）
 * 【core   】     CopyOptions新增setFieldValueEditor（issue#I4E08T@Gitee）
+* 【core   】     增加SystemPropsUtil（issue#1918@Gitee）
+* 【core   】     增加`hutool.date.lenient`系统属性（issue#1918@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
