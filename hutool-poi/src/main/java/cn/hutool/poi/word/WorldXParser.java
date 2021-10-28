@@ -65,6 +65,33 @@ public class WorldXParser {
 	}
 
 	/**
+	 * 水平合并单元格
+	 */
+	public static void mergeCellHorizontally(XWPFTable table, int row, int fromCol, int toCol) {
+		for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
+			CTHMerge hmerge = CTHMerge.Factory.newInstance();
+			if (colIndex == fromCol) {
+				// The first merged cell is set with RESTART merge value
+				hmerge.setVal(STMerge.RESTART);
+			} else {
+				// Cells which join (merge) the first one, are set with CONTINUE
+				hmerge.setVal(STMerge.CONTINUE);
+			}
+			XWPFTableCell cell = table.getRow(row).getCell(colIndex);
+			// Try getting the TcPr. Not simply setting an new one every time.
+			CTTcPr tcPr = cell.getCTTc().getTcPr();
+			if (tcPr != null) {
+				tcPr.setHMerge(hmerge);
+			} else {
+				// only set an new TcPr if there is not one already
+				tcPr = CTTcPr.Factory.newInstance();
+				tcPr.setHMerge(hmerge);
+				cell.getCTTc().setTcPr(tcPr);
+			}
+		}
+	}
+
+	/**
 	 * 拷贝一个table但是没有加入doc
 	 */
 	public static XWPFTable copyTable(XWPFDocument doc, XWPFTable sourceTable) {
@@ -113,7 +140,7 @@ public class WorldXParser {
 				numPr = style.getCTStyle().getPPr().getNumPr();
 			}
 		}
-		BigInteger currentNumID = null;
+		BigInteger currentNumId = null;
 		if (numPr != null) {
 			if (numPr.getIlvl() != null) {
 				currentIlvl = numPr.getIlvl().getVal().intValue();
@@ -121,11 +148,11 @@ public class WorldXParser {
 				currentIlvl = 0;
 			}
 			if (numPr.getNumId() != null) {
-				currentNumID = numPr.getNumId().getVal();
+				currentNumId = numPr.getNumId().getVal();
 			}
 		}
 
-		if ((currentNumID != null) && (numbering != null) && currentIlvl != -1) {
+		if ((currentNumId != null) && (numbering != null) && currentIlvl != -1) {
 			clone.getCTP().getPPr().setNumPr(numPr);
 		}
 
@@ -212,9 +239,9 @@ public class WorldXParser {
 				shouldNotSave = shouldNotSave || matchEnd(text, this.forEachEndReg);
 				shouldNotSave = shouldNotSave || matchEnd(text, this.ifEndReg);
 				shouldSave = !shouldNotSave;
-			}//不是段落的其它元素要保留，例如表格。
-			else {
-//                    System.out.println("非段落元素：" + ele.getClass());
+			} else {
+				//不是段落的其它元素要保留，例如表格。
+				System.out.println("非段落元素：" + ele.getClass());
 			}
 			if (shouldSave && currentScope != null) {
 				currentScope.addChild(ele);
@@ -262,22 +289,21 @@ public class WorldXParser {
 
 	/**
 	 * 开始新的作用域
-	 *
-	 * @param name
-	 * @param condition
 	 */
 	private void beginNewScope(String name, String condition) {
 
 		Object[] array = stack.toArray();
-		String key = "";
+		StringBuilder key = new StringBuilder();
 		for (Object obj : array) {
-			key = key + obj + ".";
+			key.append(obj).append(".");
 		}
 		stack.push(name);
 		currentScope = new WorldXParser.Scope(key + name, condition);
 	}
 
-	//匹配结束标记
+	/**
+	 * 匹配结束标记
+	 */
 	private boolean matchEnd(String text, Pattern reg) {
 		Matcher matcher = reg.matcher(text);
 		if (matcher.find()) {
@@ -350,10 +376,6 @@ public class WorldXParser {
 					XWPFTable newTable = copyTable(parsedDoc, (XWPFTable) child);
 					fillTable(newTable, context);
 					parsedDoc.setTable(getTablePos(parsedDoc, parsedDoc.createTable()), newTable);
-//							int tablePos = getTablePos(parsedDoc, parsedDoc.createTable());
-//							parsedDoc.setTable(tablePos, (XWPFTable) child);
-//							XWPFTable newTable =parsedDoc.getTables().get(tablePos);
-//							fillTable(newTable, context);
 				} else {
 					System.err.println("暂未解析" + child);
 				}
@@ -366,9 +388,6 @@ public class WorldXParser {
 
 	/**
 	 * 是否在构造表格
-	 *
-	 * @param scope
-	 * @return
 	 */
 	protected boolean isLoopRow(WorldXParser.Scope scope) {
 		return scope.children.size() == 1 && scope.children.get(0) instanceof XWPFTable;
@@ -377,20 +396,13 @@ public class WorldXParser {
 	private void fillTable(XWPFTable table, Map<String, Object> context) {
 		List<XWPFTableRow> rows = table.getRows();
 		for (XWPFTableRow row : rows) {
-			List<Map<String, Integer>> mergeList = fillRow(table, row, context);
-//				for (Map<String, Integer> map : mergeList) {
-//					mergeCellVertically(table, map.get("cellIndex"),map.get("fromRow"),map.get("toRow"));
-//				}
-
+			fillRow(table, row, context);
 		}
 
 	}
 
 	/**
 	 * 填充表格数据
-	 *
-	 * @param scope
-	 * @param context
 	 */
 	private void loopFillRow(WorldXParser.Scope scope, Map<String, Object> context) {
 		XWPFTable table = (XWPFTable) scope.eleList.get(0);
@@ -399,11 +411,6 @@ public class WorldXParser {
 
 		XWPFTable newTable = parsedDoc.getTables().get(tableIndex);
 		XWPFTableRow newRow = copyTableRow(row, newTable);
-		// XWPFTableRow newRow = copyTableRow(doc, row,
-		// tableIndex);
-		// int rowNum = newTable.getNumberOfRows();
-		// XWPFTableRow newRow = newTable.getRow(rowNum - 1);
-
 
 		List<Map<String, Integer>> mergeList = fillRow(newTable, newRow, context);
 
@@ -422,16 +429,14 @@ public class WorldXParser {
 	private List<Map<String, Integer>> fillRow(XWPFTable table, XWPFTableRow row, Map<String, Object> context) {
 		List<Map<String, Integer>> returnValue = new ArrayList<>();
 		List<XWPFTableCell> tableCells = row.getTableCells();
-		// XWPFTable table = row.getTable();
 		int rowNum = table.getNumberOfRows();
 		for (int cellIndex = 0; cellIndex < tableCells.size(); cellIndex++) {
 			XWPFTableCell cell = tableCells.get(cellIndex);
 			String text = cell.getText();
 			Matcher matcher = mergeReg.matcher(text);
-			if (matcher.find()) {// 需要合并行
+			if (matcher.find()) {
+				// 需要合并行
 				fillMergeCell(cell, context);
-				// changeParagraphText(cell.getParagraphs().get(0),
-				// replaceText(text, mergeReg, context));
 				int fromRow = -1;
 				for (int rowIndex = rowNum - 1; rowIndex > -1; rowIndex--) {
 					// 向上行查看，单元格内容相同就合并。
@@ -567,9 +572,8 @@ public class WorldXParser {
 		String name;
 		String shortName;
 		String condition;
-		// Map<String, Object> context;
-		private List<IBodyElement> eleList = new ArrayList<>();
-		private List<Object> children = new ArrayList<>();
+		private final List<IBodyElement> eleList = new ArrayList<>();
+		private final List<Object> children = new ArrayList<>();
 		// 所有作用域
 		public static Map<String, WorldXParser.Scope> allScopeMap = new HashMap<>();
 		public static List<IBodyElement> allElementList = new ArrayList<>();
