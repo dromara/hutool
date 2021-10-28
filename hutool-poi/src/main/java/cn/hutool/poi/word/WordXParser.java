@@ -2,6 +2,7 @@ package cn.hutool.poi.word;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.script.ScriptUtil;
 import org.apache.poi.xwpf.usermodel.*;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  * @version : 1.0.0.0
  * @date : Created at 10/28/2021
  */
-public class WorldXParser {
+public class WordXParser {
 	static String ifPrefix = "$if_";
 	int uniqueNum = 1;
 	Pattern forEachBeginReg;// forEach开始正则
@@ -32,10 +33,13 @@ public class WorldXParser {
 
 	Map<String, Object> rootContext;// 顶级上下文
 	Stack<String> stack = new Stack<>();// 存储forEach
-	WorldXParser.Scope currentScope;// 当前作用域
+	WordXParser.Scope currentScope;// 当前作用域
 
-	public XWPFDocument parsedDoc = new XWPFDocument();//编译完的word文档对象
+	private final XWPFDocument parsedDoc;//编译完的word文档对象
 
+	public XWPFDocument getParsedDoc() {
+		return parsedDoc;
+	}
 
 	/**
 	 * 垂直合并单元格
@@ -160,7 +164,7 @@ public class WorldXParser {
 
 
 	public static void cloneRun(XWPFRun clone, XWPFRun source) {
-		clone.getCTR().setBrArray(source.getCTR().getBrArray());
+		clone.getCTR().setBrArray((CTBr[]) source.getCTR().getBrList().toArray());
 		CTRPr rPr = clone.getCTR().isSetRPr() ? clone.getCTR().getRPr() : clone.getCTR().addNewRPr();
 		rPr.set(source.getCTR().getRPr());
 		String text = source.getText(0);
@@ -169,13 +173,7 @@ public class WorldXParser {
 		}
 	}
 
-
-	public WorldXParser(File templateFile, Map<String, Object> context) throws IOException {
-		this(new FileInputStream(templateFile), context);
-	}
-
-
-	public WorldXParser(InputStream in, Map<String, Object> context) throws IOException {
+	public WordXParser(InputStream in, Map<String, Object> context) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		IoUtil.copy(in, bos);
@@ -202,11 +200,6 @@ public class WorldXParser {
 		in.close();
 	}
 
-	public WorldXParser(InputStream in, Map<String, Object> context, String forEachBeginReg, String forEachEndReg,
-						String variableReg, String mergeReg, String ifBeginReg, String ifEndReg) throws IOException {
-		startParse(in, context, forEachBeginReg, variableReg, variableReg, mergeReg, ifBeginReg, ifEndReg);
-	}
-
 	public void startParse(InputStream in, Map<String, Object> context, String forEachBeginReg, String forEachEndReg,
 						   String variableReg, String mergeReg, String ifBeginReg, String ifEndReg) throws IOException {
 
@@ -220,12 +213,10 @@ public class WorldXParser {
 		this.ifBeginReg = Pattern.compile(ifBeginReg);
 		this.ifEndReg = Pattern.compile(ifEndReg);
 		List<IBodyElement> bodyElements = doc.getBodyElements();
-		int size = bodyElements.size();
-		currentScope = new WorldXParser.Scope(WorldXParser.Scope.root, null);
+		currentScope = new WordXParser.Scope(WordXParser.Scope.root, null);
 		stack.push(currentScope.name);
 		//编译模版，构造作用域
-		for (int i = 0; i < size; i++) {
-			IBodyElement ele = bodyElements.get(i);
+		for (IBodyElement ele : bodyElements) {
 			boolean shouldSave = true;
 			if (ele instanceof XWPFParagraph) {
 				//如果当前段落是语法标记（例如forEach），则做两件事情：
@@ -241,14 +232,14 @@ public class WorldXParser {
 				shouldSave = !shouldNotSave;
 			} else {
 				//不是段落的其它元素要保留，例如表格。
-				System.out.println("非段落元素：" + ele.getClass());
+				Console.log("{}:{}", "非段落元素", ele.getClass());
 			}
 			if (shouldSave && currentScope != null) {
 				currentScope.addChild(ele);
 			}
 		}
 		//开始从根作用域开始输出文档
-		loopScope(WorldXParser.Scope.allScopeMap.get(WorldXParser.Scope.root), context);
+		loopScope(WordXParser.Scope.allScopeMap.get(WordXParser.Scope.root), context);
 
 		// 填充页眉和页脚
 		fillHeaderAndFooter();
@@ -298,7 +289,7 @@ public class WorldXParser {
 			key.append(obj).append(".");
 		}
 		stack.push(name);
-		currentScope = new WorldXParser.Scope(key + name, condition);
+		currentScope = new WordXParser.Scope(key + name, condition);
 	}
 
 	/**
@@ -319,16 +310,16 @@ public class WorldXParser {
 
 			currentScope = null;
 		} else {
-			currentScope = WorldXParser.Scope.allScopeMap
+			currentScope = WordXParser.Scope.allScopeMap
 					.get(currentScope.name.substring(0, currentScope.name.lastIndexOf('.')));
 		}
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private void loopScope(WorldXParser.Scope scope, Map<String, Object> context) {
+	private void loopScope(WordXParser.Scope scope, Map<String, Object> context) {
 		for (Object child : scope.children) {
-			if (child instanceof WorldXParser.Scope) {
-				WorldXParser.Scope childScope = (WorldXParser.Scope) child;
+			if (child instanceof WordXParser.Scope) {
+				WordXParser.Scope childScope = (WordXParser.Scope) child;
 				if (childScope.condition != null) {//在作用域内
 
 					try {
@@ -347,7 +338,7 @@ public class WorldXParser {
 						.get(childScope.shortName);
 				if (CollectionUtil.isEmpty(childContextList)) {
 					// 当子作用域数据为空时不解析子作用域
-					System.err.println("子作用域数据为空:" + childScope.name);
+					Console.error("{}:{}", "子作用域数据为空", childScope.name);
 					continue;
 				}
 				if (isLoopRow(childScope)) {
@@ -377,7 +368,7 @@ public class WorldXParser {
 					fillTable(newTable, context);
 					parsedDoc.setTable(getTablePos(parsedDoc, parsedDoc.createTable()), newTable);
 				} else {
-					System.err.println("暂未解析" + child);
+					Console.error("{}:{}", "暂未解析", child);
 				}
 			}
 
@@ -389,7 +380,7 @@ public class WorldXParser {
 	/**
 	 * 是否在构造表格
 	 */
-	protected boolean isLoopRow(WorldXParser.Scope scope) {
+	protected boolean isLoopRow(WordXParser.Scope scope) {
 		return scope.children.size() == 1 && scope.children.get(0) instanceof XWPFTable;
 	}
 
@@ -404,7 +395,7 @@ public class WorldXParser {
 	/**
 	 * 填充表格数据
 	 */
-	private void loopFillRow(WorldXParser.Scope scope, Map<String, Object> context) {
+	private void loopFillRow(WordXParser.Scope scope, Map<String, Object> context) {
 		XWPFTable table = (XWPFTable) scope.eleList.get(0);
 		XWPFTableRow row = table.getRow(0);
 		int tableIndex = parsedDoc.getTables().size() - 1;
@@ -575,7 +566,7 @@ public class WorldXParser {
 		private final List<IBodyElement> eleList = new ArrayList<>();
 		private final List<Object> children = new ArrayList<>();
 		// 所有作用域
-		public static Map<String, WorldXParser.Scope> allScopeMap = new HashMap<>();
+		public static Map<String, WordXParser.Scope> allScopeMap = new HashMap<>();
 		public static List<IBodyElement> allElementList = new ArrayList<>();
 
 		public Scope(String name, String condition) {
@@ -590,7 +581,7 @@ public class WorldXParser {
 					parentName = root;
 					shortName = name;
 				}
-				WorldXParser.Scope parentScope = allScopeMap.get(parentName);
+				WordXParser.Scope parentScope = allScopeMap.get(parentName);
 				parentScope.children.add(this);
 			} else {
 				shortName = name;

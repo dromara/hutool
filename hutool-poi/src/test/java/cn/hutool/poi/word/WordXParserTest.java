@@ -10,7 +10,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Map;
  * @version : 1.0.0.0
  * @date : Created at 2021/10/28
  */
-public class WorldXParserTest {
+public class WordXParserTest {
 	@Test
 	public void testMergeCell() throws Exception {
 
@@ -61,10 +60,10 @@ public class WorldXParserTest {
 		}
 
 		// using the merge methods
-		WorldXParser.mergeCellVertically(table, 0, 0, 1);
-		WorldXParser.mergeCellVertically(table, 0, 1, 2);
-		WorldXParser.mergeCellHorizontally(table, 1, 2, 3);
-		WorldXParser.mergeCellHorizontally(table, 2, 1, 4);
+		WordXParser.mergeCellVertically(table, 0, 0, 1);
+		WordXParser.mergeCellVertically(table, 0, 1, 2);
+		WordXParser.mergeCellHorizontally(table, 1, 2, 3);
+		WordXParser.mergeCellHorizontally(table, 2, 1, 4);
 
 		FileOutputStream out = new FileOutputStream("create_table.docx");
 		document.write(out);
@@ -77,9 +76,7 @@ public class WorldXParserTest {
 	 *
 	 */
 	@Test
-	public void testExportReport() throws Exception {
-		String testDir = System.getProperty("user.dir") + "/hot-deploy/websdt/template/";
-		FileInputStream in = new FileInputStream(testDir + "relationExport.docx");
+	public void testExportReport() {
 
 
 		Map<String, Object> context = new HashMap<>();
@@ -104,12 +101,6 @@ public class WorldXParserTest {
 		req.put("upReqName", "需求1");
 		req.put("upSection", "标题1");
 
-		WorldXParser worldXParser = new WorldXParser(in, context);
-		XWPFDocument doc = worldXParser.parsedDoc;
-		FileOutputStream out = new FileOutputStream(testDir + "result2.docx");
-		doc.write(out);
-
-		out.flush();
-		out.close();
+		WordUtil.exportDocx("template.docx", context, "report.docx");
 	}
 }
