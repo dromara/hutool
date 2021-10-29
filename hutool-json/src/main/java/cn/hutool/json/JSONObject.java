@@ -7,7 +7,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -560,11 +560,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 支持过滤器，即选择哪些字段或值不写出
 	 *
 	 * @param indentFactor 每层缩进空格数
-	 * @param filter 键值对过滤器
+	 * @param filter       过滤器，同时可以修改编辑键和值
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(int indentFactor, Filter<Pair<String, Object>> filter){
+	public String toJSONString(int indentFactor, Filter<MutablePair<String, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -583,17 +583,18 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @param writer       writer
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
-	 * @param filter       过滤器
+	 * @param filter       过滤器，同时可以修改编辑键和值
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(Writer writer, int indentFactor, int indent, Filter<Pair<String, Object>> filter) throws JSONException {
+	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<String, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
-			if (null == filter || filter.accept(new Pair<>(key, value))) {
-				jsonWriter.writeField(key, value);
+			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+			if (null == filter || filter.accept(pair)) {
+				jsonWriter.writeField(pair.getKey(), pair.getValue());
 			}
 		});
 		jsonWriter.end();
