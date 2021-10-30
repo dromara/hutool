@@ -819,7 +819,7 @@ public class IterUtil {
 	 * @return Iterable对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(final Iterable<?> iterable) {
+	public static int size(Iterable<?> iterable) {
 		if (null == iterable) {
 			return 0;
 		}
@@ -838,7 +838,7 @@ public class IterUtil {
 	 * @return Iterator对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(final Iterator<?> iterator) {
+	public static int size(Iterator<?> iterator) {
 		int size = 0;
 		if (iterator != null) {
 			while (iterator.hasNext()) {
@@ -862,7 +862,7 @@ public class IterUtil {
 	 * @return 是否相同
 	 * @since 5.6.0
 	 */
-	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
+	public static boolean isEqualList(Iterable<?> list1, Iterable<?> list2) {
 		if (list1 == list2) {
 			return true;
 		}

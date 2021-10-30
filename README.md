@@ -113,6 +113,26 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 -------------------------------------------------------------------------------
 
+## 🪙支持Hutool
+
+### 💳捐赠
+
+如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
+
+[Gitee上捐赠](https://gitee.com/dromara/hutool)
+
+[捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
+
+### 👕周边商店
+
+你也可以通过购买Hutool的周边商品来支持Hutool维护哦！
+
+我们提供了印有Hutool Logo的周边商品，欢迎点击购买支持：
+
+👉 [Hutool 周边商店](https://m.tb.cn/h.fVxoBOm?sm=2756b2) 👈
+
+-------------------------------------------------------------------------------
+
 ## 📦安装
 
 ### 🍊Maven
@@ -122,24 +142,24 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.7.14</version>
+    <version>5.7.16</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.7.14'
+implementation 'cn.hutool:hutool-all:5.7.16'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.14/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.16/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
-> 如果你的项目使用JDK7，请使用Hutool 4.x版本
+> 如果你的项目使用JDK7，请使用Hutool 4.x版本（不再更新）
 
 ### 🚽编译安装
 
@@ -198,22 +218,9 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
-## 💳捐赠
-
-如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
-
-点击以下链接，将页面拉到最下方点击“捐赠”即可。
-
-[Gitee上捐赠](https://gitee.com/dromara/hutool)
-
-[捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
-
 ## 📌公众号
 
-#### 🧡欢迎关注Hutool合作的公众号
-
-![图灵学院](https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg)
-
-#### 🧡Dromara开源组织公众号
-
-![Dromara](https://dromara.org/img/qrcode/qrcode_1.png)
+<div align="center">
+	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
+	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
+</div>

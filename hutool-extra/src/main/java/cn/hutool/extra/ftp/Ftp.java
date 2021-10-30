@@ -470,9 +470,9 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param destPath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
@@ -489,20 +489,20 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param file     文件
-	 * @param path     服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param destPath     服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName 自定义在服务端保存的文件名
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, File file) throws IORuntimeException {
+	public boolean upload(String destPath, String fileName, File file) throws IORuntimeException {
 		try (InputStream in = FileUtil.getInputStream(file)) {
-			return upload(path, fileName, in);
+			return upload(destPath, fileName, in);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -512,18 +512,18 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
-	 * @param path       服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param destPath       服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName   文件名
 	 * @param fileStream 文件流
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(String path, String fileName, InputStream fileStream) throws IORuntimeException {
+	public boolean upload(String destPath, String fileName, InputStream fileStream) throws IORuntimeException {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 		} catch (IOException e) {
@@ -535,10 +535,10 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (StrUtil.isNotBlank(path)) {
-			mkDirs(path);
-			if (false == isDir(path)) {
-				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
+		if (StrUtil.isNotBlank(destPath)) {
+			mkDirs(destPath);
+			if (false == isDir(destPath)) {
+				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", destPath);
 			}
 		}
 

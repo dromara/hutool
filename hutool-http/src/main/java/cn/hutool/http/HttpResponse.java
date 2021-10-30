@@ -148,9 +148,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
-	 * 是否为zlib(Defalte)压缩过的内容
+	 * 是否为zlib(Deflate)压缩过的内容
 	 *
-	 * @return 是否为zlib(Defalte)压缩过的内容
+	 * @return 是否为zlib(Deflate)压缩过的内容
 	 * @since 4.5.7
 	 */
 	public boolean isDeflate() {

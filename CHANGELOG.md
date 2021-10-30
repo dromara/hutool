@@ -3,7 +3,62 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.14 (2021-10-08)
+# 5.7.16 (2021-10-30)
+
+### 🐣新特性
+* 【core   】     增加DateTime.toLocalDateTime
+* 【core   】     CharSequenceUtil增加normalize方法（pr#444@Gitee）
+* 【core   】     MailAccount增加setEncodefilename()方法，可选是否编码附件的文件名（issue#I4F160@Gitee）
+* 【core   】     MailAccount中charset增加null时的默认规则
+* 【core   】     NumberUtil.compare修正注释说明（issue#I4FAJ1@Gitee）
+* 【core   】     增加RFC3986类
+* 【extra  】     Sftp增加put和upload重载（issue#I4FGDH@Gitee）
+* 【core   】     TemporalUtil增加toChronoUnit、toTimeUnit方法（issue#I4FGDH@Gitee）
+* 【core   】     StopWatch增加prettyPrint重载（issue#1910@Github）
+* 【core   】     修改RegexPool中Ipv4正则
+* 【json   】     Filter改为MutablePair，以便编辑键值对（issue#1921@Github）
+
+### 🐞Bug修复
+* 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
+* 【core   】     修复StrBuilder中总长度计算问题（issue#I4F9L7@Gitee）
+* 【core   】     修复CharSequenceUtil.wrapIfMissing预定义长度计算问题（issue#I4FDZ2@Gitee）
+* 【poi    】     修复合并单元格为日期时，导出单元格数据为数字问题（issue#1911@Github）
+* 【core   】     修复CompilerUtil.getFileManager参数没有使用的问题（issue#I4FIO6@Gitee）
+* 【core   】     修复NetUtil.isInRange的cidr判断问题（pr#1917@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.15 (2021-10-21)
+
+### 🐣新特性
+* 【db     】     Db.quietSetAutoCommit增加判空（issue#I4D75B@Gitee）
+* 【core   】     增加RingIndexUtil（pr#438@Gitee）
+* 【core   】     Assert增加checkBetween重载（pr#436@Gitee）
+* 【core   】     ReUtil增加命名分组重载（pr#439@Gitee）
+* 【json   】     toString和writer增加Filter（issue#I4DQNQ@Gitee）
+* 【core   】     ContentType增加build重载（pr#1898@Github）
+* 【bom    】     支持scope=import方式引入（issue#1561@Github）
+* 【core   】     新增Hash接口，HashXXX继承此接口
+* 【core   】     ZipUtil增加append方法（pr#441@Gitee）
+* 【core   】     CollUtil增加重载（issue#I4E9FS@Gitee）
+* 【core   】     CopyOptions新增setFieldValueEditor（issue#I4E08T@Gitee）
+* 【core   】     增加SystemPropsUtil（issue#1918@Gitee）
+* 【core   】     增加`hutool.date.lenient`系统属性（issue#1918@Gitee）
+
+### 🐞Bug修复
+* 【core   】     修复CollUtil.isEqualList两个null返回错误问题（issue#1885@Github）
+* 【poi    】     修复ExcelWriter多余调试信息导致的问题（issue#1884@Github）
+* 【poi    】     修复TemporalAccessorUtil.toInstant使用DateTimeFormatter导致问题（issue#1891@Github）
+* 【poi    】     修复sheet.getRow(y)为null导致的问题（issue#1893@Github）
+* 【cache  】     修复LRUCache线程安全问题（issue#1895@Github）
+* 【crypto 】     修复KeyUtil异常信息参数丢失问题（issue#1902@Github）
+* 【core   】     修复StrUtil.split和splittoArray不一致问题（issue#I4ELU5@Github）
+* 【core   】     修复SymmetricCrypto未关闭CipherOutputStream导致的问题（issue#I4EMST@Gitee）
+* 【core   】     修复QueryBuilder对/转义问题（issue#1904@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.14 (2021-10-09)
 
 ### 🐣新特性
 * 【extra  】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（issue#I4B70D@Gitee）
@@ -16,12 +71,13 @@
 * 【core   】     DateTime构造和DateUtil.parse可选是否宽松模式（issue#1849@Github）
 * 【core   】     TreeBuilder增加部分根节点set方法（issue#1848@Github）
 * 【core   】     优化Base64.isBase64方法：减少一次多余的判断（pr#1860@Github）
-* 【core   】     优化Base64.isBase64方法：减少一次多余的判断（pr#1860@Github）
 * 【cache  】     优化FIFOCache未设置过期策略时，无需遍历判断过期对象（pr#425@Gitee）
 * 【core   】     增加Opt类（pr#426@Gitee）
 * 【core   】     Week增加of重载，支持DayOfWek（pr#1872@Github）
 * 【poi    】     优化read，避免多次创建CopyOptions（issue#1875@Github）
 * 【core   】     优化CsvReader，实现可控遍历（pr#1873@Github）
+* 【core   】     优化Base64.isBase64判断（pr#1879@Github）
+* 【core   】     新增StrFormatter.formatWith（pr#430@Gitee）
 
 ### 🐞Bug修复
 * 【http   】     修复HttpCookie设置cookies的方法，不符合RFC6265规范问题（pr#418@Gitee）
@@ -30,6 +86,7 @@
 * 【db     】     修复Condition没占位符的情况下sql没引号问题（issue#1846@Github）
 * 【cache  】     修复FIFOCache中remove回调无效问题（pr#1856@Github）
 * 【json   】     修复JSONArray.set中，index为0报错问题（issue#1858@Github）
+* 【core   】     修复FileUtil.checkSlip中getCanonicalPath异常引起的问题（issue#1858@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

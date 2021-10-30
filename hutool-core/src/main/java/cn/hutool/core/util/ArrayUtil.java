@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -118,7 +117,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> boolean hasNull(T... array) {
 		if (isNotEmpty(array)) {
 			for (T element : array) {
-				if (null == element) {
+				if (ObjectUtil.isNull(element)) {
 					return true;
 				}
 			}
@@ -150,7 +149,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(T... array) {
-		return firstMatch(Objects::nonNull, array);
+		return firstMatch(ObjectUtil::isNotNull, array);
 	}
 
 	/**

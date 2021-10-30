@@ -20,6 +20,7 @@ import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.LocaleConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
+import cn.hutool.core.convert.impl.OptConverter;
 import cn.hutool.core.convert.impl.OptionalConverter;
 import cn.hutool.core.convert.impl.PathConverter;
 import cn.hutool.core.convert.impl.PeriodConverter;
@@ -33,6 +34,7 @@ import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -444,6 +446,7 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
+		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
 
 		return this;
 	}

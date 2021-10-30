@@ -292,7 +292,7 @@ public class ObjectUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> T defaultIfNull(final T object, final T defaultValue) {
-		return (null != object) ? object : defaultValue;
+		return isNull(object) ? defaultValue : object;
 	}
 
 
@@ -300,14 +300,14 @@ public class ObjectUtil {
 	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
 	 *
 	 * @param source       Object 类型对象
-	 * @param handle       自定义的处理方法
+	 * @param handle       非空时自定义的处理方法
 	 * @param defaultValue 默认为空的返回值
 	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
 	 * @return 处理后的返回值
 	 * @since 5.4.6
 	 */
 	public static <T> T defaultIfNull(Object source, Supplier<? extends T> handle, final T defaultValue) {
-		if (Objects.nonNull(source)) {
+		if (isNotNull(source)) {
 			return handle.get();
 		}
 		return defaultValue;
@@ -455,11 +455,14 @@ public class ObjectUtil {
 	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
 	 *
-	 * @param object 被检查对象
+	 * @param object 被检查对象，{@code null}返回{@code false}
 	 * @return 是否为基本类型
 	 * @see ClassUtil#isBasicType(Class)
 	 */
 	public static boolean isBasicType(Object object) {
+		if (null == object) {
+			return false;
+		}
 		return ClassUtil.isBasicType(object.getClass());
 	}
 

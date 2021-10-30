@@ -3,6 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -12,6 +14,7 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -443,13 +446,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/**
 	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
 	 *
-	 * @param index 位置
+	 * @param index   位置
 	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return 替换的值，即之前的值
 	 */
 	@Override
 	public Object set(int index, Object element) {
-		if(index >= size()){
+		if (index >= size()) {
 			add(index, element);
 		}
 		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
@@ -529,17 +532,56 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return this.toJSONString(0);
 	}
 
+	/**
+	 * 返回JSON字符串<br>
+	 * 支持过滤器，即选择哪些字段或值不写出
+	 *
+	 * @param indentFactor 每层缩进空格数
+	 * @param filter       过滤器，可以修改值，key（index）无法修改
+	 * @return JSON字符串
+	 * @since 5.7.15
+	 */
+	public String toJSONString(int indentFactor, Filter<MutablePair<Integer, Object>> filter) {
+		final StringWriter sw = new StringWriter();
+		synchronized (sw.getBuffer()) {
+			return this.write(sw, indentFactor, 0, filter).toString();
+		}
+	}
+
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+		return write(writer, indentFactor, indent, null);
+	}
+
+	/**
+	 * 将JSON内容写入Writer<br>
+	 * 支持过滤器，即选择哪些字段或值不写出
+	 *
+	 * @param writer       writer
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent       本级别缩进量
+	 * @param filter       过滤器，可以修改值，key（index）无法修改
+	 * @return Writer
+	 * @throws JSONException JSON相关异常
+	 * @since 5.7.15
+	 */
+	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<Integer, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginArray();
-		this.forEach(jsonWriter::writeValue);
+
+		CollUtil.forEach(this, (value, index) -> {
+			final MutablePair<Integer, Object> pair = new MutablePair<>(index, value);
+			if (null == filter || filter.accept(pair)) {
+				jsonWriter.writeValue(pair.getValue());
+			}
+		});
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 初始化
 	 *

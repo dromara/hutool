@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ReUtilTest {
@@ -162,5 +163,27 @@ public class ReUtilTest {
 		final boolean match = ReUtil.isMatch(
 				"(.+?)省(.+?)市(.+?)区", "广东省深圳市南山区");
 		Console.log(match);
+	}
+
+	@Test
+	public void getByGroupNameTest() {
+		String content = "2021-10-11";
+		String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
+		String year = ReUtil.get(regex, content, "year");
+		Assert.assertEquals("2021", year);
+		String month = ReUtil.get(regex, content, "month");
+		Assert.assertEquals("10", month);
+		String day = ReUtil.get(regex, content, "day");
+		Assert.assertEquals("11", day);
+	}
+
+	@Test
+	public void getAllGroupNamesTest() {
+		String content = "2021-10-11";
+		String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";
+		Map<String, String> map = ReUtil.getAllGroupNames(PatternPool.get(regex, Pattern.DOTALL), content);
+		Assert.assertEquals(map.get("year"), "2021");
+		Assert.assertEquals(map.get("month"), "10");
+		Assert.assertEquals(map.get("day"), "11");
 	}
 }

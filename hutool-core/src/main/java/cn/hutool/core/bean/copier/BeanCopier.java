@@ -191,6 +191,10 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			if(null != copyOptions.propertiesFilter && false == copyOptions.propertiesFilter.test(prop.getField(), value)) {
 				return;
 			}
+
+			// since 5.7.15
+			value = copyOptions.editFieldValue(key, value);
+
 			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
 				// 当允许跳过空时，跳过
 				//值不能为bean本身，防止循环引用，此类也跳过
@@ -256,6 +260,9 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			if(null != copyOptions.propertiesFilter && false == copyOptions.propertiesFilter.test(prop.getField(), value)) {
 				return;
 			}
+
+			// since 5.7.15
+			value = copyOptions.editFieldValue(providerKey, value);
 
 			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
 				// 当允许跳过空时，跳过

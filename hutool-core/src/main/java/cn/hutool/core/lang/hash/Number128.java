@@ -6,7 +6,8 @@ package cn.hutool.core.lang.hash;
  * @author hexiufeng
  * @since 5.2.5
  */
-public class Number128 {
+public class Number128 extends Number{
+	private static final long serialVersionUID = 1L;
 
 	private long lowValue;
 	private long highValue;
@@ -40,5 +41,25 @@ public class Number128 {
 
 	public long[] getLongArray() {
 		return new long[]{lowValue, highValue};
+	}
+
+	@Override
+	public int intValue() {
+		return (int) longValue();
+	}
+
+	@Override
+	public long longValue() {
+		return this.lowValue;
+	}
+
+	@Override
+	public float floatValue() {
+		return longValue();
+	}
+
+	@Override
+	public double doubleValue() {
+		return longValue();
 	}
 }

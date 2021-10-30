@@ -198,6 +198,19 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void beanToMapWithValueEditTest() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		Map<String, Object> map = BeanUtil.beanToMap(person, new LinkedHashMap<>(),
+				CopyOptions.create().setFieldValueEditor((key, value) -> key + "_" + value));
+		Assert.assertEquals("subName_sub名字", map.get("subName"));
+	}
+
+	@Test
 	public void beanToMapWithAliasTest() {
 		SubPersonWithAlias person = new SubPersonWithAlias();
 		person.setAge(14);

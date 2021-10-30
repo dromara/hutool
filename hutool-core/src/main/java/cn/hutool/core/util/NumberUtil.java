@@ -1675,12 +1675,12 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Character#compare(char, char)
 	 * @since 3.0.1
 	 */
 	public static int compare(char x, char y) {
-		return x - y;
+		return Character.compare(x, y);
 	}
 
 	/**
@@ -1688,7 +1688,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Double#compare(double, double)
 	 * @since 3.0.1
 	 */
@@ -1701,7 +1701,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Integer#compare(int, int)
 	 * @since 3.0.1
 	 */
@@ -1714,7 +1714,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Long#compare(long, long)
 	 * @since 3.0.1
 	 */
@@ -1727,7 +1727,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Short#compare(short, short)
 	 * @since 3.0.1
 	 */
@@ -1754,7 +1754,7 @@ public class NumberUtil {
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
 	 * @return 是否大于
-	 * @since 3, 0.9
+	 * @since 3.0.9
 	 */
 	public static boolean isGreater(BigDecimal bigNum1, BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);

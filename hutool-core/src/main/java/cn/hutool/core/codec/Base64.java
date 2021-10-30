@@ -299,7 +299,7 @@ public class Base64 {
 	 * base64解码
 	 *
 	 * @param base64 被解码的base64字符串
-	 * @return 被加密后的字符串
+	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(CharSequence base64) {
 		return Base64Decoder.decode(base64);
@@ -322,8 +322,19 @@ public class Base64 {
 	 * @return 是否为Base64
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64(CharSequence base64){
-		return isBase64(StrUtil.utf8Bytes(base64));
+	public static boolean isBase64(CharSequence base64) {
+		if (base64 == null || base64.length() < 2) {
+			return false;
+		}
+
+		final byte[] bytes = StrUtil.utf8Bytes(base64);
+
+		if (bytes.length != base64.length()) {
+			// 如果长度不相等，说明存在双字节字符，肯定不是Base64，直接返回false
+			return false;
+		}
+
+		return isBase64(bytes);
 	}
 
 	/**
@@ -333,15 +344,15 @@ public class Base64 {
 	 * @return 是否为Base64
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64(byte[] base64Bytes){
+	public static boolean isBase64(byte[] base64Bytes) {
 		boolean hasPadding = false;
 		for (byte base64Byte : base64Bytes) {
-			if(hasPadding){
-				if('=' != base64Byte){
+			if (hasPadding) {
+				if ('=' != base64Byte) {
 					// 前一个字符是'='，则后边的字符都必须是'='，即'='只能都位于结尾
 					return false;
 				}
-			} else if('=' == base64Byte){
+			} else if ('=' == base64Byte) {
 				// 发现'=' 标记之
 				hasPadding = true;
 			} else if (false == (Base64Decoder.isBase64Code(base64Byte) || isWhiteSpace(base64Byte))) {
@@ -353,12 +364,12 @@ public class Base64 {
 
 	private static boolean isWhiteSpace(byte byteToCheck) {
 		switch (byteToCheck) {
-			case ' ' :
-			case '\n' :
-			case '\r' :
-			case '\t' :
+			case ' ':
+			case '\n':
+			case '\r':
+			case '\t':
 				return true;
-			default :
+			default:
 				return false;
 		}
 	}

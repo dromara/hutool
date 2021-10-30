@@ -16,6 +16,9 @@ import java.util.function.Supplier;
  */
 public class Assert {
 
+	private static final String TEMPLATE_VALUE_MUST_BE_BETWEEN_AND = "The value must be between {} and {}.";
+
+
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出给定的异常<br>
 	 *
@@ -837,6 +840,41 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
+	 * @param <X>           异常类型
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
+	 * @since 5.7.15
+	 */
+	public static <X extends Throwable> int checkBetween(int value, int min, int max, Supplier<? extends X> errorSupplier) throws X {
+		if (value < min || value > max) {
+			throw errorSupplier.get();
+		}
+
+		return value;
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
+	 * @return 经过检查后的值
+	 * @since 5.7.15
+	 */
+	public static int checkBetween(int value, int min, int max, String errorMsgTemplate, Object... params) {
+		return checkBetween(value, min, max, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
 	 * @param value 值
 	 * @param min   最小值（包含）
 	 * @param max   最大值（包含）
@@ -844,10 +882,42 @@ public class Assert {
 	 * @since 4.1.10
 	 */
 	public static int checkBetween(int value, int min, int max) {
+		return checkBetween(value, min, max, TEMPLATE_VALUE_MUST_BE_BETWEEN_AND, min, max);
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param <X>           异常类型
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
+	 * @since 5.7.15
+	 */
+	public static <X extends Throwable> long checkBetween(long value, long min, long max, Supplier<? extends X> errorSupplier) throws X {
 		if (value < min || value > max) {
-			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+			throw errorSupplier.get();
 		}
+
 		return value;
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
+	 * @return 经过检查后的值
+	 * @since 5.7.15
+	 */
+	public static long checkBetween(long value, long min, long max, String errorMsgTemplate, Object... params) {
+		return checkBetween(value, min, max, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
 
 	/**
@@ -860,10 +930,42 @@ public class Assert {
 	 * @since 4.1.10
 	 */
 	public static long checkBetween(long value, long min, long max) {
+		return checkBetween(value, min, max, TEMPLATE_VALUE_MUST_BE_BETWEEN_AND, min, max);
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param <X>           异常类型
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @return 经过检查后的值
+	 * @throws X if value is out of bound
+	 * @since 5.7.15
+	 */
+	public static <X extends Throwable> double checkBetween(double value, double min, double max, Supplier<? extends X> errorSupplier) throws X {
 		if (value < min || value > max) {
-			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+			throw errorSupplier.get();
 		}
+
 		return value;
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
+	 * @return 经过检查后的值
+	 * @since 5.7.15
+	 */
+	public static double checkBetween(double value, double min, double max, String errorMsgTemplate, Object... params) {
+		return checkBetween(value, min, max, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
 
 	/**
@@ -876,10 +978,7 @@ public class Assert {
 	 * @since 4.1.10
 	 */
 	public static double checkBetween(double value, double min, double max) {
-		if (value < min || value > max) {
-			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
-		}
-		return value;
+		return checkBetween(value, min, max, TEMPLATE_VALUE_MUST_BE_BETWEEN_AND, min, max);
 	}
 
 	/**
@@ -899,7 +998,7 @@ public class Assert {
 		double minDouble = min.doubleValue();
 		double maxDouble = max.doubleValue();
 		if (valueDouble < minDouble || valueDouble > maxDouble) {
-			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+			throw new IllegalArgumentException(StrUtil.format(TEMPLATE_VALUE_MUST_BE_BETWEEN_AND, min, max));
 		}
 		return value;
 	}

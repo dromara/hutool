@@ -63,4 +63,40 @@ public class UrlQueryTest {
 		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assert.assertEquals("password=123456&username=SSM", query);
 	}
+
+	@Test
+	public void buildHasNullTest() {
+		Map<String, String> map = new LinkedHashMap<>();
+		map.put(null, "SSM");
+		map.put("password", "123456");
+		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("password=123456", query);
+
+		map = new TreeMap<>();
+		map.put("username", "SSM");
+		map.put("password", "");
+		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("password=&username=SSM", query);
+
+		map = new TreeMap<>();
+		map.put("username", "SSM");
+		map.put("password", null);
+		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("password&username=SSM", query);
+	}
+
+	@Test
+	public void buildSpecialTest() {
+		Map<String, String> map = new LinkedHashMap<>();
+		map.put("key1&", "SSM");
+		map.put("key2", "123456&");
+		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("key1%26=SSM&key2=123456%26", query);
+
+		map = new TreeMap<>();
+		map.put("username=", "SSM");
+		map.put("password", "=");
+		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		Assert.assertEquals("password==&username%3D=SSM", query);
+	}
 }

@@ -1,6 +1,7 @@
 package cn.hutool.core.net.url;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -129,7 +130,7 @@ public final class UrlBuilder implements Serializable {
 	 */
 	public static UrlBuilder of(String url, Charset charset) {
 		Assert.notBlank(url, "Url must be not blank!");
-		return of(URLUtil.url(url.trim()), charset);
+		return of(URLUtil.url(StrUtil.trim(url)), charset);
 	}
 
 	/**
@@ -322,13 +323,25 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
-	 * 增加路径节点
+	 * 增加路径，在现有路径基础上追加路径
+	 *
+	 * @param path 路径，例如aaa/bbb/ccc
+	 * @return this
+	 */
+	public UrlBuilder addPath(CharSequence path) {
+		UrlPath.of(path, this.charset).getSegments().forEach(this::addPathSegment);
+		return this;
+	}
+
+	/**
+	 * 增加路径节点，路径节点中的"/"会被转义为"%2F"
 	 *
 	 * @param segment 路径节点
 	 * @return this
+	 * @since 5.7.16
 	 */
-	public UrlBuilder addPath(String segment) {
-		if (StrUtil.isBlank(segment)) {
+	public UrlBuilder addPathSegment(CharSequence segment) {
+		if (StrUtil.isEmpty(segment)) {
 			return this;
 		}
 		if (null == this.path) {
@@ -341,19 +354,13 @@ public final class UrlBuilder implements Serializable {
 	/**
 	 * 追加path节点
 	 *
-	 * @param segment path节点
+	 * @param path path节点
 	 * @return this
+	 * @deprecated 方法重复，请使用{@link #addPath(CharSequence)}
 	 */
-	public UrlBuilder appendPath(CharSequence segment) {
-		if (StrUtil.isEmpty(segment)) {
-			return this;
-		}
-
-		if (this.path == null) {
-			this.path = new UrlPath();
-		}
-		this.path.add(segment);
-		return this;
+	@Deprecated
+	public UrlBuilder appendPath(CharSequence path) {
+		return addPath(path);
 	}
 
 	/**
@@ -419,7 +426,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return 标识符，例如#后边的部分
 	 */
 	public String getFragmentEncoded() {
-		return URLUtil.encodeFragment(this.fragment, this.charset);
+		return RFC3986.FRAGMENT.encode(this.fragment, this.charset);
 	}
 
 	/**

@@ -2059,6 +2059,32 @@ public class DateUtil extends CalendarUtil {
 		return format;
 	}
 
+	/**
+	 * 获取时长单位简写
+	 *
+	 * @param unit 单位
+	 * @return 单位简写名称
+	 * @since 5.7.16
+	 */
+	public static String getShotName(TimeUnit unit) {
+		switch (unit) {
+			case NANOSECONDS:
+				return "ns";
+			case MICROSECONDS:
+				return "μs";
+			case MILLISECONDS:
+				return "ms";
+			case SECONDS:
+				return "s";
+			case MINUTES:
+				return "min";
+			case HOURS:
+				return "h";
+			default:
+				return unit.name().toLowerCase();
+		}
+	}
+
 	// ------------------------------------------------------------------------ Private method start
 
 	/**

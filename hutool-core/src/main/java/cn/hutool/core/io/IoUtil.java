@@ -684,7 +684,7 @@ public class IoUtil extends NioUtil {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T extends Collection<String>> T readLines(Reader reader, final T collection) throws IORuntimeException {
+	public static <T extends Collection<String>> T readLines(Reader reader, T collection) throws IORuntimeException {
 		readLines(reader, (LineHandler) collection::add);
 		return collection;
 	}

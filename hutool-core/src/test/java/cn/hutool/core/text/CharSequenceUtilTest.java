@@ -33,5 +33,19 @@ public class CharSequenceUtilTest {
 		Assert.assertEquals( str + " is Good", result);
 	}
 
+	@Test
+	public void normalizeTest(){
+		// https://blog.csdn.net/oscar999/article/details/105326270
+
+		String str1 = "\u00C1";
+		String str2 = "\u0041\u0301";
+
+		Assert.assertNotEquals(str1, str2);
+
+		str1 = CharSequenceUtil.normalize(str1);
+		str2 = CharSequenceUtil.normalize(str2);
+		Assert.assertEquals(str1, str2);
+	}
+
 	// ------------------------------------------------------------------------ remove
 }

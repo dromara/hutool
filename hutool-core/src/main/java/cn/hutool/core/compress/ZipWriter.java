@@ -26,22 +26,22 @@ import java.util.zip.ZipOutputStream;
 public class ZipWriter implements Closeable {
 
 	/**
-	 * 创建{@link ZipWriter}
+	 * 创建ZipWriter
 	 *
 	 * @param zipFile 生成的Zip文件
 	 * @param charset 编码
-	 * @return {@link ZipWriter}
+	 * @return ZipWriter
 	 */
 	public static ZipWriter of(File zipFile, Charset charset) {
 		return new ZipWriter(zipFile, charset);
 	}
 
 	/**
-	 * 创建{@link ZipWriter}
+	 * 创建ZipWriter
 	 *
 	 * @param out     Zip输出的流，一般为输出文件流
 	 * @param charset 编码
-	 * @return {@link ZipWriter}
+	 * @return ZipWriter
 	 */
 	public static ZipWriter of(OutputStream out, Charset charset) {
 		return new ZipWriter(out, charset);
