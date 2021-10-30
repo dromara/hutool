@@ -20,13 +20,13 @@ import java.sql.SQLException;
 
 /**
  * ANSI SQL 方言
- * 
+ *
  * @author loolly
  *
  */
 public class AnsiSqlDialect implements Dialect {
 	private static final long serialVersionUID = 2088101129774974580L;
-	
+
 	protected Wrapper wrapper = new Wrapper();
 
 	@Override
@@ -113,7 +113,7 @@ public class AnsiSqlDialect implements Dialect {
 	/**
 	 * 根据不同数据库在查询SQL语句基础上包装其分页的语句<br>
 	 * 各自数据库通过重写此方法实现最小改动情况下修改分页语句
-	 * 
+	 *
 	 * @param find 标准查询语句
 	 * @param page 分页对象
 	 * @return 分页语句
@@ -122,10 +122,8 @@ public class AnsiSqlDialect implements Dialect {
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
 		return find
-				.append(" limit ")
-				.append(page.getPageSize())
-				.append(" offset ")
-				.append(page.getStartPosition());
+				.append(" limit ? offset ?")
+				.addParams(page.getPageSize(), page.getStartPosition());
 	}
 
 	@Override

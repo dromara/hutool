@@ -7,10 +7,10 @@ import cn.hutool.db.sql.Wrapper;
 
 /**
  * MySQL方言
- * @author loolly
  *
+ * @author loolly
  */
-public class MysqlDialect extends AnsiSqlDialect{
+public class MysqlDialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = -3734718212043823636L;
 
 	public MysqlDialect() {
@@ -19,9 +19,12 @@ public class MysqlDialect extends AnsiSqlDialect{
 
 	@Override
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
-		return find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getPageSize());
+		int[] startEnd = page.getStartEnd();
+		return find
+				.append(" LIMIT ?, ?")
+				.addParams(startEnd[0], startEnd[1]);
 	}
-	
+
 	@Override
 	public String dialectName() {
 		return DialectName.MYSQL.toString();

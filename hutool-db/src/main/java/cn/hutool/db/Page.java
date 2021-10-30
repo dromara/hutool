@@ -171,7 +171,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 * <pre>
 	 * 页码：0，每页10 =》 [0, 10]
 	 * 页码：1，每页10 =》 [10, 20]
-	 * 页码：2，每页10 =》 [21, 30]
+	 * 页码：2，每页10 =》 [20, 30]
 	 * 。。。
 	 * </pre>
 	 *
