@@ -9,6 +9,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * {@link Opt}的单元测试
@@ -61,6 +63,38 @@ public class OptTest {
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素
 		String name = Opt.ofNullable("hutool").peek(username -> username = "123").peek(username -> username = "456").get();
 		Assert.assertEquals("hutool", name);
+	}
+
+	@Test
+	public void peeksTest() {
+		User user = new User();
+		// 相当于上面peek的动态参数调用，更加灵活，你可以像操作数组一样去动态设置中间的步骤，也可以使用这种方式去编写你的代码
+		// 可以一行搞定
+		Opt.ofNullable("hutool").peeks(user::setUsername, user::setNickname, System.out::println);
+		// 也可以在适当的地方换行使得代码的可读性提高
+		Opt.of(user).peeks(
+				u -> Assert.assertEquals("hutool", u.getNickname()),
+				u -> Assert.assertEquals("hutool", u.getUsername())
+		);
+		Assert.assertEquals("hutool", user.getNickname());
+		Assert.assertEquals("hutool", user.getUsername());
+
+		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素,这是java语言的特性。。。
+		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
+		String name = Opt.ofNullable("hutool").peeks(username -> username = "123", username -> username = "456", n -> Assert.assertEquals("hutool", n)).get();
+		Assert.assertEquals("hutool", name);
+
+		// 在控制台打印n次hutool
+		int n = 10;
+		@SuppressWarnings("unchecked")
+		Consumer<String>[] actions = Stream.<Consumer<String>>generate(() -> System.out::println).limit(n).toArray(Consumer[]::new);
+		Opt.ofNullable("hutool").peeks(actions);
+
+		// 当然，以下情况不会抛出NPE，但也没什么意义
+		Opt.ofNullable("hutool").peeks().peeks().peeks();
+		Opt.ofNullable(null).peeks(i -> {
+		});
+
 	}
 
 	@Test
