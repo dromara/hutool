@@ -20,3 +20,7 @@ starttlsEnable = true
 sslEnable = true
 # 调试模式
 debug = true
+# 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+splitlongparameters = false
+# 是否编码附件文件名（默认true）
+encodefilename = true

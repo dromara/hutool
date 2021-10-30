@@ -313,9 +313,10 @@ public class QrCodeUtil {
 			// 默认配置
 			config = new QrConfig();
 		}
+
 		BitMatrix bitMatrix;
 		try {
-			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints());
+			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints(format));
 		} catch (WriterException e) {
 			throw new QrCodeException(e);
 		}

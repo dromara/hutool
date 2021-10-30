@@ -7,7 +7,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
@@ -737,7 +736,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 		CellStyle style = null;
 		if (null != this.styleSet) {
-			style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+			style = styleSet.getStyleByValueType(content, isSetHeaderStyle);
 		}
 
 		return merge(firstRow, lastRow, firstColumn, lastColumn, content, style);
@@ -765,7 +764,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
 			CellUtil.setCellValue(cell, content, cellStyle);
-			Console.log("{} {} {}", firstColumn, firstRow, cell.getStringCellValue());
 		}
 		return this;
 	}

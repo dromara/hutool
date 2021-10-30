@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
  * @param <V> 值类型
  * @author Looly
  */
-public class FIFOCache<K, V> extends AbstractCache<K, V> {
+public class FIFOCache<K, V> extends StampedCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**

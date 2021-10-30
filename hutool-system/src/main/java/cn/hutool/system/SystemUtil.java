@@ -1,9 +1,9 @@
 package cn.hutool.system;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.SystemPropsUtil;
 
 import java.io.PrintWriter;
 import java.lang.management.ClassLoadingMXBean;
@@ -17,7 +17,6 @@ import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Java的System类封装工具类。<br>
@@ -25,7 +24,7 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class SystemUtil {
+public class SystemUtil extends SystemPropsUtil {
 
 	// ----- Java运行时环境信息 -----/
 	/**
@@ -149,117 +148,6 @@ public class SystemUtil {
 	 */
 	public final static String USER_DIR = SystemPropsKeys.USER_DIR;
 
-	// ----------------------------------------------------------------------- Basic start
-
-	/**
-	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 defaultValue
-	 *
-	 * @param name         属性名
-	 * @param defaultValue 默认值
-	 * @return 属性值或defaultValue
-	 * @see System#getProperty(String)
-	 * @see System#getenv(String)
-	 */
-	public static String get(String name, String defaultValue) {
-		return StrUtil.nullToDefault(get(name, false), defaultValue);
-	}
-
-	/**
-	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 {@code null}
-	 *
-	 * @param name  属性名
-	 * @param quiet 安静模式，不将出错信息打在{@code System.err}中
-	 * @return 属性值或{@code null}
-	 * @see System#getProperty(String)
-	 * @see System#getenv(String)
-	 */
-	public static String get(String name, boolean quiet) {
-		String value = null;
-		try {
-			value = System.getProperty(name);
-		} catch (SecurityException e) {
-			if (false == quiet) {
-				Console.error("Caught a SecurityException reading the system property '{}'; " +
-						"the SystemUtil property value will default to null.", name);
-			}
-		}
-
-		if (null == value) {
-			try {
-				value = System.getenv(name);
-			} catch (SecurityException e) {
-				if (false == quiet) {
-					Console.error("Caught a SecurityException reading the system env '{}'; " +
-							"the SystemUtil env value will default to null.", name);
-				}
-			}
-		}
-
-		return value;
-	}
-
-	/**
-	 * 获得System属性
-	 *
-	 * @param key 键
-	 * @return 属性值
-	 * @see System#getProperty(String)
-	 * @see System#getenv(String)
-	 */
-	public static String get(String key) {
-		return get(key, null);
-	}
-
-	/**
-	 * 获得boolean类型值
-	 *
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 */
-	public static boolean getBoolean(String key, boolean defaultValue) {
-		String value = get(key);
-		if (value == null) {
-			return defaultValue;
-		}
-
-		value = value.trim().toLowerCase();
-		if (value.isEmpty()) {
-			return true;
-		}
-
-		return Convert.toBool(value, defaultValue);
-	}
-
-	/**
-	 * 获得int类型值
-	 *
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 */
-	public static long getInt(String key, int defaultValue) {
-		return Convert.toInt(get(key), defaultValue);
-	}
-
-	/**
-	 * 获得long类型值
-	 *
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 */
-	public static long getLong(String key, long defaultValue) {
-		return Convert.toLong(get(key), defaultValue);
-	}
-
-	/**
-	 * @return 属性列表
-	 */
-	public static Properties props() {
-		return System.getProperties();
-	}
-
 	/**
 	 * 获取当前进程 PID
 	 *
@@ -268,7 +156,6 @@ public class SystemUtil {
 	public static long getCurrentPID() {
 		return Long.parseLong(getRuntimeMXBean().getName().split("@")[0]);
 	}
-	// ----------------------------------------------------------------------- Basic end
 
 	/**
 	 * 返回Java虚拟机类加载系统相关属性

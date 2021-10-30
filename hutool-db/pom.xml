@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15-SNAPSHOT</version>
+		<version>5.7.16-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -143,13 +143,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.26</version>
+			<version>8.0.27</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.23.jre7</version>
+			<version>42.3.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

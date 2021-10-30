@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -57,6 +58,10 @@ public class CopyOptions implements Serializable {
 	 * 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等
 	 */
 	protected Editor<String> fieldNameEditor;
+	/**
+	 * 字段属性值编辑器，用于自定义属性值转换规则，例如null转""等
+	 */
+	protected BiFunction<String, Object, Object> fieldValueEditor;
 	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 */
@@ -225,6 +230,31 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
+	 * 设置字段属性值编辑器，用于自定义属性值转换规则，例如null转""等<br>
+	 *
+	 * @param fieldValueEditor 字段属性值编辑器，用于自定义属性值转换规则，例如null转""等
+	 * @return CopyOptions
+	 * @since 5.7.15
+	 */
+	public CopyOptions setFieldValueEditor(BiFunction<String, Object, Object> fieldValueEditor) {
+		this.fieldValueEditor = fieldValueEditor;
+		return this;
+	}
+
+	/**
+	 * 编辑字段值
+	 *
+	 * @param fieldName  字段名
+	 * @param fieldValue 字段值
+	 * @return 编辑后的字段值
+	 * @since 5.7.15
+	 */
+	protected Object editFieldValue(String fieldName, Object fieldValue) {
+		return (null != this.fieldValueEditor) ?
+				this.fieldValueEditor.apply(fieldName, fieldValue) : fieldValue;
+	}
+
+	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 *
 	 * @return 是否支持
@@ -251,12 +281,12 @@ public class CopyOptions implements Serializable {
 	 * 当非反向，则根据源字段名获取目标字段名，反之根据目标字段名获取源字段名。
 	 *
 	 * @param fieldName 字段名
-	 * @param reversed 是否反向映射
+	 * @param reversed  是否反向映射
 	 * @return 映射后的字段名
 	 */
-	protected String getMappedFieldName(String fieldName, boolean reversed){
+	protected String getMappedFieldName(String fieldName, boolean reversed) {
 		Map<String, String> mapping = reversed ? getReversedMapping() : this.fieldMapping;
-		if(MapUtil.isEmpty(mapping)){
+		if (MapUtil.isEmpty(mapping)) {
 			return fieldName;
 		}
 		return ObjectUtil.defaultIfNull(mapping.get(fieldName), fieldName);
@@ -264,11 +294,12 @@ public class CopyOptions implements Serializable {
 
 	/**
 	 * 转换字段名为编辑后的字段名
+	 *
 	 * @param fieldName 字段名
 	 * @return 编辑后的字段名
 	 * @since 5.4.2
 	 */
-	protected String editFieldName(String fieldName){
+	protected String editFieldName(String fieldName) {
 		return (null != this.fieldNameEditor) ? this.fieldNameEditor.edit(fieldName) : fieldName;
 	}
 
@@ -279,10 +310,10 @@ public class CopyOptions implements Serializable {
 	 * @since 4.1.10
 	 */
 	private Map<String, String> getReversedMapping() {
-		if(null == this.fieldMapping){
+		if (null == this.fieldMapping) {
 			return null;
 		}
-		if(null == this.reversedFieldMapping){
+		if (null == this.reversedFieldMapping) {
 			reversedFieldMapping = MapUtil.reverse(this.fieldMapping);
 		}
 		return reversedFieldMapping;

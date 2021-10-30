@@ -8,6 +8,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.SystemPropsUtil;
 import cn.hutool.log.Log;
 
 import java.io.BufferedReader;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 /**
  * Setting文件加载器
- * 
+ *
  * @author Looly
  *
  */
@@ -47,7 +48,7 @@ public class SettingLoader {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param groupedMap GroupedMap
 	 */
 	public SettingLoader(GroupedMap groupedMap) {
@@ -56,7 +57,7 @@ public class SettingLoader {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param groupedMap GroupedMap
 	 * @param charset 编码
 	 * @param isUseVariable 是否使用变量
@@ -69,7 +70,7 @@ public class SettingLoader {
 
 	/**
 	 * 加载设置文件
-	 * 
+	 *
 	 * @param resource 配置文件URL
 	 * @return 加载是否成功
 	 */
@@ -93,7 +94,7 @@ public class SettingLoader {
 
 	/**
 	 * 加载设置文件。 此方法不会关闭流对象
-	 * 
+	 *
 	 * @param settingStream 文件流
 	 * @return 加载成功与否
 	 * @throws IOException IO异常
@@ -146,7 +147,7 @@ public class SettingLoader {
 	/**
 	 * 设置变量的正则<br>
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
-	 * 
+	 *
 	 * @param regex 正则
 	 */
 	public void setVarRegex(String regex) {
@@ -155,7 +156,7 @@ public class SettingLoader {
 
 	/**
 	 * 赋值分隔符（用于分隔键值对）
-	 * 
+	 *
 	 * @param assignFlag 正则
 	 * @since 4.6.5
 	 */
@@ -166,7 +167,7 @@ public class SettingLoader {
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
 	 * 持久化会不会保留之前的分组
-	 * 
+	 *
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
@@ -194,7 +195,7 @@ public class SettingLoader {
 
 	/**
 	 * 存储到Writer
-	 * 
+	 *
 	 * @param writer Writer
 	 */
 	synchronized private void store(PrintWriter writer) {
@@ -209,7 +210,7 @@ public class SettingLoader {
 	// ----------------------------------------------------------------------------------- Private method start
 	/**
 	 * 替换给定值中的变量标识
-	 * 
+	 *
 	 * @param group 所在分组
 	 * @param value 值
 	 * @return 替换后的字符串
@@ -230,13 +231,9 @@ public class SettingLoader {
 						varValue = this.groupedMap.get(groupAndKey.get(0), groupAndKey.get(1));
 					}
 				}
-				// 系统参数中查找
+				// 系统参数和环境变量中查找
 				if (null == varValue) {
-					varValue = System.getProperty(key);
-				}
-				// 环境变量中查找
-				if (null == varValue) {
-					varValue = System.getenv(key);
+					varValue = SystemPropsUtil.get(key);
 				}
 
 				if (null != varValue) {

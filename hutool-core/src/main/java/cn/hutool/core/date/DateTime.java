@@ -7,11 +7,13 @@ import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.SystemPropsUtil;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -167,7 +169,7 @@ public class DateTime extends Date {
 	 * @since 5.0.5
 	 */
 	public DateTime(Instant instant, ZoneId zoneId) {
-		this(instant.toEpochMilli(), TimeZone.getTimeZone(ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault())));
+		this(instant.toEpochMilli(), ZoneUtil.toTimeZone(zoneId));
 	}
 
 	/**
@@ -177,7 +179,7 @@ public class DateTime extends Date {
 	 * @since 5.0.0
 	 */
 	public DateTime(TemporalAccessor temporalAccessor) {
-		this(DateUtil.toInstant(temporalAccessor));
+		this(TemporalAccessorUtil.toInstant(temporalAccessor));
 	}
 
 	/**
@@ -276,7 +278,7 @@ public class DateTime extends Date {
 	 * @since 5.0.0
 	 */
 	public DateTime(CharSequence dateStr, DateTimeFormatter formatter) {
-		this(Instant.from(formatter.parse(dateStr)), formatter.getZone());
+		this(TemporalAccessorUtil.toInstant(formatter.parse(dateStr)), formatter.getZone());
 	}
 
 	/**
@@ -287,7 +289,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, DateParser dateParser) {
-		this(dateStr, dateParser, true);
+		this(dateStr, dateParser, SystemPropsUtil.getBoolean(SystemPropsUtil.HUTOOL_DATE_LENIENT, true));
 	}
 
 	/**
@@ -699,6 +701,16 @@ public class DateTime extends Date {
 	 */
 	public java.sql.Date toSqlDate() {
 		return new java.sql.Date(getTime());
+	}
+
+	/**
+	 * 转换为 {@link LocalDateTime}
+	 *
+	 * @return {@link LocalDateTime}
+	 * @since 5.7.16
+	 */
+	public LocalDateTime toLocalDateTime() {
+		return LocalDateTimeUtil.of(this);
 	}
 
 	/**

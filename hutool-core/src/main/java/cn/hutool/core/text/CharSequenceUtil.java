@@ -18,6 +18,7 @@ import cn.hutool.core.util.StrUtil;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -1729,16 +1730,14 @@ public class CharSequenceUtil {
 	/**
 	 * 切分字符串
 	 *
-	 * @param str       被切分的字符串
+	 * @param text      被切分的字符串
 	 * @param separator 分隔符字符
 	 * @param limit     限制分片数
 	 * @return 切分后的数组
 	 */
-	public static String[] splitToArray(CharSequence str, char separator, int limit) {
-		if (null == str) {
-			return new String[]{};
-		}
-		return StrSplitter.splitToArray(str.toString(), separator, limit, false, false);
+	public static String[] splitToArray(CharSequence text, char separator, int limit) {
+		Assert.notNull(text, "Text must be not null!");
+		return StrSplitter.splitToArray(text.toString(), separator, limit, false, false);
 	}
 
 	/**
@@ -2858,10 +2857,10 @@ public class CharSequenceUtil {
 			len += str.length();
 		}
 		if (isNotEmpty(prefix)) {
-			len += str.length();
+			len += prefix.length();
 		}
 		if (isNotEmpty(suffix)) {
-			len += str.length();
+			len += suffix.length();
 		}
 		StringBuilder sb = new StringBuilder(len);
 		if (isNotEmpty(prefix) && false == startWith(str, prefix)) {
@@ -4340,7 +4339,21 @@ public class CharSequenceUtil {
 	 * @return 给定字符串的所有字符是否都一样
 	 * @since 5.7.3
 	 */
-	public static boolean isCharEquals(String str) {
-		return isBlank(str.replace(str.charAt(0), CharUtil.SPACE));
+	public static boolean isCharEquals(CharSequence str) {
+		Assert.notEmpty(str, "Str to check must be not empty!");
+		return count(str, str.charAt(0)) == str.length();
+	}
+
+	/**
+	 * 对字符串归一化处理，如 "Á" 可以使用 "u00C1"或 "u0041u0301"表示，实际测试中两个字符串并不equals<br>
+	 * 因此使用此方法归一为一种表示形式，默认按照W3C通常建议的，在NFC中交换文本。
+	 *
+	 * @param str 归一化的字符串
+	 * @return 归一化后的字符串
+	 * @see Normalizer#normalize(CharSequence, Normalizer.Form)
+	 * @since 5.7.16
+	 */
+	public static String normalize(CharSequence str) {
+		return Normalizer.normalize(str, Normalizer.Form.NFC);
 	}
 }
