@@ -28,7 +28,7 @@ public class OracleDialect extends AnsiSqlDialect {
 					.append(" WHERE table_alias.rownum_ > ?")//
 					.addParams(startEnd[1], startEnd[0]);//
 		} else {
-			// start为0时，可以不用拼接该查询条件
+			// start为0时，可以不用拼接该查询条件，降低SQL复杂度，部分情况下可以提升第一页查询的性能。
 			return find
 					.insertPreFragment("SELECT row_.*, ROWNUM rownum_ FROM ( ")
 					.append(" ) row_ WHERE ROWNUM <= ?")//
