@@ -270,9 +270,9 @@ public class Opt<T> {
 	 * <p>属于 {@link #ifPresent}的链式拓展
 	 * <p>属于 {@link #peek(Consumer)}的动态拓展
 	 *
-	 * @param actions 值存在时执行的操作，动态参数，可传入数组，当数组为空数组时并不会抛出 {@code NPE}
+	 * @param actions 值存在时执行的操作，动态参数，可传入数组，当数组为一个空数组时并不会抛出 {@code NPE}
 	 * @return this
-	 * @throws NullPointerException 如果值存在，并且传入的操作为 {@code null}
+	 * @throws NullPointerException 如果值存在，并且传入的操作集中的元素为 {@code null}
 	 * @author VampireAchao
 	 */
 	@SafeVarargs
