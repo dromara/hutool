@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.16 (2021-10-30)
+# 5.7.16 (2021-10-31)
 
 ### 🐣新特性
 * 【core   】     增加DateTime.toLocalDateTime
@@ -17,6 +17,7 @@
 * 【core   】     StopWatch增加prettyPrint重载（issue#1910@Github）
 * 【core   】     修改RegexPool中Ipv4正则
 * 【json   】     Filter改为MutablePair，以便编辑键值对（issue#1921@Github）
+* 【core   】     Opt增加peeks方法（pr#445@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
