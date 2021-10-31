@@ -18,6 +18,7 @@
 * 【core   】     修改RegexPool中Ipv4正则
 * 【json   】     Filter改为MutablePair，以便编辑键值对（issue#1921@Github）
 * 【core   】     Opt增加peeks方法（pr#445@Gitee）
+* 【extra  】     MailAccount中user默认值改为邮箱全称（issue#I4FYVY@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
