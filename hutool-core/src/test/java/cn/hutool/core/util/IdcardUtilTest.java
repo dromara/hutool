@@ -24,6 +24,10 @@ public class IdcardUtilTest {
 		boolean valid15 = IdcardUtil.isValidCard(ID_15);
 		Assert.assertTrue(valid15);
 
+		//港、澳、台、外籍人员在中国内陆办理社会保险等使用的临时身份证
+		boolean validId = IdcardUtil.isValidCard("999101198202210010");
+		Assert.assertTrue(validId);
+
 		// 无效
 		String idCard = "360198910283844";
 		Assert.assertFalse(IdcardUtil.isValidCard(idCard));

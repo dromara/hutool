@@ -86,6 +86,7 @@ public class IdcardUtil {
 		//issue#1277，台湾身份证号码以83开头，但是行政区划为71
 		CITY_CODES.put("83", "台湾");
 		CITY_CODES.put("91", "国外");
+		CITY_CODES.put("99", "临时");
 
 		TW_FIRST_CODE.put('A', 10);
 		TW_FIRST_CODE.put('B', 11);
@@ -250,6 +251,11 @@ public class IdcardUtil {
 		final String proCode = idcard.substring(0, 2);
 		if (null == CITY_CODES.get(proCode)) {
 			return false;
+		}
+
+		//港、澳、台、外籍人员在中国内陆办理社会保险等使用的临时身份证:前两位为99
+		if("99".equals(proCode)){
+			return true;
 		}
 
 		//校验生日
