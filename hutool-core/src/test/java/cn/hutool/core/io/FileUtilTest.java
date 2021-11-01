@@ -300,6 +300,12 @@ public class FileUtilTest {
 
 	@Test
 	@Ignore
+	public void loopFilesTest2() {
+		FileUtil.loopFiles("").forEach(Console::log);
+	}
+
+	@Test
+	@Ignore
 	public void loopFilesWithDepthTest() {
 		List<File> files = FileUtil.loopFiles(FileUtil.file("d:/m2_repo"), 2, null);
 		for (File file : files) {
