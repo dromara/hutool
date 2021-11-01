@@ -11,7 +11,7 @@ port = 465
 # 发件人（必须正确，否则发送失败）
 from = 小磊<hutool@yeah.net>
 # 用户名（注意：如果使用foxmail邮箱，此处user为qq号）
-user = hutool
+user = hutool@yeah.net
 # 密码
 pass = q1w2e3
 # 使用 STARTTLS安全连接

@@ -608,8 +608,9 @@ public class MailAccount implements Serializable {
 			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(fromAddress, fromAddress.indexOf('@') + 1));
 		}
 		if (StrUtil.isBlank(user)) {
-			// 如果用户名为空，默认为发件人邮箱前缀
-			this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
+			// 如果用户名为空，默认为发件人（issue#I4FYVY@Gitee）
+			//this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
+			this.user = fromAddress;
 		}
 		if (null == this.auth) {
 			// 如果密码非空白，则使用认证模式
