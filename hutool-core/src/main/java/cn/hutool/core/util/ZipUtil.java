@@ -412,7 +412,7 @@ public class ZipUtil {
 	/**
 	 * 将文件流压缩到目标流中
 	 *
-	 * @param zipOutputStream 目标流，压缩完成不关闭
+	 * @param zipOutputStream 目标流，压缩完成自动关闭
 	 * @param paths           流数据在压缩文件中的路径或文件名
 	 * @param ins             要压缩的源，添加完成后自动关闭流
 	 * @throws IORuntimeException IO异常

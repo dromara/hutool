@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -169,15 +170,20 @@ public class ZipUtilTest {
 		String file3 = "d:/test/asn1.key";
 
 		String zip = "d:/test/test2.zip";
-		try (OutputStream out = new FileOutputStream(zip)){
-			//实际应用中, out 为 HttpServletResponse.getOutputStream
-			ZipUtil.zip(out, Charset.defaultCharset(), false, null,
-					new File(file1),
-					new File(file2),
-					new File(file3)
-			);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		//实际应用中, out 为 HttpServletResponse.getOutputStream
+		ZipUtil.zip(FileUtil.getOutputStream(zip), Charset.defaultCharset(), false, null,
+				new File(file1),
+				new File(file2),
+				new File(file3)
+		);
+	}
+
+	@Test
+	@Ignore
+	public void zipToStreamTest(){
+		String zip = "d:/test/testToStream.zip";
+		OutputStream out = FileUtil.getOutputStream(zip);
+		ZipUtil.zip(out, new String[]{"sm1_alias.txt"},
+				new InputStream[]{FileUtil.getInputStream("d:/test/sm4_1.txt")});
 	}
 }
