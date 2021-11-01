@@ -583,15 +583,15 @@ public class FileUtil extends PathUtil {
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 *
-	 * @param fullFilePath 文件的全路径，使用POSIX风格
+	 * @param path 相对ClassPath的目录或者绝对路径目录，使用POSIX风格
 	 * @return 文件，若路径为null，返回null
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File touch(String fullFilePath) throws IORuntimeException {
-		if (fullFilePath == null) {
+	public static File touch(String path) throws IORuntimeException {
+		if (path == null) {
 			return null;
 		}
-		return touch(file(fullFilePath));
+		return touch(file(path));
 	}
 
 	/**
@@ -2982,10 +2982,11 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 写数据到文件中
+	 * 写数据到文件中<br>
+	 * 文件路径如果是相对路径，则相对ClassPath
 	 *
 	 * @param data 数据
-	 * @param path 目标文件
+	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
