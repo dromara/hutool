@@ -64,6 +64,34 @@ public class OptTest {
 	}
 
 	@Test
+	public void peeksTest() {
+		User user = new User();
+		// 相当于上面peek的动态参数调用，更加灵活，你可以像操作数组一样去动态设置中间的步骤，也可以使用这种方式去编写你的代码
+		// 可以一行搞定
+		Opt.ofNullable("hutool").peeks(user::setUsername, user::setNickname);
+		// 也可以在适当的地方换行使得代码的可读性提高
+		Opt.of(user).peeks(
+				u -> Assert.assertEquals("hutool", u.getNickname()),
+				u -> Assert.assertEquals("hutool", u.getUsername())
+		);
+		Assert.assertEquals("hutool", user.getNickname());
+		Assert.assertEquals("hutool", user.getUsername());
+
+		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素,这是java语言的特性。。。
+		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
+		String name = Opt.ofNullable("hutool").peeks(
+				username -> username = "123", username -> username = "456",
+				n -> Assert.assertEquals("hutool", n)).get();
+		Assert.assertEquals("hutool", name);
+
+		// 当然，以下情况不会抛出NPE，但也没什么意义
+		Opt.ofNullable("hutool").peeks().peeks().peeks();
+		Opt.ofNullable(null).peeks(i -> {
+		});
+
+	}
+
+	@Test
 	public void orTest() {
 		// 这是jdk9 Optional中的新函数，直接照搬了过来
 		// 给一个替代的Opt

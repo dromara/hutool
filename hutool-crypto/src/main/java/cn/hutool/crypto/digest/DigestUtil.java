@@ -1,12 +1,11 @@
 package cn.hutool.crypto.digest;
 
+import cn.hutool.core.util.CharsetUtil;
+
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-
-import javax.crypto.SecretKey;
-
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 摘要算法工具类
@@ -424,7 +423,7 @@ public class DigestUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -436,7 +435,7 @@ public class DigestUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥{@link SecretKey}，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */

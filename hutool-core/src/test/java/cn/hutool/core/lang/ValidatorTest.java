@@ -21,7 +21,7 @@ public class ValidatorTest {
 	}
 
 	@Test
-	public void hasNumberTest() throws Exception {
+	public void hasNumberTest() {
 		String var1 = "";
 		String var2 = "str";
 		String var3 = "180";
@@ -217,5 +217,14 @@ public class ValidatorTest {
 	@Test
 	public void isCarDrivingLicenceTest(){
 		Assert.assertTrue(Validator.isCarDrivingLicence("430101758218"));
+	}
+
+	@Test
+	public void validateIpv4Test(){
+		Validator.validateIpv4("192.168.1.1", "Error ip");
+		Validator.validateIpv4("8.8.8.8", "Error ip");
+		Validator.validateIpv4("0.0.0.0", "Error ip");
+		Validator.validateIpv4("255.255.255.255", "Error ip");
+		Validator.validateIpv4("127.0.0.0", "Error ip");
 	}
 }

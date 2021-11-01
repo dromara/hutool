@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -86,5 +87,11 @@ public class QrCodeUtilTest {
 	public void decodeTest3(){
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		Console.log(decode);
+	}
+
+	@Test
+	public void pdf417Test(){
+		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
+		Assert.assertNotNull(image);
 	}
 }

@@ -2,10 +2,10 @@ package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class UrlPath {
 	 * @param charset decode用的编码，null表示不做decode
 	 * @return UrlPath
 	 */
-	public static UrlPath of(String pathStr, Charset charset) {
+	public static UrlPath of(CharSequence pathStr, Charset charset) {
 		final UrlPath urlPath = new UrlPath();
 		urlPath.parse(pathStr, charset);
 		return urlPath;
@@ -97,7 +97,7 @@ public class UrlPath {
 	 * @param charset decode编码，null表示不解码
 	 * @return this
 	 */
-	public UrlPath parse(String path, Charset charset) {
+	public UrlPath parse(CharSequence path, Charset charset) {
 		if (StrUtil.isNotEmpty(path)) {
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 			if(StrUtil.endWith(path, CharUtil.SLASH)){
@@ -127,7 +127,7 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(URLUtil.encodePathSegment(segment, charset));
+			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
 		}
 		if (withEngTag || StrUtil.isEmpty(builder)) {
 			builder.append(CharUtil.SLASH);

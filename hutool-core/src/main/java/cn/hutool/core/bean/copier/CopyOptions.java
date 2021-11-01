@@ -242,10 +242,11 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
-	 * 转换字段名为编辑后的字段名
+	 * 编辑字段值
 	 *
-	 * @param fieldName 字段名
-	 * @return 编辑后的字段名
+	 * @param fieldName  字段名
+	 * @param fieldValue 字段值
+	 * @return 编辑后的字段值
 	 * @since 5.7.15
 	 */
 	protected Object editFieldValue(String fieldName, Object fieldValue) {

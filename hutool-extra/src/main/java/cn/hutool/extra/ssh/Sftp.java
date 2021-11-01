@@ -17,6 +17,7 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -337,7 +338,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			sftpATTRS = this.channel.stat(dir);
 		} catch (SftpException e) {
-			if(e.getMessage().contains("No such file")){
+			if (e.getMessage().contains("No such file")) {
 				// 文件不存在直接返回false
 				// pr#378@Gitee
 				return false;
@@ -465,6 +466,27 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
+	 * 上传文件到指定目录，可选：
+	 *
+	 * <pre>
+	 * 1. path为null或""上传到当前路径
+	 * 2. path为相对路径则相对于当前路径的子路径
+	 * 3. path为绝对路径则上传到此路径
+	 * </pre>
+	 *
+	 * @param destPath   服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param fileName   文件名
+	 * @param fileStream 文件流
+	 * @return 是否上传成功
+	 * @since 5.7.16
+	 */
+	public boolean upload(String destPath, String fileName, InputStream fileStream) {
+		destPath = StrUtil.addSuffixIfNot(destPath, StrUtil.SLASH) + StrUtil.removePrefix(fileName, StrUtil.SLASH);
+		put(fileStream, destPath, null, Mode.OVERWRITE);
+		return true;
+	}
+
+	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
 	 *
 	 * @param srcFilePath 本地文件路径
@@ -500,6 +522,25 @@ public class Sftp extends AbstractFtp {
 	public Sftp put(String srcFilePath, String destPath, SftpProgressMonitor monitor, Mode mode) {
 		try {
 			channel.put(srcFilePath, destPath, monitor, mode.ordinal());
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
+		return this;
+	}
+
+	/**
+	 * 将本地数据流上传到目标服务器，目标文件名为destPath，目标必须为文件
+	 *
+	 * @param srcStream 本地的数据流
+	 * @param destPath  目标路径，
+	 * @param monitor   上传进度监控，通过实现此接口完成进度显示
+	 * @param mode      {@link Mode} 模式
+	 * @return this
+	 * @since 5.7.16
+	 */
+	public Sftp put(InputStream srcStream, String destPath, SftpProgressMonitor monitor, Mode mode) {
+		try {
+			channel.put(srcStream, destPath, monitor, mode.ordinal());
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
