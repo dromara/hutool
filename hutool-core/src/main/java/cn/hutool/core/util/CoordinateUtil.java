@@ -111,7 +111,7 @@ public class CoordinateUtil {
 	 * @param lat 纬度值
 	 * @return GCJ-02 坐标
 	 */
-	public static Coordinate bd09toGcj02(double lng, double lat) {
+	public static Coordinate bd09ToGcj02(double lng, double lat) {
 		double x = lng - 0.0065;
 		double y = lat - 0.006;
 		double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
@@ -129,7 +129,7 @@ public class CoordinateUtil {
 	 * @return WGS84坐标
 	 */
 	public static Coordinate bd09toWgs84(double lng, double lat) {
-		final Coordinate gcj02 = bd09toGcj02(lng, lat);
+		final Coordinate gcj02 = bd09ToGcj02(lng, lat);
 		return gcj02ToWgs84(gcj02.lng, gcj02.lat);
 	}
 
