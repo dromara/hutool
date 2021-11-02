@@ -459,11 +459,11 @@ public class HttpUtil {
 	 * </pre>
 	 *
 	 * @param paramMap 表单数据
-	 * @param charset  编码，null表示不encode键值对
+	 * @param charset  编码，{@code null} 表示不encode键值对
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
-		return toParams(paramMap, charset, true);
+		return UrlQuery.of(paramMap).build(charset);
 	}
 
 	/**
@@ -480,9 +480,11 @@ public class HttpUtil {
 	 * @param isEncode 是否转义键和值
 	 * @return url参数
 	 * @since 5.7.13
+	 * @deprecated 请使用 {@link #toParams(Map, Charset)}, charset为null表示不编码
 	 */
+	@Deprecated
 	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isEncode) {
-		return UrlQuery.of(paramMap).build(charset, isEncode);
+		return toParams(paramMap, isEncode ? charset : null);
 	}
 
 	/**

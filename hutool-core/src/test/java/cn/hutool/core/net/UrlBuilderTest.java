@@ -306,4 +306,11 @@ public class UrlBuilderTest {
 
 		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
 	}
+
+	@Test
+	public void percent2BTest(){
+		String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
+		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
+		Assert.assertEquals(url, of.toString());
+	}
 }
