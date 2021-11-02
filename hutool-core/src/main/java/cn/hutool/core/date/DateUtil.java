@@ -1877,6 +1877,10 @@ public class DateUtil extends CalendarUtil {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 
+	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit, int step) {
+		return CollUtil.newArrayList((Iterable<DateTime>) new DateRange(start, end, unit, step));
+	}
+
 	/**
 	 * 通过生日计算星座
 	 *
