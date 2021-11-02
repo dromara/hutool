@@ -1877,6 +1877,16 @@ public class DateUtil extends CalendarUtil {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 
+	/**
+	 * 创建日期范围生成器
+	 *
+	 * @param start 起始日期时间
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
+	 * @param step  步进
+	 * @return {@link DateRange}
+	 * @since 5.7.16
+	 */
 	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit, int step) {
 		return CollUtil.newArrayList((Iterable<DateTime>) new DateRange(start, end, unit, step));
 	}

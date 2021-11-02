@@ -20,6 +20,8 @@
 * 【core   】     Opt增加peeks方法（pr#445@Gitee）
 * 【extra  】     MailAccount中user默认值改为邮箱全称（issue#I4FYVY@Gitee）
 * 【core   】     增加CoordinateUtil（pr#446@Gitee）
+* 【core   】     DateUtil增加rangeToList重载（pr#1925@Github）
+* 【core   】     CollUtil增加safeContains方法（pr#1926@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
