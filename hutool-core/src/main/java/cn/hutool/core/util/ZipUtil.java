@@ -268,7 +268,7 @@ public class ZipUtil {
 	/**
 	 * 对文件或文件目录进行压缩
 	 *
-	 * @param zipOutputStream 生成的Zip到的目标流，不关闭此流
+	 * @param zipOutputStream 生成的Zip到的目标流，自动关闭此流
 	 * @param withSrcDir      是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
 	 * @param filter          文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
 	 * @param srcFiles        要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
