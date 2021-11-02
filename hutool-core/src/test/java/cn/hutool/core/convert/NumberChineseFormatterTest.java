@@ -278,4 +278,38 @@ public class NumberChineseFormatterTest {
 		// 非法字符
 		NumberChineseFormatter.chineseToNumber("一百你三");
 	}
+
+	@Test
+	public void singleMoneyTest(){
+		String format = NumberChineseFormatter.format(0.01, false, true);
+		Assert.assertEquals("一分", format);
+		format = NumberChineseFormatter.format(0.10, false, true);
+		Assert.assertEquals("一角", format);
+		format = NumberChineseFormatter.format(0.12, false, true);
+		Assert.assertEquals("一角二分", format);
+
+		format = NumberChineseFormatter.format(1.00, false, true);
+		Assert.assertEquals("一元整", format);
+		format = NumberChineseFormatter.format(1.10, false, true);
+		Assert.assertEquals("一元一角", format);
+		format = NumberChineseFormatter.format(1.02, false, true);
+		Assert.assertEquals("一元零二分", format);
+	}
+
+	@Test
+	public void singleNumberTest(){
+		String format = NumberChineseFormatter.format(0.01, false, false);
+		Assert.assertEquals("零点零一", format);
+		format = NumberChineseFormatter.format(0.10, false, false);
+		Assert.assertEquals("零点一", format);
+		format = NumberChineseFormatter.format(0.12, false, false);
+		Assert.assertEquals("零点一二", format);
+
+		format = NumberChineseFormatter.format(1.00, false, false);
+		Assert.assertEquals("一", format);
+		format = NumberChineseFormatter.format(1.10, false, false);
+		Assert.assertEquals("一点一", format);
+		format = NumberChineseFormatter.format(1.02, false, false);
+		Assert.assertEquals("一点零二", format);
+	}
 }
