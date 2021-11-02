@@ -414,11 +414,30 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @param value      需要查找的值
 	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @throws ClassCastException 如果类型不一致会抛出转换异常
+	 * @throws NullPointerException 当指定的元素 值为 null ,或集合类不支持null 时抛出该异常
+	 * @see Collection#contains(Object)
 	 * @since 4.1.10
 	 */
 	public static boolean contains(Collection<?> collection, Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
 	}
+
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @param collection 集合
+	 * @param value  需要查找的值
+	 * @return 果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 */
+	public static boolean safeContains(Collection<?> collection, Object value) {
+
+		try {
+			return contains(collection ,value);
+		} catch (ClassCastException | NullPointerException e) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * 自定义函数判断集合是否包含某类值
