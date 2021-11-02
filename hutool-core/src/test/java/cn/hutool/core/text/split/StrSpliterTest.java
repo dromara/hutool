@@ -54,4 +54,12 @@ public class StrSpliterTest {
 		Assert.assertEquals(Long.valueOf(1L), split.get(0));
 		Assert.assertEquals(Long.valueOf(2L), split.get(1));
 	}
+
+	@Test
+	public void splitEmptyTest(){
+		String str = "";
+		final String[] split = str.split(",");
+		final String[] strings = StrSplitter.splitToArray(str, ",", -1, false, false);
+		Assert.assertArrayEquals(split, strings);
+	}
 }
