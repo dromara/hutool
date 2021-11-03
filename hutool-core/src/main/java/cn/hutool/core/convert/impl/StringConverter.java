@@ -8,6 +8,7 @@ import cn.hutool.core.util.XmlUtil;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
@@ -31,6 +32,8 @@ public class StringConverter extends AbstractConverter<String> {
 			return clobToStr((Clob) value);
 		} else if (value instanceof Blob) {
 			return blobToStr((Blob) value);
+		} else if (value instanceof Type) {
+			return ((Type) value).getTypeName();
 		}
 
 		// 其它情况
