@@ -107,7 +107,7 @@ public interface RegexPool {
 	/**
 	 * Http URL
 	 */
-	String URL_HTTP = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(:\\d+)*(/[\\w- ./?%&=]*)?";
+	String URL_HTTP = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(:\\d+)*(/[\\w- ./?%&=:]*)?";
 	/**
 	 * 中文字、英文字母、数字和下划线
 	 */
