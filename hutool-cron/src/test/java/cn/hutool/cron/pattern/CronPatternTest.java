@@ -18,7 +18,6 @@ public class CronPatternTest {
 		CronPattern pattern;
 		// 任何时间匹配
 		pattern = new CronPattern("* * * * * *");
-		Assert.assertTrue(pattern.match(DateUtil.current(), true));
 		Assert.assertTrue(pattern.match(DateUtil.current(), false));
 	}
 	
