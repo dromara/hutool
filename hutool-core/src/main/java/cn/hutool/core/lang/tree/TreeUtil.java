@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.tree;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.lang.tree.parser.DefaultNodeParser;
 import cn.hutool.core.lang.tree.parser.NodeParser;
@@ -232,4 +233,73 @@ public class TreeUtil {
 	public static <E> Tree<E> createEmptyNode(E id) {
 		return new Tree<E>().setId(id);
 	}
+
+	/**
+	 * 找到所有的 children 不包括查询父节点id
+	 *
+	 * @param trees    完整的树
+	 * @param parentId 要查询所有子集的父id
+	 * @param <T>      节点ID类型
+	 * @return 返回所有的子集集合
+	 * @since 5.7.16
+	 */
+	public static <T> List<T> findAllChildren(List<Tree<T>> trees, T parentId) {
+		return findAllChildren(trees,parentId,Boolean.TRUE);
+	}
+
+	/**
+	 * 找到所有的 children
+	 *
+	 * @param trees    完整的树
+	 * @param parentId 要查询所有子集的父id
+	 * @param <T>      节点ID类型
+	 * @param removeFirst true 删除根节点id false 保留根节点id
+	 * @return 返回所有的子集集合
+	 * @since 5.7.16
+	 */
+	public static <T> List<T> findAllChildren(List<Tree<T>> trees, T parentId,Boolean removeFirst) {
+		List<T> result = recursiveSearchAllChildren(new ArrayList<>(), trees, parentId, Boolean.FALSE);
+		if (removeFirst && result.size() > 0) {
+			result.remove(0);
+		}
+		return result;
+	}
+
+	/**
+	 * 递归方法
+	 * @param result 结果
+	 * @param trees 要查找的集合
+	 * @param parentId 要查找所有子集的父id
+	 * @param loop 递归标记
+	 * @param <T> 节点ID类型
+	 * @return 返回所有的子集集合
+	 * @since 5.7.16
+	 */
+	private static <T> List<T> recursiveSearchAllChildren(List<T> result, List<Tree<T>> trees, T parentId, Boolean loop) {
+		if (loop) {
+			for (Tree<T> tree : trees) {
+				result.add(tree.getId());
+				if (ObjectUtil.isNotNull(tree.getChildren()) && CollUtil.isNotEmpty(tree.getChildren())) {
+					recursiveSearchAllChildren(result, tree.getChildren(), parentId, Boolean.TRUE);
+				}
+			}
+		} else {
+			for (Tree<T> tree : trees) {
+				if (parentId != null) {
+					if (tree.getId().equals(parentId)) {
+						result.add(tree.getId());
+						if (ObjectUtil.isNotNull(tree.getChildren()) && CollUtil.isNotEmpty(tree.getChildren())) {
+							recursiveSearchAllChildren(result, tree.getChildren(), parentId, Boolean.TRUE);
+						}
+					} else {
+						if (ObjectUtil.isNotNull(tree.getChildren()) && CollUtil.isNotEmpty(tree.getChildren())) {
+							recursiveSearchAllChildren(result, tree.getChildren(), parentId, Boolean.FALSE);
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 }
