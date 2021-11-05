@@ -25,6 +25,7 @@
 * 【core   】     ActualTypeMapperPool增加getStrKeyMap方法（pr#447@Gitee）
 * 【core   】     TreeUtil增加walk方法（pr#1932@Gitee）
 * 【crypto 】     SmUtil增加sm3WithSalt（pr#454@Gitee）
+* 【http   】     增加HttpInterceptor（issue#I4H1ZV@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）

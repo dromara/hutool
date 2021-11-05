@@ -89,6 +89,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/**
+	 * 请求前的拦截器，用于在请求前重新编辑请求
+	 */
+	private final HttpInterceptor.Chain interceptors = new HttpInterceptor.Chain();
+
+	/**
 	 * 默认连接超时
 	 */
 	private int connectionTimeout = HttpGlobalConfig.timeout;
@@ -146,11 +151,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * SSLSocketFactory，用于HTTPS安全连接
 	 */
 	private SSLSocketFactory ssf;
-
-	/**
-	 * 请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
-	 */
-	private Consumer<HttpRequest> consumer;
 
 	/**
 	 * 构造，URL编码默认使用UTF-8
@@ -274,8 +274,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.1.8
 	 */
 	public HttpRequest setUrl(String url) {
-		this.url = UrlBuilder.ofHttp(url, this.charset);
-		return this;
+		return setUrl(UrlBuilder.ofHttp(url, this.charset));
 	}
 
 	/**
@@ -925,13 +924,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
+	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
-	 * @param consumer 请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
+	 * @param interceptor 拦截器实现
 	 * @since 5.7.16
 	 */
-	public void setConsumer(Consumer<HttpRequest> consumer) {
-		this.consumer = consumer;
+	public void addInterceptor(HttpInterceptor interceptor) {
+		this.interceptors.addChain(interceptor);
 	}
 
 	/**
@@ -964,7 +963,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		return doExecute(isAsync, this.consumer);
+		return doExecute(isAsync, this.interceptors);
 	}
 
 	/**
@@ -1057,12 +1056,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 执行Reuqest请求
 	 *
-	 * @param isAsync 是否异步
+	 * @param isAsync      是否异步
+	 * @param interceptors 拦截器列表
 	 * @return this
 	 */
-	private HttpResponse doExecute(boolean isAsync, Consumer<HttpRequest> consumer) {
-		if (null != consumer) {
-			consumer.accept(this);
+	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain interceptors) {
+		if (null != interceptors) {
+			for (HttpInterceptor interceptor : interceptors) {
+				interceptor.process(this);
+			}
 		}
 
 		// 初始化URL
