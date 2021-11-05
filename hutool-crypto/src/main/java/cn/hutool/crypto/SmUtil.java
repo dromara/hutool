@@ -134,6 +134,16 @@ public class SmUtil {
 	}
 
 	/**
+	 * SM3加密，可以传入盐<br>
+	 *
+	 * @param salt 加密盐
+	 * @return {@link SM3}
+	 */
+	public static SM3 sm3(byte[] salt) {
+		return new SM3(salt);
+	}
+
+	/**
 	 * SM3加密，生成16进制SM3字符串<br>
 	 *
 	 * @param data 数据
