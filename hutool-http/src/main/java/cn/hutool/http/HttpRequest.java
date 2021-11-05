@@ -148,6 +148,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private SSLSocketFactory ssf;
 
 	/**
+	 * 请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
+	 */
+	private Consumer<HttpRequest> consumer;
+
+	/**
 	 * 构造，URL编码默认使用UTF-8
 	 *
 	 * @param url URL
@@ -920,6 +925,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 设置请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
+	 *
+	 * @param consumer 请求前的处理器，用于在请求前重新编辑请求，类似于拦截器
+	 * @since 5.7.16
+	 */
+	public void setConsumer(Consumer<HttpRequest> consumer) {
+		this.consumer = consumer;
+	}
+
+	/**
 	 * 执行Reuqest请求
 	 *
 	 * @return this
@@ -949,22 +964,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		// 初始化URL
-		urlWithParamIfGet();
-		// 初始化 connection
-		initConnection();
-		// 发送请求
-		send();
-
-		// 手动实现重定向
-		HttpResponse httpResponse = sendRedirectIfPossible();
-
-		// 获取响应
-		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
-		}
-
-		return httpResponse;
+		return doExecute(isAsync, this.consumer);
 	}
 
 	/**
@@ -1055,6 +1055,35 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Private method start
 
 	/**
+	 * 执行Reuqest请求
+	 *
+	 * @param isAsync 是否异步
+	 * @return this
+	 */
+	private HttpResponse doExecute(boolean isAsync, Consumer<HttpRequest> consumer) {
+		if (null != consumer) {
+			consumer.accept(this);
+		}
+
+		// 初始化URL
+		urlWithParamIfGet();
+		// 初始化 connection
+		initConnection();
+		// 发送请求
+		send();
+
+		// 手动实现重定向
+		HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
+
+		// 获取响应
+		if (null == httpResponse) {
+			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
+		}
+
+		return httpResponse;
+	}
+
+	/**
 	 * 初始化网络连接
 	 */
 	private void initConnection() {
@@ -1108,9 +1137,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
+	 * @param isAsync 是否异步
 	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
-	private HttpResponse sendRedirectIfPossible() {
+	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		if (this.maxRedirectCount < 1) {
 			// 不重定向
 			return null;
@@ -1132,7 +1162,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					setUrl(httpConnection.header(Header.LOCATION));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
-						return execute();
+						return doExecute(isAsync, null);
 					}
 				}
 			}
