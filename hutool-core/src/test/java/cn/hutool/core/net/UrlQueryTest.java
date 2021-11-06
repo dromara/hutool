@@ -109,6 +109,14 @@ public class UrlQueryTest {
 	}
 
 	@Test
+	public void parsePlusTest(){
+		// 根据RFC3986，在URL中，+是安全字符，即此符号不转义
+		final String a = UrlQuery.of("a+b=1+2", CharsetUtil.CHARSET_UTF_8)
+				.build(CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a+b=1+2", a);
+	}
+
+	@Test
 	public void spaceTest(){
 		// 根据RFC3986，在URL中，空格编码为"%20"
 		final String a = UrlQuery.of(MapUtil.of("a ", " ")).build(CharsetUtil.CHARSET_UTF_8);

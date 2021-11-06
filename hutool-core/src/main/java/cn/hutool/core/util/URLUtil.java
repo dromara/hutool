@@ -328,9 +328,6 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 4.4.1
 	 */
 	public static String decode(String content, Charset charset) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset);
 	}
 
@@ -345,9 +342,6 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 5.6.3
 	 */
 	public static String decode(String content, Charset charset, boolean isPlusToSpace) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset, isPlusToSpace);
 	}
 
@@ -361,7 +355,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String decode(String content, String charset) throws UtilException {
-		return decode(content, CharsetUtil.charset(charset));
+		return decode(content, StrUtil.isEmpty(charset) ? null : CharsetUtil.charset(charset));
 	}
 
 	/**

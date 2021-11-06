@@ -10,7 +10,6 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.net.FormUrlencoded;
 import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
@@ -1229,8 +1228,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.3.2
 	 */
 	private String getFormUrlEncoded() {
-		return UrlQuery.of(this.form)
-				.build(FormUrlencoded.ALL, FormUrlencoded.ALL, this.charset);
+		return UrlQuery.of(this.form, true).build(this.charset);
 	}
 
 	/**
