@@ -3,6 +3,7 @@ package cn.hutool.http;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
@@ -142,6 +143,12 @@ public class HttpUtilTest {
 
 		String encodedParams = HttpUtil.toParams(map);
 		Assert.assertEquals(paramsStr, encodedParams);
+		
+		paramsStr = ";:@&=+$,/?#[]";
+		final String encodedStr = "%3B%3A%40%26%3D%2B%24%2C%2F%3F%23%5B%5D";
+		
+		Assert.assertEquals(paramsStr, HttpUtil.decodeParamMap("str=" + encodedStr, CharsetUtil.CHARSET_UTF_8).get("str"));
+		Assert.assertEquals("str=" + encodedStr, HttpUtil.toParams(Dict.of("str", paramsStr)));
 	}
 
 	@Test
