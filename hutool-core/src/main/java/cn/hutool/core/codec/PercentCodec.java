@@ -179,6 +179,7 @@ public class PercentCodec implements Serializable {
 					continue;
 				}
 
+				// 兼容双字节的Unicode符处理（如部分emoji）
 				byte[] ba = buf.toByteArray();
 				for (byte toEncode : ba) {
 					// Converting each byte in the buffer

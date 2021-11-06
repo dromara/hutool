@@ -1,5 +1,6 @@
 package cn.hutool.core.net.url;
 
+import cn.hutool.core.codec.PercentCodec;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.Convert;
@@ -177,10 +178,28 @@ public class UrlQuery {
 	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
 	 * </ul>
 	 *
-	 * @param charset  encode编码，null表示不做encode编码
+	 * @param charset encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 */
 	public String build(Charset charset) {
+		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param keyCoder   键值对中键的编码器
+	 * @param valueCoder 键值对中值的编码器
+	 * @param charset    encode编码，null表示不做encode编码
+	 * @return URL查询字符串
+	 * @since 5.7.16
+	 */
+	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset) {
 		if (MapUtil.isEmpty(this.query)) {
 			return StrUtil.EMPTY;
 		}
@@ -191,13 +210,13 @@ public class UrlQuery {
 		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
 			name = entry.getKey();
 			if (null != name) {
-				if(sb.length() >0){
+				if (sb.length() > 0) {
 					sb.append("&");
 				}
-				sb.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset));
+				sb.append(keyCoder.encode(name, charset));
 				value = entry.getValue();
 				if (null != value) {
-					sb.append("=").append(RFC3986.QUERY_PARAM_VALUE.encode(value, charset));
+					sb.append("=").append(valueCoder.encode(value, charset));
 				}
 			}
 		}
@@ -213,8 +232,8 @@ public class UrlQuery {
 	 * 解析URL中的查询字符串<br>
 	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 *
-	 * @param queryStr       查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
-	 * @param charset        decode编码，null表示不做decode
+	 * @param queryStr 查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
+	 * @param charset  decode编码，null表示不做decode
 	 * @return this
 	 * @since 5.5.8
 	 */

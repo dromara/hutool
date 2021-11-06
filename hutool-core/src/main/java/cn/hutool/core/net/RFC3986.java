@@ -73,7 +73,7 @@ public class RFC3986 {
 	 * query中的key<br>
 	 * key不能包含"{@code &}" 和 "="
 	 */
-	public static final PercentCodec QUERY_PARAM_NAME = QUERY_PARAM_VALUE.removeSafe('=');
+	public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.of(QUERY_PARAM_VALUE).removeSafe('=');
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"

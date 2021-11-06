@@ -11,15 +11,9 @@ import cn.hutool.core.codec.PercentCodec;
 public class FormUrlencoded {
 
 	/**
-	 * query中的value<br>
-	 * value不能包含"{@code &}"，可以包含 "="
+	 * query中的value，默认除"-", "_", ".", "*"外都编码<br>
+	 * 这个类似于JDK提供的{@link java.net.URLEncoder}
 	 */
-	public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.of(RFC3986.QUERY_PARAM_VALUE)
-			.setEncodeSpaceAsPlus(true).removeSafe('+');
-
-	/**
-	 * query中的key<br>
-	 * key不能包含"{@code &}" 和 "="
-	 */
-	public static final PercentCodec QUERY_PARAM_NAME = QUERY_PARAM_VALUE.removeSafe('=');
+	public static final PercentCodec ALL = PercentCodec.of(RFC3986.UNRESERVED)
+			.removeSafe('~').addSafe('*').setEncodeSpaceAsPlus(true);
 }
