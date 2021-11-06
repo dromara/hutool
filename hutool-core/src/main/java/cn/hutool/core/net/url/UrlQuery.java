@@ -144,6 +144,81 @@ public class UrlQuery {
 			}
 		}
 
+		return doParse(queryStr, charset);
+	}
+
+	/**
+	 * 获得查询的Map
+	 *
+	 * @return 查询的Map，只读
+	 */
+	public Map<CharSequence, CharSequence> getQueryMap() {
+		return MapUtil.unmodifiable(this.query);
+	}
+
+	/**
+	 * 获取查询值
+	 *
+	 * @param key 键
+	 * @return 值
+	 */
+	public CharSequence get(CharSequence key) {
+		if (MapUtil.isEmpty(this.query)) {
+			return null;
+		}
+		return this.query.get(key);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param charset  encode编码，null表示不做encode编码
+	 * @return URL查询字符串
+	 */
+	public String build(Charset charset) {
+		if (MapUtil.isEmpty(this.query)) {
+			return StrUtil.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+		CharSequence name;
+		CharSequence value;
+		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
+			name = entry.getKey();
+			if (null != name) {
+				if(sb.length() >0){
+					sb.append("&");
+				}
+				sb.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset));
+				value = entry.getValue();
+				if (null != value) {
+					sb.append("=").append(RFC3986.QUERY_PARAM_VALUE.encode(value, charset));
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String toString() {
+		return build(null);
+	}
+
+	/**
+	 * 解析URL中的查询字符串<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
+	 *
+	 * @param queryStr       查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
+	 * @param charset        decode编码，null表示不做decode
+	 * @return this
+	 * @since 5.5.8
+	 */
+	private UrlQuery doParse(String queryStr, Charset charset) {
 		final int len = queryStr.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
@@ -189,80 +264,6 @@ public class UrlQuery {
 	}
 
 	/**
-	 * 获得查询的Map
-	 *
-	 * @return 查询的Map，只读
-	 */
-	public Map<CharSequence, CharSequence> getQueryMap() {
-		return MapUtil.unmodifiable(this.query);
-	}
-
-	/**
-	 * 获取查询值
-	 *
-	 * @param key 键
-	 * @return 值
-	 */
-	public CharSequence get(CharSequence key) {
-		if (MapUtil.isEmpty(this.query)) {
-			return null;
-		}
-		return this.query.get(key);
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为key1=v1&amp;key2=&amp;key3=v3形式
-	 *
-	 * @param charset encode编码，null表示不做encode编码
-	 * @return URL查询字符串
-	 */
-	public String build(Charset charset) {
-		return build(charset, true);
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
-	 * 对于{@code null}处理规则如下：
-	 * <ul>
-	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
-	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
-	 * </ul>
-	 *
-	 * @param charset  encode编码，null表示不做encode编码
-	 * @param isEncode 是否转义键和值，转义遵循rfc3986规范
-	 * @return URL查询字符串
-	 * @since 5.7.13
-	 */
-	public String build(Charset charset, boolean isEncode) {
-		if (MapUtil.isEmpty(this.query)) {
-			return StrUtil.EMPTY;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		CharSequence name;
-		CharSequence value;
-		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
-			name = entry.getKey();
-			if (null != name) {
-				if(sb.length() >0){
-					sb.append("&");
-				}
-				sb.append(isEncode ? RFC3986.QUERY_PARAM_NAME.encode(name, charset) : name);
-				value = entry.getValue();
-				if (null != value) {
-					sb.append("=").append(isEncode ? RFC3986.QUERY_PARAM_VALUE.encode(value, charset) : value);
-				}
-			}
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public String toString() {
-		return build(null);
-	}
-
-	/**
 	 * 对象转换为字符串，用于URL的Query中
 	 *
 	 * @param value 值
@@ -301,22 +302,5 @@ public class UrlQuery {
 			// name为空，value作为name，value赋值null
 			this.query.put(URLUtil.decode(value, charset), null);
 		}
-	}
-
-	/**
-	 * 键值对的name转换为
-	 *
-	 * @param str      原字符串
-	 * @param charset  编码，只用于encode中
-	 * @param isEncode 是否转义，转义遵循rfc3986规范
-	 * @return 转换后的String
-	 * @since 5.7.13
-	 */
-	private static String nameToStr(CharSequence str, Charset charset, boolean isEncode) {
-		String result = StrUtil.str(str);
-		if (isEncode) {
-			result = RFC3986.QUERY_PARAM_NAME.encode(result, charset);
-		}
-		return result;
 	}
 }

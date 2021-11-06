@@ -6,6 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharsetUtil;
@@ -459,11 +460,11 @@ public class HttpUtil {
 	 * </pre>
 	 *
 	 * @param paramMap 表单数据
-	 * @param charset  编码，null表示不encode键值对
+	 * @param charset  编码，{@code null} 表示不encode键值对
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
-		return toParams(paramMap, charset, true);
+		return UrlQuery.of(paramMap).build(charset);
 	}
 
 	/**
@@ -480,9 +481,11 @@ public class HttpUtil {
 	 * @param isEncode 是否转义键和值
 	 * @return url参数
 	 * @since 5.7.13
+	 * @deprecated 请使用 {@link #toParams(Map, Charset)}, charset为null表示不编码
 	 */
+	@Deprecated
 	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isEncode) {
-		return UrlQuery.of(paramMap).build(charset, isEncode);
+		return toParams(paramMap, isEncode ? charset : null);
 	}
 
 	/**
@@ -555,9 +558,10 @@ public class HttpUtil {
 					if (null == name) {
 						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 						name = paramPart.substring(pos, i);
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
+						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=');
 					} else {
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
+						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=')
+								.append(RFC3986.QUERY_PARAM_VALUE.encode(paramPart.substring(pos, i), charset)).append('&');
 					}
 					name = null;
 				}

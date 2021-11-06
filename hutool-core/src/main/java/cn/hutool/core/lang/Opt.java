@@ -310,6 +310,7 @@ public class Opt<T> {
 	 */
 	@SafeVarargs
 	public final Opt<T> peeks(Consumer<T>... actions) throws NullPointerException {
+		// 第三个参数 (opts, opt) -> null其实并不会执行到该函数式接口所以直接返回了个null
 		return Stream.of(actions).reduce(this, Opt<T>::peek, (opts, opt) -> null);
 	}
 

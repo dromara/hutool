@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 通过转换器将你的实体转化为TreeNodeMap节点实体 属性都存在此处,属性有序，可支持排序
@@ -172,6 +173,20 @@ import java.util.List;
 	@SuppressWarnings("unchecked")
 	public List<Tree<T>> getChildren() {
 		return (List<Tree<T>>) this.get(treeNodeConfig.getChildrenKey());
+	}
+
+	/**
+	 * 递归树并处理子树下的节点：
+	 *
+	 * @param consumer 节点处理器
+	 * @since 5.7.16
+	 */
+	public void walk(Consumer<Tree<T>> consumer) {
+		consumer.accept(this);
+		final List<Tree<T>> children = getChildren();
+		if(CollUtil.isNotEmpty(children)){
+			children.forEach((tree)-> tree.walk(consumer));
+		}
 	}
 
 	/**

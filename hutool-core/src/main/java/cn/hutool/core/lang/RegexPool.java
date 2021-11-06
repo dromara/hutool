@@ -101,13 +101,19 @@ public interface RegexPool {
 	 */
 	String BIRTHDAY = "^(\\d{2,4})([/\\-.年]?)(\\d{1,2})([/\\-.月]?)(\\d{1,2})日?$";
 	/**
+	 * URI<br>
+	 * 定义见：https://www.ietf.org/rfc/rfc3986.html#appendix-B
+	 */
+	String URI = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?";
+	/**
 	 * URL
 	 */
-	String URL = "[a-zA-z]+://[^\\s]*";
+	String URL = "[a-zA-Z]+://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";
 	/**
-	 * Http URL
+	 * Http URL（来自：http://urlregex.com/）<br>
+	 * 此正则同时支持FTP、File等协议的URL
 	 */
-	String URL_HTTP = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(:\\d+)*(/[\\w- ./?%&=]*)?";
+	String URL_HTTP = "(https?|ftp|file)://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";
 	/**
 	 * 中文字、英文字母、数字和下划线
 	 */

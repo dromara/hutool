@@ -223,9 +223,11 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 递归遍历目录以及子目录中的所有文件
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果用户传入相对路径，则是相对classpath的路径<br>
+	 * 如："test/aaa"表示"${classpath}/test/aaa"
 	 *
-	 * @param path 当前遍历文件或目录的路径
+	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return 文件列表
 	 * @since 3.2.0
 	 */
@@ -245,7 +247,9 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 获得指定目录下所有文件<br>
-	 * 不会扫描子目录
+	 * 不会扫描子目录<br>
+	 * 如果用户传入相对路径，则是相对classpath的路径<br>
+	 * 如："test/aaa"表示"${classpath}/test/aaa"
 	 *
 	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return 文件路径列表（如果是jar中的文件，则给定类似.jar!/xxx/xxx的路径）
@@ -287,7 +291,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 创建File对象，相当于调用new File()，不做任何处理
 	 *
-	 * @param path 文件路径
+	 * @param path 文件路径，相对路径表示相对项目路径
 	 * @return File
 	 * @since 4.1.4
 	 */
@@ -298,7 +302,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 创建File对象，自动识别相对或绝对路径，相对路径将自动从ClassPath下寻找
 	 *
-	 * @param path 文件路径
+	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return File
 	 */
 	public static File file(String path) {
@@ -579,15 +583,15 @@ public class FileUtil extends PathUtil {
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 *
-	 * @param fullFilePath 文件的全路径，使用POSIX风格
+	 * @param path 相对ClassPath的目录或者绝对路径目录，使用POSIX风格
 	 * @return 文件，若路径为null，返回null
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File touch(String fullFilePath) throws IORuntimeException {
-		if (fullFilePath == null) {
+	public static File touch(String path) throws IORuntimeException {
+		if (path == null) {
 			return null;
 		}
-		return touch(file(fullFilePath));
+		return touch(file(path));
 	}
 
 	/**
@@ -2978,10 +2982,11 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 写数据到文件中
+	 * 写数据到文件中<br>
+	 * 文件路径如果是相对路径，则相对ClassPath
 	 *
 	 * @param data 数据
-	 * @param path 目标文件
+	 * @param path 相对ClassPath的目录或者绝对路径目录
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */

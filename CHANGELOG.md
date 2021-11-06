@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.16 (2021-10-30)
+# 5.7.16 (2021-11-04)
 
 ### 🐣新特性
 * 【core   】     增加DateTime.toLocalDateTime
@@ -17,6 +17,15 @@
 * 【core   】     StopWatch增加prettyPrint重载（issue#1910@Github）
 * 【core   】     修改RegexPool中Ipv4正则
 * 【json   】     Filter改为MutablePair，以便编辑键值对（issue#1921@Github）
+* 【core   】     Opt增加peeks方法（pr#445@Gitee）
+* 【extra  】     MailAccount中user默认值改为邮箱全称（issue#I4FYVY@Gitee）
+* 【core   】     增加CoordinateUtil（pr#446@Gitee）
+* 【core   】     DateUtil增加rangeToList重载（pr#1925@Github）
+* 【core   】     CollUtil增加safeContains方法（pr#1926@Github）
+* 【core   】     ActualTypeMapperPool增加getStrKeyMap方法（pr#447@Gitee）
+* 【core   】     TreeUtil增加walk方法（pr#1932@Gitee）
+* 【crypto 】     SmUtil增加sm3WithSalt（pr#454@Gitee）
+* 【http   】     增加HttpInterceptor（issue#I4H1ZV@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
@@ -25,6 +34,7 @@
 * 【poi    】     修复合并单元格为日期时，导出单元格数据为数字问题（issue#1911@Github）
 * 【core   】     修复CompilerUtil.getFileManager参数没有使用的问题（issue#I4FIO6@Gitee）
 * 【core   】     修复NetUtil.isInRange的cidr判断问题（pr#1917@Github）
+* 【core   】     修复RegexPool中对URL正则匹配问题（issue#I4GRKD@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

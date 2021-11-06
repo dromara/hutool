@@ -89,6 +89,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/**
+	 * 请求前的拦截器，用于在请求前重新编辑请求
+	 */
+	private final HttpInterceptor.Chain interceptors = new HttpInterceptor.Chain();
+
+	/**
 	 * 默认连接超时
 	 */
 	private int connectionTimeout = HttpGlobalConfig.timeout;
@@ -269,8 +274,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.1.8
 	 */
 	public HttpRequest setUrl(String url) {
-		this.url = UrlBuilder.ofHttp(url, this.charset);
-		return this;
+		return setUrl(UrlBuilder.ofHttp(url, this.charset));
 	}
 
 	/**
@@ -920,6 +924,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @since 5.7.16
+	 */
+	public void addInterceptor(HttpInterceptor interceptor) {
+		this.interceptors.addChain(interceptor);
+	}
+
+	/**
 	 * 执行Reuqest请求
 	 *
 	 * @return this
@@ -949,22 +963,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		// 初始化URL
-		urlWithParamIfGet();
-		// 初始化 connection
-		initConnection();
-		// 发送请求
-		send();
-
-		// 手动实现重定向
-		HttpResponse httpResponse = sendRedirectIfPossible();
-
-		// 获取响应
-		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
-		}
-
-		return httpResponse;
+		return doExecute(isAsync, this.interceptors);
 	}
 
 	/**
@@ -1055,6 +1054,38 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Private method start
 
 	/**
+	 * 执行Reuqest请求
+	 *
+	 * @param isAsync      是否异步
+	 * @param interceptors 拦截器列表
+	 * @return this
+	 */
+	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain interceptors) {
+		if (null != interceptors) {
+			for (HttpInterceptor interceptor : interceptors) {
+				interceptor.process(this);
+			}
+		}
+
+		// 初始化URL
+		urlWithParamIfGet();
+		// 初始化 connection
+		initConnection();
+		// 发送请求
+		send();
+
+		// 手动实现重定向
+		HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
+
+		// 获取响应
+		if (null == httpResponse) {
+			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
+		}
+
+		return httpResponse;
+	}
+
+	/**
 	 * 初始化网络连接
 	 */
 	private void initConnection() {
@@ -1108,9 +1139,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
+	 * @param isAsync 是否异步
 	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
-	private HttpResponse sendRedirectIfPossible() {
+	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		if (this.maxRedirectCount < 1) {
 			// 不重定向
 			return null;
@@ -1132,7 +1164,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					setUrl(httpConnection.header(Header.LOCATION));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
-						return execute();
+						return doExecute(isAsync, null);
 					}
 				}
 			}

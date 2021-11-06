@@ -122,4 +122,17 @@ public class SplitIterTest {
 		final List<String> strings = splitIter.toList(false);
 		Assert.assertEquals(3, strings.size());
 	}
+
+	@Test
+	public void splitToSingleTest(){
+		String text = "";
+		SplitIter splitIter = new SplitIter(text,
+				new CharFinder(':'),
+				3,
+				false
+		);
+
+		final List<String> strings = splitIter.toList(false);
+		Assert.assertEquals(1, strings.size());
+	}
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,5 +66,14 @@ public class TreeTest {
 				});
 
 		Assert.assertEquals(treeNodes.size(), 2);
+	}
+
+	@Test
+	public void walkTest(){
+		List<String> ids = new ArrayList<>();
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		tree.walk((tr)-> ids.add(tr.getId()));
+
+		Assert .assertEquals(7, ids.size());
 	}
 }

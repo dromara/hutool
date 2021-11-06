@@ -319,7 +319,8 @@ public class URLUtil extends URLEncodeUtil {
 
 	/**
 	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。
+	 * 将%开头的16进制表示的内容解码。<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 *
 	 * @param content 被解码内容
 	 * @param charset 编码，null表示不解码

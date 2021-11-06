@@ -1,13 +1,14 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.CronException;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * 定时任务单元测试类
- * 
+ *
  * @author Looly
  *
  */
@@ -18,10 +19,11 @@ public class CronPatternTest {
 		CronPattern pattern;
 		// 任何时间匹配
 		pattern = new CronPattern("* * * * * *");
+		ThreadUtil.sleep(600);
 		Assert.assertTrue(pattern.match(DateUtil.current(), true));
 		Assert.assertTrue(pattern.match(DateUtil.current(), false));
 	}
-	
+
 	@Test
 	public void matchAllTest2() {
 		// 在5位表达式中，秒部分并不是任意匹配，而是一个固定值
@@ -88,14 +90,14 @@ public class CronPatternTest {
 		assertMatch(pattern, "2017-02-09 00:00:39");
 
 	}
-	
+
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void CronPatternTest2() {
 		CronPattern pattern = new CronPattern("0/30 * * * *");
 		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:00:00").getTime(), false));
 		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:30:00").getTime(), false));
-		
+
 		pattern = new CronPattern("32 * * * *");
 		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:32:00").getTime(), false));
 	}
@@ -144,12 +146,12 @@ public class CronPatternTest {
 	@Test(expected = CronException.class)
 	public void rangeYearTest() {
 		// year的范围是1970~2099年，超出报错
-		CronPattern pattern = new CronPattern("0/1 * * * 1/1 ? 2020-2120");
+		new CronPattern("0/1 * * * 1/1 ? 2020-2120");
 	}
 
 	/**
 	 * 表达式是否匹配日期
-	 * 
+	 *
 	 * @param pattern 表达式
 	 * @param date 日期，标准日期时间字符串
 	 */
