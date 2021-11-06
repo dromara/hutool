@@ -29,6 +29,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -123,6 +124,16 @@ public class Opt<T> {
 	 */
 	public T get() {
 		return value;
+	}
+
+	/**
+	 * 以非静态方式获取一个新的 {@code Opt}
+	 *
+	 * @param value 值
+	 * @return 新的 {@code Opt}
+	 */
+	public Opt<T> set(T value) {
+		return Opt.ofNullable(value);
 	}
 
 	/**
@@ -239,6 +250,28 @@ public class Opt<T> {
 			@SuppressWarnings("unchecked")
 			Opt<U> r = (Opt<U>) mapper.apply(value);
 			return Objects.requireNonNull(r);
+		}
+	}
+
+	/**
+	 * 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回该操作返回值
+	 * 如果不存在，返回一个空的{@code Opt}
+	 * 和 {@link Opt#map}的区别为 传入的操作返回值必须为 {@link Optional}
+	 *
+	 * @param mapper 值存在时执行的操作
+	 * @param <U>    操作返回值的类型
+	 * @return 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回该操作返回值
+	 * 如果不存在，返回一个空的{@code Opt}
+	 * @throws NullPointerException 如果给定的操作为 {@code null}或者给定的操作执行结果为 {@code null}，抛出 {@code NPE}
+	 */
+	public <U> Opt<U> flattedMap(Function<? super T, ? extends Optional<? extends U>> mapper) {
+		Objects.requireNonNull(mapper);
+		if (isEmpty()) {
+			return empty();
+		} else {
+			@SuppressWarnings("unchecked")
+			Optional<U> r = (Optional<U>) mapper.apply(value);
+			return Objects.requireNonNull(ofNullable(r.orElse(null)));
 		}
 	}
 
