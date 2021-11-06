@@ -41,9 +41,10 @@ public class URLDecoder implements Serializable {
 	}
 
 	/**
-	 * 解码
+	 * 解码<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 * <pre>
-	 *   1. 将+和%20转换为空格 ;
+	 *   1. 将+和%20转换为空格(" ");
 	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
 	 *   3. 跳过不符合规范的%形式，直接输出
 	 * </pre>

@@ -144,48 +144,7 @@ public class UrlQuery {
 			}
 		}
 
-		final int len = queryStr.length();
-		String name = null;
-		int pos = 0; // 未处理字符开始位置
-		int i; // 未处理字符结束位置
-		char c; // 当前字符
-		for (i = 0; i < len; i++) {
-			c = queryStr.charAt(i);
-			switch (c) {
-				case '='://键和值的分界符
-					if (null == name) {
-						// name可以是""
-						name = queryStr.substring(pos, i);
-						// 开始位置从分节符后开始
-						pos = i + 1;
-					}
-					// 当=不作为分界符时，按照普通字符对待
-					break;
-				case '&'://键值对之间的分界符
-					addParam(name, queryStr.substring(pos, i), charset);
-					name = null;
-					if (i + 4 < len && "amp;".equals(queryStr.substring(i + 1, i + 5))) {
-						// issue#850@Github，"&amp;"转义为"&"
-						i += 4;
-					}
-					// 开始位置从分节符后开始
-					pos = i + 1;
-					break;
-			}
-		}
-
-		if (i - pos == len) {
-			// 没有任何参数符号
-			if (queryStr.startsWith("http") || queryStr.contains("/")) {
-				// 可能为url路径，忽略之
-				return this;
-			}
-		}
-
-		// 处理结尾
-		addParam(name, queryStr.substring(pos, i), charset);
-
-		return this;
+		return doParse(queryStr, charset);
 	}
 
 	/**
@@ -248,6 +207,60 @@ public class UrlQuery {
 	@Override
 	public String toString() {
 		return build(null);
+	}
+
+	/**
+	 * 解析URL中的查询字符串<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
+	 *
+	 * @param queryStr       查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
+	 * @param charset        decode编码，null表示不做decode
+	 * @return this
+	 * @since 5.5.8
+	 */
+	private UrlQuery doParse(String queryStr, Charset charset) {
+		final int len = queryStr.length();
+		String name = null;
+		int pos = 0; // 未处理字符开始位置
+		int i; // 未处理字符结束位置
+		char c; // 当前字符
+		for (i = 0; i < len; i++) {
+			c = queryStr.charAt(i);
+			switch (c) {
+				case '='://键和值的分界符
+					if (null == name) {
+						// name可以是""
+						name = queryStr.substring(pos, i);
+						// 开始位置从分节符后开始
+						pos = i + 1;
+					}
+					// 当=不作为分界符时，按照普通字符对待
+					break;
+				case '&'://键值对之间的分界符
+					addParam(name, queryStr.substring(pos, i), charset);
+					name = null;
+					if (i + 4 < len && "amp;".equals(queryStr.substring(i + 1, i + 5))) {
+						// issue#850@Github，"&amp;"转义为"&"
+						i += 4;
+					}
+					// 开始位置从分节符后开始
+					pos = i + 1;
+					break;
+			}
+		}
+
+		if (i - pos == len) {
+			// 没有任何参数符号
+			if (queryStr.startsWith("http") || queryStr.contains("/")) {
+				// 可能为url路径，忽略之
+				return this;
+			}
+		}
+
+		// 处理结尾
+		addParam(name, queryStr.substring(pos, i), charset);
+
+		return this;
 	}
 
 	/**

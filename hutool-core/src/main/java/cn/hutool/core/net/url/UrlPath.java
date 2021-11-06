@@ -127,6 +127,9 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
+			// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
+			// path的第一部分允许有":"，其余部分不允许
+			// 在此处的Path部分特指host之后的部分，即不包含第一部分
 			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
 		}
 		if (withEngTag || StrUtil.isEmpty(builder)) {
