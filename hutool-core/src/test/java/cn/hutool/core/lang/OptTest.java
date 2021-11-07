@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -124,6 +126,24 @@ public class OptTest {
 		// 获取一个不可能为空的值，否则抛出带自定义消息的自定义异常
 		Object exceptionWithMessage = Opt.empty().orElseThrow(IllegalStateException::new, "Ops!Something is wrong!");
 		Assert.assertNull(exceptionWithMessage);
+	}
+
+	@Test
+	public void flattedMapTest() {
+		// 和Optional兼容的flatMap
+		List<User> userList = new ArrayList<>();
+		// 以前，不兼容
+//		Opt.ofNullable(userList).map(List::stream).flatMap(Stream::findFirst);
+		// 现在，兼容
+		User user = Opt.ofNullable(userList).map(List::stream).flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
+		System.out.println(user);
+	}
+
+	@Test
+	public void setTest() {
+		// 我一直在想，既然有get，为什么不能有set呢？
+		Opt.ofNullable(User.builder().username("ruben").build()).peek(System.out::println)
+				.set(User.builder().username("hutool").build()).peek(System.out::println);
 	}
 
 	@Data
