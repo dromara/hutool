@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 /**
  * {@link Opt}的单元测试
@@ -135,15 +136,10 @@ public class OptTest {
 		// 以前，不兼容
 //		Opt.ofNullable(userList).map(List::stream).flatMap(Stream::findFirst);
 		// 现在，兼容
-		User user = Opt.ofNullable(userList).map(List::stream).flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
-		System.out.println(user);
-	}
-
-	@Test
-	public void setTest() {
-		// 我一直在想，既然有get，为什么不能有set呢？
-		Opt.ofNullable(User.builder().username("ruben").build()).peek(System.out::println)
-				.set(User.builder().username("hutool").build()).peek(System.out::println);
+		User user = Opt.ofNullable(userList).map(List::stream)
+				.flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
+		Assert.assertNull(user.getUsername());
+		Assert.assertNull(user.getNickname());
 	}
 
 	@Data

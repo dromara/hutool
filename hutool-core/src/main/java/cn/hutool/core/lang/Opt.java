@@ -51,20 +51,6 @@ public class Opt<T> {
 	private static final Opt<?> EMPTY = new Opt<>(null);
 
 	/**
-	 * 包裹里实际的元素
-	 */
-	private final T value;
-
-	/**
-	 * {@code Opt}的构造函数
-	 *
-	 * @param value 包裹里的元素
-	 */
-	private Opt(T value) {
-		this.value = value;
-	}
-
-	/**
 	 * 返回一个空的{@code Opt}
 	 *
 	 * @param <T> 包裹里元素的类型
@@ -112,6 +98,20 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 包裹里实际的元素
+	 */
+	private final T value;
+
+	/**
+	 * {@code Opt}的构造函数
+	 *
+	 * @param value 包裹里的元素
+	 */
+	private Opt(T value) {
+		this.value = value;
+	}
+
+	/**
 	 * 返回包裹里的元素，取不到则为{@code null}，注意！！！此处和{@link java.util.Optional#get()}不同的一点是本方法并不会抛出{@code NoSuchElementException}
 	 * 如果元素为空，则返回{@code null}，如果需要一个绝对不能为{@code null}的值，则使用{@link #orElseThrow()}
 	 *
@@ -124,16 +124,6 @@ public class Opt<T> {
 	 */
 	public T get() {
 		return value;
-	}
-
-	/**
-	 * 以非静态方式获取一个新的 {@code Opt}
-	 *
-	 * @param value 值
-	 * @return 新的 {@code Opt}
-	 */
-	public Opt<T> set(T value) {
-		return Opt.ofNullable(value);
 	}
 
 	/**
@@ -263,15 +253,15 @@ public class Opt<T> {
 	 * @return 如果包裹里的值存在，就执行传入的操作({@link Function#apply})并返回该操作返回值
 	 * 如果不存在，返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的操作为 {@code null}或者给定的操作执行结果为 {@code null}，抛出 {@code NPE}
+	 * @see Optional#flatMap(Function)
+	 * @since 5.7.16
 	 */
 	public <U> Opt<U> flattedMap(Function<? super T, ? extends Optional<? extends U>> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isEmpty()) {
 			return empty();
 		} else {
-			@SuppressWarnings("unchecked")
-			Optional<U> r = (Optional<U>) mapper.apply(value);
-			return Objects.requireNonNull(ofNullable(r.orElse(null)));
+			return ofNullable(mapper.apply(value).orElse(null));
 		}
 	}
 
@@ -426,6 +416,15 @@ public class Opt<T> {
 		} else {
 			throw exceptionFunction.apply(message);
 		}
+	}
+
+	/**
+	 * 转换为 {@link Optional}对象
+	 * @return {@link Optional}对象
+	 * @since 5.7.16
+	 */
+	public Optional<T> toOptional(){
+		return Optional.ofNullable(this.value);
 	}
 
 	/**
