@@ -453,7 +453,8 @@ public class HttpUtil {
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
 	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
-	 * 会自动url编码键和值
+	 * 会自动url编码键和值<br>
+	 * 此方法用于拼接URL中的Query部分，并不适用于POST请求中的表单
 	 *
 	 * <pre>
 	 * key1=v1&amp;key2=&amp;key3=v3
@@ -462,9 +463,10 @@ public class HttpUtil {
 	 * @param paramMap 表单数据
 	 * @param charset  编码，{@code null} 表示不encode键值对
 	 * @return url参数
+	 * @see #toParams(Map, Charset, boolean)
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
-		return UrlQuery.of(paramMap).build(charset);
+		return toParams(paramMap, charset, false);
 	}
 
 	/**
@@ -478,14 +480,12 @@ public class HttpUtil {
 	 *
 	 * @param paramMap 表单数据
 	 * @param charset  编码，null表示不encode键值对
-	 * @param isEncode 是否转义键和值
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @return url参数
-	 * @since 5.7.13
-	 * @deprecated 请使用 {@link #toParams(Map, Charset)}, charset为null表示不编码
+	 * @since 5.7.16
 	 */
-	@Deprecated
-	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isEncode) {
-		return toParams(paramMap, isEncode ? charset : null);
+	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isFormUrlEncoded) {
+		return UrlQuery.of(paramMap, isFormUrlEncoded).build(charset);
 	}
 
 	/**
