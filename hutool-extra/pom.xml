@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.7.0.RELEASE</beetl.version>
+		<beetl.version>3.8.0.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.16</enjoy.version>
