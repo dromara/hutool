@@ -12,7 +12,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -1362,12 +1361,12 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Set<Integer> set = new HashSet<>(Math.max((int) (size / .75f) + 1, 16));
+		Set<Integer> set = new HashSet<>(size, 1);
 		while (set.size() < size) {
 			set.add(begin + RandomUtil.randomInt(end - begin));
 		}
 
-		return set.toArray(new Integer[size]);
+		return set.toArray(new Integer[0]);
 	}
 
 	// ------------------------------------------------------------------------------------------- range

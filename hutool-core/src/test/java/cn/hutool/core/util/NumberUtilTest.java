@@ -400,4 +400,10 @@ public class NumberUtilTest {
 		final String s = new BigDecimal(num).toPlainString();
 		Assert.assertEquals("5344342.34", s);
 	}
+
+	@Test
+	public void generateBySetTest(){
+		final Integer[] integers = NumberUtil.generateBySet(10, 100, 5);
+		Assert.assertEquals(5, integers.length);
+	}
 }

@@ -6,6 +6,7 @@
 # 5.7.17 (2021-11-10)
 
 ### 🐣新特性
+* 【core   】     增加AsyncUtil（pr#457@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 
