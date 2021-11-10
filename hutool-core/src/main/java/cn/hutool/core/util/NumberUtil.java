@@ -1362,10 +1362,9 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Random ran = new Random();
-		Set<Integer> set = new HashSet<>();
+		Set<Integer> set = new HashSet<>(Math.max((int) (size / .75f) + 1, 16));
 		while (set.size() < size) {
-			set.add(begin + ran.nextInt(end - begin));
+			set.add(begin + RandomUtil.randomInt(end - begin));
 		}
 
 		return set.toArray(new Integer[size]);
