@@ -693,7 +693,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.14
 	 */
 	public static DateTime parse(CharSequence dateStr, DateParser parser, boolean lenient) {
-		return new DateTime(dateStr, parser);
+		return new DateTime(dateStr, parser, lenient);
 	}
 
 	/**
