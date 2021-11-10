@@ -7,12 +7,12 @@ import cn.hutool.core.math.Calculator;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -1362,8 +1362,8 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Random ran = new Random();
-		Set<Integer> set = new HashSet<>();
+		SecureRandom ran = new SecureRandom();
+		Set<Integer> set = new HashSet<>(Math.max((int) (size / .75f) + 1, 16));
 		while (set.size() < size) {
 			set.add(begin + ran.nextInt(end - begin));
 		}
@@ -2159,14 +2159,14 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String numberStr) {
-		if(StrUtil.isBlank(numberStr)){
+		if (StrUtil.isBlank(numberStr)) {
 			return BigDecimal.ZERO;
 		}
 
 		try {
 			// 支持类似于 1,234.55 格式的数字
 			final Number number = parseNumber(numberStr);
-			if(number instanceof BigDecimal){
+			if (number instanceof BigDecimal) {
 				return (BigDecimal) number;
 			} else {
 				return new BigDecimal(number.toString());
@@ -2512,7 +2512,7 @@ public class NumberUtil {
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
-			if(format instanceof DecimalFormat){
+			if (format instanceof DecimalFormat) {
 				// issue#1818@Github
 				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
 				((DecimalFormat) format).setParseBigDecimal(true);
@@ -2699,9 +2699,9 @@ public class NumberUtil {
 	 * @since 5.7.8
 	 */
 	public static double toDouble(Number value) {
-		if(value instanceof Float){
+		if (value instanceof Float) {
 			return Double.parseDouble(value.toString());
-		}else{
+		} else {
 			return value.doubleValue();
 		}
 	}
