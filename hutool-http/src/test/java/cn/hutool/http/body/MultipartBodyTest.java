@@ -23,5 +23,6 @@ public class MultipartBodyTest {
 		final MultipartBody body = MultipartBody.create(form, CharsetUtil.CHARSET_UTF_8);
 
 		Assert.assertNotNull(body.toString());
+//		Console.log(body);
 	}
 }

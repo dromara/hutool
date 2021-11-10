@@ -8,6 +8,7 @@
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
 * 【http   】     增加HttpResource（issue#1943@Github）
+* 【http   】     增加BytesBody、FormUrlEncodedBody
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 
