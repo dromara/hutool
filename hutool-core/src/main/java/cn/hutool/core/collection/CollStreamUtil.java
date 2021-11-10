@@ -179,7 +179,7 @@ public class CollStreamUtil {
 		Set<K> key = new HashSet<>();
 		key.addAll(map1.keySet());
 		key.addAll(map2.keySet());
-		Map<K, V> map = MapUtil.newHashMap(key.size());
+		Map<K, V> map = new HashMap<>();
 		for (K t : key) {
 			X x = map1.get(t);
 			Y y = map2.get(t);
