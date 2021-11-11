@@ -1,5 +1,6 @@
 package cn.hutool.cron;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.CronTask;
 import cn.hutool.cron.task.Task;
@@ -269,6 +270,16 @@ public class TaskTable implements Serializable {
 		} finally {
 			readLock.unlock();
 		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = StrUtil.builder();
+		for (int i = 0; i < size; i++) {
+			builder.append(StrUtil.format("[{}] [{}] [{}]\n",
+					ids.get(i), patterns.get(i), tasks.get(i)));
+		}
+		return builder.toString();
 	}
 
 	/**

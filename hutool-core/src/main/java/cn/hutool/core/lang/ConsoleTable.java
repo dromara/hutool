@@ -25,11 +25,11 @@ public class ConsoleTable {
 	/**
 	 * 表格头信息
 	 */
-	private final List<List<String>> HEADER_LIST = new ArrayList<>();
+	private final List<List<String>> headerList = new ArrayList<>();
 	/**
 	 * 表格体信息
 	 */
-	private final List<List<String>> BODY_LIST = new ArrayList<>();
+	private final List<List<String>> bodyList = new ArrayList<>();
 	/**
 	 * 每列最大字符个数
 	 */
@@ -57,7 +57,7 @@ public class ConsoleTable {
 		}
 		List<String> l = new ArrayList<>();
 		fillColumns(l, titles);
-		HEADER_LIST.add(l);
+		headerList.add(l);
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class ConsoleTable {
 	 */
 	public ConsoleTable addBody(String... values) {
 		List<String> l = new ArrayList<>();
-		BODY_LIST.add(l);
+		bodyList.add(l);
 		fillColumns(l, values);
 		return this;
 	}
@@ -101,9 +101,9 @@ public class ConsoleTable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		fillBorder(sb);
-		fillRow(sb, HEADER_LIST);
+		fillRow(sb, headerList);
 		fillBorder(sb);
-		fillRow(sb, BODY_LIST);
+		fillRow(sb, bodyList);
 		fillBorder(sb);
 		return sb.toString();
 	}
