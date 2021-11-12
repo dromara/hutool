@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.2.7</version>
+			<version>3.2.9</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
