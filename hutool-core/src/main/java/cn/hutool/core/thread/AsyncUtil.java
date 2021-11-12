@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
  * {@link CompletableFuture}异步工具类<br>
  * {@link CompletableFuture} 是 Future 的改进，可以通过传入回调对象，在任务完成后调用之
  *
- * @author <achao1441470436@gmail.com>
+ * @author achao1441470436@gmail.com
  * @since 5.7.17
  */
 public class AsyncUtil {
