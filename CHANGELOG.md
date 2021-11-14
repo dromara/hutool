@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-11)
+# 5.7.17 (2021-11-14)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -12,6 +12,7 @@
 * 【cron   】     TaskTable.remove增加返回值（issue#I4HX3B@Gitee）
 * 【core   】     Tree增加filter、filterNew、cloneTree、hasChild方法（issue#I4HFC6@Gitee）
 * 【poi    】     增加ColumnSheetReader及ExcelReader.readColumn，支持读取某一列
+* 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 
