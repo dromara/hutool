@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
@@ -46,11 +48,14 @@ public class OptTest {
 	@Test
 	@Ignore
 	public void ifPresentOrElseTest() {
-		// 这是jdk9中的新函数，直接照搬了过来
 		// 存在就打印对应的值，不存在则用{@code System.err.println}打印另一句字符串
 		Opt.ofNullable("Hello Hutool!").ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
 
 		Opt.empty().ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
+
+		// 拓展为支持链式调用
+		Opt.empty().ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"))
+				.ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
 	}
 
 	@Test
@@ -140,6 +145,47 @@ public class OptTest {
 				.flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
 		Assert.assertNull(user.getUsername());
 		Assert.assertNull(user.getNickname());
+	}
+
+	@Test
+	public void ofEmptyAbleTest() {
+		// 以前，输入一个CollectionUtil感觉要命，类似前缀的类一大堆，代码补全形同虚设(在项目中起码要输入完CollectionU才能在第一个调出这个函数)
+		// 关键它还很常用，判空和判空集合真的太常用了...
+		List<String> past = Opt.ofNullable(Collections.<String>emptyList()).filter(CollectionUtil::isNotEmpty).orElseGet(() -> Collections.singletonList("hutool"));
+		// 现在，一个ofEmptyAble搞定
+		List<String> hutool = Opt.ofEmptyAble(Collections.<String>emptyList()).orElseGet(() -> Collections.singletonList("hutool"));
+		Assert.assertEquals(past, hutool);
+		Assert.assertEquals(hutool, Collections.singletonList("hutool"));
+	}
+
+	@Test
+	public void mapOrElseTest() {
+		// 如果值存在就转换为大写，否则打印一句字符串，支持链式调用、转换为其他类型
+		String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
+		Assert.assertEquals("HUTOOL", hutool);
+	}
+
+	@Test
+	public void execTest() {
+		// 有一些资深的程序员跟我说你这个lambda，双冒号语法糖看不懂...
+		// 为了尊重资深程序员的意见，并且提升代码可读性，封装了一下 "try catch NPE 和 数组越界"的情况
+
+		// 以前这种写法，简洁但可读性稍低，对资深程序员不太友好
+		List<String> last = null;
+		String npeSituation = Opt.ofEmptyAble(last).flattedMap(l -> l.stream().findFirst()).orElse("hutool");
+		String indexOutSituation = Opt.ofEmptyAble(last).map(l -> l.get(0)).orElse("hutool");
+
+		// 现在代码整洁度降低，但可读性up，如果再人说看不懂这代码...
+		String npe = Opt.exec(() -> last.get(0)).orElse("hutool");
+		String indexOut = Opt.exec(() -> {
+			List<String> list = new ArrayList<>();
+			// 你可以在里面写一长串调用链 list.get(0).getUser().getId()
+			return list.get(0);
+		}).orElse("hutool");
+		Assert.assertEquals(npe, npeSituation);
+		Assert.assertEquals(indexOut, indexOutSituation);
+		Assert.assertEquals("hutool", npe);
+		Assert.assertEquals("hutool", indexOut);
 	}
 
 	@Data
