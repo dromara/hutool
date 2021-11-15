@@ -7,6 +7,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.finder.Finder;
+import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -35,7 +37,7 @@ import java.util.function.Predicate;
  */
 public class CharSequenceUtil {
 
-	public static final int INDEX_NOT_FOUND = -1;
+	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
 
 	/**
 	 * 字符串常量：{@code "null"} <br>
@@ -1101,9 +1103,13 @@ public class CharSequenceUtil {
 		if (start < 0 || start > len) {
 			start = 0;
 		}
-		if (end > len || end < 0) {
+		if (end > len) {
 			end = len;
 		}
+		if (end < 0) {
+			end += len;
+		}
+
 		for (int i = start; i < end; i++) {
 			if (str.charAt(i) == searchChar) {
 				return i;
@@ -1168,40 +1174,22 @@ public class CharSequenceUtil {
 	/**
 	 * 指定范围内查找字符串
 	 *
-	 * @param str        字符串
-	 * @param searchStr  需要查找位置的字符串
-	 * @param fromIndex  起始位置
+	 * @param text       字符串，空则返回-1
+	 * @param searchStr  需要查找位置的字符串，空则返回-1
+	 * @param from       起始位置（包含）
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 位置
 	 * @since 3.2.1
 	 */
-	public static int indexOf(final CharSequence str, CharSequence searchStr, int fromIndex, boolean ignoreCase) {
-		if (str == null || searchStr == null) {
-			return INDEX_NOT_FOUND;
-		}
-		if (fromIndex < 0) {
-			fromIndex = 0;
-		}
-
-		final int endLimit = str.length() - searchStr.length() + 1;
-		if (fromIndex > endLimit) {
-			return INDEX_NOT_FOUND;
-		}
-		if (searchStr.length() == 0) {
-			return fromIndex;
-		}
-
-		if (false == ignoreCase) {
-			// 不忽略大小写调用JDK方法
-			return str.toString().indexOf(searchStr.toString(), fromIndex);
-		}
-
-		for (int i = fromIndex; i < endLimit; i++) {
-			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
-				return i;
+	public static int indexOf(CharSequence text, CharSequence searchStr, int from, boolean ignoreCase) {
+		if (isEmpty(text) || isEmpty(searchStr)) {
+			if (StrUtil.equals(text, searchStr)) {
+				return 0;
+			} else {
+				return INDEX_NOT_FOUND;
 			}
 		}
-		return INDEX_NOT_FOUND;
+		return new StrFinder(searchStr, ignoreCase).setText(text).start(from);
 	}
 
 	/**
@@ -1212,7 +1200,7 @@ public class CharSequenceUtil {
 	 * @return 位置
 	 * @since 3.2.1
 	 */
-	public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
+	public static int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr) {
 		return lastIndexOfIgnoreCase(str, searchStr, str.length());
 	}
 
@@ -1226,7 +1214,7 @@ public class CharSequenceUtil {
 	 * @return 位置
 	 * @since 3.2.1
 	 */
-	public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, int fromIndex) {
+	public static int lastIndexOfIgnoreCase(CharSequence str, CharSequence searchStr, int fromIndex) {
 		return lastIndexOf(str, searchStr, fromIndex, true);
 	}
 
@@ -1234,37 +1222,22 @@ public class CharSequenceUtil {
 	 * 指定范围内查找字符串<br>
 	 * fromIndex 为搜索起始位置，从后往前计数
 	 *
-	 * @param str        字符串
+	 * @param text        字符串
 	 * @param searchStr  需要查找位置的字符串
-	 * @param fromIndex  起始位置，从后往前计数
+	 * @param from  起始位置，从后往前计数
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 位置
 	 * @since 3.2.1
 	 */
-	public static int lastIndexOf(final CharSequence str, final CharSequence searchStr, int fromIndex, boolean ignoreCase) {
-		if (str == null || searchStr == null) {
-			return INDEX_NOT_FOUND;
-		}
-		if (fromIndex < 0) {
-			fromIndex = 0;
-		}
-		fromIndex = Math.min(fromIndex, str.length());
-
-		if (searchStr.length() == 0) {
-			return fromIndex;
-		}
-
-		if (false == ignoreCase) {
-			// 不忽略大小写调用JDK方法
-			return str.toString().lastIndexOf(searchStr.toString(), fromIndex);
-		}
-
-		for (int i = fromIndex; i >= 0; i--) {
-			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
-				return i;
+	public static int lastIndexOf(CharSequence text, CharSequence searchStr, int from, boolean ignoreCase) {
+		if (isEmpty(text) || isEmpty(searchStr)) {
+			if (StrUtil.equals(text, searchStr)) {
+				return 0;
+			} else {
+				return INDEX_NOT_FOUND;
 			}
 		}
-		return INDEX_NOT_FOUND;
+		return new StrFinder(searchStr, ignoreCase, true).setText(text).start(from);
 	}
 
 	/**

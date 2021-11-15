@@ -4,7 +4,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Matcher;
 
 /**
- * 字符匹配查找器
+ * 字符匹配查找器<br>
+ * 查找满足指定{@link Matcher} 匹配的字符所在位置，此类长用于查找某一类字符，如数字等
  *
  * @since 5.7.14
  * @author looly
@@ -25,8 +26,8 @@ public class CharMatcherFinder extends TextFinder {
 	@Override
 	public int start(int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
-		final int length = text.length();
-		for (int i = from; i < length; i++) {
+		final int limit = getValidEndIndex(false);
+		for (int i = from; i < limit; i++) {
 			if(matcher.match(text.charAt(i))){
 				return i;
 			}

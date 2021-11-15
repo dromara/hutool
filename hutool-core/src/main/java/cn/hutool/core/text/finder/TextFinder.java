@@ -1,5 +1,7 @@
 package cn.hutool.core.text.finder;
 
+import cn.hutool.core.lang.Assert;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +14,7 @@ public abstract class TextFinder implements Finder, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected CharSequence text;
+	protected int endIndex = -1;
 
 	/**
 	 * 设置被查找的文本
@@ -20,7 +23,37 @@ public abstract class TextFinder implements Finder, Serializable {
 	 * @return this
 	 */
 	public TextFinder setText(CharSequence text) {
-		this.text = text;
+		this.text = Assert.notNull(text, "Text must be not null!");
 		return this;
+	}
+
+	/**
+	 * 设置查找的结束位置<br>
+	 * 如果从前向后查找，结束位置最大为text.length()<br>
+	 * 如果从后向前，结束位置为-1
+	 *
+	 * @param endIndex 结束位置（不包括）
+	 * @return this
+	 */
+	public TextFinder setEndIndex(int endIndex) {
+		this.endIndex = endIndex;
+		return this;
+	}
+
+	/**
+	 * 获取有效结束位置<br>
+	 * 如果{@link #endIndex}小于0，在反向模式下是开头（-1），正向模式是结尾（text.length()）
+	 *
+	 * @param negative 是否从后向前查找模式
+	 * @return 有效结束位置
+	 */
+	protected int getValidEndIndex(boolean negative) {
+		final int limit;
+		if (endIndex < 0) {
+			limit = negative ? -1 : text.length();
+		} else {
+			limit = Math.min(endIndex, text.length());
+		}
+		return limit;
 	}
 }

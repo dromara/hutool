@@ -8,10 +8,12 @@ package cn.hutool.core.text.finder;
  */
 public interface Finder {
 
+	int INDEX_NOT_FOUND = -1;
+
 	/**
 	 * 返回开始位置，即起始字符位置（包含），未找到返回-1
 	 *
-	 * @param from 查找的开始位置（包含
+	 * @param from 查找的开始位置（包含）
 	 * @return 起始字符位置，未找到返回-1
 	 */
 	int start(int from);

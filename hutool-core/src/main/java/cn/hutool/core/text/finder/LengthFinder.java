@@ -3,7 +3,8 @@ package cn.hutool.core.text.finder;
 import cn.hutool.core.lang.Assert;
 
 /**
- * 固定长度查找器
+ * 固定长度查找器<br>
+ * 给定一个长度，查找的位置为from + length，一般用于分段截取
  *
  * @since 5.7.14
  * @author looly
@@ -25,7 +26,8 @@ public class LengthFinder extends TextFinder {
 	public int start(int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
 		final int result = from + length;
-		if(result < text.length()){
+		final int limit = getValidEndIndex(false);
+		if(result < limit){
 			return result;
 		}
 		return -1;

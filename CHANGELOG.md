@@ -13,6 +13,7 @@
 * 【core   】     Tree增加filter、filterNew、cloneTree、hasChild方法（issue#I4HFC6@Gitee）
 * 【poi    】     增加ColumnSheetReader及ExcelReader.readColumn，支持读取某一列
 * 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
+* 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 

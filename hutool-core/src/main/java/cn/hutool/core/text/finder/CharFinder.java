@@ -4,7 +4,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
 
 /**
- * 字符查找器
+ * 字符查找器<br>
+ * 查找指定字符在字符串中的位置信息
  *
  * @author looly
  * @since 5.7.14
@@ -38,8 +39,8 @@ public class CharFinder extends TextFinder {
 	@Override
 	public int start(int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
-		final int length = text.length();
-		for (int i = from; i < length; i++) {
+		final int limit = getValidEndIndex(false);
+		for (int i = from; i < limit; i++) {
 			if (NumberUtil.equals(c, text.charAt(i), caseInsensitive)) {
 				return i;
 			}
