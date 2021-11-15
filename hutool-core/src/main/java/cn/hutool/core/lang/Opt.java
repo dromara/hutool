@@ -167,12 +167,14 @@ public class Opt<T> {
 	 * }</pre>
 	 *
 	 * @param action 你想要执行的操作
+	 * @return this
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
-	public void ifPresent(Consumer<? super T> action) {
-		if (value != null) {
+	public Opt<T> ifPresent(Consumer<? super T> action) {
+		if (isPresent()) {
 			action.accept(value);
 		}
+		return this;
 	}
 
 	/**
@@ -187,16 +189,16 @@ public class Opt<T> {
 	 *
 	 * @param action      包裹里的值存在时的操作
 	 * @param emptyAction 包裹里的值不存在时的操作
+	 * @return this;
 	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
 	 */
 	public Opt<T> ifPresentOrElse(Consumer<? super T> action, VoidFunc0 emptyAction) {
 		if (isPresent()) {
 			action.accept(value);
-			return ofNullable(value);
 		} else {
 			emptyAction.callWithRuntimeException();
-			return empty();
 		}
+		return this;
 	}
 
 
@@ -459,10 +461,11 @@ public class Opt<T> {
 
 	/**
 	 * 转换为 {@link Optional}对象
+	 *
 	 * @return {@link Optional}对象
 	 * @since 5.7.16
 	 */
-	public Optional<T> toOptional(){
+	public Optional<T> toOptional() {
 		return Optional.ofNullable(this.value);
 	}
 

@@ -149,7 +149,7 @@ public class OptTest {
 
 	@Test
 	public void ofEmptyAbleTest() {
-		// 以前，输入一个CollectionUtil感觉要命，类似前缀的类一大堆，代码补全形同虚设(在项目中起码要输入完CollectionU才能在第一个调出这个函数)
+		// 以前，输入一个CollectionUtil感觉要命，类似前缀的类一大堆，代码补全形同虚设(在项目中起码要输入完CollectionUtil才能在第一个调出这个函数)
 		// 关键它还很常用，判空和判空集合真的太常用了...
 		List<String> past = Opt.ofNullable(Collections.<String>emptyList()).filter(CollectionUtil::isNotEmpty).orElseGet(() -> Collections.singletonList("hutool"));
 		// 现在，一个ofEmptyAble搞定
@@ -165,6 +165,7 @@ public class OptTest {
 		Assert.assertEquals("HUTOOL", hutool);
 	}
 
+	@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "ConstantConditions"})
 	@Test
 	public void execTest() {
 		// 有一些资深的程序员跟我说你这个lambda，双冒号语法糖看不懂...
