@@ -14,7 +14,7 @@ public class RFC3986 {
 	/**
 	 * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 	 */
-	public static final PercentCodec GEN_DELIMS = PercentCodec.of(":/?#[]&");
+	public static final PercentCodec GEN_DELIMS = PercentCodec.of(":/?#[]@");
 
 	/**
 	 * sub-delims = "!" / "$" / "{@code &}" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
