@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-14)
+# 5.7.17 (2021-11-16)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -14,6 +14,7 @@
 * 【poi    】     增加ColumnSheetReader及ExcelReader.readColumn，支持读取某一列
 * 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 * 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
+* 【core   】     改进TextFinder，支持限制结束位置及反向查找模式
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 
