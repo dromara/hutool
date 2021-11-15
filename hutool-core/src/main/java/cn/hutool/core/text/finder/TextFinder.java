@@ -48,9 +48,13 @@ public abstract class TextFinder implements Finder, Serializable {
 	 * @return 有效结束位置
 	 */
 	protected int getValidEndIndex(boolean negative) {
+		if(negative && -1 == endIndex){
+			// 反向查找模式下，-1表示0前面的位置，即字符串反向末尾的位置
+			return -1;
+		}
 		final int limit;
 		if (endIndex < 0) {
-			limit = negative ? -1 : text.length();
+			limit = endIndex + text.length();
 		} else {
 			limit = Math.min(endIndex, text.length());
 		}
