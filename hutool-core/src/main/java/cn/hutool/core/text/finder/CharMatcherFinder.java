@@ -26,10 +26,18 @@ public class CharMatcherFinder extends TextFinder {
 	@Override
 	public int start(int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
-		final int limit = getValidEndIndex(false);
-		for (int i = from; i < limit; i++) {
-			if(matcher.match(text.charAt(i))){
-				return i;
+		final int limit = getValidEndIndex();
+		if(negative){
+			for (int i = from; i > limit; i--) {
+				if(matcher.match(text.charAt(i))){
+					return i;
+				}
+			}
+		} else {
+			for (int i = from; i < limit; i++) {
+				if(matcher.match(text.charAt(i))){
+					return i;
+				}
 			}
 		}
 		return -1;

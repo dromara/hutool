@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.util.ArrayUtil;
@@ -1066,7 +1067,7 @@ public class CharSequenceUtil {
 	 * @param searchChar 被查找的字符
 	 * @return 位置
 	 */
-	public static int indexOf(final CharSequence str, char searchChar) {
+	public static int indexOf(CharSequence str, char searchChar) {
 		return indexOf(str, searchChar, 0);
 	}
 
@@ -1089,33 +1090,17 @@ public class CharSequenceUtil {
 	/**
 	 * 指定范围内查找指定字符
 	 *
-	 * @param str        字符串
+	 * @param text        字符串
 	 * @param searchChar 被查找的字符
 	 * @param start      起始位置，如果小于0，从0开始查找
 	 * @param end        终止位置，如果超过str.length()则默认查找到字符串末尾
 	 * @return 位置
 	 */
-	public static int indexOf(final CharSequence str, char searchChar, int start, int end) {
-		if (isEmpty(str)) {
+	public static int indexOf(CharSequence text, char searchChar, int start, int end) {
+		if (isEmpty(text)) {
 			return INDEX_NOT_FOUND;
 		}
-		final int len = str.length();
-		if (start < 0 || start > len) {
-			start = 0;
-		}
-		if (end > len) {
-			end = len;
-		}
-		if (end < 0) {
-			end += len;
-		}
-
-		for (int i = start; i < end; i++) {
-			if (str.charAt(i) == searchChar) {
-				return i;
-			}
-		}
-		return INDEX_NOT_FOUND;
+		return new CharFinder(searchChar).setText(text).setEndIndex(end).start(start);
 	}
 
 	/**
@@ -1237,7 +1222,8 @@ public class CharSequenceUtil {
 				return INDEX_NOT_FOUND;
 			}
 		}
-		return new StrFinder(searchStr, ignoreCase, true).setText(text).start(from);
+		return new StrFinder(searchStr, ignoreCase)
+				.setText(text).setNegative(true).start(from);
 	}
 
 	/**

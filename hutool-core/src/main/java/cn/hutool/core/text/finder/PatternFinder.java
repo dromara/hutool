@@ -42,10 +42,15 @@ public class PatternFinder extends TextFinder {
 	}
 
 	@Override
+	public TextFinder setNegative(boolean negative) {
+		throw new UnsupportedOperationException("Negative is invalid for Pattern!");
+	}
+
+	@Override
 	public int start(int from) {
 		if (matcher.find(from)) {
 			// 只有匹配到的字符串结尾在limit范围内，才算找到
-			if(matcher.end() <= getValidEndIndex(false)){
+			if(matcher.end() <= getValidEndIndex()){
 				return matcher.start();
 			}
 		}

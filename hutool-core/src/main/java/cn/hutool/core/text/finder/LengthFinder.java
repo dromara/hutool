@@ -25,10 +25,18 @@ public class LengthFinder extends TextFinder {
 	@Override
 	public int start(int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
-		final int result = from + length;
-		final int limit = getValidEndIndex(false);
-		if(result < limit){
-			return result;
+		final int limit = getValidEndIndex();
+		int result;
+		if(negative){
+			result = from - length;
+			if(result > limit){
+				return result;
+			}
+		} else {
+			result = from + length;
+			if(result < limit){
+				return result;
+			}
 		}
 		return -1;
 	}

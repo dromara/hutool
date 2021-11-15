@@ -14,7 +14,6 @@ public class StrFinder extends TextFinder {
 
 	private final CharSequence strToFind;
 	private final boolean caseInsensitive;
-	private final boolean negative;
 
 	/**
 	 * 构造
@@ -23,21 +22,9 @@ public class StrFinder extends TextFinder {
 	 * @param caseInsensitive 是否忽略大小写
 	 */
 	public StrFinder(CharSequence strToFind, boolean caseInsensitive) {
-		this(strToFind, caseInsensitive, false);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param strToFind       被查找的字符串
-	 * @param caseInsensitive 是否忽略大小写
-	 * @param negative      是否从后向前查找模式
-	 */
-	public StrFinder(CharSequence strToFind, boolean caseInsensitive, boolean negative ) {
 		Assert.notEmpty(strToFind);
 		this.strToFind = strToFind;
 		this.caseInsensitive = caseInsensitive;
-		this.negative = negative ;
 	}
 
 	@Override
@@ -48,15 +35,15 @@ public class StrFinder extends TextFinder {
 		if (from < 0) {
 			from = 0;
 		}
-		int endLimit = getValidEndIndex(negative);
-		if(negative){
+		int endLimit = getValidEndIndex();
+		if (negative) {
 			for (int i = from; i > endLimit; i--) {
 				if (CharSequenceUtil.isSubEquals(text, i, strToFind, 0, subLen, caseInsensitive)) {
 					return i;
 				}
 			}
 		} else {
-			endLimit  = endLimit - subLen + 1;
+			endLimit = endLimit - subLen + 1;
 			for (int i = from; i < endLimit; i++) {
 				if (CharSequenceUtil.isSubEquals(text, i, strToFind, 0, subLen, caseInsensitive)) {
 					return i;
