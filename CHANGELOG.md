@@ -16,6 +16,7 @@
 * 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 * 【core   】     改进TextFinder，支持限制结束位置及反向查找模式
 * 【core   】     Opt增加部分方法（pr#459@Gitee）
+* 【core   】     增加DefaultCloneable（pr#459@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
