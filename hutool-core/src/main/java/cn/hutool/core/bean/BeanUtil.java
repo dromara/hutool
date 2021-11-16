@@ -916,4 +916,31 @@ public class BeanUtil {
 		return false;
 	}
 
+
+	/**
+	 * 判断Bean是否包含值为{@code !null}的属性(非空属性)<br>
+	 * 对象本身为{@code null}也返回false
+	 *
+	 * @param bean             Bean对象
+	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @return 是否包含值为<code>!null</code>的属性(非空属性)，{@code true} - 包含 / {@code false} - 不包含
+	 * @since 4.1.10
+	 */
+	public static boolean hasNotNullField(Object bean, String... ignoreFiledNames) {
+		if (null == bean) {
+			return false;
+		}
+		for (Field field : ReflectUtil.getFields(bean.getClass())) {
+			if (ModifierUtil.isStatic(field)) {
+				continue;
+			}
+			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+					&& null != ReflectUtil.getFieldValue(bean, field)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 }
