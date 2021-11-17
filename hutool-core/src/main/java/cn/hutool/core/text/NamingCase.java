@@ -150,19 +150,30 @@ public class NamingCase {
 	 * @return 转换后的驼峰式命名的字符串
 	 */
 	public static String toCamelCase(CharSequence name) {
+		return toCamelCase(name, CharUtil.UNDERLINE);
+	}
+
+	/**
+	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
+	 *
+	 * @param name    转换前的自定义方式命名的字符串
+	 * @param symbol 连接符
+	 * @return 转换后的驼峰式命名的字符串
+	 */
+	public static String toCamelCase(CharSequence name, char symbol) {
 		if (null == name) {
 			return null;
 		}
 
 		final String name2 = name.toString();
-		if (StrUtil.contains(name2, CharUtil.UNDERLINE)) {
+		if (StrUtil.contains(name2, symbol)) {
 			final int length = name2.length();
 			final StringBuilder sb = new StringBuilder(length);
 			boolean upperCase = false;
 			for (int i = 0; i < length; i++) {
 				char c = name2.charAt(i);
 
-				if (c == CharUtil.UNDERLINE) {
+				if (c == symbol) {
 					upperCase = true;
 				} else if (upperCase) {
 					sb.append(Character.toUpperCase(c));
@@ -176,4 +187,5 @@ public class NamingCase {
 			return name2;
 		}
 	}
+
 }

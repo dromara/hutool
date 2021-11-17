@@ -4022,6 +4022,19 @@ public class CharSequenceUtil {
 		return NamingCase.toCamelCase(name);
 	}
 
+	/**
+	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
+	 * 例如：hello_world=》helloWorld; hello-world=》helloWorld
+	 *
+	 * @param name   转换前的下划线大写方式命名的字符串
+	 * @param symbol 连接符
+	 * @return 转换后的驼峰式命名的字符串
+	 * @see NamingCase#toCamelCase(CharSequence, char)
+	 */
+	public static String toCamelCase(CharSequence name, char symbol) {
+		return NamingCase.toCamelCase(name, symbol);
+	}
+
 	// ------------------------------------------------------------------------ isSurround
 
 	/**
