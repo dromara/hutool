@@ -33,6 +33,25 @@ public class CollStreamUtil {
 		return collection.stream().collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
 	}
 
+
+	/**
+	 * 将collection转化为类型不变的map<br>
+	 * <B>{@code Collection<V>  ---->  Map<K,V>}</B>
+	 *
+	 * @param collection 需要转化的集合
+	 * @param key        V类型转化为K类型的lambda方法
+	 * @param <V>        collection中的泛型
+	 * @param <K>        map中的key类型
+	 * @return 转化后的map
+	 * @see #toIdentityMap toIdentityMap的并行流实现
+	 */
+	public static <V, K> Map<K, V> toIdentityMapP(Collection<V> collection, Function<V, K> key) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyMap();
+		}
+		return collection.parallelStream().collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
+	}
+
 	/**
 	 * 将Collection转化为map(value类型与collection的泛型不同)<br>
 	 * <B>{@code Collection<E> -----> Map<K,V>  }</B>
@@ -51,6 +70,26 @@ public class CollStreamUtil {
 		}
 		return collection.stream().collect(Collectors.toMap(key, value, (l, r) -> l));
 	}
+
+	/**
+	 * @param collection 需要转化的集合
+	 * @param key        E类型转化为K类型的lambda方法
+	 * @param value      E类型转化为V类型的lambda方法
+	 * @param <E>        collection中的泛型
+	 * @param <K>        map中的key类型
+	 * @param <V>        map中的value类型
+	 * @return 转化后的map
+	 * @see #toMap toMap的并行流实现
+	 * 将Collection转化为map(value类型与collection的泛型不同)<br>
+	 * <B>{@code Collection<E> -----> Map<K,V>  }</B>
+	 */
+	public static <E, K, V> Map<K, V> toMapP(Collection<E> collection, Function<E, K> key, Function<E, V> value) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyMap();
+		}
+		return collection.parallelStream().collect(Collectors.toMap(key, value, (l, r) -> l));
+	}
+
 
 	/**
 	 * 将collection按照规则(比如有相同的班级id)分类成map<br>
@@ -72,6 +111,26 @@ public class CollStreamUtil {
 	}
 
 	/**
+	 * 将collection按照规则(比如有相同的班级id)分类成map<br>
+	 * <B>{@code Collection<E> -------> Map<K,List<E>> } </B>
+	 *
+	 * @param collection 需要分类的集合
+	 * @param key        分类的规则
+	 * @param <E>        collection中的泛型
+	 * @param <K>        map中的key类型
+	 * @return 分类后的map
+	 * @see #groupByKey groupByKey的并行流实现
+	 */
+	public static <E, K> Map<K, List<E>> groupByKeyP(Collection<E> collection, Function<E, K> key) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyMap();
+		}
+		return collection
+				.parallelStream()
+				.collect(Collectors.groupingBy(key, Collectors.toList()));
+	}
+
+	/**
 	 * 将collection按照两个规则(比如有相同的年级id,班级id)分类成双层map<br>
 	 * <B>{@code Collection<E>  --->  Map<T,Map<U,List<E>>> } </B>
 	 *
@@ -89,6 +148,29 @@ public class CollStreamUtil {
 		}
 		return collection
 				.stream()
+				.collect(Collectors.groupingBy(key1, Collectors.groupingBy(key2, Collectors.toList())));
+	}
+
+
+	/**
+	 * 将collection按照两个规则(比如有相同的年级id,班级id)分类成双层map<br>
+	 * <B>{@code Collection<E>  --->  Map<T,Map<U,List<E>>> } </B>
+	 *
+	 * @param collection 需要分类的集合
+	 * @param key1       第一个分类的规则
+	 * @param key2       第二个分类的规则
+	 * @param <E>        集合元素类型
+	 * @param <K>        第一个map中的key类型
+	 * @param <U>        第二个map中的key类型
+	 * @return 分类后的map
+	 * @see #groupBy2Key    groupBy2Key的并行实现
+	 */
+	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2KeyP(Collection<E> collection, Function<E, K> key1, Function<E, U> key2) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyMap();
+		}
+		return collection
+				.parallelStream()
 				.collect(Collectors.groupingBy(key1, Collectors.groupingBy(key2, Collectors.toList())));
 	}
 
@@ -114,6 +196,28 @@ public class CollStreamUtil {
 	}
 
 	/**
+	 * 将collection按照两个规则(比如有相同的年级id,班级id)分类成双层map<br>
+	 * <B>{@code Collection<E>  --->  Map<T,Map<U,E>> } </B>
+	 *
+	 * @param collection 需要分类的集合
+	 * @param key1       第一个分类的规则
+	 * @param key2       第二个分类的规则
+	 * @param <T>        第一个map中的key类型
+	 * @param <U>        第二个map中的key类型
+	 * @param <E>        collection中的泛型
+	 * @return 分类后的map
+	 * @see #group2Map 的并行实现
+	 */
+	public static <E, T, U> Map<T, Map<U, E>> group2MapP(Collection<E> collection, Function<E, T> key1, Function<E, U> key2) {
+		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
+			return Collections.emptyMap();
+		}
+		return collection
+				.parallelStream()
+				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l)));
+	}
+
+	/**
 	 * 将collection转化为List集合，但是两者的泛型不同<br>
 	 * <B>{@code Collection<E>  ------>  List<T> } </B>
 	 *
@@ -135,6 +239,28 @@ public class CollStreamUtil {
 	}
 
 	/**
+	 * 将collection转化为List集合，但是两者的泛型不同<br>
+	 * <B>{@code Collection<E>  ------>  List<T> } </B>
+	 *
+	 * @param collection 需要转化的集合
+	 * @param function   collection中的泛型转化为list泛型的lambda表达式
+	 * @param <E>        collection中的泛型
+	 * @param <T>        List中的泛型
+	 * @return 转化后的list
+	 * @see #toList 的并行实现
+	 */
+	public static <E, T> List<T> toListP(Collection<E> collection, Function<E, T> function) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyList();
+		}
+		return collection
+				.parallelStream()
+				.map(function)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+
+	/**
 	 * 将collection转化为Set集合，但是两者的泛型不同<br>
 	 * <B>{@code Collection<E>  ------>  Set<T> } </B>
 	 *
@@ -150,6 +276,28 @@ public class CollStreamUtil {
 		}
 		return collection
 				.stream()
+				.map(function)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * 将collection转化为Set集合，但是两者的泛型不同<br>
+	 * <B>{@code Collection<E>  ------>  Set<T> } </B>
+	 *
+	 * @param collection 需要转化的集合
+	 * @param function   collection中的泛型转化为set泛型的lambda表达式
+	 * @param <E>        collection中的泛型
+	 * @param <T>        Set中的泛型
+	 * @return 转化后的Set
+	 * @see #toSetP 的并行实现
+	 */
+	public static <E, T> Set<T> toSetP(Collection<E> collection, Function<E, T> function) {
+		if (CollUtil.isEmpty(collection) || function == null) {
+			return Collections.emptySet();
+		}
+		return collection
+				.parallelStream()
 				.map(function)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
