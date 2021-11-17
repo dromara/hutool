@@ -9,10 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 异常工具类
@@ -425,4 +422,22 @@ public class ExceptionUtil {
 	public static String getRootCauseMessage(final Throwable th) {
 		return getMessage(getRootCause(th));
 	}
+
+	/**
+	 *
+	 * 在stream流中如果有异常可以用这个类包裹起来
+	 * 把try catch逻辑延后处理，让整个流的运算显得更加合理
+	 *
+	 * @param value Supplier函数
+	 * @param <E> 当前阶段流中的对象
+	 * @return 一个TryMonad的封装包裹
+	 */
+	static <E> TryMonad<E> ofTry(TrySupplier<E> value) {
+		Objects.requireNonNull(value);
+		try {
+			return new TryMonad.success(value.get());
+		} catch (Throwable throwable) {
+			return new TryMonad.failure(throwable);
+		}
+	};
 }
