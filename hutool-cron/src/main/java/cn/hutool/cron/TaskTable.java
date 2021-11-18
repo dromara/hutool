@@ -1,5 +1,6 @@
 package cn.hutool.cron;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.CronTask;
 import cn.hutool.cron.task.Task;
@@ -128,21 +129,24 @@ public class TaskTable implements Serializable {
 	 * 移除Task
 	 *
 	 * @param id Task的ID
+	 * @return 是否成功移除，{@code false}表示未找到对应ID的任务
 	 */
-	public void remove(String id) {
+	public boolean remove(String id) {
 		final Lock writeLock = lock.writeLock();
 		writeLock.lock();
 		try {
 			final int index = ids.indexOf(id);
-			if (index > -1) {
-				tasks.remove(index);
-				patterns.remove(index);
-				ids.remove(index);
-				size--;
+			if (index < 0) {
+				return false;
 			}
+			tasks.remove(index);
+			patterns.remove(index);
+			ids.remove(index);
+			size--;
 		} finally {
 			writeLock.unlock();
 		}
+		return true;
 	}
 
 	/**
@@ -266,6 +270,16 @@ public class TaskTable implements Serializable {
 		} finally {
 			readLock.unlock();
 		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = StrUtil.builder();
+		for (int i = 0; i < size; i++) {
+			builder.append(StrUtil.format("[{}] [{}] [{}]\n",
+					ids.get(i), patterns.get(i), tasks.get(i)));
+		}
+		return builder.toString();
 	}
 
 	/**

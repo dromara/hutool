@@ -169,10 +169,9 @@ public class StrSplitter {
 	 * @param ignoreEmpty 是否忽略空串
 	 * @param ignoreCase  是否忽略大小写
 	 * @return 切分后的集合
-	 * @since 3.2.1
 	 */
 	public static List<String> split(CharSequence text, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
-		return split(text, separator, limit, ignoreEmpty, trimFunc(isTrim));
+		return split(text, separator, limit, ignoreEmpty, ignoreCase, trimFunc(isTrim));
 	}
 
 	/**

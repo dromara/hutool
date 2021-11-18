@@ -47,5 +47,22 @@ public class CharSequenceUtilTest {
 		Assert.assertEquals(str1, str2);
 	}
 
-	// ------------------------------------------------------------------------ remove
+	@Test
+	public void indexOfTest(){
+		int index = CharSequenceUtil.indexOf("abc123", '1');
+		Assert.assertEquals(3, index);
+		index = CharSequenceUtil.indexOf("abc123", '3');
+		Assert.assertEquals(5, index);
+		index = CharSequenceUtil.indexOf("abc123", 'a');
+		Assert.assertEquals(0, index);
+	}
+
+	@Test
+	public void indexOfTest2(){
+		int index = CharSequenceUtil.indexOf("abc123", '1', 0, 3);
+		Assert.assertEquals(-1, index);
+
+		index = CharSequenceUtil.indexOf("abc123", 'b', 0, 3);
+		Assert.assertEquals(1, index);
+	}
 }

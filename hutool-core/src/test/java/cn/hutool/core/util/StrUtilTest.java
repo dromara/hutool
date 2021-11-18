@@ -177,7 +177,7 @@ public class StrUtilTest {
 		Assert.assertEquals(5, StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9));
 		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1));
-		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
+		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("abc", "", 9));
 	}
 
@@ -199,8 +199,8 @@ public class StrUtilTest {
 		Assert.assertEquals(2, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", 3));
 		Assert.assertEquals(5, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", 9));
 		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", -1));
-		Assert.assertEquals(2, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
-		Assert.assertEquals(3, StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
+		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
+		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
 		Assert.assertEquals(0, StrUtil.lastIndexOfIgnoreCase("AAAcsd", "aaa"));
 	}
 
@@ -384,6 +384,12 @@ public class StrUtilTest {
 
 		String abc1d = StrUtil.toCamelCase("abc_1d");
 		Assert.assertEquals("abc1d", abc1d);
+
+
+		String str2 = "Table-Test-Of-day";
+		String result2 = StrUtil.toCamelCase(str2, CharUtil.DASHED);
+		System.out.println(result2);
+		Assert.assertEquals("tableTestOfDay", result2);
 	}
 
 	@Test

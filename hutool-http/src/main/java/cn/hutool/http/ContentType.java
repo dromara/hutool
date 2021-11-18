@@ -39,7 +39,11 @@ public enum ContentType {
 	/**
 	 * text/html编码
 	 */
-	TEXT_HTML("text/html");
+	TEXT_HTML("text/html"),
+	/**
+	 * application/octet-stream编码
+	 */
+	OCTET_STREAM("application/octet-stream");
 
 	private final String value;
 

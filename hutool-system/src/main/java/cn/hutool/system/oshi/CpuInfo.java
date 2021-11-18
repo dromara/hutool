@@ -14,7 +14,7 @@ public class CpuInfo {
 	private static final DecimalFormat LOAD_FORMAT = new DecimalFormat("#.00");
 
 	/**
-	 * cpu核心数
+	 * CPU核心数
 	 */
 	private Integer cpuNum;
 
@@ -157,7 +157,7 @@ public class CpuInfo {
 	@Override
 	public String toString() {
 		return "CpuInfo{" +
-				"cpu核心数=" + cpuNum +
+				"CPU核心数=" + cpuNum +
 				", CPU总的使用率=" + toTal +
 				", CPU系统使用率=" + sys +
 				", CPU用户使用率=" + used +

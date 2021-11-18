@@ -101,6 +101,11 @@ public interface RegexPool {
 	 */
 	String BIRTHDAY = "^(\\d{2,4})([/\\-.年]?)(\\d{1,2})([/\\-.月]?)(\\d{1,2})日?$";
 	/**
+	 * URI<br>
+	 * 定义见：https://www.ietf.org/rfc/rfc3986.html#appendix-B
+	 */
+	String URI = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?";
+	/**
 	 * URL
 	 */
 	String URL = "[a-zA-Z]+://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";

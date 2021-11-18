@@ -135,4 +135,18 @@ public class SplitIterTest {
 		final List<String> strings = splitIter.toList(false);
 		Assert.assertEquals(1, strings.size());
 	}
+
+	// 切割字符串是空字符串时报错
+	@Test(expected = IllegalArgumentException.class)
+	public void splitByEmptyTest(){
+		String text = "aa,bb,cc";
+		SplitIter splitIter = new SplitIter(text,
+				new StrFinder("", false),
+				3,
+				false
+		);
+
+		final List<String> strings = splitIter.toList(false);
+		Assert.assertEquals(1, strings.size());
+	}
 }

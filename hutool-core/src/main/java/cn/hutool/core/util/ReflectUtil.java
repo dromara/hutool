@@ -77,20 +77,14 @@ public class ReflectUtil {
 	 * 获得一个类中所有构造列表
 	 *
 	 * @param <T>       构造的对象类型
-	 * @param beanClass 类
+	 * @param beanClass 类，非{@code null}
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		Constructor<?>[] constructors = CONSTRUCTORS_CACHE.get(beanClass);
-		if (null != constructors) {
-			return (Constructor<T>[]) constructors;
-		}
-
-		constructors = getConstructorsDirectly(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.put(beanClass, constructors);
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, ()->getConstructorsDirectly(beanClass));
 	}
 
 	/**
@@ -101,7 +95,6 @@ public class ReflectUtil {
 	 * @throws SecurityException 安全检查异常
 	 */
 	public static Constructor<?>[] getConstructorsDirectly(Class<?> beanClass) throws SecurityException {
-		Assert.notNull(beanClass);
 		return beanClass.getDeclaredConstructors();
 	}
 
@@ -179,13 +172,8 @@ public class ReflectUtil {
 	 * @throws SecurityException 安全检查异常
 	 */
 	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
-		Field[] allFields = FIELDS_CACHE.get(beanClass);
-		if (null != allFields) {
-			return allFields;
-		}
-
-		allFields = getFieldsDirectly(beanClass, true);
-		return FIELDS_CACHE.put(beanClass, allFields);
+		Assert.notNull(beanClass);
+		return FIELDS_CACHE.get(beanClass, ()->getFieldsDirectly(beanClass, true));
 	}
 
 
@@ -641,18 +629,13 @@ public class ReflectUtil {
 	/**
 	 * 获得一个类中所有方法列表，包括其父类中的方法
 	 *
-	 * @param beanClass 类
+	 * @param beanClass 类，非{@code null}
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
-		Method[] allMethods = METHODS_CACHE.get(beanClass);
-		if (null != allMethods) {
-			return allMethods;
-		}
-
-		allMethods = getMethodsDirectly(beanClass, true);
-		return METHODS_CACHE.put(beanClass, allMethods);
+		Assert.notNull(beanClass);
+		return METHODS_CACHE.get(beanClass, ()-> getMethodsDirectly(beanClass, true));
 	}
 
 	/**

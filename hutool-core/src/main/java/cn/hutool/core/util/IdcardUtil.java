@@ -147,7 +147,8 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 是否有效身份证号，忽略X的大小写
+	 * 是否有效身份证号，忽略X的大小写<br>
+	 * 如果身份证号码中含有空格始终返回{@code false}
 	 *
 	 * @param idCard 身份证号，支持18位、15位和港澳台的10位
 	 * @return 是否有效
@@ -157,7 +158,7 @@ public class IdcardUtil {
 			return false;
 		}
 
-		idCard = idCard.trim();
+		//idCard = idCard.trim();
 		int length = idCard.length();
 		switch (length) {
 			case 18:// 18位身份证

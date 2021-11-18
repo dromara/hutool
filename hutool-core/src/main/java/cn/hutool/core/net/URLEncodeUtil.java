@@ -7,7 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import java.nio.charset.Charset;
 
 /**
- * URL编码工具
+ * URL编码工具<br>
+ * TODO 在6.x中移除此工具（无法很好区分URL编码和www-form编码）
  *
  * @since 5.7.13
  * @author looly

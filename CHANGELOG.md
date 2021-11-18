@@ -3,7 +3,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.16 (2021-11-04)
+# 5.7.17 (2021-11-16)
+
+### 🐣新特性
+* 【core   】     增加AsyncUtil（pr#457@Gitee）
+* 【http   】     增加HttpResource（issue#1943@Github）
+* 【http   】     增加BytesBody、FormUrlEncodedBody
+* 【cron   】     TaskTable.remove增加返回值（issue#I4HX3B@Gitee）
+* 【core   】     Tree增加filter、filterNew、cloneTree、hasChild方法（issue#I4HFC6@Gitee）
+* 【poi    】     增加ColumnSheetReader及ExcelReader.readColumn，支持读取某一列
+* 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
+* 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
+* 【core   】     改进TextFinder，支持限制结束位置及反向查找模式
+* 【core   】     Opt增加部分方法（pr#459@Gitee）
+* 【core   】     增加DefaultCloneable（pr#459@Gitee）
+* 
+### 🐞Bug修复
+* 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.7.16 (2021-11-07)
 
 ### 🐣新特性
 * 【core   】     增加DateTime.toLocalDateTime
@@ -26,6 +46,7 @@
 * 【core   】     TreeUtil增加walk方法（pr#1932@Gitee）
 * 【crypto 】     SmUtil增加sm3WithSalt（pr#454@Gitee）
 * 【http   】     增加HttpInterceptor（issue#I4H1ZV@Gitee）
+* 【core   】     Opt增加flattedMap（issue#I4H1ZV@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UrlBuilder.addPath歧义问题（issue#1912@Github）
@@ -35,6 +56,7 @@
 * 【core   】     修复CompilerUtil.getFileManager参数没有使用的问题（issue#I4FIO6@Gitee）
 * 【core   】     修复NetUtil.isInRange的cidr判断问题（pr#1917@Github）
 * 【core   】     修复RegexPool中对URL正则匹配问题（issue#I4GRKD@Gitee）
+* 【core   】     修复UrlQuery对于application/x-www-form-urlencoded问题（issue#1931@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

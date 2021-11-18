@@ -319,7 +319,8 @@ public class URLUtil extends URLEncodeUtil {
 
 	/**
 	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。
+	 * 将%开头的16进制表示的内容解码。<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 *
 	 * @param content 被解码内容
 	 * @param charset 编码，null表示不解码
@@ -327,9 +328,6 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 4.4.1
 	 */
 	public static String decode(String content, Charset charset) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset);
 	}
 
@@ -344,9 +342,6 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 5.6.3
 	 */
 	public static String decode(String content, Charset charset, boolean isPlusToSpace) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset, isPlusToSpace);
 	}
 
@@ -360,7 +355,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String decode(String content, String charset) throws UtilException {
-		return decode(content, CharsetUtil.charset(charset));
+		return decode(content, StrUtil.isEmpty(charset) ? null : CharsetUtil.charset(charset));
 	}
 
 	/**

@@ -3,7 +3,6 @@ package cn.hutool.http;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
@@ -15,14 +14,16 @@ import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.body.BytesBody;
+import cn.hutool.http.body.FormUrlEncodedBody;
 import cn.hutool.http.body.MultipartBody;
+import cn.hutool.http.body.RequestBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -1211,23 +1212,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		byte[] content;
+		RequestBody body;
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			content = this.bodyBytes;
+			body = BytesBody.create(this.bodyBytes);
 		} else {
-			content = StrUtil.bytes(getFormUrlEncoded(), this.charset);
+			body = FormUrlEncodedBody.create(this.form, this.charset);
 		}
-		IoUtil.write(this.httpConnection.getOutputStream(), true, content);
-	}
-
-	/**
-	 * 获取编码后的表单数据，无表单数据返回""
-	 *
-	 * @return 编码后的表单数据，无表单数据返回""
-	 * @since 5.3.2
-	 */
-	private String getFormUrlEncoded() {
-		return HttpUtil.toParams(this.form, this.charset);
+		body.writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**
@@ -1237,18 +1228,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException IO异常
 	 */
 	private void sendMultipart() throws IOException {
-		setMultipart();// 设置表单类型为Multipart
-
-		try (OutputStream out = this.httpConnection.getOutputStream()) {
-			MultipartBody.create(this.form, this.charset).write(out);
-		}
-	}
-
-	/**
-	 * 设置表单类型为Multipart（文件上传）
-	 */
-	private void setMultipart() {
+		//设置表单类型为Multipart（文件上传）
 		this.httpConnection.header(Header.CONTENT_TYPE, MultipartBody.getContentType(), true);
+		MultipartBody.create(this.form, this.charset).writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**
