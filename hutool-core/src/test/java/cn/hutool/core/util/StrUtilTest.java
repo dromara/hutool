@@ -384,6 +384,12 @@ public class StrUtilTest {
 
 		String abc1d = StrUtil.toCamelCase("abc_1d");
 		Assert.assertEquals("abc1d", abc1d);
+
+
+		String str2 = "Table-Test-Of-day";
+		String result2 = StrUtil.toCamelCase(str2, CharUtil.DASHED);
+		System.out.println(result2);
+		Assert.assertEquals("tableTestOfDay", result2);
 	}
 
 	@Test
