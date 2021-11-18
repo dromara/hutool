@@ -7,17 +7,23 @@ import cn.hutool.core.util.ObjectUtil;
 import java.security.SecureClassLoader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 资源类加载器，可以加载任意类型的资源类
  *
  * @param <T> {@link Resource}接口实现类
- * @author looly
+ * @author looly,lzpeng
  * @since 5.5.2
  */
 public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 
 	private final Map<String, T> resourceMap;
+
+	/**
+	 * 缓存已经加载的类
+	 */
+	private final Map<String, Class> cacheClassMap;
 
 	/**
 	 * 构造
@@ -28,6 +34,7 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	public ResourceClassLoader(ClassLoader parentClassLoader, Map<String, T> resourceMap) {
 		super(ObjectUtil.defaultIfNull(parentClassLoader, ClassLoaderUtil.getClassLoader()));
 		this.resourceMap = ObjectUtil.defaultIfNull(resourceMap, new HashMap<>());
+		this.cacheClassMap = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -42,11 +49,21 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		final Resource resource = resourceMap.get(name);
-		if (null != resource) {
-			final byte[] bytes = resource.readBytes();
-			return defineClass(name, bytes, 0, bytes.length);
+		final Class<?> clazz = cacheClassMap.computeIfAbsent(name, className -> {
+			final Resource resource = resourceMap.get(name);
+			if (null != resource) {
+				final byte[] bytes = resource.readBytes();
+				return defineClass(name, bytes, 0, bytes.length);
+			}
+			try {
+				return super.findClass(name);
+			} catch (ClassNotFoundException e) {
+				return null;
+			}
+		});
+		if (clazz == null) {
+			throw new ClassNotFoundException(name);
 		}
-		return super.findClass(name);
+		return clazz;
 	}
 }
