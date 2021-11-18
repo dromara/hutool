@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.stream.StreamUtil;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -27,10 +28,7 @@ public class CollStreamUtil {
 	 * @return 转化后的map
 	 */
 	public static <V, K> Map<K, V> toIdentityMap(Collection<V> collection, Function<V, K> key) {
-		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
-		}
-		return collection.stream().collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
+		return toIdentityMap(collection, key, false);
 	}
 
 
@@ -44,16 +42,13 @@ public class CollStreamUtil {
 	 * @param <V>        collection中的泛型
 	 * @param <K>        map中的key类型
 	 * @return 转化后的map
-	 * @see #toIdentityMap toIdentityMap的并行流实现
 	 */
 	public static <V, K> Map<K, V> toIdentityMap(Collection<V> collection, Function<V, K> key, boolean isParallel) {
-		if (false == isParallel) {
-			return toIdentityMap(collection, key);
-		}
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection.parallelStream().collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
+		return StreamUtil.of(collection, isParallel)
+				.collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
 	}
 
 	/**
@@ -69,10 +64,7 @@ public class CollStreamUtil {
 	 * @return 转化后的map
 	 */
 	public static <E, K, V> Map<K, V> toMap(Collection<E> collection, Function<E, K> key, Function<E, V> value) {
-		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
-		}
-		return collection.stream().collect(Collectors.toMap(key, value, (l, r) -> l));
+		return toMap(collection, key, value, false);
 	}
 
 	/**
@@ -84,18 +76,12 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @param <V>        map中的value类型
 	 * @return 转化后的map
-	 * @see #toMap toMap的并行流实现
-	 * 将Collection转化为map(value类型与collection的泛型不同)<br>
-	 * <B>{@code Collection<E> -----> Map<K,V>  }</B>
 	 */
 	public static <E, K, V> Map<K, V> toMap(Collection<E> collection, Function<E, K> key, Function<E, V> value, boolean isParallel) {
-		if (false == isParallel) {
-			return toMap(collection, key, value);
-		}
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection.parallelStream().collect(Collectors.toMap(key, value, (l, r) -> l));
+		return StreamUtil.of(collection, isParallel).collect(Collectors.toMap(key, value, (l, r) -> l));
 	}
 
 
@@ -110,12 +96,7 @@ public class CollStreamUtil {
 	 * @return 分类后的map
 	 */
 	public static <E, K> Map<K, List<E>> groupByKey(Collection<E> collection, Function<E, K> key) {
-		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
-		}
-		return collection
-				.stream()
-				.collect(Collectors.groupingBy(key, Collectors.toList()));
+		return groupByKey(collection, key, false);
 	}
 
 	/**
@@ -128,18 +109,12 @@ public class CollStreamUtil {
 	 * @param <E>        collection中的泛型
 	 * @param <K>        map中的key类型
 	 * @return 分类后的map
-	 * @see #groupByKey groupByKey的并行流实现
 	 */
 	public static <E, K> Map<K, List<E>> groupByKey(Collection<E> collection, Function<E, K> key, boolean isParallel) {
-		if (false == isParallel) {
-			return groupByKey(collection, key);
-		}
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection
-				.parallelStream()
-				.collect(Collectors.groupingBy(key, Collectors.toList()));
+		return StreamUtil.of(collection, isParallel).collect(Collectors.groupingBy(key, Collectors.toList()));
 	}
 
 	/**
@@ -155,12 +130,7 @@ public class CollStreamUtil {
 	 * @return 分类后的map
 	 */
 	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, K> key1, Function<E, U> key2) {
-		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
-		}
-		return collection
-				.stream()
-				.collect(Collectors.groupingBy(key1, Collectors.groupingBy(key2, Collectors.toList())));
+		return groupBy2Key(collection, key1, key2, false);
 	}
 
 
@@ -176,17 +146,13 @@ public class CollStreamUtil {
 	 * @param <K>        第一个map中的key类型
 	 * @param <U>        第二个map中的key类型
 	 * @return 分类后的map
-	 * @see #groupBy2Key    groupBy2Key的并行实现
 	 */
-	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, K> key1, Function<E, U> key2, boolean isParallel) {
-		if (false == isParallel) {
-			return groupBy2Key(collection, key1, key2);
-		}
+	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, K> key1,
+																Function<E, U> key2, boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return collection
-				.parallelStream()
+		return StreamUtil.of(collection, isParallel)
 				.collect(Collectors.groupingBy(key1, Collectors.groupingBy(key2, Collectors.toList())));
 	}
 
@@ -203,12 +169,7 @@ public class CollStreamUtil {
 	 * @return 分类后的map
 	 */
 	public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection, Function<E, T> key1, Function<E, U> key2) {
-		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
-			return Collections.emptyMap();
-		}
-		return collection
-				.stream()
-				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l)));
+		return group2Map(collection, key1, key2, false);
 	}
 
 	/**
@@ -223,17 +184,13 @@ public class CollStreamUtil {
 	 * @param <U>        第二个map中的key类型
 	 * @param <E>        collection中的泛型
 	 * @return 分类后的map
-	 * @see #group2Map 的并行实现
 	 */
-	public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection, Function<E, T> key1, Function<E, U> key2, boolean isParallel) {
-		if (false == isParallel) {
-			return group2Map(collection, key1, key2);
-		}
+	public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection,
+														Function<E, T> key1, Function<E, U> key2, boolean isParallel) {
 		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
 			return Collections.emptyMap();
 		}
-		return collection
-				.parallelStream()
+		return StreamUtil.of(collection, isParallel)
 				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l)));
 	}
 
@@ -248,14 +205,7 @@ public class CollStreamUtil {
 	 * @return 转化后的list
 	 */
 	public static <E, T> List<T> toList(Collection<E> collection, Function<E, T> function) {
-		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyList();
-		}
-		return collection
-				.stream()
-				.map(function)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+		return toList(collection, function, false);
 	}
 
 	/**
@@ -268,17 +218,12 @@ public class CollStreamUtil {
 	 * @param <E>        collection中的泛型
 	 * @param <T>        List中的泛型
 	 * @return 转化后的list
-	 * @see #toList 的并行实现
 	 */
 	public static <E, T> List<T> toList(Collection<E> collection, Function<E, T> function, boolean isParallel) {
-		if (false == isParallel) {
-			return toList(collection, function);
-		}
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyList();
 		}
-		return collection
-				.parallelStream()
+		return StreamUtil.of(collection, isParallel)
 				.map(function)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
@@ -295,14 +240,7 @@ public class CollStreamUtil {
 	 * @return 转化后的Set
 	 */
 	public static <E, T> Set<T> toSet(Collection<E> collection, Function<E, T> function) {
-		if (CollUtil.isEmpty(collection) || function == null) {
-			return Collections.emptySet();
-		}
-		return collection
-				.stream()
-				.map(function)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+		return toSet(collection, function, false);
 	}
 
 	/**
@@ -315,17 +253,12 @@ public class CollStreamUtil {
 	 * @param <E>        collection中的泛型
 	 * @param <T>        Set中的泛型
 	 * @return 转化后的Set
-	 * @see #toSet 的并行实现
 	 */
 	public static <E, T> Set<T> toSet(Collection<E> collection, Function<E, T> function, boolean isParallel) {
-		if (false == isParallel) {
-			return toSet(collection, function);
-		}
-		if (CollUtil.isEmpty(collection) || function == null) {
+		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptySet();
 		}
-		return collection
-				.parallelStream()
+		return StreamUtil.of(collection, isParallel)
 				.map(function)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());

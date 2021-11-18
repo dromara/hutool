@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-16)
+# 5.7.17 (2021-11-18)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -17,6 +17,7 @@
 * 【core   】     改进TextFinder，支持限制结束位置及反向查找模式
 * 【core   】     Opt增加部分方法（pr#459@Gitee）
 * 【core   】     增加DefaultCloneable（pr#459@Gitee）
+* 【core   】     CollStreamUtil增加是否并行的重载（pr#467@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
