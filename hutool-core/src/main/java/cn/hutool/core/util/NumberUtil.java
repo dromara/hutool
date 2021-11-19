@@ -756,10 +756,6 @@ public class NumberUtil {
 		return v1.divide(v2, scale, roundingMode);
 	}
 
-	public static void main(String[] args) {
-		System.out.println(div(BigDecimal.ZERO,BigDecimal.ZERO));
-	}
-
 	/**
 	 * 补充Math.ceilDiv() JDK8中添加了和Math.floorDiv()但却没有ceilDiv()
 	 *
