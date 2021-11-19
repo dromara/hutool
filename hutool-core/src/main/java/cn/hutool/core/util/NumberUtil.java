@@ -747,10 +747,17 @@ public class NumberUtil {
 		if (null == v1) {
 			return BigDecimal.ZERO;
 		}
+		if(v1.compareTo(BigDecimal.ZERO)==0||v2.compareTo(BigDecimal.ZERO)==0){
+			return BigDecimal.ZERO;
+		}
 		if (scale < 0) {
 			scale = -scale;
 		}
 		return v1.divide(v2, scale, roundingMode);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(div(BigDecimal.ZERO,BigDecimal.ZERO));
 	}
 
 	/**
