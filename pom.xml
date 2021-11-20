@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>5.7.16</version>
+	<version>${revision}</version>
 	<name>hutool</name>
 	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
 	<url>https://github.com/dromara/hutool</url>
@@ -42,6 +42,7 @@
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
 		<!-- versions -->
+		<revision>5.7.16</revision>
 		<compile.version>8</compile.version>
 		<junit.version>4.13.2</junit.version>
 		<lombok.version>1.18.22</lombok.version>
