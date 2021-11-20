@@ -177,12 +177,12 @@ public class OptTest {
 		String indexOutSituation = Opt.ofEmptyAble(last).map(l -> l.get(0)).orElse("hutool");
 
 		// 现在代码整洁度降低，但可读性up，如果再人说看不懂这代码...
-		String npe = Opt.exec(() -> last.get(0)).orElse("hutool");
-		String indexOut = Opt.exec(() -> {
+		String npe = Opt.ofTry(() -> last.get(0)).exceptionOrElse("hutool");
+		String indexOut = Opt.ofTry(() -> {
 			List<String> list = new ArrayList<>();
 			// 你可以在里面写一长串调用链 list.get(0).getUser().getId()
 			return list.get(0);
-		}).orElse("hutool");
+		}).exceptionOrElse("hutool");
 		Assert.assertEquals(npe, npeSituation);
 		Assert.assertEquals(indexOut, indexOutSituation);
 		Assert.assertEquals("hutool", npe);
@@ -197,6 +197,4 @@ public class OptTest {
 		private String username;
 		private String nickname;
 	}
-
-
 }

@@ -273,6 +273,17 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
+	 * 调用对象的toString方法，null会返回{@code null}
+	 *
+	 * @param obj 对象
+	 * @return 字符串 or {@code null}
+	 * @since 5.7.17
+	 */
+	public static String toStringOrNull(Object obj) {
+		return null == obj ? null : obj.toString();
+	}
+
+	/**
 	 * 创建StringBuilder对象
 	 *
 	 * @return StringBuilder对象
