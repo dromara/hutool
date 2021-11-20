@@ -1002,8 +1002,17 @@ public class ZipUtil {
 				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 
+			// issue#1961@Github
+			// 当 zipFile =  new File("temp.zip") 时, zipFile.getParentFile() == null
+			File parentFile;
+			try {
+				parentFile = zipFile.getCanonicalFile().getParentFile();
+			} catch (IOException e) {
+				parentFile = zipFile.getParentFile();
+			}
+
 			// 压缩文件不能位于被压缩的目录内
-			if (srcFile.isDirectory() && FileUtil.isSub(srcFile, zipFile.getParentFile())) {
+			if (srcFile.isDirectory() && FileUtil.isSub(srcFile, parentFile)) {
 				throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getPath(), srcFile.getPath());
 			}
 		}
