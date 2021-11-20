@@ -2471,21 +2471,22 @@ public class CharSequenceUtil {
 	 *
 	 * @param str         被重复的字符串
 	 * @param count       数量
-	 * @param conjunction 分界符
+	 * @param delimiter 分界符
 	 * @return 连接后的字符串
 	 * @since 4.0.1
 	 */
-	public static String repeatAndJoin(CharSequence str, int count, CharSequence conjunction) {
+	public static String repeatAndJoin(CharSequence str, int count, CharSequence delimiter) {
 		if (count <= 0) {
 			return EMPTY;
 		}
-		final StrBuilder builder = StrBuilder.create();
-		boolean isFirst = true;
+		final StringBuilder builder = new StringBuilder(str.length() * count);
+		builder.append(str);
+		count--;
+
+		final boolean isAppendDelimiter = isNotEmpty(delimiter);
 		while (count-- > 0) {
-			if (isFirst) {
-				isFirst = false;
-			} else if (isNotEmpty(conjunction)) {
-				builder.append(conjunction);
+			if (isAppendDelimiter) {
+				builder.append(delimiter);
 			}
 			builder.append(str);
 		}
@@ -3521,7 +3522,7 @@ public class CharSequenceUtil {
 			fromIndex = 0;
 		}
 
-		final StrBuilder result = StrBuilder.create(strLength + 16);
+		final StringBuilder result = new StringBuilder(strLength - searchStrLength + replacement.length());
 		if (0 != fromIndex) {
 			result.append(str.subSequence(0, fromIndex));
 		}
@@ -4285,7 +4286,7 @@ public class CharSequenceUtil {
 			// 循环位移，当越界时循环
 			moveLength = moveLength % len;
 		}
-		final StrBuilder strBuilder = StrBuilder.create(len);
+		final StringBuilder strBuilder = new StringBuilder(len);
 		if (moveLength > 0) {
 			int endAfterMove = Math.min(endExclude + moveLength, str.length());
 			strBuilder.append(str.subSequence(0, startInclude))//

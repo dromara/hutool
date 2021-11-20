@@ -177,7 +177,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串
 	 */
 	public static String str(byte[] bytes, String charset) {
-		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+		return str(bytes, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串
 	 */
 	public static String str(Byte[] bytes, String charset) {
-		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+		return str(bytes, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 			return null;
 		}
 
-		return str(data, Charset.forName(charset));
+		return str(data, CharsetUtil.charset(charset));
 	}
 
 	/**

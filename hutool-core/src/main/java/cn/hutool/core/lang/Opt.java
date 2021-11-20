@@ -111,6 +111,21 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 执行一系列操作，如果途中发生 {@code NPE} 和 {@code IndexOutOfBoundsException}，返回一个空的{@code Opt}
+	 *
+	 * @param supplier 操作
+	 * @param <T>      类型
+	 * @return 操作执行后的值
+	 */
+	public static <T> Opt<T> exec(Supplier<T> supplier) {
+		try {
+			return Opt.ofNullable(supplier.get());
+		} catch (NullPointerException | IndexOutOfBoundsException e) {
+			return empty();
+		}
+	}
+
+	/**
 	 * 包裹里实际的元素
 	 */
 	private final T value;
@@ -411,10 +426,7 @@ public class Opt<T> {
 	 * @throws NoSuchElementException 如果包裹里的值不存在则抛出该异常
 	 */
 	public T orElseThrow() {
-		if (value == null) {
-			throw new NoSuchElementException("No value present");
-		}
-		return value;
+		return orElseThrow(NoSuchElementException::new, "No value present");
 	}
 
 	/**
@@ -467,22 +479,6 @@ public class Opt<T> {
 	 */
 	public Optional<T> toOptional() {
 		return Optional.ofNullable(this.value);
-	}
-
-
-	/**
-	 * 执行一系列操作，如果途中发生 {@code NPE} 和 {@code IndexOutOfBoundsException}，返回一个空的{@code Opt}
-	 *
-	 * @param supplier 操作
-	 * @param <T>      类型
-	 * @return 操作执行后的值
-	 */
-	public static <T> Opt<T> exec(Supplier<T> supplier) {
-		try {
-			return Opt.ofNullable(supplier.get());
-		} catch (NullPointerException | IndexOutOfBoundsException e) {
-			return empty();
-		}
 	}
 
 	/**
