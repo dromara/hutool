@@ -17,11 +17,11 @@ public class CacheObj<K, V> implements Serializable{
 	protected final V obj;
 
 	/** 上次访问时间 */
-	private volatile long lastAccess;
+	protected volatile long lastAccess;
 	/** 访问次数 */
 	protected AtomicLong accessCount = new AtomicLong();
 	/** 对象存活时长，0表示永久存活*/
-	private final long ttl;
+	protected final long ttl;
 
 	/**
 	 * 构造
