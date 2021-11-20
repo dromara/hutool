@@ -88,6 +88,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void divBigDecimalTest() {
+		BigDecimal result = NumberUtil.div(BigDecimal.ZERO, BigDecimal.ONE);
+		Assert.assertEquals(BigDecimal.ZERO, result.stripTrailingZeros());
+	}
+
+	@Test
 	public void roundTest() {
 
 		// 四舍
