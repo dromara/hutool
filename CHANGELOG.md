@@ -20,6 +20,7 @@
 * 【core   】     CollStreamUtil增加是否并行的重载（pr#467@Gitee）
 * 【core   】     ResourceClassLoader增加缓存（pr#1959@Github）
 * 【crypto 】     增加CipherWrapper，增加setRandom（issue#1958@Github）
+* 【core   】     Opt增加ofTry方法（pr#1956@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
