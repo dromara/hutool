@@ -716,6 +716,9 @@ public class NumberUtil {
 	 * @since 3.1.0
 	 */
 	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
+		if(v1 instanceof BigDecimal && v2 instanceof BigDecimal){
+			return div((BigDecimal)v1, (BigDecimal)v2, scale, roundingMode);
+		}
 		return div(v1.toString(), v2.toString(), scale, roundingMode);
 	}
 
