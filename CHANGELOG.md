@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-20)
+# 5.7.17 (2021-11-24)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -21,6 +21,7 @@
 * 【core   】     ResourceClassLoader增加缓存（pr#1959@Github）
 * 【crypto 】     增加CipherWrapper，增加setRandom（issue#1958@Github）
 * 【core   】     Opt增加ofTry方法（pr#1956@Github）
+* 【core   】     DateUtil.toIntSecond标记为弃用（issue#I4JHPR@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
