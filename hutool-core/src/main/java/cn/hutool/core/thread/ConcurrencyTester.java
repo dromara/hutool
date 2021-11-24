@@ -40,10 +40,12 @@ public class ConcurrencyTester {
 		this.sf.clearWorker();
 
 		timeInterval.start();
-		this.sf//
-				.addRepeatWorker(runnable)//
-				.setBeginAtSameTime(true)// 同时开始
+		this.sf
+				.addRepeatWorker(runnable)
+				.setBeginAtSameTime(true)
 				.start();
+		// 停止线程池释放资源，避免空跑
+		this.sf.stop();
 
 		this.interval = timeInterval.interval();
 		return this;
