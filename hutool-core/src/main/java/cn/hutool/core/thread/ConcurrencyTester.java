@@ -2,6 +2,9 @@ package cn.hutool.core.thread;
 
 import cn.hutool.core.date.TimeInterval;
 
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
  * 高并发测试工具类
  *
@@ -12,11 +15,14 @@ import cn.hutool.core.date.TimeInterval;
  * ct.test(() -&gt; {
  *      // 需要并发测试的业务代码
  * });
+ *
+ * Console.log(ct.getInterval());
+ * ct.close();
  * </pre>
  *
  * @author kwer
  */
-public class ConcurrencyTester {
+public class ConcurrencyTester implements Closeable {
 	private final SyncFinisher sf;
 	private final TimeInterval timeInterval;
 	private long interval;
@@ -31,7 +37,8 @@ public class ConcurrencyTester {
 	}
 
 	/**
-	 * 执行测试
+	 * 执行测试<br>
+	 * 执行测试后不会关闭线程池，可以调用{@link #close()}释放线程池
 	 *
 	 * @param runnable 要测试的内容
 	 * @return this
@@ -44,8 +51,6 @@ public class ConcurrencyTester {
 				.addRepeatWorker(runnable)
 				.setBeginAtSameTime(true)
 				.start();
-		// 停止线程池释放资源，避免空跑
-		this.sf.stop();
 
 		this.interval = timeInterval.interval();
 		return this;
@@ -75,5 +80,10 @@ public class ConcurrencyTester {
 	 */
 	public long getInterval() {
 		return this.interval;
+	}
+
+	@Override
+	public void close() throws IOException {
+		this.sf.close();
 	}
 }
