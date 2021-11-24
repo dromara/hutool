@@ -56,7 +56,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	@Override
 	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ);){
+		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ)){
 			return read(open, idOrRidOrSheetName);
 		} catch (InvalidFormatException | IOException e) {
 			throw new POIException(e);

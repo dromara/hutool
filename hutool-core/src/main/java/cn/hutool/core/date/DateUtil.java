@@ -1624,7 +1624,9 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param date 日期
 	 * @return int
+	 * @deprecated 2022年后结果溢出，此方法废弃
 	 */
+	@Deprecated
 	public static int toIntSecond(Date date) {
 		return Integer.parseInt(DateUtil.format(date, "yyMMddHHmm"));
 	}
