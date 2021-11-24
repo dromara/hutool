@@ -15,13 +15,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 反射工具类
@@ -529,17 +523,19 @@ public class ReflectUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
-				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
-					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
-						return method;
-					}
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+						&& (res == null
+						|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
