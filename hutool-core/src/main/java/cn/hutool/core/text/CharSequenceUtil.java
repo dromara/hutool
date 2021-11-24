@@ -2551,7 +2551,12 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 比较两个字符串是否相等。
+	 * 比较两个字符串是否相等，规则如下
+	 * <ul>
+	 *     <li>str1和str2都为{@code null}</li>
+	 *     <li>忽略大小写使用{@link String#equalsIgnoreCase(String)}判断相等</li>
+	 *     <li>不忽略大小写使用{@link String#contentEquals(CharSequence)}判断相等</li>
+	 * </ul>
 	 *
 	 * @param str1       要比较的字符串1
 	 * @param str2       要比较的字符串2

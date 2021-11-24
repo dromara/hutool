@@ -24,6 +24,7 @@
 * 【core   】     DateUtil.toIntSecond标记为弃用（issue#I4JHPR@Gitee）
 * 【db     】     Db.executeBatch标记一个重载为弃用（issue#I4JIPH@Gitee）
 * 【core   】     增加CharSequenceUtil.subPreGbk重载（issue#I4JO2E@Gitee）
+* 【core   】     ReflectUtil.getMethod排除桥接方法（pr#1965@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
