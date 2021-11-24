@@ -23,6 +23,7 @@
 * 【core   】     Opt增加ofTry方法（pr#1956@Github）
 * 【core   】     DateUtil.toIntSecond标记为弃用（issue#I4JHPR@Gitee）
 * 【db     】     Db.executeBatch标记一个重载为弃用（issue#I4JIPH@Gitee）
+* 【core   】     增加CharSequenceUtil.subPreGbk重载（issue#I4JO2E@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）

@@ -1979,19 +1979,32 @@ public class CharSequenceUtil {
 	 * 截取部分字符串，这里一个汉字的长度认为是2
 	 *
 	 * @param str    字符串
-	 * @param len    切割的位置
+	 * @param len    bytes切割到的位置（包含）
 	 * @param suffix 切割后加上后缀
 	 * @return 切割后的字符串
 	 * @since 3.1.1
 	 */
 	public static String subPreGbk(CharSequence str, int len, CharSequence suffix) {
+		return subPreGbk(str, len, true) + suffix;
+	}
+
+	/**
+	 * 截取部分字符串，这里一个汉字的长度认为是2<br>
+	 * 可以自定义halfUp，如len为10，如果截取后最后一个字符是半个字符，{@code true}表示保留，则长度是11，否则长度9
+	 *
+	 * @param str    字符串
+	 * @param len    bytes切割到的位置（包含）
+	 * @param halfUp 遇到截取一半的GBK字符，是否保留。
+	 * @return 切割后的字符串
+	 * @since 5.7.17
+	 */
+	public static String subPreGbk(CharSequence str, int len, boolean halfUp) {
 		if (isEmpty(str)) {
 			return str(str);
 		}
 
-		byte[] b;
 		int counterOfDoubleByte = 0;
-		b = str.toString().getBytes(CharsetUtil.CHARSET_GBK);
+		final byte[] b = bytes(str, CharsetUtil.CHARSET_GBK);
 		if (b.length <= len) {
 			return str.toString();
 		}
@@ -2002,9 +2015,13 @@ public class CharSequenceUtil {
 		}
 
 		if (counterOfDoubleByte % 2 != 0) {
-			len += 1;
+			if(halfUp){
+				len += 1;
+			}else{
+				len -= 1;
+			}
 		}
-		return new String(b, 0, len, CharsetUtil.CHARSET_GBK) + suffix;
+		return new String(b, 0, len, CharsetUtil.CHARSET_GBK);
 	}
 
 	/**
