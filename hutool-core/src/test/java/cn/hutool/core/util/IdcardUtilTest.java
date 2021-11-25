@@ -103,6 +103,18 @@ public class IdcardUtilTest {
 		Assert.assertTrue(isValidCard18);
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X");
 		Assert.assertTrue(isValidCard18);
+
+		// 香港人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("81000019980902013X");
+		Assert.assertTrue(isValidCard18);
+
+		// 澳门人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("820000200009100032");
+		Assert.assertTrue(isValidCard18);
+
+		// 台湾人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("830000200209060065");
+		Assert.assertTrue(isValidCard18);
 	}
 
 	@Test
