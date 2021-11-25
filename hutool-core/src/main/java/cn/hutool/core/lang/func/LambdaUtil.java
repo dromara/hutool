@@ -73,7 +73,7 @@ public class LambdaUtil {
 	 * @param func 需要解析的 lambda 对象
 	 * @return 返回解析后的结果
 	 */
-	private static <T> SerializedLambda _resolve(Serializable func) {
+	private static SerializedLambda _resolve(Serializable func) {
 		return cache.get(func.getClass().getName(), () -> ReflectUtil.invoke(func, "writeReplace"));
 	}
 }
