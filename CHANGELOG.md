@@ -33,6 +33,7 @@
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 * 【cache  】     修复WeakCache键值强关联导致的无法回收问题（issue#1953@Github）
 * 【core   】     修复ZipUtil相对路径父路径获取null问题（issue#1961@Github）
+* 【http   】     修复HttpUtil.normalizeParams未判空导致的问题（issue#1975@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
