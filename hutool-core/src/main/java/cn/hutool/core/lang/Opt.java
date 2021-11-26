@@ -253,8 +253,10 @@ public class Opt<T> {
 	 * String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
 	 * }</pre>
 	 *
+	 * @param <U> map后新的类型
 	 * @param mapper      包裹里的值存在时的操作
 	 * @param emptyAction 包裹里的值不存在时的操作
+	 * @return 新的类型的Opt
 	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
 	 */
 	public <U> Opt<U> mapOrElse(Function<? super T, ? extends U> mapper, VoidFunc0 emptyAction) {
