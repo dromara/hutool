@@ -1,6 +1,7 @@
 package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -13,6 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +33,17 @@ import java.util.Map;
  * @since 5.4.4
  */
 public class SheetRidReader extends DefaultHandler {
+
+	/**
+	 * 从{@link XSSFReader}中解析sheet名、sheet id等相关信息
+	 *
+	 * @param reader {@link XSSFReader}
+	 * @return SheetRidReader
+	 * @since 5.7.17
+	 */
+	public static SheetRidReader parse(XSSFReader reader) {
+		return new SheetRidReader().read(reader);
+	}
 
 	private final static String TAG_NAME = "sheet";
 	private final static String RID_ATTR = "r:id";
@@ -135,6 +148,16 @@ public class SheetRidReader extends DefaultHandler {
 			return rid - 1;
 		}
 		return null;
+	}
+
+	/**
+	 * 获取所有sheet名称
+	 *
+	 * @return sheet名称
+	 * @since 5.7.17
+	 */
+	public List<String> getSheetNames() {
+		return ListUtil.toList(this.NAME_RID_MAP.keySet());
 	}
 
 	@Override

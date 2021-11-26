@@ -27,6 +27,7 @@
 * 【core   】     ReflectUtil.getMethod排除桥接方法（pr#1965@Github）
 * 【http   】     completeFileNameFromHeader在使用path为路径时，自动解码（issue#I4K0FS@Gitee）
 * 【core   】     CopyOptions增加override配置（issue#I4JQ1N@Gitee）
+* 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
