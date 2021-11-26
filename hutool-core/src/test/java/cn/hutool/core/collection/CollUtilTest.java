@@ -40,6 +40,23 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void testRemoveIfAndAdd() {
+		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3);
+		ArrayList<Integer> exceptRemovedList = CollUtil.newArrayList(2, 3);
+		ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
+
+		ArrayList<Integer> resultList = CollUtil.removeIfAndAdd(list, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
+
+		list = CollUtil.newArrayList(1, 2, 3);
+		resultList = new ArrayList<>();
+		CollUtil.removeIfAndAdd(list, resultList, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
+	}
+
+	@Test
 	public void testPadLeft() {
 		List<String> srcList = CollUtil.newArrayList();
 		List<String> answerList = CollUtil.newArrayList("a", "b");
