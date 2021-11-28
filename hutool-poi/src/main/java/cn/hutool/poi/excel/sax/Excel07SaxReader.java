@@ -202,7 +202,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 		}
 
 		// sheetIndex需转换为rid
-		final SheetRidReader ridReader = new SheetRidReader().read(xssfReader);
+		final SheetRidReader ridReader = SheetRidReader.parse(xssfReader);
 
 		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX)) {
 			// name:开头的被认为是sheet名称直接处理

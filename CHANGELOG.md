@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-24)
+# 5.7.17 (2021-11-26)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -25,11 +25,15 @@
 * 【db     】     Db.executeBatch标记一个重载为弃用（issue#I4JIPH@Gitee）
 * 【core   】     增加CharSequenceUtil.subPreGbk重载（issue#I4JO2E@Gitee）
 * 【core   】     ReflectUtil.getMethod排除桥接方法（pr#1965@Github）
+* 【http   】     completeFileNameFromHeader在使用path为路径时，自动解码（issue#I4K0FS@Gitee）
+* 【core   】     CopyOptions增加override配置（issue#I4JQ1N@Gitee）
+* 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 * 【cache  】     修复WeakCache键值强关联导致的无法回收问题（issue#1953@Github）
 * 【core   】     修复ZipUtil相对路径父路径获取null问题（issue#1961@Github）
+* 【http   】     修复HttpUtil.normalizeParams未判空导致的问题（issue#1975@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
