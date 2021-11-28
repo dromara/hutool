@@ -286,6 +286,27 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void filterRemoveTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+
+		List<String> removed = new ArrayList<>();
+		ArrayList<String> filtered = CollUtil.filter(list, t -> {
+			if("a".equals(t)){
+				removed.add(t);
+				return false;
+			}
+			return true;
+		});
+
+		Assert.assertEquals(1, removed.size());
+		Assert.assertEquals("a", removed.get(0));
+
+		// 原地过滤
+		Assert.assertSame(list, filtered);
+		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+	}
+
+	@Test
 	public void removeNullTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
 
