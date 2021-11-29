@@ -30,13 +30,15 @@ public class AsyncUtil {
 	/**
 	 * 等待任意一个任务执行完毕，包裹了异常
 	 *
+	 * @param <T>  任务返回值类型
 	 * @param tasks 并行任务
 	 * @return 执行结束的任务返回值
 	 * @throws UndeclaredThrowableException 未受检异常
 	 */
-	public static Object waitAny(CompletableFuture<?>... tasks) {
+	@SuppressWarnings("unchecked")
+	public static <T> T waitAny(CompletableFuture<?>... tasks) {
 		try {
-			return CompletableFuture.anyOf(tasks).get();
+			return (T) CompletableFuture.anyOf(tasks).get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new ThreadException(e);
 		}
@@ -45,8 +47,8 @@ public class AsyncUtil {
 	/**
 	 * 获取异步任务结果，包裹了异常
 	 *
-	 * @param task 异步任务
 	 * @param <T>  任务返回值类型
+	 * @param task 异步任务
 	 * @return 任务返回值
 	 * @throws RuntimeException 未受检异常
 	 */
