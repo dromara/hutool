@@ -154,7 +154,7 @@ public class Calculator {
 	 * @param peek peek
 	 * @return 优先级
 	 */
-	public boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
+	private boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
 		final int offset = 40;
 		if(cur  == '%'){
 			// %优先级最高
@@ -165,7 +165,7 @@ public class Calculator {
 			peek = 47;
 		}
 
-		return operatPriority[(peek) - offset] >= operatPriority[(cur) - offset];
+		return operatPriority[peek - offset] >= operatPriority[cur - offset];
 	}
 
 	/**

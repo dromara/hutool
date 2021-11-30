@@ -29,6 +29,7 @@
 * 【core   】     CopyOptions增加override配置（issue#I4JQ1N@Gitee）
 * 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
 * 【core   】     AsyncUtil.waitAny增加返回值（pr#473@Gitee）
+* 【core   】     Calculator.compare改为private（issue#1982@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
