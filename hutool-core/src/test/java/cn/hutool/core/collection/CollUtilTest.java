@@ -45,7 +45,7 @@ public class CollUtilTest {
 		ArrayList<Integer> exceptRemovedList = CollUtil.newArrayList(2, 3);
 		ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
 
-		ArrayList<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
+		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
 		Assert.assertEquals(list, exceptRemovedList);
 		Assert.assertEquals(resultList, exceptResultList);
 
