@@ -543,6 +543,6 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long[] cityHash128(byte[] data, Number128 seed) {
-		return CityHash.hash128(data).getLongArray();
+		return CityHash.hash128(data, seed).getLongArray();
 	}
 }
