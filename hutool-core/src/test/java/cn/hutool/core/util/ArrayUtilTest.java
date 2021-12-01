@@ -182,6 +182,12 @@ public class ArrayUtilTest {
 		Assert.assertEquals(9, range[9]);
 	}
 
+	@Test(expected = NegativeArraySizeException.class)
+	public void rangeMinTest() {
+		//noinspection ResultOfMethodCallIgnored
+		ArrayUtil.range(0, Integer.MIN_VALUE);
+	}
+
 	@Test
 	public void maxTest() {
 		int max = ArrayUtil.max(1, 2, 13, 4, 5);

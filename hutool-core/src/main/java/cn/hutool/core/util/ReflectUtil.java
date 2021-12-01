@@ -84,7 +84,7 @@ public class ReflectUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, ()->getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, () -> getConstructorsDirectly(beanClass));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class ReflectUtil {
 	 */
 	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return FIELDS_CACHE.get(beanClass, ()->getFieldsDirectly(beanClass, true));
+		return FIELDS_CACHE.get(beanClass, () -> getFieldsDirectly(beanClass, true));
 	}
 
 
@@ -498,11 +498,9 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 查找指定方法 如果找不到对应的方法则返回{@code null}
-	 *
-	 * <p>
-	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。
-	 * </p>
+	 * 查找指定方法 如果找不到对应的方法则返回{@code null}<br>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回{@code null}。<br>
+	 * 如果查找的方法有多个同参数类型重载，查找第一个找到的方法
 	 *
 	 * @param clazz      类，如果为{@code null}返回{@code null}
 	 * @param ignoreCase 是否忽略大小写
@@ -520,10 +518,11 @@ public class ReflectUtil {
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
-				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
-					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
-						return method;
-					}
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+						//排除桥接方法，pr#1965@Github
+						&& false == method.isBridge()) {
+					return method;
 				}
 			}
 		}
@@ -586,7 +585,9 @@ public class ReflectUtil {
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
-				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+						// 排除桥接方法
+						&& false == method.isBridge()) {
 					return method;
 				}
 			}
@@ -635,7 +636,7 @@ public class ReflectUtil {
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return METHODS_CACHE.get(beanClass, ()-> getMethodsDirectly(beanClass, true));
+		return METHODS_CACHE.get(beanClass, () -> getMethodsDirectly(beanClass, true));
 	}
 
 	/**

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-20)
+# 5.7.17 (2021-11-30)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -21,11 +21,24 @@
 * 【core   】     ResourceClassLoader增加缓存（pr#1959@Github）
 * 【crypto 】     增加CipherWrapper，增加setRandom（issue#1958@Github）
 * 【core   】     Opt增加ofTry方法（pr#1956@Github）
+* 【core   】     DateUtil.toIntSecond标记为弃用（issue#I4JHPR@Gitee）
+* 【db     】     Db.executeBatch标记一个重载为弃用（issue#I4JIPH@Gitee）
+* 【core   】     增加CharSequenceUtil.subPreGbk重载（issue#I4JO2E@Gitee）
+* 【core   】     ReflectUtil.getMethod排除桥接方法（pr#1965@Github）
+* 【http   】     completeFileNameFromHeader在使用path为路径时，自动解码（issue#I4K0FS@Gitee）
+* 【core   】     CopyOptions增加override配置（issue#I4JQ1N@Gitee）
+* 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
+* 【core   】     AsyncUtil.waitAny增加返回值（pr#473@Gitee）
+* 【core   】     Calculator.compare改为private（issue#1982@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
 * 【cache  】     修复WeakCache键值强关联导致的无法回收问题（issue#1953@Github）
 * 【core   】     修复ZipUtil相对路径父路径获取null问题（issue#1961@Github）
+* 【http   】     修复HttpUtil.normalizeParams未判空导致的问题（issue#1975@Github）
+* 【poi    】     修复读取日期类型的自定义样式单元格时间结果为1899年问题（pr#1977@Github）
+* 【poi    】     修复SoapClient参数未使用问题
+* 【core   】     修复HashUtil.cityHash128参数未使用问题
 
 -------------------------------------------------------------------------------------------------------------
 

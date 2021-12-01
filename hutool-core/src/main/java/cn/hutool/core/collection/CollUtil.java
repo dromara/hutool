@@ -1292,6 +1292,46 @@ public class CollUtil {
 	}
 
 	/**
+	 * 移除集合中的多个元素，并将结果存放到指定的集合
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param resultCollection 存放移除结果的集合
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate           用于是否移除判断的过滤器
+	 */
+	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
+		Objects.requireNonNull(predicate);
+		final Iterator<E> each = targetCollection.iterator();
+		while (each.hasNext()) {
+			E next = each.next();
+			if (predicate.test(next)) {
+				resultCollection.add(next);
+				each.remove();
+			}
+		}
+		return resultCollection;
+	}
+
+	/**
+	 * 移除集合中的多个元素，并将结果存放到生成的新集合中后返回<br>
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
+	 */
+	public static <T extends Collection<E>, E> List<E> removeWithAddIf(T targetCollection, Predicate<? super E> predicate) {
+		final List<E> removed = new ArrayList<>();
+		removeWithAddIf(targetCollection, removed, predicate);
+		return removed;
+	}
+
+	/**
 	 * 通过Editor抽取集合元素中的某些值返回为新列表<br>
 	 * 例如提供的是一个Bean列表，通过Editor接口实现获取某个字段值，返回这个字段值组成的新列表
 	 *

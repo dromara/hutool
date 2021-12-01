@@ -2,6 +2,8 @@ package cn.hutool.core.thread;
 
 import cn.hutool.core.exceptions.UtilException;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -25,7 +27,7 @@ import java.util.concurrent.ExecutorService;
  * @author Looly
  * @since 4.1.15
  */
-public class SyncFinisher {
+public class SyncFinisher implements Closeable {
 
 	private final Set<Worker> workers;
 	private final int threadSize;
@@ -171,6 +173,11 @@ public class SyncFinisher {
 	 */
 	public long count() {
 		return endLatch.getCount();
+	}
+
+	@Override
+	public void close() throws IOException {
+		stop();
 	}
 
 	/**

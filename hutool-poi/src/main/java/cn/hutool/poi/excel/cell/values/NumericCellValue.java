@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.cell.CellValue;
+import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -24,7 +25,7 @@ public class NumericCellValue implements CellValue<Object> {
 	 *
 	 * @param cell {@link Cell}
 	 */
-	public NumericCellValue(Cell cell){
+	public NumericCellValue(Cell cell) {
 		this.cell = cell;
 	}
 
@@ -36,8 +37,13 @@ public class NumericCellValue implements CellValue<Object> {
 		if (null != style) {
 			// 判断是否为日期
 			if (ExcelDateUtil.isDateFormat(cell)) {
+				// 1899年写入会导致数据错乱，读取到1899年证明这个单元格的信息不关注年月日
+				Date dateCellValue = cell.getDateCellValue();
+				if ("1899".equals(DateUtil.format(dateCellValue, "yyyy"))) {
+					return DateUtil.format(dateCellValue, style.getDataFormatString());
+				}
 				// 使用Hutool的DateTime包装
-				return DateUtil.date(cell.getDateCellValue());
+				return DateUtil.date(dateCellValue);
 			}
 
 			final String format = style.getDataFormatString();

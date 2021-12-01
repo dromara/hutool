@@ -539,6 +539,9 @@ public class HttpUtil {
 	 * @since 4.5.2
 	 */
 	public static String normalizeParams(String paramPart, Charset charset) {
+		if(StrUtil.isEmpty(paramPart)){
+			return paramPart;
+		}
 		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
 		final int len = paramPart.length();
 		String name = null;

@@ -40,6 +40,23 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void testRemoveWithAddIf() {
+		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3);
+		ArrayList<Integer> exceptRemovedList = CollUtil.newArrayList(2, 3);
+		ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
+
+		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
+
+		list = CollUtil.newArrayList(1, 2, 3);
+		resultList = new ArrayList<>();
+		CollUtil.removeWithAddIf(list, resultList, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
+	}
+
+	@Test
 	public void testPadLeft() {
 		List<String> srcList = CollUtil.newArrayList();
 		List<String> answerList = CollUtil.newArrayList("a", "b");
@@ -279,6 +296,27 @@ public class CollUtilTest {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
 		ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
+
+		// 原地过滤
+		Assert.assertSame(list, filtered);
+		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+	}
+
+	@Test
+	public void filterRemoveTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+
+		List<String> removed = new ArrayList<>();
+		ArrayList<String> filtered = CollUtil.filter(list, t -> {
+			if("a".equals(t)){
+				removed.add(t);
+				return false;
+			}
+			return true;
+		});
+
+		Assert.assertEquals(1, removed.size());
+		Assert.assertEquals("a", removed.get(0));
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
