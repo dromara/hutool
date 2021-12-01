@@ -412,4 +412,16 @@ public class NumberUtilTest {
 		final Integer[] integers = NumberUtil.generateBySet(10, 100, 5);
 		Assert.assertEquals(5, integers.length);
 	}
+
+	@Test
+	public void isOddOrEvenTest(){
+		int[] a = { 0, 32, -32, 123, -123 };
+		for (int i : a) {
+			Console.log(i + "为奇数:" + NumberUtil.isOdd(i));
+			Console.log(i + "为偶数:" + NumberUtil.isEven(i));
+		}
+	}
+
+
+
 }
