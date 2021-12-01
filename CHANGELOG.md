@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-30)
+# 5.7.17 (2021-12-01)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -30,6 +30,7 @@
 * 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
 * 【core   】     AsyncUtil.waitAny增加返回值（pr#473@Gitee）
 * 【core   】     Calculator.compare改为private（issue#1982@Github）
+* 【core   】     NumberUtil增加isOdd、isEven方法（pr#474@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）

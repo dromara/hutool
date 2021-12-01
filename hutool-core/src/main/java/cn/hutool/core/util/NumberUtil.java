@@ -2713,12 +2713,10 @@ public class NumberUtil {
 	 * @param num 被判断的数值
 	 * @return 是否是奇数
 	 * @author GuoZG
+	 * @since 5.7.17
 	 */
 	public static boolean isOdd(int num) {
-		if ((num & 1) == 1) {
-			return true;
-		}
-		return false;
+		return (num & 1) == 1;
 	}
 
 	/**
@@ -2727,12 +2725,10 @@ public class NumberUtil {
 	 * @param num 被判断的数值
 	 * @return 是否是偶数
 	 * @author GuoZG
+	 * @since 5.7.17
 	 */
 	public static boolean isEven(int num) {
-		if (!isOdd(num)) {
-			return true;
-		}
-		return false;
+		return false == isOdd(num);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
