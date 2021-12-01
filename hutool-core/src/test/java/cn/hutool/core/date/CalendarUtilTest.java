@@ -14,7 +14,7 @@ public class CalendarUtilTest {
 		final String chineseDate = CalendarUtil.formatChineseDate(calendar, false);
 		Assert.assertEquals("二〇一八年二月二十四日", chineseDate);
 		final String chineseDateTime = CalendarUtil.formatChineseDate(calendar, true);
-		Assert.assertEquals("二〇一八年二月二十四日一十二时一十三分一十四秒", chineseDateTime);
+		Assert.assertEquals("二〇一八年二月二十四日十二时十三分十四秒", chineseDateTime);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
