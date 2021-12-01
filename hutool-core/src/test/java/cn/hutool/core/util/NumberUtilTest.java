@@ -416,10 +416,20 @@ public class NumberUtilTest {
 	@Test
 	public void isOddOrEvenTest(){
 		int[] a = { 0, 32, -32, 123, -123 };
-		for (int i : a) {
-			Console.log(i + "为奇数:" + NumberUtil.isOdd(i));
-			Console.log(i + "为偶数:" + NumberUtil.isEven(i));
-		}
+		Assert.assertFalse(NumberUtil.isOdd(a[0]));
+		Assert.assertTrue(NumberUtil.isEven(a[0]));
+
+		Assert.assertFalse(NumberUtil.isOdd(a[1]));
+		Assert.assertTrue(NumberUtil.isEven(a[1]));
+
+		Assert.assertFalse(NumberUtil.isOdd(a[2]));
+		Assert.assertTrue(NumberUtil.isEven(a[2]));
+
+		Assert.assertTrue(NumberUtil.isOdd(a[3]));
+		Assert.assertFalse(NumberUtil.isEven(a[3]));
+
+		Assert.assertTrue(NumberUtil.isOdd(a[4]));
+		Assert.assertFalse(NumberUtil.isEven(a[4]));
 	}
 
 
