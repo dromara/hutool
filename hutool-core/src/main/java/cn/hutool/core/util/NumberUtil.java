@@ -750,9 +750,6 @@ public class NumberUtil {
 		if (null == v1) {
 			return BigDecimal.ZERO;
 		}
-		if(v1.compareTo(BigDecimal.ZERO)==0||v2.compareTo(BigDecimal.ZERO)==0){
-			return BigDecimal.ZERO;
-		}
 		if (scale < 0) {
 			scale = -scale;
 		}
