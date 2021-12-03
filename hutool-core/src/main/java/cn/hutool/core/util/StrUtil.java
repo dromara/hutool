@@ -1,11 +1,13 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.io.UnsafeStringWriter;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.text.TextSimilarity;
 
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -467,5 +469,18 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
+	}
+
+	/**
+	 * 收集异常堆栈信息
+	 * @param e
+	 * @return string
+	 */
+	public static String toString(Throwable e) {
+		UnsafeStringWriter w = new UnsafeStringWriter();
+		try (PrintWriter p = new PrintWriter(w)) {
+			e.printStackTrace(p);
+			return w.toString();
+		}
 	}
 }
