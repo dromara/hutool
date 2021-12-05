@@ -162,9 +162,9 @@ public class CellUtil {
 	 */
 	public static void setCellValue(Cell cell, Object value, CellStyle style) {
 		setCellValue(cell, (CellSetter) cell1 -> {
+			setCellValue(cell, value);
 			if (null != style) {
 				cell1.setCellStyle(style);
-				setCellValue(cell, value);
 			}
 		});
 	}
@@ -175,7 +175,7 @@ public class CellUtil {
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
 	 * @param cell  单元格
-	 * @param value 值
+	 * @param value 值或{@link CellSetter}
 	 * @since 5.6.4
 	 */
 	public static void setCellValue(Cell cell, Object value) {
@@ -402,7 +402,7 @@ public class CellUtil {
 		}
 		Comment comment = drawing.createCellComment(anchor);
 		comment.setString(factory.createRichTextString(commentText));
-		comment.setAuthor(StrUtil.nullToEmpty(commentText));
+		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
 		cell.setCellComment(comment);
 	}
 
