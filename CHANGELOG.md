@@ -43,6 +43,7 @@
 * 【core   】     修复DateUtil.formatChineseDate显示问题（issue#I4KK5F@Gitee）
 * 【poi    】     修复CellUtil.setCellValuestyle空导致值无法写入问题（issue#1995@Github）
 * 【poi    】     修复CellUtil.setComment参数设置错误问题
+* 【core   】     修复QueryBuilder解析路径导致的错误（issue#1989@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

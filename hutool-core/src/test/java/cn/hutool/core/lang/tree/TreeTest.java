@@ -1,7 +1,6 @@
 package cn.hutool.core.lang.tree;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -95,12 +94,12 @@ public class TreeTest {
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.filter((t)->{
 			final CharSequence name = t.getName();
-			return null != name && name.toString().contains("管理");
+			return null != name && name.toString().contains("店铺");
 		});
 
 		List<String> ids = new ArrayList<>();
 		tree.walk((tr)-> ids.add(tr.getId()));
-		Assert .assertEquals(6, ids.size());
+		Assert .assertEquals(4, ids.size());
 	}
 
 	@Test
