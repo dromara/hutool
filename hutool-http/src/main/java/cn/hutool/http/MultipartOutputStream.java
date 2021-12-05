@@ -77,6 +77,7 @@ public class MultipartOutputStream extends OutputStream {
 	 *
 	 * @param formFieldName 表单名
 	 * @param value         值，可以是普通值、资源（如文件等）
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public MultipartOutputStream write(String formFieldName, Object value) throws IORuntimeException {
