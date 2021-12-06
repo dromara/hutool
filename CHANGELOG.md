@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-12-05)
+# 5.7.17 (2021-12-06)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -32,6 +32,7 @@
 * 【core   】     Calculator.compare改为private（issue#1982@Github）
 * 【core   】     NumberUtil增加isOdd、isEven方法（pr#474@Gitee）
 * 【http   】     增加HttpGlobalConfig.setBoundary，删除MultipartBody.BOUNDARY和getContentType（issue#I4KSLY@Gitee）
+* 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
