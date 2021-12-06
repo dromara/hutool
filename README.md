@@ -10,7 +10,7 @@
 
 <p align="center">
 	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
-		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
+		111111111111
 	</a>
 	<a target="_blank" href="https://license.coscl.org.cn/MulanPSL2/">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
