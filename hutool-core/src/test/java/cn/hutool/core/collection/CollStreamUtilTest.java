@@ -28,6 +28,11 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(map.get(2L).getName(), "李四");
 		Assert.assertEquals(map.get(3L).getName(), "王五");
 		Assert.assertNull(map.get(4L));
+
+		// 测试value为空时
+		list.add(null);
+		map = CollStreamUtil.toIdentityMap(list, Student::getStudentId);
+		Assert.assertNull(map.get(4L));
 	}
 
 	@Test

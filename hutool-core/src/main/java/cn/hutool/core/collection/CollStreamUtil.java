@@ -1,6 +1,7 @@
 package cn.hutool.core.collection;
 
 
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.stream.StreamUtil;
 
@@ -48,7 +49,7 @@ public class CollStreamUtil {
 			return Collections.emptyMap();
 		}
 		return StreamUtil.of(collection, isParallel)
-				.collect(Collectors.toMap(key, Function.identity(), (l, r) -> l));
+				.collect(HashMap::new, (HashMap<K, V> m, V v) -> m.put(Opt.ofNullable(v).map(key).get(), v), HashMap::putAll);
 	}
 
 	/**
