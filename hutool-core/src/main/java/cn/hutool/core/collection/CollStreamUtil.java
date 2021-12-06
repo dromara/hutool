@@ -81,7 +81,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return StreamUtil.of(collection, isParallel).collect(Collectors.toMap(key, value, (l, r) -> l));
+		return StreamUtil.of(collection, isParallel).collect(HashMap::new, (HashMap<K, V> m, E v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
 	}
 
 

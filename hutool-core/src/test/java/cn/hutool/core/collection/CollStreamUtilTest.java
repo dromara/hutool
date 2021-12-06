@@ -6,13 +6,7 @@ import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * CollectionStream测试方法
@@ -50,6 +44,11 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(map.get(1L), "张三");
 		Assert.assertEquals(map.get(2L), "李四");
 		Assert.assertEquals(map.get(3L), "王五");
+		Assert.assertNull(map.get(4L));
+
+		// 测试value为空时
+		list.add(new Student(1, 1, 4, null));
+		map = CollStreamUtil.toMap(list, Student::getStudentId, Student::getName);
 		Assert.assertNull(map.get(4L));
 	}
 
