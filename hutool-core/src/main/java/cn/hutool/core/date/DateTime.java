@@ -743,7 +743,7 @@ public class DateTime extends Date {
 	 * @return 相差时长
 	 */
 	public String between(Date date, DateUnit unit, BetweenFormatter.Level formatLevel) {
-		return new DateBetween(this, date).toString(formatLevel);
+		return new DateBetween(this, date).toString(unit, formatLevel);
 	}
 
 	/**
