@@ -94,12 +94,12 @@ public class TreeTest {
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.filter((t)->{
 			final CharSequence name = t.getName();
-			return null != name && name.toString().contains("管理");
+			return null != name && name.toString().contains("店铺");
 		});
 
 		List<String> ids = new ArrayList<>();
 		tree.walk((tr)-> ids.add(tr.getId()));
-		Assert .assertEquals(6, ids.size());
+		Assert .assertEquals(4, ids.size());
 	}
 
 	@Test
@@ -109,12 +109,12 @@ public class TreeTest {
 		// 经过过滤，生成新的树
 		Tree<String> newTree = tree.filterNew((t)->{
 			final CharSequence name = t.getName();
-			return null != name && name.toString().contains("管理");
+			return null != name && name.toString().contains("店铺");
 		});
 
 		List<String> ids = new ArrayList<>();
 		newTree.walk((tr)-> ids.add(tr.getId()));
-		Assert .assertEquals(6, ids.size());
+		Assert .assertEquals(4, ids.size());
 
 		List<String> ids2 = new ArrayList<>();
 		tree.walk((tr)-> ids2.add(tr.getId()));

@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-11-29)
+# 5.7.17 (2021-12-06)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -29,6 +29,10 @@
 * 【core   】     CopyOptions增加override配置（issue#I4JQ1N@Gitee）
 * 【poi    】     SheetRidReader可以获取所有sheet名（issue#I4JA3M@Gitee）
 * 【core   】     AsyncUtil.waitAny增加返回值（pr#473@Gitee）
+* 【core   】     Calculator.compare改为private（issue#1982@Github）
+* 【core   】     NumberUtil增加isOdd、isEven方法（pr#474@Gitee）
+* 【http   】     增加HttpGlobalConfig.setBoundary，删除MultipartBody.BOUNDARY和getContentType（issue#I4KSLY@Gitee）
+* 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
@@ -36,6 +40,13 @@
 * 【core   】     修复ZipUtil相对路径父路径获取null问题（issue#1961@Github）
 * 【http   】     修复HttpUtil.normalizeParams未判空导致的问题（issue#1975@Github）
 * 【poi    】     修复读取日期类型的自定义样式单元格时间结果为1899年问题（pr#1977@Github）
+* 【poi    】     修复SoapClient参数未使用问题
+* 【core   】     修复HashUtil.cityHash128参数未使用问题
+* 【core   】     修复DateUtil.formatChineseDate显示问题（issue#I4KK5F@Gitee）
+* 【poi    】     修复CellUtil.setCellValuestyle空导致值无法写入问题（issue#1995@Github）
+* 【poi    】     修复CellUtil.setComment参数设置错误问题
+* 【core   】     修复QueryBuilder解析路径导致的错误（issue#1989@Github）
+* 【core   】     修复DateTime.between中DateUnit无效问题
 
 -------------------------------------------------------------------------------------------------------------
 

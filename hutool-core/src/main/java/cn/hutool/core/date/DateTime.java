@@ -45,6 +45,11 @@ public class DateTime extends Date {
 	private TimeZone timeZone;
 
 	/**
+	 * 第一周最少天数
+	 */
+	private int minimalDaysInFirstWeek;
+
+	/**
 	 * 转换时间戳为 DateTime
 	 *
 	 * @param timeMillis 时间戳，毫秒数
@@ -670,6 +675,10 @@ public class DateTime extends Date {
 		final Calendar cal = (null != zone) ? Calendar.getInstance(zone, locale) : Calendar.getInstance(locale);
 		//noinspection MagicConstant
 		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
+		// issue#1988@Github
+		if (minimalDaysInFirstWeek > 0) {
+			cal.setMinimalDaysInFirstWeek(minimalDaysInFirstWeek);
+		}
 		cal.setTime(this);
 		return cal;
 	}
@@ -743,7 +752,7 @@ public class DateTime extends Date {
 	 * @return 相差时长
 	 */
 	public String between(Date date, DateUnit unit, BetweenFormatter.Level formatLevel) {
-		return new DateBetween(this, date).toString(formatLevel);
+		return new DateBetween(this, date).toString(unit, formatLevel);
 	}
 
 	/**
@@ -905,6 +914,18 @@ public class DateTime extends Date {
 	 */
 	public DateTime setTimeZone(TimeZone timeZone) {
 		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+		return this;
+	}
+
+	/**
+	 * 设置第一周最少天数
+	 *
+	 * @param minimalDaysInFirstWeek 第一周最少天数
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public DateTime setMinimalDaysInFirstWeek(int minimalDaysInFirstWeek) {
+		this.minimalDaysInFirstWeek = minimalDaysInFirstWeek;
 		return this;
 	}
 

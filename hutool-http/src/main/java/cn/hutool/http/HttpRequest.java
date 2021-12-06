@@ -1228,9 +1228,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException IO异常
 	 */
 	private void sendMultipart() throws IOException {
+		final MultipartBody multipartBody = MultipartBody.create(this.form, this.charset);
 		//设置表单类型为Multipart（文件上传）
-		this.httpConnection.header(Header.CONTENT_TYPE, MultipartBody.getContentType(), true);
-		MultipartBody.create(this.form, this.charset).writeClose(this.httpConnection.getOutputStream());
+		this.httpConnection.header(Header.CONTENT_TYPE, multipartBody.getContentType(), true);
+		multipartBody.writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**

@@ -215,7 +215,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 
 	/**
 	 * 递归过滤当前树，注意此方法会修改当前树<br>
-	 * 通过{@link Filter}指定的过滤规则，本节点或子节点满足过滤条件，则保留当前节点，否则抛弃节点及其子节点
+	 * 通过{@link Filter}指定的过滤规则，本节点或子节点满足过滤条件，则保留当前节点及其所有子节点，否则抛弃节点及其子节点
 	 *
 	 * @param filter 节点过滤规则函数，只需处理本级节点本身即可
 	 * @return 过滤后的节点，{@code null} 表示不满足过滤要求，丢弃之
@@ -223,6 +223,11 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @since 5.7.17
 	 */
 	public Tree<T> filter(Filter<Tree<T>> filter) {
+		if(filter.accept(this)){
+			// 本节点满足，则包括所有子节点都保留
+			return this;
+		}
+
 		final List<Tree<T>> children = getChildren();
 		if (CollUtil.isNotEmpty(children)) {
 			// 递归过滤子节点
@@ -243,7 +248,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 		}
 
 		// 子节点都不符合过滤条件，检查本节点
-		return filter.accept(this) ? this : null;
+		return null;
 	}
 
 	/**

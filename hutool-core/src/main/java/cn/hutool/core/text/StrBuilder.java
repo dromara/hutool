@@ -470,7 +470,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 生成字符串
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public String toString() {
 		return toString(false);

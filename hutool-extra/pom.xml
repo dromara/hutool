@@ -241,7 +241,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.10.1</version>
+			<version>8.11.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -384,7 +384,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.7</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -432,7 +432,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.12</version>
+			<version>5.3.13</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

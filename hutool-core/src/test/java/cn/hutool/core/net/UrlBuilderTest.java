@@ -313,4 +313,11 @@ public class UrlBuilderTest {
 		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
 		Assert.assertEquals(url, of.toString());
 	}
+
+	@Test
+	public void paramTest(){
+		String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals(url, builder.toString());
+	}
 }

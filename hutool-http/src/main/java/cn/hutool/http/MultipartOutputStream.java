@@ -7,7 +7,6 @@ import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.body.MultipartBody;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,13 +16,11 @@ import java.nio.charset.Charset;
  * Multipart/form-data输出流封装<br>
  * 遵循RFC2388规范
  *
- * @since 5.7.17
  * @author looly
+ * @since 5.7.17
  */
 public class MultipartOutputStream extends OutputStream {
 
-	private static final String BOUNDARY = MultipartBody.BOUNDARY;
-	private static final String BOUNDARY_END = StrUtil.format("--{}--\r\n", BOUNDARY);
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n";
 	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
 
@@ -31,17 +28,32 @@ public class MultipartOutputStream extends OutputStream {
 
 	private final OutputStream out;
 	private final Charset charset;
+	private final String boundary;
+
 	private boolean isFinish;
 
 	/**
-	 * 构造
+	 * 构造，使用全局默认的边界字符串
 	 *
 	 * @param out     HTTP写出流
 	 * @param charset 编码
 	 */
 	public MultipartOutputStream(OutputStream out, Charset charset) {
+		this(out, charset, HttpGlobalConfig.getBoundary());
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param out      HTTP写出流
+	 * @param charset  编码
+	 * @param boundary 边界符
+	 * @since 5.7.17
+	 */
+	public MultipartOutputStream(OutputStream out, Charset charset, String boundary) {
 		this.out = out;
 		this.charset = charset;
+		this.boundary = boundary;
 	}
 
 	/**
@@ -65,6 +77,7 @@ public class MultipartOutputStream extends OutputStream {
 	 *
 	 * @param formFieldName 表单名
 	 * @param value         值，可以是普通值、资源（如文件等）
+	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public MultipartOutputStream write(String formFieldName, Object value) throws IORuntimeException {
@@ -101,8 +114,8 @@ public class MultipartOutputStream extends OutputStream {
 	 * @throws IORuntimeException IO异常
 	 */
 	public void finish() throws IORuntimeException {
-		if(false == isFinish){
-			write(BOUNDARY_END);
+		if (false == isFinish) {
+			write(StrUtil.format("--{}--\r\n", boundary));
 			this.isFinish = true;
 		}
 	}
@@ -139,7 +152,7 @@ public class MultipartOutputStream extends OutputStream {
 				// Content-Type: 类型[换行]
 				write(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, contentType));
 			}
-		} else if(StrUtil.isNotEmpty(fileName)){
+		} else if (StrUtil.isNotEmpty(fileName)) {
 			// 根据name的扩展名指定互联网媒体类型，默认二进制流数据
 			write(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE,
 					HttpUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue())));
@@ -156,9 +169,9 @@ public class MultipartOutputStream extends OutputStream {
 	 *     --分隔符(boundary)[换行]
 	 * </pre>
 	 */
-	private void beginPart(){
+	private void beginPart() {
 		// --分隔符(boundary)[换行]
-		write("--", BOUNDARY, StrUtil.CRLF);
+		write("--", boundary, StrUtil.CRLF);
 	}
 
 	/**

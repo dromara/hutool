@@ -56,7 +56,8 @@ public class RingIndexUtil {
 	}
 
 	/**
-	 * 通过cas操作 实现对指定值内的回环累加
+	 * 通过cas操作 实现对指定值内的回环累加<br>
+	 * 此方法一般用于大量数据完成回环累加（如数据库中的值大于int最大值）
 	 *
 	 * @param modulo     回环周期值
 	 * @param atomicLong 原子操作类

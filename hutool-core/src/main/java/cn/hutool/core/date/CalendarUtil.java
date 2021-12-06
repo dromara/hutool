@@ -525,8 +525,8 @@ public class CalendarUtil {
 	 * 将指定Calendar时间格式化为纯中文形式，比如：
 	 *
 	 * <pre>
-	 *     2018-02-24 12:13:14转换为 二〇一八年二月二十四日（withTime为false）
-	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日一十二时一十三分一十四秒（withTime为true）
+	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日（withTime为false）
+	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日十二时十三分十四秒（withTime为true）
 	 * </pre>
 	 *
 	 * @param calendar {@link Calendar}
@@ -538,7 +538,7 @@ public class CalendarUtil {
 		final StringBuilder result = StrUtil.builder();
 
 		// 年
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		final String year = String.valueOf(calendar.get(Calendar.YEAR));
 		final int length = year.length();
 		for (int i = 0; i < length; i++) {
 			result.append(NumberChineseFormatter.numberCharToChinese(year.charAt(i), false));
@@ -547,26 +547,26 @@ public class CalendarUtil {
 
 		// 月
 		int month = calendar.get(Calendar.MONTH) + 1;
-		result.append(NumberChineseFormatter.format(month, false));
+		result.append(NumberChineseFormatter.formatThousand(month, false));
 		result.append('月');
 
 		// 日
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		result.append(NumberChineseFormatter.format(day, false));
+		result.append(NumberChineseFormatter.formatThousand(day, false));
 		result.append('日');
 
 		if (withTime) {
 			// 时
 			int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			result.append(NumberChineseFormatter.format(hour, false));
+			result.append(NumberChineseFormatter.formatThousand(hour, false));
 			result.append('时');
 			// 分
 			int minute = calendar.get(Calendar.MINUTE);
-			result.append(NumberChineseFormatter.format(minute, false));
+			result.append(NumberChineseFormatter.formatThousand(minute, false));
 			result.append('分');
 			// 秒
 			int second = calendar.get(Calendar.SECOND);
-			result.append(NumberChineseFormatter.format(second, false));
+			result.append(NumberChineseFormatter.formatThousand(second, false));
 			result.append('秒');
 		}
 

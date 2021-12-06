@@ -2707,6 +2707,30 @@ public class NumberUtil {
 		}
 	}
 
+	/**
+	 * 检查是否为奇数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是奇数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isOdd(int num) {
+		return (num & 1) == 1;
+	}
+
+	/**
+	 * 检查是否为偶数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是偶数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isEven(int num) {
+		return false == isOdd(num);
+	}
+
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubNode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

@@ -1,6 +1,7 @@
 package cn.hutool.http;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
@@ -21,6 +22,7 @@ public class HttpGlobalConfig implements Serializable {
 
 	protected static int timeout = -1;
 	private static boolean isAllowPatch = false;
+	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
 
 	/**
 	 * 获取全局默认的超时时长
@@ -38,6 +40,26 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void setTimeout(int customTimeout) {
 		timeout = customTimeout;
+	}
+
+	/**
+	 * 获取全局默认的Multipart边界
+	 *
+	 * @return 全局默认的Multipart边界
+	 * @since 5.7.17
+	 */
+	public static String getBoundary() {
+		return boundary;
+	}
+
+	/**
+	 * 设置默认的Multipart边界
+	 *
+	 * @param customBoundary 自定义Multipart边界
+	 * @since 5.7.17
+	 */
+	synchronized public static void setBoundary(String customBoundary) {
+		boundary = customBoundary;
 	}
 
 	/**

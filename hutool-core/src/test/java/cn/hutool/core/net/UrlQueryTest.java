@@ -46,8 +46,16 @@ public class UrlQueryTest {
 	public void parseTest3(){
 		// issue#1688@Github
 		String u = "https://www.baidu.com/proxy";
-		final UrlQuery query = UrlQuery.of(u, Charset.defaultCharset());
+		final UrlQuery query = UrlQuery.of(URLUtil.url(u).getQuery(), Charset.defaultCharset());
 		Assert.assertTrue(MapUtil.isEmpty(query.getQueryMap()));
+	}
+
+	@Test
+	public void parseTest4(){
+		// https://github.com/dromara/hutool/issues/1989
+		String queryStr = "imageMogr2/thumbnail/x800/format/jpg";
+		final UrlQuery query = UrlQuery.of(queryStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(queryStr, query.toString());
 	}
 
 	@Test

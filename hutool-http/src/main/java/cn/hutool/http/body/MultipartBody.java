@@ -2,8 +2,8 @@ package cn.hutool.http.body;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.HttpGlobalConfig;
 import cn.hutool.http.MultipartOutputStream;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class MultipartBody implements RequestBody {
 
-	public static final String BOUNDARY = "--------------------Hutool_" + RandomUtil.randomString(16);
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = ContentType.MULTIPART.getValue() + "; boundary=";
 
 	/**
@@ -31,6 +30,10 @@ public class MultipartBody implements RequestBody {
 	 * 编码
 	 */
 	private final Charset charset;
+	/**
+	 * 边界
+	 */
+	private final String boundary = HttpGlobalConfig.getBoundary();
 
 	/**
 	 * 根据已有表单内容，构建MultipartBody
@@ -48,8 +51,8 @@ public class MultipartBody implements RequestBody {
 	 *
 	 * @return Multipart的Content-Type类型
 	 */
-	public static String getContentType() {
-		return CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY;
+	public String getContentType() {
+		return CONTENT_TYPE_MULTIPART_PREFIX + boundary;
 	}
 
 	/**
@@ -70,7 +73,7 @@ public class MultipartBody implements RequestBody {
 	 */
 	@Override
 	public void write(OutputStream out) {
-		final MultipartOutputStream stream = new MultipartOutputStream(out, this.charset);
+		final MultipartOutputStream stream = new MultipartOutputStream(out, this.charset, this.boundary);
 		if (MapUtil.isNotEmpty(this.form)) {
 			this.form.forEach(stream::write);
 		}
