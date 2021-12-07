@@ -1,6 +1,7 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.handler.RsHandler;
@@ -245,6 +246,22 @@ public class SqlExecutor {
 	 *
 	 * @param <T> 处理结果类型
 	 * @param conn 数据库连接对象
+	 * @param sqlBuilder SQL构建器，包含参数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.5.3
+	 */
+	public static <T> T query(Connection conn, SqlBuilder sqlBuilder, RsHandler<T> rsh) throws SQLException {
+		return query(conn, sqlBuilder.build(), rsh, sqlBuilder.getParamValueArray());
+	}
+
+	/**
+	 * 执行查询语句<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param <T> 处理结果类型
+	 * @param conn 数据库连接对象
 	 * @param sql 查询语句
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
@@ -262,19 +279,30 @@ public class SqlExecutor {
 	}
 
 	/**
-	 * 执行查询语句<br>
-	 * 此方法不会关闭Connection
+	 * 执行自定义的{@link PreparedStatement}，结果使用{@link RsHandler}处理<br>
+	 * 此方法主要用于自定义场景，如游标查询等
 	 *
 	 * @param <T> 处理结果类型
 	 * @param conn 数据库连接对象
-	 * @param sqlBuilder SQL构建器，包含参数
-	 * @param rsh 结果集处理对象
-	 * @return 结果对象
+	 * @param statementFunc 自定义{@link PreparedStatement}创建函数
+	 * @param rsh 自定义结果集处理
+	 * @return 结果
 	 * @throws SQLException SQL执行异常
-	 * @since 5.5.3
+	 * @since 5.7.17
 	 */
-	public static <T> T query(Connection conn, SqlBuilder sqlBuilder, RsHandler<T> rsh) throws SQLException {
-		return query(conn, sqlBuilder.build(), rsh, sqlBuilder.getParamValueArray());
+	public static <T> T query(Connection conn, Func1<Connection, PreparedStatement> statementFunc, RsHandler<T> rsh) throws SQLException {
+		PreparedStatement ps = null;
+		try {
+			ps = statementFunc.call(conn);
+			return executeQuery(ps, rsh);
+		} catch (Exception e) {
+			if(e instanceof SQLException){
+				throw (SQLException) e;
+			}
+			throw new RuntimeException(e);
+		} finally {
+			DbUtil.close(ps);
+		}
 	}
 
 	// -------------------------------------------------------------------------------------- Execute With PreparedStatement

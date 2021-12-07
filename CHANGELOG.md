@@ -33,6 +33,7 @@
 * 【core   】     NumberUtil增加isOdd、isEven方法（pr#474@Gitee）
 * 【http   】     增加HttpGlobalConfig.setBoundary，删除MultipartBody.BOUNDARY和getContentType（issue#I4KSLY@Gitee）
 * 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
+* 【db     】     Db增加query重载，可支持自定义PreparedStatement，从而支持游标（issue#I4JXWN@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
