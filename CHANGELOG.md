@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-12-06)
+# 5.7.17 (2021-12-07)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -43,10 +43,11 @@
 * 【poi    】     修复SoapClient参数未使用问题
 * 【core   】     修复HashUtil.cityHash128参数未使用问题
 * 【core   】     修复DateUtil.formatChineseDate显示问题（issue#I4KK5F@Gitee）
-* 【poi    】     修复CellUtil.setCellValuestyle空导致值无法写入问题（issue#1995@Github）
+* 【poi    】     修复CellUtil.setCellValueStyle空导致值无法写入问题（issue#1995@Github）
 * 【poi    】     修复CellUtil.setComment参数设置错误问题
 * 【core   】     修复QueryBuilder解析路径导致的错误（issue#1989@Github）
 * 【core   】     修复DateTime.between中DateUnit无效问题
+* 【poi    】     修复StyleUtil.getFormat非static问题（issue#I4LGNP@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -211,7 +211,7 @@ public class StyleUtil {
 	 * @return 数据格式
 	 * @since 5.5.5
 	 */
-	public Short getFormat(Workbook workbook, String format) {
+	public static Short getFormat(Workbook workbook, String format) {
 		final DataFormat dataFormat = workbook.createDataFormat();
 		return dataFormat.getFormat(format);
 	}
