@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-12-07)
+# 5.7.17 (2021-12-08)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -34,6 +34,7 @@
 * 【http   】     增加HttpGlobalConfig.setBoundary，删除MultipartBody.BOUNDARY和getContentType（issue#I4KSLY@Gitee）
 * 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
 * 【db     】     Db增加query重载，可支持自定义PreparedStatement，从而支持游标（issue#I4JXWN@Gitee）
+* 【cache  】     CacheObj增加getExpiredTime等方法（issue#I4LE80@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
