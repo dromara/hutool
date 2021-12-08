@@ -35,6 +35,7 @@
 * 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
 * 【db     】     Db增加query重载，可支持自定义PreparedStatement，从而支持游标（issue#I4JXWN@Gitee）
 * 【cache  】     CacheObj增加getExpiredTime等方法（issue#I4LE80@Gitee）
+* 【extra  】     Ftp增加backToPwd方法（issue#2004@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
