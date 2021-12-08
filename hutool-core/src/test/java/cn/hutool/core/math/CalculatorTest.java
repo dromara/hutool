@@ -1,6 +1,7 @@
 package cn.hutool.core.math;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CalculatorTest {
@@ -30,7 +31,7 @@ public class CalculatorTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void conversationTest5(){
 		// https://github.com/dromara/hutool/issues/1984
 		final double conversion = Calculator.conversion("((1/1) / (1/1) -1) * 100");
