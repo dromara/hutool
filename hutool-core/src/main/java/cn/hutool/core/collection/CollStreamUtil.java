@@ -5,7 +5,14 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.stream.StreamUtil;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,8 +55,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return StreamUtil.of(collection, isParallel)
-				.collect(HashMap::new, (HashMap<K, V> m, V v) -> m.put(Opt.ofNullable(v).map(key).get(), v), HashMap::putAll);
+		return toMap(collection, (v)-> Opt.ofNullable(v).map(key).get(), Function.identity(), isParallel);
 	}
 
 	/**
@@ -82,7 +88,8 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return StreamUtil.of(collection, isParallel).collect(HashMap::new, (HashMap<K, V> m, E v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
+		return StreamUtil.of(collection, isParallel)
+				.collect(HashMap::new, (m, v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
 	}
 
 
