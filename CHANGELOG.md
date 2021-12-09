@@ -3,7 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.17 (2021-12-06)
+# 5.7.18 (2021-12-09)
+
+### 🐣新特性
+### 🐞Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+# 5.7.17 (2021-12-09)
 
 ### 🐣新特性
 * 【core   】     增加AsyncUtil（pr#457@Gitee）
@@ -33,6 +39,10 @@
 * 【core   】     NumberUtil增加isOdd、isEven方法（pr#474@Gitee）
 * 【http   】     增加HttpGlobalConfig.setBoundary，删除MultipartBody.BOUNDARY和getContentType（issue#I4KSLY@Gitee）
 * 【core   】     DateTime增加setMinimalDaysInFirstWeek（issue#1988@Github）
+* 【db     】     Db增加query重载，可支持自定义PreparedStatement，从而支持游标（issue#I4JXWN@Gitee）
+* 【cache  】     CacheObj增加getExpiredTime等方法（issue#I4LE80@Gitee）
+* 【extra  】     Ftp增加backToPwd方法（issue#2004@Github）
+* 【core   】     CollStreamUtil修改集合中null处理问题（pr#478@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复FileResource构造fileName参数无效问题（issue#1942@Github）
@@ -43,10 +53,12 @@
 * 【poi    】     修复SoapClient参数未使用问题
 * 【core   】     修复HashUtil.cityHash128参数未使用问题
 * 【core   】     修复DateUtil.formatChineseDate显示问题（issue#I4KK5F@Gitee）
-* 【poi    】     修复CellUtil.setCellValuestyle空导致值无法写入问题（issue#1995@Github）
+* 【poi    】     修复CellUtil.setCellValueStyle空导致值无法写入问题（issue#1995@Github）
 * 【poi    】     修复CellUtil.setComment参数设置错误问题
 * 【core   】     修复QueryBuilder解析路径导致的错误（issue#1989@Github）
 * 【core   】     修复DateTime.between中DateUnit无效问题
+* 【poi    】     修复StyleUtil.getFormat非static问题（issue#I4LGNP@Gitee）
+* 【crypto 】     修复SM2.getD返回bytes包含符号位的问题（issue#2001@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

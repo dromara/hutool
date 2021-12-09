@@ -12,6 +12,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.body.BytesBody;
@@ -30,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,6 +44,112 @@ import java.util.function.Consumer;
  * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
+
+	// ---------------------------------------------------------------- static Http Method start
+
+	/**
+	 * POST请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest post(String url) {
+		return of(url).method(Method.POST);
+	}
+
+	/**
+	 * GET请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest get(String url) {
+		return of(url).method(Method.GET);
+	}
+
+	/**
+	 * HEAD请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest head(String url) {
+		return of(url).method(Method.HEAD);
+	}
+
+	/**
+	 * OPTIONS请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest options(String url) {
+		return of(url).method(Method.OPTIONS);
+	}
+
+	/**
+	 * PUT请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest put(String url) {
+		return of(url).method(Method.PUT);
+	}
+
+	/**
+	 * PATCH请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 * @since 3.0.9
+	 */
+	public static HttpRequest patch(String url) {
+		return of(url).method(Method.PATCH);
+	}
+
+	/**
+	 * DELETE请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest delete(String url) {
+		return of(url).method(Method.DELETE);
+	}
+
+	/**
+	 * TRACE请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest trace(String url) {
+		return of(url).method(Method.TRACE);
+	}
+
+	/**
+	 * 构建一个HTTP请求
+	 *
+	 * @param url URL链接，默认自动编码URL中的参数等信息
+	 * @return HttpRequest
+	 * @since 5.7.18
+	 */
+	public static HttpRequest of(String url) {
+		return of(url, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 构建一个HTTP请求
+	 *
+	 * @param url     URL链接
+	 * @param charset 编码，如果为{@code null}不自动解码编码URL
+	 * @return HttpRequest
+	 * @since 5.7.18
+	 */
+	public static HttpRequest of(String url, Charset charset) {
+		return new HttpRequest(UrlBuilder.of(url, charset));
+	}
 
 	/**
 	 * 设置全局默认的连接和读取超时时长
@@ -85,6 +193,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
 	}
+	// ---------------------------------------------------------------- static Http Method end
 
 	private UrlBuilder url;
 	private URLStreamHandler urlHandler;
@@ -168,94 +277,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url {@link UrlBuilder}
 	 */
 	public HttpRequest(UrlBuilder url) {
-		this.url = url;
+		this.url = Assert.notNull(url, "URL must be not null!");
+		// 给定默认URL编码
+		final Charset charset = url.getCharset();
+		if (null != charset) {
+			this.charset(charset);
+		}
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
-
-	// ---------------------------------------------------------------- static Http Method start
-
-	/**
-	 * POST请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest post(String url) {
-		return new HttpRequest(url).method(Method.POST);
-	}
-
-	/**
-	 * GET请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest get(String url) {
-		return new HttpRequest(url).method(Method.GET);
-	}
-
-	/**
-	 * HEAD请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest head(String url) {
-		return new HttpRequest(url).method(Method.HEAD);
-	}
-
-	/**
-	 * OPTIONS请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest options(String url) {
-		return new HttpRequest(url).method(Method.OPTIONS);
-	}
-
-	/**
-	 * PUT请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest put(String url) {
-		return new HttpRequest(url).method(Method.PUT);
-	}
-
-	/**
-	 * PATCH请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 * @since 3.0.9
-	 */
-	public static HttpRequest patch(String url) {
-		return new HttpRequest(url).method(Method.PATCH);
-	}
-
-	/**
-	 * DELETE请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest delete(String url) {
-		return new HttpRequest(url).method(Method.DELETE);
-	}
-
-	/**
-	 * TRACE请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest trace(String url) {
-		return new HttpRequest(url).method(Method.TRACE);
-	}
-	// ---------------------------------------------------------------- static Http Method end
 
 	/**
 	 * 获取请求URL

@@ -1,6 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
@@ -20,6 +21,7 @@ import cn.hutool.db.sql.Wrapper;
 import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -189,6 +191,27 @@ public abstract class AbstractDb implements Serializable {
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.query(conn, sql, rsh, paramMap);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 执行自定义的{@link PreparedStatement}，结果使用{@link RsHandler}处理<br>
+	 * 此方法主要用于自定义场景，如游标查询等
+	 *
+	 * @param <T>      结果集需要处理的对象类型
+	 * @param statementFunc 自定义{@link PreparedStatement}创建函数
+	 * @param rsh      结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.7.17
+	 */
+	public <T> T query(Func1<Connection, PreparedStatement> statementFunc, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return SqlExecutor.query(conn, statementFunc, rsh);
 		} finally {
 			this.closeConnection(conn);
 		}

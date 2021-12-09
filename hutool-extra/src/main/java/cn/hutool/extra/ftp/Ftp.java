@@ -256,6 +256,15 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 是否执行完操作返回当前目录
+	 * @return 执行完操作是否返回当前目录
+	 * @since 5.7.17
+	 */
+	public boolean isBackToPwd(){
+		return this.backToPwd;
+	}
+
+	/**
 	 * 如果连接超时的话，重新进行连接 经测试，当连接超时时，client.isConnected()仍然返回ture，无法判断是否连接超时 因此，通过发送pwd命令的方式，检查连接是否超时
 	 *
 	 * @return this

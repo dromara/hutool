@@ -1,11 +1,14 @@
 package cn.hutool.db;
 
+import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.log.StaticLog;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -108,5 +111,19 @@ public class DbTest {
 			db.update(Entity.create().set("age", 79), Entity.create("user").set("name", "unitTestUser2"));
 			db.del("user", "name", "unitTestUser2");
 		});
+	}
+
+	@Test
+	@Ignore
+	public void queryFetchTest() throws SQLException {
+		// https://gitee.com/dromara/hutool/issues/I4JXWN
+		Db.use().query((conn->{
+			PreparedStatement ps = conn.prepareStatement("select * from table",
+					ResultSet.TYPE_FORWARD_ONLY,
+					ResultSet.CONCUR_READ_ONLY);
+			ps.setFetchSize(Integer.MIN_VALUE);
+			ps.setFetchDirection(ResultSet.FETCH_FORWARD);
+			return ps;
+		}), new EntityListHandler());
 	}
 }
