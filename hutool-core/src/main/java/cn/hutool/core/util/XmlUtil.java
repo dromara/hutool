@@ -514,20 +514,20 @@ public class XmlUtil {
 	 *
 	 * @param doc     XML文档
 	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
-	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param charsetName 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 */
-	public static void toFile(Document doc, String path, String charset) {
-		if (StrUtil.isBlank(charset)) {
-			charset = doc.getXmlEncoding();
+	public static void toFile(Document doc, String path, String charsetName) {
+		if (StrUtil.isBlank(charsetName)) {
+			charsetName = doc.getXmlEncoding();
 		}
-		if (StrUtil.isBlank(charset)) {
-			charset = CharsetUtil.UTF_8;
+		if (StrUtil.isBlank(charsetName)) {
+			charsetName = CharsetUtil.UTF_8;
 		}
 
 		BufferedWriter writer = null;
 		try {
-			writer = FileUtil.getWriter(path, charset, false);
-			write(doc, writer, charset, INDENT_DEFAULT);
+			writer = FileUtil.getWriter(path, CharsetUtil.charset(charsetName), false);
+			write(doc, writer, charsetName, INDENT_DEFAULT);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -783,10 +783,10 @@ public class XmlUtil {
 	 */
 	public static Element getElement(Element element, String tagName) {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
-		if (nodeList == null || nodeList.getLength() < 1) {
+		final int length = nodeList.getLength();
+		if (length < 1) {
 			return null;
 		}
-		int length = nodeList.getLength();
 		for (int i = 0; i < length; i++) {
 			Element childEle = (Element) nodeList.item(i);
 			if (childEle == null || childEle.getParentNode() == element) {
@@ -1499,22 +1499,20 @@ public class XmlUtil {
 		 */
 		private void examineNode(Node node, boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
-			if (null != attributes) {
-				for (int i = 0; i < attributes.getLength(); i++) {
-					Node attribute = attributes.item(i);
-					storeAttribute(attribute);
-				}
+			final int length = attributes.getLength();
+			for (int i = 0; i < length; i++) {
+				Node attribute = attributes.item(i);
+				storeAttribute(attribute);
 			}
 
 			if (false == attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
-				if (null != childNodes) {
-					Node item;
-					for (int i = 0; i < childNodes.getLength(); i++) {
-						item = childNodes.item(i);
-						if (item.getNodeType() == Node.ELEMENT_NODE)
-							examineNode(item, false);
-					}
+				Node item;
+				final int childLength = childNodes.getLength();
+				for (int i = 0; i < childLength; i++) {
+					item = childNodes.item(i);
+					if (item.getNodeType() == Node.ELEMENT_NODE)
+						examineNode(item, false);
 				}
 			}
 		}
