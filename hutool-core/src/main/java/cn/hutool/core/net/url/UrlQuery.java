@@ -20,6 +20,8 @@ import java.util.Map;
  * <pre>
  *   key1=v1&amp;key2=&amp;key3=v3
  * </pre>
+ * 查询封装分为解析查询字符串和构建查询字符串，解析可通过charset为null来自定义是否decode编码后的内容，<br>
+ * 构建则通过charset是否为null是否encode参数键值对
  *
  * @author looly
  * @since 5.3.1
