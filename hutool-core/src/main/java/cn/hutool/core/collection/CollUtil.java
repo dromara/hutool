@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
@@ -51,6 +52,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -2925,6 +2927,18 @@ public class CollUtil {
 	 */
 	public static <F, T> Collection<T> trans(Collection<F> collection, Function<? super F, ? extends T> function) {
 		return new TransCollection<>(collection, function);
+	}
+	
+	/**
+	 * 使用给定的map将集合中的原素进行属性或者值的重新设定
+	 * @param collection   集合
+	 * @param map          映射集
+	 * @param keyGenerate  映射键生成函数
+	 * @param biConsumer   封装映射到的值函数
+	 * @author nick_wys
+	 */
+	public static <E, K, V> void setValueByMap(Collection<E> collection, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
+		collection.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
