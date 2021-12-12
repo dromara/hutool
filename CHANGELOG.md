@@ -6,6 +6,8 @@
 # 5.7.18 (2021-12-12)
 
 ### 🐣新特性
+* 【core   】     新增CollStreamUtil.groupKeyValue（pr#479@Gitee）
+* 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）
 * 【core   】     修复4位bytes转换float问题（issue#I4M0E4@Gitee）
