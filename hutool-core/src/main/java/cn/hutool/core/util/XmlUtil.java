@@ -1499,20 +1499,26 @@ public class XmlUtil {
 		 */
 		private void examineNode(Node node, boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
-			final int length = attributes.getLength();
-			for (int i = 0; i < length; i++) {
-				Node attribute = attributes.item(i);
-				storeAttribute(attribute);
+			//noinspection ConstantConditions
+			if (null != attributes) {
+				final int length = attributes.getLength();
+				for (int i = 0; i < length; i++) {
+					Node attribute = attributes.item(i);
+					storeAttribute(attribute);
+				}
 			}
 
 			if (false == attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
-				Node item;
-				final int childLength = childNodes.getLength();
-				for (int i = 0; i < childLength; i++) {
-					item = childNodes.item(i);
-					if (item.getNodeType() == Node.ELEMENT_NODE)
-						examineNode(item, false);
+				//noinspection ConstantConditions
+				if(null != childNodes){
+					Node item;
+					final int childLength = childNodes.getLength();
+					for (int i = 0; i < childLength; i++) {
+						item = childNodes.item(i);
+						if (item.getNodeType() == Node.ELEMENT_NODE)
+							examineNode(item, false);
+					}
 				}
 			}
 		}

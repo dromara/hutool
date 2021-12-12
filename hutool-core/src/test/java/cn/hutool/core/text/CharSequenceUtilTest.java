@@ -15,6 +15,14 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
+	public void replaceTest2(){
+		// https://gitee.com/dromara/hutool/issues/I4M16G
+		String replace = "#{A}";
+		String result = CharSequenceUtil.replace(replace, "#{AAAAAAA}", "1");
+		Assert.assertEquals(replace, result);
+	}
+
+	@Test
 	public void addPrefixIfNotTest(){
 		String str = "hutool";
 		String result = CharSequenceUtil.addPrefixIfNot(str, "hu");

@@ -3538,6 +3538,11 @@ public class CharSequenceUtil {
 
 		final int strLength = str.length();
 		final int searchStrLength = searchStr.length();
+		if(strLength < searchStrLength){
+			// issue#I4M16G@Gitee
+			return str(str);
+		}
+
 		if (fromIndex > strLength) {
 			return str(str);
 		} else if (fromIndex < 0) {

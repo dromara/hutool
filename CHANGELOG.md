@@ -8,7 +8,8 @@
 ### 🐣新特性
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）
-* 【core   】     修复4位bytes转换float问题（issue#I4M0E4@Github）
+* 【core   】     修复4位bytes转换float问题（issue#I4M0E4@Gitee）
+* 【core   】     修复CharSequenceUtil.replace问题（issue#I4M16G@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.17 (2021-12-09)
