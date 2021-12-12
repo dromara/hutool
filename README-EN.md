@@ -131,7 +131,7 @@ If you think Hutool is good, you can donate to buy the author a pack of chili~, 
 
 We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 
-👉 [Hutool Shop](https://m.tb.cn/h.fVxoBOm?sm=2756b2) 👈
+👉 [Hutool Shop](https://market.m.taobao.com/apps/market/content/index.html?wh_weex=true&contentId=331724720170) 👈
 
 -------------------------------------------------------------------------------
 
