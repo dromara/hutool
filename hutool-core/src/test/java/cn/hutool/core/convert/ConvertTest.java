@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.HexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -342,5 +343,14 @@ public class ConvertTest {
 		String str = "33020000210909112800000124";
 		final BigDecimal bigDecimal = Convert.toBigDecimal(str);
 		Assert.assertEquals(str, bigDecimal.toPlainString());
+	}
+
+	@Test
+	public void toFloatTest(){
+		// https://gitee.com/dromara/hutool/issues/I4M0E4
+		String hex2 = "CD0CCB43";
+		final byte[] value = HexUtil.decodeHex(hex2);
+		final float f = Convert.toFloat(value);
+		Assert.assertEquals(406.1F, f, 2);
 	}
 }

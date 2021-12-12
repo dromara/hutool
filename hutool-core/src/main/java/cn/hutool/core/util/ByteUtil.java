@@ -1,6 +1,12 @@
 package cn.hutool.core.util;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteOrder;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.DoubleAdder;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 对数字和字节进行转换。<br>
@@ -20,6 +26,8 @@ import java.nio.ByteOrder;
  * @since 5.6.3
  */
 public class ByteUtil {
+
+	public static ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 
 	/**
 	 * int转byte
@@ -51,14 +59,14 @@ public class ByteUtil {
 	 * @return short值
 	 */
 	public static short bytesToShort(byte[] bytes) {
-		return bytesToShort(bytes, ByteOrder.LITTLE_ENDIAN);
+		return bytesToShort(bytes, DEFAULT_ORDER);
 	}
 
 	/**
 	 * byte数组转short<br>
 	 * 自定义端序
 	 *
-	 * @param bytes     byte数组
+	 * @param bytes     byte数组，长度必须为2
 	 * @param byteOrder 端序
 	 * @return short值
 	 */
@@ -79,7 +87,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 */
 	public static byte[] shortToBytes(short shortValue) {
-		return shortToBytes(shortValue, ByteOrder.LITTLE_ENDIAN);
+		return shortToBytes(shortValue, DEFAULT_ORDER);
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class ByteUtil {
 	 * @return int值
 	 */
 	public static int bytesToInt(byte[] bytes) {
-		return bytesToInt(bytes, ByteOrder.LITTLE_ENDIAN);
+		return bytesToInt(bytes, DEFAULT_ORDER);
 	}
 
 	/**
@@ -144,7 +152,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 */
 	public static byte[] intToBytes(int intValue) {
-		return intToBytes(intValue, ByteOrder.LITTLE_ENDIAN);
+		return intToBytes(intValue, DEFAULT_ORDER);
 	}
 
 	/**
@@ -185,7 +193,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 */
 	public static byte[] longToBytes(long longValue) {
-		return longToBytes(longValue, ByteOrder.LITTLE_ENDIAN);
+		return longToBytes(longValue, DEFAULT_ORDER);
 	}
 
 	/**
@@ -222,7 +230,7 @@ public class ByteUtil {
 	 * @return long值
 	 */
 	public static long bytesToLong(byte[] bytes) {
-		return bytesToLong(bytes, ByteOrder.LITTLE_ENDIAN);
+		return bytesToLong(bytes, DEFAULT_ORDER);
 	}
 
 	/**
@@ -252,6 +260,54 @@ public class ByteUtil {
 	}
 
 	/**
+	 * float转byte数组，默认以小端序转换<br>
+	 *
+	 * @param floatValue float值
+	 * @return byte数组
+	 * @since 5.7.18
+	 */
+	public static byte[] floatToBytes(float floatValue) {
+		return floatToBytes(floatValue, DEFAULT_ORDER);
+	}
+
+	/**
+	 * float转byte数组，自定义端序<br>
+	 *
+	 * @param floatValue float值
+	 * @param byteOrder  端序
+	 * @return byte数组
+	 * @since 5.7.18
+	 */
+	public static byte[] floatToBytes(float floatValue, ByteOrder byteOrder) {
+		return intToBytes(Float.floatToIntBits(floatValue), byteOrder);
+	}
+
+	/**
+	 * byte数组转float<br>
+	 * 默认以小端序转换<br>
+	 *
+	 * @param bytes byte数组
+	 * @return float值
+	 * @since 5.7.18
+	 */
+	public static double bytesToFloat(byte[] bytes) {
+		return bytesToFloat(bytes, DEFAULT_ORDER);
+	}
+
+	/**
+	 * byte数组转float<br>
+	 * 自定义端序<br>
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return float值
+	 * @since 5.7.18
+	 */
+	public static float bytesToFloat(byte[] bytes, ByteOrder byteOrder) {
+		return Float.intBitsToFloat(bytesToInt(bytes, byteOrder));
+	}
+
+	/**
 	 * double转byte数组<br>
 	 * 默认以小端序转换<br>
 	 *
@@ -259,7 +315,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 */
 	public static byte[] doubleToBytes(double doubleValue) {
-		return doubleToBytes(doubleValue, ByteOrder.LITTLE_ENDIAN);
+		return doubleToBytes(doubleValue, DEFAULT_ORDER);
 	}
 
 	/**
@@ -283,7 +339,7 @@ public class ByteUtil {
 	 * @return long值
 	 */
 	public static double bytesToDouble(byte[] bytes) {
-		return bytesToDouble(bytes, ByteOrder.LITTLE_ENDIAN);
+		return bytesToDouble(bytes, DEFAULT_ORDER);
 	}
 
 	/**
@@ -305,7 +361,7 @@ public class ByteUtil {
 	 * @return bytes
 	 */
 	public static byte[] numberToBytes(Number number) {
-		return numberToBytes(number, ByteOrder.LITTLE_ENDIAN);
+		return numberToBytes(number, DEFAULT_ORDER);
 	}
 
 	/**
@@ -324,8 +380,62 @@ public class ByteUtil {
 			return intToBytes((Integer) number, byteOrder);
 		} else if (number instanceof Short) {
 			return shortToBytes((Short) number, byteOrder);
+		} else if (number instanceof Float) {
+			return floatToBytes((Float) number, byteOrder);
 		} else {
 			return doubleToBytes(number.doubleValue(), byteOrder);
 		}
+	}
+
+	/**
+	 * byte数组转换为指定类型数字
+	 *
+	 * @param <T>         数字类型
+	 * @param bytes       byte数组
+	 * @param targetClass 目标数字类型
+	 * @param byteOrder   端序
+	 * @return 转换后的数字
+	 * @throws IllegalArgumentException 不支持的数字类型，如用户自定义数字类型
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Number> T bytesToNumber(byte[] bytes, Class<T> targetClass, ByteOrder byteOrder) throws IllegalArgumentException {
+		Number number;
+		if (Byte.class == targetClass) {
+			number = bytes[0];
+		} else if (Short.class == targetClass) {
+			number = bytesToShort(bytes, byteOrder);
+		} else if (Integer.class == targetClass) {
+			number = bytesToInt(bytes, byteOrder);
+		} else if (AtomicInteger.class == targetClass) {
+			number = new AtomicInteger(bytesToInt(bytes, byteOrder));
+		} else if (Long.class == targetClass) {
+			number = bytesToLong(bytes, byteOrder);
+		} else if (AtomicLong.class == targetClass) {
+			number = new AtomicLong(bytesToLong(bytes, byteOrder));
+		} else if (LongAdder.class == targetClass) {
+			final LongAdder longValue = new LongAdder();
+			longValue.add(bytesToLong(bytes, byteOrder));
+			number = longValue;
+		} else if (Float.class == targetClass) {
+			number = bytesToFloat(bytes, byteOrder);
+		} else if (Double.class == targetClass) {
+			number = bytesToDouble(bytes, byteOrder);
+		} else if (DoubleAdder.class == targetClass) {
+			final DoubleAdder doubleAdder = new DoubleAdder();
+			doubleAdder.add(bytesToDouble(bytes, byteOrder));
+			number = doubleAdder;
+		} else if (BigDecimal.class == targetClass) {
+			number = NumberUtil.toBigDecimal(bytesToDouble(bytes, byteOrder));
+		} else if (BigInteger.class == targetClass) {
+			number = BigInteger.valueOf(bytesToLong(bytes, byteOrder));
+		} else if (Number.class == targetClass) {
+			// 用户没有明确类型具体类型，默认Double
+			number = bytesToDouble(bytes, byteOrder);
+		} else {
+			// 用户自定义类型不支持
+			throw new IllegalArgumentException("Unsupported Number type: " + targetClass.getName());
+		}
+
+		return (T) number;
 	}
 }

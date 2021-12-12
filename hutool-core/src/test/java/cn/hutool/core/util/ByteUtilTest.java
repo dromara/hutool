@@ -10,7 +10,7 @@ public class ByteUtilTest {
 	@Test
 	public void intAndBytesLittleEndianTest() {
 		// 测试 int 转小端序 byte 数组
-		int int1 = 1417;
+		int int1 = RandomUtil.randomInt();
 
 		byte[] bytesInt = ByteUtil.intToBytes(int1, ByteOrder.LITTLE_ENDIAN);
 		int int2 = ByteUtil.bytesToInt(bytesInt, ByteOrder.LITTLE_ENDIAN);
@@ -28,7 +28,7 @@ public class ByteUtilTest {
 	@Test
 	public void intAndBytesBigEndianTest() {
 		// 测试 int 转大端序 byte 数组
-		int int2 = 1417;
+		int int2 = RandomUtil.randomInt();
 		byte[] bytesInt = ByteUtil.intToBytes(int2, ByteOrder.BIG_ENDIAN);
 
 		// 测试大端序 byte 数组转 int
@@ -66,8 +66,29 @@ public class ByteUtilTest {
 	}
 
 	@Test
+	public void floatAndBytesLittleEndianTest() {
+		// 测试 long 转 byte 数组
+		float f1 = (float) RandomUtil.randomDouble();
+
+		byte[] bytesLong = ByteUtil.floatToBytes(f1, ByteOrder.LITTLE_ENDIAN);
+		float f2 = ByteUtil.bytesToFloat(bytesLong, ByteOrder.LITTLE_ENDIAN);
+		Assert.assertEquals(f1, f2, 2);
+	}
+
+	@Test
+	public void floatAndBytesBigEndianTest() {
+		// 测试大端序 long 转 byte 数组
+		float f1 = (float) RandomUtil.randomDouble();
+
+		byte[] bytesLong = ByteUtil.floatToBytes(f1, ByteOrder.BIG_ENDIAN);
+		float f2 = ByteUtil.bytesToFloat(bytesLong, ByteOrder.BIG_ENDIAN);
+
+		Assert.assertEquals(f1, f2, 2);
+	}
+
+	@Test
 	public void shortAndBytesLittleEndianTest() {
-		short short1 = 122;
+		short short1 = (short) RandomUtil.randomInt();
 
 		byte[] bytes = ByteUtil.shortToBytes(short1, ByteOrder.LITTLE_ENDIAN);
 		short short2 = ByteUtil.bytesToShort(bytes, ByteOrder.LITTLE_ENDIAN);
