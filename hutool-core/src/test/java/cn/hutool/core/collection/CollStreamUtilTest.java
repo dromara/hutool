@@ -150,6 +150,26 @@ public class CollStreamUtilTest {
 	}
 
 	@Test
+	public void testGroupKeyValue() {
+		Map<Long, List<Long>> map = CollStreamUtil.groupKeyValue(null, Student::getTermId, Student::getClassId);
+		Assert.assertEquals(map, Collections.EMPTY_MAP);
+
+		List<Student> list = new ArrayList<>();
+		map = CollStreamUtil.groupKeyValue(list, Student::getTermId, Student::getClassId);
+		Assert.assertEquals(map, Collections.EMPTY_MAP);
+		list.add(new Student(1, 1, 1, "张三"));
+		list.add(new Student(1, 2, 1, "李四"));
+		list.add(new Student(2, 2, 1, "王五"));
+		map = CollStreamUtil.groupKeyValue(list, Student::getTermId, Student::getClassId);
+
+		Map<Long, List<Long>> compare = new HashMap<>();
+		compare.put(1L, Arrays.asList(1L, 2L));
+		compare.put(2L, Collections.singletonList(2L));
+		Assert.assertEquals(compare, map);
+	}
+
+
+	@Test
 	public void testTranslate2List() {
 		List<String> list = CollStreamUtil.toList(null, Student::getName);
 		Assert.assertEquals(list, Collections.EMPTY_LIST);

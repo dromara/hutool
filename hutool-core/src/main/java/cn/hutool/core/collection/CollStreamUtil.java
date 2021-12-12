@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 集合的stream操作封装
  *
- * @author 528910437@QQ.COM
+ * @author 528910437@QQ.COM VampireAchao<achao1441470436@gmail.com>
  * @since 5.5.2
  */
 public class CollStreamUtil {
@@ -200,6 +200,45 @@ public class CollStreamUtil {
 		}
 		return StreamUtil.of(collection, isParallel)
 				.collect(Collectors.groupingBy(key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l)));
+	}
+
+	/**
+	 * 将collection按照规则(比如有相同的班级id)分类成map，map中的key为班级id，value为班级名<br>
+	 * <B>{@code Collection<E> -------> Map<K,List<V>> } </B>
+	 *
+	 * @param collection 需要分类的集合
+	 * @param key        分类的规则
+	 * @param value      分类的规则
+	 * @param <E>        collection中的泛型
+	 * @param <K>        map中的key类型
+	 * @param <V>        List中的value类型
+	 * @return 分类后的map
+	 */
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(Collection<E> collection, Function<E, K> key,
+														  Function<E, V> value) {
+		return groupKeyValue(collection, key, value, false);
+	}
+
+	/**
+	 * 将collection按照规则(比如有相同的班级id)分类成map，map中的key为班级id，value为班级名<br>
+	 * <B>{@code Collection<E> -------> Map<K,List<V>> } </B>
+	 *
+	 * @param collection 需要分类的集合
+	 * @param key        分类的规则
+	 * @param value      分类的规则
+	 * @param isParallel 是否并行流
+	 * @param <E>        collection中的泛型
+	 * @param <K>        map中的key类型
+	 * @param <V>        List中的value类型
+	 * @return 分类后的map
+	 */
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(Collection<E> collection, Function<E, K> key,
+														  Function<E, V> value, boolean isParallel) {
+		if (CollUtil.isEmpty(collection)) {
+			return Collections.emptyMap();
+		}
+		return StreamUtil.of(collection, isParallel)
+				.collect(Collectors.groupingBy(key, Collectors.mapping(value, Collectors.toList())));
 	}
 
 	/**
