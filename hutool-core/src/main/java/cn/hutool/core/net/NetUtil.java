@@ -48,7 +48,7 @@ import java.util.TreeSet;
  */
 public class NetUtil {
 
-	public final static String LOCAL_IP = "127.0.0.1";
+	public final static String LOCAL_IP = Ipv4Util.LOCAL_IP;
 
 	public static String localhostName;
 
@@ -230,27 +230,21 @@ public class NetUtil {
 	}
 
 	/**
-	 * 判定是否为内网IP<br>
-	 * 私有IP：A类 10.0.0.0-10.255.255.255 B类 172.16.0.0-172.31.255.255 C类 192.168.0.0-192.168.255.255 当然，还有127这个网段是环回地址
+	 * 判定是否为内网IPv4<br>
+	 * 私有IP：
+	 * <pre>
+	 * A类 10.0.0.0-10.255.255.255
+	 * B类 172.16.0.0-172.31.255.255
+	 * C类 192.168.0.0-192.168.255.255
+	 * </pre>
+	 * 当然，还有127这个网段是环回地址
 	 *
 	 * @param ipAddress IP地址
 	 * @return 是否为内网IP
+	 * @see Ipv4Util#isInnerIP(String)
 	 */
 	public static boolean isInnerIP(String ipAddress) {
-		boolean isInnerIp;
-		long ipNum = NetUtil.ipv4ToLong(ipAddress);
-
-		long aBegin = NetUtil.ipv4ToLong("10.0.0.0");
-		long aEnd = NetUtil.ipv4ToLong("10.255.255.255");
-
-		long bBegin = NetUtil.ipv4ToLong("172.16.0.0");
-		long bEnd = NetUtil.ipv4ToLong("172.31.255.255");
-
-		long cBegin = NetUtil.ipv4ToLong("192.168.0.0");
-		long cEnd = NetUtil.ipv4ToLong("192.168.255.255");
-
-		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
-		return isInnerIp;
+		return Ipv4Util.isInnerIP(ipAddress);
 	}
 
 	/**
@@ -700,7 +694,7 @@ public class NetUtil {
 	 */
 	public static boolean isInRange(String ip, String cidr) {
 		final int maskSplitMarkIndex = cidr.lastIndexOf(Ipv4Util.IP_MASK_SPLIT_MARK);
-		if(maskSplitMarkIndex < 0){
+		if (maskSplitMarkIndex < 0) {
 			throw new IllegalArgumentException("Invalid cidr: " + cidr);
 		}
 
@@ -837,17 +831,17 @@ public class NetUtil {
 	 *     NetUtil.attrNames("hutool.cn", "TXT")
 	 * </pre>
 	 *
-	 * @param hostName 主机域名
+	 * @param hostName  主机域名
 	 * @param attrNames 属性
-	 * @since 5.7.7
 	 * @return DNS信息
+	 * @since 5.7.7
 	 */
-	public static List<String> getDnsInfo(String hostName, String... attrNames){
+	public static List<String> getDnsInfo(String hostName, String... attrNames) {
 		final String uri = StrUtil.addPrefixIfNot(hostName, "dns:");
 		final Attributes attributes = JNDIUtil.getAttributes(uri, attrNames);
 
 		final List<String> infos = new ArrayList<>();
-		for (Attribute attribute: new EnumerationIter<>(attributes.getAll())){
+		for (Attribute attribute : new EnumerationIter<>(attributes.getAll())) {
 			try {
 				infos.add((String) attribute.get());
 			} catch (NamingException ignore) {
@@ -859,16 +853,5 @@ public class NetUtil {
 
 	// ----------------------------------------------------------------------------------------- Private method start
 
-	/**
-	 * 指定IP的long是否在指定范围内
-	 *
-	 * @param userIp 用户IP
-	 * @param begin  开始IP
-	 * @param end    结束IP
-	 * @return 是否在范围内
-	 */
-	private static boolean isInner(long userIp, long begin, long end) {
-		return (userIp >= begin) && (userIp <= end);
-	}
 	// ----------------------------------------------------------------------------------------- Private method end
 }

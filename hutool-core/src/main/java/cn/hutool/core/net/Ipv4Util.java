@@ -22,6 +22,8 @@ import java.util.regex.Matcher;
  */
 public class Ipv4Util {
 
+	public static final String LOCAL_IP = "127.0.0.1";
+
 	/**
 	 * IP段的分割符
 	 */
@@ -305,6 +307,36 @@ public class Ipv4Util {
 		return MaskBit.get(maskBit) != null;
 	}
 
+	/**
+	 * 判定是否为内网IPv4<br>
+	 * 私有IP：
+	 * <pre>
+	 * A类 10.0.0.0-10.255.255.255
+	 * B类 172.16.0.0-172.31.255.255
+	 * C类 192.168.0.0-192.168.255.255
+	 * </pre>
+	 * 当然，还有127这个网段是环回地址
+	 *
+	 * @param ipAddress IP地址
+	 * @return 是否为内网IP
+	 * @since 5.7.18
+	 */
+	public static boolean isInnerIP(String ipAddress) {
+		boolean isInnerIp;
+		long ipNum = ipv4ToLong(ipAddress);
+
+		long aBegin = ipv4ToLong("10.0.0.0");
+		long aEnd = ipv4ToLong("10.255.255.255");
+
+		long bBegin = ipv4ToLong("172.16.0.0");
+		long bEnd = ipv4ToLong("172.31.255.255");
+
+		long cBegin = ipv4ToLong("192.168.0.0");
+		long cEnd = ipv4ToLong("192.168.255.255");
+
+		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
+		return isInnerIp;
+	}
 
 	//-------------------------------------------------------------------------------- Private method start
 
@@ -333,6 +365,18 @@ public class Ipv4Util {
 			addr |= Long.parseLong(matcher.group(i)) << 8 * (4 - i);
 		}
 		return addr;
+	}
+
+	/**
+	 * 指定IP的long是否在指定范围内
+	 *
+	 * @param userIp 用户IP
+	 * @param begin  开始IP
+	 * @param end    结束IP
+	 * @return 是否在范围内
+	 */
+	private static boolean isInner(long userIp, long begin, long end) {
+		return (userIp >= begin) && (userIp <= end);
 	}
 	//-------------------------------------------------------------------------------- Private method end
 }
