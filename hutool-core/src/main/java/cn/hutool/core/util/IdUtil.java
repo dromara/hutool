@@ -106,7 +106,7 @@ public class IdUtil {
 	 * @param workerId     终端ID
 	 * @param datacenterId 数据中心ID
 	 * @return {@link Snowflake}
-	 * @deprecated 此方法容易产生起义：多个Snowflake实例产生的ID会产生重复，此对象在单台机器上必须单例！
+	 * @deprecated 此方法容易产生歧义：多个Snowflake实例产生的ID会产生重复，此对象在单台机器上必须单例！
 	 */
 	@Deprecated
 	public static Snowflake createSnowflake(long workerId, long datacenterId) {
