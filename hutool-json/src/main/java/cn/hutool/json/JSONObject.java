@@ -123,7 +123,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (config.isIgnoreCase()) {
 			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 		} else {
-			this.rawHashMap = MapUtil.newHashMap(config.isOrder());
+			this.rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
 		}
 		this.config = config;
 	}
