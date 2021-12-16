@@ -158,7 +158,7 @@ public class IdUtil {
 	 * <p>
 	 * 参考：http://www.cnblogs.com/relucent/p/4955340.html
 	 *
-	 * @param workerId     终端ID
+	 * @param workerId 终端ID
 	 * @return {@link Snowflake}
 	 * @since 5.7.3
 	 */
@@ -242,6 +242,7 @@ public class IdUtil {
 	}
 
 	// ------------------------------------------------------------------- NanoId
+
 	/**
 	 * 获取随机NanoId
 	 *
@@ -259,7 +260,28 @@ public class IdUtil {
 	 * @return 随机NanoId
 	 * @since 5.7.5
 	 */
-	public static String nanoId(int size){
+	public static String nanoId(int size) {
 		return NanoId.randomNanoId(size);
 	}
+
+	/**
+	 * 简单获取Snowflake 的 nextId
+	 * 终端ID 数据中心ID 默认为1
+	 *
+	 * @return nextId
+	 */
+	public static long getSnowflakeNextId() {
+		return getSnowflake(1, 1).nextId();
+	}
+
+	/**
+	 * 简单获取Snowflake 的 nextId
+	 * 终端ID 数据中心ID 默认为1
+	 *
+	 * @return nextIdStr
+	 */
+	public static String getSnowflakeNextIdStr() {
+		return getSnowflake(1, 1).nextIdStr();
+	}
+
 }
