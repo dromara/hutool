@@ -3,11 +3,12 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.18 (2021-12-14)
+# 5.7.18 (2021-12-17)
 
 ### 🐣新特性
 * 【core   】     新增CollStreamUtil.groupKeyValue（pr#479@Gitee）
 * 【core   】     新增DatePattern.createFormatter（pr#483@Gitee）
+* 【core   】     增加IdUtil.getSnowflakeNextId（pr#485@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）

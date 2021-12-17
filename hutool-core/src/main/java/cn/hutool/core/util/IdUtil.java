@@ -269,6 +269,7 @@ public class IdUtil {
 	 * 终端ID 数据中心ID 默认为1
 	 *
 	 * @return nextId
+	 * @since 5.7.18
 	 */
 	public static long getSnowflakeNextId() {
 		return getSnowflake().nextId();
@@ -279,6 +280,7 @@ public class IdUtil {
 	 * 终端ID 数据中心ID 默认为1
 	 *
 	 * @return nextIdStr
+	 * @since 5.7.18
 	 */
 	public static String getSnowflakeNextIdStr() {
 		return getSnowflake().nextIdStr();
