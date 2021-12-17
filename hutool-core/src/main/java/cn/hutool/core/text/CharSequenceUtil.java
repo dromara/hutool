@@ -706,7 +706,7 @@ public class CharSequenceUtil {
 	 */
 	public static boolean startWith(CharSequence str, CharSequence prefix, boolean ignoreCase, boolean ignoreEquals) {
 		if (null == str || null == prefix) {
-			if (false == ignoreEquals) {
+			if (ignoreEquals) {
 				return false;
 			}
 			return null == str && null == prefix;

@@ -16,6 +16,7 @@
 * 【core   】     修复4位bytes转换float问题（issue#I4M0E4@Gitee）
 * 【core   】     修复CharSequenceUtil.replace问题（issue#I4M16G@Gitee）
 * 【json   】     修复JSONObject 初始化大小值未被使用问题（issue#2016@Github）
+* 【core   】     修复StrUtil.startWith都为null返回错误问题（issue#I4MV7Q@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.17 (2021-12-09)

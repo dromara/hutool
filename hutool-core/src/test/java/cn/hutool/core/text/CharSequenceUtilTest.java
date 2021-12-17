@@ -86,4 +86,11 @@ public class CharSequenceUtilTest {
 		v = CharSequenceUtil.subPreGbk(s, 40, true);
 		Assert.assertEquals(41, v.getBytes(CharsetUtil.CHARSET_GBK).length);
 	}
+
+	@Test
+	public void startWithTest(){
+		// https://gitee.com/dromara/hutool/issues/I4MV7Q
+		Assert.assertFalse(CharSequenceUtil.startWith("123", "123", false, true));
+		Assert.assertFalse(CharSequenceUtil.startWith(null, null, false, true));
+	}
 }
