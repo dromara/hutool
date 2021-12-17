@@ -56,7 +56,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
+			<artifactId>log4j-api</artifactId>
 			<version>${log4j2.version}</version>
 			<optional>true</optional>
 		</dependency>
@@ -90,6 +90,8 @@
 			<version>${logtube.version}</version>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- 仅用于测试 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
@@ -100,6 +102,12 @@
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
 			<version>2.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

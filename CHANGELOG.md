@@ -9,6 +9,7 @@
 * 【core   】     新增CollStreamUtil.groupKeyValue（pr#479@Gitee）
 * 【core   】     新增DatePattern.createFormatter（pr#483@Gitee）
 * 【core   】     增加IdUtil.getSnowflakeNextId（pr#485@Gitee）
+* 【log    】     log4j2的编译依赖改为api，core为test依赖（pr#2019@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）

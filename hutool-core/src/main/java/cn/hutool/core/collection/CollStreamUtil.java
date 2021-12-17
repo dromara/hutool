@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 集合的stream操作封装
  *
- * @author 528910437@QQ.COM VampireAchao<achao1441470436@gmail.com>
+ * @author 528910437@QQ.COM, VampireAchao&lt;achao1441470436@gmail.com&gt;
  * @since 5.5.2
  */
 public class CollStreamUtil {
