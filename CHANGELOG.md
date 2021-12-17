@@ -10,7 +10,7 @@
 * 【core   】     新增DatePattern.createFormatter（pr#483@Gitee）
 * 【core   】     增加IdUtil.getSnowflakeNextId（pr#485@Gitee）
 * 【log    】     log4j2的编译依赖改为api，core为test依赖（pr#2019@Github）
-* 【core   】     Img.scale缩小默认使用平滑模式（issue#I4MY6X@Gitee）
+* 【core   】     Img.scale缩小默认使用平滑模式，增加scale方法重载可选模式（issue#I4MY6X@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）
