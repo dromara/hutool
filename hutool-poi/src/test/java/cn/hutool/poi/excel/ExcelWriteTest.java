@@ -807,4 +807,18 @@ public class ExcelWriteTest {
 		writer.merge(0,1,2,2,3.99,false);
 		writer.close();
 	}
+
+	@Test
+	public void writeImgTest() {
+		ExcelWriter writer = ExcelUtil.getWriter(true);
+
+		File file = new File("C:\\Users\\zsz\\Desktop\\1.jpg");
+
+		writer.writeImg(file, 0, 0, 5, 10);
+
+		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"));
+
+		writer.close();
+	}
+
 }

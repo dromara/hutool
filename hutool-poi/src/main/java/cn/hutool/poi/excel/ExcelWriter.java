@@ -16,22 +16,13 @@ import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
 import org.apache.poi.common.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HeaderFooter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -855,6 +846,85 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				isFirstRow = false;
 			}
 		}
+		return this;
+	}
+
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 添加图片到当前sheet中 / 默认图片类型png / 默认的起始坐标和结束坐标都为0
+	 *
+	 * @param imgFile 图片文件
+	 * @param col1    指定起始的单元格，下标从0开始
+	 * @param row1    指定起始的单元格，下标从0开始
+	 * @param col2    指定结束的单元格，下标从0开始
+	 * @param row2    指定结束的单元格，下标从0开始
+	 * @return this
+	 * @author vhukze
+	 */
+	public ExcelWriter writeImg(File imgFile, int col1, int row1, int col2, int row2) {
+		return this.writeImg(imgFile, 0, 0, 0, 0, col1, row1, col2, row2);
+	}
+
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 添加图片到当前sheet中 / 默认图片类型png
+	 *
+	 * @param imgFile 图片文件
+	 * @param dx1     起始单元格中的x坐标
+	 * @param dy1     起始单元格中的y坐标
+	 * @param dx2     结束单元格中的x坐标
+	 * @param dy2     结束单元格中的y坐标
+	 * @param col1    指定起始的单元格，下标从0开始
+	 * @param row1    指定起始的单元格，下标从0开始
+	 * @param col2    指定结束的单元格，下标从0开始
+	 * @param row2    指定结束的单元格，下标从0开始
+	 * @return this
+	 * @author vhukze
+	 */
+	public ExcelWriter writeImg(File imgFile, int dx1, int dy1, int dx2, int dy2, int col1, int row1,
+								int col2, int row2) {
+		return this.writeImg(imgFile, Workbook.PICTURE_TYPE_PNG, dx1, dy1, dx2, dy2, col1, row1, col2, row2);
+	}
+
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 添加图片到当前sheet中
+	 *
+	 * @param imgFile 图片文件
+	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param dx1     起始单元格中的x坐标
+	 * @param dy1     起始单元格中的y坐标
+	 * @param dx2     结束单元格中的x坐标
+	 * @param dy2     结束单元格中的y坐标
+	 * @param col1    指定起始的单元格，下标从0开始
+	 * @param row1    指定起始的单元格，下标从0开始
+	 * @param col2    指定结束的单元格，下标从0开始
+	 * @param row2    指定结束的单元格，下标从0开始
+	 * @return this
+	 * @author vhukze
+	 */
+	public ExcelWriter writeImg(File imgFile, int imgType, int dx1, int dy1, int dx2,
+								int dy2, int col1, int row1, int col2, int row2) {
+		Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
+		ClientAnchor anchor;
+		if (this.isXlsx()) {
+			anchor = new XSSFClientAnchor(dx1, dy1, dx2, dy2, col1, row1, col2, row2);
+		} else {
+			anchor = new HSSFClientAnchor(dx1, dy1, dx2, dy2, (short) col1, row1, (short) col2, row2);
+		}
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			FileInputStream is = new FileInputStream(imgFile);
+			int b;
+			while ((b = is.read()) != -1) {
+				bos.write(b);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		patriarch.createPicture(anchor, this.workbook.addPicture(bos.toByteArray(), imgType));
 		return this;
 	}
 
