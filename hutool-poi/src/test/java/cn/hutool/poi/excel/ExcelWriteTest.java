@@ -809,6 +809,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
+	@Ignore
 	public void writeImgTest() {
 		ExcelWriter writer = ExcelUtil.getWriter(true);
 
