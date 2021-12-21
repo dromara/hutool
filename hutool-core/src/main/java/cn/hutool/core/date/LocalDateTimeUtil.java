@@ -27,6 +27,9 @@ import java.util.TimeZone;
 /**
  * JDK8+中的{@link LocalDateTime} 工具类封装
  *
+ * @see DateUtil java7和一下版本，使用Date工具类
+ * @see DatePattern 常用格式工具类
+ *
  * @author looly
  * @since 5.3.9
  */
