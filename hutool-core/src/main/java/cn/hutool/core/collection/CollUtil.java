@@ -1301,7 +1301,7 @@ public class CollUtil {
 	 * @param <E>              集合元素类型
 	 * @param resultCollection 存放移除结果的集合
 	 * @param targetCollection 被操作移除元素的集合
-	 * @param predicate           用于是否移除判断的过滤器
+	 * @param predicate        用于是否移除判断的过滤器
 	 */
 	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
 		Objects.requireNonNull(predicate);
@@ -2928,17 +2928,22 @@ public class CollUtil {
 	public static <F, T> Collection<T> trans(Collection<F> collection, Function<? super F, ? extends T> function) {
 		return new TransCollection<>(collection, function);
 	}
-	
+
 	/**
 	 * 使用给定的map将集合中的原素进行属性或者值的重新设定
-	 * @param collection   集合
-	 * @param map          映射集
-	 * @param keyGenerate  映射键生成函数
-	 * @param biConsumer   封装映射到的值函数
+	 *
+	 * @param <E>         元素类型
+	 * @param <K>         替换的键
+	 * @param <V>         替换的值
+	 * @param iterable    集合
+	 * @param map         映射集
+	 * @param keyGenerate 映射键生成函数
+	 * @param biConsumer  封装映射到的值函数
 	 * @author nick_wys
+	 * @since 5.7.18
 	 */
-	public static <E, K, V> void setValueByMap(Collection<E> collection, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
-		collection.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
+	public static <E, K, V> void setValueByMap(Iterable<E> iterable, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
+		iterable.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start

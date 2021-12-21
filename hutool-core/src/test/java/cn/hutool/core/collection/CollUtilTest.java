@@ -827,4 +827,54 @@ public class CollUtilTest {
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
 	}
+
+	@Test
+	public void setValueByMapTest(){
+		// https://gitee.com/dromara/hutool/pulls/482
+		List<Person> people = Arrays.asList(
+				new Person("aa", 12, "man", 1),
+				new Person("bb", 13, "woman", 2),
+				new Person("cc", 14, "man", 3),
+				new Person("dd", 15, "woman", 4),
+				new Person("ee", 16, "woman", 5),
+				new Person("ff", 17, "man", 6)
+		);
+
+		Map<Integer, String> genderMap = new HashMap<>();
+		genderMap.put(1, null);
+		genderMap.put(2, "妇女");
+		genderMap.put(3, "少女");
+		genderMap.put(4, "女");
+		genderMap.put(5, "小孩");
+		genderMap.put(6, "男");
+
+		Assert.assertEquals(people.get(1).getGender(), "woman");
+		CollUtil.setValueByMap(people, genderMap, Person::getId, Person::setGender);
+		Assert.assertEquals(people.get(1).getGender(), "妇女");
+
+		Map<Integer, Person> personMap = new HashMap<>();
+		personMap.put(1, new Person("AA", 21, "男", 1));
+		personMap.put(2, new Person("BB", 7, "小孩", 2));
+		personMap.put(3, new Person("CC", 65, "老人", 3));
+		personMap.put(4, new Person("DD", 35, "女人", 4));
+		personMap.put(5, new Person("EE", 14, "少女", 5));
+		personMap.put(6, null);
+
+		CollUtil.setValueByMap(people, personMap, Person::getId, (x, y) -> {
+			x.setGender(y.getGender());
+			x.setName(y.getName());
+			x.setAge(y.getAge());
+		});
+
+		Assert.assertEquals(people.get(1).getGender(), "小孩");
+	}
+
+	@Data
+	@AllArgsConstructor
+	static class Person {
+		private String name;
+		private Integer age;
+		private String gender;
+		private Integer id;
+	}
 }
