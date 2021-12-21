@@ -32,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * 时间工具类
  *
+ * @see LocalDateTimeUtil java8日志工具类
+ * @see DatePattern 日期常用格式工具类
+ *
  * @author xiaoleilu
  */
 public class DateUtil extends CalendarUtil {
