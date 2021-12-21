@@ -12,6 +12,7 @@
 * 【log    】     log4j2的编译依赖改为api，core为test依赖（pr#2019@Github）
 * 【core   】     Img.scale缩小默认使用平滑模式，增加scale方法重载可选模式（issue#I4MY6X@Gitee）
 * 【core   】     excel添加写入图片的方法（pr#486@Gitee）
+* 【core   】     增加CollStreamUtil.groupBy（pr#484@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）

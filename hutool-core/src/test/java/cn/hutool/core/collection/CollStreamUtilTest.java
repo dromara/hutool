@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -173,16 +172,16 @@ public class CollStreamUtilTest {
 	}
 
 	@Test
-	public void testGroupThen() {
-		// groupThen作为之前所有group函数的公共部分抽取出来，并更接近于jdk原生，灵活性更强
+	public void testGroupBy() {
+		// groupBy作为之前所有group函数的公共部分抽取出来，并更接近于jdk原生，灵活性更强
 
 		// 参数null测试
-		Map<Long, List<Student>> map = CollStreamUtil.groupThen(null, Student::getTermId, Collectors.toList());
+		Map<Long, List<Student>> map = CollStreamUtil.groupBy(null, Student::getTermId, Collectors.toList());
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
 		// 参数空数组测试
 		List<Student> list = new ArrayList<>();
-		map = CollStreamUtil.groupThen(list, Student::getTermId, Collectors.toList());
+		map = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.toList());
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
 		// 放入元素
@@ -190,11 +189,12 @@ public class CollStreamUtilTest {
 		list.add(new Student(1, 2, 1, "李四"));
 		list.add(new Student(2, 2, 1, "王五"));
 		// 先根据termId分组，再通过classId比较，找出最大值所属的那个Student,返回的Optional
-		Map<Long, Optional<Student>> longOptionalMap = CollStreamUtil.groupThen(list, Student::getTermId, Collectors.maxBy(Comparator.comparing(Student::getClassId)));
+		Map<Long, Optional<Student>> longOptionalMap = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.maxBy(Comparator.comparing(Student::getClassId)));
+		//noinspection OptionalGetWithoutIsPresent
 		Assert.assertEquals("李四", longOptionalMap.get(1L).get().getName());
 
 		// 先根据termId分组，再转换为Map<studentId,name>
-		Map<Long, HashMap<Long, String>> groupThen = CollStreamUtil.groupThen(list, Student::getTermId, Collector.of(HashMap::new, (m, v) -> m.put(v.getStudentId(), v.getName()), (l, r) -> l));
+		Map<Long, HashMap<Long, String>> groupThen = CollStreamUtil.groupBy(list, Student::getTermId, Collector.of(HashMap::new, (m, v) -> m.put(v.getStudentId(), v.getName()), (l, r) -> l));
 		Assert.assertEquals(
 				MapUtil.builder()
 						.put(1L, MapUtil.builder().put(1L, "李四").build())

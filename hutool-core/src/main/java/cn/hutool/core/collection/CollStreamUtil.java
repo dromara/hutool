@@ -5,7 +5,14 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.stream.StreamUtil;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -106,7 +113,7 @@ public class CollStreamUtil {
 	 * <B>{@code Collection<E> -------> Map<K,List<E>> } </B>
 	 *
 	 * @param collection 需要分组的集合
-	 * @param key        分组的规则
+	 * @param key        键分组的规则
 	 * @param isParallel 是否并行流
 	 * @param <E>        collection中的泛型
 	 * @param <K>        map中的key类型
@@ -116,7 +123,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupThen(collection, key, Collectors.toList(), isParallel);
+		return groupBy(collection, key, Collectors.toList(), isParallel);
 	}
 
 	/**
@@ -154,7 +161,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupThen(collection, key1, Collectors.groupingBy(key2, Collectors.toList()), isParallel);
+		return groupBy(collection, key1, Collectors.groupingBy(key2, Collectors.toList()), isParallel);
 	}
 
 	/**
@@ -191,7 +198,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
 			return Collections.emptyMap();
 		}
-		return groupThen(collection, key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l), isParallel);
+		return groupBy(collection, key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l), isParallel);
 	}
 
 	/**
@@ -199,8 +206,8 @@ public class CollStreamUtil {
 	 * <B>{@code Collection<E> -------> Map<K,List<V>> } </B>
 	 *
 	 * @param collection 需要分组的集合
-	 * @param key        分组的规则
-	 * @param value      分组的规则
+	 * @param key        键分组的规则
+	 * @param value      值分组的规则
 	 * @param <E>        collection中的泛型
 	 * @param <K>        map中的key类型
 	 * @param <V>        List中的value类型
@@ -216,8 +223,8 @@ public class CollStreamUtil {
 	 * <B>{@code Collection<E> -------> Map<K,List<V>> } </B>
 	 *
 	 * @param collection 需要分组的集合
-	 * @param key        分组的规则
-	 * @param value      分组的规则
+	 * @param key        键分组的规则
+	 * @param value      值分组的规则
 	 * @param isParallel 是否并行流
 	 * @param <E>        collection中的泛型
 	 * @param <K>        map中的key类型
@@ -229,7 +236,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupThen(collection, key, Collectors.mapping(value, Collectors.toList()), isParallel);
+		return groupBy(collection, key, Collectors.mapping(value, Collectors.toList()), isParallel);
 	}
 
 	/**
@@ -242,12 +249,13 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @param <D>        后续操作的返回值
 	 * @return 分组后的map
+	 * @since 5.7.18
 	 */
-	public static <E, K, D> Map<K, D> groupThen(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream) {
+	public static <E, K, D> Map<K, D> groupBy(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupThen(collection, key, downstream, false);
+		return groupBy(collection, key, downstream, false);
 	}
 
 	/**
@@ -261,8 +269,10 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @param <D>        后续操作的返回值
 	 * @return 分组后的map
+	 * @see Collectors#groupingBy(Function, Collector)
+	 * @since 5.7.18
 	 */
-	public static <E, K, D> Map<K, D> groupThen(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream, boolean isParallel) {
+	public static <E, K, D> Map<K, D> groupBy(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream, boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
