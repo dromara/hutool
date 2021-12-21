@@ -602,6 +602,37 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void writeMultiSheetWithStyleTest() {
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheetWithStyle.xlsx", "表格1");
+
+		// 表1
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+		writer.write(rows);
+
+		Font headFont = writer.createFont();
+		headFont.setBold(true);
+		headFont.setFontHeightInPoints((short)50);
+		headFont.setFontName("Microsoft YaHei");
+		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeMapsTest() {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
