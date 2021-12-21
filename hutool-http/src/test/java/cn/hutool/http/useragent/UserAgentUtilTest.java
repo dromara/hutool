@@ -359,4 +359,18 @@ public class UserAgentUtilTest {
 		Assert.assertTrue(ua.isMobile());
 	}
 
+	@Test
+	public void parseEdgATest(){
+		// https://gitee.com/dromara/hutool/issues/I4MCBP
+		String uaStr = "userAgent: Mozilla/5.0 (Linux; Android 11; MI 9 Transparent Edition) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Mobile Safari/537.36 EdgA/96.0.1054.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("MSEdge", ua.getBrowser().toString());
+		Assert.assertEquals("96.0.1054.36", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("11", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
 }

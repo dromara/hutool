@@ -48,7 +48,7 @@ public class Browser extends UserAgentInfo {
 			// 夸克浏览器
 			new Browser("Quark", "Quark", Other_Version),
 
-			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg)\\/([\\d\\w\\.\\-]+)"),
+			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg|EdgA)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Chrome", "chrome", Other_Version),
 			new Browser("Firefox", "firefox", Other_Version),
 			new Browser("IEMobile", "iemobile", Other_Version),
