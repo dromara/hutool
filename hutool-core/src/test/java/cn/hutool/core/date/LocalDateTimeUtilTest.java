@@ -146,8 +146,12 @@ public class LocalDateTimeUtilTest {
 	@Test
 	public void endOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
-		final LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
+
+		LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
+
+		endOfDay = LocalDateTimeUtil.endOfDay(localDateTime, true);
+		Assert.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
 	}
 
 	@Test

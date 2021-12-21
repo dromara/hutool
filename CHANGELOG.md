@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.18 (2021-12-21)
+# 5.7.18 (2021-12-22)
 
 ### 🐣新特性
 * 【core   】     新增CollStreamUtil.groupKeyValue（pr#479@Gitee）
@@ -14,6 +14,7 @@
 * 【core   】     excel添加写入图片的方法（pr#486@Gitee）
 * 【core   】     增加CollStreamUtil.groupBy（pr#484@Gitee）
 * 【core   】     增加CollUtil.setValueByMap（pr#482@Gitee）
+* 【core   】     LocalDateTimeUtil增加endOfDay重载（issue#2025@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）
@@ -34,7 +35,6 @@
 * 【cron   】     TaskTable.remove增加返回值（issue#I4HX3B@Gitee）
 * 【core   】     Tree增加filter、filterNew、cloneTree、hasChild方法（issue#I4HFC6@Gitee）
 * 【poi    】     增加ColumnSheetReader及ExcelReader.readColumn，支持读取某一列
-* 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 * 【core   】     IdCardUtil.isValidCard不再自动trim（issue#I4I04O@Gitee）
 * 【core   】     改进TextFinder，支持限制结束位置及反向查找模式
 * 【core   】     Opt增加部分方法（pr#459@Gitee）

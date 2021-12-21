@@ -27,10 +27,9 @@ import java.util.TimeZone;
 /**
  * JDK8+中的{@link LocalDateTime} 工具类封装
  *
+ * @author looly
  * @see DateUtil java7和一下版本，使用Date工具类
  * @see DatePattern 常用格式工具类
- *
- * @author looly
  * @since 5.3.9
  */
 public class LocalDateTimeUtil {
@@ -259,7 +258,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		if(GlobalCustomFormat.isCustomFormat(format)){
+		if (GlobalCustomFormat.isCustomFormat(format)) {
 			return of(GlobalCustomFormat.parse(text, format));
 		}
 
@@ -478,6 +477,25 @@ public class LocalDateTimeUtil {
 	 * @return 一天的结束时间
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time) {
+		return endOfDay(time, false);
+	}
+
+	/**
+	 * 修改为一天的结束时间，例如：
+	 * <ul>
+	 * 	<li>毫秒不归零：2020-02-02 23:59:59,999</li>
+	 * 	<li>毫秒归零：2020-02-02 23:59:59,000</li>
+	 * </ul>
+	 *
+	 * @param time                日期时间
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 一天的结束时间
+	 * @since 5.7.18
+	 */
+	public static LocalDateTime endOfDay(LocalDateTime time, boolean truncateMillisecond) {
+		if(truncateMillisecond){
+			return time.with(LocalTime.of(23, 59, 59));
+		}
 		return time.with(LocalTime.MAX);
 	}
 
@@ -500,7 +518,7 @@ public class LocalDateTimeUtil {
 	 * @return 是否为周末（周六或周日）
 	 * @since 5.7.6
 	 */
-	public static boolean isWeekend(LocalDateTime localDateTime){
+	public static boolean isWeekend(LocalDateTime localDateTime) {
 		return isWeekend(localDateTime.toLocalDate());
 	}
 
@@ -511,7 +529,7 @@ public class LocalDateTimeUtil {
 	 * @return 是否为周末（周六或周日）
 	 * @since 5.7.6
 	 */
-	public static boolean isWeekend(LocalDate localDate){
+	public static boolean isWeekend(LocalDate localDate) {
 		final DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 		return DayOfWeek.SATURDAY == dayOfWeek || DayOfWeek.SUNDAY == dayOfWeek;
 	}
