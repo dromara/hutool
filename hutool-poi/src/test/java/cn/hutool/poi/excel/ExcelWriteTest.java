@@ -578,6 +578,30 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void writeMultiSheetTest2() {
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet2.xlsx", "正常数据");
+		writer.write(rows);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeMapsTest() {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
