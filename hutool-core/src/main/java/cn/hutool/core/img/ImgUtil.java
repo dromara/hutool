@@ -2069,6 +2069,11 @@ public class ImgUtil {
 				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
 			}
 		}
+		if (rgbFilters != null && rgbFilters.length > 0) {
+			for (int[] rgbFilter : rgbFilters) {
+				countMap.remove(rgbFilter[0] + "-" + rgbFilter[1] + "-" + rgbFilter[2]);
+			}
+		}
 		String maxColor = null;
 		long maxCount = 0;
 		for (Map.Entry<String, Long> entry : countMap.entrySet()) {
