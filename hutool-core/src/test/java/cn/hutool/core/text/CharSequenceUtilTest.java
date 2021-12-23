@@ -40,6 +40,10 @@ public class CharSequenceUtilTest {
 
 		result = CharSequenceUtil.addSuffixIfNot(str, " is Good");
 		Assert.assertEquals( str + " is Good", result);
+
+		// https://gitee.com/dromara/hutool/issues/I4NS0F
+		result = CharSequenceUtil.addSuffixIfNot("", "/");
+		Assert.assertEquals( "/", result);
 	}
 
 	@Test
