@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
