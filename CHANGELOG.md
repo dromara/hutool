@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.18 (2021-12-23)
+# 5.7.18 (2021-12-24)
 
 ### 🐣新特性
 * 【core   】     新增CollStreamUtil.groupKeyValue（pr#479@Gitee）
@@ -15,6 +15,7 @@
 * 【core   】     增加CollStreamUtil.groupBy（pr#484@Gitee）
 * 【core   】     增加CollUtil.setValueByMap（pr#482@Gitee）
 * 【core   】     LocalDateTimeUtil增加endOfDay重载（issue#2025@Github）
+* 【core   】     IoCopier增加setFlushEveryBuffer方法（issue#2022@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     LineReadWatcher#onModify文件清空判断问题（issue#2013@Github）
