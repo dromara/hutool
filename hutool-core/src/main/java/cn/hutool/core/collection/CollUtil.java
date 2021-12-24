@@ -1302,6 +1302,8 @@ public class CollUtil {
 	 * @param resultCollection 存放移除结果的集合
 	 * @param targetCollection 被操作移除元素的集合
 	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
 	 */
 	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
 		Objects.requireNonNull(predicate);
