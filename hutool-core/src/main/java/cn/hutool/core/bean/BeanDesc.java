@@ -143,7 +143,9 @@ public class BeanDesc implements Serializable {
 		final Method[] methods = ReflectUtil.getMethods(this.beanClass);
 		PropDesc prop;
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
-			if (false == ModifierUtil.isStatic(field)) {
+			if (false == ModifierUtil.isStatic(field) &&
+					// 排除对象子类
+					false == "this$0".equals(field.getName())) {
 				//只针对非static属性
 				prop = createProp(field, methods);
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
@@ -332,7 +334,7 @@ public class BeanDesc implements Serializable {
 		}
 
 		// 包括boolean的任何类型只有一种匹配情况：name -》 setName
-		return ("set" + fieldName).equals(methodName);
+		return ("set" + handledFieldName).equals(methodName);
 	}
 	// ------------------------------------------------------------------------------------------------------ Private method end
 }

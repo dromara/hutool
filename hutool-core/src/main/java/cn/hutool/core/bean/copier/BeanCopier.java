@@ -272,7 +272,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				return;
 			}
 			// 检查属性名
-			String fieldName = prop.getFieldName();
+			final String fieldName = prop.getFieldName();
 			if (CollUtil.contains(ignoreSet, fieldName)) {
 				// 目标属性值被忽略或值提供者无此key时跳过
 				return;

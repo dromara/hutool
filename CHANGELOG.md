@@ -28,6 +28,7 @@
 * 【extra  】     修复Archiver路径前带/问题（issue#I4NS0F@Gitee）
 * 【extra  】     修复getMainColor方法中参数rgbFilters无效问题（pr#2034@Github）
 * 【core   】     修复ChineseDate无法区分闰月问题（issue#I4NQQW@Gitee）
+* 【core   】     修复BeanDesc大小写误判问题（issue#2009@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.17 (2021-12-09)
