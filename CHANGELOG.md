@@ -26,6 +26,7 @@
 * 【core   】     修复PasswdStrength检测问题（issue#I4N48X@Gitee）
 * 【core   】     修复UserAgentUtil解析EdgA无法识别问题（issue#I4MCBP@Gitee）
 * 【extra  】     修复Archiver路径前带/问题（issue#I4NS0F@Gitee）
+* 【extra  】     修复getMainColor方法中参数rgbFilters无效问题（pr#2034@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.17 (2021-12-09)

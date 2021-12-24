@@ -2059,12 +2059,8 @@ public class ImgUtil {
 				r = (pixel & 0xff0000) >> 16;
 				g = (pixel & 0xff00) >> 8;
 				b = (pixel & 0xff);
-				if (rgbFilters != null && rgbFilters.length > 0) {
-					for (int[] rgbFilter : rgbFilters) {
-						if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
-							break;
-						}
-					}
+				if(matchFilters(r, g, b, rgbFilters)){
+					continue;
 				}
 				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
 			}
@@ -2087,6 +2083,25 @@ public class ImgUtil {
 		gHex = gHex.length() == 1 ? "0" + gHex : gHex;
 		bHex = bHex.length() == 1 ? "0" + bHex : bHex;
 		return "#" + rHex + gHex + bHex;
+	}
+
+	/**
+	 * 给定RGB是否匹配过滤器中任何一个RGB颜色
+	 * @param r R
+	 * @param g G
+	 * @param b B
+	 * @param rgbFilters 颜色过滤器
+	 * @return 是否匹配
+	 */
+	private static boolean matchFilters(int r, int g, int b, int[]... rgbFilters){
+		if (rgbFilters != null && rgbFilters.length > 0) {
+			for (int[] rgbFilter : rgbFilters) {
+				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// ------------------------------------------------------------------------------------------------------ 背景图换算
