@@ -55,6 +55,9 @@ public class ChineseDateTest {
 		Assert.assertEquals("六月", chineseDate.getChineseMonth());
 
 		chineseDate = new ChineseDate(2020,4,15);
+		Assert.assertEquals("四月", chineseDate.getChineseMonth());
+
+		chineseDate = new ChineseDate(2020,5,15);
 		Assert.assertEquals("闰四月", chineseDate.getChineseMonth());
 	}
 
@@ -77,7 +80,29 @@ public class ChineseDateTest {
 
 	@Test
 	public void dateTest2(){
-		ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19 11:12:23"));
+		ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19"));
 		Assert.assertEquals("庚子鼠年 九月初三", date.toString());
+	}
+
+	@Test
+	public void dateTest2_2(){
+		ChineseDate date = new ChineseDate(DateUtil.parse("2020-07-20"));
+		Assert.assertEquals("庚子鼠年 五月三十", date.toString());
+	}
+
+	@Test
+	public void dateTest3(){
+		// 初一，offset为0测试
+		ChineseDate date = new ChineseDate(DateUtil.parse("2099-03-22"));
+		Assert.assertEquals("己未羊年 闰二月初一", date.toString());
+	}
+
+	@Test
+	public void leapMonthTest(){
+		final ChineseDate c1 = new ChineseDate(DateUtil.parse("2028-05-28"));
+		final ChineseDate c2 = new ChineseDate(DateUtil.parse("2028-06-27"));
+
+		Assert.assertEquals("戊申猴年 五月初五", c1.toString());
+		Assert.assertEquals("戊申猴年 闰五月初五", c2.toString());
 	}
 }
