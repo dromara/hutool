@@ -7,6 +7,8 @@ import cn.hutool.extra.ssh.Sftp;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.List;
+
 public class FtpTest {
 
 	@Test
@@ -74,5 +76,18 @@ public class FtpTest {
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
 		IoUtil.close(ftp);
+	}
+
+	@Test
+	@Ignore
+	public void downloadTest() {
+		Ftp ftp = new Ftp("localhost");
+
+		List<String> fileNames = ftp.ls("temp/");
+		for(String name: fileNames) {
+			ftp.download("",
+					name,
+					FileUtil.file("d:/test/download/" + name));
+		}
 	}
 }
