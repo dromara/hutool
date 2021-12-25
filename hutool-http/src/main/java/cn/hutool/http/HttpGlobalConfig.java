@@ -20,9 +20,10 @@ import java.net.HttpURLConnection;
 public class HttpGlobalConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	protected static int timeout = -1;
+	private static int timeout = -1;
 	private static boolean isAllowPatch = false;
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
+	private static int maxRedirectCount = 0;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -63,6 +64,28 @@ public class HttpGlobalConfig implements Serializable {
 	}
 
 	/**
+	 * 获取全局默认的最大重定向次数，如设置0表示不重定向<br>
+	 * 如果设置为1，表示重定向一次，即请求两次
+	 *
+	 * @return 全局默认的最大重定向次数
+	 * @since 5.7.19
+	 */
+	public static int getMaxRedirectCount() {
+		return maxRedirectCount;
+	}
+
+	/**
+	 * 设置默认全局默认的最大重定向次数，如设置0表示不重定向<br>
+	 * 如果设置为1，表示重定向一次，即请求两次
+	 *
+	 * @param customMaxRedirectCount 全局默认的最大重定向次数
+	 * @since 5.7.19
+	 */
+	synchronized public static void setMaxRedirectCount(int customMaxRedirectCount) {
+		maxRedirectCount = customMaxRedirectCount;
+	}
+
+	/**
 	 * 获取Cookie管理器，用于自定义Cookie管理
 	 *
 	 * @return {@link CookieManager}
@@ -80,7 +103,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @since 4.5.14
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 */
-	public static void setCookieManager(CookieManager customCookieManager) {
+	synchronized public static void setCookieManager(CookieManager customCookieManager) {
 		GlobalCookieManager.setCookieManager(customCookieManager);
 	}
 
@@ -90,7 +113,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @since 4.1.9
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 */
-	public static void closeCookie() {
+	synchronized public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
 	}
 

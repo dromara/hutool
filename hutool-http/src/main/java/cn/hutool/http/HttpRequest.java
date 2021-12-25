@@ -206,11 +206,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 默认连接超时
 	 */
-	private int connectionTimeout = HttpGlobalConfig.timeout;
+	private int connectionTimeout = HttpGlobalConfig.getTimeout();
 	/**
 	 * 默认读取超时
 	 */
-	private int readTimeout = HttpGlobalConfig.timeout;
+	private int readTimeout = HttpGlobalConfig.getTimeout();
 	/**
 	 * 存储表单数据
 	 */
@@ -243,7 +243,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirectCount;
+	private int maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
 	/**
 	 * Chuncked块大小，0或小于0表示不设置Chuncked模式
 	 */
@@ -1131,8 +1131,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.setReadTimeout(this.readTimeout)//
 				.setMethod(this.method)//
 				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
-				// 定义转发
-				.setInstanceFollowRedirects(this.maxRedirectCount > 0)
+				// 关闭JDK自动转发，采用手动转发方式
+				.setInstanceFollowRedirects(false)
 				// 流方式上传数据
 				.setChunkedStreamingMode(this.blockSize)
 				// 覆盖默认Header
@@ -1174,13 +1174,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
 	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
-		if (this.maxRedirectCount < 1) {
-			// 不重定向
-			return null;
-		}
-
 		// 手动实现重定向
-		if (this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()) {
+		if (this.maxRedirectCount > 0) {
 			int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
@@ -1195,6 +1190,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					setUrl(httpConnection.header(Header.LOCATION));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
+						// 重定向不再走过滤器
 						return doExecute(isAsync, null);
 					}
 				}
