@@ -236,6 +236,17 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void replaceTest5() {
+		String a = "\uD853\uDC09秀秀";
+		String result = StrUtil.replace(a, 1, a.length(), '*');
+		Assert.assertEquals("\uD853\uDC09**", result);
+
+		String aa = "规划大师";
+		String result1 = StrUtil.replace(aa, 2, a.length(), '*');
+		Assert.assertEquals("规划**", result1);
+	}
+
+	@Test
 	public void upperFirstTest() {
 		StringBuilder sb = new StringBuilder("KEY");
 		String s = StrUtil.upperFirst(sb);
