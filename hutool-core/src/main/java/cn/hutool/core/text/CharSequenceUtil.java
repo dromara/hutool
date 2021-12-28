@@ -3583,27 +3583,29 @@ public class CharSequenceUtil {
 		if (isEmpty(str)) {
 			return str(str);
 		}
-		final int strLength = str.length();
+		String originalStr = str(str);
+		int[] strCodePoints = originalStr.codePoints().toArray();
+		final int strLength = strCodePoints.length;
 		if (startInclude > strLength) {
-			return str(str);
+			return originalStr;
 		}
 		if (endExclude > strLength) {
 			endExclude = strLength;
 		}
 		if (startInclude > endExclude) {
 			// 如果起始位置大于结束位置，不替换
-			return str(str);
+			return originalStr;
 		}
 
-		final char[] chars = new char[strLength];
+		final StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < strLength; i++) {
 			if (i >= startInclude && i < endExclude) {
-				chars[i] = replacedChar;
+				stringBuilder.append(replacedChar);
 			} else {
-				chars[i] = str.charAt(i);
+				stringBuilder.append(new String(strCodePoints, i, 1));
 			}
 		}
-		return new String(chars);
+		return stringBuilder.toString();
 	}
 
 	/**
