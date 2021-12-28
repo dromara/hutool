@@ -1541,7 +1541,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static boolean isAllEmpty(Object... args) {
 		for (Object obj: args) {
-			if (!ObjectUtil.isEmpty(obj)) {
+			if (false == ObjectUtil.isEmpty(obj)) {
 				return false;
 			}
 		}
@@ -1556,12 +1556,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static boolean isAllNotEmpty(Object... args) {
-		for (Object obj: args) {
-			if (ObjectUtil.isEmpty(obj)) {
-				return false;
-			}
-		}
-		return true;
+		return false == hasEmpty(args);
 	}
 
 	/**
