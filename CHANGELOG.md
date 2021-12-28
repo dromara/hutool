@@ -6,6 +6,8 @@
 # 5.7.19 (2021-12-29)
 
 ### 🐣新特性
+* 【db     】     优化Condition参数拆分（pr#2046@Github）
+
 ### 🐞Bug修复
 * 【http   】     HttpUtil重定向次数失效问题（issue#I4O28Q@Gitee）
 * 【core   】     修复UrlPath空白path多/问题（issue#I49KAL@Gitee）

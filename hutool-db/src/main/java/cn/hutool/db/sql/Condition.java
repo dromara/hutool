@@ -411,10 +411,11 @@ public class Condition extends CloneSupport<Condition> {
 		if (isPlaceHolder()) {
 			Collection<?> valuesForIn;
 			// 占位符对应值列表
-			if (value instanceof CharSequence) {
-				valuesForIn = StrUtil.split((CharSequence) value, ',');
-			} else if (value instanceof Collection) {
+			if (value instanceof Collection) {
+				// pr#2046@Github
 				valuesForIn = (Collection<?>) value;
+			} else if (value instanceof CharSequence) {
+				valuesForIn = StrUtil.split((CharSequence) value, ',');
 			} else {
 				valuesForIn = Arrays.asList(Convert.convert(Object[].class, value));
 			}
