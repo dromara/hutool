@@ -1,12 +1,13 @@
 package cn.hutool.core.exceptions;
 
+import cn.hutool.core.lang.func.*;
+
 import java.util.Objects;
-import java.util.function.*;
 
 /**
  * 方便的执行会抛出受检查类型异常的方法调用或者代码段
  * <p>
- * 该工具通过函数式的方式将那些需要抛出受检查异常的表达式或者代码段转化成一个标准的java8 functional 对象
+ * 该工具通过函数式的方式将那些需要抛出受检查异常的表达式或者代码段转化成一个 cn.hutool.core.lang.func.Func* 对象
  * </p>
  *
  * <pre>
@@ -24,13 +25,13 @@ import java.util.function.*;
  *         // use describedObject ...
  *
  *       //上面的代码增加了异常块使得代码不那么流畅，现在可以这样写：
- *       Map<String, String> describedObject = CheckedUtil.uncheck(BeanUtils::describe).apply(new Object());
+ *       Map<String, String> describedObject = CheckedUtil.uncheck(BeanUtils::describe).call(new Object());
  *       // use describedObject ...
  *
- *       CheckedUtil.uncheck 方法接受任意可以转化成标准java8 函数式接口的 Lambda 表达式。返回对应的函数式对象。
+ *       CheckedUtil.uncheck 方法接受任意可以转化成 cn.hutool.core.lang.func.Func* 函数式接口的 Lambda 表达式。返回对应的函数式对象。
  *       上述代码可以理解为：
- *        Function<Object, Map<String, String>> aFunc = CheckedUtil.uncheck(BeanUtils::describe);
- *        Map<String, String> describedObject = aFunc.apply(传入参数);
+ *        Func0<Object, Map<String, String>> aFunc = CheckedUtil.uncheck(BeanUtils::describe);
+ *        Map<String, String> describedObject = aFunc.call(传入参数);
  *        该aFunc对象代表的就是BeanUtils::describe这个表达式，且在内部转化了检查类型异常，不需要代码里面显示处理。
  *
  *
@@ -41,101 +42,100 @@ import java.util.function.*;
 public class CheckedUtil {
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Function的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
-	 * @param <T>        运行时传入的参数类型
+	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return java.util.function.Function
+	 * @return cn.hutool.core.lang.func.Func
 	 */
-	public static <T, R> Function<T, R> uncheck(MorFunction<T, R> expression) {
+	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.BiFunction的Lambda表达式当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func0 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param expression Lambda表达式
-	 * @param <T1>       运行时传入的参数类型一
-	 * @param <T2>       运行时传入的参数类型二
+	 * @param expression 运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return java.util.function.BiFunction
+	 * @return cn.hutool.core.lang.func.Func0
 	 */
-	public static <T1, T2, R> BiFunction<T1, T2, R> uncheck(BiFunction<T1, T2, R> expression) {
+	public static <R> Func0Rt<R> uncheck(Func0<R> expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Consumer的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func1 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param expression Lambda表达式
-	 * @param <T>        运行时传入的参数类型
-	 * @return java.util.function.Consumer
+	 * @param expression 运行时传入的参数类型
+	 * @param <P>        运行时传入的参数类型
+	 * @param <R>        最终返回的数据类型
+	 * @return cn.hutool.core.lang.func.Func1
 	 */
-	public static <T> Consumer<T> uncheck(MorConsumer<T> expression) {
+	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
+
 	/**
-	 * 接收一个可以转化成 java.util.function.BiConsumer的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param expression Lambda表达式
-	 * @param <T>        运行时传入的参数类型一
-	 * @param <U>        运行时传入的参数类型二
-	 * @return java.util.function.BiConsumer
+	 * @param expression 运行时传入的参数类型
+	 * @param <P>        运行时传入的参数类型
+	 * @return cn.hutool.core.lang.func.VoidFunc
 	 */
-	public static <T, U> BiConsumer<T, U> uncheck(MorBiConsumer<T, U> expression) {
+	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Runnable的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc0 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param expression Lambda表达式
-	 * @return java.util.function.Runnable
+	 * @param expression 运行时传入的参数类型
+	 * @return cn.hutool.core.lang.func.VoidFunc0
 	 */
-	public static Runnable uncheck(MorRunnable expression) {
+	public static VoidFunc0Rt uncheck(VoidFunc0 expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Supplier的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc1 的Lambda表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param expression Lambda表达式
-	 * @param <R>        运行时传入的参数类型
-	 * @return java.util.function.Supplier
+	 * @param expression 运行时传入的参数类型
+	 * @param <P>        运行时传入的参数类型
+	 * @return cn.hutool.core.lang.func.VoidFunc1
 	 */
-	public static <R> Supplier<R> uncheck(MorSupplier<R> expression) {
+	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression) {
 		return uncheck(expression, new RuntimeException());
 	}
 
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Function的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @param <T>        运行时传入的参数类型
+	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return java.util.function.Function
+	 * @return cn.hutool.core.lang.func.Func
 	 */
-	public static <T, R> Function<T, R> uncheck(MorFunction<T, R> expression, RuntimeException rte) {
+	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
-				return expression.apply(t);
-			} catch (Throwable throwable) {
+				return expression.call(t);
+			} catch (Exception e) {
 				if (rte == null) {
-					throw new RuntimeException(throwable);
+					throw new RuntimeException(e);
 				} else {
-					rte.initCause(throwable);
+					rte.initCause(e);
 					throw rte;
 				}
 			}
@@ -143,26 +143,24 @@ public class CheckedUtil {
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.BiFunction的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func0的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @param <T1>       运行时传入的参数类型一
-	 * @param <T2>       运行时传入的参数类型二
 	 * @param <R>        最终返回的数据类型
-	 * @return java.util.function.BiFunction
+	 * @return cn.hutool.core.lang.func.Func0
 	 */
-	public static <T1, T2, R> BiFunction<T1, T2, R> uncheck(BiFunction<T1, T2, R> expression, RuntimeException rte) {
+	public static <R> Func0Rt<R> uncheck(Func0<R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
-		return (t1, t2) -> {
+		return () -> {
 			try {
-				return expression.apply(t1, t2);
-			} catch (Throwable throwable) {
+				return expression.call();
+			} catch (Exception e) {
 				if (rte == null) {
-					throw new RuntimeException(throwable);
+					throw new RuntimeException(e);
 				} else {
-					rte.initCause(throwable);
+					rte.initCause(e);
 					throw rte;
 				}
 			}
@@ -170,24 +168,25 @@ public class CheckedUtil {
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Consumer的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func1的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @param <T>        运行时传入的参数类型
-	 * @return java.util.function.Consumer
+	 * @param <P>        运行时传入的参数类型
+	 * @param <R>        最终返回的数据类型
+	 * @return cn.hutool.core.lang.func.Func1
 	 */
-	public static <T> Consumer<T> uncheck(MorConsumer<T> expression, RuntimeException rte) {
+	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
-				expression.apply(t);
-			} catch (Throwable throwable) {
+				return expression.call(t);
+			} catch (Exception e) {
 				if (rte == null) {
-					throw new RuntimeException(throwable);
+					throw new RuntimeException(e);
 				} else {
-					rte.initCause(throwable);
+					rte.initCause(e);
 					throw rte;
 				}
 			}
@@ -195,74 +194,49 @@ public class CheckedUtil {
 	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.BiConsumer的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @param <T>        运行时传入的参数类型一
-	 * @param <U>        运行时传入的参数类型二
-	 * @return java.util.function.BiConsumer
+	 * @param <P>        运行时传入的参数类型
+	 * @return cn.hutool.core.lang.func.VoidFunc
 	 */
-	public static <T, U> BiConsumer<T, U> uncheck(MorBiConsumer<T, U> expression, RuntimeException rte) {
+	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
-		return (t, u) -> {
+		return t -> {
 			try {
-				expression.apply(t, u);
-			} catch (Throwable throwable) {
+				expression.call(t);
+			} catch (Exception e) {
 				if (rte == null) {
-					throw new RuntimeException(throwable);
+					throw new RuntimeException(e);
 				} else {
-					rte.initCause(throwable);
+					rte.initCause(e);
 					throw rte;
 				}
 			}
 		};
 	}
 
-	/**
-	 * 接收一个可以转化成 java.util.function.Runnable的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
-	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
-	 *
-	 * @param expression Lambda表达式
-	 * @param rte        期望抛出的运行时异常
-	 * @return java.util.function.Runnable
-	 */
-	public static Runnable uncheck(MorRunnable expression, RuntimeException rte) {
-		Objects.requireNonNull(expression, "expression can not be null");
-		return () -> {
-			try {
-				expression.apply();
-			} catch (Throwable throwable) {
-				if (rte == null) {
-					throw new RuntimeException(throwable);
-				} else {
-					rte.initCause(throwable);
-					throw rte;
-				}
-			}
-		};
-	}
 
 	/**
-	 * 接收一个可以转化成 java.util.function.Supplier的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc0的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @param <R>        运行时传入的参数类型
-	 * @return java.util.function.Supplier
+	 * @return cn.hutool.core.lang.func.VoidFunc0
 	 */
-	public static <R> Supplier<R> uncheck(MorSupplier<R> expression, RuntimeException rte) {
+	public static VoidFunc0Rt uncheck(VoidFunc0 expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return () -> {
 			try {
-				return expression.apply();
-			} catch (Throwable throwable) {
+				expression.call();
+			} catch (Exception e) {
 				if (rte == null) {
-					throw new RuntimeException(throwable);
+					throw new RuntimeException(e);
 				} else {
-					rte.initCause(throwable);
+					rte.initCause(e);
 					throw rte;
 				}
 			}
@@ -271,58 +245,53 @@ public class CheckedUtil {
 
 
 	/**
-	 * 对应java8 java.util.function.Function ,能够接受受检查异常的转化
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc1的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
-	 * @param <T>
-	 * @param <R>
+	 * @param expression Lambda表达式
+	 * @param rte        期望抛出的运行时异常
+	 * @param <P>        运行时传入的参数类型
+	 * @return cn.hutool.core.lang.func.VoidFunc1
 	 */
-	public interface MorFunction<T, R> {
-		R apply(T t) throws Throwable;
+	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression, RuntimeException rte) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return t -> {
+			try {
+				expression.call(t);
+			} catch (Exception e) {
+				if (rte == null) {
+					throw new RuntimeException(e);
+				} else {
+					rte.initCause(e);
+					throw rte;
+				}
+			}
+		};
 	}
 
-	/**
-	 * 对应java8 java.util.function.BiFunction ,能够接受受检查异常的转化
-	 *
-	 * @param <T1>
-	 * @param <T2>
-	 * @param <R>
-	 */
-	public interface MorBiFunction<T1, T2, R> {
-		R apply(T1 t1, T2 t2) throws Throwable;
+	public interface FuncRt<P, R> extends Func<P, R> {
+		R call(P... parameters) throws RuntimeException;
 	}
 
-	/**
-	 * 对应java8 java.util.function.Consumer ,能够接受受检查异常的转化
-	 *
-	 * @param <T>
-	 */
-	public interface MorConsumer<T> {
-		void apply(T t) throws Throwable;
+	public interface Func0Rt<R> extends Func0<R> {
+		R call() throws RuntimeException;
 	}
 
-	/**
-	 * 对应java8 java.util.function.BiConsumer ,能够接受受检查异常的转化
-	 *
-	 * @param <T>
-	 * @param <U>
-	 */
-	public interface MorBiConsumer<T, U> {
-		void apply(T t, U u) throws Throwable;
+	public interface Func1Rt<P, R> extends Func1<P, R> {
+		R call(P parameter) throws RuntimeException;
 	}
 
-	/**
-	 * 对应java8 java.util.function.Runnable ,能够接受受检查异常的转化
-	 */
-	public interface MorRunnable {
-		void apply() throws Throwable;
+	public interface VoidFuncRt<P> extends VoidFunc<P> {
+		void call(P... parameters) throws RuntimeException;
 	}
 
-	/**
-	 * 对应java8 java.util.function.Supplier ,能够接受受检查异常的转化
-	 *
-	 * @param <R>
-	 */
-	public interface MorSupplier<R> {
-		R apply() throws Throwable;
+	public interface VoidFunc0Rt extends VoidFunc0 {
+		void call() throws RuntimeException;
 	}
+
+	public interface VoidFunc1Rt<P> extends VoidFunc1<P> {
+		void call(P parameter) throws RuntimeException;
+	}
+
+
 }

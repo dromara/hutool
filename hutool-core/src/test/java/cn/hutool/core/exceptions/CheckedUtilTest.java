@@ -1,5 +1,7 @@
 package cn.hutool.core.exceptions;
 
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.VoidFunc0;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,11 +20,21 @@ public class CheckedUtilTest {
 
 
 	@Test
+	public void sleepTest() {
+
+		VoidFunc0 func = () -> Thread.sleep(1000L);
+		func.callWithRuntimeException();
+
+
+	}
+
+
+	@Test
 	public void supplierTest() {
 		File noFile = new File("./no-file");
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
-			FileInputStream stream = CheckedUtil.uncheck(() -> new FileInputStream(noFile)).get();
+			FileInputStream stream = CheckedUtil.uncheck(() -> new FileInputStream(noFile)).call();
 		} catch (Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
@@ -31,7 +43,7 @@ public class CheckedUtilTest {
 
 	@Test
 	public void functionTest() {
-		CheckedUtil.MorFunction<String, String> afunc = (funcParam) -> {
+		Func1<String, String> afunc = (funcParam) -> {
 			if (funcParam.length() > 5) {
 				throw new Exception("这是受检查异常需要屌用处显示处理");
 			}
@@ -43,7 +55,7 @@ public class CheckedUtilTest {
 
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
-			String reslut = CheckedUtil.uncheck(afunc).apply("hello world");
+			String reslut = CheckedUtil.uncheck(afunc).call("hello world");
 		} catch (Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
