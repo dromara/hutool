@@ -3570,7 +3570,8 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 替换指定字符串的指定区间内字符为固定字符
+	 * 替换指定字符串的指定区间内字符为固定字符<br>
+	 * 此方法使用{@link String#codePoints()}完成拆分替换
 	 *
 	 * @param str          字符串
 	 * @param startInclude 开始位置（包含）
@@ -3583,7 +3584,7 @@ public class CharSequenceUtil {
 		if (isEmpty(str)) {
 			return str(str);
 		}
-		String originalStr = str(str);
+		final String originalStr = str(str);
 		int[] strCodePoints = originalStr.codePoints().toArray();
 		final int strLength = strCodePoints.length;
 		if (startInclude > strLength) {
