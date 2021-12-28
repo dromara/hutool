@@ -409,12 +409,14 @@ public class Condition extends CloneSupport<Condition> {
 		conditionStrBuilder.append(" (");
 		final Object value = this.value;
 		if (isPlaceHolder()) {
-			List<?> valuesForIn;
+			Collection<?> valuesForIn;
 			// 占位符对应值列表
 			if (value instanceof CharSequence) {
 				valuesForIn = StrUtil.split((CharSequence) value, ',');
+			} else if (value instanceof Collection) {
+				valuesForIn = (Collection<?>) value;
 			} else {
-				valuesForIn = Arrays.asList(Convert.convert(String[].class, value));
+				valuesForIn = Arrays.asList(Convert.convert(Object[].class, value));
 			}
 			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), ","));
 			if (null != paramValues) {
