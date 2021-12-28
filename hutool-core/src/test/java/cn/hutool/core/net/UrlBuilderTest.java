@@ -320,4 +320,22 @@ public class UrlBuilderTest {
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals(url, builder.toString());
 	}
+
+	@Test
+	public void fragmentTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+
+		Assert.assertEquals(url, builder.toString());
+	}
+
+	@Test
+	public void fragmentAppendParamTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
+		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
+	}
 }
