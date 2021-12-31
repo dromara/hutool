@@ -45,6 +45,7 @@
 		<compile.version>8</compile.version>
 		<junit.version>4.13.2</junit.version>
 		<lombok.version>1.18.22</lombok.version>
+		<javax-jaxb.version>2.3.1</javax-jaxb.version>
 	</properties>
 
 	<dependencies>
@@ -60,6 +61,12 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${javax-jaxb.version}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -90,6 +97,7 @@
 
 	<build>
 		<plugins>
+			<!-- Compiler -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -97,6 +105,7 @@
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<parameters>true</parameters>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->
@@ -113,7 +122,12 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<!-- SureFire -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
 		</plugins>
 	</build>
 
