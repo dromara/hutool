@@ -1,0 +1,27 @@
+name: "Test"
+
+on:
+  push:
+    branches: [ v5-master, v5-dev ]
+  pull_request:
+    branches: [ v5-dev ]
+
+jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 8, 11, 17 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.3.1
+        with:
+          distribution: 'zulu'
+          java-version: ${{ matrix.java }}
+
+      - name: Run Test With Maven
+        run: mvn clean install -e -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn;
