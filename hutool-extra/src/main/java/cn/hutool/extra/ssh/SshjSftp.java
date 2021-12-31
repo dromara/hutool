@@ -225,8 +225,8 @@ public class SshjSftp extends AbstractFtp {
 		Session session = null;
 		try {
 			session = ssh.startSession();
-			final Session.Command pwd = session.exec(exec);
-			InputStream inputStream = pwd.getInputStream();
+			final Session.Command command = session.exec(exec);
+			InputStream inputStream = command.getInputStream();
 			return IoUtil.read(inputStream, DEFAULT_CHARSET);
 		} catch (Exception e) {
 			throw new FtpException(e);
