@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -991,6 +992,8 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse("2021-1-1");
 		Assert.assertNotNull(parse);
 		Assert.assertEquals("2021-01-01 00:00:00", parse.toString());
+
+		Console.log(DateUtil.parse("2021-1-22 00:00:00"));
 	}
 
 	@Test
