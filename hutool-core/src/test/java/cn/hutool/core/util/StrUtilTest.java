@@ -73,6 +73,14 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void splitEmptyTest() {
+		String str = "";
+		List<String> split = StrUtil.split(str, ',', -1, true, true);
+		// 测试空是否被去掉
+		Assert.assertEquals(0, split.size());
+	}
+
+	@Test
 	public void splitTest2() {
 		String str = "a.b.";
 		List<String> split = StrUtil.split(str, '.');
