@@ -9,6 +9,7 @@
 * 【db     】     优化Condition参数拆分（pr#2046@Github）
 * 【core   】     优化ArrayUtil.isAllEmpty性能（pr#2045@Github）
 * 【core   】     CharSequenceUtil.replace方法支持增补字符（pr#2041@Github）
+* 【extra  】     增加SshjSftp（pr#493@Gitee）
 
 ### 🐞Bug修复
 * 【http   】     HttpUtil重定向次数失效问题（issue#I4O28Q@Gitee）
