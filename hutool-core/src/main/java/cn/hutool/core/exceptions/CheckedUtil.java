@@ -38,6 +38,7 @@ import java.util.Objects;
  * </pre>
  *
  * @author conder
+ * @since 5.7.19
  */
 public class CheckedUtil {
 
@@ -270,6 +271,7 @@ public class CheckedUtil {
 	}
 
 	public interface FuncRt<P, R> extends Func<P, R> {
+		@SuppressWarnings("unchecked")
 		R call(P... parameters) throws RuntimeException;
 	}
 
@@ -282,6 +284,7 @@ public class CheckedUtil {
 	}
 
 	public interface VoidFuncRt<P> extends VoidFunc<P> {
+		@SuppressWarnings("unchecked")
 		void call(P... parameters) throws RuntimeException;
 	}
 

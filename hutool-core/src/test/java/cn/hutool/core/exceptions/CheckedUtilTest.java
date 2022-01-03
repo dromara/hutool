@@ -29,18 +29,20 @@ public class CheckedUtilTest {
 	}
 
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void supplierTest() {
 		File noFile = new File("./no-file");
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
-			FileInputStream stream = CheckedUtil.uncheck(() -> new FileInputStream(noFile)).call();
+			CheckedUtil.uncheck(() -> new FileInputStream(noFile)).call();
 		} catch (Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
 
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void functionTest() {
 		Func1<String, String> afunc = (funcParam) -> {
@@ -55,7 +57,7 @@ public class CheckedUtilTest {
 
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
-			String reslut = CheckedUtil.uncheck(afunc).call("hello world");
+			CheckedUtil.uncheck(afunc).call("hello world");
 		} catch (Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
