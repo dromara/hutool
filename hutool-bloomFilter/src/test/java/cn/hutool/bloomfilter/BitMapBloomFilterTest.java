@@ -1,6 +1,7 @@
 package cn.hutool.bloomfilter;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import cn.hutool.bloomfilter.bitMap.IntMap;
@@ -21,6 +22,7 @@ public class BitMapBloomFilterTest {
 	}
 
 	@Test
+	@Disabled
 	public void testIntMap(){
 		IntMap intMap = new IntMap();
 
@@ -36,6 +38,7 @@ public class BitMapBloomFilterTest {
 	}
 
 	@Test
+	@Disabled
 	public void testLongMap(){
 		LongMap longMap = new LongMap();
 

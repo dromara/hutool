@@ -35,12 +35,7 @@ public class TolerantMapTest {
 
 	@Test
 	public void testGet() {
-		Assertions.assertTrue(map.containsKey("tuesday"));
 		Assertions.assertEquals("星期二", map.get("tuesday"));
-	}
-
-	@Test
-	public void testGet2() {
 		Assertions.assertEquals("default", map.get(RandomUtil.randomString(6)));
 	}
 }

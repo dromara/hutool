@@ -2,14 +2,12 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.id.NanoId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.security.SecureRandom;
 import java.util.Set;
 
 /**
