@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest(classes = {SpringUtilWithAutoConfigTest.Demo2.class})
+@EnableAutoConfiguration
 public class SpringUtilWithAutoConfigTest {
 
 	/**

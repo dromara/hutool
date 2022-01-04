@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author sidian
  */
 @SpringBootTest(classes = EnableSpringUtilTest.class)
+@EnableSpringUtil
 public class EnableSpringUtilTest {
 
 	@Test

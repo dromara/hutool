@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+@Disabled
 public class UpdateTest {
 
 	static Db db;
@@ -22,7 +23,6 @@ public class UpdateTest {
 	 * @throws SQLException SQL异常
 	 */
 	@Test
-	@Disabled
 	public void updateTest() throws SQLException {
 
 		// 改

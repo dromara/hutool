@@ -14,6 +14,7 @@ import java.util.List;
  * @author looly
  *
  */
+@Disabled
 public class DerbyTest {
 
 	private static final String DS_GROUP_NAME = "derby";
@@ -35,14 +36,12 @@ public class DerbyTest {
 	}
 
 	@Test
-	@Disabled
 	public void queryTest() throws SQLException {
 		List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
 		Assertions.assertEquals(4, query.size());
 	}
 
 	@Test
-	@Disabled
 	public void findTest() throws SQLException {
 		List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
 		Assertions.assertEquals(4, query.size());

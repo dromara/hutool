@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 @SpringBootTest(classes = {SpringUtilTest.Demo2.class})
+@EnableAutoConfiguration
 public class SpringUtilTest {
 
 	/**
