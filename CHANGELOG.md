@@ -17,6 +17,7 @@
 * 【http   】     HttpUtil重定向次数失效问题（issue#I4O28Q@Gitee）
 * 【core   】     修复UrlPath空白path多/问题（issue#I49KAL@Gitee）
 * 【core   】     修复ServletUtil写出文件时未添加双引号导致逗号等特殊符号引起的问题（issue#I4P1BF@Gitee）
+* 【core   】     NumberUtil增加equals重载解决long传入判断问题（pr#2064@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.18 (2021-12-25)

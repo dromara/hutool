@@ -716,8 +716,8 @@ public class NumberUtil {
 	 * @since 3.1.0
 	 */
 	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
-		if(v1 instanceof BigDecimal && v2 instanceof BigDecimal){
-			return div((BigDecimal)v1, (BigDecimal)v2, scale, roundingMode);
+		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
+			return div((BigDecimal) v1, (BigDecimal) v2, scale, roundingMode);
 		}
 		return div(v1.toString(), v2.toString(), scale, roundingMode);
 	}
@@ -1836,6 +1836,7 @@ public class NumberUtil {
 	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失
+	 *
 	 * @param num1 数字1
 	 * @param num2 数字2
 	 * @return 是否相等
@@ -2172,14 +2173,14 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String numberStr) {
-		if(StrUtil.isBlank(numberStr)){
+		if (StrUtil.isBlank(numberStr)) {
 			return BigDecimal.ZERO;
 		}
 
 		try {
 			// 支持类似于 1,234.55 格式的数字
 			final Number number = parseNumber(numberStr);
-			if(number instanceof BigDecimal){
+			if (number instanceof BigDecimal) {
 				return (BigDecimal) number;
 			} else {
 				return new BigDecimal(number.toString());
@@ -2525,7 +2526,7 @@ public class NumberUtil {
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
-			if(format instanceof DecimalFormat){
+			if (format instanceof DecimalFormat) {
 				// issue#1818@Github
 				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
 				((DecimalFormat) format).setParseBigDecimal(true);
@@ -2712,9 +2713,9 @@ public class NumberUtil {
 	 * @since 5.7.8
 	 */
 	public static double toDouble(Number value) {
-		if(value instanceof Float){
+		if (value instanceof Float) {
 			return Double.parseDouble(value.toString());
-		}else{
+		} else {
 			return value.doubleValue();
 		}
 	}
