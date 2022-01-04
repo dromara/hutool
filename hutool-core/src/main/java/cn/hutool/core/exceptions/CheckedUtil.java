@@ -9,7 +9,8 @@ import java.util.Objects;
  * <p>
  * 该工具通过函数式的方式将那些需要抛出受检查异常的表达式或者代码段转化成一个 cn.hutool.core.lang.func.Func* 对象
  * </p>
- *
+ * <p>
+ * {@code
  * <pre>
  *      //代码中如果遇到一个方法调用声明了受检查异常那么我们的代码就必须这样写
  *         Map<String, String> describedObject = null;
@@ -36,6 +37,7 @@ import java.util.Objects;
  *
  *
  * </pre>
+ * }
  *
  * @author conder
  * @since 5.7.19
