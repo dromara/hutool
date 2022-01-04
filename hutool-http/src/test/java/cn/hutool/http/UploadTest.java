@@ -2,8 +2,8 @@ package cn.hutool.http;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -22,7 +22,7 @@ public class UploadTest {
 	 * 多文件上传测试
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadFilesTest() {
 		File file = FileUtil.file("d:\\图片1.JPG");
 		File file2 = FileUtil.file("d:\\图片3.png");
@@ -37,7 +37,7 @@ public class UploadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadFileTest() {
 		File file = FileUtil.file("D:\\face.jpg");
 
@@ -50,7 +50,7 @@ public class UploadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadTest2() {
 		//客户端
 		String url = "http://192.168.1.200:8888/meta/upload/img";

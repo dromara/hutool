@@ -2,7 +2,7 @@ package cn.hutool.script.test;
 
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -17,6 +17,6 @@ public class NashornDeepTest {
 		engine.eval(ResourceUtil.readUtf8Str("filter1.js"));
 
 		final Object filter1 = ((Invocable) engine).invokeFunction("filter1", 1, 2);
-		Assert.assertFalse((Boolean) filter1);
+		Assertions.assertFalse((Boolean) filter1);
 	}
 }

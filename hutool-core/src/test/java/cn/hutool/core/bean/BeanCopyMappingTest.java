@@ -4,8 +4,8 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.map.MapUtil;
 import lombok.Builder;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BeanCopyMappingTest {
 
@@ -24,7 +24,7 @@ public class BeanCopyMappingTest {
 		BeanUtil.copyProperties(b, a, copyOptions);
 		BeanUtil.copyProperties(a, c);
 
-		Assert.assertEquals("12312312", c.getCarNo());
+		Assertions.assertEquals("12312312", c.getCarNo());
 	}
 
 	@Data

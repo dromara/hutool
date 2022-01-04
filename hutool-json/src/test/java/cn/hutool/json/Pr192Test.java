@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,7 +14,7 @@ public class Pr192Test {
 		String number = "1234.123456789123456";
 		String jsonString = "{\"create\":{\"details\":[{\"price\":" + number + "}]}}";
 		WebCreate create = JSONUtil.toBean(jsonString, WebCreate.class);
-		Assert.assertEquals(number,create.getCreate().getDetails().get(0).getPrice().toString());
+		Assertions.assertEquals(number,create.getCreate().getDetails().get(0).getPrice().toString());
 	}
 
 	static class WebCreate {

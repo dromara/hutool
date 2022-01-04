@@ -3,8 +3,8 @@ package cn.hutool.core.net;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,14 +15,14 @@ public class UrlBuilderTest {
 	@Test
 	public void buildTest() {
 		String buildUrl = UrlBuilder.create().setHost("www.hutool.cn").build();
-		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
+		Assertions.assertEquals("http://www.hutool.cn/", buildUrl);
 	}
 
 	@Test
 	public void buildTest2() {
 		// path中的+不做处理
 		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.CHARSET_UTF_8).build();
-		Assert.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
+		Assertions.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class UrlBuilderTest {
 		String buildUrl = UrlBuilder.create()
 				.setScheme("https")
 				.setHost("www.hutool.cn").build();
-		Assert.assertEquals("https://www.hutool.cn/", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/", buildUrl);
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class UrlBuilderTest {
 				.setHost("www.hutool.cn")
 				.setPort(8080)
 				.build();
-		Assert.assertEquals("https://www.hutool.cn:8080/", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn:8080/", buildUrl);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class UrlBuilderTest {
 				.addQuery("wd", "test")
 				.build();
 
-		Assert.assertEquals("https://www.hutool.cn/aaa/bbb?ie=UTF-8&wd=test", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/aaa/bbb?ie=UTF-8&wd=test", buildUrl);
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class UrlBuilderTest {
 				.addQuery("wd", "测试")
 				.build();
 
-		Assert.assertEquals("https://www.hutool.cn/aaa/bbb?ie=UTF-8&wd=%E6%B5%8B%E8%AF%95", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/aaa/bbb?ie=UTF-8&wd=%E6%B5%8B%E8%AF%95", buildUrl);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class UrlBuilderTest {
 				.addQuery("wd", "测试")
 				.build();
 
-		Assert.assertEquals("https://www.hutool.cn/s?ie=UTF-8&ie=GBK&wd=%E6%B5%8B%E8%AF%95", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/s?ie=UTF-8&ie=GBK&wd=%E6%B5%8B%E8%AF%95", buildUrl);
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class UrlBuilderTest {
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setFragment("abc").build();
-		Assert.assertEquals("https://www.hutool.cn/#abc", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/#abc", buildUrl);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class UrlBuilderTest {
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setFragment("测试").build();
-		Assert.assertEquals("https://www.hutool.cn/#%E6%B5%8B%E8%AF%95", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/#%E6%B5%8B%E8%AF%95", buildUrl);
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class UrlBuilderTest {
 				.setHost("www.hutool.cn")
 				.addPath("/s")
 				.setFragment("测试").build();
-		Assert.assertEquals("https://www.hutool.cn/s#%E6%B5%8B%E8%AF%95", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/s#%E6%B5%8B%E8%AF%95", buildUrl);
 	}
 
 	@Test
@@ -119,68 +119,68 @@ public class UrlBuilderTest {
 				.addPath("/s")
 				.addQuery("wd", "test")
 				.setFragment("测试").build();
-		Assert.assertEquals("https://www.hutool.cn/s?wd=test#%E6%B5%8B%E8%AF%95", buildUrl);
+		Assertions.assertEquals("https://www.hutool.cn/s?wd=test#%E6%B5%8B%E8%AF%95", buildUrl);
 	}
 
 	@Test
 	public void ofTest() {
 		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb/?a=1&b=2#frag1", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http", builder.getScheme());
-		Assert.assertEquals("www.hutool.cn", builder.getHost());
+		Assertions.assertEquals("http", builder.getScheme());
+		Assertions.assertEquals("www.hutool.cn", builder.getHost());
 
-		Assert.assertEquals("aaa", builder.getPath().getSegment(0));
-		Assert.assertEquals("bbb", builder.getPath().getSegment(1));
+		Assertions.assertEquals("aaa", builder.getPath().getSegment(0));
+		Assertions.assertEquals("bbb", builder.getPath().getSegment(1));
 
-		Assert.assertEquals("1", builder.getQuery().get("a"));
-		Assert.assertEquals("2", builder.getQuery().get("b"));
+		Assertions.assertEquals("1", builder.getQuery().get("a"));
+		Assertions.assertEquals("2", builder.getQuery().get("b"));
 
-		Assert.assertEquals("frag1", builder.getFragment());
+		Assertions.assertEquals("frag1", builder.getFragment());
 	}
 
 	@Test
 	public void ofWithChineseTest() {
 		final UrlBuilder builder = UrlBuilder.ofHttp("www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http", builder.getScheme());
-		Assert.assertEquals("www.hutool.cn", builder.getHost());
+		Assertions.assertEquals("http", builder.getScheme());
+		Assertions.assertEquals("www.hutool.cn", builder.getHost());
 
-		Assert.assertEquals("aaa", builder.getPath().getSegment(0));
-		Assert.assertEquals("bbb", builder.getPath().getSegment(1));
+		Assertions.assertEquals("aaa", builder.getPath().getSegment(0));
+		Assertions.assertEquals("bbb", builder.getPath().getSegment(1));
 
-		Assert.assertEquals("张三", builder.getQuery().get("a"));
-		Assert.assertEquals("李四", builder.getQuery().get("b"));
+		Assertions.assertEquals("张三", builder.getQuery().get("a"));
+		Assertions.assertEquals("李四", builder.getQuery().get("b"));
 
-		Assert.assertEquals("frag1", builder.getFragment());
+		Assertions.assertEquals("frag1", builder.getFragment());
 	}
 
 	@Test
 	public void ofWithBlankTest() {
 		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http", builder.getScheme());
-		Assert.assertEquals("www.hutool.cn", builder.getHost());
+		Assertions.assertEquals("http", builder.getScheme());
+		Assertions.assertEquals("www.hutool.cn", builder.getHost());
 
-		Assert.assertEquals("aaa", builder.getPath().getSegment(0));
-		Assert.assertEquals("bbb", builder.getPath().getSegment(1));
+		Assertions.assertEquals("aaa", builder.getPath().getSegment(0));
+		Assertions.assertEquals("bbb", builder.getPath().getSegment(1));
 
-		Assert.assertEquals("张三", builder.getQuery().get("a"));
-		Assert.assertEquals("李四", builder.getQuery().get("b"));
+		Assertions.assertEquals("张三", builder.getQuery().get("a"));
+		Assertions.assertEquals("李四", builder.getQuery().get("b"));
 
-		Assert.assertEquals("frag1", builder.getFragment());
+		Assertions.assertEquals("frag1", builder.getFragment());
 	}
 
 	@Test
 	public void ofSpecialTest() {
 		//测试不规范的或者无需解码的字符串是否成功解码
 		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http", builder.getScheme());
-		Assert.assertEquals("www.hutool.cn", builder.getHost());
+		Assertions.assertEquals("http", builder.getScheme());
+		Assertions.assertEquals("www.hutool.cn", builder.getHost());
 
-		Assert.assertEquals("aaa", builder.getPath().getSegment(0));
-		Assert.assertEquals("bbb", builder.getPath().getSegment(1));
+		Assertions.assertEquals("aaa", builder.getPath().getSegment(0));
+		Assertions.assertEquals("bbb", builder.getPath().getSegment(1));
 
-		Assert.assertEquals("张三", builder.getQuery().get("a"));
-		Assert.assertEquals("%四", builder.getQuery().get("b"));
+		Assertions.assertEquals("张三", builder.getQuery().get("a"));
+		Assertions.assertEquals("%四", builder.getQuery().get("b"));
 
-		Assert.assertEquals("frag1", builder.getFragment());
+		Assertions.assertEquals("frag1", builder.getFragment());
 	}
 
 	@Test
@@ -193,7 +193,7 @@ public class UrlBuilderTest {
 				"&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
 		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
 		// 原URL中的&amp;替换为&
-		Assert.assertEquals("https://mp.weixin.qq.com/s?" +
+		Assertions.assertEquals("https://mp.weixin.qq.com/s?" +
 				"__biz=MzI5NjkyNTIxMg==" +
 				"&mid=100000465&idx=1" +
 				"&sn=1044c0d19723f74f04f4c1da34eefa35" +
@@ -207,40 +207,40 @@ public class UrlBuilderTest {
 		final String today = DateUtil.date().toString("yyyyMMdd");
 		final String getWorkDayUrl = "https://tool.bitefu.net/jiari/?info=1&d=" + today;
 		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals(getWorkDayUrl, builder.toString());
+		Assertions.assertEquals(getWorkDayUrl, builder.toString());
 	}
 
 	@Test
 	public void blankEncodeTest(){
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
+		Assertions.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
 	}
 
 	@Test
 	public void dotEncodeTest(){
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
+		Assertions.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
 	}
 
 	@Test
 	public void multiSlashTest(){
 		//issue#I25MZL，某些URL中有多个斜杠，此为合法路径
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
+		Assertions.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
 	}
 
 	@Test
 	public void toURITest() throws URISyntaxException {
 		String webUrl = "http://exmple.com/patha/pathb?a=123"; // 报错数据
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
-		Assert.assertEquals(new URI(webUrl), urlBuilder.toURI());
+		Assertions.assertEquals(new URI(webUrl), urlBuilder.toURI());
 	}
 
 	@Test
 	public void testEncodeInQuery() {
 		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
-		Assert.assertEquals("a=123&b=4?6&c=789", urlBuilder.getQueryStr());
+		Assertions.assertEquals("a=123&b=4?6&c=789", urlBuilder.getQueryStr());
 	}
 
 	@Test
@@ -248,7 +248,7 @@ public class UrlBuilderTest {
 		// Path中的某些符号无需转义，比如=
 		final String urlStr = "http://hq.sinajs.cn/list=sh600519";
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals(urlStr, urlBuilder.toString());
+		Assertions.assertEquals(urlStr, urlBuilder.toString());
 	}
 
 	@Test
@@ -257,7 +257,7 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.of(url);
 
 
-		Assert.assertEquals(url, urlBuilder.toString());
+		Assertions.assertEquals(url, urlBuilder.toString());
 	}
 
 	@Test
@@ -266,10 +266,10 @@ public class UrlBuilderTest {
 		// 见：https://stackoverflow.com/questions/26088849/url-fragment-allowed-characters
 		String url = "https://hutool.cn/docs/#/?id=简介";
 		UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
-		Assert.assertEquals("https://hutool.cn/docs/#/?id=%E7%AE%80%E4%BB%8B", urlBuilder.toString());
+		Assertions.assertEquals("https://hutool.cn/docs/#/?id=%E7%AE%80%E4%BB%8B", urlBuilder.toString());
 
 		urlBuilder = UrlBuilder.ofHttp(urlBuilder.toString());
-		Assert.assertEquals(urlBuilder.toString(), urlBuilder.toString());
+		Assertions.assertEquals(urlBuilder.toString(), urlBuilder.toString());
 	}
 
 	@Test
@@ -279,7 +279,7 @@ public class UrlBuilderTest {
 		// 见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.4
 		String url = "https://invoice.maycur.com/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx?download/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx&e=1630491088";
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
-		Assert.assertEquals(url, urlBuilder.toString());
+		Assertions.assertEquals(url, urlBuilder.toString());
 	}
 
 	@Test
@@ -292,7 +292,7 @@ public class UrlBuilderTest {
 				.addPath("bbb")
 				.build();
 
-		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+		Assertions.assertEquals("https://domain.cn/api/xxx/bbb", url);
 	}
 
 	@Test
@@ -304,21 +304,21 @@ public class UrlBuilderTest {
 				.addPath("/api/xxx/bbb")
 				.build();
 
-		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+		Assertions.assertEquals("https://domain.cn/api/xxx/bbb", url);
 	}
 
 	@Test
 	public void percent2BTest(){
 		String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
 		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
-		Assert.assertEquals(url, of.toString());
+		Assertions.assertEquals(url, of.toString());
 	}
 
 	@Test
 	public void paramTest(){
 		String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
-		Assert.assertEquals(url, builder.toString());
+		Assertions.assertEquals(url, builder.toString());
 	}
 
 	@Test
@@ -327,7 +327,7 @@ public class UrlBuilderTest {
 		String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 
-		Assert.assertEquals(url, builder.toString());
+		Assertions.assertEquals(url, builder.toString());
 	}
 
 	@Test
@@ -336,6 +336,6 @@ public class UrlBuilderTest {
 		String url = "https://www.hutool.cn/#/a/b";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
-		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
+		Assertions.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
 	}
 }

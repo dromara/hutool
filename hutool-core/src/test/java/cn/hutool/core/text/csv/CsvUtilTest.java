@@ -7,9 +7,9 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,13 +26,13 @@ public class CsvUtilTest {
 		CsvData data = reader.read(FileUtil.file("test.csv"));
 		List<CsvRow> rows = data.getRows();
 		final CsvRow row0 = rows.get(0);
-		Assert.assertEquals("sss,sss", row0.get(0));
-		Assert.assertEquals("姓名", row0.get(1));
-		Assert.assertEquals("性别", row0.get(2));
-		Assert.assertEquals("关注\"对象\"", row0.get(3));
-		Assert.assertEquals("年龄", row0.get(4));
-		Assert.assertEquals("", row0.get(5));
-		Assert.assertEquals("\"", row0.get(6));
+		Assertions.assertEquals("sss,sss", row0.get(0));
+		Assertions.assertEquals("姓名", row0.get(1));
+		Assertions.assertEquals("性别", row0.get(2));
+		Assertions.assertEquals("关注\"对象\"", row0.get(3));
+		Assertions.assertEquals("年龄", row0.get(4));
+		Assertions.assertEquals("", row0.get(5));
+		Assertions.assertEquals("\"", row0.get(6));
 	}
 
 	@Test
@@ -40,18 +40,18 @@ public class CsvUtilTest {
 		CsvReader reader = CsvUtil.getReader();
 		reader.read(FileUtil.getUtf8Reader("test.csv"), (csvRow)-> {
 			// 只有一行，所以直接判断
-			Assert.assertEquals("sss,sss", csvRow.get(0));
-			Assert.assertEquals("姓名", csvRow.get(1));
-			Assert.assertEquals("性别", csvRow.get(2));
-			Assert.assertEquals("关注\"对象\"", csvRow.get(3));
-			Assert.assertEquals("年龄", csvRow.get(4));
-			Assert.assertEquals("", csvRow.get(5));
-			Assert.assertEquals("\"", csvRow.get(6));
+			Assertions.assertEquals("sss,sss", csvRow.get(0));
+			Assertions.assertEquals("姓名", csvRow.get(1));
+			Assertions.assertEquals("性别", csvRow.get(2));
+			Assertions.assertEquals("关注\"对象\"", csvRow.get(3));
+			Assertions.assertEquals("年龄", csvRow.get(4));
+			Assertions.assertEquals("", csvRow.get(5));
+			Assertions.assertEquals("\"", csvRow.get(6));
 		});
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readTest3() {
 		CsvReader reader = CsvUtil.getReader();
 		String path = FileUtil.isWindows() ? "d:/test/test.csv" : "~/test/test.csv";
@@ -64,13 +64,13 @@ public class CsvUtilTest {
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n");
 		List<CsvRow> rows = data.getRows();
 		final CsvRow row0 = rows.get(0);
-		Assert.assertEquals("sss,sss", row0.get(0));
-		Assert.assertEquals("姓名", row0.get(1));
-		Assert.assertEquals("性别", row0.get(2));
-		Assert.assertEquals("关注\"对象\"", row0.get(3));
-		Assert.assertEquals("年龄", row0.get(4));
-		Assert.assertEquals("", row0.get(5));
-		Assert.assertEquals("\"", row0.get(6));
+		Assertions.assertEquals("sss,sss", row0.get(0));
+		Assertions.assertEquals("姓名", row0.get(1));
+		Assertions.assertEquals("性别", row0.get(2));
+		Assertions.assertEquals("关注\"对象\"", row0.get(3));
+		Assertions.assertEquals("年龄", row0.get(4));
+		Assertions.assertEquals("", row0.get(5));
+		Assertions.assertEquals("\"", row0.get(6));
 	}
 
 	@Test
@@ -78,18 +78,18 @@ public class CsvUtilTest {
 		CsvUtil.getReader().readFromStr("# 这是一行注释，读取时应忽略\n" +
 				"\"sss,sss\",姓名,\"性别\",关注\"对象\",年龄,\"\",\"\"\"\n",(csvRow)-> {
 			// 只有一行，所以直接判断
-			Assert.assertEquals("sss,sss", csvRow.get(0));
-			Assert.assertEquals("姓名", csvRow.get(1));
-			Assert.assertEquals("性别", csvRow.get(2));
-			Assert.assertEquals("关注\"对象\"", csvRow.get(3));
-			Assert.assertEquals("年龄", csvRow.get(4));
-			Assert.assertEquals("", csvRow.get(5));
-			Assert.assertEquals("\"", csvRow.get(6));
+			Assertions.assertEquals("sss,sss", csvRow.get(0));
+			Assertions.assertEquals("姓名", csvRow.get(1));
+			Assertions.assertEquals("性别", csvRow.get(2));
+			Assertions.assertEquals("关注\"对象\"", csvRow.get(3));
+			Assertions.assertEquals("年龄", csvRow.get(4));
+			Assertions.assertEquals("", csvRow.get(5));
+			Assertions.assertEquals("\"", csvRow.get(6));
 		});
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		String path = FileUtil.isWindows() ? "d:/test/testWrite.csv" : "~/test/testWrite.csv";
 		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
@@ -101,7 +101,7 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeBeansTest() {
 
 		@Data
@@ -137,7 +137,7 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readLfTest(){
 		final CsvReader reader = CsvUtil.getReader();
 		String path = FileUtil.isWindows() ? "d:/test/rw_test.csv" : "~/test/rw_test.csv";
@@ -148,7 +148,7 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeWrapTest(){
 		List<List<Object>> resultList=new ArrayList<>();
 		List<Object> list =new ArrayList<>();
@@ -167,7 +167,7 @@ public class CsvUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeDataTest(){
 		@Data
 		@AllArgsConstructor

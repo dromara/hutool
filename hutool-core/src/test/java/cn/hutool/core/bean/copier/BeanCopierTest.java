@@ -1,8 +1,8 @@
 package cn.hutool.core.bean.copier;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BeanCopierTest {
 
@@ -19,7 +19,7 @@ public class BeanCopierTest {
 		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create().setOverride(false));
 		copier.copy();
 
-		Assert.assertEquals("abc", b.getValue());
+		Assertions.assertEquals("abc", b.getValue());
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class BeanCopierTest {
 		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create());
 		copier.copy();
 
-		Assert.assertEquals("123", b.getValue());
+		Assertions.assertEquals("123", b.getValue());
 	}
 
 	@Data

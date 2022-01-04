@@ -1,7 +1,7 @@
 package cn.hutool.dfa;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class SensitiveUtilTest {
 		bean.setNum(100);
 		SensitiveUtil.init(wordList);
 		bean = SensitiveUtil.sensitiveFilter(bean, true, null);
-		Assert.assertEquals(bean.getStr(), "我有一颗$****，***的");
+		Assertions.assertEquals(bean.getStr(), "我有一颗$****，***的");
 	}
 
 	public static class TestBean {

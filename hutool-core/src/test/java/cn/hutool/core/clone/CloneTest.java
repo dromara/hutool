@@ -2,8 +2,8 @@ package cn.hutool.core.clone;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * 克隆单元测试
@@ -18,7 +18,7 @@ public class CloneTest {
 		//实现Cloneable接口
 		Cat cat = new Cat();
 		Cat cat2 = cat.clone();
-		Assert.assertEquals(cat, cat2);
+		Assertions.assertEquals(cat, cat2);
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class CloneTest {
 		//继承CloneSupport类
 		Dog dog = new Dog();
 		Dog dog2 = dog.clone();
-		Assert.assertEquals(dog, dog2);
+		Assertions.assertEquals(dog, dog2);
 	}
 
 	//------------------------------------------------------------------------------- private Class for test

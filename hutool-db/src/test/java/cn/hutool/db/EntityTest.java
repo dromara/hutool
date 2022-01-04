@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
 import cn.hutool.db.pojo.User;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Entity测试
@@ -19,8 +19,8 @@ public class EntityTest {
 		user.setName("test");
 
 		Entity entity = Entity.create("testTable").parseBean(user);
-		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
-		Assert.assertEquals("test", entity.getStr("name"));
+		Assertions.assertEquals(Integer.valueOf(1), entity.getInt("id"));
+		Assertions.assertEquals("test", entity.getStr("name"));
 	}
 
 	@Test
@@ -30,9 +30,9 @@ public class EntityTest {
 		user.setName("test");
 
 		Entity entity = Entity.create().parseBean(user);
-		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
-		Assert.assertEquals("test", entity.getStr("name"));
-		Assert.assertEquals("user", entity.getTableName());
+		Assertions.assertEquals(Integer.valueOf(1), entity.getInt("id"));
+		Assertions.assertEquals("test", entity.getStr("name"));
+		Assertions.assertEquals("user", entity.getTableName());
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class EntityTest {
 
 		Entity entity = Entity.create().parseBean(user, false, true);
 
-		Assert.assertFalse(entity.containsKey("id"));
-		Assert.assertEquals("test", entity.getStr("name"));
-		Assert.assertEquals("user", entity.getTableName());
+		Assertions.assertFalse(entity.containsKey("id"));
+		Assertions.assertEquals("test", entity.getStr("name"));
+		Assertions.assertEquals("user", entity.getTableName());
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class EntityTest {
 		Entity entity = Entity.create().set("ID", 2).set("NAME", "testName");
 		User user = entity.toBeanIgnoreCase(User.class);
 
-		Assert.assertEquals(Integer.valueOf(2), user.getId());
-		Assert.assertEquals("testName", user.getName());
+		Assertions.assertEquals(Integer.valueOf(2), user.getId());
+		Assertions.assertEquals("testName", user.getName());
 	}
 }

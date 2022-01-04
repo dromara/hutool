@@ -9,8 +9,8 @@ import cn.hutool.db.ds.druid.DruidDSFactory;
 import cn.hutool.db.ds.hikari.HikariDSFactory;
 import cn.hutool.db.ds.pooled.PooledDSFactory;
 import cn.hutool.db.ds.tomcat.TomcatDSFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class DsTest {
 
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -93,6 +93,6 @@ public class DsTest {
 		DataSource ds = DSFactory.get("test");
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 }

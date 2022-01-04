@@ -1,9 +1,9 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Setting单元测试
@@ -18,23 +18,23 @@ public class SettingTest {
 		Setting setting = new Setting("test.setting", true);
 
 		String driver = setting.getByGroup("driver", "demo");
-		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
+		Assertions.assertEquals("com.mysql.jdbc.Driver", driver);
 
 		//本分组变量替换
 		String user = setting.getByGroup("user", "demo");
-		Assert.assertEquals("rootcom.mysql.jdbc.Driver", user);
+		Assertions.assertEquals("rootcom.mysql.jdbc.Driver", user);
 
 		//跨分组变量替换
 		String user2 = setting.getByGroup("user2", "demo");
-		Assert.assertEquals("rootcom.mysql.jdbc.Driver", user2);
+		Assertions.assertEquals("rootcom.mysql.jdbc.Driver", user2);
 
 		//默认值测试
 		String value = setting.getStr("keyNotExist", "defaultTest");
-		Assert.assertEquals("defaultTest", value);
+		Assertions.assertEquals("defaultTest", value);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void settingTestForAbsPath() {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		Setting setting = new Setting("d:\\excel-plugin\\other.setting", true);
@@ -50,10 +50,10 @@ public class SettingTest {
 		setting.setByGroup("user", "group3", "root3");
 		setting.set("user", "root4");
 
-		Assert.assertEquals("root", setting.getByGroup("user", "group1"));
-		Assert.assertEquals("root2", setting.getByGroup("user", "group2"));
-		Assert.assertEquals("root3", setting.getByGroup("user", "group3"));
-		Assert.assertEquals("root4", setting.get("user"));
+		Assertions.assertEquals("root", setting.getByGroup("user", "group1"));
+		Assertions.assertEquals("root2", setting.getByGroup("user", "group2"));
+		Assertions.assertEquals("root3", setting.getByGroup("user", "group3"));
+		Assertions.assertEquals("root4", setting.get("user"));
 	}
 
 	/**

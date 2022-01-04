@@ -2,21 +2,21 @@ package cn.hutool.db;
 
 import java.sql.SQLException;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.lang.Console;
 
 /**
  * PostgreSQL 单元测试
- * 
+ *
  * @author looly
  *
  */
 public class PostgreTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void insertTest() throws SQLException {
 		for (int id = 100; id < 200; id++) {
 			Db.use("postgre").insert(Entity.create("user")//
@@ -27,7 +27,7 @@ public class PostgreTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void pageTest() throws SQLException {
 		PageResult<Entity> result = Db.use("postgre").page(Entity.create("user"), new Page(2, 10));
 		for (Entity entity : result) {

@@ -4,9 +4,9 @@ import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,9 +40,9 @@ public class ZipUtilTest {
 		List<String> afterNames = zipEntryNames(tempZipFile);
 
 		// 确认增加了文件
-		Assert.assertEquals(beforeNames.size() + 1, afterNames.size());
-		Assert.assertTrue(afterNames.containsAll(beforeNames));
-		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+		Assertions.assertEquals(beforeNames.size() + 1, afterNames.size());
+		Assertions.assertTrue(afterNames.containsAll(beforeNames));
+		Assertions.assertTrue(afterNames.contains(appendFile.getName()));
 
 		// test dir add
 		beforeNames = zipEntryNames(tempZipFile);
@@ -51,12 +51,12 @@ public class ZipUtilTest {
 		afterNames = zipEntryNames(tempZipFile);
 
 		// 确认增加了文件和目录，增加目录和目录下一个文件，故此处+2
-		Assert.assertEquals(beforeNames.size() + 2, afterNames.size());
-		Assert.assertTrue(afterNames.containsAll(beforeNames));
-		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+		Assertions.assertEquals(beforeNames.size() + 2, afterNames.size());
+		Assertions.assertTrue(afterNames.containsAll(beforeNames));
+		Assertions.assertTrue(afterNames.contains(appendFile.getName()));
 
 		// rollback
-		Assert.assertTrue(String.format("delete temp file %s failed", tempZipFile.getCanonicalPath()), tempZipFile.delete());
+		Assertions.assertTrue(tempZipFile.delete(), String.format("delete temp file %s failed", tempZipFile.getCanonicalPath()));
 	}
 
 	/**
@@ -74,43 +74,43 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipDirTest() {
 		ZipUtil.zip(new File("d:/test"));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void unzipTest() {
 		File unzip = ZipUtil.unzip("f:/test/apache-maven-3.6.2.zip", "f:\\test");
 		Console.log(unzip);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void unzipTest2() {
 		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
 		Console.log(unzip);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void unzipFromStreamTest() {
 		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/hutool-core-5.1.0.jar"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
 		Console.log(unzip);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void unzipChineseTest() {
 		ZipUtil.unzip("d:/测试.zip");
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void unzipFileBytesTest() {
 		byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.CHARSET_GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
-		Assert.assertNotNull(fileBytes);
+		Assertions.assertNotNull(fileBytes);
 	}
 
 	@Test
@@ -120,11 +120,11 @@ public class ZipUtilTest {
 		byte[] gzip = ZipUtil.gzip(bytes);
 
 		//保证gzip长度正常
-		Assert.assertEquals(68, gzip.length);
+		Assertions.assertEquals(68, gzip.length);
 
 		byte[] unGzip = ZipUtil.unGzip(gzip);
 		//保证正常还原
-		Assert.assertEquals(data, StrUtil.utf8Str(unGzip));
+		Assertions.assertEquals(data, StrUtil.utf8Str(unGzip));
 	}
 
 	@Test
@@ -134,21 +134,21 @@ public class ZipUtilTest {
 		byte[] gzip = ZipUtil.zlib(bytes, 0);
 
 		//保证zlib长度正常
-		Assert.assertEquals(62, gzip.length);
+		Assertions.assertEquals(62, gzip.length);
 		byte[] unGzip = ZipUtil.unZlib(gzip);
 		//保证正常还原
-		Assert.assertEquals(data, StrUtil.utf8Str(unGzip));
+		Assertions.assertEquals(data, StrUtil.utf8Str(unGzip));
 
 		gzip = ZipUtil.zlib(bytes, 9);
 		//保证zlib长度正常
-		Assert.assertEquals(56, gzip.length);
+		Assertions.assertEquals(56, gzip.length);
 		byte[] unGzip2 = ZipUtil.unZlib(gzip);
 		//保证正常还原
-		Assert.assertEquals(data, StrUtil.utf8Str(unGzip2));
+		Assertions.assertEquals(data, StrUtil.utf8Str(unGzip2));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipStreamTest(){
 		//https://github.com/looly/hutool/issues/944
 		String dir = "d:/test";
@@ -162,7 +162,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipStreamTest2(){
 		// https://github.com/dromara/hutool/issues/944
 		String file1 = "d:/test/a.txt";
@@ -179,7 +179,7 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipToStreamTest(){
 		String zip = "d:/test/testToStream.zip";
 		OutputStream out = FileUtil.getOutputStream(zip);

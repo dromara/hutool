@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
@@ -19,10 +19,10 @@ public class Issue644Test {
 		final JSONObject jsonObject = JSONUtil.parseObj(beanWithDate);
 
 		BeanWithDate beanWithDate2 = JSONUtil.toBean(jsonObject, BeanWithDate.class);
-		Assert.assertEquals(beanWithDate.getDate(), beanWithDate2.getDate());
+		Assertions.assertEquals(beanWithDate.getDate(), beanWithDate2.getDate());
 
 		beanWithDate2 = JSONUtil.toBean(jsonObject.toString(), BeanWithDate.class);
-		Assert.assertEquals(beanWithDate.getDate(), beanWithDate2.getDate());
+		Assertions.assertEquals(beanWithDate.getDate(), beanWithDate2.getDate());
 	}
 
 	@Data

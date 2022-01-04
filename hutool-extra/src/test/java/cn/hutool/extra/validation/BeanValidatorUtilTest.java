@@ -1,7 +1,7 @@
 package cn.hutool.extra.validation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.constraints.NotBlank;
 
@@ -40,14 +40,14 @@ public class BeanValidatorUtilTest {
 	@Test
 	public void beanValidatorTest() {
 		BeanValidationResult result = ValidationUtil.warpValidate(new TestClass());
-		Assert.assertFalse(result.isSuccess());
-		Assert.assertEquals(2, result.getErrorMessages().size());
+		Assertions.assertFalse(result.isSuccess());
+		Assertions.assertEquals(2, result.getErrorMessages().size());
 	}
 
 	@Test
 	public void propertyValidatorTest() {
 		BeanValidationResult result = ValidationUtil.warpValidateProperty(new TestClass(), "name");
-		Assert.assertFalse(result.isSuccess());
-		Assert.assertEquals(1, result.getErrorMessages().size());
+		Assertions.assertFalse(result.isSuccess());
+		Assertions.assertEquals(1, result.getErrorMessages().size());
 	}
 }

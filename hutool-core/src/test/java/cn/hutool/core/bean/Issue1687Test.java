@@ -4,8 +4,8 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 
@@ -22,8 +22,8 @@ public class Issue1687Test {
 
 		final SysUser sysUser = BeanUtil.toBean(sysUserFb, SysUser.class);
 		// 别名错位导致找不到字段
-		Assert.assertNull(sysUser.getDepart());
-		Assert.assertEquals(new Long(456L), sysUser.getOrgId());
+		Assertions.assertNull(sysUser.getDepart());
+		Assertions.assertEquals(new Long(456L), sysUser.getOrgId());
 	}
 
 	@Test
@@ -38,8 +38,8 @@ public class Issue1687Test {
 		);
 		final SysUser sysUser = BeanUtil.toBean(sysUserFb, SysUser.class, copyOptions);
 
-		Assert.assertEquals(new Long(123L), sysUser.getDepart());
-		Assert.assertEquals(new Long(456L), sysUser.getOrgId());
+		Assertions.assertEquals(new Long(123L), sysUser.getDepart());
+		Assertions.assertEquals(new Long(456L), sysUser.getOrgId());
 	}
 
 	@Data

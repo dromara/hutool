@@ -1,15 +1,15 @@
 package cn.hutool.system;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class SystemUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void dumpTest() {
 		SystemUtil.dumpSystemInfo();
 	}
@@ -17,37 +17,37 @@ public class SystemUtilTest {
 	@Test
 	public void getCurrentPidTest() {
 		long pid = SystemUtil.getCurrentPID();
-		Assert.assertTrue(pid > 0);
+		Assertions.assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
 		JavaInfo javaInfo = SystemUtil.getJavaInfo();
-		Assert.assertNotNull(javaInfo);
+		Assertions.assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
 		JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
-		Assert.assertNotNull(info);
+		Assertions.assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
 		OsInfo osInfo = SystemUtil.getOsInfo();
-		Assert.assertNotNull(osInfo);
+		Assertions.assertNotNull(osInfo);
 	}
 
 	@Test
 	public void getHostInfo() {
 		HostInfo hostInfo = SystemUtil.getHostInfo();
-		Assert.assertNotNull(hostInfo);
+		Assertions.assertNotNull(hostInfo);
 	}
 
 	@Test
 	public void getUserInfoTest(){
 		// https://gitee.com/dromara/hutool/issues/I3NM39
 		final UserInfo userInfo = SystemUtil.getUserInfo();
-		Assert.assertTrue(userInfo.getTempDir().endsWith(File.separator));
+		Assertions.assertTrue(userInfo.getTempDir().endsWith(File.separator));
 	}
 }

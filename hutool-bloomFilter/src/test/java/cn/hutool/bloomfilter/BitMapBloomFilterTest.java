@@ -1,8 +1,7 @@
 package cn.hutool.bloomfilter;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.bloomfilter.bitMap.IntMap;
 import cn.hutool.bloomfilter.bitMap.LongMap;
@@ -16,13 +15,12 @@ public class BitMapBloomFilterTest {
 		filter.add("abc");
 		filter.add("ddd");
 
-		Assert.assertTrue(filter.contains("abc"));
-		Assert.assertTrue(filter.contains("ddd"));
-		Assert.assertTrue(filter.contains("123"));
+		Assertions.assertTrue(filter.contains("abc"));
+		Assertions.assertTrue(filter.contains("ddd"));
+		Assertions.assertTrue(filter.contains("123"));
 	}
 
 	@Test
-	@Ignore
 	public void testIntMap(){
 		IntMap intMap = new IntMap();
 
@@ -38,7 +36,6 @@ public class BitMapBloomFilterTest {
 	}
 
 	@Test
-	@Ignore
 	public void testLongMap(){
 		LongMap longMap = new LongMap();
 

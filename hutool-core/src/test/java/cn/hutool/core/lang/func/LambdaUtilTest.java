@@ -1,21 +1,21 @@
 package cn.hutool.core.lang.func;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LambdaUtilTest {
 
 	@Test
 	public void getMethodNameTest(){
 		String methodName = LambdaUtil.getMethodName(MyTeacher::getAge);
-		Assert.assertEquals("getAge", methodName);
+		Assertions.assertEquals("getAge", methodName);
 	}
 
 	@Test
 	public void getFieldNameTest(){
 		String fieldName = LambdaUtil.getFieldName(MyTeacher::getAge);
-		Assert.assertEquals("age", fieldName);
+		Assertions.assertEquals("age", fieldName);
 	}
 
 	@Data

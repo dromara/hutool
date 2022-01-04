@@ -1,8 +1,8 @@
 package cn.hutool.extra.cglib;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CglibUtilTest {
 
@@ -13,10 +13,10 @@ public class CglibUtilTest {
 
 		OtherSampleBean otherBean = new OtherSampleBean();
 		CglibUtil.copy(bean, otherBean);
-		Assert.assertEquals("Hello world", otherBean.getValue());
+		Assertions.assertEquals("Hello world", otherBean.getValue());
 
 		OtherSampleBean otherBean2 = CglibUtil.copy(bean, OtherSampleBean.class);
-		Assert.assertEquals("Hello world", otherBean2.getValue());
+		Assertions.assertEquals("Hello world", otherBean2.getValue());
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.cache;
 
 import cn.hutool.cache.impl.LRUCache;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -38,7 +38,7 @@ public class LRUCacheTest {
 		for (int i = 0; i < 10; i++) {
 			sb1.append(cache.get(i));
 		}
-		Assert.assertEquals("0123456789", sb1.toString());
+		Assertions.assertEquals("0123456789", sb1.toString());
 
 		// 新加11，此时0最久未使用，应该淘汰0
 		cache.put(11, 11);
@@ -47,6 +47,6 @@ public class LRUCacheTest {
 		for (int i = 0; i < 10; i++) {
 			sb2.append(cache.get(i));
 		}
-		Assert.assertEquals("null123456789", sb2.toString());
+		Assertions.assertEquals("null123456789", sb2.toString());
 	}
 }

@@ -1,9 +1,9 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.io.FileUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -19,13 +19,13 @@ import java.net.URL;
 public class ImgUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scaleTest() {
 		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scaleTest2() {
 		ImgUtil.scale(
 				FileUtil.file("d:/test/2.png"),
@@ -33,38 +33,38 @@ public class ImgUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scalePngTest() {
 		ImgUtil.scale(FileUtil.file("f:/test/test.png"), FileUtil.file("f:/test/test_result.png"), 0.5f);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void scaleByWidthAndHeightTest() {
 		ImgUtil.scale(FileUtil.file("f:/test/aaa.jpg"), FileUtil.file("f:/test/aaa_result.jpg"), 100, 400, Color.BLUE);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cutTest() {
 		ImgUtil.cut(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), new Rectangle(200, 200, 100, 100));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void rotateTest() throws IOException {
 		Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
 		ImgUtil.write(image, FileUtil.file("e:/pic/result.png"));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void flipTest() {
 		ImgUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void pressImgTest() {
 		ImgUtil.pressImage(
 				FileUtil.file("d:/test/1435859438434136064.jpg"),
@@ -73,7 +73,7 @@ public class ImgUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void pressTextTest() {
 		ImgUtil.pressText(//
 				FileUtil.file("d:/test/2.jpg"), //
@@ -86,33 +86,33 @@ public class ImgUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sliceByRowsAndColsTest() {
 		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void convertTest() {
 		ImgUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		final byte[] bytes = ImgUtil.toBytes(ImgUtil.read("d:/test/logo_484.png"), "png");
 		FileUtil.writeBytes(bytes, "d:/test/result.png");
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void compressTest() {
 		ImgUtil.compress(FileUtil.file("d:/test/dest.png"),
 				FileUtil.file("d:/test/1111_target.jpg"), 0.1f);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void copyTest() {
 		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
 		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
@@ -121,11 +121,11 @@ public class ImgUtilTest {
 	@Test
 	public void toHexTest(){
 		final String s = ImgUtil.toHex(Color.RED);
-		Assert.assertEquals("#FF0000", s);
+		Assertions.assertEquals("#FF0000", s);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void backgroundRemovalTest() {
 		// 图片 背景 换成 透明的
 		ImgUtil.backgroundRemoval(

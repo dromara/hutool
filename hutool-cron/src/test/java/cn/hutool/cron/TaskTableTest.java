@@ -3,13 +3,13 @@ package cn.hutool.cron;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.cron.pattern.CronPattern;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TaskTableTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toStringTest(){
 		final TaskTable taskTable = new TaskTable();
 		taskTable.add(IdUtil.fastUUID(), new CronPattern("*/10 * * * * *"), ()-> Console.log("Task 1"));

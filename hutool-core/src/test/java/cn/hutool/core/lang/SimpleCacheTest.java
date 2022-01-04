@@ -2,13 +2,12 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SimpleCacheTest {
 
-	@Before
+	@Test
 	public void putTest(){
 		final SimpleCache<String, String> cache = new SimpleCache<>();
 		ThreadUtil.execute(()->cache.put("key1", "value1"));
@@ -37,12 +36,12 @@ public class SimpleCacheTest {
 		cache.get("key4");
 		cache.get("key5", ()->"value5");
 
-		Assert.assertEquals("value1", cache.get("key1"));
-		Assert.assertEquals("value2", cache.get("key2"));
-		Assert.assertEquals("value3", cache.get("key3"));
-		Assert.assertEquals("value4", cache.get("key4"));
-		Assert.assertEquals("value5", cache.get("key5"));
-		Assert.assertEquals("value6", cache.get("key6", ()-> "value6"));
+		Assertions.assertEquals("value1", cache.get("key1"));
+		Assertions.assertEquals("value2", cache.get("key2"));
+		Assertions.assertEquals("value3", cache.get("key3"));
+		Assertions.assertEquals("value4", cache.get("key4"));
+		Assertions.assertEquals("value5", cache.get("key5"));
+		Assertions.assertEquals("value6", cache.get("key6", ()-> "value6"));
 	}
 
 	@Test
@@ -54,7 +53,7 @@ public class SimpleCacheTest {
 			return "aaaValue";
 		}));
 
-		Assert.assertTrue(tester.getInterval() > 0);
-		Assert.assertEquals("aaaValue", cache.get("aaa"));
+		Assertions.assertTrue(tester.getInterval() > 0);
+		Assertions.assertEquals("aaaValue", cache.get("aaa"));
 	}
 }

@@ -1,8 +1,8 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.date.DateTime;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,9 @@ public class DictTest {
 				.set("key1", 1)//int
 				.set("key2", 1000L)//long
 				.set("key3", DateTime.now());//Date
-		
+
 		Long v2 = dict.getLong("key2");
-		Assert.assertEquals(Long.valueOf(1000L), v2);
+		Assertions.assertEquals(Long.valueOf(1000L), v2);
 	}
 
 	@Test
@@ -27,8 +27,8 @@ public class DictTest {
 
 		dict.putAll(map);
 
-		Assert.assertEquals(1, dict.get("A"));
-		Assert.assertEquals(1, dict.get("a"));
+		Assertions.assertEquals(1, dict.get("A"));
+		Assertions.assertEquals(1, dict.get("a"));
 	}
 
 	@Test
@@ -39,9 +39,9 @@ public class DictTest {
 				"BLUE", "#0000FF"
 		);
 
-		Assert.assertEquals("#FF0000", dict.get("RED"));
-		Assert.assertEquals("#00FF00", dict.get("GREEN"));
-		Assert.assertEquals("#0000FF", dict.get("BLUE"));
+		Assertions.assertEquals("#FF0000", dict.get("RED"));
+		Assertions.assertEquals("#00FF00", dict.get("GREEN"));
+		Assertions.assertEquals("#0000FF", dict.get("BLUE"));
 	}
 
 	@Test
@@ -56,6 +56,6 @@ public class DictTest {
 
 		dict.removeEqual(dict2);
 
-		Assert.assertTrue(dict.isEmpty());
+		Assertions.assertTrue(dict.isEmpty());
 	}
 }

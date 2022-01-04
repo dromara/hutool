@@ -2,8 +2,8 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +20,10 @@ public class MapUtilTest {
 
 		Map<String, String> map2 = MapUtil.filter(map, t -> Convert.toInt(t.getValue()) % 2 == 0);
 
-		Assert.assertEquals(2, map2.size());
+		Assertions.assertEquals(2, map2.size());
 
-		Assert.assertEquals("2", map2.get("b"));
-		Assert.assertEquals("4", map2.get("d"));
+		Assertions.assertEquals("2", map2.get("b"));
+		Assertions.assertEquals("4", map2.get("d"));
 	}
 
 	@Test
@@ -35,9 +35,9 @@ public class MapUtilTest {
 		map.put("fgh", "4");
 
 		Map<String, String> map2 = MapUtil.filter(map, t -> StrUtil.contains(t.getKey(), "bc"));
-		Assert.assertEquals(2, map2.size());
-		Assert.assertEquals("1", map2.get("abc"));
-		Assert.assertEquals("2", map2.get("bcd"));
+		Assertions.assertEquals(2, map2.size());
+		Assertions.assertEquals("1", map2.get("abc"));
+		Assertions.assertEquals("2", map2.get("bcd"));
 	}
 
 	@Test
@@ -54,12 +54,12 @@ public class MapUtilTest {
 			return t;
 		});
 
-		Assert.assertEquals(4, map2.size());
+		Assertions.assertEquals(4, map2.size());
 
-		Assert.assertEquals("10", map2.get("a"));
-		Assert.assertEquals("20", map2.get("b"));
-		Assert.assertEquals("30", map2.get("c"));
-		Assert.assertEquals("40", map2.get("d"));
+		Assertions.assertEquals("10", map2.get("a"));
+		Assertions.assertEquals("20", map2.get("b"));
+		Assertions.assertEquals("30", map2.get("c"));
+		Assertions.assertEquals("40", map2.get("d"));
 	}
 
 	@Test
@@ -72,10 +72,10 @@ public class MapUtilTest {
 
 		Map<String, String> map2 = MapUtil.reverse(map);
 
-		Assert.assertEquals("a", map2.get("1"));
-		Assert.assertEquals("b", map2.get("2"));
-		Assert.assertEquals("c", map2.get("3"));
-		Assert.assertEquals("d", map2.get("4"));
+		Assertions.assertEquals("a", map2.get("1"));
+		Assertions.assertEquals("b", map2.get("2"));
+		Assertions.assertEquals("c", map2.get("3"));
+		Assertions.assertEquals("d", map2.get("4"));
 	}
 
 	@Test
@@ -87,14 +87,14 @@ public class MapUtilTest {
 		map.put("d", "4");
 
 		Object[][] objectArray = MapUtil.toObjectArray(map);
-		Assert.assertEquals("a", objectArray[0][0]);
-		Assert.assertEquals("1", objectArray[0][1]);
-		Assert.assertEquals("b", objectArray[1][0]);
-		Assert.assertEquals("2", objectArray[1][1]);
-		Assert.assertEquals("c", objectArray[2][0]);
-		Assert.assertEquals("3", objectArray[2][1]);
-		Assert.assertEquals("d", objectArray[3][0]);
-		Assert.assertEquals("4", objectArray[3][1]);
+		Assertions.assertEquals("a", objectArray[0][0]);
+		Assertions.assertEquals("1", objectArray[0][1]);
+		Assertions.assertEquals("b", objectArray[1][0]);
+		Assertions.assertEquals("2", objectArray[1][1]);
+		Assertions.assertEquals("c", objectArray[2][0]);
+		Assertions.assertEquals("3", objectArray[2][1]);
+		Assertions.assertEquals("d", objectArray[3][0]);
+		Assertions.assertEquals("4", objectArray[3][1]);
 	}
 
 	@Test
@@ -105,12 +105,12 @@ public class MapUtilTest {
 				.put("key2", "value2").build();
 
 		String join1 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false);
-		Assert.assertEquals("key1value1key2value2key3value3", join1);
+		Assertions.assertEquals("key1value1key2value2key3value3", join1);
 
 		String join2 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123");
-		Assert.assertEquals("key1value1key2value2key3value3123", join2);
+		Assertions.assertEquals("key1value1key2value2key3value3123", join2);
 
 		String join3 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123", "abc");
-		Assert.assertEquals("key1value1key2value2key3value3123abc", join3);
+		Assertions.assertEquals("key1value1key2value2key3value3123abc", join3);
 	}
 }

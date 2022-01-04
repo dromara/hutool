@@ -1,8 +1,8 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.lang.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class AsyncUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void waitAndGetTest() {
 		CompletableFuture<String> hutool = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(1, TimeUnit.SECONDS);
@@ -33,6 +33,6 @@ public class AsyncUtilTest {
 		// 等待完成
 		AsyncUtil.waitAll(hutool, sweater, warm);
 		// 获取结果
-		Assert.isTrue("hutool卫衣真暖和".equals(AsyncUtil.get(hutool) + AsyncUtil.get(sweater) + AsyncUtil.get(warm)));
+		Assertions.assertEquals("hutool卫衣真暖和", AsyncUtil.get(hutool) + AsyncUtil.get(sweater) + AsyncUtil.get(warm));
 	}
 }

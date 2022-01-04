@@ -5,8 +5,8 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +22,14 @@ public class HttpRequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getHttpsTest() {
 		String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().body();
 		Console.log(body);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getHttpsThenTest() {
 		HttpRequest
 				.get("https://hutool.cn")
@@ -37,7 +37,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getCookiesTest() {
 		// 检查在Connection关闭情况下Cookie是否可以正常获取
 		HttpResponse res = HttpRequest.get("https://www.oschina.net/").execute();
@@ -47,7 +47,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toStringTest() {
 		String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
 
@@ -56,7 +56,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void asyncHeadTest() {
 		HttpResponse response = HttpRequest.head(url).execute();
 		Map<String, List<String>> headers = response.headers();
@@ -65,7 +65,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void asyncGetTest() {
 		TimeInterval timer = DateUtil.timer();
 		HttpResponse body = HttpRequest.get(url).charset("GBK").executeAsync();
@@ -77,7 +77,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void syncGetTest() {
 		TimeInterval timer = DateUtil.timer();
 		HttpResponse body = HttpRequest.get(url).charset("GBK").execute();
@@ -89,7 +89,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void customGetTest() {
 		// 自定义构建HTTP GET请求，发送Http GET请求，针对HTTPS安全加密，可以自定义SSL
 		HttpRequest request = HttpRequest.get(url)
@@ -103,7 +103,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getDeflateTest() {
 		String res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
 				.execute().body();
@@ -111,7 +111,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bodyTest() {
 		String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().body();
 		Console.log(ddddd1);
@@ -121,7 +121,7 @@ public class HttpRequestTest {
 	 * 测试GET请求附带body体是否会变更为POST
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void getLocalTest() {
 		List<String> list = new ArrayList<>();
 		list.add("hhhhh");
@@ -140,7 +140,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getWithoutEncodeTest() {
 		String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
 		HttpRequest get = HttpUtil.createGet(url);
@@ -150,7 +150,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void followRedirectsTest(){
 		// 从5.7.19开始关闭JDK的自动重定向功能，改为手动重定向
 		// 当有多层重定向时，JDK的重定向会失效，或者说只有最后一个重定向有效，因此改为手动更易控制次数

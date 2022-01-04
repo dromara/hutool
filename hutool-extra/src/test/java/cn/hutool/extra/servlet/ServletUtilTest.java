@@ -1,7 +1,7 @@
 package cn.hutool.extra.servlet;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class ServletUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		HttpServletResponse response = null;
 		byte[] bytes = "地球是我们共同的家园，需要大家珍惜.".getBytes(StandardCharsets.UTF_8);

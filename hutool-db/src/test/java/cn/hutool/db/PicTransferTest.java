@@ -3,8 +3,8 @@ package cn.hutool.db;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class PicTransferTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void findTest() throws SQLException {
 		Db.use().find(
 				ListUtil.of("NAME", "TYPE", "GROUP", "PIC"),

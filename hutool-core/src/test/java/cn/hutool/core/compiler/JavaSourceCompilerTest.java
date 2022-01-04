@@ -3,8 +3,8 @@ package cn.hutool.core.compiler;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.ZipUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class JavaSourceCompilerTest {
 				.compile();
 		final Class<?> clazz = classLoader.loadClass("c.C");
 		Object obj = ReflectUtil.newInstance(clazz);
-		Assert.assertTrue(String.valueOf(obj).startsWith("c.C@"));
+		Assertions.assertTrue(String.valueOf(obj).startsWith("c.C@"));
 	}
 
 }

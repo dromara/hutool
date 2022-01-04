@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricCrypto;
 import cn.hutool.crypto.asymmetric.ECIES;
 import cn.hutool.crypto.asymmetric.KeyType;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ECIESTest {
 
@@ -42,6 +42,6 @@ public class ECIESTest {
 		String encryptStr = cryptoForEncrypt.encryptBase64(text.toString(), KeyType.PublicKey);
 
 		String decryptStr = StrUtil.utf8Str(cryptoForDecrypt.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text.toString(), decryptStr);
+		Assertions.assertEquals(text.toString(), decryptStr);
 	}
 }

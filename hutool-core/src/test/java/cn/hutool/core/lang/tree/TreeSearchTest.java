@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.tree;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,6 @@ public class TreeSearchTest {
 		Tree<Long> tree=treeItems.get(0);
 		Tree<Long> searchResult=tree.getNode(3L);
 
-		Assert.assertEquals("module-B", searchResult.getName());
+		Assertions.assertEquals("module-B", searchResult.getName());
 	}
 }

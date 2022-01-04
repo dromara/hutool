@@ -3,8 +3,8 @@ package cn.hutool.jwt;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.signers.JWTSignerUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JWTTest {
 
@@ -23,9 +23,9 @@ public class JWTTest {
 				"bXlSnqVeJXWqUIt7HyEhgKNVlIPjkumHlAwFY-5YCtk";
 
 		String token = jwt.sign();
-		Assert.assertEquals(rightToken, token);
+		Assertions.assertEquals(rightToken, token);
 
-		Assert.assertTrue(JWT.of(rightToken).setKey(key).verify());
+		Assertions.assertTrue(JWT.of(rightToken).setKey(key).verify());
 	}
 
 	@Test
@@ -36,17 +36,17 @@ public class JWTTest {
 
 		final JWT jwt = JWT.of(rightToken);
 
-		Assert.assertTrue(jwt.setKey("1234567890".getBytes()).verify());
+		Assertions.assertTrue(jwt.setKey("1234567890".getBytes()).verify());
 
 		//header
-		Assert.assertEquals("JWT", jwt.getHeader(JWTHeader.TYPE));
-		Assert.assertEquals("HS256", jwt.getHeader(JWTHeader.ALGORITHM));
-		Assert.assertNull(jwt.getHeader(JWTHeader.CONTENT_TYPE));
+		Assertions.assertEquals("JWT", jwt.getHeader(JWTHeader.TYPE));
+		Assertions.assertEquals("HS256", jwt.getHeader(JWTHeader.ALGORITHM));
+		Assertions.assertNull(jwt.getHeader(JWTHeader.CONTENT_TYPE));
 
 		//payload
-		Assert.assertEquals("1234567890", jwt.getPayload("sub"));
-		Assert.assertEquals("looly", jwt.getPayload("name"));
-		Assert.assertEquals(true, jwt.getPayload("admin"));
+		Assertions.assertEquals("1234567890", jwt.getPayload("sub"));
+		Assertions.assertEquals("looly", jwt.getPayload("name"));
+		Assertions.assertEquals(true, jwt.getPayload("admin"));
 	}
 
 	@Test
@@ -61,22 +61,23 @@ public class JWTTest {
 				"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9.";
 
 		String token = jwt.sign();
-		Assert.assertEquals(token, token);
+		Assertions.assertEquals(token, token);
 
-		Assert.assertTrue(JWT.of(rightToken).setSigner(JWTSignerUtil.none()).verify());
+		Assertions.assertTrue(JWT.of(rightToken).setSigner(JWTSignerUtil.none()).verify());
 	}
 
 	/**
 	 * 必须定义签名器
 	 */
-	@Test(expected = JWTException.class)
+	@Test
 	public void needSignerTest(){
-		JWT jwt = JWT.create()
-				.setPayload("sub", "1234567890")
-				.setPayload("name", "looly")
-				.setPayload("admin", true);
-
-		jwt.sign();
+		Assertions.assertThrows(JWTException.class, () -> {
+			JWT jwt = JWT.create()
+					.setPayload("sub", "1234567890")
+					.setPayload("name", "looly")
+					.setPayload("admin", true);
+			jwt.sign();
+		});
 	}
 
 	@Test
@@ -86,6 +87,6 @@ public class JWTTest {
 				"aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
 
 		final boolean verify = JWT.of(token).setKey(StrUtil.utf8Bytes("123456")).verify();
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 }

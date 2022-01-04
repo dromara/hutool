@@ -3,7 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.lang.Console;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;

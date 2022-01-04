@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -19,15 +19,15 @@ public class PhoneUtilTest {
 		String errMobile = "136123456781";
 		String errTel = "010-889931081";
 
-		Assert.assertTrue(PhoneUtil.isMobile(mobile));
-		Assert.assertTrue(PhoneUtil.isTel(tel));
-		Assert.assertTrue(PhoneUtil.isPhone(mobile));
-		Assert.assertTrue(PhoneUtil.isPhone(tel));
+		Assertions.assertTrue(PhoneUtil.isMobile(mobile));
+		Assertions.assertTrue(PhoneUtil.isTel(tel));
+		Assertions.assertTrue(PhoneUtil.isPhone(mobile));
+		Assertions.assertTrue(PhoneUtil.isPhone(tel));
 
-		Assert.assertFalse(PhoneUtil.isMobile(errMobile));
-		Assert.assertFalse(PhoneUtil.isTel(errTel));
-		Assert.assertFalse(PhoneUtil.isPhone(errMobile));
-		Assert.assertFalse(PhoneUtil.isPhone(errTel));
+		Assertions.assertFalse(PhoneUtil.isMobile(errMobile));
+		Assertions.assertFalse(PhoneUtil.isTel(errTel));
+		Assertions.assertFalse(PhoneUtil.isPhone(errMobile));
+		Assertions.assertFalse(PhoneUtil.isPhone(errTel));
 	}
 
 	@Test
@@ -42,10 +42,10 @@ public class PhoneUtilTest {
 		errTels.add("0755-7654.321");
 		errTels.add("13619887123");
 		for (String s : tels) {
-			Assert.assertTrue(PhoneUtil.isTel(s));
+			Assertions.assertTrue(PhoneUtil.isTel(s));
 		}
 		for (String s : errTels) {
-			Assert.assertFalse(PhoneUtil.isTel(s));
+			Assertions.assertFalse(PhoneUtil.isTel(s));
 		}
 	}
 
@@ -53,17 +53,17 @@ public class PhoneUtilTest {
 	public void testHide() {
 		String mobile = "13612345678";
 
-		Assert.assertEquals("*******5678", PhoneUtil.hideBefore(mobile));
-		Assert.assertEquals("136****5678", PhoneUtil.hideBetween(mobile));
-		Assert.assertEquals("1361234****", PhoneUtil.hideAfter(mobile));
+		Assertions.assertEquals("*******5678", PhoneUtil.hideBefore(mobile));
+		Assertions.assertEquals("136****5678", PhoneUtil.hideBetween(mobile));
+		Assertions.assertEquals("1361234****", PhoneUtil.hideAfter(mobile));
 	}
 
 	@Test
 	public void testSubString() {
 		String mobile = "13612345678";
-		Assert.assertEquals("136", PhoneUtil.subBefore(mobile));
-		Assert.assertEquals("1234", PhoneUtil.subBetween(mobile));
-		Assert.assertEquals("5678", PhoneUtil.subAfter(mobile));
+		Assertions.assertEquals("136", PhoneUtil.subBefore(mobile));
+		Assertions.assertEquals("1234", PhoneUtil.subBetween(mobile));
+		Assertions.assertEquals("5678", PhoneUtil.subAfter(mobile));
 	}
 
 	@Test
@@ -81,19 +81,19 @@ public class PhoneUtilTest {
 		errTels.add("0755-7654.321");
 		errTels.add("13619887123");
 		for (String s : tels) {
-			Assert.assertTrue(PhoneUtil.isTel(s));
+			Assertions.assertTrue(PhoneUtil.isTel(s));
 		}
 		for (String s : errTels) {
-			Assert.assertFalse(PhoneUtil.isTel(s));
+			Assertions.assertFalse(PhoneUtil.isTel(s));
 		}
-		Assert.assertEquals("010", PhoneUtil.subTelBefore("010-12345678"));
-		Assert.assertEquals("010", PhoneUtil.subTelBefore("01012345678"));
-		Assert.assertEquals("12345678", PhoneUtil.subTelAfter("010-12345678"));
-		Assert.assertEquals("12345678", PhoneUtil.subTelAfter("01012345678"));
+		Assertions.assertEquals("010", PhoneUtil.subTelBefore("010-12345678"));
+		Assertions.assertEquals("010", PhoneUtil.subTelBefore("01012345678"));
+		Assertions.assertEquals("12345678", PhoneUtil.subTelAfter("010-12345678"));
+		Assertions.assertEquals("12345678", PhoneUtil.subTelAfter("01012345678"));
 
-		Assert.assertEquals("0755", PhoneUtil.subTelBefore("0755-7654321"));
-		Assert.assertEquals("0755", PhoneUtil.subTelBefore("07557654321"));
-		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("0755-7654321"));
-		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("07557654321"));
+		Assertions.assertEquals("0755", PhoneUtil.subTelBefore("0755-7654321"));
+		Assertions.assertEquals("0755", PhoneUtil.subTelBefore("07557654321"));
+		Assertions.assertEquals("7654321", PhoneUtil.subTelAfter("0755-7654321"));
+		Assertions.assertEquals("7654321", PhoneUtil.subTelAfter("07557654321"));
 	}
 }

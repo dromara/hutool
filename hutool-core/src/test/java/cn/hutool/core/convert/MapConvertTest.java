@@ -1,8 +1,8 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.map.MapBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Map转换单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -23,8 +23,8 @@ public class MapConvertTest {
 		user.setAge(45);
 
 		HashMap<?, ?> map = Convert.convert(HashMap.class, user);
-		Assert.assertEquals("AAA", map.get("name"));
-		Assert.assertEquals(45, map.get("age"));
+		Assertions.assertEquals("AAA", map.get("name"));
+		Assertions.assertEquals(45, map.get("age"));
 	}
 
 	@Test
@@ -35,8 +35,8 @@ public class MapConvertTest {
 				.put("age", 45).map();
 
 		LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
-		Assert.assertEquals("AAA", map.get("name"));
-		Assert.assertEquals(45, map.get("age"));
+		Assertions.assertEquals("AAA", map.get("name"));
+		Assertions.assertEquals(45, map.get("age"));
 	}
 
 	public static class User {

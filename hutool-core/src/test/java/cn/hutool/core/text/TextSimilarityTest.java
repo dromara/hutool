@@ -1,7 +1,7 @@
 package cn.hutool.core.text;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * 文本相似度计算工具类单元测试
@@ -16,10 +16,10 @@ public class TextSimilarityTest {
 		String b = "一个文本，独一无二的文本";
 
 		double degree = TextSimilarity.similar(a, b);
-		Assert.assertEquals(0.8571428571428571D, degree, 16);
+		Assertions.assertEquals(0.8571428571428571D, degree, 16);
 
 		String similarPercent = TextSimilarity.similar(a, b, 2);
-		Assert.assertEquals("84.62%", similarPercent);
+		Assertions.assertEquals("84.62%", similarPercent);
 	}
 
 	@Test
@@ -28,15 +28,15 @@ public class TextSimilarityTest {
 		String b = "一个文本，独一无二的文本,#,>>?#$%^%$&^&^%";
 
 		double degree = TextSimilarity.similar(a, b);
-		Assert.assertEquals(0.8571428571428571D, degree, 16);
+		Assertions.assertEquals(0.8571428571428571D, degree, 16);
 
 		String similarPercent = TextSimilarity.similar(a, b, 2);
-		Assert.assertEquals("84.62%", similarPercent);
+		Assertions.assertEquals("84.62%", similarPercent);
 	}
 
 	@Test
 	public void similarTest(){
 		final double abd = TextSimilarity.similar("abd", "1111");
-		Assert.assertEquals(0, abd, 1);
+		Assertions.assertEquals(0, abd, 1);
 	}
 }

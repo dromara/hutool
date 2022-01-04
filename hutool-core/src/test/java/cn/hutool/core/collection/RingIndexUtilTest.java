@@ -1,8 +1,8 @@
 package cn.hutool.core.collection;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,7 @@ public class RingIndexUtilTest {
 		ThreadUtil.concurrencyTest(strList.size(), () -> {
 			final int index = RingIndexUtil.ringNextIntByObj(strList, atomicInteger);
 			final String s = strList.get(index);
-			Assert.notNull(s);
+			Assertions.assertNotNull(s);
 		});
 	}
 

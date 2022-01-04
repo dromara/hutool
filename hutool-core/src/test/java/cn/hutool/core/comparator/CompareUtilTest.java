@@ -1,8 +1,8 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ public class CompareUtilTest {
 	@Test
 	public void compareTest(){
 		int compare = CompareUtil.compare(null, "a", true);
-		Assert.assertTrue(compare > 0);
+		Assertions.assertTrue(compare > 0);
 
 		compare = CompareUtil.compare(null, "a", false);
-		Assert.assertTrue(compare < 0);
+		Assertions.assertTrue(compare < 0);
 	}
 
 	@Test
@@ -26,10 +26,10 @@ public class CompareUtilTest {
 
 		// 正序
 		list.sort(CompareUtil.comparingPinyin(e -> e));
-		Assert.assertEquals(list, ascendingOrderResult);
+		Assertions.assertEquals(list, ascendingOrderResult);
 
 		// 反序
 		list.sort(CompareUtil.comparingPinyin(e -> e, true));
-		Assert.assertEquals(list, descendingOrderResult);
+		Assertions.assertEquals(list, descendingOrderResult);
 	}
 }

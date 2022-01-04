@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ConvertToBooleanTest {
 
@@ -9,10 +9,10 @@ public class ConvertToBooleanTest {
 	public void intToBooleanTest(){
 		int a = 100;
 		final Boolean aBoolean = Convert.toBool(a);
-		Assert.assertTrue(aBoolean);
+		Assertions.assertTrue(aBoolean);
 
 		int b = 0;
 		final Boolean bBoolean = Convert.toBool(b);
-		Assert.assertFalse(bBoolean);
+		Assertions.assertFalse(bBoolean);
 	}
 }

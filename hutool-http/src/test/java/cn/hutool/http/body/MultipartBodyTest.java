@@ -3,8 +3,8 @@ package cn.hutool.http.body;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpResource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class MultipartBodyTest {
 
 		final MultipartBody body = MultipartBody.create(form, CharsetUtil.CHARSET_UTF_8);
 
-		Assert.assertNotNull(body.toString());
+		Assertions.assertNotNull(body.toString());
 //		Console.log(body);
 	}
 }

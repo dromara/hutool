@@ -2,8 +2,8 @@ package cn.hutool.core.collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ public class IterUtilTest {
 	@Test
 	public void getFirstNonNullTest(){
 		final ArrayList<String> strings = CollUtil.newArrayList(null, null, "123", "456", null);
-		Assert.assertEquals("123", IterUtil.getFirstNoneNull(strings));
+		Assertions.assertEquals("123", IterUtil.getFirstNoneNull(strings));
 	}
 
 	@Test
@@ -30,39 +30,39 @@ public class IterUtilTest {
 		ArrayList<Car> carList = CollUtil.newArrayList(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
 		Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");
 
-		Assert.assertEquals("大众", carNameMap.get("123").getCarName());
-		Assert.assertEquals("奔驰", carNameMap.get("345").getCarName());
-		Assert.assertEquals("路虎", carNameMap.get("567").getCarName());
+		Assertions.assertEquals("大众", carNameMap.get("123").getCarName());
+		Assertions.assertEquals("奔驰", carNameMap.get("345").getCarName());
+		Assertions.assertEquals("路虎", carNameMap.get("567").getCarName());
 	}
 
 	@Test
 	public void joinTest() {
 		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
 		String join = IterUtil.join(list.iterator(), ":");
-		Assert.assertEquals("1:2:3:4", join);
+		Assertions.assertEquals("1:2:3:4", join);
 
 		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4);
 		String join1 = IterUtil.join(list1.iterator(), ":");
-		Assert.assertEquals("1:2:3:4", join1);
+		Assertions.assertEquals("1:2:3:4", join1);
 
 		// 包装每个节点
 		ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
 		String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
-		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
+		Assertions.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
 	}
 
 	@Test
 	public void joinWithFuncTest() {
 		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
 		String join = IterUtil.join(list.iterator(), ":", String::valueOf);
-		Assert.assertEquals("1:2:3:4", join);
+		Assertions.assertEquals("1:2:3:4", join);
 	}
 
 	@Test
 	public void joinWithNullTest() {
 		ArrayList<String> list = CollUtil.newArrayList("1", null, "3", "4");
 		String join = IterUtil.join(list.iterator(), ":", String::valueOf);
-		Assert.assertEquals("1:null:3:4", join);
+		Assertions.assertEquals("1:null:3:4", join);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class IterUtilTest {
 
 		Map<String, List<String>> testMap = IterUtil.toListMap(Arrays.asList("and", "brave", "back"),
 				v -> v.substring(0, 1));
-		Assert.assertEquals(testMap, expectedMap);
+		Assertions.assertEquals(testMap, expectedMap);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class IterUtilTest {
 		expectedMap.put("456", benz);
 
 		Map<String, Car> testMap = IterUtil.toMap(Arrays.asList(bmw, benz), Car::getCarNumber);
-		Assert.assertEquals(expectedMap, testMap);
+		Assertions.assertEquals(expectedMap, testMap);
 	}
 
 	@Data

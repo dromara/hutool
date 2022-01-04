@@ -1,14 +1,14 @@
 package cn.hutool.core.annotation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AnnotationUtilTest {
 
 	@Test
 	public void getAnnotationValueTest() {
 		Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
-		Assert.assertEquals("测试", value);
+		Assertions.assertEquals("测试", value);
 
 	}
 

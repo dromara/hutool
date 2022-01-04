@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JSONNullTest {
 
@@ -12,12 +12,12 @@ public class JSONNullTest {
 				"            \"device_status_date\": null,\n" +
 				"            \"imsi\": null,\n" +
 				"            \"act_date\": \"2021-07-23T06:23:26.000+00:00\"}");
-		Assert.assertEquals(JSONNull.class, bodyjson.get("device_model").getClass());
-		Assert.assertEquals(JSONNull.class, bodyjson.get("device_status_date").getClass());
-		Assert.assertEquals(JSONNull.class, bodyjson.get("imsi").getClass());
+		Assertions.assertEquals(JSONNull.class, bodyjson.get("device_model").getClass());
+		Assertions.assertEquals(JSONNull.class, bodyjson.get("device_status_date").getClass());
+		Assertions.assertEquals(JSONNull.class, bodyjson.get("imsi").getClass());
 
 		bodyjson.getConfig().setIgnoreNullValue(true);
-		Assert.assertEquals("{\"act_date\":\"2021-07-23T06:23:26.000+00:00\"}", bodyjson.toString());
+		Assertions.assertEquals("{\"act_date\":\"2021-07-23T06:23:26.000+00:00\"}", bodyjson.toString());
 	}
 
 	@Test
@@ -27,8 +27,8 @@ public class JSONNullTest {
 				"            \"device_status_date\": null,\n" +
 				"            \"imsi\": null,\n" +
 				"            \"act_date\": \"2021-07-23T06:23:26.000+00:00\"}", true, true);
-		Assert.assertFalse(bodyjson.containsKey("device_model"));
-		Assert.assertFalse(bodyjson.containsKey("device_status_date"));
-		Assert.assertFalse(bodyjson.containsKey("imsi"));
+		Assertions.assertFalse(bodyjson.containsKey("device_model"));
+		Assertions.assertFalse(bodyjson.containsKey("device_status_date"));
+		Assertions.assertFalse(bodyjson.containsKey("imsi"));
 	}
 }

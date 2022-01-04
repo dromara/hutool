@@ -1,7 +1,7 @@
 package cn.hutool.core.codec;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BCDTest {
 
@@ -13,6 +13,6 @@ public class BCDTest {
 		byte[] bcd = BCD.strToBcd(strForTest);
 		String str = BCD.bcdToStr(bcd);
 		//解码BCD
-		Assert.assertEquals(strForTest, str);
+		Assertions.assertEquals(strForTest, str);
 	}
 }

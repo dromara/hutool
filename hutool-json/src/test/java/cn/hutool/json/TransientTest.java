@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TransientTest {
 
@@ -20,6 +20,6 @@ public class TransientTest {
 
 		final JSONObject jsonObject = new JSONObject(detailBill,
 				JSONConfig.create().setTransientSupport(false));
-		Assert.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
+		Assertions.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 }

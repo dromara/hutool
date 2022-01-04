@@ -2,13 +2,13 @@ package cn.hutool.core.text.csv;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class CsvWriterTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeWithAliasTest(){
 		final CsvWriteConfig csvWriteConfig = CsvWriteConfig.defaultConfig()
 				.addHeaderAlias("name", "姓名")

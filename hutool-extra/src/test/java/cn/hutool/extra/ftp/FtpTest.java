@@ -4,15 +4,15 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.extra.ssh.Sftp;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class FtpTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cdTest() {
 		Ftp ftp = new Ftp("looly.centos");
 
@@ -23,7 +23,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadTest() {
 		Ftp ftp = new Ftp("localhost");
 
@@ -34,7 +34,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void reconnectIfTimeoutTest() throws InterruptedException {
 		Ftp ftp = new Ftp("looly.centos");
 
@@ -58,7 +58,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void recursiveDownloadFolder() {
 		Ftp ftp = new Ftp("looly.centos");
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
@@ -67,7 +67,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void recursiveDownloadFolderSftp() {
 		Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
 
@@ -79,7 +79,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadTest() {
 		Ftp ftp = new Ftp("localhost");
 

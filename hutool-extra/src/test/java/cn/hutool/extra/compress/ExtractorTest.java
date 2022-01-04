@@ -3,13 +3,13 @@ package cn.hutool.extra.compress;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.compress.extractor.Extractor;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ExtractorTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest(){
 		Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
@@ -19,7 +19,7 @@ public class ExtractorTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sevenZTest(){
 		Extractor extractor = 	CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),

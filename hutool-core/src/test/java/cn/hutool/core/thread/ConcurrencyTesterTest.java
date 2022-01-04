@@ -3,13 +3,13 @@ package cn.hutool.core.thread;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ConcurrencyTesterTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void concurrencyTesterTest() {
 		ConcurrencyTester tester = ThreadUtil.concurrencyTest(100, () -> {
 			long delay = RandomUtil.randomLong(100, 1000);
@@ -20,7 +20,7 @@ public class ConcurrencyTesterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void multiTest(){
 		ConcurrencyTester ct = new ConcurrencyTester(5);
 		for(int i=0;i<3;i++){

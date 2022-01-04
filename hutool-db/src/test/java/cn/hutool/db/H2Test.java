@@ -1,23 +1,23 @@
 package cn.hutool.db;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * H2数据库单元测试
- * 
+ *
  * @author looly
  *
  */
 public class H2Test {
-	
+
 	private static final String DS_GROUP_NAME = "h2";
-	
-	@BeforeClass
+
+	@BeforeAll
 	public static void init() throws SQLException {
 		Db db = Db.use(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
@@ -27,16 +27,16 @@ public class H2Test {
 		db.insert(Entity.create("test").set("a", 3).set("b", 31));
 		db.insert(Entity.create("test").set("a", 4).set("b", 41));
 	}
-	
+
 	@Test
 	public void queryTest() throws SQLException {
 		List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 
 	@Test
 	public void findTest() throws SQLException {
 		List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 }

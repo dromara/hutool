@@ -2,8 +2,8 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.NumberUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class PartitionIterTest {
 		final LineIter lineIter = new LineIter(ResourceUtil.getUtf8Reader("test_lines.csv"));
 		final PartitionIter<String> iter = new PartitionIter<>(lineIter, 3);
 		for (List<String> lines : iter) {
-			Assert.assertTrue(lines.size() > 0);
+			Assertions.assertTrue(lines.size() > 0);
 		}
 	}
 
@@ -26,6 +26,6 @@ public class PartitionIterTest {
 		for (List<Integer> lines : iter) {
 			max = NumberUtil.max(max, NumberUtil.max(lines.toArray(new Integer[0])));
 		}
-		Assert.assertEquals(45, max);
+		Assertions.assertEquals(45, max);
 	}
 }

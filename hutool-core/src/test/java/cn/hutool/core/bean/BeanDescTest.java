@@ -1,7 +1,7 @@
 package cn.hutool.core.bean;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link BeanDesc} 单元测试类
@@ -14,13 +14,13 @@ public class BeanDescTest {
 	@Test
 	public void propDescTes() {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
-		Assert.assertEquals("User", desc.getSimpleName());
+		Assertions.assertEquals("User", desc.getSimpleName());
 
-		Assert.assertEquals("age", desc.getField("age").getName());
-		Assert.assertEquals("getAge", desc.getGetter("age").getName());
-		Assert.assertEquals("setAge", desc.getSetter("age").getName());
-		Assert.assertEquals(1, desc.getSetter("age").getParameterTypes().length);
-		Assert.assertSame(int.class, desc.getSetter("age").getParameterTypes()[0]);
+		Assertions.assertEquals("age", desc.getField("age").getName());
+		Assertions.assertEquals("getAge", desc.getGetter("age").getName());
+		Assertions.assertEquals("setAge", desc.getSetter("age").getName());
+		Assertions.assertEquals(1, desc.getSetter("age").getParameterTypes().length);
+		Assertions.assertSame(int.class, desc.getSetter("age").getParameterTypes()[0]);
 
 	}
 
@@ -29,29 +29,29 @@ public class BeanDescTest {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
 		PropDesc prop = desc.getProp("name");
-		Assert.assertEquals("name", prop.getFieldName());
-		Assert.assertEquals("getName", prop.getGetter().getName());
-		Assert.assertEquals("setName", prop.getSetter().getName());
-		Assert.assertEquals(1, prop.getSetter().getParameterTypes().length);
-		Assert.assertSame(String.class, prop.getSetter().getParameterTypes()[0]);
+		Assertions.assertEquals("name", prop.getFieldName());
+		Assertions.assertEquals("getName", prop.getGetter().getName());
+		Assertions.assertEquals("setName", prop.getSetter().getName());
+		Assertions.assertEquals(1, prop.getSetter().getParameterTypes().length);
+		Assertions.assertSame(String.class, prop.getSetter().getParameterTypes()[0]);
 	}
 
 	@Test
 	public void propDescOfBooleanTest() {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
-		Assert.assertEquals("isAdmin", desc.getGetter("isAdmin").getName());
-		Assert.assertEquals("setAdmin", desc.getSetter("isAdmin").getName());
-		Assert.assertEquals("isGender", desc.getGetter("gender").getName());
-		Assert.assertEquals("setGender", desc.getSetter("gender").getName());
+		Assertions.assertEquals("isAdmin", desc.getGetter("isAdmin").getName());
+		Assertions.assertEquals("setAdmin", desc.getSetter("isAdmin").getName());
+		Assertions.assertEquals("isGender", desc.getGetter("gender").getName());
+		Assertions.assertEquals("setGender", desc.getSetter("gender").getName());
 	}
 
 	@Test
 	public void propDescOfBooleanTest2() {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
-		Assert.assertEquals("isIsSuper", desc.getGetter("isSuper").getName());
-		Assert.assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
+		Assertions.assertEquals("isIsSuper", desc.getGetter("isSuper").getName());
+		Assertions.assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
 	}
 
 	@Test
@@ -60,10 +60,10 @@ public class BeanDescTest {
 
 		User user = new User();
 		desc.getProp("name").setValue(user, "张三");
-		Assert.assertEquals("张三", user.getName());
+		Assertions.assertEquals("张三", user.getName());
 
 		Object value = desc.getProp("name").getValue(user);
-		Assert.assertEquals("张三", value);
+		Assertions.assertEquals("张三", value);
 	}
 
 	public static class User {

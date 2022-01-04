@@ -6,9 +6,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -24,11 +24,11 @@ public class QrCodeUtilTest {
 	@Test
 	public void generateTest() {
 		final BufferedImage image = QrCodeUtil.generate("https://hutool.cn/", 300, 300);
-		Assert.assertNotNull(image);
+		Assertions.assertNotNull(image);
 	}
 
 	@Test
-//	@Ignore
+//	@Disabled
 	public void generateCustomTest() {
 		QrConfig config = new QrConfig();
 		config.setMargin(0);
@@ -41,7 +41,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateWithLogoTest() {
 		String icon = FileUtil.isWindows() ? "d:/test/pic/face.jpg" : "~/Desktop/hutool/pic/face.jpg";
 		String targetPath = FileUtil.isWindows() ? "d:/test/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
@@ -52,14 +52,14 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest() {
 		String decode = QrCodeUtil.decode(FileUtil.file("d:/test/pic/qr.png"));
 		Console.log(decode);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest2() {
 		// 条形码
 		String decode = QrCodeUtil.decode(FileUtil.file("d:/test/90.png"));
@@ -69,21 +69,21 @@ public class QrCodeUtilTest {
 	@Test
 	public void generateAsBase64Test() {
 		String base64 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png");
-		Assert.assertNotNull(base64);
+		Assertions.assertNotNull(base64);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void generateAsBase64Test2() {
 		byte[] bytes = FileUtil.readBytes(
 				new File("d:/test/qr.png"));
 		String encode = Base64.encode(bytes);
 		String base641 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png", encode);
-		Assert.assertNotNull(base641);
+		Assertions.assertNotNull(base641);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void decodeTest3(){
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		Console.log(decode);
@@ -92,6 +92,6 @@ public class QrCodeUtilTest {
 	@Test
 	public void pdf417Test(){
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
-		Assert.assertNotNull(image);
+		Assertions.assertNotNull(image);
 	}
 }

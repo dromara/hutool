@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.extra.expression.engine.aviator.AviatorEngine;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -22,19 +22,19 @@ public class AviatorTest {
 		String exp =
 				"\"[foo i=\"+ foo.i + \", f=\" + foo.f + \", date.year=\" + (foo.date.year+1900) + \", date.month=\" + foo.date.month + \", bars[0].name=\" + #foo.bars[0].name + \"]\"";
 		String result = (String) engine.eval(exp, Dict.create().set("foo", foo));
-		Assert.assertEquals("[foo i=100, f=3.14, date.year=2020, date.month=10, bars[0].name=bar]", result);
+		Assertions.assertEquals("[foo i=100, f=3.14, date.year=2020, date.month=10, bars[0].name=bar]", result);
 
 		// Assignment.
 		exp = "#foo.bars[0].name='hello aviator' ; #foo.bars[0].name";
 		result = (String) engine.eval(exp, Dict.create().set("foo", foo));
-		Assert.assertEquals("hello aviator", result);
-		Assert.assertEquals("hello aviator", foo.bars[0].getName());
+		Assertions.assertEquals("hello aviator", result);
+		Assertions.assertEquals("hello aviator", foo.bars[0].getName());
 
 		exp = "foo.bars[0] = nil ; foo.bars[0]";
 		result = (String) engine.eval(exp, Dict.create().set("foo", foo));
 		Console.log("Execute expression: " + exp);
-		Assert.assertNull(result);
-		Assert.assertNull(foo.bars[0]);
+		Assertions.assertNull(result);
+		Assertions.assertNull(foo.bars[0]);
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
@@ -14,8 +14,8 @@ public class IssueI1F8M2 {
 	public void toBeanTest() {
 		String jsonStr = "{\"eventType\":\"fee\",\"fwdAlertingTime\":\"2020-04-22 16:34:13\",\"fwdAnswerTime\":\"\"}";
 		Param param = JSONUtil.toBean(jsonStr, Param.class);
-		Assert.assertEquals("2020-04-22T16:34:13", param.getFwdAlertingTime().toString());
-		Assert.assertNull(param.getFwdAnswerTime());
+		Assertions.assertEquals("2020-04-22T16:34:13", param.getFwdAlertingTime().toString());
+		Assertions.assertNull(param.getFwdAnswerTime());
 	}
 
 	// Param类的字段

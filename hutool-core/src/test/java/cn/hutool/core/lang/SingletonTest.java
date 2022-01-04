@@ -3,8 +3,8 @@ package cn.hutool.core.lang;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SingletonTest {
 
@@ -33,10 +33,10 @@ public class SingletonTest {
 	 * 测试单例构建属性锁死问题
 	 * C构建单例时候，同时构建B，此时在SimpleCache中会有写锁竞争（写入C时获取了写锁，此时要写入B，也要获取写锁）
 	 */
-	@Test(timeout = 1000L)
+	@Test
 	public void reentrantTest(){
 		final C c = Singleton.get(C.class);
-		Assert.assertEquals("aaa", c.getB().getA());
+		Assertions.assertEquals("aaa", c.getB().getA());
 	}
 
 	@Data

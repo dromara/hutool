@@ -5,15 +5,15 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.compress.archiver.StreamArchiver;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class ArchiverTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest(){
 		final File file = FileUtil.file("d:/test/compress/test.zip");
 		StreamArchiver.create(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.ZIP, file)
@@ -25,7 +25,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tarTest(){
 		final File file = FileUtil.file("d:/test/compress/test.tar");
 		StreamArchiver.create(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.TAR, file)
@@ -37,7 +37,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cpioTest(){
 		final File file = FileUtil.file("d:/test/compress/test.cpio");
 		StreamArchiver.create(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.CPIO, file)
@@ -49,7 +49,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sevenZTest(){
 		final File file = FileUtil.file("d:/test/compress/test.7z");
 		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.SEVEN_Z, file)

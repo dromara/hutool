@@ -1,11 +1,11 @@
 package cn.hutool.core.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConsoleTableTest {
 
 	@Test
-//    @Ignore
+//    @Disabled
 	public void printTest() {
 		ConsoleTable t = new ConsoleTable();
 		t.addHeader("姓名", "年龄");

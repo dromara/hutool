@@ -14,8 +14,8 @@ import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
 import java.math.BigInteger;
@@ -32,8 +32,8 @@ public class RSATest {
 	@Test
 	public void generateKeyPairTest() {
 		KeyPair pair = KeyUtil.generateKeyPair("RSA");
-		Assert.assertNotNull(pair.getPrivate());
-		Assert.assertNotNull(pair.getPublic());
+		Assertions.assertNotNull(pair.getPrivate());
+		Assertions.assertNotNull(pair.getPublic());
 	}
 
 	@Test
@@ -47,12 +47,12 @@ public class RSATest {
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
 		// 私钥加密，公钥解密
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -60,21 +60,21 @@ public class RSATest {
 		final RSA rsa = new RSA();
 
 		// 获取私钥和公钥
-		Assert.assertNotNull(rsa.getPrivateKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
-		Assert.assertNotNull(rsa.getPublicKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPrivateKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPublicKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
 
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
 		// 私钥加密，公钥解密
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -82,21 +82,21 @@ public class RSATest {
 		final RSA rsa = new RSA(AsymmetricAlgorithm.RSA_ECB.getValue());
 
 		// 获取私钥和公钥
-		Assert.assertNotNull(rsa.getPrivateKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
-		Assert.assertNotNull(rsa.getPublicKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPrivateKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPublicKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
 
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
 		// 私钥加密，公钥解密
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -104,21 +104,21 @@ public class RSATest {
 		final RSA rsa = new RSA(AsymmetricAlgorithm.RSA_None.getValue());
 
 		// 获取私钥和公钥
-		Assert.assertNotNull(rsa.getPrivateKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
-		Assert.assertNotNull(rsa.getPublicKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPrivateKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPublicKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
 
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
 		// 私钥加密，公钥解密
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -127,20 +127,20 @@ public class RSATest {
 		rsa.setEncryptBlockSize(3);
 
 		// 获取私钥和公钥
-		Assert.assertNotNull(rsa.getPrivateKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
-		Assert.assertNotNull(rsa.getPublicKey());
-		Assert.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPrivateKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
+		Assertions.assertNotNull(rsa.getPublicKey());
+		Assertions.assertNotNull(rsa.getPrivateKeyBase64());
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
 		// 私钥加密，公钥解密
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
-		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -152,12 +152,12 @@ public class RSATest {
 		// 公钥加密，私钥解密
 		String encryptStr = rsa.encryptBcd(text, KeyType.PublicKey);
 		String decryptStr = StrUtil.utf8Str(rsa.decryptFromBcd(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text, decryptStr);
+		Assertions.assertEquals(text, decryptStr);
 
 		// 私钥加密，公钥解密
 		String encrypt2 = rsa.encryptBcd(text, KeyType.PrivateKey);
 		String decrypt2 = StrUtil.utf8Str(rsa.decryptFromBcd(encrypt2, KeyType.PublicKey));
-		Assert.assertEquals(text, decrypt2);
+		Assertions.assertEquals(text, decrypt2);
 	}
 
 	@Test
@@ -173,12 +173,12 @@ public class RSATest {
 		// 公钥加密，私钥解密
 		String encryptStr = rsa.encryptBase64(text.toString(), KeyType.PublicKey);
 		String decryptStr = StrUtil.utf8Str(rsa.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text.toString(), decryptStr);
+		Assertions.assertEquals(text.toString(), decryptStr);
 
 		// 私钥加密，公钥解密
 		String encrypt2 = rsa.encryptBase64(text.toString(), KeyType.PrivateKey);
 		String decrypt2 = StrUtil.utf8Str(rsa.decrypt(encrypt2, KeyType.PublicKey));
-		Assert.assertEquals(text.toString(), decrypt2);
+		Assertions.assertEquals(text.toString(), decrypt2);
 	}
 
 	@Test
@@ -203,7 +203,7 @@ public class RSATest {
 		byte[] aByte = HexUtil.decodeHex(a);
 		byte[] decrypt = rsa.decrypt(aByte, KeyType.PrivateKey);
 
-		Assert.assertEquals("虎头闯杭州,多抬头看天,切勿只管种地", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assertions.assertEquals("虎头闯杭州,多抬头看天,切勿只管种地", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 	}
 
 	@Test
@@ -229,7 +229,7 @@ public class RSATest {
 		rsa.setEncryptBlockSize(128);
 		String result2 = rsa.encryptHex(finalData, KeyType.PublicKey);
 
-		Assert.assertEquals(result1, result2);
+		Assertions.assertEquals(result1, result2);
 	}
 
 	@Test
@@ -242,6 +242,6 @@ public class RSATest {
 		RSA rsa = new RSA(new BigInteger(modulus, 16), null, new BigInteger(publicExponent));
 
 		final String encryptBase64 = rsa.encryptBase64("测试内容", KeyType.PublicKey);
-		Assert.assertNotNull(encryptBase64);
+		Assertions.assertNotNull(encryptBase64);
 	}
 }

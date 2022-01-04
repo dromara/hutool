@@ -1,8 +1,8 @@
 package cn.hutool.poi.excel;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ public class Issue1729Test {
 	public void readTest() {
 		final ExcelReader reader = ExcelUtil.getReader("UserProjectDO.xlsx");
 		final List<UserProjectDO> read = reader.read(0, 1, UserProjectDO.class);
-		Assert.assertEquals("aa", read.get(0).getProjectName());
-		Assert.assertNull(read.get(0).getEndTrainTime());
-		Assert.assertEquals("2020-02-02", read.get(0).getEndTestTime().toString());
+		Assertions.assertEquals("aa", read.get(0).getProjectName());
+		Assertions.assertNull(read.get(0).getEndTrainTime());
+		Assertions.assertEquals("2020-02-02", read.get(0).getEndTestTime().toString());
 	}
 
 	@Data

@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,7 +32,7 @@ public class IssueI1AU86Test {
 
 		final List<Vcc> vccs = jsonArray.toList(Vcc.class);
 		for (Vcc vcc : vccs) {
-			Assert.assertNotNull(vcc);
+			Assertions.assertNotNull(vcc);
 		}
 	}
 

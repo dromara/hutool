@@ -1,6 +1,6 @@
 package cn.hutool.log.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.log.StaticLog;
 

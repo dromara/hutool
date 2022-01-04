@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.reflect;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -18,15 +18,15 @@ public class ActualTypeMapperPoolTest {
 		final Map<Type, Type> typeTypeMap = ActualTypeMapperPool.get(FinalClass.class);
 		typeTypeMap.forEach((key, value)->{
 			if("A".equals(key.getTypeName())){
-				Assert.assertEquals(Character.class, value);
+				Assertions.assertEquals(Character.class, value);
 			} else if("B".equals(key.getTypeName())){
-				Assert.assertEquals(Boolean.class, value);
+				Assertions.assertEquals(Boolean.class, value);
 			} else if("C".equals(key.getTypeName())){
-				Assert.assertEquals(String.class, value);
+				Assertions.assertEquals(String.class, value);
 			} else if("D".equals(key.getTypeName())){
-				Assert.assertEquals(Double.class, value);
+				Assertions.assertEquals(Double.class, value);
 			} else if("E".equals(key.getTypeName())){
-				Assert.assertEquals(Integer.class, value);
+				Assertions.assertEquals(Integer.class, value);
 			}
 		});
 	}
@@ -36,15 +36,15 @@ public class ActualTypeMapperPoolTest {
 		final Map<String, Type> typeTypeMap = ActualTypeMapperPool.getStrKeyMap(FinalClass.class);
 		typeTypeMap.forEach((key, value)->{
 			if("A".equals(key)){
-				Assert.assertEquals(Character.class, value);
+				Assertions.assertEquals(Character.class, value);
 			} else if("B".equals(key)){
-				Assert.assertEquals(Boolean.class, value);
+				Assertions.assertEquals(Boolean.class, value);
 			} else if("C".equals(key)){
-				Assert.assertEquals(String.class, value);
+				Assertions.assertEquals(String.class, value);
 			} else if("D".equals(key)){
-				Assert.assertEquals(Double.class, value);
+				Assertions.assertEquals(Double.class, value);
 			} else if("E".equals(key)){
-				Assert.assertEquals(Integer.class, value);
+				Assertions.assertEquals(Integer.class, value);
 			}
 		});
 	}

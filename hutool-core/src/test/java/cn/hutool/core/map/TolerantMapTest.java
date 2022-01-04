@@ -2,8 +2,9 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -11,8 +12,8 @@ public class TolerantMapTest {
 
 	private final TolerantMap<String, String> map = TolerantMap.of(new HashMap<>(), "default");
 
-	@Before
-	public void before() {
+	@BeforeEach
+	public void init() {
 		map.put("monday", "星期一");
 		map.put("tuesday", "星期二");
 	}
@@ -21,20 +22,25 @@ public class TolerantMapTest {
 	public void testSerialize() {
 		byte[] bytes = ObjectUtil.serialize(map);
 		TolerantMap<String, String> serializedMap = ObjectUtil.deserialize(bytes);
-		assert serializedMap != map;
-		assert map.equals(serializedMap);
+		Assertions.assertNotSame(serializedMap, map);
+		Assertions.assertEquals(map, serializedMap);
 	}
 
 	@Test
 	public void testClone() {
 		TolerantMap<String, String> clonedMap = ObjectUtil.clone(map);
-		assert clonedMap != map;
-		assert map.equals(clonedMap);
+		Assertions.assertNotSame(clonedMap, map);
+		Assertions.assertEquals(map, clonedMap);
 	}
 
 	@Test
 	public void testGet() {
-		assert "星期二".equals(map.get("tuesday"));
-		assert "default".equals(map.get(RandomUtil.randomString(6)));
+		Assertions.assertTrue(map.containsKey("tuesday"));
+		Assertions.assertEquals("星期二", map.get("tuesday"));
+	}
+
+	@Test
+	public void testGet2() {
+		Assertions.assertEquals("default", map.get(RandomUtil.randomString(6)));
 	}
 }

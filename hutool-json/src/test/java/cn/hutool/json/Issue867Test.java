@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.annotation.Alias;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Issue867Test {
 
@@ -11,9 +11,9 @@ public class Issue867Test {
 	public void toBeanTest(){
 		String json = "{\"abc_1d\":\"123\",\"abc_d\":\"456\",\"abc_de\":\"789\"}";
 		Test02 bean = JSONUtil.toBean(JSONUtil.parseObj(json),Test02.class);
-		Assert.assertEquals("123", bean.getAbc1d());
-		Assert.assertEquals("456", bean.getAbcD());
-		Assert.assertEquals("789", bean.getAbcDe());
+		Assertions.assertEquals("123", bean.getAbc1d());
+		Assertions.assertEquals("456", bean.getAbcD());
+		Assertions.assertEquals("789", bean.getAbcDe());
 	}
 
 	@Data

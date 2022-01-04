@@ -43,16 +43,32 @@
 
 		<!-- versions -->
 		<compile.version>8</compile.version>
-		<junit.version>4.13.2</junit.version>
+		<junit.version>5.8.2</junit.version>
 		<lombok.version>1.18.22</lombok.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<!-- 全局单元测试 -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -97,6 +113,7 @@
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<parameters>true</parameters>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->
@@ -113,7 +130,16 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<systemPropertyVariables>
+						<user.timezone>Asia/Shanghai</user.timezone>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

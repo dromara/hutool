@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
@@ -20,10 +20,10 @@ import cn.hutool.core.lang.test.bean.UserInfoDict;
  */
 public class BeanPathTest {
 
-	Map<String, Object> tempMap;
+	static Map<String, Object> tempMap;
 
-	@Before
-	public void init() {
+	@BeforeAll
+	static void init() {
 		// ------------------------------------------------- 考试信息列表
 		ExamInfoDict examInfoDict = new ExamInfoDict();
 		examInfoDict.setId(1);
@@ -60,36 +60,36 @@ public class BeanPathTest {
 	@Test
 	public void beanPathTest1() {
 		BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 
 	}
 
 	@Test
 	public void beanPathTest2() {
 		BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void beanPathTest3() {
 		BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void getTest() {
 		BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		Object result = pattern.get(tempMap);
-		Assert.assertEquals(1, result);
+		Assertions.assertEquals(1, result);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class BeanPathTest {
 		BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		Object result = pattern.get(tempMap);
-		Assert.assertEquals(2, result);
+		Assertions.assertEquals(2, result);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class BeanPathTest {
 		BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
-		Assert.assertEquals(1, result.get("id"));
-		Assert.assertEquals("yx.mm.com", result.get("photoPath"));
+		Assertions.assertEquals(1, result.get("id"));
+		Assertions.assertEquals("yx.mm.com", result.get("photoPath"));
 	}
 }

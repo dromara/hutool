@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Enum转换单元测试
@@ -11,19 +11,19 @@ public class EnumConvertTest {
 	@Test
 	public void convertTest(){
 		TestEnum bbb = Convert.convert(TestEnum.class, "BBB");
-		Assert.assertEquals(TestEnum.B, bbb);
+		Assertions.assertEquals(TestEnum.B, bbb);
 
 		bbb = Convert.convert(TestEnum.class, 22);
-		Assert.assertEquals(TestEnum.B, bbb);
+		Assertions.assertEquals(TestEnum.B, bbb);
 	}
 
 	@Test
 	public void toEnumTest(){
 		TestEnum ccc = Convert.toEnum(TestEnum.class, "CCC");
-		Assert.assertEquals(TestEnum.C, ccc);
+		Assertions.assertEquals(TestEnum.C, ccc);
 
 		ccc = Convert.toEnum(TestEnum.class, 33);
-		Assert.assertEquals(TestEnum.C, ccc);
+		Assertions.assertEquals(TestEnum.C, ccc);
 	}
 
 	enum TestEnum {

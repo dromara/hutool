@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JSONSupportTest {
 
@@ -23,10 +23,10 @@ public class JSONSupportTest {
 
 
 		final TestBean testBean = JSONUtil.toBean(jsonstr, TestBean.class);
-		Assert.assertEquals("https://hutool.cn", testBean.getLocation());
-		Assert.assertEquals("这是一条测试消息", testBean.getMessage());
-		Assert.assertEquals("123456789", testBean.getRequestId());
-		Assert.assertEquals("987654321", testBean.getTraceId());
+		Assertions.assertEquals("https://hutool.cn", testBean.getLocation());
+		Assertions.assertEquals("这是一条测试消息", testBean.getMessage());
+		Assertions.assertEquals("123456789", testBean.getRequestId());
+		Assertions.assertEquals("987654321", testBean.getTraceId());
 	}
 
 	@EqualsAndHashCode(callSuper = true)
