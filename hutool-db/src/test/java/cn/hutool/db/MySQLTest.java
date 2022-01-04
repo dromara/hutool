@@ -14,10 +14,10 @@ import java.util.List;
  * @author looly
  *
  */
+@Disabled
 public class MySQLTest {
 
 	@Test
-	@Disabled
 	public void insertTest() throws SQLException {
 		for (int id = 100; id < 200; id++) {
 			Db.use("mysql").insert(Entity.create("user")//
@@ -36,7 +36,6 @@ public class MySQLTest {
 	 * @throws SQLException SQL异常
 	 */
 	@Test
-	@Disabled
 	public void txTest() throws SQLException {
 		Assertions.assertThrows(SQLException.class, () -> {
 			Db.use("mysql").tx(db -> {
@@ -52,7 +51,6 @@ public class MySQLTest {
 	}
 
 	@Test
-	@Disabled
 	public void pageTest() throws SQLException {
 		PageResult<Entity> result = Db.use("mysql").page(Entity.create("user"), new Page(2, 10));
 		for (Entity entity : result) {
@@ -61,7 +59,6 @@ public class MySQLTest {
 	}
 
 	@Test
-	@Disabled
 	public void getTimeStampTest() throws SQLException {
 		final List<Entity> all = Db.use("mysql").findAll("test");
 		Console.log(all);

@@ -1,9 +1,7 @@
 package cn.hutool.extra.ssh;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -19,16 +17,11 @@ import java.util.List;
 @Disabled
 public class SftpTest {
 
-	private static SshjSftp sshjSftp;
+	private SshjSftp sshjSftp;
 
-	@BeforeAll
-	static void init() {
+	@BeforeEach
+	public void init() {
 		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.CHARSET_UTF_8);
-	}
-
-	@AfterAll
-	static void clean() {
-		IoUtil.close(sshjSftp);
 	}
 
 	@Test
