@@ -133,7 +133,7 @@ public class CsvReaderTest {
 		Assert.assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
 
 		Assert.assertEquals(4, data.getRow(2).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(2), ","));
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(2), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
 		Assert.assertEquals(6, data.getRow(3).getOriginalLineNumber());
@@ -150,7 +150,7 @@ public class CsvReaderTest {
 		Assert.assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
 
 		Assert.assertEquals(4, data.getRow(1).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(1), ","));
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(1), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
 		Assert.assertEquals(6, data.getRow(2).getOriginalLineNumber());
@@ -164,7 +164,7 @@ public class CsvReaderTest {
 		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
 
 		Assert.assertEquals(4, data.getRow(0).getOriginalLineNumber());
-		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(0), ","));
+		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容", CollUtil.join(data.getRow(0), ",").replace("\r", ""));
 
 		// 文件中第3行数据，对应原始行号是6（从0开始）
 		Assert.assertEquals(6, data.getRow(1).getOriginalLineNumber());
