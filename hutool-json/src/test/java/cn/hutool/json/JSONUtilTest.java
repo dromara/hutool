@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
@@ -223,5 +224,14 @@ public class JSONUtilTest {
 		// 科学计数法使用BigDecimal处理，默认输出非科学计数形式
 		String str = "{\"test\":100000054128897953e4}";
 		Assert.assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
+	}
+
+	@Test
+	public void toXmlTest(){
+		final JSONObject obj = JSONUtil.createObj();
+		obj.set("key1", "v1")
+				.set("key2", ListUtil.of("a", "b", "c"));
+		final String xmlStr = JSONUtil.toXmlStr(obj);
+		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
 }
