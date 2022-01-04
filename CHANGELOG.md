@@ -11,6 +11,7 @@
 * 【core   】     CharSequenceUtil.replace方法支持增补字符（pr#2041@Github）
 * 【extra  】     增加SshjSftp（pr#493@Gitee）
 * 【core   】     增加CheckedUtil（pr#491@Gitee）
+* 【extra  】     增加Sftp.isDir中的抛异常判断条件（issues#I4P9ED@Gitee）
 
 ### 🐞Bug修复
 * 【http   】     HttpUtil重定向次数失效问题（issue#I4O28Q@Gitee）
