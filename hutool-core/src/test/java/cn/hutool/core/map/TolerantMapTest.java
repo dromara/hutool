@@ -3,17 +3,17 @@ package cn.hutool.core.map;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
 public class TolerantMapTest {
 
-	private final TolerantMap<String, String> map = TolerantMap.of(new HashMap<>(), "default");
+	private static final TolerantMap<String, String> map = TolerantMap.of(new HashMap<>(), "default");
 
-	@BeforeEach
-	public void init() {
+	@BeforeAll
+	public static void init() {
 		map.put("monday", "星期一");
 		map.put("tuesday", "星期二");
 	}

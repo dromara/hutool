@@ -2,7 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.db.pojo.User;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class FindBeanTest {
 
-	Db db;
+	static Db db;
 
-	@BeforeEach
-	public void init() {
+	@BeforeAll
+	public static void init() {
 		db = Db.use("test");
 	}
 

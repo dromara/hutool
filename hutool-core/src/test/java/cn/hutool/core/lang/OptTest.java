@@ -1,7 +1,6 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.id.NanoId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

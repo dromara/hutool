@@ -1,8 +1,5 @@
 package cn.hutool.core.convert;
 
-import java.security.SecureRandom;
-
-import cn.hutool.core.lang.id.NanoId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

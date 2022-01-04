@@ -24,7 +24,7 @@ import java.util.Objects;
 public class PropsTest {
 
 	@BeforeAll
-	static void init() {
+	public static void init() {
 		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
 	}
 

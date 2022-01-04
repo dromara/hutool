@@ -1,6 +1,5 @@
 package cn.hutool.core.text.split;
 
-import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.LengthFinder;
 import cn.hutool.core.text.finder.PatternFinder;
@@ -8,7 +7,6 @@ import cn.hutool.core.text.finder.StrFinder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.regex.Pattern;
 
