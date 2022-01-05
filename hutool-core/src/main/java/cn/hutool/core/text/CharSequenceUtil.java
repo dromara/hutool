@@ -4239,12 +4239,12 @@ public class CharSequenceUtil {
 				return str.charAt(0) + ".." + str.charAt(strLength - 1);
 		}
 
-		final int w2 = (maxLength - 3) / 2;
-		final int w1 = w2 + (maxLength - 3) % 2; // w2 或 w2 + 1
+		final int suffixLength = (maxLength - 3) / 2;
+		final int preLength = suffixLength + (maxLength - 3) % 2; // suffixLength 或 suffixLength + 1
 		final String str2 = str.toString();
 		return format("{}...{}",
-				str2.substring(0, w1),
-				str2.substring(strLength - w2));
+				str2.substring(0, preLength),
+				str2.substring(strLength - suffixLength));
 	}
 
 	/**
