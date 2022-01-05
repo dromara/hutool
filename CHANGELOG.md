@@ -20,6 +20,7 @@
 * 【core   】     NumberUtil增加equals重载解决long传入判断问题（pr#2064@Github）
 * 【core   】     修复CsvParser行号有误问题（pr#2065@Github）
 * 【http   】     修复HttpRequest.of无法自动添加http前缀问题（issue#I4PEYL@Gitee）
+* 【core   】     修复 `CharSequenceUtil.brief(str, maxLength)` 方法字符串越界问题，以及 `maxLength` 部分值时结果与预期不符的问题（pr#2068@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.18 (2021-12-25)

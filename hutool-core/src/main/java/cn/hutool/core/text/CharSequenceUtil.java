@@ -1090,7 +1090,7 @@ public class CharSequenceUtil {
 	/**
 	 * 指定范围内查找指定字符
 	 *
-	 * @param text        字符串
+	 * @param text       字符串
 	 * @param searchChar 被查找的字符
 	 * @param start      起始位置，如果小于0，从0开始查找
 	 * @param end        终止位置，如果超过str.length()则默认查找到字符串末尾
@@ -1207,9 +1207,9 @@ public class CharSequenceUtil {
 	 * 指定范围内查找字符串<br>
 	 * fromIndex 为搜索起始位置，从后往前计数
 	 *
-	 * @param text        字符串
+	 * @param text       字符串
 	 * @param searchStr  需要查找位置的字符串
-	 * @param from  起始位置，从后往前计数
+	 * @param from       起始位置，从后往前计数
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 位置
 	 * @since 3.2.1
@@ -2015,9 +2015,9 @@ public class CharSequenceUtil {
 		}
 
 		if (counterOfDoubleByte % 2 != 0) {
-			if(halfUp){
+			if (halfUp) {
 				len += 1;
-			}else{
+			} else {
 				len -= 1;
 			}
 		}
@@ -2486,8 +2486,8 @@ public class CharSequenceUtil {
 	 * StrUtil.repeatAndJoin("?", 5, null) = "?????"
 	 * </pre>
 	 *
-	 * @param str         被重复的字符串
-	 * @param count       数量
+	 * @param str       被重复的字符串
+	 * @param count     数量
 	 * @param delimiter 分界符
 	 * @return 连接后的字符串
 	 * @since 4.0.1
@@ -3538,7 +3538,7 @@ public class CharSequenceUtil {
 
 		final int strLength = str.length();
 		final int searchStrLength = searchStr.length();
-		if(strLength < searchStrLength){
+		if (strLength < searchStrLength) {
 			// issue#I4M16G@Gitee
 			return str(str);
 		}
@@ -4201,11 +4201,17 @@ public class CharSequenceUtil {
 	 * 将给定字符串，变成 "xxx...xxx" 形式的字符串
 	 *
 	 * <ul>
-	 *     <li>abcdef 5 -》 a...f</li>
-	 *     <li>abcdef 4 -》 a..f</li>
-	 *     <li>abcdef 3 -》 a.f</li>
-	 *     <li>abcdef 2 -》 a.</li>
-	 *     <li>abcdef 1 -》 a</li>
+	 *     <li>abcdefgh  9 -》 abcdefgh</li>
+	 *     <li>abcdefgh  8 -》 abcdefgh</li>
+	 *     <li>abcdefgh  7 -》 ab...gh</li>
+	 *     <li>abcdefgh  6 -》 ab...h</li>
+	 *     <li>abcdefgh  5 -》 a...h</li>
+	 *     <li>abcdefgh  4 -》 a..h</li>
+	 *     <li>abcdefgh  3 -》 a.h</li>
+	 *     <li>abcdefgh  2 -》 a.</li>
+	 *     <li>abcdefgh  1 -》 a</li>
+	 *     <li>abcdefgh  0 -》 abcdefgh</li>
+	 *     <li>abcdefgh -1 -》 abcdefgh</li>
 	 * </ul>
 	 *
 	 * @param str       字符串
@@ -4228,14 +4234,17 @@ public class CharSequenceUtil {
 			case 2:
 				return str.charAt(0) + ".";
 			case 3:
-				return str.charAt(0) + "." + str.charAt(str.length() - 1);
+				return str.charAt(0) + "." + str.charAt(strLength - 1);
+			case 4:
+				return str.charAt(0) + ".." + str.charAt(strLength - 1);
 		}
 
-		final int w = maxLength / 2;
+		final int w2 = (maxLength - 3) / 2;
+		final int w1 = w2 + (maxLength - 3) % 2; // w2 或 w2 + 1
 		final String str2 = str.toString();
 		return format("{}...{}",
-				str2.substring(0, maxLength - w),
-				str2.substring(strLength - w + 3));
+				str2.substring(0, w1),
+				str2.substring(strLength - w2));
 	}
 
 	/**
