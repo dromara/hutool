@@ -22,7 +22,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -1803,10 +1802,7 @@ public class CharSequenceUtil {
 	 * @since 5.7.14
 	 */
 	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean ignoreEmpty, Function<String, R> mapping) {
-		if (null == str) {
-			return new ArrayList<>(0);
-		}
-		return StrSplitter.split(str.toString(), separator, limit, ignoreEmpty, mapping);
+		return StrSplitter.split(str, separator, limit, ignoreEmpty, mapping);
 	}
 
 	/**
@@ -1847,11 +1843,8 @@ public class CharSequenceUtil {
 	 * @since 3.2.0
 	 */
 	public static List<String> split(CharSequence str, CharSequence separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		if (null == str) {
-			return new ArrayList<>(0);
-		}
 		final String separatorStr = (null == separator) ? null : separator.toString();
-		return StrSplitter.split(str.toString(), separatorStr, limit, isTrim, ignoreEmpty);
+		return StrSplitter.split(str, separatorStr, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1860,13 +1853,10 @@ public class CharSequenceUtil {
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
-	 * @see StrSplitter#splitByLength(String, int)
+	 * @see StrSplitter#splitByLength(CharSequence, int)
 	 */
 	public static String[] split(CharSequence str, int len) {
-		if (null == str) {
-			return new String[]{};
-		}
-		return StrSplitter.splitByLength(str.toString(), len);
+		return StrSplitter.splitByLength(str, len);
 	}
 
 	/**

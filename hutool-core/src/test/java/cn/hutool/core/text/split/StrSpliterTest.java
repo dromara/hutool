@@ -60,6 +60,15 @@ public class StrSpliterTest {
 		String str = "";
 		final String[] split = str.split(",");
 		final String[] strings = StrSplitter.splitToArray(str, ",", -1, false, false);
+		Assert.assertNotNull(strings);
 		Assert.assertArrayEquals(split, strings);
+	}
+
+	@Test
+	public void splitNullTest(){
+		String str = null;
+		final String[] strings = StrSplitter.splitToArray(str, ",", -1, false, false);
+		Assert.assertNotNull(strings);
+		Assert.assertEquals(0, strings.length);
 	}
 }

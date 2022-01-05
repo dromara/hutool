@@ -1,6 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.CharMatcherFinder;
@@ -12,14 +11,12 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
  * 字符串切分器，封装统一的字符串分割静态方法
- *
  * @author Looly
  * @since 5.7.0
  */
@@ -176,7 +173,7 @@ public class StrSplitter {
 	}
 
 	/**
-	 * 切分字符串
+	 * 切分字符串<br>
 	 * 如果为空字符串或者null 则返回空集合
 	 *
 	 * @param <R>         切分后的元素类型
@@ -191,8 +188,8 @@ public class StrSplitter {
 	 */
 	public static <R> List<R> split(CharSequence text, char separator, int limit, boolean ignoreEmpty,
 									boolean ignoreCase, Function<String, R> mapping) {
-		if (StrUtil.isBlank(text)) {
-			return Collections.emptyList();
+		if (null == text) {
+			return new ArrayList<>(0);
 		}
 		final SplitIter splitIter = new SplitIter(text, new CharFinder(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(mapping);
@@ -301,7 +298,8 @@ public class StrSplitter {
 	}
 
 	/**
-	 * 切分字符串
+	 * 切分字符串<br>
+	 * 如果为空字符串或者null 则返回空集合
 	 *
 	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符串
@@ -313,6 +311,9 @@ public class StrSplitter {
 	 * @since 3.2.1
 	 */
 	public static List<String> split(CharSequence text, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
+		if (null == text) {
+			return new ArrayList<>(0);
+		}
 		final SplitIter splitIter = new SplitIter(text, new StrFinder(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);
 	}
@@ -336,7 +337,8 @@ public class StrSplitter {
 
 	/**
 	 * 使用空白符切分字符串<br>
-	 * 切分后的字符串两边不包含空白符，空串或空白符串并不做为元素之一
+	 * 切分后的字符串两边不包含空白符，空串或空白符串并不做为元素之一<br>
+	 * 如果为空字符串或者null 则返回空集合
 	 *
 	 * @param text  被切分的字符串
 	 * @param limit 限制分片数
@@ -344,8 +346,7 @@ public class StrSplitter {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence text, int limit) {
-
-		if (StrUtil.isEmpty(text)) {
+		if (null == text) {
 			return new ArrayList<>(0);
 		}
 		final SplitIter splitIter = new SplitIter(text, new CharMatcherFinder(CharUtil::isBlankChar), limit, true);
@@ -382,7 +383,8 @@ public class StrSplitter {
 	}
 
 	/**
-	 * 通过正则切分字符串
+	 * 通过正则切分字符串<br>
+	 * 如果为空字符串或者null 则返回空集合
 	 *
 	 * @param text             字符串
 	 * @param separatorPattern 分隔符正则{@link Pattern}
@@ -393,8 +395,7 @@ public class StrSplitter {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(String text, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty) {
-		Assert.notNull(text, "Text must be not null!");
-		if (text.length() < 1) {
+		if (null == text) {
 			return new ArrayList<>(0);
 		}
 		final SplitIter splitIter = new SplitIter(text, new PatternFinder(separatorPattern), limit, ignoreEmpty);
@@ -424,7 +425,10 @@ public class StrSplitter {
 	 * @param len  每一个小节的长度
 	 * @return 截取后的字符串数组
 	 */
-	public static String[] splitByLength(String text, int len) {
+	public static String[] splitByLength(CharSequence text, int len) {
+		if (null == text) {
+			return new String[0];
+		}
 		SplitIter splitIter = new SplitIter(text, new LengthFinder(len), -1, false);
 		return splitIter.toArray(false);
 	}
