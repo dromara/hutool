@@ -90,7 +90,7 @@ public class NamingCase {
 					} else if (Character.isLowerCase(preChar)) {
 						// 前一个为小写
 						sb.append(symbol);
-						if (null == nextChar || Character.isLowerCase(nextChar)) {
+						if (null == nextChar || Character.isLowerCase(nextChar) || CharUtil.isNumber(nextChar)) {
 							//普通首字母大写，如aBcc -> a_bcc
 							c = Character.toLowerCase(c);
 						}

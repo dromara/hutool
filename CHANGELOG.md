@@ -21,6 +21,7 @@
 * 【core   】     修复CsvParser行号有误问题（pr#2065@Github）
 * 【http   】     修复HttpRequest.of无法自动添加http前缀问题（issue#I4PEYL@Gitee）
 * 【core   】     修复 `CharSequenceUtil.brief(str, maxLength)` 方法字符串越界问题，以及 `maxLength` 部分值时结果与预期不符的问题（pr#2068@Github）
+* 【core   】     修复NamingCase中转换下划线字母+数字转换问题（issue#2070@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.18 (2021-12-25)

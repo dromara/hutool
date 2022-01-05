@@ -421,12 +421,6 @@ public class StrUtilTest {
 				.set("HelloWorld_test", "hello_world_test")
 				.set("H2", "H2")
 				.set("H#case", "H#case")
-				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
-	}
-
-	@Test
-	public void toUnderLineCaseTest2() {
-		Dict.create()
 				.set("PNLabel", "PN_label")
 				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
 	}
