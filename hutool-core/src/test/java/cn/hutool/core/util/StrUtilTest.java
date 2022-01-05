@@ -529,10 +529,18 @@ public class StrUtilTest {
 
 	@Test
 	public void briefTest() {
-		String str = RandomUtil.randomString(1000);
-		int maxLength = RandomUtil.randomInt(1000);
-		String brief = StrUtil.brief(str, maxLength);
-		Assert.assertEquals(brief.length(), maxLength);
+		// case: 1 至 str.length - 1
+		String str = RandomUtil.randomString(RandomUtil.randomInt(1, 100));
+		for (int maxLength = 1; maxLength < str.length(); maxLength++) {
+			String brief = StrUtil.brief(str, maxLength);
+			Assert.assertEquals(brief.length(), maxLength);
+		}
+
+		// case: 不会格式化的值
+		Assert.assertEquals(str, StrUtil.brief(str, 0));
+		Assert.assertEquals(str, StrUtil.brief(str, -1));
+		Assert.assertEquals(str, StrUtil.brief(str, str.length()));
+		Assert.assertEquals(str, StrUtil.brief(str, str.length() + 1));
 	}
 
 	@Test
