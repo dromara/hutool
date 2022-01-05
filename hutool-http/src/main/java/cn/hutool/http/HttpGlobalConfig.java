@@ -43,7 +43,13 @@ public class HttpGlobalConfig implements Serializable {
 	}
 
 	/**
-	 * 设置默认的连接和读取超时时长
+	 * 设置默认的连接和读取超时时长<br>
+	 * -1: 含义，永不超时。<br>
+	 * 如果：设置timeout = 3s(3000 ms), 那一次请求最大超时：就是：6s<br>
+	 * 官方含义：timeout of zero is interpreted as an infinite timeout. （0的超时被解释为无限超时。）<br>
+	 * 这里实际项目一定要进行修改，防止把系统拖死.<br>
+	 * 底层调用：{@link HttpURLConnection#setReadTimeout(int)} 同时设置: 读取超时<br>
+	 * 底层调用：{@link HttpURLConnection#setConnectTimeout(int)} 同时设置: 连接超时
 	 *
 	 * @param customTimeout 超时时长
 	 */
