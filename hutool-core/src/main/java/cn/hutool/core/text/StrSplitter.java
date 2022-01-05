@@ -12,6 +12,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -176,6 +177,7 @@ public class StrSplitter {
 
 	/**
 	 * 切分字符串
+	 * 如果为空字符串或者null 则返回空集合
 	 *
 	 * @param <R>         切分后的元素类型
 	 * @param text        被切分的字符串
@@ -189,6 +191,9 @@ public class StrSplitter {
 	 */
 	public static <R> List<R> split(CharSequence text, char separator, int limit, boolean ignoreEmpty,
 									boolean ignoreCase, Function<String, R> mapping) {
+		if (StrUtil.isBlank(text)) {
+			return Collections.emptyList();
+		}
 		final SplitIter splitIter = new SplitIter(text, new CharFinder(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(mapping);
 	}
