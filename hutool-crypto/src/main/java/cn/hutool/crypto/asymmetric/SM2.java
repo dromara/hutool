@@ -531,7 +531,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.7.17
 	 */
 	public String getDHex() {
-		return getDBigInteger().toString(16);
+		return String.format("%064x", new BigInteger(1, getD()));
 	}
 
 	/**
