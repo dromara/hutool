@@ -1,6 +1,6 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.lang.Assert;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -33,6 +33,6 @@ public class AsyncUtilTest {
 		// 等待完成
 		AsyncUtil.waitAll(hutool, sweater, warm);
 		// 获取结果
-		Assert.isTrue("hutool卫衣真暖和".equals(AsyncUtil.get(hutool) + AsyncUtil.get(sweater) + AsyncUtil.get(warm)));
+		Assert.assertEquals("hutool卫衣真暖和", AsyncUtil.get(hutool) + AsyncUtil.get(sweater) + AsyncUtil.get(warm));
 	}
 }
