@@ -89,9 +89,9 @@ public class StrUtilTest {
 		Assert.assertEquals("", split.get(2));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void splitNullTest() {
-		StrUtil.split(null, '.');
+		Assert.assertEquals(0, StrUtil.split(null, '.').size());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
