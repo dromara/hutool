@@ -21,8 +21,9 @@ public interface RegexPool {
 	String WORD = "[a-zA-Z]+";
 	/**
 	 * 单个中文汉字
+	 * <br/>参照维基百科汉字Unicode范围(https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97 页面右侧)
 	 */
-	String CHINESE = "[\u4E00-\u9FFF]";
+	String CHINESE = "[\u2E80-\u2EFF\u2F00-\u2FDF\u31C0-\u31EF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uD840\uDC00-\uD869\uDEDF\uD869\uDF00-\uD86D\uDF3F\uD86D\uDF40-\uD86E\uDC1F\uD86E\uDC20-\uD873\uDEAF\uD87E\uDC00-\uD87E\uDE1F]";
 	/**
 	 * 中文汉字
 	 */
