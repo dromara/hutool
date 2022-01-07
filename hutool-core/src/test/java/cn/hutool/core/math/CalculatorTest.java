@@ -31,10 +31,15 @@ public class CalculatorTest {
 	}
 
 	@Test
-	@Ignore
 	public void conversationTest5(){
 		// https://github.com/dromara/hutool/issues/1984
 		final double conversion = Calculator.conversion("((1/1) / (1/1) -1) * 100");
-		Assert.assertEquals((88D * 66 / 23) % 26, conversion, 2);
+		Assert.assertEquals(0, conversion, 2);
+	}
+
+	@Test
+	public void conversationTest6() {
+		final double conversion = Calculator.conversion("-((2.12-2) * 100)");
+		Assert.assertEquals(-1D * (2.12 - 2) * 100, conversion, 2);
 	}
 }
