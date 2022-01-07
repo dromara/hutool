@@ -68,4 +68,20 @@ public class UploadTest {
 		HttpResponse httpResponse = httpRequest.execute();
 		Console.log(httpResponse);
 	}
+
+	@Test
+	@Ignore
+	public void smmsTest(){
+		// https://github.com/dromara/hutool/issues/2079
+		// hutool的user agent 被封了
+		String token = "test";
+		String url = "https://sm.ms/api/v2/upload";
+		String result = HttpUtil.createPost(url)
+				.header(Header.USER_AGENT, "PostmanRuntime/7.28.4")
+				.auth(token)
+				.form("smfile", FileUtil.file("d:/test/qrcodeCustom.png"))
+				.execute().body();
+
+		Console.log(result);
+	}
 }
