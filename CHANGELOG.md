@@ -25,6 +25,7 @@
 * 【core   】     修复split空判断不一致问题（pr#496@Gitee）
 * 【crypto 】     修复SM2.getDHex()前导0丢失,然后导致获取密钥错误（pr#2073@Github）
 * 【core   】     修复关于Calculator.conversion()方法EmptyStackException的bug（pr#2076@Github）
+* 【core   】     修复StrUtil.subBetweenAll循环bug（issue#I4PT3M@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.18 (2021-12-25)

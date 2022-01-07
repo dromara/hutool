@@ -2336,7 +2336,9 @@ public class CharSequenceUtil {
 			}
 		} else {
 			int suffixIndex;
-			for (String fragment : split) {
+			String fragment;
+			for (int i = 1; i < split.length; i++) {
+				fragment = split[i];
 				suffixIndex = fragment.indexOf(suffix.toString());
 				if (suffixIndex > 0) {
 					result.add(fragment.substring(0, suffixIndex));

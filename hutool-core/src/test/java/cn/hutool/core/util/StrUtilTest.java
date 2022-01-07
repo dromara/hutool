@@ -522,6 +522,14 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void subBetweenAllTest4() {
+		String str = "你好:1388681xxxx用户已开通,1877275xxxx用户已开通,无法发送业务开通短信";
+		String[] strings = StrUtil.subBetweenAll(str, "1877275xxxx", ",");
+		Assert.assertEquals(1, strings.length);
+		Assert.assertEquals("用户已开通", strings[0]);
+	}
+
+	@Test
 	public void briefTest() {
 		// case: 1 至 str.length - 1
 		String str = RandomUtil.randomString(RandomUtil.randomInt(1, 100));
