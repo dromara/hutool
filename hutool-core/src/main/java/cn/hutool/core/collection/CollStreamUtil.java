@@ -3,16 +3,10 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.stream.CollectorUtil;
 import cn.hutool.core.stream.StreamUtil;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -161,7 +155,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupBy(collection, key1, Collectors.groupingBy(key2, Collectors.toList()), isParallel);
+		return groupBy(collection, key1, CollectorUtil.groupingBy(key2, Collectors.toList()), isParallel);
 	}
 
 	/**
@@ -236,7 +230,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return groupBy(collection, key, Collectors.mapping(value, Collectors.toList()), isParallel);
+		return groupBy(collection, key, Collectors.mapping(v -> Opt.ofNullable(v).map(value).orElse(null), Collectors.toList()), isParallel);
 	}
 
 	/**
@@ -276,7 +270,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
-		return StreamUtil.of(collection, isParallel).collect(Collectors.groupingBy(key, downstream));
+		return StreamUtil.of(collection, isParallel).collect(CollectorUtil.groupingBy(key, downstream));
 	}
 
 	/**
