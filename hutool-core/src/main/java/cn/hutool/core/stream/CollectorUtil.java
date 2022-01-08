@@ -1,8 +1,13 @@
 package cn.hutool.core.stream;
 
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -84,7 +89,7 @@ public class CollectorUtil {
 		Supplier<A> downstreamSupplier = downstream.supplier();
 		BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
 		BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
-			K key = Optional.ofNullable(t).map(classifier).orElse(null);
+			K key = Opt.ofNullable(t).map(classifier).orElse(null);
 			A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			downstreamAccumulator.accept(container, t);
 		};
