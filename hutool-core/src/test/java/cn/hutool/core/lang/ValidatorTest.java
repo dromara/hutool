@@ -162,7 +162,16 @@ public class ValidatorTest {
 	@Test
 	public void isChineseTest(){
 		Assert.assertTrue(Validator.isChinese("全都是中文"));
+		Assert.assertTrue(Validator.isChinese("㐓㐘"));
 		Assert.assertFalse(Validator.isChinese("not全都是中文"));
+	}
+
+	@Test
+	public void hasChineseTest() {
+		Assert.assertTrue(Validator.hasChinese("黄单桑米"));
+		Assert.assertTrue(Validator.hasChinese("Kn 四兄弟"));
+		Assert.assertTrue(Validator.hasChinese("\uD840\uDDA3"));
+		Assert.assertFalse(Validator.hasChinese("Abc"));
 	}
 
 	@Test
