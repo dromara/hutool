@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 /**
  * 方法句柄{@link MethodHandle}封装工具类<br>
+ * 方法句柄是一个有类型的，可以直接执行的指向底层方法、构造器、field等的引用，可以简单理解为函数指针，它是一种更加底层的查找、调整和调用方法的机制。
  * 参考：
  * <ul>
  *     <li>https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively</li>
@@ -113,7 +114,7 @@ public class MethodHandleUtil {
 	}
 
 	/**
-	 * 执行接口或对象中的方法<br>
+	 * 执行接口或对象中的特殊方法（private、static等）<br>
 	 *
 	 * <pre class="code">
 	 *     interface Duck {
@@ -159,7 +160,7 @@ public class MethodHandleUtil {
 	}
 
 	/**
-	 * 执行接口或对象中的方法<br>
+	 * 执行接口或对象中的特殊方法（private、static等）<br>
 	 *
 	 * <pre class="code">
 	 *     interface Duck {
