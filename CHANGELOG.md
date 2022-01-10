@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core   】     增加对null值友好的groupingBy操作的Collector实现，可指定map类型（pr#498@Gitee）
+* 【core   】     增加KetamaHash（issue#2084@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
