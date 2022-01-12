@@ -376,7 +376,7 @@ public class UserAgentUtilTest {
 
 	@Test
 	public void parseLenovoTest(){
-		// https://gitee.com/dromara/hutool/issues/I4MCBP
+		// https://gitee.com/dromara/hutool/issues/I4QBMD
 		String uaStr = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36 SLBrowser/7.0.0.6241 SLBChan/30";
 		final UserAgent ua = UserAgentUtil.parse(uaStr);
 
