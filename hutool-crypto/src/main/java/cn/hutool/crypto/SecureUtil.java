@@ -3,7 +3,6 @@ package cn.hutool.crypto;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
@@ -830,7 +829,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm) {
-		return new Sign(algorithm);
+		return SignUtil.sign(algorithm);
 	}
 
 	/**
@@ -845,7 +844,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		return new Sign(algorithm, privateKeyBase64, publicKeyBase64);
+		return SignUtil.sign(algorithm, privateKeyBase64, publicKeyBase64);
 	}
 
 	/**
@@ -860,7 +859,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
-		return new Sign(algorithm, privateKey, publicKey);
+		return SignUtil.sign(algorithm, privateKey, publicKey);
 	}
 
 	/**
@@ -875,7 +874,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String... otherParams) {
-		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(crypto, params, otherParams);
 	}
 
 	/**
@@ -893,7 +892,7 @@ public class SecureUtil {
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
 									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return crypto.encryptHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+		return SignUtil.signParams(crypto, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**
@@ -907,7 +906,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsMd5(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.MD5, params, otherParams);
+		return SignUtil.signParamsMd5(params, otherParams);
 	}
 
 	/**
@@ -921,7 +920,7 @@ public class SecureUtil {
 	 * @since 4.0.8
 	 */
 	public static String signParamsSha1(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA1, params, otherParams);
+		return SignUtil.signParamsSha1(params, otherParams);
 	}
 
 	/**
@@ -935,7 +934,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsSha256(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA256, params, otherParams);
+		return SignUtil.signParamsSha256(params, otherParams);
 	}
 
 	/**
@@ -950,7 +949,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String... otherParams) {
-		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(digestAlgorithm, params, otherParams);
 	}
 
 	/**
@@ -968,7 +967,7 @@ public class SecureUtil {
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
 									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+		return SignUtil.signParams(digestAlgorithm, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**
