@@ -47,6 +47,8 @@ public class Browser extends UserAgentInfo {
 			new Browser("UCBrowser", "UC?Browser", "UC?Browser\\/([\\d\\w\\.\\-]+)"),
 			// 夸克浏览器
 			new Browser("Quark", "Quark", Other_Version),
+			// 联想浏览器
+			new Browser("Lenovo", "SLBrowser", "SLBrowser/([\\d\\w\\.\\-]+)"),
 
 			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg|EdgA)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Chrome", "chrome", Other_Version),
