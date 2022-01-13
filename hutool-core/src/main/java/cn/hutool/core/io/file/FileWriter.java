@@ -206,11 +206,20 @@ public class FileWriter extends FileWrapper {
 	 */
 	public <T> File writeLines(Iterable<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
 		try (PrintWriter writer = getPrintWriter(isAppend)) {
+			boolean isFirst = true;
 			for (T t : list) {
 				if (null != t) {
-					printNewLine(writer, lineSeparator);
+					if(isFirst){
+						isFirst = false;
+						if(isAppend && FileUtil.isNotEmpty(this.file)){
+							// 追加模式下且文件非空，补充换行符
+							printNewLine(writer, lineSeparator);
+						}
+					} else{
+						printNewLine(writer, lineSeparator);
+					}
 					writer.print(t);
-					
+
 					writer.flush();
 				}
 			}
