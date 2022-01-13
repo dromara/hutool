@@ -295,6 +295,22 @@ public class ObjectUtil {
 		return isNull(object) ? defaultValue : object;
 	}
 
+	/**
+	 * 如果被检查对象为 {@code null}， 返回默认值（由 defaultValueSupplier 提供）；否则直接返回
+	 *
+	 * @param source               被检查对象
+	 * @param defaultValueSupplier 默认值提供者
+	 * @param <T>                  对象类型
+	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
+	 * @since 5.7.20
+	 */
+	public static <T> T defaultIfNull(T source, Supplier<? extends T> defaultValueSupplier) {
+		if (isNull(source)) {
+			return defaultValueSupplier.get();
+		}
+		return source;
+	}
 
 	/**
 	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
@@ -352,6 +368,23 @@ public class ObjectUtil {
 	}
 
 	/**
+	 * 如果被检查对象为 {@code null} 或 "" 时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
+	 *
+	 * @param str                  被检查对象
+	 * @param defaultValueSupplier 默认值提供者
+	 * @param <T>                  对象类型（必须实现CharSequence接口）
+	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
+	 * @since 5.7.20
+	 */
+	public static <T extends CharSequence> T defaultIfEmpty(T str, Supplier<? extends T> defaultValueSupplier) {
+		if (StrUtil.isEmpty(str)) {
+			return defaultValueSupplier.get();
+		}
+		return str;
+	}
+
+	/**
 	 * 如果给定对象为{@code null}或者""或者空白符返回默认值
 	 *
 	 * <pre>
@@ -370,6 +403,23 @@ public class ObjectUtil {
 	 */
 	public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultValue) {
 		return StrUtil.isBlank(str) ? defaultValue : str;
+	}
+
+	/**
+	 * 如果被检查对象为 {@code null} 或 "" 或 空白字符串时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
+	 *
+	 * @param str                  被检查对象
+	 * @param defaultValueSupplier 默认值提供者
+	 * @param <T>                  对象类型（必须实现CharSequence接口）
+	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
+	 * @since 5.7.20
+	 */
+	public static <T extends CharSequence> T defaultIfBlank(T str, Supplier<? extends T> defaultValueSupplier) {
+		if (StrUtil.isBlank(str)) {
+			return defaultValueSupplier.get();
+		}
+		return str;
 	}
 
 	/**

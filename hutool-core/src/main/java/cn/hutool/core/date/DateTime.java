@@ -143,7 +143,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(Date date, TimeZone timeZone) {
-		this(ObjectUtil.defaultIfNull(date, new Date()).getTime(), timeZone);
+		this(ObjectUtil.defaultIfNull(date, Date::new).getTime(), timeZone);
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 	}
 
 	/**
@@ -913,7 +913,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime setTimeZone(TimeZone timeZone) {
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 		return this;
 	}
 
