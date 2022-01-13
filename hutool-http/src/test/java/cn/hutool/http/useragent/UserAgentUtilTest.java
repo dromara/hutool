@@ -169,7 +169,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("63.0.3239.132", ua.getVersion());
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Windows 8.1 or Winsows Server 2012R2", ua.getOs().toString());
+		Assert.assertEquals("Windows 8.1 or Windows Server 2012R2", ua.getOs().toString());
 		Assert.assertEquals("6.3", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
