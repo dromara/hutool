@@ -227,7 +227,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 			return instant;
 		}
 
-		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault());
+		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault);
 
 		TemporalAccessor result = null;
 		if (LocalDateTime.class.equals(this.targetType)) {

@@ -60,7 +60,7 @@ public class FileResource implements Resource, Serializable {
 	public FileResource(File file, String fileName) {
 		Assert.notNull(file, "File must be not null !");
 		this.file = file;
-		this.name = ObjectUtil.defaultIfNull(fileName, file.getName());
+		this.name = ObjectUtil.defaultIfNull(fileName, file::getName);
 	}
 
 	// ----------------------------------------------------------------------- Constructor end

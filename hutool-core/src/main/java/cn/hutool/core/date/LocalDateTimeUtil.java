@@ -88,7 +88,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return LocalDateTime.ofInstant(instant, ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault()));
+		return LocalDateTime.ofInstant(instant, ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return of(instant, ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault()).toZoneId());
+		return of(instant, ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault).toZoneId());
 	}
 
 	/**

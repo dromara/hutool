@@ -10,6 +10,7 @@
 * 【core   】     增加KetamaHash（issue#2084@Github）
 * 【crypto 】     增加SignUtil
 * 【json   】     JSONGetter增加getBeanList方法
+* 【core   】     `ObjectUtil` 添加三个 `defaultIfXxxx`方法，用于节省CPU及内存损耗。（ [pr#2094@Github](https://github.com/dromara/hutool/pull/2094) ）
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）

@@ -49,7 +49,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param config 配置项
 	 */
 	public CsvBaseReader(CsvReadConfig config) {
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 	//--------------------------------------------------------------------------------------------- Constructor end
 

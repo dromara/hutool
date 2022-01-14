@@ -80,7 +80,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 */
 	public CsvParser(final Reader reader, CsvReadConfig config) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 
 	/**

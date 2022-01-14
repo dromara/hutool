@@ -36,7 +36,7 @@ public class UrlResource implements Resource, Serializable{
 	 */
 	public UrlResource(URL url, String name) {
 		this.url = url;
-		this.name = ObjectUtil.defaultIfNull(name, (null != url) ? FileUtil.getName(url.getPath()) : null);
+		this.name = ObjectUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));
 	}
 
 	/**
