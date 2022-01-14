@@ -1,0 +1,368 @@
+package cn.hutool.extra.execl;
+
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+/**
+ * Excel工具类
+ *
+ * @author simonpdh
+ */
+public class ExcelUtil extends EasyExcel {
+    private static final List<String> supportSuffix= Lists.newArrayList(ExcelTypeEnum.XLSX.getValue(),ExcelTypeEnum.XLS.getValue());
+
+    private ExcelUtil() {}
+
+    /**
+     * 指定读取Execl路径，默认分片大小
+     * @param pathName
+     * @param head
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(String pathName, Class<T> head, Consumer<List<T>> consumer) {
+        checkFileSuffix(pathName);
+        return read(pathName, head, new ExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 指定读取Execl路径，不创建对象读取，支持动态表头，默认分片大小
+     * @param pathName
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(String pathName, Consumer<List<Map<String,String>>> consumer) {
+        checkFileSuffix(pathName);
+        return read(pathName, new NoModelExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 读取Execl文件，默认分片大小
+     * @param file
+     * @param head
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(File file, Class<T> head, Consumer<List<T>> consumer) {
+        return read(file, head, new ExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 读取Execl文件，不创建对象读取，支持动态表头，默认分片大小
+     * @param file
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(File file, Consumer<List<Map<String,String>>> consumer) {
+        return read(file, new NoModelExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 读取Execl文件流，默认分片大小
+     * @param inputStream
+     * @param head
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(InputStream inputStream, Class<T> head, Consumer<List<T>> consumer) {
+        return read(inputStream, head, new ExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 读取Execl文件流，不创建对象读取，支持动态表头，默认分片大小
+     * @param inputStream
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(InputStream inputStream, Consumer<List<Map<String,String>>> consumer) {
+        return read(inputStream, new NoModelExcelConsumerListener<>(consumer));
+    }
+
+    /**
+     * 指定读取Execl路径，指定数据分片大小
+     * @param pathName
+     * @param head
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(String pathName, Class<T> head, Integer segmentSize, Consumer<List<T>> consumer) {
+        checkFileSuffix(pathName);
+        return read(pathName, head, new ExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 指定读取Execl路径，不创建对象读取，支持动态表头，指定数据分片大小
+     * @param pathName
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(String pathName, Integer segmentSize, Consumer<List<Map<String,String>>> consumer) {
+        checkFileSuffix(pathName);
+        return read(pathName, new NoModelExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 读取Execl文件，指定数据分片大小
+     * @param file
+     * @param head
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(File file, Class<T> head, Integer segmentSize, Consumer<List<T>> consumer) {
+        return read(file, head, new ExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 读取Execl文件，不创建对象读取，支持动态表头，指定数据分片大小
+     * @param file
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(File file, Integer segmentSize, Consumer<List<Map<String,String>>> consumer) {
+        return read(file, new NoModelExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 读取Execl文件流，指定数据分片大小
+     * @param inputStream
+     * @param head
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder read(InputStream inputStream, Class<T> head, Integer segmentSize, Consumer<List<T>> consumer) {
+        return read(inputStream, head, new ExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 读取Execl文件流，不创建对象读取，支持动态表头，指定数据分片大小
+     * @param inputStream
+     * @param segmentSize
+     * @param consumer
+     * @param <T>
+     * @return
+     */
+    public static <T> ExcelReaderBuilder noModelRead(InputStream inputStream, Integer segmentSize, Consumer<List<Map<String,String>>> consumer) {
+        return read(inputStream, new NoModelExcelConsumerListener<>(segmentSize, consumer));
+    }
+
+    /**
+     * 根据文件路径，写入同一个sheet
+     * @param pathName
+     * @param sheetName
+     * @param head
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void write(String pathName, String sheetName, Class<T> head, ExcelWrite excelWrite){
+        checkFileSuffix(pathName);
+
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(pathName, head).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 根据文件路径，不创建对象读取，支持动态表头，写入同一个sheet
+     * @param pathName
+     * @param sheetName
+     * @param heads
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void noModelWrite(String pathName, String sheetName, List<List<String>> heads, ExcelWrite excelWrite){
+        checkFileSuffix(pathName);
+        checkHeads(heads);
+
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(pathName).head(heads).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 根据文件，写入同一个sheet
+     * @param file
+     * @param sheetName
+     * @param head
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void write(File file, String sheetName, Class<T> head, ExcelWrite excelWrite){
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(file, head).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 根据文件，不创建对象读取，支持动态表头，写入同一个sheet
+     * @param file
+     * @param sheetName
+     * @param heads
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void noModelWrite(File file, String sheetName, List<List<String>> heads, ExcelWrite excelWrite){
+        checkHeads(heads);
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(file).head(heads).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 根据输出流，写入同一个sheet
+     * @param outputStream
+     * @param sheetName
+     * @param head
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void write(OutputStream outputStream, String sheetName, Class<T> head, ExcelWrite excelWrite){
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(outputStream, head).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 根据输出流，不创建对象读取，支持动态表头，写入同一个sheet
+     * @param outputStream
+     * @param sheetName
+     * @param heads
+     * @param excelWrite
+     * @param <T>
+     */
+    public static <T> void noModelWrite(OutputStream outputStream, String sheetName, List<List<String>> heads, ExcelWrite excelWrite){
+        checkHeads(heads);
+        ExcelWriter excelWriter = null;
+        try {
+            excelWriter = EasyExcel.write(outputStream).head(heads).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+            excelWrite.doWrite(excelWriter,writeSheet);
+        }finally {
+            if(Objects.nonNull(excelWriter)){
+                excelWriter.finish();
+            }
+        }
+    }
+
+    /**
+     * 校验文件后缀
+     * @param fileName
+     */
+    public static void checkFileSuffix(String fileName){
+        if(StringUtils.isBlank(fileName)){
+            throw new RuntimeException("文件名不能为空");
+        }
+        int lastIndex=fileName.lastIndexOf(".");
+        if(lastIndex<0){
+            throw new RuntimeException("文件格式错误：支持xls/xlsx");
+        }
+        String suffixName = fileName.substring(lastIndex);
+        if (StringUtils.isBlank(suffixName)||!supportSuffix.contains(suffixName)) {
+            throw new RuntimeException("文件格式错误：支持xls/xlsx");
+        }
+    }
+
+    /**
+     * 校验动态表头
+     * @param heads
+     */
+    public static void checkHeads(List<List<String>> heads){
+        if(CollectionUtils.isEmpty(heads)){
+            throw new RuntimeException("动态表头不能为空");
+        }
+    }
+
+	/**
+	 * 校验对象所有属性是否为空
+	 * @param o
+	 * @return
+	 */
+	public static boolean checkAllFieldIsNULL(Object o){
+		try {
+			for (Field field : o.getClass().getDeclaredFields()) {
+				field.setAccessible(true);
+
+				Object object = field.get(o);
+				if (object instanceof CharSequence) {
+					if (!ObjectUtils.isEmpty(object)) {
+						return false;
+					}
+				} else {
+					if (null != object) {
+						return false;
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("校验对象数据为空时发生异常");
+		}
+		return true;
+	}
+}
