@@ -88,9 +88,8 @@ public class BeanUtil {
 	 */
 	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			final Method[] methods = clazz.getMethods();
-			for (Method method : methods) {
-				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
+			for (Method method : clazz.getMethods()) {
+				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
 					// 检测包含标准的setXXX方法即视为标准的JavaBean
 					return true;
 				}
@@ -110,7 +109,7 @@ public class BeanUtil {
 	public static boolean hasGetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Method method : clazz.getMethods()) {
-				if (method.getParameterTypes().length == 0) {
+				if (method.getParameterCount() == 0) {
 					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
 						return true;
 					}
@@ -739,7 +738,7 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
-		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create())).copy();
+		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
 	}
 
 	/**

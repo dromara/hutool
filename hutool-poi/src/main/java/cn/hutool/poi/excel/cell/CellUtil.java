@@ -376,7 +376,7 @@ public class CellUtil {
 	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
 		return ObjectUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
-				SheetUtil.getCell(sheet, y, x));
+				() -> SheetUtil.getCell(sheet, y, x));
 	}
 
 	/**

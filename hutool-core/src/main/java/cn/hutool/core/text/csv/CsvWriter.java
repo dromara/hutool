@@ -149,7 +149,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	public CsvWriter(Writer writer, CsvWriteConfig config) {
 		this.writer = (writer instanceof BufferedWriter) ? writer : new BufferedWriter(writer);
-		this.config = ObjectUtil.defaultIfNull(config, CsvWriteConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvWriteConfig::defaultConfig);
 	}
 	// --------------------------------------------------------------------------------------------------- Constructor end
 

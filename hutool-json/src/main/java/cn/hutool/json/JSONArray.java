@@ -95,7 +95,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
-		this.config = ObjectUtil.defaultIfNull(config, JSONConfig.create());
+		this.config = ObjectUtil.defaultIfNull(config, JSONConfig::create);
 	}
 
 	/**

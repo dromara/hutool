@@ -16,7 +16,6 @@ import java.util.function.Function;
  * @param <K> 键类型
  * @param <V> 值类型
  * @author looly
- * @author looly
  * @since 4.3.3
  */
 public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Serializable, Cloneable {
@@ -179,6 +178,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		return raw.computeIfAbsent(key, mappingFunction);
 	}
 
+	// 重写默认方法的意义在于，如果被包装的Map自定义了这些默认方法，包装类就可以保持这些行为的一致性
 	//---------------------------------------------------------------------------- Override default methods start
 	@Override
 	public V getOrDefault(Object key, V defaultValue) {
