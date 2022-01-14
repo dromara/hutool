@@ -10,7 +10,8 @@
 * 【core   】     增加KetamaHash（issue#2084@Github）
 * 【crypto 】     增加SignUtil
 * 【json   】     JSONGetter增加getBeanList方法
-* 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗。(pr#2094@Github)
+* 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗(pr#2094@Github)
+* 【db     】     增加单条数据原生upsert语义支持(pr#501@Gitee)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）

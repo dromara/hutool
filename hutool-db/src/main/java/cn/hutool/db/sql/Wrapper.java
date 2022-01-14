@@ -7,6 +7,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
@@ -17,7 +18,8 @@ import java.util.Map.Entry;
  * @author Looly
  *
  */
-public class Wrapper {
+public class Wrapper implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 前置包装符号 */
 	private Character preWrapQuote;

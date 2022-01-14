@@ -96,6 +96,7 @@ public class DialectRunner implements Serializable {
 	 * @param keys   需要检查唯一性的字段
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
+	 * @since 5.7.20
 	 */
 	public int upsert(Connection conn, Entity record, String... keys) throws SQLException {
 		PreparedStatement ps = getDialect().psForUpsert(conn, record, keys);
@@ -106,12 +107,26 @@ public class DialectRunner implements Serializable {
 				DbUtil.close(ps);
 			}
 		} else {
-			final Entity where = record.filter(keys);
-			if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
-				return update(conn, record, where);
-			} else {
-				return insert(conn, record).length;
-			}
+			return insertOrUpdate(conn, record, keys);
+		}
+	}
+
+	/**
+	 * 插入或更新数据<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param conn   数据库连接
+	 * @param record 记录
+	 * @param keys   需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public int insertOrUpdate(Connection conn, Entity record, String... keys) throws SQLException {
+		final Entity where = record.filter(keys);
+		if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
+			return update(conn, record, where);
+		} else {
+			return insert(conn, record)[0];
 		}
 	}
 

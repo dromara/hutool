@@ -144,13 +144,15 @@ public interface Dialect extends Serializable {
 	}
 
 	/**
-	 * 构建用于upsert的PreparedStatement
+	 * 构建用于upsert的PreparedStatement<br>
+	 * 方言实现需实现此默认方法，默认返回{@code null}
 	 *
 	 * @param conn   数据库连接对象
 	 * @param entity 数据实体类（包含表名）
 	 * @param keys  查找字段
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
+	 * @since 5.7.20
 	 */
 	default PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
 		return null;
