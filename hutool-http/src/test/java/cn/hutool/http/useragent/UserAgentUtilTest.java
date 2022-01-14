@@ -373,20 +373,4 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Android", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
-
-	@Test
-	public void parseLenovoTest(){
-		// https://gitee.com/dromara/hutool/issues/I4QBMD
-		String uaStr = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36 SLBrowser/7.0.0.6241 SLBChan/30";
-		final UserAgent ua = UserAgentUtil.parse(uaStr);
-
-		Assert.assertEquals("Lenovo", ua.getBrowser().toString());
-		Assert.assertEquals("7.0.0.6241", ua.getVersion());
-		Assert.assertEquals("Webkit", ua.getEngine().toString());
-		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
-		Assert.assertEquals("10.0", ua.getOsVersion());
-		Assert.assertEquals("Windows", ua.getPlatform().toString());
-		Assert.assertFalse(ua.isMobile());
-	}
 }
