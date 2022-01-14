@@ -202,7 +202,7 @@ public class SqlBuilder implements Builder<String> {
 	 *
 	 * @param entity      实体
 	 * @param dialectName 方言名，用于对特殊数据库特殊处理
-	 * @param keys 根据何字段来确认唯一性，不传则用主键
+	 * @param keys        根据何字段来确认唯一性，不传则用主键
 	 * @return 自己
 	 * @since 5.7.21
 	 */
@@ -249,6 +249,12 @@ public class SqlBuilder implements Builder<String> {
 		// issue#1656@Github Phoenix兼容
 		if (DialectName.PHOENIX.match(dialectName)) {
 			sql.append("UPSERT INTO ").append(entity.getTableName());
+		} else if (DialectName.MYSQL.match(dialectName)) {
+			sql.append("INSERT INTO ");
+			sql.append(entity.getTableName())
+					.append(" (").append(fieldsPart).append(") VALUES (")
+					.append(placeHolder).append(") on duplicate key update ")
+					.append(ArrayUtil.join(ArrayUtil.map(entity.keySet().toArray(), String.class, (k) -> k + "=values(" + k + ")"), ","));
 		} else if (DialectName.H2.match(dialectName)) {
 			sql.append("MERGE INTO ").append(entity.getTableName());
 			if (null != keys && keys.length > 0) {
@@ -257,6 +263,14 @@ public class SqlBuilder implements Builder<String> {
 						.append(placeHolder)
 						.append(")");
 			}
+		} else if (DialectName.POSTGREESQL.match(dialectName)) {
+			sql.append("INSERT INTO ");
+			sql.append(entity.getTableName())
+					.append(" (").append(fieldsPart).append(") VALUES (")
+					.append(placeHolder).append(") on conflict (")
+					.append(ArrayUtil.join(keys,","))
+					.append(") do update set ")
+					.append(ArrayUtil.join(ArrayUtil.map(entity.keySet().toArray(), String.class, (k) -> k + "=excluded." + k ), ","));
 		} else {
 			throw new RuntimeException(dialectName + " not support yet");
 		}
