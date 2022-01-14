@@ -197,6 +197,87 @@ public class SqlBuilder implements Builder<String> {
 	}
 
 	/**
+	 * 插入<br>
+	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
+	 *
+	 * @param entity      实体
+	 * @param dialectName 方言名，用于对特殊数据库特殊处理
+	 * @param keys        根据何字段来确认唯一性，不传则用主键
+	 * @return 自己
+	 * @since 5.7.21
+	 */
+	public SqlBuilder upsert(Entity entity, String dialectName, String... keys) {
+		// 验证
+		validateEntity(entity);
+
+		if (null != wrapper) {
+			// 包装表名 entity = wrapper.wrap(entity);
+			entity.setTableName(wrapper.wrap(entity.getTableName()));
+		}
+
+		final boolean isOracle = DialectName.ORACLE.match(dialectName);// 对Oracle的特殊处理
+		final StringBuilder fieldsPart = new StringBuilder();
+		final StringBuilder placeHolder = new StringBuilder();
+
+		boolean isFirst = true;
+		String field;
+		Object value;
+		for (Entry<String, Object> entry : entity.entrySet()) {
+			field = entry.getKey();
+			value = entry.getValue();
+			if (StrUtil.isNotBlank(field) /* && null != value */) {
+				if (isFirst) {
+					isFirst = false;
+				} else {
+					// 非第一个参数，追加逗号
+					fieldsPart.append(", ");
+					placeHolder.append(", ");
+				}
+
+				this.fields.add(field);
+				fieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
+				if (isOracle && value instanceof String && StrUtil.endWithIgnoreCase((String) value, ".nextval")) {
+					// Oracle的特殊自增键，通过字段名.nextval获得下一个值
+					placeHolder.append(value);
+				} else {
+					placeHolder.append("?");
+					this.paramValues.add(value);
+				}
+			}
+		}
+
+		// issue#1656@Github Phoenix兼容
+		if (DialectName.PHOENIX.match(dialectName)) {
+			sql.append("UPSERT INTO ").append(entity.getTableName());
+		} else if (DialectName.MYSQL.match(dialectName)) {
+			sql.append("INSERT INTO ");
+			sql.append(entity.getTableName())
+					.append(" (").append(fieldsPart).append(") VALUES (")
+					.append(placeHolder).append(") on duplicate key update ")
+					.append(ArrayUtil.join(ArrayUtil.map(entity.keySet().toArray(), String.class, (k) -> k + "=values(" + k + ")"), ","));
+		} else if (DialectName.H2.match(dialectName)) {
+			sql.append("MERGE INTO ").append(entity.getTableName());
+			if (null != keys && keys.length > 0) {
+				sql.append(" KEY(").append(ArrayUtil.join(keys, ","))
+						.append(") VALUES (")
+						.append(placeHolder)
+						.append(")");
+			}
+		} else if (DialectName.POSTGREESQL.match(dialectName)) {
+			sql.append("INSERT INTO ");
+			sql.append(entity.getTableName())
+					.append(" (").append(fieldsPart).append(") VALUES (")
+					.append(placeHolder).append(") on conflict (")
+					.append(ArrayUtil.join(keys,","))
+					.append(") do update set ")
+					.append(ArrayUtil.join(ArrayUtil.map(entity.keySet().toArray(), String.class, (k) -> k + "=excluded." + k ), ","));
+		} else {
+			throw new RuntimeException(dialectName + " not support yet");
+		}
+		return this;
+	}
+
+	/**
 	 * 删除
 	 *
 	 * @param tableName 表名

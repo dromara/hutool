@@ -200,9 +200,9 @@ public abstract class AbstractDb implements Serializable {
 	 * 执行自定义的{@link PreparedStatement}，结果使用{@link RsHandler}处理<br>
 	 * 此方法主要用于自定义场景，如游标查询等
 	 *
-	 * @param <T>      结果集需要处理的对象类型
+	 * @param <T>           结果集需要处理的对象类型
 	 * @param statementFunc 自定义{@link PreparedStatement}创建函数
-	 * @param rsh      结果集处理对象
+	 * @param rsh           结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.17
@@ -364,6 +364,26 @@ public abstract class AbstractDb implements Serializable {
 		try {
 			conn = this.getConnection();
 			return runner.insertOrUpdate(conn, record, keys);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 使用upsert语义插入或更新数据<br>
+	 * 根据给定的字段名查询数据，如果存在则更新这些数据，否则执行插入
+	 * 如果方言未实现本方法，内部会自动调用insertOrUpdate来实现功能，由于upsert和insert使用有区别，为了兼容性保留原有insertOrUpdate不做变动
+	 * @param record 记录
+	 * @param keys   需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.7.21
+	 */
+	public int upsert(Entity record, String... keys) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.upsert(conn, record, keys);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -864,7 +884,7 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 分页查询
 	 *
-	 * @param <T> 处理结果类型，可以将ResultSet转换为给定类型
+	 * @param <T>  处理结果类型，可以将ResultSet转换为给定类型
 	 * @param sql  SQL构建器
 	 * @param page 分页对象
 	 * @param rsh  结果集处理对象
@@ -884,8 +904,8 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 分页查询
 	 *
-	 * @param sql  SQL语句字符串
-	 * @param page 分页对象
+	 * @param sql    SQL语句字符串
+	 * @param page   分页对象
 	 * @param params 参数列表
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
