@@ -3,14 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.20 (2022-01-13)
+# 5.7.20 (2022-01-14)
 
 ### 🐣新特性
 * 【core   】     增加对null值友好的groupingBy操作的Collector实现，可指定map类型（pr#498@Gitee）
 * 【core   】     增加KetamaHash（issue#2084@Github）
 * 【crypto 】     增加SignUtil
 * 【json   】     JSONGetter增加getBeanList方法
-* 【core   】     `ObjectUtil` 添加三个 `defaultIfXxxx`方法，用于节省CPU及内存损耗。（ [pr#2094@Github](https://github.com/dromara/hutool/pull/2094) ）
+* 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗。(pr#2094@Github)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
