@@ -33,6 +33,7 @@
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.6.2</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
+		<execl.version>2.2.6</execl.version>
 	</properties>
 
 	<dependencies>
@@ -456,6 +457,13 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
 			<version>1.21</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>easyexcel</artifactId>
+			<version>${execl.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
