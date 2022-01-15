@@ -4,6 +4,7 @@ import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
@@ -300,6 +301,14 @@ public class CollUtilTest {
 		// 原地过滤
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+	}
+
+	@Test
+	public void filterSetTest() {
+		Set<String> set = CollUtil.newLinkedHashSet("a", "b", "", "  ", "c");
+		Set<String> filtered = CollUtil.filter(set, StrUtil::isNotBlank);
+
+		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c"), filtered);
 	}
 
 	@Test

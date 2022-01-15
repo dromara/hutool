@@ -1,6 +1,5 @@
 package cn.hutool.db;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,6 +39,7 @@ public class H2Test {
 		List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
 		Assert.assertEquals(4, query.size());
 	}
+
 	@Test
 	public void upsertTest() throws SQLException {
 		Db db=Db.use(DS_GROUP_NAME);

@@ -2343,11 +2343,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		for (K k : keys) {
-			values.add(map.get(k));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, new ArrayIter<>(keys));
 	}
 
 	/**
@@ -2377,11 +2373,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		while (keys.hasNext()) {
-			values.add(map.get(keys.next()));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, keys);
 	}
 
 	// ------------------------------------------------------------------------------------------------- sort

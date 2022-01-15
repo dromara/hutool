@@ -99,7 +99,12 @@ public class DialectRunner implements Serializable {
 	 * @since 5.7.20
 	 */
 	public int upsert(Connection conn, Entity record, String... keys) throws SQLException {
-		PreparedStatement ps = getDialect().psForUpsert(conn, record, keys);
+		PreparedStatement ps = null;
+		try{
+			ps = getDialect().psForUpsert(conn, record, keys);
+		}catch (SQLException ignore){
+			// 方言不支持，使用默认
+		}
 		if (null != ps) {
 			try {
 				return ps.executeUpdate();
