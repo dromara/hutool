@@ -108,5 +108,9 @@ public interface DriverNamePool {
 	 * JDBC 驱动 Sybase
 	 */
 	String DRIVER_SYBASE = "com.sybase.jdbc4.jdbc.SybDriver";
+	/**
+	 * JDBC 驱动 虚谷
+	 */
+	String DRIVER_XUGO = "com.xugu.cloudjdbc.Driver";
 
 }
