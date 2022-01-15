@@ -18,7 +18,7 @@ import java.util.stream.Collector;
 /**
  * 可变的汇聚操作{@link Collector} 相关工具封装
  *
- * @author looly
+ * @author looly, VampireAchao
  * @since 5.6.7
  */
 public class CollectorUtil {

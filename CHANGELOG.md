@@ -12,6 +12,7 @@
 * 【json   】     JSONGetter增加getBeanList方法
 * 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗(pr#2094@Github)
 * 【db     】     增加单条数据原生upsert语义支持(pr#501@Gitee)
+* 【core   】     在CollectorUtil提交Collectors.toMap的对null友好实现，避免NPE(pr#502@Gitee)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
