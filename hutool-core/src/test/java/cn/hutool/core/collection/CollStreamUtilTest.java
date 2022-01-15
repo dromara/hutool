@@ -150,6 +150,13 @@ public class CollStreamUtilTest {
 		compare.put(2L, map2);
 		Assert.assertEquals(compare, map);
 
+		// 对null友好
+		Map<Long, Map<Long, Student>> termIdClassIdStudentMap = CollStreamUtil.group2Map(Arrays.asList(null, new Student(2, 2, 1, "王五")), Student::getTermId, Student::getClassId);
+		Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {{
+			put(null, MapUtil.of(null, null));
+			put(2L, MapUtil.of(2L, new Student(2, 2, 1, "王五")));
+		}};
+		Assert.assertEquals(termIdClassIdStudentCompareMap, termIdClassIdStudentMap);
 	}
 
 	@Test
