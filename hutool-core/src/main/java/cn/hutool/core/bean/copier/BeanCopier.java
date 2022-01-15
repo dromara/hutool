@@ -35,6 +35,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 源对象 */
+	@SuppressWarnings("NonSerializableFieldInSerializableClass")
 	private final Object source;
 	/** 目标对象 */
 	private final T dest;

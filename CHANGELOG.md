@@ -20,6 +20,7 @@
 * 【core   】     修复OS中的拼写错误（pr#500@Gitee）
 * 【core   】     修复CustomKeyMap的merge失效问题（issue#2086@Github）
 * 【core   】     修复FileUtil.appendLines换行问题（issue#I4QCEZ@Gitee）
+* 【core   】     修复java.time.Month解析问题（issue#2090@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.19 (2022-01-07)
