@@ -14,7 +14,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -510,15 +516,15 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得一个随机的字符串（只包含数字和字符） 并排除指定字符串
+	 * 获得一个随机的字符串（只包含数字和小写字母） 并排除指定字符串
 	 *
 	 * @param length   字符串的长度
-	 * @param elemData 要排除的字符串,如：去重容易混淆的字符串，oO0、lL1、q9Q、pP
+	 * @param elemData 要排除的字符串,如：去重容易混淆的字符串，oO0、lL1、q9Q、pP，不区分大小写
 	 * @return 随机字符串
 	 */
 	public static String randomStringWithoutStr(int length, String elemData) {
 		String baseStr = BASE_CHAR_NUMBER;
-		baseStr = StrUtil.removeAll(baseStr, elemData.toLowerCase(Locale.ROOT).toCharArray());
+		baseStr = StrUtil.removeAll(baseStr, elemData.toLowerCase().toCharArray());
 		return randomString(baseStr, length);
 	}
 

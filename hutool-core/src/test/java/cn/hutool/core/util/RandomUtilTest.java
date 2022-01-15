@@ -60,7 +60,9 @@ public class RandomUtilTest {
 		char c = RandomUtil.randomChinese();
 		Assert.assertTrue(c > 0);
 	}
+
 	@Test
+	@Ignore
 	public void randomStringWithoutStrTest() {
 		for (int i = 0; i < 100; i++) {
 			final String s = RandomUtil.randomStringWithoutStr(8, "0IPOL");

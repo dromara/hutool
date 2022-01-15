@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.20 (2022-01-15)
+# 5.7.20 (2022-01-16)
 
 ### 🐣新特性
 * 【core   】     增加对null值友好的groupingBy操作的Collector实现，可指定map类型（pr#498@Gitee）
@@ -14,6 +14,7 @@
 * 【db     】     增加单条数据原生upsert语义支持(pr#501@Gitee)
 * 【core   】     在CollectorUtil提交Collectors.toMap的对null友好实现，避免NPE(pr#502@Gitee)
 * 【http   】     增加HttpGlobalConfig.setIgnoreEOFError(issue#2092@Github)
+* 【core   】     RandomUtil.randomStringWithoutStr排除字符串兼容大写字母(pr#503@Gitee)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
