@@ -32,6 +32,7 @@ public class HttpGlobalConfig implements Serializable {
 	private static boolean isAllowPatch = false;
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
 	private static int maxRedirectCount = 0;
+	private static boolean ignoreEOFError = true;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -97,6 +98,30 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void setMaxRedirectCount(int customMaxRedirectCount) {
 		maxRedirectCount = customMaxRedirectCount;
+	}
+
+	/**
+	 * 获取是否忽略响应读取时可能的EOF异常。<br>
+	 * 在Http协议中，对于Transfer-Encoding: Chunked在正常情况下末尾会写入一个Length为0的的chunk标识完整结束。<br>
+	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
+	 *
+	 * @return 是否忽略响应读取时可能的EOF异常
+	 * @since 5.7.20
+	 */
+	public static boolean isIgnoreEOFError() {
+		return ignoreEOFError;
+	}
+
+	/**
+	 * 设置是否忽略响应读取时可能的EOF异常。<br>
+	 * 在Http协议中，对于Transfer-Encoding: Chunked在正常情况下末尾会写入一个Length为0的的chunk标识完整结束。<br>
+	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
+	 *
+	 * @param customIgnoreEOFError 是否忽略响应读取时可能的EOF异常。
+	 * @since 5.7.20
+	 */
+	synchronized public static void setIgnoreEOFError(boolean customIgnoreEOFError) {
+		ignoreEOFError = customIgnoreEOFError;
 	}
 
 	/**
