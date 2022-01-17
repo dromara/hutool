@@ -24,6 +24,7 @@
 * 【core   】     修复FileUtil.appendLines换行问题（issue#I4QCEZ@Gitee）
 * 【core   】     修复java.time.Month解析问题（issue#2090@Github）
 * 【core   】     修复PathUtil.moveContent移动覆盖导致的问题（issue#I4QV0L@Gitee）
+* 【core   】     修复Opt.ofTry中并发环境下线程安全问题（pr#504@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.19 (2022-01-07)
