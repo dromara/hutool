@@ -122,7 +122,7 @@ public class Opt<T> {
 		try {
 			return Opt.ofNullable(supplier.call());
 		} catch (Exception e) {
-			final Opt<T> empty = Opt.empty();
+			final Opt<T> empty = new Opt<>(null);
 			empty.exception = e;
 			return empty;
 		}
