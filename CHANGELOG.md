@@ -25,6 +25,7 @@
 * 【core   】     修复java.time.Month解析问题（issue#2090@Github）
 * 【core   】     修复PathUtil.moveContent移动覆盖导致的问题（issue#I4QV0L@Gitee）
 * 【core   】     修复Opt.ofTry中并发环境下线程安全问题（pr#504@Gitee）
+* 【core   】     修复PatternFinder中end边界判断问题（issue#2099@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.19 (2022-01-07)
