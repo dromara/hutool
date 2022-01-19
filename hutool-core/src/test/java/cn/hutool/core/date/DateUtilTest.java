@@ -1004,4 +1004,15 @@ public class DateUtilTest {
 		final DateTime parse = DateUtil.parse("2021-12-01", DatePattern.NORM_DATE_FORMATTER);
 		Assert.assertEquals("2021-12-01 00:00:00", parse.toString());
 	}
+
+	@Test
+	public void test() {
+		// 周六与周日比较
+		final boolean isSameWeek = DateUtil.isSameWeek(DateTime.of("2022-01-01", "yyyy-MM-dd"), DateTime.of("2022-01-02", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek);
+		// 周日与周一比较
+		final boolean isSameWeek1 = DateUtil.isSameWeek(DateTime.of("2022-01-02", "yyyy-MM-dd"), DateTime.of("2022-01-03", "yyyy-MM-dd"), false);
+		Assert.assertTrue(isSameWeek1);
+
+	}
 }

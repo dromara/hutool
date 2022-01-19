@@ -1587,6 +1587,34 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @return 是否为同一周
+	 */
+	public static boolean isSameWeek(final Date date1, final Date date2, boolean isMon) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		Calendar calendar1 = calendar(date1);
+		Calendar calendar2 = calendar(date2);
+		if (isMon) {
+			calendar1.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			calendar2.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		} else {
+			calendar1.setFirstDayOfWeek(Calendar.SUNDAY);
+			calendar1.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			calendar2.setFirstDayOfWeek(Calendar.SUNDAY);
+			calendar2.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}
+		return CalendarUtil.isSameWeek(calendar1, calendar2);
+	}
+
+	/**
 	 * 比较两个日期是否为同一月
 	 *
 	 * @param date1 日期1

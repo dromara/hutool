@@ -349,6 +349,22 @@ public class CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @return 是否为同一周
+	 */
+	public static boolean isSameWeek(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+				cal1.get(Calendar.DAY_OF_WEEK) == cal2.get(Calendar.DAY_OF_WEEK);
+	}
+
+	/**
 	 * 比较两个日期是否为同一月
 	 *
 	 * @param cal1 日期1
