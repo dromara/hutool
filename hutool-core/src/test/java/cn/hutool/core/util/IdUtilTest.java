@@ -137,7 +137,8 @@ public class IdUtilTest {
 
 	@Test
 	public void getDataCenterIdTest(){
-		final long dataCenterId = IdUtil.getDataCenterId(Long.MAX_VALUE);
-		Assert.assertTrue(dataCenterId > 1);
+		//按照mac地址算法拼接的算法，maxDatacenterId应该是0xffffffffL-1此处暂时按照0x7fffffffffffffffL-1，防止最后取模溢出
+		final long dataCenterId = IdUtil.getDataCenterId(Long.MAX_VALUE-1);
+		Assert.assertFalse(dataCenterId < 0);
 	}
 }

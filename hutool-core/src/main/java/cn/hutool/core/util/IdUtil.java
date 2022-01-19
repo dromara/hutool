@@ -193,7 +193,7 @@ public class IdUtil {
 
 	/**
 	 * 获取数据中心ID<br>
-	 * 数据中心ID依赖于本地网卡MAC地址。
+	 * 数据中心ID依赖于本地网卡MAC地址,最大值理论上为0xffffffffL-1，包括0。
 	 * <p>
 	 * 此算法来自于mybatis-plus#Sequence
 	 * </p>
@@ -203,12 +203,22 @@ public class IdUtil {
 	 * @since 5.7.3
 	 */
 	public static long getDataCenterId(long maxDatacenterId) {
-		long id = 1L;
-		final byte[] mac = NetUtil.getLocalHardwareAddress();
-		if (null != mac) {
-			id = ((0x000000FF & (long) mac[mac.length - 2])
-					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
-			id = id % (maxDatacenterId + 1);
+		long id = 0L;
+		if (maxDatacenterId == Long.MAX_VALUE || maxDatacenterId < 0) {
+			throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
+		}
+		try {
+			final byte[] mac = NetUtil.getLocalHardwareAddress();
+			if (null != mac) {
+				id = ((0x000000FF & (long) mac[mac.length - 2])
+						| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
+				id = id % (maxDatacenterId + 1);
+			}
+			else {
+				id = 1L;
+			}
+		} catch (UtilException igonre) {
+			//ignore
 		}
 
 		return id;
