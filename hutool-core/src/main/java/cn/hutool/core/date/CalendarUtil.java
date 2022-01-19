@@ -555,7 +555,7 @@ public class CalendarUtil {
 		result.append(NumberChineseFormatter.formatThousand(day, false));
 		result.append('日');
 
-		// 时分秒中零不需要替换
+		// 只替换年月日，时分秒中零不需要替换
 		String temp = result.toString().replace('零', '〇');
 		result.delete(0, result.length());
 		result.append(temp);
