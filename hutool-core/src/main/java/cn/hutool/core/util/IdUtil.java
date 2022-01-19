@@ -193,7 +193,7 @@ public class IdUtil {
 
 	/**
 	 * 获取数据中心ID<br>
-	 * 数据中心ID依赖于本地网卡MAC地址,最大值理论上为0xffffffffL-1，包括0。
+	 * 数据中心ID依赖于本地网卡MAC地址,最大值理论上为0xffffffffL>>6-1，包括0。
 	 * <p>
 	 * 此算法来自于mybatis-plus#Sequence
 	 * </p>
