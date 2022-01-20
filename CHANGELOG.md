@@ -16,6 +16,7 @@
 * 【http   】     增加HttpGlobalConfig.setIgnoreEOFError(issue#2092@Github)
 * 【core   】     RandomUtil.randomStringWithoutStr排除字符串兼容大写字母(pr#503@Gitee)
 * 【core   】     LocalDateTime增加isOverlap方法(pr#512@Gitee)
+* 【core   】     Ipv4Util.getBeginIpLong、getEndIpLong改为public(pr#508@Gitee)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
