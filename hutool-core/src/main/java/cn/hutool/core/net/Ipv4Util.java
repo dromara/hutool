@@ -187,7 +187,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的长整型表示
 	 */
-	private static Long getBeginIpLong(String ip, int maskBit) {
+	public static Long getBeginIpLong(String ip, int maskBit) {
 		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
 
@@ -348,7 +348,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 终止IP的长整型表示
 	 */
-	private static Long getEndIpLong(String ip, int maskBit) {
+	public static Long getEndIpLong(String ip, int maskBit) {
 		return getBeginIpLong(ip, maskBit)
 				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
