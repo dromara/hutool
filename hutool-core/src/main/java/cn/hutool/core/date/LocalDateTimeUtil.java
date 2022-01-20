@@ -5,13 +5,25 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.function.Supplier;
 
 /**
  * JDK8+中的{@link LocalDateTime} 工具类封装
@@ -535,33 +547,19 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 第二个事件段是否在第一个时间段的内部
-	 * 需要注意的是比如第一个时间段的结尾是23:59:59 第二天开始需要是00:00:00 相同也是重复
+	 * 检查两个时间段是否有时间重叠<br>
+	 * 重叠指两个时间段是否有交集
 	 *
 	 * @param realStartTime 第一个时间段的开始时间
 	 * @param realEndTime   第一个时间段的结束时间
 	 * @param startTime     第二个时间段的开始时间
 	 * @param endTime       第二个时间段的结束时间
 	 * @return true 表示时间有重合
+	 * @since 5.7.20
 	 */
-	public static boolean isOverlap(LocalDateTime realStartTime, LocalDateTime realEndTime, LocalDateTime startTime, LocalDateTime endTime) {
+	public static boolean isOverlap(ChronoLocalDateTime<?> realStartTime, ChronoLocalDateTime<?> realEndTime,
+									ChronoLocalDateTime<?> startTime, ChronoLocalDateTime<?> endTime) {
 		return startTime.isAfter(realEndTime) || endTime.isBefore(realStartTime);
 	}
-
-	/**
-	 * jdk新特新的支持,并没发现什么场合,因为拿不到泛型
-	 * 第二个事件段是否在第一个时间段的内部
-	 * 需要注意的是比如第一个时间段的结尾是23:59:59 第二天开始需要是00:00:00 相同也是重复
-	 *
-	 * @param realStartTime 第一个时间段的开始时间
-	 * @param realEndTime   第一个时间段的结束时间
-	 * @param startTime     第二个时间段的开始时间
-	 * @param endTime       第二个时间段的结束时间
-	 * @return true 表示没有时间有重合
-	 */
-	public static boolean isOverlap(Supplier<LocalDateTime> realStartTime, Supplier<LocalDateTime> realEndTime, Supplier<LocalDateTime> startTime, Supplier<LocalDateTime> endTime) {
-		return isOverlap(realStartTime.get(), realEndTime.get(), startTime.get(), endTime.get());
-	}
-
 
 }

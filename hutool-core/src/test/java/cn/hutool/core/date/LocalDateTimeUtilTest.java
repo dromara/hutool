@@ -180,22 +180,14 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void isOverlapTest(){
-
-
 		LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
 		LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
-
-
 
 		LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
 		LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
 
-
-
 		LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
 		LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
-
-
 
 		//真实请假数据
 		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
@@ -204,6 +196,5 @@ public class LocalDateTimeUtilTest {
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
-
 	}
 }
