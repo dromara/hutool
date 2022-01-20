@@ -1598,20 +1598,7 @@ public class DateUtil extends CalendarUtil {
 		if (date1 == null || date2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
-		Calendar calendar1 = calendar(date1);
-		Calendar calendar2 = calendar(date2);
-		if (isMon) {
-			calendar1.setFirstDayOfWeek(Calendar.MONDAY);
-			calendar1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-			calendar2.setFirstDayOfWeek(Calendar.MONDAY);
-			calendar2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		} else {
-			calendar1.setFirstDayOfWeek(Calendar.SUNDAY);
-			calendar1.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-			calendar2.setFirstDayOfWeek(Calendar.SUNDAY);
-			calendar2.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		}
-		return CalendarUtil.isSameWeek(calendar1, calendar2);
+		return CalendarUtil.isSameWeek(calendar(date1), calendar(date2), isMon);
 	}
 
 	/**

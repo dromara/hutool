@@ -353,11 +353,25 @@ public class CalendarUtil {
 	 *
 	 * @param cal1 日期1
 	 * @param cal2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
 	 * @return 是否为同一周
 	 */
-	public static boolean isSameWeek(Calendar cal1, Calendar cal2) {
+	public static boolean isSameWeek(Calendar cal1, Calendar cal2, boolean isMon) {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
+		}
+		// 把所传日期设置为其当前周的第一天
+		// 比较设置后的两个日期是否是同一天：true 代表同一周
+		if (isMon) {
+			cal1.setFirstDayOfWeek(Calendar.MONDAY);
+			cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			cal2.setFirstDayOfWeek(Calendar.MONDAY);
+			cal2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		} else {
+			cal1.setFirstDayOfWeek(Calendar.SUNDAY);
+			cal1.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			cal2.setFirstDayOfWeek(Calendar.SUNDAY);
+			cal2.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		}
 		return isSameDay(cal1, cal2);
 	}
