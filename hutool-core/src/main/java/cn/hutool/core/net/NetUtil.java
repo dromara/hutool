@@ -572,16 +572,6 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获得本机物理地址
-	 *
-	 * @return 本机物理地址
-	 * @since 5.7.3
-	 */
-	public static byte[] getLocalHardwareAddress() {
-		return getHardwareAddress(getLocalhost());
-	}
-
-	/**
 	 * 获得指定地址信息中的硬件地址
 	 *
 	 * @param inetAddress {@link InetAddress}
@@ -602,6 +592,16 @@ public class NetUtil {
 			throw new UtilException(e);
 		}
 		return null;
+	}
+
+	/**
+	 * 获得本机物理地址
+	 *
+	 * @return 本机物理地址
+	 * @since 5.7.3
+	 */
+	public static byte[] getLocalHardwareAddress() {
+		return getHardwareAddress(getLocalhost());
 	}
 
 	/**

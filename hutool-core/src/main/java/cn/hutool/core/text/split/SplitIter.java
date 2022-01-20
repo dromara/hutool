@@ -87,9 +87,8 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 		}
 
 		// 找到新的分隔符位置
-		final int end = finder.end(start);
 		final String result = text.substring(offset, start);
-		offset = end;
+		offset = finder.end(start);
 
 		if (ignoreEmpty && result.isEmpty()) {
 			// 发现空串且需要忽略时，跳过之

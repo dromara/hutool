@@ -27,7 +27,6 @@ public class ThreadUtil {
 	 *    1. 初始线程数为corePoolSize指定的大小
 	 *    2. 没有最大线程数限制
 	 *    3. 默认使用LinkedBlockingQueue，默认队列大小为1024
-	 *    4. 当运行线程大于corePoolSize放入队列，队列满后抛出异常
 	 * </pre>
 	 *
 	 * @param corePoolSize 同时执行的线程数大小

@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -493,7 +494,7 @@ public class LocalDateTimeUtil {
 	 * @since 5.7.18
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time, boolean truncateMillisecond) {
-		if(truncateMillisecond){
+		if (truncateMillisecond) {
 			return time.with(LocalTime.of(23, 59, 59));
 		}
 		return time.with(LocalTime.MAX);
@@ -544,4 +545,21 @@ public class LocalDateTimeUtil {
 	public static Week dayOfWeek(LocalDate localDate) {
 		return Week.of(localDate.getDayOfWeek());
 	}
+
+	/**
+	 * 检查两个时间段是否有时间重叠<br>
+	 * 重叠指两个时间段是否有交集
+	 *
+	 * @param realStartTime 第一个时间段的开始时间
+	 * @param realEndTime   第一个时间段的结束时间
+	 * @param startTime     第二个时间段的开始时间
+	 * @param endTime       第二个时间段的结束时间
+	 * @return true 表示时间有重合
+	 * @since 5.7.20
+	 */
+	public static boolean isOverlap(ChronoLocalDateTime<?> realStartTime, ChronoLocalDateTime<?> realEndTime,
+									ChronoLocalDateTime<?> startTime, ChronoLocalDateTime<?> endTime) {
+		return startTime.isAfter(realEndTime) || endTime.isBefore(realStartTime);
+	}
+
 }

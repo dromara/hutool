@@ -671,7 +671,6 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			// 不支持对象类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
-
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
@@ -443,5 +444,12 @@ public class FileUtilTest {
 		File file = new File("..");
 		File file2 = new File(".");
 		Assert.assertTrue(FileUtil.isSub(file, file2));
+	}
+
+	@Test
+	@Ignore
+	public void appendLinesTest(){
+		List<String> list = ListUtil.toList("a", "b", "c");
+		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.CHARSET_UTF_8);
 	}
 }

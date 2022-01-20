@@ -1,5 +1,6 @@
 package cn.hutool.db.dialect.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,16 +18,17 @@ import cn.hutool.db.sql.Wrapper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * ANSI SQL 方言
- * 
+ *
  * @author loolly
  *
  */
 public class AnsiSqlDialect implements Dialect {
 	private static final long serialVersionUID = 2088101129774974580L;
-	
+
 	protected Wrapper wrapper = new Wrapper();
 
 	@Override
@@ -53,7 +55,8 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entities[0], this.dialectName());
-		return StatementUtil.prepareStatementForBatch(conn, insert.build(), insert.getFields(), entities);
+		final Set<String> fields = CollUtil.filter(entities[0].keySet(), StrUtil::isNotBlank);
+		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
 	}
 
 	@Override
@@ -113,7 +116,7 @@ public class AnsiSqlDialect implements Dialect {
 	/**
 	 * 根据不同数据库在查询SQL语句基础上包装其分页的语句<br>
 	 * 各自数据库通过重写此方法实现最小改动情况下修改分页语句
-	 * 
+	 *
 	 * @param find 标准查询语句
 	 * @param page 分页对象
 	 * @return 分页语句

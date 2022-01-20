@@ -66,7 +66,7 @@ public class PatternFinder extends TextFinder {
 		}else{
 			limit = Math.min(endIndex, text.length());
 		}
-		return end < limit ? end : INDEX_NOT_FOUND;
+		return end <= limit ? end : INDEX_NOT_FOUND;
 	}
 
 	@Override

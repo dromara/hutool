@@ -3,20 +3,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.7.20 (2022-01-14)
+# 5.7.20 (2022-01-20)
 
 ### 🐣新特性
 * 【core   】     增加对null值友好的groupingBy操作的Collector实现，可指定map类型（pr#498@Gitee）
 * 【core   】     增加KetamaHash（issue#2084@Github）
 * 【crypto 】     增加SignUtil
 * 【json   】     JSONGetter增加getBeanList方法
-* 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗。(pr#2094@Github)
+* 【core   】     ObjectUtil 添加三个defaultIfXxxx方法，用于节省CPU及内存损耗(pr#2094@Github)
+* 【db     】     增加单条数据原生upsert语义支持(pr#501@Gitee)
+* 【core   】     在CollectorUtil提交Collectors.toMap的对null友好实现，避免NPE(pr#502@Gitee)
+* 【http   】     增加HttpGlobalConfig.setIgnoreEOFError(issue#2092@Github)
+* 【core   】     RandomUtil.randomStringWithoutStr排除字符串兼容大写字母(pr#503@Gitee)
+* 【core   】     LocalDateTime增加isOverlap方法(pr#512@Gitee)
+* 【core   】     Ipv4Util.getBeginIpLong、getEndIpLong改为public(pr#508@Gitee)
 * 
 ### 🐞Bug修复
 * 【core   】     修复setter重载导致匹配错误（issue#2082@Github）
 * 【core   】     修复RegexPool汉字匹配范围小问题（pr#2081@Github）
 * 【core   】     修复OS中的拼写错误（pr#500@Gitee）
 * 【core   】     修复CustomKeyMap的merge失效问题（issue#2086@Github）
+* 【core   】     修复FileUtil.appendLines换行问题（issue#I4QCEZ@Gitee）
+* 【core   】     修复java.time.Month解析问题（issue#2090@Github）
+* 【core   】     修复PathUtil.moveContent移动覆盖导致的问题（issue#I4QV0L@Gitee）
+* 【core   】     修复Opt.ofTry中并发环境下线程安全问题（pr#504@Gitee）
+* 【core   】     修复PatternFinder中end边界判断问题（issue#2099@Github）
+* 【core   】     修复格式化为中文日期时，0被处理为空串（pr#507@Gitee）
+* 【core   】     修复UrlPath转义冒号问题（issue#I4RA42@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.19 (2022-01-07)

@@ -588,7 +588,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
 		} catch (IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
-			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
+			if (HttpGlobalConfig.isIgnoreEOFError()
+					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {
 				// 忽略读取HTTP流中的EOF错误
 			} else {
 				throw e;

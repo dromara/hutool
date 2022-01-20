@@ -164,6 +164,7 @@ public class NumberChineseFormatter {
 	 */
 	public static String formatThousand(int amount, boolean isUseTraditional){
 		Assert.checkBetween(amount, -999, 999, "Number support only: (-999 ~ 999)！");
+
 		final String chinese = thousandToChinese(amount, isUseTraditional);
 		if(amount < 20 && amount > 10){
 			// "十一"而非"一十一"
@@ -284,6 +285,11 @@ public class NumberChineseFormatter {
 	 * @return 转换后的汉字
 	 */
 	private static String thousandToChinese(int amountPart, boolean isUseTraditional) {
+		if (amountPart == 0) {
+			// issue#I4R92H@Gitee
+			return String.valueOf(DIGITS[0]);
+		}
+
 		int temp = amountPart;
 
 		StringBuilder chineseStr = new StringBuilder();

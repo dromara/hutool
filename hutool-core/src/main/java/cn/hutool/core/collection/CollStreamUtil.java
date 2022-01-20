@@ -199,7 +199,7 @@ public class CollStreamUtil {
 		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
 			return Collections.emptyMap();
 		}
-		return groupBy(collection, key1, Collectors.toMap(key2, Function.identity(), (l, r) -> l), isParallel);
+		return groupBy(collection, key1, CollectorUtil.toMap(key2, Function.identity(), (l, r) -> l), isParallel);
 	}
 
 	/**

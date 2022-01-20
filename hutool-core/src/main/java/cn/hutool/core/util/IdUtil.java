@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ObjectId;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.lang.Snowflake;
@@ -203,8 +204,17 @@ public class IdUtil {
 	 * @since 5.7.3
 	 */
 	public static long getDataCenterId(long maxDatacenterId) {
+		Assert.isTrue(maxDatacenterId > 0, "maxDatacenterId must be > 0");
+		if(maxDatacenterId == Long.MAX_VALUE){
+			maxDatacenterId -= 1;
+		}
 		long id = 1L;
-		final byte[] mac = NetUtil.getLocalHardwareAddress();
+		byte[] mac = null;
+		try{
+			mac = NetUtil.getLocalHardwareAddress();
+		}catch (UtilException ignore){
+			// ignore
+		}
 		if (null != mac) {
 			id = ((0x000000FF & (long) mac[mac.length - 2])
 					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
