@@ -1006,13 +1006,15 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void test() {
+	public void isSameWeektest() {
 		// 周六与周日比较
 		final boolean isSameWeek = DateUtil.isSameWeek(DateTime.of("2022-01-01", "yyyy-MM-dd"), DateTime.of("2022-01-02", "yyyy-MM-dd"), true);
 		Assert.assertTrue(isSameWeek);
 		// 周日与周一比较
 		final boolean isSameWeek1 = DateUtil.isSameWeek(DateTime.of("2022-01-02", "yyyy-MM-dd"), DateTime.of("2022-01-03", "yyyy-MM-dd"), false);
 		Assert.assertTrue(isSameWeek1);
-
+		// 跨月比较
+		final boolean isSameWeek2 = DateUtil.isSameWeek(DateTime.of("2021-12-29", "yyyy-MM-dd"), DateTime.of("2022-01-01", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek2);
 	}
 }
