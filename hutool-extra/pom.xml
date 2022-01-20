@@ -119,6 +119,12 @@
 			<version>2.6.0</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.github.subchen</groupId>
+			<artifactId>jetbrick-template</artifactId>
+			<version>2.1.10</version>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- 邮件 -->
 		<dependency>
