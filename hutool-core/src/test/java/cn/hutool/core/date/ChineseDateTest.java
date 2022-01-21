@@ -105,4 +105,12 @@ public class ChineseDateTest {
 		Assert.assertEquals("戊申猴年 五月初五", c1.toString());
 		Assert.assertEquals("戊申猴年 闰五月初五", c2.toString());
 	}
+
+	@Test
+	public void getChineseMonthTest2(){
+		//https://github.com/dromara/hutool/issues/2112
+		ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
+		final String chineseMonth = springFestival.getChineseMonth();
+		Assert.assertEquals("一月", chineseMonth);
+	}
 }
