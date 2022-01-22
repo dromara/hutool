@@ -24,12 +24,12 @@
  */
 package cn.hutool.core.lang;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -101,18 +101,19 @@ public class Opt<T> {
 	}
 
 	/**
-	 * 返回一个包裹里{@code List}集合可能为空的{@code Opt}，额外判断了集合内元素为空的情况
+	 * 返回一个包裹里{@code Collection}集合可能为空的{@code Opt}，额外判断了集合内元素为空的情况
 	 *
 	 * @param value 传入需要包裹的元素
 	 * @param <T>   包裹里元素的类型
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
-	public static <T> Opt<List<T>> ofEmptyAble(List<T> value) {
-		return CollectionUtil.isEmpty(value) ? empty() : new Opt<>(value);
+	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
+		return CollUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
 	/**
+	 * 传入一段操作，包裹异常
 	 *
 	 * @param supplier 操作
 	 * @param <T>      类型

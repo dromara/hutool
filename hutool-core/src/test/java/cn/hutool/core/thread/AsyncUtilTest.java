@@ -1,5 +1,7 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.lang.Opt;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,5 +36,12 @@ public class AsyncUtilTest {
 		AsyncUtil.waitAll(hutool, sweater, warm);
 		// 获取结果
 		Assert.assertEquals("hutool卫衣真暖和", AsyncUtil.get(hutool) + AsyncUtil.get(sweater) + AsyncUtil.get(warm));
+
+		Opt<String> opt = AsyncUtil.getOpt(CompletableFuture.supplyAsync(() -> {
+			ExceptionUtil.wrapRuntimeAndThrow("Ops!");
+			return "whatever";
+		}));
+		Assert.assertTrue(opt.isFail());
+		Assert.assertEquals("java.lang.RuntimeException: Ops!", opt.getException().getMessage());
 	}
 }
