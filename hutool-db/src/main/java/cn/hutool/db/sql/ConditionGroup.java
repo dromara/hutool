@@ -10,8 +10,9 @@ import java.util.List;
  * 用于构建复杂where条件
  *
  * @author tjh
+ * @since 5.7.21
  */
-public class ConditionGroup extends Condition{
+public class ConditionGroup extends Condition {
 	/**
 	 * 条件列表
 	 */
@@ -23,7 +24,7 @@ public class ConditionGroup extends Condition{
 	 * @param conditions 条件列表
 	 */
 	public void addConditions(Condition... conditions) {
-		if(null == this.conditions) {
+		if (null == this.conditions) {
 			this.conditions = conditions;
 		} else {
 			this.conditions = ArrayUtil.addAll(this.conditions, conditions);
@@ -38,7 +39,9 @@ public class ConditionGroup extends Condition{
 	 */
 	@Override
 	public String toString(List<Object> paramValues) {
-		if (ArrayUtil.isEmpty(conditions)) return StrUtil.EMPTY;
+		if (ArrayUtil.isEmpty(conditions)) {
+			return StrUtil.EMPTY;
+		}
 
 		final StringBuilder conditionStrBuilder = StrUtil.builder();
 		conditionStrBuilder.append("(");

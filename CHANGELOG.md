@@ -8,6 +8,7 @@
 * 【extra  】     增加jetbrick模板支持
 * 【extra  】     EmojiUtil增加方法（pr#519@Gitee）
 * 【core   】     DateUtil 添加两个日期是否同一周方法（pr#516@Gitee）
+* 【db     】     新增条件组，用于处理复杂的where条件（pr#514@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）

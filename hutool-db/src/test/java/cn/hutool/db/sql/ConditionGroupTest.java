@@ -1,5 +1,7 @@
 package cn.hutool.db.sql;
 
+import cn.hutool.core.collection.ListUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ConditionGroupTest {
@@ -20,7 +22,7 @@ public class ConditionGroupTest {
 
 		final ConditionBuilder conditionBuilder = ConditionBuilder.of(cg2, condition4);
 
-		System.out.println(conditionBuilder.build());
-		System.out.println(conditionBuilder.getParamValues());
+		Assert.assertEquals("((a = ? OR b = ?) AND c = ?) AND d = ?", conditionBuilder.build());
+		Assert.assertEquals(ListUtil.of("A", "B", "C", "D"), conditionBuilder.getParamValues());
 	}
 }
