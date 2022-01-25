@@ -1587,6 +1587,21 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @return 是否为同一周
+	 */
+	public static boolean isSameWeek(final Date date1, final Date date2, boolean isMon) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return CalendarUtil.isSameWeek(calendar(date1), calendar(date2), isMon);
+	}
+
+	/**
 	 * 比较两个日期是否为同一月
 	 *
 	 * @param date1 日期1
