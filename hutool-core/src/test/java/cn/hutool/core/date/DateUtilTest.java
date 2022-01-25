@@ -1006,7 +1006,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void isSameWeektest() {
+	public void isSameWeekTest() {
 		// 周六与周日比较
 		final boolean isSameWeek = DateUtil.isSameWeek(DateTime.of("2022-01-01", "yyyy-MM-dd"), DateTime.of("2022-01-02", "yyyy-MM-dd"), true);
 		Assert.assertTrue(isSameWeek);

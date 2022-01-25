@@ -7,9 +7,11 @@
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
 * 【extra  】     EmojiUtil增加方法（pr#519@Gitee）
+* 【core   】     DateUtil 添加两个日期是否同一周方法（pr#516@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
+* 【extra  】     修复EmojiUtil.toHtmlHex()方法（pr#519@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.20 (2022-01-20)

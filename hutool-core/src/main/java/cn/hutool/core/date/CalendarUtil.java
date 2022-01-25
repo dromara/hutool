@@ -355,6 +355,7 @@ public class CalendarUtil {
 	 * @param cal2 日期2
 	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
 	 * @return 是否为同一周
+	 * @since 5.7.21
 	 */
 	public static boolean isSameWeek(Calendar cal1, Calendar cal2, boolean isMon) {
 		if (cal1 == null || cal2 == null) {
