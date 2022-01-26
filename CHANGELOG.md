@@ -11,6 +11,7 @@
 * 【db     】     新增条件组，用于处理复杂的where条件（pr#514@Gitee）
 * 【core   】     新增LocalDateTimeUtil.weekOfYear（issue#I4RWXC@Gitee）
 * 【core   】     Month增加toJdkMonth、getValueBaseOne
+* 【core   】     CsvWriter修改规则，去除末尾多余换行符（issue#I4RSQY@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
