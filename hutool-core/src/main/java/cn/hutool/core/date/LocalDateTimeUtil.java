@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalUnit;
+import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -562,4 +563,21 @@ public class LocalDateTimeUtil {
 		return startTime.isAfter(realEndTime) || endTime.isBefore(realStartTime);
 	}
 
+	/**
+	 * 获得指定日期是所在年份的第几周，如：
+	 * <ul>
+	 *     <li>如果一年的第一天是星期一，则第一周从第一天开始，没有零周</li>
+	 *     <li>如果一年的第二天是星期一，则第一周从第二天开始，而第一天在零周</li>
+	 *     <li>如果一年中的第4天是星期一，则第1周从第4周开始，第1至第3周在零周开始</li>
+	 *     <li>如果一年中的第5天是星期一，则第二周从第5周开始，第1至第4周在第1周</li>
+	 * </ul>
+	 *
+	 *
+	 * @param date 日期（{@link LocalDate} 或者 {@link LocalDateTime}等）
+	 * @return 所在年的第几周
+	 * @since 5.7.21
+	 */
+	public static int weekOfYear(TemporalAccessor date){
+		return TemporalAccessorUtil.get(date, WeekFields.ISO.weekOfYear());
+	}
 }
