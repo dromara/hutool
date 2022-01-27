@@ -146,9 +146,10 @@ public class EmojiUtil {
 	 * <pre>
 	 * 如果为hex形式，<code>👦🏿</code> 转换为 <code>&amp;#x1f466;</code>
 	 * 否则，<code>👦🏿</code> 转换为 <code>&amp;#128102;</code>
-	 * <pre></pre>
+	 * </pre>
 	 *
-	 * @param str 包含Emoji Unicode字符的字符串
+	 * @param str   包含Emoji Unicode字符的字符串
+	 * @param isHex 是否hex形式
 	 * @return 替换后的字符串
 	 * @since 5.7.21
 	 */
