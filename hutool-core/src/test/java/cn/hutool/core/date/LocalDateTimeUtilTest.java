@@ -212,9 +212,9 @@ public class LocalDateTimeUtilTest {
 	public void weekOfYearTest2(){
 		LocalDate date1 = LocalDate.of(2022, 1, 31);
 		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
-		Assert.assertEquals(weekOfYear1, 52);
+		Assert.assertEquals(weekOfYear1, 5);
 
 		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
-		Assert.assertEquals(weekOfYear2, 52);
+		Assert.assertEquals(weekOfYear2, 5);
 	}
 }
