@@ -14,6 +14,7 @@
 * 【core   】     CsvWriter修改规则，去除末尾多余换行符（issue#I4RSQY@Gitee）
 * 【core   】     DateUtil增加rangeFunc和rangeConsume（issue#I4RSQY@Gitee）
 * 【core   】     DateTime增加setUseJdkToStringStyle方法
+* 【core   】     CharSequenceUtil增加replace重载(issue#2122@Github)
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
