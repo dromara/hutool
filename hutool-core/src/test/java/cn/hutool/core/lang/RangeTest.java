@@ -37,6 +37,32 @@ public class RangeTest {
 	}
 
 	@Test
+	public void dateRangeFuncTest() {
+		DateTime start = DateUtil.parse("2021-01-01");
+		DateTime end = DateUtil.parse("2021-01-03");
+
+		List<Integer> dayOfMonthList = DateUtil.rangeFunc(start, end, DateField.DAY_OF_YEAR, a -> DateTime.of(a).dayOfMonth());
+		Assert.assertArrayEquals(dayOfMonthList.toArray(new Integer[]{}), new Integer[]{1, 2, 3});
+
+		List<Integer> dayOfMonthList2 = DateUtil.rangeFunc(null, null, DateField.DAY_OF_YEAR, a -> DateTime.of(a).dayOfMonth());
+		Assert.assertArrayEquals(dayOfMonthList2.toArray(new Integer[]{}), new Integer[]{});
+	}
+
+	@Test
+	public void dateRangeConsumeTest() {
+		DateTime start = DateUtil.parse("2021-01-01");
+		DateTime end = DateUtil.parse("2021-01-03");
+
+		StringBuilder sb = new StringBuilder();
+		DateUtil.rangeConsume(start, end, DateField.DAY_OF_YEAR, a -> sb.append(DateTime.of(a).dayOfMonth()).append("#"));
+		Assert.assertEquals(sb.toString(), "1#2#3#");
+
+		StringBuilder sb2 = new StringBuilder();
+		DateUtil.rangeConsume(null, null, DateField.DAY_OF_YEAR, a -> sb.append(DateTime.of(a).dayOfMonth()).append("#"));
+		Assert.assertEquals(sb2.toString(), "");
+	}
+
+	@Test
 	public void dateRangeTest2() {
 		DateTime start = DateUtil.parse("2021-01-31");
 		DateTime end = DateUtil.parse("2021-03-31");

@@ -20,14 +20,10 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 时间工具类
@@ -1883,6 +1879,54 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static DateRange range(Date start, Date end, final DateField unit) {
 		return new DateRange(start, end, unit);
+	}
+
+	/**
+	 * 按日期范围遍历，执行 function
+	 *
+	 * @param start 起始日期时间（包括）
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
+	 * @param func  每次遍历要执行的 function
+	 * @param <T>
+	 * @return
+	 */
+	public static <T> List<T> rangeFunc(Date start, Date end, final DateField unit, Function<Date, T> func) {
+		if (start == null || end == null || start.after(end)) {
+			return Collections.emptyList();
+		} else {
+			ArrayList<T> list = new ArrayList<>();
+			DateRange dateRange = range(start, end, unit);
+			while (dateRange.hasNext()) {
+				DateTime next = dateRange.next();
+				Date date = next.toJdkDate();
+				T result = func.apply(date);
+				list.add(result);
+			}
+			return list;
+		}
+	}
+
+	/**
+	 * 按日期范围遍历，执行 consumer
+	 *
+	 * @param start    起始日期时间（包括）
+	 * @param end      结束日期时间
+	 * @param unit     步进单位
+	 * @param consumer 每次遍历要执行的 consumer
+	 * @return
+	 */
+	public static void rangeConsume(Date start, Date end, final DateField unit, Consumer<Date> consumer) {
+		if (start == null || end == null || start.after(end)) {
+			return;
+		} else {
+			DateRange dateRange = range(start, end, unit);
+			while (dateRange.hasNext()) {
+				DateTime next = dateRange.next();
+				Date date = next.toJdkDate();
+				consumer.accept(date);
+			}
+		}
 	}
 
 	/**
