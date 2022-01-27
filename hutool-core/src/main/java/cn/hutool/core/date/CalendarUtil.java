@@ -132,7 +132,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，即忽略毫秒部分
+	 * 修改秒级别的开始时间，即忽略毫秒部分
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -143,7 +143,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的结束时间，即毫秒设置为999
+	 * 修改秒级别的结束时间，即毫秒设置为999
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -154,7 +154,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某小时的开始时间
+	 * 修改某小时的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -164,7 +164,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某小时的结束时间
+	 * 修改某小时的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -174,7 +174,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某分钟的开始时间
+	 * 修改某分钟的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -184,7 +184,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某分钟的结束时间
+	 * 修改某分钟的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -194,7 +194,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某天的开始时间
+	 * 修改某天的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -204,7 +204,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某天的结束时间
+	 * 修改某天的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -214,7 +214,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取给定日期当前周的开始时间，周一定为一周的开始时间
+	 * 修改给定日期当前周的开始时间，周一定为一周的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -224,7 +224,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取给定日期当前周的开始时间
+	 * 修改给定日期当前周的开始时间
 	 *
 	 * @param calendar           日期 {@link Calendar}
 	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
@@ -238,7 +238,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间，周日定为一周的结束
+	 * 修改某周的结束时间，周日定为一周的结束
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -248,7 +248,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间
+	 * 修改某周的结束时间
 	 *
 	 * @param calendar          日期 {@link Calendar}
 	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
@@ -261,7 +261,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某月的开始时间
+	 * 修改某月的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -271,7 +271,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某月的结束时间
+	 * 修改某月的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -281,7 +281,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某季度的开始时间
+	 * 修改某季度的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -313,7 +313,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某年的开始时间
+	 * 修改某年的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -323,7 +323,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某年的结束时间
+	 * 修改某年的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -361,6 +361,11 @@ public class CalendarUtil {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
+
+		// 防止比较前修改原始Calendar对象
+		cal1 = (Calendar) cal1.clone();
+		cal2 = (Calendar) cal2.clone();
+
 		// 把所传日期设置为其当前周的第一天
 		// 比较设置后的两个日期是否是同一天：true 代表同一周
 		if (isMon) {
