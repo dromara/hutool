@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.21 (2022-01-26)
+# 5.7.21 (2022-01-27)
 
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
@@ -12,6 +12,8 @@
 * 【core   】     新增LocalDateTimeUtil.weekOfYear（issue#I4RWXC@Gitee）
 * 【core   】     Month增加toJdkMonth、getValueBaseOne
 * 【core   】     CsvWriter修改规则，去除末尾多余换行符（issue#I4RSQY@Gitee）
+* 【core   】     DateUtil增加rangeFunc和rangeConsume（issue#I4RSQY@Gitee）
+* 【core   】     DateTime增加setUseJdkToStringStyle方法
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）

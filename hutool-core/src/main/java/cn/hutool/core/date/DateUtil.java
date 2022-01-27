@@ -20,7 +20,15 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -1888,23 +1896,19 @@ public class DateUtil extends CalendarUtil {
 	 * @param end   结束日期时间
 	 * @param unit  步进单位
 	 * @param func  每次遍历要执行的 function
-	 * @param <T>
-	 * @return
+	 * @param <T> Date经过函数处理结果类型
+	 * @return 结果列表
+	 * @since 5.7.21
 	 */
 	public static <T> List<T> rangeFunc(Date start, Date end, final DateField unit, Function<Date, T> func) {
 		if (start == null || end == null || start.after(end)) {
 			return Collections.emptyList();
-		} else {
-			ArrayList<T> list = new ArrayList<>();
-			DateRange dateRange = range(start, end, unit);
-			while (dateRange.hasNext()) {
-				DateTime next = dateRange.next();
-				Date date = next.toJdkDate();
-				T result = func.apply(date);
-				list.add(result);
-			}
-			return list;
 		}
+		ArrayList<T> list = new ArrayList<>();
+		for(DateTime date : range(start, end, unit)){
+			list.add(func.apply(date));
+		}
+		return list;
 	}
 
 	/**
@@ -1914,19 +1918,13 @@ public class DateUtil extends CalendarUtil {
 	 * @param end      结束日期时间
 	 * @param unit     步进单位
 	 * @param consumer 每次遍历要执行的 consumer
-	 * @return
+	 * @since 5.7.21
 	 */
 	public static void rangeConsume(Date start, Date end, final DateField unit, Consumer<Date> consumer) {
 		if (start == null || end == null || start.after(end)) {
 			return;
-		} else {
-			DateRange dateRange = range(start, end, unit);
-			while (dateRange.hasNext()) {
-				DateTime next = dateRange.next();
-				Date date = next.toJdkDate();
-				consumer.accept(date);
-			}
 		}
+		range(start, end, unit).forEach(consumer);
 	}
 
 	/**
@@ -1937,7 +1935,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param unit  步进单位
 	 * @return {@link DateRange}
 	 */
-	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
+	public static List<DateTime> rangeToList(Date start, Date end, DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 
