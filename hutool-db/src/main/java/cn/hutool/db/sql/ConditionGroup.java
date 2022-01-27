@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import java.util.List;
 
 /**
- * 条件组<br/>
+ * 条件组<br>
  * 用于构建复杂where条件
  *
  * @author tjh
