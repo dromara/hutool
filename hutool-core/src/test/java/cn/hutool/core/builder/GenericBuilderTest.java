@@ -1,8 +1,7 @@
 package cn.hutool.core.builder;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import cn.hutool.core.util.StrUtil;
+import lombok.*;
 import org.junit.Test;
 
 /**
@@ -31,6 +30,11 @@ public class GenericBuilderTest {
 				.with(Box::setHeight, 5)
 				.build();
 		System.out.println(boxModified);
+		Box box1 = GenericBuilder
+				.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
+				.with(Box::alis)
+				.build();
+		System.out.println(box1);
 	}
 
 	@Getter
@@ -42,6 +46,24 @@ public class GenericBuilderTest {
 		private Integer length;
 		private Integer width;
 		private Integer height;
+		private String titleAlias;
+
+		public Box() {
+		}
+
+		public Box(Long id, String title, Integer length, Integer width, Integer height) {
+			this.id = id;
+			this.title = title;
+			this.length = length;
+			this.width = width;
+			this.height = height;
+		}
+
+		public void alis() {
+			if (StrUtil.isNotBlank(this.title)) {
+				this.titleAlias = "TomXin:\"" + title + "\"";
+			}
+		}
 	}
 
 }
