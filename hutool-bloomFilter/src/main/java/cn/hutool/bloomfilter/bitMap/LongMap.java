@@ -32,21 +32,21 @@ public class LongMap implements BitMap, Serializable {
 	@Override
 	public void add(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		long c = i % BitMap.MACHINE64;
+		long c = i & (BitMap.MACHINE64 - 1);
 		longs[r] = longs[r] | (1L << c);
 	}
 
 	@Override
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		long c = i % BitMap.MACHINE64;
+		long c = i & (BitMap.MACHINE64 - 1);
 		return ((longs[r] >>> c) & 1) == 1;
 	}
 
 	@Override
 	public void remove(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		long c = i % BitMap.MACHINE64;
+		long c = i & (BitMap.MACHINE64 - 1);
 		longs[r] &= ~(1L << c);
 	}
 
