@@ -31,13 +31,17 @@ import java.util.function.Supplier;
  * 		.with(Box::setHeight, 5)
  * 		.build();
  * </pre>
- * <p> 我们还可以对这样调用有参构造，这对于创建一些在有参构造中包含初始化函数的对象是有意义的</p>
+ * <p> 我们还可以对这样调用有参构造，这对于创建一些在有参构造中包含初始化函数的对象是有意义的：</p>
  * <pre>
  * Box box1 = GenericBuilder
  * 		.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
  * 		.with(Box::alis)
  * 		.build();
  * </pre>
+ * <p>注意：本工具类支持调用的方法的参数数量不超过5个，更多的参数不利于阅读和维护。
+ * 关于Java方法的参数个数限制似乎并没有明确统一的规范，网络上众说纷纭，这里取个相对平均的数5。
+ * 特殊需要求可以基于此类进行拓展.
+ * </p>
  *
  * @author TomXin
  * @since jdk1.8
