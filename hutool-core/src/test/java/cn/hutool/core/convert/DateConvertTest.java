@@ -27,7 +27,7 @@ public class DateConvertTest {
 		int dateLong = -1497600000;
 		Date value = Convert.toDate(dateLong);
 		Assert.assertNotNull(value);
-		Assert.assertTrue(value.toString().startsWith("Mon Dec 15 00:00:00 "));
+		Assert.assertEquals("Mon Dec 15 00:00:00 CST 1969", value.toString().replace("GMT+08:00", "CST"));
 
 		final java.sql.Date sqlDate = Convert.convert(java.sql.Date.class, dateLong);
 		Assert.assertNotNull(sqlDate);
