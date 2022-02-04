@@ -5,9 +5,7 @@ import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.SystemPropsUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -692,12 +690,11 @@ public class DateUtilTest {
 	}
 
 	@Test
-	@Ignore
 	public void parseCSTTest() {
-		Console.log(SystemPropsUtil.get("java.version"));
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
 		DateTime dateTime = DateUtil.parseCST(dateStr);
