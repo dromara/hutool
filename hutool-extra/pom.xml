@@ -23,7 +23,7 @@
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.16</enjoy.version>
-		<thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
+		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.32.0</sshj.version>
@@ -31,7 +31,7 @@
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.6.2</spring-boot.version>
+		<spring-boot.version>2.6.3</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -340,7 +340,7 @@
 		<dependency>
 			<groupId>com.github.houbb</groupId>
 			<artifactId>pinyin</artifactId>
-			<version>0.2.2</version>
+			<version>0.3.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -446,7 +446,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.14</version>
+			<version>5.3.15</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
