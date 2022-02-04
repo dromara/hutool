@@ -692,8 +692,10 @@ public class DateUtilTest {
 	@Test
 	public void parseCSTTest() {
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+		Console.log(TimeZone.getDefault().getDisplayName());
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
