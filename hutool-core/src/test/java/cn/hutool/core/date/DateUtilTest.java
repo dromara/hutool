@@ -5,6 +5,7 @@ import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.SystemPropsUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -693,10 +694,9 @@ public class DateUtilTest {
 	@Test
 	@Ignore
 	public void parseCSTTest() {
+		Console.log(SystemPropsUtil.get("java.version"));
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 
-		// 奇怪的问题，在JDK8_261中，此此测试没有问题，但是升级到311后，结果会不一致，相差一个小时。
-		// 猜测可能是默认时区问题
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
