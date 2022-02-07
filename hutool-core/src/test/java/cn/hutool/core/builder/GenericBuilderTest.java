@@ -32,6 +32,7 @@ public class GenericBuilderTest {
 		Assert.assertEquals(8, box.getWidth().intValue());
 		Assert.assertEquals(7, box.getHeight().intValue());
 
+		// 对象修改
 		Box boxModified = GenericBuilder
 				.of(() -> box)
 				.with(Box::setTitle, "Hello Friend!")
@@ -46,6 +47,7 @@ public class GenericBuilderTest {
 		Assert.assertEquals(4, boxModified.getWidth().intValue());
 		Assert.assertEquals(5, boxModified.getHeight().intValue());
 
+		// 多参数构造
 		Box box1 = GenericBuilder
 				.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
 				.with(Box::alis)
