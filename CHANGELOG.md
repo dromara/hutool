@@ -2,12 +2,28 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.21 (2022-01-21)
+# 5.7.21 (2022-02-07)
 
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
+* 【extra  】     EmojiUtil增加方法（pr#519@Gitee）
+* 【core   】     DateUtil 添加两个日期是否同一周方法（pr#516@Gitee）
+* 【db     】     新增条件组，用于处理复杂的where条件（pr#514@Gitee）
+* 【core   】     新增LocalDateTimeUtil.weekOfYear（issue#I4RWXC@Gitee）
+* 【core   】     Month增加toJdkMonth、getValueBaseOne
+* 【core   】     CsvWriter修改规则，去除末尾多余换行符（issue#I4RSQY@Gitee）
+* 【core   】     DateUtil增加rangeFunc和rangeConsume（issue#I4RSQY@Gitee）
+* 【core   】     DateTime增加setUseJdkToStringStyle方法
+* 【core   】     CharSequenceUtil增加replace重载(issue#2122@Github)
+* 【core   】     IntMap和LongMap使用位运算快速求解取余运算(pr#2123@Github)
+* 【core   】     新增通用builder类：GenericBuilder(pr#526@Gitee)
+* 【core   】     新增copySafely方法与mkdirsSafely方法(pr#527@Gitee)
+
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
+* 【extra  】     修复EmojiUtil.toHtmlHex()方法（pr#519@Gitee）
+* 【system 】     修复CpuInfo.getUsed()方法（issue#2116@Github）
+* 【dfa    】     修复密集匹配和贪婪匹配冲突问题（issue#2126@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.20 (2022-01-20)

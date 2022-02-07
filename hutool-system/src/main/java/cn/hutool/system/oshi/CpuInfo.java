@@ -1,5 +1,6 @@
 package cn.hutool.system.oshi;
 
+import cn.hutool.core.util.NumberUtil;
 import oshi.hardware.CentralProcessor;
 
 import java.text.DecimalFormat;
@@ -31,7 +32,7 @@ public class CpuInfo {
 	/**
 	 * CPU用户使用率
 	 */
-	private double used;
+	private double user;
 
 	/**
 	 * CPU当前等待率
@@ -75,16 +76,16 @@ public class CpuInfo {
 	 * @param cpuNum   CPU核心数
 	 * @param toTal    CPU总的使用率
 	 * @param sys      CPU系统使用率
-	 * @param used     CPU用户使用率
+	 * @param user     CPU用户使用率
 	 * @param wait     CPU当前等待率
 	 * @param free     CPU当前空闲率
 	 * @param cpuModel CPU型号信息
 	 */
-	public CpuInfo(Integer cpuNum, double toTal, double sys, double used, double wait, double free, String cpuModel) {
+	public CpuInfo(Integer cpuNum, double toTal, double sys, double user, double wait, double free, String cpuModel) {
 		this.cpuNum = cpuNum;
 		this.toTal = toTal;
 		this.sys = sys;
-		this.used = used;
+		this.user = user;
 		this.wait = wait;
 		this.free = free;
 		this.cpuModel = cpuModel;
@@ -114,12 +115,12 @@ public class CpuInfo {
 		this.sys = sys;
 	}
 
-	public double getUsed() {
-		return used;
+	public double getUser() {
+		return user;
 	}
 
-	public void setUsed(double used) {
-		this.used = used;
+	public void setUser(double user) {
+		this.user = user;
 	}
 
 	public double getWait() {
@@ -154,16 +155,25 @@ public class CpuInfo {
 		this.ticks = ticks;
 	}
 
+	/**
+	 * 获取用户+系统的总的CPU使用率
+	 *
+	 * @return 总CPU使用率
+	 */
+	public double getUsed() {
+		return NumberUtil.sub(100, this.free);
+	}
+
 	@Override
 	public String toString() {
 		return "CpuInfo{" +
 				"CPU核心数=" + cpuNum +
 				", CPU总的使用率=" + toTal +
 				", CPU系统使用率=" + sys +
-				", CPU用户使用率=" + used +
+				", CPU用户使用率=" + user +
 				", CPU当前等待率=" + wait +
 				", CPU当前空闲率=" + free +
-				", CPU利用率=" + LOAD_FORMAT.format(100 - free) +
+				", CPU利用率=" + getUsed() +
 				", CPU型号信息='" + cpuModel + '\'' +
 				'}';
 	}
@@ -185,7 +195,7 @@ public class CpuInfo {
 		final long totalCpu = ticks.totalCpu();
 		this.toTal = totalCpu;
 		this.sys = formatDouble(ticks.cSys, totalCpu);
-		this.used = formatDouble(ticks.user, totalCpu);
+		this.user = formatDouble(ticks.user, totalCpu);
 		this.wait = formatDouble(ticks.ioWait, totalCpu);
 		this.free = formatDouble(ticks.idle, totalCpu);
 	}

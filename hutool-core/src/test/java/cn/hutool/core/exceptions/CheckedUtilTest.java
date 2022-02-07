@@ -21,11 +21,8 @@ public class CheckedUtilTest {
 
 	@Test
 	public void sleepTest() {
-
 		VoidFunc0 func = () -> Thread.sleep(1000L);
 		func.callWithRuntimeException();
-
-
 	}
 
 
@@ -39,7 +36,6 @@ public class CheckedUtilTest {
 		} catch (Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
-
 	}
 
 	@SuppressWarnings("ConstantConditions")

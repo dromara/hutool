@@ -20,7 +20,9 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 时间工具类
@@ -1587,6 +1591,21 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @return 是否为同一周
+	 */
+	public static boolean isSameWeek(final Date date1, final Date date2, boolean isMon) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return CalendarUtil.isSameWeek(calendar(date1), calendar(date2), isMon);
+	}
+
+	/**
 	 * 比较两个日期是否为同一月
 	 *
 	 * @param date1 日期1
@@ -1871,6 +1890,44 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 按日期范围遍历，执行 function
+	 *
+	 * @param start 起始日期时间（包括）
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
+	 * @param func  每次遍历要执行的 function
+	 * @param <T> Date经过函数处理结果类型
+	 * @return 结果列表
+	 * @since 5.7.21
+	 */
+	public static <T> List<T> rangeFunc(Date start, Date end, final DateField unit, Function<Date, T> func) {
+		if (start == null || end == null || start.after(end)) {
+			return Collections.emptyList();
+		}
+		ArrayList<T> list = new ArrayList<>();
+		for(DateTime date : range(start, end, unit)){
+			list.add(func.apply(date));
+		}
+		return list;
+	}
+
+	/**
+	 * 按日期范围遍历，执行 consumer
+	 *
+	 * @param start    起始日期时间（包括）
+	 * @param end      结束日期时间
+	 * @param unit     步进单位
+	 * @param consumer 每次遍历要执行的 consumer
+	 * @since 5.7.21
+	 */
+	public static void rangeConsume(Date start, Date end, final DateField unit, Consumer<Date> consumer) {
+		if (start == null || end == null || start.after(end)) {
+			return;
+		}
+		range(start, end, unit).forEach(consumer);
+	}
+
+	/**
 	 * 创建日期范围生成器
 	 *
 	 * @param start 起始日期时间
@@ -1878,7 +1935,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param unit  步进单位
 	 * @return {@link DateRange}
 	 */
-	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
+	public static List<DateTime> rangeToList(Date start, Date end, DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 

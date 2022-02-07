@@ -57,6 +57,16 @@ public enum BeanInfoCache {
 	}
 
 	/**
+	 * 清空缓存
+	 *
+	 * @since 5.7.21
+	 */
+	public void clear() {
+		this.pdCache.clear();
+		this.ignoreCasePdCache.clear();
+	}
+
+	/**
 	 * 根据是否忽略字段名的大小写，返回不用Cache对象
 	 *
 	 * @param ignoreCase 是否忽略大小写

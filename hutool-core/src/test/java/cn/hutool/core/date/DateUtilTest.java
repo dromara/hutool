@@ -692,8 +692,11 @@ public class DateUtilTest {
 	@Test
 	public void parseCSTTest() {
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+		Console.log(TimeZone.getDefault().getDisplayName());
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
 		DateTime dateTime = DateUtil.parseCST(dateStr);
@@ -1003,5 +1006,18 @@ public class DateUtilTest {
 	public void parseByDateTimeFormatterTest() {
 		final DateTime parse = DateUtil.parse("2021-12-01", DatePattern.NORM_DATE_FORMATTER);
 		Assert.assertEquals("2021-12-01 00:00:00", parse.toString());
+	}
+
+	@Test
+	public void isSameWeekTest() {
+		// 周六与周日比较
+		final boolean isSameWeek = DateUtil.isSameWeek(DateTime.of("2022-01-01", "yyyy-MM-dd"), DateTime.of("2022-01-02", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek);
+		// 周日与周一比较
+		final boolean isSameWeek1 = DateUtil.isSameWeek(DateTime.of("2022-01-02", "yyyy-MM-dd"), DateTime.of("2022-01-03", "yyyy-MM-dd"), false);
+		Assert.assertTrue(isSameWeek1);
+		// 跨月比较
+		final boolean isSameWeek2 = DateUtil.isSameWeek(DateTime.of("2021-12-29", "yyyy-MM-dd"), DateTime.of("2022-01-01", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek2);
 	}
 }

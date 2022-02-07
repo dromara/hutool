@@ -27,7 +27,7 @@
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>4.0.0</jedis.version>
+		<jedis.version>4.1.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.0</version>
+			<version>3.3.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -143,13 +143,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.27</version>
+			<version>8.0.28</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.3.1</version>
+			<version>42.3.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -167,13 +167,13 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>2.0.206</version>
+			<version>2.1.210</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.yandex.clickhouse</groupId>
 			<artifactId>clickhouse-jdbc</artifactId>
-			<version>0.3.1</version>
+			<version>0.3.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
