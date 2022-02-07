@@ -117,13 +117,13 @@ public class NioUtil {
 	 * @link http://androidxref.com/6.0.1_r10/xref/libcore/luni/src/main/java/java/nio/FileChannelImpl.java
 	 * @link http://androidxref.com/7.0.0_r1/xref/libcore/ojluni/src/main/java/sun/nio/ch/FileChannelImpl.java
 	 * @link http://androidxref.com/7.0.0_r1/xref/libcore/ojluni/src/main/native/FileChannelImpl.c
-	 * @since 2022-01-29
 	 * @author z8g
+	 * @since 5.7.21
 	 */
 	private static long copySafely(FileChannel inChannel, FileChannel outChannel) throws IOException {
-		long totalBytes = inChannel.size();
+		final long totalBytes = inChannel.size();
 		for (long pos = 0, remaining = totalBytes; remaining > 0; ) { // 确保文件内容不会缺失
-			long writeBytes = inChannel.transferTo(pos, remaining, outChannel); // 实际传输的字节数
+			final long writeBytes = inChannel.transferTo(pos, remaining, outChannel); // 实际传输的字节数
 			pos += writeBytes;
 			remaining -= writeBytes;
 		}

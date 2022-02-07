@@ -527,26 +527,39 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 计算目录或文件的总大小<br>
 	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
-	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回<br>
+	 * 此方法不包括目录本身的占用空间大小。
 	 *
 	 * @param file 目录或文件,null或者文件不存在返回0
 	 * @return 总大小，bytes长度
 	 */
 	public static long size(File file) {
+		return size(file, false);
+	}
+
+	/**
+	 * 计算目录或文件的总大小<br>
+	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
+	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 *
+	 * @param file 目录或文件,null或者文件不存在返回0
+	 * @param includeDirSize 是否包括每层目录本身的大小
+	 * @return 总大小，bytes长度
+	 * @since 5.7.21
+	 */
+	public static long size(File file, boolean includeDirSize) {
 		if (null == file || false == file.exists() || isSymlink(file)) {
 			return 0;
 		}
 
 		if (file.isDirectory()) {
-			// TODO： 是否需要统计目录本身的大小呢？
-			//  size += file.length();
-			long size = 0L;
+			long size = includeDirSize ? file.length() : 0;
 			File[] subFiles = file.listFiles();
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return 0L;// empty directory
 			}
 			for (File subFile : subFiles) {
-				size += size(subFile);
+				size += size(subFile, includeDirSize);
 			}
 			return size;
 		} else {
@@ -610,7 +623,6 @@ public class FileUtil extends PathUtil {
 			return null;
 		}
 		if (false == file.exists()) {
-			// TODO: {@see mkdirsSafely} 确保并发环境下的安全创建
 			mkParentDirs(file);
 			try {
 				//noinspection ResultOfMethodCallIgnored
@@ -815,7 +827,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建文件夹，会递归自动创建其不存在的父文件夹，如果存在直接返回此文件夹<br>
-	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型<br>
 	 *
 	 * @param dir 目录
 	 * @return 创建的目录
@@ -825,8 +837,7 @@ public class FileUtil extends PathUtil {
 			return null;
 		}
 		if (false == dir.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			dir.mkdirs();
+			mkdirsSafely(dir, 5, 1);
 		}
 		return dir;
 	}
@@ -843,23 +854,27 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param dir 待创建的目录
+	 * @param tryCount 最大尝试次数
+	 * @param sleepMillis 线程等待的毫秒数
 	 * @return true表示创建成功，false表示创建失败
-	 * @since 2022-01-29
+	 * @since 5.7.21
 	 * @author z8g
 	 */
-	public static boolean mkdirsSafely(File dir) {
+	public static boolean mkdirsSafely(File dir, int tryCount, long sleepMillis) {
 		if (dir == null) {
 			return false;
 		}
 		if (dir.isDirectory()) {
 			return true;
 		}
-		for (int i = 1; i <= 5; i++) { // 高并发场景下，可以看到 i 处于 1 ~ 3 之间
-			dir.mkdirs(); // 如果文件已存在，也会返回 false，所以该值不能作为是否能创建的依据，因此不对其进行处理
+		for (int i = 1; i <= tryCount; i++) { // 高并发场景下，可以看到 i 处于 1 ~ 3 之间
+			// 如果文件已存在，也会返回 false，所以该值不能作为是否能创建的依据，因此不对其进行处理
+			//noinspection ResultOfMethodCallIgnored
+			dir.mkdirs();
 			if (dir.exists()) {
 				return true;
 			}
-			ThreadUtil.sleep(1);
+			ThreadUtil.sleep(sleepMillis);
 		}
 		return dir.exists();
 	}
