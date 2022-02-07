@@ -13,6 +13,7 @@ import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -537,6 +538,8 @@ public class FileUtil extends PathUtil {
 		}
 
 		if (file.isDirectory()) {
+			// TODO： 是否需要统计目录本身的大小呢？
+			//  size += file.length();
 			long size = 0L;
 			File[] subFiles = file.listFiles();
 			if (ArrayUtil.isEmpty(subFiles)) {
@@ -607,6 +610,7 @@ public class FileUtil extends PathUtil {
 			return null;
 		}
 		if (false == file.exists()) {
+			// TODO: {@see mkdirsSafely} 确保并发环境下的安全创建
 			mkParentDirs(file);
 			try {
 				//noinspection ResultOfMethodCallIgnored
@@ -825,6 +829,39 @@ public class FileUtil extends PathUtil {
 			dir.mkdirs();
 		}
 		return dir;
+	}
+
+	/**
+	 * 安全地级联创建目录 (确保并发环境下能创建成功)
+	 *
+	 * <pre>
+	 *     并发环境下，假设 test 目录不存在，如果线程A mkdirs "test/A" 目录，线程B mkdirs "test/B"目录，
+	 *     其中一个线程可能会失败，进而导致以下代码抛出 FileNotFoundException 异常
+	 *
+	 *     file.getParentFile().mkdirs(); // 父目录正在被另一个线程创建中，返回 false
+	 *     file.createNewFile(); // 抛出 IO 异常，因为该线程无法感知到父目录已被创建
+	 * </pre>
+	 *
+	 * @param dir 待创建的目录
+	 * @return true表示创建成功，false表示创建失败
+	 * @since 2022-01-29
+	 * @author z8g
+	 */
+	public static boolean mkdirsSafely(File dir) {
+		if (dir == null) {
+			return false;
+		}
+		if (dir.isDirectory()) {
+			return true;
+		}
+		for (int i = 1; i <= 5; i++) { // 高并发场景下，可以看到 i 处于 1 ~ 3 之间
+			dir.mkdirs(); // 如果文件已存在，也会返回 false，所以该值不能作为是否能创建的依据，因此不对其进行处理
+			if (dir.exists()) {
+				return true;
+			}
+			ThreadUtil.sleep(1);
+		}
+		return dir.exists();
 	}
 
 	/**
