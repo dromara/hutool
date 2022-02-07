@@ -1,7 +1,10 @@
 package cn.hutool.core.builder;
 
 import cn.hutool.core.util.StrUtil;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,6 +61,7 @@ public class GenericBuilderTest {
 	@Getter
 	@Setter
 	@ToString
+	@Accessors(chain = true)
 	public static class Box {
 		private Long id;
 		private String title;

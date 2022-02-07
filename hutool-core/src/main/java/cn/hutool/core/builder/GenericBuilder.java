@@ -1,10 +1,5 @@
 package cn.hutool.core.builder;
 
-import cn.hutool.core.lang.func.Consumer1;
-import cn.hutool.core.lang.func.Consumer2;
-import cn.hutool.core.lang.func.Consumer3;
-import cn.hutool.core.lang.func.Consumer4;
-import cn.hutool.core.lang.func.Consumer5;
 import cn.hutool.core.lang.func.Supplier1;
 import cn.hutool.core.lang.func.Supplier2;
 import cn.hutool.core.lang.func.Supplier3;
@@ -13,6 +8,7 @@ import cn.hutool.core.lang.func.Supplier5;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -190,85 +186,13 @@ public class GenericBuilder<T> implements Builder<T> {
 	/**
 	 * 调用1参数方法
 	 *
-	 * @param consumer 1参数Consumer
-	 * @param p1       参数一
 	 * @param <P1>     参数一类型
+	 * @param consumer 1参数Consumer，一般为Setter方法引用
+	 * @param p1       参数一
 	 * @return GenericBuilder对象
 	 */
-	public <P1> GenericBuilder<T> with(Consumer1<T, P1> consumer, P1 p1) {
-		modifiers.add(consumer.toConsumer(p1));
-		return this;
-	}
-
-	/**
-	 * 调用2参数方法
-	 *
-	 * @param consumer 2参数Consumer
-	 * @param p1       参数一
-	 * @param p2       参数二
-	 * @param <P1>     参数一类型
-	 * @param <P2>     参数二类型
-	 * @return GenericBuilder对象
-	 */
-	public <P1, P2> GenericBuilder<T> with(Consumer2<T, P1, P2> consumer, P1 p1, P2 p2) {
-		modifiers.add(consumer.toConsumer(p1, p2));
-		return this;
-	}
-
-	/**
-	 * 调用3参数方法
-	 *
-	 * @param consumer 3参数Consumer
-	 * @param p1       参数一
-	 * @param p2       参数二
-	 * @param p3       参数三
-	 * @param <P1>     参数一类型
-	 * @param <P2>     参数二类型
-	 * @param <P3>     参数三类型
-	 * @return GenericBuilder对象
-	 */
-	public <P1, P2, P3> GenericBuilder<T> with(Consumer3<T, P1, P2, P3> consumer, P1 p1, P2 p2, P3 p3) {
-		modifiers.add(consumer.toConsumer(p1, p2, p3));
-		return this;
-	}
-
-	/**
-	 * 调用4参数方法
-	 *
-	 * @param consumer 4参数Consumer
-	 * @param p1       参数一
-	 * @param p2       参数二
-	 * @param p3       参数三
-	 * @param p4       参数四
-	 * @param <P1>     参数一类型
-	 * @param <P2>     参数二类型
-	 * @param <P3>     参数三类型
-	 * @param <P4>     参数四类型
-	 * @return GenericBuilder对象
-	 */
-	public <P1, P2, P3, P4> GenericBuilder<T> with(Consumer4<T, P1, P2, P3, P4> consumer, P1 p1, P2 p2, P3 p3, P4 p4) {
-		modifiers.add(consumer.toConsumer(p1, p2, p3, p4));
-		return this;
-	}
-
-	/**
-	 * 调用5参数方法
-	 *
-	 * @param consumer 5参数Consumer
-	 * @param p1       参数一
-	 * @param p2       参数二
-	 * @param p3       参数三
-	 * @param p4       参数四
-	 * @param p5       参数五
-	 * @param <P1>     参数一类型
-	 * @param <P2>     参数二类型
-	 * @param <P3>     参数三类型
-	 * @param <P4>     参数四类型
-	 * @param <P5>     参数五类型
-	 * @return GenericBuilder对象
-	 */
-	public <P1, P2, P3, P4, P5> GenericBuilder<T> with(Consumer5<T, P1, P2, P3, P4, P5> consumer, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) {
-		modifiers.add(consumer.toConsumer(p1, p2, p3, p4, p5));
+	public <P1> GenericBuilder<T> with(BiConsumer<T, P1> consumer, P1 p1) {
+		modifiers.add(instant -> consumer.accept(instant, p1));
 		return this;
 	}
 
