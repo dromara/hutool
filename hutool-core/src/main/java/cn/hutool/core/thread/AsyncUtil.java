@@ -1,7 +1,5 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.lang.Opt;
-
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -60,17 +58,6 @@ public class AsyncUtil {
 		} catch (InterruptedException | ExecutionException e) {
 			throw new ThreadException(e);
 		}
-	}
-
-	/**
-	 * 获取异步任务结果，包裹了异常，并返回 {@link Opt}
-	 *
-	 * @param <T>  任务返回值类型
-	 * @param task 异步任务
-	 * @return 任务返回值
-	 */
-	public static <T> Opt<T> getOpt(CompletableFuture<T> task) {
-		return Opt.ofTry(task::get);
 	}
 
 }
