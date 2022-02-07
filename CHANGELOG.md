@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.21 (2022-02-04)
+# 5.7.21 (2022-02-07)
 
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
@@ -16,6 +16,7 @@
 * 【core   】     DateTime增加setUseJdkToStringStyle方法
 * 【core   】     CharSequenceUtil增加replace重载(issue#2122@Github)
 * 【core   】     IntMap和LongMap使用位运算快速求解取余运算(pr#2123@Github)
+* 【core   】     新增通用builder类：GenericBuilder(pr#526@Gitee)
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）

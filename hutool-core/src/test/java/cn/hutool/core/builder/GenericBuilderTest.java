@@ -2,6 +2,7 @@ package cn.hutool.core.builder;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -21,7 +22,13 @@ public class GenericBuilderTest {
 				.with(Box::setWidth, 8)
 				.with(Box::setHeight, 7)
 				.build();
-		System.out.println(box);
+
+		Assert.assertEquals(1024L, box.getId().longValue());
+		Assert.assertEquals("Hello World!", box.getTitle());
+		Assert.assertEquals(9, box.getLength().intValue());
+		Assert.assertEquals(8, box.getWidth().intValue());
+		Assert.assertEquals(7, box.getHeight().intValue());
+
 		Box boxModified = GenericBuilder
 				.of(() -> box)
 				.with(Box::setTitle, "Hello Friend!")
@@ -29,12 +36,23 @@ public class GenericBuilderTest {
 				.with(Box::setWidth, 4)
 				.with(Box::setHeight, 5)
 				.build();
-		System.out.println(boxModified);
+
+		Assert.assertEquals(1024L, boxModified.getId().longValue());
+		Assert.assertEquals("Hello Friend!", box.getTitle());
+		Assert.assertEquals(3, boxModified.getLength().intValue());
+		Assert.assertEquals(4, boxModified.getWidth().intValue());
+		Assert.assertEquals(5, boxModified.getHeight().intValue());
+
 		Box box1 = GenericBuilder
 				.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
 				.with(Box::alis)
 				.build();
-		System.out.println(box1);
+
+		Assert.assertEquals(2048L, box1.getId().longValue());
+		Assert.assertEquals("Hello Partner!", box1.getTitle());
+		Assert.assertEquals(222, box1.getLength().intValue());
+		Assert.assertEquals(333, box1.getWidth().intValue());
+		Assert.assertEquals(444, box1.getHeight().intValue());
 	}
 
 	@Getter
