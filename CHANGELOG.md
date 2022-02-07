@@ -23,6 +23,7 @@
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
 * 【extra  】     修复EmojiUtil.toHtmlHex()方法（pr#519@Gitee）
 * 【system 】     修复CpuInfo.getUsed()方法（issue#2116@Github）
+* 【dfa    】     修复密集匹配和贪婪匹配冲突问题（issue#2126@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.20 (2022-01-20)
