@@ -176,6 +176,26 @@ public class NumberChineseFormatterTest {
 	}
 
 	@Test
+	public void formatSimpleTest() {
+		String f1 = NumberChineseFormatter.formatSimple(1_2345);
+		Assert.assertEquals("1.23万", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555);
+		Assert.assertEquals("-5.56万", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789);
+		Assert.assertEquals("1.23亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555);
+		Assert.assertEquals("-5.56亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789_1011L);
+		Assert.assertEquals("1.23万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555_5555L);
+		Assert.assertEquals("-5.56万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(123);
+		Assert.assertEquals("123", f1);
+		f1 = NumberChineseFormatter.formatSimple(-123);
+		Assert.assertEquals("-123", f1);
+	}
+
+	@Test
 	public void digitToChineseTest() {
 		String digitToChinese = Convert.digitToChinese(12_4124_1241_2421.12);
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
