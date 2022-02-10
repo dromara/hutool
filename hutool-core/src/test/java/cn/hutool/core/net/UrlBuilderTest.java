@@ -348,4 +348,19 @@ public class UrlBuilderTest {
 		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
 		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
 	}
+
+	@Test
+	public void paramWithPlusTest(){
+		String url = "http://127.0.0.1/?" +
+				"Expires=1642734164&" +
+				"security-token=CAIS+AF1q6Ft5B2yfSjIr5fYEeju1b1ggpPee2KGpjlgQtdfl43urjz2IHtKdXRvBu8Xs" +
+				"/4wnmxX7f4YlqB6T55OSAmcNZEoPwKpT4zmMeT7oMWQweEurv" +
+				"/MQBqyaXPS2MvVfJ+OLrf0ceusbFbpjzJ6xaCAGxypQ12iN+/m6" +
+				"/Ngdc9FHHPPD1x8CcxROxFppeIDKHLVLozNCBPxhXfKB0ca0WgVy0EHsPnvm5DNs0uH1AKjkbRM9r6ceMb0M5NeW75kSMqw0eBMca7M7TVd8RAi9t0t1" +
+				"/IVpGiY4YDAWQYLv0rda7DOltFiMkpla7MmXqlft+hzcgeQY0pc" +
+				"/RqAAYRYVCBiyuzAexSiDiJX1VqWljg4jYp1sdyv3HpV3sXVcf6VH6AN9ot5YNTw4JNO0aNpLpLm93rRMrOKIOsve+OmNyZ4HS7qHQKt1qp7HY1A" +
+				"/wGhJstkAoGQt+CHSMwVdIx3bVT1+ZYnJdM/oIQ/90afw4EEEQaRE51Z0rQC7z8d";
+		final String build = UrlBuilder.of(url).build();
+		Assert.assertEquals(url, build);
+	}
 }

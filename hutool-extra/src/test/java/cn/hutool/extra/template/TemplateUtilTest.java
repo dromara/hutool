@@ -156,7 +156,7 @@ public class TemplateUtilTest {
 	}
 
 	@Test
-	public void WitEngineTest() {
+	public void witEngineTest() {
 		//classpath模板
 		TemplateConfig config = new TemplateConfig("templates", ResourceMode.CLASSPATH)
 				.setCustomEngine(WitEngine.class);

@@ -12,7 +12,7 @@
 	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
-	<a target="_blank" href="https://license.coscl.org.cn/MulanPSL2/">
+	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
@@ -142,18 +142,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.7.20</version>
+    <version>5.7.21</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.7.20'
+implementation 'cn.hutool:hutool-all:5.7.21'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.20/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.21/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.

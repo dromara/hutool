@@ -92,7 +92,7 @@ public class ChineseDate {
 			offset -= daysOfMonth;
 		}
 
-		this.isLeapMonth = month == (leapMonth + 1);
+		this.isLeapMonth = leapMonth > 0 && (month == (leapMonth + 1));
 		if (hasLeapMonth && false == this.isLeapMonth) {
 			// 当前月份前有闰月，则月份显示要-1，除非当前月份就是润月
 			month--;
