@@ -11,6 +11,8 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
@@ -259,6 +261,16 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
+	 * 获取响应的json主体
+	 * @return JSONObject
+	 */
+	public JSONObject json(){
+		return JSONUtil.parseObj(body());
+	}
+
+
+
+	/**
 	 * 将响应内容写出到{@link OutputStream}<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
@@ -420,7 +432,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @since 5.4.1
 	 */
 	public File completeFileNameFromHeader(File targetFileOrDir) {
-		if (false == targetFileOrDir.isDirectory()) {
+		if (!targetFileOrDir.isDirectory()) {
 			// 非目录直接返回
 			return targetFileOrDir;
 		}
@@ -485,7 +497,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.status = httpConnection.responseCode();
 		} catch (IOException e) {
-			if (false == (e instanceof FileNotFoundException)) {
+			if (!(e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
 			// 服务器无返回内容，忽略之
