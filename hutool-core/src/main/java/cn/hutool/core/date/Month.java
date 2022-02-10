@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Assert;
+
 import java.util.Calendar;
 
 /**
@@ -93,12 +95,25 @@ public enum Month {
 	}
 
 	/**
-	 * 获取{@link Calendar}中的对应值
+	 * 获取{@link Calendar}中的对应值<br>
+	 * 此值从0开始，即0表示一月
 	 *
-	 * @return {@link Calendar}中的对应值
+	 * @return {@link Calendar}中的对应月份值，从0开始计数
 	 */
 	public int getValue() {
 		return this.value;
+	}
+
+	/**
+	 * 获取月份值，此值与{@link java.time.Month}对应<br>
+	 * 此值从1开始，即1表示一月
+	 *
+	 * @return 月份值，对应{@link java.time.Month}，从1开始计数
+	 * @since 5.7.21
+	 */
+	public int getValueBaseOne() {
+		Assert.isFalse(this == UNDECIMBER, "Unsupported UNDECIMBER Field");
+		return getValue() + 1;
 	}
 
 	/**
@@ -165,17 +180,28 @@ public enum Month {
 
 	/**
 	 * 获得指定月的最后一天
-	 * @param month 月份，从0开始
+	 *
+	 * @param month      月份，从0开始
 	 * @param isLeapYear 是否为闰年，闰年只对二月有影响
 	 * @return 最后一天，可能为28,29,30,31
 	 * @since 5.4.7
 	 */
-	public static int getLastDay(int month, boolean isLeapYear){
+	public static int getLastDay(int month, boolean isLeapYear) {
 		int lastDay = DAYS_OF_MONTH[month];
-		if (isLeapYear && Calendar.FEBRUARY == month){
+		if (isLeapYear && Calendar.FEBRUARY == month) {
 			// 二月
 			lastDay += 1;
 		}
 		return lastDay;
+	}
+
+	/**
+	 * 转换为{@link java.time.Month}
+	 *
+	 * @return {@link java.time.Month}
+	 * @since 5.7.21
+	 */
+	public java.time.Month toJdkMonth() {
+		return java.time.Month.of(getValueBaseOne());
 	}
 }
