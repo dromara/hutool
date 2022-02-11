@@ -44,29 +44,4 @@ public class ValidateException extends StatefulException {
 	public ValidateException(int status, String msg, Throwable throwable) {
 		super(status, msg, throwable);
 	}
-
-	/**
-	 * 满足条件就抛出异常
-	 *
-	 * @param condition 条件
-	 * @param msg       异常消息
-	 */
-	public static void matchThrow(boolean condition, String msg) {
-		if (condition) {
-			throw new ValidateException(msg);
-		}
-	}
-
-	/**
-	 * 不满足条件就抛出异常
-	 *
-	 * @param condition 条件
-	 * @param msg       异常消息
-	 */
-	public static void nonMatchThrow(boolean condition, String msg) {
-		if (false == condition) {
-			throw new ValidateException(msg);
-		}
-	}
-
 }
