@@ -2,6 +2,7 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -151,6 +152,27 @@ public class NumberChineseFormatter {
 
 		chineseStr.append(longToChinese(amount, isUseTraditional));
 		return chineseStr.toString();
+	}
+
+	/**
+	 * 阿拉伯数字（支持正负整数）四舍五入后转换成中文节权位简洁计数单位，例如 -5_5555 =》 -5.56万
+	 *
+	 * @param amount 数字
+	 * @return 中文
+	 */
+	public static String formatSimple(long amount) {
+		if (amount < 1_0000 && amount > -1_0000) {
+			return String.valueOf(amount);
+		}
+		String res;
+		if (amount < 1_0000_0000 && amount > -1_0000_0000) {
+			res = NumberUtil.div(amount, 1_0000, 2) + "万";
+		} else if (amount < 1_0000_0000_0000L && amount > -1_0000_0000_0000L) {
+			res = NumberUtil.div(amount, 1_0000_0000, 2) + "亿";
+		} else {
+			res = NumberUtil.div(amount, 1_0000_0000_0000L, 2) + "万亿";
+		}
+		return res;
 	}
 
 	/**
