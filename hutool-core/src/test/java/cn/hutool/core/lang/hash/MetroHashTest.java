@@ -31,8 +31,8 @@ public class MetroHashTest {
 	public void metroHash128Test() {
 		byte[] str = "我是一段测试123".getBytes(CharsetUtil.CHARSET_UTF_8);
 		final long[] hash128 = MetroHash.hash128(str).getLongArray();
-		Assert.assertEquals(4629350038757384271L, hash128[0]);
-		Assert.assertEquals(-1607305036506152112L, hash128[1]);
+		Assert.assertEquals(4956592424592439349L, hash128[0]);
+		Assert.assertEquals(6301214698325086246L, hash128[1]);
 	}
 
 	/**
