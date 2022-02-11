@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.hash.CityHash;
+import cn.hutool.core.lang.hash.MetroHash;
 import cn.hutool.core.lang.hash.MurmurHash;
 import cn.hutool.core.lang.hash.Number128;
 
@@ -545,4 +546,89 @@ public class HashUtil {
 	public static long[] cityHash128(byte[] data, Number128 seed) {
 		return CityHash.hash128(data, seed).getLongArray();
 	}
+
+	/**
+	 * MetroHash 算法64-bit实现
+	 *
+	 * @param data 数据
+	 * @param seed 种子
+	 * @return
+	 */
+	public static long metroHash64(byte[] data, long seed) {
+		return MetroHash.hash64(data, seed);
+	}
+
+	/**
+	 * MetroHash 算法64-bit实现
+	 *
+	 * @param data 数据
+	 * @return
+	 */
+	public static long metroHash64(byte[] data) {
+		return MetroHash.hash64(data);
+	}
+
+	/**
+	 * MetroHash 算法64-bit实现
+	 *
+	 * @param str 数据
+	 * @param seed 种子
+	 * @return
+	 */
+	public static long metroHash64(String str,long seed) {
+		return MetroHash.hash64(str,seed);
+	}
+
+	/**
+	 * MetroHash 算法64-bit实现
+	 *
+	 * @param str 数据
+	 * @return
+	 */
+	public static long metroHash64(String str) {
+		return MetroHash.hash64(str);
+	}
+
+	/**
+	 * MetroHash 算法128-bit实现
+	 *
+	 * @param data 数据
+	 * @param seed 种子
+	 * @return hash值，long[0]：低位，long[1]：高位
+	 */
+	public static long[] metroHash128(byte[] data, long seed) {
+		return MetroHash.hash128(data,seed).getLongArray();
+	}
+
+	/**
+	 * MetroHash 算法128-bit实现
+	 *
+	 * @param data 数据
+	 * @return hash值，long[0]：低位，long[1]：高位
+	 */
+	public static long[] metroHash128(byte[] data) {
+		return MetroHash.hash128(data).getLongArray();
+	}
+
+	/**
+	 * MetroHash 算法128-bit实现
+	 *
+	 * @param  str 数据
+	 * @return hash值，long[0]：低位，long[1]：高位
+	 */
+	public static long[] metroHash128(String str) {
+		return MetroHash.hash128(str).getLongArray();
+	}
+
+	/**
+	 * MetroHash 算法128-bit实现
+	 *
+	 * @param  str 数据
+	 * @param seed 种子
+	 * @return hash值，long[0]：低位，long[1]：高位
+	 */
+	public static long[] metroHash128(String str, long seed) {
+		return MetroHash.hash128(str,seed).getLongArray();
+	}
+
 }
