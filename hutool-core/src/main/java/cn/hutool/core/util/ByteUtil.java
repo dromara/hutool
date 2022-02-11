@@ -27,7 +27,11 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class ByteUtil {
 
-	public static ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
+	public static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
+	/**
+	 * CPU的字节序
+	 */
+	public static final ByteOrder CPU_ENDIAN = "little".equals(System.getProperty("sun.cpu.endian")) ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
 
 	/**
 	 * int转byte
@@ -130,16 +134,29 @@ public class ByteUtil {
 	 * @return int值
 	 */
 	public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
+		return bytesToInt(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte[]转int值<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param byteOrder 端序
+	 * @return int值
+	 * @since 5.7.21
+	 */
+	public static int bytesToInt(byte[] bytes, int start, ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return bytes[0] & 0xFF | //
-					(bytes[1] & 0xFF) << 8 | //
-					(bytes[2] & 0xFF) << 16 | //
-					(bytes[3] & 0xFF) << 24; //
+			return bytes[start] & 0xFF | //
+					(bytes[1 + start] & 0xFF) << 8 | //
+					(bytes[2 + start] & 0xFF) << 16 | //
+					(bytes[3 + start] & 0xFF) << 24; //
 		} else {
-			return bytes[3] & 0xFF | //
-					(bytes[2] & 0xFF) << 8 | //
-					(bytes[1] & 0xFF) << 16 | //
-					(bytes[0] & 0xFF) << 24; //
+			return bytes[3 + start] & 0xFF | //
+					(bytes[2 + start] & 0xFF) << 8 | //
+					(bytes[1 + start] & 0xFF) << 16 | //
+					(bytes[start] & 0xFF) << 24; //
 		}
 
 	}
@@ -243,16 +260,31 @@ public class ByteUtil {
 	 * @return long值
 	 */
 	public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
+		return bytesToLong(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte数组转long<br>
+	 * 自定义端序<br>
+	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 *
+	 * @param bytes     byte数组
+	 * @param start     计算数组开始位置
+	 * @param byteOrder 端序
+	 * @return long值
+	 * @since 5.7.21
+	 */
+	public static long bytesToLong(byte[] bytes, int start, ByteOrder byteOrder) {
 		long values = 0;
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = (Long.BYTES - 1); i >= 0; i--) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i] & 0xff);
+				values |= (bytes[i + start] & 0xff);
 			}
 		} else {
 			for (int i = 0; i < Long.BYTES; i++) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i] & 0xff);
+				values |= (bytes[i + start] & 0xff);
 			}
 		}
 
