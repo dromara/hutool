@@ -6,7 +6,7 @@ package cn.hutool.core.lang.hash;
  * @author hexiufeng
  * @since 5.2.5
  */
-public class Number128 extends Number{
+public class Number128 extends Number {
 	private static final long serialVersionUID = 1L;
 
 	private long lowValue;
@@ -23,22 +23,47 @@ public class Number128 extends Number{
 		this.highValue = highValue;
 	}
 
+	/**
+	 * 获取低位值
+	 *
+	 * @return 地位值
+	 */
 	public long getLowValue() {
 		return lowValue;
 	}
 
-	public long getHighValue() {
-		return highValue;
-	}
-
+	/**
+	 * 设置低位值
+	 *
+	 * @param lowValue 低位值
+	 */
 	public void setLowValue(long lowValue) {
 		this.lowValue = lowValue;
 	}
 
+	/**
+	 * 获取高位值
+	 *
+	 * @return 高位值
+	 */
+	public long getHighValue() {
+		return highValue;
+	}
+
+	/**
+	 * 设置高位值
+	 *
+	 * @param hiValue 高位值
+	 */
 	public void setHighValue(long hiValue) {
 		this.highValue = hiValue;
 	}
 
+	/**
+	 * 获取高低位数组，long[0]：低位，long[1]：高位
+	 *
+	 * @return 高低位数组，long[0]：低位，long[1]：高位
+	 */
 	public long[] getLongArray() {
 		return new long[]{lowValue, highValue};
 	}

@@ -387,7 +387,7 @@ public class HashUtil {
 				if (ucChar <= 'Z' && ucChar >= 'A') {
 					ucChar = (char) (ucChar + 32);
 				}
-				hash += (3 * i * ucChar * ucChar + 5 * i * ucChar + 7 * i + 11 * ucChar) % 16777216;
+				hash += (3L * i * ucChar * ucChar + 5L * i * ucChar + 7L * i + 11 * ucChar) % 16777216;
 			}
 		} else {
 			for (i = 1; i <= 96; i++) {
@@ -395,7 +395,7 @@ public class HashUtil {
 				if (ucChar <= 'Z' && ucChar >= 'A') {
 					ucChar = (char) (ucChar + 32);
 				}
-				hash += (3 * i * ucChar * ucChar + 5 * i * ucChar + 7 * i + 11 * ucChar) % 16777216;
+				hash += (3L * i * ucChar * ucChar + 5L * i * ucChar + 7L * i + 11 * ucChar) % 16777216;
 			}
 		}
 		if (hash < 0) {
@@ -552,7 +552,7 @@ public class HashUtil {
 	 *
 	 * @param data 数据
 	 * @param seed 种子
-	 * @return
+	 * @return hash值
 	 */
 	public static long metroHash64(byte[] data, long seed) {
 		return MetroHash.hash64(data, seed);
@@ -562,31 +562,10 @@ public class HashUtil {
 	 * MetroHash 算法64-bit实现
 	 *
 	 * @param data 数据
-	 * @return
+	 * @return hash值
 	 */
 	public static long metroHash64(byte[] data) {
 		return MetroHash.hash64(data);
-	}
-
-	/**
-	 * MetroHash 算法64-bit实现
-	 *
-	 * @param str 数据
-	 * @param seed 种子
-	 * @return
-	 */
-	public static long metroHash64(String str,long seed) {
-		return MetroHash.hash64(str,seed);
-	}
-
-	/**
-	 * MetroHash 算法64-bit实现
-	 *
-	 * @param str 数据
-	 * @return
-	 */
-	public static long metroHash64(String str) {
-		return MetroHash.hash64(str);
 	}
 
 	/**
@@ -609,26 +588,4 @@ public class HashUtil {
 	public static long[] metroHash128(byte[] data) {
 		return MetroHash.hash128(data).getLongArray();
 	}
-
-	/**
-	 * MetroHash 算法128-bit实现
-	 *
-	 * @param  str 数据
-	 * @return hash值，long[0]：低位，long[1]：高位
-	 */
-	public static long[] metroHash128(String str) {
-		return MetroHash.hash128(str).getLongArray();
-	}
-
-	/**
-	 * MetroHash 算法128-bit实现
-	 *
-	 * @param  str 数据
-	 * @param seed 种子
-	 * @return hash值，long[0]：低位，long[1]：高位
-	 */
-	public static long[] metroHash128(String str, long seed) {
-		return MetroHash.hash128(str,seed).getLongArray();
-	}
-
 }
