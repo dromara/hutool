@@ -123,8 +123,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (null == config) {
 			config = JSONConfig.create();
 		}
+		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {
-			final Comparator<String> keyComparator = config.getKeyComparator();
 			if(null != keyComparator){
 				// 比较器存在情况下，isOrder无效
 				this.rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
@@ -132,7 +132,6 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 				this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 			}
 		} else {
-			final Comparator<String> keyComparator = config.getKeyComparator();
 			if(null != keyComparator){
 				// 比较器存在情况下，isOrder无效
 				this.rawHashMap = new TreeMap<>(keyComparator);
