@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateRange;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,8 +59,8 @@ public class RangeTest {
 		Assert.assertEquals(sb.toString(), "1#2#3#");
 
 		StringBuilder sb2 = new StringBuilder();
-		DateUtil.rangeConsume(null, null, DateField.DAY_OF_YEAR, a -> sb.append(DateTime.of(a).dayOfMonth()).append("#"));
-		Assert.assertEquals(sb2.toString(), "");
+		DateUtil.rangeConsume(null, null, DateField.DAY_OF_YEAR, a -> sb2.append(DateTime.of(a).dayOfMonth()).append("#"));
+		Assert.assertEquals(sb2.toString(), StrUtil.EMPTY);
 	}
 
 	@Test
@@ -149,7 +150,8 @@ public class RangeTest {
 		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
 		// 交集
 		List<DateTime> dateTimes = DateUtil.rangeContains(startRange, endRange);
-		dateTimes.parallelStream().forEach(System.out::println);
+		Assert.assertEquals(1, dateTimes.size());
+		Assert.assertEquals(DateUtil.parse("2017-01-31"), dateTimes.get(0));
 	}
 
 	@Test
@@ -164,7 +166,9 @@ public class RangeTest {
 		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
 		// 差集
 		List<DateTime> dateTimes1 = DateUtil.rangeNotContains(startRange, endRange);
-		dateTimes1.parallelStream().forEach(System.out::println);
+
+		Assert.assertEquals(1, dateTimes1.size());
+		Assert.assertEquals(DateUtil.parse("2017-01-31"), dateTimes1.get(0));
 	}
 
 }

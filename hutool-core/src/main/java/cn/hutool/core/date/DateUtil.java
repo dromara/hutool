@@ -1887,6 +1887,8 @@ public class DateUtil extends CalendarUtil {
 	 * @param start 开始区间
 	 * @param end   结束区间
 	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeContains(DateRange start, DateRange end) {
 		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
@@ -1900,6 +1902,8 @@ public class DateUtil extends CalendarUtil {
 	 * @param start 开始区间
 	 * @param end   结束区间
 	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeNotContains(DateRange start, DateRange end) {
 		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);

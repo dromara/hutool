@@ -20,6 +20,7 @@
 * 【core   】     新增copySafely方法与mkdirsSafely方法(pr#527@Gitee)
 * 【core   】     新增MetroHash(pr#532@Gitee)
 * 【core   】     SpringUtil增加publishEvent重载(pr#2139@Github)
+* 【core   】     DateUtil增加rangeContains、rangeNotContains(pr#537@Gitee)
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
