@@ -461,6 +461,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 3.0.9
 	 */
 	public static boolean isFileURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		String protocol = url.getProtocol();
 		return (URL_PROTOCOL_FILE.equals(protocol) || //
 				URL_PROTOCOL_VFSFILE.equals(protocol) || //
@@ -474,6 +475,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @return 是否为jar包URL
 	 */
 	public static boolean isJarURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_JAR.equals(protocol) || //
 				URL_PROTOCOL_ZIP.equals(protocol) || //
@@ -489,6 +491,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 4.1
 	 */
 	public static boolean isJarFileURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
 				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
 	}
@@ -501,7 +504,7 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 3.2.1
 	 */
 	public static InputStream getStream(URL url) {
-		Assert.notNull(url);
+		Assert.notNull(url, "URL must be not null");
 		try {
 			return url.openStream();
 		} catch (IOException e) {
