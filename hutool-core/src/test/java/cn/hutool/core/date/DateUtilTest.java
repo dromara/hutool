@@ -3,7 +3,6 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -692,7 +691,6 @@ public class DateUtilTest {
 	@Test
 	public void parseCSTTest() {
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
-		Console.log(TimeZone.getDefault().getDisplayName());
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
 		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
@@ -995,11 +993,13 @@ public class DateUtilTest {
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
-		final DateTime parse = DateUtil.parse("2021-1-1");
+		DateTime parse = DateUtil.parse("2021-1-1");
 		Assert.assertNotNull(parse);
 		Assert.assertEquals("2021-01-01 00:00:00", parse.toString());
 
-		Console.log(DateUtil.parse("2021-1-22 00:00:00"));
+		parse = DateUtil.parse("2021-1-22 00:00:00");
+		Assert.assertNotNull(parse);
+		Assert.assertEquals("2021-01-22 00:00:00", parse.toString());
 	}
 
 	@Test
