@@ -23,6 +23,7 @@
 * 【core   】     DateUtil增加rangeContains、rangeNotContains(pr#537@Gitee)
 * 【core   】     Resource增加isModified默认方法
 * 【core   】     增加VfsResource
+* 【json   】     JSONConfig增加setKeyComparator、setNatureKeyComparator方法，支持自定义排序（issue#I4RBZ4@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
