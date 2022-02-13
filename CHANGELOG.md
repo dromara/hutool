@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.21 (2022-02-11)
+# 5.7.21 (2022-02-13)
 
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
@@ -19,6 +19,7 @@
 * 【core   】     新增通用builder类：GenericBuilder(pr#526@Gitee)
 * 【core   】     新增copySafely方法与mkdirsSafely方法(pr#527@Gitee)
 * 【core   】     新增MetroHash(pr#532@Gitee)
+* 【core   】     SpringUtil增加publishEvent重载(pr#2139@Github)
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
