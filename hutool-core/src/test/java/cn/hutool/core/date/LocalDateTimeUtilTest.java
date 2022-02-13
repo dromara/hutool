@@ -197,4 +197,24 @@ public class LocalDateTimeUtilTest {
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
 	}
+
+	@Test
+	public void weekOfYearTest(){
+		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(52, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(52, weekOfYear2);
+	}
+
+	@Test
+	public void weekOfYearTest2(){
+		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(5, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(5, weekOfYear2);
+	}
 }

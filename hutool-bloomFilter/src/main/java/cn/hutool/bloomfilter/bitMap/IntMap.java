@@ -32,21 +32,21 @@ public class IntMap implements BitMap, Serializable {
 	@Override
 	public void add(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
-		int c = (int) (i % BitMap.MACHINE32);
+		int c = (int) (i & (BitMap.MACHINE32 - 1));
 		ints[r] = ints[r] | (1 << c);
 	}
 
 	@Override
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
-		int c = (int) (i % BitMap.MACHINE32);
+		int c = (int) (i & (BitMap.MACHINE32 - 1));
 		return ((ints[r] >>> c) & 1) == 1;
 	}
 
 	@Override
 	public void remove(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
-		int c = (int) (i % BitMap.MACHINE32);
+		int c = (int) (i & (BitMap.MACHINE32 - 1));
 		ints[r] &= ~(1 << c);
 	}
 

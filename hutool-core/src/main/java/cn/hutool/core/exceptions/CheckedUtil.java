@@ -51,7 +51,7 @@ public class CheckedUtil {
 	 * @param expression Lambda表达式
 	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func
+	 * @return {@link FuncRt}
 	 */
 	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression) {
 		return uncheck(expression, new RuntimeException());
@@ -63,7 +63,7 @@ public class CheckedUtil {
 	 *
 	 * @param expression 运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func0
+	 * @return {@link Func0Rt}
 	 */
 	public static <R> Func0Rt<R> uncheck(Func0<R> expression) {
 		return uncheck(expression, new RuntimeException());
@@ -76,7 +76,7 @@ public class CheckedUtil {
 	 * @param expression 运行时传入的参数类型
 	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func1
+	 * @return {@link Func1Rt}
 	 */
 	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression) {
 		return uncheck(expression, new RuntimeException());
@@ -89,7 +89,7 @@ public class CheckedUtil {
 	 *
 	 * @param expression 运行时传入的参数类型
 	 * @param <P>        运行时传入的参数类型
-	 * @return cn.hutool.core.lang.func.VoidFunc
+	 * @return {@link VoidFuncRt}
 	 */
 	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression) {
 		return uncheck(expression, new RuntimeException());
@@ -100,7 +100,7 @@ public class CheckedUtil {
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression 运行时传入的参数类型
-	 * @return cn.hutool.core.lang.func.VoidFunc0
+	 * @return {@link VoidFunc0Rt}
 	 */
 	public static VoidFunc0Rt uncheck(VoidFunc0 expression) {
 		return uncheck(expression, new RuntimeException());
@@ -112,7 +112,7 @@ public class CheckedUtil {
 	 *
 	 * @param expression 运行时传入的参数类型
 	 * @param <P>        运行时传入的参数类型
-	 * @return cn.hutool.core.lang.func.VoidFunc1
+	 * @return {@link VoidFunc1Rt}
 	 */
 	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression) {
 		return uncheck(expression, new RuntimeException());
@@ -127,7 +127,7 @@ public class CheckedUtil {
 	 * @param rte        期望抛出的运行时异常
 	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func
+	 * @return {@link FuncRt}
 	 */
 	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
@@ -152,7 +152,7 @@ public class CheckedUtil {
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func0
+	 * @return {@link Func0Rt}
 	 */
 	public static <R> Func0Rt<R> uncheck(Func0<R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
@@ -178,7 +178,7 @@ public class CheckedUtil {
 	 * @param rte        期望抛出的运行时异常
 	 * @param <P>        运行时传入的参数类型
 	 * @param <R>        最终返回的数据类型
-	 * @return cn.hutool.core.lang.func.Func1
+	 * @return {@link Func1Rt}
 	 */
 	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
@@ -203,7 +203,7 @@ public class CheckedUtil {
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
 	 * @param <P>        运行时传入的参数类型
-	 * @return cn.hutool.core.lang.func.VoidFunc
+	 * @return {@link VoidFuncRt}
 	 */
 	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
@@ -228,7 +228,7 @@ public class CheckedUtil {
 	 *
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
-	 * @return cn.hutool.core.lang.func.VoidFunc0
+	 * @return {@link VoidFunc0Rt}
 	 */
 	public static VoidFunc0Rt uncheck(VoidFunc0 expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
@@ -254,7 +254,7 @@ public class CheckedUtil {
 	 * @param expression Lambda表达式
 	 * @param rte        期望抛出的运行时异常
 	 * @param <P>        运行时传入的参数类型
-	 * @return cn.hutool.core.lang.func.VoidFunc1
+	 * @return {@link VoidFunc1Rt}
 	 */
 	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression, RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");

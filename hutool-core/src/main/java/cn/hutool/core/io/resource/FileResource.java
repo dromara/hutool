@@ -20,6 +20,7 @@ public class FileResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final File file;
+	private final long lastModified;
 	private final String name;
 
 	// ----------------------------------------------------------------------- Constructor start
@@ -60,6 +61,7 @@ public class FileResource implements Resource, Serializable {
 	public FileResource(File file, String fileName) {
 		Assert.notNull(file, "File must be not null !");
 		this.file = file;
+		this.lastModified = file.lastModified();
 		this.name = ObjectUtil.defaultIfNull(fileName, file::getName);
 	}
 
@@ -87,6 +89,11 @@ public class FileResource implements Resource, Serializable {
 	 */
 	public File getFile() {
 		return this.file;
+	}
+
+	@Override
+	public boolean isModified() {
+		return this.lastModified != file.lastModified();
 	}
 
 	/**

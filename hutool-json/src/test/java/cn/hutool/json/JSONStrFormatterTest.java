@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -33,6 +34,7 @@ public class JSONStrFormatterTest {
 	}
 
 	@Test
+	@Ignore
 	public void formatTest4(){
 		String jsonStr = "{\"employees\":[{\"firstName\":\"Bill\",\"lastName\":\"Gates\"},{\"firstName\":\"George\",\"lastName\":\"Bush\"},{\"firstName\":\"Thomas\",\"lastName\":\"Carter\"}]}";
 		Console.log(JSONUtil.formatJsonStr(jsonStr));

@@ -19,6 +19,8 @@ public class CsvWriterTest {
 				CharsetUtil.CHARSET_GBK, false, csvWriteConfig);
 
 		writer.writeHeaderLine("name", "gender", "address");
+		writer.writeLine("张三", "男", "XX市XX区");
+		writer.writeLine("李四", "男", "XX市XX区,01号");
 		writer.close();
 	}
 }
