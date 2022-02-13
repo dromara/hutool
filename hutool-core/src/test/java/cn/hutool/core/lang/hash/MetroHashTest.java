@@ -3,12 +3,11 @@ package cn.hutool.core.lang.hash;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.Random;
 
 /**
  * https://gitee.com/dromara/hutool/pulls/532
@@ -41,7 +40,7 @@ public class MetroHashTest {
 	@Test
 	@Ignore
 	public void bulkHashing64Test() {
-		String[] strArray = getRandomStringArray(10000000);
+		String[] strArray = getRandomStringArray();
 		long startCity = System.currentTimeMillis();
 		for (String s : strArray) {
 			CityHash.hash64(s.getBytes());
@@ -65,7 +64,7 @@ public class MetroHashTest {
 	@Test
 	@Ignore
 	public void bulkHashing128Test() {
-		String[] strArray = getRandomStringArray(10000000);
+		String[] strArray = getRandomStringArray();
 		long startCity = System.currentTimeMillis();
 		for (String s : strArray) {
 			CityHash.hash128(s.getBytes());
@@ -83,26 +82,12 @@ public class MetroHashTest {
 	}
 
 
-	private static String[] getRandomStringArray(int length) {
-		String[] result = new String[length];
-		Random random = new Random();
+	private static String[] getRandomStringArray() {
+		String[] result = new String[10000000];
 		int index = 0;
-		while (index < length) {
-			result[index++] = getRandomString(random.nextInt(64));
+		while (index < 10000000) {
+			result[index++] = RandomUtil.randomString(RandomUtil.randomInt(64));
 		}
 		return result;
 	}
-
-	private static String getRandomString(int length) {
-		String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		Random random = new Random();
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < length; i++) {
-			int number = random.nextInt(62);
-			sb.append(str.charAt(number));
-		}
-		return sb.toString();
-	}
-
-
 }

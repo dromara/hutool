@@ -592,9 +592,14 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
-			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
-			if (null == filter || filter.accept(pair)) {
-				jsonWriter.writeField(pair.getKey(), pair.getValue());
+			if (null != filter){
+				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+				if (filter.accept(pair)) {
+					// 使用修改后的键值对
+					jsonWriter.writeField(pair.getKey(), pair.getValue());
+				}
+			} else {
+				jsonWriter.writeField(key, value);
 			}
 		});
 		jsonWriter.end();

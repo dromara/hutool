@@ -30,7 +30,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -656,6 +655,21 @@ public class JSONObjectTest {
 			return false;
 		});
 		Assert.assertEquals("{\"b\":\"value2_edit\"}", s);
+	}
+
+	@Test
+	public void toUnderLineCaseTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true))
+				.set("aKey", "value1")
+				.set("bJob", "value2")
+				.set("cGood", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> {
+			pair.setKey(StrUtil.toUnderlineCase(pair.getKey()));
+			return true;
+		});
+		Assert.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);
 	}
 
 	@Test
