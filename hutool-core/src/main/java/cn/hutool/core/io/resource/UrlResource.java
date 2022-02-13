@@ -7,6 +7,7 @@ import cn.hutool.core.util.URLUtil;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -24,6 +25,15 @@ public class UrlResource implements Resource, Serializable{
 	//-------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
+	 * @param uri URI
+	 * @since 5.7.21
+	 */
+	public UrlResource(URI uri) {
+		this(URLUtil.url(uri), null);
+	}
+
+	/**
+	 * 构造
 	 * @param url URL
 	 */
 	public UrlResource(URL url) {
@@ -37,7 +47,7 @@ public class UrlResource implements Resource, Serializable{
 	 */
 	public UrlResource(URL url, String name) {
 		this.url = url;
-		if(null != url && URLUtil.isFileURL(url)){
+		if(null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())){
 			this.lastModified = FileUtil.file(url).lastModified();
 		}
 		this.name = ObjectUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));

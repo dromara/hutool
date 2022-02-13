@@ -96,6 +96,26 @@ public class URLUtil extends URLEncodeUtil {
 	public static final String WAR_URL_SEPARATOR = "*/";
 
 	/**
+	 * 将{@link URI}转换为{@link URL}
+	 *
+	 * @param uri {@link URI}
+	 * @return URL对象
+	 * @see URI#toURL()
+	 * @throws UtilException {@link MalformedURLException}包装，URI格式有问题时抛出
+	 * @since 5.7.21
+	 */
+	public static URL url(URI uri) throws UtilException{
+		if(null == uri){
+			return null;
+		}
+		try {
+			return uri.toURL();
+		} catch (MalformedURLException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
 	 *
 	 * @param url URL
@@ -114,7 +134,9 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 4.1.1
 	 */
 	public static URL url(String url, URLStreamHandler handler) {
-		Assert.notNull(url, "URL must not be null");
+		if(null == url){
+			return null;
+		}
 
 		// 兼容Spring的ClassPath路径
 		if (url.startsWith(CLASSPATH_URL_PREFIX)) {
@@ -142,6 +164,9 @@ public class URLUtil extends URLEncodeUtil {
 	 * @since 5.5.2
 	 */
 	public static URI getStringURI(CharSequence content) {
+		if(null == content){
+			return null;
+		}
 		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
 		return URI.create(contentStr);
 	}
