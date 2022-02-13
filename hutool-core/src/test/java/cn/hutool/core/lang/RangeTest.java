@@ -12,8 +12,8 @@ import java.util.NoSuchElementException;
 
 /**
  * {@link Range} 单元测试
- * @author Looly
  *
+ * @author Looly
  */
 public class RangeTest {
 
@@ -110,7 +110,7 @@ public class RangeTest {
 	}
 
 	@Test
-	public void rangeDayOfYearTest(){
+	public void rangeDayOfYearTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-05");
 
@@ -135,4 +135,36 @@ public class RangeTest {
 		Assert.assertEquals(DateUtil.parse("2017-01-01"), rangeToList.get(0));
 		Assert.assertEquals(DateUtil.parse("2017-01-02"), rangeToList.get(1));
 	}
+
+
+	@Test
+	public void rangeContains() {
+		// 开始区间
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-31");
+		DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
+		// 结束区间
+		DateTime start1 = DateUtil.parse("2017-01-31");
+		DateTime end1 = DateUtil.parse("2017-02-02");
+		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
+		// 交集
+		List<DateTime> dateTimes = DateUtil.rangeContains(startRange, endRange);
+		dateTimes.parallelStream().forEach(System.out::println);
+	}
+
+	@Test
+	public void rangeNotContains() {
+		// 开始区间
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-30");
+		DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
+		// 结束区间
+		DateTime start1 = DateUtil.parse("2017-01-01");
+		DateTime end1 = DateUtil.parse("2017-01-31");
+		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
+		// 差集
+		List<DateTime> dateTimes1 = DateUtil.rangeNotContains(startRange, endRange);
+		dateTimes1.parallelStream().forEach(System.out::println);
+	}
+
 }
