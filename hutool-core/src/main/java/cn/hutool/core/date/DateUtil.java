@@ -1897,7 +1897,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 俩个时间区间取差集(end -> start)
+	 * 俩个时间区间取差集(end - start)
 	 *
 	 * @param start 开始区间
 	 * @param end   结束区间
