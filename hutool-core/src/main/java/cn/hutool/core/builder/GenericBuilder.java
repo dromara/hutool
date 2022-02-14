@@ -1,6 +1,12 @@
 package cn.hutool.core.builder;
 
-import cn.hutool.core.lang.func.*;
+import cn.hutool.core.lang.func.Consumer2;
+import cn.hutool.core.lang.func.Supplier1;
+import cn.hutool.core.lang.func.Supplier2;
+import cn.hutool.core.lang.func.Supplier3;
+import cn.hutool.core.lang.func.Supplier4;
+import cn.hutool.core.lang.func.Supplier5;
+
 
 import java.util.ArrayList;
 import java.util.List;
