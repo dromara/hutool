@@ -105,7 +105,7 @@ public class ReUtil {
 	}
 
 	/**
-	 * 获得匹配的字符串，，获得正则中分组0的内容
+	 * 获得匹配的字符串，获得正则中分组0的内容
 	 *
 	 * @param pattern 编译后的正则模式
 	 * @param content 被匹配的内容

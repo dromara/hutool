@@ -150,7 +150,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * 获取命令执行结果，使用系统默认编码，，获取后销毁进程
+	 * 获取命令执行结果，使用系统默认编码，获取后销毁进程
 	 *
 	 * @param process {@link Process} 进程
 	 * @return 命令执行结果列表
@@ -180,7 +180,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * 获取命令执行异常结果，使用系统默认编码，，获取后销毁进程
+	 * 获取命令执行异常结果，使用系统默认编码，获取后销毁进程
 	 *
 	 * @param process {@link Process} 进程
 	 * @return 命令执行结果列表
