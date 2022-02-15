@@ -34,7 +34,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * 执行系统命令，使用系统默认编码
+	 * 执行系统命令，使用传入的 {@link Charset charset} 编码
 	 *
 	 * @param charset 编码
 	 * @param cmds    命令列表，每个元素代表一条命令
@@ -58,7 +58,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * 执行系统命令，使用系统默认编码
+	 * 执行系统命令，使用传入的 {@link Charset charset} 编码
 	 *
 	 * @param charset 编码
 	 * @param cmds    命令列表，每个元素代表一条命令
@@ -131,7 +131,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * 获取命令执行结果，使用系统默认编码，获取后销毁进程
+	 * 获取命令执行结果，使用传入的 {@link Charset charset} 编码，获取后销毁进程
 	 *
 	 * @param process {@link Process} 进程
 	 * @param charset 编码
