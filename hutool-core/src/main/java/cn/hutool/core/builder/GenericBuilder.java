@@ -1,10 +1,12 @@
 package cn.hutool.core.builder;
 
+import cn.hutool.core.lang.func.Consumer2;
 import cn.hutool.core.lang.func.Supplier1;
 import cn.hutool.core.lang.func.Supplier2;
 import cn.hutool.core.lang.func.Supplier3;
 import cn.hutool.core.lang.func.Supplier4;
 import cn.hutool.core.lang.func.Supplier5;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,16 @@ import java.util.function.Supplier;
  * 		.with(Box::alis)
  * 		.build();
  * </pre>
- * <p>注意：本工具类支持调用的方法的参数数量不超过1个，更多的参数不利于阅读和维护。</p>
+ * <p> 还可能这样构建Map对象：</p>
+ * <pre>
+ * HashMap<String, String> colorMap = GenericBuilder
+ * 		.of(HashMap<String,String>::new)
+ * 		.with(Map::put, "red", "#FF0000")
+ * 		.with(Map::put, "yellow", "#FFFF00")
+ * 		.with(Map::put, "blue", "#0000FF")
+ * 		.build();
+ * </pre>
+ * <p>注意：本工具类支持调用的构造方法的参数数量不超过5个，一般方法的参数数量不超过2个，更多的参数不利于阅读和维护。</p>
  *
  * @author TomXin
  * @since 5.7.21
@@ -183,13 +194,28 @@ public class GenericBuilder<T> implements Builder<T> {
 	/**
 	 * 调用1参数方法
 	 *
-	 * @param <P1>     参数一类型
-	 * @param consumer 1参数Consumer，一般为Setter方法引用
+	 * @param consumer 1参数Consumer
 	 * @param p1       参数一
+	 * @param <P1>     参数一类型
 	 * @return GenericBuilder对象
 	 */
 	public <P1> GenericBuilder<T> with(BiConsumer<T, P1> consumer, P1 p1) {
 		modifiers.add(instant -> consumer.accept(instant, p1));
+		return this;
+	}
+
+	/**
+	 * 调用2参数方法
+	 *
+	 * @param consumer 2参数Consumer
+	 * @param p1       参数一
+	 * @param p2       参数二
+	 * @param <P1>     参数一类型
+	 * @param <P2>     参数二类型
+	 * @return GenericBuilder对象
+	 */
+	public <P1, P2> GenericBuilder<T> with(Consumer2<T, P1, P2> consumer, P1 p1, P2 p2) {
+		modifiers.add(consumer.toConsumer(p1, p2));
 		return this;
 	}
 

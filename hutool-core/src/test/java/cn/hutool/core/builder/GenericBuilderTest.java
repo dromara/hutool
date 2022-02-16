@@ -8,6 +8,9 @@ import lombok.experimental.Accessors;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * {@link GenericBuilder} 单元测试类
  *
@@ -58,6 +61,18 @@ public class GenericBuilderTest {
 		Assert.assertEquals(222, box1.getLength().intValue());
 		Assert.assertEquals(333, box1.getWidth().intValue());
 		Assert.assertEquals(444, box1.getHeight().intValue());
+		Assert.assertEquals("TomXin:\"Hello Partner!\"", box1.getTitleAlias());
+
+		//Map创建
+		HashMap<String, String> colorMap = GenericBuilder
+				.of(HashMap<String,String>::new)
+				.with(Map::put, "red", "#FF0000")
+				.with(Map::put, "yellow", "#FFFF00")
+				.with(Map::put, "blue", "#0000FF")
+				.build();
+		Assert.assertEquals("#FF0000", colorMap.get("red"));
+		Assert.assertEquals("#FFFF00", colorMap.get("yellow"));
+		Assert.assertEquals("#0000FF", colorMap.get("blue"));
 	}
 
 	@Getter
