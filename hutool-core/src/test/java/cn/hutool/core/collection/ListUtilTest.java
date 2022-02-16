@@ -227,5 +227,9 @@ public class ListUtilTest {
 		ListUtil.swapElement(list, map2, map3);
 		Map<String, String> map = list.get(2);
 		Assert.assertEquals("李四", map.get("2"));
+
+		ListUtil.swapElement(list, map2, map1);
+		map = list.get(0);
+		Assert.assertEquals("李四", map.get("2"));
 	}
 }
