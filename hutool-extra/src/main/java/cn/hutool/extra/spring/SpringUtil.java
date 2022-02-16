@@ -264,6 +264,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @param event 待发布的事件，事件必须是{@link ApplicationEvent}的子类
 	 * @since 5.7.12
 	 */
+	@Deprecated
 	public static void publishEvent(ApplicationEvent event) {
 		publishEvent((Object) event);
 	}
