@@ -258,19 +258,6 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 
 	/**
 	 * 发布事件
-	 *
-	 * Note: 从 Spring 4.2 起，{@link org.springframework.context.ApplicationEventPublisher#publishEvent} 新增了对 Object 的重载方法，保留此方法为了兼容之前版本。
-	 *
-	 * @param event 待发布的事件，事件必须是{@link ApplicationEvent}的子类
-	 * @since 5.7.12
-	 */
-	@Deprecated
-	public static void publishEvent(ApplicationEvent event) {
-		publishEvent((Object) event);
-	}
-
-	/**
-	 * 发布事件
 	 * Spring 4.2+ 版本事件可以不再是{@link ApplicationEvent}的子类
 	 *
 	 * @param event 待发布的事件
