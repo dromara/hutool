@@ -1,12 +1,11 @@
 package cn.hutool.core.builder;
 
-import cn.hutool.core.lang.func.Consumer2;
+import cn.hutool.core.lang.func.Consumer3;
 import cn.hutool.core.lang.func.Supplier1;
 import cn.hutool.core.lang.func.Supplier2;
 import cn.hutool.core.lang.func.Supplier3;
 import cn.hutool.core.lang.func.Supplier4;
 import cn.hutool.core.lang.func.Supplier5;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,8 +213,8 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P2>     参数二类型
 	 * @return GenericBuilder对象
 	 */
-	public <P1, P2> GenericBuilder<T> with(Consumer2<T, P1, P2> consumer, P1 p1, P2 p2) {
-		modifiers.add(consumer.toConsumer(p1, p2));
+	public <P1, P2> GenericBuilder<T> with(Consumer3<T, P1, P2> consumer, P1 p1, P2 p2) {
+		modifiers.add(instant ->{consumer.accept(instant, p1, p2);});
 		return this;
 	}
 

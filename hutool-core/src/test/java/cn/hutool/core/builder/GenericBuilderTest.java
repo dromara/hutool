@@ -62,7 +62,10 @@ public class GenericBuilderTest {
 		Assert.assertEquals(333, box1.getWidth().intValue());
 		Assert.assertEquals(444, box1.getHeight().intValue());
 		Assert.assertEquals("TomXin:\"Hello Partner!\"", box1.getTitleAlias());
+	}
 
+	@Test
+	public void buildMapTest(){
 		//Map创建
 		HashMap<String, String> colorMap = GenericBuilder
 				.of(HashMap<String,String>::new)
