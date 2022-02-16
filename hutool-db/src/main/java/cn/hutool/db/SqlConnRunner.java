@@ -73,7 +73,7 @@ public class SqlConnRunner extends DialectRunner {
 	/**
 	 * 构造
 	 *
-	 * @param driverClassName 驱动类名，，用于识别方言
+	 * @param driverClassName 驱动类名，用于识别方言
 	 */
 	public SqlConnRunner(String driverClassName) {
 		super(driverClassName);
