@@ -118,6 +118,7 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @param div 节点，可以是段落、Canvas、Img或者填充
 	 * @return this
 	 */
+	@SuppressWarnings("rawtypes")
 	public OfdWriter add(Div div) {
 		this.doc.add(div);
 		return this;

@@ -899,10 +899,12 @@ public class FileUtil extends PathUtil {
 	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
 	 * @return 临时文件
 	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
 	 */
 	public static File createTempFile() throws IORuntimeException {
 		return createTempFile("hutool", null, null, true);
 	}
+
 	/**
 	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
 	 * 默认临时文件目录由系统属性 <code>java.io.tmpdir<code> 指定。
@@ -913,10 +915,12 @@ public class FileUtil extends PathUtil {
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
 	 * @return 临时文件
 	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
 	 */
 	public static File createTempFile(String suffix, boolean isReCreat) throws IORuntimeException {
 		return createTempFile("hutool", suffix, null, isReCreat);
 	}
+
 	/**
 	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
 	 * 默认临时文件目录由系统属性 <code>java.io.tmpdir<code> 指定。
@@ -929,10 +933,12 @@ public class FileUtil extends PathUtil {
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
 	 * @return 临时文件
 	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
 	 */
 	public static File createTempFile(String prefix, String suffix, boolean isReCreat) throws IORuntimeException {
 		return createTempFile(prefix, suffix, null, isReCreat);
 	}
+
 	/**
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Randon].tmp

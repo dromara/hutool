@@ -22,6 +22,7 @@ public enum PicType {
 
 	/**
 	 * 构造
+	 *
 	 * @param value 图片类型值
 	 */
 	PicType(int value) {

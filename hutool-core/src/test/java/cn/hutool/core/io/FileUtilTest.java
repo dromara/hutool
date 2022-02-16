@@ -460,7 +460,7 @@ public class FileUtilTest {
 		Assert.assertTrue(nullDirTempFile.exists());
 
 		File suffixDirTempFile = FileUtil.createTempFile(".xlsx",true);
-		Assert.assertTrue(FileUtil.getSuffix(suffixDirTempFile).equals("xlsx"));
+		Assert.assertEquals("xlsx", FileUtil.getSuffix(suffixDirTempFile));
 
 		File prefixDirTempFile = FileUtil.createTempFile("prefix",".xlsx",true);
 		Assert.assertTrue(FileUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
