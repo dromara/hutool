@@ -258,7 +258,10 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 
 	/**
 	 * 发布事件
-	 * Spring 4.2+ 版本事件可以不再是{@link ApplicationEvent}的子类
+	 *
+	 * <p>
+	 * 此方法会做非空检查，从 Spring 4.2 起，发布事件参数支持 Object 类型
+	 * </p>
 	 *
 	 * @param event 待发布的事件
 	 * @since 5.7.21
