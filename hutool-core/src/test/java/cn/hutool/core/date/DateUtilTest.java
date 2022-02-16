@@ -3,6 +3,7 @@ package cn.hutool.core.date;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -1019,5 +1020,11 @@ public class DateUtilTest {
 		// 跨月比较
 		final boolean isSameWeek2 = DateUtil.isSameWeek(DateTime.of("2021-12-29", "yyyy-MM-dd"), DateTime.of("2022-01-01", "yyyy-MM-dd"), true);
 		Assert.assertTrue(isSameWeek2);
+	}
+
+	@Test
+	public void parseTimeTest(){
+		final DateTime dateTime = DateUtil.parse("12:23:34");
+		Console.log(dateTime);
 	}
 }
