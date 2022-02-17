@@ -608,7 +608,7 @@ public class ListUtil {
 	public static <T> void swapTo(List<T> list, T element, Integer targetIndex) {
 		if (CollUtil.isNotEmpty(list)) {
 			final int index = list.indexOf(element);
-			if (index > 0) {
+			if (index >= 0) {
 				Collections.swap(list, index, targetIndex);
 			}
 		}
@@ -627,7 +627,7 @@ public class ListUtil {
 	public static <T> void swapElement(List<T> list, T element, T targetElement) {
 		if (CollUtil.isNotEmpty(list)) {
 			final int targetIndex = list.indexOf(targetElement);
-			if (targetIndex > 0) {
+			if (targetIndex >= 0) {
 				swapTo(list, element, targetIndex);
 			}
 		}
