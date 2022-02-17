@@ -2,12 +2,13 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.22 (2022-02-16)
+# 5.7.22 (2022-02-17)
 
 ### 🐣新特性
 * 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
 * 【extra  】     Ftp增加构造（issue#I4TKXP@gitee）
 * 【core   】     GenericBuilder支持Map构建（pr#540@Github）
+* 【json   】     新增TemporalAccessorSerializer
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）

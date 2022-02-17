@@ -125,17 +125,17 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		}
 		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {
-			if(null != keyComparator){
+			if (null != keyComparator) {
 				// 比较器存在情况下，isOrder无效
 				this.rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
-			}else{
+			} else {
 				this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 			}
 		} else {
-			if(null != keyComparator){
+			if (null != keyComparator) {
 				// 比较器存在情况下，isOrder无效
 				this.rawHashMap = new TreeMap<>(keyComparator);
-			}else{
+			} else {
 				this.rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
 			}
 		}
@@ -607,7 +607,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
-			if (null != filter){
+			if (null != filter) {
 				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
 				if (filter.accept(pair)) {
 					// 使用修改后的键值对

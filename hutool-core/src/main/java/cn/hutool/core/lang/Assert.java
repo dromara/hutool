@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Map;
@@ -192,7 +193,7 @@ public class Assert {
 	 * @since 5.4.5
 	 */
 	public static <T, X extends Throwable> T notNull(T object, Supplier<X> errorSupplier) throws X {
-		if (null == object) {
+		if (ObjectUtil.isNull(object)) {
 			throw errorSupplier.get();
 		}
 		return object;
