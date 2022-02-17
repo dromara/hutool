@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.compress.Deflate;
 import cn.hutool.core.compress.Gzip;
 import cn.hutool.core.compress.ZipCopyVisitor;
@@ -29,7 +30,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
@@ -953,7 +953,8 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录
+	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录<br>
+	 * 此方法并不会关闭{@link ZipFile}。
 	 *
 	 * @param zipFile Zip文件
 	 * @param dir     目录前缀（目录前缀不包含开头的/）
@@ -968,7 +969,7 @@ public class ZipUtil {
 
 		final List<String> fileNames = new ArrayList<>();
 		String name;
-		for (ZipEntry entry : Collections.list(zipFile.entries())) {
+		for (ZipEntry entry : new EnumerationIter<>(zipFile.entries())) {
 			name = entry.getName();
 			if (StrUtil.isEmpty(dir) || name.startsWith(dir)) {
 				final String nameSuffix = StrUtil.removePrefix(name, dir);
