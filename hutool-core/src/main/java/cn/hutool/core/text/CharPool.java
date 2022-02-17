@@ -83,4 +83,16 @@ public interface CharPool {
 	 * 字符常量：艾特 {@code '@'}
 	 */
 	char AT = '@';
+	/**
+	 * 字符常量：星号 {@code '*'}
+	 */
+	char ASTERISK = '*';
+	/**
+	 * 字符常量：井号 {@code '#'}
+	 */
+	char HASHTAG = '#';
+	/**
+	 * 字符常量：美元符号 {@code '$'}
+	 */
+	char DOLLAR = '$';
 }

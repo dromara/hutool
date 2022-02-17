@@ -87,6 +87,21 @@ public interface StrPool {
 	char C_AT = CharPool.AT;
 
 	/**
+	 * 字符常量：星号 {@code '*'}
+	 */
+	char C_ASTERISK = CharPool.ASTERISK;
+
+	/**
+	 * 字符常量：井号 {@code '#'}
+	 */
+	char C_HASHTAG = CharPool.HASHTAG;
+
+	/**
+	 * 字符常量：美元符号 {@code '$'}
+	 */
+	char C_DOLLAR = CharPool.DOLLAR;
+
+	/**
 	 * 字符串常量：制表符 {@code "\t"}
 	 */
 	String TAB = "	";
@@ -174,6 +189,20 @@ public interface StrPool {
 	 */
 	String AT = "@";
 
+	/**
+	 * 字符常量：星号 {@code '*'}
+	 */
+	String ASTERISK = "*";
+
+	/**
+	 * 字符常量：井号 {@code '#'}
+	 */
+	String HASHTAG = "#";
+
+	/**
+	 * 字符常量：美元符号 {@code '$'}
+	 */
+	String DOLLAR = "$";
 
 	/**
 	 * 字符串常量：HTML 空格转义 {@code "&nbsp;" -> " "}
