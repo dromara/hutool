@@ -2,6 +2,7 @@ package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.crypto.CipherWrapper;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -16,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -37,7 +39,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	/**
 	 * Cipher负责完成加密或解密工作
 	 */
-	protected Cipher cipher;
+	protected CipherWrapper cipherWrapper;
 
 	/**
 	 * 加密的块大小
@@ -47,12 +49,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 解密的块大小
 	 */
 	protected int decryptBlockSize = -1;
-
-	/**
-	 * 算法参数
-	 */
-	private AlgorithmParameterSpec algorithmParameterSpec;
-
 	// ------------------------------------------------------------------ Constructor start
 
 	/**
@@ -201,7 +197,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public AlgorithmParameterSpec getAlgorithmParameterSpec() {
-		return algorithmParameterSpec;
+		return this.cipherWrapper.getParams();
 	}
 
 	/**
@@ -212,7 +208,19 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public void setAlgorithmParameterSpec(AlgorithmParameterSpec algorithmParameterSpec) {
-		this.algorithmParameterSpec = algorithmParameterSpec;
+		this.cipherWrapper.setParams(algorithmParameterSpec);
+	}
+
+	/**
+	 * 设置随机数生成器，可自定义随机数种子
+	 *
+	 * @param random 随机数生成器，可自定义随机数种子
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public AsymmetricCrypto setRandom(SecureRandom random) {
+		this.cipherWrapper.setRandom(random);
+		return this;
 	}
 
 	@Override
@@ -229,11 +237,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initMode(Cipher.ENCRYPT_MODE, key);
+			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, key);
 
 			if (this.encryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
-				final int blockSize = this.cipher.getBlockSize();
+				final int blockSize = cipher.getBlockSize();
 				if (blockSize > 0) {
 					this.encryptBlockSize = blockSize;
 				}
@@ -254,11 +262,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
-			initMode(Cipher.DECRYPT_MODE, key);
+			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, key);
 
 			if (this.decryptBlockSize < 0) {
 				// 在引入BC库情况下，自动获取块大小
-				final int blockSize = this.cipher.getBlockSize();
+				final int blockSize = cipher.getBlockSize();
 				if (blockSize > 0) {
 					this.decryptBlockSize = blockSize;
 				}
@@ -281,7 +289,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {
-		return cipher;
+		return this.cipherWrapper.getCipher();
 	}
 
 	/**
@@ -290,7 +298,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 4.5.2
 	 */
 	protected void initCipher() {
-		this.cipher = SecureUtil.createCipher(algorithm);
+		this.cipherWrapper = new CipherWrapper(this.algorithm);
 	}
 
 	/**
@@ -309,7 +317,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 		// 不足分段
 		if (dataLength <= maxBlockSize) {
-			return this.cipher.doFinal(data, 0, dataLength);
+			return getCipher().doFinal(data, 0, dataLength);
 		}
 
 		// 分段解密
@@ -337,7 +345,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 		// 对数据分段处理
 		while (remainLength > 0) {
 			blockSize = Math.min(remainLength, maxBlockSize);
-			out.write(cipher.doFinal(data, offSet, blockSize));
+			out.write(getCipher().doFinal(data, offSet, blockSize));
 
 			offSet += blockSize;
 			remainLength = dataLength - offSet;
@@ -351,14 +359,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 *
 	 * @param mode 模式，可选{@link Cipher#ENCRYPT_MODE}或者{@link Cipher#DECRYPT_MODE}
 	 * @param key  密钥
+	 * @return {@link Cipher}
 	 * @throws InvalidAlgorithmParameterException 异常算法错误
 	 * @throws InvalidKeyException                异常KEY错误
 	 */
-	private void initMode(int mode, Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		if (null != this.algorithmParameterSpec) {
-			cipher.init(mode, key, this.algorithmParameterSpec);
-		} else {
-			cipher.init(mode, key);
-		}
+	private Cipher initMode(int mode, Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
+		return this.cipherWrapper.initMode(mode, key).getCipher();
 	}
 }

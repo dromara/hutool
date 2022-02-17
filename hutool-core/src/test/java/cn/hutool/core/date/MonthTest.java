@@ -37,4 +37,15 @@ public class MonthTest {
 		lastDay = Month.of(Calendar.DECEMBER).getLastDay(true);
 		Assert.assertEquals(31, lastDay);
 	}
+
+	@Test
+	public void toJdkMonthTest(){
+		final java.time.Month month = Month.AUGUST.toJdkMonth();
+		Assert.assertEquals(java.time.Month.AUGUST, month);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void toJdkMonthTest2(){
+		Month.UNDECIMBER.toJdkMonth();
+	}
 }

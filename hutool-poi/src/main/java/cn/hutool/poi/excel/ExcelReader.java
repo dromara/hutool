@@ -6,6 +6,7 @@ import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellHandler;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.reader.BeanSheetReader;
+import cn.hutool.poi.excel.reader.ColumnSheetReader;
 import cn.hutool.poi.excel.reader.ListSheetReader;
 import cn.hutool.poi.excel.reader.MapSheetReader;
 import cn.hutool.poi.excel.reader.SheetReader;
@@ -78,8 +79,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	/**
 	 * 构造
 	 *
-	 * @param bookStream     Excel文件的流
-	 * @param sheetIndex     sheet序号，0表示第一个sheet
+	 * @param bookStream Excel文件的流
+	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(InputStream bookStream, int sheetIndex) {
 		this(WorkbookUtil.createBook(bookStream), sheetIndex);
@@ -88,8 +89,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	/**
 	 * 构造
 	 *
-	 * @param bookStream     Excel文件的流
-	 * @param sheetName      sheet名，第一个默认是sheet1
+	 * @param bookStream Excel文件的流
+	 * @param sheetName  sheet名，第一个默认是sheet1
 	 */
 	public ExcelReader(InputStream bookStream, String sheetName) {
 		this(WorkbookUtil.createBook(bookStream), sheetName);
@@ -237,8 +238,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	/**
 	 * 读取工作簿中指定的Sheet
 	 *
-	 * @param startRowIndex 起始行（包含，从0开始计数）
-	 * @param endRowIndex   结束行（包含，从0开始计数）
+	 * @param startRowIndex  起始行（包含，从0开始计数）
+	 * @param endRowIndex    结束行（包含，从0开始计数）
 	 * @param aliasFirstLine 是否首行作为标题行转换别名
 	 * @return 行的集合，一行使用List表示
 	 * @since 5.4.4
@@ -252,10 +253,39 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	}
 
 	/**
-	 * 读取工作簿中指定的Sheet，此方法为类流处理方式，当读到指定单元格时，会调用CellEditor接口<br>
-	 * 用户通过实现此接口，可以更加灵活的处理每个单元格的数据。
+	 * 读取工作簿中指定的Sheet中指定列
 	 *
-	 * @param cellHandler    单元格处理器，用于处理读到的单元格及其数据
+	 * @param columnIndex   列号，从0开始计数
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @return 列的集合
+	 * @since 5.7.17
+	 */
+	public List<Object> readColumn(int columnIndex, int startRowIndex) {
+		return readColumn(columnIndex, startRowIndex, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * 读取工作簿中指定的Sheet中指定列
+	 *
+	 * @param columnIndex   列号，从0开始计数
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @param endRowIndex   结束行（包含，从0开始计数）
+	 * @return 列的集合
+	 * @since 5.7.17
+	 */
+	public List<Object> readColumn(int columnIndex, int startRowIndex, int endRowIndex) {
+		final ColumnSheetReader reader = new ColumnSheetReader(columnIndex, startRowIndex, endRowIndex);
+		reader.setCellEditor(this.cellEditor);
+		reader.setIgnoreEmptyRow(this.ignoreEmptyRow);
+		reader.setHeaderAlias(headerAlias);
+		return read(reader);
+	}
+
+	/**
+	 * 读取工作簿中指定的Sheet，此方法为类流处理方式，当读到指定单元格时，会调用CellEditor接口<br>
+	 * 用户通过实现此接口，可以更加灵活地处理每个单元格的数据。
+	 *
+	 * @param cellHandler 单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
 	 */
 	public void read(CellHandler cellHandler) {
@@ -264,11 +294,11 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 
 	/**
 	 * 读取工作簿中指定的Sheet，此方法为类流处理方式，当读到指定单元格时，会调用CellEditor接口<br>
-	 * 用户通过实现此接口，可以更加灵活的处理每个单元格的数据。
+	 * 用户通过实现此接口，可以更加灵活地处理每个单元格的数据。
 	 *
 	 * @param startRowIndex 起始行（包含，从0开始计数）
 	 * @param endRowIndex   结束行（包含，从0开始计数）
-	 * @param cellHandler    单元格处理器，用于处理读到的单元格及其数据
+	 * @param cellHandler   单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
 	 */
 	public void read(int startRowIndex, int endRowIndex, CellHandler cellHandler) {
@@ -281,7 +311,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		short columnSize;
 		for (int y = startRowIndex; y <= endRowIndex; y++) {
 			row = this.sheet.getRow(y);
-			if(null != row){
+			if (null != row) {
 				columnSize = row.getLastCellNum();
 				Cell cell;
 				for (short x = 0; x < columnSize; x++) {
@@ -334,7 +364,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * 读取Excel为Bean的列表
 	 *
 	 * @param <T>            Bean类型
-	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，，从0开始计数
+	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，从0开始计数
 	 * @param startRowIndex  起始行（包含，从0开始计数）
 	 * @param beanType       每行对应Bean的类型
 	 * @return Map的列表
@@ -348,7 +378,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * 读取Excel为Bean的列表
 	 *
 	 * @param <T>            Bean类型
-	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，，从0开始计数
+	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，从0开始计数
 	 * @param startRowIndex  起始行（包含，从0开始计数）
 	 * @param endRowIndex    读取结束行（包含，从0开始计数）
 	 * @param beanType       每行对应Bean的类型
@@ -365,12 +395,12 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	/**
 	 * 读取数据为指定类型
 	 *
-	 * @param <T> 读取数据类型
+	 * @param <T>         读取数据类型
 	 * @param sheetReader {@link SheetReader}实现
 	 * @return 数据读取结果
 	 * @since 5.4.4
 	 */
-	public <T> T read(SheetReader<T> sheetReader){
+	public <T> T read(SheetReader<T> sheetReader) {
 		checkNotClosed();
 		return Assert.notNull(sheetReader).read(this.sheet);
 	}

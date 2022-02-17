@@ -1354,4 +1354,23 @@ public class MapUtil {
 			}
 		}
 	}
+
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 5.7.20
+	 */
+	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
+		final ArrayList<V> values = new ArrayList<>();
+		while (keys.hasNext()) {
+			values.add(map.get(keys.next()));
+		}
+		return values;
+	}
 }

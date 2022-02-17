@@ -249,22 +249,20 @@ public class JSONWriter extends Writer {
 	 * 此方法输出的值不包装引号。
 	 *
 	 * @param number 数字
-	 * @return this
 	 */
-	private JSONWriter writeNumberValue(Number number) {
+	private void writeNumberValue(Number number) {
 		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
 		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
-		return writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
+		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
 	}
 
 	/**
 	 * 写出Boolean值，直接写出true或false,不适用引号包装
 	 *
 	 * @param value Boolean值
-	 * @return this
 	 */
-	private JSONWriter writeBooleanValue(Boolean value) {
-		return writeRaw(value.toString());
+	private void writeBooleanValue(Boolean value) {
+		writeRaw(value.toString());
 	}
 
 	/**
@@ -273,9 +271,8 @@ public class JSONWriter extends Writer {
 	 * 如果toJSONString()返回null，调用toString()方法并使用双引号包装。
 	 *
 	 * @param jsonString {@link JSONString}
-	 * @return this
 	 */
-	private JSONWriter writeJSONStringValue(JSONString jsonString) {
+	private void writeJSONStringValue(JSONString jsonString) {
 		String valueStr;
 		try {
 			valueStr = jsonString.toJSONString();
@@ -287,7 +284,6 @@ public class JSONWriter extends Writer {
 		} else {
 			writeStrValue(jsonString.toString());
 		}
-		return this;
 	}
 
 	/**
@@ -297,30 +293,26 @@ public class JSONWriter extends Writer {
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
 	 * @param csq 字符串
-	 * @return this
 	 */
-	private JSONWriter writeStrValue(String csq) {
+	private void writeStrValue(String csq) {
 		try {
 			JSONUtil.quote(csq, writer);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return this;
 	}
 
 	/**
 	 * 写出空格
 	 *
 	 * @param count 空格数
-	 * @return this
 	 */
-	private JSONWriter writeSpace(int count) {
+	private void writeSpace(int count) {
 		if (indentFactor > 0) {
 			for (int i = 0; i < count; i++) {
 				writeRaw(CharUtil.SPACE);
 			}
 		}
-		return this;
 	}
 
 	/**

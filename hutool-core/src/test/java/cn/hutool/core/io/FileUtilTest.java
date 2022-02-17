@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
@@ -413,6 +414,22 @@ public class FileUtilTest {
 
 		mimeType = FileUtil.getMimeType("test.js");
 		Assert.assertEquals("application/x-javascript", mimeType);
+
+		// office03
+		mimeType = FileUtil.getMimeType("test.doc");
+		Assert.assertEquals("application/msword", mimeType);
+		mimeType = FileUtil.getMimeType("test.xls");
+		Assert.assertEquals("application/vnd.ms-excel", mimeType);
+		mimeType = FileUtil.getMimeType("test.ppt");
+		Assert.assertEquals("application/vnd.ms-powerpoint", mimeType);
+
+		// office07+
+		mimeType = FileUtil.getMimeType("test.docx");
+		Assert.assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", mimeType);
+		mimeType = FileUtil.getMimeType("test.xlsx");
+		Assert.assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType);
+		mimeType = FileUtil.getMimeType("test.pptx");
+		Assert.assertEquals("application/vnd.openxmlformats-officedocument.presentationml.presentation", mimeType);
 	}
 
 	@Test
@@ -428,4 +445,25 @@ public class FileUtilTest {
 		File file2 = new File(".");
 		Assert.assertTrue(FileUtil.isSub(file, file2));
 	}
+
+	@Test
+	@Ignore
+	public void appendLinesTest(){
+		List<String> list = ListUtil.toList("a", "b", "c");
+		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.CHARSET_UTF_8);
+	}
+
+	@Test
+	@Ignore
+	public void createTempFileTest(){
+		File nullDirTempFile = FileUtil.createTempFile();
+		Assert.assertTrue(nullDirTempFile.exists());
+
+		File suffixDirTempFile = FileUtil.createTempFile(".xlsx",true);
+		Assert.assertEquals("xlsx", FileUtil.getSuffix(suffixDirTempFile));
+
+		File prefixDirTempFile = FileUtil.createTempFile("prefix",".xlsx",true);
+		Assert.assertTrue(FileUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
+	}
+
 }

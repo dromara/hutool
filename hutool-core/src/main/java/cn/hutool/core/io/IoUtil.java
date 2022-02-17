@@ -32,6 +32,7 @@ import java.io.PushbackInputStream;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -621,6 +622,9 @@ public class IoUtil extends NioUtil {
 	public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
+		}
+		if(null != clazz){
+			in.accept(clazz);
 		}
 		try {
 			//noinspection unchecked
@@ -1330,5 +1334,20 @@ public class IoUtil extends NioUtil {
 	 */
 	public static LineIter lineIter(InputStream in, Charset charset) {
 		return new LineIter(in, charset);
+	}
+
+	/**
+	 * {@link ByteArrayOutputStream} 转换为String
+	 * @param out {@link ByteArrayOutputStream}
+	 * @param charset 编码
+	 * @return 字符串
+	 * @since 5.7.17
+	 */
+	public static String toStr(ByteArrayOutputStream out, Charset charset){
+		try {
+			return out.toString(charset.name());
+		} catch (UnsupportedEncodingException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

@@ -50,11 +50,11 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 		try {
 			final long currentLength = randomAccessFile.length();
 			final long position = randomAccessFile.getFilePointer();
-			if (0 == currentLength || position == currentLength) {
+			if (position == currentLength) {
 				// 内容长度不变时忽略此次事件
 				return;
 			} else if (currentLength < position) {
-				// 如果内容变短，说明文件做了删改，回到内容末尾
+				// 如果内容变短或变0，说明文件做了删改或清空，回到内容末尾或0
 				randomAccessFile.seek(currentLength);
 				return;
 			}

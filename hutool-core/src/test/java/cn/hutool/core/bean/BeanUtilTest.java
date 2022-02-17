@@ -6,7 +6,9 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
@@ -29,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Bean工具单元测试
@@ -305,6 +309,37 @@ public class BeanUtilTest {
 		Assert.assertEquals("11213232", person1.getOpenid());
 		Assert.assertEquals("测试A11", person1.getName());
 		Assert.assertEquals("sub名字", person1.getSubName());
+	}
+
+	@Test
+	@Ignore
+	public void multiThreadTest(){
+		Student student = new Student();
+		student.setName("张三");
+		student.setAge(123);
+		student.setNo(3158L);
+
+		Student student2 = new Student();
+		student.setName("李四");
+		student.setAge(125);
+		student.setNo(8848L);
+
+		List<Student> studentList = ListUtil.of(student, student2);
+
+		for (int i=0;i<5000;i++){
+			new Thread(()->{
+				List<Student> list = ObjectUtil.clone(studentList);
+				List<Student> listReps = list.stream().map(s1 -> {
+					Student s2 = new Student();
+					BeanUtil.copyProperties(s1, s2);
+					return s2;
+				}).collect(Collectors.toList());
+
+				System.out.println(listReps);
+			}).start();
+		}
+
+		ThreadUtil.waitForDie();
 	}
 
 	@Test
@@ -652,7 +687,9 @@ public class BeanUtilTest {
 	}
 
 	@Data
-	public static class Student {
+	public static class Student implements Serializable{
+		private static final long serialVersionUID = 1L;
+
 		String name;
 		int age;
 		Long no;

@@ -658,6 +658,21 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void toUnderLineCaseTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true))
+				.set("aKey", "value1")
+				.set("bJob", "value2")
+				.set("cGood", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> {
+			pair.setKey(StrUtil.toUnderlineCase(pair.getKey()));
+			return true;
+		});
+		Assert.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);
+	}
+
+	@Test
 	public void nullToEmptyTest() {
 		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setOrder(true).setIgnoreNullValue(false))
 				.set("a", null)

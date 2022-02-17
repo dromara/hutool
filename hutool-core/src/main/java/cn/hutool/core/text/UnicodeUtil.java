@@ -25,7 +25,7 @@ public class UnicodeUtil {
 		}
 
 		final int len = unicode.length();
-		StrBuilder sb = StrBuilder.create(len);
+		StringBuilder sb = new StringBuilder(len);
 		int i;
 		int pos = 0;
 		while ((i = StrUtil.indexOfIgnoreCase(unicode, "\\u", pos)) != -1) {
@@ -101,7 +101,7 @@ public class UnicodeUtil {
 		}
 
 		final int len = str.length();
-		final StrBuilder unicode = StrBuilder.create(str.length() * 6);
+		final StringBuilder unicode = new StringBuilder(str.length() * 6);
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);

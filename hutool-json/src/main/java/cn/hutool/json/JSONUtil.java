@@ -743,7 +743,7 @@ public class JSONUtil {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
-				|| JSONNull.NULL.equals(object) //
+				|| ObjectUtil.isNull(object) //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //

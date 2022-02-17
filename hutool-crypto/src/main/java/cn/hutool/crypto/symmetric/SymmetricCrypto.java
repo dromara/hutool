@@ -3,15 +3,16 @@ package cn.hutool.crypto.symmetric;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CipherMode;
+import cn.hutool.crypto.CipherWrapper;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -25,6 +26,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,18 +42,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private CipherWrapper cipherWrapper;
 	/**
 	 * SecretKey 负责保存对称密钥
 	 */
 	private SecretKey secretKey;
-	/**
-	 * Cipher负责完成加密或解密工作
-	 */
-	private Cipher cipher;
-	/**
-	 * 加密解密参数
-	 */
-	private AlgorithmParameterSpec params;
 	/**
 	 * 是否0填充
 	 */
@@ -152,7 +147,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			this.isZeroPadding = true;
 		}
 
-		this.cipher = SecureUtil.createCipher(algorithm);
+		this.cipherWrapper = new CipherWrapper(algorithm);
 		return this;
 	}
 
@@ -171,7 +166,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 加密或解密
 	 */
 	public Cipher getCipher() {
-		return cipher;
+		return cipherWrapper.getCipher();
 	}
 
 	/**
@@ -181,7 +176,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 自身
 	 */
 	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
-		this.params = params;
+		this.cipherWrapper.setParams(params);
 		return this;
 	}
 
@@ -192,8 +187,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 自身
 	 */
 	public SymmetricCrypto setIv(IvParameterSpec iv) {
-		setParams(iv);
-		return this;
+		return setParams(iv);
 	}
 
 	/**
@@ -203,7 +197,18 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 自身
 	 */
 	public SymmetricCrypto setIv(byte[] iv) {
-		setIv(new IvParameterSpec(iv));
+		return setIv(new IvParameterSpec(iv));
+	}
+
+	/**
+	 * 设置随机数生成器，可自定义随机数种子
+	 *
+	 * @param random 随机数生成器，可自定义随机数种子
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public SymmetricCrypto setRandom(SecureRandom random){
+		this.cipherWrapper.setRandom(random);
 		return this;
 	}
 
@@ -237,6 +242,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.6.8
 	 */
 	public byte[] update(byte[] data) {
+		final Cipher cipher = cipherWrapper.getCipher();
 		lock.lock();
 		try {
 			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
@@ -376,11 +382,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 */
 	private SymmetricCrypto initParams(String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
-			byte[] iv = null;
-			final Cipher cipher = this.cipher;
-			if (null != cipher) {
-				iv = cipher.getIV();
-			}
+			byte[] iv = Opt.ofNullable(cipherWrapper)
+					.map(CipherWrapper::getCipher).map(Cipher::getIV).get();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {
@@ -409,13 +412,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
 	private Cipher initMode(int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		final Cipher cipher = this.cipher;
-		if (null == this.params) {
-			cipher.init(mode, secretKey);
-		} else {
-			cipher.init(mode, secretKey, params);
-		}
-		return cipher;
+		return this.cipherWrapper.initMode(mode, this.secretKey).getCipher();
 	}
 
 	/**

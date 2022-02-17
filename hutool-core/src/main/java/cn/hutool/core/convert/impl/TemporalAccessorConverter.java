@@ -93,7 +93,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else if (value instanceof Date) {
 			final DateTime dateTime = DateUtil.date((Date) value);
 			return parseFromInstant(dateTime.toInstant(), dateTime.getZoneId());
-		}else if (value instanceof Calendar) {
+		} else if (value instanceof Calendar) {
 			final Calendar calendar = (Calendar) value;
 			return parseFromInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
 		} else {
@@ -108,7 +108,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return 日期对象
 	 */
 	private TemporalAccessor parseFromCharSequence(CharSequence value) {
-		if(StrUtil.isBlank(value)){
+		if (StrUtil.isBlank(value)) {
 			return null;
 		}
 
@@ -144,13 +144,13 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 */
 	private TemporalAccessor parseFromTemporalAccessor(TemporalAccessor temporalAccessor) {
 		TemporalAccessor result = null;
-		if(temporalAccessor instanceof LocalDateTime){
+		if (temporalAccessor instanceof LocalDateTime) {
 			result = parseFromLocalDateTime((LocalDateTime) temporalAccessor);
-		} else if(temporalAccessor instanceof ZonedDateTime){
+		} else if (temporalAccessor instanceof ZonedDateTime) {
 			result = parseFromZonedDateTime((ZonedDateTime) temporalAccessor);
 		}
 
-		if(null == result){
+		if (null == result) {
 			result = parseFromInstant(DateUtil.toInstant(temporalAccessor), null);
 		}
 
@@ -164,22 +164,22 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLocalDateTime(LocalDateTime localDateTime) {
-		if(Instant.class.equals(this.targetType)){
+		if (Instant.class.equals(this.targetType)) {
 			return DateUtil.toInstant(localDateTime);
 		}
-		if(LocalDate.class.equals(this.targetType)){
+		if (LocalDate.class.equals(this.targetType)) {
 			return localDateTime.toLocalDate();
 		}
-		if(LocalTime.class.equals(this.targetType)){
+		if (LocalTime.class.equals(this.targetType)) {
 			return localDateTime.toLocalTime();
 		}
-		if(ZonedDateTime.class.equals(this.targetType)){
+		if (ZonedDateTime.class.equals(this.targetType)) {
 			return localDateTime.atZone(ZoneId.systemDefault());
 		}
-		if(OffsetDateTime.class.equals(this.targetType)){
+		if (OffsetDateTime.class.equals(this.targetType)) {
 			return localDateTime.atZone(ZoneId.systemDefault()).toOffsetDateTime();
 		}
-		if(OffsetTime.class.equals(this.targetType)){
+		if (OffsetTime.class.equals(this.targetType)) {
 			return localDateTime.atZone(ZoneId.systemDefault()).toOffsetDateTime().toOffsetTime();
 		}
 
@@ -193,22 +193,22 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromZonedDateTime(ZonedDateTime zonedDateTime) {
-		if(Instant.class.equals(this.targetType)){
+		if (Instant.class.equals(this.targetType)) {
 			return DateUtil.toInstant(zonedDateTime);
 		}
-		if(LocalDateTime.class.equals(this.targetType)){
+		if (LocalDateTime.class.equals(this.targetType)) {
 			return zonedDateTime.toLocalDateTime();
 		}
-		if(LocalDate.class.equals(this.targetType)){
+		if (LocalDate.class.equals(this.targetType)) {
 			return zonedDateTime.toLocalDate();
 		}
-		if(LocalTime.class.equals(this.targetType)){
+		if (LocalTime.class.equals(this.targetType)) {
 			return zonedDateTime.toLocalTime();
 		}
-		if(OffsetDateTime.class.equals(this.targetType)){
+		if (OffsetDateTime.class.equals(this.targetType)) {
 			return zonedDateTime.toOffsetDateTime();
 		}
-		if(OffsetTime.class.equals(this.targetType)){
+		if (OffsetTime.class.equals(this.targetType)) {
 			return zonedDateTime.toOffsetDateTime().toOffsetTime();
 		}
 
@@ -219,15 +219,15 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * 将TemporalAccessor型时间戳转换为java.time中的对象
 	 *
 	 * @param instant {@link Instant}对象
-	 * @param zoneId 时区ID，null表示当前系统默认的时区
+	 * @param zoneId  时区ID，null表示当前系统默认的时区
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromInstant(Instant instant, ZoneId zoneId) {
-		if(Instant.class.equals(this.targetType)){
+		if (Instant.class.equals(this.targetType)) {
 			return instant;
 		}
 
-		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault());
+		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault);
 
 		TemporalAccessor result = null;
 		if (LocalDateTime.class.equals(this.targetType)) {

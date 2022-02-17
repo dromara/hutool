@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
@@ -51,6 +52,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -414,11 +416,32 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @param value      需要查找的值
 	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @throws ClassCastException   如果类型不一致会抛出转换异常
+	 * @throws NullPointerException 当指定的元素 值为 null ,或集合类不支持null 时抛出该异常
+	 * @see Collection#contains(Object)
 	 * @since 4.1.10
 	 */
 	public static boolean contains(Collection<?> collection, Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
 	}
+
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 *
+	 * @param collection 集合
+	 * @param value      需要查找的值
+	 * @return 果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @since 5.7.16
+	 */
+	public static boolean safeContains(Collection<?> collection, Object value) {
+
+		try {
+			return contains(collection, value);
+		} catch (ClassCastException | NullPointerException e) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * 自定义函数判断集合是否包含某类值
@@ -1268,6 +1291,48 @@ public class CollUtil {
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(T collection) {
 		return filter(collection, StrUtil::isNotBlank);
+	}
+
+	/**
+	 * 移除集合中的多个元素，并将结果存放到指定的集合
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param resultCollection 存放移除结果的集合
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
+	 */
+	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
+		Objects.requireNonNull(predicate);
+		final Iterator<E> each = targetCollection.iterator();
+		while (each.hasNext()) {
+			E next = each.next();
+			if (predicate.test(next)) {
+				resultCollection.add(next);
+				each.remove();
+			}
+		}
+		return resultCollection;
+	}
+
+	/**
+	 * 移除集合中的多个元素，并将结果存放到生成的新集合中后返回<br>
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
+	 */
+	public static <T extends Collection<E>, E> List<E> removeWithAddIf(T targetCollection, Predicate<? super E> predicate) {
+		final List<E> removed = new ArrayList<>();
+		removeWithAddIf(targetCollection, removed, predicate);
+		return removed;
 	}
 
 	/**
@@ -2278,11 +2343,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		for (K k : keys) {
-			values.add(map.get(k));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, new ArrayIter<>(keys));
 	}
 
 	/**
@@ -2312,11 +2373,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		while (keys.hasNext()) {
-			values.add(map.get(keys.next()));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, keys);
 	}
 
 	// ------------------------------------------------------------------------------------------------- sort
@@ -2864,6 +2921,23 @@ public class CollUtil {
 	 */
 	public static <F, T> Collection<T> trans(Collection<F> collection, Function<? super F, ? extends T> function) {
 		return new TransCollection<>(collection, function);
+	}
+
+	/**
+	 * 使用给定的map将集合中的原素进行属性或者值的重新设定
+	 *
+	 * @param <E>         元素类型
+	 * @param <K>         替换的键
+	 * @param <V>         替换的值
+	 * @param iterable    集合
+	 * @param map         映射集
+	 * @param keyGenerate 映射键生成函数
+	 * @param biConsumer  封装映射到的值函数
+	 * @author nick_wys
+	 * @since 5.7.18
+	 */
+	public static <E, K, V> void setValueByMap(Iterable<E> iterable, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
+		iterable.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start

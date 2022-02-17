@@ -228,7 +228,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		}
 
 		final Map<E, Tree<E>> eTreeMap = MapUtil.sortByValue(this.idTreeMap, false);
-		List<Tree<E>> rootTreeList = CollUtil.newArrayList();
 		E parentId;
 		for (Tree<E> node : eTreeMap.values()) {
 			if (null == node) {
@@ -237,7 +236,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			parentId = node.getParentId();
 			if (ObjectUtil.equals(this.root.getId(), parentId)) {
 				this.root.addChildren(node);
-				rootTreeList.add(node);
 				continue;
 			}
 

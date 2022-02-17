@@ -132,7 +132,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，即忽略毫秒部分
+	 * 修改秒级别的开始时间，即忽略毫秒部分
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -143,7 +143,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取秒级别的结束时间，即毫秒设置为999
+	 * 修改秒级别的结束时间，即毫秒设置为999
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -154,7 +154,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某小时的开始时间
+	 * 修改某小时的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -164,7 +164,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某小时的结束时间
+	 * 修改某小时的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -174,7 +174,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某分钟的开始时间
+	 * 修改某分钟的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -184,7 +184,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某分钟的结束时间
+	 * 修改某分钟的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -194,7 +194,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某天的开始时间
+	 * 修改某天的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -204,7 +204,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某天的结束时间
+	 * 修改某天的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -214,7 +214,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取给定日期当前周的开始时间，周一定为一周的开始时间
+	 * 修改给定日期当前周的开始时间，周一定为一周的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -224,7 +224,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取给定日期当前周的开始时间
+	 * 修改给定日期当前周的开始时间
 	 *
 	 * @param calendar           日期 {@link Calendar}
 	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
@@ -238,7 +238,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间，周日定为一周的结束
+	 * 修改某周的结束时间，周日定为一周的结束
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -248,7 +248,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间
+	 * 修改某周的结束时间
 	 *
 	 * @param calendar          日期 {@link Calendar}
 	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
@@ -261,7 +261,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某月的开始时间
+	 * 修改某月的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -271,7 +271,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某月的结束时间
+	 * 修改某月的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -281,7 +281,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某季度的开始时间
+	 * 修改某季度的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -313,7 +313,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某年的开始时间
+	 * 修改某年的开始时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -323,7 +323,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 获取某年的结束时间
+	 * 修改某年的结束时间
 	 *
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -346,6 +346,40 @@ public class CalendarUtil {
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
 				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
 				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+	}
+
+	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @return 是否为同一周
+	 * @since 5.7.21
+	 */
+	public static boolean isSameWeek(Calendar cal1, Calendar cal2, boolean isMon) {
+		if (cal1 == null || cal2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+
+		// 防止比较前修改原始Calendar对象
+		cal1 = (Calendar) cal1.clone();
+		cal2 = (Calendar) cal2.clone();
+
+		// 把所传日期设置为其当前周的第一天
+		// 比较设置后的两个日期是否是同一天：true 代表同一周
+		if (isMon) {
+			cal1.setFirstDayOfWeek(Calendar.MONDAY);
+			cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			cal2.setFirstDayOfWeek(Calendar.MONDAY);
+			cal2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		} else {
+			cal1.setFirstDayOfWeek(Calendar.SUNDAY);
+			cal1.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			cal2.setFirstDayOfWeek(Calendar.SUNDAY);
+			cal2.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}
+		return isSameDay(cal1, cal2);
 	}
 
 	/**
@@ -525,8 +559,8 @@ public class CalendarUtil {
 	 * 将指定Calendar时间格式化为纯中文形式，比如：
 	 *
 	 * <pre>
-	 *     2018-02-24 12:13:14转换为 二〇一八年二月二十四日（withTime为false）
-	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日一十二时一十三分一十四秒（withTime为true）
+	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日（withTime为false）
+	 *     2018-02-24 12:13:14 转换为 二〇一八年二月二十四日十二时十三分十四秒（withTime为true）
 	 * </pre>
 	 *
 	 * @param calendar {@link Calendar}
@@ -538,7 +572,7 @@ public class CalendarUtil {
 		final StringBuilder result = StrUtil.builder();
 
 		// 年
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		final String year = String.valueOf(calendar.get(Calendar.YEAR));
 		final int length = year.length();
 		for (int i = 0; i < length; i++) {
 			result.append(NumberChineseFormatter.numberCharToChinese(year.charAt(i), false));
@@ -547,30 +581,36 @@ public class CalendarUtil {
 
 		// 月
 		int month = calendar.get(Calendar.MONTH) + 1;
-		result.append(NumberChineseFormatter.format(month, false));
+		result.append(NumberChineseFormatter.formatThousand(month, false));
 		result.append('月');
 
 		// 日
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		result.append(NumberChineseFormatter.format(day, false));
+		result.append(NumberChineseFormatter.formatThousand(day, false));
 		result.append('日');
+
+		// 只替换年月日，时分秒中零不需要替换
+		String temp = result.toString().replace('零', '〇');
+		result.delete(0, result.length());
+		result.append(temp);
+
 
 		if (withTime) {
 			// 时
 			int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			result.append(NumberChineseFormatter.format(hour, false));
+			result.append(NumberChineseFormatter.formatThousand(hour, false));
 			result.append('时');
 			// 分
 			int minute = calendar.get(Calendar.MINUTE);
-			result.append(NumberChineseFormatter.format(minute, false));
+			result.append(NumberChineseFormatter.formatThousand(minute, false));
 			result.append('分');
 			// 秒
 			int second = calendar.get(Calendar.SECOND);
-			result.append(NumberChineseFormatter.format(second, false));
+			result.append(NumberChineseFormatter.formatThousand(second, false));
 			result.append('秒');
 		}
 
-		return result.toString().replace('零', '〇');
+		return result.toString();
 	}
 
 	/**

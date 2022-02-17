@@ -7,7 +7,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -434,7 +433,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
 			if (StrUtil.isBlank(fileName)) {
 				// 编码后的路径做为文件名
-				fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
+				fileName = URLUtil.encodeQuery(path, charset);
+			} else {
+				// issue#I4K0FS@Gitee
+				fileName = URLUtil.decode(fileName, charset);
 			}
 		}
 		return FileUtil.file(targetFileOrDir, fileName);
@@ -586,7 +588,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
 		} catch (IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
-			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
+			if (HttpGlobalConfig.isIgnoreEOFError()
+					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {
 				// 忽略读取HTTP流中的EOF错误
 			} else {
 				throw e;

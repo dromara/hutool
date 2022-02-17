@@ -7,13 +7,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.dialect.DialectName;
+import cn.hutool.db.dialect.impl.OracleDialect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * SQL构建器<br>
@@ -57,6 +57,24 @@ public class SqlBuilder implements Builder<String> {
 		return create().append(sql);
 	}
 
+	/**
+	 * 验证实体类对象的有效性
+	 *
+	 * @param entity 实体类对象
+	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
+	 */
+	public static void validateEntity(Entity entity) throws DbRuntimeException {
+		if (null == entity) {
+			throw new DbRuntimeException("Entity is null !");
+		}
+		if (StrUtil.isBlank(entity.getTableName())) {
+			throw new DbRuntimeException("Entity`s table name is null !");
+		}
+		if (entity.isEmpty()) {
+			throw new DbRuntimeException("No filed and value in this entity !");
+		}
+	}
+
 	// --------------------------------------------------------------- Static methods end
 
 	// --------------------------------------------------------------- Enums start
@@ -87,10 +105,6 @@ public class SqlBuilder implements Builder<String> {
 	// --------------------------------------------------------------- Enums end
 
 	private final StringBuilder sql = new StringBuilder();
-	/**
-	 * 字段列表（仅用于插入和更新）
-	 */
-	private final List<String> fields = new ArrayList<>();
 	/**
 	 * 占位符对应的值列表
 	 */
@@ -146,41 +160,29 @@ public class SqlBuilder implements Builder<String> {
 		// 验证
 		validateEntity(entity);
 
-		if (null != wrapper) {
-			// 包装表名 entity = wrapper.wrap(entity);
-			entity.setTableName(wrapper.wrap(entity.getTableName()));
-		}
-
 		final boolean isOracle = DialectName.ORACLE.match(dialectName);// 对Oracle的特殊处理
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
 
-		boolean isFirst = true;
-		String field;
-		Object value;
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			field = entry.getKey();
-			value = entry.getValue();
-			if (StrUtil.isNotBlank(field) /* && null != value */) {
-				if (isFirst) {
-					isFirst = false;
-				} else {
+		entity.forEach((field, value) -> {
+			if (StrUtil.isNotBlank(field)) {
+				if (fieldsPart.length() > 0) {
 					// 非第一个参数，追加逗号
 					fieldsPart.append(", ");
 					placeHolder.append(", ");
 				}
 
-				this.fields.add(field);
 				fieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
-				if (isOracle && value instanceof String && StrUtil.endWithIgnoreCase((String) value, ".nextval")) {
+				if (isOracle && OracleDialect.isNextVal(value)) {
 					// Oracle的特殊自增键，通过字段名.nextval获得下一个值
 					placeHolder.append(value);
 				} else {
+					// 普通字段使用占位符
 					placeHolder.append("?");
 					this.paramValues.add(value);
 				}
 			}
-		}
+		});
 
 		// issue#1656@Github Phoenix兼容
 		if (DialectName.PHOENIX.match(dialectName)) {
@@ -189,7 +191,12 @@ public class SqlBuilder implements Builder<String> {
 			sql.append("INSERT INTO ");
 		}
 
-		sql.append(entity.getTableName())
+		String tableName = entity.getTableName();
+		if (null != this.wrapper) {
+			// 包装表名 entity = wrapper.wrap(entity);
+			tableName = this.wrapper.wrap(tableName);
+		}
+		sql.append(tableName)
 				.append(" (").append(fieldsPart).append(") VALUES (")//
 				.append(placeHolder).append(")");
 
@@ -227,26 +234,22 @@ public class SqlBuilder implements Builder<String> {
 		// 验证
 		validateEntity(entity);
 
+		String tableName = entity.getTableName();
 		if (null != wrapper) {
 			// 包装表名
-			// entity = wrapper.wrap(entity);
-			entity.setTableName(wrapper.wrap(entity.getTableName()));
+			tableName = wrapper.wrap(tableName);
 		}
 
-		sql.append("UPDATE ").append(entity.getTableName()).append(" SET ");
-		String field;
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			field = entry.getKey();
+		sql.append("UPDATE ").append(tableName).append(" SET ");
+		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field)) {
 				if (paramValues.size() > 0) {
 					sql.append(", ");
 				}
-				this.fields.add(field);
 				sql.append((null != wrapper) ? wrapper.wrap(field) : field).append(" = ? ");
-				this.paramValues.add(entry.getValue());// 更新不对空做处理，因为存在清空字段的情况
+				this.paramValues.add(value);// 更新不对空做处理，因为存在清空字段的情况
 			}
-		}
-
+		});
 		return this;
 	}
 
@@ -574,24 +577,6 @@ public class SqlBuilder implements Builder<String> {
 	// --------------------------------------------------------------- Builder end
 
 	/**
-	 * 获得插入或更新的数据库字段列表
-	 *
-	 * @return 插入或更新的数据库字段列表
-	 */
-	public String[] getFieldArray() {
-		return this.fields.toArray(new String[0]);
-	}
-
-	/**
-	 * 获得插入或更新的数据库字段列表
-	 *
-	 * @return 插入或更新的数据库字段列表
-	 */
-	public List<String> getFields() {
-		return this.fields;
-	}
-
-	/**
 	 * 获得占位符对应的值列表<br>
 	 *
 	 * @return 占位符对应的值列表
@@ -644,24 +629,6 @@ public class SqlBuilder implements Builder<String> {
 		}
 
 		return ConditionBuilder.of(conditions).build(this.paramValues);
-	}
-
-	/**
-	 * 验证实体类对象的有效性
-	 *
-	 * @param entity 实体类对象
-	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
-	 */
-	private static void validateEntity(Entity entity) throws DbRuntimeException {
-		if (null == entity) {
-			throw new DbRuntimeException("Entity is null !");
-		}
-		if (StrUtil.isBlank(entity.getTableName())) {
-			throw new DbRuntimeException("Entity`s table name is null !");
-		}
-		if (entity.isEmpty()) {
-			throw new DbRuntimeException("No filed and value in this entity !");
-		}
 	}
 	// --------------------------------------------------------------- private method end
 }

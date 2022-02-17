@@ -12,7 +12,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -717,6 +716,9 @@ public class NumberUtil {
 	 * @since 3.1.0
 	 */
 	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
+		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
+			return div((BigDecimal) v1, (BigDecimal) v2, scale, roundingMode);
+		}
 		return div(v1.toString(), v2.toString(), scale, roundingMode);
 	}
 
@@ -1362,13 +1364,12 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Random ran = new Random();
-		Set<Integer> set = new HashSet<>();
+		Set<Integer> set = new HashSet<>(size, 1);
 		while (set.size() < size) {
-			set.add(begin + ran.nextInt(end - begin));
+			set.add(begin + RandomUtil.randomInt(end - begin));
 		}
 
-		return set.toArray(new Integer[size]);
+		return set.toArray(new Integer[0]);
 	}
 
 	// ------------------------------------------------------------------------------------------- range
@@ -1834,6 +1835,19 @@ public class NumberUtil {
 
 	/**
 	 * 比较大小，值相等 返回true<br>
+	 * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失
+	 *
+	 * @param num1 数字1
+	 * @param num2 数字2
+	 * @return 是否相等
+	 * @since 5.7.19
+	 */
+	public static boolean equals(long num1, long num2) {
+		return num1 == num2;
+	}
+
+	/**
+	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
 	 *
@@ -2159,14 +2173,14 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String numberStr) {
-		if(StrUtil.isBlank(numberStr)){
+		if (StrUtil.isBlank(numberStr)) {
 			return BigDecimal.ZERO;
 		}
 
 		try {
 			// 支持类似于 1,234.55 格式的数字
 			final Number number = parseNumber(numberStr);
-			if(number instanceof BigDecimal){
+			if (number instanceof BigDecimal) {
 				return (BigDecimal) number;
 			} else {
 				return new BigDecimal(number.toString());
@@ -2512,7 +2526,7 @@ public class NumberUtil {
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
-			if(format instanceof DecimalFormat){
+			if (format instanceof DecimalFormat) {
 				// issue#1818@Github
 				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
 				((DecimalFormat) format).setParseBigDecimal(true);
@@ -2699,11 +2713,35 @@ public class NumberUtil {
 	 * @since 5.7.8
 	 */
 	public static double toDouble(Number value) {
-		if(value instanceof Float){
+		if (value instanceof Float) {
 			return Double.parseDouble(value.toString());
-		}else{
+		} else {
 			return value.doubleValue();
 		}
+	}
+
+	/**
+	 * 检查是否为奇数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是奇数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isOdd(int num) {
+		return (num & 1) == 1;
+	}
+
+	/**
+	 * 检查是否为偶数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是偶数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isEven(int num) {
+		return false == isOdd(num);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

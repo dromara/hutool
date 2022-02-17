@@ -105,9 +105,11 @@ public class UrlPath {
 			}
 
 			path = fixPath(path);
-			final List<String> split = StrUtil.split(path, '/');
-			for (String seg : split) {
-				addInternal(URLDecoder.decodeForPath(seg, charset), false);
+			if(StrUtil.isNotEmpty(path)){
+				final List<String> split = StrUtil.split(path, '/');
+				for (String seg : split) {
+					addInternal(URLDecoder.decodeForPath(seg, charset), false);
+				}
 			}
 		}
 
@@ -115,7 +117,10 @@ public class UrlPath {
 	}
 
 	/**
-	 * 构建path，前面带'/'
+	 * 构建path，前面带'/'<br>
+	 * <pre>
+	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
+	 * </pre>
 	 *
 	 * @param charset encode编码，null表示不做encode
 	 * @return 如果没有任何内容，则返回空字符串""
@@ -127,11 +132,23 @@ public class UrlPath {
 
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
+			if(builder.length() == 0){
+				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
+				// path的第一部分不允许有":"，其余部分允许
+				// 在此处的Path部分特指host之后的部分，即不包含第一部分
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
+			} else {
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset));
+			}
 		}
-		if (withEngTag || StrUtil.isEmpty(builder)) {
+		if (StrUtil.isEmpty(builder)) {
+			// 空白追加是保证以/开头
+			builder.append(CharUtil.SLASH);
+		}else if (withEngTag && false == StrUtil.endWith(builder, CharUtil.SLASH)) {
+			// 尾部没有/则追加，否则不追加
 			builder.append(CharUtil.SLASH);
 		}
+
 		return builder.toString();
 	}
 

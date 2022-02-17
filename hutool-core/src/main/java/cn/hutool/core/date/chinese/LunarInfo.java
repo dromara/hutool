@@ -66,9 +66,9 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年闰月的天数
+	 * 传回农历 y年闰月的天数，如果本年无闰月，返回0，区分大小月
 	 *
-	 * @param y 年
+	 * @param y 农历年
 	 * @return 闰月的天数
 	 */
 	public static int leapDays(int y) {
@@ -80,7 +80,7 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年m月的总天数
+	 * 传回农历 y年m月的总天数，区分大小月
 	 *
 	 * @param y 年
 	 * @param m 月
@@ -91,7 +91,8 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年闰哪个月 1-12 , 没闰传回 0
+	 * 传回农历 y年闰哪个月 1-12 , 没闰传回 0<br>
+	 * 此方法会返回润N月中的N，如二月、闰二月都返回2
 	 *
 	 * @param y 年
 	 * @return 润的月, 没闰传回 0

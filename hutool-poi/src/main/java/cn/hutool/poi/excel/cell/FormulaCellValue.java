@@ -18,11 +18,11 @@ public class FormulaCellValue implements CellValue<String>, CellSetter {
 	/**
 	 * 公式
 	 */
-	String formula;
+	private final String formula;
 	/**
 	 * 结果，使用ExcelWriter时可以不用
 	 */
-	Object result;
+	private final Object result;
 
 	/**
 	 * 构造

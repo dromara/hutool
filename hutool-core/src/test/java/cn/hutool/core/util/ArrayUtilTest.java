@@ -182,6 +182,12 @@ public class ArrayUtilTest {
 		Assert.assertEquals(9, range[9]);
 	}
 
+	@Test(expected = NegativeArraySizeException.class)
+	public void rangeMinTest() {
+		//noinspection ResultOfMethodCallIgnored
+		ArrayUtil.range(0, Integer.MIN_VALUE);
+	}
+
 	@Test
 	public void maxTest() {
 		int max = ArrayUtil.max(1, 2, 13, 4, 5);
@@ -452,5 +458,12 @@ public class ArrayUtilTest {
 		byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
 		Assert.assertEquals(3, arrayAfterSplit.length);
 		Assert.assertEquals(24, arrayAfterSplit[2].length);
+	}
+
+	@Test
+	public void getTest(){
+		String[] a = {"a", "b", "c"};
+		final Object o = ArrayUtil.get(a, -1);
+		Assert.assertEquals("c", o);
 	}
 }

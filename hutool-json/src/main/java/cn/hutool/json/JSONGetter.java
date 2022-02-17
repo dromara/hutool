@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -111,6 +112,21 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	default <T> T getBean(K key, Class<T> beanType) {
 		final JSONObject obj = getJSONObject(key);
 		return (null == obj) ? null : obj.toBean(beanType);
+	}
+
+	/**
+	 * 从JSON中直接获取Bean的List列表<br>
+	 * 先获取JSONArray对象，然后转为Bean的List
+	 *
+	 * @param <T>      Bean类型
+	 * @param key      KEY
+	 * @param beanType Bean类型
+	 * @return Bean的List，如果值为null或者非JSONObject类型，返回null
+	 * @since 5.7.20
+	 */
+	default <T> List<T> getBeanList(K key, Class<T> beanType) {
+		final JSONArray jsonArray = getJSONArray(key);
+		return (null == jsonArray) ? null : jsonArray.toList(beanType);
 	}
 
 	@Override

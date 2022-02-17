@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -516,6 +517,11 @@ public class PathUtil {
 		try {
 			return Files.move(src, target, options);
 		} catch (IOException e) {
+			if(e instanceof FileAlreadyExistsException){
+				// 目标文件已存在，直接抛出异常
+				// issue#I4QV0L@Gitee
+				throw new IORuntimeException(e);
+			}
 			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
 			try {
 				Files.walkFileTree(src, new MoveVisitor(src, target, options));

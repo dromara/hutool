@@ -73,6 +73,14 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void splitEmptyTest() {
+		String str = "";
+		List<String> split = StrUtil.split(str, ',', -1, true, true);
+		// 测试空是否被去掉
+		Assert.assertEquals(0, split.size());
+	}
+
+	@Test
 	public void splitTest2() {
 		String str = "a.b.";
 		List<String> split = StrUtil.split(str, '.');
@@ -81,9 +89,9 @@ public class StrUtilTest {
 		Assert.assertEquals("", split.get(2));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void splitNullTest() {
-		StrUtil.split(null, '.');
+		Assert.assertEquals(0, StrUtil.split(null, '.').size());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -177,7 +185,7 @@ public class StrUtilTest {
 		Assert.assertEquals(5, StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9));
 		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1));
-		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
+		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("abc", "", 9));
 	}
 
@@ -199,8 +207,8 @@ public class StrUtilTest {
 		Assert.assertEquals(2, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", 3));
 		Assert.assertEquals(5, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", 9));
 		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", -1));
-		Assert.assertEquals(2, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
-		Assert.assertEquals(3, StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
+		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
+		Assert.assertEquals(-1, StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
 		Assert.assertEquals(0, StrUtil.lastIndexOfIgnoreCase("AAAcsd", "aaa"));
 	}
 
@@ -233,6 +241,17 @@ public class StrUtilTest {
 		String aa = "1039";
 		String result1 = StrUtil.padPre(aa, -1, "0"); //在字符串1039前补4个0
 		Assert.assertEquals("103", result1);
+	}
+
+	@Test
+	public void replaceTest5() {
+		String a = "\uD853\uDC09秀秀";
+		String result = StrUtil.replace(a, 1, a.length(), '*');
+		Assert.assertEquals("\uD853\uDC09**", result);
+
+		String aa = "规划大师";
+		String result1 = StrUtil.replace(aa, 2, a.length(), '*');
+		Assert.assertEquals("规划**", result1);
 	}
 
 	@Test
@@ -384,6 +403,12 @@ public class StrUtilTest {
 
 		String abc1d = StrUtil.toCamelCase("abc_1d");
 		Assert.assertEquals("abc1d", abc1d);
+
+
+		String str2 = "Table-Test-Of-day";
+		String result2 = StrUtil.toCamelCase(str2, CharUtil.DASHED);
+		System.out.println(result2);
+		Assert.assertEquals("tableTestOfDay", result2);
 	}
 
 	@Test
@@ -396,12 +421,6 @@ public class StrUtilTest {
 				.set("HelloWorld_test", "hello_world_test")
 				.set("H2", "H2")
 				.set("H#case", "H#case")
-				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
-	}
-
-	@Test
-	public void toUnderLineCaseTest2() {
-		Dict.create()
 				.set("PNLabel", "PN_label")
 				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
 	}
@@ -503,11 +522,27 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void subBetweenAllTest4() {
+		String str = "你好:1388681xxxx用户已开通,1877275xxxx用户已开通,无法发送业务开通短信";
+		String[] strings = StrUtil.subBetweenAll(str, "1877275xxxx", ",");
+		Assert.assertEquals(1, strings.length);
+		Assert.assertEquals("用户已开通", strings[0]);
+	}
+
+	@Test
 	public void briefTest() {
-		String str = RandomUtil.randomString(1000);
-		int maxLength = RandomUtil.randomInt(1000);
-		String brief = StrUtil.brief(str, maxLength);
-		Assert.assertEquals(brief.length(), maxLength);
+		// case: 1 至 str.length - 1
+		String str = RandomUtil.randomString(RandomUtil.randomInt(1, 100));
+		for (int maxLength = 1; maxLength < str.length(); maxLength++) {
+			String brief = StrUtil.brief(str, maxLength);
+			Assert.assertEquals(brief.length(), maxLength);
+		}
+
+		// case: 不会格式化的值
+		Assert.assertEquals(str, StrUtil.brief(str, 0));
+		Assert.assertEquals(str, StrUtil.brief(str, -1));
+		Assert.assertEquals(str, StrUtil.brief(str, str.length()));
+		Assert.assertEquals(str, StrUtil.brief(str, str.length() + 1));
 	}
 
 	@Test
@@ -529,8 +564,21 @@ public class StrUtilTest {
 	@Test
 	public void briefTest3() {
 		String str = "123abc";
-		int maxLength = 3;
+
+		int maxLength = 6;
 		String brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals(str, brief);
+
+		maxLength = 5;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1...c", brief);
+
+		maxLength = 4;
+		brief = StrUtil.brief(str, maxLength);
+		Assert.assertEquals("1..c", brief);
+
+		maxLength = 3;
+		brief = StrUtil.brief(str, maxLength);
 		Assert.assertEquals("1.c", brief);
 
 		maxLength = 2;

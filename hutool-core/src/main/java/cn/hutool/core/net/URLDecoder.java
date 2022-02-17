@@ -41,9 +41,10 @@ public class URLDecoder implements Serializable {
 	}
 
 	/**
-	 * 解码
+	 * 解码<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 * <pre>
-	 *   1. 将+和%20转换为空格 ;
+	 *   1. 将+和%20转换为空格(" ");
 	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
 	 *   3. 跳过不符合规范的%形式，直接输出
 	 * </pre>
@@ -66,10 +67,13 @@ public class URLDecoder implements Serializable {
 	 *
 	 * @param str           包含URL编码后的字符串
 	 * @param isPlusToSpace 是否+转换为空格
-	 * @param charset       编码
+	 * @param charset       编码，{@code null}表示不做编码
 	 * @return 解码后的字符串
 	 */
 	public static String decode(String str, Charset charset, boolean isPlusToSpace) {
+		if(null == charset){
+			return str;
+		}
 		return StrUtil.str(decode(StrUtil.bytes(str, charset), isPlusToSpace), charset);
 	}
 

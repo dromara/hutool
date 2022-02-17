@@ -16,7 +16,6 @@ import java.util.Stack;
  */
 public class Calculator {
 	private final Stack<String> postfixStack = new Stack<>();// 后缀式栈
-	private final Stack<Character> opStack = new Stack<>();// 运算符栈
 	private final int[] operatPriority = new int[]{0, 3, 2, 1, -1, 1, 0, 2};// 运用运算符ASCII码-40做索引的运算符优先级
 
 	/**
@@ -26,39 +25,7 @@ public class Calculator {
 	 * @return 计算结果
 	 */
 	public static double conversion(String expression) {
-		final Calculator cal = new Calculator();
-		expression = transform(expression);
-		return cal.calculate(expression);
-	}
-
-	/**
-	 * 将表达式中负数的符号更改
-	 *
-	 * @param expression 例如-2+-1*(-3E-2)-(-1) 被转为 ~2+~1*(~3E~2)-(~1)
-	 * @return 转换后的字符串
-	 */
-	private static String transform(String expression) {
-		expression = StrUtil.cleanBlank(expression);
-		expression = StrUtil.removeSuffix(expression, "=");
-		final char[] arr = expression.toCharArray();
-		for (int i = 0; i < arr.length; i++) {
-			if (arr[i] == '-') {
-				if (i == 0) {
-					arr[i] = '~';
-				} else {
-					char c = arr[i - 1];
-					if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == 'E' || c == 'e') {
-						arr[i] = '~';
-					}
-				}
-			}
-		}
-		if (arr[0] == '~' || (arr.length > 1 && arr[1] == '(')) {
-			arr[0] = '-';
-			return "0" + new String(arr);
-		} else {
-			return new String(arr);
-		}
+		return (new Calculator()).calculate(expression);
 	}
 
 	/**
@@ -68,15 +35,16 @@ public class Calculator {
 	 * @return 计算结果
 	 */
 	public double calculate(String expression) {
+		prepare(transform(expression));
+
 		Stack<String> resultStack = new Stack<>();
-		prepare(expression);
 		Collections.reverse(postfixStack);// 将后缀式栈反转
-		String firstValue, secondValue, currentValue;// 参与计算的第一个值，第二个值和算术运算符
+		String firstValue, secondValue, currentOp;// 参与计算的第一个值，第二个值和算术运算符
 		while (false == postfixStack.isEmpty()) {
-			currentValue = postfixStack.pop();
-			if (false == isOperator(currentValue.charAt(0))) {// 如果不是运算符则存入操作数栈中
-				currentValue = currentValue.replace("~", "-");
-				resultStack.push(currentValue);
+			currentOp = postfixStack.pop();
+			if (false == isOperator(currentOp.charAt(0))) {// 如果不是运算符则存入操作数栈中
+				currentOp = currentOp.replace("~", "-");
+				resultStack.push(currentOp);
 			} else {// 如果是运算符则从操作数栈中取两个值和该数值一起参与运算
 				secondValue = resultStack.pop();
 				firstValue = resultStack.pop();
@@ -85,7 +53,7 @@ public class Calculator {
 				firstValue = firstValue.replace("~", "-");
 				secondValue = secondValue.replace("~", "-");
 
-				BigDecimal tempResult = calculate(firstValue, secondValue, currentValue.charAt(0));
+				BigDecimal tempResult = calculate(firstValue, secondValue, currentOp.charAt(0));
 				resultStack.push(tempResult.toString());
 			}
 		}
@@ -98,6 +66,7 @@ public class Calculator {
 	 * @param expression 表达式
 	 */
 	private void prepare(String expression) {
+		final Stack<Character> opStack = new Stack<>();
 		opStack.push(',');// 运算符放入栈底元素逗号，此符号优先级最低
 		char[] arr = expression.toCharArray();
 		int currentIndex = 0;// 当前字符的位置
@@ -152,9 +121,9 @@ public class Calculator {
 	 *
 	 * @param cur  下标
 	 * @param peek peek
-	 * @return 优先级
+	 * @return 优先级，如果cur高或相等，返回true，否则false
 	 */
-	public boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
+	private boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
 		final int offset = 40;
 		if(cur  == '%'){
 			// %优先级最高
@@ -165,7 +134,7 @@ public class Calculator {
 			peek = 47;
 		}
 
-		return operatPriority[(peek) - offset] >= operatPriority[(cur) - offset];
+		return operatPriority[peek - offset] >= operatPriority[cur - offset];
 	}
 
 	/**
@@ -198,5 +167,35 @@ public class Calculator {
 				throw new IllegalStateException("Unexpected value: " + currentOp);
 		}
 		return result;
+	}
+
+	/**
+	 * 将表达式中负数的符号更改
+	 *
+	 * @param expression 例如-2+-1*(-3E-2)-(-1) 被转为 ~2+~1*(~3E~2)-(~1)
+	 * @return 转换后的字符串
+	 */
+	private static String transform(String expression) {
+		expression = StrUtil.cleanBlank(expression);
+		expression = StrUtil.removeSuffix(expression, "=");
+		final char[] arr = expression.toCharArray();
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] == '-') {
+				if (i == 0) {
+					arr[i] = '~';
+				} else {
+					char c = arr[i - 1];
+					if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == 'E' || c == 'e') {
+						arr[i] = '~';
+					}
+				}
+			}
+		}
+		if (arr[0] == '~' && (arr.length > 1 && arr[1] == '(')) {
+			arr[0] = '-';
+			return "0" + new String(arr);
+		} else {
+			return new String(arr);
+		}
 	}
 }

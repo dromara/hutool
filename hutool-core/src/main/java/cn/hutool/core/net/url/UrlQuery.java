@@ -1,13 +1,15 @@
 package cn.hutool.core.net.url;
 
+import cn.hutool.core.codec.PercentCodec;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
+import cn.hutool.core.net.FormUrlencoded;
 import cn.hutool.core.net.RFC3986;
+import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -18,6 +20,8 @@ import java.util.Map;
  * <pre>
  *   key1=v1&amp;key2=&amp;key3=v3
  * </pre>
+ * 查询封装分为解析查询字符串和构建查询字符串，解析可通过charset为null来自定义是否decode编码后的内容，<br>
+ * 构建则通过charset是否为null是否encode参数键值对
  *
  * @author looly
  * @since 5.3.1
@@ -25,6 +29,10 @@ import java.util.Map;
 public class UrlQuery {
 
 	private final TableMap<CharSequence, CharSequence> query;
+	/**
+	 * 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 */
+	private final boolean isFormUrlEncoded;
 
 	/**
 	 * 构建UrlQuery
@@ -34,6 +42,17 @@ public class UrlQuery {
 	 */
 	public static UrlQuery of(Map<? extends CharSequence, ?> queryMap) {
 		return new UrlQuery(queryMap);
+	}
+
+	/**
+	 * 构建UrlQuery
+	 *
+	 * @param queryMap         初始化的查询键值对
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @return UrlQuery
+	 */
+	public static UrlQuery of(Map<? extends CharSequence, ?> queryMap, boolean isFormUrlEncoded) {
+		return new UrlQuery(queryMap, isFormUrlEncoded);
 	}
 
 	/**
@@ -57,9 +76,21 @@ public class UrlQuery {
 	 * @since 5.5.8
 	 */
 	public static UrlQuery of(String queryStr, Charset charset, boolean autoRemovePath) {
-		final UrlQuery urlQuery = new UrlQuery();
-		urlQuery.parse(queryStr, charset, autoRemovePath);
-		return urlQuery;
+		return of(queryStr, charset, autoRemovePath, false);
+	}
+
+	/**
+	 * 构建UrlQuery
+	 *
+	 * @param queryStr         初始化的查询字符串
+	 * @param charset          decode用的编码，null表示不做decode
+	 * @param autoRemovePath   是否自动去除path部分，{@code true}则自动去除第一个?前的内容
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @return UrlQuery
+	 * @since 5.7.16
+	 */
+	public static UrlQuery of(String queryStr, Charset charset, boolean autoRemovePath, boolean isFormUrlEncoded) {
+		return new UrlQuery(isFormUrlEncoded).parse(queryStr, charset, autoRemovePath);
 	}
 
 	/**
@@ -72,15 +103,37 @@ public class UrlQuery {
 	/**
 	 * 构造
 	 *
-	 * @param queryMap 初始化的查询键值对
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @since 5.7.16
+	 */
+	public UrlQuery(boolean isFormUrlEncoded) {
+		this(null, isFormUrlEncoded);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param queryMap         初始化的查询键值对
 	 */
 	public UrlQuery(Map<? extends CharSequence, ?> queryMap) {
+		this(queryMap, false);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param queryMap         初始化的查询键值对
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @since 5.7.16
+	 */
+	public UrlQuery(Map<? extends CharSequence, ?> queryMap, boolean isFormUrlEncoded) {
 		if (MapUtil.isNotEmpty(queryMap)) {
 			query = new TableMap<>(queryMap.size());
 			addAll(queryMap);
 		} else {
 			query = new TableMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
 		}
+		this.isFormUrlEncoded = isFormUrlEncoded;
 	}
 
 	/**
@@ -144,6 +197,103 @@ public class UrlQuery {
 			}
 		}
 
+		return doParse(queryStr, charset);
+	}
+
+	/**
+	 * 获得查询的Map
+	 *
+	 * @return 查询的Map，只读
+	 */
+	public Map<CharSequence, CharSequence> getQueryMap() {
+		return MapUtil.unmodifiable(this.query);
+	}
+
+	/**
+	 * 获取查询值
+	 *
+	 * @param key 键
+	 * @return 值
+	 */
+	public CharSequence get(CharSequence key) {
+		if (MapUtil.isEmpty(this.query)) {
+			return null;
+		}
+		return this.query.get(key);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param charset encode编码，null表示不做encode编码
+	 * @return URL查询字符串
+	 */
+	public String build(Charset charset) {
+		if (isFormUrlEncoded) {
+			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset);
+		}
+
+		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param keyCoder   键值对中键的编码器
+	 * @param valueCoder 键值对中值的编码器
+	 * @param charset    encode编码，null表示不做encode编码
+	 * @return URL查询字符串
+	 * @since 5.7.16
+	 */
+	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset) {
+		if (MapUtil.isEmpty(this.query)) {
+			return StrUtil.EMPTY;
+		}
+
+		final StringBuilder sb = new StringBuilder();
+		CharSequence name;
+		CharSequence value;
+		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
+			name = entry.getKey();
+			if (null != name) {
+				if (sb.length() > 0) {
+					sb.append("&");
+				}
+				sb.append(keyCoder.encode(name, charset));
+				value = entry.getValue();
+				if (null != value) {
+					sb.append("=").append(valueCoder.encode(value, charset));
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String toString() {
+		return build(null);
+	}
+
+	/**
+	 * 解析URL中的查询字符串<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
+	 *
+	 * @param queryStr 查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3
+	 * @param charset  decode编码，null表示不做decode
+	 * @return this
+	 * @since 5.5.8
+	 */
+	private UrlQuery doParse(String queryStr, Charset charset) {
 		final int len = queryStr.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
@@ -174,92 +324,10 @@ public class UrlQuery {
 			}
 		}
 
-		if (i - pos == len) {
-			// 没有任何参数符号
-			if (queryStr.startsWith("http") || queryStr.contains("/")) {
-				// 可能为url路径，忽略之
-				return this;
-			}
-		}
-
 		// 处理结尾
 		addParam(name, queryStr.substring(pos, i), charset);
 
 		return this;
-	}
-
-	/**
-	 * 获得查询的Map
-	 *
-	 * @return 查询的Map，只读
-	 */
-	public Map<CharSequence, CharSequence> getQueryMap() {
-		return MapUtil.unmodifiable(this.query);
-	}
-
-	/**
-	 * 获取查询值
-	 *
-	 * @param key 键
-	 * @return 值
-	 */
-	public CharSequence get(CharSequence key) {
-		if (MapUtil.isEmpty(this.query)) {
-			return null;
-		}
-		return this.query.get(key);
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为key1=v1&amp;key2=&amp;key3=v3形式
-	 *
-	 * @param charset encode编码，null表示不做encode编码
-	 * @return URL查询字符串
-	 */
-	public String build(Charset charset) {
-		return build(charset, true);
-	}
-
-	/**
-	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
-	 * 对于{@code null}处理规则如下：
-	 * <ul>
-	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
-	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
-	 * </ul>
-	 *
-	 * @param charset  encode编码，null表示不做encode编码
-	 * @param isEncode 是否转义键和值，转义遵循rfc3986规范
-	 * @return URL查询字符串
-	 * @since 5.7.13
-	 */
-	public String build(Charset charset, boolean isEncode) {
-		if (MapUtil.isEmpty(this.query)) {
-			return StrUtil.EMPTY;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		CharSequence name;
-		CharSequence value;
-		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
-			name = entry.getKey();
-			if (null != name) {
-				if(sb.length() >0){
-					sb.append("&");
-				}
-				sb.append(isEncode ? RFC3986.QUERY_PARAM_NAME.encode(name, charset) : name);
-				value = entry.getValue();
-				if (null != value) {
-					sb.append("=").append(isEncode ? RFC3986.QUERY_PARAM_VALUE.encode(value, charset) : value);
-				}
-			}
-		}
-		return sb.toString();
-	}
-
-	@Override
-	public String toString() {
-		return build(null);
 	}
 
 	/**
@@ -295,28 +363,11 @@ public class UrlQuery {
 	 */
 	private void addParam(String key, String value, Charset charset) {
 		if (null != key) {
-			final String actualKey = URLUtil.decode(key, charset);
-			this.query.put(actualKey, StrUtil.nullToEmpty(URLUtil.decode(value, charset)));
+			final String actualKey = URLDecoder.decode(key, charset, isFormUrlEncoded);
+			this.query.put(actualKey, StrUtil.nullToEmpty(URLDecoder.decode(value, charset, isFormUrlEncoded)));
 		} else if (null != value) {
 			// name为空，value作为name，value赋值null
-			this.query.put(URLUtil.decode(value, charset), null);
+			this.query.put(URLDecoder.decode(value, charset, isFormUrlEncoded), null);
 		}
-	}
-
-	/**
-	 * 键值对的name转换为
-	 *
-	 * @param str      原字符串
-	 * @param charset  编码，只用于encode中
-	 * @param isEncode 是否转义，转义遵循rfc3986规范
-	 * @return 转换后的String
-	 * @since 5.7.13
-	 */
-	private static String nameToStr(CharSequence str, Charset charset, boolean isEncode) {
-		String result = StrUtil.str(str);
-		if (isEncode) {
-			result = RFC3986.QUERY_PARAM_NAME.encode(result, charset);
-		}
-		return result;
 	}
 }

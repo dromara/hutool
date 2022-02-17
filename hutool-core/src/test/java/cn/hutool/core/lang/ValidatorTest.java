@@ -162,7 +162,16 @@ public class ValidatorTest {
 	@Test
 	public void isChineseTest(){
 		Assert.assertTrue(Validator.isChinese("全都是中文"));
+		Assert.assertTrue(Validator.isChinese("㐓㐘"));
 		Assert.assertFalse(Validator.isChinese("not全都是中文"));
+	}
+
+	@Test
+	public void hasChineseTest() {
+		Assert.assertTrue(Validator.hasChinese("黄单桑米"));
+		Assert.assertTrue(Validator.hasChinese("Kn 四兄弟"));
+		Assert.assertTrue(Validator.hasChinese("\uD840\uDDA3"));
+		Assert.assertFalse(Validator.hasChinese("Abc"));
 	}
 
 	@Test
@@ -226,5 +235,14 @@ public class ValidatorTest {
 		Validator.validateIpv4("0.0.0.0", "Error ip");
 		Validator.validateIpv4("255.255.255.255", "Error ip");
 		Validator.validateIpv4("127.0.0.0", "Error ip");
+	}
+
+	@Test
+	public void isUrlTest(){
+		String content = "https://detail.tmall.com/item.htm?" +
+				"id=639428931841&ali_refid=a3_430582_1006:1152464078:N:Sk5vwkMVsn5O6DcnvicELrFucL21A32m:0af8611e23c1d07697e";
+
+		Assert.assertTrue(Validator.isMatchRegex(Validator.URL, content));
+		Assert.assertTrue(Validator.isMatchRegex(Validator.URL_HTTP, content));
 	}
 }

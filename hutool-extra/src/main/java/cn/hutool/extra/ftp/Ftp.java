@@ -135,6 +135,17 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 构造
+	 *
+	 * @param client 自定义实例化好的{@link FTPClient}
+	 * @since 5.7.22
+	 */
+	public Ftp(FTPClient client) {
+		super(FtpConfig.create());
+		this.client = client;
+	}
+
+	/**
 	 * 初始化连接
 	 *
 	 * @return this
@@ -253,6 +264,15 @@ public class Ftp extends AbstractFtp {
 	public Ftp setBackToPwd(boolean backToPwd) {
 		this.backToPwd = backToPwd;
 		return this;
+	}
+
+	/**
+	 * 是否执行完操作返回当前目录
+	 * @return 执行完操作是否返回当前目录
+	 * @since 5.7.17
+	 */
+	public boolean isBackToPwd(){
+		return this.backToPwd;
 	}
 
 	/**

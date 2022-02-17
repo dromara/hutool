@@ -10,14 +10,17 @@ import java.util.Date;
  * 日期间隔
  *
  * @author Looly
- *
  */
-public class DateBetween implements Serializable{
+public class DateBetween implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/** 开始日期 */
+	/**
+	 * 开始日期
+	 */
 	private final Date begin;
-	/** 结束日期 */
+	/**
+	 * 结束日期
+	 */
 	private final Date end;
 
 	/**
@@ -25,7 +28,7 @@ public class DateBetween implements Serializable{
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
 	 *
 	 * @param begin 起始时间
-	 * @param end 结束时间
+	 * @param end   结束时间
 	 * @return DateBetween
 	 * @since 3.2.3
 	 */
@@ -38,7 +41,7 @@ public class DateBetween implements Serializable{
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
 	 *
 	 * @param begin 起始时间
-	 * @param end 结束时间
+	 * @param end   结束时间
 	 * @param isAbs 日期间隔是否只保留绝对值正数
 	 * @return DateBetween
 	 * @since 3.2.3
@@ -52,7 +55,7 @@ public class DateBetween implements Serializable{
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
 	 *
 	 * @param begin 起始时间
-	 * @param end 结束时间
+	 * @param end   结束时间
 	 */
 	public DateBetween(Date begin, Date end) {
 		this(begin, end, true);
@@ -63,7 +66,7 @@ public class DateBetween implements Serializable{
 	 * 在前的日期做为起始时间，在后的做为结束时间
 	 *
 	 * @param begin 起始时间
-	 * @param end 结束时间
+	 * @param end   结束时间
 	 * @param isAbs 日期间隔是否只保留绝对值正数
 	 * @since 3.1.1
 	 */
@@ -135,9 +138,9 @@ public class DateBetween implements Serializable{
 		int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		if (false == isReset) {
 			// 考虑闰年的2月情况
-			if(Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)){
-				if(beginCal.get(Calendar.DAY_OF_MONTH) == beginCal.getActualMaximum(Calendar.DAY_OF_MONTH)
-				&& endCal.get(Calendar.DAY_OF_MONTH) == endCal.getActualMaximum(Calendar.DAY_OF_MONTH)){
+			if (Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)) {
+				if (beginCal.get(Calendar.DAY_OF_MONTH) == beginCal.getActualMaximum(Calendar.DAY_OF_MONTH)
+						&& endCal.get(Calendar.DAY_OF_MONTH) == endCal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
 					// 两个日期都位于2月的最后一天，此时月数按照相等对待，此时都设置为1号
 					beginCal.set(Calendar.DAY_OF_MONTH, 1);
 					endCal.set(Calendar.DAY_OF_MONTH, 1);
@@ -154,13 +157,25 @@ public class DateBetween implements Serializable{
 	}
 
 	/**
-	 * 格式化输出时间差<br>
+	 * 格式化输出时间差
+	 *
+	 * @param unit  日期单位
+	 * @param level 级别
+	 * @return 字符串
+	 * @since 5.7.17
+	 */
+	public String toString(DateUnit unit, BetweenFormatter.Level level) {
+		return DateUtil.formatBetween(between(unit), level);
+	}
+
+	/**
+	 * 格式化输出时间差
 	 *
 	 * @param level 级别
 	 * @return 字符串
 	 */
 	public String toString(BetweenFormatter.Level level) {
-		return DateUtil.formatBetween(between(DateUnit.MS), level);
+		return toString(DateUnit.MS, level);
 	}
 
 	@Override

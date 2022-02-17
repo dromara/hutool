@@ -146,8 +146,12 @@ public class LocalDateTimeUtilTest {
 	@Test
 	public void endOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
-		final LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
+
+		LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
+
+		endOfDay = LocalDateTimeUtil.endOfDay(localDateTime, true);
+		Assert.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
 	}
 
 	@Test
@@ -172,5 +176,45 @@ public class LocalDateTimeUtilTest {
 
 		final Week seven = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 26));
 		Assert.assertEquals(Week.SUNDAY, seven);
+	}
+
+	@Test
+	public void isOverlapTest(){
+		LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
+		LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
+
+		LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
+		LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
+
+		LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
+		LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
+
+		//真实请假数据
+		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
+		LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
+
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+	}
+
+	@Test
+	public void weekOfYearTest(){
+		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(52, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(52, weekOfYear2);
+	}
+
+	@Test
+	public void weekOfYearTest2(){
+		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(5, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(5, weekOfYear2);
 	}
 }

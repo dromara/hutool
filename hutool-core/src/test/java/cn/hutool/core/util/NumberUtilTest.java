@@ -88,6 +88,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void divBigDecimalTest() {
+		BigDecimal result = NumberUtil.div(BigDecimal.ZERO, BigDecimal.ONE);
+		Assert.assertEquals(BigDecimal.ZERO, result.stripTrailingZeros());
+	}
+
+	@Test
 	public void roundTest() {
 
 		// 四舍
@@ -400,4 +406,32 @@ public class NumberUtilTest {
 		final String s = new BigDecimal(num).toPlainString();
 		Assert.assertEquals("5344342.34", s);
 	}
+
+	@Test
+	public void generateBySetTest(){
+		final Integer[] integers = NumberUtil.generateBySet(10, 100, 5);
+		Assert.assertEquals(5, integers.length);
+	}
+
+	@Test
+	public void isOddOrEvenTest(){
+		int[] a = { 0, 32, -32, 123, -123 };
+		Assert.assertFalse(NumberUtil.isOdd(a[0]));
+		Assert.assertTrue(NumberUtil.isEven(a[0]));
+
+		Assert.assertFalse(NumberUtil.isOdd(a[1]));
+		Assert.assertTrue(NumberUtil.isEven(a[1]));
+
+		Assert.assertFalse(NumberUtil.isOdd(a[2]));
+		Assert.assertTrue(NumberUtil.isEven(a[2]));
+
+		Assert.assertTrue(NumberUtil.isOdd(a[3]));
+		Assert.assertFalse(NumberUtil.isEven(a[3]));
+
+		Assert.assertTrue(NumberUtil.isOdd(a[4]));
+		Assert.assertFalse(NumberUtil.isEven(a[4]));
+	}
+
+
+
 }

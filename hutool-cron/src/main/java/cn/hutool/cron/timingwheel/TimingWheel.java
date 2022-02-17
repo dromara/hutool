@@ -68,7 +68,6 @@ public class TimingWheel {
 	 * @param consumer    任务处理器
 	 */
 	public TimingWheel(long tickMs, int wheelSize, long currentTime, Consumer<TimerTaskList> consumer) {
-		this.currentTime = currentTime;
 		this.tickMs = tickMs;
 		this.wheelSize = wheelSize;
 		this.interval = tickMs * wheelSize;

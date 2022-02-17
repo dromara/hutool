@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.16-SNAPSHOT</version>
+		<version>5.7.22-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -19,18 +19,19 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.7.0.RELEASE</beetl.version>
+		<beetl.version>3.10.0.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.16</enjoy.version>
-		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
+		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
+		<sshj.version>0.32.0</sshj.version>
 		<zxing.version>3.4.1</zxing.version>
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.5.6</spring-boot.version>
+		<spring-boot.version>2.6.3</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -118,6 +119,12 @@
 			<version>2.6.0</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.github.subchen</groupId>
+			<artifactId>jetbrick-template</artifactId>
+			<version>2.1.10</version>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- 邮件 -->
 		<dependency>
@@ -133,6 +140,13 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>${jsch.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.hierynomus</groupId>
+			<artifactId>sshj</artifactId>
+			<version>${sshj.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -162,7 +176,7 @@
 		<dependency>
 			<groupId>org.apache.ftpserver</groupId>
 			<artifactId>ftpserver-core</artifactId>
-			<version>1.1.1</version>
+			<version>1.1.2</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -241,7 +255,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.10.1</version>
+			<version>8.11.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -326,7 +340,7 @@
 		<dependency>
 			<groupId>com.github.houbb</groupId>
 			<artifactId>pinyin</artifactId>
-			<version>0.2.2</version>
+			<version>0.3.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -384,7 +398,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.5</version>
+			<version>1.2.9</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -397,7 +411,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.2.7</version>
+			<version>5.3.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -418,7 +432,7 @@
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
-			<version>2.4.13.Final</version>
+			<version>2.4.14.Final</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -432,14 +446,14 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.12</version>
+			<version>5.3.15</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
-			<version>1.7.13</version>
+			<version>1.7.14</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

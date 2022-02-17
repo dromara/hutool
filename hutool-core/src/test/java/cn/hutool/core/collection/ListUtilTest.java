@@ -19,7 +19,7 @@ import java.util.Map;
 public class ListUtilTest {
 
 	@Test
-	public void splitTest(){
+	public void splitTest() {
 		List<List<Object>> lists = ListUtil.split(null, 3);
 		Assert.assertEquals(ListUtil.empty(), lists);
 
@@ -60,7 +60,7 @@ public class ListUtilTest {
 	}
 
 	@Test
-	public void splitAvgTest(){
+	public void splitAvgTest() {
 		List<List<Object>> lists = ListUtil.splitAvg(null, 3);
 		Assert.assertEquals(ListUtil.empty(), lists);
 
@@ -80,13 +80,13 @@ public class ListUtilTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void splitAvgNotZero(){
+	public void splitAvgNotZero() {
 		// limit不能小于等于0
 		ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 0);
 	}
 
 	@Test
-	public void editTest(){
+	public void editTest() {
 		List<String> a = ListUtil.toLinkedList("1", "2", "3");
 		final List<String> filter = (List<String>) CollUtil.edit(a, str -> "edit" + str);
 		Assert.assertEquals("edit1", filter.get(0));
@@ -104,7 +104,7 @@ public class ListUtilTest {
 	}
 
 	@Test
-	public void pageTest(){
+	public void pageTest() {
 		List<Integer> a = ListUtil.toLinkedList(1, 2, 3,4,5);
 
 		PageUtil.setFirstPageNo(1);
@@ -167,10 +167,13 @@ public class ListUtilTest {
 		Assert.assertArrayEquals(new int[]{}, pageListData.get(0).stream().mapToInt(Integer::valueOf).toArray());
 		Assert.assertArrayEquals(new int[]{3, 4}, pageListData.get(1).stream().mapToInt(Integer::valueOf).toArray());
 		Assert.assertArrayEquals(new int[]{5}, pageListData.get(2).stream().mapToInt(Integer::valueOf).toArray());
+
+		// 恢复默认值，避免影响其他测试用例
+		PageUtil.setFirstPageNo(0);
 	}
 
 	@Test
-	public void subTest(){
+	public void subTest() {
 		final List<Integer> of = ListUtil.of(1, 2, 3, 4);
 		final List<Integer> sub = ListUtil.sub(of, 2, 4);
 		sub.remove(0);
@@ -181,10 +184,10 @@ public class ListUtilTest {
 	}
 
 	@Test
-	public void sortByPropertyTest(){
+	public void sortByPropertyTest() {
 		@Data
 		@AllArgsConstructor
-		class TestBean{
+		class TestBean {
 			private int order;
 			private String name;
 		}
@@ -223,6 +226,10 @@ public class ListUtilTest {
 		List<Map<String, String>> list = Arrays.asList(map1, map2, map3);
 		ListUtil.swapElement(list, map2, map3);
 		Map<String, String> map = list.get(2);
+		Assert.assertEquals("李四", map.get("2"));
+
+		ListUtil.swapElement(list, map2, map1);
+		map = list.get(0);
 		Assert.assertEquals("李四", map.get("2"));
 	}
 }

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.16-SNAPSHOT</version>
+		<version>5.7.22-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.16.0</version>
+			<version>1.17.8</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

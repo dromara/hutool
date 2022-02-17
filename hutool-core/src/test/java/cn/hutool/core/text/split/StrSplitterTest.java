@@ -11,7 +11,7 @@ import java.util.List;
  * @author Looly
  *
  */
-public class StrSpliterTest {
+public class StrSplitterTest {
 
 	@Test
 	public void splitByCharTest(){
@@ -53,5 +53,40 @@ public class StrSpliterTest {
 		Assert.assertEquals(2, split.size());
 		Assert.assertEquals(Long.valueOf(1L), split.get(0));
 		Assert.assertEquals(Long.valueOf(2L), split.get(1));
+	}
+
+	@Test
+	public void splitEmptyTest(){
+		String str = "";
+		final String[] split = str.split(",");
+		final String[] strings = StrSplitter.splitToArray(str, ",", -1, false, false);
+		Assert.assertNotNull(strings);
+		Assert.assertArrayEquals(split, strings);
+	}
+
+	@Test
+	public void splitNullTest(){
+		String str = null;
+		final String[] strings = StrSplitter.splitToArray(str, ",", -1, false, false);
+		Assert.assertNotNull(strings);
+		Assert.assertEquals(0, strings.length);
+	}
+
+	/**
+	 * https://github.com/dromara/hutool/issues/2099
+	 */
+	@Test
+	public void splitByRegexTest(){
+		String text = "01  821   34567890182345617821";
+		List<String> strings = StrSplitter.splitByRegex(text, "21", 0, false, true);
+		Assert.assertEquals(2, strings.size());
+		Assert.assertEquals("01  8", strings.get(0));
+		Assert.assertEquals("   345678901823456178", strings.get(1));
+
+		strings = StrSplitter.splitByRegex(text, "21", 0, false, false);
+		Assert.assertEquals(3, strings.size());
+		Assert.assertEquals("01  8", strings.get(0));
+		Assert.assertEquals("   345678901823456178", strings.get(1));
+		Assert.assertEquals("", strings.get(2));
 	}
 }

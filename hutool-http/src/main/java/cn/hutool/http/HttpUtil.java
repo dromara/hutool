@@ -6,6 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharsetUtil;
@@ -129,7 +130,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
 	public static String get(String urlString) {
-		return get(urlString, HttpGlobalConfig.timeout);
+		return get(urlString, HttpGlobalConfig.getTimeout());
 	}
 
 	/**
@@ -176,7 +177,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, Map<String, Object> paramMap) {
-		return post(urlString, paramMap, HttpGlobalConfig.timeout);
+		return post(urlString, paramMap, HttpGlobalConfig.getTimeout());
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, String body) {
-		return post(urlString, body, HttpGlobalConfig.timeout);
+		return post(urlString, body, HttpGlobalConfig.getTimeout());
 	}
 
 	/**
@@ -452,18 +453,20 @@ public class HttpUtil {
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
 	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
-	 * 会自动url编码键和值
+	 * 会自动url编码键和值<br>
+	 * 此方法用于拼接URL中的Query部分，并不适用于POST请求中的表单
 	 *
 	 * <pre>
 	 * key1=v1&amp;key2=&amp;key3=v3
 	 * </pre>
 	 *
 	 * @param paramMap 表单数据
-	 * @param charset  编码，null表示不encode键值对
+	 * @param charset  编码，{@code null} 表示不encode键值对
 	 * @return url参数
+	 * @see #toParams(Map, Charset, boolean)
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
-		return toParams(paramMap, charset, true);
+		return toParams(paramMap, charset, false);
 	}
 
 	/**
@@ -477,12 +480,12 @@ public class HttpUtil {
 	 *
 	 * @param paramMap 表单数据
 	 * @param charset  编码，null表示不encode键值对
-	 * @param isEncode 是否转义键和值
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @return url参数
-	 * @since 5.7.13
+	 * @since 5.7.16
 	 */
-	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isEncode) {
-		return UrlQuery.of(paramMap).build(charset, isEncode);
+	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isFormUrlEncoded) {
+		return UrlQuery.of(paramMap, isFormUrlEncoded).build(charset);
 	}
 
 	/**
@@ -536,6 +539,9 @@ public class HttpUtil {
 	 * @since 4.5.2
 	 */
 	public static String normalizeParams(String paramPart, Charset charset) {
+		if(StrUtil.isEmpty(paramPart)){
+			return paramPart;
+		}
 		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
 		final int len = paramPart.length();
 		String name = null;
@@ -555,9 +561,10 @@ public class HttpUtil {
 					if (null == name) {
 						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 						name = paramPart.substring(pos, i);
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
+						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=');
 					} else {
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
+						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=')
+								.append(RFC3986.QUERY_PARAM_VALUE.encode(paramPart.substring(pos, i), charset)).append('&');
 					}
 					name = null;
 				}

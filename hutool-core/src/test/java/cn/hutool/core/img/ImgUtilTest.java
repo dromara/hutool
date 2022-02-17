@@ -67,9 +67,9 @@ public class ImgUtilTest {
 	@Ignore
 	public void pressImgTest() {
 		ImgUtil.pressImage(
-				FileUtil.file("d:/test/617180969474805871.jpg"),
-				FileUtil.file("d:/test/dest.png"),
-				ImgUtil.read(FileUtil.file("d:/test/vbbb.png")), 0, 0, 0.9f);
+				FileUtil.file("d:/test/1435859438434136064.jpg"),
+				FileUtil.file("d:/test/dest.jpg"),
+				ImgUtil.read(FileUtil.file("d:/test/qrcodeCustom.png")), 0, 0, 0.9f);
 	}
 
 	@Test

@@ -25,8 +25,8 @@ public class OS extends UserAgentInfo {
 	 */
 	public static final List<OS> oses = CollUtil.newArrayList(//
 			new OS("Windows 10 or Windows Server 2016", "windows nt 10\\.0", "windows nt (10\\.0)"),//
-			new OS("Windows 8.1 or Winsows Server 2012R2", "windows nt 6\\.3", "windows nt (6\\.3)"),//
-			new OS("Windows 8 or Winsows Server 2012", "windows nt 6\\.2", "windows nt (6\\.2)"),//
+			new OS("Windows 8.1 or Windows Server 2012R2", "windows nt 6\\.3", "windows nt (6\\.3)"),//
+			new OS("Windows 8 or Windows Server 2012", "windows nt 6\\.2", "windows nt (6\\.2)"),//
 			new OS("Windows Vista", "windows nt 6\\.0", "windows nt (6\\.0)"), //
 			new OS("Windows 7 or Windows Server 2008R2", "windows nt 6\\.1", "windows nt (6\\.1)"), //
 			new OS("Windows 2003", "windows nt 5\\.2", "windows nt (5\\.2)"), //

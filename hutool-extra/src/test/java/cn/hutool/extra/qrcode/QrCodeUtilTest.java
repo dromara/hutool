@@ -94,4 +94,6 @@ public class QrCodeUtilTest {
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
 		Assert.assertNotNull(image);
 	}
+
+
 }

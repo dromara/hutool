@@ -3,6 +3,7 @@ package cn.hutool.core.net;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.URLUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,8 +46,16 @@ public class UrlQueryTest {
 	public void parseTest3(){
 		// issue#1688@Github
 		String u = "https://www.baidu.com/proxy";
-		final UrlQuery query = UrlQuery.of(u, Charset.defaultCharset());
+		final UrlQuery query = UrlQuery.of(URLUtil.url(u).getQuery(), Charset.defaultCharset());
 		Assert.assertTrue(MapUtil.isEmpty(query.getQueryMap()));
+	}
+
+	@Test
+	public void parseTest4(){
+		// https://github.com/dromara/hutool/issues/1989
+		String queryStr = "imageMogr2/thumbnail/x800/format/jpg";
+		final UrlQuery query = UrlQuery.of(queryStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(queryStr, query.toString());
 	}
 
 	@Test
@@ -98,5 +107,34 @@ public class UrlQueryTest {
 		map.put("password", "=");
 		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assert.assertEquals("password==&username%3D=SSM", query);
+	}
+
+	@Test
+	public void plusTest(){
+		// 根据RFC3986，在URL中，+是安全字符，即此符号不转义
+		final String a = UrlQuery.of(MapUtil.of("a+b", "1+2")).build(CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a+b=1+2", a);
+	}
+
+	@Test
+	public void parsePlusTest(){
+		// 根据RFC3986，在URL中，+是安全字符，即此符号不转义
+		final String a = UrlQuery.of("a+b=1+2", CharsetUtil.CHARSET_UTF_8)
+				.build(CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a+b=1+2", a);
+	}
+
+	@Test
+	public void spaceTest(){
+		// 根据RFC3986，在URL中，空格编码为"%20"
+		final String a = UrlQuery.of(MapUtil.of("a ", " ")).build(CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a%20=%20", a);
+	}
+
+	@Test
+	public void parsePercentTest(){
+		String queryStr = "a%2B=ccc";
+		final UrlQuery query = UrlQuery.of(queryStr, null);
+		Assert.assertEquals(queryStr, query.toString());
 	}
 }

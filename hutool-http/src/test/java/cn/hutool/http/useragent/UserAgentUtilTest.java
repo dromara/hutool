@@ -169,7 +169,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("63.0.3239.132", ua.getVersion());
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Windows 8.1 or Winsows Server 2012R2", ua.getOs().toString());
+		Assert.assertEquals("Windows 8.1 or Windows Server 2012R2", ua.getOs().toString());
 		Assert.assertEquals("6.3", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
@@ -359,4 +359,34 @@ public class UserAgentUtilTest {
 		Assert.assertTrue(ua.isMobile());
 	}
 
+	@Test
+	public void parseEdgATest(){
+		// https://gitee.com/dromara/hutool/issues/I4MCBP
+		String uaStr = "userAgent: Mozilla/5.0 (Linux; Android 11; MI 9 Transparent Edition) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Mobile Safari/537.36 EdgA/96.0.1054.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("MSEdge", ua.getBrowser().toString());
+		Assert.assertEquals("96.0.1054.36", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("11", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseLenovoTest(){
+		// https://gitee.com/dromara/hutool/issues/I4QBMD
+		String uaStr = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36 SLBrowser/7.0.0.6241 SLBChan/30";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+
+		Assert.assertEquals("Lenovo", ua.getBrowser().toString());
+		Assert.assertEquals("7.0.0.6241", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
 }

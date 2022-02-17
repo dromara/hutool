@@ -56,7 +56,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	@Override
 	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ);){
+		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ)){
 			return read(open, idOrRidOrSheetName);
 		} catch (InvalidFormatException | IOException e) {
 			throw new POIException(e);
@@ -128,7 +128,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 		// 获取共享字符串表
 		try {
-			this.handler.sharedStringsTable = xssfReader.getSharedStringsTable();
+			this.handler.sharedStrings = xssfReader.getSharedStringsTable();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (InvalidFormatException e) {
@@ -202,7 +202,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 		}
 
 		// sheetIndex需转换为rid
-		final SheetRidReader ridReader = new SheetRidReader().read(xssfReader);
+		final SheetRidReader ridReader = SheetRidReader.parse(xssfReader);
 
 		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, SHEET_NAME_PREFIX)) {
 			// name:开头的被认为是sheet名称直接处理

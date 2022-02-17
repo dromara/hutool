@@ -252,12 +252,22 @@ public class UrlBuilderTest {
 	}
 
 	@Test
+	public void encodePathTest2(){
+		// https://gitee.com/dromara/hutool/issues/I4RA42
+		// Path中`:`在第一个segment需要转义，之后的不需要
+		final String urlStr = "https://hutool.cn/aa/bb/Pre-K,Kindergarten,First,Second,Third,Fourth,Fifth/Page:3";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(urlStr, urlBuilder.toString());
+	}
+
+	@Test
 	public void gimg2Test(){
 		String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
 		final UrlBuilder urlBuilder = UrlBuilder.of(url);
 
-
-		Assert.assertEquals(url, urlBuilder.toString());
+		// PATH除了第一个path外，:是允许的
+		String url2 = "https://gimg2.baidu.com/image_search/src=http:%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http:%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
+		Assert.assertEquals(url2, urlBuilder.toString());
 	}
 
 	@Test
@@ -305,5 +315,52 @@ public class UrlBuilderTest {
 				.build();
 
 		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+	}
+
+	@Test
+	public void percent2BTest(){
+		String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
+		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
+		Assert.assertEquals(url, of.toString());
+	}
+
+	@Test
+	public void paramTest(){
+		String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals(url, builder.toString());
+	}
+
+	@Test
+	public void fragmentTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+
+		Assert.assertEquals(url, builder.toString());
+	}
+
+	@Test
+	public void fragmentAppendParamTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
+		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
+	}
+
+	@Test
+	public void paramWithPlusTest(){
+		String url = "http://127.0.0.1/?" +
+				"Expires=1642734164&" +
+				"security-token=CAIS+AF1q6Ft5B2yfSjIr5fYEeju1b1ggpPee2KGpjlgQtdfl43urjz2IHtKdXRvBu8Xs" +
+				"/4wnmxX7f4YlqB6T55OSAmcNZEoPwKpT4zmMeT7oMWQweEurv" +
+				"/MQBqyaXPS2MvVfJ+OLrf0ceusbFbpjzJ6xaCAGxypQ12iN+/m6" +
+				"/Ngdc9FHHPPD1x8CcxROxFppeIDKHLVLozNCBPxhXfKB0ca0WgVy0EHsPnvm5DNs0uH1AKjkbRM9r6ceMb0M5NeW75kSMqw0eBMca7M7TVd8RAi9t0t1" +
+				"/IVpGiY4YDAWQYLv0rda7DOltFiMkpla7MmXqlft+hzcgeQY0pc" +
+				"/RqAAYRYVCBiyuzAexSiDiJX1VqWljg4jYp1sdyv3HpV3sXVcf6VH6AN9ot5YNTw4JNO0aNpLpLm93rRMrOKIOsve+OmNyZ4HS7qHQKt1qp7HY1A" +
+				"/wGhJstkAoGQt+CHSMwVdIx3bVT1+ZYnJdM/oIQ/90afw4EEEQaRE51Z0rQC7z8d";
+		final String build = UrlBuilder.of(url).build();
+		Assert.assertEquals(url, build);
 	}
 }

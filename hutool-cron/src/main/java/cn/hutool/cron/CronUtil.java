@@ -110,9 +110,10 @@ public class CronUtil {
 	 * 移除任务
 	 *
 	 * @param schedulerId 任务ID
+	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
 	 */
-	public static void remove(String schedulerId) {
-		scheduler.deschedule(schedulerId);
+	public static boolean remove(String schedulerId) {
+		return scheduler.descheduleWithStatus(schedulerId);
 	}
 
 	/**

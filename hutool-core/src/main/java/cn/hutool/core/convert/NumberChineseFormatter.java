@@ -1,6 +1,8 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -59,48 +61,138 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 */
 	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
-		if (amount > 99_9999_9999_9999.99 || amount < -99999999999999.99) {
-			throw new IllegalArgumentException("Number support only: (-99999999999999.99 ～ 99999999999999.99)！");
+		if(0 == amount){
+			return "零";
 		}
+		Assert.checkBetween(amount, -99_9999_9999_9999.99, 99_9999_9999_9999.99,
+				"Number support only: (-99999999999999.99 ~ 99999999999999.99)！");
+
+		final StringBuilder chineseStr = new StringBuilder();
 
 		// 负数
-		boolean negative = false;
 		if (amount < 0) {
-			negative = true;
+			chineseStr.append("负");
 			amount = -amount;
 		}
 
-		// 分和角
-		long temp = Math.round(amount * 100);
+		long yuan = Math.round(amount * 100);
+		final int fen = (int) (yuan % 10);
+		yuan = yuan / 10;
+		final int jiao = (int) (yuan % 10);
+		yuan = yuan / 10;
 
-		final int numFen = (int) (temp % 10);
-		temp = temp / 10;
-		final int numJiao = (int) (temp % 10);
-		temp = temp / 10;
+		// 元
+		if(false == isMoneyMode || 0 != yuan){
+			// 金额模式下，无需“零元”
+			chineseStr.append(longToChinese(yuan, isUseTraditional));
+			if(isMoneyMode){
+				chineseStr.append("元");
+			}
+		}
 
-		final StringBuilder chineseStr = new StringBuilder(longToChinese(temp, isUseTraditional));
-		//负数
-		if (negative) { // 整数部分不为 0
-			chineseStr.insert(0, "负");
+		if(0 == jiao && 0 == fen){
+			//无小数部分的金额结尾
+			if(isMoneyMode){
+				chineseStr.append("整");
+			}
+			return chineseStr.toString();
 		}
 
 		// 小数部分
-		if (numFen != 0 || numJiao != 0) {
-			if (numFen == 0) {
-				chineseStr.append(isMoneyMode ? "元" : "点").append(numberToChinese(numJiao, isUseTraditional)).append(isMoneyMode ? "角" : "");
-			} else { // “分”数不为 0
-				if (numJiao == 0) {
-					chineseStr.append(isMoneyMode ? "元零" : "点零").append(numberToChinese(numFen, isUseTraditional)).append(isMoneyMode ? "分" : "");
-				} else {
-					chineseStr.append(isMoneyMode ? "元" : "点").append(numberToChinese(numJiao, isUseTraditional)).append(isMoneyMode ? "角" : "").append(numberToChinese(numFen, isUseTraditional)).append(isMoneyMode ? "分" : "");
-				}
+		if(false == isMoneyMode){
+			chineseStr.append("点");
+		}
+
+		// 角
+		if(0 == yuan && 0 == jiao){
+			// 元和角都为0时，只有非金额模式下补“零”
+			if(false == isMoneyMode){
+				chineseStr.append("零");
 			}
-		} else if (isMoneyMode) {
-			//无小数部分的金额结尾
-			chineseStr.append("元整");
+		}else{
+			chineseStr.append(numberToChinese(jiao, isUseTraditional));
+			if(isMoneyMode && 0 != jiao){
+				chineseStr.append("角");
+			}
+		}
+
+		// 分
+		if(0 != fen){
+			chineseStr.append(numberToChinese(fen, isUseTraditional));
+			if(isMoneyMode){
+				chineseStr.append("分");
+			}
 		}
 
 		return chineseStr.toString();
+	}
+
+	/**
+	 * 阿拉伯数字（支持正负整数）转换成中文
+	 *
+	 * @param amount 数字
+	 * @param isUseTraditional 是否使用繁体
+	 * @return 中文
+	 * @since 5.7.17
+	 */
+	public static String format(long amount, boolean isUseTraditional){
+		if(0 == amount){
+			return "零";
+		}
+		Assert.checkBetween(amount, -99_9999_9999_9999.99, 99_9999_9999_9999.99,
+				"Number support only: (-99999999999999.99 ~ 99999999999999.99)！");
+
+		final StringBuilder chineseStr = new StringBuilder();
+
+		// 负数
+		if (amount < 0) {
+			chineseStr.append("负");
+			amount = -amount;
+		}
+
+		chineseStr.append(longToChinese(amount, isUseTraditional));
+		return chineseStr.toString();
+	}
+
+	/**
+	 * 阿拉伯数字（支持正负整数）四舍五入后转换成中文节权位简洁计数单位，例如 -5_5555 =》 -5.56万
+	 *
+	 * @param amount 数字
+	 * @return 中文
+	 */
+	public static String formatSimple(long amount) {
+		if (amount < 1_0000 && amount > -1_0000) {
+			return String.valueOf(amount);
+		}
+		String res;
+		if (amount < 1_0000_0000 && amount > -1_0000_0000) {
+			res = NumberUtil.div(amount, 1_0000, 2) + "万";
+		} else if (amount < 1_0000_0000_0000L && amount > -1_0000_0000_0000L) {
+			res = NumberUtil.div(amount, 1_0000_0000, 2) + "亿";
+		} else {
+			res = NumberUtil.div(amount, 1_0000_0000_0000L, 2) + "万亿";
+		}
+		return res;
+	}
+
+	/**
+	 * 格式化-999~999之间的数字<br>
+	 * 这个方法显示10~19以下的数字时使用"十一"而非"一十一"。
+	 *
+	 * @param amount 数字
+	 * @param isUseTraditional 是否使用繁体
+	 * @return 中文
+	 * @since 5.7.17
+	 */
+	public static String formatThousand(int amount, boolean isUseTraditional){
+		Assert.checkBetween(amount, -999, 999, "Number support only: (-999 ~ 999)！");
+
+		final String chinese = thousandToChinese(amount, isUseTraditional);
+		if(amount < 20 && amount > 10){
+			// "十一"而非"一十一"
+			return chinese.substring(1);
+		}
+		return chinese;
 	}
 
 	/**
@@ -215,6 +307,11 @@ public class NumberChineseFormatter {
 	 * @return 转换后的汉字
 	 */
 	private static String thousandToChinese(int amountPart, boolean isUseTraditional) {
+		if (amountPart == 0) {
+			// issue#I4R92H@Gitee
+			return String.valueOf(DIGITS[0]);
+		}
+
 		int temp = amountPart;
 
 		StringBuilder chineseStr = new StringBuilder();

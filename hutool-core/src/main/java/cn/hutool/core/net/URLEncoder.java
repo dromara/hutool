@@ -13,6 +13,7 @@ import java.util.BitSet;
 
 /**
  * URL编码，数据内容的类型是 application/x-www-form-urlencoded。
+ * TODO 6.x移除此类，使用PercentCodec代替（无法很好区分URL编码和www-form编码）
  *
  * <pre>
  * 1.字符"a"-"z"，"A"-"Z"，"0"-"9"，"."，"-"，"*"，和"_" 都不会被编码;
@@ -21,6 +22,7 @@ import java.util.BitSet;
  * </pre>
  *
  * @author looly
+ * @see cn.hutool.core.codec.PercentCodec
  */
 public class URLEncoder implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -101,6 +101,9 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 				break;
 			}
 			target.write(buffer, 0, read);
+			if(flushEveryBuffer){
+				target.flush();
+			}
 
 			numToRead -= read;
 			total += read;

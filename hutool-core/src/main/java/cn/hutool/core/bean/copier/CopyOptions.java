@@ -65,7 +65,11 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 */
-	private boolean transientSupport = true;
+	protected boolean transientSupport = true;
+	/**
+	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 */
+	protected boolean override = true;
 
 	/**
 	 * 创建拷贝选项
@@ -259,7 +263,9 @@ public class CopyOptions implements Serializable {
 	 *
 	 * @return 是否支持
 	 * @since 5.4.2
+	 * @deprecated 无需此方法，内部使用直接调用属性
 	 */
+	@Deprecated
 	public boolean isTransientSupport() {
 		return this.transientSupport;
 	}
@@ -273,6 +279,18 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions setTransientSupport(boolean transientSupport) {
 		this.transientSupport = transientSupport;
+		return this;
+	}
+
+	/**
+	 * 设置是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 *
+	 * @param override 是否覆盖目标值
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public CopyOptions setOverride(boolean override) {
+		this.override = override;
 		return this;
 	}
 

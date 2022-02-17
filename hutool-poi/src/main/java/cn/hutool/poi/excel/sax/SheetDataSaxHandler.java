@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
-import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.xml.sax.Attributes;
@@ -28,7 +28,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	// 单元格的格式表，对应style.xml
 	protected StylesTable stylesTable;
 	// excel 2007 的共享字符串表,对应sharedString.xml
-	protected SharedStringsTable sharedStringsTable;
+	protected SharedStrings sharedStrings;
 	// sheet的索引，从0开始
 	protected int sheetIndex;
 
@@ -238,7 +238,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 		fillBlankCell(preCoordinate, curCoordinate, false);
 
 		final String contentStr = StrUtil.trim(lastContent);
-		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
+		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
 		if (false == this.lastFormula.isEmpty()) {
 			value = new FormulaCellValue(StrUtil.trim(lastFormula), value);
 		}
@@ -294,7 +294,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 				final int numFmtIndex = xssfCellStyle.getDataFormat();
 				this.numFmtString = ObjectUtil.defaultIfNull(
 						xssfCellStyle.getDataFormatString(),
-						BuiltinFormats.getBuiltinFormat(numFmtIndex));
+						() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
 				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
 					cellDataType = CellDataType.DATE;
 				}

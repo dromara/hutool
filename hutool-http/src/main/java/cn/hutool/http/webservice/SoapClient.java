@@ -338,7 +338,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 */
 	public SoapClient setMethod(QName name, Map<String, Object> params, boolean useMethodPrefix) {
 		setMethod(name);
-		final String prefix = name.getPrefix();
+		final String prefix = useMethodPrefix ? name.getPrefix() : null;
 		final SOAPBodyElement methodEle = this.methodEle;
 		for (Entry<String, Object> entry : MapUtil.wrap(params)) {
 			setParam(methodEle, entry.getKey(), entry.getValue(), prefix);
@@ -618,7 +618,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @param ele    方法节点
 	 * @param name   参数名
 	 * @param value  参数值
-	 * @param prefix 命名空间前缀
+	 * @param prefix 命名空间前缀， {@code null}表示不使用前缀
 	 * @return {@link SOAPElement}子节点
 	 */
 	@SuppressWarnings("rawtypes")
