@@ -142,6 +142,7 @@ public class ByteUtil {
 	 * 自定义端序
 	 *
 	 * @param bytes     byte数组
+	 * @param start 开始位置（包含）
 	 * @param byteOrder 端序
 	 * @return int值
 	 * @since 5.7.21

@@ -47,14 +47,15 @@ import java.util.function.Supplier;
  * 		.build();
  * </pre>
  * <p> 还可能这样构建Map对象：</p>
- * <pre>
+ * {@code
  * HashMap<String, String> colorMap = GenericBuilder
  * 		.of(HashMap<String,String>::new)
  * 		.with(Map::put, "red", "#FF0000")
  * 		.with(Map::put, "yellow", "#FFFF00")
  * 		.with(Map::put, "blue", "#0000FF")
  * 		.build();
- * </pre>
+ * }
+ * 
  * <p>注意：本工具类支持调用的构造方法的参数数量不超过5个，一般方法的参数数量不超过2个，更多的参数不利于阅读和维护。</p>
  *
  * @author TomXin
@@ -214,7 +215,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @return GenericBuilder对象
 	 */
 	public <P1, P2> GenericBuilder<T> with(Consumer3<T, P1, P2> consumer, P1 p1, P2 p2) {
-		modifiers.add(instant ->{consumer.accept(instant, p1, p2);});
+		modifiers.add(instant -> consumer.accept(instant, p1, p2));
 		return this;
 	}
 
