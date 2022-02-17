@@ -978,6 +978,11 @@ public class ZipUtil {
 			}
 		}
 
+		try {
+			zipFile.close();
+		} catch (IOException e) {
+			// 静默关闭
+		}
 		return fileNames;
 	}
 
