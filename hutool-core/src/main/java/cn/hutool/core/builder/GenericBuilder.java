@@ -55,7 +55,7 @@ import java.util.function.Supplier;
  * 		.with(Map::put, "blue", "#0000FF")
  * 		.build();
  * }
- * 
+ *
  * <p>注意：本工具类支持调用的构造方法的参数数量不超过5个，一般方法的参数数量不超过2个，更多的参数不利于阅读和维护。</p>
  *
  * @author TomXin
