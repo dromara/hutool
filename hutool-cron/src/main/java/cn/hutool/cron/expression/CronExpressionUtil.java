@@ -1,5 +1,8 @@
 package cn.hutool.cron.expression;
 
+import cn.hutool.cron.pattern.CronPattern;
+import cn.hutool.cron.pattern.CronPatternUtil;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +53,19 @@ public class CronExpressionUtil {
 		}
 
 		return result;
+	}
+
+
+	/**
+	 * 对比测试
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		//耗时约5秒并且只查到当年，可能返回null
+		Date date = CronPatternUtil.nextDateAfter(new CronPattern("* 12 6 6 2 ?"), new Date(), true);
+
+		//无耗时
+		Date nextTime = CronExpressionUtil.getNextTime("* 12 6 6 2 ?", new Date());
 	}
 
 }
