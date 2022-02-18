@@ -146,6 +146,31 @@ public class CheckedUtil {
 	}
 
 	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @param <P>         运行时传入的参数类型
+	 * @param <R>         最终返回的数据类型
+	 * @return {@link FuncRt}
+	 */
+	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return t -> {
+			try {
+				return expression.call(t);
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
+				}
+			}
+		};
+	}
+
+	/**
 	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func0的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
@@ -165,6 +190,30 @@ public class CheckedUtil {
 				} else {
 					rte.initCause(e);
 					throw rte;
+				}
+			}
+		};
+	}
+
+	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func0的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @param <R>         最终返回的数据类型
+	 * @return {@link Func0Rt}
+	 */
+	public static <R> Func0Rt<R> uncheck(Func0<R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return () -> {
+			try {
+				return expression.call();
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
 				}
 			}
 		};
@@ -197,7 +246,32 @@ public class CheckedUtil {
 	}
 
 	/**
-	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.Func1的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @param <P>         运行时传入的参数类型
+	 * @param <R>         最终返回的数据类型
+	 * @return {@link Func1Rt}
+	 */
+	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return t -> {
+			try {
+				return expression.call(t);
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
+				}
+			}
+		};
+	}
+
+	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
 	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
 	 *
 	 * @param expression Lambda表达式
@@ -216,6 +290,30 @@ public class CheckedUtil {
 				} else {
 					rte.initCause(e);
 					throw rte;
+				}
+			}
+		};
+	}
+
+	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @param <P>         运行时传入的参数类型
+	 * @return {@link VoidFuncRt}
+	 */
+	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return t -> {
+			try {
+				expression.call(t);
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
 				}
 			}
 		};
@@ -241,6 +339,29 @@ public class CheckedUtil {
 				} else {
 					rte.initCause(e);
 					throw rte;
+				}
+			}
+		};
+	}
+
+	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc0的Lambda表达式，和一个可以把Exception转化成RuntimeExceptionde的表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @return {@link VoidFunc0Rt}
+	 */
+	public static VoidFunc0Rt uncheck(VoidFunc0 expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return () -> {
+			try {
+				expression.call();
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
 				}
 			}
 		};
@@ -272,29 +393,57 @@ public class CheckedUtil {
 		};
 	}
 
+	/**
+	 * 接收一个可以转化成 cn.hutool.core.lang.func.VoidFunc1的Lambda表达式，和一个RuntimeException，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+	 * 如此一来，代码中就不用显示的try-catch转化成运行时异常
+	 *
+	 * @param expression  Lambda表达式
+	 * @param rteSupplier 转化运行时异常的表达式
+	 * @param <P>         运行时传入的参数类型
+	 * @return {@link VoidFunc1Rt}
+	 */
+	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+		Objects.requireNonNull(expression, "expression can not be null");
+		return t -> {
+			try {
+				expression.call(t);
+			} catch (Exception e) {
+				if (rteSupplier == null) {
+					throw new RuntimeException(e);
+				} else {
+					throw rteSupplier.get(e);
+				}
+			}
+		};
+	}
+
 	public interface FuncRt<P, R> extends Func<P, R> {
-		@SuppressWarnings("unchecked")
+		@Override
 		R call(P... parameters) throws RuntimeException;
 	}
 
 	public interface Func0Rt<R> extends Func0<R> {
+		@Override
 		R call() throws RuntimeException;
 	}
 
 	public interface Func1Rt<P, R> extends Func1<P, R> {
+		@Override
 		R call(P parameter) throws RuntimeException;
 	}
 
 	public interface VoidFuncRt<P> extends VoidFunc<P> {
-		@SuppressWarnings("unchecked")
+		@Override
 		void call(P... parameters) throws RuntimeException;
 	}
 
 	public interface VoidFunc0Rt extends VoidFunc0 {
+		@Override
 		void call() throws RuntimeException;
 	}
 
 	public interface VoidFunc1Rt<P> extends VoidFunc1<P> {
+		@Override
 		void call(P parameter) throws RuntimeException;
 	}
 
