@@ -28,6 +28,13 @@ public class SnowflakeTest {
 	}
 
 	@Test
+	public void snowflakeTest2(){
+		Snowflake idWorker = new Snowflake();
+		long nextId = idWorker.nextId();
+		Assert.assertTrue(nextId > 0);
+	}
+
+	@Test
 	public void snowflakeTest(){
 		HashSet<Long> hashSet = new HashSet<>();
 

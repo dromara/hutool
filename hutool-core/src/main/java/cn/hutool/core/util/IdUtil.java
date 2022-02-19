@@ -219,6 +219,8 @@ public class IdUtil {
 			id = ((0x000000FF & (long) mac[mac.length - 2])
 					| (0x0000FF00 & (((long) mac[mac.length - 1]) << 8))) >> 6;
 			id = id % (maxDatacenterId + 1);
+		} else {
+			id = (long) (Math.random() * (maxDatacenterId + 1));
 		}
 
 		return id;
