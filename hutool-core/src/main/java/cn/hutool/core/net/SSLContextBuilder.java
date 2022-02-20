@@ -1,5 +1,7 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.builder.Builder;
+import cn.hutool.core.exceptions.CheckedUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -20,13 +22,13 @@ import java.security.SecureRandom;
  *     <li>{@link TrustManager}，默认{@link DefaultTrustManager}，即信任全部</li>
  *     <li>{@link SecureRandom}</li>
  * </ul>
- *
+ * <p>
  * 构建后可获得{@link SSLContext}，通过调用{@link SSLContext#getSocketFactory()}获取{@link javax.net.ssl.SSLSocketFactory}
  *
  * @author Looly
  * @since 5.5.2
  */
-public class SSLContextBuilder implements SSLProtocols {
+public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
@@ -99,10 +101,21 @@ public class SSLContextBuilder implements SSLProtocols {
 	 * 构建{@link SSLContext}
 	 *
 	 * @return {@link SSLContext}
-	 * @throws NoSuchAlgorithmException 无此算法
-	 * @throws KeyManagementException   Key管理异常
 	 */
-	public SSLContext build() throws NoSuchAlgorithmException, KeyManagementException {
+	@Override
+	public SSLContext build() {
+		return CheckedUtil.uncheck(this::buildChecked, IORuntimeException::new).call();
+	}
+
+	/**
+	 * 构建{@link SSLContext}需要处理异常
+	 *
+	 * @return {@link SSLContext}
+	 * @throws NoSuchAlgorithmException 无此算法异常
+	 * @throws KeyManagementException   密钥管理异常
+	 * @since 5.7.22
+	 */
+	public SSLContext buildChecked() throws NoSuchAlgorithmException, KeyManagementException {
 		SSLContext sslContext = SSLContext.getInstance(protocol);
 		sslContext.init(this.keyManagers, this.trustManagers, this.secureRandom);
 		return sslContext;
@@ -116,7 +129,7 @@ public class SSLContextBuilder implements SSLProtocols {
 	 */
 	public SSLContext buildQuietly() throws IORuntimeException {
 		try {
-			return build();
+			return buildChecked();
 		} catch (GeneralSecurityException e) {
 			throw new IORuntimeException(e);
 		}
