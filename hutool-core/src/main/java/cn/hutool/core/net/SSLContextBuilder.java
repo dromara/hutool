@@ -1,7 +1,6 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.builder.Builder;
-import cn.hutool.core.exceptions.CheckedUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -29,7 +28,8 @@ import java.security.SecureRandom;
  * @since 5.5.2
  */
 public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
-
+	private static final long serialVersionUID = 1L;
+	
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
 	private TrustManager[] trustManagers = {DefaultTrustManager.INSTANCE};
@@ -104,7 +104,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 */
 	@Override
 	public SSLContext build() {
-		return CheckedUtil.uncheck(this::buildChecked, IORuntimeException::new).call();
+		return buildQuietly();
 	}
 
 	/**

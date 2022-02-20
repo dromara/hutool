@@ -38,7 +38,6 @@ public class CheckedUtilTest {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void functionTest() {
 		Func1<String, String> afunc = (funcParam) -> {

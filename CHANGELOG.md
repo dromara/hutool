@@ -9,10 +9,13 @@
 * 【extra  】     Ftp增加构造（issue#I4TKXP@gitee）
 * 【core   】     GenericBuilder支持Map构建（pr#540@Github）
 * 【json   】     新增TemporalAccessorSerializer
+* 【core   】     使多个xxxBuilder实现Builder接口，扩展CheckedUtil（pr#545@Gitee）
+* 【core   】     CheckedUtil删除第二个参数为RuntimeException的方法
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）
 * 【core   】     修复SystemPropsUtil.getInt返回long问题（pr#546@Gitee）
+* 【crypto 】     修复SM2.getD前导0问题（pr#2149@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.21 (2022-02-14)
