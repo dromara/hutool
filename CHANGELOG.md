@@ -18,6 +18,7 @@
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）
 * 【core   】     修复SystemPropsUtil.getInt返回long问题（pr#546@Gitee）
 * 【crypto 】     修复SM2.getD前导0问题（pr#2149@Github）
+* 【core   】     修复ChineseDate在1970年之前农历差一天问题（issue#I4UTPK@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.21 (2022-02-14)

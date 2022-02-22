@@ -13,9 +13,9 @@ public class LunarInfo {
 	 */
 	public static final int BASE_YEAR = 1900;
 	/**
-	 * 1900-01-31
+	 * 1900-01-31，农历正月初一
 	 */
-	public static final long BASE_DAY = -25538;
+	public static final long BASE_DAY = -25537;
 
 	/**
 	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js

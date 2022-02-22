@@ -50,11 +50,18 @@ public class ChineseDate {
 		// 公历
 		final DateTime dt = DateUtil.beginOfDay(date);
 		gyear = dt.year();
-		gmonthBase1 = dt.month() + 1;
+		gmonthBase1 = dt.monthBaseOne();
 		gday = dt.dayOfMonth();
 
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((dt.getTime() / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
+		final long time = dt.getTime();
+		int offset = (int) ((time / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
+		if(time > 0 && (time % DateUnit.DAY.getMillis()) > 0){
+			// 在GMT+0800时区或非UTC时区，1970-01-02的时间戳小于一天的毫秒数，导致减法后为0，之后的农历总会少一天
+			// 此处判断是否有余数，如果有则非UTC时间，此时将时间差算为一天。
+			offset++;
+		}
+
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;
