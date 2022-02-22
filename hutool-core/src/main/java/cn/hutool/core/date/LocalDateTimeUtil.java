@@ -182,6 +182,8 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDate) {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
+		} else if(temporalAccessor instanceof Instant){
+			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
 		}
 
 		return LocalDateTime.of(
@@ -209,6 +211,8 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDateTime) {
 			return ((LocalDateTime) temporalAccessor).toLocalDate();
+		} else if(temporalAccessor instanceof Instant){
+			return of(temporalAccessor).toLocalDate();
 		}
 
 		return LocalDate.of(

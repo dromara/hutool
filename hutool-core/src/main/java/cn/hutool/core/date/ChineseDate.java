@@ -8,6 +8,7 @@ import cn.hutool.core.date.chinese.LunarInfo;
 import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.util.StrUtil;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,20 +48,23 @@ public class ChineseDate {
 	 * @param date 公历日期
 	 */
 	public ChineseDate(Date date) {
+		this(LocalDateTimeUtil.ofDate(date.toInstant()));
+	}
+
+	/**
+	 * 通过公历日期构造
+	 *
+	 * @param localDate 公历日期
+	 * @since 5.7.22
+	 */
+	public ChineseDate(LocalDate localDate) {
 		// 公历
-		final DateTime dt = DateUtil.beginOfDay(date);
-		gyear = dt.year();
-		gmonthBase1 = dt.monthBaseOne();
-		gday = dt.dayOfMonth();
+		gyear = localDate.getYear();
+		gmonthBase1 = localDate.getMonthValue();
+		gday = localDate.getDayOfMonth();
 
 		// 求出和1900年1月31日相差的天数
-		final long time = dt.getTime();
-		int offset = (int) ((time / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
-		if(time > 0 && (time % DateUnit.DAY.getMillis()) > 0){
-			// 在GMT+0800时区或非UTC时区，1970-01-02的时间戳小于一天的毫秒数，导致减法后为0，之后的农历总会少一天
-			// 此处判断是否有余数，如果有则非UTC时间，此时将时间差算为一天。
-			offset++;
-		}
+		int offset = (int) (localDate.toEpochDay() - LunarInfo.BASE_DAY);
 
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天

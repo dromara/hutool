@@ -26,11 +26,12 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 public class TemporalAccessorUtil extends TemporalUtil{
 
 	/**
-	 * 安全获取时间的某个属性，属性不存在返回0
+	 * 安全获取时间的某个属性，属性不存在返回最小值，一般为0<br>
+	 * 注意请谨慎使用此方法，某些{@link TemporalAccessor#isSupported(TemporalField)}为{@code false}的方法返回最小值
 	 *
 	 * @param temporalAccessor 需要获取的时间对象
 	 * @param field            需要获取的属性
-	 * @return 时间的值，如果无法获取则默认为 0
+	 * @return 时间的值，如果无法获取则获取最小值，一般为0
 	 */
 	public static int get(TemporalAccessor temporalAccessor, TemporalField field) {
 		if (temporalAccessor.isSupported(field)) {

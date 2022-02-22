@@ -1,5 +1,7 @@
 package cn.hutool.core.date.chinese;
 
+import java.time.LocalDate;
+
 /**
  * 阴历（农历）信息
  *
@@ -15,7 +17,7 @@ public class LunarInfo {
 	/**
 	 * 1900-01-31，农历正月初一
 	 */
-	public static final long BASE_DAY = -25537;
+	public static final long BASE_DAY = LocalDate.of(BASE_YEAR, 1, 31).toEpochDay();
 
 	/**
 	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js
