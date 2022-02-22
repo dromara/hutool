@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.22 (2022-02-21)
+# 5.7.22 (2022-02-22)
 
 ### 🐣新特性
 * 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
@@ -11,6 +11,7 @@
 * 【json   】     新增TemporalAccessorSerializer
 * 【core   】     使多个xxxBuilder实现Builder接口，扩展CheckedUtil（pr#545@Gitee）
 * 【core   】     CheckedUtil删除第二个参数为RuntimeException的方法
+* 【core   】     FileUtil增加getTotalLines方法
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）

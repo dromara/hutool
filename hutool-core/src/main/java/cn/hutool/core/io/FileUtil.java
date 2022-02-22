@@ -22,12 +22,31 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.ZipUtil;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -554,23 +573,22 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 计算文件的总行数
+	 * 计算文件的总行数<br>
+	 * 读取文件采用系统默认编码，一般乱码不会造成行数错误。
 	 *
 	 * @param file 文件
 	 * @return 该文件总行数
+	 * @since 5.7.22
 	 */
 	public static int getTotalLines(File file) {
-		if (!isFile(file)) {
-			throw new IORuntimeException("input must be file");
+		if (false == isFile(file)) {
+			throw new IORuntimeException("Input must be a File");
 		}
-
-		try (
-				final BufferedReader reader = getReader(file, CharsetUtil.CHARSET_UTF_8);
-				final LineNumberReader lineNumberReader = new LineNumberReader(reader)
-		) {
+		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
 			// 设置起始为1
 			lineNumberReader.setLineNumber(1);
 			// 跳过文件中内容
+			//noinspection ResultOfMethodCallIgnored
 			lineNumberReader.skip(Long.MAX_VALUE);
 			// 获取当前行号
 			return lineNumberReader.getLineNumber();
