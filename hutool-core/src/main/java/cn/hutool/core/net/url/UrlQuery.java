@@ -279,6 +279,12 @@ public class UrlQuery {
 		return sb.toString();
 	}
 
+	/**
+	 * 生成查询字符串，类似于aaa=111&bbb=222<br>
+	 * 此方法不对任何特殊字符编码，仅用于输出显示
+	 *
+	 * @return 查询字符串
+	 */
 	@Override
 	public String toString() {
 		return build(null);
