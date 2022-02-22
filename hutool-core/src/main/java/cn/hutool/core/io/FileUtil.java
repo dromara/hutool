@@ -22,21 +22,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.ZipUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.io.Reader;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -564,6 +550,32 @@ public class FileUtil extends PathUtil {
 			return size;
 		} else {
 			return file.length();
+		}
+	}
+
+	/**
+	 * 计算文件的总行数
+	 *
+	 * @param file 文件
+	 * @return 该文件总行数
+	 */
+	public static int getTotalLines(File file) {
+		if (!isFile(file)) {
+			throw new IORuntimeException("input must be file");
+		}
+
+		try (
+				final BufferedReader reader = getReader(file, CharsetUtil.CHARSET_UTF_8);
+				final LineNumberReader lineNumberReader = new LineNumberReader(reader)
+		) {
+			// 设置起始为1
+			lineNumberReader.setLineNumber(1);
+			// 跳过文件中内容
+			lineNumberReader.skip(Long.MAX_VALUE);
+			// 获取当前行号
+			return lineNumberReader.getLineNumber();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 

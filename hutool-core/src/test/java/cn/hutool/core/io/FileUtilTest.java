@@ -466,4 +466,12 @@ public class FileUtilTest {
 		Assert.assertTrue(FileUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
 	}
 
+	@Test
+	@Ignore
+	public void getTotalLinesTest() {
+		// 千万行秒级内返回
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file(""));
+		Assert.assertEquals(10000000, totalLines);
+	}
+
 }
