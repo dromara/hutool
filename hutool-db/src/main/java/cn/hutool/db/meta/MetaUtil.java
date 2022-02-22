@@ -185,15 +185,38 @@ public class MetaUtil {
 	 * @return Table对象
 	 */
 	public static Table getTableMeta(DataSource ds, String tableName) {
+		return getTableMeta(ds, null, null, tableName);
+	}
+
+	/**
+	 * 获得表的元信息<br>
+	 * 注意如果需要获取注释，某些数据库如MySQL，需要在配置中添加:
+	 * <pre>
+	 *     remarks = true
+	 *     useInformationSchema = true
+	 * </pre>
+	 *
+	 * @param ds        数据源
+	 * @param tableName 表名
+	 * @param catalog    catalog name，{@code null}表示自动获取，见：{@link #getCataLog(Connection)}
+	 * @param schema a schema name pattern，{@code null}表示自动获取，见：{@link #getSchema(Connection)}
+	 * @return Table对象
+	 * @since 5.7.22
+	 */
+	public static Table getTableMeta(DataSource ds, String catalog, String schema, String tableName) {
 		final Table table = Table.create(tableName);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			final String catalog = getCataLog(conn);
+			if(null == catalog){
+				catalog = getCataLog(conn);
+			}
 			table.setCatalog(catalog);
-			final String schema = getSchema(conn);
+			if(null == schema){
+				schema = getSchema(conn);
+			}
 			table.setSchema(schema);
 
 			final DatabaseMetaData metaData = conn.getMetaData();

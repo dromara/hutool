@@ -1,8 +1,11 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Date;
 
 public class ChineseDateTest {
 
@@ -112,5 +115,13 @@ public class ChineseDateTest {
 		ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
 		final String chineseMonth = springFestival.getChineseMonth();
 		Assert.assertEquals("一月", chineseMonth);
+	}
+
+	@Test
+	public void dayTest(){
+		Date date = DateUtil.parse("1900-01-31");
+		//Date date = DateUtil.parse("2022-02-22","yyyy-MM-dd");
+		ChineseDate chineseDate = new ChineseDate(date);
+		Console.log(chineseDate);
 	}
 }

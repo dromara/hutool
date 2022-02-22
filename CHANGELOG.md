@@ -12,6 +12,7 @@
 * 【core   】     使多个xxxBuilder实现Builder接口，扩展CheckedUtil（pr#545@Gitee）
 * 【core   】     CheckedUtil删除第二个参数为RuntimeException的方法
 * 【core   】     FileUtil增加getTotalLines方法
+* 【db     】     MetaUtil增加getTableMeta重载（issue#2157@Github）
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）
