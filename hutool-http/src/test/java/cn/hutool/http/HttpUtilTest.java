@@ -3,7 +3,6 @@ package cn.hutool.http;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
@@ -357,11 +356,10 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getPicTest(){
+		HttpGlobalConfig.setDecodeUrl(false);
 		String url = "https://p3-sign.douyinpic.com/tos-cn-i-0813/f41afb2e79a94dcf80970affb9a69415~noop.webp?x-expires=1647738000&x-signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D&from=4257465056&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sh=&sc=&l=2022021809224601020810013524310DD3&biz_tag=aweme_images";
-		final String s = UrlBuilder.ofHttp(url).toString();
-		// Assert.assertEquals(url, s);
 
-		final HttpRequest request = HttpRequest.of(url, null).method(Method.GET);
+		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
 		Console.log(request.execute().body());
 	}
 }

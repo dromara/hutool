@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.22 (2022-02-22)
+# 5.7.22 (2022-02-23)
 
 ### 🐣新特性
 * 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
@@ -13,6 +13,7 @@
 * 【core   】     CheckedUtil删除第二个参数为RuntimeException的方法
 * 【core   】     FileUtil增加getTotalLines方法
 * 【db     】     MetaUtil增加getTableMeta重载（issue#2157@Github）
+* 【http   】     增加HttpGlobalConfig.setDecodeUrl（issue#I4U8YQ@Gitee）
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）

@@ -33,6 +33,7 @@ public class HttpGlobalConfig implements Serializable {
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
 	private static int maxRedirectCount = 0;
 	private static boolean ignoreEOFError = true;
+	private static boolean decodeUrl = false;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -125,11 +126,35 @@ public class HttpGlobalConfig implements Serializable {
 	}
 
 	/**
+	 * 获取是否忽略解码URL，包括URL中的Path部分和Param部分。<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果此参数为{@code true}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 *
+	 * @return 是否忽略解码URL
+	 * @since 5.7.22
+	 */
+	public static boolean isDecodeUrl() {
+		return decodeUrl;
+	}
+
+	/**
+	 * 设置是否忽略解码URL，包括URL中的Path部分和Param部分。<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果此参数为{@code true}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 *
+	 * @param customDecodeUrl 是否忽略解码URL
+	 * @since 5.7.22
+	 */
+	synchronized public static void setDecodeUrl(boolean customDecodeUrl) {
+		decodeUrl = customDecodeUrl;
+	}
+
+	/**
 	 * 获取Cookie管理器，用于自定义Cookie管理
 	 *
 	 * @return {@link CookieManager}
-	 * @since 4.1.0
 	 * @see GlobalCookieManager#getCookieManager()
+	 * @since 4.1.0
 	 */
 	public static CookieManager getCookieManager() {
 		return GlobalCookieManager.getCookieManager();
@@ -139,8 +164,8 @@ public class HttpGlobalConfig implements Serializable {
 	 * 自定义{@link CookieManager}
 	 *
 	 * @param customCookieManager 自定义的{@link CookieManager}
-	 * @since 4.5.14
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
+	 * @since 4.5.14
 	 */
 	synchronized public static void setCookieManager(CookieManager customCookieManager) {
 		GlobalCookieManager.setCookieManager(customCookieManager);
@@ -149,8 +174,8 @@ public class HttpGlobalConfig implements Serializable {
 	/**
 	 * 关闭Cookie
 	 *
-	 * @since 4.1.9
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
+	 * @since 4.1.9
 	 */
 	synchronized public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
@@ -164,7 +189,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @since 5.7.4
 	 */
 	synchronized public static void allowPatch() {
-		if(isAllowPatch){
+		if (isAllowPatch) {
 			return;
 		}
 		final Field methodsField = ReflectUtil.getField(HttpURLConnection.class, "methods");
@@ -181,7 +206,7 @@ public class HttpGlobalConfig implements Serializable {
 
 		// 检查注入是否成功
 		final Object staticFieldValue = ReflectUtil.getStaticFieldValue(methodsField);
-		if(false == ArrayUtil.equals(methods, staticFieldValue)){
+		if (false == ArrayUtil.equals(methods, staticFieldValue)) {
 			throw new HttpException("Inject value to field [methods] failed!");
 		}
 

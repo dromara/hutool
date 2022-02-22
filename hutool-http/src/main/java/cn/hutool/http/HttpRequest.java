@@ -12,7 +12,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.body.BytesBody;
@@ -129,18 +128,24 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 构建一个HTTP请求
+	 * 构建一个HTTP请求<br>
+	 * 对于传入的URL，可以自定义是否解码已经编码的内容，设置见{@link HttpGlobalConfig#setDecodeUrl(boolean)}<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果{@link HttpGlobalConfig#isDecodeUrl()}为{@code true}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
 	 *
 	 * @param url URL链接，默认自动编码URL中的参数等信息
 	 * @return HttpRequest
 	 * @since 5.7.18
 	 */
 	public static HttpRequest of(String url) {
-		return of(url, CharsetUtil.CHARSET_UTF_8);
+		return of(url, HttpGlobalConfig.isDecodeUrl() ? DEFAULT_CHARSET : null);
 	}
 
 	/**
-	 * 构建一个HTTP请求
+	 * 构建一个HTTP请求<br>
+	 * 对于传入的URL，可以自定义是否解码已经编码的内容。<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果charset参数不为{@code null}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
 	 *
 	 * @param url     URL链接
 	 * @param charset 编码，如果为{@code null}不自动解码编码URL
@@ -266,7 +271,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 构造，URL编码默认使用UTF-8
 	 *
 	 * @param url URL
+	 * @deprecated 请使用 {@link #of(String)}
 	 */
+	@Deprecated
 	public HttpRequest(String url) {
 		this(UrlBuilder.ofHttp(url));
 	}
