@@ -167,7 +167,7 @@ public class CoordinateUtil {
 		dlng = (dlng * 180.0) / (RADIUS / sqrtMagic * Math.cos(lat / 180.0 * PI) * PI);
 		dlat = (dlat * 180.0) / ((RADIUS * (1 - CORRECTION_PARAM)) / (magic * sqrtMagic) * PI);
 
-		if(!isPlus){
+		if(false == isPlus){
 			dlng = - dlng;
 			dlat = - dlat;
 		}
