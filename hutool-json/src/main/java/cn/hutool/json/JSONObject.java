@@ -719,6 +719,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
 			XML.toJSONObject(this, jsonStr, false);
+			return;
 		}
 		init(new JSONTokener(StrUtil.trim(source), this.config));
 	}
