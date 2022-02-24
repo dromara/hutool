@@ -1,36 +1,37 @@
 package cn.hutool.core.codec;
 
-import java.math.BigInteger;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.exceptions.ValidateException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 
 /**
- * @author lin
- * Inspired from https://github.com/adamcaudill/Base58Check/blob/master/src/Base58Check/Base58CheckEncoding.cs
  * Base58工具类，提供Base58的编码和解码方案<br>
+ * 参考： https://github.com/Anujraval24/Base58Encoding<br>
+ * 规范见：https://en.bitcoin.it/wiki/Base58Check_encoding
+ *
+ * @author lin， looly
  * @since 5.7.22
  */
 public class Base58 {
 
-
-	private static final String ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-	private static final char[] ALPHABET_ARRAY = ALPHABET.toCharArray();
-	private static final BigInteger BASE_SIZE = BigInteger.valueOf(ALPHABET_ARRAY.length);
 	private static final int CHECKSUM_SIZE = 4;
 
 	// -------------------------------------------------------------------- encode
 
 	/**
-	 * Base58编码
+	 * Base58编码<br>
+	 * 包含版本位和校验位
 	 *
-	 * @param data 被编码的数组，添加校验和。
+	 * @param version 编码版本，{@code null}表示不包含版本位
+	 * @param data    被编码的数组，添加校验和。
 	 * @return 编码后的字符串
-	 * @since 5.7.22
 	 */
-	public static String encode(byte[] data) throws NoSuchAlgorithmException {
-		return encodePlain(addChecksum(data));
+	public static String encodeChecked(Integer version, byte[] data) {
+		return encode(addChecksum(version, data));
 	}
 
 	/**
@@ -38,114 +39,114 @@ public class Base58 {
 	 *
 	 * @param data 被编码的数据，不带校验和。
 	 * @return 编码后的字符串
-	 * @since 5.7.22
 	 */
-	public static String encodePlain(byte[] data) {
-		BigInteger intData;
-		try {
-			intData = new BigInteger(1, data);
-		} catch (NumberFormatException e) {
-			return "";
-		}
-		StringBuilder result = new StringBuilder();
-		while (intData.compareTo(BigInteger.ZERO) > 0) {
-			BigInteger[] quotientAndRemainder = intData.divideAndRemainder(BASE_SIZE);
-			BigInteger quotient = quotientAndRemainder[0];
-			BigInteger remainder = quotientAndRemainder[1];
-			intData = quotient;
-			result.insert(0, ALPHABET_ARRAY[remainder.intValue()]);
-		}
-		for (int i = 0; i < data.length && data[i] == 0; i++) {
-			result.insert(0, '1');
-		}
-		return result.toString();
+	public static String encode(byte[] data) {
+		return Base58Codec.INSTANCE.encode(data);
 	}
 	// -------------------------------------------------------------------- decode
 
 	/**
-	 * Base58编码
+	 * Base58解码<br>
+	 * 解码包含标志位验证和版本呢位去除
 	 *
 	 * @param encoded 被解码的base58字符串
 	 * @return 解码后的bytes
-	 * @since 5.7.22
+	 * @throws ValidateException 标志位验证错误抛出此异常
 	 */
-	public static byte[] decode(String encoded) throws NoSuchAlgorithmException {
-		byte[] valueWithChecksum = decodePlain(encoded);
-		byte[] value = verifyAndRemoveChecksum(valueWithChecksum);
-		if (value == null) {
-			throw new IllegalArgumentException("Base58 checksum is invalid");
+	public static byte[] decodeChecked(CharSequence encoded) throws ValidateException {
+		try {
+			return decodeChecked(encoded, true);
+		} catch (ValidateException ignore) {
+			return decodeChecked(encoded, false);
 		}
-		return value;
 	}
 
 	/**
-	 * Base58编码
+	 * Base58解码<br>
+	 * 解码包含标志位验证和版本呢位去除
 	 *
-	 * @param encoded 被解码的base58字符串
+	 * @param encoded     被解码的base58字符串
+	 * @param withVersion 是否包含版本位
 	 * @return 解码后的bytes
-	 * @since 5.7.22
+	 * @throws ValidateException 标志位验证错误抛出此异常
 	 */
-	public static byte[] decodePlain(String encoded) {
-		if (encoded.length() == 0) {
-			return new byte[0];
-		}
-		BigInteger intData = BigInteger.ZERO;
-		int leadingZeros = 0;
-		for (int i = 0; i < encoded.length(); i++) {
-			char current = encoded.charAt(i);
-			int digit = ALPHABET.indexOf(current);
-			if (digit == -1) {
-				throw new IllegalArgumentException(String.format("Invalid Base58 character `%c` at position %d", current, i));
-			}
-			intData = (intData.multiply(BASE_SIZE)).add(BigInteger.valueOf(digit));
-		}
+	public static byte[] decodeChecked(CharSequence encoded, boolean withVersion) throws ValidateException {
+		byte[] valueWithChecksum = decode(encoded);
+		return verifyAndRemoveChecksum(valueWithChecksum, withVersion);
+	}
 
-		for (int i = 0; i < encoded.length(); i++) {
-			char current = encoded.charAt(i);
-			if (current == '1') {
-				leadingZeros++;
-			} else {
-				break;
-			}
+	/**
+	 * Base58解码
+	 *
+	 * @param encoded 被编码的base58字符串
+	 * @return 解码后的bytes
+	 */
+	public static byte[] decode(CharSequence encoded) {
+		return Base58Codec.INSTANCE.decode(encoded);
+	}
+
+	/**
+	 * 验证并去除验证位和版本位
+	 *
+	 * @param data        编码的数据
+	 * @param withVersion 是否包含版本位
+	 * @return 载荷数据
+	 */
+	private static byte[] verifyAndRemoveChecksum(byte[] data, boolean withVersion) {
+		final byte[] payload = Arrays.copyOfRange(data, withVersion ? 1 : 0, data.length - CHECKSUM_SIZE);
+		final byte[] checksum = Arrays.copyOfRange(data, data.length - CHECKSUM_SIZE, data.length);
+		final byte[] expectedChecksum = checksum(payload);
+		if (false == Arrays.equals(checksum, expectedChecksum)) {
+			throw new ValidateException("Base58 checksum is invalid");
 		}
-		byte[] bytesData;
-		if (intData.equals(BigInteger.ZERO)) {
-			bytesData = new byte[0];
+		return payload;
+	}
+
+	/**
+	 * 数据 + 校验码
+	 *
+	 * @param version 版本，{@code null}表示不添加版本位
+	 * @param payload Base58数据（不含校验码）
+	 * @return Base58数据
+	 */
+	private static byte[] addChecksum(Integer version, byte[] payload) {
+		final byte[] addressBytes;
+		if (null != version) {
+			addressBytes = new byte[1 + payload.length + CHECKSUM_SIZE];
+			addressBytes[0] = (byte) version.intValue();
+			System.arraycopy(payload, 0, addressBytes, 1, payload.length);
 		} else {
-			bytesData = intData.toByteArray();
+			addressBytes = new byte[payload.length + CHECKSUM_SIZE];
+			System.arraycopy(payload, 0, addressBytes, 0, payload.length);
 		}
-		//Should we cut the sign byte ? - https://bitcoinj.googlecode.com/git-history/216deb2d35d1a128a7f617b91f2ca35438aae546/lib/src/com/google/bitcoin/core/Base58.java
-		boolean stripSignByte = bytesData.length > 1 && bytesData[0] == 0 && bytesData[1] < 0;
-		byte[] decoded = new byte[bytesData.length - (stripSignByte ? 1 : 0) + leadingZeros];
-		System.arraycopy(bytesData, stripSignByte ? 1 : 0, decoded, leadingZeros, decoded.length - leadingZeros);
-		return decoded;
+		final byte[] checksum = checksum(payload);
+		System.arraycopy(checksum, 0, addressBytes, addressBytes.length - CHECKSUM_SIZE, CHECKSUM_SIZE);
+		return addressBytes;
 	}
 
-	private static byte[] verifyAndRemoveChecksum(byte[] data) throws NoSuchAlgorithmException {
-		byte[] value = Arrays.copyOfRange(data, 0, data.length - CHECKSUM_SIZE);
-		byte[] checksum = Arrays.copyOfRange(data, data.length - CHECKSUM_SIZE, data.length);
-		byte[] expectedChecksum = getChecksum(value);
-		return Arrays.equals(checksum, expectedChecksum) ? value : null;
-	}
-
-	private static byte[] addChecksum(byte[] data) throws NoSuchAlgorithmException {
-		byte[] checksum = getChecksum(data);
-		byte[] result = new byte[data.length + checksum.length];
-		System.arraycopy(data, 0, result, 0, data.length);
-		System.arraycopy(checksum, 0, result, data.length, checksum.length);
-		return result;
-	}
-
-	private static byte[] getChecksum(byte[] data) throws NoSuchAlgorithmException {
-		byte[] hash = hash256(data);
-		hash = hash256(hash);
+	/**
+	 * 获取校验码<br>
+	 * 计算规则为对数据进行两次sha256计算，然后取{@link #CHECKSUM_SIZE}长度
+	 *
+	 * @param data 数据
+	 * @return 校验码
+	 */
+	private static byte[] checksum(byte[] data) {
+		byte[] hash = hash256(hash256(data));
 		return Arrays.copyOfRange(hash, 0, CHECKSUM_SIZE);
 	}
 
-	private static byte[] hash256(byte[] data) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		md.update(data);
-		return md.digest();
+	/**
+	 * 计算数据的SHA-256值
+	 *
+	 * @param data 数据
+	 * @return sha-256值
+	 */
+	private static byte[] hash256(byte[] data) {
+		try {
+			return MessageDigest.getInstance("SHA-256").digest(data);
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException(e);
+		}
 	}
-
 }
