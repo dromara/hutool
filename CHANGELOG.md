@@ -15,6 +15,7 @@
 * 【db     】     MetaUtil增加getTableMeta重载（issue#2157@Github）
 * 【http   】     增加HttpGlobalConfig.setDecodeUrl（issue#I4U8YQ@Gitee）
 * 【core   】     增加Base58（pr#2162@Github）
+* 【core   】     增加AntPathMatcher（issue#I4T7K5@Gitee）
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）

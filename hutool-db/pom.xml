@@ -103,6 +103,14 @@
 			<version>${mongo.version}</version>
 			<optional>true</optional>
 		</dependency>
+		<!--
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<version>4.5.0</version>
+			<optional>true</optional>
+		</dependency>
+		-->
 		<!-- Redis Java客户端 -->
 		<dependency>
 			<groupId>redis.clients</groupId>
@@ -155,13 +163,13 @@
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>9.4.1.jre8</version>
+			<version>10.2.0.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.32</version>
+			<version>1.7.36</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
