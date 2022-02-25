@@ -143,57 +143,78 @@ public class AntPathMatcher {
 		return this;
 	}
 
+	/**
+	 * 判断给定路径是否是表达式
+	 *
+	 * @param path 路径
+	 * @return 是否为表达式
+	 */
 	public boolean isPattern(String path) {
 		if (path == null) {
 			return false;
 		}
 		boolean uriVar = false;
-		for (int i = 0; i < path.length(); i++) {
-			char c = path.charAt(i);
+		final int length = path.length();
+		char c;
+		for (int i = 0; i < length; i++) {
+			c = path.charAt(i);
+			// 含有通配符
 			if (c == '*' || c == '?') {
 				return true;
 			}
-			if (c == '{') {
+			if (c == CharPool.DELIM_START) {
 				uriVar = true;
 				continue;
 			}
-			if (c == '}' && uriVar) {
+			if (c == CharPool.DELIM_END && uriVar) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * 给定路径是否匹配表达式
+	 *
+	 * @param pattern 表达式
+	 * @param path 路径
+	 * @return 是否匹配
+	 */
 	public boolean match(String pattern, String path) {
 		return doMatch(pattern, path, true, null);
 	}
 
+	/**
+	 * 前置部分匹配
+	 *
+	 * @param pattern 表达式
+	 * @param path 路径
+	 * @return 是否匹配
+	 */
 	public boolean matchStart(String pattern, String path) {
 		return doMatch(pattern, path, false, null);
 	}
 
 	/**
-	 * Actually match the given {@code path} against the given {@code pattern}.
+	 * 执行匹配，判断给定的{@code path}是否匹配{@code pattern}
 	 *
-	 * @param pattern              the pattern to match against
-	 * @param path                 the path to test
-	 * @param fullMatch            whether a full pattern match is required (else a pattern match
-	 *                             as far as the given base path goes is sufficient)
+	 * @param pattern              表达式
+	 * @param path                 路径
+	 * @param fullMatch            是否全匹配。{@code true} 表示全路径匹配，{@code false}表示只匹配开始
 	 * @param uriTemplateVariables 变量映射
-	 * @return {@code true} if the supplied {@code path} matched, {@code false} if it didn't
+	 * @return {@code true} 表示提供的 {@code path} 匹配, {@code false} 表示不匹配
 	 */
 	protected boolean doMatch(String pattern, String path, boolean fullMatch, Map<String, String> uriTemplateVariables) {
-
 		if (path == null || path.startsWith(this.pathSeparator) != pattern.startsWith(this.pathSeparator)) {
 			return false;
 		}
 
-		String[] pattDirs = tokenizePattern(pattern);
-		if (fullMatch && this.caseSensitive && !isPotentialMatch(path, pattDirs)) {
+		final String[] pattDirs = tokenizePattern(pattern);
+		if (fullMatch && this.caseSensitive && false == isPotentialMatch(path, pattDirs)) {
 			return false;
 		}
 
-		String[] pathDirs = tokenizePath(path);
+		final String[] pathDirs = tokenizePath(path);
 		int pattIdxStart = 0;
 		int pattIdxEnd = pattDirs.length - 1;
 		int pathIdxStart = 0;
@@ -224,7 +245,7 @@ public class AntPathMatcher {
 				return true;
 			}
 			for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-				if (!pattDirs[i].equals("**")) {
+				if (false == pattDirs[i].equals("**")) {
 					return false;
 				}
 			}
@@ -232,7 +253,7 @@ public class AntPathMatcher {
 		} else if (pattIdxStart > pattIdxEnd) {
 			// String not exhausted, but pattern is. Failure.
 			return false;
-		} else if (!fullMatch && "**".equals(pattDirs[pattIdxStart])) {
+		} else if (false == fullMatch && "**".equals(pattDirs[pattIdxStart])) {
 			// Path start definitely matches due to "**" part in pattern.
 			return true;
 		}
@@ -252,7 +273,7 @@ public class AntPathMatcher {
 		if (pathIdxStart > pathIdxEnd) {
 			// String is exhausted
 			for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-				if (!pattDirs[i].equals("**")) {
+				if (false == pattDirs[i].equals("**")) {
 					return false;
 				}
 			}
@@ -300,7 +321,7 @@ public class AntPathMatcher {
 		}
 
 		for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-			if (!pattDirs[i].equals("**")) {
+			if (false == pattDirs[i].equals("**")) {
 				return false;
 			}
 		}
