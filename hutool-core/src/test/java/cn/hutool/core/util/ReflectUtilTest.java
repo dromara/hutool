@@ -1,8 +1,13 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.util.ClassUtilTest.TestSubClass;
+import lombok.Data;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -91,33 +96,77 @@ public class ReflectUtilTest {
 
 	@Test
 	public void noneStaticInnerClassTest() {
-		final TestAClass testAClass = ReflectUtil.newInstanceIfPossible(TestAClass.class);
+		final NoneStaticClass testAClass = ReflectUtil.newInstanceIfPossible(NoneStaticClass.class);
 		Assert.assertNotNull(testAClass);
 		Assert.assertEquals(2, testAClass.getA());
 	}
 
+	@Data
 	static class TestClass {
 		private int a;
-
-		public int getA() {
-			return a;
-		}
-
-		public void setA(int a) {
-			this.a = a;
-		}
 	}
 
+	@Data
 	@SuppressWarnings("InnerClassMayBeStatic")
-	class TestAClass {
+	class NoneStaticClass {
 		private int a = 2;
+	}
 
-		public int getA() {
-			return a;
+	@Test
+	@Ignore
+	public void getMethodBenchTest(){
+		// 预热
+		getMethod(TestBenchClass.class, false, "getH");
+
+		final TimeInterval timer = DateUtil.timer();
+		timer.start();
+		for (int i = 0; i < 100000000; i++) {
+			ReflectUtil.getMethod(TestBenchClass.class, false, "getH");
+		}
+		Console.log(timer.interval());
+
+		timer.restart();
+		for (int i = 0; i < 100000000; i++) {
+			getMethod(TestBenchClass.class, false, "getH");
+		}
+		Console.log(timer.interval());
+	}
+
+	@Data
+	static class TestBenchClass {
+		private int a;
+		private String b;
+		private String c;
+		private String d;
+		private String e;
+		private String f;
+		private String g;
+		private String h;
+		private String i;
+		private String j;
+		private String k;
+		private String l;
+		private String m;
+		private String n;
+	}
+
+	public static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) throws SecurityException {
+		if (null == clazz || StrUtil.isBlank(methodName)) {
+			return null;
 		}
 
-		public void setA(int a) {
-			this.a = a;
+		Method res = null;
+		final Method[] methods = ReflectUtil.getMethods(clazz);
+		if (ArrayUtil.isNotEmpty(methods)) {
+			for (Method method : methods) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
+						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+						&& (res == null
+						|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
+				}
+			}
 		}
+		return res;
 	}
 }
