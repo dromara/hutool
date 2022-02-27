@@ -12,6 +12,18 @@ import java.util.function.Function;
 public class CompareUtil {
 
 	/**
+	 * 获取自然排序器，即默认排序器
+	 *
+	 * @param <E> 排序节点类型
+	 * @return 默认排序器
+	 * @since 5.7.21
+	 */
+	@SuppressWarnings("unchecked")
+	public static <E extends Comparable<? super E>> Comparator<E> naturalComparator() {
+		return ComparableComparator.INSTANCE;
+	}
+
+	/**
 	 * 对象比较，比较结果取决于comparator，如果被比较对象为null，传入的comparator对象应处理此情况<br>
 	 * 如果传入comparator为null，则使用默认规则比较（此时被比较对象必须实现Comparable接口）
 	 *

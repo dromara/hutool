@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author Looly, Sebastian Ruhleder, sebastian@seruco.io
  * @since 4.5.9
  */
-public class Base62Codec implements Serializable{
+public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byte[]>, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private static final int STANDARD_BASE = 256;
@@ -86,6 +86,7 @@ public class Base62Codec implements Serializable{
 	 * @param message 被编码的消息
 	 * @return Base62内容
 	 */
+	@Override
 	public byte[] encode(byte[] message) {
 		final byte[] indices = convert(message, STANDARD_BASE, TARGET_BASE);
 		return translate(indices, alphabet);
@@ -97,6 +98,7 @@ public class Base62Codec implements Serializable{
 	 * @param encoded Base62内容
 	 * @return 消息
 	 */
+	@Override
 	public byte[] decode(byte[] encoded) {
 		final byte[] prepared = translate(encoded, lookup);
 		return convert(prepared, TARGET_BASE, STANDARD_BASE);

@@ -50,13 +50,25 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 转换为Calendar对象
+	 * 转换为Calendar对象，使用当前默认时区
 	 *
 	 * @param millis 时间戳
 	 * @return Calendar对象
 	 */
 	public static Calendar calendar(long millis) {
-		final Calendar cal = Calendar.getInstance();
+		return calendar(millis, TimeZone.getDefault());
+	}
+
+	/**
+	 * 转换为Calendar对象
+	 *
+	 * @param millis 时间戳
+	 * @param timeZone 时区
+	 * @return Calendar对象
+	 * @since 5.7.22
+	 */
+	public static Calendar calendar(long millis, TimeZone timeZone) {
+		final Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTimeInMillis(millis);
 		return cal;
 	}

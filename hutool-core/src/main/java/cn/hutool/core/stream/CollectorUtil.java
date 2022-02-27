@@ -14,7 +14,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -114,7 +113,8 @@ public class CollectorUtil {
 		if (downstream.characteristics().contains(Collector.Characteristics.IDENTITY_FINISH)) {
 			return new SimpleCollector<>(mangledFactory, accumulator, merger, CH_ID);
 		} else {
-			UnaryOperator<A> downstreamFinisher = (UnaryOperator<A>) downstream.finisher();
+			@SuppressWarnings("unchecked")
+			Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
 			Function<Map<K, A>, M> finisher = intermediate -> {
 				intermediate.replaceAll((k, v) -> downstreamFinisher.apply(v));
 				@SuppressWarnings("unchecked")

@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 3.2.0
  */
-public class Base64Encoder {
+public class Base64Encoder{
 
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/** 标准编码表 */

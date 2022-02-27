@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
 
-import static cn.hutool.json.JSONConverter.jsonConvert;
-
 /**
  * JSON数组<br>
  * JSON数组是表示中括号括住的数据表现形式<br>
@@ -246,7 +244,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override

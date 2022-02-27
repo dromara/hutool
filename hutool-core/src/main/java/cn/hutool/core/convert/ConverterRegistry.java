@@ -135,7 +135,7 @@ public class ConverterRegistry implements Serializable {
 		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
 			try {
 				Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
-				if(null != type){
+				if (null != type) {
 					putCustom(type, converter);
 				}
 			} catch (Exception e) {
@@ -265,7 +265,6 @@ public class ConverterRegistry implements Serializable {
 				return (T) value;
 			}
 		}
-
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = convertSpecial(type, rowType, value, defaultValue);

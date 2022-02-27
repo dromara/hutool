@@ -20,26 +20,18 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 时间工具类
  *
+ * @author xiaoleilu
  * @see LocalDateTimeUtil java8日志工具类
  * @see DatePattern 日期常用格式工具类
- *
- * @author xiaoleilu
  */
 public class DateUtil extends CalendarUtil {
 
@@ -1890,13 +1882,43 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 俩个时间区间取交集
+	 *
+	 * @param start 开始区间
+	 * @param end   结束区间
+	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
+	 */
+	public static List<DateTime> rangeContains(DateRange start, DateRange end) {
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		return startDateTimes.stream().filter(endDateTimes::contains).collect(Collectors.toList());
+	}
+
+	/**
+	 * 俩个时间区间取差集(end - start)
+	 *
+	 * @param start 开始区间
+	 * @param end   结束区间
+	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
+	 */
+	public static List<DateTime> rangeNotContains(DateRange start, DateRange end) {
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		return endDateTimes.stream().filter(item -> !startDateTimes.contains(item)).collect(Collectors.toList());
+	}
+
+	/**
 	 * 按日期范围遍历，执行 function
 	 *
 	 * @param start 起始日期时间（包括）
 	 * @param end   结束日期时间
 	 * @param unit  步进单位
 	 * @param func  每次遍历要执行的 function
-	 * @param <T> Date经过函数处理结果类型
+	 * @param <T>   Date经过函数处理结果类型
 	 * @return 结果列表
 	 * @since 5.7.21
 	 */
@@ -1905,7 +1927,7 @@ public class DateUtil extends CalendarUtil {
 			return Collections.emptyList();
 		}
 		ArrayList<T> list = new ArrayList<>();
-		for(DateTime date : range(start, end, unit)){
+		for (DateTime date : range(start, end, unit)) {
 			list.add(func.apply(date));
 		}
 		return list;
@@ -1928,7 +1950,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 创建日期范围生成器
+	 * 根据步进单位获取起始日期时间和结束日期时间的时间区间集合
 	 *
 	 * @param start 起始日期时间
 	 * @param end   结束日期时间
@@ -1940,7 +1962,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 创建日期范围生成器
+	 * 根据步进单位和步进获取起始日期时间和结束日期时间的时间区间集合
 	 *
 	 * @param start 起始日期时间
 	 * @param end   结束日期时间

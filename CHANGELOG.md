@@ -2,7 +2,34 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.21 (2022-02-10)
+# 5.7.22 (2022-02-27)
+
+### 🐣新特性
+* 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
+* 【extra  】     Ftp增加构造（issue#I4TKXP@gitee）
+* 【core   】     GenericBuilder支持Map构建（pr#540@Github）
+* 【json   】     新增TemporalAccessorSerializer
+* 【core   】     使多个xxxBuilder实现Builder接口，扩展CheckedUtil（pr#545@Gitee）
+* 【core   】     CheckedUtil删除第二个参数为RuntimeException的方法
+* 【core   】     FileUtil增加getTotalLines方法
+* 【db     】     MetaUtil增加getTableMeta重载（issue#2157@Github）
+* 【http   】     增加HttpGlobalConfig.setDecodeUrl（issue#I4U8YQ@Gitee）
+* 【core   】     增加Base58（pr#2162@Github）
+* 【core   】     增加AntPathMatcher（issue#I4T7K5@Gitee）
+* 【core   】     StrJoiner修改toString策略，调用不再修改Appendable
+* 【core   】     StrJoiner增加length和merge方法
+
+### 🐞Bug修复
+* 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）
+* 【core   】     修复SystemPropsUtil.getInt返回long问题（pr#546@Gitee）
+* 【crypto 】     修复SM2.getD前导0问题（pr#2149@Github）
+* 【core   】     修复ChineseDate在1970年之前农历差一天问题（issue#I4UTPK@Gitee）
+* 【core   】     修复CoordinateUtil精准问题及转换bug（pr#551@Gitee）
+* 【json   】     修复JSONObject解析XML后没有返回的bug（issue#2160@Github）
+* 【extra  】     修复GanymedUtil错误信息读取位置问题（issue#I4VDZ2@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.7.21 (2022-02-14)
 
 ### 🐣新特性
 * 【extra  】     增加jetbrick模板支持
@@ -18,12 +45,20 @@
 * 【core   】     IntMap和LongMap使用位运算快速求解取余运算(pr#2123@Github)
 * 【core   】     新增通用builder类：GenericBuilder(pr#526@Gitee)
 * 【core   】     新增copySafely方法与mkdirsSafely方法(pr#527@Gitee)
+* 【core   】     新增MetroHash(pr#532@Gitee)
+* 【core   】     SpringUtil增加publishEvent重载(pr#2139@Github)
+* 【core   】     DateUtil增加rangeContains、rangeNotContains(pr#537@Gitee)
+* 【core   】     Resource增加isModified默认方法
+* 【core   】     增加VfsResource
+* 【json   】     JSONConfig增加setKeyComparator、setNatureKeyComparator方法，支持自定义排序（issue#I4RBZ4@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ChineseDate农历获取正月出现数组越界BUG（issue#2112@Github）
 * 【extra  】     修复EmojiUtil.toHtmlHex()方法（pr#519@Gitee）
 * 【system 】     修复CpuInfo.getUsed()方法（issue#2116@Github）
 * 【dfa    】     修复密集匹配和贪婪匹配冲突问题（issue#2126@Github）
+* 【db     】     修复c3p0丢失信息问题（issue#I4T7XZ@Gitee）
+* 【http   】     修复Action中HttpExchange没有关闭问题
 * 【http   】     修复Action中HttpExchange没有关闭问题
 
 -------------------------------------------------------------------------------------------------------------

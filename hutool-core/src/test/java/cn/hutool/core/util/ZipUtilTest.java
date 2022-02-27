@@ -186,4 +186,13 @@ public class ZipUtilTest {
 		ZipUtil.zip(out, new String[]{"sm1_alias.txt"},
 				new InputStream[]{FileUtil.getInputStream("d:/test/sm4_1.txt")});
 	}
+
+	@Test
+	@Ignore
+	public void zipMultiFileTest(){
+		File[] dd={FileUtil.file("d:\\test\\qr_a.jpg")
+				,FileUtil.file("d:\\test\\qr_b.jpg")};
+
+		ZipUtil.zip(FileUtil.file("d:\\test\\qr.zip"),false,dd);
+	}
 }

@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -41,7 +42,11 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -568,6 +573,31 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 计算文件的总行数<br>
+	 * 读取文件采用系统默认编码，一般乱码不会造成行数错误。
+	 *
+	 * @param file 文件
+	 * @return 该文件总行数
+	 * @since 5.7.22
+	 */
+	public static int getTotalLines(File file) {
+		if (false == isFile(file)) {
+			throw new IORuntimeException("Input must be a File");
+		}
+		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
+			// 设置起始为1
+			lineNumberReader.setLineNumber(1);
+			// 跳过文件中内容
+			//noinspection ResultOfMethodCallIgnored
+			lineNumberReader.skip(Long.MAX_VALUE);
+			// 获取当前行号
+			return lineNumberReader.getLineNumber();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
 	 * 给定文件或目录的最后修改时间是否晚于给定时间
 	 *
 	 * @param file      文件或目录
@@ -889,6 +919,54 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File createTempFile(File dir) throws IORuntimeException {
 		return createTempFile("hutool", null, dir, true);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].tmp。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile() throws IORuntimeException {
+		return createTempFile("hutool", null, null, true);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile(String suffix, boolean isReCreat) throws IORuntimeException {
+		return createTempFile("hutool", suffix, null, isReCreat);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
+	 * @param prefix    前缀，至少3个字符
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile(String prefix, String suffix, boolean isReCreat) throws IORuntimeException {
+		return createTempFile(prefix, suffix, null, isReCreat);
 	}
 
 	/**

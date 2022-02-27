@@ -452,4 +452,26 @@ public class FileUtilTest {
 		List<String> list = ListUtil.toList("a", "b", "c");
 		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.CHARSET_UTF_8);
 	}
+
+	@Test
+	@Ignore
+	public void createTempFileTest(){
+		File nullDirTempFile = FileUtil.createTempFile();
+		Assert.assertTrue(nullDirTempFile.exists());
+
+		File suffixDirTempFile = FileUtil.createTempFile(".xlsx",true);
+		Assert.assertEquals("xlsx", FileUtil.getSuffix(suffixDirTempFile));
+
+		File prefixDirTempFile = FileUtil.createTempFile("prefix",".xlsx",true);
+		Assert.assertTrue(FileUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
+	}
+
+	@Test
+	@Ignore
+	public void getTotalLinesTest() {
+		// 千万行秒级内返回
+		final int totalLines = FileUtil.getTotalLines(FileUtil.file(""));
+		Assert.assertEquals(10000000, totalLines);
+	}
+
 }

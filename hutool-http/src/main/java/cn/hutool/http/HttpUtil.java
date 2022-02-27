@@ -75,7 +75,7 @@ public class HttpUtil {
 	 * @since 3.0.9
 	 */
 	public static HttpRequest createRequest(Method method, String url) {
-		return new HttpRequest(url).method(method);
+		return HttpRequest.of(url).method(method);
 	}
 
 	/**

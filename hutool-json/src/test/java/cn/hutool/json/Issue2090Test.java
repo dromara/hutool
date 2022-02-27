@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 
 /**
@@ -27,6 +29,30 @@ public class Issue2090Test {
 		LocalDate localDate = LocalDate.now();
 		final JSONObject jsonObject = JSONUtil.parseObj(localDate);
 		Assert.assertNotNull(jsonObject.toString());
+	}
+
+	@Test
+	public void toBeanLocalDateTest(){
+		LocalDate d = LocalDate.now();
+		final JSONObject obj = JSONUtil.parseObj(d);
+		LocalDate d2 = obj.toBean(LocalDate.class);
+		Assert.assertEquals(d, d2);
+	}
+
+	@Test
+	public void toBeanLocalDateTimeTest(){
+		LocalDateTime d = LocalDateTime.now();
+		final JSONObject obj = JSONUtil.parseObj(d);
+		LocalDateTime d2 = obj.toBean(LocalDateTime.class);
+		Assert.assertEquals(d, d2);
+	}
+
+	@Test
+	public void toBeanLocalTimeTest(){
+		LocalTime d = LocalTime.now();
+		final JSONObject obj = JSONUtil.parseObj(d);
+		LocalTime d2 = obj.toBean(LocalTime.class);
+		Assert.assertEquals(d, d2);
 	}
 
 	@Test

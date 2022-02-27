@@ -18,7 +18,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	// 一些特殊缓存，例如使用了LinkedHashMap的缓存，由于get方法也会改变Map的结构，导致无法使用读写锁
-	// 最优的解决方案是使用Guava的ConcurrentLinkedHashMap，此处使用简化的互斥锁
+	// TODO 最优的解决方案是使用Guava的ConcurrentLinkedHashMap，此处使用简化的互斥锁
 	protected final ReentrantLock lock = new ReentrantLock();
 
 	@Override
@@ -110,6 +110,16 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 		lock.lock();
 		try {
 			cacheMap.clear();
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public String toString() {
+		lock.lock();
+		try {
+			return super.toString();
 		} finally {
 			lock.unlock();
 		}

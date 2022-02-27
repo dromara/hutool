@@ -22,12 +22,12 @@ public class CoordinateUtil {
 	/**
 	 * 坐标转换参数：(火星坐标系与百度坐标系转换的中间量)
 	 */
-	public static final double X_PI = 3.14159265358979324 * 3000.0 / 180.0;
+	public static final double X_PI = 3.1415926535897932384626433832795 * 3000.0 / 180.0;
 
 	/**
 	 * 坐标转换参数：π
 	 */
-	public static final double PI = 3.1415926535897932384626D;
+	public static final double PI = 3.1415926535897932384626433832795D;
 
 	/**
 	 * 地球半径（Krasovsky 1940）
@@ -280,7 +280,7 @@ public class CoordinateUtil {
 		 */
 		public Coordinate offset(Coordinate offset){
 			this.lng += offset.lng;
-			this.lat += offset.lng;
+			this.lat += offset.lat;
 			return this;
 		}
 

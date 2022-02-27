@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Date;
+
 public class ChineseDateTest {
 
 	@Test
@@ -112,5 +114,29 @@ public class ChineseDateTest {
 		ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
 		final String chineseMonth = springFestival.getChineseMonth();
 		Assert.assertEquals("一月", chineseMonth);
+	}
+
+	@Test
+	public void day19700101Test(){
+		// https://gitee.com/dromara/hutool/issues/I4UTPK
+		Date date = DateUtil.parse("1970-01-01");
+		ChineseDate chineseDate = new ChineseDate(date);
+		Assert.assertEquals("己酉鸡年 冬月廿四", chineseDate.toString());
+
+		date = DateUtil.parse("1970-01-02");
+		chineseDate = new ChineseDate(date);
+		Assert.assertEquals("己酉鸡年 冬月廿五", chineseDate.toString());
+
+		date = DateUtil.parse("1970-01-03");
+		chineseDate = new ChineseDate(date);
+		Assert.assertEquals("己酉鸡年 冬月廿六", chineseDate.toString());
+	}
+
+	@Test
+	public void day19000101Test(){
+		// 1900-01-31之前不支持
+		Date date = DateUtil.parse("1900-01-31");
+		ChineseDate chineseDate = new ChineseDate(date);
+		Assert.assertEquals("庚子鼠年 正月初一", chineseDate.toString());
 	}
 }

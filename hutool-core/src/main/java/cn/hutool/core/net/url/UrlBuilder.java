@@ -1,12 +1,12 @@
 package cn.hutool.core.net.url;
 
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,7 +26,7 @@ import java.nio.charset.Charset;
  * @see <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">Uniform Resource Identifier</a>
  * @since 5.3.1
  */
-public final class UrlBuilder implements Serializable {
+public final class UrlBuilder implements Builder<String> {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_SCHEME = "http";
 
@@ -468,6 +468,7 @@ public final class UrlBuilder implements Serializable {
 	 *
 	 * @return URL字符串
 	 */
+	@Override
 	public String build() {
 		return toURL().toString();
 	}

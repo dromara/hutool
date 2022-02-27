@@ -36,7 +36,7 @@ public class JSONUtilTest {
 	@Test(expected = JSONException.class)
 	public void parseNumberTest() {
 		JSONArray json = JSONUtil.parseArray(123L);
-		Console.log(json);
+		Assert.assertNotNull(json);
 	}
 
 	/**

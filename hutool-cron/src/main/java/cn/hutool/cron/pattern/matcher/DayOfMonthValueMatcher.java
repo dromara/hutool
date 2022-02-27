@@ -12,8 +12,6 @@ import java.util.List;
  */
 public class DayOfMonthValueMatcher extends BoolArrayValueMatcher {
 
-	private static final int[] LAST_DAYS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
 	/**
 	 * 构造
 	 *

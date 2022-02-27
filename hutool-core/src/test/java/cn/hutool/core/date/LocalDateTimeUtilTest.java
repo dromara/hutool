@@ -1,13 +1,16 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 
 public class LocalDateTimeUtilTest {
 
@@ -216,5 +219,12 @@ public class LocalDateTimeUtilTest {
 
 		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
 		Assert.assertEquals(5, weekOfYear2);
+	}
+
+	@Test
+	public void ofTest2(){
+		final Instant instant = DateUtil.parse("2022-02-22").toInstant();
+		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
+		Console.log(of);
 	}
 }

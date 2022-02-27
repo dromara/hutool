@@ -600,18 +600,18 @@ public class IterUtil {
 	/**
 	 * 返回{@link Iterator}中第一个匹配规则的值
 	 *
-	 * @param <T>     数组元素类型
-	 * @param iterator  {@link Iterator}
-	 * @param matcher 匹配接口，实现此接口自定义匹配规则
+	 * @param <T>      数组元素类型
+	 * @param iterator {@link Iterator}
+	 * @param matcher  匹配接口，实现此接口自定义匹配规则
 	 * @return 匹配元素，如果不存在匹配元素或{@link Iterator}为空，返回 {@code null}
 	 * @since 5.7.5
 	 */
 	public static <T> T firstMatch(Iterator<T> iterator, Matcher<T> matcher) {
 		Assert.notNull(matcher, "Matcher must be not null !");
 		if (null != iterator) {
-			while(iterator.hasNext()){
+			while (iterator.hasNext()) {
 				final T next = iterator.next();
-				if(matcher.match(next)){
+				if (matcher.match(next)) {
 					return next;
 				}
 			}
@@ -718,7 +718,7 @@ public class IterUtil {
 	 *
 	 * @param <E>    集合元素类型
 	 * @param iter   集合
-	 * @param filter 过滤器接口
+	 * @param filter 过滤器接口，删除{@link Filter#accept(Object)}为{@code false}的元素
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
@@ -733,6 +733,29 @@ public class IterUtil {
 			}
 		}
 		return iter;
+	}
+
+	/**
+	 * 过滤{@link Iterator}并将过滤后满足条件的元素添加到List中
+	 *
+	 * @param <E>    元素类型
+	 * @param iter   {@link Iterator}
+	 * @param filter 过滤器，保留{@link Filter#accept(Object)}为{@code true}的元素
+	 * @return ArrayList
+	 * @since 5.7.22
+	 */
+	public static <E> List<E> filterToList(Iterator<E> iter, Filter<E> filter) {
+		final List<E> result = new ArrayList<>();
+		if (null != iter) {
+			E ele;
+			while (iter.hasNext()) {
+				ele = iter.next();
+				if (null == filter || filter.accept(ele)) {
+					result.add(ele);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
