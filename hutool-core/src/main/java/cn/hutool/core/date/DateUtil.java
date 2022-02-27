@@ -2161,6 +2161,22 @@ public class DateUtil extends CalendarUtil {
 		}
 	}
 
+	/**
+	 * 检查两个时间段是否有时间重叠<br>
+	 * 重叠指两个时间段是否有交集
+	 *
+	 * @param realStartTime 第一个时间段的开始时间
+	 * @param realEndTime   第一个时间段的结束时间
+	 * @param startTime     第二个时间段的开始时间
+	 * @param endTime       第二个时间段的结束时间
+	 * @return true 表示时间有重合
+	 * @since 5.7.20
+	 */
+	public static boolean isOverlap(Date realStartTime, Date realEndTime,
+									Date startTime, Date endTime) {
+		return startTime.after(realEndTime) || endTime.before(realStartTime);
+	}
+
 	// ------------------------------------------------------------------------ Private method start
 
 	/**

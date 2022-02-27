@@ -1020,4 +1020,24 @@ public class DateUtilTest {
 		final boolean isSameWeek2 = DateUtil.isSameWeek(DateTime.of("2021-12-29", "yyyy-MM-dd"), DateTime.of("2022-01-01", "yyyy-MM-dd"), true);
 		Assert.assertTrue(isSameWeek2);
 	}
+
+	@Test
+	public void isOverlapTest() {
+		DateTime oneStartTime = DateTime.of("2022-01-01 10:10:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneEndTime = DateTime.of("2022-01-01 11:10:10", DatePattern.NORM_DATETIME_PATTERN);
+
+		DateTime oneStartTime2 = DateTime.of("2022-01-01 11:20:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneEndTime2 = DateTime.of("2022-01-01 11:30:10", DatePattern.NORM_DATETIME_PATTERN);
+
+		DateTime oneStartTime3 = DateTime.of("2022-01-01 11:40:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneEndTime3 = DateTime.of("2022-01-01 11:50:10", DatePattern.NORM_DATETIME_PATTERN);
+
+		//真实请假数据
+		DateTime realStartTime = DateTime.of("2022-01-01 11:49:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime realEndTime = DateTime.of("2022-01-01 12:00:10", DatePattern.NORM_DATETIME_PATTERN);
+
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, realStartTime, realEndTime));
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime2, oneEndTime2, realStartTime, realEndTime));
+		Assert.assertFalse(DateUtil.isOverlap(oneStartTime3, oneEndTime3, realStartTime, realEndTime));
+	}
 }
