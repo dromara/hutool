@@ -289,7 +289,7 @@ public class StrJoiner implements Appendable, Serializable {
 
 	@Override
 	public StrJoiner append(CharSequence csq) {
-		return append(csq, 0, csq.length());
+		return append(csq, 0, StrUtil.length(csq));
 	}
 
 	@Override
@@ -303,6 +303,8 @@ public class StrJoiner implements Appendable, Serializable {
 					break;
 				case NULL_STRING:
 					csq = StrUtil.NULL;
+					endExclude = StrUtil.NULL.length();
+					break;
 			}
 		}
 		try {
