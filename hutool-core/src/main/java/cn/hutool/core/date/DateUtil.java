@@ -2192,7 +2192,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param startTime     第二个时间段的开始时间
 	 * @param endTime       第二个时间段的结束时间
 	 * @return true 表示时间有重合
-	 * @since 5.7.20
+	 * @since 5.7.22
 	 */
 	public static boolean isOverlap(Date realStartTime, Date realEndTime,
 									Date startTime, Date endTime) {

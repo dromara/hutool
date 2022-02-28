@@ -1030,18 +1030,18 @@ public class DateUtilTest {
 
 	@Test
 	public void isOverlapTest() {
-		DateTime oneStartTime = DateTime.of("2022-01-01 10:10:10", DatePattern.NORM_DATETIME_PATTERN);
-		DateTime oneEndTime = DateTime.of("2022-01-01 11:10:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneStartTime = DateUtil.parse("2022-01-01 10:10:10");
+		DateTime oneEndTime = DateUtil.parse("2022-01-01 11:10:10");
 
-		DateTime oneStartTime2 = DateTime.of("2022-01-01 11:20:10", DatePattern.NORM_DATETIME_PATTERN);
-		DateTime oneEndTime2 = DateTime.of("2022-01-01 11:30:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneStartTime2 = DateUtil.parse("2022-01-01 11:20:10");
+		DateTime oneEndTime2 = DateUtil.parse("2022-01-01 11:30:10");
 
-		DateTime oneStartTime3 = DateTime.of("2022-01-01 11:40:10", DatePattern.NORM_DATETIME_PATTERN);
-		DateTime oneEndTime3 = DateTime.of("2022-01-01 11:50:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime oneStartTime3 = DateUtil.parse("2022-01-01 11:40:10");
+		DateTime oneEndTime3 = DateUtil.parse("2022-01-01 11:50:10");
 
 		//真实请假数据
-		DateTime realStartTime = DateTime.of("2022-01-01 11:49:10", DatePattern.NORM_DATETIME_PATTERN);
-		DateTime realEndTime = DateTime.of("2022-01-01 12:00:10", DatePattern.NORM_DATETIME_PATTERN);
+		DateTime realStartTime = DateUtil.parse("2022-01-01 11:49:10");
+		DateTime realEndTime = DateUtil.parse("2022-01-01 12:00:10");
 
 		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, realStartTime, realEndTime));
 		Assert.assertTrue(DateUtil.isOverlap(oneStartTime2, oneEndTime2, realStartTime, realEndTime));
