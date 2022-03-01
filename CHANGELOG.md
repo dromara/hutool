@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.22 (2022-02-27)
+# 5.7.22 (2022-03-01)
 
 ### 🐣新特性
 * 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
@@ -18,6 +18,7 @@
 * 【core   】     增加AntPathMatcher（issue#I4T7K5@Gitee）
 * 【core   】     StrJoiner修改toString策略，调用不再修改Appendable
 * 【core   】     StrJoiner增加length和merge方法
+* 【core   】     CRC16增加getHexValue方法（issue#I4VO3U@Gitee）
 
 ### 🐞Bug修复
 * 【cache  】     修复ReentrantCache.toString方法线程不安全问题（issue#2140@Github）

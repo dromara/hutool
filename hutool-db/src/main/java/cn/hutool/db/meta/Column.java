@@ -377,4 +377,9 @@ public class Column implements Serializable, Cloneable {
 	public String toString() {
 		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", size=" + size + ", isNullable=" + isNullable + "]";
 	}
+
+	@Override
+	public Column clone() throws CloneNotSupportedException {
+		return (Column) super.clone();
+	}
 }
