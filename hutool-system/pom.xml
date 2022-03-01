@@ -17,7 +17,7 @@
 	<description>Hutool 系统调用（Runtime）、系统监控封装</description>
 
 	<properties>
-		<slf4j.version>1.7.32</slf4j.version>
+		<slf4j.version>1.7.36</slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.1.0</version>
+			<version>6.1.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
