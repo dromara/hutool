@@ -48,7 +48,7 @@ public class PatternPool {
 	/**
 	 * 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/
 	 * What is the maximum length of a valid email address? https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
-	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@ hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
+	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
 	 */
 	public final static Pattern EMAIL = Pattern.compile(RegexPool.EMAIL, Pattern.CASE_INSENSITIVE);
 	/**
