@@ -12,6 +12,16 @@ public class AnnotationUtilTest {
 
 	}
 
+	@Test
+	public void getAnnotationSyncAlias() {
+		// 直接获取
+		Assert.assertEquals("", ClassWithAnnotation.class.getAnnotation(AnnotationForTest.class).retry());
+
+		// 加别名适配
+		AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
+		Assert.assertEquals("测试", annotation.retry());
+	}
+
 	@AnnotationForTest("测试")
 	static class ClassWithAnnotation{
 		public void test(){

@@ -2,15 +2,11 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -214,5 +210,27 @@ public class AnnotationUtil {
 	public static void setValue(Annotation annotation, String annotationField, Object value) {
 		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
 		memberValues.put(annotationField, value);
+	}
+
+	/**
+	 * 获取别名支持后的注解
+	 *
+	 * @param annotationEle  被注解的类
+	 * @param annotationType 注解类型Class
+	 * @param <T>            注解类型
+	 * @return 别名支持后的注解
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
+		T annotation = getAnnotation(annotationEle, annotationType);
+		Object o = Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, (proxy, method, args) -> {
+			Alias alias = method.getAnnotation(Alias.class);
+			if (ObjectUtil.isNotNull(alias) && StrUtil.isNotBlank(alias.value())) {
+				Method aliasMethod = annotationType.getMethod(alias.value());
+				return ReflectUtil.invoke(annotation, aliasMethod);
+			}
+			return method.invoke(args);
+		});
+		return (T) o;
 	}
 }
