@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * Jsch工具类<br>
@@ -422,6 +423,19 @@ public class JschUtil {
 	 */
 	public static String exec(Session session, String cmd, Charset charset) {
 		return exec(session, cmd, charset, System.err);
+	}
+
+	/**
+	 * 执行多条Shell命令
+	 *
+	 * @param session Session会话
+	 * @param cmdList 命令列表
+	 * @param charset 发送和读取内容的编码
+	 * @return {@link ChannelExec}
+	 * @since 5.7.22
+	 */
+	public static String exec(Session session, List<String> cmdList, Charset charset) {
+		return exec(session, String.join(" && ", cmdList), charset, System.err);
 	}
 
 	/**
