@@ -27,6 +27,24 @@ public class MapUtilTest {
 	}
 
 	@Test
+	public void filterMapWrapperTest() {
+		Map<String, String> map = MapUtil.newHashMap();
+		map.put("a", "1");
+		map.put("b", "2");
+		map.put("c", "3");
+		map.put("d", "4");
+
+		final Map<String, String> camelCaseMap = MapUtil.toCamelCaseMap(map);
+
+		Map<String, String> map2 = MapUtil.filter(camelCaseMap, t -> Convert.toInt(t.getValue()) % 2 == 0);
+
+		Assert.assertEquals(2, map2.size());
+
+		Assert.assertEquals("2", map2.get("b"));
+		Assert.assertEquals("4", map2.get("d"));
+	}
+
+	@Test
 	public void filterContainsTest() {
 		Map<String, String> map = MapUtil.newHashMap();
 		map.put("abc", "1");

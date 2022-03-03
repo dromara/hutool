@@ -1,5 +1,7 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.ObjectUtil;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,7 +32,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 */
 	protected static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
-	private final Map<K, V> raw;
+	private Map<K, V> raw;
 
 	/**
 	 * 构造
@@ -199,5 +201,14 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		return raw.merge(key, value, remappingFunction);
 	}
+
+	@Override
+	public MapWrapper<K, V> clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked")
+		final MapWrapper<K, V> clone = (MapWrapper<K, V>) super.clone();
+		clone.raw = ObjectUtil.clone(raw);
+		return clone;
+	}
+
 	//---------------------------------------------------------------------------- Override default methods end
 }

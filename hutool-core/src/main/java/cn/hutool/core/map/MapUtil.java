@@ -7,7 +7,6 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -623,24 +622,18 @@ public class MapUtil {
 	 * @param editor 编辑器接口
 	 * @return 编辑后的Map
 	 */
+	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
 
-		Map<K, V> map2 = ObjectUtil.clone(map);
+		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
 		if(null == map2){
-			// 不支持clone
 			map2 = new HashMap<>(map.size(), 1f);
 		}
-		if (isEmpty(map2)) {
+		if (isEmpty(map)) {
 			return map2;
-		}
-		try {
-			map2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>(map.size(), 1f);
 		}
 
 		Entry<K, V> modified;
@@ -690,19 +683,13 @@ public class MapUtil {
 		if(null == map || null == keys){
 			return map;
 		}
-		Map<K, V> map2 = ObjectUtil.clone(map);
+
+		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
 		if(null == map2){
-			// 不支持clone
 			map2 = new HashMap<>(map.size(), 1f);
 		}
-		if (isEmpty(map2)) {
+		if (isEmpty(map)) {
 			return map2;
-		}
-		try {
-			map2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>();
 		}
 
 		for (K key : keys) {

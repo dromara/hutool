@@ -848,7 +848,7 @@ public class ReflectUtil {
 	 *
 	 * @param <T>       对象类型
 	 * @param beanClass 被构造的类
-	 * @return 构造后的对象
+	 * @return 构造后的对象，构造失败返回{@code null}
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstanceIfPossible(Class<T> beanClass) {

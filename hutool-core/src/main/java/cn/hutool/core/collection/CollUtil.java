@@ -1178,19 +1178,9 @@ public class CollUtil {
 			return collection;
 		}
 
-		Collection<T> collection2 = ObjectUtil.clone(collection);
-		if (null == collection2) {
-			// 不支持clone
-			collection2 = create(collection.getClass());
-		}
-		if (isEmpty(collection2)) {
+		final Collection<T> collection2 = create(collection.getClass());
+		if (isEmpty(collection)) {
 			return collection2;
-		}
-		try {
-			collection2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			collection2 = new ArrayList<>();
 		}
 
 		T modified;
