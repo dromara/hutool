@@ -9,6 +9,7 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
@@ -32,7 +33,6 @@ import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -1314,7 +1314,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return this;
 		}
 		if (null == this.form) {
-			this.form = new LinkedHashMap<>();
+			this.form = new TableMap<>(16);
 		}
 		this.form.put(name, value);
 		return this;
