@@ -122,7 +122,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 				}
 			}
 		}
-		return false;
+		return array == null;
 	}
 
 	/**

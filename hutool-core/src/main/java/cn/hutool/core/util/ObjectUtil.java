@@ -625,7 +625,7 @@ public class ObjectUtil {
 	 * @see ArrayUtil#hasNull(Object[])
 	 */
 	public static boolean hasNull(Object... objs) {
-		return objs == null || ArrayUtil.hasNull(objs);
+		return ArrayUtil.hasNull(objs);
 	}
 
 	/**
