@@ -6,6 +6,7 @@
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@gitee）
+* 【core   】     AnnotationUtil增加getAnnotationAlias方法（pr#554@gitee）
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@gitee）
 

@@ -2,11 +2,15 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -38,7 +42,7 @@ public class AnnotationUtil {
 	/**
 	 * 获取指定注解
 	 *
-	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param isToCombination 是否为转换为组合注解
 	 * @return 注解对象
 	 */
@@ -201,9 +205,9 @@ public class AnnotationUtil {
 	/**
 	 * 设置新的注解的属性（字段）值
 	 *
-	 * @param annotation 注解对象
+	 * @param annotation      注解对象
 	 * @param annotationField 注解属性（字段）名称
-	 * @param value 要更新的属性值
+	 * @param value           要更新的属性值
 	 * @since 5.5.2
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -219,18 +223,11 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类型Class
 	 * @param <T>            注解类型
 	 * @return 别名支持后的注解
+	 * @since 5.7.23
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
-		T annotation = getAnnotation(annotationEle, annotationType);
-		Object o = Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, (proxy, method, args) -> {
-			Alias alias = method.getAnnotation(Alias.class);
-			if (ObjectUtil.isNotNull(alias) && StrUtil.isNotBlank(alias.value())) {
-				Method aliasMethod = annotationType.getMethod(alias.value());
-				return ReflectUtil.invoke(annotation, aliasMethod);
-			}
-			return method.invoke(args);
-		});
-		return (T) o;
+		final T annotation = getAnnotation(annotationEle, annotationType);
+		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
 	}
 }
