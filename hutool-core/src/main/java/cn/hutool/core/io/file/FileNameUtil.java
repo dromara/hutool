@@ -222,6 +222,11 @@ public class FileNameUtil {
 		if (index == -1) {
 			return StrUtil.EMPTY;
 		} else {
+			// issue#I4W5FS@Gitee
+			if(fileName.endsWith("tar.gz")){
+				return "tar.gz";
+			}
+
 			String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
 			return StrUtil.containsAny(ext, UNIX_SEPARATOR, WINDOWS_SEPARATOR) ? StrUtil.EMPTY : ext;

@@ -2,20 +2,21 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.23 (2022-03-03)
+# 5.7.23 (2022-03-04)
 
 ### 🐣新特性
-* 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@gitee）
-* 【core   】     AnnotationUtil增加getAnnotationAlias方法（pr#554@gitee）
+* 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
+* 【core   】     AnnotationUtil增加getAnnotationAlias方法（pr#554@Gitee）
+* 【core   】     FileUtil.extName增加对tar.gz特殊处理（issue#I4W5FS@Gitee）
 ### 🐞Bug修复
-* 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@gitee）
+* 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)
 
 ### 🐣新特性
-* 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@gitee）
-* 【extra  】     Ftp增加构造（issue#I4TKXP@gitee）
+* 【poi    】     ExcelUtil.readBySax增加对POI-5.2.0的兼容性（issue#I4TJF4@Gitee）
+* 【extra  】     Ftp增加构造（issue#I4TKXP@Gitee）
 * 【core   】     GenericBuilder支持Map构建（pr#540@Github）
 * 【json   】     新增TemporalAccessorSerializer
 * 【core   】     使多个xxxBuilder实现Builder接口，扩展CheckedUtil（pr#545@Gitee）
@@ -547,7 +548,7 @@
 * 【json   】     增加JSONWriter
 * 【core   】     IdUtil增加getWorkerId和getDataCenterId（issueI3Y5NI@Gitee）
 * 【core   】     JWTValidator增加leeway重载
-* 【core   】     增加RegexPool（issue#I3W9ZF@gitee）
+* 【core   】     增加RegexPool（issue#I3W9ZF@Gitee）
 
 ### 🐞Bug修复
 * 【json   】     修复XML转义字符的问题（issue#I3XH09@Gitee）

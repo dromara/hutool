@@ -392,6 +392,10 @@ public class FileUtilTest {
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/hutool/fff.xlsx";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("xlsx", mainName);
+
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.gz" : "~/Desktop/hutool/fff.tar.gz";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("tar.gz", mainName);
 	}
 
 	@Test
