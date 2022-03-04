@@ -45,7 +45,7 @@ public class FileNameUtil {
 	/**
 	 * 特殊后缀
 	 */
-	private static final CharSequence[] SPECIAL_SUFFIX = {"tar.bz2", "tar.Z", "tar.gz", ".tar.xz"};
+	private static final CharSequence[] SPECIAL_SUFFIX = {"tar.bz2", "tar.Z", "tar.gz", "tar.xz"};
 
 
 	// -------------------------------------------------------------------------------------------- name start
