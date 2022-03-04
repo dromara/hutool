@@ -42,6 +42,11 @@ public class FileNameUtil {
 	 */
 	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
 
+	/**
+	 * 特殊后缀
+	 */
+	private static final CharSequence[] SPECIAL_SUFFIX = {"tar.bz2", "tar.Z", "tar.gz"};
+
 
 	// -------------------------------------------------------------------------------------------- name start
 
@@ -223,8 +228,10 @@ public class FileNameUtil {
 			return StrUtil.EMPTY;
 		} else {
 			// issue#I4W5FS@Gitee
-			if(fileName.endsWith("tar.gz")){
-				return "tar.gz";
+			int secondToLastIndex = fileName.substring(0, index).lastIndexOf(StrUtil.DOT);
+			String substr = fileName.substring(secondToLastIndex == -1 ? index : secondToLastIndex + 1);
+			if (StrUtil.containsAny(substr, SPECIAL_SUFFIX)) {
+				return substr;
 			}
 
 			String ext = fileName.substring(index + 1);

@@ -396,6 +396,14 @@ public class FileUtilTest {
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.gz" : "~/Desktop/hutool/fff.tar.gz";
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("tar.gz", mainName);
+
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.Z" : "~/Desktop/hutool/fff.tar.Z";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("tar.Z", mainName);
+
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.bz2" : "~/Desktop/hutool/fff.tar.bz2";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("tar.bz2", mainName);
 	}
 
 	@Test
