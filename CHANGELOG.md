@@ -2,12 +2,13 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.23 (2022-03-04)
+# 5.7.23 (2022-03-05)
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
 * 【core   】     AnnotationUtil增加getAnnotationAlias方法（pr#554@Gitee）
 * 【core   】     FileUtil.extName增加对tar.gz特殊处理（issue#I4W5FS@Gitee）
+* 【crypto 】     增加XXTEA实现（issue#I4WH2X@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
 

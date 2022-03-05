@@ -1,6 +1,7 @@
 package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.XXTEA;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import org.junit.Test;
 public class TEATest {
 
 	@Test
-	public void teaTest(){
+	public void teaTest() {
 		String data = "测试的加密数据 by Hutool";
 
 		// 密钥必须为128bit
@@ -24,11 +25,25 @@ public class TEATest {
 	}
 
 	@Test
-	public void xteaTest(){
+	public void xteaTest() {
 		String data = "测试的加密数据 by Hutool";
 
 		// 密钥必须为128bit
 		final SymmetricCrypto tea = new SymmetricCrypto("XTEA", "MyPassword123456".getBytes());
+		final byte[] encrypt = tea.encrypt(data);
+
+		// 解密
+		final String decryptStr = tea.decryptStr(encrypt);
+
+		Assert.assertEquals(data, decryptStr);
+	}
+
+	@Test
+	public void xxteaTest() {
+		String data = "测试的加密数据 by Hutool";
+
+		// 密钥必须为128bit
+		final XXTEA tea = new XXTEA("MyPassword123456".getBytes());
 		final byte[] encrypt = tea.encrypt(data);
 
 		// 解密
