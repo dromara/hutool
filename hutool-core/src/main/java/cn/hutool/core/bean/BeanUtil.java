@@ -225,8 +225,8 @@ public class BeanUtil {
 	 */
 	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1)
-				: new HashMap<>((int) (propertyDescriptors.length), 1);
+		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1f)
+				: new HashMap<>(propertyDescriptors.length, 1);
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);

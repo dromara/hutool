@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -78,14 +79,15 @@ public class BeanUtilTest {
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
-		map.put("Name", "Joe");
-		map.put("aGe", 12);
-		map.put("openId", "DFDFSDFWERWER");
+		Map<String, Object> map = MapBuilder.<String, Object>create()
+				.put("Name", "Joe")
+				.put("aGe", 12)
+				.put("openId", "DFDFSDFWERWER")
+				.build();
 		SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
-		Assert.assertEquals(person.getName(), "Joe");
-		Assert.assertEquals(person.getAge(), 12);
-		Assert.assertEquals(person.getOpenid(), "DFDFSDFWERWER");
+		Assert.assertEquals("Joe", person.getName());
+		Assert.assertEquals(12, person.getAge());
+		Assert.assertEquals("DFDFSDFWERWER", person.getOpenid());
 	}
 
 	@Test

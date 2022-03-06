@@ -88,7 +88,6 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public void putAll(Map<? extends K, ? extends V> m) {
 		raw.putAll(m);
 	}
@@ -99,25 +98,21 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Collection<V> values() {
 		return raw.values();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Set<K> keySet() {
 		return raw.keySet();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Set<Entry<K, V>> entrySet() {
 		return raw.entrySet();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Iterator<Entry<K, V>> iterator() {
 		return this.entrySet().iterator();
 	}

@@ -1,7 +1,5 @@
 package cn.hutool.core.map;
 
-import cn.hutool.core.util.StrUtil;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,7 +13,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 4.0.7
  */
-public class CamelCaseLinkedMap<K, V> extends CustomKeyMap<K, V> {
+public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	// ------------------------------------------------------------------------- Constructor start
@@ -48,7 +46,7 @@ public class CamelCaseLinkedMap<K, V> extends CustomKeyMap<K, V> {
 	 * 构造
 	 *
 	 * @param loadFactor 加载因子
-	 * @param m Map
+	 * @param m Map，数据会被默认拷贝到一个新的LinkedHashMap中
 	 */
 	public CamelCaseLinkedMap(float loadFactor, Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
@@ -65,18 +63,4 @@ public class CamelCaseLinkedMap<K, V> extends CustomKeyMap<K, V> {
 		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 将Key转为驼峰风格，如果key为字符串的话
-	 *
-	 * @param key KEY
-	 * @return 驼峰Key
-	 */
-	@Override
-	protected Object customKey(Object key) {
-		if (key instanceof CharSequence) {
-			key = StrUtil.toCamelCase(key.toString());
-		}
-		return key;
-	}
 }
