@@ -906,4 +906,19 @@ public class IterUtil {
 		// 当两个Iterable长度不一致时返回false
 		return false == (it1.hasNext() || it2.hasNext());
 	}
+
+	/**
+	 * 清空指定{@link Iterator}，此方法遍历后调用{@link Iterator#remove()}移除每个元素
+	 *
+	 * @param iterator {@link Iterator}
+	 * @since 5.7.23
+	 */
+	public static void clear(Iterator<?> iterator) {
+		if (null != iterator) {
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+		}
+	}
 }

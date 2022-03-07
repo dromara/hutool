@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -173,7 +172,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public Set<Map.Entry<K, V>> entrySet() {
 		final Set<Map.Entry<K, V>> hashSet = new LinkedHashSet<>();
 		for (int i = 0; i < size(); i++) {
-			hashSet.add(new Entry<>(keys.get(i), values.get(i)));
+			hashSet.add(new SimpleEntry<>(keys.get(i), values.get(i)));
 		}
 		return hashSet;
 	}
@@ -191,7 +190,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 
 			@Override
 			public Map.Entry<K, V> next() {
-				return new Entry<>(keysIter.next(), valuesIter.next());
+				return new SimpleEntry<>(keysIter.next(), valuesIter.next());
 			}
 
 			@Override
@@ -208,49 +207,5 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 				"keys=" + keys +
 				", values=" + values +
 				'}';
-	}
-
-	private static class Entry<K, V> implements Map.Entry<K, V> {
-
-		private final K key;
-		private final V value;
-
-		public Entry(K key, V value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		@Override
-		public K getKey() {
-			return key;
-		}
-
-		@Override
-		public V getValue() {
-			return value;
-		}
-
-		@Override
-		public V setValue(V value) {
-			throw new UnsupportedOperationException("setValue not supported.");
-		}
-
-		@Override
-		public final boolean equals(Object o) {
-			if (o == this)
-				return true;
-			if (o instanceof Map.Entry) {
-				Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
-				return Objects.equals(key, e.getKey()) &&
-						Objects.equals(value, e.getValue());
-			}
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			//copy from 1.8 HashMap.Node
-			return Objects.hashCode(key) ^ Objects.hashCode(value);
-		}
 	}
 }

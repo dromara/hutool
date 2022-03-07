@@ -170,7 +170,13 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 *
 	 * @param table 其他table
 	 */
-	void putAll(Table<? extends R, ? extends C, ? extends V> table);
+	default void putAll(Table<? extends R, ? extends C, ? extends V> table){
+		if (null != table) {
+			for (Table.Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
+				put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+			}
+		}
+	}
 
 	/**
 	 * 移除指定值

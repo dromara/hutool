@@ -1,34 +1,66 @@
 package cn.hutool.core.map.multi;
 
+import cn.hutool.core.builder.Builder;
+import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.collection.TransIter;
-import cn.hutool.core.util.ObjectUtil;
-import com.sun.istack.internal.Nullable;
+import cn.hutool.core.map.AbsEntry;
+import cn.hutool.core.map.SimpleEntry;
 
-import java.io.Serializable;
-import java.util.AbstractCollection;
+import java.util.AbstractMap;
 import java.util.AbstractSet;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public class RowKeyTable<R, C, V> implements Table<R, C, V> {
+/**
+ * 将行的键作为主键的{@link Table}实现<br>
+ * 此结构为: 行=(列=值)
+ *
+ * @param <R> 行类型
+ * @param <C> 列类型
+ * @param <V> 值类型
+ * @author Guava, Looly
+ * @since 5.7.23
+ */
+public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 
 	final Map<R, Map<C, V>> raw;
-	final Supplier<? extends Map<C, V>> supplier;
+	/**
+	 * 列的Map创建器，用于定义Table中Value对应Map类型
+	 */
+	final Builder<? extends Map<C, V>> columnBuilder;
 
+	//region 构造
+
+	/**
+	 * 构造
+	 */
+	public RowKeyTable() {
+		this(new HashMap<>());
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param raw 原始Map
+	 */
 	public RowKeyTable(Map<R, Map<C, V>> raw) {
 		this(raw, HashMap::new);
 	}
 
-	public RowKeyTable(Map<R, Map<C, V>> raw, Supplier<? extends Map<C, V>> columnMapSupplier) {
+	/**
+	 * 构造
+	 *
+	 * @param raw              原始Map
+	 * @param columnMapBuilder 列的map创建器
+	 */
+	public RowKeyTable(Map<R, Map<C, V>> raw, Builder<? extends Map<C, V>> columnMapBuilder) {
 		this.raw = raw;
-		this.supplier = null == columnMapSupplier ? HashMap::new : columnMapSupplier;
+		this.columnBuilder = null == columnMapBuilder ? HashMap::new : columnMapBuilder;
 	}
+	//endregion
 
 	@Override
 	public Map<R, Map<C, V>> rowMap() {
@@ -36,33 +68,8 @@ public class RowKeyTable<R, C, V> implements Table<R, C, V> {
 	}
 
 	@Override
-	public Map<C, Map<R, V>> columnMap() {
-		// TODO 实现columnMap
-		throw new UnsupportedOperationException("TODO implement this method");
-	}
-
-	@Override
-	public Collection<V> values() {
-		return this.values;
-	}
-
-	@Override
-	public Set<Cell<R, C, V>> cellSet() {
-		return this.cellSet;
-	}
-
-	@Override
 	public V put(R rowKey, C columnKey, V value) {
-		return raw.computeIfAbsent(rowKey, (key) -> supplier.get()).put(columnKey, value);
-	}
-
-	@Override
-	public void putAll(Table<? extends R, ? extends C, ? extends V> table) {
-		if (null != table) {
-			for (Table.Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
-				put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
-			}
-		}
+		return raw.computeIfAbsent(rowKey, (key) -> columnBuilder.build()).put(columnKey, value);
 	}
 
 	@Override
@@ -89,184 +96,164 @@ public class RowKeyTable<R, C, V> implements Table<R, C, V> {
 	}
 
 	@Override
-	public Iterator<Cell<R, C, V>> iterator() {
-		return new CellIterator();
-	}
-
-	@Override
-	public boolean equals(@Nullable Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj instanceof Table) {
-			final Table<?, ?, ?> that = (Table<?, ?, ?>) obj;
-			return this.cellSet().equals(that.cellSet());
-		} else {
+	public boolean containsColumn(C columnKey) {
+		if (columnKey == null) {
 			return false;
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return cellSet().hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return rowMap().toString();
-	}
-
-	/**
-	 * 基于{@link Cell}的{@link Iterator}实现
-	 */
-	private class CellIterator implements Iterator<Cell<R, C, V>> {
-		final Iterator<Map.Entry<R, Map<C, V>>> rowIterator = raw.entrySet().iterator();
-		Map.Entry<R, Map<C, V>> rowEntry;
-		Iterator<Map.Entry<C, V>> columnIterator = IterUtil.empty();
-
-		@Override
-		public boolean hasNext() {
-			return rowIterator.hasNext() || columnIterator.hasNext();
-		}
-
-		@Override
-		public Cell<R, C, V> next() {
-			if (false == columnIterator.hasNext()) {
-				rowEntry = rowIterator.next();
-				columnIterator = rowEntry.getValue().entrySet().iterator();
-			}
-			final Map.Entry<C, V> columnEntry = columnIterator.next();
-			return new SimpleCell<>(rowEntry.getKey(), columnEntry.getKey(), columnEntry.getValue());
-		}
-
-		@Override
-		public void remove() {
-			columnIterator.remove();
-			if (rowEntry.getValue().isEmpty()) {
-				rowIterator.remove();
-			}
-		}
-	}
-
-	/**
-	 * 简单{@link Cell} 实现
-	 *
-	 * @param <R> 行类型
-	 * @param <C> 列类型
-	 * @param <V> 值类型
-	 */
-	private static class SimpleCell<R, C, V> implements Cell<R, C, V>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		private final R rowKey;
-		private final C columnKey;
-		private final V value;
-
-		SimpleCell(@Nullable R rowKey, @Nullable C columnKey, @Nullable V value) {
-			this.rowKey = rowKey;
-			this.columnKey = columnKey;
-			this.value = value;
-		}
-
-		@Override
-		public R getRowKey() {
-			return rowKey;
-		}
-
-		@Override
-		public C getColumnKey() {
-			return columnKey;
-		}
-
-		@Override
-		public V getValue() {
-			return value;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == this) {
+		for (Map<C, V> map : raw.values()) {
+			if (null != map && map.containsKey(columnKey)) {
 				return true;
 			}
-			if (obj instanceof Cell) {
-				Cell<?, ?, ?> other = (Cell<?, ?, ?>) obj;
-				return ObjectUtil.equal(rowKey, other.getRowKey())
-						&& ObjectUtil.equal(columnKey, other.getColumnKey())
-						&& ObjectUtil.equal(value, other.getValue());
-			}
-			return false;
 		}
+		return false;
+	}
 
-		@Override
-		public int hashCode() {
-			return Objects.hash(rowKey, columnKey, value);
-		}
+	//region columnMap
+	@Override
+	public Map<C, Map<R, V>> columnMap() {
+		Map<C, Map<R, V>> result = columnMap;
+		return (result == null) ? columnMap = new ColumnMap() : result;
+	}
 
+	private Map<C, Map<R, V>> columnMap;
+
+	private class ColumnMap extends AbstractMap<C, Map<R, V>> {
 		@Override
-		public String toString() {
-			return "(" + rowKey + "," + columnKey + ")=" + value;
+		public Set<Entry<C, Map<R, V>>> entrySet() {
+			return new ColumnMapEntrySet();
 		}
 	}
 
-	private final Collection<V> values = new AbstractCollection<V>() {
-		@Override
-		public Iterator<V> iterator() {
-			return new TransIter<>(cellSet().iterator(), Cell::getValue);
-		}
+	private class ColumnMapEntrySet extends AbstractSet<Map.Entry<C, Map<R, V>>> {
+		private final Set<C> columnKeySet = columnKeySet();
 
 		@Override
-		public boolean contains(Object o) {
-			//noinspection unchecked
-			return containsValue((V) o);
-		}
-
-		@Override
-		public void clear() {
-			RowKeyTable.this.clear();
+		public Iterator<Map.Entry<C, Map<R, V>>> iterator() {
+			return new TransIter<>(columnKeySet.iterator(),
+					c -> new SimpleEntry<>(c, getColumn(c)));
 		}
 
 		@Override
 		public int size() {
-			return RowKeyTable.this.size();
+			return columnKeySet.size();
 		}
-	};
+	}
+	//endregion
 
-	private final Set<Cell<R, C, V>> cellSet = new AbstractSet<Cell<R, C, V>>() {
+
+	//region columnKeySet
+	@Override
+	public Set<C> columnKeySet() {
+		Set<C> result = columnKeySet;
+		return (result == null) ? columnKeySet = new ColumnKeySet() : result;
+	}
+
+	private Set<C> columnKeySet;
+
+	private class ColumnKeySet extends AbstractSet<C> {
+
 		@Override
-		public boolean contains(Object o) {
-			if (o instanceof Cell) {
-				@SuppressWarnings("unchecked") final
-				Cell<R, C, V> cell = (Cell<R, C, V>) o;
-				Map<C, V> row = getRow(cell.getRowKey());
-				if (null != row) {
-					return ObjectUtil.equals(row.get(cell.getColumnKey()), cell.getValue());
+		public Iterator<C> iterator() {
+			return new ColumnKeyIterator();
+		}
+
+		@Override
+		public int size() {
+			return IterUtil.size(iterator());
+		}
+	}
+
+	private class ColumnKeyIterator extends ComputeIter<C> {
+		final Map<C, V> seen = columnBuilder.build();
+		final Iterator<Map<C, V>> mapIterator = raw.values().iterator();
+		Iterator<Map.Entry<C, V>> entryIterator = IterUtil.empty();
+
+		@Override
+		protected C computeNext() {
+			while (true) {
+				if (entryIterator.hasNext()) {
+					Map.Entry<C, V> entry = entryIterator.next();
+					if (false == seen.containsKey(entry.getKey())) {
+						seen.put(entry.getKey(), entry.getValue());
+						return entry.getKey();
+					}
+				} else if (mapIterator.hasNext()) {
+					entryIterator = mapIterator.next().entrySet().iterator();
+				} else {
+					return null;
 				}
 			}
-			return false;
+		}
+	}
+	//endregion
+
+	//region getColumn
+
+	@Override
+	public Map<R, V> getColumn(C columnKey) {
+		return new Column(columnKey);
+	}
+
+	private class Column extends AbstractMap<R, V> {
+		final C columnKey;
+
+		Column(C columnKey) {
+			this.columnKey = columnKey;
 		}
 
 		@Override
-		public boolean remove(Object o) {
-			if (contains(o)) {
-				@SuppressWarnings("unchecked")
-				final Cell<R, C, V> cell = (Cell<R, C, V>) o;
-				RowKeyTable.this.remove(cell.getRowKey(), cell.getColumnKey());
+		public Set<Entry<R, V>> entrySet() {
+			return new EntrySet();
+		}
+
+		private class EntrySet extends AbstractSet<Map.Entry<R, V>> {
+
+			@Override
+			public Iterator<Map.Entry<R, V>> iterator() {
+				return new EntrySetIterator();
 			}
-			return false;
+
+			@Override
+			public int size() {
+				int size = 0;
+				for (Map<C, V> map : raw.values()) {
+					if (map.containsKey(columnKey)) {
+						size++;
+					}
+				}
+				return size;
+			}
 		}
 
-		@Override
-		public void clear() {
-			RowKeyTable.this.clear();
-		}
+		private class EntrySetIterator extends ComputeIter<Entry<R, V>> {
+			final Iterator<Entry<R, Map<C, V>>> iterator = raw.entrySet().iterator();
 
-		@Override
-		public Iterator<Table.Cell<R, C, V>> iterator() {
-			return new CellIterator();
-		}
+			@Override
+			protected Entry<R, V> computeNext() {
+				while (iterator.hasNext()) {
+					final Entry<R, Map<C, V>> entry = iterator.next();
+					if (entry.getValue().containsKey(columnKey)) {
+						return new AbsEntry<R, V>() {
+							@Override
+							public R getKey() {
+								return entry.getKey();
+							}
 
-		@Override
-		public int size() {
-			return RowKeyTable.this.size();
+							@Override
+							public V getValue() {
+								return entry.getValue().get(columnKey);
+							}
+
+							@Override
+							public V setValue(V value) {
+								return entry.getValue().put(columnKey, value);
+							}
+						};
+					}
+				}
+				return null;
+			}
 		}
-	};
+	}
+	//endregion
 }
