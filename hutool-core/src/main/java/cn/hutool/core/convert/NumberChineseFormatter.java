@@ -188,7 +188,7 @@ public class NumberChineseFormatter {
 		Assert.checkBetween(amount, -999, 999, "Number support only: (-999 ~ 999)！");
 
 		final String chinese = thousandToChinese(amount, isUseTraditional);
-		if(amount < 20 && amount > 10){
+		if(amount < 20 && amount >= 10){
 			// "十一"而非"一十一"
 			return chinese.substring(1);
 		}
