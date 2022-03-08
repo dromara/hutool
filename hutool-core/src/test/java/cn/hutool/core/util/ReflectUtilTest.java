@@ -116,7 +116,7 @@ public class ReflectUtilTest {
 	@Ignore
 	public void getMethodBenchTest(){
 		// 预热
-		getMethod(TestBenchClass.class, false, "getH");
+		getMethodWithReturnTypeCheck(TestBenchClass.class, false, "getH");
 
 		final TimeInterval timer = DateUtil.timer();
 		timer.start();
@@ -127,7 +127,7 @@ public class ReflectUtilTest {
 
 		timer.restart();
 		for (int i = 0; i < 100000000; i++) {
-			getMethod(TestBenchClass.class, false, "getH");
+			getMethodWithReturnTypeCheck(TestBenchClass.class, false, "getH");
 		}
 		Console.log(timer.interval());
 	}
@@ -150,7 +150,7 @@ public class ReflectUtilTest {
 		private String n;
 	}
 
-	public static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) throws SecurityException {
+	public static Method getMethodWithReturnTypeCheck(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) throws SecurityException {
 		if (null == clazz || StrUtil.isBlank(methodName)) {
 			return null;
 		}
@@ -168,5 +168,62 @@ public class ReflectUtilTest {
 			}
 		}
 		return res;
+	}
+
+	@Test
+	public void getMethodsFromClassExtends(){
+		// 继承情况下，需解决方法去重问题
+		final Method[] methods = ReflectUtil.getMethods(C2.class);
+		Assert.assertEquals(2, methods.length);
+	}
+
+	@Test
+	public void getMethodsFromInterfaceTest(){
+		// 对于接口，直接调用Class.getMethods方法获取所有方法，因为接口都是public方法
+		// 因此此处得到包括TestInterface1、TestInterface2、TestInterface3中一共4个方法
+		final Method[] methods = ReflectUtil.getMethods(TestInterface3.class);
+		Assert.assertEquals(4, methods.length);
+
+		// 接口里，调用getMethods和getPublicMethods效果相同
+		final Method[] publicMethods = ReflectUtil.getPublicMethods(TestInterface3.class);
+		Assert.assertArrayEquals(methods, publicMethods);
+	}
+
+	interface TestInterface1{
+		void getA();
+		void getB();
+
+		default void getC(){
+
+		}
+	}
+
+	interface TestInterface2 extends TestInterface1{
+		@Override
+		void getB();
+	}
+
+	interface TestInterface3 extends TestInterface2{
+		void get3();
+	}
+
+	class C1 implements TestInterface2{
+
+		@Override
+		public void getA() {
+
+		}
+
+		@Override
+		public void getB() {
+
+		}
+	}
+
+	class C2 extends C1{
+		@Override
+		public void getA() {
+
+		}
 	}
 }

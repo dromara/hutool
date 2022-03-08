@@ -652,30 +652,36 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得一个类中所有方法列表，直接反射获取，无缓存
+	 * 获得一个类中所有方法列表，直接反射获取，无缓存<br>
+	 * 接口获取方法和默认方法
 	 *
-	 * @param beanClass             类
-	 * @param withSuperClassMethods 是否包括父类的方法列表
+	 * @param beanClass             类或接口
+	 * @param withSupers 是否包括父类或接口的方法列表
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException {
+	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSupers) throws SecurityException {
 		Assert.notNull(beanClass);
+
+		if(beanClass.isInterface()){
+			// 对于接口，直接调用Class.getMethods方法获取所有方法，因为接口都是public方法
+			return withSupers ? beanClass.getMethods() : beanClass.getDeclaredMethods();
+		}
 
 		Method[] allMethods = null;
 		Class<?> searchType = beanClass;
 		Method[] declaredMethods;
-		while (searchType != null) {
+		while (searchType != null && searchType != Object.class) {
 			declaredMethods = searchType.getDeclaredMethods();
 			if (null == allMethods) {
 				allMethods = declaredMethods;
 			} else {
 				allMethods = ArrayUtil.append(allMethods, declaredMethods);
 			}
-			searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
+			searchType = (withSupers && false == searchType.isInterface()) ? searchType.getSuperclass() : null;
 		}
 
-		return allMethods;
+		return ArrayUtil.append(allMethods);
 	}
 
 	/**
