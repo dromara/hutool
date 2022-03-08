@@ -186,7 +186,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseFloat(valueStr);
 		} else if (Double.class == targetType) {
 			if (value instanceof Number) {
-				return ((Number) value).doubleValue();
+				return NumberUtil.toDouble((Number) value);
 			} else if (value instanceof Boolean) {
 				return BooleanUtil.toDoubleObj((Boolean) value);
 			}
@@ -194,7 +194,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseDouble(valueStr);
 		} else if (DoubleAdder.class == targetType) {
 			//jdk8 新增
-			final Number number = convert(value, Long.class, toStrFunc);
+			final Number number = convert(value, Double.class, toStrFunc);
 			if (null != number) {
 				final DoubleAdder doubleAdder = new DoubleAdder();
 				doubleAdder.add(number.doubleValue());

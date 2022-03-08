@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.DoubleAdder;
 
 /**
  * 类型转换工具单元测试
@@ -360,5 +361,26 @@ public class ConvertTest {
 		final byte[] value = HexUtil.decodeHex(hex2);
 		final float f = Convert.toFloat(value);
 		Assert.assertEquals(406.1F, f, 2);
+	}
+
+	@Test
+	public void floatToDoubleTest(){
+		float a = 0.45f;
+		double b = Convert.toDouble(a);
+		Assert.assertEquals(a, b, 5);
+	}
+
+	@Test
+	public void floatToDoubleAddrTest(){
+		float a = 0.45f;
+		final DoubleAdder adder = Convert.convert(DoubleAdder.class, a);
+		Assert.assertEquals(a, adder.doubleValue(), 5);
+	}
+
+	@Test
+	public void doubleToFloatTest(){
+		double a = 0.45f;
+		float b = Convert.toFloat(a);
+		Assert.assertEquals(a, b, 5);
 	}
 }

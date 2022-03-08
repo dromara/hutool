@@ -77,6 +77,8 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.DoubleAdder;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 转换器登记中心
@@ -389,11 +391,13 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(Integer.class, new NumberConverter(Integer.class));
 		defaultConverterMap.put(AtomicInteger.class, new NumberConverter(AtomicInteger.class));// since 3.0.8
 		defaultConverterMap.put(Long.class, new NumberConverter(Long.class));
+		defaultConverterMap.put(LongAdder.class, new NumberConverter(LongAdder.class));
 		defaultConverterMap.put(AtomicLong.class, new NumberConverter(AtomicLong.class));// since 3.0.8
 		defaultConverterMap.put(Byte.class, new NumberConverter(Byte.class));
 		defaultConverterMap.put(Short.class, new NumberConverter(Short.class));
 		defaultConverterMap.put(Float.class, new NumberConverter(Float.class));
 		defaultConverterMap.put(Double.class, new NumberConverter(Double.class));
+		defaultConverterMap.put(DoubleAdder.class, new NumberConverter(DoubleAdder.class));
 		defaultConverterMap.put(Character.class, new CharacterConverter());
 		defaultConverterMap.put(Boolean.class, new BooleanConverter());
 		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
