@@ -663,18 +663,35 @@ public class ReflectUtil {
 		Assert.notNull(beanClass);
 
 		Method[] allMethods = null;
+		Class<?>[] searchInterfaces = null, parentInterfaces = null;
 		Class<?> searchType = beanClass;
 		Method[] declaredMethods;
-		while (searchType != null) {
-			declaredMethods = searchType.getDeclaredMethods();
-			if (null == allMethods) {
-				allMethods = declaredMethods;
-			} else {
-				allMethods = ArrayUtil.append(allMethods, declaredMethods);
+		while (searchType != null || searchInterfaces != null) {
+			if (searchType != null) {
+				declaredMethods = searchType.getDeclaredMethods();
+				if (null == allMethods) {
+					allMethods = declaredMethods;
+				} else {
+					allMethods = ArrayUtil.append(allMethods, declaredMethods);
+				}
+				Class<?>[] interfaces = searchType.getInterfaces();
+				for (Class<?> element : interfaces) {
+					allMethods = ArrayUtil.append(allMethods, element.getDeclaredMethods());
+					parentInterfaces = ArrayUtil.addAll(element.getInterfaces());
+				}
+				searchInterfaces = parentInterfaces;
+				Class<?>[] classes = searchInterfaces.length == 0 ? null : searchInterfaces;
+				searchInterfaces = withSuperClassMethods ? classes : null;
+				searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
 			}
-			searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
+			if (searchInterfaces != null) {
+				for (Class<?> searchInterface : searchInterfaces) {
+					allMethods = ArrayUtil.append(allMethods, searchInterface.getDeclaredMethods());
+					parentInterfaces = ArrayUtil.addAll(searchInterface.getInterfaces());
+				}
+				searchInterfaces = parentInterfaces.length == 0 ? null : parentInterfaces;
+			}
 		}
-
 		return allMethods;
 	}
 
