@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * @param <V> Value类型
  * @since 3.1.1
  */
-public class MapBuilder<K, V> implements Builder<Map<K,V>> {
+public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	private static final long serialVersionUID = 1L;
 
 	private final Map<K, V> map;
@@ -117,6 +117,17 @@ public class MapBuilder<K, V> implements Builder<Map<K,V>> {
 	 */
 	public MapBuilder<K, V> putAll(Map<K, V> map) {
 		this.map.putAll(map);
+		return this;
+	}
+
+	/**
+	 * 清空Map
+	 *
+	 * @return this
+	 * @since 5.7.23
+	 */
+	public MapBuilder<K, V> clear() {
+		this.map.clear();
 		return this;
 	}
 

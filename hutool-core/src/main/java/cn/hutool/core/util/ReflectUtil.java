@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -17,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -347,11 +349,12 @@ public class ReflectUtil {
 	/**
 	 * 是否为父类引用字段<br>
 	 * 当字段所在类是对象子类时（对象中定义的非static的class），会自动生成一个以"this$0"为名称的字段，指向父类对象
+	 *
 	 * @param field 字段
 	 * @return 是否为父类引用字段
 	 * @since 5.7.20
 	 */
-	public static boolean isOuterClassField(Field field){
+	public static boolean isOuterClassField(Field field) {
 		return "this$0".equals(field.getName());
 	}
 
@@ -648,51 +651,47 @@ public class ReflectUtil {
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return METHODS_CACHE.get(beanClass, () -> getMethodsDirectly(beanClass, true));
+		return METHODS_CACHE.get(beanClass,
+				() -> getMethodsDirectly(beanClass, true, true));
 	}
 
 	/**
-	 * 获得一个类中所有方法列表，直接反射获取，无缓存
+	 * 获得一个类中所有方法列表，直接反射获取，无缓存<br>
+	 * 接口获取方法和默认方法，获取的方法包括：
+	 * <ul>
+	 *     <li>本类中的所有方法（包括static方法）</li>
+	 *     <li>父类中的所有方法（包括static方法）</li>
+	 *     <li>Object中（包括static方法）</li>
+	 * </ul>
 	 *
-	 * @param beanClass             类
-	 * @param withSuperClassMethods 是否包括父类的方法列表
+	 * @param beanClass            类或接口
+	 * @param withSupers           是否包括父类或接口的方法列表
+	 * @param withMethodFromObject 是否包括Object中的方法
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException {
+	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSupers, boolean withMethodFromObject) throws SecurityException {
 		Assert.notNull(beanClass);
 
-		Method[] allMethods = null;
-		Class<?> searchType = beanClass;
-		Class<?>[] tempInterfaceType, interfaceType;
-		Method[] declaredMethods;
-		if (searchType.isInterface()) {
-			allMethods = searchType.getDeclaredMethods();
-			interfaceType = searchType.getInterfaces();
-			while (ArrayUtil.isNotEmpty(interfaceType)) {
-				tempInterfaceType = interfaceType;
-				for (int i = 0; i < tempInterfaceType.length; i++) {
-					Class<?> temp = tempInterfaceType[i];
-					allMethods = ArrayUtil.append(allMethods, temp.getDeclaredMethods());
-					if (i == 0 || ArrayUtil.isEmpty(interfaceType)) {
-						interfaceType = temp.getInterfaces();
-					} else {
-						interfaceType = ArrayUtil.append(interfaceType, temp.getInterfaces());
-					}
-				}
-			}
-		} else {
-			while (searchType != null) {
-				declaredMethods = searchType.getDeclaredMethods();
-				if (null == allMethods) {
-					allMethods = declaredMethods;
-				} else {
-					allMethods = ArrayUtil.append(allMethods, declaredMethods);
-				}
-				searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
-			}
+		if (beanClass.isInterface()) {
+			// 对于接口，直接调用Class.getMethods方法获取所有方法，因为接口都是public方法
+			return withSupers ? beanClass.getMethods() : beanClass.getDeclaredMethods();
 		}
-		return allMethods;
+
+		final UniqueKeySet<String, Method> result = new UniqueKeySet<>(true, ReflectUtil::getUniqueKey);
+		Class<?> searchType = beanClass;
+		while (searchType != null) {
+			if (false == withMethodFromObject && Object.class == searchType) {
+				break;
+			}
+			result.addAllIfAbsent(Arrays.asList(searchType.getDeclaredMethods()));
+			result.addAllIfAbsent(getDefaultMethodsFromInterface(searchType));
+
+
+			searchType = (withSupers && false == searchType.isInterface()) ? searchType.getSuperclass() : null;
+		}
+
+		return result.toArray(new Method[0]);
 	}
 
 	/**
@@ -788,10 +787,10 @@ public class ReflectUtil {
 
 		String name = method.getName();
 		// 跳过getClass这个特殊方法
-		if("getClass".equals(name)){
+		if ("getClass".equals(name)) {
 			return false;
 		}
-		if(ignoreCase){
+		if (ignoreCase) {
 			name = name.toLowerCase();
 		}
 		switch (parameterCount) {
@@ -1054,5 +1053,48 @@ public class ReflectUtil {
 			accessibleObject.setAccessible(true);
 		}
 		return accessibleObject;
+	}
+
+	/**
+	 * 获取方法的唯一键，结构为:
+	 * <pre>
+	 *     返回类型#方法名:参数1类型,参数2类型...
+	 * </pre>
+	 *
+	 * @param method 方法
+	 * @return 方法唯一键
+	 */
+	private static String getUniqueKey(Method method) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(method.getReturnType().getName()).append('#');
+		sb.append(method.getName());
+		Class<?>[] parameters = method.getParameterTypes();
+		for (int i = 0; i < parameters.length; i++) {
+			if (i == 0) {
+				sb.append(':');
+			} else {
+				sb.append(',');
+			}
+			sb.append(parameters[i].getName());
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 获取类对应接口中的非抽象方法（default方法）
+	 *
+	 * @param clazz 类
+	 * @return 方法列表
+	 */
+	private static List<Method> getDefaultMethodsFromInterface(Class<?> clazz) {
+		List<Method> result = new ArrayList<>();
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			for (Method m : ifc.getMethods()) {
+				if (false == ModifierUtil.isAbstract(m)) {
+					result.add(m);
+				}
+			}
+		}
+		return result;
 	}
 }

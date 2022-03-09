@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * 可复用的字符串生成器，非线程安全
+ * 可复用的字符串生成器，非线程安全<br>
+ *  TODO 6.x移除此类，java8的StringBuilder非常完善了，无需重写。
  *
  * @author Looly
  * @since 4.0.0

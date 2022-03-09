@@ -39,7 +39,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 
 	@Override
 	public Class<? extends Annotation> annotationType() {
-		return null;
+		return type;
 	}
 
 	@Override

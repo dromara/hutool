@@ -13,7 +13,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 3.3.1
  */
-public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyMap<K, V> {
+public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	// ------------------------------------------------------------------------- Constructor start
@@ -64,18 +64,4 @@ public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyMap<K, V> {
 		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 将Key转为小写
-	 *
-	 * @param key KEY
-	 * @return 小写KEY
-	 */
-	@Override
-	protected Object customKey(Object key) {
-		if (key instanceof CharSequence) {
-			key = key.toString().toLowerCase();
-		}
-		return key;
-	}
 }

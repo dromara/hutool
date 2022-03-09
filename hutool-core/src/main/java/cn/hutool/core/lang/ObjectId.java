@@ -22,6 +22,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 4. INC 自增计数器。确保同一秒内产生objectId的唯一性。
  * </pre>
  *
+ * <table summary="" border="1">
+ *     <tr>
+ *         <td>时间戳</td>
+ *         <td>机器ID</td>
+ *         <td>进程ID</td>
+ *         <td>自增计数器</td>
+ *     </tr>
+ *     <tr>
+ *         <td>4</td>
+ *         <td>3</td>
+ *         <td>2</td>
+ *         <td>3</td>
+ *     </tr>
+ * </table>
+ *
  * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
  *
  * @author looly
