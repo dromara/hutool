@@ -459,4 +459,11 @@ public class ArrayUtilTest {
 		Assert.assertEquals(3, arrayAfterSplit.length);
 		Assert.assertEquals(24, arrayAfterSplit[2].length);
 	}
+
+	@Test
+	public void getTest(){
+		String[] a = {"a", "b", "c"};
+		final Object o = ArrayUtil.get(a, -1);
+		Assert.assertEquals("c", o);
+	}
 }

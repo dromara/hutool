@@ -10,6 +10,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,10 +26,12 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * JSON对象<br>
@@ -120,10 +123,21 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (null == config) {
 			config = JSONConfig.create();
 		}
+		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {
-			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
+			if (null != keyComparator) {
+				// 比较器存在情况下，isOrder无效
+				this.rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
+			} else {
+				this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
+			}
 		} else {
-			this.rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
+			if (null != keyComparator) {
+				// 比较器存在情况下，isOrder无效
+				this.rawHashMap = new TreeMap<>(keyComparator);
+			} else {
+				this.rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
+			}
 		}
 		this.config = config;
 	}
@@ -178,7 +192,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
 		this(source, JSONConfig.create().setOrder(isOrder)//
 				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
-				.setIgnoreNullValue(ignoreNullValue));
+				.setIgnoreNullValue(ignoreNullValue)
+		);
 	}
 
 	/**
@@ -592,9 +607,14 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
-			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
-			if (null == filter || filter.accept(pair)) {
-				jsonWriter.writeField(pair.getKey(), pair.getValue());
+			if (null != filter) {
+				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+				if (filter.accept(pair)) {
+					// 使用修改后的键值对
+					jsonWriter.writeField(pair.getKey(), pair.getValue());
+				}
+			} else {
+				jsonWriter.writeField(key, value);
 			}
 		});
 		jsonWriter.end();
@@ -699,6 +719,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
 			XML.toJSONObject(this, jsonStr, false);
+			return;
 		}
 		init(new JSONTokener(StrUtil.trim(source), this.config));
 	}

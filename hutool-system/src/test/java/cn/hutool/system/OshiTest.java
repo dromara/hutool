@@ -1,8 +1,10 @@
 package cn.hutool.system;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.system.oshi.CpuInfo;
 import cn.hutool.system.oshi.OshiUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import oshi.software.os.OSProcess;
 
@@ -27,5 +29,13 @@ public class OshiTest {
 	public void getCurrentProcessTest() {
 		final OSProcess currentProcess = OshiUtil.getCurrentProcess();
 		Assert.assertEquals("java", currentProcess.getName());
+	}
+
+	@Test
+	@Ignore
+	public void getUsedTest(){
+		while (true){
+			Console.log(OshiUtil.getCpuInfo().getUsed());
+		}
 	}
 }

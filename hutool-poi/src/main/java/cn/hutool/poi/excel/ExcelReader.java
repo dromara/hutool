@@ -283,7 +283,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 
 	/**
 	 * 读取工作簿中指定的Sheet，此方法为类流处理方式，当读到指定单元格时，会调用CellEditor接口<br>
-	 * 用户通过实现此接口，可以更加灵活的处理每个单元格的数据。
+	 * 用户通过实现此接口，可以更加灵活地处理每个单元格的数据。
 	 *
 	 * @param cellHandler 单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
@@ -294,7 +294,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 
 	/**
 	 * 读取工作簿中指定的Sheet，此方法为类流处理方式，当读到指定单元格时，会调用CellEditor接口<br>
-	 * 用户通过实现此接口，可以更加灵活的处理每个单元格的数据。
+	 * 用户通过实现此接口，可以更加灵活地处理每个单元格的数据。
 	 *
 	 * @param startRowIndex 起始行（包含，从0开始计数）
 	 * @param endRowIndex   结束行（包含，从0开始计数）
@@ -364,7 +364,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * 读取Excel为Bean的列表
 	 *
 	 * @param <T>            Bean类型
-	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，，从0开始计数
+	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，从0开始计数
 	 * @param startRowIndex  起始行（包含，从0开始计数）
 	 * @param beanType       每行对应Bean的类型
 	 * @return Map的列表
@@ -378,7 +378,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * 读取Excel为Bean的列表
 	 *
 	 * @param <T>            Bean类型
-	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，，从0开始计数
+	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，从0开始计数
 	 * @param startRowIndex  起始行（包含，从0开始计数）
 	 * @param endRowIndex    读取结束行（包含，从0开始计数）
 	 * @param beanType       每行对应Bean的类型

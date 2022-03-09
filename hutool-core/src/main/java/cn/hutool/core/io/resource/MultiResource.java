@@ -64,6 +64,11 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	}
 
 	@Override
+	public boolean isModified() {
+		return resources.get(cursor).isModified();
+	}
+
+	@Override
 	public BufferedReader getReader(Charset charset) {
 		return resources.get(cursor).getReader(charset);
 	}

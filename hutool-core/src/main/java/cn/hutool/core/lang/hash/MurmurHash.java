@@ -1,9 +1,11 @@
 package cn.hutool.core.lang.hash;
 
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
 /**
@@ -41,6 +43,7 @@ public class MurmurHash implements Serializable{
 
 	private static final int DEFAULT_SEED = 0;
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	private static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 
 	/**
 	 * Murmur3 32-bit Hash值计算
@@ -76,11 +79,8 @@ public class MurmurHash implements Serializable{
 
 		// body
 		for (int i = 0; i < nblocks; i++) {
-			int i_4 = i << 2;
-			int k = (data[i_4] & 0xff) //
-					| ((data[i_4 + 1] & 0xff) << 8) //
-					| ((data[i_4 + 2] & 0xff) << 16) //
-					| ((data[i_4 + 3] & 0xff) << 24);
+			int i4 = i << 2;
+			int k = ByteUtil.bytesToInt(data, i4, DEFAULT_ORDER);
 
 			// mix functions
 			k *= C1_32;
@@ -157,14 +157,7 @@ public class MurmurHash implements Serializable{
 		// body
 		for (int i = 0; i < nblocks; i++) {
 			final int i8 = i << 3;
-			long k = ((long) data[i8] & 0xff) //
-					| (((long) data[i8 + 1] & 0xff) << 8) //
-					| (((long) data[i8 + 2] & 0xff) << 16) //
-					| (((long) data[i8 + 3] & 0xff) << 24) //
-					| (((long) data[i8 + 4] & 0xff) << 32)//
-					| (((long) data[i8 + 5] & 0xff) << 40) //
-					| (((long) data[i8 + 6] & 0xff) << 48) //
-					| (((long) data[i8 + 7] & 0xff) << 56);
+			long k = ByteUtil.bytesToLong(data, i8, DEFAULT_ORDER);
 
 			// mix functions
 			k *= C1;
@@ -241,23 +234,8 @@ public class MurmurHash implements Serializable{
 		// body
 		for (int i = 0; i < nblocks; i++) {
 			final int i16 = i << 4;
-			long k1 = ((long) data[i16] & 0xff) //
-					| (((long) data[i16 + 1] & 0xff) << 8) //
-					| (((long) data[i16 + 2] & 0xff) << 16) //
-					| (((long) data[i16 + 3] & 0xff) << 24) //
-					| (((long) data[i16 + 4] & 0xff) << 32) //
-					| (((long) data[i16 + 5] & 0xff) << 40) //
-					| (((long) data[i16 + 6] & 0xff) << 48) //
-					| (((long) data[i16 + 7] & 0xff) << 56);
-
-			long k2 = ((long) data[i16 + 8] & 0xff) //
-					| (((long) data[i16 + 9] & 0xff) << 8) //
-					| (((long) data[i16 + 10] & 0xff) << 16) //
-					| (((long) data[i16 + 11] & 0xff) << 24) //
-					| (((long) data[i16 + 12] & 0xff) << 32) //
-					| (((long) data[i16 + 13] & 0xff) << 40) //
-					| (((long) data[i16 + 14] & 0xff) << 48) //
-					| (((long) data[i16 + 15] & 0xff) << 56);
+			long k1 = ByteUtil.bytesToLong(data, i16, DEFAULT_ORDER);
+			long k2 = ByteUtil.bytesToLong(data, i16 + 8, DEFAULT_ORDER);
 
 			// mix functions for k1
 			k1 *= C1;

@@ -1,13 +1,16 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 
 public class LocalDateTimeUtilTest {
 
@@ -196,5 +199,32 @@ public class LocalDateTimeUtilTest {
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+	}
+
+	@Test
+	public void weekOfYearTest(){
+		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(52, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(52, weekOfYear2);
+	}
+
+	@Test
+	public void weekOfYearTest2(){
+		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(5, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(5, weekOfYear2);
+	}
+
+	@Test
+	public void ofTest2(){
+		final Instant instant = DateUtil.parse("2022-02-22").toInstant();
+		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
+		Console.log(of);
 	}
 }

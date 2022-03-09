@@ -54,6 +54,17 @@ public interface Resource {
 	InputStream getStream();
 
 	/**
+	 * 检查资源是否变更<br>
+	 * 一般用于文件类资源，检查文件是否被修改过。
+	 *
+	 * @return 是否变更
+	 * @since 5.7.21
+	 */
+	default boolean isModified(){
+		return false;
+	}
+
+	/**
 	 * 将资源内容写出到流，不关闭输出流，但是关闭资源流
 	 *
 	 * @param out 输出流

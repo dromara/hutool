@@ -66,6 +66,14 @@ public class ConvertTest {
 	}
 
 	@Test
+	public void toStrTest4() {
+		// 被当作八进制
+		@SuppressWarnings("OctalInteger")
+		final String result = Convert.toStr(001200);
+		Assert.assertEquals("640", result);
+	}
+
+	@Test
 	public void toIntTest() {
 		String a = " 34232";
 		Integer aInteger = Convert.toInt(a);

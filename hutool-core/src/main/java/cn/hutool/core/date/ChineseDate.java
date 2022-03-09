@@ -8,6 +8,7 @@ import cn.hutool.core.date.chinese.LunarInfo;
 import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.util.StrUtil;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,14 +48,24 @@ public class ChineseDate {
 	 * @param date 公历日期
 	 */
 	public ChineseDate(Date date) {
+		this(LocalDateTimeUtil.ofDate(date.toInstant()));
+	}
+
+	/**
+	 * 通过公历日期构造
+	 *
+	 * @param localDate 公历日期
+	 * @since 5.7.22
+	 */
+	public ChineseDate(LocalDate localDate) {
 		// 公历
-		final DateTime dt = DateUtil.beginOfDay(date);
-		gyear = dt.year();
-		gmonthBase1 = dt.month() + 1;
-		gday = dt.dayOfMonth();
+		gyear = localDate.getYear();
+		gmonthBase1 = localDate.getMonthValue();
+		gday = localDate.getDayOfMonth();
 
 		// 求出和1900年1月31日相差的天数
-		int offset = (int) ((dt.getTime() / DateUnit.DAY.getMillis()) - LunarInfo.BASE_DAY);
+		int offset = (int) (localDate.toEpochDay() - LunarInfo.BASE_DAY);
+
 		// 计算农历年份
 		// 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天
 		int daysOfYear;
@@ -92,7 +103,7 @@ public class ChineseDate {
 			offset -= daysOfMonth;
 		}
 
-		this.isLeapMonth = month == (leapMonth + 1);
+		this.isLeapMonth = leapMonth > 0 && (month == (leapMonth + 1));
 		if (hasLeapMonth && false == this.isLeapMonth) {
 			// 当前月份前有闰月，则月份显示要-1，除非当前月份就是润月
 			month--;

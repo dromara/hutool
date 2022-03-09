@@ -66,7 +66,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * 如果值为其它类型对象，尝试转换为{@link JSONArray}返回，否则抛出异常
 	 *
 	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
+	 * @return JSONArray对象，如果值为{@code null}，返回{@code null}，非JSONArray类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONArray getJSONArray(K key) {
 		final Object object = this.getObj(key);
@@ -85,7 +85,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * 如果值为其它类型对象，尝试转换为{@link JSONObject}返回，否则抛出异常
 	 *
 	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
+	 * @return JSONObject对象，如果值为{@code null}，返回{@code null}，非JSONObject类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONObject getJSONObject(K key) {
 		final Object object = this.getObj(key);

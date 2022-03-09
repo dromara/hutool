@@ -8,12 +8,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * 可变的汇聚操作{@link Collector} 相关工具封装
@@ -140,6 +142,18 @@ public class CollectorUtil {
 		return groupingBy(classifier, HashMap::new, downstream);
 	}
 
+	/**
+	 * 提供对null值友好的groupingBy操作的{@link Collector}实现
+	 *
+	 * @param classifier 分组依据
+	 * @param <T>        实体类型
+	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
+	 * @return {@link Collector}
+	 */
+	public static <T, K> Collector<T, ?, Map<K, List<T>>>
+	groupingBy(Function<? super T, ? extends K> classifier) {
+		return groupingBy(classifier, Collectors.toList());
+	}
 
 	/**
 	 * 对null友好的 toMap 操作的 {@link Collector}实现，默认使用HashMap

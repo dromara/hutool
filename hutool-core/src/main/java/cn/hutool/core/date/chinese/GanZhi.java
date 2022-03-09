@@ -75,7 +75,7 @@ public class GanZhi {
 	public static String getGanzhiOfDay(int year, int month, int day) {
 		// 与1970-01-01相差天数，不包括当天
 		final long days = LocalDate.of(year, month, day).toEpochDay() - 1;
-		//1899-12-21是农历1899年腊月甲子日  40：相差1900-01-31有40天
-		return cyclicalm((int) (days - LunarInfo.BASE_DAY + 40));
+		//1899-12-21是农历1899年腊月甲子日  41：相差1900-01-31有41天
+		return cyclicalm((int) (days - LunarInfo.BASE_DAY + 41));
 	}
 }

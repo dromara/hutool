@@ -229,7 +229,7 @@ public class JSONUtil {
 			json = (JSON) obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = isJsonArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
+			json = isTypeJSONArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
 			json = parseObj(obj, config);
@@ -252,7 +252,7 @@ public class JSONUtil {
 		return XML.toJSONObject(xmlStr);
 	}
 
-	// -------------------------------------------------------------------- Pause end
+	// -------------------------------------------------------------------- Parse end
 
 	// -------------------------------------------------------------------- Read start
 
@@ -743,7 +743,7 @@ public class JSONUtil {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
-				|| JSONNull.NULL.equals(object) //
+				|| ObjectUtil.isNull(object) //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //
@@ -821,9 +821,22 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSON(String)}
 	 */
+	@Deprecated
 	public static boolean isJson(String str) {
-		return isJsonObj(str) || isJsonArray(str);
+		return isTypeJSON(str);
+	}
+
+	/**
+	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSON类型字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSON(String str) {
+		return isTypeJSONObject(str) || isTypeJSONArray(str);
 	}
 
 	/**
@@ -832,8 +845,21 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONObject(String)}
 	 */
+	@Deprecated
 	public static boolean isJsonObj(String str) {
+		return isTypeJSONObject(str);
+	}
+
+	/**
+	 * 是否为JSONObject类型字符串，首尾都为大括号判定为JSONObject字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSON字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSONObject(String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -846,8 +872,21 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONArray(String)}
 	 */
+	@Deprecated
 	public static boolean isJsonArray(String str) {
+		return isTypeJSONArray(str);
+	}
+
+	/**
+	 * 是否为JSONArray类型的字符串，首尾都为中括号判定为JSONArray字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSONArray类型字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSONArray(String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}

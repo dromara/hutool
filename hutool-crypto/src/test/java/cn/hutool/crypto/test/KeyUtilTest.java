@@ -58,4 +58,11 @@ public class KeyUtilTest {
 		final PrivateKey privateKey = KeyUtil.generatePrivateKey("DH", privateKeyBytes);
 		Assert.assertEquals(dh.getPrivate(), privateKey);
 	}
+
+	@Test
+	public void generateSm4KeyTest(){
+		// https://github.com/dromara/hutool/issues/2150
+		Assert.assertEquals(16, KeyUtil.generateKey("sm4").getEncoded().length);
+		Assert.assertEquals(32, KeyUtil.generateKey("sm4", 256).getEncoded().length);
+	}
 }

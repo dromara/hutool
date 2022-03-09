@@ -694,6 +694,8 @@ public class DateUtilTest {
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		// Asia/Shanghai是以地区命名的地区标准时，在中国叫CST，因此如果解析CST时不使用"Asia/Shanghai"而使用"GMT+08:00"，会导致相差一个小时
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
 		DateTime dateTime = DateUtil.parseCST(dateStr);
@@ -992,16 +994,57 @@ public class DateUtilTest {
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
-		final DateTime parse = DateUtil.parse("2021-1-1");
+		DateTime parse = DateUtil.parse("2021-1-1");
 		Assert.assertNotNull(parse);
 		Assert.assertEquals("2021-01-01 00:00:00", parse.toString());
 
-		Console.log(DateUtil.parse("2021-1-22 00:00:00"));
+		parse = DateUtil.parse("2021-1-22 00:00:00");
+		Assert.assertNotNull(parse);
+		Assert.assertEquals("2021-01-22 00:00:00", parse.toString());
 	}
 
 	@Test
 	public void parseByDateTimeFormatterTest() {
 		final DateTime parse = DateUtil.parse("2021-12-01", DatePattern.NORM_DATE_FORMATTER);
 		Assert.assertEquals("2021-12-01 00:00:00", parse.toString());
+	}
+
+	@Test
+	public void isSameWeekTest() {
+		// 周六与周日比较
+		final boolean isSameWeek = DateUtil.isSameWeek(DateTime.of("2022-01-01", "yyyy-MM-dd"), DateTime.of("2022-01-02", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek);
+		// 周日与周一比较
+		final boolean isSameWeek1 = DateUtil.isSameWeek(DateTime.of("2022-01-02", "yyyy-MM-dd"), DateTime.of("2022-01-03", "yyyy-MM-dd"), false);
+		Assert.assertTrue(isSameWeek1);
+		// 跨月比较
+		final boolean isSameWeek2 = DateUtil.isSameWeek(DateTime.of("2021-12-29", "yyyy-MM-dd"), DateTime.of("2022-01-01", "yyyy-MM-dd"), true);
+		Assert.assertTrue(isSameWeek2);
+	}
+
+	@Test
+	public void parseTimeTest(){
+		final DateTime dateTime = DateUtil.parse("12:23:34");
+		Console.log(dateTime);
+	}
+
+	@Test
+	public void isOverlapTest() {
+		DateTime oneStartTime = DateUtil.parse("2022-01-01 10:10:10");
+		DateTime oneEndTime = DateUtil.parse("2022-01-01 11:10:10");
+
+		DateTime oneStartTime2 = DateUtil.parse("2022-01-01 11:20:10");
+		DateTime oneEndTime2 = DateUtil.parse("2022-01-01 11:30:10");
+
+		DateTime oneStartTime3 = DateUtil.parse("2022-01-01 11:40:10");
+		DateTime oneEndTime3 = DateUtil.parse("2022-01-01 11:50:10");
+
+		//真实请假数据
+		DateTime realStartTime = DateUtil.parse("2022-01-01 11:49:10");
+		DateTime realEndTime = DateUtil.parse("2022-01-01 12:00:10");
+
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, realStartTime, realEndTime));
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime2, oneEndTime2, realStartTime, realEndTime));
+		Assert.assertFalse(DateUtil.isOverlap(oneStartTime3, oneEndTime3, realStartTime, realEndTime));
 	}
 }
