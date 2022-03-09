@@ -10,7 +10,7 @@ import java.io.Serializable;
  * XXTEA（Corrected Block Tiny Encryption Algorithm）算法实现<br>
  * 来自：https://github.com/xxtea/xxtea-java
  *
- * @author Ma Bingyao <mabingyao@gmail.com>
+ * @author Ma Bingyao
  */
 public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializable {
 	private static final long serialVersionUID = 1L;
