@@ -23,7 +23,7 @@
 		<tomcat-jdbc.version>10.0.14</tomcat-jdbc.version>
 		<druid.version>1.2.8</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.10</mongo.version>
+		<mongo.version>4.5.0</mongo.version>
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
@@ -99,18 +99,10 @@
 		<!-- MongoDB Java客户端 -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
+			<artifactId>mongodb-driver-sync</artifactId>
 			<version>${mongo.version}</version>
 			<optional>true</optional>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
-			<version>4.5.0</version>
-			<optional>true</optional>
-		</dependency>
-		-->
 		<!-- Redis Java客户端 -->
 		<dependency>
 			<groupId>redis.clients</groupId>

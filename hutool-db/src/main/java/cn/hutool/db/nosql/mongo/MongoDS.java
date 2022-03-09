@@ -6,24 +6,28 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.log.Log;
 import cn.hutool.setting.Setting;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientOptions.Builder;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
+import com.mongodb.MongoDriverInformation;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.internal.MongoClientImpl;
+import com.mongodb.connection.ConnectionPoolSettings;
+import com.mongodb.connection.SocketSettings;
 import org.bson.Document;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * MongoDB工具类
  *
  * @author xiaoleilu
- *
  */
 public class MongoDS implements Closeable {
 	private final static Log log = Log.get();
@@ -146,11 +150,11 @@ public class MongoDS implements Closeable {
 
 		final MongoCredential credentail = createCredentail(group);
 		try {
-			if (null == credentail) {
-				mongo = new MongoClient(serverAddress, buildMongoClientOptions(group));
-			} else {
-				mongo = new MongoClient(serverAddress, credentail, buildMongoClientOptions(group));
+			MongoClientSettings.Builder clusterSettingsBuilder = MongoClientSettings.builder().applyToClusterSettings(b -> b.hosts(Collections.singletonList(serverAddress)));
+			if (null != credentail) {
+				clusterSettingsBuilder.credential(credentail);
 			}
+			mongo = new MongoClientImpl(clusterSettingsBuilder.build(), MongoDriverInformation.builder().build());
 		} catch (Exception e) {
 			throw new DbRuntimeException(StrUtil.format("Init MongoDB pool with connection to [{}] error!", serverAddress), e);
 		}
@@ -192,11 +196,11 @@ public class MongoDS implements Closeable {
 
 		final MongoCredential credentail = createCredentail(StrUtil.EMPTY);
 		try {
-			if (null == credentail) {
-				mongo = new MongoClient(addrList, buildMongoClientOptions(StrUtil.EMPTY));
-			} else {
-				mongo = new MongoClient(addrList, credentail, buildMongoClientOptions(StrUtil.EMPTY));
+			MongoClientSettings.Builder clusterSettingsBuilder = MongoClientSettings.builder().applyToClusterSettings(b -> b.hosts(addrList));
+			if (null != credentail) {
+				clusterSettingsBuilder.credential(credentail);
 			}
+			mongo = new MongoClientImpl(clusterSettingsBuilder.build(), MongoDriverInformation.builder().build());
 		} catch (Exception e) {
 			log.error(e, "Init MongoDB connection error!");
 			return;
@@ -248,6 +252,7 @@ public class MongoDS implements Closeable {
 	}
 
 	// --------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 创建ServerAddress对象，会读取配置文件中的相关信息
 	 *
@@ -322,8 +327,8 @@ public class MongoDS implements Closeable {
 	 * @param group 分组,当分组对应的选项不存在时会读取根选项，如果也不存在使用默认值
 	 * @return MongoClientOptions
 	 */
-	private MongoClientOptions buildMongoClientOptions(String group) {
-		return buildMongoClientOptions(MongoClientOptions.builder(), group).build();
+	private MongoClientSettings buildMongoClientOptions(String group) {
+		return buildMongoClientOptions(MongoClientSettings.builder(), group).build();
 	}
 
 	/**
@@ -332,7 +337,7 @@ public class MongoDS implements Closeable {
 	 * @param group 分组，当分组对应的选项不存在时会读取根选项，如果也不存在使用默认值
 	 * @return Builder
 	 */
-	private Builder buildMongoClientOptions(Builder builder, String group) {
+	private MongoClientSettings.Builder buildMongoClientOptions(MongoClientSettings.Builder builder, String group) {
 		if (setting == null) {
 			return builder;
 		}
@@ -348,8 +353,9 @@ public class MongoDS implements Closeable {
 		if (StrUtil.isBlank(group) == false && connectionsPerHost == null) {
 			connectionsPerHost = setting.getInt("connectionsPerHost");
 		}
+		ConnectionPoolSettings.Builder connectionPoolSettingsBuilder = ConnectionPoolSettings.builder();
 		if (connectionsPerHost != null) {
-			builder.connectionsPerHost(connectionsPerHost);
+			connectionPoolSettingsBuilder.maxConnecting(connectionsPerHost);
 			log.debug("MongoDB connectionsPerHost: {}", connectionsPerHost);
 		}
 
@@ -359,9 +365,10 @@ public class MongoDS implements Closeable {
 			setting.getInt("connectTimeout");
 		}
 		if (connectTimeout != null) {
-			builder.connectTimeout(connectTimeout);
+			connectionPoolSettingsBuilder.maxWaitTime(connectTimeout, TimeUnit.MILLISECONDS);
 			log.debug("MongoDB connectTimeout: {}", connectTimeout);
 		}
+		builder.applyToConnectionPoolSettings(b -> b.applySettings(connectionPoolSettingsBuilder.build()));
 
 		// 套接字超时时间;该值会被传递给Socket.setSoTimeout(int)。默以为0（无穷） --int
 		Integer socketTimeout = setting.getInt(group + "socketTimeout");
@@ -369,7 +376,8 @@ public class MongoDS implements Closeable {
 			setting.getInt("socketTimeout");
 		}
 		if (socketTimeout != null) {
-			builder.socketTimeout(socketTimeout);
+			SocketSettings socketSettings = SocketSettings.builder().connectTimeout(socketTimeout, TimeUnit.MILLISECONDS).build();
+			builder.applyToSocketSettings(b -> b.applySettings(socketSettings));
 			log.debug("MongoDB socketTimeout: {}", socketTimeout);
 		}
 
