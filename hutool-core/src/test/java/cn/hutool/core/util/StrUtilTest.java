@@ -422,6 +422,7 @@ public class StrUtilTest {
 				.set("H2", "H2")
 				.set("H#case", "H#case")
 				.set("PNLabel", "PN_label")
+				.set("DEPT_NAME","DEPT_NAME")
 				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
 	}
 
