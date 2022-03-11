@@ -369,6 +369,43 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 将元素值设置为数组的某个位置,根据元素顺序添加<br>
+	 * 当给定的index大于数组长度，则追加
+	 *
+	 * @param <T>    数组元素类型
+	 * @param buffer 已有数组
+	 * @param index  位置，大于长度追加，否则替换
+	 * @param values 新值
+	 * @return 新数组或原有数组
+	 */
+	public static <T> T[] replace(T[] buffer, int index, T... values) {
+		return index == 0 ? values : replaceBy(buffer, index, values);
+	}
+
+	/**
+	 * 将元素值设置为数组的某个位置,根据元素顺序添加<br>
+	 * 当给定的index大于数组长度，则追加
+	 *
+	 * @param <T>    数组元素类型
+	 * @param buffer 已有数组
+	 * @param index  位置，大于长度追加，否则替换
+	 * @param values 新值
+	 * @return 新数组或原有数组
+	 */
+	public static <T> T[] replaceBy(T[] buffer, int index, T... values) {
+		if (index < buffer.length && buffer.length - index - 1 >= values.length) {
+			for (int i = index; i < values.length; i++) {
+				Array.set(buffer, index, values[i]);
+			}
+			return buffer;
+		} else {
+			final T[] result = (T[]) Array.newInstance(buffer.getClass().getComponentType(), buffer.length - index - 1);
+			System.arraycopy(buffer, 0, result, 0, buffer.length - index - 1);
+			return append(result, values);
+		}
+	}
+
+	/**
 	 * 将新元素插入到到已有数组中的某个位置<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组<br>
 	 * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
