@@ -15,9 +15,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Year;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
@@ -2197,6 +2195,45 @@ public class DateUtil extends CalendarUtil {
 	public static boolean isOverlap(Date realStartTime, Date realEndTime,
 									Date startTime, Date endTime) {
 		return startTime.after(realEndTime) || endTime.before(realStartTime);
+	}
+
+	/**
+	 * 根据开始日期结束日期生成范围日期列表
+	 * @param startDate 开始日期
+	 * @param endDate   结束日期
+	 * @param formatter 日期格式化
+	 * @return 范围日期列表
+	 * @author XueRi
+	 */
+	public static List<String> rangeDate(String startDate, String endDate, DateTimeFormatter formatter) {
+		if (startDate.equals(endDate)) {
+			List<String> range = new ArrayList<>(1);
+			range.add(startDate);
+			return range;
+		}
+		LocalDate start = LocalDate.parse(startDate, formatter);
+		LocalDate end = LocalDate.parse(endDate, formatter);
+		if (start.isAfter(end)) {
+			throw new IllegalArgumentException("the startDate cannot be later than the endDate");
+		}
+		List<String> range = new ArrayList<>(Period.between(start, end).getDays() + 1);
+
+		range.add(startDate);
+		while ((start = start.plusDays(1)).isBefore(end))
+			range.add(start.toString());
+		range.add(endDate);
+		return range;
+	}
+
+	/**
+	 * 根据默认格式开始日期结束日期生成范围日期列表
+	 * @param startDate 开始日期
+	 * @param endDate   结束日期
+	 * @return 范围日期列表
+	 * @author XueRi
+	 */
+	public static List<String> rangeDate(String startDate, String endDate) {
+		return rangeDate(startDate, endDate, DateTimeFormatter.ofPattern(DatePattern.NORM_DATE_PATTERN));
 	}
 
 	// ------------------------------------------------------------------------ Private method start
