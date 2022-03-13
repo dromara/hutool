@@ -97,10 +97,10 @@ public class SpringCronUtil {
 	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
 	 */
 	public static boolean cancel(Serializable schedulerId) {
-		ScheduledFuture<?> future = getScheduledFuture(schedulerId);
-		if (future == null) {
+		if (!TASK_FUTURE.containsKey(schedulerId)) {
 			return false;
 		}
+		ScheduledFuture<?> future = TASK_FUTURE.get(schedulerId);
 		boolean cancel = future.cancel(false);
 		if (cancel) {
 			TASK_FUTURE.remove(schedulerId);
@@ -119,15 +119,6 @@ public class SpringCronUtil {
 	 */
 	public static TaskScheduler getScheduler() {
 		return taskScheduler;
-	}
-
-	/**
-	 * 可在项目中 进行细粒度控制
-	 *
-	 * @return 获得ScheduledFuture对象
-	 */
-	private static ScheduledFuture<?> getScheduledFuture(Serializable id) {
-		return TASK_FUTURE.get(id);
 	}
 
 	/**
