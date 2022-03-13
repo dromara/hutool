@@ -369,8 +369,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将元素值设置为数组的某个位置,根据元素顺序添加<br>
-	 * 当给定的index大于数组长度，则追加
+	 * 将新元素插入到到已有数组中的某个位置<br>
+	 * 添加新元素会生成一个新数组或原有数组<br>
+	 * 如果插入位置为为负数，那么生成一个由插入元素顺序加已有数组顺序的新数组
 	 *
 	 * @param <T>    数组元素类型
 	 * @param buffer 已有数组
@@ -378,31 +379,33 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param values 新值
 	 * @return 新数组或原有数组
 	 */
+	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
 	public static <T> T[] replace(T[] buffer, int index, T... values) {
-		return index == 0 ? values : replaceBy(buffer, index, values);
-	}
-
-	/**
-	 * 将元素值设置为数组的某个位置,根据元素顺序添加<br>
-	 * 当给定的index大于数组长度，则追加
-	 *
-	 * @param <T>    数组元素类型
-	 * @param buffer 已有数组
-	 * @param index  位置，大于长度追加，否则替换
-	 * @param values 新值
-	 * @return 新数组或原有数组
-	 */
-	public static <T> T[] replaceBy(T[] buffer, int index, T... values) {
-		if (index < buffer.length && buffer.length - index - 1 >= values.length) {
-			for (int i = index; i < values.length; i++) {
-				Array.set(buffer, index, values[i]);
+		if (index < 0) {
+			return insert(buffer, 0, values);
+		}
+		if (isEmpty(buffer) || index == 0 && isNotEmpty(values)) {
+			return values;
+		}
+		if (index >= buffer.length || isEmpty(values)) {
+			return append(buffer, values);
+		}
+		int replaceSpace = buffer.length - index - 1;
+		if (replaceSpace > values.length) {
+			for (int i = index - 1; i < values.length; i++) {
+				Array.set(buffer, i + 1, values[i]);
 			}
 			return buffer;
-		} else {
-			final T[] result = (T[]) Array.newInstance(buffer.getClass().getComponentType(), buffer.length - index - 1);
-			System.arraycopy(buffer, 0, result, 0, buffer.length - index - 1);
-			return append(result, values);
 		}
+		int newArrayLength = index + values.length;
+		final T[] result = (T[]) Array.newInstance(buffer.getClass().getComponentType(), newArrayLength);
+		System.arraycopy(buffer, 0, result, 0, index);
+		int valueIndex = 0;
+		for (int i = index; i < newArrayLength; i++) {
+			Array.set(result, i, values[valueIndex]);
+			valueIndex = valueIndex + 1;
+		}
+		return result;
 	}
 
 	/**
@@ -1577,7 +1580,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static boolean isAllEmpty(Object... args) {
-		for (Object obj: args) {
+		for (Object obj : args) {
 			if (false == ObjectUtil.isEmpty(obj)) {
 				return false;
 			}
@@ -1795,10 +1798,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 查找最后一个子数组的开始位置
 	 *
-	 * @param array    数组
+	 * @param array      数组
 	 * @param endInclude 查找结束的位置（包含）
-	 * @param subArray 子数组
-	 * @param <T>      数组元素类型
+	 * @param subArray   子数组
+	 * @param <T>        数组元素类型
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
