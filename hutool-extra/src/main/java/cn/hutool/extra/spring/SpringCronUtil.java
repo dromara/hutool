@@ -22,6 +22,7 @@ import java.util.concurrent.ScheduledFuture;
  *     <li>取消定时任务</li>
  *     <li>高级操作</li>
  * </ol>
+ * 参考：<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#scheduling">Spring doc</a>
  *
  * @author JC
  * @date 03/13

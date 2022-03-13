@@ -61,7 +61,7 @@ public class SpringCronUtilTest {
 
 	/**
 	 * 高级用法
-	 * 参考：
+	 * 参考：<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#scheduling">Spring doc</a>
 	 */
 	@Test
 	public void senior() {
