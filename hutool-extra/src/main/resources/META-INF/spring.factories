@@ -1,4 +1,5 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 cn.hutool.extra.spring.SpringUtil,\
-cn.hutool.extra.spring.config.SpringCronConfig
+cn.hutool.extra.spring.config.SpringCronConfig,\
+cn.hutool.extra.spring.SpringCronUtil
