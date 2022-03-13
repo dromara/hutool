@@ -97,7 +97,7 @@ public class NamingCase {
 						// 后一个为大写，按照专有名词对待，如aBC -> a_BC
 					} else {
 						//前一个为大写
-						if (null == nextChar || Character.isLowerCase(nextChar)) {
+						if (null != nextChar && Character.isLowerCase(nextChar)) {
 							// 普通首字母大写，如ABcc -> A_bcc
 							sb.append(symbol);
 							c = Character.toLowerCase(c);
