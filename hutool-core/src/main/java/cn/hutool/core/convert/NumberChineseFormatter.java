@@ -68,6 +68,7 @@ public class NumberChineseFormatter {
 	 * @param unitName         单位名称 如：元、圆
 	 * @return java.lang.String
 	 * @author machuanpeng
+	 * @since 5.7.23
 	 */
 	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode, String negativeName, String unitName) {
 		if (0 == amount) {

@@ -472,36 +472,32 @@ public class ArrayUtilTest {
 		String[] a = {"1", "2", "3", "4"};
 		String[] b = {"a", "b", "c"};
 
-		// 在小于0的位置，-1位置插入，返回b+a
+		// 在小于0的位置，-1位置插入，返回b+a，新数组
 		String[] result = ArrayUtil.replace(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
 
-		// 在第0个位置插入，即覆盖a，直接返回b
-		result = ArrayUtil.replace(a, 0, b);
-		Assert.assertArrayEquals(new String[]{"a", "b", "c"}, result);
+		// 在第0个位置开始替换，返回a
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 0, b);
+		Assert.assertArrayEquals(new String[]{"a", "b", "c", "4"}, result);
 
-		// 在第1个位置插入，即"2"之前
-		result = ArrayUtil.replace(a, 1, b);
+		// 在第1个位置替换，即"2"开始
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 1, b);
 		Assert.assertArrayEquals(new String[]{"1", "a", "b", "c"}, result);
 
-		//上一步测试修改了原数组结构
-		String[] c = {"1", "2", "3", "4"};
-		String[] d = {"a", "b", "c"};
-
 		// 在第2个位置插入，即"3"之后
-		result = ArrayUtil.replace(c, 2, d);
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 2, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "a", "b", "c"}, result);
 
 		// 在第3个位置插入，即"4"之后
-		result = ArrayUtil.replace(c, 3, d);
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 3, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "a", "b", "c"}, result);
 
 		// 在第4个位置插入，数组长度为4，在索引4出替换即两个数组相加
-		result = ArrayUtil.replace(c, 4, d);
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 4, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
 		// 在大于3个位置插入，数组长度为4，即两个数组相加
-		result = ArrayUtil.replace(c, 5, d);
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 5, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
 		String[] e = null;
@@ -509,13 +505,13 @@ public class ArrayUtilTest {
 
 		// e为null 返回 f
 		result = ArrayUtil.replace(e, -1, f);
-		Assert.assertArrayEquals(new String[]{"a", "b", "c"}, result);
+		Assert.assertArrayEquals(f, result);
 
 		String[] g = {"a", "b", "c"};
 		String[] h = null;
 
 		// h为null 返回 g
 		result = ArrayUtil.replace(g, 0, h);
-		Assert.assertArrayEquals(new String[]{"a", "b", "c"}, result);
+		Assert.assertArrayEquals(g, result);
 	}
 }

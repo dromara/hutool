@@ -392,41 +392,6 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void toCamelCaseTest() {
-		String str = "Table_Test_Of_day";
-		String result = StrUtil.toCamelCase(str);
-		Assert.assertEquals("tableTestOfDay", result);
-
-		String str1 = "TableTestOfDay";
-		String result1 = StrUtil.toCamelCase(str1);
-		Assert.assertEquals("TableTestOfDay", result1);
-
-		String abc1d = StrUtil.toCamelCase("abc_1d");
-		Assert.assertEquals("abc1d", abc1d);
-
-
-		String str2 = "Table-Test-Of-day";
-		String result2 = StrUtil.toCamelCase(str2, CharUtil.DASHED);
-		System.out.println(result2);
-		Assert.assertEquals("tableTestOfDay", result2);
-	}
-
-	@Test
-	public void toUnderLineCaseTest() {
-		Dict.create()
-				.set("Table_Test_Of_day", "table_test_of_day")
-				.set("_Table_Test_Of_day_", "_table_test_of_day_")
-				.set("_Table_Test_Of_DAY_", "_table_test_of_DAY_")
-				.set("_TableTestOfDAYToday", "_table_test_of_DAY_today")
-				.set("HelloWorld_test", "hello_world_test")
-				.set("H2", "H2")
-				.set("H#case", "H#case")
-				.set("PNLabel", "PN_label")
-				.set("DEPT_NAME","DEPT_NAME")
-				.forEach((key, value) -> Assert.assertEquals(value, StrUtil.toUnderlineCase(key)));
-	}
-
-	@Test
 	public void containsAnyTest() {
 		//字符
 		boolean containsAny = StrUtil.containsAny("aaabbbccc", 'a', 'd');

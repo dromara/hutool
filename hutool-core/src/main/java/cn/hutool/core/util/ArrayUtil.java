@@ -375,36 +375,38 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param <T>    数组元素类型
 	 * @param buffer 已有数组
-	 * @param index  位置，大于长度追加，否则替换
+	 * @param index  位置，大于长度追加，否则替换，&lt;0表示从头部追加
 	 * @param values 新值
 	 * @return 新数组或原有数组
+	 * @since 5.7.23
 	 */
-	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
+	@SuppressWarnings({"unchecked"})
 	public static <T> T[] replace(T[] buffer, int index, T... values) {
-		if (index < 0) {
-			return insert(buffer, 0, values);
-		}
-		if (isEmpty(buffer) || index == 0 && isNotEmpty(values)) {
-			return values;
-		}
-		if (index >= buffer.length || isEmpty(values)) {
-			return append(buffer, values);
-		}
-		int replaceSpace = buffer.length - index - 1;
-		if (replaceSpace > values.length) {
-			for (int i = index - 1; i < values.length; i++) {
-				Array.set(buffer, i + 1, values[i]);
-			}
+		if(isEmpty(values)){
 			return buffer;
 		}
-		int newArrayLength = index + values.length;
-		final T[] result = (T[]) Array.newInstance(buffer.getClass().getComponentType(), newArrayLength);
-		System.arraycopy(buffer, 0, result, 0, index);
-		int valueIndex = 0;
-		for (int i = index; i < newArrayLength; i++) {
-			Array.set(result, i, values[valueIndex]);
-			valueIndex = valueIndex + 1;
+		if(isEmpty(buffer)){
+			return values;
 		}
+		if (index < 0) {
+			// 从头部追加
+			return insert(buffer, 0, values);
+		}
+		if (index >= buffer.length) {
+			// 超出长度，尾部追加
+			return append(buffer, values);
+		}
+
+		if (buffer.length >= values.length + index) {
+			System.arraycopy(values, 0, buffer, index, values.length);
+			return buffer;
+		}
+
+		// 替换长度大于原数组长度，新建数组
+		int newArrayLength = index + values.length;
+		final T[] result = newArray(buffer.getClass().getComponentType(), newArrayLength);
+		System.arraycopy(buffer, 0, result, 0, index);
+		System.arraycopy(values, 0, result, index, values.length);
 		return result;
 	}
 
