@@ -107,6 +107,8 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 [📘中文文档](https://www.hutool.cn/docs/)
 
+[📘中文备用文档](https://plus.hutool.cn/docs/#/)
+
 [📙参考API](https://apidoc.gitee.com/dromara/hutool/)
 
 [🎬视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
