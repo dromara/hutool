@@ -504,7 +504,6 @@ public class ArrayUtilTest {
 		result = ArrayUtil.replace(c, 5, d);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
-		//上一步测试修改了原数组结构
 		String[] e = null;
 		String[] f = {"a", "b", "c"};
 
@@ -512,7 +511,6 @@ public class ArrayUtilTest {
 		result = ArrayUtil.replace(e, -1, f);
 		Assert.assertArrayEquals(new String[]{"a", "b", "c"}, result);
 
-		//上一步测试修改了原数组结构
 		String[] g = {"a", "b", "c"};
 		String[] h = null;
 
