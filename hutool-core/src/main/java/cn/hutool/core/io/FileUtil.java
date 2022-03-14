@@ -700,7 +700,7 @@ public class FileUtil extends PathUtil {
 		if (null == file) {
 			return null;
 		}
-		return mkdir(file.getParentFile());
+		return mkdir(getParent(file, 1));
 	}
 
 	/**

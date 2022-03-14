@@ -21,6 +21,7 @@
 * 【core   】     修复ReflectUtil.getMethods获取接口方法问题（issue#I4WUWR@Gitee）
 * 【core   】     修复NamingCase中大写转换问题（pr#572@Gitee）
 * 【http   】     修复GET重定向时，携带参数问题（issue#2189@Github）
+* 【core   】     修复FileUtil、FileCopier相对路径获取父路径错误问题（pr#2188@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

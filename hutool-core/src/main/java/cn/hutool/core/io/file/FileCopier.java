@@ -267,8 +267,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			}
 		}else {
 			//路径不存在则创建父目录
-			//noinspection ResultOfMethodCallIgnored
-			dest.getAbsoluteFile().getParentFile().mkdirs();
+			FileUtil.mkParentDirs(dest);
 		}
 
 		final ArrayList<CopyOption> optionList = new ArrayList<>(2);

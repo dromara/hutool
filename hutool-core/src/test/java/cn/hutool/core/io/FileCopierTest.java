@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -48,8 +49,11 @@ public class FileCopierTest {
 	@Test
 	@Ignore
 	public void copyFileByRelativePath(){
+		// https://github.com/dromara/hutool/pull/2188
 		//  当复制的目标文件位置是相对路径的时候可以通过
 		FileCopier copier = FileCopier.create(new File("pom.xml"),new File("aaa.txt"));
 		copier.copy();
+		final boolean delete = new File("aaa.txt").delete();
+		Assert.assertTrue(delete);
 	}
 }
