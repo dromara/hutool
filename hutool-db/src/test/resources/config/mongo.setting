@@ -13,8 +13,8 @@ socketKeepAlive=false
 
 #---------------------------------- MongoDB实例连接
 [master]
-host = 127.0.0.1:27017
+host = localhost:27017
 
 [slave]
-host = 127.0.0.1:27018
+host = localhost:27018
 #-----------------------------------------------------
