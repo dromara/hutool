@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import cn.hutool.core.io.file.FileCopier;
 
+import java.io.File;
+
 /**
  * 文件拷贝单元测试
  *
@@ -40,6 +42,14 @@ public class FileCopierTest {
 	@Ignore
 	public void copyFileToDirTest() {
 		FileCopier copier = FileCopier.create("d:/GReen_Soft/XshellXftpPortable.zip", "c:/hp/");
+		copier.copy();
+	}
+
+	@Test
+	@Ignore
+	public void copyFileByRelativePath(){
+		//  当复制的目标文件位置是相对路径的时候可以通过
+		FileCopier copier = FileCopier.create(new File("pom.xml"),new File("aaa.txt"));
 		copier.copy();
 	}
 }
