@@ -84,13 +84,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	}
 
 	/**
-	 * 获取头部字段列表，如果containsHeader设置为false则抛出异常
+	 * 获取头部字段列表，如果headerLineNo &lt; 0，抛出异常
 	 *
 	 * @return 头部列表
 	 * @throws IllegalStateException 如果不解析头部或者没有调用nextRow()方法
 	 */
 	public List<String> getHeader() {
-		if (false == config.containsHeader) {
+		if (config.headerLineNo  < 0) {
 			throw new IllegalStateException("No header available - header parsing is disabled");
 		}
 		if (lineNo < config.beginLineNo) {
@@ -152,7 +152,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			}
 
 			//初始化标题
-			if (config.containsHeader && null == header) {
+			if (lineNo == config.headerLineNo && null == header) {
 				initHeader(currentFields);
 				// 作为标题行后，此行跳过，下一行做为第一行
 				continue;

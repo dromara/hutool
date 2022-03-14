@@ -13,6 +13,7 @@
 * 【core   】     增加UniqueKeySet（issue#I4WUWR@Gitee）
 * 【core   】     阿拉伯数字转换成中文对发票票面金额转换的扩展（pr#570@Gitee）
 * 【core   】     ArrayUtil增加replace方法（pr#570@Gitee）
+* 【core   】     CsvReadConfig增加自定义标题行行号（issue#2180@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）

@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializable {
 	private static final long serialVersionUID = 5396453565371560052L;
 
-	/** 是否首行做为标题行，默认false */
-	protected boolean containsHeader;
+	/** 指定标题行号，-1表示无标题行 */
+	protected long headerLineNo = -1;
 	/** 是否跳过空白行，默认true */
 	protected boolean skipEmptyRows = true;
 	/** 每行字段个数不同时是否抛出异常，默认false */
@@ -34,13 +34,26 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	}
 
 	/**
-	 * 设置是否首行做为标题行，默认false
+	 * 设置是否首行做为标题行，默认false<br>
+	 * 当设置为{@code true}时，默认标题行号是{@link #beginLineNo}，{@code false}为-1，表示无行号
 	 *
 	 * @param containsHeader 是否首行做为标题行，默认false
 	 * @return this
+	 * @see #setHeaderLineNo(long)
 	 */
 	public CsvReadConfig setContainsHeader(boolean containsHeader) {
-		this.containsHeader = containsHeader;
+		return setHeaderLineNo(containsHeader ? beginLineNo : -1);
+	}
+
+	/**
+	 * 设置标题行行号，默认-1，表示无标题行<br>
+	 *
+	 * @param headerLineNo 标题行行号，-1表示无标题行
+	 * @return this
+	 * @since 5.7.23
+	 */
+	public CsvReadConfig setHeaderLineNo(long headerLineNo) {
+		this.headerLineNo = headerLineNo;
 		return this;
 	}
 
