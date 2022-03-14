@@ -20,10 +20,9 @@
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
-		<tomcat-jdbc.version>10.0.14</tomcat-jdbc.version>
+		<tomcat-jdbc.version>10.0.16</tomcat-jdbc.version>
 		<druid.version>1.2.8</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.10</mongo.version>
 		<mongo4.version>4.5.0</mongo4.version>
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
@@ -95,13 +94,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
-			<optional>true</optional>
-		</dependency>
-		<!-- MongoDB Java客户端 -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>${mongo.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
