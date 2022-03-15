@@ -1,9 +1,9 @@
 package cn.hutool.core.codec;
 
-import java.nio.charset.Charset;
-
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.nio.charset.Charset;
 
 /**
  * Base32 - encodes and decodes RFC3548 Base32 (see http://www.faqs.org/rfcs/rfc3548.html )<br>
@@ -30,6 +30,7 @@ public class Base32 {
 			0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, // 'p', 'q', 'r', 's', 't', 'u', 'v', 'w'
 			0x17, 0x18, 0x19, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF // 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'
 	};
+	private static final int[] BASE32_FILL = {-1, 4, 1, 6, 3};
 
 	//----------------------------------------------------------------------------------------- encode
 	/**
@@ -43,10 +44,17 @@ public class Base32 {
 		int digit;
 		int currByte;
 		int nextByte;
-		StringBuilder base32 = new StringBuilder((bytes.length + 7) * 8 / 5);
+
+		int encodeLen = bytes.length * 8 / 5;
+		if (encodeLen != 0) {
+			encodeLen = encodeLen + 1 + BASE32_FILL[(bytes.length * 8) % 5];
+		}
+
+		StringBuilder base32 = new StringBuilder(encodeLen);
 
 		while (i < bytes.length) {
-			currByte = (bytes[i] >= 0) ? bytes[i] : (bytes[i] + 256); // unsign
+			// unsign
+			currByte = (bytes[i] >= 0) ? bytes[i] : (bytes[i] + 256);
 
 			/* Is the current digit going to span a byte boundary? */
 			if (index > 3) {
@@ -71,7 +79,7 @@ public class Base32 {
 			base32.append(BASE32_CHARS.charAt(digit));
 		}
 
-		return base32.toString();
+		return StrUtil.fillAfter(base32.toString(), '=', encodeLen);
 	}
 
 	/**
@@ -114,7 +122,8 @@ public class Base32 {
 	 */
 	public static byte[] decode(final String base32) {
 		int i, index, lookup, offset, digit;
-		byte[] bytes = new byte[base32.length() * 5 / 8];
+		int len = base32.endsWith("=") ? base32.indexOf("=") * 5 / 8 : base32.length() * 5 / 8;
+		byte[] bytes = new byte[len];
 
 		for (i = 0, index = 0, offset = 0; i < base32.length(); i++) {
 			lookup = base32.charAt(i) - '0';
