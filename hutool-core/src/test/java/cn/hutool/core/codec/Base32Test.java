@@ -13,5 +13,8 @@ public class Base32Test {
 
 		String decodeStr = Base32.decodeStr(encode);
 		Assert.assertEquals(a, decodeStr);
+
+		decodeStr = Base32.decodeStr("4S6KNZNOW3TJRL7EXCAOJOFK5GOZ5ZNYXDUZLP7HTKCOLLMX46WKNZFYWI");
+		Assert.assertEquals(a, decodeStr);
 	}
 }
