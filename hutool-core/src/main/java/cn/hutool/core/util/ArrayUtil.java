@@ -370,6 +370,48 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 将新元素插入到到已有数组中的某个位置<br>
+	 * 添加新元素会生成一个新数组或原有数组<br>
+	 * 如果插入位置为为负数，那么生成一个由插入元素顺序加已有数组顺序的新数组
+	 *
+	 * @param <T>    数组元素类型
+	 * @param buffer 已有数组
+	 * @param index  位置，大于长度追加，否则替换，&lt;0表示从头部追加
+	 * @param values 新值
+	 * @return 新数组或原有数组
+	 * @since 5.7.23
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] replace(T[] buffer, int index, T... values) {
+		if(isEmpty(values)){
+			return buffer;
+		}
+		if(isEmpty(buffer)){
+			return values;
+		}
+		if (index < 0) {
+			// 从头部追加
+			return insert(buffer, 0, values);
+		}
+		if (index >= buffer.length) {
+			// 超出长度，尾部追加
+			return append(buffer, values);
+		}
+
+		if (buffer.length >= values.length + index) {
+			System.arraycopy(values, 0, buffer, index, values.length);
+			return buffer;
+		}
+
+		// 替换长度大于原数组长度，新建数组
+		int newArrayLength = index + values.length;
+		final T[] result = newArray(buffer.getClass().getComponentType(), newArrayLength);
+		System.arraycopy(buffer, 0, result, 0, index);
+		System.arraycopy(values, 0, result, index, values.length);
+		return result;
+	}
+
+	/**
+	 * 将新元素插入到到已有数组中的某个位置<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组<br>
 	 * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
 	 *
@@ -1540,7 +1582,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static boolean isAllEmpty(Object... args) {
-		for (Object obj: args) {
+		for (Object obj : args) {
 			if (false == ObjectUtil.isEmpty(obj)) {
 				return false;
 			}
@@ -1758,10 +1800,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 查找最后一个子数组的开始位置
 	 *
-	 * @param array    数组
+	 * @param array      数组
 	 * @param endInclude 查找结束的位置（包含）
-	 * @param subArray 子数组
-	 * @param <T>      数组元素类型
+	 * @param subArray   子数组
+	 * @param <T>        数组元素类型
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */

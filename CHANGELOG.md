@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.23 (2022-03-09)
+# 5.7.23 (2022-03-15)
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
@@ -11,11 +11,18 @@
 * 【crypto 】     增加XXTEA实现（issue#I4WH2X@Gitee）
 * 【core   】     增加Table实现（issue#2179@Github）
 * 【core   】     增加UniqueKeySet（issue#I4WUWR@Gitee）
+* 【core   】     阿拉伯数字转换成中文对发票票面金额转换的扩展（pr#570@Gitee）
+* 【core   】     ArrayUtil增加replace方法（pr#570@Gitee）
+* 【core   】     CsvReadConfig增加自定义标题行行号（issue#2180@Github）
+* 【db     】     增加MongoDB4.x支持（pr#568@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
 * 【core   】     修复NumberConverter对数字转换的问题（issue#I4WPF4@Gitee）
 * 【core   】     修复ReflectUtil.getMethods获取接口方法问题（issue#I4WUWR@Gitee）
+* 【core   】     修复NamingCase中大写转换问题（pr#572@Gitee）
+* 【http   】     修复GET重定向时，携带参数问题（issue#2189@Github）
+* 【core   】     修复FileUtil、FileCopier相对路径获取父路径错误问题（pr#2188@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

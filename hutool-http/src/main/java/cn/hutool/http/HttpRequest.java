@@ -1161,10 +1161,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 对于GET请求将参数加到URL中<br>
-	 * 此处不对URL中的特殊字符做单独编码
+	 * 此处不对URL中的特殊字符做单独编码<br>
+	 * 对于非rest的GET请求，且处于重定向时，参数丢弃
 	 */
 	private void urlWithParamIfGet() {
-		if (Method.GET.equals(method) && false == this.isRest) {
+		if (Method.GET.equals(method) && false == this.isRest && this.redirectCount > 0) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 				this.url.getQuery().parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
@@ -1194,7 +1195,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
-					setUrl(httpConnection.header(Header.LOCATION));
+					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
 						// 重定向不再走过滤器

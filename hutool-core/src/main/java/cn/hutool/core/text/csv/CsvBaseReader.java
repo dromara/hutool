@@ -177,7 +177,7 @@ public class CsvBaseReader implements Serializable {
 		final CsvParser csvParser = parse(reader);
 		final List<CsvRow> rows = new ArrayList<>();
 		read(csvParser, rows::add);
-		final List<String> header = config.containsHeader ? csvParser.getHeader() : null;
+		final List<String> header = config.headerLineNo > -1 ? csvParser.getHeader() : null;
 
 		return new CsvData(header, rows);
 	}
