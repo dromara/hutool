@@ -120,6 +120,14 @@ public class CRUDTest {
 		Assert.assertFalse(entity.isEmpty());
 	}
 
+	@Test
+	public void lambdaSetTest() {
+		LambdaEntity<User> entity = new LambdaEntity<>(new User());
+		entity.set(User::getAge, 66).load();
+		Assert.assertEquals(new Integer(66), entity.get(User::getAge));
+		Assert.assertFalse(entity.isEmpty());
+	}
+
 	/**
 	 * 对增删改查做单元测试
 	 *
