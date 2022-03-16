@@ -1,15 +1,13 @@
 package cn.hutool.db.meta;
 
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.DSFactory;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * 元数据信息单元测试

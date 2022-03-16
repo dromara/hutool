@@ -1,7 +1,6 @@
 package cn.hutool.db.meta;
 
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 
 import java.io.Serializable;
@@ -93,7 +92,7 @@ public class Column implements Serializable, Cloneable {
 		try {
 			init(table, columnMetaRs);
 		} catch (SQLException e) {
-			throw new DbRuntimeException(StrUtil.format("Get table [{}] meta info error!", tableName));
+			throw new DbRuntimeException(e, "Get table [{}] meta info error!", tableName);
 		}
 	}
 	// ----------------------------------------------------- Constructor end
