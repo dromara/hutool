@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.date.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
+import static cn.hutool.core.lang.OptTest.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class DictTest {
 				.set("key1", 1)//int
 				.set("key2", 1000L)//long
 				.set("key3", DateTime.now());//Date
-		
+
 		Long v2 = dict.getLong("key2");
 		Assert.assertEquals(Long.valueOf(1000L), v2);
 	}
@@ -57,5 +58,14 @@ public class DictTest {
 		dict.removeEqual(dict2);
 
 		Assert.assertTrue(dict.isEmpty());
+	}
+
+	@Test
+	public void setFieldsTest() {
+		User user = User.builder().username("hutool").nickname(null).build();
+		Dict dict = Dict.create();
+		dict.setFields(user::getNickname, user::getUsername);
+		Assert.assertEquals("hutool", dict.get("username"));
+		Assert.assertNull(dict.get("nickname"));
 	}
 }
