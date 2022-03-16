@@ -26,7 +26,8 @@ public class FileAppender implements Serializable{
 	private final int capacity;
 	/** 追加内容是否为新行 */
 	private final boolean isNewLineMode;
-	private final List<String> list = new ArrayList<>(100);
+	/** 数据行缓存 */
+	private final List<String> list;
 
 	/**
 	 * 构造
@@ -49,6 +50,7 @@ public class FileAppender implements Serializable{
 	 */
 	public FileAppender(File destFile, Charset charset, int capacity, boolean isNewLineMode) {
 		this.capacity = capacity;
+		this.list = new ArrayList<>(capacity);
 		this.isNewLineMode = isNewLineMode;
 		this.writer = FileWriter.create(destFile, charset);
 	}

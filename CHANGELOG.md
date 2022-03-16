@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.23 (2022-03-15)
+# 5.7.23 (2022-03-16)
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
@@ -15,6 +15,8 @@
 * 【core   】     ArrayUtil增加replace方法（pr#570@Gitee）
 * 【core   】     CsvReadConfig增加自定义标题行行号（issue#2180@Github）
 * 【db     】     增加MongoDB4.x支持（pr#568@Gitee）
+* 【core   】     FileAppender优化初始List大小（pr#2197@Github）
+* 【core   】     Base32增加pad支持（pr#2195@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
