@@ -139,11 +139,6 @@ public class ActiveEntity extends Entity {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
 
-	@Override
-	public ActiveEntity addFieldNames(String... fieldNames) {
-		return (ActiveEntity) super.addFieldNames(fieldNames);
-	}
-
 	/**
 	 * 通过lambda批量设置值
 	 * @param fields lambda,不能为空
@@ -152,6 +147,11 @@ public class ActiveEntity extends Entity {
 	@Override
 	public ActiveEntity setFields(Func0<?>... fields) {
 		return (ActiveEntity) super.setFields(fields);
+	}
+
+	@Override
+	public ActiveEntity addFieldNames(String... fieldNames) {
+		return (ActiveEntity) super.addFieldNames(fieldNames);
 	}
 
 	@Override
