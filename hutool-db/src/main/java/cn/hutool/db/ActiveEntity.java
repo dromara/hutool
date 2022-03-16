@@ -123,17 +123,17 @@ public class ActiveEntity extends Entity {
 		this.db = db;
 	}
 	// -------------------------------------------------------------------------- Constructor end
-    
+	
 	@Override
 	public ActiveEntity setTableName(String tableName) {
 		return (ActiveEntity) super.setTableName(tableName);
 	}
-    
+	
 	@Override
 	public ActiveEntity setFieldNames(Collection<String> fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
-    
+	
 	@Override
 	public ActiveEntity setFieldNames(String... fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
@@ -153,27 +153,27 @@ public class ActiveEntity extends Entity {
 	public ActiveEntity addFieldNames(String... fieldNames) {
 		return (ActiveEntity) super.addFieldNames(fieldNames);
 	}
-    
+	
 	@Override
 	public <T> ActiveEntity parseBean(T bean) {
 		return (ActiveEntity) super.parseBean(bean);
 	}
-    
+	
 	@Override
 	public <T> ActiveEntity parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
 		return (ActiveEntity) super.parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
-    
+	
 	@Override
 	public ActiveEntity set(String field, Object value) {
 		return (ActiveEntity) super.set(field, value);
 	}
-    
+	
 	@Override
 	public ActiveEntity setIgnoreNull(String field, Object value) {
 		return (ActiveEntity) super.setIgnoreNull(field, value);
 	}
-    
+	
 	@Override
 	public ActiveEntity clone() {
 		return (ActiveEntity) super.clone();
