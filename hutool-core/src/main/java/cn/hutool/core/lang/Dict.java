@@ -10,12 +10,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.LambdaUtil;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -595,5 +598,15 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 			key = key.toLowerCase();
 		}
 		return key;
+	}
+
+	/**
+	 * 通过lambda批量设置值
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	public Dict setFields(Func0<?>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
+		return this;
 	}
 }
