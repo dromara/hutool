@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public class FileAppender implements Serializable{
 	private final int capacity;
 	/** 追加内容是否为新行 */
 	private final boolean isNewLineMode;
-	private final List<String> list = new ArrayList<>(100);
+	private final List<String> list = new LinkedList<>();
 
 	/**
 	 * 构造
