@@ -1,6 +1,8 @@
 package cn.hutool.db.meta;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
@@ -13,7 +15,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库元数据信息工具类
@@ -247,7 +251,34 @@ public class MetaUtil {
 					}
 				}
 			}
-		} catch (SQLException e) {
+
+
+			// 获得索引信息
+
+			try (ResultSet rs = metaData.getIndexInfo(catalog, schema, tableName, false,false)) {
+				Map<String, IndexInfo> indexInfoMap = MapUtil.createMap(LinkedHashMap.class);
+				if (null != rs) {
+					while (rs.next()) {
+						//排除tableIndexStatistic类型索引
+						if (rs.getShort("TYPE") != 0) {
+							String indexName = rs.getString("INDEX_NAME");
+							String key = StrUtil.join("&", tableName, indexName);
+							IndexInfo indexInfo = indexInfoMap.getOrDefault(key
+									, new IndexInfo(rs.getBoolean("NON_UNIQUE"),indexName,tableName,schema,catalog));
+							ColumnIndexInfo columnIndexInfo = new ColumnIndexInfo();
+							columnIndexInfo.setColumnName(rs.getString("COLUMN_NAME"));
+							columnIndexInfo.setAscOrDesc(rs.getString("ASC_OR_DESC"));
+							indexInfo.getColumnIndexInfoList().add(columnIndexInfo);
+							if (!indexInfoMap.containsKey(key)) {
+								indexInfoMap.put(key,indexInfo);
+							}
+
+						}
+					}
+				}
+				table.setIndexInfoList(ListUtil.toList(indexInfoMap.values()));
+			}
+ 		} catch (SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
 			DbUtil.close(conn);

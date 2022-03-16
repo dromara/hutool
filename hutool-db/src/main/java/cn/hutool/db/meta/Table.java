@@ -1,11 +1,7 @@
 package cn.hutool.db.meta;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 数据库表信息
@@ -35,6 +31,11 @@ public class Table implements Serializable, Cloneable {
 	 * 主键字段名列表
 	 */
 	private Set<String> pkNames = new LinkedHashSet<>();
+
+	/**
+	 * 索引信息
+	 */
+	private List<IndexInfo> indexInfoList;
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
 	public static Table create(String tableName) {
@@ -208,5 +209,17 @@ public class Table implements Serializable, Cloneable {
 	public Table addPk(String pkColumnName) {
 		this.pkNames.add(pkColumnName);
 		return this;
+	}
+
+	/**
+	 * 获取索引信息
+	 * @return 索引信息
+	 */
+	public List<IndexInfo> getIndexInfoList() {
+		return indexInfoList;
+	}
+
+	public void setIndexInfoList(List<IndexInfo> indexInfoList) {
+		this.indexInfoList = indexInfoList;
 	}
 }
