@@ -281,8 +281,8 @@ public class MapUtil {
 	/**
 	 * 根据给定的Pair数组创建Map对象
 	 *
-	 * @param <K>     键类型
-	 * @param <V>     值类型
+	 * @param <K>   键类型
+	 * @param <V>   值类型
 	 * @param pairs 键值对
 	 * @return Map
 	 * @since 5.4.1
@@ -629,7 +629,7 @@ public class MapUtil {
 		}
 
 		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
-		if(null == map2){
+		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}
 		if (isEmpty(map)) {
@@ -662,7 +662,7 @@ public class MapUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
-		if(null == map || null == filter){
+		if (null == map || null == filter) {
 			return map;
 		}
 		return edit(map, t -> filter.accept(t) ? t : null);
@@ -680,12 +680,12 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
-		if(null == map || null == keys){
+		if (null == map || null == keys) {
 			return map;
 		}
 
 		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
-		if(null == map2){
+		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}
 		if (isEmpty(map)) {
@@ -792,9 +792,9 @@ public class MapUtil {
 	/**
 	 * 按照值排序，可选是否倒序
 	 *
-	 * @param map 需要对值排序的map
-	 * @param <K> 键类型
-	 * @param <V> 值类型
+	 * @param map    需要对值排序的map
+	 * @param <K>    键类型
+	 * @param <V>    值类型
 	 * @param isDesc 是否倒序
 	 * @return 排序后新的Map
 	 * @since 5.5.8
@@ -802,7 +802,7 @@ public class MapUtil {
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isDesc) {
 		Map<K, V> result = new LinkedHashMap<>();
 		Comparator<Entry<K, V>> entryComparator = Entry.comparingByValue();
-		if(isDesc){
+		if (isDesc) {
 			entryComparator = entryComparator.reversed();
 		}
 		map.entrySet().stream().sorted(entryComparator).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));

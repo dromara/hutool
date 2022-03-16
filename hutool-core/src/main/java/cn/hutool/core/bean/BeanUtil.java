@@ -915,4 +915,27 @@ public class BeanUtil {
 		return false;
 	}
 
+	/**
+	 * 获取Getter或Setter方法名对应的字段名称，规则如下：
+	 * <ul>
+	 *     <li>getXxxx获取为xxxx，如getName得到name。</li>
+	 *     <li>setXxxx获取为xxxx，如setName得到name。</li>
+	 *     <li>isXxxx获取为xxxx，如isName得到name。</li>
+	 *     <li>其它不满足规则的方法名抛出{@link IllegalArgumentException}</li>
+	 * </ul>
+	 *
+	 * @param getterOrSetterName Getter或Setter方法名
+	 * @return 字段名称
+	 * @throws IllegalArgumentException 非Getter或Setter方法
+	 * @since 5.7.23
+	 */
+	public static String getFieldName(String getterOrSetterName) {
+		if (getterOrSetterName.startsWith("get") || getterOrSetterName.startsWith("set")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 3);
+		} else if (getterOrSetterName.startsWith("is")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 2);
+		} else {
+			throw new IllegalArgumentException("Invalid Getter or Setter name: " + getterOrSetterName);
+		}
+	}
 }

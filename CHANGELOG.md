@@ -17,6 +17,7 @@
 * 【db     】     增加MongoDB4.x支持（pr#568@Gitee）
 * 【core   】     FileAppender优化初始List大小（pr#2197@Github）
 * 【core   】     Base32增加pad支持（pr#2195@Github）
+* 【core   】     Dict增加setFields方法（pr#578@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
