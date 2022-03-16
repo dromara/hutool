@@ -29,6 +29,10 @@ public class LambdaUtil {
 		return _resolve(func);
 	}
 
+	public static <R> SerializedLambda resolve(Func0<R> func) {
+		return _resolve(func);
+	}
+
 	/**
 	 * 获取lambda表达式函数（方法）名称
 	 *
@@ -37,6 +41,10 @@ public class LambdaUtil {
 	 * @return 函数名称
 	 */
 	public static <T> String getMethodName(Func1<T, ?> func) {
+		return resolve(func).getImplMethodName();
+	}
+
+	public static <R> String getMethodName(Func0<R> func) {
 		return resolve(func).getImplMethodName();
 	}
 
@@ -56,6 +64,17 @@ public class LambdaUtil {
 	 * @since 5.7.10
 	 */
 	public static <T> String getFieldName(Func1<T, ?> func) throws IllegalArgumentException {
+		final String methodName = getMethodName(func);
+		if (methodName.startsWith("get") || methodName.startsWith("set")) {
+			return StrUtil.removePreAndLowerFirst(methodName, 3);
+		} else if (methodName.startsWith("is")) {
+			return StrUtil.removePreAndLowerFirst(methodName, 2);
+		} else {
+			throw new IllegalArgumentException("Invalid Getter or Setter name: " + methodName);
+		}
+	}
+
+	public static <R> String getFieldName(Func0<R> func) throws IllegalArgumentException {
 		final String methodName = getMethodName(func);
 		if (methodName.startsWith("get") || methodName.startsWith("set")) {
 			return StrUtil.removePreAndLowerFirst(methodName, 3);
