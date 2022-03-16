@@ -62,10 +62,10 @@ public class DictTest {
 
 	@Test
 	public void setFieldsTest() {
-		User user = User.builder().username("hutool").nickname("Hutool").build();
+		User user = User.builder().username("hutool").nickname(null).build();
 		Dict dict = Dict.create();
 		dict.setFields(user::getNickname, user::getUsername);
-		Assert.assertEquals("Hutool", dict.get("nickname"));
 		Assert.assertEquals("hutool", dict.get("username"));
+		Assert.assertNull(dict.get("nickname"));
 	}
 }
