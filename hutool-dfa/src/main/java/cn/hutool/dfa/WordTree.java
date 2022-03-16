@@ -1,7 +1,6 @@
 package cn.hutool.dfa;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 
@@ -86,8 +85,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 *              @return this
 	 */
 	public WordTree addWords(String... words) {
-		HashSet<String> wordsSet = CollectionUtil.newHashSet(words);
-		for (String word : wordsSet) {
+		for (String word : CollUtil.newHashSet(words)) {
 			addWord(word);
 		}
 		return this;
@@ -105,7 +103,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 		WordTree current = this;
 		WordTree child;
 		char currentChar = 0;
-		int length = word.length();
+		final int length = word.length();
 		for (int i = 0; i < length; i++) {
 			currentChar = word.charAt(i);
 			if (charFilter.accept(currentChar)) {//只处理合法字符
