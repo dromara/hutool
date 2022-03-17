@@ -72,16 +72,6 @@ public class Base64Test {
 	}
 
 	@Test
-	public void urlSafeEncodeAndDecodeTest() {
-		String a = "广州伦家需要安全感55";
-		String encode = StrUtil.utf8Str(Base64.encodeUrlSafe(StrUtil.utf8Bytes(a), false));
-		Assert.assertEquals("5bm_5bee5Lym5a626ZyA6KaB5a6J5YWo5oSfNTU", encode);
-
-		String decodeStr = Base64.decodeStr(encode);
-		Assert.assertEquals(a, decodeStr);
-	}
-
-	@Test
 	public void encodeAndDecodeGbkTest(){
 		String orderDescription = "订购成功立即生效，30天内可观看专区中除单独计费影片外的所有内容，到期自动取消。";
 		String result = Base64.encode(orderDescription, "gbk");

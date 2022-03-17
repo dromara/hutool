@@ -159,7 +159,7 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(byte[] source) {
-		return java.util.Base64.getUrlEncoder().encodeToString(source);
+		return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(source);
 	}
 
 	/**
