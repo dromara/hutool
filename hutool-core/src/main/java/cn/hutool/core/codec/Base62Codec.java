@@ -83,12 +83,12 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	/**
 	 * 编码指定消息bytes为Base62格式的bytes
 	 *
-	 * @param message 被编码的消息
+	 * @param data 被编码的消息
 	 * @return Base62内容
 	 */
 	@Override
-	public byte[] encode(byte[] message) {
-		final byte[] indices = convert(message, STANDARD_BASE, TARGET_BASE);
+	public byte[] encode(byte[] data) {
+		final byte[] indices = convert(data, STANDARD_BASE, TARGET_BASE);
 		return translate(indices, alphabet);
 	}
 
