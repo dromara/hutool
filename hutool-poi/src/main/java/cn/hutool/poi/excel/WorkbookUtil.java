@@ -22,29 +22,52 @@ import java.io.OutputStream;
  *
  * @author looly
  * @since 4.0.7
- *
  */
 public class WorkbookUtil {
 
 	/**
-	 * 创建或加载工作簿
+	 * 创建或加载工作簿（读写模式）
 	 *
 	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
 	 * @return {@link Workbook}
 	 * @since 3.1.1
 	 */
 	public static Workbook createBook(String excelFilePath) {
-		return createBook(FileUtil.file(excelFilePath), null);
+		return createBook(excelFilePath, false);
 	}
 
 	/**
 	 * 创建或加载工作簿
 	 *
+	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param readOnly      是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link Workbook}
+	 * @since 3.1.1
+	 */
+	public static Workbook createBook(String excelFilePath, boolean readOnly) {
+		return createBook(FileUtil.file(excelFilePath), null, readOnly);
+	}
+
+	/**
+	 * 创建或加载工作簿（读写模式）
+	 *
 	 * @param excelFile Excel文件
 	 * @return {@link Workbook}
 	 */
 	public static Workbook createBook(File excelFile) {
-		return createBook(excelFile, null);
+		return createBook(excelFile, false);
+	}
+
+
+	/**
+	 * 创建或加载工作簿
+	 *
+	 * @param excelFile Excel文件
+	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link Workbook}
+	 */
+	public static Workbook createBook(File excelFile, boolean readOnly) {
+		return createBook(excelFile, null, readOnly);
 	}
 
 	/**
@@ -73,15 +96,27 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建或加载工作簿，只读模式
+	 * 创建或加载工作簿（读写模式）
 	 *
 	 * @param excelFile Excel文件
-	 * @param password Excel工作簿密码，如果无密码传{@code null}
+	 * @param password  Excel工作簿密码，如果无密码传{@code null}
 	 * @return {@link Workbook}
 	 */
 	public static Workbook createBook(File excelFile, String password) {
+		return createBook(excelFile, password, false);
+	}
+
+	/**
+	 * 创建或加载工作簿
+	 *
+	 * @param excelFile Excel文件
+	 * @param password  Excel工作簿密码，如果无密码传{@code null}
+	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link Workbook}
+	 */
+	public static Workbook createBook(File excelFile, String password, boolean readOnly) {
 		try {
-			return WorkbookFactory.create(excelFile, password);
+			return WorkbookFactory.create(excelFile, password, readOnly);
 		} catch (Exception e) {
 			throw new POIException(e);
 		}
@@ -100,7 +135,7 @@ public class WorkbookUtil {
 	/**
 	 * 创建或加载工作簿
 	 *
-	 * @param in Excel输入流，使用完毕自动关闭流
+	 * @param in       Excel输入流，使用完毕自动关闭流
 	 * @param password 密码
 	 * @return {@link Workbook}
 	 * @since 4.0.3
@@ -110,7 +145,7 @@ public class WorkbookUtil {
 			return WorkbookFactory.create(IoUtil.toMarkSupportStream(in), password);
 		} catch (Exception e) {
 			throw new POIException(e);
-		} finally{
+		} finally {
 			IoUtil.close(in);
 		}
 	}
@@ -133,37 +168,76 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建或加载SXSSFWorkbook工作簿
+	 * 创建或加载SXSSFWorkbook工作簿（读写模式）
 	 *
 	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
 	 */
 	public static SXSSFWorkbook createSXSSFBook(String excelFilePath) {
-		return createSXSSFBook(FileUtil.file(excelFilePath), null);
+		return createSXSSFBook(excelFilePath, false);
 	}
 
 	/**
 	 * 创建或加载SXSSFWorkbook工作簿
+	 *
+	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param readOnly      是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link SXSSFWorkbook}
+	 * @since 4.1.13
+	 */
+	public static SXSSFWorkbook createSXSSFBook(String excelFilePath, boolean readOnly) {
+		return createSXSSFBook(FileUtil.file(excelFilePath), null, readOnly);
+	}
+
+	/**
+	 * 创建或加载SXSSFWorkbook工作簿（读写模式）
 	 *
 	 * @param excelFile Excel文件
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
 	 */
 	public static SXSSFWorkbook createSXSSFBook(File excelFile) {
-		return createSXSSFBook(excelFile, null);
+		return createSXSSFBook(excelFile, false);
 	}
 
 	/**
-	 * 创建或加载SXSSFWorkbook工作簿，只读模式
+	 * 创建或加载SXSSFWorkbook工作簿
 	 *
 	 * @param excelFile Excel文件
-	 * @param password Excel工作簿密码，如果无密码传{@code null}
+	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link SXSSFWorkbook}
+	 * @since 4.1.13
+	 */
+	public static SXSSFWorkbook createSXSSFBook(File excelFile, boolean readOnly) {
+		return createSXSSFBook(excelFile, null, readOnly);
+	}
+
+
+	/**
+	 * 创建或加载SXSSFWorkbook工作簿（读写模式）
+	 *
+	 * @param excelFile Excel文件
+	 * @param password  Excel工作簿密码，如果无密码传{@code null}
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
 	 */
 	public static SXSSFWorkbook createSXSSFBook(File excelFile, String password) {
-		return toSXSSFBook(createBook(excelFile, password));
+		return createSXSSFBook(excelFile, password, false);
+	}
+
+
+	/**
+	 * 创建或加载SXSSFWorkbook工作簿
+	 *
+	 * @param excelFile Excel文件
+	 * @param password  Excel工作簿密码，如果无密码传{@code null}
+	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
+	 * @return {@link SXSSFWorkbook}
+	 * @since 4.1.13
+	 */
+	public static SXSSFWorkbook createSXSSFBook(File excelFile, String password, boolean readOnly) {
+		return toSXSSFBook(createBook(excelFile, password, readOnly));
 	}
 
 	/**
@@ -180,7 +254,7 @@ public class WorkbookUtil {
 	/**
 	 * 创建或加载SXSSFWorkbook工作簿
 	 *
-	 * @param in Excel输入流
+	 * @param in       Excel输入流
 	 * @param password 密码
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
@@ -214,7 +288,7 @@ public class WorkbookUtil {
 	 * 将Excel Workbook刷出到输出流，不关闭流
 	 *
 	 * @param book {@link Workbook}
-	 * @param out 输出流
+	 * @param out  输出流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.0
 	 */
@@ -230,7 +304,7 @@ public class WorkbookUtil {
 	 * 获取或者创建sheet表<br>
 	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
 	 *
-	 * @param book 工作簿{@link Workbook}
+	 * @param book      工作簿{@link Workbook}
 	 * @param sheetName 工作表名
 	 * @return 工作表{@link Sheet}
 	 * @since 4.0.2
@@ -252,7 +326,7 @@ public class WorkbookUtil {
 	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet
 	 *
-	 * @param book 工作簿{@link Workbook}
+	 * @param book       工作簿{@link Workbook}
 	 * @param sheetIndex 工作表序号
 	 * @return 工作表{@link Sheet}
 	 * @since 5.2.1
@@ -271,7 +345,6 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 *
 	 * sheet是否为空
 	 *
 	 * @param sheet {@link Sheet}
@@ -283,6 +356,7 @@ public class WorkbookUtil {
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 将普通工作簿转换为SXSSFWorkbook
 	 *

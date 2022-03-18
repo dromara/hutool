@@ -63,7 +63,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(File bookFile, int sheetIndex) {
-		this(WorkbookUtil.createBook(bookFile), sheetIndex);
+		this(WorkbookUtil.createBook(bookFile, true), sheetIndex);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 */
 	public ExcelReader(File bookFile, String sheetName) {
-		this(WorkbookUtil.createBook(bookFile), sheetName);
+		this(WorkbookUtil.createBook(bookFile, true), sheetName);
 	}
 
 	/**
