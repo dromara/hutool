@@ -4,7 +4,24 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class BeanCopierTest {
+
+	@Test
+	public void beanToMapIgnoreNullTest() {
+		final A a = new A();
+
+		HashMap<Object, Object> map = BeanCopier.create(a, new HashMap<>(), CopyOptions.create()).copy();
+		Assert.assertEquals(1, map.size());
+		Assert.assertTrue(map.containsKey("value"));
+		Assert.assertNull(map.get("value"));
+
+		// 忽略null的情况下，空字段不写入map
+		map = BeanCopier.create(a, new HashMap<>(), CopyOptions.create().ignoreNullValue()).copy();
+		Assert.assertFalse(map.containsKey("value"));
+		Assert.assertEquals(0, map.size());
+	}
 
 	/**
 	 * 测试在非覆盖模式下，目标对象有值则不覆盖

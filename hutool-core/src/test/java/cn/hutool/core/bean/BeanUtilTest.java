@@ -73,8 +73,8 @@ public class BeanUtilTest {
 
 		}, CopyOptions.create());
 
-		Assert.assertEquals(person.getName(), "张三");
-		Assert.assertEquals(person.getAge(), 18);
+		Assert.assertEquals("张三", person.getName());
+		Assert.assertEquals(18, person.getAge());
 	}
 
 	@Test

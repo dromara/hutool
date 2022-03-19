@@ -2,7 +2,12 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.7.23 (2022-03-19)
+# 5.8.0 (2022-03-19)
+
+### ❌不兼容特性
+* 【db     】     【不向下兼容】增加MongoDB4.x支持（pr#568@Gitee）
+* 【json   】     【可能兼容问题】修改JSONObject结构，继承自MapWrapper
+* 【core   】     【可能兼容问题】BeanCopier重构，新建XXXCopier，删除XXXValueProvider
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
@@ -14,7 +19,6 @@
 * 【core   】     阿拉伯数字转换成中文对发票票面金额转换的扩展（pr#570@Gitee）
 * 【core   】     ArrayUtil增加replace方法（pr#570@Gitee）
 * 【core   】     CsvReadConfig增加自定义标题行行号（issue#2180@Github）
-* 【db     】     增加MongoDB4.x支持（pr#568@Gitee）
 * 【core   】     FileAppender优化初始List大小（pr#2197@Github）
 * 【core   】     Base32增加pad支持（pr#2195@Github）
 * 【core   】     Dict增加setFields方法（pr#578@Gitee）
@@ -22,7 +26,8 @@
 * 【db     】     Oracle中Column#typeName后的长度去掉（pr#563@Gitee）
 * 【poi    】     优化ExcelReader，采用只读模式（pr#2204@Gitee）
 * 【poi    】     优化ExcelBase，将alias放入
-* 
+* 【poi    】     优化ExcelBase，将alias放入
+
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
 * 【core   】     修复NumberConverter对数字转换的问题（issue#I4WPF4@Gitee）
@@ -31,6 +36,8 @@
 * 【http   】     修复GET重定向时，携带参数问题（issue#2189@Github）
 * 【core   】     修复FileUtil、FileCopier相对路径获取父路径错误问题（pr#2188@Github）
 * 【core   】     修复CopyOptions中fieldNameEditor无效问题（issue#2202@Github）
+* 【json   】     修复JSON对Map.Entry的解析问题
+* 【core   】     修复MapConverter中map与map转换兼容问题
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

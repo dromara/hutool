@@ -1278,7 +1278,7 @@ public class XmlUtil {
 	 *
 	 * @param bean       Bean对象
 	 * @param namespace  命名空间，可以为null
-	 * @param ignoreNull 时候忽略值为{@code null}的属性
+	 * @param ignoreNull 忽略值为{@code null}的属性
 	 * @return XML
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.7.10

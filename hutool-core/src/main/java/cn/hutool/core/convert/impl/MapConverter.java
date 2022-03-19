@@ -9,7 +9,6 @@ import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 /**
@@ -86,13 +85,11 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 */
 	private void convertMapToMap(Map<?, ?> srcMap, Map<Object, Object> targetMap) {
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
-		Object key;
-		Object value;
-		for (Entry<?, ?> entry : srcMap.entrySet()) {
-			key = TypeUtil.isUnknown(this.keyType) ? entry.getKey() : convert.convert(this.keyType, entry.getKey());
-			value = TypeUtil.isUnknown(this.valueType) ? entry.getValue() : convert.convert(this.valueType, entry.getValue());
+		srcMap.forEach((key, value)->{
+			key = TypeUtil.isUnknown(this.keyType) ? key : convert.convert(this.keyType, key);
+			value = TypeUtil.isUnknown(this.valueType) ? value : convert.convert(this.valueType, value);
 			targetMap.put(key, value);
-		}
+		});
 	}
 
 	@Override
