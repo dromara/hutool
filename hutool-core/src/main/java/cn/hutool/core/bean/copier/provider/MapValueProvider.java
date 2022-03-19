@@ -2,10 +2,12 @@ package cn.hutool.core.bean.copier.provider;
 
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.lang.Editor;
+import cn.hutool.core.map.FuncKeyMap;
 import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,13 +19,13 @@ import java.util.Map;
  *     <li>isFirstName（如果为Boolean或boolean类型的值）</li>
  *     <li>is_first_name（如果为Boolean或boolean类型的值）</li>
  * </ul>
- * 为firstName或first_name都可以对应到值。
  *
  * @author looly
  */
 public class MapValueProvider implements ValueProvider<String> {
 
-	private final Map<?, ?> map;
+	@SuppressWarnings("rawtypes")
+	private final Map map;
 	private final boolean ignoreError;
 
 	/**
@@ -45,13 +47,33 @@ public class MapValueProvider implements ValueProvider<String> {
 	 * @since 5.3.2
 	 */
 	public MapValueProvider(Map<?, ?> map, boolean ignoreCase, boolean ignoreError) {
-		if (false == ignoreCase || map instanceof CaseInsensitiveMap) {
-			//不忽略大小写或者提供的Map本身为CaseInsensitiveMap则无需转换
-			this.map = map;
-		} else {
-			//转换为大小写不敏感的Map
-			this.map = new CaseInsensitiveMap<>(map);
-		}
+		this(map, ignoreCase, ignoreError, null);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param map         Map
+	 * @param ignoreCase  是否忽略key的大小写
+	 * @param ignoreError 是否忽略错误
+	 * @param keyEditor   自定义键编辑器
+	 * @since 5.7.23
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public MapValueProvider(Map map, boolean ignoreCase, boolean ignoreError, Editor<String> keyEditor) {
+		// issue#2202@Github
+		// 如果用户定义了键编辑器，则提供的map中的数据必须全部转换key
+		this.map = new FuncKeyMap(new HashMap(map.size(), 1), (key)->{
+			if(ignoreCase && key instanceof CharSequence){
+				key = key.toString().toLowerCase();
+			}
+			if(null != keyEditor){
+				key = keyEditor.edit(key.toString());
+			}
+			return key;
+		});
+		this.map.putAll(map);
+
 		this.ignoreError = ignoreError;
 	}
 

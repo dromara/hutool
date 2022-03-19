@@ -713,7 +713,7 @@ public class BeanUtilTest {
 		CopyOptions copyOptions = CopyOptions.create().
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
-						setFieldNameEditor(StrUtil::toUnderlineCase);
+						setFieldNameEditor(StrUtil::toCamelCase);
 
 		ChildVo2 childVo2 = new ChildVo2();
 		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);

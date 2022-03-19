@@ -30,6 +30,7 @@
 * 【core   】     修复NamingCase中大写转换问题（pr#572@Gitee）
 * 【http   】     修复GET重定向时，携带参数问题（issue#2189@Github）
 * 【core   】     修复FileUtil、FileCopier相对路径获取父路径错误问题（pr#2188@Github）
+* 【core   】     修复CopyOptions中fieldNameEditor无效问题（issue#2202@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

@@ -121,7 +121,8 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param destBean 目标Bean
 	 */
 	private void beanToBean(Object providerBean, Object destBean) {
-		valueProviderToBean(new BeanValueProvider(providerBean, this.copyOptions.ignoreCase, this.copyOptions.ignoreError), destBean);
+		valueProviderToBean(
+				new BeanValueProvider(providerBean, this.copyOptions.ignoreCase, this.copyOptions.ignoreError, this.copyOptions.fieldNameEditor), destBean);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 */
 	private void mapToBean(Map<?, ?> map, Object bean) {
 		valueProviderToBean(
-				new MapValueProvider(map, this.copyOptions.ignoreCase, this.copyOptions.ignoreError),
+				new MapValueProvider(map, this.copyOptions.ignoreCase, this.copyOptions.ignoreError, this.copyOptions.fieldNameEditor),
 				bean
 		);
 	}
@@ -161,7 +162,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 					return;
 				}
 
-				// 对key做映射，映射后为null的忽略之
+				// 对源key做映射，映射后为null的忽略之
 				key = copyOptions.editFieldName(copyOptions.getMappedFieldName(key.toString(), false));
 				if(null == key){
 					return;
@@ -280,12 +281,11 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			}
 
 			// 对key做映射，映射后为null的忽略之
-			// 这里 copyOptions.editFieldName() 不能少，否则导致 CopyOptions setFieldNameEditor 失效
-			final String providerKey = copyOptions.editFieldName(copyOptions.getMappedFieldName(fieldName, true));
-			if(null == providerKey){
+			final String sourceKey = copyOptions.getMappedFieldName(fieldName, true);
+			if(null == sourceKey){
 				return;
 			}
-			if (false == valueProvider.containsKey(providerKey)) {
+			if (false == valueProvider.containsKey(sourceKey)) {
 				// 无对应值可提供
 				return;
 			}
@@ -294,13 +294,13 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			final Type fieldType = TypeUtil.getActualType(this.destType ,prop.getFieldType());
 
 			// 获取属性值
-			Object value = valueProvider.value(providerKey, fieldType);
+			Object value = valueProvider.value(sourceKey, fieldType);
 			if(null != copyOptions.propertiesFilter && false == copyOptions.propertiesFilter.test(prop.getField(), value)) {
 				return;
 			}
 
 			// since 5.7.15
-			value = copyOptions.editFieldValue(providerKey, value);
+			value = copyOptions.editFieldValue(sourceKey, value);
 
 			if ((null == value && copyOptions.ignoreNullValue) || bean == value) {
 				// 当允许跳过空时，跳过

@@ -1,8 +1,7 @@
 package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.lang.Editor;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.map.BiMap;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -49,11 +48,7 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
 	 */
-	protected Map<String, String> fieldMapping;
-	/**
-	 * 反向映射表，自动生成用于反向查找
-	 */
-	private Map<String, String> reversedFieldMapping;
+	protected BiMap<String, String> fieldMapping;
 	/**
 	 * 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等
 	 */
@@ -215,7 +210,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
-		this.fieldMapping = fieldMapping;
+		this.fieldMapping = new BiMap<>(fieldMapping);
 		return this;
 	}
 
@@ -303,11 +298,14 @@ public class CopyOptions implements Serializable {
 	 * @return 映射后的字段名
 	 */
 	protected String getMappedFieldName(String fieldName, boolean reversed) {
-		Map<String, String> mapping = reversed ? getReversedMapping() : this.fieldMapping;
-		if (MapUtil.isEmpty(mapping)) {
-			return fieldName;
+		final BiMap<String, String> fieldMapping = this.fieldMapping;
+		if(null != fieldMapping){
+			final String mappingName = reversed ? fieldMapping.getKey(fieldName) : fieldMapping.get(fieldName);
+			if(null != mappingName){
+				return mappingName;
+			}
 		}
-		return ObjectUtil.defaultIfNull(mapping.get(fieldName), fieldName);
+		return fieldName;
 	}
 
 	/**
@@ -319,21 +317,5 @@ public class CopyOptions implements Serializable {
 	 */
 	protected String editFieldName(String fieldName) {
 		return (null != this.fieldNameEditor) ? this.fieldNameEditor.edit(fieldName) : fieldName;
-	}
-
-	/**
-	 * 获取反转之后的映射
-	 *
-	 * @return 反转映射
-	 * @since 4.1.10
-	 */
-	private Map<String, String> getReversedMapping() {
-		if (null == this.fieldMapping) {
-			return null;
-		}
-		if (null == this.reversedFieldMapping) {
-			reversedFieldMapping = MapUtil.reverse(this.fieldMapping);
-		}
-		return reversedFieldMapping;
 	}
 }
