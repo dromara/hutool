@@ -21,6 +21,7 @@
 * 【db     】     新加db.meta的索引相关接口（pr#563@Gitee）
 * 【db     】     Oracle中Column#typeName后的长度去掉（pr#563@Gitee）
 * 【poi    】     优化ExcelReader，采用只读模式（pr#2204@Gitee）
+* 【poi    】     优化ExcelBase，将alias放入
 * 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
