@@ -60,17 +60,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
-	 * 目标文件
-	 */
-	protected File destFile;
-	/**
 	 * 当前行
 	 */
 	private AtomicInteger currentRow = new AtomicInteger(0);
-	/**
-	 * 标题行别名
-	 */
-	private Map<String, String> headerAlias;
 	/**
 	 * 是否只保留别名对应的字段
 	 */
@@ -462,31 +454,26 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		return this;
 	}
 
-	/**
-	 * 设置标题别名，key为Map中的key，value为别名
-	 *
-	 * @param headerAlias 标题别名
-	 * @return this
-	 * @since 3.2.1
-	 */
+	//region header alias
+	@Override
 	public ExcelWriter setHeaderAlias(Map<String, String> headerAlias) {
-		this.headerAlias = headerAlias;
 		// 新增别名时清除比较器缓存
 		this.aliasComparator = null;
-		return this;
+		return super.setHeaderAlias(headerAlias);
 	}
 
-	/**
-	 * 清空标题别名，key为Map中的key，value为别名
-	 *
-	 * @return this
-	 * @since 4.5.4
-	 */
+	@Override
 	public ExcelWriter clearHeaderAlias() {
-		this.headerAlias = null;
 		// 清空别名时清除比较器缓存
 		this.aliasComparator = null;
-		return this;
+		return super.clearHeaderAlias();
+	}
+
+	@Override
+	public ExcelWriter addHeaderAlias(String name, String alias) {
+		// 新增别名时清除比较器缓存
+		this.aliasComparator = null;
+		return super.addHeaderAlias(name, alias);
 	}
 
 	/**
@@ -500,26 +487,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.onlyAlias = isOnlyAlias;
 		return this;
 	}
-
-	/**
-	 * 增加标题别名
-	 *
-	 * @param name  原标题
-	 * @param alias 别名
-	 * @return this
-	 * @since 4.1.5
-	 */
-	public ExcelWriter addHeaderAlias(String name, String alias) {
-		Map<String, String> headerAlias = this.headerAlias;
-		if (null == headerAlias) {
-			headerAlias = new LinkedHashMap<>();
-		}
-		this.headerAlias = headerAlias;
-		headerAlias.put(name, alias);
-		// 新增别名时清除比较器缓存
-		this.aliasComparator = null;
-		return this;
-	}
+	//endregion
 
 	/**
 	 * 设置窗口冻结，之前冻结的窗口会被覆盖，如果rowSplit为0表示取消冻结
