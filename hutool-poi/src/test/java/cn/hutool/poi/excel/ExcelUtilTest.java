@@ -5,6 +5,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Ignore;
 
+import java.util.List;
+import java.util.Map;
+
 public class ExcelUtilTest {
 
 	@Test
@@ -38,7 +41,7 @@ public class ExcelUtilTest {
 	}
 
 	@Test
-	public void toLocationTest(){
+	public void toLocationTest() {
 		final CellLocation a11 = ExcelUtil.toLocation("A11");
 		Assert.assertEquals(0, a11.getX());
 		Assert.assertEquals(10, a11.getY());
@@ -46,10 +49,15 @@ public class ExcelUtilTest {
 
 	@Test
 	@Ignore
-	public void readAndWriteTest(){
-		ExcelReader reader = ExcelUtil.getReader("d:\\test/select.xls");
-		ExcelWriter writer = reader.getWriter();
+	public void readAndWriteTest() {
+		String filepath = "d:\\test/select.xls";
+		ExcelWriter writer = ExcelUtil.getWriter(filepath);
 		writer.writeCellValue(1, 2, "设置值");
 		writer.close();
+		ExcelReader reader = ExcelUtil.getReader(filepath);
+		List<Map<String, Object>> map = reader.readAll();
+		reader.close();
+		Assert.assertNotNull(map);
+		Assert.assertFalse(map.isEmpty());
 	}
 }
