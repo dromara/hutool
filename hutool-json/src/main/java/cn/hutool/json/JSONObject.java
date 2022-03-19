@@ -12,6 +12,7 @@ import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -30,7 +31,6 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -43,7 +43,7 @@ import java.util.TreeMap;
  *
  * @author looly
  */
-public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object> {
+public class JSONObject extends MapWrapper<String, Object> implements JSON, JSONGetter<String> {
 	private static final long serialVersionUID = -330220388580734346L;
 
 	/**
@@ -52,13 +52,9 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	public static final int DEFAULT_CAPACITY = MapUtil.DEFAULT_INITIAL_CAPACITY;
 
 	/**
-	 * JSON的KV持有Map
-	 */
-	private final Map<String, Object> rawHashMap;
-	/**
 	 * 配置项
 	 */
-	private final JSONConfig config;
+	private JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
@@ -120,25 +116,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
-		if (null == config) {
-			config = JSONConfig.create();
-		}
-		final Comparator<String> keyComparator = config.getKeyComparator();
-		if (config.isIgnoreCase()) {
-			if (null != keyComparator) {
-				// 比较器存在情况下，isOrder无效
-				this.rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
-			} else {
-				this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
-			}
-		} else {
-			if (null != keyComparator) {
-				// 比较器存在情况下，isOrder无效
-				this.rawHashMap = new TreeMap<>(keyComparator);
-			} else {
-				this.rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
-			}
-		}
+		super(createRaw(capacity, config));
 		this.config = config;
 	}
 
@@ -311,34 +289,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	}
 
 	@Override
-	public int size() {
-		return rawHashMap.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return rawHashMap.isEmpty();
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		return rawHashMap.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		return rawHashMap.containsValue(value);
-	}
-
-	@Override
-	public Object get(Object key) {
-		return rawHashMap.get(key);
-	}
-
-	@Override
 	public Object getObj(String key, Object defaultValue) {
-		Object obj = this.rawHashMap.get(key);
-		return null == obj ? defaultValue : obj;
+		return this.getOrDefault(key, defaultValue);
 	}
 
 	@Override
@@ -390,7 +342,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			this.remove(key);
 		} else {
 			InternalJSONUtil.testValidity(value);
-			this.rawHashMap.put(key, JSONUtil.wrap(value, this.config));
+			super.put(key, JSONUtil.wrap(value, this.config));
 		}
 		return this;
 	}
@@ -405,7 +357,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null) {
-			if (rawHashMap.containsKey(key)) {
+			if (containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 			this.set(key, value);
@@ -507,58 +459,6 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		return this;
 	}
 
-	@Override
-	public Object remove(Object key) {
-		return rawHashMap.remove(key);
-	}
-
-	@Override
-	public void clear() {
-		rawHashMap.clear();
-	}
-
-	@Override
-	public Set<String> keySet() {
-		return this.rawHashMap.keySet();
-	}
-
-	@Override
-	public Collection<Object> values() {
-		return rawHashMap.values();
-	}
-
-	@Override
-	public Set<Entry<String, Object>> entrySet() {
-		return rawHashMap.entrySet();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((rawHashMap == null) ? 0 : rawHashMap.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final JSONObject other = (JSONObject) obj;
-		if (rawHashMap == null) {
-			return other.rawHashMap == null;
-		} else {
-			return rawHashMap.equals(other.rawHashMap);
-		}
-	}
-
 	/**
 	 * 返回JSON字符串<br>
 	 * 如果解析错误，返回{@code null}
@@ -620,6 +520,13 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
+	}
+
+	@Override
+	public JSONObject clone() throws CloneNotSupportedException {
+		final JSONObject clone = (JSONObject) super.clone();
+		clone.config = this.config;
+		return clone;
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
@@ -772,6 +679,37 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 					throw x.syntaxError("Expected a ',' or '}'");
 			}
 		}
+	}
+
+	/**
+	 * 根据配置创建对应的原始Map
+	 *
+	 * @param capacity 初始大小
+	 * @param config   JSON配置项，{@code null}则使用默认配置
+	 * @return Map
+	 */
+	private static Map<String, Object> createRaw(int capacity, JSONConfig config) {
+		Map<String, Object> rawHashMap;
+		if (null == config) {
+			config = JSONConfig.create();
+		}
+		final Comparator<String> keyComparator = config.getKeyComparator();
+		if (config.isIgnoreCase()) {
+			if (null != keyComparator) {
+				// 比较器存在情况下，isOrder无效
+				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
+			} else {
+				rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
+			}
+		} else {
+			if (null != keyComparator) {
+				// 比较器存在情况下，isOrder无效
+				rawHashMap = new TreeMap<>(keyComparator);
+			} else {
+				rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
+			}
+		}
+		return rawHashMap;
 	}
 	// ------------------------------------------------------------------------------------------------- Private method end
 }

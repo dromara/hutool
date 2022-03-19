@@ -55,13 +55,16 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	protected Map<?, ?> convertInternal(Object value) {
 		Map map;
 		if (value instanceof Map) {
-			final Type[] typeArguments = TypeUtil.getTypeArguments(value.getClass());
-			if (null != typeArguments //
-					&& 2 == typeArguments.length//
-					&& Objects.equals(this.keyType, typeArguments[0]) //
-					&& Objects.equals(this.valueType, typeArguments[1])) {
-				//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
-				return (Map) value;
+			final Class<?> valueClass = value.getClass();
+			if(valueClass.equals(this.mapType)){
+				final Type[] typeArguments = TypeUtil.getTypeArguments(valueClass);
+				if (null != typeArguments //
+						&& 2 == typeArguments.length//
+						&& Objects.equals(this.keyType, typeArguments[0]) //
+						&& Objects.equals(this.valueType, typeArguments[1])) {
+					//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
+					return (Map) value;
+				}
 			}
 			map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
 			convertMapToMap((Map) value, map);

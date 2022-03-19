@@ -4,10 +4,10 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.FuncKeyMap;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -63,7 +63,7 @@ public class MapValueProvider implements ValueProvider<String> {
 	public MapValueProvider(Map map, boolean ignoreCase, boolean ignoreError, Editor<String> keyEditor) {
 		// issue#2202@Github
 		// 如果用户定义了键编辑器，则提供的map中的数据必须全部转换key
-		this.map = new FuncKeyMap(new HashMap(map.size(), 1), (key)->{
+		this.map = new FuncKeyMap(ObjectUtil.clone(map), (key)->{
 			if(ignoreCase && key instanceof CharSequence){
 				key = key.toString().toLowerCase();
 			}
@@ -72,6 +72,7 @@ public class MapValueProvider implements ValueProvider<String> {
 			}
 			return key;
 		});
+		this.map.clear();
 		this.map.putAll(map);
 
 		this.ignoreError = ignoreError;
