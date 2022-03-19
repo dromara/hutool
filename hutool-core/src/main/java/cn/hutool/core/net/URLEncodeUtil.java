@@ -36,7 +36,7 @@ public class URLEncodeUtil {
 	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String encodeAll(String url, Charset charset) throws UtilException {
-		return URLEncoder.ALL.encode(url, charset);
+		return RFC3986.UNRESERVED.encode(url, charset);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class URLEncodeUtil {
 	 * @since 4.4.1
 	 */
 	public static String encode(String url, Charset charset) {
-		return URLEncoder.DEFAULT.encode(url, charset);
+		return RFC3986.PATH.encode(url, charset);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class URLEncodeUtil {
 	 * @since 4.4.1
 	 */
 	public static String encodeQuery(String url, Charset charset) {
-		return URLEncoder.QUERY.encode(url, charset);
+		return RFC3986.QUERY.encode(url, charset);
 	}
 
 	/**
@@ -135,10 +135,7 @@ public class URLEncodeUtil {
 		if (StrUtil.isEmpty(url)) {
 			return url;
 		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.PATH_SEGMENT.encode(url, charset);
+		return RFC3986.SEGMENT.encode(url, charset);
 	}
 
 	/**
@@ -185,9 +182,6 @@ public class URLEncodeUtil {
 		if (StrUtil.isEmpty(url)) {
 			return url;
 		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.FRAGMENT.encode(url, charset);
+		return RFC3986.FRAGMENT.encode(url, charset);
 	}
 }
