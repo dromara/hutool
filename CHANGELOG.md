@@ -13,6 +13,7 @@
 * 【core   】     【可能兼容问题】Base58分离编码和解码
 * 【core   】     【可能兼容问题】Base62分离编码和解码，增加inverted模式支持
 * 【core   】     【兼容问题   】PunyCode参数由String改为Charsequence
+* 【cron   】     【可能兼容问题】SimpleValueParser改名为AbsValueParser，改为abstract
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）

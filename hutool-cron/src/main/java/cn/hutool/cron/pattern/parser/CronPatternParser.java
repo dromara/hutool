@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
 import cn.hutool.cron.pattern.matcher.MatcherTable;
-import cn.hutool.cron.pattern.matcher.ValueMatcherBuilder;
 
 import java.util.List;
 
@@ -78,55 +77,40 @@ public class CronPatternParser {
 			throw new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern);
 		}
 
-		// 秒
-		if (1 == offset) {// 支持秒的表达式
-			try {
-				matcherTable.secondMatchers.add(ValueMatcherBuilder.build(parts[0], SECOND_VALUE_PARSER));
-			} catch (Exception e) {
-				throw new CronException(e, "Invalid pattern [{}], parsing 'second' field error!", pattern);
-			}
-		} else {// 不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
-			matcherTable.secondMatchers.add(ValueMatcherBuilder.build(String.valueOf(DateUtil.date().second()), SECOND_VALUE_PARSER));
-		}
+		// 秒，如果不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
+		final String secondPart = (1 == offset) ? parts[0] : String.valueOf(DateUtil.date().second());
+		parseToTable(SECOND_VALUE_PARSER, secondPart);
+
 		// 分
-		try {
-			matcherTable.minuteMatchers.add(ValueMatcherBuilder.build(parts[offset], MINUTE_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'minute' field error!", pattern);
-		}
-		// 小时
-		try {
-			matcherTable.hourMatchers.add(ValueMatcherBuilder.build(parts[1 + offset], HOUR_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'hour' field error!", pattern);
-		}
-		// 每月第几天
-		try {
-			matcherTable.dayOfMonthMatchers.add(ValueMatcherBuilder.build(parts[2 + offset], DAY_OF_MONTH_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of month' field error!", pattern);
-		}
+		parseToTable(MINUTE_VALUE_PARSER, parts[offset]);
+
+		// 时
+		parseToTable(HOUR_VALUE_PARSER, parts[1 + offset]);
+
+		// 天
+		parseToTable(DAY_OF_MONTH_VALUE_PARSER, parts[2 + offset]);
+
 		// 月
-		try {
-			matcherTable.monthMatchers.add(ValueMatcherBuilder.build(parts[3 + offset], MONTH_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'month' field error!", pattern);
-		}
-		// 星期几
-		try {
-			matcherTable.dayOfWeekMatchers.add(ValueMatcherBuilder.build(parts[4 + offset], DAY_OF_WEEK_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of week' field error!", pattern);
-		}
+		parseToTable(MONTH_VALUE_PARSER, parts[3 + offset]);
+
+		// 周
+		parseToTable(DAY_OF_WEEK_VALUE_PARSER, parts[4 + offset]);
+
 		// 年
 		if (parts.length == 7) {// 支持年的表达式
-			try {
-				matcherTable.yearMatchers.add(ValueMatcherBuilder.build(parts[6], YEAR_VALUE_PARSER));
-			} catch (Exception e) {
-				throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
-			}
+			parseToTable(YEAR_VALUE_PARSER, parts[6]);
 		} else {// 不支持年的表达式，全部匹配
 			matcherTable.yearMatchers.add(new AlwaysTrueValueMatcher());
 		}
+	}
+
+	/**
+	 * 将表达式解析后加入到{@link #matcherTable}中
+	 *
+	 * @param valueParser 表达式解析器
+	 * @param patternPart 表达式部分
+	 */
+	private void parseToTable(ValueParser valueParser, String patternPart) {
+		valueParser.parseTo(this.matcherTable, patternPart);
 	}
 }
