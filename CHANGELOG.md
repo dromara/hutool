@@ -5,12 +5,14 @@
 # 5.8.0 (2022-03-20)
 
 ### ❌不兼容特性
-* 【db     】     【不向下兼容】增加MongoDB4.x支持（pr#568@Gitee）
+* 【db     】     【不向下兼容  】增加MongoDB4.x支持返回MongoClient变更（pr#568@Gitee）
 * 【json   】     【可能兼容问题】修改JSONObject结构，继承自MapWrapper
 * 【core   】     【可能兼容问题】BeanCopier重构，新建XXXCopier，删除XXXValueProvider
 * 【core   】     【可能兼容问题】URLEncoder废弃，URLEncoderUtil使用RFC3986
 * 【core   】     【可能兼容问题】Base32分离编码和解码，以便减少数据加载，支持Hex模式
-* 【core   】     【不兼容问题】PunyCode参数由String改为Charsequence
+* 【core   】     【可能兼容问题】Base58分离编码和解码
+* 【core   】     【可能兼容问题】Base62分离编码和解码，增加inverted模式支持
+* 【core   】     【兼容问题   】PunyCode参数由String改为Charsequence
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
