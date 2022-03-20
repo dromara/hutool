@@ -79,7 +79,12 @@ public class Base32 {
 			base32.append(BASE32_CHARS.charAt(digit));
 		}
 
-		return StrUtil.fillAfter(base32.toString(), '=', encodeLen);
+		// 末尾补充不足长度的
+		while(base32.length() < encodeLen){
+			base32.append('=');
+		}
+
+		return base32.toString();
 	}
 
 	/**

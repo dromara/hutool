@@ -104,7 +104,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 		return convert(prepared, TARGET_BASE, STANDARD_BASE);
 	}
 
-	// --------------------------------------------------------------------------------------------------------------- Private method start
+	// region Private Methods
 	/**
 	 * 按照字典转换bytes
 	 *
@@ -112,7 +112,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param dictionary 字典
 	 * @return 转换值
 	 */
-	private byte[] translate(byte[] indices, byte[] dictionary) {
+	private static byte[] translate(byte[] indices, byte[] dictionary) {
 		final byte[] translation = new byte[indices.length];
 
 		for (int i = 0; i < indices.length; i++) {
@@ -130,7 +130,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param targetBase 目标基准长度
 	 * @return 计算结果
 	 */
-	private byte[] convert(byte[] message, int sourceBase, int targetBase) {
+	private static byte[] convert(byte[] message, int sourceBase, int targetBase) {
 		// 计算结果长度，算法来自：http://codegolf.stackexchange.com/a/21672
 		final int estimatedLength = estimateOutputLength(message.length, sourceBase, targetBase);
 
@@ -175,8 +175,8 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param targetBase 目标基准长度
 	 * @return 估算长度
 	 */
-	private int estimateOutputLength(int inputLength, int sourceBase, int targetBase) {
+	private static int estimateOutputLength(int inputLength, int sourceBase, int targetBase) {
 		return (int) Math.ceil((Math.log(sourceBase) / Math.log(targetBase)) * inputLength);
 	}
-	// --------------------------------------------------------------------------------------------------------------- Private method end
+	// endregion
 }
