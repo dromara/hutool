@@ -3,15 +3,20 @@ package cn.hutool.cron.pattern.parser;
 import cn.hutool.cron.CronException;
 
 /**
- * 简易值转换器。将给定String值转为int
- * @author Looly
+ * 简易值转换器。将给定String值转为int，并限定最大值和最小值<br>
+ * 此类同时识别{@code L} 为最大值。
  *
+ * @author Looly
  */
 public class SimpleValueParser implements ValueParser {
-	
-	/** 最小值（包括） */
+
+	/**
+	 * 最小值（包括）
+	 */
 	protected int min;
-	/** 最大值（包括） */
+	/**
+	 * 最大值（包括）
+	 */
 	protected int max;
 
 	/**
@@ -21,10 +26,10 @@ public class SimpleValueParser implements ValueParser {
 	 * @param max 最大值（包括）
 	 */
 	public SimpleValueParser(int min, int max) {
-		if(min > max){
+		if (min > max) {
 			this.min = max;
 			this.max = min;
-		}else{
+		} else {
 			this.min = min;
 			this.max = max;
 		}
@@ -32,7 +37,7 @@ public class SimpleValueParser implements ValueParser {
 
 	@Override
 	public int parse(String value) throws CronException {
-		if("L".equalsIgnoreCase(value)){
+		if ("L".equalsIgnoreCase(value)) {
 			// L表示最大值
 			return max;
 		}

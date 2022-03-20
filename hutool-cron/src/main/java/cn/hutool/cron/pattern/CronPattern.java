@@ -152,7 +152,6 @@ public class CronPattern {
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
 	public boolean match(GregorianCalendar calendar, boolean isMatchSecond) {
-		final int second = calendar.get(Calendar.SECOND);
 		final int minute = calendar.get(Calendar.MINUTE);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -162,7 +161,7 @@ public class CronPattern {
 
 		boolean eval;
 		for (int i = 0; i < matcherSize; i++) {
-			eval = ((false == isMatchSecond) || secondMatchers.get(i).match(second)) // 匹配秒（非秒匹配模式下始终返回true）
+			eval = ((false == isMatchSecond) || secondMatchers.get(i).match(calendar.get(Calendar.SECOND))) // 匹配秒（非秒匹配模式下始终返回true）
 					&& minuteMatchers.get(i).match(minute)// 匹配分
 					&& hourMatchers.get(i).match(hour)// 匹配时
 					&& isMatchDayOfMonth(dayOfMonthMatchers.get(i), dayOfMonth, month, calendar.isLeapYear(year))// 匹配日

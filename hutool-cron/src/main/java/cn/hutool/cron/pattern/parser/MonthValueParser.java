@@ -3,20 +3,22 @@ package cn.hutool.cron.pattern.parser;
 import cn.hutool.cron.CronException;
 
 /**
- * 月份值处理
- * 
- * @author Looly
+ * 月份值处理<br>
+ * 限定于1-12，1表示一月，支持别名，如一月是{@code jan}
  *
+ * @author Looly
  */
 public class MonthValueParser extends SimpleValueParser {
 
-	/** Months aliases. */
-	private static final String[] ALIASES = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+	/**
+	 * Months aliases.
+	 */
+	private static final String[] ALIASES = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 
 	public MonthValueParser() {
 		super(1, 12);
 	}
-	
+
 	@Override
 	public int parse(String value) throws CronException {
 		try {
@@ -28,6 +30,7 @@ public class MonthValueParser extends SimpleValueParser {
 
 	/**
 	 * 解析别名
+	 *
 	 * @param value 别名值
 	 * @return 月份int值
 	 * @throws CronException 无效月别名抛出此异常
