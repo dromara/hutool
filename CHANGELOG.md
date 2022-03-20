@@ -9,7 +9,8 @@
 * 【json   】     【可能兼容问题】修改JSONObject结构，继承自MapWrapper
 * 【core   】     【可能兼容问题】BeanCopier重构，新建XXXCopier，删除XXXValueProvider
 * 【core   】     【可能兼容问题】URLEncoder废弃，URLEncoderUtil使用RFC3986
-* 【core   】     【可能兼容问题】增加Base32.encode不足位数补=
+* 【core   】     【可能兼容问题】Base32分离编码和解码，以便减少数据加载，支持Hex模式
+* 【core   】     【不兼容问题】PunyCode参数由String改为Charsequence
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
