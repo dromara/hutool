@@ -4,7 +4,7 @@ import cn.hutool.cron.CronException;
 
 /**
  * 月份值处理<br>
- * 限定于1-12，1表示一月，支持别名，如一月是{@code jan}
+ * 限定于1-12，1表示一月，支持别名（忽略大小写），如一月是{@code jan}
  *
  * @author Looly
  */

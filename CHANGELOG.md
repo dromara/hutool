@@ -33,6 +33,7 @@
 * 【poi    】     优化ExcelBase，将alias放入
 * 【poi    】     优化ExcelBase，将alias放入
 * 【core   】     改进StrUtil#startWith、endWith性能
+* 【cron   】     增加CronPatternParser、MatcherTable
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
