@@ -345,7 +345,7 @@ public class ExcelUtil {
 	 * @return {@link BigExcelWriter}
 	 * @since 4.1.13
 	 */
-	public static ExcelWriter getBigWriter() {
+	public static BigExcelWriter getBigWriter() {
 		try {
 			return new BigExcelWriter();
 		} catch (NoClassDefFoundError e) {
@@ -362,7 +362,7 @@ public class ExcelUtil {
 	 * @return {@link BigExcelWriter}
 	 * @since 4.1.13
 	 */
-	public static ExcelWriter getBigWriter(int rowAccessWindowSize) {
+	public static BigExcelWriter getBigWriter(int rowAccessWindowSize) {
 		try {
 			return new BigExcelWriter(rowAccessWindowSize);
 		} catch (NoClassDefFoundError e) {
