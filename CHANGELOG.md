@@ -15,6 +15,7 @@
 * 【core   】     【兼容问题   】PunyCode参数由String改为Charsequence
 * 【cron   】     【可能兼容问题】SimpleValueParser改名为AbsValueParser，改为abstract
 * 【poi    】     【可能兼容问题】ExcelUtil.getBigWriter返回值改为BigExcelWriter
+* 【core   】     【可能兼容问题】Opt.ofEmptyAble参数由List改为Collection子类（pr#580@Gitee）
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
