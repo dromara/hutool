@@ -46,7 +46,7 @@ public class LazyFunLoaderTest {
 	@Test
 	public void testOnLoadStaticFactoryMethod1() {
 
-		LazyFunLoader<BigObject> loader = LazyFunLoader.onLoad(BigObject::new);
+		LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
 
 		Assert.assertNotNull(loader.get());
 		Assert.assertTrue(loader.isInitialize());
@@ -60,7 +60,7 @@ public class LazyFunLoaderTest {
 	@Test
 	public void testOnLoadStaticFactoryMethod2() {
 
-		LazyFunLoader<BigObject> loader = LazyFunLoader.onLoad(BigObject::new);
+		LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
 
 		// 若从未使用，则可以避免不必要的初始化
 		loader.ifInitialized(it -> {

@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0 (2022-03-21)
+# 5.8.0 (2022-03-22)
 
 ### ❌不兼容特性
 * 【db     】     【不向下兼容  】增加MongoDB4.x支持返回MongoClient变更（pr#568@Gitee）
@@ -37,6 +37,7 @@
 * 【poi    】     优化ExcelBase，将alias放入
 * 【core   】     改进StrUtil#startWith、endWith性能
 * 【cron   】     增加CronPatternParser、MatcherTable
+* 【http   】     GlobalHeaders增加系统属性allowUnsafeServerCertChange、allowUnsafeRenegotiation
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
