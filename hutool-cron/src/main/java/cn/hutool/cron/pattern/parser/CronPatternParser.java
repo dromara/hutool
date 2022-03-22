@@ -4,7 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
+import cn.hutool.cron.pattern.matcher.DateTimeMatcher;
 import cn.hutool.cron.pattern.matcher.MatcherTable;
+import cn.hutool.cron.pattern.matcher.ValueMatcher;
 
 import java.util.List;
 
@@ -25,25 +27,13 @@ public class CronPatternParser {
 	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
 
 	/**
-	 * 创建表达式解析器
-	 *
-	 * @return CronPatternParser
-	 */
-	public static CronPatternParser create() {
-		return new CronPatternParser();
-	}
-
-	private MatcherTable matcherTable;
-
-	/**
 	 * 解析表达式到匹配表中
 	 *
 	 * @param cronPattern 复合表达式
 	 * @return {@link MatcherTable}
 	 */
-	public MatcherTable parse(String cronPattern) {
-		parseGroupPattern(cronPattern);
-		return this.matcherTable;
+	public static MatcherTable parse(String cronPattern) {
+		return parseGroupPattern(cronPattern);
 	}
 
 	/**
@@ -53,21 +43,24 @@ public class CronPatternParser {
 	 * </pre>
 	 *
 	 * @param groupPattern 复合表达式
+	 * @return {@link MatcherTable}
 	 */
-	private void parseGroupPattern(String groupPattern) {
+	private static MatcherTable parseGroupPattern(String groupPattern) {
 		final List<String> patternList = StrUtil.split(groupPattern, '|');
-		matcherTable = new MatcherTable(patternList.size());
+		final MatcherTable matcherTable = new MatcherTable(patternList.size());
 		for (String pattern : patternList) {
-			parseSinglePattern(pattern);
+			matcherTable.matchers.add(parseSinglePattern(pattern));
 		}
+		return matcherTable;
 	}
 
 	/**
 	 * 解析单一定时任务表达式
 	 *
 	 * @param pattern 表达式
+	 * @return {@link DateTimeMatcher}
 	 */
-	private void parseSinglePattern(String pattern) {
+	private static DateTimeMatcher parseSinglePattern(String pattern) {
 		final String[] parts = pattern.split("\\s");
 
 		int offset = 0;// 偏移量用于兼容Quartz表达式，当表达式有6或7项时，第一项为秒
@@ -79,38 +72,30 @@ public class CronPatternParser {
 
 		// 秒，如果不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
 		final String secondPart = (1 == offset) ? parts[0] : String.valueOf(DateUtil.date().second());
-		parseToTable(SECOND_VALUE_PARSER, secondPart);
-
-		// 分
-		parseToTable(MINUTE_VALUE_PARSER, parts[offset]);
-
-		// 时
-		parseToTable(HOUR_VALUE_PARSER, parts[1 + offset]);
-
-		// 天
-		parseToTable(DAY_OF_MONTH_VALUE_PARSER, parts[2 + offset]);
-
-		// 月
-		parseToTable(MONTH_VALUE_PARSER, parts[3 + offset]);
-
-		// 周
-		parseToTable(DAY_OF_WEEK_VALUE_PARSER, parts[4 + offset]);
 
 		// 年
+		ValueMatcher yearMatcher;
 		if (parts.length == 7) {// 支持年的表达式
-			parseToTable(YEAR_VALUE_PARSER, parts[6]);
+			yearMatcher = YEAR_VALUE_PARSER.parseAsValueMatcher(parts[6]);
 		} else {// 不支持年的表达式，全部匹配
-			matcherTable.yearMatchers.add(new AlwaysTrueValueMatcher());
+			yearMatcher = AlwaysTrueValueMatcher.INSTANCE;
 		}
-	}
 
-	/**
-	 * 将表达式解析后加入到{@link #matcherTable}中
-	 *
-	 * @param valueParser 表达式解析器
-	 * @param patternPart 表达式部分
-	 */
-	private void parseToTable(ValueParser valueParser, String patternPart) {
-		valueParser.parseTo(this.matcherTable, patternPart);
+		return new DateTimeMatcher(
+				// 秒
+				SECOND_VALUE_PARSER.parseAsValueMatcher(secondPart),
+				// 分
+				MINUTE_VALUE_PARSER.parseAsValueMatcher(parts[offset]),
+				// 时
+				HOUR_VALUE_PARSER.parseAsValueMatcher(parts[1 + offset]),
+				// 天
+				DAY_OF_MONTH_VALUE_PARSER.parseAsValueMatcher(parts[2 + offset]),
+				// 月
+				MONTH_VALUE_PARSER.parseAsValueMatcher(parts[3 + offset]),
+				// 周
+				DAY_OF_WEEK_VALUE_PARSER.parseAsValueMatcher(parts[4 + offset]),
+				// 年
+				yearMatcher
+		);
 	}
 }

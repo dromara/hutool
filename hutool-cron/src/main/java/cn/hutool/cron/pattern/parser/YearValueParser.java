@@ -1,7 +1,5 @@
 package cn.hutool.cron.pattern.parser;
 
-import cn.hutool.cron.CronException;
-import cn.hutool.cron.pattern.matcher.MatcherTable;
 import cn.hutool.cron.pattern.matcher.ValueMatcher;
 import cn.hutool.cron.pattern.matcher.YearValueMatcher;
 
@@ -17,15 +15,6 @@ public class YearValueParser extends AbsValueParser {
 
 	public YearValueParser() {
 		super(1970, 2099);
-	}
-
-	@Override
-	public void parseTo(MatcherTable matcherTable, String pattern) {
-		try {
-			matcherTable.yearMatchers.add(parseAsValueMatcher(pattern));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
-		}
 	}
 
 	@Override

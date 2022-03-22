@@ -1,6 +1,5 @@
 package cn.hutool.cron.pattern.parser;
 
-import cn.hutool.cron.pattern.matcher.MatcherTable;
 import cn.hutool.cron.pattern.matcher.ValueMatcher;
 
 /**
@@ -10,14 +9,6 @@ import cn.hutool.cron.pattern.matcher.ValueMatcher;
  * @author Looly
  */
 public interface ValueParser {
-
-	/**
-	 * 解析表达式后，加入到{@link MatcherTable}的对应列表中
-	 *
-	 * @param matcherTable {@link MatcherTable}
-	 * @param pattern 对应时间部分的表达式
-	 */
-	void parseTo(MatcherTable matcherTable, String pattern);
 
 	/**
 	 * 解析表达式对应部分为{@link ValueMatcher}，支持的表达式包括：

@@ -2,7 +2,6 @@ package cn.hutool.cron.pattern.parser;
 
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.matcher.DayOfMonthValueMatcher;
-import cn.hutool.cron.pattern.matcher.MatcherTable;
 import cn.hutool.cron.pattern.matcher.ValueMatcher;
 
 import java.util.List;
@@ -29,15 +28,6 @@ public class DayOfMonthValueParser extends AbsValueParser {
 			return 32;
 		} else {
 			return super.parse(value);
-		}
-	}
-
-	@Override
-	public void parseTo(MatcherTable matcherTable, String pattern) {
-		try {
-			matcherTable.dayOfMonthMatchers.add(parseAsValueMatcher(pattern));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of month' field error!", pattern);
 		}
 	}
 

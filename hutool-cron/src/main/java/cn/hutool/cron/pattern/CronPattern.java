@@ -75,7 +75,7 @@ public class CronPattern {
 	 */
 	public CronPattern(String pattern) {
 		this.pattern = pattern;
-		this.matcherTable = CronPatternParser.create().parse(pattern);
+		this.matcherTable = CronPatternParser.parse(pattern);
 	}
 
 	// --------------------------------------------------------------------------------------- match start

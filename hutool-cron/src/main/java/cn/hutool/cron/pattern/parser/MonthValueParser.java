@@ -1,7 +1,6 @@
 package cn.hutool.cron.pattern.parser;
 
 import cn.hutool.cron.CronException;
-import cn.hutool.cron.pattern.matcher.MatcherTable;
 
 /**
  * 月份值处理<br>
@@ -26,15 +25,6 @@ public class MonthValueParser extends AbsValueParser {
 			return super.parse(value);
 		} catch (Exception e) {
 			return parseAlias(value);
-		}
-	}
-
-	@Override
-	public void parseTo(MatcherTable matcherTable, String pattern) {
-		try {
-			matcherTable.monthMatchers.add(parseAsValueMatcher(pattern));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'month' field error!", pattern);
 		}
 	}
 

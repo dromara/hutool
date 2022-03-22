@@ -1,7 +1,6 @@
 package cn.hutool.cron.pattern.parser;
 
 import cn.hutool.cron.CronException;
-import cn.hutool.cron.pattern.matcher.MatcherTable;
 
 /**
  * 星期值处理<br>
@@ -31,15 +30,6 @@ public class DayOfWeekValueParser extends AbsValueParser {
 			return super.parse(value) % 7;
 		} catch (Exception e) {
 			return parseAlias(value);
-		}
-	}
-
-	@Override
-	public void parseTo(MatcherTable matcherTable, String pattern) {
-		try {
-			matcherTable.dayOfWeekMatchers.add(parseAsValueMatcher(pattern));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of week' field error!", pattern);
 		}
 	}
 
