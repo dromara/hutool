@@ -564,7 +564,7 @@ public class LocalDateTimeUtil {
 	 */
 	public static boolean isOverlap(ChronoLocalDateTime<?> realStartTime, ChronoLocalDateTime<?> realEndTime,
 									ChronoLocalDateTime<?> startTime, ChronoLocalDateTime<?> endTime) {
-		return startTime.isAfter(realEndTime) || endTime.isBefore(realStartTime);
+		return startTime.isBefore(realEndTime) && endTime.isAfter(realStartTime);
 	}
 
 	/**

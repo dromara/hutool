@@ -1043,8 +1043,18 @@ public class DateUtilTest {
 		DateTime realStartTime = DateUtil.parse("2022-01-01 11:49:10");
 		DateTime realEndTime = DateUtil.parse("2022-01-01 12:00:10");
 
-		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, realStartTime, realEndTime));
-		Assert.assertTrue(DateUtil.isOverlap(oneStartTime2, oneEndTime2, realStartTime, realEndTime));
-		Assert.assertFalse(DateUtil.isOverlap(oneStartTime3, oneEndTime3, realStartTime, realEndTime));
+		DateTime realStartTime1 = DateUtil.parse("2022-03-01 08:00:00");
+		DateTime realEndTime1   = DateUtil.parse("2022-03-01 10:00:00");
+
+		DateTime startTime  = DateUtil.parse("2022-03-23 05:00:00");
+		DateTime endTime    = DateUtil.parse("2022-03-23 13:00:00");
+
+		Assert.assertFalse(DateUtil.isOverlap(oneStartTime, oneEndTime, realStartTime, realEndTime));
+		Assert.assertFalse(DateUtil.isOverlap(oneStartTime2, oneEndTime2, realStartTime, realEndTime));
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime3, oneEndTime3, realStartTime, realEndTime));
+
+		Assert.assertFalse(DateUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
+		Assert.assertFalse(DateUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+
 	}
 }
