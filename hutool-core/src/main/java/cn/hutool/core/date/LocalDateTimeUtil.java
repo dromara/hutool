@@ -564,6 +564,10 @@ public class LocalDateTimeUtil {
 	 */
 	public static boolean isOverlap(ChronoLocalDateTime<?> realStartTime, ChronoLocalDateTime<?> realEndTime,
 									ChronoLocalDateTime<?> startTime, ChronoLocalDateTime<?> endTime) {
+
+		// x>b||a>y 无交集
+		// 则有交集的逻辑为 !(x>b||a>y)
+		// 根据德摩根公式，可化简为 x<=b && a<=y
 		return startTime.isBefore(realEndTime) && endTime.isAfter(realStartTime);
 	}
 
