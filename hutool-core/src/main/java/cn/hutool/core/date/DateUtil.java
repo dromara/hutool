@@ -2196,7 +2196,8 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static boolean isOverlap(Date realStartTime, Date realEndTime,
 									Date startTime, Date endTime) {
-		return startTime.after(realEndTime) || endTime.before(realStartTime);
+
+		return startTime.before(realEndTime) && endTime.after(realStartTime);
 	}
 
 	// ------------------------------------------------------------------------ Private method start
