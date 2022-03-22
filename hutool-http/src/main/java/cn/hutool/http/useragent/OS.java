@@ -36,6 +36,7 @@ public class OS extends UserAgentInfo {
 			new OS("Windows", "windows"), //
 			new OS("OSX", "os x (\\d+)[._](\\d+)", "os x (\\d+([._]\\d+)*)"), //
 			new OS("Android", "Android", "Android (\\d+([._]\\d+)*)"),//
+			new OS("Android", "\\(X\\d+; Linux", "\\(X(\\d+([._]\\d+)*)"),//
 			new OS("Linux", "linux"), //
 			new OS("Wii", "wii", "wii libnup/(\\d+([._]\\d+)*)"), //
 			new OS("PS3", "playstation 3", "playstation 3; (\\d+([._]\\d+)*)"), //

@@ -54,6 +54,7 @@ public class Platform extends UserAgentInfo {
 			IPAD, //
 			IPOD, //
 			IPHONE, //
+			new Platform("Android", "XiaoMi|MI "), //
 			ANDROID, //
 			GOOGLE_TV, //
 			new Platform("htcFlyer", "htc_flyer"), //

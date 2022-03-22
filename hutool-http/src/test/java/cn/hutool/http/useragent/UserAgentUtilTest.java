@@ -389,4 +389,19 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
+
+	@Test
+	public void parseXiaoMiTest(){
+		String uaStr = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/89.0.4389.116 Safari/534.24 XiaoMi/MiuiBrowser/16.0.18 swan-mibrowser";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+
+		Assert.assertEquals("MiuiBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("16.0.18", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("534.24", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("11", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
 }
