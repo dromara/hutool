@@ -25,6 +25,18 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
 	private Supplier<T> supplier;
 
 	/**
+	 * 静态工厂方法，提供语义性与编码便利性
+	 * @param supplier 用于生成对象的函数
+	 * @param <T> 对象类型
+	 * @return 函数式懒加载加载器对象
+	 * @since 5.8.0
+	 */
+	public static <T> LazyFunLoader<T> on(final Supplier<T> supplier) {
+		Assert.notNull(supplier, "supplier must be not null!");
+		return new LazyFunLoader<>(supplier);
+	}
+
+	/**
 	 * 构造
 	 *
 	 * @param supplier 用于生成对象的函数

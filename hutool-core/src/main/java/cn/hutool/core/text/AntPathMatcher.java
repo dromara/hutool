@@ -137,6 +137,7 @@ public class AntPathMatcher {
 	 *
 	 * @param cachePatterns 是否缓存表达式
 	 * @see #getStringMatcher(String)
+	 * @return this
 	 */
 	public AntPathMatcher setCachePatterns(boolean cachePatterns) {
 		this.cachePatterns = cachePatterns;

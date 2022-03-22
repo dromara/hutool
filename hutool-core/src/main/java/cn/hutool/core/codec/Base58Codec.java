@@ -15,10 +15,6 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 
 	public static Base58Codec INSTANCE = new Base58Codec();
 
-	private final char[] alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
-	private final char ENCODED_ZERO = alphabet[0];
-	private final int[] lookup = initLookup();
-
 	/**
 	 * Base58编码
 	 *
@@ -27,36 +23,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 */
 	@Override
 	public String encode(byte[] data) {
-		if (null == data) {
-			return null;
-		}
-		if (data.length == 0) {
-			return StrUtil.EMPTY;
-		}
-		// 计算开头0的个数
-		int zeroCount = 0;
-		while (zeroCount < data.length && data[zeroCount] == 0) {
-			++zeroCount;
-		}
-		// 将256位编码转换为58位编码
-		data = Arrays.copyOf(data, data.length); // since we modify it in-place
-		final char[] encoded = new char[data.length * 2]; // upper bound
-		int outputStart = encoded.length;
-		for (int inputStart = zeroCount; inputStart < data.length; ) {
-			encoded[--outputStart] = alphabet[divmod(data, inputStart, 256, 58)];
-			if (data[inputStart] == 0) {
-				++inputStart; // optimization - skip leading zeros
-			}
-		}
-		// Preserve exactly as many leading encoded zeros in output as there were leading zeros in input.
-		while (outputStart < encoded.length && encoded[outputStart] == ENCODED_ZERO) {
-			++outputStart;
-		}
-		while (--zeroCount >= 0) {
-			encoded[--outputStart] = ENCODED_ZERO;
-		}
-		// Return encoded string (including encoded leading zeros).
-		return new String(encoded, outputStart, encoded.length - outputStart);
+		return Base58Encoder.ENCODER.encode(data);
 	}
 
 	/**
@@ -68,52 +35,130 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 */
 	@Override
 	public byte[] decode(CharSequence encoded) throws IllegalArgumentException {
-		if (encoded.length() == 0) {
-			return new byte[0];
-		}
-		// Convert the base58-encoded ASCII chars to a base58 byte sequence (base58 digits).
-		final byte[] input58 = new byte[encoded.length()];
-		for (int i = 0; i < encoded.length(); ++i) {
-			char c = encoded.charAt(i);
-			int digit = c < 128 ? lookup[c] : -1;
-			if (digit < 0) {
-				throw new IllegalArgumentException(StrUtil.format("Invalid char '{}' at [{}]", c, i));
-			}
-			input58[i] = (byte) digit;
-		}
-		// Count leading zeros.
-		int zeros = 0;
-		while (zeros < input58.length && input58[zeros] == 0) {
-			++zeros;
-		}
-		// Convert base-58 digits to base-256 digits.
-		byte[] decoded = new byte[encoded.length()];
-		int outputStart = decoded.length;
-		for (int inputStart = zeros; inputStart < input58.length; ) {
-			decoded[--outputStart] = divmod(input58, inputStart, 58, 256);
-			if (input58[inputStart] == 0) {
-				++inputStart; // optimization - skip leading zeros
-			}
-		}
-		// Ignore extra leading zeroes that were added during the calculation.
-		while (outputStart < decoded.length && decoded[outputStart] == 0) {
-			++outputStart;
-		}
-		// Return decoded data (including original number of leading zeros).
-		return Arrays.copyOfRange(decoded, outputStart - zeros, decoded.length);
+		return Base58Decoder.DECODER.decode(encoded);
 	}
 
 	/**
-	 * 初始化字符序号查找表
+	 * Base58编码器
 	 *
-	 * @return 字符序号查找表
+	 * @since 5.8.0
 	 */
-	private int[] initLookup() {
-		final int[] lookup = new int['z' + 1];
-		Arrays.fill(lookup, -1);
-		for (int i = 0; i < alphabet.length; i++)
-			lookup[alphabet[i]] = i;
-		return lookup;
+	public static class Base58Encoder implements Encoder<byte[], String> {
+		private static final String DEFAULT_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+		public static final Base58Encoder ENCODER = new Base58Encoder(DEFAULT_ALPHABET.toCharArray());
+
+		private final char[] alphabet;
+		private final char alphabetZero;
+
+		/**
+		 * 构造
+		 *
+		 * @param alphabet 编码字母表
+		 */
+		public Base58Encoder(char[] alphabet) {
+			this.alphabet = alphabet;
+			alphabetZero = alphabet[0];
+		}
+
+		@Override
+		public String encode(byte[] data) {
+			if (null == data) {
+				return null;
+			}
+			if (data.length == 0) {
+				return StrUtil.EMPTY;
+			}
+			// 计算开头0的个数
+			int zeroCount = 0;
+			while (zeroCount < data.length && data[zeroCount] == 0) {
+				++zeroCount;
+			}
+			// 将256位编码转换为58位编码
+			data = Arrays.copyOf(data, data.length); // since we modify it in-place
+			final char[] encoded = new char[data.length * 2]; // upper bound
+			int outputStart = encoded.length;
+			for (int inputStart = zeroCount; inputStart < data.length; ) {
+				encoded[--outputStart] = alphabet[divmod(data, inputStart, 256, 58)];
+				if (data[inputStart] == 0) {
+					++inputStart; // optimization - skip leading zeros
+				}
+			}
+			// Preserve exactly as many leading encoded zeros in output as there were leading zeros in input.
+			while (outputStart < encoded.length && encoded[outputStart] == alphabetZero) {
+				++outputStart;
+			}
+			while (--zeroCount >= 0) {
+				encoded[--outputStart] = alphabetZero;
+			}
+			// Return encoded string (including encoded leading zeros).
+			return new String(encoded, outputStart, encoded.length - outputStart);
+		}
+	}
+
+	/**
+	 * Base58解码器
+	 *
+	 * @since 5.8.0
+	 */
+	public static class Base58Decoder implements Decoder<CharSequence, byte[]> {
+
+		public static Base58Decoder DECODER = new Base58Decoder(Base58Encoder.DEFAULT_ALPHABET);
+
+		private final byte[] lookupTable;
+
+		/**
+		 * 构造
+		 *
+		 * @param alphabet 编码字符表
+		 */
+		public Base58Decoder(String alphabet) {
+			final byte[] lookupTable = new byte['z' + 1];
+			Arrays.fill(lookupTable, (byte) -1);
+
+			final int length = alphabet.length();
+			for (int i = 0; i < length; i++) {
+				lookupTable[alphabet.charAt(i)] = (byte) i;
+			}
+			this.lookupTable = lookupTable;
+		}
+
+		@Override
+		public byte[] decode(CharSequence encoded) {
+			if (encoded.length() == 0) {
+				return new byte[0];
+			}
+			// Convert the base58-encoded ASCII chars to a base58 byte sequence (base58 digits).
+			final byte[] input58 = new byte[encoded.length()];
+			for (int i = 0; i < encoded.length(); ++i) {
+				char c = encoded.charAt(i);
+				int digit = c < 128 ? lookupTable[c] : -1;
+				if (digit < 0) {
+					throw new IllegalArgumentException(StrUtil.format("Invalid char '{}' at [{}]", c, i));
+				}
+				input58[i] = (byte) digit;
+			}
+			// Count leading zeros.
+			int zeros = 0;
+			while (zeros < input58.length && input58[zeros] == 0) {
+				++zeros;
+			}
+			// Convert base-58 digits to base-256 digits.
+			byte[] decoded = new byte[encoded.length()];
+			int outputStart = decoded.length;
+			for (int inputStart = zeros; inputStart < input58.length; ) {
+				decoded[--outputStart] = divmod(input58, inputStart, 58, 256);
+				if (input58[inputStart] == 0) {
+					++inputStart; // optimization - skip leading zeros
+				}
+			}
+			// Ignore extra leading zeroes that were added during the calculation.
+			while (outputStart < decoded.length && decoded[outputStart] == 0) {
+				++outputStart;
+			}
+			// Return decoded data (including original number of leading zeros).
+			return Arrays.copyOfRange(decoded, outputStart - zeros, decoded.length);
+		}
 	}
 
 	/**

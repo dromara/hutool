@@ -217,7 +217,7 @@ public class Base64 {
 	 * @since 5.7.2
 	 */
 	public static String encodeStr(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
-		return Base64Encoder.encodeStr(arr, isMultiLine, isUrlSafe);
+		return StrUtil.str(encode(arr, isMultiLine, isUrlSafe), DEFAULT_CHARSET);
 	}
 
 	/**

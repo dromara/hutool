@@ -2,14 +2,20 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0 (2022-03-20)
+# 5.8.0 (2022-03-22)
 
 ### ❌不兼容特性
-* 【db     】     【不向下兼容】增加MongoDB4.x支持（pr#568@Gitee）
+* 【db     】     【不向下兼容  】增加MongoDB4.x支持返回MongoClient变更（pr#568@Gitee）
 * 【json   】     【可能兼容问题】修改JSONObject结构，继承自MapWrapper
 * 【core   】     【可能兼容问题】BeanCopier重构，新建XXXCopier，删除XXXValueProvider
 * 【core   】     【可能兼容问题】URLEncoder废弃，URLEncoderUtil使用RFC3986
-* 【core   】     【可能兼容问题】增加Base32.encode不足位数补=
+* 【core   】     【可能兼容问题】Base32分离编码和解码，以便减少数据加载，支持Hex模式
+* 【core   】     【可能兼容问题】Base58分离编码和解码
+* 【core   】     【可能兼容问题】Base62分离编码和解码，增加inverted模式支持
+* 【core   】     【兼容问题   】PunyCode参数由String改为Charsequence
+* 【cron   】     【可能兼容问题】SimpleValueParser改名为AbsValueParser，改为abstract
+* 【poi    】     【可能兼容问题】ExcelUtil.getBigWriter返回值改为BigExcelWriter
+* 【core   】     【可能兼容问题】Opt.ofEmptyAble参数由List改为Collection子类（pr#580@Gitee）
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
@@ -30,6 +36,8 @@
 * 【poi    】     优化ExcelBase，将alias放入
 * 【poi    】     优化ExcelBase，将alias放入
 * 【core   】     改进StrUtil#startWith、endWith性能
+* 【cron   】     增加CronPatternParser、MatcherTable
+* 【http   】     GlobalHeaders增加系统属性allowUnsafeServerCertChange、allowUnsafeRenegotiation
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
@@ -41,6 +49,7 @@
 * 【core   】     修复CopyOptions中fieldNameEditor无效问题（issue#2202@Github）
 * 【json   】     修复JSON对Map.Entry的解析问题
 * 【core   】     修复MapConverter中map与map转换兼容问题
+* 【poi    】     解决sax读取时，POI-5.2.x兼容性问题
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)
