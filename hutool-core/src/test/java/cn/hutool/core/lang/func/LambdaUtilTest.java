@@ -21,9 +21,11 @@ public class LambdaUtilTest {
 
 	@Test
 	public void getImplClassTest() {
-		Class<MyTeacher> aClass = LambdaUtil.getImplClass(MyTeacher::getAge);
+		// 一般用于封装工具类时减少参数使用
+		Class<MyTeacher> aClass = LambdaUtil.getInstantiatedClass(MyTeacher::getAge);
 		Assert.assertEquals(MyTeacher.class, aClass);
 
+		// 一般用于封装工具类时减少参数使用
 		MyTeacher myTeacher = new MyTeacher();
 		Class<MyTeacher> bClass = LambdaUtil.getImplClass(myTeacher::getAge);
 		Assert.assertEquals(MyTeacher.class, bClass);

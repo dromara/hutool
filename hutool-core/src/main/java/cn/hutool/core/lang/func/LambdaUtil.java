@@ -1,13 +1,15 @@
 package cn.hutool.core.lang.func;
 
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.text.CharPool;
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
 
 /**
  * Lambda相关工具类
@@ -55,8 +57,16 @@ public class LambdaUtil {
 		return resolve(func).getImplMethodName();
 	}
 
-	public static <P> Class<P> getImplClass(Func1<P, ?> func) {
-		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
+	/**
+	 * 获取lambda实现类
+	 *
+	 * @param func lambda
+	 * @param <P>  类型
+	 * @return lambda实现类
+	 */
+	public static <P> Class<P> getInstantiatedClass(Func1<P, ?> func) {
+		String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
+		return ClassUtil.loadClass(StrUtil.replace(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')), StrPool.SLASH, StrPool.DOT));
 	}
 
 	/**
@@ -71,6 +81,13 @@ public class LambdaUtil {
 		return resolve(func).getImplMethodName();
 	}
 
+	/**
+	 * 获取lambda实现类
+	 *
+	 * @param func lambda
+	 * @param <R>  类型
+	 * @return lambda实现类
+	 */
 	public static <R> Class<R> getImplClass(Func0<?> func) {
 		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
 	}
