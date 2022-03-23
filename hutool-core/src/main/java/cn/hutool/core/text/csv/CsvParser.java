@@ -397,7 +397,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		}
 
 		/**
-		 * 读取到缓存
+		 * 读取到缓存<br>
+		 * 全量读取，会重置Buffer中所有数据
 		 *
 		 * @param reader {@link Reader}
 		 */
