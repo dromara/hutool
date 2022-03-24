@@ -694,7 +694,12 @@ public class CharSequenceUtil {
 
 	/**
 	 * 是否以指定字符串开头<br>
-	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false<br>
+	 * <pre>
+	 *     CharSequenceUtil.startWith("123", "123", false, true);   -- false
+	 *     CharSequenceUtil.startWith("ABCDEF", "abc", true, true); -- true
+	 *     CharSequenceUtil.startWith("abc", "abc", true, true);    -- false
+	 * </pre>
 	 *
 	 * @param str          被监测字符串
 	 * @param prefix       开头字符串
@@ -711,12 +716,8 @@ public class CharSequenceUtil {
 			return null == str && null == prefix;
 		}
 
-		boolean isStartWith;
-		if (ignoreCase) {
-			isStartWith = str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
-		} else {
-			isStartWith = str.toString().startsWith(prefix.toString());
-		}
+		boolean isStartWith = str.toString()
+				.regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
 
 		if (isStartWith) {
 			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
@@ -799,21 +800,42 @@ public class CharSequenceUtil {
 	 * 是否以指定字符串结尾<br>
 	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
 	 *
-	 * @param str          被监测字符串
-	 * @param suffix       结尾字符串
-	 * @param isIgnoreCase 是否忽略大小写
+	 * @param str        被监测字符串
+	 * @param suffix     结尾字符串
+	 * @param ignoreCase 是否忽略大小写
 	 * @return 是否以指定字符串结尾
 	 */
-	public static boolean endWith(CharSequence str, CharSequence suffix, boolean isIgnoreCase) {
+	public static boolean endWith(CharSequence str, CharSequence suffix, boolean ignoreCase) {
+		return endWith(str, suffix, ignoreCase, false);
+	}
+
+	/**
+	 * 是否以指定字符串结尾<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 *
+	 * @param str          被监测字符串
+	 * @param suffix       结尾字符串
+	 * @param ignoreCase   是否忽略大小写
+	 * @param ignoreEquals 是否忽略字符串相等的情况
+	 * @return 是否以指定字符串结尾
+	 * @since 5.8.0
+	 */
+	public static boolean endWith(CharSequence str, CharSequence suffix, boolean ignoreCase, boolean ignoreEquals) {
 		if (null == str || null == suffix) {
+			if (ignoreEquals) {
+				return false;
+			}
 			return null == str && null == suffix;
 		}
 
-		if (isIgnoreCase) {
-			return str.toString().toLowerCase().endsWith(suffix.toString().toLowerCase());
-		} else {
-			return str.toString().endsWith(suffix.toString());
+		final int strOffset = str.length() - suffix.length();
+		boolean isEndWith = str.toString()
+				.regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
+
+		if (isEndWith) {
+			return (false == ignoreEquals) || (false == equals(str, suffix, ignoreCase));
 		}
+		return false;
 	}
 
 	/**
@@ -1020,7 +1042,7 @@ public class CharSequenceUtil {
 			// 如果被监测字符串和
 			return null == testStr;
 		}
-		return str.toString().toLowerCase().contains(testStr.toString().toLowerCase());
+		return indexOfIgnoreCase(str, testStr) > -1;
 	}
 
 	/**
@@ -1420,7 +1442,7 @@ public class CharSequenceUtil {
 		}
 
 		final String str2 = str.toString();
-		if (str2.toLowerCase().startsWith(prefix.toString().toLowerCase())) {
+		if (startWithIgnoreCase(str, prefix)) {
 			return subSuf(str2, prefix.length());// 截取后半段
 		}
 		return str2;
@@ -1469,7 +1491,7 @@ public class CharSequenceUtil {
 		}
 
 		final String str2 = str.toString();
-		if (str2.toLowerCase().endsWith(suffix.toString().toLowerCase())) {
+		if (endWithIgnoreCase(str, suffix)) {
 			return subPre(str2, str2.length() - suffix.length());
 		}
 		return str2;
@@ -2642,6 +2664,21 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 截取第一个字串的部分字符，与第二个字符串比较（长度一致），判断截取的子串是否相同<br>
+	 * 任意一个字符串为null返回false
+	 *
+	 * @param str1       第一个字符串
+	 * @param start1     第一个字符串开始的位置
+	 * @param str2       第二个字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 子串是否相同
+	 * @since 3.2.1
+	 */
+	public static boolean isSubEquals(CharSequence str1, int start1, CharSequence str2, boolean ignoreCase) {
+		return isSubEquals(str1, start1, str2, 0, str2.length(), ignoreCase);
+	}
+
+	/**
 	 * 截取两个字符串的不同部分（长度一致），判断截取的子串是否相同<br>
 	 * 任意一个字符串为null返回false
 	 *
@@ -3608,7 +3645,7 @@ public class CharSequenceUtil {
 	 * @param str          字符串
 	 * @param startInclude 开始位置（包含）
 	 * @param endExclude   结束位置（不包含）
-	 * @param replacedStr 被替换的字符串
+	 * @param replacedStr  被替换的字符串
 	 * @return 替换后的字符串
 	 * @since 3.2.1
 	 */

@@ -73,8 +73,8 @@ public class BeanUtilTest {
 
 		}, CopyOptions.create());
 
-		Assert.assertEquals(person.getName(), "张三");
-		Assert.assertEquals(person.getAge(), 18);
+		Assert.assertEquals("张三", person.getName());
+		Assert.assertEquals(18, person.getAge());
 	}
 
 	@Test
@@ -713,7 +713,7 @@ public class BeanUtilTest {
 		CopyOptions copyOptions = CopyOptions.create().
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
-						setFieldNameEditor(StrUtil::toUnderlineCase);
+						setFieldNameEditor(StrUtil::toCamelCase);
 
 		ChildVo2 childVo2 = new ChildVo2();
 		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);

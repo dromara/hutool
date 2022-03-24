@@ -363,4 +363,16 @@ public class UrlBuilderTest {
 		final String build = UrlBuilder.of(url).build();
 		Assert.assertEquals(url, build);
 	}
+
+	@Test
+	public void issueI4Z2ETTest(){
+		// =是url参数值中的合法字符，但是某些URL强制编码了
+		String url = "http://dsl-fd.dslbuy.com/fssc/1647947565522.pdf?" +
+				"Expires=1647949365" +
+				"&OSSAccessKeyId=STS.NTZ9hvqPSLG8ENknz2YaByLKj" +
+				"&Signature=oYUu26JufAyPY4PdzaOp1x4sr4Q%3D";
+
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url, null);
+		Assert.assertEquals(url, urlBuilder.toString());
+	}
 }

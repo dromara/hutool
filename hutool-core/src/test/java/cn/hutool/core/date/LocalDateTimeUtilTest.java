@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 
 public class LocalDateTimeUtilTest {
 
@@ -196,9 +197,18 @@ public class LocalDateTimeUtilTest {
 		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
 		LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
 
-		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
-		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
-		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+		LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
+		LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
+
+		LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
+		LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
+
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
 	}
 
 	@Test

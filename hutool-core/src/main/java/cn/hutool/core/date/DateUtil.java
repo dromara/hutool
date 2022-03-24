@@ -1756,7 +1756,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 是否闰年
 	 */
 	public static boolean isLeapYear(int year) {
-		return new GregorianCalendar().isLeapYear(year);
+		return Year.isLeap(year);
 	}
 
 	/**
@@ -2196,7 +2196,11 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static boolean isOverlap(Date realStartTime, Date realEndTime,
 									Date startTime, Date endTime) {
-		return startTime.after(realEndTime) || endTime.before(realStartTime);
+
+		// x>b||a>y 无交集
+		// 则有交集的逻辑为 !(x>b||a>y)
+		// 根据德摩根公式，可化简为 x<=b && a<=y
+		return startTime.before(realEndTime) && endTime.after(realStartTime);
 	}
 
 	// ------------------------------------------------------------------------ Private method start

@@ -223,7 +223,7 @@ public class JSONWriter extends Writer {
 			writeRaw(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Map) {
+		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
 			new JSONArray(value).write(writer, indentFactor, indent);

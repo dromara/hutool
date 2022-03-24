@@ -29,7 +29,7 @@ import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -108,7 +108,7 @@ public class Opt<T> {
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
-	public static <T> Opt<List<T>> ofEmptyAble(List<T> value) {
+	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
 		return CollectionUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 

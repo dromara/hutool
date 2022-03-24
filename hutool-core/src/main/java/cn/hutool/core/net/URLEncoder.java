@@ -23,7 +23,9 @@ import java.util.BitSet;
  *
  * @author looly
  * @see cn.hutool.core.codec.PercentCodec
+ * @deprecated 此类中的方法并不规范，请使用 {@link RFC3986}
  */
+@Deprecated
 public class URLEncoder implements Serializable {
 	private static final long serialVersionUID = 1L;
 

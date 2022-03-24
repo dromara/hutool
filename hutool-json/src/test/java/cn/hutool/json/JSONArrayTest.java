@@ -27,10 +27,18 @@ import java.util.Map;
  */
 public class JSONArrayTest {
 
-	@Test(expected = JSONException.class)
-	public void createJSONArrayTest(){
-		// 集合类不支持转为JSONObject
-		new JSONArray(new JSONObject(), JSONConfig.create());
+	@Test()
+	public void createJSONArrayFromJSONObjectTest(){
+		// JSONObject实现了Iterable接口，可以转换为JSONArray
+		final JSONObject jsonObject = new JSONObject();
+
+		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.create());
+		Assert.assertEquals(new JSONArray(), jsonArray);
+
+		jsonObject.set("key1", "value1");
+		jsonArray = new JSONArray(jsonObject, JSONConfig.create());
+		Assert.assertEquals(1, jsonArray.size());
+		Assert.assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
 	}
 
 	@Test
@@ -128,7 +136,7 @@ public class JSONArrayTest {
 	public void toDictListTest() {
 		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 
-		JSONArray array = JSONUtil.parseArray(jsonArr);
+		JSONArray array = JSONUtil.parseArray(jsonArr, JSONConfig.create().setIgnoreError(false));
 
 		List<Dict> list = JSONUtil.toList(array, Dict.class);
 

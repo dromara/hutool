@@ -43,6 +43,20 @@ public class BiMap<K, V> extends MapWrapper<K, V> {
 	}
 
 	@Override
+	public V remove(Object key) {
+		final V v = super.remove(key);
+		if(null != this.inverse && null != v){
+			this.inverse.remove(v);
+		}
+		return v;
+	}
+
+	@Override
+	public boolean remove(Object key, Object value) {
+		return super.remove(key, value) && null != this.inverse && this.inverse.remove(value, key);
+	}
+
+	@Override
 	public void clear() {
 		super.clear();
 		this.inverse = null;

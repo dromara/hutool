@@ -9,9 +9,9 @@ import java.util.List;
  *
  */
 public class YearValueMatcher implements ValueMatcher{
-	
+
 	private final List<Integer> valueList;
-	
+
 	public YearValueMatcher(List<Integer> intValueList) {
 		this.valueList = intValueList;
 	}
@@ -19,5 +19,17 @@ public class YearValueMatcher implements ValueMatcher{
 	@Override
 	public boolean match(Integer t) {
 		return valueList.contains(t);
+	}
+
+	@Override
+	public int nextAfter(int value) {
+		for (Integer year : valueList) {
+			if(year >= value){
+				return year;
+			}
+		}
+
+		// 年无效，此表达式整体无效
+		return -1;
 	}
 }

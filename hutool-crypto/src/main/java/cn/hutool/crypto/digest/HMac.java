@@ -163,7 +163,8 @@ public class HMac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestBase64(String data, Charset charset, boolean isUrlSafe) {
-		return Base64.encodeStr(digest(data, charset), false, isUrlSafe);
+		final byte[] digest = digest(data, charset);
+		return isUrlSafe ? Base64.encodeUrlSafe(digest) : Base64.encode(digest);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package cn.hutool.core.collection;
 
-import cn.hutool.core.lang.Console;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
@@ -20,8 +19,6 @@ public class UniqueKeySetTest {
 
 		// 后两个ID重复
 		Assert.assertEquals(2, set.size());
-
-		set.forEach(Console::log);
 	}
 
 	@Data

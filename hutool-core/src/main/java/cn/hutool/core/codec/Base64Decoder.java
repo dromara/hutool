@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -87,7 +88,7 @@ public class Base64Decoder {
 			return in;
 		}
 
-		final IntWrapper offset = new IntWrapper(pos);
+		final MutableInt offset = new MutableInt(pos);
 
 		byte sestet0;
 		byte sestet1;
@@ -96,7 +97,7 @@ public class Base64Decoder {
 		int maxPos = pos + length - 1;
 		int octetId = 0;
 		byte[] octet = new byte[length * 3 / 4];// over-estimated if non-base64 characters present
-		while (offset.value <= maxPos) {
+		while (offset.intValue() <= maxPos) {
 			sestet0 = getNextValidDecodeByte(in, offset, maxPos);
 			sestet1 = getNextValidDecodeByte(in, offset, maxPos);
 			sestet2 = getNextValidDecodeByte(in, offset, maxPos);
@@ -141,11 +142,12 @@ public class Base64Decoder {
 	 * @param maxPos 最大位置
 	 * @return 有效字符，如果达到末尾返回
 	 */
-	private static byte getNextValidDecodeByte(byte[] in, IntWrapper pos, int maxPos) {
+	private static byte getNextValidDecodeByte(byte[] in, MutableInt pos, int maxPos) {
 		byte base64Byte;
 		byte decodeByte;
-		while (pos.value <= maxPos) {
-			base64Byte = in[pos.value++];
+		while (pos.intValue() <= maxPos) {
+			base64Byte = in[pos.intValue()];
+			pos.increment();
 			if (base64Byte > -1) {
 				decodeByte = DECODE_TABLE[base64Byte];
 				if (decodeByte > -1) {
@@ -155,20 +157,6 @@ public class Base64Decoder {
 		}
 		// padding if reached max position
 		return PADDING;
-	}
-
-	/**
-	 * int包装，使之可变
-	 *
-	 * @author looly
-	 *
-	 */
-	private static class IntWrapper {
-		int value;
-
-		IntWrapper(int value) {
-			this.value = value;
-		}
 	}
 	// ----------------------------------------------------------------------------------------------- Private end
 }

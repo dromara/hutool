@@ -71,7 +71,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建工作簿，用于Excel写出
+	 * 创建工作簿，用于Excel写出（读写模式）
 	 *
 	 * <pre>
 	 * 1. excelFile为null时直接返回一个空的工作簿，默认xlsx格式
@@ -113,6 +113,7 @@ public class WorkbookUtil {
 	 * @param password  Excel工作簿密码，如果无密码传{@code null}
 	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
 	 * @return {@link Workbook}
+	 * @since 5.7.23
 	 */
 	public static Workbook createBook(File excelFile, String password, boolean readOnly) {
 		try {
@@ -123,7 +124,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建或加载工作簿
+	 * 创建或加载工作簿（只读模式）
 	 *
 	 * @param in Excel输入流
 	 * @return {@link Workbook}
@@ -133,7 +134,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建或加载工作簿
+	 * 创建或加载工作簿（只读模式）
 	 *
 	 * @param in       Excel输入流，使用完毕自动关闭流
 	 * @param password 密码
@@ -151,7 +152,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 根据文件类型创建新的工作簿，文件路径
+	 * 创建新的空白Excel工作簿
 	 *
 	 * @param isXlsx 是否为xlsx格式的Excel
 	 * @return {@link Workbook}
@@ -184,7 +185,7 @@ public class WorkbookUtil {
 	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
 	 * @param readOnly      是否只读模式打开，true:是（不可编辑），false:否（可编辑）
 	 * @return {@link SXSSFWorkbook}
-	 * @since 4.1.13
+	 * @since 5.7.23
 	 */
 	public static SXSSFWorkbook createSXSSFBook(String excelFilePath, boolean readOnly) {
 		return createSXSSFBook(FileUtil.file(excelFilePath), null, readOnly);
@@ -207,7 +208,7 @@ public class WorkbookUtil {
 	 * @param excelFile Excel文件
 	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
 	 * @return {@link SXSSFWorkbook}
-	 * @since 4.1.13
+	 * @since 5.7.23
 	 */
 	public static SXSSFWorkbook createSXSSFBook(File excelFile, boolean readOnly) {
 		return createSXSSFBook(excelFile, null, readOnly);
@@ -228,20 +229,20 @@ public class WorkbookUtil {
 
 
 	/**
-	 * 创建或加载SXSSFWorkbook工作簿
+	 * 创建或加载{@link SXSSFWorkbook}工作簿
 	 *
 	 * @param excelFile Excel文件
 	 * @param password  Excel工作簿密码，如果无密码传{@code null}
 	 * @param readOnly  是否只读模式打开，true:是（不可编辑），false:否（可编辑）
 	 * @return {@link SXSSFWorkbook}
-	 * @since 4.1.13
+	 * @since 5.7.23
 	 */
 	public static SXSSFWorkbook createSXSSFBook(File excelFile, String password, boolean readOnly) {
 		return toSXSSFBook(createBook(excelFile, password, readOnly));
 	}
 
 	/**
-	 * 创建或加载SXSSFWorkbook工作簿
+	 * 创建或加载{@link SXSSFWorkbook}工作簿（只读模式）
 	 *
 	 * @param in Excel输入流
 	 * @return {@link SXSSFWorkbook}
@@ -252,7 +253,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建或加载SXSSFWorkbook工作簿
+	 * 创建或加载{@link SXSSFWorkbook}工作簿（只读模式）
 	 *
 	 * @param in       Excel输入流
 	 * @param password 密码
@@ -264,7 +265,7 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建SXSSFWorkbook，用于大批量数据写出
+	 * 创建空的{@link SXSSFWorkbook}，用于大批量数据写出
 	 *
 	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
@@ -274,14 +275,27 @@ public class WorkbookUtil {
 	}
 
 	/**
-	 * 创建SXSSFWorkbook，用于大批量数据写出
+	 * 创建空的{@link SXSSFWorkbook}，用于大批量数据写出
 	 *
-	 * @param rowAccessWindowSize 在内存中的行数
-	 * @return {@link Workbook}
+	 * @param rowAccessWindowSize 在内存中的行数，-1表示不限制，此时需要手动刷出
+	 * @return {@link SXSSFWorkbook}
 	 * @since 4.1.13
 	 */
 	public static SXSSFWorkbook createSXSSFBook(int rowAccessWindowSize) {
 		return new SXSSFWorkbook(rowAccessWindowSize);
+	}
+
+	/**
+	 * 创建空的{@link SXSSFWorkbook}，用于大批量数据写出
+	 *
+	 * @param rowAccessWindowSize 在内存中的行数，-1表示不限制，此时需要手动刷出
+	 * @param compressTmpFiles     是否使用Gzip压缩临时文件
+	 * @param useSharedStringsTable 是否使用共享字符串表，一般大量重复字符串时开启可节省内存
+	 * @return {@link SXSSFWorkbook}
+	 * @since 5.7.23
+	 */
+	public static SXSSFWorkbook createSXSSFBook(int rowAccessWindowSize, boolean compressTmpFiles, boolean useSharedStringsTable) {
+		return new SXSSFWorkbook(null, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
 	}
 
 	/**

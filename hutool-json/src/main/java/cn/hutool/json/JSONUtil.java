@@ -776,7 +776,7 @@ public class JSONUtil {
 				return new JSONArray(object, jsonConfig);
 			}
 			// JSONObject
-			if (object instanceof Map) {
+			if (object instanceof Map || object instanceof Map.Entry) {
 				return new JSONObject(object, jsonConfig);
 			}
 

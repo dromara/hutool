@@ -45,7 +45,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/**
 	 * 持有原始数据的List
 	 */
-	private final List<Object> rawList;
+	private List<Object> rawList;
 	/**
 	 * 配置项
 	 */
@@ -578,6 +578,12 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return writer;
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		final JSONArray clone = (JSONArray) super.clone();
+		clone.rawList = ObjectUtil.clone(this.rawList);
+		return clone;
+	}
 	// ------------------------------------------------------------------------------------------------- Private method start
 
 	/**
