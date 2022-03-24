@@ -145,7 +145,7 @@ public class ZipReader implements Closeable {
 			if (null == entryFilter || entryFilter.accept(zipEntry)) {
 				//gitee issue #I4ZDQI
 				String path = zipEntry.getName();
-				if (System.getProperty("os.name").contains("Windows")) {
+				if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
 					path = StrUtil.replace(zipEntry.getName(), "*", "_");
 				}
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
