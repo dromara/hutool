@@ -1,5 +1,6 @@
 package cn.hutool.json;
 
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -190,5 +191,20 @@ public final class InternalJSONUtil {
 		}
 
 		return false;
+	}
+
+	/**
+	 * 将{@link JSONConfig}参数转换为Bean拷贝所用的{@link CopyOptions}
+	 *
+	 * @param config {@link JSONConfig}
+	 * @return {@link CopyOptions}
+	 * @since 5.8.0
+	 */
+	static CopyOptions toCopyOptions(JSONConfig config) {
+		return CopyOptions.create()
+				.setIgnoreCase(config.isIgnoreCase())
+				.setIgnoreError(config.isIgnoreError())
+				.setIgnoreNullValue(config.isIgnoreNullValue())
+				.setTransientSupport(config.isTransientSupport());
 	}
 }

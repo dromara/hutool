@@ -16,6 +16,7 @@
 * 【cron   】     【可能兼容问题】SimpleValueParser改名为AbsValueParser，改为abstract
 * 【poi    】     【可能兼容问题】ExcelUtil.getBigWriter返回值改为BigExcelWriter
 * 【core   】     【可能兼容问题】Opt.ofEmptyAble参数由List改为Collection子类（pr#580@Gitee）
+* 【json   】     【可能兼容问题】JSON转Bean时，使用JSON本身的相关设置，而非默认（issue#2212@Github）
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）
@@ -57,6 +58,7 @@
 * 【http   】     修复标签误删问题（issue#I4Z7BV@Gitee）
 * 【core   】     修复Win下文件名带*问题（pr#584@Gitee）
 * 【core   】     FileUtil.getMimeType增加rar、7z支持（issue#I4ZBN0@Gitee）
+* 【json   】     JSON修复transient设置无效问题（issue#2212@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

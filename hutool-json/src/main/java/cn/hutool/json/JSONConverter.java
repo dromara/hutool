@@ -1,10 +1,12 @@
 package cn.hutool.json;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.ArrayConverter;
+import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -111,6 +113,16 @@ public class JSONConverter implements Converter<JSON> {
 			if(null != deserializer) {
 				//noinspection unchecked
 				return (T) deserializer.deserialize((JSON) value);
+			}
+
+			// issue#2212@Github
+			// 在JSONObject转Bean时，读取JSONObject本身的配置文件
+			if(value instanceof JSONGetter
+					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
+				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
+				final Converter<T> converter = new BeanConverter<>(targetType,
+						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
+				return converter.convertWithCheck(value, null, ignoreError);
 			}
 		}
 

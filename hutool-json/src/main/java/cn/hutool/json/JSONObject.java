@@ -2,8 +2,6 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.BeanCopier;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Filter;
@@ -537,12 +535,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param bean Bean对象
 	 */
 	private void populateMap(Object bean) {
-		BeanCopier.create(bean, this,
-				CopyOptions.create()
-						.setIgnoreCase(config.isIgnoreCase())
-						.setIgnoreError(true)
-						.setIgnoreNullValue(config.isIgnoreNullValue())
-		).copy();
+		BeanUtil.beanToMap(bean, this, InternalJSONUtil.toCopyOptions(config));
 	}
 
 	/**
