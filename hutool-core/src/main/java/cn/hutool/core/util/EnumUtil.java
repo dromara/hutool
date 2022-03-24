@@ -6,7 +6,11 @@ import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -234,9 +238,19 @@ public class EnumUtil {
 	 * @param <F>       想要获取的字段类型
 	 * @param <C>       条件字段类型
 	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
+	 * @since 5.8.0
 	 */
-	public static <E extends Enum<E>, F, C> F getFieldBy(Function<E, F> field, Func1<E, C> condition, C value) {
-		return Arrays.stream(LambdaUtil.getImplClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().map(field).orElse(null);
+	public static <E extends Enum<E>, F, C> F getFieldBy(Func1<E, F> field,
+														 Function<E, C> condition, C value) {
+		Class<E> implClass = LambdaUtil.getImplClass(field);
+		if(Enum.class.equals(implClass)){
+			implClass = LambdaUtil.getInstantiatedClass(field);
+		}
+		return Arrays.stream(implClass.getEnumConstants())
+				// 过滤
+				.filter(e -> condition.apply(e).equals(value))
+				// 获取第一个并转换为结果
+				.findFirst().map(field::callWithRuntimeException).orElse(null);
 	}
 
 	/**

@@ -5,6 +5,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.text.CharPool;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -185,6 +186,9 @@ public class ClassLoaderUtil {
 	 */
 	public static Class<?> loadClass(String name, ClassLoader classLoader, boolean isInitialized) throws UtilException {
 		Assert.notNull(name, "Name must not be null");
+
+		// 自动将包名中的"/"替换为"."
+		name = name.replace(CharPool.SLASH, CharPool.DOT);
 
 		// 加载原始类型和缓存中的类
 		Class<?> clazz = loadPrimitiveClass(name);

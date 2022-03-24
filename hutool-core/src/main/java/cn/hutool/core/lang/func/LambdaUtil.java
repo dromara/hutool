@@ -1,10 +1,11 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.SimpleCache;
-import cn.hutool.core.text.CharPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -85,7 +86,7 @@ public class LambdaUtil {
 	 * @since 5.8.0
 	 */
 	public static <R> Class<R> getImplClass(Func0<?> func) {
-		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
+		return ClassUtil.loadClass(resolve(func).getImplClass());
 	}
 
 	/**
@@ -103,7 +104,36 @@ public class LambdaUtil {
 	 * @since 5.8.0
 	 */
 	public static <T> Class<T> getImplClass(Func1<T, ?> func) {
-		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
+		return ClassUtil.loadClass(resolve(func).getImplClass());
+	}
+
+	/**
+	 * 通过{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
+	 * 在使用{@link #getImplClass(Func0)}获取实现类的时候，如果传入的是父类方法引用，会返回父类导致问题<br>
+	 * 此类通过方法的名称，截取出类名
+	 *
+	 * @param func lambda
+	 * @param <P>  类型
+	 * @return lambda实现类
+	 */
+	public static <P> Class<P> getInstantiatedClass(Func0<?> func) {
+		final String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
+		Console.log(instantiatedMethodType);
+		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+	}
+
+	/**
+	 * 通过{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
+	 * 在使用{@link #getImplClass(Func1)}获取实现类的时候，如果传入的是父类方法引用，会返回父类导致问题<br>
+	 * 此类通过方法的名称，截取出类名
+	 *
+	 * @param func lambda
+	 * @param <P>  类型
+	 * @return lambda实现类
+	 */
+	public static <P> Class<P> getInstantiatedClass(Func1<P, ?> func) {
+		final String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
+		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
 	}
 
 	/**

@@ -44,8 +44,11 @@ public class EnumUtilTest {
 	@Test
 	public void getFieldByTest() {
 		// 枚举中字段互相映射使用
-		String type = EnumUtil.getFieldBy(TestEnum::getType, TestEnum::ordinal, 1);
+		String type = EnumUtil.getFieldBy(TestEnum::getType, Enum::ordinal, 1);
 		Assert.assertEquals("type2", type);
+
+		int ordinal = EnumUtil.getFieldBy(TestEnum::ordinal, Enum::ordinal, 1);
+		Assert.assertEquals(1, ordinal);
 	}
 
 	@Test
@@ -75,6 +78,7 @@ public class EnumUtilTest {
 		}
 
 		private final String type;
+		@SuppressWarnings("unused")
 		private String name;
 
 		public String getType() {

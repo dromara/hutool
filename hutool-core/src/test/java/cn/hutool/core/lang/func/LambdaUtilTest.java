@@ -36,6 +36,14 @@ public class LambdaUtilTest {
 		Assert.assertEquals(MyTeacher.class, aClass);
 	}
 
+	@Test
+	public void getInstantiatedClassTest() {
+		// 类方法引用，相当于获取的方法引用是：MyTeacher.getAge(this)
+		// 因此此处会匹配到Func1，其参数就是this
+		Class<MyTeacher> aClass = LambdaUtil.getInstantiatedClass(MyTeacher::getAge);
+		Assert.assertEquals(MyTeacher.class, aClass);
+	}
+
 	@Data
 	static class MyTeacher {
 
