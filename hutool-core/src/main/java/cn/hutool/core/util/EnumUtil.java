@@ -1,13 +1,13 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * 枚举工具类
@@ -208,6 +208,35 @@ public class EnumUtil {
 			}
 		}
 		return names;
+	}
+
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
+	 *
+	 * @param condition 条件字段
+	 * @param value     条件字段值
+	 * @param <E>       枚举类型
+	 * @param <C>       字段类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
+		return Arrays.stream(LambdaUtil.getInstantiatedClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举中另一字段值，获取不到时为 {@code null}
+	 *
+	 * @param field     你想要获取的字段
+	 * @param condition 条件字段
+	 * @param value     条件字段值
+	 * @param <E>       枚举类型
+	 * @param <F>       想要获取的字段类型
+	 * @param <C>       条件字段类型
+	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, F, C> F getFieldBy(Function<E, F> field, Func1<E, C> condition, C value) {
+		return Arrays.stream(LambdaUtil.getInstantiatedClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().map(field).orElse(null);
 	}
 
 	/**
