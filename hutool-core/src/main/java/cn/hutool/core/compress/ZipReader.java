@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 
 import java.io.Closeable;
@@ -142,8 +143,10 @@ public class ZipReader implements Closeable {
 	public File readTo(File outFile, Filter<ZipEntry> entryFilter) throws IORuntimeException {
 		read((zipEntry) -> {
 			if (null == entryFilter || entryFilter.accept(zipEntry)) {
+				//gitee issue #I4ZDQI
+				String replace = StrUtil.replace(zipEntry.getName(), "*", "_");
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				final File outItemFile = FileUtil.file(outFile, zipEntry.getName());
+				final File outItemFile = FileUtil.file(outFile, replace);
 				if (zipEntry.isDirectory()) {
 					// 目录
 					//noinspection ResultOfMethodCallIgnored
