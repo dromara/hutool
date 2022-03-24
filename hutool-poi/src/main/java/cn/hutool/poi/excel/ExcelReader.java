@@ -55,6 +55,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 *
 	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
 	 * @param sheetName     sheet名，第一个默认是sheet1
+	 * @since 5.8.0
 	 */
 	public ExcelReader(String excelFilePath, String sheetName) {
 		this(FileUtil.file(excelFilePath), sheetName);
