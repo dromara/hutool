@@ -144,12 +144,12 @@ public class ZipReader implements Closeable {
 		read((zipEntry) -> {
 			if (null == entryFilter || entryFilter.accept(zipEntry)) {
 				//gitee issue #I4ZDQI
-				String replace = zipEntry.getName();
+				String path = zipEntry.getName();
 				if (System.getProperty("os.name").contains("Windows")) {
-					replace = StrUtil.replace(zipEntry.getName(), "*", "_");
+					path = StrUtil.replace(zipEntry.getName(), "*", "_");
 				}
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				final File outItemFile = FileUtil.file(outFile, replace);
+				final File outItemFile = FileUtil.file(outFile, path);
 				if (zipEntry.isDirectory()) {
 					// 目录
 					//noinspection ResultOfMethodCallIgnored
