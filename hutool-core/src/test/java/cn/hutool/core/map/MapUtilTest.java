@@ -56,7 +56,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void changeTest() {
+	public void mapTest() {
 		// Add test like a foreigner
 		Map<Integer, String> adjectivesMap = MapUtil.<Integer, String>builder()
 				.put(0, "lovely")
@@ -64,7 +64,7 @@ public class MapUtilTest {
 				.put(2, "happily")
 				.build();
 
-		Map<Integer, String> resultMap = MapUtil.change(adjectivesMap, (k, v) -> v + " " + PeopleEnum.values()[k].name().toLowerCase());
+		Map<Integer, String> resultMap = MapUtil.map(adjectivesMap, (k, v) -> v + " " + PeopleEnum.values()[k].name().toLowerCase());
 
 		Assert.assertEquals("lovely girl", resultMap.get(0));
 		Assert.assertEquals("friendly boy", resultMap.get(1));
@@ -80,7 +80,7 @@ public class MapUtilTest {
 		Map<Long, List<Long>> groupIdUserIdsMap = groups.stream().flatMap(group -> idUserMap.keySet().stream().map(userId -> UserGroup.builder().groupId(group.getId()).userId(userId).build())).collect(Collectors.groupingBy(UserGroup::getUserId, Collectors.mapping(UserGroup::getGroupId, Collectors.toList())));
 
 		// 神奇的魔法发生了， 分组id和用户ids组成的map，竟然变成了订单编号和用户实体集合组成的map
-		Map<Long, List<User>> groupIdUserMap = MapUtil.change(groupIdUserIdsMap, (groupId, userIds) -> userIds.stream().map(idUserMap::get).collect(Collectors.toList()));
+		Map<Long, List<User>> groupIdUserMap = MapUtil.map(groupIdUserIdsMap, (groupId, userIds) -> userIds.stream().map(idUserMap::get).collect(Collectors.toList()));
 
 		// 然后你就可以拿着这个map，去封装groups，使其能够在订单数据带出客户信息啦
 		groups.forEach(group -> Opt.ofNullable(group.getId()).map(groupIdUserMap::get).ifPresent(group::setUsers));

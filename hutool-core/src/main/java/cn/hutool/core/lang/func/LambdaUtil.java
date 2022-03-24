@@ -3,10 +3,8 @@ package cn.hutool.core.lang.func;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.text.CharPool;
-import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -58,18 +56,6 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 获取lambda实现类
-	 *
-	 * @param func lambda
-	 * @param <P>  类型
-	 * @return lambda实现类
-	 */
-	public static <P> Class<P> getInstantiatedClass(Func1<P, ?> func) {
-		String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
-		return ClassUtil.loadClass(StrUtil.replace(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')), StrPool.SLASH, StrPool.DOT));
-	}
-
-	/**
 	 * 获取lambda表达式函数（方法）名称
 	 *
 	 * @param <R>  Lambda返回类型
@@ -82,13 +68,41 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 获取lambda实现类
+	 * 通过对象的方法或类的静态方法引用，获取lambda实现类，两种情况匹配到此方法：
+	 * <ul>
+	 *     <li>对象方法引用，如：myTeacher::getAge</li>
+	 *     <li>类静态方法引用，如：MyTeacher::takeAge</li>
+	 * </ul>
+	 * 如想获取调用的方法引用所在类，可以：
+	 * <pre>
+	 *     // 返回MyTeacher.class
+	 *     LambdaUtil.getImplClass(myTeacher::getAge);
+	 * </pre>
 	 *
 	 * @param func lambda
 	 * @param <R>  类型
 	 * @return lambda实现类
+	 * @since 5.8.0
 	 */
 	public static <R> Class<R> getImplClass(Func0<?> func) {
+		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
+	}
+
+	/**
+	 * 通过类的方法引用，获取lambda实现类<br>
+	 * 类方法引用，相当于获取的方法引用是：MyTeacher.getAge(this)
+	 * 如想获取调用的方法引用所在类，可以：
+	 * <pre>
+	 *     // 返回MyTeacher.class
+	 *     LambdaUtil.getImplClass(MyTeacher::getAge);
+	 * </pre>
+	 *
+	 * @param func lambda
+	 * @param <T>  类型
+	 * @return lambda实现类
+	 * @since 5.8.0
+	 */
+	public static <T> Class<T> getImplClass(Func1<T, ?> func) {
 		return ClassUtil.loadClass(resolve(func).getImplClass().replace(CharPool.SLASH, CharPool.DOT));
 	}
 

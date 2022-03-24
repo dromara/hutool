@@ -221,7 +221,7 @@ public class EnumUtil {
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
 	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
-		return Arrays.stream(LambdaUtil.getInstantiatedClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
+		return Arrays.stream(LambdaUtil.getImplClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class EnumUtil {
 	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
 	 */
 	public static <E extends Enum<E>, F, C> F getFieldBy(Function<E, F> field, Func1<E, C> condition, C value) {
-		return Arrays.stream(LambdaUtil.getInstantiatedClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().map(field).orElse(null);
+		return Arrays.stream(LambdaUtil.getImplClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().map(field).orElse(null);
 	}
 
 	/**

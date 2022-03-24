@@ -550,7 +550,7 @@ public class MapUtil {
 	 * @since 5.0.4
 	 */
 	public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull,
-	                              String... otherParams) {
+								  String... otherParams) {
 		return join(sort(params), separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -672,7 +672,7 @@ public class MapUtil {
 
 
 	/**
-	 * 变更<br>
+	 * 通过biFunction自定义一个规则，此规则将原Map中的元素转换成新的元素，生成新的Map返回<br>
 	 * 变更过程通过传入的 {@link BiFunction} 实现来返回一个值可以为不同类型的 {@link Map}
 	 *
 	 * @param map        原有的map
@@ -680,9 +680,10 @@ public class MapUtil {
 	 * @param <K>        {@code key}的类型
 	 * @param <V>        {@code value}的类型
 	 * @param <R>        新的，修改后的{@code value}的类型
-	 * @return 值可以为不同类型的 {@link Map}
+	 * @return 值可以为不同类型的 {@link Map
+	 * @since 5.8.0
 	 */
-	public static <K, V, R> Map<K, R> change(Map<K, V> map, BiFunction<K, V, R> biFunction) {
+	public static <K, V, R> Map<K, R> map(Map<K, V> map, BiFunction<K, V, R> biFunction) {
 		if (null == map || null == biFunction) {
 			return MapUtil.newHashMap();
 		}
