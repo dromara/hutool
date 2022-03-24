@@ -40,6 +40,7 @@
 * 【http   】     GlobalHeaders增加系统属性allowUnsafeServerCertChange、allowUnsafeRenegotiation
 * 【http   】     UserAgentUtil 解析，增加MiUI/XiaoMi浏览器判断逻辑（pr#581@Gitee）
 * 【core   】     FileAppender添加锁构造（pr#2211@Github）
+* 【poi    】     ExcelReader增加构造（pr#2213@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
