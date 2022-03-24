@@ -151,7 +151,7 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void followRedirectsTest(){
+	public void followRedirectsTest() {
 		// 从5.7.19开始关闭JDK的自动重定向功能，改为手动重定向
 		// 当有多层重定向时，JDK的重定向会失效，或者说只有最后一个重定向有效，因此改为手动更易控制次数
 		// 此链接有两次重定向，当设置次数为1时，表示最多执行一次重定向，即请求2次
@@ -167,5 +167,4 @@ public class HttpRequestTest {
 		execute = HttpRequest.get(url).setMaxRedirectCount(1).execute();
 		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
 	}
-
 }
