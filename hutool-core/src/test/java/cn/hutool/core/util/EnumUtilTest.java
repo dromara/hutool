@@ -37,7 +37,7 @@ public class EnumUtilTest {
 	@Test
 	public void getByTest() {
 		// 枚举中字段互相映射使用
-		TestEnum testEnum = EnumUtil.getBy(TestEnum::getType, "type2");
+		TestEnum testEnum = EnumUtil.getBy(TestEnum::ordinal, 1);
 		Assert.assertEquals("TEST2", testEnum.name());
 	}
 

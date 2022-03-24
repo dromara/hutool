@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 枚举工具类
@@ -214,6 +215,19 @@ public class EnumUtil {
 		return names;
 	}
 
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
+	 *
+	 * @param enumClass 枚举类
+	 * @param predicate 条件
+	 * @param <E>       枚举类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 * @since 5.8.0
+	 */
+	public static <E extends Enum<E>> E getBy(Class<E> enumClass, Predicate<? super E> predicate) {
+		return Arrays.stream(enumClass.getEnumConstants())
+				.filter(predicate).findFirst().orElse(null);
+	}
 
 	/**
 	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
@@ -225,7 +239,11 @@ public class EnumUtil {
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
 	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
-		return Arrays.stream(LambdaUtil.getImplClass(condition).getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
+		Class<E> implClass = LambdaUtil.getImplClass(condition);
+		if (Enum.class.equals(implClass)) {
+			implClass = LambdaUtil.getInstantiatedClass(condition);
+		}
+		return Arrays.stream(implClass.getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
 	}
 
 	/**
@@ -243,7 +261,7 @@ public class EnumUtil {
 	public static <E extends Enum<E>, F, C> F getFieldBy(Func1<E, F> field,
 														 Function<E, C> condition, C value) {
 		Class<E> implClass = LambdaUtil.getImplClass(field);
-		if(Enum.class.equals(implClass)){
+		if (Enum.class.equals(implClass)) {
 			implClass = LambdaUtil.getInstantiatedClass(field);
 		}
 		return Arrays.stream(implClass.getEnumConstants())
