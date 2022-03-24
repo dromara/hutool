@@ -4,6 +4,9 @@ import cn.hutool.poi.excel.cell.CellLocation;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Map;
+
 public class ExcelUtilTest {
 
 	@Test
@@ -49,5 +52,13 @@ public class ExcelUtilTest {
 		ExcelWriter writer = reader.getWriter();
 		writer.writeCellValue(1, 2, "设置值");
 		writer.close();
+	}
+
+	@Test
+	public void getReaderByBookFilePathAndSheetNameTest() {
+		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
+		List<Map<String, Object>> list = reader.readAll();
+		reader.close();
+		Assert.assertEquals(1L, list.get(1).get("鞋码"));
 	}
 }
