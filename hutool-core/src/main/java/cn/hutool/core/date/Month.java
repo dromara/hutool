@@ -1,8 +1,11 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 
+import java.time.format.TextStyle;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 月份枚举<br>
@@ -78,7 +81,11 @@ public enum Month {
 	UNDECIMBER(Calendar.UNDECIMBER);
 
 	// ---------------------------------------------------------------
-	private static final int[] DAYS_OF_MONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, -1};
+	/**
+	 * Months aliases.
+	 */
+	private static final String[] ALIASES = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+	private static final Month[] ENUMS = Month.values();
 
 	/**
 	 * 对应值，见{@link Calendar}
@@ -123,13 +130,24 @@ public enum Month {
 	 * @return 此月份最后一天的值
 	 */
 	public int getLastDay(boolean isLeapYear) {
-		return getLastDay(this.value, isLeapYear);
+		switch (this) {
+			case FEBRUARY:
+				return isLeapYear ? 29 : 28;
+			case APRIL:
+			case JUNE:
+			case SEPTEMBER:
+			case NOVEMBER:
+				return 30;
+			default:
+				return 31;
+		}
 	}
 
 	/**
 	 * 将 {@link Calendar}月份相关值转换为Month枚举对象<br>
+	 * 未找到返回{@code null}
 	 *
-	 * @param calendarMonthIntValue Calendar中关于Month的int值
+	 * @param calendarMonthIntValue Calendar中关于Month的int值，从0开始
 	 * @return Month
 	 * @see Calendar#JANUARY
 	 * @see Calendar#FEBRUARY
@@ -146,36 +164,26 @@ public enum Month {
 	 * @see Calendar#UNDECIMBER
 	 */
 	public static Month of(int calendarMonthIntValue) {
-		switch (calendarMonthIntValue) {
-			case Calendar.JANUARY:
-				return JANUARY;
-			case Calendar.FEBRUARY:
-				return FEBRUARY;
-			case Calendar.MARCH:
-				return MARCH;
-			case Calendar.APRIL:
-				return APRIL;
-			case Calendar.MAY:
-				return MAY;
-			case Calendar.JUNE:
-				return JUNE;
-			case Calendar.JULY:
-				return JULY;
-			case Calendar.AUGUST:
-				return AUGUST;
-			case Calendar.SEPTEMBER:
-				return SEPTEMBER;
-			case Calendar.OCTOBER:
-				return OCTOBER;
-			case Calendar.NOVEMBER:
-				return NOVEMBER;
-			case Calendar.DECEMBER:
-				return DECEMBER;
-			case Calendar.UNDECIMBER:
-				return UNDECIMBER;
-			default:
-				return null;
+		if (calendarMonthIntValue >= ENUMS.length || calendarMonthIntValue < 0) {
+			return null;
 		}
+		return ENUMS[calendarMonthIntValue];
+	}
+
+	/**
+	 * 解析别名为Month对象，别名如：jan或者JANUARY，不区分大小写
+	 *
+	 * @param name 别名值
+	 * @return 月份int值
+	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
+	 * @since 5.8.0
+	 */
+	public static Month of(String name) throws IllegalArgumentException {
+		Month of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
+		if (null == of) {
+			of = Month.valueOf(name.toUpperCase());
+		}
+		return of;
 	}
 
 	/**
@@ -187,12 +195,9 @@ public enum Month {
 	 * @since 5.4.7
 	 */
 	public static int getLastDay(int month, boolean isLeapYear) {
-		int lastDay = DAYS_OF_MONTH[month];
-		if (isLeapYear && Calendar.FEBRUARY == month) {
-			// 二月
-			lastDay += 1;
-		}
-		return lastDay;
+		final Month of = of(month);
+		Assert.notNull(of, "Invalid Month base 0: " + month);
+		return of.getLastDay(isLeapYear);
 	}
 
 	/**
@@ -203,5 +208,28 @@ public enum Month {
 	 */
 	public java.time.Month toJdkMonth() {
 		return java.time.Month.of(getValueBaseOne());
+	}
+
+	/**
+	 * 获取显示名称
+	 *
+	 * @param style 名称风格
+	 * @return 显示名称
+	 * @since 5.8.0
+	 */
+	public String getDisplayName(TextStyle style) {
+		return getDisplayName(style, Locale.getDefault());
+	}
+
+	/**
+	 * 获取显示名称
+	 *
+	 * @param style  名称风格
+	 * @param locale {@link Locale}
+	 * @return 显示名称
+	 * @since 5.8.0
+	 */
+	public String getDisplayName(TextStyle style, Locale locale) {
+		return toJdkMonth().getDisplayName(style, locale);
 	}
 }

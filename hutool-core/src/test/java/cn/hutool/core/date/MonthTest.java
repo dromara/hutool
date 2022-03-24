@@ -48,4 +48,19 @@ public class MonthTest {
 	public void toJdkMonthTest2(){
 		Month.UNDECIMBER.toJdkMonth();
 	}
+
+	@Test
+	public void ofTest(){
+		Month jan = Month.of("Jan");
+		Assert.assertEquals(Month.JANUARY, jan);
+
+		jan = Month.of("JAN");
+		Assert.assertEquals(Month.JANUARY, jan);
+
+		jan = Month.of("FEBRUARY");
+		Assert.assertEquals(Month.FEBRUARY, jan);
+
+		jan = Month.of("February");
+		Assert.assertEquals(Month.FEBRUARY, jan);
+	}
 }
