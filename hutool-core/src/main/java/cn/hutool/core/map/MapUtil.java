@@ -27,6 +27,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.function.BiFunction;
 
 /**
  * Map相关工具类
@@ -548,7 +550,7 @@ public class MapUtil {
 	 * @since 5.0.4
 	 */
 	public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull,
-								  String... otherParams) {
+	                              String... otherParams) {
 		return join(sort(params), separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -666,6 +668,25 @@ public class MapUtil {
 			return map;
 		}
 		return edit(map, t -> filter.accept(t) ? t : null);
+	}
+
+
+	/**
+	 * 变更<br>
+	 * 变更过程通过传入的 {@link BiFunction} 实现来返回一个值可以为不同类型的 {@link Map}
+	 *
+	 * @param map        原有的map
+	 * @param biFunction {@code lambda}，参数包含{@code key},{@code value}，返回值会作为新的{@code value}
+	 * @param <K>        {@code key}的类型
+	 * @param <V>        {@code value}的类型
+	 * @param <R>        新的，修改后的{@code value}的类型
+	 * @return 值可以为不同类型的 {@link Map}
+	 */
+	public static <K, V, R> Map<K, R> change(Map<K, V> map, BiFunction<K, V, R> biFunction) {
+		if (null == map || null == biFunction) {
+			return MapUtil.newHashMap();
+		}
+		return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue())));
 	}
 
 	/**
