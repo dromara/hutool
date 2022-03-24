@@ -30,22 +30,22 @@ public class ZipReader implements Closeable {
 	private ZipInputStream in;
 
 	/**
-	 * 创建{@link ZipReader}
+	 * 创建ZipReader
 	 *
 	 * @param zipFile 生成的Zip文件
 	 * @param charset 编码
-	 * @return {@link ZipReader}
+	 * @return ZipReader
 	 */
 	public static ZipReader of(File zipFile, Charset charset) {
 		return new ZipReader(zipFile, charset);
 	}
 
 	/**
-	 * 创建{@link ZipReader}
+	 * 创建ZipReader
 	 *
 	 * @param in      Zip输入的流，一般为输入文件流
 	 * @param charset 编码
-	 * @return {@link ZipReader}
+	 * @return ZipReader
 	 */
 	public static ZipReader of(InputStream in, Charset charset) {
 		return new ZipReader(in, charset);
@@ -108,7 +108,7 @@ public class ZipReader implements Closeable {
 				this.in.reset();
 				ZipEntry zipEntry;
 				while (null != (zipEntry = in.getNextEntry())) {
-					if(zipEntry.getName().equals(path)){
+					if (zipEntry.getName().equals(path)) {
 						return this.in;
 					}
 				}
@@ -145,7 +145,7 @@ public class ZipReader implements Closeable {
 			if (null == entryFilter || entryFilter.accept(zipEntry)) {
 				//gitee issue #I4ZDQI
 				String path = zipEntry.getName();
-				if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+				if (FileUtil.isWindows()) {
 					path = StrUtil.replace(zipEntry.getName(), "*", "_");
 				}
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/

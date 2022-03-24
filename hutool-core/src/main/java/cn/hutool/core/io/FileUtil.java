@@ -3441,10 +3441,14 @@ public class FileUtil extends PathUtil {
 		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
 		if (null == contentType) {
 			// 补充一些常用的mimeType
-			if (filePath.endsWith(".css")) {
+			if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
 				contentType = "text/css";
-			} else if (filePath.endsWith(".js")) {
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
 				contentType = "application/x-javascript";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
+				contentType = "application/x-rar-compressed";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
+				contentType = "application/x-7z-compressed";
 			}
 		}
 
