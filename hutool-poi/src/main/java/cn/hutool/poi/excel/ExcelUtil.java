@@ -157,6 +157,22 @@ public class ExcelUtil {
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
 	 *
+	 * @param bookFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @return {@link ExcelReader}
+	 * @since 3.1.1
+	 */
+	public static ExcelReader getReader(String bookFilePath, String sheetName) {
+		try {
+			return new ExcelReader(bookFilePath, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 *
 	 * @param bookFile   Excel文件
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 * @return {@link ExcelReader}
