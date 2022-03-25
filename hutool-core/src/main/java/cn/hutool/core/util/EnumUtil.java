@@ -1,10 +1,5 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.LambdaUtil;
-import cn.hutool.core.map.MapUtil;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.map.MapUtil;
 
 /**
  * 枚举工具类
@@ -239,9 +239,9 @@ public class EnumUtil {
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
 	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
-		Class<E> implClass = LambdaUtil.getImplClass(condition);
+		Class<E> implClass = LambdaUtil.getRealClass(condition);
 		if (Enum.class.equals(implClass)) {
-			implClass = LambdaUtil.getInstantiatedClass(condition);
+			implClass = LambdaUtil.getRealClass(condition);
 		}
 		return Arrays.stream(implClass.getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
 	}
@@ -260,9 +260,9 @@ public class EnumUtil {
 	 */
 	public static <E extends Enum<E>, F, C> F getFieldBy(Func1<E, F> field,
 														 Function<E, C> condition, C value) {
-		Class<E> implClass = LambdaUtil.getImplClass(field);
+		Class<E> implClass = LambdaUtil.getRealClass(field);
 		if (Enum.class.equals(implClass)) {
-			implClass = LambdaUtil.getInstantiatedClass(field);
+			implClass = LambdaUtil.getRealClass(field);
 		}
 		return Arrays.stream(implClass.getEnumConstants())
 				// 过滤
