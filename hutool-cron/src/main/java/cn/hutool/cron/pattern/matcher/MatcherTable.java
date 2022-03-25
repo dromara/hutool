@@ -1,5 +1,7 @@
 package cn.hutool.cron.pattern.matcher;
 
+import cn.hutool.core.collection.CollUtil;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,52 @@ public class MatcherTable {
 	}
 
 	public LocalDateTime nextMatchAfter(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+		List<LocalDateTime> nextMatchs = new ArrayList<>(second);
+		for (DateTimeMatcher matcher : matchers) {
+			nextMatchs.add(singleNextMatchAfter(matcher, second, minute, hour,
+					dayOfMonth, month, dayOfWeek, year));
+		}
+		// 返回最先匹配到的日期
+		return CollUtil.min(nextMatchs);
+	}
+
+	private static LocalDateTime singleNextMatchAfter(DateTimeMatcher matcher, int second, int minute, int hour,
+											   int dayOfMonth, int month, int dayOfWeek, int year){
+		boolean isNextNotEquals = true;
+		// 年
+		final int nextYear = matcher.yearMatcher.nextAfter(year);
+		isNextNotEquals &= (year != nextYear);
+
+		// 周
+		int nextDayOfWeek;
+		if(isNextNotEquals){
+			// 上一个字段不一致，说明产生了新值，本字段使用最小值
+			nextDayOfWeek = ((BoolArrayValueMatcher)matcher.dayOfWeekMatcher).getMinValue();
+		}else{
+			nextDayOfWeek = matcher.dayOfWeekMatcher.nextAfter(dayOfWeek);
+			isNextNotEquals &= (dayOfWeek != nextDayOfWeek);
+		}
+
+		// 月
+		int nextMonth;
+		if(isNextNotEquals){
+			// 上一个字段不一致，说明产生了新值，本字段使用最小值
+			nextMonth = ((BoolArrayValueMatcher)matcher.monthMatcher).getMinValue();
+		}else{
+			nextMonth = matcher.monthMatcher.nextAfter(dayOfWeek);
+			isNextNotEquals &= (month != nextMonth);
+		}
+
+		// 日
+		int nextDayOfMonth;
+		if(isNextNotEquals){
+			// 上一个字段不一致，说明产生了新值，本字段使用最小值
+			nextDayOfMonth = ((BoolArrayValueMatcher)matcher.dayOfMonthMatcher).getMinValue();
+		}else{
+			nextDayOfMonth = matcher.dayOfMonthMatcher.nextAfter(dayOfWeek);
+			isNextNotEquals &= (dayOfMonth != nextDayOfMonth);
+		}
+
 		return null;
 	}
 
