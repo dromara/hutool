@@ -1,8 +1,11 @@
 package cn.hutool.core.lang.func;
 
-import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 public class LambdaUtilTest {
 
@@ -19,36 +22,96 @@ public class LambdaUtilTest {
 	}
 
 	@Test
-	public void getImplClassTest() {
-		// 类方法引用，相当于获取的方法引用是：MyTeacher.getAge(this)
-		// 因此此处会匹配到Func1，其参数就是this
-		Class<MyTeacher> aClass = LambdaUtil.getImplClass(MyTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, aClass);
-
-		MyTeacher myTeacher = new MyTeacher();
-
-		// 对象方法引用，因为已经有了对象，因此此处引用相当于获取：myTeacher.getAge()
-		aClass = LambdaUtil.getImplClass(myTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, aClass);
-
-		// 静态方法引用，相当于获取：MyTeader.takeAge
-		aClass = LambdaUtil.getImplClass(MyTeacher::takeAge);
-		Assert.assertEquals(MyTeacher.class, aClass);
+	public void resolveTest() {
+		// 引用构造函数
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_newInvokeSpecial.ordinal(),
+				LambdaUtil.resolve(MyTeacher::new).getImplMethodKind());
+		// 数组构造函数引用
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeStatic.ordinal(),
+				LambdaUtil.resolve(MyTeacher[]::new).getImplMethodKind());
+		// 引用静态方法
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeStatic.ordinal(),
+				LambdaUtil.resolve(MyTeacher::takeAge).getImplMethodKind());
+		// 引用特定对象的实例方法
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeVirtual.ordinal(),
+				LambdaUtil.resolve(new MyTeacher()::getAge).getImplMethodKind());
+		// 引用特定类型的任意对象的实例方法
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeVirtual.ordinal(),
+				LambdaUtil.resolve(MyTeacher::getAge).getImplMethodKind());
 	}
 
+
 	@Test
-	public void getInstantiatedClassTest() {
-		// 类方法引用，相当于获取的方法引用是：MyTeacher.getAge(this)
-		// 因此此处会匹配到Func1，其参数就是this
-		Class<MyTeacher> aClass = LambdaUtil.getInstantiatedClass(MyTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, aClass);
+	public void getRealClassTest() {
+		// 引用特定类型的任意对象的实例方法
+		Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
+		Assert.assertEquals(MyTeacher.class, functionClass);
+		// 枚举测试，不会导致类型擦除
+		Class<LambdaUtil.LambdaKindEnum> enumFunctionClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum::ordinal);
+		Assert.assertEquals(LambdaUtil.LambdaKindEnum.class, enumFunctionClass);
+		// 调用父类方法，能获取到正确的子类类型
+		Class<MyTeacher> superFunctionClass = LambdaUtil.getRealClass(MyTeacher::getId);
+		Assert.assertEquals(MyTeacher.class, superFunctionClass);
+
+		MyTeacher myTeacher = new MyTeacher();
+		// 引用特定对象的实例方法
+		Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
+		Assert.assertEquals(MyTeacher.class, supplierClass);
+		// 枚举测试，只能获取到枚举类型
+		Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum.REF_NONE::ordinal);
+		Assert.assertEquals(Enum.class, enumSupplierClass);
+		// 调用父类方法，只能获取到父类类型
+		Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
+		Assert.assertEquals(Entity.class, superSupplierClass);
+
+		// 引用静态带参方法，能够获取到正确的参数类型
+		Class<MyTeacher> staticFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeAgeBy);
+		Assert.assertEquals(MyTeacher.class, staticFunctionClass);
+		// 引用父类静态带参方法，只能获取到父类类型
+		Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
+		Assert.assertEquals(Entity.class, staticSuperFunctionClass);
+
+		// 引用静态无参方法，能够获取到正确的类型
+		Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
+		Assert.assertEquals(MyTeacher.class, staticSupplierClass);
+		// 引用父类静态无参方法，能够获取到正确的参数类型
+		Class<MyTeacher> staticSuperSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeIdBy);
+		Assert.assertEquals(MyTeacher.class, staticSuperSupplierClass);
 	}
 
 	@Data
-	static class MyTeacher {
+	@AllArgsConstructor
+	static class MyStudent {
 
-		public static String takeAge(){
+		private String name;
+	}
+
+	@Data
+	public static class Entity<T> {
+
+		private T id;
+
+		public static <T> T takeId() {
+			return new Entity<T>().getId();
+		}
+
+		public static <T> T takeIdBy(Entity<T> entity) {
+			return entity.getId();
+		}
+
+
+	}
+
+	@Data
+	@EqualsAndHashCode(callSuper = true)
+	static class MyTeacher extends Entity<MyTeacher> {
+
+		public static String takeAge() {
 			return new MyTeacher().getAge();
+		}
+
+		public static String takeAgeBy(MyTeacher myTeacher) {
+			return myTeacher.getAge();
 		}
 
 		public String age;

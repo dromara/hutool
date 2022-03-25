@@ -1,13 +1,13 @@
 package cn.hutool.core.lang.func;
 
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
+
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
 
 /**
  * Lambda相关工具类
@@ -18,6 +18,58 @@ import java.lang.invoke.SerializedLambda;
 public class LambdaUtil {
 
 	private static final SimpleCache<String, SerializedLambda> cache = new SimpleCache<>();
+
+	/**
+	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
+	 * 传入lambda无参数但含有返回值的情况能够匹配到此方法：
+	 * <pre>{@code
+	 * @Data
+	 * @EqualsAndHashCode(callSuper = true)
+	 * static class MyTeacher extends Entity<MyTeacher> {
+	 *
+	 * 	public String age;
+	 *
+	 * 	public static String takeAge() {
+	 * 		return new MyTeacher().getAge();
+	 *    }
+	 *
+	 * }
+	 * }</pre>
+	 * <ul>
+	 * <li>引用特定对象的实例方法：<pre>{@code
+	 * MyTeacher myTeacher = new MyTeacher();
+	 * Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
+	 * Assert.assertEquals(MyTeacher.class, supplierClass);
+	 * }</pre></li>
+	 * <li>引用静态无参方法：<pre>{@code
+	 * Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
+	 * Assert.assertEquals(MyTeacher.class, staticSupplierClass);
+	 * }</pre></li>
+	 * </ul>
+	 * 在以下场景无法获取到正确类型
+	 * <pre>{@code
+	 * // 枚举测试，只能获取到枚举类型
+	 * Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum.REF_NONE::ordinal);
+	 * Assert.assertEquals(Enum.class, enumSupplierClass);
+	 * // 调用父类方法，只能获取到父类类型
+	 * Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
+	 * Assert.assertEquals(Entity.class, superSupplierClass);
+	 * // 引用父类静态带参方法，只能获取到父类类型
+	 * Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
+	 * Assert.assertEquals(Entity.class, staticSuperFunctionClass);
+	 * }</pre>
+	 *
+	 * @param func lambda
+	 * @param <R>  类型
+	 * @return lambda实现类
+	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
+	 * @since 5.8.0
+	 */
+	public static <R> Class<R> getRealClass(Func0<?> func) {
+		SerializedLambda lambda = resolve(func);
+		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
+		return ClassUtil.loadClass(lambda.getImplClass());
+	}
 
 	/**
 	 * 解析lambda表达式,加了缓存。
@@ -68,72 +120,57 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 通过对象的方法或类的静态方法引用，获取lambda实现类，两种情况匹配到此方法：
+	 * 通过对象的方法或类的静态方法引用，然后根据{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
+	 * 传入lambda有参数且含有返回值的情况能够匹配到此方法：
+	 * <pre>{@code
+	 * @Data
+	 * @EqualsAndHashCode(callSuper = true)
+	 * static class MyTeacher extends Entity<MyTeacher> {
+	 *
+	 * 	public String age;
+	 *
+	 * 	public static String takeAgeBy(MyTeacher myTeacher) {
+	 * 		return myTeacher.getAge();
+	 *    }
+	 *
+	 * }
+	 * }</pre>
 	 * <ul>
-	 *     <li>对象方法引用，如：myTeacher::getAge</li>
-	 *     <li>类静态方法引用，如：MyTeacher::takeAge</li>
+	 * <li>引用特定类型的任意对象的实例方法：<pre>{@code
+	 * Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
+	 * Assert.assertEquals(MyTeacher.class, functionClass);
+	 * }</pre></li>
+	 * <li>引用静态带参方法：<pre>{@code
+	 * Class<MyTeacher> staticFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeAgeBy);
+	 * Assert.assertEquals(MyTeacher.class, staticFunctionClass);
+	 * }</pre></li>
 	 * </ul>
-	 * 如想获取调用的方法引用所在类，可以：
-	 * <pre>
-	 *     // 返回MyTeacher.class
-	 *     LambdaUtil.getImplClass(myTeacher::getAge);
-	 * </pre>
 	 *
 	 * @param func lambda
-	 * @param <R>  类型
+	 * @param <P>  方法调用方类型
+	 * @param <R>  返回值类型
 	 * @return lambda实现类
+	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
 	 * @since 5.8.0
 	 */
-	public static <R> Class<R> getImplClass(Func0<?> func) {
-		return ClassUtil.loadClass(resolve(func).getImplClass());
-	}
-
-	/**
-	 * 通过类的方法引用，获取lambda实现类<br>
-	 * 类方法引用，相当于获取的方法引用是：MyTeacher.getAge(this)
-	 * 如想获取调用的方法引用所在类，可以：
-	 * <pre>
-	 *     // 返回MyTeacher.class
-	 *     LambdaUtil.getImplClass(MyTeacher::getAge);
-	 * </pre>
-	 *
-	 * @param func lambda
-	 * @param <T>  类型
-	 * @return lambda实现类
-	 * @since 5.8.0
-	 */
-	public static <T> Class<T> getImplClass(Func1<T, ?> func) {
-		return ClassUtil.loadClass(resolve(func).getImplClass());
-	}
-
-	/**
-	 * 通过{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
-	 * 在使用{@link #getImplClass(Func0)}获取实现类的时候，如果传入的是父类方法引用，会返回父类，导致问题<br>
-	 * 此类通过方法的名称，截取出类名
-	 *
-	 * @param func lambda
-	 * @param <P>  类型
-	 * @return lambda实现类
-	 * @since 5.8.0
-	 */
-	public static <P> Class<P> getInstantiatedClass(Func0<?> func) {
-		final String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
+	public static <P, R> Class<P> getRealClass(Func1<P, R> func) {
+		SerializedLambda lambda = resolve(func);
+		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
+		String instantiatedMethodType = lambda.getInstantiatedMethodType();
 		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
 	}
 
 	/**
-	 * 通过{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
-	 * 在使用{@link #getImplClass(Func1)}获取实现类的时候，如果传入的是父类方法引用，会返回父类，导致问题<br>
-	 * 此类通过方法的名称，截取出类名
+	 * 检查是否为支持的类型
 	 *
-	 * @param func lambda
-	 * @param <P>  类型
-	 * @return lambda实现类
-	 * @since 5.8.0
+	 * @param implMethodKind 支持的lambda类型
+	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常
 	 */
-	public static <P> Class<P> getInstantiatedClass(Func1<P, ?> func) {
-		final String instantiatedMethodType = resolve(func).getInstantiatedMethodType();
-		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+	private static void checkLambdaTypeCanGetClass(int implMethodKind) {
+		if (implMethodKind != LambdaKindEnum.REF_invokeVirtual.ordinal() &&
+				implMethodKind != LambdaKindEnum.REF_invokeStatic.ordinal()) {
+			throw new IllegalArgumentException("该lambda不是合适的方法引用");
+		}
 	}
 
 	/**
@@ -184,4 +221,20 @@ public class LambdaUtil {
 	private static SerializedLambda _resolve(Serializable func) {
 		return cache.get(func.getClass().getName(), () -> ReflectUtil.invoke(func, "writeReplace"));
 	}
+
+	/**
+	 * Lambda类型枚举
+	 */
+	public enum LambdaKindEnum {
+		REF_NONE,
+		REF_getField,
+		REF_getStatic,
+		REF_putField,
+		REF_putStatic,
+		REF_invokeVirtual,
+		REF_invokeStatic,
+		REF_invokeSpecial,
+		REF_newInvokeSpecial,
+	}
+
 }
