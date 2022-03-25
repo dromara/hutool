@@ -375,4 +375,11 @@ public class UrlBuilderTest {
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url, null);
 		Assert.assertEquals(url, urlBuilder.toString());
 	}
+
+	@Test
+	public void issue2215Test(){
+		String url = "https://hutool.cn/v1/104303371/messages:send";
+		final String build = UrlBuilder.of(url).build();
+		Assert.assertEquals(url, build);
+	}
 }
