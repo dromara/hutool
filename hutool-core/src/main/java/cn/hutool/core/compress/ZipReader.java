@@ -146,6 +146,7 @@ public class ZipReader implements Closeable {
 				//gitee issue #I4ZDQI
 				String path = zipEntry.getName();
 				if (FileUtil.isWindows()) {
+					// Win系统下
 					path = StrUtil.replace(path, "*", "_");
 				}
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
