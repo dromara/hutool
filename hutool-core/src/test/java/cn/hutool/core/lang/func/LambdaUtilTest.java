@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.lang.invoke.MethodHandleInfo;
+
 public class LambdaUtilTest {
 
 	@Test
@@ -24,19 +26,19 @@ public class LambdaUtilTest {
 	@Test
 	public void resolveTest() {
 		// 引用构造函数
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_newInvokeSpecial.ordinal(),
+		Assert.assertEquals(MethodHandleInfo.REF_newInvokeSpecial,
 				LambdaUtil.resolve(MyTeacher::new).getImplMethodKind());
 		// 数组构造函数引用
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeStatic.ordinal(),
+		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
 				LambdaUtil.resolve(MyTeacher[]::new).getImplMethodKind());
 		// 引用静态方法
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeStatic.ordinal(),
+		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
 				LambdaUtil.resolve(MyTeacher::takeAge).getImplMethodKind());
 		// 引用特定对象的实例方法
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeVirtual.ordinal(),
+		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
 				LambdaUtil.resolve(new MyTeacher()::getAge).getImplMethodKind());
 		// 引用特定类型的任意对象的实例方法
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.REF_invokeVirtual.ordinal(),
+		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
 				LambdaUtil.resolve(MyTeacher::getAge).getImplMethodKind());
 	}
 
@@ -47,8 +49,8 @@ public class LambdaUtilTest {
 		Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
 		Assert.assertEquals(MyTeacher.class, functionClass);
 		// 枚举测试，不会导致类型擦除
-		Class<LambdaUtil.LambdaKindEnum> enumFunctionClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum::ordinal);
-		Assert.assertEquals(LambdaUtil.LambdaKindEnum.class, enumFunctionClass);
+		Class<LambdaKindEnum> enumFunctionClass = LambdaUtil.getRealClass(LambdaKindEnum::ordinal);
+		Assert.assertEquals(LambdaKindEnum.class, enumFunctionClass);
 		// 调用父类方法，能获取到正确的子类类型
 		Class<MyTeacher> superFunctionClass = LambdaUtil.getRealClass(MyTeacher::getId);
 		Assert.assertEquals(MyTeacher.class, superFunctionClass);
@@ -58,7 +60,7 @@ public class LambdaUtilTest {
 		Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
 		Assert.assertEquals(MyTeacher.class, supplierClass);
 		// 枚举测试，只能获取到枚举类型
-		Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum.REF_NONE::ordinal);
+		Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaKindEnum.REF_NONE::ordinal);
 		Assert.assertEquals(Enum.class, enumSupplierClass);
 		// 调用父类方法，只能获取到父类类型
 		Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
@@ -115,5 +117,20 @@ public class LambdaUtilTest {
 		}
 
 		public String age;
+	}
+
+	/**
+	 * 测试Lambda类型枚举
+	 */
+	enum LambdaKindEnum {
+		REF_NONE,
+		REF_getField,
+		REF_getStatic,
+		REF_putField,
+		REF_putStatic,
+		REF_invokeVirtual,
+		REF_invokeStatic,
+		REF_invokeSpecial,
+		REF_newInvokeSpecial,
 	}
 }

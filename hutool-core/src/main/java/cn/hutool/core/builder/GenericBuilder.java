@@ -62,6 +62,7 @@ import java.util.function.Supplier;
  * @since 5.7.21
  */
 public class GenericBuilder<T> implements Builder<T> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 实例化器

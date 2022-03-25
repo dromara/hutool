@@ -1,13 +1,14 @@
 package cn.hutool.core.lang.func;
 
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.lang.invoke.MethodHandleInfo;
+import java.lang.invoke.SerializedLambda;
 
 /**
  * Lambda相关工具类
@@ -25,7 +26,7 @@ public class LambdaUtil {
 	 * <pre>{@code
 	 * @Data
 	 * @EqualsAndHashCode(callSuper = true)
-	 * static class MyTeacher extends Entity<MyTeacher> {
+	 * static class MyTeacher extends Entity&lt;MyTeacher&gt; {
 	 *
 	 * 	public String age;
 	 *
@@ -64,9 +65,10 @@ public class LambdaUtil {
 	 * @return lambda实现类
 	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
 	 * @since 5.8.0
+	 * @author VampireAchao
 	 */
 	public static <R> Class<R> getRealClass(Func0<?> func) {
-		SerializedLambda lambda = resolve(func);
+		final SerializedLambda lambda = resolve(func);
 		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
 		return ClassUtil.loadClass(lambda.getImplClass());
 	}
@@ -125,7 +127,7 @@ public class LambdaUtil {
 	 * <pre>{@code
 	 * @Data
 	 * @EqualsAndHashCode(callSuper = true)
-	 * static class MyTeacher extends Entity<MyTeacher> {
+	 * static class MyTeacher extends Entity&lt;MyTeacher&gt; {
 	 *
 	 * 	public String age;
 	 *
@@ -152,25 +154,13 @@ public class LambdaUtil {
 	 * @return lambda实现类
 	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
 	 * @since 5.8.0
+	 * @author VampireAchao
 	 */
 	public static <P, R> Class<P> getRealClass(Func1<P, R> func) {
-		SerializedLambda lambda = resolve(func);
+		final SerializedLambda lambda = resolve(func);
 		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
-		String instantiatedMethodType = lambda.getInstantiatedMethodType();
+		final String instantiatedMethodType = lambda.getInstantiatedMethodType();
 		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
-	}
-
-	/**
-	 * 检查是否为支持的类型
-	 *
-	 * @param implMethodKind 支持的lambda类型
-	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常
-	 */
-	private static void checkLambdaTypeCanGetClass(int implMethodKind) {
-		if (implMethodKind != LambdaKindEnum.REF_invokeVirtual.ordinal() &&
-				implMethodKind != LambdaKindEnum.REF_invokeStatic.ordinal()) {
-			throw new IllegalArgumentException("该lambda不是合适的方法引用");
-		}
 	}
 
 	/**
@@ -211,9 +201,28 @@ public class LambdaUtil {
 		return BeanUtil.getFieldName(getMethodName(func));
 	}
 
+	//region Private methods
+	/**
+	 * 检查是否为支持的类型
+	 *
+	 * @param implMethodKind 支持的lambda类型
+	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常
+	 */
+	private static void checkLambdaTypeCanGetClass(int implMethodKind) {
+		if (implMethodKind != MethodHandleInfo.REF_invokeVirtual &&
+				implMethodKind != MethodHandleInfo.REF_invokeStatic) {
+			throw new IllegalArgumentException("该lambda不是合适的方法引用");
+		}
+	}
+
 	/**
 	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除
+	 * 该缓存可能会在任意不定的时间被清除。
+	 *
+	 * <p>
+	 * 通过反射调用实现序列化接口函数对象的writeReplace方法，从而拿到{@link SerializedLambda}<br>
+	 * 该对象中包含了lambda表达式的所有信息。
+	 * </p>
 	 *
 	 * @param func 需要解析的 lambda 对象
 	 * @return 返回解析后的结果
@@ -221,20 +230,5 @@ public class LambdaUtil {
 	private static SerializedLambda _resolve(Serializable func) {
 		return cache.get(func.getClass().getName(), () -> ReflectUtil.invoke(func, "writeReplace"));
 	}
-
-	/**
-	 * Lambda类型枚举
-	 */
-	public enum LambdaKindEnum {
-		REF_NONE,
-		REF_getField,
-		REF_getStatic,
-		REF_putField,
-		REF_putStatic,
-		REF_invokeVirtual,
-		REF_invokeStatic,
-		REF_invokeSpecial,
-		REF_newInvokeSpecial,
-	}
-
+	//endregion
 }
