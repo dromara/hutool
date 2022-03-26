@@ -887,6 +887,30 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeImg(File imgFile, int imgType, int dx1, int dy1, int dx2,
 								int dy2, int col1, int row1, int col2, int row2) {
+		return writeImg(FileUtil.readBytes(imgFile), imgType, dx1,
+				dy1, dx2, dy2, col1, row1, col2, row2);
+	}
+
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 添加图片到当前sheet中
+	 *
+	 * @param pictureData 数据bytes
+	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param dx1     起始单元格中的x坐标
+	 * @param dy1     起始单元格中的y坐标
+	 * @param dx2     结束单元格中的x坐标
+	 * @param dy2     结束单元格中的y坐标
+	 * @param col1    指定起始的列，下标从0开始
+	 * @param row1    指定起始的行，下标从0开始
+	 * @param col2    指定结束的列，下标从0开始
+	 * @param row2    指定结束的行，下标从0开始
+	 * @return this
+	 * @author vhukze
+	 * @since 5.8.0
+	 */
+	public ExcelWriter writeImg(byte[] pictureData, int imgType, int dx1, int dy1, int dx2,
+								int dy2, int col1, int row1, int col2, int row2) {
 		Drawing<?> patriarch = this.sheet.createDrawingPatriarch();
 		ClientAnchor anchor = this.workbook.getCreationHelper().createClientAnchor();
 		anchor.setDx1(dx1);
@@ -898,7 +922,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		anchor.setCol2(col2);
 		anchor.setRow2(row2);
 
-		patriarch.createPicture(anchor, this.workbook.addPicture(FileUtil.readBytes(imgFile), imgType));
+		patriarch.createPicture(anchor, this.workbook.addPicture(pictureData, imgType));
 		return this;
 	}
 

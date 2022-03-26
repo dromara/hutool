@@ -45,6 +45,7 @@
 * 【core   】     MapUtil提供change函数，EnumUtil提供getBy函数，通过lambda进行枚举字段映射（pr#583@Gitee）
 * 【core   】     CompareUtil增加comparingIndexed（pr#585@Gitee）
 * 【db     】     DruidDataSource构建时支持自定义参数（issue#I4ZKCW@Gitee）
+* 【poi    】     ExcelWriter增加addImg重载（issue#2218@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）
