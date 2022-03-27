@@ -1,10 +1,7 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.Week;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -14,20 +11,27 @@ public class CronPatternNextMatchTest {
 	@Test
 	public void nextMatchAfterTest(){
 		CronPattern pattern = new CronPattern("23 12 * 12 * * *");
+
+		// 时间正常递增
 		//noinspection ConstantConditions
-		final Calendar calendar = pattern.nextMatchAfter(
-				DateUtil.parse("2022-04-12 09:12:24").toCalendar());
+		Calendar calendar = pattern.nextMatchAfter(
+				DateUtil.parse("2022-04-12 09:12:12").toCalendar());
 
-		Console.log(DateUtil.date(calendar));
 		Assert.assertTrue(pattern.match(calendar, true));
-	}
+		Assert.assertEquals("2022-04-12 09:12:23", DateUtil.date(calendar).toString());
 
-	@Test
-	@Ignore
-	public void calendarTest(){
-		final Calendar ca = Calendar.getInstance();
-		ca.set(Calendar.DAY_OF_WEEK, Week.SATURDAY.getValue());
+		// 秒超出规定值的最大值，小时+1
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(
+				DateUtil.parse("2022-04-12 09:12:24").toCalendar());
+		Assert.assertTrue(pattern.match(calendar, true));
+		Assert.assertEquals("2022-04-12 10:12:23", DateUtil.date(calendar).toString());
 
-		Console.log(DateUtil.date(ca));
+		// 天超出规定值的最大值，月+1
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(
+				DateUtil.parse("2022-04-13 09:12:24").toCalendar());
+		Assert.assertTrue(pattern.match(calendar, true));
+		Assert.assertEquals("2022-05-12 00:12:23", DateUtil.date(calendar).toString());
 	}
 }

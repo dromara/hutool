@@ -1,6 +1,5 @@
 package cn.hutool.cron.pattern.matcher;
 
-import cn.hutool.core.lang.mutable.MutableBool;
 import cn.hutool.cron.pattern.Part;
 
 import java.time.Year;
@@ -106,79 +105,108 @@ public class PatternMatcher {
 	/**
 	 * 获取下一个匹配日期时间
 	 *
-	 * @param second     秒
-	 * @param minute     分
-	 * @param hour       时
-	 * @param dayOfMonth 天
-	 * @param month      月（从1开始）
-	 * @param dayOfWeek  周（从0开始, 0表示周日）
-	 * @param year       年
-	 * @param zone       时区
+	 * @param values 时间字段值
+	 * @param zone   时区
 	 * @return {@link Calendar}
 	 */
-	public Calendar nextMatchAfter(int second, int minute, int hour,
-								   int dayOfMonth, int month, int dayOfWeek, int year, TimeZone zone) {
+	public Calendar nextMatchAfter(int[] values, TimeZone zone) {
 
 		Calendar calendar = Calendar.getInstance(zone);
 
-		// 上一个字段不一致，说明产生了新值，下一个字段使用最小值
-		MutableBool isNextEquals = new MutableBool(true);
-		// 年
-		final int nextYear = nextAfter(get(Part.YEAR), year, isNextEquals);
-		calendar.set(Calendar.YEAR, nextYear);
+		int i = Part.YEAR.ordinal();
+		int nextValue = 0;
+		while (i >= 0) {
+			nextValue = matchers[i].nextAfter(values[i]);
+			if (nextValue > values[i]) {
+				// 此部分正常获取新值，结束循环，后续的部分置最小值
+				setValue(calendar, Part.of(i), nextValue);
+				i--;
+				break;
+			} else if (nextValue < values[i]) {
+				// 此部分下一个值获取到的值产生回退，回到上一个部分，继续获取新值
+				i++;
+				nextValue = -1;// 标记回退查找
+				break;
+			}
+			// 值不变，设置后检查下一个部分
+			setValue(calendar, Part.of(i), nextValue);
+			i--;
+		}
 
-		// 周
-		final int nextDayOfWeek = nextAfter(get(Part.DAY_OF_WEEK), dayOfWeek, isNextEquals);
-		calendar.set(Calendar.DAY_OF_WEEK, nextDayOfWeek + 1);
+		// 值产生回退，向上查找变更值
+		if(-1 == nextValue){
+			while(i <= Part.YEAR.ordinal()){
+				nextValue = matchers[i].nextAfter(values[i] + 1);
+				if(nextValue > values[i]){
+					setValue(calendar, Part.of(i), nextValue);
+					i--;
+					break;
+				}
+				i++;
+			}
+		}
 
-		// 月
-		final int nextMonth = nextAfter(get(Part.MONTH), month, isNextEquals);
-		calendar.set(Calendar.MONTH, nextMonth - 1);
-
-		// 日
-		final int nextDayOfMonth = nextAfter(get(Part.DAY_OF_MONTH), dayOfMonth, isNextEquals);
-		calendar.set(Calendar.DAY_OF_MONTH, nextDayOfMonth);
-
-		// 时
-		final int nextHour = nextAfter(get(Part.HOUR), hour, isNextEquals);
-		calendar.set(Calendar.HOUR_OF_DAY, nextHour);
-
-		// 分
-		int nextMinute = nextAfter(get(Part.MINUTE), minute, isNextEquals);
-		calendar.set(Calendar.MINUTE, nextMinute);
-
-		// 秒
-		final int nextSecond = nextAfter(get(Part.SECOND), second, isNextEquals);
-		calendar.set(Calendar.SECOND, nextSecond);
+		// 修改值以下的字段全部归最小值
+		setToMin(calendar, i);
 
 		return calendar;
 	}
 
 	/**
-	 * 获取对应字段匹配器的下一个值
+	 * 设置从{@link Part#SECOND}到指定部分，全部设置为最小值
 	 *
-	 * @param matcher      匹配器
-	 * @param value        值
-	 * @param isNextEquals 是否下一个值和值相同。不同获取初始值，相同获取下一值，然后修改。
-	 * @return 下一个值，-1标识匹配所有值的情况，应获取整个字段的最小值
+	 * @param calendar {@link Calendar}
+	 * @param toPart   截止的部分
+	 * @return {@link Calendar}
 	 */
-	private static int nextAfter(PartMatcher matcher, int value, MutableBool isNextEquals) {
-		int nextValue;
-		if (isNextEquals.get()) {
-			// 上一层级得到相同值，下级获取下个值
-			nextValue = matcher.nextAfter(value);
-			isNextEquals.set(nextValue == value);
-		} else {
-			// 上一层级的值得到了不同值，下级的所有值使用最小值
-			if (matcher instanceof AlwaysTrueMatcher) {
-				nextValue = value;
-			} else if (matcher instanceof BoolArrayMatcher) {
-				nextValue = ((BoolArrayMatcher) matcher).getMinValue();
-			} else {
-				throw new IllegalArgumentException("Invalid matcher: " + matcher.getClass().getName());
-			}
+	private Calendar setToMin(Calendar calendar, int toPart) {
+		Part part;
+		for (int i = 0; i <= toPart; i++) {
+			part = Part.of(i);
+			setValue(calendar, part, getMin(part));
 		}
-		return nextValue;
+		return calendar;
+	}
+
+	/**
+	 * 获取表达式部分的最小值
+	 *
+	 * @param part {@link Part}
+	 * @return 最小值，如果匹配所有，返回对应部分范围的最小值
+	 */
+	private int getMin(Part part) {
+		PartMatcher matcher = get(part);
+
+		int min;
+		if (matcher instanceof AlwaysTrueMatcher) {
+			min = part.getMin();
+		} else if (matcher instanceof BoolArrayMatcher) {
+			min = ((BoolArrayMatcher) matcher).getMinValue();
+		} else {
+			throw new IllegalArgumentException("Invalid matcher: " + matcher.getClass().getName());
+		}
+		return min;
 	}
 	//endregion
+
+	/**
+	 * 设置对应部分修正后的值
+	 * @param calendar {@link Calendar}
+	 * @param part 表达式部分
+	 * @param value 值
+	 * @return {@link Calendar}
+	 */
+	private Calendar setValue(Calendar calendar, Part part, int value){
+		switch (part){
+			case MONTH:
+				value -= 1;
+				break;
+			case DAY_OF_WEEK:
+				value += 1;
+				break;
+		}
+		//noinspection MagicConstant
+		calendar.set(part.getCalendarField(), value);
+		return calendar;
+	}
 }

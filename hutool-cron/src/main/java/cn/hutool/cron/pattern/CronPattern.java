@@ -151,7 +151,7 @@ public class CronPattern {
 		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
 		final int year = calendar.get(Calendar.YEAR);
 
-		return nextMatchAfter(second, minute, hour, dayOfMonth, month, dayOfWeek, year, calendar.getTimeZone());
+		return nextMatchAfter(new int[]{second, minute, hour, dayOfMonth, month, dayOfWeek, year}, calendar.getTimeZone());
 	}
 
 	@Override
@@ -183,23 +183,16 @@ public class CronPattern {
 	/**
 	 * 获取下一个最近的匹配日期时间
 	 *
-	 * @param second     秒
-	 * @param minute     分
-	 * @param hour       时
-	 * @param dayOfMonth 天
-	 * @param month      月（从1开始）
-	 * @param dayOfWeek  周（从0开始, 0表示周日）
-	 * @param year       年
+	 * @param values     时间字段值
 	 * @param zone       时区
 	 * @return {@link Calendar}
 	 */
-	private Calendar nextMatchAfter(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year, TimeZone zone) {
-		List<Calendar> nextMatchs = new ArrayList<>(second);
+	private Calendar nextMatchAfter(int[] values, TimeZone zone) {
+		final List<Calendar> nextMatches = new ArrayList<>(matchers.size());
 		for (PatternMatcher matcher : matchers) {
-			nextMatchs.add(matcher.nextMatchAfter(
-					second, minute, hour, dayOfMonth, month, dayOfWeek, year, zone));
+			nextMatches.add(matcher.nextMatchAfter(values, zone));
 		}
 		// 返回匹配到的最早日期
-		return CollUtil.min(nextMatchs);
+		return CollUtil.min(nextMatches);
 	}
 }
