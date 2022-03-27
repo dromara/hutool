@@ -4,6 +4,7 @@ import cn.hutool.core.builder.Builder;
 import cn.hutool.core.util.StrUtil;
 
 public class CronPatternBuilder implements Builder<String> {
+	private static final long serialVersionUID = 1L;
 
 	final String[] parts = new String[7];
 

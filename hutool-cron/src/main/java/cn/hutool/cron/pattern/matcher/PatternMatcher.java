@@ -8,7 +8,11 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * 单一表达式的匹配器，匹配器由7个{@link PartMatcher}组成
+ * 单一表达式的匹配器，匹配器由7个{@link PartMatcher}组成，分别是：
+ * <pre>
+ *         0      1     2        3         4       5        6
+ *      SECOND MINUTE HOUR DAY_OF_MONTH MONTH DAY_OF_WEEK YEAR
+ * </pre>
  *
  * @author looly
  * @since 5.8.0
@@ -17,6 +21,17 @@ public class PatternMatcher {
 
 	private final PartMatcher[] matchers;
 
+	/**
+	 * 构造
+	 *
+	 * @param secondMatcher     秒匹配器
+	 * @param minuteMatcher     分匹配器
+	 * @param hourMatcher       时匹配器
+	 * @param dayOfMonthMatcher 日匹配器
+	 * @param monthMatcher      月匹配器
+	 * @param dayOfWeekMatcher  周匹配器
+	 * @param yearMatcher       年匹配器
+	 */
 	public PatternMatcher(PartMatcher secondMatcher,
 						  PartMatcher minuteMatcher,
 						  PartMatcher hourMatcher,
@@ -38,14 +53,16 @@ public class PatternMatcher {
 
 	/**
 	 * 根据表达式位置，获取对应的{@link PartMatcher}
+	 *
 	 * @param part 表达式位置
 	 * @return {@link PartMatcher}
 	 */
-	public PartMatcher get(Part part){
+	public PartMatcher get(Part part) {
 		return matchers[part.ordinal()];
 	}
 
 	//region match
+
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
@@ -71,9 +88,9 @@ public class PatternMatcher {
 	/**
 	 * 是否匹配日（指定月份的第几天）
 	 *
-	 * @param matcher {@link PartMatcher}
+	 * @param matcher    {@link PartMatcher}
 	 * @param dayOfMonth 日
-	 * @param month 月
+	 * @param month      月
 	 * @param isLeapYear 是否闰年
 	 * @return 是否匹配
 	 */
@@ -85,6 +102,7 @@ public class PatternMatcher {
 	//endregion
 
 	//region nextMatchAfter
+
 	/**
 	 * 获取下一个匹配日期时间
 	 *
@@ -99,7 +117,7 @@ public class PatternMatcher {
 	 * @return {@link Calendar}
 	 */
 	public Calendar nextMatchAfter(int second, int minute, int hour,
-												 int dayOfMonth, int month, int dayOfWeek, int year, TimeZone zone) {
+								   int dayOfMonth, int month, int dayOfWeek, int year, TimeZone zone) {
 
 		Calendar calendar = Calendar.getInstance(zone);
 
