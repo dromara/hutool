@@ -51,16 +51,19 @@ public class MonthTest {
 
 	@Test
 	public void ofTest(){
-		Month jan = Month.of("Jan");
-		Assert.assertEquals(Month.JANUARY, jan);
+		Month month = Month.of("Jan");
+		Assert.assertEquals(Month.JANUARY, month);
 
-		jan = Month.of("JAN");
-		Assert.assertEquals(Month.JANUARY, jan);
+		month = Month.of("JAN");
+		Assert.assertEquals(Month.JANUARY, month);
 
-		jan = Month.of("FEBRUARY");
-		Assert.assertEquals(Month.FEBRUARY, jan);
+		month = Month.of("FEBRUARY");
+		Assert.assertEquals(Month.FEBRUARY, month);
 
-		jan = Month.of("February");
-		Assert.assertEquals(Month.FEBRUARY, jan);
+		month = Month.of("February");
+		Assert.assertEquals(Month.FEBRUARY, month);
+
+		month = Month.of(java.time.Month.FEBRUARY);
+		Assert.assertEquals(Month.FEBRUARY, month);
 	}
 }

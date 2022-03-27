@@ -174,16 +174,27 @@ public enum Month {
 	 * 解析别名为Month对象，别名如：jan或者JANUARY，不区分大小写
 	 *
 	 * @param name 别名值
-	 * @return 月份int值
+	 * @return 月份枚举Month，非空
 	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
 	 * @since 5.8.0
 	 */
 	public static Month of(String name) throws IllegalArgumentException {
+		Assert.notBlank(name);
 		Month of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
 		if (null == of) {
 			of = Month.valueOf(name.toUpperCase());
 		}
 		return of;
+	}
+
+	/**
+	 * {@link java.time.Month}转换为Month对象
+	 * @param month {@link java.time.Month}
+	 * @return Month
+	 * @since 5.8.0
+	 */
+	public static Month of(java.time.Month month){
+		return of(month.ordinal());
 	}
 
 	/**

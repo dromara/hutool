@@ -1,19 +1,20 @@
 package cn.hutool.cron.pattern.matcher;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * 年匹配<br>
- * 考虑年数字太大，不适合boolean数组，单独使用列表遍历匹配
- * @author Looly
+ * 考虑年数字太大，不适合boolean数组，单独使用{@link LinkedHashSet}匹配
  *
+ * @author Looly
  */
-public class YearValueMatcher implements ValueMatcher{
+public class YearValueMatcher implements ValueMatcher {
 
-	private final List<Integer> valueList;
+	private final LinkedHashSet<Integer> valueList;
 
-	public YearValueMatcher(List<Integer> intValueList) {
-		this.valueList = intValueList;
+	public YearValueMatcher(Collection<Integer> intValueList) {
+		this.valueList = new LinkedHashSet<>(intValueList);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class YearValueMatcher implements ValueMatcher{
 	@Override
 	public int nextAfter(int value) {
 		for (Integer year : valueList) {
-			if(year >= value){
+			if (year >= value) {
 				return year;
 			}
 		}

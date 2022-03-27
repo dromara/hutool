@@ -6,8 +6,13 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.cron.CronException;
 
 /**
- * 表达式各个部分的枚举，用于限定位置和规则<br>
- * {@link #ordinal()}表示此部分在表达式中的位置，如0表示秒
+ * 表达式各个部分的枚举，用于限定在表达式中的位置和规则（如最小值和最大值）<br>
+ * {@link #ordinal()}表示此部分在表达式中的位置，如0表示秒<br>
+ * 表达式各个部分的枚举位置为：
+ * <pre>
+ *         0       1    2        3         4       5         6
+ *     [SECOND] MINUTE HOUR DAY_OF_MONTH MONTH DAY_OF_WEEK [YEAR]
+ * </pre>
  *
  * @author looly
  * @since 5.8.0

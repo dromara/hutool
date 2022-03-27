@@ -3,7 +3,6 @@ package cn.hutool.cron.pattern.parser;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.Month;
 import cn.hutool.core.date.Week;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
@@ -18,7 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 定时任务表达式各个部分的解析器
+ * 定时任务表达式各个部分的解析器，根据{@link Part}指定不同部分，解析为{@link ValueMatcher}<br>
+ * 每个部分支持：
+ * <ul>
+ *   <li><strong>*</strong> ：表示匹配这个位置所有的时间</li>
+ *   <li><strong>?</strong> ：表示匹配这个位置任意的时间（与"*"作用一致）</li>
+ *   <li><strong>L</strong> ：表示匹配这个位置允许的最大值</li>
+ *   <li><strong>*&#47;2</strong> ：表示间隔时间，例如在分上，表示每两分钟，同样*可以使用数字列表代替，逗号分隔</li>
+ *   <li><strong>2-8</strong> ：表示连续区间，例如在分上，表示2,3,4,5,6,7,8分</li>
+ *   <li><strong>2,3,5,8</strong> ：表示列表</li>
+ *   <li><strong>wed</strong> ：表示周别名</li>
+ *   <li><strong>jan</strong> ：表示月别名</li>
+ * </ul>
  *
  * @author looly
  * @since 5.8.0
@@ -46,7 +56,13 @@ public class PartParser {
 	}
 
 	/**
-	 * 将表达式解析为{@link ValueMatcher}
+	 * 将表达式解析为{@link ValueMatcher}<br>
+	 * <ul>
+	 *     <li>* 或者 ? 返回{@link AlwaysTrueValueMatcher}</li>
+	 *     <li>{@link Part#DAY_OF_MONTH} 返回{@link DayOfMonthValueMatcher}</li>
+	 *     <li>{@link Part#YEAR} 返回{@link YearValueMatcher}</li>
+	 *     <li>其他 返回{@link BoolArrayValueMatcher}</li>
+	 * </ul>
 	 *
 	 * @param value 表达式
 	 * @return {@link ValueMatcher}
@@ -220,11 +236,6 @@ public class PartParser {
 	 * @throws CronException 当无效数字或无效别名时抛出
 	 */
 	private int parseNumber(String value) throws CronException {
-		if ("L".equalsIgnoreCase(value)) {
-			// L表示最大值
-			return part.getMax();
-		}
-
 		int i;
 		try {
 			i = Integer.parseInt(value);
@@ -233,7 +244,7 @@ public class PartParser {
 		}
 
 		// 周日可以用0或7表示，统一转换为0
-		if(this.part == Part.DAY_OF_WEEK && Week.SUNDAY.getIso8601Value() == i){
+		if(Part.DAY_OF_WEEK.equals(this.part) && Week.SUNDAY.getIso8601Value() == i){
 			i = Week.SUNDAY.ordinal();
 		}
 
@@ -241,24 +252,29 @@ public class PartParser {
 	}
 
 	/**
-	 * 解析别名，只支持{@link Part#MONTH}和{@link Part#DAY_OF_WEEK}
+	 * 解析别名支持包括：<br>
+	 * <ul>
+	 *     <li><strong>L 表示最大值</strong></li>
+	 *     <li>{@link Part#MONTH}和{@link Part#DAY_OF_WEEK}别名</li>
+	 * </ul>
 	 *
 	 * @param name 别名
 	 * @return 解析int值
 	 * @throws CronException 无匹配别名时抛出异常
 	 */
 	private int parseAlias(String name) throws CronException {
+		if ("L".equalsIgnoreCase(name)) {
+			// L表示最大值
+			return part.getMax();
+		}
+
 		switch (this.part) {
 			case MONTH:
-				final Month month = Month.of(name);
-				Assert.notNull(month, () -> new CronException("Invalid month alias: {}", name));
 				// 月份从1开始
-				return month.getValueBaseOne();
+				return Month.of(name).getValueBaseOne();
 			case DAY_OF_WEEK:
-				final Week week = Week.of(name);
-				Assert.notNull(week, () -> new CronException("Invalid day of week alias: {}", name));
 				// 周从0开始，0表示周日
-				return week.ordinal();
+				return Week.of(name).ordinal();
 		}
 
 		throw new CronException("Invalid alias value: [{}]", name);

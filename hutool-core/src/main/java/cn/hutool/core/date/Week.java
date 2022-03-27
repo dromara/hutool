@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.time.DayOfWeek;
@@ -165,11 +166,12 @@ public enum Week {
 	 * 解析别名为Week对象，别名如：sun或者SUNDAY，不区分大小写
 	 *
 	 * @param name 别名值
-	 * @return 周int值
+	 * @return 周枚举Week，非空
 	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
 	 * @since 5.8.0
 	 */
 	public static Week of(String name) throws IllegalArgumentException {
+		Assert.notBlank(name);
 		Week of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
 		if (null == of) {
 			of = Week.valueOf(name.toUpperCase());
@@ -192,8 +194,9 @@ public enum Week {
 	 * @since 5.7.14
 	 */
 	public static Week of(DayOfWeek dayOfWeek) {
-		int week = dayOfWeek.ordinal() + 2;
-		if (week > 7) {
+		Assert.notNull(dayOfWeek);
+		int week = dayOfWeek.ordinal() + 1;
+		if (7 == week) {
 			week = 1;
 		}
 		return of(week);
