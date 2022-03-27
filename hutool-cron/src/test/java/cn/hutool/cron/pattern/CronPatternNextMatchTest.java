@@ -11,6 +11,7 @@ public class CronPatternNextMatchTest {
 	@Test
 	public void nextMatchAfterTest(){
 		CronPattern pattern = new CronPattern("23 12 * 12 * * *");
+		//noinspection ConstantConditions
 		final Calendar calendar = pattern.nextMatchAfter(
 				DateUtil.parse("2022-04-12 09:12:23").toCalendar());
 		Console.log(DateUtil.date(calendar));
