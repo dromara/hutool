@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0 (2022-03-26)
+# 5.8.0 (2022-03-27)
 
 ### ❌不兼容特性
 * 【db     】     【不向下兼容  】增加MongoDB4.x支持返回MongoClient变更（pr#568@Gitee）
@@ -46,6 +46,7 @@
 * 【core   】     CompareUtil增加comparingIndexed（pr#585@Gitee）
 * 【db     】     DruidDataSource构建时支持自定义参数（issue#I4ZKCW@Gitee）
 * 【poi    】     ExcelWriter增加addImg重载（issue#2218@Github）
+* 【bloomFilter】 增加FuncFilter
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）

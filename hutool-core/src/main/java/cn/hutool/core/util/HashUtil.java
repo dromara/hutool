@@ -226,7 +226,7 @@ public class HashUtil {
 			hash ^= ((hash << 5) + str.charAt(i) + (hash >> 2));
 		}
 
-		return hash & 0x7FFFFFFF;
+		return Math.abs(hash) & 0x7FFFFFFF;
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class HashUtil {
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
 	public static long[] metroHash128(byte[] data, long seed) {
-		return MetroHash.hash128(data,seed).getLongArray();
+		return MetroHash.hash128(data, seed).getLongArray();
 	}
 
 	/**
@@ -587,5 +587,43 @@ public class HashUtil {
 	 */
 	public static long[] metroHash128(byte[] data) {
 		return MetroHash.hash128(data).getLongArray();
+	}
+
+	/**
+	 * HF Hash算法
+	 *
+	 * @param data 字符串
+	 * @return hash结果
+	 * @since 5.8.0
+	 */
+	public static long hfHash(String data) {
+		int length = data.length();
+		long hash = 0;
+
+		for (int i = 0; i < length; i++) {
+			hash += (long) data.charAt(i) * 3 * i;
+		}
+
+		if (hash < 0) {
+			hash = -hash;
+		}
+
+		return hash;
+	}
+
+	/**
+	 * HFIP Hash算法
+	 *
+	 * @param data 字符串
+	 * @return hash结果
+	 * @since 5.8.0
+	 */
+	public static long hfIpHash(String data) {
+		int length = data.length();
+		long hash = 0;
+		for (int i = 0; i < length; i++) {
+			hash += data.charAt(i % 4) ^ data.charAt(i);
+		}
+		return hash;
 	}
 }
