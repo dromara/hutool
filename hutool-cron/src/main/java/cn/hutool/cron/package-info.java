@@ -7,6 +7,8 @@
  *     <li>{@link cn.hutool.cron.pattern.CronPattern} 定时任务表达式，用于定义任务触发时间</li>
  * </ul>
  *
+ * 同时，提供了{@link cn.hutool.cron.CronUtil}工具类，维护一个全局的{@link cn.hutool.cron.Scheduler}。
+ *
  * @author looly
  */
 package cn.hutool.cron;
