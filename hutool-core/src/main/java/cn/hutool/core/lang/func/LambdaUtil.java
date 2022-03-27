@@ -23,19 +23,6 @@ public class LambdaUtil {
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
 	 * 传入lambda无参数但含有返回值的情况能够匹配到此方法：
-	 * <pre>{@code
-	 * @Data
-	 * @EqualsAndHashCode(callSuper = true)
-	 * static class MyTeacher extends Entity&lt;MyTeacher&gt; {
-	 *
-	 * 	public String age;
-	 *
-	 * 	public static String takeAge() {
-	 * 		return new MyTeacher().getAge();
-	 *    }
-	 *
-	 * }
-	 * }</pre>
 	 * <ul>
 	 * <li>引用特定对象的实例方法：<pre>{@code
 	 * MyTeacher myTeacher = new MyTeacher();
@@ -124,19 +111,6 @@ public class LambdaUtil {
 	/**
 	 * 通过对象的方法或类的静态方法引用，然后根据{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
 	 * 传入lambda有参数且含有返回值的情况能够匹配到此方法：
-	 * <pre>{@code
-	 * @Data
-	 * @EqualsAndHashCode(callSuper = true)
-	 * static class MyTeacher extends Entity&lt;MyTeacher&gt; {
-	 *
-	 * 	public String age;
-	 *
-	 * 	public static String takeAgeBy(MyTeacher myTeacher) {
-	 * 		return myTeacher.getAge();
-	 *    }
-	 *
-	 * }
-	 * }</pre>
 	 * <ul>
 	 * <li>引用特定类型的任意对象的实例方法：<pre>{@code
 	 * Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);

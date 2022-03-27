@@ -136,8 +136,8 @@ public class AntPathMatcher {
 	 * are coming in, with little chance for encountering a recurring pattern.
 	 *
 	 * @param cachePatterns 是否缓存表达式
-	 * @see #getStringMatcher(String)
 	 * @return this
+	 * @see #getStringMatcher(String)
 	 */
 	public AntPathMatcher setCachePatterns(boolean cachePatterns) {
 		this.cachePatterns = cachePatterns;
@@ -178,7 +178,7 @@ public class AntPathMatcher {
 	 * 给定路径是否匹配表达式
 	 *
 	 * @param pattern 表达式
-	 * @param path 路径
+	 * @param path    路径
 	 * @return 是否匹配
 	 */
 	public boolean match(String pattern, String path) {
@@ -189,7 +189,7 @@ public class AntPathMatcher {
 	 * 前置部分匹配
 	 *
 	 * @param pattern 表达式
-	 * @param path 路径
+	 * @param path    路径
 	 * @return 是否匹配
 	 */
 	public boolean matchStart(String pattern, String path) {
@@ -708,6 +708,8 @@ public class AntPathMatcher {
 		/**
 		 * Main entry point.
 		 *
+		 * @param str                  Str
+		 * @param uriTemplateVariables uri template vars
 		 * @return {@code true} if the string matches against the pattern, or {@code false} otherwise.
 		 */
 		public boolean matchStrings(String str, Map<String, String> uriTemplateVariables) {
