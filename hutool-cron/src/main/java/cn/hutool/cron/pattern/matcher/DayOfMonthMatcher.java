@@ -10,14 +10,14 @@ import java.util.List;
  *
  * @author Looly
  */
-public class DayOfMonthValueMatcher extends BoolArrayValueMatcher {
+public class DayOfMonthMatcher extends BoolArrayMatcher {
 
 	/**
 	 * 构造
 	 *
 	 * @param intValueList 匹配的日值
 	 */
-	public DayOfMonthValueMatcher(List<Integer> intValueList) {
+	public DayOfMonthMatcher(List<Integer> intValueList) {
 		super(intValueList);
 	}
 

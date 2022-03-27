@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Looly
  */
-public class BoolArrayValueMatcher implements ValueMatcher {
+public class BoolArrayMatcher implements PartMatcher {
 
 	/**
 	 * 用户定义此字段的最小值
@@ -25,7 +25,7 @@ public class BoolArrayValueMatcher implements ValueMatcher {
 	 *
 	 * @param intValueList 匹配值列表
 	 */
-	public BoolArrayValueMatcher(List<Integer> intValueList) {
+	public BoolArrayMatcher(List<Integer> intValueList) {
 		Assert.isTrue(CollUtil.isNotEmpty(intValueList), "Values must be not empty!");
 		bValues = new boolean[Collections.max(intValueList) + 1];
 		int min = Integer.MAX_VALUE;

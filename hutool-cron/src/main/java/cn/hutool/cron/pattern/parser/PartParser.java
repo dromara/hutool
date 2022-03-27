@@ -7,17 +7,17 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
-import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
-import cn.hutool.cron.pattern.matcher.BoolArrayValueMatcher;
-import cn.hutool.cron.pattern.matcher.DayOfMonthValueMatcher;
-import cn.hutool.cron.pattern.matcher.ValueMatcher;
+import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;
+import cn.hutool.cron.pattern.matcher.BoolArrayMatcher;
+import cn.hutool.cron.pattern.matcher.DayOfMonthMatcher;
+import cn.hutool.cron.pattern.matcher.PartMatcher;
 import cn.hutool.cron.pattern.matcher.YearValueMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 定时任务表达式各个部分的解析器，根据{@link Part}指定不同部分，解析为{@link ValueMatcher}<br>
+ * 定时任务表达式各个部分的解析器，根据{@link Part}指定不同部分，解析为{@link PartMatcher}<br>
  * 每个部分支持：
  * <ul>
  *   <li><strong>*</strong> ：表示匹配这个位置所有的时间</li>
@@ -56,21 +56,21 @@ public class PartParser {
 	}
 
 	/**
-	 * 将表达式解析为{@link ValueMatcher}<br>
+	 * 将表达式解析为{@link PartMatcher}<br>
 	 * <ul>
-	 *     <li>* 或者 ? 返回{@link AlwaysTrueValueMatcher}</li>
-	 *     <li>{@link Part#DAY_OF_MONTH} 返回{@link DayOfMonthValueMatcher}</li>
+	 *     <li>* 或者 ? 返回{@link AlwaysTrueMatcher}</li>
+	 *     <li>{@link Part#DAY_OF_MONTH} 返回{@link DayOfMonthMatcher}</li>
 	 *     <li>{@link Part#YEAR} 返回{@link YearValueMatcher}</li>
-	 *     <li>其他 返回{@link BoolArrayValueMatcher}</li>
+	 *     <li>其他 返回{@link BoolArrayMatcher}</li>
 	 * </ul>
 	 *
 	 * @param value 表达式
-	 * @return {@link ValueMatcher}
+	 * @return {@link PartMatcher}
 	 */
-	public ValueMatcher parseAsValueMatcher(String value) {
+	public PartMatcher parse(String value) {
 		if (isMatchAllStr(value)) {
 			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
-			return new AlwaysTrueValueMatcher();
+			return new AlwaysTrueMatcher();
 		}
 
 		final List<Integer> values = parseArray(value);
@@ -80,11 +80,11 @@ public class PartParser {
 
 		switch (this.part) {
 			case DAY_OF_MONTH:
-				return new DayOfMonthValueMatcher(values);
+				return new DayOfMonthMatcher(values);
 			case YEAR:
 				return new YearValueMatcher(values);
 			default:
-				return new BoolArrayValueMatcher(values);
+				return new BoolArrayMatcher(values);
 		}
 	}
 
@@ -241,6 +241,11 @@ public class PartParser {
 			i = Integer.parseInt(value);
 		} catch (NumberFormatException ignore) {
 			i = parseAlias(value);
+		}
+
+		// 支持负数
+		if(i < 0){
+			i += part.getMax();
 		}
 
 		// 周日可以用0或7表示，统一转换为0

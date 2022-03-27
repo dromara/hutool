@@ -7,9 +7,9 @@ import cn.hutool.core.util.StrUtil;
  *
  * @author Looly
  */
-public class AlwaysTrueValueMatcher implements ValueMatcher {
+public class AlwaysTrueMatcher implements PartMatcher {
 
-	public static AlwaysTrueValueMatcher INSTANCE = new AlwaysTrueValueMatcher();
+	public static AlwaysTrueMatcher INSTANCE = new AlwaysTrueMatcher();
 
 	@Override
 	public boolean match(Integer t) {

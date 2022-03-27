@@ -4,15 +4,15 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
-import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
-import cn.hutool.cron.pattern.matcher.DateTimeMatcher;
-import cn.hutool.cron.pattern.matcher.MatcherTable;
-import cn.hutool.cron.pattern.matcher.ValueMatcher;
+import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;
+import cn.hutool.cron.pattern.matcher.PartMatcher;
+import cn.hutool.cron.pattern.matcher.PatternMatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 定时任务表达式解析器，用于将表达式字符串解析为{@link MatcherTable}
+ * 定时任务表达式解析器，用于将表达式字符串解析为{@link PatternMatcher}的列表
  *
  * @author looly
  * @since 5.8.0
@@ -28,12 +28,12 @@ public class PatternParser {
 	private static final PartParser YEAR_VALUE_PARSER = PartParser.of(Part.YEAR);
 
 	/**
-	 * 解析表达式到匹配表中
+	 * 解析表达式到匹配列表中
 	 *
 	 * @param cronPattern 复合表达式
-	 * @return {@link MatcherTable}
+	 * @return {@link List}
 	 */
-	public static MatcherTable parse(String cronPattern) {
+	public static List<PatternMatcher> parse(String cronPattern) {
 		return parseGroupPattern(cronPattern);
 	}
 
@@ -44,24 +44,24 @@ public class PatternParser {
 	 * </pre>
 	 *
 	 * @param groupPattern 复合表达式
-	 * @return {@link MatcherTable}
+	 * @return {@link List}
 	 */
-	private static MatcherTable parseGroupPattern(String groupPattern) {
+	private static List<PatternMatcher> parseGroupPattern(String groupPattern) {
 		final List<String> patternList = StrUtil.splitTrim(groupPattern, '|');
-		final MatcherTable matcherTable = new MatcherTable(patternList.size());
+		final List<PatternMatcher> patternMatchers = new ArrayList<>(patternList.size());
 		for (String pattern : patternList) {
-			matcherTable.matchers.add(parseSinglePattern(pattern));
+			patternMatchers.add(parseSinglePattern(pattern));
 		}
-		return matcherTable;
+		return patternMatchers;
 	}
 
 	/**
 	 * 解析单一定时任务表达式
 	 *
 	 * @param pattern 表达式
-	 * @return {@link DateTimeMatcher}
+	 * @return {@link PatternMatcher}
 	 */
-	private static DateTimeMatcher parseSinglePattern(String pattern) {
+	private static PatternMatcher parseSinglePattern(String pattern) {
 		final String[] parts = pattern.split("\\s+");
 		Assert.checkBetween(parts.length, 5, 7,
 				() -> new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern));
@@ -76,26 +76,26 @@ public class PatternParser {
 		final String secondPart = (1 == offset) ? parts[0] : "0";
 
 		// 年
-		ValueMatcher yearMatcher;
+		PartMatcher yearMatcher;
 		if (parts.length == 7) {// 支持年的表达式
-			yearMatcher = YEAR_VALUE_PARSER.parseAsValueMatcher(parts[6]);
+			yearMatcher = YEAR_VALUE_PARSER.parse(parts[6]);
 		} else {// 不支持年的表达式，全部匹配
-			yearMatcher = AlwaysTrueValueMatcher.INSTANCE;
+			yearMatcher = AlwaysTrueMatcher.INSTANCE;
 		}
 
-		return new DateTimeMatcher(
+		return new PatternMatcher(
 				// 秒
-				SECOND_VALUE_PARSER.parseAsValueMatcher(secondPart),
+				SECOND_VALUE_PARSER.parse(secondPart),
 				// 分
-				MINUTE_VALUE_PARSER.parseAsValueMatcher(parts[offset]),
+				MINUTE_VALUE_PARSER.parse(parts[offset]),
 				// 时
-				HOUR_VALUE_PARSER.parseAsValueMatcher(parts[1 + offset]),
+				HOUR_VALUE_PARSER.parse(parts[1 + offset]),
 				// 天
-				DAY_OF_MONTH_VALUE_PARSER.parseAsValueMatcher(parts[2 + offset]),
+				DAY_OF_MONTH_VALUE_PARSER.parse(parts[2 + offset]),
 				// 月
-				MONTH_VALUE_PARSER.parseAsValueMatcher(parts[3 + offset]),
+				MONTH_VALUE_PARSER.parse(parts[3 + offset]),
 				// 周
-				DAY_OF_WEEK_VALUE_PARSER.parseAsValueMatcher(parts[4 + offset]),
+				DAY_OF_WEEK_VALUE_PARSER.parse(parts[4 + offset]),
 				// 年
 				yearMatcher
 		);

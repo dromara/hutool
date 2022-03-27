@@ -123,6 +123,14 @@ public class CronPatternTest {
 	}
 
 	@Test
+	public void patternNegativeTest() {
+		// -4表示倒数的数字，此处在小时上，-4表示 23 - 4，为19
+		CronPattern pattern = CronPattern.of("* 0 -4 * * ?");
+		assertMatch(pattern, "2017-02-09 19:00:00");
+		assertMatch(pattern, "2017-02-19 19:00:33");
+	}
+
+	@Test
 	public void rangePatternTest() {
 		CronPattern pattern = CronPattern.of("* 20/2 * * * ?");
 		assertMatch(pattern, "2017-02-09 04:20:00");

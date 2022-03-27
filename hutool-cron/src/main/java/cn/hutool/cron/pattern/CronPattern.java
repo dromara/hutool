@@ -1,10 +1,13 @@
 package cn.hutool.cron.pattern;
 
-import cn.hutool.cron.pattern.matcher.MatcherTable;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.cron.pattern.matcher.PatternMatcher;
 import cn.hutool.cron.pattern.parser.PatternParser;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -66,7 +69,7 @@ import java.util.TimeZone;
 public class CronPattern {
 
 	private final String pattern;
-	private final MatcherTable matcherTable;
+	private final List<PatternMatcher> matchers;
 
 	/**
 	 * 解析表达式为 CronPattern
@@ -86,10 +89,8 @@ public class CronPattern {
 	 */
 	public CronPattern(String pattern) {
 		this.pattern = pattern;
-		this.matcherTable = PatternParser.parse(pattern);
+		this.matchers = PatternParser.parse(pattern);
 	}
-
-	// --------------------------------------------------------------------------------------- match start
 
 	/**
 	 * 给定时间是否匹配定时任务表达式
@@ -117,24 +118,6 @@ public class CronPattern {
 	}
 
 	/**
-	 * 返回匹配到的下一个时间
-	 *
-	 * @param calendar 时间
-	 * @return 匹配到的下一个时间
-	 */
-	public Calendar nextMatchAfter(Calendar calendar) {
-		final int second = calendar.get(Calendar.SECOND);
-		final int minute = calendar.get(Calendar.MINUTE);
-		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
-		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
-		final int year = calendar.get(Calendar.YEAR);
-
-		return this.matcherTable.nextMatchAfter(second, minute, hour, dayOfMonth, month, dayOfWeek, year, calendar.getTimeZone());
-	}
-
-	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
 	 * @param calendar      时间
@@ -150,12 +133,73 @@ public class CronPattern {
 		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
 		final int year = calendar.get(Calendar.YEAR);
 
-		return this.matcherTable.match(second, minute, hour, dayOfMonth, month, dayOfWeek, year);
+		return match(second, minute, hour, dayOfMonth, month, dayOfWeek, year);
 	}
-	// --------------------------------------------------------------------------------------- match end
+
+	/**
+	 * 返回匹配到的下一个时间
+	 *
+	 * @param calendar 时间
+	 * @return 匹配到的下一个时间
+	 */
+	public Calendar nextMatchAfter(Calendar calendar) {
+		final int second = calendar.get(Calendar.SECOND);
+		final int minute = calendar.get(Calendar.MINUTE);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
+		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
+		final int year = calendar.get(Calendar.YEAR);
+
+		return nextMatchAfter(second, minute, hour, dayOfMonth, month, dayOfWeek, year, calendar.getTimeZone());
+	}
 
 	@Override
 	public String toString() {
 		return this.pattern;
+	}
+
+	/**
+	 * 给定时间是否匹配定时任务表达式
+	 *
+	 * @param second     秒数，-1表示不匹配此项
+	 * @param minute     分钟
+	 * @param hour       小时
+	 * @param dayOfMonth 天
+	 * @param month      月，从1开始
+	 * @param dayOfWeek  周，从0开始，0和7都表示周日
+	 * @param year       年
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
+	 */
+	private boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+		for (PatternMatcher matcher : matchers) {
+			if (matcher.match(second, minute, hour, dayOfMonth, month, dayOfWeek, year)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 获取下一个最近的匹配日期时间
+	 *
+	 * @param second     秒
+	 * @param minute     分
+	 * @param hour       时
+	 * @param dayOfMonth 天
+	 * @param month      月（从1开始）
+	 * @param dayOfWeek  周（从0开始, 0表示周日）
+	 * @param year       年
+	 * @param zone       时区
+	 * @return {@link Calendar}
+	 */
+	private Calendar nextMatchAfter(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year, TimeZone zone) {
+		List<Calendar> nextMatchs = new ArrayList<>(second);
+		for (PatternMatcher matcher : matchers) {
+			nextMatchs.add(matcher.nextMatchAfter(
+					second, minute, hour, dayOfMonth, month, dayOfWeek, year, zone));
+		}
+		// 返回匹配到的最早日期
+		return CollUtil.min(nextMatchs);
 	}
 }

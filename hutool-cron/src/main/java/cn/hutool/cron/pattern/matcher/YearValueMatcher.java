@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
  *
  * @author Looly
  */
-public class YearValueMatcher implements ValueMatcher {
+public class YearValueMatcher implements PartMatcher {
 
 	private final LinkedHashSet<Integer> valueList;
 
