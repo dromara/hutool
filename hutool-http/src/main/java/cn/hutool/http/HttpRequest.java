@@ -206,7 +206,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 请求前的拦截器，用于在请求前重新编辑请求
 	 */
-	private final HttpInterceptor.Chain interceptors = new HttpInterceptor.Chain();
+	private final HttpInterceptor.Chain interceptors = GlobalInterceptor.INSTANCE.getCopied();
 
 	/**
 	 * 默认连接超时
@@ -967,8 +967,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param interceptor 拦截器实现
 	 * @since 5.7.16
 	 */
-	public void addInterceptor(HttpInterceptor interceptor) {
+	public HttpRequest addInterceptor(HttpInterceptor interceptor) {
 		this.interceptors.addChain(interceptor);
+		return this;
 	}
 
 	/**

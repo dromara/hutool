@@ -47,6 +47,7 @@
 * 【db     】     DruidDataSource构建时支持自定义参数（issue#I4ZKCW@Gitee）
 * 【poi    】     ExcelWriter增加addImg重载（issue#2218@Github）
 * 【bloomFilter】 增加FuncFilter
+* 【http   】     增加GlobalInterceptor（issue#2217）
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.hasNull传入null返回true的问题（pr#555@Gitee）

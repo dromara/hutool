@@ -113,7 +113,7 @@ public enum GlobalHeaders {
 	 * @param isOverride 是否覆盖已有值
 	 * @return this
 	 */
-	public GlobalHeaders header(String name, String value, boolean isOverride) {
+	synchronized public GlobalHeaders header(String name, String value, boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
 			if (isOverride || CollectionUtil.isEmpty(values)) {
@@ -192,7 +192,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return this
 	 */
-	public GlobalHeaders removeHeader(String name) {
+	synchronized public GlobalHeaders removeHeader(String name) {
 		if (name != null) {
 			headers.remove(name.trim());
 		}
@@ -224,7 +224,7 @@ public enum GlobalHeaders {
 	 * @return this
 	 * @since 5.7.13
 	 */
-	public GlobalHeaders clearHeaders() {
+	synchronized public GlobalHeaders clearHeaders() {
 		this.headers.clear();
 		return this;
 	}

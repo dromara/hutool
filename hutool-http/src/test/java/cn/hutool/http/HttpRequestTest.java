@@ -167,4 +167,17 @@ public class HttpRequestTest {
 		execute = HttpRequest.get(url).setMaxRedirectCount(1).execute();
 		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
 	}
+
+	@Test
+	@Ignore
+	public void addInterceptorTest() {
+		HttpUtil.createGet("https://hutool.cn").addInterceptor(Console::log).execute();
+	}
+
+	@Test
+	@Ignore
+	public void addGlobalInterceptorTest() {
+		GlobalInterceptor.INSTANCE.addInterceptor(Console::log);
+		HttpUtil.createGet("https://hutool.cn").execute();
+	}
 }

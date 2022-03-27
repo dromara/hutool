@@ -29,7 +29,6 @@ public interface HttpInterceptor {
 	class Chain implements cn.hutool.core.lang.Chain<HttpInterceptor, Chain> {
 		private final List<HttpInterceptor> interceptors = new LinkedList<>();
 
-
 		@Override
 		public Chain addChain(HttpInterceptor element) {
 			interceptors.add(element);
@@ -39,6 +38,17 @@ public interface HttpInterceptor {
 		@Override
 		public Iterator<HttpInterceptor> iterator() {
 			return interceptors.iterator();
+		}
+
+		/**
+		 * 清空
+		 *
+		 * @return this
+		 * @since 5.8.0
+		 */
+		public Chain clear() {
+			interceptors.clear();
+			return this;
 		}
 	}
 }
