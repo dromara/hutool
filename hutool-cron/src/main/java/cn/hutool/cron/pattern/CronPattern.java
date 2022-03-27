@@ -1,7 +1,7 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.cron.pattern.matcher.MatcherTable;
-import cn.hutool.cron.pattern.parser.CronPatternParser;
+import cn.hutool.cron.pattern.parser.PatternParser;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -69,16 +69,28 @@ public class CronPattern {
 	private final MatcherTable matcherTable;
 
 	/**
+	 * 解析表达式为 CronPattern
+	 *
+	 * @param pattern 表达式
+	 * @return CronPattern
+	 * @since 5.8.0
+	 */
+	public static CronPattern of(String pattern) {
+		return new CronPattern(pattern);
+	}
+
+	/**
 	 * 构造
 	 *
 	 * @param pattern 表达式
 	 */
 	public CronPattern(String pattern) {
 		this.pattern = pattern;
-		this.matcherTable = CronPatternParser.parse(pattern);
+		this.matcherTable = PatternParser.parse(pattern);
 	}
 
 	// --------------------------------------------------------------------------------------- match start
+
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
@@ -105,13 +117,31 @@ public class CronPattern {
 	}
 
 	/**
+	 * 返回匹配到的下一个时间
+	 *
+	 * @param calendar 时间
+	 * @return 匹配到的下一个时间
+	 */
+	public Calendar nextMatchAfter(Calendar calendar) {
+		final int second = calendar.get(Calendar.SECOND);
+		final int minute = calendar.get(Calendar.MINUTE);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
+		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
+		final int year = calendar.get(Calendar.YEAR);
+
+		return this.matcherTable.nextMatchAfter(second, minute, hour, dayOfMonth, month, dayOfWeek, year, calendar.getTimeZone());
+	}
+
+	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
 	 * @param calendar      时间
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(GregorianCalendar calendar, boolean isMatchSecond) {
+	public boolean match(Calendar calendar, boolean isMatchSecond) {
 		final int second = isMatchSecond ? calendar.get(Calendar.SECOND) : -1;
 		final int minute = calendar.get(Calendar.MINUTE);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);

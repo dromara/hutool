@@ -1,8 +1,9 @@
 package cn.hutool.cron.pattern.parser;
 
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
+import cn.hutool.cron.pattern.Part;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
 import cn.hutool.cron.pattern.matcher.DateTimeMatcher;
 import cn.hutool.cron.pattern.matcher.MatcherTable;
@@ -16,15 +17,15 @@ import java.util.List;
  * @author looly
  * @since 5.8.0
  */
-public class CronPatternParser {
+public class PatternParser {
 
-	private static final ValueParser SECOND_VALUE_PARSER = new SecondValueParser();
-	private static final ValueParser MINUTE_VALUE_PARSER = new MinuteValueParser();
-	private static final ValueParser HOUR_VALUE_PARSER = new HourValueParser();
-	private static final ValueParser DAY_OF_MONTH_VALUE_PARSER = new DayOfMonthValueParser();
-	private static final ValueParser MONTH_VALUE_PARSER = new MonthValueParser();
-	private static final ValueParser DAY_OF_WEEK_VALUE_PARSER = new DayOfWeekValueParser();
-	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
+	private static final PartParser SECOND_VALUE_PARSER = PartParser.of(Part.SECOND);
+	private static final PartParser MINUTE_VALUE_PARSER = PartParser.of(Part.MINUTE);
+	private static final PartParser HOUR_VALUE_PARSER = PartParser.of(Part.HOUR);
+	private static final PartParser DAY_OF_MONTH_VALUE_PARSER = PartParser.of(Part.DAY_OF_MONTH);
+	private static final PartParser MONTH_VALUE_PARSER = PartParser.of(Part.MONTH);
+	private static final PartParser DAY_OF_WEEK_VALUE_PARSER = PartParser.of(Part.DAY_OF_WEEK);
+	private static final PartParser YEAR_VALUE_PARSER = PartParser.of(Part.YEAR);
 
 	/**
 	 * 解析表达式到匹配表中
@@ -46,7 +47,7 @@ public class CronPatternParser {
 	 * @return {@link MatcherTable}
 	 */
 	private static MatcherTable parseGroupPattern(String groupPattern) {
-		final List<String> patternList = StrUtil.split(groupPattern, '|');
+		final List<String> patternList = StrUtil.splitTrim(groupPattern, '|');
 		final MatcherTable matcherTable = new MatcherTable(patternList.size());
 		for (String pattern : patternList) {
 			matcherTable.matchers.add(parseSinglePattern(pattern));
@@ -61,17 +62,18 @@ public class CronPatternParser {
 	 * @return {@link DateTimeMatcher}
 	 */
 	private static DateTimeMatcher parseSinglePattern(String pattern) {
-		final String[] parts = pattern.split("\\s");
+		final String[] parts = pattern.split("\\s+");
+		Assert.checkBetween(parts.length, 5, 7,
+				() -> new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern));
 
-		int offset = 0;// 偏移量用于兼容Quartz表达式，当表达式有6或7项时，第一项为秒
+		// 偏移量用于兼容Quartz表达式，当表达式有6或7项时，第一项为秒
+		int offset = 0;
 		if (parts.length == 6 || parts.length == 7) {
 			offset = 1;
-		} else if (parts.length != 5) {
-			throw new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern);
 		}
 
-		// 秒，如果不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
-		final String secondPart = (1 == offset) ? parts[0] : String.valueOf(DateUtil.date().second());
+		// 秒，如果不支持秒的表达式，则第一位赋值0，表示整分匹配
+		final String secondPart = (1 == offset) ? parts[0] : "0";
 
 		// 年
 		ValueMatcher yearMatcher;

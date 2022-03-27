@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.util.ArrayUtil;
+
 import java.time.DayOfWeek;
 import java.util.Calendar;
 
@@ -49,6 +51,12 @@ public enum Week {
 
 	// ---------------------------------------------------------------
 	/**
+	 * Weeks aliases.
+	 */
+	private static final String[] ALIASES = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
+	private static final Week[] ENUMS = Week.values();
+
+	/**
 	 * 星期对应{@link Calendar} 中的Week值
 	 */
 	private final int value;
@@ -69,6 +77,20 @@ public enum Week {
 	 */
 	public int getValue() {
 		return this.value;
+	}
+
+	/**
+	 * 获取ISO8601规范的int值，from 1 (Monday) to 7 (Sunday).
+	 *
+	 * @return ISO8601规范的int值
+	 * @since 5.8.0
+	 */
+	public int getIso8601Value(){
+		int iso8601IntValue = getValue() -1;
+		if(0 == iso8601IntValue){
+			iso8601IntValue = 7;
+		}
+		return iso8601IntValue;
 	}
 
 	/**
@@ -110,6 +132,16 @@ public enum Week {
 	}
 
 	/**
+	 * 转换为{@link DayOfWeek}
+	 *
+	 * @return {@link DayOfWeek}
+	 * @since 5.8.0
+	 */
+	public DayOfWeek toJdkDayOfWeek() {
+		return DayOfWeek.of(getIso8601Value());
+	}
+
+	/**
 	 * 将 {@link Calendar}星期相关值转换为Week枚举对象<br>
 	 *
 	 * @param calendarWeekIntValue Calendar中关于Week的int值
@@ -123,24 +155,26 @@ public enum Week {
 	 * @see #SATURDAY
 	 */
 	public static Week of(int calendarWeekIntValue) {
-		switch (calendarWeekIntValue) {
-			case Calendar.SUNDAY:
-				return SUNDAY;
-			case Calendar.MONDAY:
-				return MONDAY;
-			case Calendar.TUESDAY:
-				return TUESDAY;
-			case Calendar.WEDNESDAY:
-				return WEDNESDAY;
-			case Calendar.THURSDAY:
-				return THURSDAY;
-			case Calendar.FRIDAY:
-				return FRIDAY;
-			case Calendar.SATURDAY:
-				return SATURDAY;
-			default:
-				return null;
+		if (calendarWeekIntValue >= ENUMS.length || calendarWeekIntValue < 0) {
+			return null;
 		}
+		return ENUMS[calendarWeekIntValue];
+	}
+
+	/**
+	 * 解析别名为Week对象，别名如：sun或者SUNDAY，不区分大小写
+	 *
+	 * @param name 别名值
+	 * @return 周int值
+	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
+	 * @since 5.8.0
+	 */
+	public static Week of(String name) throws IllegalArgumentException {
+		Week of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
+		if (null == of) {
+			of = Week.valueOf(name.toUpperCase());
+		}
+		return of;
 	}
 
 	/**

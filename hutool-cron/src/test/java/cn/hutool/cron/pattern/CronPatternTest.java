@@ -10,7 +10,6 @@ import org.junit.Test;
  * 定时任务单元测试类
  *
  * @author Looly
- *
  */
 public class CronPatternTest {
 
@@ -31,7 +30,7 @@ public class CronPatternTest {
 		CronPattern pattern;
 		// 任何时间匹配
 		pattern = new CronPattern("* * * * *");
-		for(int i = 0; i < 1; i++) {
+		for (int i = 0; i < 1; i++) {
 			Assert.assertTrue(pattern.match(DateUtil.current(), false));
 		}
 	}
@@ -83,12 +82,23 @@ public class CronPatternTest {
 
 		pattern = new CronPattern("39 0 0 7 aug *");
 		assertMatch(pattern, "2016-08-07 00:00:39");
+	}
 
+	@Test
+	public void matchDayOfWeekTest() {
 		// 星期四
-		pattern = new CronPattern("39 0 0 * * Thu");
-		assertMatch(pattern, "2017-02-09 00:00:39");
+		CronPattern pattern = CronPattern.of("39 0 0 * * Thu");
 		assertMatch(pattern, "2017-02-09 00:00:39");
 
+		// 星期日的三种形式
+		pattern = CronPattern.of("39 0 0 * * Sun");
+		assertMatch(pattern, "2022-03-27 00:00:39");
+
+		pattern = CronPattern.of("39 0 0 * * 0");
+		assertMatch(pattern, "2022-03-27 00:00:39");
+
+		pattern = CronPattern.of("39 0 0 * * 7");
+		assertMatch(pattern, "2022-03-27 00:00:39");
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -153,11 +163,11 @@ public class CronPatternTest {
 	 * 表达式是否匹配日期
 	 *
 	 * @param pattern 表达式
-	 * @param date 日期，标准日期时间字符串
+	 * @param date    日期，标准日期时间字符串
 	 */
 	@SuppressWarnings("ConstantConditions")
 	private void assertMatch(CronPattern pattern, String date) {
-		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime(), false));
-		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime(), true));
+		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), false));
+		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), true));
 	}
 }

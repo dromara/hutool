@@ -1,5 +1,10 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.map.MapUtil;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,11 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.LambdaUtil;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * 枚举工具类
@@ -56,7 +56,7 @@ public class EnumUtil {
 	}
 
 	/**
-	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
+	 * 获取给定位置的枚举值
 	 *
 	 * @param <E>       枚举类型泛型
 	 * @param enumClass 枚举类
