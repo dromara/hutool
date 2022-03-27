@@ -65,6 +65,7 @@
 * 【core   】     FileUtil.getMimeType增加rar、7z支持（issue#I4ZBN0@Gitee）
 * 【json   】     JSON修复transient设置无效问题（issue#2212@Github）
 * 【core   】     修复IterUtil.getElementType获取结果为null的问题（issue#2222@Github）
+* 【core   】     修复农历转公历在闰月时错误（issue#I4ZSGJ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

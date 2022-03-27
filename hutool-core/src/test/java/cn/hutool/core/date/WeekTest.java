@@ -37,6 +37,7 @@ public class WeekTest {
 		Assert.assertEquals(Week.SATURDAY, Week.of("SATURDAY"));
 	}
 
+	@Test
 	public void ofTest2(){
 		Assert.assertEquals(Week.SUNDAY, Week.of(DayOfWeek.SUNDAY));
 		Assert.assertEquals(Week.MONDAY, Week.of(DayOfWeek.MONDAY));

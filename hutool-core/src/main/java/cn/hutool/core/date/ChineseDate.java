@@ -113,7 +113,8 @@ public class ChineseDate {
 	}
 
 	/**
-	 * 构造方法传入日期
+	 * 构造方法传入日期<br>
+	 * 此方法自动判断闰月，如果chineseMonth为本年的闰月，则按照闰月计算
 	 *
 	 * @param chineseYear  农历年
 	 * @param chineseMonth 农历月，1表示一月（正月）
@@ -121,28 +122,28 @@ public class ChineseDate {
 	 * @since 5.2.4
 	 */
 	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay) {
-		this(chineseYear, chineseMonth, chineseDay, chineseMonth == LunarInfo.leapMonth(chineseYear) + 1);
+		this(chineseYear, chineseMonth, chineseDay, chineseMonth == LunarInfo.leapMonth(chineseYear));
 	}
 
 	/**
-	 * 构造方法传入日期
+	 * 构造方法传入日期<br>
+	 * 通过isLeapMonth参数区分是否闰月，如五月是闰月，当isLeapMonth为{@code true}时，表示润五月，{@code false}表示五月
 	 *
 	 * @param chineseYear  农历年
-	 * @param chineseMonth 农历月，1表示一月（正月）
+	 * @param chineseMonth 农历月，1表示一月（正月），如果isLeapMonth为{@code true}，1表示润一月
 	 * @param chineseDay   农历日，1表示初一
 	 * @param isLeapMonth  当前月份是否闰月
 	 * @since 5.7.18
 	 */
 	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay, boolean isLeapMonth) {
 		this.day = chineseDay;
-		this.month = chineseMonth;
 		// 当月是闰月的后边的月定义为闰月，如润的是五月，则5表示五月，6表示润五月
 		this.isLeapMonth = isLeapMonth;
+		// 闰月时，农历月份+1，如6表示润五月
+		this.month = isLeapMonth ? chineseMonth + 1 : chineseMonth;
 		this.year = chineseYear;
-		//先判断传入的月份是不是闰月
-		int leapMonth = LunarInfo.leapMonth(chineseYear);
 
-		final DateTime dateTime = lunar2solar(chineseYear, chineseMonth, chineseDay, chineseMonth == leapMonth);
+		final DateTime dateTime = lunar2solar(chineseYear, chineseMonth, chineseDay, isLeapMonth);
 		if (null != dateTime) {
 			//初始化公历年
 			this.gday = dateTime.dayOfMonth();
