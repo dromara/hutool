@@ -643,7 +643,7 @@ public class IterUtil {
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
 		final Iterator<?> iter2 = new CopiedIter<>(iterator);
-		if (iter2.hasNext()) {
+		while (iter2.hasNext()) {
 			final Object t = iter2.next();
 			if (null != t) {
 				return t.getClass();

@@ -64,6 +64,7 @@
 * 【core   】     修复Win下文件名带*问题（pr#584@Gitee）
 * 【core   】     FileUtil.getMimeType增加rar、7z支持（issue#I4ZBN0@Gitee）
 * 【json   】     JSON修复transient设置无效问题（issue#2212@Github）
+* 【core   】     修复IterUtil.getElementType获取结果为null的问题（issue#2222@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.7.22 (2022-03-01)

@@ -90,6 +90,13 @@ public class IterUtilTest {
 		Assert.assertEquals(expectedMap, testMap);
 	}
 
+	@Test
+	public void getElementTypeTest(){
+		List<Integer> integers = Arrays.asList(null, 1);
+		Class<?> elementType = IterUtil.getElementType(integers);
+		Assert.assertEquals(Integer.class,elementType);
+	}
+
 	@Data
 	@AllArgsConstructor
 	public static class Car {
