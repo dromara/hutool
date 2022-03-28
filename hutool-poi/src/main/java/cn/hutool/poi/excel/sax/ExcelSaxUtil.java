@@ -11,8 +11,8 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
 import org.apache.poi.hssf.record.CellValueRecordInterface;
-import org.apache.poi.ooxml.util.SAXHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.util.XMLHelper;
 import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.ContentHandler;
@@ -168,9 +168,7 @@ public class ExcelSaxUtil {
 	public static void readFrom(InputStream xmlDocStream, ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
 		XMLReader xmlReader;
 		try {
-//			xmlReader = XMLReaderFactory.createXMLReader();
-			//noinspection deprecation
-			xmlReader = SAXHelper.newXMLReader();
+			xmlReader = XMLHelper.newXMLReader();
 		} catch (SAXException | ParserConfigurationException e) {
 			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
 				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");

@@ -137,7 +137,8 @@ public class CronPattern {
 	}
 
 	/**
-	 * 返回匹配到的下一个时间
+	 * 返回匹配到的下一个时间<br>
+	 * TODO 周定义后，结果错误，需改进
 	 *
 	 * @param calendar 时间
 	 * @return 匹配到的下一个时间
