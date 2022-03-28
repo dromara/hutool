@@ -21,7 +21,7 @@ public class Claims implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 时间使用秒级时间戳表示
-	private final JSONConfig CONFIG = JSONConfig.create().setDateFormat("#sss").setOrder(true);
+	private final JSONConfig CONFIG = JSONConfig.create().setDateFormat("#sss");
 
 	private JSONObject claimJSON;
 

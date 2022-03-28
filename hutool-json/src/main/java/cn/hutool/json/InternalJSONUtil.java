@@ -10,9 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.SortedMap;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -166,31 +164,6 @@ public final class InternalJSONUtil {
 		return (false == (obj instanceof CharSequence))//
 				&& (false == (obj instanceof JSONTokener))//
 				&& (false == (obj instanceof Map));
-	}
-
-	/**
-	 * 判断给定对象是否有序，用于辅助创建{@link JSONObject}时是否有序
-	 *
-	 * <ul>
-	 *     <li>对象为{@link LinkedHashMap}子类或{@link LinkedHashMap}子类</li>
-	 *     <li>对象实现</li>
-	 * </ul>
-	 *
-	 * @param value 被转换的对象
-	 * @return 是否有序
-	 * @since 5.7.0
-	 */
-	static boolean isOrder(Object value) {
-		if (value instanceof LinkedHashMap || value instanceof SortedMap) {
-			return true;
-		} else if (value instanceof JSONGetter) {
-			final JSONConfig config = ((JSONGetter<?>) value).getConfig();
-			if (null != config) {
-				return config.isOrder();
-			}
-		}
-
-		return false;
 	}
 
 	/**

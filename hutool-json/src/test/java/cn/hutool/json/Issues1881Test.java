@@ -31,6 +31,6 @@ public class Issues1881Test {
 		holderContactVOList.add(new ThingsHolderContactVO().setId(1L).setName("1"));
 		holderContactVOList.add(new ThingsHolderContactVO().setId(2L).setName("2"));
 
-		Assert.assertEquals("[{\"name\":\"1\",\"id\":1},{\"name\":\"2\",\"id\":2}]", JSONUtil.parseArray(holderContactVOList).toString());
+		Assert.assertEquals("[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}]", JSONUtil.parseArray(holderContactVOList).toString());
 	}
 }

@@ -110,14 +110,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONObject parseObj(Object obj, JSONConfig config) {
-		// 默认配置，根据对象类型决定是否有序
-		if(null == config){
-			config = JSONConfig.create();
-			if(InternalJSONUtil.isOrder(obj)){
-				config.setOrder(true);
-			}
-		}
-		return new JSONObject(obj, config);
+		return new JSONObject(obj, ObjectUtil.defaultIfNull(config, JSONConfig::create));
 	}
 
 	/**
@@ -129,7 +122,7 @@ public class JSONUtil {
 	 * @since 3.0.9
 	 */
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
-		return parseObj(obj, ignoreNullValue, InternalJSONUtil.isOrder(obj));
+		return new JSONObject(obj, ignoreNullValue);
 	}
 
 	/**
@@ -140,9 +133,12 @@ public class JSONUtil {
 	 * @param isOrder         是否有序
 	 * @return JSONObject
 	 * @since 4.2.2
+	 * @deprecated isOrder参数不再有效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue, boolean isOrder) {
-		return new JSONObject(obj, ignoreNullValue, isOrder);
+		return new JSONObject(obj, ignoreNullValue);
 	}
 
 	/**

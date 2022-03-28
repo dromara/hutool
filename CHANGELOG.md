@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0 (2022-03-27)
+# 5.8.0 (2022-03-28)
 
 ### ❌不兼容特性
 * 【db     】     【不向下兼容  】增加MongoDB4.x支持返回MongoClient变更（pr#568@Gitee）
@@ -17,6 +17,7 @@
 * 【poi    】     【可能兼容问题】ExcelUtil.getBigWriter返回值改为BigExcelWriter
 * 【core   】     【可能兼容问题】Opt.ofEmptyAble参数由List改为Collection子类（pr#580@Gitee）
 * 【json   】     【可能兼容问题】JSON转Bean时，使用JSON本身的相关设置，而非默认（issue#2212@Github）
+* 【json   】     【可能兼容问题】JSONConfig中isOrder废弃，默认全部有序
 
 ### 🐣新特性
 * 【http   】     HttpRequest.form采用TableMap方式（issue#I4W427@Gitee）

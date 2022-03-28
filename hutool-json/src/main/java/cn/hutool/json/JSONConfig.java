@@ -15,11 +15,7 @@ public class JSONConfig implements Serializable {
 	private static final long serialVersionUID = 119730355204738278L;
 
 	/**
-	 * 是否有序，顺序按照加入顺序排序，只针对JSONObject有效
-	 */
-	private boolean order;
-	/**
-	 * 键排序规则，{@code null}表示不排序，不排序情况下，如果{@link #order}为{@code true}按照加入顺序排序，否则按照hash排序
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
 	 */
 	private Comparator<String> keyComparator;
 	/**
@@ -61,9 +57,11 @@ public class JSONConfig implements Serializable {
 	 * 是否有序，顺序按照加入顺序排序，只针对JSONObject有效
 	 *
 	 * @return 是否有序
+	 * @deprecated 始终返回 {@code true}
 	 */
+	@Deprecated
 	public boolean isOrder() {
-		return order;
+		return true;
 	}
 
 	/**
@@ -71,15 +69,17 @@ public class JSONConfig implements Serializable {
 	 *
 	 * @param order 是否有序
 	 * @return this
+	 * @deprecated 始终有序，无需设置
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONConfig setOrder(boolean order) {
-		this.order = order;
 		return this;
 	}
 
 	/**
 	 * 获取键排序规则<br>
-	 * 键排序规则，{@code null}表示不排序，不排序情况下，如果{@link #order}为{@code true}按照加入顺序排序，否则按照hash排序
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
 	 *
 	 * @return 键排序规则
 	 * @since 5.7.21
@@ -100,7 +100,7 @@ public class JSONConfig implements Serializable {
 
 	/**
 	 * 设置键排序规则<br>
-	 * 键排序规则，{@code null}表示不排序，不排序情况下，如果{@link #order}为{@code true}按照加入顺序排序，否则按照hash排序
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
 	 *
 	 * @param keyComparator 键排序规则
 	 * @return this

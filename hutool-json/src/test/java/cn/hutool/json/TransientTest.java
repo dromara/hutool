@@ -21,7 +21,7 @@ public class TransientTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
 				JSONConfig.create().setTransientSupport(false));
-		Assert.assertEquals("{\"bizNo\":\"bizNo\",\"id\":\"3243\"}", jsonObject.toString());
+		Assert.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 
 	@Test

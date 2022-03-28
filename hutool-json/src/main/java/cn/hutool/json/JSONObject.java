@@ -27,6 +27,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
@@ -91,9 +92,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param isIgnoreCase 是否忽略KEY大小写
 	 * @param isOrder      是否有序
 	 * @since 3.3.1
+	 * @deprecated isOrder无效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
-		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase).setOrder(isOrder));
+		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase));
 	}
 
 	/**
@@ -148,7 +152,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(source, ignoreNullValue, InternalJSONUtil.isOrder(source));
+		this(source, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -164,9 +168,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
 	 * @param isOrder         是否有序
 	 * @since 4.2.2
+	 * @deprecated isOrder参数不再需要，JSONObject默认有序！
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
-		this(source, JSONConfig.create().setOrder(isOrder)//
+		this(source, JSONConfig.create()//
 				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
 				.setIgnoreNullValue(ignoreNullValue)
 		);
@@ -239,9 +246,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param isOrder 是否有序
 	 * @throws JSONException JSON字符串语法错误
 	 * @since 4.2.2
+	 * @deprecated isOrder无效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
-		this(source, JSONConfig.create().setOrder(isOrder));
+		this(source, JSONConfig.create());
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
@@ -689,17 +699,15 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {
 			if (null != keyComparator) {
-				// 比较器存在情况下，isOrder无效
 				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
 			} else {
-				rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
+				rawHashMap = new CaseInsensitiveLinkedMap<>(capacity);
 			}
 		} else {
 			if (null != keyComparator) {
-				// 比较器存在情况下，isOrder无效
 				rawHashMap = new TreeMap<>(keyComparator);
 			} else {
-				rawHashMap = MapUtil.newHashMap(capacity, config.isOrder());
+				rawHashMap = new LinkedHashMap<>(capacity);
 			}
 		}
 		return rawHashMap;
