@@ -78,7 +78,13 @@ public class IdcardUtilTest {
 	@Test
 	public void getCityCodeByIdCardTest() {
 		String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
-		Assert.assertEquals("32108", codeByIdCard);
+		Assert.assertEquals("3210", codeByIdCard);
+	}
+
+	@Test
+	public void getDistrictCodeByIdCardTest() {
+		String codeByIdCard = IdcardUtil.getDistrictCodeByIdCard(ID_18);
+		Assert.assertEquals("321083", codeByIdCard);
 	}
 
 	@Test

@@ -580,15 +580,32 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取市级编码，只支持15或18位身份证号码
+	 * 根据身份编号获取地市级编码，只支持15或18位身份证号码<br>
+	 * 获取编码为4位
 	 *
 	 * @param idcard 身份编码
-	 * @return 市级编码。
+	 * @return 地市级编码
 	 */
 	public static String getCityCodeByIdCard(String idcard) {
 		int len = idcard.length();
 		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
-			return idcard.substring(0, 5);
+			return idcard.substring(0, 4);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据身份编号获取区县级编码，只支持15或18位身份证号码<br>
+	 * 获取编码为6位
+	 *
+	 * @param idcard 身份编码
+	 * @return 地市级编码
+	 * @since 5.8.0
+	 */
+	public static String getDistrictCodeByIdCard(String idcard) {
+		int len = idcard.length();
+		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
+			return idcard.substring(0, 6);
 		}
 		return null;
 	}
