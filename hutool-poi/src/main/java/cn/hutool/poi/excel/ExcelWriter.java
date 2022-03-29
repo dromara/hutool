@@ -1335,17 +1335,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 
 		final Map<Object, Object> filteredMap = MapUtil.newHashMap(rowMap.size(), true);
-		String aliasName;
-		for (Entry<?, ?> entry : rowMap.entrySet()) {
-			aliasName = this.headerAlias.get(StrUtil.toString(entry.getKey()));
+		rowMap.forEach((key, value)->{
+			final String aliasName = this.headerAlias.get(StrUtil.toString(key));
 			if (null != aliasName) {
 				// 别名键值对加入
-				filteredMap.put(aliasName, entry.getValue());
+				filteredMap.put(aliasName, value);
 			} else if (false == this.onlyAlias) {
 				// 保留无别名设置的键值对
-				filteredMap.put(entry.getKey(), entry.getValue());
+				filteredMap.put(key, value);
 			}
-		}
+		});
 		return filteredMap;
 	}
 

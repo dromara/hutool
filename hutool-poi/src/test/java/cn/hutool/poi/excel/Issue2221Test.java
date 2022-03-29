@@ -2,6 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class Issue2221Test {
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void writeDuplicateHeaderAliasTest(){
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/duplicateAlias.xlsx");
 		// 设置别名
