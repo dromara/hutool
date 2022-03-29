@@ -2,7 +2,6 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.Map;
 public class Issue2221Test {
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void writeDuplicateHeaderAliasTest(){
-		final ExcelWriter writer = ExcelUtil.getWriter();
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/duplicateAlias.xlsx");
 		// 设置别名
 		writer.addHeaderAlias("androidLc", "安卓");
 		writer.addHeaderAlias("androidAc", "安卓");
@@ -24,5 +23,8 @@ public class Issue2221Test {
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人")),
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人"))
 		);
+
+		writer.write(data, true);
+		writer.close();
 	}
 }
