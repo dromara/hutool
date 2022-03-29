@@ -211,7 +211,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter reset() {
 		resetRow();
-		this.headLocationCache = null;
 		return this;
 	}
 
