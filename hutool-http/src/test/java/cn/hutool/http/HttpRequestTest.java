@@ -180,4 +180,14 @@ public class HttpRequestTest {
 		GlobalInterceptor.INSTANCE.addInterceptor(Console::log);
 		HttpUtil.createGet("https://hutool.cn").execute();
 	}
+
+	@Test
+	@Ignore
+	public void getWithFormTest(){
+		String url = "https://postman-echo.com/get";
+		final Map<String, Object> map = new HashMap<>();
+		map.put("aaa", "application+1@qqq.com");
+		HttpRequest request =HttpUtil.createGet(url).form(map);
+		Console.log(request.execute().body());
+	}
 }

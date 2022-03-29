@@ -1166,7 +1166,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 对于非rest的GET请求，且处于重定向时，参数丢弃
 	 */
 	private void urlWithParamIfGet() {
-		if (Method.GET.equals(method) && false == this.isRest && this.redirectCount > 0) {
+		if (Method.GET.equals(method) && false == this.isRest && this.redirectCount <= 0) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 				this.url.getQuery().parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);

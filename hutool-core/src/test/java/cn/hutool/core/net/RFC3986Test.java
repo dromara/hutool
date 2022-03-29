@@ -8,7 +8,10 @@ public class RFC3986Test {
 
 	@Test
 	public void encodeQueryTest(){
-		final String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=b", CharsetUtil.CHARSET_UTF_8);
+		String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=b", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("a=b", encode);
+
+		encode = RFC3986.QUERY_PARAM_VALUE.encode("a+1=b", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a+1=b", encode);
 	}
 }
