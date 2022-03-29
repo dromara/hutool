@@ -112,16 +112,16 @@ public class MapUtil {
 	/**
 	 * 新建一个HashMap
 	 *
-	 * @param <K>     Key类型
-	 * @param <V>     Value类型
-	 * @param size    初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
-	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @param <K>      Key类型
+	 * @param <V>      Value类型
+	 * @param size     初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
+	 * @param isLinked Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 * @since 3.0.4
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isOrder) {
+	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isLinked) {
 		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
-		return isOrder ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
+		return isLinked ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
 	}
 
 	/**
@@ -139,13 +139,13 @@ public class MapUtil {
 	/**
 	 * 新建一个HashMap
 	 *
-	 * @param <K>     Key类型
-	 * @param <V>     Value类型
-	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @param <K>      Key类型
+	 * @param <V>      Value类型
+	 * @param isLinked Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(boolean isOrder) {
-		return newHashMap(DEFAULT_INITIAL_CAPACITY, isOrder);
+	public static <K, V> HashMap<K, V> newHashMap(boolean isLinked) {
+		return newHashMap(DEFAULT_INITIAL_CAPACITY, isLinked);
 	}
 
 	/**
