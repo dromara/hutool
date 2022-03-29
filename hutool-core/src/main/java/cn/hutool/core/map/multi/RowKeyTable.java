@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.collection.TransIter;
 import cn.hutool.core.map.AbsEntry;
-import cn.hutool.core.map.SimpleEntry;
+import cn.hutool.core.map.MapUtil;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -130,7 +130,7 @@ public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 		@Override
 		public Iterator<Map.Entry<C, Map<R, V>>> iterator() {
 			return new TransIter<>(columnKeySet.iterator(),
-					c -> new SimpleEntry<>(c, getColumn(c)));
+					c -> MapUtil.entry(c, getColumn(c)));
 		}
 
 		@Override

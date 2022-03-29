@@ -8,7 +8,12 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -200,5 +205,14 @@ public class MapUtilTest {
 
 		String join3 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123", "abc");
 		Assert.assertEquals("key1value1key2value2key3value3123abc", join3);
+	}
+
+	@Test
+	public void ofEntriesTest(){
+		final Map<String, Integer> map = MapUtil.ofEntries(MapUtil.entry("a", 1), MapUtil.entry("b", 2));
+		Assert.assertEquals(2, map.size());
+
+		Assert.assertEquals(Integer.valueOf(1), map.get("a"));
+		Assert.assertEquals(Integer.valueOf(2), map.get("b"));
 	}
 }

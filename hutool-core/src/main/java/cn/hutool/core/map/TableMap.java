@@ -172,7 +172,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public Set<Map.Entry<K, V>> entrySet() {
 		final Set<Map.Entry<K, V>> hashSet = new LinkedHashSet<>();
 		for (int i = 0; i < size(); i++) {
-			hashSet.add(new SimpleEntry<>(keys.get(i), values.get(i)));
+			hashSet.add(MapUtil.entry(keys.get(i), values.get(i)));
 		}
 		return hashSet;
 	}
@@ -190,7 +190,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 
 			@Override
 			public Map.Entry<K, V> next() {
-				return new SimpleEntry<>(keysIter.next(), valuesIter.next());
+				return MapUtil.entry(keysIter.next(), valuesIter.next());
 			}
 
 			@Override

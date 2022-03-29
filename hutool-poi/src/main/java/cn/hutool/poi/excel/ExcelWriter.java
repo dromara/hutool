@@ -1323,7 +1323,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	// -------------------------------------------------------------------------- Private method start
 
 	/**
-	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key
+	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key<br>
+	 * key为别名，value为字段值
 	 *
 	 * @param rowMap 一行数据
 	 * @return 别名列表

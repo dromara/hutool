@@ -288,11 +288,32 @@ public class MapUtil {
 	 * @param pairs 键值对
 	 * @return Map
 	 * @since 5.4.1
+	 * @deprecated 方法容易歧义，请使用 {@link #ofEntries(Entry[])}
 	 */
 	@SafeVarargs
+	@Deprecated
 	public static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
 		final Map<K, V> map = new HashMap<>();
 		for (Pair<K, V> pair : pairs) {
+			map.put(pair.getKey(), pair.getValue());
+		}
+		return map;
+	}
+
+	/**
+	 * 根据给定的Pair数组创建Map对象
+	 *
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @param entries 键值对
+	 * @return Map
+	 * @see #entry(Object, Object)
+	 * @since 5.8.0
+	 */
+	@SafeVarargs
+	public static <K, V> Map<K, V> ofEntries(Map.Entry<K, V>... entries) {
+		final Map<K, V> map = new HashMap<>();
+		for (Map.Entry<K, V> pair : entries) {
 			map.put(pair.getKey(), pair.getValue());
 		}
 		return map;
@@ -1381,5 +1402,37 @@ public class MapUtil {
 			values.add(map.get(keys.next()));
 		}
 		return values;
+	}
+
+	/**
+	 * 将键和值转换为{@link AbstractMap.SimpleImmutableEntry}<br>
+	 * 返回的Entry不可变
+	 *
+	 * @param key   键
+	 * @param value 值
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @return {@link AbstractMap.SimpleImmutableEntry}
+	 * @since 5.8.0
+	 */
+	public static <K, V> Map.Entry<K, V> entry(K key, V value) {
+		return entry(key, value, true);
+	}
+
+	/**
+	 * 将键和值转换为{@link AbstractMap.SimpleEntry} 或者 {@link AbstractMap.SimpleImmutableEntry}
+	 *
+	 * @param key         键
+	 * @param value       值
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @param isImmutable 是否不可变Entry
+	 * @return {@link AbstractMap.SimpleEntry} 或者 {@link AbstractMap.SimpleImmutableEntry}
+	 * @since 5.8.0
+	 */
+	public static <K, V> Map.Entry<K, V> entry(K key, V value, boolean isImmutable) {
+		return isImmutable ?
+				new AbstractMap.SimpleEntry<>(key, value) :
+				new AbstractMap.SimpleImmutableEntry<>(key, value);
 	}
 }
