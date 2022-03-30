@@ -18,6 +18,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -56,6 +57,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -92,6 +94,10 @@ public class FileUtil extends PathUtil {
 	 * 在Unix和Linux下 是{@code ':'}; 在Windows下是 {@code ';'}
 	 */
 	public static final String PATH_SEPARATOR = File.pathSeparator;
+	/**
+	 * 绝对路径判断正则
+	 */
+	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?");
 
 
 	/**
@@ -547,7 +553,7 @@ public class FileUtil extends PathUtil {
 	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
 	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
 	 *
-	 * @param file 目录或文件,null或者文件不存在返回0
+	 * @param file           目录或文件,null或者文件不存在返回0
 	 * @param includeDirSize 是否包括每层目录本身的大小
 	 * @return 总大小，bytes长度
 	 * @since 5.7.21
@@ -883,12 +889,12 @@ public class FileUtil extends PathUtil {
 	 *     file.createNewFile(); // 抛出 IO 异常，因为该线程无法感知到父目录已被创建
 	 * </pre>
 	 *
-	 * @param dir 待创建的目录
-	 * @param tryCount 最大尝试次数
+	 * @param dir         待创建的目录
+	 * @param tryCount    最大尝试次数
 	 * @param sleepMillis 线程等待的毫秒数
 	 * @return true表示创建成功，false表示创建失败
-	 * @since 5.7.21
 	 * @author z8g
+	 * @since 5.7.21
 	 */
 	public static boolean mkdirsSafely(File dir, int tryCount, long sleepMillis) {
 		if (dir == null) {
@@ -927,6 +933,7 @@ public class FileUtil extends PathUtil {
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
 	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
 	 * @return 临时文件
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.22
@@ -941,6 +948,7 @@ public class FileUtil extends PathUtil {
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
 	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
 	 * @param suffix    后缀，如果null则使用默认.tmp
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
 	 * @return 临时文件
@@ -1296,7 +1304,13 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 给定路径已经是绝对路径<br>
-	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断
+	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断<br>
+	 * 绝对路径判断条件是：
+	 * <ul>
+	 *     <li>以/开头的路径</li>
+	 *     <li>满足类似于 c:/xxxxx，其中祖母随意，不区分大小写</li>
+	 *     <li>满足类似于 d:\xxxxx，其中祖母随意，不区分大小写</li>
+	 * </ul>
 	 *
 	 * @param path 需要检查的Path
 	 * @return 是否已经是绝对路径
@@ -1307,7 +1321,7 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 给定的路径已经是绝对路径了
-		return StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:([/\\\\].*)?");
+		return StrUtil.C_SLASH == path.charAt(0) || ReUtil.isMatch(PATTERN_PATH_ABSOLUTE, path);
 	}
 
 	/**

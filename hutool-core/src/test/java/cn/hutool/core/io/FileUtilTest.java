@@ -490,4 +490,12 @@ public class FileUtilTest {
 		Assert.assertEquals(10000000, totalLines);
 	}
 
+	@Test
+	public void isAbsolutePathTest(){
+		String path = "d:/test\\aaa.txt";
+		Assert.assertTrue(FileUtil.isAbsolutePath(path));
+
+		path = "test\\aaa.txt";
+		Assert.assertFalse(FileUtil.isAbsolutePath(path));
+	}
 }
