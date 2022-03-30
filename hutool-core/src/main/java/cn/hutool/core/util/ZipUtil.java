@@ -84,6 +84,21 @@ public class ZipUtil {
 	}
 
 	/**
+	 * 获得 {@link ZipOutputStream}
+	 *
+	 * @param out     压缩文件流
+	 * @param charset 编码
+	 * @return {@link ZipOutputStream}
+	 * @since 5.8.0
+	 */
+	public static ZipOutputStream getZipOutputStream(OutputStream out, Charset charset) {
+		if (out instanceof ZipOutputStream) {
+			return (ZipOutputStream) out;
+		}
+		return new ZipOutputStream(out, charset);
+	}
+
+	/**
 	 * 在zip文件中添加新文件或目录<br>
 	 * 新文件添加在zip根目录，文件夹包括其本身和内容<br>
 	 * 如果待添加文件夹是系统根路径（如/或c:/），则只复制文件夹下的内容
@@ -370,17 +385,8 @@ public class ZipUtil {
 	 * @since 3.0.9
 	 */
 	public static File zip(File zipFile, String[] paths, InputStream[] ins, Charset charset) throws UtilException {
-		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
-			throw new IllegalArgumentException("Paths or ins is empty !");
-		}
-		if (paths.length != ins.length) {
-			throw new IllegalArgumentException("Paths length is not equals to ins length !");
-		}
-
 		try (final ZipWriter zipWriter = ZipWriter.of(zipFile, charset)) {
-			for (int i = 0; i < paths.length; i++) {
-				zipWriter.add(paths[i], ins[i]);
-			}
+			zipWriter.add(paths, ins);
 		}
 
 		return zipFile;
@@ -395,18 +401,7 @@ public class ZipUtil {
 	 * @since 5.5.2
 	 */
 	public static void zip(OutputStream out, String[] paths, InputStream[] ins) {
-		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
-			throw new IllegalArgumentException("Paths or ins is empty !");
-		}
-		if (paths.length != ins.length) {
-			throw new IllegalArgumentException("Paths length is not equals to ins length !");
-		}
-
-		try (final ZipWriter zipWriter = ZipWriter.of(out, DEFAULT_CHARSET)) {
-			for (int i = 0; i < paths.length; i++) {
-				zipWriter.add(paths[i], ins[i]);
-			}
-		}
+		zip(getZipOutputStream(out, DEFAULT_CHARSET), paths, ins);
 	}
 
 	/**
@@ -419,17 +414,8 @@ public class ZipUtil {
 	 * @since 5.5.2
 	 */
 	public static void zip(ZipOutputStream zipOutputStream, String[] paths, InputStream[] ins) throws IORuntimeException {
-		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
-			throw new IllegalArgumentException("Paths or ins is empty !");
-		}
-		if (paths.length != ins.length) {
-			throw new IllegalArgumentException("Paths length is not equals to ins length !");
-		}
-
 		try (final ZipWriter zipWriter = new ZipWriter(zipOutputStream)) {
-			for (int i = 0; i < paths.length; i++) {
-				zipWriter.add(paths[i], ins[i]);
-			}
+			zipWriter.add(paths, ins);
 		}
 	}
 

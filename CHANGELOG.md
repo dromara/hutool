@@ -9,6 +9,7 @@
 
 ### 🐣新特性
 * 【core   】     MapUtil增加entry、ofEntries方法
+* 【core   】     ZipWriter增加add方法重载
 
 ### 🐞Bug修复
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）
