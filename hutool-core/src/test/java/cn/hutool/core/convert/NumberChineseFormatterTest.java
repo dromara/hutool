@@ -5,6 +5,16 @@ import org.junit.Test;
 
 public class NumberChineseFormatterTest {
 
+	@Test
+	public void formatThousandTest(){
+		String f = NumberChineseFormatter.formatThousand(10, false);
+		Assert.assertEquals("十", f);
+		f = NumberChineseFormatter.formatThousand(11, false);
+		Assert.assertEquals("十一", f);
+		f = NumberChineseFormatter.formatThousand(19, false);
+		Assert.assertEquals("十九", f);
+	}
+
 	// 测试千
 	@Test
 	public void formatThousandLongTest(){
