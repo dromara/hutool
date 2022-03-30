@@ -1,7 +1,10 @@
 package cn.hutool.cache;
 
 import cn.hutool.cache.impl.LRUCache;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -12,6 +15,18 @@ import java.util.concurrent.CountDownLatch;
  * 并可能引起死锁。
  */
 public class LRUCacheTest {
+
+	@Test
+	@Ignore
+	public void putTest(){
+		//https://github.com/dromara/hutool/issues/2227
+		LRUCache<String, String> cache = CacheUtil.newLRUCache(100, 10);
+		for (int i = 0; i < 10000; i++) {
+			//ThreadUtil.execute(()-> cache.put(RandomUtil.randomString(5), "1243", 10));
+			ThreadUtil.execute(()-> cache.get(RandomUtil.randomString(5), ()->RandomUtil.randomString(10)));
+		}
+		ThreadUtil.sleep(3000);
+	}
 
 	@Test
 	public void readWriteTest() throws InterruptedException {
