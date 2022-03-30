@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0.M2 (2022-03-30)
+# 5.8.0.M2 (2022-03-31)
 
 ### ❌不兼容特性
 * 【extra  】     【可能兼容问题】BeanCopierCache的key结构变更
@@ -10,6 +10,7 @@
 ### 🐣新特性
 * 【core   】     MapUtil增加entry、ofEntries方法
 * 【core   】     ZipWriter增加add方法重载
+* 【core   】     IterUtil增加filtered，增加FilterIter（issue#2228）
 
 ### 🐞Bug修复
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）

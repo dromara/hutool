@@ -745,17 +745,20 @@ public class IterUtil {
 	 * @since 5.7.22
 	 */
 	public static <E> List<E> filterToList(Iterator<E> iter, Filter<E> filter) {
-		final List<E> result = new ArrayList<>();
-		if (null != iter) {
-			E ele;
-			while (iter.hasNext()) {
-				ele = iter.next();
-				if (null == filter || filter.accept(ele)) {
-					result.add(ele);
-				}
-			}
-		}
-		return result;
+		return toList(filtered(iter, filter));
+	}
+
+	/**
+	 * 获取一个新的 {@link FilterIter}，用于过滤指定元素
+	 *
+	 * @param iterator  被包装的 {@link Iterator}
+	 * @param filter 过滤断言，当{@link Filter#accept(Object)}为{@code true}时保留元素，{@code false}抛弃元素
+	 * @param <E>       元素类型
+	 * @return {@link FilterIter}
+	 * @since 5.8.0
+	 */
+	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Filter<? super E> filter) {
+		return new FilterIter<>(iterator, filter);
 	}
 
 	/**
