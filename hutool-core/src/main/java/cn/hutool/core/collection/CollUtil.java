@@ -2212,17 +2212,8 @@ public class CollUtil {
 			final List<T> list = ((List<T>) collection);
 			return list.get(index);
 		} else {
-			int i = 0;
-			for (T t : collection) {
-				if (i > index) {
-					break;
-				} else if (i == index) {
-					return t;
-				}
-				i++;
-			}
+			return IterUtil.get(collection.iterator(), index);
 		}
-		return null;
 	}
 
 	/**
@@ -2303,7 +2294,9 @@ public class CollUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @see IterUtil#getElementType(Iterable)
 	 * @since 3.0.8
+	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterable)}
 	 */
+	@Deprecated
 	public static Class<?> getElementType(Iterable<?> iterable) {
 		return IterUtil.getElementType(iterable);
 	}
@@ -2315,7 +2308,9 @@ public class CollUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @see IterUtil#getElementType(Iterator)
 	 * @since 3.0.8
+	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterator)}
 	 */
+	@Deprecated
 	public static Class<?> getElementType(Iterator<?> iterator) {
 		return IterUtil.getElementType(iterator);
 	}

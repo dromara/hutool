@@ -10,6 +10,7 @@ import java.util.Iterator;
  * @since 5.7.14
  */
 public interface IterableIter<T> extends Iterable<T>, Iterator<T> {
+
 	@Override
 	default Iterator<T> iterator() {
 		return this;

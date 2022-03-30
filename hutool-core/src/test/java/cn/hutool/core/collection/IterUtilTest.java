@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -135,5 +136,12 @@ public class IterUtilTest {
 
 		Assert.assertEquals(1, filtered.size());
 		Assert.assertEquals("3", filtered.get(0));
+	}
+
+	@Test
+	public void getTest() {
+		HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
+		String str = IterUtil.get(set.iterator(), 2);
+		Assert.assertEquals("C", str);
 	}
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
@@ -211,7 +212,7 @@ public class StrJoiner implements Appendable, Serializable {
 		} else if (obj instanceof Iterable) {
 			append(((Iterable<?>) obj).iterator());
 		} else {
-			append(String.valueOf(obj));
+			append(ObjectUtil.toString(obj));
 		}
 		return this;
 	}
@@ -261,24 +262,24 @@ public class StrJoiner implements Appendable, Serializable {
 	/**
 	 * 追加{@link Iterator}中的元素到拼接器中
 	 *
-	 * @param <T>       元素类型
+	 * @param <E>       元素类型
 	 * @param iterable  元素列表
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <T> StrJoiner append(Iterable<T> iterable, Function<T, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(Iterable<E> iterable, Function<? super E, ? extends CharSequence> toStrFunc) {
 		return append(IterUtil.getIter(iterable), toStrFunc);
 	}
 
 	/**
 	 * 追加{@link Iterator}中的元素到拼接器中
 	 *
-	 * @param <T>       元素类型
+	 * @param <E>       元素类型
 	 * @param iterator  元素列表
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <T> StrJoiner append(Iterator<T> iterator, Function<T, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(Iterator<E> iterator, Function<? super E, ? extends CharSequence> toStrFunc) {
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				append(toStrFunc.apply(iterator.next()));
