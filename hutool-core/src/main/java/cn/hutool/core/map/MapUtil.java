@@ -288,7 +288,7 @@ public class MapUtil {
 	 * @param pairs 键值对
 	 * @return Map
 	 * @since 5.4.1
-	 * @deprecated 方法容易歧义，请使用 {@link #ofEntries(Entry[])}
+	 * @deprecated 方法容易歧义，请使用 {@code #ofEntries(Entry[])}
 	 */
 	@SafeVarargs
 	@Deprecated

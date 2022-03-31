@@ -11,7 +11,6 @@ import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.sun.xml.internal.ws.util.xml.NodeListIterator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -1035,10 +1034,10 @@ public class IterUtil {
 		} else if (obj instanceof Map) {
 			return ((Map<?, ?>) obj).entrySet().iterator();
 		} else if (obj instanceof NodeList) {
-			return new NodeListIterator((NodeList) obj);
+			return new NodeListIter((NodeList) obj);
 		} else if (obj instanceof Node) {
 			// 遍历子节点
-			return new NodeListIterator(((Node) obj).getChildNodes());
+			return new NodeListIter(((Node) obj).getChildNodes());
 		} else if (obj instanceof Dictionary) {
 			return new EnumerationIter<>(((Dictionary<?, ?>) obj).elements());
 		}
