@@ -3,6 +3,8 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * HexUtil单元测试
  * @author Looly
@@ -18,6 +20,12 @@ public class HexUtilTest {
 		String decodedStr = HexUtil.decodeHexStr(hex);
 
 		Assert.assertEquals(str, decodedStr);
+	}
+
+	@Test
+	public void issueI50MI6Test(){
+		String s = HexUtil.encodeHexStr("烟".getBytes(StandardCharsets.UTF_16BE));
+		Assert.assertEquals("70df", s);
 	}
 
 	@Test
