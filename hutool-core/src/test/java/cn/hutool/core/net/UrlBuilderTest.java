@@ -382,4 +382,11 @@ public class UrlBuilderTest {
 		final String build = UrlBuilder.of(url).build();
 		Assert.assertEquals(url, build);
 	}
+
+	@Test
+	public void issuesI4Z2ETTest(){
+		String url = "http://hutool.cn/2022/03/09/123.zip?Expires=1648704684&OSSAccessKeyId=LTAI4FncgaVtwZGBnYHHi8ox&Signature=%2BK%2B%3D";
+		final String build = UrlBuilder.of(url, null).build();
+		Assert.assertEquals(url, build);
+	}
 }
