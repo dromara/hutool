@@ -73,8 +73,8 @@ public class HmacTest {
 
 	@Test
 	public void zuc256MacTest(){
-		byte[] iv = new byte[25];
 		final byte[] key = new byte[32];
+		byte[] iv = new byte[25];
 		HMac mac = new HMac("ZUC-256",
 				KeyUtil.generateKey(ZUC.ZUCAlgorithm.ZUC_128.getValue(), key),
 				new IvParameterSpec(iv));
