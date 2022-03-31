@@ -12,6 +12,7 @@
 * 【core   】     ZipWriter增加add方法重载
 * 【core   】     IterUtil增加filtered，增加FilterIter（issue#2228）
 * 【core   】     增加NodeListIter、ResettableIter
+* 【crypto 】     HmacAlgorithm增加SM4CMAC（issue#2206@Github）
 
 ### 🐞Bug修复
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）

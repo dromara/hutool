@@ -83,4 +83,18 @@ public class HmacTest {
 		String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("d9ad618357c1bfb1d9d1200a763d5eaa", macHex1);
 	}
+
+	@Test
+	public void sm4CMACTest(){
+		// https://github.com/dromara/hutool/issues/2206
+		final byte[] key = new byte[16];
+		HMac mac = new HMac(HmacAlgorithm.SM4CMAC,
+				KeyUtil.generateKey("SM4", key));
+
+		// 原文
+		String testStr = "test中文";
+
+		String macHex1 = mac.digestHex(testStr);
+		Assert.assertEquals("58a0d231315664af51b858a174eabc21", macHex1);
+	}
 }
