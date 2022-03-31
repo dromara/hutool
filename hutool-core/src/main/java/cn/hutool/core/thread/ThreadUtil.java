@@ -154,11 +154,12 @@ public class ThreadUtil {
 	 * <pre>
 	 *     1. 核心线程数与最大线程数为nThreads指定的大小
 	 *     2. 默认使用LinkedBlockingQueue
-	 *     3. 当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
 	 * </pre>
 	 *
 	 * @param nThreads         线程池大小
 	 * @param threadNamePrefix 线程名称前缀
+	 * @param isBlocked        是否使用{@link BlockPolicy}策略
 	 * @return ExecutorService
 	 * @author luozongle
 	 * @since 5.8.0
