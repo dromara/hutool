@@ -15,6 +15,7 @@
 * 【core   】     增加NodeListIter、ResettableIter
 * 【crypto 】     HmacAlgorithm增加SM4CMAC（issue#2206@Github）
 * 【http   】     增加HttpConfig，响应支持拦截（issue#2217@Github）
+* 【core   】     增加BlockPolicy，ThreadUtil增加newFixedExecutor方法（pr#2231@Github）
 
 ### 🐞Bug修复
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）
