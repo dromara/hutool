@@ -171,13 +171,16 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void addInterceptorTest() {
-		HttpUtil.createGet("https://hutool.cn").addInterceptor(Console::log).execute();
+		HttpUtil.createGet("https://hutool.cn")
+				.addInterceptor(Console::log)
+				.addResponseInterceptor((res)-> Console.log(res.getStatus()))
+				.execute();
 	}
 
 	@Test
 	@Ignore
 	public void addGlobalInterceptorTest() {
-		GlobalInterceptor.INSTANCE.addInterceptor(Console::log);
+		GlobalInterceptor.INSTANCE.addRequestInterceptor(Console::log);
 		HttpUtil.createGet("https://hutool.cn").execute();
 	}
 

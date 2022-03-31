@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
@@ -200,43 +199,27 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	// ---------------------------------------------------------------- static Http Method end
 
+	private HttpConfig config = HttpConfig.create();
 	private UrlBuilder url;
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/**
-	 * 请求前的拦截器，用于在请求前重新编辑请求
+	 * 连接对象
 	 */
-	private final HttpInterceptor.Chain interceptors = GlobalInterceptor.INSTANCE.getCopied();
+	private HttpConnection httpConnection;
 
-	/**
-	 * 默认连接超时
-	 */
-	private int connectionTimeout = HttpGlobalConfig.getTimeout();
-	/**
-	 * 默认读取超时
-	 */
-	private int readTimeout = HttpGlobalConfig.getTimeout();
 	/**
 	 * 存储表单数据
 	 */
 	private Map<String, Object> form;
 	/**
-	 * 是否为Multipart表单
-	 */
-	private boolean isMultiPart;
-	/**
 	 * Cookie
 	 */
 	private String cookie;
-
 	/**
-	 * 连接对象
+	 * 是否为Multipart表单
 	 */
-	private HttpConnection httpConnection;
-	/**
-	 * 是否禁用缓存
-	 */
-	private boolean isDisableCache;
+	private boolean isMultiPart;
 	/**
 	 * 是否是REST请求模式
 	 */
@@ -245,27 +228,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 重定向次数计数器，内部使用
 	 */
 	private int redirectCount;
-	/**
-	 * 最大重定向次数
-	 */
-	private int maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
-	/**
-	 * Chuncked块大小，0或小于0表示不设置Chuncked模式
-	 */
-	private int blockSize;
-	/**
-	 * 代理
-	 */
-	private Proxy proxy;
-
-	/**
-	 * HostnameVerifier，用于HTTPS安全连接
-	 */
-	private HostnameVerifier hostnameVerifier;
-	/**
-	 * SSLSocketFactory，用于HTTPS安全连接
-	 */
-	private SSLSocketFactory ssf;
 
 	/**
 	 * 构造，URL编码默认使用UTF-8
@@ -785,6 +747,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Body end
 
 	/**
+	 * 将新的配置加入<br>
+	 * 注意加入的配置可能被修改
+	 *
+	 * @param config 配置
+	 * @return this
+	 */
+	public HttpRequest setConfig(HttpConfig config){
+		this.config = config;
+		return this;
+	}
+
+	/**
 	 * 设置超时，单位：毫秒<br>
 	 * 超时包括：
 	 *
@@ -799,8 +773,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setReadTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
-		setConnectionTimeout(milliseconds);
-		setReadTimeout(milliseconds);
+		config.timeout(milliseconds);
 		return this;
 	}
 
@@ -812,7 +785,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.5.6
 	 */
 	public HttpRequest setConnectionTimeout(int milliseconds) {
-		this.connectionTimeout = milliseconds;
+		config.setConnectionTimeout(milliseconds);
 		return this;
 	}
 
@@ -824,7 +797,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.5.6
 	 */
 	public HttpRequest setReadTimeout(int milliseconds) {
-		this.readTimeout = milliseconds;
+		config.setReadTimeout(milliseconds);
 		return this;
 	}
 
@@ -834,7 +807,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest disableCache() {
-		this.isDisableCache = true;
+		config.disableCache();
 		return this;
 	}
 
@@ -858,7 +831,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.3.0
 	 */
 	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
-		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
+		config.setMaxRedirectCount(maxRedirectCount);
 		return this;
 	}
 
@@ -870,8 +843,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setHostnameVerifier(HostnameVerifier hostnameVerifier) {
-		// 验证域
-		this.hostnameVerifier = hostnameVerifier;
+		config.setHostnameVerifier(hostnameVerifier);
 		return this;
 	}
 
@@ -884,9 +856,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.4.5
 	 */
 	public HttpRequest setHttpProxy(String host, int port) {
-		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
-				new InetSocketAddress(host, port));
-		return setProxy(proxy);
+		config.setHttpProxy(host, port);
+		return this;
 	}
 
 	/**
@@ -896,7 +867,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setProxy(Proxy proxy) {
-		this.proxy = proxy;
+		config.setProxy(proxy);
 		return this;
 	}
 
@@ -909,7 +880,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setSSLSocketFactory(SSLSocketFactory ssf) {
-		this.ssf = ssf;
+		config.setSSLSocketFactory(ssf);
 		return this;
 	}
 
@@ -930,8 +901,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
-		Assert.notBlank(protocol, "protocol must be not blank!");
-		setSSLSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
+		config.setSSLProtocol(protocol);
 		return this;
 	}
 
@@ -957,7 +927,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.6.5
 	 */
 	public HttpRequest setChunkedStreamingMode(int blockSize) {
-		this.blockSize = blockSize;
+		config.setBlockSize(blockSize);
 		return this;
 	}
 
@@ -966,9 +936,31 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param interceptor 拦截器实现
 	 * @since 5.7.16
+	 * @see #addRequestInterceptor(HttpInterceptor)
 	 */
-	public HttpRequest addInterceptor(HttpInterceptor interceptor) {
-		this.interceptors.addChain(interceptor);
+	public HttpRequest addInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		return addRequestInterceptor(interceptor);
+	}
+
+	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @since 5.8.0
+	 */
+	public HttpRequest addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		config.addRequestInterceptor(interceptor);
+		return this;
+	}
+
+	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @since 5.8.0
+	 */
+	public HttpRequest addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
+		config.addResponseInterceptor(interceptor);
 		return this;
 	}
 
@@ -1002,7 +994,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		return doExecute(isAsync, this.interceptors);
+		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors);
 	}
 
 	/**
@@ -1096,12 +1088,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 执行Reuqest请求
 	 *
 	 * @param isAsync      是否异步
-	 * @param interceptors 拦截器列表
+	 * @param requestInterceptors 请求拦截器列表
+	 * @param responseInterceptors 响应拦截器列表
 	 * @return this
 	 */
-	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain interceptors) {
-		if (null != interceptors) {
-			for (HttpInterceptor interceptor : interceptors) {
+	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain<HttpRequest> requestInterceptors,
+								   HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
+		if (null != requestInterceptors) {
+			for (HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
 				interceptor.process(this);
 			}
 		}
@@ -1118,7 +1112,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
+			httpResponse = new HttpResponse(this.httpConnection, this.config, this.charset, isAsync, isIgnoreResponseBody());
+		}
+
+		// 拦截响应
+		if (null != responseInterceptors) {
+			for (HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
+				interceptor.process(httpResponse);
+			}
 		}
 
 		return httpResponse;
@@ -1134,15 +1135,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		this.httpConnection = HttpConnection
-				.create(this.url.toURL(this.urlHandler), this.proxy)//
-				.setConnectTimeout(this.connectionTimeout)//
-				.setReadTimeout(this.readTimeout)//
+				.create(this.url.toURL(this.urlHandler), config.proxy)//
+				.setConnectTimeout(config.connectionTimeout)//
+				.setReadTimeout(config.readTimeout)//
 				.setMethod(this.method)//
-				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
+				.setHttpsInfo(config.hostnameVerifier, config.ssf)//
 				// 关闭JDK自动转发，采用手动转发方式
 				.setInstanceFollowRedirects(false)
 				// 流方式上传数据
-				.setChunkedStreamingMode(this.blockSize)
+				.setChunkedStreamingMode(config.blockSize)
 				// 覆盖默认Header
 				.header(this.headers, true);
 
@@ -1155,7 +1156,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 是否禁用缓存
-		if (this.isDisableCache) {
+		if (config.isDisableCache) {
 			this.httpConnection.disableCache();
 		}
 	}
@@ -1184,7 +1185,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		// 手动实现重定向
-		if (this.maxRedirectCount > 0) {
+		if (config.maxRedirectCount > 0) {
 			int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
@@ -1197,10 +1198,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
 					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
-					if (redirectCount < this.maxRedirectCount) {
+					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
 						// 重定向不再走过滤器
-						return doExecute(isAsync, null);
+						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
+								config.interceptorOnRedirect ? config.responseInterceptors : null);
 					}
 				}
 			}
