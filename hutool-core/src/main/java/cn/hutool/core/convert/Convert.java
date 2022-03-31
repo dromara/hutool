@@ -781,7 +781,6 @@ public class Convert {
 				c[i] = '\u3000';
 			} else if (c[i] < '\177') {
 				c[i] = (char) (c[i] + 65248);
-
 			}
 		}
 		return new String(c);

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ConsoleTable {
 
-	private static final char ROW_LINE = '-';
+	private static final char ROW_LINE = '－';
 	private static final char COLUMN_LINE = '|';
 	private static final char CORNER = '+';
 	private static final char SPACE = '\u3000';
@@ -83,9 +83,9 @@ public class ConsoleTable {
 	private void fillColumns(List<String> l, String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			String col = Convert.toSBC(column);
-			l.add(col);
-			int width = col.length();
+			column = Convert.toSBC(column);
+			l.add(column);
+			int width = column.length();
 			if (width > columnCharNumber.get(i)) {
 				columnCharNumber.set(i, width);
 			}
@@ -115,19 +115,19 @@ public class ConsoleTable {
 	 * @param list 表头列表或者表体列表
 	 */
 	private void fillRow(StringBuilder sb, List<List<String>> list) {
-		for (List<String> r : list) {
-			for (int i = 0; i < r.size(); i++) {
+		for (List<String> row : list) {
+			for (int i = 0; i < row.size(); i++) {
 				if (i == 0) {
 					sb.append(COLUMN_LINE);
 				}
-				String header = r.get(i);
+				String value = row.get(i);
 				sb.append(SPACE);
-				sb.append(header);
+				sb.append(value);
 				sb.append(SPACE);
-				int l = header.length();
-				int lw = columnCharNumber.get(i);
-				if (lw > l) {
-					for (int j = 0; j < (lw - l); j++) {
+				int length = value.length();
+				int maxLength = columnCharNumber.get(i);
+				if (maxLength > length) {
+					for (int j = 0; j < (maxLength - length); j++) {
 						sb.append(SPACE);
 					}
 				}

@@ -4437,4 +4437,22 @@ public class CharSequenceUtil {
 	public static String normalize(CharSequence str) {
 		return Normalizer.normalize(str, Normalizer.Form.NFC);
 	}
+
+	/**
+	 * 在给定字符串末尾填充指定字符，以达到给定长度<br>
+	 * 如果字符串本身的长度大于等于length，返回原字符串
+	 *
+	 * @param str       字符串
+	 * @param fixedChar 补充的字符
+	 * @param length    补充到的长度
+	 * @return 补充后的字符串
+	 * @since 5.8.0
+	 */
+	public static String fixLength(CharSequence str, char fixedChar, int length) {
+		final int fixedLength = length - str.length();
+		if (fixedLength <= 0) {
+			return str.toString();
+		}
+		return str + repeat(fixedChar, fixedLength);
+	}
 }
