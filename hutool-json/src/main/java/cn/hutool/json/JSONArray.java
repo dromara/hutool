@@ -16,6 +16,7 @@ import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -196,7 +197,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		this(DEFAULT_CAPACITY, jsonConfig);
 		init(object);
 	}
-	// -------------------------------------------------------------------------------------------------------------------- Constructor start
+	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
 	@Override
 	public JSONConfig getConfig() {
@@ -289,6 +290,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	public JSONArray put(int index, Object value) throws JSONException {
 		this.set(index, value);
 		return this;
+	}
+
+	@Override
+	public <T> T toBean(Type type) {
+		return JSON.super.toBean(type, config.isIgnoreError());
 	}
 
 	/**

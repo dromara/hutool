@@ -422,6 +422,21 @@ public class JSONUtil {
 	}
 
 	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出<br>
+	 * 通过{@link JSONConfig}可选是否忽略大小写、忽略null等配置
+	 *
+	 * @param <T>        Bean类型
+	 * @param jsonString JSON字符串
+	 * @param config     JSON配置
+	 * @param beanClass  实体类对象
+	 * @return 实体类对象
+	 * @since 5.8.0
+	 */
+	public static <T> T toBean(String jsonString, JSONConfig config, Class<T> beanClass) {
+		return toBean(parseObj(jsonString, config), beanClass);
+	}
+
+	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 *
 	 * @param <T>       Bean类型
@@ -458,7 +473,7 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
-		return toBean(parse(jsonString), beanType, ignoreError);
+		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
 	}
 
 	/**
