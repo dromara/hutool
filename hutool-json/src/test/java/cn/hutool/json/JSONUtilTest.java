@@ -213,7 +213,7 @@ public class JSONUtilTest {
 
 	@Test
 	public void sqlExceptionTest(){
-		//https://github.com/looly/hutool/issues/1399
+		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
 		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
 		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());

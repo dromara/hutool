@@ -150,7 +150,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipStreamTest(){
-		//https://github.com/looly/hutool/issues/944
+		//https://github.com/dromara/hutool/issues/944
 		String dir = "d:/test";
 		String zip = "d:/test.zip";
 		try (OutputStream out = new FileOutputStream(zip)){

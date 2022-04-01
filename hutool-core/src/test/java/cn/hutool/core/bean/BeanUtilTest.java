@@ -492,7 +492,7 @@ public class BeanUtilTest {
 	}
 
 	/**
-	 * <a href="https://github.com/looly/hutool/issues/1173">#1173</a>
+	 * <a href="https://github.com/dromara/hutool/issues/1173">#1173</a>
 	 */
 	@Test
 	public void beanToBeanOverlayFieldTest() {

@@ -204,7 +204,7 @@ public class UserAgentUtilTest {
 	}
 
 	/**
-	 * https://github.com/looly/hutool/issues/1177
+	 * https://github.com/dromara/hutool/issues/1177
 	 */
 	@Test
 	public void parseMicroMessengerTest() {
