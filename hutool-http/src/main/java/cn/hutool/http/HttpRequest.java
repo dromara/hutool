@@ -753,7 +753,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param config 配置
 	 * @return this
 	 */
-	public HttpRequest setConfig(HttpConfig config){
+	public HttpRequest setConfig(HttpConfig config) {
 		this.config = config;
 		return this;
 	}
@@ -935,8 +935,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
-	 * @since 5.7.16
+	 * @return this
 	 * @see #addRequestInterceptor(HttpInterceptor)
+	 * @since 5.7.16
 	 */
 	public HttpRequest addInterceptor(HttpInterceptor<HttpRequest> interceptor) {
 		return addRequestInterceptor(interceptor);
@@ -946,6 +947,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 * @since 5.8.0
 	 */
 	public HttpRequest addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
@@ -957,6 +959,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 * @since 5.8.0
 	 */
 	public HttpRequest addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
@@ -1087,8 +1090,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 执行Reuqest请求
 	 *
-	 * @param isAsync      是否异步
-	 * @param requestInterceptors 请求拦截器列表
+	 * @param isAsync              是否异步
+	 * @param requestInterceptors  请求拦截器列表
 	 * @param responseInterceptors 响应拦截器列表
 	 * @return this
 	 */

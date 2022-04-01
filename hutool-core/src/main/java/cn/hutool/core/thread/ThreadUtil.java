@@ -158,6 +158,7 @@ public class ThreadUtil {
 	 * </pre>
 	 *
 	 * @param nThreads         线程池大小
+	 * @param maximumQueueSize 队列大小
 	 * @param threadNamePrefix 线程名称前缀
 	 * @param isBlocked        是否使用{@link BlockPolicy}策略
 	 * @return ExecutorService

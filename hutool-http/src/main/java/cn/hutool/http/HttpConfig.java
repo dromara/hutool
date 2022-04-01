@@ -277,6 +277,7 @@ public class HttpConfig {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 */
 	public HttpConfig addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
 		this.responseInterceptors.addChain(interceptor);
