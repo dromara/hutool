@@ -7,6 +7,7 @@
 ### ❌不兼容特性
 * 【extra  】     【可能兼容问题】BeanCopierCache的key结构变更
 * 【http   】     【可能兼容问题】HttpInterceptor增加泛型标识，HttpRequest中配置汇总于HttpConfig
+* 【core   】     【可能兼容问题】UrlQuery.addQuery参数2从String变更为Object
 
 ### 🐣新特性
 * 【core   】     MapUtil增加entry、ofEntries方法
@@ -21,6 +22,7 @@
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）
 * 【core   】     修复urlWithParamIfGet函数逻辑问题（issue#I50IUD@Gitee）
 * 【core   】     修复IoUtil.readBytes限制长度读取问题（issue#2230@Github）
+* 【http   】     修复HttpRequest中编码对URL无效的问题（issue#I50NHQ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

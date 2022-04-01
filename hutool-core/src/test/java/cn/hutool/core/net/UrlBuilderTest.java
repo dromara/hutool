@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class UrlBuilderTest {
 
@@ -388,5 +390,19 @@ public class UrlBuilderTest {
 		String url = "http://hutool.cn/2022/03/09/123.zip?Expires=1648704684&OSSAccessKeyId=LTAI4FncgaVtwZGBnYHHi8ox&Signature=%2BK%2B%3D";
 		final String build = UrlBuilder.of(url, null).build();
 		Assert.assertEquals(url, build);
+	}
+
+	@Test
+	public void issueI50NHQTest(){
+		String url = "http://127.0.0.1/devicerecord/list";
+		HashMap<String, Object> params = new LinkedHashMap<>();
+		params.put("start", "2022-03-31 00:00:00");
+		params.put("end", "2022-03-31 23:59:59");
+		params.put("page", 1);
+		params.put("limit", 10);
+
+		final UrlBuilder builder = UrlBuilder.of(url);
+		params.forEach(builder::addQuery);
+		Assert.assertEquals("http://127.0.0.1/devicerecord/list?start=2022-03-31%2000:00:00&end=2022-03-31%2023:59:59&page=1&limit=10", builder.toString());
 	}
 }

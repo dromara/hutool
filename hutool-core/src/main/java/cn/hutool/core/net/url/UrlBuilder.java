@@ -399,7 +399,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param value 值
 	 * @return this
 	 */
-	public UrlBuilder addQuery(String key, String value) {
+	public UrlBuilder addQuery(String key, Object value) {
 		if (StrUtil.isEmpty(key)) {
 			return this;
 		}

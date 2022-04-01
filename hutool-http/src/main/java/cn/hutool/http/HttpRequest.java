@@ -1077,7 +1077,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
-		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
+		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
 		sb.append(super.toString());
 		return sb.toString();
 	}
@@ -1135,7 +1135,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		this.httpConnection = HttpConnection
-				.create(this.url.toURL(this.urlHandler), config.proxy)//
+				// issue#I50NHQ
+				// 在生成正式URL前，设置自定义编码
+				.create(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
 				.setConnectTimeout(config.connectionTimeout)//
 				.setReadTimeout(config.readTimeout)//
 				.setMethod(this.method)//
