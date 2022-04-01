@@ -296,7 +296,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 它会验证 SSL 服务器在数字证书中返回的主机名是否与用于连接 SSL 服务器的 URL 主机名相匹配。如果主机名不匹配，则删除此连接。<br>
 	 * 因此weblogic不支持https的sni协议的主机名验证，此时需要将此值设置为sun.net.www.protocol.https.Handler对象。
 	 * <p>
-	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
+	 * 相关issue见：https://gitee.com/dromara/hutool/issues/IMD1X
 	 *
 	 * @param urlHandler {@link URLStreamHandler}
 	 * @return this
