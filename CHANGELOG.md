@@ -8,6 +8,7 @@
 * 【extra  】     【可能兼容问题】BeanCopierCache的key结构变更
 * 【http   】     【可能兼容问题】HttpInterceptor增加泛型标识，HttpRequest中配置汇总于HttpConfig
 * 【core   】     【可能兼容问题】UrlQuery.addQuery参数2从String变更为Object
+* 【core   】     【可能兼容问题】WorkbookUtil.createBook实现改为WorkbookFactory.create
 
 ### 🐣新特性
 * 【core   】     MapUtil增加entry、ofEntries方法

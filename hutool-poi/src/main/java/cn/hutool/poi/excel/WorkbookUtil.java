@@ -159,13 +159,11 @@ public class WorkbookUtil {
 	 * @since 4.1.0
 	 */
 	public static Workbook createBook(boolean isXlsx) {
-		Workbook workbook;
-		if (isXlsx) {
-			workbook = new XSSFWorkbook();
-		} else {
-			workbook = new org.apache.poi.hssf.usermodel.HSSFWorkbook();
+		try {
+			return WorkbookFactory.create(isXlsx);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
-		return workbook;
 	}
 
 	/**
