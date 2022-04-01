@@ -245,7 +245,8 @@ public class ExcelReadTest {
 		Assert.assertEquals("", objects.get(2));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
+	@Ignore
 	public void readColumnNPETest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read_row_npe.xlsx"));
 		reader.readColumn(0, 1);
