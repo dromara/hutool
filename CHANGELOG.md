@@ -25,6 +25,7 @@
 * 【core   】     修复urlWithParamIfGet函数逻辑问题（issue#I50IUD@Gitee）
 * 【core   】     修复IoUtil.readBytes限制长度读取问题（issue#2230@Github）
 * 【http   】     修复HttpRequest中编码对URL无效的问题（issue#I50NHQ@Gitee）
+* 【poi    】     修复读取excel抛NPE错误（pr#2234@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
