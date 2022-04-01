@@ -203,6 +203,9 @@ public class CellUtil {
 	 * @since 5.5.0
 	 */
 	public static Cell getCell(Row row, int cellIndex) {
+		if (null == row) {
+			return null;
+		}
 		Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			return new NullCell(row, cellIndex);
@@ -219,6 +222,9 @@ public class CellUtil {
 	 * @since 4.0.2
 	 */
 	public static Cell getOrCreateCell(Row row, int cellIndex) {
+		if (null == row) {
+			return null;
+		}
 		Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			cell = row.createCell(cellIndex);
