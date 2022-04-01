@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.0.M2 (2022-04-01)
+# 5.8.0.M2 (2022-04-02)
 
 ### ❌不兼容特性
 * 【extra  】     【可能兼容问题】BeanCopierCache的key结构变更
@@ -17,6 +17,7 @@
 * 【crypto 】     HmacAlgorithm增加SM4CMAC（issue#2206@Github）
 * 【http   】     增加HttpConfig，响应支持拦截（issue#2217@Github）
 * 【core   】     增加BlockPolicy，ThreadUtil增加newFixedExecutor方法（pr#2231@Github）
+* 【crypto 】     BCMacEngine、Mac、CBCBlockCipherMacEngine、SM4MacEngine（issue#2206@Github）
 
 ### 🐞Bug修复
 * 【core   】     IdcardUtil#getCityCodeByIdCard位数问题（issue#2224@Github）
