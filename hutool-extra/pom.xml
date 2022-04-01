@@ -31,7 +31,7 @@
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.6.5</spring-boot.version>
+		<spring-boot.version>2.6.6</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -446,7 +446,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.17</version>
+			<version>5.3.18</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

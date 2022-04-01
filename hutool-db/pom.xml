@@ -27,7 +27,7 @@
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>4.2.0</jedis.version>
+		<jedis.version>4.2.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.2</version>
+			<version>3.3.4</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
