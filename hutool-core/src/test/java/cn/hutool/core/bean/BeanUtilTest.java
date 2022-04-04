@@ -562,6 +562,22 @@ public class BeanUtilTest {
 		Assert.assertNull(newFood.getCode());
 	}
 
+	@Test
+	public void copyBeanPropertiesFunctionFilterTest() {
+		Person o = new Person();
+		o.setName("asd");
+		o.setAge(123);
+		o.setOpenid("asd");
+
+		CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
+		Person n = new Person();
+		BeanUtil.copyProperties(o, n, copyOptions);
+
+		// 是否忽略拷贝属性
+		Assert.assertNotEquals(o.getAge(),n.getAge());
+		Assert.assertNotEquals(o.getOpenid(),n.getOpenid());
+	}
+
 	@Data
 	public static class Food {
 		@Alias("bookId")
