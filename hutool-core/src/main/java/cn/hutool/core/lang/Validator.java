@@ -105,6 +105,11 @@ public class Validator {
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号；12位数字字符串；仅限：中国驾驶证档案编号
 	 */
 	public final static Pattern CAR_DRIVING_LICENCE = PatternPool.CAR_DRIVING_LICENCE;
+	/**
+	 * 中国人姓名
+	 * 总结中国人姓名：2-60位，只能是中文和新疆人的点.
+	 */
+	public static final Pattern CHINESE_NAME = PatternPool.CHINESE_NAME;
 
 	/**
 	 * 给定值是否为{@code true}
@@ -1185,6 +1190,21 @@ public class Validator {
 	public static boolean isCarDrivingLicence(CharSequence value) {
 		return isMatchRegex(CAR_DRIVING_LICENCE, value);
 	}
+
+
+	/**
+	 * 是否是中国人姓名
+	 *
+	 * @author dazer
+	 *
+	 * @param value 中国人姓名
+	 * @return 是否是正确的中国人姓名
+	 * @see 5.8.0.M3
+	 */
+	public static boolean isChineseName(CharSequence value) {
+		return isMatchRegex(CHINESE_NAME, value);
+	}
+
 
 	/**
 	 *  验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号

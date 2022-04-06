@@ -163,6 +163,11 @@ public class PatternPool {
 	 * 仅限：中国驾驶证档案编号
 	 */
 	public static final Pattern CAR_DRIVING_LICENCE = Pattern.compile(RegexPool.CAR_DRIVING_LICENCE);
+	/**
+	 * 中国人姓名
+	 * 总结中国人姓名：2-60位，只能是中文和新疆人的点.
+	 */
+	public static final Pattern CHINESE_NAME = Pattern.compile(RegexPool.CHINESE_NAME);
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/**
