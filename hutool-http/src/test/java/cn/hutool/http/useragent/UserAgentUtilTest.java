@@ -404,4 +404,12 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Android", ua.getPlatform().toString());
 		Assert.assertTrue(ua.isMobile());
 	}
+
+	@Test
+	public void parseFromDeepinTest(){
+		// https://gitee.com/dromara/hutool/issues/I50YGY
+		String uaStr = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("Linux", ua.getOs().toString());
+	}
 }
