@@ -1,13 +1,19 @@
 package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 /**
  * 属性拷贝选项<br>
@@ -156,6 +162,33 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions setIgnoreProperties(String... ignoreProperties) {
 		return setPropertiesFilter((field, o) -> false == ArrayUtil.contains(ignoreProperties, field.getName()));
+	}
+
+	/**
+	 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值，Lambda方式
+	 *
+	 * @param func1 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
+	 * @return CopyOptions
+	 */
+	public <P, R> CopyOptions setIgnoreProperties(Func1<P, R>... func1) {
+		List<String> ignoreProperties = Arrays.asList(func1)
+				.stream()
+				.map(t -> {
+					String name = LambdaUtil.getMethodName(t);
+					if (name.startsWith("is")) {
+						name = name.substring(2);
+					} else if (name.startsWith("get") || name.startsWith("set")) {
+						name = name.substring(3);
+					} else {
+						throw new RuntimeException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+					}
+					if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
+						name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
+					}
+					return name;
+				})
+				.collect(Collectors.toList());
+		return setPropertiesFilter((field, o) -> false == ignoreProperties.contains(field.getName()));
 	}
 
 	/**
