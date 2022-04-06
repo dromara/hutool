@@ -564,11 +564,13 @@ public class BeanUtilTest {
 
 	@Test
 	public void copyBeanPropertiesFunctionFilterTest() {
+		//https://gitee.com/dromara/hutool/pulls/590
 		Person o = new Person();
 		o.setName("asd");
 		o.setAge(123);
 		o.setOpenid("asd");
 
+		@SuppressWarnings("unchecked")
 		CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
 		Person n = new Person();
 		BeanUtil.copyProperties(o, n, copyOptions);

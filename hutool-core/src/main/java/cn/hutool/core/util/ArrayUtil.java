@@ -382,10 +382,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] replace(T[] buffer, int index, T... values) {
-		if(isEmpty(values)){
+		if (isEmpty(values)) {
 			return buffer;
 		}
-		if(isEmpty(buffer)){
+		if (isEmpty(buffer)) {
 			return values;
 		}
 		if (index < 0) {
@@ -1673,7 +1673,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 按照指定规则，将一种类型的数组元素提取后转换为List
+	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link List}
 	 *
 	 * @param array 被转换的数组
 	 * @param func  转换规则函数
@@ -1684,6 +1684,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T, R> List<R> map(T[] array, Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toList());
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link Set}
+	 *
+	 * @param array 被转换的数组
+	 * @param func  转换规则函数
+	 * @param <T>   原数组类型
+	 * @param <R>   目标数组类型
+	 * @return 转换后的数组
+	 * @since 5.8.0
+	 */
+	public static <T, R> Set<R> mapToSet(T[] array, Function<? super T, ? extends R> func) {
+		return Arrays.stream(array).map(func).collect(Collectors.toSet());
 	}
 
 	/**
