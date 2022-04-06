@@ -41,7 +41,7 @@ public class ConsoleTable {
 	 * @return ConsoleTable
 	 * @since 5.4.5
 	 */
-	public static ConsoleTable create(){
+	public static ConsoleTable create() {
 		return new ConsoleTable();
 	}
 
@@ -83,8 +83,8 @@ public class ConsoleTable {
 	private void fillColumns(List<String> l, String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			column = Convert.toSBC(column);
-			l.add(column);
+			String column2 = Convert.toSBC(column);
+			l.add(column2);
 			int width = column.length();
 			if (width > columnCharNumber.get(i)) {
 				columnCharNumber.set(i, width);
@@ -101,39 +101,49 @@ public class ConsoleTable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		fillBorder(sb);
-		fillRow(sb, headerList);
+		fillRows(sb, headerList);
 		fillBorder(sb);
-		fillRow(sb, bodyList);
+		fillRows(sb, bodyList);
 		fillBorder(sb);
 		return sb.toString();
 	}
 
 	/**
-	 * 填充表头或者表体信息
+	 * 填充表头或者表体信息（多行）
 	 *
-	 * @param sb 内容
+	 * @param sb   内容
 	 * @param list 表头列表或者表体列表
 	 */
-	private void fillRow(StringBuilder sb, List<List<String>> list) {
+	private void fillRows(StringBuilder sb, List<List<String>> list) {
 		for (List<String> row : list) {
-			for (int i = 0; i < row.size(); i++) {
-				if (i == 0) {
-					sb.append(COLUMN_LINE);
-				}
-				String value = row.get(i);
-				sb.append(SPACE);
-				sb.append(value);
-				sb.append(SPACE);
-				int length = value.length();
-				int maxLength = columnCharNumber.get(i);
-				if (maxLength > length) {
-					for (int j = 0; j < (maxLength - length); j++) {
-						sb.append(SPACE);
-					}
-				}
-				sb.append(COLUMN_LINE);
-			}
+			sb.append(COLUMN_LINE);
+			fillRow(sb, row);
 			sb.append(LF);
+		}
+	}
+
+	/**
+	 * 填充一行数据
+	 *
+	 * @param sb  内容
+	 * @param row 一行数据
+	 */
+	private void fillRow(StringBuilder sb, List<String> row) {
+		final int size = row.size();
+		String value;
+		for (int i = 0;i < size; i++) {
+			value = row.get(i);
+			sb.append(SPACE);
+			sb.append(value);
+			sb.append(SPACE);
+			int length = value.length();
+			int maxLength = columnCharNumber.get(i);
+			if (maxLength > length) {
+				for (int j = 0; j < (maxLength - length); j++) {
+					sb.append(SPACE);
+				}
+			}
+			sb.append(COLUMN_LINE);
 		}
 	}
 
@@ -156,18 +166,5 @@ public class ConsoleTable {
 	 */
 	public void print() {
 		Console.print(toString());
-	}
-
-	private String fixLength(String input){
-		int fixLength = 0;
-		final int length = input.length();
-		char c;
-		for (int i = 0; i < length; i++) {
-			c = input.charAt(i);
-			if (c < '\177') {
-				fixLength ++;
-			}
-		}
-		return input + StrUtil.repeat('#', fixLength);
 	}
 }
