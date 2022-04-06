@@ -10,6 +10,7 @@
 ### 🐣新特性
 * 【core   】     CopyOptions支持以Lambda方式设置忽略属性列表（pr#590@Gitee）
 * 【core   】     增加中文姓名正则及其校验（pr#592@Gitee）
+* 【core   】     Snowflake支持sequence使用随机数（issue#I51EJY@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复UserAgentUtil识别Linux出错（issue#I50YGY@Gitee）
