@@ -145,7 +145,7 @@ public class ConsoleTable {
 	private void fillBorder(StringBuilder sb) {
 		sb.append(CORNER);
 		for (Integer width : columnCharNumber) {
-			sb.append(Convert.toSBC(StrUtil.fillAfter("", ROW_LINE, width + 2)));
+			sb.append(StrUtil.repeat(ROW_LINE, width + 2));
 			sb.append(CORNER);
 		}
 		sb.append(LF);
@@ -158,4 +158,16 @@ public class ConsoleTable {
 		Console.print(toString());
 	}
 
+	private String fixLength(String input){
+		int fixLength = 0;
+		final int length = input.length();
+		char c;
+		for (int i = 0; i < length; i++) {
+			c = input.charAt(i);
+			if (c < '\177') {
+				fixLength ++;
+			}
+		}
+		return input + StrUtil.repeat('#', fixLength);
+	}
 }
