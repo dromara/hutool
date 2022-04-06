@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -610,5 +611,22 @@ public class StrUtilTest {
 	public void isNumericTest() {
 		String a = "2142342422423423";
 		Assert.assertTrue(StrUtil.isNumeric(a));
+	}
+
+	@Test
+	public void extractWrapStrTest() {
+		String content = "{A}{B}{C}{D}";
+		List<String> list = StrUtil.extractWrapStr(content, "{", "}");
+		List<String> asList = Arrays.asList("A", "B", "C", "D");
+		for (int i = 0; i < asList.size(); i++) {
+			Assert.assertEquals(list.get(i), asList.get(i));
+		}
+
+		String content2 = "{}{}{}{}";
+		List<String> list2 = StrUtil.extractWrapStr(content2, "{", "}");
+		List<String> asList2 = Arrays.asList("", "", "", "");
+		for (int i = 0; i < asList2.size(); i++) {
+			Assert.assertEquals(list2.get(i), asList2.get(i));
+		}
 	}
 }

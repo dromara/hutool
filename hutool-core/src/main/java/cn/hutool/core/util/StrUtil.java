@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -10,7 +12,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 字符串工具类
@@ -467,5 +471,52 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
+	}
+
+	/**
+	 * 在文本中提取被包装的字符串
+	 *
+	 * @param text   被提取的文本
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 提取字符串列表
+	 */
+	public static List<String> extractWrapStr(String text, String prefix, String suffix) {
+		List<String> list = CollUtil.newArrayList();
+		extractWrapStr(text, prefix, suffix, list::add);
+
+		return list;
+	}
+
+	/**
+	 * 在文本中提取被包装的字符串
+	 * 并将被提取到的字符串进行消费
+	 * 提取字符串中包含空字符以及重复字符串，这里暂时不做处理
+	 *
+	 * @param text     被提取的文本
+	 * @param prefix   前缀
+	 * @param suffix   后缀
+	 * @param consumer 提取字符串消费者
+	 */
+	public static void extractWrapStr(String text, String prefix, String suffix, Consumer<String> consumer) {
+		Assert.notEmpty(text, "text to check must be not empty!");
+		Assert.notEmpty(prefix, "prefix to check must be not empty!");
+		Assert.notEmpty(suffix, "suffix to check must be not empty!");
+		// 去除一些特殊的情况
+		if (text.length() <= prefix.length()
+				|| text.length() <= suffix.length()
+				|| text.length() < prefix.length() + suffix.length()) {
+			return;
+		}
+		int formIndex = 0;
+		int prefixIndex = text.indexOf(prefix, formIndex);
+		int suffixIndex = text.indexOf(suffix, prefixIndex);
+		while (prefixIndex != -1 && suffixIndex > prefixIndex) {
+			consumer.accept(text.substring(prefixIndex + prefix.length(), suffixIndex));
+
+			formIndex = suffixIndex + suffix.length();
+			prefixIndex = text.indexOf(prefix, formIndex);
+			suffixIndex = text.indexOf(suffix, prefixIndex);
+		}
 	}
 }
