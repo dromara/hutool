@@ -877,4 +877,8 @@ public class ExcelWriteTest {
 		writer.close();
 	}
 
+	@Test
+	public void getDispositionTest(){
+		
+	}
 }
