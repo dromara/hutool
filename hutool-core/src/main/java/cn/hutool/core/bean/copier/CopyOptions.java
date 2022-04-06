@@ -164,6 +164,8 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值，Lambda方式
 	 *
+	 * @param <P> 参数类型
+	 * @param <R> 返回值类型
 	 * @param funcs 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 * @return CopyOptions
 	 * @since 5.8.0
