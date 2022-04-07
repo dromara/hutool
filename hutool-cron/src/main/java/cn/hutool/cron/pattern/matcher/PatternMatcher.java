@@ -103,14 +103,19 @@ public class PatternMatcher {
 	//region nextMatchAfter
 
 	/**
-	 * 获取下一个匹配日期时间
+	 * 获取下一个匹配日期时间<br>
+	 * 获取方法是，先从年开始查找对应部分的下一个值：
+	 * <ul>
+	 *     <li>如果此部分下个值不变，获取下一个部分</li>
+	 *     <li>如果此部分下个值大于给定值，以下所有值置为最小值</li>
+	 *     <li>如果此部分下个值小于给定值，回退到上一个值获取下一个新值，之后的值置为最小值</li>
+	 * </ul>
 	 *
 	 * @param values 时间字段值
 	 * @param zone   时区
 	 * @return {@link Calendar}
 	 */
 	public Calendar nextMatchAfter(int[] values, TimeZone zone) {
-
 		Calendar calendar = Calendar.getInstance(zone);
 
 		int i = Part.YEAR.ordinal();
@@ -134,10 +139,10 @@ public class PatternMatcher {
 		}
 
 		// 值产生回退，向上查找变更值
-		if(-1 == nextValue){
-			while(i <= Part.YEAR.ordinal()){
+		if (-1 == nextValue) {
+			while (i <= Part.YEAR.ordinal()) {
 				nextValue = matchers[i].nextAfter(values[i] + 1);
-				if(nextValue > values[i]){
+				if (nextValue > values[i]) {
 					setValue(calendar, Part.of(i), nextValue);
 					i--;
 					break;
@@ -190,14 +195,19 @@ public class PatternMatcher {
 	//endregion
 
 	/**
-	 * 设置对应部分修正后的值
+	 * 设置对应部分修正后的值<br>
+	 * <ul>
+	 *     <li>月在表达式中从1开始，但是{@link Calendar}中是从0开始的，需要-1</li>
+	 *     <li>周在表达式中从0开始（0表示周日），但是{@link Calendar}中是从1开始的（1表示周日），需要+1</li>
+	 * </ul>
+	 *
 	 * @param calendar {@link Calendar}
-	 * @param part 表达式部分
-	 * @param value 值
+	 * @param part     表达式部分
+	 * @param value    值
 	 * @return {@link Calendar}
 	 */
-	private Calendar setValue(Calendar calendar, Part part, int value){
-		switch (part){
+	private Calendar setValue(Calendar calendar, Part part, int value) {
+		switch (part) {
 			case MONTH:
 				value -= 1;
 				break;
