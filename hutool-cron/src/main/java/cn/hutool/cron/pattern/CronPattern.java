@@ -1,20 +1,8 @@
 package cn.hutool.cron.pattern;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.cron.CronException;
-import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
-import cn.hutool.cron.pattern.matcher.DayOfMonthValueMatcher;
-import cn.hutool.cron.pattern.matcher.ValueMatcher;
-import cn.hutool.cron.pattern.matcher.ValueMatcherBuilder;
-import cn.hutool.cron.pattern.parser.DayOfMonthValueParser;
-import cn.hutool.cron.pattern.parser.DayOfWeekValueParser;
-import cn.hutool.cron.pattern.parser.HourValueParser;
-import cn.hutool.cron.pattern.parser.MinuteValueParser;
-import cn.hutool.cron.pattern.parser.MonthValueParser;
-import cn.hutool.cron.pattern.parser.SecondValueParser;
-import cn.hutool.cron.pattern.parser.ValueParser;
-import cn.hutool.cron.pattern.parser.YearValueParser;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.cron.pattern.matcher.PatternMatcher;
+import cn.hutool.cron.pattern.parser.PatternParser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,22 +20,22 @@ import java.util.TimeZone;
  * <li><strong>月</strong> ：范围：1~12，同时支持不区分大小写的别名："jan","feb", "mar", "apr", "may","jun", "jul", "aug", "sep","oct", "nov", "dec"</li>
  * <li><strong>周</strong> ：范围：0 (Sunday)~6(Saturday)，7也可以表示周日，同时支持不区分大小写的别名："sun","mon", "tue", "wed", "thu","fri", "sat"，<strong>"L"</strong> 表示周六</li>
  * </ol>
- *
+ * <p>
  * 为了兼容Quartz表达式，同时支持6位和7位表达式，其中：<br>
  *
  * <pre>
  * 当为6位时，第一位表示<strong>秒</strong> ，范围0~59，但是第一位不做匹配
  * 当为7位时，最后一位表示<strong>年</strong> ，范围1970~2099，但是第7位不做解析，也不做匹配
  * </pre>
- *
+ * <p>
  * 当定时任务运行到的时间匹配这些表达式后，任务被启动。<br>
  * 注意：
  *
  * <pre>
- * 当isMatchSecond为<code>true</code>时才会匹配秒部分
+ * 当isMatchSecond为{@code true}时才会匹配秒部分
  * 默认都是关闭的
  * </pre>
- *
+ * <p>
  * 对于每一个子表达式，同样支持以下形式：
  * <ul>
  * <li><strong>*</strong> ：表示匹配这个位置所有的时间</li>
@@ -62,10 +50,10 @@ import java.util.TimeZone;
  * <pre>
  * 间隔（/） &gt; 区间（-） &gt; 列表（,）
  * </pre>
- *
+ * <p>
  * 例如 2,3,6/3中，由于“/”优先级高，因此相当于2,3,(6/3)，结果与 2,3,6等价<br>
  * <br>
- *
+ * <p>
  * 一些例子：
  * <ul>
  * <li><strong>5 * * * *</strong> ：每个点钟的5分执行，00:05,01:05……</li>
@@ -77,36 +65,22 @@ import java.util.TimeZone;
  * </ul>
  *
  * @author Looly
- *
  */
 public class CronPattern {
 
-	private static final ValueParser SECOND_VALUE_PARSER = new SecondValueParser();
-	private static final ValueParser MINUTE_VALUE_PARSER = new MinuteValueParser();
-	private static final ValueParser HOUR_VALUE_PARSER = new HourValueParser();
-	private static final ValueParser DAY_OF_MONTH_VALUE_PARSER = new DayOfMonthValueParser();
-	private static final ValueParser MONTH_VALUE_PARSER = new MonthValueParser();
-	private static final ValueParser DAY_OF_WEEK_VALUE_PARSER = new DayOfWeekValueParser();
-	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
-
 	private final String pattern;
+	private final List<PatternMatcher> matchers;
 
-	/** 秒字段匹配列表 */
-	private final List<ValueMatcher> secondMatchers = new ArrayList<>();
-	/** 分字段匹配列表 */
-	private final List<ValueMatcher> minuteMatchers = new ArrayList<>();
-	/** 时字段匹配列表 */
-	private final List<ValueMatcher> hourMatchers = new ArrayList<>();
-	/** 每月几号字段匹配列表 */
-	private final List<ValueMatcher> dayOfMonthMatchers = new ArrayList<>();
-	/** 月字段匹配列表 */
-	private final List<ValueMatcher> monthMatchers = new ArrayList<>();
-	/** 星期字段匹配列表 */
-	private final List<ValueMatcher> dayOfWeekMatchers = new ArrayList<>();
-	/** 年字段匹配列表 */
-	private final List<ValueMatcher> yearMatchers = new ArrayList<>();
-	/** 匹配器个数，取决于复合任务表达式中的单一表达式个数 */
-	private int matcherSize;
+	/**
+	 * 解析表达式为 CronPattern
+	 *
+	 * @param pattern 表达式
+	 * @return CronPattern
+	 * @since 5.8.0
+	 */
+	public static CronPattern of(String pattern) {
+		return new CronPattern(pattern);
+	}
 
 	/**
 	 * 构造
@@ -115,16 +89,15 @@ public class CronPattern {
 	 */
 	public CronPattern(String pattern) {
 		this.pattern = pattern;
-		parseGroupPattern(pattern);
+		this.matchers = PatternParser.parse(pattern);
 	}
 
-	// --------------------------------------------------------------------------------------- match start
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param millis 时间毫秒数
+	 * @param millis        时间毫秒数
 	 * @param isMatchSecond 是否匹配秒
-	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
 	public boolean match(long millis, boolean isMatchSecond) {
 		return match(TimeZone.getDefault(), millis, isMatchSecond);
@@ -133,10 +106,10 @@ public class CronPattern {
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param timezone 时区 {@link TimeZone}
-	 * @param millis 时间毫秒数
+	 * @param timezone      时区 {@link TimeZone}
+	 * @param millis        时间毫秒数
 	 * @param isMatchSecond 是否匹配秒
-	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
 	public boolean match(TimeZone timezone, long millis, boolean isMatchSecond) {
 		final GregorianCalendar calendar = new GregorianCalendar(timezone);
@@ -147,148 +120,85 @@ public class CronPattern {
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param calendar 时间
+	 * @param calendar      时间
 	 * @param isMatchSecond 是否匹配秒
-	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(GregorianCalendar calendar, boolean isMatchSecond) {
-		final int second = calendar.get(Calendar.SECOND);
-		final int minute = calendar.get(Calendar.MINUTE);
-		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
-		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
-		final int year = calendar.get(Calendar.YEAR);
-
-		boolean eval;
-		for (int i = 0; i < matcherSize; i++) {
-			eval = ((false == isMatchSecond) || secondMatchers.get(i).match(second)) // 匹配秒（非秒匹配模式下始终返回true）
-					&& minuteMatchers.get(i).match(minute)// 匹配分
-					&& hourMatchers.get(i).match(hour)// 匹配时
-					&& isMatchDayOfMonth(dayOfMonthMatchers.get(i), dayOfMonth, month, calendar.isLeapYear(year))// 匹配日
-					&& monthMatchers.get(i).match(month) // 匹配月
-					&& dayOfWeekMatchers.get(i).match(dayOfWeek)// 匹配周
-					&& isMatch(yearMatchers, i, year);// 匹配年
-			if (eval) {
-				return true;
-			}
-		}
-		return false;
+	public boolean match(Calendar calendar, boolean isMatchSecond) {
+		final int[] fields = getFields(calendar, isMatchSecond);
+		return match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]);
 	}
-	// --------------------------------------------------------------------------------------- match end
+
+	/**
+	 * 返回匹配到的下一个时间<br>
+	 * TODO 周定义后，结果错误，需改进
+	 *
+	 * @param calendar 时间
+	 * @return 匹配到的下一个时间
+	 */
+	public Calendar nextMatchAfter(Calendar calendar) {
+		return nextMatchAfter(getFields(calendar, true), calendar.getTimeZone());
+	}
 
 	@Override
 	public String toString() {
 		return this.pattern;
 	}
 
-	// -------------------------------------------------------------------------------------- Private method start
 	/**
-	 * 是否匹配日（指定月份的第几天）
+	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param matcher {@link ValueMatcher}
-	 * @param dayOfMonth 日
-	 * @param month 月
-	 * @param isLeapYear 是否闰年
-	 * @return 是否匹配
+	 * @param second     秒数，-1表示不匹配此项
+	 * @param minute     分钟
+	 * @param hour       小时
+	 * @param dayOfMonth 天
+	 * @param month      月，从1开始
+	 * @param dayOfWeek  周，从0开始，0和7都表示周日
+	 * @param year       年
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	private static boolean isMatchDayOfMonth(ValueMatcher matcher, int dayOfMonth, int month, boolean isLeapYear) {
-		return ((matcher instanceof DayOfMonthValueMatcher) //
-				? ((DayOfMonthValueMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
-				: matcher.match(dayOfMonth));
-	}
-
-	/**
-	 * 是否匹配指定的日期时间位置
-	 *
-	 * @param matchers 匹配器列表
-	 * @param index 位置
-	 * @param value 被匹配的值
-	 * @return 是否匹配
-	 * @since 4.0.2
-	 */
-	private static boolean isMatch(List<ValueMatcher> matchers, int index, int value) {
-		return (matchers.size() <= index) || matchers.get(index).match(value);
-	}
-
-	/**
-	 * 解析复合任务表达式
-	 *
-	 * @param groupPattern 复合表达式
-	 */
-	private void parseGroupPattern(String groupPattern) {
-		List<String> patternList = StrUtil.split(groupPattern, '|');
-		for (String pattern : patternList) {
-			parseSinglePattern(pattern);
-		}
-	}
-
-	/**
-	 * 解析单一定时任务表达式
-	 *
-	 * @param pattern 表达式
-	 */
-	private void parseSinglePattern(String pattern) {
-		final String[] parts = pattern.split("\\s");
-
-		int offset = 0;// 偏移量用于兼容Quartz表达式，当表达式有6或7项时，第一项为秒
-		if (parts.length == 6 || parts.length == 7) {
-			offset = 1;
-		} else if (parts.length != 5) {
-			throw new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern);
-		}
-
-		// 秒
-		if (1 == offset) {// 支持秒的表达式
-			try {
-				this.secondMatchers.add(ValueMatcherBuilder.build(parts[0], SECOND_VALUE_PARSER));
-			} catch (Exception e) {
-				throw new CronException(e, "Invalid pattern [{}], parsing 'second' field error!", pattern);
+	private boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+		for (PatternMatcher matcher : matchers) {
+			if (matcher.match(second, minute, hour, dayOfMonth, month, dayOfWeek, year)) {
+				return true;
 			}
-		} else {// 不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
-			this.secondMatchers.add(ValueMatcherBuilder.build(String.valueOf(DateUtil.date().second()), SECOND_VALUE_PARSER));
 		}
-		// 分
-		try {
-			this.minuteMatchers.add(ValueMatcherBuilder.build(parts[offset], MINUTE_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'minute' field error!", pattern);
-		}
-		// 小时
-		try {
-			this.hourMatchers.add(ValueMatcherBuilder.build(parts[1 + offset], HOUR_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'hour' field error!", pattern);
-		}
-		// 每月第几天
-		try {
-			this.dayOfMonthMatchers.add(ValueMatcherBuilder.build(parts[2 + offset], DAY_OF_MONTH_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of month' field error!", pattern);
-		}
-		// 月
-		try {
-			this.monthMatchers.add(ValueMatcherBuilder.build(parts[3 + offset], MONTH_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'month' field error!", pattern);
-		}
-		// 星期几
-		try {
-			this.dayOfWeekMatchers.add(ValueMatcherBuilder.build(parts[4 + offset], DAY_OF_WEEK_VALUE_PARSER));
-		} catch (Exception e) {
-			throw new CronException(e, "Invalid pattern [{}], parsing 'day of week' field error!", pattern);
-		}
-		// 年
-		if (parts.length == 7) {// 支持年的表达式
-			try {
-				this.yearMatchers.add(ValueMatcherBuilder.build(parts[6], YEAR_VALUE_PARSER));
-			} catch (Exception e) {
-				throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
-			}
-		} else {// 不支持年的表达式，全部匹配
-			this.yearMatchers.add(new AlwaysTrueValueMatcher());
-		}
-		matcherSize++;
+		return false;
 	}
-	// -------------------------------------------------------------------------------------- Private method end
+
+	/**
+	 * 获取下一个最近的匹配日期时间
+	 *
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @param zone   时区
+	 * @return {@link Calendar}，毫秒数为0
+	 */
+	private Calendar nextMatchAfter(int[] values, TimeZone zone) {
+		final List<Calendar> nextMatches = new ArrayList<>(matchers.size());
+		for (PatternMatcher matcher : matchers) {
+			nextMatches.add(matcher.nextMatchAfter(values, zone));
+		}
+		// 返回匹配到的最早日期
+		return CollUtil.min(nextMatches);
+	}
+
+	/**
+	 * 获取处理后的字段列表<br>
+	 * 月份从1开始，周从0开始
+	 *
+	 * @param calendar      {@link Calendar}
+	 * @param isMatchSecond 是否匹配秒，{@link false}则秒返回-1
+	 * @return 字段值列表
+	 * @since 5.8.0
+	 */
+	private int[] getFields(Calendar calendar, boolean isMatchSecond) {
+		final int second = isMatchSecond ? calendar.get(Calendar.SECOND) : -1;
+		final int minute = calendar.get(Calendar.MINUTE);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
+		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
+		final int year = calendar.get(Calendar.YEAR);
+		return new int[]{second, minute, hour, dayOfMonth, month, dayOfWeek, year};
+	}
 }

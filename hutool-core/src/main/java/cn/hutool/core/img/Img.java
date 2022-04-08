@@ -253,22 +253,29 @@ public class Img implements Serializable {
 	 * @return this
 	 */
 	public Img scale(int width, int height) {
+		return scale(width, height, Image.SCALE_SMOOTH);
+	}
+
+	/**
+	 * 缩放图像（按长宽缩放）<br>
+	 * 注意：目标长宽与原图不成比例会变形
+	 *
+	 * @param width  目标宽度
+	 * @param height 目标高度
+	 * @param scaleType 缩放类型，可选{@link Image#SCALE_SMOOTH}平滑模式或{@link Image#SCALE_DEFAULT}默认模式
+	 * @return this
+	 * @since 5.7.18
+	 */
+	public Img scale(int width, int height, int scaleType) {
 		final Image srcImg = getValidSrcImg();
 
 		int srcHeight = srcImg.getHeight(null);
 		int srcWidth = srcImg.getWidth(null);
-		int scaleType;
 		if (srcHeight == height && srcWidth == width) {
 			// 源与目标长宽一致返回原图
 			this.targetImage = srcImg;
 			return this;
-		} else if (srcHeight < height || srcWidth < width) {
-			// 放大图片使用平滑模式
-			scaleType = Image.SCALE_SMOOTH;
-		} else {
-			scaleType = Image.SCALE_DEFAULT;
 		}
-
 
 		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
 			// png特殊处理，借助AffineTransform可以实现透明度保留
@@ -289,7 +296,7 @@ public class Img implements Serializable {
 	 *
 	 * @param width      缩放后的宽度
 	 * @param height     缩放后的高度
-	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
 	 * @return this
 	 */
 	public Img scale(int width, int height, Color fixedColor) {

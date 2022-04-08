@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
@@ -777,11 +778,10 @@ public class Convert {
 				continue;
 			}
 
-			if (c[i] == ' ') {
+			if (c[i] == CharUtil.SPACE) {
 				c[i] = '\u3000';
 			} else if (c[i] < '\177') {
 				c[i] = (char) (c[i] + 65248);
-
 			}
 		}
 		return new String(c);

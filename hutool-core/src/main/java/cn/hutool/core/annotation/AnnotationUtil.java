@@ -42,7 +42,7 @@ public class AnnotationUtil {
 	/**
 	 * 获取指定注解
 	 *
-	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param isToCombination 是否为转换为组合注解
 	 * @return 注解对象
 	 */
@@ -205,14 +205,29 @@ public class AnnotationUtil {
 	/**
 	 * 设置新的注解的属性（字段）值
 	 *
-	 * @param annotation 注解对象
+	 * @param annotation      注解对象
 	 * @param annotationField 注解属性（字段）名称
-	 * @param value 要更新的属性值
+	 * @param value           要更新的属性值
 	 * @since 5.5.2
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static void setValue(Annotation annotation, String annotationField, Object value) {
 		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
 		memberValues.put(annotationField, value);
+	}
+
+	/**
+	 * 获取别名支持后的注解
+	 *
+	 * @param annotationEle  被注解的类
+	 * @param annotationType 注解类型Class
+	 * @param <T>            注解类型
+	 * @return 别名支持后的注解
+	 * @since 5.7.23
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
+		final T annotation = getAnnotation(annotationEle, annotationType);
+		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
 	}
 }

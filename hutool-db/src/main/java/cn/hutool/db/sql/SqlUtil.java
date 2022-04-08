@@ -85,17 +85,17 @@ public class SqlUtil {
 	 * 创建LIKE语句中的值，创建的结果为：
 	 *
 	 * <pre>
-	 * 1、LikeType.StartWith: %value
-	 * 2、LikeType.EndWith: value%
-	 * 3、LikeType.Contains: %value%
+	 * 1、LikeType.StartWith: '%value'
+	 * 2、LikeType.EndWith: 'value%'
+	 * 3、LikeType.Contains: '%value%'
 	 * </pre>
 	 * <p>
 	 * 如果withLikeKeyword为true，则结果为：
 	 *
 	 * <pre>
-	 * 1、LikeType.StartWith: LIKE %value
-	 * 2、LikeType.EndWith: LIKE value%
-	 * 3、LikeType.Contains: LIKE %value%
+	 * 1、LikeType.StartWith: LIKE '%value'
+	 * 2、LikeType.EndWith: LIKE 'value%'
+	 * 3、LikeType.Contains: LIKE '%value%'
 	 * </pre>
 	 *
 	 * @param value           被查找值

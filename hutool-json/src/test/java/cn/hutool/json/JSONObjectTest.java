@@ -10,6 +10,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.ResultDto;
@@ -67,7 +68,7 @@ public class JSONObjectTest {
 	@Test
 	public void toStringTest3() {
 		JSONObject json = Objects.requireNonNull(JSONUtil.createObj()//
-				.set("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
+						.set("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
@@ -86,14 +87,14 @@ public class JSONObjectTest {
 	@Test
 	public void putAllTest() {
 		JSONObject json1 = JSONUtil.createObj()
-		.set("a", "value1")
-		.set("b", "value2")
-		.set("c", "value3")
-		.set("d", true);
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
 
 		JSONObject json2 = JSONUtil.createObj()
-		.set("a", "value21")
-		.set("b", "value22");
+				.set("a", "value21")
+				.set("b", "value22");
 
 		// putAll操作会覆盖相同key的值，因此a,b两个key的值改变，c的值不变
 		json1.putAll(json2);
@@ -187,10 +188,11 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.createObj()//
 				.set("strValue", "null")//
 				.set("intValue", 123)//
+				// 子对象对应"null"字符串，如果忽略错误，跳过，否则抛出转换异常
 				.set("beanValue", "null")//
 				.set("list", JSONUtil.createArray().set("a").set("b"));
 
-		TestBean bean = json.toBean(TestBean.class);
+		TestBean bean = json.toBean(TestBean.class, true);
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
@@ -287,7 +289,7 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 		userA.setSqs(CollectionUtil.newArrayList(new Seq(null), new Seq("seq2")));
 
-		JSONObject json = JSONUtil.parseObj(userA, false, true);
+		JSONObject json = JSONUtil.parseObj(userA, false);
 
 		Assert.assertTrue(json.containsKey("a"));
 		Assert.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
@@ -399,7 +401,7 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void aliasTest(){
+	public void aliasTest() {
 		final BeanWithAlias beanWithAlias = new BeanWithAlias();
 		beanWithAlias.setValue1("张三");
 		beanWithAlias.setValue2(35);
@@ -417,10 +419,9 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void setDateFormatTest(){
+	public void setDateFormatTest() {
 		JSONConfig jsonConfig = JSONConfig.create();
 		jsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
-		jsonConfig.setOrder(true);
 
 		JSONObject json = new JSONObject(jsonConfig);
 		json.append("date", DateUtil.parse("2020-06-05 11:16:11"));
@@ -430,10 +431,9 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void setDateFormatTest2(){
+	public void setDateFormatTest2() {
 		JSONConfig jsonConfig = JSONConfig.create();
 		jsonConfig.setDateFormat("yyyy#MM#dd");
-		jsonConfig.setOrder(true);
 
 		Date date = DateUtil.parse("2020-06-05 11:16:11");
 		JSONObject json = new JSONObject(jsonConfig);
@@ -451,10 +451,9 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void setCustomDateFormatTest(){
+	public void setCustomDateFormatTest() {
 		JSONConfig jsonConfig = JSONConfig.create();
 		jsonConfig.setDateFormat("#sss");
-		jsonConfig.setOrder(true);
 
 		Date date = DateUtil.parse("2020-06-05 11:16:11");
 		JSONObject json = new JSONObject(jsonConfig);
@@ -472,7 +471,7 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void getTimestampTest(){
+	public void getTimestampTest() {
 		String timeStr = "1970-01-01 00:00:00";
 		final JSONObject jsonObject = JSONUtil.createObj().set("time", timeStr);
 		final Timestamp time = jsonObject.get("time", Timestamp.class);
@@ -518,7 +517,7 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void parseBeanSameNameTest(){
+	public void parseBeanSameNameTest() {
 		final SameNameBean sameNameBean = new SameNameBean();
 		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
 		Assert.assertEquals("123", parse.getStr("username"));
@@ -537,9 +536,11 @@ public class JSONObjectTest {
 	public static class SameNameBean {
 		private final String username = "123";
 		private final String userName = "abc";
+
 		public String getUsername() {
 			return username;
 		}
+
 		@PropIgnore
 		private final String fieldToIgnore = "sfdsdads";
 
@@ -547,13 +548,13 @@ public class JSONObjectTest {
 			return userName;
 		}
 
-		public String getFieldToIgnore(){
+		public String getFieldToIgnore() {
 			return this.fieldToIgnore;
 		}
 	}
 
 	@Test
-	public void setEntryTest(){
+	public void setEntryTest() {
 		final HashMap<String, String> of = MapUtil.of("test", "testValue");
 		final Set<Map.Entry<String, String>> entries = of.entrySet();
 		final Map.Entry<String, String> next = entries.iterator().next();
@@ -563,13 +564,13 @@ public class JSONObjectTest {
 	}
 
 	@Test(expected = JSONException.class)
-	public void createJSONObjectTest(){
+	public void createJSONObjectTest() {
 		// 集合类不支持转为JSONObject
 		new JSONObject(new JSONArray(), JSONConfig.create());
 	}
 
 	@Test
-	public void floatTest(){
+	public void floatTest() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("c", 2.0F);
 
@@ -578,7 +579,7 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void accumulateTest(){
+	public void accumulateTest() {
 		final JSONObject jsonObject = JSONUtil.createObj().accumulate("key1", "value1");
 		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
 
@@ -587,5 +588,98 @@ public class JSONObjectTest {
 
 		jsonObject.accumulate("key1", "value3");
 		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
+	}
+
+	@Test
+	public void putByPathTest() {
+		JSONObject json = new JSONObject();
+		json.putByPath("aa.bb", "BB");
+		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
+	}
+
+
+	@Test
+	public void bigDecimalTest() {
+		String jsonStr = "{\"orderId\":\"1704747698891333662002277\"}";
+		BigDecimalBean bigDecimalBean = JSONUtil.toBean(jsonStr, BigDecimalBean.class);
+		Assert.assertEquals("{\"orderId\":1704747698891333662002277}", JSONUtil.toJsonStr(bigDecimalBean));
+	}
+
+	@Data
+	static
+	class BigDecimalBean {
+		private BigDecimal orderId;
+	}
+
+	@Test
+	public void filterIncludeTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> pair.getKey().equals("b"));
+		Assert.assertEquals("{\"b\":\"value2\"}", s);
+	}
+
+	@Test
+	public void filterExcludeTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> false == pair.getKey().equals("b"));
+		Assert.assertEquals("{\"a\":\"value1\",\"c\":\"value3\",\"d\":true}", s);
+	}
+
+	@Test
+	public void editTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+				.set("a", "value1")
+				.set("b", "value2")
+				.set("c", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> {
+			if ("b".equals(pair.getKey())) {
+				// 修改值为新值
+				pair.setValue(pair.getValue() + "_edit");
+				return true;
+			}
+			// 除了"b"，其他都去掉
+			return false;
+		});
+		Assert.assertEquals("{\"b\":\"value2_edit\"}", s);
+	}
+
+	@Test
+	public void toUnderLineCaseTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+				.set("aKey", "value1")
+				.set("bJob", "value2")
+				.set("cGood", "value3")
+				.set("d", true);
+
+		final String s = json1.toJSONString(0, (pair) -> {
+			pair.setKey(StrUtil.toUnderlineCase(pair.getKey()));
+			return true;
+		});
+		Assert.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);
+	}
+
+	@Test
+	public void nullToEmptyTest() {
+		JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setIgnoreNullValue(false))
+				.set("a", null)
+				.set("b", "value2");
+
+		final String s = json1.toJSONString(0, (pair) -> {
+			pair.setValue(ObjectUtil.defaultIfNull(pair.getValue(), StrUtil.EMPTY));
+			return true;
+		});
+		Assert.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);
 	}
 }

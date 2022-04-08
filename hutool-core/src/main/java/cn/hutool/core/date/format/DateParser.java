@@ -33,8 +33,8 @@ public interface DateParser extends DateBasic{
 	Date parse(String source, ParsePosition pos);
 
 	/**
-	 * 根据给定格式转换日期字符串
-	 * Updates the Calendar with parsed fields. Upon success, the ParsePosition index is updated to indicate how much of the source text was consumed.
+	 * 根据给定格式更新{@link Calendar}
+	 * Upon success, the ParsePosition index is updated to indicate how much of the source text was consumed.
 	 * Not all source text needs to be consumed.
 	 * Upon parse failure, ParsePosition error index is updated to the offset of the source text which does not match the supplied format.
 	 *
@@ -49,20 +49,24 @@ public interface DateParser extends DateBasic{
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
 	 *
-	 * @param source A <code>String</code> whose beginning should be parsed.
-	 * @return a <code>java.util.Date</code> object
+	 * @param source A {@code String} whose beginning should be parsed.
+	 * @return a {@code java.util.Date} object
 	 * @throws ParseException if the beginning of the specified string cannot be parsed.
 	 * @see java.text.DateFormat#parseObject(String)
 	 */
-	Object parseObject(String source) throws ParseException;
+	default Object parseObject(String source) throws ParseException{
+		return parse(source);
+	}
 
 	/**
 	 * 根据 {@link ParsePosition} 给定将日期字符串解析并转换为  {@link Date} 对象<br>
 	 *
-	 * @param source A <code>String</code> whose beginning should be parsed.
+	 * @param source A {@code String} whose beginning should be parsed.
 	 * @param pos the parse position
-	 * @return a <code>java.util.Date</code> object
+	 * @return a {@code java.util.Date} object
 	 * @see java.text.DateFormat#parseObject(String, ParsePosition)
 	 */
-	Object parseObject(String source, ParsePosition pos);
+	default Object parseObject(String source, ParsePosition pos){
+		return parse(source, pos);
+	}
 }

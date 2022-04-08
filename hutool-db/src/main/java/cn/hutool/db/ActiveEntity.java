@@ -3,6 +3,7 @@ package cn.hutool.db;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.map.MapUtil;
 
 /**
@@ -137,7 +138,17 @@ public class ActiveEntity extends Entity {
 	public ActiveEntity setFieldNames(String... fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
-	
+
+	/**
+	 * 通过lambda批量设置值
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	@Override
+	public ActiveEntity setFields(Func0<?>... fields) {
+		return (ActiveEntity) super.setFields(fields);
+	}
+
 	@Override
 	public ActiveEntity addFieldNames(String... fieldNames) {
 		return (ActiveEntity) super.addFieldNames(fieldNames);

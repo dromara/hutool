@@ -2,13 +2,15 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.BeanCopier;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -18,14 +20,18 @@ import cn.hutool.json.serialize.JSONObjectSerializer;
 import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
+import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * JSON对象<br>
@@ -37,7 +43,7 @@ import java.util.Set;
  *
  * @author looly
  */
-public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object> {
+public class JSONObject extends MapWrapper<String, Object> implements JSON, JSONGetter<String> {
 	private static final long serialVersionUID = -330220388580734346L;
 
 	/**
@@ -46,13 +52,9 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	public static final int DEFAULT_CAPACITY = MapUtil.DEFAULT_INITIAL_CAPACITY;
 
 	/**
-	 * JSON的KV持有Map
-	 */
-	private final Map<String, Object> rawHashMap;
-	/**
 	 * 配置项
 	 */
-	private final JSONConfig config;
+	private JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
@@ -91,9 +93,12 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @param isIgnoreCase 是否忽略KEY大小写
 	 * @param isOrder      是否有序
 	 * @since 3.3.1
+	 * @deprecated isOrder无效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
-		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase).setOrder(isOrder));
+		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase));
 	}
 
 	/**
@@ -110,18 +115,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 构造
 	 *
 	 * @param capacity 初始大小
-	 * @param config   JSON配置项，null表示默认配置
+	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
-		if (null == config) {
-			config = JSONConfig.create();
-		}
-		if (config.isIgnoreCase()) {
-			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
-		} else {
-			this.rawHashMap = MapUtil.newHashMap(config.isOrder());
-		}
+		super(createRaw(capacity, config));
 		this.config = config;
 	}
 
@@ -155,7 +153,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(source, ignoreNullValue, InternalJSONUtil.isOrder(source));
+		this(source, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -171,11 +169,15 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
 	 * @param isOrder         是否有序
 	 * @since 4.2.2
+	 * @deprecated isOrder参数不再需要，JSONObject默认有序！
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
-		this(source, JSONConfig.create().setOrder(isOrder)//
+		this(source, JSONConfig.create()//
 				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
-				.setIgnoreNullValue(ignoreNullValue));
+				.setIgnoreNullValue(ignoreNullValue)
+		);
 	}
 
 	/**
@@ -192,7 +194,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 *
 	 * @param source JavaBean或者Map对象或者String
-	 * @param config JSON配置文件
+	 * @param config JSON配置文件，{@code null}则使用默认配置
 	 * @since 4.2.2
 	 */
 	public JSONObject(Object source, JSONConfig config) {
@@ -245,9 +247,12 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @param isOrder 是否有序
 	 * @throws JSONException JSON字符串语法错误
 	 * @since 4.2.2
+	 * @deprecated isOrder无效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
-		this(source, JSONConfig.create().setOrder(isOrder));
+		this(source, JSONConfig.create());
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
@@ -268,6 +273,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	public JSONObject setDateFormat(String format) {
 		this.config.setDateFormat(format);
 		return this;
+	}
+
+	@Override
+	public <T> T toBean(Type type) {
+		return JSON.super.toBean(type, this.config.isIgnoreError());
 	}
 
 	/**
@@ -293,34 +303,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	}
 
 	@Override
-	public int size() {
-		return rawHashMap.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return rawHashMap.isEmpty();
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		return rawHashMap.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		return rawHashMap.containsValue(value);
-	}
-
-	@Override
-	public Object get(Object key) {
-		return rawHashMap.get(key);
-	}
-
-	@Override
 	public Object getObj(String key, Object defaultValue) {
-		Object obj = this.rawHashMap.get(key);
-		return null == obj ? defaultValue : obj;
+		return this.getOrDefault(key, defaultValue);
 	}
 
 	@Override
@@ -372,7 +356,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			this.remove(key);
 		} else {
 			InternalJSONUtil.testValidity(value);
-			this.rawHashMap.put(key, JSONUtil.wrap(value, this.config));
+			super.put(key, JSONUtil.wrap(value, this.config));
 		}
 		return this;
 	}
@@ -387,7 +371,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null) {
-			if (rawHashMap.containsKey(key)) {
+			if (containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 			this.set(key, value);
@@ -489,58 +473,6 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		return this;
 	}
 
-	@Override
-	public Object remove(Object key) {
-		return rawHashMap.remove(key);
-	}
-
-	@Override
-	public void clear() {
-		rawHashMap.clear();
-	}
-
-	@Override
-	public Set<String> keySet() {
-		return this.rawHashMap.keySet();
-	}
-
-	@Override
-	public Collection<Object> values() {
-		return rawHashMap.values();
-	}
-
-	@Override
-	public Set<Entry<String, Object>> entrySet() {
-		return rawHashMap.entrySet();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((rawHashMap == null) ? 0 : rawHashMap.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final JSONObject other = (JSONObject) obj;
-		if (rawHashMap == null) {
-			return other.rawHashMap == null;
-		} else {
-			return rawHashMap.equals(other.rawHashMap);
-		}
-	}
-
 	/**
 	 * 返回JSON字符串<br>
 	 * 如果解析错误，返回{@code null}
@@ -552,29 +484,74 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		return this.toJSONString(0);
 	}
 
+	/**
+	 * 返回JSON字符串<br>
+	 * 支持过滤器，即选择哪些字段或值不写出
+	 *
+	 * @param indentFactor 每层缩进空格数
+	 * @param filter       过滤器，同时可以修改编辑键和值
+	 * @return JSON字符串
+	 * @since 5.7.15
+	 */
+	public String toJSONString(int indentFactor, Filter<MutablePair<String, Object>> filter) {
+		final StringWriter sw = new StringWriter();
+		synchronized (sw.getBuffer()) {
+			return this.write(sw, indentFactor, 0, filter).toString();
+		}
+	}
+
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+		return write(writer, indentFactor, indent, null);
+	}
+
+	/**
+	 * 将JSON内容写入Writer<br>
+	 * 支持过滤器，即选择哪些字段或值不写出
+	 *
+	 * @param writer       writer
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent       本级别缩进量
+	 * @param filter       过滤器，同时可以修改编辑键和值
+	 * @return Writer
+	 * @throws JSONException JSON相关异常
+	 * @since 5.7.15
+	 */
+	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<String, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
-		this.forEach(jsonWriter::writeField);
+		this.forEach((key, value) -> {
+			if (null != filter) {
+				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+				if (filter.accept(pair)) {
+					// 使用修改后的键值对
+					jsonWriter.writeField(pair.getKey(), pair.getValue());
+				}
+			} else {
+				jsonWriter.writeField(key, value);
+			}
+		});
 		jsonWriter.end();
-
+		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
 	}
 
+	@Override
+	public JSONObject clone() throws CloneNotSupportedException {
+		final JSONObject clone = (JSONObject) super.clone();
+		clone.config = this.config;
+		return clone;
+	}
+
 	// ------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * Bean对象转Map
 	 *
 	 * @param bean Bean对象
 	 */
 	private void populateMap(Object bean) {
-		BeanCopier.create(bean, this,
-				CopyOptions.create()
-						.setIgnoreCase(config.isIgnoreCase())
-						.setIgnoreError(true)
-						.setIgnoreNullValue(config.isIgnoreNullValue())
-		).copy();
+		BeanUtil.beanToMap(bean, this, InternalJSONUtil.toCopyOptions(config));
 	}
 
 	/**
@@ -630,7 +607,6 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 			// 不支持对象类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
-
 	}
 
 	/**
@@ -659,6 +635,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
 			XML.toJSONObject(this, jsonStr, false);
+			return;
 		}
 		init(new JSONTokener(StrUtil.trim(source), this.config));
 	}
@@ -711,6 +688,35 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 					throw x.syntaxError("Expected a ',' or '}'");
 			}
 		}
+	}
+
+	/**
+	 * 根据配置创建对应的原始Map
+	 *
+	 * @param capacity 初始大小
+	 * @param config   JSON配置项，{@code null}则使用默认配置
+	 * @return Map
+	 */
+	private static Map<String, Object> createRaw(int capacity, JSONConfig config) {
+		Map<String, Object> rawHashMap;
+		if (null == config) {
+			config = JSONConfig.create();
+		}
+		final Comparator<String> keyComparator = config.getKeyComparator();
+		if (config.isIgnoreCase()) {
+			if (null != keyComparator) {
+				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
+			} else {
+				rawHashMap = new CaseInsensitiveLinkedMap<>(capacity);
+			}
+		} else {
+			if (null != keyComparator) {
+				rawHashMap = new TreeMap<>(keyComparator);
+			} else {
+				rawHashMap = new LinkedHashMap<>(capacity);
+			}
+		}
+		return rawHashMap;
 	}
 	// ------------------------------------------------------------------------------------------------- Private method end
 }

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ConsoleTable {
 
-	private static final char ROW_LINE = '-';
+	private static final char ROW_LINE = '－';
 	private static final char COLUMN_LINE = '|';
 	private static final char CORNER = '+';
 	private static final char SPACE = '\u3000';
@@ -25,11 +25,11 @@ public class ConsoleTable {
 	/**
 	 * 表格头信息
 	 */
-	private final List<List<String>> HEADER_LIST = new ArrayList<>();
+	private final List<List<String>> headerList = new ArrayList<>();
 	/**
 	 * 表格体信息
 	 */
-	private final List<List<String>> BODY_LIST = new ArrayList<>();
+	private final List<List<String>> bodyList = new ArrayList<>();
 	/**
 	 * 每列最大字符个数
 	 */
@@ -41,7 +41,7 @@ public class ConsoleTable {
 	 * @return ConsoleTable
 	 * @since 5.4.5
 	 */
-	public static ConsoleTable create(){
+	public static ConsoleTable create() {
 		return new ConsoleTable();
 	}
 
@@ -57,7 +57,7 @@ public class ConsoleTable {
 		}
 		List<String> l = new ArrayList<>();
 		fillColumns(l, titles);
-		HEADER_LIST.add(l);
+		headerList.add(l);
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class ConsoleTable {
 	 */
 	public ConsoleTable addBody(String... values) {
 		List<String> l = new ArrayList<>();
-		BODY_LIST.add(l);
+		bodyList.add(l);
 		fillColumns(l, values);
 		return this;
 	}
@@ -83,9 +83,9 @@ public class ConsoleTable {
 	private void fillColumns(List<String> l, String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			String col = Convert.toSBC(column);
-			l.add(col);
-			int width = col.length();
+			String column2 = Convert.toSBC(column);
+			l.add(column2);
+			int width = column.length();
 			if (width > columnCharNumber.get(i)) {
 				columnCharNumber.set(i, width);
 			}
@@ -101,39 +101,49 @@ public class ConsoleTable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		fillBorder(sb);
-		fillRow(sb, HEADER_LIST);
+		fillRows(sb, headerList);
 		fillBorder(sb);
-		fillRow(sb, BODY_LIST);
+		fillRows(sb, bodyList);
 		fillBorder(sb);
 		return sb.toString();
 	}
 
 	/**
-	 * 填充表头或者表体信息
+	 * 填充表头或者表体信息（多行）
 	 *
-	 * @param sb 内容
+	 * @param sb   内容
 	 * @param list 表头列表或者表体列表
 	 */
-	private void fillRow(StringBuilder sb, List<List<String>> list) {
-		for (List<String> r : list) {
-			for (int i = 0; i < r.size(); i++) {
-				if (i == 0) {
-					sb.append(COLUMN_LINE);
-				}
-				String header = r.get(i);
-				sb.append(SPACE);
-				sb.append(header);
-				sb.append(SPACE);
-				int l = header.length();
-				int lw = columnCharNumber.get(i);
-				if (lw > l) {
-					for (int j = 0; j < (lw - l); j++) {
-						sb.append(SPACE);
-					}
-				}
-				sb.append(COLUMN_LINE);
-			}
+	private void fillRows(StringBuilder sb, List<List<String>> list) {
+		for (List<String> row : list) {
+			sb.append(COLUMN_LINE);
+			fillRow(sb, row);
 			sb.append(LF);
+		}
+	}
+
+	/**
+	 * 填充一行数据
+	 *
+	 * @param sb  内容
+	 * @param row 一行数据
+	 */
+	private void fillRow(StringBuilder sb, List<String> row) {
+		final int size = row.size();
+		String value;
+		for (int i = 0;i < size; i++) {
+			value = row.get(i);
+			sb.append(SPACE);
+			sb.append(value);
+			sb.append(SPACE);
+			int length = value.length();
+			int maxLength = columnCharNumber.get(i);
+			if (maxLength > length) {
+				for (int j = 0; j < (maxLength - length); j++) {
+					sb.append(SPACE);
+				}
+			}
+			sb.append(COLUMN_LINE);
 		}
 	}
 
@@ -145,7 +155,7 @@ public class ConsoleTable {
 	private void fillBorder(StringBuilder sb) {
 		sb.append(CORNER);
 		for (Integer width : columnCharNumber) {
-			sb.append(Convert.toSBC(StrUtil.fillAfter("", ROW_LINE, width + 2)));
+			sb.append(StrUtil.repeat(ROW_LINE, width + 2));
 			sb.append(CORNER);
 		}
 		sb.append(LF);
@@ -157,5 +167,4 @@ public class ConsoleTable {
 	public void print() {
 		Console.print(toString());
 	}
-
 }

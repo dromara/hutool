@@ -62,16 +62,16 @@ public class ExcelFileUtil {
 	 * 如果强转成PushbackInputStream在调用FileMagic.valueOf(inputStream)时会报错
 	 * {@link FileMagic}
 	 * 报错内容：getFileMagic() only operates on streams which support mark(int)
-	 * 此处修改成 final InputStream inputStream = FileMagic.prepareToCheckMagic(in)
+	 * 此处修改成 final InputStream in = FileMagic.prepareToCheckMagic(in)
 	 *
 	 * @param in {@link InputStream}
 	 * @author kefan.qu
 	 */
 	private static FileMagic getFileMagic(InputStream in) {
 		FileMagic magic;
-		final InputStream inputStream = FileMagic.prepareToCheckMagic(in);
+		in = FileMagic.prepareToCheckMagic(in);
 		try {
-			magic = FileMagic.valueOf(inputStream);
+			magic = FileMagic.valueOf(in);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

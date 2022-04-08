@@ -22,17 +22,15 @@ public interface Aspect {
 	boolean before(Object target, Method method, Object[] args);
 
 	/**
-	 * 目标方法执行后的操作
-	 * 如果 target.method 抛出异常且
+	 * 目标方法执行后的操作<br>
+	 * 如果 target.method 抛出异常且 {@link Aspect#afterException} 返回true,则不会执行此操作<br>
+	 * 如果 {@link Aspect#afterException} 返回false,则无论target.method是否抛出异常，均会执行此操作<br>
 	 *
 	 * @param target    目标对象
 	 * @param method    目标方法
 	 * @param args      参数
 	 * @param returnVal 目标方法执行返回值
 	 * @return 是否允许返回值（接下来的操作）
-	 * @see Aspect#afterException 返回true,则不会执行此操作
-	 * 如果
-	 * @see Aspect#afterException 返回false,则无论target.method是否抛出异常，均会执行此操作
 	 */
 	boolean after(Object target, Method method, Object[] args, Object returnVal);
 

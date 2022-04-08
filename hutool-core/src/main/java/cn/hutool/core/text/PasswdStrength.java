@@ -159,7 +159,7 @@ public class PasswdStrength {
 			}
 		}
 
-		if (StrUtil.isNumeric(passwd) && len >= 6) { // 19881010 or 881010
+		if (StrUtil.isNumeric(passwd) && len >= 6 && len <= 8) { // 19881010 or 881010
 			int year = 0;
 			if (len == 8 || len == 6) {
 				year = Integer.parseInt(passwd.substring(0, len - 4));

@@ -1,7 +1,10 @@
 package cn.hutool.json.test.bean;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class ResultDto<T> implements Serializable {
 	private static final long serialVersionUID = -1417999729205654379L;
 
@@ -127,29 +130,5 @@ public class ResultDto<T> implements Serializable {
 	 */
 	public boolean error() {
 		return !success();
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public void setCode(int code) {
-		this.code = code;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public T getResult() {
-		return result;
-	}
-
-	public void setResult(T result) {
-		this.result = result;
 	}
 }

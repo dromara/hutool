@@ -75,10 +75,26 @@ public class SmTest {
 	}
 
 	@Test
+	public void sm4TestWithCustomKeyTest2() {
+		String content = "test中文frfewrewrwerwer---------------------------------------------------";
+
+		byte[] key = KeyUtil.generateKey(SM4.ALGORITHM_NAME, 128).getEncoded();
+
+		SM4 sm4 = SmUtil.sm4(key);
+		Assert.assertEquals("SM4", sm4.getCipher().getAlgorithm());
+
+		String encryptHex = sm4.encryptHex(content);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
 	public void hmacSm3Test() {
 		String content = "test中文";
 		HMac hMac = SmUtil.hmacSm3("password".getBytes());
 		String digest = hMac.digestHex(content);
 		Assert.assertEquals("493e3f9a1896b43075fbe54658076727960d69632ac6b6ed932195857a6840c6", digest);
 	}
+
+
 }

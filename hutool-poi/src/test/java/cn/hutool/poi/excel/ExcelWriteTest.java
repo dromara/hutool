@@ -6,20 +6,24 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -40,6 +44,20 @@ import java.util.TreeMap;
  * @author looly
  */
 public class ExcelWriteTest {
+
+	@Test
+	public void writeNoFlushTest(){
+		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+
+		final ExcelWriter writer = ExcelUtil.getWriter();
+		writer.write(rows);
+		writer.close();
+	}
 
 	@Test
 	@Ignore
@@ -562,6 +580,61 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void writeMultiSheetTest2() {
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet2.xlsx", "正常数据");
+		writer.write(rows);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeMultiSheetWithStyleTest() {
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheetWithStyle.xlsx", "表格1");
+
+		// 表1
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+		writer.write(rows);
+
+		Font headFont = writer.createFont();
+		headFont.setBold(true);
+		headFont.setFontHeightInPoints((short)50);
+		headFont.setFontName("Microsoft YaHei");
+		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeMapsTest() {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
@@ -713,6 +786,19 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void mergeForDateTest(){
+		// https://github.com/dromara/hutool/issues/1911
+
+		//通过工具类创建writer
+		String path = "d:/test/mergeForDate.xlsx";
+		FileUtil.del(path);
+		ExcelWriter writer = ExcelUtil.getWriter(path);
+		writer.merge(0, 3, 0, 2, DateUtil.date(), false);
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void changeHeaderStyleTest(){
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.of("姓名", "性别", "年龄"));
@@ -746,5 +832,57 @@ public class ExcelWriteTest {
 		ExcelWriter writer = ExcelUtil.getWriter("d:/test/_x.xlsx");
 		writer.writeRow(row);
 		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeLongTest(){
+		//https://gitee.com/dromara/hutool/issues/I49R6U
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
+		writer.write(ListUtil.of(1427545395336093698L));
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeHyperlinkTest(){
+			final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
+
+		final Hyperlink hyperlink = writer.createHyperlink(HyperlinkType.URL, "https://hutool.cn");
+
+		writer.write(ListUtil.of(hyperlink));
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void mergeNumberTest(){
+		File tempFile=new File("d:/test/mergeNumber.xlsx");
+		FileUtil.del(tempFile);
+
+		BigExcelWriter writer= new BigExcelWriter(tempFile);
+		writer.merge(0,1,2,2,3.99,false);
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeImgTest() {
+		ExcelWriter writer = ExcelUtil.getWriter(true);
+
+		File file = new File("C:\\Users\\zsz\\Desktop\\1.jpg");
+
+		writer.writeImg(file, 0, 0, 5, 10);
+
+		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"));
+
+		writer.close();
+	}
+
+	@Test
+	public void getDispositionTest(){
+		ExcelWriter writer = ExcelUtil.getWriter(true);
+		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
 }

@@ -7,7 +7,6 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -28,6 +27,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.function.BiFunction;
 
 /**
  * Map相关工具类
@@ -111,16 +112,16 @@ public class MapUtil {
 	/**
 	 * 新建一个HashMap
 	 *
-	 * @param <K>     Key类型
-	 * @param <V>     Value类型
-	 * @param size    初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
-	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @param <K>      Key类型
+	 * @param <V>      Value类型
+	 * @param size     初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
+	 * @param isLinked Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 * @since 3.0.4
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isOrder) {
+	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isLinked) {
 		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
-		return isOrder ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
+		return isLinked ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
 	}
 
 	/**
@@ -138,13 +139,13 @@ public class MapUtil {
 	/**
 	 * 新建一个HashMap
 	 *
-	 * @param <K>     Key类型
-	 * @param <V>     Value类型
-	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @param <K>      Key类型
+	 * @param <V>      Value类型
+	 * @param isLinked Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(boolean isOrder) {
-		return newHashMap(DEFAULT_INITIAL_CAPACITY, isOrder);
+	public static <K, V> HashMap<K, V> newHashMap(boolean isLinked) {
+		return newHashMap(DEFAULT_INITIAL_CAPACITY, isLinked);
 	}
 
 	/**
@@ -282,16 +283,37 @@ public class MapUtil {
 	/**
 	 * 根据给定的Pair数组创建Map对象
 	 *
-	 * @param <K>     键类型
-	 * @param <V>     值类型
+	 * @param <K>   键类型
+	 * @param <V>   值类型
 	 * @param pairs 键值对
 	 * @return Map
 	 * @since 5.4.1
+	 * @deprecated 方法容易歧义，请使用 {@code #ofEntries(Entry[])}
 	 */
 	@SafeVarargs
+	@Deprecated
 	public static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
 		final Map<K, V> map = new HashMap<>();
 		for (Pair<K, V> pair : pairs) {
+			map.put(pair.getKey(), pair.getValue());
+		}
+		return map;
+	}
+
+	/**
+	 * 根据给定的Pair数组创建Map对象
+	 *
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @param entries 键值对
+	 * @return Map
+	 * @see #entry(Object, Object)
+	 * @since 5.8.0
+	 */
+	@SafeVarargs
+	public static <K, V> Map<K, V> ofEntries(Map.Entry<K, V>... entries) {
+		final Map<K, V> map = new HashMap<>();
+		for (Map.Entry<K, V> pair : entries) {
 			map.put(pair.getKey(), pair.getValue());
 		}
 		return map;
@@ -623,24 +645,18 @@ public class MapUtil {
 	 * @param editor 编辑器接口
 	 * @return 编辑后的Map
 	 */
+	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
 
-		Map<K, V> map2 = ObjectUtil.clone(map);
-		if(null == map2){
-			// 不支持clone
+		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
+		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}
-		if (isEmpty(map2)) {
+		if (isEmpty(map)) {
 			return map2;
-		}
-		try {
-			map2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>(map.size(), 1f);
 		}
 
 		Entry<K, V> modified;
@@ -669,10 +685,30 @@ public class MapUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
-		if(null == map || null == filter){
+		if (null == map || null == filter) {
 			return map;
 		}
 		return edit(map, t -> filter.accept(t) ? t : null);
+	}
+
+
+	/**
+	 * 通过biFunction自定义一个规则，此规则将原Map中的元素转换成新的元素，生成新的Map返回<br>
+	 * 变更过程通过传入的 {@link BiFunction} 实现来返回一个值可以为不同类型的 {@link Map}
+	 *
+	 * @param map        原有的map
+	 * @param biFunction {@code lambda}，参数包含{@code key},{@code value}，返回值会作为新的{@code value}
+	 * @param <K>        {@code key}的类型
+	 * @param <V>        {@code value}的类型
+	 * @param <R>        新的，修改后的{@code value}的类型
+	 * @return 值可以为不同类型的 {@link Map}
+	 * @since 5.8.0
+	 */
+	public static <K, V, R> Map<K, R> map(Map<K, V> map, BiFunction<K, V, R> biFunction) {
+		if (null == map || null == biFunction) {
+			return MapUtil.newHashMap();
+		}
+		return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue())));
 	}
 
 	/**
@@ -687,22 +723,16 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
-		if(null == map || null == keys){
+		if (null == map || null == keys) {
 			return map;
 		}
-		Map<K, V> map2 = ObjectUtil.clone(map);
-		if(null == map2){
-			// 不支持clone
+
+		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
+		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}
-		if (isEmpty(map2)) {
+		if (isEmpty(map)) {
 			return map2;
-		}
-		try {
-			map2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			map2 = new HashMap<>();
 		}
 
 		for (K key : keys) {
@@ -805,9 +835,9 @@ public class MapUtil {
 	/**
 	 * 按照值排序，可选是否倒序
 	 *
-	 * @param map 需要对值排序的map
-	 * @param <K> 键类型
-	 * @param <V> 值类型
+	 * @param map    需要对值排序的map
+	 * @param <K>    键类型
+	 * @param <V>    值类型
 	 * @param isDesc 是否倒序
 	 * @return 排序后新的Map
 	 * @since 5.5.8
@@ -815,7 +845,7 @@ public class MapUtil {
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isDesc) {
 		Map<K, V> result = new LinkedHashMap<>();
 		Comparator<Entry<K, V>> entryComparator = Entry.comparingByValue();
-		if(isDesc){
+		if (isDesc) {
 			entryComparator = entryComparator.reversed();
 		}
 		map.entrySet().stream().sorted(entryComparator).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
@@ -1353,5 +1383,56 @@ public class MapUtil {
 				map.clear();
 			}
 		}
+	}
+
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 5.7.20
+	 */
+	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
+		final ArrayList<V> values = new ArrayList<>();
+		while (keys.hasNext()) {
+			values.add(map.get(keys.next()));
+		}
+		return values;
+	}
+
+	/**
+	 * 将键和值转换为{@link AbstractMap.SimpleImmutableEntry}<br>
+	 * 返回的Entry不可变
+	 *
+	 * @param key   键
+	 * @param value 值
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @return {@link AbstractMap.SimpleImmutableEntry}
+	 * @since 5.8.0
+	 */
+	public static <K, V> Map.Entry<K, V> entry(K key, V value) {
+		return entry(key, value, true);
+	}
+
+	/**
+	 * 将键和值转换为{@link AbstractMap.SimpleEntry} 或者 {@link AbstractMap.SimpleImmutableEntry}
+	 *
+	 * @param key         键
+	 * @param value       值
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @param isImmutable 是否不可变Entry
+	 * @return {@link AbstractMap.SimpleEntry} 或者 {@link AbstractMap.SimpleImmutableEntry}
+	 * @since 5.8.0
+	 */
+	public static <K, V> Map.Entry<K, V> entry(K key, V value, boolean isImmutable) {
+		return isImmutable ?
+				new AbstractMap.SimpleEntry<>(key, value) :
+				new AbstractMap.SimpleImmutableEntry<>(key, value);
 	}
 }

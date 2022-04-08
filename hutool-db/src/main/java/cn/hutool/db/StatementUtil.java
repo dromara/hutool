@@ -194,7 +194,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, List<String> fields, Entity... entities) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Iterable<String> fields, Entity... entities) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		sql = sql.trim();
@@ -358,7 +358,7 @@ public class StatementUtil {
 				return;
 			}
 			if (param instanceof BigInteger) {
-				// BigInteger转为Long
+				// BigInteger转为BigDecimal
 				ps.setBigDecimal(paramIndex, new BigDecimal((BigInteger) param));
 				return;
 			}

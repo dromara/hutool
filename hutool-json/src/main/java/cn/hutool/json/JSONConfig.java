@@ -1,6 +1,9 @@
 package cn.hutool.json;
 
+import cn.hutool.core.comparator.CompareUtil;
+
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * JSON配置项
@@ -12,9 +15,9 @@ public class JSONConfig implements Serializable {
 	private static final long serialVersionUID = 119730355204738278L;
 
 	/**
-	 * 是否有序，顺序按照加入顺序排序
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
 	 */
-	private boolean order;
+	private Comparator<String> keyComparator;
 	/**
 	 * 是否忽略转换过程中的异常
 	 */
@@ -51,22 +54,60 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 是否有序，顺序按照加入顺序排序
+	 * 是否有序，顺序按照加入顺序排序，只针对JSONObject有效
 	 *
 	 * @return 是否有序
+	 * @deprecated 始终返回 {@code true}
 	 */
+	@Deprecated
 	public boolean isOrder() {
-		return order;
+		return true;
 	}
 
 	/**
-	 * 设置是否有序，顺序按照加入顺序排序
+	 * 设置是否有序，顺序按照加入顺序排序，只针对JSONObject有效
 	 *
 	 * @param order 是否有序
 	 * @return this
+	 * @deprecated 始终有序，无需设置
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public JSONConfig setOrder(boolean order) {
-		this.order = order;
+		return this;
+	}
+
+	/**
+	 * 获取键排序规则<br>
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
+	 *
+	 * @return 键排序规则
+	 * @since 5.7.21
+	 */
+	public Comparator<String> getKeyComparator() {
+		return this.keyComparator;
+	}
+
+	/**
+	 * 设置自然排序，即按照字母顺序排序
+	 *
+	 * @return this
+	 * @since 5.7.21
+	 */
+	public JSONConfig setNatureKeyComparator() {
+		return setKeyComparator(CompareUtil.naturalComparator());
+	}
+
+	/**
+	 * 设置键排序规则<br>
+	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
+	 *
+	 * @param keyComparator 键排序规则
+	 * @return this
+	 * @since 5.7.21
+	 */
+	public JSONConfig setKeyComparator(Comparator<String> keyComparator) {
+		this.keyComparator = keyComparator;
 		return this;
 	}
 

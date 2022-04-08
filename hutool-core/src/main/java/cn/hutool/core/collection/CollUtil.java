@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
@@ -51,8 +52,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * 集合相关工具类
@@ -84,13 +87,13 @@ public class CollUtil {
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
 	 * 空集合使用{@link Collections#emptyList()}
 	 *
-	 * @param <T> 集合元素类型
-	 * @param set 提供的集合，可能为null
+	 * @param <T>  集合元素类型
+	 * @param list 提供的集合，可能为null
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
 	 */
-	public static <T> List<T> emptyIfNull(List<T> set) {
-		return (null == set) ? Collections.emptyList() : set;
+	public static <T> List<T> emptyIfNull(List<T> list) {
+		return (null == list) ? Collections.emptyList() : list;
 	}
 
 	/**
@@ -413,11 +416,32 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @param value      需要查找的值
 	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @throws ClassCastException   如果类型不一致会抛出转换异常
+	 * @throws NullPointerException 当指定的元素 值为 null ,或集合类不支持null 时抛出该异常
+	 * @see Collection#contains(Object)
 	 * @since 4.1.10
 	 */
 	public static boolean contains(Collection<?> collection, Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
 	}
+
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 *
+	 * @param collection 集合
+	 * @param value      需要查找的值
+	 * @return 果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @since 5.7.16
+	 */
+	public static boolean safeContains(Collection<?> collection, Object value) {
+
+		try {
+			return contains(collection, value);
+		} catch (ClassCastException | NullPointerException e) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * 自定义函数判断集合是否包含某类值
@@ -1050,8 +1074,8 @@ public class CollUtil {
 	 * @param end   结束位置（不包含）
 	 * @param step  步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
-	 * @since 4.0.6
 	 * @see ListUtil#sub(List, int, int, int)
+	 * @since 4.0.6
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
 		return ListUtil.sub(list, start, end, step);
@@ -1073,11 +1097,11 @@ public class CollUtil {
 	/**
 	 * 截取集合的部分
 	 *
-	 * @param <T>   集合元素类型
-	 * @param collection  被截取的数组
-	 * @param start 开始位置（包含）
-	 * @param end   结束位置（不包含）
-	 * @param step  步进
+	 * @param <T>        集合元素类型
+	 * @param collection 被截取的数组
+	 * @param start      开始位置（包含）
+	 * @param end        结束位置（不包含）
+	 * @param step       步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空集合
 	 * @since 4.0.6
 	 */
@@ -1086,7 +1110,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 
-		final List<T> list = collection instanceof List ? (List<T>)collection : ListUtil.toList(collection);
+		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.toList(collection);
 		return sub(list, start, end, step);
 	}
 
@@ -1154,19 +1178,9 @@ public class CollUtil {
 			return collection;
 		}
 
-		Collection<T> collection2 = ObjectUtil.clone(collection);
-		if (null == collection2) {
-			// 不支持clone
-			collection2 = create(collection.getClass());
-		}
-		if (isEmpty(collection2)) {
+		final Collection<T> collection2 = create(collection.getClass());
+		if (isEmpty(collection)) {
 			return collection2;
-		}
-		try {
-			collection2.clear();
-		} catch (UnsupportedOperationException e) {
-			// 克隆后的对象不支持清空，说明为不可变集合对象，使用默认的ArrayList保存结果
-			collection2 = new ArrayList<>();
 		}
 
 		T modified;
@@ -1267,6 +1281,48 @@ public class CollUtil {
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(T collection) {
 		return filter(collection, StrUtil::isNotBlank);
+	}
+
+	/**
+	 * 移除集合中的多个元素，并将结果存放到指定的集合
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param resultCollection 存放移除结果的集合
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
+	 */
+	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
+		Objects.requireNonNull(predicate);
+		final Iterator<E> each = targetCollection.iterator();
+		while (each.hasNext()) {
+			E next = each.next();
+			if (predicate.test(next)) {
+				resultCollection.add(next);
+				each.remove();
+			}
+		}
+		return resultCollection;
+	}
+
+	/**
+	 * 移除集合中的多个元素，并将结果存放到生成的新集合中后返回<br>
+	 * 此方法直接修改原集合
+	 *
+	 * @param <T>              集合类型
+	 * @param <E>              集合元素类型
+	 * @param targetCollection 被操作移除元素的集合
+	 * @param predicate        用于是否移除判断的过滤器
+	 * @return 移除结果的集合
+	 * @since 5.7.17
+	 */
+	public static <T extends Collection<E>, E> List<E> removeWithAddIf(T targetCollection, Predicate<? super E> predicate) {
+		final List<E> removed = new ArrayList<>();
+		removeWithAddIf(targetCollection, removed, predicate);
+		return removed;
 	}
 
 	/**
@@ -1573,6 +1629,20 @@ public class CollUtil {
 	 */
 	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, T defaultCollection) {
 		return isEmpty(collection) ? defaultCollection : collection;
+	}
+
+	/**
+	 * 如果给定集合为空，返回默认集合
+	 *
+	 * @param <T>        集合类型
+	 * @param <E>        集合元素类型
+	 * @param collection 集合
+	 * @param supplier   默认值懒加载函数
+	 * @return 非空（empty）的原集合或默认集合
+	 * @since 5.7.15
+	 */
+	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, Supplier<? extends T> supplier) {
+		return isEmpty(collection) ? supplier.get() : collection;
 	}
 
 	/**
@@ -2142,17 +2212,8 @@ public class CollUtil {
 			final List<T> list = ((List<T>) collection);
 			return list.get(index);
 		} else {
-			int i = 0;
-			for (T t : collection) {
-				if (i > index) {
-					break;
-				} else if (i == index) {
-					return t;
-				}
-				i++;
-			}
+			return IterUtil.get(collection.iterator(), index);
 		}
-		return null;
 	}
 
 	/**
@@ -2233,7 +2294,9 @@ public class CollUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @see IterUtil#getElementType(Iterable)
 	 * @since 3.0.8
+	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterable)}
 	 */
+	@Deprecated
 	public static Class<?> getElementType(Iterable<?> iterable) {
 		return IterUtil.getElementType(iterable);
 	}
@@ -2245,7 +2308,9 @@ public class CollUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @see IterUtil#getElementType(Iterator)
 	 * @since 3.0.8
+	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterator)}
 	 */
+	@Deprecated
 	public static Class<?> getElementType(Iterator<?> iterator) {
 		return IterUtil.getElementType(iterator);
 	}
@@ -2263,11 +2328,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		for (K k : keys) {
-			values.add(map.get(k));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, new ArrayIter<>(keys));
 	}
 
 	/**
@@ -2297,11 +2358,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		while (keys.hasNext()) {
-			values.add(map.get(keys.next()));
-		}
-		return values;
+		return MapUtil.valuesOfKeys(map, keys);
 	}
 
 	// ------------------------------------------------------------------------------------------------- sort
@@ -2851,6 +2908,23 @@ public class CollUtil {
 		return new TransCollection<>(collection, function);
 	}
 
+	/**
+	 * 使用给定的map将集合中的原素进行属性或者值的重新设定
+	 *
+	 * @param <E>         元素类型
+	 * @param <K>         替换的键
+	 * @param <V>         替换的值
+	 * @param iterable    集合
+	 * @param map         映射集
+	 * @param keyGenerate 映射键生成函数
+	 * @param biConsumer  封装映射到的值函数
+	 * @author nick_wys
+	 * @since 5.7.18
+	 */
+	public static <E, K, V> void setValueByMap(Iterable<E> iterable, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
+		iterable.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
+	}
+
 	// ---------------------------------------------------------------------------------------------- Interface start
 
 	/**
@@ -2948,6 +3022,9 @@ public class CollUtil {
 	 * @since 5.6.0
 	 */
 	public static boolean isEqualList(final Collection<?> list1, final Collection<?> list2) {
+		if (list1 == list2) {
+			return true;
+		}
 		if (list1 == null || list2 == null || list1.size() != list2.size()) {
 			return false;
 		}

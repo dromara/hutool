@@ -40,6 +40,8 @@ public class AvgPartition<T> extends Partition<T> {
 
 	@Override
 	public List<T> get(int index) {
+		final int size = this.size;
+		final int remainder = this.remainder;
 		// 当limit个数超过list的size时，size为0，此时每个分区分1个元素，直到remainder个分配完，剩余分区为[]
 		int start = index * size + Math.min(index, remainder);
 		int end = start + size;

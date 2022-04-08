@@ -38,9 +38,9 @@ public class JAXBUtil {
 	 *
 	 * @param bean Bean对象
 	 * @return 输出的XML字符串
-	 * @see XmlRootElement <code>@XmlRootElement(name = "school")</code>
-	 * @see XmlElement <code>@XmlElement(name = "school_name", required = true)</code>
-	 * @see XmlElementWrapper <code>@XmlElementWrapper(name="schools")</code>
+	 * @see XmlRootElement {@code @XmlRootElement(name = "school")}
+	 * @see XmlElement {@code @XmlElement(name = "school_name", required = true)}
+	 * @see XmlElementWrapper {@code @XmlElementWrapper(name="schools")}
 	 * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
 	 */
 	public static String beanToXml(Object bean) {

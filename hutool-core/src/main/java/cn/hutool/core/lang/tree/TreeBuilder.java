@@ -29,7 +29,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 *
 	 * @param rootId 根节点ID
 	 * @param <T>    ID类型
-	 * @return {@link TreeBuilder}
+	 * @return TreeBuilder
 	 */
 	public static <T> TreeBuilder<T> of(T rootId) {
 		return of(rootId, null);
@@ -41,7 +41,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param rootId 根节点ID
 	 * @param config 配置
 	 * @param <T>    ID类型
-	 * @return {@link TreeBuilder}
+	 * @return TreeBuilder
 	 */
 	public static <T> TreeBuilder<T> of(T rootId, TreeNodeConfig config) {
 		return new TreeBuilder<>(rootId, config);
@@ -60,6 +60,68 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	}
 
 	/**
+	 * 设置ID
+	 *
+	 * @param id ID
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setId(E id) {
+		this.root.setId(id);
+		return this;
+	}
+
+	/**
+	 * 设置父节点ID
+	 *
+	 * @param parentId 父节点ID
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setParentId(E parentId) {
+		this.root.setParentId(parentId);
+		return this;
+	}
+
+	/**
+	 * 设置节点标签名称
+	 *
+	 * @param name 节点标签名称
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setName(CharSequence name) {
+		this.root.setName(name);
+		return this;
+	}
+
+	/**
+	 * 设置权重
+	 *
+	 * @param weight 权重
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> setWeight(Comparable<?> weight) {
+		this.root.setWeight(weight);
+		return this;
+	}
+
+	/**
+	 * 扩展属性
+	 *
+	 * @param key   键
+	 * @param value 扩展值
+	 * @return this
+	 * @since 5.7.14
+	 */
+	public TreeBuilder<E> putExtra(String key, Object value) {
+		Assert.notEmpty(key, "Key must be not empty !");
+		this.root.put(key, value);
+		return this;
+	}
+
+	/**
 	 * 增加节点列表，增加的节点是不带子节点的
 	 *
 	 * @param map 节点列表
@@ -68,7 +130,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	public TreeBuilder<E> append(Map<E, Tree<E>> map) {
 		checkBuilt();
 
-		Assert.isFalse(isBuild, "Current tree has been built.");
 		this.idTreeMap.putAll(map);
 		return this;
 	}
@@ -167,7 +228,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		}
 
 		final Map<E, Tree<E>> eTreeMap = MapUtil.sortByValue(this.idTreeMap, false);
-		List<Tree<E>> rootTreeList = CollUtil.newArrayList();
 		E parentId;
 		for (Tree<E> node : eTreeMap.values()) {
 			if (null == node) {
@@ -176,7 +236,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			parentId = node.getParentId();
 			if (ObjectUtil.equals(this.root.getId(), parentId)) {
 				this.root.addChildren(node);
-				rootTreeList.add(node);
 				continue;
 			}
 

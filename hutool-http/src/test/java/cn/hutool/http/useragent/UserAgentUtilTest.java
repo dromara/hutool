@@ -169,7 +169,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("63.0.3239.132", ua.getVersion());
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Windows 8.1 or Winsows Server 2012R2", ua.getOs().toString());
+		Assert.assertEquals("Windows 8.1 or Windows Server 2012R2", ua.getOs().toString());
 		Assert.assertEquals("6.3", ua.getOsVersion());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
@@ -204,7 +204,7 @@ public class UserAgentUtilTest {
 	}
 
 	/**
-	 * https://github.com/looly/hutool/issues/1177
+	 * https://github.com/dromara/hutool/issues/1177
 	 */
 	@Test
 	public void parseMicroMessengerTest() {
@@ -359,4 +359,57 @@ public class UserAgentUtilTest {
 		Assert.assertTrue(ua.isMobile());
 	}
 
+	@Test
+	public void parseEdgATest(){
+		// https://gitee.com/dromara/hutool/issues/I4MCBP
+		String uaStr = "userAgent: Mozilla/5.0 (Linux; Android 11; MI 9 Transparent Edition) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Mobile Safari/537.36 EdgA/96.0.1054.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("MSEdge", ua.getBrowser().toString());
+		Assert.assertEquals("96.0.1054.36", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("11", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseLenovoTest(){
+		// https://gitee.com/dromara/hutool/issues/I4QBMD
+		String uaStr = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36 SLBrowser/7.0.0.6241 SLBChan/30";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+
+		Assert.assertEquals("Lenovo", ua.getBrowser().toString());
+		Assert.assertEquals("7.0.0.6241", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
+
+	@Test
+	public void parseXiaoMiTest(){
+		String uaStr = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/89.0.4389.116 Safari/534.24 XiaoMi/MiuiBrowser/16.0.18 swan-mibrowser";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+
+		Assert.assertEquals("MiuiBrowser", ua.getBrowser().toString());
+		Assert.assertEquals("16.0.18", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("534.24", ua.getEngineVersion());
+		Assert.assertEquals("Android", ua.getOs().toString());
+		Assert.assertEquals("11", ua.getOsVersion());
+		Assert.assertEquals("Android", ua.getPlatform().toString());
+		Assert.assertTrue(ua.isMobile());
+	}
+
+	@Test
+	public void parseFromDeepinTest(){
+		// https://gitee.com/dromara/hutool/issues/I50YGY
+		String uaStr = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("Linux", ua.getOs().toString());
+	}
 }

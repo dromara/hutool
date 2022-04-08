@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
@@ -25,11 +26,12 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 public class TemporalAccessorUtil extends TemporalUtil{
 
 	/**
-	 * 安全获取时间的某个属性，属性不存在返回0
+	 * 安全获取时间的某个属性，属性不存在返回最小值，一般为0<br>
+	 * 注意请谨慎使用此方法，某些{@link TemporalAccessor#isSupported(TemporalField)}为{@code false}的方法返回最小值
 	 *
 	 * @param temporalAccessor 需要获取的时间对象
 	 * @param field            需要获取的属性
-	 * @return 时间的值，如果无法获取则默认为 0
+	 * @return 时间的值，如果无法获取则获取最小值，一般为0
 	 */
 	public static int get(TemporalAccessor temporalAccessor, TemporalField field) {
 		if (temporalAccessor.isSupported(field)) {
@@ -40,7 +42,8 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	}
 
 	/**
-	 * 格式化日期时间为指定格式
+	 * 格式化日期时间为指定格式<br>
+	 * 如果为{@link Month}，调用{@link Month#toString()}
 	 *
 	 * @param time      {@link TemporalAccessor}
 	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
@@ -50,6 +53,10 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	public static String format(TemporalAccessor time, DateTimeFormatter formatter) {
 		if (null == time) {
 			return null;
+		}
+
+		if(time instanceof Month){
+			return time.toString();
 		}
 
 		if(null == formatter){
@@ -74,7 +81,8 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	}
 
 	/**
-	 * 格式化日期时间为指定格式
+	 * 格式化日期时间为指定格式<br>
+	 * 如果为{@link Month}，调用{@link Month#toString()}
 	 *
 	 * @param time      {@link TemporalAccessor}
 	 * @param format 日期格式
@@ -84,6 +92,10 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	public static String format(TemporalAccessor time, String format) {
 		if (null == time) {
 			return null;
+		}
+
+		if(time instanceof Month){
+			return time.toString();
 		}
 
 		// 检查自定义格式
@@ -98,13 +110,17 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	}
 
 	/**
-	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）
+	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）<br>
+	 * 如果为{@link Month}，调用{@link Month#getValue()}
 	 *
 	 * @param temporalAccessor Date对象
 	 * @return {@link Instant}对象
 	 * @since 5.4.1
 	 */
 	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
+		if(temporalAccessor instanceof Month){
+			return ((Month) temporalAccessor).getValue();
+		}
 		return toInstant(temporalAccessor).toEpochMilli();
 	}
 
@@ -138,7 +154,10 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			// 指定本地时间转换 为Instant，取当天日期
 			result = ((OffsetTime) temporalAccessor).atDate(LocalDate.now()).toInstant();
 		} else {
-			result = Instant.from(temporalAccessor);
+			// issue#1891@Github
+			// Instant.from不能完成日期转换
+			//result = Instant.from(temporalAccessor);
+			result = toInstant(LocalDateTimeUtil.of(temporalAccessor));
 		}
 
 		return result;

@@ -69,7 +69,7 @@ public class ClassPathResource extends UrlResource {
 		this.path = path;
 		this.name = StrUtil.isBlank(path) ? null : FileUtil.getName(path);
 
-		this.classLoader = ObjectUtil.defaultIfNull(classLoader, ClassUtil.getClassLoader());
+		this.classLoader = ObjectUtil.defaultIfNull(classLoader, ClassUtil::getClassLoader);
 		this.clazz = clazz;
 		initUrl();
 	}

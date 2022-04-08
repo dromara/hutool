@@ -125,7 +125,7 @@ public class ExcelSaxReadTest {
 					}
 
 					@Override
-					public void handle(int sheetIndex, long rowIndex, List<Object> rowList) {
+					public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
 
 					}
 				}
@@ -143,7 +143,7 @@ public class ExcelSaxReadTest {
 					}
 
 					@Override
-					public void handle(int sheetIndex, long rowIndex, List<Object> rowList) {
+					public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
 					}
 				}
 		);

@@ -311,4 +311,14 @@ public class SM2Test {
 		byte[] dec =  sm2.decrypt(data, KeyType.PrivateKey);
 		Assert.assertArrayEquals(dec, src.getBytes(StandardCharsets.UTF_8));
 	}
+
+	@Test
+	public void dLengthTest(){
+		final SM2 sm2 = SmUtil.sm2();
+		Assert.assertEquals(64, sm2.getDHex().length());
+		Assert.assertEquals(32, sm2.getD().length);
+
+		// 04占位一个字节
+		Assert.assertEquals(65, sm2.getQ(false).length);
+	}
 }

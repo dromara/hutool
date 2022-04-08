@@ -5,6 +5,16 @@ import org.junit.Test;
 
 public class NumberChineseFormatterTest {
 
+	@Test
+	public void formatThousandTest(){
+		String f = NumberChineseFormatter.formatThousand(10, false);
+		Assert.assertEquals("十", f);
+		f = NumberChineseFormatter.formatThousand(11, false);
+		Assert.assertEquals("十一", f);
+		f = NumberChineseFormatter.formatThousand(19, false);
+		Assert.assertEquals("十九", f);
+	}
+
 	// 测试千
 	@Test
 	public void formatThousandLongTest(){
@@ -176,6 +186,26 @@ public class NumberChineseFormatterTest {
 	}
 
 	@Test
+	public void formatSimpleTest() {
+		String f1 = NumberChineseFormatter.formatSimple(1_2345);
+		Assert.assertEquals("1.23万", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555);
+		Assert.assertEquals("-5.56万", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789);
+		Assert.assertEquals("1.23亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555);
+		Assert.assertEquals("-5.56亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789_1011L);
+		Assert.assertEquals("1.23万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555_5555L);
+		Assert.assertEquals("-5.56万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(123);
+		Assert.assertEquals("123", f1);
+		f1 = NumberChineseFormatter.formatSimple(-123);
+		Assert.assertEquals("-123", f1);
+	}
+
+	@Test
 	public void digitToChineseTest() {
 		String digitToChinese = Convert.digitToChinese(12_4124_1241_2421.12);
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
@@ -277,5 +307,39 @@ public class NumberChineseFormatterTest {
 	public void badNumberTest2(){
 		// 非法字符
 		NumberChineseFormatter.chineseToNumber("一百你三");
+	}
+
+	@Test
+	public void singleMoneyTest(){
+		String format = NumberChineseFormatter.format(0.01, false, true);
+		Assert.assertEquals("一分", format);
+		format = NumberChineseFormatter.format(0.10, false, true);
+		Assert.assertEquals("一角", format);
+		format = NumberChineseFormatter.format(0.12, false, true);
+		Assert.assertEquals("一角二分", format);
+
+		format = NumberChineseFormatter.format(1.00, false, true);
+		Assert.assertEquals("一元整", format);
+		format = NumberChineseFormatter.format(1.10, false, true);
+		Assert.assertEquals("一元一角", format);
+		format = NumberChineseFormatter.format(1.02, false, true);
+		Assert.assertEquals("一元零二分", format);
+	}
+
+	@Test
+	public void singleNumberTest(){
+		String format = NumberChineseFormatter.format(0.01, false, false);
+		Assert.assertEquals("零点零一", format);
+		format = NumberChineseFormatter.format(0.10, false, false);
+		Assert.assertEquals("零点一", format);
+		format = NumberChineseFormatter.format(0.12, false, false);
+		Assert.assertEquals("零点一二", format);
+
+		format = NumberChineseFormatter.format(1.00, false, false);
+		Assert.assertEquals("一", format);
+		format = NumberChineseFormatter.format(1.10, false, false);
+		Assert.assertEquals("一点一", format);
+		format = NumberChineseFormatter.format(1.02, false, false);
+		Assert.assertEquals("一点零二", format);
 	}
 }

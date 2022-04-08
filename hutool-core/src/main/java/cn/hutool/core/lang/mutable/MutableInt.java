@@ -152,12 +152,12 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableInt}</li>
+	 * 	<li>类型为 MutableInt</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 *
 	 * @param obj 比对的对象
-	 * @return 相同返回<code>true</code>，否则 <code>false</code>
+	 * @return 相同返回<code>true</code>，否则 {@code false}
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -176,7 +176,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	/**
 	 * 比较
 	 *
-	 * @param other 其它 {@link MutableInt} 对象
+	 * @param other 其它 MutableInt 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override

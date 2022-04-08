@@ -96,6 +96,16 @@ public class JarClassLoader extends URLClassLoader {
 	public JarClassLoader(URL[] urls) {
 		super(urls, ClassUtil.getClassLoader());
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param urls        被加载的URL
+	 * @param classLoader 类加载器
+	 */
+	public JarClassLoader(URL[] urls, ClassLoader classLoader) {
+		super(urls, classLoader);
+	}
 	// ------------------------------------------------------------------- Constructor end
 
 	/**

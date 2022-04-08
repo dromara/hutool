@@ -242,7 +242,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
 		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
-		RejectedExecutionHandler handler = ObjectUtil.defaultIfNull(builder.handler, new ThreadPoolExecutor.AbortPolicy());
+		RejectedExecutionHandler handler = ObjectUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
 
 		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(//
 				corePoolSize, //

@@ -140,12 +140,12 @@ public class BeanDesc implements Serializable {
 	 * @return this
 	 */
 	private BeanDesc init() {
-		final Method[] methods = ReflectUtil.getMethods(this.beanClass);
+		final Method[] gettersAndSetters = ReflectUtil.getMethods(this.beanClass, ReflectUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
-			if (false == ModifierUtil.isStatic(field)) {
-				//只针对非static属性
-				prop = createProp(field, methods);
+			// 排除静态属性和对象子类
+			if (false == ModifierUtil.isStatic(field) && false == ReflectUtil.isOuterClassField(field)) {
+				prop = createProp(field, gettersAndSetters);
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
 				this.propMap.putIfAbsent(prop.getFieldName(), prop);
 			}
@@ -188,12 +188,12 @@ public class BeanDesc implements Serializable {
 	/**
 	 * 查找字段对应的Getter和Setter方法
 	 *
-	 * @param field      字段
-	 * @param methods    类中所有的方法
-	 * @param ignoreCase 是否忽略大小写匹配
+	 * @param field            字段
+	 * @param gettersOrSetters 类中所有的Getter或Setter方法
+	 * @param ignoreCase       是否忽略大小写匹配
 	 * @return PropDesc
 	 */
-	private PropDesc findProp(Field field, Method[] methods, boolean ignoreCase) {
+	private PropDesc findProp(Field field, Method[] gettersOrSetters, boolean ignoreCase) {
 		final String fieldName = field.getName();
 		final Class<?> fieldType = field.getType();
 		final boolean isBooleanField = BooleanUtil.isBoolean(fieldType);
@@ -201,24 +201,19 @@ public class BeanDesc implements Serializable {
 		Method getter = null;
 		Method setter = null;
 		String methodName;
-		Class<?>[] parameterTypes;
-		for (Method method : methods) {
-			parameterTypes = method.getParameterTypes();
-			if (parameterTypes.length > 1) {
-				// 多于1个参数说明非Getter或Setter
-				continue;
-			}
-
+		for (Method method : gettersOrSetters) {
 			methodName = method.getName();
-			if (parameterTypes.length == 0) {
+			if (method.getParameterCount() == 0) {
 				// 无参数，可能为Getter方法
 				if (isMatchGetter(methodName, fieldName, isBooleanField, ignoreCase)) {
 					// 方法名与字段名匹配，则为Getter方法
 					getter = method;
 				}
 			} else if (isMatchSetter(methodName, fieldName, isBooleanField, ignoreCase)) {
-				// 只有一个参数的情况下方法名与字段名对应匹配，则为Setter方法
-				setter = method;
+				// setter方法的参数类型和字段类型必须一致，或参数类型是字段类型的子类
+				if(fieldType.isAssignableFrom(method.getParameterTypes()[0])){
+					setter = method;
+				}
 			}
 			if (null != getter && null != setter) {
 				// 如果Getter和Setter方法都找到了，不再继续寻找
@@ -257,15 +252,6 @@ public class BeanDesc implements Serializable {
 			fieldName = handledFieldName;
 		} else {
 			handledFieldName = StrUtil.upperFirst(fieldName);
-		}
-
-		if (false == methodName.startsWith("get") && false == methodName.startsWith("is")) {
-			// 非标准Getter方法
-			return false;
-		}
-		if ("getclass".equals(methodName)) {
-			//跳过getClass方法
-			return false;
 		}
 
 		// 针对Boolean类型特殊检查
@@ -332,7 +318,7 @@ public class BeanDesc implements Serializable {
 		}
 
 		// 包括boolean的任何类型只有一种匹配情况：name -》 setName
-		return ("set" + fieldName).equals(methodName);
+		return ("set" + handledFieldName).equals(methodName);
 	}
 	// ------------------------------------------------------------------------------------------------------ Private method end
 }

@@ -1,6 +1,7 @@
 package cn.hutool.core.map;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
 /**
  * 自定义键的Map，默认HashMap实现
@@ -17,11 +18,11 @@ public abstract class CustomKeyMap<K, V> extends MapWrapper<K, V> {
 	 * 构造<br>
 	 * 通过传入一个Map从而确定Map的类型，子类需创建一个空的Map，而非传入一个已有Map，否则值可能会被修改
 	 *
-	 * @param m Map 被包装的Map
+	 * @param emptyMap Map 被包装的Map，必须为空Map，否则自定义key会无效
 	 * @since 3.1.2
 	 */
-	public CustomKeyMap(Map<K, V> m) {
-		super(m);
+	public CustomKeyMap(Map<K, V> emptyMap) {
+		super(emptyMap);
 	}
 
 	@Override
@@ -66,6 +67,31 @@ public abstract class CustomKeyMap<K, V> extends MapWrapper<K, V> {
 		//noinspection unchecked
 		return super.replace((K) customKey(key), value);
 	}
+
+	//---------------------------------------------------------------------------- Override default methods start
+	@Override
+	public V getOrDefault(Object key, V defaultValue) {
+		return super.getOrDefault(customKey(key), defaultValue);
+	}
+
+	@Override
+	public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+		//noinspection unchecked
+		return super.computeIfPresent((K) customKey(key), remappingFunction);
+	}
+
+	@Override
+	public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+		//noinspection unchecked
+		return super.compute((K) customKey(key), remappingFunction);
+	}
+
+	@Override
+	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		//noinspection unchecked
+		return super.merge((K) customKey(key), value, remappingFunction);
+	}
+	//---------------------------------------------------------------------------- Override default methods end
 
 	/**
 	 * 自定义键

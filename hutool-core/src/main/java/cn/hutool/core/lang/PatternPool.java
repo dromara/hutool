@@ -163,6 +163,11 @@ public class PatternPool {
 	 * 仅限：中国驾驶证档案编号
 	 */
 	public static final Pattern CAR_DRIVING_LICENCE = Pattern.compile(RegexPool.CAR_DRIVING_LICENCE);
+	/**
+	 * 中文姓名
+	 * 总结中国人姓名：2-60位，只能是中文和 ·
+	 */
+	public static final Pattern CHINESE_NAME = Pattern.compile(RegexPool.CHINESE_NAME);
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -189,13 +194,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(String regex, int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-
-		Pattern pattern = POOL.get(regexWithFlag);
-		if (null == pattern) {
-			pattern = Pattern.compile(regex, flags);
-			POOL.put(regexWithFlag, pattern);
-		}
-		return pattern;
+		return POOL.get(regexWithFlag, ()-> Pattern.compile(regex, flags));
 	}
 
 	/**

@@ -38,7 +38,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * 获得一个数据源
 	 *
 	 * @param group 数据源分组
-	 * @return {@link SimpleDataSource}
+	 * @return SimpleDataSource
 	 */
 	synchronized public static SimpleDataSource getDataSource(String group) {
 		return new SimpleDataSource(group);
@@ -47,7 +47,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	/**
 	 * 获得一个数据源，无分组
 	 *
-	 * @return {@link SimpleDataSource}
+	 * @return SimpleDataSource
 	 */
 	synchronized public static SimpleDataSource getDataSource() {
 		return new SimpleDataSource();

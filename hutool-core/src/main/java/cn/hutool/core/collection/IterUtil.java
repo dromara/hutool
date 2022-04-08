@@ -8,12 +8,16 @@ import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -511,11 +516,7 @@ public class IterUtil {
 	 * @since 4.0.6
 	 */
 	public static <E> List<E> toList(Iterator<E> iter) {
-		final List<E> list = new ArrayList<>();
-		while (iter.hasNext()) {
-			list.add(iter.next());
-		}
-		return list;
+		return ListUtil.toList(iter);
 	}
 
 	/**
@@ -543,17 +544,35 @@ public class IterUtil {
 	}
 
 	/**
-	 * 获取集合的第一个元素
+	 * 遍历{@link Iterator}，获取指定index位置的元素
+	 *
+	 * @param iterator {@link Iterator}
+	 * @param index    位置
+	 * @param <E>      元素类型
+	 * @return 元素，找不到元素返回{@code null}
+	 * @since 5.8.0
+	 */
+	public static <E> E get(final Iterator<E> iterator, int index) throws IndexOutOfBoundsException {
+		Assert.isTrue(index >= 0, "[index] must be >= 0");
+		while (iterator.hasNext()) {
+			index--;
+			if (-1 == index) {
+				return iterator.next();
+			}
+			iterator.next();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取集合的第一个元素，如果集合为空（null或者空集合），返回{@code null}
 	 *
 	 * @param <T>      集合元素类型
 	 * @param iterable {@link Iterable}
-	 * @return 第一个元素
+	 * @return 第一个元素，为空返回{@code null}
 	 */
 	public static <T> T getFirst(Iterable<T> iterable) {
-		if (null == iterable) {
-			return null;
-		}
-		return getFirst(iterable.iterator());
+		return getFirst(getIter(iterable));
 	}
 
 	/**
@@ -579,10 +598,7 @@ public class IterUtil {
 	 * @return 第一个元素
 	 */
 	public static <T> T getFirst(Iterator<T> iterator) {
-		if (null != iterator && iterator.hasNext()) {
-			return iterator.next();
-		}
-		return null;
+		return get(iterator, 0);
 	}
 
 	/**
@@ -600,18 +616,18 @@ public class IterUtil {
 	/**
 	 * 返回{@link Iterator}中第一个匹配规则的值
 	 *
-	 * @param <T>     数组元素类型
-	 * @param iterator  {@link Iterator}
-	 * @param matcher 匹配接口，实现此接口自定义匹配规则
+	 * @param <T>      数组元素类型
+	 * @param iterator {@link Iterator}
+	 * @param matcher  匹配接口，实现此接口自定义匹配规则
 	 * @return 匹配元素，如果不存在匹配元素或{@link Iterator}为空，返回 {@code null}
 	 * @since 5.7.5
 	 */
 	public static <T> T firstMatch(Iterator<T> iterator, Matcher<T> matcher) {
 		Assert.notNull(matcher, "Matcher must be not null !");
 		if (null != iterator) {
-			while(iterator.hasNext()){
+			while (iterator.hasNext()) {
 				final T next = iterator.next();
-				if(matcher.match(next)){
+				if (matcher.match(next)) {
 					return next;
 				}
 			}
@@ -627,29 +643,22 @@ public class IterUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 */
 	public static Class<?> getElementType(Iterable<?> iterable) {
-		if (null != iterable) {
-			final Iterator<?> iterator = iterable.iterator();
-			return getElementType(iterator);
-		}
-		return null;
+		return getElementType(getIter(iterable));
 	}
 
 	/**
 	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）<br>
 	 * 注意，此方法至少会调用多次next方法
 	 *
-	 * @param iterator {@link Iterator}
-	 * @return 元素类型，当列表为空或元素全部为null时，返回null
+	 * @param iterator {@link Iterator}，为 {@code null}返回{@code null}
+	 * @return 元素类型，当列表为空或元素全部为{@code null}时，返回{@code null}
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
-		final Iterator<?> iter2 = new CopiedIter<>(iterator);
-		if (iter2.hasNext()) {
-			final Object t = iter2.next();
-			if (null != t) {
-				return t.getClass();
-			}
+		if (null == iterator) {
+			return null;
 		}
-		return null;
+		final Object ele = getFirstNoneNull(iterator);
+		return null == ele ? null : ele.getClass();
 	}
 
 	/**
@@ -718,7 +727,7 @@ public class IterUtil {
 	 *
 	 * @param <E>    集合元素类型
 	 * @param iter   集合
-	 * @param filter 过滤器接口
+	 * @param filter 过滤器接口，删除{@link Filter#accept(Object)}为{@code false}的元素
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
@@ -733,6 +742,32 @@ public class IterUtil {
 			}
 		}
 		return iter;
+	}
+
+	/**
+	 * 过滤{@link Iterator}并将过滤后满足条件的元素添加到List中
+	 *
+	 * @param <E>    元素类型
+	 * @param iter   {@link Iterator}
+	 * @param filter 过滤器，保留{@link Filter#accept(Object)}为{@code true}的元素
+	 * @return ArrayList
+	 * @since 5.7.22
+	 */
+	public static <E> List<E> filterToList(Iterator<E> iter, Filter<E> filter) {
+		return toList(filtered(iter, filter));
+	}
+
+	/**
+	 * 获取一个新的 {@link FilterIter}，用于过滤指定元素
+	 *
+	 * @param iterator 被包装的 {@link Iterator}
+	 * @param filter   过滤断言，当{@link Filter#accept(Object)}为{@code true}时保留元素，{@code false}抛弃元素
+	 * @param <E>      元素类型
+	 * @return {@link FilterIter}
+	 * @since 5.8.0
+	 */
+	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Filter<? super E> filter) {
+		return new FilterIter<>(iterator, filter);
 	}
 
 	/**
@@ -819,7 +854,7 @@ public class IterUtil {
 	 * @return Iterable对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(final Iterable<?> iterable) {
+	public static int size(Iterable<?> iterable) {
 		if (null == iterable) {
 			return 0;
 		}
@@ -838,7 +873,7 @@ public class IterUtil {
 	 * @return Iterator对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(final Iterator<?> iterator) {
+	public static int size(Iterator<?> iterator) {
 		int size = 0;
 		if (iterator != null) {
 			while (iterator.hasNext()) {
@@ -862,7 +897,7 @@ public class IterUtil {
 	 * @return 是否相同
 	 * @since 5.6.0
 	 */
-	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
+	public static boolean isEqualList(Iterable<?> list1, Iterable<?> list2) {
 		if (list1 == list2) {
 			return true;
 		}
@@ -882,5 +917,140 @@ public class IterUtil {
 
 		// 当两个Iterable长度不一致时返回false
 		return false == (it1.hasNext() || it2.hasNext());
+	}
+
+	/**
+	 * 清空指定{@link Iterator}，此方法遍历后调用{@link Iterator#remove()}移除每个元素
+	 *
+	 * @param iterator {@link Iterator}
+	 * @since 5.7.23
+	 */
+	public static void clear(Iterator<?> iterator) {
+		if (null != iterator) {
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+		}
+	}
+
+	/**
+	 * 遍历{@link Iterator}<br>
+	 * 当consumer为{@code null}表示不处理，但是依旧遍历{@link Iterator}
+	 *
+	 * @param iterator {@link Iterator}
+	 * @param consumer 节点消费，{@code null}表示不处理
+	 * @param <E>      元素类型
+	 * @since 5.8.0
+	 */
+	public static <E> void forEach(final Iterator<E> iterator, final Consumer<? super E> consumer) {
+		if (iterator != null) {
+			while (iterator.hasNext()) {
+				final E element = iterator.next();
+				if (null != consumer) {
+					consumer.accept(element);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 拼接 {@link Iterator}为字符串
+	 *
+	 * @param iterator {@link Iterator}
+	 * @param <E>      元素类型
+	 * @return 字符串
+	 * @since 5.8.0
+	 */
+	public static <E> String toStr(final Iterator<E> iterator) {
+		return toStr(iterator, ObjectUtil::toString);
+	}
+
+	/**
+	 * 拼接 {@link Iterator}为字符串
+	 *
+	 * @param iterator  {@link Iterator}
+	 * @param transFunc 元素转字符串函数
+	 * @param <E>       元素类型
+	 * @return 字符串
+	 * @since 5.8.0
+	 */
+	public static <E> String toStr(final Iterator<E> iterator, final Function<? super E, String> transFunc) {
+		return toStr(iterator, transFunc, ", ", "[", "]");
+	}
+
+	/**
+	 * 拼接 {@link Iterator}为字符串
+	 *
+	 * @param iterator  {@link Iterator}
+	 * @param transFunc 元素转字符串函数
+	 * @param delimiter 分隔符
+	 * @param prefix    前缀
+	 * @param suffix    后缀
+	 * @param <E>       元素类型
+	 * @return 字符串
+	 * @since 5.8.0
+	 */
+	public static <E> String toStr(final Iterator<E> iterator,
+								   final Function<? super E, String> transFunc,
+								   final String delimiter,
+								   final String prefix,
+								   final String suffix) {
+		final StrJoiner strJoiner = StrJoiner.of(delimiter, prefix, suffix);
+		strJoiner.append(iterator, transFunc);
+		return strJoiner.toString();
+	}
+
+	/**
+	 * 从给定的对象中获取可能存在的{@link Iterator}，规则如下：
+	 * <ul>
+	 *   <li>null - null</li>
+	 *   <li>Iterator - 直接返回</li>
+	 *   <li>Enumeration - {@link EnumerationIter}</li>
+	 *   <li>Collection - 调用{@link Collection#iterator()}</li>
+	 *   <li>Map - Entry的{@link Iterator}</li>
+	 *   <li>Dictionary - values (elements) enumeration returned as iterator</li>
+	 *   <li>array - {@link ArrayIter}</li>
+	 *   <li>NodeList - {@link NodeListIter}</li>
+	 *   <li>Node - 子节点</li>
+	 *   <li>object with iterator() public method，通过反射访问</li>
+	 *   <li>object - 单对象的{@link ArrayIter}</li>
+	 * </ul>
+	 *
+	 * @param obj 可以获取{@link Iterator}的对象
+	 * @return {@link Iterator}，如果提供对象为{@code null}，返回{@code null}
+	 */
+	public static Iterator<?> getIter(final Object obj) {
+		if (obj == null) {
+			return null;
+		} else if (obj instanceof Iterator) {
+			return (Iterator<?>) obj;
+		} else if (obj instanceof Iterable) {
+			return ((Iterable<?>) obj).iterator();
+		} else if (ArrayUtil.isArray(obj)) {
+			return new ArrayIter<>(obj);
+		} else if (obj instanceof Enumeration) {
+			return new EnumerationIter<>((Enumeration<?>) obj);
+		} else if (obj instanceof Map) {
+			return ((Map<?, ?>) obj).entrySet().iterator();
+		} else if (obj instanceof NodeList) {
+			return new NodeListIter((NodeList) obj);
+		} else if (obj instanceof Node) {
+			// 遍历子节点
+			return new NodeListIter(((Node) obj).getChildNodes());
+		} else if (obj instanceof Dictionary) {
+			return new EnumerationIter<>(((Dictionary<?, ?>) obj).elements());
+		}
+
+		// 反射获取
+		try {
+			final Object iterator = ReflectUtil.invoke(obj, "iterator");
+			if (iterator instanceof Iterator) {
+				return (Iterator<?>) iterator;
+			}
+		} catch (final RuntimeException ignore) {
+			// ignore
+		}
+		return new ArrayIter<>(new Object[]{obj});
 	}
 }

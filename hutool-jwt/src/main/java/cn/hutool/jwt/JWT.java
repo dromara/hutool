@@ -50,7 +50,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	/**
 	 * 创建空的JWT对象
 	 *
-	 * @return {@link JWT}
+	 * @return JWT
 	 */
 	public static JWT create() {
 		return new JWT();
@@ -60,7 +60,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * 创建并解析JWT对象
 	 *
 	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
-	 * @return {@link JWT}
+	 * @return JWT
 	 */
 	public static JWT of(String token) {
 		return new JWT(token);

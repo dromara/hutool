@@ -289,8 +289,19 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler deschedule(String id) {
-		this.taskTable.remove(id);
+		descheduleWithStatus(id);
 		return this;
+	}
+
+	/**
+	 * 移除Task，并返回是否移除成功
+	 *
+	 * @param id Task的ID
+	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
+	 * @since 5.7.17
+	 */
+	public boolean descheduleWithStatus(String id) {
+		return this.taskTable.remove(id);
 	}
 
 	/**

@@ -1,30 +1,15 @@
 package cn.hutool.bloomfilter.filter;
 
+import cn.hutool.core.util.HashUtil;
 
-public class JSFilter extends AbstractFilter {
+public class JSFilter extends FuncFilter {
 	private static final long serialVersionUID = 1L;
 
-	public JSFilter(long maxValue, int machineNum) {
-		super(maxValue, machineNum);
-	}
-
 	public JSFilter(long maxValue) {
-		super(maxValue);
+		this(maxValue, DEFAULT_MACHINE_NUM);
 	}
 
-	@Override
-	public long hash(String str) {
-		int hash = 1315423911;
-
-		for (int i = 0; i < str.length(); i++) {
-			hash ^= ((hash << 5) + str.charAt(i) + (hash >> 2));
-		}
-
-		if(hash<0) {
-			hash*=-1 ;
-		}
-
-		return hash % size;
+	public JSFilter(long maxValue, int machineNum) {
+		super(maxValue, machineNum, HashUtil::jsHash);
 	}
-
 }

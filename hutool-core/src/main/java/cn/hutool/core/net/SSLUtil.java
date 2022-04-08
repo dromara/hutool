@@ -23,7 +23,7 @@ public class SSLUtil {
 	 * @since 5.7.8
 	 */
 	public static SSLContext createSSLContext(String protocol) throws IORuntimeException{
-		return SSLContextBuilder.create().setProtocol(protocol).buildQuietly();
+		return SSLContextBuilder.create().setProtocol(protocol).build();
 	}
 
 	/**
@@ -55,6 +55,6 @@ public class SSLUtil {
 		return SSLContextBuilder.create()
 				.setProtocol(protocol)
 				.setKeyManagers(keyManagers)
-				.setTrustManagers(trustManagers).buildQuietly();
+				.setTrustManagers(trustManagers).build();
 	}
 }

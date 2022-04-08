@@ -3,13 +3,14 @@ package cn.hutool.core.net;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Validator;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 /**
  * IPV4地址工具类
@@ -20,6 +21,9 @@ import java.util.Objects;
  * @since 5.4.1
  */
 public class Ipv4Util {
+
+	public static final String LOCAL_IP = "127.0.0.1";
+
 	/**
 	 * IP段的分割符
 	 */
@@ -149,18 +153,25 @@ public class Ipv4Util {
 	/**
 	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据
 	 * 方法别名：inet_aton
+	 *
 	 * @param strIP IP V4 地址
 	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {
-		Validator.validateIpv4(strIP, "Invalid IPv4 address!");
-		final long[] ip = Convert.convert(long[].class, StrUtil.split(strIP, CharUtil.DOT));
-		return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
+		final Matcher matcher = PatternPool.IPV4.matcher(strIP);
+		if (matcher.matches()) {
+			return matchAddress(matcher);
+		}
+//		Validator.validateIpv4(strIP, "Invalid IPv4 address!");
+//		final long[] ip = Convert.convert(long[].class, StrUtil.split(strIP, CharUtil.DOT));
+//		return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
+		throw new IllegalArgumentException("Invalid IPv4 address!");
 	}
 
 	/**
 	 * 根据 ip/掩码位 计算IP段的起始IP（字符串型）
 	 * 方法别名：inet_ntoa
+	 *
 	 * @param ip      给定的IP，如218.240.38.69
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的字符串表示
@@ -176,7 +187,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的长整型表示
 	 */
-	private static Long getBeginIpLong(String ip, int maskBit) {
+	public static Long getBeginIpLong(String ip, int maskBit) {
 		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
 
@@ -195,9 +206,7 @@ public class Ipv4Util {
 	 * 根据子网掩码转换为掩码位
 	 *
 	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
-	 *
 	 * @return 掩码位，例如 24
-	 *
 	 * @throws IllegalArgumentException 子网掩码非法
 	 */
 	public static int getMaskBitByMask(String mask) {
@@ -282,7 +291,6 @@ public class Ipv4Util {
 	 * 判断掩码是否合法
 	 *
 	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
-	 *
 	 * @return true：掩码合法；false：掩码不合法
 	 */
 	public static boolean isMaskValid(String mask) {
@@ -293,13 +301,42 @@ public class Ipv4Util {
 	 * 判断掩码位是否合法
 	 *
 	 * @param maskBit 掩码位，例如 24
-	 *
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
 	public static boolean isMaskBitValid(int maskBit) {
 		return MaskBit.get(maskBit) != null;
 	}
 
+	/**
+	 * 判定是否为内网IPv4<br>
+	 * 私有IP：
+	 * <pre>
+	 * A类 10.0.0.0-10.255.255.255
+	 * B类 172.16.0.0-172.31.255.255
+	 * C类 192.168.0.0-192.168.255.255
+	 * </pre>
+	 * 当然，还有127这个网段是环回地址
+	 *
+	 * @param ipAddress IP地址
+	 * @return 是否为内网IP
+	 * @since 5.7.18
+	 */
+	public static boolean isInnerIP(String ipAddress) {
+		boolean isInnerIp;
+		long ipNum = ipv4ToLong(ipAddress);
+
+		long aBegin = ipv4ToLong("10.0.0.0");
+		long aEnd = ipv4ToLong("10.255.255.255");
+
+		long bBegin = ipv4ToLong("172.16.0.0");
+		long bEnd = ipv4ToLong("172.31.255.255");
+
+		long cBegin = ipv4ToLong("192.168.0.0");
+		long cEnd = ipv4ToLong("192.168.255.255");
+
+		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
+		return isInnerIp;
+	}
 
 	//-------------------------------------------------------------------------------- Private method start
 
@@ -311,9 +348,35 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 终止IP的长整型表示
 	 */
-	private static Long getEndIpLong(String ip, int maskBit) {
+	public static Long getEndIpLong(String ip, int maskBit) {
 		return getBeginIpLong(ip, maskBit)
 				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
+	}
+
+	/**
+	 * 将匹配到的Ipv4地址的4个分组分别处理
+	 *
+	 * @param matcher 匹配到的Ipv4正则
+	 * @return ipv4对应long
+	 */
+	private static long matchAddress(Matcher matcher) {
+		long addr = 0;
+		for (int i = 1; i <= 4; ++i) {
+			addr |= Long.parseLong(matcher.group(i)) << 8 * (4 - i);
+		}
+		return addr;
+	}
+
+	/**
+	 * 指定IP的long是否在指定范围内
+	 *
+	 * @param userIp 用户IP
+	 * @param begin  开始IP
+	 * @param end    结束IP
+	 * @return 是否在范围内
+	 */
+	private static boolean isInner(long userIp, long begin, long end) {
+		return (userIp >= begin) && (userIp <= end);
 	}
 	//-------------------------------------------------------------------------------- Private method end
 }

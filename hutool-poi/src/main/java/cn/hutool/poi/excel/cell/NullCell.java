@@ -58,7 +58,6 @@ public class NullCell implements Cell {
 		return this.row;
 	}
 
-	@Override
 	public void setCellType(CellType cellType) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}

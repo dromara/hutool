@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class UrlBuilderTest {
 
@@ -192,9 +194,9 @@ public class UrlBuilderTest {
 				"&amp;sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
 		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
-		// 原URL中的&amp;替换为&，value中的=被编码为%3D
+		// 原URL中的&amp;替换为&
 		Assert.assertEquals("https://mp.weixin.qq.com/s?" +
-				"__biz=MzI5NjkyNTIxMg%3D%3D" +
+				"__biz=MzI5NjkyNTIxMg==" +
 				"&mid=100000465&idx=1" +
 				"&sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7",
@@ -240,7 +242,7 @@ public class UrlBuilderTest {
 	public void testEncodeInQuery() {
 		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
-		Assert.assertEquals("a=123&b=4%3F6&c=789", urlBuilder.getQueryStr());
+		Assert.assertEquals("a=123&b=4?6&c=789", urlBuilder.getQueryStr());
 	}
 
 	@Test
@@ -252,11 +254,155 @@ public class UrlBuilderTest {
 	}
 
 	@Test
+	public void encodePathTest2(){
+		// https://gitee.com/dromara/hutool/issues/I4RA42
+		// Path中`:`在第一个segment需要转义，之后的不需要
+		final String urlStr = "https://hutool.cn/aa/bb/Pre-K,Kindergarten,First,Second,Third,Fourth,Fifth/Page:3";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(urlStr, urlBuilder.toString());
+	}
+
+	@Test
 	public void gimg2Test(){
 		String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
 		final UrlBuilder urlBuilder = UrlBuilder.of(url);
 
+		// PATH除了第一个path外，:是允许的
+		String url2 = "https://gimg2.baidu.com/image_search/src=http:%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http:%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
+		Assert.assertEquals(url2, urlBuilder.toString());
+	}
 
+	@Test
+	public void fragmentEncodeTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL
+		// 见：https://stackoverflow.com/questions/26088849/url-fragment-allowed-characters
+		String url = "https://hutool.cn/docs/#/?id=简介";
+		UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals("https://hutool.cn/docs/#/?id=%E7%AE%80%E4%BB%8B", urlBuilder.toString());
+
+		urlBuilder = UrlBuilder.ofHttp(urlBuilder.toString());
+		Assert.assertEquals(urlBuilder.toString(), urlBuilder.toString());
+	}
+
+	@Test
+	public void slashEncodeTest(){
+		// https://github.com/dromara/hutool/issues/1904
+		// 在query中，"/"是不可转义字符
+		// 见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.4
+		String url = "https://invoice.maycur.com/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx?download/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx&e=1630491088";
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals(url, urlBuilder.toString());
+	}
+
+	@Test
+	public void addPathEncodeTest(){
+		String url = UrlBuilder.create()
+				.setScheme("https")
+				.setHost("domain.cn")
+				.addPath("api")
+				.addPath("xxx")
+				.addPath("bbb")
+				.build();
+
+		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+	}
+
+	@Test
+	public void addPathEncodeTest2(){
+		// https://github.com/dromara/hutool/issues/1912
+		String url = UrlBuilder.create()
+				.setScheme("https")
+				.setHost("domain.cn")
+				.addPath("/api/xxx/bbb")
+				.build();
+
+		Assert.assertEquals("https://domain.cn/api/xxx/bbb", url);
+	}
+
+	@Test
+	public void percent2BTest(){
+		String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
+		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
+		Assert.assertEquals(url, of.toString());
+	}
+
+	@Test
+	public void paramTest(){
+		String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		Assert.assertEquals(url, builder.toString());
+	}
+
+	@Test
+	public void fragmentTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+
+		Assert.assertEquals(url, builder.toString());
+	}
+
+	@Test
+	public void fragmentAppendParamTest(){
+		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
+		String url = "https://www.hutool.cn/#/a/b";
+		final UrlBuilder builder = UrlBuilder.ofHttp(url);
+		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
+		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
+	}
+
+	@Test
+	public void paramWithPlusTest(){
+		String url = "http://127.0.0.1/?" +
+				"Expires=1642734164&" +
+				"security-token=CAIS+AF1q6Ft5B2yfSjIr5fYEeju1b1ggpPee2KGpjlgQtdfl43urjz2IHtKdXRvBu8Xs" +
+				"/4wnmxX7f4YlqB6T55OSAmcNZEoPwKpT4zmMeT7oMWQweEurv" +
+				"/MQBqyaXPS2MvVfJ+OLrf0ceusbFbpjzJ6xaCAGxypQ12iN+/m6" +
+				"/Ngdc9FHHPPD1x8CcxROxFppeIDKHLVLozNCBPxhXfKB0ca0WgVy0EHsPnvm5DNs0uH1AKjkbRM9r6ceMb0M5NeW75kSMqw0eBMca7M7TVd8RAi9t0t1" +
+				"/IVpGiY4YDAWQYLv0rda7DOltFiMkpla7MmXqlft+hzcgeQY0pc" +
+				"/RqAAYRYVCBiyuzAexSiDiJX1VqWljg4jYp1sdyv3HpV3sXVcf6VH6AN9ot5YNTw4JNO0aNpLpLm93rRMrOKIOsve+OmNyZ4HS7qHQKt1qp7HY1A" +
+				"/wGhJstkAoGQt+CHSMwVdIx3bVT1+ZYnJdM/oIQ/90afw4EEEQaRE51Z0rQC7z8d";
+		final String build = UrlBuilder.of(url).build();
+		Assert.assertEquals(url, build);
+	}
+
+	@Test
+	public void issueI4Z2ETTest(){
+		// =是url参数值中的合法字符，但是某些URL强制编码了
+		String url = "http://dsl-fd.dslbuy.com/fssc/1647947565522.pdf?" +
+				"Expires=1647949365" +
+				"&OSSAccessKeyId=STS.NTZ9hvqPSLG8ENknz2YaByLKj" +
+				"&Signature=oYUu26JufAyPY4PdzaOp1x4sr4Q%3D";
+
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url, null);
+		Assert.assertEquals(url, urlBuilder.toString());
+	}
+
+	@Test
+	public void issue2215Test(){
+		String url = "https://hutool.cn/v1/104303371/messages:send";
+		final String build = UrlBuilder.of(url).build();
+		Assert.assertEquals(url, build);
+	}
+
+	@Test
+	public void issuesI4Z2ETTest(){
+		String url = "http://hutool.cn/2022/03/09/123.zip?Expires=1648704684&OSSAccessKeyId=LTAI4FncgaVtwZGBnYHHi8ox&Signature=%2BK%2B%3D";
+		final String build = UrlBuilder.of(url, null).build();
+		Assert.assertEquals(url, build);
+	}
+
+	@Test
+	public void issueI50NHQTest(){
+		String url = "http://127.0.0.1/devicerecord/list";
+		HashMap<String, Object> params = new LinkedHashMap<>();
+		params.put("start", "2022-03-31 00:00:00");
+		params.put("end", "2022-03-31 23:59:59");
+		params.put("page", 1);
+		params.put("limit", 10);
+
+		final UrlBuilder builder = UrlBuilder.of(url);
+		params.forEach(builder::addQuery);
+		Assert.assertEquals("http://127.0.0.1/devicerecord/list?start=2022-03-31%2000:00:00&end=2022-03-31%2023:59:59&page=1&limit=10", builder.toString());
 	}
 }

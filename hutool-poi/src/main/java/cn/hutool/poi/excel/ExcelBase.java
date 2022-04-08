@@ -5,8 +5,10 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,8 +17,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.Closeable;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
@@ -31,6 +36,10 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	protected boolean isClosed;
 	/**
+	 * 目标文件，如果用户读取为流或自行创建的Workbook或Sheet,此参数为{@code null}
+	 */
+	protected File destFile;
+	/**
 	 * 工作簿
 	 */
 	protected Workbook workbook;
@@ -38,6 +47,10 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * Excel中对应的Sheet
 	 */
 	protected Sheet sheet;
+	/**
+	 * 标题行别名
+	 */
+	protected Map<String, String> headerAlias;
 
 	/**
 	 * 构造
@@ -169,7 +182,6 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @return this
 	 * @since 5.7.10
 	 */
-	@SuppressWarnings("unchecked")
 	public T cloneSheet(int sheetIndex, String newSheetName, boolean setAsCurrentSheet) {
 		Sheet sheet;
 		if (this.workbook instanceof XSSFWorkbook) {
@@ -182,6 +194,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		if (setAsCurrentSheet) {
 			this.sheet = sheet;
 		}
+		//noinspection unchecked
 		return (T) this;
 	}
 
@@ -391,6 +404,32 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	}
 
 	/**
+	 * 创建 {@link Hyperlink}，默认内容（标签为链接地址本身）
+	 * @param type 链接类型
+	 * @param address 链接地址
+	 * @return 链接
+	 * @since 5.7.13
+	 */
+	public Hyperlink createHyperlink(HyperlinkType type, String address){
+		return createHyperlink(type, address, address);
+	}
+
+	/**
+	 * 创建 {@link Hyperlink}，默认内容
+	 * @param type 链接类型
+	 * @param address 链接地址
+	 * @param label 标签，即单元格中显示的内容
+	 * @return 链接
+	 * @since 5.7.13
+	 */
+	public Hyperlink createHyperlink(HyperlinkType type, String address, String label){
+		final Hyperlink hyperlink = this.workbook.getCreationHelper().createHyperlink(type);
+		hyperlink.setAddress(address);
+		hyperlink.setLabel(label);
+		return hyperlink;
+	}
+
+	/**
 	 * 获取总行数，计算方法为：
 	 *
 	 * <pre>
@@ -470,5 +509,67 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		this.sheet = null;
 		this.workbook = null;
 		this.isClosed = true;
+	}
+
+	/**
+	 * 获得标题行的别名Map
+	 *
+	 * @return 别名Map
+	 */
+	public Map<String, String> getHeaderAlias() {
+		return headerAlias;
+	}
+
+	/**
+	 * 设置标题行的别名Map
+	 *
+	 * @param headerAlias 别名Map
+	 * @return this
+	 */
+	public T setHeaderAlias(Map<String, String> headerAlias) {
+		this.headerAlias = headerAlias;
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	/**
+	 * 增加标题别名
+	 *
+	 * @param header 标题
+	 * @param alias  别名
+	 * @return this
+	 */
+	public T addHeaderAlias(String header, String alias) {
+		Map<String, String> headerAlias = this.headerAlias;
+		if (null == headerAlias) {
+			headerAlias = new LinkedHashMap<>();
+		}
+		this.headerAlias = headerAlias;
+		this.headerAlias.put(header, alias);
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	/**
+	 * 去除标题别名
+	 *
+	 * @param header 标题
+	 * @return this
+	 */
+	public T removeHeaderAlias(String header) {
+		this.headerAlias.remove(header);
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	/**
+	 * 清空标题别名，key为Map中的key，value为别名
+	 *
+	 * @return this
+	 */
+	public T clearHeaderAlias() {
+		this.headerAlias = null;
+		//noinspection unchecked
+		return (T) this;
 	}
 }

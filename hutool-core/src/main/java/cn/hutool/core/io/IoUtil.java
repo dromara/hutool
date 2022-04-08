@@ -32,6 +32,7 @@ import java.io.PushbackInputStream;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -222,6 +223,17 @@ public class IoUtil extends NioUtil {
 	 */
 	public static BufferedReader getReader(BOMInputStream in) {
 		return getReader(in, in.getCharset());
+	}
+
+	/**
+	 * 从{@link InputStream}中获取{@link BomReader}
+	 *
+	 * @param in {@link InputStream}
+	 * @return {@link BomReader}
+	 * @since 5.7.14
+	 */
+	public static BomReader getBomReader(InputStream in) {
+		return new BomReader(in);
 	}
 
 	/**
@@ -486,7 +498,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 读取指定长度的byte数组，不关闭流
 	 *
-	 * @param in     {@link InputStream}，为null返回null
+	 * @param in     {@link InputStream}，为{@code null}返回{@code null}
 	 * @param length 长度，小于等于0返回空byte数组
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
@@ -499,20 +511,9 @@ public class IoUtil extends NioUtil {
 			return new byte[0];
 		}
 
-		byte[] b = new byte[length];
-		int readLength;
-		try {
-			readLength = in.read(b);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (readLength > 0 && readLength < length) {
-			byte[] b2 = new byte[readLength];
-			System.arraycopy(b, 0, b2, 0, readLength);
-			return b2;
-		} else {
-			return b;
-		}
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream(length);
+		copy(in, out, DEFAULT_BUFFER_SIZE, length, null);
+		return out.toByteArray();
 	}
 
 	/**
@@ -611,6 +612,9 @@ public class IoUtil extends NioUtil {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
 		}
+		if(null != clazz){
+			in.accept(clazz);
+		}
 		try {
 			//noinspection unchecked
 			return (T) in.readObject();
@@ -673,7 +677,7 @@ public class IoUtil extends NioUtil {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T extends Collection<String>> T readLines(Reader reader, final T collection) throws IORuntimeException {
+	public static <T extends Collection<String>> T readLines(Reader reader, T collection) throws IORuntimeException {
 		readLines(reader, (LineHandler) collection::add);
 		return collection;
 	}
@@ -1319,5 +1323,20 @@ public class IoUtil extends NioUtil {
 	 */
 	public static LineIter lineIter(InputStream in, Charset charset) {
 		return new LineIter(in, charset);
+	}
+
+	/**
+	 * {@link ByteArrayOutputStream} 转换为String
+	 * @param out {@link ByteArrayOutputStream}
+	 * @param charset 编码
+	 * @return 字符串
+	 * @since 5.7.17
+	 */
+	public static String toStr(ByteArrayOutputStream out, Charset charset){
+		try {
+			return out.toString(charset.name());
+		} catch (UnsupportedEncodingException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

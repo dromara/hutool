@@ -8,7 +8,7 @@ package cn.hutool.core.lang.hash;
  * @since 5.2.5
  */
 @FunctionalInterface
-public interface Hash32<T> {
+public interface Hash32<T> extends Hash<T>{
 	/**
 	 * 计算Hash值
 	 *
@@ -16,4 +16,9 @@ public interface Hash32<T> {
 	 * @return hash
 	 */
 	int hash32(T t);
+
+	@Override
+	default Number hash(T t){
+		return hash32(t);
+	}
 }

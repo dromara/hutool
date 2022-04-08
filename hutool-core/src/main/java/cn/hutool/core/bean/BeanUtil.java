@@ -80,7 +80,7 @@ public class BeanUtil {
 
 	/**
 	 * 判断是否有Setter方法<br>
-	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 判定方法是否存在只有一个参数的setXXX方法
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
@@ -88,9 +88,8 @@ public class BeanUtil {
 	 */
 	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			final Method[] methods = clazz.getMethods();
-			for (Method method : methods) {
-				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
+			for (Method method : clazz.getMethods()) {
+				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
 					// 检测包含标准的setXXX方法即视为标准的JavaBean
 					return true;
 				}
@@ -101,7 +100,7 @@ public class BeanUtil {
 
 	/**
 	 * 判断是否为Bean对象<br>
-	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 判定方法是否存在只有无参数的getXXX方法或者isXXX方法
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
@@ -110,7 +109,7 @@ public class BeanUtil {
 	public static boolean hasGetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Method method : clazz.getMethods()) {
-				if (method.getParameterTypes().length == 0) {
+				if (method.getParameterCount() == 0) {
 					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
 						return true;
 					}
@@ -226,8 +225,8 @@ public class BeanUtil {
 	 */
 	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1)
-				: new HashMap<>((int) (propertyDescriptors.length), 1);
+		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1f)
+				: new HashMap<>(propertyDescriptors.length, 1);
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);
@@ -302,7 +301,7 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
+	 * 设置字段值，通过反射设置字段值，并不调用setXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 *
 	 * @param bean             Bean
@@ -664,6 +663,32 @@ public class BeanUtil {
 		).copy();
 	}
 
+	/**
+	 * 对象转Map<br>
+	 * 通过自定义{@link CopyOptions} 完成抓换选项，以便实现：
+	 *
+	 * <pre>
+	 * 1. 字段筛选，可以去除不需要的字段
+	 * 2. 字段变换，例如实现驼峰转下划线
+	 * 3. 自定义字段前缀或后缀等等
+	 * 4. 字段值处理
+	 * ...
+	 * </pre>
+	 *
+	 * @param bean        bean对象
+	 * @param targetMap   目标的Map
+	 * @param copyOptions 拷贝选项
+	 * @return Map
+	 * @since 5.7.15
+	 */
+	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, CopyOptions copyOptions) {
+		if (null == bean) {
+			return null;
+		}
+
+		return BeanCopier.create(bean, targetMap, copyOptions).copy();
+	}
+
 	// --------------------------------------------------------------------------------------------- copyProperties
 
 	/**
@@ -713,7 +738,7 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
-		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create())).copy();
+		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
 	}
 
 	/**
@@ -890,4 +915,27 @@ public class BeanUtil {
 		return false;
 	}
 
+	/**
+	 * 获取Getter或Setter方法名对应的字段名称，规则如下：
+	 * <ul>
+	 *     <li>getXxxx获取为xxxx，如getName得到name。</li>
+	 *     <li>setXxxx获取为xxxx，如setName得到name。</li>
+	 *     <li>isXxxx获取为xxxx，如isName得到name。</li>
+	 *     <li>其它不满足规则的方法名抛出{@link IllegalArgumentException}</li>
+	 * </ul>
+	 *
+	 * @param getterOrSetterName Getter或Setter方法名
+	 * @return 字段名称
+	 * @throws IllegalArgumentException 非Getter或Setter方法
+	 * @since 5.7.23
+	 */
+	public static String getFieldName(String getterOrSetterName) {
+		if (getterOrSetterName.startsWith("get") || getterOrSetterName.startsWith("set")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 3);
+		} else if (getterOrSetterName.startsWith("is")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 2);
+		} else {
+			throw new IllegalArgumentException("Invalid Getter or Setter name: " + getterOrSetterName);
+		}
+	}
 }

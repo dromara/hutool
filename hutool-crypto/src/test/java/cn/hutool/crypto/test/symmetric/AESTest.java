@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import java.security.SecureRandom;
 
 public class AESTest {
@@ -111,5 +112,25 @@ public class AESTest {
 
 		final String decryptStr = aes.decryptStr(result1);
 		Assert.assertEquals(content, decryptStr);
+	}
+
+	/**
+	 * 见：https://blog.csdn.net/weixin_42468911/article/details/114358682
+	 */
+	@Test
+	public void gcmTest() {
+		final SecretKey key = KeyUtil.generateKey("AES");
+		byte[] iv = RandomUtil.randomBytes(12);
+
+		AES aes = new AES("GCM", "NoPadding",
+				key,
+				new GCMParameterSpec(128, iv));
+
+		// 原始数据
+		String phone = "13534534567";
+		// 加密
+		byte[] encrypt = aes.encrypt(phone);
+		final String decryptStr = aes.decryptStr(encrypt);
+		Assert.assertEquals(phone, decryptStr);
 	}
 }

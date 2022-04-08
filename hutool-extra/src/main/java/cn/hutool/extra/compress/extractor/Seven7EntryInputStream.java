@@ -20,8 +20,9 @@ public class Seven7EntryInputStream extends InputStream {
 
 	/**
 	 * 构造
+	 *
 	 * @param sevenZFile {@link SevenZFile}
-	 * @param entry {@link SevenZArchiveEntry}
+	 * @param entry      {@link SevenZArchiveEntry}
 	 */
 	public Seven7EntryInputStream(SevenZFile sevenZFile, SevenZArchiveEntry entry) {
 		this.sevenZFile = sevenZFile;
@@ -30,11 +31,21 @@ public class Seven7EntryInputStream extends InputStream {
 
 	@Override
 	public int available() throws IOException {
-		try{
+		try {
 			return Math.toIntExact(this.size);
-		} catch (ArithmeticException e){
+		} catch (ArithmeticException e) {
 			throw new IOException("Entry size is too large!(max than Integer.MAX)", e);
 		}
+	}
+
+	/**
+	 * 获取读取的长度（字节数）
+	 *
+	 * @return 读取的字节数
+	 * @since 5.7.14
+	 */
+	public long getReadSize() {
+		return this.readSize;
 	}
 
 	@Override

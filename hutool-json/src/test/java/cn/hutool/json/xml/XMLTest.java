@@ -3,6 +3,8 @@ package cn.hutool.json.xml;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.XML;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +16,7 @@ public class XMLTest {
 				.set("aaa", "你好")
 				.set("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
-		Assert.assertEquals("<aaa>你好</aaa><键2>test</键2>", s);
+		MatcherAssert.assertThat(s, CoreMatchers.anyOf(CoreMatchers.is("<aaa>你好</aaa><键2>test</键2>"), CoreMatchers.is("<键2>test</键2><aaa>你好</aaa>")));
 	}
 
 	@Test

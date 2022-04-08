@@ -9,12 +9,12 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.12-SNAPSHOT</version>
+		<version>5.8.0.M3</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool POI工具类（对MS Office操作）</description>
+	<description>Hutool POI工具类（对Office文档、OFD等操作）</description>
 
 	<properties>
 		<!-- versions -->
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.15.0</version>
+			<version>1.17.13</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

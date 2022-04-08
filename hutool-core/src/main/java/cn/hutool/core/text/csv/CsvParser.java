@@ -1,5 +1,6 @@
 package cn.hutool.core.text.csv;
 
+import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
@@ -24,7 +25,7 @@ import java.util.Objects;
  *
  * @author Looly
  */
-public final class CsvParser implements Closeable, Serializable {
+public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final int DEFAULT_ROW_CAPACITY = 10;
@@ -79,23 +80,28 @@ public final class CsvParser implements Closeable, Serializable {
 	 */
 	public CsvParser(final Reader reader, CsvReadConfig config) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 
 	/**
-	 * 获取头部字段列表，如果containsHeader设置为false则抛出异常
+	 * 获取头部字段列表，如果headerLineNo &lt; 0，抛出异常
 	 *
 	 * @return 头部列表
 	 * @throws IllegalStateException 如果不解析头部或者没有调用nextRow()方法
 	 */
 	public List<String> getHeader() {
-		if (false == config.containsHeader) {
+		if (config.headerLineNo  < 0) {
 			throw new IllegalStateException("No header available - header parsing is disabled");
 		}
 		if (lineNo < config.beginLineNo) {
 			throw new IllegalStateException("No header available - call nextRow() first");
 		}
 		return header.fields;
+	}
+
+	@Override
+	protected CsvRow computeNext() {
+		return nextRow();
 	}
 
 	/**
@@ -146,7 +152,7 @@ public final class CsvParser implements Closeable, Serializable {
 			}
 
 			//初始化标题
-			if (config.containsHeader && null == header) {
+			if (lineNo == config.headerLineNo && null == header) {
 				initHeader(currentFields);
 				// 作为标题行后，此行跳过，下一行做为第一行
 				continue;
@@ -234,7 +240,7 @@ public final class CsvParser implements Closeable, Serializable {
 			if(preChar < 0 || preChar == CharUtil.CR || preChar == CharUtil.LF){
 				// 判断行首字符为指定注释字符的注释开始，直到遇到换行符
 				// 行首分两种，1是preChar < 0表示文本开始，2是换行符后紧跟就是下一行的开始
-				if(c == this.config.commentCharacter){
+				if(null != this.config.commentCharacter && c == this.config.commentCharacter){
 					inComment = true;
 				}
 			}
@@ -258,7 +264,7 @@ public final class CsvParser implements Closeable, Serializable {
 					inQuotes = false;
 				} else {
 					// 字段内容中新行
-					if (isLineEnd(c)) {
+					if (isLineEnd(c, preChar)) {
 						inQuotesLineCount++;
 					}
 				}
@@ -335,16 +341,22 @@ public final class CsvParser implements Closeable, Serializable {
 
 		field = StrUtil.unWrap(field, textDelimiter);
 		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
+		if(this.config.trimField){
+			// issue#I49M0C@Gitee
+			field = StrUtil.trim(field);
+		}
 		currentFields.add(field);
 	}
 
 	/**
 	 * 是否行结束符
-	 * @param c 符号
+	 *
+	 * @param c       符号
+	 * @param preChar 前一个字符
 	 * @return 是否结束
 	 * @since 5.7.4
 	 */
-	private boolean isLineEnd(char c){
+	private boolean isLineEnd(char c, int preChar) {
 		return (c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR;
 	}
 
@@ -385,7 +397,8 @@ public final class CsvParser implements Closeable, Serializable {
 		}
 
 		/**
-		 * 读取到缓存
+		 * 读取到缓存<br>
+		 * 全量读取，会重置Buffer中所有数据
 		 *
 		 * @param reader {@link Reader}
 		 */

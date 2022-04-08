@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
@@ -35,7 +36,7 @@ public class JSONUtilTest {
 	@Test(expected = JSONException.class)
 	public void parseNumberTest() {
 		JSONArray json = JSONUtil.parseArray(123L);
-		Console.log(json);
+		Assert.assertNotNull(json);
 	}
 
 	/**
@@ -144,13 +145,6 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void putByPathTest() {
-		JSONObject json = new JSONObject();
-		json.putByPath("aa.bb", "BB");
-		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
-	}
-
-	@Test
 	public void getStrTest() {
 		String html = "{\"name\":\"Something must have been changed since you leave\"}";
 		JSONObject jsonObject = JSONUtil.parseObj(html);
@@ -219,7 +213,7 @@ public class JSONUtilTest {
 
 	@Test
 	public void sqlExceptionTest(){
-		//https://github.com/looly/hutool/issues/1399
+		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
 		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
 		Assert.assertEquals("{\"test\":\"java.sql.SQLException: test\"}", set.toString());
@@ -230,5 +224,14 @@ public class JSONUtilTest {
 		// 科学计数法使用BigDecimal处理，默认输出非科学计数形式
 		String str = "{\"test\":100000054128897953e4}";
 		Assert.assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
+	}
+
+	@Test
+	public void toXmlTest(){
+		final JSONObject obj = JSONUtil.createObj();
+		obj.set("key1", "v1")
+				.set("key2", ListUtil.of("a", "b", "c"));
+		final String xmlStr = JSONUtil.toXmlStr(obj);
+		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
 }

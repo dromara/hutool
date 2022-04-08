@@ -24,7 +24,7 @@ public class ConditionBuilder implements Builder<String> {
 	 * 创建构建器
 	 *
 	 * @param conditions 条件列表
-	 * @return {@link ConditionBuilder}
+	 * @return ConditionBuilder
 	 */
 	public static ConditionBuilder of(Condition... conditions) {
 		return new ConditionBuilder(conditions);

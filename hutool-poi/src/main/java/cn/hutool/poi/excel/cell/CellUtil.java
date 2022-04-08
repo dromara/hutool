@@ -22,11 +22,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
 
-import java.math.BigDecimal;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Excel表格中单元格工具类
  *
@@ -150,27 +145,7 @@ public class CellUtil {
 		}
 
 		if (null != styleSet) {
-			final CellStyle headCellStyle = styleSet.getHeadCellStyle();
-			final CellStyle cellStyle = styleSet.getCellStyle();
-			if (isHeader && null != headCellStyle) {
-				cell.setCellStyle(headCellStyle);
-			} else if (null != cellStyle) {
-				cell.setCellStyle(cellStyle);
-			}
-		}
-
-		if (value instanceof Date
-				|| value instanceof TemporalAccessor
-				|| value instanceof Calendar) {
-			// 日期单独定义格式
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
-		} else if (value instanceof Number) {
-			// 数字单独定义格式
-			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
-				cell.setCellStyle(styleSet.getCellStyleForNumber());
-			}
+			cell.setCellStyle(styleSet.getStyleByValueType(value, isHeader));
 		}
 
 		setCellValue(cell, value);
@@ -187,9 +162,9 @@ public class CellUtil {
 	 */
 	public static void setCellValue(Cell cell, Object value, CellStyle style) {
 		setCellValue(cell, (CellSetter) cell1 -> {
+			setCellValue(cell, value);
 			if (null != style) {
 				cell1.setCellStyle(style);
-				setCellValue(cell, value);
 			}
 		});
 	}
@@ -200,7 +175,7 @@ public class CellUtil {
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
 	 * @param cell  单元格
-	 * @param value 值
+	 * @param value 值或{@link CellSetter}
 	 * @since 5.6.4
 	 */
 	public static void setCellValue(Cell cell, Object value) {
@@ -228,6 +203,9 @@ public class CellUtil {
 	 * @since 5.5.0
 	 */
 	public static Cell getCell(Row row, int cellIndex) {
+		if (null == row) {
+			return null;
+		}
 		Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			return new NullCell(row, cellIndex);
@@ -244,6 +222,9 @@ public class CellUtil {
 	 * @since 4.0.2
 	 */
 	public static Cell getOrCreateCell(Row row, int cellIndex) {
+		if (null == row) {
+			return null;
+		}
 		Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			cell = row.createCell(cellIndex);
@@ -401,7 +382,7 @@ public class CellUtil {
 	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
 		return ObjectUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
-				SheetUtil.getCell(sheet, y, x));
+				() -> SheetUtil.getCell(sheet, y, x));
 	}
 
 	/**
@@ -427,7 +408,7 @@ public class CellUtil {
 		}
 		Comment comment = drawing.createCellComment(anchor);
 		comment.setString(factory.createRichTextString(commentText));
-		comment.setAuthor(StrUtil.nullToEmpty(commentText));
+		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
 		cell.setCellComment(comment);
 	}
 

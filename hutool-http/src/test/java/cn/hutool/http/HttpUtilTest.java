@@ -303,6 +303,12 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void normalizeBlankParamsTest() {
+		String encodeResult = HttpUtil.normalizeParams("", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("", encodeResult);
+	}
+
+	@Test
 	public void getMimeTypeTest() {
 		String mimeType = HttpUtil.getMimeType("aaa.aaa");
 		Assert.assertNull(mimeType);
@@ -345,5 +351,15 @@ public class HttpUtilTest {
 		final String body = HttpRequest.get("https://api.acplay.net/api/v2/bangumi/9541")
 				.execute().body();
 		Console.log(body);
+	}
+
+	@Test
+	@Ignore
+	public void getPicTest(){
+		HttpGlobalConfig.setDecodeUrl(false);
+		String url = "https://p3-sign.douyinpic.com/tos-cn-i-0813/f41afb2e79a94dcf80970affb9a69415~noop.webp?x-expires=1647738000&x-signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D&from=4257465056&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sh=&sc=&l=2022021809224601020810013524310DD3&biz_tag=aweme_images";
+
+		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
+		Console.log(request.execute().body());
 	}
 }

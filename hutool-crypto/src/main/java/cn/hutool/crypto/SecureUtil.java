@@ -3,7 +3,6 @@ package cn.hutool.crypto;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
@@ -21,6 +20,9 @@ import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.PBKDF2;
 import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.ZUC;
+import cn.hutool.crypto.symmetric.fpe.FPE;
+import org.bouncycastle.crypto.AlphabetMapper;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -827,7 +829,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm) {
-		return new Sign(algorithm);
+		return SignUtil.sign(algorithm);
 	}
 
 	/**
@@ -842,7 +844,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		return new Sign(algorithm, privateKeyBase64, publicKeyBase64);
+		return SignUtil.sign(algorithm, privateKeyBase64, publicKeyBase64);
 	}
 
 	/**
@@ -857,7 +859,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
-		return new Sign(algorithm, privateKey, publicKey);
+		return SignUtil.sign(algorithm, privateKey, publicKey);
 	}
 
 	/**
@@ -872,7 +874,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String... otherParams) {
-		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(crypto, params, otherParams);
 	}
 
 	/**
@@ -889,8 +891,8 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
-	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return crypto.encryptHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+		return SignUtil.signParams(crypto, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**
@@ -904,7 +906,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsMd5(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.MD5, params, otherParams);
+		return SignUtil.signParamsMd5(params, otherParams);
 	}
 
 	/**
@@ -918,7 +920,7 @@ public class SecureUtil {
 	 * @since 4.0.8
 	 */
 	public static String signParamsSha1(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA1, params, otherParams);
+		return SignUtil.signParamsSha1(params, otherParams);
 	}
 
 	/**
@@ -932,7 +934,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsSha256(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA256, params, otherParams);
+		return SignUtil.signParamsSha256(params, otherParams);
 	}
 
 	/**
@@ -947,7 +949,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String... otherParams) {
-		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(digestAlgorithm, params, otherParams);
 	}
 
 	/**
@@ -964,8 +966,8 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
-	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+		return SignUtil.signParams(digestAlgorithm, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**
@@ -1101,11 +1103,49 @@ public class SecureUtil {
 	 * PBKDF2加密密码
 	 *
 	 * @param password 密码
-	 * @param salt 盐
+	 * @param salt     盐
 	 * @return 盐，一般为16位
 	 * @since 5.6.0
 	 */
-	public static String pbkdf2(char[] password, byte[] salt){
+	public static String pbkdf2(char[] password, byte[] salt) {
 		return new PBKDF2().encryptHex(password, salt);
+	}
+
+	/**
+	 * FPE(Format Preserving Encryption)实现，支持FF1和FF3-1模式。
+	 *
+	 * @param mode   FPE模式枚举，可选FF1或FF3-1
+	 * @param key    密钥，{@code null}表示随机密钥，长度必须是16bit、24bit或32bit
+	 * @param mapper Alphabet字典映射，被加密的字符范围和这个映射必须一致，例如手机号、银行卡号等字段可以采用数字字母字典表
+	 * @param tweak  Tweak是为了解决因局部加密而导致结果冲突问题，通常情况下将数据的不可变部分作为Tweak
+	 * @return {@link FPE}
+	 * @since 5.7.12
+	 */
+	public static FPE fpe(FPE.FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
+		return new FPE(mode, key, mapper, tweak);
+	}
+
+	/**
+	 * 祖冲之算法集（ZUC-128算法）实现，基于BouncyCastle实现。
+	 *
+	 * @param key 密钥
+	 * @param iv  加盐，长度16bytes，{@code null}是随机加盐
+	 * @return {@link ZUC}
+	 * @since 5.7.12
+	 */
+	public static ZUC zuc128(byte[] key, byte[] iv) {
+		return new ZUC(ZUC.ZUCAlgorithm.ZUC_128, key, iv);
+	}
+
+	/**
+	 * 祖冲之算法集（ZUC-256算法）实现，基于BouncyCastle实现。
+	 *
+	 * @param key 密钥
+	 * @param iv  加盐，长度25bytes，{@code null}是随机加盐
+	 * @return {@link ZUC}
+	 * @since 5.7.12
+	 */
+	public static ZUC zuc256(byte[] key, byte[] iv) {
+		return new ZUC(ZUC.ZUCAlgorithm.ZUC_256, key, iv);
 	}
 }

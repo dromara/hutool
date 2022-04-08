@@ -28,6 +28,7 @@ import java.security.spec.RSAPublicKeySpec;
  *
  */
 public class RSA extends AsymmetricCrypto {
+	private static final long serialVersionUID = 1L;
 
 	/** 默认的RSA算法 */
 	private static final AsymmetricAlgorithm ALGORITHM_RSA = AsymmetricAlgorithm.RSA_ECB_PKCS1;

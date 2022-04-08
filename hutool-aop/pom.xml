@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.12-SNAPSHOT</version>
+		<version>5.8.0.M3</version>
 	</parent>
 
 	<artifactId>hutool-aop</artifactId>
@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<cglib.version>3.3.0</cglib.version>
-		<spring.version>5.3.9</spring.version>
+		<spring.version>5.3.17</spring.version>
 	</properties>
 
 	<dependencies>

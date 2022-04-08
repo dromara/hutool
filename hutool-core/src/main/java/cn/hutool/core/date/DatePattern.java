@@ -31,6 +31,10 @@ public class DatePattern {
 
 	//-------------------------------------------------------------------------------------------------------------------------------- Normal
 	/**
+	 * 年格式：yyyy
+	 */
+	public static final String NORM_YEAR_PATTERN = "yyyy";
+	/**
 	 * 年月格式：yyyy-MM
 	 */
 	public static final String NORM_MONTH_PATTERN = "yyyy-MM";
@@ -145,7 +149,7 @@ public class DatePattern {
 	/**
 	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日
 	 */
-	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(ISO8601_PATTERN);
+	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(CHINESE_DATE_PATTERN);
 
 	/**
 	 * 标准日期格式：yyyy年MM月dd日 HH时mm分ss秒
@@ -311,7 +315,7 @@ public class DatePattern {
 	 * @return {@link DateTimeFormatter}
 	 * @since 5.7.5
 	 */
-	private static DateTimeFormatter createFormatter(String pattern) {
+	public static DateTimeFormatter createFormatter(String pattern) {
 		return DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
 				.withZone(ZoneId.systemDefault());
 	}

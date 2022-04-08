@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
@@ -61,16 +62,30 @@ public class Snowflake implements Serializable {
 	// 时间毫秒数左移22位
 	private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_ID_BITS;
 	// 序列掩码，用于限定序列最大值不能超过4095
-	@SuppressWarnings("FieldCanBeLocal")
 	private static final long SEQUENCE_MASK = ~(-1L << SEQUENCE_BITS);// 4095
 
+	/**
+	 * 初始化时间点
+	 */
 	private final long twepoch;
 	private final long workerId;
 	private final long dataCenterId;
 	private final boolean useSystemClock;
-	// 允许的时钟回拨数
+	/**
+	 * 允许的时钟回拨毫秒数
+	 */
 	private final long timeOffset;
+	/**
+	 * 当在低频模式下时，序号始终为0，导致生成ID始终为偶数<br>
+	 * 此属性用于限定一个随机上限，在不同毫秒下生成序号时，给定一个随机数，避免偶数问题。<br>
+	 * 注意次数必须小于{@link #SEQUENCE_MASK}，{@code 0}表示不使用随机数。<br>
+	 * 这个上限不包括值本身。
+	 */
+	private final long randomSequenceLimit;
 
+	/**
+	 * 自增序号，当高频模式下时，同一毫秒内生成N个ID，则这个序号在同一毫秒下，自增以避免ID重复。
+	 */
 	private long sequence = 0L;
 	private long lastTimestamp = -1L;
 
@@ -84,7 +99,7 @@ public class Snowflake implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param workerId     终端ID
+	 * @param workerId 终端ID
 	 */
 	public Snowflake(long workerId) {
 		this(workerId, IdUtil.getDataCenterId(MAX_DATA_CENTER_ID));
@@ -127,26 +142,30 @@ public class Snowflake implements Serializable {
 	 * @param workerId         工作机器节点id
 	 * @param dataCenterId     数据中心id
 	 * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
-	 * @param timeOffset 允许时间回拨的毫秒数
-	 * @since 5.7.3
+	 * @param timeOffset       允许时间回拨的毫秒数
+	 * @since 5.8.0
 	 */
 	public Snowflake(Date epochDate, long workerId, long dataCenterId, boolean isUseSystemClock, long timeOffset) {
-		if (null != epochDate) {
-			this.twepoch = epochDate.getTime();
-		} else{
-			// Thu, 04 Nov 2010 01:42:54 GMT
-			this.twepoch = DEFAULT_TWEPOCH;
-		}
-		if (workerId > MAX_WORKER_ID || workerId < 0) {
-			throw new IllegalArgumentException(StrUtil.format("worker Id can't be greater than {} or less than 0", MAX_WORKER_ID));
-		}
-		if (dataCenterId > MAX_DATA_CENTER_ID || dataCenterId < 0) {
-			throw new IllegalArgumentException(StrUtil.format("datacenter Id can't be greater than {} or less than 0", MAX_DATA_CENTER_ID));
-		}
-		this.workerId = workerId;
-		this.dataCenterId = dataCenterId;
+		this(epochDate, workerId, dataCenterId, isUseSystemClock, timeOffset, 0);
+	}
+
+	/**
+	 * @param epochDate           初始化时间起点（null表示默认起始日期）,后期修改会导致id重复,如果要修改连workerId dataCenterId，慎用
+	 * @param workerId            工作机器节点id
+	 * @param dataCenterId        数据中心id
+	 * @param isUseSystemClock    是否使用{@link SystemClock} 获取当前时间戳
+	 * @param timeOffset          允许时间回拨的毫秒数
+	 * @param randomSequenceLimit 限定一个随机上限，在不同毫秒下生成序号时，给定一个随机数，避免偶数问题，0表示无随机，上限不包括值本身。
+	 * @since 5.8.0
+	 */
+	public Snowflake(Date epochDate, long workerId, long dataCenterId,
+					 boolean isUseSystemClock, long timeOffset, long randomSequenceLimit) {
+		this.twepoch = (null != epochDate) ? epochDate.getTime() : DEFAULT_TWEPOCH;
+		this.workerId = Assert.checkBetween(workerId, 0, MAX_WORKER_ID);
+		this.dataCenterId = Assert.checkBetween(dataCenterId, 0, MAX_DATA_CENTER_ID);
 		this.useSystemClock = isUseSystemClock;
 		this.timeOffset = timeOffset;
+		this.randomSequenceLimit = Assert.checkBetween(randomSequenceLimit, 0, SEQUENCE_MASK);
 	}
 
 	/**
@@ -187,10 +206,10 @@ public class Snowflake implements Serializable {
 	public synchronized long nextId() {
 		long timestamp = genTime();
 		if (timestamp < this.lastTimestamp) {
-			if(this.lastTimestamp - timestamp < timeOffset){
+			if (this.lastTimestamp - timestamp < timeOffset) {
 				// 容忍指定的回拨，避免NTP校时造成的异常
 				timestamp = lastTimestamp;
-			} else{
+			} else {
 				// 如果服务器时间有问题(时钟后退) 报错。
 				throw new IllegalStateException(StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
 			}
@@ -203,7 +222,12 @@ public class Snowflake implements Serializable {
 			}
 			this.sequence = sequence;
 		} else {
-			sequence = 0L;
+			// issue#I51EJY
+			if (randomSequenceLimit > 1) {
+				sequence = RandomUtil.randomLong(randomSequenceLimit);
+			} else {
+				sequence = 0L;
+			}
 		}
 
 		lastTimestamp = timestamp;

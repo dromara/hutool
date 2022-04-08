@@ -5,8 +5,11 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -14,6 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
@@ -29,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Bean工具单元测试
@@ -68,20 +73,21 @@ public class BeanUtilTest {
 
 		}, CopyOptions.create());
 
-		Assert.assertEquals(person.getName(), "张三");
-		Assert.assertEquals(person.getAge(), 18);
+		Assert.assertEquals("张三", person.getName());
+		Assert.assertEquals(18, person.getAge());
 	}
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
-		map.put("Name", "Joe");
-		map.put("aGe", 12);
-		map.put("openId", "DFDFSDFWERWER");
+		Map<String, Object> map = MapBuilder.<String, Object>create()
+				.put("Name", "Joe")
+				.put("aGe", 12)
+				.put("openId", "DFDFSDFWERWER")
+				.build();
 		SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
-		Assert.assertEquals(person.getName(), "Joe");
-		Assert.assertEquals(person.getAge(), 12);
-		Assert.assertEquals(person.getOpenid(), "DFDFSDFWERWER");
+		Assert.assertEquals("Joe", person.getName());
+		Assert.assertEquals(12, person.getAge());
+		Assert.assertEquals("DFDFSDFWERWER", person.getOpenid());
 	}
 
 	@Test
@@ -198,6 +204,19 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void beanToMapWithValueEditTest() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		Map<String, Object> map = BeanUtil.beanToMap(person, new LinkedHashMap<>(),
+				CopyOptions.create().setFieldValueEditor((key, value) -> key + "_" + value));
+		Assert.assertEquals("subName_sub名字", map.get("subName"));
+	}
+
+	@Test
 	public void beanToMapWithAliasTest() {
 		SubPersonWithAlias person = new SubPersonWithAlias();
 		person.setAge(14);
@@ -292,6 +311,37 @@ public class BeanUtilTest {
 		Assert.assertEquals("11213232", person1.getOpenid());
 		Assert.assertEquals("测试A11", person1.getName());
 		Assert.assertEquals("sub名字", person1.getSubName());
+	}
+
+	@Test
+	@Ignore
+	public void multiThreadTest(){
+		Student student = new Student();
+		student.setName("张三");
+		student.setAge(123);
+		student.setNo(3158L);
+
+		Student student2 = new Student();
+		student.setName("李四");
+		student.setAge(125);
+		student.setNo(8848L);
+
+		List<Student> studentList = ListUtil.of(student, student2);
+
+		for (int i=0;i<5000;i++){
+			new Thread(()->{
+				List<Student> list = ObjectUtil.clone(studentList);
+				List<Student> listReps = list.stream().map(s1 -> {
+					Student s2 = new Student();
+					BeanUtil.copyProperties(s1, s2);
+					return s2;
+				}).collect(Collectors.toList());
+
+				System.out.println(listReps);
+			}).start();
+		}
+
+		ThreadUtil.waitForDie();
 	}
 
 	@Test
@@ -442,7 +492,7 @@ public class BeanUtilTest {
 	}
 
 	/**
-	 * <a href="https://github.com/looly/hutool/issues/1173">#1173</a>
+	 * <a href="https://github.com/dromara/hutool/issues/1173">#1173</a>
 	 */
 	@Test
 	public void beanToBeanOverlayFieldTest() {
@@ -510,6 +560,24 @@ public class BeanUtilTest {
 		BeanUtil.copyProperties(info, newFood, copyOptions);
 		Assert.assertEquals(info.getBookID(), newFood.getBookID());
 		Assert.assertNull(newFood.getCode());
+	}
+
+	@Test
+	public void copyBeanPropertiesFunctionFilterTest() {
+		//https://gitee.com/dromara/hutool/pulls/590
+		Person o = new Person();
+		o.setName("asd");
+		o.setAge(123);
+		o.setOpenid("asd");
+
+		@SuppressWarnings("unchecked")
+		CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
+		Person n = new Person();
+		BeanUtil.copyProperties(o, n, copyOptions);
+
+		// 是否忽略拷贝属性
+		Assert.assertNotEquals(o.getAge(),n.getAge());
+		Assert.assertNotEquals(o.getOpenid(),n.getOpenid());
 	}
 
 	@Data
@@ -639,7 +707,9 @@ public class BeanUtilTest {
 	}
 
 	@Data
-	public static class Student {
+	public static class Student implements Serializable{
+		private static final long serialVersionUID = 1L;
+
 		String name;
 		int age;
 		Long no;
@@ -661,7 +731,7 @@ public class BeanUtilTest {
 		CopyOptions copyOptions = CopyOptions.create().
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
-						setFieldNameEditor(StrUtil::toUnderlineCase);
+						setFieldNameEditor(StrUtil::toCamelCase);
 
 		ChildVo2 childVo2 = new ChildVo2();
 		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);

@@ -1,13 +1,17 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 
 public class LocalDateTimeUtilTest {
 
@@ -146,7 +150,91 @@ public class LocalDateTimeUtilTest {
 	@Test
 	public void endOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
-		final LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
+
+		LocalDateTime endOfDay = LocalDateTimeUtil.endOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
+
+		endOfDay = LocalDateTimeUtil.endOfDay(localDateTime, true);
+		Assert.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
+	}
+
+	@Test
+	public void dayOfWeekTest() {
+		final Week one = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 20));
+		Assert.assertEquals(Week.MONDAY, one);
+
+		final Week two = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 21));
+		Assert.assertEquals(Week.TUESDAY, two);
+
+		final Week three = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 22));
+		Assert.assertEquals(Week.WEDNESDAY, three);
+
+		final Week four = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 23));
+		Assert.assertEquals(Week.THURSDAY, four);
+
+		final Week five = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 24));
+		Assert.assertEquals(Week.FRIDAY, five);
+
+		final Week six = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 25));
+		Assert.assertEquals(Week.SATURDAY, six);
+
+		final Week seven = LocalDateTimeUtil.dayOfWeek(LocalDate.of(2021, 9, 26));
+		Assert.assertEquals(Week.SUNDAY, seven);
+	}
+
+	@Test
+	public void isOverlapTest(){
+		LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
+		LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
+
+		LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
+		LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
+
+		LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
+		LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
+
+		//真实请假数据
+		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
+		LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
+
+		LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
+		LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
+
+		LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
+		LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
+
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+	}
+
+	@Test
+	public void weekOfYearTest(){
+		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(52, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(52, weekOfYear2);
+	}
+
+	@Test
+	public void weekOfYearTest2(){
+		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
+		Assert.assertEquals(5, weekOfYear1);
+
+		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
+		Assert.assertEquals(5, weekOfYear2);
+	}
+
+	@Test
+	public void ofTest2(){
+		final Instant instant = DateUtil.parse("2022-02-22").toInstant();
+		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
+		Console.log(of);
 	}
 }

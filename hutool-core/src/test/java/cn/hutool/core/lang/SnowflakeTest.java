@@ -59,7 +59,7 @@ public class SnowflakeTest {
 
 		Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
-			for (int i = 0; i < 5000; i++) {
+			for (int i = 0; i < 50000; i++) {
 				if(false == ids.add(snowflake.nextId())){
 					throw new UtilException("重复ID！");
 				}
@@ -73,5 +73,34 @@ public class SnowflakeTest {
 			final long l = IdUtil.getSnowflake(0, 0).nextId();
 			Assert.assertEquals(19, StrUtil.toString(l).length());
 		}
+	}
+
+	@Test
+	@Ignore
+	public void snowflakeRandomSequenceTest(){
+		final Snowflake snowflake = new Snowflake(null, 0, 0,
+				false, Snowflake.DEFAULT_TIME_OFFSET, 2);
+		for (int i = 0; i < 1000; i++) {
+			final long id = snowflake.nextId();
+			Console.log(id);
+			ThreadUtil.sleep(10);
+		}
+	}
+
+	@Test
+	@Ignore
+	public void uniqueOfRandomSequenceTest(){
+		// 测试并发环境下生成ID是否重复
+		final Snowflake snowflake = new Snowflake(null, 0, 0,
+				false, Snowflake.DEFAULT_TIME_OFFSET, 100);
+
+		Set<Long> ids = new ConcurrentHashSet<>();
+		ThreadUtil.concurrencyTest(100, () -> {
+			for (int i = 0; i < 50000; i++) {
+				if(false == ids.add(snowflake.nextId())){
+					throw new UtilException("重复ID！");
+				}
+			}
+		});
 	}
 }

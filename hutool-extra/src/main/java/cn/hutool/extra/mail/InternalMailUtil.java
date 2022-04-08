@@ -17,11 +17,11 @@ import java.util.List;
  * @since 3.2.3
  */
 public class InternalMailUtil {
-	
+
 	/**
 	 * 将多个字符串邮件地址转为{@link InternetAddress}列表<br>
 	 * 单个字符串地址可以是多个地址合并的字符串
-	 * 
+	 *
 	 * @param addrStrs 地址数组
 	 * @param charset 编码（主要用于中文用户名的编码）
 	 * @return 地址数组
@@ -38,12 +38,12 @@ public class InternalMailUtil {
 		}
 		return resultList.toArray(new InternetAddress[0]);
 	}
-	
+
 	/**
 	 * 解析第一个地址
-	 * 
+	 *
 	 * @param address 地址字符串
-	 * @param charset 编码
+	 * @param charset 编码，{@code null}表示使用系统属性定义的编码或系统编码
 	 * @return 地址列表
 	 */
 	public static InternetAddress parseFirstAddress(String address, Charset charset) {
@@ -61,9 +61,9 @@ public class InternalMailUtil {
 	/**
 	 * 将一个地址字符串解析为多个地址<br>
 	 * 地址间使用" "、","、";"分隔
-	 * 
+	 *
 	 * @param address 地址字符串
-	 * @param charset 编码
+	 * @param charset 编码，{@code null}表示使用系统属性定义的编码或系统编码
 	 * @return 地址列表
 	 */
 	public static InternetAddress[] parseAddress(String address, Charset charset) {
@@ -75,9 +75,10 @@ public class InternalMailUtil {
 		}
 		//编码用户名
 		if (ArrayUtil.isNotEmpty(addresses)) {
+			final String charsetStr = null == charset ? null : charset.name();
 			for (InternetAddress internetAddress : addresses) {
 				try {
-					internetAddress.setPersonal(internetAddress.getPersonal(), charset.name());
+					internetAddress.setPersonal(internetAddress.getPersonal(), charsetStr);
 				} catch (UnsupportedEncodingException e) {
 					throw new MailException(e);
 				}
@@ -90,7 +91,7 @@ public class InternalMailUtil {
 	/**
 	 * 编码中文字符<br>
 	 * 编码失败返回原字符串
-	 * 
+	 *
 	 * @param text 被编码的文本
 	 * @param charset 编码
 	 * @return 编码后的结果

@@ -1,5 +1,6 @@
 package cn.hutool.crypto;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -180,7 +182,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generateDESKey(String algorithm, byte[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
-			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
+			throw new CryptoException("Algorithm [{}] is not a DES algorithm!", algorithm);
 		}
 
 		SecretKey secretKey;
@@ -212,7 +214,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generatePBEKey(String algorithm, char[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("PBE")) {
-			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!");
+			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!", algorithm);
 		}
 
 		if (null == key) {
@@ -987,5 +989,15 @@ public class KeyUtil {
 		} catch (InvalidKeySpecException e) {
 			throw new CryptoException(e);
 		}
+	}
+
+	/**
+	 * 将密钥编码为Base64格式
+	 * @param key 密钥
+	 * @return Base64格式密钥
+	 * @since 5.7.22
+	 */
+	public static String toBase64(Key key){
+		return Base64.encode(key.getEncoded());
 	}
 }

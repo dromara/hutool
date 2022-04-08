@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -53,6 +54,19 @@ public class PathUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果提供path为文件，直接返回过滤结果
+	 *
+	 * @param path       当前遍历文件或目录
+	 * @param fileFilter 文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录，null表示接收全部文件
+	 * @return 文件列表
+	 * @since 5.4.1
+	 */
+	public static List<File> loopFiles(Path path, FileFilter fileFilter) {
+		return loopFiles(path, -1, fileFilter);
 	}
 
 	/**
@@ -181,7 +195,7 @@ public class PathUtil {
 	 */
 	public static Path copyFile(Path src, Path target, CopyOption... options) throws IORuntimeException {
 		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(target, "Destination File or directiory is null !");
+		Assert.notNull(target, "Destination File or directory is null !");
 
 		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
 		// 创建级联父目录
@@ -503,6 +517,11 @@ public class PathUtil {
 		try {
 			return Files.move(src, target, options);
 		} catch (IOException e) {
+			if(e instanceof FileAlreadyExistsException){
+				// 目标文件已存在，直接抛出异常
+				// issue#I4QV0L@Gitee
+				throw new IORuntimeException(e);
+			}
 			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
 			try {
 				Files.walkFileTree(src, new MoveVisitor(src, target, options));
@@ -641,6 +660,20 @@ public class PathUtil {
 	 */
 	public static Path mkParentDirs(Path path) {
 		return mkdir(path.getParent());
+	}
+
+	/**
+	 * 获取{@link Path}文件名
+	 *
+	 * @param path {@link Path}
+	 * @return 文件名
+	 * @since 5.7.15
+	 */
+	public static String getName(Path path) {
+		if (null == path) {
+			return null;
+		}
+		return path.getFileName().toString();
 	}
 
 	/**

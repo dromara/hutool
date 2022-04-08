@@ -50,6 +50,7 @@ public class JAXBUtilTest {
 
 	@XmlRootElement(name = "school")
 	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(propOrder={"schoolName", "schoolAddress", "room"})
 	public static class SchoolVo {
 		@XmlElement(name = "school_name", required = true)
 		private String schoolName;
@@ -86,6 +87,7 @@ public class JAXBUtilTest {
 		}
 
 		@XmlAccessorType(XmlAccessType.FIELD)
+		@XmlType(propOrder={"roomNo", "roomName"})
 		public static final class RoomVo {
 			@XmlElement(name = "room_no", required = true)
 			private String roomNo;

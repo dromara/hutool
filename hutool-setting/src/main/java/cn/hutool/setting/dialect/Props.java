@@ -21,7 +21,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
-import cn.hutool.setting.SettingRuntimeException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -62,9 +61,9 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	// ----------------------------------------------------------------------- 私有属性 start
 	/**
-	 * 属性文件的URL
+	 * 属性文件的Resource
 	 */
-	private URL propertiesFileUrl;
+	private Resource resource;
 	private WatchMonitor watchMonitor;
 	/**
 	 * properties文件编码<br>
@@ -275,10 +274,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param resource {@link Resource}
 	 */
 	public void load(Resource resource) {
-		this.propertiesFileUrl = resource.getUrl();
-		if (null == this.propertiesFileUrl) {
-			throw new SettingRuntimeException("Can not find properties file: [{}]", resource);
-		}
+		Assert.notNull(resource, "Props resource must be not null!");
+		this.resource = resource;
 
 		try (final BufferedReader reader = resource.getReader(charset)) {
 			super.load(reader);
@@ -291,7 +288,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 重新加载配置文件
 	 */
 	public void load() {
-		this.load(this.propertiesFileUrl);
+		this.load(this.resource);
 	}
 
 	/**
@@ -301,12 +298,12 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 */
 	public void autoLoad(boolean autoReload) {
 		if (autoReload) {
-			Assert.notNull(this.propertiesFileUrl, "Properties URL is null !");
+			Assert.notNull(this.resource, "Properties resource must be not null!");
 			if (null != this.watchMonitor) {
 				// 先关闭之前的监听
 				this.watchMonitor.close();
 			}
-			this.watchMonitor = WatchUtil.createModify(this.propertiesFileUrl, new SimpleWatcher() {
+			this.watchMonitor = WatchUtil.createModify(this.resource.getUrl(), new SimpleWatcher() {
 				@Override
 				public void onModify(WatchEvent<?> event, Path currentPath) {
 					load();

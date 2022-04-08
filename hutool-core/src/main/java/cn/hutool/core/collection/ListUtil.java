@@ -90,7 +90,7 @@ public class ListUtil {
 	}
 
 	/**
-	 * 新建一个ArrayList<br>
+	 * 新建一个List<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
 	 * @param <T>      集合元素类型
@@ -312,7 +312,7 @@ public class ListUtil {
 	 * @see Collections#sort(List, Comparator)
 	 */
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
-		if(CollUtil.isEmpty(list)){
+		if (CollUtil.isEmpty(list)) {
 			return list;
 		}
 		list.sort(c);
@@ -533,8 +533,8 @@ public class ListUtil {
 	 * </p>
 	 *
 	 * @param <T>  集合元素类型
-	 * @param list 列表
-	 * @param size 每个段的长度
+	 * @param list 列表，为空时返回{@link #empty()}
+	 * @param size 每个段的长度，当长度超过list长度时，size按照list长度计算，即只返回一个节点
 	 * @return 分段列表
 	 * @since 5.4.5
 	 */
@@ -557,8 +557,8 @@ public class ListUtil {
 	 * </p>
 	 *
 	 * @param <T>  集合元素类型
-	 * @param list 列表
-	 * @param size 每个段的长度
+	 * @param list 列表，为空时返回{@link #empty()}
+	 * @param size 每个段的长度，当长度超过list长度时，size按照list长度计算，即只返回一个节点
 	 * @return 分段列表
 	 * @see #partition(List, int)
 	 * @since 5.4.5
@@ -592,5 +592,44 @@ public class ListUtil {
 		return (list instanceof RandomAccess)
 				? new RandomAccessAvgPartition<>(list, limit)
 				: new AvgPartition<>(list, limit);
+	}
+
+	/**
+	 * 将指定元素交换到指定索引位置,其他元素的索引值不变<br>
+	 * 交换会修改原List<br>
+	 * 如果集合中有多个相同元素，只交换第一个找到的元素
+	 *
+	 * @param <T>         元素类型
+	 * @param list        列表
+	 * @param element     需交换元素
+	 * @param targetIndex 目标索引
+	 * @since 5.7.13
+	 */
+	public static <T> void swapTo(List<T> list, T element, Integer targetIndex) {
+		if (CollUtil.isNotEmpty(list)) {
+			final int index = list.indexOf(element);
+			if (index >= 0) {
+				Collections.swap(list, index, targetIndex);
+			}
+		}
+	}
+
+	/**
+	 * 将指定元素交换到指定元素位置,其他元素的索引值不变<br>
+	 * 交换会修改原List<br>
+	 * 如果集合中有多个相同元素，只交换第一个找到的元素
+	 *
+	 * @param <T>           元素类型
+	 * @param list          列表
+	 * @param element       需交换元素
+	 * @param targetElement 目标元素
+	 */
+	public static <T> void swapElement(List<T> list, T element, T targetElement) {
+		if (CollUtil.isNotEmpty(list)) {
+			final int targetIndex = list.indexOf(targetElement);
+			if (targetIndex >= 0) {
+				swapTo(list, element, targetIndex);
+			}
+		}
 	}
 }

@@ -147,8 +147,8 @@ public class AnimatedGifEncoder {
 	/**
 	 * Adds next GIF frame.  The frame is not written immediately, but is
 	 * actually deferred until the next frame is received so that timing
-	 * data can be inserted.  Invoking <code>finish()</code> flushes all
-	 * frames.  If <code>setSize</code> was not invoked, the size of the
+	 * data can be inserted.  Invoking {@code finish()} flushes all
+	 * frames.  If {@code setSize} was not invoked, the size of the
 	 * first image is used for all subsequent frames.
 	 *
 	 * @param im BufferedImage containing frame to write.
@@ -225,7 +225,7 @@ public class AnimatedGifEncoder {
 
 	/**
 	 * Sets frame rate in frames per second.  Equivalent to
-	 * <code>setDelay(1000/fps)</code>.
+	 * {@code setDelay(1000/fps)}.
 	 *
 	 * @param fps float frame rate (frames per second)
 	 */

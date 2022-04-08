@@ -1,5 +1,7 @@
 package cn.hutool.dfa;
 
+import cn.hutool.core.collection.ListUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,25 +26,17 @@ public class SensitiveUtilTest {
 		Assert.assertEquals(bean.getStr(), "我有一颗$****，***的");
 	}
 
+	@Data
 	public static class TestBean {
 		private String str;
 		private Integer num;
-
-		public String getStr() {
-			return str;
-		}
-
-		public void setStr(String str) {
-			this.str = str;
-		}
-
-		public Integer getNum() {
-			return num;
-		}
-
-		public void setNum(Integer num) {
-			this.num = num;
-		}
 	}
 
+	@Test
+	public void issue2126(){
+		SensitiveUtil.init(ListUtil.of("赵", "赵阿", "赵阿三"));
+
+		String result = SensitiveUtil.sensitiveFilter("赵阿三在做什么。", true, null);
+		Assert.assertEquals("***在做什么。", result);
+	}
 }

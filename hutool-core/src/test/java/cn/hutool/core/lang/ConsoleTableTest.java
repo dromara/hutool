@@ -1,11 +1,12 @@
 package cn.hutool.core.lang;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ConsoleTableTest {
 
 	@Test
-//    @Ignore
+	@Ignore
 	public void printTest() {
 		ConsoleTable t = new ConsoleTable();
 		t.addHeader("姓名", "年龄");

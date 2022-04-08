@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
  * {@link BufferedImage} 图片二维码源<br>
  * 来自：http://blog.csdn.net/yangxin_blog/article/details/50850701<br>
  * 此类同样在zxing-j2se包中也有提供
- * 
+ *
  * @author zxing, Looly
  * @since 4.0.2
  */
@@ -22,7 +22,7 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param image {@link BufferedImage}
 	 */
 	public BufferedImageLuminanceSource(BufferedImage image) {
@@ -31,7 +31,7 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param image {@link BufferedImage}
 	 * @param left 左边间隔
 	 * @param top 顶部间隔

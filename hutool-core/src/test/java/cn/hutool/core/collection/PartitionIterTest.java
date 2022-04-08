@@ -12,7 +12,7 @@ public class PartitionIterTest {
 	@Test
 	public void iterTest() {
 		final LineIter lineIter = new LineIter(ResourceUtil.getUtf8Reader("test_lines.csv"));
-		final PartitionIter<String> iter = new PartitionIter<>(lineIter.iterator(), 3);
+		final PartitionIter<String> iter = new PartitionIter<>(lineIter, 3);
 		for (List<String> lines : iter) {
 			Assert.assertTrue(lines.size() > 0);
 		}

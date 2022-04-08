@@ -131,4 +131,13 @@ public class DateTimeTest {
 		//跨年的周返回的总是1
 		Assert.assertEquals(1, date.weekOfYear());
 	}
+
+	/**
+	 * 严格模式下，不允许非常规的数字，如秒部分最多59，99则报错
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void ofTest(){
+		String a = "2021-09-27 00:00:99";
+		new DateTime(a, DatePattern.NORM_DATETIME_FORMAT, false);
+	}
 }

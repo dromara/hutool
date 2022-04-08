@@ -109,6 +109,9 @@ public class StreamExtractor implements Extractor{
 		ArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = in.getNextEntry())) {
+			if(null != filter && false == filter.accept(entry)){
+				continue;
+			}
 			if (false == in.canReadEntryData(entry)) {
 				// 无法读取的文件直接跳过
 				continue;

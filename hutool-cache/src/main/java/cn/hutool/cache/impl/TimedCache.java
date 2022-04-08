@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledFuture;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public class TimedCache<K, V> extends AbstractCache<K, V> {
+public class TimedCache<K, V> extends StampedCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/** 正在执行的定时任务 */

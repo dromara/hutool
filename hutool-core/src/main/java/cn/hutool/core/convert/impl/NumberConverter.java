@@ -55,12 +55,39 @@ public class NumberConverter extends AbstractConverter<Number> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public Class<Number> getTargetType() {
+		return (Class<Number>) this.targetType;
+	}
+
+	@Override
 	protected Number convertInternal(Object value) {
 		return convert(value, this.targetType, this::convertToStr);
 	}
 
+	@Override
+	protected String convertToStr(Object value) {
+		String result = StrUtil.trim(super.convertToStr(value));
+		if (StrUtil.isNotEmpty(result)) {
+			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
+			if (c == 'D' || c == 'L' || c == 'F') {
+				// 类型标识形式（例如123.6D）
+				return StrUtil.subPre(result, -1);
+			}
+		}
+
+		return result;
+	}
+
 	/**
-	 * 转换对象为数字
+	 * 转换对象为数字，支持的对象包括：
+	 * <ul>
+	 *     <li>Number对象</li>
+	 *     <li>Boolean</li>
+	 *     <li>byte[]</li>
+	 *     <li>String</li>
+	 * </ul>
+	 *
 	 *
 	 * @param value      对象值
 	 * @param targetType 目标的数字类型
@@ -68,10 +95,15 @@ public class NumberConverter extends AbstractConverter<Number> {
 	 * @return 转换后的数字
 	 * @since 5.5.0
 	 */
-	protected static Number convert(Object value, Class<?> targetType, Function<Object, String> toStrFunc) {
+	protected static Number convert(Object value, Class<? extends Number> targetType, Function<Object, String> toStrFunc) {
 		// 枚举转换为数字默认为其顺序
 		if (value instanceof Enum) {
 			return convert(((Enum<?>) value).ordinal(), targetType, toStrFunc);
+		}
+
+		// since 5.7.18
+		if(value instanceof byte[]){
+			return ByteUtil.bytesToNumber((byte[])value, targetType, ByteUtil.DEFAULT_ORDER);
 		}
 
 		if (Byte.class == targetType) {
@@ -91,8 +123,6 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return ((Number) value).shortValue();
 			} else if (value instanceof Boolean) {
 				return BooleanUtil.toShortObj((Boolean) value);
-			} else if (value instanceof byte[]){
-				return ByteUtil.bytesToShort((byte[]) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
 			try{
@@ -111,17 +141,13 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return (int) ((Calendar) value).getTimeInMillis();
 			} else if (value instanceof TemporalAccessor) {
 				return (int) DateUtil.toInstant((TemporalAccessor) value).toEpochMilli();
-			} else if (value instanceof byte[]){
-				return ByteUtil.bytesToInt((byte[]) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseInt(valueStr);
 		} else if (AtomicInteger.class == targetType) {
 			final Number number = convert(value, Integer.class, toStrFunc);
 			if (null != number) {
-				final AtomicInteger intValue = new AtomicInteger();
-				intValue.set(number.intValue());
-				return intValue;
+				return new AtomicInteger(number.intValue());
 			}
 		} else if (Long.class == targetType) {
 			if (value instanceof Number) {
@@ -134,17 +160,13 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return ((Calendar) value).getTimeInMillis();
 			} else if (value instanceof TemporalAccessor) {
 				return DateUtil.toInstant((TemporalAccessor) value).toEpochMilli();
-			}else if (value instanceof byte[]){
-				return ByteUtil.bytesToLong((byte[]) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseLong(valueStr);
 		} else if (AtomicLong.class == targetType) {
 			final Number number = convert(value, Long.class, toStrFunc);
 			if (null != number) {
-				final AtomicLong longValue = new AtomicLong();
-				longValue.set(number.longValue());
-				return longValue;
+				return new AtomicLong(number.longValue());
 			}
 		} else if (LongAdder.class == targetType) {
 			//jdk8 新增
@@ -159,24 +181,20 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return ((Number) value).floatValue();
 			} else if (value instanceof Boolean) {
 				return BooleanUtil.toFloatObj((Boolean) value);
-			} else if (value instanceof byte[]){
-				return (float)ByteUtil.bytesToDouble((byte[]) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseFloat(valueStr);
 		} else if (Double.class == targetType) {
 			if (value instanceof Number) {
-				return ((Number) value).doubleValue();
+				return NumberUtil.toDouble((Number) value);
 			} else if (value instanceof Boolean) {
 				return BooleanUtil.toDoubleObj((Boolean) value);
-			} else if (value instanceof byte[]){
-				return ByteUtil.bytesToDouble((byte[]) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
 			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseDouble(valueStr);
 		} else if (DoubleAdder.class == targetType) {
 			//jdk8 新增
-			final Number number = convert(value, Long.class, toStrFunc);
+			final Number number = convert(value, Double.class, toStrFunc);
 			if (null != number) {
 				final DoubleAdder doubleAdder = new DoubleAdder();
 				doubleAdder.add(number.doubleValue());
@@ -212,9 +230,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 		if (value instanceof Number) {
 			return NumberUtil.toBigDecimal((Number) value);
 		} else if (value instanceof Boolean) {
-			return new BigDecimal((boolean) value ? 1 : 0);
-		} else if (value instanceof byte[]){
-			return NumberUtil.toBigDecimal(ByteUtil.bytesToDouble((byte[]) value));
+			return ((boolean) value) ? BigDecimal.ONE : BigDecimal.ZERO;
 		}
 
 		//对于Double类型，先要转换为String，避免精度问题
@@ -234,31 +250,9 @@ public class NumberConverter extends AbstractConverter<Number> {
 		if (value instanceof Long) {
 			return BigInteger.valueOf((Long) value);
 		} else if (value instanceof Boolean) {
-			return BigInteger.valueOf((boolean) value ? 1 : 0);
-		} else if (value instanceof byte[]){
-			return BigInteger.valueOf(ByteUtil.bytesToLong((byte[]) value));
+			return (boolean) value ? BigInteger.ONE : BigInteger.ZERO;
 		}
 
 		return NumberUtil.toBigInteger(toStrFunc.apply(value));
-	}
-
-	@Override
-	protected String convertToStr(Object value) {
-		String result = StrUtil.trim(super.convertToStr(value));
-		if (StrUtil.isNotEmpty(result)) {
-			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
-			if (c == 'D' || c == 'L' || c == 'F') {
-				// 类型标识形式（例如123.6D）
-				return StrUtil.subPre(result, -1);
-			}
-		}
-
-		return result;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public Class<Number> getTargetType() {
-		return (Class<Number>) this.targetType;
 	}
 }

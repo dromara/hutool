@@ -1,5 +1,6 @@
 package cn.hutool.db.meta;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
@@ -13,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库元数据信息工具类
@@ -79,7 +82,7 @@ public class MetaUtil {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = getCataLog(conn);
+			String catalog = getCatalog(conn);
 			if (null == schema) {
 				schema = getSchema(conn);
 			}
@@ -140,7 +143,7 @@ public class MetaUtil {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = getCataLog(conn);
+			String catalog = getCatalog(conn);
 			String schema = getSchema(conn);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
@@ -173,22 +176,50 @@ public class MetaUtil {
 	}
 
 	/**
-	 * 获得表的元信息
+	 * 获得表的元信息<br>
+	 * 注意如果需要获取注释，某些数据库如MySQL，需要在配置中添加:
+	 * <pre>
+	 *     remarks = true
+	 *     useInformationSchema = true
+	 * </pre>
 	 *
 	 * @param ds        数据源
 	 * @param tableName 表名
 	 * @return Table对象
 	 */
 	public static Table getTableMeta(DataSource ds, String tableName) {
+		return getTableMeta(ds, null, null, tableName);
+	}
+
+	/**
+	 * 获得表的元信息<br>
+	 * 注意如果需要获取注释，某些数据库如MySQL，需要在配置中添加:
+	 * <pre>
+	 *     remarks = true
+	 *     useInformationSchema = true
+	 * </pre>
+	 *
+	 * @param ds        数据源
+	 * @param tableName 表名
+	 * @param catalog   catalog name，{@code null}表示自动获取，见：{@link #getCatalog(Connection)}
+	 * @param schema    a schema name pattern，{@code null}表示自动获取，见：{@link #getSchema(Connection)}
+	 * @return Table对象
+	 * @since 5.7.22
+	 */
+	public static Table getTableMeta(DataSource ds, String catalog, String schema, String tableName) {
 		final Table table = Table.create(tableName);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			final String catalog = getCataLog(conn);
+			if (null == catalog) {
+				catalog = getCatalog(conn);
+			}
 			table.setCatalog(catalog);
-			final String schema = getSchema(conn);
+			if (null == schema) {
+				schema = getSchema(conn);
+			}
 			table.setSchema(schema);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
@@ -219,6 +250,30 @@ public class MetaUtil {
 					}
 				}
 			}
+
+			// 获得索引信息(since 5.7.23)
+			try (ResultSet rs = metaData.getIndexInfo(catalog, schema, tableName, false, false)) {
+				final Map<String, IndexInfo> indexInfoMap = new LinkedHashMap<>();
+				if (null != rs) {
+					while (rs.next()) {
+						//排除tableIndexStatistic类型索引
+						if (0 == rs.getShort("TYPE")) {
+							continue;
+						}
+
+						final String indexName = rs.getString("INDEX_NAME");
+						final String key = StrUtil.join("&", tableName, indexName);
+						// 联合索引情况下一个索引会有多个列，此处须组合索引列到一个索引信息对象下
+						IndexInfo indexInfo = indexInfoMap.get(key);
+						if (null == indexInfo) {
+							indexInfo = new IndexInfo(rs.getBoolean("NON_UNIQUE"), indexName, tableName, schema, catalog);
+							indexInfoMap.put(key, indexInfo);
+						}
+						indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.create(rs));
+					}
+				}
+				table.setIndexInfoList(ListUtil.toList(indexInfoMap.values()));
+			}
 		} catch (SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
@@ -234,8 +289,21 @@ public class MetaUtil {
 	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
 	 * @return catalog，获取失败返回{@code null}
 	 * @since 4.6.0
+	 * @deprecated 拼写错误，请使用{@link #getCatalog(Connection)}
 	 */
+	@Deprecated
 	public static String getCataLog(Connection conn) {
+		return getCatalog(conn);
+	}
+
+	/**
+	 * 获取catalog，获取失败返回{@code null}
+	 *
+	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
+	 * @return catalog，获取失败返回{@code null}
+	 * @since 5.7.23
+	 */
+	public static String getCatalog(Connection conn) {
 		if (null == conn) {
 			return null;
 		}

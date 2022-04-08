@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -21,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalUnit;
+import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -28,6 +30,8 @@ import java.util.TimeZone;
  * JDK8+中的{@link LocalDateTime} 工具类封装
  *
  * @author looly
+ * @see DateUtil java7和一下版本，使用Date工具类
+ * @see DatePattern 常用格式工具类
  * @since 5.3.9
  */
 public class LocalDateTimeUtil {
@@ -86,7 +90,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return LocalDateTime.ofInstant(instant, ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault()));
+		return LocalDateTime.ofInstant(instant, ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault));
 	}
 
 	/**
@@ -101,7 +105,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return of(instant, ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault()).toZoneId());
+		return of(instant, ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault).toZoneId());
 	}
 
 	/**
@@ -178,6 +182,8 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDate) {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
+		} else if(temporalAccessor instanceof Instant){
+			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
 		}
 
 		return LocalDateTime.of(
@@ -205,6 +211,8 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDateTime) {
 			return ((LocalDateTime) temporalAccessor).toLocalDate();
+		} else if(temporalAccessor instanceof Instant){
+			return of(temporalAccessor).toLocalDate();
 		}
 
 		return LocalDate.of(
@@ -215,7 +223,8 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 解析日期时间字符串为{@link LocalDateTime}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30
+	 * 解析日期时间字符串为{@link LocalDateTime}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30<br>
+	 * 即{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
 	 *
 	 * @param text 日期时间字符串
 	 * @return {@link LocalDateTime}
@@ -225,7 +234,8 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 解析日期时间字符串为{@link LocalDateTime}，格式支持日期时间、日期、时间
+	 * 解析日期时间字符串为{@link LocalDateTime}，格式支持日期时间、日期、时间<br>
+	 * 如果formatter为{code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
 	 *
 	 * @param text      日期时间字符串
 	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
@@ -254,7 +264,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		if(GlobalCustomFormat.isCustomFormat(format)){
+		if (GlobalCustomFormat.isCustomFormat(format)) {
 			return of(GlobalCustomFormat.parse(text, format));
 		}
 
@@ -473,6 +483,25 @@ public class LocalDateTimeUtil {
 	 * @return 一天的结束时间
 	 */
 	public static LocalDateTime endOfDay(LocalDateTime time) {
+		return endOfDay(time, false);
+	}
+
+	/**
+	 * 修改为一天的结束时间，例如：
+	 * <ul>
+	 * 	<li>毫秒不归零：2020-02-02 23:59:59,999</li>
+	 * 	<li>毫秒归零：2020-02-02 23:59:59,000</li>
+	 * </ul>
+	 *
+	 * @param time                日期时间
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 一天的结束时间
+	 * @since 5.7.18
+	 */
+	public static LocalDateTime endOfDay(LocalDateTime time, boolean truncateMillisecond) {
+		if (truncateMillisecond) {
+			return time.with(LocalTime.of(23, 59, 59));
+		}
 		return time.with(LocalTime.MAX);
 	}
 
@@ -495,7 +524,7 @@ public class LocalDateTimeUtil {
 	 * @return 是否为周末（周六或周日）
 	 * @since 5.7.6
 	 */
-	public static boolean isWeekend(LocalDateTime localDateTime){
+	public static boolean isWeekend(LocalDateTime localDateTime) {
 		return isWeekend(localDateTime.toLocalDate());
 	}
 
@@ -506,8 +535,57 @@ public class LocalDateTimeUtil {
 	 * @return 是否为周末（周六或周日）
 	 * @since 5.7.6
 	 */
-	public static boolean isWeekend(LocalDate localDate){
+	public static boolean isWeekend(LocalDate localDate) {
 		final DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 		return DayOfWeek.SATURDAY == dayOfWeek || DayOfWeek.SUNDAY == dayOfWeek;
+	}
+
+	/**
+	 * 获取{@link LocalDate}对应的星期值
+	 *
+	 * @param localDate 日期{@link LocalDate}
+	 * @return {@link Week}
+	 * @since 5.7.14
+	 */
+	public static Week dayOfWeek(LocalDate localDate) {
+		return Week.of(localDate.getDayOfWeek());
+	}
+
+	/**
+	 * 检查两个时间段是否有时间重叠<br>
+	 * 重叠指两个时间段是否有交集
+	 *
+	 * @param realStartTime 第一个时间段的开始时间
+	 * @param realEndTime   第一个时间段的结束时间
+	 * @param startTime     第二个时间段的开始时间
+	 * @param endTime       第二个时间段的结束时间
+	 * @return true 表示时间有重合
+	 * @since 5.7.20
+	 */
+	public static boolean isOverlap(ChronoLocalDateTime<?> realStartTime, ChronoLocalDateTime<?> realEndTime,
+									ChronoLocalDateTime<?> startTime, ChronoLocalDateTime<?> endTime) {
+
+		// x>b||a>y 无交集
+		// 则有交集的逻辑为 !(x>b||a>y)
+		// 根据德摩根公式，可化简为 x<=b && a<=y
+		return startTime.isBefore(realEndTime) && endTime.isAfter(realStartTime);
+	}
+
+	/**
+	 * 获得指定日期是所在年份的第几周，如：
+	 * <ul>
+	 *     <li>如果一年的第一天是星期一，则第一周从第一天开始，没有零周</li>
+	 *     <li>如果一年的第二天是星期一，则第一周从第二天开始，而第一天在零周</li>
+	 *     <li>如果一年中的第4天是星期一，则第1周从第4周开始，第1至第3周在零周开始</li>
+	 *     <li>如果一年中的第5天是星期一，则第二周从第5周开始，第1至第4周在第1周</li>
+	 * </ul>
+	 *
+	 *
+	 * @param date 日期（{@link LocalDate} 或者 {@link LocalDateTime}等）
+	 * @return 所在年的第几周
+	 * @since 5.7.21
+	 */
+	public static int weekOfYear(TemporalAccessor date){
+		return TemporalAccessorUtil.get(date, WeekFields.ISO.weekOfYear());
 	}
 }

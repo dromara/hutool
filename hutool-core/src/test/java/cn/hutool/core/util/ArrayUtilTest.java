@@ -182,6 +182,12 @@ public class ArrayUtilTest {
 		Assert.assertEquals(9, range[9]);
 	}
 
+	@Test(expected = NegativeArraySizeException.class)
+	public void rangeMinTest() {
+		//noinspection ResultOfMethodCallIgnored
+		ArrayUtil.range(0, Integer.MIN_VALUE);
+	}
+
 	@Test
 	public void maxTest() {
 		int max = ArrayUtil.max(1, 2, 13, 4, 5);
@@ -357,7 +363,7 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void indexOfSubTest2(){
+	public void indexOfSubTest2() {
 		Integer[] a = {0x12, 0x56, 0x34, 0x56, 0x78, 0x9A};
 		Integer[] b = {0x56, 0x78};
 		int i = ArrayUtil.indexOfSub(a, b);
@@ -395,7 +401,7 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void lastIndexOfSubTest2(){
+	public void lastIndexOfSubTest2() {
 		Integer[] a = {0x12, 0x56, 0x78, 0x56, 0x21, 0x9A};
 		Integer[] b = {0x56, 0x78};
 		int i = ArrayUtil.indexOfSub(a, b);
@@ -403,17 +409,17 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void reverseTest(){
-		int[] a = {1,2,3,4};
+	public void reverseTest() {
+		int[] a = {1, 2, 3, 4};
 		final int[] reverse = ArrayUtil.reverse(a);
-		Assert.assertArrayEquals(new int[]{4,3,2,1}, reverse);
+		Assert.assertArrayEquals(new int[]{4, 3, 2, 1}, reverse);
 	}
 
 	@Test
-	public void reverseTest2s(){
-		Object[] a = {"1",'2',"3",4};
+	public void reverseTest2s() {
+		Object[] a = {"1", '2', "3", 4};
 		final Object[] reverse = ArrayUtil.reverse(a);
-		Assert.assertArrayEquals(new Object[]{4,"3",'2',"1"}, reverse);
+		Assert.assertArrayEquals(new Object[]{4, "3", '2', "1"}, reverse);
 	}
 
 	@Test
@@ -452,5 +458,60 @@ public class ArrayUtilTest {
 		byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
 		Assert.assertEquals(3, arrayAfterSplit.length);
 		Assert.assertEquals(24, arrayAfterSplit[2].length);
+	}
+
+	@Test
+	public void getTest() {
+		String[] a = {"a", "b", "c"};
+		final Object o = ArrayUtil.get(a, -1);
+		Assert.assertEquals("c", o);
+	}
+
+	@Test
+	public void replaceTest() {
+		String[] a = {"1", "2", "3", "4"};
+		String[] b = {"a", "b", "c"};
+
+		// 在小于0的位置，-1位置插入，返回b+a，新数组
+		String[] result = ArrayUtil.replace(a, -1, b);
+		Assert.assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
+
+		// 在第0个位置开始替换，返回a
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 0, b);
+		Assert.assertArrayEquals(new String[]{"a", "b", "c", "4"}, result);
+
+		// 在第1个位置替换，即"2"开始
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 1, b);
+		Assert.assertArrayEquals(new String[]{"1", "a", "b", "c"}, result);
+
+		// 在第2个位置插入，即"3"之后
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 2, b);
+		Assert.assertArrayEquals(new String[]{"1", "2", "a", "b", "c"}, result);
+
+		// 在第3个位置插入，即"4"之后
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 3, b);
+		Assert.assertArrayEquals(new String[]{"1", "2", "3", "a", "b", "c"}, result);
+
+		// 在第4个位置插入，数组长度为4，在索引4出替换即两个数组相加
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 4, b);
+		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
+
+		// 在大于3个位置插入，数组长度为4，即两个数组相加
+		result = ArrayUtil.replace(ArrayUtil.clone(a), 5, b);
+		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
+
+		String[] e = null;
+		String[] f = {"a", "b", "c"};
+
+		// e为null 返回 f
+		result = ArrayUtil.replace(e, -1, f);
+		Assert.assertArrayEquals(f, result);
+
+		String[] g = {"a", "b", "c"};
+		String[] h = null;
+
+		// h为null 返回 g
+		result = ArrayUtil.replace(g, 0, h);
+		Assert.assertArrayEquals(g, result);
 	}
 }

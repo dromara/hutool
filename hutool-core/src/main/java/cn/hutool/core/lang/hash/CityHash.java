@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.hash;
 
+import cn.hutool.core.util.ByteUtil;
+
 import java.util.Arrays;
 
 /**
@@ -140,11 +142,11 @@ public class CityHash {
 		len = (len - 1) & ~63;
 		int pos = 0;
 		do {
-			x = rotate(x + y + v.getLowValue() + fetch64(data, pos + 8), 37) * k1;
-			y = rotate(y + v.getHighValue() + fetch64(data, pos + 48), 42) * k1;
+			x = rotate64(x + y + v.getLowValue() + fetch64(data, pos + 8), 37) * k1;
+			y = rotate64(y + v.getHighValue() + fetch64(data, pos + 48), 42) * k1;
 			x ^= w.getHighValue();
 			y += v.getLowValue() + fetch64(data, pos + 40);
-			z = rotate(z + w.getLowValue(), 33) * k1;
+			z = rotate64(z + w.getLowValue(), 33) * k1;
 			v = weakHashLen32WithSeeds(data, pos, v.getHighValue() * k1, x + w.getLowValue());
 			w = weakHashLen32WithSeeds(data, pos + 32, z + w.getHighValue(), y + fetch64(data, pos + 16));
 			// swap z,x value
@@ -221,19 +223,19 @@ public class CityHash {
 		long x = seed.getLowValue();
 		long y = seed.getHighValue();
 		long z = len * k1;
-		v.setLowValue(rotate(y ^ k1, 49) * k1 + fetch64(byteArray, start));
-		v.setHighValue(rotate(v.getLowValue(), 42) * k1 + fetch64(byteArray, start + 8));
-		w.setLowValue(rotate(y + z, 35) * k1 + x);
-		w.setHighValue(rotate(x + fetch64(byteArray, start + 88), 53) * k1);
+		v.setLowValue(rotate64(y ^ k1, 49) * k1 + fetch64(byteArray, start));
+		v.setHighValue(rotate64(v.getLowValue(), 42) * k1 + fetch64(byteArray, start + 8));
+		w.setLowValue(rotate64(y + z, 35) * k1 + x);
+		w.setHighValue(rotate64(x + fetch64(byteArray, start + 88), 53) * k1);
 
 		// This is the same inner loop as CityHash64(), manually unrolled.
 		int pos = start;
 		do {
-			x = rotate(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
-			y = rotate(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
+			x = rotate64(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
+			y = rotate64(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
 			x ^= w.getHighValue();
 			y += v.getLowValue() + fetch64(byteArray, pos + 40);
-			z = rotate(z + w.getLowValue(), 33) * k1;
+			z = rotate64(z + w.getLowValue(), 33) * k1;
 			v = weakHashLen32WithSeeds(byteArray, pos, v.getHighValue() * k1, x + w.getLowValue());
 			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getHighValue(), y + fetch64(byteArray, pos + 16));
 
@@ -241,11 +243,11 @@ public class CityHash {
 			x = z;
 			z = swapValue;
 			pos += 64;
-			x = rotate(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
-			y = rotate(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
+			x = rotate64(x + y + v.getLowValue() + fetch64(byteArray, pos + 8), 37) * k1;
+			y = rotate64(y + v.getHighValue() + fetch64(byteArray, pos + 48), 42) * k1;
 			x ^= w.getHighValue();
 			y += v.getLowValue() + fetch64(byteArray, pos + 40);
-			z = rotate(z + w.getLowValue(), 33) * k1;
+			z = rotate64(z + w.getLowValue(), 33) * k1;
 			v = weakHashLen32WithSeeds(byteArray, pos, v.getHighValue() * k1, x + w.getLowValue());
 			w = weakHashLen32WithSeeds(byteArray, pos + 32, z + w.getHighValue(), y + fetch64(byteArray, pos + 16));
 			swapValue = x;
@@ -254,16 +256,16 @@ public class CityHash {
 			pos += 64;
 			len -= 128;
 		} while (len >= 128);
-		x += rotate(v.getLowValue() + z, 49) * k0;
-		y = y * k0 + rotate(w.getHighValue(), 37);
-		z = z * k0 + rotate(w.getLowValue(), 27);
+		x += rotate64(v.getLowValue() + z, 49) * k0;
+		y = y * k0 + rotate64(w.getHighValue(), 37);
+		z = z * k0 + rotate64(w.getLowValue(), 27);
 		w.setLowValue(w.getLowValue() * 9);
 		v.setLowValue(v.getLowValue() * k0);
 
 		// If 0 < len < 128, hash up to 4 chunks of 32 bytes each from the end of s.
 		for (int tail_done = 0; tail_done < len; ) {
 			tail_done += 32;
-			y = rotate(x + y, 42) * k0 + v.getHighValue();
+			y = rotate64(x + y, 42) * k0 + v.getHighValue();
 			w.setLowValue(w.getLowValue() + fetch64(byteArray, pos + len - tail_done + 16));
 			x = x * k0 + w.getLowValue();
 			z += w.getHighValue() + fetch64(byteArray, pos + len - tail_done);
@@ -318,11 +320,11 @@ public class CityHash {
 	private static long hashLen0to16(byte[] byteArray) {
 		int len = byteArray.length;
 		if (len >= 8) {
-			long mul = k2 + len * 2;
+			long mul = k2 + len * 2L;
 			long a = fetch64(byteArray, 0) + k2;
 			long b = fetch64(byteArray, len - 8);
-			long c = rotate(b, 37) * mul + a;
-			long d = (rotate(a, 25) + b) * mul;
+			long c = rotate64(b, 37) * mul + a;
+			long d = (rotate64(a, 25) + b) * mul;
 			return hashLen16(c, d, mul);
 		}
 		if (len >= 4) {
@@ -344,18 +346,18 @@ public class CityHash {
 	// This probably works well for 16-byte strings as well, but it may be overkill in that case.
 	private static long hashLen17to32(byte[] byteArray) {
 		int len = byteArray.length;
-		long mul = k2 + len * 2;
+		long mul = k2 + len * 2L;
 		long a = fetch64(byteArray, 0) * k1;
 		long b = fetch64(byteArray, 8);
 		long c = fetch64(byteArray, len - 8) * mul;
 		long d = fetch64(byteArray, len - 16) * k2;
-		return hashLen16(rotate(a + b, 43) + rotate(c, 30) + d,
-				a + rotate(b + k2, 18) + c, mul);
+		return hashLen16(rotate64(a + b, 43) + rotate64(c, 30) + d,
+				a + rotate64(b + k2, 18) + c, mul);
 	}
 
 	private static long hashLen33to64(byte[] byteArray) {
 		int len = byteArray.length;
-		long mul = k2 + len * 2;
+		long mul = k2 + len * 2L;
 		long a = fetch64(byteArray, 0) * k2;
 		long b = fetch64(byteArray, 8);
 		long c = fetch64(byteArray, len - 24);
@@ -364,10 +366,10 @@ public class CityHash {
 		long f = fetch64(byteArray, 24) * 9;
 		long g = fetch64(byteArray, len - 8);
 		long h = fetch64(byteArray, len - 16) * mul;
-		long u = rotate(a + g, 43) + (rotate(b, 30) + c) * 9;
+		long u = rotate64(a + g, 43) + (rotate64(b, 30) + c) * 9;
 		long v = ((a + g) ^ d) + f + 1;
 		long w = Long.reverseBytes((u + v) * mul) + h;
-		long x = rotate(e + f, 42) + c;
+		long x = rotate64(e + f, 42) + c;
 		long y = (Long.reverseBytes((v + w) * mul) + g) * mul;
 		long z = e + f + c;
 		a = Long.reverseBytes((x + z) * mul + y) + b;
@@ -375,37 +377,15 @@ public class CityHash {
 		return b + x;
 	}
 
-	private static long loadUnaligned64(final byte[] byteArray, final int start) {
-		long result = 0;
-		OrderIter orderIter = new OrderIter(8);
-		while (orderIter.hasNext()) {
-			int next = orderIter.next();
-			long value = (byteArray[next + start] & 0xffL) << (next * 8);
-			result |= value;
-		}
-		return result;
-	}
-
-	private static int loadUnaligned32(final byte[] byteArray, final int start) {
-		int result = 0;
-		OrderIter orderIter = new OrderIter(4);
-		while (orderIter.hasNext()) {
-			int next = orderIter.next();
-			int value = (byteArray[next + start] & 0xff) << (next * 8);
-			result |= value;
-		}
-		return result;
-	}
-
-	private static long fetch64(byte[] byteArray, final int start) {
-		return loadUnaligned64(byteArray, start);
+	private static long fetch64(byte[] byteArray, int start) {
+		return ByteUtil.bytesToLong(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
 	private static int fetch32(byte[] byteArray, final int start) {
-		return loadUnaligned32(byteArray, start);
+		return ByteUtil.bytesToInt(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
-	private static long rotate(long val, int shift) {
+	private static long rotate64(long val, int shift) {
 		// Avoid shifting by 64: doing so yields an undefined result.
 		return shift == 0 ? val : ((val >>> shift) | (val << (64 - shift)));
 	}
@@ -465,11 +445,11 @@ public class CityHash {
 	private static Number128 weakHashLen32WithSeeds(
 			long w, long x, long y, long z, long a, long b) {
 		a += w;
-		b = rotate(b + a + z, 21);
+		b = rotate64(b + a + z, 21);
 		long c = a;
 		a += x;
 		a += y;
-		b += rotate(a, 44);
+		b += rotate64(a, 44);
 		return new Number128(a + z, b + c);
 	}
 
@@ -514,25 +494,6 @@ public class CityHash {
 		a = hashLen16(a, c);
 		b = hashLen16(d, b);
 		return new Number128(a ^ b, hashLen16(b, a));
-	}
-
-	private static class OrderIter {
-		private static final boolean IS_LITTLE_ENDIAN = "little".equals(System.getProperty("sun.cpu.endian"));
-
-		private final int size;
-		private int index;
-
-		OrderIter(int size) {
-			this.size = size;
-		}
-
-		boolean hasNext() {
-			return index < size;
-		}
-
-		int next() {
-			return IS_LITTLE_ENDIAN ? index++ : (size - 1 - index++);
-		}
 	}
 	//------------------------------------------------------------------------------------------------------- Private method end
 }

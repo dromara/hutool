@@ -1,5 +1,7 @@
 package cn.hutool.core.date.chinese;
 
+import java.time.LocalDate;
+
 /**
  * 阴历（农历）信息
  *
@@ -13,9 +15,9 @@ public class LunarInfo {
 	 */
 	public static final int BASE_YEAR = 1900;
 	/**
-	 * 1900-01-31
+	 * 1900-01-31，农历正月初一
 	 */
-	public static final long BASE_DAY = -25538;
+	public static final long BASE_DAY = LocalDate.of(BASE_YEAR, 1, 31).toEpochDay();
 
 	/**
 	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js
@@ -66,9 +68,9 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年闰月的天数
+	 * 传回农历 y年闰月的天数，如果本年无闰月，返回0，区分大小月
 	 *
-	 * @param y 年
+	 * @param y 农历年
 	 * @return 闰月的天数
 	 */
 	public static int leapDays(int y) {
@@ -80,7 +82,7 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年m月的总天数
+	 * 传回农历 y年m月的总天数，区分大小月
 	 *
 	 * @param y 年
 	 * @param m 月
@@ -91,7 +93,8 @@ public class LunarInfo {
 	}
 
 	/**
-	 * 传回农历 y年闰哪个月 1-12 , 没闰传回 0
+	 * 传回农历 y年闰哪个月 1-12 , 没闰传回 0<br>
+	 * 此方法会返回润N月中的N，如二月、闰二月都返回2
 	 *
 	 * @param y 年
 	 * @return 润的月, 没闰传回 0

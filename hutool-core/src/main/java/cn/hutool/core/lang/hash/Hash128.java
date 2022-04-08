@@ -8,7 +8,8 @@ package cn.hutool.core.lang.hash;
  * @since 5.2.5
  */
 @FunctionalInterface
-public interface Hash128<T> {
+public interface Hash128<T> extends Hash<T>{
+
 	/**
 	 * 计算Hash值
 	 *
@@ -16,4 +17,9 @@ public interface Hash128<T> {
 	 * @return hash
 	 */
 	Number128 hash128(T t);
+
+	@Override
+	default Number hash(T t){
+		return hash128(t);
+	}
 }

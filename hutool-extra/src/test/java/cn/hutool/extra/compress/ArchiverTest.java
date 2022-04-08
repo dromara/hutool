@@ -50,7 +50,7 @@ public class ArchiverTest {
 
 	@Test
 	@Ignore
-	public void senvenZTest(){
+	public void sevenZTest(){
 		final File file = FileUtil.file("d:/test/compress/test.7z");
 		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.SEVEN_Z, file)
 				.add(FileUtil.file("d:/Java/apache-maven-3.6.3"), (f)->{

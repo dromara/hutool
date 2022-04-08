@@ -10,6 +10,7 @@ import cn.hutool.core.text.escape.XmlUnescape;
  * 转义和反转义工具类Escape / Unescape<br>
  * escape采用ISO Latin字符集对指定的字符串进行编码。<br>
  * 所有的空格符、标点符号、特殊字符以及其他非ASCII字符都将被转化成%xx格式的字符编码(xx等于该字符在字符集表里面的编码的16进制数字)。
+ * TODO 6.x迁移到core.text.escape包下
  *
  * @author xiaoleilu
  */
@@ -118,20 +119,24 @@ public class EscapeUtil {
 		}
 
 		final StringBuilder tmp = new StringBuilder(content.length() * 6);
-		char j;
+		char c;
 		for (int i = 0; i < content.length(); i++) {
-			j = content.charAt(i);
-			if (false == filter.accept(j)) {
-				tmp.append(j);
-			} else if (j < 256) {
+			c = content.charAt(i);
+			if (false == filter.accept(c)) {
+				tmp.append(c);
+			} else if (c < 256) {
 				tmp.append("%");
-				if (j < 16) {
+				if (c < 16) {
 					tmp.append("0");
 				}
-				tmp.append(Integer.toString(j, 16));
+				tmp.append(Integer.toString(c, 16));
 			} else {
 				tmp.append("%u");
-				tmp.append(Integer.toString(j, 16));
+				if(c <= 0xfff){
+					// issue#I49JU8@Gitee
+					tmp.append("0");
+				}
+				tmp.append(Integer.toString(c, 16));
 			}
 		}
 		return tmp.toString();

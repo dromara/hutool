@@ -233,24 +233,25 @@ public class ExceptionUtil {
 	 * 堆栈转为完整字符串
 	 *
 	 * @param throwable           异常对象
-	 * @param limit               限制最大长度
+	 * @param limit               限制最大长度，&gt;0表示不限制长度
 	 * @param replaceCharToStrMap 替换字符为指定字符串
 	 * @return 堆栈转为的字符串
 	 */
 	public static String stacktraceToString(Throwable throwable, int limit, Map<Character, String> replaceCharToStrMap) {
 		final FastByteArrayOutputStream baos = new FastByteArrayOutputStream();
 		throwable.printStackTrace(new PrintStream(baos));
-		String exceptionStr = baos.toString();
-		int length = exceptionStr.length();
-		if (limit > 0 && limit < length) {
-			length = limit;
+
+		final String exceptionStr = baos.toString();
+		final int length = exceptionStr.length();
+		if (limit < 0 || limit > length) {
+			limit = length;
 		}
 
 		if (MapUtil.isNotEmpty(replaceCharToStrMap)) {
 			final StringBuilder sb = StrUtil.builder();
 			char c;
 			String value;
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < limit; i++) {
 				c = exceptionStr.charAt(i);
 				value = replaceCharToStrMap.get(c);
 				if (null != value) {
@@ -261,6 +262,9 @@ public class ExceptionUtil {
 			}
 			return sb.toString();
 		} else {
+			if(limit == length){
+				return exceptionStr;
+			}
 			return StrUtil.subPre(exceptionStr, limit);
 		}
 	}

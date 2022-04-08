@@ -26,7 +26,7 @@ public class Partition<T> extends AbstractList<List<T>> {
 	 */
 	public Partition(List<T> list, int size) {
 		this.list = list;
-		this.size = size;
+		this.size = Math.min(size, list.size());
 	}
 
 	@Override
@@ -38,10 +38,11 @@ public class Partition<T> extends AbstractList<List<T>> {
 
 	@Override
 	public int size() {
-		// 此处采用动态计算，以应对list变化
+		// 此处采用动态计算，以应对list变
+		final int size = this.size;
 		final int total = list.size();
 		int length = total / size;
-		if(total % length > 0){
+		if(total % size > 0){
 			length += 1;
 		}
 		return length;

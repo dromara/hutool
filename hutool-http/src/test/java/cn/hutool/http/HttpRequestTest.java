@@ -148,4 +148,64 @@ public class HttpRequestTest {
 		HttpResponse execute = get.execute();
 		Console.log(execute.body());
 	}
+
+	@Test
+	@Ignore
+	public void followRedirectsTest() {
+		// 从5.7.19开始关闭JDK的自动重定向功能，改为手动重定向
+		// 当有多层重定向时，JDK的重定向会失效，或者说只有最后一个重定向有效，因此改为手动更易控制次数
+		// 此链接有两次重定向，当设置次数为1时，表示最多执行一次重定向，即请求2次
+		String url = "http://api.rosysun.cn/sjtx/?type=2";
+//		String url = "https://api.btstu.cn/sjtx/api.php?lx=b1";
+
+		// 方式1：全局设置
+		HttpGlobalConfig.setMaxRedirectCount(1);
+		HttpResponse execute = HttpRequest.get(url).execute();
+		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
+
+		// 方式2，单独设置
+		execute = HttpRequest.get(url).setMaxRedirectCount(1).execute();
+		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
+	}
+
+	@Test
+	@Ignore
+	public void addInterceptorTest() {
+		HttpUtil.createGet("https://hutool.cn")
+				.addInterceptor(Console::log)
+				.addResponseInterceptor((res)-> Console.log(res.getStatus()))
+				.execute();
+	}
+
+	@Test
+	@Ignore
+	public void addGlobalInterceptorTest() {
+		GlobalInterceptor.INSTANCE.addRequestInterceptor(Console::log);
+		HttpUtil.createGet("https://hutool.cn").execute();
+	}
+
+	@Test
+	@Ignore
+	public void getWithFormTest(){
+		String url = "https://postman-echo.com/get";
+		final Map<String, Object> map = new HashMap<>();
+		map.put("aaa", "application+1@qqq.com");
+		HttpRequest request =HttpUtil.createGet(url).form(map);
+		Console.log(request.execute().body());
+	}
+
+	@Test
+	public void issueI50NHQTest(){
+		String url = "http://127.0.0.1/devicerecord/list";
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("start", "2022-03-31 00:00:00");
+		params.put("end", "2022-03-31 23:59:59");
+		params.put("page", 1);
+		params.put("limit", 10);
+
+		String result = HttpRequest.get(url)
+				.header("token", "123")
+				.form(params).toString();
+		Console.log(result);
+	}
 }

@@ -15,27 +15,24 @@ public class FtpTest {
 	@Ignore
 	public void cdTest() {
 		Ftp ftp = new Ftp("looly.centos");
-		
+
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
-		
+
 		IoUtil.close(ftp);
 	}
-	
+
 	@Test
 	@Ignore
 	public void uploadTest() {
-		Ftp ftp = new Ftp("looly.centos");
-		
-		List<String> ls = ftp.ls("/file");
-		Console.log(ls);
-		
-		boolean upload = ftp.upload("/file/aaa", FileUtil.file("E:/qrcodeWithLogo.jpg"));
+		Ftp ftp = new Ftp("localhost");
+
+		boolean upload = ftp.upload("/temp", FileUtil.file("d:/test/test.zip"));
 		Console.log(upload);
-		
+
 		IoUtil.close(ftp);
 	}
-	
+
 	@Test
 	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {
@@ -79,5 +76,18 @@ public class FtpTest {
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
 		IoUtil.close(ftp);
+	}
+
+	@Test
+	@Ignore
+	public void downloadTest() {
+		Ftp ftp = new Ftp("localhost");
+
+		List<String> fileNames = ftp.ls("temp/");
+		for(String name: fileNames) {
+			ftp.download("",
+					name,
+					FileUtil.file("d:/test/download/" + name));
+		}
 	}
 }

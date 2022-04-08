@@ -117,7 +117,7 @@ public enum DateField {
 	 * 将 {@link Calendar}相关值转换为DatePart枚举对象<br>
 	 *
 	 * @param calendarPartIntValue Calendar中关于Week的int值
-	 * @return {@link DateField}
+	 * @return DateField
 	 */
 	public static DateField of(int calendarPartIntValue) {
 		switch (calendarPartIntValue) {

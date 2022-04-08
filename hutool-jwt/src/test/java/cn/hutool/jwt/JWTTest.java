@@ -15,7 +15,7 @@ public class JWTTest {
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
-				.setPayload(RegisteredPayload.EXPIRES_AT, DateUtil.parse("2022-01-01"))
+				.setExpiresAt(DateUtil.parse("2022-01-01"))
 				.setKey(key);
 
 		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +

@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class RandomUtilTest {
@@ -52,5 +53,23 @@ public class RandomUtilTest {
 	public void randomBytesTest() {
 		final byte[] c = RandomUtil.randomBytes(10);
 		Assert.assertNotNull(c);
+	}
+
+	@Test
+	public void randomChineseTest(){
+		char c = RandomUtil.randomChinese();
+		Assert.assertTrue(c > 0);
+	}
+
+	@Test
+	@Ignore
+	public void randomStringWithoutStrTest() {
+		for (int i = 0; i < 100; i++) {
+			final String s = RandomUtil.randomStringWithoutStr(8, "0IPOL");
+			System.out.println(s);
+			for (char c : "0IPOL".toCharArray()) {
+				Assert.assertFalse(s.contains((String.valueOf(c).toLowerCase(Locale.ROOT))));
+			}
+		}
 	}
 }

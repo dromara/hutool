@@ -1,6 +1,7 @@
 package cn.hutool.poi.excel.reader;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.poi.excel.cell.CellEditor;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -41,8 +42,9 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 		}
 
 		final List<T> beanList = new ArrayList<>(mapList.size());
+		final CopyOptions copyOptions = CopyOptions.create().setIgnoreError(true);
 		for (Map<String, Object> map : mapList) {
-			beanList.add(BeanUtil.toBeanIgnoreError(map, this.beanClass));
+			beanList.add(BeanUtil.toBean(map, this.beanClass, copyOptions));
 		}
 		return beanList;
 	}

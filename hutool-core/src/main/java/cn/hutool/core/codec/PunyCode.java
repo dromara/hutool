@@ -27,11 +27,11 @@ public class PunyCode {
 	/**
 	 * 将内容编码为PunyCode
 	 *
-	 * @param input      字符串
+	 * @param input 字符串
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(String input) throws UtilException {
+	public static String encode(CharSequence input) throws UtilException {
 		return encode(input, false);
 	}
 
@@ -43,7 +43,7 @@ public class PunyCode {
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(String input, boolean withPrefix) throws UtilException {
+	public static String encode(CharSequence input, boolean withPrefix) throws UtilException {
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
@@ -112,7 +112,7 @@ public class PunyCode {
 			n++;
 		}
 
-		if(withPrefix){
+		if (withPrefix) {
 			output.insert(0, PUNY_CODE_PREFIX);
 		}
 		return output.toString();
@@ -214,6 +214,7 @@ public class PunyCode {
 	 *     ...
 	 *     35 -&gt; '9'
 	 * </pre>
+	 *
 	 * @param d 输入字符
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符
@@ -242,6 +243,7 @@ public class PunyCode {
 	 *     ...
 	 *     '9' -&gt; 35
 	 * </pre>
+	 *
 	 * @param c 输入字符
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符

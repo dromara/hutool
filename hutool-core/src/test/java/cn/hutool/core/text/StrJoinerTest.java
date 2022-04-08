@@ -34,7 +34,7 @@ public class StrJoinerTest {
 	public void joinMultiArrayTest(){
 		final StrJoiner append = StrJoiner.of(",");
 		append.append(new Object[]{ListUtil.of("1", "2"),
-				CollUtil.newHashSet("3", "4")
+				CollUtil.newLinkedHashSet("3", "4")
 		});
 		Assert.assertEquals("1,2,3,4", append.toString());
 	}
@@ -77,5 +77,26 @@ public class StrJoinerTest {
 				.append("2")
 				.append("3");
 		Assert.assertEquals("[1],[2],[3]", append.toString());
+	}
+
+	@Test
+	public void lengthTest(){
+		StrJoiner joiner = StrJoiner.of(",", "[", "]");
+		Assert.assertEquals(joiner.toString().length(), joiner.length());
+
+		joiner.append("123");
+		Assert.assertEquals(joiner.toString().length(), joiner.length());
+	}
+
+	@Test
+	public void mergeTest(){
+		StrJoiner joiner1 = StrJoiner.of(",", "[", "]");
+		joiner1.append("123");
+		StrJoiner joiner2 = StrJoiner.of(",", "[", "]");
+		joiner1.append("456");
+		joiner1.append("789");
+
+		final StrJoiner merge = joiner1.merge(joiner2);
+		Assert.assertEquals("[123,456,789]", merge.toString());
 	}
 }

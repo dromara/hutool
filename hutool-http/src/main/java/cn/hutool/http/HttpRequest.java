@@ -3,34 +3,35 @@ package cn.hutool.http;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.body.BytesBody;
+import cn.hutool.http.body.FormUrlEncodedBody;
 import cn.hutool.http.body.MultipartBody;
+import cn.hutool.http.body.RequestBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
+import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -41,6 +42,118 @@ import java.util.function.Consumer;
  * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
+
+	// ---------------------------------------------------------------- static Http Method start
+
+	/**
+	 * POST请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest post(String url) {
+		return of(url).method(Method.POST);
+	}
+
+	/**
+	 * GET请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest get(String url) {
+		return of(url).method(Method.GET);
+	}
+
+	/**
+	 * HEAD请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest head(String url) {
+		return of(url).method(Method.HEAD);
+	}
+
+	/**
+	 * OPTIONS请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest options(String url) {
+		return of(url).method(Method.OPTIONS);
+	}
+
+	/**
+	 * PUT请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest put(String url) {
+		return of(url).method(Method.PUT);
+	}
+
+	/**
+	 * PATCH请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 * @since 3.0.9
+	 */
+	public static HttpRequest patch(String url) {
+		return of(url).method(Method.PATCH);
+	}
+
+	/**
+	 * DELETE请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest delete(String url) {
+		return of(url).method(Method.DELETE);
+	}
+
+	/**
+	 * TRACE请求
+	 *
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest trace(String url) {
+		return of(url).method(Method.TRACE);
+	}
+
+	/**
+	 * 构建一个HTTP请求<br>
+	 * 对于传入的URL，可以自定义是否解码已经编码的内容，设置见{@link HttpGlobalConfig#setDecodeUrl(boolean)}<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果{@link HttpGlobalConfig#isDecodeUrl()}为{@code true}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 *
+	 * @param url URL链接，默认自动编码URL中的参数等信息
+	 * @return HttpRequest
+	 * @since 5.7.18
+	 */
+	public static HttpRequest of(String url) {
+		return of(url, HttpGlobalConfig.isDecodeUrl() ? DEFAULT_CHARSET : null);
+	}
+
+	/**
+	 * 构建一个HTTP请求<br>
+	 * 对于传入的URL，可以自定义是否解码已经编码的内容。<br>
+	 * 在构建Http请求时，用户传入的URL可能有编码后和未编码的内容混合在一起，如果charset参数不为{@code null}，则会统一解码编码后的参数，<br>
+	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
+	 *
+	 * @param url     URL链接
+	 * @param charset 编码，如果为{@code null}不自动解码编码URL
+	 * @return HttpRequest
+	 * @since 5.7.18
+	 */
+	public static HttpRequest of(String url, Charset charset) {
+		return new HttpRequest(UrlBuilder.ofHttp(url, charset));
+	}
 
 	/**
 	 * 设置全局默认的连接和读取超时时长
@@ -84,39 +197,29 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
 	}
+	// ---------------------------------------------------------------- static Http Method end
 
+	private HttpConfig config = HttpConfig.create();
 	private UrlBuilder url;
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/**
-	 * 默认连接超时
+	 * 连接对象
 	 */
-	private int connectionTimeout = HttpGlobalConfig.timeout;
-	/**
-	 * 默认读取超时
-	 */
-	private int readTimeout = HttpGlobalConfig.timeout;
+	private HttpConnection httpConnection;
+
 	/**
 	 * 存储表单数据
 	 */
 	private Map<String, Object> form;
 	/**
-	 * 是否为Multipart表单
-	 */
-	private boolean isMultiPart;
-	/**
 	 * Cookie
 	 */
 	private String cookie;
-
 	/**
-	 * 连接对象
+	 * 是否为Multipart表单
 	 */
-	private HttpConnection httpConnection;
-	/**
-	 * 是否禁用缓存
-	 */
-	private boolean isDisableCache;
+	private boolean isMultiPart;
 	/**
 	 * 是否是REST请求模式
 	 */
@@ -125,33 +228,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 重定向次数计数器，内部使用
 	 */
 	private int redirectCount;
-	/**
-	 * 最大重定向次数
-	 */
-	private int maxRedirectCount;
-	/**
-	 * Chuncked块大小，0或小于0表示不设置Chuncked模式
-	 */
-	private int blockSize;
-	/**
-	 * 代理
-	 */
-	private Proxy proxy;
-
-	/**
-	 * HostnameVerifier，用于HTTPS安全连接
-	 */
-	private HostnameVerifier hostnameVerifier;
-	/**
-	 * SSLSocketFactory，用于HTTPS安全连接
-	 */
-	private SSLSocketFactory ssf;
 
 	/**
 	 * 构造，URL编码默认使用UTF-8
 	 *
 	 * @param url URL
+	 * @deprecated 请使用 {@link #of(String)}
 	 */
+	@Deprecated
 	public HttpRequest(String url) {
 		this(UrlBuilder.ofHttp(url));
 	}
@@ -162,94 +246,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url {@link UrlBuilder}
 	 */
 	public HttpRequest(UrlBuilder url) {
-		this.url = url;
+		this.url = Assert.notNull(url, "URL must be not null!");
+		// 给定默认URL编码
+		final Charset charset = url.getCharset();
+		if (null != charset) {
+			this.charset(charset);
+		}
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
-
-	// ---------------------------------------------------------------- static Http Method start
-
-	/**
-	 * POST请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest post(String url) {
-		return new HttpRequest(url).method(Method.POST);
-	}
-
-	/**
-	 * GET请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest get(String url) {
-		return new HttpRequest(url).method(Method.GET);
-	}
-
-	/**
-	 * HEAD请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest head(String url) {
-		return new HttpRequest(url).method(Method.HEAD);
-	}
-
-	/**
-	 * OPTIONS请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest options(String url) {
-		return new HttpRequest(url).method(Method.OPTIONS);
-	}
-
-	/**
-	 * PUT请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest put(String url) {
-		return new HttpRequest(url).method(Method.PUT);
-	}
-
-	/**
-	 * PATCH请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 * @since 3.0.9
-	 */
-	public static HttpRequest patch(String url) {
-		return new HttpRequest(url).method(Method.PATCH);
-	}
-
-	/**
-	 * DELETE请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest delete(String url) {
-		return new HttpRequest(url).method(Method.DELETE);
-	}
-
-	/**
-	 * TRACE请求
-	 *
-	 * @param url URL
-	 * @return HttpRequest
-	 */
-	public static HttpRequest trace(String url) {
-		return new HttpRequest(url).method(Method.TRACE);
-	}
-	// ---------------------------------------------------------------- static Http Method end
 
 	/**
 	 * 获取请求URL
@@ -269,8 +274,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.1.8
 	 */
 	public HttpRequest setUrl(String url) {
-		this.url = UrlBuilder.ofHttp(url, this.charset);
-		return this;
+		return setUrl(UrlBuilder.ofHttp(url, this.charset));
 	}
 
 	/**
@@ -292,7 +296,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 它会验证 SSL 服务器在数字证书中返回的主机名是否与用于连接 SSL 服务器的 URL 主机名相匹配。如果主机名不匹配，则删除此连接。<br>
 	 * 因此weblogic不支持https的sni协议的主机名验证，此时需要将此值设置为sun.net.www.protocol.https.Handler对象。
 	 * <p>
-	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
+	 * 相关issue见：https://gitee.com/dromara/hutool/issues/IMD1X
 	 *
 	 * @param urlHandler {@link URLStreamHandler}
 	 * @return this
@@ -427,7 +431,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (ArrayUtil.isEmpty(cookies)) {
 			return disableCookie();
 		}
-		return cookie(ArrayUtil.join(cookies, ";"));
+		// 名称/值对之间用分号和空格 ('; ')
+		// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cookie
+		return cookie(ArrayUtil.join(cookies, "; "));
 	}
 
 	/**
@@ -741,6 +747,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Body end
 
 	/**
+	 * 将新的配置加入<br>
+	 * 注意加入的配置可能被修改
+	 *
+	 * @param config 配置
+	 * @return this
+	 */
+	public HttpRequest setConfig(HttpConfig config) {
+		this.config = config;
+		return this;
+	}
+
+	/**
 	 * 设置超时，单位：毫秒<br>
 	 * 超时包括：
 	 *
@@ -755,8 +773,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setReadTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
-		setConnectionTimeout(milliseconds);
-		setReadTimeout(milliseconds);
+		config.timeout(milliseconds);
 		return this;
 	}
 
@@ -768,7 +785,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.5.6
 	 */
 	public HttpRequest setConnectionTimeout(int milliseconds) {
-		this.connectionTimeout = milliseconds;
+		config.setConnectionTimeout(milliseconds);
 		return this;
 	}
 
@@ -780,7 +797,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.5.6
 	 */
 	public HttpRequest setReadTimeout(int milliseconds) {
-		this.readTimeout = milliseconds;
+		config.setReadTimeout(milliseconds);
 		return this;
 	}
 
@@ -790,7 +807,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest disableCache() {
-		this.isDisableCache = true;
+		config.disableCache();
 		return this;
 	}
 
@@ -814,7 +831,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.3.0
 	 */
 	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
-		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
+		config.setMaxRedirectCount(maxRedirectCount);
 		return this;
 	}
 
@@ -826,8 +843,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setHostnameVerifier(HostnameVerifier hostnameVerifier) {
-		// 验证域
-		this.hostnameVerifier = hostnameVerifier;
+		config.setHostnameVerifier(hostnameVerifier);
 		return this;
 	}
 
@@ -840,9 +856,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.4.5
 	 */
 	public HttpRequest setHttpProxy(String host, int port) {
-		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
-				new InetSocketAddress(host, port));
-		return setProxy(proxy);
+		config.setHttpProxy(host, port);
+		return this;
 	}
 
 	/**
@@ -852,7 +867,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setProxy(Proxy proxy) {
-		this.proxy = proxy;
+		config.setProxy(proxy);
 		return this;
 	}
 
@@ -865,7 +880,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setSSLSocketFactory(SSLSocketFactory ssf) {
-		this.ssf = ssf;
+		config.setSSLSocketFactory(ssf);
 		return this;
 	}
 
@@ -886,8 +901,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
-		Assert.notBlank(protocol, "protocol must be not blank!");
-		setSSLSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
+		config.setSSLProtocol(protocol);
 		return this;
 	}
 
@@ -913,7 +927,43 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 4.6.5
 	 */
 	public HttpRequest setChunkedStreamingMode(int blockSize) {
-		this.blockSize = blockSize;
+		config.setBlockSize(blockSize);
+		return this;
+	}
+
+	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 * @see #addRequestInterceptor(HttpInterceptor)
+	 * @since 5.7.16
+	 */
+	public HttpRequest addInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		return addRequestInterceptor(interceptor);
+	}
+
+	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 * @since 5.8.0
+	 */
+	public HttpRequest addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		config.addRequestInterceptor(interceptor);
+		return this;
+	}
+
+	/**
+	 * 设置拦截器，用于在请求前重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 * @since 5.8.0
+	 */
+	public HttpRequest addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
+		config.addResponseInterceptor(interceptor);
 		return this;
 	}
 
@@ -947,22 +997,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		// 初始化URL
-		urlWithParamIfGet();
-		// 初始化 connection
-		initConnection();
-		// 发送请求
-		send();
-
-		// 手动实现重定向
-		HttpResponse httpResponse = sendRedirectIfPossible();
-
-		// 获取响应
-		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
-		}
-
-		return httpResponse;
+		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors);
 	}
 
 	/**
@@ -1045,12 +1080,53 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
-		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
+		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
 		sb.append(super.toString());
 		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------- Private method start
+
+	/**
+	 * 执行Reuqest请求
+	 *
+	 * @param isAsync              是否异步
+	 * @param requestInterceptors  请求拦截器列表
+	 * @param responseInterceptors 响应拦截器列表
+	 * @return this
+	 */
+	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain<HttpRequest> requestInterceptors,
+								   HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
+		if (null != requestInterceptors) {
+			for (HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
+				interceptor.process(this);
+			}
+		}
+
+		// 初始化URL
+		urlWithParamIfGet();
+		// 初始化 connection
+		initConnection();
+		// 发送请求
+		send();
+
+		// 手动实现重定向
+		HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
+
+		// 获取响应
+		if (null == httpResponse) {
+			httpResponse = new HttpResponse(this.httpConnection, this.config, this.charset, isAsync, isIgnoreResponseBody());
+		}
+
+		// 拦截响应
+		if (null != responseInterceptors) {
+			for (HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
+				interceptor.process(httpResponse);
+			}
+		}
+
+		return httpResponse;
+	}
 
 	/**
 	 * 初始化网络连接
@@ -1062,15 +1138,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		this.httpConnection = HttpConnection
-				.create(this.url.toURL(this.urlHandler), this.proxy)//
-				.setConnectTimeout(this.connectionTimeout)//
-				.setReadTimeout(this.readTimeout)//
+				// issue#I50NHQ
+				// 在生成正式URL前，设置自定义编码
+				.create(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
+				.setConnectTimeout(config.connectionTimeout)//
+				.setReadTimeout(config.readTimeout)//
 				.setMethod(this.method)//
-				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
-				// 定义转发
-				.setInstanceFollowRedirects(this.maxRedirectCount > 0)
+				.setHttpsInfo(config.hostnameVerifier, config.ssf)//
+				// 关闭JDK自动转发，采用手动转发方式
+				.setInstanceFollowRedirects(false)
 				// 流方式上传数据
-				.setChunkedStreamingMode(this.blockSize)
+				.setChunkedStreamingMode(config.blockSize)
 				// 覆盖默认Header
 				.header(this.headers, true);
 
@@ -1083,17 +1161,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 是否禁用缓存
-		if (this.isDisableCache) {
+		if (config.isDisableCache) {
 			this.httpConnection.disableCache();
 		}
 	}
 
 	/**
 	 * 对于GET请求将参数加到URL中<br>
-	 * 此处不对URL中的特殊字符做单独编码
+	 * 此处不对URL中的特殊字符做单独编码<br>
+	 * 对于非rest的GET请求，且处于重定向时，参数丢弃
 	 */
 	private void urlWithParamIfGet() {
-		if (Method.GET.equals(method) && false == this.isRest) {
+		if (Method.GET.equals(method) && false == this.isRest && this.redirectCount <= 0) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 				this.url.getQuery().parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
@@ -1106,16 +1185,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
+	 * @param isAsync 是否异步
 	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
-	private HttpResponse sendRedirectIfPossible() {
-		if (this.maxRedirectCount < 1) {
-			// 不重定向
-			return null;
-		}
-
+	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		// 手动实现重定向
-		if (this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()) {
+		if (config.maxRedirectCount > 0) {
 			int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
@@ -1127,10 +1202,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
-					setUrl(httpConnection.header(Header.LOCATION));
-					if (redirectCount < this.maxRedirectCount) {
+					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
+					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
-						return execute();
+						// 重定向不再走过滤器
+						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
+								config.interceptorOnRedirect ? config.responseInterceptors : null);
 					}
 				}
 			}
@@ -1177,23 +1254,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		byte[] content;
+		RequestBody body;
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			content = this.bodyBytes;
+			body = BytesBody.create(this.bodyBytes);
 		} else {
-			content = StrUtil.bytes(getFormUrlEncoded(), this.charset);
+			body = FormUrlEncodedBody.create(this.form, this.charset);
 		}
-		IoUtil.write(this.httpConnection.getOutputStream(), true, content);
-	}
-
-	/**
-	 * 获取编码后的表单数据，无表单数据返回""
-	 *
-	 * @return 编码后的表单数据，无表单数据返回""
-	 * @since 5.3.2
-	 */
-	private String getFormUrlEncoded() {
-		return HttpUtil.toParams(this.form, this.charset);
+		body.writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**
@@ -1203,18 +1270,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException IO异常
 	 */
 	private void sendMultipart() throws IOException {
-		setMultipart();// 设置表单类型为Multipart
-
-		try (OutputStream out = this.httpConnection.getOutputStream()) {
-			MultipartBody.create(this.form, this.charset).write(out);
-		}
-	}
-
-	/**
-	 * 设置表单类型为Multipart（文件上传）
-	 */
-	private void setMultipart() {
-		this.httpConnection.header(Header.CONTENT_TYPE, MultipartBody.getContentType(), true);
+		final MultipartBody multipartBody = MultipartBody.create(this.form, this.charset);
+		//设置表单类型为Multipart（文件上传）
+		this.httpConnection.header(Header.CONTENT_TYPE, multipartBody.getContentType(), true);
+		multipartBody.writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**
@@ -1264,7 +1323,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return this;
 		}
 		if (null == this.form) {
-			this.form = new LinkedHashMap<>();
+			this.form = new TableMap<>(16);
 		}
 		this.form.put(name, value);
 		return this;

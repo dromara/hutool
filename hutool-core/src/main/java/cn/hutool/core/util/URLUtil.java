@@ -7,14 +7,21 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.net.url.UrlQuery;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.jar.JarFile;
@@ -33,7 +40,7 @@ import java.util.jar.JarFile;
  *
  * @author xiaoleilu
  */
-public class URLUtil {
+public class URLUtil extends URLEncodeUtil {
 
 	/**
 	 * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
@@ -89,6 +96,26 @@ public class URLUtil {
 	public static final String WAR_URL_SEPARATOR = "*/";
 
 	/**
+	 * 将{@link URI}转换为{@link URL}
+	 *
+	 * @param uri {@link URI}
+	 * @return URL对象
+	 * @see URI#toURL()
+	 * @throws UtilException {@link MalformedURLException}包装，URI格式有问题时抛出
+	 * @since 5.7.21
+	 */
+	public static URL url(URI uri) throws UtilException{
+		if(null == uri){
+			return null;
+		}
+		try {
+			return uri.toURL();
+		} catch (MalformedURLException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
 	 *
 	 * @param url URL
@@ -107,7 +134,9 @@ public class URLUtil {
 	 * @since 4.1.1
 	 */
 	public static URL url(String url, URLStreamHandler handler) {
-		Assert.notNull(url, "URL must not be null");
+		if(null == url){
+			return null;
+		}
 
 		// 兼容Spring的ClassPath路径
 		if (url.startsWith(CLASSPATH_URL_PREFIX)) {
@@ -135,6 +164,9 @@ public class URLUtil {
 	 * @since 5.5.2
 	 */
 	public static URI getStringURI(CharSequence content) {
+		if(null == content){
+			return null;
+		}
 		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
 		return URI.create(contentStr);
 	}
@@ -295,150 +327,6 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 */
-	public static String encodeAll(String url) {
-		return encodeAll(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码URL<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 *
-	 * @param url     URL
-	 * @param charset 编码，为null表示不编码
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 */
-	public static String encodeAll(String url, Charset charset) throws UtilException {
-		if (null == charset || StrUtil.isEmpty(url)) {
-			return url;
-		}
-
-		return URLEncoder.ALL.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 3.1.2
-	 */
-	public static String encode(String url) throws UtilException {
-		return encode(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 4.4.1
-	 */
-	public static String encode(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.DEFAULT.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 3.1.2
-	 */
-	public static String encodeQuery(String url) throws UtilException {
-		return encodeQuery(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为URL中查询语句<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 4.4.1
-	 */
-	public static String encodeQuery(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.QUERY.encode(url, charset);
-	}
-
-	/**
-	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL的Segment中自动编码，转义大部分特殊字符
-	 *
-	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * @param url URL
-	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 5.6.5
-	 */
-	public static String encodePathSegment(String url) throws UtilException {
-		return encodePathSegment(url, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 编码字符为URL中查询语句<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
-	 * 此方法用于URL的Segment中自动编码，转义大部分特殊字符
-	 *
-	 * <pre>
-	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / "@"
-	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-	 * </pre>
-	 *
-	 * @param url     被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @since 5.6.5
-	 */
-	public static String encodePathSegment(String url, Charset charset) {
-		if (StrUtil.isEmpty(url)) {
-			return url;
-		}
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return URLEncoder.PATH_SEGMENT.encode(url, charset);
-	}
-
 	//-------------------------------------------------------------------------- decode
 
 	/**
@@ -456,7 +344,8 @@ public class URLUtil {
 
 	/**
 	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。
+	 * 将%开头的16进制表示的内容解码。<br>
+	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
 	 *
 	 * @param content 被解码内容
 	 * @param charset 编码，null表示不解码
@@ -464,9 +353,6 @@ public class URLUtil {
 	 * @since 4.4.1
 	 */
 	public static String decode(String content, Charset charset) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset);
 	}
 
@@ -481,9 +367,6 @@ public class URLUtil {
 	 * @since 5.6.3
 	 */
 	public static String decode(String content, Charset charset, boolean isPlusToSpace) {
-		if (null == charset) {
-			return content;
-		}
 		return URLDecoder.decode(content, charset, isPlusToSpace);
 	}
 
@@ -497,7 +380,7 @@ public class URLUtil {
 	 * @throws UtilException UnsupportedEncodingException
 	 */
 	public static String decode(String content, String charset) throws UtilException {
-		return decode(content, CharsetUtil.charset(charset));
+		return decode(content, StrUtil.isEmpty(charset) ? null : CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -603,6 +486,7 @@ public class URLUtil {
 	 * @since 3.0.9
 	 */
 	public static boolean isFileURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		String protocol = url.getProtocol();
 		return (URL_PROTOCOL_FILE.equals(protocol) || //
 				URL_PROTOCOL_VFSFILE.equals(protocol) || //
@@ -616,6 +500,7 @@ public class URLUtil {
 	 * @return 是否为jar包URL
 	 */
 	public static boolean isJarURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_JAR.equals(protocol) || //
 				URL_PROTOCOL_ZIP.equals(protocol) || //
@@ -631,6 +516,7 @@ public class URLUtil {
 	 * @since 4.1
 	 */
 	public static boolean isJarFileURL(URL url) {
+		Assert.notNull(url, "URL must be not null");
 		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
 				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
 	}
@@ -643,7 +529,7 @@ public class URLUtil {
 	 * @since 3.2.1
 	 */
 	public static InputStream getStream(URL url) {
-		Assert.notNull(url);
+		Assert.notNull(url, "URL must be not null");
 		try {
 			return url.openStream();
 		} catch (IOException e) {

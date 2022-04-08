@@ -3,7 +3,8 @@ package cn.hutool.core.map;
 import java.util.LinkedHashMap;
 
 /**
- * 固定大小的{@link LinkedHashMap} 实现
+ * 固定大小的{@link LinkedHashMap} 实现<br>
+ * 注意此类非线程安全，由于{@link #get(Object)}操作会修改链表的顺序结构，因此也不可以使用读写锁。
  *
  * @author looly
  *

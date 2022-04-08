@@ -20,6 +20,7 @@ public class Issue1075Test {
 	public void testToBeanIgnoreCase() {
 		// 在忽略大小写的情况下，f2、fac都匹配
 		ObjA o2 = JSONUtil.parseObj(jsonStr, JSONConfig.create().setIgnoreCase(true)).toBean(ObjA.class);
+
 		Assert.assertEquals("fac", o2.getFAC());
 		Assert.assertEquals("f2", o2.getF2());
 	}

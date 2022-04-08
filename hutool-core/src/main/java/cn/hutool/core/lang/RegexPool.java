@@ -20,9 +20,10 @@ public interface RegexPool {
 	 */
 	String WORD = "[a-zA-Z]+";
 	/**
-	 * 单个中文汉字
+	 * 单个中文汉字<br>
+	 * 参照维基百科汉字Unicode范围(https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97 页面右侧)
 	 */
-	String CHINESE = "[\u4E00-\u9FFF]";
+	String CHINESE = "[\u2E80-\u2EFF\u2F00-\u2FDF\u31C0-\u31EF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uD840\uDC00-\uD869\uDEDF\uD869\uDF00-\uD86D\uDF3F\uD86D\uDF40-\uD86E\uDC1F\uD86E\uDC20-\uD873\uDEAF\uD87E\uDC00-\uD87E\uDE1F]";
 	/**
 	 * 中文汉字
 	 */
@@ -32,9 +33,11 @@ public interface RegexPool {
 	 */
 	String GROUP_VAR = "\\$(\\d+)";
 	/**
-	 * IP v4
+	 * IP v4<br>
+	 * 采用分组方式便于解析地址的每一个段
 	 */
-	String IPV4 = "\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b";
+	//String IPV4 = "\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b";
+	String IPV4 = "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)$";
 	/**
 	 * IP v6
 	 */
@@ -99,13 +102,19 @@ public interface RegexPool {
 	 */
 	String BIRTHDAY = "^(\\d{2,4})([/\\-.年]?)(\\d{1,2})([/\\-.月]?)(\\d{1,2})日?$";
 	/**
+	 * URI<br>
+	 * 定义见：https://www.ietf.org/rfc/rfc3986.html#appendix-B
+	 */
+	String URI = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?";
+	/**
 	 * URL
 	 */
-	String URL = "[a-zA-z]+://[^\\s]*";
+	String URL = "[a-zA-Z]+://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";
 	/**
-	 * Http URL
+	 * Http URL（来自：http://urlregex.com/）<br>
+	 * 此正则同时支持FTP、File等协议的URL
 	 */
-	String URL_HTTP = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(:\\d+)*(/[\\w- ./?%&=]*)?";
+	String URL_HTTP = "(https?|ftp|file)://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";
 	/**
 	 * 中文字、英文字母、数字和下划线
 	 */
@@ -134,9 +143,9 @@ public interface RegexPool {
 	 * 中国车牌号码（兼容新能源车牌）
 	 */
 	String PLATE_NUMBER =
-			//https://gitee.com/loolly/hutool/issues/I1B77H?from=project-issue
+			//https://gitee.com/dromara/hutool/issues/I1B77H?from=project-issue
 			"^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[ABCDEFGHJK])|([ABCDEFGHJK]([A-HJ-NP-Z0-9])[0-9]{4})))|" +
-					//https://gitee.com/loolly/hutool/issues/I1BJHE?from=project-issue
+					//https://gitee.com/dromara/hutool/issues/I1BJHE?from=project-issue
 					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]\\d{3}\\d{1,3}[领])|" +
 					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$";
 
@@ -167,4 +176,30 @@ public interface RegexPool {
 	 * 仅限：中国驾驶证档案编号
 	 */
 	String CAR_DRIVING_LICENCE = "^[0-9]{12}$";
+	/**
+	 * 中文姓名
+	 * 维吾尔族姓名里面的点是 · 输入法中文状态下，键盘左上角数字1前面的那个符号；<br>
+	 * 错误字符：{@code ．.。．.}<br>
+	 * 正确维吾尔族姓名：
+	 * <pre>
+	 * 霍加阿卜杜拉·麦提喀斯木
+	 * 玛合萨提别克·哈斯木别克
+	 * 阿布都热依木江·艾斯卡尔
+	 * 阿卜杜尼亚孜·毛力尼亚孜
+	 * </pre>
+	 * <pre>
+	 * ----------
+	 * 错误示例：孟  伟                reason: 有空格
+	 * 错误示例：连逍遥0               reason: 数字
+	 * 错误示例：依帕古丽-艾则孜        reason: 特殊符号
+	 * 错误示例：牙力空.买提萨力        reason: 新疆人的点不对
+	 * 错误示例：王建鹏2002-3-2        reason: 有数字、特殊符号
+	 * 错误示例：雷金默(雷皓添）        reason: 有括号
+	 * 错误示例：翟冬:亮               reason: 有特殊符号
+	 * 错误示例：李                   reason: 少于2位
+	 * ----------
+	 * </pre>
+	 * 总结中文姓名：2-60位，只能是中文和维吾尔族的点·
+	 */
+	String CHINESE_NAME = "^[\u4E00-\u9FFF·]{2,60}$";
 }

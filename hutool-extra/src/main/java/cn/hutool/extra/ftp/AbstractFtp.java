@@ -179,6 +179,41 @@ public abstract class AbstractFtp implements Closeable {
 	public abstract void download(String path, File outFile);
 
 	/**
+	 * 下载文件-避免未完成的文件<br>
+	 * 来自：https://gitee.com/dromara/hutool/pulls/407<br>
+	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
+	 *
+	 * @param path     文件路径
+	 * @param outFile  输出文件或目录
+	 * @param tempFileSuffix 临时文件后缀，默认".temp"
+	 * @since 5.7.12
+	 */
+	public void download(String path, File outFile, String tempFileSuffix) {
+		if(StrUtil.isBlank(tempFileSuffix)){
+			tempFileSuffix = ".temp";
+		} else {
+			tempFileSuffix = StrUtil.addPrefixIfNot(tempFileSuffix, StrUtil.DOT);
+		}
+
+		// 目标文件真实名称
+		final String fileName = outFile.isDirectory() ? FileUtil.getName(path) : outFile.getName();
+		// 临时文件名称
+		final String tempFileName = fileName + tempFileSuffix;
+
+		// 临时文件
+		outFile = new File(outFile.isDirectory() ? outFile : outFile.getParentFile(), tempFileName);
+		try {
+			download(path, outFile);
+			// 重命名下载好的临时文件
+			FileUtil.rename(outFile, fileName, true);
+		} catch (Throwable e) {
+			// 异常则删除临时文件
+			FileUtil.del(outFile);
+			throw new FtpException(e);
+		}
+	}
+
+	/**
 	 * 递归下载FTP服务器上文件到本地(文件目录和服务器同步), 服务器上有新文件会覆盖本地文件
 	 *
 	 * @param sourcePath ftp服务器目录

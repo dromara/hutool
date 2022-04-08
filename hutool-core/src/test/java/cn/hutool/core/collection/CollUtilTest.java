@@ -4,6 +4,7 @@ import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
@@ -37,6 +38,23 @@ public class CollUtilTest {
 		ArrayList<String> list = CollUtil.newArrayList("bbbbb", "aaaaa", "ccccc");
 		Assert.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
 		Assert.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
+	}
+
+	@Test
+	public void testRemoveWithAddIf() {
+		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3);
+		ArrayList<Integer> exceptRemovedList = CollUtil.newArrayList(2, 3);
+		ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
+
+		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
+
+		list = CollUtil.newArrayList(1, 2, 3);
+		resultList = new ArrayList<>();
+		CollUtil.removeWithAddIf(list, resultList, ele -> 1 == ele);
+		Assert.assertEquals(list, exceptRemovedList);
+		Assert.assertEquals(resultList, exceptResultList);
 	}
 
 	@Test
@@ -279,6 +297,35 @@ public class CollUtilTest {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
 		ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
+
+		// 原地过滤
+		Assert.assertSame(list, filtered);
+		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+	}
+
+	@Test
+	public void filterSetTest() {
+		Set<String> set = CollUtil.newLinkedHashSet("a", "b", "", "  ", "c");
+		Set<String> filtered = CollUtil.filter(set, StrUtil::isNotBlank);
+
+		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c"), filtered);
+	}
+
+	@Test
+	public void filterRemoveTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+
+		List<String> removed = new ArrayList<>();
+		ArrayList<String> filtered = CollUtil.filter(list, t -> {
+			if("a".equals(t)){
+				removed.add(t);
+				return false;
+			}
+			return true;
+		});
+
+		Assert.assertEquals(1, removed.size());
+		Assert.assertEquals("a", removed.get(0));
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -713,6 +760,23 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void mapToMapTest(){
+		final HashMap<String, String> oldMap = new HashMap<>();
+		oldMap.put("a", "1");
+		oldMap.put("b", "12");
+		oldMap.put("c", "134");
+
+		final Map<String, Long> map = CollUtil.toMap(oldMap.entrySet(),
+				new HashMap<>(),
+				Map.Entry::getKey,
+				entry -> Long.parseLong(entry.getValue()));
+
+		Assert.assertEquals(1L, (long)map.get("a"));
+		Assert.assertEquals(12L, (long)map.get("b"));
+		Assert.assertEquals(134L, (long)map.get("c"));
+	}
+
+	@Test
 	public void countMapTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
 		Map<String, Integer> countMap = CollUtil.countMap(list);
@@ -767,9 +831,59 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void sortComparableTest(){
+	public void sortComparableTest() {
 		final List<String> of = ListUtil.toList("a", "c", "b");
 		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
+	}
+
+	@Test
+	public void setValueByMapTest(){
+		// https://gitee.com/dromara/hutool/pulls/482
+		List<Person> people = Arrays.asList(
+				new Person("aa", 12, "man", 1),
+				new Person("bb", 13, "woman", 2),
+				new Person("cc", 14, "man", 3),
+				new Person("dd", 15, "woman", 4),
+				new Person("ee", 16, "woman", 5),
+				new Person("ff", 17, "man", 6)
+		);
+
+		Map<Integer, String> genderMap = new HashMap<>();
+		genderMap.put(1, null);
+		genderMap.put(2, "妇女");
+		genderMap.put(3, "少女");
+		genderMap.put(4, "女");
+		genderMap.put(5, "小孩");
+		genderMap.put(6, "男");
+
+		Assert.assertEquals(people.get(1).getGender(), "woman");
+		CollUtil.setValueByMap(people, genderMap, Person::getId, Person::setGender);
+		Assert.assertEquals(people.get(1).getGender(), "妇女");
+
+		Map<Integer, Person> personMap = new HashMap<>();
+		personMap.put(1, new Person("AA", 21, "男", 1));
+		personMap.put(2, new Person("BB", 7, "小孩", 2));
+		personMap.put(3, new Person("CC", 65, "老人", 3));
+		personMap.put(4, new Person("DD", 35, "女人", 4));
+		personMap.put(5, new Person("EE", 14, "少女", 5));
+		personMap.put(6, null);
+
+		CollUtil.setValueByMap(people, personMap, Person::getId, (x, y) -> {
+			x.setGender(y.getGender());
+			x.setName(y.getName());
+			x.setAge(y.getAge());
+		});
+
+		Assert.assertEquals(people.get(1).getGender(), "小孩");
+	}
+
+	@Data
+	@AllArgsConstructor
+	static class Person {
+		private String name;
+		private Integer age;
+		private String gender;
+		private Integer id;
 	}
 }

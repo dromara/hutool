@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
  * 注解类相关说明见：https://www.cnblogs.com/xdp-gacl/p/3622275.html
  *
  * @author looly
- *
  */
 // Retention注解决定MyAnnotation注解的生命周期
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,5 +22,8 @@ public @interface AnnotationForTest {
 	 *
 	 * @return 属性值
 	 */
-	String value();
+	String value() default "";
+
+	@Alias("value")
+	String retry() default "";
 }

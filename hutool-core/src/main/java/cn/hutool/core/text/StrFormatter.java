@@ -9,7 +9,6 @@ import java.util.Map;
  * 字符串格式化工具
  *
  * @author Looly
- *
  */
 public class StrFormatter {
 
@@ -23,22 +22,42 @@ public class StrFormatter {
 	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
 	 *
 	 * @param strPattern 字符串模板
-	 * @param argArray 参数列表
+	 * @param argArray   参数列表
 	 * @return 结果
 	 */
-	public static String format(final String strPattern, final Object... argArray) {
-		if (StrUtil.isBlank(strPattern) || ArrayUtil.isEmpty(argArray)) {
+	public static String format(String strPattern, Object... argArray) {
+		return formatWith(strPattern, StrUtil.EMPTY_JSON, argArray);
+	}
+
+	/**
+	 * 格式化字符串<br>
+	 * 此方法只是简单将指定占位符 按照顺序替换为参数<br>
+	 * 如果想输出占位符使用 \\转义即可，如果想输出占位符之前的 \ 使用双转义符 \\\\ 即可<br>
+	 * 例：<br>
+	 * 通常使用：format("this is {} for {}", "{}", "a", "b") =》 this is a for b<br>
+	 * 转义{}： format("this is \\{} for {}", "{}", "a", "b") =》 this is {} for a<br>
+	 * 转义\： format("this is \\\\{} for {}", "{}", "a", "b") =》 this is \a for b<br>
+	 *
+	 * @param strPattern  字符串模板
+	 * @param placeHolder 占位符，例如{}
+	 * @param argArray    参数列表
+	 * @return 结果
+	 * @since 5.7.14
+	 */
+	public static String formatWith(String strPattern, String placeHolder, Object... argArray) {
+		if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || ArrayUtil.isEmpty(argArray)) {
 			return strPattern;
 		}
 		final int strPatternLength = strPattern.length();
+		final int placeHolderLength = placeHolder.length();
 
 		// 初始化定义好的长度以获得更好的性能
-		StringBuilder sbuf = new StringBuilder(strPatternLength + 50);
+		final StringBuilder sbuf = new StringBuilder(strPatternLength + 50);
 
 		int handledPosition = 0;// 记录已经处理到的位置
 		int delimIndex;// 占位符所在位置
 		for (int argIndex = 0; argIndex < argArray.length; argIndex++) {
-			delimIndex = strPattern.indexOf(StrUtil.EMPTY_JSON, handledPosition);
+			delimIndex = strPattern.indexOf(placeHolder, handledPosition);
 			if (delimIndex == -1) {// 剩余部分无占位符
 				if (handledPosition == 0) { // 不带占位符的模板直接返回
 					return strPattern;
@@ -54,24 +73,23 @@ public class StrFormatter {
 					// 转义符之前还有一个转义符，占位符依旧有效
 					sbuf.append(strPattern, handledPosition, delimIndex - 1);
 					sbuf.append(StrUtil.utf8Str(argArray[argIndex]));
-					handledPosition = delimIndex + 2;
+					handledPosition = delimIndex + placeHolderLength;
 				} else {
 					// 占位符被转义
 					argIndex--;
 					sbuf.append(strPattern, handledPosition, delimIndex - 1);
-					sbuf.append(StrUtil.C_DELIM_START);
+					sbuf.append(placeHolder.charAt(0));
 					handledPosition = delimIndex + 1;
 				}
 			} else {// 正常占位符
 				sbuf.append(strPattern, handledPosition, delimIndex);
 				sbuf.append(StrUtil.utf8Str(argArray[argIndex]));
-				handledPosition = delimIndex + 2;
+				handledPosition = delimIndex + placeHolderLength;
 			}
 		}
 
-		// append the characters following the last {} pair.
 		// 加入最后一个占位符后所有的字符
-		sbuf.append(strPattern, handledPosition, strPattern.length());
+		sbuf.append(strPattern, handledPosition, strPatternLength);
 
 		return sbuf.toString();
 	}

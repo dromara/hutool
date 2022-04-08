@@ -42,6 +42,11 @@ public class FileNameUtil {
 	 */
 	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
 
+	/**
+	 * 特殊后缀
+	 */
+	private static final CharSequence[] SPECIAL_SUFFIX = {"tar.bz2", "tar.Z", "tar.gz", "tar.xz"};
+
 
 	// -------------------------------------------------------------------------------------------- name start
 
@@ -222,6 +227,13 @@ public class FileNameUtil {
 		if (index == -1) {
 			return StrUtil.EMPTY;
 		} else {
+			// issue#I4W5FS@Gitee
+			int secondToLastIndex = fileName.substring(0, index).lastIndexOf(StrUtil.DOT);
+			String substr = fileName.substring(secondToLastIndex == -1 ? index : secondToLastIndex + 1);
+			if (StrUtil.containsAny(substr, SPECIAL_SUFFIX)) {
+				return substr;
+			}
+
 			String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
 			return StrUtil.containsAny(ext, UNIX_SEPARATOR, WINDOWS_SEPARATOR) ? StrUtil.EMPTY : ext;

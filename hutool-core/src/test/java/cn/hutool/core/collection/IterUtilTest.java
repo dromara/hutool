@@ -1,9 +1,17 @@
 package cn.hutool.core.collection;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link IterUtil} 单元测试
@@ -83,29 +91,57 @@ public class IterUtilTest {
 		Assert.assertEquals(expectedMap, testMap);
 	}
 
+	@Test
+	public void getElementTypeTest(){
+		List<Integer> integers = Arrays.asList(null, 1);
+		Class<?> elementType = IterUtil.getElementType(integers);
+		Assert.assertEquals(Integer.class,elementType);
+	}
+
+	@Data
+	@AllArgsConstructor
 	public static class Car {
 		private String carNumber;
 		private String carName;
+	}
 
-		public Car(String carNumber, String carName) {
-			this.carNumber = carNumber;
-			this.carName = carName;
-		}
+	@Test
+	public void filterTest(){
+		List<String> obj2 = ListUtil.toList("3");
+		List<String> obj = ListUtil.toList("1", "3");
 
-		public String getCarNumber() {
-			return carNumber;
-		}
+		IterUtil.filter(obj.iterator(), obj2::contains);
 
-		public void setCarNumber(String carNumber) {
-			this.carNumber = carNumber;
-		}
+		Assert.assertEquals(1, obj.size());
+		Assert.assertEquals("3", obj.get(0));
+	}
 
-		public String getCarName() {
-			return carName;
-		}
+	@Test
+	public void filteredTest(){
+		List<String> obj2 = ListUtil.toList("3");
+		List<String> obj = ListUtil.toList("1", "3");
 
-		public void setCarName(String carName) {
-			this.carName = carName;
-		}
+		final FilterIter<String> filtered = IterUtil.filtered(obj.iterator(), obj2::contains);
+
+		Assert.assertEquals("3", filtered.next());
+		Assert.assertFalse(filtered.hasNext());
+	}
+
+	@Test
+	public void filterToListTest(){
+		List<String> obj2 = ListUtil.toList("3");
+		List<String> obj = ListUtil.toList("1", "3");
+
+		final List<String> filtered = IterUtil.filterToList(obj.iterator(), obj2::contains);
+
+		Assert.assertEquals(1, filtered.size());
+		Assert.assertEquals("3", filtered.get(0));
+	}
+
+	@Test
+	public void getTest() {
+		HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
+		String str = IterUtil.get(set.iterator(), 2);
+		Assert.assertEquals("C", str);
 	}
 }

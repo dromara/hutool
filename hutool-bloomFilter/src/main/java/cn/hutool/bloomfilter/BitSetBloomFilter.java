@@ -2,19 +2,21 @@ package cn.hutool.bloomfilter;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HashUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.BitSet;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
  * Hash算法的使用使用固定顺序，只需指定个数即可
- * @author loolly
  *
+ * @author loolly
  */
-public class BitSetBloomFilter implements BloomFilter{
+public class BitSetBloomFilter implements BloomFilter {
 	private static final long serialVersionUID = 1L;
 
 	private final BitSet bitSet;
@@ -39,22 +41,36 @@ public class BitSetBloomFilter implements BloomFilter{
 	/**
 	 * 通过文件初始化过滤器.
 	 *
-	 * @param path 文件路径
+	 * @param path        文件路径
+	 * @param charsetName 字符集
+	 * @throws IOException IO异常
+	 * @deprecated 请使用 {@link #init(String, Charset)}
+	 */
+	@Deprecated
+	public void init(String path, String charsetName) throws IOException {
+		init(path, CharsetUtil.charset(charsetName));
+	}
+
+	/**
+	 * 通过文件初始化过滤器.
+	 *
+	 * @param path    文件路径
 	 * @param charset 字符集
 	 * @throws IOException IO异常
+	 * @since 5.8.0
 	 */
-	public void init(String path, String charset) throws IOException {
+	public void init(String path, Charset charset) throws IOException {
 		BufferedReader reader = FileUtil.getReader(path, charset);
 		try {
 			String line;
-			while(true) {
+			while (true) {
 				line = reader.readLine();
-				if(line == null) {
+				if (line == null) {
 					break;
 				}
 				this.add(line);
 			}
-		}finally {
+		} finally {
 			IoUtil.close(reader);
 		}
 	}
@@ -75,6 +91,7 @@ public class BitSetBloomFilter implements BloomFilter{
 
 	/**
 	 * 判定是否包含指定字符串
+	 *
 	 * @param str 字符串
 	 * @return 是否包含，存在误差
 	 */
@@ -101,13 +118,13 @@ public class BitSetBloomFilter implements BloomFilter{
 	/**
 	 * 将字符串的字节表示进行多哈希编码.
 	 *
-	 * @param str 待添加进过滤器的字符串字节表示.
+	 * @param str        待添加进过滤器的字符串字节表示.
 	 * @param hashNumber 要经过的哈希个数.
 	 * @return 各个哈希的结果数组.
 	 */
 	public static int[] createHashes(String str, int hashNumber) {
 		int[] result = new int[hashNumber];
-		for(int i = 0; i < hashNumber; i++) {
+		for (int i = 0; i < hashNumber; i++) {
 			result[i] = hash(str, i);
 
 		}
@@ -116,8 +133,9 @@ public class BitSetBloomFilter implements BloomFilter{
 
 	/**
 	 * 计算Hash值
+	 *
 	 * @param str 被计算Hash的字符串
-	 * @param k Hash算法序号
+	 * @param k   Hash算法序号
 	 * @return Hash值
 	 */
 	public static int hash(String str, int k) {

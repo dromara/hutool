@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -27,7 +28,6 @@ public class ThreadUtil {
 	 *    1. 初始线程数为corePoolSize指定的大小
 	 *    2. 没有最大线程数限制
 	 *    3. 默认使用LinkedBlockingQueue，默认队列大小为1024
-	 *    4. 当运行线程大于corePoolSize放入队列，队列满后抛出异常
 	 * </pre>
 	 *
 	 * @param corePoolSize 同时执行的线程数大小
@@ -128,6 +128,73 @@ public class ThreadUtil {
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
 		int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
 		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
+	}
+
+	/**
+	 * 获取一个新的线程池，默认的策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue，默认队列大小为1024
+	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param isBlocked        是否使用{@link BlockPolicy}策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads, String threadNamePrefix, boolean isBlocked) {
+		return newFixedExecutor(nThreads, 1024, threadNamePrefix, isBlocked);
+	}
+
+	/**
+	 * 获取一个新的线程池，默认的策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue
+	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param maximumQueueSize 队列大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param isBlocked        是否使用{@link BlockPolicy}策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads, int maximumQueueSize, String threadNamePrefix, boolean isBlocked) {
+		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
+				(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
+	}
+
+	/**
+	 * 获得一个新的线程池，默认策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param maximumQueueSize 队列大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param handler          拒绝策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads,
+												   int maximumQueueSize,
+												   String threadNamePrefix,
+												   RejectedExecutionHandler handler) {
+		return ExecutorBuilder.create()
+				.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
+				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
+				.setThreadFactory(createThreadFactory(threadNamePrefix))
+				.setHandler(handler)
+				.build();
 	}
 
 	/**
@@ -389,6 +456,18 @@ public class ThreadUtil {
 	 */
 	public static ThreadFactoryBuilder createThreadFactoryBuilder() {
 		return ThreadFactoryBuilder.create();
+	}
+
+	/**
+	 * 创建自定义线程名称前缀的{@link ThreadFactory}
+	 *
+	 * @param threadNamePrefix 线程名称前缀
+	 * @return {@link ThreadFactory}
+	 * @see ThreadFactoryBuilder#build()
+	 * @since 5.8.0
+	 */
+	public static ThreadFactory createThreadFactory(String threadNamePrefix) {
+		return ThreadFactoryBuilder.create().setNamePrefix(threadNamePrefix).build();
 	}
 
 	/**

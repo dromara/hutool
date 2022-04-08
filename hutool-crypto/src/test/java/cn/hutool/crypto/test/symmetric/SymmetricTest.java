@@ -4,6 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.CipherMode;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
@@ -128,7 +129,9 @@ public class SymmetricTest {
 		AES aes = new AES(Mode.CBC, Padding.PKCS5Padding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
 
 		// 加密为16进制表示
+		aes.setMode(CipherMode.encrypt);
 		String randomData = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
+		aes.setMode(CipherMode.encrypt);
 		String randomData2 = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
 		Assert.assertEquals(randomData2, randomData);
 		Assert.assertEquals(randomData, "cd0e3a249eaf0ed80c330338508898c4");
@@ -165,7 +168,7 @@ public class SymmetricTest {
 	public void aesPkcs7PaddingTest() {
 		String content = RandomUtil.randomString(RandomUtil.randomInt(200));
 		AES aes = new AES("CBC", "PKCS7Padding",
-				"0123456789ABHAEQ".getBytes(),
+				RandomUtil.randomBytes(32),
 				"DYgjCEIMVrj2W9xN".getBytes());
 
 		// 加密为16进制表示

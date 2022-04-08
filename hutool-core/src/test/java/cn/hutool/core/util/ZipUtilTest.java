@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
@@ -10,8 +11,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link ZipUtil}单元测试
@@ -20,6 +24,54 @@ import java.nio.charset.Charset;
  */
 public class ZipUtilTest {
 
+	@Test
+	public void appendTest() throws IOException {
+		File appendFile = FileUtil.file("test-zip/addFile.txt");
+		File zipFile = FileUtil.file("test-zip/test.zip");
+
+		// 用于测试完成后将被测试文件恢复
+		File tempZipFile = FileUtil.createTempFile(FileUtil.file("test-zip"));
+		tempZipFile.deleteOnExit();
+		FileUtil.copy(zipFile, tempZipFile, true);
+
+		// test file add
+		List<String> beforeNames = zipEntryNames(tempZipFile);
+		ZipUtil.append(tempZipFile.toPath(), appendFile.toPath());
+		List<String> afterNames = zipEntryNames(tempZipFile);
+
+		// 确认增加了文件
+		Assert.assertEquals(beforeNames.size() + 1, afterNames.size());
+		Assert.assertTrue(afterNames.containsAll(beforeNames));
+		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+
+		// test dir add
+		beforeNames = zipEntryNames(tempZipFile);
+		File addDirFile = FileUtil.file("test-zip/test-add");
+		ZipUtil.append(tempZipFile.toPath(), addDirFile.toPath());
+		afterNames = zipEntryNames(tempZipFile);
+
+		// 确认增加了文件和目录，增加目录和目录下一个文件，故此处+2
+		Assert.assertEquals(beforeNames.size() + 2, afterNames.size());
+		Assert.assertTrue(afterNames.containsAll(beforeNames));
+		Assert.assertTrue(afterNames.contains(appendFile.getName()));
+
+		// rollback
+		Assert.assertTrue(String.format("delete temp file %s failed", tempZipFile.getCanonicalPath()), tempZipFile.delete());
+	}
+
+	/**
+	 * 获取zip文件中所有一级文件/文件夹的name
+	 *
+	 * @param zipFile 待测试的zip文件
+	 * @return zip文件中一级目录下的所有文件/文件夹名
+	 */
+	private List<String> zipEntryNames(File zipFile) {
+		List<String> fileNames = new ArrayList<>();
+		ZipReader reader = ZipReader.of(zipFile, CharsetUtil.CHARSET_UTF_8);
+		reader.read(zipEntry -> fileNames.add(zipEntry.getName()));
+		reader.close();
+		return fileNames;
+	}
 
 	@Test
 	@Ignore
@@ -98,7 +150,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipStreamTest(){
-		//https://github.com/looly/hutool/issues/944
+		//https://github.com/dromara/hutool/issues/944
 		String dir = "d:/test";
 		String zip = "d:/test.zip";
 		try (OutputStream out = new FileOutputStream(zip)){
@@ -109,4 +161,38 @@ public class ZipUtilTest {
 		}
 	}
 
+	@Test
+	@Ignore
+	public void zipStreamTest2(){
+		// https://github.com/dromara/hutool/issues/944
+		String file1 = "d:/test/a.txt";
+		String file2 = "d:/test/a.txt";
+		String file3 = "d:/test/asn1.key";
+
+		String zip = "d:/test/test2.zip";
+		//实际应用中, out 为 HttpServletResponse.getOutputStream
+		ZipUtil.zip(FileUtil.getOutputStream(zip), Charset.defaultCharset(), false, null,
+				new File(file1),
+				new File(file2),
+				new File(file3)
+		);
+	}
+
+	@Test
+	@Ignore
+	public void zipToStreamTest(){
+		String zip = "d:/test/testToStream.zip";
+		OutputStream out = FileUtil.getOutputStream(zip);
+		ZipUtil.zip(out, new String[]{"sm1_alias.txt"},
+				new InputStream[]{FileUtil.getInputStream("d:/test/sm4_1.txt")});
+	}
+
+	@Test
+	@Ignore
+	public void zipMultiFileTest(){
+		File[] dd={FileUtil.file("d:\\test\\qr_a.jpg")
+				,FileUtil.file("d:\\test\\qr_b.jpg")};
+
+		ZipUtil.zip(FileUtil.file("d:\\test\\qr.zip"),false,dd);
+	}
 }

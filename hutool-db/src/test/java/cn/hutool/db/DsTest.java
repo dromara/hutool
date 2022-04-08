@@ -2,6 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DataSourceWrapper;
 import cn.hutool.db.ds.bee.BeeDSFactory;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
@@ -9,6 +10,7 @@ import cn.hutool.db.ds.druid.DruidDSFactory;
 import cn.hutool.db.ds.hikari.HikariDSFactory;
 import cn.hutool.db.ds.pooled.PooledDSFactory;
 import cn.hutool.db.ds.tomcat.TomcatDSFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +20,7 @@ import java.util.List;
 
 /**
  * 数据源单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -85,6 +87,15 @@ public class DsTest {
 		Db db = Db.use(ds);
 		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
+	}
+
+	@Test
+	public void c3p0DsUserAndPassTest() {
+		// https://gitee.com/dromara/hutool/issues/I4T7XZ
+		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
+		ComboPooledDataSource ds = (ComboPooledDataSource) ((DataSourceWrapper) DSFactory.get("mysql")).getRaw();
+		Assert.assertEquals("root", ds.getUser());
+		Assert.assertEquals("123456", ds.getPassword());
 	}
 
 	@Test

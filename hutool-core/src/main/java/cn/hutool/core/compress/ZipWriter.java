@@ -6,6 +6,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -26,22 +27,22 @@ import java.util.zip.ZipOutputStream;
 public class ZipWriter implements Closeable {
 
 	/**
-	 * 创建{@link ZipWriter}
+	 * 创建ZipWriter
 	 *
 	 * @param zipFile 生成的Zip文件
 	 * @param charset 编码
-	 * @return {@link ZipWriter}
+	 * @return ZipWriter
 	 */
 	public static ZipWriter of(File zipFile, Charset charset) {
 		return new ZipWriter(zipFile, charset);
 	}
 
 	/**
-	 * 创建{@link ZipWriter}
+	 * 创建ZipWriter
 	 *
 	 * @param out     Zip输出的流，一般为输出文件流
 	 * @param charset 编码
-	 * @return {@link ZipWriter}
+	 * @return ZipWriter
 	 */
 	public static ZipWriter of(OutputStream out, Charset charset) {
 		return new ZipWriter(out, charset);
@@ -66,7 +67,7 @@ public class ZipWriter implements Closeable {
 	 * @param charset 编码
 	 */
 	public ZipWriter(OutputStream out, Charset charset) {
-		this.out = getZipOutputStream(out, charset);
+		this.out = ZipUtil.getZipOutputStream(out, charset);
 	}
 
 	/**
@@ -176,6 +177,31 @@ public class ZipWriter implements Closeable {
 		return putEntry(path, in);
 	}
 
+	/**
+	 * 对流中的数据加入到压缩文件<br>
+	 * 路径列表和流列表长度必须一致
+	 *
+	 * @param paths 流数据在压缩文件中的路径或文件名
+	 * @param ins   要压缩的源，添加完成后自动关闭流
+	 * @return 压缩文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.0
+	 */
+	public ZipWriter add(String[] paths, InputStream[] ins) throws IORuntimeException {
+		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
+			throw new IllegalArgumentException("Paths or ins is empty !");
+		}
+		if (paths.length != ins.length) {
+			throw new IllegalArgumentException("Paths length is not equals to ins length !");
+		}
+
+		for (int i = 0; i < paths.length; i++) {
+			add(paths[i], ins[i]);
+		}
+
+		return this;
+	}
+
 	@Override
 	public void close() throws IORuntimeException {
 		try {
@@ -195,21 +221,7 @@ public class ZipWriter implements Closeable {
 	 * @return {@link ZipOutputStream}
 	 */
 	private static ZipOutputStream getZipOutputStream(File zipFile, Charset charset) {
-		return getZipOutputStream(FileUtil.getOutputStream(zipFile), charset);
-	}
-
-	/**
-	 * 获得 {@link ZipOutputStream}
-	 *
-	 * @param out     压缩文件流
-	 * @param charset 编码
-	 * @return {@link ZipOutputStream}
-	 */
-	private static ZipOutputStream getZipOutputStream(OutputStream out, Charset charset) {
-		if (out instanceof ZipOutputStream) {
-			return (ZipOutputStream) out;
-		}
-		return new ZipOutputStream(out, charset);
+		return ZipUtil.getZipOutputStream(FileUtil.getOutputStream(zipFile), charset);
 	}
 
 	/**

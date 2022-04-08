@@ -1,12 +1,16 @@
 package cn.hutool.core.img;
 
+import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.URLUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.File;
 
 public class ImgTest {
 
@@ -50,7 +54,7 @@ public class ImgTest {
 
 	@Test
 	@Ignore
-	public void pressImgTest(){
+	public void pressImgTest() {
 		Img.from(FileUtil.file("d:/test/图片1.JPG"))
 				.pressImage(ImgUtil.read("d:/test/617180969474805871.jpg"), new Rectangle(0, 0, 800, 800), 1f)
 				.write(FileUtil.file("d:/test/pressImg_result.jpg"));
@@ -58,9 +62,23 @@ public class ImgTest {
 
 	@Test
 	@Ignore
-	public void strokeTest(){
+	public void strokeTest() {
 		Img.from(FileUtil.file("d:/test/公章3.png"))
 				.stroke(null, 2f)
 				.write(FileUtil.file("d:/test/stroke_result.png"));
+	}
+
+	/**
+	 * issue#I49FIU
+	 */
+	@Test
+	@Ignore
+	public void scaleTest() {
+		String downloadFile = "d:/test/1435859438434136064.JPG";
+		File file = FileUtil.file(downloadFile);
+		File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
+
+		Image img = ImgUtil.getImage(URLUtil.getURL(file));
+		ImgUtil.scale(img, fileScale, 0.8f);
 	}
 }

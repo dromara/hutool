@@ -9,6 +9,7 @@ import org.junit.Test;
 public class OshiPrintTest {
 
 	@Test
+	@Ignore
 	public void printCpuInfo(){
 		Console.log(OshiUtil.getCpuInfo());
 	}

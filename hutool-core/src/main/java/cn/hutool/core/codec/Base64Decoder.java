@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,15 +19,6 @@ public class Base64Decoder {
 	private static final byte PADDING = -2;
 
 	/** Base64解码表，共128位，-1表示非base64字符，-2表示padding */
-	// private static final byte[] DECODE_TABLE2 = {
-	// -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	// -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	// -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
-	// 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1,
-	// -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-	// 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
-	// -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-	// 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1 };
 	private static final byte[] DECODE_TABLE = {
 			// 0 1 2 3 4 5 6 7 8 9 A B C D E F
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 00-0f
@@ -96,7 +88,7 @@ public class Base64Decoder {
 			return in;
 		}
 
-		final IntWrapper offset = new IntWrapper(pos);
+		final MutableInt offset = new MutableInt(pos);
 
 		byte sestet0;
 		byte sestet1;
@@ -105,7 +97,7 @@ public class Base64Decoder {
 		int maxPos = pos + length - 1;
 		int octetId = 0;
 		byte[] octet = new byte[length * 3 / 4];// over-estimated if non-base64 characters present
-		while (offset.value <= maxPos) {
+		while (offset.intValue() <= maxPos) {
 			sestet0 = getNextValidDecodeByte(in, offset, maxPos);
 			sestet1 = getNextValidDecodeByte(in, offset, maxPos);
 			sestet2 = getNextValidDecodeByte(in, offset, maxPos);
@@ -150,11 +142,12 @@ public class Base64Decoder {
 	 * @param maxPos 最大位置
 	 * @return 有效字符，如果达到末尾返回
 	 */
-	private static byte getNextValidDecodeByte(byte[] in, IntWrapper pos, int maxPos) {
+	private static byte getNextValidDecodeByte(byte[] in, MutableInt pos, int maxPos) {
 		byte base64Byte;
 		byte decodeByte;
-		while (pos.value <= maxPos) {
-			base64Byte = in[pos.value++];
+		while (pos.intValue() <= maxPos) {
+			base64Byte = in[pos.intValue()];
+			pos.increment();
 			if (base64Byte > -1) {
 				decodeByte = DECODE_TABLE[base64Byte];
 				if (decodeByte > -1) {
@@ -164,20 +157,6 @@ public class Base64Decoder {
 		}
 		// padding if reached max position
 		return PADDING;
-	}
-
-	/**
-	 * int包装，使之可变
-	 *
-	 * @author looly
-	 *
-	 */
-	private static class IntWrapper {
-		int value;
-
-		IntWrapper(int value) {
-			this.value = value;
-		}
 	}
 	// ----------------------------------------------------------------------------------------------- Private end
 }

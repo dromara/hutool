@@ -1,9 +1,7 @@
 package cn.hutool.dfa;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -87,8 +85,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 *              @return this
 	 */
 	public WordTree addWords(String... words) {
-		HashSet<String> wordsSet = CollectionUtil.newHashSet(words);
-		for (String word : wordsSet) {
+		for (String word : CollUtil.newHashSet(words)) {
 			addWord(word);
 		}
 		return this;
@@ -106,7 +103,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 		WordTree current = this;
 		WordTree child;
 		char currentChar = 0;
-		int length = word.length();
+		final int length = word.length();
 		for (int i = 0; i < length; i++) {
 			currentChar = word.charAt(i);
 			if (charFilter.accept(currentChar)) {//只处理合法字符
@@ -247,15 +244,15 @@ public class WordTree extends HashMap<Character, WordTree> {
 
 		List<FoundWord> foundWords = new ArrayList<>();
 		WordTree current = this;
-		int length = text.length();
+		final int length = text.length();
 		final Filter<Character> charFilter = this.charFilter;
 		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
-		final StrBuilder wordBuffer = StrUtil.strBuilder();
-		final StrBuilder keyBuffer = StrUtil.strBuilder();
+		final StringBuilder wordBuffer = StrUtil.builder();
+		final StringBuilder keyBuffer = StrUtil.builder();
 		char currentChar;
 		for (int i = 0; i < length; i++) {
-			wordBuffer.reset();
-			keyBuffer.reset();
+			wordBuffer.setLength(0);
+			keyBuffer.setLength(0);
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 //				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
@@ -284,6 +281,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 					if (false == isDensityMatch) {
 						//如果非密度匹配，跳过匹配到的词
 						i = j;
+						break;
 					}
 					if (false == isGreedMatch) {
 						//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配

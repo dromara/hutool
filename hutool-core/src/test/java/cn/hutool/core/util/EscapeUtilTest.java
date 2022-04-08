@@ -38,6 +38,20 @@ public class EscapeUtilTest {
 		Assert.assertEquals(str, unescape);
 	}
 
+	/**
+	 * https://gitee.com/dromara/hutool/issues/I49JU8
+	 */
+	@Test
+	public void escapeAllTest2(){
+		String str = "٩";
+
+		String escape = EscapeUtil.escapeAll(str);
+		Assert.assertEquals("%u0669", escape);
+
+		String unescape = EscapeUtil.unescape(escape);
+		Assert.assertEquals(str, unescape);
+	}
+
 	@Test
 	public void escapeSingleQuotesTest(){
 		// 单引号不做转义
