@@ -1080,7 +1080,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
-		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
+		sb.append("Request Url: ").append(this.url).append(StrUtil.CRLF);
 		sb.append(super.toString());
 		return sb.toString();
 	}

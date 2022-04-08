@@ -208,4 +208,12 @@ public class HttpRequestTest {
 				.form(params).toString();
 		Console.log(result);
 	}
+
+	@Test
+	public void issue2243Test() {
+		String sourceUrl = "https://rtcpns.cn-north-1.myhuaweicloud.com:443/rest/provision/caas/privatenumber/v1.0?privateNum=%2B8616512884988";
+		HttpRequest request = HttpRequest.of(sourceUrl, null).method(Method.GET);
+		request.toString();
+		assert request.getUrl().equals(sourceUrl);
+	}
 }
