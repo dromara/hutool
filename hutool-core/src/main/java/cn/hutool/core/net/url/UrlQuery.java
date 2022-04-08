@@ -113,7 +113,7 @@ public class UrlQuery {
 	/**
 	 * 构造
 	 *
-	 * @param queryMap         初始化的查询键值对
+	 * @param queryMap 初始化的查询键值对
 	 */
 	public UrlQuery(Map<? extends CharSequence, ?> queryMap) {
 		this(queryMap, false);
@@ -234,11 +234,7 @@ public class UrlQuery {
 	 * @return URL查询字符串
 	 */
 	public String build(Charset charset) {
-		if (isFormUrlEncoded) {
-			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset);
-		}
-
-		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset);
+		return build(charset, true);
 	}
 
 	/**
@@ -249,17 +245,57 @@ public class UrlQuery {
 	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
 	 * </ul>
 	 *
-	 * @param keyCoder   键值对中键的编码器
-	 * @param valueCoder 键值对中值的编码器
-	 * @param charset    encode编码，null表示不做encode编码
+	 * @param charset       encode编码，null表示不做encode编码
+	 * @param encodePercent 是否编码`%`
+	 * @return URL查询字符串
+	 */
+	public String build(Charset charset, boolean encodePercent) {
+		if (isFormUrlEncoded) {
+			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
+		}
+
+		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param keyCoder      键值对中键的编码器
+	 * @param valueCoder    键值对中值的编码器
+	 * @param charset       encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 * @since 5.7.16
 	 */
 	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset) {
+		return build(keyCoder, valueCoder, charset, true);
+	}
+
+	/**
+	 * 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
+	 * 对于{@code null}处理规则如下：
+	 * <ul>
+	 *     <li>如果key为{@code null}，则这个键值对忽略</li>
+	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
+	 * </ul>
+	 *
+	 * @param keyCoder      键值对中键的编码器
+	 * @param valueCoder    键值对中值的编码器
+	 * @param charset       encode编码，null表示不做encode编码
+	 * @param encodePercent 是否编码`%`
+	 * @return URL查询字符串
+	 * @since 5.8.0
+	 */
+	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset, boolean encodePercent) {
 		if (MapUtil.isEmpty(this.query)) {
 			return StrUtil.EMPTY;
 		}
 
+		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder sb = new StringBuilder();
 		CharSequence name;
 		CharSequence value;
@@ -269,10 +305,10 @@ public class UrlQuery {
 				if (sb.length() > 0) {
 					sb.append("&");
 				}
-				sb.append(keyCoder.encode(name, charset));
+				sb.append(keyCoder.encode(name, charset, safeChars));
 				value = entry.getValue();
 				if (null != value) {
-					sb.append("=").append(valueCoder.encode(value, charset));
+					sb.append("=").append(valueCoder.encode(value, charset, safeChars));
 				}
 			}
 		}

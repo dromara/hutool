@@ -126,19 +126,35 @@ public class UrlPath {
 	 * @return 如果没有任何内容，则返回空字符串""
 	 */
 	public String build(Charset charset) {
+		return build(charset, true);
+	}
+
+	/**
+	 * 构建path，前面带'/'<br>
+	 * <pre>
+	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
+	 * </pre>
+	 *
+	 * @param charset encode编码，null表示不做encode
+	 * @param encodePercent 是否编码`%`
+	 * @return 如果没有任何内容，则返回空字符串""
+	 * @since 5.8.0
+	 */
+	public String build(Charset charset, boolean encodePercent) {
 		if (CollUtil.isEmpty(this.segments)) {
 			return StrUtil.EMPTY;
 		}
 
+		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
 			if(builder.length() == 0){
 				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
 				// path的第一部分不允许有":"，其余部分允许
 				// 在此处的Path部分特指host之后的部分，即不包含第一部分
-				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset));
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset, safeChars));
 			} else {
-				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset));
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
 			}
 		}
 		if (StrUtil.isEmpty(builder)) {

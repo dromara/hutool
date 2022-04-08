@@ -59,6 +59,11 @@ public final class UrlBuilder implements Builder<String> {
 	 * 编码，用于URLEncode和URLDecode
 	 */
 	private Charset charset;
+	/**
+	 * 是否需要编码`%`<br>
+	 * 区别对待，如果是，则生成URL时需要重新全部编码，否则跳过所有`%`
+	 */
+	private boolean needEncodePercent;
 
 	/**
 	 * 使用URI构建UrlBuilder
@@ -203,7 +208,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param path     路径，例如/aa/bb/cc
 	 * @param query    查询，例如a=1&amp;b=2
 	 * @param fragment 标识符例如#后边的部分
-	 * @param charset  编码，用于URLEncode和URLDecode
+	 * @param charset  编码，用于URLEncode和URLDecode，{@code null}表示不编码
 	 */
 	public UrlBuilder(String scheme, String host, int port, UrlPath path, UrlQuery query, String fragment, Charset charset) {
 		this.charset = charset;
@@ -213,6 +218,8 @@ public final class UrlBuilder implements Builder<String> {
 		this.path = path;
 		this.query = query;
 		this.setFragment(fragment);
+		// 编码非空情况下做解码
+		this.needEncodePercent = null != charset;
 	}
 
 	/**
@@ -308,7 +315,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return 路径，例如/aa/bb/cc
 	 */
 	public String getPathStr() {
-		return null == this.path ? StrUtil.SLASH : this.path.build(charset);
+		return null == this.path ? StrUtil.SLASH : this.path.build(charset, this.needEncodePercent);
 	}
 
 	/**
@@ -378,7 +385,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return 查询语句，例如a=1&amp;b=2
 	 */
 	public String getQueryStr() {
-		return null == this.query ? null : this.query.build(this.charset);
+		return null == this.query ? null : this.query.build(this.charset, this.needEncodePercent);
 	}
 
 	/**
@@ -426,7 +433,8 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return 标识符，例如#后边的部分
 	 */
 	public String getFragmentEncoded() {
-		return RFC3986.FRAGMENT.encode(this.fragment, this.charset);
+		final char[] safeChars = this.needEncodePercent ? null : new char[]{'%'};
+		return RFC3986.FRAGMENT.encode(this.fragment, this.charset, safeChars);
 	}
 
 	/**

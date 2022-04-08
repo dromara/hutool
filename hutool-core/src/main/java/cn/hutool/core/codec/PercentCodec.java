@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
@@ -150,9 +151,10 @@ public class PercentCodec implements Serializable {
 	 *
 	 * @param path    需要编码的字符串
 	 * @param charset 编码, {@code null}返回原字符串，表示不编码
+	 * @param customSafeChar 自定义安全字符
 	 * @return 编码后的字符串
 	 */
-	public String encode(CharSequence path, Charset charset) {
+	public String encode(CharSequence path, Charset charset, char... customSafeChar) {
 		if (null == charset || StrUtil.isEmpty(path)) {
 			return StrUtil.str(path);
 		}
@@ -161,18 +163,18 @@ public class PercentCodec implements Serializable {
 		final ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
 
-		int c;
+		char c;
 		for (int i = 0; i < path.length(); i++) {
 			c = path.charAt(i);
-			if (safeCharacters.get(c)) {
-				rewrittenPath.append((char) c);
+			if (safeCharacters.get(c) || ArrayUtil.contains(customSafeChar, c)) {
+				rewrittenPath.append(c);
 			} else if (encodeSpaceAsPlus && c == CharUtil.SPACE) {
 				// 对于空格单独处理
 				rewrittenPath.append('+');
 			} else {
 				// convert to external encoding before hex conversion
 				try {
-					writer.write((char) c);
+					writer.write(c);
 					writer.flush();
 				} catch (IOException e) {
 					buf.reset();
