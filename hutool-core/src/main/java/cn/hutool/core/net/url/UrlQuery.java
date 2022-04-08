@@ -238,7 +238,7 @@ public class UrlQuery {
 			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset);
 		}
 
-		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset);
+		return build(RFC3986.QUERY_PARAM_NAME, FormUrlencoded.ALL, charset);
 	}
 
 	/**
