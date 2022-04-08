@@ -111,6 +111,11 @@ public class PatternMatcher {
 	 *     <li>如果此部分下个值小于给定值，回退到上一个值获取下一个新值，之后的值置为最小值</li>
 	 * </ul>
 	 *
+	 * <pre>
+	 *        秒 分 时 日 月 周 年
+	 *     下 &lt;-----------------&gt; 上
+	 * </pre>
+	 *
 	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
