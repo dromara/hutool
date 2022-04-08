@@ -194,13 +194,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(String regex, int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-
-		Pattern pattern = POOL.get(regexWithFlag);
-		if (null == pattern) {
-			pattern = Pattern.compile(regex, flags);
-			POOL.put(regexWithFlag, pattern);
-		}
-		return pattern;
+		return POOL.get(regexWithFlag, ()-> Pattern.compile(regex, flags));
 	}
 
 	/**
