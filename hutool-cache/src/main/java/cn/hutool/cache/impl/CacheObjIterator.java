@@ -64,7 +64,7 @@ public class CacheObjIterator<K, V> implements Iterator<CacheObj<K, V>>, Seriali
 	private void nextValue() {
 		while (iterator.hasNext()) {
 			nextValue = iterator.next();
-			if (nextValue.isExpired() == false) {
+			if (!nextValue.isExpired()) {
 				return;
 			}
 		}

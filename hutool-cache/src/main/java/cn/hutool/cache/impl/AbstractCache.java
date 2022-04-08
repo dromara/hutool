@@ -176,7 +176,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		// 尝试读取缓存，使用乐观读锁
 		long stamp = lock.tryOptimisticRead();
 		CacheObj<K, V> co = cacheMap.get(key);
-		if(false == lock.validate(stamp)){
+		if(!lock.validate(stamp)){
 			// 有写线程修改了此对象，悲观读
 			stamp = lock.readLock();
 			try {
@@ -190,7 +190,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		if (null == co) {
 			missCount.increment();
 			return null;
-		} else if (false == co.isExpired()) {
+		} else if (!co.isExpired()) {
 			hitCount.increment();
 			return co.get(isUpdateLastAccess);
 		}

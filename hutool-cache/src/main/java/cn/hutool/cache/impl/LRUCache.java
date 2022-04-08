@@ -52,7 +52,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 	 */
 	@Override
 	protected int pruneCache() {
-		if (isPruneExpiredActive() == false) {
+		if (!isPruneExpiredActive()) {
 			return 0;
 		}
 		int count = 0;
