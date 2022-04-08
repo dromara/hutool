@@ -24,6 +24,27 @@ public class CronPatternNextMatchTest {
 		//noinspection ConstantConditions
 		calendar = pattern.nextMatchAfter(date.toCalendar());
 		Assert.assertEquals(DateUtil.parse("2022-04-08 07:45:00"), DateUtil.date(calendar));
+
+		// 匹配所有时，返回下一小时
+		pattern = new CronPattern("0 0 * * * * *");
+		date = DateUtil.parse("2022-04-08 07:44:16");
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(date.toCalendar());
+		Assert.assertEquals(DateUtil.parse("2022-04-08 08:00:00"), DateUtil.date(calendar));
+
+		// 匹配所有天，返回明日
+		pattern = new CronPattern("0 0 0 * * * *");
+		date = DateUtil.parse("2022-04-08 07:44:16");
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(date.toCalendar());
+		Assert.assertEquals(DateUtil.parse("2022-04-09 00:00:00"), DateUtil.date(calendar));
+
+		// 匹配所有月，返回下一月
+		pattern = new CronPattern("0 0 0 1 * * *");
+		date = DateUtil.parse("2022-04-08 07:44:16");
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(date.toCalendar());
+		Assert.assertEquals(DateUtil.parse("2022-05-01 00:00:00"), DateUtil.date(calendar));
 	}
 
 	@Test
@@ -58,5 +79,12 @@ public class CronPatternNextMatchTest {
 				DateUtil.parse("2022-04-13 09:12:24").toCalendar());
 		Assert.assertTrue(pattern.match(calendar, true));
 		Assert.assertEquals("2022-05-12 00:12:23", DateUtil.date(calendar).toString());
+
+		// 跨年
+		//noinspection ConstantConditions
+		calendar = pattern.nextMatchAfter(
+				DateUtil.parse("2021-12-22 00:00:00").toCalendar());
+		Assert.assertTrue(pattern.match(calendar, true));
+		Assert.assertEquals("2022-01-12 00:12:23", DateUtil.date(calendar).toString());
 	}
 }
