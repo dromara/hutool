@@ -111,14 +111,16 @@ public class PatternMatcher {
 	 *     <li>如果此部分下个值小于给定值，回退到上一个值获取下一个新值，之后的值置为最小值</li>
 	 * </ul>
 	 *
-	 * @param values 时间字段值
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @param zone   时区
-	 * @return {@link Calendar}
+	 * @return {@link Calendar}，毫秒数为0
 	 */
 	public Calendar nextMatchAfter(int[] values, TimeZone zone) {
-		Calendar calendar = Calendar.getInstance(zone);
+		final Calendar calendar = Calendar.getInstance(zone);
+		calendar.set(Calendar.MILLISECOND, 0);
 
 		int i = Part.YEAR.ordinal();
+		// 新值，-1表示标识为回退
 		int nextValue = 0;
 		while (i >= 0) {
 			nextValue = matchers[i].nextAfter(values[i]);

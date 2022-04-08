@@ -97,7 +97,7 @@ public class CalendarUtil {
 	 * 修改日期为某个时间字段起始时间
 	 *
 	 * @param calendar  {@link Calendar}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部归0
 	 * @return 原{@link Calendar}
 	 */
 	public static Calendar truncate(Calendar calendar, DateField dateField) {
@@ -119,7 +119,7 @@ public class CalendarUtil {
 	 * 修改日期为某个时间字段结束时间
 	 *
 	 * @param calendar  {@link Calendar}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部取最大值
 	 * @return 原{@link Calendar}
 	 */
 	public static Calendar ceiling(Calendar calendar, DateField dateField) {

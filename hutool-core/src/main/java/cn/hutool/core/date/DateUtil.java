@@ -999,7 +999,7 @@ public class DateUtil extends CalendarUtil {
 	 * 修改日期为某个时间字段起始时间
 	 *
 	 * @param date      {@link Date}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部归0
 	 * @return {@link DateTime}
 	 * @since 4.5.7
 	 */
@@ -1023,7 +1023,7 @@ public class DateUtil extends CalendarUtil {
 	 * 修改日期为某个时间字段结束时间
 	 *
 	 * @param date      {@link Date}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部取最大值
 	 * @return {@link DateTime}
 	 * @since 4.5.7
 	 */

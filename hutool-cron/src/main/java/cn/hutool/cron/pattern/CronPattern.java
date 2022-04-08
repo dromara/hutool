@@ -169,9 +169,9 @@ public class CronPattern {
 	/**
 	 * 获取下一个最近的匹配日期时间
 	 *
-	 * @param values 时间字段值
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @param zone   时区
-	 * @return {@link Calendar}
+	 * @return {@link Calendar}，毫秒数为0
 	 */
 	private Calendar nextMatchAfter(int[] values, TimeZone zone) {
 		final List<Calendar> nextMatches = new ArrayList<>(matchers.size());
