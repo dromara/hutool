@@ -17,7 +17,7 @@ public interface StreamProgress {
 	 *
 	 * @param progressSize 已经进行的大小
 	 */
-	void progress(long progressSize);
+	void progress(long contentLength, long progressSize);
 
 	/**
 	 * 结束

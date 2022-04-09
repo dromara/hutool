@@ -107,7 +107,7 @@ public class StreamCopier extends IoCopier<InputStream, OutputStream> {
 			numToRead -= read;
 			total += read;
 			if (null != progress) {
-				progress.progress(total);
+				progress.progress(this.count, total);
 			}
 		}
 
