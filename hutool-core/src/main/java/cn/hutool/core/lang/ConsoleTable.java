@@ -22,6 +22,18 @@ public class ConsoleTable {
 	private static final char SPACE = '\u3000';
 	private static final char LF = CharUtil.LF;
 
+	private boolean isSBCMode = true;
+
+	/**
+	 * 创建ConsoleTable对象
+	 *
+	 * @return ConsoleTable
+	 * @since 5.4.5
+	 */
+	public static ConsoleTable create() {
+		return new ConsoleTable();
+	}
+
 	/**
 	 * 表格头信息
 	 */
@@ -36,13 +48,16 @@ public class ConsoleTable {
 	private List<Integer> columnCharNumber;
 
 	/**
-	 * 创建ConsoleTable对象
+	 * 设置是否使用全角模式<br>
+	 * 当包含中文字符时，输出的表格可能无法对齐，因此当设置为全角模式时，全部字符转为全角。
 	 *
-	 * @return ConsoleTable
-	 * @since 5.4.5
+	 * @param isSBCMode 是否全角模式
+	 * @return this
+	 * @since 5.8.0
 	 */
-	public static ConsoleTable create() {
-		return new ConsoleTable();
+	public ConsoleTable setSBCMode(boolean isSBCMode) {
+		this.isSBCMode = isSBCMode;
+		return this;
 	}
 
 	/**
@@ -83,8 +98,10 @@ public class ConsoleTable {
 	private void fillColumns(List<String> l, String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			String column2 = Convert.toSBC(column);
-			l.add(column2);
+			if (isSBCMode) {
+				column = Convert.toSBC(column);
+			}
+			l.add(column);
 			int width = column.length();
 			if (width > columnCharNumber.get(i)) {
 				columnCharNumber.set(i, width);
@@ -131,17 +148,19 @@ public class ConsoleTable {
 	private void fillRow(StringBuilder sb, List<String> row) {
 		final int size = row.size();
 		String value;
-		for (int i = 0;i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			value = row.get(i);
 			sb.append(SPACE);
 			sb.append(value);
+			final int length = value.length();
+			final int sbcCount = sbcCount(value);
+			if(sbcCount % 2 == 1){
+				sb.append(CharUtil.SPACE);
+			}
 			sb.append(SPACE);
-			int length = value.length();
 			int maxLength = columnCharNumber.get(i);
-			if (maxLength > length) {
-				for (int j = 0; j < (maxLength - length); j++) {
-					sb.append(SPACE);
-				}
+			for (int j = 0; j < (maxLength - length + (sbcCount / 2)); j++) {
+				sb.append(SPACE);
 			}
 			sb.append(COLUMN_LINE);
 		}
@@ -166,5 +185,22 @@ public class ConsoleTable {
 	 */
 	public void print() {
 		Console.print(toString());
+	}
+
+	/**
+	 * 半角字符数量
+	 *
+	 * @param value 字符串
+	 * @return 填充空格数量
+	 */
+	private int sbcCount(String value) {
+		int count = 0;
+		for (int i = 0; i < value.length(); i++) {
+			if (value.charAt(i) < '\177') {
+				count++;
+			}
+		}
+
+		return count;
 	}
 }
