@@ -8,6 +8,7 @@
 ### ❌不兼容特性
 * 【core   】     StreamProgress#progress方法参数变更为2个（pr#594@Gitee）
 * 【core   】     SimpleCache的raw key使用Mutable
+* 【core   】     ArrayUtil.join删除已经弃用的无用原始类型重载
 
 ### 🐣新特性
 * 【core   】     CopyOptions支持以Lambda方式设置忽略属性列表（pr#590@Gitee）

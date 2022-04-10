@@ -50,7 +50,7 @@ public class PatternParser {
 		final List<String> patternList = StrUtil.splitTrim(groupPattern, '|');
 		final List<PatternMatcher> patternMatchers = new ArrayList<>(patternList.size());
 		for (String pattern : patternList) {
-			patternMatchers.add(parseSinglePattern(pattern));
+			patternMatchers.add(parseSingle(pattern));
 		}
 		return patternMatchers;
 	}
@@ -61,7 +61,7 @@ public class PatternParser {
 	 * @param pattern 表达式
 	 * @return {@link PatternMatcher}
 	 */
-	private static PatternMatcher parseSinglePattern(String pattern) {
+	private static PatternMatcher parseSingle(String pattern) {
 		final String[] parts = pattern.split("\\s+");
 		Assert.checkBetween(parts.length, 5, 7,
 				() -> new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern));
