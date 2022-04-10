@@ -2,8 +2,10 @@ package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -192,5 +194,16 @@ public class HttpRequestTest {
 		map.put("aaa", "application+1@qqq.com");
 		HttpRequest request =HttpUtil.createGet(url).form(map);
 		Console.log(request.execute().body());
+	}
+
+	@Test
+	@Ignore
+	public void urlWithParamIfGet(){
+		UrlBuilder urlBuilder = new UrlBuilder();
+		urlBuilder.setScheme("https").setHost("hutool.cn");
+
+		HttpRequest httpRequest = new HttpRequest(urlBuilder);
+		httpRequest.setMethod(Method.GET);
+		HttpResponse httpResponse = httpRequest.execute();
 	}
 }
