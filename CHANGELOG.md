@@ -7,6 +7,7 @@
 
 ### ❌不兼容特性
 * 【core   】     StreamProgress#progress方法参数变更为2个（pr#594@Gitee）
+* 【core   】     SimpleCache的raw key使用Mutable
 
 ### 🐣新特性
 * 【core   】     CopyOptions支持以Lambda方式设置忽略属性列表（pr#590@Gitee）

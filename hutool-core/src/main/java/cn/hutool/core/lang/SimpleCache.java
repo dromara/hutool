@@ -1,6 +1,9 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.collection.TransIter;
 import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.mutable.Mutable;
+import cn.hutool.core.lang.mutable.MutableObj;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -25,7 +28,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	/**
 	 * 池
 	 */
-	private final Map<K, V> cache;
+	private final Map<Mutable<K>, V> rawMap;
 	// 乐观读写锁
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	/**
@@ -50,8 +53,8 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 *
 	 * @param initMap 初始Map，用于定义Map类型
 	 */
-	public SimpleCache(Map<K, V> initMap) {
-		this.cache = initMap;
+	public SimpleCache(Map<Mutable<K>, V> initMap) {
+		this.rawMap = initMap;
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	public V get(K key) {
 		lock.readLock().lock();
 		try {
-			return cache.get(key);
+			return rawMap.get(MutableObj.of(key));
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -126,7 +129,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
-			cache.put(key, value);
+			rawMap.put(MutableObj.of(key), value);
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -143,7 +146,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
-			return cache.remove(key);
+			return rawMap.remove(MutableObj.of(key));
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -156,7 +159,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
-			this.cache.clear();
+			this.rawMap.clear();
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -164,6 +167,21 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 
 	@Override
 	public Iterator<Map.Entry<K, V>> iterator() {
-		return this.cache.entrySet().iterator();
+		return new TransIter<>(this.rawMap.entrySet().iterator(), (entry)-> new Map.Entry<K, V>() {
+			@Override
+			public K getKey() {
+				return entry.getKey().get();
+			}
+
+			@Override
+			public V getValue() {
+				return entry.getValue();
+			}
+
+			@Override
+			public V setValue(V value) {
+				return entry.setValue(value);
+			}
+		});
 	}
 }
