@@ -13,7 +13,7 @@ import java.util.UUID;
 
 /**
  * 下载单元测试
- * 
+ *
  * @author looly
  */
 public class DownloadTest {
@@ -54,18 +54,18 @@ public class DownloadTest {
 			}
 
 			@Override
-			public void progress(long progressSize) {
+			public void progress(long contentLength, long progressSize) {
 				long speed = progressSize / (System.currentTimeMillis() - time) * 1000;
-				Console.log("已下载：{}, 速度：{}/s", FileUtil.readableFileSize(progressSize), FileUtil.readableFileSize(speed));
+				Console.log("总大小:{}, 已下载：{}, 速度：{}/s", FileUtil.readableFileSize(contentLength), FileUtil.readableFileSize(progressSize), FileUtil.readableFileSize(speed));
 			}
-			
+
 			@Override
 			public void finish() {
 				Console.log("下载完成！");
 			}
 		});
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest1() {
@@ -74,7 +74,7 @@ public class DownloadTest {
 		Assert.assertTrue(file.isFile());
 		Assert.assertTrue(file.length() > 0);
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest2() {
@@ -85,18 +85,18 @@ public class DownloadTest {
 				public void start() {
 					System.out.println("start");
 				}
-				
+
 				@Override
-				public void progress(long progressSize) {
+				public void progress(long contentLength, long progressSize) {
 					System.out.println("download size:" + progressSize);
 				}
-				
+
 				@Override
 				public void finish() {
 					System.out.println("end");
 				}
 			});
-			
+
 			Assert.assertNotNull(file);
 			Assert.assertTrue(file.exists());
 			Assert.assertTrue(file.isFile());
@@ -108,7 +108,7 @@ public class DownloadTest {
 			FileUtil.del(file);
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest3() {
@@ -119,18 +119,18 @@ public class DownloadTest {
 				public void start() {
 					System.out.println("start");
 				}
-				
+
 				@Override
-				public void progress(long progressSize) {
-					System.out.println("download size:" + progressSize);
+				public void progress(long contentLength, long progressSize) {
+					System.out.println("contentLength:" + contentLength + "download size:" + progressSize);
 				}
-				
+
 				@Override
 				public void finish() {
 					System.out.println("end");
 				}
 			});
-			
+
 			Assert.assertNotNull(file);
 			Assert.assertTrue(file.exists());
 			Assert.assertTrue(file.isFile());
@@ -140,14 +140,14 @@ public class DownloadTest {
 			FileUtil.del(file);
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest4() {
 		File file = null;
 		try {
 			file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"), 1);
-			
+
 			Assert.assertNotNull(file);
 			Assert.assertTrue(file.exists());
 			Assert.assertTrue(file.isFile());
@@ -159,15 +159,15 @@ public class DownloadTest {
 			FileUtil.del(file);
 		}
 	}
-	
-	
+
+
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest5() {
 		File file = null;
 		try {
 			file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp", UUID.randomUUID().toString()));
-			
+
 			Assert.assertNotNull(file);
 			Assert.assertTrue(file.exists());
 			Assert.assertTrue(file.isFile());
@@ -175,11 +175,11 @@ public class DownloadTest {
 		} finally {
 			FileUtil.del(file);
 		}
-		
+
 		File file1 = null;
 		try {
 			file1 = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"));
-			
+
 			Assert.assertNotNull(file1);
 			Assert.assertTrue(file1.exists());
 			Assert.assertTrue(file1.isFile());
