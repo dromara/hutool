@@ -97,7 +97,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 			keyLock.lock();
 			try {
 				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
-				v = cache.get(key);
+				v = get(key);
 				if (null == v || (null != validPredicate && false == validPredicate.test(v))) {
 					try {
 						v = supplier.call();

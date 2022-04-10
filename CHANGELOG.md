@@ -18,6 +18,7 @@
 * 【poi    】     修复ExcelWriter.getDisposition方法生成错误（issue#2239@Github）
 * 【core   】     修复UrlBuilder重复编码的问题（issue#2243@Github）
 * 【http   】     修复HttpRequest中urlQuery，处理get请求参数的时候会导致空指针异常（pr#2248@Github）
+* 【core   】     修复SimpleCache在get时未使用读锁可能导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 
