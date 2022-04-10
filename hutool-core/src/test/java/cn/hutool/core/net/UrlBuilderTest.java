@@ -140,6 +140,13 @@ public class UrlBuilderTest {
 	}
 
 	@Test
+	public void ofNullQueryTest() {
+		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertNotNull(builder.getQuery());
+		Assert.assertNull(builder.getQuery().get("a"));
+	}
+
+	@Test
 	public void ofWithChineseTest() {
 		final UrlBuilder builder = UrlBuilder.ofHttp("www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http", builder.getScheme());

@@ -371,9 +371,10 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
-	 * 获取查询语句，例如a=1&amp;b=2
+	 * 获取查询语句，例如a=1&amp;b=2<br>
+	 * 可能为{@code null}
 	 *
-	 * @return 查询语句，例如a=1&amp;b=2
+	 * @return 查询语句，例如a=1&amp;b=2，可能为{@code null}
 	 */
 	public UrlQuery getQuery() {
 		return query;

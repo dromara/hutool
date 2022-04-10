@@ -2,7 +2,6 @@ package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
@@ -198,12 +197,11 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void urlWithParamIfGet(){
+	public void urlWithParamIfGetTest(){
 		UrlBuilder urlBuilder = new UrlBuilder();
 		urlBuilder.setScheme("https").setHost("hutool.cn");
 
 		HttpRequest httpRequest = new HttpRequest(urlBuilder);
-		httpRequest.setMethod(Method.GET);
-		HttpResponse httpResponse = httpRequest.execute();
+		httpRequest.setMethod(Method.GET).execute();
 	}
 }

@@ -1174,15 +1174,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void urlWithParamIfGet() {
 		if (Method.GET.equals(method) && false == this.isRest && this.redirectCount <= 0) {
-			if (this.url.getQuery() == null) {
-				this.url.setQuery(new UrlQuery());
+			UrlQuery query = this.url.getQuery();
+			if (null == query) {
+				query = new UrlQuery();
+				this.url.setQuery(query);
 			}
 
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-				this.url.getQuery().parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
+				query.parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
 			} else {
-				this.url.getQuery().addAll(this.form);
+				query.addAll(this.form);
 			}
 		}
 	}
