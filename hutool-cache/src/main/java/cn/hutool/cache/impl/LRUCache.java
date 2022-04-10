@@ -56,7 +56,7 @@ public class LRUCache<K, V> extends ReentrantCache<K, V> {
 			return 0;
 		}
 		int count = 0;
-		Iterator<CacheObj<K, V>> values = cacheMap.values().iterator();
+		Iterator<CacheObj<K, V>> values = cacheObjIter();
 		CacheObj<K, V> co;
 		while (values.hasNext()) {
 			co = values.next();

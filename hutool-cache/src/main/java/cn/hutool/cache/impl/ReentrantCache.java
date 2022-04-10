@@ -36,7 +36,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 		lock.lock();
 		try {
 			// 不存在或已移除
-			final CacheObj<K, V> co = cacheMap.get(key);
+			final CacheObj<K, V> co = getWithoutLock(key);
 			if (co == null) {
 				return false;
 			}
@@ -59,7 +59,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 		CacheObj<K, V> co;
 		lock.lock();
 		try {
-			co = cacheMap.get(key);
+			co = getWithoutLock(key);
 		} finally {
 			lock.unlock();
 		}
@@ -83,7 +83,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 		CopiedIter<CacheObj<K, V>> copiedIterator;
 		lock.lock();
 		try {
-			copiedIterator = CopiedIter.copyOf(this.cacheMap.values().iterator());
+			copiedIterator = CopiedIter.copyOf(cacheObjIter());
 		} finally {
 			lock.unlock();
 		}
