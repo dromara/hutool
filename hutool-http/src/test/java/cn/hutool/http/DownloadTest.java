@@ -44,7 +44,7 @@ public class DownloadTest {
 	@Ignore
 	public void downloadTest() {
 		// 带进度显示的文件下载
-		HttpUtil.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1810.iso", FileUtil.file("d:/"), new StreamProgress() {
+		HttpUtil.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso", FileUtil.file("d:/"), new StreamProgress() {
 
 			final long time = System.currentTimeMillis();
 

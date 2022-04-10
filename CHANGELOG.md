@@ -6,6 +6,7 @@
 # 5.8.0.M3 (2022-04-10)
 
 ### ❌不兼容特性
+* 【core   】     StreamProgress#progress方法参数变更为2个（pr#594@Gitee）
 
 ### 🐣新特性
 * 【core   】     CopyOptions支持以Lambda方式设置忽略属性列表（pr#590@Gitee）
