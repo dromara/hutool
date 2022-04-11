@@ -3,6 +3,7 @@ package cn.hutool.cron.pattern;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -86,5 +87,15 @@ public class CronPatternNextMatchTest {
 				DateUtil.parse("2021-12-22 00:00:00").toCalendar());
 		Assert.assertTrue(pattern.match(calendar, true));
 		Assert.assertEquals("2022-01-12 00:12:23", DateUtil.date(calendar).toString());
+	}
+
+	@Test
+	public void nextMatchAfterByWeekTest(){
+		CronPattern pattern = new CronPattern("1 1 1 * * Sat *");
+		// 周五
+		final DateTime time = DateUtil.parse("2022-04-01");
+		assert time != null;
+		final Calendar calendar = pattern.nextMatchAfter(time.toCalendar());
+		Console.log(DateUtil.date(calendar));
 	}
 }

@@ -124,6 +124,36 @@ public class PatternMatcher {
 		final Calendar calendar = Calendar.getInstance(zone);
 		calendar.set(Calendar.MILLISECOND, 0);
 
+		final int[] newValues = nextMatchValuesAfter(values);
+		for (int i = 0; i < newValues.length; i++) {
+			// 周无需设置
+			if(i != Part.DAY_OF_WEEK.ordinal()){
+				setValue(calendar, Part.of(i), newValues[i]);
+			}
+		}
+		return calendar;
+	}
+
+	/**
+	 * 获取下一个匹配日期时间<br>
+	 * 获取方法是，先从年开始查找对应部分的下一个值：
+	 * <ul>
+	 *     <li>如果此部分下个值不变，获取下一个部分</li>
+	 *     <li>如果此部分下个值大于给定值，以下所有值置为最小值</li>
+	 *     <li>如果此部分下个值小于给定值，回退到上一个值获取下一个新值，之后的值置为最小值</li>
+	 * </ul>
+	 *
+	 * <pre>
+	 *        秒 分 时 日 月 周 年
+	 *     下 &lt;-----------------&gt; 上
+	 * </pre>
+	 *
+	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @return {@link Calendar}，毫秒数为0
+	 */
+	private int[] nextMatchValuesAfter(int[] values) {
+		final int[] newValues = values.clone();
+
 		int i = Part.YEAR.ordinal();
 		// 新值，-1表示标识为回退
 		int nextValue = 0;
@@ -131,7 +161,7 @@ public class PatternMatcher {
 			nextValue = matchers[i].nextAfter(values[i]);
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
-				setValue(calendar, Part.of(i), nextValue);
+				newValues[i] = nextValue;
 				i--;
 				break;
 			} else if (nextValue < values[i]) {
@@ -140,8 +170,7 @@ public class PatternMatcher {
 				nextValue = -1;// 标记回退查找
 				break;
 			}
-			// 值不变，设置后检查下一个部分
-			setValue(calendar, Part.of(i), nextValue);
+			// 值不变，检查下一个部分
 			i--;
 		}
 
@@ -150,7 +179,7 @@ public class PatternMatcher {
 			while (i <= Part.YEAR.ordinal()) {
 				nextValue = matchers[i].nextAfter(values[i] + 1);
 				if (nextValue > values[i]) {
-					setValue(calendar, Part.of(i), nextValue);
+					newValues[i] = nextValue;
 					i--;
 					break;
 				}
@@ -159,25 +188,22 @@ public class PatternMatcher {
 		}
 
 		// 修改值以下的字段全部归最小值
-		setToMin(calendar, i);
-
-		return calendar;
+		setToMin(newValues, i);
+		return newValues;
 	}
 
 	/**
 	 * 设置从{@link Part#SECOND}到指定部分，全部设置为最小值
 	 *
-	 * @param calendar {@link Calendar}
-	 * @param toPart   截止的部分
-	 * @return {@link Calendar}
+	 * @param values 值数组
+	 * @param toPart 截止的部分
 	 */
-	private Calendar setToMin(Calendar calendar, int toPart) {
+	private void setToMin(int[] values, int toPart) {
 		Part part;
 		for (int i = 0; i <= toPart; i++) {
 			part = Part.of(i);
-			setValue(calendar, part, getMin(part));
+			values[i] = getMin(part);
 		}
-		return calendar;
 	}
 
 	/**
