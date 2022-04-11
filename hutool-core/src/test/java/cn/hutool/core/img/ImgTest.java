@@ -54,9 +54,10 @@ public class ImgTest {
 
 
 	@Test
+	@Ignore
 	public void testPressTextFullScreen() {
 		Img.from(FileUtil.file("d:/test/2.jpg"))
-				.pressTextFullScreen("版权所有 仿冒必究 进程已结束", Color.LIGHT_GRAY,
+				.pressTextFullScreen("版权所有 仿冒必究", Color.LIGHT_GRAY,
 						new Font("微软雅黑", Font.BOLD, 100),
 						-30,
 						1f)
