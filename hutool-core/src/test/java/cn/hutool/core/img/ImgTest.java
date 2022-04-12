@@ -52,6 +52,19 @@ public class ImgTest {
 				.write(FileUtil.file("d:/test/test2_result.png"));
 	}
 
+
+	@Test
+	@Ignore
+	public void testPressTextFullScreen() {
+		Img.from(FileUtil.file("d:/test/2.jpg"))
+				.pressTextFullScreen("版权所有 仿冒必究", Color.LIGHT_GRAY,
+						new Font("微软雅黑", Font.BOLD, 100),
+						-30,
+						1f)
+				.write(FileUtil.file("d:/test/2_result.png"));
+
+	}
+
 	@Test
 	@Ignore
 	public void pressImgTest() {

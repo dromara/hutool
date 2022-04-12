@@ -12,23 +12,12 @@ import cn.hutool.core.util.StrUtil;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.CropImageFilter;
-import java.awt.image.ImageFilter;
+import java.awt.image.*;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -484,6 +473,78 @@ public class Img implements Serializable {
 
 		return this;
 	}
+
+
+	/**
+	 * 给图片添加全屏文字水印
+	 *
+	 * @param pressText 水印文字
+	 * @param color     水印的字体颜色
+	 * @param font      {@link Font} 字体相关信息
+	 * @param degree    旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 处理后的图像
+	 */
+	public Img pressTextFullScreen(String pressText, Color color, Font font, int degree, float alpha) {
+		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
+		final int targetwidth = targetImage.getWidth();
+		final int targetheight = targetImage.getHeight();
+		return pressImage(createFullScreenPressImage(targetwidth, targetheight, pressText, color, font, degree, alpha).getImg(), 0, 0, alpha);
+	}
+
+	/**
+	 * 水印文字生成全屏水印图片
+	 *
+	 * @param targetwidth  水印图片宽
+	 * @param targetheight 水印图片高
+	 * @param pressText    水印字符串
+	 * @param color        水印的字体颜色
+	 * @param font         {@link Font} 字体相关信息
+	 * @param degree       旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha        透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return Img
+	 */
+	private static Img createFullScreenPressImage(int targetwidth, int targetheight, String pressText, Color color, Font font, int degree, float alpha) {
+		ColorModel cm = ColorModel.getRGBdefault();
+		WritableRaster wr = cm.createCompatibleWritableRaster(targetwidth, targetheight);
+		BufferedImage pressImg = new BufferedImage(cm, wr, cm.isAlphaPremultiplied(), null);
+
+		// 水印图片放大倍数
+		final float scale = 2;
+		font = font.deriveFont(font.getSize() / scale);
+		final Graphics2D g = pressImg.createGraphics();
+		//获取字符串本身的长宽
+		Dimension dimension;
+		try {
+			// 3字间隔
+			dimension = FontUtil.getDimension(g.getFontMetrics(font), pressText + "     ");
+		} catch (Exception e) {
+			// 此处报告bug某些情况下会抛出IndexOutOfBoundsException，在此做容错处理
+			dimension = new Dimension(targetwidth / 3, targetheight / 3);
+		}
+
+		// 3倍间宽 间隔
+		final int intervalHeight = dimension.height * 4;
+		// 循环写
+		int y = dimension.height;
+		while (y < targetheight) {
+			int x = 0;
+			while (x < targetwidth) {
+
+				GraphicsUtil.drawString(g, pressText, font, color,
+						new Point(x, y));
+				x += dimension.width;
+			}
+			y += intervalHeight;
+		}
+		g.dispose();
+		// 水印图片旋转，放大，剪切
+		return Img.from(pressImg)
+				.rotate(degree)
+				.scale(scale)
+				.cut(new Rectangle(0, 0, targetwidth, targetheight));
+	}
+
 
 	/**
 	 * 给图片添加图片水印
