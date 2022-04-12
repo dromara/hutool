@@ -3,7 +3,6 @@ package cn.hutool.cron.pattern;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -96,6 +95,5 @@ public class CronPatternNextMatchTest {
 		final DateTime time = DateUtil.parse("2022-04-01");
 		assert time != null;
 		final Calendar calendar = pattern.nextMatchAfter(time.toCalendar());
-		Console.log(DateUtil.date(calendar));
 	}
 }

@@ -158,6 +158,11 @@ public class PatternMatcher {
 		// 新值，-1表示标识为回退
 		int nextValue = 0;
 		while (i >= 0) {
+			if(i == Part.DAY_OF_WEEK.ordinal()){
+				// 周不参与计算
+				i--;
+				continue;
+			}
 			nextValue = matchers[i].nextAfter(values[i]);
 			if (nextValue > values[i]) {
 				// 此部分正常获取新值，结束循环，后续的部分置最小值
@@ -177,6 +182,11 @@ public class PatternMatcher {
 		// 值产生回退，向上查找变更值
 		if (-1 == nextValue) {
 			while (i <= Part.YEAR.ordinal()) {
+				if(i == Part.DAY_OF_WEEK.ordinal()){
+					// 周不参与计算
+					i++;
+					continue;
+				}
 				nextValue = matchers[i].nextAfter(values[i] + 1);
 				if (nextValue > values[i]) {
 					newValues[i] = nextValue;
@@ -250,6 +260,7 @@ public class PatternMatcher {
 		}
 		//noinspection MagicConstant
 		calendar.set(part.getCalendarField(), value);
+		//Console.log("Set [{}] as [{}]", part, value);
 		return calendar;
 	}
 }
