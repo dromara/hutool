@@ -37,4 +37,10 @@ public class RuntimeUtilTest {
 	public void getUsableMemoryTest(){
 		Assert.assertTrue(RuntimeUtil.getUsableMemory() > 0);
 	}
+
+	@Test
+	public void getPidTest(){
+		int pid = RuntimeUtil.getPid();
+		Assert.assertTrue(pid > 0);
+	}
 }

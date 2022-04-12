@@ -3,18 +3,20 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.0.M3 (2022-04-11)
+# 5.8.0.M3 (2022-04-12)
 
 ### ❌不兼容特性
 * 【core   】     StreamProgress#progress方法参数变更为2个（pr#594@Gitee）
 * 【core   】     SimpleCache的raw key使用Mutable
 * 【core   】     ArrayUtil.join删除已经弃用的无用原始类型重载
+* 【core   】     删除Holder类，ReUtil.extractMultiAndDelPre方法参数改为Mutable
 
 ### 🐣新特性
 * 【core   】     CopyOptions支持以Lambda方式设置忽略属性列表（pr#590@Gitee）
 * 【core   】     增加中文姓名正则及其校验（pr#592@Gitee）
 * 【core   】     Snowflake支持sequence使用随机数（issue#I51EJY@Gitee）
 * 【core   】     JarClassLoader增加构造（pr#593@Gitee）
+* 【core   】     增加Pid，以便获取单例pid
 
 ### 🐞Bug修复
 * 【core   】     修复UserAgentUtil识别Linux出错（issue#I50YGY@Gitee）

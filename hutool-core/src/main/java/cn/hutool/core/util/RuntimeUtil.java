@@ -3,12 +3,12 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Pid;
 import cn.hutool.core.text.StrBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -289,16 +289,7 @@ public class RuntimeUtil {
 	 * @since 5.7.3
 	 */
 	public static int getPid() throws UtilException {
-		final String processName = ManagementFactory.getRuntimeMXBean().getName();
-		if (StrUtil.isBlank(processName)) {
-			throw new UtilException("Process name is blank!");
-		}
-		final int atIndex = processName.indexOf('@');
-		if (atIndex > 0) {
-			return Integer.parseInt(processName.substring(0, atIndex));
-		} else {
-			return processName.hashCode();
-		}
+		return Pid.INSTANCE.get();
 	}
 
 	/**

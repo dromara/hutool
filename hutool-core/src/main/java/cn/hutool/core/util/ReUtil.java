@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 
@@ -311,8 +311,9 @@ public class ReUtil {
 	 * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
 	 * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 新字符串
+	 * @since 5.8.0
 	 */
-	public static String extractMultiAndDelPre(Pattern pattern, Holder<CharSequence> contentHolder, String template) {
+	public static String extractMultiAndDelPre(Pattern pattern, Mutable<CharSequence> contentHolder, String template) {
 		if (null == contentHolder || null == pattern || null == template) {
 			return null;
 		}
@@ -342,7 +343,7 @@ public class ReUtil {
 	 * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 按照template拼接后的字符串
 	 */
-	public static String extractMultiAndDelPre(String regex, Holder<CharSequence> contentHolder, String template) {
+	public static String extractMultiAndDelPre(String regex, Mutable<CharSequence> contentHolder, String template) {
 		if (null == contentHolder || null == regex || null == template) {
 			return null;
 		}
