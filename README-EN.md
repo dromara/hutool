@@ -207,8 +207,6 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 
 ## ⭐Star Hutool
 
-[![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
-
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
 ## 📌WeChat Official Account
