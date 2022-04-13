@@ -125,8 +125,7 @@ public class CronPattern {
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
 	public boolean match(Calendar calendar, boolean isMatchSecond) {
-		final int[] fields = getFields(calendar, isMatchSecond);
-		return match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]);
+		return match(PatternUtil.getFields(calendar, isMatchSecond));
 	}
 
 	/**
@@ -137,7 +136,7 @@ public class CronPattern {
 	 * @return 匹配到的下一个时间
 	 */
 	public Calendar nextMatchAfter(Calendar calendar) {
-		return nextMatchAfter(getFields(calendar, true), calendar.getTimeZone());
+		return nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
 	}
 
 	@Override
@@ -148,18 +147,12 @@ public class CronPattern {
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
-	 * @param second     秒数，-1表示不匹配此项
-	 * @param minute     分钟
-	 * @param hour       小时
-	 * @param dayOfMonth 天
-	 * @param month      月，从1开始
-	 * @param dayOfWeek  周，从0开始，0和7都表示周日
-	 * @param year       年
+	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	private boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+	private boolean match(int[] fields) {
 		for (PatternMatcher matcher : matchers) {
-			if (matcher.match(second, minute, hour, dayOfMonth, month, dayOfWeek, year)) {
+			if (matcher.match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])) {
 				return true;
 			}
 		}
@@ -180,25 +173,5 @@ public class CronPattern {
 		}
 		// 返回匹配到的最早日期
 		return CollUtil.min(nextMatches);
-	}
-
-	/**
-	 * 获取处理后的字段列表<br>
-	 * 月份从1开始，周从0开始
-	 *
-	 * @param calendar      {@link Calendar}
-	 * @param isMatchSecond 是否匹配秒，{@link false}则秒返回-1
-	 * @return 字段值列表
-	 * @since 5.8.0
-	 */
-	private int[] getFields(Calendar calendar, boolean isMatchSecond) {
-		final int second = isMatchSecond ? calendar.get(Calendar.SECOND) : -1;
-		final int minute = calendar.get(Calendar.MINUTE);
-		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
-		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
-		final int year = calendar.get(Calendar.YEAR);
-		return new int[]{second, minute, hour, dayOfMonth, month, dayOfWeek, year};
 	}
 }

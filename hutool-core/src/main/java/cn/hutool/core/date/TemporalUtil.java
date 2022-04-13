@@ -1,8 +1,11 @@
 package cn.hutool.core.date;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -101,5 +104,38 @@ public class TemporalUtil {
 			default:
 				throw new IllegalArgumentException("ChronoUnit cannot be converted to TimeUnit: " + unit);
 		}
+	}
+
+	/**
+	 * 日期偏移,根据field不同加不同值（偏移会修改传入的对象）
+	 *
+	 * @param <T>    日期类型，如LocalDate或LocalDateTime
+	 * @param time   {@link Temporal}
+	 * @param number 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param field  偏移单位，见{@link ChronoUnit}，不能为null
+	 * @return 偏移后的日期时间
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Temporal> T offset(T time, long number, TemporalUnit field) {
+		if (null == time) {
+			return null;
+		}
+
+		return (T) time.plus(number, field);
+	}
+
+	/**
+	 * 偏移到指定的周几
+	 *
+	 * @param temporal   日期或者日期时间
+	 * @param dayOfWeek  周几
+	 * @param <T>        日期类型，如LocalDate或LocalDateTime
+	 * @param isPrevious 是否向前偏移，{@code true}向前偏移，{@code false}向后偏移。
+	 * @return 偏移后的日期
+	 * @since 5.8.0
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends Temporal> T offset(T temporal, DayOfWeek dayOfWeek, boolean isPrevious) {
+		return (T) temporal.with(isPrevious ? TemporalAdjusters.previous(dayOfWeek) : TemporalAdjusters.next(dayOfWeek));
 	}
 }

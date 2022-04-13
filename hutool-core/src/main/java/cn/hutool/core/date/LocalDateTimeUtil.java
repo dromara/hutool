@@ -416,11 +416,7 @@ public class LocalDateTimeUtil {
 	 * @return 偏移后的日期时间
 	 */
 	public static LocalDateTime offset(LocalDateTime time, long number, TemporalUnit field) {
-		if (null == time) {
-			return null;
-		}
-
-		return time.plus(number, field);
+		return TemporalUtil.offset(time, number, field);
 	}
 
 	/**
