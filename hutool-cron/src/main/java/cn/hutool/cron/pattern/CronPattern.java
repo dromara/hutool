@@ -1,6 +1,7 @@
 package cn.hutool.cron.pattern;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.CalendarUtil;
 import cn.hutool.cron.pattern.matcher.PatternMatcher;
 import cn.hutool.cron.pattern.parser.PatternParser;
 
@@ -129,14 +130,19 @@ public class CronPattern {
 	}
 
 	/**
-	 * 返回匹配到的下一个时间<br>
-	 * TODO 周定义后，结果错误，需改进
+	 * 返回匹配到的下一个时间
 	 *
 	 * @param calendar 时间
 	 * @return 匹配到的下一个时间
 	 */
 	public Calendar nextMatchAfter(Calendar calendar) {
-		return nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
+		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
+		if(false == match(next, true)){
+			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
+			next = CalendarUtil.beginOfDay(next);
+			return nextMatchAfter(next);
+		}
+		return next;
 	}
 
 	@Override
@@ -152,7 +158,7 @@ public class CronPattern {
 	 */
 	private boolean match(int[] fields) {
 		for (PatternMatcher matcher : matchers) {
-			if (matcher.match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])) {
+			if (matcher.match(fields)) {
 				return true;
 			}
 		}

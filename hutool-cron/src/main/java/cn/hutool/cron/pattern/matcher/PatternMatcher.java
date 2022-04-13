@@ -65,6 +65,16 @@ public class PatternMatcher {
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
+	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
+	 */
+	public boolean match(int[] fields) {
+		return match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]);
+	}
+
+	/**
+	 * 给定时间是否匹配定时任务表达式
+	 *
 	 * @param second     秒数，-1表示不匹配此项
 	 * @param minute     分钟
 	 * @param hour       小时
@@ -74,7 +84,7 @@ public class PatternMatcher {
 	 * @param year       年
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+	private boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
 		return ((second < 0) || matchers[0].match(second)) // 匹配秒（非秒匹配模式下始终返回true）
 				&& matchers[1].match(minute)// 匹配分
 				&& matchers[2].match(hour)// 匹配时
@@ -127,10 +137,11 @@ public class PatternMatcher {
 		final int[] newValues = nextMatchValuesAfter(values);
 		for (int i = 0; i < newValues.length; i++) {
 			// 周无需设置
-			if(i != Part.DAY_OF_WEEK.ordinal()){
+			if (i != Part.DAY_OF_WEEK.ordinal()) {
 				setValue(calendar, Part.of(i), newValues[i]);
 			}
 		}
+
 		return calendar;
 	}
 
@@ -158,7 +169,7 @@ public class PatternMatcher {
 		// 新值，-1表示标识为回退
 		int nextValue = 0;
 		while (i >= 0) {
-			if(i == Part.DAY_OF_WEEK.ordinal()){
+			if (i == Part.DAY_OF_WEEK.ordinal()) {
 				// 周不参与计算
 				i--;
 				continue;
@@ -182,7 +193,7 @@ public class PatternMatcher {
 		// 值产生回退，向上查找变更值
 		if (-1 == nextValue) {
 			while (i <= Part.YEAR.ordinal()) {
-				if(i == Part.DAY_OF_WEEK.ordinal()){
+				if (i == Part.DAY_OF_WEEK.ordinal()) {
 					// 周不参与计算
 					i++;
 					continue;
