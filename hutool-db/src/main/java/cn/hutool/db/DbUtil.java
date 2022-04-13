@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
+import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
@@ -110,7 +111,7 @@ public final class DbUtil {
 	 */
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
-			if(null != obj){
+			if (null != obj) {
 				if (obj instanceof AutoCloseable) {
 					IoUtil.close((AutoCloseable) obj);
 				} else {
@@ -175,7 +176,7 @@ public final class DbUtil {
 	 * @param setting 配置项
 	 * @since 5.7.2
 	 */
-	public static void removeShowSqlParams(Setting setting){
+	public static void removeShowSqlParams(Setting setting) {
 		setting.remove(SqlLog.KEY_SHOW_SQL);
 		setting.remove(SqlLog.KEY_FORMAT_SQL);
 		setting.remove(SqlLog.KEY_SHOW_PARAMS);
@@ -236,5 +237,15 @@ public final class DbUtil {
 	 */
 	public static void setReturnGeneratedKeyGlobal(boolean returnGeneratedKey) {
 		GlobalDbConfig.setReturnGeneratedKey(returnGeneratedKey);
+	}
+
+	/**
+	 * 设置从绝对路径加载数据库配置文件
+	 * （特殊情况使用，比如写Minecraft插件的时候）
+	 *
+	 * @param absolutePath 配置文件的绝对路径
+	 */
+	public static void setCustomizeDbSettingPath(String absolutePath) {
+		AbstractDSFactory.CUSTOMIZE_DB_SETTING_PATH = absolutePath;
 	}
 }
