@@ -2,7 +2,6 @@ package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.TypeUtil;
 
@@ -75,7 +74,8 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 
 			// 获取目标字段真实类型并转换源值
 			final Type fieldType = TypeUtil.getActualType(this.targetType, tDesc.getFieldType());
-			sValue = Convert.convertWithCheck(fieldType, sValue, null, this.copyOptions.ignoreError);
+			//sValue = Convert.convertWithCheck(fieldType, sValue, null, this.copyOptions.ignoreError);
+			sValue = this.copyOptions.convertField(fieldType, sValue);
 			sValue = copyOptions.editFieldValue(sFieldName, sValue);
 
 			// 目标赋值

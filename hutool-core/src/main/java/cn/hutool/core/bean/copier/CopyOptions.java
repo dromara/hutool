@@ -1,5 +1,7 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.TypeConverter;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
@@ -7,6 +9,7 @@ import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -64,7 +67,14 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean override = true;
 
+	/**
+	 * 自定义类型转换器，默认使用全局万能转换器转换
+	 */
+	protected TypeConverter converter = (type, value) ->
+			Convert.convertWithCheck(type, value, null, ignoreError);
+
 	//region create
+
 	/**
 	 * 创建拷贝选项
 	 *
@@ -164,8 +174,8 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值，Lambda方式
 	 *
-	 * @param <P> 参数类型
-	 * @param <R> 返回值类型
+	 * @param <P>   参数类型
+	 * @param <R>   返回值类型
 	 * @param funcs 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 * @return CopyOptions
 	 * @since 5.8.0
@@ -225,7 +235,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
-		return setFieldNameEditor((key-> fieldMapping.getOrDefault(key, key)));
+		return setFieldNameEditor((key -> fieldMapping.getOrDefault(key, key)));
 	}
 
 	/**
@@ -289,6 +299,32 @@ public class CopyOptions implements Serializable {
 	public CopyOptions setOverride(boolean override) {
 		this.override = override;
 		return this;
+	}
+
+	/**
+	 * 设置自定义类型转换器，默认使用全局万能转换器转换。
+	 *
+	 * @param converter 转换器
+	 * @return this
+	 * @since 5.8.0
+	 */
+	public CopyOptions setConverter(TypeConverter converter) {
+		this.converter = converter;
+		return this;
+	}
+
+	/**
+	 * 使用自定义转换器转换字段值<br>
+	 * 如果自定义转换器为{@code null}，则返回原值。
+	 *
+	 * @param targetType 目标类型
+	 * @param fieldValue 字段值
+	 * @return 编辑后的字段值
+	 * @since 5.8.0
+	 */
+	protected Object convertField(Type targetType, Object fieldValue) {
+		return (null != this.converter) ?
+				this.converter.convert(targetType, fieldValue) : fieldValue;
 	}
 
 	/**

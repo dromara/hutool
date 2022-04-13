@@ -19,6 +19,7 @@
 * 【core   】     增加Pid，以便获取单例pid
 * 【core   】     Img增加全覆盖水印pressTextFull（pr#595@Gitee）
 * 【core   】     ByteUtil.numberToBytes增加Byte判断（issue#2252@Github）
+* 【core   】     CopyOptions添加converter，可以自定义非全局类型转换
 
 ### 🐞Bug修复
 * 【core   】     修复UserAgentUtil识别Linux出错（issue#I50YGY@Gitee）

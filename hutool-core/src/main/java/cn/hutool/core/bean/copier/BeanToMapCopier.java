@@ -2,7 +2,6 @@ package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.TypeUtil;
 
@@ -67,7 +66,8 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 			// 获取目标值真实类型并转换源值
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if(null != typeArguments){
-				sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
+				//sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
+				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
 				sValue = copyOptions.editFieldValue(sFieldName, sValue);
 			}
 
