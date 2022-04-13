@@ -1,11 +1,11 @@
 package cn.hutool.db.ds;
 
-import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
+import cn.hutool.db.GlobalDbConfig;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.setting.Setting;
 
@@ -25,19 +25,6 @@ public abstract class AbstractDSFactory extends DSFactory {
 	private static final long serialVersionUID = -6407302276272379881L;
 
 	/**
-	 * 数据库配置文件可选路径1
-	 */
-	private static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
-	/**
-	 * 数据库配置文件可选路径2
-	 */
-	private static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
-	/**
-	 * 自定义数据库配置文件路径（绝对路径，特殊情况使用，比如写Minecraft插件的时候）
-	 */
-	public static String CUSTOMIZE_DB_SETTING_PATH = null;
-
-	/**
 	 * 数据库连接配置文件
 	 */
 	private final Setting setting;
@@ -52,37 +39,15 @@ public abstract class AbstractDSFactory extends DSFactory {
 	 * @param dataSourceName  数据源名称
 	 * @param dataSourceClass 数据库连接池实现类，用于检测所提供的DataSource类是否存在，当传入的DataSource类不存在时抛出ClassNotFoundException<br>
 	 *                        此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
-	 * @param setting         数据库连接配置
+	 * @param setting         数据库连接配置，如果为{@code null}，则读取全局自定义或默认配置
 	 */
 	public AbstractDSFactory(String dataSourceName, Class<? extends DataSource> dataSourceClass, Setting setting) {
 		super(dataSourceName);
 		//此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
 		Assert.notNull(dataSourceClass);
-		if (CUSTOMIZE_DB_SETTING_PATH != null) {
-			try {
-				setting = new Setting(CUSTOMIZE_DB_SETTING_PATH, false);
-			} catch (NoResourceException e3) {
-				throw new NoResourceException("Customize db setting file [{}] not found !", CUSTOMIZE_DB_SETTING_PATH);
-			}
-		}
+
 		if (null == setting) {
-			try {
-				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-			} catch (NoResourceException e) {
-				// 尝试ClassPath下直接读取配置文件
-				try {
-					setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
-				} catch (NoResourceException e2) {
-					throw new NoResourceException("Default db setting [{}] or [{}] in classpath not found !", DEFAULT_DB_SETTING_PATH, DEFAULT_DB_SETTING_PATH2);
-				}
-			}
-			if (CUSTOMIZE_DB_SETTING_PATH != null) {
-				try {
-					setting = new Setting(CUSTOMIZE_DB_SETTING_PATH, false);
-				} catch (NoResourceException e3) {
-					throw new NoResourceException("Customize db setting file [{}] not found !", CUSTOMIZE_DB_SETTING_PATH);
-				}
-			}
+			setting = GlobalDbConfig.createDbSetting();
 		}
 
 		// 读取配置，用于SQL打印

@@ -4,7 +4,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
-import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
@@ -210,6 +209,7 @@ public final class DbUtil {
 	 * @param isFormatSql  是否格式化显示的SQL
 	 * @param isShowParams 是否打印参数
 	 * @param level        SQL打印到的日志等级
+	 * @see GlobalDbConfig#setShowSql(boolean, boolean, boolean, Level)
 	 * @since 4.1.7
 	 */
 	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
@@ -221,6 +221,7 @@ public final class DbUtil {
 	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
 	 *
 	 * @param caseInsensitive 否在结果中忽略大小写
+	 * @see GlobalDbConfig#setCaseInsensitive(boolean)
 	 * @since 5.2.4
 	 */
 	public static void setCaseInsensitiveGlobal(boolean caseInsensitive) {
@@ -233,6 +234,7 @@ public final class DbUtil {
 	 * 主要用于某些数据库不支持返回主键的情况
 	 *
 	 * @param returnGeneratedKey 是否INSERT语句中默认返回主键
+	 * @see GlobalDbConfig#setReturnGeneratedKey(boolean)
 	 * @since 5.3.10
 	 */
 	public static void setReturnGeneratedKeyGlobal(boolean returnGeneratedKey) {
@@ -240,12 +242,13 @@ public final class DbUtil {
 	}
 
 	/**
-	 * 设置从绝对路径加载数据库配置文件
-	 * （特殊情况使用，比如写Minecraft插件的时候）
+	 * 自定义数据库配置文件路径（绝对路径或相对classpath路径）
 	 *
-	 * @param absolutePath 配置文件的绝对路径
+	 * @param dbSettingPath 自定义数据库配置文件路径（绝对路径或相对classpath路径）
+	 * @see GlobalDbConfig#setDbSettingPath(String)
+	 * @since 5.8.0
 	 */
-	public static void setCustomizeDbSettingPath(String absolutePath) {
-		AbstractDSFactory.CUSTOMIZE_DB_SETTING_PATH = absolutePath;
+	public static void setDbSettingPathGlobal(String dbSettingPath) {
+		GlobalDbConfig.setDbSettingPath(dbSettingPath);
 	}
 }
