@@ -18,6 +18,7 @@
 * 【core   】     JarClassLoader增加构造（pr#593@Gitee）
 * 【core   】     增加Pid，以便获取单例pid
 * 【core   】     Img增加全覆盖水印pressTextFull（pr#595@Gitee）
+* 【core   】     ByteUtil.numberToBytes增加Byte判断（issue#2252@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复UserAgentUtil识别Linux出错（issue#I50YGY@Gitee）

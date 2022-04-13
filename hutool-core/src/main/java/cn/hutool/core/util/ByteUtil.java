@@ -405,7 +405,9 @@ public class ByteUtil {
 	 * @return bytes
 	 */
 	public static byte[] numberToBytes(Number number, ByteOrder byteOrder) {
-		if (number instanceof Double) {
+		if(number instanceof Byte){
+			return new byte[]{number.byteValue()};
+		}else if (number instanceof Double) {
 			return doubleToBytes((Double) number, byteOrder);
 		} else if (number instanceof Long) {
 			return longToBytes((Long) number, byteOrder);
