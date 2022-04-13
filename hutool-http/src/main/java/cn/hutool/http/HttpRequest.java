@@ -153,7 +153,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.7.18
 	 */
 	public static HttpRequest of(String url, Charset charset) {
-		return new HttpRequest(UrlBuilder.ofHttp(url, charset));
+		return of(UrlBuilder.ofHttp(url, charset));
+	}
+
+	/**
+	 * 构建一个HTTP请求<br>
+	 *
+	 * @param url {@link UrlBuilder}
+	 * @return HttpRequest
+	 * @since 5.8.0
+	 */
+	public static HttpRequest of(UrlBuilder url) {
+		return new HttpRequest(url);
 	}
 
 	/**
