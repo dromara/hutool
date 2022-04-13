@@ -153,6 +153,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 		DataSourceWrapper ds = dsMap.get(group);
 		if (ds != null) {
 			ds.close();
+			//noinspection resource
 			dsMap.remove(group);
 		}
 	}
