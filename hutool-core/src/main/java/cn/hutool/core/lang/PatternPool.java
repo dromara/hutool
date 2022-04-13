@@ -3,7 +3,8 @@ package cn.hutool.core.lang;
 import java.util.regex.Pattern;
 
 /**
- * 常用正则表达式集合，更多正则见:https://any86.github.io/any-rule/
+ * 常用正则表达式集合，更多正则见:<br>
+ * <a href="https://any86.github.io/any-rule/">https://any86.github.io/any-rule/</a>
  *
  * @author Looly
  */
@@ -46,8 +47,8 @@ public class PatternPool {
 	 */
 	public final static Pattern MONEY = Pattern.compile(RegexPool.MONEY);
 	/**
-	 * 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/
-	 * What is the maximum length of a valid email address? https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
+	 * 邮件，符合RFC 5322规范，正则来自：<a href="http://emailregex.com/">http://emailregex.com/</a><br>
+	 * <a href="https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754">https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754</a>
 	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@ hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
 	 */
 	public final static Pattern EMAIL = Pattern.compile(RegexPool.EMAIL, Pattern.CASE_INSENSITIVE);
