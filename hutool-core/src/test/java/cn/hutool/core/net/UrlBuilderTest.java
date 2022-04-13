@@ -426,4 +426,12 @@ public class UrlBuilderTest {
 		final String s = UrlBuilder.of(url, null).setCharset(CharsetUtil.CHARSET_UTF_8).toString();
 		Assert.assertEquals(url, s);
 	}
+
+	@Test
+	public void issueI51T0VTest(){
+		// &amp;自动转换为&
+		String url = "https://hutool.cn/a.mp3?Expires=1652423884&amp;key=JMv2rKNc7Pz&amp;sign=12zva00BpVqgZcX1wcb%2BrmN7H3E%3D";
+		final UrlBuilder of = UrlBuilder.of(url, null);
+		Assert.assertEquals(url.replace("&amp;", "&"), of.toString());
+	}
 }
