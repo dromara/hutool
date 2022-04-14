@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -548,10 +549,24 @@ public class BeanUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz, CopyOptions options) {
-		if (null == source) {
+		return toBean(source, () -> ReflectUtil.newInstanceIfPossible(clazz), options);
+	}
+
+	/**
+	 * 对象或Map转Bean
+	 *
+	 * @param <T>            转换的Bean类型
+	 * @param source         Bean对象或Map
+	 * @param targetSupplier 目标的Bean创建器
+	 * @param options        属性拷贝选项
+	 * @return Bean对象
+	 * @since 5.8.0
+	 */
+	public static <T> T toBean(Object source, Supplier<T> targetSupplier, CopyOptions options) {
+		if (null == source || null == targetSupplier) {
 			return null;
 		}
-		final T target = ReflectUtil.newInstanceIfPossible(clazz);
+		final T target = targetSupplier.get();
 		copyProperties(source, target, options);
 		return target;
 	}
