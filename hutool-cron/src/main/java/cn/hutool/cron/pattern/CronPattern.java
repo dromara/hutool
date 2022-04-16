@@ -5,6 +5,7 @@ import cn.hutool.core.date.CalendarUtil;
 import cn.hutool.cron.pattern.matcher.PatternMatcher;
 import cn.hutool.cron.pattern.parser.PatternParser;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -130,6 +131,18 @@ public class CronPattern {
 	}
 
 	/**
+	 * 给定时间是否匹配定时任务表达式
+	 *
+	 * @param dateTime      时间
+	 * @param isMatchSecond 是否匹配秒
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
+	 * @since 5.8.0
+	 */
+	public boolean match(LocalDateTime dateTime, boolean isMatchSecond) {
+		return match(PatternUtil.getFields(dateTime, isMatchSecond));
+	}
+
+	/**
 	 * 返回匹配到的下一个时间
 	 *
 	 * @param calendar 时间
@@ -137,7 +150,7 @@ public class CronPattern {
 	 */
 	public Calendar nextMatchAfter(Calendar calendar) {
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
-		if(false == match(next, true)){
+		if (false == match(next, true)) {
 			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
 			next = CalendarUtil.beginOfDay(next);
 			return nextMatchAfter(next);

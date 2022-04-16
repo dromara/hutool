@@ -74,7 +74,7 @@ public enum Week {
 	/**
 	 * 获得星期对应{@link Calendar} 中的Week值
 	 *
-	 * @return 星期对应{@link Calendar} 中的Week值
+	 * @return 星期对应 {@link Calendar} 中的Week值
 	 */
 	public int getValue() {
 		return this.value;
