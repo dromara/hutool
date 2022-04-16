@@ -34,11 +34,12 @@ public class JSONParser {
 	}
 
 	// region parseTo
+
 	/**
 	 * 解析{@link JSONTokener}中的字符到目标的{@link JSONObject}中
 	 *
 	 * @param jsonObject {@link JSONObject}
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
 	public void parseTo(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
 		final JSONTokener tokener = this.tokener;
@@ -91,7 +92,8 @@ public class JSONParser {
 	/**
 	 * 解析JSON字符串到{@link JSONArray}中
 	 *
-	 * @param jsonArray {@link JSONArray}
+	 * @param jsonArray {@link JSONArray
+	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
 	 */
 	public void parseTo(JSONArray jsonArray, Filter<Mutable<Object>> filter) {
 		final JSONTokener x = this.tokener;

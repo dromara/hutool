@@ -17,6 +17,7 @@ public enum GlobalInterceptor {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 */
 	synchronized public GlobalInterceptor addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
@@ -27,6 +28,7 @@ public enum GlobalInterceptor {
 	 * 设置拦截器，用于在响应读取后完成编辑或读取
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 */
 	synchronized public GlobalInterceptor addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
 		this.responseInterceptors.addChain(interceptor);

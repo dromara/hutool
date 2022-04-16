@@ -369,9 +369,10 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	/**
 	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
-	 * @param key    键
-	 * @param value  值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param key            键
+	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
@@ -388,7 +389,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 				// 使用修改后的键值对
 				key = pair.getKey();
 				value = pair.getValue();
-			}else{
+			} else {
 				// 键值对被过滤
 				return this;
 			}
@@ -399,7 +400,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			// 忽略值模式下如果值为空清除key
 			this.remove(key);
 		} else {
-			if(checkDuplicate && containsKey(key)){
+			if (checkDuplicate && containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 
@@ -423,9 +424,10 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	/**
 	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
-	 * @param key   键
-	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
+	 * @param key    键
+	 * @param value  值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @return this
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */

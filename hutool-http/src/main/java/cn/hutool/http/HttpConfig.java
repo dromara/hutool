@@ -244,6 +244,7 @@ public class HttpConfig {
 	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
 	 *
 	 * @param ignoreEOFError 是否忽略响应读取时可能的EOF异常。
+	 * @return this
 	 * @since 5.7.20
 	 */
 	public HttpConfig setIgnoreEOFError(boolean ignoreEOFError) {
@@ -257,6 +258,7 @@ public class HttpConfig {
 	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
 	 *
 	 * @param decodeUrl 是否忽略解码URL
+	 * @return this
 	 */
 	public HttpConfig setDecodeUrl(boolean decodeUrl) {
 		this.decodeUrl = decodeUrl;
@@ -267,6 +269,7 @@ public class HttpConfig {
 	 * 设置拦截器，用于在请求前重新编辑请求
 	 *
 	 * @param interceptor 拦截器实现
+	 * @return this
 	 */
 	public HttpConfig addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
