@@ -218,7 +218,7 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void putTest(){
+	public void putToIndexTest(){
 		final JSONArray jsonArray = new JSONArray();
 		jsonArray.put(3, "test");
 		// 第三个位置插入值，0~2都是null
@@ -278,5 +278,31 @@ public class JSONArrayTest {
 		array.set(null);
 
 		Assert.assertEquals("[null]", array.toString());
+	}
+
+	@Test
+	public void parseFilterTest() {
+		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> mutable.get().toString().contains("111"));
+		Assert.assertEquals(1, array.size());
+		Assert.assertTrue(array.getJSONObject(0).containsKey("id"));
+	}
+
+	@Test
+	public void parseFilterEditTest() {
+		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
+			final JSONObject o = new JSONObject(mutable.get());
+			if("111".equals(o.getStr("id"))){
+				o.set("name", "test1_edit");
+			}
+			mutable.set(o);
+			return true;
+		});
+		Assert.assertEquals(2, array.size());
+		Assert.assertTrue(array.getJSONObject(0).containsKey("id"));
+		Assert.assertEquals("test1_edit", array.getJSONObject(0).get("name"));
 	}
 }

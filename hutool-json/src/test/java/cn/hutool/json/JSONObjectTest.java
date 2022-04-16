@@ -682,4 +682,26 @@ public class JSONObjectTest {
 		});
 		Assert.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);
 	}
+
+	@Test
+	public void parseFilterTest() {
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> "b".equals(pair.getKey()));
+		Assert.assertEquals(1, jsonObject.size());
+		Assert.assertEquals("value2", jsonObject.get("b"));
+	}
+
+	@Test
+	public void parseFilterEditTest() {
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> {
+			if("b".equals(pair.getKey())){
+				pair.setValue(pair.getValue() + "_edit");
+			}
+			return true;
+		});
+		Assert.assertEquals("value2_edit", jsonObject.get("b"));
+	}
 }

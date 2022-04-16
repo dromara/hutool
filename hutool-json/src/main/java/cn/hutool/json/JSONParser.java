@@ -1,5 +1,9 @@
 package cn.hutool.json;
 
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.Mutable;
+import cn.hutool.core.lang.mutable.MutablePair;
+
 /**
  * JSON字符串解析器
  *
@@ -7,7 +11,6 @@ package cn.hutool.json;
  * @since 5.8.0
  */
 public class JSONParser {
-	private final JSONTokener tokener;
 
 	/**
 	 * 创建JSONParser
@@ -19,6 +22,8 @@ public class JSONParser {
 		return new JSONParser(tokener);
 	}
 
+	private final JSONTokener tokener;
+
 	/**
 	 * 构造
 	 *
@@ -28,12 +33,14 @@ public class JSONParser {
 		this.tokener = tokener;
 	}
 
+	// region parseTo
 	/**
 	 * 解析{@link JSONTokener}中的字符到目标的{@link JSONObject}中
 	 *
 	 * @param jsonObject {@link JSONObject}
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
-	public void parseTo(JSONObject jsonObject) {
+	public void parseTo(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;
@@ -60,7 +67,8 @@ public class JSONParser {
 			if (c != ':') {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
-			jsonObject.putOnce(key, tokener.nextValue());
+
+			jsonObject.setOnce(key, tokener.nextValue(), filter);
 
 			// Pairs are separated by ','.
 
@@ -85,7 +93,7 @@ public class JSONParser {
 	 *
 	 * @param jsonArray {@link JSONArray}
 	 */
-	public void parseTo(JSONArray jsonArray) {
+	public void parseTo(JSONArray jsonArray, Filter<Mutable<Object>> filter) {
 		final JSONTokener x = this.tokener;
 
 		if (x.nextClean() != '[') {
@@ -96,10 +104,10 @@ public class JSONParser {
 			for (; ; ) {
 				if (x.nextClean() == ',') {
 					x.back();
-					jsonArray.addRaw(JSONNull.NULL);
+					jsonArray.addRaw(JSONNull.NULL, filter);
 				} else {
 					x.back();
-					jsonArray.addRaw(x.nextValue());
+					jsonArray.addRaw(x.nextValue(), filter);
 				}
 				switch (x.nextClean()) {
 					case ',':
@@ -116,4 +124,5 @@ public class JSONParser {
 			}
 		}
 	}
+	// endregion
 }
