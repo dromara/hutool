@@ -217,7 +217,7 @@ public class JSONTokener {
 	 * 返回当前位置到指定引号前的所有字符，反斜杠的转义符也会被处理。<br>
 	 * 标准的JSON是不允许使用单引号包含字符串的，但是此实现允许。
 	 *
-	 * @param quote 字符引号, 包括 <code>"</code>（双引号） 或 <code>'</code>（单引号）。
+	 * @param quote 字符引号, 包括 {@code "}（双引号） 或 {@code '}（单引号）。
 	 * @return 截止到引号前的字符串
 	 * @throws JSONException 出现无结束的字符串时抛出此异常
 	 */

@@ -385,7 +385,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public boolean add(Object e) {
-		return this.rawList.add(JSONUtil.wrap(e, this.config));
+		return addRaw(JSONUtil.wrap(e, this.config));
 	}
 
 	@Override
@@ -593,6 +593,17 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	// ------------------------------------------------------------------------------------------------- Private method start
 
 	/**
+	 * 原始添加，添加的对象不做任何处理
+	 *
+	 * @param obj 添加的对象
+	 * @return 是否加入成功
+	 * @since 5.8.0
+	 */
+	protected boolean addRaw(Object obj) {
+		return this.rawList.add(obj);
+	}
+
+	/**
 	 * 初始化
 	 *
 	 * @param source 数组或集合或JSON数组字符串
@@ -653,33 +664,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param x {@link JSONTokener}
 	 */
 	private void init(JSONTokener x) {
-		if (x.nextClean() != '[') {
-			throw x.syntaxError("A JSONArray text must start with '['");
-		}
-		if (x.nextClean() != ']') {
-			x.back();
-			for (; ; ) {
-				if (x.nextClean() == ',') {
-					x.back();
-					this.rawList.add(JSONNull.NULL);
-				} else {
-					x.back();
-					this.rawList.add(x.nextValue());
-				}
-				switch (x.nextClean()) {
-					case ',':
-						if (x.nextClean() == ']') {
-							return;
-						}
-						x.back();
-						break;
-					case ']':
-						return;
-					default:
-						throw x.syntaxError("Expected a ',' or ']'");
-				}
-			}
-		}
+		JSONParser.of(x).parseTo(this);
 	}
 	// ------------------------------------------------------------------------------------------------- Private method end
 }
