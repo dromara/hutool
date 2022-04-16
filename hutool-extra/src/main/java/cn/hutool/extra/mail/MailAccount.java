@@ -1,6 +1,5 @@
 package cn.hutool.extra.mail;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -579,7 +578,6 @@ public class MailAccount implements Serializable {
 
 		// SSL
 		if (null != this.sslEnable && this.sslEnable) {
-			Console.log("{} {}", SOCKET_FACTORY, socketFactoryClass);
 			p.put(SSL_ENABLE, "true");
 			p.put(SOCKET_FACTORY, socketFactoryClass);
 			p.put(SOCKET_FACTORY_FALLBACK, String.valueOf(this.socketFactoryFallback));
