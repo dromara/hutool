@@ -2,7 +2,6 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReferenceUtil;
 
@@ -40,7 +39,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	/**
 	 * 回收监听
 	 */
-	private VoidFunc1<Reference<? extends K>> purgeListener;
+	private BiConsumer<Reference<? extends K>, V> purgeListener;
 
 	// region 构造
 
@@ -62,7 +61,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	 *
 	 * @param purgeListener 监听函数
 	 */
-	public void setPurgeListener(VoidFunc1<Reference<? extends K>> purgeListener) {
+	public void setPurgeListener(BiConsumer<Reference<? extends K>, V> purgeListener) {
 		this.purgeListener = purgeListener;
 	}
 
@@ -225,10 +224,11 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	 */
 	private void purgeStaleKeys() {
 		Reference<? extends K> reference;
+		V value;
 		while ((reference = this.lastQueue.poll()) != null) {
-			this.raw.remove(reference);
+			value = this.raw.remove(reference);
 			if (null != purgeListener) {
-				purgeListener.callWithRuntimeException(reference);
+				purgeListener.accept(reference, value);
 			}
 		}
 	}
