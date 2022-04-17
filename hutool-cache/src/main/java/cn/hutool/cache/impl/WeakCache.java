@@ -1,6 +1,6 @@
 package cn.hutool.cache.impl;
 
-import java.util.WeakHashMap;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 /**
  * 弱引用缓存<br>
@@ -22,6 +22,6 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 	 * @param timeout 超时时常，单位毫秒，-1或0表示无限制
 	 */
 	public WeakCache(long timeout) {
-		super(timeout, new WeakHashMap<>());
+		super(timeout, new WeakConcurrentMap<>());
 	}
 }

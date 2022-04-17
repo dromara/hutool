@@ -97,6 +97,7 @@
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<compilerArgument>-Xlint:unchecked</compilerArgument>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->
