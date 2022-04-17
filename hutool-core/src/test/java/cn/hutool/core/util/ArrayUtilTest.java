@@ -286,6 +286,19 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void distinctByFunctionTest() {
+		String[] array = {"aa", "Aa", "BB", "bb"};
+
+		// 覆盖模式下，保留最后加入的两个元素
+		String[] distinct = ArrayUtil.distinct(array, String::toLowerCase, true);
+		Assert.assertArrayEquals(new String[]{"Aa", "bb"}, distinct);
+
+		// 忽略模式下，保留最早加入的两个元素
+		distinct = ArrayUtil.distinct(array, String::toLowerCase, false);
+		Assert.assertArrayEquals(new String[]{"aa", "BB"}, distinct);
+	}
+
+	@Test
 	public void toStingTest() {
 		int[] a = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1, 3, 56, 6, 7]", ArrayUtil.toString(a));

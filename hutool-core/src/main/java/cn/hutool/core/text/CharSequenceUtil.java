@@ -3879,7 +3879,7 @@ public class CharSequenceUtil {
 	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends CharSequence> T firstNonNull(T... strs) {
+	public static <T extends CharSequence> T firstNonNull(T... strs) {
 		return ArrayUtil.firstNonNull(strs);
 	}
 
@@ -3893,7 +3893,7 @@ public class CharSequenceUtil {
 	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends CharSequence> T firstNonEmpty(T... strs) {
+	public static <T extends CharSequence> T firstNonEmpty(T... strs) {
 		return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
 	}
 
@@ -3907,7 +3907,7 @@ public class CharSequenceUtil {
 	 * @since 5.4.1
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends CharSequence> T firstNonBlank(T... strs) {
+	public static <T extends CharSequence> T firstNonBlank(T... strs) {
 		return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
 	}
 

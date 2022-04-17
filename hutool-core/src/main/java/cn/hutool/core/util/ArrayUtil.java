@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -1630,6 +1631,34 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		final Set<T> set = new LinkedHashSet<>(array.length, 1);
 		Collections.addAll(set, array);
+		return toArray(set, (Class<T>) getComponentType(array));
+	}
+
+	/**
+	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
+	 * 此方法通过{@link LinkedHashSet} 去重
+	 *
+	 * @param <T>      数组元素类型
+	 * @param <K>      唯一键类型
+	 * @param array    数组
+	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @return 去重后的数组
+	 * @since 5.8.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, K> T[] distinct(T[] array, Function<T, K> uniqueGenerator, boolean override) {
+		if (isEmpty(array)) {
+			return array;
+		}
+
+		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
+		if(override){
+			Collections.addAll(set, array);
+		} else{
+			for (T t : array) {
+				set.addIfAbsent(t);
+			}
+		}
 		return toArray(set, (Class<T>) getComponentType(array));
 	}
 
