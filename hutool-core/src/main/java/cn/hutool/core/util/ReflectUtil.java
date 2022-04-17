@@ -8,9 +8,9 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -36,15 +36,15 @@ public class ReflectUtil {
 	/**
 	 * 构造对象缓存
 	 */
-	private static final SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 字段缓存
 	 */
-	private static final SimpleCache<Class<?>, Field[]> FIELDS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 方法缓存
 	 */
-	private static final SimpleCache<Class<?>, Method[]> METHODS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- Constructor
 
@@ -86,7 +86,7 @@ public class ReflectUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, () -> getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, () -> getConstructorsDirectly(beanClass));
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class ReflectUtil {
 	 */
 	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return FIELDS_CACHE.get(beanClass, () -> getFieldsDirectly(beanClass, true));
+		return FIELDS_CACHE.computeIfAbsent(beanClass, () -> getFieldsDirectly(beanClass, true));
 	}
 
 
@@ -651,7 +651,7 @@ public class ReflectUtil {
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return METHODS_CACHE.get(beanClass,
+		return METHODS_CACHE.computeIfAbsent(beanClass,
 				() -> getMethodsDirectly(beanClass, true, true));
 	}
 

@@ -6,7 +6,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 单例类<br>
@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public final class Singleton {
 
-	private static final SimpleCache<String, Object> POOL = new SimpleCache<>(new HashMap<>());
+	private static final ConcurrentHashMap<String, Object> POOL = new ConcurrentHashMap<>();
 
 	private Singleton() {
 	}
@@ -50,7 +50,7 @@ public final class Singleton {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Func0<T> supplier) {
-		return (T) POOL.get(key, supplier::call);
+		return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
 	}
 
 	/**

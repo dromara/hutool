@@ -13,9 +13,12 @@
 * 【json   】     新增JSONParser
 * 【json   】     JSON新增在解析时的过滤方法（issue#I52O85@Gitee）
 * 【core   】     添加ArrayUtil.distinct、CollUtil.distinct重载（issue#2256@Github）
+* 【core   】     添加TransMap、FuncMap、ReferenceConcurrentMap、WeakConcurrentMap
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）
+* 【core   】     修复SimpleCache线程安全问题
+* 【core   】     修复ClassLoaderUtil中可能的关联ClassLoader错位问题
 
 -------------------------------------------------------------------------------------------------------------
 

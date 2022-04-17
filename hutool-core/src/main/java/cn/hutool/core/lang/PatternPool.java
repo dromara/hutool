@@ -1,5 +1,7 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.map.WeakConcurrentMap;
+
 import java.util.regex.Pattern;
 
 /**
@@ -174,7 +176,7 @@ public class PatternPool {
 	/**
 	 * Pattern池
 	 */
-	private static final SimpleCache<RegexWithFlag, Pattern> POOL = new SimpleCache<>();
+	private static final WeakConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakConcurrentMap<>();
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
@@ -195,7 +197,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(String regex, int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-		return POOL.get(regexWithFlag, ()-> Pattern.compile(regex, flags));
+		return POOL.computeIfAbsent(regexWithFlag, (key)-> Pattern.compile(regex, flags));
 	}
 
 	/**

@@ -38,10 +38,11 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	 * @return 驼峰Key
 	 */
 	@Override
-	protected Object customKey(Object key) {
+	protected K customKey(Object key) {
 		if (null != this.keyFunc) {
 			return keyFunc.apply(key);
 		}
-		return key;
+		//noinspection unchecked
+		return (K)key;
 	}
 }
