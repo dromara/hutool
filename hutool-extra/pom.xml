@@ -249,7 +249,7 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.8.2</version>
+			<version>portable-1.8.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -411,7 +411,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.3.0</version>
+			<version>5.3.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -446,7 +446,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.18</version>
+			<version>5.3.19</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
