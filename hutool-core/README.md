@@ -18,7 +18,7 @@
 
 ### 注解(annotation)
 
-提供了注解工具类，以及一些注解封装。如CombinationAnnotationElement组合注解以及Alias别名注解等。
+提供了注解工具类，以及一些注解封装。如`CombinationAnnotationElement`组合注解以及Alias别名注解等。
 
 ### bean(bean)
 
@@ -30,7 +30,7 @@
 
 ### 克隆(clone)
 
-提供Cloneable接口，明确clonse方法，并提供默认实现类。
+提供`Cloneable`接口，明确`clone`方法，并提供默认实现类。
 
 ### 编码(codec)
 
