@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutablePair;
@@ -13,6 +14,8 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import cn.hutool.json.serialize.JSONSerializer;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,6 +27,8 @@ import java.util.ResourceBundle;
  *     <li>Map 转 JSONObject，将键值对加入JSON对象</li>
  *     <li>Map.Entry 转 JSONObject</li>
  *     <li>CharSequence 转 JSONObject，使用JSONTokener解析</li>
+ *     <li>{@link Reader} 转 JSONObject，使用JSONTokener解析</li>
+ *     <li>{@link InputStream} 转 JSONObject，使用JSONTokener解析</li>
  *     <li>JSONTokener 转 JSONObject，直接解析</li>
  *     <li>ResourceBundle 转 JSONObject</li>
  *     <li>Bean 转 JSONObject，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
@@ -75,7 +80,7 @@ public class ObjectMapper {
 			return;
 		}
 
-		if (ArrayUtil.isArray(source) || source instanceof JSONArray) {
+		if (source instanceof JSONArray) {
 			// 不支持集合类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
@@ -91,6 +96,12 @@ public class ObjectMapper {
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject, filter);
+		} else if (source instanceof Reader) {
+			mapFromTokener(new JSONTokener((Reader) source, jsonObject.getConfig()), jsonObject, filter);
+		} else if (source instanceof InputStream) {
+			mapFromTokener(new JSONTokener((InputStream) source, jsonObject.getConfig()), jsonObject, filter);
+		} else if (source instanceof byte[]) {
+			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonObject.getConfig()), jsonObject, filter);
 		} else if (source instanceof JSONTokener) {
 			// JSONTokener
 			mapFromTokener((JSONTokener) source, jsonObject, filter);
@@ -111,7 +122,7 @@ public class ObjectMapper {
 	 * 初始化
 	 *
 	 * @param jsonArray 目标{@link JSONArray}
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
 	 * @throws JSONException 非数组或集合
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -128,6 +139,12 @@ public class ObjectMapper {
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray, filter);
+		}else if (source instanceof Reader) {
+			mapFromTokener(new JSONTokener((Reader) source, jsonArray.getConfig()), jsonArray, filter);
+		} else if (source instanceof InputStream) {
+			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
+		} else if (source instanceof byte[]) {
+			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {

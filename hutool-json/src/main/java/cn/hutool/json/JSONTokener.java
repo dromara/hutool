@@ -1,11 +1,11 @@
 package cn.hutool.json;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -67,13 +67,13 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 从InputStream中构建
+	 * 从InputStream中构建，使用UTF-8编码
 	 *
 	 * @param inputStream InputStream
 	 * @param config      JSON配置
 	 */
 	public JSONTokener(InputStream inputStream, JSONConfig config) throws JSONException {
-		this(new InputStreamReader(inputStream), config);
+		this(IoUtil.getUtf8Reader(inputStream), config);
 	}
 
 	/**
