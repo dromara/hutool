@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.0.M4 (2022-04-17)
+# 5.8.0.M4 (2022-04-18)
 
 ### ❌不兼容特性
 * 【json   】     【可能兼容问题】JSONArray删除部分构造
@@ -14,6 +14,7 @@
 * 【json   】     JSON新增在解析时的过滤方法（issue#I52O85@Gitee）
 * 【core   】     添加ArrayUtil.distinct、CollUtil.distinct重载（issue#2256@Github）
 * 【core   】     添加TransMap、FuncMap、ReferenceConcurrentMap、WeakConcurrentMap
+* 【json   】     添加ObjectMapper
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）

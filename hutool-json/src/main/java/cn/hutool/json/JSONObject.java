@@ -1,9 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -12,10 +10,6 @@ import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.serialize.GlobalSerializeMapping;
-import cn.hutool.json.serialize.JSONObjectSerializer;
-import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -24,9 +18,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * JSON对象<br>
@@ -216,7 +208,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	public JSONObject(Object source, JSONConfig config, Filter<MutablePair<String, Object>> filter) {
 		this(DEFAULT_CAPACITY, config);
-		init(source, filter);
+		ObjectMapper.of(source).map(this, filter);
 	}
 
 	/**
@@ -230,26 +222,26 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
 	 * 若names列表为空，则字段全部加入
 	 *
-	 * @param obj   包含需要字段的Bean对象或者Map对象
-	 * @param names 需要构建JSONObject的字段名列表
+	 * @param source 包含需要字段的Bean对象或者Map对象
+	 * @param names  需要构建JSONObject的字段名列表
 	 */
-	public JSONObject(Object obj, String... names) {
+	public JSONObject(Object source, String... names) {
 		this();
 		if (ArrayUtil.isEmpty(names)) {
-			init(obj, null);
+			ObjectMapper.of(source).map(this, null);
 			return;
 		}
 
-		if (obj instanceof Map) {
+		if (source instanceof Map) {
 			Object value;
 			for (String name : names) {
-				value = ((Map<?, ?>) obj).get(name);
+				value = ((Map<?, ?>) source).get(name);
 				this.putOnce(name, value);
 			}
 		} else {
 			for (String name : names) {
 				try {
-					this.putOpt(name, ReflectUtil.getFieldValue(obj, name));
+					this.putOpt(name, ReflectUtil.getFieldValue(source, name));
 				} catch (Exception ignore) {
 					// ignore
 				}
@@ -598,115 +590,4 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		clone.config = this.config;
 		return clone;
 	}
-
-	// ------------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * Bean对象转Map
-	 *
-	 * @param bean Bean对象
-	 */
-	private void populateMap(Object bean) {
-		BeanUtil.beanToMap(bean, this, InternalJSONUtil.toCopyOptions(config));
-	}
-
-	/**
-	 * 初始化
-	 * <ol>
-	 * <li>value为Map，将键值对加入JSON对象</li>
-	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
-	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
-	 * </ol>
-	 *
-	 * @param source JavaBean或者Map对象或者String
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void init(Object source, Filter<MutablePair<String, Object>> filter) {
-		if (null == source) {
-			return;
-		}
-
-		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if (serializer instanceof JSONObjectSerializer) {
-			serializer.serialize(this, source);
-			return;
-		}
-
-		if (ArrayUtil.isArray(source) || source instanceof JSONArray) {
-			// 不支持集合类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
-		}
-
-		if (source instanceof Map) {
-			// Map
-			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				this.set(Convert.toStr(e.getKey()), e.getValue(), filter, false);
-			}
-		} else if (source instanceof Map.Entry) {
-			final Map.Entry entry = (Map.Entry) source;
-			this.set(Convert.toStr(entry.getKey()), entry.getValue(), filter, false);
-		} else if (source instanceof CharSequence) {
-			// 可能为JSON字符串
-			initFromStr((CharSequence) source, filter);
-		} else if (source instanceof JSONTokener) {
-			// JSONTokener
-			initFromTokener((JSONTokener) source, filter);
-		} else if (source instanceof ResourceBundle) {
-			// JSONTokener
-			initFromResourceBundle((ResourceBundle) source, filter);
-		} else if (BeanUtil.isReadableBean(source.getClass())) {
-			// 普通Bean，过滤器无效
-			this.populateMap(source);
-		} else {
-			// 不支持对象类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param bundle ResourceBundle
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
-	 * @since 5.3.1
-	 */
-	private void initFromResourceBundle(ResourceBundle bundle, Filter<MutablePair<String, Object>> filter) {
-		Enumeration<String> keys = bundle.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			if (key != null) {
-				InternalJSONUtil.propertyPut(this, key, bundle.getString(key), filter);
-			}
-		}
-	}
-
-	/**
-	 * 初始化，可以判断字符串为JSON或者XML
-	 *
-	 * @param source JSON字符串
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
-	 */
-	private void initFromStr(CharSequence source, Filter<MutablePair<String, Object>> filter) {
-		final String jsonStr = StrUtil.trim(source);
-		if (StrUtil.startWith(jsonStr, '<')) {
-			// 可能为XML
-			XML.toJSONObject(this, jsonStr, false);
-			return;
-		}
-		initFromTokener(new JSONTokener(StrUtil.trim(source), this.config), filter);
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param x      JSONTokener
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
-	 */
-	private void initFromTokener(JSONTokener x, Filter<MutablePair<String, Object>> filter) {
-		JSONParser.of(x).parseTo(this, filter);
-	}
-	// ------------------------------------------------------------------------------------------------- Private method end
 }

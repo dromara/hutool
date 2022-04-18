@@ -1,19 +1,13 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
-import cn.hutool.json.serialize.GlobalSerializeMapping;
-import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -171,7 +165,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(Object object, JSONConfig jsonConfig, Filter<Mutable<Object>> filter) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
-		init(object, filter);
+		ObjectMapper.of(object).map(this, filter);
 	}
 	// endregion
 
@@ -588,7 +582,6 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		clone.rawList = ObjectUtil.clone(this.rawList);
 		return clone;
 	}
-	// ------------------------------------------------------------------------------------------------- Private method start
 
 	/**
 	 * 原始添加，添加的对象不做任何处理
@@ -612,71 +605,4 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		}
 		return this.rawList.add(obj);
 	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param source 数组或集合或JSON数组字符串
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
-	 * @throws JSONException 非数组或集合
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void init(Object source, Filter<Mutable<Object>> filter) throws JSONException {
-		if (null == source) {
-			return;
-		}
-
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if (null != serializer && JSONArray.class.equals(TypeUtil.getTypeArgument(serializer.getClass()))) {
-			// 自定义序列化
-			serializer.serialize(this, source);
-		} else if (source instanceof CharSequence) {
-			// JSON字符串
-			initFromStr((CharSequence) source, filter);
-		} else if (source instanceof JSONTokener) {
-			initFromTokener((JSONTokener) source, filter);
-		} else {
-			Iterator<?> iter;
-			if (ArrayUtil.isArray(source)) {// 数组
-				iter = new ArrayIter<>(source);
-			} else if (source instanceof Iterator<?>) {// Iterator
-				iter = ((Iterator<?>) source);
-			} else if (source instanceof Iterable<?>) {// Iterable
-				iter = ((Iterable<?>) source).iterator();
-			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
-			}
-
-			Object next;
-			while (iter.hasNext()) {
-				next = iter.next();
-				// 检查循环引用
-				if (next != source) {
-					this.addRaw(JSONUtil.wrap(next, this.config), filter);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param source JSON字符串
-	 */
-	private void initFromStr(CharSequence source, Filter<Mutable<Object>> filter) {
-		if (null != source) {
-			initFromTokener(new JSONTokener(StrUtil.trim(source), this.config), filter);
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param x      {@link JSONTokener}
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
-	 */
-	private void initFromTokener(JSONTokener x, Filter<Mutable<Object>> filter) {
-		JSONParser.of(x).parseTo(this, filter);
-	}
-	// ------------------------------------------------------------------------------------------------- Private method end
 }
