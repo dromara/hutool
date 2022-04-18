@@ -7,6 +7,7 @@
 
 ### ❌不兼容特性
 * 【json   】     【可能兼容问题】JSONArray删除部分构造
+* 【json   】     【可能兼容问题】JSONTokener使用InputStream作为源时，由系统编码变更为UTF-8
 
 ### 🐣新特性
 * 【core   】     BeanUtil增加toBean重载（pr#598@Gitee）
