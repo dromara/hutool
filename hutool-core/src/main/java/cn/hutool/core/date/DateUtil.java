@@ -1813,7 +1813,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * HH:mm:ss 时间格式字符串转为秒数<br>
-	 * 参考：https://github.com/iceroot
+	 * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
 	 *
 	 * @param timeStr 字符串时分秒(HH:mm:ss)格式
 	 * @return 时分秒转换后的秒数
@@ -1836,7 +1836,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 秒数转为时间格式(HH:mm:ss)<br>
-	 * 参考：https://github.com/iceroot
+	 * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
 	 *
 	 * @param seconds 需要转换的秒数
 	 * @return 转换后的字符串
