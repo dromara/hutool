@@ -1,5 +1,6 @@
 package cn.hutool.extra.servlet;
 
+import cn.hutool.core.util.StrUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -11,8 +12,8 @@ import java.nio.charset.StandardCharsets;
  * ServletUtil工具类测试
  *
  * @author dazer
- * @date 2021/3/24 15:02
  * @see ServletUtil
+ * @see JakartaServletUtil
  */
 public class ServletUtilTest {
 
@@ -20,7 +21,7 @@ public class ServletUtilTest {
 	@Ignore
 	public void writeTest() {
 		HttpServletResponse response = null;
-		byte[] bytes = "地球是我们共同的家园，需要大家珍惜.".getBytes(StandardCharsets.UTF_8);
+		byte[] bytes = StrUtil.utf8Bytes("地球是我们共同的家园，需要大家珍惜.");
 
 		//下载文件
 		// 这里没法直接测试，直接写到这里，方便调用；
@@ -30,6 +31,23 @@ public class ServletUtilTest {
 			String contentType = "application/pdf";// application/octet-stream、image/jpeg、image/gif
 			response.setCharacterEncoding(StandardCharsets.UTF_8.name()); // 必须设置否则乱码; 但是 safari乱码
 			ServletUtil.write(response, new ByteArrayInputStream(bytes), contentType, fileName);
+		}
+	}
+
+	@Test
+	@Ignore
+	public void jakartaWriteTest() {
+		jakarta.servlet.http.HttpServletResponse response = null;
+		byte[] bytes = StrUtil.utf8Bytes("地球是我们共同的家园，需要大家珍惜.");
+
+		//下载文件
+		// 这里没法直接测试，直接写到这里，方便调用；
+		//noinspection ConstantConditions
+		if (response != null) {
+			String fileName = "签名文件.pdf";
+			String contentType = "application/pdf";// application/octet-stream、image/jpeg、image/gif
+			response.setCharacterEncoding(StandardCharsets.UTF_8.name()); // 必须设置否则乱码; 但是 safari乱码
+			JakartaServletUtil.write(response, new ByteArrayInputStream(bytes), contentType, fileName);
 		}
 	}
 }

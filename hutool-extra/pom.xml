@@ -53,6 +53,13 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- 模板引擎 -->
 		<dependency>
@@ -398,7 +405,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.9</version>
+			<version>1.2.11</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>

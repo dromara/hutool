@@ -3,13 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.0.M4 (2022-04-21)
+# 5.8.0.M4 (2022-04-23)
 
 ### ❌不兼容特性
 * 【json   】     【可能兼容问题】JSONArray删除部分构造
 * 【json   】     【可能兼容问题】JSONTokener使用InputStream作为源时，由系统编码变更为UTF-8
 
-### 🐣新特性21
+### 🐣新特性
 * 【core   】     BeanUtil增加toBean重载（pr#598@Gitee）
 * 【json   】     新增JSONParser
 * 【json   】     JSON新增在解析时的过滤方法（issue#I52O85@Gitee）
@@ -17,6 +17,7 @@
 * 【core   】     添加TransMap、FuncMap、ReferenceConcurrentMap、WeakConcurrentMap
 * 【json   】     添加ObjectMapper
 * 【core   】     CHINESE_NAME正则条件放宽（pr#599@Gitee）
+* 【extra  】     增加JakartaServletUtil（issue#2271@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）
