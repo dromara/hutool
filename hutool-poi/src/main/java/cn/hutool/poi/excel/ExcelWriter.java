@@ -8,6 +8,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.util.CharsetUtil;
@@ -1049,7 +1050,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		final Table<?, ?, ?> aliasTable = aliasTable(rowMap);
 		if (isWriteKeyAsHead) {
 			// 写出标题行，并记录标题别名和列号的关系
-			writeHeadRow(aliasTable.columnKeySet());
+			writeHeadRow(aliasTable.columnKeys());
 			// 记录原数据key对应列号
 			int i = 0;
 			for (Object key : aliasTable.rowKeySet()) {
@@ -1341,7 +1342,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return 别名列表
 	 */
 	private Table<?, ?, ?> aliasTable(Map<?, ?> rowMap) {
-		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), LinkedHashMap::new);
+		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
 		if (MapUtil.isEmpty(this.headerAlias)) {
 			rowMap.forEach((key, value)-> filteredTable.put(key, key, value));
 		}else{
