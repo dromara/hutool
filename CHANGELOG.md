@@ -20,6 +20,7 @@
 * 【extra  】     增加JakartaServletUtil（issue#2271@Github）
 * 【poi    】     ExcelWriter支持重复别名的数据写出（issue#I53APY@Gitee）
 * 【core   】     增加Hashids（issue#I53APY@Gitee）
+* 【core   】     ReflectUtil.newInstanceIfPossible添加枚举、数组等类型的默认实现
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）

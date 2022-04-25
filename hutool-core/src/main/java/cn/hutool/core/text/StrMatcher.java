@@ -35,6 +35,7 @@ public class StrMatcher {
 
 	/**
 	 * 匹配并提取匹配到的内容
+	 *
 	 * @param text 被匹配的文本
 	 * @return 匹配的map，key为变量名，value为匹配到的值
 	 */
@@ -49,7 +50,7 @@ public class StrMatcher {
 				key = StrUtil.sub(part, 2, part.length() - 1);
 			} else {
 				to = text.indexOf(part, from);
-				if(to < 0){
+				if (to < 0) {
 					//普通字符串未匹配到，说明整个模式不能匹配，返回空
 					return MapUtil.empty();
 				}
@@ -73,6 +74,7 @@ public class StrMatcher {
 
 	/**
 	 * 解析表达式
+	 *
 	 * @param pattern 表达式，使用${XXXX}作为变量占位符
 	 * @return 表达式
 	 */
