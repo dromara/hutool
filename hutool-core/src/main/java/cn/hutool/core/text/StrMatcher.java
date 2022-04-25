@@ -82,7 +82,7 @@ public class StrMatcher {
 		char c = 0;
 		char pre;
 		boolean inVar = false;
-		StrBuilder part = StrUtil.strBuilder();
+		StringBuilder part = StrUtil.builder();
 		for (int i = 0; i < length; i++) {
 			pre = c;
 			c = pattern.charAt(i);
@@ -92,16 +92,17 @@ public class StrMatcher {
 					// 变量结束
 					inVar = false;
 					patterns.add(part.toString());
-					part.clear();
+					part.setLength(0);
 				}
 			} else if ('{' == c && '$' == pre) {
 				// 变量开始
 				inVar = true;
-				final String preText = part.subString(0, part.length() - 1);
+				final String preText = part.substring(0, part.length() - 1);
 				if (StrUtil.isNotEmpty(preText)) {
 					patterns.add(preText);
 				}
-				part.reset().append(pre).append(c);
+				part.setLength(0);
+				part.append(pre).append(c);
 			} else {
 				// 普通字符
 				part.append(c);
