@@ -5,7 +5,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 文件类型判断单元测试
@@ -60,6 +62,17 @@ public class FileTypeUtilTest {
 		File file = FileUtil.file("e:/laboratory/test.xlsx");
 		String type = FileTypeUtil.getType(file);
 		Assert.assertEquals("xlsx", type);
+	}
+
+	@Test
+	@Ignore
+	public void getTypeFromInputStream() throws IOException {
+		File file = FileUtil.file("d:/test/pic.jpg");
+		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
+		inputStream.mark(0);
+		String type = FileTypeUtil.getType(inputStream);
+
+		inputStream.reset();
 	}
 
 }
