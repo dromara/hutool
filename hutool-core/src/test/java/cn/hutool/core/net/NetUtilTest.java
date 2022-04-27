@@ -1,8 +1,8 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.regex.ReUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

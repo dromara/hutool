@@ -2,10 +2,11 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.IdcardUtil;
 

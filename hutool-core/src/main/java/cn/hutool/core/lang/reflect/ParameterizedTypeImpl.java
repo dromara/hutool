@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.reflect;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

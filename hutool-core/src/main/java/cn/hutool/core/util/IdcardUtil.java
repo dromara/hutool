@@ -4,8 +4,9 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.regex.ReUtil;
 
 import java.io.Serializable;
 import java.util.Date;

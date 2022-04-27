@@ -1,7 +1,7 @@
 package cn.hutool.db.meta;
 
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.db.DbRuntimeException;
 
 import java.io.Serializable;

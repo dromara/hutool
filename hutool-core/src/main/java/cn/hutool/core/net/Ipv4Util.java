@@ -3,7 +3,7 @@ package cn.hutool.core.net;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 

@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.regex;
 
 import cn.hutool.core.map.WeakConcurrentMap;
 

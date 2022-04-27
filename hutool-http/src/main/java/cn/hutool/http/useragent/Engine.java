@@ -1,7 +1,7 @@
 package cn.hutool.http.useragent;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 
 import java.util.List;
 import java.util.regex.Pattern;

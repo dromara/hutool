@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.id.IdUtil;
+import cn.hutool.core.regex.PatternPool;
 import org.junit.Assert;
 import org.junit.Test;
 

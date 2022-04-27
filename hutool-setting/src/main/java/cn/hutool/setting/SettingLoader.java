@@ -6,7 +6,7 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.SystemPropsUtil;
 import cn.hutool.log.Log;

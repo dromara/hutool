@@ -1,7 +1,8 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.regex.ReUtil;
 
 
 /**

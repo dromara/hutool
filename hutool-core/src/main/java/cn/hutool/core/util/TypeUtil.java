@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.ParameterizedTypeImpl;
+import cn.hutool.core.lang.reflect.ParameterizedTypeImpl;
 import cn.hutool.core.lang.reflect.ActualTypeMapperPool;
 
 import java.lang.reflect.Field;

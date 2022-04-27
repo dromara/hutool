@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.regex.ReUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

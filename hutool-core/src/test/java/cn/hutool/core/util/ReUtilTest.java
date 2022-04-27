@@ -2,7 +2,8 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.regex.ReUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

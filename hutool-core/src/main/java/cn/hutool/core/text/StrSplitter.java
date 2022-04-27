@@ -1,6 +1,6 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.CharMatcherFinder;
 import cn.hutool.core.text.finder.LengthFinder;

@@ -1,6 +1,6 @@
 package cn.hutool.http.useragent;
 
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;

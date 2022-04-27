@@ -7,10 +7,10 @@ import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.text.DateFormat;

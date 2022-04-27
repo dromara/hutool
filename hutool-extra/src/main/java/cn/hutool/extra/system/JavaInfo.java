@@ -1,7 +1,7 @@
 package cn.hutool.extra.system;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 
 import java.io.Serializable;
 

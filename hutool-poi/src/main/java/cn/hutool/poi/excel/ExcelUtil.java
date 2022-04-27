@@ -4,7 +4,7 @@ import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.PoiChecker;
 import cn.hutool.poi.excel.cell.CellLocation;

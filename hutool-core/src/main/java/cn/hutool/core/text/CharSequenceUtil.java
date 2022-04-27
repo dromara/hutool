@@ -15,7 +15,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.nio.ByteBuffer;

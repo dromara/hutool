@@ -1,7 +1,7 @@
 package cn.hutool.core.io.file;
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.File;

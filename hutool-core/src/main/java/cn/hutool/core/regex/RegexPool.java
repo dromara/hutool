@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.regex;
 
 /**
  * 常用正则表达式字符串池
@@ -21,7 +21,7 @@ public interface RegexPool {
 	String WORD = "[a-zA-Z]+";
 	/**
 	 * 单个中文汉字<br>
-	 * 参照维基百科汉字Unicode范围(https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97 页面右侧)
+	 * 参照维基百科汉字Unicode范围(<a href="https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97">https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97</a> 页面右侧)
 	 */
 	String CHINESE = "[\u2E80-\u2EFF\u2F00-\u2FDF\u31C0-\u31EF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uD840\uDC00-\uD869\uDEDF\uD869\uDF00-\uD86D\uDF3F\uD86D\uDF40-\uD86E\uDC1F\uD86E\uDC20-\uD873\uDEAF\uD87E\uDC00-\uD87E\uDE1F]";
 	/**
@@ -47,8 +47,8 @@ public interface RegexPool {
 	 */
 	String MONEY = "^(\\d+(?:\\.\\d+)?)$";
 	/**
-	 * 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/
-	 * What is the maximum length of a valid email address? https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
+	 * 邮件，符合RFC 5322规范，正则来自：<a href="http://emailregex.com/">http://emailregex.com/</a>
+	 * What is the maximum length of a valid email address? <a href="https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754">https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754</a>
 	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@ hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
 	 */
 	String EMAIL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
@@ -103,7 +103,7 @@ public interface RegexPool {
 	String BIRTHDAY = "^(\\d{2,4})([/\\-.年]?)(\\d{1,2})([/\\-.月]?)(\\d{1,2})日?$";
 	/**
 	 * URI<br>
-	 * 定义见：https://www.ietf.org/rfc/rfc3986.html#appendix-B
+	 * 定义见：<a href="https://www.ietf.org/rfc/rfc3986.html#appendix-B">https://www.ietf.org/rfc/rfc3986.html#appendix-B</a>
 	 */
 	String URI = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?";
 	/**
@@ -111,7 +111,7 @@ public interface RegexPool {
 	 */
 	String URL = "[a-zA-Z]+://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";
 	/**
-	 * Http URL（来自：http://urlregex.com/）<br>
+	 * Http URL（来自：<a href="http://urlregex.com/">http://urlregex.com/</a>）<br>
 	 * 此正则同时支持FTP、File等协议的URL
 	 */
 	String URL_HTTP = "(https?|ftp|file)://[\\w-+&@#/%?=~_|!:,.;]*[\\w-+&@#/%=~_|]";

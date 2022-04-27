@@ -11,7 +11,7 @@ import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;

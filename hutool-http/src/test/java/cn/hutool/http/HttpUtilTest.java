@@ -4,7 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.regex.ReUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
