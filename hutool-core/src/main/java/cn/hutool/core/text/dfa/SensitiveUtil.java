@@ -1,7 +1,6 @@
 package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -9,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 敏感词工具类
@@ -85,7 +85,7 @@ public final class SensitiveUtil {
 	 * @param charFilter 过滤函数
 	 * @since 5.4.4
 	 */
-	public static void setCharFilter(Filter<Character> charFilter) {
+	public static void setCharFilter(Predicate<Character> charFilter) {
 		if (charFilter != null) {
 			sensitiveTree.setCharFilter(charFilter);
 		}
