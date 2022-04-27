@@ -418,7 +418,7 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 判断ftp服务器文件是否存在
+	 * 判断ftp服务器目录内是否还有子元素（目录或文件）
 	 *
 	 * @param path 文件路径
 	 * @return 是否存在
