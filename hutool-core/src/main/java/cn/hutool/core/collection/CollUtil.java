@@ -592,21 +592,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将集合转换为字符串<br>
-	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
-	 *
-	 * @param <T>         集合元素类型
-	 * @param iterator    集合
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用IterUtil#join(Iterator, CharSequence)
-	 */
-	@Deprecated
-	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
-		return IterUtil.join(iterator, conjunction);
-	}
-
-	/**
 	 * 切取部分数据<br>
 	 * 切取后的栈将减少这些元素
 	 *
@@ -1137,25 +1122,6 @@ public class CollUtil {
 
 		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.toList(collection);
 		return sub(list, start, end, step);
-	}
-
-	/**
-	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
-	 * <p>
-	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
-	 * 此方法返回的是原List的视图，也就是说原List有变更，切分后的结果也会变更。
-	 * </p>
-	 *
-	 * @param <T>  集合元素类型
-	 * @param list 列表
-	 * @param size 每个段的长度
-	 * @return 分段列表
-	 * @since 5.4.5
-	 * @deprecated 请使用 {@link ListUtil#partition(List, int)}
-	 */
-	@Deprecated
-	public static <T> List<List<T>> splitList(List<T> list, int size) {
-		return ListUtil.partition(list, size);
 	}
 
 	/**
@@ -2310,34 +2276,6 @@ public class CollUtil {
 	 */
 	public static <T> T getLast(Collection<T> collection) {
 		return get(collection, -1);
-	}
-
-	/**
-	 * 获得{@link Iterable}对象的元素类型（通过第一个非空元素判断）
-	 *
-	 * @param iterable {@link Iterable}
-	 * @return 元素类型，当列表为空或元素全部为null时，返回null
-	 * @see IterUtil#getElementType(Iterable)
-	 * @since 3.0.8
-	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterable)}
-	 */
-	@Deprecated
-	public static Class<?> getElementType(Iterable<?> iterable) {
-		return IterUtil.getElementType(iterable);
-	}
-
-	/**
-	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）
-	 *
-	 * @param iterator {@link Iterator}
-	 * @return 元素类型，当列表为空或元素全部为null时，返回null
-	 * @see IterUtil#getElementType(Iterator)
-	 * @since 3.0.8
-	 * @deprecated 请使用 {@link IterUtil#getElementType(Iterator)}
-	 */
-	@Deprecated
-	public static Class<?> getElementType(Iterator<?> iterator) {
-		return IterUtil.getElementType(iterator);
 	}
 
 	/**

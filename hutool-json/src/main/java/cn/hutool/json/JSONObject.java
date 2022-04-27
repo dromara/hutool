@@ -65,32 +65,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	/**
 	 * 构造
 	 *
-	 * @param capacity 初始大小
-	 * @param isOrder  是否有序
-	 * @since 3.0.9
-	 */
-	public JSONObject(int capacity, boolean isOrder) {
-		this(capacity, false, isOrder);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param capacity     初始大小
-	 * @param isIgnoreCase 是否忽略KEY大小写
-	 * @param isOrder      是否有序
-	 * @since 3.3.1
-	 * @deprecated isOrder无效
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
-		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase));
-	}
-
-	/**
-	 * 构造
-	 *
 	 * @param config JSON配置项
 	 * @since 4.6.5
 	 */
@@ -329,21 +303,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Override
 	public void putByPath(String expression, Object value) {
 		BeanPath.create(expression).set(this, value);
-	}
-
-	/**
-	 * PUT 键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
-	 *
-	 * @param key   键
-	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException 值是无穷数字抛出此异常
-	 * @deprecated 此方法存在歧义，原Map接口返回的是之前的值，重写后返回this了，未来版本此方法会修改，请使用{@link #set(String, Object)}
-	 */
-	@Override
-	@Deprecated
-	public JSONObject put(String key, Object value) throws JSONException {
-		return set(key, value);
 	}
 
 	/**

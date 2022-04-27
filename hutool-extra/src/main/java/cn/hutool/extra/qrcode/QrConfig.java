@@ -126,19 +126,6 @@ public class QrConfig {
 	 *
 	 * @param foreColor 前景色
 	 * @return this
-	 * @deprecated 请使用 {@link #setForeColor(Color)}
-	 */
-	@Deprecated
-	public QrConfig setForeColor(int foreColor) {
-		this.foreColor = foreColor;
-		return this;
-	}
-
-	/**
-	 * 设置前景色，例如：Color.BLUE.getRGB()
-	 *
-	 * @param foreColor 前景色
-	 * @return this
 	 * @since 5.1.1
 	 */
 	public QrConfig setForeColor(Color foreColor) {
@@ -155,19 +142,6 @@ public class QrConfig {
 	 */
 	public int getBackColor() {
 		return backColor;
-	}
-
-	/**
-	 * 设置背景色，例如：Color.BLUE.getRGB()
-	 *
-	 * @param backColor 背景色
-	 * @return this
-	 * @deprecated 请使用 {@link #setBackColor(Color)}
-	 */
-	@Deprecated
-	public QrConfig setBackColor(int backColor) {
-		this.backColor = backColor;
-		return this;
 	}
 
 	/**

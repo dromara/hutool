@@ -262,26 +262,6 @@ public abstract class AbstractDb implements Serializable {
 	 * @param paramsBatch 批量的参数
 	 * @return 每个SQL执行影响的行数
 	 * @throws SQLException SQL执行异常
-	 * @deprecated 编译器无法区分重载
-	 */
-	@Deprecated
-	public int[] executeBatch(String sql, Object[]... paramsBatch) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
-		} finally {
-			this.closeConnection(conn);
-		}
-	}
-
-	/**
-	 * 批量执行非查询语句
-	 *
-	 * @param sql         SQL
-	 * @param paramsBatch 批量的参数
-	 * @return 每个SQL执行影响的行数
-	 * @throws SQLException SQL执行异常
 	 * @since 5.4.2
 	 */
 	public int[] executeBatch(String sql, Iterable<Object[]> paramsBatch) throws SQLException {

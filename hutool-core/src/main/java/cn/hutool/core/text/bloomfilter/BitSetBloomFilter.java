@@ -2,7 +2,6 @@ package cn.hutool.core.text.bloomfilter;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HashUtil;
 
 import java.io.BufferedReader;
@@ -36,19 +35,6 @@ public class BitSetBloomFilter implements BloomFilter {
 		this.bitSetSize = (int) Math.ceil(c * k);
 		this.addedElements = n;
 		this.bitSet = new BitSet(this.bitSetSize);
-	}
-
-	/**
-	 * 通过文件初始化过滤器.
-	 *
-	 * @param path        文件路径
-	 * @param charsetName 字符集
-	 * @throws IOException IO异常
-	 * @deprecated 请使用 {@link #init(String, Charset)}
-	 */
-	@Deprecated
-	public void init(String path, String charsetName) throws IOException {
-		init(path, CharsetUtil.charset(charsetName));
 	}
 
 	/**

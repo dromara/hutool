@@ -288,19 +288,6 @@ public class MetaUtil {
 	 *
 	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
 	 * @return catalog，获取失败返回{@code null}
-	 * @since 4.6.0
-	 * @deprecated 拼写错误，请使用{@link #getCatalog(Connection)}
-	 */
-	@Deprecated
-	public static String getCataLog(Connection conn) {
-		return getCatalog(conn);
-	}
-
-	/**
-	 * 获取catalog，获取失败返回{@code null}
-	 *
-	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
-	 * @return catalog，获取失败返回{@code null}
 	 * @since 5.7.23
 	 */
 	public static String getCatalog(Connection conn) {

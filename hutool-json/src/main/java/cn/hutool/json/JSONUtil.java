@@ -126,22 +126,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转JSONObject对象
-	 *
-	 * @param obj             Bean对象或者Map
-	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @param isOrder         是否有序
-	 * @return JSONObject
-	 * @since 4.2.2
-	 * @deprecated isOrder参数不再有效
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	public static JSONObject parseObj(Object obj, boolean ignoreNullValue, boolean isOrder) {
-		return new JSONObject(obj, ignoreNullValue);
-	}
-
-	/**
 	 * JSON字符串转JSONArray
 	 *
 	 * @param jsonStr JSON字符串
@@ -827,19 +811,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 是否为JSON字符串，首尾都为大括号或中括号判定为JSON字符串
-	 *
-	 * @param str 字符串
-	 * @return 是否为JSON字符串
-	 * @since 3.3.0
-	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSON(String)}
-	 */
-	@Deprecated
-	public static boolean isJson(String str) {
-		return isTypeJSON(str);
-	}
-
-	/**
 	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
 	 *
 	 * @param str 字符串
@@ -848,19 +819,6 @@ public class JSONUtil {
 	 */
 	public static boolean isTypeJSON(String str) {
 		return isTypeJSONObject(str) || isTypeJSONArray(str);
-	}
-
-	/**
-	 * 是否为JSONObject字符串，首尾都为大括号判定为JSONObject字符串
-	 *
-	 * @param str 字符串
-	 * @return 是否为JSON字符串
-	 * @since 3.3.0
-	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONObject(String)}
-	 */
-	@Deprecated
-	public static boolean isJsonObj(String str) {
-		return isTypeJSONObject(str);
 	}
 
 	/**
@@ -875,19 +833,6 @@ public class JSONUtil {
 			return false;
 		}
 		return StrUtil.isWrap(StrUtil.trim(str), '{', '}');
-	}
-
-	/**
-	 * 是否为JSONArray字符串，首尾都为中括号判定为JSONArray字符串
-	 *
-	 * @param str 字符串
-	 * @return 是否为JSON字符串
-	 * @since 3.3.0
-	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONArray(String)}
-	 */
-	@Deprecated
-	public static boolean isJsonArray(String str) {
-		return isTypeJSONArray(str);
 	}
 
 	/**

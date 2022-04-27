@@ -122,24 +122,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 
 	/**
 	 * 将对象转为字符串
-	 *
-	 * <pre>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
-	 * 2、对象数组会调用Arrays.toString方法
-	 * </pre>
-	 *
-	 * @param obj         对象
-	 * @param charsetName 字符集
-	 * @return 字符串
-	 * @deprecated 请使用 {@link #str(Object, Charset)}
-	 */
-	@Deprecated
-	public static String str(Object obj, String charsetName) {
-		return str(obj, Charset.forName(charsetName));
-	}
-
-	/**
-	 * 将对象转为字符串
 	 * <pre>
 	 * 	 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
 	 * 	 2、对象数组会调用Arrays.toString方法

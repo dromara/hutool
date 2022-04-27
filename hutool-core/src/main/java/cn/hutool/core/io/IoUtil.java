@@ -202,19 +202,6 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 获得一个文件读取器
-	 *
-	 * @param in          输入流
-	 * @param charsetName 字符集名称
-	 * @return BufferedReader对象
-	 * @deprecated 请使用 {@link #getReader(InputStream, Charset)}
-	 */
-	@Deprecated
-	public static BufferedReader getReader(InputStream in, String charsetName) {
-		return getReader(in, Charset.forName(charsetName));
-	}
-
-	/**
 	 * 从{@link BOMInputStream}中获取Reader
 	 *
 	 * @param in {@link BOMInputStream}
@@ -222,7 +209,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.5.8
 	 */
 	public static BufferedReader getReader(BOMInputStream in) {
-		return getReader(in, in.getCharset());
+		return getReader(in, CharsetUtil.charset(in.getCharset()));
 	}
 
 	/**
@@ -301,19 +288,6 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 获得一个Writer
 	 *
-	 * @param out         输入流
-	 * @param charsetName 字符集
-	 * @return OutputStreamWriter对象
-	 * @deprecated 请使用 {@link #getWriter(OutputStream, Charset)}
-	 */
-	@Deprecated
-	public static OutputStreamWriter getWriter(OutputStream out, String charsetName) {
-		return getWriter(out, Charset.forName(charsetName));
-	}
-
-	/**
-	 * 获得一个Writer
-	 *
 	 * @param out     输入流
 	 * @param charset 字符集
 	 * @return OutputStreamWriter对象
@@ -343,21 +317,6 @@ public class IoUtil extends NioUtil {
 	 */
 	public static String readUtf8(InputStream in) throws IORuntimeException {
 		return read(in, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 从流中读取内容，读取完成后关闭流
-	 *
-	 * @param in          输入流
-	 * @param charsetName 字符集
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 * @deprecated 请使用 {@link #read(InputStream, Charset)}
-	 */
-	@Deprecated
-	public static String read(InputStream in, String charsetName) throws IORuntimeException {
-		final FastByteArrayOutputStream out = read(in);
-		return StrUtil.isBlank(charsetName) ? out.toString() : out.toString(charsetName);
 	}
 
 	/**
@@ -641,22 +600,6 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 从流中读取内容
 	 *
-	 * @param <T>         集合类型
-	 * @param in          输入流
-	 * @param charsetName 字符集
-	 * @param collection  返回集合
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 * @deprecated 请使用 {@link #readLines(InputStream, Charset, Collection)}
-	 */
-	@Deprecated
-	public static <T extends Collection<String>> T readLines(InputStream in, String charsetName, T collection) throws IORuntimeException {
-		return readLines(in, CharsetUtil.charset(charsetName), collection);
-	}
-
-	/**
-	 * 从流中读取内容
-	 *
 	 * @param <T>        集合类型
 	 * @param in         输入流
 	 * @param charset    字符集
@@ -726,19 +669,6 @@ public class IoUtil extends NioUtil {
 	}
 
 	// -------------------------------------------------------------------------------------- read end
-
-	/**
-	 * String 转为流
-	 *
-	 * @param content     内容
-	 * @param charsetName 编码
-	 * @return 字节流
-	 * @deprecated 请使用 {@link #toStream(String, Charset)}
-	 */
-	@Deprecated
-	public static ByteArrayInputStream toStream(String content, String charsetName) {
-		return toStream(content, CharsetUtil.charset(charsetName));
-	}
 
 	/**
 	 * String 转为流
@@ -1006,21 +936,6 @@ public class IoUtil extends NioUtil {
 	 */
 	public static void writeUtf8(OutputStream out, boolean isCloseOut, Object... contents) throws IORuntimeException {
 		write(out, CharsetUtil.CHARSET_UTF_8, isCloseOut, contents);
-	}
-
-	/**
-	 * 将多部分内容写到流中，自动转换为字符串
-	 *
-	 * @param out         输出流
-	 * @param charsetName 写出的内容的字符集
-	 * @param isCloseOut  写入完毕是否关闭输出流
-	 * @param contents    写入的内容，调用toString()方法，不包括不会自动换行
-	 * @throws IORuntimeException IO异常
-	 * @deprecated 请使用 {@link #write(OutputStream, Charset, boolean, Object...)}
-	 */
-	@Deprecated
-	public static void write(OutputStream out, String charsetName, boolean isCloseOut, Object... contents) throws IORuntimeException {
-		write(out, CharsetUtil.charset(charsetName), isCloseOut, contents);
 	}
 
 	/**

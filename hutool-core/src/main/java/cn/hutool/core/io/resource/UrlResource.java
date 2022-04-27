@@ -53,15 +53,6 @@ public class UrlResource implements Resource, Serializable{
 		this.name = ObjectUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));
 	}
 
-	/**
-	 * 构造
-	 * @param file 文件路径
-	 * @deprecated Please use {@link FileResource}
-	 */
-	@Deprecated
-	public UrlResource(File file) {
-		this.url = URLUtil.getURL(file);
-	}
 	//-------------------------------------------------------------------------------------- Constructor end
 
 	@Override

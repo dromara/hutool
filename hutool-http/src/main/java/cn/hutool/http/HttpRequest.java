@@ -242,17 +242,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private int redirectCount;
 
 	/**
-	 * 构造，URL编码默认使用UTF-8
-	 *
-	 * @param url URL
-	 * @deprecated 请使用 {@link #of(String)}
-	 */
-	@Deprecated
-	public HttpRequest(String url) {
-		this(UrlBuilder.ofHttp(url));
-	}
-
-	/**
 	 * 构造
 	 *
 	 * @param url {@link UrlBuilder}

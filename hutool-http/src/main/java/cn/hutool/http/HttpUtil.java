@@ -438,20 +438,6 @@ public class HttpUtil {
 
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
-	 * 编码键和值对
-	 *
-	 * @param paramMap    表单数据
-	 * @param charsetName 编码
-	 * @return url参数
-	 * @deprecated 请使用 {@link #toParams(Map, Charset)}
-	 */
-	@Deprecated
-	public static String toParams(Map<String, Object> paramMap, String charsetName) {
-		return toParams(paramMap, CharsetUtil.charset(charsetName));
-	}
-
-	/**
-	 * 将Map形式的Form表单数据转换为Url参数形式<br>
 	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
 	 * 会自动url编码键和值<br>
 	 * 此方法用于拼接URL中的Query部分，并不适用于POST请求中的表单

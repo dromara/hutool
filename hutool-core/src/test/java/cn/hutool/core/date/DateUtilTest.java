@@ -870,16 +870,6 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void isExpiredTest() {
-		DateTime startDate = DateUtil.parse("2019-12-01 17:02:30");
-		DateTime endDate = DateUtil.parse("2019-12-02 17:02:30");
-		int length = 3;
-		//noinspection deprecation
-		boolean expired = DateUtil.isExpired(startDate, DateField.DAY_OF_YEAR, length, endDate);
-		Assert.assertTrue(expired);
-	}
-
-	@Test
 	public void localDateTimeTest() {
 		// 测试字符串与LocalDateTime的互相转换
 		String strDate = "2019-12-01 17:02:30";

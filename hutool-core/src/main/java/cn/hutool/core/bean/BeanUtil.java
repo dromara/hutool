@@ -362,52 +362,6 @@ public class BeanUtil {
 	 * @param <T>           Bean类型
 	 * @param map           {@link Map}
 	 * @param beanClass     Bean Class
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 * @deprecated 请使用 {@link #toBean(Object, Class)} 或 {@link #toBeanIgnoreError(Object, Class)}
-	 */
-	@Deprecated
-	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
-	}
-
-	/**
-	 * Map转换为Bean对象<br>
-	 * 忽略大小写
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           Map
-	 * @param beanClass     Bean Class
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 * @deprecated 请使用 {@link #toBeanIgnoreCase(Object, Class, boolean)}
-	 */
-	@Deprecated
-	public static <T> T mapToBeanIgnoreCase(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
-	}
-
-	/**
-	 * Map转换为Bean对象
-	 *
-	 * @param <T>         Bean类型
-	 * @param map         {@link Map}
-	 * @param beanClass   Bean Class
-	 * @param copyOptions 转Bean选项
-	 * @return Bean
-	 * @deprecated 请使用 {@link #toBean(Object, Class, CopyOptions)}
-	 */
-	@Deprecated
-	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, CopyOptions copyOptions) {
-		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), copyOptions);
-	}
-
-	/**
-	 * Map转换为Bean对象
-	 *
-	 * @param <T>           Bean类型
-	 * @param map           {@link Map}
-	 * @param beanClass     Bean Class
 	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
 	 * @param copyOptions   转Bean选项
 	 * @return Bean

@@ -6,7 +6,7 @@ import cn.hutool.log.level.Level;
 
 /**
  * 静态日志类，用于在不引入日志对象的情况下打印日志
- * 
+ *
  * @author Looly
  *
  */
@@ -21,7 +21,7 @@ public final class StaticLog {
 	/**
 	 * Trace等级日志，小于debug<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
@@ -31,7 +31,7 @@ public final class StaticLog {
 
 	/**
 	 * Trace等级日志，小于Debug
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -44,7 +44,7 @@ public final class StaticLog {
 	/**
 	 * Debug等级日志，小于Info<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
@@ -54,7 +54,7 @@ public final class StaticLog {
 
 	/**
 	 * Debug等级日志，小于Info
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -67,7 +67,7 @@ public final class StaticLog {
 	/**
 	 * Info等级日志，小于Warn<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
@@ -77,7 +77,7 @@ public final class StaticLog {
 
 	/**
 	 * Info等级日志，小于Warn
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -90,7 +90,7 @@ public final class StaticLog {
 	/**
 	 * Warn等级日志，小于Error<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
@@ -101,7 +101,7 @@ public final class StaticLog {
 	/**
 	 * Warn等级日志，小于Error<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -112,7 +112,7 @@ public final class StaticLog {
 
 	/**
 	 * Warn等级日志，小于Error
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -123,7 +123,7 @@ public final class StaticLog {
 
 	/**
 	 * Warn等级日志，小于Error
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
@@ -137,7 +137,7 @@ public final class StaticLog {
 	/**
 	 * Error等级日志<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param e 需在日志中堆栈打印的异常
 	 */
 	public static void error(Throwable e) {
@@ -147,7 +147,7 @@ public final class StaticLog {
 	/**
 	 * Error等级日志<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
@@ -158,7 +158,7 @@ public final class StaticLog {
 	/**
 	 * Error等级日志<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
+	 *
 	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -169,7 +169,7 @@ public final class StaticLog {
 
 	/**
 	 * Error等级日志<br>
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
 	 */
@@ -179,7 +179,7 @@ public final class StaticLog {
 
 	/**
 	 * Error等级日志<br>
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
@@ -190,7 +190,7 @@ public final class StaticLog {
 
 	/**
 	 * Error等级日志<br>
-	 * 
+	 *
 	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
@@ -203,7 +203,7 @@ public final class StaticLog {
 	// ------------------------ Log
 	/**
 	 * 打印日志<br>
-	 * 
+	 *
 	 * @param level 日志级别
 	 * @param t 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
@@ -214,37 +214,4 @@ public final class StaticLog {
 	}
 
 	// ----------------------------------------------------------- Log method end
-
-	/**
-	 * 获得Log
-	 * 
-	 * @param clazz 日志发出的类
-	 * @return Log
-	 * @deprecated 请使用 {@link Log#get(Class)}
-	 */
-	@Deprecated
-	public static Log get(Class<?> clazz) {
-		return LogFactory.get(clazz);
-	}
-
-	/**
-	 * 获得Log
-	 * 
-	 * @param name 自定义的日志发出者名称
-	 * @return Log
-	 * @deprecated 请使用 {@link Log#get(String)}
-	 */
-	@Deprecated
-	public static Log get(String name) {
-		return LogFactory.get(name);
-	}
-
-	/**
-	 * @return 获得日志，自动判定日志发出者
-	 * @deprecated 请使用 {@link Log#get()}
-	 */
-	@Deprecated
-	public static Log get() {
-		return LogFactory.get(CallerUtil.getCallerCaller());
-	}
 }

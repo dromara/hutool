@@ -54,30 +54,6 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 是否有序，顺序按照加入顺序排序，只针对JSONObject有效
-	 *
-	 * @return 是否有序
-	 * @deprecated 始终返回 {@code true}
-	 */
-	@Deprecated
-	public boolean isOrder() {
-		return true;
-	}
-
-	/**
-	 * 设置是否有序，顺序按照加入顺序排序，只针对JSONObject有效
-	 *
-	 * @param order 是否有序
-	 * @return this
-	 * @deprecated 始终有序，无需设置
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	public JSONConfig setOrder(boolean order) {
-		return this;
-	}
-
-	/**
 	 * 获取键排序规则<br>
 	 * 键排序规则，{@code null}表示不排序，不排序情况下，按照加入顺序排序
 	 *

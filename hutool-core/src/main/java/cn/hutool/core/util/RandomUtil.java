@@ -9,7 +9,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
 
-import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
@@ -591,19 +590,6 @@ public class RandomUtil {
 	 */
 	public static char randomChar(String baseString) {
 		return baseString.charAt(randomInt(baseString.length()));
-	}
-
-	/**
-	 * 生成随机颜色
-	 *
-	 * @return 随机颜色
-	 * @since 4.1.5
-	 * @deprecated 使用ImgUtil.randomColor()
-	 */
-	@Deprecated
-	public static Color randomColor() {
-		final Random random = getRandom();
-		return new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
 
 	/**

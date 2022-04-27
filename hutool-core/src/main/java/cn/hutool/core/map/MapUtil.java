@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -27,8 +26,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * Map相关工具类
@@ -277,26 +276,6 @@ public class MapUtil {
 	public static <K, V> HashMap<K, V> of(K key, V value, boolean isOrder) {
 		final HashMap<K, V> map = newHashMap(isOrder);
 		map.put(key, value);
-		return map;
-	}
-
-	/**
-	 * 根据给定的Pair数组创建Map对象
-	 *
-	 * @param <K>   键类型
-	 * @param <V>   值类型
-	 * @param pairs 键值对
-	 * @return Map
-	 * @since 5.4.1
-	 * @deprecated 方法容易歧义，请使用 {@code #ofEntries(Entry[])}
-	 */
-	@SafeVarargs
-	@Deprecated
-	public static <K, V> Map<K, V> of(Pair<K, V>... pairs) {
-		final Map<K, V> map = new HashMap<>();
-		for (Pair<K, V> pair : pairs) {
-			map.put(pair.getKey(), pair.getValue());
-		}
 		return map;
 	}
 

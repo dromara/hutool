@@ -359,18 +359,6 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
-	 * 追加path节点
-	 *
-	 * @param path path节点
-	 * @return this
-	 * @deprecated 方法重复，请使用{@link #addPath(CharSequence)}
-	 */
-	@Deprecated
-	public UrlBuilder appendPath(CharSequence path) {
-		return addPath(path);
-	}
-
-	/**
 	 * 获取查询语句，例如a=1&amp;b=2<br>
 	 * 可能为{@code null}
 	 *
