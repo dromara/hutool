@@ -4,18 +4,14 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 注解工具类<br>
@@ -48,6 +44,47 @@ public class AnnotationUtil {
 	 */
 	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
 		return (null == annotationEle) ? null : (isToCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
+	}
+
+	/**
+	 * 获取可重复的注解列表
+	 * 用于带有同一个注解的多个组合注解
+	 *
+	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类型
+	 * @return 注解列表
+	 * @param <T> 注解值类型
+	 */
+	public static <T> Set<T> getRepeatedAnnotations(AnnotatedElement annotationEle, Class<T> annotationType) {
+		if (!Annotation.class.isAssignableFrom(annotationType)){
+			return null;
+		}
+		Set<T> annotationList = new HashSet<>();
+		recursion(annotationList, annotationEle.getAnnotations(), annotationType);
+		return annotationList;
+	}
+
+	/**
+	 * 递归获取注解列表
+	 *
+	 * @param list 注解结果集
+	 * @param annotations 注解参数集
+	 * @param annotationType 注解类型
+	 * @param <T> 注解值类型
+	 */
+	private static <T> void recursion(Set<T> list, Annotation[] annotations, Class<T> annotationType) {
+		for (Annotation annotation : annotations) {
+			Class<? extends Annotation> clazz = annotation.getClass();
+			if (annotationType.isAssignableFrom(clazz)) {
+				list.add((T) annotation);
+			} else if (!Retention.class.isAssignableFrom(clazz)
+					&& !Target.class.isAssignableFrom(clazz)
+					&& !Documented.class.isAssignableFrom(clazz)
+					&& !Repeatable.class.isAssignableFrom(clazz)
+					&& !Inherited.class.isAssignableFrom(clazz)) {
+				recursion(list, annotation.annotationType().getAnnotations(), annotationType);
+			}
+		}
 	}
 
 	/**
