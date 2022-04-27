@@ -10,12 +10,10 @@ import cn.hutool.core.util.StrUtil;
 
 import java.text.ParsePosition;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * 针对{@link Calendar} 对象封装工具类
@@ -765,4 +763,34 @@ public class CalendarUtil {
 
 		return parser.parse(StrUtil.str(str), new ParsePosition(0), calendar) ? calendar : null;
 	}
+
+	/**
+	 * 根据当前年份设置的第一周所需的最小天数，获取某年某周的开始日期和结束日期
+	 *
+	 * @param year        年份
+	 * @param week        周数
+	 * @param minimalDays 设置一年中第一周所需的最小天数
+	 * @return 开始日期和结束日期对应Map, 日期格式：yyyy-MM-dd
+	 */
+	public static Map<String, LocalDate> getWeekRangeMap(int year, int week, int minimalDays) {
+		Map<String, LocalDate> dateMap = new HashMap<>(2);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, year);
+		// 设置星期一为一周开始的第一天
+		calendar.setFirstDayOfWeek(Calendar.MONDAY);
+		// 设置一年中第一周所需的最小天数
+		calendar.setMinimalDaysInFirstWeek(minimalDays);
+		// 获得当前的年
+		int curYear = calendar.get(Calendar.YEAR);
+		// 获得指定年的第几周的开始日期(星期几)
+		calendar.setWeekDate(curYear, week, Calendar.MONDAY);
+		LocalDate startTime = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		dateMap.put("startTime", startTime);
+		// 获得指定年的第几周的结束日期(星期几)
+		calendar.setWeekDate(curYear, week, Calendar.SUNDAY);
+		LocalDate endTime = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		dateMap.put("endTime", endTime);
+		return dateMap;
+	}
+
 }
