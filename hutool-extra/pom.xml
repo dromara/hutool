@@ -26,12 +26,12 @@
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.32.0</sshj.version>
+		<sshj.version>0.33.0</sshj.version>
 		<zxing.version>3.4.1</zxing.version>
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.6.6</spring-boot.version>
+		<spring-boot.version>2.6.7</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
