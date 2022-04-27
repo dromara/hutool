@@ -76,7 +76,7 @@ public class JSONArrayTest {
 		Assert.assertFalse(jsonArray.getJSONObject(1).containsKey("result"));
 
 		// 不忽略null，则null的键值对被保留
-		jsonArray = new JSONArray(jsonStr, false);
+		jsonArray = JSONUtil.parseArray(jsonStr, false);
 		Assert.assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
 	}
 

@@ -4,12 +4,9 @@ import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
-import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -46,20 +43,10 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
 	/**
-	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY无序
+	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY有序
 	 */
 	public JSONObject() {
-		this(DEFAULT_CAPACITY, false);
-	}
-
-	/**
-	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}
-	 *
-	 * @param isOrder 是否有序
-	 * @since 3.0.9
-	 */
-	public JSONObject(boolean isOrder) {
-		this(DEFAULT_CAPACITY, isOrder);
+		this(JSONConfig.create());
 	}
 
 	/**
@@ -97,48 +84,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	public JSONObject(Object source) {
-		this(source, InternalJSONUtil.defaultIgnoreNullValue(source));
-	}
-
-	/**
-	 * 构建JSONObject，规则如下：
-	 * <ol>
-	 * <li>value为Map，将键值对加入JSON对象</li>
-	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
-	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
-	 * </ol>
-	 *
-	 * @param source          JavaBean或者Map对象或者String
-	 * @param ignoreNullValue 是否忽略空值
-	 * @since 3.0.9
-	 */
-	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(source, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
-	}
-
-	/**
-	 * 构建JSONObject，规则如下：
-	 * <ol>
-	 * <li>value为Map，将键值对加入JSON对象</li>
-	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
-	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
-	 * </ol>
-	 *
-	 * @param source          JavaBean或者Map对象或者String
-	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @param isOrder         是否有序
-	 * @since 4.2.2
-	 * @deprecated isOrder参数不再需要，JSONObject默认有序！
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
-		this(source, JSONConfig.create()//
-				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
-				.setIgnoreNullValue(ignoreNullValue)
-		);
+		this(source, JSONConfig.create().setIgnoreNullValue(InternalJSONUtil.defaultIgnoreNullValue(source)));
 	}
 
 	/**
@@ -184,60 +130,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		this(DEFAULT_CAPACITY, config);
 		ObjectMapper.of(source).map(this, filter);
 	}
-
-	/**
-	 * 构建指定name列表对应的键值对为新的JSONObject，情况如下：
-	 *
-	 * <pre>
-	 * 1. 若obj为Map，则获取name列表对应键值对
-	 * 2. 若obj为普通Bean，使用反射方式获取字段名和字段值
-	 * </pre>
-	 * <p>
-	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
-	 * 若names列表为空，则字段全部加入
-	 *
-	 * @param source 包含需要字段的Bean对象或者Map对象
-	 * @param names  需要构建JSONObject的字段名列表
-	 */
-	public JSONObject(Object source, String... names) {
-		this();
-		if (ArrayUtil.isEmpty(names)) {
-			ObjectMapper.of(source).map(this, null);
-			return;
-		}
-
-		if (source instanceof Map) {
-			Object value;
-			for (String name : names) {
-				value = ((Map<?, ?>) source).get(name);
-				this.putOnce(name, value);
-			}
-		} else {
-			for (String name : names) {
-				try {
-					this.putOpt(name, ReflectUtil.getFieldValue(source, name));
-				} catch (Exception ignore) {
-					// ignore
-				}
-			}
-		}
-	}
-
-	/**
-	 * 从JSON字符串解析为JSON对象，对于排序单独配置参数
-	 *
-	 * @param source  以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
-	 * @param isOrder 是否有序
-	 * @throws JSONException JSON字符串语法错误
-	 * @since 4.2.2
-	 * @deprecated isOrder无效
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
-		this(source, JSONConfig.create());
-	}
-
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
 	@Override
@@ -306,6 +198,19 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	/**
+	 * PUT 键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key   键
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	@Override
+	public Object put(String key, Object value) throws JSONException {
+		return put(key, value, null, false);
+	}
+
+	/**
 	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
 	 * @param key   键
@@ -329,34 +234,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 5.8.0
 	 */
 	public JSONObject set(String key, Object value, Filter<MutablePair<String, Object>> filter, boolean checkDuplicate) throws JSONException {
-		if (null == key) {
-			return this;
-		}
-
-		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
-		if (null != filter) {
-			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
-			if (filter.accept(pair)) {
-				// 使用修改后的键值对
-				key = pair.getKey();
-				value = pair.getValue();
-			} else {
-				// 键值对被过滤
-				return this;
-			}
-		}
-
-		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
-		if (ObjectUtil.isNull(value) && ignoreNullValue) {
-			// 忽略值模式下如果值为空清除key
-			this.remove(key);
-		} else {
-			if (checkDuplicate && containsKey(key)) {
-				throw new JSONException("Duplicate key \"{}\"", key);
-			}
-
-			super.put(key, JSONUtil.wrap(InternalJSONUtil.testValidity(value), this.config));
-		}
+		put(key, value, filter, checkDuplicate);
 		return this;
 	}
 
@@ -548,5 +426,44 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		final JSONObject clone = (JSONObject) super.clone();
 		clone.config = this.config;
 		return clone;
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key            键
+	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 * @since 5.8.0
+	 */
+	private Object put(String key, Object value, Filter<MutablePair<String, Object>> filter, boolean checkDuplicate) throws JSONException {
+		if (null == key) {
+			return this;
+		}
+
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		if (null != filter) {
+			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+			if (filter.accept(pair)) {
+				// 使用修改后的键值对
+				key = pair.getKey();
+				value = pair.getValue();
+			} else {
+				// 键值对被过滤
+				return this;
+			}
+		}
+
+		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
+		if (ObjectUtil.isNull(value) && ignoreNullValue) {
+			// 忽略值模式下如果值为空清除key
+			return this.remove(key);
+		} else if (checkDuplicate && containsKey(key)) {
+			throw new JSONException("Duplicate key \"{}\"", key);
+		}
+		return super.put(key, JSONUtil.wrap(InternalJSONUtil.testValidity(value), this.config));
 	}
 }

@@ -107,25 +107,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object object) throws JSONException {
-		this(object, true);
-	}
-
-	/**
-	 * 从对象构造<br>
-	 * 支持以下类型的参数：
-	 *
-	 * <pre>
-	 * 1. 数组
-	 * 2. {@link Iterable}对象
-	 * 3. JSON数组字符串
-	 * </pre>
-	 *
-	 * @param object          数组或集合或JSON数组字符串
-	 * @param ignoreNullValue 是否忽略空值
-	 * @throws JSONException 非数组或集合
-	 */
-	public JSONArray(Object object, boolean ignoreNullValue) throws JSONException {
-		this(object, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
+		this(object, JSONConfig.create());
 	}
 
 	/**
@@ -368,13 +350,12 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return rawList.remove(o);
 	}
 
-	@SuppressWarnings("NullableProblems")
+	@SuppressWarnings({"NullableProblems", "SlowListContainsAll"})
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		return rawList.containsAll(c);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public boolean addAll(Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
@@ -386,7 +367,6 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return true;
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public boolean addAll(int index, Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
@@ -399,13 +379,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return rawList.addAll(index, list);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		return this.rawList.removeAll(c);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		return this.rawList.retainAll(c);

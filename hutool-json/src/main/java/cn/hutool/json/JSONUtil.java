@@ -80,16 +80,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转JSONObject对象
-	 *
-	 * @param jsonStr JSON字符串
-	 * @return JSONObject
-	 */
-	public static JSONObject parseObj(String jsonStr) {
-		return new JSONObject(jsonStr);
-	}
-
-	/**
 	 * JSON字符串转JSONObject对象<br>
 	 * 此方法会忽略空值，但是对JSON字符串不影响
 	 *
@@ -97,7 +87,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(Object obj) {
-		return parseObj(obj, null);
+		return new JSONObject(obj);
 	}
 
 	/**
@@ -110,7 +100,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONObject parseObj(Object obj, JSONConfig config) {
-		return new JSONObject(obj, ObjectUtil.defaultIfNull(config, JSONConfig::create));
+		return new JSONObject(obj, config);
 	}
 
 	/**
@@ -122,17 +112,7 @@ public class JSONUtil {
 	 * @since 3.0.9
 	 */
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
-		return new JSONObject(obj, ignoreNullValue);
-	}
-
-	/**
-	 * JSON字符串转JSONArray
-	 *
-	 * @param jsonStr JSON字符串
-	 * @return JSONArray
-	 */
-	public static JSONArray parseArray(String jsonStr) {
-		return new JSONArray(jsonStr);
+		return new JSONObject(obj, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -143,7 +123,7 @@ public class JSONUtil {
 	 * @since 3.0.8
 	 */
 	public static JSONArray parseArray(Object arrayOrCollection) {
-		return parseArray(arrayOrCollection, null);
+		return new JSONArray(arrayOrCollection);
 	}
 
 	/**
@@ -167,7 +147,7 @@ public class JSONUtil {
 	 * @since 3.2.3
 	 */
 	public static JSONArray parseArray(Object arrayOrCollection, boolean ignoreNullValue) {
-		return new JSONArray(arrayOrCollection, ignoreNullValue);
+		return new JSONArray(arrayOrCollection, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
