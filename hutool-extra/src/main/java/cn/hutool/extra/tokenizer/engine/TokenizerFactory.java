@@ -9,7 +9,7 @@ import cn.hutool.log.StaticLog;
 
 /**
  * 简单分词引擎工厂，用于根据用户引入的分词引擎jar，自动创建对应的引擎
- * 
+ *
  * @author looly
  *
  */
@@ -28,7 +28,7 @@ public class TokenizerFactory {
 
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
-	 * 
+	 *
 	 * @return {@link TokenizerEngine}
 	 */
 	public static TokenizerEngine create() {
@@ -39,7 +39,7 @@ public class TokenizerFactory {
 
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
-	 * 
+	 *
 	 * @return {@link TokenizerEngine}
 	 */
 	private static TokenizerEngine doCreate() {

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  *
  * @param <T> 被加载对象类型
  * @author Mr.Po
- * @see cn.hutool.core.lang.loader.LazyLoader
+ * @see LazyLoader
  * @since 5.6.1
  */
 public class LazyFunLoader<T> extends LazyLoader<T> {

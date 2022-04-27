@@ -7,7 +7,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;

@@ -7,7 +7,7 @@ import org.junit.Test;
 import cn.hutool.core.lang.Console;
 
 public class CellUtilTest {
-	
+
 	@Test
 	@Ignore
 	public void isDateTest() {

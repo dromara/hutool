@@ -9,7 +9,7 @@ import org.junit.Test;
 
 /**
  * Jsch工具类单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -47,7 +47,7 @@ public class JschUtilTest {
 		sftp.mkDirs("/opt/test/aaa/bbb");
 		Console.log("OK");
 	}
-	
+
 	@Test
 	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {

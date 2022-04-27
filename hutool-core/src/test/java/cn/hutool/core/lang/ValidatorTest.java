@@ -1,7 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.id.IdUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

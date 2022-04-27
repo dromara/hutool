@@ -27,7 +27,7 @@ public class TreeSearchTest {
 
 	@Test
 	public void searchNode() {
-		List<Tree<Long>> treeItems=TreeUtil.build(all_menu, 0L);
+		List<Tree<Long>> treeItems= TreeUtil.build(all_menu, 0L);
 
 		Tree<Long> tree=treeItems.get(0);
 		Tree<Long> searchResult=tree.getNode(3L);

@@ -16,7 +16,7 @@ public class ClipboardMonitorTest {
 			Console.log("1# {}", object);
 			return contents;
 		}, false);
-		
+
 		// 第二个监听
 		ClipboardUtil.listen((clipboard, contents) -> {
 			Object object = ClipboardUtil.getStr(contents);

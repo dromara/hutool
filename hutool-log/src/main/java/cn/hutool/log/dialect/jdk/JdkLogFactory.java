@@ -16,7 +16,7 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class JdkLogFactory extends LogFactory{
-	
+
 	public JdkLogFactory() {
 		super("JDK Logging");
 		readConfig();
@@ -31,7 +31,7 @@ public class JdkLogFactory extends LogFactory{
 	public Log createLog(Class<?> clazz) {
 		return new JdkLog(clazz);
 	}
-	
+
 	/**
 	 * 读取ClassPath下的logging.properties配置文件
 	 */
@@ -42,7 +42,7 @@ public class JdkLogFactory extends LogFactory{
 			System.err.println("[WARN] Can not find [logging.properties], use [%JRE_HOME%/lib/logging.properties] as default!");
 			return;
 		}
-		
+
 		try {
 			LogManager.getLogManager().readConfiguration(in);
 		} catch (Exception e) {

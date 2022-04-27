@@ -14,22 +14,22 @@ import cn.hutool.core.lang.Console;
  *
  */
 public class ArrangementTest {
-	
+
 	@Test
 	public void arrangementTest() {
 		long result = Arrangement.count(4, 2);
 		Assert.assertEquals(12, result);
-		
+
 		result = Arrangement.count(4, 1);
 		Assert.assertEquals(4, result);
-		
+
 		result = Arrangement.count(4, 0);
 		Assert.assertEquals(1, result);
-		
+
 		long resultAll = Arrangement.countAll(4);
 		Assert.assertEquals(64, resultAll);
 	}
-	
+
 	@Test
 	public void selectTest() {
 		Arrangement arrangement = new Arrangement(new String[] { "1", "2", "3", "4" });
@@ -47,14 +47,14 @@ public class ArrangementTest {
 		Assert.assertArrayEquals(new String[] {"4", "1"}, list.get(9));
 		Assert.assertArrayEquals(new String[] {"4", "2"}, list.get(10));
 		Assert.assertArrayEquals(new String[] {"4", "3"}, list.get(11));
-		
+
 		List<String[]> selectAll = arrangement.selectAll();
 		Assert.assertEquals(Arrangement.countAll(4), selectAll.size());
-		
+
 		List<String[]> list2 = arrangement.select(0);
 		Assert.assertEquals(1, list2.size());
 	}
-	
+
 	@Test
 	@Ignore
 	public void selectTest2() {

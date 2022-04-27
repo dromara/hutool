@@ -3,7 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Pid;
+import cn.hutool.core.lang.id.Pid;
 import cn.hutool.core.text.StrBuilder;
 
 import java.io.File;

@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;

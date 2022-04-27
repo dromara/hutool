@@ -11,7 +11,7 @@ import cn.hutool.core.lang.Console;
 
 /**
  * 文件监听单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -43,12 +43,12 @@ public class WatchMonitorTest {
 				Console.log("Overflow：{}-> {}", currentPath, obj);
 			}
 		};
-		
+
 		WatchMonitor monitor = WatchMonitor.createAll("d:/test/aaa.txt", new DelayWatcher(watcher, 500));
-		
+
 		monitor.setMaxDepth(0);
 		monitor.start();
 	}
-	
-	
+
+
 }

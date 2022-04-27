@@ -1,7 +1,6 @@
 package cn.hutool.db;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.ArrayUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

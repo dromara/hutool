@@ -12,7 +12,7 @@ import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.poi.excel.cell.CellLocation;

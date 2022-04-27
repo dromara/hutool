@@ -3,7 +3,7 @@ package cn.hutool.cron.demo;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.id.IdUtil;
 
 /**
  * 测试定时任务，当触发到定时的时间点时，执行doTest方法

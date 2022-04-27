@@ -1,13 +1,14 @@
-package cn.hutool.core.util;
+package cn.hutool.core.lang.id;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ObjectId;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.lang.UUID;
+import cn.hutool.core.lang.id.UUID;
 import cn.hutool.core.lang.id.NanoId;
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.RuntimeUtil;
 
 /**
  * ID生成器工具类，此工具类中主要封装：

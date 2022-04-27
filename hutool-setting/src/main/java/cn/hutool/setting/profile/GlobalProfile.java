@@ -5,7 +5,7 @@ import cn.hutool.setting.Setting;
 
 /**
  * 全局的Profile配置中心
- * 
+ *
  * @author Looly
  *
  */

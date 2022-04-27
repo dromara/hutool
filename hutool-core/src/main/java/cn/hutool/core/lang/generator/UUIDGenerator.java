@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.generator;
 
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.id.IdUtil;
 
 /**
  * UUID生成器

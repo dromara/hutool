@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 定时任务表达式工具类
- * 
+ *
  * @author looly
  *
  */
@@ -19,7 +19,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期之后（到开始日期对应年年底）内第一个匹配表达式的日期
-	 * 
+	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
 	 * @param isMatchSecond 是否匹配秒
@@ -36,7 +36,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期之后（到开始日期对应年年底）内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param count 列举数量
@@ -49,7 +49,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param end 结束时间
@@ -63,7 +63,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param patternStr 表达式字符串
 	 * @param start 起始时间
 	 * @param end 结束时间
@@ -77,7 +77,7 @@ public class CronPatternUtil {
 
 	/**
 	 * 列举指定日期范围内所有匹配表达式的日期
-	 * 
+	 *
 	 * @param pattern 表达式
 	 * @param start 起始时间
 	 * @param end 结束时间

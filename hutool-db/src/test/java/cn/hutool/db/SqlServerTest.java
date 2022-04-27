@@ -9,12 +9,12 @@ import cn.hutool.core.lang.Console;
 
 /**
  * SQL Server操作单元测试
- * 
+ *
  * @author looly
  *
  */
 public class SqlServerTest {
-	
+
 	@Test
 	@Ignore
 	public void createTableTest() throws SQLException {

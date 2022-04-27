@@ -6,6 +6,7 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Ignore;

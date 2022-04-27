@@ -16,15 +16,15 @@ import java.util.Map;
 
 /**
  * Word中表格相关工具
- * 
+ *
  * @author Looly
  * @since 4.5.14
  */
 public class TableUtil {
-	
+
 	/**
 	 * 创建空表，只有一行
-	 * 
+	 *
 	 * @param doc {@link XWPFDocument}
 	 * @return {@link XWPFTable}
 	 */
@@ -34,7 +34,7 @@ public class TableUtil {
 
 	/**
 	 * 创建表格并填充数据，默认表格
-	 * 
+	 *
 	 * @param doc {@link XWPFDocument}
 	 * @param data 数据
 	 * @return {@link XWPFTable}
@@ -72,10 +72,10 @@ public class TableUtil {
 
 		return table;
 	}
-	
+
 	/**
 	 * 写一行数据
-	 * 
+	 *
 	 * @param row 行
 	 * @param rowBean 行数据
 	 * @param isWriteKeyAsHead 如果为Map或者Bean，是否写标题
@@ -86,7 +86,7 @@ public class TableUtil {
 			writeRow(row, (Iterable<?>) rowBean);
 			return;
 		}
-		
+
 		Map rowMap;
 		if(rowBean instanceof Map) {
 			rowMap = (Map) rowBean;
@@ -100,10 +100,10 @@ public class TableUtil {
 
 		writeRow(row, rowMap, isWriteKeyAsHead);
 	}
-	
+
 	/**
 	 * 写行数据
-	 * 
+	 *
 	 * @param row 行
 	 * @param rowMap 行数据
 	 * @param isWriteKeyAsHead 是否写标题
@@ -122,7 +122,7 @@ public class TableUtil {
 
 	/**
 	 * 写行数据
-	 * 
+	 *
 	 * @param row 行
 	 * @param rowData 行数据
 	 */
@@ -139,7 +139,7 @@ public class TableUtil {
 	/**
 	 * 获取或创建新行<br>
 	 * 存在则直接返回，不存在创建新的行
-	 * 
+	 *
 	 * @param table {@link XWPFTable}
 	 * @param index 索引（行号），从0开始
 	 * @return {@link XWPFTableRow}
@@ -156,7 +156,7 @@ public class TableUtil {
 	/**
 	 * 获取或创建新单元格<br>
 	 * 存在则直接返回，不存在创建新的单元格
-	 * 
+	 *
 	 * @param row {@link XWPFTableRow} 行
 	 * @param index index 索引（列号），从0开始
 	 * @return {@link XWPFTableCell}

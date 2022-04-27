@@ -1,6 +1,12 @@
 package cn.hutool.core.exceptions;
 
-import cn.hutool.core.lang.func.*;
+import cn.hutool.core.lang.func.Func;
+import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.Supplier1;
+import cn.hutool.core.lang.func.VoidFunc;
+import cn.hutool.core.lang.func.VoidFunc0;
+import cn.hutool.core.lang.func.VoidFunc1;
 
 import java.util.Objects;
 

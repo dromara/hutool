@@ -10,7 +10,7 @@ import cn.hutool.log.level.WarnLog;
 
 /**
  * 日志统一接口
- * 
+ *
  * @author Looly
  *
  */

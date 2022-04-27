@@ -5,7 +5,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.CronUtil;
 
 public class AddAndRemoveMainTest {
-	
+
 	public static void main(String[] args) {
 		CronUtil.setMatchSecond(true);
 		CronUtil.start(false);
