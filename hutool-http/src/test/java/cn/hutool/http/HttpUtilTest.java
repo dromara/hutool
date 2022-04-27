@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,8 +132,8 @@ public class HttpUtilTest {
 	public void decodeParamMapTest() {
 		// 参数值存在分界标记等号时
 		Map<String, String> paramMap = HttpUtil.decodeParamMap("https://www.xxx.com/api.action?aa=123&f_token=NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("123",paramMap.get("aa"));
-		Assert.assertEquals("NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=",paramMap.get("f_token"));
+		Assert.assertEquals("123", paramMap.get("aa"));
+		Assert.assertEquals("NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", paramMap.get("f_token"));
 	}
 
 	@Test
@@ -316,7 +317,7 @@ public class HttpUtilTest {
 
 	@Test
 	@Ignore
-	public void getWeixinTest(){
+	public void getWeixinTest() {
 		// 测试特殊URL，即URL中有&amp;情况是否请求正常
 		String url = "https://mp.weixin.qq.com/s?__biz=MzI5NjkyNTIxMg==&amp;mid=100000465&amp;idx=1&amp;sn=1044c0d19723f74f04f4c1da34eefa35&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
 		final String s = HttpUtil.get(url);
@@ -325,7 +326,7 @@ public class HttpUtilTest {
 
 	@Test
 	@Ignore
-	public void getNocovTest(){
+	public void getNocovTest() {
 		String url = "https://qiniu.nocov.cn/medical-manage%2Ftest%2FBANNER_IMG%2F444004467954556928%2F1595215173047icon.png~imgReduce?e=1597081986&token=V2lJYVgQgAv_sbypfEZ0qpKs6TzD1q5JIDVr0Tw8:89cbBkLLwEc9JsMoCLkAEOu820E=";
 		final String s = HttpUtil.get(url);
 		Console.log(s);
@@ -333,21 +334,21 @@ public class HttpUtilTest {
 
 	@Test
 	@Ignore
-	public void sinajsTest(){
+	public void sinajsTest() {
 		final String s = HttpUtil.get("http://hq.sinajs.cn/list=sh600519");
 		Console.log(s);
 	}
 
 	@Test
 	@Ignore
-	public void gimg2Test(){
+	public void gimg2Test() {
 		byte[] bytes = HttpUtil.downloadBytes("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea");
 		Console.log(Base64.encode(bytes));
 	}
 
 	@Test
 	@Ignore
-	public void acplayTest(){
+	public void acplayTest() {
 		final String body = HttpRequest.get("https://api.acplay.net/api/v2/bangumi/9541")
 				.execute().body();
 		Console.log(body);
@@ -355,11 +356,20 @@ public class HttpUtilTest {
 
 	@Test
 	@Ignore
-	public void getPicTest(){
+	public void getPicTest() {
 		HttpGlobalConfig.setDecodeUrl(false);
 		String url = "https://p3-sign.douyinpic.com/tos-cn-i-0813/f41afb2e79a94dcf80970affb9a69415~noop.webp?x-expires=1647738000&x-signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D&from=4257465056&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sh=&sc=&l=2022021809224601020810013524310DD3&biz_tag=aweme_images";
 
 		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
 		Console.log(request.execute().body());
+	}
+
+	@Test
+	@Ignore
+	public void getContentLengthTest() {
+		List<String> strings = Arrays.asList("https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10ae6226b448421c83d3bf2750459763~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp", "https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/10ae6226b448421c83d3bf2750459763~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp");
+
+		Console.log(HttpUtil.getTotalContentLength(strings));
+
 	}
 }

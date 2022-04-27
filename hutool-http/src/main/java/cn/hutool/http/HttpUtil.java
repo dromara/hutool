@@ -18,16 +18,26 @@ import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.ToLongFunction;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Http请求工具类
@@ -478,8 +488,8 @@ public class HttpUtil {
 	 * key1=v1&amp;key2=&amp;key3=v3
 	 * </pre>
 	 *
-	 * @param paramMap 表单数据
-	 * @param charset  编码，null表示不encode键值对
+	 * @param paramMap         表单数据
+	 * @param charset          编码，null表示不encode键值对
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @return url参数
 	 * @since 5.7.16
@@ -539,7 +549,7 @@ public class HttpUtil {
 	 * @since 4.5.2
 	 */
 	public static String normalizeParams(String paramPart, Charset charset) {
-		if(StrUtil.isEmpty(paramPart)){
+		if (StrUtil.isEmpty(paramPart)) {
 			return paramPart;
 		}
 		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
@@ -863,5 +873,58 @@ public class HttpUtil {
 	 */
 	public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
+	}
+
+	/**
+	 * 获取url头中Content-Length大小，如果没有Content-Length，则返回-1
+	 * @param url url地址
+	 * @return Content-Length值
+	 */
+	public static long getContentLength(String url) throws Exception {
+		HttpConnection httpConnection = null;
+		try {
+			httpConnection = HttpConnection.create(new URL(url), null);
+			String contentLengthHeader = httpConnection.header(Header.CONTENT_LENGTH);
+			return contentLengthHeader != null ? Long.parseLong(contentLengthHeader) : -1;
+		} finally {
+			if (httpConnection != null) {
+				httpConnection.disconnect();
+			}
+		}
+	}
+
+	/**
+	 * 获取List<String>中所有Content-Length的总和
+	 *
+	 * @param urls url地址集合
+	 * @return Content-Length总值
+	 */
+	public static long getTotalContentLength(List<String> urls) {
+		return getTotalContentLength(urls.toArray(new String[]{}));
+	}
+
+	/**
+	 * 获取String... urls中所有Content-Length的总和
+	 *
+	 * @param urls url地址集合
+	 * @return Content-Length总值
+	 */
+	public static long getTotalContentLength(String... urls) {
+		return Stream.of(urls).map(s -> CompletableFuture.supplyAsync(() -> {
+			try {
+				return getContentLength(s);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return 0l;
+		})).mapToLong(value -> {
+			try {
+				return value.get();
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}).sum();
+
 	}
 }
