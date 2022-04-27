@@ -23,6 +23,8 @@
 * 【core   】     ReflectUtil.newInstanceIfPossible添加枚举、数组等类型的默认实现
 * 【core   】     CombinationAnnotationElement增加过滤（pr#605@Gitee）
 * 【all    】     精简CHANGELOG
+* 【core   】     新增AnsiEncoder
+* 【log    】     新增彩色日式输出风格ConsoleColorLog（pr#607@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）

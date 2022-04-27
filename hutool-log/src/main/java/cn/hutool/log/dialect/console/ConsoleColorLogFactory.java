@@ -4,11 +4,14 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
 /**
- * @author hongda.li 2022-04-27 09:55
+ * 利用System.out.println()打印彩色日志
+ *
+ * @author hongda.li
+ * @since 5.8.0
  */
 public class ConsoleColorLogFactory extends LogFactory {
 
-	public ConsoleColorLogFactory(){
+	public ConsoleColorLogFactory() {
 		super("Hutool Console Color Logging");
 	}
 
