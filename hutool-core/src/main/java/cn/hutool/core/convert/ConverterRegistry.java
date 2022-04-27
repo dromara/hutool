@@ -35,7 +35,7 @@ import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;

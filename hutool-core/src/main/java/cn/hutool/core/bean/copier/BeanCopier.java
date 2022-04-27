@@ -61,11 +61,11 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param targetType 目标的泛型类型，用于标注有泛型参数的Bean对象
 	 * @param copyOptions 拷贝属性选项
 	 */
+	@SuppressWarnings("unchecked")
 	public BeanCopier(Object source, T target, Type targetType, CopyOptions copyOptions) {
 		Copier<T> copier;
 		if (source instanceof Map) {
 			if (target instanceof Map) {
-				//noinspection unchecked
 				copier = (Copier<T>) new MapToMapCopier((Map<?, ?>) source, (Map<?, ?>) target, targetType, copyOptions);
 			} else {
 				copier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);

@@ -2,9 +2,9 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.func.Editor;
+import cn.hutool.core.lang.func.Filter;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;

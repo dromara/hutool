@@ -1,6 +1,6 @@
 package cn.hutool.json;
 
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
 

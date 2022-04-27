@@ -1,5 +1,6 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
+import cn.hutool.core.tree.TreeBuilder;
 import org.junit.Test;
 
 import java.util.ArrayList;

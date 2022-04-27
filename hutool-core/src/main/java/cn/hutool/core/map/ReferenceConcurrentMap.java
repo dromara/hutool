@@ -76,17 +76,17 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 		return 0 == size();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public V get(Object key) {
 		this.purgeStaleKeys();
-		//noinspection unchecked
 		return this.raw.get(ofKey((K) key, null));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean containsKey(Object key) {
 		this.purgeStaleKeys();
-		//noinspection unchecked
 		return this.raw.containsKey(ofKey((K) key, null));
 	}
 

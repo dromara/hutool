@@ -5,7 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;

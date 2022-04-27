@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.func;
 
 /**
  * 替换器<br>

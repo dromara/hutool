@@ -1,6 +1,6 @@
 package cn.hutool.cron.pattern.matcher;
 
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Matcher;
 
 /**
  * 表达式中的某个位置部分匹配器<br>

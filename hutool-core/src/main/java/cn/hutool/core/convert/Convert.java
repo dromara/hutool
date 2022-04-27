@@ -4,7 +4,7 @@ import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;

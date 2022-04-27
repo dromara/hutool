@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;

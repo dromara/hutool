@@ -5,7 +5,7 @@ import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.JNDIUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;

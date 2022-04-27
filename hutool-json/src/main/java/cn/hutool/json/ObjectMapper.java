@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.util.ArrayUtil;

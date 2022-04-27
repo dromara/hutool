@@ -1,6 +1,6 @@
 package cn.hutool.extra.spring;
 
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
 import org.junit.Assert;

@@ -1,7 +1,7 @@
 package cn.hutool.core.text.finder;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Matcher;
 
 /**
  * 字符匹配查找器<br>

@@ -11,4 +11,4 @@
  * @author liangbaikai（https://gitee.com/liangbaikai00/）
  * @since 5.2.1
  */
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;

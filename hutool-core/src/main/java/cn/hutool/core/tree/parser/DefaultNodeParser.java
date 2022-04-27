@@ -1,7 +1,7 @@
-package cn.hutool.core.lang.tree.parser;
+package cn.hutool.core.tree.parser;
 
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.tree.TreeNode;
+import cn.hutool.core.tree.Tree;
 import cn.hutool.core.map.MapUtil;
 
 import java.util.Map;

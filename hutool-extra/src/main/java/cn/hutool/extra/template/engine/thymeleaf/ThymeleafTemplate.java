@@ -2,7 +2,7 @@ package cn.hutool.extra.template.engine.thymeleaf;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.template.AbstractTemplate;

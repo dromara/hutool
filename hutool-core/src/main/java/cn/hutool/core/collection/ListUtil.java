@@ -2,7 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;

@@ -1,6 +1,8 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.tree.Tree;
+import cn.hutool.core.tree.TreeUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;

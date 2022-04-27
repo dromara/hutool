@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;

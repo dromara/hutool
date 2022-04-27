@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;

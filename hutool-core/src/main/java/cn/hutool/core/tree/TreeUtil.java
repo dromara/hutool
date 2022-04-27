@@ -1,8 +1,8 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.IterUtil;
-import cn.hutool.core.lang.tree.parser.DefaultNodeParser;
-import cn.hutool.core.lang.tree.parser.NodeParser;
+import cn.hutool.core.tree.parser.DefaultNodeParser;
+import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.util.ArrayList;

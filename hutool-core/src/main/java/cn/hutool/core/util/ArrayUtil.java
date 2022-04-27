@@ -6,9 +6,9 @@ import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Editor;
+import cn.hutool.core.lang.func.Filter;
+import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 

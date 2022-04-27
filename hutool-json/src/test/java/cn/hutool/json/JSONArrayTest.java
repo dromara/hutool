@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;

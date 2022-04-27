@@ -4,7 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;

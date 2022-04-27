@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
 
 import java.util.Map;

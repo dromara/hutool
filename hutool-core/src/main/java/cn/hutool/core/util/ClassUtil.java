@@ -8,7 +8,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScanner;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.Singleton;
 
 import java.io.IOException;

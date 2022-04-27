@@ -7,7 +7,7 @@ import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;

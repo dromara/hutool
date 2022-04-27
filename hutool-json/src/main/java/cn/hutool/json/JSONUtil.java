@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;

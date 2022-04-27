@@ -1,6 +1,6 @@
 package cn.hutool.json;
 
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutablePair;
 

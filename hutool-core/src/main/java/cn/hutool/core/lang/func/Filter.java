@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.func;
 
 /**
  * 过滤器接口

@@ -1,7 +1,7 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Closeable;

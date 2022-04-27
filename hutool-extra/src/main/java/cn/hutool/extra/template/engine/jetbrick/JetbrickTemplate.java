@@ -1,7 +1,7 @@
 package cn.hutool.extra.template.engine.jetbrick;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.extra.template.AbstractTemplate;
 import jetbrick.template.JetTemplate;
 

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import lombok.Data;
 
 public class Issue488Test {

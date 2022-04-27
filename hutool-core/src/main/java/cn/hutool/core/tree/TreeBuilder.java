@@ -1,9 +1,9 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
 import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.tree.parser.NodeParser;
+import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 

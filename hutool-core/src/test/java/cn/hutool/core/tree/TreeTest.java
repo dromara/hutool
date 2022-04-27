@@ -1,6 +1,10 @@
-package cn.hutool.core.lang.tree;
+package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.tree.Tree;
+import cn.hutool.core.tree.TreeNode;
+import cn.hutool.core.tree.TreeNodeConfig;
+import cn.hutool.core.tree.TreeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

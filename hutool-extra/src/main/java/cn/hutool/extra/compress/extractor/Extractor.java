@@ -1,6 +1,6 @@
 package cn.hutool.extra.compress.extractor;
 
-import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.func.Filter;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 
 import java.io.Closeable;

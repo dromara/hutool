@@ -2,7 +2,7 @@ package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.TypeConverter;
-import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.ArrayUtil;

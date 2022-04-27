@@ -1,6 +1,6 @@
 package cn.hutool.core.text.replacer;
 
-import cn.hutool.core.lang.Replacer;
+import cn.hutool.core.lang.func.Replacer;
 import cn.hutool.core.text.StrBuilder;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package cn.hutool.extra.spring;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.reflect.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
