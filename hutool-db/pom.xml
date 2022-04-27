@@ -94,6 +94,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -108,10 +114,6 @@
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
 			<exclusions>
-				<exclusion>
-					<artifactId>commons-pool2</artifactId>
-					<groupId>org.apache.commons</groupId>
-				</exclusion>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
@@ -174,6 +176,12 @@
 			<artifactId>clickhouse-jdbc</artifactId>
 			<version>0.3.2</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>gson</artifactId>
+					<groupId>com.google.code.gson</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
