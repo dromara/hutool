@@ -804,7 +804,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.1.1
 	 */
 	public static DateTime parseTimeToday(CharSequence timeString) {
-		timeString = StrUtil.format("{} {}", formatNow(), timeString);
+		timeString = StrUtil.format("{} {}", formatToday(), timeString);
 		if (1 == StrUtil.count(timeString, ':')) {
 			// 时间格式为 HH:mm
 			return parse(timeString, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
