@@ -154,24 +154,24 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 		return computeIfAbsent(key, (keyParam) -> supplier.callWithRuntimeException());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public V remove(Object key) {
 		this.purgeStaleKeys();
-		//noinspection unchecked
 		return this.raw.remove(ofKey((K) key, null));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(Object key, Object value) {
 		this.purgeStaleKeys();
-		//noinspection unchecked
 		return this.raw.remove(ofKey((K) key, null), value);
 	}
 
+	@SuppressWarnings("StatementWithEmptyBody")
 	@Override
 	public void clear() {
 		this.raw.clear();
-		//noinspection StatementWithEmptyBody
 		while (lastQueue.poll() != null) ;
 	}
 
