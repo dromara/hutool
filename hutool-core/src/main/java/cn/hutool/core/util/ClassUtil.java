@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 类工具类 <br>
@@ -233,7 +234,7 @@ public class ClassUtil {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
+	public static Set<Class<?>> scanPackage(String packageName, Predicate<Class<?>> classFilter) {
 		return ClassScanner.scanPackage(packageName, classFilter);
 	}
 

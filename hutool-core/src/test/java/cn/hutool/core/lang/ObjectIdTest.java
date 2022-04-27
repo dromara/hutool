@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import java.util.HashSet;
 
+import cn.hutool.core.lang.id.ObjectId;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

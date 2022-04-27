@@ -1,9 +1,11 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.map;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.getter.BasicTypeGetter;

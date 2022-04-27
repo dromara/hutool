@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 

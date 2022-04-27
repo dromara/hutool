@@ -1,7 +1,8 @@
 package cn.hutool.core.text.escape;
 
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.function.Predicate;
 
 /**
  * 转义和反转义工具类Escape / Unescape<br>
@@ -16,7 +17,7 @@ public class EscapeUtil {
 	 * 不转义的符号编码
 	 */
 	private static final String NOT_ESCAPE_CHARS = "*@-_+./";
-	private static final Filter<Character> JS_ESCAPE_FILTER = c -> false == (
+	private static final Predicate<Character> JS_ESCAPE_FILTER = c -> false == (
 			Character.isDigit(c)
 					|| Character.isLowerCase(c)
 					|| Character.isUpperCase(c)
@@ -109,7 +110,7 @@ public class EscapeUtil {
 	 * @param filter  编码过滤器，对于过滤器中accept为false的字符不做编码
 	 * @return 编码后的字符串
 	 */
-	public static String escape(CharSequence content, Filter<Character> filter) {
+	public static String escape(CharSequence content, Predicate<Character> filter) {
 		if (StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
@@ -118,7 +119,7 @@ public class EscapeUtil {
 		char c;
 		for (int i = 0; i < content.length(); i++) {
 			c = content.charAt(i);
-			if (false == filter.accept(c)) {
+			if (false == filter.test(c)) {
 				tmp.append(c);
 			} else if (c < 256) {
 				tmp.append("%");

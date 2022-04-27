@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.hash.HashUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

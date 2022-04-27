@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.cache;
 
 import cn.hutool.core.collection.TransIter;
 import cn.hutool.core.lang.func.Func0;

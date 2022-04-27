@@ -1,6 +1,6 @@
 package cn.hutool.extra.expression;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.extra.expression.engine.jexl.JexlEngine;
 import cn.hutool.extra.expression.engine.jfireel.JfireELEngine;
 import cn.hutool.extra.expression.engine.mvel.MvelEngine;

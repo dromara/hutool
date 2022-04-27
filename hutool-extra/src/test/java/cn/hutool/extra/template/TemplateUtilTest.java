@@ -1,6 +1,6 @@
 package cn.hutool.extra.template;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
 import cn.hutool.extra.template.engine.beetl.BeetlEngine;

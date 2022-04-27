@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.id;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ClassLoaderUtil;

@@ -1,6 +1,7 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.id;
 
 import cn.hutool.core.date.SystemClock;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;

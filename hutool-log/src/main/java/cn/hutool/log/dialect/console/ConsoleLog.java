@@ -3,7 +3,7 @@ package cn.hutool.log.dialect.console;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.AbstractLog;
 import cn.hutool.log.level.Level;

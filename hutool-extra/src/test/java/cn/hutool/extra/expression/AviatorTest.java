@@ -2,7 +2,7 @@ package cn.hutool.extra.expression;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.extra.expression.engine.aviator.AviatorEngine;
 import lombok.Data;
 import org.junit.Assert;

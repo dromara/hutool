@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.id.Snowflake;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.StrUtil;

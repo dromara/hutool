@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.builder.GenericBuilder;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.map.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.generator;
 
-import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.lang.id.Snowflake;
 
 /**
  * Snowflake生成器<br>

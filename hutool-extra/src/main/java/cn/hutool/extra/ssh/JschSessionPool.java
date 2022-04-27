@@ -1,6 +1,6 @@
 package cn.hutool.extra.ssh;
 
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.cache.SimpleCache;
 import cn.hutool.core.util.StrUtil;
 import com.jcraft.jsch.Session;
 

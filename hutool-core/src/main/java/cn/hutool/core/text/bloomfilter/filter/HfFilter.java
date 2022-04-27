@@ -1,7 +1,7 @@
 package cn.hutool.core.text.bloomfilter.filter;
 
 
-import cn.hutool.core.util.HashUtil;
+import cn.hutool.core.lang.hash.HashUtil;
 
 public class HfFilter extends FuncFilter {
 	private static final long serialVersionUID = 1L;

@@ -1,6 +1,6 @@
 package cn.hutool.extra.template;
 
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import org.junit.Assert;

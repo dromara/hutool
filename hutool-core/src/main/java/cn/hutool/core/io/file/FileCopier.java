@@ -206,7 +206,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * @throws IORuntimeException IO异常
 	 */
 	private void internalCopyDirContent(File src, File dest) throws IORuntimeException {
-		if (null != copyFilter && false == copyFilter.accept(src)) {
+		if (null != copyPredicate && false == copyPredicate.test(src)) {
 			//被过滤的目录跳过
 			return;
 		}
@@ -249,7 +249,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * @throws IORuntimeException IO异常
 	 */
 	private void internalCopyFile(File src, File dest) throws IORuntimeException {
-		if (null != copyFilter && false == copyFilter.accept(src)) {
+		if (null != copyPredicate && false == copyPredicate.test(src)) {
 			//被过滤的文件跳过
 			return;
 		}

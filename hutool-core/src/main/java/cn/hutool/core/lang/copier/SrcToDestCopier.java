@@ -1,8 +1,7 @@
 package cn.hutool.core.lang.copier;
 
 import java.io.Serializable;
-
-import cn.hutool.core.lang.Filter;
+import java.util.function.Predicate;
 
 /**
  * 复制器抽象类<br>
@@ -22,7 +21,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	/** 目标 */
 	protected T dest;
 	/** 拷贝过滤器，可以过滤掉不需要拷贝的源 */
-	protected Filter<T> copyFilter;
+	protected Predicate<T> copyPredicate;
 
 	//-------------------------------------------------------------------------------------------------------- Getters and Setters start
 	/**
@@ -68,18 +67,18 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	 * 获得过滤器
 	 * @return 过滤器
 	 */
-	public Filter<T> getCopyFilter() {
-		return copyFilter;
+	public Predicate<T> getCopyPredicate() {
+		return copyPredicate;
 	}
 	/**
 	 * 设置过滤器
 	 *
-	 * @param copyFilter 过滤器
+	 * @param copyPredicate 过滤器
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public C setCopyFilter(Filter<T> copyFilter) {
-		this.copyFilter = copyFilter;
+	public C setCopyPredicate(Predicate<T> copyPredicate) {
+		this.copyPredicate = copyPredicate;
 		return (C)this;
 	}
 	//-------------------------------------------------------------------------------------------------------- Getters and Setters end

@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.generator;
 
-import cn.hutool.core.lang.ObjectId;
+import cn.hutool.core.lang.id.ObjectId;
 
 /**
  * ObjectId生成器

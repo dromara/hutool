@@ -2,7 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;

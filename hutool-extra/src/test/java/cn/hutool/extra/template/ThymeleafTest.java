@@ -14,7 +14,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.map.Dict;
 import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 
 /**

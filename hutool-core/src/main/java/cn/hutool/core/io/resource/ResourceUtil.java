@@ -4,7 +4,6 @@ import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Resource资源工具类
@@ -155,7 +155,7 @@ public class ResourceUtil {
 	 * @param filter   过滤器，用于过滤不需要的资源，{@code null}表示不过滤，保留所有元素
 	 * @return 资源列表
 	 */
-	public static List<URL> getResources(String resource, Filter<URL> filter) {
+	public static List<URL> getResources(String resource, Predicate<URL> filter) {
 		return IterUtil.filterToList(getResourceIter(resource), filter);
 	}
 

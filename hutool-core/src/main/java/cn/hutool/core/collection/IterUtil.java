@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * {@link Iterable} 和 {@link Iterator} 相关工具类
@@ -753,7 +754,7 @@ public class IterUtil {
 	 * @return ArrayList
 	 * @since 5.7.22
 	 */
-	public static <E> List<E> filterToList(Iterator<E> iter, Filter<E> filter) {
+	public static <E> List<E> filterToList(Iterator<E> iter, Predicate<E> filter) {
 		return toList(filtered(iter, filter));
 	}
 
@@ -766,7 +767,7 @@ public class IterUtil {
 	 * @return {@link FilterIter}
 	 * @since 5.8.0
 	 */
-	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Filter<? super E> filter) {
+	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Predicate<? super E> filter) {
 		return new FilterIter<>(iterator, filter);
 	}
 

@@ -1,9 +1,4 @@
-package cn.hutool.core.util;
-
-import cn.hutool.core.lang.hash.CityHash;
-import cn.hutool.core.lang.hash.MetroHash;
-import cn.hutool.core.lang.hash.MurmurHash;
-import cn.hutool.core.lang.hash.Number128;
+package cn.hutool.core.lang.hash;
 
 /**
  * Hash算法大全<br>

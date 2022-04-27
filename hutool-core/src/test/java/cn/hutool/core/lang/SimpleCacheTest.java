@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.cache.SimpleCache;
 import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;

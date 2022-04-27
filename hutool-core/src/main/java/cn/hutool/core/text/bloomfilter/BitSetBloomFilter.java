@@ -2,7 +2,7 @@ package cn.hutool.core.text.bloomfilter;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.HashUtil;
+import cn.hutool.core.lang.hash.HashUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
