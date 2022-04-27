@@ -1,17 +1,13 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.Mutable;
+import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
-import cn.hutool.json.serialize.GlobalSerializeMapping;
-import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -52,7 +48,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	private final JSONConfig config;
 
-	// -------------------------------------------------------------------------------------------------------------------- Constructor start
+	// region Constructors
 
 	/**
 	 * 构造<br>
@@ -95,52 +91,6 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
 		this.config = ObjectUtil.defaultIfNull(config, JSONConfig::create);
-	}
-
-	/**
-	 * 构造<br>
-	 * 将参数数组中的元素转换为JSON对应的对象加入到JSONArray中
-	 *
-	 * @param list 初始化的JSON数组
-	 */
-	public JSONArray(Iterable<Object> list) {
-		this();
-		for (Object o : list) {
-			this.add(o);
-		}
-	}
-
-	/**
-	 * 构造<br>
-	 * 将参数数组中的元素转换为JSON对应的对象加入到JSONArray中
-	 *
-	 * @param list 初始化的JSON数组
-	 */
-	public JSONArray(Collection<Object> list) {
-		this(list.size());
-		this.addAll(list);
-	}
-
-	/**
-	 * 使用 {@link JSONTokener} 做为参数构造
-	 *
-	 * @param x A {@link JSONTokener}
-	 * @throws JSONException If there is a syntax error.
-	 */
-	public JSONArray(JSONTokener x) throws JSONException {
-		this();
-		init(x);
-	}
-
-	/**
-	 * 从String构造（JSONArray字符串）
-	 *
-	 * @param source JSON数组字符串
-	 * @throws JSONException If there is a syntax error.
-	 */
-	public JSONArray(CharSequence source) throws JSONException {
-		this();
-		init(source);
 	}
 
 	/**
@@ -194,10 +144,30 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 4.6.5
 	 */
 	public JSONArray(Object object, JSONConfig jsonConfig) throws JSONException {
-		this(DEFAULT_CAPACITY, jsonConfig);
-		init(object);
+		this(object, jsonConfig, null);
 	}
-	// -------------------------------------------------------------------------------------------------------------------- Constructor end
+
+	/**
+	 * 从对象构造<br>
+	 * 支持以下类型的参数：
+	 *
+	 * <pre>
+	 * 1. 数组
+	 * 2. {@link Iterable}对象
+	 * 3. JSON数组字符串
+	 * </pre>
+	 *
+	 * @param object     数组或集合或JSON数组字符串
+	 * @param jsonConfig JSON选项
+	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * @throws JSONException 非数组或集合
+	 * @since 5.8.0
+	 */
+	public JSONArray(Object object, JSONConfig jsonConfig, Filter<Mutable<Object>> filter) throws JSONException {
+		this(DEFAULT_CAPACITY, jsonConfig);
+		ObjectMapper.of(object).map(this, filter);
+	}
+	// endregion
 
 	@Override
 	public JSONConfig getConfig() {
@@ -385,7 +355,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public boolean add(Object e) {
-		return this.rawList.add(JSONUtil.wrap(e, this.config));
+		return addRaw(JSONUtil.wrap(e, this.config), null);
 	}
 
 	@Override
@@ -456,6 +426,28 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	@Override
 	public Object set(int index, Object element) {
+		return set(index, element, null);
+	}
+
+	/**
+	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
+	 *
+	 * @param index   位置
+	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter  过滤器，可以修改值，key（index）无法修改
+	 * @return 替换的值，即之前的值
+	 * @since 5.8.0
+	 */
+	public Object set(int index, Object element, Filter<MutablePair<Integer, Object>> filter) {
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		if (null != filter) {
+			final MutablePair<Integer, Object> pair = new MutablePair<>(index, element);
+			if (filter.accept(pair)) {
+				// 使用修改后的值
+				element = pair.getValue();
+			}
+		}
+
 		if (index >= size()) {
 			add(index, element);
 		}
@@ -590,96 +582,27 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		clone.rawList = ObjectUtil.clone(this.rawList);
 		return clone;
 	}
-	// ------------------------------------------------------------------------------------------------- Private method start
 
 	/**
-	 * 初始化
+	 * 原始添加，添加的对象不做任何处理
 	 *
-	 * @param source 数组或集合或JSON数组字符串
-	 * @throws JSONException 非数组或集合
+	 * @param obj    添加的对象
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * @return 是否加入成功
+	 * @since 5.8.0
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void init(Object source) throws JSONException {
-		if (null == source) {
-			return;
-		}
-
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if (null != serializer && JSONArray.class.equals(TypeUtil.getTypeArgument(serializer.getClass()))) {
-			// 自定义序列化
-			serializer.serialize(this, source);
-		} else if (source instanceof CharSequence) {
-			// JSON字符串
-			init((CharSequence) source);
-		} else if (source instanceof JSONTokener) {
-			init((JSONTokener) source);
-		} else {
-			Iterator<?> iter;
-			if (ArrayUtil.isArray(source)) {// 数组
-				iter = new ArrayIter<>(source);
-			} else if (source instanceof Iterator<?>) {// Iterator
-				iter = ((Iterator<?>) source);
-			} else if (source instanceof Iterable<?>) {// Iterable
-				iter = ((Iterable<?>) source).iterator();
-			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
-			}
-
-			Object next;
-			while (iter.hasNext()) {
-				next = iter.next();
-				// 检查循环引用
-				if (next != source) {
-					this.add(next);
-				}
+	protected boolean addRaw(Object obj, Filter<Mutable<Object>> filter) {
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		if (null != filter) {
+			final Mutable<Object> mutable = new MutableObj<>(obj);
+			if (filter.accept(mutable)) {
+				// 使用修改后的值
+				obj = mutable.get();
+			}else{
+				// 键值对被过滤
+				return false;
 			}
 		}
+		return this.rawList.add(obj);
 	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param source JSON字符串
-	 */
-	private void init(CharSequence source) {
-		if (null != source) {
-			init(new JSONTokener(StrUtil.trim(source), this.config));
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param x {@link JSONTokener}
-	 */
-	private void init(JSONTokener x) {
-		if (x.nextClean() != '[') {
-			throw x.syntaxError("A JSONArray text must start with '['");
-		}
-		if (x.nextClean() != ']') {
-			x.back();
-			for (; ; ) {
-				if (x.nextClean() == ',') {
-					x.back();
-					this.rawList.add(JSONNull.NULL);
-				} else {
-					x.back();
-					this.rawList.add(x.nextValue());
-				}
-				switch (x.nextClean()) {
-					case ',':
-						if (x.nextClean() == ']') {
-							return;
-						}
-						x.back();
-						break;
-					case ']':
-						return;
-					default:
-						throw x.syntaxError("Expected a ',' or ']'");
-				}
-			}
-		}
-	}
-	// ------------------------------------------------------------------------------------------------- Private method end
 }

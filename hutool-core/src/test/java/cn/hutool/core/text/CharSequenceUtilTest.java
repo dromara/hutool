@@ -148,4 +148,16 @@ public class CharSequenceUtilTest {
 		Assert.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "ABCdef"));
 		Assert.assertNull(CharSequenceUtil.removeSuffixIgnoreCase(null, "ABCdef"));
 	}
+
+	@Test
+	public void trimToNullTest(){
+		String a = "  ";
+		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+
+		a = "";
+		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+
+		a = null;
+		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+	}
 }

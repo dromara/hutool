@@ -878,6 +878,36 @@ public class CollUtilTest {
 		Assert.assertEquals(people.get(1).getGender(), "小孩");
 	}
 
+	@Test
+	public void distinctTest(){
+		final ArrayList<Integer> distinct = CollUtil.distinct(ListUtil.of(5, 3, 10, 9, 0, 5, 10, 9));
+		Assert.assertEquals(ListUtil.of(5, 3, 10, 9, 0), distinct);
+	}
+
+	@Test
+	public void distinctByFunctionTest(){
+		List<Person> people = Arrays.asList(
+				new Person("aa", 12, "man", 1),
+				new Person("bb", 13, "woman", 2),
+				new Person("cc", 14, "man", 3),
+				new Person("dd", 15, "woman", 4),
+				new Person("ee", 16, "woman", 5),
+				new Person("ff", 17, "man", 6)
+		);
+
+		// 覆盖模式下ff覆盖了aa，ee覆盖了bb
+		List<Person> distinct = CollUtil.distinct(people, Person::getGender, true);
+		Assert.assertEquals(2, distinct.size());
+		Assert.assertEquals("ff", distinct.get(0).getName());
+		Assert.assertEquals("ee", distinct.get(1).getName());
+
+		// 非覆盖模式下，保留了最早加入的aa和bb
+		distinct = CollUtil.distinct(people, Person::getGender, false);
+		Assert.assertEquals(2, distinct.size());
+		Assert.assertEquals("aa", distinct.get(0).getName());
+		Assert.assertEquals("bb", distinct.get(1).getName());
+	}
+
 	@Data
 	@AllArgsConstructor
 	static class Person {

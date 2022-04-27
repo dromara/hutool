@@ -28,7 +28,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -139,6 +142,37 @@ public class JSONObjectTest {
 		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals(new Integer(0), json.getInt("ok"));
+		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+	}
+
+	@Test
+	public void parseBytesTest() {
+		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject json = new JSONObject(jsonStr.getBytes(StandardCharsets.UTF_8));
+		Assert.assertEquals(new Integer(0), json.getInt("ok"));
+		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+	}
+
+	@Test
+	public void parseReaderTest() {
+		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		final StringReader stringReader = new StringReader(jsonStr);
+
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject json = new JSONObject(stringReader);
+		Assert.assertEquals(new Integer(0), json.getInt("ok"));
+		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+	}
+
+	@Test
+	public void parseInputStreamTest() {
+		String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+		final ByteArrayInputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject json = new JSONObject(in);
 		Assert.assertEquals(new Integer(0), json.getInt("ok"));
 		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
@@ -681,5 +715,27 @@ public class JSONObjectTest {
 			return true;
 		});
 		Assert.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);
+	}
+
+	@Test
+	public void parseFilterTest() {
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> "b".equals(pair.getKey()));
+		Assert.assertEquals(1, jsonObject.size());
+		Assert.assertEquals("value2", jsonObject.get("b"));
+	}
+
+	@Test
+	public void parseFilterEditTest() {
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
+		JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> {
+			if("b".equals(pair.getKey())){
+				pair.setValue(pair.getValue() + "_edit");
+			}
+			return true;
+		});
+		Assert.assertEquals("value2_edit", jsonObject.get("b"));
 	}
 }

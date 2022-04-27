@@ -777,4 +777,20 @@ public class BeanUtilTest {
 	public static class Test2 {
 		private List<Integer> strList;
 	}
+
+	@Test
+	public void issuesI53O9JTest(){
+		Map<String, String> map = new HashMap<>();
+		map.put("statusIdUpdateTime", "");
+
+		WkCrmCustomer customer = new WkCrmCustomer();
+		BeanUtil.copyProperties(map, customer);
+
+		Assert.assertNull(customer.getStatusIdUpdateTime());
+	}
+
+	@Data
+	public static class WkCrmCustomer{
+		private LocalDateTime statusIdUpdateTime;
+	}
 }

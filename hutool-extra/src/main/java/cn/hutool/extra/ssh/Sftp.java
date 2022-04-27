@@ -340,7 +340,7 @@ public class Sftp extends AbstractFtp {
 		} catch (SftpException e) {
 			final String msg = e.getMessage();
 			// issue#I4P9ED@Gitee
-			if (msg.contains("No such file") || msg.contains("does not exist")) {
+			if (StrUtil.containsAnyIgnoreCase(msg, "No such file", "does not exist")) {
 				// 文件不存在直接返回false
 				// pr#378@Gitee
 				return false;

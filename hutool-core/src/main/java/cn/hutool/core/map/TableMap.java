@@ -27,8 +27,17 @@ import java.util.Set;
 public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private static final int DEFAULT_CAPACITY = 10;
+
 	private final List<K> keys;
 	private final List<V> values;
+
+	/**
+	 * 构造
+	 */
+	public TableMap() {
+		this(DEFAULT_CAPACITY);
+	}
 
 	/**
 	 * 构造
@@ -85,11 +94,12 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 
 	/**
 	 * 根据value获得对应的key，只返回找到的第一个value对应的key值
+	 *
 	 * @param value 值
 	 * @return 键
 	 * @since 5.3.3
 	 */
-	public K getKey(V value){
+	public K getKey(V value) {
 		final int index = values.indexOf(value);
 		if (index > -1 && index < keys.size()) {
 			return keys.get(index);
@@ -160,7 +170,17 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 
 	@Override
 	public Set<K> keySet() {
-		return new HashSet<>(keys);
+		return new HashSet<>(this.keys);
+	}
+
+	/**
+	 * 获取所有键，可重复，不可修改
+	 *
+	 * @return 键列表
+	 * @since 5.8.0
+	 */
+	public List<K> keys() {
+		return Collections.unmodifiableList(this.keys);
 	}
 
 	@Override

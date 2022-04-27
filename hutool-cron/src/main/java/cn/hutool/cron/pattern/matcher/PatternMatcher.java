@@ -73,6 +73,17 @@ public class PatternMatcher {
 	}
 
 	/**
+	 * 给定周的值是否匹配定时任务表达式对应部分
+	 *
+	 * @param dayOfWeekValue dayOfMonth值，星期从0开始，0和7都表示周日
+	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
+	 * @since 5.8.0
+	 */
+	public boolean matchWeek(int dayOfWeekValue) {
+		return matchers[5].match(dayOfWeekValue);
+	}
+
+	/**
 	 * 给定时间是否匹配定时任务表达式
 	 *
 	 * @param second     秒数，-1表示不匹配此项
@@ -88,7 +99,7 @@ public class PatternMatcher {
 		return ((second < 0) || matchers[0].match(second)) // 匹配秒（非秒匹配模式下始终返回true）
 				&& matchers[1].match(minute)// 匹配分
 				&& matchers[2].match(hour)// 匹配时
-				&& isMatchDayOfMonth(matchers[3], dayOfMonth, month, Year.isLeap(year))// 匹配日
+				&& matchDayOfMonth(matchers[3], dayOfMonth, month, Year.isLeap(year))// 匹配日
 				&& matchers[4].match(month) // 匹配月
 				&& matchers[5].match(dayOfWeek)// 匹配周
 				&& matchers[6].match(year);// 匹配年
@@ -103,7 +114,7 @@ public class PatternMatcher {
 	 * @param isLeapYear 是否闰年
 	 * @return 是否匹配
 	 */
-	private static boolean isMatchDayOfMonth(PartMatcher matcher, int dayOfMonth, int month, boolean isLeapYear) {
+	private static boolean matchDayOfMonth(PartMatcher matcher, int dayOfMonth, int month, boolean isLeapYear) {
 		return ((matcher instanceof DayOfMonthMatcher) //
 				? ((DayOfMonthMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
 				: matcher.match(dayOfMonth));

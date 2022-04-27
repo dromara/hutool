@@ -200,6 +200,7 @@ public interface RegexPool {
 	 * ----------
 	 * </pre>
 	 * 总结中文姓名：2-60位，只能是中文和维吾尔族的点·
+	 * 放宽汉字范围：如生僻姓名 刘欣䶮yǎn
 	 */
-	String CHINESE_NAME = "^[\u4E00-\u9FFF·]{2,60}$";
+	String CHINESE_NAME = "^[\u2E80-\u9FFF·]{2,60}$";
 }

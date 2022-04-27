@@ -8,6 +8,9 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.TableMap;
+import cn.hutool.core.map.multi.RowKeyTable;
+import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -39,7 +42,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1045,24 +1047,35 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			return passCurrentRow();
 		}
 
-		final Map<?, ?> aliasMap = aliasMap(rowMap);
-
+		final Table<?, ?, ?> aliasTable = aliasTable(rowMap);
 		if (isWriteKeyAsHead) {
-			writeHeadRow(aliasMap.keySet());
+			// 写出标题行，并记录标题别名和列号的关系
+			writeHeadRow(aliasTable.columnKeys());
+			// 记录原数据key对应列号
+			int i = 0;
+			for (Object key : aliasTable.rowKeySet()) {
+				this.headLocationCache.putIfAbsent(StrUtil.toString(key), i);
+				i++;
+			}
 		}
 
 		// 如果已经写出标题行，根据标题行找对应的值写入
 		if (MapUtil.isNotEmpty(this.headLocationCache)) {
 			final Row row = RowUtil.getOrCreateRow(this.sheet, this.currentRow.getAndIncrement());
 			Integer location;
-			for (Entry<?, ?> entry : aliasMap.entrySet()) {
-				location = this.headLocationCache.get(StrUtil.toString(entry.getKey()));
+			for (Table.Cell<?, ?, ?> cell : aliasTable) {
+				// 首先查找原名对应的列号
+				location = this.headLocationCache.get(StrUtil.toString(cell.getRowKey()));
+				if(null == location){
+					// 未找到，则查找别名对应的列号
+					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
+				}
 				if (null != location) {
-					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), entry.getValue(), this.styleSet, false);
+					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), cell.getValue(), this.styleSet, false);
 				}
 			}
 		} else {
-			writeRow(aliasMap.values());
+			writeRow(aliasTable.values());
 		}
 		return this;
 	}
@@ -1328,23 +1341,24 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param rowMap 一行数据
 	 * @return 别名列表
 	 */
-	private Map<?, ?> aliasMap(Map<?, ?> rowMap) {
+	private Table<?, ?, ?> aliasTable(Map<?, ?> rowMap) {
+		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			return rowMap;
+			rowMap.forEach((key, value)-> filteredTable.put(key, key, value));
+		}else{
+			rowMap.forEach((key, value)->{
+				final String aliasName = this.headerAlias.get(StrUtil.toString(key));
+				if (null != aliasName) {
+					// 别名键值对加入
+					filteredTable.put(key, aliasName, value);
+				} else if (false == this.onlyAlias) {
+					// 保留无别名设置的键值对
+					filteredTable.put(key, key, value);
+				}
+			});
 		}
 
-		final Map<Object, Object> filteredMap = MapUtil.newHashMap(rowMap.size(), true);
-		rowMap.forEach((key, value)->{
-			final String aliasName = this.headerAlias.get(StrUtil.toString(key));
-			if (null != aliasName) {
-				// 别名键值对加入
-				filteredMap.put(aliasName, value);
-			} else if (false == this.onlyAlias) {
-				// 保留无别名设置的键值对
-				filteredMap.put(key, value);
-			}
-		});
-		return filteredMap;
+		return filteredTable;
 	}
 
 	/**

@@ -2541,7 +2541,7 @@ public class NumberUtil {
 
 	/**
 	 * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
 	 *
 	 * @param value 值
 	 * @return byte数组
@@ -2560,7 +2560,7 @@ public class NumberUtil {
 
 	/**
 	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
 	 *
 	 * @param bytes byte数组
 	 * @return int

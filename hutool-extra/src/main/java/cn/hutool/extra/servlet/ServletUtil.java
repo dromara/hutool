@@ -561,7 +561,7 @@ public class ServletUtil {
 	 *                      <li>application/vnd.ms-powerpoint</li>
 	 *                    </ul>
 	 *                    docx、xlsx 这种 office 2007 格式 设置 MIME;网页里面docx 文件是没问题，但是下载下来了之后就变成doc格式了
-	 *                    参考：https://my.oschina.net/shixiaobao17145/blog/32489
+	 *                    参考：<a href="https://my.oschina.net/shixiaobao17145/blog/32489">https://my.oschina.net/shixiaobao17145/blog/32489</a>
 	 *                    <ul>
 	 *                      <li>MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";</li>
 	 *                      <li>MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";</li>

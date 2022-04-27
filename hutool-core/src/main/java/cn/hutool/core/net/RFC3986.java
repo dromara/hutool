@@ -3,8 +3,8 @@ package cn.hutool.core.net;
 import cn.hutool.core.codec.PercentCodec;
 
 /**
- * rfc3986 : https://www.ietf.org/rfc/rfc3986.html 编码实现<br>
- * 定义见：https://www.ietf.org/rfc/rfc3986.html#appendix-A
+ * <a href="https://www.ietf.org/rfc/rfc3986.html">RFC3986</a> 编码实现<br>
+ * 定义见：<a href="https://www.ietf.org/rfc/rfc3986.html#appendix-A">https://www.ietf.org/rfc/rfc3986.html#appendix-A</a>
  *
  * @author looly
  * @since 5.7.16
@@ -23,13 +23,13 @@ public class RFC3986 {
 
 	/**
 	 * reserved = gen-delims / sub-delims<br>
-	 * see：https://www.ietf.org/rfc/rfc3986.html#section-2.2
+	 * see：<a href="https://www.ietf.org/rfc/rfc3986.html#section-2.2">https://www.ietf.org/rfc/rfc3986.html#section-2.2</a>
 	 */
 	public static final PercentCodec RESERVED = GEN_DELIMS.orNew(SUB_DELIMS);
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"<br>
-	 * see: https://www.ietf.org/rfc/rfc3986.html#section-2.3
+	 * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-2.3">https://www.ietf.org/rfc/rfc3986.html#section-2.3</a>
 	 */
 	public static final PercentCodec UNRESERVED = PercentCodec.of(unreservedChars());
 
@@ -40,7 +40,7 @@ public class RFC3986 {
 
 	/**
 	 * segment  = pchar<br>
-	 * see: https://www.ietf.org/rfc/rfc3986.html#section-3.3
+	 * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-3.3">https://www.ietf.org/rfc/rfc3986.html#section-3.3</a>
 	 */
 	public static final PercentCodec SEGMENT = PCHAR;
 	/**

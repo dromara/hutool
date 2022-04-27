@@ -26,11 +26,13 @@ public class WeakCacheTest {
 	@Ignore
 	public void removeByGcTest(){
 		// https://gitee.com/dromara/hutool/issues/I51O7M
-		// 经过GC，
 		WeakCache<String, String> cache = new WeakCache<>(-1);
 		cache.put("a", "1");
 		cache.put("b", "2");
+
+		// 监听
 		Assert.assertEquals(2, cache.size());
+		cache.setListener(Console::log);
 
 		// GC测试
 		int i=0;

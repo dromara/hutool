@@ -972,7 +972,7 @@ public class JSONUtil {
 
 	/**
 	 * 转义不可见字符<br>
-	 * 见：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+	 * 见：<a href="https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF">https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF</a>
 	 *
 	 * @param c 字符
 	 * @return 转义后的字符串

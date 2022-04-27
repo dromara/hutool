@@ -1,7 +1,7 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 /**
  * Bean属性缓存<br>
@@ -12,7 +12,7 @@ import cn.hutool.core.lang.func.Func0;
 public enum BeanDescCache {
 	INSTANCE;
 
-	private final SimpleCache<Class<?>, BeanDesc> bdCache = new SimpleCache<>();
+	private final WeakConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakConcurrentMap<>();
 
 	/**
 	 * 获得属性名和{@link BeanDesc}Map映射
@@ -23,7 +23,7 @@ public enum BeanDescCache {
 	 * @since 5.4.2
 	 */
 	public BeanDesc getBeanDesc(Class<?> beanClass, Func0<BeanDesc> supplier) {
-		return bdCache.get(beanClass, supplier);
+		return bdCache.computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
 	}
 
 	/**

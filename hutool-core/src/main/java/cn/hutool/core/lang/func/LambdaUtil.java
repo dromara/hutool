@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,7 +18,7 @@ import java.lang.invoke.SerializedLambda;
  */
 public class LambdaUtil {
 
-	private static final SimpleCache<String, SerializedLambda> cache = new SimpleCache<>();
+	private static final WeakConcurrentMap<String, SerializedLambda> cache = new WeakConcurrentMap<>();
 
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
@@ -202,7 +202,7 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	private static SerializedLambda _resolve(Serializable func) {
-		return cache.get(func.getClass().getName(), () -> ReflectUtil.invoke(func, "writeReplace"));
+		return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
 	}
 	//endregion
 }

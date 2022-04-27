@@ -1,6 +1,6 @@
 package cn.hutool.script;
 
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.StrUtil;
 
 import javax.script.Bindings;
@@ -20,7 +20,7 @@ import javax.script.ScriptException;
 public class ScriptUtil {
 
 	private static final ScriptEngineManager MANAGER = new ScriptEngineManager();
-	private static final SimpleCache<String, ScriptEngine> CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<String, ScriptEngine> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 获得单例的{@link ScriptEngine} 实例
@@ -29,7 +29,7 @@ public class ScriptUtil {
 	 * @return {@link ScriptEngine} 实例
 	 */
 	public static ScriptEngine getScript(String nameOrExtOrMime) {
-		return CACHE.get(nameOrExtOrMime, () -> createScript(nameOrExtOrMime));
+		return CACHE.computeIfAbsent(nameOrExtOrMime, () -> createScript(nameOrExtOrMime));
 	}
 
 	/**

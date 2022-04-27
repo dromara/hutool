@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.util.ClassUtilTest.TestSubClass;
@@ -12,6 +13,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 反射工具类单元测试
@@ -202,10 +205,13 @@ public class ReflectUtilTest {
 	}
 
 	interface TestInterface1 {
+		@SuppressWarnings("unused")
 		void getA();
 
+		@SuppressWarnings("unused")
 		void getB();
 
+		@SuppressWarnings("unused")
 		default void getC() {
 
 		}
@@ -220,6 +226,7 @@ public class ReflectUtilTest {
 		void get3();
 	}
 
+	@SuppressWarnings("InnerClassMayBeStatic")
 	class C1 implements TestInterface2 {
 
 		@Override
@@ -238,5 +245,27 @@ public class ReflectUtilTest {
 		public void getA() {
 
 		}
+	}
+
+	@Test
+	public void newInstanceIfPossibleTest(){
+		//noinspection ConstantConditions
+		int intValue = ReflectUtil.newInstanceIfPossible(int.class);
+		Assert.assertEquals(0, intValue);
+
+		Integer integer = ReflectUtil.newInstanceIfPossible(Integer.class);
+		Assert.assertEquals(new Integer(0), integer);
+
+		Map<?, ?> map = ReflectUtil.newInstanceIfPossible(Map.class);
+		Assert.assertNotNull(map);
+
+		Collection<?> collection = ReflectUtil.newInstanceIfPossible(Collection.class);
+		Assert.assertNotNull(collection);
+
+		Week week = ReflectUtil.newInstanceIfPossible(Week.class);
+		Assert.assertEquals(Week.SUNDAY, week);
+
+		int[] intArray = ReflectUtil.newInstanceIfPossible(int[].class);
+		Assert.assertArrayEquals(new int[0], intArray);
 	}
 }

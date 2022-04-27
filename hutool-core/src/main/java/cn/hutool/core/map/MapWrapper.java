@@ -2,6 +2,9 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.util.ObjectUtil;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,6 +14,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Map包装类，通过包装一个已有Map实现特定功能。例如自定义Key的规则或Value规则
@@ -33,6 +37,17 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	protected static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
 	private Map<K, V> raw;
+
+	/**
+	 * 构造<br>
+	 * 通过传入一个Map从而确定Map的类型，子类需创建一个空的Map，而非传入一个已有Map，否则值可能会被修改
+	 *
+	 * @param mapFactory 空Map创建工厂
+	 * @since 5.8.0
+	 */
+	public MapWrapper(Supplier<Map<K, V>> mapFactory) {
+		this(mapFactory.get());
+	}
 
 	/**
 	 * 构造
@@ -199,11 +214,23 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 
 	@Override
 	public MapWrapper<K, V> clone() throws CloneNotSupportedException {
-		@SuppressWarnings("unchecked")
-		final MapWrapper<K, V> clone = (MapWrapper<K, V>) super.clone();
+		@SuppressWarnings("unchecked") final MapWrapper<K, V> clone = (MapWrapper<K, V>) super.clone();
 		clone.raw = ObjectUtil.clone(raw);
 		return clone;
 	}
 
 	//---------------------------------------------------------------------------- Override default methods end
+
+	// region 序列化与反序列化重写
+	private void writeObject(final ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+		out.writeObject(this.raw);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
+		raw = (Map<K, V>) in.readObject();
+	}
+	// endregion
 }

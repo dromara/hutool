@@ -1029,6 +1029,7 @@ public class DateUtilTest {
 	}
 
 	@Test
+	@SuppressWarnings("ConstantConditions")
 	public void isOverlapTest() {
 		DateTime oneStartTime = DateUtil.parse("2022-01-01 10:10:10");
 		DateTime oneEndTime = DateUtil.parse("2022-01-01 11:10:10");
@@ -1055,6 +1056,16 @@ public class DateUtilTest {
 
 		Assert.assertFalse(DateUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
 		Assert.assertFalse(DateUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+	}
 
+	@Test
+	public void isInTest(){
+		String sourceStr = "2022-04-19 00:00:00";
+		String startTimeStr = "2022-04-19 00:00:00";
+		String endTimeStr = "2022-04-19 23:59:59";
+		boolean between = DateUtil.isIn(DateUtil.parse(startTimeStr),
+				DateUtil.parse(endTimeStr),
+				DateUtil.parse(sourceStr));
+		Assert.assertTrue(between);
 	}
 }

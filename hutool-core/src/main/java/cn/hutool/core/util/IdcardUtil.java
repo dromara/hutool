@@ -15,11 +15,11 @@ import java.util.Objects;
 
 /**
  * 身份证相关工具类<br>
- * see https://www.oschina.net/code/snippet_1611_2881
+ * see <a href="https://www.oschina.net/code/snippet_1611_2881">https://www.oschina.net/code/snippet_1611_2881</a>
  *
  * <p>
  * 本工具并没有对行政区划代码做校验，如有需求，请参阅（2018年10月）：
- * http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html
+ * <a href="http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html">http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html</a>
  * </p>
  *
  * @author Looly

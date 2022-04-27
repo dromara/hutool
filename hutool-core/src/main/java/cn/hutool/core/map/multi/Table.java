@@ -1,10 +1,13 @@
 package cn.hutool.core.map.multi;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Consumer3;
 import cn.hutool.core.map.MapUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,6 +102,25 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 */
 	default Set<C> columnKeySet() {
 		return Opt.ofNullable(columnMap()).map(Map::keySet).get();
+	}
+
+	/**
+	 * 返回所有列的key，列的key如果实现Map是可重复key，则返回对应不去重的List。
+	 *
+	 * @return 列set
+	 * @since 5.8.0
+	 */
+	default List<C> columnKeys() {
+		final Map<C, Map<R, V>> columnMap = columnMap();
+		if(MapUtil.isEmpty(columnMap)){
+			return ListUtil.empty();
+		}
+
+		final List<C> result = new ArrayList<>(columnMap.size());
+		for (Map.Entry<C, Map<R, V>> cMapEntry : columnMap.entrySet()) {
+			result.add(cMapEntry.getKey());
+		}
+		return result;
 	}
 
 	/**

@@ -9,8 +9,11 @@ import cn.hutool.core.map.MapUtil;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -198,6 +201,15 @@ public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 	//endregion
 
 	//region getColumn
+	@Override
+	public List<C> columnKeys() {
+		final Collection<Map<C, V>> values = this.raw.values();
+		final List<C> result = new ArrayList<>(values.size() * 16);
+		for (Map<C, V> map : values) {
+			map.forEach((key, value)->{result.add(key);});
+		}
+		return result;
+	}
 
 	@Override
 	public Map<R, V> getColumn(C columnKey) {

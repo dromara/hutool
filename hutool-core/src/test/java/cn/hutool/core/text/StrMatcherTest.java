@@ -1,6 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class StrMatcherTest {
 		// 当有无匹配项的时候，按照全不匹配对待
 		final StrMatcher strMatcher = new StrMatcher("${name}经过${year}年");
 		final Map<String, String> match = strMatcher.match("小明经过20年，成长为一个大人。");
-		Console.log(match);
+		//Console.log(match);
 		Assert.assertEquals("小明", match.get("name"));
 		Assert.assertEquals("20", match.get("year"));
 	}

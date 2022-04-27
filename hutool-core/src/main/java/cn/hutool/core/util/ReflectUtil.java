@@ -8,11 +8,12 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,15 +37,15 @@ public class ReflectUtil {
 	/**
 	 * 构造对象缓存
 	 */
-	private static final SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 字段缓存
 	 */
-	private static final SimpleCache<Class<?>, Field[]> FIELDS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 方法缓存
 	 */
-	private static final SimpleCache<Class<?>, Method[]> METHODS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- Constructor
 
@@ -86,7 +87,7 @@ public class ReflectUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, () -> getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, () -> getConstructorsDirectly(beanClass));
 	}
 
 	/**
@@ -175,7 +176,7 @@ public class ReflectUtil {
 	 */
 	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return FIELDS_CACHE.get(beanClass, () -> getFieldsDirectly(beanClass, true));
+		return FIELDS_CACHE.computeIfAbsent(beanClass, () -> getFieldsDirectly(beanClass, true));
 	}
 
 
@@ -651,7 +652,7 @@ public class ReflectUtil {
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return METHODS_CACHE.get(beanClass,
+		return METHODS_CACHE.computeIfAbsent(beanClass,
 				() -> getMethodsDirectly(beanClass, true, true));
 	}
 
@@ -864,30 +865,45 @@ public class ReflectUtil {
 	 * </pre>
 	 *
 	 * @param <T>       对象类型
-	 * @param beanClass 被构造的类
+	 * @param type 被构造的类
 	 * @return 构造后的对象，构造失败返回{@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstanceIfPossible(Class<T> beanClass) {
-		Assert.notNull(beanClass);
+	public static <T> T newInstanceIfPossible(Class<T> type) {
+		Assert.notNull(type);
+
+		// 原始类型
+		if(type.isPrimitive()){
+			return (T) ClassUtil.getPrimitiveDefaultValue(type);
+		}
 
 		// 某些特殊接口的实例化按照默认实现进行
-		if (beanClass.isAssignableFrom(AbstractMap.class)) {
-			beanClass = (Class<T>) HashMap.class;
-		} else if (beanClass.isAssignableFrom(List.class)) {
-			beanClass = (Class<T>) ArrayList.class;
-		} else if (beanClass.isAssignableFrom(Set.class)) {
-			beanClass = (Class<T>) HashSet.class;
+		if (type.isAssignableFrom(AbstractMap.class)) {
+			type = (Class<T>) HashMap.class;
+		} else if (type.isAssignableFrom(List.class)) {
+			type = (Class<T>) ArrayList.class;
+		} else if (type.isAssignableFrom(Set.class)) {
+			type = (Class<T>) HashSet.class;
 		}
 
 		try {
-			return newInstance(beanClass);
+			return newInstance(type);
 		} catch (Exception e) {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
 
-		final Constructor<T>[] constructors = getConstructors(beanClass);
+		// 枚举
+		if (type.isEnum()) {
+			return type.getEnumConstants()[0];
+		}
+
+		// 数组
+		if (type.isArray()) {
+			return (T) Array.newInstance(type.getComponentType(), 0);
+		}
+
+		final Constructor<T>[] constructors = getConstructors(type);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
 			parameterTypes = constructor.getParameterTypes();

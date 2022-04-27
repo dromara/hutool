@@ -153,7 +153,7 @@ public class Tailer implements Serializable {
 			Stack<String> stack = new Stack<>();
 
 			long start = this.randomAccessFile.getFilePointer();
-			long nextEnd = len - 1;
+			long nextEnd = (len - 1) < 0 ? 0 : len - 1;
 			this.randomAccessFile.seek(nextEnd);
 			int c;
 			int currentLine = 0;

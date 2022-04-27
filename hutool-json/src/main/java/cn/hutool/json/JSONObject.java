@@ -1,23 +1,15 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
-import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
-import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.serialize.GlobalSerializeMapping;
-import cn.hutool.json.serialize.JSONObjectSerializer;
-import cn.hutool.json.serialize.JSONSerializer;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -26,12 +18,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
 
 /**
  * JSON对象<br>
@@ -119,8 +106,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
-		super(createRaw(capacity, config));
-		this.config = config;
+		super(InternalJSONUtil.createRawMap(capacity, ObjectUtil.defaultIfNull(config, JSONConfig.create())));
+		this.config = ObjectUtil.defaultIfNull(config, JSONConfig.create());
 	}
 
 	/**
@@ -198,8 +185,30 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 4.2.2
 	 */
 	public JSONObject(Object source, JSONConfig config) {
+		this(source, config, null);
+	}
+
+	/**
+	 * 构建JSONObject，规则如下：
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
+	 * <p>
+	 * 如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 *
+	 * @param source JavaBean或者Map对象或者String
+	 * @param config JSON配置文件，{@code null}则使用默认配置
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @since 5.8.0
+	 */
+	public JSONObject(Object source, JSONConfig config, Filter<MutablePair<String, Object>> filter) {
 		this(DEFAULT_CAPACITY, config);
-		init(source);
+		ObjectMapper.of(source).map(this, filter);
 	}
 
 	/**
@@ -213,26 +222,26 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
 	 * 若names列表为空，则字段全部加入
 	 *
-	 * @param obj   包含需要字段的Bean对象或者Map对象
-	 * @param names 需要构建JSONObject的字段名列表
+	 * @param source 包含需要字段的Bean对象或者Map对象
+	 * @param names  需要构建JSONObject的字段名列表
 	 */
-	public JSONObject(Object obj, String... names) {
+	public JSONObject(Object source, String... names) {
 		this();
 		if (ArrayUtil.isEmpty(names)) {
-			init(obj);
+			ObjectMapper.of(source).map(this, null);
 			return;
 		}
 
-		if (obj instanceof Map) {
+		if (source instanceof Map) {
 			Object value;
 			for (String name : names) {
-				value = ((Map<?, ?>) obj).get(name);
+				value = ((Map<?, ?>) source).get(name);
 				this.putOnce(name, value);
 			}
 		} else {
 			for (String name : names) {
 				try {
-					this.putOpt(name, ReflectUtil.getFieldValue(obj, name));
+					this.putOpt(name, ReflectUtil.getFieldValue(source, name));
 				} catch (Exception ignore) {
 					// ignore
 				}
@@ -346,8 +355,36 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject set(String key, Object value) throws JSONException {
+		return set(key, value, null, false);
+	}
+
+	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
+	 *
+	 * @param key            键
+	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 * @since 5.8.0
+	 */
+	public JSONObject set(String key, Object value, Filter<MutablePair<String, Object>> filter, boolean checkDuplicate) throws JSONException {
 		if (null == key) {
 			return this;
+		}
+
+		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
+		if (null != filter) {
+			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+			if (filter.accept(pair)) {
+				// 使用修改后的键值对
+				key = pair.getKey();
+				value = pair.getValue();
+			} else {
+				// 键值对被过滤
+				return this;
+			}
 		}
 
 		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
@@ -355,8 +392,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			// 忽略值模式下如果值为空清除key
 			this.remove(key);
 		} else {
-			InternalJSONUtil.testValidity(value);
-			super.put(key, JSONUtil.wrap(value, this.config));
+			if (checkDuplicate && containsKey(key)) {
+				throw new JSONException("Duplicate key \"{}\"", key);
+			}
+
+			super.put(key, JSONUtil.wrap(InternalJSONUtil.testValidity(value), this.config));
 		}
 		return this;
 	}
@@ -370,13 +410,21 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
-		if (key != null) {
-			if (containsKey(key)) {
-				throw new JSONException("Duplicate key \"{}\"", key);
-			}
-			this.set(key, value);
-		}
-		return this;
+		return setOnce(key, value, null);
+	}
+
+	/**
+	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
+	 *
+	 * @param key    键
+	 * @param value  值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @return this
+	 * @throws JSONException 值是无穷数字、键重复抛出异常
+	 * @since 5.8.0
+	 */
+	public JSONObject setOnce(String key, Object value, Filter<MutablePair<String, Object>> filter) throws JSONException {
+		return set(key, value, filter, true);
 	}
 
 	/**
@@ -542,181 +590,4 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		clone.config = this.config;
 		return clone;
 	}
-
-	// ------------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * Bean对象转Map
-	 *
-	 * @param bean Bean对象
-	 */
-	private void populateMap(Object bean) {
-		BeanUtil.beanToMap(bean, this, InternalJSONUtil.toCopyOptions(config));
-	}
-
-	/**
-	 * 初始化
-	 * <ol>
-	 * <li>value为Map，将键值对加入JSON对象</li>
-	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
-	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
-	 * </ol>
-	 *
-	 * @param source JavaBean或者Map对象或者String
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void init(Object source) {
-		if (null == source) {
-			return;
-		}
-
-		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if (serializer instanceof JSONObjectSerializer) {
-			serializer.serialize(this, source);
-			return;
-		}
-
-		if (ArrayUtil.isArray(source) || source instanceof JSONArray) {
-			// 不支持集合类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
-		}
-
-		if (source instanceof Map) {
-			// Map
-			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				this.set(Convert.toStr(e.getKey()), e.getValue());
-			}
-		} else if (source instanceof Map.Entry) {
-			final Map.Entry entry = (Map.Entry) source;
-			this.set(Convert.toStr(entry.getKey()), entry.getValue());
-		} else if (source instanceof CharSequence) {
-			// 可能为JSON字符串
-			init((CharSequence) source);
-		} else if (source instanceof JSONTokener) {
-			// JSONTokener
-			init((JSONTokener) source);
-		} else if (source instanceof ResourceBundle) {
-			// JSONTokener
-			init((ResourceBundle) source);
-		} else if (BeanUtil.isReadableBean(source.getClass())) {
-			// 普通Bean
-			this.populateMap(source);
-		} else {
-			// 不支持对象类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
-		}
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param bundle ResourceBundle
-	 * @since 5.3.1
-	 */
-	private void init(ResourceBundle bundle) {
-		Enumeration<String> keys = bundle.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			if (key != null) {
-				InternalJSONUtil.propertyPut(this, key, bundle.getString(key));
-			}
-		}
-	}
-
-	/**
-	 * 初始化，可以判断字符串为JSON或者XML
-	 *
-	 * @param source JSON字符串
-	 */
-	private void init(CharSequence source) {
-		final String jsonStr = StrUtil.trim(source);
-		if (StrUtil.startWith(jsonStr, '<')) {
-			// 可能为XML
-			XML.toJSONObject(this, jsonStr, false);
-			return;
-		}
-		init(new JSONTokener(StrUtil.trim(source), this.config));
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param x JSONTokener
-	 */
-	private void init(JSONTokener x) {
-		char c;
-		String key;
-
-		if (x.nextClean() != '{') {
-			throw x.syntaxError("A JSONObject text must begin with '{'");
-		}
-		while (true) {
-			c = x.nextClean();
-			switch (c) {
-				case 0:
-					throw x.syntaxError("A JSONObject text must end with '}'");
-				case '}':
-					return;
-				default:
-					x.back();
-					key = x.nextValue().toString();
-			}
-
-			// The key is followed by ':'.
-
-			c = x.nextClean();
-			if (c != ':') {
-				throw x.syntaxError("Expected a ':' after a key");
-			}
-			this.putOnce(key, x.nextValue());
-
-			// Pairs are separated by ','.
-
-			switch (x.nextClean()) {
-				case ';':
-				case ',':
-					if (x.nextClean() == '}') {
-						return;
-					}
-					x.back();
-					break;
-				case '}':
-					return;
-				default:
-					throw x.syntaxError("Expected a ',' or '}'");
-			}
-		}
-	}
-
-	/**
-	 * 根据配置创建对应的原始Map
-	 *
-	 * @param capacity 初始大小
-	 * @param config   JSON配置项，{@code null}则使用默认配置
-	 * @return Map
-	 */
-	private static Map<String, Object> createRaw(int capacity, JSONConfig config) {
-		Map<String, Object> rawHashMap;
-		if (null == config) {
-			config = JSONConfig.create();
-		}
-		final Comparator<String> keyComparator = config.getKeyComparator();
-		if (config.isIgnoreCase()) {
-			if (null != keyComparator) {
-				rawHashMap = new CaseInsensitiveTreeMap<>(keyComparator);
-			} else {
-				rawHashMap = new CaseInsensitiveLinkedMap<>(capacity);
-			}
-		} else {
-			if (null != keyComparator) {
-				rawHashMap = new TreeMap<>(keyComparator);
-			} else {
-				rawHashMap = new LinkedHashMap<>(capacity);
-			}
-		}
-		return rawHashMap;
-	}
-	// ------------------------------------------------------------------------------------------------- Private method end
 }

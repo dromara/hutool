@@ -4,6 +4,7 @@ import cn.hutool.core.collection.TransIter;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -11,12 +12,13 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
 /**
- * 简单缓存，无超时实现，默认使用{@link WeakHashMap}实现缓存自动清理
+ * 简单缓存，无超时实现，默认使用{@link WeakConcurrentMap}实现缓存自动清理
  *
  * @param <K> 键类型
  * @param <V> 值类型
@@ -30,7 +32,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	private final Map<Mutable<K>, V> rawMap;
 	// 乐观读写锁
-	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	/**
 	 * 写的时候每个key一把锁，降低锁的粒度
 	 */
@@ -40,7 +42,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * 构造，默认使用{@link WeakHashMap}实现缓存自动清理
 	 */
 	public SimpleCache() {
-		this(new WeakHashMap<>());
+		this(new WeakConcurrentMap<>());
 	}
 
 	/**
@@ -94,6 +96,9 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	public V get(K key, Predicate<V> validPredicate, Func0<V> supplier) {
 		V v = get(key);
+		if((null != validPredicate && false == validPredicate.test(v))){
+			v = null;
+		}
 		if (null == v && null != supplier) {
 			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
 			final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
