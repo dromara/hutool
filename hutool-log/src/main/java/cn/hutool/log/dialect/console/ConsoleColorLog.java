@@ -82,6 +82,6 @@ public class ConsoleColorLog extends ConsoleLog {
 		}
 
 		final String template = AnsiEncoder.encode(COLOR_TIME, "[%s]", colorFactory.apply(level), "[%-5s]%s", COLOR_CLASSNAME, "%-30s: ", COLOR_NONE, "%s%n");
-		System.out.format(template, DateUtil.now(), level.name(), " - ", ClassUtil.getShortClassName(getName()), StrUtil.format(format, arguments));
+		System.out.format(template, DateUtil.formatNow(), level.name(), " - ", ClassUtil.getShortClassName(getName()), StrUtil.format(format, arguments));
 	}
 }

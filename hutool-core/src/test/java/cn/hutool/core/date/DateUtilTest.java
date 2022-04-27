@@ -49,10 +49,10 @@ public class DateUtilTest {
 		Assert.assertNotNull(date3);
 
 		// 当前日期字符串，格式：yyyy-MM-dd HH:mm:ss
-		String now = DateUtil.now();
+		String now = DateUtil.formatNow();
 		Assert.assertNotNull(now);
 		// 当前日期字符串，格式：yyyy-MM-dd
-		String today = DateUtil.today();
+		String today = DateUtil.formatToday();
 		Assert.assertNotNull(today);
 	}
 

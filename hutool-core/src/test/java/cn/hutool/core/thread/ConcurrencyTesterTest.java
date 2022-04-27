@@ -27,10 +27,10 @@ public class ConcurrencyTesterTest {
 			Console.log("开始执行第{}个",i);
 			ct.test(() -> {
 				// 需要并发测试的业务代码
-				Console.log("当前执行线程：" + Thread.currentThread().getName()+" 产生时间 "+ DateUtil.now());
+				Console.log("当前执行线程：" + Thread.currentThread().getName()+" 产生时间 "+ DateUtil.formatNow());
 				ThreadUtil.sleep(RandomUtil.randomInt(1000, 3000));
 			});
 		}
-		Console.log("全部线程执行完毕 "+DateUtil.now());
+		Console.log("全部线程执行完毕 "+DateUtil.formatNow());
 	}
 }

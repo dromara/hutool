@@ -17,7 +17,7 @@ public class CronPatternTest {
 		CronPattern pattern;
 		// 任何时间匹配
 		pattern = CronPattern.of("* * * * * *");
-		assertMatch(pattern, DateUtil.now());
+		assertMatch(pattern, DateUtil.formatNow());
 	}
 
 	@Test

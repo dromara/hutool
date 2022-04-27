@@ -394,7 +394,7 @@ public class JSONObjectTest {
 				.set("name", "nameValue")
 				.set("date", "08:00:00");
 		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
-		Assert.assertEquals(DateUtil.today() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
+		Assert.assertEquals(DateUtil.formatToday() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
 	}
 
 	@Test

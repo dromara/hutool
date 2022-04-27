@@ -7,12 +7,12 @@ import cn.hutool.core.util.IdUtil;
 
 /**
  * 测试定时任务，当触发到定时的时间点时，执行doTest方法
- * 
+ *
  * @author looly
  *
  */
 public class TestJob {
-	
+
 	private final String jobId = IdUtil.simpleUUID();
 
 	/**
@@ -20,7 +20,7 @@ public class TestJob {
 	 */
 	public void doTest() {
 //		String name = Thread.currentThread().getName();
-		Console.log("Test Job {} running... at {}", jobId, DateUtil.now());
+		Console.log("Test Job {} running... at {}", jobId, DateUtil.formatNow());
 	}
 
 	/**

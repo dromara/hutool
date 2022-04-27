@@ -147,7 +147,7 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @return 当前时间的标准形式字符串
 	 */
-	public static String now() {
+	public static String formatNow() {
 		return formatDateTime(new DateTime());
 	}
 
@@ -156,7 +156,7 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @return 当前日期的标准形式字符串
 	 */
-	public static String today() {
+	public static String formatToday() {
 		return formatDate(new DateTime());
 	}
 
@@ -804,7 +804,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.1.1
 	 */
 	public static DateTime parseTimeToday(CharSequence timeString) {
-		timeString = StrUtil.format("{} {}", today(), timeString);
+		timeString = StrUtil.format("{} {}", formatNow(), timeString);
 		if (1 == StrUtil.count(timeString, ':')) {
 			// 时间格式为 HH:mm
 			return parse(timeString, DatePattern.NORM_DATETIME_MINUTE_PATTERN);

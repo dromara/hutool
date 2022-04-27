@@ -1877,7 +1877,7 @@ public class CharSequenceUtil {
 	 * @return 截取后的字符串数组
 	 * @see StrSplitter#splitByLength(CharSequence, int)
 	 */
-	public static String[] split(CharSequence str, int len) {
+	public static String[] splitToArray(CharSequence str, int len) {
 		return StrSplitter.splitByLength(str, len);
 	}
 
