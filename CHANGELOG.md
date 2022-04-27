@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.0.M4 (2022-04-25)
+# 5.8.0.M4 (2022-04-27)
 
 ### ❌不兼容特性
 * 【json   】     【可能兼容问题】JSONArray删除部分构造
@@ -21,6 +21,7 @@
 * 【poi    】     ExcelWriter支持重复别名的数据写出（issue#I53APY@Gitee）
 * 【core   】     增加Hashids（issue#I53APY@Gitee）
 * 【core   】     ReflectUtil.newInstanceIfPossible添加枚举、数组等类型的默认实现
+* 【core   】     CombinationAnnotationElement增加过滤（pr#605@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复StrUtil.firstNonX非static问题（issue#2257@Github）

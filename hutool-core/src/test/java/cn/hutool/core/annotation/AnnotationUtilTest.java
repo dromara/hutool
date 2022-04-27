@@ -3,13 +3,23 @@ package cn.hutool.core.annotation;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Set;
+import java.lang.annotation.Annotation;
 
 public class AnnotationUtilTest {
+
 	@Test
-	public void getRepeatAnnotationValueTest(){
-		Set<AnnotationForTest> annotations = AnnotationUtil.getRepeatedAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
-		Assert.assertTrue(annotations != null && annotations.size() == 2);
+	public void getCombinationAnnotationsTest(){
+		Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
+		Assert.assertNotNull(annotations);
+		Assert.assertEquals(3, annotations.length);
+	}
+
+	@Test
+	public void getCombinationAnnotationsWithClassTest(){
+		AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
+		Assert.assertNotNull(annotations);
+		Assert.assertEquals(2, annotations.length);
+		Assert.assertEquals("测试", annotations[0].value());
 	}
 
 	@Test

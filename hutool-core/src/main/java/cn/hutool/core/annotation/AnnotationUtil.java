@@ -4,14 +4,19 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 注解工具类<br>
@@ -39,52 +44,74 @@ public class AnnotationUtil {
 	 * 获取指定注解
 	 *
 	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param isToCombination 是否为转换为组合注解
+	 * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
 	 * @return 注解对象
 	 */
 	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
-		return (null == annotationEle) ? null : (isToCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
+		return getAnnotations(annotationEle, isToCombination, (Predicate<Annotation>) null);
 	}
 
 	/**
-	 * 获取可重复的注解列表
-	 * 用于带有同一个注解的多个组合注解
+	 * 获取组合注解
 	 *
-	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param annotationType 注解类型
-	 * @return 注解列表
-	 * @param <T> 注解值类型
+	 * @param <T>            注解类型
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 限定的
+	 * @return 注解对象数组
+	 * @since 5.8.0
 	 */
-	public static <T> Set<T> getRepeatedAnnotations(AnnotatedElement annotationEle, Class<T> annotationType) {
-		if (!Annotation.class.isAssignableFrom(annotationType)){
+	public static <T> T[] getCombinationAnnotations(AnnotatedElement annotationEle, Class<T> annotationType) {
+		return getAnnotations(annotationEle, true, annotationType);
+	}
+
+	/**
+	 * 获取指定注解
+	 *
+	 * @param <T>             注解类型
+	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
+	 * @param annotationType  限定的
+	 * @return 注解对象数组
+	 * @since 5.8.0
+	 */
+	public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
+		final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
+				(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
+
+		final T[] result = ArrayUtil.newArray(annotationType, annotations.length);
+		for (int i = 0; i < annotations.length; i++) {
+			//noinspection unchecked
+			result[i] = (T) annotations[i];
+		}
+		return result;
+	}
+
+	/**
+	 * 获取指定注解
+	 *
+	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
+	 * @param predicate       过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
+	 * @return 注解对象
+	 * @since 5.8.0
+	 */
+	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
+		if (null == annotationEle) {
 			return null;
 		}
-		Set<T> annotationList = new HashSet<>();
-		recursion(annotationList, annotationEle.getAnnotations(), annotationType);
-		return annotationList;
-	}
 
-	/**
-	 * 递归获取注解列表
-	 *
-	 * @param list 注解结果集
-	 * @param annotations 注解参数集
-	 * @param annotationType 注解类型
-	 * @param <T> 注解值类型
-	 */
-	private static <T> void recursion(Set<T> list, Annotation[] annotations, Class<T> annotationType) {
-		for (Annotation annotation : annotations) {
-			Class<? extends Annotation> clazz = annotation.getClass();
-			if (annotationType.isAssignableFrom(clazz)) {
-				list.add((T) annotation);
-			} else if (!Retention.class.isAssignableFrom(clazz)
-					&& !Target.class.isAssignableFrom(clazz)
-					&& !Documented.class.isAssignableFrom(clazz)
-					&& !Repeatable.class.isAssignableFrom(clazz)
-					&& !Inherited.class.isAssignableFrom(clazz)) {
-				recursion(list, annotation.annotationType().getAnnotations(), annotationType);
+		if (isToCombination) {
+			if (null == predicate) {
+				return toCombination(annotationEle).getAnnotations();
 			}
+			return CombinationAnnotationElement.of(annotationEle, predicate).getAnnotations();
 		}
+
+		final Annotation[] result = annotationEle.getAnnotations();
+		if (null == predicate) {
+			return result;
+		}
+		return ArrayUtil.filter(result, predicate::test);
 	}
 
 	/**
