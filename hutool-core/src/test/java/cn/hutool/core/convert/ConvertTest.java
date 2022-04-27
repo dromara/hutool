@@ -6,7 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

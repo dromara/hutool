@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.util.EscapeUtil;
+import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 

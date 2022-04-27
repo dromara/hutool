@@ -1,7 +1,7 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.crypto.BCUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.ECKeyUtil;

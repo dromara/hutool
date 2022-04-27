@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.codec.HexUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

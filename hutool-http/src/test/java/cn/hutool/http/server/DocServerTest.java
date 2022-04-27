@@ -1,6 +1,5 @@
 package cn.hutool.http.server;
 
-import cn.hutool.core.swing.DesktopUtil;
 import cn.hutool.http.HttpUtil;
 
 public class DocServerTest {
@@ -10,7 +9,5 @@ public class DocServerTest {
 				// 设置默认根目录，
 				.setRoot("D:\\workspace\\site\\hutool-site")
 				.start();
-
-		DesktopUtil.browse("http://localhost/");
 	}
 }

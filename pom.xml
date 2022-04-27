@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>5.8.0.M5</version>
+	<version>6.0.0.M1</version>
 	<name>hutool</name>
 	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
 	<url>https://github.com/dromara/hutool</url>
@@ -16,25 +16,18 @@
 	<modules>
 		<module>hutool-all</module>
 		<module>hutool-bom</module>
-		<module>hutool-aop</module>
-		<module>hutool-bloomFilter</module>
-		<module>hutool-cache</module>
 		<module>hutool-core</module>
 		<module>hutool-cron</module>
 		<module>hutool-crypto</module>
 		<module>hutool-db</module>
-		<module>hutool-dfa</module>
 		<module>hutool-extra</module>
 		<module>hutool-http</module>
 		<module>hutool-log</module>
-		<module>hutool-script</module>
 		<module>hutool-setting</module>
-		<module>hutool-system</module>
 		<module>hutool-json</module>
 		<module>hutool-poi</module>
-		<module>hutool-captcha</module>
 		<module>hutool-socket</module>
-		<module>hutool-jwt</module>
+		<module>hutool-swing</module>
 	</modules>
 
 	<properties>
@@ -147,6 +140,14 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>versions-maven-plugin</artifactId>
+						<version>2.10.0</version>
+						<configuration>
+							<generateBackupPoms>false</generateBackupPoms>
+						</configuration>
 					</plugin>
 					<!-- 测试覆盖度 -->
 					<plugin>

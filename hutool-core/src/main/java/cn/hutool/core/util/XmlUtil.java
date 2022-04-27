@@ -9,6 +9,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.BiMap;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.escape.EscapeUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

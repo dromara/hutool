@@ -2,7 +2,6 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.ByteArrayOutputStream;

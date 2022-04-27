@@ -1,7 +1,7 @@
 package cn.hutool.crypto.test.symmetric;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;

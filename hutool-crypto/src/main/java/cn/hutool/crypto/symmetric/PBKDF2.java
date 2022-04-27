@@ -1,6 +1,6 @@
 package cn.hutool.crypto.symmetric;
 
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.crypto.KeyUtil;
 
 import javax.crypto.SecretKey;

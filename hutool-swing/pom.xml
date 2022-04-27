@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>cn.hutool</groupId>
+		<artifactId>hutool-parent</artifactId>
+		<version>6.0.0.M1</version>
+	</parent>
+
+	<artifactId>hutool-swing</artifactId>
+	<name>${project.artifactId}</name>
+	<description>Hutool swing桌面相关封装</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
+</project>

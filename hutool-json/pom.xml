@@ -9,18 +9,35 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.0.M5</version>
+		<version>6.0.0.M1</version>
 	</parent>
 
 	<artifactId>hutool-json</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool JSON封装</description>
 
+	<properties>
+		<!-- versions -->
+		<bouncycastle.version>1.70</bouncycastle.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-crypto</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- 测试特殊算法 -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15to18</artifactId>
+			<version>${bouncycastle.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

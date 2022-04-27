@@ -2,7 +2,7 @@ package cn.hutool.json.xml;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.EscapeUtil;
+import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONException;

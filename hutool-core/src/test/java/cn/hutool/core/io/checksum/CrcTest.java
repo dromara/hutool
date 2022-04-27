@@ -1,7 +1,7 @@
 package cn.hutool.core.io.checksum;
 
 import cn.hutool.core.io.checksum.crc16.CRC16XModem;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;

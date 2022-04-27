@@ -7,7 +7,7 @@ import cn.hutool.core.io.copy.ReaderWriterCopier;
 import cn.hutool.core.io.copy.StreamCopier;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.BufferedInputStream;

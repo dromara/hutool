@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.0.M5</version>
+		<version>6.0.0.M1</version>
 	</parent>
 
 	<artifactId>hutool-bom</artifactId>
@@ -26,32 +26,12 @@
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-aop</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-bloomFilter</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-cache</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-crypto</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-db</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-dfa</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>
@@ -71,17 +51,7 @@
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-script</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-setting</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-system</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>
@@ -101,17 +71,12 @@
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-captcha</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-socket</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>cn.hutool</groupId>
-				<artifactId>hutool-jwt</artifactId>
+				<artifactId>hutool-swing</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 		</dependencies>
@@ -124,27 +89,11 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-bloomFilter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-cache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-crypto</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-db</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-dfa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -160,15 +109,7 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-script</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-setting</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-system</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -184,15 +125,11 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-captcha</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-socket</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-jwt</artifactId>
+			<artifactId>hutool-swing</artifactId>
 		</dependency>
 	</dependencies>
 

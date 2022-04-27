@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.text.escape.EscapeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

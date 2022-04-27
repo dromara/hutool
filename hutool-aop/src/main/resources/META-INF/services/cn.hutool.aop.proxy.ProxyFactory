@@ -1,3 +1,0 @@
-cn.hutool.aop.proxy.CglibProxyFactory
-cn.hutool.aop.proxy.SpringCglibProxyFactory
-cn.hutool.aop.proxy.JdkProxyFactory

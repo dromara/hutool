@@ -2,7 +2,7 @@ package cn.hutool.core.lang.hash;
 
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
