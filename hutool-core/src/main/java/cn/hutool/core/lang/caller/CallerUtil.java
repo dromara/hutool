@@ -35,13 +35,13 @@ public class CallerUtil {
 	 * 调用者层级关系：
 	 *
 	 * <pre>
-	 * 0 {@link CallerUtil}
-	 * 1 调用{@link CallerUtil}中方法的类
+	 * 0 CallerUtil
+	 * 1 调用CallerUtil中方法的类
 	 * 2 调用者的调用者
 	 * ...
 	 * </pre>
 	 *
-	 * @param depth 层级。0表示{@link CallerUtil}本身，1表示调用{@link CallerUtil}的类，2表示调用者的调用者，依次类推
+	 * @param depth 层级。0表示CallerUtil本身，1表示调用CallerUtil的类，2表示调用者的调用者，依次类推
 	 * @return 第几级调用者
 	 */
 	public static Class<?> getCaller(int depth) {
