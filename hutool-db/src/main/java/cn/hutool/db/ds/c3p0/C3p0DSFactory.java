@@ -1,7 +1,7 @@
 package cn.hutool.db.ds.c3p0;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;

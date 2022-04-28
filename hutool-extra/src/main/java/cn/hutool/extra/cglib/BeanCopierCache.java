@@ -1,7 +1,7 @@
 package cn.hutool.extra.cglib;
 
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.core.Converter;
 

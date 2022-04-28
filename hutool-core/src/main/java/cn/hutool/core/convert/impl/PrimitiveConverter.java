@@ -3,8 +3,8 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.function.Function;
 
@@ -70,17 +70,17 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 	 */
 	protected static Object convert(Object value, Class<?> primitiveClass, Function<Object, String> toStringFunc) {
 		if (byte.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Byte.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Byte.class, toStringFunc), 0);
 		} else if (short.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Short.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Short.class, toStringFunc), 0);
 		} else if (int.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Integer.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Integer.class, toStringFunc), 0);
 		} else if (long.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Long.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Long.class, toStringFunc), 0);
 		} else if (float.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Float.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Float.class, toStringFunc), 0);
 		} else if (double.class == primitiveClass) {
-			return ObjectUtil.defaultIfNull(NumberConverter.convert(value, Double.class, toStringFunc), 0);
+			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Double.class, toStringFunc), 0);
 		} else if (char.class == primitiveClass) {
 			return Convert.convert(Character.class, value);
 		} else if (boolean.class == primitiveClass) {

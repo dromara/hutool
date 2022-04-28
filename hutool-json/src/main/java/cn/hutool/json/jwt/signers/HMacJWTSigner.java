@@ -1,7 +1,7 @@
 package cn.hutool.json.jwt.signers;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.digest.HMac;
 
 import java.nio.charset.Charset;
@@ -15,7 +15,7 @@ import java.security.Key;
  */
 public class HMacJWTSigner implements JWTSigner {
 
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+	private Charset charset = CharsetUtil.UTF_8;
 	private final HMac hMac;
 
 	/**

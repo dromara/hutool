@@ -8,7 +8,7 @@ import cn.hutool.core.io.copy.StreamCopier;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -198,7 +198,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.1.6
 	 */
 	public static BufferedReader getUtf8Reader(InputStream in) {
-		return getReader(in, CharsetUtil.CHARSET_UTF_8);
+		return getReader(in, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.1.6
 	 */
 	public static OutputStreamWriter getUtf8Writer(OutputStream out) {
-		return getWriter(out, CharsetUtil.CHARSET_UTF_8);
+		return getWriter(out, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -316,7 +316,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.4.4
 	 */
 	public static String readUtf8(InputStream in) throws IORuntimeException {
-		return read(in, CharsetUtil.CHARSET_UTF_8);
+		return read(in, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -594,7 +594,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readUtf8Lines(InputStream in, T collection) throws IORuntimeException {
-		return readLines(in, CharsetUtil.CHARSET_UTF_8, collection);
+		return readLines(in, CharsetUtil.UTF_8, collection);
 	}
 
 	/**
@@ -634,7 +634,7 @@ public class IoUtil extends NioUtil {
 	 * @since 3.1.1
 	 */
 	public static void readUtf8Lines(InputStream in, LineHandler lineHandler) throws IORuntimeException {
-		readLines(in, CharsetUtil.CHARSET_UTF_8, lineHandler);
+		readLines(in, CharsetUtil.UTF_8, lineHandler);
 	}
 
 	/**
@@ -692,7 +692,7 @@ public class IoUtil extends NioUtil {
 	 * @since 4.5.1
 	 */
 	public static ByteArrayInputStream toUtf8Stream(String content) {
-		return toStream(content, CharsetUtil.CHARSET_UTF_8);
+		return toStream(content, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -935,7 +935,7 @@ public class IoUtil extends NioUtil {
 	 * @since 3.1.1
 	 */
 	public static void writeUtf8(OutputStream out, boolean isCloseOut, Object... contents) throws IORuntimeException {
-		write(out, CharsetUtil.CHARSET_UTF_8, isCloseOut, contents);
+		write(out, CharsetUtil.UTF_8, isCloseOut, contents);
 	}
 
 	/**

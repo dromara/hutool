@@ -2,8 +2,7 @@ package cn.hutool.swing.img;
 
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.swing.img.ImgUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;

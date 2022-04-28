@@ -1,7 +1,8 @@
 package cn.hutool.core.lang.reflect;
 
+import cn.hutool.core.reflect.MethodHandleUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

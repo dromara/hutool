@@ -429,7 +429,7 @@ public class QrCodeUtil {
 	 */
 	private static Map<DecodeHintType, Object> buildHints(boolean isTryHarder, boolean isPureBarcode) {
 		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
-		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
+		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.NAME_UTF_8);
 
 		// 优化精度
 		if (isTryHarder) {

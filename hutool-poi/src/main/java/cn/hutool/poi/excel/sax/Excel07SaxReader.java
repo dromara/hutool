@@ -2,9 +2,9 @@ package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -219,7 +219,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 				final int sheetIndex = Integer.parseInt(idOrRidOrSheetName);
 				rid = ridReader.getRidBySheetIdBase0(sheetIndex);
 				// 如果查找不到对应index，则认为用户传入的直接是rid
-				return ObjectUtil.defaultIfNull(rid, sheetIndex);
+				return ObjUtil.defaultIfNull(rid, sheetIndex);
 			} catch (NumberFormatException ignore) {
 				// 非数字，说明非index，且没有对应名称，抛出异常
 			}

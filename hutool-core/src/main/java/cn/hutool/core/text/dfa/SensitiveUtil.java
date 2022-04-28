@@ -2,7 +2,7 @@ package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Collection;
 import java.util.HashMap;

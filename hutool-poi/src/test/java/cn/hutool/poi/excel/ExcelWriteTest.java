@@ -8,7 +8,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.common.usermodel.HyperlinkType;
@@ -144,7 +144,7 @@ public class ExcelWriteTest {
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 		for (int i = 0; i < 400; i++) {
 			// 超大列表写出测试
-			rows.add(ObjectUtil.clone(row1));
+			rows.add(ObjUtil.clone(row1));
 		}
 
 		String filePath = "d:/test/writeTest.xlsx";
@@ -882,7 +882,7 @@ public class ExcelWriteTest {
 	@Test
 	public void getDispositionTest(){
 		ExcelWriter writer = ExcelUtil.getWriter(true);
-		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
+		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.UTF_8);
 		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
 }

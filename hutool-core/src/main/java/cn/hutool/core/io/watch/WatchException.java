@@ -1,7 +1,7 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 监听异常

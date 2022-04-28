@@ -2,7 +2,7 @@ package cn.hutool.socket.nio;
 
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import lombok.SneakyThrows;
 
 import java.nio.ByteBuffer;

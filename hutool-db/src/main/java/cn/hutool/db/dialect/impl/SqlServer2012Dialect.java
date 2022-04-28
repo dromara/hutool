@@ -1,6 +1,6 @@
 package cn.hutool.db.dialect.impl;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.Page;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
@@ -8,7 +8,7 @@ import cn.hutool.db.sql.Wrapper;
 
 /**
  * SQLServer2012 方言
- * 
+ *
  * @author loolly
  *
  */

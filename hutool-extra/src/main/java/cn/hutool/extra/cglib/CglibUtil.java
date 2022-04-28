@@ -1,7 +1,7 @@
 package cn.hutool.extra.cglib;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.beans.BeanMap;
 import net.sf.cglib.core.Converter;

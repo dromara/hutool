@@ -1,6 +1,6 @@
 package cn.hutool.poi.excel.cell.values;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.cell.CellValue;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaError;

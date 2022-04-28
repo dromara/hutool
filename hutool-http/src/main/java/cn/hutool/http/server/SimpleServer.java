@@ -3,7 +3,7 @@ package cn.hutool.http.server;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.GlobalThreadPool;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.server.action.Action;
 import cn.hutool.http.server.action.RootAction;
 import cn.hutool.http.server.filter.HttpFilter;

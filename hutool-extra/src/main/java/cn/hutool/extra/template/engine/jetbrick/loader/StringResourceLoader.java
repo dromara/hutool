@@ -1,7 +1,7 @@
 package cn.hutool.extra.template.engine.jetbrick.loader;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import jetbrick.io.resource.AbstractResource;
 import jetbrick.io.resource.Resource;
 import jetbrick.io.resource.ResourceNotFoundException;

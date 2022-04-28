@@ -8,6 +8,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
+import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

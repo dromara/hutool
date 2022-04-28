@@ -1,7 +1,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 加密异常

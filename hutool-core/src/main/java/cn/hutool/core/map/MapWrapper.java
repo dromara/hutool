@@ -1,6 +1,6 @@
 package cn.hutool.core.map;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -215,7 +215,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	@Override
 	public MapWrapper<K, V> clone() throws CloneNotSupportedException {
 		@SuppressWarnings("unchecked") final MapWrapper<K, V> clone = (MapWrapper<K, V>) super.clone();
-		clone.raw = ObjectUtil.clone(raw);
+		clone.raw = ObjUtil.clone(raw);
 		return clone;
 	}
 

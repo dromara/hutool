@@ -5,6 +5,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.id.Pid;
 import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -3,7 +3,7 @@ package cn.hutool.poi.excel.reader;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.ArrayList;

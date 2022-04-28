@@ -437,7 +437,7 @@ public class BCrypt {
 		rounds = Integer.parseInt(salt.substring(off, off + 2));
 
 		real_salt = salt.substring(off + 3, off + 25);
-		byte[] passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes(CharsetUtil.CHARSET_UTF_8);
+		byte[] passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes(CharsetUtil.UTF_8);
 		saltb = decodeBase64(real_salt, BCRYPT_SALT_LEN);
 
 		bcrypt = new BCrypt();
@@ -521,8 +521,8 @@ public class BCrypt {
 			// 生成密文时错误直接返回false issue#1377@Github
 			return false;
 		}
-		hashed_bytes = hashed.getBytes(CharsetUtil.CHARSET_UTF_8);
-		try_bytes = try_pw.getBytes(CharsetUtil.CHARSET_UTF_8);
+		hashed_bytes = hashed.getBytes(CharsetUtil.UTF_8);
+		try_bytes = try_pw.getBytes(CharsetUtil.UTF_8);
 		if (hashed_bytes.length != try_bytes.length) {
 			return false;
 		}

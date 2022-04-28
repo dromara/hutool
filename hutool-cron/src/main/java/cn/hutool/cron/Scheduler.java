@@ -5,7 +5,7 @@ import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.listener.TaskListenerManager;
 import cn.hutool.cron.pattern.CronPattern;

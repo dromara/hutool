@@ -3,7 +3,7 @@ package cn.hutool.crypto.symmetric;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -62,7 +62,7 @@ public class RC4 implements Serializable {
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
 	public byte[] encrypt(String message) throws CryptoException {
-		return encrypt(message, CharsetUtil.CHARSET_UTF_8);
+		return encrypt(message, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class RC4 implements Serializable {
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
 	public String decrypt(byte[] message) throws CryptoException {
-		return decrypt(message, CharsetUtil.CHARSET_UTF_8);
+		return decrypt(message, CharsetUtil.UTF_8);
 	}
 
 	/**

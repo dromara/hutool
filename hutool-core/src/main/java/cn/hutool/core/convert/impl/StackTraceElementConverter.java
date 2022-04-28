@@ -4,7 +4,7 @@ import java.util.Map;
 
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 /**
  * {@link StackTraceElement} 转换器<br>
@@ -26,7 +26,7 @@ public class StackTraceElementConverter extends AbstractConverter<StackTraceElem
 			final String fileName = MapUtil.getStr(map, "fileName");
 			final Integer lineNumber = MapUtil.getInt(map, "lineNumber");
 
-			return new StackTraceElement(declaringClass, methodName, fileName, ObjectUtil.defaultIfNull(lineNumber, 0));
+			return new StackTraceElement(declaringClass, methodName, fileName, ObjUtil.defaultIfNull(lineNumber, 0));
 		}
 		return null;
 	}

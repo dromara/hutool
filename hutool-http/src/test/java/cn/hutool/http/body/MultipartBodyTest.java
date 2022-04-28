@@ -20,7 +20,7 @@ public class MultipartBodyTest {
 		form.put("pic3", new HttpResource(
 				new StringResource("pic3 content", "pic3.jpg"), "image/jpeg"));
 
-		final MultipartBody body = MultipartBody.create(form, CharsetUtil.CHARSET_UTF_8);
+		final MultipartBody body = MultipartBody.create(form, CharsetUtil.UTF_8);
 
 		Assert.assertNotNull(body.toString());
 //		Console.log(body);

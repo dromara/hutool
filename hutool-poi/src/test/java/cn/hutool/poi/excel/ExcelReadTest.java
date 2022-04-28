@@ -3,7 +3,7 @@ package cn.hutool.poi.excel;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.cell.CellHandler;
 import lombok.Data;
 import org.junit.Assert;
@@ -206,7 +206,7 @@ public class ExcelReadTest {
 	@Test
 	public void nullValueEditTest(){
 		final ExcelReader reader = ExcelUtil.getReader("null_cell_test.xlsx");
-		reader.setCellEditor((cell, value)-> ObjectUtil.defaultIfNull(value, "#"));
+		reader.setCellEditor((cell, value)-> ObjUtil.defaultIfNull(value, "#"));
 		final List<List<Object>> read = reader.read();
 
 		// 对于任意一个单元格有值的情况下，之前的单元格值按照null处理

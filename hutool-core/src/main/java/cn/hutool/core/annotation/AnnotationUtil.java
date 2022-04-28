@@ -2,7 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;

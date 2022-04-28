@@ -32,7 +32,7 @@ public class SmTest {
 		SM4 sm4 = SmUtil.sm4();
 
 		String encryptHex = sm4.encryptHex(content);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}
@@ -44,7 +44,7 @@ public class SmTest {
 		sm4.setIv("aaaabbbb".getBytes());
 
 		String encryptHex = sm4.encryptHex(content);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}
@@ -56,7 +56,7 @@ public class SmTest {
 		Assert.assertEquals("SM4/ECB/PKCS5Padding", sm4.getCipher().getAlgorithm());
 
 		String encryptHex = sm4.encryptHex(content);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.UTF_8);
 		Assert.assertEquals(content, decryptStr);
 	}
 
@@ -70,7 +70,7 @@ public class SmTest {
 		Assert.assertEquals("SM4/ECB/PKCS5Padding", sm4.getCipher().getAlgorithm());
 
 		String encryptHex = sm4.encryptHex(content);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.UTF_8);
 		Assert.assertEquals(content, decryptStr);
 	}
 
@@ -84,7 +84,7 @@ public class SmTest {
 		Assert.assertEquals("SM4", sm4.getCipher().getAlgorithm());
 
 		String encryptHex = sm4.encryptHex(content);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.UTF_8);
 		Assert.assertEquals(content, decryptStr);
 	}
 

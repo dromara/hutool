@@ -2,7 +2,6 @@ package cn.hutool.core.text;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;

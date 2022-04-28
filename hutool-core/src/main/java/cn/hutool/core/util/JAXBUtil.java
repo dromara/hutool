@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -21,8 +22,8 @@ import java.nio.charset.Charset;
  * <p>
  * 相关介绍：
  * <ul>
- *   <li>https://www.cnblogs.com/yanghaolie/p/11110991.html</li>
- *   <li>https://my.oschina.net/u/4266515/blog/3330113</li>
+ *   <li><a href="https://www.cnblogs.com/yanghaolie/p/11110991.html">https://www.cnblogs.com/yanghaolie/p/11110991.html</a></li>
+ *   <li><a href="https://my.oschina.net/u/4266515/blog/3330113">https://my.oschina.net/u/4266515/blog/3330113</a></li>
  * </ul>
  *
  * @author dazer
@@ -44,7 +45,7 @@ public class JAXBUtil {
 	 * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
 	 */
 	public static String beanToXml(Object bean) {
-		return beanToXml(bean, CharsetUtil.CHARSET_UTF_8, true);
+		return beanToXml(bean, CharsetUtil.UTF_8, true);
 	}
 
 	/**

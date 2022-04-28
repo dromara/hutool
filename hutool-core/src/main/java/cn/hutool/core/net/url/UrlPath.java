@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;

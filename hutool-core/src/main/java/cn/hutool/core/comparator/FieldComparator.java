@@ -2,8 +2,8 @@ package cn.hutool.core.comparator;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
 

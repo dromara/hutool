@@ -5,9 +5,9 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.OptNullBasicTypeFromStringGetter;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -47,7 +47,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 */
 	public String getStr(String key, String group, String defaultValue) {
 		final String value = getByGroup(key, group);
-		return ObjectUtil.defaultIfNull(value, defaultValue);
+		return ObjUtil.defaultIfNull(value, defaultValue);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 */
 	public String getStrNotEmpty(String key, String group, String defaultValue) {
 		final String value = getByGroup(key, group);
-		return ObjectUtil.defaultIfEmpty(value, defaultValue);
+		return ObjUtil.defaultIfEmpty(value, defaultValue);
 	}
 
 	/**

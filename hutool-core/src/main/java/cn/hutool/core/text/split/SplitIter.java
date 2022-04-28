@@ -3,7 +3,7 @@ package cn.hutool.core.text.split;
 import cn.hutool.core.collection.ComputeIter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.finder.TextFinder;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

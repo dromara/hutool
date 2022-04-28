@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.net;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
@@ -6,9 +6,10 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.net.url.UrlQuery;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,7 +41,7 @@ import java.util.jar.JarFile;
  *
  * @author xiaoleilu
  */
-public class URLUtil extends URLEncodeUtil {
+public class URLUtil {
 
 	/**
 	 * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
@@ -193,38 +194,12 @@ public class URLUtil extends URLEncodeUtil {
 	public static URL toUrlForHttp(String urlStr, URLStreamHandler handler) {
 		Assert.notBlank(urlStr, "Url is blank !");
 		// 编码空白符，防止空格引起的请求异常
-		urlStr = encodeBlank(urlStr);
+		urlStr = URLEncoder.encodeBlank(urlStr);
 		try {
 			return new URL(null, urlStr, handler);
 		} catch (MalformedURLException e) {
 			throw new UtilException(e);
 		}
-	}
-
-	/**
-	 * 单独编码URL中的空白符，空白符编码为%20
-	 *
-	 * @param urlStr URL字符串
-	 * @return 编码后的字符串
-	 * @since 4.5.14
-	 */
-	public static String encodeBlank(CharSequence urlStr) {
-		if (urlStr == null) {
-			return null;
-		}
-
-		int len = urlStr.length();
-		final StringBuilder sb = new StringBuilder(len);
-		char c;
-		for (int i = 0; i < len; i++) {
-			c = urlStr.charAt(i);
-			if (CharUtil.isBlankChar(c)) {
-				sb.append("%20");
-			} else {
-				sb.append(c);
-			}
-		}
-		return sb.toString();
 	}
 
 	/**
@@ -327,61 +302,6 @@ public class URLUtil extends URLEncodeUtil {
 			throw new UtilException(e);
 		}
 	}
-	//-------------------------------------------------------------------------- decode
-
-	/**
-	 * 解码URL<br>
-	 * 将%开头的16进制表示的内容解码。
-	 *
-	 * @param url URL
-	 * @return 解码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 * @since 3.1.2
-	 */
-	public static String decode(String url) throws UtilException {
-		return decode(url, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。<br>
-	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
-	 *
-	 * @param content 被解码内容
-	 * @param charset 编码，null表示不解码
-	 * @return 编码后的字符
-	 * @since 4.4.1
-	 */
-	public static String decode(String content, Charset charset) {
-		return URLDecoder.decode(content, charset);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。
-	 *
-	 * @param content       被解码内容
-	 * @param charset       编码，null表示不解码
-	 * @param isPlusToSpace 是否+转换为空格
-	 * @return 编码后的字符
-	 * @since 5.6.3
-	 */
-	public static String decode(String content, Charset charset, boolean isPlusToSpace) {
-		return URLDecoder.decode(content, charset, isPlusToSpace);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符<br>
-	 * 将%开头的16进制表示的内容解码。
-	 *
-	 * @param content URL
-	 * @param charset 编码
-	 * @return 解码后的URL
-	 * @throws UtilException UnsupportedEncodingException
-	 */
-	public static String decode(String content, String charset) throws UtilException {
-		return decode(content, StrUtil.isEmpty(charset) ? null : CharsetUtil.charset(charset));
-	}
 
 	/**
 	 * 获得path部分<br>
@@ -468,7 +388,7 @@ public class URLUtil extends URLEncodeUtil {
 	 */
 	public static URI toURI(String location, boolean isEncode) throws UtilException {
 		if (isEncode) {
-			location = encode(location);
+			location = RFC3986.PATH.encode(location, CharsetUtil.UTF_8);
 		}
 		try {
 			return new URI(StrUtil.trim(location));
@@ -657,7 +577,7 @@ public class URLUtil extends URLEncodeUtil {
 			path = StrUtil.subSuf(body, pathSepIndex);
 		}
 		if (isEncodePath) {
-			path = encode(path);
+			path = RFC3986.PATH.encode(path, CharsetUtil.UTF_8);
 		}
 		return protocol + domain + StrUtil.nullToEmpty(path) + StrUtil.nullToEmpty(params);
 	}

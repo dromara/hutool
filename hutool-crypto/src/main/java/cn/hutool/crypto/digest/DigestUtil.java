@@ -44,7 +44,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(String data) {
-		return md5(data, CharsetUtil.UTF_8);
+		return md5(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(String data) {
-		return md5Hex(data, CharsetUtil.UTF_8);
+		return md5Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex16(String data) {
-		return md5Hex16(data, CharsetUtil.CHARSET_UTF_8);
+		return md5Hex16(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] sha1(String data) {
-		return sha1(data, CharsetUtil.UTF_8);
+		return sha1(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(String data) {
-		return sha1Hex(data, CharsetUtil.UTF_8);
+		return sha1Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(String data) {
-		return sha256(data, CharsetUtil.UTF_8);
+		return sha256(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(String data) {
-		return sha256Hex(data, CharsetUtil.UTF_8);
+		return sha256Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**

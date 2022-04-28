@@ -2,7 +2,7 @@ package cn.hutool.extra.pinyin.engine;
 
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ServiceLoaderUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.StaticLog;
 
 import cn.hutool.extra.pinyin.PinyinEngine;

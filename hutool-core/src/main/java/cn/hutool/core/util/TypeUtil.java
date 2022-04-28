@@ -1,7 +1,8 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.reflect.ParameterizedTypeImpl;
-import cn.hutool.core.lang.reflect.ActualTypeMapperPool;
+import cn.hutool.core.reflect.ParameterizedTypeImpl;
+import cn.hutool.core.reflect.ActualTypeMapperPool;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -337,7 +338,7 @@ public class TypeUtil {
 		if (null == field) {
 			return null;
 		}
-		return getActualType(ObjectUtil.defaultIfNull(type, field.getDeclaringClass()), field.getGenericType());
+		return getActualType(ObjUtil.defaultIfNull(type, field.getDeclaringClass()), field.getGenericType());
 	}
 
 	/**

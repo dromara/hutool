@@ -1,7 +1,8 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import java.nio.charset.Charset;
 public class URLDecoder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	private static final byte ESCAPE_CHAR = '%';
 
 	/**
@@ -42,7 +44,23 @@ public class URLDecoder implements Serializable {
 
 	/**
 	 * 解码<br>
-	 * 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
+	 * 规则见：<a href="https://url.spec.whatwg.org/#urlencoded-parsing">https://url.spec.whatwg.org/#urlencoded-parsing</a>
+	 * <pre>
+	 *   1. 将+和%20转换为空格(" ");
+	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
+	 *   3. 跳过不符合规范的%形式，直接输出
+	 * </pre>
+	 *
+	 * @param str 包含URL编码后的字符串
+	 * @return 解码后的字符串
+	 */
+	public static String decode(String str) {
+		return decode(str, DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 解码<br>
+	 * 规则见：<a href="https://url.spec.whatwg.org/#urlencoded-parsing">https://url.spec.whatwg.org/#urlencoded-parsing</a>
 	 * <pre>
 	 *   1. 将+和%20转换为空格(" ");
 	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
@@ -67,11 +85,27 @@ public class URLDecoder implements Serializable {
 	 *
 	 * @param str           包含URL编码后的字符串
 	 * @param isPlusToSpace 是否+转换为空格
+	 * @return 解码后的字符串
+	 */
+	public static String decode(String str, boolean isPlusToSpace) {
+		return decode(str, DEFAULT_CHARSET, isPlusToSpace);
+	}
+
+	/**
+	 * 解码
+	 * <pre>
+	 *   1. 将%20转换为空格 ;
+	 *   2. 将"%xy"转换为文本形式,xy是两位16进制的数值;
+	 *   3. 跳过不符合规范的%形式，直接输出
+	 * </pre>
+	 *
+	 * @param str           包含URL编码后的字符串
+	 * @param isPlusToSpace 是否+转换为空格
 	 * @param charset       编码，{@code null}表示不做编码
 	 * @return 解码后的字符串
 	 */
 	public static String decode(String str, Charset charset, boolean isPlusToSpace) {
-		if(null == charset){
+		if (null == charset) {
 			return str;
 		}
 		return StrUtil.str(decode(StrUtil.bytes(str, charset), isPlusToSpace), charset);

@@ -9,10 +9,10 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -1399,7 +1399,7 @@ public class ImgUtil {
 			g.setColor(backgroundColor);
 			g.fillRect(0, 0, width, height);
 		}
-		g.setColor(ObjectUtil.defaultIfNull(fontColor, Color.BLACK));
+		g.setColor(ObjUtil.defaultIfNull(fontColor, Color.BLACK));
 		g.setFont(font);// 设置画笔字体
 		g.drawString(str, 0, font.getSize());// 画出字符串
 		g.dispose();

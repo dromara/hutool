@@ -5,7 +5,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.id.Snowflake;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

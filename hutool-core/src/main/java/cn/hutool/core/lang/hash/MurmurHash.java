@@ -2,7 +2,7 @@ package cn.hutool.core.lang.hash;
 
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.nio.ByteOrder;
@@ -42,7 +42,7 @@ public class MurmurHash implements Serializable{
 	private static final int N2 = 0x38495ab5;
 
 	private static final int DEFAULT_SEED = 0;
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	private static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 
 	/**

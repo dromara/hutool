@@ -1,7 +1,7 @@
 package cn.hutool.extra.compress;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 压缩解压异常语言异常

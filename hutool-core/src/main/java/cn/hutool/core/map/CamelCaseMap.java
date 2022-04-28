@@ -1,6 +1,6 @@
 package cn.hutool.core.map;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.HashMap;
 import java.util.Map;

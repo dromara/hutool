@@ -3,8 +3,8 @@ package cn.hutool.core.io.watch;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.io.File;
 import java.io.IOException;

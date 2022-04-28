@@ -1,7 +1,7 @@
 package cn.hutool.extra.tokenizer;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 分词异常

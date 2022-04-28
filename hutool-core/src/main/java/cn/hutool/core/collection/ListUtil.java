@@ -4,7 +4,7 @@ import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.PageUtil;
 
 import java.util.ArrayList;
@@ -365,7 +365,7 @@ public class ListUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverseNew(List<T> list) {
-		List<T> list2 = ObjectUtil.clone(list);
+		List<T> list2 = ObjUtil.clone(list);
 		if (null == list2) {
 			// 不支持clone
 			list2 = new ArrayList<>(list);

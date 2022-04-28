@@ -8,7 +8,6 @@ import cn.hutool.core.text.finder.PatternFinder;
 import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.text.split.SplitIter;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;

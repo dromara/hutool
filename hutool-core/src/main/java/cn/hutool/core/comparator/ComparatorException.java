@@ -1,7 +1,7 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 比较异常

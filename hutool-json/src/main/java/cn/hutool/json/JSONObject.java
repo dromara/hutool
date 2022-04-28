@@ -6,7 +6,7 @@ import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -67,8 +67,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
-		super(InternalJSONUtil.createRawMap(capacity, ObjectUtil.defaultIfNull(config, JSONConfig.create())));
-		this.config = ObjectUtil.defaultIfNull(config, JSONConfig.create());
+		super(InternalJSONUtil.createRawMap(capacity, ObjUtil.defaultIfNull(config, JSONConfig.create())));
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig.create());
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		}
 
 		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
-		if (ObjectUtil.isNull(value) && ignoreNullValue) {
+		if (ObjUtil.isNull(value) && ignoreNullValue) {
 			// 忽略值模式下如果值为空清除key
 			return this.remove(key);
 		} else if (checkDuplicate && containsKey(key)) {

@@ -1,11 +1,6 @@
-package cn.hutool.core.util;
+package cn.hutool.core.compress;
 
 import cn.hutool.core.collection.EnumerationIter;
-import cn.hutool.core.compress.Deflate;
-import cn.hutool.core.compress.Gzip;
-import cn.hutool.core.compress.ZipCopyVisitor;
-import cn.hutool.core.compress.ZipReader;
-import cn.hutool.core.compress.ZipWriter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
@@ -14,6 +9,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -56,12 +55,12 @@ public class ZipUtil {
 	 * 将Zip文件转换为{@link ZipFile}
 	 *
 	 * @param file    zip文件
-	 * @param charset 解析zip文件的编码，null表示{@link CharsetUtil#CHARSET_UTF_8}
+	 * @param charset 解析zip文件的编码，null表示{@link CharsetUtil#UTF_8}
 	 * @return {@link ZipFile}
 	 */
 	public static ZipFile toZipFile(File file, Charset charset) {
 		try {
-			return new ZipFile(file, ObjectUtil.defaultIfNull(charset, CharsetUtil.CHARSET_UTF_8));
+			return new ZipFile(file, ObjUtil.defaultIfNull(charset, CharsetUtil.UTF_8));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

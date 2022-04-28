@@ -23,7 +23,7 @@ public class UrlBuilderTest {
 	@Test
 	public void buildTest2() {
 		// path中的+不做处理
-		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.CHARSET_UTF_8).build();
+		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.UTF_8).build();
 		Assert.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
 	}
 
@@ -126,7 +126,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void ofTest() {
-		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb/?a=1&b=2#frag1", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb/?a=1&b=2#frag1", CharsetUtil.UTF_8);
 		Assert.assertEquals("http", builder.getScheme());
 		Assert.assertEquals("www.hutool.cn", builder.getHost());
 
@@ -141,14 +141,14 @@ public class UrlBuilderTest {
 
 	@Test
 	public void ofNullQueryTest() {
-		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.of("http://www.hutool.cn/aaa/bbb", CharsetUtil.UTF_8);
 		Assert.assertNotNull(builder.getQuery());
 		Assert.assertNull(builder.getQuery().get("a"));
 	}
 
 	@Test
 	public void ofWithChineseTest() {
-		final UrlBuilder builder = UrlBuilder.ofHttp("www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.ofHttp("www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.UTF_8);
 		Assert.assertEquals("http", builder.getScheme());
 		Assert.assertEquals("www.hutool.cn", builder.getHost());
 
@@ -163,7 +163,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void ofWithBlankTest() {
-		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%e6%9d%8e%e5%9b%9b#frag1", CharsetUtil.UTF_8);
 		Assert.assertEquals("http", builder.getScheme());
 		Assert.assertEquals("www.hutool.cn", builder.getHost());
 
@@ -179,7 +179,7 @@ public class UrlBuilderTest {
 	@Test
 	public void ofSpecialTest() {
 		//测试不规范的或者无需解码的字符串是否成功解码
-		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%%e5%9b%9b#frag1", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.ofHttp(" www.hutool.cn/aaa/bbb/?a=张三&b=%%e5%9b%9b#frag1", CharsetUtil.UTF_8);
 		Assert.assertEquals("http", builder.getScheme());
 		Assert.assertEquals("www.hutool.cn", builder.getHost());
 
@@ -200,7 +200,7 @@ public class UrlBuilderTest {
 				"&amp;idx=1" +
 				"&amp;sn=1044c0d19723f74f04f4c1da34eefa35" +
 				"&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
-		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.ofHttp(urlStr, CharsetUtil.UTF_8);
 		// 原URL中的&amp;替换为&
 		Assert.assertEquals("https://mp.weixin.qq.com/s?" +
 				"__biz=MzI5NjkyNTIxMg==" +
@@ -215,26 +215,26 @@ public class UrlBuilderTest {
 		// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 		final String today = DateUtil.date().toString("yyyyMMdd");
 		final String getWorkDayUrl = "https://tool.bitefu.net/jiari/?info=1&d=" + today;
-		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.UTF_8);
 		Assert.assertEquals(getWorkDayUrl, builder.toString());
 	}
 
 	@Test
 	public void blankEncodeTest(){
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://a.com/aaa bbb.html", CharsetUtil.UTF_8);
 		Assert.assertEquals("http://a.com/aaa%20bbb.html", urlBuilder.toString());
 	}
 
 	@Test
 	public void dotEncodeTest(){
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("http://xtbgyy.digitalgd.com.cn/ebus/../../..", CharsetUtil.UTF_8);
 		Assert.assertEquals("http://xtbgyy.digitalgd.com.cn/ebus/../../..", urlBuilder.toString());
 	}
 
 	@Test
 	public void multiSlashTest(){
 		//issue#I25MZL，某些URL中有多个斜杠，此为合法路径
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp("https://hutool.cn//file/test.jpg", CharsetUtil.UTF_8);
 		Assert.assertEquals("https://hutool.cn//file/test.jpg", urlBuilder.toString());
 	}
 
@@ -256,7 +256,7 @@ public class UrlBuilderTest {
 	public void encodePathTest(){
 		// Path中的某些符号无需转义，比如=
 		final String urlStr = "http://hq.sinajs.cn/list=sh600519";
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.UTF_8);
 		Assert.assertEquals(urlStr, urlBuilder.toString());
 	}
 
@@ -265,7 +265,7 @@ public class UrlBuilderTest {
 		// https://gitee.com/dromara/hutool/issues/I4RA42
 		// Path中`:`在第一个segment需要转义，之后的不需要
 		final String urlStr = "https://hutool.cn/aa/bb/Pre-K,Kindergarten,First,Second,Third,Fourth,Fifth/Page:3";
-		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.CHARSET_UTF_8);
+		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(urlStr, CharsetUtil.UTF_8);
 		Assert.assertEquals(urlStr, urlBuilder.toString());
 	}
 
@@ -423,7 +423,7 @@ public class UrlBuilderTest {
 		// https://github.com/dromara/hutool/issues/2243
 		// 如果用户已经做了%编码，不应该重复编码
 		String url = "https://hutool.cn/v1.0?privateNum=%2B8616512884988";
-		final String s = UrlBuilder.of(url, null).setCharset(CharsetUtil.CHARSET_UTF_8).toString();
+		final String s = UrlBuilder.of(url, null).setCharset(CharsetUtil.UTF_8).toString();
 		Assert.assertEquals(url, s);
 	}
 

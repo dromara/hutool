@@ -5,8 +5,8 @@ import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.SystemPropsUtil;
 
 import java.sql.Timestamp;
@@ -160,7 +160,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(Date date, TimeZone timeZone) {
-		this(ObjectUtil.defaultIfNull(date, Date::new).getTime(), timeZone);
+		this(ObjUtil.defaultIfNull(date, Date::new).getTime(), timeZone);
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
+		this.timeZone = ObjUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class DateTime extends Date {
 		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
-		DateTime dt = mutable ? this : ObjectUtil.clone(this);
+		DateTime dt = mutable ? this : ObjUtil.clone(this);
 		return dt.setTimeInternal(cal.getTimeInMillis());
 	}
 
@@ -365,7 +365,7 @@ public class DateTime extends Date {
 		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
-		return ObjectUtil.clone(this).setTimeInternal(cal.getTimeInMillis());
+		return ObjUtil.clone(this).setTimeInternal(cal.getTimeInMillis());
 	}
 	// -------------------------------------------------------------------- offset end
 
@@ -419,7 +419,7 @@ public class DateTime extends Date {
 
 		DateTime dt = this;
 		if (false == mutable) {
-			dt = ObjectUtil.clone(this);
+			dt = ObjUtil.clone(this);
 		}
 		return dt.setTimeInternal(calendar.getTimeInMillis());
 	}
@@ -930,7 +930,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime setTimeZone(TimeZone timeZone) {
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
+		this.timeZone = ObjUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 		return this;
 	}
 

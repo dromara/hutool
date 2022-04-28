@@ -2,7 +2,7 @@ package cn.hutool.poi.excel.editors;
 
 import org.apache.poi.ss.usermodel.Cell;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
 
 /**

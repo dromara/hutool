@@ -7,8 +7,8 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.EnumUtil;
-import cn.hutool.core.util.ModifierUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ModifierUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

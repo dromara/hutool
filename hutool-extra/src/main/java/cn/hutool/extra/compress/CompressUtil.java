@@ -1,7 +1,7 @@
 package cn.hutool.extra.compress;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.compress.archiver.Archiver;
 import cn.hutool.extra.compress.archiver.SevenZArchiver;
 import cn.hutool.extra.compress.archiver.StreamArchiver;

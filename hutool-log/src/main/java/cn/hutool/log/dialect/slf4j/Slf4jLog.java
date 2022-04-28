@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LocationAwareLogger;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 import cn.hutool.log.level.Level;
 
 /**
  * <a href="http://www.slf4j.org/">SLF4J</a> log.<br>
  * 同样无缝支持 <a href="http://logback.qos.ch/">LogBack</a>
- * 
+ *
  * @author Looly
  *
  */
@@ -154,7 +154,7 @@ public class Slf4jLog extends AbstractLog {
 	/**
 	 * 打印日志<br>
 	 * 此方法用于兼容底层日志实现，通过传入当前包装类名，以解决打印日志中行号错误问题
-	 * 
+	 *
 	 * @param logger {@link LocationAwareLogger} 实现
 	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于纠正定位错误行号
 	 * @param level_int 日志级别，使用LocationAwareLogger中的常量
@@ -170,7 +170,7 @@ public class Slf4jLog extends AbstractLog {
 
 	/**
 	 * 获取Slf4j Logger对象
-	 * 
+	 *
 	 * @param clazz 打印日志所在类，当为{@code null}时使用“null”表示
 	 * @return {@link Logger}
 	 */

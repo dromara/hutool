@@ -1,7 +1,7 @@
 package cn.hutool.db.ds.pooled;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;

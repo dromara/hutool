@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Properties;
 

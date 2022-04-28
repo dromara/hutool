@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel.cell.setters;
 
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.regex.Pattern;
 

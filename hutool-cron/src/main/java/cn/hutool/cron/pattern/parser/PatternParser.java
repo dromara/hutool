@@ -1,7 +1,7 @@
 package cn.hutool.cron.pattern.parser;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;

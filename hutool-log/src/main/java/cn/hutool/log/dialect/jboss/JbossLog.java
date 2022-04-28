@@ -2,13 +2,13 @@ package cn.hutool.log.dialect.jboss;
 
 import org.jboss.logging.Logger;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 import cn.hutool.log.level.Level;
 
 /**
  * <a href="https://github.com/jboss-logging">Jboss-Logging</a> log.
- * 
+ *
  * @author Looly
  *
  */
@@ -20,7 +20,7 @@ public class JbossLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Constructor
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param logger {@link Logger}
 	 */
 	public JbossLog(Logger logger) {
@@ -29,7 +29,7 @@ public class JbossLog extends AbstractLog {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param clazz 日志打印所在类
 	 */
 	public JbossLog(Class<?> clazz) {
@@ -38,7 +38,7 @@ public class JbossLog extends AbstractLog {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 日志打印所在类名
 	 */
 	public JbossLog(String name) {

@@ -5,9 +5,9 @@ import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.IdcardUtil;
 
 import java.net.MalformedURLException;
@@ -283,7 +283,7 @@ public class Validator {
 	 * @return 当两值都为null或相等返回true
 	 */
 	public static boolean equal(Object t1, Object t2) {
-		return ObjectUtil.equal(t1, t2);
+		return ObjUtil.equal(t1, t2);
 	}
 
 	/**

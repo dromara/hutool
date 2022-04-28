@@ -4,8 +4,7 @@ import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -212,7 +211,7 @@ public class StrJoiner implements Appendable, Serializable {
 		} else if (obj instanceof Iterable) {
 			append(((Iterable<?>) obj).iterator());
 		} else {
-			append(ObjectUtil.toString(obj));
+			append(ObjUtil.toString(obj));
 		}
 		return this;
 	}

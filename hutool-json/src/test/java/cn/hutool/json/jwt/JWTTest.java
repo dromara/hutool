@@ -1,7 +1,7 @@
 package cn.hutool.json.jwt;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.jwt.signers.JWTSignerUtil;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 工具类异常

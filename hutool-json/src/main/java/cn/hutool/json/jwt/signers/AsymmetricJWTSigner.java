@@ -2,7 +2,7 @@ package cn.hutool.json.jwt.signers;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 
 import java.nio.charset.Charset;
@@ -19,7 +19,7 @@ import java.security.PublicKey;
  */
 public class AsymmetricJWTSigner implements JWTSigner {
 
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+	private Charset charset = CharsetUtil.UTF_8;
 	private final Sign sign;
 
 	/**

@@ -2,7 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -2,7 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReferenceUtil;
 
 import java.io.Serializable;
@@ -279,7 +279,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 			if (other == this) {
 				return true;
 			} else if (other instanceof WeakKey) {
-				return ObjectUtil.equals(((WeakKey<?>) other).get(), get());
+				return ObjUtil.equals(((WeakKey<?>) other).get(), get());
 			}
 			return false;
 		}
@@ -314,7 +314,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 			if (other == this) {
 				return true;
 			} else if (other instanceof SoftKey) {
-				return ObjectUtil.equals(((SoftKey<?>) other).get(), get());
+				return ObjUtil.equals(((SoftKey<?>) other).get(), get());
 			}
 			return false;
 		}

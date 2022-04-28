@@ -5,7 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import com.jcraft.jsch.*;
 
 import java.io.IOException;
@@ -439,7 +439,7 @@ public class JschUtil {
 	 */
 	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
 		if (null == charset) {
-			charset = CharsetUtil.CHARSET_UTF_8;
+			charset = CharsetUtil.UTF_8;
 		}
 		final ChannelExec channel = (ChannelExec) createChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));

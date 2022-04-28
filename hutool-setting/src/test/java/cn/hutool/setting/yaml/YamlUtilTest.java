@@ -31,6 +31,6 @@ public class YamlUtilTest {
 
 		YamlUtil.dump(
 				dict
-				, FileUtil.getWriter("d:/test/dump.yaml", CharsetUtil.CHARSET_UTF_8, false));
+				, FileUtil.getWriter("d:/test/dump.yaml", CharsetUtil.UTF_8, false));
 	}
 }

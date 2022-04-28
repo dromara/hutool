@@ -5,8 +5,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -307,7 +307,7 @@ public class Mail implements Builder<MimeMessage> {
 	public Mail addImage(String cid, InputStream imageStream, String contentType) {
 		ByteArrayDataSource imgSource;
 		try {
-			imgSource = new ByteArrayDataSource(imageStream, ObjectUtil.defaultIfNull(contentType, "image/jpeg"));
+			imgSource = new ByteArrayDataSource(imageStream, ObjUtil.defaultIfNull(contentType, "image/jpeg"));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

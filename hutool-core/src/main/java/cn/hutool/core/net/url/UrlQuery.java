@@ -9,7 +9,7 @@ import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.FormUrlencoded;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 import java.util.Iterator;

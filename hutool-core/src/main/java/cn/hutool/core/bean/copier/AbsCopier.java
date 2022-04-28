@@ -1,7 +1,7 @@
 package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.lang.copier.Copier;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 /**
  * 抽象的对象拷贝封装，提供来源对象、目标对象持有
@@ -23,6 +23,6 @@ public abstract class AbsCopier<S, T> implements Copier<T> {
 	public AbsCopier(S source, T target, CopyOptions copyOptions) {
 		this.source = source;
 		this.target = target;
-		this.copyOptions = ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create);
+		this.copyOptions = ObjUtil.defaultIfNull(copyOptions, CopyOptions::create);
 	}
 }

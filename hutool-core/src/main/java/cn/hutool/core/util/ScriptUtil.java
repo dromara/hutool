@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.map.WeakConcurrentMap;
+import cn.hutool.core.text.StrUtil;
 
 import javax.script.Bindings;
 import javax.script.Compilable;

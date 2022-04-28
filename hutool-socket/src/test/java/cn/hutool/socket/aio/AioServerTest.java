@@ -3,7 +3,7 @@ package cn.hutool.socket.aio;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.StaticLog;
 
 import java.nio.ByteBuffer;

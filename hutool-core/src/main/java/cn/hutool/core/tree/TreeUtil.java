@@ -3,7 +3,7 @@ package cn.hutool.core.tree;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.tree.parser.DefaultNodeParser;
 import cn.hutool.core.tree.parser.NodeParser;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +172,7 @@ public class TreeUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> Tree<T> getNode(Tree<T> node, T id) {
-		if (ObjectUtil.equal(id, node.getId())) {
+		if (ObjUtil.equal(id, node.getId())) {
 			return node;
 		}
 

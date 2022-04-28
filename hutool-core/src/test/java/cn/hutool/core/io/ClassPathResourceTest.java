@@ -1,7 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

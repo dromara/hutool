@@ -1,9 +1,9 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -90,7 +90,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return LocalDateTime.ofInstant(instant, ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault));
+		return LocalDateTime.ofInstant(instant, ObjUtil.defaultIfNull(zoneId, ZoneId::systemDefault));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class LocalDateTimeUtil {
 			return null;
 		}
 
-		return of(instant, ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault).toZoneId());
+		return of(instant, ObjUtil.defaultIfNull(timeZone, TimeZone::getDefault).toZoneId());
 	}
 
 	/**

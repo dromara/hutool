@@ -3,7 +3,7 @@ package cn.hutool.core.io.resource;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -42,7 +42,7 @@ public class CharSequenceResource implements Resource, Serializable {
 	 * @param name 资源名称
 	 */
 	public CharSequenceResource(CharSequence data, String name) {
-		this(data, name, CharsetUtil.CHARSET_UTF_8);
+		this(data, name, CharsetUtil.UTF_8);
 	}
 
 	/**

@@ -2,9 +2,8 @@ package cn.hutool.core.lang.id;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.util.Date;

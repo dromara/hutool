@@ -9,8 +9,8 @@ import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -330,7 +330,7 @@ public class BeanUtilTest {
 
 		for (int i=0;i<5000;i++){
 			new Thread(()->{
-				List<Student> list = ObjectUtil.clone(studentList);
+				List<Student> list = ObjUtil.clone(studentList);
 				List<Student> listReps = list.stream().map(s1 -> {
 					Student s2 = new Student();
 					BeanUtil.copyProperties(s1, s2);

@@ -5,7 +5,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.File;
 import java.io.Reader;
@@ -30,7 +30,7 @@ public class CsvBaseReader implements Serializable {
 	/**
 	 * 默认编码
 	 */
-	protected static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	protected static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 
 	private final CsvReadConfig config;
 
@@ -49,7 +49,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param config 配置项
 	 */
 	public CsvBaseReader(CsvReadConfig config) {
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
+		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 	//--------------------------------------------------------------------------------------------- Constructor end
 

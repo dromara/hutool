@@ -1,10 +1,10 @@
 package cn.hutool.http.webservice;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * SOAP异常
- * 
+ *
  * @author xiaoleilu
  */
 public class SoapRuntimeException extends RuntimeException {

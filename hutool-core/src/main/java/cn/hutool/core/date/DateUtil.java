@@ -11,7 +11,7 @@ import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

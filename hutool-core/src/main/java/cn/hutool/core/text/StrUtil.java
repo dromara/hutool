@@ -1,11 +1,8 @@
-package cn.hutool.core.util;
+package cn.hutool.core.text;
 
 import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.text.StrPool;
-import cn.hutool.core.text.TextSimilarity;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -118,7 +115,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串
 	 */
 	public static String utf8Str(Object obj) {
-		return str(obj, CharsetUtil.CHARSET_UTF_8);
+		return str(obj, CharsetUtil.UTF_8);
 	}
 
 	/**

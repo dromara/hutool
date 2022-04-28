@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class GroupTimeInterval implements Serializable {
 	 */
 	public long intervalRestart(String id) {
 		final long now = getTime();
-		return now - ObjectUtil.defaultIfNull(this.groupMap.put(id, now), now);
+		return now - ObjUtil.defaultIfNull(this.groupMap.put(id, now), now);
 	}
 
 	//----------------------------------------------------------- Interval

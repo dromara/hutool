@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.DSFactory;
 
 import javax.sql.DataSource;

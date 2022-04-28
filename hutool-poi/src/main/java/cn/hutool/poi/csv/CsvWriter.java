@@ -12,7 +12,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -68,7 +68,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param file File CSV文件
 	 */
 	public CsvWriter(File file) {
-		this(file, CharsetUtil.CHARSET_UTF_8);
+		this(file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	public CsvWriter(Writer writer, CsvWriteConfig config) {
 		this.writer = (writer instanceof BufferedWriter) ? writer : new BufferedWriter(writer);
-		this.config = ObjectUtil.defaultIfNull(config, CsvWriteConfig::defaultConfig);
+		this.config = ObjUtil.defaultIfNull(config, CsvWriteConfig::defaultConfig);
 	}
 	// --------------------------------------------------------------------------------------------------- Constructor end
 

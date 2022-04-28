@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * JSON字符串格式化工具，用于简单格式化JSON字符串<br>

@@ -1,7 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.util.StrUtil;
-
 /**
  * 检测密码强度<br>
  * 来自：https://github.com/venshine/CheckPasswordStrength

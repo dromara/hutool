@@ -29,7 +29,7 @@ public class HmacTest {
 		String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
 
-		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.CHARSET_UTF_8));
+		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
 		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
 	}
 
@@ -42,7 +42,7 @@ public class HmacTest {
 		String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
 
-		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.CHARSET_UTF_8));
+		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
 		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
 	}
 
@@ -54,7 +54,7 @@ public class HmacTest {
 		String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex1);
 
-		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.CHARSET_UTF_8));
+		String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
 		Assert.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex2);
 	}
 

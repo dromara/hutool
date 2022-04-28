@@ -4,7 +4,7 @@ import cn.hutool.core.builder.Builder;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 定时任务表达式构建器

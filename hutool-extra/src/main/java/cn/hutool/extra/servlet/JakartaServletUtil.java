@@ -12,20 +12,20 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -344,7 +344,7 @@ public class JakartaServletUtil {
 	public static String getHeader(HttpServletRequest request, String name, Charset charset) {
 		final String header = request.getHeader(name);
 		if (null != header) {
-			return CharsetUtil.convert(header, CharsetUtil.CHARSET_ISO_8859_1, charset);
+			return CharsetUtil.convert(header, CharsetUtil.ISO_8859_1, charset);
 		}
 		return null;
 	}
@@ -538,7 +538,7 @@ public class JakartaServletUtil {
 	 */
 	public static void write(HttpServletResponse response, File file) {
 		final String fileName = file.getName();
-		final String contentType = ObjectUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
+		final String contentType = ObjUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -572,9 +572,9 @@ public class JakartaServletUtil {
 	 * @since 4.1.15
 	 */
 	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
-		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
+		final String charset = ObjUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.NAME_UTF_8);
 		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename=\"{}\"",
-				URLUtil.encode(fileName, CharsetUtil.charset(charset))));
+				URLEncoder.encodeAll(fileName, CharsetUtil.charset(charset))));
 		response.setContentType(contentType);
 		write(response, in);
 	}

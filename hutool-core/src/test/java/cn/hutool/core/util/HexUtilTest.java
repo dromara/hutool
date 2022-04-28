@@ -17,7 +17,7 @@ public class HexUtilTest {
 	public void hexStrTest(){
 		String str = "我是一个字符串";
 
-		String hex = HexUtil.encodeHexStr(str, CharsetUtil.CHARSET_UTF_8);
+		String hex = HexUtil.encodeHexStr(str, CharsetUtil.UTF_8);
 		String decodedStr = HexUtil.decodeHexStr(hex);
 
 		Assert.assertEquals(str, decodedStr);

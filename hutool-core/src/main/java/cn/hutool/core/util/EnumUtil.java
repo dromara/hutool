@@ -3,7 +3,9 @@ package cn.hutool.core.util;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -94,7 +96,7 @@ public class EnumUtil {
 	 * @since 4.5.18
 	 */
 	public static <E extends Enum<E>> E fromString(Class<E> enumClass, String value, E defaultValue) {
-		return ObjectUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
+		return ObjUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class EnumUtil {
 				continue;
 			}
 			for (Enum<?> enumObj : enums) {
-				if (ObjectUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
+				if (ObjUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
 					return (E) enumObj;
 				}
 			}

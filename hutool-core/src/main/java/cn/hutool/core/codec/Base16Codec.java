@@ -1,7 +1,7 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * Base16（Hex）编码解码器<br>

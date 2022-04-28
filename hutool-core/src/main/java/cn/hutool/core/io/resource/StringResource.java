@@ -31,7 +31,7 @@ public class StringResource extends CharSequenceResource {
 	 * @param name 资源名称
 	 */
 	public StringResource(String data, String name) {
-		super(data, name, CharsetUtil.CHARSET_UTF_8);
+		super(data, name, CharsetUtil.UTF_8);
 	}
 
 	/**

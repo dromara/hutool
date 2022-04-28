@@ -403,7 +403,7 @@ public class PathUtil {
 	 * @since 4.0.0
 	 */
 	public static BufferedReader getUtf8Reader(Path path) throws IORuntimeException {
-		return getReader(path, CharsetUtil.CHARSET_UTF_8);
+		return getReader(path, CharsetUtil.UTF_8);
 	}
 
 	/**

@@ -3,7 +3,7 @@ package cn.hutool.core.codec;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
  */
 public class Base64 {
 
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	// -------------------------------------------------------------------- encode
 
 	/**
@@ -215,7 +215,7 @@ public class Base64 {
 	 * @since 4.3.2
 	 */
 	public static String decodeStrGbk(CharSequence source) {
-		return Base64Decoder.decodeStr(source, CharsetUtil.CHARSET_GBK);
+		return Base64Decoder.decodeStr(source, CharsetUtil.GBK);
 	}
 
 	/**

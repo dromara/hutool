@@ -11,8 +11,8 @@ import java.util.Objects;
  *     <li>BD09坐标系：即百度坐标系，GCJ02坐标系经加密后的坐标系。百度、搜狗等使用</li>
  * </ul>
  * <p>
- * 坐标转换相关参考: https://tool.lu/coordinate/<br>
- * 参考：https://github.com/JourWon/coordinate-transform
+ * 坐标转换相关参考: <a href="https://tool.lu/coordinate/">https://tool.lu/coordinate/</a><br>
+ * 参考：<a href="https://github.com/JourWon/coordinate-transform">https://github.com/JourWon/coordinate-transform</a>
  *
  * @author hongzhe.qin(qin462328037at163.com), looly
  * @since 5.7.16

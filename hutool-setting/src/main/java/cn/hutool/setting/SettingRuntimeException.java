@@ -1,6 +1,6 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 设置异常

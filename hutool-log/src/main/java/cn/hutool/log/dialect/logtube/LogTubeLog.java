@@ -1,7 +1,7 @@
 package cn.hutool.log.dialect.logtube;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 import cn.hutool.log.level.Level;
 import io.github.logtube.Logtube;

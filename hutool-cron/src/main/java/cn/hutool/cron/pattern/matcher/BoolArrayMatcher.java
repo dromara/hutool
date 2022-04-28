@@ -2,7 +2,7 @@ package cn.hutool.cron.pattern.matcher;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Collections;
 import java.util.List;

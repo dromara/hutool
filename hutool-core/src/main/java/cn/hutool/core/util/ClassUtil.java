@@ -10,6 +10,10 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScanner;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -113,7 +117,7 @@ public class ClassUtil {
 
 	/**
 	 * 获取完整类名的短格式如：<br>
-	 * cn.hutool.core.util.StrUtil -》c.h.c.u.StrUtil
+	 * cn.hutool.core.text.StrUtil -》c.h.c.u.StrUtil
 	 *
 	 * @param className 类名
 	 * @return 短格式类名
@@ -442,7 +446,7 @@ public class ClassUtil {
 		String path;
 		while (resources.hasMoreElements()) {
 			path = resources.nextElement().getPath();
-			paths.add(isDecode ? URLUtil.decode(path, CharsetUtil.systemCharsetName()) : path);
+			paths.add(isDecode ? URLDecoder.decode(path, CharsetUtil.defaultCharset()) : path);
 		}
 		return paths;
 	}

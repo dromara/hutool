@@ -1,7 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -75,7 +75,7 @@ public class BufferUtil {
 	 * @since 4.5.0
 	 */
 	public static String readUtf8Str(ByteBuffer buffer) {
-		return readStr(buffer, CharsetUtil.CHARSET_UTF_8);
+		return readStr(buffer, CharsetUtil.UTF_8);
 	}
 
 	/**

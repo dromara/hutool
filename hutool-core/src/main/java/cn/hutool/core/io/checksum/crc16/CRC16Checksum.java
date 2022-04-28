@@ -1,7 +1,7 @@
 package cn.hutool.core.io.checksum.crc16;
 
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.util.zip.Checksum;

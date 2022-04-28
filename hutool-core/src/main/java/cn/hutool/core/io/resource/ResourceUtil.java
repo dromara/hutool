@@ -6,8 +6,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -95,7 +95,7 @@ public class ResourceUtil {
 	 * @since 5.3.6
 	 */
 	public static BufferedReader getUtf8Reader(String resource) {
-		return getReader(resource, CharsetUtil.CHARSET_UTF_8);
+		return getReader(resource, CharsetUtil.UTF_8);
 	}
 
 	/**

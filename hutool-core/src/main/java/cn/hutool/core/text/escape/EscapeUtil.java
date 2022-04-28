@@ -1,6 +1,6 @@
 package cn.hutool.core.text.escape;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.function.Predicate;
 

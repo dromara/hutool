@@ -2,7 +2,7 @@ package cn.hutool.extra.template.engine.enjoy;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
@@ -71,7 +71,7 @@ public class EnjoyEngine implements TemplateEngine {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
-		if (ObjectUtil.equal(ResourceMode.STRING, this.resourceMode)) {
+		if (ObjUtil.equal(ResourceMode.STRING, this.resourceMode)) {
 			return EnjoyTemplate.wrap(this.engine.getTemplateByString(resource));
 		}
 		return EnjoyTemplate.wrap(this.engine.getTemplate(resource));

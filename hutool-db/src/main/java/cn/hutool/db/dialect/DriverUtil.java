@@ -6,21 +6,21 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.DataSourceWrapper;
 
 /**
  * 驱动相关工具类，包括自动获取驱动类名
- * 
+ *
  * @author looly
  * @since 4.0.10
  */
 public class DriverUtil {
 	/**
 	 * 通过JDBC URL等信息识别JDBC驱动名
-	 * 
+	 *
 	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
 	 * @see DialectFactory#identifyDriver(String)
@@ -31,7 +31,7 @@ public class DriverUtil {
 
 	/**
 	 * 识别JDBC驱动名
-	 * 
+	 *
 	 * @param ds 数据源
 	 * @return 驱动
 	 */
@@ -42,7 +42,7 @@ public class DriverUtil {
 				return driver;
 			}
 		}
-		
+
 		Connection conn = null;
 		String driver;
 		try {
@@ -63,7 +63,7 @@ public class DriverUtil {
 
 	/**
 	 * 识别JDBC驱动名
-	 * 
+	 *
 	 * @param conn 数据库连接对象
 	 * @return 驱动
 	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败

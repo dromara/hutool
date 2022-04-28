@@ -1,7 +1,7 @@
 package cn.hutool.http.cookie;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.net.URLUtil;
 import cn.hutool.http.HttpConnection;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * 全局Cookie管理器，只针对Hutool请求有效
- * 
+ *
  * @author Looly
  * @since 4.5.15
  */
@@ -26,19 +26,19 @@ public class GlobalCookieManager {
 	static {
 		cookieManager = new CookieManager(new ThreadLocalCookieStore(), CookiePolicy.ACCEPT_ALL);
 	}
-	
+
 	/**
 	 * 自定义{@link CookieManager}
-	 * 
+	 *
 	 * @param customCookieManager 自定义的{@link CookieManager}
 	 */
 	public static void setCookieManager(CookieManager customCookieManager) {
 		cookieManager = customCookieManager;
 	}
-	
+
 	/**
 	 * 获取全局{@link CookieManager}
-	 * 
+	 *
 	 * @return {@link CookieManager}
 	 */
 	public static CookieManager getCookieManager() {
@@ -58,7 +58,7 @@ public class GlobalCookieManager {
 
 	/**
 	 * 将本地存储的Cookie信息附带到Http请求中，不覆盖用户定义好的Cookie
-	 * 
+	 *
 	 * @param conn {@link HttpConnection}
 	 */
 	public static void add(HttpConnection conn) {
@@ -81,7 +81,7 @@ public class GlobalCookieManager {
 
 	/**
 	 * 存储响应的Cookie信息到本地
-	 * 
+	 *
 	 * @param conn {@link HttpConnection}
 	 */
 	public static void store(HttpConnection conn) {

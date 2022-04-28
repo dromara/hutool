@@ -1,6 +1,6 @@
 package cn.hutool.extra.servlet;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 

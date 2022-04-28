@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.TokenizerException;
@@ -13,7 +13,7 @@ import cn.hutool.extra.tokenizer.TokenizerException;
 /**
  * Lucene-analysis分词抽象封装<br>
  * 项目地址：https://github.com/apache/lucene-solr/tree/master/lucene/analysis
- * 
+ *
  * @author looly
  *
  */
@@ -23,7 +23,7 @@ public class AnalysisEngine implements TokenizerEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param analyzer 分析器{@link Analyzer}
 	 */
 	public AnalysisEngine(Analyzer analyzer) {

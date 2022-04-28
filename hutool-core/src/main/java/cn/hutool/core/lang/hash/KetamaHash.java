@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.hash;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

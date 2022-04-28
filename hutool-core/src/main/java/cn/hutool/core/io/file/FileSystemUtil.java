@@ -3,7 +3,7 @@ package cn.hutool.core.io.file;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.net.URI;
@@ -58,7 +58,7 @@ public class FileSystemUtil {
 	 */
 	public static FileSystem createZip(String path, Charset charset) {
 		if(null == charset){
-			charset = CharsetUtil.CHARSET_UTF_8;
+			charset = CharsetUtil.UTF_8;
 		}
 		final HashMap<String, String> env = new HashMap<>();
 		env.put("create", "true");

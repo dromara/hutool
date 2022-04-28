@@ -2,7 +2,7 @@ package cn.hutool.swing.captcha;
 
 
 import cn.hutool.swing.img.gif.AnimatedGifEncoder;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.AlphaComposite;
@@ -148,7 +148,7 @@ public class GifCaptcha extends AbstractCaptcha {
 		//或得图形上下文
 		Graphics2D g2d = image.createGraphics();
 		//利用指定颜色填充背景
-		g2d.setColor(ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		g2d.setColor(ObjUtil.defaultIfNull(this.background, Color.WHITE));
 		g2d.fillRect(0, 0, width, height);
 		AlphaComposite ac;
 		// 字符的y坐标

@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 

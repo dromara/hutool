@@ -1,7 +1,6 @@
 package cn.hutool.core.text;
 
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文本相似度计算<br>

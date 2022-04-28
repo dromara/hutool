@@ -63,7 +63,7 @@ public class StreamUtil {
 	 * @return {@link Stream}
 	 */
 	public static Stream<String> of(File file) {
-		return of(file, CharsetUtil.CHARSET_UTF_8);
+		return of(file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class StreamUtil {
 	 * @return {@link Stream}
 	 */
 	public static Stream<String> of(Path path) {
-		return of(path, CharsetUtil.CHARSET_UTF_8);
+		return of(path, CharsetUtil.UTF_8);
 	}
 
 	/**

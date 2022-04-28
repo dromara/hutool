@@ -19,7 +19,7 @@ public class CsvReaderTest {
 	@Test
 	public void readTest() {
 		CsvReader reader = new CsvReader();
-		CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.CHARSET_UTF_8));
+		CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.UTF_8));
 		Assert.assertEquals("sss,sss", data.getRow(0).get(0));
 		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
 		Assert.assertEquals("性别", data.getRow(0).get(2));
@@ -129,7 +129,7 @@ public class CsvReaderTest {
 	@Test
 	public void lineNoTest() {
 		CsvReader reader = new CsvReader();
-		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
 		Assert.assertEquals(1, data.getRow(0).getOriginalLineNumber());
 		Assert.assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
 
@@ -146,7 +146,7 @@ public class CsvReaderTest {
 	public void lineLimitTest() {
 		// 从原始第2行开始读取
 		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2));
-		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
 
 		Assert.assertEquals(2, data.getRow(0).getOriginalLineNumber());
 		Assert.assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
@@ -164,7 +164,7 @@ public class CsvReaderTest {
 	public void lineLimitWithHeaderTest() {
 		// 从原始第2行开始读取
 		CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2).setContainsHeader(true));
-		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.CHARSET_UTF_8));
+		CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
 
 		Assert.assertEquals(4, data.getRow(0).getOriginalLineNumber());
 		Assert.assertEquals("q,w,e,r,我是一段\n带换行的内容",

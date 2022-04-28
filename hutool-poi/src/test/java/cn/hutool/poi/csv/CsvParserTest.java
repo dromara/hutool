@@ -1,7 +1,7 @@
 package cn.hutool.poi.csv;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -8,7 +8,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.JNDIUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;

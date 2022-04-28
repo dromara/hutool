@@ -57,7 +57,7 @@ public class TemplateConfig implements Serializable {
 	 * @param resourceMode 模板资源加载方式
 	 */
 	public TemplateConfig(String path, ResourceMode resourceMode) {
-		this(CharsetUtil.CHARSET_UTF_8, path, resourceMode);
+		this(CharsetUtil.UTF_8, path, resourceMode);
 	}
 
 	/**

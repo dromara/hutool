@@ -1,7 +1,7 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 
@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  */
 public class Base64Encoder {
 
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	/**
 	 * 标准编码表
 	 */

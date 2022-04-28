@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * 默认的请求编码、URL的encode、decode编码
 	 */
-	protected static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	protected static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 
 	/**
 	 * HTTP/1.0

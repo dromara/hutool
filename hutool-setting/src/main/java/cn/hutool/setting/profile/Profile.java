@@ -1,7 +1,7 @@
 package cn.hutool.setting.profile;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.setting.Setting;
 
 import java.io.Serializable;

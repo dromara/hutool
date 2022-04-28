@@ -18,7 +18,7 @@ package cn.hutool;
 
 import cn.hutool.core.lang.ConsoleTable;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Set;
 

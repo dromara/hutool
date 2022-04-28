@@ -9,8 +9,8 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -422,7 +422,7 @@ public class IterUtil {
 		if (null == resultMap) {
 			resultMap = MapUtil.newHashMap();
 		}
-		if (ObjectUtil.isNull(iterable)) {
+		if (ObjUtil.isNull(iterable)) {
 			return resultMap;
 		}
 
@@ -480,7 +480,7 @@ public class IterUtil {
 		if (null == resultMap) {
 			resultMap = MapUtil.newHashMap();
 		}
-		if (ObjectUtil.isNull(iterable)) {
+		if (ObjUtil.isNull(iterable)) {
 			return resultMap;
 		}
 
@@ -964,7 +964,7 @@ public class IterUtil {
 	 * @since 5.8.0
 	 */
 	public static <E> String toStr(final Iterator<E> iterator) {
-		return toStr(iterator, ObjectUtil::toString);
+		return toStr(iterator, ObjUtil::toString);
 	}
 
 	/**

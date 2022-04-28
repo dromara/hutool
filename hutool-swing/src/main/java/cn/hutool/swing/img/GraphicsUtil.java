@@ -1,6 +1,6 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -172,7 +172,7 @@ public class GraphicsUtil {
 		}
 
 		g.setFont(font);
-		g.setColor(ObjectUtil.defaultIfNull(color, Color.BLACK));
+		g.setColor(ObjUtil.defaultIfNull(color, Color.BLACK));
 		g.drawString(str, point.x, point.y);
 
 		return g;

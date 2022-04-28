@@ -5,6 +5,9 @@ import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.*;
 
 import java.io.File;
@@ -192,7 +195,7 @@ public class ClassScanner implements Serializable {
 	 * @param classPredicate 过滤器，无需传入null
 	 */
 	public ClassScanner(String packageName, Predicate<Class<?>> classPredicate) {
-		this(packageName, classPredicate, CharsetUtil.CHARSET_UTF_8);
+		this(packageName, classPredicate, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -233,7 +236,7 @@ public class ClassScanner implements Serializable {
 		for (URL url : ResourceUtil.getResourceIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
-					scanFile(new File(URLUtil.decode(url.getFile(), this.charset.name())), null);
+					scanFile(new File(URLDecoder.decode(url.getFile(), this.charset)), null);
 					break;
 				case "jar":
 					scanJar(URLUtil.getJarFile(url));
@@ -277,7 +280,7 @@ public class ClassScanner implements Serializable {
 		final String[] javaClassPaths = ClassUtil.getJavaClassPaths();
 		for (String classPath : javaClassPaths) {
 			// bug修复，由于路径中空格和中文导致的Jar找不到
-			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
+			classPath = URLDecoder.decode(classPath, CharsetUtil.defaultCharset());
 
 			scanFile(new File(classPath), null);
 		}

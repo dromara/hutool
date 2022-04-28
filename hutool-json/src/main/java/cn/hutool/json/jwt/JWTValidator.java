@@ -2,7 +2,7 @@ package cn.hutool.json.jwt;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.jwt.signers.JWTSigner;
 import cn.hutool.json.jwt.signers.NoneJWTSigner;
 

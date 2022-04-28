@@ -4,7 +4,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.URLUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,7 +53,7 @@ public class UrlQueryTest {
 	public void parseTest4(){
 		// https://github.com/dromara/hutool/issues/1989
 		String queryStr = "imageMogr2/thumbnail/x800/format/jpg";
-		final UrlQuery query = UrlQuery.of(queryStr, CharsetUtil.CHARSET_UTF_8);
+		final UrlQuery query = UrlQuery.of(queryStr, CharsetUtil.UTF_8);
 		Assert.assertEquals(queryStr, query.toString());
 	}
 
@@ -112,22 +111,22 @@ public class UrlQueryTest {
 	@Test
 	public void plusTest(){
 		// 根据RFC3986，在URL中，+是安全字符，即此符号不转义
-		final String a = UrlQuery.of(MapUtil.of("a+b", "1+2")).build(CharsetUtil.CHARSET_UTF_8);
+		final String a = UrlQuery.of(MapUtil.of("a+b", "1+2")).build(CharsetUtil.UTF_8);
 		Assert.assertEquals("a+b=1+2", a);
 	}
 
 	@Test
 	public void parsePlusTest(){
 		// 根据RFC3986，在URL中，+是安全字符，即此符号不转义
-		final String a = UrlQuery.of("a+b=1+2", CharsetUtil.CHARSET_UTF_8)
-				.build(CharsetUtil.CHARSET_UTF_8);
+		final String a = UrlQuery.of("a+b=1+2", CharsetUtil.UTF_8)
+				.build(CharsetUtil.UTF_8);
 		Assert.assertEquals("a+b=1+2", a);
 	}
 
 	@Test
 	public void spaceTest(){
 		// 根据RFC3986，在URL中，空格编码为"%20"
-		final String a = UrlQuery.of(MapUtil.of("a ", " ")).build(CharsetUtil.CHARSET_UTF_8);
+		final String a = UrlQuery.of(MapUtil.of("a ", " ")).build(CharsetUtil.UTF_8);
 		Assert.assertEquals("a%20=%20", a);
 	}
 

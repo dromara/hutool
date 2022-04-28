@@ -3,7 +3,7 @@ package cn.hutool.core.codec;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 
@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class Base64Decoder {
 
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	private static final byte PADDING = -2;
 
 	/** Base64解码表，共128位，-1表示非base64字符，-2表示padding */

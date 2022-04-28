@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -207,7 +207,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public byte[] sign(String data) {
-		return sign(data, CharsetUtil.CHARSET_UTF_8);
+		return sign(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public String signHex(String data) {
-		return signHex(data, CharsetUtil.CHARSET_UTF_8);
+		return signHex(data, CharsetUtil.UTF_8);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.BiMap;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.escape.EscapeUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -412,7 +413,7 @@ public class XmlUtil {
 	 * @since 5.4.5
 	 */
 	public static String toStr(Node doc, boolean isPretty) {
-		return toStr(doc, CharsetUtil.UTF_8, isPretty);
+		return toStr(doc, CharsetUtil.NAME_UTF_8, isPretty);
 	}
 
 	/**
@@ -522,7 +523,7 @@ public class XmlUtil {
 			charsetName = doc.getXmlEncoding();
 		}
 		if (StrUtil.isBlank(charsetName)) {
-			charsetName = CharsetUtil.UTF_8;
+			charsetName = CharsetUtil.NAME_UTF_8;
 		}
 
 		BufferedWriter writer = null;
@@ -1140,7 +1141,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, "xml"), CharsetUtil.UTF_8, false, omitXmlDeclaration);
+		return toStr(mapToXml(data, "xml"), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
 	}
 
 	/**
@@ -1182,7 +1183,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, false, omitXmlDeclaration);
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
 	}
 
 	/**
@@ -1198,7 +1199,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean isPretty, boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty, omitXmlDeclaration);
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, isPretty, omitXmlDeclaration);
 	}
 
 	/**

@@ -2,7 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public List<V> getValues(K key) {
 		return CollUtil.getAny(
 				this.values,
-				ListUtil.indexOfAll(this.keys, (ele) -> ObjectUtil.equal(ele, key))
+				ListUtil.indexOfAll(this.keys, (ele) -> ObjUtil.equal(ele, key))
 		);
 	}
 
@@ -131,7 +131,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public List<K> getKeys(V value) {
 		return CollUtil.getAny(
 				this.keys,
-				ListUtil.indexOfAll(this.values, (ele) -> ObjectUtil.equal(ele, value))
+				ListUtil.indexOfAll(this.values, (ele) -> ObjUtil.equal(ele, value))
 		);
 	}
 

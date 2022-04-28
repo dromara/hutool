@@ -15,7 +15,7 @@ import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.dialect.Props;
 
@@ -51,7 +51,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/**
 	 * 默认字符集
 	 */
-	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	public static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	/**
 	 * 默认配置文件扩展名
 	 */

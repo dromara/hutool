@@ -5,7 +5,7 @@ import java.util.Date;
 
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 日期转换器

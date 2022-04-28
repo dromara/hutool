@@ -1,6 +1,6 @@
 package cn.hutool.cron;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 定时任务异常

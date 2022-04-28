@@ -1,6 +1,6 @@
 package cn.hutool.db.ds.pooled;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
 
@@ -8,13 +8,13 @@ import javax.sql.DataSource;
 
 /**
  * Hutool自身实现的池化数据源工厂类
- * 
+ *
  * @author Looly
  *
  */
 public class PooledDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 8093886210895248277L;
-	
+
 	public static final String DS_NAME = "Hutool-Pooled-DataSource";
 
 	public PooledDSFactory() {

@@ -1,10 +1,10 @@
 package cn.hutool.http;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
 import cn.hutool.http.ssl.DefaultSSLInfo;
 
 import javax.net.ssl.HostnameVerifier;
@@ -267,8 +267,8 @@ public class HttpConnection {
 			// Https请求
 			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
-			httpsConn.setHostnameVerifier(ObjectUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
-			httpsConn.setSSLSocketFactory(ObjectUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
+			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
+			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
 		}
 
 		return this;

@@ -17,7 +17,7 @@ import java.util.Map;
  * 它是为JAVA应用程序提供命名和目录访问服务的API（Application Programing Interface，应用程序编程接口）。
  *
  * <p>
- * 见：https://blog.csdn.net/u010430304/article/details/54601302
+ * 见：<a href="https://blog.csdn.net/u010430304/article/details/54601302">https://blog.csdn.net/u010430304/article/details/54601302</a>
  * </p>
  *
  * @author loolY

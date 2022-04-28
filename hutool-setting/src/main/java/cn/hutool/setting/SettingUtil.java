@@ -2,7 +2,7 @@ package cn.hutool.setting;
 
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.NoResourceException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

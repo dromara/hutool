@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 
 import java.io.Serializable;
 import java.io.StringWriter;

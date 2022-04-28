@@ -35,10 +35,10 @@ import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.TypeUtil;
 
@@ -241,7 +241,7 @@ public class ConverterRegistry implements Serializable {
 			// 对于用户不指定目标类型的情况，返回原值
 			return (T) value;
 		}
-		if (ObjectUtil.isNull(value)) {
+		if (ObjUtil.isNull(value)) {
 			return defaultValue;
 		}
 		if (TypeUtil.isUnknown(type)) {

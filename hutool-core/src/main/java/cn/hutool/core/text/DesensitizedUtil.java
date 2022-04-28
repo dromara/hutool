@@ -1,4 +1,6 @@
-package cn.hutool.core.util;
+package cn.hutool.core.text;
+
+import cn.hutool.core.util.CharUtil;
 
 /**
  * 脱敏工具类，支持以下类型信息的脱敏自动处理：

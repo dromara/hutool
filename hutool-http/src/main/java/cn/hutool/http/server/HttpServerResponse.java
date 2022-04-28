@@ -3,9 +3,9 @@ package cn.hutool.http.server;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpStatus;
@@ -255,7 +255,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return 响应数据流
 	 */
 	public PrintWriter getWriter() {
-		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
+		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 		return new PrintWriter(new OutputStreamWriter(getOut(), charset));
 	}
 
@@ -278,7 +278,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(String data) {
-		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
+		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 		return write(StrUtil.bytes(data, charset));
 	}
 
@@ -391,7 +391,7 @@ public class HttpServerResponse extends HttpServerBase {
 		if(StrUtil.isBlank(fileName)){
 			fileName = file.getName();
 		}
-		final String contentType = ObjectUtil.defaultIfNull(HttpUtil.getMimeType(fileName), "application/octet-stream");
+		final String contentType = ObjUtil.defaultIfNull(HttpUtil.getMimeType(fileName), "application/octet-stream");
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -425,11 +425,11 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @since 5.2.7
 	 */
 	public HttpServerResponse write(InputStream in, int length, String contentType, String fileName) {
-		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
+		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 
 		if (false == contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
-			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
+			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLEncoder.encodeAll(fileName, charset)));
 		}
 		return write(in, length, contentType);
 	}

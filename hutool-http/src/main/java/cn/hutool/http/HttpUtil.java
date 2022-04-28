@@ -7,13 +7,13 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.RFC3986;
+import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.net.url.UrlQuery;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.server.SimpleServer;
 
@@ -433,7 +433,7 @@ public class HttpUtil {
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, ?> paramMap) {
-		return toParams(paramMap, CharsetUtil.CHARSET_UTF_8);
+		return toParams(paramMap, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -560,13 +560,13 @@ public class HttpUtil {
 
 		// 结尾处理
 		if (null != name) {
-			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
+			builder.append(URLEncoder.encodeQuery(name, charset)).append('=');
 		}
 		if (pos != i) {
 			if (null == name && pos > 0) {
 				builder.append('=');
 			}
-			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
+			builder.append(URLEncoder.encodeQuery(paramPart.substring(pos, i), charset));
 		}
 
 		// 以&结尾则去除之
@@ -746,7 +746,7 @@ public class HttpUtil {
 		}
 
 		if (null == charset) {
-			charset = CharsetUtil.CHARSET_UTF_8;
+			charset = CharsetUtil.UTF_8;
 		}
 		String content = new String(contentBytes, charset);
 		if (isGetCharsetFromContent) {
@@ -757,9 +757,9 @@ public class HttpUtil {
 					charsetInContent = Charset.forName(charsetInContentStr);
 				} catch (Exception e) {
 					if (StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8") || StrUtil.containsIgnoreCase(charsetInContentStr, "utf8")) {
-						charsetInContent = CharsetUtil.CHARSET_UTF_8;
+						charsetInContent = CharsetUtil.UTF_8;
 					} else if (StrUtil.containsIgnoreCase(charsetInContentStr, "gbk")) {
-						charsetInContent = CharsetUtil.CHARSET_GBK;
+						charsetInContent = CharsetUtil.GBK;
 					}
 					// ignore
 				}
@@ -781,7 +781,7 @@ public class HttpUtil {
 	 * @since 4.6.5
 	 */
 	public static String getMimeType(String filePath, String defaultValue) {
-		return ObjectUtil.defaultIfNull(getMimeType(filePath), defaultValue);
+		return ObjUtil.defaultIfNull(getMimeType(filePath), defaultValue);
 	}
 
 	/**

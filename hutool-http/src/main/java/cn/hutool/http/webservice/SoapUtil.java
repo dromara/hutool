@@ -14,7 +14,7 @@ import cn.hutool.core.util.XmlUtil;
 
 /**
  * SOAP相关工具类
- * 
+ *
  * @author looly
  * @since 4.5.7
  */
@@ -22,7 +22,7 @@ public class SoapUtil {
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
-	 * 
+	 *
 	 * @param url WS的URL地址
 	 * @return {@link SoapClient}
 	 */
@@ -32,7 +32,7 @@ public class SoapUtil {
 
 	/**
 	 * 创建SOAP客户端
-	 * 
+	 *
 	 * @param url WS的URL地址
 	 * @param protocol 协议，见{@link SoapProtocol}
 	 * @return {@link SoapClient}
@@ -43,7 +43,7 @@ public class SoapUtil {
 
 	/**
 	 * 创建SOAP客户端
-	 * 
+	 *
 	 * @param url WS的URL地址
 	 * @param protocol 协议，见{@link SoapProtocol}
 	 * @param namespaceURI 方法上的命名空间URI
@@ -62,7 +62,7 @@ public class SoapUtil {
 	 * @return SOAP XML字符串
 	 */
 	public static String toString(SOAPMessage message, boolean pretty) {
-		return toString(message, pretty, CharsetUtil.CHARSET_UTF_8);
+		return toString(message, pretty, CharsetUtil.UTF_8);
 	}
 
 	/**

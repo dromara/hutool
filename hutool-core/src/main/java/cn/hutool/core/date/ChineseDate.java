@@ -6,7 +6,7 @@ import cn.hutool.core.date.chinese.GanZhi;
 import cn.hutool.core.date.chinese.LunarFestival;
 import cn.hutool.core.date.chinese.LunarInfo;
 import cn.hutool.core.date.chinese.SolarTerms;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.time.LocalDate;
 import java.util.Calendar;

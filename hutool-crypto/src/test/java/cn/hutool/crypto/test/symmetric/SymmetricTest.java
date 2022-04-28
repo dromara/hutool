@@ -3,7 +3,7 @@ package cn.hutool.crypto.test.symmetric;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CipherMode;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
@@ -43,12 +43,12 @@ public class SymmetricTest {
 		// 解密
 		byte[] decrypt = aes.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.UTF_8));
 
 		// 加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
-		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}
@@ -73,7 +73,7 @@ public class SymmetricTest {
 		// 加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
-		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}
@@ -94,7 +94,7 @@ public class SymmetricTest {
 		// 加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
-		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}

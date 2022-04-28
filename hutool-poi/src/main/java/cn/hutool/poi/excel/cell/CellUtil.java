@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel.cell;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.cell.setters.CellSetterFactory;
@@ -364,7 +364,7 @@ public class CellUtil {
 		if (null == cell) {
 			return null;
 		}
-		return ObjectUtil.defaultIfNull(
+		return ObjUtil.defaultIfNull(
 				getCellIfMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex()),
 				cell);
 	}
@@ -380,7 +380,7 @@ public class CellUtil {
 	 * @since 5.1.5
 	 */
 	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
-		return ObjectUtil.defaultIfNull(
+		return ObjUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
 				() -> SheetUtil.getCell(sheet, y, x));
 	}

@@ -3,12 +3,12 @@ package cn.hutool.log.dialect.log4j;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 
 /**
  * <a href="http://logging.apache.org/log4j/1.2/index.html">Apache Log4J</a> log.<br>
- * 
+ *
  * @author Looly
  *
  */
@@ -77,7 +77,7 @@ public class Log4jLog extends AbstractLog {
 	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.WARN, t, format, arguments);
 	}
-	
+
 	// ------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
@@ -112,7 +112,7 @@ public class Log4jLog extends AbstractLog {
 			default:
 				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
-		
+
 		if(logger.isEnabledFor(log4jLevel)) {
 			logger.log(fqcn, log4jLevel, StrUtil.format(format, arguments), t);
 		}

@@ -1,7 +1,7 @@
 package cn.hutool.extra.template;
 
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.template.engine.jetbrick.JetbrickEngine;
 import org.junit.Assert;
 import org.junit.Test;

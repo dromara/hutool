@@ -1,7 +1,7 @@
 package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

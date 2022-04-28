@@ -5,8 +5,8 @@ import cn.hutool.core.convert.NumberChineseFormatter;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.FastDateParser;
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.text.ParsePosition;
 import java.time.Instant;
@@ -719,7 +719,7 @@ public class CalendarUtil {
 		}
 
 		final TimeZone tz = TimeZone.getDefault();
-		final Locale lcl = ObjectUtil.defaultIfNull(locale, Locale.getDefault());
+		final Locale lcl = ObjUtil.defaultIfNull(locale, Locale.getDefault());
 		final ParsePosition pos = new ParsePosition(0);
 		final Calendar calendar = Calendar.getInstance(tz, lcl);
 		calendar.setLenient(lenient);

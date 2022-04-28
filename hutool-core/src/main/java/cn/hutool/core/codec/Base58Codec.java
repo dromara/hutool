@@ -1,6 +1,6 @@
 package cn.hutool.core.codec;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Arrays;
 

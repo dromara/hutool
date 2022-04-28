@@ -6,8 +6,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -658,7 +658,7 @@ public class Img implements Serializable {
 		int height = image.getHeight(null);
 		Graphics2D g = image.createGraphics();
 
-		g.setColor(ObjectUtil.defaultIfNull(color, Color.BLACK));
+		g.setColor(ObjUtil.defaultIfNull(color, Color.BLACK));
 		if (null != stroke) {
 			g.setStroke(stroke);
 		}
@@ -784,7 +784,7 @@ public class Img implements Serializable {
 	 * @return 有效的源图片
 	 */
 	private Image getValidSrcImg() {
-		return ObjectUtil.defaultIfNull(this.targetImage, this.srcImage);
+		return ObjUtil.defaultIfNull(this.targetImage, this.srcImage);
 	}
 
 	/**

@@ -2,7 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * HTML工具类

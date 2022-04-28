@@ -16,7 +16,7 @@ public class ZucTest {
 
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);
-		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.CHARSET_UTF_8);
+		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.UTF_8);
 		Assert.assertEquals(msg, msg2);
 	}
 
@@ -28,7 +28,7 @@ public class ZucTest {
 
 		String msg = RandomUtil.randomString(500);
 		byte[] crypt2 = zuc.encrypt(msg);
-		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.CHARSET_UTF_8);
+		String msg2 = zuc.decryptStr(crypt2, CharsetUtil.UTF_8);
 		Assert.assertEquals(msg, msg2);
 	}
 }

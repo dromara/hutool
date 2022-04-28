@@ -3,7 +3,7 @@ package cn.hutool.crypto.symmetric;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 
 import java.io.InputStream;
@@ -58,7 +58,7 @@ public interface SymmetricDecryptor {
 	 * @return 解密后的String
 	 */
 	default String decryptStr(byte[] bytes) {
-		return decryptStr(bytes, CharsetUtil.CHARSET_UTF_8);
+		return decryptStr(bytes, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public interface SymmetricDecryptor {
 	 * @return 解密后的String
 	 */
 	default String decryptStr(String data) {
-		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
+		return decryptStr(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -121,6 +121,6 @@ public interface SymmetricDecryptor {
 	 * @return 解密后的String
 	 */
 	default String decryptStr(InputStream data) {
-		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
+		return decryptStr(data, CharsetUtil.UTF_8);
 	}
 }

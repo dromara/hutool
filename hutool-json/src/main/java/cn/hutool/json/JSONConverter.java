@@ -7,9 +7,9 @@ import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
@@ -135,7 +135,7 @@ public class JSONConverter implements Converter<JSON> {
 				return null;
 			}
 
-			throw new ConvertException("Can not convert {} to type {}", value, ObjectUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
+			throw new ConvertException("Can not convert {} to type {}", value, ObjUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
 		}
 
 		return targetValue;

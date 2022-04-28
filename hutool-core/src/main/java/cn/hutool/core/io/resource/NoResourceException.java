@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 资源文件或资源不存在异常

@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class HttpServerBase implements Closeable {
 
-	final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	final static Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 
 	final HttpExchange httpExchange;
 

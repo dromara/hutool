@@ -1,6 +1,6 @@
 package cn.hutool.crypto.digest.otp;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
 import java.time.Duration;

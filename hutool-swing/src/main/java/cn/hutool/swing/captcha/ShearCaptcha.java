@@ -2,7 +2,7 @@ package cn.hutool.swing.captcha;
 
 import cn.hutool.swing.img.GraphicsUtil;
 import cn.hutool.swing.img.ImgUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.Color;
@@ -57,13 +57,13 @@ public class ShearCaptcha extends AbstractCaptcha {
 	@Override
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 画字符串
 		drawString(g, code);
 
 		// 扭曲
-		shear(g, this.width, this.height, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		shear(g, this.width, this.height, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 		// 画干扰线
 		drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ImgUtil.randomColor());
 

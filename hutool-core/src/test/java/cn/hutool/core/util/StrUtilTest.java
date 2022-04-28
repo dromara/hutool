@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.map.Dict;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

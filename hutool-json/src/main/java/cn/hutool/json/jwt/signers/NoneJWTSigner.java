@@ -1,6 +1,6 @@
 package cn.hutool.json.jwt.signers;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 无需签名的JWT签名器

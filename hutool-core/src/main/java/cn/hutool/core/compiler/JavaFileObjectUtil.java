@@ -1,7 +1,7 @@
 package cn.hutool.core.compiler;
 
 import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.compress.ZipUtil;
 
 import javax.tools.JavaFileObject;
 import java.io.File;

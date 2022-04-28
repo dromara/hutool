@@ -24,7 +24,7 @@ public class ChaCha20Test {
 		// 加密为16进制表示
 		String encryptHex = chacha.encryptHex(content);
 		// 解密为字符串
-		String decryptStr = chacha.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		String decryptStr = chacha.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
 		Assert.assertEquals(content, decryptStr);
 	}

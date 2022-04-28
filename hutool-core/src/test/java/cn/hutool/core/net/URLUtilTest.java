@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.net;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -73,24 +73,6 @@ public class URLUtilTest {
 		String normalize = URLUtil.normalize(url);
 		URI host = URLUtil.getHost(new URL(normalize));
 		Assert.assertEquals("https://www.hutool.cn", host.toString());
-	}
-
-	@Test
-	public void encodeTest() {
-		String body = "366466 - 副本.jpg";
-		String encode = URLUtil.encode(body);
-		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode);
-		Assert.assertEquals(body, URLUtil.decode(encode));
-
-		String encode2 = URLUtil.encodeQuery(body);
-		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode2);
-	}
-
-	@Test
-	public void encodeQueryPlusTest() {
-		String body = "+";
-		String encode2 = URLUtil.encodeQuery(body);
-		Assert.assertEquals("+", encode2);
 	}
 
 	@Test

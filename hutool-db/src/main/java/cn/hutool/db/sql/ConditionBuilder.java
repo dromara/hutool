@@ -4,7 +4,7 @@ import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;

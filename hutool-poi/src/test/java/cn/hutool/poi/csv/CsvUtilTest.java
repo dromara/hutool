@@ -92,7 +92,7 @@ public class CsvUtilTest {
 	@Ignore
 	public void writeTest() {
 		String path = FileUtil.isWindows() ? "d:/test/testWrite.csv" : "~/test/testWrite.csv";
-		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
+		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.UTF_8);
 		writer.write(
 				new String[] {"a1", "b1", "c1", "123345346456745756756785656"},
 				new String[] {"a2", "b2", "c2"},
@@ -112,7 +112,7 @@ public class CsvUtilTest {
 		}
 
 		String path = FileUtil.isWindows() ? "d:/test/testWriteBeans.csv" : "~/test/testWriteBeans.csv";
-		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
+		CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.UTF_8);
 		List<Student> students = new ArrayList<>();
 		Student student1 = new Student();
 		student1.setId(1);
@@ -162,7 +162,7 @@ public class CsvUtilTest {
 		resultList.add(list);
 
 		String path = FileUtil.isWindows() ? "d:/test/csvWrapTest.csv" : "~/test/csvWrapTest.csv";
-		final CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
+		final CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.UTF_8);
 		writer.write(resultList);
 	}
 
@@ -201,7 +201,7 @@ public class CsvUtilTest {
 
 		CsvData csvData = new CsvData(header, row);
 		String path = FileUtil.isWindows() ? "d:/test/csvWriteDataTest.csv" : "~/test/csvWriteDataTest.csv";
-		final CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.CHARSET_UTF_8);
+		final CsvWriter writer = CsvUtil.getWriter(path, CharsetUtil.UTF_8);
 		writer.write(csvData);
 	}
 }

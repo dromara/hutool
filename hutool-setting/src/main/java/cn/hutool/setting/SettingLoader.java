@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.SystemPropsUtil;
 import cn.hutool.log.Log;
 
@@ -52,7 +52,7 @@ public class SettingLoader {
 	 * @param groupedMap GroupedMap
 	 */
 	public SettingLoader(GroupedMap groupedMap) {
-		this(groupedMap, CharsetUtil.CHARSET_UTF_8, false);
+		this(groupedMap, CharsetUtil.UTF_8, false);
 	}
 
 	/**

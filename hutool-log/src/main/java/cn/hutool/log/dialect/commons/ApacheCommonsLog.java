@@ -3,7 +3,7 @@ package cn.hutool.log.dialect.commons;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 import cn.hutool.log.level.Level;
 
@@ -14,7 +14,7 @@ import cn.hutool.log.level.Level;
  */
 public class ApacheCommonsLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-	
+
 	private final transient Log logger;
 	private final String name;
 
@@ -95,7 +95,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
 	}
-	
+
 	@Override
 	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
 		// fqcn此处无效
@@ -116,9 +116,9 @@ public class ApacheCommonsLog extends AbstractLog {
 		if(isErrorEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
-		
+
 	}
-	
+
 	// ------------------------------------------------------------------------- Log
 	@Override
 	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {

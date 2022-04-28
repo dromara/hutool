@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
@@ -75,7 +75,7 @@ public class Ftp extends AbstractFtp {
 	 * @param password 密码
 	 */
 	public Ftp(String host, int port, String user, String password) {
-		this(host, port, user, password, CharsetUtil.CHARSET_UTF_8);
+		this(host, port, user, password, CharsetUtil.UTF_8);
 	}
 
 	/**

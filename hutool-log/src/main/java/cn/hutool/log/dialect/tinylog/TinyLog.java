@@ -5,18 +5,18 @@ import org.pmw.tinylog.LogEntryForwarder;
 import org.pmw.tinylog.Logger;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 
 /**
  * <a href="http://www.tinylog.org/">tinylog</a> log.<br>
- * 
+ *
  * @author Looly
  *
  */
 public class TinyLog extends AbstractLog {
 	private static final long serialVersionUID = -4848042277045993735L;
-	
+
 	/** 堆栈增加层数，因为封装因此多了两层，此值用于正确获取当前类名 */
 	private static final int DEPTH = 4;
 
@@ -97,12 +97,12 @@ public class TinyLog extends AbstractLog {
 	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
 		logIfEnabled(fqcn, toTinyLevel(level), t, format, arguments);
 	}
-	
+
 	@Override
 	public boolean isEnabled(cn.hutool.log.level.Level level) {
 		return this.level <= toTinyLevel(level).ordinal();
 	}
-	
+
 	/**
 	 * 在对应日志级别打开情况下打印日志
 	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
@@ -118,10 +118,10 @@ public class TinyLog extends AbstractLog {
 		}
 		LogEntryForwarder.forward(DEPTH, level, t, StrUtil.toString(format), arguments);
 	}
-	
+
 	/**
 	 * 将Hutool的Level等级转换为Tinylog的Level等级
-	 * 
+	 *
 	 * @param level Hutool的Level等级
 	 * @return Tinylog的Level
 	 * @since 4.0.3
@@ -155,7 +155,7 @@ public class TinyLog extends AbstractLog {
 
 	/**
 	 * 如果最后一个参数为异常参数，则获取之，否则返回null
-	 * 
+	 *
 	 * @param arguments 参数
 	 * @return 最后一个异常参数
 	 * @since 4.0.3

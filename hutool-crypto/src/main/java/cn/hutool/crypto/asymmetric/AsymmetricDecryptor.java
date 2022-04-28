@@ -5,7 +5,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 
 import java.io.InputStream;
@@ -80,7 +80,7 @@ public interface AsymmetricDecryptor {
 	 * @since 4.5.2
 	 */
 	default String decryptStr(String data, KeyType keyType) {
-		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
+		return decryptStr(data, keyType, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public interface AsymmetricDecryptor {
 	 * @since 4.1.0
 	 */
 	default byte[] decryptFromBcd(String data, KeyType keyType) {
-		return decryptFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
+		return decryptFromBcd(data, keyType, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -132,6 +132,6 @@ public interface AsymmetricDecryptor {
 	 * @since 4.5.2
 	 */
 	default String decryptStrFromBcd(String data, KeyType keyType) {
-		return decryptStrFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
+		return decryptStrFromBcd(data, keyType, CharsetUtil.UTF_8);
 	}
 }

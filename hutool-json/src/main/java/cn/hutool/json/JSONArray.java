@@ -7,7 +7,7 @@ import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -90,7 +90,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
-		this.config = ObjectUtil.defaultIfNull(config, JSONConfig::create);
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig::create);
 	}
 
 	/**
@@ -557,7 +557,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		final JSONArray clone = (JSONArray) super.clone();
-		clone.rawList = ObjectUtil.clone(this.rawList);
+		clone.rawList = ObjUtil.clone(this.rawList);
 		return clone;
 	}
 

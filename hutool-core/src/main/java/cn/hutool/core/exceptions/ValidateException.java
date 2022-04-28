@@ -1,6 +1,6 @@
 package cn.hutool.core.exceptions;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 验证异常

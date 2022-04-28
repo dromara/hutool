@@ -5,7 +5,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -136,7 +136,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的bytes
 	 */
 	default byte[] encrypt(String data) {
-		return encrypt(StrUtil.bytes(data, CharsetUtil.CHARSET_UTF_8));
+		return encrypt(StrUtil.bytes(data, CharsetUtil.UTF_8));
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package cn.hutool.extra.expression;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 表达式语言异常

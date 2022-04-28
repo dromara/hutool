@@ -1,7 +1,7 @@
 package cn.hutool.swing.captcha.generator;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 随机字符验证码生成器<br>

@@ -4,8 +4,8 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ModifierUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ModifierUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.beans.Transient;

@@ -3,7 +3,7 @@ package cn.hutool.core.bean;
 import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
 import java.util.Map;

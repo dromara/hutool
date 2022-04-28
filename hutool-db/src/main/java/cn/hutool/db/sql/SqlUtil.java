@@ -2,7 +2,7 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.sql.Condition.LikeType;
@@ -143,7 +143,7 @@ public class SqlUtil {
 	 * @return RowId字符串
 	 */
 	public static String rowIdToString(RowId rowId) {
-		return StrUtil.str(rowId.getBytes(), CharsetUtil.CHARSET_ISO_8859_1);
+		return StrUtil.str(rowId.getBytes(), CharsetUtil.ISO_8859_1);
 	}
 
 	/**

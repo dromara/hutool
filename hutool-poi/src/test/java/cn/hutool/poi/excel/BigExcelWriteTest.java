@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -22,11 +22,11 @@ import java.util.Map;
 
 /**
  * 写出Excel单元测试
- * 
+ *
  * @author looly
  */
 public class BigExcelWriteTest {
-	
+
 	@Test
 	@Ignore
 	public void writeTest2() {
@@ -48,9 +48,9 @@ public class BigExcelWriteTest {
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 		for(int i=0; i < 400000; i++) {
 			//超大列表写出测试
-			rows.add(ObjectUtil.clone(row1));
+			rows.add(ObjUtil.clone(row1));
 		}
-		
+
 		String filePath = "e:/bigWriteTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
@@ -66,7 +66,7 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void mergeTest() {
@@ -89,10 +89,10 @@ public class BigExcelWriteTest {
 		writer.merge(row1.size() - 1, "测试标题");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
-		
+
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(7, 10, 4, 10, "测试Merge", false);
-		
+
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -120,14 +120,14 @@ public class BigExcelWriteTest {
 		String path = "e:/bigWriteMapTest.xlsx";
 		FileUtil.del(path);
 		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
-		
+
 		//设置内容字体
 		Font font = writer.createFont();
 		font.setBold(true);
-		font.setColor(Font.COLOR_RED); 
-		font.setItalic(true); 
+		font.setColor(Font.COLOR_RED);
+		font.setItalic(true);
 		writer.getStyleSet().setFont(font, true);
-		
+
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -135,7 +135,7 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeMapTest2() {
@@ -145,12 +145,12 @@ public class BigExcelWriteTest {
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
 		row1.put("考试日期", DateUtil.date());
-		
+
 		// 通过工具类创建writer
 		String path = "e:/bigWriteMapTest2.xlsx";
 		FileUtil.del(path);
 		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
-		
+
 		// 一次性写出内容，使用默认样式
 		writer.writeRow(row1, true);
 		// 关闭writer，释放内存
@@ -192,7 +192,7 @@ public class BigExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeCellValueTest() {

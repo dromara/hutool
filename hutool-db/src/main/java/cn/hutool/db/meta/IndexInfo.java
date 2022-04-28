@@ -1,7 +1,7 @@
 package cn.hutool.db.meta;
 
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -121,8 +121,8 @@ public class IndexInfo implements Serializable, Cloneable {
 			return false;
 		}
 		IndexInfo indexInfo = (IndexInfo) o;
-		return ObjectUtil.equals(indexName, indexInfo.indexName)
-				&& ObjectUtil.equals(tableName, indexInfo.tableName);
+		return ObjUtil.equals(indexName, indexInfo.indexName)
+				&& ObjUtil.equals(tableName, indexInfo.tableName);
 	}
 
 	@Override

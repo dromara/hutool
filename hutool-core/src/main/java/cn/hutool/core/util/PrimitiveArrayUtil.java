@@ -991,7 +991,7 @@ public class PrimitiveArrayUtil {
 
 		final int[] array = new int[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0);
+			array[i] = ObjUtil.defaultIfNull(values[i], 0);
 		}
 		return array;
 	}
@@ -1035,7 +1035,7 @@ public class PrimitiveArrayUtil {
 
 		final long[] array = new long[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0L);
+			array[i] = ObjUtil.defaultIfNull(values[i], 0L);
 		}
 		return array;
 	}
@@ -1079,7 +1079,7 @@ public class PrimitiveArrayUtil {
 
 		char[] array = new char[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], Character.MIN_VALUE);
+			array[i] = ObjUtil.defaultIfNull(values[i], Character.MIN_VALUE);
 		}
 		return array;
 	}
@@ -1123,7 +1123,7 @@ public class PrimitiveArrayUtil {
 
 		final byte[] array = new byte[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], (byte) 0);
+			array[i] = ObjUtil.defaultIfNull(values[i], (byte) 0);
 		}
 		return array;
 	}
@@ -1167,7 +1167,7 @@ public class PrimitiveArrayUtil {
 
 		final short[] array = new short[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], (short) 0);
+			array[i] = ObjUtil.defaultIfNull(values[i], (short) 0);
 		}
 		return array;
 	}
@@ -1211,7 +1211,7 @@ public class PrimitiveArrayUtil {
 
 		final float[] array = new float[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0F);
+			array[i] = ObjUtil.defaultIfNull(values[i], 0F);
 		}
 		return array;
 	}
@@ -1255,7 +1255,7 @@ public class PrimitiveArrayUtil {
 
 		final double[] array = new double[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0D);
+			array[i] = ObjUtil.defaultIfNull(values[i], 0D);
 		}
 		return array;
 	}
@@ -1299,7 +1299,7 @@ public class PrimitiveArrayUtil {
 
 		final boolean[] array = new boolean[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], false);
+			array[i] = ObjUtil.defaultIfNull(values[i], false);
 		}
 		return array;
 	}

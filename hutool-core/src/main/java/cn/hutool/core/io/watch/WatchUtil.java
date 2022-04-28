@@ -7,7 +7,7 @@ import java.net.URL;
 import java.nio.file.*;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.net.URLUtil;
 
 /**
  * 监听工具类<br>

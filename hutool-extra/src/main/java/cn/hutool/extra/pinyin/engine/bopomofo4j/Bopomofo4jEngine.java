@@ -1,6 +1,6 @@
 package cn.hutool.extra.pinyin.engine.bopomofo4j;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.pinyin.PinyinEngine;
 import com.rnkrsoft.bopomofo4j.Bopomofo4j;
 import com.rnkrsoft.bopomofo4j.ToneType;

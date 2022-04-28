@@ -1,6 +1,6 @@
 package cn.hutool.cron;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.CronTask;
 import cn.hutool.cron.task.Task;

@@ -1,7 +1,7 @@
 package cn.hutool.json.jwt.signers;
 
 import cn.hutool.core.map.BiMap;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
@@ -42,7 +42,7 @@ public class AlgorithmUtil {
 	 * @return 算法名
 	 */
 	public static String getAlgorithm(String idOrAlgorithm){
-		return ObjectUtil.defaultIfNull(getAlgorithmById(idOrAlgorithm), idOrAlgorithm);
+		return ObjUtil.defaultIfNull(getAlgorithmById(idOrAlgorithm), idOrAlgorithm);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class AlgorithmUtil {
 	 * @return 算法ID
 	 */
 	public static String getId(String idOrAlgorithm){
-		return ObjectUtil.defaultIfNull(getIdByAlgorithm(idOrAlgorithm), idOrAlgorithm);
+		return ObjUtil.defaultIfNull(getIdByAlgorithm(idOrAlgorithm), idOrAlgorithm);
 	}
 
 	/**

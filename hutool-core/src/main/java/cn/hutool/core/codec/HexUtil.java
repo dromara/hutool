@@ -1,10 +1,9 @@
 package cn.hutool.core.codec;
 
-import cn.hutool.core.codec.Base16Codec;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -15,7 +14,7 @@ import java.nio.charset.Charset;
  * 例如十进制数57，在二进制写作111001，在16进制写作39。<br>
  * 像java,c这样的语言为了区分十六进制和十进制数值,会在十六进制数的前面加上 0x,比如0x20是十进制的32,而不是十进制的20<br>
  * <p>
- * 参考：https://my.oschina.net/xinxingegeya/blog/287476
+ * 参考：<a href="https://my.oschina.net/xinxingegeya/blog/287476">https://my.oschina.net/xinxingegeya/blog/287476</a>
  *
  * @author Looly
  */
@@ -106,7 +105,7 @@ public class HexUtil {
 	 * @return 十六进制String
 	 */
 	public static String encodeHexStr(String data) {
-		return encodeHexStr(data, CharsetUtil.CHARSET_UTF_8);
+		return encodeHexStr(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -129,7 +128,7 @@ public class HexUtil {
 	 * @return 字符串
 	 */
 	public static String decodeHexStr(String hexStr) {
-		return decodeHexStr(hexStr, CharsetUtil.CHARSET_UTF_8);
+		return decodeHexStr(hexStr, CharsetUtil.UTF_8);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.util.Date;

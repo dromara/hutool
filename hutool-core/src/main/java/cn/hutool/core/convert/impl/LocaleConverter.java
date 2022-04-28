@@ -3,7 +3,7 @@ package cn.hutool.core.convert.impl;
 import java.util.Locale;
 
 import cn.hutool.core.convert.AbstractConverter;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  *

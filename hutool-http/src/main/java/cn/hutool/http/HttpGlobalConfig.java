@@ -2,7 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import java.io.Serializable;

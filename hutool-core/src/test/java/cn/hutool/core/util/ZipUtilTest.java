@@ -1,9 +1,11 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.compress.ZipReader;
+import cn.hutool.core.compress.ZipUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -67,7 +69,7 @@ public class ZipUtilTest {
 	 */
 	private List<String> zipEntryNames(File zipFile) {
 		List<String> fileNames = new ArrayList<>();
-		ZipReader reader = ZipReader.of(zipFile, CharsetUtil.CHARSET_UTF_8);
+		ZipReader reader = ZipReader.of(zipFile, CharsetUtil.UTF_8);
 		reader.read(zipEntry -> fileNames.add(zipEntry.getName()));
 		reader.close();
 		return fileNames;
@@ -89,14 +91,14 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void unzipTest2() {
-		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
+		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.GBK);
 		Console.log(unzip);
 	}
 
 	@Test
 	@Ignore
 	public void unzipFromStreamTest() {
-		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/hutool-core-5.1.0.jar"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
+		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/hutool-core-5.1.0.jar"), FileUtil.file("e:/test/"), CharsetUtil.UTF_8);
 		Console.log(unzip);
 	}
 
@@ -109,7 +111,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void unzipFileBytesTest() {
-		byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.CHARSET_GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
+		byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
 		Assert.assertNotNull(fileBytes);
 	}
 

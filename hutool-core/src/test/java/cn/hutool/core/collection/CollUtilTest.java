@@ -4,7 +4,7 @@ import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;

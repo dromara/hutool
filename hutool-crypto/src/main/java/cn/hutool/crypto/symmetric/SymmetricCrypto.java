@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CipherMode;
 import cn.hutool.crypto.CipherWrapper;
 import cn.hutool.crypto.CryptoException;

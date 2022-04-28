@@ -1,7 +1,7 @@
 package cn.hutool.extra.aop.proxy;
 
 import cn.hutool.extra.aop.aspects.Aspect;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
 
 import java.io.Serializable;

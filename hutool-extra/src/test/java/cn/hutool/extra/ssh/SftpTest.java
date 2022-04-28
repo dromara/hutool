@@ -21,7 +21,7 @@ public class SftpTest {
 	@Before
 	@Ignore
 	public void init() {
-		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.CHARSET_UTF_8);
+		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.UTF_8);
 	}
 
 	@Test

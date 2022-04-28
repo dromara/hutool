@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.Calculator;
+import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

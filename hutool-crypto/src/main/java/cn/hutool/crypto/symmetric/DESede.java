@@ -3,7 +3,7 @@ package cn.hutool.crypto.symmetric;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
@@ -13,7 +13,7 @@ import cn.hutool.crypto.SecureUtil;
  * 使用 168 位的密钥对资料进行三次加密的一种机制；它通常（但非始终）提供极其强大的安全性。<br>
  * 如果三个 56 位的子元素都相同，则三重 DES 向后兼容 DES。<br>
  * Java中默认实现为：DESede/ECB/PKCS5Padding
- * 
+ *
  * @author Looly
  * @since 3.3.0
  */
@@ -30,7 +30,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造，使用默认的DESede/ECB/PKCS5Padding
-	 * 
+	 *
 	 * @param key 密钥
 	 */
 	public DESede(byte[] key) {
@@ -39,7 +39,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造，使用随机密钥
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
@@ -49,7 +49,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度24位
@@ -60,7 +60,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度24位
@@ -73,7 +73,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度24位
@@ -85,7 +85,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度24位
@@ -98,7 +98,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 */
@@ -108,7 +108,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度24位
@@ -119,7 +119,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度24位
@@ -131,7 +131,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥
@@ -142,7 +142,7 @@ public class DESede extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥

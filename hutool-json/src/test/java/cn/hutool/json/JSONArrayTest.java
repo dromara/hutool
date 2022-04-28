@@ -5,7 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;
@@ -82,7 +82,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void parseFileTest() {
-		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.CHARSET_UTF_8);
+		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
 
 		JSONObject obj0 = array.getJSONObject(0);
 		Exam exam = JSONUtil.toBean(obj0, Exam.class);
@@ -107,7 +107,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void toListTest() {
-		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.CHARSET_UTF_8);
+		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
 		JSONArray array = JSONUtil.parseArray(jsonStr);
 
 		List<Exam> list = array.toList(Exam.class);
@@ -152,7 +152,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void toArrayTest() {
-		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.CHARSET_UTF_8);
+		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
 		JSONArray array = JSONUtil.parseArray(jsonStr);
 
 		//noinspection SuspiciousToArrayCall

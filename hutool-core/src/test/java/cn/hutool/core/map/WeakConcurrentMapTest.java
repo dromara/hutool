@@ -2,7 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class WeakConcurrentMapTest {
 		tester.test(()-> cache.computeIfAbsent("aaa" + RandomUtil.randomInt(2), (key)-> "aaaValue"));
 
 		Assert.assertTrue(tester.getInterval() > 0);
-		String value = ObjectUtil.defaultIfNull(cache.get("aaa0"), cache.get("aaa1"));
+		String value = ObjUtil.defaultIfNull(cache.get("aaa0"), cache.get("aaa1"));
 		Assert.assertEquals("aaaValue", value);
 	}
 }

@@ -70,7 +70,7 @@ public class StringConverter extends AbstractConverter<String> {
 		InputStream in = null;
 		try {
 			in = blob.getBinaryStream();
-			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
+			return IoUtil.read(in, CharsetUtil.UTF_8);
 		} catch (SQLException e) {
 			throw new ConvertException(e);
 		} finally {

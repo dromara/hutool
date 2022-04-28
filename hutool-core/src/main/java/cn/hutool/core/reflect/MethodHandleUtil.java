@@ -1,9 +1,8 @@
-package cn.hutool.core.lang.reflect;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

@@ -2,7 +2,7 @@ package cn.hutool.db.nosql.mongo;
 
 import cn.hutool.core.exceptions.NotInitedException;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.log.Log;
 import cn.hutool.setting.Setting;

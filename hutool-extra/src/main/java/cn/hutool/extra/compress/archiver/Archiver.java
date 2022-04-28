@@ -1,7 +1,7 @@
 package cn.hutool.extra.compress.archiver;
 
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
 import java.io.File;

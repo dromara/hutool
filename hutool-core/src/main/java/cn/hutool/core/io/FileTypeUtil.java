@@ -1,6 +1,6 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

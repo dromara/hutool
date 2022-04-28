@@ -2,7 +2,7 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.thread.lock.LockUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -50,7 +50,7 @@ public class FileAppender implements Serializable {
 	 * @param isNewLineMode 追加内容是否为新行
 	 */
 	public FileAppender(File destFile, int capacity, boolean isNewLineMode) {
-		this(destFile, CharsetUtil.CHARSET_UTF_8, capacity, isNewLineMode);
+		this(destFile, CharsetUtil.UTF_8, capacity, isNewLineMode);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class FileAppender implements Serializable {
 		this.list = new ArrayList<>(capacity);
 		this.isNewLineMode = isNewLineMode;
 		this.writer = FileWriter.create(destFile, charset);
-		this.lock = ObjectUtil.defaultIfNull(lock, LockUtil::getNoLock);
+		this.lock = ObjUtil.defaultIfNull(lock, LockUtil::getNoLock);
 	}
 
 	/**

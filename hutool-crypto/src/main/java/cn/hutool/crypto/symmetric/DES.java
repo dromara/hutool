@@ -3,7 +3,7 @@ package cn.hutool.crypto.symmetric;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
@@ -12,7 +12,7 @@ import cn.hutool.crypto.SecureUtil;
  * DES加密算法实现<br>
  * DES全称为Data Encryption Standard，即数据加密标准，是一种使用密钥加密的块算法<br>
  * Java中默认实现为：DES/CBC/PKCS5Padding
- * 
+ *
  * @author Looly
  * @since 3.0.8
  */
@@ -29,7 +29,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造，使用默认的DES/CBC/PKCS5Padding
-	 * 
+	 *
 	 * @param key 密钥
 	 */
 	public DES(byte[] key) {
@@ -38,7 +38,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造，使用随机密钥
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
@@ -48,7 +48,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -59,7 +59,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -72,7 +72,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -84,7 +84,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -97,7 +97,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 */
@@ -107,7 +107,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -118,7 +118,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -130,7 +130,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数
@@ -141,7 +141,7 @@ public class DES extends SymmetricCrypto {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数

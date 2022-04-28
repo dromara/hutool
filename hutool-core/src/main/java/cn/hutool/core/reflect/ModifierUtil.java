@@ -1,4 +1,6 @@
-package cn.hutool.core.util;
+package cn.hutool.core.reflect;
+
+import cn.hutool.core.util.ArrayUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

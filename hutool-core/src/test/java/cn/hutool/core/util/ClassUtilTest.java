@@ -9,12 +9,12 @@ import java.util.Objects;
 
 /**
  * {@link ClassUtil} 单元测试
- * 
+ *
  * @author Looly
  *
  */
 public class ClassUtilTest {
-	
+
 	@Test
 	public void getClassNameTest() {
 		String className = ClassUtil.getClassName(ClassUtil.class, false);
@@ -39,7 +39,7 @@ public class ClassUtilTest {
 	@SuppressWarnings({"unused", "InnerClassMayBeStatic"})
 	class TestSubClass extends TestClass {
 		private String subField;
-		
+
 		private void privateSubMethod() {
 		}
 
@@ -90,16 +90,16 @@ public class ClassUtilTest {
 		Field subField = ClassUtil.getDeclaredField(TestSubClass.class, "subField");
 		Assert.assertNotNull(subField);
 	}
-	
+
 	@Test
 	public void getClassPathTest() {
 		String classPath = ClassUtil.getClassPath();
 		Assert.assertNotNull(classPath);
 	}
-	
+
 	@Test
 	public void getShortClassNameTest() {
-		String className = "cn.hutool.core.util.StrUtil";
+		String className = "cn.hutool.core.text.StrUtil";
 		String result = ClassUtil.getShortClassName(className);
 		Assert.assertEquals("c.h.c.u.StrUtil", result);
 	}

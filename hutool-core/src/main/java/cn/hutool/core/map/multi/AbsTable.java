@@ -2,7 +2,7 @@ package cn.hutool.core.map.multi;
 
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.collection.TransIter;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.AbstractCollection;
@@ -103,7 +103,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 				@SuppressWarnings("unchecked") final Cell<R, C, V> cell = (Cell<R, C, V>) o;
 				Map<C, V> row = getRow(cell.getRowKey());
 				if (null != row) {
-					return ObjectUtil.equals(row.get(cell.getColumnKey()), cell.getValue());
+					return ObjUtil.equals(row.get(cell.getColumnKey()), cell.getValue());
 				}
 			}
 			return false;
@@ -216,9 +216,9 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 			}
 			if (obj instanceof Cell) {
 				Cell<?, ?, ?> other = (Cell<?, ?, ?>) obj;
-				return ObjectUtil.equal(rowKey, other.getRowKey())
-						&& ObjectUtil.equal(columnKey, other.getColumnKey())
-						&& ObjectUtil.equal(value, other.getValue());
+				return ObjUtil.equal(rowKey, other.getRowKey())
+						&& ObjUtil.equal(columnKey, other.getColumnKey())
+						&& ObjUtil.equal(value, other.getValue());
 			}
 			return false;
 		}

@@ -1,7 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -117,7 +117,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 */
 	public String toString(Charset charset) {
 		return new String(toByteArray(),
-				ObjectUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
+				ObjUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
 	}
 
 }

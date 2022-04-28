@@ -1,6 +1,6 @@
 package cn.hutool.core.io.unit;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 数据单位封装<p>

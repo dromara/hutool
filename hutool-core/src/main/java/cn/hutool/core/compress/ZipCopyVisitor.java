@@ -1,6 +1,6 @@
 package cn.hutool.core.compress;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;

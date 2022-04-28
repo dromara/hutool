@@ -18,8 +18,8 @@ import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.StaticLog;
 
 import java.io.BufferedReader;
@@ -69,7 +69,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * properties文件编码<br>
 	 * issue#1701，此属性不能被序列化，故忽略序列化
 	 */
-	private transient Charset charset = CharsetUtil.CHARSET_ISO_8859_1;
+	private transient Charset charset = CharsetUtil.ISO_8859_1;
 	// ----------------------------------------------------------------------- 私有属性 end
 
 	/**
@@ -118,7 +118,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param path 配置文件路径，相对于ClassPath，或者使用绝对路径
 	 */
 	public Props(String path) {
-		this(path, CharsetUtil.CHARSET_ISO_8859_1);
+		this(path, CharsetUtil.ISO_8859_1);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param clazz 基准类
 	 */
 	public Props(String path, Class<?> clazz) {
-		this(path, clazz, CharsetUtil.ISO_8859_1);
+		this(path, clazz, CharsetUtil.NAME_ISO_8859_1);
 	}
 
 	/**

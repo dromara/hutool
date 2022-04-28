@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.lang.func.VoidFunc1;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;

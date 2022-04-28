@@ -1,6 +1,6 @@
 package cn.hutool.db.dialect;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 方言名<br>

@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.NullWrapperBean;
@@ -8,9 +8,11 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;

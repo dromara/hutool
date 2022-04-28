@@ -3,8 +3,8 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -227,7 +227,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 			return instant;
 		}
 
-		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId::systemDefault);
+		zoneId = ObjUtil.defaultIfNull(zoneId, ZoneId::systemDefault);
 
 		TemporalAccessor result = null;
 		if (LocalDateTime.class.equals(this.targetType)) {

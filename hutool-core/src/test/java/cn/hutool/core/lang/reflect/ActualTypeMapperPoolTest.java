@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.reflect;
 
+import cn.hutool.core.reflect.ActualTypeMapperPool;
 import org.junit.Assert;
 import org.junit.Test;
 

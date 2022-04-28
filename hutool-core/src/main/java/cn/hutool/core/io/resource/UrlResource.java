@@ -1,8 +1,8 @@
 package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class UrlResource implements Resource, Serializable{
 		if(null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())){
 			this.lastModified = FileUtil.file(url).lastModified();
 		}
-		this.name = ObjectUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));
+		this.name = ObjUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));
 	}
 
 	//-------------------------------------------------------------------------------------- Constructor end

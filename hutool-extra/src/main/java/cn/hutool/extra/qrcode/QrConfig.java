@@ -39,7 +39,7 @@ public class QrConfig {
 	/** 纠错级别 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */
-	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
+	protected Charset charset = CharsetUtil.UTF_8;
 	/** 二维码中的Logo */
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */

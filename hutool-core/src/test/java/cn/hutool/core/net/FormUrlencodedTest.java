@@ -8,10 +8,10 @@ public class FormUrlencodedTest {
 
 	@Test
 	public void encodeParamTest(){
-		String encode = FormUrlencoded.ALL.encode("a+b", CharsetUtil.CHARSET_UTF_8);
+		String encode = FormUrlencoded.ALL.encode("a+b", CharsetUtil.UTF_8);
 		Assert.assertEquals("a%2Bb", encode);
 
-		encode = FormUrlencoded.ALL.encode("a b", CharsetUtil.CHARSET_UTF_8);
+		encode = FormUrlencoded.ALL.encode("a b", CharsetUtil.UTF_8);
 		Assert.assertEquals("a+b", encode);
 	}
 }

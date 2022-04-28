@@ -1,7 +1,7 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;

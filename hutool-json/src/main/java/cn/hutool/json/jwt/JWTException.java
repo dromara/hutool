@@ -1,7 +1,7 @@
 package cn.hutool.json.jwt;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * JWT异常

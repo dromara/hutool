@@ -1,7 +1,7 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

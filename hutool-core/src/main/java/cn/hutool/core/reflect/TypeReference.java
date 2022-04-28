@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.reflect;
+package cn.hutool.core.reflect;
 
 import java.lang.reflect.Type;
 

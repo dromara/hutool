@@ -1,7 +1,7 @@
 package cn.hutool.socket.aio;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

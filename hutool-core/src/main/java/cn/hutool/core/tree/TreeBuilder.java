@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -234,7 +234,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 				continue;
 			}
 			parentId = node.getParentId();
-			if (ObjectUtil.equals(this.root.getId(), parentId)) {
+			if (ObjUtil.equals(this.root.getId(), parentId)) {
 				this.root.addChildren(node);
 				continue;
 			}

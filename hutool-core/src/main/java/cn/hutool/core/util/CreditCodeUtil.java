@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * 统一社会信用代码（GB32100-2015）工具类<br>
- * 标准见：https://www.cods.org.cn/c/2020-10-29/12575.html
+ * 标准见：<a href="https://www.cods.org.cn/c/2020-10-29/12575.html">https://www.cods.org.cn/c/2020-10-29/12575.html</a>
  *
  * <pre>
  * 第一部分：登记管理部门代码1位 (数字或大写英文字母)

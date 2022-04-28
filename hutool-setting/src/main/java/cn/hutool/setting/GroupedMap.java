@@ -1,7 +1,7 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 /**
  * 基于分组的Map<br>
  * 此对象方法线程安全
- * 
+ *
  * @author looly
  * @since 4.0.11
  */
@@ -30,7 +30,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 获取分组对应的值，如果分组不存在或者值不存在则返回null
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 值，如果分组不存在或者值不存在则返回null
@@ -60,7 +60,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 总的键值对数
-	 * 
+	 *
 	 * @return 总键值对数
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 将键值对加入到对应分组中
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @param value 值
@@ -101,7 +101,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 加入多个键值对到某个分组下
-	 * 
+	 *
 	 * @param group 分组
 	 * @param m 键值对
 	 * @return this
@@ -115,7 +115,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 从指定分组中删除指定值
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 被删除的值，如果值不存在，返回null
@@ -136,7 +136,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 某个分组对应的键值对是否为空
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 是否为空
 	 */
@@ -156,7 +156,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 是否为空，如果多个分组同时为空，也按照空处理
-	 * 
+	 *
 	 * @return 是否为空，如果多个分组同时为空，也按照空处理
 	 */
 	@Override
@@ -166,7 +166,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 指定分组中是否包含指定key
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 是否包含key
@@ -187,7 +187,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 指定分组中是否包含指定值
-	 * 
+	 *
 	 * @param group 分组
 	 * @param value 值
 	 * @return 是否包含值
@@ -208,7 +208,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 清除指定分组下的所有键值对
-	 * 
+	 *
 	 * @param group 分组
 	 * @return this
 	 */
@@ -238,7 +238,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 指定分组所有键的Set
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 键Set
 	 */
@@ -258,7 +258,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 指定分组下所有值
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 值
 	 */
@@ -288,7 +288,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 
 	/**
 	 * 指定分组下所有键值对
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 键值对
 	 */

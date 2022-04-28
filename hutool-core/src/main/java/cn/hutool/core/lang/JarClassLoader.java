@@ -3,8 +3,8 @@ package cn.hutool.core.lang;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.io.File;
 import java.io.IOException;

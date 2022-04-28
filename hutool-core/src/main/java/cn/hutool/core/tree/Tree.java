@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -38,7 +38,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @param treeNodeConfig TreeNode配置
 	 */
 	public Tree(TreeNodeConfig treeNodeConfig) {
-		this.treeNodeConfig = ObjectUtil.defaultIfNull(
+		this.treeNodeConfig = ObjUtil.defaultIfNull(
 				treeNodeConfig, TreeNodeConfig.DEFAULT_CONFIG);
 	}
 
@@ -314,7 +314,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	 * @since 5.7.17
 	 */
 	public Tree<T> cloneTree() {
-		final Tree<T> result = ObjectUtil.clone(this);
+		final Tree<T> result = ObjUtil.clone(this);
 		result.setChildren(cloneChildren());
 		return result;
 	}

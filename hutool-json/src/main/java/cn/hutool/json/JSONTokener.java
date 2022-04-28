@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;

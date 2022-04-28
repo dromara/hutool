@@ -6,7 +6,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -189,7 +189,7 @@ public class Digester implements Serializable {
 	 * @return 摘要
 	 */
 	public byte[] digest(String data) {
-		return digest(data, CharsetUtil.CHARSET_UTF_8);
+		return digest(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class Digester implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(String data) {
-		return digestHex(data, CharsetUtil.UTF_8);
+		return digestHex(data, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**

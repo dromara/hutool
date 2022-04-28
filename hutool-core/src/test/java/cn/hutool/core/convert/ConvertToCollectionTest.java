@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
 

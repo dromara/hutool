@@ -19,9 +19,9 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.compress.ZipUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1927,7 +1927,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedReader getUtf8Reader(File file) throws IORuntimeException {
-		return getReader(file, CharsetUtil.CHARSET_UTF_8);
+		return getReader(file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -1938,7 +1938,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedReader getUtf8Reader(String path) throws IORuntimeException {
-		return getReader(path, CharsetUtil.CHARSET_UTF_8);
+		return getReader(path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2000,7 +2000,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readUtf8String(File file) throws IORuntimeException {
-		return readString(file, CharsetUtil.CHARSET_UTF_8);
+		return readString(file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2011,7 +2011,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readUtf8String(String path) throws IORuntimeException {
-		return readString(path, CharsetUtil.CHARSET_UTF_8);
+		return readString(path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2074,7 +2074,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T extends Collection<String>> T readUtf8Lines(String path, T collection) throws IORuntimeException {
-		return readLines(path, CharsetUtil.CHARSET_UTF_8, collection);
+		return readLines(path, CharsetUtil.UTF_8, collection);
 	}
 
 	/**
@@ -2116,7 +2116,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T extends Collection<String>> T readUtf8Lines(File file, T collection) throws IORuntimeException {
-		return readLines(file, CharsetUtil.CHARSET_UTF_8, collection);
+		return readLines(file, CharsetUtil.UTF_8, collection);
 	}
 
 	/**
@@ -2157,7 +2157,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readUtf8Lines(URL url, T collection) throws IORuntimeException {
-		return readLines(url, CharsetUtil.CHARSET_UTF_8, collection);
+		return readLines(url, CharsetUtil.UTF_8, collection);
 	}
 
 	/**
@@ -2191,7 +2191,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readUtf8Lines(URL url) throws IORuntimeException {
-		return readLines(url, CharsetUtil.CHARSET_UTF_8);
+		return readLines(url, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2215,7 +2215,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static List<String> readUtf8Lines(String path) throws IORuntimeException {
-		return readLines(path, CharsetUtil.CHARSET_UTF_8);
+		return readLines(path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2252,7 +2252,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static List<String> readUtf8Lines(File file) throws IORuntimeException {
-		return readLines(file, CharsetUtil.CHARSET_UTF_8);
+		return readLines(file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2287,7 +2287,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void readUtf8Lines(File file, LineHandler lineHandler) throws IORuntimeException {
-		readLines(file, CharsetUtil.CHARSET_UTF_8, lineHandler);
+		readLines(file, CharsetUtil.UTF_8, lineHandler);
 	}
 
 	/**
@@ -2315,7 +2315,7 @@ public class FileUtil extends PathUtil {
 		String line;
 		try {
 			while ((line = file.readLine()) != null) {
-				lineHandler.handle(CharsetUtil.convert(line, CharsetUtil.CHARSET_ISO_8859_1, charset));
+				lineHandler.handle(CharsetUtil.convert(line, CharsetUtil.ISO_8859_1, charset));
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
@@ -2355,7 +2355,7 @@ public class FileUtil extends PathUtil {
 			throw new IORuntimeException(e);
 		}
 		if (null != line) {
-			return CharsetUtil.convert(line, CharsetUtil.CHARSET_ISO_8859_1, charset);
+			return CharsetUtil.convert(line, CharsetUtil.ISO_8859_1, charset);
 		}
 
 		return null;
@@ -2372,7 +2372,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T loadUtf8(String path, ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return load(path, CharsetUtil.CHARSET_UTF_8, readerHandler);
+		return load(path, CharsetUtil.UTF_8, readerHandler);
 	}
 
 	/**
@@ -2416,7 +2416,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T loadUtf8(File file, ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return load(file, CharsetUtil.CHARSET_UTF_8, readerHandler);
+		return load(file, CharsetUtil.UTF_8, readerHandler);
 	}
 
 	/**
@@ -2546,7 +2546,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, String path) throws IORuntimeException {
-		return writeString(content, path, CharsetUtil.CHARSET_UTF_8);
+		return writeString(content, path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2558,7 +2558,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, File file) throws IORuntimeException {
-		return writeString(content, file, CharsetUtil.CHARSET_UTF_8);
+		return writeString(content, file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2623,7 +2623,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.2
 	 */
 	public static File appendUtf8String(String content, String path) throws IORuntimeException {
-		return appendString(content, path, CharsetUtil.CHARSET_UTF_8);
+		return appendString(content, path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2662,7 +2662,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.2
 	 */
 	public static File appendUtf8String(String content, File file) throws IORuntimeException {
-		return appendString(content, file, CharsetUtil.CHARSET_UTF_8);
+		return appendString(content, file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2702,7 +2702,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.2.0
 	 */
 	public static <T> File writeUtf8Lines(Collection<T> list, String path) throws IORuntimeException {
-		return writeLines(list, path, CharsetUtil.CHARSET_UTF_8);
+		return writeLines(list, path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2716,7 +2716,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.2.0
 	 */
 	public static <T> File writeUtf8Lines(Collection<T> list, File file) throws IORuntimeException {
-		return writeLines(list, file, CharsetUtil.CHARSET_UTF_8);
+		return writeLines(list, file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2788,7 +2788,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> File appendUtf8Lines(Collection<T> list, File file) throws IORuntimeException {
-		return appendLines(list, file, CharsetUtil.CHARSET_UTF_8);
+		return appendLines(list, file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2802,7 +2802,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> File appendUtf8Lines(Collection<T> list, String path) throws IORuntimeException {
-		return appendLines(list, path, CharsetUtil.CHARSET_UTF_8);
+		return appendLines(list, path, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -2940,7 +2940,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.5
 	 */
 	public static File writeUtf8Map(Map<?, ?> map, File file, String kvSeparator, boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.CHARSET_UTF_8).writeMap(map, kvSeparator, isAppend);
+		return FileWriter.create(file, CharsetUtil.UTF_8).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**
@@ -3364,7 +3364,7 @@ public class FileUtil extends PathUtil {
 	 * @param handler 行处理器
 	 */
 	public static void tail(File file, LineHandler handler) {
-		tail(file, CharsetUtil.CHARSET_UTF_8, handler);
+		tail(file, CharsetUtil.UTF_8, handler);
 	}
 
 	/**

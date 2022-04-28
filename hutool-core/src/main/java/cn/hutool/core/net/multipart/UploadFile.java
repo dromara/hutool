@@ -2,7 +2,7 @@ package cn.hutool.core.net.multipart;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;

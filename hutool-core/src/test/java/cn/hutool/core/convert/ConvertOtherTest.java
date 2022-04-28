@@ -15,10 +15,10 @@ public class ConvertOtherTest {
 	@Test
 	public void hexTest() {
 		String a = "我是一个小小的可爱的字符串";
-		String hex = Convert.toHex(a, CharsetUtil.CHARSET_UTF_8);
+		String hex = Convert.toHex(a, CharsetUtil.UTF_8);
 		Assert.assertEquals("e68891e698afe4b880e4b8aae5b08fe5b08fe79a84e58fafe788b1e79a84e5ad97e7aca6e4b8b2", hex);
 
-		String raw = Convert.hexToStr(hex, CharsetUtil.CHARSET_UTF_8);
+		String raw = Convert.hexToStr(hex, CharsetUtil.UTF_8);
 		Assert.assertEquals(a, raw);
 	}
 
@@ -45,8 +45,8 @@ public class ConvertOtherTest {
 	public void convertCharsetTest() {
 		String a = "我不是乱码";
 		// 转换后result为乱码
-		String result = Convert.convertCharset(a, CharsetUtil.UTF_8, CharsetUtil.ISO_8859_1);
-		String raw = Convert.convertCharset(result, CharsetUtil.ISO_8859_1, "UTF-8");
+		String result = Convert.convertCharset(a, CharsetUtil.NAME_UTF_8, CharsetUtil.NAME_ISO_8859_1);
+		String raw = Convert.convertCharset(result, CharsetUtil.NAME_ISO_8859_1, "UTF-8");
 		Assert.assertEquals(raw, a);
 	}
 

@@ -16,9 +16,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.io.Serializable;
@@ -368,7 +368,7 @@ public class CollUtil {
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
-		Collection<T> result = ObjectUtil.clone(coll1);
+		Collection<T> result = ObjUtil.clone(coll1);
 		if (null == result) {
 			result = CollUtil.create(coll1.getClass());
 			result.addAll(coll1);
@@ -1492,12 +1492,12 @@ public class CollUtil {
 			if (t instanceof Map) {
 				final Map<?, ?> map = (Map<?, ?>) t;
 				final Object value = map.get(fieldName);
-				return ObjectUtil.equal(value, fieldValue);
+				return ObjUtil.equal(value, fieldValue);
 			}
 
 			// 普通Bean
 			final Object value = ReflectUtil.getFieldValue(t, fieldName);
-			return ObjectUtil.equal(value, fieldValue);
+			return ObjUtil.equal(value, fieldValue);
 		});
 	}
 

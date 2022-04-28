@@ -1,6 +1,6 @@
 package cn.hutool.swing.captcha;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.swing.img.GraphicsUtil;
 import cn.hutool.swing.img.ImgUtil;
@@ -49,7 +49,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	public Image createImage(String code) {
 		// 图像buffer
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 干扰线
 		drawInterfere(g);

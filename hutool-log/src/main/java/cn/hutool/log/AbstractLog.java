@@ -1,7 +1,7 @@
 package cn.hutool.log;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.level.Level;
 
 import java.io.Serializable;
@@ -9,15 +9,15 @@ import java.io.Serializable;
 /**
  * 抽象日志类<br>
  * 实现了一些通用的接口
- * 
+ *
  * @author Looly
  *
  */
 public abstract class AbstractLog implements Log, Serializable{
-	
+
 	private static final long serialVersionUID = -3211115409504005616L;
 	private static final String FQCN = AbstractLog.class.getName();
-	
+
 	@Override
 	public boolean isEnabled(Level level) {
 		switch (level) {
@@ -35,12 +35,12 @@ public abstract class AbstractLog implements Log, Serializable{
 				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
 	}
-	
+
 	@Override
 	public void trace(Throwable t) {
 		trace(t, ExceptionUtil.getSimpleMessage(t));
 	}
-	
+
 	@Override
 	public void trace(String format, Object... arguments) {
 		trace(null, format, arguments);
@@ -50,12 +50,12 @@ public abstract class AbstractLog implements Log, Serializable{
 	public void trace(Throwable t, String format, Object... arguments) {
 		trace(FQCN, t, format, arguments);
 	}
-	
+
 	@Override
 	public void debug(Throwable t) {
 		debug(t, ExceptionUtil.getSimpleMessage(t));
 	}
-	
+
 	@Override
 	public void debug(String format, Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
@@ -70,12 +70,12 @@ public abstract class AbstractLog implements Log, Serializable{
 	public void debug(Throwable t, String format, Object... arguments) {
 		debug(FQCN, t, format, arguments);
 	}
-	
+
 	@Override
 	public void info(Throwable t) {
 		info(t, ExceptionUtil.getSimpleMessage(t));
 	}
-	
+
 	@Override
 	public void info(String format, Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
@@ -90,12 +90,12 @@ public abstract class AbstractLog implements Log, Serializable{
 	public void info(Throwable t, String format, Object... arguments) {
 		info(FQCN, t, format, arguments);
 	}
-	
+
 	@Override
 	public void warn(Throwable t) {
 		warn(t, ExceptionUtil.getSimpleMessage(t));
 	}
-	
+
 	@Override
 	public void warn(String format, Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
@@ -110,12 +110,12 @@ public abstract class AbstractLog implements Log, Serializable{
 	public void warn(Throwable t, String format, Object... arguments) {
 		warn(FQCN, t, format, arguments);
 	}
-	
+
 	@Override
 	public void error(Throwable t) {
 		this.error(t, ExceptionUtil.getSimpleMessage(t));
 	}
-	
+
 	@Override
 	public void error(String format, Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
@@ -130,7 +130,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	public void error(Throwable t, String format, Object... arguments) {
 		error(FQCN, t, format, arguments);
 	}
-	
+
 	@Override
 	public void log(Level level, String format, Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
@@ -140,7 +140,7 @@ public abstract class AbstractLog implements Log, Serializable{
 			log(level, null, format, arguments);
 		}
 	}
-	
+
 	@Override
 	public void log(Level level, Throwable t, String format, Object... arguments) {
 		this.log(FQCN, level, t, format, arguments);

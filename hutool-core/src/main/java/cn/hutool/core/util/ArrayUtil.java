@@ -11,6 +11,7 @@ import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -118,7 +119,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> boolean hasNull(T... array) {
 		if (isNotEmpty(array)) {
 			for (T element : array) {
-				if (ObjectUtil.isNull(element)) {
+				if (ObjUtil.isNull(element)) {
 					return true;
 				}
 			}
@@ -150,7 +151,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(T... array) {
-		return firstMatch(ObjectUtil::isNotNull, array);
+		return firstMatch(ObjUtil::isNotNull, array);
 	}
 
 	/**
@@ -797,7 +798,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(T[] array, Object value, int beginIndexInclude) {
-		return matchIndex((obj) -> ObjectUtil.equal(value, obj), beginIndexInclude, array);
+		return matchIndex((obj) -> ObjUtil.equal(value, obj), beginIndexInclude, array);
 	}
 
 	/**
@@ -810,7 +811,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(T[] array, Object value) {
-		return matchIndex((obj) -> ObjectUtil.equal(value, obj), array);
+		return matchIndex((obj) -> ObjUtil.equal(value, obj), array);
 	}
 
 	/**
@@ -861,7 +862,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> int lastIndexOf(T[] array, Object value, int endInclude) {
 		if (isNotEmpty(array)) {
 			for (int i = endInclude; i >= 0; i--) {
-				if (ObjectUtil.equal(value, array[i])) {
+				if (ObjUtil.equal(value, array[i])) {
 					return i;
 				}
 			}
@@ -1539,7 +1540,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 计算{@code null}或空元素对象的个数，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 计算{@code null}或空元素对象的个数，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 存在{@code null}的数量
@@ -1549,7 +1550,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		int count = 0;
 		if (isNotEmpty(args)) {
 			for (Object element : args) {
-				if (ObjectUtil.isEmpty(element)) {
+				if (ObjUtil.isEmpty(element)) {
 					count++;
 				}
 			}
@@ -1558,7 +1559,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存在{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查对象
 	 * @return 是否存在
@@ -1567,7 +1568,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static boolean hasEmpty(Object... args) {
 		if (isNotEmpty(args)) {
 			for (Object element : args) {
-				if (ObjectUtil.isEmpty(element)) {
+				if (ObjUtil.isEmpty(element)) {
 					return true;
 				}
 			}
@@ -1576,7 +1577,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存都为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否存都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 是否都为空
@@ -1584,7 +1585,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static boolean isAllEmpty(Object... args) {
 		for (Object obj : args) {
-			if (false == ObjectUtil.isEmpty(obj)) {
+			if (false == ObjUtil.isEmpty(obj)) {
 				return false;
 			}
 		}
@@ -1592,7 +1593,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存都不为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否存都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 是否都不为空
@@ -1816,7 +1817,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (false == ObjUtil.equal(array[i + firstIndex], subArray[i])) {
 				return indexOfSub(array, firstIndex + 1, subArray);
 			}
 		}
@@ -1861,7 +1862,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (false == ObjUtil.equal(array[i + firstIndex], subArray[i])) {
 				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}

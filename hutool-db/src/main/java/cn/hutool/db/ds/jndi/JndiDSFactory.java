@@ -2,7 +2,7 @@ package cn.hutool.db.ds.jndi;
 
 import javax.sql.DataSource;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
@@ -15,13 +15,13 @@ import cn.hutool.setting.Setting;
  * [group]<br>
  * jndi = jdbc/TestDB<br>
  * ---------------------<br>
- * 
+ *
  * @author Looly
  *
  */
 public class JndiDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 1573625812927370432L;
-	
+
 	public static final String DS_NAME = "JNDI DataSource";
 
 	public JndiDSFactory() {

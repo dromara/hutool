@@ -3,7 +3,7 @@ package cn.hutool.core.compiler;
 import cn.hutool.core.io.resource.FileObjectResource;
 import cn.hutool.core.lang.ResourceClassLoader;
 import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
@@ -44,7 +44,7 @@ class JavaClassFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 	 */
 	protected JavaClassFileManager(ClassLoader parent, JavaFileManager fileManager) {
 		super(fileManager);
-		this.parent = ObjectUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
+		this.parent = ObjUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
 	}
 
 	/**

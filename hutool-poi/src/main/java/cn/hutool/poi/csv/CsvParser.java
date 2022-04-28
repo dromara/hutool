@@ -6,8 +6,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 */
 	public CsvParser(final Reader reader, CsvReadConfig config) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
+		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 
 	/**
@@ -175,7 +175,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			String field = currentFields.get(i);
 			if (MapUtil.isNotEmpty(this.config.headerAlias)) {
 				// 自定义别名
-				field = ObjectUtil.defaultIfNull(this.config.headerAlias.get(field), field);
+				field = ObjUtil.defaultIfNull(this.config.headerAlias.get(field), field);
 			}
 			if (StrUtil.isNotEmpty(field) && false == localHeaderMap.containsKey(field)) {
 				localHeaderMap.put(field, i);

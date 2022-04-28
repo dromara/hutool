@@ -1,7 +1,7 @@
 package cn.hutool.core.swing.clipboard;
 
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -134,7 +134,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 		Transferable transferable = null;
 		for (ClipboardListener listener : listenerSet) {
 			try {
-				transferable = listener.onChange(clipboard, ObjectUtil.defaultIfNull(transferable, newContents));
+				transferable = listener.onChange(clipboard, ObjUtil.defaultIfNull(transferable, newContents));
 			} catch (Throwable e) {
 				// 忽略事件处理异常，保证所有监听正常执行
 			}
@@ -142,7 +142,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 
 		if (isRunning) {
 			// 继续监听
-			clipboard.setContents(ObjectUtil.defaultIfNull(transferable, ObjectUtil.defaultIfNull(newContents, contents)), this);
+			clipboard.setContents(ObjUtil.defaultIfNull(transferable, ObjUtil.defaultIfNull(newContents, contents)), this);
 		}
 	}
 

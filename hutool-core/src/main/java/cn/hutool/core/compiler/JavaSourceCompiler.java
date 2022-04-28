@@ -10,8 +10,8 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.net.URLUtil;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -89,7 +89,7 @@ public class JavaSourceCompiler {
 	 * @param parent 父类加载器，null则使用默认类加载器
 	 */
 	private JavaSourceCompiler(ClassLoader parent) {
-		this.parentClassLoader = ObjectUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
+		this.parentClassLoader = ObjUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class JavaSourceCompiler {
 	private Collection<JavaFileObject> getJavaFileObjectByMap(final Map<String, String> sourceCodeMap) {
 		if (MapUtil.isNotEmpty(sourceCodeMap)) {
 			return sourceCodeMap.entrySet().stream()
-					.map(entry -> new JavaSourceFileObject(entry.getKey(), entry.getValue(), CharsetUtil.CHARSET_UTF_8))
+					.map(entry -> new JavaSourceFileObject(entry.getKey(), entry.getValue(), CharsetUtil.UTF_8))
 					.collect(Collectors.toList());
 		}
 		return Collections.emptySet();

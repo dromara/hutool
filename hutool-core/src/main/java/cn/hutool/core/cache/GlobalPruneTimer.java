@@ -1,7 +1,7 @@
 package cn.hutool.core.cache;
 
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;

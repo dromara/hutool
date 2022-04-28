@@ -6,8 +6,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -166,7 +166,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 			result = ByteUtil.numberToBytes((Number)value);
 		} else if (value instanceof Serializable && byte.class == targetComponentType) {
 			// 用户可能想序列化指定对象
-			result = ObjectUtil.serialize(value);
+			result = ObjUtil.serialize(value);
 		} else {
 			// everything else:
 			result = convertToSingleElementArray(value);

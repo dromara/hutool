@@ -2,7 +2,7 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,10 +54,10 @@ public class Base64Test {
 	@Test
 	public void encodeAndDecodeTest2() {
 		String a = "a61a5db5a67c01445ca2-HZ20181120172058/pdf/中国电信影像云单体网关Docker版-V1.2.pdf";
-		String encode = Base64.encode(a, CharsetUtil.UTF_8);
+		String encode = Base64.encode(a, CharsetUtil.NAME_UTF_8);
 		Assert.assertEquals("YTYxYTVkYjVhNjdjMDE0NDVjYTItSFoyMDE4MTEyMDE3MjA1OC9wZGYv5Lit5Zu955S15L+h5b2x5YOP5LqR5Y2V5L2T572R5YWzRG9ja2Vy54mILVYxLjIucGRm", encode);
 
-		String decodeStr = Base64.decodeStr(encode, CharsetUtil.UTF_8);
+		String decodeStr = Base64.decodeStr(encode, CharsetUtil.NAME_UTF_8);
 		Assert.assertEquals(a, decodeStr);
 	}
 

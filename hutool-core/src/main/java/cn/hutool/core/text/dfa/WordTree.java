@@ -1,7 +1,7 @@
 package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

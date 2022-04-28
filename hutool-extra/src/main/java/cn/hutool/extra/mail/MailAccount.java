@@ -1,8 +1,8 @@
 package cn.hutool.extra.mail;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.setting.Setting;
 
 import java.io.Serializable;
@@ -76,7 +76,7 @@ public class MailAccount implements Serializable {
 	/**
 	 * 编码用于编码邮件正文和发送人、收件人等中文
 	 */
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+	private Charset charset = CharsetUtil.UTF_8;
 	/**
 	 * 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
 	 */
@@ -537,7 +537,7 @@ public class MailAccount implements Serializable {
 	 * @since 5.6.4
 	 */
 	public MailAccount setCustomProperty(String key, Object value) {
-		if (StrUtil.isNotBlank(key) && ObjectUtil.isNotNull(value)) {
+		if (StrUtil.isNotBlank(key) && ObjUtil.isNotNull(value)) {
 			this.customProperty.put(key, value);
 		}
 		return this;
@@ -622,7 +622,7 @@ public class MailAccount implements Serializable {
 		}
 		if (null == this.charset) {
 			// 默认UTF-8编码
-			this.charset = CharsetUtil.CHARSET_UTF_8;
+			this.charset = CharsetUtil.UTF_8;
 		}
 
 		return this;

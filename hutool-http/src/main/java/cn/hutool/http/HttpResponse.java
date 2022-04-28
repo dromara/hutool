@@ -7,9 +7,9 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import java.io.ByteArrayInputStream;
@@ -439,10 +439,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
 			if (StrUtil.isBlank(fileName)) {
 				// 编码后的路径做为文件名
-				fileName = URLUtil.encodeQuery(path, charset);
+				fileName = URLEncoder.encodeQuery(path, charset);
 			} else {
 				// issue#I4K0FS@Gitee
-				fileName = URLUtil.decode(fileName, charset);
+				fileName = URLEncoder.encodeQuery(fileName, charset);
 			}
 		}
 		return FileUtil.file(targetFileOrDir, fileName);

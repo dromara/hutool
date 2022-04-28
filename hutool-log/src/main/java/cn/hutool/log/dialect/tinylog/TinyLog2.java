@@ -1,7 +1,7 @@
 package cn.hutool.log.dialect.tinylog;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 import org.tinylog.Level;
 import org.tinylog.configuration.Configuration;

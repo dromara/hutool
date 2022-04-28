@@ -13,7 +13,7 @@ public class CharsetDetectorTest {
 	public void detectTest(){
 		// 测试多个Charset对同一个流的处理是否有问题
 		final Charset detect = CharsetDetector.detect(ResourceUtil.getStream("test.xml"),
-				CharsetUtil.CHARSET_GBK, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals(CharsetUtil.CHARSET_UTF_8, detect);
+				CharsetUtil.GBK, CharsetUtil.UTF_8);
+		Assert.assertEquals(CharsetUtil.UTF_8, detect);
 	}
 }

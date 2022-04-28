@@ -109,7 +109,7 @@ public interface Resource {
 	 * @throws IORuntimeException 包装IOException
 	 */
 	default String readUtf8Str() throws IORuntimeException {
-		return readStr(CharsetUtil.CHARSET_UTF_8);
+		return readStr(CharsetUtil.UTF_8);
 	}
 
 	/**

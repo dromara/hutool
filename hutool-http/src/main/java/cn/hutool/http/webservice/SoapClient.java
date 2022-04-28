@@ -3,8 +3,8 @@ package cn.hutool.http.webservice;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpBase;
 import cn.hutool.http.HttpGlobalConfig;
@@ -356,7 +356,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return this
 	 */
 	public SoapClient setMethod(String methodName) {
-		return setMethod(methodName, ObjectUtil.defaultIfNull(this.namespaceURI, XMLConstants.NULL_NS_URI));
+		return setMethod(methodName, ObjUtil.defaultIfNull(this.namespaceURI, XMLConstants.NULL_NS_URI));
 	}
 
 	/**

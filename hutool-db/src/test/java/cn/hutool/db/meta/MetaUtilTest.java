@@ -1,7 +1,7 @@
 package cn.hutool.db.meta;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.DSFactory;
 import org.junit.Assert;
 import org.junit.Test;

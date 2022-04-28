@@ -1,7 +1,7 @@
 package cn.hutool.extra.pinyin;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package cn.hutool.core.lang.func;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandleInfo;

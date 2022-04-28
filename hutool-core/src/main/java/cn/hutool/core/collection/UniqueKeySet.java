@@ -1,7 +1,7 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.map.MapBuilder;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.AbstractSet;
@@ -167,7 +167,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	public UniqueKeySet<K, V> clone() {
 		try {
 			UniqueKeySet<K, V> newSet = (UniqueKeySet<K, V>) super.clone();
-			newSet.map = ObjectUtil.clone(this.map);
+			newSet.map = ObjUtil.clone(this.map);
 			return newSet;
 		} catch (CloneNotSupportedException e) {
 			throw new InternalError(e);

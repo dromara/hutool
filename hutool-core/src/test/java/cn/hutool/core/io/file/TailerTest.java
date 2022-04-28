@@ -11,7 +11,7 @@ public class TailerTest {
 	@Test
 	@Ignore
 	public void tailTest() {
-		FileUtil.tail(FileUtil.file("d:/test/tail.txt"), CharsetUtil.CHARSET_GBK);
+		FileUtil.tail(FileUtil.file("d:/test/tail.txt"), CharsetUtil.GBK);
 	}
 
 	@Test

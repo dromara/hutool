@@ -2,14 +2,14 @@ package cn.hutool.extra.tokenizer.engine.ikanalyzer;
 
 import org.wltea.analyzer.core.IKSegmenter;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
  * IKAnalyzer分词引擎实现<br>
  * 项目地址：https://github.com/yozhao/IKAnalyzer
- * 
+ *
  * @author looly
  *
  */
@@ -19,7 +19,7 @@ public class IKAnalyzerEngine implements TokenizerEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 */
 	public IKAnalyzerEngine() {
 		this(new IKSegmenter(null, true));
@@ -27,7 +27,7 @@ public class IKAnalyzerEngine implements TokenizerEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param seg {@link IKSegmenter}
 	 */
 	public IKAnalyzerEngine(IKSegmenter seg) {

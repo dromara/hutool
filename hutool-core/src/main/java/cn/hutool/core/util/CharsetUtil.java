@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.io.CharsetDetector;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -12,45 +13,45 @@ import java.nio.charset.UnsupportedCharsetException;
 /**
  * 字符集工具类
  *
- * @author xiaoleilu
+ * @author looly
  */
 public class CharsetUtil {
 
 	/**
 	 * ISO-8859-1
 	 */
-	public static final String ISO_8859_1 = "ISO-8859-1";
+	public static final String NAME_ISO_8859_1 = "ISO-8859-1";
 	/**
 	 * UTF-8
 	 */
-	public static final String UTF_8 = "UTF-8";
+	public static final String NAME_UTF_8 = "UTF-8";
 	/**
 	 * GBK
 	 */
-	public static final String GBK = "GBK";
+	public static final String NAME_GBK = "GBK";
 
 	/**
 	 * ISO-8859-1
 	 */
-	public static final Charset CHARSET_ISO_8859_1 = StandardCharsets.ISO_8859_1;
+	public static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
 	/**
 	 * UTF-8
 	 */
-	public static final Charset CHARSET_UTF_8 = StandardCharsets.UTF_8;
+	public static final Charset UTF_8 = StandardCharsets.UTF_8;
 	/**
 	 * GBK
 	 */
-	public static final Charset CHARSET_GBK;
+	public static final Charset GBK;
 
 	static {
 		//避免不支持GBK的系统中运行报错 issue#731
-		Charset _CHARSET_GBK = null;
+		Charset _GBK = null;
 		try {
-			_CHARSET_GBK = Charset.forName(GBK);
+			_GBK = Charset.forName(NAME_GBK);
 		} catch (UnsupportedCharsetException e) {
 			//ignore
 		}
-		CHARSET_GBK = _CHARSET_GBK;
+		GBK = _GBK;
 	}
 
 	/**
@@ -127,11 +128,11 @@ public class CharsetUtil {
 	 */
 	public static String convert(String source, Charset srcCharset, Charset destCharset) {
 		if (null == srcCharset) {
-			srcCharset = StandardCharsets.ISO_8859_1;
+			srcCharset = ISO_8859_1;
 		}
 
 		if (null == destCharset) {
-			destCharset = StandardCharsets.UTF_8;
+			destCharset = UTF_8;
 		}
 
 		if (StrUtil.isBlank(source) || srcCharset.equals(destCharset)) {
@@ -174,7 +175,7 @@ public class CharsetUtil {
 	 * @since 3.1.2
 	 */
 	public static Charset systemCharset() {
-		return FileUtil.isWindows() ? CHARSET_GBK : defaultCharset();
+		return FileUtil.isWindows() ? GBK : defaultCharset();
 	}
 
 	/**
@@ -205,7 +206,7 @@ public class CharsetUtil {
 	 * @see CharsetDetector#detect(InputStream, Charset...)
 	 * @since 5.7.10
 	 */
-	public static Charset defaultCharset(InputStream in, Charset... charsets) {
+	public static Charset detect(InputStream in, Charset... charsets) {
 		return CharsetDetector.detect(in, charsets);
 	}
 
@@ -220,7 +221,7 @@ public class CharsetUtil {
 	 * @see CharsetDetector#detect(int, InputStream, Charset...)
 	 * @since 5.7.10
 	 */
-	public static Charset defaultCharset(int bufferSize, InputStream in, Charset... charsets) {
+	public static Charset detect(int bufferSize, InputStream in, Charset... charsets) {
 		return CharsetDetector.detect(bufferSize, in, charsets);
 	}
 }

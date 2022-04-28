@@ -1,7 +1,7 @@
 package cn.hutool.db.nosql.redis;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.setting.Setting;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

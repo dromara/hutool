@@ -7,14 +7,14 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
+import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.lang.id.IdUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
@@ -366,7 +366,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public String getDisposition(String fileName, Charset charset) {
 		if (null == charset) {
-			charset = CharsetUtil.CHARSET_UTF_8;
+			charset = CharsetUtil.UTF_8;
 		}
 
 		if (StrUtil.isBlank(fileName)) {
@@ -374,7 +374,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			fileName = IdUtil.fastSimpleUUID();
 		}
 
-		fileName = StrUtil.addSuffixIfNot(URLUtil.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
+		fileName = StrUtil.addSuffixIfNot(URLEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
 		return StrUtil.format("attachment; filename=\"{}\"", fileName);
 	}
 

@@ -15,7 +15,7 @@ import cn.hutool.core.util.CharsetUtil;
 /**
  * {@link ResourceLoader} 的字符串实现形式<br>
  * 用于直接获取字符串模板
- * 
+ *
  * @author looly
  *
  */
@@ -27,15 +27,15 @@ public class SimpleStringResourceLoader extends ResourceLoader {
 
 	/**
 	 * 获取资源流
-	 * 
+	 *
 	 * @param source 字符串模板
 	 * @return 流
 	 * @throws ResourceNotFoundException 资源未找到
 	 */
 	public InputStream getResourceStream(String source) throws ResourceNotFoundException {
-		return IoUtil.toStream(source, CharsetUtil.CHARSET_UTF_8);
+		return IoUtil.toStream(source, CharsetUtil.UTF_8);
 	}
-	
+
 	@Override
 	public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException {
 		return new StringReader(source);

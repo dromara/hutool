@@ -3,7 +3,7 @@ package cn.hutool.extra.ftp;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class AbstractFtp implements Closeable {
 
-	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	public static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 
 	protected FtpConfig ftpConfig;
 

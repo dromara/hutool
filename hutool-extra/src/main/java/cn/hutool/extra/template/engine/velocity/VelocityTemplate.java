@@ -2,9 +2,9 @@ package cn.hutool.extra.template.engine.velocity;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.template.AbstractTemplate;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -75,6 +75,6 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	 */
 	private void loadEncoding() {
 		final String charset = (String) Velocity.getProperty(Velocity.INPUT_ENCODING);
-		this.charset = StrUtil.isEmpty(charset) ? CharsetUtil.UTF_8 : charset;
+		this.charset = StrUtil.isEmpty(charset) ? CharsetUtil.NAME_UTF_8 : charset;
 	}
 }

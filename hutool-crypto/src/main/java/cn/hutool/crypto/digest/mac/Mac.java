@@ -5,7 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 
 import java.io.ByteArrayInputStream;
@@ -69,7 +69,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public byte[] digest(String data) {
-		return digest(data, CharsetUtil.CHARSET_UTF_8);
+		return digest(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestBase64(String data, boolean isUrlSafe) {
-		return digestBase64(data, CharsetUtil.CHARSET_UTF_8, isUrlSafe);
+		return digestBase64(data, CharsetUtil.UTF_8, isUrlSafe);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(String data) {
-		return digestHex(data, CharsetUtil.CHARSET_UTF_8);
+		return digestHex(data, CharsetUtil.UTF_8);
 	}
 
 	/**

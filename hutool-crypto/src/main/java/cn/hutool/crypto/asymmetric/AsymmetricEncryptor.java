@@ -6,7 +6,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -187,7 +187,7 @@ public interface AsymmetricEncryptor {
 	 * @since 4.1.0
 	 */
 	default String encryptBcd(String data, KeyType keyType) {
-		return encryptBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
+		return encryptBcd(data, keyType, CharsetUtil.UTF_8);
 	}
 
 	/**

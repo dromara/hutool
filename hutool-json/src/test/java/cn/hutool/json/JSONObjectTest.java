@@ -10,8 +10,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.ResultDto;
 import cn.hutool.json.test.bean.Seq;
@@ -711,7 +711,7 @@ public class JSONObjectTest {
 				.set("b", "value2");
 
 		final String s = json1.toJSONString(0, (pair) -> {
-			pair.setValue(ObjectUtil.defaultIfNull(pair.getValue(), StrUtil.EMPTY));
+			pair.setValue(ObjUtil.defaultIfNull(pair.getValue(), StrUtil.EMPTY));
 			return true;
 		});
 		Assert.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);

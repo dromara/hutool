@@ -1,6 +1,6 @@
 package cn.hutool.db.ds.hikari;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
@@ -11,13 +11,13 @@ import javax.sql.DataSource;
 
 /**
  * HikariCP数据源工厂类
- * 
+ *
  * @author Looly
  *
  */
 public class HikariDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = -8834744983614749401L;
-	
+
 	public static final String DS_NAME = "HikariCP";
 
 	public HikariDSFactory() {

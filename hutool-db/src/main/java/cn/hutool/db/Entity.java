@@ -5,8 +5,8 @@ import cn.hutool.core.map.Dict;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
@@ -339,7 +339,7 @@ public class Entity extends Dict {
 
 	@Override
 	public String getStr(String field) {
-		return getStr(field, CharsetUtil.CHARSET_UTF_8);
+		return getStr(field, CharsetUtil.UTF_8);
 	}
 
 	/**

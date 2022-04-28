@@ -1,7 +1,7 @@
 package cn.hutool.core.thread;
 
 import cn.hutool.core.builder.Builder;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -242,7 +242,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
 		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
-		RejectedExecutionHandler handler = ObjectUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
+		RejectedExecutionHandler handler = ObjUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
 
 		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(//
 				corePoolSize, //

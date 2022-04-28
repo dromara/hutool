@@ -2,7 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

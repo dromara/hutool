@@ -4,4 +4,4 @@
  * @author looly
  * @since 5.4.2
  */
-package cn.hutool.core.lang.reflect;
+package cn.hutool.core.reflect;

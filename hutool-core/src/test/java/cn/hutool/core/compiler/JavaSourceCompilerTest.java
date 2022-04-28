@@ -1,8 +1,8 @@
 package cn.hutool.core.compiler;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.compress.ZipUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

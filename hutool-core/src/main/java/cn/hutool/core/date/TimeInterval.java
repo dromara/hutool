@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 计时器<br>

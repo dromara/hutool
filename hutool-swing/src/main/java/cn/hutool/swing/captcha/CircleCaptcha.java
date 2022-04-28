@@ -2,7 +2,7 @@ package cn.hutool.swing.captcha;
 
 import cn.hutool.swing.img.GraphicsUtil;
 import cn.hutool.swing.img.ImgUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.Color;
@@ -57,7 +57,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 	@Override
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImgUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		final Graphics2D g = ImgUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 随机画干扰圈圈
 		drawInterfere(g);

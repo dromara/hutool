@@ -4,8 +4,8 @@ import cn.hutool.core.builder.Builder;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -96,7 +96,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @since 5.6.3
 	 */
 	public static UrlBuilder ofHttp(String httpUrl) {
-		return ofHttp(httpUrl, CharsetUtil.CHARSET_UTF_8);
+		return ofHttp(httpUrl, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(String url) {
-		return of(url, CharsetUtil.CHARSET_UTF_8);
+		return of(url, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -196,7 +196,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * 构造
 	 */
 	public UrlBuilder() {
-		this.charset = CharsetUtil.CHARSET_UTF_8;
+		this.charset = CharsetUtil.UTF_8;
 	}
 
 	/**

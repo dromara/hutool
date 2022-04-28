@@ -1,7 +1,7 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Collections;
 import java.util.EnumSet;

@@ -1,7 +1,7 @@
 package cn.hutool.log;
 
 import cn.hutool.core.lang.caller.CallerUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.level.Level;
 
 /**

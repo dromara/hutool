@@ -1,8 +1,8 @@
 package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
@@ -292,7 +292,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 				this.xssfCellStyle = stylesTable.getStyleAt(Integer.parseInt(xfIndexStr));
 				// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
 				final int numFmtIndex = xssfCellStyle.getDataFormat();
-				this.numFmtString = ObjectUtil.defaultIfNull(
+				this.numFmtString = ObjUtil.defaultIfNull(
 						xssfCellStyle.getDataFormatString(),
 						() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
 				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {

@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel.reader;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.RowUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
@@ -130,7 +130,7 @@ public abstract class AbstractSheetReader<T> implements SheetReader<T> {
 
 		final String header = headerObj.toString();
 		if(null != this.headerAlias){
-			return ObjectUtil.defaultIfNull(this.headerAlias.get(header), header);
+			return ObjUtil.defaultIfNull(this.headerAlias.get(header), header);
 		}
 		return header;
 	}

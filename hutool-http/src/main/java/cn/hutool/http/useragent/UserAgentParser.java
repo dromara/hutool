@@ -1,6 +1,6 @@
 package cn.hutool.http.useragent;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * User-Agent解析器

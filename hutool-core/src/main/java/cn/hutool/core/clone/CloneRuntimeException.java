@@ -1,7 +1,7 @@
 package cn.hutool.core.clone;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 克隆异常

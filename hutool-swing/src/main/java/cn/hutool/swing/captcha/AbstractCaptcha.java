@@ -7,7 +7,7 @@ import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

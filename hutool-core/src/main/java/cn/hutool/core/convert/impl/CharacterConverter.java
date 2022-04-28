@@ -2,7 +2,7 @@ package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 字符转换器

@@ -2,7 +2,7 @@ package cn.hutool.extra.system;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.SystemPropsUtil;
 
 import java.io.PrintWriter;

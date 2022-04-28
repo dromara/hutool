@@ -9,8 +9,8 @@ import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public final class InternalJSONUtil {
 	 * @throws JSONException If o is a non-finite number.
 	 */
 	static Object testValidity(Object obj) throws JSONException {
-		if (false == ObjectUtil.isValidIfNumber(obj)) {
+		if (false == ObjUtil.isValidIfNumber(obj)) {
 			throw new JSONException("JSON does not allow non-finite numbers.");
 		}
 		return obj;

@@ -1,7 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * IO运行时异常，常用于对IOException的包装

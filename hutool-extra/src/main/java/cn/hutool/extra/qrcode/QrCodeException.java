@@ -1,7 +1,7 @@
 package cn.hutool.extra.qrcode;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * Qrcode异常

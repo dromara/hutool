@@ -14,8 +14,8 @@ import cn.hutool.core.net.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.body.BytesBody;
 import cn.hutool.http.body.FormUrlEncodedBody;
 import cn.hutool.http.body.MultipartBody;
@@ -482,7 +482,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest form(String name, Object value) {
-		if (StrUtil.isBlank(name) || ObjectUtil.isNull(value)) {
+		if (StrUtil.isBlank(name) || ObjUtil.isNull(value)) {
 			return this; // 忽略非法的form表单项内容;
 		}
 

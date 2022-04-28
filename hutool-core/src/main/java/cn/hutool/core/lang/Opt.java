@@ -27,7 +27,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;

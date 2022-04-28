@@ -1,6 +1,6 @@
 package cn.hutool.db.ds.dbcp;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
 import cn.hutool.setting.Setting;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -9,13 +9,13 @@ import javax.sql.DataSource;
 
 /**
  * DBCP2数据源工厂类
- * 
+ *
  * @author Looly
  *
  */
 public class DbcpDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = -9133501414334104548L;
-	
+
 	public static final String DS_NAME = "commons-dbcp2";
 
 	public DbcpDSFactory() {
@@ -25,11 +25,11 @@ public class DbcpDSFactory extends AbstractDSFactory {
 	public DbcpDSFactory(Setting setting) {
 		super(DS_NAME, BasicDataSource.class, setting);
 	}
-	
+
 	@Override
 	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
 		final BasicDataSource ds = new BasicDataSource();
-		
+
 		ds.setUrl(jdbcUrl);
 		ds.setDriverClassName(driver);
 		ds.setUsername(user);

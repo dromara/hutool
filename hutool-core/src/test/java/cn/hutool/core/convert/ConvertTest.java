@@ -3,7 +3,7 @@ package cn.hutool.core.convert;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.codec.HexUtil;

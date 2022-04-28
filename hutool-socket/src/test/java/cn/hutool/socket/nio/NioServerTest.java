@@ -4,7 +4,7 @@ import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

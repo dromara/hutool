@@ -7,7 +7,7 @@ import org.junit.Test;
 import cn.hutool.crypto.symmetric.RC4;
 
 public class RC4Test {
-	
+
 	@Test
 	public void testCryptMessage() {
 		String key = "This is pretty long key";
@@ -16,7 +16,7 @@ public class RC4Test {
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
 		Assert.assertEquals(message, msg);
-		
+
 		String message2 = "Hello, World， this is megssage 2";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);
@@ -31,7 +31,7 @@ public class RC4Test {
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
 		Assert.assertEquals(message, msg);
-		
+
 		String message2 = "这是第二个中文消息！";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);
@@ -43,7 +43,7 @@ public class RC4Test {
 		String message = "这是第一个用来测试密文为十六进制字符串的消息！";
 		String key = "生成一个密钥";
 		RC4 rc4 = new RC4(key);
-		String encryptHex = rc4.encryptHex(message, CharsetUtil.CHARSET_UTF_8);
+		String encryptHex = rc4.encryptHex(message, CharsetUtil.UTF_8);
 		String msg = rc4.decrypt(encryptHex);
 		Assert.assertEquals(message, msg);
 
@@ -59,7 +59,7 @@ public class RC4Test {
 		String message = "这是第一个用来测试密文为Base64编码的消息！";
 		String key = "生成一个密钥";
 		RC4 rc4 = new RC4(key);
-		String encryptHex = rc4.encryptBase64(message, CharsetUtil.CHARSET_UTF_8);
+		String encryptHex = rc4.encryptBase64(message, CharsetUtil.UTF_8);
 		String msg = rc4.decrypt(encryptHex);
 		Assert.assertEquals(message, msg);
 

@@ -4,18 +4,18 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 
 /**
  * <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.
- * 
+ *
  * @author Looly
  *
  */
 public class JdkLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-	
+
 	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
@@ -30,7 +30,7 @@ public class JdkLog extends AbstractLog {
 	public JdkLog(String name) {
 		this(Logger.getLogger(name));
 	}
-	
+
 	@Override
 	public String getName() {
 		return logger.getName();
@@ -90,7 +90,7 @@ public class JdkLog extends AbstractLog {
 	public void error(String fqcn, Throwable t, String format, Object... arguments) {
 		logIfEnabled(fqcn, Level.SEVERE, t, format, arguments);
 	}
-	
+
 	// ------------------------------------------------------------------------- Log
 	@Override
 	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
@@ -120,7 +120,7 @@ public class JdkLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Private method
 	/**
 	 * 打印对应等级的日志
-	 * 
+	 *
 	 * @param callerFQCN 调用者的完全限定类名(Fully Qualified Class Name)
 	 * @param level 等级
 	 * @param throwable 异常对象
@@ -136,7 +136,7 @@ public class JdkLog extends AbstractLog {
 			logger.log(record);
 		}
 	}
-	
+
 	/**
 	 * 传入调用日志类的信息
 	 * @param callerFQCN 调用者全限定类名
@@ -155,7 +155,7 @@ public class JdkLog extends AbstractLog {
 				break;
 			}
 		}
-		
+
 		if (found > -1) {
 			StackTraceElement ste = steArray[found+1];
 			record.setSourceClassName(ste.getClassName());

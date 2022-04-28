@@ -138,7 +138,7 @@ public class FileUtilTest {
 	@Test
 	@Ignore
 	public void convertLineSeparatorTest() {
-		FileUtil.convertLineSeparator(FileUtil.file("d:/aaa.txt"), CharsetUtil.CHARSET_UTF_8, LineSeparator.WINDOWS);
+		FileUtil.convertLineSeparator(FileUtil.file("d:/aaa.txt"), CharsetUtil.UTF_8, LineSeparator.WINDOWS);
 	}
 
 	@Test
@@ -466,7 +466,7 @@ public class FileUtilTest {
 	@Ignore
 	public void appendLinesTest(){
 		List<String> list = ListUtil.toList("a", "b", "c");
-		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.CHARSET_UTF_8);
+		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.UTF_8);
 	}
 
 	@Test

@@ -2,7 +2,7 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.util.regex.Pattern;

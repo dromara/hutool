@@ -3,7 +3,7 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
 import cn.hutool.extra.ftp.FtpConfig;
 import cn.hutool.extra.ftp.FtpException;
@@ -42,7 +42,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshHost 主机
 	 */
 	public SshjSftp(String sshHost) {
-		this(new FtpConfig(sshHost, 22, null, null, CharsetUtil.CHARSET_UTF_8));
+		this(new FtpConfig(sshHost, 22, null, null, CharsetUtil.UTF_8));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshPass 密码
 	 */
 	public SshjSftp(String sshHost, String sshUser, String sshPass) {
-		this(new FtpConfig(sshHost, 22, sshUser, sshPass, CharsetUtil.CHARSET_UTF_8));
+		this(new FtpConfig(sshHost, 22, sshUser, sshPass, CharsetUtil.UTF_8));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshPass 密码
 	 */
 	public SshjSftp(String sshHost, int sshPort, String sshUser, String sshPass) {
-		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, CharsetUtil.CHARSET_UTF_8));
+		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, CharsetUtil.UTF_8));
 	}
 
 	/**

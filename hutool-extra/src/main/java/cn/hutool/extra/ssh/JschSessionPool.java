@@ -1,7 +1,7 @@
 package cn.hutool.extra.ssh;
 
 import cn.hutool.core.cache.SimpleCache;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import com.jcraft.jsch.Session;
 
 import java.util.HashMap;

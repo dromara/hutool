@@ -1,6 +1,6 @@
 package cn.hutool.http.ssl;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.net.ssl.SSLSocketFactory;
 

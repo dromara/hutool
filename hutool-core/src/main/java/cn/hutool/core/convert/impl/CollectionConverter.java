@@ -2,7 +2,7 @@ package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Converter;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -62,7 +62,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	@Override
 	public Collection<?> convert(Object value, Collection<?> defaultValue) throws IllegalArgumentException {
 		final Collection<?> result = convertInternal(value);
-		return ObjectUtil.defaultIfNull(result, defaultValue);
+		return ObjUtil.defaultIfNull(result, defaultValue);
 	}
 
 	/**

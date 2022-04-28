@@ -4,7 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;

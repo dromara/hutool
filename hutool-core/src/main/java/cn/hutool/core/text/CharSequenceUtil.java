@@ -13,10 +13,8 @@ import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -2016,7 +2014,7 @@ public class CharSequenceUtil {
 		}
 
 		int counterOfDoubleByte = 0;
-		final byte[] b = bytes(str, CharsetUtil.CHARSET_GBK);
+		final byte[] b = bytes(str, CharsetUtil.GBK);
 		if (b.length <= len) {
 			return str.toString();
 		}
@@ -2033,7 +2031,7 @@ public class CharSequenceUtil {
 				len -= 1;
 			}
 		}
-		return new String(b, 0, len, CharsetUtil.CHARSET_GBK);
+		return new String(b, 0, len, CharsetUtil.GBK);
 	}
 
 	/**
@@ -2744,7 +2742,7 @@ public class CharSequenceUtil {
 	 * @return 编码后的字节码
 	 */
 	public static byte[] utf8Bytes(CharSequence str) {
-		return bytes(str, CharsetUtil.CHARSET_UTF_8);
+		return bytes(str, CharsetUtil.UTF_8);
 	}
 
 	/**

@@ -3,7 +3,7 @@ package cn.hutool.core.net;
 import cn.hutool.core.builder.Builder;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -29,7 +29,7 @@ import java.security.SecureRandom;
  */
 public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
 	private TrustManager[] trustManagers = {DefaultTrustManager.INSTANCE};

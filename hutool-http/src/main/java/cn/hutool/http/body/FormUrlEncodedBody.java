@@ -1,7 +1,7 @@
 package cn.hutool.http.body;
 
 import cn.hutool.core.net.url.UrlQuery;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
 import java.util.Map;

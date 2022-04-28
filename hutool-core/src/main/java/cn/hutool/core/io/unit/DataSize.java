@@ -1,7 +1,7 @@
 package cn.hutool.core.io.unit;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;

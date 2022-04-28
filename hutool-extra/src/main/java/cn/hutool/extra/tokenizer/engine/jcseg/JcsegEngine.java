@@ -1,6 +1,6 @@
 package cn.hutool.extra.tokenizer.engine.jcseg;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.TokenizerException;
@@ -15,7 +15,7 @@ import java.io.StringReader;
 /**
  * Jcseg分词引擎实现<br>
  * 项目地址：https://gitee.com/lionsoul/jcseg
- * 
+ *
  * @author looly
  *
  */
@@ -38,7 +38,7 @@ public class JcsegEngine implements TokenizerEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param segment {@link ISegment}
 	 */
 	public JcsegEngine(ISegment segment) {

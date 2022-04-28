@@ -3,9 +3,9 @@ package cn.hutool.poi.excel;
 import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.PoiChecker;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.sax.ExcelSaxReader;
@@ -150,7 +150,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFilePath, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFilePath, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFile, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -196,7 +196,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFile, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -223,7 +223,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -239,7 +239,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -257,7 +257,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter();
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -274,7 +274,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(isXlsx);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFilePath);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -303,7 +303,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter((File) null, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -317,7 +317,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFile);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -332,7 +332,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFilePath, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -347,7 +347,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFile, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -365,7 +365,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter();
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter(rowAccessWindowSize);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -396,7 +396,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter(destFilePath);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -410,7 +410,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter(destFile);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -425,7 +425,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter(destFilePath, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -440,7 +440,7 @@ public class ExcelUtil {
 		try {
 			return new BigExcelWriter(destFile, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+			throw new DependencyException(ObjUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 

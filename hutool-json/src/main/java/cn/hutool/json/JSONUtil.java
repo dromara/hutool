@@ -2,13 +2,13 @@ package cn.hutool.json;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.lang.reflect.TypeReference;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
@@ -555,7 +555,7 @@ public class JSONUtil {
 
 		if(null != defaultValue){
 			final Class<T> type = (Class<T>) defaultValue.getClass();
-			return ObjectUtil.defaultIfNull(json.getByPath(expression, type), defaultValue);
+			return ObjUtil.defaultIfNull(json.getByPath(expression, type), defaultValue);
 		}
 		return (T) json.getByPath(expression);
 	}
@@ -718,11 +718,11 @@ public class JSONUtil {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
-				|| ObjectUtil.isNull(object) //
+				|| ObjUtil.isNull(object) //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //
-				|| ObjectUtil.isBasicType(object) //
+				|| ObjUtil.isBasicType(object) //
 		) {
 			return object;
 		}

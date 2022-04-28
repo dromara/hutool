@@ -4,7 +4,9 @@ import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -20,7 +22,7 @@ import java.util.function.Supplier;
  *
  * @author Looly
  */
-public class ObjectUtil {
+public class ObjUtil {
 
 	/**
 	 * 比较两个对象是否相等，此方法是 {@link #equal(Object, Object)}的别名方法。<br>
@@ -607,7 +609,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 存在多少个{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 存在多少个{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 存在{@code null}的数量
@@ -617,7 +619,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否存在{@code null}对象，通过{@link ObjectUtil#isNull(Object)} 判断元素
+	 * 是否存在{@code null}对象，通过{@link ObjUtil#isNull(Object)} 判断元素
 	 *
 	 * @param objs 被检查对象
 	 * @return 是否存在
@@ -629,7 +631,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否存在{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查对象
 	 * @return 是否存在
@@ -640,7 +642,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否全都为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否全都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都为空
@@ -650,7 +652,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否全都不为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否全都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都不为空

@@ -1,6 +1,6 @@
 package cn.hutool.core.map;
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.Map;
 
@@ -25,8 +25,8 @@ public abstract class AbsEntry<K, V> implements Map.Entry<K, V> {
 	public boolean equals(Object object) {
 		if (object instanceof Map.Entry) {
 			final Map.Entry<?, ?> that = (Map.Entry<?, ?>) object;
-			return ObjectUtil.equals(this.getKey(), that.getKey())
-					&& ObjectUtil.equals(this.getValue(), that.getValue());
+			return ObjUtil.equals(this.getKey(), that.getKey())
+					&& ObjUtil.equals(this.getValue(), that.getValue());
 		}
 		return false;
 	}

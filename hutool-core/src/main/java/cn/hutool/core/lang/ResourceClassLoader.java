@@ -2,7 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.util.ClassLoaderUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.security.SecureClassLoader;
 import java.util.HashMap;
@@ -30,8 +30,8 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	 * @param resourceMap       资源map
 	 */
 	public ResourceClassLoader(ClassLoader parentClassLoader, Map<String, T> resourceMap) {
-		super(ObjectUtil.defaultIfNull(parentClassLoader, ClassLoaderUtil::getClassLoader));
-		this.resourceMap = ObjectUtil.defaultIfNull(resourceMap, HashMap::new);
+		super(ObjUtil.defaultIfNull(parentClassLoader, ClassLoaderUtil::getClassLoader));
+		this.resourceMap = ObjUtil.defaultIfNull(resourceMap, HashMap::new);
 		this.cacheClassMap = new HashMap<>();
 	}
 

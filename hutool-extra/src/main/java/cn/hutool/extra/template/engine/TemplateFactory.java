@@ -1,9 +1,9 @@
 package cn.hutool.extra.template.engine;
 
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateException;

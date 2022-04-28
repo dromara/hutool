@@ -2,8 +2,8 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.net.URLUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -62,7 +62,7 @@ public class FileResource implements Resource, Serializable {
 		Assert.notNull(file, "File must be not null !");
 		this.file = file;
 		this.lastModified = file.lastModified();
-		this.name = ObjectUtil.defaultIfNull(fileName, file::getName);
+		this.name = ObjUtil.defaultIfNull(fileName, file::getName);
 	}
 
 	// ----------------------------------------------------------------------- Constructor end

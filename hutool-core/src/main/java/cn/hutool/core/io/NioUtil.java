@@ -3,7 +3,7 @@ package cn.hutool.core.io;
 import cn.hutool.core.io.copy.ChannelCopier;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -222,7 +222,7 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readUtf8(FileChannel fileChannel) throws IORuntimeException {
-		return read(fileChannel, CharsetUtil.CHARSET_UTF_8);
+		return read(fileChannel, CharsetUtil.UTF_8);
 	}
 
 	/**

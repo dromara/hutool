@@ -10,7 +10,7 @@ import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
@@ -145,7 +145,7 @@ public class HttpServerRequest extends HttpServerBase {
 	public String getHeader(String headerKey, Charset charset) {
 		final String header = getHeader(headerKey);
 		if (null != header) {
-			return CharsetUtil.convert(header, CharsetUtil.CHARSET_ISO_8859_1, charset);
+			return CharsetUtil.convert(header, CharsetUtil.ISO_8859_1, charset);
 		}
 		return null;
 	}

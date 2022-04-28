@@ -44,7 +44,7 @@ public class BOMInputStream extends InputStream {
 	 * @param in 流
 	 */
 	public BOMInputStream(InputStream in) {
-		this(in, CharsetUtil.UTF_8);
+		this(in, CharsetUtil.NAME_UTF_8);
 	}
 
 	/**

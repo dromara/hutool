@@ -8,14 +8,14 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Thymeleaf模板引擎实现
- * 
+ *
  * @author looly
  * @since 4.1.11
  */
@@ -32,7 +32,7 @@ public class ThymeleafEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 模板配置
 	 */
 	public ThymeleafEngine(TemplateConfig config) {
@@ -41,7 +41,7 @@ public class ThymeleafEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param engine {@link org.thymeleaf.TemplateEngine}
 	 */
 	public ThymeleafEngine(org.thymeleaf.TemplateEngine engine) {
@@ -77,7 +77,7 @@ public class ThymeleafEngine implements TemplateEngine {
 
 	/**
 	 * 创建引擎
-	 * 
+	 *
 	 * @param config 模板配置
 	 * @return {@link TemplateEngine}
 	 */
@@ -85,7 +85,7 @@ public class ThymeleafEngine implements TemplateEngine {
 		if (null == config) {
 			config = new TemplateConfig();
 		}
-		
+
 		ITemplateResolver resolver;
 		switch (config.getResourceMode()) {
 		case CLASSPATH:
@@ -116,7 +116,7 @@ public class ThymeleafEngine implements TemplateEngine {
 			resolver = new DefaultTemplateResolver();
 			break;
 		}
-		
+
 		final org.thymeleaf.TemplateEngine engine = new org.thymeleaf.TemplateEngine();
 		engine.setTemplateResolver(resolver);
 		return engine;

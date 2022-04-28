@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel.cell.values;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.cell.CellValue;
 import java.util.Date;

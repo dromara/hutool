@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.usermodel.Cell;

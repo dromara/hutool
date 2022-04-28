@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * HTTP异常

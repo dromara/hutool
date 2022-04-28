@@ -95,7 +95,7 @@ public class HttpRequestTest {
 		// 自定义构建HTTP GET请求，发送Http GET请求，针对HTTPS安全加密，可以自定义SSL
 		HttpRequest request = HttpRequest.get(url)
 				// 自定义返回编码
-				.charset(CharsetUtil.CHARSET_GBK)
+				.charset(CharsetUtil.GBK)
 				// 禁用缓存
 				.disableCache()
 				// 自定义SSL版本

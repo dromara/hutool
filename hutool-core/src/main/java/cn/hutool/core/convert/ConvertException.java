@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 转换异常

@@ -1,6 +1,6 @@
 package cn.hutool.extra.pinyin;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.pinyin.engine.PinyinFactory;
 
 /**

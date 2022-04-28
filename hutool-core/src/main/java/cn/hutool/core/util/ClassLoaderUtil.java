@@ -7,6 +7,7 @@ import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.CharPool;
+import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
 import java.lang.reflect.Array;

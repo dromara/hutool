@@ -1,6 +1,6 @@
 package cn.hutool.json.test.bean.report;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.StrUtil;
 
 /**
  * 测试步骤报告
@@ -10,7 +10,7 @@ import cn.hutool.core.util.StrUtil;
  */
 public class StepReport {
 	private static int step_id = 0;
-	
+
 	private int stepId = getId();
 	/**
 	 * 步骤名称
@@ -40,7 +40,7 @@ public class StepReport {
 	 * 测试时间
 	 */
 	private String testTime;
-	
+
 	/**
 	 * 测试状态：true-成功 false-失败
 	 */
@@ -53,7 +53,7 @@ public class StepReport {
 	 * 截图路径：相对路径
 	 */
 	private String screenshot;
-	
+
 	private static synchronized int getId() {
 		return step_id++;
 	}
@@ -69,11 +69,11 @@ public class StepReport {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	
+
 	public String getResult() {
 		return result;
 	}
-	
+
 	public String getStepName() {
 		return stepName;
 	}
@@ -85,7 +85,7 @@ public class StepReport {
 	public void setStepName() {
 		this.stepName = this.actionName + (StrUtil.isBlank(this.elementName) ? "" : " => " + this.elementName);
 	}
-	
+
 	public String getElementName() {
 		return elementName;
 	}

@@ -62,7 +62,7 @@ public class Tailer implements Serializable {
 	 * @param initReadLine 启动时预读取的行数
 	 */
 	public Tailer(File file, LineHandler lineHandler, int initReadLine) {
-		this(file, CharsetUtil.CHARSET_UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
+		this(file, CharsetUtil.UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
 	}
 
 	/**
