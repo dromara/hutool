@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;

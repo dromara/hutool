@@ -1,6 +1,7 @@
 package cn.hutool.extra.management;
 
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.Serializable;
 
@@ -10,18 +11,18 @@ import java.io.Serializable;
 public class JavaRuntimeInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String JAVA_RUNTIME_NAME = ManagementUtil.get("java.runtime.name", false);
-	private final String JAVA_RUNTIME_VERSION = ManagementUtil.get("java.runtime.version", false);
-	private final String JAVA_HOME = ManagementUtil.get("java.home", false);
-	private final String JAVA_EXT_DIRS = ManagementUtil.get("java.ext.dirs", false);
-	private final String JAVA_ENDORSED_DIRS = ManagementUtil.get("java.endorsed.dirs", false);
-	private final String JAVA_CLASS_PATH = ManagementUtil.get("java.class.path", false);
-	private final String JAVA_CLASS_VERSION = ManagementUtil.get("java.class.version", false);
-	private final String JAVA_LIBRARY_PATH = ManagementUtil.get("java.library.path", false);
+	private final String JAVA_RUNTIME_NAME = SystemUtil.get("java.runtime.name", false);
+	private final String JAVA_RUNTIME_VERSION = SystemUtil.get("java.runtime.version", false);
+	private final String JAVA_HOME = SystemUtil.get("java.home", false);
+	private final String JAVA_EXT_DIRS = SystemUtil.get("java.ext.dirs", false);
+	private final String JAVA_ENDORSED_DIRS = SystemUtil.get("java.endorsed.dirs", false);
+	private final String JAVA_CLASS_PATH = SystemUtil.get("java.class.path", false);
+	private final String JAVA_CLASS_VERSION = SystemUtil.get("java.class.version", false);
+	private final String JAVA_LIBRARY_PATH = SystemUtil.get("java.library.path", false);
 
-	private final String SUN_BOOT_CLASS_PATH = ManagementUtil.get("sun.boot.class.path", false);
+	private final String SUN_BOOT_CLASS_PATH = SystemUtil.get("sun.boot.class.path", false);
 
-	private final String SUN_ARCH_DATA_MODEL = ManagementUtil.get("sun.arch.data.model", false);
+	private final String SUN_ARCH_DATA_MODEL = SystemUtil.get("sun.arch.data.model", false);
 
 	public final String getSunBoothClassPath() {
 		return SUN_BOOT_CLASS_PATH;
@@ -138,7 +139,7 @@ public class JavaRuntimeInfo implements Serializable{
 	 * @since Java 1.1
 	 */
 	public final String[] getClassPathArray() {
-		return StrUtil.splitToArray(getClassPath(), ManagementUtil.get("path.separator", false));
+		return StrUtil.splitToArray(getClassPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
@@ -182,7 +183,7 @@ public class JavaRuntimeInfo implements Serializable{
 	 *
 	 */
 	public final String[] getLibraryPathArray() {
-		return StrUtil.splitToArray(getLibraryPath(), ManagementUtil.get("path.separator", false));
+		return StrUtil.splitToArray(getLibraryPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
@@ -197,7 +198,7 @@ public class JavaRuntimeInfo implements Serializable{
 	 *
 	 */
 	public final String getProtocolPackages() {
-		return ManagementUtil.get("java.protocol.handler.pkgs", true);
+		return SystemUtil.get("java.protocol.handler.pkgs", true);
 	}
 
 	/**

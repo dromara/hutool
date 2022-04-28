@@ -1,5 +1,7 @@
 package cn.hutool.extra.management;
 
+import cn.hutool.core.util.SystemUtil;
+
 import java.io.Serializable;
 
 /**
@@ -8,10 +10,10 @@ import java.io.Serializable;
 public class JvmInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String JAVA_VM_NAME = ManagementUtil.get("java.vm.name", false);
-	private final String JAVA_VM_VERSION = ManagementUtil.get("java.vm.version", false);
-	private final String JAVA_VM_VENDOR = ManagementUtil.get("java.vm.vendor", false);
-	private final String JAVA_VM_INFO = ManagementUtil.get("java.vm.info", false);
+	private final String JAVA_VM_NAME = SystemUtil.get("java.vm.name", false);
+	private final String JAVA_VM_VERSION = SystemUtil.get("java.vm.version", false);
+	private final String JAVA_VM_VENDOR = SystemUtil.get("java.vm.vendor", false);
+	private final String JAVA_VM_INFO = SystemUtil.get("java.vm.info", false);
 
 	/**
 	 * 取得当前JVM impl.的名称（取自系统属性：{@code java.vm.name}）。

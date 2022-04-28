@@ -1,5 +1,7 @@
 package cn.hutool.extra.management;
 
+import cn.hutool.core.util.SystemUtil;
+
 import java.io.Serializable;
 
 /**
@@ -8,9 +10,9 @@ import java.io.Serializable;
 public class OsInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String OS_VERSION = ManagementUtil.get("os.version", false);
-	private final String OS_ARCH = ManagementUtil.get("os.arch", false);
-	private final String OS_NAME = ManagementUtil.get("os.name", false);
+	private final String OS_VERSION = SystemUtil.get("os.version", false);
+	private final String OS_ARCH = SystemUtil.get("os.arch", false);
+	private final String OS_NAME = SystemUtil.get("os.name", false);
 	private final boolean IS_OS_AIX = getOSMatches("AIX");
 	private final boolean IS_OS_HP_UX = getOSMatches("HP-UX");
 	private final boolean IS_OS_IRIX = getOSMatches("Irix");
@@ -34,9 +36,9 @@ public class OsInfo implements Serializable{
 	private final boolean IS_OS_WINDOWS_10 = getOSMatches("Windows", "10.0");
 
 	// 由于改变file.encoding属性并不会改变系统字符编码，为了保持一致，通过LocaleUtil取系统默认编码。
-	private final String FILE_SEPARATOR = ManagementUtil.get("file.separator", false);
-	private final String LINE_SEPARATOR = ManagementUtil.get("line.separator", false);
-	private final String PATH_SEPARATOR = ManagementUtil.get("path.separator", false);
+	private final String FILE_SEPARATOR = SystemUtil.get(SystemPropsKeys.FILE_SEPARATOR, false);
+	private final String LINE_SEPARATOR = SystemUtil.get(SystemPropsKeys.LINE_SEPARATOR, false);
+	private final String PATH_SEPARATOR = SystemUtil.get(SystemPropsKeys.PATH_SEPARATOR, false);
 
 	/**
 	 * 取得当前OS的架构（取自系统属性：{@code os.arch}）。

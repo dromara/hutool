@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.text.StrUtil;
 
 import java.time.LocalDateTime;

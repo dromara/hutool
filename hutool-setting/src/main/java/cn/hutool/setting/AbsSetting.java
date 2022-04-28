@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.OptNullBasicTypeFromStringGetter;
+import cn.hutool.core.lang.getter.OptNullBasicTypeFromStringGetter;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;

@@ -8,7 +8,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.LambdaUtil;
-import cn.hutool.core.getter.BasicTypeGetter;
+import cn.hutool.core.lang.getter.BasicTypeGetter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

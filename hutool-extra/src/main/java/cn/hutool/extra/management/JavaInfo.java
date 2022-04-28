@@ -2,6 +2,7 @@ package cn.hutool.extra.management;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.Serializable;
 
@@ -11,11 +12,11 @@ import java.io.Serializable;
 public class JavaInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final String JAVA_VERSION = ManagementUtil.get("java.version", false);
+	private final String JAVA_VERSION = SystemUtil.get("java.version", false);
 	private final float JAVA_VERSION_FLOAT = getJavaVersionAsFloat();
 	private final int JAVA_VERSION_INT = getJavaVersionAsInt();
-	private final String JAVA_VENDOR = ManagementUtil.get("java.vendor", false);
-	private final String JAVA_VENDOR_URL = ManagementUtil.get("java.vendor.url", false);
+	private final String JAVA_VENDOR = SystemUtil.get("java.vendor", false);
+	private final String JAVA_VENDOR_URL = SystemUtil.get("java.vendor.url", false);
 
 	// 1.1--1.3能否识别?
 	private final boolean IS_JAVA_1_1 = getJavaVersionMatches("1.1");

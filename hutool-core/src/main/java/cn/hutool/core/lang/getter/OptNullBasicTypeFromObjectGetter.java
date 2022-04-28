@@ -1,4 +1,4 @@
-package cn.hutool.core.getter;
+package cn.hutool.core.lang.getter;
 
 import cn.hutool.core.convert.Convert;
 

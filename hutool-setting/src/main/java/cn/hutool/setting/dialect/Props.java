@@ -2,8 +2,8 @@ package cn.hutool.setting.dialect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.BasicTypeGetter;
-import cn.hutool.core.getter.OptBasicTypeGetter;
+import cn.hutool.core.lang.getter.BasicTypeGetter;
+import cn.hutool.core.lang.getter.OptBasicTypeGetter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;

@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.getter;
+package cn.hutool.core.lang.getter;

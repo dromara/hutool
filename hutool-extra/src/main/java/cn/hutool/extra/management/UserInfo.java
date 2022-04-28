@@ -1,6 +1,7 @@
 package cn.hutool.extra.management;
 
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.File;
 import java.io.Serializable;
@@ -19,16 +20,16 @@ public class UserInfo implements Serializable{
 	private final String USER_COUNTRY;
 
 	public UserInfo(){
-		USER_NAME = fixPath(ManagementUtil.get("user.name", false));
-		USER_HOME = fixPath(ManagementUtil.get("user.home", false));
-		USER_DIR = fixPath(ManagementUtil.get("user.dir", false));
-		JAVA_IO_TMPDIR = fixPath(ManagementUtil.get("java.io.tmpdir", false));
-		USER_LANGUAGE = ManagementUtil.get("user.language", false);
+		USER_NAME = fixPath(SystemUtil.get("user.name", false));
+		USER_HOME = fixPath(SystemUtil.get("user.home", false));
+		USER_DIR = fixPath(SystemUtil.get("user.dir", false));
+		JAVA_IO_TMPDIR = fixPath(SystemUtil.get("java.io.tmpdir", false));
+		USER_LANGUAGE = SystemUtil.get("user.language", false);
 
 		// JDK1.4 {@code user.country}，JDK1.2 {@code user.region}
-		String userCountry = ManagementUtil.get("user.country", false);
+		String userCountry = SystemUtil.get("user.country", false);
 		if(null == userCountry){
-			userCountry = ManagementUtil.get("user.country", false);
+			userCountry = SystemUtil.get("user.country", false);
 		}
 		USER_COUNTRY = userCountry;
 	}
