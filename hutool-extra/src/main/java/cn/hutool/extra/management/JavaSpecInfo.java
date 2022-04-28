@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class JavaSpecInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String JAVA_SPECIFICATION_NAME = SystemUtil.get("java.specification.name", false);
-	private final String JAVA_SPECIFICATION_VERSION = SystemUtil.get("java.specification.version", false);
-	private final String JAVA_SPECIFICATION_VENDOR = SystemUtil.get("java.specification.vendor", false);
+	private final String JAVA_SPECIFICATION_NAME = ManagementUtil.get("java.specification.name", false);
+	private final String JAVA_SPECIFICATION_VERSION = ManagementUtil.get("java.specification.version", false);
+	private final String JAVA_SPECIFICATION_VENDOR = ManagementUtil.get("java.specification.vendor", false);
 
 	/**
 	 * 取得当前Java Spec.的名称（取自系统属性：{@code java.specification.name}）。
@@ -64,9 +64,9 @@ public class JavaSpecInfo implements Serializable{
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "Java Spec. Name:    ", getName());
-		SystemUtil.append(builder, "Java Spec. Version: ", getVersion());
-		SystemUtil.append(builder, "Java Spec. Vendor:  ", getVendor());
+		ManagementUtil.append(builder, "Java Spec. Name:    ", getName());
+		ManagementUtil.append(builder, "Java Spec. Version: ", getVersion());
+		ManagementUtil.append(builder, "Java Spec. Vendor:  ", getVendor());
 
 		return builder.toString();
 	}

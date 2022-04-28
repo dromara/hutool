@@ -5,4 +5,4 @@
  * @author Looly
  * @since 4.6.4
  */
-package cn.hutool.extra.system.oshi;
+package cn.hutool.extra.management.oshi;

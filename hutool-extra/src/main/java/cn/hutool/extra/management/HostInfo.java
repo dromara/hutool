@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import cn.hutool.core.net.NetUtil;
 
@@ -60,8 +60,8 @@ public class HostInfo implements Serializable {
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "Host Name:    ", getName());
-		SystemUtil.append(builder, "Host Address: ", getAddress());
+		ManagementUtil.append(builder, "Host Name:    ", getName());
+		ManagementUtil.append(builder, "Host Address: ", getAddress());
 
 		return builder.toString();
 	}

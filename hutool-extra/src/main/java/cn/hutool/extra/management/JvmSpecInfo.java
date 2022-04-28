@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class JvmSpecInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private final String JAVA_VM_SPECIFICATION_NAME = SystemUtil.get("java.vm.specification.name", false);
-	private final String JAVA_VM_SPECIFICATION_VERSION = SystemUtil.get("java.vm.specification.version", false);
-	private final String JAVA_VM_SPECIFICATION_VENDOR = SystemUtil.get("java.vm.specification.vendor", false);
+	private final String JAVA_VM_SPECIFICATION_NAME = ManagementUtil.get("java.vm.specification.name", false);
+	private final String JAVA_VM_SPECIFICATION_VERSION = ManagementUtil.get("java.vm.specification.version", false);
+	private final String JAVA_VM_SPECIFICATION_VENDOR = ManagementUtil.get("java.vm.specification.vendor", false);
 
 	/**
 	 * 取得当前JVM spec.的名称（取自系统属性：{@code java.vm.specification.name}）。
@@ -63,9 +63,9 @@ public class JvmSpecInfo implements Serializable{
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "JavaVM Spec. Name:    ", getName());
-		SystemUtil.append(builder, "JavaVM Spec. Version: ", getVersion());
-		SystemUtil.append(builder, "JavaVM Spec. Vendor:  ", getVendor());
+		ManagementUtil.append(builder, "JavaVM Spec. Name:    ", getName());
+		ManagementUtil.append(builder, "JavaVM Spec. Version: ", getVersion());
+		ManagementUtil.append(builder, "JavaVM Spec. Vendor:  ", getVendor());
 
 		return builder.toString();
 	}

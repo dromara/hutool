@@ -1,11 +1,11 @@
 package cn.hutool.poi;
 
 import cn.hutool.core.exceptions.DependencyException;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 
 /**
  * POI引入检查器
- * 
+ *
  * @author looly
  * @since 4.0.10
  */

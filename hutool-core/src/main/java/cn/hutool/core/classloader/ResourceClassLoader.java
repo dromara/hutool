@@ -1,7 +1,6 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.classloader;
 
 import cn.hutool.core.io.resource.Resource;
-import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.security.SecureClassLoader;

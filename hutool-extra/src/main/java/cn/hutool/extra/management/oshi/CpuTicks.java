@@ -1,4 +1,4 @@
-package cn.hutool.extra.system.oshi;
+package cn.hutool.extra.management.oshi;
 
 import oshi.hardware.CentralProcessor;
 import oshi.util.Util;

@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -11,43 +11,43 @@ public class SystemUtilTest {
 	@Test
 	@Ignore
 	public void dumpTest() {
-		SystemUtil.dumpSystemInfo();
+		ManagementUtil.dumpSystemInfo();
 	}
 
 	@Test
 	public void getCurrentPidTest() {
-		long pid = SystemUtil.getCurrentPID();
+		long pid = ManagementUtil.getCurrentPID();
 		Assert.assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
-		JavaInfo javaInfo = SystemUtil.getJavaInfo();
+		JavaInfo javaInfo = ManagementUtil.getJavaInfo();
 		Assert.assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
-		JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
+		JavaRuntimeInfo info = ManagementUtil.getJavaRuntimeInfo();
 		Assert.assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
-		OsInfo osInfo = SystemUtil.getOsInfo();
+		OsInfo osInfo = ManagementUtil.getOsInfo();
 		Assert.assertNotNull(osInfo);
 	}
 
 	@Test
 	public void getHostInfo() {
-		HostInfo hostInfo = SystemUtil.getHostInfo();
+		HostInfo hostInfo = ManagementUtil.getHostInfo();
 		Assert.assertNotNull(hostInfo);
 	}
 
 	@Test
 	public void getUserInfoTest(){
 		// https://gitee.com/dromara/hutool/issues/I3NM39
-		final UserInfo userInfo = SystemUtil.getUserInfo();
+		final UserInfo userInfo = ManagementUtil.getUserInfo();
 		Assert.assertTrue(userInfo.getTempDir().endsWith(File.separator));
 	}
 }

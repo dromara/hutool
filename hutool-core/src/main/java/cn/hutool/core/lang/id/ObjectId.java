@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.id;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.text.StrUtil;

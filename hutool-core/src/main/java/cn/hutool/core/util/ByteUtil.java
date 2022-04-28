@@ -205,7 +205,7 @@ public class ByteUtil {
 	/**
 	 * long转byte数组<br>
 	 * 默认以小端序转换<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param longValue long值
 	 * @return byte数组
@@ -217,7 +217,7 @@ public class ByteUtil {
 	/**
 	 * long转byte数组<br>
 	 * 自定义端序<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param longValue long值
 	 * @param byteOrder 端序
@@ -242,7 +242,7 @@ public class ByteUtil {
 	/**
 	 * byte数组转long<br>
 	 * 默认以小端序转换<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param bytes byte数组
 	 * @return long值
@@ -254,7 +254,7 @@ public class ByteUtil {
 	/**
 	 * byte数组转long<br>
 	 * 自定义端序<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param bytes     byte数组
 	 * @param byteOrder 端序
@@ -267,7 +267,7 @@ public class ByteUtil {
 	/**
 	 * byte数组转long<br>
 	 * 自定义端序<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param bytes     byte数组
 	 * @param start     计算数组开始位置
@@ -354,7 +354,7 @@ public class ByteUtil {
 	/**
 	 * double转byte数组<br>
 	 * 自定义端序<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param doubleValue double值
 	 * @param byteOrder   端序

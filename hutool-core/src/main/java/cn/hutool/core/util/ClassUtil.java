@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.bean.NullWrapperBean;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;

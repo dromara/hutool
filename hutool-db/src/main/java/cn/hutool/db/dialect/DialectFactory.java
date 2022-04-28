@@ -1,6 +1,6 @@
 package cn.hutool.db.dialect;
 
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.impl.AnsiSqlDialect;

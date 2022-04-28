@@ -1,7 +1,7 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.extra.system.oshi.OshiUtil;
+import cn.hutool.extra.management.oshi.OshiUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 /**
  * 系统属性名称常量池

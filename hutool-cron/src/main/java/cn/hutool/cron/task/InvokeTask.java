@@ -1,7 +1,7 @@
 package cn.hutool.cron.task;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;

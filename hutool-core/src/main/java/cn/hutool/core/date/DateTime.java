@@ -7,7 +7,7 @@ import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.SystemPropsUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -311,7 +311,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 */
 	public DateTime(CharSequence dateStr, DateParser dateParser) {
-		this(dateStr, dateParser, SystemPropsUtil.getBoolean(SystemPropsUtil.HUTOOL_DATE_LENIENT, true));
+		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, true));
 	}
 
 	/**

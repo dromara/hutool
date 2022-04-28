@@ -8,7 +8,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.SystemPropsUtil;
+import cn.hutool.core.util.SystemUtil;
 import cn.hutool.log.Log;
 
 import java.io.BufferedReader;
@@ -233,7 +233,7 @@ public class SettingLoader {
 				}
 				// 系统参数和环境变量中查找
 				if (null == varValue) {
-					varValue = SystemPropsUtil.get(key);
+					varValue = SystemUtil.get(key);
 				}
 
 				if (null != varValue) {

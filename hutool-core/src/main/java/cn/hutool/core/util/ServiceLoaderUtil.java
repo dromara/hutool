@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.collection.ListUtil;
 
 import java.util.Iterator;

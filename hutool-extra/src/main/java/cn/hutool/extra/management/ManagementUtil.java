@@ -1,9 +1,8 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.SystemPropsUtil;
 
 import java.io.PrintWriter;
 import java.lang.management.ClassLoadingMXBean;
@@ -24,7 +23,7 @@ import java.util.List;
  *
  * @author Looly
  */
-public class SystemUtil extends SystemPropsUtil {
+public class ManagementUtil {
 
 	// ----- Java运行时环境信息 -----/
 	/**

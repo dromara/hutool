@@ -1,7 +1,7 @@
 package cn.hutool.core.io.resource;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.InputStream;

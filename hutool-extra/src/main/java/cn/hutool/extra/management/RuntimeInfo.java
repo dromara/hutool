@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import cn.hutool.core.io.FileUtil;
 
@@ -63,10 +63,10 @@ public class RuntimeInfo implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "Max Memory:    ", FileUtil.readableFileSize(getMaxMemory()));
-		SystemUtil.append(builder, "Total Memory:     ", FileUtil.readableFileSize(getTotalMemory()));
-		SystemUtil.append(builder, "Free Memory:     ", FileUtil.readableFileSize(getFreeMemory()));
-		SystemUtil.append(builder, "Usable Memory:     ", FileUtil.readableFileSize(getUsableMemory()));
+		ManagementUtil.append(builder, "Max Memory:    ", FileUtil.readableFileSize(getMaxMemory()));
+		ManagementUtil.append(builder, "Total Memory:     ", FileUtil.readableFileSize(getTotalMemory()));
+		ManagementUtil.append(builder, "Free Memory:     ", FileUtil.readableFileSize(getFreeMemory()));
+		ManagementUtil.append(builder, "Usable Memory:     ", FileUtil.readableFileSize(getUsableMemory()));
 
 		return builder.toString();
 	}

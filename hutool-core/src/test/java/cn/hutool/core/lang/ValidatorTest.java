@@ -243,8 +243,8 @@ public class ValidatorTest {
 		String content = "https://detail.tmall.com/item.htm?" +
 				"id=639428931841&ali_refid=a3_430582_1006:1152464078:N:Sk5vwkMVsn5O6DcnvicELrFucL21A32m:0af8611e23c1d07697e";
 
-		Assert.assertTrue(Validator.isMatchRegex(Validator.URL, content));
-		Assert.assertTrue(Validator.isMatchRegex(Validator.URL_HTTP, content));
+		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL, content));
+		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL_HTTP, content));
 	}
 
 	@Test

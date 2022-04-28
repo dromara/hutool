@@ -1,4 +1,4 @@
-package cn.hutool.extra.system;
+package cn.hutool.extra.management;
 
 import cn.hutool.core.text.StrUtil;
 
@@ -19,16 +19,16 @@ public class UserInfo implements Serializable{
 	private final String USER_COUNTRY;
 
 	public UserInfo(){
-		USER_NAME = fixPath(SystemUtil.get("user.name", false));
-		USER_HOME = fixPath(SystemUtil.get("user.home", false));
-		USER_DIR = fixPath(SystemUtil.get("user.dir", false));
-		JAVA_IO_TMPDIR = fixPath(SystemUtil.get("java.io.tmpdir", false));
-		USER_LANGUAGE = SystemUtil.get("user.language", false);
+		USER_NAME = fixPath(ManagementUtil.get("user.name", false));
+		USER_HOME = fixPath(ManagementUtil.get("user.home", false));
+		USER_DIR = fixPath(ManagementUtil.get("user.dir", false));
+		JAVA_IO_TMPDIR = fixPath(ManagementUtil.get("java.io.tmpdir", false));
+		USER_LANGUAGE = ManagementUtil.get("user.language", false);
 
 		// JDK1.4 {@code user.country}，JDK1.2 {@code user.region}
-		String userCountry = SystemUtil.get("user.country", false);
+		String userCountry = ManagementUtil.get("user.country", false);
 		if(null == userCountry){
-			userCountry = SystemUtil.get("user.country", false);
+			userCountry = ManagementUtil.get("user.country", false);
 		}
 		USER_COUNTRY = userCountry;
 	}
@@ -130,12 +130,12 @@ public class UserInfo implements Serializable{
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "User Name:        ", getName());
-		SystemUtil.append(builder, "User Home Dir:    ", getHomeDir());
-		SystemUtil.append(builder, "User Current Dir: ", getCurrentDir());
-		SystemUtil.append(builder, "User Temp Dir:    ", getTempDir());
-		SystemUtil.append(builder, "User Language:    ", getLanguage());
-		SystemUtil.append(builder, "User Country:     ", getCountry());
+		ManagementUtil.append(builder, "User Name:        ", getName());
+		ManagementUtil.append(builder, "User Home Dir:    ", getHomeDir());
+		ManagementUtil.append(builder, "User Current Dir: ", getCurrentDir());
+		ManagementUtil.append(builder, "User Temp Dir:    ", getTempDir());
+		ManagementUtil.append(builder, "User Language:    ", getLanguage());
+		ManagementUtil.append(builder, "User Country:     ", getCountry());
 
 		return builder.toString();
 	}

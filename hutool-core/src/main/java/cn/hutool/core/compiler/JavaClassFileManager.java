@@ -1,8 +1,8 @@
 package cn.hutool.core.compiler;
 
 import cn.hutool.core.io.resource.FileObjectResource;
-import cn.hutool.core.lang.ResourceClassLoader;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ResourceClassLoader;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import javax.tools.FileObject;

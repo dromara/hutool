@@ -9,7 +9,7 @@ import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.net.URLUtil;
 

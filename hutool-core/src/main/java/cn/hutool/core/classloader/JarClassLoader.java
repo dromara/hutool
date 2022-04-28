@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.classloader;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;

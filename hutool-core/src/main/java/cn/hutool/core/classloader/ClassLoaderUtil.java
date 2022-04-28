@@ -1,9 +1,8 @@
-package cn.hutool.core.util;
+package cn.hutool.core.classloader;
 
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.CharPool;

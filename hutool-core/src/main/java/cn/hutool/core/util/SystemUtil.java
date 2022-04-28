@@ -17,7 +17,7 @@ import java.util.Properties;
  * @author looly
  * @since 5.7.16
  */
-public class SystemPropsUtil {
+public class SystemUtil {
 
 	/** Hutool自定义系统属性：是否解析日期字符串采用严格模式 */
 	public static String HUTOOL_DATE_LENIENT = "hutool.date.lenient";
