@@ -24,7 +24,7 @@
  */
 package cn.hutool.core.lang;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.text.StrUtil;
@@ -110,7 +110,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
-		return CollectionUtil.isEmpty(value) ? empty() : new Opt<>(value);
+		return CollUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
 	/**

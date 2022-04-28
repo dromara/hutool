@@ -1,11 +1,10 @@
 package cn.hutool.http;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public abstract class HttpBase<T> {
 	 */
 	public String header(String name) {
 		final List<String> values = headerList(name);
-		if (CollectionUtil.isEmpty(values)) {
+		if (CollUtil.isEmpty(values)) {
 			return null;
 		}
 		return values.get(0);
@@ -113,7 +112,7 @@ public abstract class HttpBase<T> {
 	public T header(String name, String value, boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
-			if (isOverride || CollectionUtil.isEmpty(values)) {
+			if (isOverride || CollUtil.isEmpty(values)) {
 				final ArrayList<String> valueList = new ArrayList<>();
 				valueList.add(value);
 				headers.put(name.trim(), valueList);

@@ -1,6 +1,6 @@
 package cn.hutool.core.compress;
 
-import cn.hutool.core.collection.EnumerationIter;
+import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;

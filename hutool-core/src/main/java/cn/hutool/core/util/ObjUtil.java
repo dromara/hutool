@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;

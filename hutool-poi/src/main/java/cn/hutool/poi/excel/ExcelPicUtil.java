@@ -1,6 +1,6 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
@@ -63,7 +63,7 @@ public class ExcelPicUtil {
 	private static Map<String, PictureData> getPicMapXls(HSSFWorkbook workbook, int sheetIndex) {
 		final Map<String, PictureData> picMap = new HashMap<>();
 		final List<HSSFPictureData> pictures = workbook.getAllPictures();
-		if (CollectionUtil.isNotEmpty(pictures)) {
+		if (CollUtil.isNotEmpty(pictures)) {
 			final HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 			HSSFClientAnchor anchor;
 			int pictureIndex;

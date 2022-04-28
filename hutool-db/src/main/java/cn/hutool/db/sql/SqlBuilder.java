@@ -1,9 +1,9 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.builder.Builder;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.dialect.DialectName;
@@ -277,14 +277,14 @@ public class SqlBuilder implements Builder<String> {
 			sql.append("DISTINCT ");
 		}
 
-		if (CollectionUtil.isEmpty(fields)) {
+		if (CollUtil.isEmpty(fields)) {
 			sql.append("*");
 		} else {
 			if (null != wrapper) {
 				// 包装字段名
 				fields = wrapper.wrap(fields);
 			}
-			sql.append(CollectionUtil.join(fields, StrUtil.COMMA));
+			sql.append(CollUtil.join(fields, StrUtil.COMMA));
 		}
 
 		return this;

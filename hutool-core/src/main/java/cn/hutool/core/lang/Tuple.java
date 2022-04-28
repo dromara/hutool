@@ -1,7 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 

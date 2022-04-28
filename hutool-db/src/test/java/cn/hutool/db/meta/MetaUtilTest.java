@@ -1,6 +1,6 @@
 package cn.hutool.db.meta;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.DSFactory;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class MetaUtilTest {
 	@Test
 	public void getTableMetaTest() {
 		Table table = MetaUtil.getTableMeta(ds, "user");
-		Assert.assertEquals(CollectionUtil.newHashSet("id"), table.getPkNames());
+		Assert.assertEquals(CollUtil.newHashSet("id"), table.getPkNames());
 	}
 
 	@Test

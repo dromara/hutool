@@ -1,7 +1,7 @@
 package cn.hutool.core.map.multi;
 
-import cn.hutool.core.collection.IterUtil;
-import cn.hutool.core.collection.TransIter;
+import cn.hutool.core.collection.iter.IterUtil;
+import cn.hutool.core.collection.iter.TransIter;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;

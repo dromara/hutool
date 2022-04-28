@@ -1,6 +1,6 @@
 package cn.hutool.extra.tokenizer;
 
-import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.extra.tokenizer.engine.analysis.SmartcnEngine;
 import cn.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
 import cn.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;

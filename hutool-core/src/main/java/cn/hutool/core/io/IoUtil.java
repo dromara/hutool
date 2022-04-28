@@ -1,6 +1,6 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.collection.LineIter;
+import cn.hutool.core.collection.iter.LineIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.copy.ReaderWriterCopier;

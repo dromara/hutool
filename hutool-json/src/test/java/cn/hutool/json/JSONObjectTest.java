@@ -3,15 +3,14 @@ package cn.hutool.json;
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.ResultDto;
 import cn.hutool.json.test.bean.Seq;
@@ -239,7 +238,7 @@ public class JSONObjectTest {
 		userA.setA("A user");
 		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
-		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
+		userA.setSqs(CollUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
@@ -321,7 +320,7 @@ public class JSONObjectTest {
 		UserA userA = new UserA();
 		userA.setName("nameTest");
 		userA.setDate(new Date());
-		userA.setSqs(CollectionUtil.newArrayList(new Seq(null), new Seq("seq2")));
+		userA.setSqs(CollUtil.newArrayList(new Seq(null), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA, false);
 

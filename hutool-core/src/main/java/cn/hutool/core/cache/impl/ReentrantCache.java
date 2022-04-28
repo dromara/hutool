@@ -1,6 +1,6 @@
 package cn.hutool.core.cache.impl;
 
-import cn.hutool.core.collection.CopiedIter;
+import cn.hutool.core.collection.iter.CopiedIter;
 
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;

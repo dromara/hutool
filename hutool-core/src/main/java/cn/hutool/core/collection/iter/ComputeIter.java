@@ -1,4 +1,4 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -1,7 +1,7 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.EnumerationIter;
+import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;

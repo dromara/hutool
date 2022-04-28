@@ -1,4 +1,6 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
+
+import cn.hutool.core.collection.iter.IterableIter;
 
 import java.io.Serializable;
 import java.util.ArrayList;

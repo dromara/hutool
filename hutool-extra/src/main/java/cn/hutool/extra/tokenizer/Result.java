@@ -1,6 +1,6 @@
 package cn.hutool.extra.tokenizer;
 
-import cn.hutool.core.collection.IterableIter;
+import cn.hutool.core.collection.iter.IterableIter;
 
 /**
  * 分词结果接口定义<br>

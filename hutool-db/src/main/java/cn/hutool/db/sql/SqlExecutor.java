@@ -1,6 +1,6 @@
 package cn.hutool.db.sql;
 
-import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;

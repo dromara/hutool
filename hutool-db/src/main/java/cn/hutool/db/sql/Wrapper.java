@@ -1,10 +1,9 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.Entity;
 
 import java.io.Serializable;
@@ -114,7 +113,7 @@ public class Wrapper implements Serializable {
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
 		if (field.contains(StrUtil.DOT)) {
 			final Collection<String> target = CollUtil.edit(StrUtil.split(field, CharUtil.DOT, 2), t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
-			return CollectionUtil.join(target, StrUtil.DOT);
+			return CollUtil.join(target, StrUtil.DOT);
 		}
 
 		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
@@ -148,7 +147,7 @@ public class Wrapper implements Serializable {
 	 * @return 包装后的字段名
 	 */
 	public Collection<String> wrap(Collection<String> fields) {
-		if (CollectionUtil.isEmpty(fields)) {
+		if (CollUtil.isEmpty(fields)) {
 			return fields;
 		}
 

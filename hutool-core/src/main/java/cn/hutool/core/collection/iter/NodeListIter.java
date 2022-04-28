@@ -1,4 +1,4 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.lang.Assert;
 import org.w3c.dom.Node;

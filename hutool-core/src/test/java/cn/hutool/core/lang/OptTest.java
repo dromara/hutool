@@ -1,6 +1,6 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -151,7 +151,7 @@ public class OptTest {
 	public void ofEmptyAbleTest() {
 		// 以前，输入一个CollectionUtil感觉要命，类似前缀的类一大堆，代码补全形同虚设(在项目中起码要输入完CollectionUtil才能在第一个调出这个函数)
 		// 关键它还很常用，判空和判空集合真的太常用了...
-		List<String> past = Opt.ofNullable(Collections.<String>emptyList()).filter(CollectionUtil::isNotEmpty).orElseGet(() -> Collections.singletonList("hutool"));
+		List<String> past = Opt.ofNullable(Collections.<String>emptyList()).filter(CollUtil::isNotEmpty).orElseGet(() -> Collections.singletonList("hutool"));
 		// 现在，一个ofEmptyAble搞定
 		List<String> hutool = Opt.ofEmptyAble(Collections.<String>emptyList()).orElseGet(() -> Collections.singletonList("hutool"));
 		Assert.assertEquals(past, hutool);

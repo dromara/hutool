@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.lang.Assert;
 
 import java.util.AbstractCollection;

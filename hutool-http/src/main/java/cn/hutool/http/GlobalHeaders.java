@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 
@@ -70,7 +70,7 @@ public enum GlobalHeaders {
 	 */
 	public String header(String name) {
 		final List<String> values = headerList(name);
-		if (CollectionUtil.isEmpty(values)) {
+		if (CollUtil.isEmpty(values)) {
 			return null;
 		}
 		return values.get(0);
@@ -116,7 +116,7 @@ public enum GlobalHeaders {
 	synchronized public GlobalHeaders header(String name, String value, boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
-			if (isOverride || CollectionUtil.isEmpty(values)) {
+			if (isOverride || CollUtil.isEmpty(values)) {
 				final ArrayList<String> valueList = new ArrayList<>();
 				valueList.add(value);
 				headers.put(name.trim(), valueList);

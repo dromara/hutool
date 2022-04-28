@@ -1,12 +1,12 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -285,7 +285,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		} else {
 			// 测试单个值
 			final LinkedHashSet<String> valueSet = getValues(group);
-			if (CollectionUtil.isEmpty(valueSet)) {
+			if (CollUtil.isEmpty(valueSet)) {
 				return false;
 			}
 
@@ -303,7 +303,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 */
 	public boolean contains(String group, Collection<String> values) {
 		final LinkedHashSet<String> valueSet = getValues(group);
-		if (CollectionUtil.isEmpty(values) || CollectionUtil.isEmpty(valueSet)) {
+		if (CollUtil.isEmpty(values) || CollUtil.isEmpty(valueSet)) {
 			return false;
 		}
 

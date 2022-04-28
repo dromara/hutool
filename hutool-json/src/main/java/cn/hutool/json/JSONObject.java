@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.map.MapUtil;
@@ -163,7 +163,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException If any of the values are non-finite numbers.
 	 */
 	public JSONArray toJSONArray(Collection<String> names) throws JSONException {
-		if (CollectionUtil.isEmpty(names)) {
+		if (CollUtil.isEmpty(names)) {
 			return null;
 		}
 		final JSONArray ja = new JSONArray(this.config);

@@ -1,12 +1,12 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.map.Dict;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
@@ -154,8 +154,8 @@ public class Entity extends Dict {
 	 * @return 自身
 	 */
 	public Entity setFieldNames(Collection<String> fieldNames) {
-		if (CollectionUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollectionUtil.newHashSet(true, fieldNames);
+		if (CollUtil.isNotEmpty(fieldNames)) {
+			this.fieldNames = CollUtil.newHashSet(true, fieldNames);
 		}
 		return this;
 	}
@@ -168,7 +168,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollectionUtil.newLinkedHashSet(fieldNames);
+			this.fieldNames = CollUtil.newLinkedHashSet(fieldNames);
 		}
 		return this;
 	}

@@ -1,6 +1,6 @@
 package cn.hutool.core.cache;
 
-import cn.hutool.core.collection.TransIter;
+import cn.hutool.core.collection.iter.TransIter;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;

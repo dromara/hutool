@@ -1,9 +1,9 @@
 package cn.hutool.db.ds.pooled;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.simple.AbstractDataSource;
 
@@ -146,7 +146,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	@Override
 	synchronized public void close() {
-		if (CollectionUtil.isNotEmpty(this.freePool)) {
+		if (CollUtil.isNotEmpty(this.freePool)) {
 			this.freePool.forEach(PooledConnection::release);
 			this.freePool.clear();
 			this.freePool = null;

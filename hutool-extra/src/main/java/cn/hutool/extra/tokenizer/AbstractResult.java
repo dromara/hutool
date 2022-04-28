@@ -1,6 +1,6 @@
 package cn.hutool.extra.tokenizer;
 
-import cn.hutool.core.collection.ComputeIter;
+import cn.hutool.core.collection.iter.ComputeIter;
 
 import java.util.Iterator;
 

@@ -2,7 +2,7 @@ package cn.hutool.poi.word;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;

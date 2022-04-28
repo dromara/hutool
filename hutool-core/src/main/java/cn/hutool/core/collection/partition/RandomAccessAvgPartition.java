@@ -1,4 +1,4 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.partition;
 
 import java.util.List;
 import java.util.RandomAccess;

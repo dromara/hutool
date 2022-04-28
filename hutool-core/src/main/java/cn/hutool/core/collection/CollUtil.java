@@ -1,6 +1,10 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.iter.ArrayIter;
+import cn.hutool.core.collection.iter.EnumerationIter;
+import cn.hutool.core.collection.iter.IterUtil;
+import cn.hutool.core.collection.iter.IteratorEnumeration;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;

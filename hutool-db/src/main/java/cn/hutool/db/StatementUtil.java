@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;

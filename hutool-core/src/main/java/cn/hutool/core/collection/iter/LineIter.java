@@ -1,5 +1,7 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
 
+import cn.hutool.core.collection.iter.ComputeIter;
+import cn.hutool.core.collection.iter.IterableIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;

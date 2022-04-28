@@ -1,5 +1,9 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.collection.partition.AvgPartition;
+import cn.hutool.core.collection.partition.Partition;
+import cn.hutool.core.collection.partition.RandomAccessAvgPartition;
+import cn.hutool.core.collection.partition.RandomAccessPartition;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.func.Matcher;

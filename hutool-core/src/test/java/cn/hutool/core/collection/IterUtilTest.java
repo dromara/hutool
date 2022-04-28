@@ -1,5 +1,7 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.collection.iter.FilterIter;
+import cn.hutool.core.collection.iter.IterUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;

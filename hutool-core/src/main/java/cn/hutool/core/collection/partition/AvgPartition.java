@@ -1,5 +1,6 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.partition;
 
+import cn.hutool.core.collection.partition.Partition;
 import cn.hutool.core.lang.Assert;
 
 import java.util.List;

@@ -1,5 +1,6 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Editor;

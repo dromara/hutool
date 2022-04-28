@@ -1,6 +1,6 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.tree.parser.DefaultNodeParser;
 import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjUtil;

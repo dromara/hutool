@@ -1,7 +1,6 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
@@ -1301,7 +1300,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] toArray(Iterable<T> iterable, Class<T> componentType) {
-		return toArray(CollectionUtil.toCollection(iterable), componentType);
+		return toArray(CollUtil.toCollection(iterable), componentType);
 	}
 
 	/**

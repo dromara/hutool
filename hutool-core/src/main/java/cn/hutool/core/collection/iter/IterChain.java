@@ -1,4 +1,4 @@
-package cn.hutool.core.collection;
+package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.lang.Chain;
 
