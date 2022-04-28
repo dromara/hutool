@@ -24,11 +24,14 @@ import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -614,6 +617,29 @@ public class BeanUtil {
 	 */
 	public static Map<String, Object> beanToMap(Object bean) {
 		return beanToMap(bean, false, false);
+	}
+
+
+	/**
+	 * 将bean的部分属性转换成map
+	 *
+	 * @param bean       bean
+	 * @param properties 属性值
+	 * @return Map
+	 */
+	public static Map<String, Object> beanToMap(Object bean, String... properties) {
+		if (ArrayUtil.isEmpty(properties)) {
+			return Collections.emptyMap();
+		}
+		Set<String> propertiesSet = Arrays.stream(properties).collect(Collectors.toSet());
+		// 指明了要复制的属性 所以不忽略null值
+		return beanToMap(bean, new HashMap<>(properties.length), false,
+				property -> {
+					if (!propertiesSet.contains(property)) {
+						return null;
+					}
+					return property;
+				});
 	}
 
 	/**
