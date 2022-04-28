@@ -1,6 +1,8 @@
 package cn.hutool.core.text;
 
 
+import cn.hutool.core.text.split.SplitUtil;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -422,7 +424,7 @@ public class AntPathMatcher {
 	 * @return the tokenized path parts
 	 */
 	protected String[] tokenizePath(String path) {
-		return StrSplitter.splitToArray(path, this.pathSeparator, 0, this.trimTokens, true);
+		return SplitUtil.splitToArray(path, this.pathSeparator, 0, this.trimTokens, true);
 	}
 
 	/**

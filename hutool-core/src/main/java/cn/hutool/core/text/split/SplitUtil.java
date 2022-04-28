@@ -1,12 +1,12 @@
-package cn.hutool.core.text;
+package cn.hutool.core.text.split;
 
 import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.CharMatcherFinder;
 import cn.hutool.core.text.finder.LengthFinder;
 import cn.hutool.core.text.finder.PatternFinder;
 import cn.hutool.core.text.finder.StrFinder;
-import cn.hutool.core.text.split.SplitIter;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @author Looly
  * @since 5.7.0
  */
-public class StrSplitter {
+public class SplitUtil {
 
 	//---------------------------------------------------------------------------------------------- Split by char
 

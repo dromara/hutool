@@ -13,7 +13,7 @@ import java.util.concurrent.locks.StampedLock;
 /**
  * <p>
  * Simhash是一种局部敏感hash，用于海量文本去重。<br>
- * 算法实现来自：https://github.com/xlturing/Simhash4J
+ * 算法实现来自：<a href="https://github.com/xlturing/Simhash4J">https://github.com/xlturing/Simhash4J</a>
  * </p>
  *
  * <p>

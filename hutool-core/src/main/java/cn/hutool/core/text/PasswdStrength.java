@@ -2,7 +2,7 @@ package cn.hutool.core.text;
 
 /**
  * 检测密码强度<br>
- * 来自：https://github.com/venshine/CheckPasswordStrength
+ * 来自：<a href="https://github.com/venshine/CheckPasswordStrength">https://github.com/venshine/CheckPasswordStrength</a>
  *
  * @author venshine
  * @since 5.7.3

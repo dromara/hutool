@@ -2,7 +2,7 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.text.StrSplitter;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -503,7 +503,7 @@ public class Condition extends CloneSupport<Condition> {
 
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
-			final List<String> betweenValueStrs = StrSplitter.splitTrimIgnoreCase(strs.get(1), LogicalOperator.AND.toString(), 2, true);
+			final List<String> betweenValueStrs = SplitUtil.splitTrimIgnoreCase(strs.get(1), LogicalOperator.AND.toString(), 2, true);
 			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;

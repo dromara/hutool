@@ -10,6 +10,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -1691,7 +1692,7 @@ public class CharSequenceUtil {
 			return new String[]{};
 		}
 
-		return StrSplitter.splitToArray(str.toString(), str(separator), 0, false, false);
+		return SplitUtil.splitToArray(str.toString(), str(separator), 0, false, false);
 	}
 
 	/**
@@ -1715,7 +1716,7 @@ public class CharSequenceUtil {
 	 */
 	public static String[] splitToArray(CharSequence text, char separator, int limit) {
 		Assert.notNull(text, "Text must be not null!");
-		return StrSplitter.splitToArray(text.toString(), separator, limit, false, false);
+		return SplitUtil.splitToArray(text.toString(), separator, limit, false, false);
 	}
 
 	/**
@@ -1806,7 +1807,7 @@ public class CharSequenceUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		return StrSplitter.split(str, separator, limit, isTrim, ignoreEmpty);
+		return SplitUtil.split(str, separator, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1822,7 +1823,7 @@ public class CharSequenceUtil {
 	 * @since 5.7.14
 	 */
 	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean ignoreEmpty, Function<String, R> mapping) {
-		return StrSplitter.split(str, separator, limit, ignoreEmpty, mapping);
+		return SplitUtil.split(str, separator, limit, ignoreEmpty, mapping);
 	}
 
 	/**
@@ -1864,7 +1865,7 @@ public class CharSequenceUtil {
 	 */
 	public static List<String> split(CharSequence str, CharSequence separator, int limit, boolean isTrim, boolean ignoreEmpty) {
 		final String separatorStr = (null == separator) ? null : separator.toString();
-		return StrSplitter.split(str, separatorStr, limit, isTrim, ignoreEmpty);
+		return SplitUtil.split(str, separatorStr, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -1873,10 +1874,10 @@ public class CharSequenceUtil {
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
-	 * @see StrSplitter#splitByLength(CharSequence, int)
+	 * @see SplitUtil#splitByLength(CharSequence, int)
 	 */
 	public static String[] splitToArray(CharSequence str, int len) {
-		return StrSplitter.splitByLength(str, len);
+		return SplitUtil.splitByLength(str, len);
 	}
 
 	/**
