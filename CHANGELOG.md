@@ -7,9 +7,11 @@
 
 ### ❌不兼容特性
 * 【extra  】     升级jakarta.validation-api到3.x，包名变更导致不能向下兼容
+* 【core   】     BeanUtil删除了beanToMap(Object)方法，因为有可变参数的方法，这个删除可能导致直接升级找不到方法，重新编译项目即可。
 
 ### 🐣新特性
 * 【core   】     Singleton增加部分方法（pr#609@Gitee）
+* 【core   】     BeanUtil增加beanToMap重载（pr#2292@Github）
 
 ### 🐞Bug修复
 * 【db     】     修复RedisDS无法设置maxWaitMillis问题（issue#I54TZ9@Gitee）

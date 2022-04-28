@@ -24,8 +24,6 @@ import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -608,38 +606,24 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- beanToMap
-
 	/**
-	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
-	 *
-	 * @param bean bean对象
-	 * @return Map
-	 */
-	public static Map<String, Object> beanToMap(Object bean) {
-		return beanToMap(bean, false, false);
-	}
-
-
-	/**
-	 * 将bean的部分属性转换成map
+	 * 将bean的部分属性转换成map<br>
+	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
 	 *
 	 * @param bean       bean
-	 * @param properties 属性值
+	 * @param properties 需要拷贝的属性值，{@code null}或空表示拷贝所有值
 	 * @return Map
+	 * @since 5.8.0
 	 */
 	public static Map<String, Object> beanToMap(Object bean, String... properties) {
-		if (ArrayUtil.isEmpty(properties)) {
-			return Collections.emptyMap();
+		Editor<String> keyEditor = null;
+		if(ArrayUtil.isNotEmpty(properties)){
+			final Set<String> propertiesSet = CollUtil.set(false, properties);
+			keyEditor = property -> propertiesSet.contains(property) ? property : null;
 		}
-		Set<String> propertiesSet = Arrays.stream(properties).collect(Collectors.toSet());
+
 		// 指明了要复制的属性 所以不忽略null值
-		return beanToMap(bean, new HashMap<>(properties.length), false,
-				property -> {
-					if (!propertiesSet.contains(property)) {
-						return null;
-					}
-					return property;
-				});
+		return beanToMap(bean, new LinkedHashMap<>(properties.length, 1), false, keyEditor);
 	}
 
 	/**
