@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -561,13 +562,23 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- beanToMap
 
 	/**
-	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
+	 * 将bean的部分属性转换成map<br>
+	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
 	 *
-	 * @param bean bean对象
+	 * @param bean       bean
+	 * @param properties 需要拷贝的属性值，{@code null}或空表示拷贝所有值
 	 * @return Map
+	 * @since 5.8.0
 	 */
-	public static Map<String, Object> beanToMap(Object bean) {
-		return beanToMap(bean, false, false);
+	public static Map<String, Object> beanToMap(Object bean, String... properties) {
+		Editor<String> keyEditor = null;
+		if(ArrayUtil.isNotEmpty(properties)){
+			final Set<String> propertiesSet = CollUtil.set(false, properties);
+			keyEditor = property -> propertiesSet.contains(property) ? property : null;
+		}
+
+		// 指明了要复制的属性 所以不忽略null值
+		return beanToMap(bean, new LinkedHashMap<>(properties.length, 1), false, keyEditor);
 	}
 
 	/**

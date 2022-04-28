@@ -3,10 +3,8 @@
 ## Supported Versions（支持的版本）
 
 | Version | Supported          |
-| ------- | ------------------ |
-| 5.x.x   | :white_check_mark: |
-| 4.x.x   | :x:                |
-| 3.x.x   | :x:                |
+|---------| ------------------ |
+| 6.x.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability（报告漏洞）
 

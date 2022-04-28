@@ -25,7 +25,7 @@
 		<img src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
 	</a>
 	<a href="https://codecov.io/gh/dromara/hutool">
-		<img src="https://codecov.io/gh/dromara/hutool/branch/v5-master/graph/badge.svg" />
+		<img src="https://codecov.io/gh/dromara/hutool/branch/v6-master/graph/badge.svg" />
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" />
@@ -178,8 +178,8 @@ Hutool's source code is divided into two branches:
 
 | branch | description                                               |
 |-----------|---------------------------------------------------------------|
-| v5-master | The master branch, the branch used by the release version, is the same as the jar committed to the central repository and does not receive any pr or modifications. |
-| v5-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr |
+| v6-master | The master branch, the branch used by the release version, is the same as the jar committed to the central repository and does not receive any pr or modifications. |
+| v6-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr |
 
 ### 🐞Provide feedback or suggestions on bugs
 
@@ -195,7 +195,7 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 1. Improve the comments, especially each new method should follow the Java documentation specification to indicate the method description, parameter description, return value description and other information, if necessary, please add unit tests, if you want, you can also add your name.
 2. Code indentation according to Eclipse.
 3. Newly added methods do not use third-party library methods，Unless the method tool is add to the '**extra module**'.
-4. Please pull request to the `v5-dev` branch. Hutool uses a new branch after 5.x: `v5-master` is the master branch, which indicates the version of the central library that has been released, and this branch does not allow pr or modifications.
+4. Please pull request to the `v6-dev` branch. Hutool uses a new branch after 5.x: `v6-master` is the master branch, which indicates the version of the central library that has been released, and this branch does not allow pr or modifications.
 
 -------------------------------------------------------------------------------
 
