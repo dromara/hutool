@@ -1,4 +1,4 @@
-package cn.hutool.core.text.bloomfilter;
+package cn.hutool.core.text.bloom;
 
 /**
  * 布隆过滤器工具

@@ -1,4 +1,4 @@
-package cn.hutool.core.text.bloomfilter;
+package cn.hutool.core.text.bloom;
 
 import cn.hutool.core.map.bitMap.IntMap;
 import cn.hutool.core.map.bitMap.LongMap;

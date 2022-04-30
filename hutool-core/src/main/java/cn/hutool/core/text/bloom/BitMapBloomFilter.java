@@ -1,10 +1,10 @@
-package cn.hutool.core.text.bloomfilter;
+package cn.hutool.core.text.bloom;
 
-import cn.hutool.core.text.bloomfilter.filter.DefaultFilter;
-import cn.hutool.core.text.bloomfilter.filter.ELFFilter;
-import cn.hutool.core.text.bloomfilter.filter.JSFilter;
-import cn.hutool.core.text.bloomfilter.filter.PJWFilter;
-import cn.hutool.core.text.bloomfilter.filter.SDBMFilter;
+import cn.hutool.core.text.bloom.filter.DefaultFilter;
+import cn.hutool.core.text.bloom.filter.ELFFilter;
+import cn.hutool.core.text.bloom.filter.JSFilter;
+import cn.hutool.core.text.bloom.filter.PJWFilter;
+import cn.hutool.core.text.bloom.filter.SDBMFilter;
 import cn.hutool.core.util.NumberUtil;
 
 /**

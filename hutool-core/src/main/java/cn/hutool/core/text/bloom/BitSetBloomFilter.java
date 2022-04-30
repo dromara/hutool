@@ -1,4 +1,4 @@
-package cn.hutool.core.text.bloomfilter;
+package cn.hutool.core.text.bloom;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;

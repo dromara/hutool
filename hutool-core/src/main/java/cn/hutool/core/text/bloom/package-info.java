@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.text.bloomfilter;
+package cn.hutool.core.text.bloom;

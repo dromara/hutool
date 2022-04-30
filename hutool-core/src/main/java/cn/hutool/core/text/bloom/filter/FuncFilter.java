@@ -1,6 +1,6 @@
-package cn.hutool.core.text.bloomfilter.filter;
+package cn.hutool.core.text.bloom.filter;
 
-import cn.hutool.core.text.bloomfilter.BloomFilter;
+import cn.hutool.core.text.bloom.BloomFilter;
 
 import java.util.function.Function;
 

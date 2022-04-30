@@ -1,9 +1,9 @@
-package cn.hutool.core.text.bloomfilter.filter;
+package cn.hutool.core.text.bloom.filter;
 
 import cn.hutool.core.map.bitMap.BitMap;
 import cn.hutool.core.map.bitMap.IntMap;
 import cn.hutool.core.map.bitMap.LongMap;
-import cn.hutool.core.text.bloomfilter.BloomFilter;
+import cn.hutool.core.text.bloom.BloomFilter;
 
 /**
  * 抽象Bloom过滤器
