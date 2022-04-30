@@ -199,7 +199,7 @@ public class CellUtil {
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
-	 * @return {@link Row}
+	 * @return {@link Cell}
 	 * @since 5.5.0
 	 */
 	public static Cell getCell(Row row, int cellIndex) {
@@ -218,7 +218,7 @@ public class CellUtil {
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
-	 * @return {@link Row}
+	 * @return {@link Cell}
 	 * @since 4.0.2
 	 */
 	public static Cell getOrCreateCell(Row row, int cellIndex) {
@@ -265,16 +265,76 @@ public class CellUtil {
 	 * @return 是否是合并单元格
 	 */
 	public static boolean isMergedRegion(Sheet sheet, int x, int y) {
-		final int sheetMergeCount = sheet.getNumMergedRegions();
-		CellRangeAddress ca;
-		for (int i = 0; i < sheetMergeCount; i++) {
-			ca = sheet.getMergedRegion(i);
-			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
-					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
-				return true;
+		if (sheet != null) {
+			final int sheetMergeCount = sheet.getNumMergedRegions();
+			CellRangeAddress ca;
+			for (int i = 0; i < sheetMergeCount; i++) {
+				ca = sheet.getMergedRegion(i);
+				if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+						&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param sheet       {@link Sheet}
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link CellRangeAddress}
+	 */
+	public static CellRangeAddress getCellRangeAddress(Sheet sheet, String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getCellRangeAddress(sheet, cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param cell {@link Cell}
+	 * @return {@link CellRangeAddress}
+	 */
+	public static CellRangeAddress getCellRangeAddress(Cell cell) {
+		return getCellRangeAddress(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始
+	 * @param y     行号，从0开始
+	 * @return {@link CellRangeAddress}
+	 */
+	public static CellRangeAddress getCellRangeAddress(Sheet sheet, int x, int y) {
+		if (sheet != null) {
+			final int sheetMergeCount = sheet.getNumMergedRegions();
+			CellRangeAddress ca;
+			for (int i = 0; i < sheetMergeCount; i++) {
+				ca = sheet.getMergedRegion(i);
+				if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+						&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+					return ca;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 设置合并单元格样式，如果不是则不设置
+	 *
+	 * @param cell      {@link Cell}
+	 * @param cellStyle {@link CellStyle}
+	 */
+	public static void setMergedRegionStyle(Cell cell, CellStyle cellStyle) {
+		CellRangeAddress cellRangeAddress = getCellRangeAddress(cell);
+		if (cellRangeAddress != null) {
+			setMergeCellStyle(cellStyle, cellRangeAddress, cell.getSheet());
+		}
 	}
 
 	/**
@@ -310,16 +370,7 @@ public class CellUtil {
 				lastColumn // last column (0-based)
 		);
 
-		if (null != cellStyle) {
-			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
-			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
-			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
-			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
-			RegionUtil.setTopBorderColor(cellStyle.getTopBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setRightBorderColor(cellStyle.getRightBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setLeftBorderColor(cellStyle.getLeftBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setBottomBorderColor(cellStyle.getBottomBorderColor(),cellRangeAddress,sheet);
-		}
+		setMergeCellStyle(cellStyle, cellRangeAddress, sheet);
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
 
@@ -434,6 +485,26 @@ public class CellUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 根据{@link CellStyle}设置合并单元格边框样式
+	 *
+	 * @param cellStyle        {@link CellStyle}
+	 * @param cellRangeAddress {@link CellRangeAddress}
+	 * @param sheet            {@link Sheet}
+	 */
+	private static void setMergeCellStyle(CellStyle cellStyle, CellRangeAddress cellRangeAddress, Sheet sheet) {
+		if (null != cellStyle) {
+			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
+			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
+			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
+			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
+			RegionUtil.setTopBorderColor(cellStyle.getTopBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setRightBorderColor(cellStyle.getRightBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setLeftBorderColor(cellStyle.getLeftBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setBottomBorderColor(cellStyle.getBottomBorderColor(), cellRangeAddress, sheet);
+		}
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
 }
