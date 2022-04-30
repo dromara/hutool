@@ -47,6 +47,6 @@ public class EntityHandler implements RsHandler<Entity>{
 		final ResultSetMetaData  meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 
-		return rs.next() ? ResultSetUtil.toBean(columnCount, meta, rs, this.caseInsensitive) : null;
+		return rs.next() ? ResultSetUtil.toEntity(columnCount, meta, rs, this.caseInsensitive) : null;
 	}
 }

@@ -116,7 +116,7 @@ public class ResultSetUtil {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity toEntity(final int columnCount, final ResultSetMetaData meta, final ResultSet rs) throws SQLException {
-		return toBean(columnCount, meta, rs, false);
+		return toEntity(columnCount, meta, rs, false);
 	}
 
 	/**
@@ -130,8 +130,8 @@ public class ResultSetUtil {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.16
 	 */
-	public static Entity toBean(final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean caseInsensitive) throws SQLException {
-		return toBean(new Entity(null, caseInsensitive), columnCount, meta, rs, true);
+	public static Entity toEntity(final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean caseInsensitive) throws SQLException {
+		return toEntity(new Entity(null, caseInsensitive), columnCount, meta, rs, true);
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class ResultSetUtil {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.3.1
 	 */
-	public static <T extends Entity> T toBean(final T row, final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean withMetaInfo) throws SQLException {
+	public static <T extends Entity> T toEntity(final T row, final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean withMetaInfo) throws SQLException {
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			type = meta.getColumnType(i);
@@ -226,7 +226,7 @@ public class ResultSetUtil {
 		final int columnCount = meta.getColumnCount();
 
 		while (rs.next()) {
-			collection.add(ResultSetUtil.toBean(columnCount, meta, rs, caseInsensitive));
+			collection.add(toEntity(columnCount, meta, rs, caseInsensitive));
 		}
 
 		return collection;

@@ -6,8 +6,8 @@ import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.NumberHandler;
+import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
 import cn.hutool.db.sql.Condition;
@@ -673,10 +673,21 @@ public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionH
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public long count(final Entity where) throws DbRuntimeException {
+		return count(where, null);
+	}
+
+	/**
+	 * 结果的条目数
+	 *
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws DbRuntimeException SQL执行异常
+	 */
+	public long count(final Entity where, final Page page) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.count(conn, Query.of(where));
+			return runner.count(conn, Query.of(where).setPage(page));
 		} finally {
 			this.closeConnection(conn);
 		}

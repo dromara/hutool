@@ -134,8 +134,7 @@ public interface Dialect extends Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	default PreparedStatement psForCount(final Connection conn, final Query query) throws SQLException {
-		query.setFields(ListUtil.toList("count(1)"));
-		return psForFind(conn, query);
+		return psForFind(conn, query.clone().setFields(ListUtil.toList("count(1)")));
 	}
 
 	/**

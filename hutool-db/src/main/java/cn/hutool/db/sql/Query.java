@@ -16,7 +16,7 @@ import java.util.Collection;
  * @author Looly
  *
  */
-public class Query {
+public class Query implements Cloneable {
 
 	/** 查询的字段名列表 */
 	Collection<String> fields;
@@ -189,5 +189,14 @@ public class Query {
 			throw new DbRuntimeException("No tableName!");
 		}
 		return this.tableNames[0];
+	}
+
+	@Override
+	public Query clone() {
+		try {
+			return  (Query) super.clone();
+		} catch (final CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
 	}
 }
