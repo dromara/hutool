@@ -229,6 +229,7 @@ public class MetaUtil {
 				if (null != rs) {
 					if (rs.next()) {
 						table.setComment(rs.getString("REMARKS"));
+						table.setExists(true);
 					}
 				}
 			}
