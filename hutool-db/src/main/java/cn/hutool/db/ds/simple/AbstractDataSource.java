@@ -1,13 +1,14 @@
 package cn.hutool.db.ds.simple;
 
+import cn.hutool.core.clone.CloneRuntimeException;
+
+import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
-
-import javax.sql.DataSource;
 
 /**
  * 数据源抽象实现
@@ -52,5 +53,14 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		throw new SQLFeatureNotSupportedException("DataSource can't support getParentLogger method!");
+	}
+
+	@Override
+	public AbstractDataSource clone() {
+		try {
+			return (AbstractDataSource) super.clone();
+		} catch (final CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
 	}
 }

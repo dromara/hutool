@@ -17,6 +17,7 @@ public class ModifierUtilTest {
 				ModifierUtil.ModifierType.STATIC)
 		);
 	}
+
 	private static void ddd() {
 	}
 }
