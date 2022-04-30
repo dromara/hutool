@@ -27,7 +27,7 @@ clientName = Hutool
 ssl = false;
 
 #----- 自定义分组的连接
-[custom]=
+[custom]
 # 地址，默认localhost
 host = localhost
 # 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
