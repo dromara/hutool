@@ -5,7 +5,6 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.sql.Wrapper;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -24,7 +23,7 @@ import java.sql.Savepoint;
  * @author loolly
  *
  */
-public class Session extends AbstractDb implements Closeable {
+public class Session extends AbstractDb<Session> implements Closeable {
 	private static final long serialVersionUID = 3421251905539056945L;
 	private final static Log log = LogFactory.get();
 
@@ -34,7 +33,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @return Session
 	 * @since 3.2.3
 	 */
-	public static Session create() {
+	public static Session of() {
 		return new Session(DSFactory.get());
 	}
 
@@ -45,7 +44,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @return Session
 	 * @since 4.0.11
 	 */
-	public static Session create(final String group) {
+	public static Session of(final String group) {
 		return new Session(DSFactory.get(group));
 	}
 
@@ -55,7 +54,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param ds 数据源
 	 * @return Session
 	 */
-	public static Session create(final DataSource ds) {
+	public static Session of(final DataSource ds) {
 		return new Session(ds);
 	}
 
@@ -90,38 +89,32 @@ public class Session extends AbstractDb implements Closeable {
 	}
 	// ---------------------------------------------------------------------------- Constructor end
 
-	// ---------------------------------------------------------------------------- Getters and Setters end
-	/**
-	 * 获得{@link SqlConnRunner}
-	 *
-	 * @return {@link SqlConnRunner}
-	 */
-	@Override
-	public SqlConnRunner getRunner() {
-		return runner;
-	}
-	// ---------------------------------------------------------------------------- Getters and Setters end
-
 	// ---------------------------------------------------------------------------- Transaction method start
 	/**
 	 * 开始事务
 	 *
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public void beginTransaction() throws SQLException {
+	public void beginTransaction() throws DbRuntimeException {
 		final Connection conn = getConnection();
 		checkTransactionSupported(conn);
-		conn.setAutoCommit(false);
+		try {
+			conn.setAutoCommit(false);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	/**
 	 * 提交事务
 	 *
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public void commit() throws SQLException {
+	public void commit() throws DbRuntimeException {
 		try {
 			getConnection().commit();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -134,11 +127,13 @@ public class Session extends AbstractDb implements Closeable {
 	/**
 	 * 回滚事务
 	 *
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public void rollback() throws SQLException {
+	public void rollback() throws DbRuntimeException {
 		try {
 			getConnection().rollback();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -170,11 +165,13 @@ public class Session extends AbstractDb implements Closeable {
 	 * 回滚到某个保存点，保存点的设置请使用setSavepoint方法
 	 *
 	 * @param savepoint 保存点
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public void rollback(final Savepoint savepoint) throws SQLException {
+	public void rollback(final Savepoint savepoint) throws DbRuntimeException {
 		try {
 			getConnection().rollback(savepoint);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -207,10 +204,14 @@ public class Session extends AbstractDb implements Closeable {
 	 * 设置保存点
 	 *
 	 * @return 保存点对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Savepoint setSavepoint() throws SQLException {
-		return getConnection().setSavepoint();
+	public Savepoint setSavepoint() throws DbRuntimeException {
+		try {
+			return getConnection().setSavepoint();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	/**
@@ -234,55 +235,46 @@ public class Session extends AbstractDb implements Closeable {
 	 * Connection.TRANSACTION_SERIALIZABLE 禁止脏读、不可重复读和幻读<br>
 	 *
 	 * @param level 隔离级别
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public void setTransactionIsolation(final int level) throws SQLException {
-		if (getConnection().getMetaData().supportsTransactionIsolationLevel(level) == false) {
-			throw new SQLException(StrUtil.format("Transaction isolation [{}] not support!", level));
+	public void setTransactionIsolation(final int level) throws DbRuntimeException {
+		try {
+			if (getConnection().getMetaData().supportsTransactionIsolationLevel(level) == false) {
+				throw new DbRuntimeException(StrUtil.format("Transaction isolation [{}] not support!", level));
+			}
+			getConnection().setTransactionIsolation(level);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		}
-		getConnection().setTransactionIsolation(level);
 	}
 
 	/**
 	 * 在事务中执行操作，通过实现{@link VoidFunc1}接口的call方法执行多条SQL语句从而完成事务
 	 *
 	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
-	 * @throws SQLException SQL异常
+	 * @throws DbRuntimeException SQL异常
 	 * @since 3.2.3
 	 */
-	public void tx(final VoidFunc1<Session> func) throws SQLException {
+	public void tx(final VoidFunc1<Session> func) throws DbRuntimeException {
 		try {
 			beginTransaction();
 			func.call(this);
 			commit();
 		} catch (final Throwable e) {
 			quietRollback();
-			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
+			throw new DbRuntimeException(e);
 		}
 	}
 
 	// ---------------------------------------------------------------------------- Transaction method end
 
-	// ---------------------------------------------------------------------------- Getters and Setters start
 	@Override
-	public Session setWrapper(final Character wrapperChar) {
-		return (Session) super.setWrapper(wrapperChar);
-	}
-
-	@Override
-	public Session setWrapper(final Wrapper wrapper) {
-		return (Session) super.setWrapper(wrapper);
-	}
-
-	@Override
-	public Session disableWrapper() {
-		return (Session) super.disableWrapper();
-	}
-	// ---------------------------------------------------------------------------- Getters and Setters end
-
-	@Override
-	public Connection getConnection() throws SQLException {
-		return ThreadLocalConnection.INSTANCE.get(this.ds);
+	public Connection getConnection() throws DbRuntimeException {
+		try {
+			return ThreadLocalConnection.INSTANCE.get(this.ds);
+		} catch (final SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

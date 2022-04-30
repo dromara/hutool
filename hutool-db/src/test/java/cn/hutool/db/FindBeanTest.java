@@ -20,11 +20,11 @@ public class FindBeanTest {
 
 	@Before
 	public void init() {
-		db = Db.use("test");
+		db = Db.of("test");
 	}
 
 	@Test
-	public void findAllBeanTest() throws SQLException {
+	public void findAllBeanTest() {
 		final List<User> results = db.findAll(Entity.create("user"), User.class);
 
 		Assert.assertEquals(4, results.size());
@@ -34,7 +34,7 @@ public class FindBeanTest {
 
 	@Test
 	@SuppressWarnings("rawtypes")
-	public void findAllListTest() throws SQLException {
+	public void findAllListTest() {
 		final List<List> results = db.findAll(Entity.create("user"), List.class);
 
 		Assert.assertEquals(4, results.size());
@@ -43,7 +43,7 @@ public class FindBeanTest {
 	}
 
 	@Test
-	public void findAllArrayTest() throws SQLException {
+	public void findAllArrayTest() {
 		final List<Object[]> results = db.findAll(Entity.create("user"), Object[].class);
 
 		Assert.assertEquals(4, results.size());
@@ -52,13 +52,13 @@ public class FindBeanTest {
 	}
 
 	@Test
-	public void findAllStringTest() throws SQLException {
+	public void findAllStringTest() {
 		final List<String> results = db.findAll(Entity.create("user"), String.class);
 		Assert.assertEquals(4, results.size());
 	}
 
 	@Test
-	public void findAllStringArrayTest() throws SQLException {
+	public void findAllStringArrayTest() {
 		final List<String[]> results = db.findAll(Entity.create("user"), String[].class);
 
 		Assert.assertEquals(4, results.size());

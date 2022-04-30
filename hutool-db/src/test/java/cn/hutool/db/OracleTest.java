@@ -8,8 +8,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.SQLException;
-
 /**
  * Oracle操作单元测试
  *
@@ -41,9 +39,9 @@ public class OracleTest {
 
 	@Test
 	@Ignore
-	public void insertTest() throws SQLException {
+	public void insertTest() {
 		for (int id = 100; id < 200; id++) {
-			Db.use("orcl").insert(Entity.create("T_USER")//
+			Db.of("orcl").insert(Entity.create("T_USER")//
 					.set("ID", id)//
 					.set("name", "测试用户" + id)//
 					.set("TEXT", "描述" + id)//
@@ -54,8 +52,8 @@ public class OracleTest {
 
 	@Test
 	@Ignore
-	public void pageTest() throws SQLException {
-		final PageResult<Entity> result = Db.use("orcl").page(Entity.create("T_USER"), new Page(2, 10));
+	public void pageTest() {
+		final PageResult<Entity> result = Db.of("orcl").page(Entity.create("T_USER"), new Page(2, 10));
 		for (final Entity entity : result) {
 			Console.log(entity.get("ID"));
 		}

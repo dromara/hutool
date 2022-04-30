@@ -5,7 +5,6 @@ import cn.hutool.db.sql.NamedSql;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,17 +86,17 @@ public class NamedSqlTest {
 	}
 
 	@Test
-	public void queryTest() throws SQLException {
+	public void queryTest() {
 		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"王五")
 				.put("age1", 18).build();
 		final String sql = "select * from user where name = @name1 and age = @age1";
 
-		List<Entity> query = Db.use().query(sql, paramMap);
+		List<Entity> query = Db.of().query(sql, paramMap);
 		Assert.assertEquals(1, query.size());
 
 		// 采用传统方式查询是否能识别Map类型参数
-		query = Db.use().query(sql, new Object[]{paramMap});
+		query = Db.of().query(sql, new Object[]{paramMap});
 		Assert.assertEquals(1, query.size());
 	}
 }

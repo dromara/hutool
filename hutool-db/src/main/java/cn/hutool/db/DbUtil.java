@@ -2,8 +2,6 @@ package cn.hutool.db;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.db.dialect.Dialect;
-import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
@@ -13,7 +11,6 @@ import cn.hutool.setting.Setting;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Connection;
 
 /**
  * 数据库操作工具类
@@ -22,85 +19,6 @@ import java.sql.Connection;
  */
 public final class DbUtil {
 	private final static Log log = Log.get();
-
-	/**
-	 * 实例化一个新的SQL运行对象
-	 *
-	 * @param dialect 数据源
-	 * @return SQL执行类
-	 */
-	public static SqlConnRunner newSqlConnRunner(final Dialect dialect) {
-		return SqlConnRunner.create(dialect);
-	}
-
-	/**
-	 * 实例化一个新的SQL运行对象
-	 *
-	 * @param ds 数据源
-	 * @return SQL执行类
-	 */
-	public static SqlConnRunner newSqlConnRunner(final DataSource ds) {
-		return SqlConnRunner.create(ds);
-	}
-
-	/**
-	 * 实例化一个新的SQL运行对象
-	 *
-	 * @param conn 数据库连接对象
-	 * @return SQL执行类
-	 */
-	public static SqlConnRunner newSqlConnRunner(final Connection conn) {
-		return SqlConnRunner.create(DialectFactory.newDialect(conn));
-	}
-
-	/**
-	 * 实例化一个新的Db，使用默认数据源
-	 *
-	 * @return SQL执行类
-	 */
-	public static Db use() {
-		return Db.use();
-	}
-
-	/**
-	 * 实例化一个新的Db对象
-	 *
-	 * @param ds 数据源
-	 * @return SQL执行类
-	 */
-	public static Db use(final DataSource ds) {
-		return Db.use(ds);
-	}
-
-	/**
-	 * 实例化一个新的SQL运行对象
-	 *
-	 * @param ds      数据源
-	 * @param dialect SQL方言
-	 * @return SQL执行类
-	 */
-	public static Db use(final DataSource ds, final Dialect dialect) {
-		return Db.use(ds, dialect);
-	}
-
-	/**
-	 * 新建数据库会话，使用默认数据源
-	 *
-	 * @return 数据库会话
-	 */
-	public static Session newSession() {
-		return Session.create(getDs());
-	}
-
-	/**
-	 * 新建数据库会话
-	 *
-	 * @param ds 数据源
-	 * @return 数据库会话
-	 */
-	public static Session newSession(final DataSource ds) {
-		return Session.create(ds);
-	}
 
 	/**
 	 * 连续关闭一系列的SQL相关对象<br>

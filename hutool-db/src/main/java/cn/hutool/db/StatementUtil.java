@@ -6,7 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.db.handler.HandleHelper;
+import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.NamedSql;
 import cn.hutool.db.sql.SqlBuilder;
@@ -259,7 +259,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static List<Object> getGeneratedKeys(final Statement ps) throws SQLException {
-		return getGeneratedKeys(ps, HandleHelper::handleRowToList);
+		return getGeneratedKeys(ps, ResultSetUtil::handleRowToList);
 	}
 
 	/**

@@ -2,11 +2,12 @@ package cn.hutool.db;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.handler.NumberHandler;
+import cn.hutool.db.handler.PageResultHandler;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
@@ -62,9 +63,9 @@ public class DialectRunner implements Serializable {
 	 * @param conn    数据库连接
 	 * @param records 记录列表，记录KV必须严格一致
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int[] insert(final Connection conn, final Entity... records) throws SQLException {
+	public int[] insert(final Connection conn, final Entity... records) throws DbRuntimeException {
 		checkConn(conn);
 		if (ArrayUtil.isEmpty(records)) {
 			return new int[]{0};
@@ -81,6 +82,8 @@ public class DialectRunner implements Serializable {
 			// 批量
 			ps = dialect.psForInsertBatch(conn, records);
 			return ps.executeBatch();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -95,19 +98,21 @@ public class DialectRunner implements Serializable {
 	 * @param record 记录
 	 * @param keys   需要检查唯一性的字段
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.20
 	 */
-	public int upsert(final Connection conn, final Entity record, final String... keys) throws SQLException {
+	public int upsert(final Connection conn, final Entity record, final String... keys) throws DbRuntimeException {
 		PreparedStatement ps = null;
-		try{
+		try {
 			ps = getDialect().psForUpsert(conn, record, keys);
-		}catch (final SQLException ignore){
+		} catch (final SQLException ignore) {
 			// 方言不支持，使用默认
 		}
 		if (null != ps) {
 			try {
 				return ps.executeUpdate();
+			} catch (final SQLException e) {
+				throw new DbRuntimeException(e);
 			} finally {
 				DbUtil.close(ps);
 			}
@@ -124,11 +129,11 @@ public class DialectRunner implements Serializable {
 	 * @param record 记录
 	 * @param keys   需要检查唯一性的字段
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int insertOrUpdate(final Connection conn, final Entity record, final String... keys) throws SQLException {
+	public int insertOrUpdate(final Connection conn, final Entity record, final String... keys) throws DbRuntimeException {
 		final Entity where = record.filter(keys);
-		if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
+		if (MapUtil.isNotEmpty(where) && count(conn, Query.of(where)) > 0) {
 			return update(conn, record, where);
 		} else {
 			return insert(conn, record)[0];
@@ -144,12 +149,12 @@ public class DialectRunner implements Serializable {
 	 * @param record               记录
 	 * @param generatedKeysHandler 自增主键处理器，用于定义返回自增主键的范围和类型
 	 * @return 主键列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T insert(final Connection conn, final Entity record, final RsHandler<T> generatedKeysHandler) throws SQLException {
+	public <T> T insert(final Connection conn, final Entity record, final RsHandler<T> generatedKeysHandler) throws DbRuntimeException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
+			throw new DbRuntimeException("Empty entity provided!");
 		}
 
 		PreparedStatement ps = null;
@@ -160,6 +165,8 @@ public class DialectRunner implements Serializable {
 				return null;
 			}
 			return StatementUtil.getGeneratedKeys(ps, generatedKeysHandler);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -172,19 +179,21 @@ public class DialectRunner implements Serializable {
 	 * @param conn  数据库连接
 	 * @param where 条件
 	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int del(final Connection conn, final Entity where) throws SQLException {
+	public int del(final Connection conn, final Entity where) throws DbRuntimeException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(where)) {
 			//不允许做全表删除
-			throw new SQLException("Empty entity provided!");
+			throw new DbRuntimeException("Empty entity provided!");
 		}
 
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForDelete(conn, Query.of(where));
 			return ps.executeUpdate();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -198,16 +207,16 @@ public class DialectRunner implements Serializable {
 	 * @param record 记录
 	 * @param where  条件
 	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int update(final Connection conn, final Entity record, final Entity where) throws SQLException {
+	public int update(final Connection conn, final Entity record, final Entity where) throws DbRuntimeException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(record)) {
-			throw new SQLException("Empty entity provided!");
+			throw new DbRuntimeException("Empty entity provided!");
 		}
 		if (MapUtil.isEmpty(where)) {
 			//不允许做全表更新
-			throw new SQLException("Empty where provided!");
+			throw new DbRuntimeException("Empty where provided!");
 		}
 
 		//表名可以从被更新记录的Entity中获得，也可以从Where中获得
@@ -222,6 +231,8 @@ public class DialectRunner implements Serializable {
 		try {
 			ps = dialect.psForUpdate(conn, record, query);
 			return ps.executeUpdate();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -236,25 +247,33 @@ public class DialectRunner implements Serializable {
 	 * @param query {@link Query}
 	 * @param rsh   结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T find(final Connection conn, final Query query, final RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Connection conn, final Query query, final RsHandler<T> rsh) throws DbRuntimeException {
 		checkConn(conn);
 		Assert.notNull(query, "[query] is null !");
-		return SqlExecutor.queryAndClosePs(dialect.psForFind(conn, query), rsh);
+		try {
+			return SqlExecutor.queryAndClosePs(dialect.psForFind(conn, query), rsh);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	/**
 	 * 获取结果总数，生成类似于select count(1) from XXX wher XXX=? and YYY=?
 	 *
 	 * @param conn  数据库连接对象
-	 * @param where 查询条件
+	 * @param query 查询
 	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public long count(final Connection conn, final Entity where) throws SQLException {
+	public long count(final Connection conn, final Query query) throws DbRuntimeException {
 		checkConn(conn);
-		return SqlExecutor.queryAndClosePs(dialect.psForCount(conn, Query.of(where)), new NumberHandler()).longValue();
+		try {
+			return SqlExecutor.queryAndClosePs(dialect.psForCount(conn, query), new NumberHandler()).longValue();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	/**
@@ -264,10 +283,10 @@ public class DialectRunner implements Serializable {
 	 * @param conn       数据库连接对象
 	 * @param sqlBuilder 查询语句
 	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.2
 	 */
-	public long count(final Connection conn, final SqlBuilder sqlBuilder) throws SQLException {
+	public long count(final Connection conn, final SqlBuilder sqlBuilder) throws DbRuntimeException {
 		checkConn(conn);
 
 		String selectSql = sqlBuilder.build();
@@ -276,9 +295,30 @@ public class DialectRunner implements Serializable {
 		if (orderByIndex > 0) {
 			selectSql = StrUtil.subPre(selectSql, orderByIndex);
 		}
-		return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
-				SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
-				new NumberHandler()).longValue();
+		try {
+			return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
+							SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
+					new NumberHandler()).longValue();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
+	}
+
+	/**
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param conn  数据库连接对象
+	 * @param query 查询
+	 * @return 结果对象
+	 * @throws DbRuntimeException SQL执行异常
+	 */
+	public PageResult<Entity> page(final Connection conn, final Query query) throws DbRuntimeException {
+		final Page page = query.getPage();
+		final PageResultHandler pageResultHandler = new PageResultHandler(
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, query)),
+				this.caseInsensitive);
+		return page(conn, query, pageResultHandler);
 	}
 
 	/**
@@ -290,15 +330,36 @@ public class DialectRunner implements Serializable {
 	 * @param query 查询条件（包含表名）
 	 * @param rsh   结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T page(final Connection conn, final Query query, final RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Connection conn, final Query query, final RsHandler<T> rsh) throws DbRuntimeException {
 		checkConn(conn);
 		if (null == query.getPage()) {
 			return this.find(conn, query, rsh);
 		}
 
-		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);
+		try {
+			return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
+	}
+
+	/**
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param conn       数据库连接对象
+	 * @param sqlBuilder SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page       分页对象
+	 * @return 结果对象
+	 * @throws DbRuntimeException SQL执行异常
+	 */
+	public PageResult<Entity> page(final Connection conn, final SqlBuilder sqlBuilder, final Page page) throws DbRuntimeException {
+		final PageResultHandler pageResultHandler = new PageResultHandler(
+				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder)),
+				this.caseInsensitive);
+		return page(conn, sqlBuilder, page, pageResultHandler);
 	}
 
 	/**
@@ -311,16 +372,22 @@ public class DialectRunner implements Serializable {
 	 * @param page       分页对象
 	 * @param rsh        结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public <T> T page(final Connection conn, final SqlBuilder sqlBuilder, final Page page, final RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Connection conn, final SqlBuilder sqlBuilder, final Page page, final RsHandler<T> rsh) throws DbRuntimeException {
 		checkConn(conn);
 		if (null == page) {
 			return SqlExecutor.query(conn, sqlBuilder, rsh);
 		}
 
-		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, sqlBuilder, page), rsh);
+		final PreparedStatement ps;
+		try {
+			ps = dialect.psForPage(conn, sqlBuilder, page);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
+		return SqlExecutor.queryAndClosePs(ps, rsh);
 	}
 	//---------------------------------------------------------------------------- CRUD end
 

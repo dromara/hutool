@@ -13,8 +13,8 @@ public class PicTransferTest {
 
 	@Test
 	@Ignore
-	public void findTest() throws SQLException {
-		Db.use().find(
+	public void findTest() {
+		Db.of().find(
 				ListUtil.of("NAME", "TYPE", "GROUP", "PIC"),
 				Entity.create("PIC_INFO").set("TYPE", 1),
 				rs -> {

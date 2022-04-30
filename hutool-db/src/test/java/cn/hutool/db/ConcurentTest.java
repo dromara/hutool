@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class ConcurentTest {
 
 	@Before
 	public void init() {
-		db = Db.use("test");
+		db = Db.of("test");
 	}
 
 	@Test
@@ -32,11 +31,7 @@ public class ConcurentTest {
 		for(int i = 0; i < 10000; i++) {
 			ThreadUtil.execute(() -> {
 				final List<Entity> find;
-				try {
-					find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
-				} catch (final SQLException e) {
-					throw new DbRuntimeException(e);
-				}
+				find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
 				Console.log(find);
 			});
 		}

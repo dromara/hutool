@@ -35,6 +35,6 @@ public class BeanHandler<E> implements RsHandler<E>{
 	public E handle(final ResultSet rs) throws SQLException {
 		final ResultSetMetaData  meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
-		return rs.next() ? HandleHelper.handleRow(columnCount, meta, rs, this.elementBeanType) : null;
+		return rs.next() ? ResultSetUtil.toBean(columnCount, meta, rs, this.elementBeanType) : null;
 	}
 }

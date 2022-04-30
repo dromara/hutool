@@ -43,6 +43,6 @@ public class EntitySetHandler implements RsHandler<LinkedHashSet<Entity>>{
 
 	@Override
 	public LinkedHashSet<Entity> handle(final ResultSet rs) throws SQLException {
-		return HandleHelper.handleRs(rs, new LinkedHashSet<>(), this.caseInsensitive);
+		return ResultSetUtil.toEntityList(rs, new LinkedHashSet<>(), this.caseInsensitive);
 	}
 }

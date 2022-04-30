@@ -38,6 +38,6 @@ public class BeanListHandler<E> implements RsHandler<List<E>> {
 
 	@Override
 	public List<E> handle(final ResultSet rs) throws SQLException {
-		return HandleHelper.handleRsToBeanList(rs, new ArrayList<>(), elementBeanType);
+		return ResultSetUtil.toBeanList(rs, new ArrayList<>(), elementBeanType);
 	}
 }

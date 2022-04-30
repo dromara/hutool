@@ -6,6 +6,7 @@ import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
+import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
@@ -32,9 +33,9 @@ import java.util.Map;
  * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作<br>
  * 提供抽象方法getConnection和closeConnection，用于自定义数据库连接的打开和关闭
  *
- * @author Luxiaolei
+ * @author looly
  */
-public abstract class AbstractDb implements Serializable {
+public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionHolder, Serializable {
 	private static final long serialVersionUID = 3858951941916349062L;
 
 	protected final DataSource ds;
@@ -46,7 +47,7 @@ public abstract class AbstractDb implements Serializable {
 	 * 是否大小写不敏感（默认大小写不敏感）
 	 */
 	protected boolean caseInsensitive = GlobalDbConfig.caseInsensitive;
-	protected SqlConnRunner runner;
+	protected DialectRunner runner;
 
 	// ------------------------------------------------------- Constructor start
 
@@ -58,25 +59,9 @@ public abstract class AbstractDb implements Serializable {
 	 */
 	public AbstractDb(final DataSource ds, final Dialect dialect) {
 		this.ds = ds;
-		this.runner = new SqlConnRunner(dialect);
+		this.runner = new DialectRunner(dialect);
 	}
 	// ------------------------------------------------------- Constructor end
-
-	/**
-	 * 获得链接。根据实现不同，可以自定义获取连接的方式
-	 *
-	 * @return {@link Connection}
-	 * @throws SQLException 连接获取异常
-	 */
-	public abstract Connection getConnection() throws SQLException;
-
-	/**
-	 * 关闭连接<br>
-	 * 自定义关闭连接有利于自定义回收连接机制，或者不关闭
-	 *
-	 * @param conn 连接 {@link Connection}
-	 */
-	public abstract void closeConnection(Connection conn);
 
 	/**
 	 * 查询
@@ -84,10 +69,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    查询语句
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.1.1
 	 */
-	public List<Entity> query(final String sql, final Map<String, Object> params) throws SQLException {
+	public List<Entity> query(final String sql, final Map<String, Object> params) throws DbRuntimeException {
 		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
@@ -97,10 +82,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    查询语句
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.1.1
 	 */
-	public List<Entity> query(final String sql, final Object... params) throws SQLException {
+	public List<Entity> query(final String sql, final Object... params) throws DbRuntimeException {
 		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
@@ -112,10 +97,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param beanClass 元素Bean类型
 	 * @param params    参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> query(final String sql, final Class<T> beanClass, final Object... params) throws SQLException {
+	public <T> List<T> query(final String sql, final Class<T> beanClass, final Object... params) throws DbRuntimeException {
 		return query(sql, new BeanListHandler<>(beanClass), params);
 	}
 
@@ -125,9 +110,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    查询语句
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Entity queryOne(final String sql, final Object... params) throws SQLException {
+	public Entity queryOne(final String sql, final Object... params) throws DbRuntimeException {
 		return query(sql, new EntityHandler(this.caseInsensitive), params);
 	}
 
@@ -137,9 +122,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    查询语句
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Number queryNumber(final String sql, final Object... params) throws SQLException {
+	public Number queryNumber(final String sql, final Object... params) throws DbRuntimeException {
 		return query(sql, new NumberHandler(), params);
 	}
 
@@ -149,9 +134,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    查询语句
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public String queryString(final String sql, final Object... params) throws SQLException {
+	public String queryString(final String sql, final Object... params) throws DbRuntimeException {
 		return query(sql, new StringHandler(), params);
 	}
 
@@ -163,9 +148,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param rsh    结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T query(final String sql, final RsHandler<T> rsh, final Object... params) throws SQLException {
+	public <T> T query(final String sql, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -183,10 +168,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param rsh      结果集处理对象
 	 * @param paramMap 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.2.2
 	 */
-	public <T> T query(final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws SQLException {
+	public <T> T query(final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -204,10 +189,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param statementFunc 自定义{@link PreparedStatement}创建函数
 	 * @param rsh           结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public <T> T query(final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws SQLException {
+	public <T> T query(final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -224,9 +209,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int execute(final String sql, final Object... params) throws SQLException {
+	public int execute(final String sql, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -243,9 +228,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql    SQL
 	 * @param params 参数
 	 * @return 主键
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Long executeForGeneratedKey(final String sql, final Object... params) throws SQLException {
+	public Long executeForGeneratedKey(final String sql, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -261,10 +246,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param sql         SQL
 	 * @param paramsBatch 批量的参数
 	 * @return 每个SQL执行影响的行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.4.2
 	 */
-	public int[] executeBatch(final String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
+	public int[] executeBatch(final String sql, final Iterable<Object[]> paramsBatch) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -279,10 +264,10 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param sqls SQL列表
 	 * @return 每个SQL执行影响的行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public int[] executeBatch(final String... sqls) throws SQLException {
+	public int[] executeBatch(final String... sqls) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -297,10 +282,10 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param sqls SQL列表
 	 * @return 每个SQL执行影响的行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.4.2
 	 */
-	public int[] executeBatch(final Iterable<String> sqls) throws SQLException {
+	public int[] executeBatch(final Iterable<String> sqls) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -317,13 +302,13 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param record 记录
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int insert(final Entity record) throws SQLException {
+	public int insert(final Entity record) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.insert(conn, record);
+			return runner.insert(conn, record)[0];
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -336,10 +321,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param record 记录
 	 * @param keys   需要检查唯一性的字段
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public int insertOrUpdate(final Entity record, final String... keys) throws SQLException {
+	public int insertOrUpdate(final Entity record, final String... keys) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -353,13 +338,14 @@ public abstract class AbstractDb implements Serializable {
 	 * 使用upsert语义插入或更新数据<br>
 	 * 根据给定的字段名查询数据，如果存在则更新这些数据，否则执行插入
 	 * 如果方言未实现本方法，内部会自动调用insertOrUpdate来实现功能，由于upsert和insert使用有区别，为了兼容性保留原有insertOrUpdate不做变动
+	 *
 	 * @param record 记录
 	 * @param keys   需要检查唯一性的字段
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.21
 	 */
-	public int upsert(final Entity record, final String... keys) throws SQLException {
+	public int upsert(final Entity record, final String... keys) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -376,13 +362,13 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param records 记录列表
 	 * @return 插入行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int[] insert(final Collection<Entity> records) throws SQLException {
+	public int[] insert(final Collection<Entity> records) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.insert(conn, records);
+			return runner.insert(conn, records.toArray(new Entity[0]));
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -393,13 +379,13 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param record 记录
 	 * @return 主键列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public List<Object> insertForGeneratedKeys(final Entity record) throws SQLException {
+	public List<Object> insertForGeneratedKeys(final Entity record) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.insertForGeneratedKeys(conn, record);
+			return runner.insert(conn, record, ResultSetUtil::handleRowToList);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -410,13 +396,13 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param record 记录
 	 * @return 主键
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Long insertForGeneratedKey(final Entity record) throws SQLException {
+	public Long insertForGeneratedKey(final Entity record) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.insertForGeneratedKey(conn, record);
+			return runner.insert(conn, record, ResultSetUtil::toLong);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -429,9 +415,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param field     字段名，最好是主键
 	 * @param value     值，值可以是列表或数组，被当作IN查询处理
 	 * @return 删除行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int del(final String tableName, final String field, final Object value) throws SQLException {
+	public int del(final String tableName, final String field, final Object value) throws DbRuntimeException {
 		return del(Entity.create(tableName).set(field, value));
 	}
 
@@ -440,9 +426,9 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param where 条件
 	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int del(final Entity where) throws SQLException {
+	public int del(final Entity where) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -459,9 +445,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param record 记录
 	 * @param where  条件
 	 * @return 影响行数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public int update(final Entity record, final Entity where) throws SQLException {
+	public int update(final Entity record, final Entity where) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -482,9 +468,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param field     字段名
 	 * @param value     字段值
 	 * @return 记录
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> Entity get(final String tableName, final String field, final T value) throws SQLException {
+	public <T> Entity get(final String tableName, final String field, final T value) throws DbRuntimeException {
 		return this.get(Entity.create(tableName).set(field, value));
 	}
 
@@ -493,9 +479,9 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param where 条件
 	 * @return 记录
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public Entity get(final Entity where) throws SQLException {
+	public Entity get(final Entity where) throws DbRuntimeException {
 		return find(where.getFieldNames(), where, new EntityHandler(this.caseInsensitive));
 
 	}
@@ -510,13 +496,13 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where  条件实体类（包含表名）
 	 * @param rsh    结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T find(final Collection<String> fields, final Entity where, final RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Collection<String> fields, final Entity where, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.find(conn, fields, where, rsh);
+			return runner.find(conn, Query.of(where).setFields(fields), rsh);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -529,10 +515,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where  条件实体类（包含表名）
 	 * @return 结果Entity列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 4.5.16
 	 */
-	public List<Entity> find(final Collection<String> fields, final Entity where) throws SQLException {
+	public List<Entity> find(final Collection<String> fields, final Entity where) throws DbRuntimeException {
 		return find(fields, where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -544,10 +530,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param query {@link Query}对象，此对象中可以定义返回字段、查询条件，查询的表、分页等信息
 	 * @param rsh   结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 4.0.0
 	 */
-	public <T> T find(final Query query, final RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Query query, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -566,9 +552,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param rsh    结果集处理对象
 	 * @param fields 字段列表，可变长参数如果无值表示查询全部字段
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws SQLException {
+	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws DbRuntimeException {
 		return find(CollUtil.newArrayList(fields), where, rsh);
 	}
 
@@ -578,10 +564,10 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param where 条件实体类（包含表名）
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.1
 	 */
-	public List<Entity> find(final Entity where) throws SQLException {
+	public List<Entity> find(final Entity where) throws DbRuntimeException {
 		return find(where.getFieldNames(), where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -593,10 +579,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where     条件实体类（包含表名）
 	 * @param beanClass Bean类
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> find(final Entity where, final Class<T> beanClass) throws SQLException {
+	public <T> List<T> find(final Entity where, final Class<T> beanClass) throws DbRuntimeException {
 		return find(where.getFieldNames(), where, BeanListHandler.create(beanClass));
 	}
 
@@ -606,9 +592,9 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param where 条件实体类（包含表名）
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public List<Entity> findAll(final Entity where) throws SQLException {
+	public List<Entity> findAll(final Entity where) throws DbRuntimeException {
 		return find(where, EntityListHandler.create());
 	}
 
@@ -620,10 +606,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where     条件实体类（包含表名）
 	 * @param beanClass 返回的对象类型
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> findAll(final Entity where, final Class<T> beanClass) throws SQLException {
+	public <T> List<T> findAll(final Entity where, final Class<T> beanClass) throws DbRuntimeException {
 		return find(where, BeanListHandler.create(beanClass));
 	}
 
@@ -632,9 +618,9 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param tableName 表名
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public List<Entity> findAll(final String tableName) throws SQLException {
+	public List<Entity> findAll(final String tableName) throws DbRuntimeException {
 		return findAll(Entity.create(tableName));
 	}
 
@@ -645,9 +631,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param field     字段名
 	 * @param value     字段值
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public List<Entity> findBy(final String tableName, final String field, final Object value) throws SQLException {
+	public List<Entity> findBy(final String tableName, final String field, final Object value) throws DbRuntimeException {
 		return findAll(Entity.create(tableName).set(field, value));
 	}
 
@@ -657,10 +643,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param tableName 表名
 	 * @param wheres    条件，多个条件的连接逻辑使用{@link Condition#setLinkOperator(LogicalOperator)} 定义
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 4.0.0
 	 */
-	public List<Entity> findBy(final String tableName, final Condition... wheres) throws SQLException {
+	public List<Entity> findBy(final String tableName, final Condition... wheres) throws DbRuntimeException {
 		final Query query = new Query(wheres, tableName);
 		return find(query, new EntityListHandler(this.caseInsensitive));
 	}
@@ -673,9 +659,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param value     字段值
 	 * @param likeType  {@link LikeType}
 	 * @return 数据对象列表
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public List<Entity> findLike(final String tableName, final String field, final String value, final LikeType likeType) throws SQLException {
+	public List<Entity> findLike(final String tableName, final String field, final String value, final LikeType likeType) throws DbRuntimeException {
 		return findAll(Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 
@@ -684,13 +670,13 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param where 查询条件
 	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public long count(final Entity where) throws SQLException {
+	public long count(final Entity where) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.count(conn, where);
+			return runner.count(conn, Query.of(where));
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -701,9 +687,9 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param sql sql构造器
 	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public long count(final SqlBuilder sql) throws SQLException {
+	public long count(final SqlBuilder sql) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -719,72 +705,17 @@ public abstract class AbstractDb implements Serializable {
 	 * @param selectSql 查询SQL语句
 	 * @param params    查询参数
 	 * @return 复合条件的结果数
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.6.6
 	 */
-	public long count(final CharSequence selectSql, final Object... params) throws SQLException {
+	public long count(final CharSequence selectSql, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.count(conn, selectSql, params);
+			return runner.count(conn, SqlBuilder.of(selectSql).addParams(params));
 		} finally {
 			this.closeConnection(conn);
 		}
-	}
-
-	/**
-	 * 分页查询<br>
-	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
-	 *
-	 * @param <T>        结果对象类型
-	 * @param fields     返回的字段列表，null则返回所有字段
-	 * @param where      条件实体类（包含表名）
-	 * @param page       页码，0表示第一页
-	 * @param numPerPage 每页条目数
-	 * @param rsh        结果集处理对象
-	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
-	 */
-	public <T> T page(final Collection<String> fields, final Entity where, final int page, final int numPerPage, final RsHandler<T> rsh) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			return runner.page(conn, fields, where, page, numPerPage, rsh);
-		} finally {
-			this.closeConnection(conn);
-		}
-	}
-
-	/**
-	 * 分页查询<br>
-	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
-	 *
-	 * @param <T>        结果对象类型
-	 * @param where      条件实体类（包含表名）
-	 * @param page       页码，0表示第一页
-	 * @param numPerPage 每页条目数
-	 * @param rsh        结果集处理对象
-	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
-	 * @since 3.2.2
-	 */
-	public <T> T page(final Entity where, final int page, final int numPerPage, final RsHandler<T> rsh) throws SQLException {
-		return page(where, new Page(page, numPerPage), rsh);
-	}
-
-	/**
-	 * 分页查询，结果为Entity列表，不计算总数<br>
-	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
-	 *
-	 * @param where      条件实体类（包含表名）
-	 * @param page       页码，0表示第一页
-	 * @param numPerPage 每页条目数
-	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
-	 * @since 3.2.2
-	 */
-	public List<Entity> pageForEntityList(final Entity where, final int page, final int numPerPage) throws SQLException {
-		return pageForEntityList(where, new Page(page, numPerPage));
 	}
 
 	/**
@@ -794,10 +725,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where 条件实体类（包含表名）
 	 * @param page  分页对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public List<Entity> pageForEntityList(final Entity where, final Page page) throws SQLException {
+	public List<Entity> pageForEntityList(final Entity where, final Page page) throws DbRuntimeException {
 		return page(where, page, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -810,10 +741,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param page  分页对象
 	 * @param rsh   结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> T page(final Entity where, final Page page, final RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Entity where, final Page page, final RsHandler<T> rsh) throws DbRuntimeException {
 		return page(where.getFieldNames(), where, page, rsh);
 	}
 
@@ -827,13 +758,13 @@ public abstract class AbstractDb implements Serializable {
 	 * @param page   分页对象
 	 * @param rsh    结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T page(final Collection<String> fields, final Entity where, final Page page, final RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Collection<String> fields, final Entity where, final Page page, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.page(conn, fields, where, page, rsh);
+			return runner.page(conn, Query.of(where).setFields(fields).setPage(page), rsh);
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -848,10 +779,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param rsh    结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.6.6
 	 */
-	public <T> T page(final CharSequence sql, final Page page, final RsHandler<T> rsh, final Object... params) throws SQLException {
+	public <T> T page(final CharSequence sql, final Page page, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -869,9 +800,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param page 分页对象
 	 * @param rsh  结果集处理对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public <T> T page(final SqlBuilder sql, final Page page, final RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final SqlBuilder sql, final Page page, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -888,10 +819,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param page   分页对象
 	 * @param params 参数列表
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public PageResult<Entity> page(final CharSequence sql, final Page page, final Object... params) throws SQLException {
+	public PageResult<Entity> page(final CharSequence sql, final Page page, final Object... params) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -910,9 +841,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param pageNumber 页码
 	 * @param pageSize   每页结果数
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final int pageNumber, final int pageSize) throws SQLException {
+	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final int pageNumber, final int pageSize) throws DbRuntimeException {
 		return page(fields, where, new Page(pageNumber, pageSize));
 	}
 
@@ -924,13 +855,13 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where  条件实体类（包含表名）
 	 * @param page   分页对象
 	 * @return 结果对象
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final Page page) throws SQLException {
+	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final Page page) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.page(conn, fields, where, page);
+			return runner.page(conn, Query.of(where).setFields(fields).setPage(page));
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -944,10 +875,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @param page       页码
 	 * @param numPerPage 每页条目数
 	 * @return 分页结果集
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public PageResult<Entity> page(final Entity where, final int page, final int numPerPage) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final int page, final int numPerPage) throws DbRuntimeException {
 		return this.page(where, new Page(page, numPerPage));
 	}
 
@@ -958,9 +889,9 @@ public abstract class AbstractDb implements Serializable {
 	 * @param where 条件实体类（包含表名）
 	 * @param page  分页对象
 	 * @return 分页结果集
-	 * @throws SQLException SQL执行异常
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public PageResult<Entity> page(final Entity where, final Page page) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final Page page) throws DbRuntimeException {
 		return this.page(where.getFieldNames(), where, page);
 	}
 	// ---------------------------------------------------------------------------- CRUD end
@@ -974,26 +905,30 @@ public abstract class AbstractDb implements Serializable {
 	 * @param caseInsensitive 否在结果中忽略大小写
 	 * @since 5.2.4
 	 */
-	public void setCaseInsensitive(final boolean caseInsensitive) {
+	@SuppressWarnings("unchecked")
+	public R setCaseInsensitive(final boolean caseInsensitive) {
 		this.caseInsensitive = caseInsensitive;
+		return (R) this;
 	}
 
 	/**
-	 * 获取{@link SqlConnRunner}
+	 * 获取{@link DialectRunner}
 	 *
-	 * @return {@link SqlConnRunner}
+	 * @return {@link DialectRunner}
 	 */
-	public SqlConnRunner getRunner() {
+	public DialectRunner getRunner() {
 		return runner;
 	}
 
 	/**
-	 * 设置 {@link SqlConnRunner}
+	 * 设置 {@link DialectRunner}
 	 *
-	 * @param runner {@link SqlConnRunner}
+	 * @param runner {@link DialectRunner}
 	 */
-	public void setRunner(final SqlConnRunner runner) {
+	@SuppressWarnings("unchecked")
+	public R setRunner(final DialectRunner runner) {
 		this.runner = runner;
+		return (R) this;
 	}
 
 	/**
@@ -1003,7 +938,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractDb setWrapper(final Character wrapperChar) {
+	public R setWrapper(final Character wrapperChar) {
 		return setWrapper(new Wrapper(wrapperChar));
 	}
 
@@ -1014,9 +949,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractDb setWrapper(final Wrapper wrapper) {
+	@SuppressWarnings("unchecked")
+	public R setWrapper(final Wrapper wrapper) {
 		this.runner.setWrapper(wrapper);
-		return this;
+		return (R) this;
 	}
 
 	/**
@@ -1026,7 +962,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return this
 	 * @since 4.5.7
 	 */
-	public AbstractDb disableWrapper() {
+	public R disableWrapper() {
 		return setWrapper((Wrapper) null);
 	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
@@ -1037,12 +973,16 @@ public abstract class AbstractDb implements Serializable {
 	 * 检查数据库是否支持事务，此项检查同一个数据源只检查一次，如果不支持抛出DbRuntimeException异常
 	 *
 	 * @param conn Connection
-	 * @throws SQLException       获取元数据信息失败
+	 * @throws DbRuntimeException 获取元数据信息失败
 	 * @throws DbRuntimeException 不支持事务
 	 */
-	protected void checkTransactionSupported(final Connection conn) throws SQLException, DbRuntimeException {
+	protected void checkTransactionSupported(final Connection conn) throws DbRuntimeException {
 		if (null == isSupportTransaction) {
-			isSupportTransaction = conn.getMetaData().supportsTransactions();
+			try {
+				isSupportTransaction = conn.getMetaData().supportsTransactions();
+			} catch (final SQLException e) {
+				throw new DbRuntimeException(e);
+			}
 		}
 		if (false == isSupportTransaction) {
 			throw new DbRuntimeException("Transaction not supported for current database!");

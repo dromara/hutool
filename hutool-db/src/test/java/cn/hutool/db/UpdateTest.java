@@ -5,25 +5,22 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.SQLException;
-
 public class UpdateTest {
 
 	Db db;
 
 	@Before
 	public void init() {
-		db = Db.use("test");
+		db = Db.of("test");
 	}
 
 	/**
 	 * 对更新做单元测试
 	 *
-	 * @throws SQLException SQL异常
 	 */
 	@Test
 	@Ignore
-	public void updateTest() throws SQLException {
+	public void updateTest() {
 
 		// 改
 		final int update = db.update(Entity.create("user").set("age", 88), Entity.create().set("name", "unitTestUser"));

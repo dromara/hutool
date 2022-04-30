@@ -55,6 +55,6 @@ public class PageResultHandler implements RsHandler<PageResult<Entity>> {
 
 	@Override
 	public PageResult<Entity> handle(final ResultSet rs) throws SQLException {
-		return HandleHelper.handleRs(rs, pageResult, this.caseInsensitive);
+		return ResultSetUtil.toEntityList(rs, pageResult, this.caseInsensitive);
 	}
 }

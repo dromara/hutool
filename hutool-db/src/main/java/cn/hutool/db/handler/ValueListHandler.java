@@ -25,7 +25,7 @@ public class ValueListHandler implements RsHandler<List<List<Object>>>{
 	public List<List<Object>> handle(final ResultSet rs) throws SQLException {
 		final ArrayList<List<Object>> result = new ArrayList<>();
 		while (rs.next()) {
-			result.add(HandleHelper.handleRowToList(rs));
+			result.add(ResultSetUtil.handleRowToList(rs));
 		}
 		return result;
 	}

@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -18,8 +17,8 @@ public class H2Test {
 	private static final String DS_GROUP_NAME = "h2";
 
 	@BeforeClass
-	public static void init() throws SQLException {
-		final Db db = Db.use(DS_GROUP_NAME);
+	public static void init() {
+		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 
 		db.insert(Entity.create("test").set("a", 1).set("b", 11));
@@ -29,20 +28,20 @@ public class H2Test {
 	}
 
 	@Test
-	public void queryTest() throws SQLException {
-		final List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
+	public void queryTest() {
+		final List<Entity> query = Db.of(DS_GROUP_NAME).query("select * from test");
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
-	public void findTest() throws SQLException {
-		final List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
+	public void findTest() {
+		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.create("test"));
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
-	public void upsertTest() throws SQLException {
-		final Db db=Db.use(DS_GROUP_NAME);
+	public void upsertTest() {
+		final Db db=Db.of(DS_GROUP_NAME);
 		db.upsert(Entity.create("test").set("a",1).set("b",111),"a");
 		final Entity a1=db.get("test","a",1);
 		Assert.assertEquals(Long.valueOf(111),a1.getLong("b"));

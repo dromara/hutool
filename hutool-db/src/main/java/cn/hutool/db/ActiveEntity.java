@@ -1,10 +1,9 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.Collection;
-
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.map.MapUtil;
+
+import java.util.Collection;
 
 /**
  * 动态实体类<br>
@@ -79,7 +78,7 @@ public class ActiveEntity extends Entity {
 	 * 构造
 	 */
 	public ActiveEntity() {
-		this(Db.use(), (String) null);
+		this(Db.of(), (String) null);
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class ActiveEntity extends Entity {
 	 * @param tableName 表名
 	 */
 	public ActiveEntity(final String tableName) {
-		this(Db.use(), tableName);
+		this(Db.of(), tableName);
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class ActiveEntity extends Entity {
 	 * @param entity 非动态实体
 	 */
 	public ActiveEntity(final Entity entity) {
-		this(Db.use(), entity);
+		this(Db.of(), entity);
 	}
 
 	/**
@@ -186,11 +185,7 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	public ActiveEntity add() {
-		try {
-			db.insert(this);
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
+		db.insert(this);
 		return this;
 	}
 
@@ -200,13 +195,9 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	public ActiveEntity load() {
-		try {
-			final Entity result = db.get(this);
-			if(MapUtil.isNotEmpty(result)) {
-				this.putAll(result);
-			}
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
+		final Entity result = db.get(this);
+		if(MapUtil.isNotEmpty(result)) {
+			this.putAll(result);
 		}
 		return this;
 	}
@@ -217,11 +208,7 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	public ActiveEntity del() {
-		try {
-			db.del(this);
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
+		db.del(this);
 		return this;
 	}
 
@@ -232,11 +219,7 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	public ActiveEntity update(final String primaryKey) {
-		try {
-			db.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
+		db.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
 		return this;
 	}
 	// -------------------------------------------------------------------------- CRUD end

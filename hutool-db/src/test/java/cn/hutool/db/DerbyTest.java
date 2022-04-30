@@ -20,13 +20,8 @@ public class DerbyTest {
 
 	@BeforeClass
 	public static void init() throws SQLException {
-		final Db db = Db.use(DS_GROUP_NAME);
-		try{
-			db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
-		}catch (final SQLException e){
-			// 数据库已存在
-			return;
-		}
+		final Db db = Db.of(DS_GROUP_NAME);
+		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 
 		db.insert(Entity.create("test").set("a", 1).set("b", 11));
 		db.insert(Entity.create("test").set("a", 2).set("b", 21));
@@ -37,14 +32,14 @@ public class DerbyTest {
 	@Test
 	@Ignore
 	public void queryTest() throws SQLException {
-		final List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
+		final List<Entity> query = Db.of(DS_GROUP_NAME).query("select * from test");
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
 	@Ignore
 	public void findTest() throws SQLException {
-		final List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
+		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.create("test"));
 		Assert.assertEquals(4, query.size());
 	}
 }

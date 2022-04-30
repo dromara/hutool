@@ -4,7 +4,6 @@ import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.sql.Wrapper;
 import cn.hutool.db.transaction.TransactionLevel;
 import cn.hutool.log.StaticLog;
 
@@ -19,7 +18,7 @@ import java.sql.SQLException;
  * @author Looly
  * @since 4.1.2
  */
-public class Db extends AbstractDb {
+public class Db extends AbstractDb<Db> {
 	private static final long serialVersionUID = -3378415769645309514L;
 
 	/**
@@ -28,8 +27,8 @@ public class Db extends AbstractDb {
 	 *
 	 * @return Db
 	 */
-	public static Db use() {
-		return use(DSFactory.get());
+	public static Db of() {
+		return of(DSFactory.get());
 	}
 
 	/**
@@ -39,8 +38,8 @@ public class Db extends AbstractDb {
 	 * @param group 数据源分组
 	 * @return Db
 	 */
-	public static Db use(final String group) {
-		return use(DSFactory.get(group));
+	public static Db of(final String group) {
+		return of(DSFactory.get(group));
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 * @return Db
 	 */
-	public static Db use(final DataSource ds) {
+	public static Db of(final DataSource ds) {
 		return ds == null ? null : new Db(ds);
 	}
 
@@ -61,7 +60,7 @@ public class Db extends AbstractDb {
 	 * @param dialect 方言
 	 * @return Db
 	 */
-	public static Db use(final DataSource ds, final Dialect dialect) {
+	public static Db of(final DataSource ds, final Dialect dialect) {
 		return new Db(ds, dialect);
 	}
 
@@ -72,7 +71,7 @@ public class Db extends AbstractDb {
 	 * @param driverClassName 数据库连接驱动类名
 	 * @return Db
 	 */
-	public static Db use(final DataSource ds, final String driverClassName) {
+	public static Db of(final DataSource ds, final String driverClassName) {
 		return new Db(ds, DialectFactory.newDialect(driverClassName));
 	}
 
@@ -107,26 +106,13 @@ public class Db extends AbstractDb {
 	}
 	// ---------------------------------------------------------------------------- Constructor end
 
-	// ---------------------------------------------------------------------------- Getters and Setters start
 	@Override
-	public Db setWrapper(final Character wrapperChar) {
-		return (Db) super.setWrapper(wrapperChar);
-	}
-
-	@Override
-	public Db setWrapper(final Wrapper wrapper) {
-		return (Db) super.setWrapper(wrapper);
-	}
-
-	@Override
-	public Db disableWrapper() {
-		return (Db)super.disableWrapper();
-	}
-	// ---------------------------------------------------------------------------- Getters and Setters end
-
-	@Override
-	public Connection getConnection() throws SQLException {
-		return ThreadLocalConnection.INSTANCE.get(this.ds);
+	public Connection getConnection() throws DbRuntimeException {
+		try {
+			return ThreadLocalConnection.INSTANCE.get(this.ds);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	@Override

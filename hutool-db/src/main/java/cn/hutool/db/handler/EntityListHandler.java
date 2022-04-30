@@ -44,6 +44,6 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 
 	@Override
 	public List<Entity> handle(final ResultSet rs) throws SQLException {
-		return HandleHelper.handleRs(rs, new ArrayList<>(), this.caseInsensitive);
+		return ResultSetUtil.toEntityList(rs, new ArrayList<>(), this.caseInsensitive);
 	}
 }
