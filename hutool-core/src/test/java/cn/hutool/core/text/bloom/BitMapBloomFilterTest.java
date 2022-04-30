@@ -10,7 +10,7 @@ public class BitMapBloomFilterTest {
 
 	@Test
 	public void filterTest() {
-		BitMapBloomFilter filter = new BitMapBloomFilter(10);
+		CombinedBloomFilter filter = new CombinedBloomFilter(10);
 		filter.add("123");
 		filter.add("abc");
 		filter.add("ddd");
