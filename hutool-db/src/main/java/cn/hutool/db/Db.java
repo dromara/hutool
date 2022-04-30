@@ -106,29 +106,6 @@ public class Db extends AbstractDb<Db> {
 	}
 	// ---------------------------------------------------------------------------- Constructor end
 
-	@Override
-	public Connection getConnection() throws DbRuntimeException {
-		try {
-			return ThreadLocalConnection.INSTANCE.get(this.ds);
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
-	}
-
-	@Override
-	public void closeConnection(final Connection conn) {
-		try {
-			if (conn != null && false == conn.getAutoCommit()) {
-				// 事务中的Session忽略关闭事件
-				return;
-			}
-		} catch (final SQLException e) {
-			// ignore
-		}
-
-		ThreadLocalConnection.INSTANCE.close(this.ds);
-	}
-
 	/**
 	 * 执行事务，使用默认的事务级别<br>
 	 * 在同一事务中，所有对数据库操作都是原子的，同时提交或者同时回滚

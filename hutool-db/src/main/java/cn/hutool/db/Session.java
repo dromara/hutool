@@ -269,30 +269,6 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	// ---------------------------------------------------------------------------- Transaction method end
 
 	@Override
-	public Connection getConnection() throws DbRuntimeException {
-		try {
-			return ThreadLocalConnection.INSTANCE.get(this.ds);
-		} catch (final SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public void closeConnection(final Connection conn) {
-		try {
-			if(conn != null && false == conn.getAutoCommit()) {
-				// 事务中的Session忽略关闭事件
-				return;
-			}
-		} catch (final SQLException e) {
-			log.error(e);
-		}
-
-		// 普通请求关闭（或归还）连接
-		ThreadLocalConnection.INSTANCE.close(this.ds);
-	}
-
-	@Override
 	public void close() {
 		closeConnection(null);
 	}

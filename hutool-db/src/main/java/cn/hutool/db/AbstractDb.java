@@ -35,10 +35,9 @@ import java.util.Map;
  *
  * @author looly
  */
-public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionHolder, Serializable {
+public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnectionHolder implements Serializable {
 	private static final long serialVersionUID = 3858951941916349062L;
 
-	protected final DataSource ds;
 	/**
 	 * 是否支持事务
 	 */
@@ -58,7 +57,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionH
 	 * @param dialect 数据库方言
 	 */
 	public AbstractDb(final DataSource ds, final Dialect dialect) {
-		this.ds = ds;
+		super(ds);
 		this.runner = new DialectRunner(dialect);
 	}
 	// ------------------------------------------------------- Constructor end
