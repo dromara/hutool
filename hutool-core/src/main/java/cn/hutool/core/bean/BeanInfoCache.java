@@ -26,7 +26,7 @@ public enum BeanInfoCache {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 属性名和{@link PropertyDescriptor}Map映射
 	 */
-	public Map<String, PropertyDescriptor> getPropertyDescriptorMap(Class<?> beanClass, boolean ignoreCase) {
+	public Map<String, PropertyDescriptor> getPropertyDescriptorMap(final Class<?> beanClass, final boolean ignoreCase) {
 		return getCache(ignoreCase).get(beanClass);
 	}
 
@@ -40,9 +40,9 @@ public enum BeanInfoCache {
 	 * @since 5.4.1
 	 */
 	public Map<String, PropertyDescriptor> getPropertyDescriptorMap(
-			Class<?> beanClass,
-			boolean ignoreCase,
-			Func0<Map<String, PropertyDescriptor>> supplier) {
+			final Class<?> beanClass,
+			final boolean ignoreCase,
+			final Func0<Map<String, PropertyDescriptor>> supplier) {
 		return getCache(ignoreCase).computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
 	}
 
@@ -53,7 +53,7 @@ public enum BeanInfoCache {
 	 * @param fieldNamePropertyDescriptorMap 属性名和{@link PropertyDescriptor}Map映射
 	 * @param ignoreCase                     是否忽略大小写
 	 */
-	public void putPropertyDescriptorMap(Class<?> beanClass, Map<String, PropertyDescriptor> fieldNamePropertyDescriptorMap, boolean ignoreCase) {
+	public void putPropertyDescriptorMap(final Class<?> beanClass, final Map<String, PropertyDescriptor> fieldNamePropertyDescriptorMap, final boolean ignoreCase) {
 		getCache(ignoreCase).put(beanClass, fieldNamePropertyDescriptorMap);
 	}
 
@@ -74,7 +74,7 @@ public enum BeanInfoCache {
 	 * @return {@link ReferenceConcurrentMap}
 	 * @since 5.4.1
 	 */
-	private ReferenceConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> getCache(boolean ignoreCase) {
+	private ReferenceConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> getCache(final boolean ignoreCase) {
 		return ignoreCase ? ignoreCasePdCache : pdCache;
 	}
 }

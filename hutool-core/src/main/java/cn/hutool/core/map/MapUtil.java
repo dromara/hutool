@@ -52,7 +52,7 @@ public class MapUtil {
 	 * @param map 集合
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Map<?, ?> map) {
+	public static boolean isEmpty(final Map<?, ?> map) {
 		return null == map || map.isEmpty();
 	}
 
@@ -62,7 +62,7 @@ public class MapUtil {
 	 * @param map 集合
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(Map<?, ?> map) {
+	public static boolean isNotEmpty(final Map<?, ?> map) {
 		return null != map && false == map.isEmpty();
 	}
 
@@ -76,7 +76,7 @@ public class MapUtil {
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
 	 */
-	public static <K, V> Map<K, V> emptyIfNull(Map<K, V> set) {
+	public static <K, V> Map<K, V> emptyIfNull(final Map<K, V> set) {
 		return (null == set) ? Collections.emptyMap() : set;
 	}
 
@@ -91,7 +91,7 @@ public class MapUtil {
 	 * @return 非空（empty）的原Map或默认Map
 	 * @since 4.6.9
 	 */
-	public static <T extends Map<K, V>, K, V> T defaultIfEmpty(T map, T defaultMap) {
+	public static <T extends Map<K, V>, K, V> T defaultIfEmpty(final T map, final T defaultMap) {
 		return isEmpty(map) ? defaultMap : map;
 	}
 
@@ -118,8 +118,8 @@ public class MapUtil {
 	 * @return HashMap对象
 	 * @since 3.0.4
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isLinked) {
-		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
+	public static <K, V> HashMap<K, V> newHashMap(final int size, final boolean isLinked) {
+		final int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
 		return isLinked ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
 	}
 
@@ -131,7 +131,7 @@ public class MapUtil {
 	 * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
 	 * @return HashMap对象
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(int size) {
+	public static <K, V> HashMap<K, V> newHashMap(final int size) {
 		return newHashMap(size, false);
 	}
 
@@ -143,7 +143,7 @@ public class MapUtil {
 	 * @param isLinked Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 */
-	public static <K, V> HashMap<K, V> newHashMap(boolean isLinked) {
+	public static <K, V> HashMap<K, V> newHashMap(final boolean isLinked) {
 		return newHashMap(DEFAULT_INITIAL_CAPACITY, isLinked);
 	}
 
@@ -156,7 +156,7 @@ public class MapUtil {
 	 * @return TreeMap
 	 * @since 3.2.3
 	 */
-	public static <K, V> TreeMap<K, V> newTreeMap(Comparator<? super K> comparator) {
+	public static <K, V> TreeMap<K, V> newTreeMap(final Comparator<? super K> comparator) {
 		return new TreeMap<>(comparator);
 	}
 
@@ -170,7 +170,7 @@ public class MapUtil {
 	 * @return TreeMap
 	 * @since 3.2.3
 	 */
-	public static <K, V> TreeMap<K, V> newTreeMap(Map<K, V> map, Comparator<? super K> comparator) {
+	public static <K, V> TreeMap<K, V> newTreeMap(final Map<K, V> map, final Comparator<? super K> comparator) {
 		final TreeMap<K, V> treeMap = new TreeMap<>(comparator);
 		if (false == isEmpty(map)) {
 			treeMap.putAll(map);
@@ -187,7 +187,7 @@ public class MapUtil {
 	 * @return {@link IdentityHashMap}
 	 * @since 4.5.7
 	 */
-	public static <K, V> Map<K, V> newIdentityMap(int size) {
+	public static <K, V> Map<K, V> newIdentityMap(final int size) {
 		return new IdentityHashMap<>(size);
 	}
 
@@ -210,7 +210,7 @@ public class MapUtil {
 	 * @param <V>  value的类型
 	 * @return ConcurrentHashMap
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int size) {
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final int size) {
 		final int initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
 		return new ConcurrentHashMap<>(initCapacity);
 	}
@@ -223,7 +223,7 @@ public class MapUtil {
 	 * @param <V> value的类型
 	 * @return ConcurrentHashMap
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<K, V> map) {
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final Map<K, V> map) {
 		if (isEmpty(map)) {
 			return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
 		}
@@ -240,7 +240,7 @@ public class MapUtil {
 	 * @return {@link Map}实例
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> createMap(Class<?> mapType) {
+	public static <K, V> Map<K, V> createMap(final Class<?> mapType) {
 		if (mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
@@ -259,7 +259,7 @@ public class MapUtil {
 	 * @param value 值
 	 * @return {@link HashMap}
 	 */
-	public static <K, V> HashMap<K, V> of(K key, V value) {
+	public static <K, V> HashMap<K, V> of(final K key, final V value) {
 		return of(key, value, false);
 	}
 
@@ -273,7 +273,7 @@ public class MapUtil {
 	 * @param isOrder 是否有序
 	 * @return {@link HashMap}
 	 */
-	public static <K, V> HashMap<K, V> of(K key, V value, boolean isOrder) {
+	public static <K, V> HashMap<K, V> of(final K key, final V value, final boolean isOrder) {
 		final HashMap<K, V> map = newHashMap(isOrder);
 		map.put(key, value);
 		return map;
@@ -290,9 +290,9 @@ public class MapUtil {
 	 * @since 5.8.0
 	 */
 	@SafeVarargs
-	public static <K, V> Map<K, V> ofEntries(Map.Entry<K, V>... entries) {
+	public static <K, V> Map<K, V> ofEntries(final Map.Entry<K, V>... entries) {
 		final Map<K, V> map = new HashMap<>();
-		for (Map.Entry<K, V> pair : entries) {
+		for (final Map.Entry<K, V> pair : entries) {
 			map.put(pair.getKey(), pair.getValue());
 		}
 		return map;
@@ -323,7 +323,7 @@ public class MapUtil {
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings("rawtypes")
-	public static HashMap<Object, Object> of(Object[] array) {
+	public static HashMap<Object, Object> of(final Object[] array) {
 		if (array == null) {
 			return null;
 		}
@@ -331,7 +331,7 @@ public class MapUtil {
 		for (int i = 0; i < array.length; i++) {
 			final Object object = array[i];
 			if (object instanceof Map.Entry) {
-				Map.Entry entry = (Map.Entry) object;
+				final Map.Entry entry = (Map.Entry) object;
 				map.put(entry.getKey(), entry.getValue());
 			} else if (object instanceof Object[]) {
 				final Object[] entry = (Object[]) object;
@@ -393,18 +393,18 @@ public class MapUtil {
 	 * @param mapList Map列表
 	 * @return Map
 	 */
-	public static <K, V> Map<K, List<V>> toListMap(Iterable<? extends Map<K, V>> mapList) {
+	public static <K, V> Map<K, List<V>> toListMap(final Iterable<? extends Map<K, V>> mapList) {
 		final HashMap<K, List<V>> resultMap = new HashMap<>();
 		if (CollUtil.isEmpty(mapList)) {
 			return resultMap;
 		}
 
 		Set<Entry<K, V>> entrySet;
-		for (Map<K, V> map : mapList) {
+		for (final Map<K, V> map : mapList) {
 			entrySet = map.entrySet();
 			K key;
 			List<V> valueList;
-			for (Entry<K, V> entry : entrySet) {
+			for (final Entry<K, V> entry : entrySet) {
 				key = entry.getKey();
 				valueList = resultMap.get(key);
 				if (null == valueList) {
@@ -448,7 +448,7 @@ public class MapUtil {
 	 * @param listMap 列表Map
 	 * @return Map列表
 	 */
-	public static <K, V> List<Map<K, V>> toMapList(Map<K, ? extends Iterable<V>> listMap) {
+	public static <K, V> List<Map<K, V>> toMapList(final Map<K, ? extends Iterable<V>> listMap) {
 		final List<Map<K, V>> resultList = new ArrayList<>();
 		if (isEmpty(listMap)) {
 			return resultList;
@@ -462,7 +462,7 @@ public class MapUtil {
 			map = new HashMap<>();
 			List<V> vList;
 			int vListSize;
-			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
+			for (final Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
 				vList = CollUtil.newArrayList(entry.getValue());
 				vListSize = vList.size();
 				if (index < vListSize) {
@@ -492,7 +492,7 @@ public class MapUtil {
 	 * @return 驼峰风格Map
 	 * @since 3.3.1
 	 */
-	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
+	public static <K, V> Map<K, V> toCamelCaseMap(final Map<K, V> map) {
 		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
 	}
 
@@ -503,7 +503,7 @@ public class MapUtil {
 	 * @return 数组
 	 * @since 4.1.9
 	 */
-	public static Object[][] toObjectArray(Map<?, ?> map) {
+	public static Object[][] toObjectArray(final Map<?, ?> map) {
 		if (map == null) {
 			return null;
 		}
@@ -512,7 +512,7 @@ public class MapUtil {
 			return result;
 		}
 		int index = 0;
-		for (Entry<?, ?> entry : map.entrySet()) {
+		for (final Entry<?, ?> entry : map.entrySet()) {
 			result[index][0] = entry.getKey();
 			result[index][1] = entry.getValue();
 			index++;
@@ -534,7 +534,7 @@ public class MapUtil {
 	 * @return 连接字符串
 	 * @since 3.1.1
 	 */
-	public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, String... otherParams) {
+	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator, final String... otherParams) {
 		return join(map, separator, keyValueSeparator, false, otherParams);
 	}
 
@@ -549,8 +549,8 @@ public class MapUtil {
 	 * @return 签名字符串
 	 * @since 5.0.4
 	 */
-	public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull,
-								  String... otherParams) {
+	public static String sortJoin(final Map<?, ?> params, final String separator, final String keyValueSeparator, final boolean isIgnoreNull,
+								  final String... otherParams) {
 		return join(sort(params), separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -566,7 +566,7 @@ public class MapUtil {
 	 * @return 连接后的字符串
 	 * @since 3.1.1
 	 */
-	public static <K, V> String joinIgnoreNull(Map<K, V> map, String separator, String keyValueSeparator, String... otherParams) {
+	public static <K, V> String joinIgnoreNull(final Map<K, V> map, final String separator, final String keyValueSeparator, final String... otherParams) {
 		return join(map, separator, keyValueSeparator, true, otherParams);
 	}
 
@@ -583,11 +583,11 @@ public class MapUtil {
 	 * @return 连接后的字符串，map和otherParams为空返回""
 	 * @since 3.1.1
 	 */
-	public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator, final boolean isIgnoreNull, final String... otherParams) {
 		final StringBuilder strBuilder = StrUtil.builder();
 		boolean isFirst = true;
 		if (isNotEmpty(map)) {
-			for (Entry<K, V> entry : map.entrySet()) {
+			for (final Entry<K, V> entry : map.entrySet()) {
 				if (false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
 					if (isFirst) {
 						isFirst = false;
@@ -600,7 +600,7 @@ public class MapUtil {
 		}
 		// 补充其它字符串到末尾，默认无分隔符
 		if (ArrayUtil.isNotEmpty(otherParams)) {
-			for (String otherParam : otherParams) {
+			for (final String otherParam : otherParams) {
 				strBuilder.append(otherParam);
 			}
 		}
@@ -625,7 +625,7 @@ public class MapUtil {
 	 * @return 编辑后的Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> edit(Map<K, V> map, Editor<Entry<K, V>> editor) {
+	public static <K, V> Map<K, V> edit(final Map<K, V> map, final Editor<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
@@ -639,7 +639,7 @@ public class MapUtil {
 		}
 
 		Entry<K, V> modified;
-		for (Entry<K, V> entry : map.entrySet()) {
+		for (final Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
 			if (null != modified) {
 				map2.put(modified.getKey(), modified.getValue());
@@ -663,7 +663,7 @@ public class MapUtil {
 	 * @return 过滤后的Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+	public static <K, V> Map<K, V> filter(final Map<K, V> map, final Filter<Entry<K, V>> filter) {
 		if (null == map || null == filter) {
 			return map;
 		}
@@ -683,7 +683,7 @@ public class MapUtil {
 	 * @return 值可以为不同类型的 {@link Map}
 	 * @since 5.8.0
 	 */
-	public static <K, V, R> Map<K, R> map(Map<K, V> map, BiFunction<K, V, R> biFunction) {
+	public static <K, V, R> Map<K, R> map(final Map<K, V> map, final BiFunction<K, V, R> biFunction) {
 		if (null == map || null == biFunction) {
 			return MapUtil.newHashMap();
 		}
@@ -701,7 +701,7 @@ public class MapUtil {
 	 * @since 4.0.10
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
+	public static <K, V> Map<K, V> filter(final Map<K, V> map, final K... keys) {
 		if (null == map || null == keys) {
 			return map;
 		}
@@ -714,7 +714,7 @@ public class MapUtil {
 			return map2;
 		}
 
-		for (K key : keys) {
+		for (final K key : keys) {
 			if (map.containsKey(key)) {
 				map2.put(key, map.get(key));
 			}
@@ -733,7 +733,7 @@ public class MapUtil {
 	 * @see #inverse(Map)
 	 * @since 3.2.2
 	 */
-	public static <T> Map<T, T> reverse(Map<T, T> map) {
+	public static <T> Map<T, T> reverse(final Map<T, T> map) {
 		return edit(map, t -> new Entry<T, T>() {
 
 			@Override
@@ -747,7 +747,7 @@ public class MapUtil {
 			}
 
 			@Override
-			public T setValue(T value) {
+			public T setValue(final T value) {
 				throw new UnsupportedOperationException("Unsupported setValue method !");
 			}
 		});
@@ -764,7 +764,7 @@ public class MapUtil {
 	 * @return 互换后的Map
 	 * @since 5.2.6
 	 */
-	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+	public static <K, V> Map<V, K> inverse(final Map<K, V> map) {
 		final Map<V, K> result = createMap(map.getClass());
 		map.forEach((key, value) -> result.put(value, key));
 		return result;
@@ -780,7 +780,7 @@ public class MapUtil {
 	 * @see #newTreeMap(Map, Comparator)
 	 * @since 4.0.1
 	 */
-	public static <K, V> TreeMap<K, V> sort(Map<K, V> map) {
+	public static <K, V> TreeMap<K, V> sort(final Map<K, V> map) {
 		return sort(map, null);
 	}
 
@@ -795,14 +795,14 @@ public class MapUtil {
 	 * @see #newTreeMap(Map, Comparator)
 	 * @since 4.0.1
 	 */
-	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
+	public static <K, V> TreeMap<K, V> sort(final Map<K, V> map, final Comparator<? super K> comparator) {
 		if (null == map) {
 			return null;
 		}
 
 		if (map instanceof TreeMap) {
 			// 已经是可排序Map，此时只有比较器一致才返回原map
-			TreeMap<K, V> result = (TreeMap<K, V>) map;
+			final TreeMap<K, V> result = (TreeMap<K, V>) map;
 			if (null == comparator || comparator.equals(result.comparator())) {
 				return result;
 			}
@@ -821,8 +821,8 @@ public class MapUtil {
 	 * @return 排序后新的Map
 	 * @since 5.5.8
 	 */
-	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, boolean isDesc) {
-		Map<K, V> result = new LinkedHashMap<>();
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(final Map<K, V> map, final boolean isDesc) {
+		final Map<K, V> result = new LinkedHashMap<>();
 		Comparator<Entry<K, V>> entryComparator = Entry.comparingByValue();
 		if (isDesc) {
 			entryComparator = entryComparator.reversed();
@@ -839,7 +839,7 @@ public class MapUtil {
 	 * @return {@link MapProxy}
 	 * @since 3.2.0
 	 */
-	public static MapProxy createProxy(Map<?, ?> map) {
+	public static MapProxy createProxy(final Map<?, ?> map) {
 		return MapProxy.create(map);
 	}
 
@@ -853,7 +853,7 @@ public class MapUtil {
 	 * @return {@link MapWrapper}
 	 * @since 4.5.4
 	 */
-	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
+	public static <K, V> MapWrapper<K, V> wrap(final Map<K, V> map) {
 		return new MapWrapper<>(map);
 	}
 
@@ -866,7 +866,7 @@ public class MapUtil {
 	 * @return 不修改Map
 	 * @since 5.2.6
 	 */
-	public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
+	public static <K, V> Map<K, V> unmodifiable(final Map<K, V> map) {
 		return Collections.unmodifiableMap(map);
 	}
 
@@ -891,7 +891,7 @@ public class MapUtil {
 	 * @param map 实际使用的map
 	 * @return map创建类
 	 */
-	public static <K, V> MapBuilder<K, V> builder(Map<K, V> map) {
+	public static <K, V> MapBuilder<K, V> builder(final Map<K, V> map) {
 		return new MapBuilder<>(map);
 	}
 
@@ -904,7 +904,7 @@ public class MapUtil {
 	 * @param v   value
 	 * @return map创建类
 	 */
-	public static <K, V> MapBuilder<K, V> builder(K k, V v) {
+	public static <K, V> MapBuilder<K, V> builder(final K k, final V v) {
 		return (builder(new HashMap<K, V>())).put(k, v);
 	}
 
@@ -919,7 +919,7 @@ public class MapUtil {
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> getAny(Map<K, V> map, final K... keys) {
+	public static <K, V> Map<K, V> getAny(final Map<K, V> map, final K... keys) {
 		return filter(map, entry -> ArrayUtil.contains(keys, entry.getKey()));
 	}
 
@@ -934,8 +934,8 @@ public class MapUtil {
 	 * @since 5.0.5
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> removeAny(Map<K, V> map, final K... keys) {
-		for (K key : keys) {
+	public static <K, V> Map<K, V> removeAny(final Map<K, V> map, final K... keys) {
+		for (final K key : keys) {
 			map.remove(key);
 		}
 		return map;
@@ -949,7 +949,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static String getStr(Map<?, ?> map, Object key) {
+	public static String getStr(final Map<?, ?> map, final Object key) {
 		return get(map, key, String.class);
 	}
 
@@ -962,7 +962,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static String getStr(Map<?, ?> map, Object key, String defaultValue) {
+	public static String getStr(final Map<?, ?> map, final Object key, final String defaultValue) {
 		return get(map, key, String.class, defaultValue);
 	}
 
@@ -974,7 +974,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Integer getInt(Map<?, ?> map, Object key) {
+	public static Integer getInt(final Map<?, ?> map, final Object key) {
 		return get(map, key, Integer.class);
 	}
 
@@ -987,7 +987,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Integer getInt(Map<?, ?> map, Object key, Integer defaultValue) {
+	public static Integer getInt(final Map<?, ?> map, final Object key, final Integer defaultValue) {
 		return get(map, key, Integer.class, defaultValue);
 	}
 
@@ -999,7 +999,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Double getDouble(Map<?, ?> map, Object key) {
+	public static Double getDouble(final Map<?, ?> map, final Object key) {
 		return get(map, key, Double.class);
 	}
 
@@ -1012,7 +1012,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Double getDouble(Map<?, ?> map, Object key, Double defaultValue) {
+	public static Double getDouble(final Map<?, ?> map, final Object key, final Double defaultValue) {
 		return get(map, key, Double.class, defaultValue);
 	}
 
@@ -1024,7 +1024,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Float getFloat(Map<?, ?> map, Object key) {
+	public static Float getFloat(final Map<?, ?> map, final Object key) {
 		return get(map, key, Float.class);
 	}
 
@@ -1037,7 +1037,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Float getFloat(Map<?, ?> map, Object key, Float defaultValue) {
+	public static Float getFloat(final Map<?, ?> map, final Object key, final Float defaultValue) {
 		return get(map, key, Float.class, defaultValue);
 	}
 
@@ -1049,7 +1049,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Short getShort(Map<?, ?> map, Object key) {
+	public static Short getShort(final Map<?, ?> map, final Object key) {
 		return get(map, key, Short.class);
 	}
 
@@ -1062,7 +1062,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Short getShort(Map<?, ?> map, Object key, Short defaultValue) {
+	public static Short getShort(final Map<?, ?> map, final Object key, final Short defaultValue) {
 		return get(map, key, Short.class, defaultValue);
 	}
 
@@ -1074,7 +1074,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Boolean getBool(Map<?, ?> map, Object key) {
+	public static Boolean getBool(final Map<?, ?> map, final Object key) {
 		return get(map, key, Boolean.class);
 	}
 
@@ -1087,7 +1087,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Boolean getBool(Map<?, ?> map, Object key, Boolean defaultValue) {
+	public static Boolean getBool(final Map<?, ?> map, final Object key, final Boolean defaultValue) {
 		return get(map, key, Boolean.class, defaultValue);
 	}
 
@@ -1099,7 +1099,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Character getChar(Map<?, ?> map, Object key) {
+	public static Character getChar(final Map<?, ?> map, final Object key) {
 		return get(map, key, Character.class);
 	}
 
@@ -1112,7 +1112,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Character getChar(Map<?, ?> map, Object key, Character defaultValue) {
+	public static Character getChar(final Map<?, ?> map, final Object key, final Character defaultValue) {
 		return get(map, key, Character.class, defaultValue);
 	}
 
@@ -1124,7 +1124,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static Long getLong(Map<?, ?> map, Object key) {
+	public static Long getLong(final Map<?, ?> map, final Object key) {
 		return get(map, key, Long.class);
 	}
 
@@ -1137,7 +1137,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static Long getLong(Map<?, ?> map, Object key, Long defaultValue) {
+	public static Long getLong(final Map<?, ?> map, final Object key, final Long defaultValue) {
 		return get(map, key, Long.class, defaultValue);
 	}
 
@@ -1149,7 +1149,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.1.2
 	 */
-	public static Date getDate(Map<?, ?> map, Object key) {
+	public static Date getDate(final Map<?, ?> map, final Object key) {
 		return get(map, key, Date.class);
 	}
 
@@ -1162,7 +1162,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.1.2
 	 */
-	public static Date getDate(Map<?, ?> map, Object key, Date defaultValue) {
+	public static Date getDate(final Map<?, ?> map, final Object key, final Date defaultValue) {
 		return get(map, key, Date.class, defaultValue);
 	}
 
@@ -1176,7 +1176,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
+	public static <T> T get(final Map<?, ?> map, final Object key, final Class<T> type) {
 		return get(map, key, type, null);
 	}
 
@@ -1191,7 +1191,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static <T> T get(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
+	public static <T> T get(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
 		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
@@ -1206,7 +1206,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.5.3
 	 */
-	public static <T> T getQuietly(Map<?, ?> map, Object key, Class<T> type, T defaultValue) {
+	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
 		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
@@ -1220,7 +1220,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 4.5.12
 	 */
-	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type) {
+	public static <T> T get(final Map<?, ?> map, final Object key, final TypeReference<T> type) {
 		return get(map, key, type, null);
 	}
 
@@ -1235,7 +1235,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.3.11
 	 */
-	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
+	public static <T> T get(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
 		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
 	}
 
@@ -1250,7 +1250,7 @@ public class MapUtil {
 	 * @return 值
 	 * @since 5.5.3
 	 */
-	public static <T> T getQuietly(Map<?, ?> map, Object key, TypeReference<T> type, T defaultValue) {
+	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
 		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
 	}
 
@@ -1268,7 +1268,7 @@ public class MapUtil {
 	 * @throws IllegalArgumentException 新key存在抛出此异常
 	 * @since 4.5.16
 	 */
-	public static <K, V> Map<K, V> renameKey(Map<K, V> map, K oldKey, K newKey) {
+	public static <K, V> Map<K, V> renameKey(final Map<K, V> map, final K oldKey, final K newKey) {
 		if (isNotEmpty(map) && map.containsKey(oldKey)) {
 			if (map.containsKey(newKey)) {
 				throw new IllegalArgumentException(StrUtil.format("The key '{}' exist !", newKey));
@@ -1288,7 +1288,7 @@ public class MapUtil {
 	 * @return map
 	 * @since 4.6.5
 	 */
-	public static <K, V> Map<K, V> removeNullValue(Map<K, V> map) {
+	public static <K, V> Map<K, V> removeNullValue(final Map<K, V> map) {
 		if (isEmpty(map)) {
 			return map;
 		}
@@ -1335,7 +1335,7 @@ public class MapUtil {
 	 * @since 5.3.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V, T extends Map<K, V>> T empty(Class<?> mapClass) {
+	public static <K, V, T extends Map<K, V>> T empty(final Class<?> mapClass) {
 		if (null == mapClass) {
 			return (T) Collections.emptyMap();
 		}
@@ -1356,8 +1356,8 @@ public class MapUtil {
 	 *
 	 * @param maps 一个或多个Map
 	 */
-	public static void clear(Map<?, ?>... maps) {
-		for (Map<?, ?> map : maps) {
+	public static void clear(final Map<?, ?>... maps) {
+		for (final Map<?, ?> map : maps) {
 			if (isNotEmpty(map)) {
 				map.clear();
 			}
@@ -1375,7 +1375,7 @@ public class MapUtil {
 	 * @return 值列表
 	 * @since 5.7.20
 	 */
-	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterator<K> keys) {
 		final ArrayList<V> values = new ArrayList<>();
 		while (keys.hasNext()) {
 			values.add(map.get(keys.next()));
@@ -1394,7 +1394,7 @@ public class MapUtil {
 	 * @return {@link AbstractMap.SimpleImmutableEntry}
 	 * @since 5.8.0
 	 */
-	public static <K, V> Map.Entry<K, V> entry(K key, V value) {
+	public static <K, V> Map.Entry<K, V> entry(final K key, final V value) {
 		return entry(key, value, true);
 	}
 
@@ -1409,7 +1409,7 @@ public class MapUtil {
 	 * @return {@link AbstractMap.SimpleEntry} 或者 {@link AbstractMap.SimpleImmutableEntry}
 	 * @since 5.8.0
 	 */
-	public static <K, V> Map.Entry<K, V> entry(K key, V value, boolean isImmutable) {
+	public static <K, V> Map.Entry<K, V> entry(final K key, final V value, final boolean isImmutable) {
 		return isImmutable ?
 				new AbstractMap.SimpleEntry<>(key, value) :
 				new AbstractMap.SimpleImmutableEntry<>(key, value);

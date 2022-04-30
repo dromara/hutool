@@ -25,7 +25,7 @@ public class Order implements Serializable{
 	 * 构造
 	 * @param field 排序字段
 	 */
-	public Order(String field) {
+	public Order(final String field) {
 		this.field = field;
 	}
 
@@ -34,7 +34,7 @@ public class Order implements Serializable{
 	 * @param field 排序字段
 	 * @param direction 排序方式
 	 */
-	public Order(String field, Direction direction) {
+	public Order(final String field, final Direction direction) {
 		this(field);
 		this.direction = direction;
 	}
@@ -52,7 +52,7 @@ public class Order implements Serializable{
 	 * 设置排序字段
 	 * @param field 排序字段
 	 */
-	public void setField(String field) {
+	public void setField(final String field) {
 		this.field = field;
 	}
 
@@ -66,7 +66,7 @@ public class Order implements Serializable{
 	 * 设置排序方向
 	 * @param direction 排序方向
 	 */
-	public void setDirection(Direction direction) {
+	public void setDirection(final Direction direction) {
 		this.direction = direction;
 	}
 	//---------------------------------------------------------- Getters and Setters end

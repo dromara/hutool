@@ -10,9 +10,9 @@ public class ClassScanerTest {
 	@Test
 	@Ignore
 	public void scanTest() {
-		ClassScanner scaner = new ClassScanner("cn.hutool.core.util", null);
-		Set<Class<?>> set = scaner.scan();
-		for (Class<?> clazz : set) {
+		final ClassScanner scaner = new ClassScanner("cn.hutool.core.util", null);
+		final Set<Class<?>> set = scaner.scan();
+		for (final Class<?> clazz : set) {
 			Console.log(clazz.getName());
 		}
 	}

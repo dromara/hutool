@@ -66,7 +66,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param code the code
 	 * @param message the message
 	 */
-	public ResultDto(int code, String message) {
+	public ResultDto(final int code, final String message) {
 		this(code, message, null);
 	}
 
@@ -77,7 +77,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param message the message
 	 * @param result the result
 	 */
-	public ResultDto(int code, String message, T result) {
+	public ResultDto(final int code, final String message, final T result) {
 		this.code(code).message(message).result(result);
 	}
 
@@ -87,7 +87,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param code the new 编号
 	 * @return the wrapper
 	 */
-	private ResultDto<T> code(int code) {
+	private ResultDto<T> code(final int code) {
 		this.setCode(code);
 		return this;
 	}
@@ -98,7 +98,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param message the new 信息
 	 * @return the wrapper
 	 */
-	private ResultDto<T> message(String message) {
+	private ResultDto<T> message(final String message) {
 		this.setMessage(message);
 		return this;
 	}
@@ -109,7 +109,7 @@ public class ResultDto<T> implements Serializable {
 	 * @param result the new 结果数据
 	 * @return the wrapper
 	 */
-	public ResultDto<T> result(T result) {
+	public ResultDto<T> result(final T result) {
 		this.setResult(result);
 		return this;
 	}

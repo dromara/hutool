@@ -18,15 +18,15 @@ public class Log4jLog extends AbstractLog {
 	private final Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4jLog(Logger logger) {
+	public Log4jLog(final Logger logger) {
 		this.logger = logger;
 	}
 
-	public Log4jLog(Class<?> clazz) {
+	public Log4jLog(final Class<?> clazz) {
 		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
-	public Log4jLog(String name) {
+	public Log4jLog(final String name) {
 		this(Logger.getLogger(name));
 	}
 
@@ -42,7 +42,7 @@ public class Log4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.TRACE, t, format, arguments);
 	}
 
@@ -53,7 +53,7 @@ public class Log4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.DEBUG, t, format, arguments);
 	}
 	// ------------------------------------------------------------------------- Info
@@ -63,7 +63,7 @@ public class Log4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.INFO, t, format, arguments);
 	}
 
@@ -74,7 +74,7 @@ public class Log4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.WARN, t, format, arguments);
 	}
 
@@ -85,14 +85,14 @@ public class Log4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, cn.hutool.log.level.Level.ERROR, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		Level log4jLevel;
+	public void log(final String fqcn, final cn.hutool.log.level.Level level, final Throwable t, final String format, final Object... arguments) {
+		final Level log4jLevel;
 		switch (level) {
 			case TRACE:
 				log4jLevel = Level.TRACE;

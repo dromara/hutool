@@ -29,7 +29,7 @@ public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public CamelCaseLinkedMap(int initialCapacity) {
+	public CamelCaseLinkedMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -38,7 +38,7 @@ public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	 *
 	 * @param m Map
 	 */
-	public CamelCaseLinkedMap(Map<? extends K, ? extends V> m) {
+	public CamelCaseLinkedMap(final Map<? extends K, ? extends V> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -48,7 +48,7 @@ public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	 * @param loadFactor 加载因子
 	 * @param m Map，数据会被默认拷贝到一个新的LinkedHashMap中
 	 */
-	public CamelCaseLinkedMap(float loadFactor, Map<? extends K, ? extends V> m) {
+	public CamelCaseLinkedMap(final float loadFactor, final Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
 		this.putAll(m);
 	}
@@ -59,7 +59,7 @@ public class CamelCaseLinkedMap<K, V> extends CamelCaseMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public CamelCaseLinkedMap(int initialCapacity, float loadFactor) {
+	public CamelCaseLinkedMap(final int initialCapacity, final float loadFactor) {
 		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end

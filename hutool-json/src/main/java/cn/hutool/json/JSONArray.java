@@ -65,7 +65,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param initialCapacity 初始大小
 	 * @since 3.2.2
 	 */
-	public JSONArray(int initialCapacity) {
+	public JSONArray(final int initialCapacity) {
 		this(initialCapacity, JSONConfig.create());
 	}
 
@@ -76,7 +76,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param config JSON配置项
 	 * @since 4.6.5
 	 */
-	public JSONArray(JSONConfig config) {
+	public JSONArray(final JSONConfig config) {
 		this(DEFAULT_CAPACITY, config);
 	}
 
@@ -88,7 +88,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param config          JSON配置项
 	 * @since 4.1.19
 	 */
-	public JSONArray(int initialCapacity, JSONConfig config) {
+	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig::create);
 	}
@@ -106,7 +106,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param object 数组或集合或JSON数组字符串
 	 * @throws JSONException 非数组或集合
 	 */
-	public JSONArray(Object object) throws JSONException {
+	public JSONArray(final Object object) throws JSONException {
 		this(object, JSONConfig.create());
 	}
 
@@ -125,7 +125,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 * @since 4.6.5
 	 */
-	public JSONArray(Object object, JSONConfig jsonConfig) throws JSONException {
+	public JSONArray(final Object object, final JSONConfig jsonConfig) throws JSONException {
 		this(object, jsonConfig, null);
 	}
 
@@ -145,7 +145,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 * @since 5.8.0
 	 */
-	public JSONArray(Object object, JSONConfig jsonConfig, Filter<Mutable<Object>> filter) throws JSONException {
+	public JSONArray(final Object object, final JSONConfig jsonConfig, final Filter<Mutable<Object>> filter) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
 		ObjectMapper.of(object).map(this, filter);
 	}
@@ -163,7 +163,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return this
 	 * @since 4.1.19
 	 */
-	public JSONArray setDateFormat(String format) {
+	public JSONArray setDateFormat(final String format) {
 		this.config.setDateFormat(format);
 		return this;
 	}
@@ -175,33 +175,33 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return a string.
 	 * @throws JSONException If the array contains an invalid number.
 	 */
-	public String join(String separator) throws JSONException {
+	public String join(final String separator) throws JSONException {
 		return StrJoiner.of(separator)
 				.append(this, InternalJSONUtil::valueToString).toString();
 	}
 
 	@Override
-	public Object get(int index) {
+	public Object get(final int index) {
 		return this.rawList.get(index);
 	}
 
 	@Override
-	public Object getObj(Integer index, Object defaultValue) {
+	public Object getObj(final Integer index, final Object defaultValue) {
 		return (index < 0 || index >= this.size()) ? defaultValue : this.rawList.get(index);
 	}
 
 	@Override
-	public Object getByPath(String expression) {
+	public Object getByPath(final String expression) {
 		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
-	public <T> T getByPath(String expression, Class<T> resultType) {
+	public <T> T getByPath(final String expression, final Class<T> resultType) {
 		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
-	public void putByPath(String expression, Object value) {
+	public void putByPath(final String expression, final Object value) {
 		BeanPath.create(expression).set(this, value);
 	}
 
@@ -213,7 +213,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return this.
 	 * @see #set(Object)
 	 */
-	public JSONArray put(Object value) {
+	public JSONArray put(final Object value) {
 		return set(value);
 	}
 
@@ -225,7 +225,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return this.
 	 * @since 5.2.5
 	 */
-	public JSONArray set(Object value) {
+	public JSONArray set(final Object value) {
 		this.add(value);
 		return this;
 	}
@@ -239,13 +239,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException index &lt; 0 或者非有限的数字
 	 * @see #set(int, Object)
 	 */
-	public JSONArray put(int index, Object value) throws JSONException {
+	public JSONArray put(final int index, final Object value) throws JSONException {
 		this.set(index, value);
 		return this;
 	}
 
 	@Override
-	public <T> T toBean(Type type) {
+	public <T> T toBean(final Type type) {
 		return JSON.super.toBean(type, config.isIgnoreError());
 	}
 
@@ -256,7 +256,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return A JSONObject，无名或值返回null
 	 * @throws JSONException 如果任何一个名为null
 	 */
-	public JSONObject toJSONObject(JSONArray names) throws JSONException {
+	public JSONObject toJSONObject(final JSONArray names) throws JSONException {
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
@@ -276,7 +276,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -320,7 +320,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return rawList.contains(o);
 	}
 
@@ -331,61 +331,61 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public <T> T[] toArray(T[] a) {
+	public <T> T[] toArray(final T[] a) {
 		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
 	}
 
 	@Override
-	public boolean add(Object e) {
+	public boolean add(final Object e) {
 		return addRaw(JSONUtil.wrap(e, this.config), null);
 	}
 
 	@Override
-	public Object remove(int index) {
+	public Object remove(final int index) {
 		return index >= 0 && index < this.size() ? this.rawList.remove(index) : null;
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return rawList.remove(o);
 	}
 
 	@SuppressWarnings({"NullableProblems", "SlowListContainsAll"})
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		return rawList.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(Collection<?> c) {
+	public boolean addAll(final Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
-		for (Object obj : c) {
+		for (final Object obj : c) {
 			this.add(obj);
 		}
 		return true;
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<?> c) {
+	public boolean addAll(final int index, final Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
-		for (Object object : c) {
+		for (final Object object : c) {
 			list.add(JSONUtil.wrap(object, this.config));
 		}
 		return rawList.addAll(index, list);
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(final Collection<?> c) {
 		return this.rawList.removeAll(c);
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		return this.rawList.retainAll(c);
 	}
 
@@ -403,7 +403,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 替换的值，即之前的值
 	 */
 	@Override
-	public Object set(int index, Object element) {
+	public Object set(final int index, final Object element) {
 		return set(index, element, null);
 	}
 
@@ -416,7 +416,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 替换的值，即之前的值
 	 * @since 5.8.0
 	 */
-	public Object set(int index, Object element, Filter<MutablePair<Integer, Object>> filter) {
+	public Object set(final int index, Object element, final Filter<MutablePair<Integer, Object>> filter) {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != filter) {
 			final MutablePair<Integer, Object> pair = new MutablePair<>(index, element);
@@ -433,7 +433,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public void add(int index, Object element) {
+	public void add(final int index, final Object element) {
 		if (index < 0) {
 			throw new JSONException("JSONArray[{}] not found.", index);
 		}
@@ -450,12 +450,12 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(final Object o) {
 		return this.rawList.indexOf(o);
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(final Object o) {
 		return this.rawList.lastIndexOf(o);
 	}
 
@@ -465,12 +465,12 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public ListIterator<Object> listIterator(int index) {
+	public ListIterator<Object> listIterator(final int index) {
 		return this.rawList.listIterator(index);
 	}
 
 	@Override
-	public List<Object> subList(int fromIndex, int toIndex) {
+	public List<Object> subList(final int fromIndex, final int toIndex) {
 		return this.rawList.subList(fromIndex, toIndex);
 	}
 
@@ -480,7 +480,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param arrayClass 数组元素类型
 	 * @return 实体类对象
 	 */
-	public Object toArray(Class<?> arrayClass) {
+	public Object toArray(final Class<?> arrayClass) {
 		return JSONConverter.toArray(this, arrayClass);
 	}
 
@@ -492,7 +492,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return {@link ArrayList}
 	 * @since 3.0.8
 	 */
-	public <T> List<T> toList(Class<T> elementType) {
+	public <T> List<T> toList(final Class<T> elementType) {
 		return JSONConverter.toList(this, elementType);
 	}
 
@@ -515,7 +515,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(int indentFactor, Filter<MutablePair<Integer, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Filter<MutablePair<Integer, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -523,7 +523,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent) throws JSONException {
 		return write(writer, indentFactor, indent, null);
 	}
 
@@ -539,7 +539,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<Integer, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutablePair<Integer, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginArray();
 
@@ -569,7 +569,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 是否加入成功
 	 * @since 5.8.0
 	 */
-	protected boolean addRaw(Object obj, Filter<Mutable<Object>> filter) {
+	protected boolean addRaw(Object obj, final Filter<Mutable<Object>> filter) {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != filter) {
 			final Mutable<Object> mutable = new MutableObj<>(obj);

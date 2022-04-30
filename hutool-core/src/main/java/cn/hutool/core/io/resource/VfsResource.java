@@ -27,7 +27,7 @@ public class VfsResource implements Resource {
 	private static final Method VIRTUAL_FILE_METHOD_GET_NAME;
 
 	static {
-		Class<?> virtualFile = ClassLoaderUtil.loadClass(VFS3_PKG + "VirtualFile");
+		final Class<?> virtualFile = ClassLoaderUtil.loadClass(VFS3_PKG + "VirtualFile");
 		try {
 			VIRTUAL_FILE_METHOD_EXISTS = virtualFile.getMethod("exists");
 			VIRTUAL_FILE_METHOD_GET_INPUT_STREAM = virtualFile.getMethod("openStream");
@@ -35,7 +35,7 @@ public class VfsResource implements Resource {
 			VIRTUAL_FILE_METHOD_GET_LAST_MODIFIED = virtualFile.getMethod("getLastModified");
 			VIRTUAL_FILE_METHOD_TO_URL = virtualFile.getMethod("toURL");
 			VIRTUAL_FILE_METHOD_GET_NAME = virtualFile.getMethod("getName");
-		} catch (NoSuchMethodException ex) {
+		} catch (final NoSuchMethodException ex) {
 			throw new IllegalStateException("Could not detect JBoss VFS infrastructure", ex);
 		}
 	}
@@ -51,7 +51,7 @@ public class VfsResource implements Resource {
 	 *
 	 * @param resource org.jboss.vfs.VirtualFile实例对象
 	 */
-	public VfsResource(Object resource) {
+	public VfsResource(final Object resource) {
 		Assert.notNull(resource, "VirtualFile must not be null");
 		this.virtualFile = resource;
 		this.lastModified = getLastModified();

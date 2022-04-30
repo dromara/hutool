@@ -22,7 +22,7 @@ public final class ProxyUtil {
 	 * @param aspectClass 切面对象类
 	 * @return 代理对象
 	 */
-	public static <T> T proxy(T target, Class<? extends Aspect> aspectClass){
+	public static <T> T proxy(final T target, final Class<? extends Aspect> aspectClass){
 		return ProxyFactory.createProxy(target, aspectClass);
 	}
 
@@ -34,7 +34,7 @@ public final class ProxyUtil {
 	 * @param aspect 切面对象
 	 * @return 代理对象
 	 */
-	public static <T> T proxy(T target, Aspect aspect){
+	public static <T> T proxy(final T target, final Aspect aspect){
 		return ProxyFactory.createProxy(target, aspect);
 	}
 
@@ -56,7 +56,7 @@ public final class ProxyUtil {
 	 * @return 代理类
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newProxyInstance(ClassLoader classloader, InvocationHandler invocationHandler, Class<?>... interfaces) {
+	public static <T> T newProxyInstance(final ClassLoader classloader, final InvocationHandler invocationHandler, final Class<?>... interfaces) {
 		return (T) Proxy.newProxyInstance(classloader, interfaces, invocationHandler);
 	}
 
@@ -68,7 +68,7 @@ public final class ProxyUtil {
 	 * @param interfaces 代理类中需要实现的被代理类的接口方法
 	 * @return 代理类
 	 */
-	public static <T> T newProxyInstance(InvocationHandler invocationHandler, Class<?>... interfaces) {
+	public static <T> T newProxyInstance(final InvocationHandler invocationHandler, final Class<?>... interfaces) {
 		return newProxyInstance(ClassUtil.getClassLoader(), invocationHandler, interfaces);
 	}
 }

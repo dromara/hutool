@@ -20,7 +20,7 @@ public class SpliteratorUtil {
 	 * @param function 转换函数
 	 * @return 新类型的{@link Spliterator}
 	 */
-	public static <F, T> Spliterator<T> trans(Spliterator<F> fromSpliterator, Function<? super F, ? extends T> function) {
+	public static <F, T> Spliterator<T> trans(final Spliterator<F> fromSpliterator, final Function<? super F, ? extends T> function) {
 		return new TransSpliterator<>(fromSpliterator, function);
 	}
 }

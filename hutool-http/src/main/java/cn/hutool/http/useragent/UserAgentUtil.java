@@ -14,7 +14,7 @@ public class UserAgentUtil {
 	 * @param userAgentString User-Agent字符串
 	 * @return {@link UserAgent}
 	 */
-	public static UserAgent parse(String userAgentString) {
+	public static UserAgent parse(final String userAgentString) {
 		return UserAgentParser.parse(userAgentString);
 	}
 

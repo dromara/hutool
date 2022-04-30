@@ -23,13 +23,13 @@ public class ExcelReadTest {
 
 	@Test
 	public void aliasTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
 
 		//读取单个单元格内容测试
-		Object value = reader.readCellValue(1, 2);
+		final Object value = reader.readCellValue(1, 2);
 		Assert.assertEquals("仓库", value);
 
-		Map<String, String> headerAlias = MapUtil.newHashMap();
+		final Map<String, String> headerAlias = MapUtil.newHashMap();
 		headerAlias.put("用户姓名", "userName");
 		headerAlias.put("库房", "storageName");
 		headerAlias.put("盘点权限", "checkPerm");
@@ -37,14 +37,14 @@ public class ExcelReadTest {
 		reader.setHeaderAlias(headerAlias);
 
 		// 读取list时默认首个非空行为标题
-		List<List<Object>> read = reader.read();
+		final List<List<Object>> read = reader.read();
 		Assert.assertEquals("userName", read.get(0).get(0));
 		Assert.assertEquals("storageName", read.get(0).get(1));
 		Assert.assertEquals("checkPerm", read.get(0).get(2));
 		Assert.assertEquals("allotAuditPerm", read.get(0).get(3));
 
-		List<Map<String, Object>> readAll = reader.readAll();
-		for (Map<String, Object> map : readAll) {
+		final List<Map<String, Object>> readAll = reader.readAll();
+		for (final Map<String, Object> map : readAll) {
 			Assert.assertTrue(map.containsKey("userName"));
 			Assert.assertTrue(map.containsKey("storageName"));
 			Assert.assertTrue(map.containsKey("checkPerm"));
@@ -54,16 +54,16 @@ public class ExcelReadTest {
 
 	@Test
 	public void excelReadTestOfEmptyLine() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("priceIndex.xls"));
-		List<Map<String, Object>> readAll = reader.readAll();
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("priceIndex.xls"));
+		final List<Map<String, Object>> readAll = reader.readAll();
 
 		Assert.assertEquals(4, readAll.size());
 	}
 
 	@Test
 	public void excelReadTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
-		List<List<Object>> readAll = reader.read();
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final List<List<Object>> readAll = reader.read();
 
 		// 标题
 		Assert.assertEquals("姓名", readAll.get(0).get(0));
@@ -80,14 +80,14 @@ public class ExcelReadTest {
 
 	@Test
 	public void excelReadAsTextTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		Assert.assertNotNull(reader.readAsText(false));
 	}
 
 	@Test
 	public void excel03ReadTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
-		List<List<Object>> readAll = reader.read();
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
+		final List<List<Object>> readAll = reader.read();
 
 		// for (List<Object> list : readAll) {
 		// Console.log(list);
@@ -108,8 +108,8 @@ public class ExcelReadTest {
 
 	@Test
 	public void excel03ReadTest2() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"), "校园入学");
-		List<List<Object>> readAll = reader.read();
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"), "校园入学");
+		final List<List<Object>> readAll = reader.read();
 
 		// 标题
 		Assert.assertEquals("班级", readAll.get(0).get(0));
@@ -121,8 +121,8 @@ public class ExcelReadTest {
 
 	@Test
 	public void excelReadToMapListTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
-		List<Map<String, Object>> readAll = reader.readAll();
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final List<Map<String, Object>> readAll = reader.readAll();
 
 		Assert.assertEquals("张三", readAll.get(0).get("姓名"));
 		Assert.assertEquals("男", readAll.get(0).get("性别"));
@@ -131,13 +131,13 @@ public class ExcelReadTest {
 
 	@Test
 	public void excelReadToBeanListTest() {
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		reader.addHeaderAlias("姓名", "name");
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
 		reader.addHeaderAlias("鞋码", "shoeSize");
 
-		List<Person> all = reader.readAll(Person.class);
+		final List<Person> all = reader.readAll(Person.class);
 		Assert.assertEquals("张三", all.get(0).getName());
 		Assert.assertEquals("男", all.get(0).getGender());
 		Assert.assertEquals(Integer.valueOf(11), all.get(0).getAge());
@@ -147,13 +147,13 @@ public class ExcelReadTest {
 	@Test
 	@Ignore
 	public void excelReadToBeanListTest2() {
-		ExcelReader reader = ExcelUtil.getReader("f:/test/toBean.xlsx");
+		final ExcelReader reader = ExcelUtil.getReader("f:/test/toBean.xlsx");
 		reader.addHeaderAlias("姓名", "name");
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
 
-		List<Person> all = reader.read(0, 2, Person.class);
-		for (Person person : all) {
+		final List<Person> all = reader.read(0, 2, Person.class);
+		for (final Person person : all) {
 			Console.log(person);
 		}
 	}
@@ -169,9 +169,9 @@ public class ExcelReadTest {
 	@Test
 	@Ignore
 	public void readDoubleTest() {
-		ExcelReader reader = ExcelUtil.getReader("f:/test/doubleTest.xls");
+		final ExcelReader reader = ExcelUtil.getReader("f:/test/doubleTest.xls");
 		final List<List<Object>> read = reader.read();
-		for (List<Object> list : read) {
+		for (final List<Object> list : read) {
 			Console.log(list.get(8));
 		}
 	}
@@ -198,7 +198,7 @@ public class ExcelReadTest {
 		// 测试合并单元格是否可以正常读到第一个单元格的值
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/人员体检信息表.xlsx");
 		final List<List<Object>> read = reader.read();
-		for (List<Object> list : read) {
+		for (final List<Object> list : read) {
 			Console.log(list);
 		}
 	}
@@ -236,7 +236,7 @@ public class ExcelReadTest {
 
 	@Test
 	public void readColumnTest(){
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		final List<Object> objects = reader.readColumn(0, 1);
 
 		Assert.assertEquals(3, objects.size());
@@ -248,7 +248,7 @@ public class ExcelReadTest {
 	@Test
 	public void readColumnNPETest() {
 		// https://github.com/dromara/hutool/pull/2234
-		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read_row_npe.xlsx"));
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read_row_npe.xlsx"));
 		reader.readColumn(0, 1);
 	}
 }

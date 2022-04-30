@@ -34,7 +34,7 @@ public class ClipboardUtil {
 	 *
 	 * @param contents 内容
 	 */
-	public static void set(Transferable contents) {
+	public static void set(final Transferable contents) {
 		set(contents, null);
 	}
 
@@ -44,7 +44,7 @@ public class ClipboardUtil {
 	 * @param contents 内容
 	 * @param owner 所有者
 	 */
-	public static void set(Transferable contents, ClipboardOwner owner) {
+	public static void set(final Transferable contents, final ClipboardOwner owner) {
 		getClipboard().setContents(contents, owner);
 	}
 
@@ -54,7 +54,7 @@ public class ClipboardUtil {
 	 * @param flavor 数据元信息，标识数据类型
 	 * @return 剪贴板内容，类型根据flavor不同而不同
 	 */
-	public static Object get(DataFlavor flavor) {
+	public static Object get(final DataFlavor flavor) {
 		return get(getClipboard().getContents(null), flavor);
 	}
 
@@ -65,11 +65,11 @@ public class ClipboardUtil {
 	 * @param flavor 数据元信息，标识数据类型
 	 * @return 剪贴板内容，类型根据flavor不同而不同
 	 */
-	public static Object get(Transferable content, DataFlavor flavor) {
+	public static Object get(final Transferable content, final DataFlavor flavor) {
 		if (null != content && content.isDataFlavorSupported(flavor)) {
 			try {
 				return content.getTransferData(flavor);
-			} catch (UnsupportedFlavorException | IOException e) {
+			} catch (final UnsupportedFlavorException | IOException e) {
 				throw new UtilException(e);
 			}
 		}
@@ -81,7 +81,7 @@ public class ClipboardUtil {
 	 *
 	 * @param text 字符串文本
 	 */
-	public static void setStr(String text) {
+	public static void setStr(final String text) {
 		set(new StringSelection(text));
 	}
 
@@ -101,7 +101,7 @@ public class ClipboardUtil {
 	 * @return 文本
 	 * @since 4.5.6
 	 */
-	public static String getStr(Transferable content) {
+	public static String getStr(final Transferable content) {
 		return (String) get(content, DataFlavor.stringFlavor);
 	}
 
@@ -110,7 +110,7 @@ public class ClipboardUtil {
 	 *
 	 * @param image 图像
 	 */
-	public static void setImage(Image image) {
+	public static void setImage(final Image image) {
 		set(new ImageSelection(image), null);
 	}
 
@@ -130,7 +130,7 @@ public class ClipboardUtil {
 	 * @return 图片
 	 * @since 4.5.6
 	 */
-	public static Image getImage(Transferable content) {
+	public static Image getImage(final Transferable content) {
 		return (Image) get(content, DataFlavor.imageFlavor);
 	}
 
@@ -141,7 +141,7 @@ public class ClipboardUtil {
 	 * @since 4.5.6
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
-	public static void listen(ClipboardListener listener) {
+	public static void listen(final ClipboardListener listener) {
 		listen(listener, true);
 	}
 
@@ -153,7 +153,7 @@ public class ClipboardUtil {
 	 * @since 4.5.6
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
-	public static void listen(ClipboardListener listener, boolean sync) {
+	public static void listen(final ClipboardListener listener, final boolean sync) {
 		listen(ClipboardMonitor.DEFAULT_TRY_COUNT, ClipboardMonitor.DEFAULT_DELAY, listener, sync);
 	}
 
@@ -167,7 +167,7 @@ public class ClipboardUtil {
 	 * @since 4.5.6
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
-	public static void listen(int tryCount, long delay, ClipboardListener listener, boolean sync) {
+	public static void listen(final int tryCount, final long delay, final ClipboardListener listener, final boolean sync) {
 		ClipboardMonitor.INSTANCE//
 				.setTryCount(tryCount)//
 				.setDelay(delay)//

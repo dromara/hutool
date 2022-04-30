@@ -16,12 +16,12 @@ public class Issue2202Test {
 	 */
 	@Test
 	public void mapToBeanWithFieldNameEditorTest(){
-		Map<String, String> headerMap = new HashMap<>(5);
+		final Map<String, String> headerMap = new HashMap<>(5);
 		headerMap.put("wechatpay-serial", "serial");
 		headerMap.put("wechatpay-nonce", "nonce");
 		headerMap.put("wechatpay-timestamp", "timestamp");
 		headerMap.put("wechatpay-signature", "signature");
-		ResponseSignVerifyParams case1 = BeanUtil.toBean(headerMap, ResponseSignVerifyParams.class,
+		final ResponseSignVerifyParams case1 = BeanUtil.toBean(headerMap, ResponseSignVerifyParams.class,
 				CopyOptions.create().setFieldNameEditor(field -> NamingCase.toCamelCase(field, '-')));
 
 		Assert.assertEquals("serial", case1.getWechatpaySerial());

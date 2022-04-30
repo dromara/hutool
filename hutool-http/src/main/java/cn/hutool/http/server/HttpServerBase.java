@@ -24,7 +24,7 @@ public class HttpServerBase implements Closeable {
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public HttpServerBase(HttpExchange httpExchange) {
+	public HttpServerBase(final HttpExchange httpExchange) {
 		this.httpExchange = httpExchange;
 	}
 

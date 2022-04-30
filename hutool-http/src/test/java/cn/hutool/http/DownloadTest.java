@@ -21,7 +21,7 @@ public class DownloadTest {
 	@Test
 	@Ignore
 	public void downloadPicTest() {
-		String url = "http://wx.qlogo.cn/mmopen/vKhlFcibVUtNBVDjcIowlg0X8aJfHXrTNCEFBukWVH9ta99pfEN88lU39MKspCUCOP3yrFBH3y2NbV7sYtIIlon8XxLwAEqv2/0";
+		final String url = "http://wx.qlogo.cn/mmopen/vKhlFcibVUtNBVDjcIowlg0X8aJfHXrTNCEFBukWVH9ta99pfEN88lU39MKspCUCOP3yrFBH3y2NbV7sYtIIlon8XxLwAEqv2/0";
 		HttpUtil.downloadFile(url, "e:/pic/t3.jpg");
 		Console.log("ok");
 	}
@@ -29,14 +29,14 @@ public class DownloadTest {
 	@Test
 	@Ignore
 	public void downloadSizeTest() {
-		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
+		final String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
 		HttpRequest.get(url).setSSLProtocol("TLSv1.2").executeAsync().writeBody("e:/pic/366466.jpg");
 	}
 
 	@Test
 	@Ignore
 	public void downloadTest1() {
-		long size = HttpUtil.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", "e:/temp/");
+		final long size = HttpUtil.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", "e:/temp/");
 		System.out.println("Download size: " + size);
 	}
 
@@ -54,8 +54,8 @@ public class DownloadTest {
 			}
 
 			@Override
-			public void progress(long contentLength, long progressSize) {
-				long speed = progressSize / (System.currentTimeMillis() - time) * 1000;
+			public void progress(final long contentLength, final long progressSize) {
+				final long speed = progressSize / (System.currentTimeMillis() - time) * 1000;
 				Console.log("总大小:{}, 已下载：{}, 速度：{}/s", FileUtil.readableFileSize(contentLength), FileUtil.readableFileSize(progressSize), FileUtil.readableFileSize(speed));
 			}
 
@@ -69,7 +69,7 @@ public class DownloadTest {
 	@Test
 	@Ignore
 	public void downloadFileFromUrlTest1() {
-		File file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", "d:/download/temp");
+		final File file = HttpUtil.downloadFileFromUrl("http://groovy-lang.org/changelogs/changelog-3.0.5.html", "d:/download/temp");
 		Assert.assertNotNull(file);
 		Assert.assertTrue(file.isFile());
 		Assert.assertTrue(file.length() > 0);
@@ -87,7 +87,7 @@ public class DownloadTest {
 				}
 
 				@Override
-				public void progress(long contentLength, long progressSize) {
+				public void progress(final long contentLength, final long progressSize) {
 					System.out.println("download size:" + progressSize);
 				}
 
@@ -102,7 +102,7 @@ public class DownloadTest {
 			Assert.assertTrue(file.isFile());
 			Assert.assertTrue(file.length() > 0);
 			Assert.assertTrue(file.getName().length() > 0);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Assert.assertTrue(e instanceof IORuntimeException);
 		} finally {
 			FileUtil.del(file);
@@ -121,7 +121,7 @@ public class DownloadTest {
 				}
 
 				@Override
-				public void progress(long contentLength, long progressSize) {
+				public void progress(final long contentLength, final long progressSize) {
 					System.out.println("contentLength:" + contentLength + "download size:" + progressSize);
 				}
 
@@ -153,7 +153,7 @@ public class DownloadTest {
 			Assert.assertTrue(file.isFile());
 			Assert.assertTrue(file.length() > 0);
 			Assert.assertTrue(file.getName().length() > 0);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Assert.assertTrue(e instanceof IORuntimeException);
 		} finally {
 			FileUtil.del(file);

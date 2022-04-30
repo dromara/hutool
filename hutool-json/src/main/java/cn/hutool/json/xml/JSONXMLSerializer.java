@@ -23,7 +23,7 @@ public class JSONXMLSerializer {
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
-	public static String toXml(Object object) throws JSONException {
+	public static String toXml(final Object object) throws JSONException {
 		return toXml(object, null);
 	}
 
@@ -35,7 +35,7 @@ public class JSONXMLSerializer {
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object, String tagName) throws JSONException {
+	public static String toXml(final Object object, final String tagName) throws JSONException {
 		return toXml(object, tagName, "content");
 	}
 
@@ -48,7 +48,7 @@ public class JSONXMLSerializer {
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object, String tagName, String... contentKeys) throws JSONException {
+	public static String toXml(Object object, final String tagName, final String... contentKeys) throws JSONException {
 		if (null == object) {
 			return null;
 		}
@@ -69,7 +69,7 @@ public class JSONXMLSerializer {
 				if (ArrayUtil.contains(contentKeys, key)) {
 					if (value instanceof JSONArray) {
 						int i = 0;
-						for (Object val : (JSONArray) value) {
+						for (final Object val : (JSONArray) value) {
 							if (i > 0) {
 								sb.append(CharUtil.LF);
 							}
@@ -85,7 +85,7 @@ public class JSONXMLSerializer {
 				} else if (StrUtil.isEmptyIfStr(value)) {
 					sb.append(wrapWithTag(null, key));
 				} else if (value instanceof JSONArray) {
-					for (Object val : (JSONArray) value) {
+					for (final Object val : (JSONArray) value) {
 						if (val instanceof JSONArray) {
 							sb.append(wrapWithTag(toXml(val), key));
 						} else {
@@ -107,7 +107,7 @@ public class JSONXMLSerializer {
 		}
 
 		if (object instanceof JSONArray) {
-			for (Object val : (JSONArray) object) {
+			for (final Object val : (JSONArray) object) {
 				// XML does not have good support for arrays. If an array
 				// appears in a place where XML is lacking, synthesize an
 				// <array> element.
@@ -127,7 +127,7 @@ public class JSONXMLSerializer {
 	 * @param isEndTag 是否结束标签
 	 * @since 5.7.11
 	 */
-	private static void appendTag(StringBuilder sb, String tagName, boolean isEndTag) {
+	private static void appendTag(final StringBuilder sb, final String tagName, final boolean isEndTag) {
 		if (StrUtil.isNotBlank(tagName)) {
 			sb.append('<');
 			if (isEndTag) {
@@ -145,7 +145,7 @@ public class JSONXMLSerializer {
 	 * @return 包装后的XML
 	 * @since 5.7.11
 	 */
-	private static String wrapWithTag(String content, String tagName) {
+	private static String wrapWithTag(final String content, final String tagName) {
 		if (StrUtil.isBlank(tagName)) {
 			return StrUtil.wrap(content, "\"");
 		}

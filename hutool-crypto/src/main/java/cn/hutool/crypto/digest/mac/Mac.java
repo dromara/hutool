@@ -35,7 +35,7 @@ public class Mac implements Serializable {
 	 *
 	 * @param engine MAC算法实现引擎
 	 */
-	public Mac(MacEngine engine) {
+	public Mac(final MacEngine engine) {
 		this.engine = engine;
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
@@ -58,7 +58,7 @@ public class Mac implements Serializable {
 	 * @param charset 编码
 	 * @return 摘要
 	 */
-	public byte[] digest(String data, Charset charset) {
+	public byte[] digest(final String data, final Charset charset) {
 		return digest(StrUtil.bytes(data, charset));
 	}
 
@@ -68,7 +68,7 @@ public class Mac implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public byte[] digest(String data) {
+	public byte[] digest(final String data) {
 		return digest(data, CharsetUtil.UTF_8);
 	}
 
@@ -79,7 +79,7 @@ public class Mac implements Serializable {
 	 * @param isUrlSafe 是否使用URL安全字符
 	 * @return 摘要
 	 */
-	public String digestBase64(String data, boolean isUrlSafe) {
+	public String digestBase64(final String data, final boolean isUrlSafe) {
 		return digestBase64(data, CharsetUtil.UTF_8, isUrlSafe);
 	}
 
@@ -91,7 +91,7 @@ public class Mac implements Serializable {
 	 * @param isUrlSafe 是否使用URL安全字符
 	 * @return 摘要
 	 */
-	public String digestBase64(String data, Charset charset, boolean isUrlSafe) {
+	public String digestBase64(final String data, final Charset charset, final boolean isUrlSafe) {
 		final byte[] digest = digest(data, charset);
 		return isUrlSafe ? Base64.encodeUrlSafe(digest) : Base64.encode(digest);
 	}
@@ -103,7 +103,7 @@ public class Mac implements Serializable {
 	 * @param charset 编码
 	 * @return 摘要
 	 */
-	public String digestHex(String data, Charset charset) {
+	public String digestHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(digest(data, charset));
 	}
 
@@ -113,7 +113,7 @@ public class Mac implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(String data) {
+	public String digestHex(final String data) {
 		return digestHex(data, CharsetUtil.UTF_8);
 	}
 
@@ -125,7 +125,7 @@ public class Mac implements Serializable {
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
 	 */
-	public byte[] digest(File file) throws CryptoException {
+	public byte[] digest(final File file) throws CryptoException {
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -142,7 +142,7 @@ public class Mac implements Serializable {
 	 * @param file 被摘要文件
 	 * @return 摘要
 	 */
-	public String digestHex(File file) {
+	public String digestHex(final File file) {
 		return HexUtil.encodeHexStr(digest(file));
 	}
 
@@ -152,7 +152,7 @@ public class Mac implements Serializable {
 	 * @param data 数据bytes
 	 * @return 摘要bytes
 	 */
-	public byte[] digest(byte[] data) {
+	public byte[] digest(final byte[] data) {
 		return digest(new ByteArrayInputStream(data), -1);
 	}
 
@@ -162,7 +162,7 @@ public class Mac implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(byte[] data) {
+	public String digestHex(final byte[] data) {
 		return HexUtil.encodeHexStr(digest(data));
 	}
 
@@ -172,7 +172,7 @@ public class Mac implements Serializable {
 	 * @param data {@link InputStream} 数据流
 	 * @return 摘要bytes
 	 */
-	public byte[] digest(InputStream data) {
+	public byte[] digest(final InputStream data) {
 		return digest(data, IoUtil.DEFAULT_BUFFER_SIZE);
 	}
 
@@ -183,7 +183,7 @@ public class Mac implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(InputStream data) {
+	public String digestHex(final InputStream data) {
 		return HexUtil.encodeHexStr(digest(data));
 	}
 
@@ -194,7 +194,7 @@ public class Mac implements Serializable {
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
 	 */
-	public byte[] digest(InputStream data, int bufferLength) {
+	public byte[] digest(final InputStream data, final int bufferLength) {
 		return this.engine.digest(data, bufferLength);
 	}
 
@@ -206,7 +206,7 @@ public class Mac implements Serializable {
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要
 	 */
-	public String digestHex(InputStream data, int bufferLength) {
+	public String digestHex(final InputStream data, final int bufferLength) {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
 	}
 
@@ -220,7 +220,7 @@ public class Mac implements Serializable {
 	 * @see MessageDigest#isEqual(byte[], byte[])
 	 * @since 5.6.8
 	 */
-	public boolean verify(byte[] digest, byte[] digestToCompare) {
+	public boolean verify(final byte[] digest, final byte[] digestToCompare) {
 		return MessageDigest.isEqual(digest, digestToCompare);
 	}
 

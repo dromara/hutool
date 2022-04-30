@@ -61,7 +61,7 @@ public class RuntimeInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "Max Memory:    ", FileUtil.readableFileSize(getMaxMemory()));
 		ManagementUtil.append(builder, "Total Memory:     ", FileUtil.readableFileSize(getTotalMemory()));

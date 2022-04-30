@@ -57,7 +57,7 @@ public class MaskBit {
 	 * @param maskBit 掩码位
 	 * @return 掩码
 	 */
-	public static String get(int maskBit) {
+	public static String get(final int maskBit) {
 		return MASK_BIT_MAP.get(maskBit);
 	}
 
@@ -69,7 +69,7 @@ public class MaskBit {
 	 * @return 掩码位，如 24；如果掩码不合法，则返回null
 	 * @since 5.6.5
 	 */
-	public static Integer getMaskBit(String mask) {
+	public static Integer getMaskBit(final String mask) {
 		return MASK_BIT_MAP.getKey(mask);
 	}
 

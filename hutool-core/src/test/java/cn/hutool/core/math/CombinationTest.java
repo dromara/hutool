@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * 组合单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -17,23 +17,23 @@ public class CombinationTest {
 	public void countTest() {
 		long result = Combination.count(5, 2);
 		Assert.assertEquals(10, result);
-		
+
 		result = Combination.count(5, 5);
 		Assert.assertEquals(1, result);
-		
+
 		result = Combination.count(5, 0);
 		Assert.assertEquals(1, result);
-		
-		long resultAll = Combination.countAll(5);
+
+		final long resultAll = Combination.countAll(5);
 		Assert.assertEquals(31, resultAll);
 	}
 
 	@Test
 	public void selectTest() {
-		Combination combination = new Combination(new String[] { "1", "2", "3", "4", "5" });
-		List<String[]> list = combination.select(2);
+		final Combination combination = new Combination(new String[] { "1", "2", "3", "4", "5" });
+		final List<String[]> list = combination.select(2);
 		Assert.assertEquals(Combination.count(5, 2), list.size());
-		
+
 		Assert.assertArrayEquals(new String[] {"1", "2"}, list.get(0));
 		Assert.assertArrayEquals(new String[] {"1", "3"}, list.get(1));
 		Assert.assertArrayEquals(new String[] {"1", "4"}, list.get(2));
@@ -44,11 +44,11 @@ public class CombinationTest {
 		Assert.assertArrayEquals(new String[] {"3", "4"}, list.get(7));
 		Assert.assertArrayEquals(new String[] {"3", "5"}, list.get(8));
 		Assert.assertArrayEquals(new String[] {"4", "5"}, list.get(9));
-		
-		List<String[]> selectAll = combination.selectAll();
+
+		final List<String[]> selectAll = combination.selectAll();
 		Assert.assertEquals(Combination.countAll(5), selectAll.size());
-		
-		List<String[]> list2 = combination.select(0);
+
+		final List<String[]> list2 = combination.select(0);
 		Assert.assertEquals(1, list2.size());
 	}
 }

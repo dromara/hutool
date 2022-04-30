@@ -26,13 +26,13 @@ public class JWTPayload extends Claims implements RegisteredPayload<JWTPayload>{
 	 * @param payloadClaims 载荷信息
 	 * @return this
 	 */
-	public JWTPayload addPayloads(Map<String, ?> payloadClaims) {
+	public JWTPayload addPayloads(final Map<String, ?> payloadClaims) {
 		putAll(payloadClaims);
 		return this;
 	}
 
 	@Override
-	public JWTPayload setPayload(String name, Object value) {
+	public JWTPayload setPayload(final String name, final Object value) {
 		setClaim(name, value);
 		return this;
 	}

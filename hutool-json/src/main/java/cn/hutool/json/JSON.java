@@ -106,7 +106,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return JSON字符串
 	 * @throws JSONException 包含非法数抛出此异常
 	 */
-	default String toJSONString(int indentFactor) throws JSONException {
+	default String toJSONString(final int indentFactor) throws JSONException {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0).toString();
@@ -121,7 +121,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
-	default Writer write(Writer writer) throws JSONException {
+	default Writer write(final Writer writer) throws JSONException {
 		return this.write(writer, 0, 0);
 	}
 
@@ -144,7 +144,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param clazz 实体类
 	 * @return 实体类对象
 	 */
-	default <T> T toBean(Class<T> clazz) {
+	default <T> T toBean(final Class<T> clazz) {
 		return toBean((Type) clazz);
 	}
 
@@ -156,7 +156,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return 实体类对象
 	 * @since 4.2.2
 	 */
-	default <T> T toBean(TypeReference<T> reference) {
+	default <T> T toBean(final TypeReference<T> reference) {
 		return toBean(reference.getType());
 	}
 
@@ -168,7 +168,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
-	default <T> T toBean(Type type) {
+	default <T> T toBean(final Type type) {
 		return toBean(type, false);
 	}
 
@@ -181,7 +181,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	default <T> T toBean(Type type, boolean ignoreError) {
+	default <T> T toBean(final Type type, final boolean ignoreError) {
 		return JSONConverter.jsonConvert(type, this, ignoreError);
 	}
 }

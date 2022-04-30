@@ -35,14 +35,14 @@ public class ConsistentHash<T> implements Serializable {
 	 * @param numberOfReplicas 复制的节点个数，增加每个节点的复制节点有利于负载均衡
 	 * @param nodes            节点对象
 	 */
-	public ConsistentHash(int numberOfReplicas, Collection<T> nodes) {
+	public ConsistentHash(final int numberOfReplicas, final Collection<T> nodes) {
 		this.numberOfReplicas = numberOfReplicas;
 		this.hashFunc = key -> {
 			//默认使用FNV1hash算法
 			return HashUtil.fnvHash(key.toString());
 		};
 		//初始化节点
-		for (T node : nodes) {
+		for (final T node : nodes) {
 			add(node);
 		}
 	}
@@ -54,11 +54,11 @@ public class ConsistentHash<T> implements Serializable {
 	 * @param numberOfReplicas 复制的节点个数，增加每个节点的复制节点有利于负载均衡
 	 * @param nodes            节点对象
 	 */
-	public ConsistentHash(Hash32<Object> hashFunc, int numberOfReplicas, Collection<T> nodes) {
+	public ConsistentHash(final Hash32<Object> hashFunc, final int numberOfReplicas, final Collection<T> nodes) {
 		this.numberOfReplicas = numberOfReplicas;
 		this.hashFunc = hashFunc;
 		//初始化节点
-		for (T node : nodes) {
+		for (final T node : nodes) {
 			add(node);
 		}
 	}
@@ -71,7 +71,7 @@ public class ConsistentHash<T> implements Serializable {
 	 *
 	 * @param node 节点对象
 	 */
-	public void add(T node) {
+	public void add(final T node) {
 		for (int i = 0; i < numberOfReplicas; i++) {
 			circle.put(hashFunc.hash32(node.toString() + i), node);
 		}
@@ -82,7 +82,7 @@ public class ConsistentHash<T> implements Serializable {
 	 *
 	 * @param node 节点对象
 	 */
-	public void remove(T node) {
+	public void remove(final T node) {
 		for (int i = 0; i < numberOfReplicas; i++) {
 			circle.remove(hashFunc.hash32(node.toString() + i));
 		}
@@ -94,13 +94,13 @@ public class ConsistentHash<T> implements Serializable {
 	 * @param key 为给定键取Hash，取得顺时针方向上最近的一个虚拟节点对应的实际节点
 	 * @return 节点对象
 	 */
-	public T get(Object key) {
+	public T get(final Object key) {
 		if (circle.isEmpty()) {
 			return null;
 		}
 		int hash = hashFunc.hash32(key);
 		if (false == circle.containsKey(hash)) {
-			SortedMap<Integer, T> tailMap = circle.tailMap(hash);    //返回此映射的部分视图，其键大于等于 hash
+			final SortedMap<Integer, T> tailMap = circle.tailMap(hash);    //返回此映射的部分视图，其键大于等于 hash
 			hash = tailMap.isEmpty() ? circle.firstKey() : tailMap.firstKey();
 		}
 		//正好命中

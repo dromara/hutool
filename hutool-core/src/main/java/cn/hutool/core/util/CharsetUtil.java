@@ -48,7 +48,7 @@ public class CharsetUtil {
 		Charset _GBK = null;
 		try {
 			_GBK = Charset.forName(NAME_GBK);
-		} catch (UnsupportedCharsetException e) {
+		} catch (final UnsupportedCharsetException e) {
 			//ignore
 		}
 		GBK = _GBK;
@@ -61,7 +61,7 @@ public class CharsetUtil {
 	 * @return Charset
 	 * @throws UnsupportedCharsetException 编码不支持
 	 */
-	public static Charset charset(String charsetName) throws UnsupportedCharsetException {
+	public static Charset charset(final String charsetName) throws UnsupportedCharsetException {
 		return StrUtil.isBlank(charsetName) ? Charset.defaultCharset() : Charset.forName(charsetName);
 	}
 
@@ -72,7 +72,7 @@ public class CharsetUtil {
 	 * @return Charset
 	 * @since 5.2.6
 	 */
-	public static Charset parse(String charsetName) {
+	public static Charset parse(final String charsetName) {
 		return parse(charsetName, Charset.defaultCharset());
 	}
 
@@ -84,7 +84,7 @@ public class CharsetUtil {
 	 * @return Charset
 	 * @since 5.2.6
 	 */
-	public static Charset parse(String charsetName, Charset defaultCharset) {
+	public static Charset parse(final String charsetName, final Charset defaultCharset) {
 		if (StrUtil.isBlank(charsetName)) {
 			return defaultCharset;
 		}
@@ -92,7 +92,7 @@ public class CharsetUtil {
 		Charset result;
 		try {
 			result = Charset.forName(charsetName);
-		} catch (UnsupportedCharsetException e) {
+		} catch (final UnsupportedCharsetException e) {
 			result = defaultCharset;
 		}
 
@@ -107,7 +107,7 @@ public class CharsetUtil {
 	 * @param destCharset 目标字符集，默认UTF-8
 	 * @return 转换后的字符集
 	 */
-	public static String convert(String source, String srcCharset, String destCharset) {
+	public static String convert(final String source, final String srcCharset, final String destCharset) {
 		return convert(source, Charset.forName(srcCharset), Charset.forName(destCharset));
 	}
 
@@ -126,7 +126,7 @@ public class CharsetUtil {
 	 * @param destCharset 目标字符集，默认UTF-8
 	 * @return 转换后的字符集
 	 */
-	public static String convert(String source, Charset srcCharset, Charset destCharset) {
+	public static String convert(final String source, Charset srcCharset, Charset destCharset) {
 		if (null == srcCharset) {
 			srcCharset = ISO_8859_1;
 		}
@@ -151,7 +151,7 @@ public class CharsetUtil {
 	 * @return 被转换编码的文件
 	 * @since 3.1.0
 	 */
-	public static File convert(File file, Charset srcCharset, Charset destCharset) {
+	public static File convert(final File file, final Charset srcCharset, final Charset destCharset) {
 		final String str = FileUtil.readString(file, srcCharset);
 		return FileUtil.writeString(str, file, destCharset);
 	}
@@ -206,7 +206,7 @@ public class CharsetUtil {
 	 * @see CharsetDetector#detect(InputStream, Charset...)
 	 * @since 5.7.10
 	 */
-	public static Charset detect(InputStream in, Charset... charsets) {
+	public static Charset detect(final InputStream in, final Charset... charsets) {
 		return CharsetDetector.detect(in, charsets);
 	}
 
@@ -221,7 +221,7 @@ public class CharsetUtil {
 	 * @see CharsetDetector#detect(int, InputStream, Charset...)
 	 * @since 5.7.10
 	 */
-	public static Charset detect(int bufferSize, InputStream in, Charset... charsets) {
+	public static Charset detect(final int bufferSize, final InputStream in, final Charset... charsets) {
 		return CharsetDetector.detect(bufferSize, in, charsets);
 	}
 }

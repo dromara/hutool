@@ -22,7 +22,7 @@ public class SSLUtil {
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 * @since 5.7.8
 	 */
-	public static SSLContext createSSLContext(String protocol) throws IORuntimeException{
+	public static SSLContext createSSLContext(final String protocol) throws IORuntimeException{
 		return SSLContextBuilder.create().setProtocol(protocol).build();
 	}
 
@@ -35,7 +35,7 @@ public class SSLUtil {
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 */
-	public static SSLContext createSSLContext(String protocol, KeyManager keyManager, TrustManager trustManager)
+	public static SSLContext createSSLContext(final String protocol, final KeyManager keyManager, final TrustManager trustManager)
 			throws IORuntimeException {
 		return createSSLContext(protocol,
 				keyManager == null ? null : new KeyManager[]{keyManager},
@@ -51,7 +51,7 @@ public class SSLUtil {
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 */
-	public static SSLContext createSSLContext(String protocol, KeyManager[] keyManagers, TrustManager[] trustManagers) throws IORuntimeException {
+	public static SSLContext createSSLContext(final String protocol, final KeyManager[] keyManagers, final TrustManager[] trustManagers) throws IORuntimeException {
 		return SSLContextBuilder.create()
 				.setProtocol(protocol)
 				.setKeyManagers(keyManagers)

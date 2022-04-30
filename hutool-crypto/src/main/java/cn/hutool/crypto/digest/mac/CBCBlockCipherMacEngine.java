@@ -27,7 +27,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param iv            加盐
 	 * @since 5.7.12
 	 */
-	public CBCBlockCipherMacEngine(BlockCipher digest, int macSizeInBits, Key key, byte[] iv) {
+	public CBCBlockCipherMacEngine(final BlockCipher digest, final int macSizeInBits, final Key key, final byte[] iv) {
 		this(digest, macSizeInBits, key.getEncoded(), iv);
 	}
 
@@ -39,7 +39,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param key           密钥
 	 * @param iv            加盐
 	 */
-	public CBCBlockCipherMacEngine(BlockCipher digest, int macSizeInBits, byte[] key, byte[] iv) {
+	public CBCBlockCipherMacEngine(final BlockCipher digest, final int macSizeInBits, final byte[] key, final byte[] iv) {
 		this(digest, macSizeInBits, new ParametersWithIV(new KeyParameter(key), iv));
 	}
 
@@ -50,7 +50,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param macSizeInBits mac结果的bits长度，必须为8的倍数
 	 * @param key           密钥
 	 */
-	public CBCBlockCipherMacEngine(BlockCipher cipher, int macSizeInBits, Key key) {
+	public CBCBlockCipherMacEngine(final BlockCipher cipher, final int macSizeInBits, final Key key) {
 		this(cipher, macSizeInBits, key.getEncoded());
 	}
 
@@ -61,7 +61,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param macSizeInBits mac结果的bits长度，必须为8的倍数
 	 * @param key           密钥
 	 */
-	public CBCBlockCipherMacEngine(BlockCipher cipher, int macSizeInBits, byte[] key) {
+	public CBCBlockCipherMacEngine(final BlockCipher cipher, final int macSizeInBits, final byte[] key) {
 		this(cipher, macSizeInBits, new KeyParameter(key));
 	}
 
@@ -72,7 +72,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param macSizeInBits mac结果的bits长度，必须为8的倍数
 	 * @param params        参数，例如密钥可以用{@link KeyParameter}
 	 */
-	public CBCBlockCipherMacEngine(BlockCipher cipher, int macSizeInBits, CipherParameters params) {
+	public CBCBlockCipherMacEngine(final BlockCipher cipher, final int macSizeInBits, final CipherParameters params) {
 		this(new CBCBlockCipherMac(cipher, macSizeInBits), params);
 	}
 
@@ -82,7 +82,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @param mac    {@link CBCBlockCipherMac}
 	 * @param params 参数，例如密钥可以用{@link KeyParameter}
 	 */
-	public CBCBlockCipherMacEngine(CBCBlockCipherMac mac, CipherParameters params) {
+	public CBCBlockCipherMacEngine(final CBCBlockCipherMac mac, final CipherParameters params) {
 		super(mac, params);
 	}
 
@@ -94,7 +94,7 @@ public class CBCBlockCipherMacEngine extends BCMacEngine {
 	 * @return this
 	 * @see #init(Mac, CipherParameters)
 	 */
-	public CBCBlockCipherMacEngine init(BlockCipher cipher, CipherParameters params) {
+	public CBCBlockCipherMacEngine init(final BlockCipher cipher, final CipherParameters params) {
 		return (CBCBlockCipherMacEngine) init(new CBCBlockCipherMac(cipher), params);
 	}
 }

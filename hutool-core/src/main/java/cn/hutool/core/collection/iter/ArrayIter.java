@@ -38,7 +38,7 @@ public class ArrayIter<E> implements IterableIter<E>, ResettableIter<E>, Seriali
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException     array对象为null
 	 */
-	public ArrayIter(E[] array) {
+	public ArrayIter(final E[] array) {
 		this((Object) array);
 	}
 
@@ -49,7 +49,7 @@ public class ArrayIter<E> implements IterableIter<E>, ResettableIter<E>, Seriali
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException     array对象为null
 	 */
-	public ArrayIter(Object array) {
+	public ArrayIter(final Object array) {
 		this(array, 0);
 	}
 
@@ -61,7 +61,7 @@ public class ArrayIter<E> implements IterableIter<E>, ResettableIter<E>, Seriali
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException     array对象为null
 	 */
-	public ArrayIter(Object array, int startIndex) {
+	public ArrayIter(final Object array, final int startIndex) {
 		this(array, startIndex, -1);
 	}
 

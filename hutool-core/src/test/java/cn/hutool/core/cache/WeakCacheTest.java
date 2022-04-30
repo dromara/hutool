@@ -26,7 +26,7 @@ public class WeakCacheTest {
 	@Ignore
 	public void removeByGcTest(){
 		// https://gitee.com/dromara/hutool/issues/I51O7M
-		WeakCache<String, String> cache = new WeakCache<>(-1);
+		final WeakCache<String, String> cache = new WeakCache<>(-1);
 		cache.put("a", "1");
 		cache.put("b", "2");
 

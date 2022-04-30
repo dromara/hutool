@@ -26,7 +26,7 @@ public class HttpInputStream extends InputStream {
 	 *
 	 * @param response 响应对象
 	 */
-	public HttpInputStream(HttpResponse response) {
+	public HttpInputStream(final HttpResponse response) {
 		init(response);
 	}
 
@@ -37,12 +37,12 @@ public class HttpInputStream extends InputStream {
 
 	@SuppressWarnings("NullableProblems")
 	@Override
-	public int read(byte[] b, int off, int len) throws IOException {
+	public int read(final byte[] b, final int off, final int len) throws IOException {
 		return this.in.read(b, off, len);
 	}
 
 	@Override
-	public long skip(long n) throws IOException {
+	public long skip(final long n) throws IOException {
 		return this.in.skip(n);
 	}
 
@@ -57,7 +57,7 @@ public class HttpInputStream extends InputStream {
 	}
 
 	@Override
-	public synchronized void mark(int readlimit) {
+	public synchronized void mark(final int readlimit) {
 		this.in.mark(readlimit);
 	}
 
@@ -76,10 +76,10 @@ public class HttpInputStream extends InputStream {
 	 *
 	 * @param response 响应对象
 	 */
-	private void init(HttpResponse response) {
+	private void init(final HttpResponse response) {
 		try {
 			this.in = (response.status < HttpStatus.HTTP_BAD_REQUEST) ? response.httpConnection.getInputStream() : response.httpConnection.getErrorStream();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
@@ -96,7 +96,7 @@ public class HttpInputStream extends InputStream {
 			// Accept-Encoding: gzip
 			try {
 				this.in = new GZIPInputStream(this.in);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// 在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
 				// ignore
 			}

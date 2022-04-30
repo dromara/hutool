@@ -14,7 +14,7 @@ public class TransientTest {
 
 	@Test
 	public void beanWithoutTransientTest(){
-		Bill detailBill = new Bill();
+		final Bill detailBill = new Bill();
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 
@@ -26,7 +26,7 @@ public class TransientTest {
 
 	@Test
 	public void beanWithTransientTest(){
-		Bill detailBill = new Bill();
+		final Bill detailBill = new Bill();
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 
@@ -38,7 +38,7 @@ public class TransientTest {
 
 	@Test
 	public void beanWithoutTransientToBeanTest(){
-		Bill detailBill = new Bill();
+		final Bill detailBill = new Bill();
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 
@@ -52,7 +52,7 @@ public class TransientTest {
 
 	@Test
 	public void beanWithTransientToBeanTest(){
-		Bill detailBill = new Bill();
+		final Bill detailBill = new Bill();
 		detailBill.setId("3243");
 		detailBill.setBizNo("bizNo");
 

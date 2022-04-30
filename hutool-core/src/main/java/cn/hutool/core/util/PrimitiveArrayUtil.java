@@ -26,7 +26,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(long[] array) {
+	public static boolean isEmpty(final long[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -36,7 +36,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(int[] array) {
+	public static boolean isEmpty(final int[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -46,7 +46,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(short[] array) {
+	public static boolean isEmpty(final short[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -56,7 +56,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(char[] array) {
+	public static boolean isEmpty(final char[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -66,7 +66,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(byte[] array) {
+	public static boolean isEmpty(final byte[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -76,7 +76,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(double[] array) {
+	public static boolean isEmpty(final double[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -86,7 +86,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(float[] array) {
+	public static boolean isEmpty(final float[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -96,7 +96,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(boolean[] array) {
+	public static boolean isEmpty(final boolean[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -108,7 +108,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(long[] array) {
+	public static boolean isNotEmpty(final long[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -118,7 +118,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(int[] array) {
+	public static boolean isNotEmpty(final int[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -128,7 +128,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(short[] array) {
+	public static boolean isNotEmpty(final short[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -138,7 +138,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(char[] array) {
+	public static boolean isNotEmpty(final char[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -148,7 +148,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(byte[] array) {
+	public static boolean isNotEmpty(final byte[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -158,7 +158,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(double[] array) {
+	public static boolean isNotEmpty(final double[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -168,7 +168,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(float[] array) {
+	public static boolean isNotEmpty(final float[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -178,7 +178,7 @@ public class PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(boolean[] array) {
+	public static boolean isNotEmpty(final boolean[] array) {
 		return false == isEmpty(array);
 	}
 
@@ -193,7 +193,7 @@ public class PrimitiveArrayUtil {
 	 * @return 调整后的新数组
 	 * @since 4.6.7
 	 */
-	public static byte[] resize(byte[] bytes, int newSize) {
+	public static byte[] resize(final byte[] bytes, final int newSize) {
 		if (newSize < 0) {
 			return bytes;
 		}
@@ -214,14 +214,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static byte[] addAll(byte[]... arrays) {
+	public static byte[] addAll(final byte[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (byte[] array : arrays) {
+		for (final byte[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -229,7 +229,7 @@ public class PrimitiveArrayUtil {
 
 		final byte[] result = new byte[length];
 		length = 0;
-		for (byte[] array : arrays) {
+		for (final byte[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -246,14 +246,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static int[] addAll(int[]... arrays) {
+	public static int[] addAll(final int[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (int[] array : arrays) {
+		for (final int[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -261,7 +261,7 @@ public class PrimitiveArrayUtil {
 
 		final int[] result = new int[length];
 		length = 0;
-		for (int[] array : arrays) {
+		for (final int[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -278,14 +278,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static long[] addAll(long[]... arrays) {
+	public static long[] addAll(final long[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (long[] array : arrays) {
+		for (final long[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -293,7 +293,7 @@ public class PrimitiveArrayUtil {
 
 		final long[] result = new long[length];
 		length = 0;
-		for (long[] array : arrays) {
+		for (final long[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -310,14 +310,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static double[] addAll(double[]... arrays) {
+	public static double[] addAll(final double[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (double[] array : arrays) {
+		for (final double[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -325,7 +325,7 @@ public class PrimitiveArrayUtil {
 
 		final double[] result = new double[length];
 		length = 0;
-		for (double[] array : arrays) {
+		for (final double[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -342,14 +342,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static float[] addAll(float[]... arrays) {
+	public static float[] addAll(final float[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (float[] array : arrays) {
+		for (final float[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -357,7 +357,7 @@ public class PrimitiveArrayUtil {
 
 		final float[] result = new float[length];
 		length = 0;
-		for (float[] array : arrays) {
+		for (final float[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -374,14 +374,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static char[] addAll(char[]... arrays) {
+	public static char[] addAll(final char[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (char[] array : arrays) {
+		for (final char[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -389,7 +389,7 @@ public class PrimitiveArrayUtil {
 
 		final char[] result = new char[length];
 		length = 0;
-		for (char[] array : arrays) {
+		for (final char[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -406,14 +406,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static boolean[] addAll(boolean[]... arrays) {
+	public static boolean[] addAll(final boolean[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (boolean[] array : arrays) {
+		for (final boolean[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -421,7 +421,7 @@ public class PrimitiveArrayUtil {
 
 		final boolean[] result = new boolean[length];
 		length = 0;
-		for (boolean[] array : arrays) {
+		for (final boolean[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -438,14 +438,14 @@ public class PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 * @since 4.6.9
 	 */
-	public static short[] addAll(short[]... arrays) {
+	public static short[] addAll(final short[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		// 计算总长度
 		int length = 0;
-		for (short[] array : arrays) {
+		for (final short[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
@@ -453,7 +453,7 @@ public class PrimitiveArrayUtil {
 
 		final short[] result = new short[length];
 		length = 0;
-		for (short[] array : arrays) {
+		for (final short[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -470,7 +470,7 @@ public class PrimitiveArrayUtil {
 	 * @param excludedEnd 结束的数字（不包含）
 	 * @return 数字列表
 	 */
-	public static int[] range(int excludedEnd) {
+	public static int[] range(final int excludedEnd) {
 		return range(0, excludedEnd, 1);
 	}
 
@@ -482,7 +482,7 @@ public class PrimitiveArrayUtil {
 	 * @param excludedEnd   结束的数字（不包含）
 	 * @return 数字列表
 	 */
-	public static int[] range(int includedStart, int excludedEnd) {
+	public static int[] range(final int includedStart, final int excludedEnd) {
 		return range(includedStart, excludedEnd, 1);
 	}
 
@@ -497,7 +497,7 @@ public class PrimitiveArrayUtil {
 	 */
 	public static int[] range(int includedStart, int excludedEnd, int step) {
 		if (includedStart > excludedEnd) {
-			int tmp = includedStart;
+			final int tmp = includedStart;
 			includedStart = excludedEnd;
 			excludedEnd = tmp;
 		}
@@ -506,12 +506,12 @@ public class PrimitiveArrayUtil {
 			step = 1;
 		}
 
-		int deviation = excludedEnd - includedStart;
+		final int deviation = excludedEnd - includedStart;
 		int length = deviation / step;
 		if (deviation % step != 0) {
 			length += 1;
 		}
-		int[] range = new int[length];
+		final int[] range = new int[length];
 		for (int i = 0; i < length; i++) {
 			range[i] = includedStart;
 			includedStart += step;
@@ -528,7 +528,7 @@ public class PrimitiveArrayUtil {
 	 * @param len   每个小节的长度
 	 * @return 拆分后的数组
 	 */
-	public static byte[][] split(byte[] array, int len) {
+	public static byte[][] split(final byte[] array, final int len) {
 		int amount = array.length / len;
 		final int remainder = array.length % len;
 		if (remainder != 0) {
@@ -560,7 +560,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(long[] array, long value) {
+	public static int indexOf(final long[] array, final long value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -579,7 +579,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(long[] array, long value) {
+	public static int lastIndexOf(final long[] array, final long value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -598,7 +598,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(long[] array, long value) {
+	public static boolean contains(final long[] array, final long value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -610,7 +610,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(int[] array, int value) {
+	public static int indexOf(final int[] array, final int value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -629,7 +629,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(int[] array, int value) {
+	public static int lastIndexOf(final int[] array, final int value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -648,7 +648,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(int[] array, int value) {
+	public static boolean contains(final int[] array, final int value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -660,7 +660,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(short[] array, short value) {
+	public static int indexOf(final short[] array, final short value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -679,7 +679,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(short[] array, short value) {
+	public static int lastIndexOf(final short[] array, final short value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -698,7 +698,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(short[] array, short value) {
+	public static boolean contains(final short[] array, final short value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -710,7 +710,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(char[] array, char value) {
+	public static int indexOf(final char[] array, final char value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -729,7 +729,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(char[] array, char value) {
+	public static int lastIndexOf(final char[] array, final char value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -748,7 +748,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(char[] array, char value) {
+	public static boolean contains(final char[] array, final char value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -760,7 +760,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(byte[] array, byte value) {
+	public static int indexOf(final byte[] array, final byte value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -779,7 +779,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(byte[] array, byte value) {
+	public static int lastIndexOf(final byte[] array, final byte value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -798,7 +798,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(byte[] array, byte value) {
+	public static boolean contains(final byte[] array, final byte value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -810,7 +810,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(double[] array, double value) {
+	public static int indexOf(final double[] array, final double value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (NumberUtil.equals(value, array[i])) {
@@ -829,7 +829,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(double[] array, double value) {
+	public static int lastIndexOf(final double[] array, final double value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (NumberUtil.equals(value, array[i])) {
@@ -848,7 +848,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(double[] array, double value) {
+	public static boolean contains(final double[] array, final double value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -860,7 +860,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(float[] array, float value) {
+	public static int indexOf(final float[] array, final float value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (NumberUtil.equals(value, array[i])) {
@@ -879,7 +879,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(float[] array, float value) {
+	public static int lastIndexOf(final float[] array, final float value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (NumberUtil.equals(value, array[i])) {
@@ -898,7 +898,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(float[] array, float value) {
+	public static boolean contains(final float[] array, final float value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -910,7 +910,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int indexOf(boolean[] array, boolean value) {
+	public static int indexOf(final boolean[] array, final boolean value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (value == array[i]) {
@@ -929,7 +929,7 @@ public class PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static int lastIndexOf(boolean[] array, boolean value) {
+	public static int lastIndexOf(final boolean[] array, final boolean value) {
 		if (null != array) {
 			for (int i = array.length - 1; i >= 0; i--) {
 				if (value == array[i]) {
@@ -948,7 +948,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.0.7
 	 */
-	public static boolean contains(boolean[] array, boolean value) {
+	public static boolean contains(final boolean[] array, final boolean value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -960,7 +960,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Integer[] wrap(int... values) {
+	public static Integer[] wrap(final int... values) {
 		if (null == values) {
 			return null;
 		}
@@ -982,7 +982,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static int[] unWrap(Integer... values) {
+	public static int[] unWrap(final Integer... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1004,7 +1004,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Long[] wrap(long... values) {
+	public static Long[] wrap(final long... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1026,7 +1026,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static long[] unWrap(Long... values) {
+	public static long[] unWrap(final Long... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1048,7 +1048,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Character[] wrap(char... values) {
+	public static Character[] wrap(final char... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1070,7 +1070,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static char[] unWrap(Character... values) {
+	public static char[] unWrap(final Character... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1079,7 +1079,7 @@ public class PrimitiveArrayUtil {
 			return new char[0];
 		}
 
-		char[] array = new char[length];
+		final char[] array = new char[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = ObjUtil.defaultIfNull(values[i], Character.MIN_VALUE);
 		}
@@ -1092,7 +1092,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Byte[] wrap(byte... values) {
+	public static Byte[] wrap(final byte... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1114,7 +1114,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static byte[] unWrap(Byte... values) {
+	public static byte[] unWrap(final Byte... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1136,7 +1136,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Short[] wrap(short... values) {
+	public static Short[] wrap(final short... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1158,7 +1158,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static short[] unWrap(Short... values) {
+	public static short[] unWrap(final Short... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1180,7 +1180,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Float[] wrap(float... values) {
+	public static Float[] wrap(final float... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1202,7 +1202,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static float[] unWrap(Float... values) {
+	public static float[] unWrap(final Float... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1224,7 +1224,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Double[] wrap(double... values) {
+	public static Double[] wrap(final double... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1246,7 +1246,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static double[] unWrap(Double... values) {
+	public static double[] unWrap(final Double... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1268,7 +1268,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
-	public static Boolean[] wrap(boolean... values) {
+	public static Boolean[] wrap(final boolean... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1290,7 +1290,7 @@ public class PrimitiveArrayUtil {
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
 	 */
-	public static boolean[] unWrap(Boolean... values) {
+	public static boolean[] unWrap(final Boolean... values) {
 		if (null == values) {
 			return null;
 		}
@@ -1318,8 +1318,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static byte[] sub(byte[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static byte[] sub(final byte[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1330,7 +1330,7 @@ public class PrimitiveArrayUtil {
 			return new byte[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1353,8 +1353,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static int[] sub(int[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static int[] sub(final int[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1365,7 +1365,7 @@ public class PrimitiveArrayUtil {
 			return new int[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1388,8 +1388,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static long[] sub(long[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static long[] sub(final long[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1400,7 +1400,7 @@ public class PrimitiveArrayUtil {
 			return new long[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1423,8 +1423,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static short[] sub(short[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static short[] sub(final short[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1435,7 +1435,7 @@ public class PrimitiveArrayUtil {
 			return new short[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1458,8 +1458,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static char[] sub(char[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static char[] sub(final char[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1470,7 +1470,7 @@ public class PrimitiveArrayUtil {
 			return new char[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1493,8 +1493,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static double[] sub(double[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static double[] sub(final double[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1505,7 +1505,7 @@ public class PrimitiveArrayUtil {
 			return new double[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1528,8 +1528,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static float[] sub(float[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static float[] sub(final float[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1540,7 +1540,7 @@ public class PrimitiveArrayUtil {
 			return new float[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1563,8 +1563,8 @@ public class PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.5.2
 	 */
-	public static boolean[] sub(boolean[] array, int start, int end) {
-		int length = Array.getLength(array);
+	public static boolean[] sub(final boolean[] array, int start, int end) {
+		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1575,7 +1575,7 @@ public class PrimitiveArrayUtil {
 			return new boolean[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1600,7 +1600,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static long[] remove(long[] array, int index) throws IllegalArgumentException {
+	public static long[] remove(final long[] array, final int index) throws IllegalArgumentException {
 		return (long[]) remove((Object) array, index);
 	}
 
@@ -1614,7 +1614,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static int[] remove(int[] array, int index) throws IllegalArgumentException {
+	public static int[] remove(final int[] array, final int index) throws IllegalArgumentException {
 		return (int[]) remove((Object) array, index);
 	}
 
@@ -1628,7 +1628,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static short[] remove(short[] array, int index) throws IllegalArgumentException {
+	public static short[] remove(final short[] array, final int index) throws IllegalArgumentException {
 		return (short[]) remove((Object) array, index);
 	}
 
@@ -1642,7 +1642,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static char[] remove(char[] array, int index) throws IllegalArgumentException {
+	public static char[] remove(final char[] array, final int index) throws IllegalArgumentException {
 		return (char[]) remove((Object) array, index);
 	}
 
@@ -1656,7 +1656,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static byte[] remove(byte[] array, int index) throws IllegalArgumentException {
+	public static byte[] remove(final byte[] array, final int index) throws IllegalArgumentException {
 		return (byte[]) remove((Object) array, index);
 	}
 
@@ -1670,7 +1670,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static double[] remove(double[] array, int index) throws IllegalArgumentException {
+	public static double[] remove(final double[] array, final int index) throws IllegalArgumentException {
 		return (double[]) remove((Object) array, index);
 	}
 
@@ -1684,7 +1684,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static float[] remove(float[] array, int index) throws IllegalArgumentException {
+	public static float[] remove(final float[] array, final int index) throws IllegalArgumentException {
 		return (float[]) remove((Object) array, index);
 	}
 
@@ -1698,7 +1698,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static boolean[] remove(boolean[] array, int index) throws IllegalArgumentException {
+	public static boolean[] remove(final boolean[] array, final int index) throws IllegalArgumentException {
 		return (boolean[]) remove((Object) array, index);
 	}
 
@@ -1713,11 +1713,11 @@ public class PrimitiveArrayUtil {
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings("SuspiciousSystemArraycopy")
-	public static Object remove(Object array, int index) throws IllegalArgumentException {
+	public static Object remove(final Object array, final int index) throws IllegalArgumentException {
 		if (null == array) {
 			return null;
 		}
-		int length = Array.getLength(array);
+		final int length = Array.getLength(array);
 		if (index < 0 || index >= length) {
 			return array;
 		}
@@ -1744,7 +1744,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static long[] removeEle(long[] array, long element) throws IllegalArgumentException {
+	public static long[] removeEle(final long[] array, final long element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1758,7 +1758,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static int[] removeEle(int[] array, int element) throws IllegalArgumentException {
+	public static int[] removeEle(final int[] array, final int element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1772,7 +1772,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static short[] removeEle(short[] array, short element) throws IllegalArgumentException {
+	public static short[] removeEle(final short[] array, final short element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1786,7 +1786,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static char[] removeEle(char[] array, char element) throws IllegalArgumentException {
+	public static char[] removeEle(final char[] array, final char element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1800,7 +1800,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static byte[] removeEle(byte[] array, byte element) throws IllegalArgumentException {
+	public static byte[] removeEle(final byte[] array, final byte element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1814,7 +1814,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static double[] removeEle(double[] array, double element) throws IllegalArgumentException {
+	public static double[] removeEle(final double[] array, final double element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1828,7 +1828,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static float[] removeEle(float[] array, float element) throws IllegalArgumentException {
+	public static float[] removeEle(final float[] array, final float element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1842,7 +1842,7 @@ public class PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
+	public static boolean[] removeEle(final boolean[] array, final boolean element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1857,7 +1857,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static long[] reverse(long[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static long[] reverse(final long[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1878,7 +1878,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static long[] reverse(long[] array) {
+	public static long[] reverse(final long[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -1891,7 +1891,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static int[] reverse(int[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static int[] reverse(final int[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1912,7 +1912,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static int[] reverse(int[] array) {
+	public static int[] reverse(final int[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -1925,7 +1925,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static short[] reverse(short[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static short[] reverse(final short[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1946,7 +1946,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static short[] reverse(short[] array) {
+	public static short[] reverse(final short[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -1959,7 +1959,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static char[] reverse(char[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static char[] reverse(final char[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1980,7 +1980,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static char[] reverse(char[] array) {
+	public static char[] reverse(final char[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -1993,7 +1993,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static byte[] reverse(byte[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static byte[] reverse(final byte[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -2014,7 +2014,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static byte[] reverse(byte[] array) {
+	public static byte[] reverse(final byte[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -2027,7 +2027,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static double[] reverse(double[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static double[] reverse(final double[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -2048,7 +2048,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static double[] reverse(double[] array) {
+	public static double[] reverse(final double[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -2061,7 +2061,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static float[] reverse(float[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static float[] reverse(final float[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -2082,7 +2082,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static float[] reverse(float[] array) {
+	public static float[] reverse(final float[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -2095,7 +2095,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static boolean[] reverse(boolean[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static boolean[] reverse(final boolean[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -2116,7 +2116,7 @@ public class PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static boolean[] reverse(boolean[] array) {
+	public static boolean[] reverse(final boolean[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -2129,7 +2129,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static long min(long... numberArray) {
+	public static long min(final long... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2149,7 +2149,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static int min(int... numberArray) {
+	public static int min(final int... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2169,7 +2169,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static short min(short... numberArray) {
+	public static short min(final short... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2189,7 +2189,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static char min(char... numberArray) {
+	public static char min(final char... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2209,7 +2209,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static byte min(byte... numberArray) {
+	public static byte min(final byte... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2229,7 +2229,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static double min(double... numberArray) {
+	public static double min(final double... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2249,7 +2249,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static float min(float... numberArray) {
+	public static float min(final float... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2269,7 +2269,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static long max(long... numberArray) {
+	public static long max(final long... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2289,7 +2289,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static int max(int... numberArray) {
+	public static int max(final int... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2309,7 +2309,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static short max(short... numberArray) {
+	public static short max(final short... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2329,7 +2329,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static char max(char... numberArray) {
+	public static char max(final char... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2349,7 +2349,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static byte max(byte... numberArray) {
+	public static byte max(final byte... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2369,7 +2369,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static double max(double... numberArray) {
+	public static double max(final double... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2389,7 +2389,7 @@ public class PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static float max(float... numberArray) {
+	public static float max(final float... numberArray) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -2412,7 +2412,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static int[] shuffle(int[] array) {
+	public static int[] shuffle(final int[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2425,7 +2425,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static int[] shuffle(int[] array, Random random) {
+	public static int[] shuffle(final int[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2445,7 +2445,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static long[] shuffle(long[] array) {
+	public static long[] shuffle(final long[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2458,7 +2458,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static long[] shuffle(long[] array, Random random) {
+	public static long[] shuffle(final long[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2478,7 +2478,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static double[] shuffle(double[] array) {
+	public static double[] shuffle(final double[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2491,7 +2491,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static double[] shuffle(double[] array, Random random) {
+	public static double[] shuffle(final double[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2511,7 +2511,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static float[] shuffle(float[] array) {
+	public static float[] shuffle(final float[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2524,7 +2524,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static float[] shuffle(float[] array, Random random) {
+	public static float[] shuffle(final float[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2544,7 +2544,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean[] shuffle(boolean[] array) {
+	public static boolean[] shuffle(final boolean[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2557,7 +2557,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean[] shuffle(boolean[] array, Random random) {
+	public static boolean[] shuffle(final boolean[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2577,7 +2577,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static byte[] shuffle(byte[] array) {
+	public static byte[] shuffle(final byte[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2590,7 +2590,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static byte[] shuffle(byte[] array, Random random) {
+	public static byte[] shuffle(final byte[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2610,7 +2610,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static char[] shuffle(char[] array) {
+	public static char[] shuffle(final char[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2623,7 +2623,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static char[] shuffle(char[] array, Random random) {
+	public static char[] shuffle(final char[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2643,7 +2643,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static short[] shuffle(short[] array) {
+	public static short[] shuffle(final short[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -2656,7 +2656,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static short[] shuffle(short[] array, Random random) {
+	public static short[] shuffle(final short[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -2679,11 +2679,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static int[] swap(int[] array, int index1, int index2) {
+	public static int[] swap(final int[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		int tmp = array[index1];
+		final int tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2698,11 +2698,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static long[] swap(long[] array, int index1, int index2) {
+	public static long[] swap(final long[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		long tmp = array[index1];
+		final long tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2717,11 +2717,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static double[] swap(double[] array, int index1, int index2) {
+	public static double[] swap(final double[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		double tmp = array[index1];
+		final double tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2736,11 +2736,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static float[] swap(float[] array, int index1, int index2) {
+	public static float[] swap(final float[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		float tmp = array[index1];
+		final float tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2755,11 +2755,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static boolean[] swap(boolean[] array, int index1, int index2) {
+	public static boolean[] swap(final boolean[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		boolean tmp = array[index1];
+		final boolean tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2774,11 +2774,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static byte[] swap(byte[] array, int index1, int index2) {
+	public static byte[] swap(final byte[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		byte tmp = array[index1];
+		final byte tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2793,11 +2793,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static char[] swap(char[] array, int index1, int index2) {
+	public static char[] swap(final char[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		char tmp = array[index1];
+		final char tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2812,11 +2812,11 @@ public class PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static short[] swap(short[] array, int index1, int index2) {
+	public static short[] swap(final short[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
-		short tmp = array[index1];
+		final short tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -2830,7 +2830,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(byte[] array) {
+	public static boolean isSorted(final byte[] array) {
 		return isSortedASC(array);
 	}
 
@@ -2842,7 +2842,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(byte[] array) {
+	public static boolean isSortedASC(final byte[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2864,7 +2864,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(byte[] array) {
+	public static boolean isSortedDESC(final byte[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2886,7 +2886,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(short[] array) {
+	public static boolean isSorted(final short[] array) {
 		return isSortedASC(array);
 	}
 
@@ -2898,7 +2898,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(short[] array) {
+	public static boolean isSortedASC(final short[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2920,7 +2920,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(short[] array) {
+	public static boolean isSortedDESC(final short[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2942,7 +2942,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(char[] array) {
+	public static boolean isSorted(final char[] array) {
 		return isSortedASC(array);
 	}
 
@@ -2954,7 +2954,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(char[] array) {
+	public static boolean isSortedASC(final char[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2976,7 +2976,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(char[] array) {
+	public static boolean isSortedDESC(final char[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -2998,7 +2998,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(int[] array) {
+	public static boolean isSorted(final int[] array) {
 		return isSortedASC(array);
 	}
 
@@ -3010,7 +3010,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(int[] array) {
+	public static boolean isSortedASC(final int[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3032,7 +3032,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(int[] array) {
+	public static boolean isSortedDESC(final int[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3054,7 +3054,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(long[] array) {
+	public static boolean isSorted(final long[] array) {
 		return isSortedASC(array);
 	}
 
@@ -3066,7 +3066,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(long[] array) {
+	public static boolean isSortedASC(final long[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3088,7 +3088,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(long[] array) {
+	public static boolean isSortedDESC(final long[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3110,7 +3110,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(double[] array) {
+	public static boolean isSorted(final double[] array) {
 		return isSortedASC(array);
 	}
 
@@ -3122,7 +3122,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(double[] array) {
+	public static boolean isSortedASC(final double[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3144,7 +3144,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(double[] array) {
+	public static boolean isSortedDESC(final double[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3166,7 +3166,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(float[] array) {
+	public static boolean isSorted(final float[] array) {
 		return isSortedASC(array);
 	}
 
@@ -3178,7 +3178,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedASC(float[] array) {
+	public static boolean isSortedASC(final float[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -3200,7 +3200,7 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSortedDESC(float[] array) {
+	public static boolean isSortedDESC(final float[] array) {
 		if (array == null) {
 			return false;
 		}

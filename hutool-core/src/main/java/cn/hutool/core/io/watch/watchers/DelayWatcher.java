@@ -36,7 +36,7 @@ public class DelayWatcher implements Watcher {
 	 * @param watcher 实际处理触发事件的监视器{@link Watcher}，不可以是{@link DelayWatcher}
 	 * @param delay 延迟时间，单位毫秒
 	 */
-	public DelayWatcher(Watcher watcher, long delay) {
+	public DelayWatcher(final Watcher watcher, final long delay) {
 		Assert.notNull(watcher);
 		if(watcher instanceof DelayWatcher) {
 			throw new IllegalArgumentException("Watcher must not be a DelayWatcher");
@@ -47,7 +47,7 @@ public class DelayWatcher implements Watcher {
 	//---------------------------------------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public void onModify(WatchEvent<?> event, Path currentPath) {
+	public void onModify(final WatchEvent<?> event, final Path currentPath) {
 		if(this.delay < 1) {
 			this.watcher.onModify(event, currentPath);
 		}else {
@@ -56,17 +56,17 @@ public class DelayWatcher implements Watcher {
 	}
 
 	@Override
-	public void onCreate(WatchEvent<?> event, Path currentPath) {
+	public void onCreate(final WatchEvent<?> event, final Path currentPath) {
 		watcher.onCreate(event, currentPath);
 	}
 
 	@Override
-	public void onDelete(WatchEvent<?> event, Path currentPath) {
+	public void onDelete(final WatchEvent<?> event, final Path currentPath) {
 		watcher.onDelete(event, currentPath);
 	}
 
 	@Override
-	public void onOverflow(WatchEvent<?> event, Path currentPath) {
+	public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
 		watcher.onOverflow(event, currentPath);
 	}
 
@@ -76,8 +76,8 @@ public class DelayWatcher implements Watcher {
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	private void onDelayModify(WatchEvent<?> event, Path currentPath) {
-		Path eventPath = Paths.get(currentPath.toString(), event.context().toString());
+	private void onDelayModify(final WatchEvent<?> event, final Path currentPath) {
+		final Path eventPath = Paths.get(currentPath.toString(), event.context().toString());
 		if(eventSet.contains(eventPath)) {
 			//此事件已经被触发过，后续事件忽略，等待统一处理。
 			return;

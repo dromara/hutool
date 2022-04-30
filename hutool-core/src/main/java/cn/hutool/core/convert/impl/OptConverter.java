@@ -14,7 +14,7 @@ public class OptConverter extends AbstractConverter<Opt<?>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Opt<?> convertInternal(Object value) {
+	protected Opt<?> convertInternal(final Object value) {
 		return Opt.ofNullable(value);
 	}
 

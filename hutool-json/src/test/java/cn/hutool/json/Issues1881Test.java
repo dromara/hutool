@@ -27,7 +27,7 @@ public class Issues1881Test {
 
 	@Test
 	public void parseTest(){
-		List<ThingsHolderContactVO> holderContactVOList = new ArrayList<>();
+		final List<ThingsHolderContactVO> holderContactVOList = new ArrayList<>();
 		holderContactVOList.add(new ThingsHolderContactVO().setId(1L).setName("1"));
 		holderContactVOList.add(new ThingsHolderContactVO().setId(2L).setName("2"));
 

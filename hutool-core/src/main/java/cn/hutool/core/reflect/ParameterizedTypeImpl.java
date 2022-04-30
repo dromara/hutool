@@ -27,7 +27,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 	 * @param ownerType 拥有者类型
 	 * @param rawType 原始类型
 	 */
-	public ParameterizedTypeImpl(Type[] actualTypeArguments, Type ownerType, Type rawType) {
+	public ParameterizedTypeImpl(final Type[] actualTypeArguments, final Type ownerType, final Type rawType) {
 		this.actualTypeArguments = actualTypeArguments;
 		this.ownerType = ownerType;
 		this.rawType = rawType;
@@ -60,7 +60,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 			if (useOwner instanceof Class<?>) {
 				buf.append(((Class<?>) useOwner).getName());
 			} else {
-				buf.append(useOwner.toString());
+				buf.append(useOwner);
 			}
 			buf.append('.').append(raw.getSimpleName());
 		}
@@ -80,14 +80,14 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 	private static StringBuilder appendAllTo(final StringBuilder buf, final String sep, final Type... types) {
 		if (ArrayUtil.isNotEmpty(types)) {
 			boolean isFirst = true;
-			for (Type type : types) {
+			for (final Type type : types) {
 				if (isFirst) {
 					isFirst = false;
 				} else {
 					buf.append(sep);
 				}
 
-				String typeStr;
+				final String typeStr;
 				if(type instanceof Class) {
 					typeStr = ((Class<?>)type).getName();
 				}else {

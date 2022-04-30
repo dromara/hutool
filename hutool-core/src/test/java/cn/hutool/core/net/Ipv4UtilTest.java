@@ -16,7 +16,7 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void getMaskBitByIllegalMaskTest() {
-		ThrowingRunnable getMaskBitByMaskRunnable = () -> Ipv4Util.getMaskBitByMask("255.255.0.255");
+		final ThrowingRunnable getMaskBitByMaskRunnable = () -> Ipv4Util.getMaskBitByMask("255.255.0.255");
 		Assert.assertThrows("非法掩码测试", IllegalArgumentException.class, getMaskBitByMaskRunnable);
 	}
 
@@ -28,15 +28,15 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void longToIpTest() {
-		String ip = "192.168.1.255";
+		final String ip = "192.168.1.255";
 		final long ipLong = Ipv4Util.ipv4ToLong(ip);
-		String ipv4 = Ipv4Util.longToIpv4(ipLong);
+		final String ipv4 = Ipv4Util.longToIpv4(ipLong);
 		Assert.assertEquals(ip, ipv4);
 	}
 
 	@Test
 	public void getEndIpStrTest(){
-		String ip = "192.168.1.1";
+		final String ip = "192.168.1.1";
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final String endIpStr = Ipv4Util.getEndIpStr(ip, maskBitByMask);
 		Assert.assertEquals("192.168.1.255", endIpStr);
@@ -44,14 +44,14 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void listTest(){
-		int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
+		final int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final List<String> list = Ipv4Util.list("192.168.100.2", maskBit, false);
 		Assert.assertEquals(254, list.size());
 	}
 
 	@Test
 	public void isMaskValidTest() {
-		boolean maskValid = Ipv4Util.isMaskValid("255.255.255.0");
+		final boolean maskValid = Ipv4Util.isMaskValid("255.255.255.0");
 		Assert.assertTrue("掩码合法检验", maskValid);
 	}
 
@@ -65,13 +65,13 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void isMaskBitValidTest() {
-		boolean maskBitValid = Ipv4Util.isMaskBitValid(32);
+		final boolean maskBitValid = Ipv4Util.isMaskBitValid(32);
 		Assert.assertTrue("掩码位合法检验", maskBitValid);
 	}
 
 	@Test
 	public void isMaskBitInvalidTest() {
-		boolean maskBitValid = Ipv4Util.isMaskBitValid(33);
+		final boolean maskBitValid = Ipv4Util.isMaskBitValid(33);
 		Assert.assertFalse("掩码位非法检验", maskBitValid);
 	}
 

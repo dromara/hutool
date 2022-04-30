@@ -31,7 +31,7 @@ public class GraphicsUtil {
 	 * @return {@link Graphics2D}
 	 * @since 4.5.2
 	 */
-	public static Graphics2D createGraphics(BufferedImage image, Color color) {
+	public static Graphics2D createGraphics(final BufferedImage image, final Color color) {
 		final Graphics2D g = image.createGraphics();
 
 		if (null != color) {
@@ -52,15 +52,15 @@ public class GraphicsUtil {
 	 * @return 最小高度，-1表示无法获取
 	 * @since 4.5.17
 	 */
-	public static int getCenterY(Graphics g, int backgroundHeight) {
+	public static int getCenterY(final Graphics g, final int backgroundHeight) {
 		// 获取允许文字最小高度
 		FontMetrics metrics = null;
 		try {
 			metrics = g.getFontMetrics();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// 此处报告bug某些情况下会抛出IndexOutOfBoundsException，在此做容错处理
 		}
-		int y;
+		final int y;
 		if (null != metrics) {
 			y = (backgroundHeight - metrics.getHeight()) / 2 + metrics.getAscent();
 		} else {
@@ -80,7 +80,7 @@ public class GraphicsUtil {
 	 * @return 画笔对象
 	 * @since 4.5.10
 	 */
-	public static Graphics drawStringColourful(Graphics g, String str, Font font, int width, int height) {
+	public static Graphics drawStringColourful(final Graphics g, final String str, final Font font, final int width, final int height) {
 		return drawString(g, str, font, null, width, height);
 	}
 
@@ -96,7 +96,7 @@ public class GraphicsUtil {
 	 * @return 画笔对象
 	 * @since 4.5.10
 	 */
-	public static Graphics drawString(Graphics g, String str, Font font, Color color, int width, int height) {
+	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int width, final int height) {
 		// 抗锯齿
 		if (g instanceof Graphics2D) {
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -105,13 +105,13 @@ public class GraphicsUtil {
 		g.setFont(font);
 
 		// 文字高度（必须在设置字体后调用）
-		int midY = getCenterY(g, height);
+		final int midY = getCenterY(g, height);
 		if (null != color) {
 			g.setColor(color);
 		}
 
 		final int len = str.length();
-		int charWidth = width / len;
+		final int charWidth = width / len;
 		for (int i = 0; i < len; i++) {
 			if (null == color) {
 				// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
@@ -134,7 +134,7 @@ public class GraphicsUtil {
 	 * @return 画笔对象
 	 * @since 4.5.10
 	 */
-	public static Graphics drawString(Graphics g, String str, Font font, Color color, Rectangle rectangle) {
+	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final Rectangle rectangle) {
 		// 背景长宽
 		final int backgroundWidth = rectangle.width;
 		final int backgroundHeight = rectangle.height;
@@ -143,7 +143,7 @@ public class GraphicsUtil {
 		Dimension dimension;
 		try {
 			dimension = FontUtil.getDimension(g.getFontMetrics(font), str);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// 此处报告bug某些情况下会抛出IndexOutOfBoundsException，在此做容错处理
 			dimension = new Dimension(backgroundWidth / 3, backgroundHeight / 3);
 		}
@@ -165,7 +165,7 @@ public class GraphicsUtil {
 	 * @return 画笔对象
 	 * @since 5.3.6
 	 */
-	public static Graphics drawString(Graphics g, String str, Font font, Color color, Point point) {
+	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final Point point) {
 		// 抗锯齿
 		if (g instanceof Graphics2D) {
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -186,7 +186,7 @@ public class GraphicsUtil {
 	 * @param point 绘制的位置，基于左上角
 	 * @return 画笔对象
 	 */
-	public static Graphics drawImg(Graphics g, Image img, Point point) {
+	public static Graphics drawImg(final Graphics g, final Image img, final Point point) {
 		return drawImg(g, img,
 				new Rectangle(point.x, point.y, img.getWidth(null), img.getHeight(null)));
 	}
@@ -199,7 +199,7 @@ public class GraphicsUtil {
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height,，基于左上角
 	 * @return 画笔对象
 	 */
-	public static Graphics drawImg(Graphics g, Image img, Rectangle rectangle) {
+	public static Graphics drawImg(final Graphics g, final Image img, final Rectangle rectangle) {
 		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
 		return g;
 	}
@@ -211,7 +211,7 @@ public class GraphicsUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 画笔
 	 */
-	public static Graphics2D setAlpha(Graphics2D g, float alpha){
+	public static Graphics2D setAlpha(final Graphics2D g, final float alpha){
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		return g;
 	}

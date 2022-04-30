@@ -9,29 +9,29 @@ import java.util.Collection;
  *
  */
 public class EnvSettingInfo {
-	
+
 	public static boolean DEV_MODE = true;
-	
+
 	private boolean remoteMode;
-	
+
 	private String hubRemoteUrl;
-	
+
 	private String reportFolder = "/report";
 	private String screenshotFolder = "/screenshot";
 
 	private String elementFolder = "/config/element/";
 	private String suiteFolder = "/config/suite/";
-	
+
 	private String chromeDriverPath = "/src/main/resources/chromedriver.exe";
 	private String ieDriverPath = "/src/main/resources/IEDriverServer.exe";
 	private String operaDriverPath = "/src/main/resources/operadriver.exe";
 	private String firefoxDriverPath = "/src/main/resources/geckodriver.exe";
-	
+
 	private Double defaultSleepSeconds;
-	
+
 	private Integer elementLocationRetryCount;
 	private Double elementLocationTimeouts;
-	
+
 	/**
 	 * 收件人列表
 	 */
@@ -44,51 +44,51 @@ public class EnvSettingInfo {
 	 * 密送人列表
 	 */
 	private Collection<String> bccs;
-	
+
 	/**
 	 * 是否可以开启定时任务
 	 */
 	private boolean cronEnabled = false;
-	
+
 	/**
 	 * 定时执行：suite文件
 	 */
 	private String cronSuite;
-	
+
 	/**
 	 * 定时执行：cron表达式，支持linux crontab格式(5位)和Quartz的cron格式(6位)
 	 */
 	private String cronExpression;
-	
+
 	/**
 	 * 存储测试报告数据的轻量级数据库，路径
 	 */
 	private String sqlitePath;
-	
+
 	public EnvSettingInfo() {
 	}
 
-	public void setSqlitePath(String sqlitePath) {
+	public void setSqlitePath(final String sqlitePath) {
 		this.sqlitePath = sqlitePath;
 	}
-	
+
 	public String getSqlitePath() {
 		return sqlitePath;
 	}
-	
-	public void setCronEnabled(boolean cronEnabled) {
+
+	public void setCronEnabled(final boolean cronEnabled) {
 		this.cronEnabled = cronEnabled;
 	}
-	
+
 	public boolean isCronEnabled() {
 		return cronEnabled;
 	}
-	
+
 	public String getCronSuite() {
 		return cronSuite;
 	}
 
-	public void setCronSuite(String cronSuite) {
+	public void setCronSuite(final String cronSuite) {
 		this.cronSuite = cronSuite;
 	}
 
@@ -96,7 +96,7 @@ public class EnvSettingInfo {
 		return cronExpression;
 	}
 
-	public void setCronExpression(String cronExpression) {
+	public void setCronExpression(final String cronExpression) {
 		this.cronExpression = cronExpression;
 	}
 
@@ -104,7 +104,7 @@ public class EnvSettingInfo {
 		return elementLocationRetryCount;
 	}
 
-	public void setElementLocationRetryCount(Integer elementLocationRetryCount) {
+	public void setElementLocationRetryCount(final Integer elementLocationRetryCount) {
 		this.elementLocationRetryCount = elementLocationRetryCount;
 	}
 
@@ -112,7 +112,7 @@ public class EnvSettingInfo {
 		return elementLocationTimeouts;
 	}
 
-	public void setElementLocationTimeouts(Double elementLocationTimeouts) {
+	public void setElementLocationTimeouts(final Double elementLocationTimeouts) {
 		this.elementLocationTimeouts = elementLocationTimeouts;
 	}
 
@@ -120,7 +120,7 @@ public class EnvSettingInfo {
 		return elementFolder;
 	}
 
-	public void setElementFolder(String elementFolder) {
+	public void setElementFolder(final String elementFolder) {
 		this.elementFolder = elementFolder;
 	}
 
@@ -128,7 +128,7 @@ public class EnvSettingInfo {
 		return suiteFolder;
 	}
 
-	public void setSuiteFolder(String suiteFolder) {
+	public void setSuiteFolder(final String suiteFolder) {
 		this.suiteFolder = suiteFolder;
 	}
 
@@ -136,7 +136,7 @@ public class EnvSettingInfo {
 		return remoteMode;
 	}
 
-	public void setRemoteMode(boolean remoteMode) {
+	public void setRemoteMode(final boolean remoteMode) {
 		this.remoteMode = remoteMode;
 	}
 
@@ -144,7 +144,7 @@ public class EnvSettingInfo {
 		return hubRemoteUrl;
 	}
 
-	public void setHubRemoteUrl(String hubRemoteUrl) {
+	public void setHubRemoteUrl(final String hubRemoteUrl) {
 		this.hubRemoteUrl = hubRemoteUrl;
 	}
 
@@ -152,7 +152,7 @@ public class EnvSettingInfo {
 		return reportFolder;
 	}
 
-	public void setReportFolder(String reportFolder) {
+	public void setReportFolder(final String reportFolder) {
 		this.reportFolder = reportFolder;
 	}
 
@@ -160,7 +160,7 @@ public class EnvSettingInfo {
 		return screenshotFolder;
 	}
 
-	public void setScreenshotFolder(String screenshotFolder) {
+	public void setScreenshotFolder(final String screenshotFolder) {
 		this.screenshotFolder = screenshotFolder;
 	}
 
@@ -168,7 +168,7 @@ public class EnvSettingInfo {
 		return chromeDriverPath;
 	}
 
-	public void setChromeDriverPath(String chromeDriverPath) {
+	public void setChromeDriverPath(final String chromeDriverPath) {
 		this.chromeDriverPath = chromeDriverPath;
 	}
 
@@ -176,7 +176,7 @@ public class EnvSettingInfo {
 		return ieDriverPath;
 	}
 
-	public void setIeDriverPath(String ieDriverPath) {
+	public void setIeDriverPath(final String ieDriverPath) {
 		this.ieDriverPath = ieDriverPath;
 	}
 
@@ -184,7 +184,7 @@ public class EnvSettingInfo {
 		return operaDriverPath;
 	}
 
-	public void setOperaDriverPath(String operaDriverPath) {
+	public void setOperaDriverPath(final String operaDriverPath) {
 		this.operaDriverPath = operaDriverPath;
 	}
 
@@ -192,7 +192,7 @@ public class EnvSettingInfo {
 		return firefoxDriverPath;
 	}
 
-	public void setFirefoxDriverPath(String firefoxDriverPath) {
+	public void setFirefoxDriverPath(final String firefoxDriverPath) {
 		this.firefoxDriverPath = firefoxDriverPath;
 	}
 
@@ -200,7 +200,7 @@ public class EnvSettingInfo {
 		return defaultSleepSeconds;
 	}
 
-	public void setDefaultSleepSeconds(Double defaultSleepSeconds) {
+	public void setDefaultSleepSeconds(final Double defaultSleepSeconds) {
 		this.defaultSleepSeconds = defaultSleepSeconds;
 	}
 
@@ -208,7 +208,7 @@ public class EnvSettingInfo {
 		return tos;
 	}
 
-	public void setTos(Collection<String> tos) {
+	public void setTos(final Collection<String> tos) {
 		this.tos = tos;
 	}
 
@@ -216,7 +216,7 @@ public class EnvSettingInfo {
 		return ccs;
 	}
 
-	public void setCcs(Collection<String> ccs) {
+	public void setCcs(final Collection<String> ccs) {
 		this.ccs = ccs;
 	}
 
@@ -224,7 +224,7 @@ public class EnvSettingInfo {
 		return bccs;
 	}
 
-	public void setBccs(Collection<String> bccs) {
+	public void setBccs(final Collection<String> bccs) {
 		this.bccs = bccs;
 	}
 

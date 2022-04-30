@@ -26,7 +26,7 @@ public class SystemClock {
 	 * 构造
 	 * @param period 时钟更新间隔，单位毫秒
 	 */
-	public SystemClock(long period) {
+	public SystemClock(final long period) {
 		this.period = period;
 		this.now = System.currentTimeMillis();
 		scheduleClockUpdating();
@@ -36,8 +36,8 @@ public class SystemClock {
 	 * 开启计时器线程
 	 */
 	private void scheduleClockUpdating() {
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
-			Thread thread = new Thread(runnable, "System Clock");
+		final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
+			final Thread thread = new Thread(runnable, "System Clock");
 			thread.setDaemon(true);
 			return thread;
 		});

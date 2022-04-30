@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicTypeGetter<K>{
 	@Override
-	default Object getObj(K key) {
+	default Object getObj(final K key) {
 		return getObj(key, null);
 	}
 
@@ -25,7 +25,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default String getStr(K key){
+	default String getStr(final K key){
 		return this.getStr(key, null);
 	}
 
@@ -37,7 +37,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Integer getInt(K key) {
+	default Integer getInt(final K key) {
 		return this.getInt(key, null);
 	}
 
@@ -49,7 +49,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Short getShort(K key){
+	default Short getShort(final K key){
 		return this.getShort(key, null);
 	}
 
@@ -61,7 +61,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Boolean getBool(K key){
+	default Boolean getBool(final K key){
 		return this.getBool(key, null);
 	}
 
@@ -73,7 +73,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Long getLong(K key){
+	default Long getLong(final K key){
 		return this.getLong(key, null);
 	}
 
@@ -85,7 +85,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Character getChar(K key){
+	default Character getChar(final K key){
 		return this.getChar(key, null);
 	}
 
@@ -97,7 +97,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Float getFloat(K key){
+	default Float getFloat(final K key){
 		return this.getFloat(key, null);
 	}
 
@@ -109,7 +109,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Double getDouble(K key){
+	default Double getDouble(final K key){
 		return this.getDouble(key, null);
 	}
 
@@ -121,7 +121,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Byte getByte(K key){
+	default Byte getByte(final K key){
 		return this.getByte(key, null);
 	}
 
@@ -133,7 +133,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default BigDecimal getBigDecimal(K key){
+	default BigDecimal getBigDecimal(final K key){
 		return this.getBigDecimal(key, null);
 	}
 
@@ -145,7 +145,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default BigInteger getBigInteger(K key){
+	default BigInteger getBigInteger(final K key){
 		return this.getBigInteger(key, null);
 	}
 
@@ -158,7 +158,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default <E extends Enum<E>> E getEnum(Class<E> clazz, K key) {
+	default <E extends Enum<E>> E getEnum(final Class<E> clazz, final K key) {
 		return this.getEnum(clazz, key, null);
 	}
 
@@ -170,7 +170,7 @@ public interface OptNullBasicTypeGetter<K> extends BasicTypeGetter<K>, OptBasicT
 	 * @return 属性值
 	 */
 	@Override
-	default Date getDate(K key) {
+	default Date getDate(final K key) {
 		return this.getDate(key, null);
 	}
 }

@@ -4,7 +4,7 @@ package cn.hutool.crypto.symmetric;
  * 维吉尼亚密码实现。<br>
  * 人们在恺撒移位密码的基础上扩展出多表密码，称为维吉尼亚密码。<br>
  * 算法实现来自：https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption
- * 
+ *
  * @author looly,zhaorenjie110
  * @since 4.4.1
  */
@@ -12,12 +12,12 @@ public class Vigenere {
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * @param data 数据
 	 * @param cipherKey 密钥
 	 * @return 密文
 	 */
-	public static String encrypt(CharSequence data, CharSequence cipherKey) {
+	public static String encrypt(final CharSequence data, final CharSequence cipherKey) {
 		final int dataLen = data.length();
 		final int cipherKeyLen = cipherKey.length();
 
@@ -37,12 +37,12 @@ public class Vigenere {
 
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data 密文
 	 * @param cipherKey 密钥
 	 * @return 明文
 	 */
-	public static String decrypt(CharSequence data, CharSequence cipherKey) {
+	public static String decrypt(final CharSequence data, final CharSequence cipherKey) {
 		final int dataLen = data.length();
 		final int cipherKeyLen = cipherKey.length();
 

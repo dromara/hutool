@@ -34,7 +34,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public EnjoyEngine(TemplateConfig config) {
+	public EnjoyEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -43,7 +43,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 *
 	 * @param engine {@link com.jfinal.template.Engine}
 	 */
-	public EnjoyEngine(com.jfinal.template.Engine engine) {
+	public EnjoyEngine(final com.jfinal.template.Engine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -62,12 +62,12 @@ public class EnjoyEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(com.jfinal.template.Engine engine){
+	private void init(final com.jfinal.template.Engine engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
@@ -83,7 +83,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 * @return {@link com.jfinal.template.Engine}
 	 */
-	private static com.jfinal.template.Engine createEngine(TemplateConfig config) {
+	private static com.jfinal.template.Engine createEngine(final TemplateConfig config) {
 		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + IdUtil.fastSimpleUUID());
 		engine.setEncoding(config.getCharsetStr());
 

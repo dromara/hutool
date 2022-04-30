@@ -25,7 +25,7 @@ public class NumericCellValue implements CellValue<Object> {
 	 *
 	 * @param cell {@link Cell}
 	 */
-	public NumericCellValue(Cell cell) {
+	public NumericCellValue(final Cell cell) {
 		this.cell = cell;
 	}
 
@@ -38,7 +38,7 @@ public class NumericCellValue implements CellValue<Object> {
 			// 判断是否为日期
 			if (ExcelDateUtil.isDateFormat(cell)) {
 				// 1899年写入会导致数据错乱，读取到1899年证明这个单元格的信息不关注年月日
-				Date dateCellValue = cell.getDateCellValue();
+				final Date dateCellValue = cell.getDateCellValue();
 				if ("1899".equals(DateUtil.format(dateCellValue, "yyyy"))) {
 					return DateUtil.format(dateCellValue, style.getDataFormatString());
 				}

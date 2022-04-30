@@ -7,7 +7,7 @@ public class TableMapTest {
 
 	@Test
 	public void getTest(){
-		TableMap<String, Integer> tableMap = new TableMap<>(16);
+		final TableMap<String, Integer> tableMap = new TableMap<>(16);
 		tableMap.put("aaa", 111);
 		tableMap.put("bbb", 222);
 

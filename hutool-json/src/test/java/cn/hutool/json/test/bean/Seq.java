@@ -9,7 +9,7 @@ public class Seq {
 	public Seq() {
 	}
 
-	public Seq(String seq) {
+	public Seq(final String seq) {
 		this.seq = seq;
 	}
 }

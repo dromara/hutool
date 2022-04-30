@@ -29,10 +29,10 @@ public interface VoidFunc1<P> extends Serializable {
 	 * @param parameter 参数
 	 * @since 5.3.6
 	 */
-	default void callWithRuntimeException(P parameter){
+	default void callWithRuntimeException(final P parameter){
 		try {
 			call(parameter);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

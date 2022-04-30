@@ -29,7 +29,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key       密钥
 	 * @since 4.5.13
 	 */
-	public DefaultHMacEngine(String algorithm, byte[] key) {
+	public DefaultHMacEngine(final String algorithm, final byte[] key) {
 		this(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
 	}
 
@@ -40,7 +40,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key       密钥
 	 * @since 4.5.13
 	 */
-	public DefaultHMacEngine(String algorithm, Key key) {
+	public DefaultHMacEngine(final String algorithm, final Key key) {
 		this(algorithm, key, null);
 	}
 
@@ -52,7 +52,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param spec {@link AlgorithmParameterSpec}
 	 * @since 5.7.12
 	 */
-	public DefaultHMacEngine(String algorithm, Key key, AlgorithmParameterSpec spec) {
+	public DefaultHMacEngine(final String algorithm, final Key key, final AlgorithmParameterSpec spec) {
 		init(algorithm, key, spec);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
@@ -64,7 +64,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @param key       密钥
 	 * @return this
 	 */
-	public DefaultHMacEngine init(String algorithm, byte[] key) {
+	public DefaultHMacEngine init(final String algorithm, final byte[] key) {
 		return init(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
 	}
 
@@ -76,7 +76,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @return this
 	 * @throws CryptoException Cause by IOException
 	 */
-	public DefaultHMacEngine init(String algorithm, Key key) {
+	public DefaultHMacEngine init(final String algorithm, final Key key) {
 		return init(algorithm, key, null);
 	}
 
@@ -90,7 +90,7 @@ public class DefaultHMacEngine implements MacEngine {
 	 * @throws CryptoException Cause by IOException
 	 * @since 5.7.12
 	 */
-	public DefaultHMacEngine init(String algorithm, Key key, AlgorithmParameterSpec spec) {
+	public DefaultHMacEngine init(final String algorithm, Key key, final AlgorithmParameterSpec spec) {
 		try {
 			mac = SecureUtil.createMac(algorithm);
 			if (null == key) {
@@ -101,7 +101,7 @@ public class DefaultHMacEngine implements MacEngine {
 			} else {
 				mac.init(key);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 		return this;
@@ -117,12 +117,12 @@ public class DefaultHMacEngine implements MacEngine {
 	}
 
 	@Override
-	public void update(byte[] in) {
+	public void update(final byte[] in) {
 		this.mac.update(in);
 	}
 
 	@Override
-	public void update(byte[] in, int inOff, int len) {
+	public void update(final byte[] in, final int inOff, final int len) {
 		this.mac.update(in, inOff, len);
 	}
 

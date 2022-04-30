@@ -23,7 +23,7 @@ public class ChaCha20 extends SymmetricCrypto {
 	 * @param key 密钥
 	 * @param iv  加盐，12bytes（64bit）
 	 */
-	public ChaCha20(byte[] key, byte[] iv) {
+	public ChaCha20(final byte[] key, final byte[] iv) {
 		super(ALGORITHM_NAME,
 				KeyUtil.generateKey(ALGORITHM_NAME, key),
 				generateIvParam(iv));

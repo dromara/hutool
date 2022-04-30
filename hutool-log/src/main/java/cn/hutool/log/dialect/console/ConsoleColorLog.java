@@ -53,7 +53,7 @@ public class ConsoleColorLog extends ConsoleLog {
 	 *
 	 * @param colorFactory 颜色工厂函数
 	 */
-	public static void setColorFactory(Function<Level, AnsiColor> colorFactory) {
+	public static void setColorFactory(final Function<Level, AnsiColor> colorFactory) {
 		ConsoleColorLog.colorFactory = colorFactory;
 	}
 
@@ -62,7 +62,7 @@ public class ConsoleColorLog extends ConsoleLog {
 	 *
 	 * @param name 类名
 	 */
-	public ConsoleColorLog(String name) {
+	public ConsoleColorLog(final String name) {
 		super(name);
 	}
 
@@ -71,12 +71,12 @@ public class ConsoleColorLog extends ConsoleLog {
 	 *
 	 * @param clazz 类
 	 */
-	public ConsoleColorLog(Class<?> clazz) {
+	public ConsoleColorLog(final Class<?> clazz) {
 		super(clazz);
 	}
 
 	@Override
-	public synchronized void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public synchronized void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		if (false == isEnabled(level)) {
 			return;
 		}

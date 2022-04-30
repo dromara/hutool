@@ -18,12 +18,12 @@ public class BooleanCellSetter implements CellSetter {
 	 *
 	 * @param value 值
 	 */
-	BooleanCellSetter(Boolean value) {
+	BooleanCellSetter(final Boolean value) {
 		this.value = value;
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setCellValue(value);
 	}
 }

@@ -22,7 +22,7 @@ public class TaskListenerManager implements Serializable {
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public TaskListenerManager addListener(TaskListener listener){
+	public TaskListenerManager addListener(final TaskListener listener){
 		synchronized (listeners) {
 			this.listeners.add(listener);
 		}
@@ -34,7 +34,7 @@ public class TaskListenerManager implements Serializable {
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public TaskListenerManager removeListener(TaskListener listener){
+	public TaskListenerManager removeListener(final TaskListener listener){
 		synchronized (listeners) {
 			this.listeners.remove(listener);
 		}
@@ -45,10 +45,10 @@ public class TaskListenerManager implements Serializable {
 	 * 通知所有监听任务启动器启动
 	 * @param executor {@link TaskExecutor}
 	 */
-	public void notifyTaskStart(TaskExecutor executor) {
+	public void notifyTaskStart(final TaskExecutor executor) {
 		synchronized (listeners) {
 			TaskListener listener;
-			for (TaskListener taskListener : listeners) {
+			for (final TaskListener taskListener : listeners) {
 				listener = taskListener;
 				if (null != listener) {
 					listener.onStart(executor);
@@ -61,9 +61,9 @@ public class TaskListenerManager implements Serializable {
 	 * 通知所有监听任务启动器成功结束
 	 * @param executor {@link TaskExecutor}
 	 */
-	public void notifyTaskSucceeded(TaskExecutor executor) {
+	public void notifyTaskSucceeded(final TaskExecutor executor) {
 		synchronized (listeners) {
-			for (TaskListener listener : listeners) {
+			for (final TaskListener listener : listeners) {
 				listener.onSucceeded(executor);
 			}
 		}
@@ -75,11 +75,11 @@ public class TaskListenerManager implements Serializable {
 	 * @param executor {@link TaskExecutor}
 	 * @param exception 失败原因
 	 */
-	public void notifyTaskFailed(TaskExecutor executor, Throwable exception) {
+	public void notifyTaskFailed(final TaskExecutor executor, final Throwable exception) {
 		synchronized (listeners) {
-			int size = listeners.size();
+			final int size = listeners.size();
 			if(size > 0){
-				for (TaskListener listener : listeners) {
+				for (final TaskListener listener : listeners) {
 					listener.onFailed(executor, exception);
 				}
 			}else{

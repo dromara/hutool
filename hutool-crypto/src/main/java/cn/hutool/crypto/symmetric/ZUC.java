@@ -22,7 +22,7 @@ public class ZUC extends SymmetricCrypto {
 	 *
 	 * @see KeyUtil#generateKey(String)
 	 */
-	public static byte[] generateKey(ZUCAlgorithm algorithm) {
+	public static byte[] generateKey(final ZUCAlgorithm algorithm) {
 		return KeyUtil.generateKey(algorithm.value).getEncoded();
 	}
 
@@ -33,7 +33,7 @@ public class ZUC extends SymmetricCrypto {
 	 * @param key       密钥
 	 * @param iv        加盐，128位加盐是16bytes，256位是25bytes，{@code null}是随机加盐
 	 */
-	public ZUC(ZUCAlgorithm algorithm, byte[] key, byte[] iv) {
+	public ZUC(final ZUCAlgorithm algorithm, final byte[] key, final byte[] iv) {
 		super(algorithm.value,
 				KeyUtil.generateKey(algorithm.value, key),
 				generateIvParam(algorithm, iv));
@@ -55,7 +55,7 @@ public class ZUC extends SymmetricCrypto {
 		 *
 		 * @param value 算法的字符串表示，区分大小写
 		 */
-		ZUCAlgorithm(String value) {
+		ZUCAlgorithm(final String value) {
 			this.value = value;
 		}
 
@@ -76,7 +76,7 @@ public class ZUC extends SymmetricCrypto {
 	 * @param iv 加盐，128位加盐是16bytes，256位是25bytes，{@code null}是随机加盐
 	 * @return {@link IvParameterSpec}
 	 */
-	private static IvParameterSpec generateIvParam(ZUCAlgorithm algorithm, byte[] iv){
+	private static IvParameterSpec generateIvParam(final ZUCAlgorithm algorithm, byte[] iv){
 		if(null == iv){
 			switch (algorithm){
 				case ZUC_128:

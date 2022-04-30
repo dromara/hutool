@@ -17,7 +17,7 @@ public class ZoneUtil {
 	 * @param zoneId {@link ZoneId}，{@code null}则返回系统默认值
 	 * @return {@link TimeZone}
 	 */
-	public static TimeZone toTimeZone(ZoneId zoneId) {
+	public static TimeZone toTimeZone(final ZoneId zoneId) {
 		if (null == zoneId) {
 			return TimeZone.getDefault();
 		}
@@ -31,7 +31,7 @@ public class ZoneUtil {
 	 * @param timeZone {@link TimeZone}，{@code null}则返回系统默认值
 	 * @return {@link ZoneId}
 	 */
-	public static ZoneId toZoneId(TimeZone timeZone) {
+	public static ZoneId toZoneId(final TimeZone timeZone) {
 		if (null == timeZone) {
 			return ZoneId.systemDefault();
 		}

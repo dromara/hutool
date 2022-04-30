@@ -33,7 +33,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String sendText(String to, String subject, String content, File... files) {
+	public static String sendText(final String to, final String subject, final String content, final File... files) {
 		return send(to, subject, content, false, files);
 	}
 
@@ -48,7 +48,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String sendHtml(String to, String subject, String content, File... files) {
+	public static String sendHtml(final String to, final String subject, final String content, final File... files) {
 		return send(to, subject, content, true, files);
 	}
 
@@ -63,7 +63,7 @@ public class MailUtil {
 	 * @param files   附件列表
 	 * @return message-id
 	 */
-	public static String send(String to, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final String to, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(splitAddress(to), subject, content, isHtml, files);
 	}
 
@@ -81,7 +81,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.0.3
 	 */
-	public static String send(String to, String cc, String bcc, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final String to, final String cc, final String bcc, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(splitAddress(to), splitAddress(cc), splitAddress(bcc), subject, content, isHtml, files);
 	}
 
@@ -94,7 +94,7 @@ public class MailUtil {
 	 * @param files   附件列表
 	 * @return message-id
 	 */
-	public static String sendText(Collection<String> tos, String subject, String content, File... files) {
+	public static String sendText(final Collection<String> tos, final String subject, final String content, final File... files) {
 		return send(tos, subject, content, false, files);
 	}
 
@@ -108,7 +108,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String sendHtml(Collection<String> tos, String subject, String content, File... files) {
+	public static String sendHtml(final Collection<String> tos, final String subject, final String content, final File... files) {
 		return send(tos, subject, content, true, files);
 	}
 
@@ -122,7 +122,7 @@ public class MailUtil {
 	 * @param files   附件列表
 	 * @return message-id
 	 */
-	public static String send(Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final Collection<String> tos, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(tos, null, null, subject, content, isHtml, files);
 	}
 
@@ -139,7 +139,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.0.3
 	 */
-	public static String send(Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(GlobalMailAccount.INSTANCE.getAccount(), true, tos, ccs, bccs, subject, content, null, isHtml, files);
 	}
 
@@ -157,7 +157,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String send(MailAccount mailAccount, String to, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final String to, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(mailAccount, splitAddress(to), subject, content, isHtml, files);
 	}
 
@@ -172,7 +172,7 @@ public class MailUtil {
 	 * @param files       附件列表
 	 * @return message-id
 	 */
-	public static String send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final Collection<String> tos, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(mailAccount, tos, null, null, subject, content, isHtml, files);
 	}
 
@@ -190,7 +190,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.0.3
 	 */
-	public static String send(MailAccount mailAccount, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content, final boolean isHtml, final File... files) {
 		return send(mailAccount, false, tos, ccs, bccs, subject, content, null, isHtml, files);
 	}
 
@@ -206,7 +206,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String sendHtml(String to, String subject, String content, Map<String, InputStream> imageMap, File... files) {
+	public static String sendHtml(final String to, final String subject, final String content, final Map<String, InputStream> imageMap, final File... files) {
 		return send(to, subject, content, imageMap, true, files);
 	}
 
@@ -222,7 +222,7 @@ public class MailUtil {
 	 * @param files    附件列表
 	 * @return message-id
 	 */
-	public static String send(String to, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final String to, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(splitAddress(to), subject, content, imageMap, isHtml, files);
 	}
 
@@ -241,7 +241,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.0.3
 	 */
-	public static String send(String to, String cc, String bcc, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final String to, final String cc, final String bcc, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(splitAddress(to), splitAddress(cc), splitAddress(bcc), subject, content, imageMap, isHtml, files);
 	}
 
@@ -256,7 +256,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String sendHtml(Collection<String> tos, String subject, String content, Map<String, InputStream> imageMap, File... files) {
+	public static String sendHtml(final Collection<String> tos, final String subject, final String content, final Map<String, InputStream> imageMap, final File... files) {
 		return send(tos, subject, content, imageMap, true, files);
 	}
 
@@ -271,7 +271,7 @@ public class MailUtil {
 	 * @param files    附件列表
 	 * @return message-id
 	 */
-	public static String send(Collection<String> tos, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final Collection<String> tos, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(tos, null, null, subject, content, imageMap, isHtml, files);
 	}
 
@@ -289,7 +289,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.0.3
 	 */
-	public static String send(Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(GlobalMailAccount.INSTANCE.getAccount(), true, tos, ccs, bccs, subject, content, imageMap, isHtml, files);
 	}
 
@@ -308,7 +308,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 3.2.0
 	 */
-	public static String send(MailAccount mailAccount, String to, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final String to, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(mailAccount, splitAddress(to), subject, content, imageMap, isHtml, files);
 	}
 
@@ -325,7 +325,7 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.6.3
 	 */
-	public static String send(MailAccount mailAccount, Collection<String> tos, String subject, String content, Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final Collection<String> tos, final String subject, final String content, final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		return send(mailAccount, tos, null, null, subject, content, imageMap, isHtml, files);
 	}
 
@@ -344,8 +344,8 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.6.3
 	 */
-	public static String send(MailAccount mailAccount, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, Map<String, InputStream> imageMap,
-							  boolean isHtml, File... files) {
+	public static String send(final MailAccount mailAccount, final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content, final Map<String, InputStream> imageMap,
+							  final boolean isHtml, final File... files) {
 		return send(mailAccount, false, tos, ccs, bccs, subject, content, imageMap, isHtml, files);
 	}
 
@@ -357,7 +357,7 @@ public class MailUtil {
 	 * @return {@link Session}
 	 * @since 5.5.7
 	 */
-	public static Session getSession(MailAccount mailAccount, boolean isSingleton) {
+	public static Session getSession(final MailAccount mailAccount, final boolean isSingleton) {
 		Authenticator authenticator = null;
 		if (mailAccount.isAuth()) {
 			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
@@ -385,8 +385,8 @@ public class MailUtil {
 	 * @return message-id
 	 * @since 4.6.3
 	 */
-	private static String send(MailAccount mailAccount, boolean useGlobalSession, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content,
-							   Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+	private static String send(final MailAccount mailAccount, final boolean useGlobalSession, final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content,
+							   final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
 		final Mail mail = Mail.create(mailAccount).setUseGlobalSession(useGlobalSession);
 
 		// 可选抄送人
@@ -406,7 +406,7 @@ public class MailUtil {
 
 		// 图片
 		if (MapUtil.isNotEmpty(imageMap)) {
-			for (Entry<String, InputStream> entry : imageMap.entrySet()) {
+			for (final Entry<String, InputStream> entry : imageMap.entrySet()) {
 				mail.addImage(entry.getKey(), entry.getValue());
 				// 关闭流
 				IoUtil.close(entry.getValue());
@@ -422,12 +422,12 @@ public class MailUtil {
 	 * @param addresses 多个联系人，如果为空返回null
 	 * @return 联系人列表
 	 */
-	private static List<String> splitAddress(String addresses) {
+	private static List<String> splitAddress(final String addresses) {
 		if (StrUtil.isBlank(addresses)) {
 			return null;
 		}
 
-		List<String> result;
+		final List<String> result;
 		if (StrUtil.contains(addresses, CharUtil.COMMA)) {
 			result = StrUtil.splitTrim(addresses, CharUtil.COMMA);
 		} else if (StrUtil.contains(addresses, ';')) {

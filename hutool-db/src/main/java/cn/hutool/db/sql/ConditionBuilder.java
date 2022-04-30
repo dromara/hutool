@@ -26,7 +26,7 @@ public class ConditionBuilder implements Builder<String> {
 	 * @param conditions 条件列表
 	 * @return ConditionBuilder
 	 */
-	public static ConditionBuilder of(Condition... conditions) {
+	public static ConditionBuilder of(final Condition... conditions) {
 		return new ConditionBuilder(conditions);
 	}
 
@@ -44,7 +44,7 @@ public class ConditionBuilder implements Builder<String> {
 	 *
 	 * @param conditions 条件列表
 	 */
-	public ConditionBuilder(Condition... conditions) {
+	public ConditionBuilder(final Condition... conditions) {
 		this.conditions = conditions;
 	}
 
@@ -81,14 +81,14 @@ public class ConditionBuilder implements Builder<String> {
 	 * @param paramValues 用于写出参数的List,构建时会将参数写入此List
 	 * @return 构建后的SQL语句条件部分
 	 */
-	public String build(List<Object> paramValues) {
+	public String build(final List<Object> paramValues) {
 		if (ArrayUtil.isEmpty(conditions)) {
 			return StrUtil.EMPTY;
 		}
 
 		final StringBuilder conditionStrBuilder = new StringBuilder();
 		boolean isFirst = true;
-		for (Condition condition : conditions) {
+		for (final Condition condition : conditions) {
 			// 添加逻辑运算符
 			if (isFirst) {
 				isFirst = false;

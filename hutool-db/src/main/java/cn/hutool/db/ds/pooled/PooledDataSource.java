@@ -31,7 +31,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param group 数据源分组
 	 * @return {@link PooledDataSource}
 	 */
-	synchronized public static PooledDataSource getDataSource(String group) {
+	synchronized public static PooledDataSource getDataSource(final String group) {
 		return new PooledDataSource(group);
 	}
 
@@ -57,7 +57,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 *
 	 * @param group 分组
 	 */
-	public PooledDataSource(String group) {
+	public PooledDataSource(final String group) {
 		this(new DbSetting(), group);
 	}
 
@@ -67,7 +67,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param setting 数据库配置文件对象
 	 * @param group 分组
 	 */
-	public PooledDataSource(DbSetting setting, String group) {
+	public PooledDataSource(final DbSetting setting, final String group) {
 		this(setting.getDbConfig(group));
 	}
 
@@ -76,7 +76,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 *
 	 * @param config 数据库配置
 	 */
-	public PooledDataSource(DbConfig config) {
+	public PooledDataSource(final DbConfig config) {
 		this.config = config;
 		freePool = new LinkedList<>();
 		int initialSize = config.getInitialSize();
@@ -84,7 +84,7 @@ public class PooledDataSource extends AbstractDataSource {
 			while (initialSize-- > 0) {
 				freePool.offer(newConnection());
 			}
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 	}
@@ -99,7 +99,7 @@ public class PooledDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	public Connection getConnection(String username, String password) throws SQLException {
+	public Connection getConnection(final String username, final String password) throws SQLException {
 		throw new SQLException("Pooled DataSource is not allow to get special Connection!");
 	}
 
@@ -109,7 +109,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param conn 连接
 	 * @return 释放成功与否
 	 */
-	protected synchronized boolean free(PooledConnection conn) {
+	protected synchronized boolean free(final PooledConnection conn) {
 		activeCount--;
 		return freePool.offer(conn);
 	}
@@ -135,10 +135,10 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @return 连接对象
 	 * @throws SQLException SQL异常
 	 */
-	public PooledConnection getConnection(long wait) throws SQLException {
+	public PooledConnection getConnection(final long wait) throws SQLException {
 		try {
 			return getConnectionDirect();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			ThreadUtil.sleep(wait);
 		}
 		return getConnectionDirect();

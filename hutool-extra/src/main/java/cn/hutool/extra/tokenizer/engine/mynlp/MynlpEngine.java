@@ -31,12 +31,12 @@ public class MynlpEngine implements TokenizerEngine {
 	 *
 	 * @param lexer 分词器接口{@link Lexer}
 	 */
-	public MynlpEngine(Lexer lexer) {
+	public MynlpEngine(final Lexer lexer) {
 		this.lexer = lexer;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		final Sentence sentence = this.lexer.scan(StrUtil.str(text));
 		return new MynlpResult(sentence);
 	}

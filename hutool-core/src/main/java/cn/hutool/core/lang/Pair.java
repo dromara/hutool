@@ -29,7 +29,7 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 	 * @return {@code Pair}
 	 * @since 5.4.3
 	 */
-	public static <K, V> Pair<K, V> of(K key, V value) {
+	public static <K, V> Pair<K, V> of(final K key, final V value) {
 		return new Pair<>(key, value);
 	}
 
@@ -39,7 +39,7 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 	 * @param key   键
 	 * @param value 值
 	 */
-	public Pair(K key, V value) {
+	public Pair(final K key, final V value) {
 		this.key = key;
 		this.value = value;
 	}
@@ -68,11 +68,11 @@ public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o instanceof Pair) {
-			Pair<?, ?> pair = (Pair<?, ?>) o;
+			final Pair<?, ?> pair = (Pair<?, ?>) o;
 			return Objects.equals(getKey(), pair.getKey()) &&
 					Objects.equals(getValue(), pair.getValue());
 		}

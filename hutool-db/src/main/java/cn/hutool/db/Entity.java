@@ -48,7 +48,7 @@ public class Entity extends Dict {
 	 * @param tableName 表名
 	 * @return Entity
 	 */
-	public static Entity create(String tableName) {
+	public static Entity create(final String tableName) {
 		return new Entity(tableName);
 	}
 
@@ -59,7 +59,7 @@ public class Entity extends Dict {
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
-	public static <T> Entity parse(T bean) {
+	public static <T> Entity parse(final T bean) {
 		return create(null).parseBean(bean);
 	}
 
@@ -72,7 +72,7 @@ public class Entity extends Dict {
 	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return Entity
 	 */
-	public static <T> Entity parse(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public static <T> Entity parse(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		return create(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
 
@@ -83,7 +83,7 @@ public class Entity extends Dict {
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
-	public static <T> Entity parseWithUnderlineCase(T bean) {
+	public static <T> Entity parseWithUnderlineCase(final T bean) {
 		return create(null).parseBean(bean, true, true);
 	}
 	// --------------------------------------------------------------- Static method end
@@ -103,7 +103,7 @@ public class Entity extends Dict {
 	 * @param tableName 数据表名
 	 */
 
-	public Entity(String tableName) {
+	public Entity(final String tableName) {
 		this.tableName = tableName;
 	}
 
@@ -114,7 +114,7 @@ public class Entity extends Dict {
 	 * @param caseInsensitive 是否大小写不敏感
 	 * @since 4.5.16
 	 */
-	public Entity(String tableName, boolean caseInsensitive) {
+	public Entity(final String tableName, final boolean caseInsensitive) {
 		super(caseInsensitive);
 		this.tableName = tableName;
 	}
@@ -135,7 +135,7 @@ public class Entity extends Dict {
 	 * @param tableName 表名
 	 * @return 本身
 	 */
-	public Entity setTableName(String tableName) {
+	public Entity setTableName(final String tableName) {
 		this.tableName = tableName;
 		return this;
 	}
@@ -153,7 +153,7 @@ public class Entity extends Dict {
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
-	public Entity setFieldNames(Collection<String> fieldNames) {
+	public Entity setFieldNames(final Collection<String> fieldNames) {
 		if (CollUtil.isNotEmpty(fieldNames)) {
 			this.fieldNames = CollUtil.newHashSet(true, fieldNames);
 		}
@@ -166,7 +166,7 @@ public class Entity extends Dict {
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
-	public Entity setFieldNames(String... fieldNames) {
+	public Entity setFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
 			this.fieldNames = CollUtil.newLinkedHashSet(fieldNames);
 		}
@@ -179,7 +179,7 @@ public class Entity extends Dict {
 	 * @return this
 	 */
 	@Override
-	public Entity setFields(Func0<?>... fields) {
+	public Entity setFields(final Func0<?>... fields) {
 		return (Entity) super.setFields(fields);
 	}
 
@@ -189,7 +189,7 @@ public class Entity extends Dict {
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
-	public Entity addFieldNames(String... fieldNames) {
+	public Entity addFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
 			if (null == this.fieldNames) {
 				return setFieldNames(fieldNames);
@@ -211,7 +211,7 @@ public class Entity extends Dict {
 	 * @return 自己
 	 */
 	@Override
-	public <T> Entity parseBean(T bean) {
+	public <T> Entity parseBean(final T bean) {
 		if (StrUtil.isBlank(this.tableName)) {
 			this.setTableName(StrUtil.lowerFirst(bean.getClass().getSimpleName()));
 		}
@@ -229,9 +229,9 @@ public class Entity extends Dict {
 	 * @return 自己
 	 */
 	@Override
-	public <T> Entity parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public <T> Entity parseBean(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		if (StrUtil.isBlank(this.tableName)) {
-			String simpleName = bean.getClass().getSimpleName();
+			final String simpleName = bean.getClass().getSimpleName();
 			this.setTableName(isToUnderlineCase ? StrUtil.toUnderlineCase(simpleName) : StrUtil.lowerFirst(simpleName));
 		}
 		return (Entity) super.parseBean(bean, isToUnderlineCase, ignoreNullValue);
@@ -245,11 +245,11 @@ public class Entity extends Dict {
 	 * @since 4.0.10
 	 */
 	@Override
-	public Entity filter(String... keys) {
+	public Entity filter(final String... keys) {
 		final Entity result = new Entity(this.tableName);
 		result.setFieldNames(this.fieldNames);
 
-		for (String key : keys) {
+		for (final String key : keys) {
 			if (this.containsKey(key)) {
 				result.put(key, this.get(key));
 			}
@@ -259,12 +259,12 @@ public class Entity extends Dict {
 
 	// -------------------------------------------------------------------- Put and Set start
 	@Override
-	public Entity set(String field, Object value) {
+	public Entity set(final String field, final Object value) {
 		return (Entity) super.set(field, value);
 	}
 
 	@Override
-	public Entity setIgnoreNull(String field, Object value) {
+	public Entity setIgnoreNull(final String field, final Object value) {
 		return (Entity) super.setIgnoreNull(field, value);
 	}
 	// -------------------------------------------------------------------- Put and Set end
@@ -277,7 +277,7 @@ public class Entity extends Dict {
 	 * @param field 参数
 	 * @return Clob
 	 */
-	public Clob getClob(String field) {
+	public Clob getClob(final String field) {
 		return get(field, null);
 	}
 
@@ -288,18 +288,18 @@ public class Entity extends Dict {
 	 * @return Blob
 	 * @since 3.0.6
 	 */
-	public Blob getBlob(String field) {
+	public Blob getBlob(final String field) {
 		return get(field, null);
 	}
 
 	@Override
-	public Time getTime(String field) {
-		Object obj = get(field);
+	public Time getTime(final String field) {
+		final Object obj = get(field);
 		Time result = null;
 		if (null != obj) {
 			try {
 				result = (Time) obj;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
 				result = ReflectUtil.invoke(obj, "timeValue");
 			}
@@ -308,13 +308,13 @@ public class Entity extends Dict {
 	}
 
 	@Override
-	public Date getDate(String field) {
-		Object obj = get(field);
+	public Date getDate(final String field) {
+		final Object obj = get(field);
 		Date result = null;
 		if (null != obj) {
 			try {
 				result = (Date) obj;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
 				result = ReflectUtil.invoke(obj, "dateValue");
 			}
@@ -323,13 +323,13 @@ public class Entity extends Dict {
 	}
 
 	@Override
-	public Timestamp getTimestamp(String field) {
-		Object obj = get(field);
+	public Timestamp getTimestamp(final String field) {
+		final Object obj = get(field);
 		Timestamp result = null;
 		if (null != obj) {
 			try {
 				result = (Timestamp) obj;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
 				result = ReflectUtil.invoke(obj, "timestampValue");
 			}
@@ -338,7 +338,7 @@ public class Entity extends Dict {
 	}
 
 	@Override
-	public String getStr(String field) {
+	public String getStr(final String field) {
 		return getStr(field, CharsetUtil.UTF_8);
 	}
 
@@ -351,7 +351,7 @@ public class Entity extends Dict {
 	 * @return 字段对应值
 	 * @since 3.0.6
 	 */
-	public String getStr(String field, Charset charset) {
+	public String getStr(final String field, final Charset charset) {
 		final Object obj = get(field);
 		if (obj instanceof Clob) {
 			return SqlUtil.clobToStr((Clob) obj);
@@ -379,8 +379,8 @@ public class Entity extends Dict {
 	 * @param field rowid属性名
 	 * @return RowId
 	 */
-	public RowId getRowId(String field) {
-		Object obj = this.get(field);
+	public RowId getRowId(final String field) {
+		final Object obj = this.get(field);
 		if (null == obj) {
 			return null;
 		}

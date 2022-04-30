@@ -40,7 +40,7 @@ public class SimpleServer {
 	 *
 	 * @param port 监听端口
 	 */
-	public SimpleServer(int port) {
+	public SimpleServer(final int port) {
 		this(new InetSocketAddress(port));
 	}
 
@@ -50,7 +50,7 @@ public class SimpleServer {
 	 * @param hostname 监听地址
 	 * @param port     监听端口
 	 */
-	public SimpleServer(String hostname, int port) {
+	public SimpleServer(final String hostname, final int port) {
 		this(new InetSocketAddress(hostname, port));
 	}
 
@@ -59,7 +59,7 @@ public class SimpleServer {
 	 *
 	 * @param address 监听地址
 	 */
-	public SimpleServer(InetSocketAddress address) {
+	public SimpleServer(final InetSocketAddress address) {
 		this(address, null);
 	}
 
@@ -69,7 +69,7 @@ public class SimpleServer {
 	 * @param address 监听地址
 	 * @param configurator https配置信息，用于使用自定义SSL（TLS）证书等
 	 */
-	public SimpleServer(InetSocketAddress address, HttpsConfigurator configurator) {
+	public SimpleServer(final InetSocketAddress address, final HttpsConfigurator configurator) {
 		try {
 			if(null != configurator){
 				final HttpsServer server = HttpsServer.create(address, 0);
@@ -78,7 +78,7 @@ public class SimpleServer {
 			} else{
 				this.server = HttpServer.create(address, 0);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		setExecutor(GlobalThreadPool.getExecutor());
@@ -101,7 +101,7 @@ public class SimpleServer {
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public SimpleServer addFilter(Filter filter) {
+	public SimpleServer addFilter(final Filter filter) {
 		this.filters.add(filter);
 		return this;
 	}
@@ -122,10 +122,10 @@ public class SimpleServer {
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public SimpleServer addFilter(HttpFilter filter) {
+	public SimpleServer addFilter(final HttpFilter filter) {
 		return addFilter(new SimpleFilter() {
 			@Override
-			public void doFilter(HttpExchange httpExchange, Chain chain) throws IOException {
+			public void doFilter(final HttpExchange httpExchange, final Chain chain) throws IOException {
 				filter.doFilter(new HttpServerRequest(httpExchange), new HttpServerResponse(httpExchange), chain);
 			}
 		});
@@ -139,7 +139,7 @@ public class SimpleServer {
 	 * @return this
 	 * @see #createContext(String, HttpHandler)
 	 */
-	public SimpleServer addHandler(String path, HttpHandler handler) {
+	public SimpleServer addHandler(final String path, final HttpHandler handler) {
 		createContext(path, handler);
 		return this;
 	}
@@ -152,7 +152,7 @@ public class SimpleServer {
 	 * @return {@link HttpContext}
 	 * @since 5.5.7
 	 */
-	public HttpContext createContext(String path, HttpHandler handler) {
+	public HttpContext createContext(String path, final HttpHandler handler) {
 		// 非/开头的路径会报错
 		path = StrUtil.addPrefixIfNot(path, StrUtil.SLASH);
 		final HttpContext context = this.server.createContext(path, handler);
@@ -167,7 +167,7 @@ public class SimpleServer {
 	 * @param root 路径
 	 * @return this
 	 */
-	public SimpleServer setRoot(String root) {
+	public SimpleServer setRoot(final String root) {
 		return setRoot(new File(root));
 	}
 
@@ -177,7 +177,7 @@ public class SimpleServer {
 	 * @param root 路径
 	 * @return this
 	 */
-	public SimpleServer setRoot(File root) {
+	public SimpleServer setRoot(final File root) {
 		return addAction("/", new RootAction(root));
 	}
 
@@ -188,7 +188,7 @@ public class SimpleServer {
 	 * @param action 处理器
 	 * @return this
 	 */
-	public SimpleServer addAction(String path, Action action) {
+	public SimpleServer addAction(final String path, final Action action) {
 		return addHandler(path, new ActionHandler(action));
 	}
 
@@ -198,7 +198,7 @@ public class SimpleServer {
 	 * @param executor {@link Executor}
 	 * @return this
 	 */
-	public SimpleServer setExecutor(Executor executor) {
+	public SimpleServer setExecutor(final Executor executor) {
 		this.server.setExecutor(executor);
 		return this;
 	}

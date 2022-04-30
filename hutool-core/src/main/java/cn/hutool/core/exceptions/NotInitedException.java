@@ -10,27 +10,27 @@ import cn.hutool.core.text.StrUtil;
 public class NotInitedException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public NotInitedException(Throwable e) {
+	public NotInitedException(final Throwable e) {
 		super(e);
 	}
 
-	public NotInitedException(String message) {
+	public NotInitedException(final String message) {
 		super(message);
 	}
 
-	public NotInitedException(String messageTemplate, Object... params) {
+	public NotInitedException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public NotInitedException(String message, Throwable throwable) {
+	public NotInitedException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public NotInitedException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public NotInitedException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public NotInitedException(Throwable throwable, String messageTemplate, Object... params) {
+	public NotInitedException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

@@ -48,8 +48,8 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @return 新的StrJoiner，配置相同
 	 * @since 5.7.12
 	 */
-	public static StrJoiner of(StrJoiner joiner) {
-		StrJoiner joinerNew = new StrJoiner(joiner.delimiter, joiner.prefix, joiner.suffix);
+	public static StrJoiner of(final StrJoiner joiner) {
+		final StrJoiner joinerNew = new StrJoiner(joiner.delimiter, joiner.prefix, joiner.suffix);
 		joinerNew.wrapElement = joiner.wrapElement;
 		joinerNew.nullMode = joiner.nullMode;
 		joinerNew.emptyResult = joiner.emptyResult;
@@ -63,7 +63,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param delimiter 分隔符
 	 * @return StrJoiner
 	 */
-	public static StrJoiner of(CharSequence delimiter) {
+	public static StrJoiner of(final CharSequence delimiter) {
 		return new StrJoiner(delimiter);
 	}
 
@@ -75,7 +75,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param suffix    后缀
 	 * @return StrJoiner
 	 */
-	public static StrJoiner of(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+	public static StrJoiner of(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
 		return new StrJoiner(delimiter, prefix, suffix);
 	}
 
@@ -84,7 +84,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 *
 	 * @param delimiter 分隔符，{@code null}表示无连接符，直接拼接
 	 */
-	public StrJoiner(CharSequence delimiter) {
+	public StrJoiner(final CharSequence delimiter) {
 		this(null, delimiter);
 	}
 
@@ -94,7 +94,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param appendable 字符串追加器，拼接的字符串都将加入到此，{@code null}使用默认{@link StringBuilder}
 	 * @param delimiter  分隔符，{@code null}表示无连接符，直接拼接
 	 */
-	public StrJoiner(Appendable appendable, CharSequence delimiter) {
+	public StrJoiner(final Appendable appendable, final CharSequence delimiter) {
 		this(appendable, delimiter, null, null);
 	}
 
@@ -105,7 +105,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param prefix    前缀
 	 * @param suffix    后缀
 	 */
-	public StrJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+	public StrJoiner(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
 		this(null, delimiter, prefix, suffix);
 	}
 
@@ -117,8 +117,8 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param prefix     前缀
 	 * @param suffix     后缀
 	 */
-	public StrJoiner(Appendable appendable, CharSequence delimiter,
-					 CharSequence prefix, CharSequence suffix) {
+	public StrJoiner(final Appendable appendable, final CharSequence delimiter,
+					 final CharSequence prefix, final CharSequence suffix) {
 		if (null != appendable) {
 			this.appendable = appendable;
 			checkHasContent(appendable);
@@ -135,7 +135,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param delimiter 分隔符
 	 * @return this
 	 */
-	public StrJoiner setDelimiter(CharSequence delimiter) {
+	public StrJoiner setDelimiter(final CharSequence delimiter) {
 		this.delimiter = delimiter;
 		return this;
 	}
@@ -146,7 +146,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param prefix 前缀
 	 * @return this
 	 */
-	public StrJoiner setPrefix(CharSequence prefix) {
+	public StrJoiner setPrefix(final CharSequence prefix) {
 		this.prefix = prefix;
 		return this;
 	}
@@ -157,7 +157,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param suffix 后缀
 	 * @return this
 	 */
-	public StrJoiner setSuffix(CharSequence suffix) {
+	public StrJoiner setSuffix(final CharSequence suffix) {
 		this.suffix = suffix;
 		return this;
 	}
@@ -168,7 +168,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param wrapElement true表示包装每个元素，false包装整个字符串
 	 * @return this
 	 */
-	public StrJoiner setWrapElement(boolean wrapElement) {
+	public StrJoiner setWrapElement(final boolean wrapElement) {
 		this.wrapElement = wrapElement;
 		return this;
 	}
@@ -179,7 +179,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param nullMode 逻辑枚举，可选忽略、转换为""或转换为null字符串
 	 * @return this
 	 */
-	public StrJoiner setNullMode(NullMode nullMode) {
+	public StrJoiner setNullMode(final NullMode nullMode) {
 		this.nullMode = nullMode;
 		return this;
 	}
@@ -190,7 +190,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param emptyResult 默认字符串
 	 * @return this
 	 */
-	public StrJoiner setEmptyResult(String emptyResult) {
+	public StrJoiner setEmptyResult(final String emptyResult) {
 		this.emptyResult = emptyResult;
 		return this;
 	}
@@ -201,7 +201,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param obj 对象，支持数组、集合等
 	 * @return this
 	 */
-	public StrJoiner append(Object obj) {
+	public StrJoiner append(final Object obj) {
 		if (null == obj) {
 			append((CharSequence) null);
 		} else if (ArrayUtil.isArray(obj)) {
@@ -223,7 +223,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param array 元素数组
 	 * @return this
 	 */
-	public <T> StrJoiner append(T[] array) {
+	public <T> StrJoiner append(final T[] array) {
 		if (null == array) {
 			return this;
 		}
@@ -237,7 +237,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param iterator 元素列表
 	 * @return this
 	 */
-	public <T> StrJoiner append(Iterator<T> iterator) {
+	public <T> StrJoiner append(final Iterator<T> iterator) {
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				append(iterator.next());
@@ -254,7 +254,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <T> StrJoiner append(T[] array, Function<T, ? extends CharSequence> toStrFunc) {
+	public <T> StrJoiner append(final T[] array, final Function<T, ? extends CharSequence> toStrFunc) {
 		return append((Iterator<T>) new ArrayIter<>(array), toStrFunc);
 	}
 
@@ -266,7 +266,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <E> StrJoiner append(Iterable<E> iterable, Function<? super E, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(final Iterable<E> iterable, final Function<? super E, ? extends CharSequence> toStrFunc) {
 		return append(IterUtil.getIter(iterable), toStrFunc);
 	}
 
@@ -278,7 +278,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <E> StrJoiner append(Iterator<E> iterator, Function<? super E, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(final Iterator<E> iterator, final Function<? super E, ? extends CharSequence> toStrFunc) {
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				append(toStrFunc.apply(iterator.next()));
@@ -288,12 +288,12 @@ public class StrJoiner implements Appendable, Serializable {
 	}
 
 	@Override
-	public StrJoiner append(CharSequence csq) {
+	public StrJoiner append(final CharSequence csq) {
 		return append(csq, 0, StrUtil.length(csq));
 	}
 
 	@Override
-	public StrJoiner append(CharSequence csq, int startInclude, int endExclude) {
+	public StrJoiner append(CharSequence csq, final int startInclude, int endExclude) {
 		if (null == csq) {
 			switch (this.nullMode) {
 				case IGNORE:
@@ -316,14 +316,14 @@ public class StrJoiner implements Appendable, Serializable {
 			if (wrapElement && StrUtil.isNotEmpty(this.suffix)) {
 				appendable.append(suffix);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
 	}
 
 	@Override
-	public StrJoiner append(char c) {
+	public StrJoiner append(final char c) {
 		return append(String.valueOf(c));
 	}
 
@@ -335,7 +335,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @return this
 	 * @since 5.7.22
 	 */
-	public StrJoiner merge(StrJoiner strJoiner){
+	public StrJoiner merge(final StrJoiner strJoiner){
 		if(null != strJoiner && null != strJoiner.appendable){
 			final String otherStr = strJoiner.toString();
 			if(strJoiner.wrapElement){
@@ -417,7 +417,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 *
 	 * @param appendable {@link Appendable}
 	 */
-	private void checkHasContent(Appendable appendable) {
+	private void checkHasContent(final Appendable appendable) {
 		if (appendable instanceof CharSequence) {
 			final CharSequence charSequence = (CharSequence) appendable;
 			if (charSequence.length() > 0 && StrUtil.endWith(charSequence, delimiter)) {

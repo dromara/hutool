@@ -34,7 +34,7 @@ import java.util.Set;
 public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj instanceof Table) {
@@ -58,7 +58,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 	//region values
 	@Override
 	public Collection<V> values() {
-		Collection<V> result = values;
+		final Collection<V> result = values;
 		return (result == null) ? values = new Values() : result;
 	}
 
@@ -71,7 +71,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public boolean contains(Object o) {
+		public boolean contains(final Object o) {
 			return containsValue((V) o);
 		}
 
@@ -90,7 +90,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 	//region cellSet
 	@Override
 	public Set<Cell<R, C, V>> cellSet() {
-		Set<Cell<R, C, V>> result = cellSet;
+		final Set<Cell<R, C, V>> result = cellSet;
 		return (result == null) ? cellSet = new CellSet() : result;
 	}
 
@@ -98,10 +98,10 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 
 	private class CellSet extends AbstractSet<Cell<R, C, V>> {
 		@Override
-		public boolean contains(Object o) {
+		public boolean contains(final Object o) {
 			if (o instanceof Cell) {
 				@SuppressWarnings("unchecked") final Cell<R, C, V> cell = (Cell<R, C, V>) o;
-				Map<C, V> row = getRow(cell.getRowKey());
+				final Map<C, V> row = getRow(cell.getRowKey());
 				if (null != row) {
 					return ObjUtil.equals(row.get(cell.getColumnKey()), cell.getValue());
 				}
@@ -110,7 +110,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 		}
 
 		@Override
-		public boolean remove(Object o) {
+		public boolean remove(final Object o) {
 			if (contains(o)) {
 				@SuppressWarnings("unchecked") final Cell<R, C, V> cell = (Cell<R, C, V>) o;
 				AbsTable.this.remove(cell.getRowKey(), cell.getColumnKey());
@@ -188,7 +188,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 		private final C columnKey;
 		private final V value;
 
-		SimpleCell(R rowKey, C columnKey, V value) {
+		SimpleCell(final R rowKey, final C columnKey, final V value) {
 			this.rowKey = rowKey;
 			this.columnKey = columnKey;
 			this.value = value;
@@ -210,12 +210,12 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			if (obj == this) {
 				return true;
 			}
 			if (obj instanceof Cell) {
-				Cell<?, ?, ?> other = (Cell<?, ?, ?>) obj;
+				final Cell<?, ?, ?> other = (Cell<?, ?, ?>) obj;
 				return ObjUtil.equal(rowKey, other.getRowKey())
 						&& ObjUtil.equal(columnKey, other.getColumnKey())
 						&& ObjUtil.equal(value, other.getValue());

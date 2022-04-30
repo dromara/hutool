@@ -16,7 +16,7 @@ public class JWTUtil {
 	 * @param key     HS256(HmacSHA256)密钥
 	 * @return JWT Token
 	 */
-	public static String createToken(Map<String, Object> payload, byte[] key) {
+	public static String createToken(final Map<String, Object> payload, final byte[] key) {
 		return createToken(null, payload, key);
 	}
 
@@ -28,7 +28,7 @@ public class JWTUtil {
 	 * @param key     HS256(HmacSHA256)密钥
 	 * @return JWT Token
 	 */
-	public static String createToken(Map<String, Object> headers, Map<String, Object> payload, byte[] key) {
+	public static String createToken(final Map<String, Object> headers, final Map<String, Object> payload, final byte[] key) {
 		return JWT.create()
 				.addHeaders(headers)
 				.addPayloads(payload)
@@ -43,7 +43,7 @@ public class JWTUtil {
 	 * @param signer  签名算法
 	 * @return JWT Token
 	 */
-	public static String createToken(Map<String, Object> payload, JWTSigner signer) {
+	public static String createToken(final Map<String, Object> payload, final JWTSigner signer) {
 		return createToken(null, payload, signer);
 	}
 
@@ -55,7 +55,7 @@ public class JWTUtil {
 	 * @param signer  签名算法
 	 * @return JWT Token
 	 */
-	public static String createToken(Map<String, Object> headers, Map<String, Object> payload, JWTSigner signer) {
+	public static String createToken(final Map<String, Object> headers, final Map<String, Object> payload, final JWTSigner signer) {
 		return JWT.create()
 				.addHeaders(headers)
 				.addPayloads(payload)
@@ -69,7 +69,7 @@ public class JWTUtil {
 	 * @param token token
 	 * @return {@link JWT}
 	 */
-	public static JWT parseToken(String token) {
+	public static JWT parseToken(final String token) {
 		return JWT.of(token);
 	}
 
@@ -80,7 +80,7 @@ public class JWTUtil {
 	 * @param key   HS256(HmacSHA256)密钥
 	 * @return 是否有效
 	 */
-	public static boolean verify(String token, byte[] key) {
+	public static boolean verify(final String token, final byte[] key) {
 		return JWT.of(token).setKey(key).verify();
 	}
 
@@ -91,7 +91,7 @@ public class JWTUtil {
 	 * @param signer 签名器
 	 * @return 是否有效
 	 */
-	public static boolean verify(String token, JWTSigner signer) {
+	public static boolean verify(final String token, final JWTSigner signer) {
 		return JWT.of(token).verify(signer);
 	}
 }

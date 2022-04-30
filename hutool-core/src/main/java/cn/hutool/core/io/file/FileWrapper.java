@@ -29,7 +29,7 @@ public class FileWrapper implements Serializable{
 	 * @param file 文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 */
-	public FileWrapper(File file, Charset charset) {
+	public FileWrapper(final File file, final Charset charset) {
 		this.file = file;
 		this.charset = charset;
 	}
@@ -49,7 +49,7 @@ public class FileWrapper implements Serializable{
 	 * @param file 文件
 	 * @return 自身
 	 */
-	public FileWrapper setFile(File file) {
+	public FileWrapper setFile(final File file) {
 		this.file = file;
 		return this;
 	}
@@ -67,7 +67,7 @@ public class FileWrapper implements Serializable{
 	 * @param charset 编码
 	 * @return 自身
 	 */
-	public FileWrapper setCharset(Charset charset) {
+	public FileWrapper setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}

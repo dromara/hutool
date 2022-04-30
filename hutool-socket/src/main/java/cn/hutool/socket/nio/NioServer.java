@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 /**
  * 基于NIO的Socket服务端实现
- * 
+ *
  * @author looly
  *
  */
@@ -31,20 +31,20 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param port 端口
 	 */
-	public NioServer(int port) {
+	public NioServer(final int port) {
 		init(new InetSocketAddress(port));
 	}
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param address 地址和端口
 	 * @return this
 	 */
-	public NioServer init(InetSocketAddress address) {
+	public NioServer init(final InetSocketAddress address) {
 		try {
 			// 打开服务器套接字通道
 			this.serverSocketChannel = ServerSocketChannel.open();
@@ -57,7 +57,7 @@ public class NioServer implements Closeable {
 			this.selector = Selector.open();
 			// 服务器套接字注册到Selector中 并指定Selector监控连接事件
 			this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -72,7 +72,7 @@ public class NioServer implements Closeable {
 	 * @param handler {@link ChannelHandler}
 	 * @return this
 	 */
-	public NioServer setChannelHandler(ChannelHandler handler){
+	public NioServer setChannelHandler(final ChannelHandler handler){
 		this.handler = handler;
 		return this;
 	}
@@ -101,14 +101,14 @@ public class NioServer implements Closeable {
 	public void listen() {
 		try {
 			doListen();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	/**
 	 * 开始监听
-	 * 
+	 *
 	 * @throws IOException IO异常
 	 */
 	private void doListen() throws IOException {
@@ -124,10 +124,10 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 处理SelectionKey
-	 * 
+	 *
 	 * @param key SelectionKey
 	 */
-	private void handle(SelectionKey key) {
+	private void handle(final SelectionKey key) {
 		// 有客户端接入此服务端
 		if (key.isAcceptable()) {
 			ACCEPT_HANDLER.completed((ServerSocketChannel) key.channel(), this);
@@ -138,7 +138,7 @@ public class NioServer implements Closeable {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
 			try{
 				handler.handle(socketChannel);
-			} catch (Exception e){
+			} catch (final Exception e){
 				IoUtil.close(socketChannel);
 				StaticLog.error(e);
 			}

@@ -36,7 +36,7 @@ public interface PinyinEngine {
 	 * @param c 任意字符，汉字返回拼音，非汉字原样返回
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	default char getFirstLetter(char c) {
+	default char getFirstLetter(final char c) {
 		return getPinyin(c).charAt(0);
 	}
 
@@ -47,7 +47,7 @@ public interface PinyinEngine {
 	 * @param separator 分隔符
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	default String getFirstLetter(String str, String separator) {
+	default String getFirstLetter(final String str, final String separator) {
 		final String splitSeparator = StrUtil.isEmpty(separator) ? "#" : separator;
 		final List<String> split = StrUtil.split(getPinyin(str, splitSeparator), splitSeparator);
 		return CollUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : StrUtil.EMPTY));

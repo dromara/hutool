@@ -38,7 +38,7 @@ public class GlobalThreadPool {
 	 *
 	 * @param isNow 是否立即关闭而不等待正在执行的线程
 	 */
-	synchronized public static void shutdown(boolean isNow) {
+	synchronized public static void shutdown(final boolean isNow) {
 		if (null != executor) {
 			if (isNow) {
 				executor.shutdownNow();
@@ -62,10 +62,10 @@ public class GlobalThreadPool {
 	 *
 	 * @param runnable 可运行对象
 	 */
-	public static void execute(Runnable runnable) {
+	public static void execute(final Runnable runnable) {
 		try {
 			executor.execute(runnable);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "Exception when running task!");
 		}
 	}
@@ -78,7 +78,7 @@ public class GlobalThreadPool {
 	 * @param task {@link Callable}
 	 * @return Future
 	 */
-	public static <T> Future<T> submit(Callable<T> task) {
+	public static <T> Future<T> submit(final Callable<T> task) {
 		return executor.submit(task);
 	}
 
@@ -90,7 +90,7 @@ public class GlobalThreadPool {
 	 * @return {@link Future}
 	 * @since 3.0.5
 	 */
-	public static Future<?> submit(Runnable runnable) {
+	public static Future<?> submit(final Runnable runnable) {
 		return executor.submit(runnable);
 	}
 }

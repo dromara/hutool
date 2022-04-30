@@ -19,13 +19,13 @@ public class ArrayUtilTest {
 
 	@Test
 	public void isEmptyTest() {
-		int[] a = {};
+		final int[] a = {};
 		Assert.assertTrue(ArrayUtil.isEmpty(a));
 		Assert.assertTrue(ArrayUtil.isEmpty((Object) a));
-		int[] b = null;
+		final int[] b = null;
 		//noinspection ConstantConditions
 		Assert.assertTrue(ArrayUtil.isEmpty(b));
-		Object c = null;
+		final Object c = null;
 		//noinspection ConstantConditions
 		Assert.assertTrue(ArrayUtil.isEmpty(c));
 
@@ -42,97 +42,97 @@ public class ArrayUtilTest {
 		Assert.assertTrue(isEmpty);
 
 		// Object数组
-		Object[] e = new Object[]{"1", "2", 3, 4D};
+		final Object[] e = new Object[]{"1", "2", 3, 4D};
 		final boolean empty = ArrayUtil.isEmpty(e);
 		Assert.assertFalse(empty);
 	}
 
 	@Test
 	public void isNotEmptyTest() {
-		int[] a = {1, 2};
+		final int[] a = {1, 2};
 		Assert.assertTrue(ArrayUtil.isNotEmpty(a));
 
-		String[] b = {"a", "b", "c"};
+		final String[] b = {"a", "b", "c"};
 		Assert.assertTrue(ArrayUtil.isNotEmpty(b));
 
-		Object c = new Object[]{"1", "2", 3, 4D};
+		final Object c = new Object[]{"1", "2", 3, 4D};
 		Assert.assertTrue(ArrayUtil.isNotEmpty(c));
 	}
 
 	@Test
 	public void newArrayTest() {
-		String[] newArray = ArrayUtil.newArray(String.class, 3);
+		final String[] newArray = ArrayUtil.newArray(String.class, 3);
 		Assert.assertEquals(3, newArray.length);
 	}
 
 	@Test
 	public void cloneTest() {
-		Integer[] b = {1, 2, 3};
-		Integer[] cloneB = ArrayUtil.clone(b);
+		final Integer[] b = {1, 2, 3};
+		final Integer[] cloneB = ArrayUtil.clone(b);
 		Assert.assertArrayEquals(b, cloneB);
 
-		int[] a = {1, 2, 3};
-		int[] clone = ArrayUtil.clone(a);
+		final int[] a = {1, 2, 3};
+		final int[] clone = ArrayUtil.clone(a);
 		Assert.assertArrayEquals(a, clone);
 	}
 
 	@Test
 	public void filterEditTest() {
-		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t : null);
+		final Integer[] a = {1, 2, 3, 4, 5, 6};
+		final Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t : null);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
 	public void filterTestForFilter() {
-		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, t -> t % 2 == 0);
+		final Integer[] a = {1, 2, 3, 4, 5, 6};
+		final Integer[] filter = ArrayUtil.filter(a, t -> t % 2 == 0);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
 	public void editTest() {
-		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t * 10 : t);
+		final Integer[] a = {1, 2, 3, 4, 5, 6};
+		final Integer[] filter = ArrayUtil.edit(a, t -> (t % 2 == 0) ? t * 10 : t);
 		Assert.assertArrayEquals(filter, new Integer[]{1, 20, 3, 40, 5, 60});
 	}
 
 	@Test
 	public void indexOfTest() {
-		Integer[] a = {1, 2, 3, 4, 5, 6};
-		int index = ArrayUtil.indexOf(a, 3);
+		final Integer[] a = {1, 2, 3, 4, 5, 6};
+		final int index = ArrayUtil.indexOf(a, 3);
 		Assert.assertEquals(2, index);
 
-		long[] b = {1, 2, 3, 4, 5, 6};
-		int index2 = ArrayUtil.indexOf(b, 3);
+		final long[] b = {1, 2, 3, 4, 5, 6};
+		final int index2 = ArrayUtil.indexOf(b, 3);
 		Assert.assertEquals(2, index2);
 	}
 
 	@Test
 	public void lastIndexOfTest() {
-		Integer[] a = {1, 2, 3, 4, 3, 6};
-		int index = ArrayUtil.lastIndexOf(a, 3);
+		final Integer[] a = {1, 2, 3, 4, 3, 6};
+		final int index = ArrayUtil.lastIndexOf(a, 3);
 		Assert.assertEquals(4, index);
 
-		long[] b = {1, 2, 3, 4, 3, 6};
-		int index2 = ArrayUtil.lastIndexOf(b, 3);
+		final long[] b = {1, 2, 3, 4, 3, 6};
+		final int index2 = ArrayUtil.lastIndexOf(b, 3);
 		Assert.assertEquals(4, index2);
 	}
 
 	@Test
 	public void containsTest() {
-		Integer[] a = {1, 2, 3, 4, 3, 6};
-		boolean contains = ArrayUtil.contains(a, 3);
+		final Integer[] a = {1, 2, 3, 4, 3, 6};
+		final boolean contains = ArrayUtil.contains(a, 3);
 		Assert.assertTrue(contains);
 
-		long[] b = {1, 2, 3, 4, 3, 6};
-		boolean contains2 = ArrayUtil.contains(b, 3);
+		final long[] b = {1, 2, 3, 4, 3, 6};
+		final boolean contains2 = ArrayUtil.contains(b, 3);
 		Assert.assertTrue(contains2);
 	}
 
 	@Test
 	public void containsAnyTest() {
-		Integer[] a = {1, 2, 3, 4, 3, 6};
+		final Integer[] a = {1, 2, 3, 4, 3, 6};
 		boolean contains = ArrayUtil.containsAny(a, 4, 10, 40);
 		Assert.assertTrue(contains);
 
@@ -142,7 +142,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void containsAllTest() {
-		Integer[] a = {1, 2, 3, 4, 3, 6};
+		final Integer[] a = {1, 2, 3, 4, 3, 6};
 		boolean contains = ArrayUtil.containsAll(a, 4, 2, 6);
 		Assert.assertTrue(contains);
 
@@ -152,16 +152,16 @@ public class ArrayUtilTest {
 
 	@Test
 	public void mapTest() {
-		String[] keys = {"a", "b", "c"};
-		Integer[] values = {1, 2, 3};
-		Map<String, Integer> map = ArrayUtil.zip(keys, values, true);
+		final String[] keys = {"a", "b", "c"};
+		final Integer[] values = {1, 2, 3};
+		final Map<String, Integer> map = ArrayUtil.zip(keys, values, true);
 		Assert.assertEquals(Objects.requireNonNull(map).toString(), "{a=1, b=2, c=3}");
 	}
 
 	@Test
 	public void castTest() {
-		Object[] values = {"1", "2", "3"};
-		String[] cast = (String[]) ArrayUtil.cast(String.class, values);
+		final Object[] values = {"1", "2", "3"};
+		final String[] cast = (String[]) ArrayUtil.cast(String.class, values);
 		Assert.assertEquals(values[0], cast[0]);
 		Assert.assertEquals(values[1], cast[1]);
 		Assert.assertEquals(values[2], cast[2]);
@@ -169,7 +169,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void rangeTest() {
-		int[] range = ArrayUtil.range(0, 10);
+		final int[] range = ArrayUtil.range(0, 10);
 		Assert.assertEquals(0, range[0]);
 		Assert.assertEquals(1, range[1]);
 		Assert.assertEquals(2, range[2]);
@@ -190,52 +190,52 @@ public class ArrayUtilTest {
 
 	@Test
 	public void maxTest() {
-		int max = ArrayUtil.max(1, 2, 13, 4, 5);
+		final int max = ArrayUtil.max(1, 2, 13, 4, 5);
 		Assert.assertEquals(13, max);
 
-		long maxLong = ArrayUtil.max(1L, 2L, 13L, 4L, 5L);
+		final long maxLong = ArrayUtil.max(1L, 2L, 13L, 4L, 5L);
 		Assert.assertEquals(13, maxLong);
 
-		double maxDouble = ArrayUtil.max(1D, 2.4D, 13.0D, 4.55D, 5D);
+		final double maxDouble = ArrayUtil.max(1D, 2.4D, 13.0D, 4.55D, 5D);
 		Assert.assertEquals(13.0, maxDouble, 2);
 
-		BigDecimal one = new BigDecimal("1.00");
-		BigDecimal two = new BigDecimal("2.0");
-		BigDecimal three = new BigDecimal("3");
-		BigDecimal[] bigDecimals = {two, one, three};
+		final BigDecimal one = new BigDecimal("1.00");
+		final BigDecimal two = new BigDecimal("2.0");
+		final BigDecimal three = new BigDecimal("3");
+		final BigDecimal[] bigDecimals = {two, one, three};
 
-		BigDecimal minAccuracy = ArrayUtil.min(bigDecimals, Comparator.comparingInt(BigDecimal::scale));
+		final BigDecimal minAccuracy = ArrayUtil.min(bigDecimals, Comparator.comparingInt(BigDecimal::scale));
 		Assert.assertEquals(minAccuracy, three);
 
-		BigDecimal maxAccuracy = ArrayUtil.max(bigDecimals, Comparator.comparingInt(BigDecimal::scale));
+		final BigDecimal maxAccuracy = ArrayUtil.max(bigDecimals, Comparator.comparingInt(BigDecimal::scale));
 		Assert.assertEquals(maxAccuracy, one);
 	}
 
 	@Test
 	public void minTest() {
-		int min = ArrayUtil.min(1, 2, 13, 4, 5);
+		final int min = ArrayUtil.min(1, 2, 13, 4, 5);
 		Assert.assertEquals(1, min);
 
-		long minLong = ArrayUtil.min(1L, 2L, 13L, 4L, 5L);
+		final long minLong = ArrayUtil.min(1L, 2L, 13L, 4L, 5L);
 		Assert.assertEquals(1, minLong);
 
-		double minDouble = ArrayUtil.min(1D, 2.4D, 13.0D, 4.55D, 5D);
+		final double minDouble = ArrayUtil.min(1D, 2.4D, 13.0D, 4.55D, 5D);
 		Assert.assertEquals(1.0, minDouble, 2);
 	}
 
 	@Test
 	public void appendTest() {
-		String[] a = {"1", "2", "3", "4"};
-		String[] b = {"a", "b", "c"};
+		final String[] a = {"1", "2", "3", "4"};
+		final String[] b = {"a", "b", "c"};
 
-		String[] result = ArrayUtil.append(a, b);
+		final String[] result = ArrayUtil.append(a, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 	}
 
 	@Test
 	public void insertTest() {
-		String[] a = {"1", "2", "3", "4"};
-		String[] b = {"a", "b", "c"};
+		final String[] a = {"1", "2", "3", "4"};
+		final String[] b = {"a", "b", "c"};
 
 		// 在-1位置插入，相当于在3位置插入
 		String[] result = ArrayUtil.insert(a, -1, b);
@@ -260,12 +260,12 @@ public class ArrayUtilTest {
 
 	@Test
 	public void joinTest() {
-		String[] array = {"aa", "bb", "cc", "dd"};
-		String join = ArrayUtil.join(array, ",", "[", "]");
+		final String[] array = {"aa", "bb", "cc", "dd"};
+		final String join = ArrayUtil.join(array, ",", "[", "]");
 		Assert.assertEquals("[aa],[bb],[cc],[dd]", join);
 
-		Object array2 = new String[]{"aa", "bb", "cc", "dd"};
-		String join2 = ArrayUtil.join(array2, ",");
+		final Object array2 = new String[]{"aa", "bb", "cc", "dd"};
+		final String join2 = ArrayUtil.join(array2, ",");
 		Assert.assertEquals("aa,bb,cc,dd", join2);
 	}
 
@@ -280,14 +280,14 @@ public class ArrayUtilTest {
 
 	@Test
 	public void distinctTest() {
-		String[] array = {"aa", "bb", "cc", "dd", "bb", "dd"};
-		String[] distinct = ArrayUtil.distinct(array);
+		final String[] array = {"aa", "bb", "cc", "dd", "bb", "dd"};
+		final String[] distinct = ArrayUtil.distinct(array);
 		Assert.assertArrayEquals(new String[]{"aa", "bb", "cc", "dd"}, distinct);
 	}
 
 	@Test
 	public void distinctByFunctionTest() {
-		String[] array = {"aa", "Aa", "BB", "bb"};
+		final String[] array = {"aa", "Aa", "BB", "bb"};
 
 		// 覆盖模式下，保留最后加入的两个元素
 		String[] distinct = ArrayUtil.distinct(array, String::toLowerCase, true);
@@ -300,24 +300,24 @@ public class ArrayUtilTest {
 
 	@Test
 	public void toStingTest() {
-		int[] a = {1, 3, 56, 6, 7};
+		final int[] a = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1, 3, 56, 6, 7]", ArrayUtil.toString(a));
-		long[] b = {1, 3, 56, 6, 7};
+		final long[] b = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1, 3, 56, 6, 7]", ArrayUtil.toString(b));
-		short[] c = {1, 3, 56, 6, 7};
+		final short[] c = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1, 3, 56, 6, 7]", ArrayUtil.toString(c));
-		double[] d = {1, 3, 56, 6, 7};
+		final double[] d = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1.0, 3.0, 56.0, 6.0, 7.0]", ArrayUtil.toString(d));
-		byte[] e = {1, 3, 56, 6, 7};
+		final byte[] e = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1, 3, 56, 6, 7]", ArrayUtil.toString(e));
-		boolean[] f = {true, false, true, true, true};
+		final boolean[] f = {true, false, true, true, true};
 		Assert.assertEquals("[true, false, true, true, true]", ArrayUtil.toString(f));
-		float[] g = {1, 3, 56, 6, 7};
+		final float[] g = {1, 3, 56, 6, 7};
 		Assert.assertEquals("[1.0, 3.0, 56.0, 6.0, 7.0]", ArrayUtil.toString(g));
-		char[] h = {'a', 'b', '你', '好', '1'};
+		final char[] h = {'a', 'b', '你', '好', '1'};
 		Assert.assertEquals("[a, b, 你, 好, 1]", ArrayUtil.toString(h));
 
-		String[] array = {"aa", "bb", "cc", "dd", "bb", "dd"};
+		final String[] array = {"aa", "bb", "cc", "dd", "bb", "dd"};
 		Assert.assertEquals("[aa, bb, cc, dd, bb, dd]", ArrayUtil.toString(array));
 	}
 
@@ -339,19 +339,19 @@ public class ArrayUtilTest {
 
 	@Test
 	public void isAllNotNullTest() {
-		String[] allNotNull = {"aa", "bb", "cc", "dd", "bb", "dd"};
+		final String[] allNotNull = {"aa", "bb", "cc", "dd", "bb", "dd"};
 		Assert.assertTrue(ArrayUtil.isAllNotNull(allNotNull));
-		String[] hasNull = {"aa", "bb", "cc", null, "bb", "dd"};
+		final String[] hasNull = {"aa", "bb", "cc", null, "bb", "dd"};
 		Assert.assertFalse(ArrayUtil.isAllNotNull(hasNull));
 	}
 
 	@Test
 	public void indexOfSubTest() {
-		Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
-		Integer[] b = {0x56, 0x78};
-		Integer[] c = {0x12, 0x56};
-		Integer[] d = {0x78, 0x9A};
-		Integer[] e = {0x78, 0x9A, 0x10};
+		final Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
+		final Integer[] b = {0x56, 0x78};
+		final Integer[] c = {0x12, 0x56};
+		final Integer[] d = {0x78, 0x9A};
+		final Integer[] e = {0x78, 0x9A, 0x10};
 
 		int i = ArrayUtil.indexOfSub(a, b);
 		Assert.assertEquals(2, i);
@@ -377,19 +377,19 @@ public class ArrayUtilTest {
 
 	@Test
 	public void indexOfSubTest2() {
-		Integer[] a = {0x12, 0x56, 0x34, 0x56, 0x78, 0x9A};
-		Integer[] b = {0x56, 0x78};
-		int i = ArrayUtil.indexOfSub(a, b);
+		final Integer[] a = {0x12, 0x56, 0x34, 0x56, 0x78, 0x9A};
+		final Integer[] b = {0x56, 0x78};
+		final int i = ArrayUtil.indexOfSub(a, b);
 		Assert.assertEquals(3, i);
 	}
 
 	@Test
 	public void lastIndexOfSubTest() {
-		Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
-		Integer[] b = {0x56, 0x78};
-		Integer[] c = {0x12, 0x56};
-		Integer[] d = {0x78, 0x9A};
-		Integer[] e = {0x78, 0x9A, 0x10};
+		final Integer[] a = {0x12, 0x34, 0x56, 0x78, 0x9A};
+		final Integer[] b = {0x56, 0x78};
+		final Integer[] c = {0x12, 0x56};
+		final Integer[] d = {0x78, 0x9A};
+		final Integer[] e = {0x78, 0x9A, 0x10};
 
 		int i = ArrayUtil.lastIndexOfSub(a, b);
 		Assert.assertEquals(2, i);
@@ -415,75 +415,75 @@ public class ArrayUtilTest {
 
 	@Test
 	public void lastIndexOfSubTest2() {
-		Integer[] a = {0x12, 0x56, 0x78, 0x56, 0x21, 0x9A};
-		Integer[] b = {0x56, 0x78};
-		int i = ArrayUtil.indexOfSub(a, b);
+		final Integer[] a = {0x12, 0x56, 0x78, 0x56, 0x21, 0x9A};
+		final Integer[] b = {0x56, 0x78};
+		final int i = ArrayUtil.indexOfSub(a, b);
 		Assert.assertEquals(1, i);
 	}
 
 	@Test
 	public void reverseTest() {
-		int[] a = {1, 2, 3, 4};
+		final int[] a = {1, 2, 3, 4};
 		final int[] reverse = ArrayUtil.reverse(a);
 		Assert.assertArrayEquals(new int[]{4, 3, 2, 1}, reverse);
 	}
 
 	@Test
 	public void reverseTest2s() {
-		Object[] a = {"1", '2', "3", 4};
+		final Object[] a = {"1", '2', "3", 4};
 		final Object[] reverse = ArrayUtil.reverse(a);
 		Assert.assertArrayEquals(new Object[]{4, "3", '2', "1"}, reverse);
 	}
 
 	@Test
 	public void removeEmptyTest() {
-		String[] a = {"a", "b", "", null, " ", "c"};
-		String[] resultA = {"a", "b", " ", "c"};
+		final String[] a = {"a", "b", "", null, " ", "c"};
+		final String[] resultA = {"a", "b", " ", "c"};
 		Assert.assertArrayEquals(ArrayUtil.removeEmpty(a), resultA);
 	}
 
 	@Test
 	public void removeBlankTest() {
-		String[] a = {"a", "b", "", null, " ", "c"};
-		String[] resultA = {"a", "b", "c"};
+		final String[] a = {"a", "b", "", null, " ", "c"};
+		final String[] resultA = {"a", "b", "c"};
 		Assert.assertArrayEquals(ArrayUtil.removeBlank(a), resultA);
 	}
 
 	@Test
 	public void nullToEmptyTest() {
-		String[] a = {"a", "b", "", null, " ", "c"};
-		String[] resultA = {"a", "b", "", "", " ", "c"};
+		final String[] a = {"a", "b", "", null, " ", "c"};
+		final String[] resultA = {"a", "b", "", "", " ", "c"};
 		Assert.assertArrayEquals(ArrayUtil.nullToEmpty(a), resultA);
 	}
 
 	@Test
 	public void wrapTest() {
-		Object a = new int[]{1, 2, 3, 4};
-		Object[] wrapA = ArrayUtil.wrap(a);
-		for (Object o : wrapA) {
+		final Object a = new int[]{1, 2, 3, 4};
+		final Object[] wrapA = ArrayUtil.wrap(a);
+		for (final Object o : wrapA) {
 			Assert.assertTrue(o instanceof Integer);
 		}
 	}
 
 	@Test
 	public void splitTest() {
-		byte[] array = new byte[1024];
-		byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
+		final byte[] array = new byte[1024];
+		final byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
 		Assert.assertEquals(3, arrayAfterSplit.length);
 		Assert.assertEquals(24, arrayAfterSplit[2].length);
 	}
 
 	@Test
 	public void getTest() {
-		String[] a = {"a", "b", "c"};
+		final String[] a = {"a", "b", "c"};
 		final Object o = ArrayUtil.get(a, -1);
 		Assert.assertEquals("c", o);
 	}
 
 	@Test
 	public void replaceTest() {
-		String[] a = {"1", "2", "3", "4"};
-		String[] b = {"a", "b", "c"};
+		final String[] a = {"1", "2", "3", "4"};
+		final String[] b = {"a", "b", "c"};
 
 		// 在小于0的位置，-1位置插入，返回b+a，新数组
 		String[] result = ArrayUtil.replace(a, -1, b);
@@ -513,15 +513,15 @@ public class ArrayUtilTest {
 		result = ArrayUtil.replace(ArrayUtil.clone(a), 5, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
-		String[] e = null;
-		String[] f = {"a", "b", "c"};
+		final String[] e = null;
+		final String[] f = {"a", "b", "c"};
 
 		// e为null 返回 f
 		result = ArrayUtil.replace(e, -1, f);
 		Assert.assertArrayEquals(f, result);
 
-		String[] g = {"a", "b", "c"};
-		String[] h = null;
+		final String[] g = {"a", "b", "c"};
+		final String[] h = null;
 
 		// h为null 返回 g
 		result = ArrayUtil.replace(g, 0, h);

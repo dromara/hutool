@@ -46,16 +46,16 @@ public class BeanUtilTest {
 	public void isBeanTest() {
 
 		// HashMap不包含setXXX方法，不是bean
-		boolean isBean = BeanUtil.isBean(HashMap.class);
+		final boolean isBean = BeanUtil.isBean(HashMap.class);
 		Assert.assertFalse(isBean);
 	}
 
 	@Test
 	public void fillBeanTest() {
-		Person person = BeanUtil.fillBean(new Person(), new ValueProvider<String>() {
+		final Person person = BeanUtil.fillBean(new Person(), new ValueProvider<String>() {
 
 			@Override
-			public Object value(String key, Type valueType) {
+			public Object value(final String key, final Type valueType) {
 				switch (key) {
 					case "name":
 						return "张三";
@@ -66,7 +66,7 @@ public class BeanUtilTest {
 			}
 
 			@Override
-			public boolean containsKey(String key) {
+			public boolean containsKey(final String key) {
 				// 总是存在key
 				return true;
 			}
@@ -79,12 +79,12 @@ public class BeanUtilTest {
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		Map<String, Object> map = MapBuilder.<String, Object>create()
+		final Map<String, Object> map = MapBuilder.<String, Object>create()
 				.put("Name", "Joe")
 				.put("aGe", 12)
 				.put("openId", "DFDFSDFWERWER")
 				.build();
-		SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
+		final SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 		Assert.assertEquals("DFDFSDFWERWER", person.getOpenid());
@@ -92,7 +92,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void toBeanTest() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
@@ -111,12 +111,12 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void toBeanIgnoreErrorTest() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("name", "Joe");
 		// 错误的类型，此处忽略
 		map.put("age", "aaaaaa");
 
-		Person person = BeanUtil.toBeanIgnoreError(map, Person.class);
+		final Person person = BeanUtil.toBeanIgnoreError(map, Person.class);
 		Assert.assertEquals("Joe", person.getName());
 		// 错误的类型，不copy这个字段，使用对象创建的默认值
 		Assert.assertEquals(0, person.getAge());
@@ -124,27 +124,27 @@ public class BeanUtilTest {
 
 	@Test
 	public void mapToBeanIgnoreCaseTest() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
-		Person person = BeanUtil.toBeanIgnoreCase(map, Person.class, false);
+		final Person person = BeanUtil.toBeanIgnoreCase(map, Person.class, false);
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
 
 	@Test
 	public void mapToBeanTest() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("a_name", "Joe");
 		map.put("b_age", 12);
 
 		// 别名，用于对应bean的字段名
-		HashMap<String, String> mapping = MapUtil.newHashMap();
+		final HashMap<String, String> mapping = MapUtil.newHashMap();
 		mapping.put("a_name", "name");
 		mapping.put("b_age", "age");
 
-		Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -154,12 +154,12 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void mapToBeanTest2() {
-		HashMap<String, Object> map = MapUtil.newHashMap();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("name", "Joe");
 		map.put("age", 12);
 
 		// 非空构造也可以实例化成功
-		Person2 person = BeanUtil.toBean(map, Person2.class, CopyOptions.create());
+		final Person2 person = BeanUtil.toBean(map, Person2.class, CopyOptions.create());
 		Assert.assertEquals("Joe", person.name);
 		Assert.assertEquals(12, person.age);
 	}
@@ -169,20 +169,20 @@ public class BeanUtilTest {
 	 */
 	@Test(expected = NumberFormatException.class)
 	public void mapToBeanWinErrorTest() {
-		Map<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("age", "哈哈");
 		BeanUtil.toBean(map, Person.class);
 	}
 
 	@Test
 	public void beanToMapTest() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 
-		Map<String, Object> map = BeanUtil.beanToMap(person);
+		final Map<String, Object> map = BeanUtil.beanToMap(person);
 
 		Assert.assertEquals("测试A11", map.get("name"));
 		Assert.assertEquals(14, map.get("age"));
@@ -193,32 +193,32 @@ public class BeanUtilTest {
 
 	@Test
 	public void beanToMapTest2() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 
-		Map<String, Object> map = BeanUtil.beanToMap(person, true, true);
+		final Map<String, Object> map = BeanUtil.beanToMap(person, true, true);
 		Assert.assertEquals("sub名字", map.get("sub_name"));
 	}
 
 	@Test
 	public void beanToMapWithValueEditTest() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 
-		Map<String, Object> map = BeanUtil.beanToMap(person, new LinkedHashMap<>(),
+		final Map<String, Object> map = BeanUtil.beanToMap(person, new LinkedHashMap<>(),
 				CopyOptions.create().setFieldValueEditor((key, value) -> key + "_" + value));
 		Assert.assertEquals("subName_sub名字", map.get("subName"));
 	}
 
 	@Test
 	public void beanToMapWithAliasTest() {
-		SubPersonWithAlias person = new SubPersonWithAlias();
+		final SubPersonWithAlias person = new SubPersonWithAlias();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
@@ -227,13 +227,13 @@ public class BeanUtilTest {
 		person.setBooleana(true);
 		person.setBooleanb(true);
 
-		Map<String, Object> map = BeanUtil.beanToMap(person);
+		final Map<String, Object> map = BeanUtil.beanToMap(person);
 		Assert.assertEquals("sub名字", map.get("aliasSubName"));
 	}
 
 	@Test
 	public void mapToBeanWithAliasTest() {
-		Map<String, Object> map = MapUtil.newHashMap();
+		final Map<String, Object> map = MapUtil.newHashMap();
 		map.put("aliasSubName", "sub名字");
 		map.put("slow", true);
 		map.put("is_booleana", "1");
@@ -249,7 +249,7 @@ public class BeanUtilTest {
 	public void beanToMapWithLocalDateTimeTest() {
 		final LocalDateTime now = LocalDateTime.now();
 
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
@@ -257,22 +257,22 @@ public class BeanUtilTest {
 		person.setDate(now);
 		person.setDate2(now.toLocalDate());
 
-		Map<String, Object> map = BeanUtil.beanToMap(person, false, true);
+		final Map<String, Object> map = BeanUtil.beanToMap(person, false, true);
 		Assert.assertEquals(now, map.get("date"));
 		Assert.assertEquals(now.toLocalDate(), map.get("date2"));
 	}
 
 	@Test
 	public void getPropertyTest() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 
-		Object name = BeanUtil.getProperty(person, "name");
+		final Object name = BeanUtil.getProperty(person, "name");
 		Assert.assertEquals("测试A11", name);
-		Object subName = BeanUtil.getProperty(person, "subName");
+		final Object subName = BeanUtil.getProperty(person, "subName");
 		Assert.assertEquals("sub名字", subName);
 	}
 
@@ -285,9 +285,9 @@ public class BeanUtilTest {
 
 	@Test
 	public void getPropertyDescriptorsTest() {
-		HashSet<Object> set = CollUtil.newHashSet();
-		PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
-		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+		final HashSet<Object> set = CollUtil.newHashSet();
+		final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
+		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			set.add(propertyDescriptor.getName());
 		}
 		Assert.assertTrue(set.contains("age"));
@@ -300,13 +300,13 @@ public class BeanUtilTest {
 
 	@Test
 	public void copyPropertiesTest() {
-		SubPerson person = new SubPerson();
+		final SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 
-		SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
+		final SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
 		Assert.assertEquals(14, person1.getAge());
 		Assert.assertEquals("11213232", person1.getOpenid());
 		Assert.assertEquals("测试A11", person1.getName());
@@ -316,23 +316,23 @@ public class BeanUtilTest {
 	@Test
 	@Ignore
 	public void multiThreadTest(){
-		Student student = new Student();
+		final Student student = new Student();
 		student.setName("张三");
 		student.setAge(123);
 		student.setNo(3158L);
 
-		Student student2 = new Student();
+		final Student student2 = new Student();
 		student.setName("李四");
 		student.setAge(125);
 		student.setNo(8848L);
 
-		List<Student> studentList = ListUtil.of(student, student2);
+		final List<Student> studentList = ListUtil.of(student, student2);
 
 		for (int i=0;i<5000;i++){
 			new Thread(()->{
-				List<Student> list = ObjUtil.clone(studentList);
-				List<Student> listReps = list.stream().map(s1 -> {
-					Student s2 = new Student();
+				final List<Student> list = ObjUtil.clone(studentList);
+				final List<Student> listReps = list.stream().map(s1 -> {
+					final Student s2 = new Student();
 					BeanUtil.copyProperties(s1, s2);
 					return s2;
 				}).collect(Collectors.toList());
@@ -346,27 +346,27 @@ public class BeanUtilTest {
 
 	@Test
 	public void copyPropertiesHasBooleanTest() {
-		SubPerson p1 = new SubPerson();
+		final SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
 
 		// 测试boolean参数值isXXX形式
-		SubPerson p2 = new SubPerson();
+		final SubPerson p2 = new SubPerson();
 		BeanUtil.copyProperties(p1, p2);
 		Assert.assertTrue(p2.getSlow());
 
 		// 测试boolean参数值非isXXX形式
-		SubPerson2 p3 = new SubPerson2();
+		final SubPerson2 p3 = new SubPerson2();
 		BeanUtil.copyProperties(p1, p3);
 		Assert.assertTrue(p3.getSlow());
 	}
 
 	@Test
 	public void copyPropertiesIgnoreNullTest() {
-		SubPerson p1 = new SubPerson();
+		final SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
 		p1.setName(null);
 
-		SubPerson2 p2 = new SubPerson2();
+		final SubPerson2 p2 = new SubPerson2();
 		p2.setName("oldName");
 
 		// null值不覆盖目标属性
@@ -381,12 +381,12 @@ public class BeanUtilTest {
 	@Test
 	public void copyPropertiesBeanToMapTest() {
 		// 测试BeanToMap
-		SubPerson p1 = new SubPerson();
+		final SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
 		p1.setName("测试");
 		p1.setSubName("sub测试");
 
-		Map<String, Object> map = MapUtil.newHashMap();
+		final Map<String, Object> map = MapUtil.newHashMap();
 		BeanUtil.copyProperties(p1, map);
 		Assert.assertTrue((Boolean) map.get("slow"));
 		Assert.assertEquals("测试", map.get("name"));
@@ -396,12 +396,12 @@ public class BeanUtilTest {
 	@Test
 	public void copyPropertiesMapToMapTest() {
 		// 测试MapToMap
-		Map<String, Object> p1 = new HashMap<>();
+		final Map<String, Object> p1 = new HashMap<>();
 		p1.put("isSlow", true);
 		p1.put("name", "测试");
 		p1.put("subName", "sub测试");
 
-		Map<String, Object> map = MapUtil.newHashMap();
+		final Map<String, Object> map = MapUtil.newHashMap();
 		BeanUtil.copyProperties(p1, map);
 		Assert.assertTrue((Boolean) map.get("isSlow"));
 		Assert.assertEquals("测试", map.get("name"));
@@ -410,11 +410,11 @@ public class BeanUtilTest {
 
 	@Test
 	public void trimBeanStrFieldsTest() {
-		Person person = new Person();
+		final Person person = new Person();
 		person.setAge(1);
 		person.setName("  张三 ");
 		person.setOpenid(null);
-		Person person2 = BeanUtil.trimStrFields(person);
+		final Person person2 = BeanUtil.trimStrFields(person);
 
 		// 是否改变原对象
 		Assert.assertEquals("张三", person.getName());
@@ -480,7 +480,7 @@ public class BeanUtilTest {
 
 	public static class Person2 {
 
-		public Person2(String name, int age, String openid) {
+		public Person2(final String name, final int age, final String openid) {
 			this.name = name;
 			this.age = age;
 			this.openid = openid;
@@ -496,11 +496,11 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void beanToBeanOverlayFieldTest() {
-		SubPersonWithOverlayTransientField source = new SubPersonWithOverlayTransientField();
+		final SubPersonWithOverlayTransientField source = new SubPersonWithOverlayTransientField();
 		source.setName("zhangsan");
 		source.setAge(20);
 		source.setOpenid("1");
-		SubPersonWithOverlayTransientField dest = new SubPersonWithOverlayTransientField();
+		final SubPersonWithOverlayTransientField dest = new SubPersonWithOverlayTransientField();
 		BeanUtil.copyProperties(source, dest);
 
 		Assert.assertEquals(source.getName(), dest.getName());
@@ -511,7 +511,7 @@ public class BeanUtilTest {
 	@Test
 	public void beanToBeanTest() {
 		// 修复对象无getter方法导致报错的问题
-		Page page1 = new Page();
+		final Page page1 = new Page();
 		BeanUtil.toBean(page1, Page.class);
 	}
 
@@ -522,7 +522,7 @@ public class BeanUtilTest {
 			return optimizeCountSql;
 		}
 
-		public Page setOptimizeCountSql(boolean optimizeCountSql) {
+		public Page setOptimizeCountSql(final boolean optimizeCountSql) {
 			this.optimizeCountSql = optimizeCountSql;
 			return this;
 		}
@@ -531,10 +531,10 @@ public class BeanUtilTest {
 	@Test
 	public void copyBeanToBeanTest() {
 		// 测试在copyProperties方法中alias是否有效
-		Food info = new Food();
+		final Food info = new Food();
 		info.setBookID("0");
 		info.setCode("123");
-		HllFoodEntity entity = new HllFoodEntity();
+		final HllFoodEntity entity = new HllFoodEntity();
 		BeanUtil.copyProperties(info, entity);
 		Assert.assertEquals(info.getBookID(), entity.getBookId());
 		Assert.assertEquals(info.getCode(), entity.getCode2());
@@ -542,21 +542,21 @@ public class BeanUtilTest {
 
 	@Test
 	public void copyBeanTest() {
-		Food info = new Food();
+		final Food info = new Food();
 		info.setBookID("0");
 		info.setCode("123");
-		Food newFood = BeanUtil.copyProperties(info, Food.class, "code");
+		final Food newFood = BeanUtil.copyProperties(info, Food.class, "code");
 		Assert.assertEquals(info.getBookID(), newFood.getBookID());
 		Assert.assertNull(newFood.getCode());
 	}
 
 	@Test
 	public void copyBeanPropertiesFilterTest() {
-		Food info = new Food();
+		final Food info = new Food();
 		info.setBookID("0");
 		info.setCode("");
-		Food newFood = new Food();
-		CopyOptions copyOptions = CopyOptions.create().setPropertiesFilter((f, v) -> !(v instanceof CharSequence) || StrUtil.isNotBlank(v.toString()));
+		final Food newFood = new Food();
+		final CopyOptions copyOptions = CopyOptions.create().setPropertiesFilter((f, v) -> !(v instanceof CharSequence) || StrUtil.isNotBlank(v.toString()));
 		BeanUtil.copyProperties(info, newFood, copyOptions);
 		Assert.assertEquals(info.getBookID(), newFood.getBookID());
 		Assert.assertNull(newFood.getCode());
@@ -565,14 +565,13 @@ public class BeanUtilTest {
 	@Test
 	public void copyBeanPropertiesFunctionFilterTest() {
 		//https://gitee.com/dromara/hutool/pulls/590
-		Person o = new Person();
+		final Person o = new Person();
 		o.setName("asd");
 		o.setAge(123);
 		o.setOpenid("asd");
 
-		@SuppressWarnings("unchecked")
-		CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
-		Person n = new Person();
+		@SuppressWarnings("unchecked") final CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
+		final Person n = new Person();
 		BeanUtil.copyProperties(o, n, copyOptions);
 
 		// 是否忽略拷贝属性
@@ -598,7 +597,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void setPropertiesTest() {
-		Map<String, Object> resultMap = MapUtil.newHashMap();
+		final Map<String, Object> resultMap = MapUtil.newHashMap();
 		BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
 		Assert.assertEquals("{codeList={0={name=张三}}}", resultMap.toString());
 	}
@@ -624,18 +623,18 @@ public class BeanUtilTest {
 
 	@Test
 	public void copyListTest() {
-		Student student = new Student();
+		final Student student = new Student();
 		student.setName("张三");
 		student.setAge(123);
 		student.setNo(3158L);
 
-		Student student2 = new Student();
+		final Student student2 = new Student();
 		student.setName("李四");
 		student.setAge(125);
 		student.setNo(8848L);
 
-		List<Student> studentList = ListUtil.of(student, student2);
-		List<Person> people = BeanUtil.copyToList(studentList, Person.class);
+		final List<Student> studentList = ListUtil.of(student, student2);
+		final List<Person> people = BeanUtil.copyToList(studentList, Person.class);
 
 		Assert.assertEquals(studentList.size(), people.size());
 		for (int i = 0; i < studentList.size(); i++) {
@@ -648,14 +647,14 @@ public class BeanUtilTest {
 	@Test
 	public void toMapTest() {
 		// 测试转map的时候返回key
-		PrivilegeIClassification a = new PrivilegeIClassification();
+		final PrivilegeIClassification a = new PrivilegeIClassification();
 		a.setId("1");
 		a.setName("2");
 		a.setCode("3");
 		a.setCreateTime(new Date());
 		a.setSortOrder(9L);
 
-		Map<String, Object> f = BeanUtil.beanToMap(
+		final Map<String, Object> f = BeanUtil.beanToMap(
 				a,
 				new LinkedHashMap<>(),
 				false,
@@ -677,19 +676,19 @@ public class BeanUtilTest {
 
 	@Test
 	public void getFieldValue() {
-		TestPojo testPojo = new TestPojo();
+		final TestPojo testPojo = new TestPojo();
 		testPojo.setName("名字");
 
-		TestPojo2 testPojo2 = new TestPojo2();
+		final TestPojo2 testPojo2 = new TestPojo2();
 		testPojo2.setAge(2);
-		TestPojo2 testPojo3 = new TestPojo2();
+		final TestPojo2 testPojo3 = new TestPojo2();
 		testPojo3.setAge(3);
 
 
 		testPojo.setTestPojo2List(new TestPojo2[]{testPojo2, testPojo3});
 
-		BeanPath beanPath = BeanPath.create("testPojo2List.age");
-		Object o = beanPath.get(testPojo);
+		final BeanPath beanPath = BeanPath.create("testPojo2List.age");
+		final Object o = beanPath.get(testPojo);
 
 		Assert.assertEquals(Integer.valueOf(2), ArrayUtil.get(o, 0));
 		Assert.assertEquals(Integer.valueOf(3), ArrayUtil.get(o, 1));
@@ -722,18 +721,18 @@ public class BeanUtilTest {
 	 */
 	@Test
 	public void beanToBeanCopyOptionsTest() {
-		ChildVo1 childVo1 = new ChildVo1();
+		final ChildVo1 childVo1 = new ChildVo1();
 		childVo1.setChild_address("中国北京五道口");
 		childVo1.setChild_name("张三");
 		childVo1.setChild_father_name("张无忌");
 		childVo1.setChild_mother_name("赵敏敏");
 
-		CopyOptions copyOptions = CopyOptions.create().
+		final CopyOptions copyOptions = CopyOptions.create().
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
 						setFieldNameEditor(StrUtil::toCamelCase);
 
-		ChildVo2 childVo2 = new ChildVo2();
+		final ChildVo2 childVo2 = new ChildVo2();
 		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);
 
 		Assert.assertEquals(childVo1.getChild_address(), childVo2.getChildAddress());
@@ -760,8 +759,8 @@ public class BeanUtilTest {
 
 	@Test
 	public void issueI41WKPTest(){
-		Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
-		Test2 t2_hu = new Test2();
+		final Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
+		final Test2 t2_hu = new Test2();
 		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
 		Assert.assertNull(t2_hu.getStrList());
 	}
@@ -780,10 +779,10 @@ public class BeanUtilTest {
 
 	@Test
 	public void issuesI53O9JTest(){
-		Map<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("statusIdUpdateTime", "");
 
-		WkCrmCustomer customer = new WkCrmCustomer();
+		final WkCrmCustomer customer = new WkCrmCustomer();
 		BeanUtil.copyProperties(map, customer);
 
 		Assert.assertNull(customer.getStatusIdUpdateTime());

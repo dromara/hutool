@@ -41,14 +41,14 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
 	 *
 	 * @param supplier 用于生成对象的函数
 	 */
-	public LazyFunLoader(Supplier<T> supplier) {
+	public LazyFunLoader(final Supplier<T> supplier) {
 		Assert.notNull(supplier);
 		this.supplier = supplier;
 	}
 
 	@Override
 	protected T init() {
-		T t = this.supplier.get();
+		final T t = this.supplier.get();
 		this.supplier = null;
 		return t;
 	}
@@ -67,7 +67,7 @@ public class LazyFunLoader<T> extends LazyLoader<T> {
 	 *
 	 * @param consumer 待执行函数
 	 */
-	public void ifInitialized(Consumer<T> consumer) {
+	public void ifInitialized(final Consumer<T> consumer) {
 		Assert.notNull(consumer);
 
 		//	已经初始化

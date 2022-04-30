@@ -48,7 +48,7 @@ public class Word07Writer implements Closeable {
 	 *
 	 * @param destFile 写出的文件
 	 */
-	public Word07Writer(File destFile) {
+	public Word07Writer(final File destFile) {
 		this(DocUtil.create(destFile), destFile);
 	}
 
@@ -57,7 +57,7 @@ public class Word07Writer implements Closeable {
 	 *
 	 * @param doc {@link XWPFDocument}
 	 */
-	public Word07Writer(XWPFDocument doc) {
+	public Word07Writer(final XWPFDocument doc) {
 		this(doc, null);
 	}
 
@@ -67,7 +67,7 @@ public class Word07Writer implements Closeable {
 	 * @param doc      {@link XWPFDocument}
 	 * @param destFile 写出的文件
 	 */
-	public Word07Writer(XWPFDocument doc, File destFile) {
+	public Word07Writer(final XWPFDocument doc, final File destFile) {
 		this.doc = doc;
 		this.destFile = destFile;
 	}
@@ -89,7 +89,7 @@ public class Word07Writer implements Closeable {
 	 * @param destFile 目标文件
 	 * @return this
 	 */
-	public Word07Writer setDestFile(File destFile) {
+	public Word07Writer setDestFile(final File destFile) {
 		this.destFile = destFile;
 		return this;
 	}
@@ -101,7 +101,7 @@ public class Word07Writer implements Closeable {
 	 * @param texts 段落中的文本，支持多个文本作为一个段落
 	 * @return this
 	 */
-	public Word07Writer addText(Font font, String... texts) {
+	public Word07Writer addText(final Font font, final String... texts) {
 		return addText(null, font, texts);
 	}
 
@@ -113,14 +113,14 @@ public class Word07Writer implements Closeable {
 	 * @param texts 段落中的文本，支持多个文本作为一个段落
 	 * @return this
 	 */
-	public Word07Writer addText(ParagraphAlignment align, Font font, String... texts) {
+	public Word07Writer addText(final ParagraphAlignment align, final Font font, final String... texts) {
 		final XWPFParagraph p = this.doc.createParagraph();
 		if (null != align) {
 			p.setAlignment(align);
 		}
 		if (ArrayUtil.isNotEmpty(texts)) {
 			XWPFRun run;
-			for (String text : texts) {
+			for (final String text : texts) {
 				run = p.createRun();
 				run.setText(text);
 				if (null != font) {
@@ -142,7 +142,7 @@ public class Word07Writer implements Closeable {
 	 * @since 4.5.16
 	 * @see TableUtil#createTable(XWPFDocument, Iterable)
 	 */
-	public Word07Writer addTable(Iterable<?> data) {
+	public Word07Writer addTable(final Iterable<?> data) {
 		TableUtil.createTable(this.doc, data);
 		return this;
 	}
@@ -156,13 +156,13 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @since 5.1.6
 	 */
-	public Word07Writer addPicture(File picFile, int width, int height) {
+	public Word07Writer addPicture(final File picFile, final int width, final int height) {
 		final String fileName = picFile.getName();
 		final String extName = FileUtil.extName(fileName).toUpperCase();
 		PicType picType;
 		try {
 			picType = PicType.valueOf(extName);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			// 默认值
 			picType = PicType.JPEG;
 		}
@@ -180,7 +180,7 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @since 5.1.6
 	 */
-	public Word07Writer addPicture(InputStream in, PicType picType, String fileName, int width, int height) {
+	public Word07Writer addPicture(final InputStream in, final PicType picType, final String fileName, final int width, final int height) {
 		return addPicture(in, picType, fileName, width, height, ParagraphAlignment.CENTER);
 	}
 
@@ -196,15 +196,15 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @since 5.2.4
 	 */
-	public Word07Writer addPicture(InputStream in, PicType picType, String fileName, int width, int height, ParagraphAlignment align) {
+	public Word07Writer addPicture(final InputStream in, final PicType picType, final String fileName, final int width, final int height, final ParagraphAlignment align) {
 		final XWPFParagraph paragraph = doc.createParagraph();
 		paragraph.setAlignment(align);
 		final XWPFRun run = paragraph.createRun();
 		try {
 			run.addPicture(in, picType.getValue(), fileName, Units.toEMU(width), Units.toEMU(height));
-		} catch (InvalidFormatException e) {
+		} catch (final InvalidFormatException e) {
 			throw new POIException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -233,7 +233,7 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public Word07Writer flush(File destFile) throws IORuntimeException {
+	public Word07Writer flush(final File destFile) throws IORuntimeException {
 		Assert.notNull(destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
 		return flush(FileUtil.getOutputStream(destFile), true);
 	}
@@ -245,7 +245,7 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public Word07Writer flush(OutputStream out) throws IORuntimeException {
+	public Word07Writer flush(final OutputStream out) throws IORuntimeException {
 		return flush(out, false);
 	}
 
@@ -257,12 +257,12 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public Word07Writer flush(OutputStream out, boolean isCloseOut) throws IORuntimeException {
+	public Word07Writer flush(final OutputStream out, final boolean isCloseOut) throws IORuntimeException {
 		Assert.isFalse(this.isClosed, "WordWriter has been closed!");
 		try {
 			this.doc.write(out);
 			out.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			if (isCloseOut) {

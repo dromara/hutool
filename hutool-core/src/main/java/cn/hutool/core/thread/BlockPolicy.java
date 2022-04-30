@@ -18,10 +18,10 @@ public class BlockPolicy implements RejectedExecutionHandler {
 	}
 
 	@Override
-	public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+	public void rejectedExecution(final Runnable r, final ThreadPoolExecutor e) {
 		try {
 			e.getQueue().put(r);
-		} catch (InterruptedException ex) {
+		} catch (final InterruptedException ex) {
 			throw new RejectedExecutionException("Task " + r + " rejected from " + e);
 		}
 	}

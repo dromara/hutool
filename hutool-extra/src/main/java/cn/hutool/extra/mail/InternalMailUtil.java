@@ -27,10 +27,10 @@ public class InternalMailUtil {
 	 * @return 地址数组
 	 * @since 4.0.3
 	 */
-	public static InternetAddress[] parseAddressFromStrs(String[] addrStrs, Charset charset) {
+	public static InternetAddress[] parseAddressFromStrs(final String[] addrStrs, final Charset charset) {
 		final List<InternetAddress> resultList = new ArrayList<>(addrStrs.length);
 		InternetAddress[] addrs;
-		for (String addrStr : addrStrs) {
+		for (final String addrStr : addrStrs) {
 			addrs = parseAddress(addrStr, charset);
 			if (ArrayUtil.isNotEmpty(addrs)) {
 				Collections.addAll(resultList, addrs);
@@ -46,12 +46,12 @@ public class InternalMailUtil {
 	 * @param charset 编码，{@code null}表示使用系统属性定义的编码或系统编码
 	 * @return 地址列表
 	 */
-	public static InternetAddress parseFirstAddress(String address, Charset charset) {
+	public static InternetAddress parseFirstAddress(final String address, final Charset charset) {
 		final InternetAddress[] internetAddresses = parseAddress(address, charset);
 		if (ArrayUtil.isEmpty(internetAddresses)) {
 			try {
 				return new InternetAddress(address);
-			} catch (AddressException e) {
+			} catch (final AddressException e) {
 				throw new MailException(e);
 			}
 		}
@@ -66,20 +66,20 @@ public class InternalMailUtil {
 	 * @param charset 编码，{@code null}表示使用系统属性定义的编码或系统编码
 	 * @return 地址列表
 	 */
-	public static InternetAddress[] parseAddress(String address, Charset charset) {
-		InternetAddress[] addresses;
+	public static InternetAddress[] parseAddress(final String address, final Charset charset) {
+		final InternetAddress[] addresses;
 		try {
 			addresses = InternetAddress.parse(address);
-		} catch (AddressException e) {
+		} catch (final AddressException e) {
 			throw new MailException(e);
 		}
 		//编码用户名
 		if (ArrayUtil.isNotEmpty(addresses)) {
 			final String charsetStr = null == charset ? null : charset.name();
-			for (InternetAddress internetAddress : addresses) {
+			for (final InternetAddress internetAddress : addresses) {
 				try {
 					internetAddress.setPersonal(internetAddress.getPersonal(), charsetStr);
-				} catch (UnsupportedEncodingException e) {
+				} catch (final UnsupportedEncodingException e) {
 					throw new MailException(e);
 				}
 			}
@@ -96,10 +96,10 @@ public class InternalMailUtil {
 	 * @param charset 编码
 	 * @return 编码后的结果
 	 */
-	public static String encodeText(String text, Charset charset) {
+	public static String encodeText(final String text, final Charset charset) {
 		try {
 			return MimeUtility.encodeText(text, charset.name(), null);
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			// ignore
 		}
 		return text;

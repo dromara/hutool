@@ -11,9 +11,9 @@ public class Pr192Test {
 	@Test
 	public void toBeanTest3() {
 		//		测试数字类型精度丢失的情况
-		String number = "1234.123456789123456";
-		String jsonString = "{\"create\":{\"details\":[{\"price\":" + number + "}]}}";
-		WebCreate create = JSONUtil.toBean(jsonString, WebCreate.class);
+		final String number = "1234.123456789123456";
+		final String jsonString = "{\"create\":{\"details\":[{\"price\":" + number + "}]}}";
+		final WebCreate create = JSONUtil.toBean(jsonString, WebCreate.class);
 		Assert.assertEquals(number,create.getCreate().getDetails().get(0).getPrice().toString());
 	}
 
@@ -26,7 +26,7 @@ public class Pr192Test {
 					'}';
 		}
 
-		public void setCreate(Create create) {
+		public void setCreate(final Create create) {
 			this.create = create;
 		}
 
@@ -45,7 +45,7 @@ public class Pr192Test {
 
 		private List<Detail> details;
 
-		public void setDetails(List<Detail> details) {
+		public void setDetails(final List<Detail> details) {
 			this.details = details;
 		}
 
@@ -57,7 +57,7 @@ public class Pr192Test {
 	static class Detail {
 		private BigDecimal price;
 
-		public void setPrice(BigDecimal price) {
+		public void setPrice(final BigDecimal price) {
 			this.price = price;
 		}
 

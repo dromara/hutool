@@ -41,15 +41,15 @@ public class JcsegEngine implements TokenizerEngine {
 	 *
 	 * @param segment {@link ISegment}
 	 */
-	public JcsegEngine(ISegment segment) {
+	public JcsegEngine(final ISegment segment) {
 		this.segment = segment;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		try {
 			this.segment.reset(new StringReader(StrUtil.str(text)));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		return new JcsegResult(this.segment);

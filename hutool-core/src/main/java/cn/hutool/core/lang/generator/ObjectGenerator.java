@@ -17,7 +17,7 @@ public class ObjectGenerator<T> implements Generator<T> {
 	 * 构造
 	 * @param clazz 对象类型
 	 */
-	public ObjectGenerator(Class<T> clazz) {
+	public ObjectGenerator(final Class<T> clazz) {
 		this.clazz = clazz;
 	}
 

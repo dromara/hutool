@@ -59,7 +59,7 @@ public class CheckedUtil {
 	 * @param <R>        最终返回的数据类型
 	 * @return {@link FuncRt}
 	 */
-	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression) {
+	public static <P, R> FuncRt<P, R> uncheck(final Func<P, R> expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -71,7 +71,7 @@ public class CheckedUtil {
 	 * @param <R>        最终返回的数据类型
 	 * @return {@link Func0Rt}
 	 */
-	public static <R> Func0Rt<R> uncheck(Func0<R> expression) {
+	public static <R> Func0Rt<R> uncheck(final Func0<R> expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -84,7 +84,7 @@ public class CheckedUtil {
 	 * @param <R>        最终返回的数据类型
 	 * @return {@link Func1Rt}
 	 */
-	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression) {
+	public static <P, R> Func1Rt<P, R> uncheck(final Func1<P, R> expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -97,7 +97,7 @@ public class CheckedUtil {
 	 * @param <P>        运行时传入的参数类型
 	 * @return {@link VoidFuncRt}
 	 */
-	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression) {
+	public static <P> VoidFuncRt<P> uncheck(final VoidFunc<P> expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -108,7 +108,7 @@ public class CheckedUtil {
 	 * @param expression 运行时传入的参数类型
 	 * @return {@link VoidFunc0Rt}
 	 */
-	public static VoidFunc0Rt uncheck(VoidFunc0 expression) {
+	public static VoidFunc0Rt uncheck(final VoidFunc0 expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -120,7 +120,7 @@ public class CheckedUtil {
 	 * @param <P>        运行时传入的参数类型
 	 * @return {@link VoidFunc1Rt}
 	 */
-	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression) {
+	public static <P> VoidFunc1Rt<P> uncheck(final VoidFunc1<P> expression) {
 		return uncheck(expression, RuntimeException::new);
 	}
 
@@ -135,12 +135,12 @@ public class CheckedUtil {
 	 * @param <R>         最终返回的数据类型
 	 * @return {@link FuncRt}
 	 */
-	public static <P, R> FuncRt<P, R> uncheck(Func<P, R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <P, R> FuncRt<P, R> uncheck(final Func<P, R> expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
 				return expression.call(t);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -159,12 +159,12 @@ public class CheckedUtil {
 	 * @param <R>         最终返回的数据类型
 	 * @return {@link Func0Rt}
 	 */
-	public static <R> Func0Rt<R> uncheck(Func0<R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <R> Func0Rt<R> uncheck(final Func0<R> expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return () -> {
 			try {
 				return expression.call();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -184,12 +184,12 @@ public class CheckedUtil {
 	 * @param <R>         最终返回的数据类型
 	 * @return {@link Func1Rt}
 	 */
-	public static <P, R> Func1Rt<P, R> uncheck(Func1<P, R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <P, R> Func1Rt<P, R> uncheck(final Func1<P, R> expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
 				return expression.call(t);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -208,12 +208,12 @@ public class CheckedUtil {
 	 * @param <P>         运行时传入的参数类型
 	 * @return {@link VoidFuncRt}
 	 */
-	public static <P> VoidFuncRt<P> uncheck(VoidFunc<P> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <P> VoidFuncRt<P> uncheck(final VoidFunc<P> expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
 				expression.call(t);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -232,12 +232,12 @@ public class CheckedUtil {
 	 * @param rte        期望抛出的运行时异常
 	 * @return {@link VoidFunc0Rt}
 	 */
-	public static VoidFunc0Rt uncheck(VoidFunc0 expression, RuntimeException rte) {
+	public static VoidFunc0Rt uncheck(final VoidFunc0 expression, final RuntimeException rte) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return () -> {
 			try {
 				expression.call();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rte == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -256,12 +256,12 @@ public class CheckedUtil {
 	 * @param rteSupplier 转化运行时异常的表达式
 	 * @return {@link VoidFunc0Rt}
 	 */
-	public static VoidFunc0Rt uncheck(VoidFunc0 expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static VoidFunc0Rt uncheck(final VoidFunc0 expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return () -> {
 			try {
 				expression.call();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
@@ -280,12 +280,12 @@ public class CheckedUtil {
 	 * @param <P>         运行时传入的参数类型
 	 * @return {@link VoidFunc1Rt}
 	 */
-	public static <P> VoidFunc1Rt<P> uncheck(VoidFunc1<P> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <P> VoidFunc1Rt<P> uncheck(final VoidFunc1<P> expression, final Supplier1<RuntimeException, Exception> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return t -> {
 			try {
 				expression.call(t);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {

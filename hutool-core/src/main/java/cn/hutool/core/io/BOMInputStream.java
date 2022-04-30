@@ -43,7 +43,7 @@ public class BOMInputStream extends InputStream {
 	 * 构造
 	 * @param in 流
 	 */
-	public BOMInputStream(InputStream in) {
+	public BOMInputStream(final InputStream in) {
 		this(in, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -53,7 +53,7 @@ public class BOMInputStream extends InputStream {
 	 * @param in 流
 	 * @param defaultCharset 默认编码
 	 */
-	public BOMInputStream(InputStream in, String defaultCharset) {
+	public BOMInputStream(final InputStream in, final String defaultCharset) {
 		this.in = new PushbackInputStream(in, BOM_SIZE);
 		this.defaultCharset = defaultCharset;
 	}
@@ -77,7 +77,7 @@ public class BOMInputStream extends InputStream {
 		if (false == isInited) {
 			try {
 				init();
-			} catch (IOException ex) {
+			} catch (final IOException ex) {
 				throw new IORuntimeException(ex);
 			}
 		}
@@ -106,8 +106,9 @@ public class BOMInputStream extends InputStream {
 			return;
 		}
 
-		byte[] bom = new byte[BOM_SIZE];
-		int n, unread;
+		final byte[] bom = new byte[BOM_SIZE];
+		final int n;
+		final int unread;
 		n = in.read(bom, 0, bom.length);
 
 		if ((bom[0] == (byte) 0x00) && (bom[1] == (byte) 0x00) && (bom[2] == (byte) 0xFE) && (bom[3] == (byte) 0xFF)) {

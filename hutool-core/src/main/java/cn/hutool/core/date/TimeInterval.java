@@ -24,7 +24,7 @@ public class TimeInterval extends GroupTimeInterval {
 	 *
 	 * @param isNano 是否使用纳秒计数，false则使用毫秒
 	 */
-	public TimeInterval(boolean isNano) {
+	public TimeInterval(final boolean isNano) {
 		super(isNano);
 		start();
 	}

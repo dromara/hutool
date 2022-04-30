@@ -18,7 +18,7 @@ public class MySQLTest {
 	@BeforeClass
 	@Ignore
 	public static void createTable() throws SQLException {
-		Db db = Db.use("mysql");
+		final Db db = Db.use("mysql");
 		db.executeBatch("drop table if exists testuser", "CREATE TABLE if not exists `testuser` ( `id` int(11) NOT NULL, `account` varchar(255) DEFAULT NULL, `pass` varchar(255) DEFAULT NULL, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 	}
 
@@ -45,7 +45,7 @@ public class MySQLTest {
 	@Ignore
 	public void txTest() throws SQLException {
 		Db.use("mysql").tx(db -> {
-			int update = db.update(Entity.create("user").set("text", "描述100"), Entity.create().set("id", 100));
+			final int update = db.update(Entity.create("user").set("text", "描述100"), Entity.create().set("id", 100));
 			db.update(Entity.create("user").set("text", "描述101"), Entity.create().set("id", 101));
 			if (1 == update) {
 				// 手动指定异常，然后测试回滚触发
@@ -58,8 +58,8 @@ public class MySQLTest {
 	@Test
 	@Ignore
 	public void pageTest() throws SQLException {
-		PageResult<Entity> result = Db.use("mysql").page(Entity.create("user"), new Page(2, 10));
-		for (Entity entity : result) {
+		final PageResult<Entity> result = Db.use("mysql").page(Entity.create("user"), new Page(2, 10));
+		for (final Entity entity : result) {
 			Console.log(entity.get("id"));
 		}
 	}
@@ -74,11 +74,11 @@ public class MySQLTest {
 	@Test
 	@Ignore
 	public void upsertTest() throws SQLException {
-		Db db = Db.use("mysql");
+		final Db db = Db.use("mysql");
 		db.insert(Entity.create("testuser").set("id", 1).set("account", "ice").set("pass", "123456"));
 		db.upsert(Entity.create("testuser").set("id", 1).set("account", "icefairy").set("pass", "a123456"));
-		Entity user = db.get(Entity.create("testuser").set("id", 1));
+		final Entity user = db.get(Entity.create("testuser").set("id", 1));
 		System.out.println("user======="+user.getStr("account")+"___"+user.getStr("pass"));
-		Assert.assertEquals(user.getStr("account"), new String("icefairy"));
+		Assert.assertEquals(user.getStr("account"), "icefairy");
 	}
 }

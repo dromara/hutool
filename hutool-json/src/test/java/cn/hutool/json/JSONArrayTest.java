@@ -44,7 +44,7 @@ public class JSONArrayTest {
 	@Test
 	public void addNullTest(){
 		final List<String> aaa = ListUtil.of("aaa", null);
-		String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
+		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
 				JSONConfig.create().setIgnoreNullValue(false)));
 		Assert.assertEquals("[\"aaa\",null]", jsonStr);
 	}
@@ -52,7 +52,7 @@ public class JSONArrayTest {
 	@Test
 	public void addTest() {
 		// 方法1
-		JSONArray array = JSONUtil.createArray();
+		final JSONArray array = JSONUtil.createArray();
 		// 方法2
 		// JSONArray array = new JSONArray();
 		array.add("value1");
@@ -64,14 +64,14 @@ public class JSONArrayTest {
 
 	@Test
 	public void parseTest() {
-		String jsonStr = "[\"value1\", \"value2\", \"value3\"]";
-		JSONArray array = JSONUtil.parseArray(jsonStr);
+		final String jsonStr = "[\"value1\", \"value2\", \"value3\"]";
+		final JSONArray array = JSONUtil.parseArray(jsonStr);
 		Assert.assertEquals(array.get(0), "value1");
 	}
 
 	@Test
 	public void parseWithNullTest() {
-		String jsonStr = "[{\"grep\":\"4.8\",\"result\":\"右\"},{\"grep\":\"4.8\",\"result\":null}]";
+		final String jsonStr = "[{\"grep\":\"4.8\",\"result\":\"右\"},{\"grep\":\"4.8\",\"result\":null}]";
 		JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
 		Assert.assertFalse(jsonArray.getJSONObject(1).containsKey("result"));
 
@@ -82,45 +82,45 @@ public class JSONArrayTest {
 
 	@Test
 	public void parseFileTest() {
-		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
+		final JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
 
-		JSONObject obj0 = array.getJSONObject(0);
-		Exam exam = JSONUtil.toBean(obj0, Exam.class);
+		final JSONObject obj0 = array.getJSONObject(0);
+		final Exam exam = JSONUtil.toBean(obj0, Exam.class);
 		Assert.assertEquals("0", exam.getAnswerArray()[0].getSeq());
 	}
 
 	@Test
 	public void parseBeanListTest() {
-		KeyBean b1 = new KeyBean();
+		final KeyBean b1 = new KeyBean();
 		b1.setAkey("aValue1");
 		b1.setBkey("bValue1");
-		KeyBean b2 = new KeyBean();
+		final KeyBean b2 = new KeyBean();
 		b2.setAkey("aValue2");
 		b2.setBkey("bValue2");
 
-		ArrayList<KeyBean> list = CollUtil.newArrayList(b1, b2);
+		final ArrayList<KeyBean> list = CollUtil.newArrayList(b1, b2);
 
-		JSONArray jsonArray = JSONUtil.parseArray(list);
+		final JSONArray jsonArray = JSONUtil.parseArray(list);
 		Assert.assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));
 		Assert.assertEquals("bValue2", jsonArray.getJSONObject(1).getStr("bkey"));
 	}
 
 	@Test
 	public void toListTest() {
-		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
-		JSONArray array = JSONUtil.parseArray(jsonStr);
+		final String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
+		final JSONArray array = JSONUtil.parseArray(jsonStr);
 
-		List<Exam> list = array.toList(Exam.class);
+		final List<Exam> list = array.toList(Exam.class);
 		Assert.assertFalse(list.isEmpty());
 		Assert.assertSame(Exam.class, list.get(0).getClass());
 	}
 
 	@Test
 	public void toListTest2() {
-		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 
-		JSONArray array = JSONUtil.parseArray(jsonArr);
-		List<User> userList = JSONUtil.toList(array, User.class);
+		final JSONArray array = JSONUtil.parseArray(jsonArr);
+		final List<User> userList = JSONUtil.toList(array, User.class);
 
 		Assert.assertFalse(userList.isEmpty());
 		Assert.assertSame(User.class, userList.get(0).getClass());
@@ -134,11 +134,11 @@ public class JSONArrayTest {
 
 	@Test
 	public void toDictListTest() {
-		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 
-		JSONArray array = JSONUtil.parseArray(jsonArr, JSONConfig.create().setIgnoreError(false));
+		final JSONArray array = JSONUtil.parseArray(jsonArr, JSONConfig.create().setIgnoreError(false));
 
-		List<Dict> list = JSONUtil.toList(array, Dict.class);
+		final List<Dict> list = JSONUtil.toList(array, Dict.class);
 
 		Assert.assertFalse(list.isEmpty());
 		Assert.assertSame(Dict.class, list.get(0).getClass());
@@ -152,11 +152,11 @@ public class JSONArrayTest {
 
 	@Test
 	public void toArrayTest() {
-		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
-		JSONArray array = JSONUtil.parseArray(jsonStr);
+		final String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.UTF_8);
+		final JSONArray array = JSONUtil.parseArray(jsonStr);
 
 		//noinspection SuspiciousToArrayCall
-		Exam[] list = array.toArray(new Exam[0]);
+		final Exam[] list = array.toArray(new Exam[0]);
 		Assert.assertNotEquals(0, list.length);
 		Assert.assertSame(Exam.class, list[0].getClass());
 	}
@@ -166,10 +166,10 @@ public class JSONArrayTest {
 	 */
 	@Test
 	public void toListWithNullTest() {
-		String json = "[null,{'akey':'avalue','bkey':'bvalue'}]";
-		JSONArray ja = JSONUtil.parseArray(json);
+		final String json = "[null,{'akey':'avalue','bkey':'bvalue'}]";
+		final JSONArray ja = JSONUtil.parseArray(json);
 
-		List<KeyBean> list = ja.toList(KeyBean.class);
+		final List<KeyBean> list = ja.toList(KeyBean.class);
 		Assert.assertNull(list.get(0));
 		Assert.assertEquals("avalue", list.get(1).getAkey());
 		Assert.assertEquals("bvalue", list.get(1).getBkey());
@@ -177,21 +177,21 @@ public class JSONArrayTest {
 
 	@Test(expected = ConvertException.class)
 	public void toListWithErrorTest(){
-		String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
-		JSONArray ja = JSONUtil.parseArray(json);
+		final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
+		final JSONArray ja = JSONUtil.parseArray(json);
 
 		ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
 	}
 
 	@Test
 	public void toBeanListTest() {
-		List<Map<String, String>> mapList = new ArrayList<>();
+		final List<Map<String, String>> mapList = new ArrayList<>();
 		mapList.add(buildMap("0", "0", "0"));
 		mapList.add(buildMap("1", "1", "1"));
 		mapList.add(buildMap("+0", "+0", "+0"));
 		mapList.add(buildMap("-0", "-0", "-0"));
-		JSONArray jsonArray = JSONUtil.parseArray(mapList);
-		List<JsonNode> nodeList = jsonArray.toList(JsonNode.class);
+		final JSONArray jsonArray = JSONUtil.parseArray(mapList);
+		final List<JsonNode> nodeList = jsonArray.toList(JsonNode.class);
 
 		Assert.assertEquals(Long.valueOf(0L), nodeList.get(0).getId());
 		Assert.assertEquals(Long.valueOf(1L), nodeList.get(1).getId());
@@ -211,7 +211,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void getByPathTest(){
-		String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
+		final String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
 		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
 		Assert.assertEquals("b", jsonArray.getByPath("[1].name"));
 		Assert.assertEquals("b", JSONUtil.getByPath(jsonArray, "[1].name"));
@@ -234,8 +234,8 @@ public class JSONArrayTest {
 		Assert.assertEquals(1, jsonArray.get(0));
 	}
 
-	private static Map<String, String> buildMap(String id, String parentId, String name) {
-		Map<String, String> map = new HashMap<>();
+	private static Map<String, String> buildMap(final String id, final String parentId, final String name) {
+		final Map<String, String> map = new HashMap<>();
 		map.put("id", id);
 		map.put("parentId", parentId);
 		map.put("name", name);
@@ -250,7 +250,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void filterIncludeTest(){
-		JSONArray json1 = JSONUtil.createArray()
+		final JSONArray json1 = JSONUtil.createArray()
 				.set("value1")
 				.set("value2")
 				.set("value3")
@@ -262,7 +262,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void filterExcludeTest(){
-		JSONArray json1 = JSONUtil.createArray()
+		final JSONArray json1 = JSONUtil.createArray()
 				.set("value1")
 				.set("value2")
 				.set("value3")
@@ -282,7 +282,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void parseFilterTest() {
-		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> mutable.get().toString().contains("111"));
 		Assert.assertEquals(1, array.size());
@@ -291,7 +291,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void parseFilterEditTest() {
-		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
 			final JSONObject o = new JSONObject(mutable.get());

@@ -55,7 +55,7 @@ public class HttpGlobalConfig implements Serializable {
 	 *
 	 * @param customTimeout 超时时长
 	 */
-	synchronized public static void setTimeout(int customTimeout) {
+	synchronized public static void setTimeout(final int customTimeout) {
 		timeout = customTimeout;
 	}
 
@@ -75,7 +75,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customBoundary 自定义Multipart边界
 	 * @since 5.7.17
 	 */
-	synchronized public static void setBoundary(String customBoundary) {
+	synchronized public static void setBoundary(final String customBoundary) {
 		boundary = customBoundary;
 	}
 
@@ -97,7 +97,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customMaxRedirectCount 全局默认的最大重定向次数
 	 * @since 5.7.19
 	 */
-	synchronized public static void setMaxRedirectCount(int customMaxRedirectCount) {
+	synchronized public static void setMaxRedirectCount(final int customMaxRedirectCount) {
 		maxRedirectCount = customMaxRedirectCount;
 	}
 
@@ -121,7 +121,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customIgnoreEOFError 是否忽略响应读取时可能的EOF异常。
 	 * @since 5.7.20
 	 */
-	synchronized public static void setIgnoreEOFError(boolean customIgnoreEOFError) {
+	synchronized public static void setIgnoreEOFError(final boolean customIgnoreEOFError) {
 		ignoreEOFError = customIgnoreEOFError;
 	}
 
@@ -145,7 +145,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @param customDecodeUrl 是否忽略解码URL
 	 * @since 5.7.22
 	 */
-	synchronized public static void setDecodeUrl(boolean customDecodeUrl) {
+	synchronized public static void setDecodeUrl(final boolean customDecodeUrl) {
 		decodeUrl = customDecodeUrl;
 	}
 
@@ -167,7 +167,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 * @since 4.5.14
 	 */
-	synchronized public static void setCookieManager(CookieManager customCookieManager) {
+	synchronized public static void setCookieManager(final CookieManager customCookieManager) {
 		GlobalCookieManager.setCookieManager(customCookieManager);
 	}
 

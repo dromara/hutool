@@ -44,7 +44,7 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
 	 * @param isPadding 不足4位时，是否填充0以满足位数
 	 * @return 16进制的CRC16值，4位
 	 */
-	public String getHexValue(boolean isPadding){
+	public String getHexValue(final boolean isPadding){
 		String hex = HexUtil.toHex(getValue());
 		if(isPadding){
 			hex = StrUtil.padPre(hex, 4, '0');
@@ -62,12 +62,12 @@ public abstract class CRC16Checksum implements Checksum, Serializable {
 	 * 计算全部字节
 	 * @param b 字节
 	 */
-	public void update(byte[] b){
+	public void update(final byte[] b){
 		update(b, 0, b.length);
 	}
 
 	@Override
-	public void update(byte[] b, int off, int len) {
+	public void update(final byte[] b, final int off, final int len) {
 		for (int i = off; i < off + len; i++)
 			update(b[i]);
 	}

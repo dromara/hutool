@@ -12,17 +12,17 @@ import cn.hutool.log.dialect.log4j.Log4jLog;
  */
 public class ApacheCommonsLog4JLog extends Log4jLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-	
+
 	// ------------------------------------------------------------------------- Constructor
-	public ApacheCommonsLog4JLog(Log logger) {
+	public ApacheCommonsLog4JLog(final Log logger) {
 		super(((Log4JLogger) logger).getLogger());
 	}
 
-	public ApacheCommonsLog4JLog(Class<?> clazz) {
+	public ApacheCommonsLog4JLog(final Class<?> clazz) {
 		super(clazz);
 	}
 
-	public ApacheCommonsLog4JLog(String name) {
+	public ApacheCommonsLog4JLog(final String name) {
 		super(name);
 	}
 }

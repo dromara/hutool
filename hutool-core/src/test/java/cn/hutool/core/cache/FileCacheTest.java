@@ -13,7 +13,7 @@ import cn.hutool.core.cache.file.LFUFileCache;
 public class FileCacheTest {
 	@Test
 	public void lfuFileCacheTest() {
-		LFUFileCache cache = new LFUFileCache(1000, 500, 2000);
+		final LFUFileCache cache = new LFUFileCache(1000, 500, 2000);
 		Assert.assertNotNull(cache);
 	}
 }

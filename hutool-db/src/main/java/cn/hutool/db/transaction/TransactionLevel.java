@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 /**
  * 事务级别枚举
- * 
+ *
  * <p>
  * <b>脏读（Dirty Read）</b>：<br>
  * 一个事务会读到另一个事务更新后但未提交的数据，如果另一个事务回滚，那么当前事务读到的数据就是脏数据
@@ -14,7 +14,7 @@ import java.sql.Connection;
  * <p>
  * <b>幻读（Phantom Read）</b>：<br>
  * 在一个事务中，第一次查询某条记录，发现没有，但是，当试图更新这条不存在的记录时，竟然能成功，且可以再次读取同一条记录。
- * 
+ *
  * @see Connection#TRANSACTION_NONE
  * @see Connection#TRANSACTION_READ_UNCOMMITTED
  * @see Connection#TRANSACTION_READ_COMMITTED
@@ -60,13 +60,13 @@ public enum TransactionLevel {
 	/** 事务级别，对应Connection中的常量值 */
 	private final int level;
 
-	TransactionLevel(int level) {
+	TransactionLevel(final int level) {
 		this.level = level;
 	}
 
 	/**
 	 * 获取数据库事务级别int值
-	 * 
+	 *
 	 * @return 数据库事务级别int值
 	 */
 	public int getLevel() {

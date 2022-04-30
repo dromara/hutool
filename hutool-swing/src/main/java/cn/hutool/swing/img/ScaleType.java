@@ -31,7 +31,7 @@ public enum ScaleType {
 	 * @see Image#SCALE_REPLICATE
 	 * @see Image#SCALE_AREA_AVERAGING
 	 */
-	ScaleType(int value) {
+	ScaleType(final int value) {
 		this.value = value;
 	}
 

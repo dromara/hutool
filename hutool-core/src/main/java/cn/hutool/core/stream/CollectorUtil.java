@@ -42,7 +42,7 @@ public class CollectorUtil {
 	 * @param <T>       对象类型
 	 * @return {@link Collector}
 	 */
-	public static <T> Collector<T, ?, String> joining(CharSequence delimiter) {
+	public static <T> Collector<T, ?, String> joining(final CharSequence delimiter) {
 		return joining(delimiter, Object::toString);
 	}
 
@@ -54,8 +54,8 @@ public class CollectorUtil {
 	 * @param <T>          对象类型
 	 * @return {@link Collector}
 	 */
-	public static <T> Collector<T, ?, String> joining(CharSequence delimiter,
-													  Function<T, ? extends CharSequence> toStringFunc) {
+	public static <T> Collector<T, ?, String> joining(final CharSequence delimiter,
+													  final Function<T, ? extends CharSequence> toStringFunc) {
 		return joining(delimiter, StrUtil.EMPTY, StrUtil.EMPTY, toStringFunc);
 	}
 
@@ -69,10 +69,10 @@ public class CollectorUtil {
 	 * @param <T>          对象类型
 	 * @return {@link Collector}
 	 */
-	public static <T> Collector<T, ?, String> joining(CharSequence delimiter,
-													  CharSequence prefix,
-													  CharSequence suffix,
-													  Function<T, ? extends CharSequence> toStringFunc) {
+	public static <T> Collector<T, ?, String> joining(final CharSequence delimiter,
+													  final CharSequence prefix,
+													  final CharSequence suffix,
+													  final Function<T, ? extends CharSequence> toStringFunc) {
 		return new SimpleCollector<>(
 				() -> new StringJoiner(delimiter, prefix, suffix),
 				(joiner, ele) -> joiner.add(toStringFunc.apply(ele)),
@@ -96,29 +96,26 @@ public class CollectorUtil {
 	 * @param <M>        最后返回结果Map类型
 	 * @return {@link Collector}
 	 */
-	public static <T, K, D, A, M extends Map<K, D>> Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
-																				  Supplier<M> mapFactory,
-																				  Collector<? super T, A, D> downstream) {
-		Supplier<A> downstreamSupplier = downstream.supplier();
-		BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
-		BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
-			K key = Opt.ofNullable(t).map(classifier).orElse(null);
-			A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
+	public static <T, K, D, A, M extends Map<K, D>> Collector<T, ?, M> groupingBy(final Function<? super T, ? extends K> classifier,
+																				  final Supplier<M> mapFactory,
+																				  final Collector<? super T, A, D> downstream) {
+		final Supplier<A> downstreamSupplier = downstream.supplier();
+		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+		final BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
+			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
+			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			downstreamAccumulator.accept(container, t);
 		};
-		BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
-		@SuppressWarnings("unchecked")
-		Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
+		final BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
+		@SuppressWarnings("unchecked") final Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
 
 		if (downstream.characteristics().contains(Collector.Characteristics.IDENTITY_FINISH)) {
 			return new SimpleCollector<>(mangledFactory, accumulator, merger, CH_ID);
 		} else {
-			@SuppressWarnings("unchecked")
-			Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
-			Function<Map<K, A>, M> finisher = intermediate -> {
+			@SuppressWarnings("unchecked") final Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
+			final Function<Map<K, A>, M> finisher = intermediate -> {
 				intermediate.replaceAll((k, v) -> downstreamFinisher.apply(v));
-				@SuppressWarnings("unchecked")
-				M castResult = (M) intermediate;
+				@SuppressWarnings("unchecked") final M castResult = (M) intermediate;
 				return castResult;
 			};
 			return new SimpleCollector<>(mangledFactory, accumulator, merger, finisher, CH_NOID);
@@ -137,8 +134,8 @@ public class CollectorUtil {
 	 * @return {@link Collector}
 	 */
 	public static <T, K, A, D>
-	Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,
-										  Collector<? super T, A, D> downstream) {
+	Collector<T, ?, Map<K, D>> groupingBy(final Function<? super T, ? extends K> classifier,
+										  final Collector<? super T, A, D> downstream) {
 		return groupingBy(classifier, HashMap::new, downstream);
 	}
 
@@ -151,7 +148,7 @@ public class CollectorUtil {
 	 * @return {@link Collector}
 	 */
 	public static <T, K> Collector<T, ?, Map<K, List<T>>>
-	groupingBy(Function<? super T, ? extends K> classifier) {
+	groupingBy(final Function<? super T, ? extends K> classifier) {
 		return groupingBy(classifier, Collectors.toList());
 	}
 
@@ -167,9 +164,9 @@ public class CollectorUtil {
 	 * @return 对null友好的 toMap 操作的 {@link Collector}实现
 	 */
 	public static <T, K, U>
-	Collector<T, ?, Map<K, U>> toMap(Function<? super T, ? extends K> keyMapper,
-									 Function<? super T, ? extends U> valueMapper,
-									 BinaryOperator<U> mergeFunction) {
+	Collector<T, ?, Map<K, U>> toMap(final Function<? super T, ? extends K> keyMapper,
+									 final Function<? super T, ? extends U> valueMapper,
+									 final BinaryOperator<U> mergeFunction) {
 		return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
 	}
 
@@ -187,11 +184,11 @@ public class CollectorUtil {
 	 * @return 对null友好的 toMap 操作的 {@link Collector}实现
 	 */
 	public static <T, K, U, M extends Map<K, U>>
-	Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
-							 Function<? super T, ? extends U> valueMapper,
-							 BinaryOperator<U> mergeFunction,
-							 Supplier<M> mapSupplier) {
-		BiConsumer<M, T> accumulator
+	Collector<T, ?, M> toMap(final Function<? super T, ? extends K> keyMapper,
+							 final Function<? super T, ? extends U> valueMapper,
+							 final BinaryOperator<U> mergeFunction,
+							 final Supplier<M> mapSupplier) {
+		final BiConsumer<M, T> accumulator
 				= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
 		return new SimpleCollector<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
 	}
@@ -205,9 +202,9 @@ public class CollectorUtil {
 	 * @param <M>           map
 	 * @return 用户合并map的BinaryOperator
 	 */
-	public static <K, V, M extends Map<K, V>> BinaryOperator<M> mapMerger(BinaryOperator<V> mergeFunction) {
+	public static <K, V, M extends Map<K, V>> BinaryOperator<M> mapMerger(final BinaryOperator<V> mergeFunction) {
 		return (m1, m2) -> {
-			for (Map.Entry<K, V> e : m2.entrySet()) {
+			for (final Map.Entry<K, V> e : m2.entrySet()) {
 				m1.merge(e.getKey(), e.getValue(), mergeFunction);
 			}
 			return m1;

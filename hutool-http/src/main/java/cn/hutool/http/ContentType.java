@@ -52,7 +52,7 @@ public enum ContentType {
 	 *
 	 * @param value ContentType值
 	 */
-	ContentType(String value) {
+	ContentType(final String value) {
 		this.value = value;
 	}
 
@@ -77,7 +77,7 @@ public enum ContentType {
 	 * @param charset 编码
 	 * @return Content-Type字符串
 	 */
-	public String toString(Charset charset) {
+	public String toString(final Charset charset) {
 		return build(this.value, charset);
 	}
 
@@ -88,7 +88,7 @@ public enum ContentType {
 	 * @return 是否为默认Content-Type
 	 * @since 4.1.5
 	 */
-	public static boolean isDefault(String contentType) {
+	public static boolean isDefault(final String contentType) {
 		return null == contentType || isFormUrlEncode(contentType);
 	}
 
@@ -98,7 +98,7 @@ public enum ContentType {
 	 * @param contentType 内容类型
 	 * @return 是否为application/x-www-form-urlencoded
 	 */
-	public static boolean isFormUrlEncode(String contentType) {
+	public static boolean isFormUrlEncode(final String contentType) {
 		return StrUtil.startWithIgnoreCase(contentType, FORM_URLENCODED.toString());
 	}
 
@@ -113,10 +113,10 @@ public enum ContentType {
 	 * @param body 请求参数体
 	 * @return Content-Type类型，如果无法判断返回null
 	 */
-	public static ContentType get(String body) {
+	public static ContentType get(final String body) {
 		ContentType contentType = null;
 		if (StrUtil.isNotBlank(body)) {
-			char firstChar = body.charAt(0);
+			final char firstChar = body.charAt(0);
 			switch (firstChar) {
 				case '{':
 				case '[':
@@ -143,7 +143,7 @@ public enum ContentType {
 	 * @return Content-Type字符串
 	 * @since 4.5.4
 	 */
-	public static String build(String contentType, Charset charset) {
+	public static String build(final String contentType, final Charset charset) {
 		return StrUtil.format("{};charset={}", contentType, charset.name());
 	}
 
@@ -155,7 +155,7 @@ public enum ContentType {
 	 * @return Content-Type字符串
 	 * @since 5.7.15
 	 */
-	public static String build(ContentType contentType, Charset charset) {
+	public static String build(final ContentType contentType, final Charset charset) {
 		return build(contentType.getValue(), charset);
 	}
 }

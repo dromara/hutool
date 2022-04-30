@@ -30,12 +30,12 @@ public class IKAnalyzerEngine implements TokenizerEngine {
 	 *
 	 * @param seg {@link IKSegmenter}
 	 */
-	public IKAnalyzerEngine(IKSegmenter seg) {
+	public IKAnalyzerEngine(final IKSegmenter seg) {
 		this.seg = seg;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		this.seg.reset(StrUtil.getReader(text));
 		return new IKAnalyzerResult(this.seg);
 	}

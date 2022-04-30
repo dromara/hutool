@@ -384,7 +384,7 @@ public class ManagementUtil {
 	 *
 	 * @param out {@link PrintWriter}输出流
 	 */
-	public static void dumpSystemInfo(PrintWriter out) {
+	public static void dumpSystemInfo(final PrintWriter out) {
 		out.println("--------------");
 		out.println(getJvmSpecInfo());
 		out.println("--------------");
@@ -414,7 +414,7 @@ public class ManagementUtil {
 	 * @param caption 标题
 	 * @param value   值
 	 */
-	protected static void append(StringBuilder builder, String caption, Object value) {
+	protected static void append(final StringBuilder builder, final String caption, final Object value) {
 		builder.append(caption).append(StrUtil.nullToDefault(Convert.toStr(value), "[n/a]")).append("\n");
 	}
 }

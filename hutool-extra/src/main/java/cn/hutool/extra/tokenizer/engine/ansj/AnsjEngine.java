@@ -30,12 +30,12 @@ public class AnsjEngine implements TokenizerEngine {
 	 *
 	 * @param analysis {@link Analysis}
 	 */
-	public AnsjEngine(Analysis analysis) {
+	public AnsjEngine(final Analysis analysis) {
 		this.analysis = analysis;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		return new AnsjResult(analysis.parseStr(StrUtil.str(text)));
 	}
 

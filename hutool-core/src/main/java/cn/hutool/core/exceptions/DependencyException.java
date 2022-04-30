@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class DependencyException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public DependencyException(Throwable e) {
+	public DependencyException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public DependencyException(String message) {
+	public DependencyException(final String message) {
 		super(message);
 	}
 
-	public DependencyException(String messageTemplate, Object... params) {
+	public DependencyException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public DependencyException(String message, Throwable throwable) {
+	public DependencyException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public DependencyException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public DependencyException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public DependencyException(Throwable throwable, String messageTemplate, Object... params) {
+	public DependencyException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

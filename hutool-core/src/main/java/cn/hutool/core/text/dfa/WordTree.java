@@ -55,7 +55,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return this
 	 * @since 5.2.0
 	 */
-	public WordTree setCharFilter(Predicate<Character> charFilter) {
+	public WordTree setCharFilter(final Predicate<Character> charFilter) {
 		this.charFilter = charFilter;
 		return this;
 	}
@@ -72,7 +72,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 		if (false == (words instanceof Set)) {
 			words = new HashSet<>(words);
 		}
-		for (String word : words) {
+		for (final String word : words) {
 			addWord(word);
 		}
 		return this;
@@ -84,8 +84,8 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param words 单词数组
 	 *              @return this
 	 */
-	public WordTree addWords(String... words) {
-		for (String word : CollUtil.newHashSet(words)) {
+	public WordTree addWords(final String... words) {
+		for (final String word : CollUtil.newHashSet(words)) {
 			addWord(word);
 		}
 		return this;
@@ -97,7 +97,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param word 单词
 	 * @return this
 	 */
-	public WordTree addWord(String word) {
+	public WordTree addWord(final String word) {
 		final Predicate<Character> charFilter = this.charFilter;
 		WordTree parent = null;
 		WordTree current = this;
@@ -130,7 +130,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param text 被检查的文本
 	 * @return 是否包含
 	 */
-	public boolean isMatch(String text) {
+	public boolean isMatch(final String text) {
 		if (null == text) {
 			return false;
 		}
@@ -143,7 +143,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param text 被检查的文本
 	 * @return 匹配到的关键字
 	 */
-	public String match(String text) {
+	public String match(final String text) {
 		final FoundWord foundWord = matchWord(text);
 		return null != foundWord ? foundWord.toString() : null;
 	}
@@ -155,7 +155,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配到的关键字
 	 * @since 5.5.3
 	 */
-	public FoundWord matchWord(String text) {
+	public FoundWord matchWord(final String text) {
 		if (null == text) {
 			return null;
 		}
@@ -171,7 +171,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param text 被检查的文本
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text) {
+	public List<String> matchAll(final String text) {
 		return matchAll(text, -1);
 	}
 
@@ -182,7 +182,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配的词列表
 	 * @since 5.5.3
 	 */
-	public List<FoundWord> matchAllWords(String text) {
+	public List<FoundWord> matchAllWords(final String text) {
 		return matchAllWords(text, -1);
 	}
 
@@ -193,7 +193,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param limit 限制匹配个数
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text, int limit) {
+	public List<String> matchAll(final String text, final int limit) {
 		return matchAll(text, limit, false, false);
 	}
 
@@ -205,7 +205,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配的词列表
 	 * @since 5.5.3
 	 */
-	public List<FoundWord> matchAllWords(String text, int limit) {
+	public List<FoundWord> matchAllWords(final String text, final int limit) {
 		return matchAllWords(text, limit, false, false);
 	}
 
@@ -220,7 +220,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
+	public List<String> matchAll(final String text, final int limit, final boolean isDensityMatch, final boolean isGreedMatch) {
 		final List<FoundWord> matchAllWords = matchAllWords(text, limit, isDensityMatch, isGreedMatch);
 		return CollUtil.map(matchAllWords, FoundWord::toString, true);
 	}
@@ -237,12 +237,12 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 匹配的词列表
 	 * @since 5.5.3
 	 */
-	public List<FoundWord> matchAllWords(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
+	public List<FoundWord> matchAllWords(final String text, final int limit, final boolean isDensityMatch, final boolean isGreedMatch) {
 		if (null == text) {
 			return null;
 		}
 
-		List<FoundWord> foundWords = new ArrayList<>();
+		final List<FoundWord> foundWords = new ArrayList<>();
 		WordTree current = this;
 		final int length = text.length();
 		final Predicate<Character> charFilter = this.charFilter;
@@ -305,7 +305,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param c 检查的字符
 	 * @return 是否末尾
 	 */
-	private boolean isEnd(Character c) {
+	private boolean isEnd(final Character c) {
 		return this.endCharacterSet.contains(c);
 	}
 
@@ -314,7 +314,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 *
 	 * @param c 设置结尾的字符
 	 */
-	private void setEnd(Character c) {
+	private void setEnd(final Character c) {
 		if (null != c) {
 			this.endCharacterSet.add(c);
 		}

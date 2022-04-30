@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 /**
  * 处理为字符串结果，当查询结果为单个字符串时使用此处理器
- * 
+ *
  * @author  weibaohui
  */
 public class StringHandler implements RsHandler<String>{
@@ -20,7 +20,7 @@ public class StringHandler implements RsHandler<String>{
 	}
 
 	@Override
-	public String handle(ResultSet rs) throws SQLException {
+	public String handle(final ResultSet rs) throws SQLException {
 		return rs.next() ? rs.getString(1) : null;
 	}
 }

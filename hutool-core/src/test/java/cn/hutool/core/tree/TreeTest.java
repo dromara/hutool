@@ -34,8 +34,8 @@ public class TreeTest {
 
 	@Test
 	public void sampleTreeTest() {
-		List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
-		for (Tree<String> tree : treeList) {
+		final List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
+		for (final Tree<String> tree : treeList) {
 			Assert.assertNotNull(tree);
 			Assert.assertEquals("0", tree.getParentId());
 //			Console.log(tree);
@@ -51,14 +51,14 @@ public class TreeTest {
 	public void treeTest() {
 
 		//配置
-		TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
+		final TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
 		// 自定义属性名 都要默认值的
 		treeNodeConfig.setWeightKey("order");
 		treeNodeConfig.setIdKey("rid");
 		treeNodeConfig.setDeep(2);
 
 		//转换器
-		List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
+		final List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
 				(treeNode, tree) -> {
 					tree.setId(treeNode.getId());
 					tree.setParentId(treeNode.getParentId());
@@ -74,7 +74,7 @@ public class TreeTest {
 
 	@Test
 	public void walkTest(){
-		List<String> ids = new ArrayList<>();
+		final List<String> ids = new ArrayList<>();
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.walk((tr)-> ids.add(tr.getId()));
 
@@ -86,7 +86,7 @@ public class TreeTest {
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		final Tree<String> cloneTree = tree.cloneTree();
 
-		List<String> ids = new ArrayList<>();
+		final List<String> ids = new ArrayList<>();
 		cloneTree.walk((tr)-> ids.add(tr.getId()));
 
 		Assert .assertEquals(7, ids.size());
@@ -101,7 +101,7 @@ public class TreeTest {
 			return null != name && name.toString().contains("店铺");
 		});
 
-		List<String> ids = new ArrayList<>();
+		final List<String> ids = new ArrayList<>();
 		tree.walk((tr)-> ids.add(tr.getId()));
 		Assert .assertEquals(4, ids.size());
 	}
@@ -111,16 +111,16 @@ public class TreeTest {
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 
 		// 经过过滤，生成新的树
-		Tree<String> newTree = tree.filterNew((t)->{
+		final Tree<String> newTree = tree.filterNew((t)->{
 			final CharSequence name = t.getName();
 			return null != name && name.toString().contains("店铺");
 		});
 
-		List<String> ids = new ArrayList<>();
+		final List<String> ids = new ArrayList<>();
 		newTree.walk((tr)-> ids.add(tr.getId()));
 		Assert .assertEquals(4, ids.size());
 
-		List<String> ids2 = new ArrayList<>();
+		final List<String> ids2 = new ArrayList<>();
 		tree.walk((tr)-> ids2.add(tr.getId()));
 		Assert .assertEquals(7, ids2.size());
 	}

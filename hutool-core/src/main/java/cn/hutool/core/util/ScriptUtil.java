@@ -29,7 +29,7 @@ public class ScriptUtil {
 	 * @param nameOrExtOrMime 脚本名称
 	 * @return {@link ScriptEngine} 实例
 	 */
-	public static ScriptEngine getScript(String nameOrExtOrMime) {
+	public static ScriptEngine getScript(final String nameOrExtOrMime) {
 		return CACHE.computeIfAbsent(nameOrExtOrMime, () -> createScript(nameOrExtOrMime));
 	}
 
@@ -40,7 +40,7 @@ public class ScriptUtil {
 	 * @return {@link ScriptEngine} 实例
 	 * @since 5.2.6
 	 */
-	public static ScriptEngine createScript(String nameOrExtOrMime) {
+	public static ScriptEngine createScript(final String nameOrExtOrMime) {
 		ScriptEngine engine = MANAGER.getEngineByName(nameOrExtOrMime);
 		if (null == engine) {
 			engine = MANAGER.getEngineByExtension(nameOrExtOrMime);
@@ -155,12 +155,12 @@ public class ScriptUtil {
 	 * @throws UtilException 脚本异常
 	 * @since 5.3.6
 	 */
-	public static Invocable evalInvocable(String script) throws UtilException {
+	public static Invocable evalInvocable(final String script) throws UtilException {
 		final ScriptEngine jsEngine = getJsEngine();
 		final Object eval;
 		try {
 			eval = jsEngine.eval(script);
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 		if(eval instanceof Invocable){
@@ -179,10 +179,10 @@ public class ScriptUtil {
 	 * @throws UtilException 脚本异常
 	 * @since 3.2.0
 	 */
-	public static Object eval(String script) throws UtilException {
+	public static Object eval(final String script) throws UtilException {
 		try {
 			return getJsEngine().eval(script);
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -196,10 +196,10 @@ public class ScriptUtil {
 	 * @throws UtilException 脚本异常
 	 * @since 3.2.0
 	 */
-	public static Object eval(String script, ScriptContext context) throws UtilException {
+	public static Object eval(final String script, final ScriptContext context) throws UtilException {
 		try {
 			return getJsEngine().eval(script, context);
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -213,10 +213,10 @@ public class ScriptUtil {
 	 * @throws UtilException 脚本异常
 	 * @since 3.2.0
 	 */
-	public static Object eval(String script, Bindings bindings) throws UtilException {
+	public static Object eval(final String script, final Bindings bindings) throws UtilException {
 		try {
 			return getJsEngine().eval(script, bindings);
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -230,11 +230,11 @@ public class ScriptUtil {
 	 * @return 结果
 	 * @since 5.3.6
 	 */
-	public static Object invoke(String script, String func, Object... args) {
+	public static Object invoke(final String script, final String func, final Object... args) {
 		final Invocable eval = evalInvocable(script);
 		try {
 			return eval.invokeFunction(func, args);
-		} catch (ScriptException | NoSuchMethodException e) {
+		} catch (final ScriptException | NoSuchMethodException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -247,10 +247,10 @@ public class ScriptUtil {
 	 * @throws UtilException 脚本异常
 	 * @since 3.2.0
 	 */
-	public static CompiledScript compile(String script) throws UtilException {
+	public static CompiledScript compile(final String script) throws UtilException {
 		try {
 			return compile(getJsEngine(), script);
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -263,7 +263,7 @@ public class ScriptUtil {
 	 * @return {@link CompiledScript}
 	 * @throws ScriptException 脚本异常
 	 */
-	public static CompiledScript compile(ScriptEngine engine, String script) throws ScriptException {
+	public static CompiledScript compile(final ScriptEngine engine, final String script) throws ScriptException {
 		if (engine instanceof Compilable) {
 			final Compilable compEngine = (Compilable) engine;
 			return compEngine.compile(script);

@@ -22,7 +22,7 @@ public class StringResourceLoader extends AbstractResourceLoader {
 	private Charset charset;
 
 	@Override
-	public Resource load(String name) {
+	public Resource load(final String name) {
 		return new StringTemplateResource(name, charset);
 	}
 
@@ -30,7 +30,7 @@ public class StringResourceLoader extends AbstractResourceLoader {
 	 * 设置编码
 	 * @param charset 编码
 	 */
-	public void setCharset(Charset charset){
+	public void setCharset(final Charset charset){
 		this.charset = charset;
 	}
 
@@ -49,7 +49,7 @@ public class StringResourceLoader extends AbstractResourceLoader {
 		 * @param content 模板内容
 		 * @param charset 编码
 		 */
-		public StringTemplateResource(String content, Charset charset){
+		public StringTemplateResource(final String content, final Charset charset){
 			this.content = content;
 			this.charset = charset;
 		}

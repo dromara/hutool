@@ -20,7 +20,7 @@ public class LRUCacheTest {
 	@Ignore
 	public void putTest(){
 		//https://github.com/dromara/hutool/issues/2227
-		LRUCache<String, String> cache = CacheUtil.newLRUCache(100, 10);
+		final LRUCache<String, String> cache = CacheUtil.newLRUCache(100, 10);
 		for (int i = 0; i < 10000; i++) {
 			//ThreadUtil.execute(()-> cache.put(RandomUtil.randomString(5), "1243", 10));
 			ThreadUtil.execute(()-> cache.get(RandomUtil.randomString(5), ()->RandomUtil.randomString(10)));
@@ -30,15 +30,15 @@ public class LRUCacheTest {
 
 	@Test
 	public void readWriteTest() throws InterruptedException {
-		LRUCache<Integer, Integer> cache = CacheUtil.newLRUCache(10);
+		final LRUCache<Integer, Integer> cache = CacheUtil.newLRUCache(10);
 		for (int i = 0; i < 10; i++) {
 			cache.put(i, i);
 		}
 
-		CountDownLatch countDownLatch = new CountDownLatch(10);
+		final CountDownLatch countDownLatch = new CountDownLatch(10);
 		// 10个线程分别读0-9 10000次
 		for (int i = 0; i < 10; i++) {
-			int finalI = i;
+			final int finalI = i;
 			new Thread(() -> {
 				for (int j = 0; j < 10000; j++) {
 					cache.get(finalI);
@@ -49,7 +49,7 @@ public class LRUCacheTest {
 		// 等待读线程结束
 		countDownLatch.await();
 		// 按顺序读0-9
-		StringBuilder sb1 = new StringBuilder();
+		final StringBuilder sb1 = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
 			sb1.append(cache.get(i));
 		}
@@ -58,7 +58,7 @@ public class LRUCacheTest {
 		// 新加11，此时0最久未使用，应该淘汰0
 		cache.put(11, 11);
 
-		StringBuilder sb2 = new StringBuilder();
+		final StringBuilder sb2 = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
 			sb2.append(cache.get(i));
 		}

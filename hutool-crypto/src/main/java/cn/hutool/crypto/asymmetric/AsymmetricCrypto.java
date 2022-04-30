@@ -57,7 +57,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
 	@SuppressWarnings("RedundantCast")
-	public AsymmetricCrypto(AsymmetricAlgorithm algorithm) {
+	public AsymmetricCrypto(final AsymmetricAlgorithm algorithm) {
 		this(algorithm, (byte[]) null, (byte[]) null);
 	}
 
@@ -67,7 +67,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param algorithm 算法
 	 */
 	@SuppressWarnings("RedundantCast")
-	public AsymmetricCrypto(String algorithm) {
+	public AsymmetricCrypto(final String algorithm) {
 		this(algorithm, (byte[]) null, (byte[]) null);
 	}
 
@@ -79,7 +79,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param privateKeyStr 私钥Hex或Base64表示
 	 * @param publicKeyStr  公钥Hex或Base64表示
 	 */
-	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
+	public AsymmetricCrypto(final AsymmetricAlgorithm algorithm, final String privateKeyStr, final String publicKeyStr) {
 		this(algorithm.getValue(), SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
@@ -91,7 +91,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param privateKey 私钥
 	 * @param publicKey  公钥
 	 */
-	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
+	public AsymmetricCrypto(final AsymmetricAlgorithm algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
 	}
 
@@ -104,7 +104,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param publicKey  公钥
 	 * @since 3.1.1
 	 */
-	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public AsymmetricCrypto(final AsymmetricAlgorithm algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
 	}
 
@@ -116,7 +116,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64  公钥Base64
 	 */
-	public AsymmetricCrypto(String algorithm, String privateKeyBase64, String publicKeyBase64) {
+	public AsymmetricCrypto(final String algorithm, final String privateKeyBase64, final String publicKeyBase64) {
 		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 
@@ -130,7 +130,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param privateKey 私钥
 	 * @param publicKey  公钥
 	 */
-	public AsymmetricCrypto(String algorithm, byte[] privateKey, byte[] publicKey) {
+	public AsymmetricCrypto(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm, //
 				KeyUtil.generatePrivateKey(algorithm, privateKey), //
 				KeyUtil.generatePublicKey(algorithm, publicKey)//
@@ -148,7 +148,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param publicKey  公钥
 	 * @since 3.1.1
 	 */
-	public AsymmetricCrypto(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public AsymmetricCrypto(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		super(algorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
@@ -167,7 +167,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 *
 	 * @param encryptBlockSize 加密块大小
 	 */
-	public void setEncryptBlockSize(int encryptBlockSize) {
+	public void setEncryptBlockSize(final int encryptBlockSize) {
 		this.encryptBlockSize = encryptBlockSize;
 	}
 
@@ -185,7 +185,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 *
 	 * @param decryptBlockSize 解密块大小
 	 */
-	public void setDecryptBlockSize(int decryptBlockSize) {
+	public void setDecryptBlockSize(final int decryptBlockSize) {
 		this.decryptBlockSize = decryptBlockSize;
 	}
 
@@ -207,7 +207,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param algorithmParameterSpec {@link AlgorithmParameterSpec}
 	 * @since 5.4.3
 	 */
-	public void setAlgorithmParameterSpec(AlgorithmParameterSpec algorithmParameterSpec) {
+	public void setAlgorithmParameterSpec(final AlgorithmParameterSpec algorithmParameterSpec) {
 		this.cipherWrapper.setParams(algorithmParameterSpec);
 	}
 
@@ -218,13 +218,13 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public AsymmetricCrypto setRandom(SecureRandom random) {
+	public AsymmetricCrypto setRandom(final SecureRandom random) {
 		this.cipherWrapper.setRandom(random);
 		return this;
 	}
 
 	@Override
-	public AsymmetricCrypto init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public AsymmetricCrypto init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		super.init(algorithm, privateKey, publicKey);
 		initCipher();
 		return this;
@@ -233,7 +233,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	// --------------------------------------------------------------------------------- Encrypt
 
 	@Override
-	public byte[] encrypt(byte[] data, KeyType keyType) {
+	public byte[] encrypt(final byte[] data, final KeyType keyType) {
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
@@ -248,7 +248,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 			}
 
 			return doFinal(data, this.encryptBlockSize < 0 ? data.length : this.encryptBlockSize);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -258,7 +258,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	// --------------------------------------------------------------------------------- Decrypt
 
 	@Override
-	public byte[] decrypt(byte[] data, KeyType keyType) {
+	public byte[] decrypt(final byte[] data, final KeyType keyType) {
 		final Key key = getKeyByType(keyType);
 		lock.lock();
 		try {
@@ -273,7 +273,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 			}
 
 			return doFinal(data, this.decryptBlockSize < 0 ? data.length : this.decryptBlockSize);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -311,7 +311,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws BadPaddingException       padding错误异常
 	 * @throws IOException               IO异常，不会被触发
 	 */
-	private byte[] doFinal(byte[] data, int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
+	private byte[] doFinal(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
 		// 模长
 		final int dataLength = data.length;
 
@@ -334,7 +334,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws BadPaddingException       padding错误异常
 	 * @throws IOException               IO异常，不会被触发
 	 */
-	private byte[] doFinalWithBlock(byte[] data, int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
+	private byte[] doFinalWithBlock(final byte[] data, final int maxBlockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
 		final int dataLength = data.length;
 		@SuppressWarnings("resource") final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 
@@ -363,7 +363,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws InvalidAlgorithmParameterException 异常算法错误
 	 * @throws InvalidKeyException                异常KEY错误
 	 */
-	private Cipher initMode(int mode, Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
+	private Cipher initMode(final int mode, final Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
 		return this.cipherWrapper.initMode(mode, key).getCipher();
 	}
 }

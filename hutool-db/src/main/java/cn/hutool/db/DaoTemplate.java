@@ -39,7 +39,7 @@ public class DaoTemplate {
 	 *
 	 * @param tableName 数据库表名
 	 */
-	public DaoTemplate(String tableName) {
+	public DaoTemplate(final String tableName) {
 		this(tableName, (String) null);
 	}
 
@@ -49,7 +49,7 @@ public class DaoTemplate {
 	 * @param tableName       数据库表名
 	 * @param primaryKeyField 主键字段名
 	 */
-	public DaoTemplate(String tableName, String primaryKeyField) {
+	public DaoTemplate(final String tableName, final String primaryKeyField) {
 		this(tableName, primaryKeyField, DSFactory.get());
 	}
 
@@ -59,7 +59,7 @@ public class DaoTemplate {
 	 * @param tableName 表
 	 * @param ds 数据源
 	 */
-	public DaoTemplate(String tableName, DataSource ds) {
+	public DaoTemplate(final String tableName, final DataSource ds) {
 		this(tableName, null, ds);
 	}
 
@@ -70,7 +70,7 @@ public class DaoTemplate {
 	 * @param primaryKeyField 主键字段名
 	 * @param ds              数据源
 	 */
-	public DaoTemplate(String tableName, String primaryKeyField, DataSource ds) {
+	public DaoTemplate(final String tableName, final String primaryKeyField, final DataSource ds) {
 		this(tableName, primaryKeyField, Db.use(ds));
 	}
 
@@ -81,7 +81,7 @@ public class DaoTemplate {
 	 * @param primaryKeyField 主键字段名
 	 * @param db              Db对象
 	 */
-	public DaoTemplate(String tableName, String primaryKeyField, Db db) {
+	public DaoTemplate(final String tableName, final String primaryKeyField, final Db db) {
 		this.tableName = tableName;
 		if (StrUtil.isNotBlank(primaryKeyField)) {
 			this.primaryKeyField = primaryKeyField;
@@ -99,7 +99,7 @@ public class DaoTemplate {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int add(Entity entity) throws SQLException {
+	public int add(final Entity entity) throws SQLException {
 		return db.insert(fixEntity(entity));
 	}
 
@@ -110,7 +110,7 @@ public class DaoTemplate {
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Object> addForGeneratedKeys(Entity entity) throws SQLException {
+	public List<Object> addForGeneratedKeys(final Entity entity) throws SQLException {
 		return db.insertForGeneratedKeys(fixEntity(entity));
 	}
 
@@ -121,7 +121,7 @@ public class DaoTemplate {
 	 * @return 自增主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public Long addForGeneratedKey(Entity entity) throws SQLException {
+	public Long addForGeneratedKey(final Entity entity) throws SQLException {
 		return db.insertForGeneratedKey(fixEntity(entity));
 	}
 	//------------------------------------------------------------- Add end
@@ -136,7 +136,7 @@ public class DaoTemplate {
 	 * @return 删除行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> int del(T pk) throws SQLException {
+	public <T> int del(final T pk) throws SQLException {
 		if (pk == null) {
 			return 0;
 		}
@@ -152,7 +152,7 @@ public class DaoTemplate {
 	 * @return 删除行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> int del(String field, T value) throws SQLException {
+	public <T> int del(final String field, final T value) throws SQLException {
 		if (StrUtil.isBlank(field)) {
 			return 0;
 		}
@@ -168,7 +168,7 @@ public class DaoTemplate {
 	 * @return 删除行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> int del(Entity where) throws SQLException {
+	public <T> int del(final Entity where) throws SQLException {
 		if (MapUtil.isEmpty(where)) {
 			return 0;
 		}
@@ -186,7 +186,7 @@ public class DaoTemplate {
 	 * @return 更新条目数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int update(Entity record, Entity where) throws SQLException {
+	public int update(final Entity record, final Entity where) throws SQLException {
 		if (MapUtil.isEmpty(record)) {
 			return 0;
 		}
@@ -205,7 +205,7 @@ public class DaoTemplate {
 			return 0;
 		}
 		entity = fixEntity(entity);
-		Object pk = entity.get(primaryKeyField);
+		final Object pk = entity.get(primaryKeyField);
 		if (null == pk) {
 			throw new SQLException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
 		}
@@ -224,7 +224,7 @@ public class DaoTemplate {
 	 * @return 新增或更新条数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int addOrUpdate(Entity entity) throws SQLException {
+	public int addOrUpdate(final Entity entity) throws SQLException {
 		return null == entity.get(primaryKeyField) ? add(entity) : update(entity);
 	}
 	//------------------------------------------------------------- Update end
@@ -239,7 +239,7 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> Entity get(T pk) throws SQLException {
+	public <T> Entity get(final T pk) throws SQLException {
 		return this.get(primaryKeyField, pk);
 	}
 
@@ -253,7 +253,7 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> Entity get(String field, T value) throws SQLException {
+	public <T> Entity get(final String field, final T value) throws SQLException {
 		return this.get(Entity.create(tableName).set(field, value));
 	}
 
@@ -264,7 +264,7 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public Entity get(Entity where) throws SQLException {
+	public Entity get(final Entity where) throws SQLException {
 		return db.get(fixEntity(where));
 	}
 	//------------------------------------------------------------- Get end
@@ -280,7 +280,7 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> List<Entity> find(String field, T value) throws SQLException {
+	public <T> List<Entity> find(final String field, final T value) throws SQLException {
 		return this.find(Entity.create(tableName).set(field, value));
 	}
 
@@ -301,7 +301,7 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> find(Entity where) throws SQLException {
+	public List<Entity> find(final Entity where) throws SQLException {
 		return db.find(null, fixEntity(where));
 	}
 
@@ -315,8 +315,8 @@ public class DaoTemplate {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findBySql(String sql, Object... params) throws SQLException {
-		String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
+	public List<Entity> findBySql(String sql, final Object... params) throws SQLException {
+		final String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
 		if (false == "select".equals(selectKeyword)) {
 			sql = "SELECT * FROM " + this.tableName + " " + sql;
 		}
@@ -332,7 +332,7 @@ public class DaoTemplate {
 	 * @return 分页结果集
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Entity where, Page page, String... selectFields) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final Page page, final String... selectFields) throws SQLException {
 		return db.page(Arrays.asList(selectFields), fixEntity(where), page);
 	}
 
@@ -344,7 +344,7 @@ public class DaoTemplate {
 	 * @return 分页结果集
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Entity where, Page page) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final Page page) throws SQLException {
 		return db.page(fixEntity(where), page);
 	}
 
@@ -355,7 +355,7 @@ public class DaoTemplate {
 	 * @return 数量
 	 * @throws SQLException SQL执行异常
 	 */
-	public long count(Entity where) throws SQLException {
+	public long count(final Entity where) throws SQLException {
 		return db.count(fixEntity(where));
 	}
 
@@ -366,7 +366,7 @@ public class DaoTemplate {
 	 * @return 是否存在
 	 * @throws SQLException SQL执行异常
 	 */
-	public boolean exist(Entity where) throws SQLException {
+	public boolean exist(final Entity where) throws SQLException {
 		return this.count(where) > 0;
 	}
 	//------------------------------------------------------------- Find end

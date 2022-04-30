@@ -21,7 +21,7 @@ public class CsvUtil {
 	 * @param config 配置, 允许为空.
 	 * @return {@link CsvReader}
 	 */
-	public static CsvReader getReader(CsvReadConfig config) {
+	public static CsvReader getReader(final CsvReadConfig config) {
 		return new CsvReader(config);
 	}
 
@@ -42,7 +42,7 @@ public class CsvUtil {
 	 * @return {@link CsvReader}
 	 * @since 5.7.14
 	 */
-	public static CsvReader getReader(Reader reader, CsvReadConfig config) {
+	public static CsvReader getReader(final Reader reader, final CsvReadConfig config) {
 		return new CsvReader(reader, config);
 	}
 
@@ -53,7 +53,7 @@ public class CsvUtil {
 	 * @return {@link CsvReader}
 	 * @since 5.7.14
 	 */
-	public static CsvReader getReader(Reader reader) {
+	public static CsvReader getReader(final Reader reader) {
 		return getReader(reader, null);
 	}
 
@@ -66,7 +66,7 @@ public class CsvUtil {
 	 * @param charset  编码
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(String filePath, Charset charset) {
+	public static CsvWriter getWriter(final String filePath, final Charset charset) {
 		return new CsvWriter(filePath, charset);
 	}
 
@@ -77,7 +77,7 @@ public class CsvUtil {
 	 * @param charset 编码
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(File file, Charset charset) {
+	public static CsvWriter getWriter(final File file, final Charset charset) {
 		return new CsvWriter(file, charset);
 	}
 
@@ -89,7 +89,7 @@ public class CsvUtil {
 	 * @param isAppend 是否追加
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(String filePath, Charset charset, boolean isAppend) {
+	public static CsvWriter getWriter(final String filePath, final Charset charset, final boolean isAppend) {
 		return new CsvWriter(filePath, charset, isAppend);
 	}
 
@@ -101,7 +101,7 @@ public class CsvUtil {
 	 * @param isAppend 是否追加
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(File file, Charset charset, boolean isAppend) {
+	public static CsvWriter getWriter(final File file, final Charset charset, final boolean isAppend) {
 		return new CsvWriter(file, charset, isAppend);
 	}
 
@@ -114,7 +114,7 @@ public class CsvUtil {
 	 * @param config   写出配置，null则使用默认配置
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(File file, Charset charset, boolean isAppend, CsvWriteConfig config) {
+	public static CsvWriter getWriter(final File file, final Charset charset, final boolean isAppend, final CsvWriteConfig config) {
 		return new CsvWriter(file, charset, isAppend, config);
 	}
 
@@ -124,7 +124,7 @@ public class CsvUtil {
 	 * @param writer Writer
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(Writer writer) {
+	public static CsvWriter getWriter(final Writer writer) {
 		return new CsvWriter(writer);
 	}
 
@@ -135,7 +135,7 @@ public class CsvUtil {
 	 * @param config 写出配置，null则使用默认配置
 	 * @return {@link CsvWriter}
 	 */
-	public static CsvWriter getWriter(Writer writer, CsvWriteConfig config) {
+	public static CsvWriter getWriter(final Writer writer, final CsvWriteConfig config) {
 		return new CsvWriter(writer, config);
 	}
 }

@@ -35,7 +35,7 @@ public class Console {
 	 *
 	 * @param obj 要打印的对象
 	 */
-	public static void log(Object obj) {
+	public static void log(final Object obj) {
 		if (obj instanceof Throwable) {
 			final Throwable e = (Throwable) obj;
 			log(e, e.getMessage());
@@ -52,7 +52,7 @@ public class Console {
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
-	public static void log(Object obj1, Object... otherObjs) {
+	public static void log(final Object obj1, final Object... otherObjs) {
 		if (ArrayUtil.isEmpty(otherObjs)) {
 			log(obj1);
 		} else {
@@ -67,7 +67,7 @@ public class Console {
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values   值
 	 */
-	public static void log(String template, Object... values) {
+	public static void log(final String template, final Object... values) {
 		if (ArrayUtil.isEmpty(values) || StrUtil.contains(template, TEMPLATE_VAR)) {
 			logInternal(template, values);
 		} else {
@@ -82,7 +82,7 @@ public class Console {
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values   值
 	 */
-	public static void log(Throwable t, String template, Object... values) {
+	public static void log(final Throwable t, final String template, final Object... values) {
 		out.println(StrUtil.format(template, values));
 		if (null != t) {
 			//noinspection CallToPrintStackTrace
@@ -98,7 +98,7 @@ public class Console {
 	 * @param values   值
 	 * @since 5.4.3
 	 */
-	private static void logInternal(String template, Object... values) {
+	private static void logInternal(final String template, final Object... values) {
 		log(null, template, values);
 	}
 
@@ -110,7 +110,7 @@ public class Console {
 	 * @param consoleTable 控制台表格
 	 * @since 5.4.5
 	 */
-	public static void table(ConsoleTable consoleTable) {
+	public static void table(final ConsoleTable consoleTable) {
 		print(consoleTable.toString());
 	}
 
@@ -120,7 +120,7 @@ public class Console {
 	 * @param obj 要打印的对象
 	 * @since 3.3.1
 	 */
-	public static void print(Object obj) {
+	public static void print(final Object obj) {
 		print(TEMPLATE_VAR, obj);
 	}
 
@@ -132,7 +132,7 @@ public class Console {
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
-	public static void print(Object obj1, Object... otherObjs) {
+	public static void print(final Object obj1, final Object... otherObjs) {
 		if (ArrayUtil.isEmpty(otherObjs)) {
 			print(obj1);
 		} else {
@@ -147,7 +147,7 @@ public class Console {
 	 * @param values   值
 	 * @since 3.3.1
 	 */
-	public static void print(String template, Object... values) {
+	public static void print(final String template, final Object... values) {
 		if (ArrayUtil.isEmpty(values) || StrUtil.contains(template, TEMPLATE_VAR)) {
 			printInternal(template, values);
 		} else {
@@ -162,7 +162,7 @@ public class Console {
 	 * @param len      打印长度
 	 * @since 4.5.6
 	 */
-	public static void printProgress(char showChar, int len) {
+	public static void printProgress(final char showChar, final int len) {
 		print("{}{}", CharUtil.CR, StrUtil.repeat(showChar, len));
 	}
 
@@ -174,7 +174,7 @@ public class Console {
 	 * @param rate     总长度所占比取值0~1
 	 * @since 4.5.6
 	 */
-	public static void printProgress(char showChar, int totalLen, double rate) {
+	public static void printProgress(final char showChar, final int totalLen, final double rate) {
 		Assert.isTrue(rate >= 0 && rate <= 1, "Rate must between 0 and 1 (both include)");
 		printProgress(showChar, (int) (totalLen * rate));
 	}
@@ -186,7 +186,7 @@ public class Console {
 	 * @param values   值
 	 * @since 5.4.3
 	 */
-	private static void printInternal(String template, Object... values) {
+	private static void printInternal(final String template, final Object... values) {
 		out.print(StrUtil.format(template, values));
 	}
 
@@ -204,9 +204,9 @@ public class Console {
 	 *
 	 * @param obj 要打印的对象
 	 */
-	public static void error(Object obj) {
+	public static void error(final Object obj) {
 		if (obj instanceof Throwable) {
-			Throwable e = (Throwable) obj;
+			final Throwable e = (Throwable) obj;
 			error(e, e.getMessage());
 		} else {
 			error(TEMPLATE_VAR, obj);
@@ -221,7 +221,7 @@ public class Console {
 	 * @param otherObjs 其它要打印的对象
 	 * @since 5.4.3
 	 */
-	public static void error(Object obj1, Object... otherObjs) {
+	public static void error(final Object obj1, final Object... otherObjs) {
 		if (ArrayUtil.isEmpty(otherObjs)) {
 			error(obj1);
 		} else {
@@ -235,7 +235,7 @@ public class Console {
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values   值
 	 */
-	public static void error(String template, Object... values) {
+	public static void error(final String template, final Object... values) {
 		if (ArrayUtil.isEmpty(values) || StrUtil.contains(template, TEMPLATE_VAR)) {
 			errorInternal(template, values);
 		} else {
@@ -250,7 +250,7 @@ public class Console {
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values   值
 	 */
-	public static void error(Throwable t, String template, Object... values) {
+	public static void error(final Throwable t, final String template, final Object... values) {
 		err.println(StrUtil.format(template, values));
 		if (null != t) {
 			t.printStackTrace(err);
@@ -264,7 +264,7 @@ public class Console {
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values   值
 	 */
-	private static void errorInternal(String template, Object... values) {
+	private static void errorInternal(final String template, final Object... values) {
 		error(null, template, values);
 	}
 
@@ -324,7 +324,7 @@ public class Console {
 	 * @param count 变量数量
 	 * @return 模板
 	 */
-	private static String buildTemplateSplitBySpace(int count) {
+	private static String buildTemplateSplitBySpace(final int count) {
 		return StrUtil.repeatAndJoin(TEMPLATE_VAR, count, StrUtil.SPACE);
 	}
 

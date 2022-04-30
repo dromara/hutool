@@ -19,16 +19,16 @@ public class ApacheCommonsLog extends AbstractLog {
 	private final String name;
 
 	// ------------------------------------------------------------------------- Constructor
-	public ApacheCommonsLog(Log logger, String name) {
+	public ApacheCommonsLog(final Log logger, final String name) {
 		this.logger = logger;
 		this.name = name;
 	}
 
-	public ApacheCommonsLog(Class<?> clazz) {
+	public ApacheCommonsLog(final Class<?> clazz) {
 		this(LogFactory.getLog(clazz), null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
-	public ApacheCommonsLog(String name) {
+	public ApacheCommonsLog(final String name) {
 		this(LogFactory.getLog(name), name);
 	}
 
@@ -44,7 +44,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
 		if(isTraceEnabled()){
 			logger.trace(StrUtil.format(format, arguments), t);
@@ -58,7 +58,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
 		if(isDebugEnabled()){
 			logger.debug(StrUtil.format(format, arguments), t);
@@ -72,7 +72,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
 		if(isInfoEnabled()){
 			logger.info(StrUtil.format(format, arguments), t);
@@ -86,18 +86,18 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String format, Object... arguments) {
+	public void warn(final String format, final Object... arguments) {
 		if(isWarnEnabled()){
 			logger.warn(StrUtil.format(format, arguments));
 		}
 	}
 
 	@Override
-	public void warn(Throwable t, String format, Object... arguments) {
+	public void warn(final Throwable t, final String format, final Object... arguments) {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
 		if(isWarnEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
@@ -111,7 +111,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
 		if(isErrorEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
@@ -121,7 +121,7 @@ public class ApacheCommonsLog extends AbstractLog {
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		switch (level) {
 		case TRACE:
 			trace(t, format, arguments);

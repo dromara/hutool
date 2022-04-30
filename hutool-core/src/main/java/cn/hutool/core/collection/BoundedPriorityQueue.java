@@ -20,7 +20,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	private final int capacity;
 	private final Comparator<? super E> comparator;
 
-	public BoundedPriorityQueue(int capacity) {
+	public BoundedPriorityQueue(final int capacity) {
 		this(capacity, null);
 	}
 
@@ -29,14 +29,13 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * @param capacity 容量
 	 * @param comparator 比较器
 	 */
-	public BoundedPriorityQueue(int capacity, final Comparator<? super E> comparator) {
+	public BoundedPriorityQueue(final int capacity, final Comparator<? super E> comparator) {
 		super(capacity, (o1, o2) -> {
-			int cResult;
+			final int cResult;
 			if(comparator != null) {
 				cResult = comparator.compare(o1, o2);
 			}else {
-				@SuppressWarnings("unchecked")
-				Comparable<E> o1c = (Comparable<E>)o1;
+				@SuppressWarnings("unchecked") final Comparable<E> o1c = (Comparable<E>)o1;
 				cResult = o1c.compareTo(o2);
 			}
 
@@ -52,9 +51,9 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * @return 加入成功与否
 	 */
 	@Override
-	public boolean offer(E e) {
+	public boolean offer(final E e) {
 		if(size() >= capacity) {
-			E head = peek();
+			final E head = peek();
 			if (this.comparator().compare(e, head) <= 0){
 				return true;
 			}
@@ -70,7 +69,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * @param c 元素数组
 	 * @return 是否发生改变
 	 */
-	public boolean addAll(E[] c) {
+	public boolean addAll(final E[] c) {
 		return this.addAll(Arrays.asList(c));
 	}
 

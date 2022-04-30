@@ -24,12 +24,12 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 	 *
 	 * @param key 密钥，16位
 	 */
-	public XXTEA(byte[] key) {
+	public XXTEA(final byte[] key) {
 		this.key = key;
 	}
 
 	@Override
-	public byte[] encrypt(byte[] data) {
+	public byte[] encrypt(final byte[] data) {
 		if (data.length == 0) {
 			return data;
 		}
@@ -39,12 +39,12 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 	}
 
 	@Override
-	public void encrypt(InputStream data, OutputStream out, boolean isClose) {
+	public void encrypt(final InputStream data, final OutputStream out, final boolean isClose) {
 		IoUtil.write(out, isClose, encrypt(IoUtil.readBytes(data)));
 	}
 
 	@Override
-	public byte[] decrypt(byte[] data) {
+	public byte[] decrypt(final byte[] data) {
 		if (data.length == 0) {
 			return data;
 		}
@@ -54,13 +54,13 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 	}
 
 	@Override
-	public void decrypt(InputStream data, OutputStream out, boolean isClose) {
+	public void decrypt(final InputStream data, final OutputStream out, final boolean isClose) {
 		IoUtil.write(out, isClose, decrypt(IoUtil.readBytes(data)));
 	}
 
 	//region Private Method
-	private static int[] encrypt(int[] v, int[] k) {
-		int n = v.length - 1;
+	private static int[] encrypt(final int[] v, final int[] k) {
+		final int n = v.length - 1;
 
 		if (n < 1) {
 			return v;
@@ -81,13 +81,14 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 		return v;
 	}
 
-	private static int[] decrypt(int[] v, int[] k) {
-		int n = v.length - 1;
+	private static int[] decrypt(final int[] v, final int[] k) {
+		final int n = v.length - 1;
 
 		if (n < 1) {
 			return v;
 		}
-		int p, q = 6 + 52 / (n + 1);
+		int p;
+		final int q = 6 + 52 / (n + 1);
 		int z, y = v[0], sum = q * DELTA, e;
 
 		while (sum != 0) {
@@ -103,24 +104,24 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 		return v;
 	}
 
-	private static int mx(int sum, int y, int z, int p, int e, int[] k) {
+	private static int mx(final int sum, final int y, final int z, final int p, final int e, final int[] k) {
 		return (z >>> 5 ^ y << 2) + (y >>> 3 ^ z << 4) ^ (sum ^ y) + (k[p & 3 ^ e] ^ z);
 	}
 
-	private static byte[] fixKey(byte[] key) {
+	private static byte[] fixKey(final byte[] key) {
 		if (key.length == 16) {
 			return key;
 		}
-		byte[] fixedkey = new byte[16];
+		final byte[] fixedkey = new byte[16];
 		System.arraycopy(key, 0, fixedkey, 0, Math.min(key.length, 16));
 		return fixedkey;
 	}
 
-	private static int[] toIntArray(byte[] data, boolean includeLength) {
+	private static int[] toIntArray(final byte[] data, final boolean includeLength) {
 		int n = (((data.length & 3) == 0)
 				? (data.length >>> 2)
 				: ((data.length >>> 2) + 1));
-		int[] result;
+		final int[] result;
 
 		if (includeLength) {
 			result = new int[n + 1];
@@ -135,18 +136,18 @@ public class XXTEA implements SymmetricEncryptor, SymmetricDecryptor, Serializab
 		return result;
 	}
 
-	private static byte[] toByteArray(int[] data, boolean includeLength) {
+	private static byte[] toByteArray(final int[] data, final boolean includeLength) {
 		int n = data.length << 2;
 
 		if (includeLength) {
-			int m = data[data.length - 1];
+			final int m = data[data.length - 1];
 			n -= 4;
 			if ((m < n - 3) || (m > n)) {
 				return null;
 			}
 			n = m;
 		}
-		byte[] result = new byte[n];
+		final byte[] result = new byte[n];
 
 		for (int i = 0; i < n; ++i) {
 			result[i] = (byte) (data[i >>> 2] >>> ((i & 3) << 3));

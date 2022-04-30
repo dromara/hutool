@@ -87,7 +87,7 @@ public class CRC16Test {
 		Assert.assertEquals("1e00", crc16.getHexValue());
 
 		crc16.reset();
-		String str2 = "QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&RtdInterval=30&&";
+		final String str2 = "QN=20160801085857223;ST=32;CN=1062;PW=100000;MN=010000A8900016F000169DC0;Flag=5;CP=&&RtdInterval=30&&";
 		crc16.update(str2.getBytes());
 		Assert.assertEquals("1c80", crc16.getHexValue());
 	}

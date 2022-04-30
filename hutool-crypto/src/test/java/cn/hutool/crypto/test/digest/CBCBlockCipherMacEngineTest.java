@@ -16,12 +16,12 @@ public class CBCBlockCipherMacEngineTest {
 		// https://github.com/dromara/hutool/issues/2206
 		final byte[] key = new byte[16];
 		final CipherParameters parameter = new KeyParameter(KeyUtil.generateKey("SM4", key).getEncoded());
-		Mac mac = new Mac(new SM4MacEngine(parameter));
+		final Mac mac = new Mac(new SM4MacEngine(parameter));
 
 		// 原文
-		String testStr = "test中文";
+		final String testStr = "test中文";
 
-		String macHex1 = mac.digestHex(testStr);
+		final String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
 	}
 
@@ -32,12 +32,12 @@ public class CBCBlockCipherMacEngineTest {
 		final byte[] iv = new byte[16];
 		CipherParameters parameter = new KeyParameter(KeyUtil.generateKey("SM4", key).getEncoded());
 		parameter = new ParametersWithIV(parameter, iv);
-		Mac mac = new Mac(new SM4MacEngine(parameter));
+		final Mac mac = new Mac(new SM4MacEngine(parameter));
 
 		// 原文
-		String testStr = "test中文";
+		final String testStr = "test中文";
 
-		String macHex1 = mac.digestHex(testStr);
+		final String macHex1 = mac.digestHex(testStr);
 		Assert.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
 	}
 }

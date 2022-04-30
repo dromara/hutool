@@ -24,7 +24,7 @@ public class LRUCache<K, V> extends ReentrantCache<K, V> {
 	 * 默认无超时
 	 * @param capacity 容量
 	 */
-	public LRUCache(int capacity) {
+	public LRUCache(final int capacity) {
 		this(capacity, 0);
 	}
 
@@ -33,7 +33,7 @@ public class LRUCache<K, V> extends ReentrantCache<K, V> {
 	 * @param capacity 容量
 	 * @param timeout 默认超时时间，单位：毫秒
 	 */
-	public LRUCache(int capacity, long timeout) {
+	public LRUCache(int capacity, final long timeout) {
 		if(Integer.MAX_VALUE == capacity) {
 			capacity -= 1;
 		}
@@ -56,7 +56,7 @@ public class LRUCache<K, V> extends ReentrantCache<K, V> {
 			return 0;
 		}
 		int count = 0;
-		Iterator<CacheObj<K, V>> values = cacheObjIter();
+		final Iterator<CacheObj<K, V>> values = cacheObjIter();
 		CacheObj<K, V> co;
 		while (values.hasNext()) {
 			co = values.next();

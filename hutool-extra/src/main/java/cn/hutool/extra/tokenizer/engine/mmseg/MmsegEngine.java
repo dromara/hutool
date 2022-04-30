@@ -34,12 +34,12 @@ public class MmsegEngine implements TokenizerEngine {
 	 *
 	 * @param mmSeg 模式{@link MMSeg}
 	 */
-	public MmsegEngine(MMSeg mmSeg) {
+	public MmsegEngine(final MMSeg mmSeg) {
 		this.mmSeg = mmSeg;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		this.mmSeg.reset(StrUtil.getReader(text));
 		return new MmsegResult(this.mmSeg);
 	}

@@ -13,35 +13,35 @@ public class ValidateException extends StatefulException {
 	public ValidateException() {
 	}
 
-	public ValidateException(String msg) {
+	public ValidateException(final String msg) {
 		super(msg);
 	}
 
-	public ValidateException(String messageTemplate, Object... params) {
+	public ValidateException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public ValidateException(Throwable throwable) {
+	public ValidateException(final Throwable throwable) {
 		super(throwable);
 	}
 
-	public ValidateException(String msg, Throwable throwable) {
+	public ValidateException(final String msg, final Throwable throwable) {
 		super(msg, throwable);
 	}
 
-	public ValidateException(int status, String msg) {
+	public ValidateException(final int status, final String msg) {
 		super(status, msg);
 	}
 
-	public ValidateException(int status, Throwable throwable) {
+	public ValidateException(final int status, final Throwable throwable) {
 		super(status, throwable);
 	}
 
-	public ValidateException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public ValidateException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public ValidateException(int status, String msg, Throwable throwable) {
+	public ValidateException(final int status, final String msg, final Throwable throwable) {
 		super(status, msg, throwable);
 	}
 }

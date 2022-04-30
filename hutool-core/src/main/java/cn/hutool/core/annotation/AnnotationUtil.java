@@ -33,7 +33,7 @@ public class AnnotationUtil {
 	 * @param annotationEle 注解元素
 	 * @return 组合注解元素
 	 */
-	public static CombinationAnnotationElement toCombination(AnnotatedElement annotationEle) {
+	public static CombinationAnnotationElement toCombination(final AnnotatedElement annotationEle) {
 		if (annotationEle instanceof CombinationAnnotationElement) {
 			return (CombinationAnnotationElement) annotationEle;
 		}
@@ -47,7 +47,7 @@ public class AnnotationUtil {
 	 * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
 	 * @return 注解对象
 	 */
-	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
+	public static Annotation[] getAnnotations(final AnnotatedElement annotationEle, final boolean isToCombination) {
 		return getAnnotations(annotationEle, isToCombination, (Predicate<Annotation>) null);
 	}
 
@@ -60,7 +60,7 @@ public class AnnotationUtil {
 	 * @return 注解对象数组
 	 * @since 5.8.0
 	 */
-	public static <T> T[] getCombinationAnnotations(AnnotatedElement annotationEle, Class<T> annotationType) {
+	public static <T> T[] getCombinationAnnotations(final AnnotatedElement annotationEle, final Class<T> annotationType) {
 		return getAnnotations(annotationEle, true, annotationType);
 	}
 
@@ -75,7 +75,7 @@ public class AnnotationUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
+	public static <T> T[] getAnnotations(final AnnotatedElement annotationEle, final boolean isToCombination, final Class<T> annotationType) {
 		final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
 				(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
@@ -95,7 +95,7 @@ public class AnnotationUtil {
 	 * @return 注解对象
 	 * @since 5.8.0
 	 */
-	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
+	public static Annotation[] getAnnotations(final AnnotatedElement annotationEle, final boolean isToCombination, final Predicate<Annotation> predicate) {
 		if (null == annotationEle) {
 			return null;
 		}
@@ -122,7 +122,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 */
-	public static <A extends Annotation> A getAnnotation(AnnotatedElement annotationEle, Class<A> annotationType) {
+	public static <A extends Annotation> A getAnnotation(final AnnotatedElement annotationEle, final Class<A> annotationType) {
 		return (null == annotationEle) ? null : toCombination(annotationEle).getAnnotation(annotationType);
 	}
 
@@ -134,7 +134,7 @@ public class AnnotationUtil {
 	 * @return 是否包含指定注解
 	 * @since 5.4.2
 	 */
-	public static boolean hasAnnotation(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) {
+	public static boolean hasAnnotation(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) {
 		return null != getAnnotation(annotationEle, annotationType);
 	}
 
@@ -148,7 +148,7 @@ public class AnnotationUtil {
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 */
-	public static <T> T getAnnotationValue(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) throws UtilException {
+	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
 		return getAnnotationValue(annotationEle, annotationType, "value");
 	}
 
@@ -163,7 +163,7 @@ public class AnnotationUtil {
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 */
-	public static <T> T getAnnotationValue(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType, String propertyName) throws UtilException {
+	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType, final String propertyName) throws UtilException {
 		final Annotation annotation = getAnnotation(annotationEle, annotationType);
 		if (null == annotation) {
 			return null;
@@ -185,7 +185,7 @@ public class AnnotationUtil {
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 */
-	public static Map<String, Object> getAnnotationValueMap(AnnotatedElement annotationEle, Class<? extends Annotation> annotationType) throws UtilException {
+	public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
 		final Annotation annotation = getAnnotation(annotationEle, annotationType);
 		if (null == annotation) {
 			return null;
@@ -204,7 +204,7 @@ public class AnnotationUtil {
 		});
 
 		final HashMap<String, Object> result = new HashMap<>(methods.length, 1);
-		for (Method method : methods) {
+		for (final Method method : methods) {
 			result.put(method.getName(), ReflectUtil.invoke(annotation, method));
 		}
 		return result;
@@ -216,7 +216,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @return 保留时间枚举
 	 */
-	public static RetentionPolicy getRetentionPolicy(Class<? extends Annotation> annotationType) {
+	public static RetentionPolicy getRetentionPolicy(final Class<? extends Annotation> annotationType) {
 		final Retention retention = annotationType.getAnnotation(Retention.class);
 		if (null == retention) {
 			return RetentionPolicy.CLASS;
@@ -230,7 +230,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @return 注解修饰的程序元素数组
 	 */
-	public static ElementType[] getTargetType(Class<? extends Annotation> annotationType) {
+	public static ElementType[] getTargetType(final Class<? extends Annotation> annotationType) {
 		final Target target = annotationType.getAnnotation(Target.class);
 		if (null == target) {
 			return new ElementType[]{ElementType.TYPE, //
@@ -252,7 +252,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @return 是否会保存到 Javadoc 文档中
 	 */
-	public static boolean isDocumented(Class<? extends Annotation> annotationType) {
+	public static boolean isDocumented(final Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Documented.class);
 	}
 
@@ -262,7 +262,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @return 是否会保存到 Javadoc 文档中
 	 */
-	public static boolean isInherited(Class<? extends Annotation> annotationType) {
+	public static boolean isInherited(final Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Inherited.class);
 	}
 
@@ -275,7 +275,7 @@ public class AnnotationUtil {
 	 * @since 5.5.2
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static void setValue(Annotation annotation, String annotationField, Object value) {
+	public static void setValue(final Annotation annotation, final String annotationField, final Object value) {
 		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
 		memberValues.put(annotationField, value);
 	}
@@ -290,7 +290,7 @@ public class AnnotationUtil {
 	 * @since 5.7.23
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
+	public static <T extends Annotation> T getAnnotationAlias(final AnnotatedElement annotationEle, final Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
 	}

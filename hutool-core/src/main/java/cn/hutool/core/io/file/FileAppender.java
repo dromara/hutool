@@ -49,7 +49,7 @@ public class FileAppender implements Serializable {
 	 * @param capacity      当行数积累多少条时刷入到文件
 	 * @param isNewLineMode 追加内容是否为新行
 	 */
-	public FileAppender(File destFile, int capacity, boolean isNewLineMode) {
+	public FileAppender(final File destFile, final int capacity, final boolean isNewLineMode) {
 		this(destFile, CharsetUtil.UTF_8, capacity, isNewLineMode);
 	}
 
@@ -61,7 +61,7 @@ public class FileAppender implements Serializable {
 	 * @param capacity      当行数积累多少条时刷入到文件
 	 * @param isNewLineMode 追加内容是否为新行
 	 */
-	public FileAppender(File destFile, Charset charset, int capacity, boolean isNewLineMode) {
+	public FileAppender(final File destFile, final Charset charset, final int capacity, final boolean isNewLineMode) {
 		this(destFile, charset, capacity, isNewLineMode, null);
 	}
 
@@ -74,7 +74,7 @@ public class FileAppender implements Serializable {
 	 * @param isNewLineMode 追加内容是否为新行
 	 * @param lock          是否加锁，添加则使用给定锁保护写出，保证线程安全，{@code null}则表示无锁
 	 */
-	public FileAppender(File destFile, Charset charset, int capacity, boolean isNewLineMode, Lock lock) {
+	public FileAppender(final File destFile, final Charset charset, final int capacity, final boolean isNewLineMode, final Lock lock) {
 		this.capacity = capacity;
 		this.list = new ArrayList<>(capacity);
 		this.isNewLineMode = isNewLineMode;
@@ -88,7 +88,7 @@ public class FileAppender implements Serializable {
 	 * @param line 行
 	 * @return this
 	 */
-	public FileAppender append(String line) {
+	public FileAppender append(final String line) {
 		if (list.size() >= capacity) {
 			flush();
 		}
@@ -110,8 +110,8 @@ public class FileAppender implements Serializable {
 	public FileAppender flush() {
 		this.lock.lock();
 		try{
-			try (PrintWriter pw = writer.getPrintWriter(true)) {
-				for (String str : list) {
+			try (final PrintWriter pw = writer.getPrintWriter(true)) {
+				for (final String str : list) {
 					pw.print(str);
 					if (isNewLineMode) {
 						pw.println();

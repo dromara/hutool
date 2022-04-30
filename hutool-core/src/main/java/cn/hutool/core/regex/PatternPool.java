@@ -184,7 +184,7 @@ public class PatternPool {
 	 * @param regex 正则表达式
 	 * @return {@link Pattern}
 	 */
-	public static Pattern get(String regex) {
+	public static Pattern get(final String regex) {
 		return get(regex, 0);
 	}
 
@@ -195,7 +195,7 @@ public class PatternPool {
 	 * @param flags 正则标识位集合 {@link Pattern}
 	 * @return {@link Pattern}
 	 */
-	public static Pattern get(String regex, int flags) {
+	public static Pattern get(final String regex, final int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
 		return POOL.computeIfAbsent(regexWithFlag, (key)-> Pattern.compile(regex, flags));
 	}
@@ -207,7 +207,7 @@ public class PatternPool {
 	 * @param flags 标识
 	 * @return 移除的{@link Pattern}，可能为{@code null}
 	 */
-	public static Pattern remove(String regex, int flags) {
+	public static Pattern remove(final String regex, final int flags) {
 		return POOL.remove(new RegexWithFlag(regex, flags));
 	}
 
@@ -235,7 +235,7 @@ public class PatternPool {
 		 * @param regex 正则
 		 * @param flag  标识
 		 */
-		public RegexWithFlag(String regex, int flag) {
+		public RegexWithFlag(final String regex, final int flag) {
 			this.regex = regex;
 			this.flag = flag;
 		}
@@ -250,7 +250,7 @@ public class PatternPool {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			if (this == obj) {
 				return true;
 			}
@@ -260,7 +260,7 @@ public class PatternPool {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			RegexWithFlag other = (RegexWithFlag) obj;
+			final RegexWithFlag other = (RegexWithFlag) obj;
 			if (flag != other.flag) {
 				return false;
 			}

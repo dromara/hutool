@@ -68,7 +68,7 @@ public class BeanPath implements Serializable{
 	 * @param expression 表达式
 	 * @return BeanPath
 	 */
-	public static BeanPath create(String expression) {
+	public static BeanPath create(final String expression) {
 		return new BeanPath(expression);
 	}
 
@@ -77,7 +77,7 @@ public class BeanPath implements Serializable{
 	 *
 	 * @param expression 表达式
 	 */
-	public BeanPath(String expression) {
+	public BeanPath(final String expression) {
 		init(expression);
 	}
 
@@ -87,7 +87,7 @@ public class BeanPath implements Serializable{
 	 * @param bean Bean对象或Map或List等
 	 * @return 值，如果对应值不存在，则返回null
 	 */
-	public Object get(Object bean) {
+	public Object get(final Object bean) {
 		return get(this.patternParts, bean, false);
 	}
 
@@ -104,7 +104,7 @@ public class BeanPath implements Serializable{
 	 * @param bean Bean、Map或List
 	 * @param value 值
 	 */
-	public void set(Object bean, Object value) {
+	public void set(final Object bean, final Object value) {
 		set(bean, this.patternParts, value);
 	}
 
@@ -122,7 +122,7 @@ public class BeanPath implements Serializable{
 	 * @param patternParts 表达式块列表
 	 * @param value 值
 	 */
-	private void set(Object bean, List<String> patternParts, Object value) {
+	private void set(final Object bean, final List<String> patternParts, final Object value) {
 		Object subBean = get(patternParts, bean, true);
 		if(null == subBean) {
 			set(bean, patternParts.subList(0, patternParts.size() - 1), new HashMap<>());
@@ -141,7 +141,7 @@ public class BeanPath implements Serializable{
 	 * @param ignoreLast 是否忽略最后一个值，忽略最后一个值则用于set，否则用于read
 	 * @return 值，如果对应值不存在，则返回null
 	 */
-	private Object get(List<String> patternParts, Object bean, boolean ignoreLast) {
+	private Object get(final List<String> patternParts, final Object bean, final boolean ignoreLast) {
 		int length = patternParts.size();
 		if (ignoreLast) {
 			length--;
@@ -166,7 +166,7 @@ public class BeanPath implements Serializable{
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Object getFieldValue(Object bean, String expression) {
+	private static Object getFieldValue(final Object bean, final String expression) {
 		if (StrUtil.isBlank(expression)) {
 			return null;
 		}
@@ -174,8 +174,8 @@ public class BeanPath implements Serializable{
 		if (StrUtil.contains(expression, ':')) {
 			// [start:end:step] 模式
 			final List<String> parts = StrUtil.splitTrim(expression, ':');
-			int start = Integer.parseInt(parts.get(0));
-			int end = Integer.parseInt(parts.get(1));
+			final int start = Integer.parseInt(parts.get(0));
+			final int end = Integer.parseInt(parts.get(1));
 			int step = 1;
 			if (3 == parts.size()) {
 				step = Integer.parseInt(parts.get(2));
@@ -218,9 +218,9 @@ public class BeanPath implements Serializable{
 	 *
 	 * @param expression 表达式
 	 */
-	private void init(String expression) {
-		List<String> localPatternParts = new ArrayList<>();
-		int length = expression.length();
+	private void init(final String expression) {
+		final List<String> localPatternParts = new ArrayList<>();
+		final int length = expression.length();
 
 		final StrBuilder builder = StrUtil.strBuilder();
 		char c;
@@ -281,7 +281,7 @@ public class BeanPath implements Serializable{
 	 * @param expression 表达式
 	 * @return 表达式
 	 */
-	private static String unWrapIfPossible(CharSequence expression) {
+	private static String unWrapIfPossible(final CharSequence expression) {
 		if (StrUtil.containsAny(expression, " = ", " > ", " < ", " like ", ",")) {
 			return expression.toString();
 		}

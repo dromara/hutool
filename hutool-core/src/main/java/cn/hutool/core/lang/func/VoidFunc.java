@@ -31,10 +31,10 @@ public interface VoidFunc<P> extends Serializable {
 	 * @param parameters 参数列表
 	 */
 	@SuppressWarnings("unchecked")
-	default void callWithRuntimeException(P... parameters){
+	default void callWithRuntimeException(final P... parameters){
 		try {
 			call(parameters);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

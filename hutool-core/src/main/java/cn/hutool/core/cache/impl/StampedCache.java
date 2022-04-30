@@ -22,7 +22,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	protected final StampedLock lock = new StampedLock();
 
 	@Override
-	public void put(K key, V object, long timeout) {
+	public void put(final K key, final V object, final long timeout) {
 		final long stamp = lock.writeLock();
 		try {
 			putWithoutLock(key, object, timeout);
@@ -32,7 +32,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	}
 
 	@Override
-	public boolean containsKey(K key) {
+	public boolean containsKey(final K key) {
 		final long stamp = lock.readLock();
 		try {
 			// 不存在或已移除
@@ -55,7 +55,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	}
 
 	@Override
-	public V get(K key, boolean isUpdateLastAccess) {
+	public V get(final K key, final boolean isUpdateLastAccess) {
 		// 尝试读取缓存，使用乐观读锁
 		long stamp = lock.tryOptimisticRead();
 		CacheObj<K, V> co = getWithoutLock(key);
@@ -106,7 +106,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	}
 
 	@Override
-	public void remove(K key) {
+	public void remove(final K key) {
 		remove(key, false);
 	}
 
@@ -126,7 +126,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	 * @param key           键
 	 * @param withMissCount 是否计数丢失数
 	 */
-	private void remove(K key, boolean withMissCount) {
+	private void remove(final K key, final boolean withMissCount) {
 		final long stamp = lock.writeLock();
 		CacheObj<K, V> co;
 		try {

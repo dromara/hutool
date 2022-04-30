@@ -67,7 +67,7 @@ public class XML {
 	 * @return A JSONObject containing the structured data from the XML string.
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
-	public static JSONObject toJSONObject(String string) throws JSONException {
+	public static JSONObject toJSONObject(final String string) throws JSONException {
 		return toJSONObject(string, false);
 	}
 
@@ -82,7 +82,7 @@ public class XML {
 	 * @return A JSONObject containing the structured data from the XML string.
 	 * @throws JSONException Thrown if there is an errors while parsing the string
 	 */
-	public static JSONObject toJSONObject(String string, boolean keepStrings) throws JSONException {
+	public static JSONObject toJSONObject(final String string, final boolean keepStrings) throws JSONException {
 		return toJSONObject(new JSONObject(), string, keepStrings);
 	}
 
@@ -97,7 +97,7 @@ public class XML {
 	 * @throws JSONException 解析异常
 	 * @since 5.3.1
 	 */
-	public static JSONObject toJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
+	public static JSONObject toJSONObject(final JSONObject jo, final String xmlStr, final boolean keepStrings) throws JSONException {
 		JSONXMLParser.parseJSONObject(jo, xmlStr, keepStrings);
 		return jo;
 	}
@@ -109,7 +109,7 @@ public class XML {
 	 * @return XML字符串
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object) throws JSONException {
+	public static String toXml(final Object object) throws JSONException {
 		return toXml(object, null);
 	}
 
@@ -121,7 +121,7 @@ public class XML {
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object, String tagName) throws JSONException {
+	public static String toXml(final Object object, final String tagName) throws JSONException {
 		return toXml(object, tagName, "content");
 	}
 
@@ -134,7 +134,7 @@ public class XML {
 	 * @return A string.
 	 * @throws JSONException JSON解析异常
 	 */
-	public static String toXml(Object object, String tagName, String... contentKeys) throws JSONException {
+	public static String toXml(final Object object, final String tagName, final String... contentKeys) throws JSONException {
 		return JSONXMLSerializer.toXml(object, tagName, contentKeys);
 	}
 }

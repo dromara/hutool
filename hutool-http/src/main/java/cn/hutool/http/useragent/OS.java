@@ -60,7 +60,7 @@ public class OS extends UserAgentInfo {
 	 * @param versionRegex 匹配版本的正则
 	 * @since 5.7.4
 	 */
-	synchronized public static void addCustomOs(String name, String regex, String versionRegex) {
+	synchronized public static void addCustomOs(final String name, final String regex, final String versionRegex) {
 		oses.add(new OS(name, regex, versionRegex));
 	}
 
@@ -72,7 +72,7 @@ public class OS extends UserAgentInfo {
 	 * @param name  系统名称
 	 * @param regex 关键字或表达式
 	 */
-	public OS(String name, String regex) {
+	public OS(final String name, final String regex) {
 		this(name, regex, null);
 	}
 
@@ -84,7 +84,7 @@ public class OS extends UserAgentInfo {
 	 * @param versionRegex 版本正则表达式
 	 * @since 5.7.4
 	 */
-	public OS(String name, String regex, String versionRegex) {
+	public OS(final String name, final String regex, final String versionRegex) {
 		super(name, regex);
 		if (null != versionRegex) {
 			this.versionPattern = Pattern.compile(versionRegex, Pattern.CASE_INSENSITIVE);
@@ -97,7 +97,7 @@ public class OS extends UserAgentInfo {
 	 * @param userAgentString User-Agent字符串
 	 * @return 版本
 	 */
-	public String getVersion(String userAgentString) {
+	public String getVersion(final String userAgentString) {
 		if(isUnknown() || null == this.versionPattern){
 			// 无版本信息
 			return null;

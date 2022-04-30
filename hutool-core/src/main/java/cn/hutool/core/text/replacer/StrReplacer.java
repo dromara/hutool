@@ -26,7 +26,7 @@ public abstract class StrReplacer implements Replacer<CharSequence>, Serializabl
 	protected abstract int replace(CharSequence str, int pos, StrBuilder out);
 
 	@Override
-	public CharSequence replace(CharSequence t) {
+	public CharSequence replace(final CharSequence t) {
 		final int len = t.length();
 		final StrBuilder builder = StrBuilder.create(len);
 		int pos = 0;//当前位置

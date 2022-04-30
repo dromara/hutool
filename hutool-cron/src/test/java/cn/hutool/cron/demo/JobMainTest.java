@@ -7,7 +7,7 @@ import cn.hutool.cron.CronUtil;
  */
 public class JobMainTest {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		CronUtil.setMatchSecond(true);
 		CronUtil.start(false);
 	}

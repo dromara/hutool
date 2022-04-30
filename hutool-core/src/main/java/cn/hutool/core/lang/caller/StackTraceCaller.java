@@ -22,7 +22,7 @@ public class StackTraceCaller implements Caller, Serializable {
 		final String className = stackTrace[OFFSET + 1].getClassName();
 		try {
 			return Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new UtilException(e, "[{}] not found!", className);
 		}
 	}
@@ -36,13 +36,13 @@ public class StackTraceCaller implements Caller, Serializable {
 		final String className = stackTrace[OFFSET + 2].getClassName();
 		try {
 			return Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new UtilException(e, "[{}] not found!", className);
 		}
 	}
 
 	@Override
-	public Class<?> getCaller(int depth) {
+	public Class<?> getCaller(final int depth) {
 		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		if (OFFSET + depth >= stackTrace.length) {
 			return null;
@@ -50,13 +50,13 @@ public class StackTraceCaller implements Caller, Serializable {
 		final String className = stackTrace[OFFSET + depth].getClassName();
 		try {
 			return Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new UtilException(e, "[{}] not found!", className);
 		}
 	}
 
 	@Override
-	public boolean isCalledBy(Class<?> clazz) {
+	public boolean isCalledBy(final Class<?> clazz) {
 		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		for (final StackTraceElement element : stackTrace) {
 			if (element.getClassName().equals(clazz.getName())) {

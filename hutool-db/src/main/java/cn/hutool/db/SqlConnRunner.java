@@ -35,7 +35,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @param dialect 方言
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner create(Dialect dialect) {
+	public static SqlConnRunner create(final Dialect dialect) {
 		return new SqlConnRunner(dialect);
 	}
 
@@ -45,7 +45,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @param ds 数据源
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner create(DataSource ds) {
+	public static SqlConnRunner create(final DataSource ds) {
 		return new SqlConnRunner(DialectFactory.getDialect(ds));
 	}
 
@@ -55,7 +55,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @param driverClassName 驱动类名
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner create(String driverClassName) {
+	public static SqlConnRunner create(final String driverClassName) {
 		return new SqlConnRunner(driverClassName);
 	}
 
@@ -66,7 +66,7 @@ public class SqlConnRunner extends DialectRunner {
 	 *
 	 * @param dialect 方言
 	 */
-	public SqlConnRunner(Dialect dialect) {
+	public SqlConnRunner(final Dialect dialect) {
 		super(dialect);
 	}
 
@@ -75,7 +75,7 @@ public class SqlConnRunner extends DialectRunner {
 	 *
 	 * @param driverClassName 驱动类名，用于识别方言
 	 */
-	public SqlConnRunner(String driverClassName) {
+	public SqlConnRunner(final String driverClassName) {
 		super(driverClassName);
 	}
 	//------------------------------------------------------- Constructor end
@@ -93,7 +93,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int[] insert(Connection conn, Collection<Entity> records) throws SQLException {
+	public int[] insert(final Connection conn, final Collection<Entity> records) throws SQLException {
 		return insert(conn, records.toArray(new Entity[0]));
 	}
 
@@ -106,7 +106,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int insert(Connection conn, Entity record) throws SQLException {
+	public int insert(final Connection conn, final Entity record) throws SQLException {
 		return insert(conn, new Entity[]{record})[0];
 	}
 
@@ -119,7 +119,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Object> insertForGeneratedKeys(Connection conn, Entity record) throws SQLException {
+	public List<Object> insertForGeneratedKeys(final Connection conn, final Entity record) throws SQLException {
 		return insert(conn, record, HandleHelper::handleRowToList);
 	}
 
@@ -132,13 +132,13 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 自增主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public Long insertForGeneratedKey(Connection conn, Entity record) throws SQLException {
+	public Long insertForGeneratedKey(final Connection conn, final Entity record) throws SQLException {
 		return insert(conn, record, (rs) -> {
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
 					generatedKey = rs.getLong(1);
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					// 自增主键不为数字或者为Oracle的rowid，跳过
 				}
 			}
@@ -158,7 +158,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Connection conn, final Collection<String> fields, final Entity where, final RsHandler<T> rsh) throws SQLException {
 		return find(conn, Query.of(where).setFields(fields), rsh);
 	}
 
@@ -174,7 +174,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
+	public <T> T find(final Connection conn, final Entity where, final RsHandler<T> rsh, final String... fields) throws SQLException {
 		return find(conn, CollUtil.newArrayList(fields), where, rsh);
 	}
 
@@ -187,7 +187,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.1
 	 */
-	public List<Entity> find(Connection conn, Entity where) throws SQLException {
+	public List<Entity> find(final Connection conn, final Entity where) throws SQLException {
 		return find(conn, where.getFieldNames(), where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -199,7 +199,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findAll(Connection conn, Entity where) throws SQLException {
+	public List<Entity> findAll(final Connection conn, final Entity where) throws SQLException {
 		return find(conn, where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -211,7 +211,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findAll(Connection conn, String tableName) throws SQLException {
+	public List<Entity> findAll(final Connection conn, final String tableName) throws SQLException {
 		return findAll(conn, Entity.create(tableName));
 	}
 
@@ -225,7 +225,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findBy(Connection conn, String tableName, String field, Object value) throws SQLException {
+	public List<Entity> findBy(final Connection conn, final String tableName, final String field, final Object value) throws SQLException {
 		return findAll(conn, Entity.create(tableName).set(field, value));
 	}
 
@@ -240,7 +240,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findLike(Connection conn, String tableName, String field, String value, LikeType likeType) throws SQLException {
+	public List<Entity> findLike(final Connection conn, final String tableName, final String field, final String value, final LikeType likeType) throws SQLException {
 		return findAll(conn, Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 
@@ -254,7 +254,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findIn(Connection conn, String tableName, String field, Object... values) throws SQLException {
+	public List<Entity> findIn(final Connection conn, final String tableName, final String field, final Object... values) throws SQLException {
 		return findAll(conn, Entity.create(tableName).set(field, values));
 	}
 
@@ -268,7 +268,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @throws SQLException SQL异常
 	 * @since 5.6.6
 	 */
-	public long count(Connection conn, CharSequence selectSql, Object... params) throws SQLException {
+	public long count(final Connection conn, final CharSequence selectSql, final Object... params) throws SQLException {
 		return count(conn, SqlBuilder.of(selectSql).addParams(params));
 	}
 
@@ -286,7 +286,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(Connection conn, Collection<String> fields, Entity where, int pageNumber, int numPerPage, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Connection conn, final Collection<String> fields, final Entity where, final int pageNumber, final int numPerPage, final RsHandler<T> rsh) throws SQLException {
 		return page(conn, Query.of(where).setFields(fields).setPage(new Page(pageNumber, numPerPage)), rsh);
 	}
 
@@ -301,7 +301,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public PageResult<Entity> page(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException {
+	public PageResult<Entity> page(final Connection conn, final SqlBuilder sqlBuilder, final Page page) throws SQLException {
 		final PageResultHandler pageResultHandler = new PageResultHandler(
 				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder)),
 				this.caseInsensitive);
@@ -320,7 +320,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
+	public PageResult<Entity> page(final Connection conn, final Collection<String> fields, final Entity where, final int page, final int numPerPage) throws SQLException {
 		return page(conn, fields, where, new Page(page, numPerPage));
 	}
 
@@ -334,7 +334,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Connection conn, Entity where, Page page) throws SQLException {
+	public PageResult<Entity> page(final Connection conn, final Entity where, final Page page) throws SQLException {
 		return this.page(conn, null, where, page);
 	}
 
@@ -349,7 +349,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
+	public PageResult<Entity> page(final Connection conn, final Collection<String> fields, final Entity where, final Page page) throws SQLException {
 		final PageResultHandler pageResultHandler = new PageResultHandler(
 				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, where)),
 				this.caseInsensitive);
@@ -369,7 +369,7 @@ public class SqlConnRunner extends DialectRunner {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(Connection conn, Collection<String> fields, Entity where, Page page, RsHandler<T> handler) throws SQLException {
+	public <T> T page(final Connection conn, final Collection<String> fields, final Entity where, final Page page, final RsHandler<T> handler) throws SQLException {
 		return this.page(conn, Query.of(where).setFields(fields).setPage(page), handler);
 	}
 	//---------------------------------------------------------------------------- CRUD end

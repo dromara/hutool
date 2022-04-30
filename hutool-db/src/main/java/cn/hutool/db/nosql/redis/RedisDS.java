@@ -43,7 +43,7 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param group 配置文件中配置分组
 	 * @return RedisDS
 	 */
-	public static RedisDS create(String group) {
+	public static RedisDS create(final String group) {
 		return new RedisDS(group);
 	}
 
@@ -54,7 +54,7 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param group 配置文件中配置分组
 	 * @return RedisDS
 	 */
-	public static RedisDS create(Setting setting, String group) {
+	public static RedisDS create(final Setting setting, final String group) {
 		return new RedisDS(setting, group);
 	}
 	// --------------------------------------------------------------------------------- Static method end
@@ -71,7 +71,7 @@ public class RedisDS implements Closeable, Serializable {
 	 *
 	 * @param group 配置文件中配置分组
 	 */
-	public RedisDS(String group) {
+	public RedisDS(final String group) {
 		this(null, group);
 	}
 
@@ -81,7 +81,7 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param setting 配置文件
 	 * @param group 配置文件中配置分组
 	 */
-	public RedisDS(Setting setting, String group) {
+	public RedisDS(final Setting setting, final String group) {
 		this.setting = setting;
 		init(group);
 	}
@@ -92,7 +92,7 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param group Redis服务器信息分组
 	 * @return this
 	 */
-	public RedisDS init(String group) {
+	public RedisDS init(final String group) {
 		if (null == setting) {
 			setting = new Setting(REDIS_CONFIG_PATH, true);
 		}
@@ -150,8 +150,8 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param key 键
 	 * @return 值
 	 */
-	public String getStr(String key) {
-		try (Jedis jedis = getJedis()) {
+	public String getStr(final String key) {
+		try (final Jedis jedis = getJedis()) {
 			return jedis.get(key);
 		}
 	}
@@ -163,8 +163,8 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param value 值
 	 * @return 状态码
 	 */
-	public String setStr(String key, String value) {
-		try (Jedis jedis = getJedis()) {
+	public String setStr(final String key, final String value) {
+		try (final Jedis jedis = getJedis()) {
 			return jedis.set(key, value);
 		}
 	}
@@ -175,8 +175,8 @@ public class RedisDS implements Closeable, Serializable {
 	 * @param keys 需要删除值对应的键列表
 	 * @return 删除个数，0表示无key可删除
 	 */
-	public Long del(String... keys) {
-		try (Jedis jedis = getJedis()) {
+	public Long del(final String... keys) {
+		try (final Jedis jedis = getJedis()) {
 			return jedis.del(keys);
 		}
 	}

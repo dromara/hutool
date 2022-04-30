@@ -67,7 +67,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	// ---------------------------------------------------------------- put start
 	@Override
-	public void put(K key, V object) {
+	public void put(final K key, final V object) {
 		put(key, object, timeout);
 	}
 
@@ -79,8 +79,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @param timeout 超时时长
 	 * @since 4.5.16
 	 */
-	protected void putWithoutLock(K key, V object, long timeout) {
-		CacheObj<K, V> co = new CacheObj<>(key, object, timeout);
+	protected void putWithoutLock(final K key, final V object, final long timeout) {
+		final CacheObj<K, V> co = new CacheObj<>(key, object, timeout);
 		if (timeout != 0) {
 			existCustomTimeout = true;
 		}
@@ -107,7 +107,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
+	public V get(final K key, final boolean isUpdateLastAccess, final Func0<V> supplier) {
 		V v = get(key, isUpdateLastAccess);
 		if (null == v && null != supplier) {
 			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
@@ -119,7 +119,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				if (null == co || co.isExpired()) {
 					try {
 						v = supplier.call();
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						throw new RuntimeException(e);
 					}
 					put(key, v, this.timeout);
@@ -140,14 +140,14 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return {@link CacheObj}
 	 * @since 5.8.0
 	 */
-	protected CacheObj<K, V> getWithoutLock(K key){
+	protected CacheObj<K, V> getWithoutLock(final K key){
 		return this.cacheMap.get(MutableObj.of(key));
 	}
 	// ---------------------------------------------------------------- get end
 
 	@Override
 	public Iterator<V> iterator() {
-		CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();
+		final CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();
 		return new CacheValuesIterator<>(copiedIterator);
 	}
 	// ---------------------------------------------------------------- prune start
@@ -213,7 +213,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @since 5.5.2
 	 */
 	@Override
-	public AbstractCache<K, V> setListener(CacheListener<K, V> listener) {
+	public AbstractCache<K, V> setListener(final CacheListener<K, V> listener) {
 		this.listener = listener;
 		return this;
 	}
@@ -235,7 +235,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @param key          键
 	 * @param cachedObject 被缓存的对象
 	 */
-	protected void onRemove(K key, V cachedObject) {
+	protected void onRemove(final K key, final V cachedObject) {
 		final CacheListener<K, V> listener = this.listener;
 		if (null != listener) {
 			listener.onRemove(key, cachedObject);
@@ -249,7 +249,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @param withMissCount 是否计数丢失数
 	 * @return 移除的对象，无返回null
 	 */
-	protected CacheObj<K, V> removeWithoutLock(K key, boolean withMissCount) {
+	protected CacheObj<K, V> removeWithoutLock(final K key, final boolean withMissCount) {
 		final CacheObj<K, V> co = cacheMap.remove(MutableObj.of(key));
 		if (withMissCount) {
 			// 在丢失计数有效的情况下，移除一般为get时的超时操作，此处应该丢失数+1

@@ -19,10 +19,10 @@ public class AsyncUtil {
 	 * @param tasks 并行任务
 	 * @throws UndeclaredThrowableException 未受检异常
 	 */
-	public static void waitAll(CompletableFuture<?>... tasks) {
+	public static void waitAll(final CompletableFuture<?>... tasks) {
 		try {
 			CompletableFuture.allOf(tasks).get();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (final InterruptedException | ExecutionException e) {
 			throw new ThreadException(e);
 		}
 	}
@@ -36,10 +36,10 @@ public class AsyncUtil {
 	 * @throws UndeclaredThrowableException 未受检异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T waitAny(CompletableFuture<?>... tasks) {
+	public static <T> T waitAny(final CompletableFuture<?>... tasks) {
 		try {
 			return (T) CompletableFuture.anyOf(tasks).get();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (final InterruptedException | ExecutionException e) {
 			throw new ThreadException(e);
 		}
 	}
@@ -52,10 +52,10 @@ public class AsyncUtil {
 	 * @return 任务返回值
 	 * @throws RuntimeException 未受检异常
 	 */
-	public static <T> T get(CompletableFuture<T> task) {
+	public static <T> T get(final CompletableFuture<T> task) {
 		try {
 			return task.get();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (final InterruptedException | ExecutionException e) {
 			throw new ThreadException(e);
 		}
 	}

@@ -56,7 +56,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @param ds      数据源
 	 * @param dialect 数据库方言
 	 */
-	public AbstractDb(DataSource ds, Dialect dialect) {
+	public AbstractDb(final DataSource ds, final Dialect dialect) {
 		this.ds = ds;
 		this.runner = new SqlConnRunner(dialect);
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.1.1
 	 */
-	public List<Entity> query(String sql, Map<String, Object> params) throws SQLException {
+	public List<Entity> query(final String sql, final Map<String, Object> params) throws SQLException {
 		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
@@ -100,7 +100,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.1.1
 	 */
-	public List<Entity> query(String sql, Object... params) throws SQLException {
+	public List<Entity> query(final String sql, final Object... params) throws SQLException {
 		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
@@ -115,7 +115,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> query(String sql, Class<T> beanClass, Object... params) throws SQLException {
+	public <T> List<T> query(final String sql, final Class<T> beanClass, final Object... params) throws SQLException {
 		return query(sql, new BeanListHandler<>(beanClass), params);
 	}
 
@@ -127,7 +127,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public Entity queryOne(String sql, Object... params) throws SQLException {
+	public Entity queryOne(final String sql, final Object... params) throws SQLException {
 		return query(sql, new EntityHandler(this.caseInsensitive), params);
 	}
 
@@ -139,7 +139,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public Number queryNumber(String sql, Object... params) throws SQLException {
+	public Number queryNumber(final String sql, final Object... params) throws SQLException {
 		return query(sql, new NumberHandler(), params);
 	}
 
@@ -151,7 +151,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public String queryString(String sql, Object... params) throws SQLException {
+	public String queryString(final String sql, final Object... params) throws SQLException {
 		return query(sql, new StringHandler(), params);
 	}
 
@@ -165,7 +165,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T query(String sql, RsHandler<T> rsh, Object... params) throws SQLException {
+	public <T> T query(final String sql, final RsHandler<T> rsh, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -186,7 +186,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.2.2
 	 */
-	public <T> T query(String sql, RsHandler<T> rsh, Map<String, Object> paramMap) throws SQLException {
+	public <T> T query(final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -207,7 +207,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public <T> T query(Func1<Connection, PreparedStatement> statementFunc, RsHandler<T> rsh) throws SQLException {
+	public <T> T query(final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -226,7 +226,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 影响行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int execute(String sql, Object... params) throws SQLException {
+	public int execute(final String sql, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -245,7 +245,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public Long executeForGeneratedKey(String sql, Object... params) throws SQLException {
+	public Long executeForGeneratedKey(final String sql, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -264,7 +264,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.4.2
 	 */
-	public int[] executeBatch(String sql, Iterable<Object[]> paramsBatch) throws SQLException {
+	public int[] executeBatch(final String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -282,7 +282,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public int[] executeBatch(String... sqls) throws SQLException {
+	public int[] executeBatch(final String... sqls) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -300,7 +300,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.4.2
 	 */
-	public int[] executeBatch(Iterable<String> sqls) throws SQLException {
+	public int[] executeBatch(final Iterable<String> sqls) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -319,7 +319,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int insert(Entity record) throws SQLException {
+	public int insert(final Entity record) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -339,7 +339,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public int insertOrUpdate(Entity record, String... keys) throws SQLException {
+	public int insertOrUpdate(final Entity record, final String... keys) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -359,7 +359,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.21
 	 */
-	public int upsert(Entity record, String... keys) throws SQLException {
+	public int upsert(final Entity record, final String... keys) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -378,7 +378,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int[] insert(Collection<Entity> records) throws SQLException {
+	public int[] insert(final Collection<Entity> records) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -395,7 +395,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Object> insertForGeneratedKeys(Entity record) throws SQLException {
+	public List<Object> insertForGeneratedKeys(final Entity record) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -412,7 +412,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public Long insertForGeneratedKey(Entity record) throws SQLException {
+	public Long insertForGeneratedKey(final Entity record) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -431,7 +431,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 删除行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int del(String tableName, String field, Object value) throws SQLException {
+	public int del(final String tableName, final String field, final Object value) throws SQLException {
 		return del(Entity.create(tableName).set(field, value));
 	}
 
@@ -442,7 +442,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 影响行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int del(Entity where) throws SQLException {
+	public int del(final Entity where) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -461,7 +461,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 影响行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int update(Entity record, Entity where) throws SQLException {
+	public int update(final Entity record, final Entity where) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -484,7 +484,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> Entity get(String tableName, String field, T value) throws SQLException {
+	public <T> Entity get(final String tableName, final String field, final T value) throws SQLException {
 		return this.get(Entity.create(tableName).set(field, value));
 	}
 
@@ -495,7 +495,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */
-	public Entity get(Entity where) throws SQLException {
+	public Entity get(final Entity where) throws SQLException {
 		return find(where.getFieldNames(), where, new EntityHandler(this.caseInsensitive));
 
 	}
@@ -512,7 +512,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Collection<String> fields, final Entity where, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -532,7 +532,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.16
 	 */
-	public List<Entity> find(Collection<String> fields, Entity where) throws SQLException {
+	public List<Entity> find(final Collection<String> fields, final Entity where) throws SQLException {
 		return find(fields, where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -547,7 +547,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.0
 	 */
-	public <T> T find(Query query, RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Query query, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -568,7 +568,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
+	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws SQLException {
 		return find(CollUtil.newArrayList(fields), where, rsh);
 	}
 
@@ -581,7 +581,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.1
 	 */
-	public List<Entity> find(Entity where) throws SQLException {
+	public List<Entity> find(final Entity where) throws SQLException {
 		return find(where.getFieldNames(), where, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -596,7 +596,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> find(Entity where, Class<T> beanClass) throws SQLException {
+	public <T> List<T> find(final Entity where, final Class<T> beanClass) throws SQLException {
 		return find(where.getFieldNames(), where, BeanListHandler.create(beanClass));
 	}
 
@@ -608,7 +608,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findAll(Entity where) throws SQLException {
+	public List<Entity> findAll(final Entity where) throws SQLException {
 		return find(where, EntityListHandler.create());
 	}
 
@@ -623,7 +623,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> List<T> findAll(Entity where, Class<T> beanClass) throws SQLException {
+	public <T> List<T> findAll(final Entity where, final Class<T> beanClass) throws SQLException {
 		return find(where, BeanListHandler.create(beanClass));
 	}
 
@@ -634,7 +634,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findAll(String tableName) throws SQLException {
+	public List<Entity> findAll(final String tableName) throws SQLException {
 		return findAll(Entity.create(tableName));
 	}
 
@@ -647,7 +647,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findBy(String tableName, String field, Object value) throws SQLException {
+	public List<Entity> findBy(final String tableName, final String field, final Object value) throws SQLException {
 		return findAll(Entity.create(tableName).set(field, value));
 	}
 
@@ -660,7 +660,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.0
 	 */
-	public List<Entity> findBy(String tableName, Condition... wheres) throws SQLException {
+	public List<Entity> findBy(final String tableName, final Condition... wheres) throws SQLException {
 		final Query query = new Query(wheres, tableName);
 		return find(query, new EntityListHandler(this.caseInsensitive));
 	}
@@ -675,7 +675,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public List<Entity> findLike(String tableName, String field, String value, LikeType likeType) throws SQLException {
+	public List<Entity> findLike(final String tableName, final String field, final String value, final LikeType likeType) throws SQLException {
 		return findAll(Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 
@@ -686,7 +686,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
 	 */
-	public long count(Entity where) throws SQLException {
+	public long count(final Entity where) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -703,7 +703,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
 	 */
-	public long count(SqlBuilder sql) throws SQLException {
+	public long count(final SqlBuilder sql) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -722,7 +722,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.6.6
 	 */
-	public long count(CharSequence selectSql, Object... params) throws SQLException {
+	public long count(final CharSequence selectSql, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -745,7 +745,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(Collection<String> fields, Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Collection<String> fields, final Entity where, final int page, final int numPerPage, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -768,7 +768,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> T page(Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Entity where, final int page, final int numPerPage, final RsHandler<T> rsh) throws SQLException {
 		return page(where, new Page(page, numPerPage), rsh);
 	}
 
@@ -783,7 +783,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public List<Entity> pageForEntityList(Entity where, int page, int numPerPage) throws SQLException {
+	public List<Entity> pageForEntityList(final Entity where, final int page, final int numPerPage) throws SQLException {
 		return pageForEntityList(where, new Page(page, numPerPage));
 	}
 
@@ -797,7 +797,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public List<Entity> pageForEntityList(Entity where, Page page) throws SQLException {
+	public List<Entity> pageForEntityList(final Entity where, final Page page) throws SQLException {
 		return page(where, page, new EntityListHandler(this.caseInsensitive));
 	}
 
@@ -813,7 +813,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public <T> T page(Entity where, Page page, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Entity where, final Page page, final RsHandler<T> rsh) throws SQLException {
 		return page(where.getFieldNames(), where, page, rsh);
 	}
 
@@ -829,7 +829,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(Collection<String> fields, Entity where, Page page, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Collection<String> fields, final Entity where, final Page page, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -851,7 +851,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.6.6
 	 */
-	public <T> T page(CharSequence sql, Page page, RsHandler<T> rsh, Object... params) throws SQLException {
+	public <T> T page(final CharSequence sql, final Page page, final RsHandler<T> rsh, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -871,7 +871,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(SqlBuilder sql, Page page, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final SqlBuilder sql, final Page page, final RsHandler<T> rsh) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -891,7 +891,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public PageResult<Entity> page(CharSequence sql, Page page, Object... params) throws SQLException {
+	public PageResult<Entity> page(final CharSequence sql, final Page page, final Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -912,7 +912,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Collection<String> fields, Entity where, int pageNumber, int pageSize) throws SQLException {
+	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final int pageNumber, final int pageSize) throws SQLException {
 		return page(fields, where, new Page(pageNumber, pageSize));
 	}
 
@@ -926,7 +926,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Collection<String> fields, Entity where, Page page) throws SQLException {
+	public PageResult<Entity> page(final Collection<String> fields, final Entity where, final Page page) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -947,7 +947,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
 	 */
-	public PageResult<Entity> page(Entity where, int page, int numPerPage) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final int page, final int numPerPage) throws SQLException {
 		return this.page(where, new Page(page, numPerPage));
 	}
 
@@ -960,7 +960,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return 分页结果集
 	 * @throws SQLException SQL执行异常
 	 */
-	public PageResult<Entity> page(Entity where, Page page) throws SQLException {
+	public PageResult<Entity> page(final Entity where, final Page page) throws SQLException {
 		return this.page(where.getFieldNames(), where, page);
 	}
 	// ---------------------------------------------------------------------------- CRUD end
@@ -974,7 +974,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @param caseInsensitive 否在结果中忽略大小写
 	 * @since 5.2.4
 	 */
-	public void setCaseInsensitive(boolean caseInsensitive) {
+	public void setCaseInsensitive(final boolean caseInsensitive) {
 		this.caseInsensitive = caseInsensitive;
 	}
 
@@ -992,7 +992,7 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param runner {@link SqlConnRunner}
 	 */
-	public void setRunner(SqlConnRunner runner) {
+	public void setRunner(final SqlConnRunner runner) {
 		this.runner = runner;
 	}
 
@@ -1003,7 +1003,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractDb setWrapper(Character wrapperChar) {
+	public AbstractDb setWrapper(final Character wrapperChar) {
 		return setWrapper(new Wrapper(wrapperChar));
 	}
 
@@ -1014,7 +1014,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractDb setWrapper(Wrapper wrapper) {
+	public AbstractDb setWrapper(final Wrapper wrapper) {
 		this.runner.setWrapper(wrapper);
 		return this;
 	}
@@ -1040,7 +1040,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException       获取元数据信息失败
 	 * @throws DbRuntimeException 不支持事务
 	 */
-	protected void checkTransactionSupported(Connection conn) throws SQLException, DbRuntimeException {
+	protected void checkTransactionSupported(final Connection conn) throws SQLException, DbRuntimeException {
 		if (null == isSupportTransaction) {
 			isSupportTransaction = conn.getMetaData().supportsTransactions();
 		}

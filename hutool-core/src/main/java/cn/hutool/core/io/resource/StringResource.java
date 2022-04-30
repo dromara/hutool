@@ -20,7 +20,7 @@ public class StringResource extends CharSequenceResource {
 	 *
 	 * @param data 资源数据
 	 */
-	public StringResource(String data) {
+	public StringResource(final String data) {
 		super(data, null);
 	}
 
@@ -30,7 +30,7 @@ public class StringResource extends CharSequenceResource {
 	 * @param data 资源数据
 	 * @param name 资源名称
 	 */
-	public StringResource(String data, String name) {
+	public StringResource(final String data, final String name) {
 		super(data, name, CharsetUtil.UTF_8);
 	}
 
@@ -41,7 +41,7 @@ public class StringResource extends CharSequenceResource {
 	 * @param name 资源名称
 	 * @param charset 编码
 	 */
-	public StringResource(String data, String name, Charset charset) {
+	public StringResource(final String data, final String name, final Charset charset) {
 		super(data, name, charset);
 	}
 }

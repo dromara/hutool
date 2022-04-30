@@ -37,7 +37,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 转化后的map
 	 */
-	public static <V, K> Map<K, V> toIdentityMap(Collection<V> collection, Function<V, K> key) {
+	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final Function<V, K> key) {
 		return toIdentityMap(collection, key, false);
 	}
 
@@ -53,7 +53,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 转化后的map
 	 */
-	public static <V, K> Map<K, V> toIdentityMap(Collection<V> collection, Function<V, K> key, boolean isParallel) {
+	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final Function<V, K> key, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -72,7 +72,7 @@ public class CollStreamUtil {
 	 * @param <V>        map中的value类型
 	 * @return 转化后的map
 	 */
-	public static <E, K, V> Map<K, V> toMap(Collection<E> collection, Function<E, K> key, Function<E, V> value) {
+	public static <E, K, V> Map<K, V> toMap(final Collection<E> collection, final Function<E, K> key, final Function<E, V> value) {
 		return toMap(collection, key, value, false);
 	}
 
@@ -86,7 +86,7 @@ public class CollStreamUtil {
 	 * @param <V>        map中的value类型
 	 * @return 转化后的map
 	 */
-	public static <E, K, V> Map<K, V> toMap(Collection<E> collection, Function<E, K> key, Function<E, V> value, boolean isParallel) {
+	public static <E, K, V> Map<K, V> toMap(final Collection<E> collection, final Function<E, K> key, final Function<E, V> value, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -105,7 +105,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 分组后的map
 	 */
-	public static <E, K> Map<K, List<E>> groupByKey(Collection<E> collection, Function<E, K> key) {
+	public static <E, K> Map<K, List<E>> groupByKey(final Collection<E> collection, final Function<E, K> key) {
 		return groupByKey(collection, key, false);
 	}
 
@@ -120,7 +120,7 @@ public class CollStreamUtil {
 	 * @param <K>        map中的key类型
 	 * @return 分组后的map
 	 */
-	public static <E, K> Map<K, List<E>> groupByKey(Collection<E> collection, Function<E, K> key, boolean isParallel) {
+	public static <E, K> Map<K, List<E>> groupByKey(final Collection<E> collection, final Function<E, K> key, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -139,7 +139,7 @@ public class CollStreamUtil {
 	 * @param <U>        第二个map中的key类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, K> key1, Function<E, U> key2) {
+	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(final Collection<E> collection, final Function<E, K> key1, final Function<E, U> key2) {
 		return groupBy2Key(collection, key1, key2, false);
 	}
 
@@ -157,8 +157,8 @@ public class CollStreamUtil {
 	 * @param <U>        第二个map中的key类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(Collection<E> collection, Function<E, K> key1,
-																Function<E, U> key2, boolean isParallel) {
+	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(final Collection<E> collection, final Function<E, K> key1,
+																final Function<E, U> key2, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -177,7 +177,7 @@ public class CollStreamUtil {
 	 * @param <E>        collection中的泛型
 	 * @return 分组后的map
 	 */
-	public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection, Function<E, T> key1, Function<E, U> key2) {
+	public static <E, T, U> Map<T, Map<U, E>> group2Map(final Collection<E> collection, final Function<E, T> key1, final Function<E, U> key2) {
 		return group2Map(collection, key1, key2, false);
 	}
 
@@ -194,8 +194,8 @@ public class CollStreamUtil {
 	 * @param <E>        collection中的泛型
 	 * @return 分组后的map
 	 */
-	public static <E, T, U> Map<T, Map<U, E>> group2Map(Collection<E> collection,
-														Function<E, T> key1, Function<E, U> key2, boolean isParallel) {
+	public static <E, T, U> Map<T, Map<U, E>> group2Map(final Collection<E> collection,
+														final Function<E, T> key1, final Function<E, U> key2, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
 			return Collections.emptyMap();
 		}
@@ -214,8 +214,8 @@ public class CollStreamUtil {
 	 * @param <V>        List中的value类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, V> Map<K, List<V>> groupKeyValue(Collection<E> collection, Function<E, K> key,
-														  Function<E, V> value) {
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final Function<E, K> key,
+														  final Function<E, V> value) {
 		return groupKeyValue(collection, key, value, false);
 	}
 
@@ -232,8 +232,8 @@ public class CollStreamUtil {
 	 * @param <V>        List中的value类型
 	 * @return 分组后的map
 	 */
-	public static <E, K, V> Map<K, List<V>> groupKeyValue(Collection<E> collection, Function<E, K> key,
-														  Function<E, V> value, boolean isParallel) {
+	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final Function<E, K> key,
+														  final Function<E, V> value, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -252,7 +252,7 @@ public class CollStreamUtil {
 	 * @return 分组后的map
 	 * @since 5.7.18
 	 */
-	public static <E, K, D> Map<K, D> groupBy(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream) {
+	public static <E, K, D> Map<K, D> groupBy(final Collection<E> collection, final Function<E, K> key, final Collector<E, ?, D> downstream) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -273,7 +273,7 @@ public class CollStreamUtil {
 	 * @see Collectors#groupingBy(Function, Collector)
 	 * @since 5.7.18
 	 */
-	public static <E, K, D> Map<K, D> groupBy(Collection<E> collection, Function<E, K> key, Collector<E, ?, D> downstream, boolean isParallel) {
+	public static <E, K, D> Map<K, D> groupBy(final Collection<E> collection, final Function<E, K> key, final Collector<E, ?, D> downstream, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyMap();
 		}
@@ -290,7 +290,7 @@ public class CollStreamUtil {
 	 * @param <T>        List中的泛型
 	 * @return 转化后的list
 	 */
-	public static <E, T> List<T> toList(Collection<E> collection, Function<E, T> function) {
+	public static <E, T> List<T> toList(final Collection<E> collection, final Function<E, T> function) {
 		return toList(collection, function, false);
 	}
 
@@ -305,7 +305,7 @@ public class CollStreamUtil {
 	 * @param <T>        List中的泛型
 	 * @return 转化后的list
 	 */
-	public static <E, T> List<T> toList(Collection<E> collection, Function<E, T> function, boolean isParallel) {
+	public static <E, T> List<T> toList(final Collection<E> collection, final Function<E, T> function, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptyList();
 		}
@@ -325,7 +325,7 @@ public class CollStreamUtil {
 	 * @param <T>        Set中的泛型
 	 * @return 转化后的Set
 	 */
-	public static <E, T> Set<T> toSet(Collection<E> collection, Function<E, T> function) {
+	public static <E, T> Set<T> toSet(final Collection<E> collection, final Function<E, T> function) {
 		return toSet(collection, function, false);
 	}
 
@@ -340,7 +340,7 @@ public class CollStreamUtil {
 	 * @param <T>        Set中的泛型
 	 * @return 转化后的Set
 	 */
-	public static <E, T> Set<T> toSet(Collection<E> collection, Function<E, T> function, boolean isParallel) {
+	public static <E, T> Set<T> toSet(final Collection<E> collection, final Function<E, T> function, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
 			return Collections.emptySet();
 		}
@@ -363,7 +363,7 @@ public class CollStreamUtil {
 	 * @param <V>   最终map的value类型
 	 * @return 合并后的map
 	 */
-	public static <K, X, Y, V> Map<K, V> merge(Map<K, X> map1, Map<K, Y> map2, BiFunction<X, Y, V> merge) {
+	public static <K, X, Y, V> Map<K, V> merge(Map<K, X> map1, Map<K, Y> map2, final BiFunction<X, Y, V> merge) {
 		if (MapUtil.isEmpty(map1) && MapUtil.isEmpty(map2)) {
 			return Collections.emptyMap();
 		} else if (MapUtil.isEmpty(map1)) {
@@ -371,14 +371,14 @@ public class CollStreamUtil {
 		} else if (MapUtil.isEmpty(map2)) {
 			map2 = Collections.emptyMap();
 		}
-		Set<K> key = new HashSet<>();
+		final Set<K> key = new HashSet<>();
 		key.addAll(map1.keySet());
 		key.addAll(map2.keySet());
-		Map<K, V> map = MapUtil.newHashMap(key.size());
-		for (K t : key) {
-			X x = map1.get(t);
-			Y y = map2.get(t);
-			V z = merge.apply(x, y);
+		final Map<K, V> map = MapUtil.newHashMap(key.size());
+		for (final K t : key) {
+			final X x = map1.get(t);
+			final Y y = map2.get(t);
+			final V z = merge.apply(x, y);
 			if (z != null) {
 				map.put(t, z);
 			}

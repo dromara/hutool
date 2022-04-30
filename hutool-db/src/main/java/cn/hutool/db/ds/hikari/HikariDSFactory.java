@@ -24,16 +24,16 @@ public class HikariDSFactory extends AbstractDSFactory {
 		this(null);
 	}
 
-	public HikariDSFactory(Setting setting) {
+	public HikariDSFactory(final Setting setting) {
 		super(DS_NAME, HikariDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		// remarks等特殊配置，since 5.3.8
 		final Props connProps = new Props();
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);

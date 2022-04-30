@@ -34,7 +34,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	 * @param map 被代理的Map
 	 * @return {@link MapProxy}
 	 */
-	public static MapProxy create(Map<?, ?> map) {
+	public static MapProxy create(final Map<?, ?> map) {
 		return (map instanceof MapProxy) ? (MapProxy) map : new MapProxy(map);
 	}
 
@@ -43,12 +43,12 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	 *
 	 * @param map 被代理的Map
 	 */
-	public MapProxy(Map<?, ?> map) {
+	public MapProxy(final Map<?, ?> map) {
 		this.map = map;
 	}
 
 	@Override
-	public Object getObj(Object key, Object defaultValue) {
+	public Object getObj(final Object key, final Object defaultValue) {
 		final Object value = map.get(key);
 		return null != value ? value : defaultValue;
 	}
@@ -64,34 +64,34 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	}
 
 	@Override
-	public boolean containsKey(Object key) {
+	public boolean containsKey(final Object key) {
 		return map.containsKey(key);
 	}
 
 	@Override
-	public boolean containsValue(Object value) {
+	public boolean containsValue(final Object value) {
 		return map.containsValue(value);
 	}
 
 	@Override
-	public Object get(Object key) {
+	public Object get(final Object key) {
 		return map.get(key);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object put(Object key, Object value) {
+	public Object put(final Object key, final Object value) {
 		return map.put(key, value);
 	}
 
 	@Override
-	public Object remove(Object key) {
+	public Object remove(final Object key) {
 		return map.remove(key);
 	}
 
 	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
-	public void putAll(Map<?, ?> m) {
+	public void putAll(final Map<?, ?> m) {
 		map.putAll(m);
 	}
 
@@ -119,7 +119,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) {
+	public Object invoke(final Object proxy, final Method method, final Object[] args) {
 		final Class<?>[] parameterTypes = method.getParameterTypes();
 		if (ArrayUtil.isEmpty(parameterTypes)) {
 			final Class<?> returnType = method.getReturnType();
@@ -177,7 +177,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	 * @since 4.5.2
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T toProxyBean(Class<T> interfaceClass) {
+	public <T> T toProxyBean(final Class<T> interfaceClass) {
 		return (T) Proxy.newProxyInstance(ClassLoaderUtil.getClassLoader(), new Class<?>[]{interfaceClass}, this);
 	}
 }

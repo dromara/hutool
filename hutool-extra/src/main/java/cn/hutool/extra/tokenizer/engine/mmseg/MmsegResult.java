@@ -23,16 +23,16 @@ public class MmsegResult extends AbstractResult {
 	 *
 	 * @param mmSeg 分词结果
 	 */
-	public MmsegResult(MMSeg mmSeg) {
+	public MmsegResult(final MMSeg mmSeg) {
 		this.mmSeg = mmSeg;
 	}
 
 	@Override
 	protected Word nextWord() {
-		com.chenlb.mmseg4j.Word next;
+		final com.chenlb.mmseg4j.Word next;
 		try {
 			next = this.mmSeg.next();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		if (null == next) {

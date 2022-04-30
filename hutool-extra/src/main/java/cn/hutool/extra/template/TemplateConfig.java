@@ -46,7 +46,7 @@ public class TemplateConfig implements Serializable {
 	 *
 	 * @param path 模板路径，如果ClassPath或者WebRoot模式，则表示相对路径
 	 */
-	public TemplateConfig(String path) {
+	public TemplateConfig(final String path) {
 		this(path, ResourceMode.STRING);
 	}
 
@@ -56,7 +56,7 @@ public class TemplateConfig implements Serializable {
 	 * @param path         模板路径，如果ClassPath或者WebRoot模式，则表示相对路径
 	 * @param resourceMode 模板资源加载方式
 	 */
-	public TemplateConfig(String path, ResourceMode resourceMode) {
+	public TemplateConfig(final String path, final ResourceMode resourceMode) {
 		this(CharsetUtil.UTF_8, path, resourceMode);
 	}
 
@@ -67,7 +67,7 @@ public class TemplateConfig implements Serializable {
 	 * @param path         模板路径，如果ClassPath或者WebRoot模式，则表示相对路径
 	 * @param resourceMode 模板资源加载方式
 	 */
-	public TemplateConfig(Charset charset, String path, ResourceMode resourceMode) {
+	public TemplateConfig(final Charset charset, final String path, final ResourceMode resourceMode) {
 		this.charset = charset;
 		this.path = path;
 		this.resourceMode = resourceMode;
@@ -100,7 +100,7 @@ public class TemplateConfig implements Serializable {
 	 *
 	 * @param charset 编码
 	 */
-	public void setCharset(Charset charset) {
+	public void setCharset(final Charset charset) {
 		this.charset = charset;
 	}
 
@@ -118,7 +118,7 @@ public class TemplateConfig implements Serializable {
 	 *
 	 * @param path 模板路径
 	 */
-	public void setPath(String path) {
+	public void setPath(final String path) {
 		this.path = path;
 	}
 
@@ -136,7 +136,7 @@ public class TemplateConfig implements Serializable {
 	 *
 	 * @param resourceMode 模板资源加载方式
 	 */
-	public void setResourceMode(ResourceMode resourceMode) {
+	public void setResourceMode(final ResourceMode resourceMode) {
 		this.resourceMode = resourceMode;
 	}
 
@@ -158,7 +158,7 @@ public class TemplateConfig implements Serializable {
 	 * @return this
 	 * @since 5.2.1
 	 */
-	public TemplateConfig setCustomEngine(Class<? extends TemplateEngine> customEngine) {
+	public TemplateConfig setCustomEngine(final Class<? extends TemplateEngine> customEngine) {
 		this.customEngine = customEngine;
 		return this;
 	}
@@ -192,14 +192,14 @@ public class TemplateConfig implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o){
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()){
 			return false;
 		}
-		TemplateConfig that = (TemplateConfig) o;
+		final TemplateConfig that = (TemplateConfig) o;
 		return Objects.equals(charset, that.charset) &&
 				Objects.equals(path, that.path) &&
 				resourceMode == that.resourceMode &&

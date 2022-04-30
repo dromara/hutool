@@ -42,7 +42,7 @@ class JavaClassFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 	 * @param parent      父类加载器
 	 * @param fileManager 字节码文件管理器
 	 */
-	protected JavaClassFileManager(ClassLoader parent, JavaFileManager fileManager) {
+	protected JavaClassFileManager(final ClassLoader parent, final JavaFileManager fileManager) {
 		super(fileManager);
 		this.parent = ObjUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
 	}

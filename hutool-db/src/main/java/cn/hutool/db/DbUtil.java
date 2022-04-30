@@ -29,7 +29,7 @@ public final class DbUtil {
 	 * @param dialect 数据源
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner newSqlConnRunner(Dialect dialect) {
+	public static SqlConnRunner newSqlConnRunner(final Dialect dialect) {
 		return SqlConnRunner.create(dialect);
 	}
 
@@ -39,7 +39,7 @@ public final class DbUtil {
 	 * @param ds 数据源
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner newSqlConnRunner(DataSource ds) {
+	public static SqlConnRunner newSqlConnRunner(final DataSource ds) {
 		return SqlConnRunner.create(ds);
 	}
 
@@ -49,7 +49,7 @@ public final class DbUtil {
 	 * @param conn 数据库连接对象
 	 * @return SQL执行类
 	 */
-	public static SqlConnRunner newSqlConnRunner(Connection conn) {
+	public static SqlConnRunner newSqlConnRunner(final Connection conn) {
 		return SqlConnRunner.create(DialectFactory.newDialect(conn));
 	}
 
@@ -68,7 +68,7 @@ public final class DbUtil {
 	 * @param ds 数据源
 	 * @return SQL执行类
 	 */
-	public static Db use(DataSource ds) {
+	public static Db use(final DataSource ds) {
 		return Db.use(ds);
 	}
 
@@ -79,7 +79,7 @@ public final class DbUtil {
 	 * @param dialect SQL方言
 	 * @return SQL执行类
 	 */
-	public static Db use(DataSource ds, Dialect dialect) {
+	public static Db use(final DataSource ds, final Dialect dialect) {
 		return Db.use(ds, dialect);
 	}
 
@@ -98,7 +98,7 @@ public final class DbUtil {
 	 * @param ds 数据源
 	 * @return 数据库会话
 	 */
-	public static Session newSession(DataSource ds) {
+	public static Session newSession(final DataSource ds) {
 		return Session.create(ds);
 	}
 
@@ -108,8 +108,8 @@ public final class DbUtil {
 	 *
 	 * @param objsToClose 需要关闭的对象
 	 */
-	public static void close(Object... objsToClose) {
-		for (Object obj : objsToClose) {
+	public static void close(final Object... objsToClose) {
+		for (final Object obj : objsToClose) {
 			if (null != obj) {
 				if (obj instanceof AutoCloseable) {
 					IoUtil.close((AutoCloseable) obj);
@@ -135,7 +135,7 @@ public final class DbUtil {
 	 * @param group 分组
 	 * @return 数据源
 	 */
-	public static DataSource getDs(String group) {
+	public static DataSource getDs(final String group) {
 		return DSFactory.get(group);
 	}
 
@@ -145,10 +145,10 @@ public final class DbUtil {
 	 * @param jndiName JNDI名称
 	 * @return 数据源
 	 */
-	public static DataSource getJndiDsWithLog(String jndiName) {
+	public static DataSource getJndiDsWithLog(final String jndiName) {
 		try {
 			return getJndiDs(jndiName);
-		} catch (DbRuntimeException e) {
+		} catch (final DbRuntimeException e) {
 			log.error(e.getCause(), "Find JNDI datasource error!");
 		}
 		return null;
@@ -160,10 +160,10 @@ public final class DbUtil {
 	 * @param jndiName JNDI名称
 	 * @return 数据源
 	 */
-	public static DataSource getJndiDs(String jndiName) {
+	public static DataSource getJndiDs(final String jndiName) {
 		try {
 			return (DataSource) new InitialContext().lookup(jndiName);
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DbRuntimeException(e);
 		}
 	}
@@ -175,7 +175,7 @@ public final class DbUtil {
 	 * @param setting 配置项
 	 * @since 5.7.2
 	 */
-	public static void removeShowSqlParams(Setting setting) {
+	public static void removeShowSqlParams(final Setting setting) {
 		setting.remove(SqlLog.KEY_SHOW_SQL);
 		setting.remove(SqlLog.KEY_FORMAT_SQL);
 		setting.remove(SqlLog.KEY_SHOW_PARAMS);
@@ -188,7 +188,7 @@ public final class DbUtil {
 	 * @param setting 配置文件
 	 * @since 4.1.7
 	 */
-	public static void setShowSqlGlobal(Setting setting) {
+	public static void setShowSqlGlobal(final Setting setting) {
 		// 初始化SQL显示
 		final boolean isShowSql = Convert.toBool(setting.remove(SqlLog.KEY_SHOW_SQL), false);
 		final boolean isFormatSql = Convert.toBool(setting.remove(SqlLog.KEY_FORMAT_SQL), false);
@@ -212,7 +212,7 @@ public final class DbUtil {
 	 * @see GlobalDbConfig#setShowSql(boolean, boolean, boolean, Level)
 	 * @since 4.1.7
 	 */
-	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
+	public static void setShowSqlGlobal(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
 		GlobalDbConfig.setShowSql(isShowSql, isFormatSql, isShowParams, level);
 	}
 
@@ -224,7 +224,7 @@ public final class DbUtil {
 	 * @see GlobalDbConfig#setCaseInsensitive(boolean)
 	 * @since 5.2.4
 	 */
-	public static void setCaseInsensitiveGlobal(boolean caseInsensitive) {
+	public static void setCaseInsensitiveGlobal(final boolean caseInsensitive) {
 		GlobalDbConfig.setCaseInsensitive(caseInsensitive);
 	}
 
@@ -237,7 +237,7 @@ public final class DbUtil {
 	 * @see GlobalDbConfig#setReturnGeneratedKey(boolean)
 	 * @since 5.3.10
 	 */
-	public static void setReturnGeneratedKeyGlobal(boolean returnGeneratedKey) {
+	public static void setReturnGeneratedKeyGlobal(final boolean returnGeneratedKey) {
 		GlobalDbConfig.setReturnGeneratedKey(returnGeneratedKey);
 	}
 
@@ -248,7 +248,7 @@ public final class DbUtil {
 	 * @see GlobalDbConfig#setDbSettingPath(String)
 	 * @since 5.8.0
 	 */
-	public static void setDbSettingPathGlobal(String dbSettingPath) {
+	public static void setDbSettingPathGlobal(final String dbSettingPath) {
 		GlobalDbConfig.setDbSettingPath(dbSettingPath);
 	}
 }

@@ -51,7 +51,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	 * @param textDelimiter 文本分隔符，文本包装符，默认双引号'"'
 	 * @return this
 	 */
-	public T setTextDelimiter(char textDelimiter) {
+	public T setTextDelimiter(final char textDelimiter) {
 		this.textDelimiter = textDelimiter;
 		return (T) this;
 	}
@@ -75,7 +75,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public T setCommentCharacter(Character commentCharacter) {
+	public T setCommentCharacter(final Character commentCharacter) {
 		this.commentCharacter = commentCharacter;
 		return (T) this;
 	}
@@ -87,7 +87,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	 * @return this
 	 * @since 5.7.10
 	 */
-	public T setHeaderAlias(Map<String, String> headerAlias) {
+	public T setHeaderAlias(final Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
 		return (T) this;
 	}
@@ -100,7 +100,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	 * @return this
 	 * @since 5.7.10
 	 */
-	public T addHeaderAlias(String header, String alias) {
+	public T addHeaderAlias(final String header, final String alias) {
 		this.headerAlias.put(header, alias);
 		return (T) this;
 	}
@@ -112,7 +112,7 @@ public class CsvConfig<T extends CsvConfig<T>> implements Serializable {
 	 * @return this
 	 * @since 5.7.10
 	 */
-	public T removeHeaderAlias(String header) {
+	public T removeHeaderAlias(final String header) {
 		this.headerAlias.remove(header);
 		return (T) this;
 	}

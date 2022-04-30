@@ -21,7 +21,7 @@ public class CheckedUtilTest {
 
 	@Test
 	public void sleepTest() {
-		VoidFunc0 func = () -> Thread.sleep(1000L);
+		final VoidFunc0 func = () -> Thread.sleep(1000L);
 		func.callWithRuntimeException();
 	}
 
@@ -29,18 +29,18 @@ public class CheckedUtilTest {
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void supplierTest() {
-		File noFile = new File("./no-file");
+		final File noFile = new File("./no-file");
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
 			CheckedUtil.uncheck(() -> new FileInputStream(noFile)).call();
-		} catch (Exception re) {
+		} catch (final Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
 	}
 
 	@Test
 	public void functionTest() {
-		Func1<String, String> afunc = (funcParam) -> {
+		final Func1<String, String> afunc = (funcParam) -> {
 			if (funcParam.length() > 5) {
 				throw new Exception("这是受检查异常需要屌用处显示处理");
 			}
@@ -53,7 +53,7 @@ public class CheckedUtilTest {
 		try {
 			//本行代码原本需要抛出受检查异常，现在只抛出运行时异常
 			CheckedUtil.uncheck(afunc).call("hello world");
-		} catch (Exception re) {
+		} catch (final Exception re) {
 			Assert.assertTrue(re instanceof RuntimeException);
 		}
 

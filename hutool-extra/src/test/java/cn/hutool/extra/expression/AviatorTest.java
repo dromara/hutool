@@ -17,8 +17,8 @@ public class AviatorTest {
 
 	@Test
 	public void simpleTest(){
-		Foo foo = new Foo(100, 3.14f, DateUtil.parseDate("2020-11-12"));
-		ExpressionEngine engine = new AviatorEngine();
+		final Foo foo = new Foo(100, 3.14f, DateUtil.parseDate("2020-11-12"));
+		final ExpressionEngine engine = new AviatorEngine();
 		String exp =
 				"\"[foo i=\"+ foo.i + \", f=\" + foo.f + \", date.year=\" + (foo.date.year+1900) + \", date.month=\" + foo.date.month + \", bars[0].name=\" + #foo.bars[0].name + \"]\"";
 		String result = (String) engine.eval(exp, Dict.create().set("foo", foo));

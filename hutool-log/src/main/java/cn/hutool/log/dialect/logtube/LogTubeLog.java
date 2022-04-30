@@ -18,15 +18,15 @@ public class LogTubeLog extends AbstractLog {
 	private final IEventLogger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public LogTubeLog(IEventLogger logger) {
+	public LogTubeLog(final IEventLogger logger) {
 		this.logger = logger;
 	}
 
-	public LogTubeLog(Class<?> clazz) {
+	public LogTubeLog(final Class<?> clazz) {
 		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
-	public LogTubeLog(String name) {
+	public LogTubeLog(final String name) {
 		this(Logtube.getLogger(name));
 	}
 
@@ -43,7 +43,7 @@ public class LogTubeLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.TRACE, t, format, arguments);
 	}
 
@@ -54,7 +54,7 @@ public class LogTubeLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.DEBUG, t, format, arguments);
 	}
 
@@ -65,7 +65,7 @@ public class LogTubeLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.INFO, t, format, arguments);
 	}
 
@@ -76,7 +76,7 @@ public class LogTubeLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.WARN, t, format, arguments);
 	}
 
@@ -87,12 +87,12 @@ public class LogTubeLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.ERROR, t, format, arguments);
 	}
 
 	@Override
-	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		final String topic = level.name().toLowerCase();
 		logger.topic(topic)
 				.xStackTraceElement(ExceptionUtil.getStackElement(6), null)

@@ -23,7 +23,7 @@ public class LFUCache<K, V> extends StampedCache<K, V> {
 	 *
 	 * @param capacity 容量
 	 */
-	public LFUCache(int capacity) {
+	public LFUCache(final int capacity) {
 		this(capacity, 0);
 	}
 
@@ -33,7 +33,7 @@ public class LFUCache<K, V> extends StampedCache<K, V> {
 	 * @param capacity 容量
 	 * @param timeout 过期时长
 	 */
-	public LFUCache(int capacity, long timeout) {
+	public LFUCache(int capacity, final long timeout) {
 		if(Integer.MAX_VALUE == capacity) {
 			capacity -= 1;
 		}
@@ -76,7 +76,7 @@ public class LFUCache<K, V> extends StampedCache<K, V> {
 
 		// 减少所有对象访问量，并清除减少后为0的访问对象
 		if (isFull() && comin != null) {
-			long minAccessCount = comin.accessCount.get();
+			final long minAccessCount = comin.accessCount.get();
 
 			values = cacheObjIter();
 			CacheObj<K, V> co1;

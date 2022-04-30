@@ -69,13 +69,13 @@ public class PathUtilTest {
 
 	@Test
 	public void getMimeOfRarTest(){
-		String contentType = FileUtil.getMimeType("a001.rar");
+		final String contentType = FileUtil.getMimeType("a001.rar");
 		Assert.assertEquals("application/x-rar-compressed", contentType);
 	}
 
 	@Test
 	public void getMimeOf7zTest(){
-		String contentType = FileUtil.getMimeType("a001.7z");
+		final String contentType = FileUtil.getMimeType("a001.7z");
 		Assert.assertEquals("application/x-7z-compressed", contentType);
 	}
 }

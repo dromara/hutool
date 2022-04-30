@@ -55,7 +55,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.2.5
 	 */
-	public static JSONObject createObj(JSONConfig config) {
+	public static JSONObject createObj(final JSONConfig config) {
 		return new JSONObject(config);
 	}
 
@@ -75,7 +75,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @since 5.2.5
 	 */
-	public static JSONArray createArray(JSONConfig config) {
+	public static JSONArray createArray(final JSONConfig config) {
 		return new JSONArray(config);
 	}
 
@@ -86,7 +86,7 @@ public class JSONUtil {
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
-	public static JSONObject parseObj(Object obj) {
+	public static JSONObject parseObj(final Object obj) {
 		return new JSONObject(obj);
 	}
 
@@ -99,7 +99,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.3.1
 	 */
-	public static JSONObject parseObj(Object obj, JSONConfig config) {
+	public static JSONObject parseObj(final Object obj, final JSONConfig config) {
 		return new JSONObject(obj, config);
 	}
 
@@ -111,7 +111,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 3.0.9
 	 */
-	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
+	public static JSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
 		return new JSONObject(obj, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
@@ -122,7 +122,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @since 3.0.8
 	 */
-	public static JSONArray parseArray(Object arrayOrCollection) {
+	public static JSONArray parseArray(final Object arrayOrCollection) {
 		return new JSONArray(arrayOrCollection);
 	}
 
@@ -134,7 +134,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @since 5.3.1
 	 */
-	public static JSONArray parseArray(Object arrayOrCollection, JSONConfig config) {
+	public static JSONArray parseArray(final Object arrayOrCollection, final JSONConfig config) {
 		return new JSONArray(arrayOrCollection, config);
 	}
 
@@ -146,7 +146,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @since 3.2.3
 	 */
-	public static JSONArray parseArray(Object arrayOrCollection, boolean ignoreNullValue) {
+	public static JSONArray parseArray(final Object arrayOrCollection, final boolean ignoreNullValue) {
 		return new JSONArray(arrayOrCollection, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
 	}
 
@@ -162,7 +162,7 @@ public class JSONUtil {
 	 * @param obj 对象
 	 * @return JSON
 	 */
-	public static JSON parse(Object obj) {
+	public static JSON parse(final Object obj) {
 		return parse(obj, null);
 	}
 
@@ -180,11 +180,11 @@ public class JSONUtil {
 	 * @return JSON
 	 * @since 5.3.1
 	 */
-	public static JSON parse(Object obj, JSONConfig config) {
+	public static JSON parse(final Object obj, final JSONConfig config) {
 		if (null == obj) {
 			return null;
 		}
-		JSON json;
+		final JSON json;
 		if (obj instanceof JSON) {
 			json = (JSON) obj;
 		} else if (obj instanceof CharSequence) {
@@ -208,7 +208,7 @@ public class JSONUtil {
 	 * @param xmlStr XML字符串
 	 * @return JSONObject
 	 */
-	public static JSONObject parseFromXml(String xmlStr) {
+	public static JSONObject parseFromXml(final String xmlStr) {
 		return XML.toJSONObject(xmlStr);
 	}
 
@@ -224,7 +224,7 @@ public class JSONUtil {
 	 * @return JSON（包括JSONObject和JSONArray）
 	 * @throws IORuntimeException IO异常
 	 */
-	public static JSON readJSON(File file, Charset charset) throws IORuntimeException {
+	public static JSON readJSON(final File file, final Charset charset) throws IORuntimeException {
 		return parse(FileReader.create(file, charset).readString());
 	}
 
@@ -236,7 +236,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @throws IORuntimeException IO异常
 	 */
-	public static JSONObject readJSONObject(File file, Charset charset) throws IORuntimeException {
+	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
 		return parseObj(FileReader.create(file, charset).readString());
 	}
 
@@ -248,7 +248,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @throws IORuntimeException IO异常
 	 */
-	public static JSONArray readJSONArray(File file, Charset charset) throws IORuntimeException {
+	public static JSONArray readJSONArray(final File file, final Charset charset) throws IORuntimeException {
 		return parseArray(FileReader.create(file, charset).readString());
 	}
 	// -------------------------------------------------------------------- Read end
@@ -262,7 +262,7 @@ public class JSONUtil {
 	 * @param indentFactor 每一级别的缩进
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(JSON json, int indentFactor) {
+	public static String toJsonStr(final JSON json, final int indentFactor) {
 		if (null == json) {
 			return null;
 		}
@@ -275,7 +275,7 @@ public class JSONUtil {
 	 * @param json JSON
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(JSON json) {
+	public static String toJsonStr(final JSON json) {
 		if (null == json) {
 			return null;
 		}
@@ -289,7 +289,7 @@ public class JSONUtil {
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
-	public static void toJsonStr(JSON json, Writer writer) {
+	public static void toJsonStr(final JSON json, final Writer writer) {
 		if (null != json) {
 			json.write(writer);
 		}
@@ -301,7 +301,7 @@ public class JSONUtil {
 	 * @param json JSON
 	 * @return JSON字符串
 	 */
-	public static String toJsonPrettyStr(JSON json) {
+	public static String toJsonPrettyStr(final JSON json) {
 		if (null == json) {
 			return null;
 		}
@@ -314,7 +314,7 @@ public class JSONUtil {
 	 * @param obj 被转为JSON的对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(Object obj) {
+	public static String toJsonStr(final Object obj) {
 		return toJsonStr(obj, (JSONConfig) null);
 	}
 
@@ -326,7 +326,7 @@ public class JSONUtil {
 	 * @return JSON字符串
 	 * @since 5.7.12
 	 */
-	public static String toJsonStr(Object obj, JSONConfig jsonConfig) {
+	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
 		if (null == obj) {
 			return null;
 		}
@@ -343,7 +343,7 @@ public class JSONUtil {
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
-	public static void toJsonStr(Object obj, Writer writer) {
+	public static void toJsonStr(final Object obj, final Writer writer) {
 		if (null != obj) {
 			toJsonStr(parse(obj), writer);
 		}
@@ -355,7 +355,7 @@ public class JSONUtil {
 	 * @param obj Bean对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonPrettyStr(Object obj) {
+	public static String toJsonPrettyStr(final Object obj) {
 		return toJsonPrettyStr(parse(obj));
 	}
 
@@ -365,7 +365,7 @@ public class JSONUtil {
 	 * @param json JSON
 	 * @return XML字符串
 	 */
-	public static String toXmlStr(JSON json) {
+	public static String toXmlStr(final JSON json) {
 		return XML.toXml(json);
 	}
 	// -------------------------------------------------------------------- toString end
@@ -381,7 +381,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 3.1.2
 	 */
-	public static <T> T toBean(String jsonString, Class<T> beanClass) {
+	public static <T> T toBean(final String jsonString, final Class<T> beanClass) {
 		return toBean(parseObj(jsonString), beanClass);
 	}
 
@@ -396,7 +396,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 5.8.0
 	 */
-	public static <T> T toBean(String jsonString, JSONConfig config, Class<T> beanClass) {
+	public static <T> T toBean(final String jsonString, final JSONConfig config, final Class<T> beanClass) {
 		return toBean(parseObj(jsonString, config), beanClass);
 	}
 
@@ -408,7 +408,7 @@ public class JSONUtil {
 	 * @param beanClass 实体类对象
 	 * @return 实体类对象
 	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
+	public static <T> T toBean(final JSONObject json, final Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
 	}
 
@@ -422,7 +422,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(String jsonString, TypeReference<T> typeReference, boolean ignoreError) {
+	public static <T> T toBean(final String jsonString, final TypeReference<T> typeReference, final boolean ignoreError) {
 		return toBean(jsonString, typeReference.getType(), ignoreError);
 	}
 
@@ -436,7 +436,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
+	public static <T> T toBean(final String jsonString, final Type beanType, final boolean ignoreError) {
 		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
 	}
 
@@ -450,7 +450,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.6.2
 	 */
-	public static <T> T toBean(JSON json, TypeReference<T> typeReference, boolean ignoreError) {
+	public static <T> T toBean(final JSON json, final TypeReference<T> typeReference, final boolean ignoreError) {
 		return toBean(json, typeReference.getType(), ignoreError);
 	}
 
@@ -464,7 +464,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(JSON json, Type beanType, boolean ignoreError) {
+	public static <T> T toBean(final JSON json, final Type beanType, final boolean ignoreError) {
 		if (null == json) {
 			return null;
 		}
@@ -481,7 +481,7 @@ public class JSONUtil {
 	 * @return List
 	 * @since 5.5.2
 	 */
-	public static <T> List<T> toList(String jsonArray, Class<T> elementType) {
+	public static <T> List<T> toList(final String jsonArray, final Class<T> elementType) {
 		return toList(parseArray(jsonArray), elementType);
 	}
 
@@ -494,7 +494,7 @@ public class JSONUtil {
 	 * @return List
 	 * @since 4.0.7
 	 */
-	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType) {
+	public static <T> List<T> toList(final JSONArray jsonArray, final Class<T> elementType) {
 		return null == jsonArray ? null : jsonArray.toList(elementType);
 	}
 
@@ -519,7 +519,7 @@ public class JSONUtil {
 	 * @return 对象
 	 * @see JSON#getByPath(String)
 	 */
-	public static Object getByPath(JSON json, String expression) {
+	public static Object getByPath(final JSON json, final String expression) {
 		return getByPath(json, expression, null);
 	}
 
@@ -548,7 +548,7 @@ public class JSONUtil {
 	 * @since 5.6.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getByPath(JSON json, String expression, T defaultValue) {
+	public static <T> T getByPath(final JSON json, final String expression, final T defaultValue) {
 		if((null == json || StrUtil.isBlank(expression))){
 			return defaultValue;
 		}
@@ -582,7 +582,7 @@ public class JSONUtil {
 	 * @param expression 表达式
 	 * @param value      值
 	 */
-	public static void putByPath(JSON json, String expression, Object value) {
+	public static void putByPath(final JSON json, final String expression, final Object value) {
 		json.putByPath(expression, value);
 	}
 
@@ -594,7 +594,7 @@ public class JSONUtil {
 	 * @param string 字符串
 	 * @return 适合在JSON中显示的字符串
 	 */
-	public static String quote(String string) {
+	public static String quote(final String string) {
 		return quote(string, true);
 	}
 
@@ -608,11 +608,11 @@ public class JSONUtil {
 	 * @return 适合在JSON中显示的字符串
 	 * @since 3.3.1
 	 */
-	public static String quote(String string, boolean isWrap) {
-		StringWriter sw = new StringWriter();
+	public static String quote(final String string, final boolean isWrap) {
+		final StringWriter sw = new StringWriter();
 		try {
 			return quote(string, sw, isWrap).toString();
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			// will never happen - we are writing to a string writer
 			return StrUtil.EMPTY;
 		}
@@ -628,7 +628,7 @@ public class JSONUtil {
 	 * @return Writer
 	 * @throws IOException IO异常
 	 */
-	public static Writer quote(String str, Writer writer) throws IOException {
+	public static Writer quote(final String str, final Writer writer) throws IOException {
 		return quote(str, writer, true);
 	}
 
@@ -644,7 +644,7 @@ public class JSONUtil {
 	 * @throws IOException IO异常
 	 * @since 3.3.1
 	 */
-	public static Writer quote(String str, Writer writer, boolean isWrap) throws IOException {
+	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IOException {
 		if (StrUtil.isEmpty(str)) {
 			if (isWrap) {
 				writer.write("\"\"");
@@ -653,7 +653,7 @@ public class JSONUtil {
 		}
 
 		char c; // 当前字符
-		int len = str.length();
+		final int len = str.length();
 		if (isWrap) {
 			writer.write('"');
 		}
@@ -681,7 +681,7 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 转义后的字符串
 	 */
-	public static String escape(String str) {
+	public static String escape(final String str) {
 		if (StrUtil.isEmpty(str)) {
 			return str;
 		}
@@ -713,7 +713,7 @@ public class JSONUtil {
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static Object wrap(Object object, JSONConfig jsonConfig) {
+	public static Object wrap(final Object object, final JSONConfig jsonConfig) {
 		if (object == null) {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
@@ -774,7 +774,7 @@ public class JSONUtil {
 
 			// 默认按照JSONObject对待
 			return new JSONObject(object, jsonConfig);
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			return null;
 		}
 	}
@@ -786,7 +786,7 @@ public class JSONUtil {
 	 * @return 格式化后的字符串
 	 * @since 3.1.2
 	 */
-	public static String formatJsonStr(String jsonStr) {
+	public static String formatJsonStr(final String jsonStr) {
 		return JSONStrFormatter.format(jsonStr);
 	}
 
@@ -797,7 +797,7 @@ public class JSONUtil {
 	 * @return 是否为JSON类型字符串
 	 * @since 5.7.22
 	 */
-	public static boolean isTypeJSON(String str) {
+	public static boolean isTypeJSON(final String str) {
 		return isTypeJSONObject(str) || isTypeJSONArray(str);
 	}
 
@@ -808,7 +808,7 @@ public class JSONUtil {
 	 * @return 是否为JSON字符串
 	 * @since 5.7.22
 	 */
-	public static boolean isTypeJSONObject(String str) {
+	public static boolean isTypeJSONObject(final String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -822,7 +822,7 @@ public class JSONUtil {
 	 * @return 是否为JSONArray类型字符串
 	 * @since 5.7.22
 	 */
-	public static boolean isTypeJSONArray(String str) {
+	public static boolean isTypeJSONArray(final String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -841,7 +841,7 @@ public class JSONUtil {
 	 * @return 是否为null
 	 * @since 4.5.7
 	 */
-	public static boolean isNull(Object obj) {
+	public static boolean isNull(final Object obj) {
 		return null == obj || obj instanceof JSONNull;
 	}
 
@@ -853,7 +853,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 4.0.8
 	 */
-	public static JSONObject xmlToJson(String xml) {
+	public static JSONObject xmlToJson(final String xml) {
 		return XML.toJSONObject(xml);
 	}
 
@@ -865,7 +865,7 @@ public class JSONUtil {
 	 * @see GlobalSerializeMapping#put(Type, JSONArraySerializer)
 	 * @since 4.6.5
 	 */
-	public static void putSerializer(Type type, JSONArraySerializer<?> serializer) {
+	public static void putSerializer(final Type type, final JSONArraySerializer<?> serializer) {
 		GlobalSerializeMapping.put(type, serializer);
 	}
 
@@ -877,7 +877,7 @@ public class JSONUtil {
 	 * @see GlobalSerializeMapping#put(Type, JSONObjectSerializer)
 	 * @since 4.6.5
 	 */
-	public static void putSerializer(Type type, JSONObjectSerializer<?> serializer) {
+	public static void putSerializer(final Type type, final JSONObjectSerializer<?> serializer) {
 		GlobalSerializeMapping.put(type, serializer);
 	}
 
@@ -889,7 +889,7 @@ public class JSONUtil {
 	 * @see GlobalSerializeMapping#put(Type, JSONDeserializer)
 	 * @since 4.6.5
 	 */
-	public static void putDeserializer(Type type, JSONDeserializer<?> deserializer) {
+	public static void putDeserializer(final Type type, final JSONDeserializer<?> deserializer) {
 		GlobalSerializeMapping.put(type, deserializer);
 	}
 
@@ -902,7 +902,7 @@ public class JSONUtil {
 	 * @param c 字符
 	 * @return 转义后的字符串
 	 */
-	private static String escape(char c) {
+	private static String escape(final char c) {
 		switch (c) {
 			case '\b':
 				return "\\b";

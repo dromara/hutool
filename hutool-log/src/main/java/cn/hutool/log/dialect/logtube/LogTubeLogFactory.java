@@ -17,12 +17,12 @@ public class LogTubeLogFactory extends LogFactory {
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new LogTubeLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new LogTubeLog(clazz);
 	}
 

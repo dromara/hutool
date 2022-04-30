@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.reflect;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.reflect.ActualTypeMapperPool;
 import org.junit.Assert;
@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * 见：https://gitee.com/dromara/hutool/pulls/447/files
+ * 见：<a href="https://gitee.com/dromara/hutool/pulls/447/files">https://gitee.com/dromara/hutool/pulls/447/files</a>
  *
  * TODO 同时继承泛型和实现泛型接口需要解析，此处为F
  */

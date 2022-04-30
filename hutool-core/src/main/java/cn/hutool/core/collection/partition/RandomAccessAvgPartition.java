@@ -26,7 +26,7 @@ public class RandomAccessAvgPartition<T> extends AvgPartition<T> implements Rand
 	 * @param list  被分区的列表
 	 * @param limit 分区个数
 	 */
-	public RandomAccessAvgPartition(List<T> list, int limit) {
+	public RandomAccessAvgPartition(final List<T> list, final int limit) {
 		super(list, limit);
 	}
 }

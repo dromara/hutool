@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * Socket通讯配置
- * 
+ *
  * @author looly
  *
  */
@@ -29,10 +29,10 @@ public class SocketConfig implements Serializable{
 	private int readBufferSize = IoUtil.DEFAULT_BUFFER_SIZE;
 	/** 写出缓存大小 */
 	private int writeBufferSize = IoUtil.DEFAULT_BUFFER_SIZE;
-	
+
 	/**
 	 * 获取共享线程池大小，此线程池用于接收和处理用户连接
-	 * 
+	 *
 	 * @return 共享线程池大小，此线程池用于接收和处理用户连接
 	 */
 	public int getThreadPoolSize() {
@@ -41,16 +41,16 @@ public class SocketConfig implements Serializable{
 
 	/**
 	 * 设置共享线程池大小，此线程池用于接收和处理用户连接
-	 * 
+	 *
 	 * @param threadPoolSize 共享线程池大小，此线程池用于接收和处理用户连接
 	 */
-	public void setThreadPoolSize(int threadPoolSize) {
+	public void setThreadPoolSize(final int threadPoolSize) {
 		this.threadPoolSize = threadPoolSize;
 	}
 
 	/**
 	 * 获取读取超时时长，小于等于0表示默认
-	 * 
+	 *
 	 * @return 读取超时时长，小于等于0表示默认
 	 */
 	public long getReadTimeout() {
@@ -59,16 +59,16 @@ public class SocketConfig implements Serializable{
 
 	/**
 	 * 设置读取超时时长，小于等于0表示默认
-	 * 
+	 *
 	 * @param readTimeout 读取超时时长，小于等于0表示默认
 	 */
-	public void setReadTimeout(long readTimeout) {
+	public void setReadTimeout(final long readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
 	/**
 	 * 获取写出超时时长，小于等于0表示默认
-	 * 
+	 *
 	 * @return 写出超时时长，小于等于0表示默认
 	 */
 	public long getWriteTimeout() {
@@ -77,10 +77,10 @@ public class SocketConfig implements Serializable{
 
 	/**
 	 * 设置写出超时时长，小于等于0表示默认
-	 * 
+	 *
 	 * @param writeTimeout 写出超时时长，小于等于0表示默认
 	 */
-	public void setWriteTimeout(long writeTimeout) {
+	public void setWriteTimeout(final long writeTimeout) {
 		this.writeTimeout = writeTimeout;
 	}
 
@@ -96,7 +96,7 @@ public class SocketConfig implements Serializable{
 	 * 设置读取缓存大小
 	 * @param readBufferSize 读取缓存大小
 	 */
-	public void setReadBufferSize(int readBufferSize) {
+	public void setReadBufferSize(final int readBufferSize) {
 		this.readBufferSize = readBufferSize;
 	}
 
@@ -112,7 +112,7 @@ public class SocketConfig implements Serializable{
 	 * 设置写出缓存大小
 	 * @param writeBufferSize 写出缓存大小
 	 */
-	public void setWriteBufferSize(int writeBufferSize) {
+	public void setWriteBufferSize(final int writeBufferSize) {
 		this.writeBufferSize = writeBufferSize;
 	}
 }

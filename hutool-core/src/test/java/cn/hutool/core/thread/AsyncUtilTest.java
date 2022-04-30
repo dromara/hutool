@@ -18,15 +18,15 @@ public class AsyncUtilTest {
 	@Test
 	@Ignore
 	public void waitAndGetTest() {
-		CompletableFuture<String> hutool = CompletableFuture.supplyAsync(() -> {
+		final CompletableFuture<String> hutool = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(1, TimeUnit.SECONDS);
 			return "hutool";
 		});
-		CompletableFuture<String> sweater = CompletableFuture.supplyAsync(() -> {
+		final CompletableFuture<String> sweater = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(2, TimeUnit.SECONDS);
 			return "卫衣";
 		});
-		CompletableFuture<String> warm = CompletableFuture.supplyAsync(() -> {
+		final CompletableFuture<String> warm = CompletableFuture.supplyAsync(() -> {
 			ThreadUtil.sleep(3, TimeUnit.SECONDS);
 			return "真暖和";
 		});

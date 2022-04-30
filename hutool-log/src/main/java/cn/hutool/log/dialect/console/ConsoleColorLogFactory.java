@@ -16,12 +16,12 @@ public class ConsoleColorLogFactory extends LogFactory {
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new ConsoleColorLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new ConsoleColorLog(clazz);
 	}
 }

@@ -2,7 +2,7 @@ package cn.hutool.extra.ssh;
 
 /**
  * Jsch支持的Channel类型
- * 
+ *
  * @author looly
  * @since 4.5.2
  */
@@ -31,16 +31,16 @@ public enum ChannelType {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param value 类型值
 	 */
-	ChannelType(String value) {
+	ChannelType(final String value) {
 		this.value = value;
 	}
 
 	/**
 	 * 获取值
-	 * 
+	 *
 	 * @return 值
 	 */
 	public String getValue() {

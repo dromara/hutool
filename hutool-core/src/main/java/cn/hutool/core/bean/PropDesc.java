@@ -41,7 +41,7 @@ public class PropDesc {
 	 * @param getter get方法
 	 * @param setter set方法
 	 */
-	public PropDesc(Field field, Method getter, Method setter) {
+	public PropDesc(final Field field, final Method getter, final Method setter) {
 		this.field = field;
 		this.getter = ClassUtil.setAccessible(getter);
 		this.setter = ClassUtil.setAccessible(setter);
@@ -126,7 +126,7 @@ public class PropDesc {
 	 * @return 是否可读
 	 * @since 5.4.2
 	 */
-	public boolean isReadable(boolean checkTransient) {
+	public boolean isReadable(final boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
 		if (null == this.getter && false == ModifierUtil.isPublic(this.field)) {
 			return false;
@@ -150,7 +150,7 @@ public class PropDesc {
 	 * @return 字段值
 	 * @since 4.0.5
 	 */
-	public Object getValue(Object bean) {
+	public Object getValue(final Object bean) {
 		if (null != this.getter) {
 			return ReflectUtil.invoke(bean, this.getter);
 		} else if (ModifierUtil.isPublic(this.field)) {
@@ -170,11 +170,11 @@ public class PropDesc {
 	 * @return this
 	 * @since 5.4.2
 	 */
-	public Object getValue(Object bean, Type targetType, boolean ignoreError) {
+	public Object getValue(final Object bean, final Type targetType, final boolean ignoreError) {
 		Object result = null;
 		try {
 			result = getValue(bean);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if (false == ignoreError) {
 				throw new BeanException(e, "Get value of [{}] error!", getFieldName());
 			}
@@ -196,7 +196,7 @@ public class PropDesc {
 	 * @return 是否可读
 	 * @since 5.4.2
 	 */
-	public boolean isWritable(boolean checkTransient) {
+	public boolean isWritable(final boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
 		if (null == this.setter && false == ModifierUtil.isPublic(this.field)) {
 			return false;
@@ -221,7 +221,7 @@ public class PropDesc {
 	 * @return this
 	 * @since 4.0.5
 	 */
-	public PropDesc setValue(Object bean, Object value) {
+	public PropDesc setValue(final Object bean, final Object value) {
 		if (null != this.setter) {
 			ReflectUtil.invoke(bean, this.setter, value);
 		} else if (ModifierUtil.isPublic(this.field)) {
@@ -240,7 +240,7 @@ public class PropDesc {
 	 * @return this
 	 * @since 5.4.2
 	 */
-	public PropDesc setValue(Object bean, Object value, boolean ignoreNull, boolean ignoreError) {
+	public PropDesc setValue(final Object bean, final Object value, final boolean ignoreNull, final boolean ignoreError) {
 		return setValue(bean, value, ignoreNull, ignoreError, true);
 	}
 
@@ -255,7 +255,7 @@ public class PropDesc {
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public PropDesc setValue(Object bean, Object value, boolean ignoreNull, boolean ignoreError, boolean override) {
+	public PropDesc setValue(final Object bean, Object value, final boolean ignoreNull, final boolean ignoreError, final boolean override) {
 		if (null == value && ignoreNull) {
 			return this;
 		}
@@ -278,7 +278,7 @@ public class PropDesc {
 		if (null != value || false == ignoreNull) {
 			try {
 				this.setValue(bean, value);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				if (false == ignoreError) {
 					throw new BeanException(e, "Set value of [{}] error!", getFieldName());
 				}
@@ -298,7 +298,7 @@ public class PropDesc {
 	 * @param setter Setter方法
 	 * @return {@link Type}
 	 */
-	private Type findPropType(Method getter, Method setter) {
+	private Type findPropType(final Method getter, final Method setter) {
 		Type type = null;
 		if (null != getter) {
 			type = TypeUtil.getReturnType(getter);
@@ -316,7 +316,7 @@ public class PropDesc {
 	 * @param setter Setter方法
 	 * @return {@link Type}
 	 */
-	private Class<?> findPropClass(Method getter, Method setter) {
+	private Class<?> findPropClass(final Method getter, final Method setter) {
 		Class<?> type = null;
 		if (null != getter) {
 			type = TypeUtil.getReturnClass(getter);

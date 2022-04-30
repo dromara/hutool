@@ -27,9 +27,9 @@ public class RingIndexUtil {
 	 * @param atomicInteger 原子操作类
 	 * @return 索引位置
 	 */
-	public static int ringNextIntByObj(Object object, AtomicInteger atomicInteger) {
+	public static int ringNextIntByObj(final Object object, final AtomicInteger atomicInteger) {
 		Assert.notNull(object);
-		int modulo = CollUtil.size(object);
+		final int modulo = CollUtil.size(object);
 		return ringNextInt(modulo, atomicInteger);
 	}
 
@@ -40,15 +40,15 @@ public class RingIndexUtil {
 	 * @param atomicInteger 原子操作类
 	 * @return 索引位置
 	 */
-	public static int ringNextInt(int modulo, AtomicInteger atomicInteger) {
+	public static int ringNextInt(final int modulo, final AtomicInteger atomicInteger) {
 		Assert.notNull(atomicInteger);
 		Assert.isTrue(modulo > 0);
 		if (modulo <= 1) {
 			return 0;
 		}
 		for (; ; ) {
-			int current = atomicInteger.get();
-			int next = (current + 1) % modulo;
+			final int current = atomicInteger.get();
+			final int next = (current + 1) % modulo;
 			if (atomicInteger.compareAndSet(current, next)) {
 				return next;
 			}
@@ -63,15 +63,15 @@ public class RingIndexUtil {
 	 * @param atomicLong 原子操作类
 	 * @return 索引位置
 	 */
-	public static long ringNextLong(long modulo, AtomicLong atomicLong) {
+	public static long ringNextLong(final long modulo, final AtomicLong atomicLong) {
 		Assert.notNull(atomicLong);
 		Assert.isTrue(modulo > 0);
 		if (modulo <= 1) {
 			return 0;
 		}
 		for (; ; ) {
-			long current = atomicLong.get();
-			long next = (current + 1) % modulo;
+			final long current = atomicLong.get();
+			final long next = (current + 1) % modulo;
 			if (atomicLong.compareAndSet(current, next)) {
 				return next;
 			}

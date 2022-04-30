@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class IssueI1F8M2 {
 	@Test
 	public void toBeanTest() {
-		String jsonStr = "{\"eventType\":\"fee\",\"fwdAlertingTime\":\"2020-04-22 16:34:13\",\"fwdAnswerTime\":\"\"}";
-		Param param = JSONUtil.toBean(jsonStr, Param.class);
+		final String jsonStr = "{\"eventType\":\"fee\",\"fwdAlertingTime\":\"2020-04-22 16:34:13\",\"fwdAnswerTime\":\"\"}";
+		final Param param = JSONUtil.toBean(jsonStr, Param.class);
 		Assert.assertEquals("2020-04-22T16:34:13", param.getFwdAlertingTime().toString());
 		Assert.assertNull(param.getFwdAnswerTime());
 	}

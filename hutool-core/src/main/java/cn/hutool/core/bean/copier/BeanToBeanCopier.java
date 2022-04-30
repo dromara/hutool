@@ -30,7 +30,7 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 	 * @param targetType  目标泛型类型
 	 * @param copyOptions 拷贝选项
 	 */
-	public BeanToBeanCopier(S source, T target, Type targetType, CopyOptions copyOptions) {
+	public BeanToBeanCopier(final S source, final T target, final Type targetType, final CopyOptions copyOptions) {
 		super(source, target, copyOptions);
 		this.targetType = targetType;
 	}

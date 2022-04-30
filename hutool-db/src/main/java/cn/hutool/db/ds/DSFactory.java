@@ -49,7 +49,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 *
 	 * @param dataSourceName 数据源名称
 	 */
-	public DSFactory(String dataSourceName) {
+	public DSFactory(final String dataSourceName) {
 		this.dataSourceName = dataSourceName;
 	}
 
@@ -107,7 +107,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * @param group 配置文件中对应的分组
 	 * @return 数据源
 	 */
-	public static DataSource get(String group) {
+	public static DataSource get(final String group) {
 		return GlobalDSFactory.get().getDataSource(group);
 	}
 
@@ -124,7 +124,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * @param dsFactory 数据源工厂
 	 * @return 自定义的数据源工厂
 	 */
-	public static DSFactory setCurrentDSFactory(DSFactory dsFactory) {
+	public static DSFactory setCurrentDSFactory(final DSFactory dsFactory) {
 		return GlobalDSFactory.set(dsFactory);
 	}
 
@@ -136,7 +136,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * @param setting 数据库配置项
 	 * @return 日志实现类
 	 */
-	public static DSFactory create(Setting setting) {
+	public static DSFactory create(final Setting setting) {
 		final DSFactory dsFactory = doCreate(setting);
 		log.debug("Use [{}] DataSource As Default", dsFactory.dataSourceName);
 		return dsFactory;
@@ -151,37 +151,37 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * @return 日志实现类
 	 * @since 4.1.3
 	 */
-	private static DSFactory doCreate(Setting setting) {
+	private static DSFactory doCreate(final Setting setting) {
 		try {
 			return new HikariDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 		try {
 			return new DruidDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 		try {
 			return new TomcatDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			//如果未引入包，此处会报org.apache.tomcat.jdbc.pool.PoolConfiguration未找到错误
 			//因为org.apache.tomcat.jdbc.pool.DataSource实现了此接口，会首先检查接口的存在与否
 			// ignore
 		}
 		try {
 			return new BeeDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 		try {
 			return new DbcpDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 		try {
 			return new C3p0DSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 		return new PooledDSFactory(setting);

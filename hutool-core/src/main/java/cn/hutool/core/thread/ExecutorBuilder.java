@@ -68,7 +68,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param corePoolSize 初始池大小
 	 * @return this
 	 */
-	public ExecutorBuilder setCorePoolSize(int corePoolSize) {
+	public ExecutorBuilder setCorePoolSize(final int corePoolSize) {
 		this.corePoolSize = corePoolSize;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param maxPoolSize 最大池大小（允许同时执行的最大线程数）
 	 * @return this
 	 */
-	public ExecutorBuilder setMaxPoolSize(int maxPoolSize) {
+	public ExecutorBuilder setMaxPoolSize(final int maxPoolSize) {
 		this.maxPoolSize = maxPoolSize;
 		return this;
 	}
@@ -91,7 +91,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param unit          单位
 	 * @return this
 	 */
-	public ExecutorBuilder setKeepAliveTime(long keepAliveTime, TimeUnit unit) {
+	public ExecutorBuilder setKeepAliveTime(final long keepAliveTime, final TimeUnit unit) {
 		return setKeepAliveTime(unit.toNanos(keepAliveTime));
 	}
 
@@ -101,7 +101,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param keepAliveTime 线程存活时间，单位纳秒
 	 * @return this
 	 */
-	public ExecutorBuilder setKeepAliveTime(long keepAliveTime) {
+	public ExecutorBuilder setKeepAliveTime(final long keepAliveTime) {
 		this.keepAliveTime = keepAliveTime;
 		return this;
 	}
@@ -120,7 +120,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param workQueue 队列
 	 * @return this
 	 */
-	public ExecutorBuilder setWorkQueue(BlockingQueue<Runnable> workQueue) {
+	public ExecutorBuilder setWorkQueue(final BlockingQueue<Runnable> workQueue) {
 		this.workQueue = workQueue;
 		return this;
 	}
@@ -133,7 +133,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @return this
 	 * @since 5.1.4
 	 */
-	public ExecutorBuilder useArrayBlockingQueue(int capacity) {
+	public ExecutorBuilder useArrayBlockingQueue(final int capacity) {
 		return setWorkQueue(new ArrayBlockingQueue<>(capacity));
 	}
 
@@ -156,7 +156,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @return this
 	 * @since 4.5.0
 	 */
-	public ExecutorBuilder useSynchronousQueue(boolean fair) {
+	public ExecutorBuilder useSynchronousQueue(final boolean fair) {
 		return setWorkQueue(new SynchronousQueue<>(fair));
 	}
 
@@ -167,7 +167,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @return this
 	 * @see ThreadFactoryBuilder
 	 */
-	public ExecutorBuilder setThreadFactory(ThreadFactory threadFactory) {
+	public ExecutorBuilder setThreadFactory(final ThreadFactory threadFactory) {
 		this.threadFactory = threadFactory;
 		return this;
 	}
@@ -181,7 +181,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @return this
 	 * @see RejectPolicy
 	 */
-	public ExecutorBuilder setHandler(RejectedExecutionHandler handler) {
+	public ExecutorBuilder setHandler(final RejectedExecutionHandler handler) {
 		this.handler = handler;
 		return this;
 	}
@@ -192,7 +192,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param allowCoreThreadTimeOut 线程执行超时后是否回收线程
 	 * @return this
 	 */
-	public ExecutorBuilder setAllowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
+	public ExecutorBuilder setAllowCoreThreadTimeOut(final boolean allowCoreThreadTimeOut) {
 		this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
 		return this;
 	}
@@ -230,7 +230,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @param builder this
 	 * @return {@link ThreadPoolExecutor}
 	 */
-	private static ThreadPoolExecutor build(ExecutorBuilder builder) {
+	private static ThreadPoolExecutor build(final ExecutorBuilder builder) {
 		final int corePoolSize = builder.corePoolSize;
 		final int maxPoolSize = builder.maxPoolSize;
 		final long keepAliveTime = builder.keepAliveTime;
@@ -242,7 +242,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
 		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
-		RejectedExecutionHandler handler = ObjUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
+		final RejectedExecutionHandler handler = ObjUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
 
 		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(//
 				corePoolSize, //

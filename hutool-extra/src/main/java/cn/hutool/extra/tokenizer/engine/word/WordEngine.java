@@ -31,7 +31,7 @@ public class WordEngine implements TokenizerEngine {
 	 *
 	 * @param algorithm {@link SegmentationAlgorithm}分词算法枚举
 	 */
-	public WordEngine(SegmentationAlgorithm algorithm) {
+	public WordEngine(final SegmentationAlgorithm algorithm) {
 		this(SegmentationFactory.getSegmentation(algorithm));
 	}
 
@@ -40,12 +40,12 @@ public class WordEngine implements TokenizerEngine {
 	 *
 	 * @param segmentation {@link Segmentation}分词实现
 	 */
-	public WordEngine(Segmentation segmentation) {
+	public WordEngine(final Segmentation segmentation) {
 		this.segmentation = segmentation;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		return new WordResult(this.segmentation.seg(StrUtil.str(text)));
 	}
 

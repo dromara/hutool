@@ -40,7 +40,7 @@ public class BCUtil {
 	 * @return 压缩得到的X
 	 * @since 5.1.6
 	 */
-	public static byte[] encodeECPrivateKey(PrivateKey privateKey) {
+	public static byte[] encodeECPrivateKey(final PrivateKey privateKey) {
 		return ((BCECPrivateKey) privateKey).getD().toByteArray();
 	}
 
@@ -52,7 +52,7 @@ public class BCUtil {
 	 * @return 压缩得到的Q
 	 * @since 4.4.4
 	 */
-	public static byte[] encodeECPublicKey(PublicKey publicKey) {
+	public static byte[] encodeECPublicKey(final PublicKey publicKey) {
 		return encodeECPublicKey(publicKey, true);
 	}
 
@@ -65,7 +65,7 @@ public class BCUtil {
 	 * @return 得到的Q
 	 * @since 5.5.9
 	 */
-	public static byte[] encodeECPublicKey(PublicKey publicKey, boolean isCompressed) {
+	public static byte[] encodeECPublicKey(final PublicKey publicKey, final boolean isCompressed) {
 		return ((BCECPublicKey) publicKey).getQ().getEncoded(isCompressed);
 	}
 
@@ -78,7 +78,7 @@ public class BCUtil {
 	 * @return 公钥
 	 * @since 4.4.4
 	 */
-	public static PublicKey decodeECPoint(String encode, String curveName) {
+	public static PublicKey decodeECPoint(final String encode, final String curveName) {
 		return decodeECPoint(SecureUtil.decode(encode), curveName);
 	}
 
@@ -90,7 +90,7 @@ public class BCUtil {
 	 * @return 公钥
 	 * @since 4.4.4
 	 */
-	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
+	public static PublicKey decodeECPoint(final byte[] encodeByte, final String curveName) {
 		final X9ECParameters x9ECParameters = ECUtil.getNamedCurveByName(curveName);
 		final ECCurve curve = x9ECParameters.getCurve();
 		final ECPoint point = EC5Util.convertPoint(curve.decodePoint(encodeByte));
@@ -107,7 +107,7 @@ public class BCUtil {
 	 * @return {@link ECDomainParameters}
 	 * @since 5.2.0
 	 */
-	public static ECDomainParameters toDomainParams(ECParameterSpec parameterSpec) {
+	public static ECDomainParameters toDomainParams(final ECParameterSpec parameterSpec) {
 		return new ECDomainParameters(
 				parameterSpec.getCurve(),
 				parameterSpec.getG(),
@@ -122,7 +122,7 @@ public class BCUtil {
 	 * @return {@link ECDomainParameters}
 	 * @since 5.2.0
 	 */
-	public static ECDomainParameters toDomainParams(String curveName) {
+	public static ECDomainParameters toDomainParams(final String curveName) {
 		return toDomainParams(ECUtil.getNamedCurveByName(curveName));
 	}
 
@@ -133,7 +133,7 @@ public class BCUtil {
 	 * @return {@link ECDomainParameters}
 	 * @since 5.2.0
 	 */
-	public static ECDomainParameters toDomainParams(X9ECParameters x9ECParameters) {
+	public static ECDomainParameters toDomainParams(final X9ECParameters x9ECParameters) {
 		return new ECDomainParameters(
 				x9ECParameters.getCurve(),
 				x9ECParameters.getG(),
@@ -149,7 +149,7 @@ public class BCUtil {
 	 * @return ECPrivateKeyParameters或者ECPublicKeyParameters
 	 * @since 5.2.0
 	 */
-	public static AsymmetricKeyParameter toParams(Key key) {
+	public static AsymmetricKeyParameter toParams(final Key key) {
 		return ECKeyUtil.toParams(key);
 	}
 
@@ -159,7 +159,7 @@ public class BCUtil {
 	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2Params(String d) {
+	public static ECPrivateKeyParameters toSm2Params(final String d) {
 		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
@@ -170,7 +170,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toParams(String dHex, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toParams(final String dHex, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPrivateParams(dHex, domainParameters);
 	}
 
@@ -180,7 +180,7 @@ public class BCUtil {
 	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2Params(byte[] d) {
+	public static ECPrivateKeyParameters toSm2Params(final byte[] d) {
 		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
@@ -191,7 +191,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toParams(byte[] d, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toParams(final byte[] d, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPrivateParams(d, domainParameters);
 	}
 
@@ -201,7 +201,7 @@ public class BCUtil {
 	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2Params(BigInteger d) {
+	public static ECPrivateKeyParameters toSm2Params(final BigInteger d) {
 		return ECKeyUtil.toSm2PrivateParams(d);
 	}
 
@@ -212,7 +212,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toParams(BigInteger d, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toParams(final BigInteger d, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPrivateParams(d, domainParameters);
 	}
 
@@ -224,7 +224,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toParams(BigInteger x, BigInteger y, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toParams(final BigInteger x, final BigInteger y, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPublicParams(x, y, domainParameters);
 	}
 
@@ -235,7 +235,7 @@ public class BCUtil {
 	 * @param yHex 公钥Y
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2Params(String xHex, String yHex) {
+	public static ECPublicKeyParameters toSm2Params(final String xHex, final String yHex) {
 		return ECKeyUtil.toSm2PublicParams(xHex, yHex);
 	}
 
@@ -247,7 +247,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toParams(String xHex, String yHex, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toParams(final String xHex, final String yHex, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPublicParams(xHex, yHex, domainParameters);
 	}
 
@@ -258,7 +258,7 @@ public class BCUtil {
 	 * @param yBytes 公钥Y
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2Params(byte[] xBytes, byte[] yBytes) {
+	public static ECPublicKeyParameters toSm2Params(final byte[] xBytes, final byte[] yBytes) {
 		return ECKeyUtil.toSm2PublicParams(xBytes, yBytes);
 	}
 
@@ -270,7 +270,7 @@ public class BCUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toParams(byte[] xBytes, byte[] yBytes, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toParams(final byte[] xBytes, final byte[] yBytes, final ECDomainParameters domainParameters) {
 		return ECKeyUtil.toPublicParams(xBytes, yBytes, domainParameters);
 	}
 
@@ -280,7 +280,7 @@ public class BCUtil {
 	 * @param publicKey 公钥，传入null返回null
 	 * @return {@link ECPublicKeyParameters}或null
 	 */
-	public static ECPublicKeyParameters toParams(PublicKey publicKey) {
+	public static ECPublicKeyParameters toParams(final PublicKey publicKey) {
 		return ECKeyUtil.toPublicParams(publicKey);
 	}
 
@@ -290,7 +290,7 @@ public class BCUtil {
 	 * @param privateKey 私钥，传入null返回null
 	 * @return {@link ECPrivateKeyParameters}或null
 	 */
-	public static ECPrivateKeyParameters toParams(PrivateKey privateKey) {
+	public static ECPrivateKeyParameters toParams(final PrivateKey privateKey) {
 		return ECKeyUtil.toPrivateParams(privateKey);
 	}
 
@@ -302,7 +302,7 @@ public class BCUtil {
 	 * @since 5.2.5
 	 * @see PemUtil#readPemPrivateKey(InputStream)
 	 */
-	public static PrivateKey readPemPrivateKey(InputStream pemStream) {
+	public static PrivateKey readPemPrivateKey(final InputStream pemStream) {
 		return PemUtil.readPemPrivateKey(pemStream);
 	}
 
@@ -314,7 +314,7 @@ public class BCUtil {
 	 * @since 5.2.5
 	 * @see PemUtil#readPemPublicKey(InputStream)
 	 */
-	public static PublicKey readPemPublicKey(InputStream pemStream) {
+	public static PublicKey readPemPublicKey(final InputStream pemStream) {
 		return PemUtil.readPemPublicKey(pemStream);
 	}
 
@@ -325,11 +325,11 @@ public class BCUtil {
 	 * @return PKCS#1格式私钥
 	 * @since 5.5.9
 	 */
-	public static byte[] toPkcs1(PrivateKey privateKey){
+	public static byte[] toPkcs1(final PrivateKey privateKey){
 		final PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
 		try {
 			return pkInfo.parsePrivateKey().toASN1Primitive().getEncoded();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -341,12 +341,12 @@ public class BCUtil {
 	 * @return PKCS#1格式公钥
 	 * @since 5.5.9
 	 */
-	public static byte[] toPkcs1(PublicKey publicKey){
+	public static byte[] toPkcs1(final PublicKey publicKey){
 		final SubjectPublicKeyInfo spkInfo = SubjectPublicKeyInfo
 				.getInstance(publicKey.getEncoded());
 		try {
 			return spkInfo.parsePublicKey().getEncoded();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

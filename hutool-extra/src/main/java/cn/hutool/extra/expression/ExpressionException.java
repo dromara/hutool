@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class ExpressionException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public ExpressionException(Throwable e) {
+	public ExpressionException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public ExpressionException(String message) {
+	public ExpressionException(final String message) {
 		super(message);
 	}
 
-	public ExpressionException(String messageTemplate, Object... params) {
+	public ExpressionException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public ExpressionException(String message, Throwable throwable) {
+	public ExpressionException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public ExpressionException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public ExpressionException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public ExpressionException(Throwable throwable, String messageTemplate, Object... params) {
+	public ExpressionException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

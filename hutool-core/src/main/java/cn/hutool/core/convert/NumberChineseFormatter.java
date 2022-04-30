@@ -47,7 +47,7 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 中文
 	 */
-	public static String format(double amount, boolean isUseTraditional) {
+	public static String format(final double amount, final boolean isUseTraditional) {
 		return format(amount, isUseTraditional, false);
 	}
 
@@ -70,7 +70,7 @@ public class NumberChineseFormatter {
 	 * @author machuanpeng
 	 * @since 5.7.23
 	 */
-	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode, String negativeName, String unitName) {
+	public static String format(double amount, final boolean isUseTraditional, final boolean isMoneyMode, final String negativeName, final String unitName) {
 		if (0 == amount) {
 			return "零";
 		}
@@ -145,7 +145,7 @@ public class NumberChineseFormatter {
 	 * @param isMoneyMode      是否为金额模式
 	 * @return 中文
 	 */
-	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
+	public static String format(final double amount, final boolean isUseTraditional, final boolean isMoneyMode) {
 		return format(amount, isUseTraditional, isMoneyMode, "负", "元");
 	}
 
@@ -157,7 +157,7 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 * @since 5.7.17
 	 */
-	public static String format(long amount, boolean isUseTraditional) {
+	public static String format(long amount, final boolean isUseTraditional) {
 		if (0 == amount) {
 			return "零";
 		}
@@ -182,11 +182,11 @@ public class NumberChineseFormatter {
 	 * @param amount 数字
 	 * @return 中文
 	 */
-	public static String formatSimple(long amount) {
+	public static String formatSimple(final long amount) {
 		if (amount < 1_0000 && amount > -1_0000) {
 			return String.valueOf(amount);
 		}
-		String res;
+		final String res;
 		if (amount < 1_0000_0000 && amount > -1_0000_0000) {
 			res = NumberUtil.div(amount, 1_0000, 2) + "万";
 		} else if (amount < 1_0000_0000_0000L && amount > -1_0000_0000_0000L) {
@@ -206,7 +206,7 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 * @since 5.7.17
 	 */
-	public static String formatThousand(int amount, boolean isUseTraditional) {
+	public static String formatThousand(final int amount, final boolean isUseTraditional) {
 		Assert.checkBetween(amount, -999, 999, "Number support only: (-999 ~ 999)！");
 
 		final String chinese = thousandToChinese(amount, isUseTraditional);
@@ -225,7 +225,7 @@ public class NumberChineseFormatter {
 	 * @return 中文字符
 	 * @since 5.3.9
 	 */
-	public static String numberCharToChinese(char c, boolean isUseTraditional) {
+	public static String numberCharToChinese(final char c, final boolean isUseTraditional) {
 		if (c < '0' || c > '9') {
 			return String.valueOf(c);
 		}
@@ -239,13 +239,13 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 中文
 	 */
-	private static String longToChinese(long amount, boolean isUseTraditional) {
+	private static String longToChinese(long amount, final boolean isUseTraditional) {
 		if (0 == amount) {
 			return "零";
 		}
 
 		//将数字以万为单位分为多份
-		int[] parts = new int[4];
+		final int[] parts = new int[4];
 		for (int i = 0; amount != 0; i++) {
 			parts[i] = (int) (amount % 10000);
 			amount = amount / 10000;
@@ -328,7 +328,7 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体单位
 	 * @return 转换后的汉字
 	 */
-	private static String thousandToChinese(int amountPart, boolean isUseTraditional) {
+	private static String thousandToChinese(final int amountPart, final boolean isUseTraditional) {
 		if (amountPart == 0) {
 			// issue#I4R92H@Gitee
 			return String.valueOf(DIGITS[0]);
@@ -336,10 +336,10 @@ public class NumberChineseFormatter {
 
 		int temp = amountPart;
 
-		StringBuilder chineseStr = new StringBuilder();
+		final StringBuilder chineseStr = new StringBuilder();
 		boolean lastIsZero = true; // 在从低位往高位循环时，记录上一位数字是不是 0
 		for (int i = 0; temp > 0; i++) {
-			int digit = temp % 10;
+			final int digit = temp % 10;
 			if (digit == 0) { // 取到的数字为 0
 				if (false == lastIsZero) {
 					// 前一个数字不是 0，则在当前汉字串前加“零”字;
@@ -367,7 +367,7 @@ public class NumberChineseFormatter {
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static int chineseToNumber(String chinese) {
+	public static int chineseToNumber(final String chinese) {
 		final int length = chinese.length();
 		int result = 0;
 
@@ -433,8 +433,8 @@ public class NumberChineseFormatter {
 	 * @param chinese 中文权位名
 	 * @return 权对象
 	 */
-	private static ChineseUnit chineseToUnit(char chinese) {
-		for (ChineseUnit chineseNameValue : CHINESE_NAME_VALUE) {
+	private static ChineseUnit chineseToUnit(final char chinese) {
+		for (final ChineseUnit chineseNameValue : CHINESE_NAME_VALUE) {
 			if (chineseNameValue.name == chinese) {
 				return chineseNameValue;
 			}
@@ -468,7 +468,7 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 汉字
 	 */
-	private static char numberToChinese(int number, boolean isUseTraditional) {
+	private static char numberToChinese(final int number, final boolean isUseTraditional) {
 		if (0 == number) {
 			return DIGITS[0];
 		}
@@ -482,7 +482,7 @@ public class NumberChineseFormatter {
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 单位
 	 */
-	private static String getUnitName(int index, boolean isUseTraditional) {
+	private static String getUnitName(final int index, final boolean isUseTraditional) {
 		if (0 == index) {
 			return StrUtil.EMPTY;
 		}
@@ -517,14 +517,14 @@ public class NumberChineseFormatter {
 		 * @param value   值，即10的倍数
 		 * @param secUnit 是否为节权位
 		 */
-		public ChineseUnit(char name, int value, boolean secUnit) {
+		public ChineseUnit(final char name, final int value, final boolean secUnit) {
 			this.name = name;
 			this.value = value;
 			this.secUnit = secUnit;
 		}
 	}
 
-	private static void addPreZero(StringBuilder chineseStr) {
+	private static void addPreZero(final StringBuilder chineseStr) {
 		if (StrUtil.isEmpty(chineseStr)) {
 			return;
 		}

@@ -28,7 +28,7 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 *
 	 * @param timeout 超时（过期）时长，单位毫秒
 	 */
-	public TimedCache(long timeout) {
+	public TimedCache(final long timeout) {
 		this(timeout, new HashMap<>());
 	}
 
@@ -38,7 +38,7 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 * @param timeout 过期时长
 	 * @param map 存储缓存对象的map
 	 */
-	public TimedCache(long timeout, Map<Mutable<K>, CacheObj<K, V>> map) {
+	public TimedCache(final long timeout, final Map<Mutable<K>, CacheObj<K, V>> map) {
 		this.capacity = 0;
 		this.timeout = timeout;
 		this.cacheMap = map;
@@ -72,7 +72,7 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	 *
 	 * @param delay 间隔时长，单位毫秒
 	 */
-	public void schedulePrune(long delay) {
+	public void schedulePrune(final long delay) {
 		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(this::prune, delay);
 	}
 

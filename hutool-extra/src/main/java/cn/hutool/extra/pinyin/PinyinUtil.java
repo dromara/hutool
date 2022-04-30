@@ -27,7 +27,7 @@ public class PinyinUtil {
 	 * @param c 任意字符，汉字返回拼音，非汉字原样返回
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String getPinyin(char c) {
+	public static String getPinyin(final char c) {
 		return getEngine().getPinyin(c);
 	}
 
@@ -37,7 +37,7 @@ public class PinyinUtil {
 	 * @param str 任意字符，汉字返回拼音，非汉字原样返回
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String getPinyin(String str) {
+	public static String getPinyin(final String str) {
 		return getPinyin(str, StrUtil.SPACE);
 	}
 
@@ -48,7 +48,7 @@ public class PinyinUtil {
 	 * @param separator 每个字拼音之间的分隔符
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String getPinyin(String str, String separator) {
+	public static String getPinyin(final String str, final String separator) {
 		return getEngine().getPinyin(str, separator);
 	}
 
@@ -58,7 +58,7 @@ public class PinyinUtil {
 	 * @param c 任意字符，汉字返回拼音，非汉字原样返回
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static char getFirstLetter(char c) {
+	public static char getFirstLetter(final char c) {
 		return getEngine().getFirstLetter(c);
 	}
 
@@ -69,7 +69,7 @@ public class PinyinUtil {
 	 * @param separator 分隔符
 	 * @return 汉字返回拼音，非汉字原样返回
 	 */
-	public static String getFirstLetter(String str, String separator) {
+	public static String getFirstLetter(final String str, final String separator) {
 		return getEngine().getFirstLetter(str, separator);
 	}
 
@@ -79,7 +79,7 @@ public class PinyinUtil {
 	 * @param c 字符
 	 * @return 是否为中文字符
 	 */
-	public static boolean isChinese(char c) {
+	public static boolean isChinese(final char c) {
 		return '〇' == c || String.valueOf(c).matches(CHINESE_REGEX);
 	}
 }

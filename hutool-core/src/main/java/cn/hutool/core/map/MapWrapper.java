@@ -45,7 +45,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 * @param mapFactory 空Map创建工厂
 	 * @since 5.8.0
 	 */
-	public MapWrapper(Supplier<Map<K, V>> mapFactory) {
+	public MapWrapper(final Supplier<Map<K, V>> mapFactory) {
 		this(mapFactory.get());
 	}
 
@@ -54,7 +54,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 *
 	 * @param raw 被包装的Map
 	 */
-	public MapWrapper(Map<K, V> raw) {
+	public MapWrapper(final Map<K, V> raw) {
 		this.raw = raw;
 	}
 
@@ -78,32 +78,32 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	public boolean containsKey(Object key) {
+	public boolean containsKey(final Object key) {
 		return raw.containsKey(key);
 	}
 
 	@Override
-	public boolean containsValue(Object value) {
+	public boolean containsValue(final Object value) {
 		return raw.containsValue(value);
 	}
 
 	@Override
-	public V get(Object key) {
+	public V get(final Object key) {
 		return raw.get(key);
 	}
 
 	@Override
-	public V put(K key, V value) {
+	public V put(final K key, final V value) {
 		return raw.put(key, value);
 	}
 
 	@Override
-	public V remove(Object key) {
+	public V remove(final Object key) {
 		return raw.remove(key);
 	}
 
 	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
+	public void putAll(final Map<? extends K, ? extends V> m) {
 		raw.putAll(m);
 	}
 
@@ -133,14 +133,14 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		MapWrapper<?, ?> that = (MapWrapper<?, ?>) o;
+		final MapWrapper<?, ?> that = (MapWrapper<?, ?>) o;
 		return Objects.equals(raw, that.raw);
 	}
 
@@ -156,59 +156,59 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 
 
 	@Override
-	public void forEach(BiConsumer<? super K, ? super V> action) {
+	public void forEach(final BiConsumer<? super K, ? super V> action) {
 		raw.forEach(action);
 	}
 
 	@Override
-	public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+	public void replaceAll(final BiFunction<? super K, ? super V, ? extends V> function) {
 		raw.replaceAll(function);
 	}
 
 	@Override
-	public V putIfAbsent(K key, V value) {
+	public V putIfAbsent(final K key, final V value) {
 		return raw.putIfAbsent(key, value);
 	}
 
 	@Override
-	public boolean remove(Object key, Object value) {
+	public boolean remove(final Object key, final Object value) {
 		return raw.remove(key, value);
 	}
 
 	@Override
-	public boolean replace(K key, V oldValue, V newValue) {
+	public boolean replace(final K key, final V oldValue, final V newValue) {
 		return raw.replace(key, oldValue, newValue);
 	}
 
 	@Override
-	public V replace(K key, V value) {
+	public V replace(final K key, final V value) {
 		return raw.replace(key, value);
 	}
 
 	@Override
-	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
 		return raw.computeIfAbsent(key, mappingFunction);
 	}
 
 	// 重写默认方法的意义在于，如果被包装的Map自定义了这些默认方法，包装类就可以保持这些行为的一致性
 	//---------------------------------------------------------------------------- Override default methods start
 	@Override
-	public V getOrDefault(Object key, V defaultValue) {
+	public V getOrDefault(final Object key, final V defaultValue) {
 		return raw.getOrDefault(key, defaultValue);
 	}
 
 	@Override
-	public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 		return raw.computeIfPresent(key, remappingFunction);
 	}
 
 	@Override
-	public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+	public V compute(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 		return raw.compute(key, remappingFunction);
 	}
 
 	@Override
-	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V merge(final K key, final V value, final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		return raw.merge(key, value, remappingFunction);
 	}
 

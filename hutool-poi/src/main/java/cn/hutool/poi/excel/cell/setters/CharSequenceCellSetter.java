@@ -18,12 +18,12 @@ public class CharSequenceCellSetter implements CellSetter {
 	 *
 	 * @param value 值
 	 */
-	CharSequenceCellSetter(CharSequence value) {
+	CharSequenceCellSetter(final CharSequence value) {
 		this.value = value;
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setCellValue(value.toString());
 	}
 }

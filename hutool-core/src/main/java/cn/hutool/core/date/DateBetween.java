@@ -32,7 +32,7 @@ public class DateBetween implements Serializable {
 	 * @return DateBetween
 	 * @since 3.2.3
 	 */
-	public static DateBetween create(Date begin, Date end) {
+	public static DateBetween create(final Date begin, final Date end) {
 		return new DateBetween(begin, end);
 	}
 
@@ -46,7 +46,7 @@ public class DateBetween implements Serializable {
 	 * @return DateBetween
 	 * @since 3.2.3
 	 */
-	public static DateBetween create(Date begin, Date end, boolean isAbs) {
+	public static DateBetween create(final Date begin, final Date end, final boolean isAbs) {
 		return new DateBetween(begin, end, isAbs);
 	}
 
@@ -57,7 +57,7 @@ public class DateBetween implements Serializable {
 	 * @param begin 起始时间
 	 * @param end   结束时间
 	 */
-	public DateBetween(Date begin, Date end) {
+	public DateBetween(final Date begin, final Date end) {
 		this(begin, end, true);
 	}
 
@@ -70,7 +70,7 @@ public class DateBetween implements Serializable {
 	 * @param isAbs 日期间隔是否只保留绝对值正数
 	 * @since 3.1.1
 	 */
-	public DateBetween(Date begin, Date end, boolean isAbs) {
+	public DateBetween(final Date begin, final Date end, final boolean isAbs) {
 		Assert.notNull(begin, "Begin date is null !");
 		Assert.notNull(end, "End date is null !");
 
@@ -91,8 +91,8 @@ public class DateBetween implements Serializable {
 	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 时长差
 	 */
-	public long between(DateUnit unit) {
-		long diff = end.getTime() - begin.getTime();
+	public long between(final DateUnit unit) {
+		final long diff = end.getTime() - begin.getTime();
 		return diff / unit.getMillis();
 	}
 
@@ -104,18 +104,18 @@ public class DateBetween implements Serializable {
 	 * @return 相差月数
 	 * @since 3.0.8
 	 */
-	public long betweenMonth(boolean isReset) {
+	public long betweenMonth(final boolean isReset) {
 		final Calendar beginCal = DateUtil.calendar(begin);
 		final Calendar endCal = DateUtil.calendar(end);
 
 		final int betweenYear = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		final int betweenMonthOfYear = endCal.get(Calendar.MONTH) - beginCal.get(Calendar.MONTH);
 
-		int result = betweenYear * 12 + betweenMonthOfYear;
+		final int result = betweenYear * 12 + betweenMonthOfYear;
 		if (false == isReset) {
 			endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
 			endCal.set(Calendar.MONTH, beginCal.get(Calendar.MONTH));
-			long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
+			final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
 			if (between < 0) {
 				return result - 1;
 			}
@@ -131,11 +131,11 @@ public class DateBetween implements Serializable {
 	 * @return 相差年数
 	 * @since 3.0.8
 	 */
-	public long betweenYear(boolean isReset) {
+	public long betweenYear(final boolean isReset) {
 		final Calendar beginCal = DateUtil.calendar(begin);
 		final Calendar endCal = DateUtil.calendar(end);
 
-		int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
+		final int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		if (false == isReset) {
 			// 考虑闰年的2月情况
 			if (Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)) {
@@ -148,7 +148,7 @@ public class DateBetween implements Serializable {
 			}
 
 			endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
-			long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
+			final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
 			if (between < 0) {
 				return result - 1;
 			}
@@ -164,7 +164,7 @@ public class DateBetween implements Serializable {
 	 * @return 字符串
 	 * @since 5.7.17
 	 */
-	public String toString(DateUnit unit, BetweenFormatter.Level level) {
+	public String toString(final DateUnit unit, final BetweenFormatter.Level level) {
 		return DateUtil.formatBetween(between(unit), level);
 	}
 
@@ -174,7 +174,7 @@ public class DateBetween implements Serializable {
 	 * @param level 级别
 	 * @return 字符串
 	 */
-	public String toString(BetweenFormatter.Level level) {
+	public String toString(final BetweenFormatter.Level level) {
 		return toString(DateUnit.MS, level);
 	}
 

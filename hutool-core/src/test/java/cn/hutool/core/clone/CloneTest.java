@@ -16,16 +16,16 @@ public class CloneTest {
 	public void cloneTest(){
 
 		//实现Cloneable接口
-		Cat cat = new Cat();
-		Cat cat2 = cat.clone();
+		final Cat cat = new Cat();
+		final Cat cat2 = cat.clone();
 		Assert.assertEquals(cat, cat2);
 	}
 
 	@Test
 	public void cloneTest2(){
 		//继承CloneSupport类
-		Dog dog = new Dog();
-		Dog dog2 = dog.clone();
+		final Dog dog = new Dog();
+		final Dog dog2 = dog.clone();
 		Assert.assertEquals(dog, dog2);
 	}
 
@@ -44,7 +44,7 @@ public class CloneTest {
 		public Cat clone() {
 			try {
 				return (Cat) super.clone();
-			} catch (CloneNotSupportedException e) {
+			} catch (final CloneNotSupportedException e) {
 				throw new CloneRuntimeException(e);
 			}
 		}

@@ -20,25 +20,25 @@ public class MetaUtilTest {
 
 	@Test
 	public void getTablesTest() {
-		List<String> tables = MetaUtil.getTables(ds);
+		final List<String> tables = MetaUtil.getTables(ds);
 		Assert.assertEquals("user", tables.get(0));
 	}
 
 	@Test
 	public void getTableMetaTest() {
-		Table table = MetaUtil.getTableMeta(ds, "user");
+		final Table table = MetaUtil.getTableMeta(ds, "user");
 		Assert.assertEquals(CollUtil.newHashSet("id"), table.getPkNames());
 	}
 
 	@Test
 	public void getColumnNamesTest() {
-		String[] names = MetaUtil.getColumnNames(ds, "user");
+		final String[] names = MetaUtil.getColumnNames(ds, "user");
 		Assert.assertArrayEquals(StrUtil.splitToArray("id,name,age,birthday,gender", ','), names);
 	}
 
 	@Test
 	public void getTableIndexInfoTest() {
-		Table table = MetaUtil.getTableMeta(ds, "user_1");
+		final Table table = MetaUtil.getTableMeta(ds, "user_1");
 		Assert.assertEquals(table.getIndexInfoList().size(), 2);
 	}
 }

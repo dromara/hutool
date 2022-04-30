@@ -30,7 +30,7 @@ public enum ElementName {
 	 * @param elementName 标签名
 	 * @return 是否匹配
 	 */
-	public boolean match(String elementName){
+	public boolean match(final String elementName){
 		return this.name().equals(elementName);
 	}
 
@@ -39,10 +39,10 @@ public enum ElementName {
 	 * @param elementName 节点名
 	 * @return 节点名枚举
 	 */
-	public static ElementName of(String elementName){
+	public static ElementName of(final String elementName){
 		try {
 			return valueOf(elementName);
-		} catch (Exception ignore){
+		} catch (final Exception ignore){
 		}
 		return null;
 	}

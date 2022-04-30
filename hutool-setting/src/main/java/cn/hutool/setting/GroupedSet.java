@@ -61,7 +61,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 *
 	 * @param charset 字符集
 	 */
-	public GroupedSet(Charset charset) {
+	public GroupedSet(final Charset charset) {
 		this.charset = charset;
 	}
 
@@ -71,7 +71,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 * @param charset 字符集
 	 */
-	public GroupedSet(String pathBaseClassLoader, Charset charset) {
+	public GroupedSet(String pathBaseClassLoader, final Charset charset) {
 		if (null == pathBaseClassLoader) {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
@@ -89,7 +89,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param configFile 配置文件对象
 	 * @param charset 字符集
 	 */
-	public GroupedSet(File configFile, Charset charset) {
+	public GroupedSet(final File configFile, final Charset charset) {
 		if (configFile == null) {
 			throw new RuntimeException("Null GroupSet file!");
 		}
@@ -104,7 +104,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param clazz 基准类
 	 * @param charset 字符集
 	 */
-	public GroupedSet(String path, Class<?> clazz, Charset charset) {
+	public GroupedSet(final String path, final Class<?> clazz, final Charset charset) {
 		final URL url = URLUtil.getURL(path, clazz);
 		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", path));
@@ -118,7 +118,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param url 设定文件的URL
 	 * @param charset 字符集
 	 */
-	public GroupedSet(URL url, Charset charset) {
+	public GroupedSet(final URL url, final Charset charset) {
 		if (url == null) {
 			throw new RuntimeException("Null url define!");
 		}
@@ -130,7 +130,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 *
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 */
-	public GroupedSet(String pathBaseClassLoader) {
+	public GroupedSet(final String pathBaseClassLoader) {
 		this(pathBaseClassLoader, CharsetUtil.UTF_8);
 	}
 
@@ -142,7 +142,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param charset 字符集
 	 * @return 成功初始化与否
 	 */
-	public boolean init(URL groupedSetUrl, Charset charset) {
+	public boolean init(final URL groupedSetUrl, final Charset charset) {
 		if (groupedSetUrl == null) {
 			throw new RuntimeException("Null GroupSet url or charset define!");
 		}
@@ -158,7 +158,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param groupedSetUrl 配置文件URL
 	 * @return 加载是否成功
 	 */
-	synchronized public boolean load(URL groupedSetUrl) {
+	synchronized public boolean load(final URL groupedSetUrl) {
 		if (groupedSetUrl == null) {
 			throw new RuntimeException("Null GroupSet url define!");
 		}
@@ -167,7 +167,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		try {
 			settingStream = groupedSetUrl.openStream();
 			load(settingStream);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// log.error(e, "Load GroupSet error!");
 			return false;
 		} finally {
@@ -190,7 +190,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	public boolean load(InputStream settingStream) throws IOException {
+	public boolean load(final InputStream settingStream) throws IOException {
 		super.clear();
 		BufferedReader reader = null;
 		try {
@@ -276,7 +276,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param otherValues 其他值
 	 * @return 是否包含
 	 */
-	public boolean contains(String group, String value, String... otherValues) {
+	public boolean contains(final String group, final String value, final String... otherValues) {
 		if (ArrayUtil.isNotEmpty(otherValues)) {
 			// 需要测试多个值的情况
 			final List<String> valueList = ListUtil.toList(otherValues);
@@ -301,7 +301,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param values 测试的值集合
 	 * @return 是否包含
 	 */
-	public boolean contains(String group, Collection<String> values) {
+	public boolean contains(final String group, final Collection<String> values) {
 		final LinkedHashSet<String> valueSet = getValues(group);
 		if (CollUtil.isEmpty(values) || CollUtil.isEmpty(valueSet)) {
 			return false;

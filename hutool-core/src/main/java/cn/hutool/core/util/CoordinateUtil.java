@@ -47,7 +47,7 @@ public class CoordinateUtil {
 	 * @param lat 纬度
 	 * @return 坐标是否在国外
 	 */
-	public static boolean outOfChina(double lng, double lat) {
+	public static boolean outOfChina(final double lng, final double lat) {
 		return (lng < 72.004 || lng > 137.8347) || (lat < 0.8293 || lat > 55.8271);
 	}
 
@@ -59,7 +59,7 @@ public class CoordinateUtil {
 	 * @param lat 维度值
 	 * @return 火星坐标 (GCJ-02)
 	 */
-	public static Coordinate wgs84ToGcj02(double lng, double lat) {
+	public static Coordinate wgs84ToGcj02(final double lng, final double lat) {
 		return new Coordinate(lng, lat).offset(offset(lng, lat, true));
 	}
 
@@ -70,7 +70,7 @@ public class CoordinateUtil {
 	 * @param lat 维度值
 	 * @return bd09 坐标
 	 */
-	public static Coordinate wgs84ToBd09(double lng, double lat) {
+	public static Coordinate wgs84ToBd09(final double lng, final double lat) {
 		final Coordinate gcj02 = wgs84ToGcj02(lng, lat);
 		return gcj02ToBd09(gcj02.lng, gcj02.lat);
 	}
@@ -83,7 +83,7 @@ public class CoordinateUtil {
 	 * @param lat 维度坐标
 	 * @return WGS84 坐标
 	 */
-	public static Coordinate gcj02ToWgs84(double lng, double lat) {
+	public static Coordinate gcj02ToWgs84(final double lng, final double lat) {
 		return new Coordinate(lng, lat).offset(offset(lng, lat, false));
 	}
 
@@ -94,11 +94,11 @@ public class CoordinateUtil {
 	 * @param lat 纬度值
 	 * @return BD-09 坐标
 	 */
-	public static Coordinate gcj02ToBd09(double lng, double lat) {
-		double z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * X_PI);
-		double theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * X_PI);
-		double bd_lng = z * Math.cos(theta) + 0.0065;
-		double bd_lat = z * Math.sin(theta) + 0.006;
+	public static Coordinate gcj02ToBd09(final double lng, final double lat) {
+		final double z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * X_PI);
+		final double theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * X_PI);
+		final double bd_lng = z * Math.cos(theta) + 0.0065;
+		final double bd_lat = z * Math.sin(theta) + 0.006;
 		return new Coordinate(bd_lng, bd_lat);
 	}
 
@@ -111,13 +111,13 @@ public class CoordinateUtil {
 	 * @param lat 纬度值
 	 * @return GCJ-02 坐标
 	 */
-	public static Coordinate bd09ToGcj02(double lng, double lat) {
-		double x = lng - 0.0065;
-		double y = lat - 0.006;
-		double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
-		double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
-		double gg_lng = z * Math.cos(theta);
-		double gg_lat = z * Math.sin(theta);
+	public static Coordinate bd09ToGcj02(final double lng, final double lat) {
+		final double x = lng - 0.0065;
+		final double y = lat - 0.006;
+		final double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
+		final double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
+		final double gg_lng = z * Math.cos(theta);
+		final double gg_lat = z * Math.sin(theta);
 		return new Coordinate(gg_lng, gg_lat);
 	}
 
@@ -128,7 +128,7 @@ public class CoordinateUtil {
 	 * @param lat 纬度值
 	 * @return WGS84坐标
 	 */
-	public static Coordinate bd09toWgs84(double lng, double lat) {
+	public static Coordinate bd09toWgs84(final double lng, final double lat) {
 		final Coordinate gcj02 = bd09ToGcj02(lng, lat);
 		return gcj02ToWgs84(gcj02.lng, gcj02.lat);
 	}
@@ -142,7 +142,7 @@ public class CoordinateUtil {
 	 * @param lat 维度坐标
 	 * @return 返回结果
 	 */
-	private static double transCore(double lng, double lat) {
+	private static double transCore(final double lng, final double lat) {
 		double ret = (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
 		ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
 		return ret;
@@ -156,13 +156,13 @@ public class CoordinateUtil {
 	 * @param isPlus 是否正向偏移：WGS84转GCJ-02使用正向，否则使用反向
 	 * @return 偏移坐标
 	 */
-	private static Coordinate offset(double lng, double lat, boolean isPlus) {
+	private static Coordinate offset(final double lng, final double lat, final boolean isPlus) {
 		double dlng = transLng(lng - 105.0, lat - 35.0);
 		double dlat = transLat(lng - 105.0, lat - 35.0);
 
 		double magic = Math.sin(lat / 180.0 * PI);
 		magic = 1 - CORRECTION_PARAM * magic * magic;
-		double sqrtMagic = Math.sqrt(magic);
+		final double sqrtMagic = Math.sqrt(magic);
 
 		dlng = (dlng * 180.0) / (RADIUS / sqrtMagic * Math.cos(lat / 180.0 * PI) * PI);
 		dlat = (dlat * 180.0) / ((RADIUS * (1 - CORRECTION_PARAM)) / (magic * sqrtMagic) * PI);
@@ -182,7 +182,7 @@ public class CoordinateUtil {
 	 * @param lat 维度坐标
 	 * @return ret 计算完成后的
 	 */
-	private static double transLng(double lng, double lat) {
+	private static double transLng(final double lng, final double lat) {
 		double ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
 		ret += transCore(lng, lat);
 		ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0;
@@ -196,7 +196,7 @@ public class CoordinateUtil {
 	 * @param lat 维度
 	 * @return ret 计算完成后的
 	 */
-	private static double transLat(double lng, double lat) {
+	private static double transLat(final double lng, final double lat) {
 		double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
 		ret += transCore(lng, lat);
 		ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
@@ -227,7 +227,7 @@ public class CoordinateUtil {
 		 * @param lng 经度
 		 * @param lat 纬度
 		 */
-		public Coordinate(double lng, double lat) {
+		public Coordinate(final double lng, final double lat) {
 			this.lng = lng;
 			this.lat = lat;
 		}
@@ -247,7 +247,7 @@ public class CoordinateUtil {
 		 * @param lng 经度
 		 * @return this
 		 */
-		public Coordinate setLng(double lng) {
+		public Coordinate setLng(final double lng) {
 			this.lng = lng;
 			return this;
 		}
@@ -267,7 +267,7 @@ public class CoordinateUtil {
 		 * @param lat 纬度
 		 * @return this
 		 */
-		public Coordinate setLat(double lat) {
+		public Coordinate setLat(final double lat) {
 			this.lat = lat;
 			return this;
 		}
@@ -278,21 +278,21 @@ public class CoordinateUtil {
 		 * @param offset 偏移量
 		 * @return this
 		 */
-		public Coordinate offset(Coordinate offset){
+		public Coordinate offset(final Coordinate offset){
 			this.lng += offset.lng;
 			this.lat += offset.lat;
 			return this;
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(final Object o) {
 			if (this == o) {
 				return true;
 			}
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			Coordinate that = (Coordinate) o;
+			final Coordinate that = (Coordinate) o;
 			return Double.compare(that.lng, lng) == 0 && Double.compare(that.lat, lat) == 0;
 		}
 

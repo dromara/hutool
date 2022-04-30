@@ -17,9 +17,9 @@ public class LocaleConverter extends AbstractConverter<Locale> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Locale convertInternal(Object value) {
+	protected Locale convertInternal(final Object value) {
 		try {
-			String str = convertToStr(value);
+			final String str = convertToStr(value);
 			if (StrUtil.isEmpty(str)) {
 				return null;
 			}
@@ -32,7 +32,7 @@ public class LocaleConverter extends AbstractConverter<Locale> {
 				return new Locale(items[0], items[1]);
 			}
 			return new Locale(items[0], items[1], items[2]);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// Ignore Exception
 		}
 		return null;

@@ -56,7 +56,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param bean Bean对象
 	 * @return Vo
 	 */
-	public static <T> Dict parse(T bean) {
+	public static <T> Dict parse(final T bean) {
 		return create().parseBean(bean);
 	}
 
@@ -68,9 +68,9 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @since 5.4.1
 	 */
 	@SafeVarargs
-	public static Dict of(Pair<String, Object>... pairs) {
+	public static Dict of(final Pair<String, Object>... pairs) {
 		final Dict dict = create();
-		for (Pair<String, Object> pair : pairs) {
+		for (final Pair<String, Object> pair : pairs) {
 			dict.put(pair.getKey(), pair.getValue());
 		}
 		return dict;
@@ -94,7 +94,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Dict
 	 * @since 5.4.1
 	 */
-	public static Dict of(Object... keysAndValues) {
+	public static Dict of(final Object... keysAndValues) {
 		final Dict dict = create();
 
 		String key = null;
@@ -124,7 +124,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 *
 	 * @param caseInsensitive 是否大小写不敏感
 	 */
-	public Dict(boolean caseInsensitive) {
+	public Dict(final boolean caseInsensitive) {
 		this(DEFAULT_INITIAL_CAPACITY, caseInsensitive);
 	}
 
@@ -133,7 +133,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 *
 	 * @param initialCapacity 初始容量
 	 */
-	public Dict(int initialCapacity) {
+	public Dict(final int initialCapacity) {
 		this(initialCapacity, false);
 	}
 
@@ -143,7 +143,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param initialCapacity 初始容量
 	 * @param caseInsensitive 是否大小写不敏感
 	 */
-	public Dict(int initialCapacity, boolean caseInsensitive) {
+	public Dict(final int initialCapacity, final boolean caseInsensitive) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR, caseInsensitive);
 	}
 
@@ -153,7 +153,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param initialCapacity 初始容量
 	 * @param loadFactor      容量增长因子，0~1，即达到容量的百分之多少时扩容
 	 */
-	public Dict(int initialCapacity, float loadFactor) {
+	public Dict(final int initialCapacity, final float loadFactor) {
 		this(initialCapacity, loadFactor, false);
 	}
 
@@ -165,7 +165,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param caseInsensitive 是否大小写不敏感
 	 * @since 4.5.16
 	 */
-	public Dict(int initialCapacity, float loadFactor, boolean caseInsensitive) {
+	public Dict(final int initialCapacity, final float loadFactor, final boolean caseInsensitive) {
 		super(initialCapacity, loadFactor);
 		this.caseInsensitive = caseInsensitive;
 	}
@@ -175,7 +175,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 *
 	 * @param m Map
 	 */
-	public Dict(Map<String, Object> m) {
+	public Dict(final Map<String, Object> m) {
 		super((null == m) ? new HashMap<>() : m);
 	}
 	// --------------------------------------------------------------- Constructor end
@@ -187,7 +187,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param bean Bean
 	 * @return Bean
 	 */
-	public <T> T toBean(T bean) {
+	public <T> T toBean(final T bean) {
 		return toBean(bean, false);
 	}
 
@@ -199,7 +199,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Bean
 	 * @since 3.3.1
 	 */
-	public <T> T toBeanIgnoreCase(T bean) {
+	public <T> T toBeanIgnoreCase(final T bean) {
 		BeanUtil.fillBeanWithMapIgnoreCase(this, bean, false);
 		return bean;
 	}
@@ -212,7 +212,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param isToCamelCase 是否转换为驼峰模式
 	 * @return Bean
 	 */
-	public <T> T toBean(T bean, boolean isToCamelCase) {
+	public <T> T toBean(final T bean, final boolean isToCamelCase) {
 		BeanUtil.fillBeanWithMap(this, bean, isToCamelCase, false);
 		return bean;
 	}
@@ -224,7 +224,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param bean Bean
 	 * @return Bean
 	 */
-	public <T> T toBeanWithCamelCase(T bean) {
+	public <T> T toBeanWithCamelCase(final T bean) {
 		BeanUtil.fillBeanWithMap(this, bean, true, false);
 		return bean;
 	}
@@ -236,7 +236,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
-	public <T> T toBean(Class<T> clazz) {
+	public <T> T toBean(final Class<T> clazz) {
 		return BeanUtil.toBean(this, clazz);
 	}
 
@@ -247,7 +247,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
-	public <T> T toBeanIgnoreCase(Class<T> clazz) {
+	public <T> T toBeanIgnoreCase(final Class<T> clazz) {
 		return BeanUtil.toBeanIgnoreCase(this, clazz, false);
 	}
 
@@ -259,7 +259,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param bean 值对象
 	 * @return 自己
 	 */
-	public <T> Dict parseBean(T bean) {
+	public <T> Dict parseBean(final T bean) {
 		Assert.notNull(bean, "Bean class must be not null");
 		this.putAll(BeanUtil.beanToMap(bean));
 		return this;
@@ -275,7 +275,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return 自己
 	 */
-	public <T> Dict parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public <T> Dict parseBean(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		Assert.notNull(bean, "Bean class must be not null");
 		this.putAll(BeanUtil.beanToMap(bean, isToUnderlineCase, ignoreNullValue));
 		return this;
@@ -289,9 +289,9 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param dict         字典对象
 	 * @param withoutNames 不需要去除的字段名
 	 */
-	public <T extends Dict> void removeEqual(T dict, String... withoutNames) {
-		HashSet<String> withoutSet = CollUtil.newHashSet(withoutNames);
-		for (Map.Entry<String, Object> entry : dict.entrySet()) {
+	public <T extends Dict> void removeEqual(final T dict, final String... withoutNames) {
+		final HashSet<String> withoutSet = CollUtil.newHashSet(withoutNames);
+		for (final Map.Entry<String, Object> entry : dict.entrySet()) {
 			if (withoutSet.contains(entry.getKey())) {
 				continue;
 			}
@@ -310,10 +310,10 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Dict 结果
 	 * @since 4.0.10
 	 */
-	public Dict filter(String... keys) {
+	public Dict filter(final String... keys) {
 		final Dict result = new Dict(keys.length, 1);
 
-		for (String key : keys) {
+		for (final String key : keys) {
 			if (this.containsKey(key)) {
 				result.put(key, this.get(key));
 			}
@@ -330,7 +330,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param value 值
 	 * @return 本身
 	 */
-	public Dict set(String attr, Object value) {
+	public Dict set(final String attr, final Object value) {
 		this.put(attr, value);
 		return this;
 	}
@@ -342,7 +342,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param value 值
 	 * @return 本身
 	 */
-	public Dict setIgnoreNull(String attr, Object value) {
+	public Dict setIgnoreNull(final String attr, final Object value) {
 		if (null != attr && null != value) {
 			set(attr, value);
 		}
@@ -353,7 +353,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	// -------------------------------------------------------------------- Get start
 
 	@Override
-	public Object getObj(String key) {
+	public Object getObj(final String key) {
 		return super.get(key);
 	}
 
@@ -365,7 +365,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 * @since 4.6.3
 	 */
-	public <T> T getBean(String attr) {
+	public <T> T getBean(final String attr) {
 		return get(attr, null);
 	}
 
@@ -378,7 +378,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(String attr, T defaultValue) {
+	public <T> T get(final String attr, final T defaultValue) {
 		final Object result = get(attr);
 		return (T) (result != null ? result : defaultValue);
 	}
@@ -388,7 +388,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public String getStr(String attr) {
+	public String getStr(final String attr) {
 		return Convert.toStr(get(attr), null);
 	}
 
@@ -397,7 +397,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public Integer getInt(String attr) {
+	public Integer getInt(final String attr) {
 		return Convert.toInt(get(attr), null);
 	}
 
@@ -406,7 +406,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public Long getLong(String attr) {
+	public Long getLong(final String attr) {
 		return Convert.toLong(get(attr), null);
 	}
 
@@ -415,27 +415,27 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public Float getFloat(String attr) {
+	public Float getFloat(final String attr) {
 		return Convert.toFloat(get(attr), null);
 	}
 
 	@Override
-	public Short getShort(String attr) {
+	public Short getShort(final String attr) {
 		return Convert.toShort(get(attr), null);
 	}
 
 	@Override
-	public Character getChar(String attr) {
+	public Character getChar(final String attr) {
 		return Convert.toChar(get(attr), null);
 	}
 
 	@Override
-	public Double getDouble(String attr) {
+	public Double getDouble(final String attr) {
 		return Convert.toDouble(get(attr), null);
 	}
 
 	@Override
-	public Byte getByte(String attr) {
+	public Byte getByte(final String attr) {
 		return Convert.toByte(get(attr), null);
 	}
 
@@ -444,7 +444,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public Boolean getBool(String attr) {
+	public Boolean getBool(final String attr) {
 		return Convert.toBool(get(attr), null);
 	}
 
@@ -453,7 +453,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public BigDecimal getBigDecimal(String attr) {
+	public BigDecimal getBigDecimal(final String attr) {
 		return Convert.toBigDecimal(get(attr));
 	}
 
@@ -462,12 +462,12 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public BigInteger getBigInteger(String attr) {
+	public BigInteger getBigInteger(final String attr) {
 		return Convert.toBigInteger(get(attr));
 	}
 
 	@Override
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
+	public <E extends Enum<E>> E getEnum(final Class<E> clazz, final String key) {
 		return Convert.toEnum(clazz, get(key));
 	}
 
@@ -475,7 +475,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
-	public byte[] getBytes(String attr) {
+	public byte[] getBytes(final String attr) {
 		return get(attr, null);
 	}
 
@@ -484,7 +484,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return 字段值
 	 */
 	@Override
-	public Date getDate(String attr) {
+	public Date getDate(final String attr) {
 		return get(attr, null);
 	}
 
@@ -492,7 +492,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
-	public Time getTime(String attr) {
+	public Time getTime(final String attr) {
 		return get(attr, null);
 	}
 
@@ -500,7 +500,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
-	public Timestamp getTimestamp(String attr) {
+	public Timestamp getTimestamp(final String attr) {
 		return get(attr, null);
 	}
 
@@ -508,7 +508,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
-	public Number getNumber(String attr) {
+	public Number getNumber(final String attr) {
 		return get(attr, null);
 	}
 
@@ -535,7 +535,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @since 5.7.14
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getByPath(String expression) {
+	public <T> T getByPath(final String expression) {
 		return (T) BeanPath.create(expression).get(this);
 	}
 
@@ -564,23 +564,23 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @see BeanPath#get(Object)
 	 * @since 5.7.14
 	 */
-	public <T> T getByPath(String expression, Class<T> resultType) {
+	public <T> T getByPath(final String expression, final Class<T> resultType) {
 		return Convert.convert(resultType, getByPath(expression));
 	}
 	// -------------------------------------------------------------------- Get end
 
 	@Override
-	public Object get(Object key) {
+	public Object get(final Object key) {
 		return super.get(customKey((String) key));
 	}
 
 	@Override
-	public Object put(String key, Object value) {
+	public Object put(final String key, final Object value) {
 		return super.put(customKey(key), value);
 	}
 
 	@Override
-	public void putAll(Map<? extends String, ?> m) {
+	public void putAll(final Map<? extends String, ?> m) {
 		m.forEach(this::put);
 	}
 
@@ -614,7 +614,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return this
 	 * @since 5.7.23
 	 */
-	public Dict setFields(Func0<?>... fields) {
+	public Dict setFields(final Func0<?>... fields) {
 		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
 		return this;
 	}

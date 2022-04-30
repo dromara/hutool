@@ -9,14 +9,14 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void getCombinationAnnotationsTest(){
-		Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
+		final Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
 		Assert.assertNotNull(annotations);
 		Assert.assertEquals(3, annotations.length);
 	}
 
 	@Test
 	public void getCombinationAnnotationsWithClassTest(){
-		AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
+		final AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertNotNull(annotations);
 		Assert.assertEquals(2, annotations.length);
 		Assert.assertEquals("测试", annotations[0].value());
@@ -24,7 +24,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void getAnnotationValueTest() {
-		Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
+		final Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertEquals("测试", value);
 
 	}
@@ -35,7 +35,7 @@ public class AnnotationUtilTest {
 		Assert.assertEquals("", ClassWithAnnotation.class.getAnnotation(AnnotationForTest.class).retry());
 
 		// 加别名适配
-		AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
+		final AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertEquals("测试", annotation.retry());
 	}
 

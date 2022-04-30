@@ -30,7 +30,7 @@ public interface VoidFunc0 extends Serializable {
 	default void callWithRuntimeException(){
 		try {
 			call();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

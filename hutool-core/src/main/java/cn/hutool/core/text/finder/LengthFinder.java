@@ -18,15 +18,15 @@ public class LengthFinder extends TextFinder {
 	 * 构造
 	 * @param length 长度
 	 */
-	public LengthFinder(int length) {
+	public LengthFinder(final int length) {
 		this.length = length;
 	}
 
 	@Override
-	public int start(int from) {
+	public int start(final int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
 		final int limit = getValidEndIndex();
-		int result;
+		final int result;
 		if(negative){
 			result = from - length;
 			if(result > limit){
@@ -42,7 +42,7 @@ public class LengthFinder extends TextFinder {
 	}
 
 	@Override
-	public int end(int start) {
+	public int end(final int start) {
 		return start;
 	}
 }

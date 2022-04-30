@@ -29,7 +29,7 @@ public class NamingCase {
 	 * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
 	 * @return 转换后下划线方式命名的字符串
 	 */
-	public static String toUnderlineCase(CharSequence str) {
+	public static String toUnderlineCase(final CharSequence str) {
 		return toSymbolCase(str, CharUtil.UNDERLINE);
 	}
 
@@ -52,7 +52,7 @@ public class NamingCase {
 	 * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
 	 * @return 转换后下划线方式命名的字符串
 	 */
-	public static String toKebabCase(CharSequence str) {
+	public static String toKebabCase(final CharSequence str) {
 		return toSymbolCase(str, CharUtil.DASHED);
 	}
 
@@ -64,7 +64,7 @@ public class NamingCase {
 	 * @return 转换后符号连接方式命名的字符串
 	 * @since 4.0.10
 	 */
-	public static String toSymbolCase(CharSequence str, char symbol) {
+	public static String toSymbolCase(final CharSequence str, final char symbol) {
 		if (str == null) {
 			return null;
 		}
@@ -131,7 +131,7 @@ public class NamingCase {
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
 	 */
-	public static String toPascalCase(CharSequence name) {
+	public static String toPascalCase(final CharSequence name) {
 		return StrUtil.upperFirst(toCamelCase(name));
 	}
 
@@ -148,7 +148,7 @@ public class NamingCase {
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
 	 */
-	public static String toCamelCase(CharSequence name) {
+	public static String toCamelCase(final CharSequence name) {
 		return toCamelCase(name, CharUtil.UNDERLINE);
 	}
 
@@ -160,7 +160,7 @@ public class NamingCase {
 	 * @return 转换后的驼峰式命名的字符串
 	 * @since 5.7.17
 	 */
-	public static String toCamelCase(CharSequence name, char symbol) {
+	public static String toCamelCase(final CharSequence name, final char symbol) {
 		if (null == name) {
 			return null;
 		}
@@ -171,7 +171,7 @@ public class NamingCase {
 			final StringBuilder sb = new StringBuilder(length);
 			boolean upperCase = false;
 			for (int i = 0; i < length; i++) {
-				char c = name2.charAt(i);
+				final char c = name2.charAt(i);
 
 				if (c == symbol) {
 					upperCase = true;

@@ -22,7 +22,7 @@ public abstract class AbstractGenerator implements CodeGenerator {
 	 *
 	 * @param count 生成验证码长度
 	 */
-	public AbstractGenerator(int count) {
+	public AbstractGenerator(final int count) {
 		this(RandomUtil.BASE_CHAR_NUMBER, count);
 	}
 
@@ -32,7 +32,7 @@ public abstract class AbstractGenerator implements CodeGenerator {
 	 * @param baseStr 基础字符集合，用于随机获取字符串的字符集合
 	 * @param length 生成验证码长度
 	 */
-	public AbstractGenerator(String baseStr, int length) {
+	public AbstractGenerator(final String baseStr, final int length) {
 		this.baseStr = baseStr;
 		this.length = length;
 	}

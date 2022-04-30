@@ -31,7 +31,7 @@ public class Claims implements Serializable {
 	 * @param name  属性名
 	 * @param value 属性值
 	 */
-	protected void setClaim(String name, Object value) {
+	protected void setClaim(final String name, final Object value) {
 		init();
 		Assert.notNull(name, "Name must be not null!");
 		if (value == null) {
@@ -45,9 +45,9 @@ public class Claims implements Serializable {
 	 * 加入多个Claims属性
 	 * @param headerClaims 多个Claims属性
 	 */
-	protected void putAll(Map<String, ?> headerClaims){
+	protected void putAll(final Map<String, ?> headerClaims){
 		if (MapUtil.isNotEmpty(headerClaims)) {
-			for (Map.Entry<String, ?> entry : headerClaims.entrySet()) {
+			for (final Map.Entry<String, ?> entry : headerClaims.entrySet()) {
 				setClaim(entry.getKey(), entry.getValue());
 			}
 		}
@@ -59,7 +59,7 @@ public class Claims implements Serializable {
 	 * @param name 名称
 	 * @return 属性
 	 */
-	public Object getClaim(String name) {
+	public Object getClaim(final String name) {
 		init();
 		return this.claimJSON.getObj(name);
 	}
@@ -80,7 +80,7 @@ public class Claims implements Serializable {
 	 * @param tokenPart JWT JSON
 	 * @param charset   编码
 	 */
-	public void parse(String tokenPart, Charset charset) {
+	public void parse(final String tokenPart, final Charset charset) {
 		this.claimJSON = JSONUtil.parseObj(Base64.decodeStr(tokenPart, charset), CONFIG);
 	}
 

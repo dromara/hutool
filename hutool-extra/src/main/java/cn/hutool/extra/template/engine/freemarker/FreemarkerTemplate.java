@@ -28,7 +28,7 @@ public class FreemarkerTemplate extends AbstractTemplate implements Serializable
 	 * @param beetlTemplate Beetl的模板对象 {@link freemarker.template.Template}
 	 * @return this
 	 */
-	public static FreemarkerTemplate wrap(freemarker.template.Template beetlTemplate) {
+	public static FreemarkerTemplate wrap(final freemarker.template.Template beetlTemplate) {
 		return (null == beetlTemplate) ? null : new FreemarkerTemplate(beetlTemplate);
 	}
 
@@ -37,23 +37,23 @@ public class FreemarkerTemplate extends AbstractTemplate implements Serializable
 	 *
 	 * @param freemarkerTemplate Beetl的模板对象 {@link freemarker.template.Template}
 	 */
-	public FreemarkerTemplate(freemarker.template.Template freemarkerTemplate) {
+	public FreemarkerTemplate(final freemarker.template.Template freemarkerTemplate) {
 		this.rawTemplate = freemarkerTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		try {
 			rawTemplate.process(bindingMap, writer);
-		} catch (freemarker.template.TemplateException e) {
+		} catch (final freemarker.template.TemplateException e) {
 			throw new TemplateException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		render(bindingMap, IoUtil.getWriter(out, Charset.forName(this.rawTemplate.getEncoding())));
 	}
 

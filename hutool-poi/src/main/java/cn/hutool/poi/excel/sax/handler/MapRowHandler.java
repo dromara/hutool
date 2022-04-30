@@ -32,14 +32,14 @@ public abstract class MapRowHandler extends AbstractRowHandler<Map<String, Objec
 	 * @param startRowIndex 读取起始行（包含，从0开始计数）
 	 * @param endRowIndex 读取结束行（包含，从0开始计数）
 	 */
-	public MapRowHandler(int headerRowIndex, int startRowIndex, int endRowIndex){
+	public MapRowHandler(final int headerRowIndex, final int startRowIndex, final int endRowIndex){
 		super(startRowIndex, endRowIndex);
 		this.headerRowIndex = headerRowIndex;
 		this.convertFunc = (rowList)-> IterUtil.toMap(headerList, rowList);
 	}
 
 	@Override
-	public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+	public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 		if (rowIndex == this.headerRowIndex) {
 			this.headerList = ListUtil.unmodifiable(Convert.toList(String.class, rowCells));
 			return;

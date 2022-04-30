@@ -21,7 +21,7 @@ public class RandomAccessPartition<T> extends Partition<T> implements RandomAcce
 	 * @param list 被分区的列表，必须实现{@link RandomAccess}
 	 * @param size 每个分区的长度
 	 */
-	public RandomAccessPartition(List<T> list, int size) {
+	public RandomAccessPartition(final List<T> list, final int size) {
 		super(list, size);
 	}
 }

@@ -19,7 +19,7 @@ public class SoapClientTest {
 	@Test
 	@Ignore
 	public void requestTest() {
-		SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
+		final SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 		.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
 		.setCharset(CharsetUtil.GBK)
 		.setParam("theIpAddress", "218.21.240.106");
@@ -32,11 +32,11 @@ public class SoapClientTest {
 	@Test
 	@Ignore
 	public void requestForMessageTest() throws SOAPException {
-		SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
+		final SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 				.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
 				.setParam("theIpAddress", "218.21.240.106");
 
-		SOAPMessage message = client.sendForMessage();
+		final SOAPMessage message = client.sendForMessage();
 		Console.log(message.getSOAPBody().getTextContent());
 	}
 }

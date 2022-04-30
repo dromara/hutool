@@ -80,7 +80,7 @@ public class CronPattern {
 	 * @return CronPattern
 	 * @since 5.8.0
 	 */
-	public static CronPattern of(String pattern) {
+	public static CronPattern of(final String pattern) {
 		return new CronPattern(pattern);
 	}
 
@@ -89,7 +89,7 @@ public class CronPattern {
 	 *
 	 * @param pattern 表达式
 	 */
-	public CronPattern(String pattern) {
+	public CronPattern(final String pattern) {
 		this.pattern = pattern;
 		this.matchers = PatternParser.parse(pattern);
 	}
@@ -101,7 +101,7 @@ public class CronPattern {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(long millis, boolean isMatchSecond) {
+	public boolean match(final long millis, final boolean isMatchSecond) {
 		return match(TimeZone.getDefault(), millis, isMatchSecond);
 	}
 
@@ -113,7 +113,7 @@ public class CronPattern {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(TimeZone timezone, long millis, boolean isMatchSecond) {
+	public boolean match(final TimeZone timezone, final long millis, final boolean isMatchSecond) {
 		final GregorianCalendar calendar = new GregorianCalendar(timezone);
 		calendar.setTimeInMillis(millis);
 		return match(calendar, isMatchSecond);
@@ -126,7 +126,7 @@ public class CronPattern {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(Calendar calendar, boolean isMatchSecond) {
+	public boolean match(final Calendar calendar, final boolean isMatchSecond) {
 		return match(PatternUtil.getFields(calendar, isMatchSecond));
 	}
 
@@ -138,7 +138,7 @@ public class CronPattern {
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 * @since 5.8.0
 	 */
-	public boolean match(LocalDateTime dateTime, boolean isMatchSecond) {
+	public boolean match(final LocalDateTime dateTime, final boolean isMatchSecond) {
 		return match(PatternUtil.getFields(dateTime, isMatchSecond));
 	}
 
@@ -148,7 +148,7 @@ public class CronPattern {
 	 * @param calendar 时间
 	 * @return 匹配到的下一个时间
 	 */
-	public Calendar nextMatchAfter(Calendar calendar) {
+	public Calendar nextMatchAfter(final Calendar calendar) {
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
 		if (false == match(next, true)) {
 			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
@@ -169,8 +169,8 @@ public class CronPattern {
 	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	private boolean match(int[] fields) {
-		for (PatternMatcher matcher : matchers) {
+	private boolean match(final int[] fields) {
+		for (final PatternMatcher matcher : matchers) {
 			if (matcher.match(fields)) {
 				return true;
 			}
@@ -185,9 +185,9 @@ public class CronPattern {
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
 	 */
-	private Calendar nextMatchAfter(int[] values, TimeZone zone) {
+	private Calendar nextMatchAfter(final int[] values, final TimeZone zone) {
 		final List<Calendar> nextMatches = new ArrayList<>(matchers.size());
-		for (PatternMatcher matcher : matchers) {
+		for (final PatternMatcher matcher : matchers) {
 			nextMatches.add(matcher.nextMatchAfter(values, zone));
 		}
 		// 返回匹配到的最早日期

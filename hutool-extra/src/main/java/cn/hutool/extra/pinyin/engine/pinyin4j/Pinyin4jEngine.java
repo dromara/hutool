@@ -48,7 +48,7 @@ public class Pinyin4jEngine implements PinyinEngine {
 	 *
 	 * @param format 格式
 	 */
-	public Pinyin4jEngine(HanyuPinyinOutputFormat format) {
+	public Pinyin4jEngine(final HanyuPinyinOutputFormat format) {
 		init(format);
 	}
 
@@ -71,19 +71,19 @@ public class Pinyin4jEngine implements PinyinEngine {
 	}
 
 	@Override
-	public String getPinyin(char c) {
+	public String getPinyin(final char c) {
 		String result;
 		try {
-			String[] results = PinyinHelper.toHanyuPinyinStringArray(c, format);
+			final String[] results = PinyinHelper.toHanyuPinyinStringArray(c, format);
 			result = ArrayUtil.isEmpty(results) ? String.valueOf(c) : results[0];
-		} catch (BadHanyuPinyinOutputFormatCombination e) {
+		} catch (final BadHanyuPinyinOutputFormatCombination e) {
 			result = String.valueOf(c);
 		}
 		return result;
 	}
 
 	@Override
-	public String getPinyin(String str, String separator) {
+	public String getPinyin(final String str, final String separator) {
 		final StrBuilder result = StrUtil.strBuilder();
 		boolean isFirst = true;
 		final int strLen = str.length();
@@ -101,7 +101,7 @@ public class Pinyin4jEngine implements PinyinEngine {
 					result.append(pinyinStringArray[0]);
 				}
 			}
-		} catch (BadHanyuPinyinOutputFormatCombination e) {
+		} catch (final BadHanyuPinyinOutputFormatCombination e) {
 			throw new PinyinException(e);
 		}
 

@@ -19,7 +19,7 @@ public interface Archiver extends Closeable {
 	 * @param file 文件或目录
 	 * @return this
 	 */
-	default Archiver add(File file) {
+	default Archiver add(final File file) {
 		return add(file, null);
 	}
 
@@ -30,7 +30,7 @@ public interface Archiver extends Closeable {
 	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 * @return this
 	 */
-	default Archiver add(File file, Filter<File> filter) {
+	default Archiver add(final File file, final Filter<File> filter) {
 		return add(file, StrUtil.SLASH, filter);
 	}
 

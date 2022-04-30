@@ -23,12 +23,12 @@ public class JdkLogFactory extends LogFactory{
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new JdkLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new JdkLog(clazz);
 	}
 
@@ -37,7 +37,7 @@ public class JdkLogFactory extends LogFactory{
 	 */
 	private void readConfig() {
 		//避免循环引用，Log初始化的时候不使用相关工具类
-		InputStream in = ResourceUtil.getStreamSafe("logging.properties");
+		final InputStream in = ResourceUtil.getStreamSafe("logging.properties");
 		if(null == in){
 			System.err.println("[WARN] Can not find [logging.properties], use [%JRE_HOME%/lib/logging.properties] as default!");
 			return;
@@ -45,11 +45,11 @@ public class JdkLogFactory extends LogFactory{
 
 		try {
 			LogManager.getLogManager().readConfiguration(in);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Console.error(e, "Read [logging.properties] from classpath error!");
 			try {
 				LogManager.getLogManager().readConfiguration();
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				Console.error(e, "Read [logging.properties] from [%JRE_HOME%/lib/logging.properties] error!");
 			}
 		} finally {

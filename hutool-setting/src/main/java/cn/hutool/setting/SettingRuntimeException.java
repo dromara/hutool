@@ -10,27 +10,27 @@ import cn.hutool.core.text.StrUtil;
 public class SettingRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 7941096116780378387L;
 
-	public SettingRuntimeException(Throwable e) {
+	public SettingRuntimeException(final Throwable e) {
 		super(e);
 	}
 
-	public SettingRuntimeException(String message) {
+	public SettingRuntimeException(final String message) {
 		super(message);
 	}
 
-	public SettingRuntimeException(String messageTemplate, Object... params) {
+	public SettingRuntimeException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public SettingRuntimeException(String message, Throwable throwable) {
+	public SettingRuntimeException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public SettingRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public SettingRuntimeException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public SettingRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
+	public SettingRuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

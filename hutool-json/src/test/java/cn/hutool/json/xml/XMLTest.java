@@ -21,18 +21,18 @@ public class XMLTest {
 
 	@Test
 	public void escapeTest(){
-		String xml = "<a>•</a>";
-		JSONObject jsonObject = XML.toJSONObject(xml);
+		final String xml = "<a>•</a>";
+		final JSONObject jsonObject = XML.toJSONObject(xml);
 
 		Assert.assertEquals("{\"a\":\"•\"}", jsonObject.toString());
 
-		String xml2 = XML.toXml(JSONUtil.parseObj(jsonObject));
+		final String xml2 = XML.toXml(JSONUtil.parseObj(jsonObject));
 		Assert.assertEquals(xml, xml2);
 	}
 
 	@Test
 	public void xmlContentTest(){
-		JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
+		final JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
 
 		String xml = XML.toXml(jsonObject);
 		Assert.assertEquals("123456", xml);

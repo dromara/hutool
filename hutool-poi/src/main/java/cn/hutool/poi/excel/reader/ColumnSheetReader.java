@@ -23,17 +23,17 @@ public class ColumnSheetReader extends AbstractSheetReader<List<Object>> {
 	 * @param startRowIndex 起始行（包含，从0开始计数）
 	 * @param endRowIndex   结束行（包含，从0开始计数）
 	 */
-	public ColumnSheetReader(int columnIndex, int startRowIndex, int endRowIndex) {
+	public ColumnSheetReader(final int columnIndex, final int startRowIndex, final int endRowIndex) {
 		super(startRowIndex, endRowIndex);
 		this.columnIndex = columnIndex;
 	}
 
 	@Override
-	public List<Object> read(Sheet sheet) {
+	public List<Object> read(final Sheet sheet) {
 		final List<Object> resultList = new ArrayList<>();
 
-		int startRowIndex = Math.max(this.startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
-		int endRowIndex = Math.min(this.endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
+		final int startRowIndex = Math.max(this.startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
+		final int endRowIndex = Math.min(this.endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
 
 		Object value;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {

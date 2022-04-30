@@ -19,15 +19,15 @@ public class JdkLog extends AbstractLog {
 	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public JdkLog(Logger logger) {
+	public JdkLog(final Logger logger) {
 		this.logger = logger;
 	}
 
-	public JdkLog(Class<?> clazz) {
+	public JdkLog(final Class<?> clazz) {
 		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
-	public JdkLog(String name) {
+	public JdkLog(final String name) {
 		this(Logger.getLogger(name));
 	}
 
@@ -43,7 +43,7 @@ public class JdkLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.FINEST, t, format, arguments);
 	}
 
@@ -54,7 +54,7 @@ public class JdkLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.FINE, t, format, arguments);
 	}
 
@@ -65,7 +65,7 @@ public class JdkLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.INFO, t, format, arguments);
 	}
 
@@ -76,7 +76,7 @@ public class JdkLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.WARNING, t, format, arguments);
 	}
 
@@ -87,14 +87,14 @@ public class JdkLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.SEVERE, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		Level jdkLevel;
+	public void log(final String fqcn, final cn.hutool.log.level.Level level, final Throwable t, final String format, final Object... arguments) {
+		final Level jdkLevel;
 		switch (level) {
 			case TRACE:
 				jdkLevel = Level.FINEST;
@@ -127,9 +127,9 @@ public class JdkLog extends AbstractLog {
 	 * @param format 消息模板
 	 * @param arguments 参数
 	 */
-	private void logIfEnabled(String callerFQCN, Level level, Throwable throwable, String format, Object[] arguments){
+	private void logIfEnabled(final String callerFQCN, final Level level, final Throwable throwable, final String format, final Object[] arguments){
 		if(logger.isLoggable(level)){
-			LogRecord record = new LogRecord(level, StrUtil.format(format, arguments));
+			final LogRecord record = new LogRecord(level, StrUtil.format(format, arguments));
 			record.setLoggerName(getName());
 			record.setThrown(throwable);
 			fillCallerData(callerFQCN, record);
@@ -142,8 +142,8 @@ public class JdkLog extends AbstractLog {
 	 * @param callerFQCN 调用者全限定类名
 	 * @param record The record to update
 	 */
-	private static void fillCallerData(String callerFQCN, LogRecord record) {
-		StackTraceElement[] steArray = Thread.currentThread().getStackTrace();
+	private static void fillCallerData(final String callerFQCN, final LogRecord record) {
+		final StackTraceElement[] steArray = Thread.currentThread().getStackTrace();
 
 		int found = -1;
 		String className;
@@ -157,7 +157,7 @@ public class JdkLog extends AbstractLog {
 		}
 
 		if (found > -1) {
-			StackTraceElement ste = steArray[found+1];
+			final StackTraceElement ste = steArray[found+1];
 			record.setSourceClassName(ste.getClassName());
 			record.setSourceMethodName(ste.getMethodName());
 		}

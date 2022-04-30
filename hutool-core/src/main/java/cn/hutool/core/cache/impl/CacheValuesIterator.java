@@ -18,7 +18,7 @@ public class CacheValuesIterator<V> implements Iterator<V>, Serializable {
 	 * 构造
 	 * @param iterator 原{@link CacheObjIterator}
 	 */
-	CacheValuesIterator(CacheObjIterator<?, V> iterator) {
+	CacheValuesIterator(final CacheObjIterator<?, V> iterator) {
 		this.cacheObjIter = iterator;
 	}
 

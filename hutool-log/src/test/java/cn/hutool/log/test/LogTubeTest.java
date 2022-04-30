@@ -9,9 +9,9 @@ public class LogTubeTest {
 
 	@Test
 	public void logTest(){
-		LogFactory factory = new LogTubeLogFactory();
+		final LogFactory factory = new LogTubeLogFactory();
 		LogFactory.setCurrentLogFactory(factory);
-		Log log = LogFactory.get();
+		final Log log = LogFactory.get();
 		log.debug("LogTube debug test.");
 	}
 }

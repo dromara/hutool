@@ -27,7 +27,7 @@ public class GanZhi {
 	 * @param num 月日的offset
 	 * @return 干支
 	 */
-	public static String cyclicalm(int num) {
+	public static String cyclicalm(final int num) {
 		return (GAN[num % 10] + ZHI[num % 12]);
 	}
 
@@ -38,7 +38,7 @@ public class GanZhi {
 	 * @return 干支
 	 * @since 5.4.7
 	 */
-	public static String getGanzhiOfYear(int year) {
+	public static String getGanzhiOfYear(final int year) {
 		// 1864年（1900 - 36）是甲子年，用于计算基准的干支年
 		return cyclicalm(year - LunarInfo.BASE_YEAR + 36);
 	}
@@ -52,9 +52,9 @@ public class GanZhi {
 	 * @return 干支月
 	 * @since 5.4.7
 	 */
-	public static String getGanzhiOfMonth(int year, int month, int day) {
+	public static String getGanzhiOfMonth(final int year, final int month, final int day) {
 		//返回当月「节」为几日开始
-		int firstNode = SolarTerms.getTerm(year, (month * 2 - 1));
+		final int firstNode = SolarTerms.getTerm(year, (month * 2 - 1));
 		// 依据12节气修正干支月
 		int monthOffset = (year - LunarInfo.BASE_YEAR) * 12 + month + 11;
 		if (day >= firstNode) {
@@ -72,7 +72,7 @@ public class GanZhi {
 	 * @return 干支
 	 * @since 5.4.7
 	 */
-	public static String getGanzhiOfDay(int year, int month, int day) {
+	public static String getGanzhiOfDay(final int year, final int month, final int day) {
 		// 与1970-01-01相差天数，不包括当天
 		final long days = LocalDate.of(year, month, day).toEpochDay() - 1;
 		//1899-12-21是农历1899年腊月甲子日  41：相差1900-01-31有41天

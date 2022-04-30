@@ -27,12 +27,12 @@ public class ClassConverter extends AbstractConverter<Class<?>> {
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @since 5.5.0
 	 */
-	public ClassConverter(boolean isInitialized) {
+	public ClassConverter(final boolean isInitialized) {
 		this.isInitialized = isInitialized;
 	}
 
 	@Override
-	protected Class<?> convertInternal(Object value) {
+	protected Class<?> convertInternal(final Object value) {
 		return ClassLoaderUtil.loadClass(convertToStr(value), isInitialized);
 	}
 

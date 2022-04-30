@@ -15,7 +15,7 @@ public abstract class StrClipboardListener implements ClipboardListener, Seriali
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Transferable onChange(Clipboard clipboard, Transferable contents) {
+	public Transferable onChange(final Clipboard clipboard, final Transferable contents) {
 		if (contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 			return onChange(clipboard, ClipboardUtil.getStr(contents));
 		}

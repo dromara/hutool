@@ -67,7 +67,7 @@ public enum Week {
 	 *
 	 * @param value 星期对应{@link Calendar} 中的Week值
 	 */
-	Week(int value) {
+	Week(final int value) {
 		this.value = value;
 	}
 
@@ -111,7 +111,7 @@ public enum Week {
 	 * @return 星期的中文名
 	 * @since 4.0.11
 	 */
-	public String toChinese(String weekNamePre) {
+	public String toChinese(final String weekNamePre) {
 		switch (this) {
 			case SUNDAY:
 				return weekNamePre + "日";
@@ -155,7 +155,7 @@ public enum Week {
 	 * @see #FRIDAY
 	 * @see #SATURDAY
 	 */
-	public static Week of(int calendarWeekIntValue) {
+	public static Week of(final int calendarWeekIntValue) {
 		if (calendarWeekIntValue > ENUMS.length || calendarWeekIntValue < 1) {
 			return null;
 		}
@@ -170,7 +170,7 @@ public enum Week {
 	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
 	 * @since 5.8.0
 	 */
-	public static Week of(String name) throws IllegalArgumentException {
+	public static Week of(final String name) throws IllegalArgumentException {
 		Assert.notBlank(name);
 		Week of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name) + 1);
 		if (null == of) {
@@ -193,7 +193,7 @@ public enum Week {
 	 * @see #SATURDAY
 	 * @since 5.7.14
 	 */
-	public static Week of(DayOfWeek dayOfWeek) {
+	public static Week of(final DayOfWeek dayOfWeek) {
 		Assert.notNull(dayOfWeek);
 		int week = dayOfWeek.getValue() + 1;
 		if(8 == week){

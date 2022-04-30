@@ -70,7 +70,7 @@ public class Column implements Serializable, Cloneable {
 	 * @return 列对象
 	 * @since 5.4.3
 	 */
-	public static Column create(Table table, ResultSet columnMetaRs) {
+	public static Column create(final Table table, final ResultSet columnMetaRs) {
 		return new Column(table, columnMetaRs);
 	}
 
@@ -89,10 +89,10 @@ public class Column implements Serializable, Cloneable {
 	 * @param columnMetaRs Meta信息的ResultSet
 	 * @since 5.4.3
 	 */
-	public Column(Table table, ResultSet columnMetaRs) {
+	public Column(final Table table, final ResultSet columnMetaRs) {
 		try {
 			init(table, columnMetaRs);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e, "Get table [{}] meta info error!", tableName);
 		}
 	}
@@ -105,7 +105,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param columnMetaRs 列的meta ResultSet
 	 * @throws SQLException SQL执行异常
 	 */
-	public void init(Table table, ResultSet columnMetaRs) throws SQLException {
+	public void init(final Table table, final ResultSet columnMetaRs) throws SQLException {
 		this.tableName = table.getTableName();
 
 		this.name = columnMetaRs.getString("COLUMN_NAME");
@@ -126,17 +126,17 @@ public class Column implements Serializable, Cloneable {
 		// 保留小数位数
 		try {
 			this.digit = columnMetaRs.getInt("DECIMAL_DIGITS");
-		} catch (SQLException ignore) {
+		} catch (final SQLException ignore) {
 			//某些驱动可能不支持，跳过
 		}
 
 		// 是否自增
 		try {
-			String auto = columnMetaRs.getString("IS_AUTOINCREMENT");
+			final String auto = columnMetaRs.getString("IS_AUTOINCREMENT");
 			if (BooleanUtil.toBoolean(auto)) {
 				this.autoIncrement = true;
 			}
-		} catch (SQLException ignore) {
+		} catch (final SQLException ignore) {
 			//某些驱动可能不支持，跳过
 		}
 	}
@@ -158,7 +158,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param tableName 表名
 	 * @return this
 	 */
-	public Column setTableName(String tableName) {
+	public Column setTableName(final String tableName) {
 		this.tableName = tableName;
 		return this;
 	}
@@ -178,7 +178,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param name 列名
 	 * @return this
 	 */
-	public Column setName(String name) {
+	public Column setName(final String name) {
 		this.name = name;
 		return this;
 	}
@@ -208,7 +208,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param type 类型
 	 * @return this
 	 */
-	public Column setType(int type) {
+	public Column setType(final int type) {
 		this.type = type;
 		return this;
 	}
@@ -228,7 +228,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param typeName 类型名称
 	 * @return this
 	 */
-	public Column setTypeName(String typeName) {
+	public Column setTypeName(final String typeName) {
 		this.typeName = typeName;
 		return this;
 	}
@@ -248,7 +248,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param size 大小或数据长度
 	 * @return this
 	 */
-	public Column setSize(int size) {
+	public Column setSize(final int size) {
 		this.size = size;
 		return this;
 	}
@@ -268,7 +268,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param digit 小数位数
 	 * @return this
 	 */
-	public Column setDigit(int digit) {
+	public Column setDigit(final int digit) {
 		this.digit = digit;
 		return this;
 	}
@@ -288,7 +288,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param isNullable 是否为可空
 	 * @return this
 	 */
-	public Column setNullable(boolean isNullable) {
+	public Column setNullable(final boolean isNullable) {
 		this.isNullable = isNullable;
 		return this;
 	}
@@ -308,7 +308,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param comment 注释
 	 * @return this
 	 */
-	public Column setComment(String comment) {
+	public Column setComment(final String comment) {
 		this.comment = comment;
 		return this;
 	}
@@ -330,7 +330,7 @@ public class Column implements Serializable, Cloneable {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public Column setAutoIncrement(boolean autoIncrement) {
+	public Column setAutoIncrement(final boolean autoIncrement) {
 		this.autoIncrement = autoIncrement;
 		return this;
 	}
@@ -352,7 +352,7 @@ public class Column implements Serializable, Cloneable {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public Column setPk(boolean isPk) {
+	public Column setPk(final boolean isPk) {
 		this.isPk = isPk;
 		return this;
 	}
@@ -371,7 +371,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param columnDef 默认值
 	 * @return this
 	 */
-	public Column setColumnDef(String columnDef) {
+	public Column setColumnDef(final String columnDef) {
 		this.columnDef = columnDef;
 		return this;
 	}

@@ -8,7 +8,7 @@ import cn.hutool.extra.tokenizer.Word;
 
 /**
  * Lucene-analysis分词中的一个单词包装
- * 
+ *
  * @author looly
  *
  */
@@ -19,10 +19,10 @@ public class AnalysisWord implements Word {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param word {@link CharTermAttribute}
 	 */
-	public AnalysisWord(CharTermAttribute word) {
+	public AnalysisWord(final CharTermAttribute word) {
 		this.word = word;
 	}
 
@@ -30,7 +30,7 @@ public class AnalysisWord implements Word {
 	public String getText() {
 		return word.toString();
 	}
-	
+
 	@Override
 	public int getStartOffset() {
 		if(this.word instanceof OffsetAttribute) {
@@ -38,7 +38,7 @@ public class AnalysisWord implements Word {
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public int getEndOffset() {
 		if(this.word instanceof OffsetAttribute) {

@@ -41,7 +41,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public HttpServerResponse(HttpExchange httpExchange) {
+	public HttpServerResponse(final HttpExchange httpExchange) {
 		super(httpExchange);
 	}
 
@@ -51,7 +51,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param httpStatusCode HTTP状态码，见HttpStatus
 	 * @return this
 	 */
-	public HttpServerResponse send(int httpStatusCode) {
+	public HttpServerResponse send(final int httpStatusCode) {
 		return send(httpStatusCode, 0);
 	}
 
@@ -71,7 +71,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.5.7
 	 */
-	public HttpServerResponse sendOk(int bodyLength) {
+	public HttpServerResponse sendOk(final int bodyLength) {
 		return send(HttpStatus.HTTP_OK, bodyLength);
 	}
 
@@ -81,7 +81,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param content 错误页页面内容，默认text/html类型
 	 * @return this
 	 */
-	public HttpServerResponse send404(String content) {
+	public HttpServerResponse send404(final String content) {
 		return sendError(HttpStatus.HTTP_NOT_FOUND, content);
 	}
 
@@ -92,7 +92,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param content   错误页页面内容，默认text/html类型
 	 * @return this
 	 */
-	public HttpServerResponse sendError(int errorCode, String content) {
+	public HttpServerResponse sendError(final int errorCode, final String content) {
 		send(errorCode);
 		setContentType(ContentType.TEXT_HTML.toString());
 		return write(content);
@@ -105,14 +105,14 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param bodyLength     响应体长度，默认0表示不定长度，会输出Transfer-encoding: chunked
 	 * @return this
 	 */
-	public HttpServerResponse send(int httpStatusCode, long bodyLength) {
+	public HttpServerResponse send(final int httpStatusCode, final long bodyLength) {
 		if (this.isSendCode) {
 			throw new IORuntimeException("Http status code has been send!");
 		}
 
 		try {
 			this.httpExchange.sendResponseHeaders(httpStatusCode, bodyLength);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -136,7 +136,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param value  值
 	 * @return this
 	 */
-	public HttpServerResponse addHeader(String header, String value) {
+	public HttpServerResponse addHeader(final String header, final String value) {
 		getHeaders().add(header, value);
 		return this;
 	}
@@ -148,7 +148,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param value  值
 	 * @return this
 	 */
-	public HttpServerResponse setHeader(Header header, String value) {
+	public HttpServerResponse setHeader(final Header header, final String value) {
 		return setHeader(header.getValue(), value);
 	}
 
@@ -159,7 +159,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param value  值
 	 * @return this
 	 */
-	public HttpServerResponse setHeader(String header, String value) {
+	public HttpServerResponse setHeader(final String header, final String value) {
 		getHeaders().set(header, value);
 		return this;
 	}
@@ -171,7 +171,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param value  值列表
 	 * @return this
 	 */
-	public HttpServerResponse setHeader(String header, List<String> value) {
+	public HttpServerResponse setHeader(final String header, final List<String> value) {
 		getHeaders().put(header, value);
 		return this;
 	}
@@ -182,7 +182,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param headers 响应头map
 	 * @return this
 	 */
-	public HttpServerResponse setHeaders(Map<String, List<String>> headers) {
+	public HttpServerResponse setHeaders(final Map<String, List<String>> headers) {
 		getHeaders().putAll(headers);
 		return this;
 	}
@@ -210,7 +210,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param contentLength Content-Length头内容
 	 * @return this
 	 */
-	public HttpServerResponse setContentLength(long contentLength) {
+	public HttpServerResponse setContentLength(final long contentLength) {
 		return setHeader(Header.CONTENT_LENGTH, String.valueOf(contentLength));
 	}
 
@@ -220,7 +220,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param charset 编码
 	 * @return this
 	 */
-	public HttpServerResponse setCharset(Charset charset) {
+	public HttpServerResponse setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -232,7 +232,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param value 属性值
 	 * @return this
 	 */
-	public HttpServerResponse setAttr(String name, Object value) {
+	public HttpServerResponse setAttr(final String name, final Object value) {
 		this.httpExchange.setAttribute(name, value);
 		return this;
 	}
@@ -266,7 +266,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param contentType Content-Type类型
 	 * @return this
 	 */
-	public HttpServerResponse write(String data, String contentType) {
+	public HttpServerResponse write(final String data, final String contentType) {
 		setContentType(contentType);
 		return write(data);
 	}
@@ -277,7 +277,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param data 数据
 	 * @return this
 	 */
-	public HttpServerResponse write(String data) {
+	public HttpServerResponse write(final String data) {
 		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 		return write(StrUtil.bytes(data, charset));
 	}
@@ -289,7 +289,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param contentType 返回的类型
 	 * @return this
 	 */
-	public HttpServerResponse write(byte[] data, String contentType) {
+	public HttpServerResponse write(final byte[] data, final String contentType) {
 		setContentType(contentType);
 		return write(data);
 	}
@@ -300,7 +300,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param data 数据
 	 * @return this
 	 */
-	public HttpServerResponse write(byte[] data) {
+	public HttpServerResponse write(final byte[] data) {
 		final ByteArrayInputStream in = new ByteArrayInputStream(data);
 		return write(in, in.available());
 	}
@@ -313,7 +313,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.2.6
 	 */
-	public HttpServerResponse write(InputStream in, String contentType) {
+	public HttpServerResponse write(final InputStream in, final String contentType) {
 		return write(in, 0, contentType);
 	}
 
@@ -326,7 +326,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.2.7
 	 */
-	public HttpServerResponse write(InputStream in, int length, String contentType) {
+	public HttpServerResponse write(final InputStream in, final int length, final String contentType) {
 		setContentType(contentType);
 		return write(in, length);
 	}
@@ -337,7 +337,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param in 数据流
 	 * @return this
 	 */
-	public HttpServerResponse write(InputStream in) {
+	public HttpServerResponse write(final InputStream in) {
 		return write(in, 0);
 	}
 
@@ -348,7 +348,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param length 指定响应内容长度，默认0表示不定长度，会输出Transfer-encoding: chunked
 	 * @return this
 	 */
-	public HttpServerResponse write(InputStream in, int length) {
+	public HttpServerResponse write(final InputStream in, final int length) {
 		if (false == isSendCode) {
 			sendOk(Math.max(0, length));
 		}
@@ -370,7 +370,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.2.6
 	 */
-	public HttpServerResponse write(File file) {
+	public HttpServerResponse write(final File file) {
 		return write(file, null);
 	}
 
@@ -382,7 +382,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.5.8
 	 */
-	public HttpServerResponse write(File file, String fileName) {
+	public HttpServerResponse write(final File file, String fileName) {
 		final long fileSize = file.length();
 		if(fileSize > Integer.MAX_VALUE){
 			throw new IllegalArgumentException("File size is too bigger than " + Integer.MAX_VALUE);
@@ -410,7 +410,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @param fileName    文件名
 	 * @since 5.2.6
 	 */
-	public void write(InputStream in, String contentType, String fileName) {
+	public void write(final InputStream in, final String contentType, final String fileName) {
 		write(in, 0, contentType, fileName);
 	}
 
@@ -424,7 +424,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 * @since 5.2.7
 	 */
-	public HttpServerResponse write(InputStream in, int length, String contentType, String fileName) {
+	public HttpServerResponse write(final InputStream in, final int length, final String contentType, final String fileName) {
 		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 
 		if (false == contentType.startsWith("text/")) {

@@ -34,7 +34,7 @@ public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	 * @param <E>      元素类型
 	 * @return {@code CopiedIter}
 	 */
-	public static <E> CopiedIter<E> copyOf(Iterator<E> iterator) {
+	public static <E> CopiedIter<E> copyOf(final Iterator<E> iterator) {
 		return new CopiedIter<>(iterator);
 	}
 
@@ -43,7 +43,7 @@ public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	 *
 	 * @param iterator 被复制的Iterator
 	 */
-	public CopiedIter(Iterator<E> iterator) {
+	public CopiedIter(final Iterator<E> iterator) {
 		final List<E> eleList = ListUtil.toList(iterator);
 		this.listIterator = eleList.iterator();
 	}

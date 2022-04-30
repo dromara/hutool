@@ -25,7 +25,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void trace(String format, Object... arguments) {
+	public static void trace(final String format, final Object... arguments) {
 		trace(LogFactory.get(CallerUtil.getCallerCaller()), format, arguments);
 	}
 
@@ -36,7 +36,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void trace(Log log, String format, Object... arguments) {
+	public static void trace(final Log log, final String format, final Object... arguments) {
 		log.trace(FQCN, null, format, arguments);
 	}
 
@@ -48,7 +48,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void debug(String format, Object... arguments) {
+	public static void debug(final String format, final Object... arguments) {
 		debug(LogFactory.get(CallerUtil.getCallerCaller()), format, arguments);
 	}
 
@@ -59,7 +59,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void debug(Log log, String format, Object... arguments) {
+	public static void debug(final Log log, final String format, final Object... arguments) {
 		log.debug(FQCN, null, format, arguments);
 	}
 
@@ -71,7 +71,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void info(String format, Object... arguments) {
+	public static void info(final String format, final Object... arguments) {
 		info(LogFactory.get(CallerUtil.getCallerCaller()), format, arguments);
 	}
 
@@ -82,7 +82,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void info(Log log, String format, Object... arguments) {
+	public static void info(final Log log, final String format, final Object... arguments) {
 		log.info(FQCN, null, format, arguments);
 	}
 
@@ -94,7 +94,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void warn(String format, Object... arguments) {
+	public static void warn(final String format, final Object... arguments) {
 		warn(LogFactory.get(CallerUtil.getCallerCaller()), format, arguments);
 	}
 
@@ -106,7 +106,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void warn(Throwable e, String format, Object... arguments) {
+	public static void warn(final Throwable e, final String format, final Object... arguments) {
 		warn(LogFactory.get(CallerUtil.getCallerCaller()), e, StrUtil.format(format, arguments));
 	}
 
@@ -117,7 +117,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void warn(Log log, String format, Object... arguments) {
+	public static void warn(final Log log, final String format, final Object... arguments) {
 		warn(log, null, format, arguments);
 	}
 
@@ -129,7 +129,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void warn(Log log, Throwable e, String format, Object... arguments) {
+	public static void warn(final Log log, final Throwable e, final String format, final Object... arguments) {
 		log.warn(FQCN, e, format, arguments);
 	}
 
@@ -140,7 +140,7 @@ public final class StaticLog {
 	 *
 	 * @param e 需在日志中堆栈打印的异常
 	 */
-	public static void error(Throwable e) {
+	public static void error(final Throwable e) {
 		error(LogFactory.get(CallerUtil.getCallerCaller()), e);
 	}
 
@@ -151,7 +151,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void error(String format, Object... arguments) {
+	public static void error(final String format, final Object... arguments) {
 		error(LogFactory.get(CallerUtil.getCallerCaller()), format, arguments);
 	}
 
@@ -163,7 +163,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void error(Throwable e, String format, Object... arguments) {
+	public static void error(final Throwable e, final String format, final Object... arguments) {
 		error(LogFactory.get(CallerUtil.getCallerCaller()), e, format, arguments);
 	}
 
@@ -173,7 +173,7 @@ public final class StaticLog {
 	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
 	 */
-	public static void error(Log log, Throwable e) {
+	public static void error(final Log log, final Throwable e) {
 		error(log, e, e.getMessage());
 	}
 
@@ -184,7 +184,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void error(Log log, String format, Object... arguments) {
+	public static void error(final Log log, final String format, final Object... arguments) {
 		error(log, null, format, arguments);
 	}
 
@@ -196,7 +196,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void error(Log log, Throwable e, String format, Object... arguments) {
+	public static void error(final Log log, final Throwable e, final String format, final Object... arguments) {
 		log.error(FQCN, e, format, arguments);
 	}
 
@@ -209,7 +209,7 @@ public final class StaticLog {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void log(Level level, Throwable t, String format, Object... arguments) {
+	public static void log(final Level level, final Throwable t, final String format, final Object... arguments) {
 		LogFactory.get(CallerUtil.getCallerCaller()).log(FQCN, level, t, format, arguments);
 	}
 

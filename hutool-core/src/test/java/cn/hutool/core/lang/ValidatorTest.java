@@ -23,10 +23,10 @@ public class ValidatorTest {
 
 	@Test
 	public void hasNumberTest() {
-		String var1 = "";
-		String var2 = "str";
-		String var3 = "180";
-		String var4 = "身高180体重180";
+		final String var1 = "";
+		final String var2 = "str";
+		final String var3 = "180";
+		final String var4 = "身高180体重180";
 		Assert.assertFalse(Validator.hasNumber(var1));
 		Assert.assertFalse(Validator.hasNumber(var2));
 		Assert.assertTrue(Validator.hasNumber(var3));
@@ -61,17 +61,17 @@ public class ValidatorTest {
 
 	@Test
 	public void isBirthdayTest() {
-		boolean b = Validator.isBirthday("20150101");
+		final boolean b = Validator.isBirthday("20150101");
 		Assert.assertTrue(b);
-		boolean b2 = Validator.isBirthday("2015-01-01");
+		final boolean b2 = Validator.isBirthday("2015-01-01");
 		Assert.assertTrue(b2);
-		boolean b3 = Validator.isBirthday("2015.01.01");
+		final boolean b3 = Validator.isBirthday("2015.01.01");
 		Assert.assertTrue(b3);
-		boolean b4 = Validator.isBirthday("2015年01月01日");
+		final boolean b4 = Validator.isBirthday("2015年01月01日");
 		Assert.assertTrue(b4);
-		boolean b5 = Validator.isBirthday("2015.01.01");
+		final boolean b5 = Validator.isBirthday("2015.01.01");
 		Assert.assertTrue(b5);
-		boolean b6 = Validator.isBirthday("2018-08-15");
+		final boolean b6 = Validator.isBirthday("2018-08-15");
 		Assert.assertTrue(b6);
 
 		//验证年非法
@@ -85,15 +85,15 @@ public class ValidatorTest {
 	@Test
 	public void isCitizenIdTest() {
 		// 18为身份证号码验证
-		boolean b = Validator.isCitizenId("110101199003074477");
+		final boolean b = Validator.isCitizenId("110101199003074477");
 		Assert.assertTrue(b);
 
 		// 15位身份证号码验证
-		boolean b1 = Validator.isCitizenId("410001910101123");
+		final boolean b1 = Validator.isCitizenId("410001910101123");
 		Assert.assertTrue(b1);
 
 		// 10位身份证号码验证
-		boolean b2 = Validator.isCitizenId("U193683453");
+		final boolean b2 = Validator.isCitizenId("U193683453");
 		Assert.assertTrue(b2);
 	}
 
@@ -104,25 +104,25 @@ public class ValidatorTest {
 
 	@Test
 	public void isEmailTest() {
-		boolean email = Validator.isEmail("abc_cde@163.com");
+		final boolean email = Validator.isEmail("abc_cde@163.com");
 		Assert.assertTrue(email);
-		boolean email1 = Validator.isEmail("abc_%cde@163.com");
+		final boolean email1 = Validator.isEmail("abc_%cde@163.com");
 		Assert.assertTrue(email1);
-		boolean email2 = Validator.isEmail("abc_%cde@aaa.c");
+		final boolean email2 = Validator.isEmail("abc_%cde@aaa.c");
 		Assert.assertTrue(email2);
-		boolean email3 = Validator.isEmail("xiaolei.lu@aaa.b");
+		final boolean email3 = Validator.isEmail("xiaolei.lu@aaa.b");
 		Assert.assertTrue(email3);
-		boolean email4 = Validator.isEmail("xiaolei.Lu@aaa.b");
+		final boolean email4 = Validator.isEmail("xiaolei.Lu@aaa.b");
 		Assert.assertTrue(email4);
 	}
 
 	@Test
 	public void isMobileTest() {
-		boolean m1 = Validator.isMobile("13900221432");
+		final boolean m1 = Validator.isMobile("13900221432");
 		Assert.assertTrue(m1);
-		boolean m2 = Validator.isMobile("015100221432");
+		final boolean m2 = Validator.isMobile("015100221432");
 		Assert.assertTrue(m2);
-		boolean m3 = Validator.isMobile("+8618600221432");
+		final boolean m3 = Validator.isMobile("+8618600221432");
 		Assert.assertTrue(m3);
 	}
 
@@ -240,7 +240,7 @@ public class ValidatorTest {
 
 	@Test
 	public void isUrlTest(){
-		String content = "https://detail.tmall.com/item.htm?" +
+		final String content = "https://detail.tmall.com/item.htm?" +
 				"id=639428931841&ali_refid=a3_430582_1006:1152464078:N:Sk5vwkMVsn5O6DcnvicELrFucL21A32m:0af8611e23c1d07697e";
 
 		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL, content));

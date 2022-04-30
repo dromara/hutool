@@ -101,7 +101,7 @@ public class Snowflake implements Serializable {
 	 *
 	 * @param workerId 终端ID
 	 */
-	public Snowflake(long workerId) {
+	public Snowflake(final long workerId) {
 		this(workerId, IdUtil.getDataCenterId(MAX_DATA_CENTER_ID));
 	}
 
@@ -111,7 +111,7 @@ public class Snowflake implements Serializable {
 	 * @param workerId     终端ID
 	 * @param dataCenterId 数据中心ID
 	 */
-	public Snowflake(long workerId, long dataCenterId) {
+	public Snowflake(final long workerId, final long dataCenterId) {
 		this(workerId, dataCenterId, false);
 	}
 
@@ -122,7 +122,7 @@ public class Snowflake implements Serializable {
 	 * @param dataCenterId     数据中心ID
 	 * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
 	 */
-	public Snowflake(long workerId, long dataCenterId, boolean isUseSystemClock) {
+	public Snowflake(final long workerId, final long dataCenterId, final boolean isUseSystemClock) {
 		this(null, workerId, dataCenterId, isUseSystemClock);
 	}
 
@@ -133,7 +133,7 @@ public class Snowflake implements Serializable {
 	 * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
 	 * @since 5.1.3
 	 */
-	public Snowflake(Date epochDate, long workerId, long dataCenterId, boolean isUseSystemClock) {
+	public Snowflake(final Date epochDate, final long workerId, final long dataCenterId, final boolean isUseSystemClock) {
 		this(epochDate, workerId, dataCenterId, isUseSystemClock, DEFAULT_TIME_OFFSET);
 	}
 
@@ -145,7 +145,7 @@ public class Snowflake implements Serializable {
 	 * @param timeOffset       允许时间回拨的毫秒数
 	 * @since 5.8.0
 	 */
-	public Snowflake(Date epochDate, long workerId, long dataCenterId, boolean isUseSystemClock, long timeOffset) {
+	public Snowflake(final Date epochDate, final long workerId, final long dataCenterId, final boolean isUseSystemClock, final long timeOffset) {
 		this(epochDate, workerId, dataCenterId, isUseSystemClock, timeOffset, 0);
 	}
 
@@ -158,8 +158,8 @@ public class Snowflake implements Serializable {
 	 * @param randomSequenceLimit 限定一个随机上限，在不同毫秒下生成序号时，给定一个随机数，避免偶数问题，0表示无随机，上限不包括值本身。
 	 * @since 5.8.0
 	 */
-	public Snowflake(Date epochDate, long workerId, long dataCenterId,
-					 boolean isUseSystemClock, long timeOffset, long randomSequenceLimit) {
+	public Snowflake(final Date epochDate, final long workerId, final long dataCenterId,
+					 final boolean isUseSystemClock, final long timeOffset, final long randomSequenceLimit) {
 		this.twepoch = (null != epochDate) ? epochDate.getTime() : DEFAULT_TWEPOCH;
 		this.workerId = Assert.checkBetween(workerId, 0, MAX_WORKER_ID);
 		this.dataCenterId = Assert.checkBetween(dataCenterId, 0, MAX_DATA_CENTER_ID);
@@ -174,7 +174,7 @@ public class Snowflake implements Serializable {
 	 * @param id snowflake算法生成的id
 	 * @return 所属机器的id
 	 */
-	public long getWorkerId(long id) {
+	public long getWorkerId(final long id) {
 		return id >> WORKER_ID_SHIFT & ~(-1L << WORKER_ID_BITS);
 	}
 
@@ -184,7 +184,7 @@ public class Snowflake implements Serializable {
 	 * @param id snowflake算法生成的id
 	 * @return 所属数据中心
 	 */
-	public long getDataCenterId(long id) {
+	public long getDataCenterId(final long id) {
 		return id >> DATA_CENTER_ID_SHIFT & ~(-1L << DATA_CENTER_ID_BITS);
 	}
 
@@ -194,7 +194,7 @@ public class Snowflake implements Serializable {
 	 * @param id snowflake算法生成的id
 	 * @return 生成的时间
 	 */
-	public long getGenerateDateTime(long id) {
+	public long getGenerateDateTime(final long id) {
 		return (id >> TIMESTAMP_LEFT_SHIFT & ~(-1L << 41L)) + twepoch;
 	}
 
@@ -255,7 +255,7 @@ public class Snowflake implements Serializable {
 	 * @param lastTimestamp 上次记录的时间
 	 * @return 下一个时间
 	 */
-	private long tilNextMillis(long lastTimestamp) {
+	private long tilNextMillis(final long lastTimestamp) {
 		long timestamp = genTime();
 		// 循环直到操作系统时间戳变化
 		while (timestamp == lastTimestamp) {

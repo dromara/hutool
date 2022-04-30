@@ -25,7 +25,7 @@ public enum Quarter {
 	// ---------------------------------------------------------------
 	private final int value;
 
-	Quarter(int value) {
+	Quarter(final int value) {
 		this.value = value;
 	}
 
@@ -44,7 +44,7 @@ public enum Quarter {
 	 * @param intValue 季度int表示
 	 * @return {@link Quarter}
 	 */
-	public static Quarter of(int intValue) {
+	public static Quarter of(final int intValue) {
 		switch (intValue) {
 			case 1:
 				return Q1;

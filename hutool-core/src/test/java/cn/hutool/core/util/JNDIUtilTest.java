@@ -15,7 +15,7 @@ public class JNDIUtilTest {
 	@Ignore
 	public void getDnsTest() throws NamingException {
 		final Attributes attributes = JNDIUtil.getAttributes("dns:paypal.com", "TXT");
-		for (Attribute attribute: new EnumerationIter<>(attributes.getAll())){
+		for (final Attribute attribute: new EnumerationIter<>(attributes.getAll())){
 			Console.log(attribute.get());
 		}
 	}

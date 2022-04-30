@@ -13,22 +13,22 @@ import cn.hutool.log.LogFactory;
 /**
  * <a href="http://www.slf4j.org/">SLF4J</a> log.<br>
  * 同样无缝支持 <a href="http://logback.qos.ch/">LogBack</a>
- * 
+ *
  * @author Looly
  *
  */
 public class Slf4jLogFactory extends LogFactory {
-	
+
 	public Slf4jLogFactory() {
 		this(true);
 	}
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param failIfNOP 如果未找到桥接包是否报错
 	 */
-	public Slf4jLogFactory(boolean failIfNOP) {
+	public Slf4jLogFactory(final boolean failIfNOP) {
 		super("Slf4j");
 		checkLogExist(LoggerFactory.class);
 		if(false == failIfNOP){
@@ -42,11 +42,11 @@ public class Slf4jLogFactory extends LogFactory {
 		try {
 			System.setErr(new PrintStream(new OutputStream(){
 				@Override
-				public void write(int b) {
+				public void write(final int b) {
 					buf.append((char) b);
 				}
 			}, true, "US-ASCII"));
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new Error(e);
 		}
 
@@ -63,12 +63,12 @@ public class Slf4jLogFactory extends LogFactory {
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new Slf4jLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new Slf4jLog(clazz);
 	}
 

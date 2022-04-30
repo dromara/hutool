@@ -33,7 +33,7 @@ public abstract class AbstractFileCache implements Serializable{
 	 * @param maxFileSize 文件最大大小
 	 * @param timeout 默认超时时间，0表示无默认超时
 	 */
-	public AbstractFileCache(int capacity, int maxFileSize, long timeout) {
+	public AbstractFileCache(final int capacity, final int maxFileSize, final long timeout) {
 		this.capacity = capacity;
 		this.maxFileSize = maxFileSize;
 		this.timeout = timeout;
@@ -91,7 +91,7 @@ public abstract class AbstractFileCache implements Serializable{
 	 * @return 缓存过的文件bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] getFileBytes(String path) throws IORuntimeException {
+	public byte[] getFileBytes(final String path) throws IORuntimeException {
 		return getFileBytes(new File(path));
 	}
 
@@ -101,7 +101,7 @@ public abstract class AbstractFileCache implements Serializable{
 	 * @return 缓存过的文件bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] getFileBytes(File file) throws IORuntimeException {
+	public byte[] getFileBytes(final File file) throws IORuntimeException {
 		byte[] bytes = cache.get(file);
 		if (bytes != null) {
 			return bytes;

@@ -17,12 +17,12 @@ import java.util.Map;
 public abstract class AbsEntry<K, V> implements Map.Entry<K, V> {
 
 	@Override
-	public V setValue(V value) {
+	public V setValue(final V value) {
 		throw new UnsupportedOperationException("Entry is read only.");
 	}
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		if (object instanceof Map.Entry) {
 			final Map.Entry<?, ?> that = (Map.Entry<?, ?>) object;
 			return ObjUtil.equals(this.getKey(), that.getKey())
@@ -34,8 +34,8 @@ public abstract class AbsEntry<K, V> implements Map.Entry<K, V> {
 	@Override
 	public int hashCode() {
 		//copy from 1.8 HashMap.Node
-		K k = getKey();
-		V v = getValue();
+		final K k = getKey();
+		final V v = getValue();
 		return ((k == null) ? 0 : k.hashCode()) ^ ((v == null) ? 0 : v.hashCode());
 	}
 

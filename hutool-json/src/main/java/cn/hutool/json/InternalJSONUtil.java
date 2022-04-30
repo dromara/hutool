@@ -36,7 +36,7 @@ public final class InternalJSONUtil {
 	 * @return 检测后的值
 	 * @throws JSONException If o is a non-finite number.
 	 */
-	static Object testValidity(Object obj) throws JSONException {
+	static Object testValidity(final Object obj) throws JSONException {
 		if (false == ObjUtil.isValidIfNumber(obj)) {
 			throw new JSONException("JSON does not allow non-finite numbers.");
 		}
@@ -58,14 +58,14 @@ public final class InternalJSONUtil {
 	 * @return 字符串
 	 * @throws JSONException If the value is or contains an invalid number.
 	 */
-	static String valueToString(Object value) throws JSONException {
+	static String valueToString(final Object value) throws JSONException {
 		if (value == null || value instanceof JSONNull) {
 			return JSONNull.NULL.toString();
 		}
 		if (value instanceof JSONString) {
 			try {
 				return ((JSONString) value).toJSONString();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new JSONException(e);
 			}
 		} else if (value instanceof Number) {
@@ -73,10 +73,10 @@ public final class InternalJSONUtil {
 		} else if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
 			return value.toString();
 		} else if (value instanceof Map) {
-			Map<?, ?> map = (Map<?, ?>) value;
+			final Map<?, ?> map = (Map<?, ?>) value;
 			return new JSONObject(map).toString();
 		} else if (value instanceof Collection) {
-			Collection<?> coll = (Collection<?>) value;
+			final Collection<?> coll = (Collection<?>) value;
 			return new JSONArray(coll).toString();
 		} else if (ArrayUtil.isArray(value)) {
 			return new JSONArray(value).toString();
@@ -91,7 +91,7 @@ public final class InternalJSONUtil {
 	 * @param string A String.
 	 * @return A simple JSON value.
 	 */
-	public static Object stringToValue(String string) {
+	public static Object stringToValue(final String string) {
 		// null处理
 		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
 			return JSONNull.NULL;
@@ -106,7 +106,7 @@ public final class InternalJSONUtil {
 		}
 
 		// Number处理
-		char b = string.charAt(0);
+		final char b = string.charAt(0);
 		if ((b >= '0' && b <= '9') || b == '-') {
 			try {
 				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
@@ -122,7 +122,7 @@ public final class InternalJSONUtil {
 						}
 					}
 				}
-			} catch (Exception ignore) {
+			} catch (final Exception ignore) {
 			}
 		}
 
@@ -140,12 +140,12 @@ public final class InternalJSONUtil {
 	 * @param value      值
 	 * @return JSONObject
 	 */
-	static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value, Filter<MutablePair<String, Object>> filter) {
+	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Filter<MutablePair<String, Object>> filter) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
-		int last = path.length - 1;
+		final int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
-			String segment = path[i];
+			final String segment = path[i];
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = new JSONObject(target.getConfig());
@@ -170,7 +170,7 @@ public final class InternalJSONUtil {
 	 * @return 是否忽略null值
 	 * @since 4.3.1
 	 */
-	static boolean defaultIgnoreNullValue(Object obj) {
+	static boolean defaultIgnoreNullValue(final Object obj) {
 		return (false == (obj instanceof CharSequence))//
 				&& (false == (obj instanceof JSONTokener))//
 				&& (false == (obj instanceof Map));
@@ -183,7 +183,7 @@ public final class InternalJSONUtil {
 	 * @return {@link CopyOptions}
 	 * @since 5.8.0
 	 */
-	static CopyOptions toCopyOptions(JSONConfig config) {
+	static CopyOptions toCopyOptions(final JSONConfig config) {
 		return CopyOptions.create()
 				.setIgnoreCase(config.isIgnoreCase())
 				.setIgnoreError(config.isIgnoreError())
@@ -198,8 +198,8 @@ public final class InternalJSONUtil {
 	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 * @return Map
 	 */
-	static Map<String, Object> createRawMap(int capacity, JSONConfig config) {
-		Map<String, Object> rawHashMap;
+	static Map<String, Object> createRawMap(final int capacity, JSONConfig config) {
+		final Map<String, Object> rawHashMap;
 		if (null == config) {
 			config = JSONConfig.create();
 		}

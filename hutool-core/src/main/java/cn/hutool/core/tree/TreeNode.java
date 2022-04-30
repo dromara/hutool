@@ -55,7 +55,7 @@ public class TreeNode<T> implements Node<T> {
 	 * @param name     名称
 	 * @param weight   权重
 	 */
-	public TreeNode(T id, T parentId, String name, Comparable<?> weight) {
+	public TreeNode(final T id, final T parentId, final String name, final Comparable<?> weight) {
 		this.id = id;
 		this.parentId = parentId;
 		this.name = name;
@@ -71,7 +71,7 @@ public class TreeNode<T> implements Node<T> {
 	}
 
 	@Override
-	public TreeNode<T> setId(T id) {
+	public TreeNode<T> setId(final T id) {
 		this.id = id;
 		return this;
 	}
@@ -82,7 +82,7 @@ public class TreeNode<T> implements Node<T> {
 	}
 
 	@Override
-	public TreeNode<T> setParentId(T parentId) {
+	public TreeNode<T> setParentId(final T parentId) {
 		this.parentId = parentId;
 		return this;
 	}
@@ -93,7 +93,7 @@ public class TreeNode<T> implements Node<T> {
 	}
 
 	@Override
-	public TreeNode<T> setName(CharSequence name) {
+	public TreeNode<T> setName(final CharSequence name) {
 		this.name = name;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class TreeNode<T> implements Node<T> {
 	}
 
 	@Override
-	public TreeNode<T> setWeight(Comparable<?> weight) {
+	public TreeNode<T> setWeight(final Comparable<?> weight) {
 		this.weight = weight;
 		return this;
 	}
@@ -126,20 +126,20 @@ public class TreeNode<T> implements Node<T> {
 	 * @return this
 	 * @since 5.2.5
 	 */
-	public TreeNode<T> setExtra(Map<String, Object> extra) {
+	public TreeNode<T> setExtra(final Map<String, Object> extra) {
 		this.extra = extra;
 		return this;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		TreeNode<?> treeNode = (TreeNode<?>) o;
+		final TreeNode<?> treeNode = (TreeNode<?>) o;
 		return Objects.equals(id, treeNode.id);
 	}
 

@@ -55,9 +55,9 @@ public class FastByteBuffer {
 	 *
 	 * @param newSize 理想缓冲区字节数
 	 */
-	private void needNewBuffer(int newSize) {
-		int delta = newSize - size;
-		int newBufferSize = Math.max(minChunkLen, delta);
+	private void needNewBuffer(final int newSize) {
+		final int delta = newSize - size;
+		final int newBufferSize = Math.max(minChunkLen, delta);
 
 		currentBufferIndex++;
 		currentBuffer = new byte[newBufferSize];
@@ -65,8 +65,8 @@ public class FastByteBuffer {
 
 		// add buffer
 		if (currentBufferIndex >= buffers.length) {
-			int newLen = buffers.length << 1;
-			byte[][] newBuffers = new byte[newLen][];
+			final int newLen = buffers.length << 1;
+			final byte[][] newBuffers = new byte[newLen][];
 			System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
 			buffers = newBuffers;
 		}
@@ -82,20 +82,20 @@ public class FastByteBuffer {
 	 * @param len 字节数
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
-	public FastByteBuffer append(byte[] array, int off, int len) {
-		int end = off + len;
+	public FastByteBuffer append(final byte[] array, final int off, final int len) {
+		final int end = off + len;
 		if ((off < 0) || (len < 0) || (end > array.length)) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (len == 0) {
 			return this;
 		}
-		int newSize = size + len;
+		final int newSize = size + len;
 		int remaining = len;
 
 		if (currentBuffer != null) {
 			// first try to fill current buffer
-			int part = Math.min(remaining, currentBuffer.length - offset);
+			final int part = Math.min(remaining, currentBuffer.length - offset);
 			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
 			offset += part;
@@ -109,7 +109,7 @@ public class FastByteBuffer {
 
 			// then copy remaining
 			// but this time we are sure that it will fit
-			int part = Math.min(remaining, currentBuffer.length - offset);
+			final int part = Math.min(remaining, currentBuffer.length - offset);
 			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			offset += part;
 			size += part;
@@ -125,7 +125,7 @@ public class FastByteBuffer {
 	 *
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
-	public FastByteBuffer append(byte[] array) {
+	public FastByteBuffer append(final byte[] array) {
 		return append(array, 0, array.length);
 	}
 
@@ -135,7 +135,7 @@ public class FastByteBuffer {
 	 * @param element 一个字节的数据
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
-	public FastByteBuffer append(byte element) {
+	public FastByteBuffer append(final byte element) {
 		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
 			needNewBuffer(size + 1);
 		}
@@ -153,7 +153,7 @@ public class FastByteBuffer {
 	 * @param buff 快速缓冲
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
-	public FastByteBuffer append(FastByteBuffer buff) {
+	public FastByteBuffer append(final FastByteBuffer buff) {
 		if (buff.size == 0) {
 			return this;
 		}
@@ -191,7 +191,7 @@ public class FastByteBuffer {
 	 * @param index 索引位
 	 * @return 缓冲
 	 */
-	public byte[] array(int index) {
+	public byte[] array(final int index) {
 		return buffers[index];
 	}
 
@@ -210,14 +210,14 @@ public class FastByteBuffer {
 	 */
 	public byte[] toArray() {
 		int pos = 0;
-		byte[] array = new byte[size];
+		final byte[] array = new byte[size];
 
 		if (currentBufferIndex == -1) {
 			return array;
 		}
 
 		for (int i = 0; i < currentBufferIndex; i++) {
-			int len = buffers[i].length;
+			final int len = buffers[i].length;
 			System.arraycopy(buffers[i], 0, array, pos, len);
 			pos += len;
 		}
@@ -234,10 +234,10 @@ public class FastByteBuffer {
 	 * @param len 逻辑字节长
 	 * @return 快速缓冲中的数据
 	 */
-	public byte[] toArray(int start, int len) {
+	public byte[] toArray(int start, final int len) {
 		int remaining = len;
 		int pos = 0;
-		byte[] array = new byte[len];
+		final byte[] array = new byte[len];
 
 		if (len == 0) {
 			return array;
@@ -250,8 +250,8 @@ public class FastByteBuffer {
 		}
 
 		while (i < buffersCount) {
-			byte[] buf = buffers[i];
-			int c = Math.min(buf.length - start, remaining);
+			final byte[] buf = buffers[i];
+			final int c = Math.min(buf.length - start, remaining);
 			System.arraycopy(buf, start, array, pos, c);
 			pos += c;
 			remaining -= c;
@@ -276,7 +276,7 @@ public class FastByteBuffer {
 		}
 		int ndx = 0;
 		while (true) {
-			byte[] b = buffers[ndx];
+			final byte[] b = buffers[ndx];
 			if (index < b.length) {
 				return b[index];
 			}

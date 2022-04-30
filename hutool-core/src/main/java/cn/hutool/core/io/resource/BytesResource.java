@@ -27,7 +27,7 @@ public class BytesResource implements Resource, Serializable {
 	 *
 	 * @param bytes 字节数组
 	 */
-	public BytesResource(byte[] bytes) {
+	public BytesResource(final byte[] bytes) {
 		this(bytes, null);
 	}
 
@@ -37,7 +37,7 @@ public class BytesResource implements Resource, Serializable {
 	 * @param bytes 字节数组
 	 * @param name 资源名称
 	 */
-	public BytesResource(byte[] bytes, String name) {
+	public BytesResource(final byte[] bytes, final String name) {
 		this.bytes = bytes;
 		this.name = name;
 	}
@@ -58,7 +58,7 @@ public class BytesResource implements Resource, Serializable {
 	}
 
 	@Override
-	public String readStr(Charset charset) throws IORuntimeException {
+	public String readStr(final Charset charset) throws IORuntimeException {
 		return StrUtil.str(this.bytes, charset);
 	}
 

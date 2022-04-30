@@ -208,7 +208,7 @@ public class JavaRuntimeInfo implements Serializable{
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "Java Runtime Name:      ", getName());
 		ManagementUtil.append(builder, "Java Runtime Version:   ", getVersion());

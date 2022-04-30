@@ -18,10 +18,10 @@ public class ScriptUtilTest {
 
 	@Test
 	public void compileTest() {
-		CompiledScript script = ScriptUtil.compile("print('Script test!');");
+		final CompiledScript script = ScriptUtil.compile("print('Script test!');");
 		try {
 			script.eval();
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new UtilException(e);
 		}
 	}

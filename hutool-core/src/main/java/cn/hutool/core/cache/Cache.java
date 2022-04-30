@@ -59,7 +59,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @return 键对应的对象
 	 * @see #get(Object, boolean)
 	 */
-	default V get(K key) {
+	default V get(final K key) {
 		return get(key, true);
 	}
 
@@ -74,7 +74,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @param supplier 如果不存在回调方法，用于生产值对象
 	 * @return 值对象
 	 */
-	default V get(K key, Func0<V> supplier) {
+	default V get(final K key, final Func0<V> supplier) {
 		return get(key, true, supplier);
 	}
 
@@ -168,7 +168,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @return this
 	 * @since 5.5.2
 	 */
-	default Cache<K, V> setListener(CacheListener<K, V> listener){
+	default Cache<K, V> setListener(final CacheListener<K, V> listener){
 		return this;
 	}
 }

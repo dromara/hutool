@@ -12,19 +12,19 @@ public class CallerTest {
 
 	@Test
 	public void getCallerTest() {
-		Class<?> caller = CallerUtil.getCaller();
+		final Class<?> caller = CallerUtil.getCaller();
 		Assert.assertEquals(this.getClass(), caller);
 
-		Class<?> caller0 = CallerUtil.getCaller(0);
+		final Class<?> caller0 = CallerUtil.getCaller(0);
 		Assert.assertEquals(CallerUtil.class, caller0);
 
-		Class<?> caller1 = CallerUtil.getCaller(1);
+		final Class<?> caller1 = CallerUtil.getCaller(1);
 		Assert.assertEquals(this.getClass(), caller1);
 	}
 
 	@Test
 	public void getCallerCallerTest() {
-		Class<?> callerCaller = CallerTestClass.getCaller();
+		final Class<?> callerCaller = CallerTestClass.getCaller();
 		Assert.assertEquals(this.getClass(), callerCaller);
 	}
 

@@ -49,7 +49,7 @@ public enum SqlLog {
 	 * @param isShowParams 是否打印参数
 	 * @param level 日志级别
 	 */
-	public void init(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
+	public void init(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
 		this.showSql = isShowSql;
 		this.formatSql = isFormatSql;
 		this.showParams = isShowParams;
@@ -62,7 +62,7 @@ public enum SqlLog {
 	 * @param sql SQL语句
 	 * @since 4.6.7
 	 */
-	public void log(String sql) {
+	public void log(final String sql) {
 		log(sql, null);
 	}
 
@@ -72,7 +72,7 @@ public enum SqlLog {
 	 * @param sql SQL语句
 	 * @since 4.6.7
 	 */
-	public void logForBatch(String sql) {
+	public void logForBatch(final String sql) {
 		if (this.showSql) {
 			log.log(this.level, "\n[Batch SQL] -> {}", this.formatSql ? SqlFormatter.format(sql) : sql);
 		}
@@ -84,7 +84,7 @@ public enum SqlLog {
 	 * @param sql SQL语句
 	 * @param paramValues 参数，可为null
 	 */
-	public void log(String sql, Object paramValues) {
+	public void log(final String sql, final Object paramValues) {
 		if (this.showSql) {
 			if (null != paramValues && this.showParams) {
 				log.log(this.level, "\n[SQL] -> {}\nParams -> {}", this.formatSql ? SqlFormatter.format(sql) : sql, paramValues);

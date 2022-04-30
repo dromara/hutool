@@ -30,7 +30,7 @@ public final class CsvRow implements List<String> {
 	 * @param headerMap 标题Map
 	 * @param fields 数据列表
 	 */
-	public CsvRow(long originalLineNumber, Map<String, Integer> headerMap, List<String> fields) {
+	public CsvRow(final long originalLineNumber, final Map<String, Integer> headerMap, final List<String> fields) {
 		Assert.notNull(fields, "fields must be not null!");
 		this.originalLineNumber = originalLineNumber;
 		this.headerMap = headerMap;
@@ -53,7 +53,7 @@ public final class CsvRow implements List<String> {
 	 * @return 字段值，null表示无此字段值
 	 * @throws IllegalStateException CSV文件无标题行抛出此异常
 	 */
-	public String getByName(String name) {
+	public String getByName(final String name) {
 		Assert.notNull(this.headerMap, "No header available!");
 
 		final Integer col = headerMap.get(name);
@@ -105,7 +105,7 @@ public final class CsvRow implements List<String> {
 	 * @return Bean
 	 * @since 5.3.6
 	 */
-	public <T> T toBean(Class<T> clazz){
+	public <T> T toBean(final Class<T> clazz){
 		return BeanUtil.toBeanIgnoreError(getFieldMap(), clazz);
 	}
 
@@ -129,7 +129,7 @@ public final class CsvRow implements List<String> {
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return this.fields.contains(o);
 	}
 
@@ -144,43 +144,43 @@ public final class CsvRow implements List<String> {
 	}
 
 	@Override
-	public <T> T[] toArray(T[] a) {
+	public <T> T[] toArray(final T[] a) {
 		//noinspection SuspiciousToArrayCall
 		return this.fields.toArray(a);
 	}
 
 	@Override
-	public boolean add(String e) {
+	public boolean add(final String e) {
 		return this.fields.add(e);
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return this.fields.remove(o);
 	}
 
 	@Override
-	public boolean containsAll(Collection<?> c) {
+	public boolean containsAll(final Collection<?> c) {
 		return this.fields.containsAll(c);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends String> c) {
+	public boolean addAll(final Collection<? extends String> c) {
 		return this.fields.addAll(c);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends String> c) {
+	public boolean addAll(final int index, final Collection<? extends String> c) {
 		return this.fields.addAll(index, c);
 	}
 
 	@Override
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll(final Collection<?> c) {
 		return this.fields.removeAll(c);
 	}
 
 	@Override
-	public boolean retainAll(Collection<?> c) {
+	public boolean retainAll(final Collection<?> c) {
 		return this.fields.retainAll(c);
 	}
 
@@ -190,32 +190,32 @@ public final class CsvRow implements List<String> {
 	}
 
 	@Override
-	public String get(int index) {
+	public String get(final int index) {
 		return index >= fields.size() ? null : fields.get(index);
 	}
 
 	@Override
-	public String set(int index, String element) {
+	public String set(final int index, final String element) {
 		return this.fields.set(index, element);
 	}
 
 	@Override
-	public void add(int index, String element) {
+	public void add(final int index, final String element) {
 		this.fields.add(index, element);
 	}
 
 	@Override
-	public String remove(int index) {
+	public String remove(final int index) {
 		return this.fields.remove(index);
 	}
 
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(final Object o) {
 		return this.fields.indexOf(o);
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(final Object o) {
 		return this.fields.lastIndexOf(o);
 	}
 
@@ -225,12 +225,12 @@ public final class CsvRow implements List<String> {
 	}
 
 	@Override
-	public ListIterator<String> listIterator(int index) {
+	public ListIterator<String> listIterator(final int index) {
 		return this.fields.listIterator(index);
 	}
 
 	@Override
-	public List<String> subList(int fromIndex, int toIndex) {
+	public List<String> subList(final int fromIndex, final int toIndex) {
 		return this.fields.subList(fromIndex, toIndex);
 	}
 

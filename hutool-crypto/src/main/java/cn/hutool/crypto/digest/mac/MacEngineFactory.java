@@ -21,7 +21,7 @@ public class MacEngineFactory {
 	 * @param key       密钥
 	 * @return {@link MacEngine}
 	 */
-	public static MacEngine createEngine(String algorithm, Key key) {
+	public static MacEngine createEngine(final String algorithm, final Key key) {
 		return createEngine(algorithm, key, null);
 	}
 
@@ -34,7 +34,7 @@ public class MacEngineFactory {
 	 * @return {@link MacEngine}
 	 * @since 5.7.12
 	 */
-	public static MacEngine createEngine(String algorithm, Key key, AlgorithmParameterSpec spec) {
+	public static MacEngine createEngine(final String algorithm, final Key key, final AlgorithmParameterSpec spec) {
 		if (algorithm.equalsIgnoreCase(HmacAlgorithm.HmacSM3.getValue())) {
 			// HmacSM3算法是BC库实现的，忽略加盐
 			return SmUtil.createHmacSm3Engine(key.getEncoded());

@@ -104,7 +104,7 @@ public class HttpConfig {
 	 * @see #setConnectionTimeout(int)
 	 * @see #setReadTimeout(int)
 	 */
-	public HttpConfig timeout(int milliseconds) {
+	public HttpConfig timeout(final int milliseconds) {
 		setConnectionTimeout(milliseconds);
 		setReadTimeout(milliseconds);
 		return this;
@@ -116,7 +116,7 @@ public class HttpConfig {
 	 * @param milliseconds 超时毫秒数
 	 * @return this
 	 */
-	public HttpConfig setConnectionTimeout(int milliseconds) {
+	public HttpConfig setConnectionTimeout(final int milliseconds) {
 		this.connectionTimeout = milliseconds;
 		return this;
 	}
@@ -127,7 +127,7 @@ public class HttpConfig {
 	 * @param milliseconds 超时毫秒数
 	 * @return this
 	 */
-	public HttpConfig setReadTimeout(int milliseconds) {
+	public HttpConfig setReadTimeout(final int milliseconds) {
 		this.readTimeout = milliseconds;
 		return this;
 	}
@@ -149,7 +149,7 @@ public class HttpConfig {
 	 * @param maxRedirectCount 最大重定向次数
 	 * @return this
 	 */
-	public HttpConfig setMaxRedirectCount(int maxRedirectCount) {
+	public HttpConfig setMaxRedirectCount(final int maxRedirectCount) {
 		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
 		return this;
 	}
@@ -161,7 +161,7 @@ public class HttpConfig {
 	 * @param hostnameVerifier HostnameVerifier
 	 * @return this
 	 */
-	public HttpConfig setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+	public HttpConfig setHostnameVerifier(final HostnameVerifier hostnameVerifier) {
 		// 验证域
 		this.hostnameVerifier = hostnameVerifier;
 		return this;
@@ -174,7 +174,7 @@ public class HttpConfig {
 	 * @param port 代理 端口
 	 * @return this
 	 */
-	public HttpConfig setHttpProxy(String host, int port) {
+	public HttpConfig setHttpProxy(final String host, final int port) {
 		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
 				new InetSocketAddress(host, port));
 		return setProxy(proxy);
@@ -186,7 +186,7 @@ public class HttpConfig {
 	 * @param proxy 代理 {@link Proxy}
 	 * @return this
 	 */
-	public HttpConfig setProxy(Proxy proxy) {
+	public HttpConfig setProxy(final Proxy proxy) {
 		this.proxy = proxy;
 		return this;
 	}
@@ -199,7 +199,7 @@ public class HttpConfig {
 	 * @param ssf SSLScketFactory
 	 * @return this
 	 */
-	public HttpConfig setSSLSocketFactory(SSLSocketFactory ssf) {
+	public HttpConfig setSSLSocketFactory(final SSLSocketFactory ssf) {
 		this.ssf = ssf;
 		return this;
 	}
@@ -220,7 +220,7 @@ public class HttpConfig {
 	 * @see SSLUtil#createSSLContext(String)
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
-	public HttpConfig setSSLProtocol(String protocol) {
+	public HttpConfig setSSLProtocol(final String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
 		setSSLSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
 		return this;
@@ -233,7 +233,7 @@ public class HttpConfig {
 	 * @param blockSize 块大小（bytes数），0或小于0表示不设置Chuncked模式
 	 * @return this
 	 */
-	public HttpConfig setBlockSize(int blockSize) {
+	public HttpConfig setBlockSize(final int blockSize) {
 		this.blockSize = blockSize;
 		return this;
 	}
@@ -247,7 +247,7 @@ public class HttpConfig {
 	 * @return this
 	 * @since 5.7.20
 	 */
-	public HttpConfig setIgnoreEOFError(boolean ignoreEOFError) {
+	public HttpConfig setIgnoreEOFError(final boolean ignoreEOFError) {
 		this.ignoreEOFError = ignoreEOFError;
 		return this;
 	}
@@ -260,7 +260,7 @@ public class HttpConfig {
 	 * @param decodeUrl 是否忽略解码URL
 	 * @return this
 	 */
-	public HttpConfig setDecodeUrl(boolean decodeUrl) {
+	public HttpConfig setDecodeUrl(final boolean decodeUrl) {
 		this.decodeUrl = decodeUrl;
 		return this;
 	}
@@ -271,7 +271,7 @@ public class HttpConfig {
 	 * @param interceptor 拦截器实现
 	 * @return this
 	 */
-	public HttpConfig addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+	public HttpConfig addRequestInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
 		return this;
 	}
@@ -282,7 +282,7 @@ public class HttpConfig {
 	 * @param interceptor 拦截器实现
 	 * @return this
 	 */
-	public HttpConfig addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
+	public HttpConfig addResponseInterceptor(final HttpInterceptor<HttpResponse> interceptor) {
 		this.responseInterceptors.addChain(interceptor);
 		return this;
 	}
@@ -293,7 +293,7 @@ public class HttpConfig {
 	 * @param interceptorOnRedirect 重定向时是否使用拦截器
 	 * @return this
 	 */
-	public HttpConfig setInterceptorOnRedirect(boolean interceptorOnRedirect) {
+	public HttpConfig setInterceptorOnRedirect(final boolean interceptorOnRedirect) {
 		this.interceptorOnRedirect = interceptorOnRedirect;
 		return this;
 	}

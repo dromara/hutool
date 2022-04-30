@@ -25,7 +25,7 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	 * @param emptyMap       Map，提供的空map
 	 * @param keyFunc 自定义KEY的函数
 	 */
-	public FuncKeyMap(Map<K, V> emptyMap, Function<Object, K> keyFunc) {
+	public FuncKeyMap(final Map<K, V> emptyMap, final Function<Object, K> keyFunc) {
 		super(emptyMap);
 		this.keyFunc = keyFunc;
 	}
@@ -39,7 +39,7 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected K customKey(Object key) {
+	protected K customKey(final Object key) {
 		if (null != this.keyFunc) {
 			return keyFunc.apply(key);
 		}

@@ -33,12 +33,12 @@ public class CalendarConverter extends AbstractConverter<Calendar> {
 	 *
 	 * @param format 日期格式
 	 */
-	public void setFormat(String format) {
+	public void setFormat(final String format) {
 		this.format = format;
 	}
 
 	@Override
-	protected Calendar convertInternal(Object value) {
+	protected Calendar convertInternal(final Object value) {
 		// Handle Date
 		if (value instanceof Date) {
 			return DateUtil.calendar((Date)value);

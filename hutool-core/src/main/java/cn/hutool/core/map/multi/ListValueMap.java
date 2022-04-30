@@ -31,7 +31,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public ListValueMap(int initialCapacity) {
+	public ListValueMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -40,7 +40,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
 	 *
 	 * @param m Map
 	 */
-	public ListValueMap(Map<? extends K, ? extends Collection<V>> m) {
+	public ListValueMap(final Map<? extends K, ? extends Collection<V>> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -50,7 +50,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
 	 * @param loadFactor 加载因子
 	 * @param m Map
 	 */
-	public ListValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m) {
+	public ListValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m) {
 		this(m.size(), loadFactor);
 		this.putAllValues(m);
 	}
@@ -61,7 +61,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public ListValueMap(int initialCapacity, float loadFactor) {
+	public ListValueMap(final int initialCapacity, final float loadFactor) {
 		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end

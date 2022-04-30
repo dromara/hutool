@@ -18,7 +18,7 @@ public class BitStatusUtil {
 	 * @param stat   要添加的状态
 	 * @return 新的状态值
 	 */
-	public static int add(int states, int stat) {
+	public static int add(final int states, final int stat) {
 		check(states, stat);
 		return states | stat;
 	}
@@ -30,7 +30,7 @@ public class BitStatusUtil {
 	 * @param stat   要判断的状态
 	 * @return true：有
 	 */
-	public static boolean has(int states, int stat) {
+	public static boolean has(final int states, final int stat) {
 		check(states, stat);
 		return (states & stat) == stat;
 	}
@@ -42,7 +42,7 @@ public class BitStatusUtil {
 	 * @param stat   要删除的状态
 	 * @return 新的状态值
 	 */
-	public static int remove(int states, int stat) {
+	public static int remove(final int states, final int stat) {
 		check(states, stat);
 		if (has(states, stat)) {
 			return states ^ stat;
@@ -68,8 +68,8 @@ public class BitStatusUtil {
 	 *
 	 * @param args 被检查的状态
 	 */
-	private static void check(int... args) {
-		for (int arg : args) {
+	private static void check(final int... args) {
+		for (final int arg : args) {
 			if (arg < 0) {
 				throw new IllegalArgumentException(arg + " 必须大于等于0");
 			}

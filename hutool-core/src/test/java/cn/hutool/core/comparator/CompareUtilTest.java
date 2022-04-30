@@ -19,10 +19,10 @@ public class CompareUtilTest {
 
 	@Test
 	public void comparingPinyin() {
-		List<String> list = ListUtil.toList("成都", "北京", "上海", "深圳");
+		final List<String> list = ListUtil.toList("成都", "北京", "上海", "深圳");
 
-		List<String> ascendingOrderResult = ListUtil.of("北京", "成都", "上海", "深圳");
-		List<String> descendingOrderResult = ListUtil.of("深圳", "上海", "成都", "北京");
+		final List<String> ascendingOrderResult = ListUtil.of("北京", "成都", "上海", "深圳");
+		final List<String> descendingOrderResult = ListUtil.of("深圳", "上海", "成都", "北京");
 
 		// 正序
 		list.sort(CompareUtil.comparingPinyin(e -> e));

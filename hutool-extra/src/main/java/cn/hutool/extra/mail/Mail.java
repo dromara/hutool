@@ -91,7 +91,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param mailAccount 邮件帐号
 	 * @return Mail
 	 */
-	public static Mail create(MailAccount mailAccount) {
+	public static Mail create(final MailAccount mailAccount) {
 		return new Mail(mailAccount);
 	}
 
@@ -133,7 +133,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @see #setTos(String...)
 	 */
-	public Mail to(String... tos) {
+	public Mail to(final String... tos) {
 		return setTos(tos);
 	}
 
@@ -143,7 +143,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param tos 收件人列表
 	 * @return this
 	 */
-	public Mail setTos(String... tos) {
+	public Mail setTos(final String... tos) {
 		this.tos = tos;
 		return this;
 	}
@@ -155,7 +155,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.0.3
 	 */
-	public Mail setCcs(String... ccs) {
+	public Mail setCcs(final String... ccs) {
 		this.ccs = ccs;
 		return this;
 	}
@@ -167,7 +167,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.0.3
 	 */
-	public Mail setBccs(String... bccs) {
+	public Mail setBccs(final String... bccs) {
 		this.bccs = bccs;
 		return this;
 	}
@@ -179,7 +179,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.6.0
 	 */
-	public Mail setReply(String... reply) {
+	public Mail setReply(final String... reply) {
 		this.reply = reply;
 		return this;
 	}
@@ -190,7 +190,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param title 标题
 	 * @return this
 	 */
-	public Mail setTitle(String title) {
+	public Mail setTitle(final String title) {
 		this.title = title;
 		return this;
 	}
@@ -202,7 +202,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param content 正文
 	 * @return this
 	 */
-	public Mail setContent(String content) {
+	public Mail setContent(final String content) {
 		this.content = content;
 		return this;
 	}
@@ -213,7 +213,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param isHtml 是否为HTML
 	 * @return this
 	 */
-	public Mail setHtml(boolean isHtml) {
+	public Mail setHtml(final boolean isHtml) {
 		this.isHtml = isHtml;
 		return this;
 	}
@@ -225,7 +225,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param isHtml  是否为HTML
 	 * @return this
 	 */
-	public Mail setContent(String content, boolean isHtml) {
+	public Mail setContent(final String content, final boolean isHtml) {
 		setContent(content);
 		return setHtml(isHtml);
 	}
@@ -236,7 +236,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param files 附件文件列表
 	 * @return this
 	 */
-	public Mail setFiles(File... files) {
+	public Mail setFiles(final File... files) {
 		if (ArrayUtil.isEmpty(files)) {
 			return this;
 		}
@@ -255,13 +255,13 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.0.9
 	 */
-	public Mail setAttachments(DataSource... attachments) {
+	public Mail setAttachments(final DataSource... attachments) {
 		if (ArrayUtil.isNotEmpty(attachments)) {
 			final Charset charset = this.mailAccount.getCharset();
 			MimeBodyPart bodyPart;
 			String nameEncoded;
 			try {
-				for (DataSource attachment : attachments) {
+				for (final DataSource attachment : attachments) {
 					bodyPart = new MimeBodyPart();
 					bodyPart.setDataHandler(new DataHandler(attachment));
 					nameEncoded = attachment.getName();
@@ -276,7 +276,7 @@ public class Mail implements Builder<MimeMessage> {
 					}
 					this.multipart.addBodyPart(bodyPart);
 				}
-			} catch (MessagingException e) {
+			} catch (final MessagingException e) {
 				throw new MailException(e);
 			}
 		}
@@ -291,7 +291,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.6.3
 	 */
-	public Mail addImage(String cid, InputStream imageStream) {
+	public Mail addImage(final String cid, final InputStream imageStream) {
 		return addImage(cid, imageStream, null);
 	}
 
@@ -304,11 +304,11 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.6.3
 	 */
-	public Mail addImage(String cid, InputStream imageStream, String contentType) {
-		ByteArrayDataSource imgSource;
+	public Mail addImage(final String cid, final InputStream imageStream, final String contentType) {
+		final ByteArrayDataSource imgSource;
 		try {
 			imgSource = new ByteArrayDataSource(imageStream, ObjUtil.defaultIfNull(contentType, "image/jpeg"));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		imgSource.setName(cid);
@@ -323,7 +323,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.6.3
 	 */
-	public Mail addImage(String cid, File imageFile) {
+	public Mail addImage(final String cid, final File imageFile) {
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(imageFile);
@@ -340,7 +340,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @see MailAccount#setCharset(Charset)
 	 */
-	public Mail setCharset(Charset charset) {
+	public Mail setCharset(final Charset charset) {
 		this.mailAccount.setCharset(charset);
 		return this;
 	}
@@ -352,7 +352,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 4.0.2
 	 */
-	public Mail setUseGlobalSession(boolean isUseGlobalSession) {
+	public Mail setUseGlobalSession(final boolean isUseGlobalSession) {
 		this.useGlobalSession = isUseGlobalSession;
 		return this;
 	}
@@ -364,7 +364,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return this
 	 * @since 5.5.6
 	 */
-	public Mail setDebugOutput(PrintStream debugOutput) {
+	public Mail setDebugOutput(final PrintStream debugOutput) {
 		this.debugOutput = debugOutput;
 		return this;
 	}
@@ -374,7 +374,7 @@ public class Mail implements Builder<MimeMessage> {
 	public MimeMessage build() {
 		try {
 			return buildMsg();
-		} catch (MessagingException e) {
+		} catch (final MessagingException e) {
 			throw new MailException(e);
 		}
 	}
@@ -388,7 +388,7 @@ public class Mail implements Builder<MimeMessage> {
 	public String send() throws MailException {
 		try {
 			return doSend();
-		} catch (MessagingException e) {
+		} catch (final MessagingException e) {
 			if (e instanceof SendFailedException) {
 				// 当地址无效时，显示更加详细的无效地址信息
 				final Address[] invalidAddresses = ((SendFailedException) e).getInvalidAddresses();
@@ -461,7 +461,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @return 邮件信息主体
 	 * @throws MessagingException 消息异常
 	 */
-	private Multipart buildContent(Charset charset) throws MessagingException {
+	private Multipart buildContent(final Charset charset) throws MessagingException {
 		final String charsetStr = null != charset ? charset.name() : MimeUtility.getDefaultJavaCharset();
 		// 正文
 		final MimeBodyPart body = new MimeBodyPart();

@@ -31,7 +31,7 @@ public class PageUtil {
 	 *
 	 * @param customFirstPageNo 自定义的首页页码，为0或者1
 	 */
-	synchronized public static void setFirstPageNo(int customFirstPageNo) {
+	synchronized public static void setFirstPageNo(final int customFirstPageNo) {
 		firstPageNo = customFirstPageNo;
 	}
 
@@ -105,7 +105,7 @@ public class PageUtil {
 	 * @return 开始位置
 	 * @since 5.2.5
 	 */
-	public static int getEnd(int pageNo, int pageSize) {
+	public static int getEnd(final int pageNo, final int pageSize) {
 		final int start = getStart(pageNo, pageSize);
 		return getEndByStart(start, pageSize);
 	}
@@ -133,7 +133,7 @@ public class PageUtil {
 	 * @param pageSize 每页条目数
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */
-	public static int[] transToStartEnd(int pageNo, int pageSize) {
+	public static int[] transToStartEnd(final int pageNo, final int pageSize) {
 		final int start = getStart(pageNo, pageSize);
 		return new int[]{start, getEndByStart(start, pageSize)};
 	}
@@ -162,7 +162,7 @@ public class PageUtil {
 	 * @return {@link Segment}
 	 * @since 5.5.3
 	 */
-	public static Segment<Integer> toSegment(int pageNo, int pageSize) {
+	public static Segment<Integer> toSegment(final int pageNo, final int pageSize) {
 		final int[] startEnd = transToStartEnd(pageNo, pageSize);
 		return new DefaultSegment<>(startEnd[0], startEnd[1]);
 	}
@@ -174,7 +174,7 @@ public class PageUtil {
 	 * @param pageSize   每页数
 	 * @return 总页数
 	 */
-	public static int totalPage(int totalCount, int pageSize) {
+	public static int totalPage(final int totalCount, final int pageSize) {
 		if (pageSize == 0) {
 			return 0;
 		}
@@ -191,10 +191,10 @@ public class PageUtil {
 	 * @param displayCount 每屏展示的页数
 	 * @return 分页条
 	 */
-	public static int[] rainbow(int pageNo, int totalPage, int displayCount) {
+	public static int[] rainbow(final int pageNo, final int totalPage, final int displayCount) {
 		// displayCount % 2
-		boolean isEven = (displayCount & 1) == 0;
-		int left = displayCount >> 1;
+		final boolean isEven = (displayCount & 1) == 0;
+		final int left = displayCount >> 1;
 		int right = displayCount >> 1;
 
 		int length = displayCount;
@@ -204,7 +204,7 @@ public class PageUtil {
 		if (totalPage < displayCount) {
 			length = totalPage;
 		}
-		int[] result = new int[length];
+		final int[] result = new int[length];
 		if (totalPage >= displayCount) {
 			if (pageNo <= left) {
 				for (int i = 0; i < result.length; i++) {
@@ -236,7 +236,7 @@ public class PageUtil {
 	 * @param pageCount   总页数
 	 * @return 分页条
 	 */
-	public static int[] rainbow(int currentPage, int pageCount) {
+	public static int[] rainbow(final int currentPage, final int pageCount) {
 		return rainbow(currentPage, pageCount, 10);
 	}
 
@@ -249,7 +249,7 @@ public class PageUtil {
 	 * @param pageSize 每页条目数
 	 * @return 结束位置
 	 */
-	private static int getEndByStart(int start, int pageSize) {
+	private static int getEndByStart(final int start, int pageSize) {
 		if (pageSize < 1) {
 			pageSize = 0;
 		}

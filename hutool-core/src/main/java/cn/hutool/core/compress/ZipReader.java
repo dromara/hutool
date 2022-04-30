@@ -35,7 +35,7 @@ public class ZipReader implements Closeable {
 	 * @param charset 编码
 	 * @return ZipReader
 	 */
-	public static ZipReader of(File zipFile, Charset charset) {
+	public static ZipReader of(final File zipFile, final Charset charset) {
 		return new ZipReader(zipFile, charset);
 	}
 
@@ -46,7 +46,7 @@ public class ZipReader implements Closeable {
 	 * @param charset 编码
 	 * @return ZipReader
 	 */
-	public static ZipReader of(InputStream in, Charset charset) {
+	public static ZipReader of(final InputStream in, final Charset charset) {
 		return new ZipReader(in, charset);
 	}
 
@@ -56,7 +56,7 @@ public class ZipReader implements Closeable {
 	 * @param zipFile 读取的的Zip文件
 	 * @param charset 编码
 	 */
-	public ZipReader(File zipFile, Charset charset) {
+	public ZipReader(final File zipFile, final Charset charset) {
 		this.zipFile = ZipUtil.toZipFile(zipFile, charset);
 	}
 
@@ -65,7 +65,7 @@ public class ZipReader implements Closeable {
 	 *
 	 * @param zipFile 读取的的Zip文件
 	 */
-	public ZipReader(ZipFile zipFile) {
+	public ZipReader(final ZipFile zipFile) {
 		this.zipFile = zipFile;
 	}
 
@@ -75,7 +75,7 @@ public class ZipReader implements Closeable {
 	 * @param in      读取的的Zip文件流
 	 * @param charset 编码
 	 */
-	public ZipReader(InputStream in, Charset charset) {
+	public ZipReader(final InputStream in, final Charset charset) {
 		this.in = new ZipInputStream(in, charset);
 	}
 
@@ -84,7 +84,7 @@ public class ZipReader implements Closeable {
 	 *
 	 * @param zin 读取的的Zip文件流
 	 */
-	public ZipReader(ZipInputStream zin) {
+	public ZipReader(final ZipInputStream zin) {
 		this.in = zin;
 	}
 
@@ -95,7 +95,7 @@ public class ZipReader implements Closeable {
 	 * @param path 路径
 	 * @return 文件流
 	 */
-	public InputStream get(String path) {
+	public InputStream get(final String path) {
 		if (null != this.zipFile) {
 			final ZipFile zipFile = this.zipFile;
 			final ZipEntry entry = zipFile.getEntry(path);
@@ -111,7 +111,7 @@ public class ZipReader implements Closeable {
 						return this.in;
 					}
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 		}
@@ -126,7 +126,7 @@ public class ZipReader implements Closeable {
 	 * @return 解压的目录
 	 * @throws IORuntimeException IO异常
 	 */
-	public File readTo(File outFile) throws IORuntimeException {
+	public File readTo(final File outFile) throws IORuntimeException {
 		return readTo(outFile, null);
 	}
 
@@ -139,7 +139,7 @@ public class ZipReader implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.12
 	 */
-	public File readTo(File outFile, Filter<ZipEntry> entryFilter) throws IORuntimeException {
+	public File readTo(final File outFile, final Filter<ZipEntry> entryFilter) throws IORuntimeException {
 		read((zipEntry) -> {
 			if (null == entryFilter || entryFilter.accept(zipEntry)) {
 				//gitee issue #I4ZDQI
@@ -155,7 +155,7 @@ public class ZipReader implements Closeable {
 					//noinspection ResultOfMethodCallIgnored
 					outItemFile.mkdirs();
 				} else {
-					InputStream in;
+					final InputStream in;
 					if (null != this.zipFile) {
 						in = ZipUtil.getStream(this.zipFile, zipEntry);
 					} else {
@@ -176,7 +176,7 @@ public class ZipReader implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public ZipReader read(Consumer<ZipEntry> consumer) throws IORuntimeException {
+	public ZipReader read(final Consumer<ZipEntry> consumer) throws IORuntimeException {
 		if (null != this.zipFile) {
 			readFromZipFile(consumer);
 		} else {
@@ -199,7 +199,7 @@ public class ZipReader implements Closeable {
 	 *
 	 * @param consumer {@link ZipEntry}处理器
 	 */
-	private void readFromZipFile(Consumer<ZipEntry> consumer) {
+	private void readFromZipFile(final Consumer<ZipEntry> consumer) {
 		final Enumeration<? extends ZipEntry> em = zipFile.entries();
 		while (em.hasMoreElements()) {
 			consumer.accept(em.nextElement());
@@ -212,13 +212,13 @@ public class ZipReader implements Closeable {
 	 * @param consumer {@link ZipEntry}处理器
 	 * @throws IORuntimeException IO异常
 	 */
-	private void readFromStream(Consumer<ZipEntry> consumer) throws IORuntimeException {
+	private void readFromStream(final Consumer<ZipEntry> consumer) throws IORuntimeException {
 		try {
 			ZipEntry zipEntry;
 			while (null != (zipEntry = in.getNextEntry())) {
 				consumer.accept(zipEntry);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

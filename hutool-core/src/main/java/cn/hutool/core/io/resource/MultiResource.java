@@ -31,7 +31,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 *
 	 * @param resources 资源数组
 	 */
-	public MultiResource(Resource... resources) {
+	public MultiResource(final Resource... resources) {
 		this(CollUtil.newArrayList(resources));
 	}
 
@@ -40,7 +40,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 *
 	 * @param resources 资源列表
 	 */
-	public MultiResource(Collection<Resource> resources) {
+	public MultiResource(final Collection<Resource> resources) {
 		if(resources instanceof List) {
 			this.resources = (List<Resource>)resources;
 		}else {
@@ -69,12 +69,12 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	}
 
 	@Override
-	public BufferedReader getReader(Charset charset) {
+	public BufferedReader getReader(final Charset charset) {
 		return resources.get(cursor).getReader(charset);
 	}
 
 	@Override
-	public String readStr(Charset charset) throws IORuntimeException {
+	public String readStr(final Charset charset) throws IORuntimeException {
 		return resources.get(cursor).readStr(charset);
 	}
 
@@ -124,7 +124,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * @param resource 资源
 	 * @return this
 	 */
-	public MultiResource add(Resource resource) {
+	public MultiResource add(final Resource resource) {
 		this.resources.add(resource);
 		return this;
 	}

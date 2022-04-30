@@ -47,10 +47,10 @@ public class CompressUtil {
 	 * @param out            输出流，可以输出到内存、网络或文件
 	 * @return {@link CompressorOutputStream}
 	 */
-	public static CompressorOutputStream getOut(String compressorName, OutputStream out) {
+	public static CompressorOutputStream getOut(final String compressorName, final OutputStream out) {
 		try {
 			return new CompressorStreamFactory().createCompressorOutputStream(compressorName, out);
-		} catch (CompressorException e) {
+		} catch (final CompressorException e) {
 			throw new CompressException(e);
 		}
 	}
@@ -80,7 +80,7 @@ public class CompressUtil {
 				compressorName = CompressorStreamFactory.detect(in);
 			}
 			return new CompressorStreamFactory().createCompressorInputStream(compressorName, in);
-		} catch (CompressorException e) {
+		} catch (final CompressorException e) {
 			throw new CompressException(e);
 		}
 	}
@@ -101,7 +101,7 @@ public class CompressUtil {
 	 * @param file         归档输出的文件
 	 * @return Archiver
 	 */
-	public static Archiver createArchiver(Charset charset, String archiverName, File file) {
+	public static Archiver createArchiver(final Charset charset, final String archiverName, final File file) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZArchiver(file);
 		}
@@ -124,7 +124,7 @@ public class CompressUtil {
 	 * @param out          归档输出的流
 	 * @return Archiver
 	 */
-	public static Archiver createArchiver(Charset charset, String archiverName, OutputStream out) {
+	public static Archiver createArchiver(final Charset charset, final String archiverName, final OutputStream out) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZArchiver(out);
 		}
@@ -146,7 +146,7 @@ public class CompressUtil {
 	 * @param file    归档文件
 	 * @return {@link Extractor}
 	 */
-	public static Extractor createExtractor(Charset charset, File file) {
+	public static Extractor createExtractor(final Charset charset, final File file) {
 		return createExtractor(charset, null, file);
 	}
 
@@ -166,13 +166,13 @@ public class CompressUtil {
 	 * @param file         归档文件
 	 * @return {@link Extractor}
 	 */
-	public static Extractor createExtractor(Charset charset, String archiverName, File file) {
+	public static Extractor createExtractor(final Charset charset, final String archiverName, final File file) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZExtractor(file);
 		}
 		try {
 			return new StreamExtractor(charset, archiverName, file);
-		} catch (CompressException e) {
+		} catch (final CompressException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
 				return new SevenZExtractor(file);
@@ -196,7 +196,7 @@ public class CompressUtil {
 	 * @param in      归档输入的流
 	 * @return {@link Extractor}
 	 */
-	public static Extractor createExtractor(Charset charset, InputStream in) {
+	public static Extractor createExtractor(final Charset charset, final InputStream in) {
 		return createExtractor(charset, null, in);
 	}
 
@@ -216,14 +216,14 @@ public class CompressUtil {
 	 * @param in           归档输入的流
 	 * @return {@link Extractor}
 	 */
-	public static Extractor createExtractor(Charset charset, String archiverName, InputStream in) {
+	public static Extractor createExtractor(final Charset charset, final String archiverName, final InputStream in) {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZExtractor(in);
 		}
 
 		try {
 			return new StreamExtractor(charset, archiverName, in);
-		} catch (CompressException e) {
+		} catch (final CompressException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof StreamingNotSupportedException && cause.getMessage().contains("7z")) {
 				return new SevenZExtractor(in);

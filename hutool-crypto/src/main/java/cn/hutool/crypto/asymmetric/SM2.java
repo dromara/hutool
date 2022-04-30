@@ -77,7 +77,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param privateKeyStr 私钥Hex或Base64表示，必须使用PKCS#8规范
 	 * @param publicKeyStr  公钥Hex或Base64表示，必须使用X509规范
 	 */
-	public SM2(String privateKeyStr, String publicKeyStr) {
+	public SM2(final String privateKeyStr, final String publicKeyStr) {
 		this(SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
@@ -89,7 +89,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param privateKey 私钥，可以使用PKCS#8、D值或PKCS#1规范
 	 * @param publicKey  公钥，可以使用X509、Q值或PKCS#1规范
 	 */
-	public SM2(byte[] privateKey, byte[] publicKey) {
+	public SM2(final byte[] privateKey, final byte[] publicKey) {
 		this(
 				ECKeyUtil.decodePrivateKeyParams(privateKey),
 				ECKeyUtil.decodePublicKeyParams(publicKey)
@@ -104,7 +104,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param privateKey 私钥
 	 * @param publicKey  公钥
 	 */
-	public SM2(PrivateKey privateKey, PublicKey publicKey) {
+	public SM2(final PrivateKey privateKey, final PublicKey publicKey) {
 		this(BCUtil.toParams(privateKey), BCUtil.toParams(publicKey));
 		if (null != privateKey) {
 			this.privateKey = privateKey;
@@ -124,7 +124,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKeyPointYHex 公钥Y16进制
 	 * @since 5.2.0
 	 */
-	public SM2(String privateKeyHex, String publicKeyPointXHex, String publicKeyPointYHex) {
+	public SM2(final String privateKeyHex, final String publicKeyPointXHex, final String publicKeyPointYHex) {
 		this(BCUtil.toSm2Params(privateKeyHex), BCUtil.toSm2Params(publicKeyPointXHex, publicKeyPointYHex));
 	}
 
@@ -138,7 +138,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKeyPointY 公钥Y
 	 * @since 5.2.0
 	 */
-	public SM2(byte[] privateKey, byte[] publicKeyPointX, byte[] publicKeyPointY) {
+	public SM2(final byte[] privateKey, final byte[] publicKeyPointX, final byte[] publicKeyPointY) {
 		this(BCUtil.toSm2Params(privateKey), BCUtil.toSm2Params(publicKeyPointX, publicKeyPointY));
 	}
 
@@ -150,7 +150,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param privateKeyParams 私钥，可以为null
 	 * @param publicKeyParams  公钥，可以为null
 	 */
-	public SM2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
+	public SM2(final ECPrivateKeyParameters privateKeyParams, final ECPublicKeyParameters publicKeyParams) {
 		super(ALGORITHM_SM2, null, null);
 		this.privateKeyParams = privateKeyParams;
 		this.publicKeyParams = publicKeyParams;
@@ -198,7 +198,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.7.10
 	 */
-	public byte[] encrypt(byte[] data) throws CryptoException {
+	public byte[] encrypt(final byte[] data) throws CryptoException {
 		return encrypt(data, KeyType.PublicKey);
 	}
 
@@ -217,7 +217,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 */
 	@Override
-	public byte[] encrypt(byte[] data, KeyType keyType) throws CryptoException {
+	public byte[] encrypt(final byte[] data, final KeyType keyType) throws CryptoException {
 		if (KeyType.PublicKey != keyType) {
 			throw new IllegalArgumentException("Encrypt is only support by public key");
 		}
@@ -239,13 +239,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.1.6
 	 */
-	public byte[] encrypt(byte[] data, CipherParameters pubKeyParameters) throws CryptoException {
+	public byte[] encrypt(final byte[] data, final CipherParameters pubKeyParameters) throws CryptoException {
 		lock.lock();
 		final SM2Engine engine = getEngine();
 		try {
 			engine.init(true, pubKeyParameters);
 			return engine.processBlock(data, 0, data.length);
-		} catch (InvalidCipherTextException e) {
+		} catch (final InvalidCipherTextException e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -262,7 +262,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.7.10
 	 */
-	public byte[] decrypt(byte[] data) throws CryptoException {
+	public byte[] decrypt(final byte[] data) throws CryptoException {
 		return decrypt(data, KeyType.PrivateKey);
 	}
 
@@ -275,7 +275,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 */
 	@Override
-	public byte[] decrypt(byte[] data, KeyType keyType) throws CryptoException {
+	public byte[] decrypt(final byte[] data, final KeyType keyType) throws CryptoException {
 		if (KeyType.PrivateKey != keyType) {
 			throw new IllegalArgumentException("Decrypt is only support by private key");
 		}
@@ -291,13 +291,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.1.6
 	 */
-	public byte[] decrypt(byte[] data, CipherParameters privateKeyParameters) throws CryptoException {
+	public byte[] decrypt(final byte[] data, final CipherParameters privateKeyParameters) throws CryptoException {
 		lock.lock();
 		final SM2Engine engine = getEngine();
 		try {
 			engine.init(false, privateKeyParameters);
 			return engine.processBlock(data, 0, data.length);
-		} catch (InvalidCipherTextException e) {
+		} catch (final InvalidCipherTextException e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -311,7 +311,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param dataHex 被签名的数据数据
 	 * @return 签名
 	 */
-	public String signHex(String dataHex) {
+	public String signHex(final String dataHex) {
 		return signHex(dataHex, null);
 	}
 
@@ -322,7 +322,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param data 加密数据
 	 * @return 签名
 	 */
-	public byte[] sign(byte[] data) {
+	public byte[] sign(final byte[] data) {
 		return sign(data, null);
 	}
 
@@ -333,7 +333,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param idHex   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
 	 * @return 签名
 	 */
-	public String signHex(String dataHex, String idHex) {
+	public String signHex(final String dataHex, final String idHex) {
 		return HexUtil.encodeHexStr(sign(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(idHex)));
 	}
 
@@ -345,7 +345,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param id   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
 	 * @return 签名
 	 */
-	public byte[] sign(byte[] data, byte[] id) {
+	public byte[] sign(final byte[] data, final byte[] id) {
 		lock.lock();
 		final SM2Signer signer = getSigner();
 		try {
@@ -356,7 +356,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 			signer.init(true, param);
 			signer.update(data, 0, data.length);
 			return signer.generateSignature();
-		} catch (org.bouncycastle.crypto.CryptoException e) {
+		} catch (final org.bouncycastle.crypto.CryptoException e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -371,7 +371,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return 是否验证通过
 	 * @since 5.2.0
 	 */
-	public boolean verifyHex(String dataHex, String signHex) {
+	public boolean verifyHex(final String dataHex, final String signHex) {
 		return verifyHex(dataHex, signHex, null);
 	}
 
@@ -382,7 +382,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param sign 签名
 	 * @return 是否验证通过
 	 */
-	public boolean verify(byte[] data, byte[] sign) {
+	public boolean verify(final byte[] data, final byte[] sign) {
 		return verify(data, sign, null);
 	}
 
@@ -395,7 +395,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return 是否验证通过
 	 * @since 5.2.0
 	 */
-	public boolean verifyHex(String dataHex, String signHex, String idHex) {
+	public boolean verifyHex(final String dataHex, final String signHex, final String idHex) {
 		return verify(HexUtil.decodeHex(dataHex), HexUtil.decodeHex(signHex), HexUtil.decodeHex(idHex));
 	}
 
@@ -407,7 +407,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param id   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
 	 * @return 是否验证通过
 	 */
-	public boolean verify(byte[] data, byte[] sign, byte[] id) {
+	public boolean verify(final byte[] data, final byte[] sign, final byte[] id) {
 		lock.lock();
 		final SM2Signer signer = getSigner();
 		try {
@@ -424,7 +424,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	}
 
 	@Override
-	public SM2 setPrivateKey(PrivateKey privateKey) {
+	public SM2 setPrivateKey(final PrivateKey privateKey) {
 		super.setPrivateKey(privateKey);
 
 		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
@@ -440,13 +440,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return this
 	 * @since 5.2.0
 	 */
-	public SM2 setPrivateKeyParams(ECPrivateKeyParameters privateKeyParams) {
+	public SM2 setPrivateKeyParams(final ECPrivateKeyParameters privateKeyParams) {
 		this.privateKeyParams = privateKeyParams;
 		return this;
 	}
 
 	@Override
-	public SM2 setPublicKey(PublicKey publicKey) {
+	public SM2 setPublicKey(final PublicKey publicKey) {
 		super.setPublicKey(publicKey);
 
 		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
@@ -461,7 +461,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKeyParams 公钥参数
 	 * @return this
 	 */
-	public SM2 setPublicKeyParams(ECPublicKeyParameters publicKeyParams) {
+	public SM2 setPublicKeyParams(final ECPublicKeyParameters publicKeyParams) {
 		this.publicKeyParams = publicKeyParams;
 		return this;
 	}
@@ -483,7 +483,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return this
 	 * @since 5.3.1
 	 */
-	public SM2 setEncoding(DSAEncoding encoding) {
+	public SM2 setEncoding(final DSAEncoding encoding) {
 		this.encoding = encoding;
 		this.signer = null;
 		return this;
@@ -496,7 +496,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return this
 	 * @since 5.3.1
 	 */
-	public SM2 setDigest(Digest digest) {
+	public SM2 setDigest(final Digest digest) {
 		this.digest = digest;
 		this.engine = null;
 		this.signer = null;
@@ -509,7 +509,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param mode {@link SM2Engine.Mode}
 	 * @return this
 	 */
-	public SM2 setMode(SM2Engine.Mode mode) {
+	public SM2 setMode(final SM2Engine.Mode mode) {
 		this.mode = mode;
 		this.engine = null;
 		return this;
@@ -552,7 +552,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return Q值
 	 * @since 5.5.9
 	 */
-	public byte[] getQ(boolean isCompressed) {
+	public byte[] getQ(final boolean isCompressed) {
 		return this.publicKeyParams.getQ().getEncoded(isCompressed);
 	}
 
@@ -564,7 +564,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param keyType Key类型枚举，包括私钥或公钥
 	 * @return {@link CipherParameters}
 	 */
-	private CipherParameters getCipherParameters(KeyType keyType) {
+	private CipherParameters getCipherParameters(final KeyType keyType) {
 		switch (keyType) {
 			case PublicKey:
 				Assert.notNull(this.publicKeyParams, "PublicKey must be not null !");

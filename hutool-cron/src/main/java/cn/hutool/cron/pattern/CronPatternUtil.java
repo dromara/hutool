@@ -26,8 +26,8 @@ public class CronPatternUtil {
 	 * @return 日期
 	 * @since 4.5.8
 	 */
-	public static Date nextDateAfter(CronPattern pattern, Date start, boolean isMatchSecond) {
-		List<Date> matchedDates = matchedDates(pattern, start.getTime(), DateUtil.endOfYear(start).getTime(), 1, isMatchSecond);
+	public static Date nextDateAfter(final CronPattern pattern, final Date start, final boolean isMatchSecond) {
+		final List<Date> matchedDates = matchedDates(pattern, start.getTime(), DateUtil.endOfYear(start).getTime(), 1, isMatchSecond);
 		if (CollUtil.isNotEmpty(matchedDates)) {
 			return matchedDates.get(0);
 		}
@@ -43,7 +43,7 @@ public class CronPatternUtil {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(String patternStr, Date start, int count, boolean isMatchSecond) {
+	public static List<Date> matchedDates(final String patternStr, final Date start, final int count, final boolean isMatchSecond) {
 		return matchedDates(patternStr, start, DateUtil.endOfYear(start), count, isMatchSecond);
 	}
 
@@ -57,7 +57,7 @@ public class CronPatternUtil {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(String patternStr, Date start, Date end, int count, boolean isMatchSecond) {
+	public static List<Date> matchedDates(final String patternStr, final Date start, final Date end, final int count, final boolean isMatchSecond) {
 		return matchedDates(patternStr, start.getTime(), end.getTime(), count, isMatchSecond);
 	}
 
@@ -71,7 +71,7 @@ public class CronPatternUtil {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(String patternStr, long start, long end, int count, boolean isMatchSecond) {
+	public static List<Date> matchedDates(final String patternStr, final long start, final long end, final int count, final boolean isMatchSecond) {
 		return matchedDates(new CronPattern(patternStr), start, end, count, isMatchSecond);
 	}
 
@@ -85,11 +85,11 @@ public class CronPatternUtil {
 	 * @param isMatchSecond 是否匹配秒
 	 * @return 日期列表
 	 */
-	public static List<Date> matchedDates(CronPattern pattern, long start, long end, int count, boolean isMatchSecond) {
+	public static List<Date> matchedDates(final CronPattern pattern, final long start, final long end, final int count, final boolean isMatchSecond) {
 		Assert.isTrue(start < end, "Start date is later than end !");
 
 		final List<Date> result = new ArrayList<>(count);
-		long step = isMatchSecond ? DateUnit.SECOND.getMillis() : DateUnit.MINUTE.getMillis();
+		final long step = isMatchSecond ? DateUnit.SECOND.getMillis() : DateUnit.MINUTE.getMillis();
 		for (long i = start; i < end; i += step) {
 			if (pattern.match(i, isMatchSecond)) {
 				result.add(DateUtil.date(i));

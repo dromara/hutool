@@ -45,7 +45,7 @@ public class BeanDesc implements Serializable {
 	 *
 	 * @param beanClass Bean类
 	 */
-	public BeanDesc(Class<?> beanClass) {
+	public BeanDesc(final Class<?> beanClass) {
 		Assert.notNull(beanClass);
 		this.beanClass = beanClass;
 		init();
@@ -75,7 +75,7 @@ public class BeanDesc implements Serializable {
 	 * @param ignoreCase 是否忽略大小写，true为忽略，false不忽略
 	 * @return 字段名-字段属性Map
 	 */
-	public Map<String, PropDesc> getPropMap(boolean ignoreCase) {
+	public Map<String, PropDesc> getPropMap(final boolean ignoreCase) {
 		return ignoreCase ? new CaseInsensitiveMap<>(1, this.propMap) : this.propMap;
 	}
 
@@ -94,7 +94,7 @@ public class BeanDesc implements Serializable {
 	 * @param fieldName 字段名
 	 * @return {@link PropDesc}
 	 */
-	public PropDesc getProp(String fieldName) {
+	public PropDesc getProp(final String fieldName) {
 		return this.propMap.get(fieldName);
 	}
 
@@ -104,7 +104,7 @@ public class BeanDesc implements Serializable {
 	 * @param fieldName 字段名
 	 * @return 字段值
 	 */
-	public Field getField(String fieldName) {
+	public Field getField(final String fieldName) {
 		final PropDesc desc = this.propMap.get(fieldName);
 		return null == desc ? null : desc.getField();
 	}
@@ -115,7 +115,7 @@ public class BeanDesc implements Serializable {
 	 * @param fieldName 字段名
 	 * @return Getter方法
 	 */
-	public Method getGetter(String fieldName) {
+	public Method getGetter(final String fieldName) {
 		final PropDesc desc = this.propMap.get(fieldName);
 		return null == desc ? null : desc.getGetter();
 	}
@@ -126,7 +126,7 @@ public class BeanDesc implements Serializable {
 	 * @param fieldName 字段名
 	 * @return Setter方法
 	 */
-	public Method getSetter(String fieldName) {
+	public Method getSetter(final String fieldName) {
 		final PropDesc desc = this.propMap.get(fieldName);
 		return null == desc ? null : desc.getSetter();
 	}
@@ -142,7 +142,7 @@ public class BeanDesc implements Serializable {
 	private BeanDesc init() {
 		final Method[] gettersAndSetters = ReflectUtil.getMethods(this.beanClass, ReflectUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
-		for (Field field : ReflectUtil.getFields(this.beanClass)) {
+		for (final Field field : ReflectUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类
 			if (false == ModifierUtil.isStatic(field) && false == ReflectUtil.isOuterClassField(field)) {
 				prop = createProp(field, gettersAndSetters);
@@ -169,7 +169,7 @@ public class BeanDesc implements Serializable {
 	 * @return {@link PropDesc}
 	 * @since 4.0.2
 	 */
-	private PropDesc createProp(Field field, Method[] methods) {
+	private PropDesc createProp(final Field field, final Method[] methods) {
 		final PropDesc prop = findProp(field, methods, false);
 		// 忽略大小写重新匹配一次
 		if (null == prop.getter || null == prop.setter) {
@@ -193,7 +193,7 @@ public class BeanDesc implements Serializable {
 	 * @param ignoreCase       是否忽略大小写匹配
 	 * @return PropDesc
 	 */
-	private PropDesc findProp(Field field, Method[] gettersOrSetters, boolean ignoreCase) {
+	private PropDesc findProp(final Field field, final Method[] gettersOrSetters, final boolean ignoreCase) {
 		final String fieldName = field.getName();
 		final Class<?> fieldType = field.getType();
 		final boolean isBooleanField = BooleanUtil.isBoolean(fieldType);
@@ -201,7 +201,7 @@ public class BeanDesc implements Serializable {
 		Method getter = null;
 		Method setter = null;
 		String methodName;
-		for (Method method : gettersOrSetters) {
+		for (final Method method : gettersOrSetters) {
 			methodName = method.getName();
 			if (method.getParameterCount() == 0) {
 				// 无参数，可能为Getter方法
@@ -243,7 +243,7 @@ public class BeanDesc implements Serializable {
 	 * @param ignoreCase     匹配是否忽略大小写
 	 * @return 是否匹配
 	 */
-	private boolean isMatchGetter(String methodName, String fieldName, boolean isBooleanField, boolean ignoreCase) {
+	private boolean isMatchGetter(String methodName, String fieldName, final boolean isBooleanField, final boolean ignoreCase) {
 		final String handledFieldName;
 		if (ignoreCase) {
 			// 全部转为小写，忽略大小写比较
@@ -291,7 +291,7 @@ public class BeanDesc implements Serializable {
 	 * @param ignoreCase     匹配是否忽略大小写
 	 * @return 是否匹配
 	 */
-	private boolean isMatchSetter(String methodName, String fieldName, boolean isBooleanField, boolean ignoreCase) {
+	private boolean isMatchSetter(String methodName, String fieldName, final boolean isBooleanField, final boolean ignoreCase) {
 		final String handledFieldName;
 		if (ignoreCase) {
 			// 全部转为小写，忽略大小写比较

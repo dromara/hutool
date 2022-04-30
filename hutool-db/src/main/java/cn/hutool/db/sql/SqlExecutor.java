@@ -35,7 +35,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static int execute(Connection conn, String sql, Map<String, Object> paramMap) throws SQLException {
+	public static int execute(final Connection conn, final String sql, final Map<String, Object> paramMap) throws SQLException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return execute(conn, namedSql.getSql(), namedSql.getParams());
 	}
@@ -51,7 +51,7 @@ public class SqlExecutor {
 	 * @return 影响的行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public static int execute(Connection conn, String sql, Object... params) throws SQLException {
+	public static int execute(final Connection conn, final String sql, final Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatement(conn, sql, params);
@@ -71,7 +71,7 @@ public class SqlExecutor {
 	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
 	 * @throws SQLException SQL执行异常
 	 */
-	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
+	public static boolean call(final Connection conn, final String sql, final Object... params) throws SQLException {
 		CallableStatement call = null;
 		try {
 			call = StatementUtil.prepareCall(conn, sql, params);
@@ -92,7 +92,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.1.4
 	 */
-	public static ResultSet callQuery(Connection conn, String sql, Object... params) throws SQLException {
+	public static ResultSet callQuery(final Connection conn, final String sql, final Object... params) throws SQLException {
 		return StatementUtil.prepareCall(conn, sql, params).executeQuery();
 	}
 
@@ -108,7 +108,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static Long executeForGeneratedKey(Connection conn, String sql, Map<String, Object> paramMap) throws SQLException {
+	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Map<String, Object> paramMap) throws SQLException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return executeForGeneratedKey(conn, namedSql.getSql(), namedSql.getParams());
 	}
@@ -124,7 +124,7 @@ public class SqlExecutor {
 	 * @return 主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public static Long executeForGeneratedKey(Connection conn, String sql, Object... params) throws SQLException {
+	public static Long executeForGeneratedKey(final Connection conn, final String sql, final Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
@@ -134,7 +134,7 @@ public class SqlExecutor {
 			if (rs != null && rs.next()) {
 				try {
 					return rs.getLong(1);
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					// 可能会出现没有主键返回的情况
 				}
 			}
@@ -156,7 +156,7 @@ public class SqlExecutor {
 	 * @return 每个SQL执行影响的行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public static int[] executeBatch(Connection conn, String sql, Iterable<Object[]> paramsBatch) throws SQLException {
+	public static int[] executeBatch(final Connection conn, final String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatementForBatch(conn, sql, paramsBatch);
@@ -177,7 +177,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public static int[] executeBatch(Connection conn, String... sqls) throws SQLException {
+	public static int[] executeBatch(final Connection conn, final String... sqls) throws SQLException {
 		return executeBatch(conn, new ArrayIter<>(sqls));
 	}
 
@@ -192,11 +192,11 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.6
 	 */
-	public static int[] executeBatch(Connection conn, Iterable<String> sqls) throws SQLException {
+	public static int[] executeBatch(final Connection conn, final Iterable<String> sqls) throws SQLException {
 		Statement statement = null;
 		try {
 			statement = conn.createStatement();
-			for (String sql : sqls) {
+			for (final String sql : sqls) {
 				statement.addBatch(sql);
 			}
 			return statement.executeBatch();
@@ -218,7 +218,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.0.10
 	 */
-	public static <T> T query(Connection conn, String sql, RsHandler<T> rsh, Map<String, Object> paramMap) throws SQLException {
+	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Map<String, Object> paramMap) throws SQLException {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return query(conn, namedSql.getSql(), rsh, namedSql.getParams());
 	}
@@ -235,7 +235,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public static <T> T query(Connection conn, SqlBuilder sqlBuilder, RsHandler<T> rsh) throws SQLException {
+	public static <T> T query(final Connection conn, final SqlBuilder sqlBuilder, final RsHandler<T> rsh) throws SQLException {
 		return query(conn, sqlBuilder.build(), rsh, sqlBuilder.getParamValueArray());
 	}
 
@@ -251,7 +251,7 @@ public class SqlExecutor {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public static <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
+	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatement(conn, sql, params);
@@ -273,12 +273,12 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public static <T> T query(Connection conn, Func1<Connection, PreparedStatement> statementFunc, RsHandler<T> rsh) throws SQLException {
+	public static <T> T query(final Connection conn, final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = statementFunc.call(conn);
 			return executeQuery(ps, rsh);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if(e instanceof SQLException){
 				throw (SQLException) e;
 			}
@@ -301,7 +301,7 @@ public class SqlExecutor {
 	 * @return 影响的行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public static int executeUpdate(PreparedStatement ps, Object... params) throws SQLException {
+	public static int executeUpdate(final PreparedStatement ps, final Object... params) throws SQLException {
 		StatementUtil.fillParams(ps, params);
 		return ps.executeUpdate();
 	}
@@ -316,7 +316,7 @@ public class SqlExecutor {
 	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
 	 * @throws SQLException SQL执行异常
 	 */
-	public static boolean execute(PreparedStatement ps, Object... params) throws SQLException {
+	public static boolean execute(final PreparedStatement ps, final Object... params) throws SQLException {
 		StatementUtil.fillParams(ps, params);
 		return ps.execute();
 	}
@@ -332,7 +332,7 @@ public class SqlExecutor {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public static <T> T query(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
+	public static <T> T query(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws SQLException {
 		StatementUtil.fillParams(ps, params);
 		return executeQuery(ps, rsh);
 	}
@@ -347,7 +347,7 @@ public class SqlExecutor {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public static <T> T queryAndClosePs(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
+	public static <T> T queryAndClosePs(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws SQLException {
 		try {
 			return query(ps, rsh, params);
 		} finally {
@@ -365,7 +365,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.1.13
 	 */
-	private static <T> T executeQuery(PreparedStatement ps, RsHandler<T> rsh) throws SQLException {
+	private static <T> T executeQuery(final PreparedStatement ps, final RsHandler<T> rsh) throws SQLException {
 		ResultSet rs = null;
 		try {
 			rs = ps.executeQuery();

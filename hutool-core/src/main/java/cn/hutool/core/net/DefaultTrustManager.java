@@ -26,26 +26,26 @@ public class DefaultTrustManager extends X509ExtendedTrustManager {
 	}
 
 	@Override
-	public void checkClientTrusted(X509Certificate[] chain, String authType) {
+	public void checkClientTrusted(final X509Certificate[] chain, final String authType) {
 	}
 
 	@Override
-	public void checkServerTrusted(X509Certificate[] chain, String authType) {
+	public void checkServerTrusted(final X509Certificate[] chain, final String authType) {
 	}
 
 	@Override
-	public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
+	public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) {
 	}
 
 	@Override
-	public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
+	public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final Socket socket) {
 	}
 
 	@Override
-	public void checkClientTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) {
+	public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) {
 	}
 
 	@Override
-	public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) {
+	public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s, final SSLEngine sslEngine) {
 	}
 }

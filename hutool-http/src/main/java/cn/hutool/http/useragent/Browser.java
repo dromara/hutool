@@ -84,7 +84,7 @@ public class Browser extends UserAgentInfo {
 	 * @param versionRegex 匹配版本的正则
 	 * @since 5.7.4
 	 */
-	synchronized public static void addCustomBrowser(String name, String regex, String versionRegex) {
+	synchronized public static void addCustomBrowser(final String name, final String regex, final String versionRegex) {
 		browers.add(new Browser(name, regex, versionRegex));
 	}
 
@@ -97,7 +97,7 @@ public class Browser extends UserAgentInfo {
 	 * @param regex        关键字或表达式
 	 * @param versionRegex 匹配版本的正则
 	 */
-	public Browser(String name, String regex, String versionRegex) {
+	public Browser(final String name, final String regex, String versionRegex) {
 		super(name, regex);
 		if (Other_Version.equals(versionRegex)) {
 			versionRegex = name + versionRegex;
@@ -113,7 +113,7 @@ public class Browser extends UserAgentInfo {
 	 * @param userAgentString User-Agent字符串
 	 * @return 版本
 	 */
-	public String getVersion(String userAgentString) {
+	public String getVersion(final String userAgentString) {
 		if(isUnknown()){
 			return null;
 		}

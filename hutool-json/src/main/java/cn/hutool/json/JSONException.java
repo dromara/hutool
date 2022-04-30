@@ -12,27 +12,27 @@ import cn.hutool.core.text.StrUtil;
 public class JSONException extends RuntimeException {
 	private static final long serialVersionUID = 0;
 
-	public JSONException(Throwable e) {
+	public JSONException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public JSONException(String message) {
+	public JSONException(final String message) {
 		super(message);
 	}
 
-	public JSONException(String messageTemplate, Object... params) {
+	public JSONException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public JSONException(String message, Throwable cause) {
+	public JSONException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public JSONException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public JSONException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public JSONException(Throwable throwable, String messageTemplate, Object... params) {
+	public JSONException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

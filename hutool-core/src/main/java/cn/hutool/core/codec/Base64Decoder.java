@@ -2,24 +2,22 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
-
-import java.nio.charset.Charset;
 
 /**
- * Base64解码实现
+ * Base64解码实现<br>
+ * 此解码保留的原因是，JDK提供的解码需要指定是否为URL安全的或是否换行，此解码无需区分
  *
  * @author looly
  *
  */
-public class Base64Decoder {
+public class Base64Decoder implements Decoder<byte[], byte[]>{
 
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
+	public static Base64Decoder INSTANCE = new Base64Decoder();
+
 	private static final byte PADDING = -2;
 
 	/** Base64解码表，共128位，-1表示非base64字符，-2表示padding */
-	private static final byte[] DECODE_TABLE = {
+	private final byte[] DECODE_TABLE = {
 			// 0 1 2 3 4 5 6 7 8 9 A B C D E F
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 00-0f
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10-1f
@@ -32,43 +30,13 @@ public class Base64Decoder {
 	};
 
 	/**
-	 * base64解码
-	 *
-	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(CharSequence source) {
-		return decodeStr(source, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * base64解码
-	 *
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(CharSequence source, Charset charset) {
-		return StrUtil.str(decode(source), charset);
-	}
-
-	/**
-	 * base64解码
-	 *
-	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(CharSequence source) {
-		return decode(StrUtil.bytes(source, DEFAULT_CHARSET));
-	}
-
-	/**
 	 * 解码Base64
 	 *
 	 * @param in 输入
 	 * @return 解码后的bytes
 	 */
-	public static byte[] decode(byte[] in) {
+	@Override
+	public byte[] decode(final byte[] in) {
 		if (ArrayUtil.isEmpty(in)) {
 			return in;
 		}
@@ -83,7 +51,7 @@ public class Base64Decoder {
 	 * @param length 长度
 	 * @return 解码后的bytes
 	 */
-	public static byte[] decode(byte[] in, int pos, int length) {
+	public byte[] decode(final byte[] in, final int pos, final int length) {
 		if (ArrayUtil.isEmpty(in)) {
 			return in;
 		}
@@ -94,9 +62,9 @@ public class Base64Decoder {
 		byte sestet1;
 		byte sestet2;
 		byte sestet3;
-		int maxPos = pos + length - 1;
+		final int maxPos = pos + length - 1;
 		int octetId = 0;
-		byte[] octet = new byte[length * 3 / 4];// over-estimated if non-base64 characters present
+		final byte[] octet = new byte[length * 3 / 4];// over-estimated if non-base64 characters present
 		while (offset.intValue() <= maxPos) {
 			sestet0 = getNextValidDecodeByte(in, offset, maxPos);
 			sestet1 = getNextValidDecodeByte(in, offset, maxPos);
@@ -129,7 +97,7 @@ public class Base64Decoder {
 	 * @return 是否为Base64字符
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64Code(byte octet) {
+	public boolean isBase64Code(final byte octet) {
 		return octet == '=' || (octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1);
 	}
 
@@ -142,7 +110,7 @@ public class Base64Decoder {
 	 * @param maxPos 最大位置
 	 * @return 有效字符，如果达到末尾返回
 	 */
-	private static byte getNextValidDecodeByte(byte[] in, MutableInt pos, int maxPos) {
+	private byte getNextValidDecodeByte(final byte[] in, final MutableInt pos, final int maxPos) {
 		byte base64Byte;
 		byte decodeByte;
 		while (pos.intValue() <= maxPos) {

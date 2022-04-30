@@ -13,7 +13,7 @@ public class CRC16CCITT extends CRC16Checksum{
 	private static final int WC_POLY = 0x8408;
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		wCRCin ^= (b & 0x00ff);
 		for (int j = 0; j < 8; j++) {
 			if ((wCRCin & 0x0001) != 0) {

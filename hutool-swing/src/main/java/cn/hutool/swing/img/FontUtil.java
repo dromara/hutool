@@ -34,7 +34,7 @@ public class FontUtil {
 	 * @param size 字体大小
 	 * @return 字体
 	 */
-	public static Font createSansSerifFont(int size) {
+	public static Font createSansSerifFont(final int size) {
 		return createFont(Font.SANS_SERIF, size);
 	}
 
@@ -45,7 +45,7 @@ public class FontUtil {
 	 * @param size 字体大小
 	 * @return 字体
 	 */
-	public static Font createFont(String name, int size) {
+	public static Font createFont(final String name, final int size) {
 		return new Font(name, Font.PLAIN, size);
 	}
 
@@ -56,17 +56,17 @@ public class FontUtil {
 	 * @param fontFile 字体文件
 	 * @return {@link Font}
 	 */
-	public static Font createFont(File fontFile) {
+	public static Font createFont(final File fontFile) {
 		try {
 			return Font.createFont(Font.TRUETYPE_FONT, fontFile);
-		} catch (FontFormatException e) {
+		} catch (final FontFormatException e) {
 			// True Type字体无效时使用Type1字体
 			try {
 				return Font.createFont(Font.TYPE1_FONT, fontFile);
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				throw new UtilException(e);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -78,17 +78,17 @@ public class FontUtil {
 	 * @param fontStream 字体流
 	 * @return {@link Font}
 	 */
-	public static Font createFont(InputStream fontStream) {
+	public static Font createFont(final InputStream fontStream) {
 		try {
 			return Font.createFont(Font.TRUETYPE_FONT, fontStream);
-		} catch (FontFormatException e) {
+		} catch (final FontFormatException e) {
 			// True Type字体无效时使用Type1字体
 			try {
 				return Font.createFont(Font.TYPE1_FONT, fontStream);
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				throw new UtilException(e1);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -100,7 +100,7 @@ public class FontUtil {
 	 * @param str  字符串
 	 * @return 长宽信息
 	 */
-	public static Dimension getDimension(FontMetrics metrics, String str) {
+	public static Dimension getDimension(final FontMetrics metrics, final String str) {
 		final int width = metrics.stringWidth(str);
 		final int height = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
 

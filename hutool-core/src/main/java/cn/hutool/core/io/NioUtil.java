@@ -52,7 +52,7 @@ public class NioUtil {
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copyByNIO(final InputStream in, final OutputStream out, final int bufferSize, final StreamProgress streamProgress) throws IORuntimeException {
 		return copyByNIO(in, out, bufferSize, -1, streamProgress);
 	}
 
@@ -69,7 +69,7 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copyByNIO(final InputStream in, final OutputStream out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
 		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
 	}
 
@@ -82,13 +82,13 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.3
 	 */
-	public static long copy(FileChannel inChannel, FileChannel outChannel) throws IORuntimeException {
+	public static long copy(final FileChannel inChannel, final FileChannel outChannel) throws IORuntimeException {
 		Assert.notNull(inChannel, "In channel is null!");
 		Assert.notNull(outChannel, "Out channel is null!");
 
 		try {
 			return copySafely(inChannel, outChannel);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -120,7 +120,7 @@ public class NioUtil {
 	 * @author z8g
 	 * @since 5.7.21
 	 */
-	private static long copySafely(FileChannel inChannel, FileChannel outChannel) throws IOException {
+	private static long copySafely(final FileChannel inChannel, final FileChannel outChannel) throws IOException {
 		final long totalBytes = inChannel.size();
 		for (long pos = 0, remaining = totalBytes; remaining > 0; ) { // 确保文件内容不会缺失
 			final long writeBytes = inChannel.transferTo(pos, remaining, outChannel); // 实际传输的字节数
@@ -139,7 +139,7 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.0
 	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out) throws IORuntimeException {
+	public static long copy(final ReadableByteChannel in, final WritableByteChannel out) throws IORuntimeException {
 		return copy(in, out, DEFAULT_BUFFER_SIZE);
 	}
 
@@ -153,7 +153,7 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.0
 	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize) throws IORuntimeException {
+	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize) throws IORuntimeException {
 		return copy(in, out, bufferSize, null);
 	}
 
@@ -167,7 +167,7 @@ public class NioUtil {
 	 * @return 拷贝的字节数
 	 * @throws IORuntimeException IO异常
 	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final StreamProgress streamProgress) throws IORuntimeException {
 		return copy(in, out, bufferSize, -1, streamProgress);
 	}
 
@@ -183,7 +183,7 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
+	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
 		return new ChannelCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 
@@ -196,8 +196,8 @@ public class NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.0
 	 */
-	public static String read(ReadableByteChannel channel, Charset charset) throws IORuntimeException {
-		FastByteArrayOutputStream out = read(channel);
+	public static String read(final ReadableByteChannel channel, final Charset charset) throws IORuntimeException {
+		final FastByteArrayOutputStream out = read(channel);
 		return null == charset ? out.toString() : out.toString(charset);
 	}
 
@@ -208,7 +208,7 @@ public class NioUtil {
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
 	 */
-	public static FastByteArrayOutputStream read(ReadableByteChannel channel) throws IORuntimeException {
+	public static FastByteArrayOutputStream read(final ReadableByteChannel channel) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(channel, Channels.newChannel(out));
 		return out;
@@ -221,7 +221,7 @@ public class NioUtil {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readUtf8(FileChannel fileChannel) throws IORuntimeException {
+	public static String readUtf8(final FileChannel fileChannel) throws IORuntimeException {
 		return read(fileChannel, CharsetUtil.UTF_8);
 	}
 
@@ -233,7 +233,7 @@ public class NioUtil {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String read(FileChannel fileChannel, String charsetName) throws IORuntimeException {
+	public static String read(final FileChannel fileChannel, final String charsetName) throws IORuntimeException {
 		return read(fileChannel, CharsetUtil.charset(charsetName));
 	}
 
@@ -245,11 +245,11 @@ public class NioUtil {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String read(FileChannel fileChannel, Charset charset) throws IORuntimeException {
-		MappedByteBuffer buffer;
+	public static String read(final FileChannel fileChannel, final Charset charset) throws IORuntimeException {
+		final MappedByteBuffer buffer;
 		try {
 			buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return StrUtil.str(buffer, charset);
@@ -261,11 +261,11 @@ public class NioUtil {
 	 *
 	 * @param closeable 被关闭的对象
 	 */
-	public static void close(AutoCloseable closeable) {
+	public static void close(final AutoCloseable closeable) {
 		if (null != closeable) {
 			try {
 				closeable.close();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 静默关闭
 			}
 		}

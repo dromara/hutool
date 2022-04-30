@@ -27,12 +27,12 @@ public class JSONStrFormatter {
 	 * @param json 未格式化的JSON字符串。
 	 * @return 格式化的JSON字符串。
 	 */
-	public static String format(String json) {
+	public static String format(final String json) {
 		final StringBuilder result = new StringBuilder();
 
 		Character wrapChar = null;
 		boolean isEscapeMode = false;
-		int length = json.length();
+		final int length = json.length();
 		int number = 0;
 		char key;
 		for (int i = 0; i < length; i++) {
@@ -134,7 +134,7 @@ public class JSONStrFormatter {
 	 * @param number 缩进次数。
 	 * @return 指定缩进次数的字符串。
 	 */
-	private static String indent(int number) {
+	private static String indent(final int number) {
 		return StrUtil.repeat(SPACE, number);
 	}
 }

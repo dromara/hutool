@@ -18,7 +18,7 @@ public class Number128 extends Number {
 	 * @param lowValue  低位
 	 * @param highValue 高位
 	 */
-	public Number128(long lowValue, long highValue) {
+	public Number128(final long lowValue, final long highValue) {
 		this.lowValue = lowValue;
 		this.highValue = highValue;
 	}
@@ -37,7 +37,7 @@ public class Number128 extends Number {
 	 *
 	 * @param lowValue 低位值
 	 */
-	public void setLowValue(long lowValue) {
+	public void setLowValue(final long lowValue) {
 		this.lowValue = lowValue;
 	}
 
@@ -55,7 +55,7 @@ public class Number128 extends Number {
 	 *
 	 * @param hiValue 高位值
 	 */
-	public void setHighValue(long hiValue) {
+	public void setHighValue(final long hiValue) {
 		this.highValue = hiValue;
 	}
 

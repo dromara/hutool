@@ -17,13 +17,13 @@ public class ReverseComparator<E> implements Comparator<E>, Serializable {
 	private final Comparator<? super E> comparator;
 
 	@SuppressWarnings("unchecked")
-	public ReverseComparator(Comparator<? super E> comparator) {
+	public ReverseComparator(final Comparator<? super E> comparator) {
 		this.comparator = (null == comparator) ? ComparableComparator.INSTANCE : comparator;
 	}
 
 	//-----------------------------------------------------------------------------------------------------
 	@Override
-	public int compare(E o1, E o2) {
+	public int compare(final E o1, final E o2) {
 		return comparator.compare(o2, o1);
 	}
 

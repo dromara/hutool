@@ -23,7 +23,7 @@ public abstract class TextFinder implements Finder, Serializable {
 	 * @param text 文本
 	 * @return this
 	 */
-	public TextFinder setText(CharSequence text) {
+	public TextFinder setText(final CharSequence text) {
 		this.text = Assert.notNull(text, "Text must be not null!");
 		return this;
 	}
@@ -36,7 +36,7 @@ public abstract class TextFinder implements Finder, Serializable {
 	 * @param endIndex 结束位置（不包括）
 	 * @return this
 	 */
-	public TextFinder setEndIndex(int endIndex) {
+	public TextFinder setEndIndex(final int endIndex) {
 		this.endIndex = endIndex;
 		return this;
 	}
@@ -47,7 +47,7 @@ public abstract class TextFinder implements Finder, Serializable {
 	 * @param negative 结束位置（不包括）
 	 * @return this
 	 */
-	public TextFinder setNegative(boolean negative) {
+	public TextFinder setNegative(final boolean negative) {
 		this.negative = negative;
 		return this;
 	}

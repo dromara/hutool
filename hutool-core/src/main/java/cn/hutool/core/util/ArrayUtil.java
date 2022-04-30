@@ -44,7 +44,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static <T> boolean isEmpty(T[] array) {
+	public static <T> boolean isEmpty(final T[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -57,7 +57,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 非空（empty）的原数组或默认数组
 	 * @since 4.6.9
 	 */
-	public static <T> T[] defaultIfEmpty(T[] array, T[] defaultArray) {
+	public static <T> T[] defaultIfEmpty(final T[] array, final T[] defaultArray) {
 		return isEmpty(array) ? defaultArray : array;
 	}
 
@@ -70,7 +70,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Object array) {
+	public static boolean isEmpty(final Object array) {
 		if (array != null) {
 			if (isArray(array)) {
 				return 0 == Array.getLength(array);
@@ -89,7 +89,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static <T> boolean isNotEmpty(T[] array) {
+	public static <T> boolean isNotEmpty(final T[] array) {
 		return (null != array && array.length != 0);
 	}
 
@@ -102,7 +102,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(Object array) {
+	public static boolean isNotEmpty(final Object array) {
 		return false == isEmpty(array);
 	}
 
@@ -115,9 +115,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> boolean hasNull(T... array) {
+	public static <T> boolean hasNull(final T... array) {
 		if (isNotEmpty(array)) {
-			for (T element : array) {
+			for (final T element : array) {
 				if (ObjUtil.isNull(element)) {
 					return true;
 				}
@@ -136,7 +136,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> boolean isAllNull(T... array) {
+	public static <T> boolean isAllNull(final T... array) {
 		return null == firstNonNull(array);
 	}
 
@@ -149,7 +149,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T firstNonNull(T... array) {
+	public static <T> T firstNonNull(final T... array) {
 		return firstMatch(ObjUtil::isNotNull, array);
 	}
 
@@ -163,7 +163,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T firstMatch(Matcher<T> matcher, T... array) {
+	public static <T> T firstMatch(final Matcher<T> matcher, final T... array) {
 		final int index = matchIndex(matcher, array);
 		if (index < 0) {
 			return null;
@@ -182,7 +182,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.6.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(Matcher<T> matcher, T... array) {
+	public static <T> int matchIndex(final Matcher<T> matcher, final T... array) {
 		return matchIndex(matcher, 0, array);
 	}
 
@@ -197,7 +197,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(Matcher<T> matcher, int beginIndexInclude, T... array) {
+	public static <T> int matchIndex(final Matcher<T> matcher, final int beginIndexInclude, final T... array) {
 		Assert.notNull(matcher, "Matcher must be not null !");
 		if (isNotEmpty(array)) {
 			for (int i = beginIndexInclude; i < array.length; i++) {
@@ -219,7 +219,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 空数组
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] newArray(Class<?> componentType, int newSize) {
+	public static <T> T[] newArray(final Class<?> componentType, final int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
 	}
 
@@ -230,7 +230,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 空数组
 	 * @since 3.3.0
 	 */
-	public static Object[] newArray(int newSize) {
+	public static Object[] newArray(final int newSize) {
 		return new Object[newSize];
 	}
 
@@ -241,7 +241,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 元素类型
 	 * @since 3.2.2
 	 */
-	public static Class<?> getComponentType(Object array) {
+	public static Class<?> getComponentType(final Object array) {
 		return null == array ? null : array.getClass().getComponentType();
 	}
 
@@ -252,7 +252,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 元素类型
 	 * @since 3.2.2
 	 */
-	public static Class<?> getComponentType(Class<?> arrayClass) {
+	public static Class<?> getComponentType(final Class<?> arrayClass) {
 		return null == arrayClass ? null : arrayClass.getComponentType();
 	}
 
@@ -264,7 +264,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组类型
 	 * @since 3.2.2
 	 */
-	public static Class<?> getArrayType(Class<?> componentType) {
+	public static Class<?> getArrayType(final Class<?> componentType) {
 		return Array.newInstance(componentType, 0).getClass();
 	}
 
@@ -280,7 +280,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数arrayObj不是数组
 	 * @since 3.0.6
 	 */
-	public static Object[] cast(Class<?> type, Object arrayObj) throws NullPointerException, IllegalArgumentException {
+	public static Object[] cast(final Class<?> type, final Object arrayObj) throws NullPointerException, IllegalArgumentException {
 		if (null == arrayObj) {
 			throw new NullPointerException("Argument [arrayObj] is null !");
 		}
@@ -308,7 +308,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组
 	 */
 	@SafeVarargs
-	public static <T> T[] append(T[] buffer, T... newElements) {
+	public static <T> T[] append(final T[] buffer, final T... newElements) {
 		if (isEmpty(buffer)) {
 			return newElements;
 		}
@@ -325,7 +325,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组
 	 */
 	@SafeVarargs
-	public static <T> Object append(Object array, T... newElements) {
+	public static <T> Object append(final Object array, final T... newElements) {
 		if (isEmpty(array)) {
 			return newElements;
 		}
@@ -342,7 +342,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
-	public static <T> T[] setOrAppend(T[] buffer, int index, T value) {
+	public static <T> T[] setOrAppend(final T[] buffer, final int index, final T value) {
 		if (index < buffer.length) {
 			Array.set(buffer, index, value);
 			return buffer;
@@ -360,7 +360,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
-	public static Object setOrAppend(Object array, int index, Object value) {
+	public static Object setOrAppend(final Object array, final int index, final Object value) {
 		if (index < length(array)) {
 			Array.set(array, index, value);
 			return array;
@@ -382,7 +382,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.7.23
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> T[] replace(T[] buffer, int index, T... values) {
+	public static <T> T[] replace(final T[] buffer, final int index, final T... values) {
 		if (isEmpty(values)) {
 			return buffer;
 		}
@@ -404,7 +404,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		// 替换长度大于原数组长度，新建数组
-		int newArrayLength = index + values.length;
+		final int newArrayLength = index + values.length;
 		final T[] result = newArray(buffer.getClass().getComponentType(), newArrayLength);
 		System.arraycopy(buffer, 0, result, 0, index);
 		System.arraycopy(values, 0, result, index, values.length);
@@ -424,7 +424,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.0.8
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] insert(T[] buffer, int index, T... newElements) {
+	public static <T> T[] insert(final T[] buffer, final int index, final T... newElements) {
 		return (T[]) insert((Object) buffer, index, newElements);
 	}
 
@@ -441,7 +441,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.0.8
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
-	public static <T> Object insert(Object array, int index, T... newElements) {
+	public static <T> Object insert(final Object array, int index, final T... newElements) {
 		if (isEmpty(newElements)) {
 			return array;
 		}
@@ -473,7 +473,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param componentType 数组元素类型
 	 * @return 调整后的新数组
 	 */
-	public static <T> T[] resize(T[] data, int newSize, Class<?> componentType) {
+	public static <T> T[] resize(final T[] data, final int newSize, final Class<?> componentType) {
 		if (newSize < 0) {
 			return data;
 		}
@@ -494,7 +494,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 调整后的新数组
 	 * @since 4.6.7
 	 */
-	public static Object resize(Object array, int newSize) {
+	public static Object resize(final Object array, final int newSize) {
 		if (newSize < 0) {
 			return array;
 		}
@@ -519,7 +519,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param newSize 新的数组大小
 	 * @return 调整后的新数组
 	 */
-	public static <T> T[] resize(T[] buffer, int newSize) {
+	public static <T> T[] resize(final T[] buffer, final int newSize) {
 		return resize(buffer, newSize, buffer.getClass().getComponentType());
 	}
 
@@ -532,21 +532,21 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 合并后的数组
 	 */
 	@SafeVarargs
-	public static <T> T[] addAll(T[]... arrays) {
+	public static <T> T[] addAll(final T[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
 		}
 
 		int length = 0;
-		for (T[] array : arrays) {
+		for (final T[] array : arrays) {
 			if (null != array) {
 				length += array.length;
 			}
 		}
-		T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
 
 		length = 0;
-		for (T[] array : arrays) {
+		for (final T[] array : arrays) {
 			if (null != array) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
@@ -567,7 +567,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 目标数组
 	 * @since 3.0.6
 	 */
-	public static Object copy(Object src, int srcPos, Object dest, int destPos, int length) {
+	public static Object copy(final Object src, final int srcPos, final Object dest, final int destPos, final int length) {
 		//noinspection SuspiciousSystemArraycopy
 		System.arraycopy(src, srcPos, dest, destPos, length);
 		return dest;
@@ -583,7 +583,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 目标数组
 	 * @since 3.0.6
 	 */
-	public static Object copy(Object src, Object dest, int length) {
+	public static Object copy(final Object src, final Object dest, final int length) {
 		//noinspection SuspiciousSystemArraycopy
 		System.arraycopy(src, 0, dest, 0, length);
 		return dest;
@@ -596,7 +596,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 被克隆的数组
 	 * @return 新数组
 	 */
-	public static <T> T[] clone(T[] array) {
+	public static <T> T[] clone(final T[] array) {
 		if (array == null) {
 			return null;
 		}
@@ -648,14 +648,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 编辑后的数组
 	 * @since 5.3.3
 	 */
-	public static <T> T[] edit(T[] array, Editor<T> editor) {
+	public static <T> T[] edit(final T[] array, final Editor<T> editor) {
 		if (null == editor) {
 			return array;
 		}
 
 		final ArrayList<T> list = new ArrayList<>(array.length);
 		T modified;
-		for (T t : array) {
+		for (final T t : array) {
 			modified = editor.edit(t);
 			if (null != modified) {
 				list.add(modified);
@@ -679,7 +679,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */
-	public static <T> T[] filter(T[] array, Filter<T> filter) {
+	public static <T> T[] filter(final T[] array, final Filter<T> filter) {
 		if (null == array || null == filter) {
 			return array;
 		}
@@ -694,7 +694,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 处理后的数组
 	 * @since 3.2.2
 	 */
-	public static <T> T[] removeNull(T[] array) {
+	public static <T> T[] removeNull(final T[] array) {
 		return edit(array, t -> {
 			// 返回null便不加入集合
 			return t;
@@ -709,7 +709,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 处理后的数组
 	 * @since 3.2.2
 	 */
-	public static <T extends CharSequence> T[] removeEmpty(T[] array) {
+	public static <T extends CharSequence> T[] removeEmpty(final T[] array) {
 		return filter(array, StrUtil::isNotEmpty);
 	}
 
@@ -721,7 +721,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 处理后的数组
 	 * @since 3.2.2
 	 */
-	public static <T extends CharSequence> T[] removeBlank(T[] array) {
+	public static <T extends CharSequence> T[] removeBlank(final T[] array) {
 		return filter(array, StrUtil::isNotBlank);
 	}
 
@@ -732,7 +732,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组
 	 * @since 3.2.1
 	 */
-	public static String[] nullToEmpty(String[] array) {
+	public static String[] nullToEmpty(final String[] array) {
 		return edit(array, t -> null == t ? StrUtil.EMPTY : t);
 	}
 
@@ -752,7 +752,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return Map
 	 * @since 3.0.4
 	 */
-	public static <K, V> Map<K, V> zip(K[] keys, V[] values, boolean isOrder) {
+	public static <K, V> Map<K, V> zip(final K[] keys, final V[] values, final boolean isOrder) {
 		if (isEmpty(keys) || isEmpty(values)) {
 			return null;
 		}
@@ -780,7 +780,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param values 值列表
 	 * @return Map
 	 */
-	public static <K, V> Map<K, V> zip(K[] keys, V[] values) {
+	public static <K, V> Map<K, V> zip(final K[] keys, final V[] values) {
 		return zip(keys, values, false);
 	}
 
@@ -796,7 +796,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static <T> int indexOf(T[] array, Object value, int beginIndexInclude) {
+	public static <T> int indexOf(final T[] array, final Object value, final int beginIndexInclude) {
 		return matchIndex((obj) -> ObjUtil.equal(value, obj), beginIndexInclude, array);
 	}
 
@@ -809,7 +809,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static <T> int indexOf(T[] array, Object value) {
+	public static <T> int indexOf(final T[] array, final Object value) {
 		return matchIndex((obj) -> ObjUtil.equal(value, obj), array);
 	}
 
@@ -821,7 +821,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.1.2
 	 */
-	public static int indexOfIgnoreCase(CharSequence[] array, CharSequence value) {
+	public static int indexOfIgnoreCase(final CharSequence[] array, final CharSequence value) {
 		if (null != array) {
 			for (int i = 0; i < array.length; i++) {
 				if (StrUtil.equalsIgnoreCase(array[i], value)) {
@@ -841,7 +841,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
-	public static <T> int lastIndexOf(T[] array, Object value) {
+	public static <T> int lastIndexOf(final T[] array, final Object value) {
 		if (isEmpty(array)) {
 			return INDEX_NOT_FOUND;
 		}
@@ -858,7 +858,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 5.7.3
 	 */
-	public static <T> int lastIndexOf(T[] array, Object value, int endInclude) {
+	public static <T> int lastIndexOf(final T[] array, final Object value, final int endInclude) {
 		if (isNotEmpty(array)) {
 			for (int i = endInclude; i >= 0; i--) {
 				if (ObjUtil.equal(value, array[i])) {
@@ -877,7 +877,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param value 被检查的元素
 	 * @return 是否包含
 	 */
-	public static <T> boolean contains(T[] array, T value) {
+	public static <T> boolean contains(final T[] array, final T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -891,8 +891,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.1.20
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> boolean containsAny(T[] array, T... values) {
-		for (T value : values) {
+	public static <T> boolean containsAny(final T[] array, final T... values) {
+		for (final T value : values) {
 			if (contains(array, value)) {
 				return true;
 			}
@@ -910,8 +910,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.7
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> boolean containsAll(T[] array, T... values) {
-		for (T value : values) {
+	public static <T> boolean containsAll(final T[] array, final T... values) {
+		for (final T value : values) {
 			if (false == contains(array, value)) {
 				return false;
 			}
@@ -927,7 +927,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否包含
 	 * @since 3.1.2
 	 */
-	public static boolean containsIgnoreCase(CharSequence[] array, CharSequence value) {
+	public static boolean containsIgnoreCase(final CharSequence[] array, final CharSequence value) {
 		return indexOfIgnoreCase(array, value) > INDEX_NOT_FOUND;
 	}
 
@@ -940,14 +940,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 包装类型数组或对象数组
 	 * @throws UtilException 对象为非数组
 	 */
-	public static Object[] wrap(Object obj) {
+	public static Object[] wrap(final Object obj) {
 		if (null == obj) {
 			return null;
 		}
 		if (isArray(obj)) {
 			try {
 				return (Object[]) obj;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
 					case "long":
@@ -980,7 +980,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param obj 对象
 	 * @return 是否为数组对象，如果为{@code null} 返回false
 	 */
-	public static boolean isArray(Object obj) {
+	public static boolean isArray(final Object obj) {
 		return null != obj && obj.getClass().isArray();
 	}
 
@@ -995,7 +995,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T get(Object array, int index) {
+	public static <T> T get(final Object array, int index) {
 		if (null == array) {
 			return null;
 		}
@@ -1005,7 +1005,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		try {
 			return (T) Array.get(array, index);
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (final ArrayIndexOutOfBoundsException e) {
 			return null;
 		}
 	}
@@ -1018,13 +1018,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param indexes 下标列表
 	 * @return 结果
 	 */
-	public static <T> T[] getAny(Object array, int... indexes) {
+	public static <T> T[] getAny(final Object array, final int... indexes) {
 		if (null == array) {
 			return null;
 		}
 
 		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
-		for (int i : indexes) {
+		for (final int i : indexes) {
 			result[i] = get(array, i);
 		}
 		return result;
@@ -1041,8 +1041,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.2.2
 	 */
-	public static <T> T[] sub(T[] array, int start, int end) {
-		int length = length(array);
+	public static <T> T[] sub(final T[] array, int start, int end) {
+		final int length = length(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1053,7 +1053,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return newArray(array.getClass().getComponentType(), 0);
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1075,7 +1075,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新的数组
 	 * @since 4.0.6
 	 */
-	public static Object[] sub(Object array, int start, int end) {
+	public static Object[] sub(final Object array, final int start, final int end) {
 		return sub(array, start, end, 1);
 	}
 
@@ -1089,8 +1089,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新的数组
 	 * @since 4.0.6
 	 */
-	public static Object[] sub(Object array, int start, int end, int step) {
-		int length = length(array);
+	public static Object[] sub(final Object array, int start, int end, int step) {
+		final int length = length(array);
 		if (start < 0) {
 			start += length;
 		}
@@ -1101,7 +1101,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return new Object[0];
 		}
 		if (start > end) {
-			int tmp = start;
+			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
@@ -1130,7 +1130,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param obj 集合或数组对象
 	 * @return 数组字符串，与集合转字符串格式相同
 	 */
-	public static String toString(Object obj) {
+	public static String toString(final Object obj) {
 		if (null == obj) {
 			return null;
 		}
@@ -1155,7 +1155,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			// 对象数组
 			try {
 				return Arrays.deepToString((Object[]) obj);
-			} catch (Exception ignore) {
+			} catch (final Exception ignore) {
 				//ignore
 			}
 		}
@@ -1182,7 +1182,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @see Array#getLength(Object)
 	 * @since 3.0.8
 	 */
-	public static int length(Object array) throws IllegalArgumentException {
+	public static int length(final Object array) throws IllegalArgumentException {
 		if (null == array) {
 			return 0;
 		}
@@ -1197,7 +1197,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static <T> String join(T[] array, CharSequence conjunction) {
+	public static <T> String join(final T[] array, final CharSequence conjunction) {
 		return join(array, conjunction, null, null);
 	}
 
@@ -1212,7 +1212,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 连接后的字符串
 	 * @since 4.0.10
 	 */
-	public static <T> String join(T[] array, CharSequence delimiter, String prefix, String suffix) {
+	public static <T> String join(final T[] array, final CharSequence delimiter, final String prefix, final String suffix) {
 		if (null == array) {
 			return null;
 		}
@@ -1234,7 +1234,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 连接后的字符串
 	 * @since 5.3.3
 	 */
-	public static <T> String join(T[] array, CharSequence conjunction, Editor<T> editor) {
+	public static <T> String join(final T[] array, final CharSequence conjunction, final Editor<T> editor) {
 		return StrJoiner.of(conjunction).append(array, (t) -> String.valueOf(editor.edit(t))).toString();
 	}
 
@@ -1245,7 +1245,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(Object array, CharSequence conjunction) {
+	public static String join(final Object array, final CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1263,14 +1263,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return byte数组
 	 * @since 3.0.1
 	 */
-	public static byte[] toArray(ByteBuffer bytebuffer) {
+	public static byte[] toArray(final ByteBuffer bytebuffer) {
 		if (bytebuffer.hasArray()) {
 			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
 		} else {
-			int oldPosition = bytebuffer.position();
+			final int oldPosition = bytebuffer.position();
 			bytebuffer.position(0);
-			int size = bytebuffer.limit();
-			byte[] buffers = new byte[size];
+			final int size = bytebuffer.limit();
+			final byte[] buffers = new byte[size];
 			bytebuffer.get(buffers);
 			bytebuffer.position(oldPosition);
 			return buffers;
@@ -1286,7 +1286,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] toArray(Iterator<T> iterator, Class<T> componentType) {
+	public static <T> T[] toArray(final Iterator<T> iterator, final Class<T> componentType) {
 		return toArray(CollUtil.newArrayList(iterator), componentType);
 	}
 
@@ -1299,7 +1299,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] toArray(Iterable<T> iterable, Class<T> componentType) {
+	public static <T> T[] toArray(final Iterable<T> iterable, final Class<T> componentType) {
 		return toArray(CollUtil.toCollection(iterable), componentType);
 	}
 
@@ -1312,7 +1312,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] toArray(Collection<T> collection, Class<T> componentType) {
+	public static <T> T[] toArray(final Collection<T> collection, final Class<T> componentType) {
 		return collection.toArray(newArray(componentType, 0));
 	}
 
@@ -1330,7 +1330,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] remove(T[] array, int index) throws IllegalArgumentException {
+	public static <T> T[] remove(final T[] array, final int index) throws IllegalArgumentException {
 		return (T[]) remove((Object) array, index);
 	}
 
@@ -1347,7 +1347,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @throws IllegalArgumentException 参数对象不为数组对象
 	 * @since 3.0.8
 	 */
-	public static <T> T[] removeEle(T[] array, T element) throws IllegalArgumentException {
+	public static <T> T[] removeEle(final T[] array, final T element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
 
@@ -1363,7 +1363,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] reverse(T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+	public static <T> T[] reverse(final T[] array, final int startIndexInclusive, final int endIndexExclusive) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1388,7 +1388,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 变更后的原数组
 	 * @since 3.0.9
 	 */
-	public static <T> T[] reverse(T[] array) {
+	public static <T> T[] reverse(final T[] array) {
 		return reverse(array, 0, array.length);
 	}
 
@@ -1402,7 +1402,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+	public static <T extends Comparable<? super T>> T min(final T[] numberArray) {
 		return min(numberArray, null);
 	}
 
@@ -1415,12 +1415,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 5.3.4
 	 */
-	public static <T extends Comparable<? super T>> T min(T[] numberArray, Comparator<T> comparator) {
+	public static <T extends Comparable<? super T>> T min(final T[] numberArray, final Comparator<T> comparator) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
 		T min = numberArray[0];
-		for (T t : numberArray) {
+		for (final T t : numberArray) {
 			if (CompareUtil.compare(min, t, comparator) > 0) {
 				min = t;
 			}
@@ -1436,7 +1436,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+	public static <T extends Comparable<? super T>> T max(final T[] numberArray) {
 		return max(numberArray, null);
 	}
 
@@ -1449,7 +1449,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 5.3.4
 	 */
-	public static <T extends Comparable<? super T>> T max(T[] numberArray, Comparator<T> comparator) {
+	public static <T extends Comparable<? super T>> T max(final T[] numberArray, final Comparator<T> comparator) {
 		if (isEmpty(numberArray)) {
 			throw new IllegalArgumentException("Number array must not empty !");
 		}
@@ -1473,7 +1473,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T> T[] shuffle(T[] array) {
+	public static <T> T[] shuffle(final T[] array) {
 		return shuffle(array, RandomUtil.getRandom());
 	}
 
@@ -1487,7 +1487,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T> T[] shuffle(T[] array, Random random) {
+	public static <T> T[] shuffle(final T[] array, final Random random) {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
@@ -1509,11 +1509,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static <T> T[] swap(T[] array, int index1, int index2) {
+	public static <T> T[] swap(final T[] array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Array must not empty !");
 		}
-		T tmp = array[index1];
+		final T tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
 		return array;
@@ -1528,11 +1528,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static Object swap(Object array, int index1, int index2) {
+	public static Object swap(final Object array, final int index1, final int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Array must not empty !");
 		}
-		Object tmp = get(array, index1);
+		final Object tmp = get(array, index1);
 		Array.set(array, index1, Array.get(array, index2));
 		Array.set(array, index2, tmp);
 		return array;
@@ -1545,10 +1545,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 存在{@code null}的数量
 	 * @since 4.5.18
 	 */
-	public static int emptyCount(Object... args) {
+	public static int emptyCount(final Object... args) {
 		int count = 0;
 		if (isNotEmpty(args)) {
-			for (Object element : args) {
+			for (final Object element : args) {
 				if (ObjUtil.isEmpty(element)) {
 					count++;
 				}
@@ -1564,9 +1564,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否存在
 	 * @since 4.5.18
 	 */
-	public static boolean hasEmpty(Object... args) {
+	public static boolean hasEmpty(final Object... args) {
 		if (isNotEmpty(args)) {
-			for (Object element : args) {
+			for (final Object element : args) {
 				if (ObjUtil.isEmpty(element)) {
 					return true;
 				}
@@ -1582,8 +1582,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否都为空
 	 * @since 4.5.18
 	 */
-	public static boolean isAllEmpty(Object... args) {
-		for (Object obj : args) {
+	public static boolean isAllEmpty(final Object... args) {
+		for (final Object obj : args) {
 			if (false == ObjUtil.isEmpty(obj)) {
 				return false;
 			}
@@ -1598,7 +1598,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否都不为空
 	 * @since 4.5.18
 	 */
-	public static boolean isAllNotEmpty(Object... args) {
+	public static boolean isAllNotEmpty(final Object... args) {
 		return false == hasEmpty(args);
 	}
 
@@ -1611,7 +1611,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> boolean isAllNotNull(T... array) {
+	public static <T> boolean isAllNotNull(final T... array) {
 		return false == hasNull(array);
 	}
 
@@ -1624,7 +1624,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 去重后的数组
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T[] distinct(T[] array) {
+	public static <T> T[] distinct(final T[] array) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1646,7 +1646,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T, K> T[] distinct(T[] array, Function<T, K> uniqueGenerator, boolean override) {
+	public static <T, K> T[] distinct(final T[] array, final Function<T, K> uniqueGenerator, final boolean override) {
 		if (isEmpty(array)) {
 			return array;
 		}
@@ -1655,7 +1655,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if(override){
 			Collections.addAll(set, array);
 		} else{
-			for (T t : array) {
+			for (final T t : array) {
 				set.addIfAbsent(t);
 			}
 		}
@@ -1673,7 +1673,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 转换后的数组
 	 * @since 5.4.2
 	 */
-	public static <T, R> R[] map(T[] array, Class<R> targetComponentType, Function<? super T, ? extends R> func) {
+	public static <T, R> R[] map(final T[] array, final Class<R> targetComponentType, final Function<? super T, ? extends R> func) {
 		final R[] result = newArray(targetComponentType, array.length);
 		for (int i = 0; i < array.length; i++) {
 			result[i] = func.apply(array[i]);
@@ -1692,7 +1692,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 转换后的数组
 	 * @since 5.5.8
 	 */
-	public static <T, R> R[] map(Object array, Class<R> targetComponentType, Function<? super T, ? extends R> func) {
+	public static <T, R> R[] map(final Object array, final Class<R> targetComponentType, final Function<? super T, ? extends R> func) {
 		final int length = length(array);
 		final R[] result = newArray(targetComponentType, length);
 		for (int i = 0; i < length; i++) {
@@ -1711,7 +1711,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 转换后的数组
 	 * @since 5.5.7
 	 */
-	public static <T, R> List<R> map(T[] array, Function<? super T, ? extends R> func) {
+	public static <T, R> List<R> map(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toList());
 	}
 
@@ -1725,7 +1725,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 转换后的数组
 	 * @since 5.8.0
 	 */
-	public static <T, R> Set<R> mapToSet(T[] array, Function<? super T, ? extends R> func) {
+	public static <T, R> Set<R> mapToSet(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toSet());
 	}
 
@@ -1737,7 +1737,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否相等
 	 * @since 5.4.2
 	 */
-	public static boolean equals(Object array1, Object array2) {
+	public static boolean equals(final Object array1, final Object array2) {
 		if (array1 == array2) {
 			return true;
 		}
@@ -1779,7 +1779,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> boolean isSub(T[] array, T[] subArray) {
+	public static <T> boolean isSub(final T[] array, final T[] subArray) {
 		return indexOfSub(array, subArray) > INDEX_NOT_FOUND;
 	}
 
@@ -1792,7 +1792,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int indexOfSub(T[] array, T[] subArray) {
+	public static <T> int indexOfSub(final T[] array, final T[] subArray) {
 		return indexOfSub(array, 0, subArray);
 	}
 
@@ -1806,11 +1806,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int indexOfSub(T[] array, int beginInclude, T[] subArray) {
+	public static <T> int indexOfSub(final T[] array, final int beginInclude, final T[] subArray) {
 		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
-		int firstIndex = indexOf(array, subArray[0], beginInclude);
+		final int firstIndex = indexOf(array, subArray[0], beginInclude);
 		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
@@ -1833,7 +1833,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int lastIndexOfSub(T[] array, T[] subArray) {
+	public static <T> int lastIndexOfSub(final T[] array, final T[] subArray) {
 		if (isEmpty(array) || isEmpty(subArray)) {
 			return INDEX_NOT_FOUND;
 		}
@@ -1850,12 +1850,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
-	public static <T> int lastIndexOfSub(T[] array, int endInclude, T[] subArray) {
+	public static <T> int lastIndexOfSub(final T[] array, final int endInclude, final T[] subArray) {
 		if (isEmpty(array) || isEmpty(subArray) || subArray.length > array.length || endInclude < 0) {
 			return INDEX_NOT_FOUND;
 		}
 
-		int firstIndex = lastIndexOf(array, subArray[0]);
+		final int firstIndex = lastIndexOf(array, subArray[0]);
 		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
@@ -1881,7 +1881,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T> boolean isSorted(T[] array, Comparator<? super T> comparator) {
+	public static <T> boolean isSorted(final T[] array, final Comparator<? super T> comparator) {
 		if (array == null || comparator == null) {
 			return false;
 		}
@@ -1903,7 +1903,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T extends Comparable<? super T>> boolean isSorted(T[] array) {
+	public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
 		return isSortedASC(array);
 	}
 
@@ -1917,7 +1917,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T extends Comparable<? super T>> boolean isSortedASC(T[] array) {
+	public static <T extends Comparable<? super T>> boolean isSortedASC(final T[] array) {
 		if (array == null) {
 			return false;
 		}
@@ -1940,7 +1940,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static <T extends Comparable<? super T>> boolean isSortedDESC(T[] array) {
+	public static <T extends Comparable<? super T>> boolean isSortedDESC(final T[] array) {
 		if (array == null) {
 			return false;
 		}

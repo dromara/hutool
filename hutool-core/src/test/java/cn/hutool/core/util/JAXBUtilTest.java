@@ -25,11 +25,11 @@ public class JAXBUtilTest {
 
 	@Test
 	public void beanToXmlTest() {
-		SchoolVo schoolVo = new SchoolVo();
+		final SchoolVo schoolVo = new SchoolVo();
 		schoolVo.setSchoolName("西安市第一中学");
 		schoolVo.setSchoolAddress("西安市雁塔区长安堡一号");
 
-		SchoolVo.RoomVo roomVo = new SchoolVo.RoomVo();
+		final SchoolVo.RoomVo roomVo = new SchoolVo.RoomVo();
 		roomVo.setRoomName("101教室");
 		roomVo.setRoomNo("101");
 		schoolVo.setRoom(roomVo);
@@ -64,7 +64,7 @@ public class JAXBUtilTest {
 			return schoolName;
 		}
 
-		public void setSchoolName(String schoolName) {
+		public void setSchoolName(final String schoolName) {
 			this.schoolName = schoolName;
 		}
 
@@ -73,7 +73,7 @@ public class JAXBUtilTest {
 			return schoolAddress;
 		}
 
-		public void setSchoolAddress(String schoolAddress) {
+		public void setSchoolAddress(final String schoolAddress) {
 			this.schoolAddress = schoolAddress;
 		}
 
@@ -82,7 +82,7 @@ public class JAXBUtilTest {
 			return room;
 		}
 
-		public void setRoom(RoomVo room) {
+		public void setRoom(final RoomVo room) {
 			this.room = room;
 		}
 
@@ -99,7 +99,7 @@ public class JAXBUtilTest {
 				return roomNo;
 			}
 
-			public void setRoomNo(String roomNo) {
+			public void setRoomNo(final String roomNo) {
 				this.roomNo = roomNo;
 			}
 
@@ -108,7 +108,7 @@ public class JAXBUtilTest {
 				return roomName;
 			}
 
-			public void setRoomName(String roomName) {
+			public void setRoomName(final String roomName) {
 				this.roomName = roomName;
 			}
 		}

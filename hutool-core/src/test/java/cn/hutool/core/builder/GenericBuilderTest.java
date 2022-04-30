@@ -20,7 +20,7 @@ public class GenericBuilderTest {
 
 	@Test
 	public void test() {
-		Box box = GenericBuilder
+		final Box box = GenericBuilder
 				.of(Box::new)
 				.with(Box::setId, 1024L)
 				.with(Box::setTitle, "Hello World!")
@@ -36,7 +36,7 @@ public class GenericBuilderTest {
 		Assert.assertEquals(7, box.getHeight().intValue());
 
 		// 对象修改
-		Box boxModified = GenericBuilder
+		final Box boxModified = GenericBuilder
 				.of(() -> box)
 				.with(Box::setTitle, "Hello Friend!")
 				.with(Box::setLength, 3)
@@ -51,7 +51,7 @@ public class GenericBuilderTest {
 		Assert.assertEquals(5, boxModified.getHeight().intValue());
 
 		// 多参数构造
-		Box box1 = GenericBuilder
+		final Box box1 = GenericBuilder
 				.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
 				.with(Box::alis)
 				.build();
@@ -67,7 +67,7 @@ public class GenericBuilderTest {
 	@Test
 	public void buildMapTest(){
 		//Map创建
-		HashMap<String, String> colorMap = GenericBuilder
+		final HashMap<String, String> colorMap = GenericBuilder
 				.of(HashMap<String,String>::new)
 				.with(Map::put, "red", "#FF0000")
 				.with(Map::put, "yellow", "#FFFF00")
@@ -93,7 +93,7 @@ public class GenericBuilderTest {
 		public Box() {
 		}
 
-		public Box(Long id, String title, Integer length, Integer width, Integer height) {
+		public Box(final Long id, final String title, final Integer length, final Integer width, final Integer height) {
 			this.id = id;
 			this.title = title;
 			this.length = length;

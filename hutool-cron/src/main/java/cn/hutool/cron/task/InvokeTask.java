@@ -26,7 +26,7 @@ public class InvokeTask implements Task{
 	 * 构造
 	 * @param classNameWithMethodName 类名与方法名的字符串表示，方法名和类名使用#隔开或者.隔开
 	 */
-	public InvokeTask(String classNameWithMethodName) {
+	public InvokeTask(final String classNameWithMethodName) {
 		int splitIndex = classNameWithMethodName.lastIndexOf('#');
 		if(splitIndex <= 0){
 			splitIndex = classNameWithMethodName.lastIndexOf('.');
@@ -61,7 +61,7 @@ public class InvokeTask implements Task{
 	public void execute() {
 		try {
 			ReflectUtil.invoke(this.obj, this.method);
-		} catch (UtilException e) {
+		} catch (final UtilException e) {
 			throw new CronException(e.getCause());
 		}
 	}

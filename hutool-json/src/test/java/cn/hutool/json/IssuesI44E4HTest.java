@@ -21,7 +21,7 @@ public class IssuesI44E4HTest {
 			return testDto;
 		});
 
-		String jsonStr = "{\"md\":\"value1\"}";
+		final String jsonStr = "{\"md\":\"value1\"}";
 		final TestDto testDto = JSONUtil.toBean(jsonStr, TestDto.class);
 		Assert.assertEquals("value1", testDto.getMd().getValue());
 	}

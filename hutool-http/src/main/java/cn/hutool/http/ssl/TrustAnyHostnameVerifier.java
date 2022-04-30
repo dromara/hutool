@@ -5,13 +5,13 @@ import javax.net.ssl.SSLSession;
 
 /**
  * https 域名校验
- * 
+ *
  * @author Looly
  */
 public class TrustAnyHostnameVerifier implements HostnameVerifier {
-	
+
 	@Override
-	public boolean verify(String hostname, SSLSession session) {
+	public boolean verify(final String hostname, final SSLSession session) {
 		return true;// 直接返回true
 	}
 }

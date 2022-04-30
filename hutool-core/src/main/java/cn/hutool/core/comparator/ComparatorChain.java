@@ -45,7 +45,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @return {@link ComparatorChain}
 	 * @since 5.4.3
 	 */
-	public static <E> ComparatorChain<E> of(Comparator<E> comparator) {
+	public static <E> ComparatorChain<E> of(final Comparator<E> comparator) {
 		return of(comparator, false);
 	}
 
@@ -58,7 +58,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @return {@link ComparatorChain}
 	 * @since 5.4.3
 	 */
-	public static <E> ComparatorChain<E> of(Comparator<E> comparator, boolean reverse) {
+	public static <E> ComparatorChain<E> of(final Comparator<E> comparator, final boolean reverse) {
 		return new ComparatorChain<>(comparator, reverse);
 	}
 
@@ -71,7 +71,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @since 5.4.3
 	 */
 	@SafeVarargs
-	public static <E> ComparatorChain<E> of(Comparator<E>... comparators) {
+	public static <E> ComparatorChain<E> of(final Comparator<E>... comparators) {
 		return of(Arrays.asList(comparators));
 	}
 
@@ -83,7 +83,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @return {@link ComparatorChain}
 	 * @since 5.4.3
 	 */
-	public static <E> ComparatorChain<E> of(List<Comparator<E>> comparators) {
+	public static <E> ComparatorChain<E> of(final List<Comparator<E>> comparators) {
 		return new ComparatorChain<>(comparators);
 	}
 
@@ -96,7 +96,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * @return {@link ComparatorChain}
 	 * @since 5.4.3
 	 */
-	public static <E> ComparatorChain<E> of(List<Comparator<E>> comparators, BitSet bits) {
+	public static <E> ComparatorChain<E> of(final List<Comparator<E>> comparators, final BitSet bits) {
 		return new ComparatorChain<>(comparators, bits);
 	}
 	//------------------------------------------------------------------------------------- Static method start
@@ -261,7 +261,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	}
 
 	@Override
-	public ComparatorChain<E> addChain(Comparator<E> element) {
+	public ComparatorChain<E> addChain(final Comparator<E> element) {
 		return this.addComparator(element);
 	}
 

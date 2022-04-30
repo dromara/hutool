@@ -19,7 +19,7 @@ public interface MacEngine {
 	 * @param in 内容
 	 * @since 5.7.0
 	 */
-	default void update(byte[] in){
+	default void update(final byte[] in){
 		update(in, 0, in.length);
 	}
 
@@ -53,7 +53,7 @@ public interface MacEngine {
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
 	 */
-	default byte[] digest(InputStream data, int bufferLength){
+	default byte[] digest(final InputStream data, int bufferLength){
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}
@@ -69,7 +69,7 @@ public interface MacEngine {
 				read = data.read(buffer, 0, bufferLength);
 			}
 			result = doFinal();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new CryptoException(e);
 		} finally {
 			reset();

@@ -49,7 +49,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 * @param version2 版本2
 	 */
 	@Override
-	public int compare(String version1, String version2) {
+	public int compare(final String version1, final String version2) {
 		if(ObjUtil.equal(version1, version2)) {
 			return 0;
 		}
@@ -65,7 +65,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 		final List<String> v2s = StrUtil.split(version2, CharUtil.DOT);
 
 		int diff = 0;
-		int minLength = Math.min(v1s.size(), v2s.size());// 取最小长度值
+		final int minLength = Math.min(v1s.size(), v2s.size());// 取最小长度值
 		String v1;
 		String v2;
 		for (int i = 0; i < minLength; i++) {

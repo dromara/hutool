@@ -40,7 +40,7 @@ public class ReferenceUtilTest {
 	public void gcTest(){
 		// https://blog.csdn.net/zmx729618/article/details/54093532
 		// 弱引用的对象必须使用可变对象，不能使用常量对象（比如String）
-		WeakReference<MutableObj<String>> reference = new WeakReference<>(new MutableObj<>("abc"));
+		final WeakReference<MutableObj<String>> reference = new WeakReference<>(new MutableObj<>("abc"));
 		int i=0;
 		while(true){
 			if(reference.get()!=null){

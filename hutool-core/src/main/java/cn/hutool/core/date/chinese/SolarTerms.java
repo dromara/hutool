@@ -107,7 +107,7 @@ public class SolarTerms {
 	 * @param n 二十四节气中的第几个节气(1~24)；从n=1(小寒)算起
 	 * @return getTerm(1987,3) -》4;意即1987年2月4日立春
 	 */
-	public static int getTerm(int y, int n) {
+	public static int getTerm(final int y, final int n) {
 		if (y < 1900 || y > 2100) {
 			return -1;
 		}
@@ -116,11 +116,11 @@ public class SolarTerms {
 		}
 
 		final String _table = S_TERM_INFO[y - 1900];
-		Integer[] _info = new Integer[6];
+		final Integer[] _info = new Integer[6];
 		for (int i = 0; i < 6; i++) {
 			_info[i] = Integer.parseInt(_table.substring(i * 5, 5 * (i + 1)), 16);
 		}
-		String[] _calday = new String[24];
+		final String[] _calday = new String[24];
 		for (int i = 0; i < 6; i++) {
 			_calday[4 * i] = _info[i].toString().substring(0, 1);
 			_calday[4 * i + 1] = _info[i].toString().substring(1, 3);
@@ -135,7 +135,7 @@ public class SolarTerms {
 	 * @param date 日期
 	 * @return 返回指定日期所处的节气，若不是一个节气则返回空字符串
 	 */
-	public static String getTerm(Date date) {
+	public static String getTerm(final Date date) {
 		final DateTime dt = DateUtil.date(date);
 		return getTermInternal(dt.year(), dt.month() + 1, dt.dayOfMonth());
 	}
@@ -146,7 +146,7 @@ public class SolarTerms {
 	 * @param chineseDate 农历日期
 	 * @return 返回指定农历日期所处的节气，若不是一个节气则返回空字符串
 	 */
-	public static String getTerm(ChineseDate chineseDate) {
+	public static String getTerm(final ChineseDate chineseDate) {
 		return chineseDate.getTerm();
 	}
 
@@ -155,7 +155,7 @@ public class SolarTerms {
 	 * @param date 日期
 	 * @return 返回指定日期所处的节气，若不是一个节气则返回空字符串
 	 */
-	public static String getTerm(LocalDate date) {
+	public static String getTerm(final LocalDate date) {
 		return getTermInternal(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
 	}
 
@@ -166,7 +166,7 @@ public class SolarTerms {
 	 * @param day 公历日，从1开始
 	 * @return 返回指定年月日所处的节气，若不是一个节气则返回空字符串
 	 */
-	public static String getTerm(int year, int mouth, int day) {
+	public static String getTerm(final int year, final int mouth, final int day) {
 		return getTerm(LocalDate.of(year, mouth, day));
 	}
 
@@ -177,7 +177,7 @@ public class SolarTerms {
 	 * @param day 公历日，从1开始
 	 * @return 返回指定年月日所处的节气，若不是一个节气则返回空字符串
 	 */
-	private static String getTermInternal(int year, int mouth, int day) {
+	private static String getTermInternal(final int year, final int mouth, final int day) {
 		if (year < 1900 || year > 2100) {
 			throw new IllegalArgumentException("只支持1900-2100之间的日期获取节气");
 		}

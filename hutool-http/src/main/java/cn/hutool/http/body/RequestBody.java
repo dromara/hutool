@@ -22,7 +22,7 @@ public interface RequestBody {
 	 * @param out {@link OutputStream}
 	 * @since 5.7.17
 	 */
-	default void writeClose(OutputStream out) {
+	default void writeClose(final OutputStream out) {
 		try {
 			write(out);
 		} finally {

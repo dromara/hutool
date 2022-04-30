@@ -105,13 +105,13 @@ public class URLUtil {
 	 * @throws UtilException {@link MalformedURLException}包装，URI格式有问题时抛出
 	 * @since 5.7.21
 	 */
-	public static URL url(URI uri) throws UtilException{
+	public static URL url(final URI uri) throws UtilException{
 		if(null == uri){
 			return null;
 		}
 		try {
 			return uri.toURL();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -122,7 +122,7 @@ public class URLUtil {
 	 * @param url URL
 	 * @return URL对象
 	 */
-	public static URL url(String url) {
+	public static URL url(final String url) {
 		return url(url, null);
 	}
 
@@ -134,7 +134,7 @@ public class URLUtil {
 	 * @return URL对象
 	 * @since 4.1.1
 	 */
-	public static URL url(String url, URLStreamHandler handler) {
+	public static URL url(String url, final URLStreamHandler handler) {
 		if(null == url){
 			return null;
 		}
@@ -147,11 +147,11 @@ public class URLUtil {
 
 		try {
 			return new URL(null, url, handler);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			// 尝试文件路径
 			try {
 				return new File(url).toURI().toURL();
-			} catch (MalformedURLException ex2) {
+			} catch (final MalformedURLException ex2) {
 				throw new UtilException(e);
 			}
 		}
@@ -164,7 +164,7 @@ public class URLUtil {
 	 * @return URL
 	 * @since 5.5.2
 	 */
-	public static URI getStringURI(CharSequence content) {
+	public static URI getStringURI(final CharSequence content) {
 		if(null == content){
 			return null;
 		}
@@ -179,7 +179,7 @@ public class URLUtil {
 	 * @return URL
 	 * @since 4.1.9
 	 */
-	public static URL toUrlForHttp(String urlStr) {
+	public static URL toUrlForHttp(final String urlStr) {
 		return toUrlForHttp(urlStr, null);
 	}
 
@@ -191,13 +191,13 @@ public class URLUtil {
 	 * @return URL
 	 * @since 4.1.9
 	 */
-	public static URL toUrlForHttp(String urlStr, URLStreamHandler handler) {
+	public static URL toUrlForHttp(String urlStr, final URLStreamHandler handler) {
 		Assert.notBlank(urlStr, "Url is blank !");
 		// 编码空白符，防止空格引起的请求异常
 		urlStr = URLEncoder.encodeBlank(urlStr);
 		try {
 			return new URL(null, urlStr, handler);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -209,7 +209,7 @@ public class URLUtil {
 	 * @return URL
 	 * @see ResourceUtil#getResource(String)
 	 */
-	public static URL getURL(String pathBaseClassLoader) {
+	public static URL getURL(final String pathBaseClassLoader) {
 		return ResourceUtil.getResource(pathBaseClassLoader);
 	}
 
@@ -221,7 +221,7 @@ public class URLUtil {
 	 * @return URL
 	 * @see ResourceUtil#getResource(String, Class)
 	 */
-	public static URL getURL(String path, Class<?> clazz) {
+	public static URL getURL(final String path, final Class<?> clazz) {
 		return ResourceUtil.getResource(path, clazz);
 	}
 
@@ -232,11 +232,11 @@ public class URLUtil {
 	 * @return URL
 	 * @throws UtilException MalformedURLException
 	 */
-	public static URL getURL(File file) {
+	public static URL getURL(final File file) {
 		Assert.notNull(file, "File is null !");
 		try {
 			return file.toURI().toURL();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new UtilException(e, "Error occured when get URL!");
 		}
 	}
@@ -248,13 +248,13 @@ public class URLUtil {
 	 * @return URL
 	 * @throws UtilException MalformedURLException
 	 */
-	public static URL[] getURLs(File... files) {
+	public static URL[] getURLs(final File... files) {
 		final URL[] urls = new URL[files.length];
 		try {
 			for (int i = 0; i < files.length; i++) {
 				urls[i] = files[i].toURI().toURL();
 			}
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new UtilException(e, "Error occured when get URL!");
 		}
 
@@ -268,14 +268,14 @@ public class URLUtil {
 	 * @return 域名的URI
 	 * @since 4.6.9
 	 */
-	public static URI getHost(URL url) {
+	public static URI getHost(final URL url) {
 		if (null == url) {
 			return null;
 		}
 
 		try {
 			return new URI(url.getProtocol(), url.getHost(), null, null);
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -288,7 +288,7 @@ public class URLUtil {
 	 * @return 相对路径
 	 * @throws UtilException MalformedURLException
 	 */
-	public static String completeUrl(String baseUrl, String relativePath) {
+	public static String completeUrl(String baseUrl, final String relativePath) {
 		baseUrl = normalize(baseUrl, false);
 		if (StrUtil.isBlank(baseUrl)) {
 			return null;
@@ -298,7 +298,7 @@ public class URLUtil {
 			final URL absoluteUrl = new URL(baseUrl);
 			final URL parseUrl = new URL(absoluteUrl, relativePath);
 			return parseUrl.toString();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -310,7 +310,7 @@ public class URLUtil {
 	 * @return path
 	 * @throws UtilException 包装URISyntaxException
 	 */
-	public static String getPath(String uriStr) {
+	public static String getPath(final String uriStr) {
 		return toURI(uriStr).getPath();
 	}
 
@@ -323,7 +323,7 @@ public class URLUtil {
 	 * @return 路径
 	 * @since 3.0.8
 	 */
-	public static String getDecodedPath(URL url) {
+	public static String getDecodedPath(final URL url) {
 		if (null == url) {
 			return null;
 		}
@@ -332,7 +332,7 @@ public class URLUtil {
 		try {
 			// URL对象的getPath方法对于包含中文或空格的问题
 			path = toURI(url).getPath();
-		} catch (UtilException e) {
+		} catch (final UtilException e) {
 			// ignore
 		}
 		return (null != path) ? path : url.getPath();
@@ -345,7 +345,7 @@ public class URLUtil {
 	 * @return URI
 	 * @throws UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(URL url) throws UtilException {
+	public static URI toURI(final URL url) throws UtilException {
 		return toURI(url, false);
 	}
 
@@ -358,7 +358,7 @@ public class URLUtil {
 	 * @throws UtilException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
-	public static URI toURI(URL url, boolean isEncode) throws UtilException {
+	public static URI toURI(final URL url, final boolean isEncode) throws UtilException {
 		if (null == url) {
 			return null;
 		}
@@ -373,7 +373,7 @@ public class URLUtil {
 	 * @return URI
 	 * @throws UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(String location) throws UtilException {
+	public static URI toURI(final String location) throws UtilException {
 		return toURI(location, false);
 	}
 
@@ -386,13 +386,13 @@ public class URLUtil {
 	 * @throws UtilException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
-	public static URI toURI(String location, boolean isEncode) throws UtilException {
+	public static URI toURI(String location, final boolean isEncode) throws UtilException {
 		if (isEncode) {
 			location = RFC3986.PATH.encode(location, CharsetUtil.UTF_8);
 		}
 		try {
 			return new URI(StrUtil.trim(location));
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -405,9 +405,9 @@ public class URLUtil {
 	 * @return 是否为文件
 	 * @since 3.0.9
 	 */
-	public static boolean isFileURL(URL url) {
+	public static boolean isFileURL(final URL url) {
 		Assert.notNull(url, "URL must be not null");
-		String protocol = url.getProtocol();
+		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_FILE.equals(protocol) || //
 				URL_PROTOCOL_VFSFILE.equals(protocol) || //
 				URL_PROTOCOL_VFS.equals(protocol));
@@ -419,7 +419,7 @@ public class URLUtil {
 	 * @param url {@link URL}
 	 * @return 是否为jar包URL
 	 */
-	public static boolean isJarURL(URL url) {
+	public static boolean isJarURL(final URL url) {
 		Assert.notNull(url, "URL must be not null");
 		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_JAR.equals(protocol) || //
@@ -435,7 +435,7 @@ public class URLUtil {
 	 * @return whether the URL has been identified as a JAR file URL
 	 * @since 4.1
 	 */
-	public static boolean isJarFileURL(URL url) {
+	public static boolean isJarFileURL(final URL url) {
 		Assert.notNull(url, "URL must be not null");
 		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
 				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
@@ -448,11 +448,11 @@ public class URLUtil {
 	 * @return InputStream流
 	 * @since 3.2.1
 	 */
-	public static InputStream getStream(URL url) {
+	public static InputStream getStream(final URL url) {
 		Assert.notNull(url, "URL must be not null");
 		try {
 			return url.openStream();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -465,7 +465,7 @@ public class URLUtil {
 	 * @return {@link BufferedReader}
 	 * @since 3.2.1
 	 */
-	public static BufferedReader getReader(URL url, Charset charset) {
+	public static BufferedReader getReader(final URL url, final Charset charset) {
 		return IoUtil.getReader(getStream(url), charset);
 	}
 
@@ -476,11 +476,11 @@ public class URLUtil {
 	 * @return JarFile
 	 * @since 4.1.5
 	 */
-	public static JarFile getJarFile(URL url) {
+	public static JarFile getJarFile(final URL url) {
 		try {
-			JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
+			final JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
 			return urlConnection.getJarFile();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -497,7 +497,7 @@ public class URLUtil {
 	 * @param url URL字符串
 	 * @return 标准化后的URL字符串
 	 */
-	public static String normalize(String url) {
+	public static String normalize(final String url) {
 		return normalize(url, false);
 	}
 
@@ -515,7 +515,7 @@ public class URLUtil {
 	 * @return 标准化后的URL字符串
 	 * @since 4.4.1
 	 */
-	public static String normalize(String url, boolean isEncodePath) {
+	public static String normalize(final String url, final boolean isEncodePath) {
 		return normalize(url, isEncodePath, false);
 	}
 
@@ -535,12 +535,12 @@ public class URLUtil {
 	 * @return 标准化后的URL字符串
 	 * @since 5.5.5
 	 */
-	public static String normalize(String url, boolean isEncodePath, boolean replaceSlash) {
+	public static String normalize(final String url, final boolean isEncodePath, final boolean replaceSlash) {
 		if (StrUtil.isBlank(url)) {
 			return url;
 		}
 		final int sepIndex = url.indexOf("://");
-		String protocol;
+		final String protocol;
 		String body;
 		if (sepIndex > 0) {
 			protocol = StrUtil.subPre(url, sepIndex + 3);
@@ -595,7 +595,7 @@ public class URLUtil {
 	 * @param charset  编码，编码为null表示不编码
 	 * @return url参数
 	 */
-	public static String buildQuery(Map<String, ?> paramMap, Charset charset) {
+	public static String buildQuery(final Map<String, ?> paramMap, final Charset charset) {
 		return UrlQuery.of(paramMap).build(charset);
 	}
 
@@ -607,7 +607,7 @@ public class URLUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.4
 	 */
-	public static long getContentLength(URL url) throws IORuntimeException {
+	public static long getContentLength(final URL url) throws IORuntimeException {
 		if (null == url) {
 			return -1;
 		}
@@ -616,7 +616,7 @@ public class URLUtil {
 		try {
 			conn = url.openConnection();
 			return conn.getContentLengthLong();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			if (conn instanceof HttpURLConnection) {
@@ -640,7 +640,7 @@ public class URLUtil {
 	 * @return Data URI字符串
 	 * @since 5.3.11
 	 */
-	public static String getDataUriBase64(String mimeType, String data) {
+	public static String getDataUriBase64(final String mimeType, final String data) {
 		return getDataUri(mimeType, null, "base64", data);
 	}
 
@@ -660,7 +660,7 @@ public class URLUtil {
 	 * @return Data URI字符串
 	 * @since 5.3.6
 	 */
-	public static String getDataUri(String mimeType, String encoding, String data) {
+	public static String getDataUri(final String mimeType, final String encoding, final String data) {
 		return getDataUri(mimeType, null, encoding, data);
 	}
 
@@ -681,7 +681,7 @@ public class URLUtil {
 	 * @return Data URI字符串
 	 * @since 5.3.6
 	 */
-	public static String getDataUri(String mimeType, Charset charset, String encoding, String data) {
+	public static String getDataUri(final String mimeType, final Charset charset, final String encoding, final String data) {
 		final StringBuilder builder = StrUtil.builder("data:");
 		if (StrUtil.isNotBlank(mimeType)) {
 			builder.append(mimeType);

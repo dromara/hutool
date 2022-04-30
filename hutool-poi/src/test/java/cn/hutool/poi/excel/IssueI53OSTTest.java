@@ -17,8 +17,8 @@ public class IssueI53OSTTest {
 	@Test
 	@Ignore
 	public void readTest(){
-		Map<String, Object> result = new HashMap<>();
-		List<Object> header = new ArrayList<>();
+		final Map<String, Object> result = new HashMap<>();
+		final List<Object> header = new ArrayList<>();
 
 		ExcelUtil.readBySax("d:/test/sax_merge.xlsx", -1, (sheetIndex, rowIndex, rowCells) -> {
 			if(rowIndex == 0){

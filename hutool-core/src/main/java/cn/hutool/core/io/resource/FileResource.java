@@ -29,7 +29,7 @@ public class FileResource implements Resource, Serializable {
 	 *
 	 * @param path 文件绝对路径或相对ClassPath路径，但是这个路径不能指向一个jar包中的文件
 	 */
-	public FileResource(String path) {
+	public FileResource(final String path) {
 		this(FileUtil.file(path));
 	}
 
@@ -39,7 +39,7 @@ public class FileResource implements Resource, Serializable {
 	 * @param path 文件
 	 * @since 4.4.1
 	 */
-	public FileResource(Path path) {
+	public FileResource(final Path path) {
 		this(path.toFile());
 	}
 
@@ -48,7 +48,7 @@ public class FileResource implements Resource, Serializable {
 	 *
 	 * @param file 文件
 	 */
-	public FileResource(File file) {
+	public FileResource(final File file) {
 		this(file, null);
 	}
 
@@ -58,7 +58,7 @@ public class FileResource implements Resource, Serializable {
 	 * @param file 文件
 	 * @param fileName 文件名，带扩展名，如果为null获取文件本身的文件名
 	 */
-	public FileResource(File file, String fileName) {
+	public FileResource(final File file, final String fileName) {
 		Assert.notNull(file, "File must be not null !");
 		this.file = file;
 		this.lastModified = file.lastModified();

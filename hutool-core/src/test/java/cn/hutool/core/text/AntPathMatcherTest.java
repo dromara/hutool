@@ -9,14 +9,14 @@ public class AntPathMatcherTest {
 
 	@Test
 	public void matchesTest() {
-		AntPathMatcher antPathMatcher = new AntPathMatcher();
-		boolean matched = antPathMatcher.match("/api/org/organization/{orgId}", "/api/org/organization/999");
+		final AntPathMatcher antPathMatcher = new AntPathMatcher();
+		final boolean matched = antPathMatcher.match("/api/org/organization/{orgId}", "/api/org/organization/999");
 		Assert.assertTrue(matched);
 	}
 
 	@Test
 	public void matchesTest2() {
-		AntPathMatcher antPathMatcher = new AntPathMatcher();
+		final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
 		String pattern = "/**/*.xml*";
 		String path = "/WEB-INF/web.xml";
@@ -36,7 +36,7 @@ public class AntPathMatcherTest {
 
 	@Test
 	public void matchesTest3(){
-		AntPathMatcher pathMatcher = new AntPathMatcher();
+		final AntPathMatcher pathMatcher = new AntPathMatcher();
 		pathMatcher.setCachePatterns(true);
 		pathMatcher.setCaseSensitive(true);
 		pathMatcher.setPathSeparator("/");
@@ -58,7 +58,7 @@ public class AntPathMatcherTest {
 	 */
 	@Test
 	public void matchesTest4() {
-		AntPathMatcher pathMatcher = new AntPathMatcher();
+		final AntPathMatcher pathMatcher = new AntPathMatcher();
 
 		// 精确匹配
 		Assert.assertTrue(pathMatcher.match("/test", "/test"));
@@ -105,8 +105,8 @@ public class AntPathMatcherTest {
 	 */
 	@Test
 	public void testExtractUriTemplateVariables() {
-		AntPathMatcher antPathMatcher = new AntPathMatcher();
-		HashMap<String, String> map = (HashMap<String, String>) antPathMatcher.extractUriTemplateVariables("/api/org/organization/{orgId}",
+		final AntPathMatcher antPathMatcher = new AntPathMatcher();
+		final HashMap<String, String> map = (HashMap<String, String>) antPathMatcher.extractUriTemplateVariables("/api/org/organization/{orgId}",
 				"/api/org" +
 						"/organization" +
 						"/999");

@@ -40,7 +40,7 @@ public class MongoFactory {
 	 * @param port 端口
 	 * @return MongoDB连接
 	 */
-	public static MongoDS getDS(String host, int port) {
+	public static MongoDS getDS(final String host, final int port) {
 		final String key = host + ":" + port;
 		MongoDS ds = DS_MAP.get(key);
 		if (null == ds) {
@@ -59,7 +59,7 @@ public class MongoFactory {
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
-	public static MongoDS getDS(String... groups) {
+	public static MongoDS getDS(final String... groups) {
 		final String key = ArrayUtil.join(groups, GROUP_SEPRATER);
 		MongoDS ds = DS_MAP.get(key);
 		if (null == ds) {
@@ -77,7 +77,7 @@ public class MongoFactory {
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
-	public static MongoDS getDS(Collection<String> groups) {
+	public static MongoDS getDS(final Collection<String> groups) {
 		return getDS(groups.toArray(new String[0]));
 	}
 
@@ -88,7 +88,7 @@ public class MongoFactory {
 	 * @param groups  分组列表
 	 * @return MongoDB连接
 	 */
-	public static MongoDS getDS(Setting setting, String... groups) {
+	public static MongoDS getDS(final Setting setting, final String... groups) {
 		final String key = setting.getSettingPath() + GROUP_SEPRATER + ArrayUtil.join(groups, GROUP_SEPRATER);
 		MongoDS ds = DS_MAP.get(key);
 		if (null == ds) {
@@ -107,7 +107,7 @@ public class MongoFactory {
 	 * @param groups  分组列表
 	 * @return MongoDB连接
 	 */
-	public static MongoDS getDS(Setting setting, Collection<String> groups) {
+	public static MongoDS getDS(final Setting setting, final Collection<String> groups) {
 		return getDS(setting, groups.toArray(new String[0]));
 	}
 	// ------------------------------------------------------------------------ Get DS ends
@@ -117,7 +117,7 @@ public class MongoFactory {
 	 */
 	public static void closeAll() {
 		if (MapUtil.isNotEmpty(DS_MAP)) {
-			for (MongoDS ds : DS_MAP.values()) {
+			for (final MongoDS ds : DS_MAP.values()) {
 				ds.close();
 			}
 			DS_MAP.clear();

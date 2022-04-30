@@ -36,7 +36,7 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	 * @param alwaysDelimitText 是否始终使用文本分隔符，文本包装符，默认false，按需添加
 	 * @return this
 	 */
-	public CsvWriteConfig setAlwaysDelimitText(boolean alwaysDelimitText) {
+	public CsvWriteConfig setAlwaysDelimitText(final boolean alwaysDelimitText) {
 		this.alwaysDelimitText = alwaysDelimitText;
 		return this;
 	}
@@ -47,7 +47,7 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	 * @param lineDelimiter 换行符
 	 * @return this
 	 */
-	public CsvWriteConfig setLineDelimiter(char[] lineDelimiter) {
+	public CsvWriteConfig setLineDelimiter(final char[] lineDelimiter) {
 		this.lineDelimiter = lineDelimiter;
 		return this;
 	}

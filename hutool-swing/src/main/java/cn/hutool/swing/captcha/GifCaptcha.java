@@ -37,7 +37,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param width  验证码宽度
 	 * @param height 验证码高度
 	 */
-	public GifCaptcha(int width, int height) {
+	public GifCaptcha(final int width, final int height) {
 		this(width, height, 5);
 	}
 
@@ -46,7 +46,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param height    验证码高度
 	 * @param codeCount 验证码个数
 	 */
-	public GifCaptcha(int width, int height, int codeCount) {
+	public GifCaptcha(final int width, final int height, final int codeCount) {
 		super(width, height, codeCount, 10);
 	}
 
@@ -75,7 +75,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param repeat 必须大于等于0
 	 * @return this
 	 */
-	public GifCaptcha setRepeat(int repeat) {
+	public GifCaptcha setRepeat(final int repeat) {
 		if (repeat >= 0) {
 			this.repeat = repeat;
 		}
@@ -88,7 +88,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param maxColor 颜色
 	 * @return this
 	 */
-	public GifCaptcha setMaxColor(int maxColor) {
+	public GifCaptcha setMaxColor(final int maxColor) {
 		this.maxColor = maxColor;
 		return this;
 	}
@@ -99,7 +99,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param minColor 颜色
 	 * @return this
 	 */
-	public GifCaptcha setMinColor(int minColor) {
+	public GifCaptcha setMinColor(final int minColor) {
 		this.minColor = minColor;
 		return this;
 	}
@@ -109,17 +109,17 @@ public class GifCaptcha extends AbstractCaptcha {
 		generateCode();
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();// gif编码类
+		final AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();// gif编码类
 		//生成字符
 		gifEncoder.start(out);
 		gifEncoder.setQuality(quality);//设置量化器取样间隔
 		// 帧延迟 (默认100)
-		int delay = 100;
+		final int delay = 100;
 		gifEncoder.setDelay(delay);//设置帧延迟
 		gifEncoder.setRepeat(repeat);//帧循环次数
 		BufferedImage frame;
-		char[] chars = code.toCharArray();
-		Color[] fontColor = new Color[chars.length];
+		final char[] chars = code.toCharArray();
+		final Color[] fontColor = new Color[chars.length];
 		for (int i = 0; i < chars.length; i++) {
 			fontColor[i] = getRandomColor(minColor, maxColor);
 			frame = graphicsImage(chars, fontColor, chars, i);
@@ -131,7 +131,7 @@ public class GifCaptcha extends AbstractCaptcha {
 	}
 
 	@Override
-	protected Image createImage(String code) {
+	protected Image createImage(final String code) {
 		return null;
 	}
 
@@ -143,19 +143,19 @@ public class GifCaptcha extends AbstractCaptcha {
 	 * @param flag      透明度使用
 	 * @return BufferedImage
 	 */
-	private BufferedImage graphicsImage(char[] chars, Color[] fontColor, char[] words, int flag) {
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private BufferedImage graphicsImage(final char[] chars, final Color[] fontColor, final char[] words, final int flag) {
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		//或得图形上下文
-		Graphics2D g2d = image.createGraphics();
+		final Graphics2D g2d = image.createGraphics();
 		//利用指定颜色填充背景
 		g2d.setColor(ObjUtil.defaultIfNull(this.background, Color.WHITE));
 		g2d.fillRect(0, 0, width, height);
 		AlphaComposite ac;
 		// 字符的y坐标
-		float y = (height >> 1) + (font.getSize() >> 1);
-		float m = 1.0f * (width - (chars.length * font.getSize())) / chars.length;
+		final float y = (height >> 1) + (font.getSize() >> 1);
+		final float m = 1.0f * (width - (chars.length * font.getSize())) / chars.length;
 		//字符的x坐标
-		float x = Math.max(m / 2.0f, 2);
+		final float x = Math.max(m / 2.0f, 2);
 		g2d.setFont(font);
 		// 指定透明度
 		if (null != this.textAlpha) {
@@ -181,10 +181,10 @@ public class GifCaptcha extends AbstractCaptcha {
 	 *
 	 * @return float 透明度
 	 */
-	private float getAlpha(int v, int i, int j) {
-		int num = i + j;
-		float r = (float) 1 / v;
-		float s = (v + 1) * r;
+	private float getAlpha(final int v, final int i, final int j) {
+		final int num = i + j;
+		final float r = (float) 1 / v;
+		final float s = (v + 1) * r;
 		return num > v ? (num * r - s) : num * r;
 	}
 

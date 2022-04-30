@@ -43,7 +43,7 @@ public class Digester implements Serializable {
 	 *
 	 * @param algorithm 算法枚举
 	 */
-	public Digester(DigestAlgorithm algorithm) {
+	public Digester(final DigestAlgorithm algorithm) {
 		this(algorithm.getValue());
 	}
 
@@ -52,7 +52,7 @@ public class Digester implements Serializable {
 	 *
 	 * @param algorithm 算法枚举
 	 */
-	public Digester(String algorithm) {
+	public Digester(final String algorithm) {
 		this(algorithm, null);
 	}
 
@@ -63,7 +63,7 @@ public class Digester implements Serializable {
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
 	 * @since 4.5.1
 	 */
-	public Digester(DigestAlgorithm algorithm, Provider provider) {
+	public Digester(final DigestAlgorithm algorithm, final Provider provider) {
 		init(algorithm.getValue(), provider);
 	}
 
@@ -74,7 +74,7 @@ public class Digester implements Serializable {
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
 	 * @since 4.5.1
 	 */
-	public Digester(String algorithm, Provider provider) {
+	public Digester(final String algorithm, final Provider provider) {
 		init(algorithm, provider);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
@@ -87,13 +87,13 @@ public class Digester implements Serializable {
 	 * @return Digester
 	 * @throws CryptoException Cause by IOException
 	 */
-	public Digester init(String algorithm, Provider provider) {
+	public Digester init(final String algorithm, final Provider provider) {
 		if(null == provider) {
 			this.digest = SecureUtil.createMessageDigest(algorithm);
 		}else {
 			try {
 				this.digest = MessageDigest.getInstance(algorithm, provider);
-			} catch (NoSuchAlgorithmException e) {
+			} catch (final NoSuchAlgorithmException e) {
 				throw new CryptoException(e);
 			}
 		}
@@ -107,7 +107,7 @@ public class Digester implements Serializable {
 	 * @return this
 	 * @since 4.4.3
 	 */
-	public Digester setSalt(byte[] salt) {
+	public Digester setSalt(final byte[] salt) {
 		this.salt = salt;
 		return this;
 	}
@@ -131,7 +131,7 @@ public class Digester implements Serializable {
 	 * @return this
 	 * @since 4.4.3
 	 */
-	public Digester setSaltPosition(int saltPosition) {
+	public Digester setSaltPosition(final int saltPosition) {
 		this.saltPosition = saltPosition;
 		return this;
 	}
@@ -142,7 +142,7 @@ public class Digester implements Serializable {
 	 * @param digestCount 摘要值次数
 	 * @return this
 	 */
-	public Digester setDigestCount(int digestCount) {
+	public Digester setDigestCount(final int digestCount) {
 		this.digestCount = digestCount;
 		return this;
 	}
@@ -166,7 +166,7 @@ public class Digester implements Serializable {
 	 * @param charsetName 编码
 	 * @return 摘要
 	 */
-	public byte[] digest(String data, String charsetName) {
+	public byte[] digest(final String data, final String charsetName) {
 		return digest(data, CharsetUtil.charset(charsetName));
 	}
 
@@ -178,7 +178,7 @@ public class Digester implements Serializable {
 	 * @return 摘要
 	 * @since 4.6.0
 	 */
-	public byte[] digest(String data, Charset charset) {
+	public byte[] digest(final String data, final Charset charset) {
 		return digest(StrUtil.bytes(data, charset));
 	}
 
@@ -188,7 +188,7 @@ public class Digester implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public byte[] digest(String data) {
+	public byte[] digest(final String data) {
 		return digest(data, CharsetUtil.UTF_8);
 	}
 
@@ -199,7 +199,7 @@ public class Digester implements Serializable {
 	 * @param charsetName 编码
 	 * @return 摘要
 	 */
-	public String digestHex(String data, String charsetName) {
+	public String digestHex(final String data, final String charsetName) {
 		return digestHex(data, CharsetUtil.charset(charsetName));
 	}
 
@@ -211,7 +211,7 @@ public class Digester implements Serializable {
 	 * @return 摘要
 	 * @since 4.6.0
 	 */
-	public String digestHex(String data, Charset charset) {
+	public String digestHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(digest(data, charset));
 	}
 
@@ -221,7 +221,7 @@ public class Digester implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(String data) {
+	public String digestHex(final String data) {
 		return digestHex(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -233,7 +233,7 @@ public class Digester implements Serializable {
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
 	 */
-	public byte[] digest(File file) throws CryptoException {
+	public byte[] digest(final File file) throws CryptoException {
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -250,7 +250,7 @@ public class Digester implements Serializable {
 	 * @param file 被摘要文件
 	 * @return 摘要
 	 */
-	public String digestHex(File file) {
+	public String digestHex(final File file) {
 		return HexUtil.encodeHexStr(digest(file));
 	}
 
@@ -260,8 +260,8 @@ public class Digester implements Serializable {
 	 * @param data 数据bytes
 	 * @return 摘要bytes
 	 */
-	public byte[] digest(byte[] data) {
-		byte[] result;
+	public byte[] digest(final byte[] data) {
+		final byte[] result;
 		if (this.saltPosition <= 0) {
 			// 加盐在开头，自动忽略空盐值
 			result = doDigest(this.salt, data);
@@ -288,7 +288,7 @@ public class Digester implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(byte[] data) {
+	public String digestHex(final byte[] data) {
 		return HexUtil.encodeHexStr(digest(data));
 	}
 
@@ -298,7 +298,7 @@ public class Digester implements Serializable {
 	 * @param data {@link InputStream} 数据流
 	 * @return 摘要bytes
 	 */
-	public byte[] digest(InputStream data) {
+	public byte[] digest(final InputStream data) {
 		return digest(data, IoUtil.DEFAULT_BUFFER_SIZE);
 	}
 
@@ -309,7 +309,7 @@ public class Digester implements Serializable {
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
-	public String digestHex(InputStream data) {
+	public String digestHex(final InputStream data) {
 		return HexUtil.encodeHexStr(digest(data));
 	}
 
@@ -321,19 +321,19 @@ public class Digester implements Serializable {
 	 * @return 摘要bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] digest(InputStream data, int bufferLength) throws IORuntimeException {
+	public byte[] digest(final InputStream data, int bufferLength) throws IORuntimeException {
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}
 
-		byte[] result;
+		final byte[] result;
 		try {
 			if (ArrayUtil.isEmpty(this.salt)) {
 				result = digestWithoutSalt(data, bufferLength);
 			} else {
 				result = digestWithSalt(data, bufferLength);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -348,7 +348,7 @@ public class Digester implements Serializable {
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要
 	 */
-	public String digestHex(InputStream data, int bufferLength) {
+	public String digestHex(final InputStream data, final int bufferLength) {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
 	}
 
@@ -380,7 +380,7 @@ public class Digester implements Serializable {
 	 * @return 摘要bytes
 	 * @throws IOException 从流中读取数据引发的IO异常
 	 */
-	private byte[] digestWithoutSalt(InputStream data, int bufferLength) throws IOException {
+	private byte[] digestWithoutSalt(final InputStream data, final int bufferLength) throws IOException {
 		final byte[] buffer = new byte[bufferLength];
 		int read;
 		while ((read = data.read(buffer, 0, bufferLength)) > -1) {
@@ -397,7 +397,7 @@ public class Digester implements Serializable {
 	 * @return 摘要bytes
 	 * @throws IOException 从流中读取数据引发的IO异常
 	 */
-	private byte[] digestWithSalt(InputStream data, int bufferLength) throws IOException {
+	private byte[] digestWithSalt(final InputStream data, final int bufferLength) throws IOException {
 		if (this.saltPosition <= 0) {
 			// 加盐在开头
 			this.digest.update(this.salt);
@@ -435,8 +435,8 @@ public class Digester implements Serializable {
 	 * @return 摘要bytes
 	 * @since 4.4.3
 	 */
-	private byte[] doDigest(byte[]... datas) {
-		for (byte[] data : datas) {
+	private byte[] doDigest(final byte[]... datas) {
+		for (final byte[] data : datas) {
 			if (null != data) {
 				this.digest.update(data);
 			}

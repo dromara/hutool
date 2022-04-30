@@ -31,7 +31,7 @@ public class CharSequenceResource implements Resource, Serializable {
 	 *
 	 * @param data 资源数据
 	 */
-	public CharSequenceResource(CharSequence data) {
+	public CharSequenceResource(final CharSequence data) {
 		this(data, null);
 	}
 
@@ -41,7 +41,7 @@ public class CharSequenceResource implements Resource, Serializable {
 	 * @param data 资源数据
 	 * @param name 资源名称
 	 */
-	public CharSequenceResource(CharSequence data, String name) {
+	public CharSequenceResource(final CharSequence data, final String name) {
 		this(data, name, CharsetUtil.UTF_8);
 	}
 
@@ -52,7 +52,7 @@ public class CharSequenceResource implements Resource, Serializable {
 	 * @param name 资源名称
 	 * @param charset 编码
 	 */
-	public CharSequenceResource(CharSequence data, CharSequence name, Charset charset) {
+	public CharSequenceResource(final CharSequence data, final CharSequence name, final Charset charset) {
 		this.data = data;
 		this.name = name;
 		this.charset = charset;
@@ -74,12 +74,12 @@ public class CharSequenceResource implements Resource, Serializable {
 	}
 
 	@Override
-	public BufferedReader getReader(Charset charset) {
+	public BufferedReader getReader(final Charset charset) {
 		return IoUtil.getReader(new StringReader(this.data.toString()));
 	}
 
 	@Override
-	public String readStr(Charset charset) throws IORuntimeException {
+	public String readStr(final Charset charset) throws IORuntimeException {
 		return this.data.toString();
 	}
 

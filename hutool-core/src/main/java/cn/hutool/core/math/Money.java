@@ -100,7 +100,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param yuan 金额元数，0的情况下表示元的部分从分中截取
 	 * @param cent 金额分数。
 	 */
-	public Money(long yuan, int cent) {
+	public Money(final long yuan, final int cent) {
 		this(yuan, cent, Currency.getInstance(DEFAULT_CURRENCY_CODE));
 	}
 
@@ -114,7 +114,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param cent     金额分数。
 	 * @param currency 货币单位
 	 */
-	public Money(long yuan, int cent, Currency currency) {
+	public Money(final long yuan, final int cent, final Currency currency) {
 		this.currency = currency;
 
 		if(0 == yuan) {
@@ -132,7 +132,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 *
 	 * @param amount 金额，以元为单位。
 	 */
-	public Money(String amount) {
+	public Money(final String amount) {
 		this(amount, Currency.getInstance(DEFAULT_CURRENCY_CODE));
 	}
 
@@ -145,7 +145,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param amount   金额，以元为单位。
 	 * @param currency 币种。
 	 */
-	public Money(String amount, Currency currency) {
+	public Money(final String amount, final Currency currency) {
 		this(new BigDecimal(amount), currency);
 	}
 
@@ -160,7 +160,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param currency     币种。
 	 * @param roundingMode 取整模式。
 	 */
-	public Money(String amount, Currency currency, RoundingMode roundingMode) {
+	public Money(final String amount, final Currency currency, final RoundingMode roundingMode) {
 		this(new BigDecimal(amount), currency, roundingMode);
 	}
 
@@ -186,7 +186,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 *
 	 * @param amount 金额，以元为单位。
 	 */
-	public Money(double amount) {
+	public Money(final double amount) {
 		this(amount, Currency.getInstance(DEFAULT_CURRENCY_CODE));
 	}
 
@@ -213,7 +213,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param amount   金额，以元为单位。
 	 * @param currency 币种。
 	 */
-	public Money(double amount, Currency currency) {
+	public Money(final double amount, final Currency currency) {
 		this.currency = currency;
 		this.cent = Math.round(amount * getCentFactor());
 	}
@@ -227,7 +227,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 *
 	 * @param amount 金额，以元为单位。
 	 */
-	public Money(BigDecimal amount) {
+	public Money(final BigDecimal amount) {
 		this(amount, Currency.getInstance(DEFAULT_CURRENCY_CODE));
 	}
 
@@ -241,7 +241,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param amount       金额，以元为单位。
 	 * @param roundingMode 取整模式
 	 */
-	public Money(BigDecimal amount, RoundingMode roundingMode) {
+	public Money(final BigDecimal amount, final RoundingMode roundingMode) {
 		this(amount, Currency.getInstance(DEFAULT_CURRENCY_CODE), roundingMode);
 	}
 
@@ -255,7 +255,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param amount   金额，以元为单位。
 	 * @param currency 币种
 	 */
-	public Money(BigDecimal amount, Currency currency) {
+	public Money(final BigDecimal amount, final Currency currency) {
 		this(amount, currency, DEFAULT_ROUNDING_MODE);
 	}
 
@@ -270,7 +270,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param currency     币种。
 	 * @param roundingMode 取整模式。
 	 */
-	public Money(BigDecimal amount, Currency currency, RoundingMode roundingMode) {
+	public Money(final BigDecimal amount, final Currency currency, final RoundingMode roundingMode) {
 		this.currency = currency;
 		this.cent = rounding(amount.movePointRight(currency.getDefaultFractionDigits()),
 				roundingMode);
@@ -292,7 +292,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 *
 	 * @param amount 金额数，以元为单位。
 	 */
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(final BigDecimal amount) {
 		if (amount != null) {
 			cent = rounding(amount.movePointRight(2), DEFAULT_ROUNDING_MODE);
 		}
@@ -341,7 +341,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return {@code true}表示相等，{@code false}表示不相等。
 	 */
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(final Object other) {
 		return (other instanceof Money) && equals((Money) other);
 	}
 
@@ -357,7 +357,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param other 待比较的另一货币对象。
 	 * @return {@code true}表示相等，{@code false}表示不相等。
 	 */
-	public boolean equals(Money other) {
+	public boolean equals(final Money other) {
 		return currency.equals(other.currency) && (cent == other.cent);
 	}
 
@@ -386,7 +386,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @throws IllegalArgumentException 待比较货币对象与本货币对象的币种不同。
 	 */
 	@Override
-	public int compareTo(Money other) {
+	public int compareTo(final Money other) {
 		assertSameCurrencyAs(other);
 		return Long.compare(cent, other.cent);
 	}
@@ -403,7 +403,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return true表示大于，false表示不大于（小于等于）。
 	 * @throws IllegalArgumentException 待比较货币对象与本货币对象的币种不同。
 	 */
-	public boolean greaterThan(Money other) {
+	public boolean greaterThan(final Money other) {
 		return compareTo(other) > 0;
 	}
 
@@ -421,7 +421,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 相加后的结果。
 	 * @throws IllegalArgumentException 如果本货币对象与另一货币对象币种不同。
 	 */
-	public Money add(Money other) {
+	public Money add(final Money other) {
 		assertSameCurrencyAs(other);
 
 		return newMoneyWithSameCurrency(cent + other.cent);
@@ -438,7 +438,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 累加后的本货币对象。
 	 * @throws IllegalArgumentException 如果本货币对象与另一货币对象币种不同。
 	 */
-	public Money addTo(Money other) {
+	public Money addTo(final Money other) {
 		assertSameCurrencyAs(other);
 
 		this.cent += other.cent;
@@ -458,7 +458,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 相减后的结果。
 	 * @throws IllegalArgumentException 如果本货币对象与另一货币对象币种不同。
 	 */
-	public Money subtract(Money other) {
+	public Money subtract(final Money other) {
 		assertSameCurrencyAs(other);
 
 		return newMoneyWithSameCurrency(cent - other.cent);
@@ -475,7 +475,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 累减后的本货币对象。
 	 * @throws IllegalArgumentException 如果本货币对象与另一货币对象币种不同。
 	 */
-	public Money subtractFrom(Money other) {
+	public Money subtractFrom(final Money other) {
 		assertSameCurrencyAs(other);
 
 		this.cent -= other.cent;
@@ -493,7 +493,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 乘法后的结果。
 	 */
-	public Money multiply(long val) {
+	public Money multiply(final long val) {
 		return newMoneyWithSameCurrency(cent * val);
 	}
 
@@ -506,7 +506,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 累乘后的本货币对象。
 	 */
-	public Money multiplyBy(long val) {
+	public Money multiplyBy(final long val) {
 		this.cent *= val;
 
 		return this;
@@ -522,7 +522,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 相乘后的结果。
 	 */
-	public Money multiply(double val) {
+	public Money multiply(final double val) {
 		return newMoneyWithSameCurrency(Math.round(cent * val));
 	}
 
@@ -536,7 +536,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 累乘后的本货币对象。
 	 */
-	public Money multiplyBy(double val) {
+	public Money multiplyBy(final double val) {
 		this.cent = Math.round(this.cent * val);
 
 		return this;
@@ -553,7 +553,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 相乘后的结果。
 	 */
-	public Money multiply(BigDecimal val) {
+	public Money multiply(final BigDecimal val) {
 		return multiply(val, DEFAULT_ROUNDING_MODE);
 	}
 
@@ -568,7 +568,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 乘数
 	 * @return 累乘后的结果。
 	 */
-	public Money multiplyBy(BigDecimal val) {
+	public Money multiplyBy(final BigDecimal val) {
 		return multiplyBy(val, DEFAULT_ROUNDING_MODE);
 	}
 
@@ -584,8 +584,8 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 相乘后的结果。
 	 */
-	public Money multiply(BigDecimal val, RoundingMode roundingMode) {
-		BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
+	public Money multiply(final BigDecimal val, final RoundingMode roundingMode) {
+		final BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
 
 		return newMoneyWithSameCurrency(rounding(newCent, roundingMode));
 	}
@@ -602,8 +602,8 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 累乘后的结果。
 	 */
-	public Money multiplyBy(BigDecimal val, RoundingMode roundingMode) {
-		BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
+	public Money multiplyBy(final BigDecimal val, final RoundingMode roundingMode) {
+		final BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
 
 		this.cent = rounding(newCent, roundingMode);
 
@@ -620,7 +620,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 除数
 	 * @return 相除后的结果。
 	 */
-	public Money divide(double val) {
+	public Money divide(final double val) {
 		return newMoneyWithSameCurrency(Math.round(cent / val));
 	}
 
@@ -634,7 +634,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 除数
 	 * @return 累除后的结果。
 	 */
-	public Money divideBy(double val) {
+	public Money divideBy(final double val) {
 		this.cent = Math.round(this.cent / val);
 
 		return this;
@@ -651,7 +651,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 除数
 	 * @return 相除后的结果。
 	 */
-	public Money divide(BigDecimal val) {
+	public Money divide(final BigDecimal val) {
 		return divide(val, DEFAULT_ROUNDING_MODE);
 	}
 
@@ -667,8 +667,8 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整
 	 * @return 相除后的结果。
 	 */
-	public Money divide(BigDecimal val, RoundingMode roundingMode) {
-		BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
+	public Money divide(final BigDecimal val, final RoundingMode roundingMode) {
+		final BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
 
 		return newMoneyWithSameCurrency(newCent.longValue());
 	}
@@ -684,7 +684,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param val 除数
 	 * @return 累除后的结果。
 	 */
-	public Money divideBy(BigDecimal val) {
+	public Money divideBy(final BigDecimal val) {
 		return divideBy(val, DEFAULT_ROUNDING_MODE);
 	}
 
@@ -700,8 +700,8 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 保留小数方式
 	 * @return 累除后的结果。
 	 */
-	public Money divideBy(BigDecimal val, RoundingMode roundingMode) {
-		BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
+	public Money divideBy(final BigDecimal val, final RoundingMode roundingMode) {
+		final BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
 
 		this.cent = newCent.longValue();
 
@@ -720,13 +720,13 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @return 货币对象数组，数组的长度与分配份数相同，数组元素
 	 * 从大到小排列，所有货币对象的金额最多只相差1分。
 	 */
-	public Money[] allocate(int targets) {
-		Money[] results = new Money[targets];
+	public Money[] allocate(final int targets) {
+		final Money[] results = new Money[targets];
 
-		Money lowResult = newMoneyWithSameCurrency(cent / targets);
-		Money highResult = newMoneyWithSameCurrency(lowResult.cent + 1);
+		final Money lowResult = newMoneyWithSameCurrency(cent / targets);
+		final Money highResult = newMoneyWithSameCurrency(lowResult.cent + 1);
 
-		int remainder = (int) cent % targets;
+		final int remainder = (int) cent % targets;
 
 		for (int i = 0; i < remainder; i++) {
 			results[i] = highResult;
@@ -750,12 +750,12 @@ public class Money implements Serializable, Comparable<Money> {
 	 *               相对于总数的相对数。
 	 * @return 货币对象数组，数组的长度与分配比例数组的长度相同。
 	 */
-	public Money[] allocate(long[] ratios) {
-		Money[] results = new Money[ratios.length];
+	public Money[] allocate(final long[] ratios) {
+		final Money[] results = new Money[ratios.length];
 
 		long total = 0;
 
-		for (long element : ratios) {
+		for (final long element : ratios) {
 			total += element;
 		}
 
@@ -795,7 +795,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param other 另一货币对象
 	 * @throws IllegalArgumentException 如果本货币对象与另一货币对象币种不同。
 	 */
-	protected void assertSameCurrencyAs(Money other) {
+	protected void assertSameCurrencyAs(final Money other) {
 		if (!currency.equals(other.currency)) {
 			throw new IllegalArgumentException("Money math currency mismatch.");
 		}
@@ -808,7 +808,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 取整后的long型值
 	 */
-	protected long rounding(BigDecimal val, RoundingMode roundingMode) {
+	protected long rounding(final BigDecimal val, final RoundingMode roundingMode) {
 		return val.setScale(0, roundingMode).longValue();
 	}
 
@@ -818,8 +818,8 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param cent 金额，以分为单位
 	 * @return 一个新建的币种相同，具有指定金额的货币对象
 	 */
-	protected Money newMoneyWithSameCurrency(long cent) {
-		Money money = new Money(0, currency);
+	protected Money newMoneyWithSameCurrency(final long cent) {
+		final Money money = new Money(0, currency);
 
 		money.cent = cent;
 
@@ -848,7 +848,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 *
 	 * @param cent 分值
 	 */
-	public void setCent(long cent) {
+	public void setCent(final long cent) {
 		this.cent = cent;
 	}
 }

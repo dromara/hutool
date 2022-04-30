@@ -29,7 +29,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public CaseInsensitiveLinkedMap(int initialCapacity) {
+	public CaseInsensitiveLinkedMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -38,7 +38,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 *
 	 * @param m Map
 	 */
-	public CaseInsensitiveLinkedMap(Map<? extends K, ? extends V> m) {
+	public CaseInsensitiveLinkedMap(final Map<? extends K, ? extends V> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -49,7 +49,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 * @param m Map
 	 * @since 3.1.2
 	 */
-	public CaseInsensitiveLinkedMap(float loadFactor, Map<? extends K, ? extends V> m) {
+	public CaseInsensitiveLinkedMap(final float loadFactor, final Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
 		this.putAll(m);
 	}
@@ -60,7 +60,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public CaseInsensitiveLinkedMap(int initialCapacity, float loadFactor) {
+	public CaseInsensitiveLinkedMap(final int initialCapacity, final float loadFactor) {
 		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end

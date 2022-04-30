@@ -35,7 +35,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public CollectionValueMap(int initialCapacity) {
+	public CollectionValueMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -44,7 +44,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 *
 	 * @param m Map
 	 */
-	public CollectionValueMap(Map<? extends K, ? extends Collection<V>> m) {
+	public CollectionValueMap(final Map<? extends K, ? extends Collection<V>> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -54,7 +54,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 * @param loadFactor 加载因子
 	 * @param m          Map
 	 */
-	public CollectionValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m) {
+	public CollectionValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m) {
 		this(loadFactor, m, ArrayList::new);
 	}
 
@@ -64,7 +64,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor      加载因子
 	 */
-	public CollectionValueMap(int initialCapacity, float loadFactor) {
+	public CollectionValueMap(final int initialCapacity, final float loadFactor) {
 		this(initialCapacity, loadFactor, ArrayList::new);
 	}
 
@@ -76,7 +76,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 * @param collectionCreateFunc Map中值的集合创建函数
 	 * @since 5.7.4
 	 */
-	public CollectionValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m, Func0<Collection<V>> collectionCreateFunc) {
+	public CollectionValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m, final Func0<Collection<V>> collectionCreateFunc) {
 		this(m.size(), loadFactor, collectionCreateFunc);
 		this.putAll(m);
 	}
@@ -89,7 +89,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V
 	 * @param collectionCreateFunc Map中值的集合创建函数
 	 * @since 5.7.4
 	 */
-	public CollectionValueMap(int initialCapacity, float loadFactor, Func0<Collection<V>> collectionCreateFunc) {
+	public CollectionValueMap(final int initialCapacity, final float loadFactor, final Func0<Collection<V>> collectionCreateFunc) {
 		super(new HashMap<>(initialCapacity, loadFactor));
 		this.collectionCreateFunc = collectionCreateFunc;
 	}

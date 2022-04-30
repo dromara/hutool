@@ -32,7 +32,7 @@ public class LookupFactory {
 		try {
 			//noinspection JavaReflectionMemberAccess
 			privateLookupInMethod = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
-		} catch (NoSuchMethodException ignore) {
+		} catch (final NoSuchMethodException ignore) {
 			//ignore
 		}
 
@@ -42,7 +42,7 @@ public class LookupFactory {
 			try {
 				java8LookupConstructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
 				java8LookupConstructor.setAccessible(true);
-			} catch (NoSuchMethodException e) {
+			} catch (final NoSuchMethodException e) {
 				//可能是jdk8 以下版本
 				throw new IllegalStateException(
 						"There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.", e);
@@ -57,19 +57,19 @@ public class LookupFactory {
 	 * @param callerClass 被调用的类或接口
 	 * @return {@link MethodHandles.Lookup}
 	 */
-	public static MethodHandles.Lookup lookup(Class<?> callerClass) {
+	public static MethodHandles.Lookup lookup(final Class<?> callerClass) {
 		//使用反射,因为当前jdk可能不是java9或以上版本
 		if (privateLookupInMethod != null) {
 			try {
 				return (MethodHandles.Lookup) privateLookupInMethod.invoke(MethodHandles.class, callerClass, MethodHandles.lookup());
-			} catch (IllegalAccessException | InvocationTargetException e) {
+			} catch (final IllegalAccessException | InvocationTargetException e) {
 				throw new UtilException(e);
 			}
 		}
 		//jdk 8
 		try {
 			return java8LookupConstructor.newInstance(callerClass, ALLOWED_MODES);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IllegalStateException("no 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.", e);
 		}
 	}

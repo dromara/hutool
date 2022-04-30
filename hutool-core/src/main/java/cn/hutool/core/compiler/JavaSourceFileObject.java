@@ -33,7 +33,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	 *
 	 * @param uri  需要编译的文件uri
 	 */
-	protected JavaSourceFileObject(URI uri) {
+	protected JavaSourceFileObject(final URI uri) {
 		super(uri, Kind.SOURCE);
 	}
 
@@ -43,7 +43,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	 * @param className 需要编译的类名
 	 * @param code      需要编译的类源码
 	 */
-	protected JavaSourceFileObject(String className, String code, Charset charset) {
+	protected JavaSourceFileObject(final String className, final String code, final Charset charset) {
 		this(className, IoUtil.toStream(code, charset));
 	}
 
@@ -53,7 +53,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	 * @param name        需要编译的文件名
 	 * @param inputStream 输入流
 	 */
-	protected JavaSourceFileObject(String name, InputStream inputStream) {
+	protected JavaSourceFileObject(final String name, final InputStream inputStream) {
 		this(URLUtil.getStringURI(name.replace(CharUtil.DOT, CharUtil.SLASH) + Kind.SOURCE.extension));
 		this.inputStream = inputStream;
 	}
@@ -81,7 +81,7 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	 * @throws IOException IO异常
 	 */
 	@Override
-	public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+	public CharSequence getCharContent(final boolean ignoreEncodingErrors) throws IOException {
 		try(final InputStream in = openInputStream()){
 			return IoUtil.readUtf8(in);
 		}

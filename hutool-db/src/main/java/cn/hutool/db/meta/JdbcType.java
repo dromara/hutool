@@ -56,28 +56,28 @@ public enum JdbcType {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param code {@link java.sql.Types} 中对应的值
 	 */
-	JdbcType(int code) {
+	JdbcType(final int code) {
 		this.typeCode = code;
 	}
 
 	private static final Map<Integer, JdbcType> CODE_MAP = new ConcurrentHashMap<>(100, 1);
 	static {
-		for (JdbcType type : JdbcType.values()) {
+		for (final JdbcType type : JdbcType.values()) {
 			CODE_MAP.put(type.typeCode, type);
 		}
 	}
 
 	/**
 	 * 通过{@link java.sql.Types}中对应int值找到enum值
-	 * 
+	 *
 	 * @param code Jdbc type值
 	 * @return {@link JdbcType}
 	 */
-	public static JdbcType valueOf(int code) {
+	public static JdbcType valueOf(final int code) {
 		return CODE_MAP.get(code);
 	}
-	
+
 }

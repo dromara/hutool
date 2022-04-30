@@ -28,7 +28,7 @@ public class UrlResource implements Resource, Serializable{
 	 * @param uri URI
 	 * @since 5.7.21
 	 */
-	public UrlResource(URI uri) {
+	public UrlResource(final URI uri) {
 		this(URLUtil.url(uri), null);
 	}
 
@@ -36,7 +36,7 @@ public class UrlResource implements Resource, Serializable{
 	 * 构造
 	 * @param url URL
 	 */
-	public UrlResource(URL url) {
+	public UrlResource(final URL url) {
 		this(url, null);
 	}
 
@@ -45,7 +45,7 @@ public class UrlResource implements Resource, Serializable{
 	 * @param url URL，允许为空
 	 * @param name 资源名称
 	 */
-	public UrlResource(URL url, String name) {
+	public UrlResource(final URL url, final String name) {
 		this.url = url;
 		if(null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())){
 			this.lastModified = FileUtil.file(url).lastModified();

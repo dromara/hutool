@@ -25,7 +25,7 @@ public class BufferUtil {
 	 * @param end   结束位置（不包括）
 	 * @return 新的ByteBuffer
 	 */
-	public static ByteBuffer copy(ByteBuffer src, int start, int end) {
+	public static ByteBuffer copy(final ByteBuffer src, final int start, final int end) {
 		return copy(src, ByteBuffer.allocate(end - start));
 	}
 
@@ -36,7 +36,7 @@ public class BufferUtil {
 	 * @param dest 目标ByteBuffer
 	 * @return 目标ByteBuffer
 	 */
-	public static ByteBuffer copy(ByteBuffer src, ByteBuffer dest) {
+	public static ByteBuffer copy(final ByteBuffer src, final ByteBuffer dest) {
 		return copy(src, dest, Math.min(src.limit(), dest.remaining()));
 	}
 
@@ -48,7 +48,7 @@ public class BufferUtil {
 	 * @param length 长度
 	 * @return 目标ByteBuffer
 	 */
-	public static ByteBuffer copy(ByteBuffer src, ByteBuffer dest, int length) {
+	public static ByteBuffer copy(final ByteBuffer src, final ByteBuffer dest, final int length) {
 		return copy(src, src.position(), dest, dest.position(), length);
 	}
 
@@ -62,7 +62,7 @@ public class BufferUtil {
 	 * @param length    长度
 	 * @return 目标ByteBuffer
 	 */
-	public static ByteBuffer copy(ByteBuffer src, int srcStart, ByteBuffer dest, int destStart, int length) {
+	public static ByteBuffer copy(final ByteBuffer src, final int srcStart, final ByteBuffer dest, final int destStart, final int length) {
 		System.arraycopy(src.array(), srcStart, dest.array(), destStart, length);
 		return dest;
 	}
@@ -74,7 +74,7 @@ public class BufferUtil {
 	 * @return 字符串
 	 * @since 4.5.0
 	 */
-	public static String readUtf8Str(ByteBuffer buffer) {
+	public static String readUtf8Str(final ByteBuffer buffer) {
 		return readStr(buffer, CharsetUtil.UTF_8);
 	}
 
@@ -86,7 +86,7 @@ public class BufferUtil {
 	 * @return 字符串
 	 * @since 4.5.0
 	 */
-	public static String readStr(ByteBuffer buffer, Charset charset) {
+	public static String readStr(final ByteBuffer buffer, final Charset charset) {
 		return StrUtil.str(readBytes(buffer), charset);
 	}
 
@@ -96,9 +96,9 @@ public class BufferUtil {
 	 * @param buffer ByteBuffer
 	 * @return bytes
 	 */
-	public static byte[] readBytes(ByteBuffer buffer) {
+	public static byte[] readBytes(final ByteBuffer buffer) {
 		final int remaining = buffer.remaining();
-		byte[] ab = new byte[remaining];
+		final byte[] ab = new byte[remaining];
 		buffer.get(ab);
 		return ab;
 	}
@@ -111,12 +111,12 @@ public class BufferUtil {
 	 * @param maxLength 最大长度
 	 * @return bytes
 	 */
-	public static byte[] readBytes(ByteBuffer buffer, int maxLength) {
+	public static byte[] readBytes(final ByteBuffer buffer, int maxLength) {
 		final int remaining = buffer.remaining();
 		if (maxLength > remaining) {
 			maxLength = remaining;
 		}
-		byte[] ab = new byte[maxLength];
+		final byte[] ab = new byte[maxLength];
 		buffer.get(ab);
 		return ab;
 	}
@@ -129,8 +129,8 @@ public class BufferUtil {
 	 * @param end    结束位置
 	 * @return bytes
 	 */
-	public static byte[] readBytes(ByteBuffer buffer, int start, int end) {
-		byte[] bs = new byte[end - start];
+	public static byte[] readBytes(final ByteBuffer buffer, final int start, final int end) {
+		final byte[] bs = new byte[end - start];
 		System.arraycopy(buffer.array(), start, bs, 0, bs.length);
 		return bs;
 	}
@@ -141,7 +141,7 @@ public class BufferUtil {
 	 * @param buffer {@link ByteBuffer}
 	 * @return 末尾位置，未找到或达到最大长度返回-1
 	 */
-	public static int lineEnd(ByteBuffer buffer) {
+	public static int lineEnd(final ByteBuffer buffer) {
 		return lineEnd(buffer, buffer.remaining());
 	}
 
@@ -158,8 +158,8 @@ public class BufferUtil {
 	 * @param maxLength 读取最大长度
 	 * @return 末尾位置，未找到或达到最大长度返回-1
 	 */
-	public static int lineEnd(ByteBuffer buffer, int maxLength) {
-		int primitivePosition = buffer.position();
+	public static int lineEnd(final ByteBuffer buffer, final int maxLength) {
+		final int primitivePosition = buffer.position();
 		boolean canEnd = false;
 		int charIndex = primitivePosition;
 		byte b;
@@ -201,12 +201,12 @@ public class BufferUtil {
 	 * @param charset 编码
 	 * @return 一行
 	 */
-	public static String readLine(ByteBuffer buffer, Charset charset) {
+	public static String readLine(final ByteBuffer buffer, final Charset charset) {
 		final int startPosition = buffer.position();
 		final int endPosition = lineEnd(buffer);
 
 		if (endPosition > startPosition) {
-			byte[] bs = readBytes(buffer, startPosition, endPosition);
+			final byte[] bs = readBytes(buffer, startPosition, endPosition);
 			return StrUtil.str(bs, charset);
 		} else if (endPosition == startPosition) {
 			return StrUtil.EMPTY;
@@ -222,7 +222,7 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer create(byte[] data) {
+	public static ByteBuffer create(final byte[] data) {
 		return ByteBuffer.wrap(data);
 	}
 
@@ -234,7 +234,7 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer create(CharSequence data, Charset charset) {
+	public static ByteBuffer create(final CharSequence data, final Charset charset) {
 		return create(StrUtil.bytes(data, charset));
 	}
 
@@ -245,7 +245,7 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer createUtf8(CharSequence data) {
+	public static ByteBuffer createUtf8(final CharSequence data) {
 		return create(StrUtil.utf8Bytes(data));
 	}
 
@@ -256,7 +256,7 @@ public class BufferUtil {
 	 * @return {@link CharBuffer}
 	 * @since 5.5.7
 	 */
-	public static CharBuffer createCharBuffer(int capacity) {
+	public static CharBuffer createCharBuffer(final int capacity) {
 		return CharBuffer.allocate(capacity);
 	}
 }

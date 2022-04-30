@@ -19,19 +19,19 @@ public class IssueI1AU86Test {
 
 	@Test
 	public void toListTest() {
-		List<String> redisList = CollUtil.newArrayList(
+		final List<String> redisList = CollUtil.newArrayList(
 				"{\"updateDate\":1583376342000,\"code\":\"move\",\"id\":1,\"sort\":1,\"name\":\"电影大全\"}",
 				"{\"updateDate\":1583378882000,\"code\":\"zy\",\"id\":3,\"sort\":5,\"name\":\"综艺会\"}"
 		);
 
 		// 手动parse
 		final JSONArray jsonArray = new JSONArray();
-		for (String str : redisList) {
+		for (final String str : redisList) {
 			jsonArray.add(JSONUtil.parse(str));
 		}
 
 		final List<Vcc> vccs = jsonArray.toList(Vcc.class);
-		for (Vcc vcc : vccs) {
+		for (final Vcc vcc : vccs) {
 			Assert.assertNotNull(vcc);
 		}
 	}

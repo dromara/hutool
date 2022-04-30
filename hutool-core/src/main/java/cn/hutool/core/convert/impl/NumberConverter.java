@@ -50,7 +50,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	 *
 	 * @param clazz 需要转换的数字类型，默认 {@link Number}
 	 */
-	public NumberConverter(Class<? extends Number> clazz) {
+	public NumberConverter(final Class<? extends Number> clazz) {
 		this.targetType = (null == clazz) ? Number.class : clazz;
 	}
 
@@ -61,13 +61,13 @@ public class NumberConverter extends AbstractConverter<Number> {
 	}
 
 	@Override
-	protected Number convertInternal(Object value) {
+	protected Number convertInternal(final Object value) {
 		return convert(value, this.targetType, this::convertToStr);
 	}
 
 	@Override
-	protected String convertToStr(Object value) {
-		String result = StrUtil.trim(super.convertToStr(value));
+	protected String convertToStr(final Object value) {
+		final String result = StrUtil.trim(super.convertToStr(value));
 		if (StrUtil.isNotEmpty(result)) {
 			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
 			if (c == 'D' || c == 'L' || c == 'F') {
@@ -95,7 +95,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	 * @return 转换后的数字
 	 * @since 5.5.0
 	 */
-	protected static Number convert(Object value, Class<? extends Number> targetType, Function<Object, String> toStrFunc) {
+	protected static Number convert(final Object value, final Class<? extends Number> targetType, final Function<Object, String> toStrFunc) {
 		// 枚举转换为数字默认为其顺序
 		if (value instanceof Enum) {
 			return convert(((Enum<?>) value).ordinal(), targetType, toStrFunc);
@@ -115,7 +115,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 			final String valueStr = toStrFunc.apply(value);
 			try{
 				return StrUtil.isBlank(valueStr) ? null : Byte.valueOf(valueStr);
-			} catch (NumberFormatException e){
+			} catch (final NumberFormatException e){
 				return NumberUtil.parseNumber(valueStr).byteValue();
 			}
 		} else if (Short.class == targetType) {
@@ -127,7 +127,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 			final String valueStr = toStrFunc.apply((value));
 			try{
 				return StrUtil.isBlank(valueStr) ? null : Short.valueOf(valueStr);
-			} catch (NumberFormatException e){
+			} catch (final NumberFormatException e){
 				return NumberUtil.parseNumber(valueStr).shortValue();
 			}
 		} else if (Integer.class == targetType) {
@@ -226,7 +226,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	 * @param toStrFunc 转换为字符串的函数规则
 	 * @return 结果
 	 */
-	private static BigDecimal toBigDecimal(Object value, Function<Object, String> toStrFunc) {
+	private static BigDecimal toBigDecimal(final Object value, final Function<Object, String> toStrFunc) {
 		if (value instanceof Number) {
 			return NumberUtil.toBigDecimal((Number) value);
 		} else if (value instanceof Boolean) {
@@ -246,7 +246,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	 * @param toStrFunc 转换为字符串的函数规则
 	 * @return 结果
 	 */
-	private static BigInteger toBigInteger(Object value, Function<Object, String> toStrFunc) {
+	private static BigInteger toBigInteger(final Object value, final Function<Object, String> toStrFunc) {
 		if (value instanceof Long) {
 			return BigInteger.valueOf((Long) value);
 		} else if (value instanceof Boolean) {

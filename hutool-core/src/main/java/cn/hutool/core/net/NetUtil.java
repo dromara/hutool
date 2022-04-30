@@ -68,7 +68,7 @@ public class NetUtil {
 	 * @return IP V4 地址
 	 * @see Ipv4Util#longToIpv4(long)
 	 */
-	public static String longToIpv4(long longIP) {
+	public static String longToIpv4(final long longIP) {
 		return Ipv4Util.longToIpv4(longIP);
 	}
 
@@ -79,7 +79,7 @@ public class NetUtil {
 	 * @return long值
 	 * @see Ipv4Util#ipv4ToLong(String)
 	 */
-	public static long ipv4ToLong(String strIP) {
+	public static long ipv4ToLong(final String strIP) {
 		return Ipv4Util.ipv4ToLong(strIP);
 	}
 
@@ -90,13 +90,13 @@ public class NetUtil {
 	 * @return 大整数, 如发生异常返回 null
 	 * @since 5.5.7
 	 */
-	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+	public static BigInteger ipv6ToBitInteger(final String IPv6Str) {
 		try {
-			InetAddress address = InetAddress.getByName(IPv6Str);
+			final InetAddress address = InetAddress.getByName(IPv6Str);
 			if (address instanceof Inet6Address) {
 				return new BigInteger(1, address.getAddress());
 			}
-		} catch (UnknownHostException ignore) {
+		} catch (final UnknownHostException ignore) {
 		}
 		return null;
 	}
@@ -108,10 +108,10 @@ public class NetUtil {
 	 * @return IPv6字符串, 如发生异常返回 null
 	 * @since 5.5.7
 	 */
-	public static String bigIntegerToIPv6(BigInteger bigInteger) {
+	public static String bigIntegerToIPv6(final BigInteger bigInteger) {
 		try {
 			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
-		} catch (UnknownHostException ignore) {
+		} catch (final UnknownHostException ignore) {
 			return null;
 		}
 	}
@@ -123,22 +123,22 @@ public class NetUtil {
 	 * @param port 被检测的端口
 	 * @return 是否可用
 	 */
-	public static boolean isUsableLocalPort(int port) {
+	public static boolean isUsableLocalPort(final int port) {
 		if (false == isValidPort(port)) {
 			// 给定的IP未在指定端口范围中
 			return false;
 		}
 
 		// issue#765@Github, 某些绑定非127.0.0.1的端口无法被检测到
-		try (ServerSocket ss = new ServerSocket(port)) {
+		try (final ServerSocket ss = new ServerSocket(port)) {
 			ss.setReuseAddress(true);
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			return false;
 		}
 
-		try (DatagramSocket ds = new DatagramSocket(port)) {
+		try (final DatagramSocket ds = new DatagramSocket(port)) {
 			ds.setReuseAddress(true);
-		} catch (IOException ignored) {
+		} catch (final IOException ignored) {
 			return false;
 		}
 
@@ -152,7 +152,7 @@ public class NetUtil {
 	 * @param port 端口号
 	 * @return 是否有效
 	 */
-	public static boolean isValidPort(int port) {
+	public static boolean isValidPort(final int port) {
 		// 有效端口是0～65535
 		return port >= 0 && port <= PORT_RANGE_MAX;
 	}
@@ -178,7 +178,7 @@ public class NetUtil {
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
-	public static int getUsableLocalPort(int minPort) {
+	public static int getUsableLocalPort(final int minPort) {
 		return getUsableLocalPort(minPort, PORT_RANGE_MAX);
 	}
 
@@ -192,7 +192,7 @@ public class NetUtil {
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
-	public static int getUsableLocalPort(int minPort, int maxPort) {
+	public static int getUsableLocalPort(final int minPort, final int maxPort) {
 		final int maxPortExclude = maxPort + 1;
 		int randomPort;
 		for (int i = minPort; i < maxPortExclude; i++) {
@@ -215,7 +215,7 @@ public class NetUtil {
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
-	public static TreeSet<Integer> getUsableLocalPorts(int numRequested, int minPort, int maxPort) {
+	public static TreeSet<Integer> getUsableLocalPorts(final int numRequested, final int minPort, final int maxPort) {
 		final TreeSet<Integer> availablePorts = new TreeSet<>();
 		int attemptCount = 0;
 		while ((++attemptCount <= numRequested + 100) && availablePorts.size() < numRequested) {
@@ -243,7 +243,7 @@ public class NetUtil {
 	 * @return 是否为内网IP
 	 * @see Ipv4Util#isInnerIP(String)
 	 */
-	public static boolean isInnerIP(String ipAddress) {
+	public static boolean isInnerIP(final String ipAddress) {
 		return Ipv4Util.isInnerIP(ipAddress);
 	}
 
@@ -254,11 +254,11 @@ public class NetUtil {
 	 * @param relativePath     相对路径
 	 * @return 绝对URL
 	 */
-	public static String toAbsoluteUrl(String absoluteBasePath, String relativePath) {
+	public static String toAbsoluteUrl(final String absoluteBasePath, final String relativePath) {
 		try {
-			URL absoluteUrl = new URL(absoluteBasePath);
+			final URL absoluteUrl = new URL(absoluteBasePath);
 			return new URL(absoluteUrl, relativePath).toString();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "To absolute url [{}] base [{}] error!", relativePath, absoluteBasePath);
 		}
 	}
@@ -269,7 +269,7 @@ public class NetUtil {
 	 * @param ip IP地址
 	 * @return 隐藏部分后的IP
 	 */
-	public static String hideIpPart(String ip) {
+	public static String hideIpPart(final String ip) {
 		return StrUtil.builder(ip.length()).append(ip, 0, ip.lastIndexOf(".") + 1).append("*").toString();
 	}
 
@@ -279,7 +279,7 @@ public class NetUtil {
 	 * @param ip IP地址
 	 * @return 隐藏部分后的IP
 	 */
-	public static String hideIpPart(long ip) {
+	public static String hideIpPart(final long ip) {
 		return hideIpPart(longToIpv4(ip));
 	}
 
@@ -292,14 +292,14 @@ public class NetUtil {
 	 * @param defaultPort 默认端口
 	 * @return InetSocketAddress
 	 */
-	public static InetSocketAddress buildInetSocketAddress(String host, int defaultPort) {
+	public static InetSocketAddress buildInetSocketAddress(String host, final int defaultPort) {
 		if (StrUtil.isBlank(host)) {
 			host = LOCAL_IP;
 		}
 
-		String destHost;
-		int port;
-		int index = host.indexOf(":");
+		final String destHost;
+		final int port;
+		final int index = host.indexOf(":");
 		if (index != -1) {
 			// host:port形式
 			destHost = host.substring(0, index);
@@ -318,10 +318,10 @@ public class NetUtil {
 	 * @param hostName HOST
 	 * @return ip address or hostName if UnknownHostException
 	 */
-	public static String getIpByHost(String hostName) {
+	public static String getIpByHost(final String hostName) {
 		try {
 			return InetAddress.getByName(hostName).getHostAddress();
-		} catch (UnknownHostException e) {
+		} catch (final UnknownHostException e) {
 			return hostName;
 		}
 	}
@@ -333,11 +333,11 @@ public class NetUtil {
 	 * @return 网卡，未找到返回{@code null}
 	 * @since 5.0.7
 	 */
-	public static NetworkInterface getNetworkInterface(String name) {
-		Enumeration<NetworkInterface> networkInterfaces;
+	public static NetworkInterface getNetworkInterface(final String name) {
+		final Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			return null;
 		}
 
@@ -359,10 +359,10 @@ public class NetUtil {
 	 * @since 3.0.1
 	 */
 	public static Collection<NetworkInterface> getNetworkInterfaces() {
-		Enumeration<NetworkInterface> networkInterfaces;
+		final Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			return null;
 		}
 
@@ -401,9 +401,9 @@ public class NetUtil {
 	 * @return IP地址字符串列表
 	 * @since 4.5.17
 	 */
-	public static LinkedHashSet<String> toIpList(Set<InetAddress> addressList) {
+	public static LinkedHashSet<String> toIpList(final Set<InetAddress> addressList) {
 		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-		for (InetAddress address : addressList) {
+		for (final InetAddress address : addressList) {
 			ipSet.add(address.getHostAddress());
 		}
 
@@ -428,11 +428,11 @@ public class NetUtil {
 	 * @return 过滤后的地址对象列表
 	 * @since 4.5.17
 	 */
-	public static LinkedHashSet<InetAddress> localAddressList(Filter<InetAddress> addressFilter) {
-		Enumeration<NetworkInterface> networkInterfaces;
+	public static LinkedHashSet<InetAddress> localAddressList(final Filter<InetAddress> addressFilter) {
+		final Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			throw new UtilException(e);
 		}
 
@@ -467,7 +467,7 @@ public class NetUtil {
 	 * @since 3.0.7
 	 */
 	public static String getLocalhostStr() {
-		InetAddress localhost = getLocalhost();
+		final InetAddress localhost = getLocalhost();
 		if (null != localhost) {
 			return localhost.getHostAddress();
 		}
@@ -499,7 +499,7 @@ public class NetUtil {
 
 		if (CollUtil.isNotEmpty(localAddressList)) {
 			InetAddress address2 = null;
-			for (InetAddress inetAddress : localAddressList) {
+			for (final InetAddress inetAddress : localAddressList) {
 				if (false == inetAddress.isSiteLocalAddress()) {
 					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
 					return inetAddress;
@@ -515,7 +515,7 @@ public class NetUtil {
 
 		try {
 			return InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
+		} catch (final UnknownHostException e) {
 			// ignore
 		}
 
@@ -537,7 +537,7 @@ public class NetUtil {
 	 * @param inetAddress {@link InetAddress}
 	 * @return MAC地址，用-分隔
 	 */
-	public static String getMacAddress(InetAddress inetAddress) {
+	public static String getMacAddress(final InetAddress inetAddress) {
 		return getMacAddress(inetAddress, "-");
 	}
 
@@ -548,7 +548,7 @@ public class NetUtil {
 	 * @param separator   分隔符，推荐使用“-”或者“:”
 	 * @return MAC地址，用-分隔
 	 */
-	public static String getMacAddress(InetAddress inetAddress, String separator) {
+	public static String getMacAddress(final InetAddress inetAddress, final String separator) {
 		if (null == inetAddress) {
 			return null;
 		}
@@ -578,7 +578,7 @@ public class NetUtil {
 	 * @return 硬件地址
 	 * @since 5.7.3
 	 */
-	public static byte[] getHardwareAddress(InetAddress inetAddress) {
+	public static byte[] getHardwareAddress(final InetAddress inetAddress) {
 		if (null == inetAddress) {
 			return null;
 		}
@@ -588,7 +588,7 @@ public class NetUtil {
 			if (null != networkInterface) {
 				return networkInterface.getHardwareAddress();
 			}
-		} catch (SocketException e) {
+		} catch (final SocketException e) {
 			throw new UtilException(e);
 		}
 		return null;
@@ -635,7 +635,7 @@ public class NetUtil {
 	 * @return {@link InetSocketAddress}
 	 * @since 3.3.0
 	 */
-	public static InetSocketAddress createAddress(String host, int port) {
+	public static InetSocketAddress createAddress(final String host, final int port) {
 		if (StrUtil.isBlank(host)) {
 			return new InetSocketAddress(port);
 		}
@@ -652,11 +652,11 @@ public class NetUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.0
 	 */
-	public static void netCat(String host, int port, boolean isBlock, ByteBuffer data) throws IORuntimeException {
-		try (SocketChannel channel = SocketChannel.open(createAddress(host, port))) {
+	public static void netCat(final String host, final int port, final boolean isBlock, final ByteBuffer data) throws IORuntimeException {
+		try (final SocketChannel channel = SocketChannel.open(createAddress(host, port))) {
 			channel.configureBlocking(isBlock);
 			channel.write(data);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -670,13 +670,13 @@ public class NetUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.0
 	 */
-	public static void netCat(String host, int port, byte[] data) throws IORuntimeException {
+	public static void netCat(final String host, final int port, final byte[] data) throws IORuntimeException {
 		OutputStream out = null;
-		try (Socket socket = new Socket(host, port)) {
+		try (final Socket socket = new Socket(host, port)) {
 			out = socket.getOutputStream();
 			out.write(data);
 			out.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(out);
@@ -692,14 +692,14 @@ public class NetUtil {
 	 * @return 是否在范围内
 	 * @since 4.0.6
 	 */
-	public static boolean isInRange(String ip, String cidr) {
+	public static boolean isInRange(final String ip, final String cidr) {
 		final int maskSplitMarkIndex = cidr.lastIndexOf(Ipv4Util.IP_MASK_SPLIT_MARK);
 		if (maskSplitMarkIndex < 0) {
 			throw new IllegalArgumentException("Invalid cidr: " + cidr);
 		}
 
 		final long mask = (-1L << 32 - Integer.parseInt(cidr.substring(maskSplitMarkIndex + 1)));
-		long cidrIpAddr = ipv4ToLong(cidr.substring(0, maskSplitMarkIndex));
+		final long cidrIpAddr = ipv4ToLong(cidr.substring(0, maskSplitMarkIndex));
 
 		return (ipv4ToLong(ip) & mask) == (cidrIpAddr & mask);
 	}
@@ -711,7 +711,7 @@ public class NetUtil {
 	 * @return puny code
 	 * @since 4.1.22
 	 */
-	public static String idnToASCII(String unicode) {
+	public static String idnToASCII(final String unicode) {
 		return IDN.toASCII(unicode);
 	}
 
@@ -726,7 +726,7 @@ public class NetUtil {
 		// 多级反向代理检测
 		if (ip != null && ip.indexOf(",") > 0) {
 			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
+			for (final String subIp : ips) {
 				if (false == isUnknown(subIp)) {
 					ip = subIp;
 					break;
@@ -743,7 +743,7 @@ public class NetUtil {
 	 * @return 是否未知
 	 * @since 5.2.6
 	 */
-	public static boolean isUnknown(String checkString) {
+	public static boolean isUnknown(final String checkString) {
 		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
@@ -753,7 +753,7 @@ public class NetUtil {
 	 * @param ip IP地址
 	 * @return 返回是否ping通
 	 */
-	public static boolean ping(String ip) {
+	public static boolean ping(final String ip) {
 		return ping(ip, 200);
 	}
 
@@ -764,10 +764,10 @@ public class NetUtil {
 	 * @param timeout 检测超时（毫秒）
 	 * @return 是否ping通
 	 */
-	public static boolean ping(String ip, int timeout) {
+	public static boolean ping(final String ip, final int timeout) {
 		try {
 			return InetAddress.getByName(ip).isReachable(timeout); // 当返回值是true时，说明host是可用的，false则不可。
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			return false;
 		}
 	}
@@ -779,7 +779,7 @@ public class NetUtil {
 	 * @return cookie字符串
 	 * @since 5.2.6
 	 */
-	public static List<HttpCookie> parseCookies(String cookieStr) {
+	public static List<HttpCookie> parseCookies(final String cookieStr) {
 		if (StrUtil.isBlank(cookieStr)) {
 			return Collections.emptyList();
 		}
@@ -794,11 +794,11 @@ public class NetUtil {
 	 * @return 远程端口是否开启
 	 * @since 5.3.2
 	 */
-	public static boolean isOpen(InetSocketAddress address, int timeout) {
-		try (Socket sc = new Socket()) {
+	public static boolean isOpen(final InetSocketAddress address, final int timeout) {
+		try (final Socket sc = new Socket()) {
 			sc.connect(address, timeout);
 			return true;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return false;
 		}
 	}
@@ -810,7 +810,7 @@ public class NetUtil {
 	 * @param pass 密码，考虑安全，此处不使用String
 	 * @since 5.7.2
 	 */
-	public static void setGlobalAuthenticator(String user, char[] pass) {
+	public static void setGlobalAuthenticator(final String user, final char[] pass) {
 		setGlobalAuthenticator(new UserPassAuthenticator(user, pass));
 	}
 
@@ -820,7 +820,7 @@ public class NetUtil {
 	 * @param authenticator 验证器
 	 * @since 5.7.2
 	 */
-	public static void setGlobalAuthenticator(Authenticator authenticator) {
+	public static void setGlobalAuthenticator(final Authenticator authenticator) {
 		Authenticator.setDefault(authenticator);
 	}
 
@@ -836,15 +836,15 @@ public class NetUtil {
 	 * @return DNS信息
 	 * @since 5.7.7
 	 */
-	public static List<String> getDnsInfo(String hostName, String... attrNames) {
+	public static List<String> getDnsInfo(final String hostName, final String... attrNames) {
 		final String uri = StrUtil.addPrefixIfNot(hostName, "dns:");
 		final Attributes attributes = JNDIUtil.getAttributes(uri, attrNames);
 
 		final List<String> infos = new ArrayList<>();
-		for (Attribute attribute : new EnumerationIter<>(attributes.getAll())) {
+		for (final Attribute attribute : new EnumerationIter<>(attributes.getAll())) {
 			try {
 				infos.add((String) attribute.get());
-			} catch (NamingException ignore) {
+			} catch (final NamingException ignore) {
 				//ignore
 			}
 		}

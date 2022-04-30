@@ -23,8 +23,8 @@ public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, Rep
 	 *
 	 * @param strReplacers 字符串替换器
 	 */
-	public ReplacerChain(StrReplacer... strReplacers) {
-		for (StrReplacer strReplacer : strReplacers) {
+	public ReplacerChain(final StrReplacer... strReplacers) {
+		for (final StrReplacer strReplacer : strReplacers) {
 			addChain(strReplacer);
 		}
 	}
@@ -36,15 +36,15 @@ public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, Rep
 	}
 
 	@Override
-	public ReplacerChain addChain(StrReplacer element) {
+	public ReplacerChain addChain(final StrReplacer element) {
 		replacers.add(element);
 		return this;
 	}
 
 	@Override
-	protected int replace(CharSequence str, int pos, StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
 		int consumed = 0;
-		for (StrReplacer strReplacer : replacers) {
+		for (final StrReplacer strReplacer : replacers) {
 			consumed = strReplacer.replace(str, pos, out);
 			if (0 != consumed) {
 				return consumed;

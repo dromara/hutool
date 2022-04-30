@@ -43,7 +43,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	 * @param limit           限制数量，小于等于0表示无限制
 	 * @param ignoreEmpty     是否忽略""
 	 */
-	public SplitIter(CharSequence text, TextFinder separatorFinder, int limit, boolean ignoreEmpty) {
+	public SplitIter(final CharSequence text, final TextFinder separatorFinder, final int limit, final boolean ignoreEmpty) {
 		Assert.notNull(text, "Text must be not null!");
 		this.text = text.toString();
 		this.finder = separatorFinder.setText(text);
@@ -114,7 +114,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	 * @param trim 是否去除元素两边空格
 	 * @return 切分后的列表
 	 */
-	public String[] toArray(boolean trim) {
+	public String[] toArray(final boolean trim) {
 		return toList(trim).toArray(new String[0]);
 	}
 
@@ -124,7 +124,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	 * @param trim 是否去除元素两边空格
 	 * @return 切分后的列表
 	 */
-	public List<String> toList(boolean trim) {
+	public List<String> toList(final boolean trim) {
 		return toList((str) -> trim ? StrUtil.trim(str) : str);
 	}
 
@@ -135,7 +135,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	 * @param mapping 字符串映射函数
 	 * @return 切分后的列表
 	 */
-	public <T> List<T> toList(Function<String, T> mapping) {
+	public <T> List<T> toList(final Function<String, T> mapping) {
 		final List<T> result = new ArrayList<>();
 		while (this.hasNext()) {
 			final T apply = mapping.apply(this.next());

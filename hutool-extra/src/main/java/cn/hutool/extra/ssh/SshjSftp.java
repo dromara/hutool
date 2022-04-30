@@ -41,7 +41,7 @@ public class SshjSftp extends AbstractFtp {
 	 *
 	 * @param sshHost 主机
 	 */
-	public SshjSftp(String sshHost) {
+	public SshjSftp(final String sshHost) {
 		this(new FtpConfig(sshHost, 22, null, null, CharsetUtil.UTF_8));
 	}
 
@@ -52,7 +52,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshUser 用户名
 	 * @param sshPass 密码
 	 */
-	public SshjSftp(String sshHost, String sshUser, String sshPass) {
+	public SshjSftp(final String sshHost, final String sshUser, final String sshPass) {
 		this(new FtpConfig(sshHost, 22, sshUser, sshPass, CharsetUtil.UTF_8));
 	}
 
@@ -64,7 +64,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshUser 用户名
 	 * @param sshPass 密码
 	 */
-	public SshjSftp(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public SshjSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, CharsetUtil.UTF_8));
 	}
 
@@ -77,7 +77,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param sshPass 密码
 	 * @param charset 编码
 	 */
-	public SshjSftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
+	public SshjSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
 		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
 	}
 
@@ -87,7 +87,7 @@ public class SshjSftp extends AbstractFtp {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	protected SshjSftp(FtpConfig config) {
+	protected SshjSftp(final FtpConfig config) {
 		super(config);
 		init();
 	}
@@ -106,7 +106,7 @@ public class SshjSftp extends AbstractFtp {
 			ssh.authPassword(ftpConfig.getUser(), ftpConfig.getPassword());
 			ssh.setRemoteCharset(ftpConfig.getCharset());
 			this.sftp = ssh.newSFTPClient();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException("sftp 初始化失败.", e);
 		}
 	}
@@ -118,7 +118,7 @@ public class SshjSftp extends AbstractFtp {
 		}
 		try {
 			this.cd(StrUtil.SLASH);
-		} catch (FtpException e) {
+		} catch (final FtpException e) {
 			close();
 			init();
 		}
@@ -126,10 +126,10 @@ public class SshjSftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean cd(String directory) {
-		String exec = String.format("cd %s", directory);
+	public boolean cd(final String directory) {
+		final String exec = String.format("cd %s", directory);
 		command(exec);
-		String pwd = pwd();
+		final String pwd = pwd();
 		return pwd.equals(directory);
 	}
 
@@ -139,21 +139,21 @@ public class SshjSftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean mkdir(String dir) {
+	public boolean mkdir(final String dir) {
 		try {
 			sftp.mkdir(dir);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 		return containsFile(dir);
 	}
 
 	@Override
-	public List<String> ls(String path) {
-		List<RemoteResourceInfo> infoList;
+	public List<String> ls(final String path) {
+		final List<RemoteResourceInfo> infoList;
 		try {
 			infoList = sftp.ls(path);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 		if (CollUtil.isNotEmpty(infoList)) {
@@ -163,47 +163,47 @@ public class SshjSftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean delFile(String path) {
+	public boolean delFile(final String path) {
 		try {
 			sftp.rm(path);
 			return !containsFile(path);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 	}
 
 	@Override
-	public boolean delDir(String dirPath) {
+	public boolean delDir(final String dirPath) {
 		try {
 			sftp.rmdir(dirPath);
 			return !containsFile(dirPath);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 	}
 
 	@Override
-	public boolean upload(String destPath, File file) {
+	public boolean upload(final String destPath, final File file) {
 		try {
 			sftp.put(new FileSystemFile(file), destPath);
 			return containsFile(destPath);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 	}
 
 	@Override
-	public void download(String path, File outFile) {
+	public void download(final String path, final File outFile) {
 		try {
 			sftp.get(path, new FileSystemFile(outFile));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 	}
 
 	@Override
-	public void recursiveDownloadFolder(String sourcePath, File destDir) {
-		List<String> files = ls(sourcePath);
+	public void recursiveDownloadFolder(final String sourcePath, final File destDir) {
+		final List<String> files = ls(sourcePath);
 		if (files != null && !files.isEmpty()) {
 			files.forEach(path -> download(sourcePath + "/" + path, destDir));
 		}
@@ -214,7 +214,7 @@ public class SshjSftp extends AbstractFtp {
 		try {
 			sftp.close();
 			ssh.disconnect();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FtpException(e);
 		}
 	}
@@ -227,11 +227,11 @@ public class SshjSftp extends AbstractFtp {
 	 * @author youyongkun
 	 * @since 5.7.18
 	 */
-	public boolean containsFile(String fileDir) {
+	public boolean containsFile(final String fileDir) {
 		try {
 			sftp.lstat(fileDir);
 			return true;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return false;
 		}
 	}
@@ -245,14 +245,14 @@ public class SshjSftp extends AbstractFtp {
 	 * @author youyongkun
 	 * @since 5.7.19
 	 */
-	public String command(String exec) {
+	public String command(final String exec) {
 		Session session = null;
 		try {
 			session = ssh.startSession();
 			final Session.Command command = session.exec(exec);
-			InputStream inputStream = command.getInputStream();
+			final InputStream inputStream = command.getInputStream();
 			return IoUtil.read(inputStream, DEFAULT_CHARSET);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new FtpException(e);
 		} finally {
 			IoUtil.close(session);

@@ -51,7 +51,7 @@ public enum DataUnit {
 	private final DataSize size;
 
 
-	DataUnit(String suffix, DataSize size) {
+	DataUnit(final String suffix, final DataSize size) {
 		this.suffix = suffix;
 		this.size = size;
 	}
@@ -67,8 +67,8 @@ public enum DataUnit {
 	 * @return 匹配到的{@link DataUnit}
 	 * @throws IllegalArgumentException 后缀无法识别报错
 	 */
-	public static DataUnit fromSuffix(String suffix) {
-		for (DataUnit candidate : values()) {
+	public static DataUnit fromSuffix(final String suffix) {
+		for (final DataUnit candidate : values()) {
 			// 支持类似于 3MB，3M，3m等写法
 			if (StrUtil.startWithIgnoreCase(candidate.suffix, suffix)) {
 				return candidate;

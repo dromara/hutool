@@ -10,28 +10,28 @@ public class CharSequenceUtilTest {
 
 	@Test
 	public void replaceTest() {
-		String actual = CharSequenceUtil.replace("SSM15930297701BeryAllen", Pattern.compile("[0-9]"), matcher -> "");
+		final String actual = CharSequenceUtil.replace("SSM15930297701BeryAllen", Pattern.compile("[0-9]"), matcher -> "");
 		Assert.assertEquals("SSMBeryAllen", actual);
 	}
 
 	@Test
 	public void replaceTest2() {
 		// https://gitee.com/dromara/hutool/issues/I4M16G
-		String replace = "#{A}";
-		String result = CharSequenceUtil.replace(replace, "#{AAAAAAA}", "1");
+		final String replace = "#{A}";
+		final String result = CharSequenceUtil.replace(replace, "#{AAAAAAA}", "1");
 		Assert.assertEquals(replace, result);
 	}
 
 	@Test
 	public void replaceByStrTest() {
-		String replace = "SSM15930297701BeryAllen";
-		String result = CharSequenceUtil.replace(replace, 5, 12, "***");
+		final String replace = "SSM15930297701BeryAllen";
+		final String result = CharSequenceUtil.replace(replace, 5, 12, "***");
 		Assert.assertEquals("SSM15***01BeryAllen", result);
 	}
 
 	@Test
 	public void addPrefixIfNotTest() {
-		String str = "hutool";
+		final String str = "hutool";
 		String result = CharSequenceUtil.addPrefixIfNot(str, "hu");
 		Assert.assertEquals(str, result);
 
@@ -41,7 +41,7 @@ public class CharSequenceUtilTest {
 
 	@Test
 	public void addSuffixIfNotTest() {
-		String str = "hutool";
+		final String str = "hutool";
 		String result = CharSequenceUtil.addSuffixIfNot(str, "tool");
 		Assert.assertEquals(str, result);
 
@@ -89,7 +89,7 @@ public class CharSequenceUtilTest {
 	@Test
 	public void subPreGbkTest() {
 		// https://gitee.com/dromara/hutool/issues/I4JO2E
-		String s = "华硕K42Intel酷睿i31代2G以下独立显卡不含机械硬盘固态硬盘120GB-192GB4GB-6GB";
+		final String s = "华硕K42Intel酷睿i31代2G以下独立显卡不含机械硬盘固态硬盘120GB-192GB4GB-6GB";
 
 		String v = CharSequenceUtil.subPreGbk(s, 40, false);
 		Assert.assertEquals(39, v.getBytes(CharsetUtil.GBK).length);

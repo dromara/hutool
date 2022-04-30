@@ -38,7 +38,7 @@ public class DbConfig {
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public DbConfig(String url, String user, String pass) {
+	public DbConfig(final String url, final String user, final String pass) {
 		init(url, user, pass);
 	}
 	//-------------------------------------------------------------------- Constructor end
@@ -50,14 +50,14 @@ public class DbConfig {
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public void init(String url, String user, String pass) {
+	public void init(final String url, final String user, final String pass) {
 		this.url = url;
 		this.user = user;
 		this.pass = pass;
 		this.driver = DriverUtil.identifyDriver(url);
 		try {
 			Class.forName(this.driver);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new DbRuntimeException(e, "Get jdbc driver from [{}] error!", url);
 		}
 	}
@@ -67,7 +67,7 @@ public class DbConfig {
 		return driver;
 	}
 
-	public void setDriver(String driver) {
+	public void setDriver(final String driver) {
 		this.driver = driver;
 	}
 
@@ -75,7 +75,7 @@ public class DbConfig {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
@@ -83,7 +83,7 @@ public class DbConfig {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(final String user) {
 		this.user = user;
 	}
 
@@ -91,7 +91,7 @@ public class DbConfig {
 		return pass;
 	}
 
-	public void setPass(String pass) {
+	public void setPass(final String pass) {
 		this.pass = pass;
 	}
 
@@ -99,7 +99,7 @@ public class DbConfig {
 		return initialSize;
 	}
 
-	public void setInitialSize(int initialSize) {
+	public void setInitialSize(final int initialSize) {
 		this.initialSize = initialSize;
 	}
 
@@ -107,7 +107,7 @@ public class DbConfig {
 		return minIdle;
 	}
 
-	public void setMinIdle(int minIdle) {
+	public void setMinIdle(final int minIdle) {
 		this.minIdle = minIdle;
 	}
 
@@ -115,7 +115,7 @@ public class DbConfig {
 		return maxActive;
 	}
 
-	public void setMaxActive(int maxActive) {
+	public void setMaxActive(final int maxActive) {
 		this.maxActive = maxActive;
 	}
 
@@ -123,7 +123,7 @@ public class DbConfig {
 		return maxWait;
 	}
 
-	public void setMaxWait(long maxWait) {
+	public void setMaxWait(final long maxWait) {
 		this.maxWait = maxWait;
 	}
 
@@ -131,11 +131,11 @@ public class DbConfig {
 		return connProps;
 	}
 
-	public void setConnProps(Properties connProps) {
+	public void setConnProps(final Properties connProps) {
 		this.connProps = connProps;
 	}
 
-	public void addConnProps(String key, String value){
+	public void addConnProps(final String key, final String value){
 		if(null == this.connProps){
 			this.connProps = new Properties();
 		}

@@ -20,7 +20,7 @@ public class BooleanConverter extends AbstractConverter<Boolean> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Boolean convertInternal(Object value) {
+	protected Boolean convertInternal(final Object value) {
 		if (value instanceof Number) {
 			// 0为false，其它数字为true
 			return 0 != ((Number) value).doubleValue();

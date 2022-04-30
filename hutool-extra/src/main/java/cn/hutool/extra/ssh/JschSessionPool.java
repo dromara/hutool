@@ -27,7 +27,7 @@ public enum JschSessionPool {
 	 * @param key 键
 	 * @return Session
 	 */
-	public Session get(String key) {
+	public Session get(final String key) {
 		return cache.get(key);
 	}
 
@@ -40,7 +40,7 @@ public enum JschSessionPool {
 	 * @param sshPass 跳板机密码
 	 * @return SSH会话
 	 */
-	public Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public Session getSession(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
 		return this.cache.get(key, Session::isConnected, ()-> JschUtil.openSession(sshHost, sshPort, sshUser, sshPass));
 	}
@@ -55,7 +55,7 @@ public enum JschSessionPool {
 	 * @param passphrase 跳板机私钥密码
 	 * @return SSH会话
 	 */
-	public Session getSession(String sshHost, int sshPort, String sshUser, String prvkey, byte[] passphrase) {
+	public Session getSession(final String sshHost, final int sshPort, final String sshUser, final String prvkey, final byte[] passphrase) {
 		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
 		return this.cache.get(key, Session::isConnected, ()->JschUtil.openSession(sshHost, sshPort, sshUser, prvkey, passphrase));
 	}
@@ -66,7 +66,7 @@ public enum JschSessionPool {
 	 * @param key     键
 	 * @param session Session
 	 */
-	public void put(String key, Session session) {
+	public void put(final String key, final Session session) {
 		this.cache.put(key, session);
 	}
 
@@ -75,8 +75,8 @@ public enum JschSessionPool {
 	 *
 	 * @param key 主机，格式为user@host:port
 	 */
-	public void close(String key) {
-		Session session = get(key);
+	public void close(final String key) {
+		final Session session = get(key);
 		if (session != null && session.isConnected()) {
 			session.disconnect();
 		}
@@ -89,7 +89,7 @@ public enum JschSessionPool {
 	 * @param session Session会话
 	 * @since 4.1.15
 	 */
-	public void remove(Session session) {
+	public void remove(final Session session) {
 		if (null != session) {
 			final Iterator<Entry<String, Session>> iterator = this.cache.iterator();
 			Entry<String, Session> entry;
@@ -108,7 +108,7 @@ public enum JschSessionPool {
 	 */
 	public void closeAll() {
 		Session session;
-		for (Entry<String, Session> entry : this.cache) {
+		for (final Entry<String, Session> entry : this.cache) {
 			session = entry.getValue();
 			if (session != null && session.isConnected()) {
 				session.disconnect();

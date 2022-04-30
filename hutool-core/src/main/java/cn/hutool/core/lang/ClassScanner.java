@@ -79,7 +79,7 @@ public class ClassScanner implements Serializable {
 	 * @param annotationClass 注解类
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanAllPackageByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
+	public static Set<Class<?>> scanAllPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
 		return scanAllPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
 	}
 
@@ -91,7 +91,7 @@ public class ClassScanner implements Serializable {
 	 * @param annotationClass 注解类
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackageByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
+	public static Set<Class<?>> scanPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
 		return scanPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
 	}
 
@@ -102,7 +102,7 @@ public class ClassScanner implements Serializable {
 	 * @param superClass  父类或接口（不包括）
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanAllPackageBySuper(String packageName, Class<?> superClass) {
+	public static Set<Class<?>> scanAllPackageBySuper(final String packageName, final Class<?> superClass) {
 		return scanAllPackage(packageName, clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz));
 	}
 
@@ -114,7 +114,7 @@ public class ClassScanner implements Serializable {
 	 * @param superClass  父类或接口（不包括）
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackageBySuper(String packageName, Class<?> superClass) {
+	public static Set<Class<?>> scanPackageBySuper(final String packageName, final Class<?> superClass) {
 		return scanPackage(packageName, clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz));
 	}
 
@@ -143,7 +143,7 @@ public class ClassScanner implements Serializable {
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName) {
+	public static Set<Class<?>> scanPackage(final String packageName) {
 		return scanPackage(packageName, null);
 	}
 
@@ -157,7 +157,7 @@ public class ClassScanner implements Serializable {
 	 * @return 类集合
 	 * @since 5.7.5
 	 */
-	public static Set<Class<?>> scanAllPackage(String packageName, Predicate<Class<?>> classFilter) {
+	public static Set<Class<?>> scanAllPackage(final String packageName, final Predicate<Class<?>> classFilter) {
 		return new ClassScanner(packageName, classFilter).scan(true);
 	}
 
@@ -170,7 +170,7 @@ public class ClassScanner implements Serializable {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, Predicate<Class<?>> classFilter) {
+	public static Set<Class<?>> scanPackage(final String packageName, final Predicate<Class<?>> classFilter) {
 		return new ClassScanner(packageName, classFilter).scan();
 	}
 
@@ -186,7 +186,7 @@ public class ClassScanner implements Serializable {
 	 *
 	 * @param packageName 包名，所有包传入""或者null
 	 */
-	public ClassScanner(String packageName) {
+	public ClassScanner(final String packageName) {
 		this(packageName, null);
 	}
 
@@ -196,7 +196,7 @@ public class ClassScanner implements Serializable {
 	 * @param packageName 包名，所有包传入""或者null
 	 * @param classPredicate 过滤器，无需传入null
 	 */
-	public ClassScanner(String packageName, Predicate<Class<?>> classPredicate) {
+	public ClassScanner(final String packageName, final Predicate<Class<?>> classPredicate) {
 		this(packageName, classPredicate, CharsetUtil.UTF_8);
 	}
 
@@ -207,7 +207,7 @@ public class ClassScanner implements Serializable {
 	 * @param classPredicate 过滤器，无需传入null
 	 * @param charset     编码
 	 */
-	public ClassScanner(String packageName, Predicate<Class<?>> classPredicate, Charset charset) {
+	public ClassScanner(String packageName, final Predicate<Class<?>> classPredicate, final Charset charset) {
 		packageName = StrUtil.nullToEmpty(packageName);
 		this.packageName = packageName;
 		this.packageNameWithDot = StrUtil.addSuffixIfNot(packageName, StrUtil.DOT);
@@ -234,8 +234,8 @@ public class ClassScanner implements Serializable {
 	 * @return 类集合
 	 * @since 5.7.5
 	 */
-	public Set<Class<?>> scan(boolean forceScanJavaClassPaths) {
-		for (URL url : ResourceUtil.getResourceIter(this.packagePath)) {
+	public Set<Class<?>> scan(final boolean forceScanJavaClassPaths) {
+		for (final URL url : ResourceUtil.getResourceIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
 					scanFile(new File(URLDecoder.decode(url.getFile(), this.charset)), null);
@@ -259,7 +259,7 @@ public class ClassScanner implements Serializable {
 	 *
 	 * @param initialize 是否初始化类
 	 */
-	public void setInitialize(boolean initialize) {
+	public void setInitialize(final boolean initialize) {
 		this.initialize = initialize;
 	}
 
@@ -269,7 +269,7 @@ public class ClassScanner implements Serializable {
 	 * @param classLoader 类加载器
 	 * @since 4.6.9
 	 */
-	public void setClassLoader(ClassLoader classLoader) {
+	public void setClassLoader(final ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
 
@@ -294,7 +294,7 @@ public class ClassScanner implements Serializable {
 	 * @param file    文件或目录
 	 * @param rootDir 包名对应classpath绝对路径
 	 */
-	private void scanFile(File file, String rootDir) {
+	private void scanFile(final File file, final String rootDir) {
 		if (file.isFile()) {
 			final String fileName = file.getAbsolutePath();
 			if (fileName.endsWith(FileUtil.CLASS_EXT)) {
@@ -307,14 +307,14 @@ public class ClassScanner implements Serializable {
 			} else if (fileName.endsWith(FileUtil.JAR_FILE_EXT)) {
 				try {
 					scanJar(new JarFile(file));
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new IORuntimeException(e);
 				}
 			}
 		} else if (file.isDirectory()) {
 			final File[] files = file.listFiles();
 			if (null != files) {
-				for (File subFile : files) {
+				for (final File subFile : files) {
 					scanFile(subFile, (null == rootDir) ? subPathBeforePackage(file) : rootDir);
 				}
 			}
@@ -326,9 +326,9 @@ public class ClassScanner implements Serializable {
 	 *
 	 * @param jar jar包
 	 */
-	private void scanJar(JarFile jar) {
+	private void scanJar(final JarFile jar) {
 		String name;
-		for (JarEntry entry : new EnumerationIter<>(jar.entries())) {
+		for (final JarEntry entry : new EnumerationIter<>(jar.entries())) {
 			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
 			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
 				if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
@@ -347,7 +347,7 @@ public class ClassScanner implements Serializable {
 	 * @param className 类名
 	 * @return 加载的类
 	 */
-	private Class<?> loadClass(String className) {
+	private Class<?> loadClass(final String className) {
 		ClassLoader loader = this.classLoader;
 		if (null == loader) {
 			loader = ClassLoaderUtil.getClassLoader();
@@ -357,11 +357,11 @@ public class ClassScanner implements Serializable {
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName(className, this.initialize, loader);
-		} catch (NoClassDefFoundError | ClassNotFoundException e) {
+		} catch (final NoClassDefFoundError | ClassNotFoundException e) {
 			// 由于依赖库导致的类无法加载，直接跳过此类
-		} catch (UnsupportedClassVersionError e) {
+		} catch (final UnsupportedClassVersionError e) {
 			// 版本导致的不兼容的类，跳过
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 		return clazz;
@@ -372,12 +372,12 @@ public class ClassScanner implements Serializable {
 	 *
 	 * @param className 类名
 	 */
-	private void addIfAccept(String className) {
+	private void addIfAccept(final String className) {
 		if (StrUtil.isBlank(className)) {
 			return;
 		}
-		int classLen = className.length();
-		int packageLen = this.packageName.length();
+		final int classLen = className.length();
+		final int packageLen = this.packageName.length();
 		if (classLen == packageLen) {
 			//类名和包名长度一致，用户可能传入的包名是类名
 			if (className.equals(this.packageName)) {
@@ -396,9 +396,9 @@ public class ClassScanner implements Serializable {
 	 *
 	 * @param clazz 类
 	 */
-	private void addIfAccept(Class<?> clazz) {
+	private void addIfAccept(final Class<?> clazz) {
 		if (null != clazz) {
-			Predicate<Class<?>> classFilter = this.classPredicate;
+			final Predicate<Class<?>> classFilter = this.classPredicate;
 			if (classFilter == null || classFilter.test(clazz)) {
 				this.classes.add(clazz);
 			}
@@ -411,7 +411,7 @@ public class ClassScanner implements Serializable {
 	 * @param file 文件
 	 * @return 包名之前的部分
 	 */
-	private String subPathBeforePackage(File file) {
+	private String subPathBeforePackage(final File file) {
 		String filePath = file.getAbsolutePath();
 		if (StrUtil.isNotEmpty(this.packageDirName)) {
 			filePath = StrUtil.subBefore(filePath, this.packageDirName, true);

@@ -44,7 +44,7 @@ public class CallerUtil {
 	 * @param depth 层级。0表示CallerUtil本身，1表示调用CallerUtil的类，2表示调用者的调用者，依次类推
 	 * @return 第几级调用者
 	 */
-	public static Class<?> getCaller(int depth) {
+	public static Class<?> getCaller(final int depth) {
 		return INSTANCE.getCaller(depth);
 	}
 
@@ -54,7 +54,7 @@ public class CallerUtil {
 	 * @param clazz 调用者类
 	 * @return 是否被调用
 	 */
-	public static boolean isCalledBy(Class<?> clazz) {
+	public static boolean isCalledBy(final Class<?> clazz) {
 		return INSTANCE.isCalledBy(clazz);
 	}
 
@@ -65,7 +65,7 @@ public class CallerUtil {
 	 * @return 调用此方法的方法名
 	 * @since 5.2.4
 	 */
-	public static String getCallerMethodName(boolean isFullName){
+	public static String getCallerMethodName(final boolean isFullName){
 		final StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
 		final String methodName = stackTraceElement.getMethodName();
 		if(false == isFullName){
@@ -87,7 +87,7 @@ public class CallerUtil {
 			if(null != caller.getCaller() && null != caller.getCallerCaller()) {
 				return caller;
 			}
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			//ignore
 		}
 

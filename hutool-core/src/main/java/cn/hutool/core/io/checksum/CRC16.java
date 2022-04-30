@@ -26,7 +26,7 @@ public class CRC16 implements Checksum, Serializable {
 	 *
 	 * @param crc16Checksum {@link CRC16Checksum} 实现
 	 */
-	public CRC16(CRC16Checksum crc16Checksum) {
+	public CRC16(final CRC16Checksum crc16Checksum) {
 		this.crc16 = crc16Checksum;
 	}
 
@@ -47,7 +47,7 @@ public class CRC16 implements Checksum, Serializable {
 	 * @return 16进制的CRC16值，4位
 	 * @since 5.7.22
 	 */
-	public String getHexValue(boolean isPadding) {
+	public String getHexValue(final boolean isPadding) {
 		return crc16.getHexValue(isPadding);
 	}
 
@@ -62,12 +62,12 @@ public class CRC16 implements Checksum, Serializable {
 	}
 
 	@Override
-	public void update(byte[] b, int off, int len) {
+	public void update(final byte[] b, final int off, final int len) {
 		crc16.update(b, off, len);
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		crc16.update(b);
 	}
 }

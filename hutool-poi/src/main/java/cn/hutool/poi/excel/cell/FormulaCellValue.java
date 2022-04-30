@@ -29,7 +29,7 @@ public class FormulaCellValue implements CellValue<String>, CellSetter {
 	 *
 	 * @param formula 公式
 	 */
-	public FormulaCellValue(String formula) {
+	public FormulaCellValue(final String formula) {
 		this(formula, null);
 	}
 
@@ -39,7 +39,7 @@ public class FormulaCellValue implements CellValue<String>, CellSetter {
 	 * @param formula 公式
 	 * @param result  结果
 	 */
-	public FormulaCellValue(String formula, Object result) {
+	public FormulaCellValue(final String formula, final Object result) {
 		this.formula = formula;
 		this.result = result;
 	}
@@ -50,7 +50,7 @@ public class FormulaCellValue implements CellValue<String>, CellSetter {
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setCellFormula(this.formula);
 	}
 

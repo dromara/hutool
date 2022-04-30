@@ -57,7 +57,7 @@ public class FileNameUtil {
 	 * @return 文件名
 	 * @since 4.1.13
 	 */
-	public static String getName(File file) {
+	public static String getName(final File file) {
 		return (null != file) ? file.getName() : null;
 	}
 
@@ -72,7 +72,7 @@ public class FileNameUtil {
 	 * @return 文件名
 	 * @since 4.1.13
 	 */
-	public static String getName(String filePath) {
+	public static String getName(final String filePath) {
 		if (null == filePath) {
 			return null;
 		}
@@ -107,7 +107,7 @@ public class FileNameUtil {
 	 * @see #extName(File)
 	 * @since 5.3.8
 	 */
-	public static String getSuffix(File file) {
+	public static String getSuffix(final File file) {
 		return extName(file);
 	}
 
@@ -119,7 +119,7 @@ public class FileNameUtil {
 	 * @see #extName(String)
 	 * @since 5.3.8
 	 */
-	public static String getSuffix(String fileName) {
+	public static String getSuffix(final String fileName) {
 		return extName(fileName);
 	}
 
@@ -131,7 +131,7 @@ public class FileNameUtil {
 	 * @see #mainName(File)
 	 * @since 5.3.8
 	 */
-	public static String getPrefix(File file) {
+	public static String getPrefix(final File file) {
 		return mainName(file);
 	}
 
@@ -143,7 +143,7 @@ public class FileNameUtil {
 	 * @see #mainName(String)
 	 * @since 5.3.8
 	 */
-	public static String getPrefix(String fileName) {
+	public static String getPrefix(final String fileName) {
 		return mainName(fileName);
 	}
 
@@ -153,7 +153,7 @@ public class FileNameUtil {
 	 * @param file 文件
 	 * @return 主文件名
 	 */
-	public static String mainName(File file) {
+	public static String mainName(final File file) {
 		if (file.isDirectory()) {
 			return file.getName();
 		}
@@ -166,7 +166,7 @@ public class FileNameUtil {
 	 * @param fileName 完整文件名
 	 * @return 主文件名
 	 */
-	public static String mainName(String fileName) {
+	public static String mainName(final String fileName) {
 		if (null == fileName) {
 			return null;
 		}
@@ -203,7 +203,7 @@ public class FileNameUtil {
 	 * @param file 文件
 	 * @return 扩展名
 	 */
-	public static String extName(File file) {
+	public static String extName(final File file) {
 		if (null == file) {
 			return null;
 		}
@@ -219,22 +219,22 @@ public class FileNameUtil {
 	 * @param fileName 文件名
 	 * @return 扩展名
 	 */
-	public static String extName(String fileName) {
+	public static String extName(final String fileName) {
 		if (fileName == null) {
 			return null;
 		}
-		int index = fileName.lastIndexOf(StrUtil.DOT);
+		final int index = fileName.lastIndexOf(StrUtil.DOT);
 		if (index == -1) {
 			return StrUtil.EMPTY;
 		} else {
 			// issue#I4W5FS@Gitee
-			int secondToLastIndex = fileName.substring(0, index).lastIndexOf(StrUtil.DOT);
-			String substr = fileName.substring(secondToLastIndex == -1 ? index : secondToLastIndex + 1);
+			final int secondToLastIndex = fileName.substring(0, index).lastIndexOf(StrUtil.DOT);
+			final String substr = fileName.substring(secondToLastIndex == -1 ? index : secondToLastIndex + 1);
 			if (StrUtil.containsAny(substr, SPECIAL_SUFFIX)) {
 				return substr;
 			}
 
-			String ext = fileName.substring(index + 1);
+			final String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
 			return StrUtil.containsAny(ext, UNIX_SEPARATOR, WINDOWS_SEPARATOR) ? StrUtil.EMPTY : ext;
 		}
@@ -247,7 +247,7 @@ public class FileNameUtil {
 	 * @return 清理后的文件名
 	 * @since 3.3.1
 	 */
-	public static String cleanInvalid(String fileName) {
+	public static String cleanInvalid(final String fileName) {
 		return StrUtil.isBlank(fileName) ? fileName : ReUtil.delAll(FILE_NAME_INVALID_PATTERN_WIN, fileName);
 	}
 
@@ -258,7 +258,7 @@ public class FileNameUtil {
 	 * @return 是否包含非法字符
 	 * @since 3.3.1
 	 */
-	public static boolean containsInvalid(String fileName) {
+	public static boolean containsInvalid(final String fileName) {
 		return (false == StrUtil.isBlank(fileName)) && ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
 	}
 
@@ -270,7 +270,7 @@ public class FileNameUtil {
 	 * @return 是否是指定扩展名的类型
 	 * @since 5.5.2
 	 */
-	public static boolean isType(String fileName, String... extNames) {
+	public static boolean isType(final String fileName, final String... extNames) {
 		return StrUtil.equalsAnyIgnoreCase(extName(fileName), extNames);
 	}
 	// -------------------------------------------------------------------------------------------- name end

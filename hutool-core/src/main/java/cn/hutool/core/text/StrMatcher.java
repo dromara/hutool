@@ -28,7 +28,7 @@ public class StrMatcher {
 	 *
 	 * @param pattern 模式，变量用${XXX}占位
 	 */
-	public StrMatcher(String pattern) {
+	public StrMatcher(final String pattern) {
 		this.patterns = parse(pattern);
 	}
 
@@ -38,12 +38,12 @@ public class StrMatcher {
 	 * @param text 被匹配的文本
 	 * @return 匹配的map，key为变量名，value为匹配到的值
 	 */
-	public Map<String, String> match(String text) {
+	public Map<String, String> match(final String text) {
 		final HashMap<String, String> result = MapUtil.newHashMap(true);
 		int from = 0;
 		String key = null;
 		int to;
-		for (String part : patterns) {
+		for (final String part : patterns) {
 			if (StrUtil.isWrap(part, "${", "}")) {
 				// 变量
 				key = StrUtil.sub(part, 2, part.length() - 1);
@@ -77,13 +77,13 @@ public class StrMatcher {
 	 * @param pattern 表达式，使用${XXXX}作为变量占位符
 	 * @return 表达式
 	 */
-	private static List<String> parse(String pattern) {
-		List<String> patterns = new ArrayList<>();
+	private static List<String> parse(final String pattern) {
+		final List<String> patterns = new ArrayList<>();
 		final int length = pattern.length();
 		char c = 0;
 		char pre;
 		boolean inVar = false;
-		StringBuilder part = StrUtil.builder();
+		final StringBuilder part = StrUtil.builder();
 		for (int i = 0; i < length; i++) {
 			pre = c;
 			c = pattern.charAt(i);

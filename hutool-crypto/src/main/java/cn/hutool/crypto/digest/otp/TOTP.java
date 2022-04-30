@@ -31,7 +31,7 @@ public class TOTP extends HOTP {
 	 *
 	 * @param key 共享密码，RFC 4226要求最少128位
 	 */
-	public TOTP(byte[] key) {
+	public TOTP(final byte[] key) {
 		this(DEFAULT_TIME_STEP, key);
 	}
 
@@ -41,7 +41,7 @@ public class TOTP extends HOTP {
 	 * @param timeStep 日期步进，用于生成移动因子（moving factor）
 	 * @param key      共享密码，RFC 4226要求最少128位
 	 */
-	public TOTP(Duration timeStep, byte[] key) {
+	public TOTP(final Duration timeStep, final byte[] key) {
 		this(timeStep, DEFAULT_PASSWORD_LENGTH, key);
 	}
 
@@ -52,7 +52,7 @@ public class TOTP extends HOTP {
 	 * @param passwordLength 密码长度，可以是6,7,8
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public TOTP(Duration timeStep, int passwordLength, byte[] key) {
+	public TOTP(final Duration timeStep, final int passwordLength, final byte[] key) {
 		this(timeStep, passwordLength, HOTP_HMAC_ALGORITHM, key);
 	}
 
@@ -64,7 +64,7 @@ public class TOTP extends HOTP {
 	 * @param algorithm      HMAC算法枚举
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public TOTP(Duration timeStep, int passwordLength, HmacAlgorithm algorithm, byte[] key) {
+	public TOTP(final Duration timeStep, final int passwordLength, final HmacAlgorithm algorithm, final byte[] key) {
 		super(passwordLength, algorithm, key);
 		this.timeStep = timeStep;
 	}
@@ -75,7 +75,7 @@ public class TOTP extends HOTP {
 	 * @param timestamp 用于生成密码的时间戳
 	 * @return 一次性密码的int形式
 	 */
-	public int generate(Instant timestamp) {
+	public int generate(final Instant timestamp) {
 		return this.generate(timestamp.toEpochMilli() / this.timeStep.toMillis());
 	}
 
@@ -88,7 +88,7 @@ public class TOTP extends HOTP {
 	 * @return 是否通过
 	 * @since 5.7.4
 	 */
-	public boolean validate(Instant timestamp, int offsetSize, int code) {
+	public boolean validate(final Instant timestamp, final int offsetSize, final int code) {
 		if (offsetSize == 0) {
 			return generate(timestamp) == code;
 		}
@@ -109,7 +109,7 @@ public class TOTP extends HOTP {
 	 * @return 共享密钥
 	 * @since 5.7.4
 	 */
-	public static String generateGoogleSecretKey(String account, int numBytes) {
+	public static String generateGoogleSecretKey(final String account, final int numBytes) {
 		return StrUtil.format("otpauth://totp/{}?secret={}", account, generateSecretKey(numBytes));
 	}
 

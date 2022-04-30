@@ -24,7 +24,7 @@ public enum Direction {
 	 * @return Direction，{@code null}表示提供的value为空
 	 * @throws IllegalArgumentException in case the given value cannot be parsed into an enum value.
 	 */
-	public static Direction fromString(String value) throws IllegalArgumentException {
+	public static Direction fromString(final String value) throws IllegalArgumentException {
 		if (StrUtil.isEmpty(value)) {
 			return null;
 		}
@@ -40,7 +40,7 @@ public enum Direction {
 
 		try {
 			return Direction.valueOf(value.toUpperCase());
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IllegalArgumentException(StrUtil.format(
 					"Invalid value [{}] for orders given! Has to be either 'desc' or 'asc' (case insensitive).", value), e);
 		}

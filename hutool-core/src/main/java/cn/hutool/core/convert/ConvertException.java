@@ -10,23 +10,23 @@ import cn.hutool.core.text.StrUtil;
 public class ConvertException extends RuntimeException{
 	private static final long serialVersionUID = 4730597402855274362L;
 
-	public ConvertException(Throwable e) {
+	public ConvertException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public ConvertException(String message) {
+	public ConvertException(final String message) {
 		super(message);
 	}
 
-	public ConvertException(String messageTemplate, Object... params) {
+	public ConvertException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public ConvertException(String message, Throwable throwable) {
+	public ConvertException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public ConvertException(Throwable throwable, String messageTemplate, Object... params) {
+	public ConvertException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

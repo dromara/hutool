@@ -27,7 +27,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param bean 普通Bean
 	 * @return DynaBean
 	 */
-	public static DynaBean create(Object bean) {
+	public static DynaBean create(final Object bean) {
 		return new DynaBean(bean);
 	}
 
@@ -37,7 +37,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param beanClass Bean类
 	 * @return DynaBean
 	 */
-	public static DynaBean create(Class<?> beanClass) {
+	public static DynaBean create(final Class<?> beanClass) {
 		return new DynaBean(beanClass);
 	}
 
@@ -49,7 +49,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param params    构造Bean所需要的参数
 	 * @return DynaBean
 	 */
-	public static DynaBean create(Class<?> beanClass, Object... params) {
+	public static DynaBean create(final Class<?> beanClass, final Object... params) {
 		return new DynaBean(beanClass, params);
 	}
 
@@ -61,7 +61,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param beanClass Bean类
 	 * @param params    构造Bean所需要的参数
 	 */
-	public DynaBean(Class<?> beanClass, Object... params) {
+	public DynaBean(final Class<?> beanClass, final Object... params) {
 		this(ReflectUtil.newInstance(beanClass, params));
 	}
 
@@ -70,7 +70,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 *
 	 * @param beanClass Bean类
 	 */
-	public DynaBean(Class<?> beanClass) {
+	public DynaBean(final Class<?> beanClass) {
 		this(ReflectUtil.newInstance(beanClass));
 	}
 
@@ -98,7 +98,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @throws BeanException 反射获取属性值或字段值导致的异常
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(String fieldName) throws BeanException {
+	public <T> T get(final String fieldName) throws BeanException {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			return (T) ((Map<?, ?>) bean).get(fieldName);
 		} else {
@@ -117,7 +117,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @return 是否有bean属性
 	 * @since 5.4.2
 	 */
-	public boolean containsProp(String fieldName) {
+	public boolean containsProp(final String fieldName) {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			return ((Map<?, ?>) bean).containsKey(fieldName);
 		} else{
@@ -133,10 +133,10 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @return 字段值
 	 * @since 3.1.1
 	 */
-	public <T> T safeGet(String fieldName) {
+	public <T> T safeGet(final String fieldName) {
 		try {
 			return get(fieldName);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 	}
@@ -149,7 +149,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @throws BeanException 反射获取属性值或字段值导致的异常
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void set(String fieldName, Object value) throws BeanException {
+	public void set(final String fieldName, final Object value) throws BeanException {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			((Map) bean).put(fieldName, value);
 		} else {
@@ -168,7 +168,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param params     参数
 	 * @return 执行结果，可能为null
 	 */
-	public Object invoke(String methodName, Object... params) {
+	public Object invoke(final String methodName, final Object... params) {
 		return ReflectUtil.invoke(this.bean, methodName, params);
 	}
 
@@ -203,7 +203,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}

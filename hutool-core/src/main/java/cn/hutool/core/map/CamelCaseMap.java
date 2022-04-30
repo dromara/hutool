@@ -31,7 +31,7 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public CamelCaseMap(int initialCapacity) {
+	public CamelCaseMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -40,7 +40,7 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param m Map
 	 */
-	public CamelCaseMap(Map<? extends K, ? extends V> m) {
+	public CamelCaseMap(final Map<? extends K, ? extends V> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -50,7 +50,7 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param loadFactor 加载因子
 	 * @param m          初始Map，数据会被默认拷贝到一个新的HashMap中
 	 */
-	public CamelCaseMap(float loadFactor, Map<? extends K, ? extends V> m) {
+	public CamelCaseMap(final float loadFactor, final Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
 		this.putAll(m);
 	}
@@ -61,7 +61,7 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor      加载因子
 	 */
-	public CamelCaseMap(int initialCapacity, float loadFactor) {
+	public CamelCaseMap(final int initialCapacity, final float loadFactor) {
 		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)));
 	}
 
@@ -72,7 +72,7 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param emptyMapBuilder Map构造器，必须构造空的Map
 	 */
 	@SuppressWarnings("unchecked")
-	CamelCaseMap(MapBuilder<K, V> emptyMapBuilder) {
+	CamelCaseMap(final MapBuilder<K, V> emptyMapBuilder) {
 		super(emptyMapBuilder.build(), (key) -> {
 			if (key instanceof CharSequence) {
 				key = StrUtil.toCamelCase(key.toString());

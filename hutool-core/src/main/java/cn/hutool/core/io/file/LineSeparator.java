@@ -25,7 +25,7 @@ public enum LineSeparator {
 
 	private final String value;
 
-	LineSeparator(String lineSeparator) {
+	LineSeparator(final String lineSeparator) {
 		this.value = lineSeparator;
 	}
 

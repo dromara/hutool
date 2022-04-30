@@ -26,7 +26,7 @@ public enum ThreadLocalConnection {
 	 * @return Connection
 	 * @throws SQLException SQL异常
 	 */
-	public Connection get(DataSource ds) throws SQLException {
+	public Connection get(final DataSource ds) throws SQLException {
 		GroupedConnection groupedConnection = threadLocal.get();
 		if (null == groupedConnection) {
 			groupedConnection = new GroupedConnection();
@@ -41,8 +41,8 @@ public enum ThreadLocalConnection {
 	 * @param ds 数据源
 	 * @since 4.1.7
 	 */
-	public void close(DataSource ds) {
-		GroupedConnection groupedConnection = threadLocal.get();
+	public void close(final DataSource ds) {
+		final GroupedConnection groupedConnection = threadLocal.get();
 		if (null != groupedConnection) {
 			groupedConnection.close(ds);
 			if (groupedConnection.isEmpty()) {
@@ -69,7 +69,7 @@ public enum ThreadLocalConnection {
 		 * @return Connection
 		 * @throws SQLException SQL异常
 		 */
-		public Connection get(DataSource ds) throws SQLException {
+		public Connection get(final DataSource ds) throws SQLException {
 			Connection conn = connMap.get(ds);
 			if (null == conn || conn.isClosed()) {
 				conn = ds.getConnection();
@@ -85,7 +85,7 @@ public enum ThreadLocalConnection {
 		 * @param ds 数据源
 		 * @return this
 		 */
-		public GroupedConnection close(DataSource ds) {
+		public GroupedConnection close(final DataSource ds) {
 			final Connection conn = connMap.get(ds);
 			if (null != conn) {
 				try {
@@ -93,7 +93,7 @@ public enum ThreadLocalConnection {
 						// 非自动提交事务的连接，不做关闭（可能处于事务中）
 						return this;
 					}
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					// ignore
 				}
 				connMap.remove(ds);

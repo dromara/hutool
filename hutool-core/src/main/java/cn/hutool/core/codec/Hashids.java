@@ -229,7 +229,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 
 					// append the separator, if more numbers are pending encoding
 					if (idx + 1 < numbers.length) {
-						long n = numbers[idx] % (global.charAt(initialLength) + 1);
+						final long n = numbers[idx] % (global.charAt(initialLength) + 1);
 						global.append(separators[(int) (n % separators.length)]);
 					}
 				});
@@ -253,7 +253,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 			final int initialSize = global.length();
 			if (paddingLeft > currentAlphabet.length) {
 				// entire alphabet with the current encoding in the middle of it
-				int offset = alphabetHalfSize + (currentAlphabet.length % 2 == 0 ? 0 : 1);
+				final int offset = alphabetHalfSize + (currentAlphabet.length % 2 == 0 ? 0 : 1);
 
 				global.insert(0, currentAlphabet, alphabetHalfSize, offset);
 				global.insert(offset + initialSize, currentAlphabet, 0, alphabetHalfSize);
@@ -429,7 +429,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 		int offset = 1;
 		// 2. salt
 		if (salt.length > 0 && spaceLeft > 0) {
-			int length = Math.min(salt.length, spaceLeft);
+			final int length = Math.min(salt.length, spaceLeft);
 			System.arraycopy(salt, 0, newSalt, offset, length);
 			spaceLeft -= length;
 			offset += length;
@@ -471,7 +471,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 		// create a new alphabet without the duplicates
 		final char[] uniqueAlphabet = new char[seen.size()];
 		int idx = 0;
-		for (char c : seen) {
+		for (final char c : seen) {
 			uniqueAlphabet[idx++] = c;
 		}
 		return uniqueAlphabet;

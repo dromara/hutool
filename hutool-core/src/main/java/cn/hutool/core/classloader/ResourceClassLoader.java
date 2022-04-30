@@ -28,7 +28,7 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	 * @param parentClassLoader 父类加载器，null表示默认当前上下文加载器
 	 * @param resourceMap       资源map
 	 */
-	public ResourceClassLoader(ClassLoader parentClassLoader, Map<String, T> resourceMap) {
+	public ResourceClassLoader(final ClassLoader parentClassLoader, final Map<String, T> resourceMap) {
 		super(ObjUtil.defaultIfNull(parentClassLoader, ClassLoaderUtil::getClassLoader));
 		this.resourceMap = ObjUtil.defaultIfNull(resourceMap, HashMap::new);
 		this.cacheClassMap = new HashMap<>();
@@ -40,13 +40,13 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	 * @param resource 资源，可以是文件、流或者字符串
 	 * @return this
 	 */
-	public ResourceClassLoader<T> addResource(T resource) {
+	public ResourceClassLoader<T> addResource(final T resource) {
 		this.resourceMap.put(resource.getName(), resource);
 		return this;
 	}
 
 	@Override
-	protected Class<?> findClass(String name) throws ClassNotFoundException {
+	protected Class<?> findClass(final String name) throws ClassNotFoundException {
 		final Class<?> clazz = cacheClassMap.computeIfAbsent(name, this::defineByName);
 		if (clazz == null) {
 			return super.findClass(name);
@@ -61,7 +61,7 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	 * @param name 类名
 	 * @return 定义的类
 	 */
-	private Class<?> defineByName(String name) {
+	private Class<?> defineByName(final String name) {
 		final Resource resource = resourceMap.get(name);
 		if (null != resource) {
 			final byte[] bytes = resource.readBytes();

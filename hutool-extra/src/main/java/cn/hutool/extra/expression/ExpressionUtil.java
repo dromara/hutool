@@ -28,7 +28,7 @@ public class ExpressionUtil {
 	 * @param context    表达式上下文，用于存储表达式中所需的变量值等
 	 * @return 执行结果
 	 */
-	public static Object eval(String expression, Map<String, Object> context) {
+	public static Object eval(final String expression, final Map<String, Object> context) {
 		return getEngine().eval(expression, context);
 	}
 }

@@ -27,7 +27,7 @@ public class FoundWord extends DefaultSegment<Integer> {
 	 * @param startIndex 起始位置（包含）
 	 * @param endIndex 结束位置（包含）
 	 */
-	public FoundWord(String word, String foundWord, int startIndex, int endIndex) {
+	public FoundWord(final String word, final String foundWord, final int startIndex, final int endIndex) {
 		super(startIndex, endIndex);
 		this.word = word;
 		this.foundWord = foundWord;

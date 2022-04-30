@@ -36,7 +36,7 @@ public class JavaSourceCompilerTest {
 //				.addLibrary(FileUtil.file("D:\\m2_repo\\cn\\hutool\\hutool-all\\5.5.7\\hutool-all-5.5.7.jar"))
 				.compile();
 		final Class<?> clazz = classLoader.loadClass("c.C");
-		Object obj = ReflectUtil.newInstance(clazz);
+		final Object obj = ReflectUtil.newInstance(clazz);
 		Assert.assertTrue(String.valueOf(obj).startsWith("c.C@"));
 	}
 

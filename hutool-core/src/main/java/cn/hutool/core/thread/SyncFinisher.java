@@ -44,7 +44,7 @@ public class SyncFinisher implements Closeable {
 	 *
 	 * @param threadSize 线程数
 	 */
-	public SyncFinisher(int threadSize) {
+	public SyncFinisher(final int threadSize) {
 		this.beginLatch = new CountDownLatch(1);
 		this.threadSize = threadSize;
 		this.workers = new LinkedHashSet<>();
@@ -56,7 +56,7 @@ public class SyncFinisher implements Closeable {
 	 * @param isBeginAtSameTime 是否所有worker线程同时开始
 	 * @return this
 	 */
-	public SyncFinisher setBeginAtSameTime(boolean isBeginAtSameTime) {
+	public SyncFinisher setBeginAtSameTime(final boolean isBeginAtSameTime) {
 		this.isBeginAtSameTime = isBeginAtSameTime;
 		return this;
 	}
@@ -100,7 +100,7 @@ public class SyncFinisher implements Closeable {
 	 * @param worker 工作线程
 	 * @return this
 	 */
-	synchronized public SyncFinisher addWorker(Worker worker) {
+	synchronized public SyncFinisher addWorker(final Worker worker) {
 		workers.add(worker);
 		return this;
 	}
@@ -120,13 +120,13 @@ public class SyncFinisher implements Closeable {
 	 * @param sync 是否阻塞等待
 	 * @since 4.5.8
 	 */
-	public void start(boolean sync) {
+	public void start(final boolean sync) {
 		endLatch = new CountDownLatch(workers.size());
 
 		if(null == this.executorService || this.executorService.isShutdown()){
 			this.executorService = ThreadUtil.newExecutor(threadSize);
 		}
-		for (Worker worker : workers) {
+		for (final Worker worker : workers) {
 			executorService.submit(worker);
 		}
 		// 保证所有worker同时开始
@@ -135,7 +135,7 @@ public class SyncFinisher implements Closeable {
 		if (sync) {
 			try {
 				this.endLatch.await();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				throw new UtilException(e);
 			}
 		}
@@ -193,7 +193,7 @@ public class SyncFinisher implements Closeable {
 			if (isBeginAtSameTime) {
 				try {
 					beginLatch.await();
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					throw new UtilException(e);
 				}
 			}

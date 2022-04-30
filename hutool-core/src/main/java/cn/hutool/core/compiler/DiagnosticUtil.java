@@ -18,7 +18,7 @@ public class DiagnosticUtil {
 	 * @param collector {@link DiagnosticCollector}
 	 * @return 诊断消息
 	 */
-	public static String getMessages(DiagnosticCollector<?> collector) {
+	public static String getMessages(final DiagnosticCollector<?> collector) {
 		final List<?> diagnostics = collector.getDiagnostics();
 		return diagnostics.stream().map(String::valueOf)
 				.collect(Collectors.joining(System.lineSeparator()));

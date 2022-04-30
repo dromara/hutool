@@ -27,7 +27,7 @@ public class PageResultHandler implements RsHandler<PageResult<Entity>> {
 	 * @param pageResult 分页结果集空对象
 	 * @return EntityHandler对象
 	 */
-	public static PageResultHandler create(PageResult<Entity> pageResult) {
+	public static PageResultHandler create(final PageResult<Entity> pageResult) {
 		return new PageResultHandler(pageResult);
 	}
 
@@ -37,7 +37,7 @@ public class PageResultHandler implements RsHandler<PageResult<Entity>> {
 	 *
 	 * @param pageResult 分页结果集空对象
 	 */
-	public PageResultHandler(PageResult<Entity> pageResult) {
+	public PageResultHandler(final PageResult<Entity> pageResult) {
 		this(pageResult, false);
 	}
 
@@ -48,13 +48,13 @@ public class PageResultHandler implements RsHandler<PageResult<Entity>> {
 	 * @param pageResult      分页结果集空对象
 	 * @param caseInsensitive 是否大小写不敏感
 	 */
-	public PageResultHandler(PageResult<Entity> pageResult, boolean caseInsensitive) {
+	public PageResultHandler(final PageResult<Entity> pageResult, final boolean caseInsensitive) {
 		this.pageResult = pageResult;
 		this.caseInsensitive = caseInsensitive;
 	}
 
 	@Override
-	public PageResult<Entity> handle(ResultSet rs) throws SQLException {
+	public PageResult<Entity> handle(final ResultSet rs) throws SQLException {
 		return HandleHelper.handleRs(rs, pageResult, this.caseInsensitive);
 	}
 }

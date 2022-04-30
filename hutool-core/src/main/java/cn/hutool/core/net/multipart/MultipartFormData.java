@@ -42,7 +42,7 @@ public class MultipartFormData {
 	 *
 	 * @param uploadSetting 上传设定
 	 */
-	public MultipartFormData(UploadSetting uploadSetting) {
+	public MultipartFormData(final UploadSetting uploadSetting) {
 		this.setting = uploadSetting == null ? new UploadSetting() : uploadSetting;
 	}
 	// --------------------------------------------------------------------- Constructor end
@@ -54,20 +54,20 @@ public class MultipartFormData {
 	 * @param charset 编码
 	 * @throws IOException IO异常
 	 */
-	public void parseRequestStream(InputStream inputStream, Charset charset) throws IOException {
+	public void parseRequestStream(final InputStream inputStream, final Charset charset) throws IOException {
 		setLoaded();
 
-		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
+		final MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
 		input.readBoundary();
 		while (true) {
-			UploadFileHeader header = input.readDataHeader(charset);
+			final UploadFileHeader header = input.readDataHeader(charset);
 			if (header == null) {
 				break;
 			}
 
 			if (header.isFile == true) {
 				// 文件类型的表单项
-				String fileName = header.fileName;
+				final String fileName = header.fileName;
 				if (fileName.length() > 0 && header.contentType.contains("application/x-macbinary")) {
 					input.skipBytes(128);
 				}
@@ -84,7 +84,7 @@ public class MultipartFormData {
 			input.mark(1);
 
 			// read byte, but may be end of stream
-			int nextByte = input.read();
+			final int nextByte = input.read();
 			if (nextByte == -1 || nextByte == '-') {
 				input.reset();
 				break;
@@ -100,7 +100,7 @@ public class MultipartFormData {
 	 * @param paramName 参数名
 	 * @return null未找到，否则返回值
 	 */
-	public String getParam(String paramName) {
+	public String getParam(final String paramName) {
 		final List<String> values = getListParam(paramName);
 		if (CollUtil.isNotEmpty(values)) {
 			return values.get(0);
@@ -121,7 +121,7 @@ public class MultipartFormData {
 	 * @param paramName 参数名
 	 * @return 数组表单值
 	 */
-	public String[] getArrayParam(String paramName) {
+	public String[] getArrayParam(final String paramName) {
 		final List<String> listParam = getListParam(paramName);
 		if(null != listParam){
 			return listParam.toArray(new String[0]);
@@ -136,7 +136,7 @@ public class MultipartFormData {
 	 * @return 数组表单值
 	 * @since 5.3.0
 	 */
-	public List<String> getListParam(String paramName) {
+	public List<String> getListParam(final String paramName) {
 		return requestParameters.get(paramName);
 	}
 
@@ -165,8 +165,8 @@ public class MultipartFormData {
 	 * @param paramName 文件参数名称
 	 * @return 上传的文件， 如果无为null
 	 */
-	public UploadFile getFile(String paramName) {
-		UploadFile[] values = getFiles(paramName);
+	public UploadFile getFile(final String paramName) {
+		final UploadFile[] values = getFiles(paramName);
 		if ((values != null) && (values.length > 0)) {
 			return values[0];
 		}
@@ -180,7 +180,7 @@ public class MultipartFormData {
 	 * @param paramName 属性名
 	 * @return 上传的文件列表
 	 */
-	public UploadFile[] getFiles(String paramName) {
+	public UploadFile[] getFiles(final String paramName) {
 		final List<UploadFile> fileList = getFileList(paramName);
 		if(null != fileList){
 			return fileList.toArray(new UploadFile[0]);
@@ -196,7 +196,7 @@ public class MultipartFormData {
 	 * @return 上传的文件列表
 	 * @since 5.3.0
 	 */
-	public List<UploadFile> getFileList(String paramName) {
+	public List<UploadFile> getFileList(final String paramName) {
 		return requestFiles.get(paramName);
 	}
 
@@ -244,7 +244,7 @@ public class MultipartFormData {
 	 * @param name 参数名
 	 * @param uploadFile 文件
 	 */
-	private void putFile(String name, UploadFile uploadFile) {
+	private void putFile(final String name, final UploadFile uploadFile) {
 		this.requestFiles.putValue(name, uploadFile);
 	}
 
@@ -254,7 +254,7 @@ public class MultipartFormData {
 	 * @param name 参数名
 	 * @param value 参数值
 	 */
-	private void putParameter(String name, String value) {
+	private void putParameter(final String name, final String value) {
 		this.requestParameters.putValue(name, value);
 	}
 

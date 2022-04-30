@@ -30,7 +30,7 @@ public interface Supplier2<T, P1, P2> {
 	 * @param p2 参数2
 	 * @return {@link Supplier}
 	 */
-	default Supplier<T> toSupplier(P1 p1, P2 p2) {
+	default Supplier<T> toSupplier(final P1 p1, final P2 p2) {
 		return () -> get(p1, p2);
 	}
 }

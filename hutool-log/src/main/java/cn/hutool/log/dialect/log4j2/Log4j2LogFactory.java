@@ -9,19 +9,19 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class Log4j2LogFactory extends LogFactory{
-	
+
 	public Log4j2LogFactory() {
 		super("Log4j2");
 		checkLogExist(org.apache.logging.log4j.LogManager.class);
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new Log4j2Log(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new Log4j2Log(clazz);
 	}
 

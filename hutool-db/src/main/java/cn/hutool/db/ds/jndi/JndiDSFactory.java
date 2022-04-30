@@ -28,13 +28,13 @@ public class JndiDSFactory extends AbstractDSFactory {
 		this(null);
 	}
 
-	public JndiDSFactory(Setting setting) {
+	public JndiDSFactory(final Setting setting) {
 		super(DS_NAME, null, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
-		String jndiName = poolSetting.getStr("jndi");
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
+		final String jndiName = poolSetting.getStr("jndi");
 		if (StrUtil.isEmpty(jndiName)) {
 			throw new DbRuntimeException("No setting name [jndi] for this group.");
 		}

@@ -30,7 +30,7 @@ public class TransCollection<F, T> extends AbstractCollection<T> {
 	 * @param fromCollection 源集合
 	 * @param function       转换函数
 	 */
-	public TransCollection(Collection<F> fromCollection, Function<? super F, ? extends T> function) {
+	public TransCollection(final Collection<F> fromCollection, final Function<? super F, ? extends T> function) {
 		this.fromCollection = Assert.notNull(fromCollection);
 		this.function = Assert.notNull(function);
 	}
@@ -51,13 +51,13 @@ public class TransCollection<F, T> extends AbstractCollection<T> {
 	}
 
 	@Override
-	public void forEach(Consumer<? super T> action) {
+	public void forEach(final Consumer<? super T> action) {
 		Assert.notNull(action);
 		fromCollection.forEach((f) -> action.accept(function.apply(f)));
 	}
 
 	@Override
-	public boolean removeIf(Predicate<? super T> filter) {
+	public boolean removeIf(final Predicate<? super T> filter) {
 		Assert.notNull(filter);
 		return fromCollection.removeIf(element -> filter.test(function.apply(element)));
 	}

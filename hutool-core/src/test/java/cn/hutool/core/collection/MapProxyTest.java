@@ -14,18 +14,18 @@ public class MapProxyTest {
 
 	@Test
 	public void mapProxyTest() {
-		Map<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("a", "1");
 		map.put("b", "2");
 
-		MapProxy mapProxy = new MapProxy(map);
-		Integer b = mapProxy.getInt("b");
+		final MapProxy mapProxy = new MapProxy(map);
+		final Integer b = mapProxy.getInt("b");
 		Assert.assertEquals(new Integer(2), b);
 
-		Set<Object> keys = mapProxy.keySet();
+		final Set<Object> keys = mapProxy.keySet();
 		Assert.assertFalse(keys.isEmpty());
 
-		Set<Entry<Object,Object>> entrys = mapProxy.entrySet();
+		final Set<Entry<Object,Object>> entrys = mapProxy.entrySet();
 		Assert.assertFalse(entrys.isEmpty());
 	}
 
@@ -39,7 +39,7 @@ public class MapProxyTest {
 
 	@Test
 	public void classProxyTest() {
-		Student student = MapProxy.create(new HashMap<>()).toProxyBean(Student.class);
+		final Student student = MapProxy.create(new HashMap<>()).toProxyBean(Student.class);
 		student.setName("小明").setAge(18);
 		Assert.assertEquals(student.getAge(), 18);
 		Assert.assertEquals(student.getName(), "小明");

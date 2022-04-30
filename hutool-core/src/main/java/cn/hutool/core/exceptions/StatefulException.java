@@ -16,37 +16,37 @@ public class StatefulException extends RuntimeException {
 	public StatefulException() {
 	}
 
-	public StatefulException(String msg) {
+	public StatefulException(final String msg) {
 		super(msg);
 	}
 
-	public StatefulException(String messageTemplate, Object... params) {
+	public StatefulException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public StatefulException(Throwable throwable) {
+	public StatefulException(final Throwable throwable) {
 		super(throwable);
 	}
 
-	public StatefulException(String msg, Throwable throwable) {
+	public StatefulException(final String msg, final Throwable throwable) {
 		super(msg, throwable);
 	}
 
-	public StatefulException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public StatefulException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public StatefulException(int status, String msg) {
+	public StatefulException(final int status, final String msg) {
 		super(msg);
 		this.status = status;
 	}
 
-	public StatefulException(int status, Throwable throwable) {
+	public StatefulException(final int status, final Throwable throwable) {
 		super(throwable);
 		this.status = status;
 	}
 
-	public StatefulException(int status, String msg, Throwable throwable) {
+	public StatefulException(final int status, final String msg, final Throwable throwable) {
 		super(msg, throwable);
 		this.status = status;
 	}

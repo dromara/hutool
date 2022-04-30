@@ -63,7 +63,7 @@ public abstract class HttpBase<T> {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	public String header(String name) {
+	public String header(final String name) {
 		final List<String> values = headerList(name);
 		if (CollUtil.isEmpty(values)) {
 			return null;
@@ -78,7 +78,7 @@ public abstract class HttpBase<T> {
 	 * @return Header值
 	 * @since 3.1.1
 	 */
-	public List<String> headerList(String name) {
+	public List<String> headerList(final String name) {
 		if (StrUtil.isBlank(name)) {
 			return null;
 		}
@@ -93,7 +93,7 @@ public abstract class HttpBase<T> {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	public String header(Header name) {
+	public String header(final Header name) {
 		if (null == name) {
 			return null;
 		}
@@ -109,7 +109,7 @@ public abstract class HttpBase<T> {
 	 * @param isOverride 是否覆盖已有值
 	 * @return T 本身
 	 */
-	public T header(String name, String value, boolean isOverride) {
+	public T header(final String name, final String value, final boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
 			if (isOverride || CollUtil.isEmpty(values)) {
@@ -132,7 +132,7 @@ public abstract class HttpBase<T> {
 	 * @param isOverride 是否覆盖已有值
 	 * @return T 本身
 	 */
-	public T header(Header name, String value, boolean isOverride) {
+	public T header(final Header name, final String value, final boolean isOverride) {
 		return header(name.toString(), value, isOverride);
 	}
 
@@ -144,7 +144,7 @@ public abstract class HttpBase<T> {
 	 * @param value Header值
 	 * @return T 本身
 	 */
-	public T header(Header name, String value) {
+	public T header(final Header name, final String value) {
 		return header(name.toString(), value, true);
 	}
 
@@ -156,7 +156,7 @@ public abstract class HttpBase<T> {
 	 * @param value Header值
 	 * @return T 本身
 	 */
-	public T header(String name, String value) {
+	public T header(final String name, final String value) {
 		return header(name, value, true);
 	}
 
@@ -168,12 +168,12 @@ public abstract class HttpBase<T> {
 	 * @return this
 	 * @since 4.6.3
 	 */
-	public T headerMap(Map<String, String> headers, boolean isOverride) {
+	public T headerMap(final Map<String, String> headers, final boolean isOverride) {
 		if (MapUtil.isEmpty(headers)) {
 			return (T) this;
 		}
 
-		for (Entry<String, String> entry : headers.entrySet()) {
+		for (final Entry<String, String> entry : headers.entrySet()) {
 			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), isOverride);
 		}
 		return (T) this;
@@ -186,7 +186,7 @@ public abstract class HttpBase<T> {
 	 * @param headers 请求头
 	 * @return this
 	 */
-	public T header(Map<String, List<String>> headers) {
+	public T header(final Map<String, List<String>> headers) {
 		return header(headers, false);
 	}
 
@@ -198,15 +198,15 @@ public abstract class HttpBase<T> {
 	 * @return this
 	 * @since 4.0.8
 	 */
-	public T header(Map<String, List<String>> headers, boolean isOverride) {
+	public T header(final Map<String, List<String>> headers, final boolean isOverride) {
 		if (MapUtil.isEmpty(headers)) {
 			return (T) this;
 		}
 
 		String name;
-		for (Entry<String, List<String>> entry : headers.entrySet()) {
+		for (final Entry<String, List<String>> entry : headers.entrySet()) {
 			name = entry.getKey();
-			for (String value : entry.getValue()) {
+			for (final String value : entry.getValue()) {
 				this.header(name, StrUtil.nullToEmpty(value), isOverride);
 			}
 		}
@@ -221,12 +221,12 @@ public abstract class HttpBase<T> {
 	 * @return this
 	 * @since 4.0.3
 	 */
-	public T addHeaders(Map<String, String> headers) {
+	public T addHeaders(final Map<String, String> headers) {
 		if (MapUtil.isEmpty(headers)) {
 			return (T) this;
 		}
 
-		for (Entry<String, String> entry : headers.entrySet()) {
+		for (final Entry<String, String> entry : headers.entrySet()) {
 			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), false);
 		}
 		return (T) this;
@@ -238,7 +238,7 @@ public abstract class HttpBase<T> {
 	 * @param name Header名
 	 * @return this
 	 */
-	public T removeHeader(String name) {
+	public T removeHeader(final String name) {
 		if (name != null) {
 			headers.remove(name.trim());
 		}
@@ -251,7 +251,7 @@ public abstract class HttpBase<T> {
 	 * @param name Header名
 	 * @return this
 	 */
-	public T removeHeader(Header name) {
+	public T removeHeader(final Header name) {
 		return removeHeader(name.toString());
 	}
 
@@ -291,7 +291,7 @@ public abstract class HttpBase<T> {
 	 * @param httpVersion Http版本，{@link HttpBase#HTTP_1_0}，{@link HttpBase#HTTP_1_1}
 	 * @return this
 	 */
-	public T httpVersion(String httpVersion) {
+	public T httpVersion(final String httpVersion) {
 		this.httpVersion = httpVersion;
 		return (T) this;
 	}
@@ -312,7 +312,7 @@ public abstract class HttpBase<T> {
 	 * @return T 自己
 	 * @see CharsetUtil
 	 */
-	public T charset(String charset) {
+	public T charset(final String charset) {
 		if (StrUtil.isNotBlank(charset)) {
 			charset(Charset.forName(charset));
 		}
@@ -326,7 +326,7 @@ public abstract class HttpBase<T> {
 	 * @return T 自己
 	 * @see CharsetUtil
 	 */
-	public T charset(Charset charset) {
+	public T charset(final Charset charset) {
 		if (null != charset) {
 			this.charset = charset;
 		}
@@ -335,9 +335,9 @@ public abstract class HttpBase<T> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
-		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
+		for (final Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(
 							entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
 					.append(StrUtil.CRLF);

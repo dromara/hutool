@@ -19,7 +19,7 @@ public class H2Test {
 
 	@BeforeClass
 	public static void init() throws SQLException {
-		Db db = Db.use(DS_GROUP_NAME);
+		final Db db = Db.use(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 
 		db.insert(Entity.create("test").set("a", 1).set("b", 11));
@@ -30,21 +30,21 @@ public class H2Test {
 
 	@Test
 	public void queryTest() throws SQLException {
-		List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
+		final List<Entity> query = Db.use(DS_GROUP_NAME).query("select * from test");
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
 	public void findTest() throws SQLException {
-		List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
+		final List<Entity> query = Db.use(DS_GROUP_NAME).find(Entity.create("test"));
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
 	public void upsertTest() throws SQLException {
-		Db db=Db.use(DS_GROUP_NAME);
+		final Db db=Db.use(DS_GROUP_NAME);
 		db.upsert(Entity.create("test").set("a",1).set("b",111),"a");
-		Entity a1=db.get("test","a",1);
+		final Entity a1=db.get("test","a",1);
 		Assert.assertEquals(Long.valueOf(111),a1.getLong("b"));
 	}
 }

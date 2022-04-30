@@ -13,18 +13,18 @@ public class YearValueMatcher implements PartMatcher {
 
 	private final LinkedHashSet<Integer> valueList;
 
-	public YearValueMatcher(Collection<Integer> intValueList) {
+	public YearValueMatcher(final Collection<Integer> intValueList) {
 		this.valueList = new LinkedHashSet<>(intValueList);
 	}
 
 	@Override
-	public boolean match(Integer t) {
+	public boolean match(final Integer t) {
 		return valueList.contains(t);
 	}
 
 	@Override
-	public int nextAfter(int value) {
-		for (Integer year : valueList) {
+	public int nextAfter(final int value) {
+		for (final Integer year : valueList) {
 			if (year >= value) {
 				return year;
 			}

@@ -22,7 +22,7 @@ public class FileSystemUtilTest {
 		PathUtil.walkFiles(root, new SimpleFileVisitor<Path>() {
 
 			@Override
-			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+			public FileVisitResult visitFile(final Path path, final BasicFileAttributes attrs) {
 				Console.log(path);
 				return FileVisitResult.CONTINUE;
 			}

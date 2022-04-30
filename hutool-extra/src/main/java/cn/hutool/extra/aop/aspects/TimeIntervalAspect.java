@@ -16,13 +16,13 @@ public class TimeIntervalAspect extends SimpleAspect {
 	private final TimeInterval interval = new TimeInterval();
 
 	@Override
-	public boolean before(Object target, Method method, Object[] args) {
+	public boolean before(final Object target, final Method method, final Object[] args) {
 		interval.start();
 		return true;
 	}
 
 	@Override
-	public boolean after(Object target, Method method, Object[] args, Object returnVal) {
+	public boolean after(final Object target, final Method method, final Object[] args, final Object returnVal) {
 		Console.log("Method [{}.{}] execute spend [{}]ms return value [{}]",
 				target.getClass().getName(), //
 				method.getName(), //

@@ -28,7 +28,7 @@ public class CronConfig {
 	 * @param timezone 时区
 	 * @return this
 	 */
-	public CronConfig setTimeZone(TimeZone timezone) {
+	public CronConfig setTimeZone(final TimeZone timezone) {
 		this.timezone = timezone;
 		return this;
 	}
@@ -57,7 +57,7 @@ public class CronConfig {
 	 * @param isMatchSecond {@code true}支持，{@code false}不支持
 	 * @return this
 	 */
-	public CronConfig setMatchSecond(boolean isMatchSecond) {
+	public CronConfig setMatchSecond(final boolean isMatchSecond) {
 		this.matchSecond = isMatchSecond;
 		return this;
 	}

@@ -32,8 +32,8 @@ public class CronPatternBuilder implements Builder<String> {
 	 * @param values 时间值列表
 	 * @return this
 	 */
-	public CronPatternBuilder setValues(Part part, int... values) {
-		for (int value : values) {
+	public CronPatternBuilder setValues(final Part part, final int... values) {
+		for (final int value : values) {
 			part.checkValue(value);
 		}
 		return set(part, ArrayUtil.join(values, ","));
@@ -47,7 +47,7 @@ public class CronPatternBuilder implements Builder<String> {
 	 * @param end   结束值
 	 * @return this
 	 */
-	public CronPatternBuilder setRange(Part part, int begin, int end) {
+	public CronPatternBuilder setRange(final Part part, final int begin, final int end) {
 		Assert.notNull(part );
 		part.checkValue(begin);
 		part.checkValue(end);
@@ -61,7 +61,7 @@ public class CronPatternBuilder implements Builder<String> {
 	 * @param value 表达式值，如"*"、"1,2"、"5-12"等
 	 * @return this
 	 */
-	public CronPatternBuilder set(Part part, String value) {
+	public CronPatternBuilder set(final Part part, final String value) {
 		parts[part.ordinal()] = value;
 		return this;
 	}

@@ -35,14 +35,14 @@ public class SqlUtil {
 	 * @param paramValues 条件值得存放List
 	 * @return 带where关键字的SQL部分
 	 */
-	public static String buildEqualsWhere(Entity entity, List<Object> paramValues) {
+	public static String buildEqualsWhere(final Entity entity, final List<Object> paramValues) {
 		if (null == entity || entity.isEmpty()) {
 			return StrUtil.EMPTY;
 		}
 
 		final StringBuilder sb = new StringBuilder(" WHERE ");
 		boolean isNotFirst = false;
-		for (Entry<String, Object> entry : entity.entrySet()) {
+		for (final Entry<String, Object> entry : entity.entrySet()) {
 			if (isNotFirst) {
 				sb.append(" and ");
 			} else {
@@ -61,7 +61,7 @@ public class SqlUtil {
 	 * @param entity 实体对象
 	 * @return 条件对象
 	 */
-	public static Condition[] buildConditions(Entity entity) {
+	public static Condition[] buildConditions(final Entity entity) {
 		if (null == entity || entity.isEmpty()) {
 			return null;
 		}
@@ -69,7 +69,7 @@ public class SqlUtil {
 		final Condition[] conditions = new Condition[entity.size()];
 		int i = 0;
 		Object value;
-		for (Entry<String, Object> entry : entity.entrySet()) {
+		for (final Entry<String, Object> entry : entity.entrySet()) {
 			value = entry.getValue();
 			if (value instanceof Condition) {
 				conditions[i++] = (Condition) value;
@@ -103,12 +103,12 @@ public class SqlUtil {
 	 * @param withLikeKeyword 是否包含LIKE关键字
 	 * @return 拼接后的like值
 	 */
-	public static String buildLikeValue(String value, LikeType likeType, boolean withLikeKeyword) {
+	public static String buildLikeValue(final String value, final LikeType likeType, final boolean withLikeKeyword) {
 		if (null == value) {
 			return null;
 		}
 
-		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
+		final StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
 		switch (likeType) {
 			case StartWith:
 				likeValue.append(value).append('%');
@@ -132,7 +132,7 @@ public class SqlUtil {
 	 * @param sql SQL
 	 * @return 格式化后的SQL
 	 */
-	public static String formatSql(String sql) {
+	public static String formatSql(final String sql) {
 		return SqlFormatter.format(sql);
 	}
 
@@ -142,7 +142,7 @@ public class SqlUtil {
 	 * @param rowId RowId
 	 * @return RowId字符串
 	 */
-	public static String rowIdToString(RowId rowId) {
+	public static String rowIdToString(final RowId rowId) {
 		return StrUtil.str(rowId.getBytes(), CharsetUtil.ISO_8859_1);
 	}
 
@@ -153,12 +153,12 @@ public class SqlUtil {
 	 * @return 字符串
 	 * @since 3.0.6
 	 */
-	public static String clobToStr(Clob clob) {
+	public static String clobToStr(final Clob clob) {
 		Reader reader = null;
 		try {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
 			IoUtil.close(reader);
@@ -173,12 +173,12 @@ public class SqlUtil {
 	 * @return 字符串
 	 * @since 3.0.6
 	 */
-	public static String blobToStr(Blob blob, Charset charset) {
+	public static String blobToStr(final Blob blob, final Charset charset) {
 		InputStream in = null;
 		try {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, charset);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -194,14 +194,14 @@ public class SqlUtil {
 	 * @return {@link Blob}
 	 * @since 4.5.13
 	 */
-	public static Blob createBlob(Connection conn, InputStream dataStream, boolean closeAfterUse) {
+	public static Blob createBlob(final Connection conn, final InputStream dataStream, final boolean closeAfterUse) {
 		Blob blob;
 		OutputStream out = null;
 		try {
 			blob = conn.createBlob();
 			out = blob.setBinaryStream(1);
 			IoUtil.copy(dataStream, out);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
 			IoUtil.close(out);
@@ -220,12 +220,12 @@ public class SqlUtil {
 	 * @return {@link Blob}
 	 * @since 4.5.13
 	 */
-	public static Blob createBlob(Connection conn, byte[] data) {
-		Blob blob;
+	public static Blob createBlob(final Connection conn, final byte[] data) {
+		final Blob blob;
 		try {
 			blob = conn.createBlob();
 			blob.setBytes(0, data);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 		return blob;
@@ -238,7 +238,7 @@ public class SqlUtil {
 	 * @return {@link java.sql.Date}
 	 * @since 3.1.2
 	 */
-	public static java.sql.Date toSqlDate(java.util.Date date) {
+	public static java.sql.Date toSqlDate(final java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
 
@@ -249,7 +249,7 @@ public class SqlUtil {
 	 * @return {@link java.sql.Timestamp}
 	 * @since 3.1.2
 	 */
-	public static java.sql.Timestamp toSqlTimestamp(java.util.Date date) {
+	public static java.sql.Timestamp toSqlTimestamp(final java.util.Date date) {
 		return new java.sql.Timestamp(date.getTime());
 	}
 }

@@ -52,7 +52,7 @@ public enum WatchKind {
 	 *
 	 * @param value 事件类型
 	 */
-	WatchKind(WatchEvent.Kind<?> value) {
+	WatchKind(final WatchEvent.Kind<?> value) {
 		this.value = value;
 	}
 

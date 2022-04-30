@@ -20,20 +20,20 @@ public class OracleTest {
 
 	@Test
 	public void oraclePageSqlTest() {
-		Page page = new Page(0, 10);
-		Entity where = Entity.create("PMCPERFORMANCEINFO").set("yearPI", "2017");
+		final Page page = new Page(0, 10);
+		final Entity where = Entity.create("PMCPERFORMANCEINFO").set("yearPI", "2017");
 		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		query.setPage(page);
 
-		SqlBuilder find = SqlBuilder.create(null).query(query).orderBy(page.getOrders());
+		final SqlBuilder find = SqlBuilder.create(null).query(query).orderBy(page.getOrders());
 		final int[] startEnd = page.getStartEnd();
-		SqlBuilder builder = SqlBuilder.create(null).append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")//
+		final SqlBuilder builder = SqlBuilder.create(null).append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")//
 				.append(find)//
 				.append(" ) row_ where rownum <= ").append(startEnd[1])//
 				.append(") table_alias")//
 				.append(" where table_alias.rownum_ >= ").append(startEnd[0]);//
 
-		String ok = "SELECT * FROM "//
+		final String ok = "SELECT * FROM "//
 				+ "( SELECT row_.*, rownum rownum_ from ( SELECT * FROM PMCPERFORMANCEINFO WHERE yearPI = ? ) row_ "//
 				+ "where rownum <= 10) table_alias where table_alias.rownum_ >= 0";//
 		Assert.assertEquals(ok, builder.toString());
@@ -55,8 +55,8 @@ public class OracleTest {
 	@Test
 	@Ignore
 	public void pageTest() throws SQLException {
-		PageResult<Entity> result = Db.use("orcl").page(Entity.create("T_USER"), new Page(2, 10));
-		for (Entity entity : result) {
+		final PageResult<Entity> result = Db.use("orcl").page(Entity.create("T_USER"), new Page(2, 10));
+		for (final Entity entity : result) {
 			Console.log(entity.get("ID"));
 		}
 	}

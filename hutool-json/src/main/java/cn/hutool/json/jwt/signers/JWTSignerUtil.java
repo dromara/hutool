@@ -32,7 +32,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner hs256(byte[] key) {
+	public static JWTSigner hs256(final byte[] key) {
 		return createSigner("HS256", key);
 	}
 
@@ -42,7 +42,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner hs384(byte[] key) {
+	public static JWTSigner hs384(final byte[] key) {
 		return createSigner("HS384", key);
 	}
 
@@ -52,7 +52,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner hs512(byte[] key) {
+	public static JWTSigner hs512(final byte[] key) {
 		return createSigner("HS512", key);
 	}
 
@@ -64,7 +64,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner rs256(Key key) {
+	public static JWTSigner rs256(final Key key) {
 		return createSigner("RS256", key);
 	}
 
@@ -74,7 +74,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner rs384(Key key) {
+	public static JWTSigner rs384(final Key key) {
 		return createSigner("RS384", key);
 	}
 
@@ -84,7 +84,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner rs512(Key key) {
+	public static JWTSigner rs512(final Key key) {
 		return createSigner("RS512", key);
 	}
 
@@ -96,7 +96,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner es256(Key key) {
+	public static JWTSigner es256(final Key key) {
 		return createSigner("ES256", key);
 	}
 
@@ -106,7 +106,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner es384(Key key) {
+	public static JWTSigner es384(final Key key) {
 		return createSigner("ES384", key);
 	}
 
@@ -116,7 +116,7 @@ public class JWTSignerUtil {
 	 * @param key 密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner es512(Key key) {
+	public static JWTSigner es512(final Key key) {
 		return createSigner("ES512", key);
 	}
 
@@ -127,7 +127,7 @@ public class JWTSignerUtil {
 	 * @param key         密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner createSigner(String algorithmId, byte[] key) {
+	public static JWTSigner createSigner(final String algorithmId, final byte[] key) {
 		Assert.notNull(key, "Signer key must be not null!");
 
 		if (null == algorithmId || NoneJWTSigner.ID_NONE.equals(algorithmId)) {
@@ -143,7 +143,7 @@ public class JWTSignerUtil {
 	 * @param keyPair     密钥对
 	 * @return 签名器
 	 */
-	public static JWTSigner createSigner(String algorithmId, KeyPair keyPair) {
+	public static JWTSigner createSigner(final String algorithmId, final KeyPair keyPair) {
 		Assert.notNull(keyPair, "Signer key pair must be not null!");
 
 		if (null == algorithmId || NoneJWTSigner.ID_NONE.equals(algorithmId)) {
@@ -159,7 +159,7 @@ public class JWTSignerUtil {
 	 * @param key         密钥
 	 * @return 签名器
 	 */
-	public static JWTSigner createSigner(String algorithmId, Key key) {
+	public static JWTSigner createSigner(final String algorithmId, final Key key) {
 		Assert.notNull(key, "Signer key must be not null!");
 
 		if (null == algorithmId || NoneJWTSigner.ID_NONE.equals(algorithmId)) {

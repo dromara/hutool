@@ -18,7 +18,7 @@ public class TaskLauncher implements Runnable {
 	 * @param scheduler {@link Scheduler}
 	 * @param millis    毫秒数
 	 */
-	public TaskLauncher(Scheduler scheduler, long millis) {
+	public TaskLauncher(final Scheduler scheduler, final long millis) {
 		this.scheduler = scheduler;
 		this.millis = millis;
 	}

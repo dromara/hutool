@@ -35,10 +35,10 @@ public enum GlobalMailAccount {
 	 * @return MailAccount
 	 */
 	private MailAccount createDefaultAccount() {
-		for (String mailSettingPath : MailAccount.MAIL_SETTING_PATHS) {
+		for (final String mailSettingPath : MailAccount.MAIL_SETTING_PATHS) {
 			try {
 				return new MailAccount(mailSettingPath);
-			} catch (IORuntimeException ignore) {
+			} catch (final IORuntimeException ignore) {
 				//ignore
 			}
 		}

@@ -61,7 +61,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param ms 间隔时间，单位毫秒
 	 */
-	public void setDelay(int ms) {
+	public void setDelay(final int ms) {
 		delay = Math.round(ms / 10.0f);
 	}
 
@@ -72,7 +72,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param code int disposal code.
 	 */
-	public void setDispose(int code) {
+	public void setDispose(final int code) {
 		if (code >= 0) {
 			dispose = code;
 		}
@@ -86,7 +86,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param iter int number of iterations.
 	 */
-	public void setRepeat(int iter) {
+	public void setRepeat(final int iter) {
 		if (iter >= 0) {
 			repeat = iter;
 		}
@@ -103,7 +103,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param c Color to be treated as transparent on display.
 	 */
-	public void setTransparent(Color c) {
+	public void setTransparent(final Color c) {
 		setTransparent(c, false);
 	}
 
@@ -122,7 +122,7 @@ public class AnimatedGifEncoder {
 	 * @param c          Color to be treated as transparent on display.
 	 * @param exactMatch If exactMatch is set to true, transparent color index is search with exact match
 	 */
-	public void setTransparent(Color c, boolean exactMatch) {
+	public void setTransparent(final Color c, final boolean exactMatch) {
 		transparent = c;
 		transparentExactMatch = exactMatch;
 	}
@@ -140,7 +140,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param c Color to be treated as background on display.
 	 */
-	public void setBackground(Color c) {
+	public void setBackground(final Color c) {
 		background = c;
 	}
 
@@ -154,7 +154,7 @@ public class AnimatedGifEncoder {
 	 * @param im BufferedImage containing frame to write.
 	 * @return true if successful.
 	 */
-	public boolean addFrame(BufferedImage im) {
+	public boolean addFrame(final BufferedImage im) {
 		if ((im == null) || !started) {
 			return false;
 		}
@@ -182,7 +182,7 @@ public class AnimatedGifEncoder {
 			}
 			writePixels(); // encode and write pixel data
 			firstFrame = false;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			ok = false;
 		}
 
@@ -206,7 +206,7 @@ public class AnimatedGifEncoder {
 			if (closeStream) {
 				out.close();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			ok = false;
 		}
 
@@ -229,7 +229,7 @@ public class AnimatedGifEncoder {
 	 *
 	 * @param fps float frame rate (frames per second)
 	 */
-	public void setFrameRate(float fps) {
+	public void setFrameRate(final float fps) {
 		if (fps != 0f) {
 			delay = Math.round(100f / fps);
 		}
@@ -258,7 +258,7 @@ public class AnimatedGifEncoder {
 	 * @param w int frame width.
 	 * @param h int frame width.
 	 */
-	public void setSize(int w, int h) {
+	public void setSize(final int w, final int h) {
 		if (started && !firstFrame) return;
 		width = w;
 		height = h;
@@ -274,14 +274,14 @@ public class AnimatedGifEncoder {
 	 * @param os OutputStream on which GIF images are written.
 	 * @return false if initial write failed.
 	 */
-	public boolean start(OutputStream os) {
+	public boolean start(final OutputStream os) {
 		if (os == null) return false;
 		boolean ok = true;
 		closeStream = false;
 		out = os;
 		try {
 			writeString("GIF89a"); // header
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			ok = false;
 		}
 		return started = ok;
@@ -293,13 +293,13 @@ public class AnimatedGifEncoder {
 	 * @param file String containing output file name.
 	 * @return false if open or initial write failed.
 	 */
-	public boolean start(String file) {
+	public boolean start(final String file) {
 		boolean ok;
 		try {
 			out = new BufferedOutputStream(new FileOutputStream(file));
 			ok = start(out);
 			closeStream = true;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			ok = false;
 		}
 		return started = ok;
@@ -313,15 +313,15 @@ public class AnimatedGifEncoder {
 	 * Analyzes image colors and creates color map.
 	 */
 	protected void analyzePixels() {
-		int len = pixels.length;
-		int nPix = len / 3;
+		final int len = pixels.length;
+		final int nPix = len / 3;
 		indexedPixels = new byte[nPix];
-		NeuQuant nq = new NeuQuant(pixels, len, sample);
+		final NeuQuant nq = new NeuQuant(pixels, len, sample);
 		// initialize quantizer
 		colorTab = nq.process(); // create reduced palette
 		// convert map from BGR to RGB
 		for (int i = 0; i < colorTab.length; i += 3) {
-			byte temp = colorTab[i];
+			final byte temp = colorTab[i];
 			colorTab[i] = colorTab[i + 2];
 			colorTab[i + 2] = temp;
 			usedEntry[i / 3] = false;
@@ -329,7 +329,7 @@ public class AnimatedGifEncoder {
 		// map image pixels to new palette
 		int k = 0;
 		for (int i = 0; i < nPix; i++) {
-			int index =
+			final int index =
 					nq.map(pixels[k++] & 0xff,
 							pixels[k++] & 0xff,
 							pixels[k++] & 0xff);
@@ -351,20 +351,20 @@ public class AnimatedGifEncoder {
 	 * @param c Color
 	 * @return index
 	 */
-	protected int findClosest(Color c) {
+	protected int findClosest(final Color c) {
 		if (colorTab == null) return -1;
-		int r = c.getRed();
-		int g = c.getGreen();
-		int b = c.getBlue();
+		final int r = c.getRed();
+		final int g = c.getGreen();
+		final int b = c.getBlue();
 		int minpos = 0;
 		int dmin = 256 * 256 * 256;
-		int len = colorTab.length;
+		final int len = colorTab.length;
 		for (int i = 0; i < len; ) {
-			int dr = r - (colorTab[i++] & 0xff);
-			int dg = g - (colorTab[i++] & 0xff);
-			int db = b - (colorTab[i] & 0xff);
-			int d = dr * dr + dg * dg + db * db;
-			int index = i / 3;
+			final int dr = r - (colorTab[i++] & 0xff);
+			final int dg = g - (colorTab[i++] & 0xff);
+			final int db = b - (colorTab[i] & 0xff);
+			final int d = dr * dr + dg * dg + db * db;
+			final int index = i / 3;
 			if (usedEntry[index] && (d < dmin)) {
 				dmin = d;
 				minpos = index;
@@ -382,7 +382,7 @@ public class AnimatedGifEncoder {
 	 * @param c 颜色
 	 * @return 颜色是否存在
 	 */
-	boolean isColorUsed(Color c) {
+	boolean isColorUsed(final Color c) {
 		return findExact(c) != -1;
 	}
 
@@ -392,17 +392,17 @@ public class AnimatedGifEncoder {
 	 * @param c Color
 	 * @return index
 	 */
-	protected int findExact(Color c) {
+	protected int findExact(final Color c) {
 		if (colorTab == null) {
 			return -1;
 		}
 
-		int r = c.getRed();
-		int g = c.getGreen();
-		int b = c.getBlue();
-		int len = colorTab.length / 3;
+		final int r = c.getRed();
+		final int g = c.getGreen();
+		final int b = c.getBlue();
+		final int len = colorTab.length / 3;
 		for (int index = 0; index < len; ++index) {
-			int i = index * 3;
+			final int i = index * 3;
 			// If the entry is used in colorTab, then check if it is the same exact color we're looking for
 			if (usedEntry[index] && r == (colorTab[i] & 0xff) && g == (colorTab[i + 1] & 0xff) && b == (colorTab[i + 2] & 0xff)) {
 				return index;
@@ -415,16 +415,16 @@ public class AnimatedGifEncoder {
 	 * Extracts image pixels into byte array "pixels"
 	 */
 	protected void getImagePixels() {
-		int w = image.getWidth();
-		int h = image.getHeight();
-		int type = image.getType();
+		final int w = image.getWidth();
+		final int h = image.getHeight();
+		final int type = image.getType();
 		if ((w != width)
 				|| (h != height)
 				|| (type != BufferedImage.TYPE_3BYTE_BGR)) {
 			// create new image with right size/format
-			BufferedImage temp =
+			final BufferedImage temp =
 					new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-			Graphics2D g = temp.createGraphics();
+			final Graphics2D g = temp.createGraphics();
 			g.setColor(background);
 			g.fillRect(0, 0, width, height);
 			g.drawImage(image, 0, 0, null);
@@ -442,7 +442,8 @@ public class AnimatedGifEncoder {
 		out.write(0x21); // extension introducer
 		out.write(0xf9); // GCE label
 		out.write(4); // data block size
-		int transp, disp;
+		final int transp;
+		int disp;
 		if (transparent == null) {
 			transp = 0;
 			disp = 0; // dispose = no action
@@ -537,7 +538,7 @@ public class AnimatedGifEncoder {
 	 */
 	protected void writePalette() throws IOException {
 		out.write(colorTab, 0, colorTab.length);
-		int n = (3 * 256) - colorTab.length;
+		final int n = (3 * 256) - colorTab.length;
 		for (int i = 0; i < n; i++) {
 			out.write(0);
 		}
@@ -549,7 +550,7 @@ public class AnimatedGifEncoder {
 	 * @throws IOException IO异常
 	 */
 	protected void writePixels() throws IOException {
-		LZWEncoder encoder = new LZWEncoder(width, height, indexedPixels, colorDepth);
+		final LZWEncoder encoder = new LZWEncoder(width, height, indexedPixels, colorDepth);
 		encoder.encode(out);
 	}
 
@@ -559,7 +560,7 @@ public class AnimatedGifEncoder {
 	 * @param value 16-bit value
 	 * @throws IOException IO异常
 	 */
-	protected void writeShort(int value) throws IOException {
+	protected void writeShort(final int value) throws IOException {
 		out.write(value & 0xff);
 		out.write((value >> 8) & 0xff);
 	}
@@ -570,7 +571,7 @@ public class AnimatedGifEncoder {
 	 * @param s String
 	 * @throws IOException IO异常
 	 */
-	protected void writeString(String s) throws IOException {
+	protected void writeString(final String s) throws IOException {
 		for (int i = 0; i < s.length(); i++) {
 			out.write((byte) s.charAt(i));
 		}

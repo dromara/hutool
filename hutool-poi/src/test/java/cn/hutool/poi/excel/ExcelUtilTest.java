@@ -48,16 +48,16 @@ public class ExcelUtilTest {
 
 	@Test
 	public void readAndWriteTest() {
-		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx");
-		ExcelWriter writer = reader.getWriter();
+		final ExcelReader reader = ExcelUtil.getReader("aaa.xlsx");
+		final ExcelWriter writer = reader.getWriter();
 		writer.writeCellValue(1, 2, "设置值");
 		writer.close();
 	}
 
 	@Test
 	public void getReaderByBookFilePathAndSheetNameTest() {
-		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
-		List<Map<String, Object>> list = reader.readAll();
+		final ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
+		final List<Map<String, Object>> list = reader.readAll();
 		reader.close();
 		Assert.assertEquals(1L, list.get(1).get("鞋码"));
 	}

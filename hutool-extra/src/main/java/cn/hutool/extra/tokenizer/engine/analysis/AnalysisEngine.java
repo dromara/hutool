@@ -26,17 +26,17 @@ public class AnalysisEngine implements TokenizerEngine {
 	 *
 	 * @param analyzer 分析器{@link Analyzer}
 	 */
-	public AnalysisEngine(Analyzer analyzer) {
+	public AnalysisEngine(final Analyzer analyzer) {
 		this.analyzer = analyzer;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
-		TokenStream stream;
+	public Result parse(final CharSequence text) {
+		final TokenStream stream;
 		try {
 			stream = analyzer.tokenStream("text", StrUtil.str(text));
 			stream.reset();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		return new AnalysisResult(stream);

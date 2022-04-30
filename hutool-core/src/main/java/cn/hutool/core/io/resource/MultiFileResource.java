@@ -18,7 +18,7 @@ public class MultiFileResource extends MultiResource{
 	 *
 	 * @param files 文件资源列表
 	 */
-	public MultiFileResource(Collection<File> files) {
+	public MultiFileResource(final Collection<File> files) {
 		add(files);
 	}
 
@@ -27,7 +27,7 @@ public class MultiFileResource extends MultiResource{
 	 *
 	 * @param files 文件资源列表
 	 */
-	public MultiFileResource(File... files) {
+	public MultiFileResource(final File... files) {
 		add(files);
 	}
 
@@ -37,8 +37,8 @@ public class MultiFileResource extends MultiResource{
 	 * @param files 文件资源
 	 * @return this
 	 */
-	public MultiFileResource add(File... files) {
-		for (File file : files) {
+	public MultiFileResource add(final File... files) {
+		for (final File file : files) {
 			this.add(new FileResource(file));
 		}
 		return this;
@@ -50,15 +50,15 @@ public class MultiFileResource extends MultiResource{
 	 * @param files 文件资源
 	 * @return this
 	 */
-	public MultiFileResource add(Collection<File> files) {
-		for (File file : files) {
+	public MultiFileResource add(final Collection<File> files) {
+		for (final File file : files) {
 			this.add(new FileResource(file));
 		}
 		return this;
 	}
 
 	@Override
-	public MultiFileResource add(Resource resource) {
+	public MultiFileResource add(final Resource resource) {
 		return (MultiFileResource)super.add(resource);
 	}
 }

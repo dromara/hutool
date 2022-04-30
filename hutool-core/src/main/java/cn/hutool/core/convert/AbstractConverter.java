@@ -27,17 +27,17 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 	 * @return 转换后的值
 	 * @since 4.5.7
 	 */
-	public T convertQuietly(Object value, T defaultValue) {
+	public T convertQuietly(final Object value, final T defaultValue) {
 		try {
 			return convert(value, defaultValue);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return defaultValue;
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T convert(Object value, T defaultValue) {
+	public T convert(final Object value, final T defaultValue) {
 		Class<T> targetType = getTargetType();
 		if (null == targetType && null == defaultValue) {
 			throw new NullPointerException(StrUtil.format("[type] and [defaultValue] are both null for Converter [{}], we can not know what type to convert !", this.getClass().getName()));
@@ -55,7 +55,7 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
 				return targetType.cast(value);
 			}
-			T result = convertInternal(value);
+			final T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);
 		} else {
 			throw new IllegalArgumentException(
@@ -90,7 +90,7 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 	 * @param value 值
 	 * @return String
 	 */
-	protected String convertToStr(Object value) {
+	protected String convertToStr(final Object value) {
 		if (null == value) {
 			return null;
 		}

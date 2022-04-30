@@ -18,7 +18,7 @@ public enum DialectName {
 	 * @return 是否时Oracle数据库
 	 * @since 5.7.2
 	 */
-	public boolean match(String dialectName) {
+	public boolean match(final String dialectName) {
 		return StrUtil.equalsIgnoreCase(dialectName, name());
 	}
 }

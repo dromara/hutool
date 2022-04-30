@@ -32,7 +32,7 @@ public interface HttpInterceptor<T extends HttpBase<T>> {
 		private final List<HttpInterceptor<T>> interceptors = new LinkedList<>();
 
 		@Override
-		public Chain<T> addChain(HttpInterceptor<T> element) {
+		public Chain<T> addChain(final HttpInterceptor<T> element) {
 			interceptors.add(element);
 			return this;
 		}

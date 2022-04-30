@@ -31,10 +31,10 @@ public class SevenZArchiver implements Archiver {
 	 *
 	 * @param file 归档输出的文件
 	 */
-	public SevenZArchiver(File file) {
+	public SevenZArchiver(final File file) {
 		try {
 			this.sevenZOutputFile = new SevenZOutputFile(file);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -44,12 +44,12 @@ public class SevenZArchiver implements Archiver {
 	 *
 	 * @param out 归档输出的流
 	 */
-	public SevenZArchiver(OutputStream out) {
+	public SevenZArchiver(final OutputStream out) {
 		this.out = out;
 		this.channel = new SeekableInMemoryByteChannel();
 		try {
 			this.sevenZOutputFile = new SevenZOutputFile(channel);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -59,10 +59,10 @@ public class SevenZArchiver implements Archiver {
 	 *
 	 * @param channel 归档输出的文件
 	 */
-	public SevenZArchiver(SeekableByteChannel channel) {
+	public SevenZArchiver(final SeekableByteChannel channel) {
 		try {
 			this.sevenZOutputFile = new SevenZOutputFile(channel);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -77,10 +77,10 @@ public class SevenZArchiver implements Archiver {
 	}
 
 	@Override
-	public SevenZArchiver add(File file, String path, Filter<File> filter) {
+	public SevenZArchiver add(final File file, final String path, final Filter<File> filter) {
 		try {
 			addInternal(file, path, filter);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -90,7 +90,7 @@ public class SevenZArchiver implements Archiver {
 	public SevenZArchiver finish() {
 		try {
 			this.sevenZOutputFile.finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -100,13 +100,13 @@ public class SevenZArchiver implements Archiver {
 	public void close() {
 		try {
 			finish();
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			//ignore
 		}
 		if (null != out && this.channel instanceof SeekableInMemoryByteChannel) {
 			try {
 				out.write(((SeekableInMemoryByteChannel) this.channel).array());
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 		}
@@ -120,7 +120,7 @@ public class SevenZArchiver implements Archiver {
 	 * @param path   文件或目录的初始路径，null表示位于根路径
 	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 */
-	private void addInternal(File file, String path, Filter<File> filter) throws IOException {
+	private void addInternal(final File file, final String path, final Filter<File> filter) throws IOException {
 		if (null != filter && false == filter.accept(file)) {
 			return;
 		}
@@ -140,7 +140,7 @@ public class SevenZArchiver implements Archiver {
 			// 目录遍历写入
 			final File[] files = file.listFiles();
 			if(ArrayUtil.isNotEmpty(files)){
-				for (File childFile : files) {
+				for (final File childFile : files) {
 					addInternal(childFile, entryName, filter);
 				}
 			}

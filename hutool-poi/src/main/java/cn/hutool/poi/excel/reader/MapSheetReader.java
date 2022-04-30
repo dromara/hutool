@@ -27,13 +27,13 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 	 * @param startRowIndex 起始行（包含，从0开始计数）
 	 * @param endRowIndex   结束行（包含，从0开始计数）
 	 */
-	public MapSheetReader(int headerRowIndex, int startRowIndex, int endRowIndex) {
+	public MapSheetReader(final int headerRowIndex, final int startRowIndex, final int endRowIndex) {
 		super(startRowIndex, endRowIndex);
 		this.headerRowIndex = headerRowIndex;
 	}
 
 	@Override
-	public List<Map<String, Object>> read(Sheet sheet) {
+	public List<Map<String, Object>> read(final Sheet sheet) {
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
@@ -50,7 +50,7 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		final int endRowIndex = Math.min(this.endRowIndex, lastRowNum);// 读取结束行（包含）
 
 		// 读取header
-		List<String> headerList = aliasHeader(readRow(sheet, headerRowIndex));
+		final List<String> headerList = aliasHeader(readRow(sheet, headerRowIndex));
 
 		final List<Map<String, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
 		List<Object> rowList;

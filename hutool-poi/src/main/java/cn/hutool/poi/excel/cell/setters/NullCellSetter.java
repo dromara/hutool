@@ -15,7 +15,7 @@ public class NullCellSetter implements CellSetter {
 	public static final NullCellSetter INSTANCE = new NullCellSetter();
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setCellValue(StrUtil.EMPTY);
 	}
 }

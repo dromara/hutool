@@ -22,7 +22,7 @@ public enum BeanDescCache {
 	 * @return 属性名和{@link BeanDesc}映射
 	 * @since 5.4.2
 	 */
-	public BeanDesc getBeanDesc(Class<?> beanClass, Func0<BeanDesc> supplier) {
+	public BeanDesc getBeanDesc(final Class<?> beanClass, final Func0<BeanDesc> supplier) {
 		return bdCache.computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
 	}
 

@@ -6,7 +6,8 @@ import cn.hutool.core.text.StrUtil;
 import java.nio.charset.Charset;
 
 /**
- * Base32 - encodes and decodes RFC4648 Base32 (see https://datatracker.ietf.org/doc/html/rfc4648#section-6 )<br>
+ * Base32 - encodes and decodes RFC4648 Base32<br>
+ *  (see <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-6">https://datatracker.ietf.org/doc/html/rfc4648#section-6</a> )<br>
  * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。<br>
  * 所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。<br>
  * 根据RFC4648 Base32规范，支持两种模式：
@@ -36,7 +37,7 @@ public class Base32 {
 	 * @param source 被编码的base32字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source) {
+	public static String encode(final String source) {
 		return encode(source, CharsetUtil.UTF_8);
 	}
 
@@ -47,7 +48,7 @@ public class Base32 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source, Charset charset) {
+	public static String encode(final String source, final Charset charset) {
 		return encode(StrUtil.bytes(source, charset));
 	}
 
@@ -67,7 +68,7 @@ public class Base32 {
 	 * @param source 被编码的base32字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeHex(String source) {
+	public static String encodeHex(final String source) {
 		return encodeHex(source, CharsetUtil.UTF_8);
 	}
 
@@ -78,7 +79,7 @@ public class Base32 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeHex(String source, Charset charset) {
+	public static String encodeHex(final String source, final Charset charset) {
 		return encodeHex(StrUtil.bytes(source, charset));
 	}
 
@@ -90,7 +91,7 @@ public class Base32 {
 	 * @param base32 base32编码
 	 * @return 数据
 	 */
-	public static byte[] decode(String base32) {
+	public static byte[] decode(final String base32) {
 		return Base32Codec.INSTANCE.decode(base32);
 	}
 
@@ -100,7 +101,7 @@ public class Base32 {
 	 * @param source 被解码的base32字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source) {
+	public static String decodeStr(final String source) {
 		return decodeStr(source, CharsetUtil.UTF_8);
 	}
 
@@ -111,7 +112,7 @@ public class Base32 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source, Charset charset) {
+	public static String decodeStr(final String source, final Charset charset) {
 		return StrUtil.str(decode(source), charset);
 	}
 
@@ -121,7 +122,7 @@ public class Base32 {
 	 * @param base32 base32编码
 	 * @return 数据
 	 */
-	public static byte[] decodeHex(String base32) {
+	public static byte[] decodeHex(final String base32) {
 		return Base32Codec.INSTANCE.decode(base32, true);
 	}
 
@@ -131,7 +132,7 @@ public class Base32 {
 	 * @param source 被解码的base32字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStrHex(String source) {
+	public static String decodeStrHex(final String source) {
 		return decodeStrHex(source, CharsetUtil.UTF_8);
 	}
 
@@ -142,7 +143,7 @@ public class Base32 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStrHex(String source, Charset charset) {
+	public static String decodeStrHex(final String source, final Charset charset) {
 		return StrUtil.str(decodeHex(source), charset);
 	}
 }

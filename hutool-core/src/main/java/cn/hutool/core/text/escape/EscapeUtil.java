@@ -38,8 +38,8 @@ public class EscapeUtil {
 	 * @return 转义后的文本
 	 * @since 5.7.2
 	 */
-	public static String escapeXml(CharSequence xml) {
-		XmlEscape escape = new XmlEscape();
+	public static String escapeXml(final CharSequence xml) {
+		final XmlEscape escape = new XmlEscape();
 		return escape.replace(xml).toString();
 	}
 
@@ -50,8 +50,8 @@ public class EscapeUtil {
 	 * @return 转义后的文本
 	 * @since 5.7.2
 	 */
-	public static String unescapeXml(CharSequence xml) {
-		XmlUnescape unescape = new XmlUnescape();
+	public static String unescapeXml(final CharSequence xml) {
+		final XmlUnescape unescape = new XmlUnescape();
 		return unescape.replace(xml).toString();
 	}
 
@@ -62,8 +62,8 @@ public class EscapeUtil {
 	 * @return 转义后的文本
 	 * @since 4.1.5
 	 */
-	public static String escapeHtml4(CharSequence html) {
-		Html4Escape escape = new Html4Escape();
+	public static String escapeHtml4(final CharSequence html) {
+		final Html4Escape escape = new Html4Escape();
 		return escape.replace(html).toString();
 	}
 
@@ -74,8 +74,8 @@ public class EscapeUtil {
 	 * @return 转义后的文本
 	 * @since 4.1.5
 	 */
-	public static String unescapeHtml4(CharSequence html) {
-		Html4Unescape unescape = new Html4Unescape();
+	public static String unescapeHtml4(final CharSequence html) {
+		final Html4Unescape unescape = new Html4Unescape();
 		return unescape.replace(html).toString();
 	}
 
@@ -87,7 +87,7 @@ public class EscapeUtil {
 	 * @param content 被转义的内容
 	 * @return 编码后的字符串
 	 */
-	public static String escape(CharSequence content) {
+	public static String escape(final CharSequence content) {
 		return escape(content, JS_ESCAPE_FILTER);
 	}
 
@@ -98,7 +98,7 @@ public class EscapeUtil {
 	 * @param content 被转义的内容
 	 * @return 编码后的字符串
 	 */
-	public static String escapeAll(CharSequence content) {
+	public static String escapeAll(final CharSequence content) {
 		return escape(content, c -> true);
 	}
 
@@ -110,7 +110,7 @@ public class EscapeUtil {
 	 * @param filter  编码过滤器，对于过滤器中accept为false的字符不做编码
 	 * @return 编码后的字符串
 	 */
-	public static String escape(CharSequence content, Predicate<Character> filter) {
+	public static String escape(final CharSequence content, final Predicate<Character> filter) {
 		if (StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
@@ -145,12 +145,12 @@ public class EscapeUtil {
 	 * @param content 被转义的内容
 	 * @return 解码后的字符串
 	 */
-	public static String unescape(String content) {
+	public static String unescape(final String content) {
 		if (StrUtil.isBlank(content)) {
 			return content;
 		}
 
-		StringBuilder tmp = new StringBuilder(content.length());
+		final StringBuilder tmp = new StringBuilder(content.length());
 		int lastPos = 0;
 		int pos;
 		char ch;
@@ -185,10 +185,10 @@ public class EscapeUtil {
 	 * @param content 内容
 	 * @return 解码后的字符串，如果解码失败返回原字符串
 	 */
-	public static String safeUnescape(String content) {
+	public static String safeUnescape(final String content) {
 		try {
 			return unescape(content);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// Ignore Exception
 		}
 		return content;

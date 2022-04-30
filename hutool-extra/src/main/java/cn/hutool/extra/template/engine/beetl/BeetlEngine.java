@@ -17,7 +17,7 @@ import java.io.IOException;
 
 /**
  * Beetl模板引擎封装
- * 
+ *
  * @author looly
  */
 public class BeetlEngine implements TemplateEngine {
@@ -32,26 +32,26 @@ public class BeetlEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 模板配置
 	 */
-	public BeetlEngine(TemplateConfig config) {
+	public BeetlEngine(final TemplateConfig config) {
 		init(config);
 	}
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param engine {@link GroupTemplate}
 	 */
-	public BeetlEngine(GroupTemplate engine) {
+	public BeetlEngine(final GroupTemplate engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 
 
 	@Override
-	public TemplateEngine init(TemplateConfig config) {
+	public TemplateEngine init(final TemplateConfig config) {
 		init(createEngine(config));
 		return this;
 	}
@@ -60,12 +60,12 @@ public class BeetlEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(GroupTemplate engine){
+	private void init(final GroupTemplate engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
@@ -74,7 +74,7 @@ public class BeetlEngine implements TemplateEngine {
 
 	/**
 	 * 创建引擎
-	 * 
+	 *
 	 * @param config 模板配置
 	 * @return {@link GroupTemplate}
 	 */
@@ -103,27 +103,27 @@ public class BeetlEngine implements TemplateEngine {
 	/**
 	 * 创建自定义的模板组 {@link GroupTemplate}，配置文件使用全局默认<br>
 	 * 此时自定义的配置文件可在ClassPath中放入beetl.properties配置
-	 * 
+	 *
 	 * @param loader {@link ResourceLoader}，资源加载器
 	 * @return {@link GroupTemplate}
 	 * @since 3.2.0
 	 */
-	private static GroupTemplate createGroupTemplate(ResourceLoader<?> loader) {
+	private static GroupTemplate createGroupTemplate(final ResourceLoader<?> loader) {
 		try {
 			return createGroupTemplate(loader, Configuration.defaultConfiguration());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	/**
 	 * 创建自定义的 {@link GroupTemplate}
-	 * 
+	 *
 	 * @param loader {@link ResourceLoader}，资源加载器
 	 * @param conf {@link Configuration} 配置文件
 	 * @return {@link GroupTemplate}
 	 */
-	private static GroupTemplate createGroupTemplate(ResourceLoader<?> loader, Configuration conf) {
+	private static GroupTemplate createGroupTemplate(final ResourceLoader<?> loader, final Configuration conf) {
 		return new GroupTemplate(loader, conf);
 	}
 }

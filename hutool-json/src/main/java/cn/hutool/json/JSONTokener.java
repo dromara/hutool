@@ -55,7 +55,7 @@ public class JSONTokener {
 	 * @param reader Reader
 	 * @param config JSON配置
 	 */
-	public JSONTokener(Reader reader, JSONConfig config) {
+	public JSONTokener(final Reader reader, final JSONConfig config) {
 		this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
 		this.eof = false;
 		this.usePrevious = false;
@@ -72,7 +72,7 @@ public class JSONTokener {
 	 * @param inputStream InputStream
 	 * @param config      JSON配置
 	 */
-	public JSONTokener(InputStream inputStream, JSONConfig config) throws JSONException {
+	public JSONTokener(final InputStream inputStream, final JSONConfig config) throws JSONException {
 		this(IoUtil.getUtf8Reader(inputStream), config);
 	}
 
@@ -82,7 +82,7 @@ public class JSONTokener {
 	 * @param s      JSON字符串
 	 * @param config JSON配置
 	 */
-	public JSONTokener(CharSequence s, JSONConfig config) {
+	public JSONTokener(final CharSequence s, final JSONConfig config) {
 		this(new StringReader(StrUtil.str(s)), config);
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
@@ -135,7 +135,7 @@ public class JSONTokener {
 		} else {
 			try {
 				c = this.reader.read();
-			} catch (IOException exception) {
+			} catch (final IOException exception) {
 				throw new JSONException(exception);
 			}
 
@@ -165,8 +165,8 @@ public class JSONTokener {
 	 * @return The character 匹配到的字符
 	 * @throws JSONException 如果不匹配抛出此异常
 	 */
-	public char next(char c) throws JSONException {
-		char n = this.next();
+	public char next(final char c) throws JSONException {
+		final char n = this.next();
 		if (n != c) {
 			throw this.syntaxError("Expected '" + c + "' and instead saw '" + n + "'");
 		}
@@ -180,12 +180,12 @@ public class JSONTokener {
 	 * @return 获得的n个字符组成的字符串
 	 * @throws JSONException 如果源中余下的字符数不足以提供所需的字符数，抛出此异常
 	 */
-	public String next(int n) throws JSONException {
+	public String next(final int n) throws JSONException {
 		if (n == 0) {
 			return "";
 		}
 
-		char[] chars = new char[n];
+		final char[] chars = new char[n];
 		int pos = 0;
 		while (pos < n) {
 			chars[pos] = this.next();
@@ -221,9 +221,9 @@ public class JSONTokener {
 	 * @return 截止到引号前的字符串
 	 * @throws JSONException 出现无结束的字符串时抛出此异常
 	 */
-	public String nextString(char quote) throws JSONException {
+	public String nextString(final char quote) throws JSONException {
 		char c;
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		while (true) {
 			c = this.next();
 			switch (c) {
@@ -278,10 +278,10 @@ public class JSONTokener {
 	 * @param delimiter 分隔符
 	 * @return 字符串
 	 */
-	public String nextTo(char delimiter) throws JSONException {
-		StringBuilder sb = new StringBuilder();
+	public String nextTo(final char delimiter) throws JSONException {
+		final StringBuilder sb = new StringBuilder();
 		for (; ; ) {
-			char c = this.next();
+			final char c = this.next();
 			if (c == delimiter || c == 0 || c == '\n' || c == '\r') {
 				if (c != 0) {
 					this.back();
@@ -298,9 +298,9 @@ public class JSONTokener {
 	 * @param delimiters A set of delimiter characters.
 	 * @return A string, trimmed.
 	 */
-	public String nextTo(String delimiters) throws JSONException {
+	public String nextTo(final String delimiters) throws JSONException {
 		char c;
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (; ; ) {
 			c = this.next();
 			if (delimiters.indexOf(c) >= 0 || c == 0 || c == '\n' || c == '\r') {
@@ -321,7 +321,7 @@ public class JSONTokener {
 	 */
 	public Object nextValue() throws JSONException {
 		char c = this.nextClean();
-		String string;
+		final String string;
 
 		switch (c) {
 			case '"':
@@ -341,7 +341,7 @@ public class JSONTokener {
 		 * characters until we reach the end of the text or a formatting character.
 		 */
 
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
 			sb.append(c);
 			c = this.next();
@@ -361,12 +361,12 @@ public class JSONTokener {
 	 * @param to 需要定位的字符
 	 * @return 定位的字符，如果字符未找到返回0
 	 */
-	public char skipTo(char to) throws JSONException {
+	public char skipTo(final char to) throws JSONException {
 		char c;
 		try {
-			long startIndex = this.index;
-			long startCharacter = this.character;
-			long startLine = this.line;
+			final long startIndex = this.index;
+			final long startCharacter = this.character;
+			final long startLine = this.line;
 			this.reader.mark(1000000);
 			do {
 				c = this.next();
@@ -378,7 +378,7 @@ public class JSONTokener {
 					return c;
 				}
 			} while (c != to);
-		} catch (IOException exception) {
+		} catch (final IOException exception) {
 			throw new JSONException(exception);
 		}
 		this.back();
@@ -392,7 +392,7 @@ public class JSONTokener {
 	 * @param message 错误消息
 	 * @return A JSONException object, suitable for throwing
 	 */
-	public JSONException syntaxError(String message) {
+	public JSONException syntaxError(final String message) {
 		return new JSONException(message + this);
 	}
 
@@ -402,7 +402,7 @@ public class JSONTokener {
 	 * @return {@link JSONArray}
 	 */
 	public JSONArray toJSONArray() {
-		JSONArray jsonArray = new JSONArray(this.config);
+		final JSONArray jsonArray = new JSONArray(this.config);
 		if (this.nextClean() != '[') {
 			throw this.syntaxError("A JSONArray text must start with '['");
 		}

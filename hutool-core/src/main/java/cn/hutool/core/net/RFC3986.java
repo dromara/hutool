@@ -81,7 +81,7 @@ public class RFC3986 {
 	 * @return unreserved字符
 	 */
 	private static StringBuilder unreservedChars() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
 		// ALPHA
 		for (char c = 'A'; c <= 'Z'; c++) {

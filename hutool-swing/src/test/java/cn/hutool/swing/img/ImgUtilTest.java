@@ -54,7 +54,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void rotateTest() throws IOException {
-		Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
+		final Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
 		ImgUtil.write(image, FileUtil.file("e:/pic/result.png"));
 	}
 
@@ -115,7 +115,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void copyTest() {
-		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
+		final BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
 		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
 	}
 
@@ -142,8 +142,8 @@ public class ImgUtilTest {
 
 	@Test
 	public void getMainColor() throws MalformedURLException {
-		BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
-		String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
+		final BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
+		final String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
 		System.out.println(mainColor);
 	}
 

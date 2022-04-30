@@ -30,8 +30,8 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest2() {
-		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
-		BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/excel/single_line.xlsx");
+		final List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/excel/single_line.xlsx");
 		overtimeWriter.write(row);
 		overtimeWriter.close();
 	}
@@ -39,22 +39,22 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 		for(int i=0; i < 400000; i++) {
 			//超大列表写出测试
 			rows.add(ObjUtil.clone(row1));
 		}
 
-		String filePath = "e:/bigWriteTest.xlsx";
+		final String filePath = "e:/bigWriteTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
-		BigExcelWriter writer = ExcelUtil.getBigWriter(filePath);
+		final BigExcelWriter writer = ExcelUtil.getBigWriter(filePath);
 
 //		// 跳过当前行，即第一行，非必须，在此演示用
 //		writer.passCurrentRow();
@@ -70,17 +70,17 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest() {
-		List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
-		BigExcelWriter writer = ExcelUtil.getBigWriter("e:/mergeTest.xlsx");
-		CellStyle style = writer.getStyleSet().getHeadCellStyle();
+		final BigExcelWriter writer = ExcelUtil.getBigWriter("e:/mergeTest.xlsx");
+		final CellStyle style = writer.getStyleSet().getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
 		// 跳过当前行，即第一行，非必须，在此演示用
@@ -100,29 +100,29 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeMapTest() {
-		Map<String, Object> row1 = new LinkedHashMap<>();
+		final Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
 		row1.put("考试日期", DateUtil.date());
 
-		Map<String, Object> row2 = new LinkedHashMap<>();
+		final Map<String, Object> row2 = new LinkedHashMap<>();
 		row2.put("姓名", "李四");
 		row2.put("年龄", 33);
 		row2.put("成绩", 59.50);
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		String path = "e:/bigWriteMapTest.xlsx";
+		final String path = "e:/bigWriteMapTest.xlsx";
 		FileUtil.del(path);
-		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 
 		//设置内容字体
-		Font font = writer.createFont();
+		final Font font = writer.createFont();
 		font.setBold(true);
 		font.setColor(Font.COLOR_RED);
 		font.setItalic(true);
@@ -139,7 +139,7 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeMapTest2() {
-		Map<String, Object> row1 = MapUtil.newHashMap(true);
+		final Map<String, Object> row1 = MapUtil.newHashMap(true);
 		row1.put("姓名", "张三");
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
@@ -147,9 +147,9 @@ public class BigExcelWriteTest {
 		row1.put("考试日期", DateUtil.date());
 
 		// 通过工具类创建writer
-		String path = "e:/bigWriteMapTest2.xlsx";
+		final String path = "e:/bigWriteMapTest2.xlsx";
 		FileUtil.del(path);
-		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 
 		// 一次性写出内容，使用默认样式
 		writer.writeRow(row1, true);
@@ -160,25 +160,25 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeBeanTest() {
-		cn.hutool.poi.excel.TestBean bean1 = new cn.hutool.poi.excel.TestBean();
+		final cn.hutool.poi.excel.TestBean bean1 = new cn.hutool.poi.excel.TestBean();
 		bean1.setName("张三");
 		bean1.setAge(22);
 		bean1.setPass(true);
 		bean1.setScore(66.30);
 		bean1.setExamDate(DateUtil.date());
 
-		cn.hutool.poi.excel.TestBean bean2 = new cn.hutool.poi.excel.TestBean();
+		final cn.hutool.poi.excel.TestBean bean2 = new cn.hutool.poi.excel.TestBean();
 		bean2.setName("李四");
 		bean2.setAge(28);
 		bean2.setPass(false);
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
+		final List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
-		String file = "e:/bigWriteBeanTest.xlsx";
+		final String file = "e:/bigWriteBeanTest.xlsx";
 		FileUtil.del(file);
-		BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+		final BigExcelWriter writer = ExcelUtil.getBigWriter(file);
 		//自定义标题
 		writer.addHeaderAlias("name", "姓名");
 		writer.addHeaderAlias("age", "年龄");
@@ -196,9 +196,9 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeCellValueTest() {
-		String path = "d:/test/cellValueTest.xlsx";
+		final String path = "d:/test/cellValueTest.xlsx";
 		FileUtil.del(path);
-		BigExcelWriter writer = new BigExcelWriter(path);
+		final BigExcelWriter writer = new BigExcelWriter(path);
 		writer.writeCellValue(3, 5, "aaa");
 		writer.close();
 	}
@@ -211,7 +211,7 @@ public class BigExcelWriteTest {
 		final List<?> data = Arrays.asList(map1, map2);
 		final String destFilePath = "d:/test/closeTest.xlsx";//略
 		FileUtil.del(destFilePath);
-		try (ExcelWriter writer = ExcelUtil.getBigWriter(destFilePath)) {
+		try (final ExcelWriter writer = ExcelUtil.getBigWriter(destFilePath)) {
 			writer.write(data).flush();
 		}
 	}
@@ -220,13 +220,13 @@ public class BigExcelWriteTest {
 	@Ignore
 	public void issue1210() {
 		// 通过工具类创建writer
-		String path = "d:/test/issue1210.xlsx";
+		final String path = "d:/test/issue1210.xlsx";
 		FileUtil.del(path);
-		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 		writer.addHeaderAlias("id", "SN");
 		writer.addHeaderAlias("userName", "User Name");
 
-		List<Map<String, Object>> list = new ArrayList<>();
+		final List<Map<String, Object>> list = new ArrayList<>();
 		list.add(new HashMap<String, Object>() {
 			private static final long serialVersionUID = 1L;
 

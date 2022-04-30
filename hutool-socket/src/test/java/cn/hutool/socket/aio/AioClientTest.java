@@ -7,11 +7,11 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 public class AioClientTest {
-	public static void main(String[] args) {
-		AioClient client = new AioClient(new InetSocketAddress("localhost", 8899), new SimpleIoAction() {
+	public static void main(final String[] args) {
+		final AioClient client = new AioClient(new InetSocketAddress("localhost", 8899), new SimpleIoAction() {
 
 			@Override
-			public void doAction(AioSession session, ByteBuffer data) {
+			public void doAction(final AioSession session, final ByteBuffer data) {
 				if(data.hasRemaining()) {
 					Console.log(StrUtil.utf8Str(data));
 					session.read();

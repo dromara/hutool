@@ -52,7 +52,7 @@ public class Sftp extends AbstractFtp {
 	 * @param sshUser 远程主机用户名
 	 * @param sshPass 远程主机密码
 	 */
-	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public Sftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		this(sshHost, sshPort, sshUser, sshPass, DEFAULT_CHARSET);
 	}
 
@@ -66,7 +66,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 * @since 4.1.14
 	 */
-	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
+	public Sftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
 		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
 	}
 
@@ -76,7 +76,7 @@ public class Sftp extends AbstractFtp {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	public Sftp(FtpConfig config) {
+	public Sftp(final FtpConfig config) {
 		super(config);
 		init(config);
 	}
@@ -86,7 +86,7 @@ public class Sftp extends AbstractFtp {
 	 *
 	 * @param session {@link Session}
 	 */
-	public Sftp(Session session) {
+	public Sftp(final Session session) {
 		this(session, DEFAULT_CHARSET);
 	}
 
@@ -97,7 +97,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 * @since 4.1.14
 	 */
-	public Sftp(Session session, Charset charset) {
+	public Sftp(final Session session, final Charset charset) {
 		super(FtpConfig.create().setCharset(charset));
 		init(session, charset);
 	}
@@ -108,7 +108,7 @@ public class Sftp extends AbstractFtp {
 	 * @param channel {@link ChannelSftp}
 	 * @param charset 编码
 	 */
-	public Sftp(ChannelSftp channel, Charset charset) {
+	public Sftp(final ChannelSftp channel, final Charset charset) {
 		super(FtpConfig.create().setCharset(charset));
 		init(channel, charset);
 	}
@@ -123,7 +123,7 @@ public class Sftp extends AbstractFtp {
 	 * @param sshPass 远程主机密码
 	 * @param charset 编码
 	 */
-	public void init(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
+	public void init(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
 		init(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
 	}
 
@@ -142,7 +142,7 @@ public class Sftp extends AbstractFtp {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	public void init(FtpConfig config) {
+	public void init(final FtpConfig config) {
 		init(config.getHost(), config.getPort(), config.getUser(), config.getPassword(), config.getCharset());
 	}
 
@@ -152,7 +152,7 @@ public class Sftp extends AbstractFtp {
 	 * @param session {@link Session}
 	 * @param charset 编码
 	 */
-	public void init(Session session, Charset charset) {
+	public void init(final Session session, final Charset charset) {
 		this.session = session;
 		init(JschUtil.openSftp(session, (int) this.ftpConfig.getConnectionTimeout()), charset);
 	}
@@ -163,11 +163,11 @@ public class Sftp extends AbstractFtp {
 	 * @param channel {@link ChannelSftp}
 	 * @param charset 编码
 	 */
-	public void init(ChannelSftp channel, Charset charset) {
+	public void init(final ChannelSftp channel, final Charset charset) {
 		this.ftpConfig.setCharset(charset);
 		try {
 			channel.setFilenameEncoding(charset.toString());
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		this.channel = channel;
@@ -180,7 +180,7 @@ public class Sftp extends AbstractFtp {
 		}
 		try {
 			this.cd(StrUtil.SLASH);
-		} catch (FtpException e) {
+		} catch (final FtpException e) {
 			close();
 			init();
 		}
@@ -206,7 +206,7 @@ public class Sftp extends AbstractFtp {
 	public String pwd() {
 		try {
 			return channel.pwd();
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 	}
@@ -220,7 +220,7 @@ public class Sftp extends AbstractFtp {
 	public String home() {
 		try {
 			return channel.getHome();
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 	}
@@ -233,7 +233,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.0.5
 	 */
 	@Override
-	public List<String> ls(String path) {
+	public List<String> ls(final String path) {
 		return ls(path, null);
 	}
 
@@ -244,7 +244,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 目录名列表
 	 * @since 4.0.5
 	 */
-	public List<String> lsDirs(String path) {
+	public List<String> lsDirs(final String path) {
 		return ls(path, t -> t.getAttrs().isDir());
 	}
 
@@ -255,7 +255,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 文件名列表
 	 * @since 4.0.5
 	 */
-	public List<String> lsFiles(String path) {
+	public List<String> lsFiles(final String path) {
 		return ls(path, t -> false == t.getAttrs().isDir());
 	}
 
@@ -268,7 +268,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 目录或文件名列表
 	 * @since 4.0.5
 	 */
-	public List<String> ls(String path, final Filter<LsEntry> filter) {
+	public List<String> ls(final String path, final Filter<LsEntry> filter) {
 		final List<LsEntry> entries = lsEntries(path, filter);
 		if (CollUtil.isEmpty(entries)) {
 			return ListUtil.empty();
@@ -284,7 +284,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 目录或文件名列表
 	 * @since 5.3.5
 	 */
-	public List<LsEntry> lsEntries(String path) {
+	public List<LsEntry> lsEntries(final String path) {
 		return lsEntries(path, null);
 	}
 
@@ -297,7 +297,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 目录或文件名列表
 	 * @since 5.3.5
 	 */
-	public List<LsEntry> lsEntries(String path, Filter<LsEntry> filter) {
+	public List<LsEntry> lsEntries(final String path, final Filter<LsEntry> filter) {
 		final List<LsEntry> entryList = new ArrayList<>();
 		try {
 			channel.ls(path, entry -> {
@@ -309,7 +309,7 @@ public class Sftp extends AbstractFtp {
 				}
 				return LsEntrySelector.CONTINUE;
 			});
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			if (false == StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")) {
 				throw new JschRuntimeException(e);
 			}
@@ -319,7 +319,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean mkdir(String dir) {
+	public boolean mkdir(final String dir) {
 		if (isDir(dir)) {
 			// 目录已经存在，创建直接返回
 			return true;
@@ -327,17 +327,17 @@ public class Sftp extends AbstractFtp {
 		try {
 			this.channel.mkdir(dir);
 			return true;
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 	}
 
 	@Override
-	public boolean isDir(String dir) {
+	public boolean isDir(final String dir) {
 		final SftpATTRS sftpATTRS;
 		try {
 			sftpATTRS = this.channel.stat(dir);
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			final String msg = e.getMessage();
 			// issue#I4P9ED@Gitee
 			if (StrUtil.containsAnyIgnoreCase(msg, "No such file", "does not exist")) {
@@ -358,7 +358,7 @@ public class Sftp extends AbstractFtp {
 	 * @throws FtpException 进入目录失败异常
 	 */
 	@Override
-	synchronized public boolean cd(String directory) throws FtpException {
+	synchronized public boolean cd(final String directory) throws FtpException {
 		if (StrUtil.isBlank(directory)) {
 			// 当前目录
 			return true;
@@ -366,7 +366,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			channel.cd(directory.replace('\\', '/'));
 			return true;
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new FtpException(e);
 		}
 	}
@@ -377,10 +377,10 @@ public class Sftp extends AbstractFtp {
 	 * @param filePath 要删除的文件绝对路径
 	 */
 	@Override
-	public boolean delFile(String filePath) {
+	public boolean delFile(final String filePath) {
 		try {
 			channel.rm(filePath);
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		return true;
@@ -394,20 +394,20 @@ public class Sftp extends AbstractFtp {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean delDir(String dirPath) {
+	public boolean delDir(final String dirPath) {
 		if (false == cd(dirPath)) {
 			return false;
 		}
 
-		Vector<LsEntry> list;
+		final Vector<LsEntry> list;
 		try {
 			list = channel.ls(channel.pwd());
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 
 		String fileName;
-		for (LsEntry entry : list) {
+		for (final LsEntry entry : list) {
 			fileName = entry.getFilename();
 			if (false == ".".equals(fileName) && false == "..".equals(fileName)) {
 				if (entry.getAttrs().isDir()) {
@@ -426,7 +426,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			channel.rmdir(dirPath);
 			return true;
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 	}
@@ -438,18 +438,18 @@ public class Sftp extends AbstractFtp {
 	 * @param remotePath 远程路径
 	 * @since 5.7.6
 	 */
-	public void syncUpload(File file, String remotePath) {
+	public void syncUpload(final File file, final String remotePath) {
 		if (false == FileUtil.exist(file)) {
 			return;
 		}
 		if (file.isDirectory()) {
-			File[] files = file.listFiles();
+			final File[] files = file.listFiles();
 			if (files == null) {
 				return;
 			}
-			for (File fileItem : files) {
+			for (final File fileItem : files) {
 				if (fileItem.isDirectory()) {
-					String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
+					final String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
 					this.syncUpload(fileItem, mkdir);
 				} else {
 					this.syncUpload(fileItem, remotePath);
@@ -462,7 +462,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean upload(String destPath, File file) {
+	public boolean upload(final String destPath, final File file) {
 		put(FileUtil.getAbsolutePath(file), destPath);
 		return true;
 	}
@@ -482,7 +482,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 是否上传成功
 	 * @since 5.7.16
 	 */
-	public boolean upload(String destPath, String fileName, InputStream fileStream) {
+	public boolean upload(String destPath, final String fileName, final InputStream fileStream) {
 		destPath = StrUtil.addSuffixIfNot(destPath, StrUtil.SLASH) + StrUtil.removePrefix(fileName, StrUtil.SLASH);
 		put(fileStream, destPath, null, Mode.OVERWRITE);
 		return true;
@@ -495,7 +495,7 @@ public class Sftp extends AbstractFtp {
 	 * @param destPath    目标路径，
 	 * @return this
 	 */
-	public Sftp put(String srcFilePath, String destPath) {
+	public Sftp put(final String srcFilePath, final String destPath) {
 		return put(srcFilePath, destPath, Mode.OVERWRITE);
 	}
 
@@ -507,7 +507,7 @@ public class Sftp extends AbstractFtp {
 	 * @param mode        {@link Mode} 模式
 	 * @return this
 	 */
-	public Sftp put(String srcFilePath, String destPath, Mode mode) {
+	public Sftp put(final String srcFilePath, final String destPath, final Mode mode) {
 		return put(srcFilePath, destPath, null, mode);
 	}
 
@@ -521,10 +521,10 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 4.6.5
 	 */
-	public Sftp put(String srcFilePath, String destPath, SftpProgressMonitor monitor, Mode mode) {
+	public Sftp put(final String srcFilePath, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
 		try {
 			channel.put(srcFilePath, destPath, monitor, mode.ordinal());
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		return this;
@@ -540,17 +540,17 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 5.7.16
 	 */
-	public Sftp put(InputStream srcStream, String destPath, SftpProgressMonitor monitor, Mode mode) {
+	public Sftp put(final InputStream srcStream, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
 		try {
 			channel.put(srcStream, destPath, monitor, mode.ordinal());
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		return this;
 	}
 
 	@Override
-	public void download(String src, File destFile) {
+	public void download(final String src, final File destFile) {
 		get(src, FileUtil.getAbsolutePath(destFile));
 	}
 
@@ -561,7 +561,7 @@ public class Sftp extends AbstractFtp {
 	 * @param out 目标流
 	 * @see #get(String, OutputStream)
 	 */
-	public void download(String src, OutputStream out) {
+	public void download(final String src, final OutputStream out) {
 		get(src, out);
 	}
 
@@ -572,11 +572,11 @@ public class Sftp extends AbstractFtp {
 	 * @param destDir    本地目录
 	 */
 	@Override
-	public void recursiveDownloadFolder(String sourcePath, File destDir) throws JschRuntimeException {
+	public void recursiveDownloadFolder(final String sourcePath, final File destDir) throws JschRuntimeException {
 		String fileName;
 		String srcFile;
 		File destFile;
-		for (LsEntry item : lsEntries(sourcePath)) {
+		for (final LsEntry item : lsEntries(sourcePath)) {
 			fileName = item.getFilename();
 			srcFile = StrUtil.format("{}/{}", sourcePath, fileName);
 			destFile = FileUtil.file(destDir, fileName);
@@ -603,10 +603,10 @@ public class Sftp extends AbstractFtp {
 	 * @param dest 目标文件路径
 	 * @return this
 	 */
-	public Sftp get(String src, String dest) {
+	public Sftp get(final String src, final String dest) {
 		try {
 			channel.get(src, dest);
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		return this;
@@ -620,10 +620,10 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 5.7.0
 	 */
-	public Sftp get(String src, OutputStream out) {
+	public Sftp get(final String src, final OutputStream out) {
 		try {
 			channel.get(src, out);
-		} catch (SftpException e) {
+		} catch (final SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 		return this;

@@ -20,7 +20,7 @@ public class CollStreamUtilTest {
 	public void testToIdentityMap() {
 		Map<Long, Student> map = CollStreamUtil.toIdentityMap(null, Student::getStudentId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.toIdentityMap(list, Student::getStudentId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
@@ -42,7 +42,7 @@ public class CollStreamUtilTest {
 	public void testToMap() {
 		Map<Long, String> map = CollStreamUtil.toMap(null, Student::getStudentId, Student::getName);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.toMap(list, Student::getStudentId, Student::getName);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
@@ -64,7 +64,7 @@ public class CollStreamUtilTest {
 	public void testGroupByKey() {
 		Map<Long, List<Student>> map = CollStreamUtil.groupByKey(null, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.groupByKey(list, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
@@ -73,17 +73,17 @@ public class CollStreamUtilTest {
 		list.add(new Student(2, 2, 2, "威震天"));
 		list.add(new Student(2, 3, 2, "霸天虎"));
 		map = CollStreamUtil.groupByKey(list, Student::getClassId);
-		Map<Long, List<Student>> compare = new HashMap<>();
-		List<Student> class1 = new ArrayList<>();
+		final Map<Long, List<Student>> compare = new HashMap<>();
+		final List<Student> class1 = new ArrayList<>();
 		class1.add(new Student(1, 1, 1, "张三"));
 		class1.add(new Student(2, 1, 1, "擎天柱"));
 		compare.put(1L, class1);
-		List<Student> class2 = new ArrayList<>();
+		final List<Student> class2 = new ArrayList<>();
 		class2.add(new Student(1, 2, 2, "李四"));
 		class2.add(new Student(2, 2, 2, "威震天"));
 
 		compare.put(2L, class2);
-		List<Student> class3 = new ArrayList<>();
+		final List<Student> class3 = new ArrayList<>();
 		class3.add(new Student(2, 3, 2, "霸天虎"));
 		compare.put(3L, class3);
 		Assert.assertEquals(map, compare);
@@ -93,7 +93,7 @@ public class CollStreamUtilTest {
 	public void testGroupBy2Key() {
 		Map<Long, Map<Long, List<Student>>> map = CollStreamUtil.groupBy2Key(null, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.groupBy2Key(list, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
@@ -103,24 +103,24 @@ public class CollStreamUtilTest {
 		list.add(new Student(2, 2, 2, "威震天"));
 		list.add(new Student(2, 2, 3, "霸天虎"));
 		map = CollStreamUtil.groupBy2Key(list, Student::getTermId, Student::getClassId);
-		Map<Long, Map<Long, List<Student>>> compare = new HashMap<>();
-		Map<Long, List<Student>> map1 = new HashMap<>();
-		List<Student> list11 = new ArrayList<>();
+		final Map<Long, Map<Long, List<Student>>> compare = new HashMap<>();
+		final Map<Long, List<Student>> map1 = new HashMap<>();
+		final List<Student> list11 = new ArrayList<>();
 		list11.add(new Student(1, 1, 1, "张三"));
 		map1.put(1L, list11);
 		compare.put(1L, map1);
-		List<Student> list12 = new ArrayList<>();
+		final List<Student> list12 = new ArrayList<>();
 		list12.add(new Student(1, 2, 2, "李四"));
 		list12.add(new Student(1, 2, 3, "王五"));
 		map1.put(2L, list12);
 		compare.put(2L, map1);
-		Map<Long, List<Student>> map2 = new HashMap<>();
-		List<Student> list21 = new ArrayList<>();
+		final Map<Long, List<Student>> map2 = new HashMap<>();
+		final List<Student> list21 = new ArrayList<>();
 		list21.add(new Student(2, 1, 1, "擎天柱"));
 		map2.put(1L, list21);
 		compare.put(2L, map2);
 
-		List<Student> list22 = new ArrayList<>();
+		final List<Student> list22 = new ArrayList<>();
 		list22.add(new Student(2, 2, 2, "威震天"));
 		list22.add(new Student(2, 2, 3, "霸天虎"));
 		map2.put(2L, list22);
@@ -133,26 +133,26 @@ public class CollStreamUtilTest {
 		Map<Long, Map<Long, Student>> map = CollStreamUtil.group2Map(null, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.group2Map(list, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
 		list.add(new Student(1, 2, 1, "李四"));
 		list.add(new Student(2, 2, 1, "王五"));
 		map = CollStreamUtil.group2Map(list, Student::getTermId, Student::getClassId);
-		Map<Long, Map<Long, Student>> compare = new HashMap<>();
-		Map<Long, Student> map1 = new HashMap<>();
+		final Map<Long, Map<Long, Student>> compare = new HashMap<>();
+		final Map<Long, Student> map1 = new HashMap<>();
 		map1.put(1L, new Student(1, 1, 1, "张三"));
 		map1.put(2L, new Student(1, 2, 1, "李四"));
 		compare.put(1L, map1);
-		Map<Long, Student> map2 = new HashMap<>();
+		final Map<Long, Student> map2 = new HashMap<>();
 		map2.put(2L, new Student(2, 2, 1, "王五"));
 		compare.put(2L, map2);
 		Assert.assertEquals(compare, map);
 
 		// 对null友好
-		Map<Long, Map<Long, Student>> termIdClassIdStudentMap = CollStreamUtil.group2Map(Arrays.asList(null, new Student(2, 2, 1, "王五")), Student::getTermId, Student::getClassId);
-		Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {{
+		final Map<Long, Map<Long, Student>> termIdClassIdStudentMap = CollStreamUtil.group2Map(Arrays.asList(null, new Student(2, 2, 1, "王五")), Student::getTermId, Student::getClassId);
+		final Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {{
 			put(null, MapUtil.of(null, null));
 			put(2L, MapUtil.of(2L, new Student(2, 2, 1, "王五")));
 		}};
@@ -164,7 +164,7 @@ public class CollStreamUtilTest {
 		Map<Long, List<Long>> map = CollStreamUtil.groupKeyValue(null, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.groupKeyValue(list, Student::getTermId, Student::getClassId);
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 		list.add(new Student(1, 1, 1, "张三"));
@@ -172,7 +172,7 @@ public class CollStreamUtilTest {
 		list.add(new Student(2, 2, 1, "王五"));
 		map = CollStreamUtil.groupKeyValue(list, Student::getTermId, Student::getClassId);
 
-		Map<Long, List<Long>> compare = new HashMap<>();
+		final Map<Long, List<Long>> compare = new HashMap<>();
 		compare.put(1L, Arrays.asList(1L, 2L));
 		compare.put(2L, Collections.singletonList(2L));
 		Assert.assertEquals(compare, map);
@@ -187,7 +187,7 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
 		// 参数空数组测试
-		List<Student> list = new ArrayList<>();
+		final List<Student> list = new ArrayList<>();
 		map = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.toList());
 		Assert.assertEquals(map, Collections.EMPTY_MAP);
 
@@ -196,12 +196,12 @@ public class CollStreamUtilTest {
 		list.add(new Student(1, 2, 1, "李四"));
 		list.add(new Student(2, 2, 1, "王五"));
 		// 先根据termId分组，再通过classId比较，找出最大值所属的那个Student,返回的Optional
-		Map<Long, Optional<Student>> longOptionalMap = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.maxBy(Comparator.comparing(Student::getClassId)));
+		final Map<Long, Optional<Student>> longOptionalMap = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.maxBy(Comparator.comparing(Student::getClassId)));
 		//noinspection OptionalGetWithoutIsPresent
 		Assert.assertEquals("李四", longOptionalMap.get(1L).get().getName());
 
 		// 先根据termId分组，再转换为Map<studentId,name>
-		Map<Long, HashMap<Long, String>> groupThen = CollStreamUtil.groupBy(list, Student::getTermId, Collector.of(HashMap::new, (m, v) -> m.put(v.getStudentId(), v.getName()), (l, r) -> l));
+		final Map<Long, HashMap<Long, String>> groupThen = CollStreamUtil.groupBy(list, Student::getTermId, Collector.of(HashMap::new, (m, v) -> m.put(v.getStudentId(), v.getName()), (l, r) -> l));
 		Assert.assertEquals(
 				MapUtil.builder()
 						.put(1L, MapUtil.builder().put(1L, "李四").build())
@@ -211,16 +211,16 @@ public class CollStreamUtilTest {
 
 		// 总之，如果你是想要group分组后还要进行别的操作，用它就对了！
 		// 并且对null值进行了友好处理，例如
-		List<Student> students = Arrays.asList(null, null, new Student(1, 1, 1, "张三"),
+		final List<Student> students = Arrays.asList(null, null, new Student(1, 1, 1, "张三"),
 				new Student(1, 2, 1, "李四"));
-		Map<Long, List<Student>> termIdStudentsMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.toList());
-		Map<Long, List<Student>> termIdStudentsCompareMap = new HashMap<>();
+		final Map<Long, List<Student>> termIdStudentsMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.toList());
+		final Map<Long, List<Student>> termIdStudentsCompareMap = new HashMap<>();
 		termIdStudentsCompareMap.put(null, Arrays.asList(null, null));
 		termIdStudentsCompareMap.put(1L, Arrays.asList(new Student(1L, 1, 1, "张三"), new Student(1L, 2, 1, "李四")));
 		Assert.assertEquals(termIdStudentsCompareMap, termIdStudentsMap);
 
-		Map<Long, Long> termIdCountMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.counting());
-		Map<Long, Long> termIdCountCompareMap = new HashMap<>();
+		final Map<Long, Long> termIdCountMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.counting());
+		final Map<Long, Long> termIdCountCompareMap = new HashMap<>();
 		termIdCountCompareMap.put(null, 2L);
 		termIdCountCompareMap.put(1L, 2L);
 		Assert.assertEquals(termIdCountCompareMap, termIdCountMap);
@@ -231,7 +231,7 @@ public class CollStreamUtilTest {
 	public void testTranslate2List() {
 		List<String> list = CollStreamUtil.toList(null, Student::getName);
 		Assert.assertEquals(list, Collections.EMPTY_LIST);
-		List<Student> students = new ArrayList<>();
+		final List<Student> students = new ArrayList<>();
 		list = CollStreamUtil.toList(students, Student::getName);
 		Assert.assertEquals(list, Collections.EMPTY_LIST);
 		students.add(new Student(1, 1, 1, "张三"));
@@ -240,7 +240,7 @@ public class CollStreamUtilTest {
 		students.add(new Student(2, 2, 2, "李四"));
 		students.add(new Student(2, 3, 2, "霸天虎"));
 		list = CollStreamUtil.toList(students, Student::getName);
-		List<String> compare = new ArrayList<>();
+		final List<String> compare = new ArrayList<>();
 		compare.add("张三");
 		compare.add("李四");
 		compare.add("李四");
@@ -253,7 +253,7 @@ public class CollStreamUtilTest {
 	public void testTranslate2Set() {
 		Set<String> set = CollStreamUtil.toSet(null, Student::getName);
 		Assert.assertEquals(set, Collections.EMPTY_SET);
-		List<Student> students = new ArrayList<>();
+		final List<Student> students = new ArrayList<>();
 		set = CollStreamUtil.toSet(students, Student::getName);
 		Assert.assertEquals(set, Collections.EMPTY_SET);
 		students.add(new Student(1, 1, 1, "张三"));
@@ -262,7 +262,7 @@ public class CollStreamUtilTest {
 		students.add(new Student(2, 2, 2, "李四"));
 		students.add(new Student(2, 3, 2, "霸天虎"));
 		set = CollStreamUtil.toSet(students, Student::getName);
-		Set<String> compare = new HashSet<>();
+		final Set<String> compare = new HashSet<>();
 		compare.add("张三");
 		compare.add("李四");
 		compare.add("霸天虎");
@@ -278,18 +278,18 @@ public class CollStreamUtilTest {
 		map1 = new HashMap<>();
 		map1.put(1L, new Student(1, 1, 1, "张三"));
 		map = CollStreamUtil.merge(map1, map2, this::merge);
-		Map<Long, String> temp = new HashMap<>();
+		final Map<Long, String> temp = new HashMap<>();
 		temp.put(1L, "张三");
 		Assert.assertEquals(map, temp);
 		map2 = new HashMap<>();
 		map2.put(1L, new Student(2, 1, 1, "李四"));
 		map = CollStreamUtil.merge(map1, map2, this::merge);
-		Map<Long, String> compare = new HashMap<>();
+		final Map<Long, String> compare = new HashMap<>();
 		compare.put(1L, "张三李四");
 		Assert.assertEquals(map, compare);
 	}
 
-	private String merge(Student student1, Student student2) {
+	private String merge(final Student student1, final Student student2) {
 		if (student1 == null && student2 == null) {
 			return null;
 		} else if (student1 == null) {

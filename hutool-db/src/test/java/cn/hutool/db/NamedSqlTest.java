@@ -14,15 +14,15 @@ public class NamedSqlTest {
 
 	@Test
 	public void parseTest() {
-		String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
+		final String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
 
-		Map<String, Object> paramMap = MapUtil
+		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"张三")
 				.put("age", 12)
 				.put("subName", "小豆豆")
 				.build();
 
-		NamedSql namedSql = new NamedSql(sql, paramMap);
+		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		//未指定参数原样输出
 		Assert.assertEquals("select * from table where id=@id and name = ? and nickName = ?", namedSql.getSql());
 		Assert.assertEquals("张三", namedSql.getParams()[0]);
@@ -31,16 +31,16 @@ public class NamedSqlTest {
 
 	@Test
 	public void parseTest2() {
-		String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
+		final String sql = "select * from table where id=@id and name = @name1 and nickName = :subName";
 
-		Map<String, Object> paramMap = MapUtil
+		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"张三")
 				.put("age", 12)
 				.put("subName", "小豆豆")
 				.put("id", null)
 				.build();
 
-		NamedSql namedSql = new NamedSql(sql, paramMap);
+		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals("select * from table where id=? and name = ? and nickName = ?", namedSql.getSql());
 		//指定了null参数的依旧替换，参数值为null
 		Assert.assertNull(namedSql.getParams()[0]);
@@ -51,35 +51,35 @@ public class NamedSqlTest {
 	@Test
 	public void parseTest3() {
 		// 测试连续变量名出现是否有问题
-		String sql = "SELECT to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') as sysdate FROM dual";
+		final String sql = "SELECT to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') as sysdate FROM dual";
 
-		Map<String, Object> paramMap = MapUtil
+		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"张三")
 				.build();
 
-		NamedSql namedSql = new NamedSql(sql, paramMap);
+		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals(sql, namedSql.getSql());
 	}
 
 	@Test
 	public void parseTest4() {
 		// 测试postgre中形如data_value::numeric是否出错
-		String sql = "select device_key, min(data_value::numeric) as data_value from device";
+		final String sql = "select device_key, min(data_value::numeric) as data_value from device";
 
-		Map<String, Object> paramMap = MapUtil
+		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"张三")
 				.build();
 
-		NamedSql namedSql = new NamedSql(sql, paramMap);
+		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals(sql, namedSql.getSql());
 	}
 
 	@Test
 	public void parseInTest(){
-		String sql = "select * from user where id in (:ids)";
+		final String sql = "select * from user where id in (:ids)";
 		final HashMap<String, Object> paramMap = MapUtil.of("ids", new int[]{1, 2, 3});
 
-		NamedSql namedSql = new NamedSql(sql, paramMap);
+		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals("select * from user where id in (?,?,?)", namedSql.getSql());
 		Assert.assertEquals(1, namedSql.getParams()[0]);
 		Assert.assertEquals(2, namedSql.getParams()[1]);
@@ -88,10 +88,10 @@ public class NamedSqlTest {
 
 	@Test
 	public void queryTest() throws SQLException {
-		Map<String, Object> paramMap = MapUtil
+		final Map<String, Object> paramMap = MapUtil
 				.builder("name1", (Object)"王五")
 				.put("age1", 18).build();
-		String sql = "select * from user where name = @name1 and age = @age1";
+		final String sql = "select * from user where name = @name1 and age = @age1";
 
 		List<Entity> query = Db.use().query(sql, paramMap);
 		Assert.assertEquals(1, query.size());

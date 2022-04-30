@@ -24,7 +24,7 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 	 *
 	 * @param capacity 容量
 	 */
-	public FIFOCache(int capacity) {
+	public FIFOCache(final int capacity) {
 		this(capacity, 0);
 	}
 
@@ -34,7 +34,7 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 	 * @param capacity 容量
 	 * @param timeout  过期时长
 	 */
-	public FIFOCache(int capacity, long timeout) {
+	public FIFOCache(final int capacity, final long timeout) {
 		this.capacity = capacity;
 		this.timeout = timeout;
 		cacheMap = new LinkedHashMap<>(capacity + 1, 1.0f, false);
@@ -54,7 +54,7 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 		if (isPruneExpiredActive()) {
 			// 清理过期对象并找出链表头部元素（先入元素）
 			while (values.hasNext()) {
-				CacheObj<K, V> co = values.next();
+				final CacheObj<K, V> co = values.next();
 				if (co.isExpired()) {
 					values.remove();
 					onRemove(co.key, co.obj);

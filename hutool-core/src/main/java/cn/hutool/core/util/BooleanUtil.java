@@ -23,7 +23,7 @@ public class BooleanUtil {
 	 * @param bool Boolean值
 	 * @return 相反的Boolean值
 	 */
-	public static Boolean negate(Boolean bool) {
+	public static Boolean negate(final Boolean bool) {
 		if (bool == null) {
 			return null;
 		}
@@ -42,7 +42,7 @@ public class BooleanUtil {
 	 * @param bool 被检查的Boolean值
 	 * @return 当值为true且非null时返回{@code true}
 	 */
-	public static boolean isTrue(Boolean bool) {
+	public static boolean isTrue(final Boolean bool) {
 		return Boolean.TRUE.equals(bool);
 	}
 
@@ -58,7 +58,7 @@ public class BooleanUtil {
 	 * @param bool 被检查的Boolean值
 	 * @return 当值为false且非null时返回{@code true}
 	 */
-	public static boolean isFalse(Boolean bool) {
+	public static boolean isFalse(final Boolean bool) {
 		return Boolean.FALSE.equals(bool);
 	}
 
@@ -68,7 +68,7 @@ public class BooleanUtil {
 	 * @param bool Boolean值
 	 * @return 相反的Boolean值
 	 */
-	public static boolean negate(boolean bool) {
+	public static boolean negate(final boolean bool) {
 		return !bool;
 	}
 
@@ -92,7 +92,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return int值
 	 */
-	public static int toInt(boolean value) {
+	public static int toInt(final boolean value) {
 		return value ? 1 : 0;
 	}
 
@@ -102,7 +102,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return Integer值
 	 */
-	public static Integer toInteger(boolean value) {
+	public static Integer toInteger(final boolean value) {
 		return toInt(value);
 	}
 
@@ -112,7 +112,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return char值
 	 */
-	public static char toChar(boolean value) {
+	public static char toChar(final boolean value) {
 		return (char) toInt(value);
 	}
 
@@ -122,7 +122,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return Character值
 	 */
-	public static Character toCharacter(boolean value) {
+	public static Character toCharacter(final boolean value) {
 		return toChar(value);
 	}
 
@@ -132,7 +132,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return byte值
 	 */
-	public static byte toByte(boolean value) {
+	public static byte toByte(final boolean value) {
 		return (byte) toInt(value);
 	}
 
@@ -142,7 +142,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return Byte值
 	 */
-	public static Byte toByteObj(boolean value) {
+	public static Byte toByteObj(final boolean value) {
 		return toByte(value);
 	}
 
@@ -152,7 +152,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return long值
 	 */
-	public static long toLong(boolean value) {
+	public static long toLong(final boolean value) {
 		return toInt(value);
 	}
 
@@ -162,7 +162,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return Long值
 	 */
-	public static Long toLongObj(boolean value) {
+	public static Long toLongObj(final boolean value) {
 		return toLong(value);
 	}
 
@@ -172,7 +172,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return short值
 	 */
-	public static short toShort(boolean value) {
+	public static short toShort(final boolean value) {
 		return (short) toInt(value);
 	}
 
@@ -182,7 +182,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return Short值
 	 */
-	public static Short toShortObj(boolean value) {
+	public static Short toShortObj(final boolean value) {
 		return toShort(value);
 	}
 
@@ -192,7 +192,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return float值
 	 */
-	public static float toFloat(boolean value) {
+	public static float toFloat(final boolean value) {
 		return (float) toInt(value);
 	}
 
@@ -202,7 +202,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return float值
 	 */
-	public static Float toFloatObj(boolean value) {
+	public static Float toFloatObj(final boolean value) {
 		return toFloat(value);
 	}
 
@@ -212,7 +212,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return double值
 	 */
-	public static double toDouble(boolean value) {
+	public static double toDouble(final boolean value) {
 		return toInt(value);
 	}
 
@@ -222,7 +222,7 @@ public class BooleanUtil {
 	 * @param value Boolean值
 	 * @return double值
 	 */
-	public static Double toDoubleObj(boolean value) {
+	public static Double toDoubleObj(final boolean value) {
 		return toDouble(value);
 	}
 
@@ -237,7 +237,7 @@ public class BooleanUtil {
 	 * @param bool Boolean值
 	 * @return {@code 'true'}, {@code 'false'}
 	 */
-	public static String toStringTrueFalse(boolean bool) {
+	public static String toStringTrueFalse(final boolean bool) {
 		return toString(bool, "true", "false");
 	}
 
@@ -252,7 +252,7 @@ public class BooleanUtil {
 	 * @param bool Boolean值
 	 * @return {@code 'on'}, {@code 'off'}
 	 */
-	public static String toStringOnOff(boolean bool) {
+	public static String toStringOnOff(final boolean bool) {
 		return toString(bool, "on", "off");
 	}
 
@@ -267,7 +267,7 @@ public class BooleanUtil {
 	 * @param bool Boolean值
 	 * @return {@code 'yes'}, {@code 'no'}
 	 */
-	public static String toStringYesNo(boolean bool) {
+	public static String toStringYesNo(final boolean bool) {
 		return toString(bool, "yes", "no");
 	}
 
@@ -284,7 +284,7 @@ public class BooleanUtil {
 	 * @param falseString 当值为 {@code false}时返回此字符串, 可能为 {@code null}
 	 * @return 结果值
 	 */
-	public static String toString(boolean bool, String trueString, String falseString) {
+	public static String toString(final boolean bool, final String trueString, final String falseString) {
 		return bool ? trueString : falseString;
 	}
 
@@ -302,7 +302,7 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取与为真返回{@code true}
 	 */
-	public static boolean and(boolean... array) {
+	public static boolean and(final boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
@@ -329,7 +329,7 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取与为真返回{@code true}
 	 */
-	public static Boolean andOfWrap(Boolean... array) {
+	public static Boolean andOfWrap(final Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
@@ -352,7 +352,7 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取或为真返回{@code true}
 	 */
-	public static boolean or(boolean... array) {
+	public static boolean or(final boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
@@ -380,7 +380,7 @@ public class BooleanUtil {
 	 * @param array {@code Boolean}数组
 	 * @return 取或为真返回{@code true}
 	 */
-	public static Boolean orOfWrap(Boolean... array) {
+	public static Boolean orOfWrap(final Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
@@ -403,7 +403,7 @@ public class BooleanUtil {
 	 * @param array {@code boolean}数组
 	 * @return 如果异或计算为true返回 {@code true}
 	 */
-	public static boolean xor(boolean... array) {
+	public static boolean xor(final boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty");
 		}
@@ -428,7 +428,7 @@ public class BooleanUtil {
 	 * @param array {@code Boolean} 数组
 	 * @return 异或为真取{@code true}
 	 */
-	public static Boolean xorOfWrap(Boolean... array) {
+	public static Boolean xorOfWrap(final Boolean... array) {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
@@ -443,7 +443,7 @@ public class BooleanUtil {
 	 * @return 是否为Boolean或者boolean
 	 * @since 4.5.2
 	 */
-	public static boolean isBoolean(Class<?> clazz) {
+	public static boolean isBoolean(final Class<?> clazz) {
 		return (clazz == Boolean.class || clazz == boolean.class);
 	}
 }

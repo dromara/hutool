@@ -121,7 +121,7 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void formatTest() {
-		String f0 = NumberChineseFormatter.format(5000_8000, false);
+		final String f0 = NumberChineseFormatter.format(5000_8000, false);
 		Assert.assertEquals("五千万零八千", f0);
 		String f1 = NumberChineseFormatter.format(1_0889.72356, false);
 		Assert.assertEquals("一万零八百八十九点七二", f1);
@@ -155,13 +155,13 @@ public class NumberChineseFormatterTest {
 //		String f1 = NumberChineseFormatter.format(5000_8000, false, false);
 //		Assert.assertEquals("五千万零八千", f1);
 
-		String f2 = NumberChineseFormatter.format(1_0035_0089, false, false);
+		final String f2 = NumberChineseFormatter.format(1_0035_0089, false, false);
 		Assert.assertEquals("一亿零三十五万零八十九", f2);
 	}
 
 	@Test
 	public void formatMaxTest() {
-		String f3 = NumberChineseFormatter.format(99_9999_9999_9999L, false, false);
+		final String f3 = NumberChineseFormatter.format(99_9999_9999_9999L, false, false);
 		Assert.assertEquals("九十九万九千九百九十九亿九千九百九十九万九千九百九十九", f3);
 	}
 
@@ -233,7 +233,7 @@ public class NumberChineseFormatterTest {
 		digitUppercase = Convert.digitToChinese(a);
 		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 
-		double b = 1024;
+		final double b = 1024;
 		digitUppercase = Convert.digitToChinese(b);
 		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 	}
@@ -250,7 +250,7 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void digitToChineseTest4() {
-		String digitToChinese = Convert.digitToChinese(400_0000.00);
+		final String digitToChinese = Convert.digitToChinese(400_0000.00);
 		Assert.assertEquals("肆佰万元整", digitToChinese);
 	}
 

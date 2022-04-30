@@ -26,7 +26,7 @@ public class PhoneUtil {
 	 * @return 是否为手机号码（中国）
 	 * @since 5.3.11
 	 */
-	public static boolean isMobile(CharSequence value) {
+	public static boolean isMobile(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.MOBILE, value);
 	}
 
@@ -37,7 +37,7 @@ public class PhoneUtil {
 	 * @since 5.6.3
 	 * @author dazer, ourslook
 	 */
-	public static boolean isMobileHk(CharSequence value) {
+	public static boolean isMobileHk(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.MOBILE_HK, value);
 	}
 
@@ -48,7 +48,7 @@ public class PhoneUtil {
 	 * @since 5.6.6
 	 * @author ihao
 	 */
-	public static boolean isMobileTw(CharSequence value) {
+	public static boolean isMobileTw(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.MOBILE_TW, value);
 	}
 
@@ -59,7 +59,7 @@ public class PhoneUtil {
 	 * @since 5.6.6
 	 * @author ihao
 	 */
-	public static boolean isMobileMo(CharSequence value) {
+	public static boolean isMobileMo(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.MOBILE_MO, value);
 	}
 
@@ -70,7 +70,7 @@ public class PhoneUtil {
 	 * @return 是否为座机号码（中国）
 	 * @since 5.3.11
 	 */
-	public static boolean isTel(CharSequence value) {
+	public static boolean isTel(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.TEL, value);
 	}
 
@@ -82,7 +82,7 @@ public class PhoneUtil {
 	 * @since 5.6.3
 	 * @author dazer, ourslook
 	 */
-	public static boolean isTel400800(CharSequence value) {
+	public static boolean isTel400800(final CharSequence value) {
 		return Validator.isMatchRegex(PatternPool.TEL_400_800, value);
 	}
 
@@ -93,7 +93,7 @@ public class PhoneUtil {
 	 * @return 是否为座机号码+手机号码（中国）+手机号码（香港）+手机号码（台湾）+手机号码（澳门）
 	 * @since 5.3.11
 	 */
-	public static boolean isPhone(CharSequence value) {
+	public static boolean isPhone(final CharSequence value) {
 		return isMobile(value) || isTel400800(value) || isMobileHk(value) || isMobileTw(value) || isMobileMo(value);
 	}
 
@@ -105,7 +105,7 @@ public class PhoneUtil {
 	 * @return 替换后的字符串
 	 * @since 5.3.11
 	 */
-	public static CharSequence hideBefore(CharSequence phone) {
+	public static CharSequence hideBefore(final CharSequence phone) {
 		return StrUtil.hide(phone, 0, 7);
 	}
 
@@ -116,7 +116,7 @@ public class PhoneUtil {
 	 * @return 替换后的字符串
 	 * @since 5.3.11
 	 */
-	public static CharSequence hideBetween(CharSequence phone) {
+	public static CharSequence hideBetween(final CharSequence phone) {
 		return StrUtil.hide(phone, 3, 7);
 	}
 
@@ -127,7 +127,7 @@ public class PhoneUtil {
 	 * @return 替换后的字符串
 	 * @since 5.3.11
 	 */
-	public static CharSequence hideAfter(CharSequence phone) {
+	public static CharSequence hideAfter(final CharSequence phone) {
 		return StrUtil.hide(phone, 7, 11);
 	}
 
@@ -138,7 +138,7 @@ public class PhoneUtil {
 	 * @return 手机号前3位
 	 * @since 5.3.11
 	 */
-	public static CharSequence subBefore(CharSequence phone) {
+	public static CharSequence subBefore(final CharSequence phone) {
 		return StrUtil.sub(phone, 0, 3);
 	}
 
@@ -149,7 +149,7 @@ public class PhoneUtil {
 	 * @return 手机号中间4位
 	 * @since 5.3.11
 	 */
-	public static CharSequence subBetween(CharSequence phone) {
+	public static CharSequence subBetween(final CharSequence phone) {
 		return StrUtil.sub(phone, 3, 7);
 	}
 
@@ -160,7 +160,7 @@ public class PhoneUtil {
 	 * @return 手机号后4位
 	 * @since 5.3.11
 	 */
-	public static CharSequence subAfter(CharSequence phone) {
+	public static CharSequence subAfter(final CharSequence phone) {
 		return StrUtil.sub(phone, 7, 11);
 	}
 
@@ -171,7 +171,7 @@ public class PhoneUtil {
 	 * @return 固话号码的区号部分
 	 * @since 5.7.7
 	 */
-	public static CharSequence subTelBefore(CharSequence value)
+	public static CharSequence subTelBefore(final CharSequence value)
 	{
 		return ReUtil.getGroup1(PatternPool.TEL, value);
 	}
@@ -183,7 +183,7 @@ public class PhoneUtil {
 	 * @return 固话号码的号码部分
 	 * @since 5.7.7
 	 */
-	public static CharSequence subTelAfter(CharSequence value)
+	public static CharSequence subTelAfter(final CharSequence value)
 	{
 		return ReUtil.get(PatternPool.TEL, value, 2);
 	}

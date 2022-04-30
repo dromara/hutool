@@ -37,7 +37,7 @@ public class PartitionIter<T> implements IterableIter<List<T>>, Serializable {
 	 * @param iterator      迭代器
 	 * @param partitionSize 每批大小，最后一批不满一批算一批
 	 */
-	public PartitionIter(Iterator<T> iterator, int partitionSize) {
+	public PartitionIter(final Iterator<T> iterator, final int partitionSize) {
 		this.iterator = iterator;
 		this.partitionSize = partitionSize;
 	}

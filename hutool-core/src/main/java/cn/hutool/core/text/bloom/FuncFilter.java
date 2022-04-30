@@ -18,7 +18,7 @@ public class FuncFilter extends AbstractFilter {
 	 * @param hashFunc Hash函数
 	 * @return
 	 */
-	public static FuncFilter of(int size, Function<String, Number> hashFunc) {
+	public static FuncFilter of(final int size, final Function<String, Number> hashFunc) {
 		return new FuncFilter(size, hashFunc);
 	}
 
@@ -28,13 +28,13 @@ public class FuncFilter extends AbstractFilter {
 	 * @param size     最大值
 	 * @param hashFunc Hash函数
 	 */
-	public FuncFilter(int size, Function<String, Number> hashFunc) {
+	public FuncFilter(final int size, final Function<String, Number> hashFunc) {
 		super(size);
 		this.hashFunc = hashFunc;
 	}
 
 	@Override
-	public int hash(String str) {
+	public int hash(final String str) {
 		return hashFunc.apply(str).intValue() % size;
 	}
 }

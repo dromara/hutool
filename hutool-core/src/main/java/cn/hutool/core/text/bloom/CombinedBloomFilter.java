@@ -19,7 +19,7 @@ public class CombinedBloomFilter implements BloomFilter {
 	 *
 	 * @param filters Bloom过滤器列表
 	 */
-	public CombinedBloomFilter(BloomFilter... filters) {
+	public CombinedBloomFilter(final BloomFilter... filters) {
 		this.filters = filters;
 	}
 
@@ -29,9 +29,9 @@ public class CombinedBloomFilter implements BloomFilter {
 	 * @param str 字符串
 	 */
 	@Override
-	public boolean add(String str) {
+	public boolean add(final String str) {
 		boolean flag = false;
-		for (BloomFilter filter : filters) {
+		for (final BloomFilter filter : filters) {
 			flag |= filter.add(str);
 		}
 		return flag;
@@ -44,8 +44,8 @@ public class CombinedBloomFilter implements BloomFilter {
 	 * @return 是否存在
 	 */
 	@Override
-	public boolean contains(String str) {
-		for (BloomFilter filter : filters) {
+	public boolean contains(final String str) {
+		for (final BloomFilter filter : filters) {
 			if (filter.contains(str) == false) {
 				return false;
 			}

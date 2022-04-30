@@ -38,7 +38,7 @@ public class DateModifier {
 	 * @param modifyType 修改类型，包括舍去、四舍五入、进一等
 	 * @return 修改后的{@link Calendar}
 	 */
-	public static Calendar modify(Calendar calendar, int dateField, ModifyType modifyType) {
+	public static Calendar modify(final Calendar calendar, final int dateField, final ModifyType modifyType) {
 		return modify(calendar, dateField, modifyType, false);
 	}
 
@@ -59,10 +59,10 @@ public class DateModifier {
 	 * @return 修改后的{@link Calendar}
 	 * @since 5.7.5
 	 */
-	public static Calendar modify(Calendar calendar, int dateField, ModifyType modifyType, boolean truncateMillisecond) {
+	public static Calendar modify(final Calendar calendar, final int dateField, final ModifyType modifyType, final boolean truncateMillisecond) {
 		// AM_PM上下午特殊处理
 		if (Calendar.AM_PM == dateField) {
-			boolean isAM = DateUtil.isAM(calendar);
+			final boolean isAM = DateUtil.isAM(calendar);
 			switch (modifyType) {
 				case TRUNCATE:
 					calendar.set(Calendar.HOUR_OF_DAY, isAM ? 0 : 12);
@@ -71,10 +71,10 @@ public class DateModifier {
 					calendar.set(Calendar.HOUR_OF_DAY, isAM ? 11 : 23);
 					break;
 				case ROUND:
-					int min = isAM ? 0 : 12;
-					int max = isAM ? 11 : 23;
-					int href = (max - min) / 2 + 1;
-					int value = calendar.get(Calendar.HOUR_OF_DAY);
+					final int min = isAM ? 0 : 12;
+					final int max = isAM ? 11 : 23;
+					final int href = (max - min) / 2 + 1;
+					final int value = calendar.get(Calendar.HOUR_OF_DAY);
 					calendar.set(Calendar.HOUR_OF_DAY, (value < href) ? min : max);
 					break;
 			}
@@ -121,7 +121,7 @@ public class DateModifier {
 	 * @param field      字段，见{@link Calendar}
 	 * @param modifyType {@link ModifyType}
 	 */
-	private static void modifyField(Calendar calendar, int field, ModifyType modifyType) {
+	private static void modifyField(final Calendar calendar, int field, final ModifyType modifyType) {
 		if (Calendar.HOUR == field) {
 			// 修正小时。HOUR为12小时制，上午的结束时间为12:00，此处改为HOUR_OF_DAY: 23:59
 			field = Calendar.HOUR_OF_DAY;
@@ -135,16 +135,16 @@ public class DateModifier {
 				calendar.set(field, DateUtil.getEndValue(calendar, field));
 				break;
 			case ROUND:
-				int min = DateUtil.getBeginValue(calendar, field);
-				int max = DateUtil.getEndValue(calendar, field);
-				int href;
+				final int min = DateUtil.getBeginValue(calendar, field);
+				final int max = DateUtil.getEndValue(calendar, field);
+				final int href;
 				if (Calendar.DAY_OF_WEEK == field) {
 					// 星期特殊处理，假设周一是第一天，中间的为周四
 					href = (min + 3) % 7;
 				} else {
 					href = (max - min) / 2 + 1;
 				}
-				int value = calendar.get(field);
+				final int value = calendar.get(field);
 				calendar.set(field, (value < href) ? min : max);
 				break;
 		}

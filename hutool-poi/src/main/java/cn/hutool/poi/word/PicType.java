@@ -25,7 +25,7 @@ public enum PicType {
 	 *
 	 * @param value 图片类型值
 	 */
-	PicType(int value) {
+	PicType(final int value) {
 		this.value = value;
 	}
 

@@ -16,31 +16,31 @@ public class SystemUtilTest {
 
 	@Test
 	public void getCurrentPidTest() {
-		long pid = ManagementUtil.getCurrentPID();
+		final long pid = ManagementUtil.getCurrentPID();
 		Assert.assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
-		JavaInfo javaInfo = ManagementUtil.getJavaInfo();
+		final JavaInfo javaInfo = ManagementUtil.getJavaInfo();
 		Assert.assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
-		JavaRuntimeInfo info = ManagementUtil.getJavaRuntimeInfo();
+		final JavaRuntimeInfo info = ManagementUtil.getJavaRuntimeInfo();
 		Assert.assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
-		OsInfo osInfo = ManagementUtil.getOsInfo();
+		final OsInfo osInfo = ManagementUtil.getOsInfo();
 		Assert.assertNotNull(osInfo);
 	}
 
 	@Test
 	public void getHostInfo() {
-		HostInfo hostInfo = ManagementUtil.getHostInfo();
+		final HostInfo hostInfo = ManagementUtil.getHostInfo();
 		Assert.assertNotNull(hostInfo);
 	}
 

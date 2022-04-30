@@ -51,7 +51,7 @@ public class MurmurHash implements Serializable{
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static int hash32(CharSequence data) {
+	public static int hash32(final CharSequence data) {
 		return hash32(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -61,7 +61,7 @@ public class MurmurHash implements Serializable{
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static int hash32(byte[] data) {
+	public static int hash32(final byte[] data) {
 		return hash32(data, data.length, DEFAULT_SEED);
 	}
 
@@ -73,13 +73,13 @@ public class MurmurHash implements Serializable{
 	 * @param seed 种子，默认0
 	 * @return Hash值
 	 */
-	public static int hash32(byte[] data, int length, int seed) {
+	public static int hash32(final byte[] data, final int length, final int seed) {
 		int hash = seed;
 		final int nblocks = length >> 2;
 
 		// body
 		for (int i = 0; i < nblocks; i++) {
-			int i4 = i << 2;
+			final int i4 = i << 2;
 			int k = ByteUtil.bytesToInt(data, i4, DEFAULT_ORDER);
 
 			// mix functions
@@ -91,7 +91,7 @@ public class MurmurHash implements Serializable{
 		}
 
 		// tail
-		int idx = nblocks << 2;
+		final int idx = nblocks << 2;
 		int k1 = 0;
 		switch (length - idx) {
 		case 3:
@@ -125,7 +125,7 @@ public class MurmurHash implements Serializable{
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static long hash64(CharSequence data) {
+	public static long hash64(final CharSequence data) {
 		return hash64(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -137,7 +137,7 @@ public class MurmurHash implements Serializable{
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static long hash64(byte[] data) {
+	public static long hash64(final byte[] data) {
 		return hash64(data, data.length, DEFAULT_SEED);
 	}
 
@@ -150,7 +150,7 @@ public class MurmurHash implements Serializable{
 	 * @param seed 种子，默认0
 	 * @return Hash值
 	 */
-	public static long hash64(byte[] data, int length, int seed) {
+	public static long hash64(final byte[] data, final int length, final int seed) {
 		long hash = seed;
 		final int nblocks = length >> 3;
 
@@ -169,7 +169,7 @@ public class MurmurHash implements Serializable{
 
 		// tail
 		long k1 = 0;
-		int tailStart = nblocks << 3;
+		final int tailStart = nblocks << 3;
 		switch (length - tailStart) {
 		case 7:
 			k1 ^= ((long) data[tailStart + 6] & 0xff) << 48;
@@ -204,7 +204,7 @@ public class MurmurHash implements Serializable{
 	 * @param data 数据
 	 * @return Hash值 (2 longs)
 	 */
-	public static long[] hash128(CharSequence data) {
+	public static long[] hash128(final CharSequence data) {
 		return hash128(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -214,7 +214,7 @@ public class MurmurHash implements Serializable{
 	 * @param data -数据
 	 * @return Hash值 (2 longs)
 	 */
-	public static long[] hash128(byte[] data) {
+	public static long[] hash128(final byte[] data) {
 		return hash128(data, data.length, DEFAULT_SEED);
 	}
 
@@ -226,7 +226,7 @@ public class MurmurHash implements Serializable{
 	 * @param seed 种子，默认0
 	 * @return Hash值(2 longs)
 	 */
-	public static long[] hash128(byte[] data, int length, int seed) {
+	public static long[] hash128(final byte[] data, final int length, final int seed) {
 		long h1 = seed;
 		long h2 = seed;
 		final int nblocks = length >> 4;
@@ -259,7 +259,7 @@ public class MurmurHash implements Serializable{
 		// tail
 		long k1 = 0;
 		long k2 = 0;
-		int tailStart = nblocks << 4;
+		final int tailStart = nblocks << 4;
 		switch (length - tailStart) {
 		case 15:
 			k2 ^= (long) (data[tailStart + 14] & 0xff) << 48;

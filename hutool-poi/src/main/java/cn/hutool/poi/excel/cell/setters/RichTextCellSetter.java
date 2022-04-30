@@ -19,12 +19,12 @@ public class RichTextCellSetter implements CellSetter {
 	 *
 	 * @param value 值
 	 */
-	RichTextCellSetter(RichTextString value) {
+	RichTextCellSetter(final RichTextString value) {
 		this.value = value;
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setCellValue(value);
 	}
 }

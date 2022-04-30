@@ -21,7 +21,7 @@ public class StrFinder extends TextFinder {
 	 * @param strToFind       被查找的字符串
 	 * @param caseInsensitive 是否忽略大小写
 	 */
-	public StrFinder(CharSequence strToFind, boolean caseInsensitive) {
+	public StrFinder(final CharSequence strToFind, final boolean caseInsensitive) {
 		Assert.notEmpty(strToFind);
 		this.strToFind = strToFind;
 		this.caseInsensitive = caseInsensitive;
@@ -55,7 +55,7 @@ public class StrFinder extends TextFinder {
 	}
 
 	@Override
-	public int end(int start) {
+	public int end(final int start) {
 		if (start < 0) {
 			return -1;
 		}

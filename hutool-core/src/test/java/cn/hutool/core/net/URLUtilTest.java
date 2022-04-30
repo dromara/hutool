@@ -55,30 +55,30 @@ public class URLUtilTest {
 
 	@Test
 	public void normalizeIpv6Test() {
-		String url = "http://[fe80::8f8:2022:a603:d180]:9439";
-		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", true);
+		final String url = "http://[fe80::8f8:2022:a603:d180]:9439";
+		final String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", true);
 		Assert.assertEquals(url, normalize);
 	}
 
 	@Test
 	public void formatTest() {
-		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
-		String normalize = URLUtil.normalize(url);
+		final String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		final String normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn//aaa//bbb?a=1&b=2", normalize);
 	}
 
 	@Test
 	public void getHostTest() throws MalformedURLException {
-		String url = "https://www.hutool.cn//aaa/\\bbb?a=1&b=2";
-		String normalize = URLUtil.normalize(url);
-		URI host = URLUtil.getHost(new URL(normalize));
+		final String url = "https://www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		final String normalize = URLUtil.normalize(url);
+		final URI host = URLUtil.getHost(new URL(normalize));
 		Assert.assertEquals("https://www.hutool.cn", host.toString());
 	}
 
 	@Test
 	public void getPathTest(){
-		String url = " http://www.aaa.bbb/search?scope=ccc&q=ddd";
-		String path = URLUtil.getPath(url);
+		final String url = " http://www.aaa.bbb/search?scope=ccc&q=ddd";
+		final String path = URLUtil.getPath(url);
 		Assert.assertEquals("/search", path);
 	}
 }

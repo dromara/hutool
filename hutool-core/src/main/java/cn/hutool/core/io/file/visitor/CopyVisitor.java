@@ -39,7 +39,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 * @param target      目标Path
 	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
-	public CopyVisitor(Path source, Path target, CopyOption... copyOptions) {
+	public CopyVisitor(final Path source, final Path target, final CopyOption... copyOptions) {
 		if (PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)) {
 			throw new IllegalArgumentException("Target must be a directory");
 		}
@@ -49,7 +49,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+	public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 		initTargetDir();
 		// 将当前目录相对于源路径转换为相对于目标路径
 		final Path targetDir = resolveTarget(dir);
@@ -57,7 +57,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 		// 在目录不存在的情况下，copy方法会创建新目录
 		try {
 			Files.copy(dir, targetDir, copyOptions);
-		} catch (FileAlreadyExistsException e) {
+		} catch (final FileAlreadyExistsException e) {
 			if (false == Files.isDirectory(targetDir)) {
 				// 目标文件存在抛出异常，目录忽略
 				throw e;
@@ -67,7 +67,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
 			throws IOException {
 		initTargetDir();
 		// 如果目标存在，无论目录还是文件都抛出FileAlreadyExistsException异常，此处不做特别处理
@@ -87,7 +87,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 * @param file 需要拷贝的文件或目录Path
 	 * @return 目标Path
 	 */
-	private Path resolveTarget(Path file) {
+	private Path resolveTarget(final Path file) {
 		return target.resolve(source.relativize(file));
 	}
 

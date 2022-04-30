@@ -16,7 +16,7 @@ public class NamedThreadLocal<T> extends ThreadLocal<T> {
 	 *
 	 * @param name 名字
 	 */
-	public NamedThreadLocal(String name) {
+	public NamedThreadLocal(final String name) {
 		this.name = name;
 	}
 

@@ -21,12 +21,12 @@ public class PooledDSFactory extends AbstractDSFactory {
 		this(null);
 	}
 
-	public PooledDSFactory(Setting setting) {
+	public PooledDSFactory(final Setting setting) {
 		super(DS_NAME, PooledDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		final DbConfig dbConfig = new DbConfig();
 		dbConfig.setUrl(jdbcUrl);
 		dbConfig.setDriver(driver);
@@ -41,7 +41,7 @@ public class PooledDSFactory extends AbstractDSFactory {
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.get(key);
 			if(StrUtil.isNotBlank(connValue)){
 				dbConfig.addConnProps(key, connValue);

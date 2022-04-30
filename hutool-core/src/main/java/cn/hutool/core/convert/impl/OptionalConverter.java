@@ -15,7 +15,7 @@ public class OptionalConverter extends AbstractConverter<Optional<?>> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Optional<?> convertInternal(Object value) {
+	protected Optional<?> convertInternal(final Object value) {
 		return Optional.ofNullable(value);
 	}
 

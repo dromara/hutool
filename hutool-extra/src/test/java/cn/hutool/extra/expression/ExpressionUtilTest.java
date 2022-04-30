@@ -26,7 +26,7 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void jexlTest(){
-		ExpressionEngine engine = new JexlEngine();
+		final ExpressionEngine engine = new JexlEngine();
 
 		final Dict dict = Dict.create()
 				.set("a", 100.3)
@@ -38,18 +38,18 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void jexlScriptTest(){
-		ExpressionEngine engine = new JexlEngine();
+		final ExpressionEngine engine = new JexlEngine();
 
-		String exps2="if(a>0){return 100;}";
-		Map<String,Object> map2=new HashMap<>();
+		final String exps2="if(a>0){return 100;}";
+		final Map<String,Object> map2=new HashMap<>();
 		map2.put("a", 1);
-		Object eval1 = engine.eval(exps2, map2);
+		final Object eval1 = engine.eval(exps2, map2);
 		Assert.assertEquals(100, eval1);
 	}
 
 	@Test
 	public void mvelTest(){
-		ExpressionEngine engine = new MvelEngine();
+		final ExpressionEngine engine = new MvelEngine();
 
 		final Dict dict = Dict.create()
 				.set("a", 100.3)
@@ -61,7 +61,7 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void jfireELTest(){
-		ExpressionEngine engine = new JfireELEngine();
+		final ExpressionEngine engine = new JfireELEngine();
 
 		final Dict dict = Dict.create()
 				.set("a", 100.3)
@@ -73,7 +73,7 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void spELTest(){
-		ExpressionEngine engine = new SpELEngine();
+		final ExpressionEngine engine = new SpELEngine();
 
 		final Dict dict = Dict.create()
 				.set("a", 100.3)
@@ -85,7 +85,7 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void rhinoTest(){
-		ExpressionEngine engine = new RhinoEngine();
+		final ExpressionEngine engine = new RhinoEngine();
 
 		final Dict dict = Dict.create()
 				.set("a", 100.3)

@@ -105,7 +105,7 @@ public enum DateField {
 	// ---------------------------------------------------------------
 	private final int value;
 
-	DateField(int value) {
+	DateField(final int value) {
 		this.value = value;
 	}
 
@@ -119,7 +119,7 @@ public enum DateField {
 	 * @param calendarPartIntValue Calendar中关于Week的int值
 	 * @return DateField
 	 */
-	public static DateField of(int calendarPartIntValue) {
+	public static DateField of(final int calendarPartIntValue) {
 		switch (calendarPartIntValue) {
 		case Calendar.ERA:
 			return ERA;

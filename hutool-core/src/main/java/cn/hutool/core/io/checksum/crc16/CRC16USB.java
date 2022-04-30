@@ -18,13 +18,13 @@ public class CRC16USB extends CRC16Checksum{
 	}
 
 	@Override
-	public void update(byte[] b, int off, int len) {
+	public void update(final byte[] b, final int off, final int len) {
 		super.update(b, off, len);
 		wCRCin ^= 0xffff;
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		wCRCin ^= (b & 0x00ff);
 		for (int j = 0; j < 8; j++) {
 			if ((wCRCin & 0x0001) != 0) {

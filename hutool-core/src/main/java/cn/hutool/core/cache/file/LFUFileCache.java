@@ -19,7 +19,7 @@ public class LFUFileCache extends AbstractFileCache{
 	 * 默认无超时
 	 * @param capacity 缓存容量
 	 */
-	public LFUFileCache(int capacity) {
+	public LFUFileCache(final int capacity) {
 		this(capacity, capacity / 2, 0);
 	}
 
@@ -29,7 +29,7 @@ public class LFUFileCache extends AbstractFileCache{
 	 * @param capacity 缓存容量
 	 * @param maxFileSize 最大文件大小
 	 */
-	public LFUFileCache(int capacity, int maxFileSize) {
+	public LFUFileCache(final int capacity, final int maxFileSize) {
 		this(capacity, maxFileSize, 0);
 	}
 
@@ -39,7 +39,7 @@ public class LFUFileCache extends AbstractFileCache{
 	 * @param maxFileSize 文件最大大小
 	 * @param timeout 默认超时时间，0表示无默认超时
 	 */
-	public LFUFileCache(int capacity, int maxFileSize, long timeout) {
+	public LFUFileCache(final int capacity, final int maxFileSize, final long timeout) {
 		super(capacity, maxFileSize, timeout);
 	}
 
@@ -54,7 +54,7 @@ public class LFUFileCache extends AbstractFileCache{
 			}
 
 			@Override
-			protected void onRemove(File key, byte[] cachedObject) {
+			protected void onRemove(final File key, final byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
 		};

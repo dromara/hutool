@@ -55,7 +55,7 @@ public class TimingWheel {
 	 * @param wheelSize 时间轮大小
 	 * @param consumer  任务处理器
 	 */
-	public TimingWheel(long tickMs, int wheelSize, Consumer<TimerTaskList> consumer) {
+	public TimingWheel(final long tickMs, final int wheelSize, final Consumer<TimerTaskList> consumer) {
 		this(tickMs, wheelSize, System.currentTimeMillis(), consumer);
 	}
 
@@ -67,7 +67,7 @@ public class TimingWheel {
 	 * @param currentTime 当前时间
 	 * @param consumer    任务处理器
 	 */
-	public TimingWheel(long tickMs, int wheelSize, long currentTime, Consumer<TimerTaskList> consumer) {
+	public TimingWheel(final long tickMs, final int wheelSize, final long currentTime, final Consumer<TimerTaskList> consumer) {
 		this.tickMs = tickMs;
 		this.wheelSize = wheelSize;
 		this.interval = tickMs * wheelSize;
@@ -83,15 +83,15 @@ public class TimingWheel {
 	 * @param timerTask 任务
 	 * @return 是否成功
 	 */
-	public boolean addTask(TimerTask timerTask) {
-		long expiration = timerTask.getDelayMs();
+	public boolean addTask(final TimerTask timerTask) {
+		final long expiration = timerTask.getDelayMs();
 		//过期任务直接执行
 		if (expiration < currentTime + tickMs) {
 			return false;
 		} else if (expiration < currentTime + interval) {
 			//当前时间轮可以容纳该任务 加入时间槽
-			long virtualId = expiration / tickMs;
-			int index = (int) (virtualId % wheelSize);
+			final long virtualId = expiration / tickMs;
+			final int index = (int) (virtualId % wheelSize);
 			StaticLog.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
 
 			TimerTaskList timerTaskList = timerTaskLists[index];
@@ -106,7 +106,7 @@ public class TimingWheel {
 			}
 		} else {
 			//放到上一层的时间轮
-			TimingWheel timeWheel = getOverflowWheel();
+			final TimingWheel timeWheel = getOverflowWheel();
 			timeWheel.addTask(timerTask);
 		}
 		return true;
@@ -117,7 +117,7 @@ public class TimingWheel {
 	 *
 	 * @param timestamp 推进的时间
 	 */
-	public void advanceClock(long timestamp) {
+	public void advanceClock(final long timestamp) {
 		if (timestamp >= currentTime + tickMs) {
 			currentTime = timestamp - (timestamp % tickMs);
 			if (overflowWheel != null) {

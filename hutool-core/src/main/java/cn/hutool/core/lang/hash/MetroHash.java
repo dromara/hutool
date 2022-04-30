@@ -33,15 +33,15 @@ public class MetroHash {
 	private final static long k2_128 = 0x7BDEC03B;
 	private final static long k3_128 = 0x2F5870A5;
 
-	public static long hash64(byte[] data) {
+	public static long hash64(final byte[] data) {
 		return hash64(data, 1337);
 	}
 
-	public static Number128 hash128(byte[] data) {
+	public static Number128 hash128(final byte[] data) {
 		return hash128(data, 1337);
 	}
 
-	public static long hash64(byte[] data, long seed) {
+	public static long hash64(final byte[] data, final long seed) {
 		byte[] buffer = data;
 		long hash = (seed + k2_64) * k0_64;
 
@@ -113,7 +113,7 @@ public class MetroHash {
 		return hash;
 	}
 
-	public static Number128 hash128(byte[] data, long seed) {
+	public static Number128 hash128(final byte[] data, final long seed) {
 		byte[] buffer = data;
 
 		long v0, v1, v2, v3;
@@ -193,25 +193,25 @@ public class MetroHash {
 	}
 
 
-	private static long littleEndian64(byte[] b, int start) {
+	private static long littleEndian64(final byte[] b, final int start) {
 		return ByteUtil.bytesToLong(b, start, ByteOrder.LITTLE_ENDIAN);
 	}
 
-	private static int littleEndian32(byte[] b) {
+	private static int littleEndian32(final byte[] b) {
 		return (int) b[0] | (int) b[1] << 8 | (int) b[2] << 16 | (int) b[3] << 24;
 	}
 
-	private static int littleEndian16(byte[] b) {
+	private static int littleEndian16(final byte[] b) {
 		return ByteUtil.bytesToShort(b, ByteOrder.LITTLE_ENDIAN);
 	}
 
-	private static long rotateLeft64(long x, int k) {
-		int n = 64;
-		int s = k & (n - 1);
+	private static long rotateLeft64(final long x, final int k) {
+		final int n = 64;
+		final int s = k & (n - 1);
 		return x << s | x >> (n - s);
 	}
 
-	private static long rotateRight(long val, int shift) {
+	private static long rotateRight(final long val, final int shift) {
 		return (val >> shift) | (val << (64 - shift));
 	}
 }

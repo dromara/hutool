@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class CompressException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public CompressException(Throwable e) {
+	public CompressException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public CompressException(String message) {
+	public CompressException(final String message) {
 		super(message);
 	}
 
-	public CompressException(String messageTemplate, Object... params) {
+	public CompressException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public CompressException(String message, Throwable throwable) {
+	public CompressException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public CompressException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public CompressException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public CompressException(Throwable throwable, String messageTemplate, Object... params) {
+	public CompressException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

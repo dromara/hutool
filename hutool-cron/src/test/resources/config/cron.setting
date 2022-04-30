@@ -8,7 +8,7 @@
 
 # cn.hutool.cron.demo.TestJob.doTest = */1 * * * * *
 
-[cn.hutool.cron.demo]
+[cn.hutool.cron.demo]=
 # 6位表达式在秒匹配模式下可用，此处表示每秒执行一次
 # TestJob.doTest = */1 * * * * *
 # 5位表达式在分匹配模式下可用，此处表示每分钟执行一次

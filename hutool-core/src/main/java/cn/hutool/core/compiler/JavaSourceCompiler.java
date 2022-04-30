@@ -79,7 +79,7 @@ public class JavaSourceCompiler {
 	 * @param parent 父类加载器
 	 * @return Java源码编译器
 	 */
-	public static JavaSourceCompiler create(ClassLoader parent) {
+	public static JavaSourceCompiler create(final ClassLoader parent) {
 		return new JavaSourceCompiler(parent);
 	}
 
@@ -88,7 +88,7 @@ public class JavaSourceCompiler {
 	 *
 	 * @param parent 父类加载器，null则使用默认类加载器
 	 */
-	private JavaSourceCompiler(ClassLoader parent) {
+	private JavaSourceCompiler(final ClassLoader parent) {
 		this.parentClassLoader = ObjUtil.defaultIfNull(parent, ClassLoaderUtil::getClassLoader);
 	}
 
@@ -99,7 +99,7 @@ public class JavaSourceCompiler {
 	 * @param resources 待编译的资源，支持 .java, 文件夹, 压缩文件 递归搜索文件夹内的压缩文件和jar包
 	 * @return Java源码编译器
 	 */
-	public JavaSourceCompiler addSource(Resource... resources) {
+	public JavaSourceCompiler addSource(final Resource... resources) {
 		if (ArrayUtil.isNotEmpty(resources)) {
 			this.sourceList.addAll(Arrays.asList(resources));
 		}
@@ -113,9 +113,9 @@ public class JavaSourceCompiler {
 	 * @param files 待编译的文件 支持 .java, 文件夹, 压缩文件 递归搜索文件夹内的压缩文件和jar包
 	 * @return Java源码编译器
 	 */
-	public JavaSourceCompiler addSource(File... files) {
+	public JavaSourceCompiler addSource(final File... files) {
 		if (ArrayUtil.isNotEmpty(files)) {
-			for (File file : files) {
+			for (final File file : files) {
 				this.sourceList.add(new FileResource(file));
 			}
 		}
@@ -128,7 +128,7 @@ public class JavaSourceCompiler {
 	 * @param sourceCodeMap 源码Map key: 类名 value 源码
 	 * @return Java源码编译器
 	 */
-	public JavaSourceCompiler addSource(Map<String, String> sourceCodeMap) {
+	public JavaSourceCompiler addSource(final Map<String, String> sourceCodeMap) {
 		if (MapUtil.isNotEmpty(sourceCodeMap)) {
 			sourceCodeMap.forEach(this::addSource);
 		}
@@ -142,7 +142,7 @@ public class JavaSourceCompiler {
 	 * @param sourceCode 源码
 	 * @return Java文件编译器
 	 */
-	public JavaSourceCompiler addSource(String className, String sourceCode) {
+	public JavaSourceCompiler addSource(final String className, final String sourceCode) {
 		if (className != null && sourceCode != null) {
 			this.sourceList.add(new StringResource(sourceCode, className));
 		}
@@ -155,7 +155,7 @@ public class JavaSourceCompiler {
 	 * @param files 编译Java源码时所需要的jar包
 	 * @return Java源码编译器
 	 */
-	public JavaSourceCompiler addLibrary(File... files) {
+	public JavaSourceCompiler addLibrary(final File... files) {
 		if (ArrayUtil.isNotEmpty(files)) {
 			this.libraryFileList.addAll(Arrays.asList(files));
 		}
@@ -210,9 +210,9 @@ public class JavaSourceCompiler {
 	 * @return 编译源码时需要的classpath
 	 */
 	private List<File> getClassPath() {
-		List<File> classPathFileList = new ArrayList<>();
-		for (File file : libraryFileList) {
-			List<File> jarOrZipFile = FileUtil.loopFiles(file, (subFile) -> JavaFileObjectUtil.isJarOrZipFile(subFile.getName()));
+		final List<File> classPathFileList = new ArrayList<>();
+		for (final File file : libraryFileList) {
+			final List<File> jarOrZipFile = FileUtil.loopFiles(file, (subFile) -> JavaFileObjectUtil.isJarOrZipFile(subFile.getName()));
 			classPathFileList.addAll(jarOrZipFile);
 			if (file.isDirectory()) {
 				classPathFileList.add(file);
@@ -229,7 +229,7 @@ public class JavaSourceCompiler {
 	private List<JavaFileObject> getJavaFileObject() {
 		final List<JavaFileObject> list = new ArrayList<>();
 
-		for (Resource resource : this.sourceList) {
+		for (final Resource resource : this.sourceList) {
 			if (resource instanceof FileResource) {
 				final File file = ((FileResource) resource).getFile();
 				FileUtil.walkFiles(file, (subFile) -> list.addAll(JavaFileObjectUtil.getJavaFileObjects(file)));

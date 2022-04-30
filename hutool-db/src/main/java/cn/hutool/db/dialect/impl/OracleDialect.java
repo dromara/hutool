@@ -20,7 +20,7 @@ public class OracleDialect extends AnsiSqlDialect {
 	 * @return 是否为Oracle自增字段
 	 * @since 5.7.20
 	 */
-	public static boolean isNextVal(Object value) {
+	public static boolean isNextVal(final Object value) {
 		return (value instanceof CharSequence) && StrUtil.endWithIgnoreCase(value.toString(), ".nextval");
 	}
 
@@ -30,7 +30,7 @@ public class OracleDialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
+	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		final int[] startEnd = page.getStartEnd();
 		return find
 				.insertPreFragment("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")

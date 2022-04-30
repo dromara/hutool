@@ -67,7 +67,7 @@ public class QrConfig {
 	 * @param width 宽
 	 * @param height 长
 	 */
-	public QrConfig(int width, int height) {
+	public QrConfig(final int width, final int height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -87,7 +87,7 @@ public class QrConfig {
 	 * @param width 宽度
 	 * @return this
 	 */
-	public QrConfig setWidth(int width) {
+	public QrConfig setWidth(final int width) {
 		this.width = width;
 		return this;
 	}
@@ -107,7 +107,7 @@ public class QrConfig {
 	 * @param height 高度
 	 * @return this;
 	 */
-	public QrConfig setHeight(int height) {
+	public QrConfig setHeight(final int height) {
 		this.height = height;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class QrConfig {
 	 * @return this
 	 * @since 5.1.1
 	 */
-	public QrConfig setForeColor(Color foreColor) {
+	public QrConfig setForeColor(final Color foreColor) {
 		if(null != foreColor){
 			this.foreColor = foreColor.getRGB();
 		}
@@ -151,7 +151,7 @@ public class QrConfig {
 	 * @return this
 	 * @since 5.1.1
 	 */
-	public QrConfig setBackColor(Color backColor) {
+	public QrConfig setBackColor(final Color backColor) {
 		if(null == backColor){
 			this.backColor = null;
 		} else {
@@ -175,7 +175,7 @@ public class QrConfig {
 	 * @param margin 边距
 	 * @return this
 	 */
-	public QrConfig setMargin(Integer margin) {
+	public QrConfig setMargin(final Integer margin) {
 		this.margin = margin;
 		return this;
 	}
@@ -195,7 +195,7 @@ public class QrConfig {
 	 * @param qrVersion 二维码中的信息量
 	 * @return this
 	 */
-	public QrConfig setQrVersion(Integer qrVersion) {
+	public QrConfig setQrVersion(final Integer qrVersion) {
 		this.qrVersion = qrVersion;
 		return this;
 	}
@@ -215,7 +215,7 @@ public class QrConfig {
 	 * @param errorCorrection 纠错级别
 	 * @return this
 	 */
-	public QrConfig setErrorCorrection(ErrorCorrectionLevel errorCorrection) {
+	public QrConfig setErrorCorrection(final ErrorCorrectionLevel errorCorrection) {
 		this.errorCorrection = errorCorrection;
 		return this;
 	}
@@ -235,7 +235,7 @@ public class QrConfig {
 	 * @param charset 编码
 	 * @return this
 	 */
-	public QrConfig setCharset(Charset charset) {
+	public QrConfig setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -255,7 +255,7 @@ public class QrConfig {
 	 * @param imgPath 二维码中的Logo路径
 	 * @return this;
 	 */
-	public QrConfig setImg(String imgPath) {
+	public QrConfig setImg(final String imgPath) {
 		return setImg(FileUtil.file(imgPath));
 	}
 
@@ -265,7 +265,7 @@ public class QrConfig {
 	 * @param imgFile 二维码中的Logo
 	 * @return this;
 	 */
-	public QrConfig setImg(File imgFile) {
+	public QrConfig setImg(final File imgFile) {
 		return setImg(ImgUtil.read(imgFile));
 	}
 
@@ -275,7 +275,7 @@ public class QrConfig {
 	 * @param img 二维码中的Logo
 	 * @return this;
 	 */
-	public QrConfig setImg(Image img) {
+	public QrConfig setImg(final Image img) {
 		this.img = img;
 		return this;
 	}
@@ -295,7 +295,7 @@ public class QrConfig {
 	 * @param ratio 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 * @return this;
 	 */
-	public QrConfig setRatio(int ratio) {
+	public QrConfig setRatio(final int ratio) {
 		this.ratio = ratio;
 		return this;
 	}
@@ -315,14 +315,14 @@ public class QrConfig {
 	 * @param format 格式，根据格式不同，{@link #errorCorrection}的值类型有所不同
 	 * @return 配置
 	 */
-	public HashMap<EncodeHintType, Object> toHints(BarcodeFormat format) {
+	public HashMap<EncodeHintType, Object> toHints(final BarcodeFormat format) {
 		// 配置
 		final HashMap<EncodeHintType, Object> hints = new HashMap<>();
 		if (null != this.charset) {
 			hints.put(EncodeHintType.CHARACTER_SET, charset.toString().toLowerCase());
 		}
 		if (null != this.errorCorrection) {
-			Object value;
+			final Object value;
 			if(BarcodeFormat.AZTEC == format || BarcodeFormat.PDF_417 == format){
 				// issue#I4FE3U@Gitee
 				value = this.errorCorrection.getBits();

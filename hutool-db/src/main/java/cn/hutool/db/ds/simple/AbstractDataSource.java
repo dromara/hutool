@@ -21,12 +21,12 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 	}
 
 	@Override
-	public void setLogWriter(PrintWriter out) {
+	public void setLogWriter(final PrintWriter out) {
 		DriverManager.setLogWriter(out);
 	}
 
 	@Override
-	public void setLoginTimeout(int seconds) {
+	public void setLoginTimeout(final int seconds) {
 		DriverManager.setLoginTimeout(seconds);
 	}
 
@@ -36,12 +36,12 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
+	public <T> T unwrap(final Class<T> iface) throws SQLException {
 		throw new SQLException("Can't support unwrap method!");
 	}
 
 	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
 		throw new SQLException("Can't support isWrapperFor method!");
 	}
 

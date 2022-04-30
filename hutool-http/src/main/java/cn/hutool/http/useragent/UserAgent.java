@@ -61,7 +61,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param mobile 是否为移动平台
 	 */
-	public void setMobile(boolean mobile) {
+	public void setMobile(final boolean mobile) {
 		this.mobile = mobile;
 	}
 
@@ -79,7 +79,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param browser 浏览器类型
 	 */
-	public void setBrowser(Browser browser) {
+	public void setBrowser(final Browser browser) {
 		this.browser = browser;
 	}
 
@@ -97,7 +97,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param platform 平台类型
 	 */
-	public void setPlatform(Platform platform) {
+	public void setPlatform(final Platform platform) {
 		this.platform = platform;
 	}
 
@@ -115,7 +115,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param os 系统类型
 	 */
-	public void setOs(OS os) {
+	public void setOs(final OS os) {
 		this.os = os;
 	}
 
@@ -135,7 +135,7 @@ public class UserAgent implements Serializable {
 	 * @param osVersion 系统版本
 	 * @since 5.7.4
 	 */
-	public void setOsVersion(String osVersion) {
+	public void setOsVersion(final String osVersion) {
 		this.osVersion = osVersion;
 	}
 
@@ -153,7 +153,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param engine 引擎类型
 	 */
-	public void setEngine(Engine engine) {
+	public void setEngine(final Engine engine) {
 		this.engine = engine;
 	}
 
@@ -171,7 +171,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param version 浏览器版本
 	 */
-	public void setVersion(String version) {
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 
@@ -189,7 +189,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param engineVersion 引擎版本
 	 */
-	public void setEngineVersion(String engineVersion) {
+	public void setEngineVersion(final String engineVersion) {
 		this.engineVersion = engineVersion;
 	}
 

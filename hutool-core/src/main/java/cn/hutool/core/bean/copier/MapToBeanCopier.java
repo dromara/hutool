@@ -32,7 +32,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 	 * @param targetType  目标泛型类型
 	 * @param copyOptions 拷贝选项
 	 */
-	public MapToBeanCopier(Map<?, ?> source, T target, Type targetType, CopyOptions copyOptions) {
+	public MapToBeanCopier(final Map<?, ?> source, final T target, final Type targetType, final CopyOptions copyOptions) {
 		super(source, target, copyOptions);
 
 		// 针对MapWrapper特殊处理，提供的Map包装了忽略大小写的Map，则默认转Bean的时候也忽略大小写，如JSONObject
@@ -68,7 +68,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 			}
 
 			// 检查目标字段可写性
-			PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
+			final PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;
@@ -100,7 +100,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 	 * @param sKeyStr 键或字段名
 	 * @return {@link PropDesc}
 	 */
-	private PropDesc findPropDesc(Map<String, PropDesc> targetPropDescMap, String sKeyStr){
+	private PropDesc findPropDesc(final Map<String, PropDesc> targetPropDescMap, String sKeyStr){
 		PropDesc propDesc = targetPropDescMap.get(sKeyStr);
 		if(null != propDesc){
 			return propDesc;

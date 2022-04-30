@@ -18,7 +18,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	 *
 	 * @param property 属性名
 	 */
-	public PropertyComparator(String property) {
+	public PropertyComparator(final String property) {
 		this(property, true);
 	}
 
@@ -28,7 +28,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	 * @param property 属性名
 	 * @param isNullGreater null值是否排在后（从小到大排序）
 	 */
-	public PropertyComparator(String property, boolean isNullGreater) {
+	public PropertyComparator(final String property, final boolean isNullGreater) {
 		super(isNullGreater, (bean)-> BeanUtil.getProperty(bean, property));
 	}
 }

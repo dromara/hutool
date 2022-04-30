@@ -64,7 +64,7 @@ public class JavaSpecInfo implements Serializable{
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "Java Spec. Name:    ", getName());
 		ManagementUtil.append(builder, "Java Spec. Version: ", getVersion());

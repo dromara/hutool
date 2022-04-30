@@ -22,7 +22,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 * @return 编码后的字符串
 	 */
 	@Override
-	public String encode(byte[] data) {
+	public String encode(final byte[] data) {
 		return Base58Encoder.ENCODER.encode(data);
 	}
 
@@ -34,7 +34,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 * @throws IllegalArgumentException 非标准Base58字符串
 	 */
 	@Override
-	public byte[] decode(CharSequence encoded) throws IllegalArgumentException {
+	public byte[] decode(final CharSequence encoded) throws IllegalArgumentException {
 		return Base58Decoder.DECODER.decode(encoded);
 	}
 
@@ -56,7 +56,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		 *
 		 * @param alphabet 编码字母表
 		 */
-		public Base58Encoder(char[] alphabet) {
+		public Base58Encoder(final char[] alphabet) {
 			this.alphabet = alphabet;
 			alphabetZero = alphabet[0];
 		}
@@ -112,7 +112,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		 *
 		 * @param alphabet 编码字符表
 		 */
-		public Base58Decoder(String alphabet) {
+		public Base58Decoder(final String alphabet) {
 			final byte[] lookupTable = new byte['z' + 1];
 			Arrays.fill(lookupTable, (byte) -1);
 
@@ -124,15 +124,15 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		}
 
 		@Override
-		public byte[] decode(CharSequence encoded) {
+		public byte[] decode(final CharSequence encoded) {
 			if (encoded.length() == 0) {
 				return new byte[0];
 			}
 			// Convert the base58-encoded ASCII chars to a base58 byte sequence (base58 digits).
 			final byte[] input58 = new byte[encoded.length()];
 			for (int i = 0; i < encoded.length(); ++i) {
-				char c = encoded.charAt(i);
-				int digit = c < 128 ? lookupTable[c] : -1;
+				final char c = encoded.charAt(i);
+				final int digit = c < 128 ? lookupTable[c] : -1;
 				if (digit < 0) {
 					throw new IllegalArgumentException(StrUtil.format("Invalid char '{}' at [{}]", c, i));
 				}
@@ -144,7 +144,7 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 				++zeros;
 			}
 			// Convert base-58 digits to base-256 digits.
-			byte[] decoded = new byte[encoded.length()];
+			final byte[] decoded = new byte[encoded.length()];
 			int outputStart = decoded.length;
 			for (int inputStart = zeros; inputStart < input58.length; ) {
 				decoded[--outputStart] = divmod(input58, inputStart, 58, 256);
@@ -173,12 +173,12 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 * @param divisor    the number to divide by (up to 256)
 	 * @return the remainder of the division operation
 	 */
-	private static byte divmod(byte[] number, int firstDigit, int base, int divisor) {
+	private static byte divmod(final byte[] number, final int firstDigit, final int base, final int divisor) {
 		// this is just long division which accounts for the base of the input digits
 		int remainder = 0;
 		for (int i = firstDigit; i < number.length; i++) {
-			int digit = (int) number[i] & 0xFF;
-			int temp = remainder * base + digit;
+			final int digit = (int) number[i] & 0xFF;
+			final int temp = remainder * base + digit;
 			number[i] = (byte) (temp / divisor);
 			remainder = temp % divisor;
 		}

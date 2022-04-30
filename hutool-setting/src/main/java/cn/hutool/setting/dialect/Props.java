@@ -78,7 +78,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return Props
 	 */
-	public static Props getProp(String resource) {
+	public static Props getProp(final String resource) {
 		return new Props(resource);
 	}
 
@@ -89,7 +89,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param charsetName 字符集
 	 * @return Properties
 	 */
-	public static Props getProp(String resource, String charsetName) {
+	public static Props getProp(final String resource, final String charsetName) {
 		return new Props(resource, charsetName);
 	}
 
@@ -100,7 +100,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param charset  字符集
 	 * @return Properties
 	 */
-	public static Props getProp(String resource, Charset charset) {
+	public static Props getProp(final String resource, final Charset charset) {
 		return new Props(resource, charset);
 	}
 
@@ -117,7 +117,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param path 配置文件路径，相对于ClassPath，或者使用绝对路径
 	 */
-	public Props(String path) {
+	public Props(final String path) {
 		this(path, CharsetUtil.ISO_8859_1);
 	}
 
@@ -127,7 +127,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param path        相对或绝对路径
 	 * @param charsetName 字符集
 	 */
-	public Props(String path, String charsetName) {
+	public Props(final String path, final String charsetName) {
 		this(path, CharsetUtil.charset(charsetName));
 	}
 
@@ -137,7 +137,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param path    相对或绝对路径
 	 * @param charset 字符集
 	 */
-	public Props(String path, Charset charset) {
+	public Props(final String path, final Charset charset) {
 		Assert.notBlank(path, "Blank properties file path !");
 		if (null != charset) {
 			this.charset = charset;
@@ -150,7 +150,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param propertiesFile 配置文件对象
 	 */
-	public Props(File propertiesFile) {
+	public Props(final File propertiesFile) {
 		this(propertiesFile, StandardCharsets.ISO_8859_1);
 	}
 
@@ -160,7 +160,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesFile 配置文件对象
 	 * @param charsetName    字符集
 	 */
-	public Props(File propertiesFile, String charsetName) {
+	public Props(final File propertiesFile, final String charsetName) {
 		this(propertiesFile, Charset.forName(charsetName));
 	}
 
@@ -170,7 +170,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesFile 配置文件对象
 	 * @param charset        字符集
 	 */
-	public Props(File propertiesFile, Charset charset) {
+	public Props(final File propertiesFile, final Charset charset) {
 		Assert.notNull(propertiesFile, "Null properties file!");
 		this.charset = charset;
 		this.load(new FileResource(propertiesFile));
@@ -182,7 +182,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param path  相对路径
 	 * @param clazz 基准类
 	 */
-	public Props(String path, Class<?> clazz) {
+	public Props(final String path, final Class<?> clazz) {
 		this(path, clazz, CharsetUtil.NAME_ISO_8859_1);
 	}
 
@@ -193,7 +193,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param clazz       基准类
 	 * @param charsetName 字符集
 	 */
-	public Props(String path, Class<?> clazz, String charsetName) {
+	public Props(final String path, final Class<?> clazz, final String charsetName) {
 		this(path, clazz, CharsetUtil.charset(charsetName));
 	}
 
@@ -204,7 +204,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param clazz   基准类
 	 * @param charset 字符集
 	 */
-	public Props(String path, Class<?> clazz, Charset charset) {
+	public Props(final String path, final Class<?> clazz, final Charset charset) {
 		Assert.notBlank(path, "Blank properties file path !");
 		if (null != charset) {
 			this.charset = charset;
@@ -217,7 +217,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param propertiesUrl 属性文件路径
 	 */
-	public Props(URL propertiesUrl) {
+	public Props(final URL propertiesUrl) {
 		this(propertiesUrl, StandardCharsets.ISO_8859_1);
 	}
 
@@ -227,7 +227,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesUrl 属性文件路径
 	 * @param charsetName   字符集
 	 */
-	public Props(URL propertiesUrl, String charsetName) {
+	public Props(final URL propertiesUrl, final String charsetName) {
 		this(propertiesUrl, CharsetUtil.charset(charsetName));
 	}
 
@@ -237,7 +237,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesUrl 属性文件路径
 	 * @param charset       字符集
 	 */
-	public Props(URL propertiesUrl, Charset charset) {
+	public Props(final URL propertiesUrl, final Charset charset) {
 		Assert.notNull(propertiesUrl, "Null properties URL !");
 		if (null != charset) {
 			this.charset = charset;
@@ -250,7 +250,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param properties 属性文件路径
 	 */
-	public Props(Properties properties) {
+	public Props(final Properties properties) {
 		if (MapUtil.isNotEmpty(properties)) {
 			this.putAll(properties);
 		}
@@ -264,7 +264,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param url {@link URL}
 	 * @since 5.5.2
 	 */
-	public void load(URL url) {
+	public void load(final URL url) {
 		load(new UrlResource(url));
 	}
 
@@ -273,13 +273,13 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param resource {@link Resource}
 	 */
-	public void load(Resource resource) {
+	public void load(final Resource resource) {
 		Assert.notNull(resource, "Props resource must be not null!");
 		this.resource = resource;
 
 		try (final BufferedReader reader = resource.getReader(charset)) {
 			super.load(reader);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -296,7 +296,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 *
 	 * @param autoReload 是否自动加载
 	 */
-	public void autoLoad(boolean autoReload) {
+	public void autoLoad(final boolean autoReload) {
 		if (autoReload) {
 			Assert.notNull(this.resource, "Properties resource must be not null!");
 			if (null != this.watchMonitor) {
@@ -305,7 +305,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 			}
 			this.watchMonitor = WatchUtil.createModify(this.resource.getUrl(), new SimpleWatcher() {
 				@Override
-				public void onModify(WatchEvent<?> event, Path currentPath) {
+				public void onModify(final WatchEvent<?> event, final Path currentPath) {
 					load();
 				}
 			});
@@ -318,57 +318,57 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	// ----------------------------------------------------------------------- Get start
 	@Override
-	public Object getObj(String key, Object defaultValue) {
+	public Object getObj(final String key, final Object defaultValue) {
 		return getStr(key, null == defaultValue ? null : defaultValue.toString());
 	}
 
 	@Override
-	public Object getObj(String key) {
+	public Object getObj(final String key) {
 		return getObj(key, null);
 	}
 
 	@Override
-	public String getStr(String key, String defaultValue) {
+	public String getStr(final String key, final String defaultValue) {
 		return super.getProperty(key, defaultValue);
 	}
 
 	@Override
-	public String getStr(String key) {
+	public String getStr(final String key) {
 		return super.getProperty(key);
 	}
 
 	@Override
-	public Integer getInt(String key, Integer defaultValue) {
+	public Integer getInt(final String key, final Integer defaultValue) {
 		return Convert.toInt(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Integer getInt(String key) {
+	public Integer getInt(final String key) {
 		return getInt(key, null);
 	}
 
 	@Override
-	public Boolean getBool(String key, Boolean defaultValue) {
+	public Boolean getBool(final String key, final Boolean defaultValue) {
 		return Convert.toBool(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Boolean getBool(String key) {
+	public Boolean getBool(final String key) {
 		return getBool(key, null);
 	}
 
 	@Override
-	public Long getLong(String key, Long defaultValue) {
+	public Long getLong(final String key, final Long defaultValue) {
 		return Convert.toLong(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Long getLong(String key) {
+	public Long getLong(final String key) {
 		return getLong(key, null);
 	}
 
 	@Override
-	public Character getChar(String key, Character defaultValue) {
+	public Character getChar(final String key, final Character defaultValue) {
 		final String value = getStr(key);
 		if (StrUtil.isBlank(value)) {
 			return defaultValue;
@@ -377,52 +377,52 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	}
 
 	@Override
-	public Character getChar(String key) {
+	public Character getChar(final String key) {
 		return getChar(key, null);
 	}
 
 	@Override
-	public Float getFloat(String key) {
+	public Float getFloat(final String key) {
 		return getFloat(key, null);
 	}
 
 	@Override
-	public Float getFloat(String key, Float defaultValue) {
+	public Float getFloat(final String key, final Float defaultValue) {
 		return Convert.toFloat(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Double getDouble(String key, Double defaultValue) throws NumberFormatException {
+	public Double getDouble(final String key, final Double defaultValue) throws NumberFormatException {
 		return Convert.toDouble(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Double getDouble(String key) throws NumberFormatException {
+	public Double getDouble(final String key) throws NumberFormatException {
 		return getDouble(key, null);
 	}
 
 	@Override
-	public Short getShort(String key, Short defaultValue) {
+	public Short getShort(final String key, final Short defaultValue) {
 		return Convert.toShort(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Short getShort(String key) {
+	public Short getShort(final String key) {
 		return getShort(key, null);
 	}
 
 	@Override
-	public Byte getByte(String key, Byte defaultValue) {
+	public Byte getByte(final String key, final Byte defaultValue) {
 		return Convert.toByte(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Byte getByte(String key) {
+	public Byte getByte(final String key) {
 		return getByte(key, null);
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+	public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
 		final String valueStr = getStr(key);
 		if (StrUtil.isBlank(valueStr)) {
 			return defaultValue;
@@ -430,18 +430,18 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 		try {
 			return new BigDecimal(valueStr);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return defaultValue;
 		}
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(String key) {
+	public BigDecimal getBigDecimal(final String key) {
 		return getBigDecimal(key, null);
 	}
 
 	@Override
-	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
+	public BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
 		final String valueStr = getStr(key);
 		if (StrUtil.isBlank(valueStr)) {
 			return defaultValue;
@@ -449,33 +449,33 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 		try {
 			return new BigInteger(valueStr);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return defaultValue;
 		}
 	}
 
 	@Override
-	public BigInteger getBigInteger(String key) {
+	public BigInteger getBigInteger(final String key) {
 		return getBigInteger(key, null);
 	}
 
 	@Override
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
+	public <E extends Enum<E>> E getEnum(final Class<E> clazz, final String key, final E defaultValue) {
 		return Convert.toEnum(clazz, getStr(key), defaultValue);
 	}
 
 	@Override
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
+	public <E extends Enum<E>> E getEnum(final Class<E> clazz, final String key) {
 		return getEnum(clazz, key, null);
 	}
 
 	@Override
-	public Date getDate(String key, Date defaultValue) {
+	public Date getDate(final String key, final Date defaultValue) {
 		return Convert.toDate(getStr(key), defaultValue);
 	}
 
 	@Override
-	public Date getDate(String key) {
+	public Date getDate(final String key) {
 		return getDate(key, null);
 	}
 
@@ -486,9 +486,9 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @return 字符串值
 	 * @since 4.1.21
 	 */
-	public String getAndRemoveStr(String... keys) {
+	public String getAndRemoveStr(final String... keys) {
 		Object value = null;
-		for (String key : keys) {
+		for (final String key : keys) {
 			value = remove(key);
 			if (null != value) {
 				break;
@@ -526,7 +526,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @return Bean对象
 	 * @since 4.6.3
 	 */
-	public <T> T toBean(Class<T> beanClass) {
+	public <T> T toBean(final Class<T> beanClass) {
 		return toBean(beanClass, null);
 	}
 
@@ -548,7 +548,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @return Bean对象
 	 * @since 4.6.3
 	 */
-	public <T> T toBean(Class<T> beanClass, String prefix) {
+	public <T> T toBean(final Class<T> beanClass, final String prefix) {
 		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
 		return fillBean(bean, prefix);
 	}
@@ -571,11 +571,11 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @return Bean对象
 	 * @since 4.6.3
 	 */
-	public <T> T fillBean(T bean, String prefix) {
+	public <T> T fillBean(final T bean, String prefix) {
 		prefix = StrUtil.nullToEmpty(StrUtil.addSuffixIfNot(prefix, StrUtil.DOT));
 
 		String key;
-		for (java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
+		for (final java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
 			key = (String) entry.getKey();
 			if (false == StrUtil.startWith(key, prefix)) {
 				// 非指定开头的属性忽略掉
@@ -583,7 +583,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 			}
 			try {
 				BeanUtil.setProperty(bean, StrUtil.subSuf(key, prefix.length()), entry.getValue());
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 忽略注入失败的字段（这些字段可能用于其它配置）
 				StaticLog.debug("Ignore property: [{}]", key);
 			}
@@ -602,7 +602,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param key   属性键
 	 * @param value 属性值
 	 */
-	public void setProperty(String key, Object value) {
+	public void setProperty(final String key, final Object value) {
 		super.setProperty(key, value.toString());
 	}
 
@@ -612,12 +612,12 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param absolutePath 设置文件的绝对路径
 	 * @throws IORuntimeException IO异常，可能为文件未找到
 	 */
-	public void store(String absolutePath) throws IORuntimeException {
+	public void store(final String absolutePath) throws IORuntimeException {
 		Writer writer = null;
 		try {
 			writer = FileUtil.getWriter(absolutePath, charset, false);
 			super.store(writer, null);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e, "Store properties to [{}] error!", absolutePath);
 		} finally {
 			IoUtil.close(writer);
@@ -630,7 +630,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param path  相对路径
 	 * @param clazz 相对的类
 	 */
-	public void store(String path, Class<?> clazz) {
+	public void store(final String path, final Class<?> clazz) {
 		this.store(FileUtil.getAbsolutePath(path, clazz));
 	}
 	// ----------------------------------------------------------------------- Set end

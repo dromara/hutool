@@ -58,7 +58,7 @@ public class LunarInfo {
 	 * @param y 年
 	 * @return 总天数
 	 */
-	public static int yearDays(int y) {
+	public static int yearDays(final int y) {
 		int i, sum = 348;
 		for (i = 0x8000; i > 0x8; i >>= 1) {
 			if ((getCode(y) & i) != 0)
@@ -73,7 +73,7 @@ public class LunarInfo {
 	 * @param y 农历年
 	 * @return 闰月的天数
 	 */
-	public static int leapDays(int y) {
+	public static int leapDays(final int y) {
 		if (leapMonth(y) != 0) {
 			return (getCode(y) & 0x10000) != 0 ? 30 : 29;
 		}
@@ -88,7 +88,7 @@ public class LunarInfo {
 	 * @param m 月
 	 * @return 总天数
 	 */
-	public static int monthDays(int y, int m) {
+	public static int monthDays(final int y, final int m) {
 		return (getCode(y) & (0x10000 >> m)) == 0 ? 29 : 30;
 	}
 
@@ -99,7 +99,7 @@ public class LunarInfo {
 	 * @param y 年
 	 * @return 润的月, 没闰传回 0
 	 */
-	public static int leapMonth(int y) {
+	public static int leapMonth(final int y) {
 		return (int) (getCode(y) & 0xf);
 	}
 
@@ -109,7 +109,7 @@ public class LunarInfo {
 	 * @param year 年
 	 * @return 农历信息
 	 */
-	private static long getCode(int year) {
+	private static long getCode(final int year) {
 		return LUNAR_CODE[year - BASE_YEAR];
 	}
 }

@@ -41,7 +41,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @return this
 	 * @see #setHeaderLineNo(long)
 	 */
-	public CsvReadConfig setContainsHeader(boolean containsHeader) {
+	public CsvReadConfig setContainsHeader(final boolean containsHeader) {
 		return setHeaderLineNo(containsHeader ? beginLineNo : -1);
 	}
 
@@ -52,7 +52,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @return this
 	 * @since 5.7.23
 	 */
-	public CsvReadConfig setHeaderLineNo(long headerLineNo) {
+	public CsvReadConfig setHeaderLineNo(final long headerLineNo) {
 		this.headerLineNo = headerLineNo;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @param skipEmptyRows 是否跳过空白行，默认true
 	 * @return this
 	 */
-	public CsvReadConfig setSkipEmptyRows(boolean skipEmptyRows) {
+	public CsvReadConfig setSkipEmptyRows(final boolean skipEmptyRows) {
 		this.skipEmptyRows = skipEmptyRows;
 		return this;
 	}
@@ -74,7 +74,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @param errorOnDifferentFieldCount 每行字段个数不同时是否抛出异常，默认false
 	 * @return this
 	 */
-	public CsvReadConfig setErrorOnDifferentFieldCount(boolean errorOnDifferentFieldCount) {
+	public CsvReadConfig setErrorOnDifferentFieldCount(final boolean errorOnDifferentFieldCount) {
 		this.errorOnDifferentFieldCount = errorOnDifferentFieldCount;
 		return this;
 	}
@@ -86,7 +86,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @return this
 	 * @since 5.7.4
 	 */
-	public CsvReadConfig setBeginLineNo(long beginLineNo) {
+	public CsvReadConfig setBeginLineNo(final long beginLineNo) {
 		this.beginLineNo = beginLineNo;
 		return this;
 	}
@@ -98,7 +98,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @return this
 	 * @since 5.7.4
 	 */
-	public CsvReadConfig setEndLineNo(long endLineNo) {
+	public CsvReadConfig setEndLineNo(final long endLineNo) {
 		this.endLineNo = endLineNo;
 		return this;
 	}
@@ -111,7 +111,7 @@ public class CsvReadConfig extends CsvConfig<CsvReadConfig> implements Serializa
 	 * @return this
 	 * @since 5.7.13
 	 */
-	public CsvReadConfig setTrimField(boolean trimField) {
+	public CsvReadConfig setTrimField(final boolean trimField) {
 		this.trimField = trimField;
 		return this;
 	}

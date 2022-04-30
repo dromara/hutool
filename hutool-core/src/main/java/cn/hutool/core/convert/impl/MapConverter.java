@@ -32,7 +32,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 *
 	 * @param mapType Map类型
 	 */
-	public MapConverter(Type mapType) {
+	public MapConverter(final Type mapType) {
 		this(mapType, TypeUtil.getTypeArgument(mapType, 0), TypeUtil.getTypeArgument(mapType, 1));
 	}
 
@@ -43,7 +43,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 * @param keyType 键类型
 	 * @param valueType 值类型
 	 */
-	public MapConverter(Type mapType, Type keyType, Type valueType) {
+	public MapConverter(final Type mapType, final Type keyType, final Type valueType) {
 		this.mapType = mapType;
 		this.keyType = keyType;
 		this.valueType = valueType;
@@ -51,7 +51,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Map<?, ?> convertInternal(Object value) {
+	protected Map<?, ?> convertInternal(final Object value) {
 		Map map;
 		if (value instanceof Map) {
 			final Class<?> valueClass = value.getClass();
@@ -83,7 +83,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 * @param srcMap 源Map
 	 * @param targetMap 目标Map
 	 */
-	private void convertMapToMap(Map<?, ?> srcMap, Map<Object, Object> targetMap) {
+	private void convertMapToMap(final Map<?, ?> srcMap, final Map<Object, Object> targetMap) {
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		srcMap.forEach((key, value)->{
 			key = TypeUtil.isUnknown(this.keyType) ? key : convert.convert(this.keyType, key);

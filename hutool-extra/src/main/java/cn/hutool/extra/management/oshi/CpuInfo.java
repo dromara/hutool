@@ -66,7 +66,7 @@ public class CpuInfo {
 	 * @param processor   {@link CentralProcessor}
 	 * @param waitingTime 设置等待时间，单位毫秒
 	 */
-	public CpuInfo(CentralProcessor processor, long waitingTime) {
+	public CpuInfo(final CentralProcessor processor, final long waitingTime) {
 		init(processor, waitingTime);
 	}
 
@@ -81,7 +81,7 @@ public class CpuInfo {
 	 * @param free     CPU当前空闲率
 	 * @param cpuModel CPU型号信息
 	 */
-	public CpuInfo(Integer cpuNum, double toTal, double sys, double user, double wait, double free, String cpuModel) {
+	public CpuInfo(final Integer cpuNum, final double toTal, final double sys, final double user, final double wait, final double free, final String cpuModel) {
 		this.cpuNum = cpuNum;
 		this.toTal = toTal;
 		this.sys = sys;
@@ -95,7 +95,7 @@ public class CpuInfo {
 		return cpuNum;
 	}
 
-	public void setCpuNum(Integer cpuNum) {
+	public void setCpuNum(final Integer cpuNum) {
 		this.cpuNum = cpuNum;
 	}
 
@@ -103,7 +103,7 @@ public class CpuInfo {
 		return toTal;
 	}
 
-	public void setToTal(double toTal) {
+	public void setToTal(final double toTal) {
 		this.toTal = toTal;
 	}
 
@@ -111,7 +111,7 @@ public class CpuInfo {
 		return sys;
 	}
 
-	public void setSys(double sys) {
+	public void setSys(final double sys) {
 		this.sys = sys;
 	}
 
@@ -119,7 +119,7 @@ public class CpuInfo {
 		return user;
 	}
 
-	public void setUser(double user) {
+	public void setUser(final double user) {
 		this.user = user;
 	}
 
@@ -127,7 +127,7 @@ public class CpuInfo {
 		return wait;
 	}
 
-	public void setWait(double wait) {
+	public void setWait(final double wait) {
 		this.wait = wait;
 	}
 
@@ -135,7 +135,7 @@ public class CpuInfo {
 		return free;
 	}
 
-	public void setFree(double free) {
+	public void setFree(final double free) {
 		this.free = free;
 	}
 
@@ -143,7 +143,7 @@ public class CpuInfo {
 		return cpuModel;
 	}
 
-	public void setCpuModel(String cpuModel) {
+	public void setCpuModel(final String cpuModel) {
 		this.cpuModel = cpuModel;
 	}
 
@@ -151,7 +151,7 @@ public class CpuInfo {
 		return ticks;
 	}
 
-	public void setTicks(CpuTicks ticks) {
+	public void setTicks(final CpuTicks ticks) {
 		this.ticks = ticks;
 	}
 
@@ -185,7 +185,7 @@ public class CpuInfo {
 	 * @param waitingTime 设置等待时间，单位毫秒
 	 * @since 5.7.12
 	 */
-	private void init(CentralProcessor processor, long waitingTime) {
+	private void init(final CentralProcessor processor, final long waitingTime) {
 		final CpuTicks ticks = new CpuTicks(processor, waitingTime);
 		this.ticks = ticks;
 
@@ -208,7 +208,7 @@ public class CpuInfo {
 	 * @return 平均每个CPU核心的tick
 	 * @since 5.7.12
 	 */
-	private static double formatDouble(long tick, long totalCpu) {
+	private static double formatDouble(final long tick, final long totalCpu) {
 		if (0 == totalCpu) {
 			return 0D;
 		}

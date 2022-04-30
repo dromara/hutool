@@ -32,7 +32,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	 *
 	 * @param members 成员数组
 	 */
-	public Tuple(Object... members) {
+	public Tuple(final Object... members) {
 		this.members = members;
 	}
 
@@ -44,7 +44,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	 * @return 元素
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(int index) {
+	public <T> T get(final int index) {
 		return (T) members[index];
 	}
 
@@ -75,7 +75,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	 * @return this
 	 * @since 5.2.1
 	 */
-	public Tuple setCacheHash(boolean cacheHash) {
+	public Tuple setCacheHash(final boolean cacheHash) {
 		this.cacheHash = cacheHash;
 		return this;
 	}
@@ -97,7 +97,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	 * @return 是否包含
 	 * @since 5.6.6
 	 */
-	public boolean contains(Object value) {
+	public boolean contains(final Object value) {
 		return ArrayUtil.contains(this.members, value);
 	}
 
@@ -148,7 +148,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -158,7 +158,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Tuple other = (Tuple) obj;
+		final Tuple other = (Tuple) obj;
 		return false != Arrays.deepEquals(members, other.members);
 	}
 

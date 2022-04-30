@@ -26,7 +26,7 @@ public class SettingUtil {
 	 * @param name 文件名，如果没有扩展名，默认为.setting
 	 * @return 当前环境下配置文件
 	 */
-	public static Setting get(String name) {
+	public static Setting get(final String name) {
 		return SETTING_MAP.computeIfAbsent(name, (filePath)->{
 			final String extName = FileNameUtil.extName(filePath);
 			if (StrUtil.isEmpty(extName)) {
@@ -45,11 +45,11 @@ public class SettingUtil {
 	 * @return 当前环境下配置文件
 	 * @since 5.1.3
 	 */
-	public static Setting getFirstFound(String... names) {
-		for (String name : names) {
+	public static Setting getFirstFound(final String... names) {
+		for (final String name : names) {
 			try {
 				return get(name);
-			} catch (NoResourceException e) {
+			} catch (final NoResourceException e) {
 				//ignore
 			}
 		}

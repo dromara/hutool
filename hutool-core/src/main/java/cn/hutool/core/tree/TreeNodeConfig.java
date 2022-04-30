@@ -40,7 +40,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param idKey ID对应的名称
 	 * @return this
 	 */
-	public TreeNodeConfig setIdKey(String idKey) {
+	public TreeNodeConfig setIdKey(final String idKey) {
 		this.idKey = idKey;
 		return this;
 	}
@@ -60,7 +60,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param weightKey 权重对应的名称
 	 * @return this
 	 */
-	public TreeNodeConfig setWeightKey(String weightKey) {
+	public TreeNodeConfig setWeightKey(final String weightKey) {
 		this.weightKey = weightKey;
 		return this;
 	}
@@ -80,7 +80,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param nameKey 节点名对应的名称
 	 * @return this
 	 */
-	public TreeNodeConfig setNameKey(String nameKey) {
+	public TreeNodeConfig setNameKey(final String nameKey) {
 		this.nameKey = nameKey;
 		return this;
 	}
@@ -100,7 +100,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param childrenKey 子点对应的名称
 	 * @return this
 	 */
-	public TreeNodeConfig setChildrenKey(String childrenKey) {
+	public TreeNodeConfig setChildrenKey(final String childrenKey) {
 		this.childrenKey = childrenKey;
 		return this;
 	}
@@ -121,7 +121,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param parentIdKey 父点对应的名称
 	 * @return this
 	 */
-	public TreeNodeConfig setParentIdKey(String parentIdKey) {
+	public TreeNodeConfig setParentIdKey(final String parentIdKey) {
 		this.parentIdKey = parentIdKey;
 		return this;
 	}
@@ -141,7 +141,7 @@ public class TreeNodeConfig implements Serializable {
 	 * @param deep 递归深度
 	 * @return this
 	 */
-	public TreeNodeConfig setDeep(Integer deep) {
+	public TreeNodeConfig setDeep(final Integer deep) {
 		this.deep = deep;
 		return this;
 	}

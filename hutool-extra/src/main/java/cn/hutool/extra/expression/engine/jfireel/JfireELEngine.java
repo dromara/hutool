@@ -21,7 +21,7 @@ public class JfireELEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context) {
 		return Expression.parse(expression).calculate(context);
 	}
 }

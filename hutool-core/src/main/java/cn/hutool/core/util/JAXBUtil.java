@@ -44,7 +44,7 @@ public class JAXBUtil {
 	 * @see XmlElementWrapper {@code @XmlElementWrapper(name="schools")}
 	 * @see XmlTransient JAXB "有两个名为 "**" 的属性,类的两个属性具有相同名称 "**""解决方案
 	 */
-	public static String beanToXml(Object bean) {
+	public static String beanToXml(final Object bean) {
 		return beanToXml(bean, CharsetUtil.UTF_8, true);
 	}
 
@@ -56,16 +56,16 @@ public class JAXBUtil {
 	 * @param format  是否格式化输出eg: true
 	 * @return 输出的XML字符串
 	 */
-	public static String beanToXml(Object bean, Charset charset, boolean format) {
-		StringWriter writer;
+	public static String beanToXml(final Object bean, final Charset charset, final boolean format) {
+		final StringWriter writer;
 		try {
-			JAXBContext context = JAXBContext.newInstance(bean.getClass());
-			Marshaller marshaller = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(bean.getClass());
+			final Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, format);
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, charset.name());
 			writer = new StringWriter();
 			marshaller.marshal(bean, writer);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException("convertToXml 错误：" + e.getMessage(), e);
 		}
 		return writer.toString();
@@ -79,7 +79,7 @@ public class JAXBUtil {
 	 * @param c   Bean类型
 	 * @return bean
 	 */
-	public static <T> T xmlToBean(String xml, Class<T> c) {
+	public static <T> T xmlToBean(final String xml, final Class<T> c) {
 		return xmlToBean(StrUtil.getReader(xml), c);
 	}
 
@@ -92,7 +92,7 @@ public class JAXBUtil {
 	 * @param <T>     Bean类型
 	 * @return Bean
 	 */
-	public static <T> T xmlToBean(File file, Charset charset, Class<T> c) {
+	public static <T> T xmlToBean(final File file, final Charset charset, final Class<T> c) {
 		return xmlToBean(FileUtil.getReader(file, charset), c);
 	}
 
@@ -105,12 +105,12 @@ public class JAXBUtil {
 	 * @return Bean
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T xmlToBean(Reader reader, Class<T> c) {
+	public static <T> T xmlToBean(final Reader reader, final Class<T> c) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(c);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
+			final JAXBContext context = JAXBContext.newInstance(c);
+			final Unmarshaller unmarshaller = context.createUnmarshaller();
 			return (T) unmarshaller.unmarshal(reader);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("convertToJava2 错误：" + e.getMessage(), e);
 		} finally {
 			IoUtil.close(reader);

@@ -38,7 +38,7 @@ public class RC4 implements Serializable {
 	 * @param key 密钥
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public RC4(String key) throws CryptoException {
+	public RC4(final String key) throws CryptoException {
 		setKey(key);
 	}
 
@@ -50,7 +50,7 @@ public class RC4 implements Serializable {
 	 * @return 密文
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public byte[] encrypt(String message, Charset charset) throws CryptoException {
+	public byte[] encrypt(final String message, final Charset charset) throws CryptoException {
 		return crypt(StrUtil.bytes(message, charset));
 	}
 
@@ -61,7 +61,7 @@ public class RC4 implements Serializable {
 	 * @return 密文
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public byte[] encrypt(String message) throws CryptoException {
+	public byte[] encrypt(final String message) throws CryptoException {
 		return encrypt(message, CharsetUtil.UTF_8);
 	}
 
@@ -72,7 +72,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Hex
 	 * @since 4.5.12
 	 */
-	public String encryptHex(byte[] data) {
+	public String encryptHex(final byte[] data) {
 		return HexUtil.encodeHexStr(crypt(data));
 	}
 
@@ -83,7 +83,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Base64
 	 * @since 4.5.12
 	 */
-	public String encryptBase64(byte[] data) {
+	public String encryptBase64(final byte[] data) {
 		return Base64.encode(crypt(data));
 	}
 
@@ -95,7 +95,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Hex
 	 * @since 4.5.12
 	 */
-	public String encryptHex(String data, Charset charset) {
+	public String encryptHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
 	}
 
@@ -106,7 +106,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Hex
 	 * @since 5.4.4
 	 */
-	public String encryptHex(String data) {
+	public String encryptHex(final String data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
 
@@ -118,7 +118,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Base64
 	 * @since 4.5.12
 	 */
-	public String encryptBase64(String data, Charset charset) {
+	public String encryptBase64(final String data, final Charset charset) {
 		return Base64.encode(encrypt(data, charset));
 	}
 
@@ -130,7 +130,7 @@ public class RC4 implements Serializable {
 	 * @return 加密后的Base64
 	 * @since 5.4.4
 	 */
-	public String encryptBase64(String data) {
+	public String encryptBase64(final String data) {
 		return Base64.encode(encrypt(data));
 	}
 
@@ -142,7 +142,7 @@ public class RC4 implements Serializable {
 	 * @return 明文
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public String decrypt(byte[] message, Charset charset) throws CryptoException {
+	public String decrypt(final byte[] message, final Charset charset) throws CryptoException {
 		return StrUtil.str(crypt(message), charset);
 	}
 
@@ -153,7 +153,7 @@ public class RC4 implements Serializable {
 	 * @return 明文
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public String decrypt(byte[] message) throws CryptoException {
+	public String decrypt(final byte[] message) throws CryptoException {
 		return decrypt(message, CharsetUtil.UTF_8);
 	}
 
@@ -164,7 +164,7 @@ public class RC4 implements Serializable {
 	 * @return 明文
 	 * @since 5.4.4
 	 */
-	public String decrypt(String message) {
+	public String decrypt(final String message) {
 		return decrypt(SecureUtil.decode(message));
 	}
 
@@ -176,7 +176,7 @@ public class RC4 implements Serializable {
 	 * @return 明文
 	 * @since 5.4.4
 	 */
-	public String decrypt(String message, Charset charset) {
+	public String decrypt(final String message, final Charset charset) {
 		return StrUtil.str(decrypt(message), charset);
 	}
 
@@ -200,7 +200,7 @@ public class RC4 implements Serializable {
 				i = (i + 1) % SBOX_LENGTH;
 				j = (j + sbox[i]) % SBOX_LENGTH;
 				swap(i, j, sbox);
-				int rand = sbox[(sbox[i] + sbox[j]) % SBOX_LENGTH];
+				final int rand = sbox[(sbox[i] + sbox[j]) % SBOX_LENGTH];
 				code[n] = (byte) (rand ^ msg[n]);
 			}
 		} finally {
@@ -215,7 +215,7 @@ public class RC4 implements Serializable {
 	 * @param key 密钥
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
-	public void setKey(String key) throws CryptoException {
+	public void setKey(final String key) throws CryptoException {
 		final int length = key.length();
 		if (length < KEY_MIN_LENGTH || length >= SBOX_LENGTH) {
 			throw new CryptoException("Key length has to be between {} and {}", KEY_MIN_LENGTH, (SBOX_LENGTH - 1));
@@ -237,8 +237,8 @@ public class RC4 implements Serializable {
 	 * @param key 密钥
 	 * @return sbox
 	 */
-	private int[] initSBox(byte[] key) {
-		int[] sbox = new int[SBOX_LENGTH];
+	private int[] initSBox(final byte[] key) {
+		final int[] sbox = new int[SBOX_LENGTH];
 		int j = 0;
 
 		for (int i = 0; i < SBOX_LENGTH; i++) {
@@ -259,8 +259,8 @@ public class RC4 implements Serializable {
 	 * @param j 位置2
 	 * @param sbox 数组
 	 */
-	private void swap(int i, int j, int[] sbox) {
-		int temp = sbox[i];
+	private void swap(final int i, final int j, final int[] sbox) {
+		final int temp = sbox[i];
 		sbox[i] = sbox[j];
 		sbox[j] = temp;
 	}

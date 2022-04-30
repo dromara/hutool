@@ -119,7 +119,7 @@ class LZWEncoder {
 	byte[] accum = new byte[256];
 
 	//----------------------------------------------------------------------------
-	LZWEncoder(int width, int height, byte[] pixels, int color_depth) {
+	LZWEncoder(final int width, final int height, final byte[] pixels, final int color_depth) {
 		imgW = width;
 		imgH = height;
 		pixAry = pixels;
@@ -128,7 +128,7 @@ class LZWEncoder {
 
 	// Add a character to the end of the current packet, and if it is 254
 	// characters, flush the packet to disk.
-	void char_out(byte c, OutputStream outs) throws IOException {
+	void char_out(final byte c, final OutputStream outs) throws IOException {
 		accum[a_count++] = c;
 		if (a_count >= 254)
 			flush_char(outs);
@@ -137,7 +137,7 @@ class LZWEncoder {
 	// Clear out the hash table
 
 	// table clear for block compress
-	void cl_block(OutputStream outs) throws IOException {
+	void cl_block(final OutputStream outs) throws IOException {
 		cl_hash(hsize);
 		free_ent = ClearCode + 2;
 		clear_flg = true;
@@ -146,18 +146,18 @@ class LZWEncoder {
 	}
 
 	// reset code table
-	void cl_hash(int hsize) {
+	void cl_hash(final int hsize) {
 		for (int i = 0; i < hsize; ++i)
 			htab[i] = -1;
 	}
 
-	void compress(int init_bits, OutputStream outs) throws IOException {
+	void compress(final int init_bits, final OutputStream outs) throws IOException {
 		int fcode;
 		int i /* = 0 */;
 		int c;
 		int ent;
 		int disp;
-		int hsize_reg;
+		final int hsize_reg;
 		int hshift;
 
 		// Set up the globals:  g_init_bits - initial number of bits
@@ -222,7 +222,7 @@ class LZWEncoder {
 	}
 
 	//----------------------------------------------------------------------------
-	void encode(OutputStream os) throws IOException {
+	void encode(final OutputStream os) throws IOException {
 		os.write(initCodeSize); // write "initial code size" byte
 
 		remaining = imgW * imgH; // reset navigation variables
@@ -234,7 +234,7 @@ class LZWEncoder {
 	}
 
 	// Flush the packet to disk, and reset the accumulator
-	void flush_char(OutputStream outs) throws IOException {
+	void flush_char(final OutputStream outs) throws IOException {
 		if (a_count > 0) {
 			outs.write(a_count);
 			outs.write(accum, 0, a_count);
@@ -242,7 +242,7 @@ class LZWEncoder {
 		}
 	}
 
-	final int MAXCODE(int n_bits) {
+	final int MAXCODE(final int n_bits) {
 		return (1 << n_bits) - 1;
 	}
 
@@ -255,12 +255,12 @@ class LZWEncoder {
 
 		--remaining;
 
-		byte pix = pixAry[curPixel++];
+		final byte pix = pixAry[curPixel++];
 
 		return pix & 0xff;
 	}
 
-	void output(int code, OutputStream outs) throws IOException {
+	void output(final int code, final OutputStream outs) throws IOException {
 		cur_accum &= masks[cur_bits];
 
 		if (cur_bits > 0)

@@ -38,7 +38,7 @@ public class MultipartOutputStream extends OutputStream {
 	 * @param out     HTTP写出流
 	 * @param charset 编码
 	 */
-	public MultipartOutputStream(OutputStream out, Charset charset) {
+	public MultipartOutputStream(final OutputStream out, final Charset charset) {
 		this(out, charset, HttpGlobalConfig.getBoundary());
 	}
 
@@ -50,7 +50,7 @@ public class MultipartOutputStream extends OutputStream {
 	 * @param boundary 边界符
 	 * @since 5.7.17
 	 */
-	public MultipartOutputStream(OutputStream out, Charset charset, String boundary) {
+	public MultipartOutputStream(final OutputStream out, final Charset charset, final String boundary) {
 		this.out = out;
 		this.charset = charset;
 		this.boundary = boundary;
@@ -80,10 +80,10 @@ public class MultipartOutputStream extends OutputStream {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public MultipartOutputStream write(String formFieldName, Object value) throws IORuntimeException {
+	public MultipartOutputStream write(final String formFieldName, final Object value) throws IORuntimeException {
 		// 多资源
 		if (value instanceof MultiResource) {
-			for (Resource subResource : (MultiResource) value) {
+			for (final Resource subResource : (MultiResource) value) {
 				write(formFieldName, subResource);
 			}
 			return this;
@@ -104,7 +104,7 @@ public class MultipartOutputStream extends OutputStream {
 	}
 
 	@Override
-	public void write(int b) throws IOException {
+	public void write(final int b) throws IOException {
 		this.out.write(b);
 	}
 
@@ -133,7 +133,7 @@ public class MultipartOutputStream extends OutputStream {
 	 * @param resource      资源
 	 * @throws IORuntimeException IO异常
 	 */
-	private void appendResource(String formFieldName, Resource resource) throws IORuntimeException {
+	private void appendResource(final String formFieldName, final Resource resource) throws IORuntimeException {
 		final String fileName = resource.getName();
 
 		// Content-Disposition
@@ -179,7 +179,7 @@ public class MultipartOutputStream extends OutputStream {
 	 *
 	 * @param objs 写出的对象（转换为字符串）
 	 */
-	private void write(Object... objs) {
+	private void write(final Object... objs) {
 		IoUtil.write(this, this.charset, false, objs);
 	}
 }

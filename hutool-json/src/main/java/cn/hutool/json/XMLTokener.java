@@ -28,7 +28,7 @@ public class XMLTokener extends JSONTokener {
 	 * @param s      A source string.
 	 * @param config JSON配置
 	 */
-	public XMLTokener(CharSequence s, JSONConfig config) {
+	public XMLTokener(final CharSequence s, final JSONConfig config) {
 		super(s, config);
 	}
 
@@ -41,7 +41,7 @@ public class XMLTokener extends JSONTokener {
 	public String nextCDATA() throws JSONException {
 		char c;
 		int i;
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (; ; ) {
 			c = next();
 			if (end()) {
@@ -65,7 +65,7 @@ public class XMLTokener extends JSONTokener {
 	 */
 	public Object nextContent() throws JSONException {
 		char c;
-		StringBuilder sb;
+		final StringBuilder sb;
 		do {
 			c = next();
 		} while (Character.isWhitespace(c));
@@ -97,10 +97,10 @@ public class XMLTokener extends JSONTokener {
 	 * @return A Character or an entity String if the entity is not recognized.
 	 * @throws JSONException If missing ';' in XML entity.
 	 */
-	public Object nextEntity(char ampersand) throws JSONException {
-		StringBuilder sb = new StringBuilder();
+	public Object nextEntity(final char ampersand) throws JSONException {
+		final StringBuilder sb = new StringBuilder();
 		for (; ; ) {
-			char c = next();
+			final char c = next();
 			if (Character.isLetterOrDigit(c) || c == '#') {
 				sb.append(Character.toLowerCase(c));
 			} else if (c == ';') {
@@ -109,8 +109,8 @@ public class XMLTokener extends JSONTokener {
 				throw syntaxError("Missing ';' in XML entity: &" + sb);
 			}
 		}
-		String string = sb.toString();
-		Object object = entity.get(string);
+		final String string = sb.toString();
+		final Object object = entity.get(string);
 		return object != null ? object : ampersand + string + ";";
 	}
 
@@ -122,7 +122,7 @@ public class XMLTokener extends JSONTokener {
 	 */
 	public Object nextMeta() throws JSONException {
 		char c;
-		char q;
+		final char q;
 		do {
 			c = next();
 		} while (Character.isWhitespace(c));
@@ -186,8 +186,8 @@ public class XMLTokener extends JSONTokener {
 	 */
 	public Object nextToken() throws JSONException {
 		char c;
-		char q;
-		StringBuilder sb;
+		final char q;
+		final StringBuilder sb;
 		do {
 			c = next();
 		} while (Character.isWhitespace(c));
@@ -266,14 +266,14 @@ public class XMLTokener extends JSONTokener {
 	 * @return 是否成功skip
 	 * @throws JSONException JSON异常
 	 */
-	public boolean skipPast(String to) throws JSONException {
+	public boolean skipPast(final String to) throws JSONException {
 		boolean b;
 		char c;
 		int i;
 		int j;
 		int offset = 0;
-		int length = to.length();
-		char[] circle = new char[length];
+		final int length = to.length();
+		final char[] circle = new char[length];
 
 		/*
 		 * First fill the circle buffer with as many characters as are in the to string. If we reach an early end, bail.

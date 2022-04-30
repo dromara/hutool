@@ -26,40 +26,40 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public void put(K key, V object) {
+	public void put(final K key, final V object) {
 		// 跳过
 	}
 
 	@Override
-	public void put(K key, V object, long timeout) {
+	public void put(final K key, final V object, final long timeout) {
 		// 跳过
 	}
 
 	@Override
-	public boolean containsKey(K key) {
+	public boolean containsKey(final K key) {
 		return false;
 	}
 
 	@Override
-	public V get(K key) {
+	public V get(final K key) {
 		return null;
 	}
 
 	@Override
-	public V get(K key, boolean isUpdateLastAccess) {
+	public V get(final K key, final boolean isUpdateLastAccess) {
 		return null;
 	}
 
 	@Override
-	public V get(K key, Func0<V> supplier) {
+	public V get(final K key, final Func0<V> supplier) {
 		return get(key, true, supplier);
 	}
 
 	@Override
-	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
+	public V get(final K key, final boolean isUpdateLastAccess, final Func0<V> supplier) {
 		try {
 			return (null == supplier) ? null : supplier.call();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -95,7 +95,7 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public void remove(K key) {
+	public void remove(final K key) {
 		// 跳过
 	}
 

@@ -36,7 +36,7 @@ public class FreemarkerEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public FreemarkerEngine(TemplateConfig config) {
+	public FreemarkerEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -45,7 +45,7 @@ public class FreemarkerEngine implements TemplateEngine {
 	 *
 	 * @param freemarkerCfg {@link Configuration}
 	 */
-	public FreemarkerEngine(Configuration freemarkerCfg) {
+	public FreemarkerEngine(final Configuration freemarkerCfg) {
 		init(freemarkerCfg);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -64,20 +64,20 @@ public class FreemarkerEngine implements TemplateEngine {
 	 *
 	 * @param freemarkerCfg Configuration
 	 */
-	private void init(Configuration freemarkerCfg) {
+	private void init(final Configuration freemarkerCfg) {
 		this.cfg = freemarkerCfg;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if (null == this.cfg) {
 			init(TemplateConfig.DEFAULT);
 		}
 		try {
 			return FreemarkerTemplate.wrap(this.cfg.getTemplate(resource));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new TemplateException(e);
 		}
 	}
@@ -104,14 +104,14 @@ public class FreemarkerEngine implements TemplateEngine {
 			case FILE:
 				try {
 					cfg.setTemplateLoader(new FileTemplateLoader(FileUtil.file(config.getPath())));
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new IORuntimeException(e);
 				}
 				break;
 			case WEB_ROOT:
 				try {
 					cfg.setTemplateLoader(new FileTemplateLoader(FileUtil.file(FileUtil.getWebRoot(), config.getPath())));
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new IORuntimeException(e);
 				}
 				break;

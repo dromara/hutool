@@ -24,15 +24,15 @@ public class Partition<T> extends AbstractList<List<T>> {
 	 * @param list 被分区的列表
 	 * @param size 每个分区的长度
 	 */
-	public Partition(List<T> list, int size) {
+	public Partition(final List<T> list, final int size) {
 		this.list = list;
 		this.size = Math.min(size, list.size());
 	}
 
 	@Override
-	public List<T> get(int index) {
-		int start = index * size;
-		int end = Math.min(start + size, list.size());
+	public List<T> get(final int index) {
+		final int start = index * size;
+		final int end = Math.min(start + size, list.size());
 		return list.subList(start, end);
 	}
 

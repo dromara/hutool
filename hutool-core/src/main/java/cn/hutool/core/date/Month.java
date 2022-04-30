@@ -97,7 +97,7 @@ public enum Month {
 	 *
 	 * @param value 对应值，见{@link Calendar}
 	 */
-	Month(int value) {
+	Month(final int value) {
 		this.value = value;
 	}
 
@@ -129,7 +129,7 @@ public enum Month {
 	 * @param isLeapYear 是否闰年
 	 * @return 此月份最后一天的值
 	 */
-	public int getLastDay(boolean isLeapYear) {
+	public int getLastDay(final boolean isLeapYear) {
 		switch (this) {
 			case FEBRUARY:
 				return isLeapYear ? 29 : 28;
@@ -163,7 +163,7 @@ public enum Month {
 	 * @see Calendar#DECEMBER
 	 * @see Calendar#UNDECIMBER
 	 */
-	public static Month of(int calendarMonthIntValue) {
+	public static Month of(final int calendarMonthIntValue) {
 		if (calendarMonthIntValue >= ENUMS.length || calendarMonthIntValue < 0) {
 			return null;
 		}
@@ -178,7 +178,7 @@ public enum Month {
 	 * @throws IllegalArgumentException 如果别名无对应的枚举，抛出此异常
 	 * @since 5.8.0
 	 */
-	public static Month of(String name) throws IllegalArgumentException {
+	public static Month of(final String name) throws IllegalArgumentException {
 		Assert.notBlank(name);
 		Month of = of(ArrayUtil.indexOfIgnoreCase(ALIASES, name));
 		if (null == of) {
@@ -193,7 +193,7 @@ public enum Month {
 	 * @return Month
 	 * @since 5.8.0
 	 */
-	public static Month of(java.time.Month month){
+	public static Month of(final java.time.Month month){
 		return of(month.ordinal());
 	}
 
@@ -205,7 +205,7 @@ public enum Month {
 	 * @return 最后一天，可能为28,29,30,31
 	 * @since 5.4.7
 	 */
-	public static int getLastDay(int month, boolean isLeapYear) {
+	public static int getLastDay(final int month, final boolean isLeapYear) {
 		final Month of = of(month);
 		Assert.notNull(of, "Invalid Month base 0: " + month);
 		return of.getLastDay(isLeapYear);
@@ -228,7 +228,7 @@ public enum Month {
 	 * @return 显示名称
 	 * @since 5.8.0
 	 */
-	public String getDisplayName(TextStyle style) {
+	public String getDisplayName(final TextStyle style) {
 		return getDisplayName(style, Locale.getDefault());
 	}
 
@@ -240,7 +240,7 @@ public enum Month {
 	 * @return 显示名称
 	 * @since 5.8.0
 	 */
-	public String getDisplayName(TextStyle style, Locale locale) {
+	public String getDisplayName(final TextStyle style, final Locale locale) {
 		return toJdkMonth().getDisplayName(style, locale);
 	}
 }

@@ -8,29 +8,29 @@ import java.io.StringReader;
 /**
  * {@link TemplateLoader} 字符串实现形式<br>
  * 用于直接获取字符串模板
- * 
+ *
  * @author looly
  * @since 4.3.3
  */
 public class SimpleStringTemplateLoader implements TemplateLoader {
 
 	@Override
-	public Object findTemplateSource(String name) {
+	public Object findTemplateSource(final String name) {
 		return name;
 	}
 
 	@Override
-	public long getLastModified(Object templateSource) {
+	public long getLastModified(final Object templateSource) {
 		return System.currentTimeMillis();
 	}
 
 	@Override
-	public Reader getReader(Object templateSource, String encoding) {
+	public Reader getReader(final Object templateSource, final String encoding) {
 		return new StringReader((String) templateSource);
 	}
 
 	@Override
-	public void closeTemplateSource(Object templateSource) {
+	public void closeTemplateSource(final Object templateSource) {
 		// ignore
 	}
 

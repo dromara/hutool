@@ -31,7 +31,7 @@ public class TypeUtil {
 	 * @param type {@link Type}
 	 * @return 原始类，如果无法获取原始类，返回{@code null}
 	 */
-	public static Class<?> getClass(Type type) {
+	public static Class<?> getClass(final Type type) {
 		if (null != type) {
 			if (type instanceof Class) {
 				return (Class<?>) type;
@@ -56,7 +56,7 @@ public class TypeUtil {
 	 * @param field 字段
 	 * @return {@link Type}，可能为{@code null}
 	 */
-	public static Type getType(Field field) {
+	public static Type getType(final Field field) {
 		if (null == field) {
 			return null;
 		}
@@ -71,7 +71,7 @@ public class TypeUtil {
 	 * @return 字段的泛型类型
 	 * @since 5.4.2
 	 */
-	public static Type getFieldType(Class<?> clazz, String fieldName) {
+	public static Type getFieldType(final Class<?> clazz, final String fieldName) {
 		return getType(ReflectUtil.getField(clazz, fieldName));
 	}
 
@@ -82,7 +82,7 @@ public class TypeUtil {
 	 * @return 原始类，如果无法获取原始类，返回{@code null}
 	 * @since 3.1.2
 	 */
-	public static Class<?> getClass(Field field) {
+	public static Class<?> getClass(final Field field) {
 		return null == field ? null : field.getType();
 	}
 
@@ -96,7 +96,7 @@ public class TypeUtil {
 	 * @return {@link Type}，可能为{@code null}
 	 * @since 3.1.2
 	 */
-	public static Type getFirstParamType(Method method) {
+	public static Type getFirstParamType(final Method method) {
 		return getParamType(method, 0);
 	}
 
@@ -107,7 +107,7 @@ public class TypeUtil {
 	 * @return 第一个参数类型，可能为{@code null}
 	 * @since 3.1.2
 	 */
-	public static Class<?> getFirstParamClass(Method method) {
+	public static Class<?> getFirstParamClass(final Method method) {
 		return getParamClass(method, 0);
 	}
 
@@ -119,8 +119,8 @@ public class TypeUtil {
 	 * @param index  第几个参数的索引，从0开始计数
 	 * @return {@link Type}，可能为{@code null}
 	 */
-	public static Type getParamType(Method method, int index) {
-		Type[] types = getParamTypes(method);
+	public static Type getParamType(final Method method, final int index) {
+		final Type[] types = getParamTypes(method);
 		if (null != types && types.length > index) {
 			return types[index];
 		}
@@ -135,8 +135,8 @@ public class TypeUtil {
 	 * @return 参数类，可能为{@code null}
 	 * @since 3.1.2
 	 */
-	public static Class<?> getParamClass(Method method, int index) {
-		Class<?>[] classes = getParamClasses(method);
+	public static Class<?> getParamClass(final Method method, final int index) {
+		final Class<?>[] classes = getParamClasses(method);
 		if (null != classes && classes.length > index) {
 			return classes[index];
 		}
@@ -152,7 +152,7 @@ public class TypeUtil {
 	 * @see Method#getGenericParameterTypes()
 	 * @see Method#getParameterTypes()
 	 */
-	public static Type[] getParamTypes(Method method) {
+	public static Type[] getParamTypes(final Method method) {
 		return null == method ? null : method.getGenericParameterTypes();
 	}
 
@@ -166,7 +166,7 @@ public class TypeUtil {
 	 * @see Method#getParameterTypes
 	 * @since 3.1.2
 	 */
-	public static Class<?>[] getParamClasses(Method method) {
+	public static Class<?>[] getParamClasses(final Method method) {
 		return null == method ? null : method.getParameterTypes();
 	}
 
@@ -181,7 +181,7 @@ public class TypeUtil {
 	 * @see Method#getGenericReturnType()
 	 * @see Method#getReturnType()
 	 */
-	public static Type getReturnType(Method method) {
+	public static Type getReturnType(final Method method) {
 		return null == method ? null : method.getGenericReturnType();
 	}
 
@@ -194,7 +194,7 @@ public class TypeUtil {
 	 * @see Method#getReturnType
 	 * @since 3.1.2
 	 */
-	public static Class<?> getReturnClass(Method method) {
+	public static Class<?> getReturnClass(final Method method) {
 		return null == method ? null : method.getReturnType();
 	}
 
@@ -206,7 +206,7 @@ public class TypeUtil {
 	 * @param type 被检查的类型，必须是已经确定泛型类型的类型
 	 * @return {@link Type}，可能为{@code null}
 	 */
-	public static Type getTypeArgument(Type type) {
+	public static Type getTypeArgument(final Type type) {
 		return getTypeArgument(type, 0);
 	}
 
@@ -217,7 +217,7 @@ public class TypeUtil {
 	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Type}
 	 */
-	public static Type getTypeArgument(Type type, int index) {
+	public static Type getTypeArgument(final Type type, final int index) {
 		final Type[] typeArguments = getTypeArguments(type);
 		if (null != typeArguments && typeArguments.length > index) {
 			return typeArguments[index];
@@ -238,7 +238,7 @@ public class TypeUtil {
 	 * @param type 指定类型
 	 * @return 所有泛型参数类型
 	 */
-	public static Type[] getTypeArguments(Type type) {
+	public static Type[] getTypeArguments(final Type type) {
 		if (null == type) {
 			return null;
 		}
@@ -263,7 +263,7 @@ public class TypeUtil {
 	 * @return {@link ParameterizedType}
 	 * @since 4.5.2
 	 */
-	public static ParameterizedType toParameterizedType(Type type) {
+	public static ParameterizedType toParameterizedType(final Type type) {
 		ParameterizedType result = null;
 		if (type instanceof ParameterizedType) {
 			result = (ParameterizedType) type;
@@ -291,7 +291,7 @@ public class TypeUtil {
 	 * @return 是否未知类型
 	 * @since 4.5.2
 	 */
-	public static boolean isUnknown(Type type) {
+	public static boolean isUnknown(final Type type) {
 		return null == type || type instanceof TypeVariable;
 	}
 
@@ -302,8 +302,8 @@ public class TypeUtil {
 	 * @return 是否含有泛型变量
 	 * @since 4.5.7
 	 */
-	public static boolean hasTypeVariable(Type... types) {
-		for (Type type : types) {
+	public static boolean hasTypeVariable(final Type... types) {
+		for (final Type type : types) {
 			if (type instanceof TypeVariable) {
 				return true;
 			}
@@ -322,7 +322,7 @@ public class TypeUtil {
 	 * @param clazz 被解析的包含泛型参数的类
 	 * @return 泛型对应关系Map
 	 */
-	public static Map<Type, Type> getTypeMap(Class<?> clazz) {
+	public static Map<Type, Type> getTypeMap(final Class<?> clazz) {
 		return ActualTypeMapperPool.get(clazz);
 	}
 
@@ -333,7 +333,7 @@ public class TypeUtil {
 	 * @param field 字段
 	 * @return 实际类型，可能为Class等
 	 */
-	public static Type getActualType(Type type, Field field) {
+	public static Type getActualType(final Type type, final Field field) {
 		if (null == field) {
 			return null;
 		}
@@ -353,7 +353,7 @@ public class TypeUtil {
 	 * @param typeVariable 泛型变量，例如T等
 	 * @return 实际类型，可能为Class等
 	 */
-	public static Type getActualType(Type type, Type typeVariable) {
+	public static Type getActualType(final Type type, final Type typeVariable) {
 		if (typeVariable instanceof ParameterizedType) {
 			return getActualType(type, (ParameterizedType) typeVariable);
 		}
@@ -374,7 +374,7 @@ public class TypeUtil {
 	 * @param parameterizedType 泛型变量，例如List&lt;T&gt;等
 	 * @return 实际类型，可能为Class等
 	 */
-	public static Type getActualType(Type type, ParameterizedType parameterizedType) {
+	public static Type getActualType(final Type type, ParameterizedType parameterizedType) {
 		// 字段类型为泛型参数类型，解析对应泛型类型为真实类型，类似于List<T> a
 		Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
 
@@ -397,7 +397,7 @@ public class TypeUtil {
 	 * @param typeVariables 泛型变量数组，例如T等
 	 * @return 实际类型数组，可能为Class等
 	 */
-	public static Type[] getActualTypes(Type type, Type... typeVariables) {
+	public static Type[] getActualTypes(final Type type, final Type... typeVariables) {
 		return ActualTypeMapperPool.getActualTypes(type, typeVariables);
 	}
 }

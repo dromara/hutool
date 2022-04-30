@@ -67,7 +67,7 @@ public class Img implements Serializable {
 	 * @param imagePath 图片文件路径
 	 * @return Img
 	 */
-	public static Img from(Path imagePath) {
+	public static Img from(final Path imagePath) {
 		return from(imagePath.toFile());
 	}
 
@@ -77,7 +77,7 @@ public class Img implements Serializable {
 	 * @param imageFile 图片文件
 	 * @return Img
 	 */
-	public static Img from(File imageFile) {
+	public static Img from(final File imageFile) {
 		return new Img(ImgUtil.read(imageFile));
 	}
 
@@ -88,7 +88,7 @@ public class Img implements Serializable {
 	 * @return Img
 	 * @since 4.4.1
 	 */
-	public static Img from(Resource resource) {
+	public static Img from(final Resource resource) {
 		return from(resource.getStream());
 	}
 
@@ -98,7 +98,7 @@ public class Img implements Serializable {
 	 * @param in 图片流
 	 * @return Img
 	 */
-	public static Img from(InputStream in) {
+	public static Img from(final InputStream in) {
 		return new Img(ImgUtil.read(in));
 	}
 
@@ -108,7 +108,7 @@ public class Img implements Serializable {
 	 * @param imageStream 图片流
 	 * @return Img
 	 */
-	public static Img from(ImageInputStream imageStream) {
+	public static Img from(final ImageInputStream imageStream) {
 		return new Img(ImgUtil.read(imageStream));
 	}
 
@@ -118,7 +118,7 @@ public class Img implements Serializable {
 	 * @param imageUrl 图片URL
 	 * @return Img
 	 */
-	public static Img from(URL imageUrl) {
+	public static Img from(final URL imageUrl) {
 		return new Img(ImgUtil.read(imageUrl));
 	}
 
@@ -128,7 +128,7 @@ public class Img implements Serializable {
 	 * @param image 图片
 	 * @return Img
 	 */
-	public static Img from(Image image) {
+	public static Img from(final Image image) {
 		return new Img(ImgUtil.toBufferedImage(image));
 	}
 
@@ -137,7 +137,7 @@ public class Img implements Serializable {
 	 *
 	 * @param srcImage 来源图片
 	 */
-	public Img(BufferedImage srcImage) {
+	public Img(final BufferedImage srcImage) {
 		this(srcImage, null);
 	}
 
@@ -148,7 +148,7 @@ public class Img implements Serializable {
 	 * @param targetImageType 目标图片类型，null则读取来源图片类型
 	 * @since 5.0.7
 	 */
-	public Img(BufferedImage srcImage, String targetImageType) {
+	public Img(final BufferedImage srcImage, String targetImageType) {
 		this.srcImage = srcImage;
 		if (null == targetImageType) {
 			if (srcImage.getType() == BufferedImage.TYPE_INT_ARGB
@@ -172,7 +172,7 @@ public class Img implements Serializable {
 	 * @see ImgUtil#IMAGE_TYPE_JPG
 	 * @see ImgUtil#IMAGE_TYPE_PNG
 	 */
-	public Img setTargetImageType(String imgType) {
+	public Img setTargetImageType(final String imgType) {
 		this.targetImageType = imgType;
 		return this;
 	}
@@ -184,7 +184,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.1.15
 	 */
-	public Img setPositionBaseCentre(boolean positionBaseCentre) {
+	public Img setPositionBaseCentre(final boolean positionBaseCentre) {
 		this.positionBaseCentre = positionBaseCentre;
 		return this;
 	}
@@ -196,7 +196,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.3.2
 	 */
-	public Img setQuality(double quality) {
+	public Img setQuality(final double quality) {
 		return setQuality((float) quality);
 	}
 
@@ -207,7 +207,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.3.2
 	 */
-	public Img setQuality(float quality) {
+	public Img setQuality(final float quality) {
 		if (quality > 0 && quality < 1) {
 			this.quality = quality;
 		} else {
@@ -253,7 +253,7 @@ public class Img implements Serializable {
 	 * @param height 目标高度
 	 * @return this
 	 */
-	public Img scale(int width, int height) {
+	public Img scale(final int width, final int height) {
 		return scale(width, height, Image.SCALE_SMOOTH);
 	}
 
@@ -267,11 +267,11 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 5.7.18
 	 */
-	public Img scale(int width, int height, int scaleType) {
+	public Img scale(final int width, final int height, final int scaleType) {
 		final Image srcImg = getValidSrcImg();
 
-		int srcHeight = srcImg.getHeight(null);
-		int srcWidth = srcImg.getWidth(null);
+		final int srcHeight = srcImg.getHeight(null);
+		final int srcWidth = srcImg.getWidth(null);
 		if (srcHeight == height && srcWidth == width) {
 			// 源与目标长宽一致返回原图
 			this.targetImage = srcImg;
@@ -300,12 +300,12 @@ public class Img implements Serializable {
 	 * @param fixedColor 比例不对时补充的颜色，不补充为{@code null}
 	 * @return this
 	 */
-	public Img scale(int width, int height, Color fixedColor) {
+	public Img scale(final int width, final int height, final Color fixedColor) {
 		Image srcImage = getValidSrcImg();
 		int srcHeight = srcImage.getHeight(null);
 		int srcWidth = srcImage.getWidth(null);
-		double heightRatio = NumberUtil.div(height, srcHeight);
-		double widthRatio = NumberUtil.div(width, srcWidth);
+		final double heightRatio = NumberUtil.div(height, srcHeight);
+		final double widthRatio = NumberUtil.div(width, srcWidth);
 
 		// 浮点数之间的等值判断,基本数据类型不能用==比较,包装数据类型不能用equals来判断。
 		if (NumberUtil.equals(heightRatio, widthRatio)) {
@@ -325,7 +325,7 @@ public class Img implements Serializable {
 		srcWidth = srcImage.getWidth(null);
 
 		final BufferedImage image = new BufferedImage(width, height, getTypeInt());
-		Graphics2D g = image.createGraphics();
+		final Graphics2D g = image.createGraphics();
 
 		// 设置背景
 		if (null != fixedColor) {
@@ -347,7 +347,7 @@ public class Img implements Serializable {
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @return this
 	 */
-	public Img cut(Rectangle rectangle) {
+	public Img cut(final Rectangle rectangle) {
 		final Image srcImage = getValidSrcImg();
 		fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
 
@@ -364,7 +364,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.1.15
 	 */
-	public Img cut(int x, int y) {
+	public Img cut(final int x, final int y) {
 		return cut(x, y, -1);
 	}
 
@@ -377,7 +377,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.1.15
 	 */
-	public Img cut(int x, int y, int radius) {
+	public Img cut(int x, int y, final int radius) {
 		final Image srcImage = getValidSrcImg();
 		final int width = srcImage.getWidth(null);
 		final int height = srcImage.getHeight(null);
@@ -458,7 +458,7 @@ public class Img implements Serializable {
 	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 处理后的图像
 	 */
-	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
+	public Img pressText(final String pressText, final Color color, final Font font, final int x, final int y, final float alpha) {
 		return pressText(pressText, color, font, new Point(x, y), alpha);
 	}
 
@@ -473,7 +473,7 @@ public class Img implements Serializable {
 	 * @param alpha     透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 处理后的图像
 	 */
-	public Img pressText(String pressText, Color color, Font font, Point point, float alpha) {
+	public Img pressText(final String pressText, final Color color, Font font, final Point point, final float alpha) {
 		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
 
 		if (null == font) {
@@ -515,7 +515,7 @@ public class Img implements Serializable {
 	 * @return 处理后的图像
 	 * @since 5.8.0
 	 */
-	public Img pressTextFull(String pressText, Color color, Font font, int lineHeight, int degree, float alpha) {
+	public Img pressTextFull(final String pressText, final Color color, Font font, final int lineHeight, final int degree, final float alpha) {
 		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
 
 		if (null == font) {
@@ -536,7 +536,7 @@ public class Img implements Serializable {
 		Dimension dimension;
 		try {
 			dimension = FontUtil.getDimension(g.getFontMetrics(font), pressText);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// 此处报告bug某些情况下会抛出IndexOutOfBoundsException，在此做容错处理
 			dimension = new Dimension(targetWidth / 3, targetHeight / 3);
 		}
@@ -566,7 +566,7 @@ public class Img implements Serializable {
 	 * @param alpha    透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return this
 	 */
-	public Img pressImage(Image pressImg, int x, int y, float alpha) {
+	public Img pressImage(final Image pressImg, final int x, final int y, final float alpha) {
 		final int pressImgWidth = pressImg.getWidth(null);
 		final int pressImgHeight = pressImg.getHeight(null);
 		return pressImage(pressImg, new Rectangle(x, y, pressImgWidth, pressImgHeight), alpha);
@@ -581,7 +581,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 4.1.14
 	 */
-	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
+	public Img pressImage(final Image pressImg, final Rectangle rectangle, final float alpha) {
 		final Image targetImg = getValidSrcImg();
 
 		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg, this.targetImageType), pressImg, rectangle, alpha);
@@ -596,13 +596,13 @@ public class Img implements Serializable {
 	 * @return 旋转后的图片
 	 * @since 3.2.2
 	 */
-	public Img rotate(int degree) {
+	public Img rotate(final int degree) {
 		final Image image = getValidSrcImg();
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
+		final int width = image.getWidth(null);
+		final int height = image.getHeight(null);
 		final Rectangle rectangle = calcRotatedSize(width, height, degree);
 		final BufferedImage targetImg = new BufferedImage(rectangle.width, rectangle.height, getTypeInt());
-		Graphics2D graphics2d = targetImg.createGraphics();
+		final Graphics2D graphics2d = targetImg.createGraphics();
 		// 抗锯齿
 		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		// 从中心旋转
@@ -621,10 +621,10 @@ public class Img implements Serializable {
 	 */
 	public Img flip() {
 		final Image image = getValidSrcImg();
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
+		final int width = image.getWidth(null);
+		final int height = image.getHeight(null);
 		final BufferedImage targetImg = new BufferedImage(width, height, getTypeInt());
-		Graphics2D graphics2d = targetImg.createGraphics();
+		final Graphics2D graphics2d = targetImg.createGraphics();
 		graphics2d.drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
 		graphics2d.dispose();
 
@@ -640,7 +640,7 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 5.4.1
 	 */
-	public Img stroke(Color color, float width) {
+	public Img stroke(final Color color, final float width) {
 		return stroke(color, new BasicStroke(width));
 	}
 
@@ -652,11 +652,11 @@ public class Img implements Serializable {
 	 * @return this
 	 * @since 5.4.1
 	 */
-	public Img stroke(Color color, Stroke stroke) {
+	public Img stroke(final Color color, final Stroke stroke) {
 		final BufferedImage image = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-		Graphics2D g = image.createGraphics();
+		final int width = image.getWidth(null);
+		final int height = image.getHeight(null);
+		final Graphics2D g = image.createGraphics();
 
 		g.setColor(ObjUtil.defaultIfNull(color, Color.BLACK));
 		if (null != stroke) {
@@ -690,7 +690,7 @@ public class Img implements Serializable {
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(OutputStream out) throws IORuntimeException {
+	public boolean write(final OutputStream out) throws IORuntimeException {
 		return write(ImgUtil.getImageOutputStream(out));
 	}
 
@@ -702,7 +702,7 @@ public class Img implements Serializable {
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(ImageOutputStream targetImageStream) throws IORuntimeException {
+	public boolean write(final ImageOutputStream targetImageStream) throws IORuntimeException {
 		Assert.notBlank(this.targetImageType, "Target image type is blank !");
 		Assert.notNull(targetImageStream, "Target output stream is null !");
 
@@ -719,7 +719,7 @@ public class Img implements Serializable {
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(File targetFile) throws IORuntimeException {
+	public boolean write(final File targetFile) throws IORuntimeException {
 		final String formatName = FileUtil.extName(targetFile);
 		if (StrUtil.isNotBlank(formatName)) {
 			this.targetImageType = formatName;
@@ -750,7 +750,7 @@ public class Img implements Serializable {
 	 * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 绘制后的背景
 	 */
-	private BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
+	private BufferedImage draw(final BufferedImage backgroundImg, final Image img, final Rectangle rectangle, final float alpha) {
 		final Graphics2D g = backgroundImg.createGraphics();
 		GraphicsUtil.setAlpha(g, alpha);
 
@@ -807,7 +807,7 @@ public class Img implements Serializable {
 	 * @return 修正后的{@link Rectangle}
 	 * @since 4.1.15
 	 */
-	private Rectangle fixRectangle(Rectangle rectangle, int baseWidth, int baseHeight) {
+	private Rectangle fixRectangle(final Rectangle rectangle, final int baseWidth, final int baseHeight) {
 		if (this.positionBaseCentre) {
 			final Point pointBaseCentre = ImgUtil.getPointBaseCentre(rectangle, baseWidth, baseHeight);
 			// 修正图片位置从背景的中心计算
@@ -832,22 +832,22 @@ public class Img implements Serializable {
 		}
 		if (degree >= 90) {
 			if (degree / 90 % 2 == 1) {
-				int temp = height;
+				final int temp = height;
 				//noinspection SuspiciousNameCombination
 				height = width;
 				width = temp;
 			}
 			degree = degree % 90;
 		}
-		double r = Math.sqrt(height * height + width * width) / 2;
-		double len = 2 * Math.sin(Math.toRadians(degree) / 2) * r;
-		double angel_alpha = (Math.PI - Math.toRadians(degree)) / 2;
-		double angel_dalta_width = Math.atan((double) height / width);
-		double angel_dalta_height = Math.atan((double) width / height);
-		int len_dalta_width = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width));
-		int len_dalta_height = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height));
-		int des_width = width + len_dalta_width * 2;
-		int des_height = height + len_dalta_height * 2;
+		final double r = Math.sqrt(height * height + width * width) / 2;
+		final double len = 2 * Math.sin(Math.toRadians(degree) / 2) * r;
+		final double angel_alpha = (Math.PI - Math.toRadians(degree)) / 2;
+		final double angel_dalta_width = Math.atan((double) height / width);
+		final double angel_dalta_height = Math.atan((double) width / height);
+		final int len_dalta_width = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width));
+		final int len_dalta_height = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height));
+		final int des_width = width + len_dalta_width * 2;
+		final int des_height = height + len_dalta_height * 2;
 
 		return new Rectangle(des_width, des_height);
 	}

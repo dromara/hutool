@@ -16,7 +16,7 @@ public class Issue2009Test {
 			return paPss;
 		}
 
-		public void setPaPss(String paPss) {
+		public void setPaPss(final String paPss) {
 			this.paPss = paPss;
 		}
 	}
@@ -29,7 +29,7 @@ public class Issue2009Test {
 			return papss;
 		}
 
-		public void setPapss(String papss) {
+		public void setPapss(final String papss) {
 			this.papss = papss;
 		}
 
@@ -45,7 +45,7 @@ public class Issue2009Test {
 	public class B extends BaseA {
 		private String papss;
 
-		public B(String papss) {
+		public B(final String papss) {
 			this.papss = papss;
 		}
 
@@ -53,7 +53,7 @@ public class Issue2009Test {
 			return papss;
 		}
 
-		public void setPapss(String papss) {
+		public void setPapss(final String papss) {
 			this.papss = papss;
 		}
 
@@ -67,8 +67,8 @@ public class Issue2009Test {
 
 	@Test
 	public void test() {
-		B b = new B("a string text");
-		A a = new A();
+		final B b = new B("a string text");
+		final A a = new A();
 		BeanUtil.copyProperties(b, a);
 
 		Assert.assertEquals(b.getPapss(), a.getPapss());

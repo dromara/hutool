@@ -22,7 +22,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	protected final ReentrantLock lock = new ReentrantLock();
 
 	@Override
-	public void put(K key, V object, long timeout) {
+	public void put(final K key, final V object, final long timeout) {
 		lock.lock();
 		try {
 			putWithoutLock(key, object, timeout);
@@ -32,7 +32,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	@Override
-	public boolean containsKey(K key) {
+	public boolean containsKey(final K key) {
 		lock.lock();
 		try {
 			// 不存在或已移除
@@ -55,7 +55,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	@Override
-	public V get(K key, boolean isUpdateLastAccess) {
+	public V get(final K key, final boolean isUpdateLastAccess) {
 		CacheObj<K, V> co;
 		lock.lock();
 		try {
@@ -101,7 +101,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	@Override
-	public void remove(K key) {
+	public void remove(final K key) {
 		remove(key, false);
 	}
 
@@ -131,7 +131,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	 * @param key           键
 	 * @param withMissCount 是否计数丢失数
 	 */
-	private void remove(K key, boolean withMissCount) {
+	private void remove(final K key, final boolean withMissCount) {
 		lock.lock();
 		CacheObj<K, V> co;
 		try {

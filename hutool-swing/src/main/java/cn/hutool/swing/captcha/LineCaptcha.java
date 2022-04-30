@@ -28,7 +28,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	 * @param width 图片宽
 	 * @param height 图片高
 	 */
-	public LineCaptcha(int width, int height) {
+	public LineCaptcha(final int width, final int height) {
 		this(width, height, 5, 150);
 	}
 
@@ -40,13 +40,13 @@ public class LineCaptcha extends AbstractCaptcha {
 	 * @param codeCount 字符个数
 	 * @param lineCount 干扰线条数
 	 */
-	public LineCaptcha(int width, int height, int codeCount, int lineCount) {
+	public LineCaptcha(final int width, final int height, final int codeCount, final int lineCount) {
 		super(width, height, codeCount, lineCount);
 	}
 	// -------------------------------------------------------------------- Constructor end
 
 	@Override
-	public Image createImage(String code) {
+	public Image createImage(final String code) {
 		// 图像buffer
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
@@ -67,7 +67,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
-	private void drawString(Graphics2D g, String code) {
+	private void drawString(final Graphics2D g, final String code) {
 		// 指定透明度
 		if (null != this.textAlpha) {
 			g.setComposite(this.textAlpha);
@@ -80,14 +80,14 @@ public class LineCaptcha extends AbstractCaptcha {
 	 *
 	 * @param g {@link Graphics2D}画笔
 	 */
-	private void drawInterfere(Graphics2D g) {
+	private void drawInterfere(final Graphics2D g) {
 		final ThreadLocalRandom random = RandomUtil.getRandom();
 		// 干扰线
 		for (int i = 0; i < this.interfereCount; i++) {
-			int xs = random.nextInt(width);
-			int ys = random.nextInt(height);
-			int xe = xs + random.nextInt(width / 8);
-			int ye = ys + random.nextInt(height / 8);
+			final int xs = random.nextInt(width);
+			final int ys = random.nextInt(height);
+			final int xe = xs + random.nextInt(width / 8);
+			final int ye = ys + random.nextInt(height / 8);
 			g.setColor(ImgUtil.randomColor(random));
 			g.drawLine(xs, ys, xe, ye);
 		}

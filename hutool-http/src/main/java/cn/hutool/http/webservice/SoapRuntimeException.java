@@ -10,23 +10,23 @@ import cn.hutool.core.text.StrUtil;
 public class SoapRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public SoapRuntimeException(Throwable e) {
+	public SoapRuntimeException(final Throwable e) {
 		super(e.getMessage(), e);
 	}
 
-	public SoapRuntimeException(String message) {
+	public SoapRuntimeException(final String message) {
 		super(message);
 	}
 
-	public SoapRuntimeException(String messageTemplate, Object... params) {
+	public SoapRuntimeException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public SoapRuntimeException(String message, Throwable throwable) {
+	public SoapRuntimeException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public SoapRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
+	public SoapRuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

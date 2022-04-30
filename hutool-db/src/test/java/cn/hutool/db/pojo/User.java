@@ -2,7 +2,7 @@ package cn.hutool.db.pojo;
 
 /**
  * 测试用POJO，与测试数据库中的user表对应
- * 
+ *
  * @author looly
  *
  */
@@ -17,7 +17,7 @@ public class User {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(final Integer id) {
 		this.id = id;
 	}
 
@@ -25,7 +25,7 @@ public class User {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -33,7 +33,7 @@ public class User {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(final int age) {
 		this.age = age;
 	}
 
@@ -41,7 +41,7 @@ public class User {
 		return birthday;
 	}
 
-	public void setBirthday(String birthday) {
+	public void setBirthday(final String birthday) {
 		this.birthday = birthday;
 	}
 
@@ -49,7 +49,7 @@ public class User {
 		return gender;
 	}
 
-	public void setGender(boolean gender) {
+	public void setGender(final boolean gender) {
 		this.gender = gender;
 	}
 

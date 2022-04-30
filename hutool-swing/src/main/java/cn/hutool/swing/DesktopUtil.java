@@ -31,7 +31,7 @@ public class DesktopUtil {
 	 *
 	 * @param url URL地址
 	 */
-	public static void browse(String url) {
+	public static void browse(final String url) {
 		browse(URLUtil.toURI(url));
 	}
 
@@ -41,11 +41,11 @@ public class DesktopUtil {
 	 * @param uri URI地址
 	 * @since 4.6.3
 	 */
-	public static void browse(URI uri) {
+	public static void browse(final URI uri) {
 		final Desktop dsktop = getDsktop();
 		try {
 			dsktop.browse(uri);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -55,11 +55,11 @@ public class DesktopUtil {
 	 *
 	 * @param file URL地址
 	 */
-	public static void open(File file) {
+	public static void open(final File file) {
 		final Desktop dsktop = getDsktop();
 		try {
 			dsktop.open(file);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -69,11 +69,11 @@ public class DesktopUtil {
 	 *
 	 * @param file 文件
 	 */
-	public static void edit(File file) {
+	public static void edit(final File file) {
 		final Desktop dsktop = getDsktop();
 		try {
 			dsktop.edit(file);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -83,11 +83,11 @@ public class DesktopUtil {
 	 *
 	 * @param file 文件
 	 */
-	public static void print(File file) {
+	public static void print(final File file) {
 		final Desktop dsktop = getDsktop();
 		try {
 			dsktop.print(file);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -97,11 +97,11 @@ public class DesktopUtil {
 	 *
 	 * @param mailAddress 邮件地址
 	 */
-	public static void mail(String mailAddress) {
+	public static void mail(final String mailAddress) {
 		final Desktop dsktop = getDsktop();
 		try {
 			dsktop.mail(URLUtil.toURI(mailAddress));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

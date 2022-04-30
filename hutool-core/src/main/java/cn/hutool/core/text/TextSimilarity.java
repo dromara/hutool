@@ -23,8 +23,9 @@ public class TextSimilarity {
 	 * @param strB 字符串2
 	 * @return 相似度
 	 */
-	public static double similar(String strA, String strB) {
-		String newStrA, newStrB;
+	public static double similar(final String strA, final String strB) {
+		final String newStrA;
+		final String newStrB;
 		if (strA.length() < strB.length()) {
 			newStrA = removeSign(strB);
 			newStrB = removeSign(strA);
@@ -34,7 +35,7 @@ public class TextSimilarity {
 		}
 
 		// 用较大的字符串长度作为分母，相似子串作为分子计算出字串相似度
-		int temp = Math.max(newStrA.length(), newStrB.length());
+		final int temp = Math.max(newStrA.length(), newStrB.length());
 		if(0 == temp) {
 			// 两个都是空串相似度为1，被认为是相同的串
 			return 1;
@@ -52,7 +53,7 @@ public class TextSimilarity {
 	 * @param scale 保留小数
 	 * @return 百分比
 	 */
-	public static String similar(String strA, String strB, int scale) {
+	public static String similar(final String strA, final String strB, final int scale) {
 		return NumberUtil.formatPercent(similar(strA, strB), scale);
 	}
 
@@ -64,7 +65,7 @@ public class TextSimilarity {
 	 * @param strB 字符串2
 	 * @return 最长公共子串
 	 */
-	public static String longestCommonSubstring(String strA, String strB) {
+	public static String longestCommonSubstring(final String strA, final String strB) {
 		// 初始化矩阵数据,matrix[0][0]的值为0， 如果字符数组chars_strA和chars_strB的对应位相同，则matrix[i][j]的值为左上角的值加1，
 		// 否则，matrix[i][j]的值等于左上方最近两个位置的较大值， 矩阵中其余各点的值为0.
 		final int[][] matrix = generateMatrix(strA, strB);
@@ -73,7 +74,7 @@ public class TextSimilarity {
 		int n = strB.length();
 		// 矩阵中，如果matrix[m][n]的值不等于matrix[m-1][n]的值也不等于matrix[m][n-1]的值，
 		// 则matrix[m][n]对应的字符为相似字符元，并将其存入result数组中。
-		char[] result = new char[matrix[m][n]];
+		final char[] result = new char[matrix[m][n]];
 		int currentIndex = result.length - 1;
 		while (matrix[m][n] != 0) {
 			if (matrix[m][n] == matrix[m][n - 1]) {
@@ -97,9 +98,9 @@ public class TextSimilarity {
 	 * @param str 字符串
 	 * @return 处理后的字符串
 	 */
-	private static String removeSign(String str) {
-		int length = str.length();
-		StringBuilder sb = StrUtil.builder(length);
+	private static String removeSign(final String str) {
+		final int length = str.length();
+		final StringBuilder sb = StrUtil.builder(length);
 		// 遍历字符串str,如果是汉字数字或字母，则追加到ab上面
 		char c;
 		for (int i = 0; i < length; i++) {
@@ -118,7 +119,7 @@ public class TextSimilarity {
 	 * @param charValue 字符
 	 * @return true表示为非汉字，数字和字母，false反之
 	 */
-	private static boolean isValidChar(char charValue) {
+	private static boolean isValidChar(final char charValue) {
 		return (charValue >= 0x4E00 && charValue <= 0X9FFF) || //
 				(charValue >= 'a' && charValue <= 'z') || //
 				(charValue >= 'A' && charValue <= 'Z') || //
@@ -132,7 +133,7 @@ public class TextSimilarity {
 	 * @param strB 字符串2
 	 * @return 公共子串
 	 */
-	private static int longestCommonSubstringLength(String strA, String strB) {
+	private static int longestCommonSubstringLength(final String strA, final String strB) {
 		final int m = strA.length();
 		final int n = strB.length();
 		return generateMatrix(strA, strB)[m][n];
@@ -145,9 +146,9 @@ public class TextSimilarity {
 	 * @param strB 字符串2
 	 * @return 公共串矩阵
 	 */
-	private static int[][] generateMatrix(String strA, String strB) {
-		int m = strA.length();
-		int n = strB.length();
+	private static int[][] generateMatrix(final String strA, final String strB) {
+		final int m = strA.length();
+		final int n = strB.length();
 
 		// 初始化矩阵数据,matrix[0][0]的值为0， 如果字符数组chars_strA和chars_strB的对应位相同，则matrix[i][j]的值为左上角的值加1，
 		// 否则，matrix[i][j]的值等于左上方最近两个位置的较大值， 矩阵中其余各点的值为0.

@@ -1,16 +1,16 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.text.StrUtil;
-
 /**
  * 莫尔斯电码的编码和解码实现<br>
- * 参考：https://github.com/TakWolf/Java-MorseCoder
+ * 参考：<a href="https://github.com/TakWolf/Java-MorseCoder">https://github.com/TakWolf/Java-MorseCoder</a>
  *
  * @author looly, TakWolf
  * @since 4.4.1
@@ -26,7 +26,7 @@ public class Morse {
 	 * @param abc 字母和字符
 	 * @param dict 二进制
 	 */
-	private static void registerMorse(Character abc, String dict) {
+	private static void registerMorse(final Character abc, final String dict) {
 		ALPHABETS.put((int) abc, dict);
 		DICTIONARIES.put(dict, (int) abc);
 	}
@@ -109,7 +109,7 @@ public class Morse {
 	 * @param dah 横线表示的字符
 	 * @param split 分隔符
 	 */
-	public Morse(char dit, char dah, char split) {
+	public Morse(final char dit, final char dah, final char split) {
 		this.dit = dit;
 		this.dah = dah;
 		this.split = split;
@@ -128,7 +128,7 @@ public class Morse {
 		final StringBuilder morseBuilder = new StringBuilder();
 		final int len = text.codePointCount(0, text.length());
 		for (int i = 0; i < len; i++) {
-			int codePoint = text.codePointAt(i);
+			final int codePoint = text.codePointAt(i);
 			String word = ALPHABETS.get(codePoint);
 			if (word == null) {
 				word = Integer.toBinaryString(codePoint);
@@ -144,7 +144,7 @@ public class Morse {
 	 * @param morse 莫尔斯电码
 	 * @return 明文
 	 */
-	public String decode(String morse) {
+	public String decode(final String morse) {
 		Assert.notNull(morse, "Morse should not be null.");
 
 		final char dit = this.dit;

@@ -28,7 +28,7 @@ public class TaskExecutorManager implements Serializable {
 	 */
 	private final List<TaskExecutor> executors = new ArrayList<>();
 
-	public TaskExecutorManager(Scheduler scheduler) {
+	public TaskExecutorManager(final Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
 
@@ -48,7 +48,7 @@ public class TaskExecutorManager implements Serializable {
 	 * @param task {@link Task}
 	 * @return {@link TaskExecutor}
 	 */
-	public TaskExecutor spawnExecutor(CronTask task) {
+	public TaskExecutor spawnExecutor(final CronTask task) {
 		final TaskExecutor executor = new TaskExecutor(this.scheduler, task);
 		synchronized (this.executors) {
 			this.executors.add(executor);
@@ -66,7 +66,7 @@ public class TaskExecutorManager implements Serializable {
 	 * @param executor 执行器 {@link TaskExecutor}
 	 * @return this
 	 */
-	public TaskExecutorManager notifyExecutorCompleted(TaskExecutor executor) {
+	public TaskExecutorManager notifyExecutorCompleted(final TaskExecutor executor) {
 		synchronized (executors) {
 			executors.remove(executor);
 		}

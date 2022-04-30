@@ -50,7 +50,7 @@ public class Tailer implements Serializable {
 	 * @param file 文件
 	 * @param lineHandler 行处理器
 	 */
-	public Tailer(File file, LineHandler lineHandler) {
+	public Tailer(final File file, final LineHandler lineHandler) {
 		this(file, lineHandler, 0);
 	}
 
@@ -61,7 +61,7 @@ public class Tailer implements Serializable {
 	 * @param lineHandler 行处理器
 	 * @param initReadLine 启动时预读取的行数
 	 */
-	public Tailer(File file, LineHandler lineHandler, int initReadLine) {
+	public Tailer(final File file, final LineHandler lineHandler, final int initReadLine) {
 		this(file, CharsetUtil.UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
 	}
 
@@ -72,7 +72,7 @@ public class Tailer implements Serializable {
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
 	 */
-	public Tailer(File file, Charset charset, LineHandler lineHandler) {
+	public Tailer(final File file, final Charset charset, final LineHandler lineHandler) {
 		this(file, charset, lineHandler, 0, DateUnit.SECOND.getMillis());
 	}
 
@@ -85,7 +85,7 @@ public class Tailer implements Serializable {
 	 * @param initReadLine 启动时预读取的行数
 	 * @param period 检查间隔
 	 */
-	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine, long period) {
+	public Tailer(final File file, final Charset charset, final LineHandler lineHandler, final int initReadLine, final long period) {
 		checkFile(file);
 		this.charset = charset;
 		this.lineHandler = lineHandler;
@@ -107,11 +107,11 @@ public class Tailer implements Serializable {
 	 *
 	 * @param async 是否异步执行
 	 */
-	public void start(boolean async) {
+	public void start(final boolean async) {
 		// 初始读取
 		try {
 			this.readTail();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -125,9 +125,9 @@ public class Tailer implements Serializable {
 		if (false == async) {
 			try {
 				scheduledFuture.get();
-			} catch (ExecutionException e) {
+			} catch (final ExecutionException e) {
 				throw new UtilException(e);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				// ignore and exist
 			}
 		}
@@ -150,9 +150,9 @@ public class Tailer implements Serializable {
 		final long len = this.randomAccessFile.length();
 
 		if (initReadLine > 0) {
-			Stack<String> stack = new Stack<>();
+			final Stack<String> stack = new Stack<>();
 
-			long start = this.randomAccessFile.getFilePointer();
+			final long start = this.randomAccessFile.getFilePointer();
 			long nextEnd = (len - 1) < 0 ? 0 : len - 1;
 			this.randomAccessFile.seek(nextEnd);
 			int c;
@@ -195,7 +195,7 @@ public class Tailer implements Serializable {
 		// 将指针置于末尾
 		try {
 			this.randomAccessFile.seek(len);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -205,7 +205,7 @@ public class Tailer implements Serializable {
 	 *
 	 * @param file 文件
 	 */
-	private static void checkFile(File file) {
+	private static void checkFile(final File file) {
 		if (false == file.exists()) {
 			throw new UtilException("File [{}] not exist !", file.getAbsolutePath());
 		}
@@ -223,7 +223,7 @@ public class Tailer implements Serializable {
 	 */
 	public static class ConsoleLineHandler implements LineHandler {
 		@Override
-		public void handle(String line) {
+		public void handle(final String line) {
 			Console.log(line);
 		}
 	}

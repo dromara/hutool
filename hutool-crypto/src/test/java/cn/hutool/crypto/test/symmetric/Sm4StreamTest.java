@@ -22,29 +22,29 @@ public class Sm4StreamTest {
 	@Test
 	@Ignore
 	public void sm4Test(){
-		String source = "d:/test/sm4_1.txt";
-		String target = "d:/test/sm4_2.data";
-		String target2 = "d:/test/sm4_3.txt";
+		final String source = "d:/test/sm4_1.txt";
+		final String target = "d:/test/sm4_2.data";
+		final String target2 = "d:/test/sm4_3.txt";
 		encrypt(source, target);
 		decrypt(target, target2);
 	}
 
-	public static void encrypt(String source, String target) {
-		try (InputStream input = new FileInputStream(source);
-			 OutputStream out = new FileOutputStream(target)) {
+	public static void encrypt(final String source, final String target) {
+		try (final InputStream input = new FileInputStream(source);
+			 final OutputStream out = new FileOutputStream(target)) {
 			sm4.encrypt(input, out, IS_CLOSE);
 			System.out.println("============encrypt end");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void decrypt(String source, String target) {
-		try (InputStream input = new FileInputStream(source);
-			 OutputStream out = new FileOutputStream(target)) {
+	public static void decrypt(final String source, final String target) {
+		try (final InputStream input = new FileInputStream(source);
+			 final OutputStream out = new FileOutputStream(target)) {
 			sm4.decrypt(input, out, IS_CLOSE);
 			System.out.println("============decrypt end");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}

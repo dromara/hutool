@@ -24,7 +24,7 @@ public class EmojiUtil {
 	 * @param str 被测试的字符串
 	 * @return 是否为Emoji表情的Unicode符
 	 */
-	public static boolean isEmoji(String str) {
+	public static boolean isEmoji(final String str) {
 		return EmojiManager.isEmoji(str);
 	}
 
@@ -35,7 +35,7 @@ public class EmojiUtil {
 	 * @return 是否包含Emoji表情的Unicode符
 	 * @since 4.5.11
 	 */
-	public static boolean containsEmoji(String str) {
+	public static boolean containsEmoji(final String str) {
 		return EmojiManager.containsEmoji(str);
 	}
 
@@ -45,7 +45,7 @@ public class EmojiUtil {
 	 * @param tag tag标签，例如“happy”
 	 * @return Emoji表情集合，如果找不到返回null
 	 */
-	public static Set<Emoji> getByTag(String tag) {
+	public static Set<Emoji> getByTag(final String tag) {
 		return EmojiManager.getForTag(tag);
 	}
 
@@ -55,7 +55,7 @@ public class EmojiUtil {
 	 * @param alias 别名，例如“smile”
 	 * @return Emoji对象，如果找不到返回null
 	 */
-	public static Emoji get(String alias) {
+	public static Emoji get(final String alias) {
 		return EmojiManager.getForAlias(alias);
 	}
 
@@ -73,7 +73,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji别名或者HTML表现形式的字符串
 	 * @return 替换后的字符串
 	 */
-	public static String toUnicode(String str) {
+	public static String toUnicode(final String str) {
 		return EmojiParser.parseToUnicode(str);
 	}
 
@@ -100,7 +100,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
 	 */
-	public static String toAlias(String str) {
+	public static String toAlias(final String str) {
 		return toAlias(str, FitzpatrickAction.PARSE);
 	}
 
@@ -113,7 +113,7 @@ public class EmojiUtil {
 	 * @param fitzpatrickAction {@link FitzpatrickAction}
 	 * @return 替换后的字符串
 	 */
-	public static String toAlias(String str, FitzpatrickAction fitzpatrickAction) {
+	public static String toAlias(final String str, final FitzpatrickAction fitzpatrickAction) {
 		return EmojiParser.parseToAliases(str, fitzpatrickAction);
 	}
 
@@ -125,7 +125,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
 	 */
-	public static String toHtmlHex(String str) {
+	public static String toHtmlHex(final String str) {
 		return toHtml(str, true);
 	}
 
@@ -137,7 +137,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
 	 */
-	public static String toHtml(String str) {
+	public static String toHtml(final String str) {
 		return toHtml(str, false);
 	}
 
@@ -153,7 +153,7 @@ public class EmojiUtil {
 	 * @return 替换后的字符串
 	 * @since 5.7.21
 	 */
-	public static String toHtml(String str, boolean isHex) {
+	public static String toHtml(final String str, final boolean isHex) {
 		return isHex ? EmojiParser.parseToHtmlHexadecimal(str) :
 				EmojiParser.parseToHtmlDecimal(str);
 	}
@@ -164,7 +164,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji字符的字符串
 	 * @return 替换后的字符串
 	 */
-	public static String removeAllEmojis(String str) {
+	public static String removeAllEmojis(final String str) {
 		return EmojiParser.removeAllEmojis(str);
 	}
 
@@ -174,7 +174,7 @@ public class EmojiUtil {
 	 * @param str 包含Emoji字符的字符串
 	 * @return Emoji字符列表
 	 */
-	public static List<String> extractEmojis(String str) {
+	public static List<String> extractEmojis(final String str) {
 		return EmojiParser.extractEmojis(str);
 	}
 }

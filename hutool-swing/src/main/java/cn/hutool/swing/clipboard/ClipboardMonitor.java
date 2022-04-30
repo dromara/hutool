@@ -49,7 +49,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param tryCount 尝试获取剪贴板内容的次数
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 */
-	ClipboardMonitor(int tryCount, long delay) {
+	ClipboardMonitor(final int tryCount, final long delay) {
 		this(tryCount, delay, ClipboardUtil.getClipboard());
 	}
 
@@ -60,7 +60,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 * @param clipboard 剪贴板对象
 	 */
-	ClipboardMonitor(int tryCount, long delay, Clipboard clipboard) {
+	ClipboardMonitor(final int tryCount, final long delay, final Clipboard clipboard) {
 		this.tryCount = tryCount;
 		this.delay = delay;
 		this.clipboard = clipboard;
@@ -73,7 +73,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param tryCount 重试次数
 	 * @return this
 	 */
-	public ClipboardMonitor setTryCount(int tryCount) {
+	public ClipboardMonitor setTryCount(final int tryCount) {
 		this.tryCount = tryCount;
 		return this;
 	}
@@ -84,7 +84,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param delay 重试等待
 	 * @return this
 	 */
-	public ClipboardMonitor setDelay(long delay) {
+	public ClipboardMonitor setDelay(final long delay) {
 		this.delay = delay;
 		return this;
 	}
@@ -95,7 +95,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param listener 监听事件处理
 	 * @return this
 	 */
-	public ClipboardMonitor addListener(ClipboardListener listener) {
+	public ClipboardMonitor addListener(final ClipboardListener listener) {
 		this.listenerSet.add(listener);
 		return this;
 	}
@@ -106,7 +106,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param listener 监听
 	 * @return this
 	 */
-	public ClipboardMonitor removeListener(ClipboardListener listener) {
+	public ClipboardMonitor removeListener(final ClipboardListener listener) {
 		this.listenerSet.remove(listener);
 		return this;
 	}
@@ -122,20 +122,20 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	}
 
 	@Override
-	public void lostOwnership(Clipboard clipboard, Transferable contents) {
-		Transferable newContents;
+	public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
+		final Transferable newContents;
 		try {
 			newContents = tryGetContent(clipboard);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			// 中断后结束简体
 			return;
 		}
 
 		Transferable transferable = null;
-		for (ClipboardListener listener : listenerSet) {
+		for (final ClipboardListener listener : listenerSet) {
 			try {
 				transferable = listener.onChange(clipboard, ObjUtil.defaultIfNull(transferable, newContents));
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				// 忽略事件处理异常，保证所有监听正常执行
 			}
 		}
@@ -160,7 +160,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 *
 	 * @param sync 是否阻塞
 	 */
-	public void listen(boolean sync) {
+	public void listen(final boolean sync) {
 		run();
 
 		if (sync) {
@@ -184,7 +184,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @return 剪贴板内容，{@code null} 表示未获取到
 	 * @throws InterruptedException 线程中断
 	 */
-	private Transferable tryGetContent(Clipboard clipboard) throws InterruptedException {
+	private Transferable tryGetContent(final Clipboard clipboard) throws InterruptedException {
 		Transferable newContents = null;
 		for (int i = 0; i < this.tryCount; i++) {
 			if (this.delay > 0 && i > 0) {
@@ -195,7 +195,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 
 			try {
 				newContents = clipboard.getContents(null);
-			} catch (IllegalStateException e) {
+			} catch (final IllegalStateException e) {
 				// ignore
 			}
 			if (null != newContents) {

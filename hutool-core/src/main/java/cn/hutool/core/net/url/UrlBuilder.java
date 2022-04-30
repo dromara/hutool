@@ -72,7 +72,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset 编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(URI uri, Charset charset) {
+	public static UrlBuilder of(final URI uri, final Charset charset) {
 		return of(uri.getScheme(), uri.getHost(), uri.getPort(), uri.getPath(), uri.getRawQuery(), uri.getFragment(), charset);
 	}
 
@@ -84,7 +84,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return UrlBuilder
 	 * @since 5.4.3
 	 */
-	public static UrlBuilder ofHttpWithoutEncode(String httpUrl) {
+	public static UrlBuilder ofHttpWithoutEncode(final String httpUrl) {
 		return ofHttp(httpUrl, null);
 	}
 
@@ -95,7 +95,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return UrlBuilder
 	 * @since 5.6.3
 	 */
-	public static UrlBuilder ofHttp(String httpUrl) {
+	public static UrlBuilder ofHttp(final String httpUrl) {
 		return ofHttp(httpUrl, CharsetUtil.UTF_8);
 	}
 
@@ -106,7 +106,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset 编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder ofHttp(String httpUrl, Charset charset) {
+	public static UrlBuilder ofHttp(String httpUrl, final Charset charset) {
 		Assert.notBlank(httpUrl, "Http url must be not blank!");
 
 		final int sepIndex = httpUrl.indexOf("://");
@@ -122,7 +122,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param url     URL字符串
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(String url) {
+	public static UrlBuilder of(final String url) {
 		return of(url, CharsetUtil.UTF_8);
 	}
 
@@ -133,7 +133,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset 编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(String url, Charset charset) {
+	public static UrlBuilder of(final String url, final Charset charset) {
 		Assert.notBlank(url, "Url must be not blank!");
 		return of(URLUtil.url(StrUtil.trim(url)), charset);
 	}
@@ -145,7 +145,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset 编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(URL url, Charset charset) {
+	public static UrlBuilder of(final URL url, final Charset charset) {
 		return of(url.getProtocol(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef(), charset);
 	}
 
@@ -161,7 +161,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset  编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(String scheme, String host, int port, String path, String query, String fragment, Charset charset) {
+	public static UrlBuilder of(final String scheme, final String host, final int port, final String path, final String query, final String fragment, final Charset charset) {
 		return of(scheme, host, port,
 				UrlPath.of(path, charset),
 				UrlQuery.of(query, charset, false), fragment, charset);
@@ -179,7 +179,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset  编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder of(String scheme, String host, int port, UrlPath path, UrlQuery query, String fragment, Charset charset) {
+	public static UrlBuilder of(final String scheme, final String host, final int port, final UrlPath path, final UrlQuery query, final String fragment, final Charset charset) {
 		return new UrlBuilder(scheme, host, port, path, query, fragment, charset);
 	}
 
@@ -210,7 +210,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param fragment 标识符例如#后边的部分
 	 * @param charset  编码，用于URLEncode和URLDecode，{@code null}表示不编码
 	 */
-	public UrlBuilder(String scheme, String host, int port, UrlPath path, UrlQuery query, String fragment, Charset charset) {
+	public UrlBuilder(final String scheme, final String host, final int port, final UrlPath path, final UrlQuery query, final String fragment, final Charset charset) {
 		this.charset = charset;
 		this.scheme = scheme;
 		this.host = host;
@@ -246,7 +246,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param scheme 协议，例如http
 	 * @return this
 	 */
-	public UrlBuilder setScheme(String scheme) {
+	public UrlBuilder setScheme(final String scheme) {
 		this.scheme = scheme;
 		return this;
 	}
@@ -266,7 +266,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param host 主机，例如127.0.0.1
 	 * @return this
 	 */
-	public UrlBuilder setHost(String host) {
+	public UrlBuilder setHost(final String host) {
 		this.host = host;
 		return this;
 	}
@@ -286,7 +286,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param port 端口，默认-1
 	 * @return this
 	 */
-	public UrlBuilder setPort(int port) {
+	public UrlBuilder setPort(final int port) {
 		this.port = port;
 		return this;
 	}
@@ -324,7 +324,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param path 路径，例如/aa/bb/cc
 	 * @return this
 	 */
-	public UrlBuilder setPath(UrlPath path) {
+	public UrlBuilder setPath(final UrlPath path) {
 		this.path = path;
 		return this;
 	}
@@ -335,7 +335,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param path 路径，例如aaa/bbb/ccc
 	 * @return this
 	 */
-	public UrlBuilder addPath(CharSequence path) {
+	public UrlBuilder addPath(final CharSequence path) {
 		UrlPath.of(path, this.charset).getSegments().forEach(this::addPathSegment);
 		return this;
 	}
@@ -347,7 +347,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return this
 	 * @since 5.7.16
 	 */
-	public UrlBuilder addPathSegment(CharSequence segment) {
+	public UrlBuilder addPathSegment(final CharSequence segment) {
 		if (StrUtil.isEmpty(segment)) {
 			return this;
 		}
@@ -383,7 +383,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param query 查询语句，例如a=1&amp;b=2
 	 * @return this
 	 */
-	public UrlBuilder setQuery(UrlQuery query) {
+	public UrlBuilder setQuery(final UrlQuery query) {
 		this.query = query;
 		return this;
 	}
@@ -395,7 +395,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param value 值
 	 * @return this
 	 */
-	public UrlBuilder addQuery(String key, Object value) {
+	public UrlBuilder addQuery(final String key, final Object value) {
 		if (StrUtil.isEmpty(key)) {
 			return this;
 		}
@@ -432,7 +432,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param fragment 标识符，例如#后边的部分
 	 * @return this
 	 */
-	public UrlBuilder setFragment(String fragment) {
+	public UrlBuilder setFragment(final String fragment) {
 		if (StrUtil.isEmpty(fragment)) {
 			this.fragment = null;
 		}
@@ -455,7 +455,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param charset 编码
 	 * @return this
 	 */
-	public UrlBuilder setCharset(Charset charset) {
+	public UrlBuilder setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -485,7 +485,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @param handler {@link URLStreamHandler}，null表示默认
 	 * @return {@link URL}
 	 */
-	public URL toURL(URLStreamHandler handler) {
+	public URL toURL(final URLStreamHandler handler) {
 		final StringBuilder fileBuilder = new StringBuilder();
 
 		// path
@@ -504,7 +504,7 @@ public final class UrlBuilder implements Builder<String> {
 
 		try {
 			return new URL(getSchemeWithDefault(), host, port, fileBuilder.toString(), handler);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			return null;
 		}
 	}
@@ -522,7 +522,7 @@ public final class UrlBuilder implements Builder<String> {
 					getPathStr(),
 					getQueryStr(),
 					getFragmentEncoded());
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			return null;
 		}
 	}

@@ -27,7 +27,7 @@ public class SnowflakeGenerator implements Generator<Long> {
 	 * @param workerId     终端ID
 	 * @param dataCenterId 数据中心ID
 	 */
-	public SnowflakeGenerator(long workerId, long dataCenterId) {
+	public SnowflakeGenerator(final long workerId, final long dataCenterId) {
 		snowflake = new Snowflake(workerId, dataCenterId);
 	}
 

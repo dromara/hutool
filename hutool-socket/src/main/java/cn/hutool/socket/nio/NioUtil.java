@@ -20,7 +20,7 @@ public class NioUtil {
 	 * @param channel 通道
 	 * @param ops 注册的通道监听（操作）类型
 	 */
-	public static void registerChannel(Selector selector, SelectableChannel channel, Operation ops) {
+	public static void registerChannel(final Selector selector, final SelectableChannel channel, final Operation ops) {
 		if (channel == null) {
 			return;
 		}
@@ -30,7 +30,7 @@ public class NioUtil {
 			// 注册通道
 			//noinspection MagicConstant
 			channel.register(selector, ops.getValue());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

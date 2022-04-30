@@ -21,19 +21,19 @@ public class FuncComparator<T> extends NullComparator<T> {
 	 * @param nullGreater 是否{@code null}在后
 	 * @param func        比较项获取函数
 	 */
-	public FuncComparator(boolean nullGreater, Function<T, Comparable<?>> func) {
+	public FuncComparator(final boolean nullGreater, final Function<T, Comparable<?>> func) {
 		super(nullGreater, null);
 		this.func = func;
 	}
 
 	@Override
-	protected int doCompare(T a, T b) {
-		Comparable<?> v1;
-		Comparable<?> v2;
+	protected int doCompare(final T a, final T b) {
+		final Comparable<?> v1;
+		final Comparable<?> v2;
 		try {
 			v1 = func.apply(a);
 			v2 = func.apply(b);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new ComparatorException(e);
 		}
 
@@ -52,7 +52,7 @@ public class FuncComparator<T> extends NullComparator<T> {
 	 * @return 比较结果
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private int compare(T o1, T o2, Comparable v1, Comparable v2) {
+	private int compare(final T o1, final T o2, final Comparable v1, final Comparable v2) {
 		int result = ObjUtil.compare(v1, v2);
 		if (0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况

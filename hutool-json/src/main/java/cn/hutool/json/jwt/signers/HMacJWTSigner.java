@@ -24,7 +24,7 @@ public class HMacJWTSigner implements JWTSigner {
 	 * @param algorithm HMAC签名算法
 	 * @param key       密钥
 	 */
-	public HMacJWTSigner(String algorithm, byte[] key) {
+	public HMacJWTSigner(final String algorithm, final byte[] key) {
 		this.hMac = new HMac(algorithm, key);
 	}
 
@@ -34,7 +34,7 @@ public class HMacJWTSigner implements JWTSigner {
 	 * @param algorithm HMAC签名算法
 	 * @param key       密钥
 	 */
-	public HMacJWTSigner(String algorithm, Key key) {
+	public HMacJWTSigner(final String algorithm, final Key key) {
 		this.hMac = new HMac(algorithm, key);
 	}
 
@@ -44,18 +44,18 @@ public class HMacJWTSigner implements JWTSigner {
 	 * @param charset 编码
 	 * @return 编码
 	 */
-	public HMacJWTSigner setCharset(Charset charset) {
+	public HMacJWTSigner setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
 
 	@Override
-	public String sign(String headerBase64, String payloadBase64) {
+	public String sign(final String headerBase64, final String payloadBase64) {
 		return hMac.digestBase64(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset, true);
 	}
 
 	@Override
-	public boolean verify(String headerBase64, String payloadBase64, String signBase64) {
+	public boolean verify(final String headerBase64, final String payloadBase64, final String signBase64) {
 		final String sign = sign(headerBase64, payloadBase64);
 		return hMac.verify(
 				StrUtil.bytes(sign, charset),

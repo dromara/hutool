@@ -47,7 +47,7 @@ public class ChineseDate {
 	 *
 	 * @param date 公历日期
 	 */
-	public ChineseDate(Date date) {
+	public ChineseDate(final Date date) {
 		this(LocalDateTimeUtil.ofDate(date.toInstant()));
 	}
 
@@ -57,7 +57,7 @@ public class ChineseDate {
 	 * @param localDate 公历日期
 	 * @since 5.7.22
 	 */
-	public ChineseDate(LocalDate localDate) {
+	public ChineseDate(final LocalDate localDate) {
 		// 公历
 		gyear = localDate.getYear();
 		gmonthBase1 = localDate.getMonthValue();
@@ -80,7 +80,7 @@ public class ChineseDate {
 
 		year = iYear;
 		// 计算农历月份
-		int leapMonth = LunarInfo.leapMonth(iYear); // 闰哪个月,1-12
+		final int leapMonth = LunarInfo.leapMonth(iYear); // 闰哪个月,1-12
 		// 用当年的天数offset,逐个减去每月（农历）的天数，求出当天是本月的第几天
 		int month;
 		int daysOfMonth;
@@ -121,7 +121,7 @@ public class ChineseDate {
 	 * @param chineseDay   农历日，1表示初一
 	 * @since 5.2.4
 	 */
-	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay) {
+	public ChineseDate(final int chineseYear, final int chineseMonth, final int chineseDay) {
 		this(chineseYear, chineseMonth, chineseDay, chineseMonth == LunarInfo.leapMonth(chineseYear));
 	}
 
@@ -135,7 +135,7 @@ public class ChineseDate {
 	 * @param isLeapMonth  当前月份是否闰月
 	 * @since 5.7.18
 	 */
-	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay, boolean isLeapMonth) {
+	public ChineseDate(final int chineseYear, final int chineseMonth, final int chineseDay, final boolean isLeapMonth) {
 		this.day = chineseDay;
 		// 当月是闰月的后边的月定义为闰月，如润的是五月，则5表示五月，6表示润五月
 		this.isLeapMonth = isLeapMonth;
@@ -247,7 +247,7 @@ public class ChineseDate {
 	 * @return 返回农历月份
 	 * @since 5.7.18
 	 */
-	public String getChineseMonth(boolean isTraditional) {
+	public String getChineseMonth(final boolean isTraditional) {
 		return ChineseMonth.getChineseMonthName(isLeapMonth(),
 				isLeapMonth() ? this.month - 1 : this.month, isTraditional);
 	}
@@ -278,8 +278,8 @@ public class ChineseDate {
 	 * @return 获得农历日
 	 */
 	public String getChineseDay() {
-		String[] chineseTen = {"初", "十", "廿", "卅"};
-		int n = (day % 10 == 0) ? 9 : (day % 10 - 1);
+		final String[] chineseTen = {"初", "十", "廿", "卅"};
+		final int n = (day % 10 == 0) ? 9 : (day % 10 - 1);
 		if (day > 30) {
 			return "";
 		}
@@ -396,7 +396,7 @@ public class ChineseDate {
 	 * @param day   公历日
 	 * @return 天干地支信息
 	 */
-	private String cyclicalm(int year, int month, int day) {
+	private String cyclicalm(final int year, final int month, final int day) {
 		return StrUtil.format("{}年{}月{}日",
 				GanZhi.getGanzhiOfYear(this.year),
 				GanZhi.getGanzhiOfMonth(year, month, day),
@@ -412,13 +412,13 @@ public class ChineseDate {
 	 * @param isLeapMonth  传入的月是不是闰月
 	 * @return 公历信息
 	 */
-	private DateTime lunar2solar(int chineseYear, int chineseMonth, int chineseDay, boolean isLeapMonth) {
+	private DateTime lunar2solar(final int chineseYear, final int chineseMonth, final int chineseDay, final boolean isLeapMonth) {
 		//超出了最大极限值
 		if ((chineseYear == 2100 && chineseMonth == 12 && chineseDay > 1) ||
 				(chineseYear == LunarInfo.BASE_YEAR && chineseMonth == 1 && chineseDay < 31)) {
 			return null;
 		}
-		int day = LunarInfo.monthDays(chineseYear, chineseMonth);
+		final int day = LunarInfo.monthDays(chineseYear, chineseMonth);
 		int _day = day;
 		if (isLeapMonth) {
 			_day = LunarInfo.leapDays(chineseYear);

@@ -15,7 +15,7 @@ public class AtomicBooleanConverter extends AbstractConverter<AtomicBoolean> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected AtomicBoolean convertInternal(Object value) {
+	protected AtomicBoolean convertInternal(final Object value) {
 		if (value instanceof Boolean) {
 			return new AtomicBoolean((Boolean) value);
 		}

@@ -26,7 +26,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers  观察者列表
 	 * @return {@link WatcherChain}
 	 */
-	public static WatcherChain create(Watcher... watchers) {
+	public static WatcherChain create(final Watcher... watchers) {
 		return new WatcherChain(watchers);
 	}
 
@@ -34,34 +34,34 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * 构造
 	 * @param watchers 观察者列表
 	 */
-	public WatcherChain(Watcher... watchers) {
+	public WatcherChain(final Watcher... watchers) {
 		chain = CollUtil.newArrayList(watchers);
 	}
 
 	@Override
-	public void onCreate(WatchEvent<?> event, Path currentPath) {
-		for (Watcher watcher : chain) {
+	public void onCreate(final WatchEvent<?> event, final Path currentPath) {
+		for (final Watcher watcher : chain) {
 			watcher.onCreate(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onModify(WatchEvent<?> event, Path currentPath) {
-		for (Watcher watcher : chain) {
+	public void onModify(final WatchEvent<?> event, final Path currentPath) {
+		for (final Watcher watcher : chain) {
 			watcher.onModify(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onDelete(WatchEvent<?> event, Path currentPath) {
-		for (Watcher watcher : chain) {
+	public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+		for (final Watcher watcher : chain) {
 			watcher.onDelete(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onOverflow(WatchEvent<?> event, Path currentPath) {
-		for (Watcher watcher : chain) {
+	public void onOverflow(final WatchEvent<?> event, final Path currentPath) {
+		for (final Watcher watcher : chain) {
 			watcher.onOverflow(event, currentPath);
 		}
 	}
@@ -73,7 +73,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	}
 
 	@Override
-	public WatcherChain addChain(Watcher element) {
+	public WatcherChain addChain(final Watcher element) {
 		this.chain.add(element);
 		return this;
 	}

@@ -35,20 +35,20 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 	 * @param fileSystem 目标Zip文件
 	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
-	public ZipCopyVisitor(Path source, FileSystem fileSystem, CopyOption... copyOptions) {
+	public ZipCopyVisitor(final Path source, final FileSystem fileSystem, final CopyOption... copyOptions) {
 		this.source = source;
 		this.fileSystem = fileSystem;
 		this.copyOptions = copyOptions;
 	}
 
 	@Override
-	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+	public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 		final Path targetDir = resolveTarget(dir);
 		if(StrUtil.isNotEmpty(targetDir.toString())){
 			// 在目标的Zip文件中的相对位置创建目录
 			try {
 				Files.copy(dir, targetDir, copyOptions);
-			} catch (FileAlreadyExistsException e) {
+			} catch (final FileAlreadyExistsException e) {
 				if (false == Files.isDirectory(targetDir)) {
 					throw e;
 				}
@@ -59,7 +59,7 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
 		// 如果目标存在，无论目录还是文件都抛出FileAlreadyExistsException异常，此处不做特别处理
 		Files.copy(file, resolveTarget(file), copyOptions);
 
@@ -78,7 +78,7 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 	 * @param file 需要拷贝的文件或目录Path
 	 * @return 目标Path
 	 */
-	private Path resolveTarget(Path file) {
+	private Path resolveTarget(final Path file) {
 		return fileSystem.getPath(source.relativize(file).toString());
 	}
 }

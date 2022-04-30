@@ -11,15 +11,15 @@ import cn.hutool.cron.TaskExecutor;
 public class SimpleTaskListener implements TaskListener{
 
 	@Override
-	public void onStart(TaskExecutor executor) {
+	public void onStart(final TaskExecutor executor) {
 	}
 
 	@Override
-	public void onSucceeded(TaskExecutor executor) {
+	public void onSucceeded(final TaskExecutor executor) {
 	}
 
 	@Override
-	public void onFailed(TaskExecutor executor, Throwable exception) {
+	public void onFailed(final TaskExecutor executor, final Throwable exception) {
 	}
 
 }

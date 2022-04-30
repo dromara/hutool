@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
  * 参考：<a href="https://my.oschina.net/xinxingegeya/blog/287476">https://my.oschina.net/xinxingegeya/blog/287476</a>
  *
  * @author Looly
+ * @see Base16Codec
  */
 public class HexUtil {
 
@@ -28,13 +29,13 @@ public class HexUtil {
 	 * @param value 值
 	 * @return 是否为16进制
 	 */
-	public static boolean isHexNumber(String value) {
+	public static boolean isHexNumber(final String value) {
 		final int index = (value.startsWith("-") ? 1 : 0);
 		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
 			try {
 				//noinspection ResultOfMethodCallIgnored
 				Long.decode(value);
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				return false;
 			}
 			return true;
@@ -51,7 +52,7 @@ public class HexUtil {
 	 * @param data byte[]
 	 * @return 十六进制char[]
 	 */
-	public static char[] encodeHex(byte[] data) {
+	public static char[] encodeHex(final byte[] data) {
 		return encodeHex(data, true);
 	}
 
@@ -62,7 +63,7 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 十六进制char[]
 	 */
-	public static char[] encodeHex(String str, Charset charset) {
+	public static char[] encodeHex(final String str, final Charset charset) {
 		return encodeHex(StrUtil.bytes(str, charset), true);
 	}
 
@@ -73,7 +74,7 @@ public class HexUtil {
 	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制char[]
 	 */
-	public static char[] encodeHex(byte[] data, boolean toLowerCase) {
+	public static char[] encodeHex(final byte[] data, final boolean toLowerCase) {
 		return (toLowerCase ? Base16Codec.CODEC_LOWER : Base16Codec.CODEC_UPPER).encode(data);
 	}
 
@@ -83,7 +84,7 @@ public class HexUtil {
 	 * @param data byte[]
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(byte[] data) {
+	public static String encodeHexStr(final byte[] data) {
 		return encodeHexStr(data, true);
 	}
 
@@ -94,7 +95,7 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(String data, Charset charset) {
+	public static String encodeHexStr(final String data, final Charset charset) {
 		return encodeHexStr(StrUtil.bytes(data, charset), true);
 	}
 
@@ -104,7 +105,7 @@ public class HexUtil {
 	 * @param data 被编码的字符串
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(String data) {
+	public static String encodeHexStr(final String data) {
 		return encodeHexStr(data, CharsetUtil.UTF_8);
 	}
 
@@ -115,7 +116,7 @@ public class HexUtil {
 	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
 	 * @return 十六进制String
 	 */
-	public static String encodeHexStr(byte[] data, boolean toLowerCase) {
+	public static String encodeHexStr(final byte[] data, final boolean toLowerCase) {
 		return new String(encodeHex(data, toLowerCase));
 	}
 
@@ -127,7 +128,7 @@ public class HexUtil {
 	 * @param hexStr 十六进制String
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(String hexStr) {
+	public static String decodeHexStr(final String hexStr) {
 		return decodeHexStr(hexStr, CharsetUtil.UTF_8);
 	}
 
@@ -138,7 +139,7 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(String hexStr, Charset charset) {
+	public static String decodeHexStr(final String hexStr, final Charset charset) {
 		if (StrUtil.isEmpty(hexStr)) {
 			return hexStr;
 		}
@@ -152,7 +153,7 @@ public class HexUtil {
 	 * @param charset 编码
 	 * @return 字符串
 	 */
-	public static String decodeHexStr(char[] hexData, Charset charset) {
+	public static String decodeHexStr(final char[] hexData, final Charset charset) {
 		return StrUtil.str(decodeHex(hexData), charset);
 	}
 
@@ -162,7 +163,7 @@ public class HexUtil {
 	 * @param hexStr 十六进制String
 	 * @return byte[]
 	 */
-	public static byte[] decodeHex(String hexStr) {
+	public static byte[] decodeHex(final String hexStr) {
 		return decodeHex((CharSequence) hexStr);
 	}
 
@@ -173,7 +174,7 @@ public class HexUtil {
 	 * @return byte[]
 	 * @throws RuntimeException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 */
-	public static byte[] decodeHex(char[] hexData) {
+	public static byte[] decodeHex(final char[] hexData) {
 		return decodeHex(String.valueOf(hexData));
 	}
 
@@ -185,7 +186,7 @@ public class HexUtil {
 	 * @throws UtilException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 * @since 5.6.6
 	 */
-	public static byte[] decodeHex(CharSequence hexData) {
+	public static byte[] decodeHex(final CharSequence hexData) {
 		return Base16Codec.CODEC_LOWER.decode(hexData);
 	}
 
@@ -198,7 +199,7 @@ public class HexUtil {
 	 * @return Hex字符串
 	 * @since 3.0.8
 	 */
-	public static String encodeColor(Color color) {
+	public static String encodeColor(final Color color) {
 		return encodeColor(color, "#");
 	}
 
@@ -210,7 +211,7 @@ public class HexUtil {
 	 * @return Hex字符串
 	 * @since 3.0.8
 	 */
-	public static String encodeColor(Color color, String prefix) {
+	public static String encodeColor(final Color color, final String prefix) {
 		final StringBuilder builder = new StringBuilder(prefix);
 		String colorHex;
 		colorHex = Integer.toHexString(color.getRed());
@@ -238,7 +239,7 @@ public class HexUtil {
 	 * @return {@link Color}
 	 * @since 3.0.8
 	 */
-	public static Color decodeColor(String hexColor) {
+	public static Color decodeColor(final String hexColor) {
 		return Color.decode(hexColor);
 	}
 
@@ -253,12 +254,12 @@ public class HexUtil {
 	 * @param value int值，也可以是char
 	 * @return Unicode表现形式
 	 */
-	public static String toUnicodeHex(int value) {
+	public static String toUnicodeHex(final int value) {
 		final StringBuilder builder = new StringBuilder(6);
 
 		builder.append("\\u");
-		String hex = toHex(value);
-		int len = hex.length();
+		final String hex = toHex(value);
+		final int len = hex.length();
 		if (len < 4) {
 			builder.append("0000", 0, 4 - len);// 不足4位补0
 		}
@@ -279,7 +280,7 @@ public class HexUtil {
 	 * @return Unicode表现形式
 	 * @since 4.0.1
 	 */
-	public static String toUnicodeHex(char ch) {
+	public static String toUnicodeHex(final char ch) {
 		return Base16Codec.CODEC_LOWER.toUnicodeHex(ch);
 	}
 
@@ -290,7 +291,7 @@ public class HexUtil {
 	 * @return 16进制字符串
 	 * @since 4.4.1
 	 */
-	public static String toHex(int value) {
+	public static String toHex(final int value) {
 		return Integer.toHexString(value);
 	}
 
@@ -301,7 +302,7 @@ public class HexUtil {
 	 * @return 16进制字符串int值
 	 * @since 5.7.4
 	 */
-	public static int hexToInt(String value) {
+	public static int hexToInt(final String value) {
 		return Integer.parseInt(value, 16);
 	}
 
@@ -312,7 +313,7 @@ public class HexUtil {
 	 * @return 16进制字符串
 	 * @since 4.4.1
 	 */
-	public static String toHex(long value) {
+	public static String toHex(final long value) {
 		return Long.toHexString(value);
 	}
 
@@ -323,7 +324,7 @@ public class HexUtil {
 	 * @return long值
 	 * @since 5.7.4
 	 */
-	public static long hexToLong(String value) {
+	public static long hexToLong(final String value) {
 		return Long.parseLong(value, 16);
 	}
 
@@ -335,7 +336,7 @@ public class HexUtil {
 	 * @param toLowerCase 是否使用小写
 	 * @since 4.4.1
 	 */
-	public static void appendHex(StringBuilder builder, byte b, boolean toLowerCase) {
+	public static void appendHex(final StringBuilder builder, final byte b, final boolean toLowerCase) {
 		(toLowerCase ? Base16Codec.CODEC_LOWER : Base16Codec.CODEC_UPPER).appendHex(builder, b);
 	}
 
@@ -346,7 +347,7 @@ public class HexUtil {
 	 * @return {@link BigInteger}
 	 * @since 5.2.0
 	 */
-	public static BigInteger toBigInteger(String hexStr) {
+	public static BigInteger toBigInteger(final String hexStr) {
 		if (null == hexStr) {
 			return null;
 		}
@@ -362,7 +363,7 @@ public class HexUtil {
 	 * @param hexStr Hex字符串
 	 * @return 格式化后的字符串
 	 */
-	public static String format(String hexStr) {
+	public static String format(final String hexStr) {
 		final int length = hexStr.length();
 		final StringBuilder builder = StrUtil.builder(length + length / 2);
 		builder.append(hexStr.charAt(0)).append(hexStr.charAt(1));

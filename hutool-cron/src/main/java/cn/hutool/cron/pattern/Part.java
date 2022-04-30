@@ -42,7 +42,7 @@ public enum Part {
 	 * @param min           限定最小值（包含）
 	 * @param max           限定最大值（包含）
 	 */
-	Part(int calendarField, int min, int max) {
+	Part(final int calendarField, final int min, final int max) {
 		this.calendarField = calendarField;
 		if (min > max) {
 			this.min = max;
@@ -87,7 +87,7 @@ public enum Part {
 	 * @return 检查后的值
 	 * @throws CronException 检查无效抛出此异常
 	 */
-	public int checkValue(int value) throws CronException {
+	public int checkValue(final int value) throws CronException {
 		Assert.checkBetween(value, min, max,
 				() -> new CronException("Value {} out of range: [{} , {}]", value, min, max));
 		return value;
@@ -99,7 +99,7 @@ public enum Part {
 	 * @param i 位置，从0开始
 	 * @return Part
 	 */
-	public static Part of(int i) {
+	public static Part of(final int i) {
 		return ENUMS[i];
 	}
 }

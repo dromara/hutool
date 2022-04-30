@@ -41,7 +41,7 @@ public class SM3 extends Digester {
 	 *
 	 * @param salt 盐值
 	 */
-	public SM3(byte[] salt) {
+	public SM3(final byte[] salt) {
 		this(salt, 0, 1);
 	}
 
@@ -51,7 +51,7 @@ public class SM3 extends Digester {
 	 * @param salt        盐值
 	 * @param digestCount 摘要次数，当此值小于等于1,默认为1。
 	 */
-	public SM3(byte[] salt, int digestCount) {
+	public SM3(final byte[] salt, final int digestCount) {
 		this(salt, 0, digestCount);
 	}
 
@@ -62,7 +62,7 @@ public class SM3 extends Digester {
 	 * @param saltPosition 加盐位置，即将盐值字符串放置在数据的index数，默认0
 	 * @param digestCount  摘要次数，当此值小于等于1,默认为1。
 	 */
-	public SM3(byte[] salt, int saltPosition, int digestCount) {
+	public SM3(final byte[] salt, final int saltPosition, final int digestCount) {
 		this();
 		this.salt = salt;
 		this.saltPosition = saltPosition;

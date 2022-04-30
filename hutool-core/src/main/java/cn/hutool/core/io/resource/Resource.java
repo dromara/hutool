@@ -71,10 +71,10 @@ public interface Resource {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.5
 	 */
-	default void writeTo(OutputStream out) throws IORuntimeException {
-		try (InputStream in = getStream()) {
+	default void writeTo(final OutputStream out) throws IORuntimeException {
+		try (final InputStream in = getStream()) {
 			IoUtil.copy(in, out);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -85,7 +85,7 @@ public interface Resource {
 	 * @param charset 编码
 	 * @return {@link BufferedReader}
 	 */
-	default BufferedReader getReader(Charset charset) {
+	default BufferedReader getReader(final Charset charset) {
 		return IoUtil.getReader(getStream(), charset);
 	}
 
@@ -97,7 +97,7 @@ public interface Resource {
 	 * @return 读取资源内容
 	 * @throws IORuntimeException 包装{@link IOException}
 	 */
-	default String readStr(Charset charset) throws IORuntimeException {
+	default String readStr(final Charset charset) throws IORuntimeException {
 		return IoUtil.read(getReader(charset));
 	}
 

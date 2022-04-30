@@ -51,7 +51,7 @@ public class Profile implements Serializable {
 	 *
 	 * @param profile 环境
 	 */
-	public Profile(String profile) {
+	public Profile(final String profile) {
 		this(profile, Setting.DEFAULT_CHARSET, false);
 	}
 
@@ -62,7 +62,7 @@ public class Profile implements Serializable {
 	 * @param charset 编码
 	 * @param useVar 是否使用变量
 	 */
-	public Profile(String profile, Charset charset, boolean useVar) {
+	public Profile(final String profile, final Charset charset, final boolean useVar) {
 		this.profile = profile;
 		this.charset = charset;
 		this.useVar = useVar;
@@ -75,8 +75,8 @@ public class Profile implements Serializable {
 	 * @param name 文件名，如果没有扩展名，默认为.setting
 	 * @return 当前环境下配置文件
 	 */
-	public Setting getSetting(String name) {
-		String nameForProfile = fixNameForProfile(name);
+	public Setting getSetting(final String name) {
+		final String nameForProfile = fixNameForProfile(name);
 		Setting setting = settingMap.get(nameForProfile);
 		if (null == setting) {
 			setting = new Setting(nameForProfile, this.charset, this.useVar);
@@ -91,7 +91,7 @@ public class Profile implements Serializable {
 	 * @param profile 环境
 	 * @return 自身
 	 */
-	public Profile setProfile(String profile) {
+	public Profile setProfile(final String profile) {
 		this.profile = profile;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class Profile implements Serializable {
 	 * @param charset 编码
 	 * @return 自身
 	 */
-	public Profile setCharset(Charset charset) {
+	public Profile setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -113,7 +113,7 @@ public class Profile implements Serializable {
 	 * @param useVar 变量
 	 * @return 自身
 	 */
-	public Profile setUseVar(boolean useVar) {
+	public Profile setUseVar(final boolean useVar) {
 		this.useVar = useVar;
 		return this;
 	}
@@ -135,7 +135,7 @@ public class Profile implements Serializable {
 	 * @param name 文件名
 	 * @return 修正后的文件名
 	 */
-	private String fixNameForProfile(String name) {
+	private String fixNameForProfile(final String name) {
 		Assert.notBlank(name, "Setting name must be not blank !");
 		final String actralProfile = StrUtil.nullToEmpty(this.profile);
 		if (false == name.contains(StrUtil.DOT)) {

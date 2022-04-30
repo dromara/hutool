@@ -41,12 +41,12 @@ public interface EnumItem<E extends EnumItem<E>> extends Serializable {
 	 * @param intVal int值
 	 * @return Enum
 	 */
-	default E fromInt(Integer intVal) {
+	default E fromInt(final Integer intVal) {
 		if (intVal == null) {
 			return null;
 		}
-		E[] vs = items();
-		for (E enumItem : vs) {
+		final E[] vs = items();
+		for (final E enumItem : vs) {
 			if (enumItem.intVal() == intVal) {
 				return enumItem;
 			}
@@ -60,12 +60,12 @@ public interface EnumItem<E extends EnumItem<E>> extends Serializable {
 	 * @param strVal String值
 	 * @return Enum
 	 */
-	default E fromStr(String strVal) {
+	default E fromStr(final String strVal) {
 		if (strVal == null) {
 			return null;
 		}
-		E[] vs = items();
-		for (E enumItem : vs) {
+		final E[] vs = items();
+		for (final E enumItem : vs) {
 			if (strVal.equalsIgnoreCase(enumItem.name())) {
 				return enumItem;
 			}

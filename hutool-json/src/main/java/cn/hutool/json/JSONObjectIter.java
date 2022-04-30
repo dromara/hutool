@@ -4,15 +4,15 @@ import java.util.Iterator;
 
 /**
  * 此类用于在JSONAray中便于遍历JSONObject而封装的Iterable，可以借助foreach语法遍历
- * 
+ *
  * @author looly
  * @since 4.0.12
  */
 public class JSONObjectIter implements Iterable<JSONObject> {
 
 	Iterator<Object> iterator;
-	
-	public JSONObjectIter(Iterator<Object> iterator) {
+
+	public JSONObjectIter(final Iterator<Object> iterator) {
 		this.iterator = iterator;
 	}
 

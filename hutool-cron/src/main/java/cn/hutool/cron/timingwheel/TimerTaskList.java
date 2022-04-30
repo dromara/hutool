@@ -39,7 +39,7 @@ public class TimerTaskList implements Delayed {
 	 * @param expire 过期时间，单位毫秒
 	 * @return 是否设置成功
 	 */
-	public boolean setExpiration(long expire) {
+	public boolean setExpiration(final long expire) {
 		return this.expire.getAndSet(expire) != expire;
 	}
 
@@ -56,11 +56,11 @@ public class TimerTaskList implements Delayed {
 	 *
 	 * @param timerTask 延迟任务
 	 */
-	public void addTask(TimerTask timerTask) {
+	public void addTask(final TimerTask timerTask) {
 		synchronized (this) {
 			if (timerTask.timerTaskList == null) {
 				timerTask.timerTaskList = this;
-				TimerTask tail = root.prev;
+				final TimerTask tail = root.prev;
 				timerTask.next = root;
 				timerTask.prev = tail;
 				tail.next = timerTask;
@@ -74,7 +74,7 @@ public class TimerTaskList implements Delayed {
 	 *
 	 * @param timerTask 任务
 	 */
-	public void removeTask(TimerTask timerTask) {
+	public void removeTask(final TimerTask timerTask) {
 		synchronized (this) {
 			if (this.equals(timerTask.timerTaskList)) {
 				timerTask.next.prev = timerTask.prev;
@@ -91,7 +91,7 @@ public class TimerTaskList implements Delayed {
 	 *
 	 * @param flush 任务处理函数
 	 */
-	public synchronized void flush(Consumer<TimerTask> flush) {
+	public synchronized void flush(final Consumer<TimerTask> flush) {
 		TimerTask timerTask = root.next;
 		while (false == timerTask.equals(root)) {
 			this.removeTask(timerTask);
@@ -102,12 +102,12 @@ public class TimerTaskList implements Delayed {
 	}
 
 	@Override
-	public long getDelay(TimeUnit unit) {
+	public long getDelay(final TimeUnit unit) {
 		return Math.max(0, unit.convert(expire.get() - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
 	}
 
 	@Override
-	public int compareTo(Delayed o) {
+	public int compareTo(final Delayed o) {
 		if (o instanceof TimerTaskList) {
 			return Long.compare(expire.get(), ((TimerTaskList) o).expire.get());
 		}

@@ -118,26 +118,26 @@ public class HtmlUtilTest {
 	@Test
 	public void unwrapTest2() {
 		// 避免移除i却误删img标签的情况
-		String htmlString = "<html><img src='aaa'><i>测试文本</i></html>";
-		String tagString = "i,br";
-		String cleanTxt = HtmlUtil.removeHtmlTag(htmlString, false, tagString.split(","));
+		final String htmlString = "<html><img src='aaa'><i>测试文本</i></html>";
+		final String tagString = "i,br";
+		final String cleanTxt = HtmlUtil.removeHtmlTag(htmlString, false, tagString.split(","));
 		Assert.assertEquals("<html><img src='aaa'>测试文本</html>", cleanTxt);
 	}
 
 	@Test
 	public void escapeTest() {
-		String html = "<html><body>123'123'</body></html>";
-		String escape = HtmlUtil.escape(html);
+		final String html = "<html><body>123'123'</body></html>";
+		final String escape = HtmlUtil.escape(html);
 		Assert.assertEquals("&lt;html&gt;&lt;body&gt;123&#039;123&#039;&lt;/body&gt;&lt;/html&gt;", escape);
-		String restoreEscaped = HtmlUtil.unescape(escape);
+		final String restoreEscaped = HtmlUtil.unescape(escape);
 		Assert.assertEquals(html, restoreEscaped);
 		Assert.assertEquals("'", HtmlUtil.unescape("&apos;"));
 	}
 
 	@Test
 	public void filterTest() {
-		String html = "<alert></alert>";
-		String filter = HtmlUtil.filter(html);
+		final String html = "<alert></alert>";
+		final String filter = HtmlUtil.filter(html);
 		Assert.assertEquals("", filter);
 	}
 
@@ -167,8 +167,8 @@ public class HtmlUtilTest {
 
 	@Test
 	public void removeAllHtmlAttrTest() {
-		String html = "<div class=\"test_div\" width=\"120\"></div>";
-		String result = HtmlUtil.removeAllHtmlAttr(html, "div");
+		final String html = "<div class=\"test_div\" width=\"120\"></div>";
+		final String result = HtmlUtil.removeAllHtmlAttr(html, "div");
 		Assert.assertEquals("<div></div>", result);
 	}
 }

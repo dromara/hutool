@@ -10,7 +10,7 @@ public class JWTValidatorTest {
 
 	@Test(expected = ValidateException.class)
 	public void expiredAtTest(){
-		String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0Nzc1OTJ9.isvT0Pqx0yjnZk53mUFSeYFJLDs-Ls9IsNAm86gIdZo";
+		final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0Nzc1OTJ9.isvT0Pqx0yjnZk53mUFSeYFJLDs-Ls9IsNAm86gIdZo";
 		JWTValidator.of(token).validateDate(DateUtil.date());
 	}
 
@@ -64,9 +64,9 @@ public class JWTValidatorTest {
 
 	@Test
 	public void validateTest(){
-		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJNb0xpIiwiZXhwIjoxNjI0OTU4MDk0NTI4LCJpYXQiOjE2MjQ5NTgwMzQ1MjAsInVzZXIiOiJ1c2VyIn0.L0uB38p9sZrivbmP0VlDe--j_11YUXTu3TfHhfQhRKc";
-		byte[] key = "1234567890".getBytes();
-		boolean validate = JWT.of(token).setKey(key).validate(0);
+		final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJNb0xpIiwiZXhwIjoxNjI0OTU4MDk0NTI4LCJpYXQiOjE2MjQ5NTgwMzQ1MjAsInVzZXIiOiJ1c2VyIn0.L0uB38p9sZrivbmP0VlDe--j_11YUXTu3TfHhfQhRKc";
+		final byte[] key = "1234567890".getBytes();
+		final boolean validate = JWT.of(token).setKey(key).validate(0);
 		Assert.assertFalse(validate);
 	}
 

@@ -44,7 +44,7 @@ public class GlobalSerializeMapping {
 	 * @param type 对象类型
 	 * @param serializer 序列化器实现
 	 */
-	public static void put(Type type, JSONArraySerializer<?> serializer) {
+	public static void put(final Type type, final JSONArraySerializer<?> serializer) {
 		putInternal(type, serializer);
 	}
 
@@ -54,7 +54,7 @@ public class GlobalSerializeMapping {
 	 * @param type 对象类型
 	 * @param serializer 序列化器实现
 	 */
-	public static void put(Type type, JSONObjectSerializer<?> serializer) {
+	public static void put(final Type type, final JSONObjectSerializer<?> serializer) {
 		putInternal(type, serializer);
 	}
 
@@ -64,7 +64,7 @@ public class GlobalSerializeMapping {
 	 * @param type 对象类型
 	 * @param serializer 序列化器实现
 	 */
-	synchronized private static void putInternal(Type type, JSONSerializer<? extends JSON, ?> serializer) {
+	synchronized private static void putInternal(final Type type, final JSONSerializer<? extends JSON, ?> serializer) {
 		if(null == serializerMap) {
 			serializerMap = new ConcurrentHashMap<>();
 		}
@@ -77,7 +77,7 @@ public class GlobalSerializeMapping {
 	 * @param type 对象类型
 	 * @param deserializer 反序列化器实现
 	 */
-	synchronized public static void put(Type type, JSONDeserializer<?> deserializer) {
+	synchronized public static void put(final Type type, final JSONDeserializer<?> deserializer) {
 		if(null == deserializerMap) {
 			deserializerMap = new ConcurrentHashMap<>();
 		}
@@ -89,7 +89,7 @@ public class GlobalSerializeMapping {
 	 * @param type 类型
 	 * @return 自定义的序列化器或者{@code null}
 	 */
-	public static JSONSerializer<? extends JSON, ?> getSerializer(Type type){
+	public static JSONSerializer<? extends JSON, ?> getSerializer(final Type type){
 		if(null == serializerMap) {
 			return null;
 		}
@@ -101,7 +101,7 @@ public class GlobalSerializeMapping {
 	 * @param type 类型
 	 * @return 自定义的反序列化器或者{@code null}
 	 */
-	public static JSONDeserializer<?> getDeserializer(Type type){
+	public static JSONDeserializer<?> getDeserializer(final Type type){
 		if(null == deserializerMap) {
 			return null;
 		}

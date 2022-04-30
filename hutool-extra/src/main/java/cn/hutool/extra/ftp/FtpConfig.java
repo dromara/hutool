@@ -71,7 +71,7 @@ public class FtpConfig implements Serializable {
 	 * @param password           密码
 	 * @param charset            编码
 	 */
-	public FtpConfig(String host, int port, String user, String password, Charset charset) {
+	public FtpConfig(final String host, final int port, final String user, final String password, final Charset charset) {
 		this(host, port, user, password, charset, null, null);
 	}
 
@@ -87,7 +87,7 @@ public class FtpConfig implements Serializable {
 	 * @param systemKey          系统关键字
 	 * @since 5.5.7
 	 */
-	public FtpConfig(String host, int port, String user, String password, Charset charset, String serverLanguageCode, String systemKey) {
+	public FtpConfig(final String host, final int port, final String user, final String password, final Charset charset, final String serverLanguageCode, final String systemKey) {
 		this.host = host;
 		this.port = port;
 		this.user = user;
@@ -101,7 +101,7 @@ public class FtpConfig implements Serializable {
 		return host;
 	}
 
-	public FtpConfig setHost(String host) {
+	public FtpConfig setHost(final String host) {
 		this.host = host;
 		return this;
 	}
@@ -110,7 +110,7 @@ public class FtpConfig implements Serializable {
 		return port;
 	}
 
-	public FtpConfig setPort(int port) {
+	public FtpConfig setPort(final int port) {
 		this.port = port;
 		return this;
 	}
@@ -119,7 +119,7 @@ public class FtpConfig implements Serializable {
 		return user;
 	}
 
-	public FtpConfig setUser(String user) {
+	public FtpConfig setUser(final String user) {
 		this.user = user;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class FtpConfig implements Serializable {
 		return password;
 	}
 
-	public FtpConfig setPassword(String password) {
+	public FtpConfig setPassword(final String password) {
 		this.password = password;
 		return this;
 	}
@@ -137,7 +137,7 @@ public class FtpConfig implements Serializable {
 		return charset;
 	}
 
-	public FtpConfig setCharset(Charset charset) {
+	public FtpConfig setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -146,7 +146,7 @@ public class FtpConfig implements Serializable {
 		return connectionTimeout;
 	}
 
-	public FtpConfig setConnectionTimeout(long connectionTimeout) {
+	public FtpConfig setConnectionTimeout(final long connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
 		return this;
 	}
@@ -155,7 +155,7 @@ public class FtpConfig implements Serializable {
 		return soTimeout;
 	}
 
-	public FtpConfig setSoTimeout(long soTimeout) {
+	public FtpConfig setSoTimeout(final long soTimeout) {
 		this.soTimeout = soTimeout;
 		return this;
 	}
@@ -164,7 +164,7 @@ public class FtpConfig implements Serializable {
 		return serverLanguageCode;
 	}
 
-	public FtpConfig setServerLanguageCode(String serverLanguageCode) {
+	public FtpConfig setServerLanguageCode(final String serverLanguageCode) {
 		this.serverLanguageCode = serverLanguageCode;
 		return this;
 	}
@@ -173,7 +173,7 @@ public class FtpConfig implements Serializable {
 		return systemKey;
 	}
 
-	public FtpConfig setSystemKey(String systemKey) {
+	public FtpConfig setSystemKey(final String systemKey) {
 		this.systemKey = systemKey;
 		return this;
 	}

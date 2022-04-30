@@ -56,7 +56,7 @@ public class StyleSet implements Serializable {
 	 *
 	 * @param workbook 工作簿
 	 */
-	public StyleSet(Workbook workbook) {
+	public StyleSet(final Workbook workbook) {
 		this.workbook = workbook;
 		this.headCellStyle = StyleUtil.createHeadCellStyle(workbook);
 		this.cellStyle = StyleUtil.createDefaultCellStyle(workbook);
@@ -134,7 +134,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setBorder(BorderStyle borderSize, IndexedColors colorIndex) {
+	public StyleSet setBorder(final BorderStyle borderSize, final IndexedColors colorIndex) {
 		StyleUtil.setBorder(this.headCellStyle, borderSize, colorIndex);
 		StyleUtil.setBorder(this.cellStyle, borderSize, colorIndex);
 		StyleUtil.setBorder(this.cellStyleForNumber, borderSize, colorIndex);
@@ -151,7 +151,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setAlign(HorizontalAlignment halign, VerticalAlignment valign) {
+	public StyleSet setAlign(final HorizontalAlignment halign, final VerticalAlignment valign) {
 		StyleUtil.setAlign(this.headCellStyle, halign, valign);
 		StyleUtil.setAlign(this.cellStyle, halign, valign);
 		StyleUtil.setAlign(this.cellStyleForNumber, halign, valign);
@@ -168,7 +168,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public StyleSet setBackgroundColor(IndexedColors backgroundColor, boolean withHeadCell) {
+	public StyleSet setBackgroundColor(final IndexedColors backgroundColor, final boolean withHeadCell) {
 		if (withHeadCell) {
 			StyleUtil.setColor(this.headCellStyle, backgroundColor, FillPatternType.SOLID_FOREGROUND);
 		}
@@ -188,7 +188,7 @@ public class StyleSet implements Serializable {
 	 * @param ignoreHead 是否跳过头部样式
 	 * @return this
 	 */
-	public StyleSet setFont(short color, short fontSize, String fontName, boolean ignoreHead) {
+	public StyleSet setFont(final short color, final short fontSize, final String fontName, final boolean ignoreHead) {
 		final Font font = StyleUtil.createFont(this.workbook, color, fontSize, fontName);
 		return setFont(font, ignoreHead);
 	}
@@ -201,7 +201,7 @@ public class StyleSet implements Serializable {
 	 * @return this
 	 * @since 4.1.0
 	 */
-	public StyleSet setFont(Font font, boolean ignoreHead) {
+	public StyleSet setFont(final Font font, final boolean ignoreHead) {
 		if (false == ignoreHead) {
 			this.headCellStyle.setFont(font);
 		}
@@ -234,7 +234,7 @@ public class StyleSet implements Serializable {
 	 * @return 值对应单元格样式
 	 * @since 5.7.16
 	 */
-	public CellStyle getStyleByValueType(Object value, boolean isHeader) {
+	public CellStyle getStyleByValueType(final Object value, final boolean isHeader) {
 		CellStyle style = null;
 
 		if (isHeader && null != this.headCellStyle) {

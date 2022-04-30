@@ -55,7 +55,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param config JSON配置项
 	 * @since 4.6.5
 	 */
-	public JSONObject(JSONConfig config) {
+	public JSONObject(final JSONConfig config) {
 		this(DEFAULT_CAPACITY, config);
 	}
 
@@ -66,7 +66,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param config   JSON配置项，{@code null}则使用默认配置
 	 * @since 4.1.19
 	 */
-	public JSONObject(int capacity, JSONConfig config) {
+	public JSONObject(final int capacity, final JSONConfig config) {
 		super(InternalJSONUtil.createRawMap(capacity, ObjUtil.defaultIfNull(config, JSONConfig.create())));
 		this.config = ObjUtil.defaultIfNull(config, JSONConfig.create());
 	}
@@ -83,7 +83,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 *
 	 * @param source JavaBean或者Map对象或者String
 	 */
-	public JSONObject(Object source) {
+	public JSONObject(final Object source) {
 		this(source, JSONConfig.create().setIgnoreNullValue(InternalJSONUtil.defaultIgnoreNullValue(source)));
 	}
 
@@ -104,7 +104,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param config JSON配置文件，{@code null}则使用默认配置
 	 * @since 4.2.2
 	 */
-	public JSONObject(Object source, JSONConfig config) {
+	public JSONObject(final Object source, final JSONConfig config) {
 		this(source, config, null);
 	}
 
@@ -126,7 +126,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 * @since 5.8.0
 	 */
-	public JSONObject(Object source, JSONConfig config, Filter<MutablePair<String, Object>> filter) {
+	public JSONObject(final Object source, final JSONConfig config, final Filter<MutablePair<String, Object>> filter) {
 		this(DEFAULT_CAPACITY, config);
 		ObjectMapper.of(source).map(this, filter);
 	}
@@ -145,13 +145,13 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this
 	 * @since 4.1.19
 	 */
-	public JSONObject setDateFormat(String format) {
+	public JSONObject setDateFormat(final String format) {
 		this.config.setDateFormat(format);
 		return this;
 	}
 
 	@Override
-	public <T> T toBean(Type type) {
+	public <T> T toBean(final Type type) {
 		return JSON.super.toBean(type, this.config.isIgnoreError());
 	}
 
@@ -162,13 +162,13 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return A JSONArray of values.
 	 * @throws JSONException If any of the values are non-finite numbers.
 	 */
-	public JSONArray toJSONArray(Collection<String> names) throws JSONException {
+	public JSONArray toJSONArray(final Collection<String> names) throws JSONException {
 		if (CollUtil.isEmpty(names)) {
 			return null;
 		}
 		final JSONArray ja = new JSONArray(this.config);
 		Object value;
-		for (String name : names) {
+		for (final String name : names) {
 			value = this.get(name);
 			if (null != value) {
 				ja.set(value);
@@ -178,22 +178,22 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	@Override
-	public Object getObj(String key, Object defaultValue) {
+	public Object getObj(final String key, final Object defaultValue) {
 		return this.getOrDefault(key, defaultValue);
 	}
 
 	@Override
-	public Object getByPath(String expression) {
+	public Object getByPath(final String expression) {
 		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
-	public <T> T getByPath(String expression, Class<T> resultType) {
+	public <T> T getByPath(final String expression, final Class<T> resultType) {
 		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
-	public void putByPath(String expression, Object value) {
+	public void putByPath(final String expression, final Object value) {
 		BeanPath.create(expression).set(this, value);
 	}
 
@@ -206,7 +206,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	@Override
-	public Object put(String key, Object value) throws JSONException {
+	public Object put(final String key, final Object value) throws JSONException {
 		return put(key, value, null, false);
 	}
 
@@ -218,7 +218,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
-	public JSONObject set(String key, Object value) throws JSONException {
+	public JSONObject set(final String key, final Object value) throws JSONException {
 		return set(key, value, null, false);
 	}
 
@@ -233,7 +233,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	public JSONObject set(String key, Object value, Filter<MutablePair<String, Object>> filter, boolean checkDuplicate) throws JSONException {
+	public JSONObject set(final String key, final Object value, final Filter<MutablePair<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
 		put(key, value, filter, checkDuplicate);
 		return this;
 	}
@@ -246,7 +246,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 */
-	public JSONObject putOnce(String key, Object value) throws JSONException {
+	public JSONObject putOnce(final String key, final Object value) throws JSONException {
 		return setOnce(key, value, null);
 	}
 
@@ -260,7 +260,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */
-	public JSONObject setOnce(String key, Object value, Filter<MutablePair<String, Object>> filter) throws JSONException {
+	public JSONObject setOnce(final String key, final Object value, final Filter<MutablePair<String, Object>> filter) throws JSONException {
 		return set(key, value, filter, true);
 	}
 
@@ -272,7 +272,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 值是无穷数字
 	 */
-	public JSONObject putOpt(String key, Object value) throws JSONException {
+	public JSONObject putOpt(final String key, final Object value) throws JSONException {
 		if (key != null && value != null) {
 			this.set(key, value);
 		}
@@ -280,8 +280,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	@Override
-	public void putAll(Map<? extends String, ?> m) {
-		for (Entry<? extends String, ?> entry : m.entrySet()) {
+	public void putAll(final Map<? extends String, ?> m) {
+		for (final Entry<? extends String, ?> entry : m.entrySet()) {
 			this.set(entry.getKey(), entry.getValue());
 		}
 	}
@@ -295,9 +295,9 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 */
-	public JSONObject accumulate(String key, Object value) throws JSONException {
+	public JSONObject accumulate(final String key, final Object value) throws JSONException {
 		InternalJSONUtil.testValidity(value);
-		Object object = this.getObj(key);
+		final Object object = this.getObj(key);
 		if (object == null) {
 			this.set(key, value);
 		} else if (object instanceof JSONArray) {
@@ -316,9 +316,9 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 */
-	public JSONObject append(String key, Object value) throws JSONException {
+	public JSONObject append(final String key, final Object value) throws JSONException {
 		InternalJSONUtil.testValidity(value);
-		Object object = this.getObj(key);
+		final Object object = this.getObj(key);
 		if (object == null) {
 			this.set(key, new JSONArray(this.config).set(value));
 		} else if (object instanceof JSONArray) {
@@ -336,8 +336,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 如果存在值非Integer, Long, Double, 或 Float.
 	 */
-	public JSONObject increment(String key) throws JSONException {
-		Object value = this.getObj(key);
+	public JSONObject increment(final String key) throws JSONException {
+		final Object value = this.getObj(key);
 		if (value == null) {
 			this.set(key, 1);
 		} else if (value instanceof BigInteger) {
@@ -378,7 +378,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(int indentFactor, Filter<MutablePair<String, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Filter<MutablePair<String, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -386,7 +386,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	@Override
-	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent) throws JSONException {
 		return write(writer, indentFactor, indent, null);
 	}
 
@@ -402,7 +402,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<String, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutablePair<String, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
@@ -439,7 +439,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	private Object put(String key, Object value, Filter<MutablePair<String, Object>> filter, boolean checkDuplicate) throws JSONException {
+	private Object put(String key, Object value, final Filter<MutablePair<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
 		if (null == key) {
 			return this;
 		}

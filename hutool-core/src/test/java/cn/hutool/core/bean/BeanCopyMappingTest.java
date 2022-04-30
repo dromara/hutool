@@ -18,9 +18,9 @@ public class BeanCopyMappingTest {
 		final CopyOptions copyOptions = CopyOptions.create()
 				.setFieldMapping(MapUtil.of("car", "carNo"));
 
-		B b = B.builder().car("12312312").build();
-		A a = A.builder().build();
-		C c = C.builder().build();
+		final B b = B.builder().car("12312312").build();
+		final A a = A.builder().build();
+		final C c = C.builder().build();
 		BeanUtil.copyProperties(b, a, copyOptions);
 		BeanUtil.copyProperties(a, c);
 

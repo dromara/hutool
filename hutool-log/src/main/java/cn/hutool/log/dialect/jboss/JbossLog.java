@@ -23,7 +23,7 @@ public class JbossLog extends AbstractLog {
 	 *
 	 * @param logger {@link Logger}
 	 */
-	public JbossLog(Logger logger) {
+	public JbossLog(final Logger logger) {
 		this.logger = logger;
 	}
 
@@ -32,7 +32,7 @@ public class JbossLog extends AbstractLog {
 	 *
 	 * @param clazz 日志打印所在类
 	 */
-	public JbossLog(Class<?> clazz) {
+	public JbossLog(final Class<?> clazz) {
 		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
@@ -41,7 +41,7 @@ public class JbossLog extends AbstractLog {
 	 *
 	 * @param name 日志打印所在类名
 	 */
-	public JbossLog(String name) {
+	public JbossLog(final String name) {
 		this(Logger.getLogger(name));
 	}
 
@@ -57,7 +57,7 @@ public class JbossLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isTraceEnabled()) {
 			logger.trace(fqcn, StrUtil.format(format, arguments), t);
 		}
@@ -70,7 +70,7 @@ public class JbossLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isDebugEnabled()) {
 			logger.debug(fqcn, StrUtil.format(format, arguments), t);
 		}
@@ -83,7 +83,7 @@ public class JbossLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isInfoEnabled()) {
 			logger.info(fqcn, StrUtil.format(format, arguments), t);
 		}
@@ -96,7 +96,7 @@ public class JbossLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isWarnEnabled()) {
 			logger.warn(fqcn, StrUtil.format(format, arguments), t);
 		}
@@ -109,7 +109,7 @@ public class JbossLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isErrorEnabled()) {
 			logger.error(fqcn, StrUtil.format(format, arguments), t);
 		}
@@ -117,7 +117,7 @@ public class JbossLog extends AbstractLog {
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		switch (level) {
 		case TRACE:
 			trace(fqcn, t, format, arguments);

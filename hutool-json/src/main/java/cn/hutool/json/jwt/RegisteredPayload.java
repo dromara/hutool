@@ -46,7 +46,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param issuer jwt签发者
 	 * @return this
 	 */
-	default T setIssuer(String issuer) {
+	default T setIssuer(final String issuer) {
 		return setPayload(ISSUER, issuer);
 	}
 
@@ -56,7 +56,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param subject jwt所面向的用户
 	 * @return this
 	 */
-	default T setSubject(String subject) {
+	default T setSubject(final String subject) {
 		return setPayload(SUBJECT, subject);
 	}
 
@@ -66,7 +66,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param audience 接收jwt的一方
 	 * @return this
 	 */
-	default T setAudience(String... audience) {
+	default T setAudience(final String... audience) {
 		return setPayload(AUDIENCE, audience);
 	}
 
@@ -77,7 +77,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @return this
 	 * @see #setIssuedAt(Date)
 	 */
-	default T setExpiresAt(Date expiresAt) {
+	default T setExpiresAt(final Date expiresAt) {
 		return setPayload(EXPIRES_AT, expiresAt);
 	}
 
@@ -87,7 +87,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param notBefore 不可用时间点界限，在这个时间点之前，jwt不可用
 	 * @return this
 	 */
-	default T setNotBefore(Date notBefore) {
+	default T setNotBefore(final Date notBefore) {
 		return setPayload(NOT_BEFORE, notBefore);
 	}
 
@@ -97,7 +97,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param issuedAt 签发时间
 	 * @return this
 	 */
-	default T setIssuedAt(Date issuedAt) {
+	default T setIssuedAt(final Date issuedAt) {
 		return setPayload(ISSUED_AT, issuedAt);
 	}
 
@@ -107,7 +107,7 @@ public interface RegisteredPayload<T extends RegisteredPayload<T>> {
 	 * @param jwtId 唯一身份标识
 	 * @return this
 	 */
-	default T setJWTId(String jwtId) {
+	default T setJWTId(final String jwtId) {
 		return setPayload(JWT_ID, jwtId);
 	}
 

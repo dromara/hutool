@@ -15,13 +15,13 @@ public class OshiTest {
 
 	@Test
 	public void getMemoryTest() {
-		long total = OshiUtil.getMemory().getTotal();
+		final long total = OshiUtil.getMemory().getTotal();
 		Assert.assertTrue(total > 0);
 	}
 
 	@Test
 	public void getCupInfo() {
-		CpuInfo cpuInfo = OshiUtil.getCpuInfo();
+		final CpuInfo cpuInfo = OshiUtil.getCpuInfo();
 		Assert.assertNotNull(cpuInfo);
 	}
 

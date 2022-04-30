@@ -16,7 +16,7 @@ public enum GlobalBouncyCastleProvider {
 	GlobalBouncyCastleProvider() {
 		try {
 			this.provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError e) {
 			// ignore
 		}
 	}
@@ -37,7 +37,7 @@ public enum GlobalBouncyCastleProvider {
 	 * @param isUseBouncyCastle 是否使用BouncyCastle库
 	 * @since 4.5.2
 	 */
-	public static void setUseBouncyCastle(boolean isUseBouncyCastle) {
+	public static void setUseBouncyCastle(final boolean isUseBouncyCastle) {
 		useBouncyCastle = isUseBouncyCastle;
 	}
 }

@@ -28,7 +28,7 @@ public class ConsoleLog extends AbstractLog {
 	 *
 	 * @param clazz 类
 	 */
-	public ConsoleLog(Class<?> clazz) {
+	public ConsoleLog(final Class<?> clazz) {
 		this.name = (null == clazz) ? StrUtil.NULL : clazz.getName();
 	}
 
@@ -37,7 +37,7 @@ public class ConsoleLog extends AbstractLog {
 	 *
 	 * @param name 类名
 	 */
-	public ConsoleLog(String name) {
+	public ConsoleLog(final String name) {
 		this.name = name;
 	}
 
@@ -52,7 +52,7 @@ public class ConsoleLog extends AbstractLog {
 	 * @param customLevel 自定义级别
 	 * @since 4.1.10
 	 */
-	public static void setLevel(Level customLevel) {
+	public static void setLevel(final Level customLevel) {
 		Assert.notNull(customLevel);
 		currentLevel = customLevel;
 	}
@@ -64,7 +64,7 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.TRACE, t, format, arguments);
 	}
 
@@ -75,7 +75,7 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.DEBUG, t, format, arguments);
 	}
 
@@ -86,7 +86,7 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.INFO, t, format, arguments);
 	}
 
@@ -97,7 +97,7 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.WARN, t, format, arguments);
 	}
 
@@ -108,13 +108,13 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		log(fqcn, Level.ERROR, t, format, arguments);
 	}
 
 	//------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		// fqcn 无效
 		if (false == isEnabled(level)) {
 			return;
@@ -138,7 +138,7 @@ public class ConsoleLog extends AbstractLog {
 	}
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		return currentLevel.compareTo(level) <= 0;
 	}
 }

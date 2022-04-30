@@ -24,7 +24,7 @@ public class ExcelFileUtil {
 	 * @param in excel输入流
 	 * @return 是否为XLS格式的Excel文件（HSSF）
 	 */
-	public static boolean isXls(InputStream in) {
+	public static boolean isXls(final InputStream in) {
 		return FileMagic.OLE2 == getFileMagic(in);
 	}
 
@@ -36,7 +36,7 @@ public class ExcelFileUtil {
 	 * @param in excel输入流
 	 * @return 是否为XLSX格式的Excel文件（XSSF）
 	 */
-	public static boolean isXlsx(InputStream in) {
+	public static boolean isXlsx(final InputStream in) {
 		return FileMagic.OOXML == getFileMagic(in);
 	}
 
@@ -48,10 +48,10 @@ public class ExcelFileUtil {
 	 * @return 是否为XLSX格式的Excel文件（XSSF）
 	 * @since 5.4.4
 	 */
-	public static boolean isXlsx(File file) {
+	public static boolean isXlsx(final File file) {
 		try {
 			return FileMagic.valueOf(file) == FileMagic.OOXML;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -68,11 +68,11 @@ public class ExcelFileUtil {
 	 * @author kefan.qu
 	 */
 	private static FileMagic getFileMagic(InputStream in) {
-		FileMagic magic;
+		final FileMagic magic;
 		in = FileMagic.prepareToCheckMagic(in);
 		try {
 			magic = FileMagic.valueOf(in);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 

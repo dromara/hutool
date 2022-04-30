@@ -31,7 +31,7 @@ public class ConcurrencyTester implements Closeable {
 	 * 构造
 	 * @param threadSize 线程数
 	 */
-	public ConcurrencyTester(int threadSize) {
+	public ConcurrencyTester(final int threadSize) {
 		this.sf = new SyncFinisher(threadSize);
 		this.timeInterval = new TimeInterval();
 	}
@@ -43,7 +43,7 @@ public class ConcurrencyTester implements Closeable {
 	 * @param runnable 要测试的内容
 	 * @return this
 	 */
-	public ConcurrencyTester test(Runnable runnable) {
+	public ConcurrencyTester test(final Runnable runnable) {
 		this.sf.clearWorker();
 
 		timeInterval.start();

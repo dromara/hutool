@@ -32,7 +32,7 @@ public class NioClient implements Closeable {
 	 * @param host 服务器地址
 	 * @param port 端口
 	 */
-	public NioClient(String host, int port) {
+	public NioClient(final String host, final int port) {
 		init(new InetSocketAddress(host, port));
 	}
 
@@ -41,7 +41,7 @@ public class NioClient implements Closeable {
 	 *
 	 * @param address 服务器地址
 	 */
-	public NioClient(InetSocketAddress address) {
+	public NioClient(final InetSocketAddress address) {
 		init(address);
 	}
 
@@ -51,7 +51,7 @@ public class NioClient implements Closeable {
 	 * @param address 地址和端口
 	 * @return this
 	 */
-	public NioClient init(InetSocketAddress address) {
+	public NioClient init(final InetSocketAddress address) {
 		try {
 			//创建一个SocketChannel对象，配置成非阻塞模式
 			this.channel = SocketChannel.open();
@@ -65,7 +65,7 @@ public class NioClient implements Closeable {
 			// 等待建立连接
 			//noinspection StatementWithEmptyBody
 			while (false == channel.finishConnect()){}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			close();
 			throw new IORuntimeException(e);
 		}
@@ -78,7 +78,7 @@ public class NioClient implements Closeable {
 	 * @param handler {@link ChannelHandler}
 	 * @return this
 	 */
-	public NioClient setChannelHandler(ChannelHandler handler){
+	public NioClient setChannelHandler(final ChannelHandler handler){
 		this.handler = handler;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class NioClient implements Closeable {
 		ThreadUtil.execute(() -> {
 			try {
 				doListen();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		});
@@ -117,13 +117,13 @@ public class NioClient implements Closeable {
 	 *
 	 * @param key SelectionKey
 	 */
-	private void handle(SelectionKey key) {
+	private void handle(final SelectionKey key) {
 		// 读事件就绪
 		if (key.isReadable()) {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
 			try{
 				handler.handle(socketChannel);
-			} catch (Exception e){
+			} catch (final Exception e){
 				throw new SocketRuntimeException(e);
 			}
 		}
@@ -136,10 +136,10 @@ public class NioClient implements Closeable {
 	 * @param datas 发送的数据
 	 * @return this
 	 */
-	public NioClient write(ByteBuffer... datas) {
+	public NioClient write(final ByteBuffer... datas) {
 		try {
 			this.channel.write(datas);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;

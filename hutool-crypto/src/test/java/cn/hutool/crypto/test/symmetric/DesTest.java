@@ -15,7 +15,7 @@ public class DesTest {
 
 	@Test
 	public void encryptDecryptTest(){
-		String content = "我是一个测试的test字符串123";
+		final String content = "我是一个测试的test字符串123";
 		final DES des = SecureUtil.des();
 
 		final String encryptHex = des.encryptHex(content);
@@ -26,7 +26,7 @@ public class DesTest {
 
 	@Test
 	public void encryptDecryptWithCustomTest(){
-		String content = "我是一个测试的test字符串123";
+		final String content = "我是一个测试的test字符串123";
 		final DES des = new DES(
 				Mode.CTS,
 				Padding.PKCS5Padding,

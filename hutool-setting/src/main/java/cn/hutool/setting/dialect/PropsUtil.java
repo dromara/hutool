@@ -28,7 +28,7 @@ public class PropsUtil {
 	 * @param name 文件名，如果没有扩展名，默认为.properties
 	 * @return 当前环境下配置文件
 	 */
-	public static Props get(String name) {
+	public static Props get(final String name) {
 		return propsMap.computeIfAbsent(name, (filePath)->{
 			final String extName = FileUtil.extName(filePath);
 			if (StrUtil.isEmpty(extName)) {
@@ -46,11 +46,11 @@ public class PropsUtil {
 	 *
 	 * @return 当前环境下配置文件
 	 */
-	public static Props getFirstFound(String... names) {
-		for (String name : names) {
+	public static Props getFirstFound(final String... names) {
+		for (final String name : names) {
 			try {
 				return get(name);
-			} catch (NoResourceException e) {
+			} catch (final NoResourceException e) {
 				//ignore
 			}
 		}

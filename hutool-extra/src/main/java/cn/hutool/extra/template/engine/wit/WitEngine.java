@@ -32,7 +32,7 @@ public class WitEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public WitEngine(TemplateConfig config) {
+	public WitEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -41,14 +41,14 @@ public class WitEngine implements TemplateEngine {
 	 *
 	 * @param engine {@link Engine}
 	 */
-	public WitEngine(Engine engine) {
+	public WitEngine(final Engine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 
 
 	@Override
-	public TemplateEngine init(TemplateConfig config) {
+	public TemplateEngine init(final TemplateConfig config) {
 		init(createEngine(config));
 		return this;
 	}
@@ -57,18 +57,18 @@ public class WitEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(Engine engine){
+	private void init(final Engine engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
 		try {
 			return WitTemplate.wrap(engine.getTemplate(resource));
-		} catch (ResourceNotFoundException e) {
+		} catch (final ResourceNotFoundException e) {
 			throw new TemplateException(e);
 		}
 	}
@@ -79,7 +79,7 @@ public class WitEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 * @return {@link Engine}
 	 */
-	private static Engine createEngine(TemplateConfig config) {
+	private static Engine createEngine(final TemplateConfig config) {
 		final Props configProps = Engine.createConfigProps("");
 		Dict dict = null;
 

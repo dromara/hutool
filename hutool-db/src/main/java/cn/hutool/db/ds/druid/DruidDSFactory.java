@@ -31,12 +31,12 @@ public class DruidDSFactory extends AbstractDSFactory {
 	 *
 	 * @param setting 数据库配置
 	 */
-	public DruidDSFactory(Setting setting) {
+	public DruidDSFactory(final Setting setting) {
 		super(DS_NAME, DruidDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		final DruidDataSource ds = new DruidDataSource();
 
 		// 基本信息
@@ -48,7 +48,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 		// remarks等特殊配置，since 5.3.8
 		// Druid中也可以通过 druid.connectProperties 属性设置
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				ds.addConnectionProperty(key, connValue);
@@ -61,7 +61,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 		ds.configFromPropety(druidProps);
 
 		//issue#I4ZKCW 某些非属性设置单独设置
-		String[] specialKeys = {"druid.connectionErrorRetryAttempts", "druid.breakAfterAcquireFailure"};
+		final String[] specialKeys = {"druid.connectionErrorRetryAttempts", "druid.breakAfterAcquireFailure"};
 
 		// connectionErrorRetryAttempts
 		final String connectionErrorRetryAttemptsKey = "druid.connectionErrorRetryAttempts";

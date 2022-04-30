@@ -9,24 +9,24 @@ public class MorseTest {
 
 	@Test
 	public void test0() {
-		String text = "Hello World!";
-		String morse = "...././.-../.-../---/-...../.--/---/.-./.-../-../-.-.--/";
+		final String text = "Hello World!";
+		final String morse = "...././.-../.-../---/-...../.--/---/.-./.-../-../-.-.--/";
 		Assert.assertEquals(morse, morseCoder.encode(text));
 		Assert.assertEquals(morseCoder.decode(morse), text.toUpperCase());
 	}
 
 	@Test
 	public void test1() {
-		String text = "你好，世界！";
-		String morse = "-..----.--...../-.--..-.-----.-/--------....--../-..---....-.--./---.-.-.-..--../--------.......-/";
+		final String text = "你好，世界！";
+		final String morse = "-..----.--...../-.--..-.-----.-/--------....--../-..---....-.--./---.-.-.-..--../--------.......-/";
 		Assert.assertEquals(morseCoder.encode(text), morse);
 		Assert.assertEquals(morseCoder.decode(morse), text);
 	}
 
 	@Test
 	public void test2() {
-		String text = "こんにちは";
-		String morse = "--.....-.-..--/--....-..-..--/--.....--.-.--/--.....--....-/--.....--.----/";
+		final String text = "こんにちは";
+		final String morse = "--.....-.-..--/--....-..-..--/--.....--.-.--/--.....--....-/--.....--.----/";
 		Assert.assertEquals(morseCoder.encode(text), morse);
 		Assert.assertEquals(morseCoder.decode(morse), text);
 	}

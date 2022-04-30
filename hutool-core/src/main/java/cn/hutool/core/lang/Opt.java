@@ -60,8 +60,7 @@ public class Opt<T> {
 	 * @return Opt
 	 */
 	public static <T> Opt<T> empty() {
-		@SuppressWarnings("unchecked")
-		Opt<T> t = (Opt<T>) EMPTY;
+		@SuppressWarnings("unchecked") final Opt<T> t = (Opt<T>) EMPTY;
 		return t;
 	}
 
@@ -73,7 +72,7 @@ public class Opt<T> {
 	 * @return 一个包裹里元素不可能为空的 {@code Opt}
 	 * @throws NullPointerException 如果传入的元素为空，抛出 {@code NPE}
 	 */
-	public static <T> Opt<T> of(T value) {
+	public static <T> Opt<T> of(final T value) {
 		return new Opt<>(Objects.requireNonNull(value));
 	}
 
@@ -84,7 +83,7 @@ public class Opt<T> {
 	 * @param <T>   包裹里元素的类型
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 */
-	public static <T> Opt<T> ofNullable(T value) {
+	public static <T> Opt<T> ofNullable(final T value) {
 		return value == null ? empty()
 				: new Opt<>(value);
 	}
@@ -96,7 +95,7 @@ public class Opt<T> {
 	 * @param <T>   包裹里元素的类型
 	 * @return 一个包裹里元素可能为空，或者为空字符串的 {@code Opt}
 	 */
-	public static <T> Opt<T> ofBlankAble(T value) {
+	public static <T> Opt<T> ofBlankAble(final T value) {
 		return StrUtil.isBlankIfStr(value) ? empty() : new Opt<>(value);
 	}
 
@@ -109,7 +108,7 @@ public class Opt<T> {
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
-	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
+	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(final R value) {
 		return CollUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
@@ -118,10 +117,10 @@ public class Opt<T> {
 	 * @param <T>      类型
 	 * @return 操作执行后的值
 	 */
-	public static <T> Opt<T> ofTry(Func0<T> supplier) {
+	public static <T> Opt<T> ofTry(final Func0<T> supplier) {
 		try {
 			return Opt.ofNullable(supplier.call());
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			final Opt<T> empty = new Opt<>(null);
 			empty.exception = e;
 			return empty;
@@ -139,7 +138,7 @@ public class Opt<T> {
 	 *
 	 * @param value 包裹里的元素
 	 */
-	private Opt(T value) {
+	private Opt(final T value) {
 		this.value = value;
 	}
 
@@ -211,7 +210,7 @@ public class Opt<T> {
 	 * @return this
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
-	public Opt<T> ifPresent(Consumer<? super T> action) {
+	public Opt<T> ifPresent(final Consumer<? super T> action) {
 		if (isPresent()) {
 			action.accept(value);
 		}
@@ -233,7 +232,7 @@ public class Opt<T> {
 	 * @return this;
 	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
 	 */
-	public Opt<T> ifPresentOrElse(Consumer<? super T> action, VoidFunc0 emptyAction) {
+	public Opt<T> ifPresentOrElse(final Consumer<? super T> action, final VoidFunc0 emptyAction) {
 		if (isPresent()) {
 			action.accept(value);
 		} else {
@@ -259,7 +258,7 @@ public class Opt<T> {
 	 * @return 新的类型的Opt
 	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
 	 */
-	public <U> Opt<U> mapOrElse(Function<? super T, ? extends U> mapper, VoidFunc0 emptyAction) {
+	public <U> Opt<U> mapOrElse(final Function<? super T, ? extends U> mapper, final VoidFunc0 emptyAction) {
 		if (isPresent()) {
 			return ofNullable(mapper.apply(value));
 		} else {
@@ -277,7 +276,7 @@ public class Opt<T> {
 	 * @return 如果满足条件则返回本身, 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的条件为 {@code null}，抛出{@code NPE}
 	 */
-	public Opt<T> filter(Predicate<? super T> predicate) {
+	public Opt<T> filter(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isEmpty()) {
 			return this;
@@ -296,7 +295,7 @@ public class Opt<T> {
 	 * 如果不存在，返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的操作为 {@code null}，抛出 {@code NPE}
 	 */
-	public <U> Opt<U> map(Function<? super T, ? extends U> mapper) {
+	public <U> Opt<U> map(final Function<? super T, ? extends U> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isEmpty()) {
 			return empty();
@@ -316,13 +315,12 @@ public class Opt<T> {
 	 * 如果不存在，返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的操作为 {@code null}或者给定的操作执行结果为 {@code null}，抛出 {@code NPE}
 	 */
-	public <U> Opt<U> flatMap(Function<? super T, ? extends Opt<? extends U>> mapper) {
+	public <U> Opt<U> flatMap(final Function<? super T, ? extends Opt<? extends U>> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isEmpty()) {
 			return empty();
 		} else {
-			@SuppressWarnings("unchecked")
-			Opt<U> r = (Opt<U>) mapper.apply(value);
+			@SuppressWarnings("unchecked") final Opt<U> r = (Opt<U>) mapper.apply(value);
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -340,7 +338,7 @@ public class Opt<T> {
 	 * @see Optional#flatMap(Function)
 	 * @since 5.7.16
 	 */
-	public <U> Opt<U> flattedMap(Function<? super T, ? extends Optional<? extends U>> mapper) {
+	public <U> Opt<U> flattedMap(final Function<? super T, ? extends Optional<? extends U>> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isEmpty()) {
 			return empty();
@@ -360,7 +358,7 @@ public class Opt<T> {
 	 * @throws NullPointerException 如果值存在，并且传入的操作为 {@code null}
 	 * @author VampireAchao
 	 */
-	public Opt<T> peek(Consumer<T> action) throws NullPointerException {
+	public Opt<T> peek(final Consumer<T> action) throws NullPointerException {
 		Objects.requireNonNull(action);
 		if (isEmpty()) {
 			return Opt.empty();
@@ -383,7 +381,7 @@ public class Opt<T> {
 	 * @author VampireAchao
 	 */
 	@SafeVarargs
-	public final Opt<T> peeks(Consumer<T>... actions) throws NullPointerException {
+	public final Opt<T> peeks(final Consumer<T>... actions) throws NullPointerException {
 		// 第三个参数 (opts, opt) -> null其实并不会执行到该函数式接口所以直接返回了个null
 		return Stream.of(actions).reduce(this, Opt<T>::peek, (opts, opt) -> null);
 	}
@@ -395,13 +393,12 @@ public class Opt<T> {
 	 * @return 如果包裹里元素的值存在，就返回本身，如果不存在，则使用传入的函数执行后获得的 {@code Opt}
 	 * @throws NullPointerException 如果传入的操作为空，或者传入的操作执行后返回值为空，则抛出 {@code NPE}
 	 */
-	public Opt<T> or(Supplier<? extends Opt<? extends T>> supplier) {
+	public Opt<T> or(final Supplier<? extends Opt<? extends T>> supplier) {
 		Objects.requireNonNull(supplier);
 		if (isPresent()) {
 			return this;
 		} else {
-			@SuppressWarnings("unchecked")
-			Opt<T> r = (Opt<T>) supplier.get();
+			@SuppressWarnings("unchecked") final Opt<T> r = (Opt<T>) supplier.get();
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -432,7 +429,7 @@ public class Opt<T> {
 	 * @param other 元素为空时返回的值，有可能为 {@code null}.
 	 * @return 如果包裹里元素的值存在，则返回该值，否则返回传入的{@code other}
 	 */
-	public T orElse(T other) {
+	public T orElse(final T other) {
 		return isPresent() ? value : other;
 	}
 
@@ -443,7 +440,7 @@ public class Opt<T> {
 	 * @return 如果未发生异常，则返回该值，否则返回传入的{@code other}
 	 * @since 5.7.17
 	 */
-	public T exceptionOrElse(T other) {
+	public T exceptionOrElse(final T other) {
 		return isFail() ? other : value;
 	}
 
@@ -454,7 +451,7 @@ public class Opt<T> {
 	 * @return 如果包裹里元素的值存在，则返回该值，否则返回传入的操作执行后的返回值
 	 * @throws NullPointerException 如果之不存在，并且传入的操作为空，则抛出 {@code NPE}
 	 */
-	public T orElseGet(Supplier<? extends T> supplier) {
+	public T orElseGet(final Supplier<? extends T> supplier) {
 		return isPresent() ? value : supplier.get();
 	}
 
@@ -478,7 +475,7 @@ public class Opt<T> {
 	 * @throws X                    如果值不存在
 	 * @throws NullPointerException 如果值不存在并且 传入的操作为 {@code null}或者操作执行后的返回值为{@code null}
 	 */
-	public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+	public <X extends Throwable> T orElseThrow(final Supplier<? extends X> exceptionSupplier) throws X {
 		if (isPresent()) {
 			return value;
 		} else {
@@ -502,7 +499,7 @@ public class Opt<T> {
 	 * @throws NullPointerException 如果值不存在并且 传入的操作为 {@code null}或者操作执行后的返回值为{@code null}
 	 * @author VampireAchao
 	 */
-	public <X extends Throwable> T orElseThrow(Function<String, ? extends X> exceptionFunction, String message) throws X {
+	public <X extends Throwable> T orElseThrow(final Function<String, ? extends X> exceptionFunction, final String message) throws X {
 		if (isPresent()) {
 			return value;
 		} else {
@@ -535,7 +532,7 @@ public class Opt<T> {
 	 * 否则返回 {@code false}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -544,7 +541,7 @@ public class Opt<T> {
 			return false;
 		}
 
-		Opt<?> other = (Opt<?>) obj;
+		final Opt<?> other = (Opt<?>) obj;
 		return Objects.equals(value, other.value);
 	}
 

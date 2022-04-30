@@ -38,7 +38,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public AbsCollValueMap(int initialCapacity) {
+	public AbsCollValueMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -47,7 +47,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 *
 	 * @param m Map
 	 */
-	public AbsCollValueMap(Map<? extends K, C> m) {
+	public AbsCollValueMap(final Map<? extends K, C> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -57,7 +57,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @param loadFactor 加载因子
 	 * @param m          Map
 	 */
-	public AbsCollValueMap(float loadFactor, Map<? extends K, C> m) {
+	public AbsCollValueMap(final float loadFactor, final Map<? extends K, C> m) {
 		this(m.size(), loadFactor);
 		this.putAll(m);
 	}
@@ -68,7 +68,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor      加载因子
 	 */
-	public AbsCollValueMap(int initialCapacity, float loadFactor) {
+	public AbsCollValueMap(final int initialCapacity, final float loadFactor) {
 		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
@@ -79,7 +79,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @param m valueMap
 	 * @since 5.7.4
 	 */
-	public void putAllValues(Map<? extends K, ? extends Collection<V>> m) {
+	public void putAllValues(final Map<? extends K, ? extends Collection<V>> m) {
 		if(null != m){
 			m.forEach((key, valueColl) -> {
 				if(null != valueColl){
@@ -96,7 +96,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @param key   键
 	 * @param value 值
 	 */
-	public void putValue(K key, V value) {
+	public void putValue(final K key, final V value) {
 		C collection = this.get(key);
 		if (null == collection) {
 			collection = createCollection();
@@ -112,7 +112,7 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @param index 第几个值的索引，越界返回null
 	 * @return 值或null
 	 */
-	public V get(K key, int index) {
+	public V get(final K key, final int index) {
 		final Collection<V> collection = get(key);
 		return CollUtil.get(collection, index);
 	}

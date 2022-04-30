@@ -10,27 +10,27 @@ import cn.hutool.core.text.StrUtil;
 public class HttpException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public HttpException(Throwable e) {
+	public HttpException(final Throwable e) {
 		super(e.getMessage(), e);
 	}
 
-	public HttpException(String message) {
+	public HttpException(final String message) {
 		super(message);
 	}
 
-	public HttpException(String messageTemplate, Object... params) {
+	public HttpException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public HttpException(String message, Throwable throwable) {
+	public HttpException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public HttpException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public HttpException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public HttpException(Throwable throwable, String messageTemplate, Object... params) {
+	public HttpException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

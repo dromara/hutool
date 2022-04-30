@@ -7,7 +7,7 @@ public class JSONNullTest {
 
 	@Test
 	public void parseNullTest(){
-		JSONObject bodyjson = JSONUtil.parseObj("{\n" +
+		final JSONObject bodyjson = JSONUtil.parseObj("{\n" +
 				"            \"device_model\": null,\n" +
 				"            \"device_status_date\": null,\n" +
 				"            \"imsi\": null,\n" +
@@ -22,7 +22,7 @@ public class JSONNullTest {
 
 	@Test
 	public void parseNullTest2(){
-		JSONObject bodyjson = JSONUtil.parseObj("{\n" +
+		final JSONObject bodyjson = JSONUtil.parseObj("{\n" +
 				"            \"device_model\": null,\n" +
 				"            \"device_status_date\": null,\n" +
 				"            \"imsi\": null,\n" +

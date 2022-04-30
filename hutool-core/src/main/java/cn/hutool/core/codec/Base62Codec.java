@@ -27,7 +27,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @return Base62内容
 	 */
 	@Override
-	public byte[] encode(byte[] data) {
+	public byte[] encode(final byte[] data) {
 		return encode(data, false);
 	}
 
@@ -38,7 +38,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param useInverted 是否使用反转风格，即将GMP风格中的大小写做转换
 	 * @return Base62内容
 	 */
-	public byte[] encode(byte[] data, boolean useInverted) {
+	public byte[] encode(final byte[] data, final boolean useInverted) {
 		final Base62Encoder encoder = useInverted ? Base62Encoder.INVERTED_ENCODER : Base62Encoder.GMP_ENCODER;
 		return encoder.encode(data);
 	}
@@ -50,7 +50,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @return 消息
 	 */
 	@Override
-	public byte[] decode(byte[] encoded) {
+	public byte[] decode(final byte[] encoded) {
 		return decode(encoded, false);
 	}
 
@@ -61,7 +61,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param useInverted 是否使用反转风格，即将GMP风格中的大小写做转换
 	 * @return 消息
 	 */
-	public byte[] decode(byte[] encoded, boolean useInverted) {
+	public byte[] decode(final byte[] encoded, final boolean useInverted) {
 		final Base62Decoder decoder = useInverted ? Base62Decoder.INVERTED_DECODER : Base62Decoder.GMP_DECODER;
 		return decoder.decode(encoded);
 	}
@@ -110,12 +110,12 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 		 *
 		 * @param alphabet 字符表
 		 */
-		public Base62Encoder(byte[] alphabet) {
+		public Base62Encoder(final byte[] alphabet) {
 			this.alphabet = alphabet;
 		}
 
 		@Override
-		public byte[] encode(byte[] data) {
+		public byte[] encode(final byte[] data) {
 			final byte[] indices = convert(data, STANDARD_BASE, TARGET_BASE);
 			return translate(indices, alphabet);
 		}
@@ -138,7 +138,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 		 *
 		 * @param alphabet 字母表
 		 */
-		public Base62Decoder(byte[] alphabet) {
+		public Base62Decoder(final byte[] alphabet) {
 			lookupTable = new byte['z' + 1];
 			for (int i = 0; i < alphabet.length; i++) {
 				lookupTable[alphabet[i]] = (byte) i;
@@ -147,7 +147,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 
 
 		@Override
-		public byte[] decode(byte[] encoded) {
+		public byte[] decode(final byte[] encoded) {
 			final byte[] prepared = translate(encoded, lookupTable);
 			return convert(prepared, TARGET_BASE, STANDARD_BASE);
 		}
@@ -162,7 +162,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param dictionary 字典
 	 * @return 转换值
 	 */
-	private static byte[] translate(byte[] indices, byte[] dictionary) {
+	private static byte[] translate(final byte[] indices, final byte[] dictionary) {
 		final byte[] translation = new byte[indices.length];
 
 		for (int i = 0; i < indices.length; i++) {
@@ -180,7 +180,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param targetBase 目标基准长度
 	 * @return 计算结果
 	 */
-	private static byte[] convert(byte[] message, int sourceBase, int targetBase) {
+	private static byte[] convert(final byte[] message, final int sourceBase, final int targetBase) {
 		// 计算结果长度，算法来自：http://codegolf.stackexchange.com/a/21672
 		final int estimatedLength = estimateOutputLength(message.length, sourceBase, targetBase);
 
@@ -193,7 +193,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 
 			int remainder = 0;
 
-			for (byte b : source) {
+			for (final byte b : source) {
 				final int accumulator = (b & 0xFF) + remainder * sourceBase;
 				final int digit = (accumulator - (accumulator % targetBase)) / targetBase;
 
@@ -225,7 +225,7 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 * @param targetBase  目标基准长度
 	 * @return 估算长度
 	 */
-	private static int estimateOutputLength(int inputLength, int sourceBase, int targetBase) {
+	private static int estimateOutputLength(final int inputLength, final int sourceBase, final int targetBase) {
 		return (int) Math.ceil((Math.log(sourceBase) / Math.log(targetBase)) * inputLength);
 	}
 	// endregion

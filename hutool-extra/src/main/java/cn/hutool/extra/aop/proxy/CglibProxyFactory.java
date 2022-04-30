@@ -14,7 +14,7 @@ public class CglibProxyFactory extends ProxyFactory {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T proxy(T target, Aspect aspect) {
+	public <T> T proxy(final T target, final Aspect aspect) {
 		final Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(target.getClass());
 		enhancer.setCallback(new CglibInterceptor(target, aspect));

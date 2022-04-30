@@ -29,7 +29,7 @@ public class NoLock implements Lock{
 
 	@SuppressWarnings("NullableProblems")
 	@Override
-	public boolean tryLock(long time, TimeUnit unit) {
+	public boolean tryLock(final long time, final TimeUnit unit) {
 		return true;
 	}
 

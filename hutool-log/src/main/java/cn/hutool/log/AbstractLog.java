@@ -19,7 +19,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	private static final String FQCN = AbstractLog.class.getName();
 
 	@Override
-	public boolean isEnabled(Level level) {
+	public boolean isEnabled(final Level level) {
 		switch (level) {
 			case TRACE:
 				return isTraceEnabled();
@@ -37,27 +37,27 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void trace(Throwable t) {
+	public void trace(final Throwable t) {
 		trace(t, ExceptionUtil.getSimpleMessage(t));
 	}
 
 	@Override
-	public void trace(String format, Object... arguments) {
+	public void trace(final String format, final Object... arguments) {
 		trace(null, format, arguments);
 	}
 
 	@Override
-	public void trace(Throwable t, String format, Object... arguments) {
+	public void trace(final Throwable t, final String format, final Object... arguments) {
 		trace(FQCN, t, format, arguments);
 	}
 
 	@Override
-	public void debug(Throwable t) {
+	public void debug(final Throwable t) {
 		debug(t, ExceptionUtil.getSimpleMessage(t));
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
+	public void debug(final String format, final Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
 			// 兼容Slf4j中的xxx(String message, Throwable e)
 			debug((Throwable)arguments[0], format);
@@ -67,17 +67,17 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void debug(Throwable t, String format, Object... arguments) {
+	public void debug(final Throwable t, final String format, final Object... arguments) {
 		debug(FQCN, t, format, arguments);
 	}
 
 	@Override
-	public void info(Throwable t) {
+	public void info(final Throwable t) {
 		info(t, ExceptionUtil.getSimpleMessage(t));
 	}
 
 	@Override
-	public void info(String format, Object... arguments) {
+	public void info(final String format, final Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
 			// 兼容Slf4j中的xxx(String message, Throwable e)
 			info((Throwable)arguments[0], format);
@@ -87,17 +87,17 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void info(Throwable t, String format, Object... arguments) {
+	public void info(final Throwable t, final String format, final Object... arguments) {
 		info(FQCN, t, format, arguments);
 	}
 
 	@Override
-	public void warn(Throwable t) {
+	public void warn(final Throwable t) {
 		warn(t, ExceptionUtil.getSimpleMessage(t));
 	}
 
 	@Override
-	public void warn(String format, Object... arguments) {
+	public void warn(final String format, final Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
 			// 兼容Slf4j中的xxx(String message, Throwable e)
 			warn((Throwable)arguments[0], format);
@@ -107,17 +107,17 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void warn(Throwable t, String format, Object... arguments) {
+	public void warn(final Throwable t, final String format, final Object... arguments) {
 		warn(FQCN, t, format, arguments);
 	}
 
 	@Override
-	public void error(Throwable t) {
+	public void error(final Throwable t) {
 		this.error(t, ExceptionUtil.getSimpleMessage(t));
 	}
 
 	@Override
-	public void error(String format, Object... arguments) {
+	public void error(final String format, final Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
 			// 兼容Slf4j中的xxx(String message, Throwable e)
 			error((Throwable)arguments[0], format);
@@ -127,12 +127,12 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void error(Throwable t, String format, Object... arguments) {
+	public void error(final Throwable t, final String format, final Object... arguments) {
 		error(FQCN, t, format, arguments);
 	}
 
 	@Override
-	public void log(Level level, String format, Object... arguments) {
+	public void log(final Level level, final String format, final Object... arguments) {
 		if(null != arguments && 1 == arguments.length && arguments[0] instanceof Throwable) {
 			// 兼容Slf4j中的xxx(String message, Throwable e)
 			log(level, (Throwable)arguments[0], format);
@@ -142,7 +142,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void log(Level level, Throwable t, String format, Object... arguments) {
+	public void log(final Level level, final Throwable t, final String format, final Object... arguments) {
 		this.log(FQCN, level, t, format, arguments);
 	}
 }

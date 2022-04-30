@@ -29,12 +29,12 @@ public class FileSystemUtil {
 	 * @param path 文件路径，可以是目录或Zip文件等
 	 * @return {@link FileSystem}
 	 */
-	public static FileSystem create(String path) {
+	public static FileSystem create(final String path) {
 		try {
 			return FileSystems.newFileSystem(
 					Paths.get(path).toUri(),
 					MapUtil.of("create", "true"));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -45,7 +45,7 @@ public class FileSystemUtil {
 	 * @param path 文件路径，可以是目录或Zip文件等
 	 * @return {@link FileSystem}
 	 */
-	public static FileSystem createZip(String path) {
+	public static FileSystem createZip(final String path) {
 		return createZip(path, null);
 	}
 
@@ -56,7 +56,7 @@ public class FileSystemUtil {
 	 * @param charset 编码
 	 * @return {@link FileSystem}
 	 */
-	public static FileSystem createZip(String path, Charset charset) {
+	public static FileSystem createZip(final String path, Charset charset) {
 		if(null == charset){
 			charset = CharsetUtil.UTF_8;
 		}
@@ -67,7 +67,7 @@ public class FileSystemUtil {
 		try {
 			return FileSystems.newFileSystem(
 					URI.create("jar:" + Paths.get(path).toUri()), env);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -78,7 +78,7 @@ public class FileSystemUtil {
 	 * @param fileSystem {@link FileSystem}
 	 * @return 根 {@link Path}
 	 */
-	public static Path getRoot(FileSystem fileSystem) {
+	public static Path getRoot(final FileSystem fileSystem) {
 		return fileSystem.getPath(StrUtil.SLASH);
 	}
 }

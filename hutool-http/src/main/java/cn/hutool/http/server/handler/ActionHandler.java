@@ -23,12 +23,12 @@ public class ActionHandler implements HttpHandler {
 	 *
 	 * @param action Action
 	 */
-	public ActionHandler(Action action) {
+	public ActionHandler(final Action action) {
 		this.action = action;
 	}
 
 	@Override
-	public void handle(HttpExchange httpExchange) throws IOException {
+	public void handle(final HttpExchange httpExchange) throws IOException {
 		action.doAction(
 				new HttpServerRequest(httpExchange),
 				new HttpServerResponse(httpExchange)

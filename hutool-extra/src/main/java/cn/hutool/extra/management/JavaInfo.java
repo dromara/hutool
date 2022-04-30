@@ -108,9 +108,9 @@ public class JavaInfo implements Serializable {
 			return 0;
 		}
 
-		String javaVersion = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2}){0,2}", JAVA_VERSION, 0);
+		final String javaVersion = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2}){0,2}", JAVA_VERSION, 0);
 
-		String[] split = javaVersion.split("\\.");
+		final String[] split = javaVersion.split("\\.");
 		String result = ArrayUtil.join(split, "");
 
 		//保证java10及其之后的版本返回的值为4位
@@ -297,7 +297,7 @@ public class JavaInfo implements Serializable {
 	 * @param versionPrefix Java版本前缀
 	 * @return 如果版本匹配，则返回{@code true}
 	 */
-	private boolean getJavaVersionMatches(String versionPrefix) {
+	private boolean getJavaVersionMatches(final String versionPrefix) {
 		if (JAVA_VERSION == null) {
 			return false;
 		}
@@ -320,7 +320,7 @@ public class JavaInfo implements Serializable {
 	 * @param requiredVersion 需要的版本
 	 * @return 如果当前Java版本大于或等于指定的版本，则返回{@code true}
 	 */
-	public final boolean isJavaVersionAtLeast(float requiredVersion) {
+	public final boolean isJavaVersionAtLeast(final float requiredVersion) {
 		return getVersionFloat() >= requiredVersion;
 	}
 
@@ -339,7 +339,7 @@ public class JavaInfo implements Serializable {
 	 * @param requiredVersion 需要的版本
 	 * @return 如果当前Java版本大于或等于指定的版本，则返回{@code true}
 	 */
-	public final boolean isJavaVersionAtLeast(int requiredVersion) {
+	public final boolean isJavaVersionAtLeast(final int requiredVersion) {
 		return getVersionInt() >= requiredVersion;
 	}
 
@@ -350,7 +350,7 @@ public class JavaInfo implements Serializable {
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "Java Version:    ", getVersion());
 		ManagementUtil.append(builder, "Java Vendor:     ", getVendor());

@@ -25,7 +25,7 @@ public class AviatorEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context) {
 		return engine.execute(expression, context);
 	}
 

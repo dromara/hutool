@@ -12,7 +12,7 @@ import cn.hutool.extra.tokenizer.Word;
 /**
  * Lucene-analysis分词抽象结果封装<br>
  * 项目地址：https://github.com/apache/lucene-solr/tree/master/lucene/analysis
- * 
+ *
  * @author looly
  *
  */
@@ -22,10 +22,10 @@ public class AnalysisResult extends AbstractResult {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param stream 分词结果
 	 */
-	public AnalysisResult(TokenStream stream) {
+	public AnalysisResult(final TokenStream stream) {
 		this.stream = stream;
 	}
 
@@ -35,7 +35,7 @@ public class AnalysisResult extends AbstractResult {
 			if(this.stream.incrementToken()) {
 				return new AnalysisWord(this.stream.getAttribute(CharTermAttribute.class));
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		return null;

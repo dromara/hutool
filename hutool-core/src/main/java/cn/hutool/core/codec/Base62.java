@@ -27,7 +27,7 @@ public class Base62 {
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(CharSequence source) {
+	public static String encode(final CharSequence source) {
 		return encode(source, DEFAULT_CHARSET);
 	}
 
@@ -38,7 +38,7 @@ public class Base62 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(CharSequence source, Charset charset) {
+	public static String encode(final CharSequence source, final Charset charset) {
 		return encode(StrUtil.bytes(source, charset));
 	}
 
@@ -48,7 +48,7 @@ public class Base62 {
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(byte[] source) {
+	public static String encode(final byte[] source) {
 		return new String(Base62Codec.INSTANCE.encode(source));
 	}
 
@@ -58,7 +58,7 @@ public class Base62 {
 	 * @param in 被编码Base62的流（一般为图片流或者文件流）
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(InputStream in) {
+	public static String encode(final InputStream in) {
 		return encode(IoUtil.readBytes(in));
 	}
 
@@ -68,7 +68,7 @@ public class Base62 {
 	 * @param file 被编码Base62的文件
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(File file) {
+	public static String encode(final File file) {
 		return encode(FileUtil.readBytes(file));
 	}
 
@@ -78,7 +78,7 @@ public class Base62 {
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeInverted(CharSequence source) {
+	public static String encodeInverted(final CharSequence source) {
 		return encodeInverted(source, DEFAULT_CHARSET);
 	}
 
@@ -89,7 +89,7 @@ public class Base62 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeInverted(CharSequence source, Charset charset) {
+	public static String encodeInverted(final CharSequence source, final Charset charset) {
 		return encodeInverted(StrUtil.bytes(source, charset));
 	}
 
@@ -99,7 +99,7 @@ public class Base62 {
 	 * @param source 被编码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeInverted(byte[] source) {
+	public static String encodeInverted(final byte[] source) {
 		return new String(Base62Codec.INSTANCE.encode(source, true));
 	}
 
@@ -109,7 +109,7 @@ public class Base62 {
 	 * @param in 被编码Base62的流（一般为图片流或者文件流）
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeInverted(InputStream in) {
+	public static String encodeInverted(final InputStream in) {
 		return encodeInverted(IoUtil.readBytes(in));
 	}
 
@@ -119,7 +119,7 @@ public class Base62 {
 	 * @param file 被编码Base62的文件
 	 * @return 被加密后的字符串
 	 */
-	public static String encodeInverted(File file) {
+	public static String encodeInverted(final File file) {
 		return encodeInverted(FileUtil.readBytes(file));
 	}
 
@@ -130,7 +130,7 @@ public class Base62 {
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStrGbk(CharSequence source) {
+	public static String decodeStrGbk(final CharSequence source) {
 		return decodeStr(source, CharsetUtil.GBK);
 	}
 
@@ -140,7 +140,7 @@ public class Base62 {
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(CharSequence source) {
+	public static String decodeStr(final CharSequence source) {
 		return decodeStr(source, DEFAULT_CHARSET);
 	}
 
@@ -151,7 +151,7 @@ public class Base62 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(CharSequence source, Charset charset) {
+	public static String decodeStr(final CharSequence source, final Charset charset) {
 		return StrUtil.str(decode(source), charset);
 	}
 
@@ -162,7 +162,7 @@ public class Base62 {
 	 * @param destFile 目标文件
 	 * @return 目标文件
 	 */
-	public static File decodeToFile(CharSequence Base62, File destFile) {
+	public static File decodeToFile(final CharSequence Base62, final File destFile) {
 		return FileUtil.writeBytes(decode(Base62), destFile);
 	}
 
@@ -173,7 +173,7 @@ public class Base62 {
 	 * @param out 写出到的流
 	 * @param isCloseOut 是否关闭输出流
 	 */
-	public static void decodeToStream(CharSequence base62Str, OutputStream out, boolean isCloseOut) {
+	public static void decodeToStream(final CharSequence base62Str, final OutputStream out, final boolean isCloseOut) {
 		IoUtil.write(out, isCloseOut, decode(base62Str));
 	}
 
@@ -183,7 +183,7 @@ public class Base62 {
 	 * @param base62Str 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static byte[] decode(CharSequence base62Str) {
+	public static byte[] decode(final CharSequence base62Str) {
 		return decode(StrUtil.bytes(base62Str, DEFAULT_CHARSET));
 	}
 
@@ -193,7 +193,7 @@ public class Base62 {
 	 * @param base62bytes Base62输入
 	 * @return 解码后的bytes
 	 */
-	public static byte[] decode(byte[] base62bytes) {
+	public static byte[] decode(final byte[] base62bytes) {
 		return Base62Codec.INSTANCE.decode(base62bytes);
 	}
 
@@ -203,7 +203,7 @@ public class Base62 {
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStrInverted(CharSequence source) {
+	public static String decodeStrInverted(final CharSequence source) {
 		return decodeStrInverted(source, DEFAULT_CHARSET);
 	}
 
@@ -214,7 +214,7 @@ public class Base62 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStrInverted(CharSequence source, Charset charset) {
+	public static String decodeStrInverted(final CharSequence source, final Charset charset) {
 		return StrUtil.str(decodeInverted(source), charset);
 	}
 
@@ -225,7 +225,7 @@ public class Base62 {
 	 * @param destFile 目标文件
 	 * @return 目标文件
 	 */
-	public static File decodeToFileInverted(CharSequence Base62, File destFile) {
+	public static File decodeToFileInverted(final CharSequence Base62, final File destFile) {
 		return FileUtil.writeBytes(decodeInverted(Base62), destFile);
 	}
 
@@ -236,7 +236,7 @@ public class Base62 {
 	 * @param out 写出到的流
 	 * @param isCloseOut 是否关闭输出流
 	 */
-	public static void decodeToStreamInverted(CharSequence base62Str, OutputStream out, boolean isCloseOut) {
+	public static void decodeToStreamInverted(final CharSequence base62Str, final OutputStream out, final boolean isCloseOut) {
 		IoUtil.write(out, isCloseOut, decodeInverted(base62Str));
 	}
 
@@ -246,7 +246,7 @@ public class Base62 {
 	 * @param base62Str 被解码的Base62字符串
 	 * @return 被加密后的字符串
 	 */
-	public static byte[] decodeInverted(CharSequence base62Str) {
+	public static byte[] decodeInverted(final CharSequence base62Str) {
 		return decodeInverted(StrUtil.bytes(base62Str, DEFAULT_CHARSET));
 	}
 
@@ -256,7 +256,7 @@ public class Base62 {
 	 * @param base62bytes Base62输入
 	 * @return 解码后的bytes
 	 */
-	public static byte[] decodeInverted(byte[] base62bytes) {
+	public static byte[] decodeInverted(final byte[] base62bytes) {
 		return Base62Codec.INSTANCE.decode(base62bytes, true);
 	}
 }

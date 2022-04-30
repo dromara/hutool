@@ -19,7 +19,7 @@ public class MynlpWord implements Word {
 	 *
 	 * @param word {@link WordTerm}
 	 */
-	public MynlpWord(WordTerm word) {
+	public MynlpWord(final WordTerm word) {
 		this.word = word;
 	}
 

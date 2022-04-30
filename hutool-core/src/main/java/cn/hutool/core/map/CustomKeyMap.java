@@ -20,13 +20,13 @@ public abstract class CustomKeyMap<K, V> extends TransMap<K, V> {
 	 * @param emptyMap Map 被包装的Map，必须为空Map，否则自定义key会无效
 	 * @since 3.1.2
 	 */
-	public CustomKeyMap(Map<K, V> emptyMap) {
+	public CustomKeyMap(final Map<K, V> emptyMap) {
 		super(emptyMap);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected V customValue(Object value) {
+	protected V customValue(final Object value) {
 		return (V)value;
 	}
 }

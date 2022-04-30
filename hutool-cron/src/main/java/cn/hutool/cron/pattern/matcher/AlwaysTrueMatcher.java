@@ -12,12 +12,12 @@ public class AlwaysTrueMatcher implements PartMatcher {
 	public static AlwaysTrueMatcher INSTANCE = new AlwaysTrueMatcher();
 
 	@Override
-	public boolean match(Integer t) {
+	public boolean match(final Integer t) {
 		return true;
 	}
 
 	@Override
-	public int nextAfter(int value) {
+	public int nextAfter(final int value) {
 		return value;
 	}
 

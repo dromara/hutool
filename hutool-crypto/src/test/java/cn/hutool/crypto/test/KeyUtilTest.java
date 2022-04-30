@@ -20,7 +20,7 @@ public class KeyUtilTest {
 	@Ignore
 	public void generateKeyPairTest() {
 		GlobalBouncyCastleProvider.setUseBouncyCastle(false);
-		KeyPair pair = KeyUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		Assert.assertNotNull(pair);
 	}
 
@@ -41,7 +41,7 @@ public class KeyUtilTest {
 		Assert.assertNotNull(ecies.getPrivate());
 		Assert.assertNotNull(ecies.getPublic());
 
-		byte[] privateKeyBytes = ecies.getPrivate().getEncoded();
+		final byte[] privateKeyBytes = ecies.getPrivate().getEncoded();
 
 		final PrivateKey privateKey = KeyUtil.generatePrivateKey("EC", privateKeyBytes);
 		Assert.assertEquals(ecies.getPrivate(), privateKey);
@@ -53,7 +53,7 @@ public class KeyUtilTest {
 		Assert.assertNotNull(dh.getPrivate());
 		Assert.assertNotNull(dh.getPublic());
 
-		byte[] privateKeyBytes = dh.getPrivate().getEncoded();
+		final byte[] privateKeyBytes = dh.getPrivate().getEncoded();
 
 		final PrivateKey privateKey = KeyUtil.generatePrivateKey("DH", privateKeyBytes);
 		Assert.assertEquals(dh.getPrivate(), privateKey);

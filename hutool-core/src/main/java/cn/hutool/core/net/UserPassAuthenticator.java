@@ -18,7 +18,7 @@ public class UserPassAuthenticator extends Authenticator {
 	 * @param pass 密码
 	 * @return PassAuth
 	 */
-	public static UserPassAuthenticator of(String user, char[] pass) {
+	public static UserPassAuthenticator of(final String user, final char[] pass) {
 		return new UserPassAuthenticator(user, pass);
 	}
 
@@ -30,7 +30,7 @@ public class UserPassAuthenticator extends Authenticator {
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public UserPassAuthenticator(String user, char[] pass) {
+	public UserPassAuthenticator(final String user, final char[] pass) {
 		auth = new PasswordAuthentication(user, pass);
 	}
 

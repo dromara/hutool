@@ -210,7 +210,7 @@ public class HttpStatus {
 	 * @return 是否为重定向状态码
 	 * @since 5.6.3
 	 */
-	public static boolean isRedirected(int responseCode){
+	public static boolean isRedirected(final int responseCode){
 		return responseCode == HTTP_MOVED_PERM
 				|| responseCode == HTTP_MOVED_TEMP
 				|| responseCode == HTTP_SEE_OTHER

@@ -30,14 +30,14 @@ public class TemplateUtilTest {
 	public void createEngineTest() {
 		// 字符串模板, 默认模板引擎，此处为Beetl
 		TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig());
-		Template template = engine.getTemplate("hello,${name}");
-		String result = template.render(Dict.create().set("name", "hutool"));
+		final Template template = engine.getTemplate("hello,${name}");
+		final String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 
 		// classpath中获取模板
 		engine = TemplateUtil.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
-		Template template2 = engine.getTemplate("beetl_test.btl");
-		String result2 = template2.render(Dict.create().set("name", "hutool"));
+		final Template template2 = engine.getTemplate("beetl_test.btl");
+		final String result2 = template2.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result2);
 	}
 
@@ -45,29 +45,29 @@ public class TemplateUtilTest {
 	public void beetlEngineTest() {
 		// 字符串模板
 		TemplateEngine engine = new BeetlEngine(new TemplateConfig("templates"));
-		Template template = engine.getTemplate("hello,${name}");
-		String result = template.render(Dict.create().set("name", "hutool"));
+		final Template template = engine.getTemplate("hello,${name}");
+		final String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 
 		// classpath中获取模板
 		engine = new BeetlEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
-		Template template2 = engine.getTemplate("beetl_test.btl");
-		String result2 = template2.render(Dict.create().set("name", "hutool"));
+		final Template template2 = engine.getTemplate("beetl_test.btl");
+		final String result2 = template2.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result2);
 	}
 
 	@Test
 	public void rythmEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(
+		final TemplateEngine engine = TemplateUtil.createEngine(
 				new TemplateConfig("templates").setCustomEngine(RythmEngine.class));
-		Template template = engine.getTemplate("hello,@name");
-		String result = template.render(Dict.create().set("name", "hutool"));
+		final Template template = engine.getTemplate("hello,@name");
+		final String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 
 		// classpath中获取模板
-		Template template2 = engine.getTemplate("rythm_test.tmpl");
-		String result2 = template2.render(Dict.create().set("name", "hutool"));
+		final Template template2 = engine.getTemplate("rythm_test.tmpl");
+		final String result2 = template2.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result2);
 	}
 
@@ -146,12 +146,12 @@ public class TemplateUtilTest {
 	@Test
 	@Ignore
 	public void renderToFileTest() {
-		TemplateEngine engine = new BeetlEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
-		Template template = engine.getTemplate("freemarker_test.ftl");
+		final TemplateEngine engine = new BeetlEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		final Template template = engine.getTemplate("freemarker_test.ftl");
 
 		final Map<String, Object> bindingMap = new HashMap<>();
 		bindingMap.put("name", "aa");
-		File outputFile = new File("e:/test.txt");
+		final File outputFile = new File("e:/test.txt");
 		template.render(bindingMap, outputFile);
 	}
 

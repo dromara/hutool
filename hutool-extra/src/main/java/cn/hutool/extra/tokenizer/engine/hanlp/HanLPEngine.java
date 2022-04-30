@@ -31,12 +31,12 @@ public class HanLPEngine implements TokenizerEngine {
 	 *
 	 * @param seg {@link Segment}
 	 */
-	public HanLPEngine(Segment seg) {
+	public HanLPEngine(final Segment seg) {
 		this.seg = seg;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		return new HanLPResult(this.seg.seg(StrUtil.str(text)));
 	}
 

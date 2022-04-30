@@ -37,7 +37,7 @@ public class UploadFile {
 	 * @param header  头部信息
 	 * @param setting 上传设置
 	 */
-	public UploadFile(UploadFileHeader header, UploadSetting setting) {
+	public UploadFile(final UploadFileHeader header, final UploadSetting setting) {
 		this.header = header;
 		this.setting = setting;
 	}
@@ -65,7 +65,7 @@ public class UploadFile {
 	 * @return 目标文件
 	 * @throws IOException IO异常
 	 */
-	public File write(String destPath) throws IOException {
+	public File write(final String destPath) throws IOException {
 		if (data != null || tempFile != null) {
 			return write(FileUtil.file(destPath));
 		}
@@ -184,7 +184,7 @@ public class UploadFile {
 	 * @return 是否成功
 	 * @throws IOException IO异常
 	 */
-	protected boolean processStream(MultipartRequestInputStream input) throws IOException {
+	protected boolean processStream(final MultipartRequestInputStream input) throws IOException {
 		if (!isAllowedExtension()) {
 			// 非允许的扩展名
 			size = input.skipToBoundary();
@@ -193,7 +193,7 @@ public class UploadFile {
 		size = 0;
 
 		// 处理内存文件
-		int memoryThreshold = setting.memoryThreshold;
+		final int memoryThreshold = setting.memoryThreshold;
 		if (memoryThreshold > 0) {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
 			final long written = input.copy(baos, memoryThreshold);
@@ -241,14 +241,14 @@ public class UploadFile {
 	 */
 	private boolean isAllowedExtension() {
 		final String[] exts = setting.fileExts;
-		boolean isAllow = setting.isAllowFileExts;
+		final boolean isAllow = setting.isAllowFileExts;
 		if (exts == null || exts.length == 0) {
 			// 如果给定扩展名列表为空，当允许扩展名时全部允许，否则全部禁止
 			return isAllow;
 		}
 
 		final String fileNameExt = FileUtil.extName(this.getFileName());
-		for (String fileExtension : setting.fileExts) {
+		for (final String fileExtension : setting.fileExts) {
 			if (fileNameExt.equalsIgnoreCase(fileExtension)) {
 				return isAllow;
 			}

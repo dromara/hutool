@@ -36,7 +36,7 @@ public class AioServer implements Closeable {
 	 *
 	 * @param port 端口
 	 */
-	public AioServer(int port) {
+	public AioServer(final int port) {
 		this(new InetSocketAddress(port), new SocketConfig());
 	}
 
@@ -46,7 +46,7 @@ public class AioServer implements Closeable {
 	 * @param address 地址
 	 * @param config  {@link SocketConfig} 配置项
 	 */
-	public AioServer(InetSocketAddress address, SocketConfig config) {
+	public AioServer(final InetSocketAddress address, final SocketConfig config) {
 		this.config = config;
 		init(address);
 	}
@@ -57,14 +57,14 @@ public class AioServer implements Closeable {
 	 * @param address 地址和端口
 	 * @return this
 	 */
-	public AioServer init(InetSocketAddress address) {
+	public AioServer init(final InetSocketAddress address) {
 		try {
 			this.group = AsynchronousChannelGroup.withFixedThreadPool(//
 					config.getThreadPoolSize(), // 默认线程池大小
 					ThreadFactoryBuilder.create().setNamePrefix("Hutool-socket-").build()//
 			);
 			this.channel = AsynchronousServerSocketChannel.open(group).bind(address);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -75,7 +75,7 @@ public class AioServer implements Closeable {
 	 *
 	 * @param sync 是否阻塞
 	 */
-	public void start(boolean sync) {
+	public void start(final boolean sync) {
 		doStart(sync);
 	}
 
@@ -89,7 +89,7 @@ public class AioServer implements Closeable {
 	 * @return this
 	 * @throws IOException IO异常
 	 */
-	public <T> AioServer setOption(SocketOption<T> name, T value) throws IOException {
+	public <T> AioServer setOption(final SocketOption<T> name, final T value) throws IOException {
 		this.channel.setOption(name, value);
 		return this;
 	}
@@ -109,7 +109,7 @@ public class AioServer implements Closeable {
 	 * @param ioAction {@link IoAction}
 	 * @return this;
 	 */
-	public AioServer setIoAction(IoAction<ByteBuffer> ioAction) {
+	public AioServer setIoAction(final IoAction<ByteBuffer> ioAction) {
 		this.ioAction = ioAction;
 		return this;
 	}
@@ -152,7 +152,7 @@ public class AioServer implements Closeable {
 		if (null != this.group && false == this.group.isShutdown()) {
 			try {
 				this.group.shutdownNow();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 		}
@@ -170,7 +170,7 @@ public class AioServer implements Closeable {
 	 *
 	 * @param sync 是否阻塞
 	 */
-	private void doStart(boolean sync) {
+	private void doStart(final boolean sync) {
 		log.debug("Aio Server started, waiting for accept.");
 
 		// 接收客户端连接

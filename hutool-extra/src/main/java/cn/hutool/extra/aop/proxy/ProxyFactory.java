@@ -24,7 +24,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @return 代理对象
 	 * @since 5.3.1
 	 */
-	public <T> T proxy(T target, Class<? extends Aspect> aspectClass) {
+	public <T> T proxy(final T target, final Class<? extends Aspect> aspectClass) {
 		return proxy(target, ReflectUtil.newInstanceIfPossible(aspectClass));
 	}
 
@@ -46,7 +46,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @param aspectClass 切面对象类
 	 * @return 代理对象
 	 */
-	public static <T> T createProxy(T target, Class<? extends Aspect> aspectClass) {
+	public static <T> T createProxy(final T target, final Class<? extends Aspect> aspectClass) {
 		return createProxy(target, ReflectUtil.newInstance(aspectClass));
 	}
 
@@ -58,7 +58,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @param aspect 切面实现
 	 * @return 代理对象
 	 */
-	public static <T> T createProxy(T target, Aspect aspect) {
+	public static <T> T createProxy(final T target, final Aspect aspect) {
 		return create().proxy(target, aspect);
 	}
 

@@ -26,13 +26,13 @@ public class ReferenceConverter extends AbstractConverter<Reference> {
 	 * 构造
 	 * @param targetType {@link Reference}实现类型
 	 */
-	public ReferenceConverter(Class<? extends Reference> targetType) {
+	public ReferenceConverter(final Class<? extends Reference> targetType) {
 		this.targetType = targetType;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Reference<?> convertInternal(Object value) {
+	protected Reference<?> convertInternal(final Object value) {
 
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;

@@ -44,7 +44,7 @@ public class FPE implements Serializable {
 	 * @param key    密钥，{@code null}表示随机密钥，长度必须是16bit、24bit或32bit
 	 * @param mapper Alphabet字典映射，被加密的字符范围和这个映射必须一致，例如手机号、银行卡号等字段可以采用数字字母字典表
 	 */
-	public FPE(FPEMode mode, byte[] key, AlphabetMapper mapper) {
+	public FPE(final FPEMode mode, final byte[] key, final AlphabetMapper mapper) {
 		this(mode, key, mapper, null);
 	}
 
@@ -56,7 +56,7 @@ public class FPE implements Serializable {
 	 * @param mapper Alphabet字典映射，被加密的字符范围和这个映射必须一致，例如手机号、银行卡号等字段可以采用数字字母字典表
 	 * @param tweak  Tweak是为了解决因局部加密而导致结果冲突问题，通常情况下将数据的不可变部分作为Tweak，{@code null}使用默认长度全是0的bytes
 	 */
-	public FPE(FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
+	public FPE(FPEMode mode, final byte[] key, final AlphabetMapper mapper, byte[] tweak) {
 		if (null == mode) {
 			mode = FPEMode.FF1;
 		}
@@ -83,7 +83,7 @@ public class FPE implements Serializable {
 	 * @param data 数据，数据必须在构造传入的{@link AlphabetMapper}中定义的范围
 	 * @return 密文结果
 	 */
-	public String encrypt(String data) {
+	public String encrypt(final String data) {
 		if (null == data) {
 			return null;
 		}
@@ -96,7 +96,7 @@ public class FPE implements Serializable {
 	 * @param data 数据，数据必须在构造传入的{@link AlphabetMapper}中定义的范围
 	 * @return 密文结果
 	 */
-	public char[] encrypt(char[] data) {
+	public char[] encrypt(final char[] data) {
 		if (null == data) {
 			return null;
 		}
@@ -110,7 +110,7 @@ public class FPE implements Serializable {
 	 * @param data 密文数据，数据必须在构造传入的{@link AlphabetMapper}中定义的范围
 	 * @return 明文结果
 	 */
-	public String decrypt(String data) {
+	public String decrypt(final String data) {
 		if (null == data) {
 			return null;
 		}
@@ -123,7 +123,7 @@ public class FPE implements Serializable {
 	 * @param data 密文数据，数据必须在构造传入的{@link AlphabetMapper}中定义的范围
 	 * @return 明文结果
 	 */
-	public char[] decrypt(char[] data) {
+	public char[] decrypt(final char[] data) {
 		if (null == data) {
 			return null;
 		}
@@ -149,7 +149,7 @@ public class FPE implements Serializable {
 
 		private final String value;
 
-		FPEMode(String name) {
+		FPEMode(final String name) {
 			this.value = name;
 		}
 

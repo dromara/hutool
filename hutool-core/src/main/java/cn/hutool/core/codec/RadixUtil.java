@@ -51,9 +51,9 @@ public class RadixUtil {
 	 * @param num    要转换的数值
 	 * @return 自定义进制字符串
 	 */
-	public static String encode(String radixs, int num) {
+	public static String encode(final String radixs, final int num) {
 		//考虑到负数问题
-		long tmpNum = (num >= 0 ? num : (0x100000000L - (~num + 1)));
+		final long tmpNum = (num >= 0 ? num : (0x100000000L - (~num + 1)));
 		return encode(radixs, tmpNum, 32);
 	}
 
@@ -64,7 +64,7 @@ public class RadixUtil {
 	 * @param num    要转换的数值
 	 * @return 自定义进制字符串
 	 */
-	public static String encode(String radixs, long num) {
+	public static String encode(final String radixs, final long num) {
 		if (num < 0) {
 			throw new RuntimeException("暂不支持负数！");
 		}
@@ -79,7 +79,7 @@ public class RadixUtil {
 	 * @param encodeStr 需要转换成十进制的字符串
 	 * @return int
 	 */
-	public static int decodeToInt(String radixs, String encodeStr) {
+	public static int decodeToInt(final String radixs, final String encodeStr) {
 		//还原负数
 		return (int) decode(radixs, encodeStr);
 	}
@@ -91,29 +91,29 @@ public class RadixUtil {
 	 * @param encodeStr 需要转换成十进制的字符串
 	 * @return long
 	 */
-	public static long decode(String radixs, String encodeStr) {
+	public static long decode(final String radixs, final String encodeStr) {
 		//目标是多少进制
-		int rl = radixs.length();
+		final int rl = radixs.length();
 		long res = 0L;
 
-		for (char c : encodeStr.toCharArray()) {
+		for (final char c : encodeStr.toCharArray()) {
 			res = res * rl + radixs.indexOf(c);
 		}
 		return res;
 	}
 
 	// -------------------------------------------------------------------------------- Private methods
-	private static String encode(String radixs, long num, int maxLength) {
+	private static String encode(final String radixs, final long num, final int maxLength) {
 		if (radixs.length() < 2) {
 			throw new RuntimeException("自定义进制最少两个字符哦！");
 		}
 		//目标是多少进制
-		int rl = radixs.length();
+		final int rl = radixs.length();
 		//考虑到负数问题
 		long tmpNum = num;
 		//进制的结果，二进制最小进制转换结果是32个字符
 		//StringBuilder 比较耗时
-		char[] aa = new char[maxLength];
+		final char[] aa = new char[maxLength];
 		//因为反需字符串比较耗时
 		int i = aa.length;
 		do {

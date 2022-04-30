@@ -9,41 +9,41 @@ import java.util.Map;
 
 /**
  * Beetl模板实现
- * 
+ *
  * @author looly
  */
 public class BeetlTemplate extends AbstractTemplate implements Serializable{
 	private static final long serialVersionUID = -8157926902932567280L;
 
 	private final org.beetl.core.Template rawTemplate;
-	
+
 	/**
 	 * 包装Beetl模板
-	 * 
+	 *
 	 * @param beetlTemplate Beetl的模板对象 {@link org.beetl.core.Template}
 	 * @return BeetlTemplate
 	 */
-	public static BeetlTemplate wrap(org.beetl.core.Template beetlTemplate) {
+	public static BeetlTemplate wrap(final org.beetl.core.Template beetlTemplate) {
 		return (null == beetlTemplate) ? null : new BeetlTemplate(beetlTemplate);
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param beetlTemplate Beetl的模板对象 {@link org.beetl.core.Template}
 	 */
-	public BeetlTemplate(org.beetl.core.Template beetlTemplate) {
+	public BeetlTemplate(final org.beetl.core.Template beetlTemplate) {
 		this.rawTemplate = beetlTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		rawTemplate.binding(bindingMap);
 		rawTemplate.renderTo(writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		rawTemplate.binding(bindingMap);
 		rawTemplate.renderTo(out);
 	}

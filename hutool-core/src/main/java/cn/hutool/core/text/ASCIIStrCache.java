@@ -24,7 +24,7 @@ public class ASCIIStrCache {
 	 * @param c 字符
 	 * @return 字符串
 	 */
-	public static String toString(char c) {
+	public static String toString(final char c) {
 		return c < ASCII_LENGTH ? CACHE[c] : String.valueOf(c);
 	}
 }

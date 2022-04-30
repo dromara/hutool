@@ -29,7 +29,7 @@ public class JetbrickEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public JetbrickEngine(TemplateConfig config) {
+	public JetbrickEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -38,14 +38,14 @@ public class JetbrickEngine implements TemplateEngine {
 	 *
 	 * @param engine {@link JetEngine}
 	 */
-	public JetbrickEngine(JetEngine engine) {
+	public JetbrickEngine(final JetEngine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 
 
 	@Override
-	public TemplateEngine init(TemplateConfig config) {
+	public TemplateEngine init(final TemplateConfig config) {
 		init(createEngine(config));
 		return this;
 	}
@@ -54,12 +54,12 @@ public class JetbrickEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(JetEngine engine){
+	private void init(final JetEngine engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
@@ -77,7 +77,7 @@ public class JetbrickEngine implements TemplateEngine {
 			config = TemplateConfig.DEFAULT;
 		}
 
-		Properties props = new Properties();
+		final Properties props = new Properties();
 		props.setProperty("jetx.input.encoding", config.getCharsetStr());
 		props.setProperty("jetx.output.encoding", config.getCharsetStr());
 		props.setProperty("jetx.template.loaders", "$loader");

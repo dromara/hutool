@@ -10,17 +10,17 @@ import java.util.List;
  *
  */
 public class SuiteReport {
-	
+
 	/**
 	 * 包含的用例测试报告
 	 */
 	private List<CaseReport> caseReports = new ArrayList<>();
-	
+
 	public List<CaseReport> getCaseReports() {
 		return caseReports;
 	}
 
-	public void setCaseReports(List<CaseReport> caseReports) {
+	public void setCaseReports(final List<CaseReport> caseReports) {
 		this.caseReports = caseReports;
 	}
 

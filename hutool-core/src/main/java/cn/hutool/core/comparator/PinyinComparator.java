@@ -24,7 +24,7 @@ public class PinyinComparator implements Comparator<String>, Serializable {
 	}
 
 	@Override
-	public int compare(String o1, String o2) {
+	public int compare(final String o1, final String o2) {
 		return collator.compare(o1, o2);
 	}
 

@@ -30,7 +30,7 @@ public class CglibUtil {
 	 * @param targetClass 目标bean类，自动实例化此对象
 	 * @return 目标对象
 	 */
-	public static <T> T copy(Object source, Class<T> targetClass) {
+	public static <T> T copy(final Object source, final Class<T> targetClass) {
 		return copy(source, targetClass, null);
 	}
 
@@ -44,7 +44,7 @@ public class CglibUtil {
 	 * @param converter   转换器，无需可传{@code null}
 	 * @return 目标对象
 	 */
-	public static <T> T copy(Object source, Class<T> targetClass, Converter converter) {
+	public static <T> T copy(final Object source, final Class<T> targetClass, final Converter converter) {
 		final T target = ReflectUtil.newInstanceIfPossible(targetClass);
 		copy(source, target, converter);
 		return target;
@@ -56,7 +56,7 @@ public class CglibUtil {
 	 * @param source 源bean对象
 	 * @param target 目标bean对象
 	 */
-	public static void copy(Object source, Object target) {
+	public static void copy(final Object source, final Object target) {
 		copy(source, target, null);
 	}
 
@@ -67,7 +67,7 @@ public class CglibUtil {
 	 * @param target    目标bean对象
 	 * @param converter 转换器，无需可传{@code null}
 	 */
-	public static void copy(Object source, Object target, Converter converter) {
+	public static void copy(final Object source, final Object target, final Converter converter) {
 		Assert.notNull(source, "Source bean must be not null.");
 		Assert.notNull(target, "Target bean must be not null.");
 
@@ -87,7 +87,7 @@ public class CglibUtil {
 	 * @param target 目标bean对象
 	 * @return 目标bean对象list
 	 */
-	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target) {
+	public static <S, T> List<T> copyList(final Collection<S> source, final Supplier<T> target) {
 		return copyList(source, target, null, null);
 	}
 
@@ -102,7 +102,7 @@ public class CglibUtil {
 	 * @return 目标bean对象list
 	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter) {
+	public static <S, T> List<T> copyList(final Collection<S> source, final Supplier<T> target, final Converter converter) {
 		return copyList(source, target, converter, null);
 	}
 
@@ -117,7 +117,7 @@ public class CglibUtil {
 	 * @return 目标bean对象list
 	 * @since 5.4.1
 	 */
-	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, BiConsumer<S, T> callback) {
+	public static <S, T> List<T> copyList(final Collection<S> source, final Supplier<T> target, final BiConsumer<S, T> callback) {
 		return copyList(source, target, null, callback);
 	}
 
@@ -132,9 +132,9 @@ public class CglibUtil {
 	 * @param <T>       目标bean类型
 	 * @return 目标bean对象list
 	 */
-	public static <S, T> List<T> copyList(Collection<S> source, Supplier<T> target, Converter converter, BiConsumer<S, T> callback) {
+	public static <S, T> List<T> copyList(final Collection<S> source, final Supplier<T> target, final Converter converter, final BiConsumer<S, T> callback) {
 		return source.stream().map(s -> {
-			T t = target.get();
+			final T t = target.get();
 			copy(s, t, converter);
 			if (callback != null) {
 				callback.accept(s, t);
@@ -150,7 +150,7 @@ public class CglibUtil {
 	 * @return {@link BeanMap}
 	 * @since 5.4.1
 	 */
-	public static BeanMap toMap(Object bean) {
+	public static BeanMap toMap(final Object bean) {
 		return BeanMap.create(bean);
 	}
 
@@ -163,7 +163,7 @@ public class CglibUtil {
 	 * @since 5.6.3
 	 */
 	@SuppressWarnings("rawtypes")
-	public static <T> T fillBean(Map map, T bean){
+	public static <T> T fillBean(final Map map, final T bean){
 		BeanMap.create(bean).putAll(map);
 		return bean;
 	}
@@ -177,7 +177,7 @@ public class CglibUtil {
 	 * @since 5.6.3
 	 */
 	@SuppressWarnings("rawtypes")
-	public static <T> T toBean(Map map, Class<T> beanClass){
+	public static <T> T toBean(final Map map, final Class<T> beanClass){
 		return fillBean(map, ReflectUtil.newInstanceIfPossible(beanClass));
 	}
 }

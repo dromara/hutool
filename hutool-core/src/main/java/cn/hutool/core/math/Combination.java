@@ -25,7 +25,7 @@ public class Combination implements Serializable {
 	 *
 	 * @param datas 用于组合的数据
 	 */
-	public Combination(String[] datas) {
+	public Combination(final String[] datas) {
 		this.datas = datas;
 	}
 
@@ -36,7 +36,7 @@ public class Combination implements Serializable {
 	 * @param m 选择的个数
 	 * @return 组合数
 	 */
-	public static long count(int n, int m) {
+	public static long count(final int n, final int m) {
 		if (0 == m || n == m) {
 			return 1;
 		}
@@ -49,7 +49,7 @@ public class Combination implements Serializable {
 	 * @param n 总数
 	 * @return 组合数
 	 */
-	public static long countAll(int n) {
+	public static long countAll(final int n) {
 		if (n < 0 || n > 63) {
 			throw new IllegalArgumentException(StrUtil.format("countAll must have n >= 0 and n <= 63, but got n={}", n));
 		}
@@ -62,7 +62,7 @@ public class Combination implements Serializable {
 	 * @param m 选择个数
 	 * @return 组合结果
 	 */
-	public List<String[]> select(int m) {
+	public List<String[]> select(final int m) {
 		final List<String[]> result = new ArrayList<>((int) count(this.datas.length, m));
 		select(0, new String[m], 0, result);
 		return result;
@@ -89,9 +89,9 @@ public class Combination implements Serializable {
 	 * @param resultIndex 选择索引，从0开始
 	 * @param result      结果集
 	 */
-	private void select(int dataIndex, String[] resultList, int resultIndex, List<String[]> result) {
-		int resultLen = resultList.length;
-		int resultCount = resultIndex + 1;
+	private void select(final int dataIndex, final String[] resultList, final int resultIndex, final List<String[]> result) {
+		final int resultLen = resultList.length;
+		final int resultCount = resultIndex + 1;
 		if (resultCount > resultLen) { // 全部选择完时，输出组合结果
 			result.add(Arrays.copyOf(resultList, resultList.length));
 			return;

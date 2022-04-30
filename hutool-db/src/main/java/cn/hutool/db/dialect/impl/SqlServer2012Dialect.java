@@ -21,7 +21,7 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
+	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		if (false == StrUtil.containsIgnoreCase(find.toString(), "order by")) {
 			//offset 分页必须要跟在order by后面，没有情况下补充默认排序
 			find.append(" order by current_timestamp");

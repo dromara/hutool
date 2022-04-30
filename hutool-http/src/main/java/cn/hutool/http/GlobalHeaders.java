@@ -38,7 +38,7 @@ public enum GlobalHeaders {
 	 * @param isReset 是否重置所有头部信息（删除自定义保留默认）
 	 * @return this
 	 */
-	public GlobalHeaders putDefault(boolean isReset) {
+	public GlobalHeaders putDefault(final boolean isReset) {
 		// 解决HttpURLConnection中无法自定义Host等头信息的问题
 		// https://stackoverflow.com/questions/9096987/how-to-overwrite-http-header-host-in-a-httpurlconnection/9098440
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -68,7 +68,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	public String header(String name) {
+	public String header(final String name) {
 		final List<String> values = headerList(name);
 		if (CollUtil.isEmpty(values)) {
 			return null;
@@ -83,7 +83,7 @@ public enum GlobalHeaders {
 	 * @return Header值
 	 * @since 3.1.1
 	 */
-	public List<String> headerList(String name) {
+	public List<String> headerList(final String name) {
 		if (StrUtil.isBlank(name)) {
 			return null;
 		}
@@ -97,7 +97,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	public String header(Header name) {
+	public String header(final Header name) {
 		if (null == name) {
 			return null;
 		}
@@ -113,7 +113,7 @@ public enum GlobalHeaders {
 	 * @param isOverride 是否覆盖已有值
 	 * @return this
 	 */
-	synchronized public GlobalHeaders header(String name, String value, boolean isOverride) {
+	synchronized public GlobalHeaders header(final String name, final String value, final boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
 			if (isOverride || CollUtil.isEmpty(values)) {
@@ -136,7 +136,7 @@ public enum GlobalHeaders {
 	 * @param isOverride 是否覆盖已有值
 	 * @return this
 	 */
-	public GlobalHeaders header(Header name, String value, boolean isOverride) {
+	public GlobalHeaders header(final Header name, final String value, final boolean isOverride) {
 		return header(name.toString(), value, isOverride);
 	}
 
@@ -148,7 +148,7 @@ public enum GlobalHeaders {
 	 * @param value Header值
 	 * @return this
 	 */
-	public GlobalHeaders header(Header name, String value) {
+	public GlobalHeaders header(final Header name, final String value) {
 		return header(name.toString(), value, true);
 	}
 
@@ -160,7 +160,7 @@ public enum GlobalHeaders {
 	 * @param value Header值
 	 * @return this
 	 */
-	public GlobalHeaders header(String name, String value) {
+	public GlobalHeaders header(final String name, final String value) {
 		return header(name, value, true);
 	}
 
@@ -171,15 +171,15 @@ public enum GlobalHeaders {
 	 * @param headers 请求头
 	 * @return this
 	 */
-	public GlobalHeaders header(Map<String, List<String>> headers) {
+	public GlobalHeaders header(final Map<String, List<String>> headers) {
 		if (MapUtil.isEmpty(headers)) {
 			return this;
 		}
 
 		String name;
-		for (Entry<String, List<String>> entry : headers.entrySet()) {
+		for (final Entry<String, List<String>> entry : headers.entrySet()) {
 			name = entry.getKey();
-			for (String value : entry.getValue()) {
+			for (final String value : entry.getValue()) {
 				this.header(name, StrUtil.nullToEmpty(value), false);
 			}
 		}
@@ -192,7 +192,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return this
 	 */
-	synchronized public GlobalHeaders removeHeader(String name) {
+	synchronized public GlobalHeaders removeHeader(final String name) {
 		if (name != null) {
 			headers.remove(name.trim());
 		}
@@ -205,7 +205,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return this
 	 */
-	public GlobalHeaders removeHeader(Header name) {
+	public GlobalHeaders removeHeader(final Header name) {
 		return removeHeader(name.toString());
 	}
 

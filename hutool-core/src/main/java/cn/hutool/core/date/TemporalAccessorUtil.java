@@ -33,7 +33,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	 * @param field            需要获取的属性
 	 * @return 时间的值，如果无法获取则获取最小值，一般为0
 	 */
-	public static int get(TemporalAccessor temporalAccessor, TemporalField field) {
+	public static int get(final TemporalAccessor temporalAccessor, final TemporalField field) {
 		if (temporalAccessor.isSupported(field)) {
 			return temporalAccessor.get(field);
 		}
@@ -50,7 +50,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	 * @return 格式化后的字符串
 	 * @since 5.3.10
 	 */
-	public static String format(TemporalAccessor time, DateTimeFormatter formatter) {
+	public static String format(final TemporalAccessor time, DateTimeFormatter formatter) {
 		if (null == time) {
 			return null;
 		}
@@ -65,7 +65,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 
 		try {
 			return formatter.format(time);
-		} catch (UnsupportedTemporalTypeException e){
+		} catch (final UnsupportedTemporalTypeException e){
 			if(time instanceof LocalDate && e.getMessage().contains("HourOfDay")){
 				// 用户传入LocalDate，但是要求格式化带有时间部分，转换为LocalDateTime重试
 				return formatter.format(((LocalDate) time).atStartOfDay());
@@ -89,7 +89,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	 * @return 格式化后的字符串
 	 * @since 5.3.10
 	 */
-	public static String format(TemporalAccessor time, String format) {
+	public static String format(final TemporalAccessor time, final String format) {
 		if (null == time) {
 			return null;
 		}
@@ -117,7 +117,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	 * @return {@link Instant}对象
 	 * @since 5.4.1
 	 */
-	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
+	public static long toEpochMilli(final TemporalAccessor temporalAccessor) {
 		if(temporalAccessor instanceof Month){
 			return ((Month) temporalAccessor).getValue();
 		}
@@ -131,12 +131,12 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	 * @return {@link Instant}对象
 	 * @since 5.3.10
 	 */
-	public static Instant toInstant(TemporalAccessor temporalAccessor) {
+	public static Instant toInstant(final TemporalAccessor temporalAccessor) {
 		if (null == temporalAccessor) {
 			return null;
 		}
 
-		Instant result;
+		final Instant result;
 		if (temporalAccessor instanceof Instant) {
 			result = (Instant) temporalAccessor;
 		} else if (temporalAccessor instanceof LocalDateTime) {

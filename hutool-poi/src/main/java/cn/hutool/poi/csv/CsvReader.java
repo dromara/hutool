@@ -39,7 +39,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 *
 	 * @param config 配置项
 	 */
-	public CsvReader(CsvReadConfig config) {
+	public CsvReader(final CsvReadConfig config) {
 		this((Reader) null, config);
 	}
 
@@ -50,7 +50,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @param config 配置项，null表示默认配置
 	 * @since 5.0.4
 	 */
-	public CsvReader(File file, CsvReadConfig config) {
+	public CsvReader(final File file, final CsvReadConfig config) {
 		this(file, DEFAULT_CHARSET, config);
 	}
 
@@ -61,7 +61,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @param config 配置项，null表示默认配置
 	 * @since 5.0.4
 	 */
-	public CsvReader(Path path, CsvReadConfig config) {
+	public CsvReader(final Path path, final CsvReadConfig config) {
 		this(path, DEFAULT_CHARSET, config);
 	}
 
@@ -73,7 +73,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @param config  配置项，null表示默认配置
 	 * @since 5.0.4
 	 */
-	public CsvReader(File file, Charset charset, CsvReadConfig config) {
+	public CsvReader(final File file, final Charset charset, final CsvReadConfig config) {
 		this(FileUtil.getReader(file, charset), config);
 	}
 
@@ -85,7 +85,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @param config  配置项，null表示默认配置
 	 * @since 5.0.4
 	 */
-	public CsvReader(Path path, Charset charset, CsvReadConfig config) {
+	public CsvReader(final Path path, final Charset charset, final CsvReadConfig config) {
 		this(FileUtil.getReader(path, charset), config);
 	}
 
@@ -96,7 +96,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @param config 配置项，null表示默认配置
 	 * @since 5.0.4
 	 */
-	public CsvReader(Reader reader, CsvReadConfig config) {
+	public CsvReader(final Reader reader, final CsvReadConfig config) {
 		super(config);
 		this.reader = reader;
 	}
@@ -120,7 +120,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	public void read(CsvRowHandler rowHandler) throws IORuntimeException {
+	public void read(final CsvRowHandler rowHandler) throws IORuntimeException {
 		read(this.reader, rowHandler);
 	}
 

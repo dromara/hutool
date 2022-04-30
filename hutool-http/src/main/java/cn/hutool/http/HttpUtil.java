@@ -51,7 +51,7 @@ public class HttpUtil {
 	 * @param url URL
 	 * @return 是否https
 	 */
-	public static boolean isHttps(String url) {
+	public static boolean isHttps(final String url) {
 		return url.toLowerCase().startsWith("https:");
 	}
 
@@ -62,7 +62,7 @@ public class HttpUtil {
 	 * @return 是否http
 	 * @since 5.3.8
 	 */
-	public static boolean isHttp(String url) {
+	public static boolean isHttp(final String url) {
 		return url.toLowerCase().startsWith("http:");
 	}
 
@@ -74,7 +74,7 @@ public class HttpUtil {
 	 * @return {@link HttpRequest}
 	 * @since 3.0.9
 	 */
-	public static HttpRequest createRequest(Method method, String url) {
+	public static HttpRequest createRequest(final Method method, final String url) {
 		return HttpRequest.of(url).method(method);
 	}
 
@@ -85,7 +85,7 @@ public class HttpUtil {
 	 * @return {@link HttpRequest}
 	 * @since 3.2.0
 	 */
-	public static HttpRequest createGet(String url) {
+	public static HttpRequest createGet(final String url) {
 		return createGet(url, false);
 	}
 
@@ -97,7 +97,7 @@ public class HttpUtil {
 	 * @return {@link HttpRequest}
 	 * @since 5.6.4
 	 */
-	public static HttpRequest createGet(String url, boolean isFollowRedirects) {
+	public static HttpRequest createGet(final String url, final boolean isFollowRedirects) {
 		return HttpRequest.get(url).setFollowRedirects(isFollowRedirects);
 	}
 
@@ -108,7 +108,7 @@ public class HttpUtil {
 	 * @return {@link HttpRequest}
 	 * @since 3.2.0
 	 */
-	public static HttpRequest createPost(String url) {
+	public static HttpRequest createPost(final String url) {
 		return HttpRequest.post(url);
 	}
 
@@ -119,7 +119,7 @@ public class HttpUtil {
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
-	public static String get(String urlString, Charset customCharset) {
+	public static String get(final String urlString, final Charset customCharset) {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
 
@@ -129,7 +129,7 @@ public class HttpUtil {
 	 * @param urlString 网址
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
-	public static String get(String urlString) {
+	public static String get(final String urlString) {
 		return get(urlString, HttpGlobalConfig.getTimeout());
 	}
 
@@ -141,7 +141,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @since 3.2.0
 	 */
-	public static String get(String urlString, int timeout) {
+	public static String get(final String urlString, final int timeout) {
 		return HttpRequest.get(urlString).timeout(timeout).execute().body();
 	}
 
@@ -152,7 +152,7 @@ public class HttpUtil {
 	 * @param paramMap  post表单数据
 	 * @return 返回数据
 	 */
-	public static String get(String urlString, Map<String, Object> paramMap) {
+	public static String get(final String urlString, final Map<String, Object> paramMap) {
 		return HttpRequest.get(urlString).form(paramMap).execute().body();
 	}
 
@@ -165,7 +165,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.3.0
 	 */
-	public static String get(String urlString, Map<String, Object> paramMap, int timeout) {
+	public static String get(final String urlString, final Map<String, Object> paramMap, final int timeout) {
 		return HttpRequest.get(urlString).form(paramMap).timeout(timeout).execute().body();
 	}
 
@@ -176,7 +176,7 @@ public class HttpUtil {
 	 * @param paramMap  post表单数据
 	 * @return 返回数据
 	 */
-	public static String post(String urlString, Map<String, Object> paramMap) {
+	public static String post(final String urlString, final Map<String, Object> paramMap) {
 		return post(urlString, paramMap, HttpGlobalConfig.getTimeout());
 	}
 
@@ -189,7 +189,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
-	public static String post(String urlString, Map<String, Object> paramMap, int timeout) {
+	public static String post(final String urlString, final Map<String, Object> paramMap, final int timeout) {
 		return HttpRequest.post(urlString).form(paramMap).timeout(timeout).execute().body();
 	}
 
@@ -206,7 +206,7 @@ public class HttpUtil {
 	 * @param body      post表单数据
 	 * @return 返回数据
 	 */
-	public static String post(String urlString, String body) {
+	public static String post(final String urlString, final String body) {
 		return post(urlString, body, HttpGlobalConfig.getTimeout());
 	}
 
@@ -225,7 +225,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
-	public static String post(String urlString, String body, int timeout) {
+	public static String post(final String urlString, final String body, final int timeout) {
 		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().body();
 	}
 
@@ -238,7 +238,7 @@ public class HttpUtil {
 	 * @param customCharsetName 自定义的字符集
 	 * @return 文本
 	 */
-	public static String downloadString(String url, String customCharsetName) {
+	public static String downloadString(final String url, final String customCharsetName) {
 		return downloadString(url, CharsetUtil.charset(customCharsetName), null);
 	}
 
@@ -249,7 +249,7 @@ public class HttpUtil {
 	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
 	 * @return 文本
 	 */
-	public static String downloadString(String url, Charset customCharset) {
+	public static String downloadString(final String url, final Charset customCharset) {
 		return downloadString(url, customCharset, null);
 	}
 
@@ -261,7 +261,7 @@ public class HttpUtil {
 	 * @param streamPress   进度条 {@link StreamProgress}
 	 * @return 文本
 	 */
-	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
+	public static String downloadString(final String url, final Charset customCharset, final StreamProgress streamPress) {
 		return HttpDownloader.downloadString(url, customCharset, streamPress);
 	}
 
@@ -272,7 +272,7 @@ public class HttpUtil {
 	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 */
-	public static long downloadFile(String url, String dest) {
+	public static long downloadFile(final String url, final String dest) {
 		return downloadFile(url, FileUtil.file(dest));
 	}
 
@@ -283,7 +283,7 @@ public class HttpUtil {
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 */
-	public static long downloadFile(String url, File destFile) {
+	public static long downloadFile(final String url, final File destFile) {
 		return downloadFile(url, destFile, null);
 	}
 
@@ -296,7 +296,7 @@ public class HttpUtil {
 	 * @return 文件大小
 	 * @since 4.0.4
 	 */
-	public static long downloadFile(String url, File destFile, int timeout) {
+	public static long downloadFile(final String url, final File destFile, final int timeout) {
 		return downloadFile(url, destFile, timeout, null);
 	}
 
@@ -308,7 +308,7 @@ public class HttpUtil {
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 */
-	public static long downloadFile(String url, File destFile, StreamProgress streamProgress) {
+	public static long downloadFile(final String url, final File destFile, final StreamProgress streamProgress) {
 		return downloadFile(url, destFile, -1, streamProgress);
 	}
 
@@ -322,7 +322,7 @@ public class HttpUtil {
 	 * @return 文件大小
 	 * @since 4.0.4
 	 */
-	public static long downloadFile(String url, File destFile, int timeout, StreamProgress streamProgress) {
+	public static long downloadFile(final String url, final File destFile, final int timeout, final StreamProgress streamProgress) {
 		return HttpDownloader.downloadFile(url, destFile, timeout, streamProgress);
 	}
 
@@ -334,7 +334,7 @@ public class HttpUtil {
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
-	public static File downloadFileFromUrl(String url, String dest) {
+	public static File downloadFileFromUrl(final String url, final String dest) {
 		return downloadFileFromUrl(url, FileUtil.file(dest));
 	}
 
@@ -346,7 +346,7 @@ public class HttpUtil {
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
-	public static File downloadFileFromUrl(String url, File destFile) {
+	public static File downloadFileFromUrl(final String url, final File destFile) {
 		return downloadFileFromUrl(url, destFile, null);
 	}
 
@@ -359,7 +359,7 @@ public class HttpUtil {
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
-	public static File downloadFileFromUrl(String url, File destFile, int timeout) {
+	public static File downloadFileFromUrl(final String url, final File destFile, final int timeout) {
 		return downloadFileFromUrl(url, destFile, timeout, null);
 	}
 
@@ -372,7 +372,7 @@ public class HttpUtil {
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
-	public static File downloadFileFromUrl(String url, File destFile, StreamProgress streamProgress) {
+	public static File downloadFileFromUrl(final String url, final File destFile, final StreamProgress streamProgress) {
 		return downloadFileFromUrl(url, destFile, -1, streamProgress);
 	}
 
@@ -386,7 +386,7 @@ public class HttpUtil {
 	 * @return 下载的文件对象
 	 * @since 5.4.1
 	 */
-	public static File downloadFileFromUrl(String url, File destFile, int timeout, StreamProgress streamProgress) {
+	public static File downloadFileFromUrl(final String url, final File destFile, final int timeout, final StreamProgress streamProgress) {
 		return HttpDownloader.downloadForFile(url, destFile, timeout, streamProgress);
 	}
 
@@ -398,7 +398,7 @@ public class HttpUtil {
 	 * @param isCloseOut 是否关闭输出流
 	 * @return 文件大小
 	 */
-	public static long download(String url, OutputStream out, boolean isCloseOut) {
+	public static long download(final String url, final OutputStream out, final boolean isCloseOut) {
 		return download(url, out, isCloseOut, null);
 	}
 
@@ -411,7 +411,7 @@ public class HttpUtil {
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 */
-	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
+	public static long download(final String url, final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		return HttpDownloader.download(url, out, isCloseOut, streamProgress);
 	}
 
@@ -422,7 +422,7 @@ public class HttpUtil {
 	 * @return 文件数据
 	 * @since 5.3.6
 	 */
-	public static byte[] downloadBytes(String url) {
+	public static byte[] downloadBytes(final String url) {
 		return HttpDownloader.downloadBytes(url);
 	}
 
@@ -432,7 +432,7 @@ public class HttpUtil {
 	 * @param paramMap 表单数据
 	 * @return url参数
 	 */
-	public static String toParams(Map<String, ?> paramMap) {
+	public static String toParams(final Map<String, ?> paramMap) {
 		return toParams(paramMap, CharsetUtil.UTF_8);
 	}
 
@@ -451,7 +451,7 @@ public class HttpUtil {
 	 * @return url参数
 	 * @see #toParams(Map, Charset, boolean)
 	 */
-	public static String toParams(Map<String, ?> paramMap, Charset charset) {
+	public static String toParams(final Map<String, ?> paramMap, final Charset charset) {
 		return toParams(paramMap, charset, false);
 	}
 
@@ -470,7 +470,7 @@ public class HttpUtil {
 	 * @return url参数
 	 * @since 5.7.16
 	 */
-	public static String toParams(Map<String, ?> paramMap, Charset charset, boolean isFormUrlEncoded) {
+	public static String toParams(final Map<String, ?> paramMap, final Charset charset, final boolean isFormUrlEncoded) {
 		return UrlQuery.of(paramMap, isFormUrlEncoded).build(charset);
 	}
 
@@ -485,7 +485,7 @@ public class HttpUtil {
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
-	public static String encodeParams(String urlWithParams, Charset charset) {
+	public static String encodeParams(final String urlWithParams, final Charset charset) {
 		if (StrUtil.isBlank(urlWithParams)) {
 			return StrUtil.EMPTY;
 		}
@@ -524,7 +524,7 @@ public class HttpUtil {
 	 * @return 标准化的参数字符串
 	 * @since 4.5.2
 	 */
-	public static String normalizeParams(String paramPart, Charset charset) {
+	public static String normalizeParams(final String paramPart, final Charset charset) {
 		if(StrUtil.isEmpty(paramPart)){
 			return paramPart;
 		}
@@ -570,7 +570,7 @@ public class HttpUtil {
 		}
 
 		// 以&结尾则去除之
-		int lastIndex = builder.length() - 1;
+		final int lastIndex = builder.length() - 1;
 		if ('&' == builder.charAt(lastIndex)) {
 			builder.delTo(lastIndex);
 		}
@@ -585,7 +585,7 @@ public class HttpUtil {
 	 * @return 参数Map
 	 * @since 5.2.6
 	 */
-	public static Map<String, String> decodeParamMap(String paramsStr, Charset charset) {
+	public static Map<String, String> decodeParamMap(final String paramsStr, final Charset charset) {
 		final Map<CharSequence, CharSequence> queryMap = UrlQuery.of(paramsStr, charset).getQueryMap();
 		if (MapUtil.isEmpty(queryMap)) {
 			return MapUtil.empty();
@@ -600,7 +600,7 @@ public class HttpUtil {
 	 * @param charset   字符集
 	 * @return 参数Map
 	 */
-	public static Map<String, List<String>> decodeParams(String paramsStr, String charset) {
+	public static Map<String, List<String>> decodeParams(final String paramsStr, final String charset) {
 		return decodeParams(paramsStr, CharsetUtil.charset(charset));
 	}
 
@@ -612,7 +612,7 @@ public class HttpUtil {
 	 * @return 参数Map
 	 * @since 5.2.6
 	 */
-	public static Map<String, List<String>> decodeParams(String paramsStr, Charset charset) {
+	public static Map<String, List<String>> decodeParams(final String paramsStr, final Charset charset) {
 		final Map<CharSequence, CharSequence> queryMap = UrlQuery.of(paramsStr, charset).getQueryMap();
 		if (MapUtil.isEmpty(queryMap)) {
 			return MapUtil.empty();
@@ -637,7 +637,7 @@ public class HttpUtil {
 	 * @param isEncodeParams 是否对键和值做转义处理
 	 * @return 合成后的URL
 	 */
-	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncodeParams) {
+	public static String urlWithForm(String url, final Map<String, Object> form, final Charset charset, final boolean isEncodeParams) {
 		if (isEncodeParams && StrUtil.contains(url, '?')) {
 			// 在需要编码的情况下，如果url中已经有部分参数，则编码之
 			url = encodeParams(url, charset);
@@ -656,7 +656,7 @@ public class HttpUtil {
 	 * @param isEncode    是否对键和值做转义处理
 	 * @return 拼接后的字符串
 	 */
-	public static String urlWithForm(String url, String queryString, Charset charset, boolean isEncode) {
+	public static String urlWithForm(final String url, final String queryString, final Charset charset, final boolean isEncode) {
 		if (StrUtil.isBlank(queryString)) {
 			// 无额外参数
 			if (StrUtil.contains(url, '?')) {
@@ -668,7 +668,7 @@ public class HttpUtil {
 
 		// 始终有参数
 		final StrBuilder urlBuilder = StrBuilder.create(url.length() + queryString.length() + 16);
-		int qmIndex = url.indexOf('?');
+		final int qmIndex = url.indexOf('?');
 		if (qmIndex > 0) {
 			// 原URL带参数，则对这部分参数单独编码（如果选项为进行编码）
 			urlBuilder.append(isEncode ? encodeParams(url, charset) : url);
@@ -695,7 +695,7 @@ public class HttpUtil {
 	 * @param conn HTTP连接对象
 	 * @return 字符集
 	 */
-	public static String getCharset(HttpURLConnection conn) {
+	public static String getCharset(final HttpURLConnection conn) {
 		if (conn == null) {
 			return null;
 		}
@@ -710,7 +710,7 @@ public class HttpUtil {
 	 * @return 字符集
 	 * @since 5.2.6
 	 */
-	public static String getCharset(String contentType) {
+	public static String getCharset(final String contentType) {
 		if (StrUtil.isBlank(contentType)) {
 			return null;
 		}
@@ -726,7 +726,7 @@ public class HttpUtil {
 	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
 	 */
-	public static String getString(InputStream in, Charset charset, boolean isGetCharsetFromContent) {
+	public static String getString(final InputStream in, final Charset charset, final boolean isGetCharsetFromContent) {
 		final byte[] contentBytes = IoUtil.readBytes(in);
 		return getString(contentBytes, charset, isGetCharsetFromContent);
 	}
@@ -740,7 +740,7 @@ public class HttpUtil {
 	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
 	 */
-	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) {
+	public static String getString(final byte[] contentBytes, Charset charset, final boolean isGetCharsetFromContent) {
 		if (null == contentBytes) {
 			return null;
 		}
@@ -755,7 +755,7 @@ public class HttpUtil {
 				Charset charsetInContent = null;
 				try {
 					charsetInContent = Charset.forName(charsetInContentStr);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					if (StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8") || StrUtil.containsIgnoreCase(charsetInContentStr, "utf8")) {
 						charsetInContent = CharsetUtil.UTF_8;
 					} else if (StrUtil.containsIgnoreCase(charsetInContentStr, "gbk")) {
@@ -780,7 +780,7 @@ public class HttpUtil {
 	 * @see FileUtil#getMimeType(String)
 	 * @since 4.6.5
 	 */
-	public static String getMimeType(String filePath, String defaultValue) {
+	public static String getMimeType(final String filePath, final String defaultValue) {
 		return ObjUtil.defaultIfNull(getMimeType(filePath), defaultValue);
 	}
 
@@ -791,7 +791,7 @@ public class HttpUtil {
 	 * @return MimeType
 	 * @see FileUtil#getMimeType(String)
 	 */
-	public static String getMimeType(String filePath) {
+	public static String getMimeType(final String filePath) {
 		return FileUtil.getMimeType(filePath);
 	}
 
@@ -808,7 +808,7 @@ public class HttpUtil {
 	 * @see ContentType#get(String)
 	 * @since 3.2.0
 	 */
-	public static String getContentTypeByRequestBody(String body) {
+	public static String getContentTypeByRequestBody(final String body) {
 		final ContentType contentType = ContentType.get(body);
 		return (null == contentType) ? null : contentType.toString();
 	}
@@ -820,7 +820,7 @@ public class HttpUtil {
 	 * @return {@link SimpleServer}
 	 * @since 5.2.6
 	 */
-	public static SimpleServer createServer(int port) {
+	public static SimpleServer createServer(final int port) {
 		return new SimpleServer(port);
 	}
 
@@ -836,7 +836,7 @@ public class HttpUtil {
 	 * @return 密码验证信息
 	 * @since 5.4.6
 	 */
-	public static String buildBasicAuth(String username, String password, Charset charset) {
+	public static String buildBasicAuth(final String username, final String password, final Charset charset) {
 		final String data = username.concat(":").concat(password);
 		return "Basic " + Base64.encode(data, charset);
 	}

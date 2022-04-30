@@ -19,15 +19,15 @@ public class TolerantMapTest {
 
 	@Test
 	public void testSerialize() {
-		byte[] bytes = ObjUtil.serialize(map);
-		TolerantMap<String, String> serializedMap = ObjUtil.deserialize(bytes);
+		final byte[] bytes = ObjUtil.serialize(map);
+		final TolerantMap<String, String> serializedMap = ObjUtil.deserialize(bytes);
 		assert serializedMap != map;
 		assert map.equals(serializedMap);
 	}
 
 	@Test
 	public void testClone() {
-		TolerantMap<String, String> clonedMap = ObjUtil.clone(map);
+		final TolerantMap<String, String> clonedMap = ObjUtil.clone(map);
 		assert clonedMap != map;
 		assert map.equals(clonedMap);
 	}

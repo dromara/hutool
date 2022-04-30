@@ -136,11 +136,11 @@ public class ConverterRegistry implements Serializable {
 	private void putCustomBySpi() {
 		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
 			try {
-				Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
+				final Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
 				if (null != type) {
 					putCustom(type, converter);
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 忽略注册失败的
 			}
 		});
@@ -153,7 +153,7 @@ public class ConverterRegistry implements Serializable {
 	 * @param converterClass 转换器类，必须有默认构造方法
 	 * @return ConverterRegistry
 	 */
-	public ConverterRegistry putCustom(Type type, Class<? extends Converter<?>> converterClass) {
+	public ConverterRegistry putCustom(final Type type, final Class<? extends Converter<?>> converterClass) {
 		return putCustom(type, ReflectUtil.newInstance(converterClass));
 	}
 
@@ -164,7 +164,7 @@ public class ConverterRegistry implements Serializable {
 	 * @param converter 转换器
 	 * @return ConverterRegistry
 	 */
-	public ConverterRegistry putCustom(Type type, Converter<?> converter) {
+	public ConverterRegistry putCustom(final Type type, final Converter<?> converter) {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
@@ -184,7 +184,7 @@ public class ConverterRegistry implements Serializable {
 	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换器
 	 */
-	public <T> Converter<T> getConverter(Type type, boolean isCustomFirst) {
+	public <T> Converter<T> getConverter(final Type type, final boolean isCustomFirst) {
 		Converter<T> converter;
 		if (isCustomFirst) {
 			converter = this.getCustomConverter(type);
@@ -208,7 +208,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换器
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Converter<T> getDefaultConverter(Type type) {
+	public <T> Converter<T> getDefaultConverter(final Type type) {
 		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(type);
 	}
 
@@ -220,7 +220,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换器
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Converter<T> getCustomConverter(Type type) {
+	public <T> Converter<T> getCustomConverter(final Type type) {
 		return (null == customConverterMap) ? null : (Converter<T>) customConverterMap.get(type);
 	}
 
@@ -236,7 +236,7 @@ public class ConverterRegistry implements Serializable {
 	 * @throws ConvertException 转换器不存在
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Type type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
+	public <T> T convert(Type type, final Object value, final T defaultValue, final boolean isCustomFirst) throws ConvertException {
 		if (TypeUtil.isUnknown(type) && null == defaultValue) {
 			// 对于用户不指定目标类型的情况，返回原值
 			return (T) value;
@@ -294,7 +294,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
+	public <T> T convert(final Type type, final Object value, final T defaultValue) throws ConvertException {
 		return convert(type, value, defaultValue, true);
 	}
 
@@ -307,7 +307,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换后的值，默认为{@code null}
 	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Type type, Object value) throws ConvertException {
+	public <T> T convert(final Type type, final Object value) throws ConvertException {
 		return convert(type, value, null);
 	}
 
@@ -331,7 +331,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换后的值
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T convertSpecial(Type type, Class<T> rowType, Object value, T defaultValue) {
+	private <T> T convertSpecial(final Type type, final Class<T> rowType, final Object value, final T defaultValue) {
 		if (null == rowType) {
 			return null;
 		}

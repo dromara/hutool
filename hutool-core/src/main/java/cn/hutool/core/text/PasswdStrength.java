@@ -41,11 +41,11 @@ public class PasswdStrength {
 	 * @param passwd 密码
 	 * @return strength level
 	 */
-	public static int check(String passwd) {
+	public static int check(final String passwd) {
 		if (null == passwd) {
 			throw new IllegalArgumentException("password is empty");
 		}
-		int len = passwd.length();
+		final int len = passwd.length();
 		int level = 0;
 
 		// increase points
@@ -139,8 +139,8 @@ public class PasswdStrength {
 		}
 
 		if (len % 2 == 0) { // aaabbb
-			String part1 = passwd.substring(0, len / 2);
-			String part2 = passwd.substring(len / 2);
+			final String part1 = passwd.substring(0, len / 2);
+			final String part2 = passwd.substring(len / 2);
 			if (part1.equals(part2)) {
 				level--;
 			}
@@ -149,9 +149,9 @@ public class PasswdStrength {
 			}
 		}
 		if (len % 3 == 0) { // ababab
-			String part1 = passwd.substring(0, len / 3);
-			String part2 = passwd.substring(len / 3, len / 3 * 2);
-			String part3 = passwd.substring(len / 3 * 2);
+			final String part1 = passwd.substring(0, len / 3);
+			final String part2 = passwd.substring(len / 3, len / 3 * 2);
+			final String part3 = passwd.substring(len / 3 * 2);
 			if (part1.equals(part2) && part2.equals(part3)) {
 				level--;
 			}
@@ -162,15 +162,15 @@ public class PasswdStrength {
 			if (len == 8 || len == 6) {
 				year = Integer.parseInt(passwd.substring(0, len - 4));
 			}
-			int size = sizeOfInt(year);
-			int month = Integer.parseInt(passwd.substring(size, size + 2));
-			int day = Integer.parseInt(passwd.substring(size + 2, len));
+			final int size = sizeOfInt(year);
+			final int month = Integer.parseInt(passwd.substring(size, size + 2));
+			final int day = Integer.parseInt(passwd.substring(size + 2, len));
 			if (year >= 1950 && year < 2050 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
 				level--;
 			}
 		}
 
-		for (String s : DICTIONARY) {
+		for (final String s : DICTIONARY) {
 			if (passwd.equals(s) || s.contains(passwd)) {
 				level--;
 				break;
@@ -204,8 +204,8 @@ public class PasswdStrength {
 	 * @param passwd 密码
 	 * @return 密码等级枚举
 	 */
-	public static PASSWD_LEVEL getLevel(String passwd) {
-		int level = check(passwd);
+	public static PASSWD_LEVEL getLevel(final String passwd) {
+		final int level = check(passwd);
 		switch (level) {
 			case 0:
 			case 1:
@@ -236,7 +236,7 @@ public class PasswdStrength {
 	 * @param c 字符
 	 * @return 类型
 	 */
-	private static CHAR_TYPE checkCharacterType(char c) {
+	private static CHAR_TYPE checkCharacterType(final char c) {
 		if (c >= 48 && c <= 57) {
 			return CHAR_TYPE.NUM;
 		}
@@ -256,7 +256,7 @@ public class PasswdStrength {
 	 * @param type   类型
 	 * @return 数量
 	 */
-	private static int countLetter(String passwd, CHAR_TYPE type) {
+	private static int countLetter(final String passwd, final CHAR_TYPE type) {
 		int count = 0;
 		if (null != passwd) {
 			final int length = passwd.length();
@@ -277,7 +277,7 @@ public class PasswdStrength {
 	 * @param x 值
 	 * @return 数字长度
 	 */
-	private static int sizeOfInt(int x) {
+	private static int sizeOfInt(final int x) {
 		for (int i = 0; ; i++)
 			if (x <= SIZE_TABLE[i]) {
 				return i + 1;

@@ -11,7 +11,7 @@ public class UniqueKeySetTest {
 
 	@Test
 	public void addTest(){
-		Set<UniqueTestBean> set = new UniqueKeySet<>(UniqueTestBean::getId);
+		final Set<UniqueTestBean> set = new UniqueKeySet<>(UniqueTestBean::getId);
 		set.add(new UniqueTestBean("id1", "张三", "地球"));
 		set.add(new UniqueTestBean("id2", "李四", "火星"));
 		// id重复，替换之前的元素

@@ -22,7 +22,7 @@ public class WordResult implements Result{
 	 *
 	 * @param result 分词结果
 	 */
-	public WordResult(List<org.apdplat.word.segmentation.Word> result) {
+	public WordResult(final List<org.apdplat.word.segmentation.Word> result) {
 		this.wordIter = result.iterator();
 	}
 

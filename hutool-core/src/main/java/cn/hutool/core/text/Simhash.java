@@ -49,7 +49,7 @@ public class Simhash {
 	 * @param fracCount 存储段数
 	 * @param hammingThresh 汉明距离的衡量标准
 	 */
-	public Simhash(int fracCount, int hammingThresh) {
+	public Simhash(final int fracCount, final int hammingThresh) {
 		this.fracCount = fracCount;
 		this.fracBitNum = bitNum / fracCount;
 		this.hammingThresh = hammingThresh;
@@ -65,12 +65,12 @@ public class Simhash {
 	 * @param segList 分词的词列表
 	 * @return Hash值
 	 */
-	public long hash(Collection<? extends CharSequence> segList) {
+	public long hash(final Collection<? extends CharSequence> segList) {
 		final int bitNum = this.bitNum;
 		// 按照词语的hash值，计算simHashWeight(低位对齐)
 		final int[] weight = new int[bitNum];
 		long wordHash;
-		for (CharSequence seg : segList) {
+		for (final CharSequence seg : segList) {
 			wordHash = MurmurHash.hash64(seg);
 			for (int i = 0; i < bitNum; i++) {
 				if (((wordHash >> i) & 1) == 1)
@@ -95,8 +95,8 @@ public class Simhash {
 	 * @param segList 文本分词后的结果
 	 * @return 是否重复
 	 */
-	public boolean equals(Collection<? extends CharSequence> segList) {
-		long simhash = hash(segList);
+	public boolean equals(final Collection<? extends CharSequence> segList) {
+		final long simhash = hash(segList);
 		final List<String> fracList = splitSimhash(simhash);
 		final int hammingThresh = this.hammingThresh;
 
@@ -108,7 +108,7 @@ public class Simhash {
 				frac = fracList.get(i);
 				fracMap = storage.get(i);
 				if (fracMap.containsKey(frac)) {
-					for (Long simhash2 : fracMap.get(frac)) {
+					for (final Long simhash2 : fracMap.get(frac)) {
 						// 当汉明距离小于标准时相似
 						if (hamming(simhash, simhash2) < hammingThresh) {
 							return true;
@@ -127,7 +127,7 @@ public class Simhash {
 	 *
 	 * @param simhash Simhash值
 	 */
-	public void store(Long simhash) {
+	public void store(final Long simhash) {
 		final int fracCount = this.fracCount;
 		final List<Map<String, List<Long>>> storage = this.storage;
 		final List<String> lFrac = splitSimhash(simhash);
@@ -160,7 +160,7 @@ public class Simhash {
 	 * @param s2 值2
 	 * @return 汉明距离
 	 */
-	private int hamming(Long s1, Long s2) {
+	private int hamming(final Long s1, final Long s2) {
 		final int bitNum = this.bitNum;
 		int dis = 0;
 		for (int i = 0; i < bitNum; i++) {
@@ -176,7 +176,7 @@ public class Simhash {
 	 * @param simhash Simhash值
 	 * @return N段Simhash
 	 */
-	private List<String> splitSimhash(Long simhash) {
+	private List<String> splitSimhash(final Long simhash) {
 		final int bitNum = this.bitNum;
 		final int fracBitNum = this.fracBitNum;
 

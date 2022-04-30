@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.reflect;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.reflect.MethodHandleUtil;
 import cn.hutool.core.reflect.ReflectUtil;
@@ -15,7 +15,7 @@ public class MethodHandleUtilTest {
 
 	@Test
 	public void invokeDefaultTest(){
-		Duck duck = (Duck) Proxy.newProxyInstance(
+		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
 				MethodHandleUtil::invokeSpecial);
@@ -34,7 +34,7 @@ public class MethodHandleUtilTest {
 
 	@Test
 	public void invokeDefaultByReflectTest(){
-		Duck duck = (Duck) Proxy.newProxyInstance(
+		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
 				ReflectUtil::invoke);
@@ -44,7 +44,7 @@ public class MethodHandleUtilTest {
 
 	@Test
 	public void invokeStaticByProxyTest(){
-		Duck duck = (Duck) Proxy.newProxyInstance(
+		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
 				ReflectUtil::invoke);
@@ -74,14 +74,14 @@ public class MethodHandleUtilTest {
 				MethodType.methodType(String.class));
 		Assert.assertNotNull(handle);
 		// 对象方法自行需要绑定对象或者传入对象参数
-		String invoke = (String) handle.invoke(new BigDuck());
+		final String invoke = (String) handle.invoke(new BigDuck());
 		Assert.assertEquals("Quack", invoke);
 
 		// 对象的方法获取
 		handle = MethodHandleUtil.findMethod(BigDuck.class, "getSize",
 				MethodType.methodType(int.class));
 		Assert.assertNotNull(handle);
-		int invokeInt = (int) handle.invoke(new BigDuck());
+		final int invokeInt = (int) handle.invoke(new BigDuck());
 		Assert.assertEquals(36, invokeInt);
 	}
 
@@ -132,7 +132,7 @@ public class MethodHandleUtilTest {
 			return "Quack";
 		}
 
-		static String getDuck(int count){
+		static String getDuck(final int count){
 			return "Duck " + count;
 		}
 	}

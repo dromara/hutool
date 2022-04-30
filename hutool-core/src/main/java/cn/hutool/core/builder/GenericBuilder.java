@@ -79,7 +79,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 *
 	 * @param instant 实例化器
 	 */
-	public GenericBuilder(Supplier<T> instant) {
+	public GenericBuilder(final Supplier<T> instant) {
 		this.instant = instant;
 	}
 
@@ -90,7 +90,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <T>     目标类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T> GenericBuilder<T> of(Supplier<T> instant) {
+	public static <T> GenericBuilder<T> of(final Supplier<T> instant) {
 		return new GenericBuilder<>(instant);
 	}
 
@@ -103,7 +103,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P1>    参数一类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T, P1> GenericBuilder<T> of(Supplier1<T, P1> instant, P1 p1) {
+	public static <T, P1> GenericBuilder<T> of(final Supplier1<T, P1> instant, final P1 p1) {
 		return of(instant.toSupplier(p1));
 	}
 
@@ -118,7 +118,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P2>    参数二类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T, P1, P2> GenericBuilder<T> of(Supplier2<T, P1, P2> instant, P1 p1, P2 p2) {
+	public static <T, P1, P2> GenericBuilder<T> of(final Supplier2<T, P1, P2> instant, final P1 p1, final P2 p2) {
 		return of(instant.toSupplier(p1, p2));
 	}
 
@@ -135,7 +135,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P3>    参数三类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T, P1, P2, P3> GenericBuilder<T> of(Supplier3<T, P1, P2, P3> instant, P1 p1, P2 p2, P3 p3) {
+	public static <T, P1, P2, P3> GenericBuilder<T> of(final Supplier3<T, P1, P2, P3> instant, final P1 p1, final P2 p2, final P3 p3) {
 		return of(instant.toSupplier(p1, p2, p3));
 	}
 
@@ -154,7 +154,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P4>    参数四类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T, P1, P2, P3, P4> GenericBuilder<T> of(Supplier4<T, P1, P2, P3, P4> instant, P1 p1, P2 p2, P3 p3, P4 p4) {
+	public static <T, P1, P2, P3, P4> GenericBuilder<T> of(final Supplier4<T, P1, P2, P3, P4> instant, final P1 p1, final P2 p2, final P3 p3, final P4 p4) {
 		return of(instant.toSupplier(p1, p2, p3, p4));
 	}
 
@@ -175,7 +175,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P5>    参数五类型
 	 * @return GenericBuilder对象
 	 */
-	public static <T, P1, P2, P3, P4, P5> GenericBuilder<T> of(Supplier5<T, P1, P2, P3, P4, P5> instant, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) {
+	public static <T, P1, P2, P3, P4, P5> GenericBuilder<T> of(final Supplier5<T, P1, P2, P3, P4, P5> instant, final P1 p1, final P2 p2, final P3 p3, final P4 p4, final P5 p5) {
 		return of(instant.toSupplier(p1, p2, p3, p4, p5));
 	}
 
@@ -186,7 +186,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param consumer 无参数Consumer
 	 * @return GenericBuilder对象
 	 */
-	public GenericBuilder<T> with(Consumer<T> consumer) {
+	public GenericBuilder<T> with(final Consumer<T> consumer) {
 		modifiers.add(consumer);
 		return this;
 	}
@@ -200,7 +200,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P1>     参数一类型
 	 * @return GenericBuilder对象
 	 */
-	public <P1> GenericBuilder<T> with(BiConsumer<T, P1> consumer, P1 p1) {
+	public <P1> GenericBuilder<T> with(final BiConsumer<T, P1> consumer, final P1 p1) {
 		modifiers.add(instant -> consumer.accept(instant, p1));
 		return this;
 	}
@@ -215,7 +215,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P2>     参数二类型
 	 * @return GenericBuilder对象
 	 */
-	public <P1, P2> GenericBuilder<T> with(Consumer3<T, P1, P2> consumer, P1 p1, P2 p2) {
+	public <P1, P2> GenericBuilder<T> with(final Consumer3<T, P1, P2> consumer, final P1 p1, final P2 p2) {
 		modifiers.add(instant -> consumer.accept(instant, p1, p2));
 		return this;
 	}
@@ -227,7 +227,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 */
 	@Override
 	public T build() {
-		T value = instant.get();
+		final T value = instant.get();
 		modifiers.forEach(modifier -> modifier.accept(value));
 		modifiers.clear();
 		return value;

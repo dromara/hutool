@@ -14,7 +14,7 @@ public class NullWrapperBean<T> {
 	/**
 	 * @param clazz null的类型
 	 */
-	public NullWrapperBean(Class<T> clazz) {
+	public NullWrapperBean(final Class<T> clazz) {
 		this.clazz = clazz;
 	}
 

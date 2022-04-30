@@ -30,7 +30,7 @@ public class EnumUtil {
 	 * @param clazz 类
 	 * @return 是否为Enum类
 	 */
-	public static boolean isEnum(Class<?> clazz) {
+	public static boolean isEnum(final Class<?> clazz) {
 		Assert.notNull(clazz);
 		return clazz.isEnum();
 	}
@@ -41,7 +41,7 @@ public class EnumUtil {
 	 * @param obj 类
 	 * @return 是否为Enum类
 	 */
-	public static boolean isEnum(Object obj) {
+	public static boolean isEnum(final Object obj) {
 		Assert.notNull(obj);
 		return obj.getClass().isEnum();
 	}
@@ -53,7 +53,7 @@ public class EnumUtil {
 	 * @return name值
 	 * @since 4.1.13
 	 */
-	public static String toString(Enum<?> e) {
+	public static String toString(final Enum<?> e) {
 		return null != e ? e.name() : null;
 	}
 
@@ -66,7 +66,7 @@ public class EnumUtil {
 	 * @return 枚举值，null表示无此对应枚举
 	 * @since 5.1.6
 	 */
-	public static <E extends Enum<E>> E getEnumAt(Class<E> enumClass, int index) {
+	public static <E extends Enum<E>> E getEnumAt(final Class<E> enumClass, final int index) {
 		final E[] enumConstants = enumClass.getEnumConstants();
 		return index >= 0 && index < enumConstants.length ? enumConstants[index] : null;
 	}
@@ -80,7 +80,7 @@ public class EnumUtil {
 	 * @return 枚举值
 	 * @since 4.1.13
 	 */
-	public static <E extends Enum<E>> E fromString(Class<E> enumClass, String value) {
+	public static <E extends Enum<E>> E fromString(final Class<E> enumClass, final String value) {
 		return Enum.valueOf(enumClass, value);
 	}
 
@@ -95,7 +95,7 @@ public class EnumUtil {
 	 * @return 枚举值
 	 * @since 4.5.18
 	 */
-	public static <E extends Enum<E>> E fromString(Class<E> enumClass, String value, E defaultValue) {
+	public static <E extends Enum<E>> E fromString(final Class<E> enumClass, final String value, final E defaultValue) {
 		return ObjUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
 	}
 
@@ -108,14 +108,14 @@ public class EnumUtil {
 	 * @return 枚举值
 	 * @since 4.5.18
 	 */
-	public static <E extends Enum<E>> E fromStringQuietly(Class<E> enumClass, String value) {
+	public static <E extends Enum<E>> E fromStringQuietly(final Class<E> enumClass, final String value) {
 		if (null == enumClass || StrUtil.isBlank(value)) {
 			return null;
 		}
 
 		try {
 			return fromString(enumClass, value);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			return null;
 		}
 	}
@@ -129,7 +129,7 @@ public class EnumUtil {
 	 * @return 匹配到的枚举对象，未匹配到返回null
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E extends Enum<E>> E likeValueOf(Class<E> enumClass, Object value) {
+	public static <E extends Enum<E>> E likeValueOf(final Class<E> enumClass, Object value) {
 		if (value instanceof CharSequence) {
 			value = value.toString().trim();
 		}
@@ -137,13 +137,13 @@ public class EnumUtil {
 		final Field[] fields = ReflectUtil.getFields(enumClass);
 		final Enum<?>[] enums = enumClass.getEnumConstants();
 		String fieldName;
-		for (Field field : fields) {
+		for (final Field field : fields) {
 			fieldName = field.getName();
 			if (field.getType().isEnum() || "ENUM$VALUES".equals(fieldName) || "ordinal".equals(fieldName)) {
 				// 跳过一些特殊字段
 				continue;
 			}
-			for (Enum<?> enumObj : enums) {
+			for (final Enum<?> enumObj : enums) {
 				if (ObjUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
 					return (E) enumObj;
 				}
@@ -158,13 +158,13 @@ public class EnumUtil {
 	 * @param clazz 枚举类
 	 * @return name列表
 	 */
-	public static List<String> getNames(Class<? extends Enum<?>> clazz) {
+	public static List<String> getNames(final Class<? extends Enum<?>> clazz) {
 		final Enum<?>[] enums = clazz.getEnumConstants();
 		if (null == enums) {
 			return null;
 		}
 		final List<String> list = new ArrayList<>(enums.length);
-		for (Enum<?> e : enums) {
+		for (final Enum<?> e : enums) {
 			list.add(e.name());
 		}
 		return list;
@@ -177,13 +177,13 @@ public class EnumUtil {
 	 * @param fieldName 字段名，最终调用getXXX方法
 	 * @return 字段值列表
 	 */
-	public static List<Object> getFieldValues(Class<? extends Enum<?>> clazz, String fieldName) {
+	public static List<Object> getFieldValues(final Class<? extends Enum<?>> clazz, final String fieldName) {
 		final Enum<?>[] enums = clazz.getEnumConstants();
 		if (null == enums) {
 			return null;
 		}
 		final List<Object> list = new ArrayList<>(enums.length);
-		for (Enum<?> e : enums) {
+		for (final Enum<?> e : enums) {
 			list.add(ReflectUtil.getFieldValue(e, fieldName));
 		}
 		return list;
@@ -201,11 +201,11 @@ public class EnumUtil {
 	 * @return 字段名列表
 	 * @since 4.1.20
 	 */
-	public static List<String> getFieldNames(Class<? extends Enum<?>> clazz) {
+	public static List<String> getFieldNames(final Class<? extends Enum<?>> clazz) {
 		final List<String> names = new ArrayList<>();
 		final Field[] fields = ReflectUtil.getFields(clazz);
 		String name;
-		for (Field field : fields) {
+		for (final Field field : fields) {
 			name = field.getName();
 			if (field.getType().isEnum() || name.contains("$VALUES") || "ordinal".equals(name)) {
 				continue;
@@ -226,7 +226,7 @@ public class EnumUtil {
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 * @since 5.8.0
 	 */
-	public static <E extends Enum<E>> E getBy(Class<E> enumClass, Predicate<? super E> predicate) {
+	public static <E extends Enum<E>> E getBy(final Class<E> enumClass, final Predicate<? super E> predicate) {
 		return Arrays.stream(enumClass.getEnumConstants())
 				.filter(predicate).findFirst().orElse(null);
 	}
@@ -240,7 +240,7 @@ public class EnumUtil {
 	 * @param <C>       字段类型
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
-	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
+	public static <E extends Enum<E>, C> E getBy(final Func1<E, C> condition, final C value) {
 		Class<E> implClass = LambdaUtil.getRealClass(condition);
 		if (Enum.class.equals(implClass)) {
 			implClass = LambdaUtil.getRealClass(condition);
@@ -260,8 +260,8 @@ public class EnumUtil {
 	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
 	 * @since 5.8.0
 	 */
-	public static <E extends Enum<E>, F, C> F getFieldBy(Func1<E, F> field,
-														 Function<E, C> condition, C value) {
+	public static <E extends Enum<E>, F, C> F getFieldBy(final Func1<E, F> field,
+														 final Function<E, C> condition, final C value) {
 		Class<E> implClass = LambdaUtil.getRealClass(field);
 		if (Enum.class.equals(implClass)) {
 			implClass = LambdaUtil.getRealClass(field);
@@ -298,13 +298,13 @@ public class EnumUtil {
 	 * @param fieldName 字段名，最终调用getXXX方法
 	 * @return 枚举名对应指定字段值的Map
 	 */
-	public static Map<String, Object> getNameFieldMap(Class<? extends Enum<?>> clazz, String fieldName) {
+	public static Map<String, Object> getNameFieldMap(final Class<? extends Enum<?>> clazz, final String fieldName) {
 		final Enum<?>[] enums = clazz.getEnumConstants();
 		if (null == enums) {
 			return null;
 		}
 		final Map<String, Object> map = MapUtil.newHashMap(enums.length, true);
-		for (Enum<?> e : enums) {
+		for (final Enum<?> e : enums) {
 			map.put(e.name(), ReflectUtil.getFieldValue(e, fieldName));
 		}
 		return map;
@@ -318,7 +318,7 @@ public class EnumUtil {
 	 * @param val       需要查找的值
 	 * @return 是否存在
 	 */
-	public static <E extends Enum<E>> boolean contains(final Class<E> enumClass, String val) {
+	public static <E extends Enum<E>> boolean contains(final Class<E> enumClass, final String val) {
 		return EnumUtil.getEnumMap(enumClass).containsKey(val);
 	}
 
@@ -330,7 +330,7 @@ public class EnumUtil {
 	 * @param val       需要查找的值
 	 * @return 是否不存在
 	 */
-	public static <E extends Enum<E>> boolean notContains(final Class<E> enumClass, String val) {
+	public static <E extends Enum<E>> boolean notContains(final Class<E> enumClass, final String val) {
 		return false == contains(enumClass, val);
 	}
 
@@ -341,7 +341,7 @@ public class EnumUtil {
 	 * @param val 需要判断的值
 	 * @return 是非匹配
 	 */
-	public static boolean equalsIgnoreCase(final Enum<?> e, String val) {
+	public static boolean equalsIgnoreCase(final Enum<?> e, final String val) {
 		return StrUtil.equalsIgnoreCase(toString(e), val);
 	}
 
@@ -352,7 +352,7 @@ public class EnumUtil {
 	 * @param val 需要判断的值
 	 * @return 是非匹配
 	 */
-	public static boolean equals(final Enum<?> e, String val) {
+	public static boolean equals(final Enum<?> e, final String val) {
 		return StrUtil.equals(toString(e), val);
 	}
 }

@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class POIException extends RuntimeException {
 	private static final long serialVersionUID = 2711633732613506552L;
 
-	public POIException(Throwable e) {
+	public POIException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public POIException(String message) {
+	public POIException(final String message) {
 		super(message);
 	}
 
-	public POIException(String messageTemplate, Object... params) {
+	public POIException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public POIException(String message, Throwable throwable) {
+	public POIException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public POIException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public POIException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public POIException(Throwable throwable, String messageTemplate, Object... params) {
+	public POIException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

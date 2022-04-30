@@ -30,7 +30,7 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 	 * @param charset 编码
 	 * @param lineHandler 行处理器{@link LineHandler}实现
 	 */
-	public LineReadWatcher(RandomAccessFile randomAccessFile, Charset charset, LineHandler lineHandler) {
+	public LineReadWatcher(final RandomAccessFile randomAccessFile, final Charset charset, final LineHandler lineHandler) {
 		this.randomAccessFile = randomAccessFile;
 		this.charset = charset;
 		this.lineHandler = lineHandler;
@@ -42,7 +42,7 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 	}
 
 	@Override
-	public void onModify(WatchEvent<?> event, Path currentPath) {
+	public void onModify(final WatchEvent<?> event, final Path currentPath) {
 		final RandomAccessFile randomAccessFile = this.randomAccessFile;
 		final Charset charset = this.charset;
 		final LineHandler lineHandler = this.lineHandler;
@@ -64,7 +64,7 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 
 			// 记录当前读到的位置
 			randomAccessFile.seek(currentLength);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

@@ -22,12 +22,12 @@ public class DbcpDSFactory extends AbstractDSFactory {
 		this(null);
 	}
 
-	public DbcpDSFactory(Setting setting) {
+	public DbcpDSFactory(final Setting setting) {
 		super(DS_NAME, BasicDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		final BasicDataSource ds = new BasicDataSource();
 
 		ds.setUrl(jdbcUrl);
@@ -37,7 +37,7 @@ public class DbcpDSFactory extends AbstractDSFactory {
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				ds.addConnectionProperty(key, connValue);

@@ -33,7 +33,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	public final static String DEFAULT_GROUP = StrUtil.EMPTY;
 
 	@Override
-	public String getStr(String key, String defaultValue) {
+	public String getStr(final String key, final String defaultValue) {
 		return getStr(key, DEFAULT_GROUP, defaultValue);
 	}
 
@@ -45,7 +45,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认值
 	 * @return 值，如果字符串为{@code null}返回默认值
 	 */
-	public String getStr(String key, String group, String defaultValue) {
+	public String getStr(final String key, final String group, final String defaultValue) {
 		final String value = getByGroup(key, group);
 		return ObjUtil.defaultIfNull(value, defaultValue);
 	}
@@ -59,7 +59,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @return 值，如果字符串为{@code null}或者""返回默认值
 	 * @since 5.2。4
 	 */
-	public String getStrNotEmpty(String key, String group, String defaultValue) {
+	public String getStrNotEmpty(final String key, final String group, final String defaultValue) {
 		final String value = getByGroup(key, group);
 		return ObjUtil.defaultIfEmpty(value, defaultValue);
 	}
@@ -81,7 +81,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param key 键
 	 * @return 值
 	 */
-	public String getWithLog(String key) {
+	public String getWithLog(final String key) {
 		final String value = getStr(key);
 		if (value == null) {
 			log.debug("No key define for [{}]!", key);
@@ -96,7 +96,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组
 	 * @return 值
 	 */
-	public String getByGroupWithLog(String key, String group) {
+	public String getByGroupWithLog(final String key, final String group) {
 		final String value = getByGroup(key, group);
 		if (value == null) {
 			log.debug("No key define for [{}] of group [{}] !", key, group);
@@ -112,7 +112,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public String[] getStrings(String key) {
+	public String[] getStrings(final String key) {
 		return getStrings(key, null);
 	}
 
@@ -123,7 +123,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认的值
 	 * @return 属性值
 	 */
-	public String[] getStringsWithDefault(String key, String[] defaultValue) {
+	public String[] getStringsWithDefault(final String key, final String[] defaultValue) {
 		String[] value = getStrings(key, null);
 		if (null == value) {
 			value = defaultValue;
@@ -139,7 +139,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public String[] getStrings(String key, String group) {
+	public String[] getStrings(final String key, final String group) {
 		return getStrings(key, group, DEFAULT_DELIMITER);
 	}
 
@@ -151,7 +151,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param delimiter 分隔符
 	 * @return 属性值
 	 */
-	public String[] getStrings(String key, String group, String delimiter) {
+	public String[] getStrings(final String key, final String group, final String delimiter) {
 		final String value = getByGroup(key, group);
 		if (StrUtil.isBlank(value)) {
 			return null;
@@ -168,7 +168,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Integer getInt(String key, String group) {
+	public Integer getInt(final String key, final String group) {
 		return getInt(key, group, null);
 	}
 
@@ -180,7 +180,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认值
 	 * @return 属性值
 	 */
-	public Integer getInt(String key, String group, Integer defaultValue) {
+	public Integer getInt(final String key, final String group, final Integer defaultValue) {
 		return Convert.toInt(getByGroup(key, group), defaultValue);
 	}
 
@@ -193,7 +193,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Boolean getBool(String key, String group) {
+	public Boolean getBool(final String key, final String group) {
 		return getBool(key, group, null);
 	}
 
@@ -205,7 +205,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认值
 	 * @return 属性值
 	 */
-	public Boolean getBool(String key, String group, Boolean defaultValue) {
+	public Boolean getBool(final String key, final String group, final Boolean defaultValue) {
 		return Convert.toBool(getByGroup(key, group), defaultValue);
 	}
 
@@ -218,7 +218,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Long getLong(String key, String group) {
+	public Long getLong(final String key, final String group) {
 		return getLong(key, group, null);
 	}
 
@@ -230,7 +230,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认值
 	 * @return 属性值
 	 */
-	public Long getLong(String key, String group, Long defaultValue) {
+	public Long getLong(final String key, final String group, final Long defaultValue) {
 		return Convert.toLong(getByGroup(key, group), defaultValue);
 	}
 
@@ -243,7 +243,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Character getChar(String key, String group) {
+	public Character getChar(final String key, final String group) {
 		final String value = getByGroup(key, group);
 		if (StrUtil.isBlank(value)) {
 			return null;
@@ -260,7 +260,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Double getDouble(String key, String group) {
+	public Double getDouble(final String key, final String group) {
 		return getDouble(key, group, null);
 	}
 
@@ -272,7 +272,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param defaultValue 默认值
 	 * @return 属性值
 	 */
-	public Double getDouble(String key, String group, Double defaultValue) {
+	public Double getDouble(final String key, final String group, final Double defaultValue) {
 		return Convert.toDouble(getByGroup(key, group), defaultValue);
 	}
 
@@ -285,16 +285,16 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param bean  Bean对象
 	 * @return Bean
 	 */
-	public <T> T toBean(final String group, T bean) {
+	public <T> T toBean(final String group, final T bean) {
 		return BeanUtil.fillBean(bean, new ValueProvider<String>() {
 
 			@Override
-			public Object value(String key, Type valueType) {
+			public Object value(final String key, final Type valueType) {
 				return getByGroup(key, group);
 			}
 
 			@Override
-			public boolean containsKey(String key) {
+			public boolean containsKey(final String key) {
 				return null != getByGroup(key, group);
 			}
 		}, CopyOptions.create());
@@ -310,7 +310,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @return Bean
 	 * @since 5.0.6
 	 */
-	public <T> T toBean(String group, Class<T> beanClass) {
+	public <T> T toBean(final String group, final Class<T> beanClass) {
 		return toBean(group, ReflectUtil.newInstanceIfPossible(beanClass));
 	}
 
@@ -322,7 +322,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @param bean Bean
 	 * @return Bean
 	 */
-	public <T> T toBean(T bean) {
+	public <T> T toBean(final T bean) {
 		return toBean(null, bean);
 	}
 
@@ -335,7 +335,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @return Bean
 	 * @since 5.0.6
 	 */
-	public <T> T toBean(Class<T> beanClass) {
+	public <T> T toBean(final Class<T> beanClass) {
 		return toBean(null, beanClass);
 	}
 }

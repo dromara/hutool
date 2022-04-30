@@ -23,7 +23,7 @@ public class StringConverter extends AbstractConverter<String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected String convertInternal(Object value) {
+	protected String convertInternal(final Object value) {
 		if (value instanceof TimeZone) {
 			return ((TimeZone) value).getID();
 		} else if (value instanceof org.w3c.dom.Node) {
@@ -47,12 +47,12 @@ public class StringConverter extends AbstractConverter<String> {
 	 * @return 字符串
 	 * @since 5.4.5
 	 */
-	private static String clobToStr(Clob clob) {
+	private static String clobToStr(final Clob clob) {
 		Reader reader = null;
 		try {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new ConvertException(e);
 		} finally {
 			IoUtil.close(reader);
@@ -66,12 +66,12 @@ public class StringConverter extends AbstractConverter<String> {
 	 * @return 字符串
 	 * @since 5.4.5
 	 */
-	private static String blobToStr(Blob blob) {
+	private static String blobToStr(final Blob blob) {
 		InputStream in = null;
 		try {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, CharsetUtil.UTF_8);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new ConvertException(e);
 		} finally {
 			IoUtil.close(in);

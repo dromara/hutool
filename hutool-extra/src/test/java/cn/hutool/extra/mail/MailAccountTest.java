@@ -16,7 +16,7 @@ public class MailAccountTest {
 
 	@Test
 	public void parseSettingTest() {
-		MailAccount account = GlobalMailAccount.INSTANCE.getAccount();
+		final MailAccount account = GlobalMailAccount.INSTANCE.getAccount();
 		account.getSmtpProps();
 
 		Assert.assertNotNull(account.getCharset());
@@ -33,21 +33,21 @@ public class MailAccountTest {
 	@Test
 	@Ignore
 	public void customPropertyTest() throws GeneralSecurityException {
-		MailAccount mailAccount = new MailAccount();
+		final MailAccount mailAccount = new MailAccount();
 		mailAccount.setFrom("xxx@xxx.com");
 		mailAccount.setPass("xxxxxx");
 
 		mailAccount.setHost("smtp.aol.com");
 
 		// 使用其他配置属性
-		MailSSLSocketFactory sf = new MailSSLSocketFactory();
+		final MailSSLSocketFactory sf = new MailSSLSocketFactory();
 		sf.setTrustAllHosts(true);
 		mailAccount.setCustomProperty("mail.smtp.ssl.socketFactory", sf);
 
 		mailAccount.setAuth(true);
 		mailAccount.setSslEnable(true);
 
-		Mail mail = Mail.create(mailAccount)
+		final Mail mail = Mail.create(mailAccount)
 				.setTos("xx@xx.com")
 				.setTitle("邮箱验证")
 				.setContent("您的验证码是：<h3>2333</h3>")

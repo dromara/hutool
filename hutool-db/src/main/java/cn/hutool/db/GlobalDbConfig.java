@@ -42,7 +42,7 @@ public class GlobalDbConfig {
 	 *
 	 * @param isCaseInsensitive 否在结果中忽略大小写
 	 */
-	public static void setCaseInsensitive(boolean isCaseInsensitive) {
+	public static void setCaseInsensitive(final boolean isCaseInsensitive) {
 		caseInsensitive = isCaseInsensitive;
 	}
 
@@ -53,7 +53,7 @@ public class GlobalDbConfig {
 	 *
 	 * @param isReturnGeneratedKey 是否INSERT语句中默认返回主键
 	 */
-	public static void setReturnGeneratedKey(boolean isReturnGeneratedKey) {
+	public static void setReturnGeneratedKey(final boolean isReturnGeneratedKey) {
 		returnGeneratedKey = isReturnGeneratedKey;
 	}
 
@@ -63,7 +63,7 @@ public class GlobalDbConfig {
 	 * @param customDbSettingPath 自定义数据库配置文件路径（绝对路径或相对classpath路径）
 	 * @since 5.8.0
 	 */
-	public static void setDbSettingPath(String customDbSettingPath) {
+	public static void setDbSettingPath(final String customDbSettingPath) {
 		dbSettingPath = customDbSettingPath;
 	}
 
@@ -79,17 +79,17 @@ public class GlobalDbConfig {
 			// 自定义数据库配置文件位置
 			try {
 				setting = new Setting(dbSettingPath, false);
-			} catch (NoResourceException e3) {
+			} catch (final NoResourceException e3) {
 				throw new NoResourceException("Customize db setting file [{}] not found !", dbSettingPath);
 			}
 		} else {
 			try {
 				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-			} catch (NoResourceException e) {
+			} catch (final NoResourceException e) {
 				// 尝试ClassPath下直接读取配置文件
 				try {
 					setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
-				} catch (NoResourceException e2) {
+				} catch (final NoResourceException e2) {
 					throw new NoResourceException("Default db setting [{}] or [{}] in classpath not found !", DEFAULT_DB_SETTING_PATH, DEFAULT_DB_SETTING_PATH2);
 				}
 			}
@@ -105,7 +105,7 @@ public class GlobalDbConfig {
 	 * @param isShowParams 是否打印参数
 	 * @param level        SQL打印到的日志等级
 	 */
-	public static void setShowSql(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
+	public static void setShowSql(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
 		SqlLog.INSTANCE.init(isShowSql, isFormatSql, isShowParams, level);
 	}
 }

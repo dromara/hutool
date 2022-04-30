@@ -55,7 +55,7 @@ public class ConsoleTable {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public ConsoleTable setSBCMode(boolean isSBCMode) {
+	public ConsoleTable setSBCMode(final boolean isSBCMode) {
 		this.isSBCMode = isSBCMode;
 		return this;
 	}
@@ -66,11 +66,11 @@ public class ConsoleTable {
 	 * @param titles 列名
 	 * @return 自身对象
 	 */
-	public ConsoleTable addHeader(String... titles) {
+	public ConsoleTable addHeader(final String... titles) {
 		if (columnCharNumber == null) {
 			columnCharNumber = new ArrayList<>(Collections.nCopies(titles.length, 0));
 		}
-		List<String> l = new ArrayList<>();
+		final List<String> l = new ArrayList<>();
 		fillColumns(l, titles);
 		headerList.add(l);
 		return this;
@@ -82,8 +82,8 @@ public class ConsoleTable {
 	 * @param values 列值
 	 * @return 自身对象
 	 */
-	public ConsoleTable addBody(String... values) {
-		List<String> l = new ArrayList<>();
+	public ConsoleTable addBody(final String... values) {
+		final List<String> l = new ArrayList<>();
 		bodyList.add(l);
 		fillColumns(l, values);
 		return this;
@@ -95,14 +95,14 @@ public class ConsoleTable {
 	 * @param l       被填充列表
 	 * @param columns 填充内容
 	 */
-	private void fillColumns(List<String> l, String[] columns) {
+	private void fillColumns(final List<String> l, final String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
 			if (isSBCMode) {
 				column = Convert.toSBC(column);
 			}
 			l.add(column);
-			int width = column.length();
+			final int width = column.length();
 			if (width > columnCharNumber.get(i)) {
 				columnCharNumber.set(i, width);
 			}
@@ -116,7 +116,7 @@ public class ConsoleTable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		fillBorder(sb);
 		fillRows(sb, headerList);
 		fillBorder(sb);
@@ -131,8 +131,8 @@ public class ConsoleTable {
 	 * @param sb   内容
 	 * @param list 表头列表或者表体列表
 	 */
-	private void fillRows(StringBuilder sb, List<List<String>> list) {
-		for (List<String> row : list) {
+	private void fillRows(final StringBuilder sb, final List<List<String>> list) {
+		for (final List<String> row : list) {
 			sb.append(COLUMN_LINE);
 			fillRow(sb, row);
 			sb.append(LF);
@@ -145,7 +145,7 @@ public class ConsoleTable {
 	 * @param sb  内容
 	 * @param row 一行数据
 	 */
-	private void fillRow(StringBuilder sb, List<String> row) {
+	private void fillRow(final StringBuilder sb, final List<String> row) {
 		final int size = row.size();
 		String value;
 		for (int i = 0; i < size; i++) {
@@ -158,7 +158,7 @@ public class ConsoleTable {
 				sb.append(CharUtil.SPACE);
 			}
 			sb.append(SPACE);
-			int maxLength = columnCharNumber.get(i);
+			final int maxLength = columnCharNumber.get(i);
 			for (int j = 0; j < (maxLength - length + (sbcCount / 2)); j++) {
 				sb.append(SPACE);
 			}
@@ -171,9 +171,9 @@ public class ConsoleTable {
 	 *
 	 * @param sb StringBuilder
 	 */
-	private void fillBorder(StringBuilder sb) {
+	private void fillBorder(final StringBuilder sb) {
 		sb.append(CORNER);
-		for (Integer width : columnCharNumber) {
+		for (final Integer width : columnCharNumber) {
 			sb.append(StrUtil.repeat(ROW_LINE, width + 2));
 			sb.append(CORNER);
 		}
@@ -193,7 +193,7 @@ public class ConsoleTable {
 	 * @param value 字符串
 	 * @return 填充空格数量
 	 */
-	private int sbcCount(String value) {
+	private int sbcCount(final String value) {
 		int count = 0;
 		for (int i = 0; i < value.length(); i++) {
 			if (value.charAt(i) < '\177') {

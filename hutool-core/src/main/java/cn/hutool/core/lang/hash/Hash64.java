@@ -18,7 +18,7 @@ public interface Hash64<T> extends Hash<T>{
 	long hash64(T t);
 
 	@Override
-	default Number hash(T t){
+	default Number hash(final T t){
 		return hash64(t);
 	}
 }

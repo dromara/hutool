@@ -41,7 +41,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.3.1
 	 */
-	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, T bean) throws SQLException {
+	public static <T> T handleRow(final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final T bean) throws SQLException {
 		return handleRow(columnCount, meta, rs).toBeanIgnoreCase(bean);
 	}
 
@@ -58,7 +58,7 @@ public class HandleHelper {
 	 * @since 3.3.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, Class<T> beanClass) throws SQLException {
+	public static <T> T handleRow(final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final Class<T> beanClass) throws SQLException {
 		Assert.notNull(beanClass, "Bean Class must be not null !");
 
 		if(beanClass.isArray()) {
@@ -115,7 +115,7 @@ public class HandleHelper {
 	 * @return 每一行的Entity
 	 * @throws SQLException SQL执行异常
 	 */
-	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
+	public static Entity handleRow(final int columnCount, final ResultSetMetaData meta, final ResultSet rs) throws SQLException {
 		return handleRow(columnCount, meta, rs, false);
 	}
 
@@ -130,7 +130,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.16
 	 */
-	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, boolean caseInsensitive) throws SQLException {
+	public static Entity handleRow(final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean caseInsensitive) throws SQLException {
 		return handleRow(new Entity(null, caseInsensitive), columnCount, meta, rs, true);
 	}
 
@@ -147,7 +147,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.3.1
 	 */
-	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
+	public static <T extends Entity> T handleRow(final T row, final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean withMetaInfo) throws SQLException {
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			type = meta.getColumnType(i);
@@ -156,7 +156,7 @@ public class HandleHelper {
 		if (withMetaInfo) {
 			try {
 				row.setTableName(meta.getTableName(1));
-			} catch (SQLException ignore){
+			} catch (final SQLException ignore){
 				//issue#I2AGLU@Gitee
 				// Hive等NoSQL中无表的概念，此处报错，跳过。
 			}
@@ -172,7 +172,7 @@ public class HandleHelper {
 	 * @return 每一行的Entity
 	 * @throws SQLException SQL执行异常
 	 */
-	public static Entity handleRow(ResultSet rs) throws SQLException {
+	public static Entity handleRow(final ResultSet rs) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 		return handleRow(columnCount, meta, rs);
@@ -186,7 +186,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.1.6
 	 */
-	public static List<Object> handleRowToList(ResultSet rs) throws SQLException {
+	public static List<Object> handleRowToList(final ResultSet rs) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 		final List<Object> row = new ArrayList<>(columnCount);
@@ -206,7 +206,7 @@ public class HandleHelper {
 	 * @return Entity列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection) throws SQLException {
+	public static <T extends Collection<Entity>> T handleRs(final ResultSet rs, final T collection) throws SQLException {
 		return handleRs(rs, collection, false);
 	}
 
@@ -221,7 +221,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.16
 	 */
-	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection, boolean caseInsensitive) throws SQLException {
+	public static <T extends Collection<Entity>> T handleRs(final ResultSet rs, final T collection, final boolean caseInsensitive) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 
@@ -244,7 +244,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.1.0
 	 */
-	public static <E, T extends Collection<E>> T handleRsToBeanList(ResultSet rs, T collection, Class<E> elementBeanType) throws SQLException {
+	public static <E, T extends Collection<E>> T handleRsToBeanList(final ResultSet rs, final T collection, final Class<E> elementBeanType) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 
@@ -267,13 +267,13 @@ public class HandleHelper {
 	 * @return 字段值
 	 * @throws SQLException SQL异常
 	 */
-	private static Object getColumnValue(ResultSet rs, int columnIndex, int type, Type targetColumnType) throws SQLException {
+	private static Object getColumnValue(final ResultSet rs, final int columnIndex, final int type, final Type targetColumnType) throws SQLException {
 		Object rawValue = null;
 		switch (type) {
 		case Types.TIMESTAMP:
 			try{
 				rawValue = rs.getTimestamp(columnIndex);
-			} catch (SQLException ignore){
+			} catch (final SQLException ignore){
 				// issue#776@Github
 				// 当数据库中日期为0000-00-00 00:00:00报错，转为null
 			}

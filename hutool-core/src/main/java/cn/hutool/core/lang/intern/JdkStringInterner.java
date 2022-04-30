@@ -8,7 +8,7 @@ package cn.hutool.core.lang.intern;
  */
 public class JdkStringInterner implements Interner<String>{
 	@Override
-	public String intern(String sample) {
+	public String intern(final String sample) {
 		if(null == sample){
 			return null;
 		}

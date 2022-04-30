@@ -82,7 +82,7 @@ public class JSONConfig implements Serializable {
 	 * @return this
 	 * @since 5.7.21
 	 */
-	public JSONConfig setKeyComparator(Comparator<String> keyComparator) {
+	public JSONConfig setKeyComparator(final Comparator<String> keyComparator) {
 		this.keyComparator = keyComparator;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class JSONConfig implements Serializable {
 	 * @param ignoreError 是否忽略转换过程中的异常
 	 * @return this
 	 */
-	public JSONConfig setIgnoreError(boolean ignoreError) {
+	public JSONConfig setIgnoreError(final boolean ignoreError) {
 		this.ignoreError = ignoreError;
 		return this;
 	}
@@ -122,7 +122,7 @@ public class JSONConfig implements Serializable {
 	 * @param ignoreCase 是否忽略键的大小写
 	 * @return this
 	 */
-	public JSONConfig setIgnoreCase(boolean ignoreCase) {
+	public JSONConfig setIgnoreCase(final boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 		return this;
 	}
@@ -143,7 +143,7 @@ public class JSONConfig implements Serializable {
 	 * @param dateFormat 日期格式，null表示默认的时间戳
 	 * @return this
 	 */
-	public JSONConfig setDateFormat(String dateFormat) {
+	public JSONConfig setDateFormat(final String dateFormat) {
 		this.dateFormat = dateFormat;
 		return this;
 	}
@@ -163,7 +163,7 @@ public class JSONConfig implements Serializable {
 	 * @param ignoreNullValue 是否忽略null值
 	 * @return this
 	 */
-	public JSONConfig setIgnoreNullValue(boolean ignoreNullValue) {
+	public JSONConfig setIgnoreNullValue(final boolean ignoreNullValue) {
 		this.ignoreNullValue = ignoreNullValue;
 		return this;
 	}
@@ -185,7 +185,7 @@ public class JSONConfig implements Serializable {
 	 * @return this
 	 * @since 5.4.2
 	 */
-	public JSONConfig setTransientSupport(boolean transientSupport) {
+	public JSONConfig setTransientSupport(final boolean transientSupport) {
 		this.transientSupport = transientSupport;
 		return this;
 	}
@@ -207,7 +207,7 @@ public class JSONConfig implements Serializable {
 	 * @return this
 	 * @since 5.6.2
 	 */
-	public JSONConfig setStripTrailingZeros(boolean stripTrailingZeros) {
+	public JSONConfig setStripTrailingZeros(final boolean stripTrailingZeros) {
 		this.stripTrailingZeros = stripTrailingZeros;
 		return this;
 	}

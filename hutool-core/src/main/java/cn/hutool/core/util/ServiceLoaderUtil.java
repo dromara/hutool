@@ -30,12 +30,12 @@ public class ServiceLoaderUtil {
 	 * @param clazz 服务接口
 	 * @return 第一个服务接口实现对象，无实现返回{@code null}
 	 */
-	public static <T> T loadFirstAvailable(Class<T> clazz) {
+	public static <T> T loadFirstAvailable(final Class<T> clazz) {
 		final Iterator<T> iterator = load(clazz).iterator();
 		while (iterator.hasNext()) {
 			try {
 				return iterator.next();
-			} catch (ServiceConfigurationError ignore) {
+			} catch (final ServiceConfigurationError ignore) {
 				// ignore
 			}
 		}
@@ -49,7 +49,7 @@ public class ServiceLoaderUtil {
 	 * @param clazz 服务接口
 	 * @return 第一个服务接口实现对象，无实现返回{@code null}
 	 */
-	public static <T> T loadFirst(Class<T> clazz) {
+	public static <T> T loadFirst(final Class<T> clazz) {
 		final Iterator<T> iterator = load(clazz).iterator();
 		if (iterator.hasNext()) {
 			return iterator.next();
@@ -64,7 +64,7 @@ public class ServiceLoaderUtil {
 	 * @param clazz 服务接口
 	 * @return 服务接口实现列表
 	 */
-	public static <T> ServiceLoader<T> load(Class<T> clazz) {
+	public static <T> ServiceLoader<T> load(final Class<T> clazz) {
 		return load(clazz, null);
 	}
 
@@ -76,7 +76,7 @@ public class ServiceLoaderUtil {
 	 * @param loader {@link ClassLoader}
 	 * @return 服务接口实现列表
 	 */
-	public static <T> ServiceLoader<T> load(Class<T> clazz, ClassLoader loader) {
+	public static <T> ServiceLoader<T> load(final Class<T> clazz, final ClassLoader loader) {
 		return ServiceLoader.load(clazz, ObjUtil.defaultIfNull(loader, ClassLoaderUtil::getClassLoader));
 	}
 
@@ -88,7 +88,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 * @since 5.4.2
 	 */
-	public static <T> List<T> loadList(Class<T> clazz) {
+	public static <T> List<T> loadList(final Class<T> clazz) {
 		return loadList(clazz, null);
 	}
 
@@ -101,7 +101,7 @@ public class ServiceLoaderUtil {
 	 * @return 服务接口实现列表
 	 * @since 5.4.2
 	 */
-	public static <T> List<T> loadList(Class<T> clazz, ClassLoader loader) {
+	public static <T> List<T> loadList(final Class<T> clazz, final ClassLoader loader) {
 		return ListUtil.list(false, load(clazz, loader));
 	}
 }

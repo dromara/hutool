@@ -35,7 +35,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @return CombinationAnnotationElement
 	 * @since 5.8.0
 	 */
-	public static CombinationAnnotationElement of(AnnotatedElement element, Predicate<Annotation> predicate) {
+	public static CombinationAnnotationElement of(final AnnotatedElement element, final Predicate<Annotation> predicate) {
 		return new CombinationAnnotationElement(element, predicate);
 	}
 
@@ -69,7 +69,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 *
 	 * @param element 需要解析注解的元素：可以是Class、Method、Field、Constructor、ReflectPermission
 	 */
-	public CombinationAnnotationElement(AnnotatedElement element) {
+	public CombinationAnnotationElement(final AnnotatedElement element) {
 		this(element, null);
 	}
 
@@ -80,20 +80,20 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param predicate 过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
 	 * @since 5.8.0
 	 */
-	public CombinationAnnotationElement(AnnotatedElement element, Predicate<Annotation> predicate) {
+	public CombinationAnnotationElement(final AnnotatedElement element, final Predicate<Annotation> predicate) {
 		this.predicate = predicate;
 		init(element);
 	}
 
 	@Override
-	public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+	public boolean isAnnotationPresent(final Class<? extends Annotation> annotationClass) {
 		return annotationMap.containsKey(annotationClass);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-		Annotation annotation = annotationMap.get(annotationClass);
+	public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
+		final Annotation annotation = annotationMap.get(annotationClass);
 		return (annotation == null) ? null : (T) annotation;
 	}
 
@@ -114,7 +114,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 *
 	 * @param element 元素
 	 */
-	private void init(AnnotatedElement element) {
+	private void init(final AnnotatedElement element) {
 		final Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
 		this.declaredAnnotationMap = new TableMap<>();
 		parseDeclared(declaredAnnotations);
@@ -133,10 +133,10 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 *
 	 * @param annotations Class, Method, Field等
 	 */
-	private void parseDeclared(Annotation[] annotations) {
+	private void parseDeclared(final Annotation[] annotations) {
 		Class<? extends Annotation> annotationType;
 		// 直接注解
-		for (Annotation annotation : annotations) {
+		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
 			if (false == META_ANNOTATIONS.contains(annotationType)) {
 				if(test(annotation)){
@@ -153,9 +153,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 *
 	 * @param annotations Class, Method, Field等
 	 */
-	private void parse(Annotation[] annotations) {
+	private void parse(final Annotation[] annotations) {
 		Class<? extends Annotation> annotationType;
-		for (Annotation annotation : annotations) {
+		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
 			if (false == META_ANNOTATIONS.contains(annotationType)) {
 				if(test(annotation)){
@@ -173,7 +173,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param annotation 注解对象
 	 * @return 是否符合条件
 	 */
-	private boolean test(Annotation annotation) {
+	private boolean test(final Annotation annotation) {
 		return null == this.predicate || this.predicate.test(annotation);
 	}
 }

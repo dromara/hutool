@@ -13,9 +13,9 @@ public class CellEditorTest {
 
 	@org.junit.Test
 	public void readTest(){
-		ExcelReader excelReader= ExcelUtil.getReader("cell_editor_test.xlsx");
+		final ExcelReader excelReader= ExcelUtil.getReader("cell_editor_test.xlsx");
 		excelReader.setCellEditor(new ExcelHandler());
-		List<Test> excelReaderObjects=excelReader.readAll(Test.class);
+		final List<Test> excelReaderObjects=excelReader.readAll(Test.class);
 
 		Assert.assertEquals("0", excelReaderObjects.get(0).getTest1());
 		Assert.assertEquals("b", excelReaderObjects.get(0).getTest2());
@@ -36,7 +36,7 @@ public class CellEditorTest {
 
 	public static class ExcelHandler implements CellEditor {
 		@ Override
-		public Object edit(Cell cell, Object o) {
+		public Object edit(final Cell cell, Object o) {
 			if (cell.getColumnIndex()==0 && cell.getRowIndex() != 0){
 				o="0";
 			}

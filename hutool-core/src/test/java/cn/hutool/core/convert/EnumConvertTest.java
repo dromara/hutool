@@ -29,7 +29,7 @@ public class EnumConvertTest {
 	enum TestEnum {
 		A, B, C;
 
-		public static TestEnum parse(String str) {
+		public static TestEnum parse(final String str) {
 			switch (str) {
 				case "AAA":
 					return A;
@@ -41,7 +41,7 @@ public class EnumConvertTest {
 			return null;
 		}
 
-		public static TestEnum parseByNumber(int i) {
+		public static TestEnum parseByNumber(final int i) {
 			switch (i) {
 				case 11:
 					return A;

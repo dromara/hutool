@@ -19,12 +19,12 @@ public class CharMatcherFinder extends TextFinder {
 	 * 构造
 	 * @param matcher 被查找的字符匹配器
 	 */
-	public CharMatcherFinder(Matcher<Character> matcher) {
+	public CharMatcherFinder(final Matcher<Character> matcher) {
 		this.matcher = matcher;
 	}
 
 	@Override
-	public int start(int from) {
+	public int start(final int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
 		final int limit = getValidEndIndex();
 		if(negative){
@@ -44,7 +44,7 @@ public class CharMatcherFinder extends TextFinder {
 	}
 
 	@Override
-	public int end(int start) {
+	public int end(final int start) {
 		if(start < 0){
 			return -1;
 		}

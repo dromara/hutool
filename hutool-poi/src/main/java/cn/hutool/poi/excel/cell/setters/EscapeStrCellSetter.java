@@ -22,7 +22,7 @@ public class EscapeStrCellSetter extends CharSequenceCellSetter {
 	 *
 	 * @param value 值
 	 */
-	public EscapeStrCellSetter(CharSequence value) {
+	public EscapeStrCellSetter(final CharSequence value) {
 		super(escape(StrUtil.str(value)));
 	}
 
@@ -33,7 +33,7 @@ public class EscapeStrCellSetter extends CharSequenceCellSetter {
 	 * @param value 被转义的字符串
 	 * @return 转义后的字符串
 	 */
-	private static String escape(String value) {
+	private static String escape(final String value) {
 		if (value == null || false == value.contains("_x")) {
 			return value;
 		}

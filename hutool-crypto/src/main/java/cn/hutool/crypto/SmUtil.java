@@ -76,7 +76,7 @@ public class SmUtil {
 	 * @param publicKeyStr  公钥Hex或Base64表示
 	 * @return {@link SM2}
 	 */
-	public static SM2 sm2(String privateKeyStr, String publicKeyStr) {
+	public static SM2 sm2(final String privateKeyStr, final String publicKeyStr) {
 		return new SM2(privateKeyStr, publicKeyStr);
 	}
 
@@ -89,7 +89,7 @@ public class SmUtil {
 	 * @param publicKey  公钥，必须使用X509规范
 	 * @return {@link SM2}
 	 */
-	public static SM2 sm2(byte[] privateKey, byte[] publicKey) {
+	public static SM2 sm2(final byte[] privateKey, final byte[] publicKey) {
 		return new SM2(privateKey, publicKey);
 	}
 
@@ -103,7 +103,7 @@ public class SmUtil {
 	 * @return {@link SM2}
 	 * @since 5.5.9
 	 */
-	public static SM2 sm2(PrivateKey privateKey, PublicKey publicKey) {
+	public static SM2 sm2(final PrivateKey privateKey, final PublicKey publicKey) {
 		return new SM2(privateKey, publicKey);
 	}
 
@@ -117,7 +117,7 @@ public class SmUtil {
 	 * @return {@link SM2}
 	 * @since 5.5.9
 	 */
-	public static SM2 sm2(ECPrivateKeyParameters privateKeyParams, ECPublicKeyParameters publicKeyParams) {
+	public static SM2 sm2(final ECPrivateKeyParameters privateKeyParams, final ECPublicKeyParameters publicKeyParams) {
 		return new SM2(privateKeyParams, publicKeyParams);
 	}
 
@@ -140,7 +140,7 @@ public class SmUtil {
 	 * @return {@link SM3}
 	 * @since 5.7.16
 	 */
-	public static SM3 sm3WithSalt(byte[] salt) {
+	public static SM3 sm3WithSalt(final byte[] salt) {
 		return new SM3(salt);
 	}
 
@@ -150,7 +150,7 @@ public class SmUtil {
 	 * @param data 数据
 	 * @return SM3字符串
 	 */
-	public static String sm3(String data) {
+	public static String sm3(final String data) {
 		return sm3().digestHex(data);
 	}
 
@@ -160,7 +160,7 @@ public class SmUtil {
 	 * @param data 数据
 	 * @return SM3字符串
 	 */
-	public static String sm3(InputStream data) {
+	public static String sm3(final InputStream data) {
 		return sm3().digestHex(data);
 	}
 
@@ -170,7 +170,7 @@ public class SmUtil {
 	 * @param dataFile 被加密文件
 	 * @return SM3字符串
 	 */
-	public static String sm3(File dataFile) {
+	public static String sm3(final File dataFile) {
 		return sm3().digestHex(dataFile);
 	}
 
@@ -201,7 +201,7 @@ public class SmUtil {
 	 * @param key 密钥
 	 * @return {@link SM4}
 	 */
-	public static SM4 sm4(byte[] key) {
+	public static SM4 sm4(final byte[] key) {
 		return new SM4(key);
 	}
 
@@ -212,11 +212,11 @@ public class SmUtil {
 	 * @param ecDomainParameters {@link ECDomainParameters}
 	 * @return 加密后的bytes，顺序为C1C3C2
 	 */
-	public static byte[] changeC1C2C3ToC1C3C2(byte[] c1c2c3, ECDomainParameters ecDomainParameters) {
+	public static byte[] changeC1C2C3ToC1C3C2(final byte[] c1c2c3, final ECDomainParameters ecDomainParameters) {
 		// sm2p256v1的这个固定65。可看GMNamedCurves、ECCurve代码。
 		final int c1Len = (ecDomainParameters.getCurve().getFieldSize() + 7) / 8 * 2 + 1;
 		final int c3Len = 32; // new SM3Digest().getDigestSize();
-		byte[] result = new byte[c1c2c3.length];
+		final byte[] result = new byte[c1c2c3.length];
 		System.arraycopy(c1c2c3, 0, result, 0, c1Len); // c1
 		System.arraycopy(c1c2c3, c1c2c3.length - c3Len, result, c1Len, c3Len); // c3
 		System.arraycopy(c1c2c3, c1Len, result, c1Len + c3Len, c1c2c3.length - c1Len - c3Len); // c2
@@ -230,11 +230,11 @@ public class SmUtil {
 	 * @param ecDomainParameters {@link ECDomainParameters}
 	 * @return c1c2c3 加密后的bytes，顺序为C1C2C3
 	 */
-	public static byte[] changeC1C3C2ToC1C2C3(byte[] c1c3c2, ECDomainParameters ecDomainParameters) {
+	public static byte[] changeC1C3C2ToC1C2C3(final byte[] c1c3c2, final ECDomainParameters ecDomainParameters) {
 		// sm2p256v1的这个固定65。可看GMNamedCurves、ECCurve代码。
 		final int c1Len = (ecDomainParameters.getCurve().getFieldSize() + 7) / 8 * 2 + 1;
 		final int c3Len = 32; // new SM3Digest().getDigestSize();
-		byte[] result = new byte[c1c3c2.length];
+		final byte[] result = new byte[c1c3c2.length];
 		System.arraycopy(c1c3c2, 0, result, 0, c1Len); // c1: 0->65
 		System.arraycopy(c1c3c2, c1Len + c3Len, result, c1Len, c1c3c2.length - c1Len - c3Len); // c2
 		System.arraycopy(c1c3c2, c1Len, result, c1c3c2.length - c3Len, c3Len); // c3
@@ -248,11 +248,11 @@ public class SmUtil {
 	 * @return sign result in plain byte array
 	 * @since 4.5.0
 	 */
-	public static byte[] rsAsn1ToPlain(byte[] rsDer) {
+	public static byte[] rsAsn1ToPlain(final byte[] rsDer) {
 		final BigInteger[] decode;
 		try {
 			decode = StandardDSAEncoding.INSTANCE.decode(SM2_DOMAIN_PARAMS.getN(), rsDer);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -269,15 +269,15 @@ public class SmUtil {
 	 * @return rs result in asn1 format
 	 * @since 4.5.0
 	 */
-	public static byte[] rsPlainToAsn1(byte[] sign) {
+	public static byte[] rsPlainToAsn1(final byte[] sign) {
 		if (sign.length != RS_LEN * 2) {
 			throw new CryptoException("err rs. ");
 		}
-		BigInteger r = new BigInteger(1, Arrays.copyOfRange(sign, 0, RS_LEN));
-		BigInteger s = new BigInteger(1, Arrays.copyOfRange(sign, RS_LEN, RS_LEN * 2));
+		final BigInteger r = new BigInteger(1, Arrays.copyOfRange(sign, 0, RS_LEN));
+		final BigInteger s = new BigInteger(1, Arrays.copyOfRange(sign, RS_LEN, RS_LEN * 2));
 		try {
 			return StandardDSAEncoding.INSTANCE.encode(SM2_DOMAIN_PARAMS.getN(), r, s);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -289,7 +289,7 @@ public class SmUtil {
 	 * @return {@link MacEngine}
 	 * @since 4.5.13
 	 */
-	public static MacEngine createHmacSm3Engine(byte[] key) {
+	public static MacEngine createHmacSm3Engine(final byte[] key) {
 		return new BCHMacEngine(new SM3Digest(), key);
 	}
 
@@ -300,7 +300,7 @@ public class SmUtil {
 	 * @return {@link HMac} 对象，调用digestXXX即可
 	 * @since 4.5.13
 	 */
-	public static HMac hmacSm3(byte[] key) {
+	public static HMac hmacSm3(final byte[] key) {
 		return new HMac(HmacAlgorithm.HmacSM3, key);
 	}
 
@@ -313,16 +313,16 @@ public class SmUtil {
 	 * @return 固定长度bytes
 	 * @since 4.5.0
 	 */
-	private static byte[] bigIntToFixedLengthBytes(BigInteger rOrS) {
+	private static byte[] bigIntToFixedLengthBytes(final BigInteger rOrS) {
 		// for sm2p256v1, n is 00fffffffeffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123,
 		// r and s are the result of mod n, so they should be less than n and have length<=32
-		byte[] rs = rOrS.toByteArray();
+		final byte[] rs = rOrS.toByteArray();
 		if (rs.length == RS_LEN) {
 			return rs;
 		} else if (rs.length == RS_LEN + 1 && rs[0] == 0) {
 			return Arrays.copyOfRange(rs, 1, RS_LEN + 1);
 		} else if (rs.length < RS_LEN) {
-			byte[] result = new byte[RS_LEN];
+			final byte[] result = new byte[RS_LEN];
 			Arrays.fill(result, (byte) 0);
 			System.arraycopy(rs, 0, result, RS_LEN - rs.length, rs.length);
 			return result;

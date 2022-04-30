@@ -58,7 +58,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 *
 	 * @param filePath File CSV文件路径
 	 */
-	public CsvWriter(String filePath) {
+	public CsvWriter(final String filePath) {
 		this(FileUtil.file(filePath));
 	}
 
@@ -67,7 +67,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 *
 	 * @param file File CSV文件
 	 */
-	public CsvWriter(File file) {
+	public CsvWriter(final File file) {
 		this(file, CharsetUtil.UTF_8);
 	}
 
@@ -77,7 +77,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param filePath File CSV文件路径
 	 * @param charset  编码
 	 */
-	public CsvWriter(String filePath, Charset charset) {
+	public CsvWriter(final String filePath, final Charset charset) {
 		this(FileUtil.file(filePath), charset);
 	}
 
@@ -87,7 +87,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param file    File CSV文件
 	 * @param charset 编码
 	 */
-	public CsvWriter(File file, Charset charset) {
+	public CsvWriter(final File file, final Charset charset) {
 		this(file, charset, false);
 	}
 
@@ -98,7 +98,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param charset  编码
 	 * @param isAppend 是否追加
 	 */
-	public CsvWriter(String filePath, Charset charset, boolean isAppend) {
+	public CsvWriter(final String filePath, final Charset charset, final boolean isAppend) {
 		this(FileUtil.file(filePath), charset, isAppend);
 	}
 
@@ -109,7 +109,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param charset  编码
 	 * @param isAppend 是否追加
 	 */
-	public CsvWriter(File file, Charset charset, boolean isAppend) {
+	public CsvWriter(final File file, final Charset charset, final boolean isAppend) {
 		this(file, charset, isAppend, null);
 	}
 
@@ -121,7 +121,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param isAppend 是否追加
 	 * @param config   写出配置，null则使用默认配置
 	 */
-	public CsvWriter(String filePath, Charset charset, boolean isAppend, CsvWriteConfig config) {
+	public CsvWriter(final String filePath, final Charset charset, final boolean isAppend, final CsvWriteConfig config) {
 		this(FileUtil.file(filePath), charset, isAppend, config);
 	}
 
@@ -133,7 +133,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param isAppend 是否追加
 	 * @param config   写出配置，null则使用默认配置
 	 */
-	public CsvWriter(File file, Charset charset, boolean isAppend, CsvWriteConfig config) {
+	public CsvWriter(final File file, final Charset charset, final boolean isAppend, final CsvWriteConfig config) {
 		this(FileUtil.getWriter(file, charset, isAppend), config);
 	}
 
@@ -142,7 +142,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 *
 	 * @param writer {@link Writer}
 	 */
-	public CsvWriter(Writer writer) {
+	public CsvWriter(final Writer writer) {
 		this(writer, null);
 	}
 
@@ -152,7 +152,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param writer Writer
 	 * @param config 写出配置，null则使用默认配置
 	 */
-	public CsvWriter(Writer writer, CsvWriteConfig config) {
+	public CsvWriter(final Writer writer, final CsvWriteConfig config) {
 		this.writer = (writer instanceof BufferedWriter) ? writer : new BufferedWriter(writer);
 		this.config = ObjUtil.defaultIfNull(config, CsvWriteConfig::defaultConfig);
 	}
@@ -164,7 +164,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param alwaysDelimitText 是否始终使用文本分隔符，文本包装符，默认false，按需添加
 	 * @return this
 	 */
-	public CsvWriter setAlwaysDelimitText(boolean alwaysDelimitText) {
+	public CsvWriter setAlwaysDelimitText(final boolean alwaysDelimitText) {
 		this.config.setAlwaysDelimitText(alwaysDelimitText);
 		return this;
 	}
@@ -175,7 +175,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param lineDelimiter 换行符
 	 * @return this
 	 */
-	public CsvWriter setLineDelimiter(char[] lineDelimiter) {
+	public CsvWriter setLineDelimiter(final char[] lineDelimiter) {
 		this.config.setLineDelimiter(lineDelimiter);
 		return this;
 	}
@@ -187,7 +187,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvWriter write(String[]... lines) throws IORuntimeException {
+	public CsvWriter write(final String[]... lines) throws IORuntimeException {
 		return write(new ArrayIter<>(lines));
 	}
 
@@ -198,9 +198,9 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvWriter write(Iterable<?> lines) throws IORuntimeException {
+	public CsvWriter write(final Iterable<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
-			for (Object values : lines) {
+			for (final Object values : lines) {
 				appendLine(Convert.toStrArray(values));
 			}
 			flush();
@@ -215,7 +215,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @return this
 	 * @since 5.7.4
 	 */
-	public CsvWriter write(CsvData csvData) {
+	public CsvWriter write(final CsvData csvData) {
 		if (csvData != null) {
 			// 1、写header
 			final List<String> header = csvData.getHeader();
@@ -235,11 +235,11 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param beans Bean集合
 	 * @return this
 	 */
-	public CsvWriter writeBeans(Iterable<?> beans) {
+	public CsvWriter writeBeans(final Iterable<?> beans) {
 		if (CollUtil.isNotEmpty(beans)) {
 			boolean isFirst = true;
 			Map<String, Object> map;
-			for (Object bean : beans) {
+			for (final Object bean : beans) {
 				map = BeanUtil.beanToMap(bean);
 				if (isFirst) {
 					writeHeaderLine(map.keySet().toArray(new String[0]));
@@ -260,7 +260,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.10
 	 */
-	public CsvWriter writeHeaderLine(String... fields) throws IORuntimeException {
+	public CsvWriter writeHeaderLine(final String... fields) throws IORuntimeException {
 		final Map<String, String> headerAlias = this.config.headerAlias;
 		if (MapUtil.isNotEmpty(headerAlias)) {
 			// 标题别名替换
@@ -283,7 +283,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.7
 	 */
-	public CsvWriter writeLine(String... fields) throws IORuntimeException {
+	public CsvWriter writeLine(final String... fields) throws IORuntimeException {
 		if (ArrayUtil.isEmpty(fields)) {
 			return writeLine();
 		}
@@ -300,7 +300,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	public CsvWriter writeLine() throws IORuntimeException {
 		try {
 			writer.write(config.lineDelimiter);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		newline = true;
@@ -316,7 +316,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @see CsvConfig#commentCharacter
 	 * @since 5.5.7
 	 */
-	public CsvWriter writeComment(String comment) {
+	public CsvWriter writeComment(final String comment) {
 		Assert.notNull(this.config.commentCharacter, "Comment is disable!");
 		try {
 			if(isFirstLine){
@@ -328,7 +328,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 			writer.write(this.config.commentCharacter);
 			writer.write(comment);
 			newline = true;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -343,7 +343,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	public void flush() throws IORuntimeException {
 		try {
 			writer.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -356,10 +356,10 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param fields 字段列表 ({@code null} 值会被做为空值追加)
 	 * @throws IORuntimeException IO异常
 	 */
-	private void appendLine(String... fields) throws IORuntimeException {
+	private void appendLine(final String... fields) throws IORuntimeException {
 		try {
 			doAppendLine(fields);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -370,7 +370,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param fields 字段列表 ({@code null} 值会被做为空值追加)
 	 * @throws IOException IO异常
 	 */
-	private void doAppendLine(String... fields) throws IOException {
+	private void doAppendLine(final String... fields) throws IOException {
 		if (null != fields) {
 			if(isFirstLine){
 				// 首行不补换行符
@@ -378,7 +378,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 			}else {
 				writer.write(config.lineDelimiter);
 			}
-			for (String field : fields) {
+			for (final String field : fields) {
 				appendField(field);
 			}
 			newline = true;
@@ -392,9 +392,9 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @throws IOException IO异常
 	 */
 	private void appendField(final String value) throws IOException {
-		boolean alwaysDelimitText = config.alwaysDelimitText;
-		char textDelimiter = config.textDelimiter;
-		char fieldSeparator = config.fieldSeparator;
+		final boolean alwaysDelimitText = config.alwaysDelimitText;
+		final char textDelimiter = config.textDelimiter;
+		final char fieldSeparator = config.fieldSeparator;
 
 		if (false == newline) {
 			writer.write(fieldSeparator);

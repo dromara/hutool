@@ -15,12 +15,12 @@ public class NoneJWTSigner implements JWTSigner {
 	public static NoneJWTSigner NONE = new NoneJWTSigner();
 
 	@Override
-	public String sign(String headerBase64, String payloadBase64) {
+	public String sign(final String headerBase64, final String payloadBase64) {
 		return StrUtil.EMPTY;
 	}
 
 	@Override
-	public boolean verify(String headerBase64, String payloadBase64, String signBase64) {
+	public boolean verify(final String headerBase64, final String payloadBase64, final String signBase64) {
 		return StrUtil.isEmpty(signBase64);
 	}
 

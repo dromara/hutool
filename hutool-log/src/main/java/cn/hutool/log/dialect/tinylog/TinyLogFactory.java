@@ -5,12 +5,12 @@ import cn.hutool.log.LogFactory;
 
 /**
  * <a href="http://www.tinylog.org/">TinyLog</a> log.<br>
- * 
+ *
  * @author Looly
  *
  */
 public class TinyLogFactory extends LogFactory {
-	
+
 	/**
 	 * 构造
 	 */
@@ -20,12 +20,12 @@ public class TinyLogFactory extends LogFactory {
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new TinyLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new TinyLog(clazz);
 	}
 

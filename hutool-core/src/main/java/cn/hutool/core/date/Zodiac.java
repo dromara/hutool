@@ -23,7 +23,7 @@ public class Zodiac {
 	 * @param date 出生日期
 	 * @return 星座名
 	 */
-	public static String getZodiac(Date date) {
+	public static String getZodiac(final Date date) {
 		return getZodiac(DateUtil.calendar(date));
 	}
 
@@ -33,7 +33,7 @@ public class Zodiac {
 	 * @param calendar 出生日期
 	 * @return 星座名
 	 */
-	public static String getZodiac(Calendar calendar) {
+	public static String getZodiac(final Calendar calendar) {
 		if (null == calendar) {
 			return null;
 		}
@@ -48,7 +48,7 @@ public class Zodiac {
 	 * @return 星座名
 	 * @since 4.5.0
 	 */
-	public static String getZodiac(Month month, int day) {
+	public static String getZodiac(final Month month, final int day) {
 		return getZodiac(month.getValue(), day);
 	}
 
@@ -59,7 +59,7 @@ public class Zodiac {
 	 * @param day 天
 	 * @return 星座名
 	 */
-	public static String getZodiac(int month, int day) {
+	public static String getZodiac(final int month, final int day) {
 		// 在分隔日前为前一个星座，否则为后一个星座
 		return day < DAY_ARR[month] ? ZODIACS[month] : ZODIACS[month + 1];
 	}
@@ -71,7 +71,7 @@ public class Zodiac {
 	 * @param date 出生日期（年需农历）
 	 * @return 星座名
 	 */
-	public static String getChineseZodiac(Date date) {
+	public static String getChineseZodiac(final Date date) {
 		return getChineseZodiac(DateUtil.calendar(date));
 	}
 
@@ -81,7 +81,7 @@ public class Zodiac {
 	 * @param calendar 出生日期（年需农历）
 	 * @return 星座名
 	 */
-	public static String getChineseZodiac(Calendar calendar) {
+	public static String getChineseZodiac(final Calendar calendar) {
 		if (null == calendar) {
 			return null;
 		}
@@ -94,7 +94,7 @@ public class Zodiac {
 	 * @param year 农历年
 	 * @return 生肖名
 	 */
-	public static String getChineseZodiac(int year) {
+	public static String getChineseZodiac(final int year) {
 		if (year < 1900) {
 			return null;
 		}

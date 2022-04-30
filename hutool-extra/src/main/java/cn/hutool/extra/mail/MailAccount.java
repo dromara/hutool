@@ -140,7 +140,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * @param settingPath 配置文件路径
 	 */
-	public MailAccount(String settingPath) {
+	public MailAccount(final String settingPath) {
 		this(new Setting(settingPath));
 	}
 
@@ -149,7 +149,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * @param setting 配置文件
 	 */
-	public MailAccount(Setting setting) {
+	public MailAccount(final Setting setting) {
 		setting.toBean(this);
 	}
 
@@ -170,7 +170,7 @@ public class MailAccount implements Serializable {
 	 * @param host SMTP服务器域名
 	 * @return this
 	 */
-	public MailAccount setHost(String host) {
+	public MailAccount setHost(final String host) {
 		this.host = host;
 		return this;
 	}
@@ -190,7 +190,7 @@ public class MailAccount implements Serializable {
 	 * @param port SMTP服务端口
 	 * @return this
 	 */
-	public MailAccount setPort(Integer port) {
+	public MailAccount setPort(final Integer port) {
 		this.port = port;
 		return this;
 	}
@@ -210,7 +210,7 @@ public class MailAccount implements Serializable {
 	 * @param isAuth 是否需要用户名密码验证
 	 * @return this
 	 */
-	public MailAccount setAuth(boolean isAuth) {
+	public MailAccount setAuth(final boolean isAuth) {
 		this.auth = isAuth;
 		return this;
 	}
@@ -230,7 +230,7 @@ public class MailAccount implements Serializable {
 	 * @param user 用户名
 	 * @return this
 	 */
-	public MailAccount setUser(String user) {
+	public MailAccount setUser(final String user) {
 		this.user = user;
 		return this;
 	}
@@ -250,7 +250,7 @@ public class MailAccount implements Serializable {
 	 * @param pass 密码
 	 * @return this
 	 */
-	public MailAccount setPass(String pass) {
+	public MailAccount setPass(final String pass) {
 		this.pass = pass;
 		return this;
 	}
@@ -276,7 +276,7 @@ public class MailAccount implements Serializable {
 	 * @param from 发送方，遵循RFC-822标准
 	 * @return this
 	 */
-	public MailAccount setFrom(String from) {
+	public MailAccount setFrom(final String from) {
 		this.from = from;
 		return this;
 	}
@@ -298,7 +298,7 @@ public class MailAccount implements Serializable {
 	 * @return this
 	 * @since 4.0.2
 	 */
-	public MailAccount setDebug(boolean debug) {
+	public MailAccount setDebug(final boolean debug) {
 		this.debug = debug;
 		return this;
 	}
@@ -321,7 +321,7 @@ public class MailAccount implements Serializable {
 	 * @param charset 字符集编码，{@code null} 则表示使用全局设置的默认编码，全局编码为mail.mime.charset系统属性
 	 * @return this
 	 */
-	public MailAccount setCharset(Charset charset) {
+	public MailAccount setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -344,7 +344,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * @param splitlongparameters 对于超长参数是否切分为多份
 	 */
-	public void setSplitlongparameters(boolean splitlongparameters) {
+	public void setSplitlongparameters(final boolean splitlongparameters) {
 		this.splitlongparameters = splitlongparameters;
 	}
 
@@ -370,7 +370,7 @@ public class MailAccount implements Serializable {
 	 * @param encodefilename 对于文件名是否使用{@link #charset}编码
 	 * @since 5.7.16
 	 */
-	public void setEncodefilename(boolean encodefilename) {
+	public void setEncodefilename(final boolean encodefilename) {
 		this.encodefilename = encodefilename;
 	}
 
@@ -389,7 +389,7 @@ public class MailAccount implements Serializable {
 	 * @param startttlsEnable 是否使用STARTTLS安全连接
 	 * @return this
 	 */
-	public MailAccount setStarttlsEnable(boolean startttlsEnable) {
+	public MailAccount setStarttlsEnable(final boolean startttlsEnable) {
 		this.starttlsEnable = startttlsEnable;
 		return this;
 	}
@@ -409,7 +409,7 @@ public class MailAccount implements Serializable {
 	 * @param sslEnable 是否使用SSL安全连接
 	 * @return this
 	 */
-	public MailAccount setSslEnable(Boolean sslEnable) {
+	public MailAccount setSslEnable(final Boolean sslEnable) {
 		this.sslEnable = sslEnable;
 		return this;
 	}
@@ -430,7 +430,7 @@ public class MailAccount implements Serializable {
 	 * @param sslProtocols SSL协议，多个协议用空格分隔
 	 * @since 5.5.7
 	 */
-	public void setSslProtocols(String sslProtocols) {
+	public void setSslProtocols(final String sslProtocols) {
 		this.sslProtocols = sslProtocols;
 	}
 
@@ -449,7 +449,7 @@ public class MailAccount implements Serializable {
 	 * @param socketFactoryClass 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 	 * @return this
 	 */
-	public MailAccount setSocketFactoryClass(String socketFactoryClass) {
+	public MailAccount setSocketFactoryClass(final String socketFactoryClass) {
 		this.socketFactoryClass = socketFactoryClass;
 		return this;
 	}
@@ -469,7 +469,7 @@ public class MailAccount implements Serializable {
 	 * @param socketFactoryFallback 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
 	 * @return this
 	 */
-	public MailAccount setSocketFactoryFallback(boolean socketFactoryFallback) {
+	public MailAccount setSocketFactoryFallback(final boolean socketFactoryFallback) {
 		this.socketFactoryFallback = socketFactoryFallback;
 		return this;
 	}
@@ -489,7 +489,7 @@ public class MailAccount implements Serializable {
 	 * @param socketFactoryPort 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
 	 * @return this
 	 */
-	public MailAccount setSocketFactoryPort(int socketFactoryPort) {
+	public MailAccount setSocketFactoryPort(final int socketFactoryPort) {
 		this.socketFactoryPort = socketFactoryPort;
 		return this;
 	}
@@ -501,7 +501,7 @@ public class MailAccount implements Serializable {
 	 * @return this
 	 * @since 4.1.17
 	 */
-	public MailAccount setTimeout(long timeout) {
+	public MailAccount setTimeout(final long timeout) {
 		this.timeout = timeout;
 		return this;
 	}
@@ -513,7 +513,7 @@ public class MailAccount implements Serializable {
 	 * @return this
 	 * @since 4.1.17
 	 */
-	public MailAccount setConnectionTimeout(long connectionTimeout) {
+	public MailAccount setConnectionTimeout(final long connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
 		return this;
 	}
@@ -536,7 +536,7 @@ public class MailAccount implements Serializable {
 	 * @return this
 	 * @since 5.6.4
 	 */
-	public MailAccount setCustomProperty(String key, Object value) {
+	public MailAccount setCustomProperty(final String key, final Object value) {
 		if (StrUtil.isNotBlank(key) && ObjUtil.isNotNull(value)) {
 			this.customProperty.put(key, value);
 		}

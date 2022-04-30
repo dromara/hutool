@@ -41,7 +41,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param privateExponent d特征值
 	 * @return {@link PrivateKey}
 	 */
-	public static PrivateKey generatePrivateKey(BigInteger modulus, BigInteger privateExponent) {
+	public static PrivateKey generatePrivateKey(final BigInteger modulus, final BigInteger privateExponent) {
 		return SecureUtil.generatePrivateKey(ALGORITHM_RSA.getValue(), new RSAPrivateKeySpec(modulus, privateExponent));
 	}
 
@@ -52,7 +52,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicExponent e特征值
 	 * @return {@link PublicKey}
 	 */
-	public static PublicKey generatePublicKey(BigInteger modulus, BigInteger publicExponent) {
+	public static PublicKey generatePublicKey(final BigInteger modulus, final BigInteger publicExponent) {
 		return SecureUtil.generatePublicKey(ALGORITHM_RSA.getValue(), new RSAPublicKeySpec(modulus, publicExponent));
 	}
 	// ------------------------------------------------------------------ Static method end
@@ -70,7 +70,7 @@ public class RSA extends AsymmetricCrypto {
 	 *
 	 * @param rsaAlgorithm 自定义RSA算法，例如RSA/ECB/PKCS1Padding
 	 */
-	public RSA(String rsaAlgorithm) {
+	public RSA(final String rsaAlgorithm) {
 		super(rsaAlgorithm);
 	}
 
@@ -82,7 +82,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param privateKeyStr 私钥Hex或Base64表示
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public RSA(String privateKeyStr, String publicKeyStr) {
+	public RSA(final String privateKeyStr, final String publicKeyStr) {
 		super(ALGORITHM_RSA, privateKeyStr, publicKeyStr);
 	}
 
@@ -96,7 +96,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 * @since 4.5.8
 	 */
-	public RSA(String rsaAlgorithm, String privateKeyStr, String publicKeyStr) {
+	public RSA(final String rsaAlgorithm, final String privateKeyStr, final String publicKeyStr) {
 		super(rsaAlgorithm, privateKeyStr, publicKeyStr);
 	}
 
@@ -108,7 +108,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public RSA(byte[] privateKey, byte[] publicKey) {
+	public RSA(final byte[] privateKey, final byte[] publicKey) {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 
@@ -122,7 +122,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicExponent e特征值
 	 * @since 3.1.1
 	 */
-	public RSA(BigInteger modulus, BigInteger privateExponent, BigInteger publicExponent) {
+	public RSA(final BigInteger modulus, final BigInteger privateExponent, final BigInteger publicExponent) {
 		this(generatePrivateKey(modulus, privateExponent), generatePublicKey(modulus, publicExponent));
 	}
 
@@ -135,7 +135,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicKey 公钥
 	 * @since 3.1.1
 	 */
-	public RSA(PrivateKey privateKey, PublicKey publicKey) {
+	public RSA(final PrivateKey privateKey, final PublicKey publicKey) {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 
@@ -149,13 +149,13 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicKey 公钥
 	 * @since 4.5.8
 	 */
-	public RSA(String rsaAlgorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public RSA(final String rsaAlgorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		super(rsaAlgorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
 
 	@Override
-	public byte[] encrypt(byte[] data, KeyType keyType) {
+	public byte[] encrypt(final byte[] data, final KeyType keyType) {
 		// 在非使用BC库情况下，blockSize使用默认的算法
 		if (this.encryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
 			// 加密数据长度 <= 模长-11
@@ -165,7 +165,7 @@ public class RSA extends AsymmetricCrypto {
 	}
 
 	@Override
-	public byte[] decrypt(byte[] bytes, KeyType keyType) {
+	public byte[] decrypt(final byte[] bytes, final KeyType keyType) {
 		// 在非使用BC库情况下，blockSize使用默认的算法
 		if (this.decryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
 			// 加密数据长度 <= 模长-11
@@ -178,7 +178,7 @@ public class RSA extends AsymmetricCrypto {
 	protected void initCipher() {
 		try {
 			super.initCipher();
-		} catch (CryptoException e) {
+		} catch (final CryptoException e) {
 			final Throwable cause = e.getCause();
 			if(cause instanceof NoSuchAlgorithmException) {
 				// 在Linux下，未引入BC库可能会导致RSA/ECB/PKCS1Padding算法无法找到，此时使用默认算法

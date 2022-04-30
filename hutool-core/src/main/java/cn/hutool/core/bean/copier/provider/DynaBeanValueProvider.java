@@ -23,19 +23,19 @@ public class DynaBeanValueProvider implements ValueProvider<String> {
 	 * @param dynaBean        DynaBean
 	 * @param ignoreError 是否忽略错误
 	 */
-	public DynaBeanValueProvider(DynaBean dynaBean, boolean ignoreError) {
+	public DynaBeanValueProvider(final DynaBean dynaBean, final boolean ignoreError) {
 		this.dynaBean = dynaBean;
 		this.ignoreError = ignoreError;
 	}
 
 	@Override
-	public Object value(String key, Type valueType) {
+	public Object value(final String key, final Type valueType) {
 		final Object value = dynaBean.get(key);
 		return Convert.convertWithCheck(valueType, value, null, this.ignoreError);
 	}
 
 	@Override
-	public boolean containsKey(String key) {
+	public boolean containsKey(final String key) {
 		return dynaBean.containsProp(key);
 	}
 

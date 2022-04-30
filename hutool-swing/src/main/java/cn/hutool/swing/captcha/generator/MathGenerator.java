@@ -31,7 +31,7 @@ public class MathGenerator implements CodeGenerator {
 	 *
 	 * @param numberLength 参与计算最大数字位数
 	 */
-	public MathGenerator(int numberLength) {
+	public MathGenerator(final int numberLength) {
 		this.numberLength = numberLength;
 	}
 
@@ -51,11 +51,11 @@ public class MathGenerator implements CodeGenerator {
 	}
 
 	@Override
-	public boolean verify(String code, String userInputCode) {
-		int result;
+	public boolean verify(final String code, final String userInputCode) {
+		final int result;
 		try {
 			result = Integer.parseInt(userInputCode);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			// 用户输入非数字
 			return false;
 		}

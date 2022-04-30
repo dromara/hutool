@@ -35,10 +35,10 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param key 键
 	 * @return 值，如果分组不存在或者值不存在则返回null
 	 */
-	public String get(String group, String key) {
+	public String get(final String group, final String key) {
 		readLock.lock();
 		try {
-			LinkedHashMap<String, String> map = this.get(StrUtil.nullToEmpty(group));
+			final LinkedHashMap<String, String> map = this.get(StrUtil.nullToEmpty(group));
 			if (MapUtil.isNotEmpty(map)) {
 				return map.get(key);
 			}
@@ -49,7 +49,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	}
 
 	@Override
-	public LinkedHashMap<String, String> get(Object key) {
+	public LinkedHashMap<String, String> get(final Object key) {
 		readLock.lock();
 		try {
 			return super.get(key);
@@ -69,7 +69,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 		try {
 			if (this.size < 0) {
 				this.size = 0;
-				for (LinkedHashMap<String, String> value : this.values()) {
+				for (final LinkedHashMap<String, String> value : this.values()) {
 					this.size += value.size();
 				}
 			}
@@ -87,7 +87,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param value 值
 	 * @return 此key之前存在的值，如果没有返回null
 	 */
-	public String put(String group, String key, String value) {
+	public String put(String group, final String key, final String value) {
 		group = StrUtil.nullToEmpty(group).trim();
 		writeLock.lock();
 		try {
@@ -106,8 +106,8 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param m 键值对
 	 * @return this
 	 */
-	public GroupedMap putAll(String group, Map<? extends String, ? extends String> m) {
-		for (Entry<? extends String, ? extends String> entry : m.entrySet()) {
+	public GroupedMap putAll(final String group, final Map<? extends String, ? extends String> m) {
+		for (final Entry<? extends String, ? extends String> entry : m.entrySet()) {
 			this.put(group, entry.getKey(), entry.getValue());
 		}
 		return this;
@@ -120,7 +120,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param key 键
 	 * @return 被删除的值，如果值不存在，返回null
 	 */
-	public String remove(String group, String key) {
+	public String remove(String group, final String key) {
 		group = StrUtil.nullToEmpty(group).trim();
 		writeLock.lock();
 		try {
@@ -171,7 +171,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param key 键
 	 * @return 是否包含key
 	 */
-	public boolean containsKey(String group, String key) {
+	public boolean containsKey(String group, final String key) {
 		group = StrUtil.nullToEmpty(group).trim();
 		readLock.lock();
 		try {
@@ -192,7 +192,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param value 值
 	 * @return 是否包含值
 	 */
-	public boolean containsValue(String group, String value) {
+	public boolean containsValue(String group, final String value) {
 		group = StrUtil.nullToEmpty(group).trim();
 		readLock.lock();
 		try {

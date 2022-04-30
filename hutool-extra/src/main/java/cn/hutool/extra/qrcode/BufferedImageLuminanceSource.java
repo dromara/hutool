@@ -25,7 +25,7 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 	 *
 	 * @param image {@link BufferedImage}
 	 */
-	public BufferedImageLuminanceSource(BufferedImage image) {
+	public BufferedImageLuminanceSource(final BufferedImage image) {
 		this(image, 0, 0, image.getWidth(), image.getHeight());
 	}
 
@@ -38,11 +38,11 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 	 * @param width 宽度
 	 * @param height 高度
 	 */
-	public BufferedImageLuminanceSource(BufferedImage image, int left, int top, int width, int height) {
+	public BufferedImageLuminanceSource(final BufferedImage image, final int left, final int top, final int width, final int height) {
 		super(width, height);
 
-		int sourceWidth = image.getWidth();
-		int sourceHeight = image.getHeight();
+		final int sourceWidth = image.getWidth();
+		final int sourceHeight = image.getHeight();
 		if (left + width > sourceWidth || top + height > sourceHeight) {
 			throw new IllegalArgumentException("Crop rectangle does not fit within image data.");
 		}
@@ -62,11 +62,11 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 	}
 
 	@Override
-	public byte[] getRow(int y, byte[] row) {
+	public byte[] getRow(final int y, byte[] row) {
 		if (y < 0 || y >= getHeight()) {
 			throw new IllegalArgumentException("Requested row is outside the image: " + y);
 		}
-		int width = getWidth();
+		final int width = getWidth();
 		if (row == null || row.length < width) {
 			row = new byte[width];
 		}
@@ -76,10 +76,10 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 
 	@Override
 	public byte[] getMatrix() {
-		int width = getWidth();
-		int height = getHeight();
-		int area = width * height;
-		byte[] matrix = new byte[area];
+		final int width = getWidth();
+		final int height = getHeight();
+		final int area = width * height;
+		final byte[] matrix = new byte[area];
 		image.getRaster().getDataElements(left, top, width, height, matrix);
 		return matrix;
 	}
@@ -90,7 +90,7 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 	}
 
 	@Override
-	public LuminanceSource crop(int left, int top, int width, int height) {
+	public LuminanceSource crop(final int left, final int top, final int width, final int height) {
 		return new BufferedImageLuminanceSource(image, this.left + left, this.top + top, width, height);
 	}
 
@@ -103,18 +103,18 @@ public final class BufferedImageLuminanceSource extends LuminanceSource {
 	@Override
 	public LuminanceSource rotateCounterClockwise() {
 
-		int sourceWidth = image.getWidth();
-		int sourceHeight = image.getHeight();
+		final int sourceWidth = image.getWidth();
+		final int sourceHeight = image.getHeight();
 
-		AffineTransform transform = new AffineTransform(0.0, -1.0, 1.0, 0.0, 0.0, sourceWidth);
+		final AffineTransform transform = new AffineTransform(0.0, -1.0, 1.0, 0.0, 0.0, sourceWidth);
 
-		BufferedImage rotatedImage = new BufferedImage(sourceHeight, sourceWidth, BufferedImage.TYPE_BYTE_GRAY);
+		final BufferedImage rotatedImage = new BufferedImage(sourceHeight, sourceWidth, BufferedImage.TYPE_BYTE_GRAY);
 
-		Graphics2D g = rotatedImage.createGraphics();
+		final Graphics2D g = rotatedImage.createGraphics();
 		g.drawImage(image, transform, null);
 		g.dispose();
 
-		int width = getWidth();
+		final int width = getWidth();
 		return new BufferedImageLuminanceSource(rotatedImage, top, sourceWidth - (left + width), getHeight(), width);
 	}
 

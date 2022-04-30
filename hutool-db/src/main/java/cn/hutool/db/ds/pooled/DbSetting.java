@@ -31,7 +31,7 @@ public class DbSetting {
 	 *
 	 * @param setting 数据库配置
 	 */
-	public DbSetting(Setting setting) {
+	public DbSetting(final Setting setting) {
 		if (null == setting) {
 			this.setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		} else {
@@ -45,7 +45,7 @@ public class DbSetting {
 	 * @param group 分组
 	 * @return 分组
 	 */
-	public DbConfig getDbConfig(String group) {
+	public DbConfig getDbConfig(final String group) {
 		final Setting config = setting.getSetting(group);
 		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No Hutool pool config for group: [{}]", group);
@@ -73,7 +73,7 @@ public class DbSetting {
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (String key : DSFactory.KEY_CONN_PROPS) {
+		for (final String key : DSFactory.KEY_CONN_PROPS) {
 			connValue = config.get(key);
 			if(StrUtil.isNotBlank(connValue)){
 				dbConfig.addConnProps(key, connValue);

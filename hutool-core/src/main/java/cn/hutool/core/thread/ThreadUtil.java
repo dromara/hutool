@@ -33,8 +33,8 @@ public class ThreadUtil {
 	 * @param corePoolSize 同时执行的线程数大小
 	 * @return ExecutorService
 	 */
-	public static ExecutorService newExecutor(int corePoolSize) {
-		ExecutorBuilder builder = ExecutorBuilder.create();
+	public static ExecutorService newExecutor(final int corePoolSize) {
+		final ExecutorBuilder builder = ExecutorBuilder.create();
 		if (corePoolSize > 0) {
 			builder.setCorePoolSize(corePoolSize);
 		}
@@ -83,7 +83,7 @@ public class ThreadUtil {
 	 * @param maximumPoolSize 最大线程池大小
 	 * @return {@link ThreadPoolExecutor}
 	 */
-	public static ThreadPoolExecutor newExecutor(int corePoolSize, int maximumPoolSize) {
+	public static ThreadPoolExecutor newExecutor(final int corePoolSize, final int maximumPoolSize) {
 		return ExecutorBuilder.create()
 				.setCorePoolSize(corePoolSize)
 				.setMaxPoolSize(maximumPoolSize)
@@ -100,7 +100,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 * @since 5.4.1
 	 */
-	public static ExecutorService newExecutor(int corePoolSize, int maximumPoolSize, int maximumQueueSize) {
+	public static ExecutorService newExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize) {
 		return ExecutorBuilder.create()
 				.setCorePoolSize(corePoolSize)
 				.setMaxPoolSize(maximumPoolSize)
@@ -120,13 +120,13 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 * @since 3.0.6
 	 */
-	public static ThreadPoolExecutor newExecutorByBlockingCoefficient(float blockingCoefficient) {
+	public static ThreadPoolExecutor newExecutorByBlockingCoefficient(final float blockingCoefficient) {
 		if (blockingCoefficient >= 1 || blockingCoefficient < 0) {
 			throw new IllegalArgumentException("[blockingCoefficient] must between 0 and 1, or equals 0.");
 		}
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
-		int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
+		final int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
 		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
 	}
 
@@ -145,7 +145,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads, String threadNamePrefix, boolean isBlocked) {
+	public static ExecutorService newFixedExecutor(final int nThreads, final String threadNamePrefix, final boolean isBlocked) {
 		return newFixedExecutor(nThreads, 1024, threadNamePrefix, isBlocked);
 	}
 
@@ -165,7 +165,7 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads, int maximumQueueSize, String threadNamePrefix, boolean isBlocked) {
+	public static ExecutorService newFixedExecutor(final int nThreads, final int maximumQueueSize, final String threadNamePrefix, final boolean isBlocked) {
 		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
 				(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
 	}
@@ -185,10 +185,10 @@ public class ThreadUtil {
 	 * @author luozongle
 	 * @since 5.8.0
 	 */
-	public static ExecutorService newFixedExecutor(int nThreads,
-												   int maximumQueueSize,
-												   String threadNamePrefix,
-												   RejectedExecutionHandler handler) {
+	public static ExecutorService newFixedExecutor(final int nThreads,
+												   final int maximumQueueSize,
+												   final String threadNamePrefix,
+												   final RejectedExecutionHandler handler) {
 		return ExecutorBuilder.create()
 				.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
 				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
@@ -202,7 +202,7 @@ public class ThreadUtil {
 	 *
 	 * @param runnable 可运行对象
 	 */
-	public static void execute(Runnable runnable) {
+	public static void execute(final Runnable runnable) {
 		GlobalThreadPool.execute(runnable);
 	}
 
@@ -213,8 +213,8 @@ public class ThreadUtil {
 	 * @param isDaemon 是否守护线程。守护线程会在主线程结束后自动结束
 	 * @return 执行的方法体
 	 */
-	public static Runnable execAsync(Runnable runnable, boolean isDaemon) {
-		Thread thread = new Thread(runnable);
+	public static Runnable execAsync(final Runnable runnable, final boolean isDaemon) {
+		final Thread thread = new Thread(runnable);
 		thread.setDaemon(isDaemon);
 		thread.start();
 
@@ -229,7 +229,7 @@ public class ThreadUtil {
 	 * @param task {@link Callable}
 	 * @return Future
 	 */
-	public static <T> Future<T> execAsync(Callable<T> task) {
+	public static <T> Future<T> execAsync(final Callable<T> task) {
 		return GlobalThreadPool.submit(task);
 	}
 
@@ -241,7 +241,7 @@ public class ThreadUtil {
 	 * @return {@link Future}
 	 * @since 3.0.5
 	 */
-	public static Future<?> execAsync(Runnable runnable) {
+	public static Future<?> execAsync(final Runnable runnable) {
 		return GlobalThreadPool.submit(runnable);
 	}
 
@@ -264,7 +264,7 @@ public class ThreadUtil {
 	 * @param executor 执行器 {@link ExecutorService}
 	 * @return CompletionService
 	 */
-	public static <T> CompletionService<T> newCompletionService(ExecutorService executor) {
+	public static <T> CompletionService<T> newCompletionService(final ExecutorService executor) {
 		return new ExecutorCompletionService<>(executor);
 	}
 
@@ -274,7 +274,7 @@ public class ThreadUtil {
 	 * @param threadCount 线程数量
 	 * @return CountDownLatch
 	 */
-	public static CountDownLatch newCountDownLatch(int threadCount) {
+	public static CountDownLatch newCountDownLatch(final int threadCount) {
 		return new CountDownLatch(threadCount);
 	}
 
@@ -286,7 +286,7 @@ public class ThreadUtil {
 	 * @return {@link Thread}
 	 * @since 3.1.2
 	 */
-	public static Thread newThread(Runnable runnable, String name) {
+	public static Thread newThread(final Runnable runnable, final String name) {
 		final Thread t = newThread(runnable, name, false);
 		if (t.getPriority() != Thread.NORM_PRIORITY) {
 			t.setPriority(Thread.NORM_PRIORITY);
@@ -303,7 +303,7 @@ public class ThreadUtil {
 	 * @return {@link Thread}
 	 * @since 4.1.2
 	 */
-	public static Thread newThread(Runnable runnable, String name, boolean isDaemon) {
+	public static Thread newThread(final Runnable runnable, final String name, final boolean isDaemon) {
 		final Thread t = new Thread(null, runnable, name);
 		t.setDaemon(isDaemon);
 		return t;
@@ -316,10 +316,10 @@ public class ThreadUtil {
 	 * @param timeUnit 时长单位
 	 * @return 被中断返回false，否则true
 	 */
-	public static boolean sleep(Number timeout, TimeUnit timeUnit) {
+	public static boolean sleep(final Number timeout, final TimeUnit timeUnit) {
 		try {
 			timeUnit.sleep(timeout.longValue());
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			return false;
 		}
 		return true;
@@ -331,7 +331,7 @@ public class ThreadUtil {
 	 * @param millis 挂起的毫秒数
 	 * @return 被中断返回false，否则true
 	 */
-	public static boolean sleep(Number millis) {
+	public static boolean sleep(final Number millis) {
 		if (millis == null) {
 			return true;
 		}
@@ -345,11 +345,11 @@ public class ThreadUtil {
 	 * @return 被中断返回false，否则true
 	 * @since 5.3.2
 	 */
-	public static boolean sleep(long millis) {
+	public static boolean sleep(final long millis) {
 		if (millis > 0) {
 			try {
 				Thread.sleep(millis);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				return false;
 			}
 		}
@@ -363,7 +363,7 @@ public class ThreadUtil {
 	 * @return 被中断返回false，否则true
 	 * @see ThreadUtil#sleep(Number)
 	 */
-	public static boolean safeSleep(Number millis) {
+	public static boolean safeSleep(final Number millis) {
 		if (millis == null) {
 			return true;
 		}
@@ -379,7 +379,7 @@ public class ThreadUtil {
 	 * @see ThreadUtil#sleep(Number)
 	 * @since 5.3.2
 	 */
-	public static boolean safeSleep(long millis) {
+	public static boolean safeSleep(final long millis) {
 		long done = 0;
 		long before;
 		long spendTime;
@@ -412,7 +412,7 @@ public class ThreadUtil {
 	 * @return 堆栈项
 	 */
 	public static StackTraceElement getStackTraceElement(int i) {
-		StackTraceElement[] stackTrace = getStackTrace();
+		final StackTraceElement[] stackTrace = getStackTrace();
 		if (i < 0) {
 			i += stackTrace.length;
 		}
@@ -426,7 +426,7 @@ public class ThreadUtil {
 	 * @param isInheritable 是否为子线程提供从父线程那里继承的值
 	 * @return 本地线程
 	 */
-	public static <T> ThreadLocal<T> createThreadLocal(boolean isInheritable) {
+	public static <T> ThreadLocal<T> createThreadLocal(final boolean isInheritable) {
 		if (isInheritable) {
 			return new InheritableThreadLocal<>();
 		} else {
@@ -443,7 +443,7 @@ public class ThreadUtil {
 	 * @see ThreadLocal#withInitial(Supplier)
 	 * @since 5.6.7
 	 */
-	public static <T> ThreadLocal<T> createThreadLocal(Supplier<? extends T> supplier) {
+	public static <T> ThreadLocal<T> createThreadLocal(final Supplier<? extends T> supplier) {
 		return ThreadLocal.withInitial(supplier);
 	}
 
@@ -466,7 +466,7 @@ public class ThreadUtil {
 	 * @see ThreadFactoryBuilder#build()
 	 * @since 5.8.0
 	 */
-	public static ThreadFactory createThreadFactory(String threadNamePrefix) {
+	public static ThreadFactory createThreadFactory(final String threadNamePrefix) {
 		return ThreadFactoryBuilder.create().setNamePrefix(threadNamePrefix).build();
 	}
 
@@ -476,7 +476,7 @@ public class ThreadUtil {
 	 * @param thread 线程
 	 * @param isJoin 是否等待结束
 	 */
-	public static void interrupt(Thread thread, boolean isJoin) {
+	public static void interrupt(final Thread thread, final boolean isJoin) {
 		if (null != thread && false == thread.isInterrupted()) {
 			thread.interrupt();
 			if (isJoin) {
@@ -497,7 +497,7 @@ public class ThreadUtil {
 	 *
 	 * @param thread 线程
 	 */
-	public static void waitForDie(Thread thread) {
+	public static void waitForDie(final Thread thread) {
 		if (null == thread) {
 			return;
 		}
@@ -507,7 +507,7 @@ public class ThreadUtil {
 			try {
 				thread.join();
 				dead = true;
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				// ignore
 			}
 		} while (false == dead);
@@ -530,7 +530,7 @@ public class ThreadUtil {
 	 * @param group 线程组
 	 * @return 线程对象数组
 	 */
-	public static Thread[] getThreads(ThreadGroup group) {
+	public static Thread[] getThreads(final ThreadGroup group) {
 		final Thread[] slackList = new Thread[group.activeCount() * 2];
 		final int actualSize = group.enumerate(slackList);
 		final Thread[] result = new Thread[actualSize];
@@ -545,7 +545,7 @@ public class ThreadUtil {
 	 * @return 进程的主线程
 	 */
 	public static Thread getMainThread() {
-		for (Thread thread : getThreads()) {
+		for (final Thread thread : getThreads()) {
 			if (thread.getId() == 1) {
 				return thread;
 			}
@@ -572,7 +572,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadFactory}
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDaemon) {
+	public static ThreadFactory newNamedThreadFactory(final String prefix, final boolean isDaemon) {
 		return new NamedThreadFactory(prefix, isDaemon);
 	}
 
@@ -585,7 +585,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadFactory}
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon) {
+	public static ThreadFactory newNamedThreadFactory(final String prefix, final ThreadGroup threadGroup, final boolean isDaemon) {
 		return new NamedThreadFactory(prefix, threadGroup, isDaemon);
 	}
 
@@ -599,7 +599,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadFactory}
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon, UncaughtExceptionHandler handler) {
+	public static ThreadFactory newNamedThreadFactory(final String prefix, final ThreadGroup threadGroup, final boolean isDaemon, final UncaughtExceptionHandler handler) {
 		return new NamedThreadFactory(prefix, threadGroup, isDaemon, handler);
 	}
 
@@ -610,11 +610,11 @@ public class ThreadUtil {
 	 * @since 4.5.6
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void sync(Object obj) {
+	public static void sync(final Object obj) {
 		synchronized (obj) {
 			try {
 				obj.wait();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				// ignore
 			}
 		}
@@ -631,7 +631,7 @@ public class ThreadUtil {
 	 * @return {@link ConcurrencyTester}
 	 * @since 4.5.8
 	 */
-	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
+	public static ConcurrencyTester concurrencyTest(final int threadSize, final Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
 	}
 
@@ -642,7 +642,7 @@ public class ThreadUtil {
 	 * @return {@link ScheduledThreadPoolExecutor}
 	 * @since 5.5.8
 	 */
-	public static ScheduledThreadPoolExecutor createScheduledExecutor(int corePoolSize) {
+	public static ScheduledThreadPoolExecutor createScheduledExecutor(final int corePoolSize) {
 		return new ScheduledThreadPoolExecutor(corePoolSize);
 	}
 
@@ -663,11 +663,11 @@ public class ThreadUtil {
 	 * @return {@link ScheduledThreadPoolExecutor}
 	 * @since 5.5.8
 	 */
-	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
-													   Runnable command,
-													   long initialDelay,
-													   long period,
-													   boolean fixedRateOrFixedDelay) {
+	public static ScheduledThreadPoolExecutor schedule(final ScheduledThreadPoolExecutor executor,
+													   final Runnable command,
+													   final long initialDelay,
+													   final long period,
+													   final boolean fixedRateOrFixedDelay) {
 		return schedule(executor, command, initialDelay, period, TimeUnit.MILLISECONDS, fixedRateOrFixedDelay);
 	}
 
@@ -689,11 +689,11 @@ public class ThreadUtil {
 	 * @since 5.6.5
 	 */
 	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
-													   Runnable command,
-													   long initialDelay,
-													   long period,
-													   TimeUnit timeUnit,
-													   boolean fixedRateOrFixedDelay) {
+													   final Runnable command,
+													   final long initialDelay,
+													   final long period,
+													   final TimeUnit timeUnit,
+													   final boolean fixedRateOrFixedDelay) {
 		if (null == executor) {
 			executor = createScheduledExecutor(2);
 		}

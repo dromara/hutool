@@ -18,7 +18,7 @@ public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>>
 	 * @param key   键
 	 * @param value 值
 	 */
-	public MutablePair(K key, V value) {
+	public MutablePair(final K key, final V value) {
 		super(key, value);
 	}
 
@@ -28,7 +28,7 @@ public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>>
 	 * @param key 新键
 	 * @return this
 	 */
-	public MutablePair<K, V> setKey(K key) {
+	public MutablePair<K, V> setKey(final K key) {
 		this.key = key;
 		return this;
 	}
@@ -39,7 +39,7 @@ public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>>
 	 * @param value 新值
 	 * @return this
 	 */
-	public MutablePair<K, V> setValue(V value) {
+	public MutablePair<K, V> setValue(final V value) {
 		this.value = value;
 		return this;
 	}
@@ -50,7 +50,7 @@ public class MutablePair<K, V> extends Pair<K, V> implements Mutable<Pair<K, V>>
 	}
 
 	@Override
-	public void set(Pair<K, V> pair) {
+	public void set(final Pair<K, V> pair) {
 		this.key = pair.getKey();
 		this.value = pair.getValue();
 	}

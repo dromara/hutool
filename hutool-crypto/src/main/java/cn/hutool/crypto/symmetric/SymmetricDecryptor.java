@@ -47,7 +47,7 @@ public interface SymmetricDecryptor {
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	default String decryptStr(byte[] bytes, Charset charset) {
+	default String decryptStr(final byte[] bytes, final Charset charset) {
 		return StrUtil.str(decrypt(bytes), charset);
 	}
 
@@ -57,7 +57,7 @@ public interface SymmetricDecryptor {
 	 * @param bytes 被解密的bytes
 	 * @return 解密后的String
 	 */
-	default String decryptStr(byte[] bytes) {
+	default String decryptStr(final byte[] bytes) {
 		return decryptStr(bytes, CharsetUtil.UTF_8);
 	}
 
@@ -67,7 +67,7 @@ public interface SymmetricDecryptor {
 	 * @param data 被解密的String，必须为16进制字符串或Base64表示形式
 	 * @return 解密后的bytes
 	 */
-	default byte[] decrypt(String data) {
+	default byte[] decrypt(final String data) {
 		return decrypt(SecureUtil.decode(data));
 	}
 
@@ -78,7 +78,7 @@ public interface SymmetricDecryptor {
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	default String decryptStr(String data, Charset charset) {
+	default String decryptStr(final String data, final Charset charset) {
 		return StrUtil.str(decrypt(data), charset);
 	}
 
@@ -88,7 +88,7 @@ public interface SymmetricDecryptor {
 	 * @param data 被解密的String
 	 * @return 解密后的String
 	 */
-	default String decryptStr(String data) {
+	default String decryptStr(final String data) {
 		return decryptStr(data, CharsetUtil.UTF_8);
 	}
 
@@ -99,7 +99,7 @@ public interface SymmetricDecryptor {
 	 * @return 解密后的bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	default byte[] decrypt(InputStream data) throws IORuntimeException {
+	default byte[] decrypt(final InputStream data) throws IORuntimeException {
 		return decrypt(IoUtil.readBytes(data));
 	}
 
@@ -110,7 +110,7 @@ public interface SymmetricDecryptor {
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	default String decryptStr(InputStream data, Charset charset) {
+	default String decryptStr(final InputStream data, final Charset charset) {
 		return StrUtil.str(decrypt(data), charset);
 	}
 
@@ -120,7 +120,7 @@ public interface SymmetricDecryptor {
 	 * @param data 被解密的InputStream
 	 * @return 解密后的String
 	 */
-	default String decryptStr(InputStream data) {
+	default String decryptStr(final InputStream data) {
 		return decryptStr(data, CharsetUtil.UTF_8);
 	}
 }

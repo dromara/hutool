@@ -14,7 +14,7 @@ public class CharsetConverter extends AbstractConverter<Charset>{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Charset convertInternal(Object value) {
+	protected Charset convertInternal(final Object value) {
 		return CharsetUtil.charset(convertToStr(value));
 	}
 

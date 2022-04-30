@@ -41,7 +41,7 @@ public class Engine extends UserAgentInfo {
 	 * @param name 引擎名称
 	 * @param regex 关键字或表达式
 	 */
-	public Engine(String name, String regex) {
+	public Engine(final String name, final String regex) {
 		super(name, regex);
 		this.versionPattern = Pattern.compile(name + "[/\\- ]([\\d\\w.\\-]+)", Pattern.CASE_INSENSITIVE);
 	}
@@ -53,7 +53,7 @@ public class Engine extends UserAgentInfo {
 	 * @return 版本
 	 * @since 5.7.4
 	 */
-	public String getVersion(String userAgentString) {
+	public String getVersion(final String userAgentString) {
 		if(isUnknown()){
 			return null;
 		}

@@ -53,7 +53,7 @@ public class ClassLoaderUtil {
 	private static final WeakConcurrentMap<Pair<String, ClassLoader>, Class<?>> CLASS_CACHE = new WeakConcurrentMap<>();
 
 	static {
-		List<Class<?>> primitiveTypes = new ArrayList<>(32);
+		final List<Class<?>> primitiveTypes = new ArrayList<>(32);
 		// 加入原始类型
 		primitiveTypes.addAll(BasicType.PRIMITIVE_WRAPPER_MAP.keySet());
 		// 加入原始类型数组类型
@@ -66,7 +66,7 @@ public class ClassLoaderUtil {
 		primitiveTypes.add(long[].class);
 		primitiveTypes.add(short[].class);
 		primitiveTypes.add(void.class);
-		for (Class<?> primitiveType : primitiveTypes) {
+		for (final Class<?> primitiveType : primitiveTypes) {
 			PRIMITIVE_TYPE_NAME_MAP.put(primitiveType.getName(), primitiveType);
 		}
 	}
@@ -144,7 +144,7 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(String name) throws UtilException {
+	public static Class<?> loadClass(final String name) throws UtilException {
 		return loadClass(name, true);
 	}
 
@@ -163,7 +163,7 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(String name, boolean isInitialized) throws UtilException {
+	public static Class<?> loadClass(final String name, final boolean isInitialized) throws UtilException {
 		return loadClass(name, null, isInitialized);
 	}
 
@@ -185,7 +185,7 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(String name, ClassLoader classLoader, boolean isInitialized) throws UtilException {
+	public static Class<?> loadClass(String name, ClassLoader classLoader, final boolean isInitialized) throws UtilException {
 		Assert.notNull(name, "Name must not be null");
 
 		// 自动将包名中的"/"替换为"."
@@ -228,7 +228,7 @@ public class ClassLoaderUtil {
 	 * @return {@link JarClassLoader}
 	 * @since 4.4.2
 	 */
-	public static JarClassLoader getJarClassLoader(File jarOrDir) {
+	public static JarClassLoader getJarClassLoader(final File jarOrDir) {
 		return JarClassLoader.load(jarOrDir);
 	}
 
@@ -240,10 +240,10 @@ public class ClassLoaderUtil {
 	 * @return 类
 	 * @since 4.4.2
 	 */
-	public static Class<?> loadClass(File jarOrDir, String name) {
+	public static Class<?> loadClass(final File jarOrDir, final String name) {
 		try {
 			return getJarClassLoader(jarOrDir).loadClass(name);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -258,7 +258,7 @@ public class ClassLoaderUtil {
 	 * @param className 类名
 	 * @return 是否被提供
 	 */
-	public static boolean isPresent(String className) {
+	public static boolean isPresent(final String className) {
 		return isPresent(className, null);
 	}
 
@@ -271,11 +271,11 @@ public class ClassLoaderUtil {
 	 * @param classLoader {@link ClassLoader}
 	 * @return 是否被提供
 	 */
-	public static boolean isPresent(String className, ClassLoader classLoader) {
+	public static boolean isPresent(final String className, final ClassLoader classLoader) {
 		try {
 			loadClass(className, classLoader, false);
 			return true;
-		} catch (Throwable ex) {
+		} catch (final Throwable ex) {
 			return false;
 		}
 	}
@@ -288,7 +288,7 @@ public class ClassLoaderUtil {
 	 * @param isInitialized 是否初始化
 	 * @return 类
 	 */
-	private static Class<?> doLoadClass(String name, ClassLoader classLoader, boolean isInitialized){
+	private static Class<?> doLoadClass(final String name, ClassLoader classLoader, final boolean isInitialized){
 		Class<?> clazz;
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			// 对象数组"java.lang.String[]"风格
@@ -312,7 +312,7 @@ public class ClassLoaderUtil {
 			}
 			try {
 				clazz = Class.forName(name, isInitialized, classLoader);
-			} catch (ClassNotFoundException ex) {
+			} catch (final ClassNotFoundException ex) {
 				// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
 				clazz = tryLoadInnerClass(name, classLoader, isInitialized);
 				if (null == clazz) {
@@ -332,14 +332,14 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @since 4.1.20
 	 */
-	private static Class<?> tryLoadInnerClass(String name, ClassLoader classLoader, boolean isInitialized) {
+	private static Class<?> tryLoadInnerClass(final String name, final ClassLoader classLoader, final boolean isInitialized) {
 		// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
 		final int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
 		if (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
 			final String innerClassName = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
 			try {
 				return Class.forName(innerClassName, isInitialized, classLoader);
-			} catch (ClassNotFoundException ex2) {
+			} catch (final ClassNotFoundException ex2) {
 				// 尝试获取内部类失败时，忽略之。
 			}
 		}

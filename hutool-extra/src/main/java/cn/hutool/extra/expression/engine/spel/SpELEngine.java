@@ -27,7 +27,7 @@ public class SpELEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context) {
 		final EvaluationContext evaluationContext = new StandardEvaluationContext();
 		context.forEach(evaluationContext::setVariable);
 		return parser.parseExpression(expression).getValue(evaluationContext);

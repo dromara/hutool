@@ -20,15 +20,15 @@ public class Log4j2Log extends AbstractLog {
 	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4j2Log(Logger logger) {
+	public Log4j2Log(final Logger logger) {
 		this.logger = logger;
 	}
 
-	public Log4j2Log(Class<?> clazz) {
+	public Log4j2Log(final Class<?> clazz) {
 		this(LogManager.getLogger(clazz));
 	}
 
-	public Log4j2Log(String name) {
+	public Log4j2Log(final String name) {
 		this(LogManager.getLogger(name));
 	}
 
@@ -44,7 +44,7 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.TRACE, t, format, arguments);
 	}
 
@@ -55,7 +55,7 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.DEBUG, t, format, arguments);
 	}
 
@@ -66,7 +66,7 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.INFO, t, format, arguments);
 	}
 
@@ -77,7 +77,7 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.WARN, t, format, arguments);
 	}
 
@@ -88,14 +88,14 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.ERROR, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		Level log4j2Level;
+	public void log(final String fqcn, final cn.hutool.log.level.Level level, final Throwable t, final String format, final Object... arguments) {
+		final Level log4j2Level;
 		switch (level) {
 			case TRACE:
 				log4j2Level = Level.TRACE;
@@ -129,7 +129,7 @@ public class Log4j2Log extends AbstractLog {
 	 * @param msgTemplate 消息模板
 	 * @param arguments 参数
 	 */
-	private void logIfEnabled(String fqcn, Level level, Throwable t, String msgTemplate, Object... arguments) {
+	private void logIfEnabled(final String fqcn, final Level level, final Throwable t, final String msgTemplate, final Object... arguments) {
 		if(this.logger.isEnabled(level)) {
 			if(this.logger instanceof AbstractLogger){
 				((AbstractLogger)this.logger).logIfEnabled(fqcn, level, null, StrUtil.format(msgTemplate, arguments), t);

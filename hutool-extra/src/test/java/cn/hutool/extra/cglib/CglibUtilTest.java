@@ -9,7 +9,7 @@ public class CglibUtilTest {
 
 	@Test
 	public void copyTest() {
-		SampleBean bean = new SampleBean();
+		final SampleBean bean = new SampleBean();
 		OtherSampleBean otherBean = new OtherSampleBean();
 		bean.setValue("Hello world");
 		bean.setValue2("123");
@@ -19,7 +19,7 @@ public class CglibUtilTest {
 		// 无定义转换器，转换失败
 		Assert.assertEquals(0, otherBean.getValue2());
 
-		OtherSampleBean otherBean2 = CglibUtil.copy(bean, OtherSampleBean.class);
+		final OtherSampleBean otherBean2 = CglibUtil.copy(bean, OtherSampleBean.class);
 		Assert.assertEquals("Hello world", otherBean2.getValue());
 		// 无定义转换器，转换失败
 		Assert.assertEquals(0, otherBean.getValue2());

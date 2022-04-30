@@ -33,7 +33,7 @@ public class Deflate implements Closeable {
 	 * @param nowrap {@code true}表示兼容Gzip压缩
 	 * @return this
 	 */
-	public static Deflate of(InputStream source, OutputStream target, boolean nowrap) {
+	public static Deflate of(final InputStream source, final OutputStream target, final boolean nowrap) {
 		return new Deflate(source, target, nowrap);
 	}
 
@@ -44,7 +44,7 @@ public class Deflate implements Closeable {
 	 * @param target 目标流
 	 * @param nowrap {@code true}表示兼容Gzip压缩
 	 */
-	public Deflate(InputStream source, OutputStream target, boolean nowrap) {
+	public Deflate(final InputStream source, final OutputStream target, final boolean nowrap) {
 		this.source = source;
 		this.target = target;
 		this.nowrap = nowrap;
@@ -65,13 +65,13 @@ public class Deflate implements Closeable {
 	 * @param level 压缩级别，0~9
 	 * @return this
 	 */
-	public Deflate deflater(int level) {
+	public Deflate deflater(final int level) {
 		target= (target instanceof DeflaterOutputStream) ?
 				(DeflaterOutputStream) target : new DeflaterOutputStream(target, new Deflater(level, nowrap));
 		IoUtil.copy(source, target);
 		try {
 			((DeflaterOutputStream)target).finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -88,7 +88,7 @@ public class Deflate implements Closeable {
 		IoUtil.copy(source, target);
 		try {
 			((InflaterOutputStream)target).finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;

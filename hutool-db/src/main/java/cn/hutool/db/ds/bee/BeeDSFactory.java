@@ -23,19 +23,19 @@ public class BeeDSFactory extends AbstractDSFactory {
 		this(null);
 	}
 
-	public BeeDSFactory(Setting setting) {
+	public BeeDSFactory(final Setting setting) {
 		super(DS_NAME, BeeDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 
 		final BeeDataSourceConfig beeConfig = new BeeDataSourceConfig(driver, jdbcUrl, user, pass);
 		poolSetting.toBean(beeConfig);
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				beeConfig.addConnectProperty(key, connValue);

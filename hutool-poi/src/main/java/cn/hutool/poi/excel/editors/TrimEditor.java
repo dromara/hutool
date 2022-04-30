@@ -13,7 +13,7 @@ import cn.hutool.poi.excel.cell.CellEditor;
 public class TrimEditor implements CellEditor{
 
 	@Override
-	public Object edit(Cell cell, Object value) {
+	public Object edit(final Cell cell, final Object value) {
 		if(value instanceof String) {
 			return StrUtil.trim((String)value);
 		}

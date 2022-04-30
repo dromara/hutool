@@ -47,7 +47,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @param page     页码，0表示第一页
 	 * @param pageSize 每页结果数
 	 */
-	public PageResult(int page, int pageSize) {
+	public PageResult(final int page, final int pageSize) {
 		super(pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize);
 
 		this.page = Math.max(page, 0);
@@ -61,7 +61,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @param pageSize 每页结果数
 	 * @param total    结果总数
 	 */
-	public PageResult(int page, int pageSize, int total) {
+	public PageResult(final int page, final int pageSize, final int total) {
 		this(page, pageSize);
 
 		this.total = total;
@@ -85,7 +85,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 *
 	 * @param page 页码
 	 */
-	public void setPage(int page) {
+	public void setPage(final int page) {
 		this.page = page;
 	}
 
@@ -101,7 +101,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 *
 	 * @param pageSize 每页结果数
 	 */
-	public void setPageSize(int pageSize) {
+	public void setPageSize(final int pageSize) {
 		this.pageSize = pageSize;
 	}
 
@@ -117,7 +117,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 *
 	 * @param totalPage 总页数
 	 */
-	public void setTotalPage(int totalPage) {
+	public void setTotalPage(final int totalPage) {
 		this.totalPage = totalPage;
 	}
 
@@ -133,7 +133,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 *
 	 * @param total 总数
 	 */
-	public void setTotal(int total) {
+	public void setTotal(final int total) {
 		this.total = total;
 	}
 	//---------------------------------------------------------- Getters and Setters end

@@ -29,7 +29,7 @@ public class Gzip implements Closeable {
 	 * @param target 目标流
 	 * @return Gzip
 	 */
-	public static Gzip of(InputStream source, OutputStream target) {
+	public static Gzip of(final InputStream source, final OutputStream target) {
 		return new Gzip(source, target);
 	}
 
@@ -39,7 +39,7 @@ public class Gzip implements Closeable {
 	 * @param source 源流
 	 * @param target 目标流
 	 */
-	public Gzip(InputStream source, OutputStream target) {
+	public Gzip(final InputStream source, final OutputStream target) {
 		this.source = source;
 		this.target = target;
 	}
@@ -64,7 +64,7 @@ public class Gzip implements Closeable {
 					(GZIPOutputStream) target : new GZIPOutputStream(target);
 			IoUtil.copy(source, target);
 			((GZIPOutputStream) target).finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -80,7 +80,7 @@ public class Gzip implements Closeable {
 			source = (source instanceof GZIPInputStream) ?
 					(GZIPInputStream) source : new GZIPInputStream(source);
 			IoUtil.copy(source, target);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;

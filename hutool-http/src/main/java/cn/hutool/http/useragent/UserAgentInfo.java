@@ -27,7 +27,7 @@ public class UserAgentInfo implements Serializable {
 	 * @param name 名字
 	 * @param regex 表达式
 	 */
-	public UserAgentInfo(String name, String regex) {
+	public UserAgentInfo(final String name, final String regex) {
 		this(name, (null == regex) ? null : Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
 	}
 
@@ -37,7 +37,7 @@ public class UserAgentInfo implements Serializable {
 	 * @param name 名字
 	 * @param pattern 匹配模式
 	 */
-	public UserAgentInfo(String name, Pattern pattern) {
+	public UserAgentInfo(final String name, final Pattern pattern) {
 		this.name = name;
 		this.pattern = pattern;
 	}
@@ -66,7 +66,7 @@ public class UserAgentInfo implements Serializable {
 	 * @param content User-Agent字符串
 	 * @return 是否包含匹配此信息的内容
 	 */
-	public boolean isMatch(String content) {
+	public boolean isMatch(final String content) {
 		return ReUtil.contains(this.pattern, content);
 	}
 
@@ -88,7 +88,7 @@ public class UserAgentInfo implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}

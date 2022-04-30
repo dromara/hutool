@@ -22,7 +22,7 @@ public class ValueListHandler implements RsHandler<List<List<Object>>>{
 	}
 
 	@Override
-	public List<List<Object>> handle(ResultSet rs) throws SQLException {
+	public List<List<Object>> handle(final ResultSet rs) throws SQLException {
 		final ArrayList<List<Object>> result = new ArrayList<>();
 		while (rs.next()) {
 			result.add(HandleHelper.handleRowToList(rs));

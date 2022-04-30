@@ -11,23 +11,23 @@ import cn.hutool.core.text.StrUtil;
 public class IORuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public IORuntimeException(Throwable e) {
+	public IORuntimeException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public IORuntimeException(String message) {
+	public IORuntimeException(final String message) {
 		super(message);
 	}
 
-	public IORuntimeException(String messageTemplate, Object... params) {
+	public IORuntimeException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public IORuntimeException(String message, Throwable throwable) {
+	public IORuntimeException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public IORuntimeException(Throwable throwable, String messageTemplate, Object... params) {
+	public IORuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 
@@ -37,7 +37,7 @@ public class IORuntimeException extends RuntimeException {
 	 * @param clazz 异常类
 	 * @return 是否为指定类型异常
 	 */
-	public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
+	public boolean causeInstanceOf(final Class<? extends Throwable> clazz) {
 		final Throwable cause = this.getCause();
 		return null != clazz && clazz.isInstance(cause);
 	}

@@ -38,7 +38,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	 *
 	 * @param beanType 转换成的目标Bean类型
 	 */
-	public BeanConverter(Type beanType) {
+	public BeanConverter(final Type beanType) {
 		this(beanType, CopyOptions.create().setIgnoreError(true));
 	}
 
@@ -47,7 +47,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	 *
 	 * @param beanClass 转换成的目标Bean类
 	 */
-	public BeanConverter(Class<T> beanClass) {
+	public BeanConverter(final Class<T> beanClass) {
 		this(beanClass, CopyOptions.create().setIgnoreError(true));
 	}
 
@@ -58,14 +58,14 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	 * @param copyOptions Bean转换选项参数
 	 */
 	@SuppressWarnings("unchecked")
-	public BeanConverter(Type beanType, CopyOptions copyOptions) {
+	public BeanConverter(final Type beanType, final CopyOptions copyOptions) {
 		this.beanType = beanType;
 		this.beanClass = (Class<T>) TypeUtil.getClass(beanType);
 		this.copyOptions = copyOptions;
 	}
 
 	@Override
-	protected T convertInternal(Object value) {
+	protected T convertInternal(final Object value) {
 		if(value instanceof Map ||
 				value instanceof ValueProvider ||
 				BeanUtil.isBean(value.getClass())) {

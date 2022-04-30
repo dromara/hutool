@@ -3,7 +3,8 @@ package cn.hutool.core.codec;
 import java.util.Arrays;
 
 /**
- * Base32 - encodes and decodes RFC4648 Base32 (see https://datatracker.ietf.org/doc/html/rfc4648#section-6 )<br>
+ * Base32 - encodes and decodes RFC4648 Base32<br>
+ *  (see <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-6">https://datatracker.ietf.org/doc/html/rfc4648#section-6</a> )<br>
  * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。<br>
  * 所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。<br>
  * 根据RFC4648 Base32规范，支持两种模式：
@@ -20,7 +21,7 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	public static Base32Codec INSTANCE = new Base32Codec();
 
 	@Override
-	public String encode(byte[] data) {
+	public String encode(final byte[] data) {
 		return encode(data, false);
 	}
 
@@ -31,13 +32,13 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 * @param useHex 是否使用Hex Alphabet
 	 * @return 编码后的Base32字符串
 	 */
-	public String encode(byte[] data, boolean useHex) {
+	public String encode(final byte[] data, final boolean useHex) {
 		final Base32Encoder encoder = useHex ? Base32Encoder.HEX_ENCODER : Base32Encoder.ENCODER;
 		return encoder.encode(data);
 	}
 
 	@Override
-	public byte[] decode(CharSequence encoded) {
+	public byte[] decode(final CharSequence encoded) {
 		return decode(encoded, false);
 	}
 
@@ -48,7 +49,7 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 * @param useHex  是否使用Hex Alphabet
 	 * @return 解码后的内容
 	 */
-	public byte[] decode(CharSequence encoded, boolean useHex) {
+	public byte[] decode(final CharSequence encoded, final boolean useHex) {
 		final Base32Decoder decoder = useHex ? Base32Decoder.HEX_DECODER : Base32Decoder.DECODER;
 		return decoder.decode(encoded);
 	}
@@ -74,13 +75,13 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		 * @param alphabet 自定义编码字母表，见 {@link #DEFAULT_ALPHABET}和 {@link #HEX_ALPHABET}
 		 * @param pad      补位字符
 		 */
-		public Base32Encoder(String alphabet, Character pad) {
+		public Base32Encoder(final String alphabet, final Character pad) {
 			this.alphabet = alphabet.toCharArray();
 			this.pad = pad;
 		}
 
 		@Override
-		public String encode(byte[] data) {
+		public String encode(final byte[] data) {
 			int i = 0;
 			int index = 0;
 			int digit;
@@ -92,7 +93,7 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 				encodeLen = encodeLen + 1 + BASE32_FILL[(data.length * 8) % 5];
 			}
 
-			StringBuilder base32 = new StringBuilder(encodeLen);
+			final StringBuilder base32 = new StringBuilder(encodeLen);
 
 			while (i < data.length) {
 				// unsign
@@ -148,7 +149,7 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		 *
 		 * @param alphabet 编码字母表
 		 */
-		public Base32Decoder(String alphabet) {
+		public Base32Decoder(final String alphabet) {
 			lookupTable = new byte[128];
 			Arrays.fill(lookupTable, (byte) -1);
 
@@ -166,11 +167,11 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		}
 
 		@Override
-		public byte[] decode(CharSequence encoded) {
+		public byte[] decode(final CharSequence encoded) {
 			int i, index, lookup, offset, digit;
 			final String base32 = encoded.toString();
-			int len = base32.endsWith("=") ? base32.indexOf("=") * 5 / 8 : base32.length() * 5 / 8;
-			byte[] bytes = new byte[len];
+			final int len = base32.endsWith("=") ? base32.indexOf("=") * 5 / 8 : base32.length() * 5 / 8;
+			final byte[] bytes = new byte[len];
 
 			for (i = 0, index = 0, offset = 0; i < base32.length(); i++) {
 				lookup = base32.charAt(i) - BASE_CHAR;

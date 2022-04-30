@@ -26,7 +26,7 @@ public class RobotUtil {
 	static {
 		try {
 			ROBOT = new Robot();
-		} catch (AWTException e) {
+		} catch (final AWTException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -48,7 +48,7 @@ public class RobotUtil {
 	 * @param delayMillis 等待毫秒数
 	 * @since 4.5.7
 	 */
-	public static void setDelay(int delayMillis) {
+	public static void setDelay(final int delayMillis) {
 		delay = delayMillis;
 	}
 
@@ -69,7 +69,7 @@ public class RobotUtil {
 	 * @param y 移动到的y坐标
 	 * @since 4.5.7
 	 */
-	public static void mouseMove(int x, int y) {
+	public static void mouseMove(final int x, final int y) {
 		ROBOT.mouseMove(x, y);
 	}
 
@@ -103,7 +103,7 @@ public class RobotUtil {
 	 * @param wheelAmt 滚动数，负数表示向前滚动，正数向后滚动
 	 * @since 4.5.7
 	 */
-	public static void mouseWheel(int wheelAmt) {
+	public static void mouseWheel(final int wheelAmt) {
 		ROBOT.mouseWheel(wheelAmt);
 		delay();
 	}
@@ -115,8 +115,8 @@ public class RobotUtil {
 	 * @param keyCodes 按键码列表，见{@link java.awt.event.KeyEvent}
 	 * @since 4.5.7
 	 */
-	public static void keyClick(int... keyCodes) {
-		for (int keyCode : keyCodes) {
+	public static void keyClick(final int... keyCodes) {
+		for (final int keyCode : keyCodes) {
 			ROBOT.keyPress(keyCode);
 			ROBOT.keyRelease(keyCode);
 		}
@@ -128,7 +128,7 @@ public class RobotUtil {
 	 *
 	 * @param str 字符串
 	 */
-	public static void keyPressString(String str) {
+	public static void keyPressString(final String str) {
 		ClipboardUtil.setStr(str);
 		keyPressWithCtrl(KeyEvent.VK_V);// 粘贴
 		delay();
@@ -139,7 +139,7 @@ public class RobotUtil {
 	 *
 	 * @param key 按键
 	 */
-	public static void keyPressWithShift(int key) {
+	public static void keyPressWithShift(final int key) {
 		ROBOT.keyPress(KeyEvent.VK_SHIFT);
 		ROBOT.keyPress(key);
 		ROBOT.keyRelease(key);
@@ -152,7 +152,7 @@ public class RobotUtil {
 	 *
 	 * @param key 按键
 	 */
-	public static void keyPressWithCtrl(int key) {
+	public static void keyPressWithCtrl(final int key) {
 		ROBOT.keyPress(KeyEvent.VK_CONTROL);
 		ROBOT.keyPress(key);
 		ROBOT.keyRelease(key);
@@ -165,7 +165,7 @@ public class RobotUtil {
 	 *
 	 * @param key 按键
 	 */
-	public static void keyPressWithAlt(int key) {
+	public static void keyPressWithAlt(final int key) {
 		ROBOT.keyPress(KeyEvent.VK_ALT);
 		ROBOT.keyPress(key);
 		ROBOT.keyRelease(key);
@@ -188,7 +188,7 @@ public class RobotUtil {
 	 * @param outFile 写出到的文件
 	 * @return 写出到的文件
 	 */
-	public static File captureScreen(File outFile) {
+	public static File captureScreen(final File outFile) {
 		ImgUtil.write(captureScreen(), outFile);
 		return outFile;
 	}
@@ -199,7 +199,7 @@ public class RobotUtil {
 	 * @param screenRect 截屏的矩形区域
 	 * @return 截屏的图片
 	 */
-	public static BufferedImage captureScreen(Rectangle screenRect) {
+	public static BufferedImage captureScreen(final Rectangle screenRect) {
 		return ROBOT.createScreenCapture(screenRect);
 	}
 
@@ -210,7 +210,7 @@ public class RobotUtil {
 	 * @param outFile 写出到的文件
 	 * @return 写出到的文件
 	 */
-	public static File captureScreen(Rectangle screenRect, File outFile) {
+	public static File captureScreen(final Rectangle screenRect, final File outFile) {
 		ImgUtil.write(captureScreen(screenRect), outFile);
 		return outFile;
 	}

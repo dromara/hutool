@@ -26,7 +26,7 @@ public class SemaphoreRunnable implements Runnable {
 	 * @param runnable 实际执行的线程逻辑
 	 * @param semaphore 信号量，多个线程必须共享同一信号量
 	 */
-	public SemaphoreRunnable(Runnable runnable, Semaphore semaphore) {
+	public SemaphoreRunnable(final Runnable runnable, final Semaphore semaphore) {
 		this.runnable = runnable;
 		this.semaphore = semaphore;
 	}
@@ -51,7 +51,7 @@ public class SemaphoreRunnable implements Runnable {
 				} finally {
 					semaphore.release();
 				}
-			}catch (InterruptedException e) {
+			}catch (final InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 		}

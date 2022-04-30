@@ -27,12 +27,12 @@ public class TemporalAccessorSerializer implements JSONObjectSerializer<Temporal
 
 	private final Class<? extends TemporalAccessor> temporalAccessorClass;
 
-	public TemporalAccessorSerializer(Class<? extends TemporalAccessor> temporalAccessorClass) {
+	public TemporalAccessorSerializer(final Class<? extends TemporalAccessor> temporalAccessorClass) {
 		this.temporalAccessorClass = temporalAccessorClass;
 	}
 
 	@Override
-	public void serialize(JSONObject json, TemporalAccessor bean) {
+	public void serialize(final JSONObject json, final TemporalAccessor bean) {
 		if (bean instanceof LocalDate) {
 			final LocalDate localDate = (LocalDate) bean;
 			json.set(YEAR_KEY, localDate.getYear());
@@ -59,7 +59,7 @@ public class TemporalAccessorSerializer implements JSONObjectSerializer<Temporal
 	}
 
 	@Override
-	public TemporalAccessor deserialize(JSON json) {
+	public TemporalAccessor deserialize(final JSON json) {
 		final JSONObject jsonObject = (JSONObject) json;
 		if (LocalDate.class.equals(this.temporalAccessorClass)) {
 			return LocalDate.of(jsonObject.getInt(YEAR_KEY), jsonObject.getInt(MONTH_KEY), jsonObject.getInt(DAY_KEY));

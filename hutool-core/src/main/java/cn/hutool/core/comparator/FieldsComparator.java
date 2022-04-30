@@ -21,7 +21,7 @@ public class FieldsComparator<T> extends NullComparator<T> {
 	 * @param beanClass  Bean类
 	 * @param fieldNames 多个字段名
 	 */
-	public FieldsComparator(Class<T> beanClass, String... fieldNames) {
+	public FieldsComparator(final Class<T> beanClass, final String... fieldNames) {
 		this(true, beanClass, fieldNames);
 	}
 
@@ -32,10 +32,10 @@ public class FieldsComparator<T> extends NullComparator<T> {
 	 * @param beanClass   Bean类
 	 * @param fieldNames  多个字段名
 	 */
-	public FieldsComparator(boolean nullGreater, Class<T> beanClass, String... fieldNames) {
+	public FieldsComparator(final boolean nullGreater, final Class<T> beanClass, final String... fieldNames) {
 		super(nullGreater, (a, b) -> {
 			Field field;
-			for (String fieldName : fieldNames) {
+			for (final String fieldName : fieldNames) {
 				field = ClassUtil.getDeclaredField(beanClass, fieldName);
 				Assert.notNull(field, "Field [{}] not found in Class [{}]", fieldName, beanClass.getName());
 				final int compare = new FieldComparator<>(field).compare(a, b);

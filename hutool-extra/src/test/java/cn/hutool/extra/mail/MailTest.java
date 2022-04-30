@@ -33,7 +33,7 @@ public class MailTest {
 	@Test
 	@Ignore
 	public void sendWithImageTest() {
-		Map<String, InputStream> map = new HashMap<>();
+		final Map<String, InputStream> map = new HashMap<>();
 		map.put("testImage", FileUtil.getInputStream("f:/test/me.png"));
 		MailUtil.sendHtml("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:testImage\" />", map);
 	}
@@ -47,7 +47,7 @@ public class MailTest {
 	@Test
 	@Ignore
 	public void sendByAccountTest() {
-		MailAccount account = new MailAccount();
+		final MailAccount account = new MailAccount();
 		account.setHost("smtp.yeah.net");
 		account.setPort(465);
 		account.setSslEnable(true);
@@ -59,11 +59,11 @@ public class MailTest {
 
 	@Test
 	public void mailAccountTest() {
-		MailAccount account = new MailAccount();
+		final MailAccount account = new MailAccount();
 		account.setFrom("hutool@yeah.net");
 		account.setDebug(true);
 		account.defaultIfEmpty();
-		Properties props = account.getSmtpProps();
+		final Properties props = account.getSmtpProps();
 		Assert.assertEquals("true", props.getProperty("mail.debug"));
 	}
 }

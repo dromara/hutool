@@ -16,20 +16,20 @@ public class UrlBuilderTest {
 
 	@Test
 	public void buildTest() {
-		String buildUrl = UrlBuilder.create().setHost("www.hutool.cn").build();
+		final String buildUrl = UrlBuilder.create().setHost("www.hutool.cn").build();
 		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
 	}
 
 	@Test
 	public void buildTest2() {
 		// path中的+不做处理
-		String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.UTF_8).build();
+		final String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.UTF_8).build();
 		Assert.assertEquals("http://www.hutool.cn/+8618888888888", buildUrl);
 	}
 
 	@Test
 	public void testHost() {
-		String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.create()
 				.setScheme("https")
 				.setHost("www.hutool.cn").build();
 		Assert.assertEquals("https://www.hutool.cn/", buildUrl);
@@ -37,7 +37,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testHostPort() {
-		String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.create()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setPort(8080)
@@ -87,7 +87,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testFragment() {
-		String buildUrl = new UrlBuilder()
+		final String buildUrl = new UrlBuilder()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setFragment("abc").build();
@@ -96,7 +96,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testChineseFragment() {
-		String buildUrl = new UrlBuilder()
+		final String buildUrl = new UrlBuilder()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setFragment("测试").build();
@@ -105,7 +105,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testChineseFragmentWithPath() {
-		String buildUrl = new UrlBuilder()
+		final String buildUrl = new UrlBuilder()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.addPath("/s")
@@ -115,7 +115,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testChineseFragmentWithPathAndQuery() {
-		String buildUrl = new UrlBuilder()
+		final String buildUrl = new UrlBuilder()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.addPath("/s")
@@ -194,7 +194,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void weixinUrlTest(){
-		String urlStr = "https://mp.weixin.qq.com/s?" +
+		final String urlStr = "https://mp.weixin.qq.com/s?" +
 				"__biz=MzI5NjkyNTIxMg==" +
 				"&amp;mid=100000465" +
 				"&amp;idx=1" +
@@ -240,14 +240,14 @@ public class UrlBuilderTest {
 
 	@Test
 	public void toURITest() throws URISyntaxException {
-		String webUrl = "http://exmple.com/patha/pathb?a=123"; // 报错数据
+		final String webUrl = "http://exmple.com/patha/pathb?a=123"; // 报错数据
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
 		Assert.assertEquals(new URI(webUrl), urlBuilder.toURI());
 	}
 
 	@Test
 	public void testEncodeInQuery() {
-		String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
+		final String webUrl = "http://exmple.com/patha/pathb?a=123&b=4?6&c=789"; // b=4?6  参数中有未编码的？
 		final UrlBuilder urlBuilder = UrlBuilder.of(webUrl, StandardCharsets.UTF_8);
 		Assert.assertEquals("a=123&b=4?6&c=789", urlBuilder.getQueryStr());
 	}
@@ -271,11 +271,11 @@ public class UrlBuilderTest {
 
 	@Test
 	public void gimg2Test(){
-		String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
+		final String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
 		final UrlBuilder urlBuilder = UrlBuilder.of(url);
 
 		// PATH除了第一个path外，:是允许的
-		String url2 = "https://gimg2.baidu.com/image_search/src=http:%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http:%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
+		final String url2 = "https://gimg2.baidu.com/image_search/src=http:%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http:%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea";
 		Assert.assertEquals(url2, urlBuilder.toString());
 	}
 
@@ -283,7 +283,7 @@ public class UrlBuilderTest {
 	public void fragmentEncodeTest(){
 		// https://gitee.com/dromara/hutool/issues/I49KAL
 		// 见：https://stackoverflow.com/questions/26088849/url-fragment-allowed-characters
-		String url = "https://hutool.cn/docs/#/?id=简介";
+		final String url = "https://hutool.cn/docs/#/?id=简介";
 		UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals("https://hutool.cn/docs/#/?id=%E7%AE%80%E4%BB%8B", urlBuilder.toString());
 
@@ -296,14 +296,14 @@ public class UrlBuilderTest {
 		// https://github.com/dromara/hutool/issues/1904
 		// 在query中，"/"是不可转义字符
 		// 见：https://www.rfc-editor.org/rfc/rfc3986.html#section-3.4
-		String url = "https://invoice.maycur.com/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx?download/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx&e=1630491088";
+		final String url = "https://invoice.maycur.com/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx?download/2b27a802-8423-4d41-86f5-63a6b259f61e.xlsx&e=1630491088";
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals(url, urlBuilder.toString());
 	}
 
 	@Test
 	public void addPathEncodeTest(){
-		String url = UrlBuilder.create()
+		final String url = UrlBuilder.create()
 				.setScheme("https")
 				.setHost("domain.cn")
 				.addPath("api")
@@ -317,7 +317,7 @@ public class UrlBuilderTest {
 	@Test
 	public void addPathEncodeTest2(){
 		// https://github.com/dromara/hutool/issues/1912
-		String url = UrlBuilder.create()
+		final String url = UrlBuilder.create()
 				.setScheme("https")
 				.setHost("domain.cn")
 				.addPath("/api/xxx/bbb")
@@ -328,14 +328,14 @@ public class UrlBuilderTest {
 
 	@Test
 	public void percent2BTest(){
-		String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
+		final String url = "http://xxx.cn/a?Signature=3R013Bj9Uq4YeISzAs2iC%2BTVCL8%3D";
 		final UrlBuilder of = UrlBuilder.ofHttpWithoutEncode(url);
 		Assert.assertEquals(url, of.toString());
 	}
 
 	@Test
 	public void paramTest(){
-		String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
+		final String url = "http://ci.xiaohongshu.com/spectrum/c136c98aa2047babe25b994a26ffa7b492bd8058?imageMogr2/thumbnail/x800/format/jpg";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 		Assert.assertEquals(url, builder.toString());
 	}
@@ -343,7 +343,7 @@ public class UrlBuilderTest {
 	@Test
 	public void fragmentTest(){
 		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
-		String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
+		final String url = "https://www.hutool.cn/#/a/b?timestamp=1640391380204";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 
 		Assert.assertEquals(url, builder.toString());
@@ -352,7 +352,7 @@ public class UrlBuilderTest {
 	@Test
 	public void fragmentAppendParamTest(){
 		// https://gitee.com/dromara/hutool/issues/I49KAL#note_8060874
-		String url = "https://www.hutool.cn/#/a/b";
+		final String url = "https://www.hutool.cn/#/a/b";
 		final UrlBuilder builder = UrlBuilder.ofHttp(url);
 		builder.setFragment(builder.getFragment() + "?timestamp=1640391380204");
 		Assert.assertEquals("https://www.hutool.cn/#/a/b?timestamp=1640391380204", builder.toString());
@@ -360,7 +360,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void paramWithPlusTest(){
-		String url = "http://127.0.0.1/?" +
+		final String url = "http://127.0.0.1/?" +
 				"Expires=1642734164&" +
 				"security-token=CAIS+AF1q6Ft5B2yfSjIr5fYEeju1b1ggpPee2KGpjlgQtdfl43urjz2IHtKdXRvBu8Xs" +
 				"/4wnmxX7f4YlqB6T55OSAmcNZEoPwKpT4zmMeT7oMWQweEurv" +
@@ -376,7 +376,7 @@ public class UrlBuilderTest {
 	@Test
 	public void issueI4Z2ETTest(){
 		// =是url参数值中的合法字符，但是某些URL强制编码了
-		String url = "http://dsl-fd.dslbuy.com/fssc/1647947565522.pdf?" +
+		final String url = "http://dsl-fd.dslbuy.com/fssc/1647947565522.pdf?" +
 				"Expires=1647949365" +
 				"&OSSAccessKeyId=STS.NTZ9hvqPSLG8ENknz2YaByLKj" +
 				"&Signature=oYUu26JufAyPY4PdzaOp1x4sr4Q%3D";
@@ -387,22 +387,22 @@ public class UrlBuilderTest {
 
 	@Test
 	public void issue2215Test(){
-		String url = "https://hutool.cn/v1/104303371/messages:send";
+		final String url = "https://hutool.cn/v1/104303371/messages:send";
 		final String build = UrlBuilder.of(url).build();
 		Assert.assertEquals(url, build);
 	}
 
 	@Test
 	public void issuesI4Z2ETTest(){
-		String url = "http://hutool.cn/2022/03/09/123.zip?Expires=1648704684&OSSAccessKeyId=LTAI4FncgaVtwZGBnYHHi8ox&Signature=%2BK%2B%3D";
+		final String url = "http://hutool.cn/2022/03/09/123.zip?Expires=1648704684&OSSAccessKeyId=LTAI4FncgaVtwZGBnYHHi8ox&Signature=%2BK%2B%3D";
 		final String build = UrlBuilder.of(url, null).build();
 		Assert.assertEquals(url, build);
 	}
 
 	@Test
 	public void issueI50NHQTest(){
-		String url = "http://127.0.0.1/devicerecord/list";
-		HashMap<String, Object> params = new LinkedHashMap<>();
+		final String url = "http://127.0.0.1/devicerecord/list";
+		final HashMap<String, Object> params = new LinkedHashMap<>();
 		params.put("start", "2022-03-31 00:00:00");
 		params.put("end", "2022-03-31 23:59:59");
 		params.put("page", 1);
@@ -422,7 +422,7 @@ public class UrlBuilderTest {
 	public void issue2243Test(){
 		// https://github.com/dromara/hutool/issues/2243
 		// 如果用户已经做了%编码，不应该重复编码
-		String url = "https://hutool.cn/v1.0?privateNum=%2B8616512884988";
+		final String url = "https://hutool.cn/v1.0?privateNum=%2B8616512884988";
 		final String s = UrlBuilder.of(url, null).setCharset(CharsetUtil.UTF_8).toString();
 		Assert.assertEquals(url, s);
 	}
@@ -430,7 +430,7 @@ public class UrlBuilderTest {
 	@Test
 	public void issueI51T0VTest(){
 		// &amp;自动转换为&
-		String url = "https://hutool.cn/a.mp3?Expires=1652423884&amp;key=JMv2rKNc7Pz&amp;sign=12zva00BpVqgZcX1wcb%2BrmN7H3E%3D";
+		final String url = "https://hutool.cn/a.mp3?Expires=1652423884&amp;key=JMv2rKNc7Pz&amp;sign=12zva00BpVqgZcX1wcb%2BrmN7H3E%3D";
 		final UrlBuilder of = UrlBuilder.of(url, null);
 		Assert.assertEquals(url.replace("&amp;", "&"), of.toString());
 	}

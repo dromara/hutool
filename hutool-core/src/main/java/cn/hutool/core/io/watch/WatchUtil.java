@@ -24,7 +24,7 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URL url, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final URL url, final WatchEvent.Kind<?>... events) {
 		return create(url, 0, events);
 	}
 
@@ -36,7 +36,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URL url, int maxDepth, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final URL url, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return create(URLUtil.toURI(url), maxDepth, events);
 	}
 
@@ -47,7 +47,7 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URI uri, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final URI uri, final WatchEvent.Kind<?>... events) {
 		return create(uri, 0, events);
 	}
 
@@ -59,7 +59,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URI uri, int maxDepth, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final URI uri, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return create(Paths.get(uri), maxDepth, events);
 	}
 
@@ -70,7 +70,7 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(File file, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final File file, final WatchEvent.Kind<?>... events) {
 		return create(file, 0, events);
 	}
 
@@ -82,7 +82,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(File file, int maxDepth, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final File file, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return create(file.toPath(), maxDepth, events);
 	}
 
@@ -93,7 +93,7 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(String path, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final String path, final WatchEvent.Kind<?>... events) {
 		return create(path, 0, events);
 	}
 
@@ -105,7 +105,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(String path, int maxDepth, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final String path, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return create(Paths.get(path), maxDepth, events);
 	}
 
@@ -116,7 +116,7 @@ public class WatchUtil {
 	 * @param events 监听事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(Path path, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final Path path, final WatchEvent.Kind<?>... events) {
 		return create(path, 0, events);
 	}
 
@@ -128,7 +128,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(Path path, int maxDepth, WatchEvent.Kind<?>... events) {
+	public static WatchMonitor create(final Path path, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return new WatchMonitor(path, maxDepth, events);
 	}
 
@@ -140,7 +140,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(URL url, Watcher watcher) {
+	public static WatchMonitor createAll(final URL url, final Watcher watcher) {
 		return createAll(url, 0, watcher);
 	}
 
@@ -152,7 +152,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(URL url, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createAll(final URL url, final int maxDepth, final Watcher watcher) {
 		return createAll(URLUtil.toURI(url), maxDepth, watcher);
 	}
 
@@ -163,7 +163,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(URI uri, Watcher watcher) {
+	public static WatchMonitor createAll(final URI uri, final Watcher watcher) {
 		return createAll(uri, 0, watcher);
 	}
 
@@ -175,7 +175,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(URI uri, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createAll(final URI uri, final int maxDepth, final Watcher watcher) {
 		return createAll(Paths.get(uri), maxDepth, watcher);
 	}
 
@@ -186,7 +186,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(File file, Watcher watcher) {
+	public static WatchMonitor createAll(final File file, final Watcher watcher) {
 		return createAll(file, 0, watcher);
 	}
 
@@ -198,7 +198,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(File file, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createAll(final File file, final int maxDepth, final Watcher watcher) {
 		return createAll(file.toPath(), 0, watcher);
 	}
 
@@ -209,7 +209,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(String path, Watcher watcher) {
+	public static WatchMonitor createAll(final String path, final Watcher watcher) {
 		return createAll(path, 0, watcher);
 	}
 
@@ -221,7 +221,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(String path, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createAll(final String path, final int maxDepth, final Watcher watcher) {
 		return createAll(Paths.get(path), maxDepth, watcher);
 	}
 
@@ -232,7 +232,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(Path path, Watcher watcher) {
+	public static WatchMonitor createAll(final Path path, final Watcher watcher) {
 		return createAll(path, 0, watcher);
 	}
 
@@ -244,7 +244,7 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(Path path, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createAll(final Path path, final int maxDepth, final Watcher watcher) {
 		final WatchMonitor watchMonitor = create(path, maxDepth, WatchMonitor.EVENTS_ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
@@ -259,7 +259,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(URL url, Watcher watcher) {
+	public static WatchMonitor createModify(final URL url, final Watcher watcher) {
 		return createModify(url, 0, watcher);
 	}
 
@@ -272,7 +272,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(URL url, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createModify(final URL url, final int maxDepth, final Watcher watcher) {
 		return createModify(URLUtil.toURI(url), maxDepth, watcher);
 	}
 
@@ -284,7 +284,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(URI uri, Watcher watcher) {
+	public static WatchMonitor createModify(final URI uri, final Watcher watcher) {
 		return createModify(uri, 0, watcher);
 	}
 
@@ -297,7 +297,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(URI uri, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createModify(final URI uri, final int maxDepth, final Watcher watcher) {
 		return createModify(Paths.get(uri), maxDepth, watcher);
 	}
 
@@ -309,7 +309,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(File file, Watcher watcher) {
+	public static WatchMonitor createModify(final File file, final Watcher watcher) {
 		return createModify(file, 0, watcher);
 	}
 
@@ -322,7 +322,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(File file, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createModify(final File file, final int maxDepth, final Watcher watcher) {
 		return createModify(file.toPath(), 0, watcher);
 	}
 
@@ -334,7 +334,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(String path, Watcher watcher) {
+	public static WatchMonitor createModify(final String path, final Watcher watcher) {
 		return createModify(path, 0, watcher);
 	}
 
@@ -347,7 +347,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(String path, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createModify(final String path, final int maxDepth, final Watcher watcher) {
 		return createModify(Paths.get(path), maxDepth, watcher);
 	}
 
@@ -359,7 +359,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(Path path, Watcher watcher) {
+	public static WatchMonitor createModify(final Path path, final Watcher watcher) {
 		return createModify(path, 0, watcher);
 	}
 
@@ -372,7 +372,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 * @since 4.5.2
 	 */
-	public static WatchMonitor createModify(Path path, int maxDepth, Watcher watcher) {
+	public static WatchMonitor createModify(final Path path, final int maxDepth, final Watcher watcher) {
 		final WatchMonitor watchMonitor = create(path, maxDepth, WatchMonitor.ENTRY_MODIFY);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
@@ -387,10 +387,10 @@ public class WatchUtil {
 	 * @return {@link WatchKey}
 	 * @since 4.6.9
 	 */
-	public static WatchKey register(Watchable watchable, WatchService watcher, WatchEvent.Kind<?>... events){
+	public static WatchKey register(final Watchable watchable, final WatchService watcher, final WatchEvent.Kind<?>... events){
 		try {
 			return watchable.register(watcher, events);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

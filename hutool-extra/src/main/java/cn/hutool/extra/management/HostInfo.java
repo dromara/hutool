@@ -58,7 +58,7 @@ public class HostInfo implements Serializable {
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "Host Name:    ", getName());
 		ManagementUtil.append(builder, "Host Address: ", getAddress());

@@ -26,7 +26,7 @@ public class FileObjectResource implements Resource {
 	 *
 	 * @param fileObject {@link FileObject}
 	 */
-	public FileObjectResource(FileObject fileObject) {
+	public FileObjectResource(final FileObject fileObject) {
 		this.fileObject = fileObject;
 	}
 
@@ -48,7 +48,7 @@ public class FileObjectResource implements Resource {
 	public URL getUrl() {
 		try {
 			return this.fileObject.toUri().toURL();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			return null;
 		}
 	}
@@ -57,16 +57,16 @@ public class FileObjectResource implements Resource {
 	public InputStream getStream() {
 		try {
 			return this.fileObject.openInputStream();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	@Override
-	public BufferedReader getReader(Charset charset) {
+	public BufferedReader getReader(final Charset charset) {
 		try {
 			return IoUtil.getReader(this.fileObject.openReader(false));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

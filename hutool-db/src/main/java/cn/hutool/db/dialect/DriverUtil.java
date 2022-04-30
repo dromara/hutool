@@ -25,7 +25,7 @@ public class DriverUtil {
 	 * @return 驱动
 	 * @see DialectFactory#identifyDriver(String)
 	 */
-	public static String identifyDriver(String nameContainsProductInfo) {
+	public static String identifyDriver(final String nameContainsProductInfo) {
 		return DialectFactory.identifyDriver(nameContainsProductInfo);
 	}
 
@@ -35,7 +35,7 @@ public class DriverUtil {
 	 * @param ds 数据源
 	 * @return 驱动
 	 */
-	public static String identifyDriver(DataSource ds) {
+	public static String identifyDriver(final DataSource ds) {
 		if(ds instanceof DataSourceWrapper) {
 			final String driver = ((DataSourceWrapper)ds).getDriver();
 			if(StrUtil.isNotBlank(driver)) {
@@ -48,9 +48,9 @@ public class DriverUtil {
 		try {
 			try {
 				conn = ds.getConnection();
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				throw new DbRuntimeException("Get Connection error !", e);
-			} catch (NullPointerException e) {
+			} catch (final NullPointerException e) {
 				throw new DbRuntimeException("Unexpected NullPointException, maybe [jdbcUrl] or [url] is empty!", e);
 			}
 			driver = identifyDriver(conn);
@@ -68,16 +68,16 @@ public class DriverUtil {
 	 * @return 驱动
 	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */
-	public static String identifyDriver(Connection conn) throws DbRuntimeException {
+	public static String identifyDriver(final Connection conn) throws DbRuntimeException {
 		String driver;
-		DatabaseMetaData meta;
+		final DatabaseMetaData meta;
 		try {
 			meta = conn.getMetaData();
 			driver = identifyDriver(meta.getDatabaseProductName());
 			if (StrUtil.isBlank(driver)) {
 				driver = identifyDriver(meta.getDriverName());
 			}
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException("Identify driver error!", e);
 		}
 

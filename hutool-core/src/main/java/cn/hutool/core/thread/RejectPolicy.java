@@ -27,7 +27,7 @@ public enum RejectPolicy {
 
 	private final RejectedExecutionHandler value;
 
-	RejectPolicy(RejectedExecutionHandler handler) {
+	RejectPolicy(final RejectedExecutionHandler handler) {
 		this.value = handler;
 	}
 

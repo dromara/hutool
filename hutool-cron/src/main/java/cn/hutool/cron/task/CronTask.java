@@ -20,7 +20,7 @@ public class CronTask implements Task{
 	 * @param pattern 表达式
 	 * @param task 作业
 	 */
-	public CronTask(String id, CronPattern pattern, Task task) {
+	public CronTask(final String id, final CronPattern pattern, final Task task) {
 		this.id = id;
 		this.pattern = pattern;
 		this.task = task;
@@ -54,7 +54,7 @@ public class CronTask implements Task{
 	 * @param pattern 表达式
 	 * @return this
 	 */
-	public CronTask setPattern(CronPattern pattern){
+	public CronTask setPattern(final CronPattern pattern){
 		this.pattern = pattern;
 		return this;
 	}

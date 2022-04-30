@@ -10,7 +10,7 @@ public class ModifierUtilTest {
 
 	@Test
 	public void hasModifierTest() throws NoSuchMethodException {
-		Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
+		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
 		Assert.assertTrue(ModifierUtil.hasModifier(method, ModifierUtil.ModifierType.PRIVATE));
 		Assert.assertTrue(ModifierUtil.hasModifier(method,
 				ModifierUtil.ModifierType.PRIVATE,

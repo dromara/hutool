@@ -31,7 +31,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public SetValueMap(int initialCapacity) {
+	public SetValueMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -40,7 +40,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 	 *
 	 * @param m Map
 	 */
-	public SetValueMap(Map<? extends K, ? extends Collection<V>> m) {
+	public SetValueMap(final Map<? extends K, ? extends Collection<V>> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -50,7 +50,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 	 * @param loadFactor 加载因子
 	 * @param m Map
 	 */
-	public SetValueMap(float loadFactor, Map<? extends K, ? extends Collection<V>> m) {
+	public SetValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m) {
 		this(m.size(), loadFactor);
 		this.putAllValues(m);
 	}
@@ -61,7 +61,7 @@ public class SetValueMap<K, V> extends AbsCollValueMap<K, V, Set<V>> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public SetValueMap(int initialCapacity, float loadFactor) {
+	public SetValueMap(final int initialCapacity, final float loadFactor) {
 		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end

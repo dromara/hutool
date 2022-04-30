@@ -103,7 +103,7 @@ public class IdUtil {
 	 * @return {@link Snowflake}
 	 * @since 4.5.9
 	 */
-	public static Snowflake getSnowflake(long workerId, long datacenterId) {
+	public static Snowflake getSnowflake(final long workerId, final long datacenterId) {
 		return Singleton.get(Snowflake.class, workerId, datacenterId);
 	}
 
@@ -129,7 +129,7 @@ public class IdUtil {
 	 * @return {@link Snowflake}
 	 * @since 5.7.3
 	 */
-	public static Snowflake getSnowflake(long workerId) {
+	public static Snowflake getSnowflake(final long workerId) {
 		return Singleton.get(Snowflake.class, workerId);
 	}
 
@@ -178,7 +178,7 @@ public class IdUtil {
 		byte[] mac = null;
 		try{
 			mac = NetUtil.getLocalHardwareAddress();
-		}catch (UtilException ignore){
+		}catch (final UtilException ignore){
 			// ignore
 		}
 		if (null != mac) {
@@ -203,12 +203,12 @@ public class IdUtil {
 	 * @return ID
 	 * @since 5.7.3
 	 */
-	public static long getWorkerId(long datacenterId, long maxWorkerId) {
+	public static long getWorkerId(final long datacenterId, final long maxWorkerId) {
 		final StringBuilder mpid = new StringBuilder();
 		mpid.append(datacenterId);
 		try {
 			mpid.append(RuntimeUtil.getPid());
-		} catch (UtilException igonre) {
+		} catch (final UtilException igonre) {
 			//ignore
 		}
 		/*
@@ -236,7 +236,7 @@ public class IdUtil {
 	 * @return 随机NanoId
 	 * @since 5.7.5
 	 */
-	public static String nanoId(int size) {
+	public static String nanoId(final int size) {
 		return NanoId.randomNanoId(size);
 	}
 

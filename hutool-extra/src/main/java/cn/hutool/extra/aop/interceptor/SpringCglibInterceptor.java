@@ -25,7 +25,7 @@ public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 	 * @param target 被代理对象
 	 * @param aspect 切面实现
 	 */
-	public SpringCglibInterceptor(Object target, Aspect aspect) {
+	public SpringCglibInterceptor(final Object target, final Aspect aspect) {
 		this.target = target;
 		this.aspect = aspect;
 	}
@@ -40,7 +40,7 @@ public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 	}
 
 	@Override
-	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+	public Object intercept(final Object obj, final Method method, final Object[] args, final MethodProxy proxy) throws Throwable {
 		final Object target = this.target;
 		Object result = null;
 		// 开始前回调
@@ -48,7 +48,7 @@ public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 			try {
 //				result = proxy.invokeSuper(obj, args);
 				result = proxy.invoke(target, args);
-			} catch (InvocationTargetException e) {
+			} catch (final InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
 				if (aspect.afterException(target, method, args, e.getTargetException())) {
 					throw e;

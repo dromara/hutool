@@ -23,7 +23,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 * @param beanClass Bean类
 	 * @param fieldName 字段名
 	 */
-	public FieldComparator(Class<T> beanClass, String fieldName) {
+	public FieldComparator(final Class<T> beanClass, final String fieldName) {
 		this(getNonNullField(beanClass, fieldName));
 	}
 
@@ -32,7 +32,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 *
 	 * @param field 字段
 	 */
-	public FieldComparator(Field field) {
+	public FieldComparator(final Field field) {
 		this(true, field);
 	}
 
@@ -42,7 +42,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 * @param nullGreater 是否{@code null}在后
 	 * @param field       字段
 	 */
-	public FieldComparator(boolean nullGreater, Field field) {
+	public FieldComparator(final boolean nullGreater, final Field field) {
 		super(nullGreater, (bean) ->
 				(Comparable<?>) ReflectUtil.getFieldValue(bean,
 						Assert.notNull(field, "Field must be not null!")));
@@ -55,7 +55,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 * @param fieldName 字段名
 	 * @return 非null字段
 	 */
-	private static Field getNonNullField(Class<?> beanClass, String fieldName) {
+	private static Field getNonNullField(final Class<?> beanClass, final String fieldName) {
 		final Field field = ClassUtil.getDeclaredField(beanClass, fieldName);
 		if (field == null) {
 			throw new IllegalArgumentException(StrUtil.format("Field [{}] not found in Class [{}]", fieldName, beanClass.getName()));

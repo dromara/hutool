@@ -25,12 +25,12 @@ public class SpringUtilWithAutoConfigTest {
 	 */
 	@Test
 	public void registerBeanTest() {
-		Demo2 registerBean = new Demo2();
+		final Demo2 registerBean = new Demo2();
 		registerBean.setId(123);
 		registerBean.setName("222");
 		SpringUtil.registerBean("registerBean", registerBean);
 
-		Demo2 registerBean2 = SpringUtil.getBean("registerBean");
+		final Demo2 registerBean2 = SpringUtil.getBean("registerBean");
 		Assert.assertEquals(123, registerBean2.getId());
 		Assert.assertEquals("222", registerBean2.getName());
 	}
@@ -44,7 +44,7 @@ public class SpringUtilWithAutoConfigTest {
 
 	@Test
 	public void getBeanWithTypeReferenceTest() {
-		Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {});
+		final Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {});
 		Assert.assertNotNull(mapBean);
 		Assert.assertEquals("value1", mapBean.get("key1"));
 		Assert.assertEquals("value2", mapBean.get("key2"));
@@ -57,7 +57,7 @@ public class SpringUtilWithAutoConfigTest {
 
 		@Bean(name="testDemo")
 		public Demo2 generateDemo() {
-			Demo2 demo = new Demo2();
+			final Demo2 demo = new Demo2();
 			demo.setId(12345);
 			demo.setName("test");
 			return demo;
@@ -65,7 +65,7 @@ public class SpringUtilWithAutoConfigTest {
 
 		@Bean(name="mapDemo")
 		public Map<String, Object> generateMap() {
-			HashMap<String, Object> map = MapUtil.newHashMap();
+			final HashMap<String, Object> map = MapUtil.newHashMap();
 			map.put("key1", "value1");
 			map.put("key2", "value2");
 			return map;

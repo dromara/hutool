@@ -23,7 +23,7 @@ public class Calculator {
 	 * @param expression 表达式
 	 * @return 计算结果
 	 */
-	public static double conversion(String expression) {
+	public static double conversion(final String expression) {
 		return (new Calculator()).calculate(expression);
 	}
 
@@ -33,10 +33,10 @@ public class Calculator {
 	 * @param expression 要计算的表达式例如:5+12*(3+5)/7
 	 * @return 计算结果
 	 */
-	public double calculate(String expression) {
+	public double calculate(final String expression) {
 		prepare(transform(expression));
 
-		Stack<String> resultStack = new Stack<>();
+		final Stack<String> resultStack = new Stack<>();
 		Collections.reverse(postfixStack);// 将后缀式栈反转
 		String firstValue, secondValue, currentOp;// 参与计算的第一个值，第二个值和算术运算符
 		while (false == postfixStack.isEmpty()) {
@@ -52,7 +52,7 @@ public class Calculator {
 				firstValue = firstValue.replace("~", "-");
 				secondValue = secondValue.replace("~", "-");
 
-				BigDecimal tempResult = calculate(firstValue, secondValue, currentOp.charAt(0));
+				final BigDecimal tempResult = calculate(firstValue, secondValue, currentOp.charAt(0));
 				resultStack.push(tempResult.toString());
 			}
 		}
@@ -64,10 +64,10 @@ public class Calculator {
 	 *
 	 * @param expression 表达式
 	 */
-	private void prepare(String expression) {
+	private void prepare(final String expression) {
 		final Stack<Character> opStack = new Stack<>();
 		opStack.push(',');// 运算符放入栈底元素逗号，此符号优先级最低
-		char[] arr = expression.toCharArray();
+		final char[] arr = expression.toCharArray();
 		int currentIndex = 0;// 当前字符的位置
 		int count = 0;// 上次算术运算符到本次算术运算符的字符的长度便于或者之间的数值
 		char currentOp, peekOp;// 当前操作符和栈顶操作符
@@ -111,7 +111,7 @@ public class Calculator {
 	 * @param c 字符
 	 * @return 是否为算术符号
 	 */
-	private boolean isOperator(char c) {
+	private boolean isOperator(final char c) {
 		return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '%';
 	}
 
@@ -144,8 +144,8 @@ public class Calculator {
 	 * @param currentOp   算数符，只支持'+'、'-'、'*'、'/'、'%'
 	 * @return 结果
 	 */
-	private BigDecimal calculate(String firstValue, String secondValue, char currentOp) {
-		BigDecimal result;
+	private BigDecimal calculate(final String firstValue, final String secondValue, final char currentOp) {
+		final BigDecimal result;
 		switch (currentOp) {
 			case '+':
 				result = NumberUtil.add(firstValue, secondValue);
@@ -183,7 +183,7 @@ public class Calculator {
 				if (i == 0) {
 					arr[i] = '~';
 				} else {
-					char c = arr[i - 1];
+					final char c = arr[i - 1];
 					if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == 'E' || c == 'e') {
 						arr[i] = '~';
 					}

@@ -39,7 +39,7 @@ public abstract class ComputeIter<T> implements Iterator<T> {
 			return false;
 		}
 
-		T result = computeNext();
+		final T result = computeNext();
 		if (null == result) {
 			// 不再有新的节点，结束
 			this.finished = true;
@@ -57,7 +57,7 @@ public abstract class ComputeIter<T> implements Iterator<T> {
 			throw new NoSuchElementException("No more lines");
 		}
 
-		T result = this.next;
+		final T result = this.next;
 		// 清空cache，表示此节点读取完毕，下次计算新节点
 		this.next = null;
 		return result;

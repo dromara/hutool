@@ -60,7 +60,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	 * @param timeZone non-null time zone to use
 	 * @param locale   non-null locale
 	 */
-	public FastDateParser(String pattern, TimeZone timeZone, Locale locale) {
+	public FastDateParser(final String pattern, final TimeZone timeZone, final Locale locale) {
 		this(pattern, timeZone, locale, null);
 	}
 
@@ -78,7 +78,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 		super(pattern, timeZone, locale);
 		final Calendar definingCalendar = Calendar.getInstance(timeZone, locale);
 
-		int centuryStartYear;
+		final int centuryStartYear;
 		if (centuryStart != null) {
 			definingCalendar.setTime(centuryStart);
 			centuryStartYear = definingCalendar.get(Calendar.YEAR);
@@ -220,7 +220,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public Date parse(String source) throws ParseException {
+	public Date parse(final String source) throws ParseException {
 		final ParsePosition pp = new ParsePosition(0);
 		final Date date = parse(source, pp);
 		if (date == null) {
@@ -235,7 +235,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public Date parse(String source, ParsePosition pos) {
+	public Date parse(final String source, final ParsePosition pos) {
 		// timing tests indicate getting new instance is 19% faster than cloning
 		final Calendar cal = Calendar.getInstance(timeZone, locale);
 		cal.clear();
@@ -244,7 +244,7 @@ public class FastDateParser extends AbstractDateBasic implements DateParser {
 	}
 
 	@Override
-	public boolean parse(String source, ParsePosition pos, Calendar calendar) {
+	public boolean parse(final String source, final ParsePosition pos, final Calendar calendar) {
 		final ListIterator<StrategyAndWidth> lt = patterns.listIterator();
 		while (lt.hasNext()) {
 			final StrategyAndWidth strategyAndWidth = lt.next();

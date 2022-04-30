@@ -54,7 +54,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @param backingThreadFactory 用于创建基础线程的线程工厂
 	 * @return this
 	 */
-	public ThreadFactoryBuilder setThreadFactory(ThreadFactory backingThreadFactory) {
+	public ThreadFactoryBuilder setThreadFactory(final ThreadFactory backingThreadFactory) {
 		this.backingThreadFactory = backingThreadFactory;
 		return this;
 	}
@@ -65,7 +65,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @param namePrefix 线程名前缀
 	 * @return this
 	 */
-	public ThreadFactoryBuilder setNamePrefix(String namePrefix) {
+	public ThreadFactoryBuilder setNamePrefix(final String namePrefix) {
 		this.namePrefix = namePrefix;
 		return this;
 	}
@@ -76,7 +76,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @param daemon 是否守护线程
 	 * @return this
 	 */
-	public ThreadFactoryBuilder setDaemon(boolean daemon) {
+	public ThreadFactoryBuilder setDaemon(final boolean daemon) {
 		this.daemon = daemon;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @see Thread#NORM_PRIORITY
 	 * @see Thread#MAX_PRIORITY
 	 */
-	public ThreadFactoryBuilder setPriority(int priority) {
+	public ThreadFactoryBuilder setPriority(final int priority) {
 		if (priority < Thread.MIN_PRIORITY) {
 			throw new IllegalArgumentException(StrUtil.format("Thread priority ({}) must be >= {}", priority, Thread.MIN_PRIORITY));
 		}
@@ -107,7 +107,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @param uncaughtExceptionHandler {@link UncaughtExceptionHandler}
 	 * @return this
 	 */
-	public ThreadFactoryBuilder setUncaughtExceptionHandler(UncaughtExceptionHandler uncaughtExceptionHandler) {
+	public ThreadFactoryBuilder setUncaughtExceptionHandler(final UncaughtExceptionHandler uncaughtExceptionHandler) {
 		this.uncaughtExceptionHandler = uncaughtExceptionHandler;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 * @param builder {@code ThreadFactoryBuilder}
 	 * @return {@link ThreadFactory}
 	 */
-	private static ThreadFactory build(ThreadFactoryBuilder builder) {
+	private static ThreadFactory build(final ThreadFactoryBuilder builder) {
 		final ThreadFactory backingThreadFactory = (null != builder.backingThreadFactory)//
 				? builder.backingThreadFactory //
 				: Executors.defaultThreadFactory();

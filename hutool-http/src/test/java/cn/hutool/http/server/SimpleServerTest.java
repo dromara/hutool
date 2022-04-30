@@ -9,7 +9,7 @@ import cn.hutool.json.JSONUtil;
 
 public class SimpleServerTest {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		HttpUtil.createServer(8888)
 				.addFilter(((req, res, chain) -> {
 					Console.log("Filter: " + req.getPath());
@@ -23,7 +23,7 @@ public class SimpleServerTest {
 				)
 				// 返回JSON数据测试
 				.addAction("/restTest", (request, response) -> {
-					String res = JSONUtil.createObj()
+					final String res = JSONUtil.createObj()
 							.set("id", 1)
 							.set("method", request.getMethod())
 							.set("request", request.getBody())
@@ -43,7 +43,7 @@ public class SimpleServerTest {
 							Console.log(request.getParams());
 							final UploadFile[] files = request.getMultipart().getFiles("file");
 							// 传入目录，默认读取HTTP头中的文件名然后创建文件
-							for (UploadFile file : files) {
+							for (final UploadFile file : files) {
 								file.write("d:/test/");
 								Console.log("Write file: d:/test/" + file.getFileName());
 							}

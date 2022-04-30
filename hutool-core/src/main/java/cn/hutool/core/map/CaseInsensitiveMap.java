@@ -29,7 +29,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public CaseInsensitiveMap(int initialCapacity) {
+	public CaseInsensitiveMap(final int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -39,7 +39,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param m 被包装的自定义Map创建器
 	 */
-	public CaseInsensitiveMap(Map<? extends K, ? extends V> m) {
+	public CaseInsensitiveMap(final Map<? extends K, ? extends V> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
@@ -50,7 +50,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param m Map
 	 * @since 3.1.2
 	 */
-	public CaseInsensitiveMap(float loadFactor, Map<? extends K, ? extends V> m) {
+	public CaseInsensitiveMap(final float loadFactor, final Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
 		this.putAll(m);
 	}
@@ -61,7 +61,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public CaseInsensitiveMap(int initialCapacity, float loadFactor) {
+	public CaseInsensitiveMap(final int initialCapacity, final float loadFactor) {
 		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)));
 	}
 
@@ -72,7 +72,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param emptyMapBuilder 被包装的自定义Map创建器
 	 */
 	@SuppressWarnings("unchecked")
-	CaseInsensitiveMap(MapBuilder<K, V> emptyMapBuilder) {
+	CaseInsensitiveMap(final MapBuilder<K, V> emptyMapBuilder) {
 		super(emptyMapBuilder.build(), (key)->{
 			if (key instanceof CharSequence) {
 				key = key.toString().toLowerCase();

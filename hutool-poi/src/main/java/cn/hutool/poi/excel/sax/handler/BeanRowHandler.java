@@ -34,7 +34,7 @@ public abstract class BeanRowHandler<T> extends AbstractRowHandler<T> {
 	 * @param endRowIndex    读取结束行（包含，从0开始计数）
 	 * @param clazz          Bean类型
 	 */
-	public BeanRowHandler(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> clazz) {
+	public BeanRowHandler(final int headerRowIndex, final int startRowIndex, final int endRowIndex, final Class<T> clazz) {
 		super(startRowIndex, endRowIndex);
 		Assert.isTrue(headerRowIndex <= startRowIndex, "Header row must before the start row!");
 		this.headerRowIndex = headerRowIndex;
@@ -42,7 +42,7 @@ public abstract class BeanRowHandler<T> extends AbstractRowHandler<T> {
 	}
 
 	@Override
-	public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+	public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 		if (rowIndex == this.headerRowIndex) {
 			this.headerList = ListUtil.unmodifiable(Convert.toList(String.class, rowCells));
 			return;

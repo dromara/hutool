@@ -19,7 +19,7 @@ public class CRC16Modbus extends CRC16Checksum{
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		wCRCin ^= (b & 0x00ff);
 		for (int j = 0; j < 8; j++) {
 			if ((wCRCin & 0x0001) != 0) {

@@ -28,7 +28,7 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	protected AbstractFtp(FtpConfig config) {
+	protected AbstractFtp(final FtpConfig config) {
 		this.ftpConfig = config;
 	}
 
@@ -72,7 +72,7 @@ public abstract class AbstractFtp implements Closeable {
 	 * @return 是否为目录
 	 * @since 5.7.5
 	 */
-	public boolean isDir(String dir) {
+	public boolean isDir(final String dir) {
 		return cd(dir);
 	}
 
@@ -90,13 +90,13 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param path 目录
 	 * @return 是否存在
 	 */
-	public boolean exist(String path) {
+	public boolean exist(final String path) {
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		final List<String> names;
 		try {
 			names = ls(dir);
-		} catch (FtpException ignore) {
+		} catch (final FtpException ignore) {
 			return false;
 		}
 		return containsIgnoreCase(names, fileName);
@@ -131,7 +131,7 @@ public abstract class AbstractFtp implements Closeable {
 	 *
 	 * @param dir 文件夹路径，绝对路径
 	 */
-	public void mkDirs(String dir) {
+	public void mkDirs(final String dir) {
 		final String[] dirs = StrUtil.trim(dir).split("[\\\\/]+");
 
 		final String now = pwd();
@@ -139,14 +139,14 @@ public abstract class AbstractFtp implements Closeable {
 			//首位为空，表示以/开头
 			this.cd(StrUtil.SLASH);
 		}
-		for (String s : dirs) {
+		for (final String s : dirs) {
 			if (StrUtil.isNotEmpty(s)) {
 				boolean exist = true;
 				try {
 					if (false == cd(s)) {
 						exist = false;
 					}
-				} catch (FtpException e) {
+				} catch (final FtpException e) {
 					exist = false;
 				}
 				if (false == exist) {
@@ -188,7 +188,7 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param tempFileSuffix 临时文件后缀，默认".temp"
 	 * @since 5.7.12
 	 */
-	public void download(String path, File outFile, String tempFileSuffix) {
+	public void download(final String path, File outFile, String tempFileSuffix) {
 		if(StrUtil.isBlank(tempFileSuffix)){
 			tempFileSuffix = ".temp";
 		} else {
@@ -206,7 +206,7 @@ public abstract class AbstractFtp implements Closeable {
 			download(path, outFile);
 			// 重命名下载好的临时文件
 			FileUtil.rename(outFile, fileName, true);
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			// 异常则删除临时文件
 			FileUtil.del(outFile);
 			throw new FtpException(e);
@@ -231,14 +231,14 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param nameToFind 要查找的文件或目录名
 	 * @return 是否包含
 	 */
-	private static boolean containsIgnoreCase(List<String> names, String nameToFind) {
+	private static boolean containsIgnoreCase(final List<String> names, final String nameToFind) {
 		if (CollUtil.isEmpty(names)) {
 			return false;
 		}
 		if (StrUtil.isEmpty(nameToFind)) {
 			return false;
 		}
-		for (String name : names) {
+		for (final String name : names) {
 			if (nameToFind.equalsIgnoreCase(name)) {
 				return true;
 			}

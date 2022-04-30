@@ -17,7 +17,7 @@ public class StackTraceElementConverter extends AbstractConverter<StackTraceElem
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected StackTraceElement convertInternal(Object value) {
+	protected StackTraceElement convertInternal(final Object value) {
 		if (value instanceof Map) {
 			final Map<?, ?> map = (Map<?, ?>) value;
 

@@ -46,7 +46,7 @@ public class IterUtil {
 	 * @return 当iterable为null返回{@code null}，否则返回对应的{@link Iterator}
 	 * @since 5.7.2
 	 */
-	public static <T> Iterator<T> getIter(Iterable<T> iterable) {
+	public static <T> Iterator<T> getIter(final Iterable<T> iterable) {
 		return null == iterable ? null : iterable.iterator();
 	}
 
@@ -56,7 +56,7 @@ public class IterUtil {
 	 * @param iterable Iterable对象
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Iterable<?> iterable) {
+	public static boolean isEmpty(final Iterable<?> iterable) {
 		return null == iterable || isEmpty(iterable.iterator());
 	}
 
@@ -66,7 +66,7 @@ public class IterUtil {
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Iterator<?> Iterator) {
+	public static boolean isEmpty(final Iterator<?> Iterator) {
 		return null == Iterator || false == Iterator.hasNext();
 	}
 
@@ -76,7 +76,7 @@ public class IterUtil {
 	 * @param iterable Iterable对象
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(Iterable<?> iterable) {
+	public static boolean isNotEmpty(final Iterable<?> iterable) {
 		return null != iterable && isNotEmpty(iterable.iterator());
 	}
 
@@ -86,7 +86,7 @@ public class IterUtil {
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(Iterator<?> Iterator) {
+	public static boolean isNotEmpty(final Iterator<?> Iterator) {
 		return null != Iterator && Iterator.hasNext();
 	}
 
@@ -96,7 +96,7 @@ public class IterUtil {
 	 * @param iter 被检查的{@link Iterable}对象，如果为{@code null} 返回true
 	 * @return 是否包含{@code null}元素
 	 */
-	public static boolean hasNull(Iterable<?> iter) {
+	public static boolean hasNull(final Iterable<?> iter) {
 		return hasNull(null == iter ? null : iter.iterator());
 	}
 
@@ -106,7 +106,7 @@ public class IterUtil {
 	 * @param iter 被检查的{@link Iterator}对象，如果为{@code null} 返回true
 	 * @return 是否包含{@code null}元素
 	 */
-	public static boolean hasNull(Iterator<?> iter) {
+	public static boolean hasNull(final Iterator<?> iter) {
 		if (null == iter) {
 			return true;
 		}
@@ -126,7 +126,7 @@ public class IterUtil {
 	 * @return 是否全部元素为null
 	 * @since 3.3.0
 	 */
-	public static boolean isAllNull(Iterable<?> iter) {
+	public static boolean isAllNull(final Iterable<?> iter) {
 		return isAllNull(null == iter ? null : iter.iterator());
 	}
 
@@ -137,7 +137,7 @@ public class IterUtil {
 	 * @return 是否全部元素为null
 	 * @since 3.3.0
 	 */
-	public static boolean isAllNull(Iterator<?> iter) {
+	public static boolean isAllNull(final Iterator<?> iter) {
 		return null == getFirstNoneNull(iter);
 	}
 
@@ -153,7 +153,7 @@ public class IterUtil {
 	 * @param iter {@link Iterator}，如果为null返回一个空的Map
 	 * @return {@link Map}
 	 */
-	public static <T> Map<T, Integer> countMap(Iterator<T> iter) {
+	public static <T> Map<T, Integer> countMap(final Iterator<T> iter) {
 		final HashMap<T, Integer> countMap = new HashMap<>();
 		if (null != iter) {
 			T t;
@@ -177,7 +177,7 @@ public class IterUtil {
 	 * @since 4.0.4
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> fieldValueMap(Iterator<V> iter, String fieldName) {
+	public static <K, V> Map<K, V> fieldValueMap(final Iterator<V> iter, final String fieldName) {
 		return toMap(iter, new HashMap<>(), (value) -> (K) ReflectUtil.getFieldValue(value, fieldName));
 	}
 
@@ -193,7 +193,7 @@ public class IterUtil {
 	 * @since 4.0.10
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> fieldValueAsMap(Iterator<?> iter, String fieldNameForKey, String fieldNameForValue) {
+	public static <K, V> Map<K, V> fieldValueAsMap(final Iterator<?> iter, final String fieldNameForKey, final String fieldNameForValue) {
 		return toMap(iter, new HashMap<>(),
 				(value) -> (K) ReflectUtil.getFieldValue(value, fieldNameForKey),
 				(value) -> (V) ReflectUtil.getFieldValue(value, fieldNameForValue)
@@ -209,7 +209,7 @@ public class IterUtil {
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.6.2
 	 */
-	public static <V> List<Object> fieldValueList(Iterable<V> iterable, String fieldName) {
+	public static <V> List<Object> fieldValueList(final Iterable<V> iterable, final String fieldName) {
 		return fieldValueList(getIter(iterable), fieldName);
 	}
 
@@ -222,7 +222,7 @@ public class IterUtil {
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.0.10
 	 */
-	public static <V> List<Object> fieldValueList(Iterator<V> iter, String fieldName) {
+	public static <V> List<Object> fieldValueList(final Iterator<V> iter, final String fieldName) {
 		final List<Object> result = new ArrayList<>();
 		if (null != iter) {
 			V value;
@@ -243,7 +243,7 @@ public class IterUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
+	public static <T> String join(final Iterator<T> iterator, final CharSequence conjunction) {
 		return StrJoiner.of(conjunction).append(iterator).toString();
 	}
 
@@ -259,7 +259,7 @@ public class IterUtil {
 	 * @return 连接后的字符串
 	 * @since 4.0.10
 	 */
-	public static <T> String join(Iterator<T> iterator, CharSequence conjunction, String prefix, String suffix) {
+	public static <T> String join(final Iterator<T> iterator, final CharSequence conjunction, final String prefix, final String suffix) {
 		return StrJoiner.of(conjunction, prefix, suffix)
 				// 每个元素都添加前后缀
 				.setWrapElement(true)
@@ -278,7 +278,7 @@ public class IterUtil {
 	 * @return 连接后的字符串
 	 * @since 5.6.7
 	 */
-	public static <T> String join(Iterator<T> iterator, CharSequence conjunction, Function<T, ? extends CharSequence> func) {
+	public static <T> String join(final Iterator<T> iterator, final CharSequence conjunction, final Function<T, ? extends CharSequence> func) {
 		if (null == iterator) {
 			return null;
 		}
@@ -294,10 +294,10 @@ public class IterUtil {
 	 * @param entryIter entry集合
 	 * @return Map
 	 */
-	public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
+	public static <K, V> HashMap<K, V> toMap(final Iterable<Entry<K, V>> entryIter) {
 		final HashMap<K, V> map = new HashMap<>();
 		if (isNotEmpty(entryIter)) {
-			for (Entry<K, V> entry : entryIter) {
+			for (final Entry<K, V> entry : entryIter) {
 				map.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -316,7 +316,7 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values) {
+	public static <K, V> Map<K, V> toMap(final Iterable<K> keys, final Iterable<V> values) {
 		return toMap(keys, values, false);
 	}
 
@@ -333,7 +333,7 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 4.1.12
 	 */
-	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values, boolean isOrder) {
+	public static <K, V> Map<K, V> toMap(final Iterable<K> keys, final Iterable<V> values, final boolean isOrder) {
 		return toMap(null == keys ? null : keys.iterator(), null == values ? null : values.iterator(), isOrder);
 	}
 
@@ -349,7 +349,7 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values) {
+	public static <K, V> Map<K, V> toMap(final Iterator<K> keys, final Iterator<V> values) {
 		return toMap(keys, values, false);
 	}
 
@@ -366,7 +366,7 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 4.1.12
 	 */
-	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values, boolean isOrder) {
+	public static <K, V> Map<K, V> toMap(final Iterator<K> keys, final Iterator<V> values, final boolean isOrder) {
 		final Map<K, V> resultMap = MapUtil.newHashMap(isOrder);
 		if (isNotEmpty(keys)) {
 			while (keys.hasNext()) {
@@ -386,7 +386,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <K, V> Map<K, List<V>> toListMap(Iterable<V> iterable, Function<V, K> keyMapper) {
+	public static <K, V> Map<K, List<V>> toListMap(final Iterable<V> iterable, final Function<V, K> keyMapper) {
 		return toListMap(iterable, keyMapper, v -> v);
 	}
 
@@ -402,7 +402,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <T, K, V> Map<K, List<V>> toListMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+	public static <T, K, V> Map<K, List<V>> toListMap(final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
 		return toListMap(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
 	}
 
@@ -419,7 +419,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <T, K, V> Map<K, List<V>> toListMap(Map<K, List<V>> resultMap, Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+	public static <T, K, V> Map<K, List<V>> toListMap(Map<K, List<V>> resultMap, final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
 		if (null == resultMap) {
 			resultMap = MapUtil.newHashMap();
 		}
@@ -427,7 +427,7 @@ public class IterUtil {
 			return resultMap;
 		}
 
-		for (T value : iterable) {
+		for (final T value : iterable) {
 			resultMap.computeIfAbsent(keyMapper.apply(value), k -> new ArrayList<>()).add(valueMapper.apply(value));
 		}
 
@@ -444,7 +444,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <K, V> Map<K, V> toMap(Iterable<V> iterable, Function<V, K> keyMapper) {
+	public static <K, V> Map<K, V> toMap(final Iterable<V> iterable, final Function<V, K> keyMapper) {
 		return toMap(iterable, keyMapper, v -> v);
 	}
 
@@ -460,7 +460,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <T, K, V> Map<K, V> toMap(Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+	public static <T, K, V> Map<K, V> toMap(final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
 		return toMap(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
 	}
 
@@ -477,7 +477,7 @@ public class IterUtil {
 	 * @return HashMap
 	 * @since 5.3.6
 	 */
-	public static <T, K, V> Map<K, V> toMap(Map<K, V> resultMap, Iterable<T> iterable, Function<T, K> keyMapper, Function<T, V> valueMapper) {
+	public static <T, K, V> Map<K, V> toMap(Map<K, V> resultMap, final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
 		if (null == resultMap) {
 			resultMap = MapUtil.newHashMap();
 		}
@@ -485,7 +485,7 @@ public class IterUtil {
 			return resultMap;
 		}
 
-		for (T value : iterable) {
+		for (final T value : iterable) {
 			resultMap.put(keyMapper.apply(value), valueMapper.apply(value));
 		}
 
@@ -501,7 +501,7 @@ public class IterUtil {
 	 * @return List
 	 * @since 4.0.6
 	 */
-	public static <E> List<E> toList(Iterable<E> iter) {
+	public static <E> List<E> toList(final Iterable<E> iter) {
 		if (null == iter) {
 			return null;
 		}
@@ -517,7 +517,7 @@ public class IterUtil {
 	 * @return List
 	 * @since 4.0.6
 	 */
-	public static <E> List<E> toList(Iterator<E> iter) {
+	public static <E> List<E> toList(final Iterator<E> iter) {
 		return ListUtil.toList(iter);
 	}
 
@@ -530,7 +530,7 @@ public class IterUtil {
 	 * @param e   {@link Enumeration}
 	 * @return {@link Iterator}
 	 */
-	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
+	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
 		return new EnumerationIter<>(e);
 	}
 
@@ -573,7 +573,7 @@ public class IterUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 第一个元素，为空返回{@code null}
 	 */
-	public static <T> T getFirst(Iterable<T> iterable) {
+	public static <T> T getFirst(final Iterable<T> iterable) {
 		return getFirst(getIter(iterable));
 	}
 
@@ -585,7 +585,7 @@ public class IterUtil {
 	 * @return 第一个元素
 	 * @since 5.7.2
 	 */
-	public static <T> T getFirstNoneNull(Iterable<T> iterable) {
+	public static <T> T getFirstNoneNull(final Iterable<T> iterable) {
 		if (null == iterable) {
 			return null;
 		}
@@ -599,7 +599,7 @@ public class IterUtil {
 	 * @param iterator {@link Iterator}
 	 * @return 第一个元素
 	 */
-	public static <T> T getFirst(Iterator<T> iterator) {
+	public static <T> T getFirst(final Iterator<T> iterator) {
 		return get(iterator, 0);
 	}
 
@@ -611,7 +611,7 @@ public class IterUtil {
 	 * @return 第一个非空元素，null表示未找到
 	 * @since 5.7.2
 	 */
-	public static <T> T getFirstNoneNull(Iterator<T> iterator) {
+	public static <T> T getFirstNoneNull(final Iterator<T> iterator) {
 		return firstMatch(iterator, Objects::nonNull);
 	}
 
@@ -624,7 +624,7 @@ public class IterUtil {
 	 * @return 匹配元素，如果不存在匹配元素或{@link Iterator}为空，返回 {@code null}
 	 * @since 5.7.5
 	 */
-	public static <T> T firstMatch(Iterator<T> iterator, Matcher<T> matcher) {
+	public static <T> T firstMatch(final Iterator<T> iterator, final Matcher<T> matcher) {
 		Assert.notNull(matcher, "Matcher must be not null !");
 		if (null != iterator) {
 			while (iterator.hasNext()) {
@@ -644,7 +644,7 @@ public class IterUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 */
-	public static Class<?> getElementType(Iterable<?> iterable) {
+	public static Class<?> getElementType(final Iterable<?> iterable) {
 		return getElementType(getIter(iterable));
 	}
 
@@ -655,7 +655,7 @@ public class IterUtil {
 	 * @param iterator {@link Iterator}，为 {@code null}返回{@code null}
 	 * @return 元素类型，当列表为空或元素全部为{@code null}时，返回{@code null}
 	 */
-	public static Class<?> getElementType(Iterator<?> iterator) {
+	public static Class<?> getElementType(final Iterator<?> iterator) {
 		if (null == iterator) {
 			return null;
 		}
@@ -678,14 +678,14 @@ public class IterUtil {
 	 * @return 过滤后的集合
 	 * @since 5.7.1
 	 */
-	public static <T> List<T> edit(Iterable<T> iter, Editor<T> editor) {
+	public static <T> List<T> edit(final Iterable<T> iter, final Editor<T> editor) {
 		final List<T> result = new ArrayList<>();
 		if (null == iter) {
 			return result;
 		}
 
 		T modified;
-		for (T t : iter) {
+		for (final T t : iter) {
 			modified = (null == editor) ? t : editor.edit(t);
 			if (null != modified) {
 				result.add(t);
@@ -709,7 +709,7 @@ public class IterUtil {
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Iterable<E>, E> T filter(T iter, Filter<E> filter) {
+	public static <T extends Iterable<E>, E> T filter(final T iter, final Filter<E> filter) {
 		if (null == iter) {
 			return null;
 		}
@@ -733,7 +733,7 @@ public class IterUtil {
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <E> Iterator<E> filter(Iterator<E> iter, Filter<E> filter) {
+	public static <E> Iterator<E> filter(final Iterator<E> iter, final Filter<E> filter) {
 		if (null == iter || null == filter) {
 			return iter;
 		}
@@ -755,7 +755,7 @@ public class IterUtil {
 	 * @return ArrayList
 	 * @since 5.7.22
 	 */
-	public static <E> List<E> filterToList(Iterator<E> iter, Predicate<E> filter) {
+	public static <E> List<E> filterToList(final Iterator<E> iter, final Predicate<E> filter) {
 		return toList(filtered(iter, filter));
 	}
 
@@ -784,7 +784,7 @@ public class IterUtil {
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
-	public static <K, V> Map<K, V> toMap(Iterator<V> iterator, Map<K, V> map, Func1<V, K> keyFunc) {
+	public static <K, V> Map<K, V> toMap(final Iterator<V> iterator, final Map<K, V> map, final Func1<V, K> keyFunc) {
 		return toMap(iterator, map, keyFunc, (value) -> value);
 	}
 
@@ -802,7 +802,7 @@ public class IterUtil {
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
-	public static <K, V, E> Map<K, V> toMap(Iterator<E> iterator, Map<K, V> map, Func1<E, K> keyFunc, Func1<E, V> valueFunc) {
+	public static <K, V, E> Map<K, V> toMap(final Iterator<E> iterator, Map<K, V> map, final Func1<E, K> keyFunc, final Func1<E, V> valueFunc) {
 		if (null == iterator) {
 			return map;
 		}
@@ -816,7 +816,7 @@ public class IterUtil {
 			element = iterator.next();
 			try {
 				map.put(keyFunc.call(element), valueFunc.call(element));
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new UtilException(e);
 			}
 		}
@@ -845,7 +845,7 @@ public class IterUtil {
 	 * @return 转换后的{@link Iterator}
 	 * @since 5.4.3
 	 */
-	public static <F, T> Iterator<T> trans(Iterator<F> iterator, Function<? super F, ? extends T> function) {
+	public static <F, T> Iterator<T> trans(final Iterator<F> iterator, final Function<? super F, ? extends T> function) {
 		return new TransIter<>(iterator, function);
 	}
 
@@ -856,7 +856,7 @@ public class IterUtil {
 	 * @return Iterable对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(Iterable<?> iterable) {
+	public static int size(final Iterable<?> iterable) {
 		if (null == iterable) {
 			return 0;
 		}
@@ -875,7 +875,7 @@ public class IterUtil {
 	 * @return Iterator对象的元素数量
 	 * @since 5.5.0
 	 */
-	public static int size(Iterator<?> iterator) {
+	public static int size(final Iterator<?> iterator) {
 		int size = 0;
 		if (iterator != null) {
 			while (iterator.hasNext()) {
@@ -899,7 +899,7 @@ public class IterUtil {
 	 * @return 是否相同
 	 * @since 5.6.0
 	 */
-	public static boolean isEqualList(Iterable<?> list1, Iterable<?> list2) {
+	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
 		if (list1 == list2) {
 			return true;
 		}
@@ -927,7 +927,7 @@ public class IterUtil {
 	 * @param iterator {@link Iterator}
 	 * @since 5.7.23
 	 */
-	public static void clear(Iterator<?> iterator) {
+	public static void clear(final Iterator<?> iterator) {
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				iterator.next();

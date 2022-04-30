@@ -46,7 +46,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static String toStr(Object value, String defaultValue) {
+	public static String toStr(final Object value, final String defaultValue) {
 		return convertQuietly(String.class, value, defaultValue);
 	}
 
@@ -58,7 +58,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static String toStr(Object value) {
+	public static String toStr(final Object value) {
 		return toStr(value, null);
 	}
 
@@ -69,7 +69,7 @@ public class Convert {
 	 * @return String数组
 	 * @since 3.2.0
 	 */
-	public static String[] toStrArray(Object value) {
+	public static String[] toStrArray(final Object value) {
 		return convert(String[].class, value);
 	}
 
@@ -82,7 +82,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Character toChar(Object value, Character defaultValue) {
+	public static Character toChar(final Object value, final Character defaultValue) {
 		return convertQuietly(Character.class, value, defaultValue);
 	}
 
@@ -94,7 +94,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Character toChar(Object value) {
+	public static Character toChar(final Object value) {
 		return toChar(value, null);
 	}
 
@@ -105,7 +105,7 @@ public class Convert {
 	 * @return Character数组
 	 * @since 3.2.0
 	 */
-	public static Character[] toCharArray(Object value) {
+	public static Character[] toCharArray(final Object value) {
 		return convert(Character[].class, value);
 	}
 
@@ -118,7 +118,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Byte toByte(Object value, Byte defaultValue) {
+	public static Byte toByte(final Object value, final Byte defaultValue) {
 		return convertQuietly(Byte.class, value, defaultValue);
 	}
 
@@ -130,7 +130,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Byte toByte(Object value) {
+	public static Byte toByte(final Object value) {
 		return toByte(value, null);
 	}
 
@@ -141,7 +141,7 @@ public class Convert {
 	 * @return Byte数组
 	 * @since 3.2.0
 	 */
-	public static Byte[] toByteArray(Object value) {
+	public static Byte[] toByteArray(final Object value) {
 		return convert(Byte[].class, value);
 	}
 
@@ -152,7 +152,7 @@ public class Convert {
 	 * @return Byte数组
 	 * @since 5.1.1
 	 */
-	public static byte[] toPrimitiveByteArray(Object value) {
+	public static byte[] toPrimitiveByteArray(final Object value) {
 		return convert(byte[].class, value);
 	}
 
@@ -165,7 +165,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Short toShort(Object value, Short defaultValue) {
+	public static Short toShort(final Object value, final Short defaultValue) {
 		return convertQuietly(Short.class, value, defaultValue);
 	}
 
@@ -177,7 +177,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Short toShort(Object value) {
+	public static Short toShort(final Object value) {
 		return toShort(value, null);
 	}
 
@@ -188,7 +188,7 @@ public class Convert {
 	 * @return Short数组
 	 * @since 3.2.0
 	 */
-	public static Short[] toShortArray(Object value) {
+	public static Short[] toShortArray(final Object value) {
 		return convert(Short[].class, value);
 	}
 
@@ -201,7 +201,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Number toNumber(Object value, Number defaultValue) {
+	public static Number toNumber(final Object value, final Number defaultValue) {
 		return convertQuietly(Number.class, value, defaultValue);
 	}
 
@@ -213,7 +213,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Number toNumber(Object value) {
+	public static Number toNumber(final Object value) {
 		return toNumber(value, null);
 	}
 
@@ -224,7 +224,7 @@ public class Convert {
 	 * @return Number数组
 	 * @since 3.2.0
 	 */
-	public static Number[] toNumberArray(Object value) {
+	public static Number[] toNumberArray(final Object value) {
 		return convert(Number[].class, value);
 	}
 
@@ -237,7 +237,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Integer toInt(Object value, Integer defaultValue) {
+	public static Integer toInt(final Object value, final Integer defaultValue) {
 		return convertQuietly(Integer.class, value, defaultValue);
 	}
 
@@ -249,7 +249,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Integer toInt(Object value) {
+	public static Integer toInt(final Object value) {
 		return toInt(value, null);
 	}
 
@@ -259,7 +259,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Integer[] toIntArray(Object value) {
+	public static Integer[] toIntArray(final Object value) {
 		return convert(Integer[].class, value);
 	}
 
@@ -272,7 +272,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Long toLong(Object value, Long defaultValue) {
+	public static Long toLong(final Object value, final Long defaultValue) {
 		return convertQuietly(Long.class, value, defaultValue);
 	}
 
@@ -284,7 +284,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Long toLong(Object value) {
+	public static Long toLong(final Object value) {
 		return toLong(value, null);
 	}
 
@@ -294,7 +294,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Long[] toLongArray(Object value) {
+	public static Long[] toLongArray(final Object value) {
 		return convert(Long[].class, value);
 	}
 
@@ -307,7 +307,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Double toDouble(Object value, Double defaultValue) {
+	public static Double toDouble(final Object value, final Double defaultValue) {
 		return convertQuietly(Double.class, value, defaultValue);
 	}
 
@@ -319,7 +319,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Double toDouble(Object value) {
+	public static Double toDouble(final Object value) {
 		return toDouble(value, null);
 	}
 
@@ -329,7 +329,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Double[] toDoubleArray(Object value) {
+	public static Double[] toDoubleArray(final Object value) {
 		return convert(Double[].class, value);
 	}
 
@@ -342,7 +342,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Float toFloat(Object value, Float defaultValue) {
+	public static Float toFloat(final Object value, final Float defaultValue) {
 		return convertQuietly(Float.class, value, defaultValue);
 	}
 
@@ -354,7 +354,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Float toFloat(Object value) {
+	public static Float toFloat(final Object value) {
 		return toFloat(value, null);
 	}
 
@@ -364,7 +364,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Float[] toFloatArray(Object value) {
+	public static Float[] toFloatArray(final Object value) {
 		return convert(Float[].class, value);
 	}
 
@@ -377,7 +377,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static Boolean toBool(Object value, Boolean defaultValue) {
+	public static Boolean toBool(final Object value, final Boolean defaultValue) {
 		return convertQuietly(Boolean.class, value, defaultValue);
 	}
 
@@ -389,7 +389,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Boolean toBool(Object value) {
+	public static Boolean toBool(final Object value) {
 		return toBool(value, null);
 	}
 
@@ -399,7 +399,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Boolean[] toBooleanArray(Object value) {
+	public static Boolean[] toBooleanArray(final Object value) {
 		return convert(Boolean[].class, value);
 	}
 
@@ -412,7 +412,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static BigInteger toBigInteger(Object value, BigInteger defaultValue) {
+	public static BigInteger toBigInteger(final Object value, final BigInteger defaultValue) {
 		return convertQuietly(BigInteger.class, value, defaultValue);
 	}
 
@@ -424,7 +424,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static BigInteger toBigInteger(Object value) {
+	public static BigInteger toBigInteger(final Object value) {
 		return toBigInteger(value, null);
 	}
 
@@ -437,7 +437,7 @@ public class Convert {
 	 * @param defaultValue 转换错误时的默认值
 	 * @return 结果
 	 */
-	public static BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
+	public static BigDecimal toBigDecimal(final Object value, final BigDecimal defaultValue) {
 		return convertQuietly(BigDecimal.class, value, defaultValue);
 	}
 
@@ -449,7 +449,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static BigDecimal toBigDecimal(Object value) {
+	public static BigDecimal toBigDecimal(final Object value) {
 		return toBigDecimal(value, null);
 	}
 
@@ -463,7 +463,7 @@ public class Convert {
 	 * @return 结果
 	 * @since 4.1.6
 	 */
-	public static Date toDate(Object value, Date defaultValue) {
+	public static Date toDate(final Object value, final Date defaultValue) {
 		return convertQuietly(Date.class, value, defaultValue);
 	}
 
@@ -477,7 +477,7 @@ public class Convert {
 	 * @return 结果
 	 * @since 5.0.7
 	 */
-	public static LocalDateTime toLocalDateTime(Object value, LocalDateTime defaultValue) {
+	public static LocalDateTime toLocalDateTime(final Object value, final LocalDateTime defaultValue) {
 		return convertQuietly(LocalDateTime.class, value, defaultValue);
 	}
 
@@ -489,7 +489,7 @@ public class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static LocalDateTime toLocalDateTime(Object value) {
+	public static LocalDateTime toLocalDateTime(final Object value) {
 		return toLocalDateTime(value, null);
 	}
 
@@ -503,7 +503,7 @@ public class Convert {
 	 * @return 结果
 	 * @since 5.0.7
 	 */
-	public static Date toInstant(Object value, Date defaultValue) {
+	public static Date toInstant(final Object value, final Date defaultValue) {
 		return convertQuietly(Instant.class, value, defaultValue);
 	}
 
@@ -516,7 +516,7 @@ public class Convert {
 	 * @return 结果
 	 * @since 4.1.6
 	 */
-	public static Date toDate(Object value) {
+	public static Date toDate(final Object value) {
 		return toDate(value, null);
 	}
 
@@ -531,7 +531,7 @@ public class Convert {
 	 * @return Enum
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
+	public static <E extends Enum<E>> E toEnum(final Class<E> clazz, final Object value, final E defaultValue) {
 		return (E) (new EnumConverter(clazz)).convertQuietly(value, defaultValue);
 	}
 
@@ -544,7 +544,7 @@ public class Convert {
 	 * @param value 值
 	 * @return Enum
 	 */
-	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value) {
+	public static <E extends Enum<E>> E toEnum(final Class<E> clazz, final Object value) {
 		return toEnum(clazz, value, null);
 	}
 
@@ -557,7 +557,7 @@ public class Convert {
 	 * @return {@link Collection}
 	 * @since 3.0.8
 	 */
-	public static Collection<?> toCollection(Class<?> collectionType, Class<?> elementType, Object value) {
+	public static Collection<?> toCollection(final Class<?> collectionType, final Class<?> elementType, final Object value) {
 		return new CollectionConverter(collectionType, elementType).convert(value, null);
 	}
 
@@ -568,7 +568,7 @@ public class Convert {
 	 * @return {@link List}
 	 * @since 4.1.11
 	 */
-	public static List<?> toList(Object value) {
+	public static List<?> toList(final Object value) {
 		return convert(List.class, value);
 	}
 
@@ -582,7 +582,7 @@ public class Convert {
 	 * @since 4.1.20
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> toList(Class<T> elementType, Object value) {
+	public static <T> List<T> toList(final Class<T> elementType, final Object value) {
 		return (List<T>) toCollection(ArrayList.class, elementType, value);
 	}
 
@@ -596,7 +596,7 @@ public class Convert {
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> toSet(Class<T> elementType, Object value) {
+	public static <T> Set<T> toSet(final Class<T> elementType, final Object value) {
 		return (Set<T>) toCollection(HashSet.class, elementType, value);
 	}
 
@@ -612,7 +612,7 @@ public class Convert {
 	 * @since 4.6.8
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object value) {
+	public static <K, V> Map<K, V> toMap(final Class<K> keyType, final Class<V> valueType, final Object value) {
 		return (Map<K, V>) new MapConverter(HashMap.class, keyType, valueType).convert(value, null);
 	}
 
@@ -626,7 +626,7 @@ public class Convert {
 	 * @since 4.0.7
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convertByClassName(String className, Object value) throws ConvertException{
+	public static <T> T convertByClassName(final String className, final Object value) throws ConvertException{
 		return convert(ClassUtil.loadClass(className), value);
 	}
 
@@ -640,7 +640,7 @@ public class Convert {
 	 * @since 4.0.0
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Class<T> type, Object value) throws ConvertException{
+	public static <T> T convert(final Class<T> type, final Object value) throws ConvertException{
 		return convert((Type)type, value);
 	}
 
@@ -653,7 +653,7 @@ public class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(TypeReference<T> reference, Object value) throws ConvertException{
+	public static <T> T convert(final TypeReference<T> reference, final Object value) throws ConvertException{
 		return convert(reference.getType(), value, null);
 	}
 
@@ -666,7 +666,7 @@ public class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Type type, Object value) throws ConvertException{
+	public static <T> T convert(final Type type, final Object value) throws ConvertException{
 		return convert(type, value, null);
 	}
 
@@ -681,7 +681,7 @@ public class Convert {
 	 * @throws ConvertException 转换器不存在
 	 * @since 4.0.0
 	 */
-	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+	public static <T> T convert(final Class<T> type, final Object value, final T defaultValue) throws ConvertException {
 		return convert((Type)type, value, defaultValue);
 	}
 
@@ -695,7 +695,7 @@ public class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
+	public static <T> T convert(final Type type, final Object value, final T defaultValue) throws ConvertException {
 		return convertWithCheck(type, value, defaultValue, false);
 	}
 
@@ -709,7 +709,7 @@ public class Convert {
 	 * @return 转换后的值，转换失败返回null
 	 * @since 4.5.10
 	 */
-	public static <T> T convertQuietly(Type type, Object value) {
+	public static <T> T convertQuietly(final Type type, final Object value) {
 		return convertQuietly(type, value, null);
 	}
 
@@ -724,7 +724,7 @@ public class Convert {
 	 * @return 转换后的值
 	 * @since 4.5.10
 	 */
-	public static <T> T convertQuietly(Type type, Object value, T defaultValue) {
+	public static <T> T convertQuietly(final Type type, final Object value, final T defaultValue) {
 		return convertWithCheck(type, value, defaultValue, true);
 	}
 
@@ -740,11 +740,11 @@ public class Convert {
 	 * @return 转换后的值
 	 * @since 5.3.2
 	 */
-	public static <T> T convertWithCheck(Type type, Object value, T defaultValue, boolean quietly) {
+	public static <T> T convertWithCheck(final Type type, final Object value, final T defaultValue, final boolean quietly) {
 		final ConverterRegistry registry = ConverterRegistry.getInstance();
 		try {
 			return registry.convert(type, value, defaultValue);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if(quietly){
 				return defaultValue;
 			}
@@ -759,7 +759,7 @@ public class Convert {
 	 * @param input String.
 	 * @return 全角字符串.
 	 */
-	public static String toSBC(String input) {
+	public static String toSBC(final String input) {
 		return toSBC(input, null);
 	}
 
@@ -770,7 +770,7 @@ public class Convert {
 	 * @param notConvertSet 不替换的字符集合
 	 * @return 全角字符串.
 	 */
-	public static String toSBC(String input, Set<Character> notConvertSet) {
+	public static String toSBC(final String input, final Set<Character> notConvertSet) {
 		final char[] c = input.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {
@@ -793,7 +793,7 @@ public class Convert {
 	 * @param input String.
 	 * @return 半角字符串
 	 */
-	public static String toDBC(String input) {
+	public static String toDBC(final String input) {
 		return toDBC(input, null);
 	}
 
@@ -804,7 +804,7 @@ public class Convert {
 	 * @param notConvertSet 不替换的字符集合
 	 * @return 替换后的字符
 	 */
-	public static String toDBC(String text, Set<Character> notConvertSet) {
+	public static String toDBC(final String text, final Set<Character> notConvertSet) {
 		if(StrUtil.isBlank(text)) {
 			return text;
 		}
@@ -835,7 +835,7 @@ public class Convert {
 	 * @return 16进制字符串
 	 * @see HexUtil#encodeHexStr(String, Charset)
 	 */
-	public static String toHex(String str, Charset charset) {
+	public static String toHex(final String str, final Charset charset) {
 		return HexUtil.encodeHexStr(str, charset);
 	}
 
@@ -846,7 +846,7 @@ public class Convert {
 	 * @return 转换后的值
 	 * @see HexUtil#encodeHexStr(byte[])
 	 */
-	public static String toHex(byte[] bytes) {
+	public static String toHex(final byte[] bytes) {
 		return HexUtil.encodeHexStr(bytes);
 	}
 
@@ -857,7 +857,7 @@ public class Convert {
 	 * @return byte[]
 	 * @see HexUtil#decodeHex(char[])
 	 */
-	public static byte[] hexToBytes(String src) {
+	public static byte[] hexToBytes(final String src) {
 		return HexUtil.decodeHex(src.toCharArray());
 	}
 
@@ -870,7 +870,7 @@ public class Convert {
 	 * @see HexUtil#decodeHexStr(String, Charset)
 	 * @since 4.1.11
 	 */
-	public static String hexToStr(String hexStr, Charset charset) {
+	public static String hexToStr(final String hexStr, final Charset charset) {
 		return HexUtil.decodeHexStr(hexStr, charset);
 	}
 
@@ -881,7 +881,7 @@ public class Convert {
 	 * @return String 每个unicode之间无分隔符
 	 * @see UnicodeUtil#toUnicode(String)
 	 */
-	public static String strToUnicode(String strText) {
+	public static String strToUnicode(final String strText) {
 		return UnicodeUtil.toUnicode(strText);
 	}
 
@@ -892,7 +892,7 @@ public class Convert {
 	 * @return String 字符串
 	 * @see UnicodeUtil#toString(String)
 	 */
-	public static String unicodeToStr(String unicode) {
+	public static String unicodeToStr(final String unicode) {
 		return UnicodeUtil.toString(unicode);
 	}
 
@@ -906,7 +906,7 @@ public class Convert {
 	 * @return 转换后的字符串
 	 * @see CharsetUtil#convert(String, String, String)
 	 */
-	public static String convertCharset(String str, String sourceCharset, String destCharset) {
+	public static String convertCharset(final String str, final String sourceCharset, final String destCharset) {
 		if (StrUtil.hasBlank(str, sourceCharset, destCharset)) {
 			return str;
 		}
@@ -922,7 +922,7 @@ public class Convert {
 	 * @param destUnit 目标单位
 	 * @return 目标单位的时长
 	 */
-	public static long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit) {
+	public static long convertTime(final long sourceDuration, final TimeUnit sourceUnit, final TimeUnit destUnit) {
 		Assert.notNull(sourceUnit, "sourceUnit is null !");
 		Assert.notNull(destUnit, "destUnit is null !");
 		return destUnit.convert(sourceDuration, sourceUnit);
@@ -937,7 +937,7 @@ public class Convert {
 	 * @return 包装类
 	 * @see BasicType#wrap(Class)
 	 */
-	public static Class<?> wrap(Class<?> clazz) {
+	public static Class<?> wrap(final Class<?> clazz) {
 		return BasicType.wrap(clazz);
 	}
 
@@ -949,7 +949,7 @@ public class Convert {
 	 * @return 原始类
 	 * @see BasicType#unWrap(Class)
 	 */
-	public static Class<?> unWrap(Class<?> clazz) {
+	public static Class<?> unWrap(final Class<?> clazz) {
 		return BasicType.unWrap(clazz);
 	}
 
@@ -961,7 +961,7 @@ public class Convert {
 	 * @return 英文表达式
 	 * @since 3.0.9
 	 */
-	public static String numberToWord(Number number) {
+	public static String numberToWord(final Number number) {
 		return NumberWordFormatter.format(number);
 	}
 
@@ -976,7 +976,7 @@ public class Convert {
 	 * @return 英文表达式
 	 * @since 5.5.9
 	 */
-	public static String numberToSimple(Number number) {
+	public static String numberToSimple(final Number number) {
 		return NumberWordFormatter.formatSimple(number.longValue());
 	}
 
@@ -988,7 +988,7 @@ public class Convert {
 	 * @return 中文
 	 * @since 3.2.3
 	 */
-	public static String numberToChinese(double number, boolean isUseTraditional) {
+	public static String numberToChinese(final double number, final boolean isUseTraditional) {
 		return NumberChineseFormatter.format(number, isUseTraditional);
 	}
 
@@ -1003,7 +1003,7 @@ public class Convert {
 	 * @return 数字
 	 * @since 5.6.0
 	 */
-	public static int chineseToNumber(String number){
+	public static int chineseToNumber(final String number){
 		return NumberChineseFormatter.chineseToNumber(number);
 	}
 
@@ -1014,7 +1014,7 @@ public class Convert {
 	 * @return 中文大写数字
 	 * @since 3.2.3
 	 */
-	public static String digitToChinese(Number n) {
+	public static String digitToChinese(final Number n) {
 		if(null == n) {
 			return "零";
 		}
@@ -1029,7 +1029,7 @@ public class Convert {
 	 * @return byte值
 	 * @since 3.2.0
 	 */
-	public static byte intToByte(int intValue) {
+	public static byte intToByte(final int intValue) {
 		return (byte) intValue;
 	}
 
@@ -1040,7 +1040,7 @@ public class Convert {
 	 * @return 无符号int值
 	 * @since 3.2.0
 	 */
-	public static int byteToUnsignedInt(byte byteValue) {
+	public static int byteToUnsignedInt(final byte byteValue) {
 		// Java 总是把 byte 当做有符处理；我们可以通过将其和 0xFF 进行二进制与得到它的无符值
 		return byteValue & 0xFF;
 	}
@@ -1053,7 +1053,7 @@ public class Convert {
 	 * @return short值
 	 * @since 5.6.3
 	 */
-	public static short bytesToShort(byte[] bytes) {
+	public static short bytesToShort(final byte[] bytes) {
 		return ByteUtil.bytesToShort(bytes);
 	}
 
@@ -1065,7 +1065,7 @@ public class Convert {
 	 * @return byte数组
 	 * @since 5.6.3
 	 */
-	public static byte[] shortToBytes(short shortValue) {
+	public static byte[] shortToBytes(final short shortValue) {
 		return ByteUtil.shortToBytes(shortValue);
 	}
 
@@ -1077,7 +1077,7 @@ public class Convert {
 	 * @return int值
 	 * @since 5.6.3
 	 */
-	public static int bytesToInt(byte[] bytes) {
+	public static int bytesToInt(final byte[] bytes) {
 		return ByteUtil.bytesToInt(bytes);
 	}
 
@@ -1089,7 +1089,7 @@ public class Convert {
 	 * @return byte数组
 	 * @since 5.6.3
 	 */
-	public static byte[] intToBytes(int intValue) {
+	public static byte[] intToBytes(final int intValue) {
 		return ByteUtil.intToBytes(intValue);
 	}
 
@@ -1102,7 +1102,7 @@ public class Convert {
 	 * @return byte数组
 	 * @since 5.6.3
 	 */
-	public static byte[] longToBytes(long longValue) {
+	public static byte[] longToBytes(final long longValue) {
 		return ByteUtil.longToBytes(longValue);
 	}
 
@@ -1115,7 +1115,7 @@ public class Convert {
 	 * @return long值
 	 * @since 5.6.3
 	 */
-	public static long bytesToLong(byte[] bytes) {
+	public static long bytesToLong(final byte[] bytes) {
 		return ByteUtil.bytesToLong(bytes);
 	}
 }

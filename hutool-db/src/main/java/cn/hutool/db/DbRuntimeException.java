@@ -10,27 +10,27 @@ import cn.hutool.core.text.StrUtil;
 public class DbRuntimeException extends RuntimeException{
 	private static final long serialVersionUID = 3624487785708765623L;
 
-	public DbRuntimeException(Throwable e) {
+	public DbRuntimeException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public DbRuntimeException(String message) {
+	public DbRuntimeException(final String message) {
 		super(message);
 	}
 
-	public DbRuntimeException(String messageTemplate, Object... params) {
+	public DbRuntimeException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public DbRuntimeException(String message, Throwable throwable) {
+	public DbRuntimeException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public DbRuntimeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public DbRuntimeException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public DbRuntimeException(Throwable throwable, String messageTemplate, Object... params) {
+	public DbRuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

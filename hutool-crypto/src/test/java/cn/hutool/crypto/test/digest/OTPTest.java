@@ -18,17 +18,17 @@ public class OTPTest {
 
 	@Test
 	public void genKeyTest() {
-		String key = TOTP.generateSecretKey(8);
+		final String key = TOTP.generateSecretKey(8);
 		Assert.assertEquals(8, Base32.decode(key).length);
 	}
 
 	@Test
 	public void validTest() {
-		String key = "VYCFSW2QZ3WZO";
+		final String key = "VYCFSW2QZ3WZO";
 		// 2021/7/1下午6:29:54 显示code为 106659
 		//Assert.assertEquals(new TOTP(Base32.decode(key)).generate(Instant.ofEpochSecond(1625135394L)),106659);
-		TOTP totp = new TOTP(Base32.decode(key));
-		Instant instant = Instant.ofEpochSecond(1625135394L);
+		final TOTP totp = new TOTP(Base32.decode(key));
+		final Instant instant = Instant.ofEpochSecond(1625135394L);
 		Assert.assertTrue(totp.validate(instant, 0, 106659));
 		Assert.assertTrue(totp.validate(instant.plusSeconds(30), 1, 106659));
 		Assert.assertTrue(totp.validate(instant.plusSeconds(60), 2, 106659));
@@ -39,7 +39,7 @@ public class OTPTest {
 
 	@Test
 	public void googleAuthTest() {
-		String str = TOTP.generateGoogleSecretKey("xl7@qq.com", 10);
+		final String str = TOTP.generateGoogleSecretKey("xl7@qq.com", 10);
 		Assert.assertTrue(str.startsWith("otpauth://totp/xl7@qq.com?secret="));
 	}
 
@@ -50,7 +50,7 @@ public class OTPTest {
 
 	@Test
 	public void generateHOPTTest(){
-		byte[] key = "12345678901234567890".getBytes();
+		final byte[] key = "12345678901234567890".getBytes();
 		final HOTP hotp = new HOTP(key);
 		Assert.assertEquals(755224, hotp.generate(0));
 		Assert.assertEquals(287082, hotp.generate(1));
@@ -75,9 +75,9 @@ public class OTPTest {
 
 	@Test
 	public void generateHmacSHA1TOPTTest(){
-		HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA1;
-		byte[] key = "12345678901234567890".getBytes();
-		TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
+		final HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA1;
+		final byte[] key = "12345678901234567890".getBytes();
+		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
 		Assert.assertEquals(94287082, generate);
@@ -95,9 +95,9 @@ public class OTPTest {
 
 	@Test
 	public void generateHmacSHA256TOPTTest(){
-		HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA256;
-		byte[] key = "12345678901234567890123456789012".getBytes();
-		TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
+		final HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA256;
+		final byte[] key = "12345678901234567890123456789012".getBytes();
+		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
 		Assert.assertEquals(46119246, generate);
@@ -115,9 +115,9 @@ public class OTPTest {
 
 	@Test
 	public void generateHmacSHA512TOPTTest(){
-		HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA512;
-		byte[] key = "1234567890123456789012345678901234567890123456789012345678901234".getBytes();
-		TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
+		final HmacAlgorithm algorithm = HmacAlgorithm.HmacSHA512;
+		final byte[] key = "1234567890123456789012345678901234567890123456789012345678901234".getBytes();
+		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
 		Assert.assertEquals(90693936, generate);

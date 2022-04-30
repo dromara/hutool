@@ -8,7 +8,7 @@ public class JSONBeanParserTest {
 
 	@Test
 	public void parseTest(){
-		String jsonStr = "{\"customName\": \"customValue\", \"customAddress\": \"customAddressValue\"}";
+		final String jsonStr = "{\"customName\": \"customValue\", \"customAddress\": \"customAddressValue\"}";
 		final TestBean testBean = JSONUtil.toBean(jsonStr, TestBean.class);
 		Assert.assertNotNull(testBean);
 		Assert.assertEquals("customValue", testBean.getName());
@@ -22,7 +22,7 @@ public class JSONBeanParserTest {
 		private String address;
 
 		@Override
-		public void parse(JSONObject value) {
+		public void parse(final JSONObject value) {
 			this.name = value.getStr("customName");
 			this.address = value.getStr("customAddress");
 		}

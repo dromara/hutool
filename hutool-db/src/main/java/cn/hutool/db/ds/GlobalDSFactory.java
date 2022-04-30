@@ -62,7 +62,7 @@ public class GlobalDSFactory {
 	 * @param customDSFactory 自定义数据源工厂
 	 * @return 自定义的数据源工厂
 	 */
-	public static DSFactory set(DSFactory customDSFactory) {
+	public static DSFactory set(final DSFactory customDSFactory) {
 		synchronized (lock) {
 			if (null != factory) {
 				if (factory.equals(customDSFactory)) {

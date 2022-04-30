@@ -25,7 +25,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	}
 
 	@Override
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
+	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		return find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getPageSize());
 	}
 
@@ -49,7 +49,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	 * @since 5.7.20
 	 */
 	@Override
-	public PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
+	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		SqlBuilder.validateEntity(entity);
 		final SqlBuilder builder = SqlBuilder.create(wrapper);
 

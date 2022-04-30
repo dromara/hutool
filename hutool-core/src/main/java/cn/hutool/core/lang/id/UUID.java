@@ -67,7 +67,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 *
 	 * @param data 数据
 	 */
-	private UUID(byte[] data) {
+	private UUID(final byte[] data) {
 		long msb = 0;
 		long lsb = 0;
 		assert data.length == 16 : "data must be 16 bytes in length";
@@ -87,7 +87,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param mostSigBits  用于 {@code UUID} 的最高有效 64 位
 	 * @param leastSigBits 用于 {@code UUID} 的最低有效 64 位
 	 */
-	public UUID(long mostSigBits, long leastSigBits) {
+	public UUID(final long mostSigBits, final long leastSigBits) {
 		this.mostSigBits = mostSigBits;
 		this.leastSigBits = leastSigBits;
 	}
@@ -116,7 +116,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param isSecure 是否使用{@link SecureRandom}如果是可以获得更安全的随机码，否则可以得到更好的性能
 	 * @return 随机生成的 {@code UUID}
 	 */
-	public static UUID randomUUID(boolean isSecure) {
+	public static UUID randomUUID(final boolean isSecure) {
 		final Random ng = isSecure ? Holder.NUMBER_GENERATOR : RandomUtil.getRandom();
 
 		final byte[] randomBytes = new byte[16];
@@ -136,14 +136,14 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param name 用于构造 UUID 的字节数组。
 	 * @return 根据指定数组生成的 {@code UUID}
 	 */
-	public static UUID nameUUIDFromBytes(byte[] name) {
-		MessageDigest md;
+	public static UUID nameUUIDFromBytes(final byte[] name) {
+		final MessageDigest md;
 		try {
 			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException nsae) {
+		} catch (final NoSuchAlgorithmException nsae) {
 			throw new InternalError("MD5 not supported");
 		}
-		byte[] md5Bytes = md.digest(name);
+		final byte[] md5Bytes = md.digest(name);
 		md5Bytes[6] &= 0x0f; /* clear version */
 		md5Bytes[6] |= 0x30; /* set to version 3 */
 		md5Bytes[8] &= 0x3f; /* clear variant */
@@ -158,8 +158,8 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 具有指定值的 {@code UUID}
 	 * @throws IllegalArgumentException 如果 name 与 {@link #toString} 中描述的字符串表示形式不符抛出此异常
 	 */
-	public static UUID fromString(String name) {
-		String[] components = name.split("-");
+	public static UUID fromString(final String name) {
+		final String[] components = name.split("-");
 		if (components.length != 5) {
 			throw new IllegalArgumentException("Invalid UUID string: " + name);
 		}
@@ -343,7 +343,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param isSimple 是否简单模式，简单模式为不带'-'的UUID字符串
 	 * @return 此{@code UUID} 的字符串表现形式
 	 */
-	public String toString(boolean isSimple) {
+	public String toString(final boolean isSimple) {
 		final StringBuilder builder = StrUtil.builder(isSimple ? 32 : 36);
 		// time_low
 		builder.append(digits(mostSigBits >> 32, 8));
@@ -378,7 +378,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 */
 	@Override
 	public int hashCode() {
-		long hilo = mostSigBits ^ leastSigBits;
+		final long hilo = mostSigBits ^ leastSigBits;
 		return ((int) (hilo >> 32)) ^ (int) hilo;
 	}
 
@@ -391,11 +391,11 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 如果对象相同，则返回 {@code true}；否则返回 {@code false}
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if ((null == obj) || (obj.getClass() != UUID.class)) {
 			return false;
 		}
-		UUID id = (UUID) obj;
+		final UUID id = (UUID) obj;
 		return (mostSigBits == id.mostSigBits && leastSigBits == id.leastSigBits);
 	}
 
@@ -411,7 +411,7 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @return 在此 UUID 小于、等于或大于 val 时，分别返回 -1、0 或 1。
 	 */
 	@Override
-	public int compareTo(UUID val) {
+	public int compareTo(final UUID val) {
 		// The ordering is intentionally set up so that the UUIDs
 		// can simply be numerically compared as two numbers
 		int compare = Long.compare(this.mostSigBits, val.mostSigBits);
@@ -430,8 +430,8 @@ public class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param digits 位
 	 * @return 值
 	 */
-	private static String digits(long val, int digits) {
-		long hi = 1L << (digits * 4);
+	private static String digits(final long val, final int digits) {
+		final long hi = 1L << (digits * 4);
 		return Long.toHexString(hi | (val & (hi - 1))).substring(1);
 	}
 

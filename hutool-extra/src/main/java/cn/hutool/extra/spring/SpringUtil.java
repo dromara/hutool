@@ -45,13 +45,13 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 
 	@SuppressWarnings("NullableProblems")
 	@Override
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		SpringUtil.beanFactory = beanFactory;
 	}
 
 	@SuppressWarnings("NullableProblems")
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) {
+	public void setApplicationContext(final ApplicationContext applicationContext) {
 		SpringUtil.applicationContext = applicationContext;
 	}
 
@@ -103,7 +103,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return Bean
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getBean(String name) {
+	public static <T> T getBean(final String name) {
 		return (T) getBeanFactory().getBean(name);
 	}
 
@@ -114,7 +114,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @param clazz Bean类
 	 * @return Bean对象
 	 */
-	public static <T> T getBean(Class<T> clazz) {
+	public static <T> T getBean(final Class<T> clazz) {
 		return getBeanFactory().getBean(clazz);
 	}
 
@@ -126,7 +126,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @param clazz bean类型
 	 * @return Bean对象
 	 */
-	public static <T> T getBean(String name, Class<T> clazz) {
+	public static <T> T getBean(final String name, final Class<T> clazz) {
 		return getBeanFactory().getBean(name, clazz);
 	}
 
@@ -139,7 +139,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.4.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getBean(TypeReference<T> reference) {
+	public static <T> T getBean(final TypeReference<T> reference) {
 		final ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
 		final Class<T> rawType = (Class<T>) parameterizedType.getRawType();
 		final Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
@@ -155,7 +155,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return 类型对应的bean，key是bean注册的name，value是Bean
 	 * @since 5.3.3
 	 */
-	public static <T> Map<String, T> getBeansOfType(Class<T> type) {
+	public static <T> Map<String, T> getBeansOfType(final Class<T> type) {
 		return getBeanFactory().getBeansOfType(type);
 	}
 
@@ -166,7 +166,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return bean名称
 	 * @since 5.3.3
 	 */
-	public static String[] getBeanNamesForType(Class<?> type) {
+	public static String[] getBeanNamesForType(final Class<?> type) {
 		return getBeanFactory().getBeanNamesForType(type);
 	}
 
@@ -177,7 +177,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @return 属性值
 	 * @since 5.3.3
 	 */
-	public static String getProperty(String key) {
+	public static String getProperty(final String key) {
 		if (null == applicationContext) {
 			return null;
 		}
@@ -231,7 +231,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @author shadow
 	 * @since 5.4.2
 	 */
-	public static <T> void registerBean(String beanName, T bean) {
+	public static <T> void registerBean(final String beanName, final T bean) {
 		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
 		factory.autowireBean(bean);
 		factory.registerSingleton(beanName, bean);
@@ -246,10 +246,10 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @author shadow
 	 * @since 5.7.7
 	 */
-	public static void unregisterBean(String beanName) {
+	public static void unregisterBean(final String beanName) {
 		final ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
 		if (factory instanceof DefaultSingletonBeanRegistry) {
-			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
+			final DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
 			registry.destroySingleton(beanName);
 		} else {
 			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
@@ -262,7 +262,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @param event 待发布的事件，事件必须是{@link ApplicationEvent}的子类
 	 * @since 5.7.12
 	 */
-	public static void publishEvent(ApplicationEvent event) {
+	public static void publishEvent(final ApplicationEvent event) {
 		if (null != applicationContext) {
 			applicationContext.publishEvent(event);
 		}
@@ -275,7 +275,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @param event 待发布的事件
 	 * @since 5.7.21
 	 */
-	public static void publishEvent(Object event) {
+	public static void publishEvent(final Object event) {
 		if (null != applicationContext) {
 			applicationContext.publishEvent(event);
 		}

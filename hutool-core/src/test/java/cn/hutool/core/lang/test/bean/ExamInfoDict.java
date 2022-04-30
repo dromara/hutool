@@ -20,7 +20,7 @@ public class ExamInfoDict implements Serializable {
 	// 试题是否作答
 	private Integer answerIs;
 
-	public Integer getId(Integer defaultValue) {
+	public Integer getId(final Integer defaultValue) {
 		return this.id == null ? defaultValue : this.id;
 	}
 }

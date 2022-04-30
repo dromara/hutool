@@ -27,7 +27,7 @@ public class Issue2221Test {
 		writer.setOnlyAlias(true);
 
 		// 写入数据
-		List<Map<Object, Object>> data = ListUtil.of(
+		final List<Map<Object, Object>> data = ListUtil.of(
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人")),
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人"))
 		);
@@ -40,18 +40,18 @@ public class Issue2221Test {
 	@Ignore
 	public void writeDuplicateHeaderAliasTest2(){
 		// 获取写Excel的流
-		ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/duplicateAlias2.xlsx");
+		final ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/duplicateAlias2.xlsx");
 
 		// 设置头部的背景颜色
 		StyleUtil.setColor(writer.getHeadCellStyle(), IndexedColors.GREY_50_PERCENT, FillPatternType.SOLID_FOREGROUND);
 
 		//设置全局字体
-		Font font = writer.createFont();
+		final Font font = writer.createFont();
 		font.setFontName("Microsoft YaHei");
 		writer.getStyleSet().setFont(font, false);
 
 		// 设置头部的字体为白颜色
-		Font headerFont = writer.createFont();
+		final Font headerFont = writer.createFont();
 		headerFont.setColor(IndexedColors.WHITE.getIndex());
 		writer.getHeadCellStyle().setFont(headerFont);
 
@@ -75,7 +75,7 @@ public class Issue2221Test {
 		writer.merge(0, 0, 3, 4, "新增人数", true);
 
 		// 写入数据
-		List<Map<Object, Object>> data = ListUtil.of(
+		final List<Map<Object, Object>> data = ListUtil.of(
 				MapUtil.ofEntries(
 						MapUtil.entry("date", "2022-01-01"),
 						MapUtil.entry("androidLc", "1次"),

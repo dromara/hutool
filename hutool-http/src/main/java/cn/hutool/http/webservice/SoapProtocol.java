@@ -4,7 +4,7 @@ import javax.xml.soap.SOAPConstants;
 
 /**
  * SOAP协议版本枚举
- * 
+ *
  * @author looly
  *
  */
@@ -16,10 +16,10 @@ public enum SoapProtocol {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param value {@link SOAPConstants} 中的协议版本值
 	 */
-	SoapProtocol(String value) {
+	SoapProtocol(final String value) {
 		this.value = value;
 	}
 
@@ -27,7 +27,7 @@ public enum SoapProtocol {
 
 	/**
 	 * 获取版本值信息
-	 * 
+	 *
 	 * @return 版本值信息
 	 */
 	public String getValue() {

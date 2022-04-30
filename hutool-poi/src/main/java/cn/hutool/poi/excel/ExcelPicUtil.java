@@ -37,7 +37,7 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	public static Map<String, PictureData> getPicMap(Workbook workbook, int sheetIndex) {
+	public static Map<String, PictureData> getPicMap(final Workbook workbook, int sheetIndex) {
 		Assert.notNull(workbook, "Workbook must be not null !");
 		if (sheetIndex < 0) {
 			sheetIndex = 0;
@@ -60,14 +60,14 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	private static Map<String, PictureData> getPicMapXls(HSSFWorkbook workbook, int sheetIndex) {
+	private static Map<String, PictureData> getPicMapXls(final HSSFWorkbook workbook, final int sheetIndex) {
 		final Map<String, PictureData> picMap = new HashMap<>();
 		final List<HSSFPictureData> pictures = workbook.getAllPictures();
 		if (CollUtil.isNotEmpty(pictures)) {
 			final HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 			HSSFClientAnchor anchor;
 			int pictureIndex;
-			for (HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
+			for (final HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
 				if (shape instanceof HSSFPicture) {
 					pictureIndex = ((HSSFPicture) shape).getPictureIndex() - 1;
 					anchor = (HSSFClientAnchor) shape.getAnchor();
@@ -85,17 +85,17 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	private static Map<String, PictureData> getPicMapXlsx(XSSFWorkbook workbook, int sheetIndex) {
+	private static Map<String, PictureData> getPicMapXlsx(final XSSFWorkbook workbook, final int sheetIndex) {
 		final Map<String, PictureData> sheetIndexPicMap = new HashMap<>();
 		final XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 		XSSFDrawing drawing;
-		for (POIXMLDocumentPart dr : sheet.getRelations()) {
+		for (final POIXMLDocumentPart dr : sheet.getRelations()) {
 			if (dr instanceof XSSFDrawing) {
 				drawing = (XSSFDrawing) dr;
 				final List<XSSFShape> shapes = drawing.getShapes();
 				XSSFPicture pic;
 				CTMarker ctMarker;
-				for (XSSFShape shape : shapes) {
+				for (final XSSFShape shape : shapes) {
 					if(shape instanceof XSSFPicture){
 						pic = (XSSFPicture) shape;
 						ctMarker = pic.getPreferredSize().getFrom();

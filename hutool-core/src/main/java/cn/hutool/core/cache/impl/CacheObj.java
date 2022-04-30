@@ -39,7 +39,7 @@ public class CacheObj<K, V> implements Serializable {
 	 * @param obj 值
 	 * @param ttl 超时时长
 	 */
-	protected CacheObj(K key, V obj, long ttl) {
+	protected CacheObj(final K key, final V obj, final long ttl) {
 		this.key = key;
 		this.obj = obj;
 		this.ttl = ttl;
@@ -124,7 +124,7 @@ public class CacheObj<K, V> implements Serializable {
 	 * @return 获得对象
 	 * @since 4.0.10
 	 */
-	protected V get(boolean isUpdateLastAccess) {
+	protected V get(final boolean isUpdateLastAccess) {
 		if (isUpdateLastAccess) {
 			lastAccess = System.currentTimeMillis();
 		}

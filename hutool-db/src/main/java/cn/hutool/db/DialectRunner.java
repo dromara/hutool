@@ -39,7 +39,7 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param dialect 方言
 	 */
-	public DialectRunner(Dialect dialect) {
+	public DialectRunner(final Dialect dialect) {
 		this.dialect = dialect;
 	}
 
@@ -48,7 +48,7 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param driverClassName 驱动类名，用于识别方言
 	 */
-	public DialectRunner(String driverClassName) {
+	public DialectRunner(final String driverClassName) {
 		this(DialectFactory.newDialect(driverClassName));
 	}
 
@@ -64,7 +64,7 @@ public class DialectRunner implements Serializable {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int[] insert(Connection conn, Entity... records) throws SQLException {
+	public int[] insert(final Connection conn, final Entity... records) throws SQLException {
 		checkConn(conn);
 		if (ArrayUtil.isEmpty(records)) {
 			return new int[]{0};
@@ -98,11 +98,11 @@ public class DialectRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.20
 	 */
-	public int upsert(Connection conn, Entity record, String... keys) throws SQLException {
+	public int upsert(final Connection conn, final Entity record, final String... keys) throws SQLException {
 		PreparedStatement ps = null;
 		try{
 			ps = getDialect().psForUpsert(conn, record, keys);
-		}catch (SQLException ignore){
+		}catch (final SQLException ignore){
 			// 方言不支持，使用默认
 		}
 		if (null != ps) {
@@ -126,7 +126,7 @@ public class DialectRunner implements Serializable {
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int insertOrUpdate(Connection conn, Entity record, String... keys) throws SQLException {
+	public int insertOrUpdate(final Connection conn, final Entity record, final String... keys) throws SQLException {
 		final Entity where = record.filter(keys);
 		if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
 			return update(conn, record, where);
@@ -146,7 +146,7 @@ public class DialectRunner implements Serializable {
 	 * @return 主键列表
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T insert(Connection conn, Entity record, RsHandler<T> generatedKeysHandler) throws SQLException {
+	public <T> T insert(final Connection conn, final Entity record, final RsHandler<T> generatedKeysHandler) throws SQLException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
@@ -174,7 +174,7 @@ public class DialectRunner implements Serializable {
 	 * @return 影响行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int del(Connection conn, Entity where) throws SQLException {
+	public int del(final Connection conn, final Entity where) throws SQLException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(where)) {
 			//不允许做全表删除
@@ -200,7 +200,7 @@ public class DialectRunner implements Serializable {
 	 * @return 影响行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int update(Connection conn, Entity record, Entity where) throws SQLException {
+	public int update(final Connection conn, final Entity record, final Entity where) throws SQLException {
 		checkConn(conn);
 		if (MapUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
@@ -238,7 +238,7 @@ public class DialectRunner implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Connection conn, Query query, RsHandler<T> rsh) throws SQLException {
+	public <T> T find(final Connection conn, final Query query, final RsHandler<T> rsh) throws SQLException {
 		checkConn(conn);
 		Assert.notNull(query, "[query] is null !");
 		return SqlExecutor.queryAndClosePs(dialect.psForFind(conn, query), rsh);
@@ -252,7 +252,7 @@ public class DialectRunner implements Serializable {
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
 	 */
-	public long count(Connection conn, Entity where) throws SQLException {
+	public long count(final Connection conn, final Entity where) throws SQLException {
 		checkConn(conn);
 		return SqlExecutor.queryAndClosePs(dialect.psForCount(conn, Query.of(where)), new NumberHandler()).longValue();
 	}
@@ -267,7 +267,7 @@ public class DialectRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.2
 	 */
-	public long count(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+	public long count(final Connection conn, final SqlBuilder sqlBuilder) throws SQLException {
 		checkConn(conn);
 
 		String selectSql = sqlBuilder.build();
@@ -292,7 +292,7 @@ public class DialectRunner implements Serializable {
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T page(Connection conn, Query query, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Connection conn, final Query query, final RsHandler<T> rsh) throws SQLException {
 		checkConn(conn);
 		if (null == query.getPage()) {
 			return this.find(conn, query, rsh);
@@ -314,7 +314,7 @@ public class DialectRunner implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public <T> T page(Connection conn, SqlBuilder sqlBuilder, Page page, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(final Connection conn, final SqlBuilder sqlBuilder, final Page page, final RsHandler<T> rsh) throws SQLException {
 		checkConn(conn);
 		if (null == page) {
 			return SqlExecutor.query(conn, sqlBuilder, rsh);
@@ -333,7 +333,7 @@ public class DialectRunner implements Serializable {
 	 * @param caseInsensitive 否在结果中忽略大小写
 	 * @since 5.2.4
 	 */
-	public void setCaseInsensitive(boolean caseInsensitive) {
+	public void setCaseInsensitive(final boolean caseInsensitive) {
 		this.caseInsensitive = caseInsensitive;
 	}
 
@@ -349,7 +349,7 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param dialect 方言
 	 */
-	public void setDialect(Dialect dialect) {
+	public void setDialect(final Dialect dialect) {
 		this.dialect = dialect;
 	}
 
@@ -358,7 +358,7 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param wrapperChar 包装字符，字符会在SQL生成时位于表名和字段名两边，null时表示取消包装
 	 */
-	public void setWrapper(Character wrapperChar) {
+	public void setWrapper(final Character wrapperChar) {
 		setWrapper(new Wrapper(wrapperChar));
 	}
 
@@ -367,13 +367,13 @@ public class DialectRunner implements Serializable {
 	 *
 	 * @param wrapper 包装器，null表示取消包装
 	 */
-	public void setWrapper(Wrapper wrapper) {
+	public void setWrapper(final Wrapper wrapper) {
 		this.dialect.setWrapper(wrapper);
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 
 	//---------------------------------------------------------------------------- Private method start
-	private void checkConn(Connection conn) {
+	private void checkConn(final Connection conn) {
 		Assert.notNull(conn, "Connection object must be not null!");
 	}
 	//---------------------------------------------------------------------------- Private method start

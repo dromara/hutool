@@ -37,7 +37,7 @@ public class ThymeleafTemplate extends AbstractTemplate implements Serializable 
 	 * @param charset 编码
 	 * @return {@link ThymeleafTemplate}
 	 */
-	public static ThymeleafTemplate wrap(TemplateEngine engine, String template, Charset charset) {
+	public static ThymeleafTemplate wrap(final TemplateEngine engine, final String template, final Charset charset) {
 		return (null == engine) ? null : new ThymeleafTemplate(engine, template, charset);
 	}
 
@@ -48,21 +48,21 @@ public class ThymeleafTemplate extends AbstractTemplate implements Serializable 
 	 * @param template 模板路径或模板内容
 	 * @param charset 编码
 	 */
-	public ThymeleafTemplate(TemplateEngine engine, String template, Charset charset) {
+	public ThymeleafTemplate(final TemplateEngine engine, final String template, final Charset charset) {
 		this.engine = engine;
 		this.template = template;
 		this.charset = ObjUtil.defaultIfNull(charset, CharsetUtil.UTF_8);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		final Context context = new Context(Locale.getDefault(), map);
 		this.engine.process(this.template, context, writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		render(bindingMap, IoUtil.getWriter(out, this.charset));
 	}
 

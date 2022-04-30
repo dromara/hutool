@@ -18,25 +18,25 @@ public class UnicodeUtil {
 	 * @param unicode Unicode字符串
 	 * @return 普通字符串
 	 */
-	public static String toString(String unicode) {
+	public static String toString(final String unicode) {
 		if (StrUtil.isBlank(unicode)) {
 			return unicode;
 		}
 
 		final int len = unicode.length();
-		StringBuilder sb = new StringBuilder(len);
+		final StringBuilder sb = new StringBuilder(len);
 		int i;
 		int pos = 0;
 		while ((i = StrUtil.indexOfIgnoreCase(unicode, "\\u", pos)) != -1) {
 			sb.append(unicode, pos, i);//写入Unicode符之前的部分
 			pos = i;
 			if (i + 5 < len) {
-				char c;
+				final char c;
 				try {
 					c = (char) Integer.parseInt(unicode.substring(i + 2, i + 6), 16);
 					sb.append(c);
 					pos = i + 6;//跳过整个Unicode符
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					//非法Unicode符，跳过
 					sb.append(unicode, pos, i + 2);//写入"\\u"
 					pos = i + 2;
@@ -61,7 +61,7 @@ public class UnicodeUtil {
 	 * @since 5.6.2
 	 * @see HexUtil#toUnicodeHex(char)
 	 */
-	public static String toUnicode(char c) {
+	public static String toUnicode(final char c) {
 		return HexUtil.toUnicodeHex(c);
 	}
 
@@ -73,7 +73,7 @@ public class UnicodeUtil {
 	 * @since 5.6.2
 	 * @see HexUtil#toUnicodeHex(int)
 	 */
-	public static String toUnicode(int c) {
+	public static String toUnicode(final int c) {
 		return HexUtil.toUnicodeHex(c);
 	}
 
@@ -83,7 +83,7 @@ public class UnicodeUtil {
 	 * @param str 被编码的字符串
 	 * @return Unicode字符串
 	 */
-	public static String toUnicode(String str) {
+	public static String toUnicode(final String str) {
 		return toUnicode(str, true);
 	}
 
@@ -94,7 +94,7 @@ public class UnicodeUtil {
 	 * @param isSkipAscii 是否跳过ASCII字符（只跳过可见字符）
 	 * @return Unicode字符串
 	 */
-	public static String toUnicode(String str, boolean isSkipAscii) {
+	public static String toUnicode(final String str, final boolean isSkipAscii) {
 		if (StrUtil.isEmpty(str)) {
 			return str;
 		}

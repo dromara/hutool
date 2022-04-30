@@ -8,9 +8,9 @@ import java.util.List;
 
 /**
  * 线程隔离的Cookie存储。多线程环境下Cookie隔离使用，防止Cookie覆盖<br>
- * 
+ *
  * 见：https://stackoverflow.com/questions/16305486/cookiemanager-for-multiple-threads
- * 
+ *
  * @author looly
  * @since 4.1.18
  */
@@ -26,7 +26,7 @@ public class ThreadLocalCookieStore implements CookieStore {
 
 	/**
 	 * 获取本线程下的CookieStore
-	 * 
+	 *
 	 * @return CookieStore
 	 */
 	public CookieStore getCookieStore() {
@@ -35,7 +35,7 @@ public class ThreadLocalCookieStore implements CookieStore {
 
 	/**
 	 * 移除当前线程的Cookie
-	 * 
+	 *
 	 * @return this
 	 */
 	public ThreadLocalCookieStore removeCurrent() {
@@ -44,12 +44,12 @@ public class ThreadLocalCookieStore implements CookieStore {
 	}
 
 	@Override
-	public void add(URI uri, HttpCookie cookie) {
+	public void add(final URI uri, final HttpCookie cookie) {
 		getCookieStore().add(uri, cookie);
 	}
 
 	@Override
-	public List<HttpCookie> get(URI uri) {
+	public List<HttpCookie> get(final URI uri) {
 		return getCookieStore().get(uri);
 	}
 
@@ -64,7 +64,7 @@ public class ThreadLocalCookieStore implements CookieStore {
 	}
 
 	@Override
-	public boolean remove(URI uri, HttpCookie cookie) {
+	public boolean remove(final URI uri, final HttpCookie cookie) {
 		return getCookieStore().remove(uri, cookie);
 	}
 

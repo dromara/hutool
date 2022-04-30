@@ -51,7 +51,7 @@ public class JschUtil {
 	 * @param sshPass 密码
 	 * @return SSH会话
 	 */
-	public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Session getSession(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		return JschSessionPool.INSTANCE.getSession(sshHost, sshPort, sshUser, sshPass);
 	}
 
@@ -65,7 +65,7 @@ public class JschUtil {
 	 * @param passphrase     私钥密码
 	 * @return SSH会话
 	 */
-	public static Session getSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+	public static Session getSession(final String sshHost, final int sshPort, final String sshUser, final String privateKeyPath, final byte[] passphrase) {
 		return JschSessionPool.INSTANCE.getSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
 	}
 
@@ -78,7 +78,7 @@ public class JschUtil {
 	 * @param sshPass 密码
 	 * @return SSH会话
 	 */
-	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Session openSession(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		return openSession(sshHost, sshPort, sshUser, sshPass, 0);
 	}
 
@@ -93,11 +93,11 @@ public class JschUtil {
 	 * @return SSH会话
 	 * @since 5.3.3
 	 */
-	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass, int timeout) {
+	public static Session openSession(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final int timeout) {
 		final Session session = createSession(sshHost, sshPort, sshUser, sshPass);
 		try {
 			session.connect(timeout);
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 		return session;
@@ -113,11 +113,11 @@ public class JschUtil {
 	 * @param passphrase     私钥文件的密码，可以为null
 	 * @return SSH会话
 	 */
-	public static Session openSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+	public static Session openSession(final String sshHost, final int sshPort, final String sshUser, final String privateKeyPath, final byte[] passphrase) {
 		final Session session = createSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
 		try {
 			session.connect();
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 		return session;
@@ -133,7 +133,7 @@ public class JschUtil {
 	 * @return SSH会话
 	 * @since 4.5.2
 	 */
-	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Session createSession(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		final JSch jsch = new JSch();
 		final Session session = createSession(jsch, sshHost, sshPort, sshUser);
 
@@ -155,13 +155,13 @@ public class JschUtil {
 	 * @return SSH会话
 	 * @since 5.0.0
 	 */
-	public static Session createSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+	public static Session createSession(final String sshHost, final int sshPort, final String sshUser, final String privateKeyPath, final byte[] passphrase) {
 		Assert.notEmpty(privateKeyPath, "PrivateKey Path must be not empty!");
 
 		final JSch jsch = new JSch();
 		try {
 			jsch.addIdentity(privateKeyPath, passphrase);
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 
@@ -178,7 +178,7 @@ public class JschUtil {
 	 * @return {@link Session}
 	 * @since 5.0.3
 	 */
-	public static Session createSession(JSch jsch, String sshHost, int sshPort, String sshUser) {
+	public static Session createSession(JSch jsch, final String sshHost, final int sshPort, String sshUser) {
 		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
 		Assert.isTrue(sshPort > 0, "SSH port must be > 0");
 
@@ -191,10 +191,10 @@ public class JschUtil {
 			jsch = new JSch();
 		}
 
-		Session session;
+		final Session session;
 		try {
 			session = jsch.getSession(sshUser, sshHost, sshPort);
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 
@@ -214,7 +214,7 @@ public class JschUtil {
 	 * @return 成功与否
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 */
-	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JschRuntimeException {
+	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final int localPort) throws JschRuntimeException {
 		return bindPort(session, remoteHost, remotePort, "127.0.0.1", localPort);
 	}
 
@@ -230,11 +230,11 @@ public class JschUtil {
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 * @since 5.7.8
 	 */
-	public static boolean bindPort(Session session, String remoteHost, int remotePort, String localHost, int localPort) throws JschRuntimeException {
+	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final String localHost, final int localPort) throws JschRuntimeException {
 		if (session != null && session.isConnected()) {
 			try {
 				session.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
-			} catch (JSchException e) {
+			} catch (final JSchException e) {
 				throw new JschRuntimeException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
 			}
 			return true;
@@ -255,11 +255,11 @@ public class JschUtil {
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 * @since 5.4.2
 	 */
-	public static boolean bindRemotePort(Session session, int bindPort, String host, int port) throws JschRuntimeException {
+	public static boolean bindRemotePort(final Session session, final int bindPort, final String host, final int port) throws JschRuntimeException {
 		if (session != null && session.isConnected()) {
 			try {
 				session.setPortForwardingR(bindPort, host, port);
-			} catch (JSchException e) {
+			} catch (final JSchException e) {
 				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", bindPort, port);
 			}
 			return true;
@@ -275,10 +275,10 @@ public class JschUtil {
 	 * @param localPort 需要解除的本地端口
 	 * @return 解除成功与否
 	 */
-	public static boolean unBindPort(Session session, int localPort) {
+	public static boolean unBindPort(final Session session, final int localPort) {
 		try {
 			session.delPortForwardingL(localPort);
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 		return true;
@@ -293,7 +293,7 @@ public class JschUtil {
 	 * @return 映射后的本地端口
 	 * @throws JschRuntimeException 连接异常
 	 */
-	public static int openAndBindPortToLocal(Connector sshConn, String remoteHost, int remotePort) throws JschRuntimeException {
+	public static int openAndBindPortToLocal(final Connector sshConn, final String remoteHost, final int remotePort) throws JschRuntimeException {
 		final Session session = openSession(sshConn.getHost(), sshConn.getPort(), sshConn.getUser(), sshConn.getPassword());
 		final int localPort = generateLocalPort();
 		bindPort(session, remoteHost, remotePort, localPort);
@@ -307,7 +307,7 @@ public class JschUtil {
 	 * @return {@link ChannelSftp}
 	 * @since 4.0.3
 	 */
-	public static ChannelSftp openSftp(Session session) {
+	public static ChannelSftp openSftp(final Session session) {
 		return openSftp(session, 0);
 	}
 
@@ -319,7 +319,7 @@ public class JschUtil {
 	 * @return {@link ChannelSftp}
 	 * @since 5.3.3
 	 */
-	public static ChannelSftp openSftp(Session session, int timeout) {
+	public static ChannelSftp openSftp(final Session session, final int timeout) {
 		return (ChannelSftp) openChannel(session, ChannelType.SFTP, timeout);
 	}
 
@@ -333,7 +333,7 @@ public class JschUtil {
 	 * @return {@link Sftp}
 	 * @since 4.0.3
 	 */
-	public static Sftp createSftp(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Sftp createSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		return new Sftp(sshHost, sshPort, sshUser, sshPass);
 	}
 
@@ -344,7 +344,7 @@ public class JschUtil {
 	 * @return {@link Sftp}
 	 * @since 4.0.5
 	 */
-	public static Sftp createSftp(Session session) {
+	public static Sftp createSftp(final Session session) {
 		return new Sftp(session);
 	}
 
@@ -355,7 +355,7 @@ public class JschUtil {
 	 * @return {@link ChannelShell}
 	 * @since 4.0.3
 	 */
-	public static ChannelShell openShell(Session session) {
+	public static ChannelShell openShell(final Session session) {
 		return (ChannelShell) openChannel(session, ChannelType.SHELL);
 	}
 
@@ -367,7 +367,7 @@ public class JschUtil {
 	 * @return {@link Channel}
 	 * @since 4.5.2
 	 */
-	public static Channel openChannel(Session session, ChannelType channelType) {
+	public static Channel openChannel(final Session session, final ChannelType channelType) {
 		return openChannel(session, channelType, 0);
 	}
 
@@ -380,11 +380,11 @@ public class JschUtil {
 	 * @return {@link Channel}
 	 * @since 5.3.3
 	 */
-	public static Channel openChannel(Session session, ChannelType channelType, int timeout) {
+	public static Channel openChannel(final Session session, final ChannelType channelType, final int timeout) {
 		final Channel channel = createChannel(session, channelType);
 		try {
 			channel.connect(Math.max(timeout, 0));
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 		return channel;
@@ -398,14 +398,14 @@ public class JschUtil {
 	 * @return {@link Channel}
 	 * @since 4.5.2
 	 */
-	public static Channel createChannel(Session session, ChannelType channelType) {
-		Channel channel;
+	public static Channel createChannel(final Session session, final ChannelType channelType) {
+		final Channel channel;
 		try {
 			if (false == session.isConnected()) {
 				session.connect();
 			}
 			channel = session.openChannel(channelType.getValue());
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
 		return channel;
@@ -420,7 +420,7 @@ public class JschUtil {
 	 * @return {@link ChannelExec}
 	 * @since 4.0.3
 	 */
-	public static String exec(Session session, String cmd, Charset charset) {
+	public static String exec(final Session session, final String cmd, final Charset charset) {
 		return exec(session, cmd, charset, System.err);
 	}
 
@@ -437,7 +437,7 @@ public class JschUtil {
 	 * @return 执行结果内容
 	 * @since 4.3.1
 	 */
-	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
+	public static String exec(final Session session, final String cmd, Charset charset, final OutputStream errStream) {
 		if (null == charset) {
 			charset = CharsetUtil.UTF_8;
 		}
@@ -450,9 +450,9 @@ public class JschUtil {
 			channel.connect();
 			in = channel.getInputStream();
 			return IoUtil.read(in, charset);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} catch (JSchException e) {
+		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -472,7 +472,7 @@ public class JschUtil {
 	 * @return {@link ChannelExec}
 	 * @since 5.2.5
 	 */
-	public static String execByShell(Session session, String cmd, Charset charset) {
+	public static String execByShell(final Session session, final String cmd, final Charset charset) {
 		final ChannelShell shell = openShell(session);
 		// 开始连接
 		shell.setPty(true);
@@ -486,7 +486,7 @@ public class JschUtil {
 			out.flush();
 
 			return IoUtil.read(in, charset);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(out);
@@ -500,7 +500,7 @@ public class JschUtil {
 	 *
 	 * @param session SSH会话
 	 */
-	public static void close(Session session) {
+	public static void close(final Session session) {
 		if (session != null && session.isConnected()) {
 			session.disconnect();
 		}
@@ -513,7 +513,7 @@ public class JschUtil {
 	 * @param channel 会话通道
 	 * @since 4.0.3
 	 */
-	public static void close(Channel channel) {
+	public static void close(final Channel channel) {
 		if (channel != null && channel.isConnected()) {
 			channel.disconnect();
 		}
@@ -524,7 +524,7 @@ public class JschUtil {
 	 *
 	 * @param key 主机，格式为user@host:port
 	 */
-	public static void close(String key) {
+	public static void close(final String key) {
 		JschSessionPool.INSTANCE.close(key);
 	}
 

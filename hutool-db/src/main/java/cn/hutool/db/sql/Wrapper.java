@@ -37,7 +37,7 @@ public class Wrapper implements Serializable {
 	 *
 	 * @param wrapQuote 单包装字符
 	 */
-	public Wrapper(Character wrapQuote) {
+	public Wrapper(final Character wrapQuote) {
 		this.preWrapQuote = wrapQuote;
 		this.sufWrapQuote = wrapQuote;
 	}
@@ -48,7 +48,7 @@ public class Wrapper implements Serializable {
 	 * @param preWrapQuote 前置包装符号
 	 * @param sufWrapQuote 后置包装符号
 	 */
-	public Wrapper(Character preWrapQuote, Character sufWrapQuote) {
+	public Wrapper(final Character preWrapQuote, final Character sufWrapQuote) {
 		this.preWrapQuote = preWrapQuote;
 		this.sufWrapQuote = sufWrapQuote;
 	}
@@ -67,7 +67,7 @@ public class Wrapper implements Serializable {
 	 *
 	 * @param preWrapQuote 前置包装符号
 	 */
-	public void setPreWrapQuote(Character preWrapQuote) {
+	public void setPreWrapQuote(final Character preWrapQuote) {
 		this.preWrapQuote = preWrapQuote;
 	}
 
@@ -83,7 +83,7 @@ public class Wrapper implements Serializable {
 	 *
 	 * @param sufWrapQuote 后置包装符号
 	 */
-	public void setSufWrapQuote(Character sufWrapQuote) {
+	public void setSufWrapQuote(final Character sufWrapQuote) {
 		this.sufWrapQuote = sufWrapQuote;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
@@ -95,7 +95,7 @@ public class Wrapper implements Serializable {
 	 * @param field 字段名
 	 * @return 包装后的字段名
 	 */
-	public String wrap(String field) {
+	public String wrap(final String field) {
 		if (preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
@@ -126,12 +126,12 @@ public class Wrapper implements Serializable {
 	 * @param fields 字段名
 	 * @return 包装后的字段名
 	 */
-	public String[] wrap(String... fields) {
+	public String[] wrap(final String... fields) {
 		if (ArrayUtil.isEmpty(fields)) {
 			return fields;
 		}
 
-		String[] wrappedFields = new String[fields.length];
+		final String[] wrappedFields = new String[fields.length];
 		for (int i = 0; i < fields.length; i++) {
 			wrappedFields[i] = wrap(fields[i]);
 		}
@@ -146,7 +146,7 @@ public class Wrapper implements Serializable {
 	 * @param fields 字段名
 	 * @return 包装后的字段名
 	 */
-	public Collection<String> wrap(Collection<String> fields) {
+	public Collection<String> wrap(final Collection<String> fields) {
 		if (CollUtil.isEmpty(fields)) {
 			return fields;
 		}
@@ -161,7 +161,7 @@ public class Wrapper implements Serializable {
 	 * @param entity 被包装的实体
 	 * @return 新的实体
 	 */
-	public Entity wrap(Entity entity) {
+	public Entity wrap(final Entity entity) {
 		if (null == entity) {
 			return null;
 		}
@@ -172,7 +172,7 @@ public class Wrapper implements Serializable {
 		wrapedEntity.setTableName(wrap(entity.getTableName()));
 
 		//wrap fields
-		for (Entry<String, Object> entry : entity.entrySet()) {
+		for (final Entry<String, Object> entry : entity.entrySet()) {
 			wrapedEntity.set(wrap(entry.getKey()), entry.getValue());
 		}
 
@@ -186,7 +186,7 @@ public class Wrapper implements Serializable {
 	 * @param conditions 被包装的实体
 	 * @return 包装后的字段名
 	 */
-	public Condition[] wrap(Condition... conditions) {
+	public Condition[] wrap(final Condition... conditions) {
 		final Condition[] clonedConditions = new Condition[conditions.length];
 		if (ArrayUtil.isNotEmpty(conditions)) {
 			Condition clonedCondition;

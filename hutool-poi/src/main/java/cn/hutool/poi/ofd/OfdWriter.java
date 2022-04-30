@@ -34,7 +34,7 @@ public class OfdWriter implements Serializable, Closeable {
 	 *
 	 * @param file 生成的文件
 	 */
-	public OfdWriter(File file) {
+	public OfdWriter(final File file) {
 		this(file.toPath());
 	}
 
@@ -43,14 +43,14 @@ public class OfdWriter implements Serializable, Closeable {
 	 *
 	 * @param file 生成的文件
 	 */
-	public OfdWriter(Path file) {
+	public OfdWriter(final Path file) {
 		try {
 			if(PathUtil.exists(file, true)){
 				this.doc = new OFDDoc(new OFDReader(file), file);
 			} else{
 				this.doc = new OFDDoc(file);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -60,7 +60,7 @@ public class OfdWriter implements Serializable, Closeable {
 	 *
 	 * @param out 需要输出的流
 	 */
-	public OfdWriter(OutputStream out) {
+	public OfdWriter(final OutputStream out) {
 		this.doc = new OFDDoc(out);
 	}
 
@@ -71,12 +71,12 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @param texts 文本
 	 * @return this
 	 */
-	public OfdWriter addText(Font font, String... texts) {
+	public OfdWriter addText(final Font font, final String... texts) {
 		final Paragraph paragraph = new Paragraph();
 		if (null != font) {
 			paragraph.setDefaultFont(font);
 		}
-		for (String text : texts) {
+		for (final String text : texts) {
 			paragraph.add(text);
 		}
 		return add(paragraph);
@@ -90,7 +90,7 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @param height  高度
 	 * @return this
 	 */
-	public OfdWriter addPicture(File picFile, int width, int height) {
+	public OfdWriter addPicture(final File picFile, final int width, final int height) {
 		return addPicture(picFile.toPath(), width, height);
 	}
 
@@ -102,11 +102,11 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @param height  高度
 	 * @return this
 	 */
-	public OfdWriter addPicture(Path picFile, int width, int height) {
+	public OfdWriter addPicture(final Path picFile, final int width, final int height) {
 		final Img img;
 		try {
 			img = new Img(width, height, picFile);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return add(img);
@@ -119,7 +119,7 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @return this
 	 */
 	@SuppressWarnings("rawtypes")
-	public OfdWriter add(Div div) {
+	public OfdWriter add(final Div div) {
 		this.doc.add(div);
 		return this;
 	}
@@ -131,10 +131,10 @@ public class OfdWriter implements Serializable, Closeable {
 	 * @param annotation 节点，可以是段落、Canvas、Img或者填充
 	 * @return this
 	 */
-	public OfdWriter add(int page, Annotation annotation) {
+	public OfdWriter add(final int page, final Annotation annotation) {
 		try {
 			this.doc.addAnnotation(page, annotation);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;

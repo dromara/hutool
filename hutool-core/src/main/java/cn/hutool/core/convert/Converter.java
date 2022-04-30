@@ -30,10 +30,10 @@ public interface Converter<T> {
 	 * @since 5.8.0
 	 * @see #convert(Object, Object)
 	 */
-	default T convertWithCheck(Object value, T defaultValue, boolean quietly) {
+	default T convertWithCheck(final Object value, final T defaultValue, final boolean quietly) {
 		try {
 			return convert(value, defaultValue);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if(quietly){
 				return defaultValue;
 			}

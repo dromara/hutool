@@ -44,7 +44,7 @@ public class SystemTimer {
 	 * @param delayQueueTimeout 执行队列取元素超时时长，单位毫秒
 	 * @return this
 	 */
-	public SystemTimer setDelayQueueTimeout(long delayQueueTimeout){
+	public SystemTimer setDelayQueueTimeout(final long delayQueueTimeout){
 		this.delayQueueTimeout = delayQueueTimeout;
 		return this;
 	}
@@ -78,7 +78,7 @@ public class SystemTimer {
 	 *
 	 * @param timerTask 任务
 	 */
-	public void addTask(TimerTask timerTask) {
+	public void addTask(final TimerTask timerTask) {
 		//添加失败任务直接执行
 		if (false == timeWheel.addTask(timerTask)) {
 			ThreadUtil.execAsync(timerTask.getTask());
@@ -92,14 +92,14 @@ public class SystemTimer {
 	 */
 	private boolean advanceClock() {
 		try {
-			TimerTaskList timerTaskList = poll();
+			final TimerTaskList timerTaskList = poll();
 			if (null != timerTaskList) {
 				//推进时间
 				timeWheel.advanceClock(timerTaskList.getExpire());
 				//执行过期任务（包含降级操作）
 				timerTaskList.flush(this::addTask);
 			}
-		} catch (InterruptedException ignore) {
+		} catch (final InterruptedException ignore) {
 			return false;
 		}
 		return true;

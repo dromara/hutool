@@ -40,7 +40,7 @@ public class UrlQuery {
 	 * @param queryMap 初始化的查询键值对
 	 * @return UrlQuery
 	 */
-	public static UrlQuery of(Map<? extends CharSequence, ?> queryMap) {
+	public static UrlQuery of(final Map<? extends CharSequence, ?> queryMap) {
 		return new UrlQuery(queryMap);
 	}
 
@@ -51,7 +51,7 @@ public class UrlQuery {
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @return UrlQuery
 	 */
-	public static UrlQuery of(Map<? extends CharSequence, ?> queryMap, boolean isFormUrlEncoded) {
+	public static UrlQuery of(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded) {
 		return new UrlQuery(queryMap, isFormUrlEncoded);
 	}
 
@@ -62,7 +62,7 @@ public class UrlQuery {
 	 * @param charset  decode用的编码，null表示不做decode
 	 * @return UrlQuery
 	 */
-	public static UrlQuery of(String queryStr, Charset charset) {
+	public static UrlQuery of(final String queryStr, final Charset charset) {
 		return of(queryStr, charset, true);
 	}
 
@@ -75,7 +75,7 @@ public class UrlQuery {
 	 * @return UrlQuery
 	 * @since 5.5.8
 	 */
-	public static UrlQuery of(String queryStr, Charset charset, boolean autoRemovePath) {
+	public static UrlQuery of(final String queryStr, final Charset charset, final boolean autoRemovePath) {
 		return of(queryStr, charset, autoRemovePath, false);
 	}
 
@@ -89,7 +89,7 @@ public class UrlQuery {
 	 * @return UrlQuery
 	 * @since 5.7.16
 	 */
-	public static UrlQuery of(String queryStr, Charset charset, boolean autoRemovePath, boolean isFormUrlEncoded) {
+	public static UrlQuery of(final String queryStr, final Charset charset, final boolean autoRemovePath, final boolean isFormUrlEncoded) {
 		return new UrlQuery(isFormUrlEncoded).parse(queryStr, charset, autoRemovePath);
 	}
 
@@ -106,7 +106,7 @@ public class UrlQuery {
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @since 5.7.16
 	 */
-	public UrlQuery(boolean isFormUrlEncoded) {
+	public UrlQuery(final boolean isFormUrlEncoded) {
 		this(null, isFormUrlEncoded);
 	}
 
@@ -115,7 +115,7 @@ public class UrlQuery {
 	 *
 	 * @param queryMap 初始化的查询键值对
 	 */
-	public UrlQuery(Map<? extends CharSequence, ?> queryMap) {
+	public UrlQuery(final Map<? extends CharSequence, ?> queryMap) {
 		this(queryMap, false);
 	}
 
@@ -126,7 +126,7 @@ public class UrlQuery {
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @since 5.7.16
 	 */
-	public UrlQuery(Map<? extends CharSequence, ?> queryMap, boolean isFormUrlEncoded) {
+	public UrlQuery(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded) {
 		if (MapUtil.isNotEmpty(queryMap)) {
 			query = new TableMap<>(queryMap.size());
 			addAll(queryMap);
@@ -143,7 +143,7 @@ public class UrlQuery {
 	 * @param value 值，集合和数组转换为逗号分隔形式
 	 * @return this
 	 */
-	public UrlQuery add(CharSequence key, Object value) {
+	public UrlQuery add(final CharSequence key, final Object value) {
 		this.query.put(key, toStr(value));
 		return this;
 	}
@@ -154,7 +154,7 @@ public class UrlQuery {
 	 * @param queryMap query中的键值对
 	 * @return this
 	 */
-	public UrlQuery addAll(Map<? extends CharSequence, ?> queryMap) {
+	public UrlQuery addAll(final Map<? extends CharSequence, ?> queryMap) {
 		if (MapUtil.isNotEmpty(queryMap)) {
 			queryMap.forEach(this::add);
 		}
@@ -168,7 +168,7 @@ public class UrlQuery {
 	 * @param charset  decode编码，null表示不做decode
 	 * @return this
 	 */
-	public UrlQuery parse(String queryStr, Charset charset) {
+	public UrlQuery parse(final String queryStr, final Charset charset) {
 		return parse(queryStr, charset, true);
 	}
 
@@ -181,14 +181,14 @@ public class UrlQuery {
 	 * @return this
 	 * @since 5.5.8
 	 */
-	public UrlQuery parse(String queryStr, Charset charset, boolean autoRemovePath) {
+	public UrlQuery parse(String queryStr, final Charset charset, final boolean autoRemovePath) {
 		if (StrUtil.isBlank(queryStr)) {
 			return this;
 		}
 
 		if (autoRemovePath) {
 			// 去掉Path部分
-			int pathEndPos = queryStr.indexOf('?');
+			final int pathEndPos = queryStr.indexOf('?');
 			if (pathEndPos > -1) {
 				queryStr = StrUtil.subSuf(queryStr, pathEndPos + 1);
 				if (StrUtil.isBlank(queryStr)) {
@@ -215,7 +215,7 @@ public class UrlQuery {
 	 * @param key 键
 	 * @return 值
 	 */
-	public CharSequence get(CharSequence key) {
+	public CharSequence get(final CharSequence key) {
 		if (MapUtil.isEmpty(this.query)) {
 			return null;
 		}
@@ -233,7 +233,7 @@ public class UrlQuery {
 	 * @param charset encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 */
-	public String build(Charset charset) {
+	public String build(final Charset charset) {
 		return build(charset, true);
 	}
 
@@ -249,7 +249,7 @@ public class UrlQuery {
 	 * @param encodePercent 是否编码`%`
 	 * @return URL查询字符串
 	 */
-	public String build(Charset charset, boolean encodePercent) {
+	public String build(final Charset charset, final boolean encodePercent) {
 		if (isFormUrlEncoded) {
 			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
 		}
@@ -271,7 +271,7 @@ public class UrlQuery {
 	 * @return URL查询字符串
 	 * @since 5.7.16
 	 */
-	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset) {
+	public String build(final PercentCodec keyCoder, final PercentCodec valueCoder, final Charset charset) {
 		return build(keyCoder, valueCoder, charset, true);
 	}
 
@@ -290,7 +290,7 @@ public class UrlQuery {
 	 * @return URL查询字符串
 	 * @since 5.8.0
 	 */
-	public String build(PercentCodec keyCoder, PercentCodec valueCoder, Charset charset, boolean encodePercent) {
+	public String build(final PercentCodec keyCoder, final PercentCodec valueCoder, final Charset charset, final boolean encodePercent) {
 		if (MapUtil.isEmpty(this.query)) {
 			return StrUtil.EMPTY;
 		}
@@ -299,7 +299,7 @@ public class UrlQuery {
 		final StringBuilder sb = new StringBuilder();
 		CharSequence name;
 		CharSequence value;
-		for (Map.Entry<CharSequence, CharSequence> entry : this.query) {
+		for (final Map.Entry<CharSequence, CharSequence> entry : this.query) {
 			name = entry.getKey();
 			if (null != name) {
 				if (sb.length() > 0) {
@@ -335,7 +335,7 @@ public class UrlQuery {
 	 * @return this
 	 * @since 5.5.8
 	 */
-	private UrlQuery doParse(String queryStr, Charset charset) {
+	private UrlQuery doParse(final String queryStr, final Charset charset) {
 		final int len = queryStr.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
@@ -378,8 +378,8 @@ public class UrlQuery {
 	 * @param value 值
 	 * @return 字符串
 	 */
-	private static String toStr(Object value) {
-		String result;
+	private static String toStr(final Object value) {
+		final String result;
 		if (value instanceof Iterable) {
 			result = CollUtil.join((Iterable<?>) value, ",");
 		} else if (value instanceof Iterator) {
@@ -403,7 +403,7 @@ public class UrlQuery {
 	 * @param value   value，为null且key不为null时传入""
 	 * @param charset 编码
 	 */
-	private void addParam(String key, String value, Charset charset) {
+	private void addParam(final String key, final String value, final Charset charset) {
 		if (null != key) {
 			final String actualKey = URLDecoder.decode(key, charset, isFormUrlEncoded);
 			this.query.put(actualKey, StrUtil.nullToEmpty(URLDecoder.decode(value, charset, isFormUrlEncoded)));

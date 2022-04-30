@@ -23,16 +23,16 @@ public class Slf4jLog extends AbstractLog {
 	private final boolean isLocationAwareLogger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Slf4jLog(Logger logger) {
+	public Slf4jLog(final Logger logger) {
 		this.logger = logger;
 		this.isLocationAwareLogger = (logger instanceof LocationAwareLogger);
 	}
 
-	public Slf4jLog(Class<?> clazz) {
+	public Slf4jLog(final Class<?> clazz) {
 		this(getSlf4jLogger(clazz));
 	}
 
-	public Slf4jLog(String name) {
+	public Slf4jLog(final String name) {
 		this(LoggerFactory.getLogger(name));
 	}
 
@@ -48,7 +48,7 @@ public class Slf4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isTraceEnabled()) {
 			if(this.isLocationAwareLogger) {
 				locationAwareLog((LocationAwareLogger)this.logger, fqcn, LocationAwareLogger.TRACE_INT, t, format, arguments);
@@ -65,7 +65,7 @@ public class Slf4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isDebugEnabled()) {
 			if(this.isLocationAwareLogger) {
 				locationAwareLog((LocationAwareLogger)this.logger, fqcn, LocationAwareLogger.DEBUG_INT, t, format, arguments);
@@ -82,7 +82,7 @@ public class Slf4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isInfoEnabled()) {
 			if(this.isLocationAwareLogger) {
 				locationAwareLog((LocationAwareLogger)this.logger, fqcn, LocationAwareLogger.INFO_INT, t, format, arguments);
@@ -99,7 +99,7 @@ public class Slf4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isWarnEnabled()) {
 			if(this.isLocationAwareLogger) {
 				locationAwareLog((LocationAwareLogger)this.logger, fqcn, LocationAwareLogger.WARN_INT, t, format, arguments);
@@ -116,7 +116,7 @@ public class Slf4jLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		if (isErrorEnabled()) {
 			if(this.isLocationAwareLogger) {
 				locationAwareLog((LocationAwareLogger)this.logger, fqcn, LocationAwareLogger.ERROR_INT, t, format, arguments);
@@ -128,7 +128,7 @@ public class Slf4jLog extends AbstractLog {
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		switch (level) {
 		case TRACE:
 			trace(fqcn, t, format, arguments);
@@ -162,7 +162,7 @@ public class Slf4jLog extends AbstractLog {
 	 * @param msgTemplate 消息模板
 	 * @param arguments 参数
 	 */
-	private void locationAwareLog(LocationAwareLogger logger, String fqcn, int level_int, Throwable t, String msgTemplate, Object[] arguments) {
+	private void locationAwareLog(final LocationAwareLogger logger, final String fqcn, final int level_int, final Throwable t, final String msgTemplate, final Object[] arguments) {
 		// ((LocationAwareLogger)this.logger).log(null, fqcn, level_int, msgTemplate, arguments, t);
 		// 由于slf4j-log4j12中此方法的实现存在bug，故在此拼接参数
 		logger.log(null, fqcn, level_int, StrUtil.format(msgTemplate, arguments), null, t);
@@ -174,7 +174,7 @@ public class Slf4jLog extends AbstractLog {
 	 * @param clazz 打印日志所在类，当为{@code null}时使用“null”表示
 	 * @return {@link Logger}
 	 */
-	private static Logger getSlf4jLogger(Class<?> clazz) {
+	private static Logger getSlf4jLogger(final Class<?> clazz) {
 		return (null == clazz) ? LoggerFactory.getLogger(StrUtil.EMPTY) : LoggerFactory.getLogger(clazz);
 	}
 }

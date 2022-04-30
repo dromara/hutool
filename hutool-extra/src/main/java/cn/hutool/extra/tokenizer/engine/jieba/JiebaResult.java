@@ -22,7 +22,7 @@ public class JiebaResult implements Result{
 	 * 构造
 	 * @param segTokenList 分词结果
 	 */
-	public JiebaResult(List<SegToken> segTokenList) {
+	public JiebaResult(final List<SegToken> segTokenList) {
 		this.result = segTokenList.iterator();
 	}
 

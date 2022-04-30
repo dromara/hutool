@@ -34,8 +34,8 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static int hash32(byte[] data) {
-		int len = data.length;
+	public static int hash32(final byte[] data) {
+		final int len = data.length;
 		if (len <= 24) {
 			return len <= 12 ?
 					(len <= 4 ? hash32Len0to4(data) : hash32Len5to12(data)) :
@@ -90,7 +90,7 @@ public class CityHash {
 			h += a4 * 5;
 			h = Integer.reverseBytes(h);
 			f += a0;
-			int swapValue = f;
+			final int swapValue = f;
 			f = g;
 			g = h;
 			h = swapValue;
@@ -117,7 +117,7 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static long hash64(byte[] data) {
+	public static long hash64(final byte[] data) {
 		int len = data.length;
 		if (len <= 32) {
 			if (len <= 16) {
@@ -150,7 +150,7 @@ public class CityHash {
 			v = weakHashLen32WithSeeds(data, pos, v.getHighValue() * k1, x + w.getLowValue());
 			w = weakHashLen32WithSeeds(data, pos + 32, z + w.getHighValue(), y + fetch64(data, pos + 16));
 			// swap z,x value
-			long swapValue = x;
+			final long swapValue = x;
 			x = z;
 			z = swapValue;
 			pos += 64;
@@ -168,7 +168,7 @@ public class CityHash {
 	 * @param seed1 种子2
 	 * @return hash值
 	 */
-	public static long hash64(byte[] data, long seed0, long seed1) {
+	public static long hash64(final byte[] data, final long seed0, final long seed1) {
 		return hashLen16(hash64(data) - seed0, seed1);
 	}
 
@@ -179,7 +179,7 @@ public class CityHash {
 	 * @param seed 种子2
 	 * @return hash值
 	 */
-	public static long hash64(byte[] data, long seed) {
+	public static long hash64(final byte[] data, final long seed) {
 		return hash64(data, k2, seed);
 	}
 
@@ -189,8 +189,8 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static Number128 hash128(byte[] data) {
-		int len = data.length;
+	public static Number128 hash128(final byte[] data) {
+		final int len = data.length;
 		return len >= 16 ?
 				hash128(data, 16,
 						new Number128(fetch64(data, 0), fetch64(data, 8) + k0)) :
@@ -204,12 +204,12 @@ public class CityHash {
 	 * @param seed 种子
 	 * @return hash值
 	 */
-	public static Number128 hash128(byte[] data, Number128 seed) {
+	public static Number128 hash128(final byte[] data, final Number128 seed) {
 		return hash128(data, 0, seed);
 	}
 
 	//------------------------------------------------------------------------------------------------------- Private method start
-	private static Number128 hash128(final byte[] byteArray, int start, final Number128 seed) {
+	private static Number128 hash128(final byte[] byteArray, final int start, final Number128 seed) {
 		int len = byteArray.length - start;
 
 		if (len < 128) {
@@ -286,8 +286,8 @@ public class CityHash {
 	private static int hash32Len0to4(final byte[] byteArray) {
 		int b = 0;
 		int c = 9;
-		int len = byteArray.length;
-		for (int v : byteArray) {
+		final int len = byteArray.length;
+		for (final int v : byteArray) {
 			b = b * c1 + v;
 			c ^= b;
 		}
@@ -295,107 +295,109 @@ public class CityHash {
 	}
 
 	private static int hash32Len5to12(final byte[] byteArray) {
-		int len = byteArray.length;
-		int a = len, b = len * 5, c = 9, d = b;
+		final int len = byteArray.length;
+		int a = len;
+		int b = len * 5;
+		int c = 9;
+		final int d = b;
 		a += fetch32(byteArray, 0);
 		b += fetch32(byteArray, len - 4);
 		c += fetch32(byteArray, ((len >>> 1) & 4));
 		return fmix(mur(c, mur(b, mur(a, d))));
 	}
 
-	private static int hash32Len13to24(byte[] byteArray) {
-		int len = byteArray.length;
-		int a = fetch32(byteArray, (len >>> 1) - 4);
-		int b = fetch32(byteArray, 4);
-		int c = fetch32(byteArray, len - 8);
-		int d = fetch32(byteArray, (len >>> 1));
-		int e = fetch32(byteArray, 0);
-		int f = fetch32(byteArray, len - 4);
-		@SuppressWarnings("UnnecessaryLocalVariable")
-		int h = len;
+	private static int hash32Len13to24(final byte[] byteArray) {
+		final int len = byteArray.length;
+		final int a = fetch32(byteArray, (len >>> 1) - 4);
+		final int b = fetch32(byteArray, 4);
+		final int c = fetch32(byteArray, len - 8);
+		final int d = fetch32(byteArray, (len >>> 1));
+		final int e = fetch32(byteArray, 0);
+		final int f = fetch32(byteArray, len - 4);
+		@SuppressWarnings("UnnecessaryLocalVariable") final int h = len;
 
 		return fmix(mur(f, mur(e, mur(d, mur(c, mur(b, mur(a, h)))))));
 	}
 
-	private static long hashLen0to16(byte[] byteArray) {
-		int len = byteArray.length;
+	private static long hashLen0to16(final byte[] byteArray) {
+		final int len = byteArray.length;
 		if (len >= 8) {
-			long mul = k2 + len * 2L;
-			long a = fetch64(byteArray, 0) + k2;
-			long b = fetch64(byteArray, len - 8);
-			long c = rotate64(b, 37) * mul + a;
-			long d = (rotate64(a, 25) + b) * mul;
+			final long mul = k2 + len * 2L;
+			final long a = fetch64(byteArray, 0) + k2;
+			final long b = fetch64(byteArray, len - 8);
+			final long c = rotate64(b, 37) * mul + a;
+			final long d = (rotate64(a, 25) + b) * mul;
 			return hashLen16(c, d, mul);
 		}
 		if (len >= 4) {
-			long mul = k2 + len * 2;
-			long a = fetch32(byteArray, 0) & 0xffffffffL;
+			final long mul = k2 + len * 2;
+			final long a = fetch32(byteArray, 0) & 0xffffffffL;
 			return hashLen16(len + (a << 3), fetch32(byteArray, len - 4) & 0xffffffffL, mul);
 		}
 		if (len > 0) {
-			int a = byteArray[0] & 0xff;
-			int b = byteArray[len >>> 1] & 0xff;
-			int c = byteArray[len - 1] & 0xff;
-			int y = a + (b << 8);
-			int z = len + (c << 2);
+			final int a = byteArray[0] & 0xff;
+			final int b = byteArray[len >>> 1] & 0xff;
+			final int c = byteArray[len - 1] & 0xff;
+			final int y = a + (b << 8);
+			final int z = len + (c << 2);
 			return shiftMix(y * k2 ^ z * k0) * k2;
 		}
 		return k2;
 	}
 
 	// This probably works well for 16-byte strings as well, but it may be overkill in that case.
-	private static long hashLen17to32(byte[] byteArray) {
-		int len = byteArray.length;
-		long mul = k2 + len * 2L;
-		long a = fetch64(byteArray, 0) * k1;
-		long b = fetch64(byteArray, 8);
-		long c = fetch64(byteArray, len - 8) * mul;
-		long d = fetch64(byteArray, len - 16) * k2;
+	private static long hashLen17to32(final byte[] byteArray) {
+		final int len = byteArray.length;
+		final long mul = k2 + len * 2L;
+		final long a = fetch64(byteArray, 0) * k1;
+		final long b = fetch64(byteArray, 8);
+		final long c = fetch64(byteArray, len - 8) * mul;
+		final long d = fetch64(byteArray, len - 16) * k2;
 		return hashLen16(rotate64(a + b, 43) + rotate64(c, 30) + d,
 				a + rotate64(b + k2, 18) + c, mul);
 	}
 
-	private static long hashLen33to64(byte[] byteArray) {
-		int len = byteArray.length;
-		long mul = k2 + len * 2L;
+	private static long hashLen33to64(final byte[] byteArray) {
+		final int len = byteArray.length;
+		final long mul = k2 + len * 2L;
 		long a = fetch64(byteArray, 0) * k2;
 		long b = fetch64(byteArray, 8);
-		long c = fetch64(byteArray, len - 24);
-		long d = fetch64(byteArray, len - 32);
-		long e = fetch64(byteArray, 16) * k2;
-		long f = fetch64(byteArray, 24) * 9;
-		long g = fetch64(byteArray, len - 8);
-		long h = fetch64(byteArray, len - 16) * mul;
-		long u = rotate64(a + g, 43) + (rotate64(b, 30) + c) * 9;
-		long v = ((a + g) ^ d) + f + 1;
-		long w = Long.reverseBytes((u + v) * mul) + h;
-		long x = rotate64(e + f, 42) + c;
-		long y = (Long.reverseBytes((v + w) * mul) + g) * mul;
-		long z = e + f + c;
+		final long c = fetch64(byteArray, len - 24);
+		final long d = fetch64(byteArray, len - 32);
+		final long e = fetch64(byteArray, 16) * k2;
+		final long f = fetch64(byteArray, 24) * 9;
+		final long g = fetch64(byteArray, len - 8);
+		final long h = fetch64(byteArray, len - 16) * mul;
+		final long u = rotate64(a + g, 43) + (rotate64(b, 30) + c) * 9;
+		final long v = ((a + g) ^ d) + f + 1;
+		final long w = Long.reverseBytes((u + v) * mul) + h;
+		final long x = rotate64(e + f, 42) + c;
+		final long y = (Long.reverseBytes((v + w) * mul) + g) * mul;
+		final long z = e + f + c;
 		a = Long.reverseBytes((x + z) * mul + y) + b;
 		b = shiftMix((z + a) * mul + d + h) * mul;
 		return b + x;
 	}
 
-	private static long fetch64(byte[] byteArray, int start) {
+	private static long fetch64(final byte[] byteArray, final int start) {
 		return ByteUtil.bytesToLong(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
-	private static int fetch32(byte[] byteArray, final int start) {
+	private static int fetch32(final byte[] byteArray, final int start) {
 		return ByteUtil.bytesToInt(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
-	private static long rotate64(long val, int shift) {
+	private static long rotate64(final long val, final int shift) {
 		// Avoid shifting by 64: doing so yields an undefined result.
 		return shift == 0 ? val : ((val >>> shift) | (val << (64 - shift)));
 	}
 
-	private static int rotate32(int val, int shift) {
+	private static int rotate32(final int val, final int shift) {
 		// Avoid shifting by 32: doing so yields an undefined result.
 		return shift == 0 ? val : ((val >>> shift) | (val << (32 - shift)));
 	}
 
-	private static long hashLen16(long u, long v, long mul) {
+	private static long hashLen16(final long u, final long v, final long mul) {
 		// Murmur-inspired hashing.
 		long a = (u ^ v) * mul;
 		a ^= (a >>> 47);
@@ -405,7 +407,7 @@ public class CityHash {
 		return b;
 	}
 
-	private static long hashLen16(long u, long v) {
+	private static long hashLen16(final long u, final long v) {
 		return hash128to64(new Number128(u, v));
 	}
 
@@ -419,7 +421,7 @@ public class CityHash {
 		return b;
 	}
 
-	private static long shiftMix(long val) {
+	private static long shiftMix(final long val) {
 		return val ^ (val >>> 47);
 	}
 
@@ -443,10 +445,10 @@ public class CityHash {
 	}
 
 	private static Number128 weakHashLen32WithSeeds(
-			long w, long x, long y, long z, long a, long b) {
+			final long w, final long x, final long y, final long z, long a, long b) {
 		a += w;
 		b = rotate64(b + a + z, 21);
-		long c = a;
+		final long c = a;
 		a += x;
 		a += y;
 		b += rotate64(a, 44);
@@ -455,7 +457,7 @@ public class CityHash {
 
 	// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
 	private static Number128 weakHashLen32WithSeeds(
-			byte[] byteArray, int start, long a, long b) {
+			final byte[] byteArray, final int start, final long a, final long b) {
 		return weakHashLen32WithSeeds(fetch64(byteArray, start),
 				fetch64(byteArray, start + 8),
 				fetch64(byteArray, start + 16),
@@ -464,8 +466,8 @@ public class CityHash {
 				b);
 	}
 
-	private static Number128 cityMurmur(final byte[] byteArray, Number128 seed) {
-		int len = byteArray.length;
+	private static Number128 cityMurmur(final byte[] byteArray, final Number128 seed) {
+		final int len = byteArray.length;
 		long a = seed.getLowValue();
 		long b = seed.getHighValue();
 		long c;

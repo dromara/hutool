@@ -34,7 +34,7 @@ public class FileWriter extends FileWrapper {
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 * @return FileWriter
 	 */
-	public static FileWriter create(File file, Charset charset) {
+	public static FileWriter create(final File file, final Charset charset) {
 		return new FileWriter(file, charset);
 	}
 
@@ -44,7 +44,7 @@ public class FileWriter extends FileWrapper {
 	 * @param file 文件
 	 * @return FileWriter
 	 */
-	public static FileWriter create(File file) {
+	public static FileWriter create(final File file) {
 		return new FileWriter(file);
 	}
 
@@ -56,7 +56,7 @@ public class FileWriter extends FileWrapper {
 	 * @param file    文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 */
-	public FileWriter(File file, Charset charset) {
+	public FileWriter(final File file, final Charset charset) {
 		super(file, charset);
 		checkFile();
 	}
@@ -67,7 +67,7 @@ public class FileWriter extends FileWrapper {
 	 * @param file    文件
 	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
 	 */
-	public FileWriter(File file, String charset) {
+	public FileWriter(final File file, final String charset) {
 		this(file, CharsetUtil.charset(charset));
 	}
 
@@ -77,7 +77,7 @@ public class FileWriter extends FileWrapper {
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 * @param charset  编码，使用 {@link CharsetUtil}
 	 */
-	public FileWriter(String filePath, Charset charset) {
+	public FileWriter(final String filePath, final Charset charset) {
 		this(FileUtil.file(filePath), charset);
 	}
 
@@ -87,7 +87,7 @@ public class FileWriter extends FileWrapper {
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 * @param charset  编码，使用 {@link CharsetUtil#charset(String)}
 	 */
-	public FileWriter(String filePath, String charset) {
+	public FileWriter(final String filePath, final String charset) {
 		this(FileUtil.file(filePath), CharsetUtil.charset(charset));
 	}
 
@@ -97,7 +97,7 @@ public class FileWriter extends FileWrapper {
 	 *
 	 * @param file 文件
 	 */
-	public FileWriter(File file) {
+	public FileWriter(final File file) {
 		this(file, DEFAULT_CHARSET);
 	}
 
@@ -107,7 +107,7 @@ public class FileWriter extends FileWrapper {
 	 *
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 */
-	public FileWriter(String filePath) {
+	public FileWriter(final String filePath) {
 		this(filePath, DEFAULT_CHARSET);
 	}
 	// ------------------------------------------------------- Constructor end
@@ -120,13 +120,13 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File write(String content, boolean isAppend) throws IORuntimeException {
+	public File write(final String content, final boolean isAppend) throws IORuntimeException {
 		BufferedWriter writer = null;
 		try {
 			writer = getWriter(isAppend);
 			writer.write(content);
 			writer.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(writer);
@@ -141,7 +141,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File write(String content) throws IORuntimeException {
+	public File write(final String content) throws IORuntimeException {
 		return write(content, false);
 	}
 
@@ -152,7 +152,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 写入的文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File append(String content) throws IORuntimeException {
+	public File append(final String content) throws IORuntimeException {
 		return write(content, true);
 	}
 
@@ -164,7 +164,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File writeLines(Iterable<T> list) throws IORuntimeException {
+	public <T> File writeLines(final Iterable<T> list) throws IORuntimeException {
 		return writeLines(list, false);
 	}
 
@@ -176,7 +176,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File appendLines(Iterable<T> list) throws IORuntimeException {
+	public <T> File appendLines(final Iterable<T> list) throws IORuntimeException {
 		return writeLines(list, true);
 	}
 
@@ -189,7 +189,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File writeLines(Iterable<T> list, boolean isAppend) throws IORuntimeException {
+	public <T> File writeLines(final Iterable<T> list, final boolean isAppend) throws IORuntimeException {
 		return writeLines(list, null, isAppend);
 	}
 
@@ -204,10 +204,10 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
-	public <T> File writeLines(Iterable<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
-		try (PrintWriter writer = getPrintWriter(isAppend)) {
+	public <T> File writeLines(final Iterable<T> list, final LineSeparator lineSeparator, final boolean isAppend) throws IORuntimeException {
+		try (final PrintWriter writer = getPrintWriter(isAppend)) {
 			boolean isFirst = true;
-			for (T t : list) {
+			for (final T t : list) {
 				if (null != t) {
 					if(isFirst){
 						isFirst = false;
@@ -237,7 +237,7 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.5
 	 */
-	public File writeMap(Map<?, ?> map, String kvSeparator, boolean isAppend) throws IORuntimeException {
+	public File writeMap(final Map<?, ?> map, final String kvSeparator, final boolean isAppend) throws IORuntimeException {
 		return writeMap(map, null, kvSeparator, isAppend);
 	}
 
@@ -252,12 +252,12 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.5
 	 */
-	public File writeMap(Map<?, ?> map, LineSeparator lineSeparator, String kvSeparator, boolean isAppend) throws IORuntimeException {
+	public File writeMap(final Map<?, ?> map, final LineSeparator lineSeparator, String kvSeparator, final boolean isAppend) throws IORuntimeException {
 		if (null == kvSeparator) {
 			kvSeparator = " = ";
 		}
-		try (PrintWriter writer = getPrintWriter(isAppend)) {
-			for (Entry<?, ?> entry : map.entrySet()) {
+		try (final PrintWriter writer = getPrintWriter(isAppend)) {
+			for (final Entry<?, ?> entry : map.entrySet()) {
 				if (null != entry) {
 					writer.print(StrUtil.format("{}{}{}", entry.getKey(), kvSeparator, entry.getValue()));
 					printNewLine(writer, lineSeparator);
@@ -277,7 +277,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File write(byte[] data, int off, int len) throws IORuntimeException {
+	public File write(final byte[] data, final int off, final int len) throws IORuntimeException {
 		return write(data, off, len, false);
 	}
 
@@ -290,7 +290,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File append(byte[] data, int off, int len) throws IORuntimeException {
+	public File append(final byte[] data, final int off, final int len) throws IORuntimeException {
 		return write(data, off, len, true);
 	}
 
@@ -304,11 +304,11 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public File write(byte[] data, int off, int len, boolean isAppend) throws IORuntimeException {
-		try (FileOutputStream out = new FileOutputStream(FileUtil.touch(file), isAppend)) {
+	public File write(final byte[] data, final int off, final int len, final boolean isAppend) throws IORuntimeException {
+		try (final FileOutputStream out = new FileOutputStream(FileUtil.touch(file), isAppend)) {
 			out.write(data, off, len);
 			out.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return file;
@@ -322,7 +322,7 @@ public class FileWriter extends FileWrapper {
 	 * @return dest
 	 * @throws IORuntimeException IO异常
 	 */
-	public File writeFromStream(InputStream in) throws IORuntimeException {
+	public File writeFromStream(final InputStream in) throws IORuntimeException {
 		return writeFromStream(in, true);
 	}
 
@@ -335,12 +335,12 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */
-	public File writeFromStream(InputStream in, boolean isCloseIn) throws IORuntimeException {
+	public File writeFromStream(final InputStream in, final boolean isCloseIn) throws IORuntimeException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(FileUtil.touch(file));
 			IoUtil.copy(in, out);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(out);
@@ -360,7 +360,7 @@ public class FileWriter extends FileWrapper {
 	public BufferedOutputStream getOutputStream() throws IORuntimeException {
 		try {
 			return new BufferedOutputStream(new FileOutputStream(FileUtil.touch(file)));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -372,10 +372,10 @@ public class FileWriter extends FileWrapper {
 	 * @return BufferedReader对象
 	 * @throws IORuntimeException IO异常
 	 */
-	public BufferedWriter getWriter(boolean isAppend) throws IORuntimeException {
+	public BufferedWriter getWriter(final boolean isAppend) throws IORuntimeException {
 		try {
 			return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FileUtil.touch(file), isAppend), charset));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -387,7 +387,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 打印对象
 	 * @throws IORuntimeException IO异常
 	 */
-	public PrintWriter getPrintWriter(boolean isAppend) throws IORuntimeException {
+	public PrintWriter getPrintWriter(final boolean isAppend) throws IORuntimeException {
 		return new PrintWriter(getWriter(isAppend));
 	}
 
@@ -410,7 +410,7 @@ public class FileWriter extends FileWrapper {
 	 * @param lineSeparator 换行符枚举
 	 * @since 4.0.5
 	 */
-	private void printNewLine(PrintWriter writer, LineSeparator lineSeparator) {
+	private void printNewLine(final PrintWriter writer, final LineSeparator lineSeparator) {
 		if (null == lineSeparator) {
 			//默认换行符
 			writer.println();

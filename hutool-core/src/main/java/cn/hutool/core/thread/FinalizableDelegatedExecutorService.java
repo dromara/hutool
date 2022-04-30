@@ -14,7 +14,7 @@ public class FinalizableDelegatedExecutorService extends DelegatedExecutorServic
 	 *
 	 * @param executor {@link ExecutorService}
 	 */
-	FinalizableDelegatedExecutorService(ExecutorService executor) {
+	FinalizableDelegatedExecutorService(final ExecutorService executor) {
 		super(executor);
 	}
 

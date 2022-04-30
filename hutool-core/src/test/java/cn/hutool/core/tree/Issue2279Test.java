@@ -13,7 +13,7 @@ public class Issue2279Test {
 
 	@Test
 	public void buildSingleTest() {
-		List<TestTree> list = ListUtil.of(
+		final List<TestTree> list = ListUtil.of(
 				// 模拟数据
 				new TestTree(1, 0, 1, 1),
 				new TestTree(2, 1, 2, 2),
@@ -21,7 +21,7 @@ public class Issue2279Test {
 				new TestTree(4, 2, 4, 4)
 		);
 
-		List<Tree<String>> stringTree = TreeUtil.build(list, "0",
+		final List<Tree<String>> stringTree = TreeUtil.build(list, "0",
 				(object, treeNode) -> {
 					treeNode.setId(object.getId());
 					treeNode.setName(object.getName());
@@ -41,7 +41,7 @@ public class Issue2279Test {
 		private String name;
 		private String extra1;
 
-		public TestTree(int id, int pid, int name, int extra1) {
+		public TestTree(final int id, final int pid, final int name, final int extra1) {
 			this.id = String.valueOf(id);
 			this.pid = String.valueOf(pid);
 			this.name = String.valueOf(name);

@@ -81,7 +81,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param expression 表达式或普通值
 	 * @return Condition
 	 */
-	public static Condition parse(String field, Object expression) {
+	public static Condition parse(final String field, final Object expression) {
 		return new Condition(field, expression);
 	}
 
@@ -98,7 +98,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param isPlaceHolder 是否使用条件值占位符
 	 */
-	public Condition(boolean isPlaceHolder) {
+	public Condition(final boolean isPlaceHolder) {
 		this.isPlaceHolder = isPlaceHolder;
 	}
 
@@ -108,7 +108,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param field 字段
 	 * @param value 值
 	 */
-	public Condition(String field, Object value) {
+	public Condition(final String field, final Object value) {
 		this(field, "=", value);
 		parseValue();
 	}
@@ -120,7 +120,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param operator 运算符（大于号，小于号，等于号 like 等）
 	 * @param value    值
 	 */
-	public Condition(String field, String operator, Object value) {
+	public Condition(final String field, final String operator, final Object value) {
 		this.field = field;
 		this.operator = operator;
 		this.value = value;
@@ -133,7 +133,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param value    值
 	 * @param likeType {@link LikeType}
 	 */
-	public Condition(String field, String value, LikeType likeType) {
+	public Condition(final String field, final String value, final LikeType likeType) {
 		this.field = field;
 		this.operator = OPERATOR_LIKE;
 		this.value = SqlUtil.buildLikeValue(value, likeType, false);
@@ -154,7 +154,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param field 字段名
 	 */
-	public void setField(String field) {
+	public void setField(final String field) {
 		this.field = field;
 	}
 
@@ -174,7 +174,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param operator 运算符
 	 */
-	public void setOperator(String operator) {
+	public void setOperator(final String operator) {
 		this.operator = operator;
 	}
 
@@ -192,7 +192,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param value 值
 	 */
-	public void setValue(Object value) {
+	public void setValue(final Object value) {
 		setValue(value, false);
 	}
 
@@ -202,7 +202,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param value   值
 	 * @param isParse 是否解析值表达式
 	 */
-	public void setValue(Object value, boolean isParse) {
+	public void setValue(final Object value, final boolean isParse) {
 		this.value = value;
 		if (isParse) {
 			parseValue();
@@ -223,7 +223,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param isPlaceHolder 是否使用条件占位符
 	 */
-	public void setPlaceHolder(boolean isPlaceHolder) {
+	public void setPlaceHolder(final boolean isPlaceHolder) {
 		this.isPlaceHolder = isPlaceHolder;
 	}
 
@@ -294,7 +294,7 @@ public class Condition extends CloneSupport<Condition> {
 	 *
 	 * @param secondValue 第二个值
 	 */
-	public void setSecondValue(Object secondValue) {
+	public void setSecondValue(final Object secondValue) {
 		this.secondValue = secondValue;
 	}
 
@@ -314,7 +314,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param linkOperator 与前一个Condition连接的逻辑运算符，可以是and或or
 	 * @since 5.4.3
 	 */
-	public void setLinkOperator(LogicalOperator linkOperator) {
+	public void setLinkOperator(final LogicalOperator linkOperator) {
 		this.linkOperator = linkOperator;
 	}
 
@@ -331,7 +331,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param paramValues 参数列表，用于回填占位符对应参数值
 	 * @return 条件字符串
 	 */
-	public String toString(List<Object> paramValues) {
+	public String toString(final List<Object> paramValues) {
 		final StringBuilder conditionStrBuilder = StrUtil.builder();
 		// 判空值
 		checkValueNull();
@@ -371,7 +371,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param conditionStrBuilder 条件语句构建器
 	 * @param paramValues         参数集合，用于参数占位符对应参数回填
 	 */
-	private void buildValuePartForBETWEEN(StringBuilder conditionStrBuilder, List<Object> paramValues) {
+	private void buildValuePartForBETWEEN(final StringBuilder conditionStrBuilder, final List<Object> paramValues) {
 		// BETWEEN x AND y 的情况，两个参数
 		if (isPlaceHolder()) {
 			// 使用条件表达式占位符
@@ -405,11 +405,11 @@ public class Condition extends CloneSupport<Condition> {
 	 * @param conditionStrBuilder 条件语句构建器
 	 * @param paramValues         参数集合，用于参数占位符对应参数回填
 	 */
-	private void buildValuePartForIN(StringBuilder conditionStrBuilder, List<Object> paramValues) {
+	private void buildValuePartForIN(final StringBuilder conditionStrBuilder, final List<Object> paramValues) {
 		conditionStrBuilder.append(" (");
 		final Object value = this.value;
 		if (isPlaceHolder()) {
-			Collection<?> valuesForIn;
+			final Collection<?> valuesForIn;
 			// 占位符对应值列表
 			if (value instanceof Collection) {
 				// pr#2046@Github
@@ -529,8 +529,8 @@ public class Condition extends CloneSupport<Condition> {
 
 		int from = 0;
 		int to = value.length();
-		char startChar = value.charAt(0);
-		char endChar = value.charAt(value.length() - 1);
+		final char startChar = value.charAt(0);
+		final char endChar = value.charAt(value.length() - 1);
 		if (startChar == endChar) {
 			if ('\'' == startChar || '"' == startChar) {
 				from = 1;
@@ -558,7 +558,7 @@ public class Condition extends CloneSupport<Condition> {
 		}
 		try {
 			return NumberUtil.parseNumber(value);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			return value;
 		}
 	}

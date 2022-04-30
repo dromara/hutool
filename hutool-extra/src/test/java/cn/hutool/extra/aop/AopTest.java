@@ -15,16 +15,16 @@ public class AopTest {
 
 	@Test
 	public void aopTest() {
-		Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
-		String result = cat.eat();
+		final Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
+		final String result = cat.eat();
 		Assert.assertEquals("猫吃鱼", result);
 		cat.seize();
 	}
 
 	@Test
 	public void aopByAutoCglibTest() {
-		Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
-		String result = dog.eat();
+		final Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
+		final String result = dog.eat();
 		Assert.assertEquals("狗吃肉", result);
 
 		dog.seize();
@@ -71,11 +71,11 @@ public class AopTest {
 
 	@Test
 	public void testCGLIBProxy() {
-		TagObj target = new TagObj();
+		final TagObj target = new TagObj();
 		//目标类设置标记
 		target.setTag("tag");
 
-		TagObj proxy = ProxyUtil.proxy(target, TimeIntervalAspect.class);
+		final TagObj proxy = ProxyUtil.proxy(target, TimeIntervalAspect.class);
 		//代理类获取标记tag (断言错误)
 		Assert.assertEquals("tag", proxy.getTag());
 	}

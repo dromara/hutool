@@ -19,7 +19,7 @@ public class BytesBody implements RequestBody {
 	 * @param content body内容，编码后
 	 * @return BytesBody
 	 */
-	public static BytesBody create(byte[] content){
+	public static BytesBody create(final byte[] content){
 		return new BytesBody(content);
 	}
 
@@ -28,12 +28,12 @@ public class BytesBody implements RequestBody {
 	 *
 	 * @param content Body内容，编码后
 	 */
-	public BytesBody(byte[] content) {
+	public BytesBody(final byte[] content) {
 		this.content = content;
 	}
 
 	@Override
-	public void write(OutputStream out) {
+	public void write(final OutputStream out) {
 		IoUtil.write(out, false, content);
 	}
 }

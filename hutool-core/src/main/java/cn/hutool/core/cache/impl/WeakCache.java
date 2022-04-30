@@ -26,12 +26,12 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 	 * 构造
 	 * @param timeout 超时时常，单位毫秒，-1或0表示无限制
 	 */
-	public WeakCache(long timeout) {
+	public WeakCache(final long timeout) {
 		super(timeout, new WeakConcurrentMap<>());
 	}
 
 	@Override
-	public WeakCache<K, V> setListener(CacheListener<K, V> listener) {
+	public WeakCache<K, V> setListener(final CacheListener<K, V> listener) {
 		super.setListener(listener);
 
 		final WeakConcurrentMap<Mutable<K>, CacheObj<K, V>> map = (WeakConcurrentMap<Mutable<K>, CacheObj<K, V>>) this.cacheMap;

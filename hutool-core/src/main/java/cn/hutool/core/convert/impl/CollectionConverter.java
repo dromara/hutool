@@ -34,7 +34,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 *
 	 * @param collectionType 集合类型
 	 */
-	public CollectionConverter(Type collectionType) {
+	public CollectionConverter(final Type collectionType) {
 		this(collectionType, TypeUtil.getTypeArgument(collectionType));
 	}
 
@@ -43,7 +43,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 *
 	 * @param collectionType 集合类型
 	 */
-	public CollectionConverter(Class<?> collectionType) {
+	public CollectionConverter(final Class<?> collectionType) {
 		this(collectionType, TypeUtil.getTypeArgument(collectionType));
 	}
 
@@ -53,14 +53,14 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 * @param collectionType 集合类型
 	 * @param elementType 集合元素类型
 	 */
-	public CollectionConverter(Type collectionType, Type elementType) {
+	public CollectionConverter(final Type collectionType, final Type elementType) {
 		this.collectionType = collectionType;
 		this.elementType = elementType;
 	}
 	// ---------------------------------------------------------------------------------------------- Constractor end
 
 	@Override
-	public Collection<?> convert(Object value, Collection<?> defaultValue) throws IllegalArgumentException {
+	public Collection<?> convert(final Object value, final Collection<?> defaultValue) throws IllegalArgumentException {
 		final Collection<?> result = convertInternal(value);
 		return ObjUtil.defaultIfNull(result, defaultValue);
 	}
@@ -71,7 +71,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 * @param value 值
 	 * @return 转换后的集合对象
 	 */
-	protected Collection<?> convertInternal(Object value) {
+	protected Collection<?> convertInternal(final Object value) {
 		final Collection<Object> collection = CollUtil.create(TypeUtil.getClass(this.collectionType));
 		return CollUtil.addAll(collection, value, this.elementType);
 	}

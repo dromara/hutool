@@ -6,7 +6,7 @@ import java.util.zip.Checksum;
 /**
  * CRC8 循环冗余校验码（Cyclic Redundancy Check）实现<br>
  * 代码来自：https://github.com/BBSc0der
- * 
+ *
  * @author Bolek,Looly
  * @since 4.4.1
  */
@@ -19,11 +19,11 @@ public class CRC8 implements Checksum, Serializable {
 
 	/**
 	 * 构造<br>
-	 * 
+	 *
 	 * @param polynomial Polynomial, typically one of the POLYNOMIAL_* constants.
 	 * @param init Initial value, typically either 0xff or zero.
 	 */
-	public CRC8(int polynomial, short init) {
+	public CRC8(final int polynomial, final short init) {
 		this.value = this.init = init;
 		for (int dividend = 0; dividend < 256; dividend++) {
 			int remainder = dividend;// << 8;
@@ -39,24 +39,24 @@ public class CRC8 implements Checksum, Serializable {
 	}
 
 	@Override
-	public void update(byte[] buffer, int offset, int len) {
+	public void update(final byte[] buffer, final int offset, final int len) {
 		for (int i = 0; i < len; i++) {
-			int data = buffer[offset + i] ^ value;
+			final int data = buffer[offset + i] ^ value;
 			value = (short) (crcTable[data & 0xff] ^ (value << 8));
 		}
 	}
 
 	/**
 	 * Updates the current checksum with the specified array of bytes. Equivalent to calling <code>update(buffer, 0, buffer.length)</code>.
-	 * 
+	 *
 	 * @param buffer the byte array to update the checksum with
 	 */
-	public void update(byte[] buffer) {
+	public void update(final byte[] buffer) {
 		update(buffer, 0, buffer.length);
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		update(new byte[] { (byte) b }, 0, 1);
 	}
 

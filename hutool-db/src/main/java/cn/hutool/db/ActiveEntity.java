@@ -34,7 +34,7 @@ public class ActiveEntity extends Entity {
 	 * @param tableName 表名
 	 * @return ActiveEntity
 	 */
-	public static ActiveEntity create(String tableName) {
+	public static ActiveEntity create(final String tableName) {
 		return new ActiveEntity(tableName);
 	}
 
@@ -45,7 +45,7 @@ public class ActiveEntity extends Entity {
 	 * @param bean Bean对象
 	 * @return ActiveEntity
 	 */
-	public static <T> ActiveEntity parse(T bean) {
+	public static <T> ActiveEntity parse(final T bean) {
 		return create(null).parseBean(bean);
 	}
 
@@ -58,7 +58,7 @@ public class ActiveEntity extends Entity {
 	 * @param ignoreNullValue 是否忽略值为空的字段
 	 * @return ActiveEntity
 	 */
-	public static <T> ActiveEntity parse(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public static <T> ActiveEntity parse(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		return create(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
 
@@ -69,7 +69,7 @@ public class ActiveEntity extends Entity {
 	 * @param bean Bean对象
 	 * @return ActiveEntity
 	 */
-	public static <T> ActiveEntity parseWithUnderlineCase(T bean) {
+	public static <T> ActiveEntity parseWithUnderlineCase(final T bean) {
 		return create(null).parseBean(bean, true, true);
 	}
 	// --------------------------------------------------------------- Static method end
@@ -87,7 +87,7 @@ public class ActiveEntity extends Entity {
 	 *
 	 * @param tableName 表名
 	 */
-	public ActiveEntity(String tableName) {
+	public ActiveEntity(final String tableName) {
 		this(Db.use(), tableName);
 	}
 
@@ -96,7 +96,7 @@ public class ActiveEntity extends Entity {
 	 *
 	 * @param entity 非动态实体
 	 */
-	public ActiveEntity(Entity entity) {
+	public ActiveEntity(final Entity entity) {
 		this(Db.use(), entity);
 	}
 
@@ -106,7 +106,7 @@ public class ActiveEntity extends Entity {
 	 * @param db {@link Db}
 	 * @param tableName 表名
 	 */
-	public ActiveEntity(Db db, String tableName) {
+	public ActiveEntity(final Db db, final String tableName) {
 		super(tableName);
 		this.db = db;
 	}
@@ -117,7 +117,7 @@ public class ActiveEntity extends Entity {
 	 * @param db {@link Db}
 	 * @param entity 非动态实体
 	 */
-	public ActiveEntity(Db db, Entity entity) {
+	public ActiveEntity(final Db db, final Entity entity) {
 		super(entity.getTableName());
 		this.putAll(entity);
 		this.db = db;
@@ -125,17 +125,17 @@ public class ActiveEntity extends Entity {
 	// -------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public ActiveEntity setTableName(String tableName) {
+	public ActiveEntity setTableName(final String tableName) {
 		return (ActiveEntity) super.setTableName(tableName);
 	}
 
 	@Override
-	public ActiveEntity setFieldNames(Collection<String> fieldNames) {
+	public ActiveEntity setFieldNames(final Collection<String> fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
 
 	@Override
-	public ActiveEntity setFieldNames(String... fieldNames) {
+	public ActiveEntity setFieldNames(final String... fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
 
@@ -145,32 +145,32 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	@Override
-	public ActiveEntity setFields(Func0<?>... fields) {
+	public ActiveEntity setFields(final Func0<?>... fields) {
 		return (ActiveEntity) super.setFields(fields);
 	}
 
 	@Override
-	public ActiveEntity addFieldNames(String... fieldNames) {
+	public ActiveEntity addFieldNames(final String... fieldNames) {
 		return (ActiveEntity) super.addFieldNames(fieldNames);
 	}
 
 	@Override
-	public <T> ActiveEntity parseBean(T bean) {
+	public <T> ActiveEntity parseBean(final T bean) {
 		return (ActiveEntity) super.parseBean(bean);
 	}
 
 	@Override
-	public <T> ActiveEntity parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public <T> ActiveEntity parseBean(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
 		return (ActiveEntity) super.parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
 
 	@Override
-	public ActiveEntity set(String field, Object value) {
+	public ActiveEntity set(final String field, final Object value) {
 		return (ActiveEntity) super.set(field, value);
 	}
 
 	@Override
-	public ActiveEntity setIgnoreNull(String field, Object value) {
+	public ActiveEntity setIgnoreNull(final String field, final Object value) {
 		return (ActiveEntity) super.setIgnoreNull(field, value);
 	}
 
@@ -188,7 +188,7 @@ public class ActiveEntity extends Entity {
 	public ActiveEntity add() {
 		try {
 			db.insert(this);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 		return this;
@@ -205,7 +205,7 @@ public class ActiveEntity extends Entity {
 			if(MapUtil.isNotEmpty(result)) {
 				this.putAll(result);
 			}
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 		return this;
@@ -219,7 +219,7 @@ public class ActiveEntity extends Entity {
 	public ActiveEntity del() {
 		try {
 			db.del(this);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 		return this;
@@ -231,10 +231,10 @@ public class ActiveEntity extends Entity {
 	 * @param primaryKey 主键名
 	 * @return this
 	 */
-	public ActiveEntity update(String primaryKey) {
+	public ActiveEntity update(final String primaryKey) {
 		try {
 			db.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 		return this;

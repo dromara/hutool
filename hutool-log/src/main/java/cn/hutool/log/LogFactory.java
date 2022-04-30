@@ -31,7 +31,7 @@ public abstract class LogFactory {
 	 *
 	 * @param name 日志框架名
 	 */
-	public LogFactory(String name) {
+	public LogFactory(final String name) {
 		this.name = name;
 		logCache = new ConcurrentHashMap<>();
 	}
@@ -52,7 +52,7 @@ public abstract class LogFactory {
 	 * @param name 日志对象名
 	 * @return 日志对象
 	 */
-	public Log getLog(String name) {
+	public Log getLog(final String name) {
 		return logCache.computeIfAbsent(name, o -> createLog((String)o));
 	}
 
@@ -62,7 +62,7 @@ public abstract class LogFactory {
 	 * @param clazz 日志对应类
 	 * @return 日志对象
 	 */
-	public Log getLog(Class<?> clazz) {
+	public Log getLog(final Class<?> clazz) {
 		return logCache.computeIfAbsent(clazz, o -> createLog((Class<?>)o));
 	}
 
@@ -89,7 +89,7 @@ public abstract class LogFactory {
 	 *
 	 * @param logClassName 日志实现相关类
 	 */
-	protected void checkLogExist(Class<?> logClassName) {
+	protected void checkLogExist(final Class<?> logClassName) {
 		// 不做任何操作
 	}
 
@@ -108,7 +108,7 @@ public abstract class LogFactory {
 	 * @param logFactoryClass 日志工厂类
 	 * @return 自定义的日志工厂类
 	 */
-	public static LogFactory setCurrentLogFactory(Class<? extends LogFactory> logFactoryClass) {
+	public static LogFactory setCurrentLogFactory(final Class<? extends LogFactory> logFactoryClass) {
 		return GlobalLogFactory.set(logFactoryClass);
 	}
 
@@ -118,7 +118,7 @@ public abstract class LogFactory {
 	 * @param logFactory 日志工厂类对象
 	 * @return 自定义的日志工厂类
 	 */
-	public static LogFactory setCurrentLogFactory(LogFactory logFactory) {
+	public static LogFactory setCurrentLogFactory(final LogFactory logFactory) {
 		return GlobalLogFactory.set(logFactory);
 	}
 
@@ -128,7 +128,7 @@ public abstract class LogFactory {
 	 * @param name 日志对象名
 	 * @return 日志对象
 	 */
-	public static Log get(String name) {
+	public static Log get(final String name) {
 		return getCurrentLogFactory().getLog(name);
 	}
 
@@ -138,7 +138,7 @@ public abstract class LogFactory {
 	 * @param clazz 日志对应类
 	 * @return 日志对象
 	 */
-	public static Log get(Class<?> clazz) {
+	public static Log get(final Class<?> clazz) {
 		return getCurrentLogFactory().getLog(clazz);
 	}
 

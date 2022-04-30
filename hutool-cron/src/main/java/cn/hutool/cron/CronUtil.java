@@ -34,7 +34,7 @@ public class CronUtil {
 	 *
 	 * @param cronSetting 定时任务配置文件
 	 */
-	public static void setCronSetting(Setting cronSetting) {
+	public static void setCronSetting(final Setting cronSetting) {
 		crontabSetting = cronSetting;
 	}
 
@@ -43,10 +43,10 @@ public class CronUtil {
 	 *
 	 * @param cronSettingPath 定时任务配置文件路径（相对绝对都可）
 	 */
-	public static void setCronSetting(String cronSettingPath) {
+	public static void setCronSetting(final String cronSettingPath) {
 		try {
 			crontabSetting = new Setting(cronSettingPath, Setting.DEFAULT_CHARSET, false);
-		} catch (SettingRuntimeException | NoResourceException e) {
+		} catch (final SettingRuntimeException | NoResourceException e) {
 			// ignore setting file parse error and no config error
 		}
 	}
@@ -57,7 +57,7 @@ public class CronUtil {
 	 *
 	 * @param isMatchSecond {@code true}支持，{@code false}不支持
 	 */
-	public static void setMatchSecond(boolean isMatchSecond) {
+	public static void setMatchSecond(final boolean isMatchSecond) {
 		scheduler.setMatchSecond(isMatchSecond);
 	}
 
@@ -68,7 +68,7 @@ public class CronUtil {
 	 * @param task 任务
 	 * @return 定时任务ID
 	 */
-	public static String schedule(String schedulingPattern, Task task) {
+	public static String schedule(final String schedulingPattern, final Task task) {
 		return scheduler.schedule(schedulingPattern, task);
 	}
 
@@ -81,7 +81,7 @@ public class CronUtil {
 	 * @return 定时任务ID
 	 * @since 3.3.0
 	 */
-	public static String schedule(String id, String schedulingPattern, Task task) {
+	public static String schedule(final String id, final String schedulingPattern, final Task task) {
 		scheduler.schedule(id, schedulingPattern, task);
 		return id;
 	}
@@ -93,7 +93,7 @@ public class CronUtil {
 	 * @param task 任务
 	 * @return 定时任务ID
 	 */
-	public static String schedule(String schedulingPattern, Runnable task) {
+	public static String schedule(final String schedulingPattern, final Runnable task) {
 		return scheduler.schedule(schedulingPattern, task);
 	}
 
@@ -102,7 +102,7 @@ public class CronUtil {
 	 *
 	 * @param cronSetting 定时任务设置文件
 	 */
-	public static void schedule(Setting cronSetting) {
+	public static void schedule(final Setting cronSetting) {
 		scheduler.schedule(cronSetting);
 	}
 
@@ -112,7 +112,7 @@ public class CronUtil {
 	 * @param schedulerId 任务ID
 	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
 	 */
-	public static boolean remove(String schedulerId) {
+	public static boolean remove(final String schedulerId) {
 		return scheduler.descheduleWithStatus(schedulerId);
 	}
 
@@ -123,7 +123,7 @@ public class CronUtil {
 	 * @param pattern {@link CronPattern}
 	 * @since 4.0.10
 	 */
-	public static void updatePattern(String id, CronPattern pattern) {
+	public static void updatePattern(final String id, final CronPattern pattern) {
 		scheduler.updatePattern(id, pattern);
 	}
 
@@ -148,7 +148,7 @@ public class CronUtil {
 	 *
 	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 */
-	synchronized public static void start(boolean isDaemon) {
+	synchronized public static void start(final boolean isDaemon) {
 		if (scheduler.isStarted()) {
 			throw new UtilException("Scheduler has been started, please stop it first!");
 		}

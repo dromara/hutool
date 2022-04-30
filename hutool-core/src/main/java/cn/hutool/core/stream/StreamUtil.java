@@ -25,7 +25,7 @@ import java.util.stream.StreamSupport;
 public class StreamUtil {
 
 	@SafeVarargs
-	public static <T> Stream<T> of(T... array) {
+	public static <T> Stream<T> of(final T... array) {
 		Assert.notNull(array, "Array must be not null!");
 		return Stream.of(array);
 	}
@@ -37,7 +37,7 @@ public class StreamUtil {
 	 * @param <T>      集合元素类型
 	 * @return {@link Stream}
 	 */
-	public static <T> Stream<T> of(Iterable<T> iterable) {
+	public static <T> Stream<T> of(final Iterable<T> iterable) {
 		return of(iterable, false);
 	}
 
@@ -49,7 +49,7 @@ public class StreamUtil {
 	 * @param <T>      集合元素类型
 	 * @return {@link Stream}
 	 */
-	public static <T> Stream<T> of(Iterable<T> iterable, boolean parallel) {
+	public static <T> Stream<T> of(final Iterable<T> iterable, final boolean parallel) {
 		Assert.notNull(iterable, "Iterable must be not null!");
 		return StreamSupport.stream(
 				Spliterators.spliterator(CollUtil.toCollection(iterable), 0),
@@ -62,7 +62,7 @@ public class StreamUtil {
 	 * @param file 文件
 	 * @return {@link Stream}
 	 */
-	public static Stream<String> of(File file) {
+	public static Stream<String> of(final File file) {
 		return of(file, CharsetUtil.UTF_8);
 	}
 
@@ -72,7 +72,7 @@ public class StreamUtil {
 	 * @param path 路径
 	 * @return {@link Stream}
 	 */
-	public static Stream<String> of(Path path) {
+	public static Stream<String> of(final Path path) {
 		return of(path, CharsetUtil.UTF_8);
 	}
 
@@ -83,7 +83,7 @@ public class StreamUtil {
 	 * @param charset 编码
 	 * @return {@link Stream}
 	 */
-	public static Stream<String> of(File file, Charset charset) {
+	public static Stream<String> of(final File file, final Charset charset) {
 		Assert.notNull(file, "File must be not null!");
 		return of(file.toPath(), charset);
 	}
@@ -95,10 +95,10 @@ public class StreamUtil {
 	 * @param charset 编码
 	 * @return {@link Stream}
 	 */
-	public static Stream<String> of(Path path, Charset charset) {
+	public static Stream<String> of(final Path path, final Charset charset) {
 		try {
 			return Files.lines(path, charset);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -112,7 +112,7 @@ public class StreamUtil {
 	 * @param <T>            创建元素类型
 	 * @return {@link Stream}
 	 */
-	public static <T> Stream<T> of(T seed, UnaryOperator<T> elementCreator, int limit) {
+	public static <T> Stream<T> of(final T seed, final UnaryOperator<T> elementCreator, final int limit) {
 		return Stream.iterate(seed, elementCreator).limit(limit);
 	}
 
@@ -124,7 +124,7 @@ public class StreamUtil {
 	 * @param <T>       元素类型
 	 * @return 字符串
 	 */
-	public static <T> String join(Stream<T> stream, CharSequence delimiter) {
+	public static <T> String join(final Stream<T> stream, final CharSequence delimiter) {
 		return stream.collect(CollectorUtil.joining(delimiter));
 	}
 
@@ -137,8 +137,8 @@ public class StreamUtil {
 	 * @param <T>          元素类型
 	 * @return 字符串
 	 */
-	public static <T> String join(Stream<T> stream, CharSequence delimiter,
-								  Function<T, ? extends CharSequence> toStringFunc) {
+	public static <T> String join(final Stream<T> stream, final CharSequence delimiter,
+								  final Function<T, ? extends CharSequence> toStringFunc) {
 		return stream.collect(CollectorUtil.joining(delimiter, toStringFunc));
 	}
 }

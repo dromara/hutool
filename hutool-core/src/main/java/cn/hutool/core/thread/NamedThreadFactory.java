@@ -36,7 +36,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	 * @param prefix 线程名前缀
 	 * @param isDaemon 是否守护线程
 	 */
-	public NamedThreadFactory(String prefix, boolean isDaemon) {
+	public NamedThreadFactory(final String prefix, final boolean isDaemon) {
 		this(prefix, null, isDaemon);
 	}
 
@@ -47,7 +47,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	 * @param threadGroup 线程组，可以为null
 	 * @param isDaemon 是否守护线程
 	 */
-	public NamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon) {
+	public NamedThreadFactory(final String prefix, final ThreadGroup threadGroup, final boolean isDaemon) {
 		this(prefix, threadGroup, isDaemon, null);
 	}
 
@@ -59,7 +59,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	 * @param isDaemon 是否守护线程
 	 * @param handler 未捕获异常处理
 	 */
-	public NamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon, UncaughtExceptionHandler handler) {
+	public NamedThreadFactory(final String prefix, ThreadGroup threadGroup, final boolean isDaemon, final UncaughtExceptionHandler handler) {
 		this.prefix = StrUtil.isBlank(prefix) ? "Hutool" : prefix;
 		if (null == threadGroup) {
 			threadGroup = ThreadUtil.currentThreadGroup();
@@ -70,7 +70,7 @@ public class NamedThreadFactory implements ThreadFactory {
 	}
 
 	@Override
-	public Thread newThread(Runnable r) {
+	public Thread newThread(final Runnable r) {
 		final Thread t = new Thread(this.group, r, StrUtil.format("{}{}", prefix, threadNumber.getAndIncrement()));
 
 		//守护线程

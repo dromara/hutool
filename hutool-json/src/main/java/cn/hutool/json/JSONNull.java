@@ -29,7 +29,7 @@ public class JSONNull implements Serializable {
 	 */
 	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(final Object object) {
 		return object == null || (object == this);
 	}
 

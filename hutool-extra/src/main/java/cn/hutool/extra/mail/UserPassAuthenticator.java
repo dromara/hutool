@@ -5,7 +5,7 @@ import javax.mail.PasswordAuthentication;
 
 /**
  * 用户名密码验证器
- * 
+ *
  * @author looly
  * @since 3.1.2
  */
@@ -16,11 +16,11 @@ public class UserPassAuthenticator extends Authenticator {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public UserPassAuthenticator(String user, String pass) {
+	public UserPassAuthenticator(final String user, final String pass) {
 		this.user = user;
 		this.pass = pass;
 	}

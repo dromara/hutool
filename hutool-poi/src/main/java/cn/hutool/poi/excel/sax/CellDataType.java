@@ -2,7 +2,7 @@ package cn.hutool.poi.excel.sax;
 
 /**
  * 单元格数据类型枚举
- * 
+ *
  * @author Looly
  *
  */
@@ -29,16 +29,16 @@ public enum CellDataType {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 类型属性值
 	 */
-	CellDataType(String name) {
+	CellDataType(final String name) {
 		this.name = name;
 	}
 
 	/**
 	 * 获取对应类型的属性值
-	 * 
+	 *
 	 * @return 属性值
 	 */
 	public String getName() {
@@ -50,12 +50,12 @@ public enum CellDataType {
 	 * @param name 类型字符串
 	 * @return 类型枚举
 	 */
-	public static CellDataType of(String name) {
+	public static CellDataType of(final String name) {
 		if(null == name) {
 			//默认数字
 			return NUMBER;
 		}
-		
+
 		if(BOOL.name.equals(name)) {
 			return BOOL;
 		}else if(ERROR.name.equals(name)) {

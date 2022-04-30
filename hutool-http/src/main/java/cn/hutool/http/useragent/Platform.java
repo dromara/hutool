@@ -91,7 +91,7 @@ public class Platform extends UserAgentInfo {
 	 * @param name  平台名称
 	 * @param regex 关键字或表达式
 	 */
-	public Platform(String name, String regex) {
+	public Platform(final String name, final String regex) {
 		super(name, regex);
 	}
 

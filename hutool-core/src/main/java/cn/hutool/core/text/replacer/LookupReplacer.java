@@ -26,7 +26,7 @@ public class LookupReplacer extends StrReplacer {
 	 *
 	 * @param lookup 被查找的键值对
 	 */
-	public LookupReplacer(String[]... lookup) {
+	public LookupReplacer(final String[]... lookup) {
 		this.lookupMap = new HashMap<>();
 		this.prefixSet = new HashSet<>();
 
@@ -34,7 +34,7 @@ public class LookupReplacer extends StrReplacer {
 		int maxLength = 0;
 		String key;
 		int keySize;
-		for (String[] pair : lookup) {
+		for (final String[] pair : lookup) {
 			key = pair[0];
 			lookupMap.put(key, pair[1]);
 			this.prefixSet.add(key.charAt(0));
@@ -51,7 +51,7 @@ public class LookupReplacer extends StrReplacer {
 	}
 
 	@Override
-	protected int replace(CharSequence str, int pos, StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
 		if (prefixSet.contains(str.charAt(pos))) {
 			int max = this.maxLength;
 			if (pos + this.maxLength > str.length()) {

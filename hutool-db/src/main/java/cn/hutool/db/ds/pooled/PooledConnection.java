@@ -15,7 +15,7 @@ import java.util.Properties;
  *
  */
 public class PooledConnection extends ConnectionWraper{
-	
+
 	private final PooledDataSource ds;
 	private boolean isClosed;
 
@@ -25,7 +25,7 @@ public class PooledConnection extends ConnectionWraper{
 	 * @param ds 数据源
 	 * @throws SQLException SQL异常
 	 */
-	public PooledConnection(PooledDataSource ds) throws SQLException {
+	public PooledConnection(final PooledDataSource ds) throws SQLException {
 		this.ds = ds;
 		final DbConfig config = ds.getConfig();
 
@@ -47,8 +47,8 @@ public class PooledConnection extends ConnectionWraper{
 
 		this.raw = DriverManager.getConnection(config.getUrl(), info);
 	}
-	
-	public PooledConnection(PooledDataSource ds, Connection conn) {
+
+	public PooledConnection(final PooledDataSource ds, final Connection conn) {
 		this.ds = ds;
 		this.raw = conn;
 	}
@@ -71,7 +71,7 @@ public class PooledConnection extends ConnectionWraper{
 	public boolean isClosed() throws SQLException {
 		return isClosed || raw.isClosed();
 	}
-	
+
 	/**
 	 * 打开连接
 	 * @return this

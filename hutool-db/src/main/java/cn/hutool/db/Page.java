@@ -39,7 +39,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 * @return Page
 	 * @since 5.5.3
 	 */
-	public static Page of(int pageNumber, int pageSize) {
+	public static Page of(final int pageNumber, final int pageSize) {
 		return new Page(pageNumber, pageSize);
 	}
 
@@ -60,7 +60,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 * @param pageNumber 页码，0表示第一页
 	 * @param pageSize   每页结果数
 	 */
-	public Page(int pageNumber, int pageSize) {
+	public Page(final int pageNumber, final int pageSize) {
 		this.pageNumber = Math.max(pageNumber, 0);
 		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
 	}
@@ -72,7 +72,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 * @param pageSize   每页结果数
 	 * @param order      排序对象
 	 */
-	public Page(int pageNumber, int pageSize, Order order) {
+	public Page(final int pageNumber, final int pageSize, final Order order) {
 		this(pageNumber, pageSize);
 		this.orders = new Order[]{order};
 	}
@@ -92,7 +92,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 *
 	 * @param pageNumber 页码
 	 */
-	public void setPageNumber(int pageNumber) {
+	public void setPageNumber(final int pageNumber) {
 		this.pageNumber = Math.max(pageNumber, 0);
 	}
 
@@ -108,7 +108,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 *
 	 * @param pageSize 每页结果数
 	 */
-	public void setPageSize(int pageSize) {
+	public void setPageSize(final int pageSize) {
 		this.pageSize = (pageSize <= 0) ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 
@@ -124,7 +124,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 *
 	 * @param orders 排序
 	 */
-	public void setOrder(Order... orders) {
+	public void setOrder(final Order... orders) {
 		this.orders = orders;
 	}
 
@@ -133,7 +133,7 @@ public class Page implements Segment<Integer>, Serializable {
 	 *
 	 * @param orders 排序
 	 */
-	public void addOrder(Order... orders) {
+	public void addOrder(final Order... orders) {
 		this.orders = ArrayUtil.append(this.orders, orders);
 	}
 	// ---------------------------------------------------------- Getters and Setters end

@@ -13,10 +13,14 @@ public class WeakConcurrentMapTest {
 	public void putAndGetTest(){
 		final WeakConcurrentMap<Object, Object> map = new WeakConcurrentMap<>();
 		Object
-				key1 = new Object(), value1 = new Object(),
-				key2 = new Object(), value2 = new Object(),
-				key3 = new Object(), value3 = new Object(),
-				key4 = new Object(), value4 = new Object();
+				key1 = new Object();
+		final Object value1 = new Object();
+		Object key2 = new Object();
+		final Object value2 = new Object();
+		final Object key3 = new Object();
+		final Object value3 = new Object();
+		final Object key4 = new Object();
+		final Object value4 = new Object();
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
@@ -46,7 +50,7 @@ public class WeakConcurrentMapTest {
 		tester.test(()-> cache.computeIfAbsent("aaa" + RandomUtil.randomInt(2), (key)-> "aaaValue"));
 
 		Assert.assertTrue(tester.getInterval() > 0);
-		String value = ObjUtil.defaultIfNull(cache.get("aaa0"), cache.get("aaa1"));
+		final String value = ObjUtil.defaultIfNull(cache.get("aaa0"), cache.get("aaa1"));
 		Assert.assertEquals("aaaValue", value);
 	}
 }

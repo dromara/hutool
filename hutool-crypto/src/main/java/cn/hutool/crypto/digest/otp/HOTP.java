@@ -42,7 +42,7 @@ public class HOTP {
 	 *
 	 * @param key 共享密码，RFC 4226要求最少128位
 	 */
-	public HOTP(byte[] key) {
+	public HOTP(final byte[] key) {
 		this(DEFAULT_PASSWORD_LENGTH, key);
 	}
 
@@ -52,7 +52,7 @@ public class HOTP {
 	 * @param passwordLength 密码长度，可以是6,7,8
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public HOTP(int passwordLength, byte[] key) {
+	public HOTP(final int passwordLength, final byte[] key) {
 		this(passwordLength, HOTP_HMAC_ALGORITHM, key);
 	}
 
@@ -63,7 +63,7 @@ public class HOTP {
 	 * @param algorithm      HMAC算法枚举
 	 * @param key            共享密码，RFC 4226要求最少128位
 	 */
-	public HOTP(int passwordLength, HmacAlgorithm algorithm, byte[] key) {
+	public HOTP(final int passwordLength, final HmacAlgorithm algorithm, final byte[] key) {
 		if(passwordLength >= MOD_DIVISORS.length){
 			throw new IllegalArgumentException("Password length must be < " + MOD_DIVISORS.length);
 		}
@@ -80,7 +80,7 @@ public class HOTP {
 	 *                可以是基于计次的动移动因子，也可以是计时移动因子
 	 * @return 一次性密码的int值
 	 */
-	public synchronized int generate(long counter) {
+	public synchronized int generate(final long counter) {
 		// C 的整数值需要用二进制的字符串表达，比如某个事件计数为 3，
 		// 则C是 "11"（此处省略了前面的二进制的数字0）
 		this.buffer[0] = (byte) ((counter & 0xff00000000000000L) >>> 56);
@@ -104,7 +104,7 @@ public class HOTP {
 	 * @return 共享密钥
 	 * @since 5.7.4
 	 */
-	public static String generateSecretKey(int numBytes) {
+	public static String generateSecretKey(final int numBytes) {
 		return Base32.encode(RandomUtil.getSHA1PRNGRandom(RandomUtil.randomBytes(256)).generateSeed(numBytes));
 	}
 
@@ -132,7 +132,7 @@ public class HOTP {
 	 * @param digest HMAC的hash值
 	 * @return 截断值
 	 */
-	private int truncate(byte[] digest) {
+	private int truncate(final byte[] digest) {
 		final int offset = digest[digest.length - 1] & 0x0f;
 		return ((digest[offset] & 0x7f) << 24 |
 				(digest[offset + 1] & 0xff) << 16 |

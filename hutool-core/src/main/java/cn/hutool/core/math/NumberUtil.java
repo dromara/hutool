@@ -62,7 +62,7 @@ public class NumberUtil {
 	 * @param v2 加数
 	 * @return 和
 	 */
-	public static double add(float v1, float v2) {
+	public static double add(final float v1, final float v2) {
 		return add(Float.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -73,7 +73,7 @@ public class NumberUtil {
 	 * @param v2 加数
 	 * @return 和
 	 */
-	public static double add(float v1, double v2) {
+	public static double add(final float v1, final double v2) {
 		return add(Float.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -84,7 +84,7 @@ public class NumberUtil {
 	 * @param v2 加数
 	 * @return 和
 	 */
-	public static double add(double v1, float v2) {
+	public static double add(final double v1, final float v2) {
 		return add(Double.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -95,7 +95,7 @@ public class NumberUtil {
 	 * @param v2 加数
 	 * @return 和
 	 */
-	public static double add(double v1, double v2) {
+	public static double add(final double v1, final double v2) {
 		return add(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -107,7 +107,7 @@ public class NumberUtil {
 	 * @return 和
 	 * @since 3.1.1
 	 */
-	public static double add(Double v1, Double v2) {
+	public static double add(final Double v1, final Double v2) {
 		//noinspection RedundantCast
 		return add((Number) v1, (Number) v2).doubleValue();
 	}
@@ -120,7 +120,7 @@ public class NumberUtil {
 	 * @param v2 加数
 	 * @return 和
 	 */
-	public static BigDecimal add(Number v1, Number v2) {
+	public static BigDecimal add(final Number v1, final Number v2) {
 		return add(new Number[]{v1, v2});
 	}
 
@@ -132,7 +132,7 @@ public class NumberUtil {
 	 * @return 和
 	 * @since 4.0.0
 	 */
-	public static BigDecimal add(Number... values) {
+	public static BigDecimal add(final Number... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -156,7 +156,7 @@ public class NumberUtil {
 	 * @return 和
 	 * @since 4.0.0
 	 */
-	public static BigDecimal add(String... values) {
+	public static BigDecimal add(final String... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -180,7 +180,7 @@ public class NumberUtil {
 	 * @return 和
 	 * @since 4.0.0
 	 */
-	public static BigDecimal add(BigDecimal... values) {
+	public static BigDecimal add(final BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -203,7 +203,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static double sub(float v1, float v2) {
+	public static double sub(final float v1, final float v2) {
 		return sub(Float.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -214,7 +214,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static double sub(float v1, double v2) {
+	public static double sub(final float v1, final double v2) {
 		return sub(Float.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -225,7 +225,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static double sub(double v1, float v2) {
+	public static double sub(final double v1, final float v2) {
 		return sub(Double.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -236,7 +236,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static double sub(double v1, double v2) {
+	public static double sub(final double v1, final double v2) {
 		return sub(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -247,7 +247,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static double sub(Double v1, Double v2) {
+	public static double sub(final Double v1, final Double v2) {
 		//noinspection RedundantCast
 		return sub((Number) v1, (Number) v2).doubleValue();
 	}
@@ -260,7 +260,7 @@ public class NumberUtil {
 	 * @param v2 减数
 	 * @return 差
 	 */
-	public static BigDecimal sub(Number v1, Number v2) {
+	public static BigDecimal sub(final Number v1, final Number v2) {
 		return sub(new Number[]{v1, v2});
 	}
 
@@ -272,7 +272,7 @@ public class NumberUtil {
 	 * @return 差
 	 * @since 4.0.0
 	 */
-	public static BigDecimal sub(Number... values) {
+	public static BigDecimal sub(final Number... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -296,7 +296,7 @@ public class NumberUtil {
 	 * @return 差
 	 * @since 4.0.0
 	 */
-	public static BigDecimal sub(String... values) {
+	public static BigDecimal sub(final String... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -320,7 +320,7 @@ public class NumberUtil {
 	 * @return 差
 	 * @since 4.0.0
 	 */
-	public static BigDecimal sub(BigDecimal... values) {
+	public static BigDecimal sub(final BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -343,7 +343,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static double mul(float v1, float v2) {
+	public static double mul(final float v1, final float v2) {
 		return mul(Float.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -354,7 +354,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static double mul(float v1, double v2) {
+	public static double mul(final float v1, final double v2) {
 		return mul(Float.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -365,7 +365,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static double mul(double v1, float v2) {
+	public static double mul(final double v1, final float v2) {
 		return mul(Double.toString(v1), Float.toString(v2)).doubleValue();
 	}
 
@@ -376,7 +376,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static double mul(double v1, double v2) {
+	public static double mul(final double v1, final double v2) {
 		return mul(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
 
@@ -388,7 +388,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static double mul(Double v1, Double v2) {
+	public static double mul(final Double v1, final Double v2) {
 		//noinspection RedundantCast
 		return mul((Number) v1, (Number) v2).doubleValue();
 	}
@@ -401,7 +401,7 @@ public class NumberUtil {
 	 * @param v2 乘数
 	 * @return 积
 	 */
-	public static BigDecimal mul(Number v1, Number v2) {
+	public static BigDecimal mul(final Number v1, final Number v2) {
 		return mul(new Number[]{v1, v2});
 	}
 
@@ -413,7 +413,7 @@ public class NumberUtil {
 	 * @return 积
 	 * @since 4.0.0
 	 */
-	public static BigDecimal mul(Number... values) {
+	public static BigDecimal mul(final Number... values) {
 		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -435,7 +435,7 @@ public class NumberUtil {
 	 * @return 积
 	 * @since 3.0.8
 	 */
-	public static BigDecimal mul(String v1, String v2) {
+	public static BigDecimal mul(final String v1, final String v2) {
 		return mul(new BigDecimal(v1), new BigDecimal(v2));
 	}
 
@@ -447,7 +447,7 @@ public class NumberUtil {
 	 * @return 积
 	 * @since 4.0.0
 	 */
-	public static BigDecimal mul(String... values) {
+	public static BigDecimal mul(final String... values) {
 		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -468,7 +468,7 @@ public class NumberUtil {
 	 * @return 积
 	 * @since 4.0.0
 	 */
-	public static BigDecimal mul(BigDecimal... values) {
+	public static BigDecimal mul(final BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values) || ArrayUtil.hasNull(values)) {
 			return BigDecimal.ZERO;
 		}
@@ -487,7 +487,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, float v2) {
+	public static double div(final float v1, final float v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -498,7 +498,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, double v2) {
+	public static double div(final float v1, final double v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -509,7 +509,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, float v2) {
+	public static double div(final double v1, final float v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -520,7 +520,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, double v2) {
+	public static double div(final double v1, final double v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -531,7 +531,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static double div(Double v1, Double v2) {
+	public static double div(final Double v1, final Double v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -543,7 +543,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 3.1.0
 	 */
-	public static BigDecimal div(Number v1, Number v2) {
+	public static BigDecimal div(final Number v1, final Number v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -554,7 +554,7 @@ public class NumberUtil {
 	 * @param v2 除数
 	 * @return 两个参数的商
 	 */
-	public static BigDecimal div(String v1, String v2) {
+	public static BigDecimal div(final String v1, final String v2) {
 		return div(v1, v2, DEFAULT_DIV_SCALE);
 	}
 
@@ -566,7 +566,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, float v2, int scale) {
+	public static double div(final float v1, final float v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -578,7 +578,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, double v2, int scale) {
+	public static double div(final float v1, final double v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -590,7 +590,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, float v2, int scale) {
+	public static double div(final double v1, final float v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -602,7 +602,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, double v2, int scale) {
+	public static double div(final double v1, final double v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -614,7 +614,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static double div(Double v1, Double v2, int scale) {
+	public static double div(final Double v1, final Double v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -627,7 +627,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 3.1.0
 	 */
-	public static BigDecimal div(Number v1, Number v2, int scale) {
+	public static BigDecimal div(final Number v1, final Number v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -639,7 +639,7 @@ public class NumberUtil {
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
-	public static BigDecimal div(String v1, String v2, int scale) {
+	public static BigDecimal div(final String v1, final String v2, final int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -652,7 +652,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, float v2, int scale, RoundingMode roundingMode) {
+	public static double div(final float v1, final float v2, final int scale, final RoundingMode roundingMode) {
 		return div(Float.toString(v1), Float.toString(v2), scale, roundingMode).doubleValue();
 	}
 
@@ -665,7 +665,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static double div(float v1, double v2, int scale, RoundingMode roundingMode) {
+	public static double div(final float v1, final double v2, final int scale, final RoundingMode roundingMode) {
 		return div(Float.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
 	}
 
@@ -678,7 +678,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, float v2, int scale, RoundingMode roundingMode) {
+	public static double div(final double v1, final float v2, final int scale, final RoundingMode roundingMode) {
 		return div(Double.toString(v1), Float.toString(v2), scale, roundingMode).doubleValue();
 	}
 
@@ -691,7 +691,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
+	public static double div(final double v1, final double v2, final int scale, final RoundingMode roundingMode) {
 		return div(Double.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
 	}
 
@@ -704,7 +704,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static double div(Double v1, Double v2, int scale, RoundingMode roundingMode) {
+	public static double div(final Double v1, final Double v2, final int scale, final RoundingMode roundingMode) {
 		//noinspection RedundantCast
 		return div((Number) v1, (Number) v2, scale, roundingMode).doubleValue();
 	}
@@ -719,7 +719,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 3.1.0
 	 */
-	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
+	public static BigDecimal div(final Number v1, final Number v2, final int scale, final RoundingMode roundingMode) {
 		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
 			return div((BigDecimal) v1, (BigDecimal) v2, scale, roundingMode);
 		}
@@ -735,7 +735,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商
 	 */
-	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
+	public static BigDecimal div(final String v1, final String v2, final int scale, final RoundingMode roundingMode) {
 		return div(toBigDecimal(v1), toBigDecimal(v2), scale, roundingMode);
 	}
 
@@ -749,7 +749,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 3.0.9
 	 */
-	public static BigDecimal div(BigDecimal v1, BigDecimal v2, int scale, RoundingMode roundingMode) {
+	public static BigDecimal div(final BigDecimal v1, final BigDecimal v2, int scale, final RoundingMode roundingMode) {
 		Assert.notNull(v2, "Divisor must be not null !");
 		if (null == v1) {
 			return BigDecimal.ZERO;
@@ -768,7 +768,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 5.3.3
 	 */
-	public static int ceilDiv(int v1, int v2) {
+	public static int ceilDiv(final int v1, final int v2) {
 		return (int) Math.ceil((double) v1 / v2);
 	}
 
@@ -783,7 +783,7 @@ public class NumberUtil {
 	 * @param scale 保留小数位数
 	 * @return 新值
 	 */
-	public static BigDecimal round(double v, int scale) {
+	public static BigDecimal round(final double v, final int scale) {
 		return round(v, scale, RoundingMode.HALF_UP);
 	}
 
@@ -796,7 +796,7 @@ public class NumberUtil {
 	 * @param scale 保留小数位数
 	 * @return 新值
 	 */
-	public static String roundStr(double v, int scale) {
+	public static String roundStr(final double v, final int scale) {
 		return round(v, scale).toString();
 	}
 
@@ -809,7 +809,7 @@ public class NumberUtil {
 	 * @param scale     保留小数位数
 	 * @return 新值
 	 */
-	public static BigDecimal round(String numberStr, int scale) {
+	public static BigDecimal round(final String numberStr, final int scale) {
 		return round(numberStr, scale, RoundingMode.HALF_UP);
 	}
 
@@ -823,7 +823,7 @@ public class NumberUtil {
 	 * @return 新值
 	 * @since 4.1.0
 	 */
-	public static BigDecimal round(BigDecimal number, int scale) {
+	public static BigDecimal round(final BigDecimal number, final int scale) {
 		return round(number, scale, RoundingMode.HALF_UP);
 	}
 
@@ -837,7 +837,7 @@ public class NumberUtil {
 	 * @return 新值
 	 * @since 3.2.2
 	 */
-	public static String roundStr(String numberStr, int scale) {
+	public static String roundStr(final String numberStr, final int scale) {
 		return round(numberStr, scale).toString();
 	}
 
@@ -850,7 +850,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 新值
 	 */
-	public static BigDecimal round(double v, int scale, RoundingMode roundingMode) {
+	public static BigDecimal round(final double v, final int scale, final RoundingMode roundingMode) {
 		return round(Double.toString(v), scale, roundingMode);
 	}
 
@@ -864,7 +864,7 @@ public class NumberUtil {
 	 * @return 新值
 	 * @since 3.2.2
 	 */
-	public static String roundStr(double v, int scale, RoundingMode roundingMode) {
+	public static String roundStr(final double v, final int scale, final RoundingMode roundingMode) {
 		return round(v, scale, roundingMode).toString();
 	}
 
@@ -877,7 +877,7 @@ public class NumberUtil {
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
 	 * @return 新值
 	 */
-	public static BigDecimal round(String numberStr, int scale, RoundingMode roundingMode) {
+	public static BigDecimal round(final String numberStr, int scale, final RoundingMode roundingMode) {
 		Assert.notBlank(numberStr);
 		if (scale < 0) {
 			scale = 0;
@@ -918,7 +918,7 @@ public class NumberUtil {
 	 * @return 新值
 	 * @since 3.2.2
 	 */
-	public static String roundStr(String numberStr, int scale, RoundingMode roundingMode) {
+	public static String roundStr(final String numberStr, final int scale, final RoundingMode roundingMode) {
 		return round(numberStr, scale, roundingMode).toString();
 	}
 
@@ -942,7 +942,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static BigDecimal roundHalfEven(Number number, int scale) {
+	public static BigDecimal roundHalfEven(final Number number, final int scale) {
 		return roundHalfEven(toBigDecimal(number), scale);
 	}
 
@@ -966,7 +966,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
+	public static BigDecimal roundHalfEven(final BigDecimal value, final int scale) {
 		return round(value, scale, RoundingMode.HALF_EVEN);
 	}
 
@@ -978,7 +978,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static BigDecimal roundDown(Number number, int scale) {
+	public static BigDecimal roundDown(final Number number, final int scale) {
 		return roundDown(toBigDecimal(number), scale);
 	}
 
@@ -990,7 +990,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static BigDecimal roundDown(BigDecimal value, int scale) {
+	public static BigDecimal roundDown(final BigDecimal value, final int scale) {
 		return round(value, scale, RoundingMode.DOWN);
 	}
 
@@ -1014,7 +1014,7 @@ public class NumberUtil {
 	 * @param value   值
 	 * @return 格式化后的值
 	 */
-	public static String decimalFormat(String pattern, double value) {
+	public static String decimalFormat(final String pattern, final double value) {
 		Assert.isTrue(isValid(value), "value is NaN or Infinite!");
 		return new DecimalFormat(pattern).format(value);
 	}
@@ -1038,7 +1038,7 @@ public class NumberUtil {
 	 * @return 格式化后的值
 	 * @since 3.0.5
 	 */
-	public static String decimalFormat(String pattern, long value) {
+	public static String decimalFormat(final String pattern, final long value) {
 		return new DecimalFormat(pattern).format(value);
 	}
 
@@ -1061,7 +1061,7 @@ public class NumberUtil {
 	 * @return 格式化后的值
 	 * @since 5.1.6
 	 */
-	public static String decimalFormat(String pattern, Object value) {
+	public static String decimalFormat(final String pattern, final Object value) {
 		return decimalFormat(pattern, value, null);
 	}
 
@@ -1085,7 +1085,7 @@ public class NumberUtil {
 	 * @return 格式化后的值
 	 * @since 5.6.5
 	 */
-	public static String decimalFormat(String pattern, Object value, RoundingMode roundingMode) {
+	public static String decimalFormat(final String pattern, final Object value, final RoundingMode roundingMode) {
 		if (value instanceof Number) {
 			Assert.isTrue(isValidNumber((Number) value), "value is NaN or Infinite!");
 		}
@@ -1103,7 +1103,7 @@ public class NumberUtil {
 	 * @return 格式化后的值
 	 * @since 3.0.9
 	 */
-	public static String decimalFormatMoney(double value) {
+	public static String decimalFormatMoney(final double value) {
 		return decimalFormat(",##0.00", value);
 	}
 
@@ -1115,7 +1115,7 @@ public class NumberUtil {
 	 * @return 百分比
 	 * @since 3.2.3
 	 */
-	public static String formatPercent(double number, int scale) {
+	public static String formatPercent(final double number, final int scale) {
 		final NumberFormat format = NumberFormat.getPercentInstance();
 		format.setMaximumFractionDigits(scale);
 		return format.format(number);
@@ -1137,18 +1137,18 @@ public class NumberUtil {
 	 * @param str 字符串值
 	 * @return 是否为数字
 	 */
-	public static boolean isNumber(CharSequence str) {
+	public static boolean isNumber(final CharSequence str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		char[] chars = str.toString().toCharArray();
+		final char[] chars = str.toString().toCharArray();
 		int sz = chars.length;
 		boolean hasExp = false;
 		boolean hasDecPoint = false;
 		boolean allowSigns = false;
 		boolean foundDigit = false;
 		// deal with any possible sign up front
-		int start = (chars[0] == '-' || chars[0] == '+') ? 1 : 0;
+		final int start = (chars[0] == '-' || chars[0] == '+') ? 1 : 0;
 		if (sz > start + 1) {
 			if (chars[start] == '0' && (chars[start + 1] == 'x' || chars[start + 1] == 'X')) {
 				int i = start + 2;
@@ -1241,10 +1241,10 @@ public class NumberUtil {
 	 * @param s String
 	 * @return 是否为整数
 	 */
-	public static boolean isInteger(String s) {
+	public static boolean isInteger(final String s) {
 		try {
 			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return false;
 		}
 		return true;
@@ -1258,10 +1258,10 @@ public class NumberUtil {
 	 * @return 是否为{@link Long}类型
 	 * @since 4.0.0
 	 */
-	public static boolean isLong(String s) {
+	public static boolean isLong(final String s) {
 		try {
 			Long.parseLong(s);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return false;
 		}
 		return true;
@@ -1273,11 +1273,11 @@ public class NumberUtil {
 	 * @param s String
 	 * @return 是否为{@link Double}类型
 	 */
-	public static boolean isDouble(String s) {
+	public static boolean isDouble(final String s) {
 		try {
 			Double.parseDouble(s);
 			return s.contains(".");
-		} catch (NumberFormatException ignore) {
+		} catch (final NumberFormatException ignore) {
 			// ignore
 		}
 		return false;
@@ -1290,7 +1290,7 @@ public class NumberUtil {
 	 * @param n 数字
 	 * @return 是否是质数
 	 */
-	public static boolean isPrimes(int n) {
+	public static boolean isPrimes(final int n) {
 		Assert.isTrue(n > 1, "The number must be > 1");
 		for (int i = 2; i <= Math.sqrt(n); i++) {
 			if (n % i == 0) {
@@ -1310,7 +1310,7 @@ public class NumberUtil {
 	 * @param size  指定产生随机数的个数
 	 * @return 随机int数组
 	 */
-	public static int[] generateRandomNumber(int begin, int end, int size) {
+	public static int[] generateRandomNumber(final int begin, final int end, final int size) {
 		// 种子你可以随意生成，但不能重复
 		final int[] seed = ArrayUtil.range(begin, end);
 		return generateRandomNumber(begin, end, size, seed);
@@ -1326,9 +1326,9 @@ public class NumberUtil {
 	 * @return 随机int数组
 	 * @since 5.4.5
 	 */
-	public static int[] generateRandomNumber(int begin, int end, int size, int[] seed) {
+	public static int[] generateRandomNumber(int begin, int end, final int size, final int[] seed) {
 		if (begin > end) {
-			int temp = begin;
+			final int temp = begin;
 			begin = end;
 			end = temp;
 		}
@@ -1340,7 +1340,7 @@ public class NumberUtil {
 		// 数量你可以自己定义。
 		for (int i = 0; i < size; i++) {
 			// 得到一个位置
-			int j = RandomUtil.randomInt(seed.length - i);
+			final int j = RandomUtil.randomInt(seed.length - i);
 			// 得到那个位置的数值
 			ranArr[i] = seed[j];
 			// 将最后一个未用的数字放到这里
@@ -1357,9 +1357,9 @@ public class NumberUtil {
 	 * @param size  指定产生随机数的个数
 	 * @return 随机int数组
 	 */
-	public static Integer[] generateBySet(int begin, int end, int size) {
+	public static Integer[] generateBySet(int begin, int end, final int size) {
 		if (begin > end) {
-			int temp = begin;
+			final int temp = begin;
 			begin = end;
 			end = temp;
 		}
@@ -1368,7 +1368,7 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Set<Integer> set = new HashSet<>(size, 1);
+		final Set<Integer> set = new HashSet<>(size, 1);
 		while (set.size() < size) {
 			set.add(begin + RandomUtil.randomInt(end - begin));
 		}
@@ -1385,7 +1385,7 @@ public class NumberUtil {
 	 * @return 整数列表
 	 * @since 3.3.1
 	 */
-	public static int[] range(int stop) {
+	public static int[] range(final int stop) {
 		return range(0, stop);
 	}
 
@@ -1396,7 +1396,7 @@ public class NumberUtil {
 	 * @param stop  结束（包含）
 	 * @return 整数列表
 	 */
-	public static int[] range(int start, int stop) {
+	public static int[] range(final int start, final int stop) {
 		return range(start, stop, 1);
 	}
 
@@ -1408,7 +1408,7 @@ public class NumberUtil {
 	 * @param step  步进
 	 * @return 整数列表
 	 */
-	public static int[] range(int start, int stop, int step) {
+	public static int[] range(final int start, final int stop, int step) {
 		if (start < stop) {
 			step = Math.abs(step);
 		} else if (start > stop) {
@@ -1417,8 +1417,8 @@ public class NumberUtil {
 			return new int[]{start};
 		}
 
-		int size = Math.abs((stop - start) / step) + 1;
-		int[] values = new int[size];
+		final int size = Math.abs((stop - start) / step) + 1;
+		final int[] values = new int[size];
 		int index = 0;
 		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
 			values[index] = i;
@@ -1435,7 +1435,7 @@ public class NumberUtil {
 	 * @param values 集合
 	 * @return 集合
 	 */
-	public static Collection<Integer> appendRange(int start, int stop, Collection<Integer> values) {
+	public static Collection<Integer> appendRange(final int start, final int stop, final Collection<Integer> values) {
 		return appendRange(start, stop, 1, values);
 	}
 
@@ -1448,7 +1448,7 @@ public class NumberUtil {
 	 * @param values 集合
 	 * @return 集合
 	 */
-	public static Collection<Integer> appendRange(int start, int stop, int step, Collection<Integer> values) {
+	public static Collection<Integer> appendRange(final int start, final int stop, int step, final Collection<Integer> values) {
 		if (start < stop) {
 			step = Math.abs(step);
 		} else if (start > stop) {
@@ -1476,7 +1476,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 5.6.0
 	 */
-	public static BigInteger factorial(BigInteger n) {
+	public static BigInteger factorial(final BigInteger n) {
 		if (n.equals(BigInteger.ZERO)) {
 			return BigInteger.ONE;
 		}
@@ -1529,7 +1529,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static long factorial(long start, long end) {
+	public static long factorial(final long start, final long end) {
 		// 负数没有阶乘
 		if (start < 0 || end < 0) {
 			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be >= 0, but got start={}, end={}", start, end));
@@ -1550,7 +1550,7 @@ public class NumberUtil {
 	 * @param b 被乘数
 	 * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
 	 */
-	private static long factorialMultiplyAndCheck(long a, long b) {
+	private static long factorialMultiplyAndCheck(final long a, final long b) {
 		if (a <= Long.MAX_VALUE / b) {
 			return a * b;
 		}
@@ -1566,7 +1566,7 @@ public class NumberUtil {
 	 * @param n 阶乘起始
 	 * @return 结果
 	 */
-	public static long factorial(long n) {
+	public static long factorial(final long n) {
 		if (n < 0 || n > 20) {
 			throw new IllegalArgumentException(StrUtil.format("Factorial must have n >= 0 and n <= 20 for n!, but got n = {}", n));
 		}
@@ -1604,8 +1604,8 @@ public class NumberUtil {
 	 * @param minNum    最少要选中多少个小球
 	 * @return 注数
 	 */
-	public static int processMultiple(int selectNum, int minNum) {
-		int result;
+	public static int processMultiple(final int selectNum, final int minNum) {
+		final int result;
 		result = mathSubNode(selectNum, minNum) / mathNode(selectNum - minNum);
 		return result;
 	}
@@ -1619,7 +1619,7 @@ public class NumberUtil {
 	 */
 	public static int divisor(int m, int n) {
 		while (m % n != 0) {
-			int temp = m % n;
+			final int temp = m % n;
 			m = n;
 			n = temp;
 		}
@@ -1633,7 +1633,7 @@ public class NumberUtil {
 	 * @param n 第二个值
 	 * @return 最小公倍数
 	 */
-	public static int multiple(int m, int n) {
+	public static int multiple(final int m, final int n) {
 		return m * n / divisor(m, n);
 	}
 
@@ -1643,7 +1643,7 @@ public class NumberUtil {
 	 * @param number 数字
 	 * @return 二进制字符串
 	 */
-	public static String getBinaryStr(Number number) {
+	public static String getBinaryStr(final Number number) {
 		if (number instanceof Long) {
 			return Long.toBinaryString((Long) number);
 		} else if (number instanceof Integer) {
@@ -1659,7 +1659,7 @@ public class NumberUtil {
 	 * @param binaryStr 二进制字符串
 	 * @return int
 	 */
-	public static int binaryToInt(String binaryStr) {
+	public static int binaryToInt(final String binaryStr) {
 		return Integer.parseInt(binaryStr, 2);
 	}
 
@@ -1669,7 +1669,7 @@ public class NumberUtil {
 	 * @param binaryStr 二进制字符串
 	 * @return long
 	 */
-	public static long binaryToLong(String binaryStr) {
+	public static long binaryToLong(final String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
 	}
 
@@ -1684,7 +1684,7 @@ public class NumberUtil {
 	 * @see Character#compare(char, char)
 	 * @since 3.0.1
 	 */
-	public static int compare(char x, char y) {
+	public static int compare(final char x, final char y) {
 		return Character.compare(x, y);
 	}
 
@@ -1697,7 +1697,7 @@ public class NumberUtil {
 	 * @see Double#compare(double, double)
 	 * @since 3.0.1
 	 */
-	public static int compare(double x, double y) {
+	public static int compare(final double x, final double y) {
 		return Double.compare(x, y);
 	}
 
@@ -1710,7 +1710,7 @@ public class NumberUtil {
 	 * @see Integer#compare(int, int)
 	 * @since 3.0.1
 	 */
-	public static int compare(int x, int y) {
+	public static int compare(final int x, final int y) {
 		return Integer.compare(x, y);
 	}
 
@@ -1723,7 +1723,7 @@ public class NumberUtil {
 	 * @see Long#compare(long, long)
 	 * @since 3.0.1
 	 */
-	public static int compare(long x, long y) {
+	public static int compare(final long x, final long y) {
 		return Long.compare(x, y);
 	}
 
@@ -1736,7 +1736,7 @@ public class NumberUtil {
 	 * @see Short#compare(short, short)
 	 * @since 3.0.1
 	 */
-	public static int compare(short x, short y) {
+	public static int compare(final short x, final short y) {
 		return Short.compare(x, y);
 	}
 
@@ -1749,7 +1749,7 @@ public class NumberUtil {
 	 * @see Byte#compare(byte, byte)
 	 * @since 3.0.1
 	 */
-	public static int compare(byte x, byte y) {
+	public static int compare(final byte x, final byte y) {
 		return Byte.compare(x, y);
 	}
 
@@ -1761,7 +1761,7 @@ public class NumberUtil {
 	 * @return 是否大于
 	 * @since 3.0.9
 	 */
-	public static boolean isGreater(BigDecimal bigNum1, BigDecimal bigNum2) {
+	public static boolean isGreater(final BigDecimal bigNum1, final BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
 		Assert.notNull(bigNum2);
 		return bigNum1.compareTo(bigNum2) > 0;
@@ -1775,7 +1775,7 @@ public class NumberUtil {
 	 * @return 是否大于等于
 	 * @since 3, 0.9
 	 */
-	public static boolean isGreaterOrEqual(BigDecimal bigNum1, BigDecimal bigNum2) {
+	public static boolean isGreaterOrEqual(final BigDecimal bigNum1, final BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
 		Assert.notNull(bigNum2);
 		return bigNum1.compareTo(bigNum2) >= 0;
@@ -1789,7 +1789,7 @@ public class NumberUtil {
 	 * @return 是否小于
 	 * @since 3, 0.9
 	 */
-	public static boolean isLess(BigDecimal bigNum1, BigDecimal bigNum2) {
+	public static boolean isLess(final BigDecimal bigNum1, final BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
 		Assert.notNull(bigNum2);
 		return bigNum1.compareTo(bigNum2) < 0;
@@ -1803,7 +1803,7 @@ public class NumberUtil {
 	 * @return 是否小于等于
 	 * @since 3, 0.9
 	 */
-	public static boolean isLessOrEqual(BigDecimal bigNum1, BigDecimal bigNum2) {
+	public static boolean isLessOrEqual(final BigDecimal bigNum1, final BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
 		Assert.notNull(bigNum2);
 		return bigNum1.compareTo(bigNum2) <= 0;
@@ -1819,7 +1819,7 @@ public class NumberUtil {
 	 * @return 是否相等
 	 * @since 5.4.2
 	 */
-	public static boolean equals(double num1, double num2) {
+	public static boolean equals(final double num1, final double num2) {
 		return Double.doubleToLongBits(num1) == Double.doubleToLongBits(num2);
 	}
 
@@ -1833,7 +1833,7 @@ public class NumberUtil {
 	 * @return 是否相等
 	 * @since 5.4.5
 	 */
-	public static boolean equals(float num1, float num2) {
+	public static boolean equals(final float num1, final float num2) {
 		return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
 	}
 
@@ -1846,7 +1846,7 @@ public class NumberUtil {
 	 * @return 是否相等
 	 * @since 5.7.19
 	 */
-	public static boolean equals(long num1, long num2) {
+	public static boolean equals(final long num1, final long num2) {
 		return num1 == num2;
 	}
 
@@ -1859,7 +1859,7 @@ public class NumberUtil {
 	 * @param bigNum2 数字2
 	 * @return 是否相等
 	 */
-	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
+	public static boolean equals(final BigDecimal bigNum1, final BigDecimal bigNum2) {
 		//noinspection NumberEquality
 		if (bigNum1 == bigNum2) {
 			// 如果用户传入同一对象，省略compareTo以提高性能。
@@ -1881,7 +1881,7 @@ public class NumberUtil {
 	 * @see CharUtil#equals(char, char, boolean)
 	 * @since 3.2.1
 	 */
-	public static boolean equals(char c1, char c2, boolean ignoreCase) {
+	public static boolean equals(final char c1, final char c2, final boolean ignoreCase) {
 		return CharUtil.equals(c1, c2, ignoreCase);
 	}
 
@@ -1894,7 +1894,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(Comparable[])
 	 * @since 4.0.7
 	 */
-	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+	public static <T extends Comparable<? super T>> T min(final T[] numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1906,7 +1906,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(long...)
 	 * @since 4.0.7
 	 */
-	public static long min(long... numberArray) {
+	public static long min(final long... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1918,7 +1918,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(int...)
 	 * @since 4.0.7
 	 */
-	public static int min(int... numberArray) {
+	public static int min(final int... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1930,7 +1930,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(short...)
 	 * @since 4.0.7
 	 */
-	public static short min(short... numberArray) {
+	public static short min(final short... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1942,7 +1942,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(double...)
 	 * @since 4.0.7
 	 */
-	public static double min(double... numberArray) {
+	public static double min(final double... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1954,7 +1954,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(float...)
 	 * @since 4.0.7
 	 */
-	public static float min(float... numberArray) {
+	public static float min(final float... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1966,7 +1966,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#min(Comparable[])
 	 * @since 5.0.8
 	 */
-	public static BigDecimal min(BigDecimal... numberArray) {
+	public static BigDecimal min(final BigDecimal... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
 
@@ -1979,7 +1979,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(Comparable[])
 	 * @since 4.0.7
 	 */
-	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+	public static <T extends Comparable<? super T>> T max(final T[] numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -1991,7 +1991,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(long...)
 	 * @since 4.0.7
 	 */
-	public static long max(long... numberArray) {
+	public static long max(final long... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2003,7 +2003,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(int...)
 	 * @since 4.0.7
 	 */
-	public static int max(int... numberArray) {
+	public static int max(final int... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2015,7 +2015,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(short...)
 	 * @since 4.0.7
 	 */
-	public static short max(short... numberArray) {
+	public static short max(final short... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2027,7 +2027,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(double...)
 	 * @since 4.0.7
 	 */
-	public static double max(double... numberArray) {
+	public static double max(final double... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2039,7 +2039,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(float...)
 	 * @since 4.0.7
 	 */
-	public static float max(float... numberArray) {
+	public static float max(final float... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2051,7 +2051,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(Comparable[])
 	 * @since 5.0.8
 	 */
-	public static BigDecimal max(BigDecimal... numberArray) {
+	public static BigDecimal max(final BigDecimal... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
@@ -2064,7 +2064,7 @@ public class NumberUtil {
 	 * @return A String.
 	 * @since 3.0.9
 	 */
-	public static String toStr(Number number, String defaultValue) {
+	public static String toStr(final Number number, final String defaultValue) {
 		return (null == number) ? defaultValue : toStr(number);
 	}
 
@@ -2075,7 +2075,7 @@ public class NumberUtil {
 	 * @param number A Number
 	 * @return A String.
 	 */
-	public static String toStr(Number number) {
+	public static String toStr(final Number number) {
 		return toStr(number, true);
 	}
 
@@ -2087,7 +2087,7 @@ public class NumberUtil {
 	 * @param isStripTrailingZeros 是否去除末尾多余0，例如5.0返回5
 	 * @return A String.
 	 */
-	public static String toStr(Number number, boolean isStripTrailingZeros) {
+	public static String toStr(final Number number, final boolean isStripTrailingZeros) {
 		Assert.notNull(number, "Number is null !");
 
 		// BigDecimal单独处理，使用非科学计数法
@@ -2119,7 +2119,7 @@ public class NumberUtil {
 	 * @return A String.
 	 * @since 5.4.6
 	 */
-	public static String toStr(BigDecimal bigDecimal) {
+	public static String toStr(final BigDecimal bigDecimal) {
 		return toStr(bigDecimal, true);
 	}
 
@@ -2132,7 +2132,7 @@ public class NumberUtil {
 	 * @return A String.
 	 * @since 5.4.6
 	 */
-	public static String toStr(BigDecimal bigDecimal, boolean isStripTrailingZeros) {
+	public static String toStr(BigDecimal bigDecimal, final boolean isStripTrailingZeros) {
 		Assert.notNull(bigDecimal, "BigDecimal is null !");
 		if (isStripTrailingZeros) {
 			bigDecimal = bigDecimal.stripTrailingZeros();
@@ -2149,7 +2149,7 @@ public class NumberUtil {
 	 * @return {@link BigDecimal}
 	 * @since 4.0.9
 	 */
-	public static BigDecimal toBigDecimal(Number number) {
+	public static BigDecimal toBigDecimal(final Number number) {
 		if (null == number) {
 			return BigDecimal.ZERO;
 		}
@@ -2176,7 +2176,7 @@ public class NumberUtil {
 	 * @return {@link BigDecimal}
 	 * @since 4.0.9
 	 */
-	public static BigDecimal toBigDecimal(String numberStr) {
+	public static BigDecimal toBigDecimal(final String numberStr) {
 		if (StrUtil.isBlank(numberStr)) {
 			return BigDecimal.ZERO;
 		}
@@ -2189,7 +2189,7 @@ public class NumberUtil {
 			} else {
 				return new BigDecimal(number.toString());
 			}
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			// 忽略解析错误
 		}
 
@@ -2204,7 +2204,7 @@ public class NumberUtil {
 	 * @return {@link BigInteger}
 	 * @since 5.4.5
 	 */
-	public static BigInteger toBigInteger(Number number) {
+	public static BigInteger toBigInteger(final Number number) {
 		if (null == number) {
 			return BigInteger.ZERO;
 		}
@@ -2226,7 +2226,7 @@ public class NumberUtil {
 	 * @return {@link BigInteger}
 	 * @since 5.4.5
 	 */
-	public static BigInteger toBigInteger(String number) {
+	public static BigInteger toBigInteger(final String number) {
 		return StrUtil.isBlank(number) ? BigInteger.ZERO : new BigInteger(number);
 	}
 
@@ -2238,7 +2238,7 @@ public class NumberUtil {
 	 * @return 分成了几份
 	 * @since 3.0.6
 	 */
-	public static int count(int total, int part) {
+	public static int count(final int total, final int part) {
 		return (total % part == 0) ? (total / part) : (total / part + 1);
 	}
 
@@ -2249,7 +2249,7 @@ public class NumberUtil {
 	 * @return {@link BigDecimal}参数为空时返回0的值
 	 * @since 3.0.9
 	 */
-	public static BigDecimal null2Zero(BigDecimal decimal) {
+	public static BigDecimal null2Zero(final BigDecimal decimal) {
 
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
@@ -2261,7 +2261,7 @@ public class NumberUtil {
 	 * @return 1或非0值
 	 * @since 3.1.2
 	 */
-	public static int zero2One(int value) {
+	public static int zero2One(final int value) {
 		return 0 == value ? 1 : value;
 	}
 
@@ -2316,7 +2316,7 @@ public class NumberUtil {
 	 * @return 是否相邻
 	 * @since 4.0.7
 	 */
-	public static boolean isBeside(long number1, long number2) {
+	public static boolean isBeside(final long number1, final long number2) {
 		return Math.abs(number1 - number2) == 1;
 	}
 
@@ -2329,7 +2329,7 @@ public class NumberUtil {
 	 * @return 是否相邻
 	 * @since 4.0.7
 	 */
-	public static boolean isBeside(int number1, int number2) {
+	public static boolean isBeside(final int number1, final int number2) {
 		return Math.abs(number1 - number2) == 1;
 	}
 
@@ -2342,7 +2342,7 @@ public class NumberUtil {
 	 * @return 每份的个数
 	 * @since 4.0.7
 	 */
-	public static int partValue(int total, int partCount) {
+	public static int partValue(final int total, final int partCount) {
 		return partValue(total, partCount, true);
 	}
 
@@ -2356,7 +2356,7 @@ public class NumberUtil {
 	 * @return 每份的个数
 	 * @since 4.0.7
 	 */
-	public static int partValue(int total, int partCount, boolean isPlusOneWhenHasRem) {
+	public static int partValue(final int total, final int partCount, final boolean isPlusOneWhenHasRem) {
 		int partValue = total / partCount;
 		if (isPlusOneWhenHasRem && total % partCount > 0) {
 			partValue++;
@@ -2372,7 +2372,7 @@ public class NumberUtil {
 	 * @return 幂的积
 	 * @since 4.1.0
 	 */
-	public static BigDecimal pow(Number number, int n) {
+	public static BigDecimal pow(final Number number, final int n) {
 		return pow(toBigDecimal(number), n);
 	}
 
@@ -2384,7 +2384,7 @@ public class NumberUtil {
 	 * @return 幂的积
 	 * @since 4.1.0
 	 */
-	public static BigDecimal pow(BigDecimal number, int n) {
+	public static BigDecimal pow(final BigDecimal number, final int n) {
 		return number.pow(n);
 	}
 
@@ -2395,7 +2395,7 @@ public class NumberUtil {
 	 * @param n 待验证的整数
 	 * @return 如果n是2的幂返回true, 反之返回false
 	 */
-	public static boolean isPowerOfTwo(long n) {
+	public static boolean isPowerOfTwo(final long n) {
 		return (n > 0) && ((n & (n - 1)) == 0);
 	}
 
@@ -2416,7 +2416,7 @@ public class NumberUtil {
 	 * @throws NumberFormatException 数字格式异常
 	 * @since 4.1.4
 	 */
-	public static int parseInt(String number) throws NumberFormatException {
+	public static int parseInt(final String number) throws NumberFormatException {
 		if (StrUtil.isBlank(number)) {
 			return 0;
 		}
@@ -2428,7 +2428,7 @@ public class NumberUtil {
 
 		try {
 			return Integer.parseInt(number);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return parseNumber(number).intValue();
 		}
 	}
@@ -2449,7 +2449,7 @@ public class NumberUtil {
 	 * @return long
 	 * @since 4.1.4
 	 */
-	public static long parseLong(String number) {
+	public static long parseLong(final String number) {
 		if (StrUtil.isBlank(number)) {
 			return 0L;
 		}
@@ -2461,7 +2461,7 @@ public class NumberUtil {
 
 		try {
 			return Long.parseLong(number);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return parseNumber(number).longValue();
 		}
 	}
@@ -2480,14 +2480,14 @@ public class NumberUtil {
 	 * @return long
 	 * @since 5.5.5
 	 */
-	public static float parseFloat(String number) {
+	public static float parseFloat(final String number) {
 		if (StrUtil.isBlank(number)) {
 			return 0f;
 		}
 
 		try {
 			return Float.parseFloat(number);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return parseNumber(number).floatValue();
 		}
 	}
@@ -2506,14 +2506,14 @@ public class NumberUtil {
 	 * @return long
 	 * @since 5.5.5
 	 */
-	public static double parseDouble(String number) {
+	public static double parseDouble(final String number) {
 		if (StrUtil.isBlank(number)) {
 			return 0D;
 		}
 
 		try {
 			return Double.parseDouble(number);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return parseNumber(number).doubleValue();
 		}
 	}
@@ -2527,7 +2527,7 @@ public class NumberUtil {
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
 	 * @since 4.1.15
 	 */
-	public static Number parseNumber(String numberStr) throws NumberFormatException {
+	public static Number parseNumber(final String numberStr) throws NumberFormatException {
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
 			if (format instanceof DecimalFormat) {
@@ -2536,7 +2536,7 @@ public class NumberUtil {
 				((DecimalFormat) format).setParseBigDecimal(true);
 			}
 			return format.parse(numberStr);
-		} catch (ParseException e) {
+		} catch (final ParseException e) {
 			final NumberFormatException nfe = new NumberFormatException(e.getMessage());
 			nfe.initCause(e);
 			throw nfe;
@@ -2551,7 +2551,7 @@ public class NumberUtil {
 	 * @return byte数组
 	 * @since 4.4.5
 	 */
-	public static byte[] toBytes(int value) {
+	public static byte[] toBytes(final int value) {
 		final byte[] result = new byte[4];
 
 		result[0] = (byte) (value >> 24);
@@ -2570,7 +2570,7 @@ public class NumberUtil {
 	 * @return int
 	 * @since 4.4.5
 	 */
-	public static int toInt(byte[] bytes) {
+	public static int toInt(final byte[] bytes) {
 		return (bytes[0] & 0xff) << 24//
 				| (bytes[1] & 0xff) << 16//
 				| (bytes[2] & 0xff) << 8//
@@ -2584,11 +2584,11 @@ public class NumberUtil {
 	 * @return 无符号bytes
 	 * @since 4.5.0
 	 */
-	public static byte[] toUnsignedByteArray(BigInteger value) {
-		byte[] bytes = value.toByteArray();
+	public static byte[] toUnsignedByteArray(final BigInteger value) {
+		final byte[] bytes = value.toByteArray();
 
 		if (bytes[0] == 0) {
-			byte[] tmp = new byte[bytes.length - 1];
+			final byte[] tmp = new byte[bytes.length - 1];
 			System.arraycopy(bytes, 1, tmp, 0, tmp.length);
 
 			return tmp;
@@ -2605,20 +2605,20 @@ public class NumberUtil {
 	 * @return 无符号bytes
 	 * @since 4.5.0
 	 */
-	public static byte[] toUnsignedByteArray(int length, BigInteger value) {
-		byte[] bytes = value.toByteArray();
+	public static byte[] toUnsignedByteArray(final int length, final BigInteger value) {
+		final byte[] bytes = value.toByteArray();
 		if (bytes.length == length) {
 			return bytes;
 		}
 
-		int start = bytes[0] == 0 ? 1 : 0;
-		int count = bytes.length - start;
+		final int start = bytes[0] == 0 ? 1 : 0;
+		final int count = bytes.length - start;
 
 		if (count > length) {
 			throw new IllegalArgumentException("standard length exceeded for value");
 		}
 
-		byte[] tmp = new byte[length];
+		final byte[] tmp = new byte[length];
 		System.arraycopy(bytes, start, tmp, tmp.length - count, count);
 		return tmp;
 	}
@@ -2630,7 +2630,7 @@ public class NumberUtil {
 	 * @return {@link BigInteger}
 	 * @since 4.5.0
 	 */
-	public static BigInteger fromUnsignedByteArray(byte[] buf) {
+	public static BigInteger fromUnsignedByteArray(final byte[] buf) {
 		return new BigInteger(1, buf);
 	}
 
@@ -2642,7 +2642,7 @@ public class NumberUtil {
 	 * @param length 长度
 	 * @return {@link BigInteger}
 	 */
-	public static BigInteger fromUnsignedByteArray(byte[] buf, int off, int length) {
+	public static BigInteger fromUnsignedByteArray(final byte[] buf, final int off, final int length) {
 		byte[] mag = buf;
 		if (off != 0 || length != buf.length) {
 			mag = new byte[length];
@@ -2660,7 +2660,7 @@ public class NumberUtil {
 	 * @return 检查结果，非数字类型和Null将返回true
 	 * @since 4.6.7
 	 */
-	public static boolean isValidNumber(Number number) {
+	public static boolean isValidNumber(final Number number) {
 		if (number instanceof Double) {
 			return (false == ((Double) number).isInfinite()) && (false == ((Double) number).isNaN());
 		} else if (number instanceof Float) {
@@ -2677,7 +2677,7 @@ public class NumberUtil {
 	 * @return 检查结果
 	 * @since 5.7.0
 	 */
-	public static boolean isValid(double number) {
+	public static boolean isValid(final double number) {
 		return false == (Double.isNaN(number) || Double.isInfinite(number));
 	}
 
@@ -2689,7 +2689,7 @@ public class NumberUtil {
 	 * @return 检查结果
 	 * @since 5.7.0
 	 */
-	public static boolean isValid(float number) {
+	public static boolean isValid(final float number) {
 		return false == (Float.isNaN(number) || Float.isInfinite(number));
 	}
 
@@ -2704,7 +2704,7 @@ public class NumberUtil {
 	 * @return 结果
 	 * @since 5.7.6
 	 */
-	public static double calculate(String expression) {
+	public static double calculate(final String expression) {
 		return Calculator.conversion(expression);
 	}
 
@@ -2716,7 +2716,7 @@ public class NumberUtil {
 	 * @return double值
 	 * @since 5.7.8
 	 */
-	public static double toDouble(Number value) {
+	public static double toDouble(final Number value) {
 		if (value instanceof Float) {
 			return Double.parseDouble(value.toString());
 		} else {
@@ -2732,7 +2732,7 @@ public class NumberUtil {
 	 * @author GuoZG
 	 * @since 5.7.17
 	 */
-	public static boolean isOdd(int num) {
+	public static boolean isOdd(final int num) {
 		return (num & 1) == 1;
 	}
 
@@ -2744,12 +2744,12 @@ public class NumberUtil {
 	 * @author GuoZG
 	 * @since 5.7.17
 	 */
-	public static boolean isEven(int num) {
+	public static boolean isEven(final int num) {
 		return false == isOdd(num);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
-	private static int mathSubNode(int selectNum, int minNum) {
+	private static int mathSubNode(final int selectNum, final int minNum) {
 		if (selectNum == minNum) {
 			return 1;
 		} else {
@@ -2757,7 +2757,7 @@ public class NumberUtil {
 		}
 	}
 
-	private static int mathNode(int selectNum) {
+	private static int mathNode(final int selectNum) {
 		if (selectNum == 0) {
 			return 1;
 		} else {

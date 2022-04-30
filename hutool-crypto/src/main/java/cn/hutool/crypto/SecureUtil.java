@@ -71,7 +71,7 @@ public class SecureUtil {
 	 * @param algorithm 算法，支持PBE算法
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm) {
+	public static SecretKey generateKey(final String algorithm) {
 		return KeyUtil.generateKey(algorithm);
 	}
 
@@ -83,7 +83,7 @@ public class SecureUtil {
 	 * @return {@link SecretKey}
 	 * @since 3.1.2
 	 */
-	public static SecretKey generateKey(String algorithm, int keySize) {
+	public static SecretKey generateKey(final String algorithm, final int keySize) {
 		return KeyUtil.generateKey(algorithm, keySize);
 	}
 
@@ -94,7 +94,7 @@ public class SecureUtil {
 	 * @param key       密钥，如果为{@code null} 自动生成随机密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm, byte[] key) {
+	public static SecretKey generateKey(final String algorithm, final byte[] key) {
 		return KeyUtil.generateKey(algorithm, key);
 	}
 
@@ -105,7 +105,7 @@ public class SecureUtil {
 	 * @param key       密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateDESKey(String algorithm, byte[] key) {
+	public static SecretKey generateDESKey(final String algorithm, final byte[] key) {
 		return KeyUtil.generateDESKey(algorithm, key);
 	}
 
@@ -116,7 +116,7 @@ public class SecureUtil {
 	 * @param key       密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generatePBEKey(String algorithm, char[] key) {
+	public static SecretKey generatePBEKey(final String algorithm, final char[] key) {
 		return KeyUtil.generatePBEKey(algorithm, key);
 	}
 
@@ -127,7 +127,7 @@ public class SecureUtil {
 	 * @param keySpec   {@link KeySpec}
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm, KeySpec keySpec) {
+	public static SecretKey generateKey(final String algorithm, final KeySpec keySpec) {
 		return KeyUtil.generateKey(algorithm, keySpec);
 	}
 
@@ -139,7 +139,7 @@ public class SecureUtil {
 	 * @param key       密钥
 	 * @return 私钥 {@link PrivateKey}
 	 */
-	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
+	public static PrivateKey generatePrivateKey(final String algorithm, final byte[] key) {
 		return KeyUtil.generatePrivateKey(algorithm, key);
 	}
 
@@ -152,7 +152,7 @@ public class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 * @since 3.1.1
 	 */
-	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
+	public static PrivateKey generatePrivateKey(final String algorithm, final KeySpec keySpec) {
 		return KeyUtil.generatePrivateKey(algorithm, keySpec);
 	}
 
@@ -164,7 +164,7 @@ public class SecureUtil {
 	 * @param password 密码
 	 * @return 私钥 {@link PrivateKey}
 	 */
-	public static PrivateKey generatePrivateKey(KeyStore keyStore, String alias, char[] password) {
+	public static PrivateKey generatePrivateKey(final KeyStore keyStore, final String alias, final char[] password) {
 		return KeyUtil.generatePrivateKey(keyStore, alias, password);
 	}
 
@@ -176,7 +176,7 @@ public class SecureUtil {
 	 * @param key       密钥
 	 * @return 公钥 {@link PublicKey}
 	 */
-	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
+	public static PublicKey generatePublicKey(final String algorithm, final byte[] key) {
 		return KeyUtil.generatePublicKey(algorithm, key);
 	}
 
@@ -189,7 +189,7 @@ public class SecureUtil {
 	 * @return 公钥 {@link PublicKey}
 	 * @since 3.1.1
 	 */
-	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
+	public static PublicKey generatePublicKey(final String algorithm, final KeySpec keySpec) {
 		return KeyUtil.generatePublicKey(algorithm, keySpec);
 	}
 
@@ -200,7 +200,7 @@ public class SecureUtil {
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm) {
+	public static KeyPair generateKeyPair(final String algorithm) {
 		return KeyUtil.generateKeyPair(algorithm);
 	}
 
@@ -212,7 +212,7 @@ public class SecureUtil {
 	 * @param keySize   密钥模（modulus ）长度
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize) {
+	public static KeyPair generateKeyPair(final String algorithm, final int keySize) {
 		return KeyUtil.generateKeyPair(algorithm, keySize);
 	}
 
@@ -225,7 +225,7 @@ public class SecureUtil {
 	 * @param seed      种子
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
+	public static KeyPair generateKeyPair(final String algorithm, final int keySize, final byte[] seed) {
 		return KeyUtil.generateKeyPair(algorithm, keySize, seed);
 	}
 
@@ -238,7 +238,7 @@ public class SecureUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params) {
+	public static KeyPair generateKeyPair(final String algorithm, final AlgorithmParameterSpec params) {
 		return KeyUtil.generateKeyPair(algorithm, params);
 	}
 
@@ -252,7 +252,7 @@ public class SecureUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, byte[] seed, AlgorithmParameterSpec params) {
+	public static KeyPair generateKeyPair(final String algorithm, final byte[] seed, final AlgorithmParameterSpec params) {
 		return KeyUtil.generateKeyPair(algorithm, seed, params);
 	}
 
@@ -263,7 +263,7 @@ public class SecureUtil {
 	 * @param algorithm XXXwithXXX算法
 	 * @return 算法
 	 */
-	public static String getAlgorithmAfterWith(String algorithm) {
+	public static String getAlgorithmAfterWith(final String algorithm) {
 		return KeyUtil.getAlgorithmAfterWith(algorithm);
 	}
 
@@ -275,7 +275,7 @@ public class SecureUtil {
 	 * @return 算法
 	 * @since 4.4.1
 	 */
-	public static String generateAlgorithm(AsymmetricAlgorithm asymmetricAlgorithm, DigestAlgorithm digestAlgorithm) {
+	public static String generateAlgorithm(final AsymmetricAlgorithm asymmetricAlgorithm, final DigestAlgorithm digestAlgorithm) {
 		final String digestPart = (null == digestAlgorithm) ? "NONE" : digestAlgorithm.name();
 		return StrUtil.format("{}with{}", digestPart, asymmetricAlgorithm.getValue());
 	}
@@ -287,10 +287,10 @@ public class SecureUtil {
 	 * @param digestAlgorithm     {@link DigestAlgorithm} 摘要算法
 	 * @return {@link Signature}
 	 */
-	public static Signature generateSignature(AsymmetricAlgorithm asymmetricAlgorithm, DigestAlgorithm digestAlgorithm) {
+	public static Signature generateSignature(final AsymmetricAlgorithm asymmetricAlgorithm, final DigestAlgorithm digestAlgorithm) {
 		try {
 			return Signature.getInstance(generateAlgorithm(asymmetricAlgorithm, digestAlgorithm));
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -304,7 +304,7 @@ public class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
+	public static KeyStore readJKSKeyStore(final InputStream in, final char[] password) {
 		return KeyUtil.readJKSKeyStore(in, password);
 	}
 
@@ -318,7 +318,7 @@ public class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readKeyStore(String type, InputStream in, char[] password) {
+	public static KeyStore readKeyStore(final String type, final InputStream in, final char[] password) {
 		return KeyUtil.readKeyStore(type, in, password);
 	}
 
@@ -333,7 +333,7 @@ public class SecureUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readX509Certificate(InputStream in, char[] password, String alias) {
+	public static Certificate readX509Certificate(final InputStream in, final char[] password, final String alias) {
 		return KeyUtil.readX509Certificate(in, password, alias);
 	}
 
@@ -346,7 +346,7 @@ public class SecureUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readX509Certificate(InputStream in) {
+	public static Certificate readX509Certificate(final InputStream in) {
 		return KeyUtil.readX509Certificate(in);
 	}
 
@@ -362,7 +362,7 @@ public class SecureUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readCertificate(String type, InputStream in, char[] password, String alias) {
+	public static Certificate readCertificate(final String type, final InputStream in, final char[] password, final String alias) {
 		return KeyUtil.readCertificate(type, in, password, alias);
 	}
 
@@ -375,7 +375,7 @@ public class SecureUtil {
 	 * @param in   {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @return {@link Certificate}
 	 */
-	public static Certificate readCertificate(String type, InputStream in) {
+	public static Certificate readCertificate(final String type, final InputStream in) {
 		return KeyUtil.readCertificate(type, in);
 	}
 
@@ -386,7 +386,7 @@ public class SecureUtil {
 	 * @param alias    别名
 	 * @return {@link Certificate}
 	 */
-	public static Certificate getCertificate(KeyStore keyStore, String alias) {
+	public static Certificate getCertificate(final KeyStore keyStore, final String alias) {
 		return KeyUtil.getCertificate(keyStore, alias);
 	}
 
@@ -419,7 +419,7 @@ public class SecureUtil {
 	 * @param key 密钥
 	 * @return {@link SymmetricCrypto}
 	 */
-	public static AES aes(byte[] key) {
+	public static AES aes(final byte[] key) {
 		return new AES(key);
 	}
 
@@ -450,7 +450,7 @@ public class SecureUtil {
 	 * @param key 密钥
 	 * @return {@link DES}
 	 */
-	public static DES des(byte[] key) {
+	public static DES des(final byte[] key) {
 		return new DES(key);
 	}
 
@@ -485,7 +485,7 @@ public class SecureUtil {
 	 * @return {@link DESede}
 	 * @since 3.3.0
 	 */
-	public static DESede desede(byte[] key) {
+	public static DESede desede(final byte[] key) {
 		return new DESede(key);
 	}
 
@@ -512,7 +512,7 @@ public class SecureUtil {
 	 * @param data 数据
 	 * @return MD5字符串
 	 */
-	public static String md5(String data) {
+	public static String md5(final String data) {
 		return new MD5().digestHex(data);
 	}
 
@@ -522,7 +522,7 @@ public class SecureUtil {
 	 * @param data 数据
 	 * @return MD5字符串
 	 */
-	public static String md5(InputStream data) {
+	public static String md5(final InputStream data) {
 		return new MD5().digestHex(data);
 	}
 
@@ -532,7 +532,7 @@ public class SecureUtil {
 	 * @param dataFile 被加密文件
 	 * @return MD5字符串
 	 */
-	public static String md5(File dataFile) {
+	public static String md5(final File dataFile) {
 		return new MD5().digestHex(dataFile);
 	}
 
@@ -554,7 +554,7 @@ public class SecureUtil {
 	 * @param data 数据
 	 * @return SHA1字符串
 	 */
-	public static String sha1(String data) {
+	public static String sha1(final String data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
@@ -564,7 +564,7 @@ public class SecureUtil {
 	 * @param data 数据
 	 * @return SHA1字符串
 	 */
-	public static String sha1(InputStream data) {
+	public static String sha1(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
@@ -574,7 +574,7 @@ public class SecureUtil {
 	 * @param dataFile 被加密文件
 	 * @return SHA1字符串
 	 */
-	public static String sha1(File dataFile) {
+	public static String sha1(final File dataFile) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(dataFile);
 	}
 
@@ -598,7 +598,7 @@ public class SecureUtil {
 	 * @return SHA256字符串
 	 * @since 4.3.2
 	 */
-	public static String sha256(String data) {
+	public static String sha256(final String data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
@@ -609,7 +609,7 @@ public class SecureUtil {
 	 * @return SHA1字符串
 	 * @since 4.3.2
 	 */
-	public static String sha256(InputStream data) {
+	public static String sha256(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
@@ -620,7 +620,7 @@ public class SecureUtil {
 	 * @return SHA256字符串
 	 * @since 4.3.2
 	 */
-	public static String sha256(File dataFile) {
+	public static String sha256(final File dataFile) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(dataFile);
 	}
 
@@ -632,7 +632,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, String key) {
+	public static HMac hmac(final HmacAlgorithm algorithm, final String key) {
 		return new HMac(algorithm, StrUtil.utf8Bytes(key));
 	}
 
@@ -644,7 +644,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, byte[] key) {
+	public static HMac hmac(final HmacAlgorithm algorithm, final byte[] key) {
 		return new HMac(algorithm, key);
 	}
 
@@ -656,7 +656,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key) {
+	public static HMac hmac(final HmacAlgorithm algorithm, final SecretKey key) {
 		return new HMac(algorithm, key);
 	}
 
@@ -670,7 +670,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmacMd5(String key) {
+	public static HMac hmacMd5(final String key) {
 		return hmacMd5(StrUtil.utf8Bytes(key));
 	}
 
@@ -683,7 +683,7 @@ public class SecureUtil {
 	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacMd5(byte[] key) {
+	public static HMac hmacMd5(final byte[] key) {
 		return new HMac(HmacAlgorithm.HmacMD5, key);
 	}
 
@@ -709,7 +709,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmacSha1(String key) {
+	public static HMac hmacSha1(final String key) {
 		return hmacSha1(StrUtil.utf8Bytes(key));
 	}
 
@@ -722,7 +722,7 @@ public class SecureUtil {
 	 * @param key 加密密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacSha1(byte[] key) {
+	public static HMac hmacSha1(final byte[] key) {
 		return new HMac(HmacAlgorithm.HmacSHA1, key);
 	}
 
@@ -748,7 +748,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 5.6.0
 	 */
-	public static HMac hmacSha256(String key) {
+	public static HMac hmacSha256(final String key) {
 		return hmacSha256(StrUtil.utf8Bytes(key));
 	}
 
@@ -762,7 +762,7 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 * @since 5.6.0
 	 */
-	public static HMac hmacSha256(byte[] key) {
+	public static HMac hmacSha256(final byte[] key) {
 		return new HMac(HmacAlgorithm.HmacSHA256, key);
 	}
 
@@ -802,7 +802,7 @@ public class SecureUtil {
 	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
-	public static RSA rsa(String privateKeyBase64, String publicKeyBase64) {
+	public static RSA rsa(final String privateKeyBase64, final String publicKeyBase64) {
 		return new RSA(privateKeyBase64, publicKeyBase64);
 	}
 
@@ -816,7 +816,7 @@ public class SecureUtil {
 	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
-	public static RSA rsa(byte[] privateKey, byte[] publicKey) {
+	public static RSA rsa(final byte[] privateKey, final byte[] publicKey) {
 		return new RSA(privateKey, publicKey);
 	}
 
@@ -828,7 +828,7 @@ public class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm) {
+	public static Sign sign(final SignAlgorithm algorithm) {
 		return SignUtil.sign(algorithm);
 	}
 
@@ -843,7 +843,7 @@ public class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
+	public static Sign sign(final SignAlgorithm algorithm, final String privateKeyBase64, final String publicKeyBase64) {
 		return SignUtil.sign(algorithm, privateKeyBase64, publicKeyBase64);
 	}
 
@@ -858,7 +858,7 @@ public class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
+	public static Sign sign(final SignAlgorithm algorithm, final byte[] privateKey, final byte[] publicKey) {
 		return SignUtil.sign(algorithm, privateKey, publicKey);
 	}
 
@@ -873,7 +873,7 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String... otherParams) {
+	public static String signParams(final SymmetricCrypto crypto, final Map<?, ?> params, final String... otherParams) {
 		return SignUtil.signParams(crypto, params, otherParams);
 	}
 
@@ -890,8 +890,8 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
-									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+	public static String signParams(final SymmetricCrypto crypto, final Map<?, ?> params, final String separator,
+									final String keyValueSeparator, final boolean isIgnoreNull, final String... otherParams) {
 		return SignUtil.signParams(crypto, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -905,7 +905,7 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParamsMd5(Map<?, ?> params, String... otherParams) {
+	public static String signParamsMd5(final Map<?, ?> params, final String... otherParams) {
 		return SignUtil.signParamsMd5(params, otherParams);
 	}
 
@@ -919,7 +919,7 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.8
 	 */
-	public static String signParamsSha1(Map<?, ?> params, String... otherParams) {
+	public static String signParamsSha1(final Map<?, ?> params, final String... otherParams) {
 		return SignUtil.signParamsSha1(params, otherParams);
 	}
 
@@ -933,7 +933,7 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParamsSha256(Map<?, ?> params, String... otherParams) {
+	public static String signParamsSha256(final Map<?, ?> params, final String... otherParams) {
 		return SignUtil.signParamsSha256(params, otherParams);
 	}
 
@@ -948,7 +948,7 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String... otherParams) {
+	public static String signParams(final DigestAlgorithm digestAlgorithm, final Map<?, ?> params, final String... otherParams) {
 		return SignUtil.signParams(digestAlgorithm, params, otherParams);
 	}
 
@@ -965,8 +965,8 @@ public class SecureUtil {
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
-									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+	public static String signParams(final DigestAlgorithm digestAlgorithm, final Map<?, ?> params, final String separator,
+									final String keyValueSeparator, final boolean isIgnoreNull, final String... otherParams) {
 		return SignUtil.signParams(digestAlgorithm, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
@@ -980,7 +980,7 @@ public class SecureUtil {
 	 * @param provider 算法提供者
 	 * @since 4.1.22
 	 */
-	public static void addProvider(Provider provider) {
+	public static void addProvider(final Provider provider) {
 		Security.insertProviderAt(provider, 0);
 	}
 
@@ -996,7 +996,7 @@ public class SecureUtil {
 	 * @return 密钥
 	 * @since 4.3.3
 	 */
-	public static byte[] decode(String key) {
+	public static byte[] decode(final String key) {
 		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
 	}
 
@@ -1007,13 +1007,13 @@ public class SecureUtil {
 	 * @return {@link Cipher}
 	 * @since 4.5.2
 	 */
-	public static Cipher createCipher(String algorithm) {
+	public static Cipher createCipher(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		Cipher cipher;
+		final Cipher cipher;
 		try {
 			cipher = (null == provider) ? Cipher.getInstance(algorithm) : Cipher.getInstance(algorithm, provider);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 
@@ -1027,13 +1027,13 @@ public class SecureUtil {
 	 * @return {@link MessageDigest}
 	 * @since 4.5.2
 	 */
-	public static MessageDigest createMessageDigest(String algorithm) {
+	public static MessageDigest createMessageDigest(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		MessageDigest messageDigest;
+		final MessageDigest messageDigest;
 		try {
 			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
@@ -1047,13 +1047,13 @@ public class SecureUtil {
 	 * @return {@link Mac}
 	 * @since 4.5.13
 	 */
-	public static Mac createMac(String algorithm) {
+	public static Mac createMac(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		Mac mac;
+		final Mac mac;
 		try {
 			mac = (null == provider) ? Mac.getInstance(algorithm) : Mac.getInstance(algorithm, provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
@@ -1067,13 +1067,13 @@ public class SecureUtil {
 	 * @return {@link Signature}
 	 * @since 5.7.0
 	 */
-	public static Signature createSignature(String algorithm) {
+	public static Signature createSignature(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		Signature signature;
+		final Signature signature;
 		try {
 			signature = (null == provider) ? Signature.getInstance(algorithm) : Signature.getInstance(algorithm, provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
@@ -1086,7 +1086,7 @@ public class SecureUtil {
 	 * @param key 密钥
 	 * @return {@link RC4}
 	 */
-	public static RC4 rc4(String key) {
+	public static RC4 rc4(final String key) {
 		return new RC4(key);
 	}
 
@@ -1107,7 +1107,7 @@ public class SecureUtil {
 	 * @return 盐，一般为16位
 	 * @since 5.6.0
 	 */
-	public static String pbkdf2(char[] password, byte[] salt) {
+	public static String pbkdf2(final char[] password, final byte[] salt) {
 		return new PBKDF2().encryptHex(password, salt);
 	}
 
@@ -1121,7 +1121,7 @@ public class SecureUtil {
 	 * @return {@link FPE}
 	 * @since 5.7.12
 	 */
-	public static FPE fpe(FPE.FPEMode mode, byte[] key, AlphabetMapper mapper, byte[] tweak) {
+	public static FPE fpe(final FPE.FPEMode mode, final byte[] key, final AlphabetMapper mapper, final byte[] tweak) {
 		return new FPE(mode, key, mapper, tweak);
 	}
 
@@ -1133,7 +1133,7 @@ public class SecureUtil {
 	 * @return {@link ZUC}
 	 * @since 5.7.12
 	 */
-	public static ZUC zuc128(byte[] key, byte[] iv) {
+	public static ZUC zuc128(final byte[] key, final byte[] iv) {
 		return new ZUC(ZUC.ZUCAlgorithm.ZUC_128, key, iv);
 	}
 
@@ -1145,7 +1145,7 @@ public class SecureUtil {
 	 * @return {@link ZUC}
 	 * @since 5.7.12
 	 */
-	public static ZUC zuc256(byte[] key, byte[] iv) {
+	public static ZUC zuc256(final byte[] key, final byte[] iv) {
 		return new ZUC(ZUC.ZUCAlgorithm.ZUC_256, key, iv);
 	}
 }

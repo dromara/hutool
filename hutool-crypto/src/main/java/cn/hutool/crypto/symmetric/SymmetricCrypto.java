@@ -60,7 +60,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 *
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
-	public SymmetricCrypto(SymmetricAlgorithm algorithm) {
+	public SymmetricCrypto(final SymmetricAlgorithm algorithm) {
 		this(algorithm, (byte[]) null);
 	}
 
@@ -69,7 +69,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 *
 	 * @param algorithm 算法，可以是"algorithm/mode/padding"或者"algorithm"
 	 */
-	public SymmetricCrypto(String algorithm) {
+	public SymmetricCrypto(final String algorithm) {
 		this(algorithm, (byte[]) null);
 	}
 
@@ -79,7 +79,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param algorithm 算法 {@link SymmetricAlgorithm}
 	 * @param key       自定义KEY
 	 */
-	public SymmetricCrypto(SymmetricAlgorithm algorithm, byte[] key) {
+	public SymmetricCrypto(final SymmetricAlgorithm algorithm, final byte[] key) {
 		this(algorithm.getValue(), key);
 	}
 
@@ -90,7 +90,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param key       自定义KEY
 	 * @since 3.1.2
 	 */
-	public SymmetricCrypto(SymmetricAlgorithm algorithm, SecretKey key) {
+	public SymmetricCrypto(final SymmetricAlgorithm algorithm, final SecretKey key) {
 		this(algorithm.getValue(), key);
 	}
 
@@ -100,7 +100,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param algorithm 算法
 	 * @param key       密钥
 	 */
-	public SymmetricCrypto(String algorithm, byte[] key) {
+	public SymmetricCrypto(final String algorithm, final byte[] key) {
 		this(algorithm, KeyUtil.generateKey(algorithm, key));
 	}
 
@@ -111,7 +111,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param key       密钥
 	 * @since 3.1.2
 	 */
-	public SymmetricCrypto(String algorithm, SecretKey key) {
+	public SymmetricCrypto(final String algorithm, final SecretKey key) {
 		this(algorithm, key, null);
 	}
 
@@ -123,7 +123,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param paramsSpec 算法参数，例如加盐等
 	 * @since 3.3.0
 	 */
-	public SymmetricCrypto(String algorithm, SecretKey key, AlgorithmParameterSpec paramsSpec) {
+	public SymmetricCrypto(final String algorithm, final SecretKey key, final AlgorithmParameterSpec paramsSpec) {
 		init(algorithm, key);
 		initParams(algorithm, paramsSpec);
 	}
@@ -137,7 +137,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param key       密钥，如果为{@code null}自动生成一个key
 	 * @return SymmetricCrypto的子对象，即子对象自身
 	 */
-	public SymmetricCrypto init(String algorithm, SecretKey key) {
+	public SymmetricCrypto init(String algorithm, final SecretKey key) {
 		Assert.notBlank(algorithm, "'algorithm' must be not blank !");
 		this.secretKey = key;
 
@@ -175,7 +175,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param params {@link AlgorithmParameterSpec}
 	 * @return 自身
 	 */
-	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
+	public SymmetricCrypto setParams(final AlgorithmParameterSpec params) {
 		this.cipherWrapper.setParams(params);
 		return this;
 	}
@@ -186,7 +186,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param iv {@link IvParameterSpec}偏移向量
 	 * @return 自身
 	 */
-	public SymmetricCrypto setIv(IvParameterSpec iv) {
+	public SymmetricCrypto setIv(final IvParameterSpec iv) {
 		return setParams(iv);
 	}
 
@@ -196,7 +196,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param iv 偏移向量，加盐
 	 * @return 自身
 	 */
-	public SymmetricCrypto setIv(byte[] iv) {
+	public SymmetricCrypto setIv(final byte[] iv) {
 		return setIv(new IvParameterSpec(iv));
 	}
 
@@ -207,7 +207,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public SymmetricCrypto setRandom(SecureRandom random){
+	public SymmetricCrypto setRandom(final SecureRandom random){
 		this.cipherWrapper.setRandom(random);
 		return this;
 	}
@@ -221,11 +221,11 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.12
 	 */
-	public SymmetricCrypto setMode(CipherMode mode){
+	public SymmetricCrypto setMode(final CipherMode mode){
 		lock.lock();
 		try {
 			initMode(mode.getValue());
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -241,12 +241,12 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return update之后的bytes
 	 * @since 5.6.8
 	 */
-	public byte[] update(byte[] data) {
+	public byte[] update(final byte[] data) {
 		final Cipher cipher = cipherWrapper.getCipher();
 		lock.lock();
 		try {
 			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -261,19 +261,19 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return update之后的hex数据
 	 * @since 5.6.8
 	 */
-	public String updateHex(byte[] data) {
+	public String updateHex(final byte[] data) {
 		return HexUtil.encodeHexStr(update(data));
 	}
 
 	// --------------------------------------------------------------------------------- Encrypt
 
 	@Override
-	public byte[] encrypt(byte[] data) {
+	public byte[] encrypt(final byte[] data) {
 		lock.lock();
 		try {
 			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
 			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -281,13 +281,13 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	}
 
 	@Override
-	public void encrypt(InputStream data, OutputStream out, boolean isClose) throws IORuntimeException {
+	public void encrypt(final InputStream data, final OutputStream out, final boolean isClose) throws IORuntimeException {
 		lock.lock();
 		CipherOutputStream cipherOutputStream = null;
 		try {
 			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
 			cipherOutputStream = new CipherOutputStream(out, cipher);
-			long length = IoUtil.copy(data, cipherOutputStream);
+			final long length = IoUtil.copy(data, cipherOutputStream);
 			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
 				if (blockSize > 0) {
@@ -300,9 +300,9 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 					}
 				}
 			}
-		} catch (IORuntimeException e) {
+		} catch (final IORuntimeException e) {
 			throw e;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -318,7 +318,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	// --------------------------------------------------------------------------------- Decrypt
 
 	@Override
-	public byte[] decrypt(byte[] bytes) {
+	public byte[] decrypt(final byte[] bytes) {
 		final int blockSize;
 		final byte[] decryptData;
 
@@ -327,7 +327,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
 			blockSize = cipher.getBlockSize();
 			decryptData = cipher.doFinal(bytes);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -337,7 +337,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	}
 
 	@Override
-	public void decrypt(InputStream data, OutputStream out, boolean isClose) throws IORuntimeException {
+	public void decrypt(final InputStream data, final OutputStream out, final boolean isClose) throws IORuntimeException {
 		lock.lock();
 		CipherInputStream cipherInputStream = null;
 		try {
@@ -351,11 +351,11 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 				}
 			}
 			IoUtil.copy(cipherInputStream, out);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} catch (IORuntimeException e) {
+		} catch (final IORuntimeException e) {
 			throw e;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -380,7 +380,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.11
 	 */
-	private SymmetricCrypto initParams(String algorithm, AlgorithmParameterSpec paramsSpec) {
+	private SymmetricCrypto initParams(final String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
 			byte[] iv = Opt.ofNullable(cipherWrapper)
 					.map(CipherWrapper::getCipher).map(Cipher::getIV).get();
@@ -411,7 +411,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @throws InvalidKeyException                无效key
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
-	private Cipher initMode(int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
+	private Cipher initMode(final int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
 		return this.cipherWrapper.initMode(mode, this.secretKey).getCipher();
 	}
 
@@ -429,7 +429,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 填充后的数据，如果isZeroPadding为false或长度刚好，返回原数据
 	 * @since 4.6.7
 	 */
-	private byte[] paddingDataWithZero(byte[] data, int blockSize) {
+	private byte[] paddingDataWithZero(final byte[] data, final int blockSize) {
 		if (this.isZeroPadding) {
 			final int length = data.length;
 			// 按照块拆分后的数据中多余的数据
@@ -453,7 +453,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 去除填充后的数据，如果isZeroPadding为false或长度刚好，返回原数据
 	 * @since 4.6.7
 	 */
-	private byte[] removePadding(byte[] data, int blockSize) {
+	private byte[] removePadding(final byte[] data, final int blockSize) {
 		if (this.isZeroPadding && blockSize > 0) {
 			final int length = data.length;
 			final int remainLength = length % blockSize;
@@ -477,7 +477,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @param blockSize 块大小
 	 * @throws IOException IO异常
 	 */
-	private static void copyForZeroPadding(CipherInputStream in, OutputStream out, int blockSize) throws IOException {
+	private static void copyForZeroPadding(final CipherInputStream in, final OutputStream out, final int blockSize) throws IOException {
 		int n = 1;
 		if (IoUtil.DEFAULT_BUFFER_SIZE > blockSize) {
 			n = Math.max(n, IoUtil.DEFAULT_BUFFER_SIZE / blockSize);

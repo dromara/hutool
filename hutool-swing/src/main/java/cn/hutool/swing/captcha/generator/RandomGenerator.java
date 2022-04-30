@@ -18,7 +18,7 @@ public class RandomGenerator extends AbstractGenerator {
 	 *
 	 * @param count 生成验证码长度
 	 */
-	public RandomGenerator(int count) {
+	public RandomGenerator(final int count) {
 		super(count);
 	}
 
@@ -28,7 +28,7 @@ public class RandomGenerator extends AbstractGenerator {
 	 * @param baseStr 基础字符集合，用于随机获取字符串的字符集合
 	 * @param length 生成验证码长度
 	 */
-	public RandomGenerator(String baseStr, int length) {
+	public RandomGenerator(final String baseStr, final int length) {
 		super(baseStr, length);
 	}
 
@@ -38,7 +38,7 @@ public class RandomGenerator extends AbstractGenerator {
 	}
 
 	@Override
-	public boolean verify(String code, String userInputCode) {
+	public boolean verify(final String code, final String userInputCode) {
 		if (StrUtil.isNotBlank(userInputCode)) {
 			return StrUtil.equalsIgnoreCase(code, userInputCode);
 		}

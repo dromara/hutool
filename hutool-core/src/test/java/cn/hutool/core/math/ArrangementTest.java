@@ -26,14 +26,14 @@ public class ArrangementTest {
 		result = Arrangement.count(4, 0);
 		Assert.assertEquals(1, result);
 
-		long resultAll = Arrangement.countAll(4);
+		final long resultAll = Arrangement.countAll(4);
 		Assert.assertEquals(64, resultAll);
 	}
 
 	@Test
 	public void selectTest() {
-		Arrangement arrangement = new Arrangement(new String[] { "1", "2", "3", "4" });
-		List<String[]> list = arrangement.select(2);
+		final Arrangement arrangement = new Arrangement(new String[] { "1", "2", "3", "4" });
+		final List<String[]> list = arrangement.select(2);
 		Assert.assertEquals(Arrangement.count(4, 2), list.size());
 		Assert.assertArrayEquals(new String[] {"1", "2"}, list.get(0));
 		Assert.assertArrayEquals(new String[] {"1", "3"}, list.get(1));
@@ -48,18 +48,18 @@ public class ArrangementTest {
 		Assert.assertArrayEquals(new String[] {"4", "2"}, list.get(10));
 		Assert.assertArrayEquals(new String[] {"4", "3"}, list.get(11));
 
-		List<String[]> selectAll = arrangement.selectAll();
+		final List<String[]> selectAll = arrangement.selectAll();
 		Assert.assertEquals(Arrangement.countAll(4), selectAll.size());
 
-		List<String[]> list2 = arrangement.select(0);
+		final List<String[]> list2 = arrangement.select(0);
 		Assert.assertEquals(1, list2.size());
 	}
 
 	@Test
 	@Ignore
 	public void selectTest2() {
-		List<String[]> list = MathUtil.arrangementSelect(new String[] { "1", "1", "3", "4" });
-		for (String[] strings : list) {
+		final List<String[]> list = MathUtil.arrangementSelect(new String[] { "1", "1", "3", "4" });
+		for (final String[] strings : list) {
 			Console.log(strings);
 		}
 	}

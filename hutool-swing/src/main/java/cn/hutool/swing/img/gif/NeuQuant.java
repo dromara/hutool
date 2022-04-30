@@ -89,7 +89,7 @@ public class NeuQuant {
 
 	/* Initialise network in range (0,0,0) to (255,255,255) and set parameters
 	   ----------------------------------------------------------------------- */
-	public NeuQuant(byte[] thepic, int len, int sample) {
+	public NeuQuant(final byte[] thepic, final int len, final int sample) {
 
 		int i;
 		int[] p;
@@ -109,13 +109,13 @@ public class NeuQuant {
 	}
 
 	public byte[] colorMap() {
-		byte[] map = new byte[3 * NETSIZE];
-		int[] index = new int[NETSIZE];
+		final byte[] map = new byte[3 * NETSIZE];
+		final int[] index = new int[NETSIZE];
 		for (int i = 0; i < NETSIZE; i++)
 			index[network[i][3]] = i;
 		int k = 0;
 		for (int i = 0; i < NETSIZE; i++) {
-			int j = index[i];
+			final int j = index[i];
 			map[k++] = (byte) (network[j][0]);
 			map[k++] = (byte) (network[j][1]);
 			map[k++] = (byte) (network[j][2]);
@@ -181,9 +181,15 @@ public class NeuQuant {
 	public void learn() {
 
 		int i, j, b, g, r;
-		int radius, rad, alpha, step, delta, samplepixels;
-		byte[] p;
-		int pix, lim;
+		int radius;
+		int rad;
+		int alpha;
+		int step;
+		int delta;
+		final int samplepixels;
+		final byte[] p;
+		int pix;
+		final int lim;
 
 		if (lengthcount < MINPICTUREBYTES)
 			samplefac = 1;
@@ -252,7 +258,7 @@ public class NeuQuant {
 
 	/* Search for BGR values 0..255 (after net is unbiased) and return colour index
 	   ---------------------------------------------------------------------------- */
-	public int map(int b, int g, int r) {
+	public int map(final int b, final int g, final int r) {
 
 		int i, j, dist, a, bestd;
 		int[] p;
@@ -338,7 +344,7 @@ public class NeuQuant {
 
 	/* Move adjacent neurons by precomputed alpha*(1-((i-j)^2/[r]^2)) in radpower[|i-j|]
 	   --------------------------------------------------------------------------------- */
-	protected void alterneigh(int rad, int i, int b, int g, int r) {
+	protected void alterneigh(final int rad, final int i, final int b, final int g, final int r) {
 
 		int j, k, lo, hi, a, m;
 		int[] p;
@@ -361,7 +367,7 @@ public class NeuQuant {
 					p[0] -= (a * (p[0] - b)) / ALPHARADBIAS;
 					p[1] -= (a * (p[1] - g)) / ALPHARADBIAS;
 					p[2] -= (a * (p[2] - r)) / ALPHARADBIAS;
-				} catch (Exception ignored) {
+				} catch (final Exception ignored) {
 				} // prevents 1.3 miscompilation
 			}
 			if (k > lo) {
@@ -370,7 +376,7 @@ public class NeuQuant {
 					p[0] -= (a * (p[0] - b)) / ALPHARADBIAS;
 					p[1] -= (a * (p[1] - g)) / ALPHARADBIAS;
 					p[2] -= (a * (p[2] - r)) / ALPHARADBIAS;
-				} catch (Exception ignored) {
+				} catch (final Exception ignored) {
 				}
 			}
 		}
@@ -378,10 +384,10 @@ public class NeuQuant {
 
 	/* Move neuron i towards biased (b,g,r) by factor alpha
 	   ---------------------------------------------------- */
-	protected void altersingle(int alpha, int i, int b, int g, int r) {
+	protected void altersingle(final int alpha, final int i, final int b, final int g, final int r) {
 
 		/* alter hit neuron */
-		int[] n = network[i];
+		final int[] n = network[i];
 		n[0] -= (alpha * (n[0] - b)) / INITALPHA;
 		n[1] -= (alpha * (n[1] - g)) / INITALPHA;
 		n[2] -= (alpha * (n[2] - r)) / INITALPHA;
@@ -389,7 +395,7 @@ public class NeuQuant {
 
 	/* Search for biased BGR values
 	   ---------------------------- */
-	protected int contest(int b, int g, int r) {
+	protected int contest(final int b, final int g, final int r) {
 
 		/* finds closest neuron (min dist) and updates freq */
 		/* finds best neuron (min dist-bias) and returns position */

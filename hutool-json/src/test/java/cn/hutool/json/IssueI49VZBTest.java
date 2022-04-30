@@ -30,13 +30,13 @@ public class IssueI49VZBTest {
 		 */
 		snapKey;
 
-		public static NBCloudKeyType find(String value) {
+		public static NBCloudKeyType find(final String value) {
 			return Stream.of(values()).filter(e -> e.getValue().equalsIgnoreCase(value)).findFirst()
 					.orElse(null);
 		}
 
 
-		public static NBCloudKeyType downFind(String keyType) {
+		public static NBCloudKeyType downFind(final String keyType) {
 			if (fingerPrint.name().equals(keyType.toLowerCase())) {
 				return NBCloudKeyType.fingerPrint;
 			} else {
@@ -63,7 +63,7 @@ public class IssueI49VZBTest {
 
 	@Test
 	public void toBeanTest(){
-		String str = "{type: \"password\"}";
+		final String str = "{type: \"password\"}";
 		final UPOpendoor upOpendoor = JSONUtil.toBean(str, UPOpendoor.class);
 		Assert.assertEquals(NBCloudKeyType.password, upOpendoor.getType());
 	}

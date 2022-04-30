@@ -37,7 +37,7 @@ public abstract class IoCopier<S, T> {
 	 * @param count      拷贝总数，-1表示无限制
 	 * @param progress   进度条
 	 */
-	public IoCopier(int bufferSize, long count, StreamProgress progress) {
+	public IoCopier(final int bufferSize, final long count, final StreamProgress progress) {
 		this.bufferSize = bufferSize > 0 ? bufferSize : IoUtil.DEFAULT_BUFFER_SIZE;
 		this.count = count <= 0 ? Long.MAX_VALUE : count;
 		this.progress = progress;
@@ -58,7 +58,7 @@ public abstract class IoCopier<S, T> {
 	 * @param count 目标长度
 	 * @return 缓存大小
 	 */
-	protected int bufferSize(long count) {
+	protected int bufferSize(final long count) {
 		return (int) Math.min(this.bufferSize, count);
 	}
 
@@ -69,7 +69,7 @@ public abstract class IoCopier<S, T> {
 	 * @return this
 	 * @since 5.7.18
 	 */
-	public IoCopier<S, T> setFlushEveryBuffer(boolean flushEveryBuffer){
+	public IoCopier<S, T> setFlushEveryBuffer(final boolean flushEveryBuffer){
 		this.flushEveryBuffer = flushEveryBuffer;
 		return this;
 	}

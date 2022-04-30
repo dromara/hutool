@@ -93,7 +93,7 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @param builder {@link StringBuilder}
 	 * @param b       byte
 	 */
-	public void appendHex(StringBuilder builder, byte b) {
+	public void appendHex(final StringBuilder builder, final byte b) {
 		//高位
 		builder.append(hexDigit(b >> 4));
 		//低位
@@ -120,7 +120,7 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @throws UtilException 当ch不是一个合法的十六进制字符时，抛出运行时异常
 	 */
 	private static int toDigit(final char ch, final int index) {
-		int digit = Character.digit(ch, 16);
+		final int digit = Character.digit(ch, 16);
 		if (digit < 0) {
 			throw new UtilException("Illegal hexadecimal character {} at index {}", ch, index);
 		}

@@ -24,7 +24,7 @@ public class GroupTimeInterval implements Serializable {
 	 *
 	 * @param isNano 是否使用纳秒计数，false则使用毫秒
 	 */
-	public GroupTimeInterval(boolean isNano) {
+	public GroupTimeInterval(final boolean isNano) {
 		this.isNano = isNano;
 		groupMap = new ConcurrentHashMap<>();
 	}
@@ -45,7 +45,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 开始计时并返回当前时间
 	 */
-	public long start(String id) {
+	public long start(final String id) {
 		final long time = getTime();
 		this.groupMap.put(id, time);
 		return time;
@@ -58,7 +58,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 重新计时并返回从开始到当前的持续时间
 	 */
-	public long intervalRestart(String id) {
+	public long intervalRestart(final String id) {
 		final long now = getTime();
 		return now - ObjUtil.defaultIfNull(this.groupMap.put(id, now), now);
 	}
@@ -73,7 +73,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
-	public long interval(String id) {
+	public long interval(final String id) {
 		final Long lastTime = this.groupMap.get(id);
 		if (null == lastTime) {
 			return 0;
@@ -88,7 +88,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param dateUnit 时间单位
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
-	public long interval(String id, DateUnit dateUnit) {
+	public long interval(final String id, final DateUnit dateUnit) {
 		final long intervalMs = isNano ? interval(id) / 1000000L : interval(id);
 		if (DateUnit.MS == dateUnit) {
 			return intervalMs;
@@ -102,7 +102,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
-	public long intervalMs(String id) {
+	public long intervalMs(final String id) {
 		return interval(id, DateUnit.MS);
 	}
 
@@ -112,7 +112,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔秒数，取绝对值
 	 */
-	public long intervalSecond(String id) {
+	public long intervalSecond(final String id) {
 		return interval(id, DateUnit.SECOND);
 	}
 
@@ -122,7 +122,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔分钟数，取绝对值
 	 */
-	public long intervalMinute(String id) {
+	public long intervalMinute(final String id) {
 		return interval(id, DateUnit.MINUTE);
 	}
 
@@ -132,7 +132,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔小时数，取绝对值
 	 */
-	public long intervalHour(String id) {
+	public long intervalHour(final String id) {
 		return interval(id, DateUnit.HOUR);
 	}
 
@@ -142,7 +142,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔天数，取绝对值
 	 */
-	public long intervalDay(String id) {
+	public long intervalDay(final String id) {
 		return interval(id, DateUnit.DAY);
 	}
 
@@ -152,7 +152,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔周数，取绝对值
 	 */
-	public long intervalWeek(String id) {
+	public long intervalWeek(final String id) {
 		return interval(id, DateUnit.WEEK);
 	}
 
@@ -162,7 +162,7 @@ public class GroupTimeInterval implements Serializable {
 	 * @param id 分组ID
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
-	public String intervalPretty(String id) {
+	public String intervalPretty(final String id) {
 		return DateUtil.formatBetween(intervalMs(id));
 	}
 

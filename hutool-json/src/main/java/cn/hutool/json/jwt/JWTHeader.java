@@ -42,7 +42,7 @@ public class JWTHeader extends Claims {
 	 * @param keyId kid
 	 * @return this
 	 */
-	public JWTHeader setKeyId(String keyId) {
+	public JWTHeader setKeyId(final String keyId) {
 		setClaim(KEY_ID, keyId);
 		return this;
 	}
@@ -53,7 +53,7 @@ public class JWTHeader extends Claims {
 	 * @param headerClaims 头信息
 	 * @return this
 	 */
-	public JWTHeader addHeaders(Map<String, ?> headerClaims) {
+	public JWTHeader addHeaders(final Map<String, ?> headerClaims) {
 		putAll(headerClaims);
 		return this;
 	}

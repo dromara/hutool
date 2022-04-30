@@ -10,23 +10,23 @@ import cn.hutool.core.text.StrUtil;
 public class CronException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public CronException(Throwable e) {
+	public CronException(final Throwable e) {
 		super(e.getMessage(), e);
 	}
 
-	public CronException(String message) {
+	public CronException(final String message) {
 		super(message);
 	}
 
-	public CronException(String messageTemplate, Object... params) {
+	public CronException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public CronException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public CronException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public CronException(Throwable throwable, String messageTemplate, Object... params) {
+	public CronException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

@@ -43,7 +43,7 @@ public class TimerTask {
 	 * @param task 任务
 	 * @param delayMs 延迟毫秒数（以当前时间为准）
 	 */
-	public TimerTask(Runnable task, long delayMs) {
+	public TimerTask(final Runnable task, final long delayMs) {
 		this.delayMs = System.currentTimeMillis() + delayMs;
 		this.task = task;
 	}

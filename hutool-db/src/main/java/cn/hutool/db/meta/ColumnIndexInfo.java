@@ -21,12 +21,12 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	 * @param rs 结果集，通过DatabaseMetaData#getIndexInfo获取
 	 * @return ColumnIndexInfo
 	 */
-	public static ColumnIndexInfo create(ResultSet rs) {
+	public static ColumnIndexInfo create(final ResultSet rs) {
 		try {
 			return new ColumnIndexInfo(
 					rs.getString("COLUMN_NAME"),
 					rs.getString("ASC_OR_DESC"));
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
 	}
@@ -46,7 +46,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	 * @param columnName 索引列名
 	 * @param ascOrDesc  正序或反序，null表示无顺序表示
 	 */
-	public ColumnIndexInfo(String columnName, String ascOrDesc) {
+	public ColumnIndexInfo(final String columnName, final String ascOrDesc) {
 		this.columnName = columnName;
 		this.ascOrDesc = ascOrDesc;
 	}
@@ -55,7 +55,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 		return columnName;
 	}
 
-	public void setColumnName(String columnName) {
+	public void setColumnName(final String columnName) {
 		this.columnName = columnName;
 	}
 
@@ -63,7 +63,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 		return ascOrDesc;
 	}
 
-	public void setAscOrDesc(String ascOrDesc) {
+	public void setAscOrDesc(final String ascOrDesc) {
 		this.ascOrDesc = ascOrDesc;
 	}
 

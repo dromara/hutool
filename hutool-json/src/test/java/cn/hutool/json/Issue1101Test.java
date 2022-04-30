@@ -17,7 +17,7 @@ public class Issue1101Test {
 
 	@Test
 	public void treeMapConvertTest(){
-		String json = "[{\"nodeName\":\"admin\",\"treeNodeId\":\"00010001_52c95b83-2083-4138-99fb-e6e21f0c1277\",\"sort\":0,\"type\":10,\"parentId\":\"00010001\",\"children\":[],\"id\":\"52c95b83-2083-4138-99fb-e6e21f0c1277\",\"status\":true},{\"nodeName\":\"test\",\"treeNodeId\":\"00010001_97054a82-f8ff-46a1-b76c-cbacf6d18045\",\"sort\":0,\"type\":10,\"parentId\":\"00010001\",\"children\":[],\"id\":\"97054a82-f8ff-46a1-b76c-cbacf6d18045\",\"status\":true}]";
+		final String json = "[{\"nodeName\":\"admin\",\"treeNodeId\":\"00010001_52c95b83-2083-4138-99fb-e6e21f0c1277\",\"sort\":0,\"type\":10,\"parentId\":\"00010001\",\"children\":[],\"id\":\"52c95b83-2083-4138-99fb-e6e21f0c1277\",\"status\":true},{\"nodeName\":\"test\",\"treeNodeId\":\"00010001_97054a82-f8ff-46a1-b76c-cbacf6d18045\",\"sort\":0,\"type\":10,\"parentId\":\"00010001\",\"children\":[],\"id\":\"97054a82-f8ff-46a1-b76c-cbacf6d18045\",\"status\":true}]";
 		final JSONArray objects = JSONUtil.parseArray(json);
 		final TreeSet<TreeNodeDto> convert = Convert.convert(new TypeReference<TreeSet<TreeNodeDto>>() {
 		}, objects);
@@ -26,7 +26,7 @@ public class Issue1101Test {
 
 	@Test
 	public void test(){
-		String json = "{\n" +
+		final String json = "{\n" +
 				"\t\"children\": [{\n" +
 				"\t\t\"children\": [],\n" +
 				"\t\t\"id\": \"52c95b83-2083-4138-99fb-e6e21f0c1277\",\n" +
@@ -60,7 +60,7 @@ public class Issue1101Test {
 		final TreeNode treeNode = JSONUtil.toBean(jsonObject, TreeNode.class);
 		Assert.assertEquals(2, treeNode.getChildren().size());
 
-		TreeNodeDto dto = new TreeNodeDto();
+		final TreeNodeDto dto = new TreeNodeDto();
 		BeanUtil.copyProperties(treeNode, dto, true);
 		Assert.assertEquals(2, dto.getChildren().size());
 	}
@@ -89,7 +89,7 @@ public class Issue1101Test {
 		private TreeSet<TreeNode> children = new TreeSet<>();
 
 		@Override
-		public int compareTo(TreeNode o) {
+		public int compareTo(final TreeNode o) {
 			return id.compareTo(o.getId());
 		}
 	}

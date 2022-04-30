@@ -45,7 +45,7 @@ public class Table implements Serializable, Cloneable {
 	 */
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
-	public static Table create(String tableName) {
+	public static Table create(final String tableName) {
 		return new Table(tableName);
 	}
 
@@ -56,7 +56,7 @@ public class Table implements Serializable, Cloneable {
 	 *
 	 * @param tableName 表名
 	 */
-	public Table(String tableName) {
+	public Table(final String tableName) {
 		this.setTableName(tableName);
 	}
 	// ----------------------------------------------------- Constructor end
@@ -80,7 +80,7 @@ public class Table implements Serializable, Cloneable {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public Table setSchema(String schema) {
+	public Table setSchema(final String schema) {
 		this.schema = schema;
 		return this;
 	}
@@ -102,7 +102,7 @@ public class Table implements Serializable, Cloneable {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public Table setCatalog(String catalog) {
+	public Table setCatalog(final String catalog) {
 		this.catalog = catalog;
 		return this;
 	}
@@ -121,7 +121,7 @@ public class Table implements Serializable, Cloneable {
 	 *
 	 * @param tableName 表名
 	 */
-	public void setTableName(String tableName) {
+	public void setTableName(final String tableName) {
 		this.tableName = tableName;
 	}
 
@@ -140,7 +140,7 @@ public class Table implements Serializable, Cloneable {
 	 * @param comment 注释
 	 * @return this
 	 */
-	public Table setComment(String comment) {
+	public Table setComment(final String comment) {
 		this.comment = comment;
 		return this;
 	}
@@ -161,7 +161,7 @@ public class Table implements Serializable, Cloneable {
 	 * @return 是否为主键
 	 * @since 5.4.3
 	 */
-	public boolean isPk(String columnName) {
+	public boolean isPk(final String columnName) {
 		return getPkNames().contains(columnName);
 	}
 
@@ -170,7 +170,7 @@ public class Table implements Serializable, Cloneable {
 	 *
 	 * @param pkNames 主键列表
 	 */
-	public void setPkNames(Set<String> pkNames) {
+	public void setPkNames(final Set<String> pkNames) {
 		this.pkNames = pkNames;
 	}
 	// ----------------------------------------------------- Getters and Setters end
@@ -181,7 +181,7 @@ public class Table implements Serializable, Cloneable {
 	 * @param column 列对象
 	 * @return 自己
 	 */
-	public Table setColumn(Column column) {
+	public Table setColumn(final Column column) {
 		this.columns.put(column.getName(), column);
 		return this;
 	}
@@ -193,7 +193,7 @@ public class Table implements Serializable, Cloneable {
 	 * @return 列对象
 	 * @since 4.2.2
 	 */
-	public Column getColumn(String name) {
+	public Column getColumn(final String name) {
 		return this.columns.get(name);
 	}
 
@@ -213,7 +213,7 @@ public class Table implements Serializable, Cloneable {
 	 * @param pkColumnName 主键的列名
 	 * @return 自己
 	 */
-	public Table addPk(String pkColumnName) {
+	public Table addPk(final String pkColumnName) {
 		this.pkNames.add(pkColumnName);
 		return this;
 	}
@@ -234,7 +234,7 @@ public class Table implements Serializable, Cloneable {
 	 * @param indexInfoList 索引信息列表
 	 * @since 5.7.23
 	 */
-	public void setIndexInfoList(List<IndexInfo> indexInfoList) {
+	public void setIndexInfoList(final List<IndexInfo> indexInfoList) {
 		this.indexInfoList = indexInfoList;
 	}
 

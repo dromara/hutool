@@ -23,7 +23,7 @@ public class CacheConcurrentTest {
 	@Test
 	@Ignore
 	public void fifoCacheTest() {
-		int threadCount = 4000;
+		final int threadCount = 4000;
 		final Cache<String, String> cache = new FIFOCache<>(3);
 
 		// 由于缓存容量只有3，当加入第四个元素的时候，根据FIFO规则，最先放入的对象将被移除
@@ -54,7 +54,7 @@ public class CacheConcurrentTest {
 	@Test
 	@Ignore
 	public void lruCacheTest() {
-		int threadCount = 40000;
+		final int threadCount = 40000;
 		final Cache<String, String> cache = new LRUCache<>(1000);
 
 		for (int i = 0; i < threadCount; i++) {
@@ -80,9 +80,9 @@ public class CacheConcurrentTest {
 		ThreadUtil.sleep(5000);
 	}
 
-	private void show(Cache<String, String> cache) {
+	private void show(final Cache<String, String> cache) {
 
-		for (Object tt : cache) {
+		for (final Object tt : cache) {
 			Console.log(tt);
 		}
 	}
@@ -90,17 +90,17 @@ public class CacheConcurrentTest {
 	@Test
 	public void effectiveTest() {
 		// 模拟耗时操作消耗时间
-		int delay = 2000;
-		AtomicInteger ai = new AtomicInteger(0);
-		WeakCache<Integer, Integer> weakCache = new WeakCache<>(60 * 1000);
-		ConcurrencyTester concurrencyTester = ThreadUtil.concurrencyTest(32, () -> {
-			int i = ai.incrementAndGet() % 4;
+		final int delay = 2000;
+		final AtomicInteger ai = new AtomicInteger(0);
+		final WeakCache<Integer, Integer> weakCache = new WeakCache<>(60 * 1000);
+		final ConcurrencyTester concurrencyTester = ThreadUtil.concurrencyTest(32, () -> {
+			final int i = ai.incrementAndGet() % 4;
 			weakCache.get(i, () -> {
 				ThreadUtil.sleep(delay);
 				return i;
 			});
 		});
-		long interval = concurrencyTester.getInterval();
+		final long interval = concurrencyTester.getInterval();
 		// 总耗时应与单次操作耗时在同一个数量级
 		Assert.assertTrue(interval < delay * 2);
 	}

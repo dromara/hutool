@@ -4,7 +4,7 @@ import javax.crypto.Cipher;
 
 /**
  * 密钥类型
- * 
+ *
  * @author Looly
  *
  */
@@ -28,7 +28,7 @@ public enum KeyType {
 	 *
 	 * @param value 见{@link Cipher}
 	 */
-	KeyType(int value) {
+	KeyType(final int value) {
 		this.value = value;
 	}
 

@@ -39,7 +39,7 @@ public class CompareUtil {
 	 * @since 4.6.9
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static <T> int compare(T c1, T c2, Comparator<T> comparator) {
+	public static <T> int compare(final T c1, final T c2, final Comparator<T> comparator) {
 		if (null == comparator) {
 			return compare((Comparable) c1, (Comparable) c2);
 		}
@@ -55,7 +55,7 @@ public class CompareUtil {
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */
-	public static <T extends Comparable<? super T>> int compare(T c1, T c2) {
+	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2) {
 		return compare(c1, c2, false);
 	}
 
@@ -69,7 +69,7 @@ public class CompareUtil {
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */
-	public static <T extends Comparable<? super T>> int compare(T c1, T c2, boolean isNullGreater) {
+	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2, final boolean isNullGreater) {
 		if (c1 == c2) {
 			return 0;
 		} else if (c1 == null) {
@@ -97,7 +97,7 @@ public class CompareUtil {
 	 * @return 比较结果，如果o1 &lt; o2，返回数小于0，o1==o2返回0，o1 &gt; o2 大于0
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> int compare(T o1, T o2, boolean isNullGreater) {
+	public static <T> int compare(final T o1, final T o2, final boolean isNullGreater) {
 		if (o1 == o2) {
 			return 0;
 		} else if (null == o1) {// null 排在后面
@@ -131,7 +131,7 @@ public class CompareUtil {
 	 * @return 中文比较器
 	 * @since 5.4.3
 	 */
-	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor) {
+	public static <T> Comparator<T> comparingPinyin(final Function<T, String> keyExtractor) {
 		return comparingPinyin(keyExtractor, false);
 	}
 
@@ -144,9 +144,9 @@ public class CompareUtil {
 	 * @return 中文比较器
 	 * @since 5.4.3
 	 */
-	public static <T> Comparator<T> comparingPinyin(Function<T, String> keyExtractor, boolean reverse) {
+	public static <T> Comparator<T> comparingPinyin(final Function<T, String> keyExtractor, final boolean reverse) {
 		Objects.requireNonNull(keyExtractor);
-		PinyinComparator pinyinComparator = new PinyinComparator();
+		final PinyinComparator pinyinComparator = new PinyinComparator();
 		if (reverse) {
 			return (o1, o2) -> pinyinComparator.compare(keyExtractor.apply(o2), keyExtractor.apply(o1));
 		}
@@ -165,7 +165,7 @@ public class CompareUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T, U> Comparator<T> comparingIndexed(Function<? super T, ? extends U> keyExtractor, U... objs) {
+	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final U... objs) {
 		return comparingIndexed(keyExtractor, false, objs);
 	}
 
@@ -182,9 +182,9 @@ public class CompareUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T, U> Comparator<T> comparingIndexed(Function<? super T, ? extends U> keyExtractor, boolean atEndIfMiss, U... objs) {
+	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final boolean atEndIfMiss, final U... objs) {
 		Objects.requireNonNull(keyExtractor);
-		IndexedComparator<U> indexedComparator = new IndexedComparator<>(atEndIfMiss, objs);
+		final IndexedComparator<U> indexedComparator = new IndexedComparator<>(atEndIfMiss, objs);
 		return (o1, o2) -> indexedComparator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
 	}
 }

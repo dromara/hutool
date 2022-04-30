@@ -21,7 +21,7 @@ public class AnsjResult implements Result {
 	 *
 	 * @param ansjResult 分词结果
 	 */
-	public AnsjResult(org.ansj.domain.Result ansjResult) {
+	public AnsjResult(final org.ansj.domain.Result ansjResult) {
 		this.result = ansjResult.iterator();
 	}
 

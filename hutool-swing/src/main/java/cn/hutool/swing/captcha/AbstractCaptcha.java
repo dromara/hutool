@@ -74,7 +74,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param codeCount      字符个数
 	 * @param interfereCount 验证码干扰元素个数
 	 */
-	public AbstractCaptcha(int width, int height, int codeCount, int interfereCount) {
+	public AbstractCaptcha(final int width, final int height, final int codeCount, final int interfereCount) {
 		this(width, height, new RandomGenerator(codeCount), interfereCount);
 	}
 
@@ -86,7 +86,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param generator      验证码生成器
 	 * @param interfereCount 验证码干扰元素个数
 	 */
-	public AbstractCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
+	public AbstractCaptcha(final int width, final int height, final CodeGenerator generator, final int interfereCount) {
 		this.width = width;
 		this.height = height;
 		this.generator = generator;
@@ -130,7 +130,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	}
 
 	@Override
-	public boolean verify(String userInputCode) {
+	public boolean verify(final String userInputCode) {
 		return this.generator.verify(getCode(), userInputCode);
 	}
 
@@ -140,7 +140,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param path 文件路径
 	 * @throws IORuntimeException IO异常
 	 */
-	public void write(String path) throws IORuntimeException {
+	public void write(final String path) throws IORuntimeException {
 		this.write(FileUtil.touch(path));
 	}
 
@@ -150,16 +150,16 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param file 文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public void write(File file) throws IORuntimeException {
-		try (OutputStream out = FileUtil.getOutputStream(file)) {
+	public void write(final File file) throws IORuntimeException {
+		try (final OutputStream out = FileUtil.getOutputStream(file)) {
 			this.write(out);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	@Override
-	public void write(OutputStream out) {
+	public void write(final OutputStream out) {
 		IoUtil.write(out, false, getImageBytes());
 	}
 
@@ -210,7 +210,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 *
 	 * @param font 字体
 	 */
-	public void setFont(Font font) {
+	public void setFont(final Font font) {
 		this.font = font;
 	}
 
@@ -228,7 +228,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 *
 	 * @param generator 验证码生成器
 	 */
-	public void setGenerator(CodeGenerator generator) {
+	public void setGenerator(final CodeGenerator generator) {
 		this.generator = generator;
 	}
 
@@ -238,7 +238,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param background 背景色
 	 * @since 4.1.22
 	 */
-	public void setBackground(Color background) {
+	public void setBackground(final Color background) {
 		this.background = background;
 	}
 
@@ -248,7 +248,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param textAlpha 文字透明度，取值0~1，1表示不透明
 	 * @since 4.5.17
 	 */
-	public void setTextAlpha(float textAlpha) {
+	public void setTextAlpha(final float textAlpha) {
 		this.textAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, textAlpha);
 	}
 

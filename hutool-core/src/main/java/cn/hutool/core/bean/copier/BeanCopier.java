@@ -35,7 +35,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param copyOptions 拷贝属性选项
 	 * @return BeanCopier
 	 */
-	public static <T> BeanCopier<T> create(Object source, T target, CopyOptions copyOptions) {
+	public static <T> BeanCopier<T> create(final Object source, final T target, final CopyOptions copyOptions) {
 		return create(source, target, target.getClass(), copyOptions);
 	}
 
@@ -49,7 +49,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param copyOptions 拷贝属性选项
 	 * @return BeanCopier
 	 */
-	public static <T> BeanCopier<T> create(Object source, T target, Type destType, CopyOptions copyOptions) {
+	public static <T> BeanCopier<T> create(final Object source, final T target, final Type destType, final CopyOptions copyOptions) {
 		return new BeanCopier<>(source, target, destType, copyOptions);
 	}
 
@@ -62,8 +62,8 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	 * @param copyOptions 拷贝属性选项
 	 */
 	@SuppressWarnings("unchecked")
-	public BeanCopier(Object source, T target, Type targetType, CopyOptions copyOptions) {
-		Copier<T> copier;
+	public BeanCopier(final Object source, final T target, final Type targetType, final CopyOptions copyOptions) {
+		final Copier<T> copier;
 		if (source instanceof Map) {
 			if (target instanceof Map) {
 				copier = (Copier<T>) new MapToMapCopier((Map<?, ?>) source, (Map<?, ?>) target, targetType, copyOptions);

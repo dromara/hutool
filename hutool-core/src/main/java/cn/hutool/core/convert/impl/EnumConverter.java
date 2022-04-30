@@ -34,12 +34,12 @@ public class EnumConverter extends AbstractConverter<Object> {
 	 *
 	 * @param enumClass 转换成的目标Enum类
 	 */
-	public EnumConverter(Class enumClass) {
+	public EnumConverter(final Class enumClass) {
 		this.enumClass = enumClass;
 	}
 
 	@Override
-	protected Object convertInternal(Object value) {
+	protected Object convertInternal(final Object value) {
 		Enum enumValue = tryConvertEnum(value, this.enumClass);
 		if (null == enumValue && false == value instanceof String) {
 			// 最后尝试先将value转String，再valueOf转换
@@ -71,7 +71,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 	 * @param enumClass enum类
 	 * @return 对应的枚举值
 	 */
-	protected static Enum tryConvertEnum(Object value, Class enumClass) {
+	protected static Enum tryConvertEnum(final Object value, final Class enumClass) {
 		if (value == null) {
 			return null;
 		}
@@ -94,13 +94,13 @@ public class EnumConverter extends AbstractConverter<Object> {
 			final Map<Class<?>, Method> methodMap = getMethodMap(enumClass);
 			if (MapUtil.isNotEmpty(methodMap)) {
 				final Class<?> valueClass = value.getClass();
-				for (Map.Entry<Class<?>, Method> entry : methodMap.entrySet()) {
+				for (final Map.Entry<Class<?>, Method> entry : methodMap.entrySet()) {
 					if (ClassUtil.isAssignable(entry.getKey(), valueClass)) {
 						return ReflectUtil.invokeStatic(entry.getValue(), value);
 					}
 				}
 			}
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			//ignore
 		}
 
@@ -117,7 +117,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 		} else if (value instanceof String) {
 			try {
 				enumResult = Enum.valueOf(enumClass, (String) value);
-			} catch (IllegalArgumentException e) {
+			} catch (final IllegalArgumentException e) {
 				//ignore
 			}
 		}
@@ -131,7 +131,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 	 * @param enumClass 枚举类
 	 * @return 转换方法map，key为方法参数类型，value为方法
 	 */
-	private static Map<Class<?>, Method> getMethodMap(Class<?> enumClass) {
+	private static Map<Class<?>, Method> getMethodMap(final Class<?> enumClass) {
 		return VALUE_OF_METHOD_CACHE.computeIfAbsent(enumClass, (key) -> Arrays.stream(enumClass.getMethods())
 				.filter(ModifierUtil::isStatic)
 				.filter(m -> m.getReturnType() == enumClass)

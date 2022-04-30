@@ -22,7 +22,7 @@ public class FixedLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
 	 *
 	 * @param capacity 容量，实际初始容量比容量大1
 	 */
-	public FixedLinkedHashMap(int capacity) {
+	public FixedLinkedHashMap(final int capacity) {
 		super(capacity + 1, 1.0f, true);
 		this.capacity = capacity;
 	}
@@ -41,12 +41,12 @@ public class FixedLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
 	 *
 	 * @param capacity 容量
 	 */
-	public void setCapacity(int capacity) {
+	public void setCapacity(final int capacity) {
 		this.capacity = capacity;
 	}
 
 	@Override
-	protected boolean removeEldestEntry(java.util.Map.Entry<K, V> eldest) {
+	protected boolean removeEldestEntry(final java.util.Map.Entry<K, V> eldest) {
 		//当链表元素大于容量时，移除最老（最久未被使用）的元素
 		return size() > this.capacity;
 	}

@@ -23,7 +23,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @param clazz 日志发出的类
 	 * @return Log
 	 */
-	static Log get(Class<?> clazz) {
+	static Log get(final Class<?> clazz) {
 		return LogFactory.get(clazz);
 	}
 
@@ -34,7 +34,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @return Log
 	 * @since 5.0.0
 	 */
-	static Log get(String name) {
+	static Log get(final String name) {
 		return LogFactory.get(name);
 	}
 

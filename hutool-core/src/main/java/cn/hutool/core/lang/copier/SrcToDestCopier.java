@@ -38,7 +38,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public C setSrc(T src) {
+	public C setSrc(final T src) {
 		this.src = src;
 		return (C)this;
 	}
@@ -58,7 +58,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public C setDest(T dest) {
+	public C setDest(final T dest) {
 		this.dest = dest;
 		return (C)this;
 	}
@@ -77,7 +77,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public C setCopyPredicate(Predicate<T> copyPredicate) {
+	public C setCopyPredicate(final Predicate<T> copyPredicate) {
 		this.copyPredicate = copyPredicate;
 		return (C)this;
 	}

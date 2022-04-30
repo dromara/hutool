@@ -15,7 +15,7 @@ public class UUIDTest {
 	 */
 	@Test
 	public void fastUUIDTest(){
-		Set<String> set = new ConcurrentHashSet<>(100);
+		final Set<String> set = new ConcurrentHashSet<>(100);
 		ThreadUtil.concurrencyTest(100, ()-> set.add(UUID.fastUUID().toString()));
 		Assert.assertEquals(100, set.size());
 	}

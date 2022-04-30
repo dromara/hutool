@@ -42,7 +42,7 @@ public class HttpConnection {
 	 * @param proxy  代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection create(String urlStr, Proxy proxy) {
+	public static HttpConnection create(final String urlStr, final Proxy proxy) {
 		return create(URLUtil.toUrlForHttp(urlStr), proxy);
 	}
 
@@ -53,7 +53,7 @@ public class HttpConnection {
 	 * @param proxy 代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection create(URL url, Proxy proxy) {
+	public static HttpConnection create(final URL url, final Proxy proxy) {
 		return new HttpConnection(url, proxy);
 	}
 
@@ -65,7 +65,7 @@ public class HttpConnection {
 	 * @param url   URL
 	 * @param proxy 代理
 	 */
-	public HttpConnection(URL url, Proxy proxy) {
+	public HttpConnection(final URL url, final Proxy proxy) {
 		this.url = url;
 		this.proxy = proxy;
 
@@ -84,7 +84,7 @@ public class HttpConnection {
 	public HttpConnection initConn() {
 		try {
 			this.conn = openHttp();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
 
@@ -111,7 +111,7 @@ public class HttpConnection {
 	 * @param method 请求方法
 	 * @return 自己
 	 */
-	public HttpConnection setMethod(Method method) {
+	public HttpConnection setMethod(final Method method) {
 		if (Method.POST.equals(method) //
 				|| Method.PUT.equals(method)//
 				|| Method.PATCH.equals(method)//
@@ -127,7 +127,7 @@ public class HttpConnection {
 		// method
 		try {
 			this.conn.setRequestMethod(method.toString());
-		} catch (ProtocolException e) {
+		} catch (final ProtocolException e) {
 			throw new HttpException(e);
 		}
 
@@ -174,7 +174,7 @@ public class HttpConnection {
 	 * @param isOverride 是否覆盖旧值
 	 * @return HttpConnection
 	 */
-	public HttpConnection header(String header, String value, boolean isOverride) {
+	public HttpConnection header(final String header, final String value, final boolean isOverride) {
 		if (null != this.conn) {
 			if (isOverride) {
 				this.conn.setRequestProperty(header, value);
@@ -195,7 +195,7 @@ public class HttpConnection {
 	 * @param isOverride 是否覆盖旧值
 	 * @return HttpConnection
 	 */
-	public HttpConnection header(Header header, String value, boolean isOverride) {
+	public HttpConnection header(final Header header, final String value, final boolean isOverride) {
 		return header(header.toString(), value, isOverride);
 	}
 
@@ -207,12 +207,12 @@ public class HttpConnection {
 	 * @param isOverride 是否覆盖
 	 * @return this
 	 */
-	public HttpConnection header(Map<String, List<String>> headerMap, boolean isOverride) {
+	public HttpConnection header(final Map<String, List<String>> headerMap, final boolean isOverride) {
 		if (MapUtil.isNotEmpty(headerMap)) {
 			String name;
-			for (Entry<String, List<String>> entry : headerMap.entrySet()) {
+			for (final Entry<String, List<String>> entry : headerMap.entrySet()) {
 				name = entry.getKey();
-				for (String value : entry.getValue()) {
+				for (final String value : entry.getValue()) {
 					this.header(name, StrUtil.nullToEmpty(value), isOverride);
 				}
 			}
@@ -226,7 +226,7 @@ public class HttpConnection {
 	 * @param name Header名
 	 * @return Http请求头值
 	 */
-	public String header(String name) {
+	public String header(final String name) {
 		return this.conn.getHeaderField(name);
 	}
 
@@ -236,7 +236,7 @@ public class HttpConnection {
 	 * @param name Header名
 	 * @return Http请求头值
 	 */
-	public String header(Header name) {
+	public String header(final Header name) {
 		return header(name.toString());
 	}
 
@@ -260,7 +260,7 @@ public class HttpConnection {
 	 * @return this
 	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
 	 */
-	public HttpConnection setHttpsInfo(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws HttpException {
+	public HttpConnection setHttpsInfo(final HostnameVerifier hostnameVerifier, final SSLSocketFactory ssf) throws HttpException {
 		final HttpURLConnection conn = this.conn;
 
 		if (conn instanceof HttpsURLConnection) {
@@ -291,7 +291,7 @@ public class HttpConnection {
 	 * @param timeout 超时
 	 * @return this
 	 */
-	public HttpConnection setConnectTimeout(int timeout) {
+	public HttpConnection setConnectTimeout(final int timeout) {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setConnectTimeout(timeout);
 		}
@@ -305,7 +305,7 @@ public class HttpConnection {
 	 * @param timeout 超时
 	 * @return this
 	 */
-	public HttpConnection setReadTimeout(int timeout) {
+	public HttpConnection setReadTimeout(final int timeout) {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setReadTimeout(timeout);
 		}
@@ -319,7 +319,7 @@ public class HttpConnection {
 	 * @param timeout 超时时间
 	 * @return this
 	 */
-	public HttpConnection setConnectionAndReadTimeout(int timeout) {
+	public HttpConnection setConnectionAndReadTimeout(final int timeout) {
 		setConnectTimeout(timeout);
 		setReadTimeout(timeout);
 
@@ -332,7 +332,7 @@ public class HttpConnection {
 	 * @param cookie Cookie
 	 * @return this
 	 */
-	public HttpConnection setCookie(String cookie) {
+	public HttpConnection setCookie(final String cookie) {
 		if (cookie != null) {
 			header(Header.COOKIE, cookie, true);
 		}
@@ -346,7 +346,7 @@ public class HttpConnection {
 	 * @param blockSize 块大小（bytes数），0或小于0表示不设置Chuncked模式
 	 * @return this
 	 */
-	public HttpConnection setChunkedStreamingMode(int blockSize) {
+	public HttpConnection setChunkedStreamingMode(final int blockSize) {
 		if (blockSize > 0) {
 			conn.setChunkedStreamingMode(blockSize);
 		}
@@ -359,7 +359,7 @@ public class HttpConnection {
 	 * @param isInstanceFollowRedirects 是否自定跳转
 	 * @return this
 	 */
-	public HttpConnection setInstanceFollowRedirects(boolean isInstanceFollowRedirects) {
+	public HttpConnection setInstanceFollowRedirects(final boolean isInstanceFollowRedirects) {
 		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
 		return this;
 	}
@@ -386,7 +386,7 @@ public class HttpConnection {
 	public HttpConnection disconnectQuietly() {
 		try {
 			disconnect();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			// ignore
 		}
 
@@ -497,7 +497,7 @@ public class HttpConnection {
 		if (StrUtil.isNotBlank(charsetName)) {
 			try {
 				charset = Charset.forName(charsetName);
-			} catch (UnsupportedCharsetException e) {
+			} catch (final UnsupportedCharsetException e) {
 				// ignore
 			}
 		}
@@ -506,7 +506,7 @@ public class HttpConnection {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request URL: ").append(this.url).append(StrUtil.CRLF);
 		sb.append("Request Method: ").append(this.getMethod()).append(StrUtil.CRLF);
 		// sb.append("Request Headers: ").append(StrUtil.CRLF);

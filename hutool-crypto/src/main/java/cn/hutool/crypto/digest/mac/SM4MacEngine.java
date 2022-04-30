@@ -18,7 +18,7 @@ public class SM4MacEngine extends CBCBlockCipherMacEngine {
 	 *
 	 * @param params {@link CipherParameters}
 	 */
-	public SM4MacEngine(CipherParameters params) {
+	public SM4MacEngine(final CipherParameters params) {
 		super(new SM4Engine(), MAC_SIZE, params);
 	}
 }

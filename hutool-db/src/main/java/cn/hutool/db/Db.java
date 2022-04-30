@@ -39,7 +39,7 @@ public class Db extends AbstractDb {
 	 * @param group 数据源分组
 	 * @return Db
 	 */
-	public static Db use(String group) {
+	public static Db use(final String group) {
 		return use(DSFactory.get(group));
 	}
 
@@ -50,7 +50,7 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 * @return Db
 	 */
-	public static Db use(DataSource ds) {
+	public static Db use(final DataSource ds) {
 		return ds == null ? null : new Db(ds);
 	}
 
@@ -61,7 +61,7 @@ public class Db extends AbstractDb {
 	 * @param dialect 方言
 	 * @return Db
 	 */
-	public static Db use(DataSource ds, Dialect dialect) {
+	public static Db use(final DataSource ds, final Dialect dialect) {
 		return new Db(ds, dialect);
 	}
 
@@ -72,7 +72,7 @@ public class Db extends AbstractDb {
 	 * @param driverClassName 数据库连接驱动类名
 	 * @return Db
 	 */
-	public static Db use(DataSource ds, String driverClassName) {
+	public static Db use(final DataSource ds, final String driverClassName) {
 		return new Db(ds, DialectFactory.newDialect(driverClassName));
 	}
 
@@ -82,7 +82,7 @@ public class Db extends AbstractDb {
 	 *
 	 * @param ds 数据源
 	 */
-	public Db(DataSource ds) {
+	public Db(final DataSource ds) {
 		this(ds, DialectFactory.getDialect(ds));
 	}
 
@@ -92,7 +92,7 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
-	public Db(DataSource ds, String driverClassName) {
+	public Db(final DataSource ds, final String driverClassName) {
 		this(ds, DialectFactory.newDialect(driverClassName));
 	}
 
@@ -102,19 +102,19 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 * @param dialect 方言
 	 */
-	public Db(DataSource ds, Dialect dialect) {
+	public Db(final DataSource ds, final Dialect dialect) {
 		super(ds, dialect);
 	}
 	// ---------------------------------------------------------------------------- Constructor end
 
 	// ---------------------------------------------------------------------------- Getters and Setters start
 	@Override
-	public Db setWrapper(Character wrapperChar) {
+	public Db setWrapper(final Character wrapperChar) {
 		return (Db) super.setWrapper(wrapperChar);
 	}
 
 	@Override
-	public Db setWrapper(Wrapper wrapper) {
+	public Db setWrapper(final Wrapper wrapper) {
 		return (Db) super.setWrapper(wrapper);
 	}
 
@@ -130,13 +130,13 @@ public class Db extends AbstractDb {
 	}
 
 	@Override
-	public void closeConnection(Connection conn) {
+	public void closeConnection(final Connection conn) {
 		try {
 			if (conn != null && false == conn.getAutoCommit()) {
 				// 事务中的Session忽略关闭事件
 				return;
 			}
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// ignore
 		}
 
@@ -151,7 +151,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(VoidFunc1<Db> func) throws SQLException {
+	public Db tx(final VoidFunc1<Db> func) throws SQLException {
 		return tx(null, func);
 	}
 
@@ -164,7 +164,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(TransactionLevel transactionLevel, VoidFunc1<Db> func) throws SQLException {
+	public Db tx(final TransactionLevel transactionLevel, final VoidFunc1<Db> func) throws SQLException {
 		final Connection conn = getConnection();
 
 		// 检查是否支持事务
@@ -181,7 +181,7 @@ public class Db extends AbstractDb {
 		}
 
 		// 开始事务
-		boolean autoCommit = conn.getAutoCommit();
+		final boolean autoCommit = conn.getAutoCommit();
 		if (autoCommit) {
 			conn.setAutoCommit(false);
 		}
@@ -191,7 +191,7 @@ public class Db extends AbstractDb {
 			func.call(this);
 			// 提交
 			conn.commit();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			quietRollback(conn);
 			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
 		} finally {
@@ -210,11 +210,11 @@ public class Db extends AbstractDb {
 	 *
 	 * @param conn Connection
 	 */
-	private void quietRollback(Connection conn) {
+	private void quietRollback(final Connection conn) {
 		if (null != conn) {
 			try {
 				conn.rollback();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				StaticLog.error(e);
 			}
 		}
@@ -226,11 +226,11 @@ public class Db extends AbstractDb {
 	 * @param conn Connection
 	 * @param autoCommit 是否自动提交
 	 */
-	private void quietSetAutoCommit(Connection conn, Boolean autoCommit) {
+	private void quietSetAutoCommit(final Connection conn, final Boolean autoCommit) {
 		if (null != conn && null != autoCommit) {
 			try {
 				conn.setAutoCommit(autoCommit);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				StaticLog.error(e);
 			}
 		}

@@ -49,7 +49,7 @@ public class CronPatternNextMatchTest {
 
 	@Test
 	public void nextMatchAfterTest(){
-		CronPattern pattern = new CronPattern("23 12 * 12 * * *");
+		final CronPattern pattern = new CronPattern("23 12 * 12 * * *");
 
 		// 时间正常递增
 		//noinspection ConstantConditions
@@ -90,7 +90,7 @@ public class CronPatternNextMatchTest {
 
 	@Test
 	public void nextMatchAfterByWeekTest(){
-		CronPattern pattern = new CronPattern("1 1 1 * * Sat *");
+		final CronPattern pattern = new CronPattern("1 1 1 * * Sat *");
 		// 周日，下个周六在4月9日
 		final DateTime time = DateUtil.parse("2022-04-03");
 		assert time != null;

@@ -33,7 +33,7 @@ public class StreamExtractor implements Extractor{
 	 * @param charset      编码
 	 * @param file         包文件
 	 */
-	public StreamExtractor(Charset charset, File file) {
+	public StreamExtractor(final Charset charset, final File file) {
 		this(charset, null, file);
 	}
 
@@ -44,7 +44,7 @@ public class StreamExtractor implements Extractor{
 	 * @param archiverName 归档包格式，null表示自动检测
 	 * @param file         包文件
 	 */
-	public StreamExtractor(Charset charset, String archiverName, File file) {
+	public StreamExtractor(final Charset charset, final String archiverName, final File file) {
 		this(charset, archiverName, FileUtil.getInputStream(file));
 	}
 
@@ -54,7 +54,7 @@ public class StreamExtractor implements Extractor{
 	 * @param charset 编码
 	 * @param in      包流
 	 */
-	public StreamExtractor(Charset charset, InputStream in) {
+	public StreamExtractor(final Charset charset, final InputStream in) {
 		this(charset, null, in);
 	}
 
@@ -65,7 +65,7 @@ public class StreamExtractor implements Extractor{
 	 * @param archiverName 归档包格式，null表示自动检测
 	 * @param in           包流
 	 */
-	public StreamExtractor(Charset charset, String archiverName, InputStream in) {
+	public StreamExtractor(final Charset charset, final String archiverName, InputStream in) {
 		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
 		try {
 			in = IoUtil.toBuffered(in);
@@ -74,7 +74,7 @@ public class StreamExtractor implements Extractor{
 			} else {
 				this.in = factory.createArchiveInputStream(archiverName, in);
 			}
-		} catch (ArchiveException e) {
+		} catch (final ArchiveException e) {
 			throw new CompressException(e);
 		}
 	}
@@ -86,10 +86,10 @@ public class StreamExtractor implements Extractor{
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 */
 	@Override
-	public void extract(File targetDir, Filter<ArchiveEntry> filter) {
+	public void extract(final File targetDir, final Filter<ArchiveEntry> filter) {
 		try {
 			extractInternal(targetDir, filter);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			close();
@@ -103,7 +103,7 @@ public class StreamExtractor implements Extractor{
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(File targetDir, Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(final File targetDir, final Filter<ArchiveEntry> filter) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final ArchiveInputStream in = this.in;
 		ArchiveEntry entry;

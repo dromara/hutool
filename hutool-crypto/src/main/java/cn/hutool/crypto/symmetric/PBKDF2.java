@@ -34,7 +34,7 @@ public class PBKDF2 {
 	 * @param keyLength      生成密钥长度，默认512
 	 * @param iterationCount 迭代次数，默认1000
 	 */
-	public PBKDF2(String algorithm, int keyLength, int iterationCount) {
+	public PBKDF2(final String algorithm, final int keyLength, final int iterationCount) {
 		this.algorithm = algorithm;
 		this.keyLength = keyLength;
 		this.iterationCount = iterationCount;
@@ -47,7 +47,7 @@ public class PBKDF2 {
 	 * @param salt     盐
 	 * @return 加密后的密码
 	 */
-	public byte[] encrypt(char[] password, byte[] salt) {
+	public byte[] encrypt(final char[] password, final byte[] salt) {
 		final PBEKeySpec pbeKeySpec = new PBEKeySpec(password, salt, iterationCount, keyLength);
 		final SecretKey secretKey = KeyUtil.generateKey(algorithm, pbeKeySpec);
 		return secretKey.getEncoded();
@@ -60,7 +60,7 @@ public class PBKDF2 {
 	 * @param salt     盐
 	 * @return 加密后的密码
 	 */
-	public String encryptHex(char[] password, byte[] salt) {
+	public String encryptHex(final char[] password, final byte[] salt) {
 		return HexUtil.encodeHexStr(encrypt(password, salt));
 	}
 }

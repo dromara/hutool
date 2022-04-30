@@ -17,7 +17,7 @@ public class PathConverter extends AbstractConverter<Path>{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Path convertInternal(Object value) {
+	protected Path convertInternal(final Object value) {
 		try {
 			if(value instanceof URI){
 				return Paths.get((URI)value);
@@ -32,7 +32,7 @@ public class PathConverter extends AbstractConverter<Path>{
 			}
 
 			return Paths.get(convertToStr(value));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// Ignore Exception
 		}
 		return null;

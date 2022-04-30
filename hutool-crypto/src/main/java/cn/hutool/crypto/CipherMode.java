@@ -32,7 +32,7 @@ public enum CipherMode {
 	 *
 	 * @param value 见{@link Cipher}
 	 */
-	CipherMode(int value) {
+	CipherMode(final int value) {
 		this.value = value;
 	}
 

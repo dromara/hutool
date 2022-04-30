@@ -37,12 +37,12 @@ public class EntitySetHandler implements RsHandler<LinkedHashSet<Entity>>{
 	 *
 	 * @param caseInsensitive 是否大小写不敏感
 	 */
-	public EntitySetHandler(boolean caseInsensitive) {
+	public EntitySetHandler(final boolean caseInsensitive) {
 		this.caseInsensitive = caseInsensitive;
 	}
 
 	@Override
-	public LinkedHashSet<Entity> handle(ResultSet rs) throws SQLException {
+	public LinkedHashSet<Entity> handle(final ResultSet rs) throws SQLException {
 		return HandleHelper.handleRs(rs, new LinkedHashSet<>(), this.caseInsensitive);
 	}
 }

@@ -13,7 +13,7 @@ public class MultipartBodyTest {
 
 	@Test
 	public void buildTest(){
-		Map<String, Object> form = new HashMap<>();
+		final Map<String, Object> form = new HashMap<>();
 		form.put("pic1", "pic1 content");
 		form.put("pic2", new HttpResource(
 				new StringResource("pic2 content"), "text/plain"));

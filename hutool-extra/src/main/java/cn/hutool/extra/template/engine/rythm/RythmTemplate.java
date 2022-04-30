@@ -26,7 +26,7 @@ public class RythmTemplate extends AbstractTemplate implements Serializable {
 	 * @param template Rythm的模板对象 {@link org.rythmengine.template.ITemplate}
 	 * @return {@link RythmTemplate}
 	 */
-	public static RythmTemplate wrap(org.rythmengine.template.ITemplate template) {
+	public static RythmTemplate wrap(final org.rythmengine.template.ITemplate template) {
 		return (null == template) ? null : new RythmTemplate(template);
 	}
 
@@ -35,19 +35,19 @@ public class RythmTemplate extends AbstractTemplate implements Serializable {
 	 *
 	 * @param rawTemplate Velocity模板对象
 	 */
-	public RythmTemplate(org.rythmengine.template.ITemplate rawTemplate) {
+	public RythmTemplate(final org.rythmengine.template.ITemplate rawTemplate) {
 		this.rawTemplate = rawTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.__setRenderArgs(map);
 		rawTemplate.render(writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		rawTemplate.__setRenderArgs(bindingMap);
 		rawTemplate.render(out);
 	}

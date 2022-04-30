@@ -41,7 +41,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 	 *                        此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
 	 * @param setting         数据库连接配置，如果为{@code null}，则读取全局自定义或默认配置
 	 */
-	public AbstractDSFactory(String dataSourceName, Class<? extends DataSource> dataSourceClass, Setting setting) {
+	public AbstractDSFactory(final String dataSourceName, final Class<? extends DataSource> dataSourceClass, Setting setting) {
 		super(dataSourceName);
 		//此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
 		Assert.notNull(dataSourceClass);
@@ -140,7 +140,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 			group = StrUtil.EMPTY;
 		}
 
-		DataSourceWrapper ds = dsMap.get(group);
+		final DataSourceWrapper ds = dsMap.get(group);
 		if (ds != null) {
 			ds.close();
 			//noinspection resource
@@ -151,8 +151,8 @@ public abstract class AbstractDSFactory extends DSFactory {
 	@Override
 	public void destroy() {
 		if (MapUtil.isNotEmpty(dsMap)) {
-			Collection<DataSourceWrapper> values = dsMap.values();
-			for (DataSourceWrapper ds : values) {
+			final Collection<DataSourceWrapper> values = dsMap.values();
+			for (final DataSourceWrapper ds : values) {
 				ds.close();
 			}
 			dsMap.clear();
@@ -169,7 +169,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -179,7 +179,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AbstractDSFactory other = (AbstractDSFactory) obj;
+		final AbstractDSFactory other = (AbstractDSFactory) obj;
 		if (dataSourceName == null) {
 			if (other.dataSourceName != null) {
 				return false;

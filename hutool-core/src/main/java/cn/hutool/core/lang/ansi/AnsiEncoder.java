@@ -19,7 +19,7 @@ public abstract class AnsiEncoder {
 	 * @param elements 节点数组
 	 * @return ANSI字符串
 	 */
-	public static String encode(Object... elements) {
+	public static String encode(final Object... elements) {
 		final StringBuilder sb = new StringBuilder();
 		buildEnabled(sb, elements);
 		return sb.toString();
@@ -31,10 +31,10 @@ public abstract class AnsiEncoder {
 	 * @param sb       {@link StringBuilder}
 	 * @param elements 节点列表
 	 */
-	private static void buildEnabled(StringBuilder sb, Object[] elements) {
+	private static void buildEnabled(final StringBuilder sb, final Object[] elements) {
 		boolean writingAnsi = false;
 		boolean containsEncoding = false;
-		for (Object element : elements) {
+		for (final Object element : elements) {
 			if (null == element) {
 				continue;
 			}

@@ -19,7 +19,7 @@ public class ExcelDateUtil {
 	 */
 	private static final int[] customFormats = new int[]{28, 30, 31, 32, 33, 55, 56, 57, 58};
 
-	public static boolean isDateFormat(Cell cell){
+	public static boolean isDateFormat(final Cell cell){
 		return isDateFormat(cell, null);
 	}
 
@@ -29,7 +29,7 @@ public class ExcelDateUtil {
 	 * @param cfEvaluator {@link ConditionalFormattingEvaluator}
 	 * @return 是否日期格式
 	 */
-	public static boolean isDateFormat(Cell cell, ConditionalFormattingEvaluator cfEvaluator){
+	public static boolean isDateFormat(final Cell cell, final ConditionalFormattingEvaluator cfEvaluator){
 		final ExcelNumberFormat nf = ExcelNumberFormat.from(cell, cfEvaluator);
 		return isDateFormat(nf);
 	}
@@ -39,7 +39,7 @@ public class ExcelDateUtil {
 	 * @param numFmt {@link ExcelNumberFormat}
 	 * @return 是否日期格式
 	 */
-	public static boolean isDateFormat(ExcelNumberFormat numFmt) {
+	public static boolean isDateFormat(final ExcelNumberFormat numFmt) {
 		return isDateFormat(numFmt.getIdx(), numFmt.getFormat());
 	}
 
@@ -51,7 +51,7 @@ public class ExcelDateUtil {
 	 * @return 是否为日期格式
 	 * @since 5.5.3
 	 */
-	public static boolean isDateFormat(int formatIndex, String formatString) {
+	public static boolean isDateFormat(final int formatIndex, final String formatString) {
 		// issue#1283@Github
 		if (ArrayUtil.contains(customFormats, formatIndex)) {
 			return true;

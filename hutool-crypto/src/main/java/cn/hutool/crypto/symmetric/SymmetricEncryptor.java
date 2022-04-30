@@ -48,7 +48,7 @@ public interface SymmetricEncryptor {
 	 * @param data 数据
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(byte[] data) {
+	default String encryptHex(final byte[] data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
 
@@ -58,7 +58,7 @@ public interface SymmetricEncryptor {
 	 * @param data 数据
 	 * @return 加密后的Base64
 	 */
-	default String encryptBase64(byte[] data) {
+	default String encryptBase64(final byte[] data) {
 		return Base64.encode(encrypt(data));
 	}
 
@@ -69,7 +69,7 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的bytes
 	 */
-	default byte[] encrypt(String data, String charset) {
+	default byte[] encrypt(final String data, final String charset) {
 		return encrypt(StrUtil.bytes(data, charset));
 	}
 
@@ -80,7 +80,7 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的bytes
 	 */
-	default byte[] encrypt(String data, Charset charset) {
+	default byte[] encrypt(final String data, final Charset charset) {
 		return encrypt(StrUtil.bytes(data, charset));
 	}
 
@@ -91,7 +91,7 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(String data, String charset) {
+	default String encryptHex(final String data, final String charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
 	}
 
@@ -102,7 +102,7 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(String data, Charset charset) {
+	default String encryptHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
 	}
 
@@ -113,7 +113,7 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的Base64
 	 */
-	default String encryptBase64(String data, String charset) {
+	default String encryptBase64(final String data, final String charset) {
 		return Base64.encode(encrypt(data, charset));
 	}
 
@@ -125,7 +125,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的Base64
 	 * @since 4.5.12
 	 */
-	default String encryptBase64(String data, Charset charset) {
+	default String encryptBase64(final String data, final Charset charset) {
 		return Base64.encode(encrypt(data, charset));
 	}
 
@@ -135,7 +135,7 @@ public interface SymmetricEncryptor {
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
 	 */
-	default byte[] encrypt(String data) {
+	default byte[] encrypt(final String data) {
 		return encrypt(StrUtil.bytes(data, CharsetUtil.UTF_8));
 	}
 
@@ -145,7 +145,7 @@ public interface SymmetricEncryptor {
 	 * @param data 被加密的字符串
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(String data) {
+	default String encryptHex(final String data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
 
@@ -155,7 +155,7 @@ public interface SymmetricEncryptor {
 	 * @param data 被加密的字符串
 	 * @return 加密后的Base64
 	 */
-	default String encryptBase64(String data) {
+	default String encryptBase64(final String data) {
 		return Base64.encode(encrypt(data));
 	}
 
@@ -166,7 +166,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	default byte[] encrypt(InputStream data) throws IORuntimeException {
+	default byte[] encrypt(final InputStream data) throws IORuntimeException {
 		return encrypt(IoUtil.readBytes(data));
 	}
 
@@ -176,7 +176,7 @@ public interface SymmetricEncryptor {
 	 * @param data 被加密的字符串
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(InputStream data) {
+	default String encryptHex(final InputStream data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
 
@@ -186,7 +186,7 @@ public interface SymmetricEncryptor {
 	 * @param data 被加密的字符串
 	 * @return 加密后的Base64
 	 */
-	default String encryptBase64(InputStream data) {
+	default String encryptBase64(final InputStream data) {
 		return Base64.encode(encrypt(data));
 	}
 }

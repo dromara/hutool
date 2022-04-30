@@ -27,7 +27,7 @@ public class SftpTest {
 	@Test
 	@Ignore
 	public void lsTest() {
-		List<String> files = sshjSftp.ls("/");
+		final List<String> files = sshjSftp.ls("/");
 		if (files != null && !files.isEmpty()) {
 			files.forEach(System.out::print);
 		}
@@ -48,7 +48,7 @@ public class SftpTest {
 	@Test
 	@Ignore
 	public void mkDirTest() {
-		boolean flag = sshjSftp.mkdir("/home/test/temp");
+		final boolean flag = sshjSftp.mkdir("/home/test/temp");
 		System.out.println("是否创建成功: " + flag);
 	}
 

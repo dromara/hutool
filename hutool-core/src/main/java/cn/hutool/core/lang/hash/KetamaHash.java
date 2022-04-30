@@ -15,8 +15,8 @@ import java.security.NoSuchAlgorithmException;
 public class KetamaHash implements Hash64<String>, Hash32<String> {
 
 	@Override
-	public long hash64(String key) {
-		byte[] bKey = md5(key);
+	public long hash64(final String key) {
+		final byte[] bKey = md5(key);
 		return ((long) (bKey[3] & 0xFF) << 24)
 				| ((long) (bKey[2] & 0xFF) << 16)
 				| ((long) (bKey[1] & 0xFF) << 8)
@@ -24,12 +24,12 @@ public class KetamaHash implements Hash64<String>, Hash32<String> {
 	}
 
 	@Override
-	public int hash32(String key) {
+	public int hash32(final String key) {
 		return (int) (hash64(key) & 0xffffffffL);
 	}
 
 	@Override
-	public Number hash(String key) {
+	public Number hash(final String key) {
 		return hash64(key);
 	}
 
@@ -39,11 +39,11 @@ public class KetamaHash implements Hash64<String>, Hash32<String> {
 	 * @param key 被计算的键
 	 * @return MD5值
 	 */
-	private static byte[] md5(String key) {
+	private static byte[] md5(final String key) {
 		final MessageDigest md5;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new UtilException("MD5 algorithm not suooport!", e);
 		}
 		return md5.digest(StrUtil.utf8Bytes(key));

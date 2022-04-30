@@ -138,9 +138,9 @@ public class BCrypt {
 	 * @return base64-encoded string
 	 * @throws IllegalArgumentException if the length is invalid
 	 */
-	private static String encode_base64(byte[] d, int len) throws IllegalArgumentException {
+	private static String encode_base64(final byte[] d, final int len) throws IllegalArgumentException {
 		int off = 0;
-		StringBuilder rs = new StringBuilder();
+		final StringBuilder rs = new StringBuilder();
 		int c1, c2;
 
 		if (len <= 0 || len > d.length)
@@ -176,7 +176,7 @@ public class BCrypt {
 	 * @param x the base64-encoded value
 	 * @return the decoded value of x
 	 */
-	private static byte char64(char x) {
+	private static byte char64(final char x) {
 		if ((int) x > index_64.length)
 			return -1;
 		return index_64[x];
@@ -192,10 +192,12 @@ public class BCrypt {
 	 * @throws IllegalArgumentException if maxolen is invalid
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private static byte[] decodeBase64(String s, int maxolen) throws IllegalArgumentException {
+	private static byte[] decodeBase64(final String s, final int maxolen) throws IllegalArgumentException {
 		final StringBuilder rs = new StringBuilder();
-		int off = 0, slen = s.length(), olen = 0;
-		byte[] ret;
+		int off = 0;
+		final int slen = s.length();
+		int olen = 0;
+		final byte[] ret;
 		byte c1, c2, c3, c4, o;
 
 		if (maxolen <= 0)
@@ -238,7 +240,7 @@ public class BCrypt {
 	 * @param lr  an array containing the two 32-bit half blocks
 	 * @param off the position in the array of the blocks
 	 */
-	private void encipher(int[] lr, int off) {
+	private void encipher(final int[] lr, final int off) {
 		int i, n, l = lr[off], r = lr[off + 1];
 
 		l ^= P[0];
@@ -268,7 +270,7 @@ public class BCrypt {
 	 * @param offp a "pointer" (as a one-entry array) to the current offset into data
 	 * @return the next word of material from data
 	 */
-	private static int streamToWord(byte[] data, int[] offp) {
+	private static int streamToWord(final byte[] data, final int[] offp) {
 		int i;
 		int word = 0;
 		int off = offp[0];
@@ -295,11 +297,12 @@ public class BCrypt {
 	 *
 	 * @param key an array containing the key
 	 */
-	private void key(byte[] key) {
+	private void key(final byte[] key) {
 		int i;
-		int[] koffp = {0};
-		int[] lr = {0, 0};
-		int plen = P.length, slen = S.length;
+		final int[] koffp = {0};
+		final int[] lr = {0, 0};
+		final int plen = P.length;
+		final int slen = S.length;
 
 		for (i = 0; i < plen; i++)
 			P[i] = P[i] ^ streamToWord(key, koffp);
@@ -323,12 +326,13 @@ public class BCrypt {
 	 * @param data salt information
 	 * @param key  password information
 	 */
-	private void ekskey(byte[] data, byte[] key) {
+	private void ekskey(final byte[] data, final byte[] key) {
 		int i;
-		int[] koffp = {0};
-		int[] doffp = {0};
-		int[] lr = {0, 0};
-		int plen = P.length, slen = S.length;
+		final int[] koffp = {0};
+		final int[] doffp = {0};
+		final int[] lr = {0, 0};
+		final int plen = P.length;
+		final int slen = S.length;
 
 		for (i = 0; i < plen; i++)
 			P[i] = P[i] ^ streamToWord(key, koffp);
@@ -359,10 +363,12 @@ public class BCrypt {
 	 * @param cdata      加密数据
 	 * @return 加密后的密文
 	 */
-	public byte[] crypt(byte[] password, byte[] salt, int log_rounds, int[] cdata) {
-		int rounds, i, j;
-		int clen = cdata.length;
-		byte[] ret;
+	public byte[] crypt(final byte[] password, final byte[] salt, final int log_rounds, final int[] cdata) {
+		final int rounds;
+		int i;
+		int j;
+		final int clen = cdata.length;
+		final byte[] ret;
 
 		if (log_rounds < 4 || log_rounds > 30)
 			throw new IllegalArgumentException("Bad number of rounds");
@@ -398,7 +404,7 @@ public class BCrypt {
 	 * @param password 需要加密的明文
 	 * @return 密文
 	 */
-	public static String hashpw(String password) {
+	public static String hashpw(final String password) {
 		return hashpw(password, gensalt());
 	}
 
@@ -409,14 +415,15 @@ public class BCrypt {
 	 * @param salt     盐，使用{@link #gensalt()} 生成
 	 * @return 密文
 	 */
-	public static String hashpw(String password, String salt) {
-		BCrypt bcrypt;
-		String real_salt;
-		byte[] saltb;
-		byte[] hashed;
+	public static String hashpw(final String password, final String salt) {
+		final BCrypt bcrypt;
+		final String real_salt;
+		final byte[] saltb;
+		final byte[] hashed;
 		char minor = (char) 0;
-		int rounds, off;
-		StringBuilder rs = new StringBuilder();
+		final int rounds;
+		final int off;
+		final StringBuilder rs = new StringBuilder();
 
 		if (salt.charAt(0) != '$' || salt.charAt(1) != '2')
 			throw new IllegalArgumentException("Invalid salt version");
@@ -437,7 +444,7 @@ public class BCrypt {
 		rounds = Integer.parseInt(salt.substring(off, off + 2));
 
 		real_salt = salt.substring(off + 3, off + 25);
-		byte[] passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes(CharsetUtil.UTF_8);
+		final byte[] passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes(CharsetUtil.UTF_8);
 		saltb = decodeBase64(real_salt, BCRYPT_SALT_LEN);
 
 		bcrypt = new BCrypt();
@@ -466,9 +473,9 @@ public class BCrypt {
 	 * @param random     {@link SecureRandom}
 	 * @return an encoded salt value
 	 */
-	public static String gensalt(int log_rounds, SecureRandom random) {
+	public static String gensalt(final int log_rounds, final SecureRandom random) {
 		final StringBuilder rs = new StringBuilder();
-		byte[] rnd = new byte[BCRYPT_SALT_LEN];
+		final byte[] rnd = new byte[BCRYPT_SALT_LEN];
 
 		random.nextBytes(rnd);
 
@@ -490,7 +497,7 @@ public class BCrypt {
 	 * @param log_rounds the log2 of the number of rounds of hashing to apply - the work factor therefore increases as 2**log_rounds.
 	 * @return 盐
 	 */
-	public static String gensalt(int log_rounds) {
+	public static String gensalt(final int log_rounds) {
 		return gensalt(log_rounds, new SecureRandom());
 	}
 
@@ -510,14 +517,14 @@ public class BCrypt {
 	 * @param hashed    密文
 	 * @return 是否匹配
 	 */
-	public static boolean checkpw(String plaintext, String hashed) {
-		byte[] hashed_bytes;
-		byte[] try_bytes;
+	public static boolean checkpw(final String plaintext, final String hashed) {
+		final byte[] hashed_bytes;
+		final byte[] try_bytes;
 
-		String try_pw;
+		final String try_pw;
 		try{
 			try_pw = hashpw(plaintext, hashed);
-		} catch (Exception ignore){
+		} catch (final Exception ignore){
 			// 生成密文时错误直接返回false issue#1377@Github
 			return false;
 		}

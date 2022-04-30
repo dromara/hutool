@@ -41,7 +41,7 @@ public class ByteUtil {
 	 * @param intValue int值
 	 * @return byte值
 	 */
-	public static byte intToByte(int intValue) {
+	public static byte intToByte(final int intValue) {
 		return (byte) intValue;
 	}
 
@@ -52,7 +52,7 @@ public class ByteUtil {
 	 * @return 无符号int值
 	 * @since 3.2.0
 	 */
-	public static int byteToUnsignedInt(byte byteValue) {
+	public static int byteToUnsignedInt(final byte byteValue) {
 		// Java 总是把 byte 当做有符处理；我们可以通过将其和 0xFF 进行二进制与得到它的无符值
 		return byteValue & 0xFF;
 	}
@@ -64,7 +64,7 @@ public class ByteUtil {
 	 * @param bytes byte数组
 	 * @return short值
 	 */
-	public static short bytesToShort(byte[] bytes) {
+	public static short bytesToShort(final byte[] bytes) {
 		return bytesToShort(bytes, DEFAULT_ORDER);
 	}
 
@@ -76,7 +76,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return short值
 	 */
-	public static short bytesToShort(byte[] bytes, ByteOrder byteOrder) {
+	public static short bytesToShort(final byte[] bytes, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
 			return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
@@ -92,7 +92,7 @@ public class ByteUtil {
 	 * @param shortValue short值
 	 * @return byte数组
 	 */
-	public static byte[] shortToBytes(short shortValue) {
+	public static byte[] shortToBytes(final short shortValue) {
 		return shortToBytes(shortValue, DEFAULT_ORDER);
 	}
 
@@ -104,8 +104,8 @@ public class ByteUtil {
 	 * @param byteOrder  端序
 	 * @return byte数组
 	 */
-	public static byte[] shortToBytes(short shortValue, ByteOrder byteOrder) {
-		byte[] b = new byte[Short.BYTES];
+	public static byte[] shortToBytes(final short shortValue, final ByteOrder byteOrder) {
+		final byte[] b = new byte[Short.BYTES];
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			b[0] = (byte) (shortValue & 0xff);
 			b[1] = (byte) ((shortValue >> Byte.SIZE) & 0xff);
@@ -123,7 +123,7 @@ public class ByteUtil {
 	 * @param bytes byte数组
 	 * @return int值
 	 */
-	public static int bytesToInt(byte[] bytes) {
+	public static int bytesToInt(final byte[] bytes) {
 		return bytesToInt(bytes, DEFAULT_ORDER);
 	}
 
@@ -135,7 +135,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return int值
 	 */
-	public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
+	public static int bytesToInt(final byte[] bytes, final ByteOrder byteOrder) {
 		return bytesToInt(bytes, 0, byteOrder);
 	}
 
@@ -149,7 +149,7 @@ public class ByteUtil {
 	 * @return int值
 	 * @since 5.7.21
 	 */
-	public static int bytesToInt(byte[] bytes, int start, ByteOrder byteOrder) {
+	public static int bytesToInt(final byte[] bytes, final int start, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			return bytes[start] & 0xFF | //
 					(bytes[1 + start] & 0xFF) << 8 | //
@@ -171,7 +171,7 @@ public class ByteUtil {
 	 * @param intValue int值
 	 * @return byte数组
 	 */
-	public static byte[] intToBytes(int intValue) {
+	public static byte[] intToBytes(final int intValue) {
 		return intToBytes(intValue, DEFAULT_ORDER);
 	}
 
@@ -183,7 +183,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return byte数组
 	 */
-	public static byte[] intToBytes(int intValue, ByteOrder byteOrder) {
+	public static byte[] intToBytes(final int intValue, final ByteOrder byteOrder) {
 
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			return new byte[]{ //
@@ -212,7 +212,7 @@ public class ByteUtil {
 	 * @param longValue long值
 	 * @return byte数组
 	 */
-	public static byte[] longToBytes(long longValue) {
+	public static byte[] longToBytes(final long longValue) {
 		return longToBytes(longValue, DEFAULT_ORDER);
 	}
 
@@ -225,8 +225,8 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return byte数组
 	 */
-	public static byte[] longToBytes(long longValue, ByteOrder byteOrder) {
-		byte[] result = new byte[Long.BYTES];
+	public static byte[] longToBytes(long longValue, final ByteOrder byteOrder) {
+		final byte[] result = new byte[Long.BYTES];
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = 0; i < result.length; i++) {
 				result[i] = (byte) (longValue & 0xFF);
@@ -249,7 +249,7 @@ public class ByteUtil {
 	 * @param bytes byte数组
 	 * @return long值
 	 */
-	public static long bytesToLong(byte[] bytes) {
+	public static long bytesToLong(final byte[] bytes) {
 		return bytesToLong(bytes, DEFAULT_ORDER);
 	}
 
@@ -262,7 +262,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return long值
 	 */
-	public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
+	public static long bytesToLong(final byte[] bytes, final ByteOrder byteOrder) {
 		return bytesToLong(bytes, 0, byteOrder);
 	}
 
@@ -277,7 +277,7 @@ public class ByteUtil {
 	 * @return long值
 	 * @since 5.7.21
 	 */
-	public static long bytesToLong(byte[] bytes, int start, ByteOrder byteOrder) {
+	public static long bytesToLong(final byte[] bytes, final int start, final ByteOrder byteOrder) {
 		long values = 0;
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = (Long.BYTES - 1); i >= 0; i--) {
@@ -301,7 +301,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 * @since 5.7.18
 	 */
-	public static byte[] floatToBytes(float floatValue) {
+	public static byte[] floatToBytes(final float floatValue) {
 		return floatToBytes(floatValue, DEFAULT_ORDER);
 	}
 
@@ -313,7 +313,7 @@ public class ByteUtil {
 	 * @return byte数组
 	 * @since 5.7.18
 	 */
-	public static byte[] floatToBytes(float floatValue, ByteOrder byteOrder) {
+	public static byte[] floatToBytes(final float floatValue, final ByteOrder byteOrder) {
 		return intToBytes(Float.floatToIntBits(floatValue), byteOrder);
 	}
 
@@ -325,7 +325,7 @@ public class ByteUtil {
 	 * @return float值
 	 * @since 5.7.18
 	 */
-	public static double bytesToFloat(byte[] bytes) {
+	public static double bytesToFloat(final byte[] bytes) {
 		return bytesToFloat(bytes, DEFAULT_ORDER);
 	}
 
@@ -338,7 +338,7 @@ public class ByteUtil {
 	 * @return float值
 	 * @since 5.7.18
 	 */
-	public static float bytesToFloat(byte[] bytes, ByteOrder byteOrder) {
+	public static float bytesToFloat(final byte[] bytes, final ByteOrder byteOrder) {
 		return Float.intBitsToFloat(bytesToInt(bytes, byteOrder));
 	}
 
@@ -349,7 +349,7 @@ public class ByteUtil {
 	 * @param doubleValue double值
 	 * @return byte数组
 	 */
-	public static byte[] doubleToBytes(double doubleValue) {
+	public static byte[] doubleToBytes(final double doubleValue) {
 		return doubleToBytes(doubleValue, DEFAULT_ORDER);
 	}
 
@@ -362,7 +362,7 @@ public class ByteUtil {
 	 * @param byteOrder   端序
 	 * @return byte数组
 	 */
-	public static byte[] doubleToBytes(double doubleValue, ByteOrder byteOrder) {
+	public static byte[] doubleToBytes(final double doubleValue, final ByteOrder byteOrder) {
 		return longToBytes(Double.doubleToLongBits(doubleValue), byteOrder);
 	}
 
@@ -373,7 +373,7 @@ public class ByteUtil {
 	 * @param bytes byte数组
 	 * @return long值
 	 */
-	public static double bytesToDouble(byte[] bytes) {
+	public static double bytesToDouble(final byte[] bytes) {
 		return bytesToDouble(bytes, DEFAULT_ORDER);
 	}
 
@@ -385,7 +385,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return long值
 	 */
-	public static double bytesToDouble(byte[] bytes, ByteOrder byteOrder) {
+	public static double bytesToDouble(final byte[] bytes, final ByteOrder byteOrder) {
 		return Double.longBitsToDouble(bytesToLong(bytes, byteOrder));
 	}
 
@@ -395,7 +395,7 @@ public class ByteUtil {
 	 * @param number 数字
 	 * @return bytes
 	 */
-	public static byte[] numberToBytes(Number number) {
+	public static byte[] numberToBytes(final Number number) {
 		return numberToBytes(number, DEFAULT_ORDER);
 	}
 
@@ -406,7 +406,7 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return bytes
 	 */
-	public static byte[] numberToBytes(Number number, ByteOrder byteOrder) {
+	public static byte[] numberToBytes(final Number number, final ByteOrder byteOrder) {
 		if(number instanceof Byte){
 			return new byte[]{number.byteValue()};
 		}else if (number instanceof Double) {
@@ -435,8 +435,8 @@ public class ByteUtil {
 	 * @throws IllegalArgumentException 不支持的数字类型，如用户自定义数字类型
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Number> T bytesToNumber(byte[] bytes, Class<T> targetClass, ByteOrder byteOrder) throws IllegalArgumentException {
-		Number number;
+	public static <T extends Number> T bytesToNumber(final byte[] bytes, final Class<T> targetClass, final ByteOrder byteOrder) throws IllegalArgumentException {
+		final Number number;
 		if (Byte.class == targetClass) {
 			number = bytes[0];
 		} else if (Short.class == targetClass) {

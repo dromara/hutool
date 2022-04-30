@@ -31,13 +31,13 @@ public class JiebaEngine implements TokenizerEngine {
 	 *
 	 * @param mode 模式{@link SegMode}
 	 */
-	public JiebaEngine(SegMode mode) {
+	public JiebaEngine(final SegMode mode) {
 		this.jiebaSegmenter = new JiebaSegmenter();
 		this.mode = mode;
 	}
 
 	@Override
-	public Result parse(CharSequence text) {
+	public Result parse(final CharSequence text) {
 		return new JiebaResult(jiebaSegmenter.process(StrUtil.str(text), mode));
 	}
 

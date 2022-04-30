@@ -9,18 +9,18 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class ConsoleLogFactory extends LogFactory {
-	
+
 	public ConsoleLogFactory() {
 		super("Hutool Console Logging");
 	}
 
 	@Override
-	public Log createLog(String name) {
+	public Log createLog(final String name) {
 		return new ConsoleLog(name);
 	}
 
 	@Override
-	public Log createLog(Class<?> clazz) {
+	public Log createLog(final Class<?> clazz) {
 		return new ConsoleLog(clazz);
 	}
 

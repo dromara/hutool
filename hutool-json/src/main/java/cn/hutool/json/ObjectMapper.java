@@ -45,7 +45,7 @@ public class ObjectMapper {
 	 * @param source 来源对象
 	 * @return ObjectMapper
 	 */
-	public static ObjectMapper of(Object source) {
+	public static ObjectMapper of(final Object source) {
 		return new ObjectMapper(source);
 	}
 
@@ -56,7 +56,7 @@ public class ObjectMapper {
 	 *
 	 * @param source 来源对象
 	 */
-	public ObjectMapper(Object source) {
+	public ObjectMapper(final Object source) {
 		this.source = source;
 	}
 
@@ -67,7 +67,7 @@ public class ObjectMapper {
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void map(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
+	public void map(final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
 		final Object source = this.source;
 		if (null == source) {
 			return;
@@ -126,7 +126,7 @@ public class ObjectMapper {
 	 * @throws JSONException 非数组或集合
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void map(JSONArray jsonArray, Filter<Mutable<Object>> filter) throws JSONException {
+	public void map(final JSONArray jsonArray, final Filter<Mutable<Object>> filter) throws JSONException {
 		final Object source = this.source;
 		if (null == source) {
 			return;
@@ -148,7 +148,7 @@ public class ObjectMapper {
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {
-			Iterator<?> iter;
+			final Iterator<?> iter;
 			if (ArrayUtil.isArray(source)) {// 数组
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
@@ -179,10 +179,10 @@ public class ObjectMapper {
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 * @since 5.3.1
 	 */
-	private static void mapFromResourceBundle(ResourceBundle bundle, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
-		Enumeration<String> keys = bundle.getKeys();
+	private static void mapFromResourceBundle(final ResourceBundle bundle, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+		final Enumeration<String> keys = bundle.getKeys();
 		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
+			final String key = keys.nextElement();
 			if (key != null) {
 				InternalJSONUtil.propertyPut(jsonObject, key, bundle.getString(key), filter);
 			}
@@ -196,7 +196,7 @@ public class ObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
-	private static void mapFromStr(CharSequence source, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
+	private static void mapFromStr(final CharSequence source, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
@@ -213,7 +213,7 @@ public class ObjectMapper {
 	 * @param jsonArray {@link JSONArray}
 	 * @param filter    值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
 	 */
-	private void mapFromStr(CharSequence source, JSONArray jsonArray, Filter<Mutable<Object>> filter) {
+	private void mapFromStr(final CharSequence source, final JSONArray jsonArray, final Filter<Mutable<Object>> filter) {
 		if (null != source) {
 			mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonArray.getConfig()), jsonArray, filter);
 		}
@@ -226,7 +226,7 @@ public class ObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
 	 */
-	private static void mapFromTokener(JSONTokener x, JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
+	private static void mapFromTokener(final JSONTokener x, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
 		JSONParser.of(x).parseTo(jsonObject, filter);
 	}
 
@@ -237,7 +237,7 @@ public class ObjectMapper {
 	 * @param jsonArray {@link JSONArray}
 	 * @param filter    值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
 	 */
-	private static void mapFromTokener(JSONTokener x, JSONArray jsonArray, Filter<Mutable<Object>> filter) {
+	private static void mapFromTokener(final JSONTokener x, final JSONArray jsonArray, final Filter<Mutable<Object>> filter) {
 		JSONParser.of(x).parseTo(jsonArray, filter);
 	}
 
@@ -247,7 +247,7 @@ public class ObjectMapper {
 	 * @param bean       Bean对象
 	 * @param jsonObject {@link JSONObject}
 	 */
-	private static void mapFromBean(Object bean, JSONObject jsonObject) {
+	private static void mapFromBean(final Object bean, final JSONObject jsonObject) {
 		BeanUtil.beanToMap(bean, jsonObject, InternalJSONUtil.toCopyOptions(jsonObject.getConfig()));
 	}
 }

@@ -25,7 +25,7 @@ public class CharsetDetector {
 	private static final Charset[] DEFAULT_CHARSETS;
 
 	static {
-		String[] names = {
+		final String[] names = {
 				"UTF-8",
 				"GBK",
 				"GB2312",
@@ -47,7 +47,7 @@ public class CharsetDetector {
 	 * @return 编码
 	 * @since 5.6.7
 	 */
-	public static Charset detect(File file, Charset... charsets) {
+	public static Charset detect(final File file, final Charset... charsets) {
 		return detect(FileUtil.getInputStream(file), charsets);
 	}
 
@@ -59,7 +59,7 @@ public class CharsetDetector {
 	 * @param charsets 需要测试用的编码，null或空使用默认的编码数组
 	 * @return 编码
 	 */
-	public static Charset detect(InputStream in, Charset... charsets) {
+	public static Charset detect(final InputStream in, final Charset... charsets) {
 		return detect(IoUtil.DEFAULT_BUFFER_SIZE, in, charsets);
 	}
 
@@ -73,7 +73,7 @@ public class CharsetDetector {
 	 * @return 编码
 	 * @since 5.7.10
 	 */
-	public static Charset detect(int bufferSize, InputStream in, Charset... charsets) {
+	public static Charset detect(final int bufferSize, final InputStream in, Charset... charsets) {
 		if (ArrayUtil.isEmpty(charsets)) {
 			charsets = DEFAULT_CHARSETS;
 		}
@@ -81,14 +81,14 @@ public class CharsetDetector {
 		final byte[] buffer = new byte[bufferSize];
 		try {
 			while (in.read(buffer) > -1) {
-				for (Charset charset : charsets) {
+				for (final Charset charset : charsets) {
 					final CharsetDecoder decoder = charset.newDecoder();
 					if (identify(buffer, decoder)) {
 						return charset;
 					}
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -103,10 +103,10 @@ public class CharsetDetector {
 	 * @param decoder 解码器
 	 * @return 是否是指定编码
 	 */
-	private static boolean identify(byte[] bytes, CharsetDecoder decoder) {
+	private static boolean identify(final byte[] bytes, final CharsetDecoder decoder) {
 		try {
 			decoder.decode(ByteBuffer.wrap(bytes));
-		} catch (CharacterCodingException e) {
+		} catch (final CharacterCodingException e) {
 			return false;
 		}
 		return true;

@@ -92,7 +92,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
 	 * @return 拷贝选项
 	 */
-	public static CopyOptions create(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
+	public static CopyOptions create(final Class<?> editable, final boolean ignoreNullValue, final String... ignoreProperties) {
 		return new CopyOptions(editable, ignoreNullValue, ignoreProperties);
 	}
 	//endregion
@@ -110,7 +110,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreNullValue  是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 	 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 */
-	public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
+	public CopyOptions(final Class<?> editable, final boolean ignoreNullValue, final String... ignoreProperties) {
 		this.propertiesFilter = (f, v) -> true;
 		this.editable = editable;
 		this.ignoreNullValue = ignoreNullValue;
@@ -123,7 +123,7 @@ public class CopyOptions implements Serializable {
 	 * @param editable 限制的类或接口
 	 * @return CopyOptions
 	 */
-	public CopyOptions setEditable(Class<?> editable) {
+	public CopyOptions setEditable(final Class<?> editable) {
 		this.editable = editable;
 		return this;
 	}
@@ -134,7 +134,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreNullVall 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 	 * @return CopyOptions
 	 */
-	public CopyOptions setIgnoreNullValue(boolean ignoreNullVall) {
+	public CopyOptions setIgnoreNullValue(final boolean ignoreNullVall) {
 		this.ignoreNullValue = ignoreNullVall;
 		return this;
 	}
@@ -156,7 +156,7 @@ public class CopyOptions implements Serializable {
 	 * @param propertiesFilter 属性过滤器
 	 * @return CopyOptions
 	 */
-	public CopyOptions setPropertiesFilter(BiPredicate<Field, Object> propertiesFilter) {
+	public CopyOptions setPropertiesFilter(final BiPredicate<Field, Object> propertiesFilter) {
 		this.propertiesFilter = propertiesFilter;
 		return this;
 	}
@@ -167,7 +167,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 	 * @return CopyOptions
 	 */
-	public CopyOptions setIgnoreProperties(String... ignoreProperties) {
+	public CopyOptions setIgnoreProperties(final String... ignoreProperties) {
 		return setPropertiesFilter((field, o) -> false == ArrayUtil.contains(ignoreProperties, field.getName()));
 	}
 
@@ -181,7 +181,7 @@ public class CopyOptions implements Serializable {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public <P, R> CopyOptions setIgnoreProperties(Func1<P, R>... funcs) {
+	public <P, R> CopyOptions setIgnoreProperties(final Func1<P, R>... funcs) {
 		final Set<String> ignoreProperties = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
 		return setPropertiesFilter((field, o) -> false == ignoreProperties.contains(field.getName()));
 	}
@@ -192,7 +192,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreError 是否忽略注入错误
 	 * @return CopyOptions
 	 */
-	public CopyOptions setIgnoreError(boolean ignoreError) {
+	public CopyOptions setIgnoreError(final boolean ignoreError) {
 		this.ignoreError = ignoreError;
 		return this;
 	}
@@ -213,7 +213,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return CopyOptions
 	 */
-	public CopyOptions setIgnoreCase(boolean ignoreCase) {
+	public CopyOptions setIgnoreCase(final boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 		return this;
 	}
@@ -234,7 +234,7 @@ public class CopyOptions implements Serializable {
 	 * @param fieldMapping 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
 	 * @return CopyOptions
 	 */
-	public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
+	public CopyOptions setFieldMapping(final Map<String, String> fieldMapping) {
 		return setFieldNameEditor((key -> fieldMapping.getOrDefault(key, key)));
 	}
 
@@ -247,7 +247,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 * @since 5.4.2
 	 */
-	public CopyOptions setFieldNameEditor(Editor<String> fieldNameEditor) {
+	public CopyOptions setFieldNameEditor(final Editor<String> fieldNameEditor) {
 		this.fieldNameEditor = fieldNameEditor;
 		return this;
 	}
@@ -259,7 +259,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 * @since 5.7.15
 	 */
-	public CopyOptions setFieldValueEditor(BiFunction<String, Object, Object> fieldValueEditor) {
+	public CopyOptions setFieldValueEditor(final BiFunction<String, Object, Object> fieldValueEditor) {
 		this.fieldValueEditor = fieldValueEditor;
 		return this;
 	}
@@ -272,7 +272,7 @@ public class CopyOptions implements Serializable {
 	 * @return 编辑后的字段值
 	 * @since 5.7.15
 	 */
-	protected Object editFieldValue(String fieldName, Object fieldValue) {
+	protected Object editFieldValue(final String fieldName, final Object fieldValue) {
 		return (null != this.fieldValueEditor) ?
 				this.fieldValueEditor.apply(fieldName, fieldValue) : fieldValue;
 	}
@@ -284,7 +284,7 @@ public class CopyOptions implements Serializable {
 	 * @return this
 	 * @since 5.4.2
 	 */
-	public CopyOptions setTransientSupport(boolean transientSupport) {
+	public CopyOptions setTransientSupport(final boolean transientSupport) {
 		this.transientSupport = transientSupport;
 		return this;
 	}
@@ -296,7 +296,7 @@ public class CopyOptions implements Serializable {
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public CopyOptions setOverride(boolean override) {
+	public CopyOptions setOverride(final boolean override) {
 		this.override = override;
 		return this;
 	}
@@ -308,7 +308,7 @@ public class CopyOptions implements Serializable {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public CopyOptions setConverter(TypeConverter converter) {
+	public CopyOptions setConverter(final TypeConverter converter) {
 		this.converter = converter;
 		return this;
 	}
@@ -322,7 +322,7 @@ public class CopyOptions implements Serializable {
 	 * @return 编辑后的字段值
 	 * @since 5.8.0
 	 */
-	protected Object convertField(Type targetType, Object fieldValue) {
+	protected Object convertField(final Type targetType, final Object fieldValue) {
 		return (null != this.converter) ?
 				this.converter.convert(targetType, fieldValue) : fieldValue;
 	}
@@ -334,7 +334,7 @@ public class CopyOptions implements Serializable {
 	 * @return 编辑后的字段名
 	 * @since 5.4.2
 	 */
-	protected String editFieldName(String fieldName) {
+	protected String editFieldName(final String fieldName) {
 		return (null != this.fieldNameEditor) ? this.fieldNameEditor.edit(fieldName) : fieldName;
 	}
 
@@ -345,7 +345,7 @@ public class CopyOptions implements Serializable {
 	 * @param value 值
 	 * @return 是否保留
 	 */
-	protected boolean testPropertyFilter(Field field, Object value) {
+	protected boolean testPropertyFilter(final Field field, final Object value) {
 		return null == this.propertiesFilter || this.propertiesFilter.test(field, value);
 	}
 }

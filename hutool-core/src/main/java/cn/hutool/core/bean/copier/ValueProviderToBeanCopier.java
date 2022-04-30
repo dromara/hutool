@@ -29,7 +29,7 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 	 * @param targetType  目标泛型类型
 	 * @param copyOptions 拷贝选项
 	 */
-	public ValueProviderToBeanCopier(ValueProvider<String> source, T target, Type targetType, CopyOptions copyOptions) {
+	public ValueProviderToBeanCopier(final ValueProvider<String> source, final T target, final Type targetType, final CopyOptions copyOptions) {
 		super(source, target, copyOptions);
 		this.targetType = targetType;
 	}

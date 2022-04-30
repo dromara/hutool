@@ -25,7 +25,7 @@ public class TemporalUtil {
 	 * @param endTimeExclude   结束时间（不包含）
 	 * @return 时间差 {@link Duration}对象
 	 */
-	public static Duration between(Temporal startTimeInclude, Temporal endTimeExclude) {
+	public static Duration between(final Temporal startTimeInclude, final Temporal endTimeExclude) {
 		return Duration.between(startTimeInclude, endTimeExclude);
 	}
 
@@ -39,7 +39,7 @@ public class TemporalUtil {
 	 * @param unit             时间差单位
 	 * @return 时间差
 	 */
-	public static long between(Temporal startTimeInclude, Temporal endTimeExclude, ChronoUnit unit) {
+	public static long between(final Temporal startTimeInclude, final Temporal endTimeExclude, final ChronoUnit unit) {
 		return unit.between(startTimeInclude, endTimeExclude);
 	}
 
@@ -50,7 +50,7 @@ public class TemporalUtil {
 	 * @return {@link ChronoUnit}
 	 * @since 5.7.16
 	 */
-	public static ChronoUnit toChronoUnit(TimeUnit unit) throws IllegalArgumentException {
+	public static ChronoUnit toChronoUnit(final TimeUnit unit) throws IllegalArgumentException {
 		if (null == unit) {
 			return null;
 		}
@@ -82,7 +82,7 @@ public class TemporalUtil {
 	 * @throws IllegalArgumentException 如果{@link TimeUnit}没有对应单位抛出
 	 * @since 5.7.16
 	 */
-	public static TimeUnit toTimeUnit(ChronoUnit unit) throws IllegalArgumentException {
+	public static TimeUnit toTimeUnit(final ChronoUnit unit) throws IllegalArgumentException {
 		if (null == unit) {
 			return null;
 		}
@@ -116,7 +116,7 @@ public class TemporalUtil {
 	 * @return 偏移后的日期时间
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Temporal> T offset(T time, long number, TemporalUnit field) {
+	public static <T extends Temporal> T offset(final T time, final long number, final TemporalUnit field) {
 		if (null == time) {
 			return null;
 		}
@@ -135,7 +135,7 @@ public class TemporalUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Temporal> T offset(T temporal, DayOfWeek dayOfWeek, boolean isPrevious) {
+	public <T extends Temporal> T offset(final T temporal, final DayOfWeek dayOfWeek, final boolean isPrevious) {
 		return (T) temporal.with(isPrevious ? TemporalAdjusters.previous(dayOfWeek) : TemporalAdjusters.next(dayOfWeek));
 	}
 }

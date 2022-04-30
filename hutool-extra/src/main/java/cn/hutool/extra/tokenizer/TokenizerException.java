@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class TokenizerException extends RuntimeException {
 	private static final long serialVersionUID = 8074865854534335463L;
 
-	public TokenizerException(Throwable e) {
+	public TokenizerException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public TokenizerException(String message) {
+	public TokenizerException(final String message) {
 		super(message);
 	}
 
-	public TokenizerException(String messageTemplate, Object... params) {
+	public TokenizerException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public TokenizerException(String message, Throwable throwable) {
+	public TokenizerException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public TokenizerException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public TokenizerException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public TokenizerException(Throwable throwable, String messageTemplate, Object... params) {
+	public TokenizerException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

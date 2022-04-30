@@ -32,7 +32,7 @@ public class GlobalCookieManager {
 	 *
 	 * @param customCookieManager 自定义的{@link CookieManager}
 	 */
-	public static void setCookieManager(CookieManager customCookieManager) {
+	public static void setCookieManager(final CookieManager customCookieManager) {
 		cookieManager = customCookieManager;
 	}
 
@@ -52,7 +52,7 @@ public class GlobalCookieManager {
 	 * @return Cookie信息列表
 	 * @since 4.6.9
 	 */
-	public static List<HttpCookie> getCookies(HttpConnection conn){
+	public static List<HttpCookie> getCookies(final HttpConnection conn){
 		return cookieManager.getCookieStore().get(getURI(conn));
 	}
 
@@ -61,16 +61,16 @@ public class GlobalCookieManager {
 	 *
 	 * @param conn {@link HttpConnection}
 	 */
-	public static void add(HttpConnection conn) {
+	public static void add(final HttpConnection conn) {
 		if(null == cookieManager) {
 			// 全局Cookie管理器关闭
 			return;
 		}
 
-		Map<String, List<String>> cookieHeader;
+		final Map<String, List<String>> cookieHeader;
 		try {
 			cookieHeader = cookieManager.get(getURI(conn), new HashMap<>(0));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -84,7 +84,7 @@ public class GlobalCookieManager {
 	 *
 	 * @param conn {@link HttpConnection}
 	 */
-	public static void store(HttpConnection conn) {
+	public static void store(final HttpConnection conn) {
 		if(null == cookieManager) {
 			// 全局Cookie管理器关闭
 			return;
@@ -92,7 +92,7 @@ public class GlobalCookieManager {
 
 		try {
 			cookieManager.put(getURI(conn), conn.headers());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -102,7 +102,7 @@ public class GlobalCookieManager {
 	 * @param conn HttpConnection
 	 * @return URI
 	 */
-	private static URI getURI(HttpConnection conn){
+	private static URI getURI(final HttpConnection conn){
 		return URLUtil.toURI(conn.getUrl());
 	}
 }

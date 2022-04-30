@@ -15,7 +15,7 @@ public class UserInfoRedundCount implements Serializable {
 		return ownershipExamCount;
 	}
 
-	public void setOwnershipExamCount(Integer ownershipExamCount) {
+	public void setOwnershipExamCount(final Integer ownershipExamCount) {
 		this.ownershipExamCount = ownershipExamCount;
 	}
 
@@ -23,7 +23,7 @@ public class UserInfoRedundCount implements Serializable {
 		return answeredExamCount;
 	}
 
-	public void setAnsweredExamCount(Integer answeredExamCount) {
+	public void setAnsweredExamCount(final Integer answeredExamCount) {
 		this.answeredExamCount = answeredExamCount;
 	}
 
@@ -31,7 +31,7 @@ public class UserInfoRedundCount implements Serializable {
 		return finishedRatio;
 	}
 
-	public void setFinishedRatio(String finishedRatio) {
+	public void setFinishedRatio(final String finishedRatio) {
 		this.finishedRatio = finishedRatio;
 	}
 

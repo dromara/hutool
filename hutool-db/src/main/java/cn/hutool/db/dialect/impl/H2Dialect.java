@@ -31,13 +31,13 @@ public class H2Dialect extends AnsiSqlDialect {
 	}
 
 	@Override
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
+	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		// limit A , B 表示：A就是查询的起点位置，B就是你需要多少行。
 		return find.append(" limit ").append(page.getStartPosition()).append(" , ").append(page.getPageSize());
 	}
 
 	@Override
-	public PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
+	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for H2 MERGE SQL.");
 		SqlBuilder.validateEntity(entity);
 		final SqlBuilder builder = SqlBuilder.create(wrapper);

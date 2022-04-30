@@ -21,7 +21,7 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	 *
 	 * @param defaultValue 默认值
 	 */
-	public TolerantMap(V defaultValue) {
+	public TolerantMap(final V defaultValue) {
 		this(new HashMap<>(), defaultValue);
 	}
 
@@ -32,7 +32,7 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	 * @param loadFactor      增长因子
 	 * @param defaultValue    默认值
 	 */
-	public TolerantMap(int initialCapacity, float loadFactor, V defaultValue) {
+	public TolerantMap(final int initialCapacity, final float loadFactor, final V defaultValue) {
 		this(new HashMap<>(initialCapacity, loadFactor), defaultValue);
 	}
 
@@ -42,7 +42,7 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	 * @param initialCapacity 初始容量
 	 * @param defaultValue    默认值
 	 */
-	public TolerantMap(int initialCapacity, V defaultValue) {
+	public TolerantMap(final int initialCapacity, final V defaultValue) {
 		this(new HashMap<>(initialCapacity), defaultValue);
 	}
 
@@ -52,7 +52,7 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	 * @param map          Map实现
 	 * @param defaultValue 默认值
 	 */
-	public TolerantMap(Map<K, V> map, V defaultValue) {
+	public TolerantMap(final Map<K, V> map, final V defaultValue) {
 		super(map);
 		this.defaultValue = defaultValue;
 	}
@@ -66,17 +66,17 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 	 * @param <V>          值类型
 	 * @return TolerantMap
 	 */
-	public static <K, V> TolerantMap<K, V> of(Map<K, V> map, V defaultValue) {
+	public static <K, V> TolerantMap<K, V> of(final Map<K, V> map, final V defaultValue) {
 		return new TolerantMap<>(map, defaultValue);
 	}
 
 	@Override
-	public V get(Object key) {
+	public V get(final Object key) {
 		return getOrDefault(key, defaultValue);
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}

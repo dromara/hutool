@@ -14,7 +14,7 @@ public class CharacterConverter extends AbstractConverter<Character> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Character convertInternal(Object value) {
+	protected Character convertInternal(final Object value) {
 		if (value instanceof Boolean) {
 			return BooleanUtil.toCharacter((Boolean) value);
 		} else {

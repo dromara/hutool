@@ -92,7 +92,7 @@ public class LunarFestival {
 	 * @return 获得农历节日
 	 * @since 5.4.5
 	 */
-	public static List<String> getFestivals(int year, int month, int day) {
+	public static List<String> getFestivals(final int year, final int month, int day) {
 		// 春节判断，如果12月是小月，则29为除夕，否则30为除夕
 		if (12 == month && 29 == day) {
 			if (29 == LunarInfo.monthDays(year, month)) {
@@ -109,7 +109,7 @@ public class LunarFestival {
 	 * @param day   日
 	 * @return 获得农历节日
 	 */
-	public static List<String> getFestivals(int month, int day) {
+	public static List<String> getFestivals(final int month, final int day) {
 		return L_FTV.getValues(new Pair<>(month, day));
 	}
 }

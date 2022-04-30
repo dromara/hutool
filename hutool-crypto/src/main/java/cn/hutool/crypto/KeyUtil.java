@@ -104,7 +104,7 @@ public class KeyUtil {
 	 * @param algorithm 算法，支持PBE算法
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm) {
+	public static SecretKey generateKey(final String algorithm) {
 		return generateKey(algorithm, -1);
 	}
 
@@ -117,7 +117,7 @@ public class KeyUtil {
 	 * @return {@link SecretKey}
 	 * @since 3.1.2
 	 */
-	public static SecretKey generateKey(String algorithm, int keySize) {
+	public static SecretKey generateKey(final String algorithm, final int keySize) {
 		return generateKey(algorithm, keySize, null);
 	}
 
@@ -131,7 +131,7 @@ public class KeyUtil {
 	 * @return {@link SecretKey}
 	 * @since 5.5.2
 	 */
-	public static SecretKey generateKey(String algorithm, int keySize, SecureRandom random) {
+	public static SecretKey generateKey(String algorithm, int keySize, final SecureRandom random) {
 		algorithm = getMainAlgorithm(algorithm);
 
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
@@ -157,9 +157,9 @@ public class KeyUtil {
 	 * @param key       密钥，如果为{@code null} 自动生成随机密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm, byte[] key) {
+	public static SecretKey generateKey(final String algorithm, final byte[] key) {
 		Assert.notBlank(algorithm, "Algorithm is blank!");
-		SecretKey secretKey;
+		final SecretKey secretKey;
 		if (algorithm.startsWith("PBE")) {
 			// PBE密钥
 			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.utf8Str(key).toCharArray());
@@ -180,16 +180,16 @@ public class KeyUtil {
 	 * @param key       密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateDESKey(String algorithm, byte[] key) {
+	public static SecretKey generateDESKey(final String algorithm, final byte[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
 			throw new CryptoException("Algorithm [{}] is not a DES algorithm!", algorithm);
 		}
 
-		SecretKey secretKey;
+		final SecretKey secretKey;
 		if (null == key) {
 			secretKey = generateKey(algorithm);
 		} else {
-			KeySpec keySpec;
+			final KeySpec keySpec;
 			try {
 				if (algorithm.startsWith("DESede")) {
 					// DESede兼容
@@ -197,7 +197,7 @@ public class KeyUtil {
 				} else {
 					keySpec = new DESKeySpec(key);
 				}
-			} catch (InvalidKeyException e) {
+			} catch (final InvalidKeyException e) {
 				throw new CryptoException(e);
 			}
 			secretKey = generateKey(algorithm, keySpec);
@@ -212,7 +212,7 @@ public class KeyUtil {
 	 * @param key       密钥
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generatePBEKey(String algorithm, char[] key) {
+	public static SecretKey generatePBEKey(final String algorithm, char[] key) {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("PBE")) {
 			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!", algorithm);
 		}
@@ -220,7 +220,7 @@ public class KeyUtil {
 		if (null == key) {
 			key = RandomUtil.randomString(32).toCharArray();
 		}
-		PBEKeySpec keySpec = new PBEKeySpec(key);
+		final PBEKeySpec keySpec = new PBEKeySpec(key);
 		return generateKey(algorithm, keySpec);
 	}
 
@@ -231,11 +231,11 @@ public class KeyUtil {
 	 * @param keySpec   {@link KeySpec}
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm, KeySpec keySpec) {
+	public static SecretKey generateKey(final String algorithm, final KeySpec keySpec) {
 		final SecretKeyFactory keyFactory = getSecretKeyFactory(algorithm);
 		try {
 			return keyFactory.generateSecret(keySpec);
-		} catch (InvalidKeySpecException e) {
+		} catch (final InvalidKeySpecException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -249,7 +249,7 @@ public class KeyUtil {
 	 * @return RSA私钥 {@link PrivateKey}
 	 * @since 4.5.2
 	 */
-	public static PrivateKey generateRSAPrivateKey(byte[] key) {
+	public static PrivateKey generateRSAPrivateKey(final byte[] key) {
 		return generatePrivateKey(AsymmetricAlgorithm.RSA.getValue(), key);
 	}
 
@@ -262,7 +262,7 @@ public class KeyUtil {
 	 * @param key       密钥，PKCS#8格式
 	 * @return 私钥 {@link PrivateKey}
 	 */
-	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
+	public static PrivateKey generatePrivateKey(final String algorithm, final byte[] key) {
 		if (null == key) {
 			return null;
 		}
@@ -278,14 +278,14 @@ public class KeyUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 * @since 3.1.1
 	 */
-	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
+	public static PrivateKey generatePrivateKey(String algorithm, final KeySpec keySpec) {
 		if (null == keySpec) {
 			return null;
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return getKeyFactory(algorithm).generatePrivate(keySpec);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -298,10 +298,10 @@ public class KeyUtil {
 	 * @param password 密码
 	 * @return 私钥 {@link PrivateKey}
 	 */
-	public static PrivateKey generatePrivateKey(KeyStore keyStore, String alias, char[] password) {
+	public static PrivateKey generatePrivateKey(final KeyStore keyStore, final String alias, final char[] password) {
 		try {
 			return (PrivateKey) keyStore.getKey(alias, password);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -315,7 +315,7 @@ public class KeyUtil {
 	 * @return 公钥 {@link PublicKey}
 	 * @since 4.5.2
 	 */
-	public static PublicKey generateRSAPublicKey(byte[] key) {
+	public static PublicKey generateRSAPublicKey(final byte[] key) {
 		return generatePublicKey(AsymmetricAlgorithm.RSA.getValue(), key);
 	}
 
@@ -328,7 +328,7 @@ public class KeyUtil {
 	 * @param key       密钥，必须为DER编码存储
 	 * @return 公钥 {@link PublicKey}
 	 */
-	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
+	public static PublicKey generatePublicKey(final String algorithm, final byte[] key) {
 		if (null == key) {
 			return null;
 		}
@@ -344,14 +344,14 @@ public class KeyUtil {
 	 * @return 公钥 {@link PublicKey}
 	 * @since 3.1.1
 	 */
-	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
+	public static PublicKey generatePublicKey(String algorithm, final KeySpec keySpec) {
 		if (null == keySpec) {
 			return null;
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return getKeyFactory(algorithm).generatePublic(keySpec);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -363,7 +363,7 @@ public class KeyUtil {
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm) {
+	public static KeyPair generateKeyPair(final String algorithm) {
 		int keySize = DEFAULT_KEY_SIZE;
 		if("ECIES".equalsIgnoreCase(algorithm)){
 			// ECIES算法对KEY的长度有要求，此处默认256
@@ -381,7 +381,7 @@ public class KeyUtil {
 	 * @param keySize   密钥模（modulus ）长度
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize) {
+	public static KeyPair generateKeyPair(final String algorithm, final int keySize) {
 		return generateKeyPair(algorithm, keySize, null);
 	}
 
@@ -394,7 +394,7 @@ public class KeyUtil {
 	 * @param seed      种子
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
+	public static KeyPair generateKeyPair(final String algorithm, final int keySize, final byte[] seed) {
 		// SM2算法需要单独定义其曲线生成
 		if ("SM2".equalsIgnoreCase(algorithm)) {
 			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
@@ -413,7 +413,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params) {
+	public static KeyPair generateKeyPair(final String algorithm, final AlgorithmParameterSpec params) {
 		return generateKeyPair(algorithm, null, params);
 	}
 
@@ -427,7 +427,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, byte[] seed, AlgorithmParameterSpec param) {
+	public static KeyPair generateKeyPair(final String algorithm, final byte[] seed, final AlgorithmParameterSpec param) {
 		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE, seed, param);
 	}
 
@@ -461,7 +461,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed, AlgorithmParameterSpec... params) {
+	public static KeyPair generateKeyPair(final String algorithm, final int keySize, final byte[] seed, final AlgorithmParameterSpec... params) {
 		return generateKeyPair(algorithm, keySize, RandomUtil.createSecureRandom(seed), params);
 	}
 
@@ -495,7 +495,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.6.5
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize, SecureRandom random, AlgorithmParameterSpec... params) {
+	public static KeyPair generateKeyPair(String algorithm, int keySize, final SecureRandom random, final AlgorithmParameterSpec... params) {
 		algorithm = getAlgorithmAfterWith(algorithm);
 		final KeyPairGenerator keyPairGen = getKeyPairGenerator(algorithm);
 
@@ -515,7 +515,7 @@ public class KeyUtil {
 
 		// 自定义初始化参数
 		if (ArrayUtil.isNotEmpty(params)) {
-			for (AlgorithmParameterSpec param : params) {
+			for (final AlgorithmParameterSpec param : params) {
 				if (null == param) {
 					continue;
 				}
@@ -525,7 +525,7 @@ public class KeyUtil {
 					} else {
 						keyPairGen.initialize(param);
 					}
-				} catch (InvalidAlgorithmParameterException e) {
+				} catch (final InvalidAlgorithmParameterException e) {
 					throw new CryptoException(e);
 				}
 			}
@@ -540,15 +540,15 @@ public class KeyUtil {
 	 * @return {@link KeyPairGenerator}
 	 * @since 4.4.3
 	 */
-	public static KeyPairGenerator getKeyPairGenerator(String algorithm) {
+	public static KeyPairGenerator getKeyPairGenerator(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		KeyPairGenerator keyPairGen;
+		final KeyPairGenerator keyPairGen;
 		try {
 			keyPairGen = (null == provider) //
 					? KeyPairGenerator.getInstance(getMainAlgorithm(algorithm)) //
 					: KeyPairGenerator.getInstance(getMainAlgorithm(algorithm), provider);//
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyPairGen;
@@ -561,15 +561,15 @@ public class KeyUtil {
 	 * @return {@link KeyFactory}
 	 * @since 4.4.4
 	 */
-	public static KeyFactory getKeyFactory(String algorithm) {
+	public static KeyFactory getKeyFactory(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		KeyFactory keyFactory;
+		final KeyFactory keyFactory;
 		try {
 			keyFactory = (null == provider) //
 					? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
 					: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
@@ -582,15 +582,15 @@ public class KeyUtil {
 	 * @return {@link KeyFactory}
 	 * @since 4.5.2
 	 */
-	public static SecretKeyFactory getSecretKeyFactory(String algorithm) {
+	public static SecretKeyFactory getSecretKeyFactory(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		SecretKeyFactory keyFactory;
+		final SecretKeyFactory keyFactory;
 		try {
 			keyFactory = (null == provider) //
 					? SecretKeyFactory.getInstance(getMainAlgorithm(algorithm)) //
 					: SecretKeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
@@ -603,15 +603,15 @@ public class KeyUtil {
 	 * @return {@link KeyGenerator}
 	 * @since 4.5.2
 	 */
-	public static KeyGenerator getKeyGenerator(String algorithm) {
+	public static KeyGenerator getKeyGenerator(final String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		KeyGenerator generator;
+		final KeyGenerator generator;
 		try {
 			generator = (null == provider) //
 					? KeyGenerator.getInstance(getMainAlgorithm(algorithm)) //
 					: KeyGenerator.getInstance(getMainAlgorithm(algorithm), provider);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return generator;
@@ -624,7 +624,7 @@ public class KeyUtil {
 	 * @return 主体算法名
 	 * @since 4.5.2
 	 */
-	public static String getMainAlgorithm(String algorithm) {
+	public static String getMainAlgorithm(final String algorithm) {
 		Assert.notBlank(algorithm, "Algorithm must be not blank!");
 		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
 		if (slashIndex > 0) {
@@ -647,7 +647,7 @@ public class KeyUtil {
 			return "EC";
 		}
 
-		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
+		final int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
 		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
@@ -670,7 +670,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 5.0.0
 	 */
-	public static KeyStore readJKSKeyStore(File keyFile, char[] password) {
+	public static KeyStore readJKSKeyStore(final File keyFile, final char[] password) {
 		return readKeyStore(KEY_TYPE_JKS, keyFile, password);
 	}
 
@@ -683,7 +683,7 @@ public class KeyUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
+	public static KeyStore readJKSKeyStore(final InputStream in, final char[] password) {
 		return readKeyStore(KEY_TYPE_JKS, in, password);
 	}
 
@@ -696,7 +696,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 5.0.0
 	 */
-	public static KeyStore readPKCS12KeyStore(File keyFile, char[] password) {
+	public static KeyStore readPKCS12KeyStore(final File keyFile, final char[] password) {
 		return readKeyStore(KEY_TYPE_PKCS12, keyFile, password);
 	}
 
@@ -709,7 +709,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 5.0.0
 	 */
-	public static KeyStore readPKCS12KeyStore(InputStream in, char[] password) {
+	public static KeyStore readPKCS12KeyStore(final InputStream in, final char[] password) {
 		return readKeyStore(KEY_TYPE_PKCS12, in, password);
 	}
 
@@ -724,7 +724,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 5.0.0
 	 */
-	public static KeyStore readKeyStore(String type, File keyFile, char[] password) {
+	public static KeyStore readKeyStore(final String type, final File keyFile, final char[] password) {
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(keyFile);
@@ -744,12 +744,12 @@ public class KeyUtil {
 	 * @param password 密码，null表示无密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readKeyStore(String type, InputStream in, char[] password) {
-		KeyStore keyStore;
+	public static KeyStore readKeyStore(final String type, final InputStream in, final char[] password) {
+		final KeyStore keyStore;
 		try {
 			keyStore = KeyStore.getInstance(type);
 			keyStore.load(in, password);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 		return keyStore;
@@ -765,7 +765,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.4.1
 	 */
-	public static KeyPair getKeyPair(String type, InputStream in, char[] password, String alias) {
+	public static KeyPair getKeyPair(final String type, final InputStream in, final char[] password, final String alias) {
 		final KeyStore keyStore = readKeyStore(type, in, password);
 		return getKeyPair(keyStore, password, alias);
 	}
@@ -779,13 +779,13 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 * @since 4.4.1
 	 */
-	public static KeyPair getKeyPair(KeyStore keyStore, char[] password, String alias) {
-		PublicKey publicKey;
-		PrivateKey privateKey;
+	public static KeyPair getKeyPair(final KeyStore keyStore, final char[] password, final String alias) {
+		final PublicKey publicKey;
+		final PrivateKey privateKey;
 		try {
 			publicKey = keyStore.getCertificate(alias).getPublicKey();
 			privateKey = (PrivateKey) keyStore.getKey(alias, password);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 		return new KeyPair(publicKey, privateKey);
@@ -802,7 +802,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readX509Certificate(InputStream in, char[] password, String alias) {
+	public static Certificate readX509Certificate(final InputStream in, final char[] password, final String alias) {
 		return readCertificate(CERT_TYPE_X509, in, password, alias);
 	}
 
@@ -815,7 +815,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.5.2
 	 */
-	public static PublicKey readPublicKeyFromCert(InputStream in) {
+	public static PublicKey readPublicKeyFromCert(final InputStream in) {
 		final Certificate certificate = readX509Certificate(in);
 		if (null != certificate) {
 			return certificate.getPublicKey();
@@ -832,7 +832,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readX509Certificate(InputStream in) {
+	public static Certificate readX509Certificate(final InputStream in) {
 		return readCertificate(CERT_TYPE_X509, in);
 	}
 
@@ -848,11 +848,11 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
-	public static Certificate readCertificate(String type, InputStream in, char[] password, String alias) {
+	public static Certificate readCertificate(final String type, final InputStream in, final char[] password, final String alias) {
 		final KeyStore keyStore = readKeyStore(type, in, password);
 		try {
 			return keyStore.getCertificate(alias);
-		} catch (KeyStoreException e) {
+		} catch (final KeyStoreException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -866,10 +866,10 @@ public class KeyUtil {
 	 * @param in   {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @return {@link Certificate}
 	 */
-	public static Certificate readCertificate(String type, InputStream in) {
+	public static Certificate readCertificate(final String type, final InputStream in) {
 		try {
 			return getCertificateFactory(type).generateCertificate(in);
-		} catch (CertificateException e) {
+		} catch (final CertificateException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -881,10 +881,10 @@ public class KeyUtil {
 	 * @param alias    别名
 	 * @return {@link Certificate}
 	 */
-	public static Certificate getCertificate(KeyStore keyStore, String alias) {
+	public static Certificate getCertificate(final KeyStore keyStore, final String alias) {
 		try {
 			return keyStore.getCertificate(alias);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -896,13 +896,13 @@ public class KeyUtil {
 	 * @return {@link KeyPairGenerator}
 	 * @since 4.5.0
 	 */
-	public static CertificateFactory getCertificateFactory(String type) {
+	public static CertificateFactory getCertificateFactory(final String type) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
-		CertificateFactory factory;
+		final CertificateFactory factory;
 		try {
 			factory = (null == provider) ? CertificateFactory.getInstance(type) : CertificateFactory.getInstance(type, provider);
-		} catch (CertificateException e) {
+		} catch (final CertificateException e) {
 			throw new CryptoException(e);
 		}
 		return factory;
@@ -916,7 +916,7 @@ public class KeyUtil {
 	 * @return 压缩得到的X
 	 * @since 4.4.4
 	 */
-	public static byte[] encodeECPublicKey(PublicKey publicKey) {
+	public static byte[] encodeECPublicKey(final PublicKey publicKey) {
 		return BCUtil.encodeECPublicKey(publicKey);
 	}
 
@@ -929,7 +929,7 @@ public class KeyUtil {
 	 * @return 公钥
 	 * @since 4.4.4
 	 */
-	public static PublicKey decodeECPoint(String encode, String curveName) {
+	public static PublicKey decodeECPoint(final String encode, final String curveName) {
 		return BCUtil.decodeECPoint(encode, curveName);
 	}
 
@@ -942,7 +942,7 @@ public class KeyUtil {
 	 * @return 公钥
 	 * @since 4.4.4
 	 */
-	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
+	public static PublicKey decodeECPoint(final byte[] encodeByte, final String curveName) {
 		return BCUtil.decodeECPoint(encodeByte, curveName);
 	}
 
@@ -953,7 +953,7 @@ public class KeyUtil {
 	 * @return RSA公钥，null表示私钥不被支持
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(PrivateKey privateKey){
+	public static PublicKey getRSAPublicKey(final PrivateKey privateKey){
 		if(privateKey instanceof RSAPrivateCrtKey){
 			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey)privateKey;
 			return getRSAPublicKey(privk.getModulus(), privk.getPublicExponent());
@@ -969,7 +969,7 @@ public class KeyUtil {
 	 * @return 公钥
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(String modulus, String publicExponent){
+	public static PublicKey getRSAPublicKey(final String modulus, final String publicExponent){
 		return getRSAPublicKey(
 				new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
 	}
@@ -982,11 +982,11 @@ public class KeyUtil {
 	 * @return 公钥
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(BigInteger modulus, BigInteger publicExponent){
+	public static PublicKey getRSAPublicKey(final BigInteger modulus, final BigInteger publicExponent){
 		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
 		try {
 			return getKeyFactory("RSA").generatePublic(publicKeySpec);
-		} catch (InvalidKeySpecException e) {
+		} catch (final InvalidKeySpecException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -997,7 +997,7 @@ public class KeyUtil {
 	 * @return Base64格式密钥
 	 * @since 5.7.22
 	 */
-	public static String toBase64(Key key){
+	public static String toBase64(final Key key){
 		return Base64.encode(key.getEncoded());
 	}
 }

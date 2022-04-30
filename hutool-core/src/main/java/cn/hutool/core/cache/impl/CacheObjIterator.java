@@ -24,7 +24,7 @@ public class CacheObjIterator<K, V> implements Iterator<CacheObj<K, V>>, Seriali
 	 *
 	 * @param iterator 原{@link Iterator}
 	 */
-	CacheObjIterator(Iterator<CacheObj<K, V>> iterator) {
+	CacheObjIterator(final Iterator<CacheObj<K, V>> iterator) {
 		this.iterator = iterator;
 		nextValue();
 	}

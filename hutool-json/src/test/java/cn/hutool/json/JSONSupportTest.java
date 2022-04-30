@@ -14,7 +14,7 @@ public class JSONSupportTest {
 	 */
 	@Test
 	public void parseTest() {
-		String jsonstr = "{\n" +
+		final String jsonstr = "{\n" +
 				"    \"location\": \"https://hutool.cn\",\n" +
 				"    \"message\": \"这是一条测试消息\",\n" +
 				"    \"requestId\": \"123456789\",\n" +

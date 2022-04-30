@@ -9,7 +9,7 @@ public class MapBuilderTest {
 
 	@Test
 	public void conditionPutTest() {
-		Map<String, String> map = MapBuilder.<String, String>create()
+		final Map<String, String> map = MapBuilder.<String, String>create()
 				.put(true, "a", "1")
 				.put(false, "b", "2")
 				.put(true, "c", () -> getValue(3))
@@ -22,7 +22,7 @@ public class MapBuilderTest {
 		Assert.assertFalse(map.containsKey("d"));
 	}
 
-	public String getValue(int value) {
+	public String getValue(final int value) {
 		return String.valueOf(value);
 	}
 }

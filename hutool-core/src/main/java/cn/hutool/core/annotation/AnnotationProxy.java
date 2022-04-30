@@ -30,7 +30,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 	 * @param annotation 注解
 	 */
 	@SuppressWarnings("unchecked")
-	public AnnotationProxy(T annotation) {
+	public AnnotationProxy(final T annotation) {
 		this.annotation = annotation;
 		this.type = (Class<T>) annotation.annotationType();
 		this.attributes = initAttributes();
@@ -43,10 +43,10 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
 		// 注解别名
-		Alias alias = method.getAnnotation(Alias.class);
+		final Alias alias = method.getAnnotation(Alias.class);
 		if(null != alias){
 			final String name = alias.value();
 			if(StrUtil.isNotBlank(name)){
@@ -74,7 +74,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 		final Method[] methods = ReflectUtil.getMethods(this.type);
 		final Map<String, Object> attributes = new HashMap<>(methods.length, 1);
 
-		for (Method method : methods) {
+		for (final Method method : methods) {
 			// 跳过匿名内部类自动生成的方法
 			if (method.isSynthetic()) {
 				continue;

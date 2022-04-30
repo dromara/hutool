@@ -15,9 +15,9 @@ public class IssueI1H2VN {
 
 	@Test
 	public void toBeanTest() {
-		String jsonStr = "{'conditionsVo':[{'column':'StockNo','value':'abc','type':'='},{'column':'CheckIncoming','value':'1','type':'='}]," +
+		final String jsonStr = "{'conditionsVo':[{'column':'StockNo','value':'abc','type':'='},{'column':'CheckIncoming','value':'1','type':'='}]," +
 				"'queryVo':{'conditionsVo':[{'column':'StockNo','value':'abc','type':'='},{'column':'CheckIncoming','value':'1','type':'='}],'queryVo':null}}";
-		QueryVo vo = JSONUtil.toBean(jsonStr, QueryVo.class);
+		final QueryVo vo = JSONUtil.toBean(jsonStr, QueryVo.class);
 		Assert.assertEquals(2, vo.getConditionsVo().size());
 		final QueryVo subVo = vo.getQueryVo();
 		Assert.assertNotNull(subVo);

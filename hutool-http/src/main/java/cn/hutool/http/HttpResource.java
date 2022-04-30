@@ -25,7 +25,7 @@ public class HttpResource implements Resource, Serializable {
 	 * @param resource    资源，非空
 	 * @param contentType Content-Type类型，{@code null}表示不设置
 	 */
-	public HttpResource(Resource resource, String contentType) {
+	public HttpResource(final Resource resource, final String contentType) {
 		this.resource = Assert.notNull(resource, "Resource must be not null !");
 		this.contentType = contentType;
 	}

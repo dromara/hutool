@@ -133,7 +133,7 @@ public interface Dialect extends Serializable {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	default PreparedStatement psForCount(Connection conn, Query query) throws SQLException {
+	default PreparedStatement psForCount(final Connection conn, final Query query) throws SQLException {
 		query.setFields(ListUtil.toList("count(1)"));
 		return psForFind(conn, query);
 	}
@@ -149,7 +149,7 @@ public interface Dialect extends Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.7.2
 	 */
-	default PreparedStatement psForCount(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+	default PreparedStatement psForCount(final Connection conn, SqlBuilder sqlBuilder) throws SQLException {
 		sqlBuilder = sqlBuilder
 				.insertPreFragment("SELECT count(1) from(")
 				// issue#I3IJ8X@Gitee，在子查询时需设置单独别名，此处为了防止和用户的表名冲突，使用自定义的较长别名
@@ -168,7 +168,7 @@ public interface Dialect extends Serializable {
 	 * @throws SQLException SQL执行异常，或方言数据不支持此操作
 	 * @since 5.7.20
 	 */
-	default PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
+	default PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		throw new SQLException("Unsupported upsert operation of " + dialectName());
 	}
 

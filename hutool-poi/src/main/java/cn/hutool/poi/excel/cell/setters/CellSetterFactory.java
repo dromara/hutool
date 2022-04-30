@@ -22,7 +22,7 @@ public class CellSetterFactory {
 	 * @param value 值
 	 * @return {@link CellSetter}
 	 */
-	public static CellSetter createCellSetter(Object value) {
+	public static CellSetter createCellSetter(final Object value) {
 		if (null == value) {
 			return NullCellSetter.INSTANCE;
 		} else if (value instanceof CellSetter) {

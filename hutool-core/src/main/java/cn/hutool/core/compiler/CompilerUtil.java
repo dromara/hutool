@@ -26,7 +26,7 @@ public class CompilerUtil {
 	 * @param sourceFiles 源码文件路径
 	 * @return 0表示成功，否则其他
 	 */
-	public static boolean compile(String... sourceFiles) {
+	public static boolean compile(final String... sourceFiles) {
 		return 0 == SYSTEM_COMPILER.run(null, null, null, sourceFiles);
 	}
 
@@ -46,7 +46,7 @@ public class CompilerUtil {
 	 * @return {@link StandardJavaFileManager}
 	 * @since 5.5.8
 	 */
-	public static StandardJavaFileManager getFileManager(DiagnosticListener<? super JavaFileObject> diagnosticListener) {
+	public static StandardJavaFileManager getFileManager(final DiagnosticListener<? super JavaFileObject> diagnosticListener) {
 		return SYSTEM_COMPILER.getStandardFileManager(diagnosticListener, null, null);
 	}
 
@@ -60,10 +60,10 @@ public class CompilerUtil {
 	 * @return {@link JavaCompiler.CompilationTask}
 	 */
 	public static JavaCompiler.CompilationTask getTask(
-			JavaFileManager fileManager,
-			DiagnosticListener<? super JavaFileObject> diagnosticListener,
-			Iterable<String> options,
-			Iterable<? extends JavaFileObject> compilationUnits) {
+			final JavaFileManager fileManager,
+			final DiagnosticListener<? super JavaFileObject> diagnosticListener,
+			final Iterable<String> options,
+			final Iterable<? extends JavaFileObject> compilationUnits) {
 		return SYSTEM_COMPILER.getTask(null, fileManager, diagnosticListener, options, null, compilationUnits);
 	}
 
@@ -74,7 +74,7 @@ public class CompilerUtil {
 	 * @return {@link JavaSourceCompiler}
 	 * @see JavaSourceCompiler#create(ClassLoader)
 	 */
-	public static JavaSourceCompiler getCompiler(ClassLoader parent) {
+	public static JavaSourceCompiler getCompiler(final ClassLoader parent) {
 		return JavaSourceCompiler.create(parent);
 	}
 }

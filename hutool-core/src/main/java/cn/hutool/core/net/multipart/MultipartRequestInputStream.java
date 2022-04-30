@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  */
 public class MultipartRequestInputStream extends BufferedInputStream {
 
-	public MultipartRequestInputStream(InputStream in) {
+	public MultipartRequestInputStream(final InputStream in) {
 		super(in);
 	}
 
@@ -28,7 +28,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @throws IOException 读取异常
 	 */
 	public byte readByte() throws IOException {
-		int i = super.read();
+		final int i = super.read();
 		if (i == -1) {
 			throw new IOException("End of HTTP request stream reached");
 		}
@@ -41,8 +41,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @param i 跳过的byte数
 	 * @throws IOException IO异常
 	 */
-	public void skipBytes(long i) throws IOException {
-		long len = super.skip(i);
+	public void skipBytes(final long i) throws IOException {
+		final long len = super.skip(i);
 		if (len != i) {
 			throw new IOException("Unable to skip data in HTTP request");
 		}
@@ -62,7 +62,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @throws IOException 读取异常
 	 */
 	public byte[] readBoundary() throws IOException {
-		ByteArrayOutputStream boundaryOutput = new ByteArrayOutputStream(1024);
+		final ByteArrayOutputStream boundaryOutput = new ByteArrayOutputStream(1024);
 		byte b;
 		// skip optional whitespaces
 		//noinspection StatementWithEmptyBody
@@ -100,8 +100,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 头部信息， 如果达到末尾则返回null
 	 * @throws IOException 读取异常
 	 */
-	public UploadFileHeader readDataHeader(Charset encoding) throws IOException {
-		String dataHeader = readDataHeaderString(encoding);
+	public UploadFileHeader readDataHeader(final Charset encoding) throws IOException {
+		final String dataHeader = readDataHeaderString(encoding);
 		if (dataHeader != null) {
 			lastHeader = new UploadFileHeader(dataHeader);
 		} else {
@@ -117,8 +117,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 数据头信息字符串
 	 * @throws IOException IO异常
 	 */
-	protected String readDataHeaderString(Charset charset) throws IOException {
-		ByteArrayOutputStream data = new ByteArrayOutputStream();
+	protected String readDataHeaderString(final Charset charset) throws IOException {
+		final ByteArrayOutputStream data = new ByteArrayOutputStream();
 		byte b;
 		while (true) {
 			// end marker byte on offset +0 and +2 must be 13
@@ -128,7 +128,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 			}
 			mark(4);
 			skipBytes(1);
-			int i = read();
+			final int i = read();
 			if (i == -1) {
 				// reached end of stream
 				return null;
@@ -152,7 +152,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 读取的字符串
 	 * @throws IOException 读取异常
 	 */
-	public String readString(Charset charset) throws IOException {
+	public String readString(final Charset charset) throws IOException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(out);
 		return out.toString(charset);
@@ -165,10 +165,10 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public long copy(OutputStream out) throws IOException {
+	public long copy(final OutputStream out) throws IOException {
 		long count = 0;
 		while (true) {
-			byte b = readByte();
+			final byte b = readByte();
 			if (isBoundary(b)) {
 				break;
 			}
@@ -186,10 +186,10 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
 	 */
-	public long copy(OutputStream out, long limit) throws IOException {
+	public long copy(final OutputStream out, final long limit) throws IOException {
 		long count = 0;
 		while (true) {
-			byte b = readByte();
+			final byte b = readByte();
 			if (isBoundary(b)) {
 				break;
 			}
@@ -211,7 +211,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	public long skipToBoundary() throws IOException {
 		long count = 0;
 		while (true) {
-			byte b = readByte();
+			final byte b = readByte();
 			count++;
 			if (isBoundary(b)) {
 				break;
@@ -226,7 +226,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @throws IOException 读取异常
 	 */
 	public boolean isBoundary(byte b) throws IOException {
-		int boundaryLen = boundary.length;
+		final int boundaryLen = boundary.length;
 		mark(boundaryLen + 1);
 		int bpos = 0;
 		while (b == boundary[bpos]) {

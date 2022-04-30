@@ -72,7 +72,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 * @since 3.1.2
 	 */
-	protected HttpResponse(HttpConnection httpConnection, HttpConfig config, Charset charset, boolean isAsync, boolean isIgnoreBody) {
+	protected HttpResponse(final HttpConnection httpConnection, final HttpConfig config, final Charset charset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.config = config;
 		this.charset = charset;
@@ -201,10 +201,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return {@link HttpCookie}
 	 * @since 4.1.4
 	 */
-	public HttpCookie getCookie(String name) {
-		List<HttpCookie> cookie = getCookies();
+	public HttpCookie getCookie(final String name) {
+		final List<HttpCookie> cookie = getCookies();
 		if (null != cookie) {
-			for (HttpCookie httpCookie : cookie) {
+			for (final HttpCookie httpCookie : cookie) {
 				if (httpCookie.getName().equals(name)) {
 					return httpCookie;
 				}
@@ -220,8 +220,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return Cookie值
 	 * @since 4.1.4
 	 */
-	public String getCookieValue(String name) {
-		HttpCookie cookie = getCookie(name);
+	public String getCookieValue(final String name) {
+		final HttpCookie cookie = getCookie(name);
 		return (null == cookie) ? null : cookie.getValue();
 	}
 	// ---------------------------------------------------------------- Http Response Header end
@@ -275,7 +275,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
+	public long writeBody(final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] must be not null!");
 		final long contentLength = contentLength();
 		try {
@@ -298,7 +298,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(File targetFileOrDir, StreamProgress streamProgress) {
+	public long writeBody(final File targetFileOrDir, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
 		final File outFile = completeFileNameFromHeader(targetFileOrDir);
@@ -318,7 +318,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出bytes数
 	 * @since 5.7.12
 	 */
-	public long writeBody(File targetFileOrDir, String tempFileSuffix, StreamProgress streamProgress) {
+	public long writeBody(final File targetFileOrDir, String tempFileSuffix, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
 		File outFile = completeFileNameFromHeader(targetFileOrDir);
@@ -337,12 +337,12 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 临时文件
 		outFile = new File(outFile.getParentFile(), tempFileName);
 
-		long length;
+		final long length;
 		try {
 			length = writeBody(outFile, streamProgress);
 			// 重命名下载好的临时文件
 			FileUtil.rename(outFile, fileName, true);
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			// 异常则删除临时文件
 			FileUtil.del(outFile);
 			throw new HttpException(e);
@@ -360,7 +360,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出的文件
 	 * @since 5.6.4
 	 */
-	public File writeBodyForFile(File targetFileOrDir, StreamProgress streamProgress) {
+	public File writeBodyForFile(final File targetFileOrDir, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
 		final File outFile = completeFileNameFromHeader(targetFileOrDir);
@@ -378,7 +378,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(File targetFileOrDir) {
+	public long writeBody(final File targetFileOrDir) {
 		return writeBody(targetFileOrDir, null);
 	}
 
@@ -391,7 +391,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return 写出bytes数
 	 * @since 3.3.2
 	 */
-	public long writeBody(String targetFileOrDir) {
+	public long writeBody(final String targetFileOrDir) {
 		return writeBody(FileUtil.file(targetFileOrDir));
 	}
 	// ---------------------------------------------------------------- Body end
@@ -406,9 +406,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Response Headers: ").append(StrUtil.CRLF);
-		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
+		for (final Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(entry).append(StrUtil.CRLF);
 		}
 
@@ -425,7 +425,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return File 保存的文件
 	 * @since 5.4.1
 	 */
-	public File completeFileNameFromHeader(File targetFileOrDir) {
+	public File completeFileNameFromHeader(final File targetFileOrDir) {
 		if (false == targetFileOrDir.isDirectory()) {
 			// 非目录直接返回
 			return targetFileOrDir;
@@ -466,7 +466,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	private HttpResponse initWithDisconnect() throws HttpException {
 		try {
 			init();
-		} catch (HttpException e) {
+		} catch (final HttpException e) {
 			this.httpConnection.disconnectQuietly();
 			throw e;
 		}
@@ -490,7 +490,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 获取响应状态码
 		try {
 			this.status = httpConnection.responseCode();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
@@ -501,7 +501,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 读取响应头信息
 		try {
 			this.headers = httpConnection.headers();
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			// ignore
 			// StaticLog.warn(e, e.getMessage());
 		}
@@ -540,7 +540,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 非同步状态转为同步状态
 		try {
 			this.readBody(this.in);
-		} catch (IORuntimeException e) {
+		} catch (final IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof FileNotFoundException) {
 				// 服务器无返回内容，忽略之
@@ -562,7 +562,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param in 输入流
 	 * @throws IORuntimeException IO异常
 	 */
-	private void readBody(InputStream in) throws IORuntimeException {
+	private void readBody(final InputStream in) throws IORuntimeException {
 		if (ignoreBody) {
 			return;
 		}
@@ -585,7 +585,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param isIgnoreEOFError 是否忽略响应读取时可能的EOF异常
 	 * @return 拷贝长度
 	 */
-	private static long copyBody(InputStream in, OutputStream out, long contentLength, StreamProgress streamProgress, boolean isIgnoreEOFError) {
+	private static long copyBody(final InputStream in, final OutputStream out, final long contentLength, final StreamProgress streamProgress, final boolean isIgnoreEOFError) {
 		if (null == out) {
 			throw new NullPointerException("[out] is null!");
 		}
@@ -593,7 +593,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		long copyLength = -1;
 		try {
 			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
-		} catch (IORuntimeException e) {
+		} catch (final IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
 			if (isIgnoreEOFError
 					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {

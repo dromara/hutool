@@ -32,7 +32,7 @@ public class ZipWriter implements Closeable {
 	 * @param charset 编码
 	 * @return ZipWriter
 	 */
-	public static ZipWriter of(File zipFile, Charset charset) {
+	public static ZipWriter of(final File zipFile, final Charset charset) {
 		return new ZipWriter(zipFile, charset);
 	}
 
@@ -43,7 +43,7 @@ public class ZipWriter implements Closeable {
 	 * @param charset 编码
 	 * @return ZipWriter
 	 */
-	public static ZipWriter of(OutputStream out, Charset charset) {
+	public static ZipWriter of(final OutputStream out, final Charset charset) {
 		return new ZipWriter(out, charset);
 	}
 
@@ -55,7 +55,7 @@ public class ZipWriter implements Closeable {
 	 * @param zipFile 生成的Zip文件
 	 * @param charset 编码
 	 */
-	public ZipWriter(File zipFile, Charset charset) {
+	public ZipWriter(final File zipFile, final Charset charset) {
 		this.out = getZipOutputStream(zipFile, charset);
 	}
 
@@ -65,7 +65,7 @@ public class ZipWriter implements Closeable {
 	 * @param out     {@link ZipOutputStream}
 	 * @param charset 编码
 	 */
-	public ZipWriter(OutputStream out, Charset charset) {
+	public ZipWriter(final OutputStream out, final Charset charset) {
 		this.out = ZipUtil.getZipOutputStream(out, charset);
 	}
 
@@ -74,7 +74,7 @@ public class ZipWriter implements Closeable {
 	 *
 	 * @param out {@link ZipOutputStream}
 	 */
-	public ZipWriter(ZipOutputStream out) {
+	public ZipWriter(final ZipOutputStream out) {
 		this.out = out;
 	}
 
@@ -84,7 +84,7 @@ public class ZipWriter implements Closeable {
 	 * @param level 压缩级别
 	 * @return this
 	 */
-	public ZipWriter setLevel(int level) {
+	public ZipWriter setLevel(final int level) {
 		this.out.setLevel(level);
 		return this;
 	}
@@ -95,7 +95,7 @@ public class ZipWriter implements Closeable {
 	 * @param comment 注释
 	 * @return this
 	 */
-	public ZipWriter setComment(String comment) {
+	public ZipWriter setComment(final String comment) {
 		this.out.setComment(comment);
 		return this;
 	}
@@ -119,8 +119,8 @@ public class ZipWriter implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.1.1
 	 */
-	public ZipWriter add(boolean withSrcDir, FileFilter filter, File... files) throws IORuntimeException {
-		for (File file : files) {
+	public ZipWriter add(final boolean withSrcDir, final FileFilter filter, final File... files) throws IORuntimeException {
+		for (final File file : files) {
 			// 如果只是压缩一个文件，则需要截取该文件的父目录
 			String srcRootDir;
 			try {
@@ -129,7 +129,7 @@ public class ZipWriter implements Closeable {
 					// 若是文件，则将父目录完整路径都截取掉；若设置包含目录，则将上级目录全部截取掉，保留本目录名
 					srcRootDir = file.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 
@@ -145,8 +145,8 @@ public class ZipWriter implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public ZipWriter add(Resource... resources) throws IORuntimeException {
-		for (Resource resource : resources) {
+	public ZipWriter add(final Resource... resources) throws IORuntimeException {
+		for (final Resource resource : resources) {
 			if (null != resource) {
 				add(resource.getName(), resource.getStream());
 			}
@@ -163,7 +163,7 @@ public class ZipWriter implements Closeable {
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public ZipWriter add(String path, InputStream in) throws IORuntimeException {
+	public ZipWriter add(String path, final InputStream in) throws IORuntimeException {
 		path = StrUtil.nullToEmpty(path);
 		if (null == in) {
 			// 空目录需要检查路径规范性，目录以"/"结尾
@@ -186,7 +186,7 @@ public class ZipWriter implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.8.0
 	 */
-	public ZipWriter add(String[] paths, InputStream[] ins) throws IORuntimeException {
+	public ZipWriter add(final String[] paths, final InputStream[] ins) throws IORuntimeException {
 		if (ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
 			throw new IllegalArgumentException("Paths or ins is empty !");
 		}
@@ -205,7 +205,7 @@ public class ZipWriter implements Closeable {
 	public void close() throws IORuntimeException {
 		try {
 			out.finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(this.out);
@@ -219,7 +219,7 @@ public class ZipWriter implements Closeable {
 	 * @param charset 编码
 	 * @return {@link ZipOutputStream}
 	 */
-	private static ZipOutputStream getZipOutputStream(File zipFile, Charset charset) {
+	private static ZipOutputStream getZipOutputStream(final File zipFile, final Charset charset) {
 		return ZipUtil.getZipOutputStream(FileUtil.getOutputStream(zipFile), charset);
 	}
 
@@ -233,7 +233,7 @@ public class ZipWriter implements Closeable {
 	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩），{@code null}表示不过滤
 	 * @throws IORuntimeException IO异常
 	 */
-	private ZipWriter _add(File file, String srcRootDir, FileFilter filter) throws IORuntimeException {
+	private ZipWriter _add(final File file, final String srcRootDir, final FileFilter filter) throws IORuntimeException {
 		if (null == file || (null != filter && false == filter.accept(file))) {
 			return this;
 		}
@@ -248,7 +248,7 @@ public class ZipWriter implements Closeable {
 				add(subPath, null);
 			} else {
 				// 压缩目录下的子文件或目录
-				for (File childFile : files) {
+				for (final File childFile : files) {
 					_add(childFile, srcRootDir, filter);
 				}
 			}
@@ -267,14 +267,14 @@ public class ZipWriter implements Closeable {
 	 * @param in   需要压缩的输入流，使用完后自动关闭，{@code null}表示加入空目录
 	 * @throws IORuntimeException IO异常
 	 */
-	private ZipWriter putEntry(String path, InputStream in) throws IORuntimeException {
+	private ZipWriter putEntry(final String path, final InputStream in) throws IORuntimeException {
 		try {
 			out.putNextEntry(new ZipEntry(path));
 			if (null != in) {
 				IoUtil.copy(in, out);
 			}
 			out.closeEntry();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);

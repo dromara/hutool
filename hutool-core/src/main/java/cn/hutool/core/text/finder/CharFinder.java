@@ -21,7 +21,7 @@ public class CharFinder extends TextFinder {
 	 *
 	 * @param c 被查找的字符
 	 */
-	public CharFinder(char c) {
+	public CharFinder(final char c) {
 		this(c, false);
 	}
 
@@ -31,13 +31,13 @@ public class CharFinder extends TextFinder {
 	 * @param c               被查找的字符
 	 * @param caseInsensitive 是否忽略大小写
 	 */
-	public CharFinder(char c, boolean caseInsensitive) {
+	public CharFinder(final char c, final boolean caseInsensitive) {
 		this.c = c;
 		this.caseInsensitive = caseInsensitive;
 	}
 
 	@Override
-	public int start(int from) {
+	public int start(final int from) {
 		Assert.notNull(this.text, "Text to find must be not null!");
 		final int limit = getValidEndIndex();
 		if(negative){
@@ -57,7 +57,7 @@ public class CharFinder extends TextFinder {
 	}
 
 	@Override
-	public int end(int start) {
+	public int end(final int start) {
 		if (start < 0) {
 			return -1;
 		}

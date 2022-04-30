@@ -27,7 +27,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param width 图片宽
 	 * @param height 图片高
 	 */
-	public ShearCaptcha(int width, int height) {
+	public ShearCaptcha(final int width, final int height) {
 		this(width, height, 5);
 	}
 
@@ -38,7 +38,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param height 图片高
 	 * @param codeCount 字符个数
 	 */
-	public ShearCaptcha(int width, int height, int codeCount) {
+	public ShearCaptcha(final int width, final int height, final int codeCount) {
 		this(width, height, codeCount, 4);
 	}
 
@@ -50,12 +50,12 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param codeCount 字符个数
 	 * @param thickness 干扰线宽度
 	 */
-	public ShearCaptcha(int width, int height, int codeCount, int thickness) {
+	public ShearCaptcha(final int width, final int height, final int codeCount, final int thickness) {
 		super(width, height, codeCount, thickness);
 	}
 
 	@Override
-	public Image createImage(String code) {
+	public Image createImage(final String code) {
 		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
@@ -77,7 +77,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
-	private void drawString(Graphics2D g, String code) {
+	private void drawString(final Graphics2D g, final String code) {
 		// 指定透明度
 		if (null != this.textAlpha) {
 			g.setComposite(this.textAlpha);
@@ -93,7 +93,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param h1 h1
 	 * @param color 颜色
 	 */
-	private void shear(Graphics g, int w1, int h1, Color color) {
+	private void shear(final Graphics g, final int w1, final int h1, final Color color) {
 		shearX(g, w1, h1, color);
 		shearY(g, w1, h1, color);
 	}
@@ -106,15 +106,15 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param h1 高
 	 * @param color 颜色
 	 */
-	private void shearX(Graphics g, int w1, int h1, Color color) {
+	private void shearX(final Graphics g, final int w1, final int h1, final Color color) {
 
-		int period = RandomUtil.randomInt(this.width);
+		final int period = RandomUtil.randomInt(this.width);
 
-		int frames = 1;
-		int phase = RandomUtil.randomInt(2);
+		final int frames = 1;
+		final int phase = RandomUtil.randomInt(2);
 
 		for (int i = 0; i < h1; i++) {
-			double d = (double) (period >> 1) * Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
+			final double d = (double) (period >> 1) * Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
 			g.copyArea(0, i, w1, 1, (int) d, 0);
 			g.setColor(color);
 			g.drawLine((int) d, i, 0, i);
@@ -131,14 +131,14 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param h1 高
 	 * @param color 颜色
 	 */
-	private void shearY(Graphics g, int w1, int h1, Color color) {
+	private void shearY(final Graphics g, final int w1, final int h1, final Color color) {
 
-		int period = RandomUtil.randomInt(this.height >> 1);
+		final int period = RandomUtil.randomInt(this.height >> 1);
 
-		int frames = 20;
-		int phase = 7;
+		final int frames = 20;
+		final int phase = 7;
 		for (int i = 0; i < w1; i++) {
-			double d = (double) (period >> 1) * Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
+			final double d = (double) (period >> 1) * Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
 			g.copyArea(i, 0, 1, h1, 0, (int) d);
 			g.setColor(color);
 			// 擦除原位置的痕迹
@@ -160,16 +160,16 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param c 颜色
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private void drawInterfere(Graphics g, int x1, int y1, int x2, int y2, int thickness, Color c) {
+	private void drawInterfere(final Graphics g, final int x1, final int y1, final int x2, final int y2, final int thickness, final Color c) {
 
 		// The thick line is in fact a filled polygon
 		g.setColor(c);
-		int dX = x2 - x1;
-		int dY = y2 - y1;
+		final int dX = x2 - x1;
+		final int dY = y2 - y1;
 		// line length
-		double lineLength = Math.sqrt(dX * dX + dY * dY);
+		final double lineLength = Math.sqrt(dX * dX + dY * dY);
 
-		double scale = (double) (thickness) / (2 * lineLength);
+		final double scale = (double) (thickness) / (2 * lineLength);
 
 		// The x and y increments from an endpoint needed to create a
 		// rectangle...
@@ -177,12 +177,12 @@ public class ShearCaptcha extends AbstractCaptcha {
 		double ddy = scale * (double) dX;
 		ddx += (ddx > 0) ? 0.5 : -0.5;
 		ddy += (ddy > 0) ? 0.5 : -0.5;
-		int dx = (int) ddx;
-		int dy = (int) ddy;
+		final int dx = (int) ddx;
+		final int dy = (int) ddy;
 
 		// Now we can compute the corner points...
-		int[] xPoints = new int[4];
-		int[] yPoints = new int[4];
+		final int[] xPoints = new int[4];
+		final int[] yPoints = new int[4];
 
 		xPoints[0] = x1 + dx;
 		yPoints[0] = y1 + dy;

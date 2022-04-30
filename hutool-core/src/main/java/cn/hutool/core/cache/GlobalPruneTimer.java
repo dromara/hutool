@@ -45,7 +45,7 @@ public enum GlobalPruneTimer {
 	 * @param delay 周期
 	 * @return {@link ScheduledFuture}对象，可手动取消此任务
 	 */
-	public ScheduledFuture<?> schedule(Runnable task, long delay) {
+	public ScheduledFuture<?> schedule(final Runnable task, final long delay) {
 		return this.pruneTimer.scheduleAtFixedRate(task, delay, delay, TimeUnit.MILLISECONDS);
 	}
 

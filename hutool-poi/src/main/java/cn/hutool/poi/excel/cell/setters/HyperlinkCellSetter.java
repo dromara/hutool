@@ -19,12 +19,12 @@ public class HyperlinkCellSetter implements CellSetter {
 	 *
 	 * @param value 值
 	 */
-	HyperlinkCellSetter(Hyperlink value) {
+	HyperlinkCellSetter(final Hyperlink value) {
 		this.value = value;
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		cell.setHyperlink(this.value);
 		cell.setCellValue(this.value.getLabel());
 	}

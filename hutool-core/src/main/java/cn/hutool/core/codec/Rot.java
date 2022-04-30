@@ -22,7 +22,7 @@ public class Rot {
 	 * @param message 被编码的消息
 	 * @return 编码后的字符串
 	 */
-	public static String encode13(String message) {
+	public static String encode13(final String message) {
 		return encode13(message, true);
 	}
 
@@ -33,7 +33,7 @@ public class Rot {
 	 * @param isEnocdeNumber 是否编码数字
 	 * @return 编码后的字符串
 	 */
-	public static String encode13(String message, boolean isEnocdeNumber) {
+	public static String encode13(final String message, final boolean isEnocdeNumber) {
 		return encode(message, 13, isEnocdeNumber);
 	}
 
@@ -45,7 +45,7 @@ public class Rot {
 	 * @param isEnocdeNumber 是否编码数字
 	 * @return 编码后的字符串
 	 */
-	public static String encode(String message, int offset, boolean isEnocdeNumber) {
+	public static String encode(final String message, final int offset, final boolean isEnocdeNumber) {
 		final int len = message.length();
 		final char[] chars = new char[len];
 
@@ -61,7 +61,7 @@ public class Rot {
 	 * @param rot 被解码的消息密文
 	 * @return 解码后的字符串
 	 */
-	public static String decode13(String rot) {
+	public static String decode13(final String rot) {
 		return decode13(rot, true);
 	}
 
@@ -72,7 +72,7 @@ public class Rot {
 	 * @param isDecodeNumber 是否解码数字
 	 * @return 解码后的字符串
 	 */
-	public static String decode13(String rot, boolean isDecodeNumber) {
+	public static String decode13(final String rot, final boolean isDecodeNumber) {
 		return decode(rot, 13, isDecodeNumber);
 	}
 
@@ -84,7 +84,7 @@ public class Rot {
 	 * @param isDecodeNumber 是否解码数字
 	 * @return 解码后的字符串
 	 */
-	public static String decode(String rot, int offset, boolean isDecodeNumber) {
+	public static String decode(final String rot, final int offset, final boolean isDecodeNumber) {
 		final int len = rot.length();
 		final char[] chars = new char[len];
 
@@ -103,7 +103,7 @@ public class Rot {
 	 * @param isDecodeNumber 是否解码数字
 	 * @return 解码后的字符串
 	 */
-	private static char encodeChar(char c, int offset, boolean isDecodeNumber) {
+	private static char encodeChar(char c, final int offset, final boolean isDecodeNumber) {
 		if (isDecodeNumber) {
 			if (c >= CHAR0 && c <= CHAR9) {
 				c -= CHAR0;
@@ -135,7 +135,7 @@ public class Rot {
 	 * @param isDecodeNumber 是否编码数字
 	 * @return 编码后的字符串
 	 */
-	private static char decodeChar(char c, int offset, boolean isDecodeNumber) {
+	private static char decodeChar(final char c, final int offset, final boolean isDecodeNumber) {
 		int temp = c;
 		// if converting numbers is enabled
 		if (isDecodeNumber) {

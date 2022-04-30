@@ -27,7 +27,7 @@ public class JSONConverter implements Converter<JSON> {
 
 	static {
 		// 注册到转换中心
-		ConverterRegistry registry = ConverterRegistry.getInstance();
+		final ConverterRegistry registry = ConverterRegistry.getInstance();
 		registry.putCustom(JSON.class, JSONConverter.class);
 		registry.putCustom(JSONObject.class, JSONConverter.class);
 		registry.putCustom(JSONArray.class, JSONConverter.class);
@@ -40,7 +40,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @param arrayClass 数组元素类型
 	 * @return 数组对象
 	 */
-	protected static Object toArray(JSONArray jsonArray, Class<?> arrayClass) {
+	protected static Object toArray(final JSONArray jsonArray, final Class<?> arrayClass) {
 		return new ArrayConverter(arrayClass).convert(jsonArray, null);
 	}
 
@@ -52,7 +52,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @param elementType 对象元素类型
 	 * @return 对象列表
 	 */
-	protected static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType) {
+	protected static <T> List<T> toList(final JSONArray jsonArray, final Class<T> elementType) {
 		return Convert.toList(elementType, jsonArray);
 	}
 
@@ -69,7 +69,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @throws ConvertException 转换失败
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+	protected static <T> T jsonConvert(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
@@ -78,8 +78,7 @@ public class JSONConverter implements Converter<JSON> {
 		if(targetType instanceof Class){
 			final Class<?> clazz = (Class<?>) targetType;
 			if (JSONBeanParser.class.isAssignableFrom(clazz)){
-				@SuppressWarnings("rawtypes")
-				JSONBeanParser target = (JSONBeanParser) ReflectUtil.newInstanceIfPossible(clazz);
+				@SuppressWarnings("rawtypes") final JSONBeanParser target = (JSONBeanParser) ReflectUtil.newInstanceIfPossible(clazz);
 				if(null == target){
 					throw new ConvertException("Can not instance [{}]", targetType);
 				}
@@ -104,7 +103,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @since 5.7.10
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonToBean(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+	protected static <T> T jsonToBean(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
@@ -142,7 +141,7 @@ public class JSONConverter implements Converter<JSON> {
 	}
 
 	@Override
-	public JSON convert(Object value, JSON defaultValue) throws IllegalArgumentException {
+	public JSON convert(final Object value, final JSON defaultValue) throws IllegalArgumentException {
 		return JSONUtil.parse(value);
 	}
 }

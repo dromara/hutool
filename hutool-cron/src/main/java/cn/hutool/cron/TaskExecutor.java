@@ -40,7 +40,7 @@ public class TaskExecutor implements Runnable {
 	 * @param scheduler 调度器
 	 * @param task 被执行的任务
 	 */
-	public TaskExecutor(Scheduler scheduler, CronTask task) {
+	public TaskExecutor(final Scheduler scheduler, final CronTask task) {
 		this.scheduler = scheduler;
 		this.task = task;
 	}
@@ -51,7 +51,7 @@ public class TaskExecutor implements Runnable {
 			scheduler.listenerManager.notifyTaskStart(this);
 			task.execute();
 			scheduler.listenerManager.notifyTaskSucceeded(this);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			scheduler.listenerManager.notifyTaskFailed(this, e);
 		} finally {
 			scheduler.taskExecutorManager.notifyExecutorCompleted(this);

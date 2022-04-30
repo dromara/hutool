@@ -32,7 +32,7 @@ public class ResourceUtil {
 	 * @return 资源内容
 	 * @since 3.1.1
 	 */
-	public static String readUtf8Str(String resource) {
+	public static String readUtf8Str(final String resource) {
 		return getResourceObj(resource).readUtf8Str();
 	}
 
@@ -44,7 +44,7 @@ public class ResourceUtil {
 	 * @return 资源内容
 	 * @since 3.1.1
 	 */
-	public static String readStr(String resource, Charset charset) {
+	public static String readStr(final String resource, final Charset charset) {
 		return getResourceObj(resource).readStr(charset);
 	}
 
@@ -55,7 +55,7 @@ public class ResourceUtil {
 	 * @return 资源内容
 	 * @since 4.5.19
 	 */
-	public static byte[] readBytes(String resource) {
+	public static byte[] readBytes(final String resource) {
 		return getResourceObj(resource).readBytes();
 	}
 
@@ -67,7 +67,7 @@ public class ResourceUtil {
 	 * @throws NoResourceException 资源不存在异常
 	 * @since 3.1.2
 	 */
-	public static InputStream getStream(String resource) throws NoResourceException {
+	public static InputStream getStream(final String resource) throws NoResourceException {
 		return getResourceObj(resource).getStream();
 	}
 
@@ -78,10 +78,10 @@ public class ResourceUtil {
 	 * @return {@link InputStream}
 	 * @since 4.0.3
 	 */
-	public static InputStream getStreamSafe(String resource) {
+	public static InputStream getStreamSafe(final String resource) {
 		try {
 			return getResourceObj(resource).getStream();
-		} catch (NoResourceException e) {
+		} catch (final NoResourceException e) {
 			// ignore
 		}
 		return null;
@@ -94,7 +94,7 @@ public class ResourceUtil {
 	 * @return {@link InputStream}
 	 * @since 5.3.6
 	 */
-	public static BufferedReader getUtf8Reader(String resource) {
+	public static BufferedReader getUtf8Reader(final String resource) {
 		return getReader(resource, CharsetUtil.UTF_8);
 	}
 
@@ -106,7 +106,7 @@ public class ResourceUtil {
 	 * @return {@link InputStream}
 	 * @since 3.1.2
 	 */
-	public static BufferedReader getReader(String resource, Charset charset) {
+	public static BufferedReader getReader(final String resource, final Charset charset) {
 		return getResourceObj(resource).getReader(charset);
 	}
 
@@ -122,7 +122,7 @@ public class ResourceUtil {
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
 	 */
-	public static URL getResource(String resource) throws IORuntimeException {
+	public static URL getResource(final String resource) throws IORuntimeException {
 		return getResource(resource, null);
 	}
 
@@ -138,7 +138,7 @@ public class ResourceUtil {
 	 * @param resource 资源路径
 	 * @return 资源列表
 	 */
-	public static List<URL> getResources(String resource) {
+	public static List<URL> getResources(final String resource) {
 		return getResources(resource, null);
 	}
 
@@ -155,7 +155,7 @@ public class ResourceUtil {
 	 * @param filter   过滤器，用于过滤不需要的资源，{@code null}表示不过滤，保留所有元素
 	 * @return 资源列表
 	 */
-	public static List<URL> getResources(String resource, Predicate<URL> filter) {
+	public static List<URL> getResources(final String resource, final Predicate<URL> filter) {
 		return IterUtil.filterToList(getResourceIter(resource), filter);
 	}
 
@@ -172,11 +172,11 @@ public class ResourceUtil {
 	 * @return 资源列表
 	 * @since 4.1.5
 	 */
-	public static EnumerationIter<URL> getResourceIter(String resource) {
+	public static EnumerationIter<URL> getResourceIter(final String resource) {
 		final Enumeration<URL> resources;
 		try {
 			resources = ClassLoaderUtil.getClassLoader().getResources(resource);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return new EnumerationIter<>(resources);
@@ -189,7 +189,7 @@ public class ResourceUtil {
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
 	 */
-	public static URL getResource(String resource, Class<?> baseClass) {
+	public static URL getResource(String resource, final Class<?> baseClass) {
 		resource = StrUtil.nullToEmpty(resource);
 		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
 	}
@@ -202,7 +202,7 @@ public class ResourceUtil {
 	 * @return {@link Resource} 资源对象
 	 * @since 3.2.1
 	 */
-	public static Resource getResourceObj(String path) {
+	public static Resource getResourceObj(final String path) {
 		if (StrUtil.isNotBlank(path)) {
 			if (path.startsWith(URLUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
 				return new FileResource(path);

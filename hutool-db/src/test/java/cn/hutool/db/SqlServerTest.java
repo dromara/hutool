@@ -35,8 +35,8 @@ public class SqlServerTest {
 	@Test
 	@Ignore
 	public void pageTest() throws SQLException {
-		PageResult<Entity> result = Db.use("sqlserver").page(Entity.create("T_USER"), new Page(2, 10));
-		for (Entity entity : result) {
+		final PageResult<Entity> result = Db.use("sqlserver").page(Entity.create("T_USER"), new Page(2, 10));
+		for (final Entity entity : result) {
 			Console.log(entity.get("ID"));
 		}
 	}

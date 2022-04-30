@@ -2,7 +2,7 @@ package cn.hutool.core.codec;
 
 /**
  * 凯撒密码实现<br>
- * 算法来自：https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption
+ * 算法来自：<a href="https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption">https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption</a>
  *
  * @author looly
  */
@@ -18,7 +18,7 @@ public class Caesar {
 	 * @param offset  偏移量
 	 * @return 加密后的内容
 	 */
-	public static String encode(String message, int offset) {
+	public static String encode(final String message, final int offset) {
 		final int len = message.length();
 		final char[] plain = message.toCharArray();
 		char c;
@@ -39,7 +39,7 @@ public class Caesar {
 	 * @param offset     偏移量
 	 * @return 解密后的内容
 	 */
-	public static String decode(String cipherText, int offset) {
+	public static String decode(final String cipherText, final int offset) {
 		final int len = cipherText.length();
 		final char[] plain = cipherText.toCharArray();
 		char c;
@@ -62,8 +62,8 @@ public class Caesar {
 	 * @param offset 偏移量
 	 * @return 加密后的字符
 	 */
-	private static char encodeChar(char c, int offset) {
-		int position = (TABLE.indexOf(c) + offset) % 52;
+	private static char encodeChar(final char c, final int offset) {
+		final int position = (TABLE.indexOf(c) + offset) % 52;
 		return TABLE.charAt(position);
 
 	}
@@ -74,7 +74,7 @@ public class Caesar {
 	 * @param c 字符
 	 * @return 解密后的字符
 	 */
-	private static char decodeChar(char c, int offset) {
+	private static char decodeChar(final char c, final int offset) {
 		int position = (TABLE.indexOf(c) - offset) % 52;
 		if (position < 0) {
 			position += 52;

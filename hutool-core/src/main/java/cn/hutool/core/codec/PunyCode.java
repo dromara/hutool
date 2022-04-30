@@ -7,7 +7,7 @@ import cn.hutool.core.text.StrUtil;
 /**
  * Punycode是一个根据RFC 3492标准而制定的编码系统，主要用于把域名从地方语言所采用的Unicode编码转换成为可用于DNS系统的编码
  * <p>
- * 参考：https://blog.csdn.net/a19881029/article/details/18262671
+ * 参考：<a href="https://blog.csdn.net/a19881029/article/details/18262671">https://blog.csdn.net/a19881029/article/details/18262671</a>
  *
  * @author looly
  * @since 5.5.2
@@ -31,7 +31,7 @@ public class PunyCode {
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(CharSequence input) throws UtilException {
+	public static String encode(final CharSequence input) throws UtilException {
 		return encode(input, false);
 	}
 
@@ -43,16 +43,16 @@ public class PunyCode {
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(CharSequence input, boolean withPrefix) throws UtilException {
+	public static String encode(final CharSequence input, final boolean withPrefix) throws UtilException {
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
-		StringBuilder output = new StringBuilder();
+		final StringBuilder output = new StringBuilder();
 		// Copy all basic code points to the output
 		final int length = input.length();
 		int b = 0;
 		for (int i = 0; i < length; i++) {
-			char c = input.charAt(i);
+			final char c = input.charAt(i);
 			if (isBasic(c)) {
 				output.append(c);
 				b++;
@@ -78,7 +78,7 @@ public class PunyCode {
 			delta = delta + (m - n) * (h + 1);
 			n = m;
 			for (int j = 0; j < length; j++) {
-				int c = input.charAt(j);
+				final int c = input.charAt(j);
 				if (c < n) {
 					delta++;
 					if (0 == delta) {
@@ -88,7 +88,7 @@ public class PunyCode {
 				if (c == n) {
 					int q = delta;
 					for (int k = BASE; ; k += BASE) {
-						int t;
+						final int t;
 						if (k <= bias) {
 							t = TMIN;
 						} else if (k >= bias + TMAX) {
@@ -131,7 +131,7 @@ public class PunyCode {
 		int n = INITIAL_N;
 		int i = 0;
 		int bias = INITIAL_BIAS;
-		StringBuilder output = new StringBuilder();
+		final StringBuilder output = new StringBuilder();
 		int d = input.lastIndexOf(DELIMITER);
 		if (d > 0) {
 			for (int j = 0; j < d; j++) {
@@ -146,19 +146,19 @@ public class PunyCode {
 		}
 		final int length = input.length();
 		while (d < length) {
-			int oldi = i;
+			final int oldi = i;
 			int w = 1;
 			for (int k = BASE; ; k += BASE) {
 				if (d == length) {
 					throw new UtilException("BAD_INPUT");
 				}
-				int c = input.charAt(d++);
-				int digit = codepoint2digit(c);
+				final int c = input.charAt(d++);
+				final int digit = codepoint2digit(c);
 				if (digit > (Integer.MAX_VALUE - i) / w) {
 					throw new UtilException("OVERFLOW");
 				}
 				i = i + digit * w;
-				int t;
+				final int t;
 				if (k <= bias) {
 					t = TMIN;
 				} else if (k >= bias + TMAX) {
@@ -184,7 +184,7 @@ public class PunyCode {
 		return output.toString();
 	}
 
-	private static int adapt(int delta, int numpoints, boolean first) {
+	private static int adapt(int delta, final int numpoints, final boolean first) {
 		if (first) {
 			delta = delta / DAMP;
 		} else {
@@ -199,7 +199,7 @@ public class PunyCode {
 		return k + ((BASE - TMIN + 1) * delta) / (delta + SKEW);
 	}
 
-	private static boolean isBasic(char c) {
+	private static boolean isBasic(final char c) {
 		return c < 0x80;
 	}
 
@@ -219,7 +219,7 @@ public class PunyCode {
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符
 	 */
-	private static int digit2codepoint(int d) throws UtilException {
+	private static int digit2codepoint(final int d) throws UtilException {
 		Assert.checkBetween(d, 0, 35);
 		if (d < 26) {
 			// 0..25 : 'a'..'z'
@@ -248,7 +248,7 @@ public class PunyCode {
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符
 	 */
-	private static int codepoint2digit(int c) throws UtilException {
+	private static int codepoint2digit(final int c) throws UtilException {
 		if (c - '0' < 10) {
 			// '0'..'9' : 26..35
 			return c - '0' + 26;

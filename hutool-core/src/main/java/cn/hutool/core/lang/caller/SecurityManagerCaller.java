@@ -33,7 +33,7 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
 	}
 
 	@Override
-	public Class<?> getCaller(int depth) {
+	public Class<?> getCaller(final int depth) {
 		final Class<?>[] context = getClassContext();
 		if (null != context && (OFFSET + depth) < context.length) {
 			return context[OFFSET + depth];
@@ -42,10 +42,10 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
 	}
 
 	@Override
-	public boolean isCalledBy(Class<?> clazz) {
+	public boolean isCalledBy(final Class<?> clazz) {
 		final Class<?>[] classes = getClassContext();
 		if(ArrayUtil.isNotEmpty(classes)) {
-			for (Class<?> contextClass : classes) {
+			for (final Class<?> contextClass : classes) {
 				if (contextClass.equals(clazz)) {
 					return true;
 				}

@@ -34,17 +34,17 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 *
 	 * @param size 预估大小
 	 */
-	public FastByteArrayOutputStream(int size) {
+	public FastByteArrayOutputStream(final int size) {
 		buffer = new FastByteBuffer(size);
 	}
 
 	@Override
-	public void write(byte[] b, int off, int len) {
+	public void write(final byte[] b, final int off, final int len) {
 		buffer.append(b, off, len);
 	}
 
 	@Override
-	public void write(int b) {
+	public void write(final int b) {
 		buffer.append((byte) b);
 	}
 
@@ -69,7 +69,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @param out 输出流
 	 * @throws IORuntimeException IO异常
 	 */
-	public void writeTo(OutputStream out) throws IORuntimeException {
+	public void writeTo(final OutputStream out) throws IORuntimeException {
 		final int index = buffer.index();
 		if(index < 0){
 			// 无数据写出
@@ -82,7 +82,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 				out.write(buf);
 			}
 			out.write(buffer.array(index), 0, buffer.offset());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -106,7 +106,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @param charset 编码,null表示默认编码
 	 * @return 字符串
 	 */
-	public String toString(Charset charset) {
+	public String toString(final Charset charset) {
 		return new String(toByteArray(),
 				ObjUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
 	}

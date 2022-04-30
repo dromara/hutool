@@ -9,12 +9,10 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScanner;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
-import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -52,7 +50,7 @@ public class ClassUtil {
 	 * @return 对象类型，提供对象如果为{@code null} 返回{@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> getClass(T obj) {
+	public static <T> Class<T> getClass(final T obj) {
 		return ((null == obj) ? null : (Class<T>) obj.getClass());
 	}
 
@@ -64,7 +62,7 @@ public class ClassUtil {
 	 * @return 外围类
 	 * @since 4.5.7
 	 */
-	public static Class<?> getEnclosingClass(Class<?> clazz) {
+	public static Class<?> getEnclosingClass(final Class<?> clazz) {
 		return null == clazz ? null : clazz.getEnclosingClass();
 	}
 
@@ -75,7 +73,7 @@ public class ClassUtil {
 	 * @return 是否为顶层类
 	 * @since 4.5.7
 	 */
-	public static boolean isTopLevelClass(Class<?> clazz) {
+	public static boolean isTopLevelClass(final Class<?> clazz) {
 		if (null == clazz) {
 			return false;
 		}
@@ -90,7 +88,7 @@ public class ClassUtil {
 	 * @return 类名
 	 * @since 3.0.7
 	 */
-	public static String getClassName(Object obj, boolean isSimple) {
+	public static String getClassName(final Object obj, final boolean isSimple) {
 		if (null == obj) {
 			return null;
 		}
@@ -113,7 +111,7 @@ public class ClassUtil {
 	 * @return 类名
 	 * @since 3.0.7
 	 */
-	public static String getClassName(Class<?> clazz, boolean isSimple) {
+	public static String getClassName(final Class<?> clazz, final boolean isSimple) {
 		if (null == clazz) {
 			return null;
 		}
@@ -128,7 +126,7 @@ public class ClassUtil {
 	 * @return 短格式类名
 	 * @since 4.1.9
 	 */
-	public static String getShortClassName(String className) {
+	public static String getShortClassName(final String className) {
 		final List<String> packages = StrUtil.split(className, CharUtil.DOT);
 		if (null == packages || packages.size() < 2) {
 			return className;
@@ -150,8 +148,8 @@ public class ClassUtil {
 	 * @param objects 对象数组，如果数组中存在{@code null}元素，则此元素被认为是Object类型
 	 * @return 类数组
 	 */
-	public static Class<?>[] getClasses(Object... objects) {
-		Class<?>[] classes = new Class<?>[objects.length];
+	public static Class<?>[] getClasses(final Object... objects) {
+		final Class<?>[] classes = new Class<?>[objects.length];
 		Object obj;
 		for (int i = 0; i < objects.length; i++) {
 			obj = objects[i];
@@ -176,7 +174,7 @@ public class ClassUtil {
 	 * @return 指定类是否与给定的类名相同
 	 * @since 3.0.7
 	 */
-	public static boolean equals(Class<?> clazz, String className, boolean ignoreCase) {
+	public static boolean equals(final Class<?> clazz, final String className, final boolean ignoreCase) {
 		if (null == clazz || StrUtil.isBlank(className)) {
 			return false;
 		}
@@ -197,7 +195,7 @@ public class ClassUtil {
 	 * @return 类集合
 	 * @see ClassScanner#scanPackageByAnnotation(String, Class)
 	 */
-	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
+	public static Set<Class<?>> scanPackageByAnnotation(final String packageName, final Class<? extends Annotation> annotationClass) {
 		return ClassScanner.scanPackageByAnnotation(packageName, annotationClass);
 	}
 
@@ -209,7 +207,7 @@ public class ClassUtil {
 	 * @return 类集合
 	 * @see ClassScanner#scanPackageBySuper(String, Class)
 	 */
-	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
+	public static Set<Class<?>> scanPackageBySuper(final String packageName, final Class<?> superClass) {
 		return ClassScanner.scanPackageBySuper(packageName, superClass);
 	}
 
@@ -230,7 +228,7 @@ public class ClassUtil {
 	 * @return 类集合
 	 * @see ClassScanner#scanPackage(String)
 	 */
-	public static Set<Class<?>> scanPackage(String packageName) {
+	public static Set<Class<?>> scanPackage(final String packageName) {
 		return ClassScanner.scanPackage(packageName);
 	}
 
@@ -243,7 +241,7 @@ public class ClassUtil {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, Predicate<Class<?>> classFilter) {
+	public static Set<Class<?>> scanPackage(final String packageName, final Predicate<Class<?>> classFilter) {
 		return ClassScanner.scanPackage(packageName, classFilter);
 	}
 
@@ -256,7 +254,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 方法名Set
 	 */
-	public static Set<String> getPublicMethodNames(Class<?> clazz) {
+	public static Set<String> getPublicMethodNames(final Class<?> clazz) {
 		return ReflectUtil.getPublicMethodNames(clazz);
 	}
 
@@ -266,7 +264,7 @@ public class ClassUtil {
 	 * @param clazz 查找方法的类
 	 * @return 过滤后的方法列表
 	 */
-	public static Method[] getPublicMethods(Class<?> clazz) {
+	public static Method[] getPublicMethods(final Class<?> clazz) {
 		return ReflectUtil.getPublicMethods(clazz);
 	}
 
@@ -277,7 +275,7 @@ public class ClassUtil {
 	 * @param filter 过滤器
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getPublicMethods(Class<?> clazz, Filter<Method> filter) {
+	public static List<Method> getPublicMethods(final Class<?> clazz, final Filter<Method> filter) {
 		return ReflectUtil.getPublicMethods(clazz, filter);
 	}
 
@@ -288,7 +286,7 @@ public class ClassUtil {
 	 * @param excludeMethods 不包括的方法
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getPublicMethods(Class<?> clazz, Method... excludeMethods) {
+	public static List<Method> getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
 		return ReflectUtil.getPublicMethods(clazz, excludeMethods);
 	}
 
@@ -299,7 +297,7 @@ public class ClassUtil {
 	 * @param excludeMethodNames 不包括的方法名列表
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getPublicMethods(Class<?> clazz, String... excludeMethodNames) {
+	public static List<Method> getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
 		return ReflectUtil.getPublicMethods(clazz, excludeMethodNames);
 	}
 
@@ -312,7 +310,7 @@ public class ClassUtil {
 	 * @return 方法
 	 * @throws SecurityException 无权访问抛出异常
 	 */
-	public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws SecurityException {
+	public static Method getPublicMethod(final Class<?> clazz, final String methodName, final Class<?>... paramTypes) throws SecurityException {
 		return ReflectUtil.getPublicMethod(clazz, methodName, paramTypes);
 	}
 
@@ -323,7 +321,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 方法名Set
 	 */
-	public static Set<String> getDeclaredMethodNames(Class<?> clazz) {
+	public static Set<String> getDeclaredMethodNames(final Class<?> clazz) {
 		return ReflectUtil.getMethodNames(clazz);
 	}
 
@@ -333,7 +331,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 方法数组
 	 */
-	public static Method[] getDeclaredMethods(Class<?> clazz) {
+	public static Method[] getDeclaredMethods(final Class<?> clazz) {
 		return ReflectUtil.getMethods(clazz);
 	}
 
@@ -346,7 +344,7 @@ public class ClassUtil {
 	 * @return 方法
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
-	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws SecurityException {
+	public static Method getDeclaredMethodOfObj(final Object obj, final String methodName, final Object... args) throws SecurityException {
 		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
 	}
 
@@ -359,7 +357,7 @@ public class ClassUtil {
 	 * @return 方法
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
-	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws SecurityException {
+	public static Method getDeclaredMethod(final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) throws SecurityException {
 		return ReflectUtil.getMethod(clazz, methodName, parameterTypes);
 	}
 
@@ -373,13 +371,13 @@ public class ClassUtil {
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws SecurityException {
+	public static Field getDeclaredField(final Class<?> clazz, final String fieldName) throws SecurityException {
 		if (null == clazz || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
 		try {
 			return clazz.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException e) {
+		} catch (final NoSuchFieldException e) {
 			// e.printStackTrace();
 		}
 		return null;
@@ -392,7 +390,7 @@ public class ClassUtil {
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field[] getDeclaredFields(Class<?> clazz) throws SecurityException {
+	public static Field[] getDeclaredFields(final Class<?> clazz) throws SecurityException {
 		if (null == clazz) {
 			return null;
 		}
@@ -417,7 +415,7 @@ public class ClassUtil {
 	 * @return ClassPath集合
 	 * @since 4.0.11
 	 */
-	public static Set<String> getClassPathResources(boolean isDecode) {
+	public static Set<String> getClassPathResources(final boolean isDecode) {
 		return getClassPaths(StrUtil.EMPTY, isDecode);
 	}
 
@@ -427,7 +425,7 @@ public class ClassUtil {
 	 * @param packageName 包名称
 	 * @return ClassPath路径字符串集合
 	 */
-	public static Set<String> getClassPaths(String packageName) {
+	public static Set<String> getClassPaths(final String packageName) {
 		return getClassPaths(packageName, false);
 	}
 
@@ -439,12 +437,12 @@ public class ClassUtil {
 	 * @return ClassPath路径字符串集合
 	 * @since 4.0.11
 	 */
-	public static Set<String> getClassPaths(String packageName, boolean isDecode) {
-		String packagePath = packageName.replace(StrUtil.DOT, StrUtil.SLASH);
-		Enumeration<URL> resources;
+	public static Set<String> getClassPaths(final String packageName, final boolean isDecode) {
+		final String packagePath = packageName.replace(StrUtil.DOT, StrUtil.SLASH);
+		final Enumeration<URL> resources;
 		try {
 			resources = getClassLoader().getResources(packagePath);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new UtilException(e, "Loading classPath [{}] error!", packagePath);
 		}
 		final Set<String> paths = new HashSet<>();
@@ -473,9 +471,9 @@ public class ClassUtil {
 	 * @return ClassPath
 	 * @since 3.2.1
 	 */
-	public static String getClassPath(boolean isEncoded) {
+	public static String getClassPath(final boolean isEncoded) {
 		final URL classPathURL = getClassPathURL();
-		String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
+		final String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
 		return FileUtil.normalize(url);
 	}
 
@@ -501,7 +499,7 @@ public class ClassUtil {
 	 * @return 资源URL
 	 * @see ResourceUtil#getResource(String)
 	 */
-	public static URL getResourceURL(String resource) throws IORuntimeException {
+	public static URL getResourceURL(final String resource) throws IORuntimeException {
 		return ResourceUtil.getResource(resource);
 	}
 
@@ -518,7 +516,7 @@ public class ClassUtil {
 	 * @return 资源列表
 	 * @see ResourceUtil#getResources(String)
 	 */
-	public static List<URL> getResources(String resource) {
+	public static List<URL> getResources(final String resource) {
 		return ResourceUtil.getResources(resource);
 	}
 
@@ -530,7 +528,7 @@ public class ClassUtil {
 	 * @return {@link URL}
 	 * @see ResourceUtil#getResource(String, Class)
 	 */
-	public static URL getResourceUrl(String resource, Class<?> baseClass) {
+	public static URL getResourceUrl(final String resource, final Class<?> baseClass) {
 		return ResourceUtil.getResource(resource, baseClass);
 	}
 
@@ -574,7 +572,7 @@ public class ClassUtil {
 	 * @param types2 类组2
 	 * @return 是否相同、父类或接口
 	 */
-	public static boolean isAllAssignableFrom(Class<?>[] types1, Class<?>[] types2) {
+	public static boolean isAllAssignableFrom(final Class<?>[] types1, final Class<?>[] types2) {
 		if (ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)) {
 			return true;
 		}
@@ -612,7 +610,7 @@ public class ClassUtil {
 	 * @return 类
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> loadClass(String className, boolean isInitialized) {
+	public static <T> Class<T> loadClass(final String className, final boolean isInitialized) {
 		return (Class<T>) ClassLoaderUtil.loadClass(className, isInitialized);
 	}
 
@@ -623,7 +621,7 @@ public class ClassUtil {
 	 * @param className 类名
 	 * @return 类
 	 */
-	public static <T> Class<T> loadClass(String className) {
+	public static <T> Class<T> loadClass(final String className) {
 		return loadClass(className, true);
 	}
 
@@ -640,7 +638,7 @@ public class ClassUtil {
 	 * @param args                    参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameWithMethodName, Object[] args) {
+	public static <T> T invoke(final String classNameWithMethodName, final Object[] args) {
 		return invoke(classNameWithMethodName, false, args);
 	}
 
@@ -655,7 +653,7 @@ public class ClassUtil {
 	 * @param args                    参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameWithMethodName, boolean isSingleton, Object... args) {
+	public static <T> T invoke(final String classNameWithMethodName, final boolean isSingleton, final Object... args) {
 		if (StrUtil.isBlank(classNameWithMethodName)) {
 			throw new UtilException("Blank classNameDotMethodName!");
 		}
@@ -686,7 +684,7 @@ public class ClassUtil {
 	 * @param args       参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, Object[] args) {
+	public static <T> T invoke(final String className, final String methodName, final Object[] args) {
 		return invoke(className, methodName, false, args);
 	}
 
@@ -702,8 +700,8 @@ public class ClassUtil {
 	 * @param args        参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args) {
-		Class<Object> clazz = loadClass(className);
+	public static <T> T invoke(final String className, final String methodName, final boolean isSingleton, final Object... args) {
+		final Class<Object> clazz = loadClass(className);
 		try {
 			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
 			if (null == method) {
@@ -714,7 +712,7 @@ public class ClassUtil {
 			} else {
 				return ReflectUtil.invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), method, args);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -727,7 +725,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为包装类型
 	 */
-	public static boolean isPrimitiveWrapper(Class<?> clazz) {
+	public static boolean isPrimitiveWrapper(final Class<?> clazz) {
 		if (null == clazz) {
 			return false;
 		}
@@ -740,7 +738,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为基本类型
 	 */
-	public static boolean isBasicType(Class<?> clazz) {
+	public static boolean isBasicType(final Class<?> clazz) {
 		if (null == clazz) {
 			return false;
 		}
@@ -754,7 +752,7 @@ public class ClassUtil {
 	 * @param clazz 属性类
 	 * @return 是否简单值类型或简单值类型的数组
 	 */
-	public static boolean isSimpleTypeOrArray(Class<?> clazz) {
+	public static boolean isSimpleTypeOrArray(final Class<?> clazz) {
 		if (null == clazz) {
 			return false;
 		}
@@ -778,7 +776,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为简单值类型
 	 */
-	public static boolean isSimpleValueType(Class<?> clazz) {
+	public static boolean isSimpleValueType(final Class<?> clazz) {
 		return isBasicType(clazz) //
 				|| clazz.isEnum() //
 				|| CharSequence.class.isAssignableFrom(clazz) //
@@ -803,7 +801,7 @@ public class ClassUtil {
 	 * @param sourceType 原类型
 	 * @return 是否可转化
 	 */
-	public static boolean isAssignable(Class<?> targetType, Class<?> sourceType) {
+	public static boolean isAssignable(final Class<?> targetType, final Class<?> sourceType) {
 		if (null == targetType || null == sourceType) {
 			return false;
 		}
@@ -816,11 +814,11 @@ public class ClassUtil {
 		// 基本类型
 		if (targetType.isPrimitive()) {
 			// 原始类型
-			Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
+			final Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
 			return targetType.equals(resolvedPrimitive);
 		} else {
 			// 包装类型
-			Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
+			final Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
 			return resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper);
 		}
 	}
@@ -831,7 +829,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为public
 	 */
-	public static boolean isPublic(Class<?> clazz) {
+	public static boolean isPublic(final Class<?> clazz) {
 		if (null == clazz) {
 			throw new NullPointerException("Class to provided is null.");
 		}
@@ -844,7 +842,7 @@ public class ClassUtil {
 	 * @param method 方法
 	 * @return 是否为public
 	 */
-	public static boolean isPublic(Method method) {
+	public static boolean isPublic(final Method method) {
 		Assert.notNull(method, "Method to provided is null.");
 		return Modifier.isPublic(method.getModifiers());
 	}
@@ -855,7 +853,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为非public
 	 */
-	public static boolean isNotPublic(Class<?> clazz) {
+	public static boolean isNotPublic(final Class<?> clazz) {
 		return false == isPublic(clazz);
 	}
 
@@ -865,7 +863,7 @@ public class ClassUtil {
 	 * @param method 方法
 	 * @return 是否为非public
 	 */
-	public static boolean isNotPublic(Method method) {
+	public static boolean isNotPublic(final Method method) {
 		return false == isPublic(method);
 	}
 
@@ -875,7 +873,7 @@ public class ClassUtil {
 	 * @param method 方法
 	 * @return 是否为静态方法
 	 */
-	public static boolean isStatic(Method method) {
+	public static boolean isStatic(final Method method) {
 		Assert.notNull(method, "Method to provided is null.");
 		return Modifier.isStatic(method.getModifiers());
 	}
@@ -886,7 +884,7 @@ public class ClassUtil {
 	 * @param method 方法
 	 * @return 方法
 	 */
-	public static Method setAccessible(Method method) {
+	public static Method setAccessible(final Method method) {
 		if (null != method && false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
@@ -899,7 +897,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为抽象类
 	 */
-	public static boolean isAbstract(Class<?> clazz) {
+	public static boolean isAbstract(final Class<?> clazz) {
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
@@ -919,7 +917,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 是否为标准类
 	 */
-	public static boolean isNormalClass(Class<?> clazz) {
+	public static boolean isNormalClass(final Class<?> clazz) {
 		return null != clazz //
 				&& false == clazz.isInterface() //
 				&& false == isAbstract(clazz) //
@@ -937,7 +935,7 @@ public class ClassUtil {
 	 * @return 是否为枚举类型
 	 * @since 3.2.0
 	 */
-	public static boolean isEnum(Class<?> clazz) {
+	public static boolean isEnum(final Class<?> clazz) {
 		return null != clazz && clazz.isEnum();
 	}
 
@@ -947,7 +945,7 @@ public class ClassUtil {
 	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
 	 * @return {@link Class}
 	 */
-	public static Class<?> getTypeArgument(Class<?> clazz) {
+	public static Class<?> getTypeArgument(final Class<?> clazz) {
 		return getTypeArgument(clazz, 0);
 	}
 
@@ -958,7 +956,7 @@ public class ClassUtil {
 	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Class}
 	 */
-	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
+	public static Class<?> getTypeArgument(final Class<?> clazz, final int index) {
 		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
 		return TypeUtil.getClass(argumentType);
 	}
@@ -971,12 +969,12 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 包名
 	 */
-	public static String getPackage(Class<?> clazz) {
+	public static String getPackage(final Class<?> clazz) {
 		if (clazz == null) {
 			return StrUtil.EMPTY;
 		}
 		final String className = clazz.getName();
-		int packageEndIndex = className.lastIndexOf(StrUtil.DOT);
+		final int packageEndIndex = className.lastIndexOf(StrUtil.DOT);
 		if (packageEndIndex == -1) {
 			return StrUtil.EMPTY;
 		}
@@ -991,7 +989,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 包名
 	 */
-	public static String getPackagePath(Class<?> clazz) {
+	public static String getPackagePath(final Class<?> clazz) {
 		return getPackage(clazz).replace(StrUtil.C_DOT, StrUtil.C_SLASH);
 	}
 
@@ -1008,7 +1006,7 @@ public class ClassUtil {
 	 * @return 默认值
 	 * @since 3.0.8
 	 */
-	public static Object getDefaultValue(Class<?> clazz) {
+	public static Object getDefaultValue(final Class<?> clazz) {
 		// 原始类型
 		if (clazz.isPrimitive()) {
 			return getPrimitiveDefaultValue(clazz);
@@ -1029,7 +1027,7 @@ public class ClassUtil {
 	 * @return 默认值
 	 * @since 5.8.0
 	 */
-	public static Object getPrimitiveDefaultValue(Class<?> clazz) {
+	public static Object getPrimitiveDefaultValue(final Class<?> clazz) {
 		if (long.class == clazz) {
 			return 0L;
 		} else if (int.class == clazz) {
@@ -1057,7 +1055,7 @@ public class ClassUtil {
 	 * @return 默认值列表
 	 * @since 3.0.9
 	 */
-	public static Object[] getDefaultValues(Class<?>... classes) {
+	public static Object[] getDefaultValues(final Class<?>... classes) {
 		final Object[] values = new Object[classes.length];
 		for (int i = 0; i < classes.length; i++) {
 			values[i] = getDefaultValue(classes[i]);
@@ -1077,7 +1075,7 @@ public class ClassUtil {
 	 * @return 是否为JDK中定义的类或接口
 	 * @since 4.6.5
 	 */
-	public static boolean isJdkClass(Class<?> clazz) {
+	public static boolean isJdkClass(final Class<?> clazz) {
 		final Package objectPackage = clazz.getPackage();
 		if (null == objectPackage) {
 			return false;
@@ -1097,7 +1095,7 @@ public class ClassUtil {
 	 * @return URL
 	 * @since 5.2.4
 	 */
-	public static URL getLocation(Class<?> clazz) {
+	public static URL getLocation(final Class<?> clazz) {
 		if (null == clazz) {
 			return null;
 		}
@@ -1113,7 +1111,7 @@ public class ClassUtil {
 	 * @return class路径
 	 * @since 5.2.4
 	 */
-	public static String getLocationPath(Class<?> clazz) {
+	public static String getLocationPath(final Class<?> clazz) {
 		final URL location = getLocation(clazz);
 		if (null == location) {
 			return null;

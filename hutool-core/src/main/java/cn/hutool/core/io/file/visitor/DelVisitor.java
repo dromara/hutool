@@ -18,7 +18,7 @@ public class DelVisitor extends SimpleFileVisitor<Path> {
 	public static DelVisitor INSTANCE = new DelVisitor();
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
 		Files.delete(file);
 		return FileVisitResult.CONTINUE;
 	}
@@ -33,7 +33,7 @@ public class DelVisitor extends SimpleFileVisitor<Path> {
 	 * @throws IOException IO异常
 	 */
 	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+	public FileVisitResult postVisitDirectory(final Path dir, final IOException e) throws IOException {
 		if (e == null) {
 			Files.delete(dir);
 			return FileVisitResult.CONTINUE;

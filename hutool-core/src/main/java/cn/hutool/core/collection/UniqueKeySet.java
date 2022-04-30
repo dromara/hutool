@@ -38,7 +38,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 *
 	 * @param uniqueGenerator 唯一键生成规则函数，用于生成对象对应的唯一键
 	 */
-	public UniqueKeySet(Function<V, K> uniqueGenerator) {
+	public UniqueKeySet(final Function<V, K> uniqueGenerator) {
 		this(false, uniqueGenerator);
 	}
 
@@ -49,7 +49,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param c 初始化加入的集合
 	 * @since 5.8.0
 	 */
-	public UniqueKeySet(Function<V, K> uniqueGenerator, Collection<? extends V> c) {
+	public UniqueKeySet(final Function<V, K> uniqueGenerator, final Collection<? extends V> c) {
 		this(false, uniqueGenerator, c);
 	}
 
@@ -59,7 +59,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param isLinked        是否保持加入顺序
 	 * @param uniqueGenerator 唯一键生成规则函数，用于生成对象对应的唯一键
 	 */
-	public UniqueKeySet(boolean isLinked, Function<V, K> uniqueGenerator) {
+	public UniqueKeySet(final boolean isLinked, final Function<V, K> uniqueGenerator) {
 		this(MapBuilder.create(isLinked), uniqueGenerator);
 	}
 
@@ -71,7 +71,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param c 初始化加入的集合
 	 * @since 5.8.0
 	 */
-	public UniqueKeySet(boolean isLinked, Function<V, K> uniqueGenerator, Collection<? extends V> c) {
+	public UniqueKeySet(final boolean isLinked, final Function<V, K> uniqueGenerator, final Collection<? extends V> c) {
 		this(isLinked, uniqueGenerator);
 		addAll(c);
 	}
@@ -83,7 +83,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param loadFactor      增长因子
 	 * @param uniqueGenerator 唯一键生成规则函数，用于生成对象对应的唯一键
 	 */
-	public UniqueKeySet(int initialCapacity, float loadFactor, Function<V, K> uniqueGenerator) {
+	public UniqueKeySet(final int initialCapacity, final float loadFactor, final Function<V, K> uniqueGenerator) {
 		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)), uniqueGenerator);
 	}
 
@@ -93,7 +93,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param builder         初始Map，定义了Map类型
 	 * @param uniqueGenerator 唯一键生成规则函数，用于生成对象对应的唯一键
 	 */
-	public UniqueKeySet(MapBuilder<K, V> builder, Function<V, K> uniqueGenerator) {
+	public UniqueKeySet(final MapBuilder<K, V> builder, final Function<V, K> uniqueGenerator) {
 		this.map = builder.build();
 		this.uniqueGenerator = uniqueGenerator;
 	}
@@ -117,12 +117,12 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		return map.containsKey(this.uniqueGenerator.apply((V) o));
 	}
 
 	@Override
-	public boolean add(V v) {
+	public boolean add(final V v) {
 		return null == map.put(this.uniqueGenerator.apply(v), v);
 	}
 
@@ -132,7 +132,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param v 值
 	 * @return 是否成功加入
 	 */
-	public boolean addIfAbsent(V v) {
+	public boolean addIfAbsent(final V v) {
 		return null == map.putIfAbsent(this.uniqueGenerator.apply(v), v);
 	}
 
@@ -142,9 +142,9 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	 * @param c 集合
 	 * @return 是否有一个或多个被加入成功
 	 */
-	public boolean addAllIfAbsent(Collection<? extends V> c) {
+	public boolean addAllIfAbsent(final Collection<? extends V> c) {
 		boolean modified = false;
-		for (V v : c)
+		for (final V v : c)
 			if (addIfAbsent(v)) {
 				modified = true;
 			}
@@ -153,7 +153,7 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return null != map.remove(this.uniqueGenerator.apply((V) o));
 	}
 
@@ -166,10 +166,10 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 	@SuppressWarnings("unchecked")
 	public UniqueKeySet<K, V> clone() {
 		try {
-			UniqueKeySet<K, V> newSet = (UniqueKeySet<K, V>) super.clone();
+			final UniqueKeySet<K, V> newSet = (UniqueKeySet<K, V>) super.clone();
 			newSet.map = ObjUtil.clone(this.map);
 			return newSet;
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			throw new InternalError(e);
 		}
 	}

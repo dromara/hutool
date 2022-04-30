@@ -12,8 +12,8 @@ public class Issue2082Test {
 
 	@Test
 	public void toBeanTest() {
-		TestBean2 testBean2 = new TestBean2();
-		TestBean test = BeanUtil.toBean(testBean2, TestBean.class);
+		final TestBean2 testBean2 = new TestBean2();
+		final TestBean test = BeanUtil.toBean(testBean2, TestBean.class);
 		Assert.assertNull(test.getId());
 	}
 
@@ -21,7 +21,7 @@ public class Issue2082Test {
 	static class TestBean {
 		private Long id;
 
-		public void setId(String id) {
+		public void setId(final String id) {
 			this.id = Long.valueOf(id);
 		}
 	}

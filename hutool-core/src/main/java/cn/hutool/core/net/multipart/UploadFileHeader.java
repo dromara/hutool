@@ -24,7 +24,7 @@ public class UploadFileHeader {
 	String mimeSubtype;
 	String contentDisposition;
 
-	UploadFileHeader(String dataHeader) {
+	UploadFileHeader(final String dataHeader) {
 		processHeaderString(dataHeader);
 	}
 
@@ -115,13 +115,13 @@ public class UploadFileHeader {
 	 * @param fieldName  字段名
 	 * @return 字段值
 	 */
-	private String getDataFieldValue(String dataHeader, String fieldName) {
+	private String getDataFieldValue(final String dataHeader, final String fieldName) {
 		String value = null;
-		String token = StrUtil.format("{}=\"", fieldName);
-		int pos = dataHeader.indexOf(token);
+		final String token = StrUtil.format("{}=\"", fieldName);
+		final int pos = dataHeader.indexOf(token);
 		if (pos > 0) {
-			int start = pos + token.length();
-			int end = dataHeader.indexOf('"', start);
+			final int start = pos + token.length();
+			final int end = dataHeader.indexOf('"', start);
 			if ((start > 0) && (end > 0)) {
 				value = dataHeader.substring(start, end);
 			}
@@ -135,8 +135,8 @@ public class UploadFileHeader {
 	 * @param dataHeader data header string
 	 * @return content type or an empty string if no content type defined
 	 */
-	private String getContentType(String dataHeader) {
-		String token = "Content-Type:";
+	private String getContentType(final String dataHeader) {
+		final String token = "Content-Type:";
 		int start = dataHeader.indexOf(token);
 		if (start == -1) {
 			return StrUtil.EMPTY;
@@ -145,21 +145,21 @@ public class UploadFileHeader {
 		return dataHeader.substring(start);
 	}
 
-	private String getContentDisposition(String dataHeader) {
-		int start = dataHeader.indexOf(':') + 1;
-		int end = dataHeader.indexOf(';');
+	private String getContentDisposition(final String dataHeader) {
+		final int start = dataHeader.indexOf(':') + 1;
+		final int end = dataHeader.indexOf(';');
 		return dataHeader.substring(start, end);
 	}
 
-	private String getMimeType(String ContentType) {
-		int pos = ContentType.indexOf('/');
+	private String getMimeType(final String ContentType) {
+		final int pos = ContentType.indexOf('/');
 		if (pos == -1) {
 			return ContentType;
 		}
 		return ContentType.substring(1, pos);
 	}
 
-	private String getMimeSubtype(String ContentType) {
+	private String getMimeSubtype(final String ContentType) {
 		int start = ContentType.indexOf('/');
 		if (start == -1) {
 			return ContentType;
@@ -173,7 +173,7 @@ public class UploadFileHeader {
 	 *
 	 * @param dataHeader 头字符串
 	 */
-	private void processHeaderString(String dataHeader) {
+	private void processHeaderString(final String dataHeader) {
 		isFile = dataHeader.indexOf("filename") > 0;
 		formFieldName = getDataFieldValue(dataHeader, "name");
 		if (isFile) {
@@ -185,7 +185,7 @@ public class UploadFileHeader {
 				path = StrUtil.EMPTY;
 				fileName = StrUtil.EMPTY;
 			}
-			int ls = FileUtil.lastIndexOfSeparator(formFileName);
+			final int ls = FileUtil.lastIndexOfSeparator(formFileName);
 			if (ls == -1) {
 				path = StrUtil.EMPTY;
 				fileName = formFileName;

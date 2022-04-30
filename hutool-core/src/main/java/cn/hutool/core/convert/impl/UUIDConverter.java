@@ -15,7 +15,7 @@ public class UUIDConverter extends AbstractConverter<UUID> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected UUID convertInternal(Object value) {
+	protected UUID convertInternal(final Object value) {
 		return UUID.fromString(convertToStr(value));
 	}
 

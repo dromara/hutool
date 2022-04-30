@@ -62,7 +62,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * @param start   起始对象（包括）
 	 * @param stepper 步进
 	 */
-	public Range(T start, Stepper<T> stepper) {
+	public Range(final T start, final Stepper<T> stepper) {
 		this(start, null, stepper);
 	}
 
@@ -73,7 +73,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * @param end     结束对象（包含）
 	 * @param stepper 步进
 	 */
-	public Range(T start, T end, Stepper<T> stepper) {
+	public Range(final T start, final T end, final Stepper<T> stepper) {
 		this(start, end, stepper, true, true);
 	}
 
@@ -86,7 +86,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * @param isIncludeStart 是否包含第一个元素
 	 * @param isIncludeEnd   是否包含最后一个元素
 	 */
-	public Range(T start, T end, Stepper<T> stepper, boolean isIncludeStart, boolean isIncludeEnd) {
+	public Range(final T start, final T end, final Stepper<T> stepper, final boolean isIncludeStart, final boolean isIncludeEnd) {
 		Assert.notNull(start, "First element must be not null!");
 		this.start = start;
 		this.end = end;
@@ -142,7 +142,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 获取下一个元素，并将下下个元素准备好
 	 */
 	private T nextUncheck() {
-		T current;
+		final T current;
 		if(0 == this.index){
 			current = start;
 			if(false == this.includeStart){
@@ -165,12 +165,12 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * @param base  上一个元素
 	 * @return 下一步进
 	 */
-	private T safeStep(T base) {
+	private T safeStep(final T base) {
 		final int index = this.index;
 		T next = null;
 		try {
 			next = stepper.step(base, this.end, index);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// ignore
 		}
 

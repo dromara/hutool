@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class TemplateException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public TemplateException(Throwable e) {
+	public TemplateException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public TemplateException(String message) {
+	public TemplateException(final String message) {
 		super(message);
 	}
 
-	public TemplateException(String messageTemplate, Object... params) {
+	public TemplateException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public TemplateException(String message, Throwable throwable) {
+	public TemplateException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public TemplateException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public TemplateException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public TemplateException(Throwable throwable, String messageTemplate, Object... params) {
+	public TemplateException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

@@ -32,7 +32,7 @@ public class DES extends SymmetricCrypto {
 	 *
 	 * @param key 密钥
 	 */
-	public DES(byte[] key) {
+	public DES(final byte[] key) {
 		super(SymmetricAlgorithm.DES, key);
 	}
 
@@ -42,7 +42,7 @@ public class DES extends SymmetricCrypto {
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
-	public DES(Mode mode, Padding padding) {
+	public DES(final Mode mode, final Padding padding) {
 		this(mode.name(), padding.name());
 	}
 
@@ -53,7 +53,7 @@ public class DES extends SymmetricCrypto {
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度：8的倍数
 	 */
-	public DES(Mode mode, Padding padding, byte[] key) {
+	public DES(final Mode mode, final Padding padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -66,7 +66,7 @@ public class DES extends SymmetricCrypto {
 	 * @param iv 偏移向量，加盐
 	 * @since 3.3.0
 	 */
-	public DES(Mode mode, Padding padding, byte[] key, byte[] iv) {
+	public DES(final Mode mode, final Padding padding, final byte[] key, final byte[] iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -78,7 +78,7 @@ public class DES extends SymmetricCrypto {
 	 * @param key 密钥，长度：8的倍数
 	 * @since 3.3.0
 	 */
-	public DES(Mode mode, Padding padding, SecretKey key) {
+	public DES(final Mode mode, final Padding padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -91,7 +91,7 @@ public class DES extends SymmetricCrypto {
 	 * @param iv 偏移向量，加盐
 	 * @since 3.3.0
 	 */
-	public DES(Mode mode, Padding padding, SecretKey key, IvParameterSpec iv) {
+	public DES(final Mode mode, final Padding padding, final SecretKey key, final IvParameterSpec iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -101,7 +101,7 @@ public class DES extends SymmetricCrypto {
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 */
-	public DES(String mode, String padding) {
+	public DES(final String mode, final String padding) {
 		this(mode, padding, (byte[]) null);
 	}
 
@@ -112,7 +112,7 @@ public class DES extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数
 	 */
-	public DES(String mode, String padding, byte[] key) {
+	public DES(final String mode, final String padding, final byte[] key) {
 		this(mode, padding, SecureUtil.generateKey("DES", key), null);
 	}
 
@@ -124,7 +124,7 @@ public class DES extends SymmetricCrypto {
 	 * @param key 密钥，长度：8的倍数
 	 * @param iv 加盐
 	 */
-	public DES(String mode, String padding, byte[] key, byte[] iv) {
+	public DES(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding, SecureUtil.generateKey("DES", key), null == iv ? null : new IvParameterSpec(iv));
 	}
 
@@ -135,7 +135,7 @@ public class DES extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key 密钥，长度：8的倍数
 	 */
-	public DES(String mode, String padding, SecretKey key) {
+	public DES(final String mode, final String padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -147,7 +147,7 @@ public class DES extends SymmetricCrypto {
 	 * @param key 密钥，长度：8的倍数
 	 * @param iv 加盐
 	 */
-	public DES(String mode, String padding, SecretKey key, IvParameterSpec iv) {
+	public DES(final String mode, final String padding, final SecretKey key, final IvParameterSpec iv) {
 		super(StrUtil.format("DES/{}/{}", mode, padding), key, iv);
 	}
 	// ------------------------------------------------------------------------- Constrctor end

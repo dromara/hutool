@@ -14,11 +14,11 @@ public class DefaultCloneTest {
 
 	@Test
 	public void clone0() {
-		Car oldCar = new Car();
+		final Car oldCar = new Car();
 		oldCar.setId(1);
 		oldCar.setWheelList(Stream.of(new Wheel("h")).collect(Collectors.toList()));
 
-		Car newCar = oldCar.clone0();
+		final Car newCar = oldCar.clone0();
 		Assert.assertEquals(oldCar.getId(), newCar.getId());
 		Assert.assertEquals(oldCar.getWheelList(), newCar.getWheelList());
 

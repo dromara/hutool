@@ -13,7 +13,7 @@ public class ResourceUtilTest {
 		final String str = ResourceUtil.readUtf8Str("test.xml");
 		Assert.assertNotNull(str);
 
-		Resource resource = new ClassPathResource("test.xml");
+		final Resource resource = new ClassPathResource("test.xml");
 		final String xmlStr = resource.readUtf8Str();
 
 		Assert.assertEquals(str, xmlStr);

@@ -25,7 +25,7 @@ public class CronPatternBuilderTest {
 
 	@Test
 	public void buildRangeTest(){
-		String build = CronPatternBuilder.of()
+		final String build = CronPatternBuilder.of()
 				.set(Part.SECOND, "*")
 				.setRange(Part.HOUR, 2, 9)
 				.build();
@@ -34,7 +34,7 @@ public class CronPatternBuilderTest {
 
 	@Test(expected = CronException.class)
 	public void buildRangeErrorTest(){
-		String build = CronPatternBuilder.of()
+		final String build = CronPatternBuilder.of()
 				.set(Part.SECOND, "*")
 				// 55无效值
 				.setRange(Part.HOUR, 2, 55)

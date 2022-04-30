@@ -17,7 +17,7 @@ public class TaskLauncherManager implements Serializable {
 	/** 启动器列表 */
 	protected final List<TaskLauncher> launchers = new ArrayList<>();
 
-	public TaskLauncherManager(Scheduler scheduler) {
+	public TaskLauncherManager(final Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
 
@@ -26,7 +26,7 @@ public class TaskLauncherManager implements Serializable {
 	 * @param millis 触发事件的毫秒数
 	 * @return {@link TaskLauncher}
 	 */
-	protected TaskLauncher spawnLauncher(long millis) {
+	protected TaskLauncher spawnLauncher(final long millis) {
 		final TaskLauncher launcher = new TaskLauncher(this.scheduler, millis);
 		synchronized (this.launchers) {
 			this.launchers.add(launcher);
@@ -42,7 +42,7 @@ public class TaskLauncherManager implements Serializable {
 	 * 启动器启动完毕，启动完毕后从执行器列表中移除
 	 * @param launcher 启动器 {@link TaskLauncher}
 	 */
-	protected void notifyLauncherCompleted(TaskLauncher launcher) {
+	protected void notifyLauncherCompleted(final TaskLauncher launcher) {
 		synchronized (launchers) {
 			launchers.remove(launcher);
 		}

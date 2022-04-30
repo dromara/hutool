@@ -53,11 +53,11 @@ public class SimpleCollector<T, A, R> implements Collector<T, A, R> {
 	 * @param finisher        将结果容器转换成最终的表示函数
 	 * @param characteristics 特征值枚举
 	 */
-	public SimpleCollector(Supplier<A> supplier,
-						   BiConsumer<A, T> accumulator,
-						   BinaryOperator<A> combiner,
-						   Function<A, R> finisher,
-						   Set<Characteristics> characteristics) {
+	public SimpleCollector(final Supplier<A> supplier,
+						   final BiConsumer<A, T> accumulator,
+						   final BinaryOperator<A> combiner,
+						   final Function<A, R> finisher,
+						   final Set<Characteristics> characteristics) {
 		this.supplier = supplier;
 		this.accumulator = accumulator;
 		this.combiner = combiner;
@@ -74,10 +74,10 @@ public class SimpleCollector<T, A, R> implements Collector<T, A, R> {
 	 * @param characteristics 特征值枚举
 	 */
 	@SuppressWarnings("unchecked")
-	public SimpleCollector(Supplier<A> supplier,
-						   BiConsumer<A, T> accumulator,
-						   BinaryOperator<A> combiner,
-						   Set<Characteristics> characteristics) {
+	public SimpleCollector(final Supplier<A> supplier,
+						   final BiConsumer<A, T> accumulator,
+						   final BinaryOperator<A> combiner,
+						   final Set<Characteristics> characteristics) {
 		this(supplier, accumulator, combiner, i -> (R) i, characteristics);
 	}
 

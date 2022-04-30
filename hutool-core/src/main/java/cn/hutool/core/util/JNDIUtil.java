@@ -31,13 +31,13 @@ public class JNDIUtil {
 	 * @param environment 环境参数，{code null}表示无参数
 	 * @return {@link InitialDirContext}
 	 */
-	public static InitialDirContext createInitialDirContext(Map<String, String> environment) {
+	public static InitialDirContext createInitialDirContext(final Map<String, String> environment) {
 		try {
 			if (MapUtil.isEmpty(environment)) {
 				return new InitialDirContext();
 			}
 			return new InitialDirContext(Convert.convert(Hashtable.class, environment));
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -48,13 +48,13 @@ public class JNDIUtil {
 	 * @param environment 环境参数，{code null}表示无参数
 	 * @return {@link InitialContext}
 	 */
-	public static InitialContext createInitialContext(Map<String, String> environment) {
+	public static InitialContext createInitialContext(final Map<String, String> environment) {
 		try {
 			if (MapUtil.isEmpty(environment)) {
 				return new InitialContext();
 			}
 			return new InitialContext(Convert.convert(Hashtable.class, environment));
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -67,10 +67,10 @@ public class JNDIUtil {
 	 * @param attrIds 需要获取的属性ID名称
 	 * @return {@link Attributes}
 	 */
-	public static Attributes getAttributes(String uri, String... attrIds) {
+	public static Attributes getAttributes(final String uri, final String... attrIds) {
 		try {
 			return createInitialDirContext(null).getAttributes(uri, attrIds);
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new UtilException(e);
 		}
 	}

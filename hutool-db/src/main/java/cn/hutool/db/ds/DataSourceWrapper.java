@@ -33,7 +33,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	 * @param driver 数据库驱动类名
 	 * @return DataSourceWrapper
 	 */
-	public static DataSourceWrapper wrap(DataSource ds, String driver) {
+	public static DataSourceWrapper wrap(final DataSource ds, final String driver) {
 		return new DataSourceWrapper(ds, driver);
 	}
 
@@ -43,7 +43,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	 * @param ds     原始的DataSource
 	 * @param driver 数据库驱动类名
 	 */
-	public DataSourceWrapper(DataSource ds, String driver) {
+	public DataSourceWrapper(final DataSource ds, final String driver) {
 		this.ds = ds;
 		this.driver = driver;
 	}
@@ -72,12 +72,12 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	}
 
 	@Override
-	public void setLogWriter(PrintWriter out) throws SQLException {
+	public void setLogWriter(final PrintWriter out) throws SQLException {
 		ds.setLogWriter(out);
 	}
 
 	@Override
-	public void setLoginTimeout(int seconds) throws SQLException {
+	public void setLoginTimeout(final int seconds) throws SQLException {
 		ds.setLoginTimeout(seconds);
 	}
 
@@ -92,12 +92,12 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
+	public <T> T unwrap(final Class<T> iface) throws SQLException {
 		return ds.unwrap(iface);
 	}
 
 	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
 		return ds.isWrapperFor(iface);
 	}
 
@@ -107,7 +107,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	}
 
 	@Override
-	public Connection getConnection(String username, String password) throws SQLException {
+	public Connection getConnection(final String username, final String password) throws SQLException {
 		return ds.getConnection(username, password);
 	}
 
@@ -122,7 +122,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	public DataSourceWrapper clone() {
 		try {
 			return (DataSourceWrapper) super.clone();
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			throw new CloneRuntimeException(e);
 		}
 	}

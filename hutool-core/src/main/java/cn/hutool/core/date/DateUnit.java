@@ -35,7 +35,7 @@ public enum DateUnit {
 
 	private final long millis;
 
-	DateUnit(long millis) {
+	DateUnit(final long millis) {
 		this.millis = millis;
 	}
 
@@ -63,7 +63,7 @@ public enum DateUnit {
 	 * @return DateUnit，null表示不支持此单位
 	 * @since 5.4.5
 	 */
-	public static DateUnit of(ChronoUnit unit) {
+	public static DateUnit of(final ChronoUnit unit) {
 		switch (unit) {
 			case MICROS:
 				return DateUnit.MS;
@@ -88,7 +88,7 @@ public enum DateUnit {
 	 * @return {@link ChronoUnit}
 	 * @since 5.4.5
 	 */
-	public static ChronoUnit toChronoUnit(DateUnit unit) {
+	public static ChronoUnit toChronoUnit(final DateUnit unit) {
 		switch (unit) {
 			case MS:
 				return ChronoUnit.MICROS;

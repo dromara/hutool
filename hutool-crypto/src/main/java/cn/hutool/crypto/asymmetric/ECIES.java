@@ -32,7 +32,7 @@ public class ECIES extends AsymmetricCrypto{
 	 *
 	 * @param eciesAlgorithm 自定义ECIES算法，例如ECIESwithDESede/NONE/PKCS7Padding
 	 */
-	public ECIES(String eciesAlgorithm) {
+	public ECIES(final String eciesAlgorithm) {
 		super(eciesAlgorithm);
 	}
 
@@ -44,7 +44,7 @@ public class ECIES extends AsymmetricCrypto{
 	 * @param privateKeyStr 私钥Hex或Base64表示
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public ECIES(String privateKeyStr, String publicKeyStr) {
+	public ECIES(final String privateKeyStr, final String publicKeyStr) {
 		super(ALGORITHM_ECIES, privateKeyStr, publicKeyStr);
 	}
 
@@ -58,7 +58,7 @@ public class ECIES extends AsymmetricCrypto{
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 * @since 4.5.8
 	 */
-	public ECIES(String eciesAlgorithm, String privateKeyStr, String publicKeyStr) {
+	public ECIES(final String eciesAlgorithm, final String privateKeyStr, final String publicKeyStr) {
 		super(eciesAlgorithm, privateKeyStr, publicKeyStr);
 	}
 
@@ -70,7 +70,7 @@ public class ECIES extends AsymmetricCrypto{
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public ECIES(byte[] privateKey, byte[] publicKey) {
+	public ECIES(final byte[] privateKey, final byte[] publicKey) {
 		super(ALGORITHM_ECIES, privateKey, publicKey);
 	}
 
@@ -83,7 +83,7 @@ public class ECIES extends AsymmetricCrypto{
 	 * @param publicKey 公钥
 	 * @since 3.1.1
 	 */
-	public ECIES(PrivateKey privateKey, PublicKey publicKey) {
+	public ECIES(final PrivateKey privateKey, final PublicKey publicKey) {
 		super(ALGORITHM_ECIES, privateKey, publicKey);
 	}
 
@@ -97,7 +97,7 @@ public class ECIES extends AsymmetricCrypto{
 	 * @param publicKey 公钥
 	 * @since 4.5.8
 	 */
-	public ECIES(String eciesAlgorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public ECIES(final String eciesAlgorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		super(eciesAlgorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end

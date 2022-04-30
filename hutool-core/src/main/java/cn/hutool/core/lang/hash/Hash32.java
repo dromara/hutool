@@ -18,7 +18,7 @@ public interface Hash32<T> extends Hash<T>{
 	int hash32(T t);
 
 	@Override
-	default Number hash(T t){
+	default Number hash(final T t){
 		return hash32(t);
 	}
 }

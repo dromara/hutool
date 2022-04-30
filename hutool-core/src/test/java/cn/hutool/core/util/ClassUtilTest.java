@@ -18,10 +18,10 @@ public class ClassUtilTest {
 
 	@Test
 	public void getClassNameTest() {
-		String className = ClassUtil.getClassName(ClassUtil.class, false);
+		final String className = ClassUtil.getClassName(ClassUtil.class, false);
 		Assert.assertEquals("cn.hutool.core.reflect.ClassUtil", className);
 
-		String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
+		final String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
 		Assert.assertEquals("ClassUtil", simpleClassName);
 	}
 
@@ -51,57 +51,57 @@ public class ClassUtilTest {
 
 	@Test
 	public void getPublicMethod() {
-		Method superPublicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicMethod");
+		final Method superPublicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicMethod");
 		Assert.assertNotNull(superPublicMethod);
-		Method superPrivateMethod = ClassUtil.getPublicMethod(TestSubClass.class, "privateMethod");
+		final Method superPrivateMethod = ClassUtil.getPublicMethod(TestSubClass.class, "privateMethod");
 		Assert.assertNull(superPrivateMethod);
 
-		Method publicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicSubMethod");
+		final Method publicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicSubMethod");
 		Assert.assertNotNull(publicMethod);
-		Method privateMethod = ClassUtil.getPublicMethod(TestSubClass.class, "privateSubMethod");
+		final Method privateMethod = ClassUtil.getPublicMethod(TestSubClass.class, "privateSubMethod");
 		Assert.assertNull(privateMethod);
 	}
 
 	@Test
 	public void getDeclaredMethod() {
-		Method noMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "noMethod");
+		final Method noMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "noMethod");
 		Assert.assertNull(noMethod);
 
-		Method privateMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "privateMethod");
+		final Method privateMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "privateMethod");
 		Assert.assertNotNull(privateMethod);
-		Method publicMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "publicMethod");
+		final Method publicMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "publicMethod");
 		Assert.assertNotNull(publicMethod);
 
-		Method publicSubMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "publicSubMethod");
+		final Method publicSubMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "publicSubMethod");
 		Assert.assertNotNull(publicSubMethod);
-		Method privateSubMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "privateSubMethod");
+		final Method privateSubMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "privateSubMethod");
 		Assert.assertNotNull(privateSubMethod);
 
 	}
 
 	@Test
 	public void getDeclaredField() {
-		Field noField = ClassUtil.getDeclaredField(TestSubClass.class, "noField");
+		final Field noField = ClassUtil.getDeclaredField(TestSubClass.class, "noField");
 		Assert.assertNull(noField);
 
 		// 获取不到父类字段
-		Field field = ClassUtil.getDeclaredField(TestSubClass.class, "field");
+		final Field field = ClassUtil.getDeclaredField(TestSubClass.class, "field");
 		Assert.assertNull(field);
 
-		Field subField = ClassUtil.getDeclaredField(TestSubClass.class, "subField");
+		final Field subField = ClassUtil.getDeclaredField(TestSubClass.class, "subField");
 		Assert.assertNotNull(subField);
 	}
 
 	@Test
 	public void getClassPathTest() {
-		String classPath = ClassUtil.getClassPath();
+		final String classPath = ClassUtil.getClassPath();
 		Assert.assertNotNull(classPath);
 	}
 
 	@Test
 	public void getShortClassNameTest() {
-		String className = "cn.hutool.core.text.StrUtil";
-		String result = ClassUtil.getShortClassName(className);
+		final String className = "cn.hutool.core.text.StrUtil";
+		final String result = ClassUtil.getShortClassName(className);
 		Assert.assertEquals("c.h.c.t.StrUtil", result);
 	}
 

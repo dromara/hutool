@@ -55,7 +55,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 *
 	 * @param initMap 初始Map，用于定义Map类型
 	 */
-	public SimpleCache(Map<Mutable<K>, V> initMap) {
+	public SimpleCache(final Map<Mutable<K>, V> initMap) {
 		this.rawMap = initMap;
 	}
 
@@ -65,7 +65,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @param key 键
 	 * @return 值
 	 */
-	public V get(K key) {
+	public V get(final K key) {
 		lock.readLock().lock();
 		try {
 			return rawMap.get(MutableObj.of(key));
@@ -81,7 +81,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @param supplier 如果不存在回调方法，用于生产值对象
 	 * @return 值对象
 	 */
-	public V get(K key, Func0<V> supplier) {
+	public V get(final K key, final Func0<V> supplier) {
 		return get(key, null, supplier);
 	}
 
@@ -94,7 +94,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @return 值对象
 	 * @since 5.7.9
 	 */
-	public V get(K key, Predicate<V> validPredicate, Func0<V> supplier) {
+	public V get(final K key, final Predicate<V> validPredicate, final Func0<V> supplier) {
 		V v = get(key);
 		if((null != validPredicate && false == validPredicate.test(v))){
 			v = null;
@@ -109,7 +109,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 				if (null == v || (null != validPredicate && false == validPredicate.test(v))) {
 					try {
 						v = supplier.call();
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						throw new RuntimeException(e);
 					}
 					put(key, v);
@@ -130,7 +130,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @param value 值
 	 * @return 值
 	 */
-	public V put(K key, V value) {
+	public V put(final K key, final V value) {
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
@@ -147,7 +147,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @param key 键
 	 * @return 移除的值
 	 */
-	public V remove(K key) {
+	public V remove(final K key) {
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
@@ -184,7 +184,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 			}
 
 			@Override
-			public V setValue(V value) {
+			public V setValue(final V value) {
 				return entry.setValue(value);
 			}
 		});

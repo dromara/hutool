@@ -25,7 +25,7 @@ public class YamlUtil {
 	 * @param path YAML路径，相对路径相对classpath
 	 * @return 加载的内容，默认Map
 	 */
-	public static Dict loadByPath(String path) {
+	public static Dict loadByPath(final String path) {
 		return loadByPath(path, Dict.class);
 	}
 
@@ -37,7 +37,7 @@ public class YamlUtil {
 	 * @param type 加载的Bean类型，即转换为的bean
 	 * @return 加载的内容，默认Map
 	 */
-	public static <T> T loadByPath(String path, Class<T> type) {
+	public static <T> T loadByPath(final String path, final Class<T> type) {
 		return load(ResourceUtil.getStream(path), type);
 	}
 
@@ -49,7 +49,7 @@ public class YamlUtil {
 	 * @param type 加载的Bean类型，即转换为的bean
 	 * @return 加载的内容，默认Map
 	 */
-	public static <T> T load(InputStream in, Class<T> type) {
+	public static <T> T load(final InputStream in, final Class<T> type) {
 		return load(IoUtil.getBomReader(in), type);
 	}
 
@@ -59,7 +59,7 @@ public class YamlUtil {
 	 * @param reader {@link Reader}
 	 * @return 加载的Map
 	 */
-	public static Dict load(Reader reader) {
+	public static Dict load(final Reader reader) {
 		return load(reader, Dict.class);
 	}
 
@@ -71,7 +71,7 @@ public class YamlUtil {
 	 * @param type   加载的Bean类型，即转换为的bean
 	 * @return 加载的内容，默认Map
 	 */
-	public static <T> T load(Reader reader, Class<T> type) {
+	public static <T> T load(final Reader reader, final Class<T> type) {
 		return load(reader, type, true);
 	}
 
@@ -85,7 +85,7 @@ public class YamlUtil {
 	 * @return 加载的内容，默认Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T load(Reader reader, Class<T> type, boolean isCloseReader) {
+	public static <T> T load(final Reader reader, Class<T> type, final boolean isCloseReader) {
 		Assert.notNull(reader, "Reader must be not null !");
 		if (null == type) {
 			type = (Class<T>) Object.class;
@@ -107,7 +107,7 @@ public class YamlUtil {
 	 * @param object 对象
 	 * @param writer {@link Writer}
 	 */
-	public static void dump(Object object, Writer writer) {
+	public static void dump(final Object object, final Writer writer) {
 		final DumperOptions options = new DumperOptions();
 		options.setIndent(2);
 		options.setPrettyFlow(true);
@@ -123,7 +123,7 @@ public class YamlUtil {
 	 * @param writer        {@link Writer}
 	 * @param dumperOptions 输出风格
 	 */
-	public static void dump(Object object, Writer writer, DumperOptions dumperOptions) {
+	public static void dump(final Object object, final Writer writer, DumperOptions dumperOptions) {
 		if (null == dumperOptions) {
 			dumperOptions = new DumperOptions();
 		}

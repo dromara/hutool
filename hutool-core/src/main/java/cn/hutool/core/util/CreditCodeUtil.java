@@ -58,7 +58,7 @@ public class CreditCodeUtil {
 	 * @param creditCode 统一社会信用代码
 	 * @return 校验结果
 	 */
-	public static boolean isCreditCodeSimple(CharSequence creditCode) {
+	public static boolean isCreditCodeSimple(final CharSequence creditCode) {
 		if (StrUtil.isBlank(creditCode)) {
 			return false;
 		}
@@ -78,7 +78,7 @@ public class CreditCodeUtil {
 	 * @param creditCode 统一社会信用代码
 	 * @return 校验结果
 	 */
-	public static boolean isCreditCode(CharSequence creditCode) {
+	public static boolean isCreditCode(final CharSequence creditCode) {
 		if (false == isCreditCodeSimple(creditCode)) {
 			return false;
 		}
@@ -102,15 +102,15 @@ public class CreditCodeUtil {
 
 		//
 		for (int i = 0; i < 2; i++) {
-			int num = RandomUtil.randomInt(BASE_CODE_ARRAY.length - 1);
+			final int num = RandomUtil.randomInt(BASE_CODE_ARRAY.length - 1);
 			buf.append(Character.toUpperCase(BASE_CODE_ARRAY[num]));
 		}
 		for (int i = 2; i < 8; i++) {
-			int num = RandomUtil.randomInt(10);
+			final int num = RandomUtil.randomInt(10);
 			buf.append(BASE_CODE_ARRAY[num]);
 		}
 		for (int i = 8; i < 17; i++) {
-			int num = RandomUtil.randomInt(BASE_CODE_ARRAY.length - 1);
+			final int num = RandomUtil.randomInt(BASE_CODE_ARRAY.length - 1);
 			buf.append(BASE_CODE_ARRAY[num]);
 		}
 
@@ -124,7 +124,7 @@ public class CreditCodeUtil {
 	 * @param creditCode 统一社会信息代码
 	 * @return 获取校验位的值，-1表示获取错误
 	 */
-	private static int getParityBit(CharSequence creditCode) {
+	private static int getParityBit(final CharSequence creditCode) {
 		int sum = 0;
 		Integer codeIndex;
 		for (int i = 0; i < 17; i++) {

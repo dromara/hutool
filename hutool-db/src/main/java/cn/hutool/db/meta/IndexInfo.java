@@ -55,7 +55,7 @@ public class IndexInfo implements Serializable, Cloneable {
 	 * @param schema    table所在的schema
 	 * @param catalog   table所在的catalog
 	 */
-	public IndexInfo(boolean nonUnique, String indexName, String tableName, String schema, String catalog) {
+	public IndexInfo(final boolean nonUnique, final String indexName, final String tableName, final String schema, final String catalog) {
 		this.nonUnique = nonUnique;
 		this.indexName = indexName;
 		this.tableName = tableName;
@@ -68,7 +68,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		return nonUnique;
 	}
 
-	public void setNonUnique(boolean nonUnique) {
+	public void setNonUnique(final boolean nonUnique) {
 		this.nonUnique = nonUnique;
 	}
 
@@ -76,7 +76,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		return indexName;
 	}
 
-	public void setIndexName(String indexName) {
+	public void setIndexName(final String indexName) {
 		this.indexName = indexName;
 	}
 
@@ -84,7 +84,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		return tableName;
 	}
 
-	public void setTableName(String tableName) {
+	public void setTableName(final String tableName) {
 		this.tableName = tableName;
 	}
 
@@ -92,7 +92,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		return schema;
 	}
 
-	public void setSchema(String schema) {
+	public void setSchema(final String schema) {
 		this.schema = schema;
 	}
 
@@ -100,7 +100,7 @@ public class IndexInfo implements Serializable, Cloneable {
 		return catalog;
 	}
 
-	public void setCatalog(String catalog) {
+	public void setCatalog(final String catalog) {
 		this.catalog = catalog;
 	}
 
@@ -108,19 +108,19 @@ public class IndexInfo implements Serializable, Cloneable {
 		return columnIndexInfoList;
 	}
 
-	public void setColumnIndexInfoList(List<ColumnIndexInfo> columnIndexInfoList) {
+	public void setColumnIndexInfoList(final List<ColumnIndexInfo> columnIndexInfoList) {
 		this.columnIndexInfoList = columnIndexInfoList;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		IndexInfo indexInfo = (IndexInfo) o;
+		final IndexInfo indexInfo = (IndexInfo) o;
 		return ObjUtil.equals(indexName, indexInfo.indexName)
 				&& ObjUtil.equals(tableName, indexInfo.tableName);
 	}

@@ -33,10 +33,10 @@ public interface Func1<P, R> extends Serializable {
 	 * @return 函数执行结果
 	 * @since 5.3.6
 	 */
-	default R callWithRuntimeException(P parameter){
+	default R callWithRuntimeException(final P parameter){
 		try {
 			return call(parameter);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

@@ -15,21 +15,21 @@ public class TypeUtilTest {
 
 	@Test
 	public void getEleTypeTest() {
-		Method method = ReflectUtil.getMethod(TestClass.class, "getList");
-		Type type = TypeUtil.getReturnType(method);
+		final Method method = ReflectUtil.getMethod(TestClass.class, "getList");
+		final Type type = TypeUtil.getReturnType(method);
 		Assert.assertEquals("java.util.List<java.lang.String>", type.toString());
 
-		Type type2 = TypeUtil.getTypeArgument(type);
+		final Type type2 = TypeUtil.getTypeArgument(type);
 		Assert.assertEquals(String.class, type2);
 	}
 
 	@Test
 	public void getParamTypeTest() {
-		Method method = ReflectUtil.getMethod(TestClass.class, "intTest", Integer.class);
-		Type type = TypeUtil.getParamType(method, 0);
+		final Method method = ReflectUtil.getMethod(TestClass.class, "intTest", Integer.class);
+		final Type type = TypeUtil.getParamType(method, 0);
 		Assert.assertEquals(Integer.class, type);
 
-		Type returnType = TypeUtil.getReturnType(method);
+		final Type returnType = TypeUtil.getReturnType(method);
 		Assert.assertEquals(Integer.class, returnType);
 	}
 
@@ -38,7 +38,7 @@ public class TypeUtilTest {
 			return new ArrayList<>();
 		}
 
-		public Integer intTest(Integer integer) {
+		public Integer intTest(final Integer integer) {
 			return 1;
 		}
 	}
@@ -56,14 +56,14 @@ public class TypeUtilTest {
 
 	public static class IPService implements OperateService<String> {
 		@Override
-		public void service(String string) {
+		public void service(final String string) {
 		}
 	}
 
 	@Test
 	public void getActualTypesTest(){
 		// 测试多层级泛型参数是否能获取成功
-		Type idType = TypeUtil.getActualType(Level3.class,
+		final Type idType = TypeUtil.getActualType(Level3.class,
 				ReflectUtil.getField(Level3.class, "id"));
 
 		Assert.assertEquals(Long.class, idType);

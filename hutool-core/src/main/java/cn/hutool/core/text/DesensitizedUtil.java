@@ -72,7 +72,7 @@ public class DesensitizedUtil {
 	 * @author dazer and neusoft and qiaomu
 	 * @since 5.6.2
 	 */
-	public static String desensitized(CharSequence str, DesensitizedUtil.DesensitizedType desensitizedType) {
+	public static String desensitized(final CharSequence str, final DesensitizedUtil.DesensitizedType desensitizedType) {
 		if (StrUtil.isBlank(str)) {
 			return StrUtil.EMPTY;
 		}
@@ -128,7 +128,7 @@ public class DesensitizedUtil {
 	 * @param fullName 姓名
 	 * @return 脱敏后的姓名
 	 */
-	public static String chineseName(String fullName) {
+	public static String chineseName(final String fullName) {
 		if (StrUtil.isBlank(fullName)) {
 			return StrUtil.EMPTY;
 		}
@@ -143,7 +143,7 @@ public class DesensitizedUtil {
 	 * @param end       保留：后面的end位数；从1开始
 	 * @return 脱敏后的身份证
 	 */
-	public static String idCardNum(String idCardNum, int front, int end) {
+	public static String idCardNum(final String idCardNum, final int front, final int end) {
 		//身份证不能为空
 		if (StrUtil.isBlank(idCardNum)) {
 			return StrUtil.EMPTY;
@@ -165,7 +165,7 @@ public class DesensitizedUtil {
 	 * @param num 固定电话
 	 * @return 脱敏后的固定电话；
 	 */
-	public static String fixedPhone(String num) {
+	public static String fixedPhone(final String num) {
 		if (StrUtil.isBlank(num)) {
 			return StrUtil.EMPTY;
 		}
@@ -178,7 +178,7 @@ public class DesensitizedUtil {
 	 * @param num 移动电话；
 	 * @return 脱敏后的移动电话；
 	 */
-	public static String mobilePhone(String num) {
+	public static String mobilePhone(final String num) {
 		if (StrUtil.isBlank(num)) {
 			return StrUtil.EMPTY;
 		}
@@ -192,11 +192,11 @@ public class DesensitizedUtil {
 	 * @param sensitiveSize 敏感信息长度
 	 * @return 脱敏后的家庭地址
 	 */
-	public static String address(String address, int sensitiveSize) {
+	public static String address(final String address, final int sensitiveSize) {
 		if (StrUtil.isBlank(address)) {
 			return StrUtil.EMPTY;
 		}
-		int length = address.length();
+		final int length = address.length();
 		return StrUtil.hide(address, length - sensitiveSize, length);
 	}
 
@@ -206,11 +206,11 @@ public class DesensitizedUtil {
 	 * @param email 邮箱
 	 * @return 脱敏后的邮箱
 	 */
-	public static String email(String email) {
+	public static String email(final String email) {
 		if (StrUtil.isBlank(email)) {
 			return StrUtil.EMPTY;
 		}
-		int index = StrUtil.indexOf(email, '@');
+		final int index = StrUtil.indexOf(email, '@');
 		if (index <= 1) {
 			return email;
 		}
@@ -223,7 +223,7 @@ public class DesensitizedUtil {
 	 * @param password 密码
 	 * @return 脱敏后的密码
 	 */
-	public static String password(String password) {
+	public static String password(final String password) {
 		if (StrUtil.isBlank(password)) {
 			return StrUtil.EMPTY;
 		}

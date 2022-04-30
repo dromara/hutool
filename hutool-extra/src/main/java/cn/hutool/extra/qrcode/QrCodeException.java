@@ -11,27 +11,27 @@ import cn.hutool.core.text.StrUtil;
 public class QrCodeException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public QrCodeException(Throwable e) {
+	public QrCodeException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public QrCodeException(String message) {
+	public QrCodeException(final String message) {
 		super(message);
 	}
 
-	public QrCodeException(String messageTemplate, Object... params) {
+	public QrCodeException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public QrCodeException(String message, Throwable throwable) {
+	public QrCodeException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public QrCodeException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public QrCodeException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public QrCodeException(Throwable throwable, String messageTemplate, Object... params) {
+	public QrCodeException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

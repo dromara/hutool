@@ -29,7 +29,7 @@ public class JWTValidator {
 	 * @param token JWT Token
 	 * @return JWTValidator
 	 */
-	public static JWTValidator of(String token) {
+	public static JWTValidator of(final String token) {
 		return new JWTValidator(JWT.of(token));
 	}
 
@@ -39,7 +39,7 @@ public class JWTValidator {
 	 * @param jwt JWT对象
 	 * @return JWTValidator
 	 */
-	public static JWTValidator of(JWT jwt) {
+	public static JWTValidator of(final JWT jwt) {
 		return new JWTValidator(jwt);
 	}
 
@@ -48,7 +48,7 @@ public class JWTValidator {
 	 *
 	 * @param jwt JWT对象
 	 */
-	public JWTValidator(JWT jwt) {
+	public JWTValidator(final JWT jwt) {
 		this.jwt = jwt;
 	}
 
@@ -69,7 +69,7 @@ public class JWTValidator {
 	 * @return this
 	 * @throws ValidateException 验证失败的异常
 	 */
-	public JWTValidator validateAlgorithm(JWTSigner signer) throws ValidateException {
+	public JWTValidator validateAlgorithm(final JWTSigner signer) throws ValidateException {
 		validateAlgorithm(this.jwt, signer);
 		return this;
 	}
@@ -108,7 +108,7 @@ public class JWTValidator {
 	 * @return this
 	 * @throws ValidateException 验证失败的异常
 	 */
-	public JWTValidator validateDate(Date dateToCheck) throws ValidateException {
+	public JWTValidator validateDate(final Date dateToCheck) throws ValidateException {
 		validateDate(this.jwt.getPayload(), dateToCheck, 0L);
 		return this;
 	}
@@ -129,7 +129,7 @@ public class JWTValidator {
 	 * @return this
 	 * @throws ValidateException 验证失败的异常
 	 */
-	public JWTValidator validateDate(Date dateToCheck, long leeway) throws ValidateException {
+	public JWTValidator validateDate(final Date dateToCheck, final long leeway) throws ValidateException {
 		validateDate(this.jwt.getPayload(), dateToCheck, leeway);
 		return this;
 	}
@@ -141,7 +141,7 @@ public class JWTValidator {
 	 * @param signer 用于验证的签名器
 	 * @throws ValidateException 验证异常
 	 */
-	private static void validateAlgorithm(JWT jwt, JWTSigner signer) throws ValidateException {
+	private static void validateAlgorithm(final JWT jwt, JWTSigner signer) throws ValidateException {
 		final String algorithmId = jwt.getAlgorithm();
 		if (null == signer) {
 			signer = jwt.getSigner();
@@ -187,7 +187,7 @@ public class JWTValidator {
 	 * @param leeway  容忍空间，单位：秒。当不能晚于当前时间时，向后容忍；不能早于向前容忍。
 	 * @throws ValidateException 验证异常
 	 */
-	private static void validateDate(JWTPayload payload, Date now, long leeway) throws ValidateException {
+	private static void validateDate(final JWTPayload payload, Date now, final long leeway) throws ValidateException {
 		if (null == now) {
 			// 默认当前时间
 			now = DateUtil.date();
@@ -218,7 +218,7 @@ public class JWTValidator {
 	 * @param leeway      容忍空间，单位：秒。向后容忍
 	 * @throws ValidateException 验证异常
 	 */
-	private static void validateNotAfter(String fieldName, Date dateToCheck, Date now, long leeway) throws ValidateException {
+	private static void validateNotAfter(final String fieldName, final Date dateToCheck, final Date now, final long leeway) throws ValidateException {
 		if (null == dateToCheck) {
 			return;
 		}
@@ -240,7 +240,7 @@ public class JWTValidator {
 	 * @throws ValidateException 验证异常
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private static void validateNotBefore(String fieldName, Date dateToCheck, Date now, long leeway) throws ValidateException {
+	private static void validateNotBefore(final String fieldName, final Date dateToCheck, final Date now, final long leeway) throws ValidateException {
 		if (null == dateToCheck) {
 			return;
 		}

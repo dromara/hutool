@@ -30,14 +30,14 @@ public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T
 	 * @param iterators 多个{@link Iterator}
 	 */
 	@SafeVarargs
-	public IterChain(Iterator<T>... iterators) {
+	public IterChain(final Iterator<T>... iterators) {
 		for (final Iterator<T> iterator : iterators) {
 			addChain(iterator);
 		}
 	}
 
 	@Override
-	public IterChain<T> addChain(Iterator<T> iterator) {
+	public IterChain<T> addChain(final Iterator<T> iterator) {
 		if (allIterators.contains(iterator)) {
 			throw new IllegalArgumentException("Duplicate iterator");
 		}

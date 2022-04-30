@@ -14,7 +14,7 @@ public class NumericEntityUnescaper extends StrReplacer {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected int replace(CharSequence str, int pos, StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
 		final int len = str.length();
 		// 检查以确保以&#开头
 		if (str.charAt(pos) == '&' && pos < len - 2 && str.charAt(pos + 1) == '#') {
@@ -37,7 +37,7 @@ public class NumericEntityUnescaper extends StrReplacer {
 			}
 			final boolean isSemiNext = (end != len) && (str.charAt(end) == ';');
 			if (isSemiNext) {
-				int entityValue;
+				final int entityValue;
 				try {
 					if (isHex) {
 						entityValue = Integer.parseInt(str.subSequence(start, end).toString(), 16);

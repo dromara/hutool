@@ -42,7 +42,7 @@ public class DataSizeUtilTest {
 
 		try {
 			DataSizeUtil.parse("3.1.3");
-		} catch (IllegalArgumentException ie) {
+		} catch (final IllegalArgumentException ie) {
 			Assert.assertEquals("'3.1.3' is not a valid data size", ie.getMessage());
 		}
 

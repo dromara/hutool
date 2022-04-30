@@ -44,7 +44,7 @@ public enum SignAlgorithm {
 	 *
 	 * @param value 算法字符表示，区分大小写
 	 */
-	SignAlgorithm(String value) {
+	SignAlgorithm(final String value) {
 		this.value = value;
 	}
 

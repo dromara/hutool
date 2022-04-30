@@ -12,27 +12,27 @@ import cn.hutool.core.text.StrUtil;
 public class ThreadException extends RuntimeException {
 	private static final long serialVersionUID = 5253124428623713216L;
 
-	public ThreadException(Throwable e) {
+	public ThreadException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public ThreadException(String message) {
+	public ThreadException(final String message) {
 		super(message);
 	}
 
-	public ThreadException(String messageTemplate, Object... params) {
+	public ThreadException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public ThreadException(String message, Throwable throwable) {
+	public ThreadException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public ThreadException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public ThreadException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public ThreadException(Throwable throwable, String messageTemplate, Object... params) {
+	public ThreadException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

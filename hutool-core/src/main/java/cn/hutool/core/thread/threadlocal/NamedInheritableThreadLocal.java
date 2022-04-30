@@ -16,7 +16,7 @@ public class NamedInheritableThreadLocal<T> extends InheritableThreadLocal<T> {
 	 *
 	 * @param name 名字
 	 */
-	public NamedInheritableThreadLocal(String name) {
+	public NamedInheritableThreadLocal(final String name) {
 		this.name = name;
 	}
 

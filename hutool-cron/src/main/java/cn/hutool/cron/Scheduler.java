@@ -84,7 +84,7 @@ public class Scheduler implements Serializable {
 	 * @param timeZone 时区
 	 * @return this
 	 */
-	public Scheduler setTimeZone(TimeZone timeZone) {
+	public Scheduler setTimeZone(final TimeZone timeZone) {
 		this.config.setTimeZone(timeZone);
 		return this;
 	}
@@ -107,7 +107,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 * @throws CronException 定时任务已经启动抛出此异常
 	 */
-	public Scheduler setDaemon(boolean on) throws CronException {
+	public Scheduler setDaemon(final boolean on) throws CronException {
 		lock.lock();
 		try {
 			checkStarted();
@@ -127,7 +127,7 @@ public class Scheduler implements Serializable {
 	 * @throws CronException 定时任务已经启动抛出此异常
 	 * @since 5.7.10
 	 */
-	public Scheduler setThreadExecutor(ExecutorService threadExecutor) throws CronException {
+	public Scheduler setThreadExecutor(final ExecutorService threadExecutor) throws CronException {
 		lock.lock();
 		try {
 			checkStarted();
@@ -162,7 +162,7 @@ public class Scheduler implements Serializable {
 	 * @param isMatchSecond {@code true}支持，{@code false}不支持
 	 * @return this
 	 */
-	public Scheduler setMatchSecond(boolean isMatchSecond) {
+	public Scheduler setMatchSecond(final boolean isMatchSecond) {
 		this.config.setMatchSecond(isMatchSecond);
 		return this;
 	}
@@ -173,7 +173,7 @@ public class Scheduler implements Serializable {
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public Scheduler addListener(TaskListener listener) {
+	public Scheduler addListener(final TaskListener listener) {
 		this.listenerManager.addListener(listener);
 		return this;
 	}
@@ -184,7 +184,7 @@ public class Scheduler implements Serializable {
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public Scheduler removeListener(TaskListener listener) {
+	public Scheduler removeListener(final TaskListener listener) {
 		this.listenerManager.removeListener(listener);
 		return this;
 	}
@@ -198,12 +198,12 @@ public class Scheduler implements Serializable {
 	 * @param cronSetting 定时任务设置文件
 	 * @return this
 	 */
-	public Scheduler schedule(Setting cronSetting) {
+	public Scheduler schedule(final Setting cronSetting) {
 		if (MapUtil.isNotEmpty(cronSetting)) {
 			String group;
-			for (Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
+			for (final Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
 				group = groupedEntry.getKey();
-				for (Entry<String, String> entry : groupedEntry.getValue().entrySet()) {
+				for (final Entry<String, String> entry : groupedEntry.getValue().entrySet()) {
 					String jobClass = entry.getKey();
 					if (StrUtil.isNotBlank(group)) {
 						jobClass = group + CharUtil.DOT + jobClass;
@@ -212,7 +212,7 @@ public class Scheduler implements Serializable {
 					StaticLog.debug("Load job: {} {}", pattern, jobClass);
 					try {
 						schedule(pattern, new InvokeTask(jobClass));
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
 					}
 				}
@@ -228,7 +228,7 @@ public class Scheduler implements Serializable {
 	 * @param task {@link Runnable}
 	 * @return ID
 	 */
-	public String schedule(String pattern, Runnable task) {
+	public String schedule(final String pattern, final Runnable task) {
 		return schedule(pattern, new RunnableTask(task));
 	}
 
@@ -239,8 +239,8 @@ public class Scheduler implements Serializable {
 	 * @param task {@link Task}
 	 * @return ID
 	 */
-	public String schedule(String pattern, Task task) {
-		String id = IdUtil.fastUUID();
+	public String schedule(final String pattern, final Task task) {
+		final String id = IdUtil.fastUUID();
 		schedule(id, pattern, task);
 		return id;
 	}
@@ -253,7 +253,7 @@ public class Scheduler implements Serializable {
 	 * @param task {@link Runnable}
 	 * @return this
 	 */
-	public Scheduler schedule(String id, String pattern, Runnable task) {
+	public Scheduler schedule(final String id, final String pattern, final Runnable task) {
 		return schedule(id, new CronPattern(pattern), new RunnableTask(task));
 	}
 
@@ -265,7 +265,7 @@ public class Scheduler implements Serializable {
 	 * @param task {@link Task}
 	 * @return this
 	 */
-	public Scheduler schedule(String id, String pattern, Task task) {
+	public Scheduler schedule(final String id, final String pattern, final Task task) {
 		return schedule(id, new CronPattern(pattern), task);
 	}
 
@@ -277,7 +277,7 @@ public class Scheduler implements Serializable {
 	 * @param task {@link Task}
 	 * @return this
 	 */
-	public Scheduler schedule(String id, CronPattern pattern, Task task) {
+	public Scheduler schedule(final String id, final CronPattern pattern, final Task task) {
 		taskTable.add(id, pattern, task);
 		return this;
 	}
@@ -288,7 +288,7 @@ public class Scheduler implements Serializable {
 	 * @param id Task的ID
 	 * @return this
 	 */
-	public Scheduler deschedule(String id) {
+	public Scheduler deschedule(final String id) {
 		descheduleWithStatus(id);
 		return this;
 	}
@@ -300,7 +300,7 @@ public class Scheduler implements Serializable {
 	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
 	 * @since 5.7.17
 	 */
-	public boolean descheduleWithStatus(String id) {
+	public boolean descheduleWithStatus(final String id) {
 		return this.taskTable.remove(id);
 	}
 
@@ -312,7 +312,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 * @since 4.0.10
 	 */
-	public Scheduler updatePattern(String id, CronPattern pattern) {
+	public Scheduler updatePattern(final String id, final CronPattern pattern) {
 		this.taskTable.updatePattern(id, pattern);
 		return this;
 	}
@@ -334,7 +334,7 @@ public class Scheduler implements Serializable {
 	 * @return {@link CronPattern}
 	 * @since 3.1.1
 	 */
-	public CronPattern getPattern(String id) {
+	public CronPattern getPattern(final String id) {
 		return this.taskTable.getPattern(id);
 	}
 
@@ -345,7 +345,7 @@ public class Scheduler implements Serializable {
 	 * @return {@link Task}
 	 * @since 3.1.1
 	 */
-	public Task getTask(String id) {
+	public Task getTask(final String id) {
 		return this.taskTable.getTask(id);
 	}
 
@@ -393,7 +393,7 @@ public class Scheduler implements Serializable {
 	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 * @return this
 	 */
-	public Scheduler start(boolean isDaemon) {
+	public Scheduler start(final boolean isDaemon) {
 		this.daemon = isDaemon;
 		return start();
 	}
@@ -447,7 +447,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 * @since 4.1.17
 	 */
-	public Scheduler stop(boolean clearTasks) {
+	public Scheduler stop(final boolean clearTasks) {
 		lock.lock();
 		try {
 			if (false == started) {

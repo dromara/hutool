@@ -40,7 +40,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 *
 	 * @param algorithm {@link SignAlgorithm}
 	 */
-	public Sign(SignAlgorithm algorithm) {
+	public Sign(final SignAlgorithm algorithm) {
 		this(algorithm, null, (byte[]) null);
 	}
 
@@ -49,7 +49,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 *
 	 * @param algorithm 算法
 	 */
-	public Sign(String algorithm) {
+	public Sign(final String algorithm) {
 		this(algorithm, null, (byte[]) null);
 	}
 
@@ -61,7 +61,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKeyStr 私钥Hex或Base64表示
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public Sign(SignAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
+	public Sign(final SignAlgorithm algorithm, final String privateKeyStr, final String publicKeyStr) {
 		this(algorithm.getValue(), SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
@@ -73,7 +73,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public Sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
+	public Sign(final SignAlgorithm algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
 	}
 
@@ -84,7 +84,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param algorithm {@link SignAlgorithm}
 	 * @param keyPair 密钥对（包括公钥和私钥）
 	 */
-	public Sign(SignAlgorithm algorithm, KeyPair keyPair) {
+	public Sign(final SignAlgorithm algorithm, final KeyPair keyPair) {
 		this(algorithm.getValue(), keyPair);
 	}
 
@@ -96,7 +96,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public Sign(SignAlgorithm algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public Sign(final SignAlgorithm algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
 	}
 
@@ -108,7 +108,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
 	 */
-	public Sign(String algorithm, String privateKeyBase64, String publicKeyBase64) {
+	public Sign(final String algorithm, final String privateKeyBase64, final String publicKeyBase64) {
 		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 
@@ -122,7 +122,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public Sign(String algorithm, byte[] privateKey, byte[] publicKey) {
+	public Sign(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm, //
 				SecureUtil.generatePrivateKey(algorithm, privateKey), //
 				SecureUtil.generatePublicKey(algorithm, publicKey)//
@@ -136,7 +136,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param algorithm 算法，见{@link SignAlgorithm}
 	 * @param keyPair 密钥对（包括公钥和私钥）
 	 */
-	public Sign(String algorithm, KeyPair keyPair) {
+	public Sign(final String algorithm, final KeyPair keyPair) {
 		this(algorithm, keyPair.getPrivate(), keyPair.getPublic());
 	}
 
@@ -150,7 +150,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public Sign(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public Sign(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		super(algorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
@@ -164,7 +164,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return this
 	 */
 	@Override
-	public Sign init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public Sign init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		signature = SecureUtil.createSignature(algorithm);
 		super.init(algorithm, privateKey, publicKey);
 		return this;
@@ -177,10 +177,10 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return this
 	 * @since 4.6.5
 	 */
-	public Sign setParameter(AlgorithmParameterSpec params) {
+	public Sign setParameter(final AlgorithmParameterSpec params) {
 		try {
 			this.signature.setParameter(params);
-		} catch (InvalidAlgorithmParameterException e) {
+		} catch (final InvalidAlgorithmParameterException e) {
 			throw new CryptoException(e);
 		}
 		return this;
@@ -195,7 +195,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public byte[] sign(String data, Charset charset) {
+	public byte[] sign(final String data, final Charset charset) {
 		return sign(StrUtil.bytes(data, charset));
 	}
 
@@ -206,7 +206,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public byte[] sign(String data) {
+	public byte[] sign(final String data) {
 		return sign(data, CharsetUtil.UTF_8);
 	}
 
@@ -218,7 +218,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String signHex(String data, Charset charset) {
+	public String signHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(sign(data, charset));
 	}
 
@@ -229,7 +229,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String signHex(String data) {
+	public String signHex(final String data) {
 		return signHex(data, CharsetUtil.UTF_8);
 	}
 
@@ -239,7 +239,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param data 加密数据
 	 * @return 签名
 	 */
-	public byte[] sign(byte[] data) {
+	public byte[] sign(final byte[] data) {
 		return sign(new ByteArrayInputStream(data), -1);
 	}
 
@@ -250,7 +250,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String signHex(byte[] data) {
+	public String signHex(final byte[] data) {
 		return HexUtil.encodeHexStr(sign(data));
 	}
 
@@ -262,7 +262,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String signHex(InputStream data) {
+	public String signHex(final InputStream data) {
 		return HexUtil.encodeHexStr(sign(data));
 	}
 
@@ -273,7 +273,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名bytes
 	 * @since 5.7.0
 	 */
-	public byte[] sign(InputStream data) {
+	public byte[] sign(final InputStream data) {
 		return sign(data, IoUtil.DEFAULT_BUFFER_SIZE);
 	}
 
@@ -286,7 +286,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名
 	 * @since 5.7.0
 	 */
-	public String digestHex(InputStream data, int bufferLength) {
+	public String digestHex(final InputStream data, final int bufferLength) {
 		return HexUtil.encodeHexStr(sign(data, bufferLength));
 	}
 
@@ -298,7 +298,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @return 签名bytes
 	 * @since 5.7.0
 	 */
-	public byte[] sign(InputStream data, int bufferLength){
+	public byte[] sign(final InputStream data, int bufferLength){
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}
@@ -307,7 +307,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 		lock.lock();
 		try {
 			signature.initSign(this.privateKey);
-			byte[] result;
+			final byte[] result;
 			try {
 				int read = data.read(buffer, 0, bufferLength);
 				while (read > -1) {
@@ -315,11 +315,11 @@ public class Sign extends BaseAsymmetric<Sign> {
 					read = data.read(buffer, 0, bufferLength);
 				}
 				result = signature.sign();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new CryptoException(e);
 			}
 			return result;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -333,13 +333,13 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param sign 签名
 	 * @return 是否验证通过
 	 */
-	public boolean verify(byte[] data, byte[] sign) {
+	public boolean verify(final byte[] data, final byte[] sign) {
 		lock.lock();
 		try {
 			signature.initVerify(this.publicKey);
 			signature.update(data);
 			return signature.verify(sign);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
@@ -361,7 +361,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param signature 签名对象 {@link Signature}
 	 * @return 自身 {@link AsymmetricCrypto}
 	 */
-	public Sign setSignature(Signature signature) {
+	public Sign setSignature(final Signature signature) {
 		this.signature = signature;
 		return this;
 	}
@@ -373,7 +373,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param certificate {@link Certificate}
 	 * @return this
 	 */
-	public Sign setCertificate(Certificate certificate) {
+	public Sign setCertificate(final Certificate certificate) {
 		// If the certificate is of type X509Certificate,
 		// we should check whether it has a Key Usage
 		// extension marked as critical.

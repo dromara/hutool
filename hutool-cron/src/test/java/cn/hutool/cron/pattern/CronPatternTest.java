@@ -14,7 +14,7 @@ public class CronPatternTest {
 
 	@Test
 	public void matchAllTest() {
-		CronPattern pattern;
+		final CronPattern pattern;
 		// 任何时间匹配
 		pattern = CronPattern.of("* * * * * *");
 		assertMatch(pattern, DateUtil.formatNow());
@@ -24,7 +24,7 @@ public class CronPatternTest {
 	public void matchAllTest2() {
 		// 在5位表达式中，秒部分并不是任意匹配，而是一个固定值0
 		// 因此此处匹配就不能匹配秒
-		CronPattern pattern;
+		final CronPattern pattern;
 		// 任何时间匹配
 		// 分 时 天 月 周
 		pattern = CronPattern.of("* * * * *");
@@ -125,7 +125,7 @@ public class CronPatternTest {
 	@Test
 	public void patternNegativeTest() {
 		// -4表示倒数的数字，此处在小时上，-4表示 23 - 4，为19
-		CronPattern pattern = CronPattern.of("* 0 -4 * * ?");
+		final CronPattern pattern = CronPattern.of("* 0 -4 * * ?");
 		assertMatch(pattern, "2017-02-09 19:00:00");
 		assertMatch(pattern, "2017-02-19 19:00:33");
 	}
@@ -172,7 +172,7 @@ public class CronPatternTest {
 	 * @param date    日期，标准日期时间字符串
 	 */
 	@SuppressWarnings("ConstantConditions")
-	private void assertMatch(CronPattern pattern, String date) {
+	private void assertMatch(final CronPattern pattern, final String date) {
 		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), false));
 		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), true));
 	}

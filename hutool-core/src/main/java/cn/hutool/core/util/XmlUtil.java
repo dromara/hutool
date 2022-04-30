@@ -138,7 +138,7 @@ public class XmlUtil {
 	 * @param isNamespaceAware 是否命名空间支持
 	 * @since 5.3.1
 	 */
-	synchronized public static void setNamespaceAware(boolean isNamespaceAware) {
+	synchronized public static void setNamespaceAware(final boolean isNamespaceAware) {
 		namespaceAware = isNamespaceAware;
 	}
 
@@ -161,7 +161,7 @@ public class XmlUtil {
 
 		try {
 			file = file.getCanonicalFile();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// ignore
 		}
 
@@ -183,7 +183,7 @@ public class XmlUtil {
 	 * @return XML文档对象
 	 * @since 3.0.9
 	 */
-	public static Document readXML(String pathOrContent) {
+	public static Document readXML(final String pathOrContent) {
 		if (StrUtil.startWith(pathOrContent, '<')) {
 			return parseXml(pathOrContent);
 		}
@@ -199,7 +199,7 @@ public class XmlUtil {
 	 * @throws UtilException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(InputStream inputStream) throws UtilException {
+	public static Document readXML(final InputStream inputStream) throws UtilException {
 		return readXML(new InputSource(inputStream));
 	}
 
@@ -211,7 +211,7 @@ public class XmlUtil {
 	 * @throws UtilException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(Reader reader) throws UtilException {
+	public static Document readXML(final Reader reader) throws UtilException {
 		return readXML(new InputSource(reader));
 	}
 
@@ -223,11 +223,11 @@ public class XmlUtil {
 	 * @return XML文档对象
 	 * @since 3.0.9
 	 */
-	public static Document readXML(InputSource source) {
+	public static Document readXML(final InputSource source) {
 		final DocumentBuilder builder = createDocumentBuilder();
 		try {
 			return builder.parse(source);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "Parse XML from stream error!");
 		}
 	}
@@ -240,7 +240,7 @@ public class XmlUtil {
 	 * @param contentHandler XML流处理器，用于按照Element处理xml
 	 * @since 5.4.4
 	 */
-	public static void readBySax(File file, ContentHandler contentHandler) {
+	public static void readBySax(final File file, final ContentHandler contentHandler) {
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -258,7 +258,7 @@ public class XmlUtil {
 	 * @param contentHandler XML流处理器，用于按照Element处理xml
 	 * @since 5.4.4
 	 */
-	public static void readBySax(Reader reader, ContentHandler contentHandler) {
+	public static void readBySax(final Reader reader, final ContentHandler contentHandler) {
 		try {
 			readBySax(new InputSource(reader), contentHandler);
 		} finally {
@@ -274,7 +274,7 @@ public class XmlUtil {
 	 * @param contentHandler XML流处理器，用于按照Element处理xml
 	 * @since 5.4.4
 	 */
-	public static void readBySax(InputStream source, ContentHandler contentHandler) {
+	public static void readBySax(final InputStream source, final ContentHandler contentHandler) {
 		try {
 			readBySax(new InputSource(source), contentHandler);
 		} finally {
@@ -290,7 +290,7 @@ public class XmlUtil {
 	 * @param contentHandler XML流处理器，用于按照Element处理xml
 	 * @since 5.4.4
 	 */
-	public static void readBySax(InputSource source, ContentHandler contentHandler) {
+	public static void readBySax(final InputSource source, final ContentHandler contentHandler) {
 		// 1.获取解析工厂
 		if (null == factory) {
 			factory = SAXParserFactory.newInstance();
@@ -299,7 +299,7 @@ public class XmlUtil {
 		}
 		// 2.从解析工厂获取解析器
 		final SAXParser parse;
-		XMLReader reader;
+		final XMLReader reader;
 		try {
 			parse = factory.newSAXParser();
 			if (contentHandler instanceof DefaultHandler) {
@@ -311,9 +311,9 @@ public class XmlUtil {
 			reader = parse.getXMLReader();
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
-		} catch (ParserConfigurationException | SAXException e) {
+		} catch (final ParserConfigurationException | SAXException e) {
 			throw new UtilException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -339,7 +339,7 @@ public class XmlUtil {
 	 * @param source XML文件
 	 * @return 对象
 	 */
-	public static <T> T readObjectFromXml(File source) {
+	public static <T> T readObjectFromXml(final File source) {
 		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
 	}
 
@@ -351,7 +351,7 @@ public class XmlUtil {
 	 * @return 对象
 	 * @since 3.2.0
 	 */
-	public static <T> T readObjectFromXml(String xmlStr) {
+	public static <T> T readObjectFromXml(final String xmlStr) {
 		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
 	}
 
@@ -364,7 +364,7 @@ public class XmlUtil {
 	 * @since 3.2.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T readObjectFromXml(InputSource source) {
+	public static <T> T readObjectFromXml(final InputSource source) {
 		Object result;
 		XMLDecoder xmldec = null;
 		try {
@@ -387,7 +387,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.4.5
 	 */
-	public static String toStr(Node doc) {
+	public static String toStr(final Node doc) {
 		return toStr(doc, false);
 	}
 
@@ -399,7 +399,7 @@ public class XmlUtil {
 	 * @param doc XML文档
 	 * @return XML字符串
 	 */
-	public static String toStr(Document doc) {
+	public static String toStr(final Document doc) {
 		return toStr((Node) doc);
 	}
 
@@ -412,7 +412,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.4.5
 	 */
-	public static String toStr(Node doc, boolean isPretty) {
+	public static String toStr(final Node doc, final boolean isPretty) {
 		return toStr(doc, CharsetUtil.NAME_UTF_8, isPretty);
 	}
 
@@ -425,7 +425,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 3.0.9
 	 */
-	public static String toStr(Document doc, boolean isPretty) {
+	public static String toStr(final Document doc, final boolean isPretty) {
 		return toStr((Node) doc, isPretty);
 	}
 
@@ -439,7 +439,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.4.5
 	 */
-	public static String toStr(Node doc, String charset, boolean isPretty) {
+	public static String toStr(final Node doc, final String charset, final boolean isPretty) {
 		return toStr(doc, charset, isPretty, false);
 	}
 
@@ -453,7 +453,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 3.0.9
 	 */
-	public static String toStr(Document doc, String charset, boolean isPretty) {
+	public static String toStr(final Document doc, final String charset, final boolean isPretty) {
 		return toStr((Node) doc, charset, isPretty);
 	}
 
@@ -468,11 +468,11 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */
-	public static String toStr(Node doc, String charset, boolean isPretty, boolean omitXmlDeclaration) {
+	public static String toStr(final Node doc, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
 		final StringWriter writer = StrUtil.getWriter();
 		try {
 			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
 		return writer.toString();
@@ -485,7 +485,7 @@ public class XmlUtil {
 	 * @return 格式化后的XML字符串
 	 * @since 4.4.5
 	 */
-	public static String format(Document doc) {
+	public static String format(final Document doc) {
 		return toStr(doc, true);
 	}
 
@@ -496,7 +496,7 @@ public class XmlUtil {
 	 * @return 格式化后的XML字符串
 	 * @since 4.4.5
 	 */
-	public static String format(String xmlStr) {
+	public static String format(final String xmlStr) {
 		return format(parseXml(xmlStr));
 	}
 
@@ -507,7 +507,7 @@ public class XmlUtil {
 	 * @param doc          XML文档
 	 * @param absolutePath 文件绝对路径，不存在会自动创建
 	 */
-	public static void toFile(Document doc, String absolutePath) {
+	public static void toFile(final Document doc, final String absolutePath) {
 		toFile(doc, absolutePath, null);
 	}
 
@@ -518,7 +518,7 @@ public class XmlUtil {
 	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
 	 * @param charsetName 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 */
-	public static void toFile(Document doc, String path, String charsetName) {
+	public static void toFile(final Document doc, final String path, String charsetName) {
 		if (StrUtil.isBlank(charsetName)) {
 			charsetName = doc.getXmlEncoding();
 		}
@@ -544,7 +544,7 @@ public class XmlUtil {
 	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 3.0.9
 	 */
-	public static void write(Node node, Writer writer, String charset, int indent) {
+	public static void write(final Node node, final Writer writer, final String charset, final int indent) {
 		transform(new DOMSource(node), new StreamResult(writer), charset, indent);
 	}
 
@@ -558,7 +558,7 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void write(Node node, Writer writer, String charset, int indent, boolean omitXmlDeclaration) {
+	public static void write(final Node node, final Writer writer, final String charset, final int indent, final boolean omitXmlDeclaration) {
 		transform(new DOMSource(node), new StreamResult(writer), charset, indent, omitXmlDeclaration);
 	}
 
@@ -571,7 +571,7 @@ public class XmlUtil {
 	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.8
 	 */
-	public static void write(Node node, OutputStream out, String charset, int indent) {
+	public static void write(final Node node, final OutputStream out, final String charset, final int indent) {
 		transform(new DOMSource(node), new StreamResult(out), charset, indent);
 	}
 
@@ -585,7 +585,7 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void write(Node node, OutputStream out, String charset, int indent, boolean omitXmlDeclaration) {
+	public static void write(final Node node, final OutputStream out, final String charset, final int indent, final boolean omitXmlDeclaration) {
 		transform(new DOMSource(node), new StreamResult(out), charset, indent, omitXmlDeclaration);
 	}
 
@@ -599,7 +599,7 @@ public class XmlUtil {
 	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.9
 	 */
-	public static void transform(Source source, Result result, String charset, int indent) {
+	public static void transform(final Source source, final Result result, final String charset, final int indent) {
 		transform(source, result, charset, indent, false);
 	}
 
@@ -614,7 +614,7 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void transform(Source source, Result result, String charset, int indent, boolean omitXmlDeclaration) {
+	public static void transform(final Source source, final Result result, final String charset, final int indent, final boolean omitXmlDeclaration) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
@@ -631,7 +631,7 @@ public class XmlUtil {
 				xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			}
 			xformer.transform(source, result);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
 	}
@@ -656,10 +656,10 @@ public class XmlUtil {
 	 * @since 4.1.2
 	 */
 	public static DocumentBuilder createDocumentBuilder() {
-		DocumentBuilder builder;
+		final DocumentBuilder builder;
 		try {
 			builder = createDocumentBuilderFactory().newDocumentBuilder();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e, "Create xml document error!");
 		}
 		return builder;
@@ -693,7 +693,7 @@ public class XmlUtil {
 	 * @param rootElementName 根节点名称
 	 * @return XML文档
 	 */
-	public static Document createXml(String rootElementName) {
+	public static Document createXml(final String rootElementName) {
 		return createXml(rootElementName, null);
 	}
 
@@ -706,7 +706,7 @@ public class XmlUtil {
 	 * @return XML文档
 	 * @since 5.0.4
 	 */
-	public static Document createXml(String rootElementName, String namespace) {
+	public static Document createXml(final String rootElementName, final String namespace) {
 		final Document doc = createXml();
 		doc.appendChild(null == namespace ? doc.createElement(rootElementName) : doc.createElementNS(namespace, rootElementName));
 		return doc;
@@ -722,7 +722,7 @@ public class XmlUtil {
 	 * @see Document#getDocumentElement()
 	 * @since 3.0.8
 	 */
-	public static Element getRootElement(Document doc) {
+	public static Element getRootElement(final Document doc) {
 		return (null == doc) ? null : doc.getDocumentElement();
 	}
 
@@ -733,7 +733,7 @@ public class XmlUtil {
 	 * @return {@link Document}
 	 * @since 5.3.0
 	 */
-	public static Document getOwnerDocument(Node node) {
+	public static Document getOwnerDocument(final Node node) {
 		return (node instanceof Document) ? (Document) node : node.getOwnerDocument();
 	}
 
@@ -743,7 +743,7 @@ public class XmlUtil {
 	 * @param xmlContent XML文本
 	 * @return 当传入为null时返回null
 	 */
-	public static String cleanInvalid(String xmlContent) {
+	public static String cleanInvalid(final String xmlContent) {
 		if (xmlContent == null) {
 			return null;
 		}
@@ -757,7 +757,7 @@ public class XmlUtil {
 	 * @return 当传入为null时返回null
 	 * @since 5.4.5
 	 */
-	public static String cleanComment(String xmlContent) {
+	public static String cleanComment(final String xmlContent) {
 		if (xmlContent == null) {
 			return null;
 		}
@@ -771,7 +771,7 @@ public class XmlUtil {
 	 * @param tagName 节点名，如果节点名为空（null或blank），返回所有子节点
 	 * @return 节点列表
 	 */
-	public static List<Element> getElements(Element element, String tagName) {
+	public static List<Element> getElements(final Element element, final String tagName) {
 		final NodeList nodeList = StrUtil.isBlank(tagName) ? element.getChildNodes() : element.getElementsByTagName(tagName);
 		return transElements(element, nodeList);
 	}
@@ -783,14 +783,14 @@ public class XmlUtil {
 	 * @param tagName 节点名
 	 * @return 节点
 	 */
-	public static Element getElement(Element element, String tagName) {
+	public static Element getElement(final Element element, final String tagName) {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
 		final int length = nodeList.getLength();
 		if (length < 1) {
 			return null;
 		}
 		for (int i = 0; i < length; i++) {
-			Element childEle = (Element) nodeList.item(i);
+			final Element childEle = (Element) nodeList.item(i);
 			if (childEle == null || childEle.getParentNode() == element) {
 				return childEle;
 			}
@@ -805,8 +805,8 @@ public class XmlUtil {
 	 * @param tagName 节点名
 	 * @return 节点中的值
 	 */
-	public static String elementText(Element element, String tagName) {
-		Element child = getElement(element, tagName);
+	public static String elementText(final Element element, final String tagName) {
+		final Element child = getElement(element, tagName);
 		return child == null ? null : child.getTextContent();
 	}
 
@@ -818,8 +818,8 @@ public class XmlUtil {
 	 * @param defaultValue 默认值
 	 * @return 节点中的值
 	 */
-	public static String elementText(Element element, String tagName, String defaultValue) {
-		Element child = getElement(element, tagName);
+	public static String elementText(final Element element, final String tagName, final String defaultValue) {
+		final Element child = getElement(element, tagName);
 		return child == null ? defaultValue : child.getTextContent();
 	}
 
@@ -829,7 +829,7 @@ public class XmlUtil {
 	 * @param nodeList NodeList
 	 * @return Element列表
 	 */
-	public static List<Element> transElements(NodeList nodeList) {
+	public static List<Element> transElements(final NodeList nodeList) {
 		return transElements(null, nodeList);
 	}
 
@@ -841,8 +841,8 @@ public class XmlUtil {
 	 * @param nodeList  NodeList
 	 * @return Element列表
 	 */
-	public static List<Element> transElements(Element parentEle, NodeList nodeList) {
-		int length = nodeList.getLength();
+	public static List<Element> transElements(final Element parentEle, final NodeList nodeList) {
+		final int length = nodeList.getLength();
 		final ArrayList<Element> elements = new ArrayList<>(length);
 		Node node;
 		Element element;
@@ -866,7 +866,7 @@ public class XmlUtil {
 	 * @param dest 目标文件
 	 * @param bean 对象
 	 */
-	public static void writeObjectAsXml(File dest, Object bean) {
+	public static void writeObjectAsXml(final File dest, final Object bean) {
 		XMLEncoder xmlenc = null;
 		try {
 			xmlenc = new XMLEncoder(FileUtil.getOutputStream(dest));
@@ -897,7 +897,7 @@ public class XmlUtil {
 	 * @return 匹配返回类型的值
 	 * @since 4.0.9
 	 */
-	public static Element getElementByXPath(String expression, Object source) {
+	public static Element getElementByXPath(final String expression, final Object source) {
 		return (Element) getNodeByXPath(expression, source);
 	}
 
@@ -910,7 +910,7 @@ public class XmlUtil {
 	 * @return NodeList
 	 * @since 4.0.9
 	 */
-	public static NodeList getNodeListByXPath(String expression, Object source) {
+	public static NodeList getNodeListByXPath(final String expression, final Object source) {
 		return (NodeList) getByXPath(expression, source, XPathConstants.NODESET);
 	}
 
@@ -923,7 +923,7 @@ public class XmlUtil {
 	 * @return 匹配返回类型的值
 	 * @since 4.0.9
 	 */
-	public static Node getNodeByXPath(String expression, Object source) {
+	public static Node getNodeByXPath(final String expression, final Object source) {
 		return (Node) getByXPath(expression, source, XPathConstants.NODE);
 	}
 
@@ -937,7 +937,7 @@ public class XmlUtil {
 	 * @return 匹配返回类型的值
 	 * @since 3.2.0
 	 */
-	public static Object getByXPath(String expression, Object source, QName returnType) {
+	public static Object getByXPath(final String expression, final Object source, final QName returnType) {
 		NamespaceContext nsContext = null;
 		if (source instanceof Node) {
 			nsContext = new UniversalNamespaceCache((Node) source, false);
@@ -958,7 +958,7 @@ public class XmlUtil {
 	 * @return 匹配返回类型的值
 	 * @since 5.3.1
 	 */
-	public static Object getByXPath(String expression, Object source, QName returnType, NamespaceContext nsContext) {
+	public static Object getByXPath(final String expression, final Object source, final QName returnType, final NamespaceContext nsContext) {
 		final XPath xPath = createXPath();
 		if (null != nsContext) {
 			xPath.setNamespaceContext(nsContext);
@@ -969,7 +969,7 @@ public class XmlUtil {
 			} else {
 				return xPath.evaluate(expression, source, returnType);
 			}
-		} catch (XPathExpressionException e) {
+		} catch (final XPathExpressionException e) {
 			throw new UtilException(e);
 		}
 	}
@@ -988,7 +988,7 @@ public class XmlUtil {
 	 * @return 替换后的字符串
 	 * @since 4.0.8
 	 */
-	public static String escape(String string) {
+	public static String escape(final String string) {
 		return EscapeUtil.escapeHtml4(string);
 	}
 
@@ -1000,7 +1000,7 @@ public class XmlUtil {
 	 * @see EscapeUtil#unescape(String)
 	 * @since 5.0.6
 	 */
-	public static String unescape(String string) {
+	public static String unescape(final String string) {
 		return EscapeUtil.unescapeHtml4(string);
 	}
 
@@ -1011,7 +1011,7 @@ public class XmlUtil {
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
 	 */
-	public static Map<String, Object> xmlToMap(String xmlStr) {
+	public static Map<String, Object> xmlToMap(final String xmlStr) {
 		return xmlToMap(xmlStr, new HashMap<>());
 	}
 
@@ -1025,7 +1025,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#xmlToBean(String, Class)
 	 * @since 5.2.4
 	 */
-	public static <T> T xmlToBean(Node node, Class<T> bean) {
+	public static <T> T xmlToBean(final Node node, final Class<T> bean) {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
 			final String simpleName = bean.getSimpleName();
@@ -1044,7 +1044,7 @@ public class XmlUtil {
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
 	 */
-	public static Map<String, Object> xmlToMap(Node node) {
+	public static Map<String, Object> xmlToMap(final Node node) {
 		return xmlToMap(node, new HashMap<>());
 	}
 
@@ -1057,7 +1057,7 @@ public class XmlUtil {
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
 	 */
-	public static Map<String, Object> xmlToMap(String xmlStr, Map<String, Object> result) {
+	public static Map<String, Object> xmlToMap(final String xmlStr, final Map<String, Object> result) {
 		final Document doc = parseXml(xmlStr);
 		final Element root = getRootElement(doc);
 		root.normalize();
@@ -1074,7 +1074,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> xmlToMap(Node node, Map<String, Object> result) {
+	public static Map<String, Object> xmlToMap(final Node node, Map<String, Object> result) {
 		if (null == result) {
 			result = new HashMap<>();
 		}
@@ -1090,7 +1090,7 @@ public class XmlUtil {
 
 			childEle = (Element) childNode;
 			final Object value = result.get(childEle.getNodeName());
-			Object newValue;
+			final Object newValue;
 			if (childEle.hasChildNodes()) {
 				// 子节点继续递归遍历
 				final Map<String, Object> map = xmlToMap(childEle);
@@ -1127,7 +1127,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data) {
+	public static String mapToXmlStr(final Map<?, ?> data) {
 		return toStr(mapToXml(data, "xml"));
 	}
 
@@ -1140,7 +1140,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(final Map<?, ?> data, final boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, "xml"), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
 	}
 
@@ -1153,7 +1153,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.8
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName) {
 		return toStr(mapToXml(data, rootName));
 	}
 
@@ -1167,7 +1167,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace) {
 		return toStr(mapToXml(data, rootName, namespace));
 	}
 
@@ -1182,7 +1182,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
 	}
 
@@ -1198,7 +1198,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean isPretty, boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean isPretty, final boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, isPretty, omitXmlDeclaration);
 	}
 
@@ -1215,7 +1215,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, String charset, boolean isPretty, boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, rootName, namespace), charset, isPretty, omitXmlDeclaration);
 	}
 
@@ -1228,7 +1228,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.9
 	 */
-	public static Document mapToXml(Map<?, ?> data, String rootName) {
+	public static Document mapToXml(final Map<?, ?> data, final String rootName) {
 		return mapToXml(data, rootName, null);
 	}
 
@@ -1242,7 +1242,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
-	public static Document mapToXml(Map<?, ?> data, String rootName, String namespace) {
+	public static Document mapToXml(final Map<?, ?> data, final String rootName, final String namespace) {
 		final Document doc = createXml();
 		final Element root = appendChild(doc, rootName, namespace);
 
@@ -1258,7 +1258,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.3.4
 	 */
-	public static Document beanToXml(Object bean) {
+	public static Document beanToXml(final Object bean) {
 		return beanToXml(bean, null);
 	}
 
@@ -1271,7 +1271,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.2.4
 	 */
-	public static Document beanToXml(Object bean, String namespace) {
+	public static Document beanToXml(final Object bean, final String namespace) {
 		return beanToXml(bean, namespace, false);
 	}
 
@@ -1285,7 +1285,7 @@ public class XmlUtil {
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.7.10
 	 */
-	public static Document beanToXml(Object bean, String namespace, boolean ignoreNull) {
+	public static Document beanToXml(final Object bean, final String namespace, final boolean ignoreNull) {
 		if (null == bean) {
 			return null;
 		}
@@ -1300,7 +1300,7 @@ public class XmlUtil {
 	 * @return 是否为{@link Element} 类型节点
 	 * @since 4.0.8
 	 */
-	public static boolean isElement(Node node) {
+	public static boolean isElement(final Node node) {
 		return (null != node) && Node.ELEMENT_NODE == node.getNodeType();
 	}
 
@@ -1312,7 +1312,7 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 4.0.9
 	 */
-	public static Element appendChild(Node node, String tagName) {
+	public static Element appendChild(final Node node, final String tagName) {
 		return appendChild(node, tagName, null);
 	}
 
@@ -1325,7 +1325,7 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 5.0.4
 	 */
-	public static Element appendChild(Node node, String tagName, String namespace) {
+	public static Element appendChild(final Node node, final String tagName, final String namespace) {
 		final Document doc = getOwnerDocument(node);
 		final Element child = (null == namespace) ? doc.createElement(tagName) : doc.createElementNS(namespace, tagName);
 		node.appendChild(child);
@@ -1340,7 +1340,7 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 5.3.0
 	 */
-	public static Node appendText(Node node, CharSequence text) {
+	public static Node appendText(final Node node, final CharSequence text) {
 		return appendText(getOwnerDocument(node), node, text);
 	}
 
@@ -1351,7 +1351,7 @@ public class XmlUtil {
 	 * @param data 数据
 	 * @since 5.7.10
 	 */
-	public static void append(Node node, Object data) {
+	public static void append(final Node node, final Object data) {
 		append(getOwnerDocument(node), node, data);
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
@@ -1364,7 +1364,7 @@ public class XmlUtil {
 	 * @param data 数据
 	 */
 	@SuppressWarnings("rawtypes")
-	private static void append(Document doc, Node node, Object data) {
+	private static void append(final Document doc, final Node node, final Object data) {
 		if (data instanceof Map) {
 			// 如果值依旧为map，递归继续
 			appendMap(doc, node, (Map) data);
@@ -1388,7 +1388,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private static void appendMap(Document doc, Node node, Map data) {
+	private static void appendMap(final Document doc, final Node node, final Map data) {
 		data.forEach((key, value) -> {
 			if (null != key) {
 				final Element child = appendChild(node, key.toString());
@@ -1407,7 +1407,7 @@ public class XmlUtil {
 	 * @param data 数据
 	 */
 	@SuppressWarnings("rawtypes")
-	private static void appendIterator(Document doc, Node node, Iterator data) {
+	private static void appendIterator(final Document doc, final Node node, final Iterator data) {
 		final Node parentNode = node.getParentNode();
 		boolean isFirst = true;
 		Object eleData;
@@ -1433,7 +1433,7 @@ public class XmlUtil {
 	 * @return 增加的子节点，即Text节点
 	 * @since 5.3.0
 	 */
-	private static Node appendText(Document doc, Node node, CharSequence text) {
+	private static Node appendText(final Document doc, final Node node, final CharSequence text) {
 		return node.appendChild(doc.createTextNode(StrUtil.str(text)));
 	}
 
@@ -1444,7 +1444,7 @@ public class XmlUtil {
 	 * @param dbf DocumentBuilderFactory
 	 * @return DocumentBuilderFactory
 	 */
-	private static DocumentBuilderFactory disableXXE(DocumentBuilderFactory dbf) {
+	private static DocumentBuilderFactory disableXXE(final DocumentBuilderFactory dbf) {
 		String feature;
 		try {
 			// This is the PRIMARY defense. If DTDs (doctypes) are disallowed, almost all XML entity attacks are prevented
@@ -1468,7 +1468,7 @@ public class XmlUtil {
 			// and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity Attacks"
 			dbf.setXIncludeAware(false);
 			dbf.setExpandEntityReferences(false);
-		} catch (ParserConfigurationException e) {
+		} catch (final ParserConfigurationException e) {
 			// ignore
 		}
 		return dbf;
@@ -1489,7 +1489,7 @@ public class XmlUtil {
 		 * @param node         source Node
 		 * @param toplevelOnly restriction of the search to enhance performance
 		 */
-		public UniversalNamespaceCache(Node node, boolean toplevelOnly) {
+		public UniversalNamespaceCache(final Node node, final boolean toplevelOnly) {
 			examineNode(node.getFirstChild(), toplevelOnly);
 		}
 
@@ -1499,13 +1499,13 @@ public class XmlUtil {
 		 * @param node            to examine
 		 * @param attributesOnly, if true no recursion happens
 		 */
-		private void examineNode(Node node, boolean attributesOnly) {
+		private void examineNode(final Node node, final boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
 			//noinspection ConstantConditions
 			if (null != attributes) {
 				final int length = attributes.getLength();
 				for (int i = 0; i < length; i++) {
-					Node attribute = attributes.item(i);
+					final Node attribute = attributes.item(i);
 					storeAttribute(attribute);
 				}
 			}
@@ -1531,7 +1531,7 @@ public class XmlUtil {
 		 *
 		 * @param attribute to examine
 		 */
-		private void storeAttribute(Node attribute) {
+		private void storeAttribute(final Node attribute) {
 			if (null == attribute) {
 				return;
 			}
@@ -1556,7 +1556,7 @@ public class XmlUtil {
 		 * @return uri
 		 */
 		@Override
-		public String getNamespaceURI(String prefix) {
+		public String getNamespaceURI(final String prefix) {
 			if (prefix == null || XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
 				return prefixUri.get(DEFAULT_NS);
 			} else {
@@ -1569,12 +1569,12 @@ public class XmlUtil {
 		 * similar way.
 		 */
 		@Override
-		public String getPrefix(String namespaceURI) {
+		public String getPrefix(final String namespaceURI) {
 			return prefixUri.getInverse().get(namespaceURI);
 		}
 
 		@Override
-		public Iterator<String> getPrefixes(String namespaceURI) {
+		public Iterator<String> getPrefixes(final String namespaceURI) {
 			// Not implemented
 			return null;
 		}

@@ -39,7 +39,7 @@ public class ECKeyUtil {
 	 * @param key PrivateKey或者PublicKey
 	 * @return ECPrivateKeyParameters或者ECPublicKeyParameters
 	 */
-	public static AsymmetricKeyParameter toParams(Key key) {
+	public static AsymmetricKeyParameter toParams(final Key key) {
 		if (key instanceof PrivateKey) {
 			return toPrivateParams((PrivateKey) key);
 		} else if (key instanceof PublicKey) {
@@ -56,7 +56,7 @@ public class ECKeyUtil {
 	 * @return 公钥参数
 	 * @since 5.5.9
 	 */
-	public static ECPublicKeyParameters getPublicParams(ECPrivateKeyParameters privateKeyParameters) {
+	public static ECPublicKeyParameters getPublicParams(final ECPrivateKeyParameters privateKeyParameters) {
 		final ECDomainParameters domainParameters = privateKeyParameters.getParameters();
 		final ECPoint q = new FixedPointCombMultiplier().multiply(domainParameters.getG(), privateKeyParameters.getD());
 		return new ECPublicKeyParameters(q, domainParameters);
@@ -70,7 +70,7 @@ public class ECKeyUtil {
 	 * @param q 公钥Q值
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2PublicParams(byte[] q) {
+	public static ECPublicKeyParameters toSm2PublicParams(final byte[] q) {
 		return toPublicParams(q, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -80,7 +80,7 @@ public class ECKeyUtil {
 	 * @param q 公钥Q值
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2PublicParams(String q) {
+	public static ECPublicKeyParameters toSm2PublicParams(final String q) {
 		return toPublicParams(q, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -91,7 +91,7 @@ public class ECKeyUtil {
 	 * @param y 公钥Y
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2PublicParams(String x, String y) {
+	public static ECPublicKeyParameters toSm2PublicParams(final String x, final String y) {
 		return toPublicParams(x, y, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -102,7 +102,7 @@ public class ECKeyUtil {
 	 * @param yBytes 公钥Y
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toSm2PublicParams(byte[] xBytes, byte[] yBytes) {
+	public static ECPublicKeyParameters toSm2PublicParams(final byte[] xBytes, final byte[] yBytes) {
 		return toPublicParams(xBytes, yBytes, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -114,7 +114,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPublicKeyParameters，x或y为{@code null}则返回{@code null}
 	 */
-	public static ECPublicKeyParameters toPublicParams(String x, String y, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final String x, final String y, final ECDomainParameters domainParameters) {
 		return toPublicParams(SecureUtil.decode(x), SecureUtil.decode(y), domainParameters);
 	}
 
@@ -126,7 +126,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters曲线参数
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toPublicParams(byte[] xBytes, byte[] yBytes, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final byte[] xBytes, final byte[] yBytes, final ECDomainParameters domainParameters) {
 		if (null == xBytes || null == yBytes) {
 			return null;
 		}
@@ -141,7 +141,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPublicKeyParameters
 	 */
-	public static ECPublicKeyParameters toPublicParams(BigInteger x, BigInteger y, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final BigInteger x, final BigInteger y, final ECDomainParameters domainParameters) {
 		if (null == x || null == y) {
 			return null;
 		}
@@ -157,7 +157,7 @@ public class ECKeyUtil {
 	 * @return ECPublicKeyParameters
 	 * @since 5.4.3
 	 */
-	public static ECPublicKeyParameters toPublicParams(String pointEncoded, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final String pointEncoded, final ECDomainParameters domainParameters) {
 		final ECCurve curve = domainParameters.getCurve();
 		return toPublicParams(curve.decodePoint(SecureUtil.decode(pointEncoded)), domainParameters);
 	}
@@ -170,7 +170,7 @@ public class ECKeyUtil {
 	 * @return ECPublicKeyParameters
 	 * @since 5.4.3
 	 */
-	public static ECPublicKeyParameters toPublicParams(byte[] pointEncoded, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final byte[] pointEncoded, final ECDomainParameters domainParameters) {
 		final ECCurve curve = domainParameters.getCurve();
 		return toPublicParams(curve.decodePoint(pointEncoded), domainParameters);
 	}
@@ -183,7 +183,7 @@ public class ECKeyUtil {
 	 * @return ECPublicKeyParameters
 	 * @since 5.4.3
 	 */
-	public static ECPublicKeyParameters toPublicParams(org.bouncycastle.math.ec.ECPoint point, ECDomainParameters domainParameters) {
+	public static ECPublicKeyParameters toPublicParams(final org.bouncycastle.math.ec.ECPoint point, final ECDomainParameters domainParameters) {
 		return new ECPublicKeyParameters(point, domainParameters);
 	}
 
@@ -193,13 +193,13 @@ public class ECKeyUtil {
 	 * @param publicKey 公钥，传入null返回null
 	 * @return {@link ECPublicKeyParameters}或null
 	 */
-	public static ECPublicKeyParameters toPublicParams(PublicKey publicKey) {
+	public static ECPublicKeyParameters toPublicParams(final PublicKey publicKey) {
 		if (null == publicKey) {
 			return null;
 		}
 		try {
 			return (ECPublicKeyParameters) ECUtil.generatePublicKeyParameter(publicKey);
-		} catch (InvalidKeyException e) {
+		} catch (final InvalidKeyException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -212,7 +212,7 @@ public class ECKeyUtil {
 	 * @param d 私钥d值16进制字符串
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2PrivateParams(String d) {
+	public static ECPrivateKeyParameters toSm2PrivateParams(final String d) {
 		return toPrivateParams(d, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -222,7 +222,7 @@ public class ECKeyUtil {
 	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2PrivateParams(byte[] d) {
+	public static ECPrivateKeyParameters toSm2PrivateParams(final byte[] d) {
 		return toPrivateParams(d, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -232,7 +232,7 @@ public class ECKeyUtil {
 	 * @param d 私钥d值
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toSm2PrivateParams(BigInteger d) {
+	public static ECPrivateKeyParameters toSm2PrivateParams(final BigInteger d) {
 		return toPrivateParams(d, SmUtil.SM2_DOMAIN_PARAMS);
 	}
 
@@ -243,7 +243,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toPrivateParams(String d, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toPrivateParams(final String d, final ECDomainParameters domainParameters) {
 		return toPrivateParams(BigIntegers.fromUnsignedByteArray(SecureUtil.decode(d)), domainParameters);
 	}
 
@@ -254,7 +254,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toPrivateParams(byte[] d, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toPrivateParams(final byte[] d, final ECDomainParameters domainParameters) {
 		return toPrivateParams(BigIntegers.fromUnsignedByteArray(d), domainParameters);
 	}
 
@@ -265,7 +265,7 @@ public class ECKeyUtil {
 	 * @param domainParameters ECDomainParameters
 	 * @return ECPrivateKeyParameters
 	 */
-	public static ECPrivateKeyParameters toPrivateParams(BigInteger d, ECDomainParameters domainParameters) {
+	public static ECPrivateKeyParameters toPrivateParams(final BigInteger d, final ECDomainParameters domainParameters) {
 		if (null == d) {
 			return null;
 		}
@@ -278,13 +278,13 @@ public class ECKeyUtil {
 	 * @param privateKey 私钥，传入null返回null
 	 * @return {@link ECPrivateKeyParameters}或null
 	 */
-	public static ECPrivateKeyParameters toPrivateParams(PrivateKey privateKey) {
+	public static ECPrivateKeyParameters toPrivateParams(final PrivateKey privateKey) {
 		if (null == privateKey) {
 			return null;
 		}
 		try {
 			return (ECPrivateKeyParameters) ECUtil.generatePrivateKeyParameter(privateKey);
-		} catch (InvalidKeyException e) {
+		} catch (final InvalidKeyException e) {
 			throw new CryptoException(e);
 		}
 	}
@@ -295,12 +295,12 @@ public class ECKeyUtil {
 	 * @param privateKey {@link ECPrivateKey}
 	 * @return {@link PrivateKey}
 	 */
-	public static PrivateKey toSm2PrivateKey(ECPrivateKey privateKey) {
+	public static PrivateKey toSm2PrivateKey(final ECPrivateKey privateKey) {
 		try {
 			final PrivateKeyInfo info = new PrivateKeyInfo(
 					new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, SmUtil.ID_SM2_PUBLIC_KEY_PARAM), privateKey);
 			return KeyUtil.generatePrivateKey("SM2", info.getEncoded());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -312,7 +312,7 @@ public class ECKeyUtil {
 	 * @return {@link OpenSSHPrivateKeySpec}
 	 * @since 5.5.9
 	 */
-	public static KeySpec createOpenSSHPrivateKeySpec(byte[] key) {
+	public static KeySpec createOpenSSHPrivateKeySpec(final byte[] key) {
 		return new OpenSSHPrivateKeySpec(key);
 	}
 
@@ -323,7 +323,7 @@ public class ECKeyUtil {
 	 * @return {@link OpenSSHPublicKeySpec}
 	 * @since 5.5.9
 	 */
-	public static KeySpec createOpenSSHPublicKeySpec(byte[] key) {
+	public static KeySpec createOpenSSHPublicKeySpec(final byte[] key) {
 		return new OpenSSHPublicKeySpec(key);
 	}
 
@@ -340,11 +340,11 @@ public class ECKeyUtil {
 	 * @return {@link ECPrivateKeyParameters}
 	 * @since 5.5.9
 	 */
-	public static ECPrivateKeyParameters decodePrivateKeyParams(byte[] privateKeyBytes) {
+	public static ECPrivateKeyParameters decodePrivateKeyParams(final byte[] privateKeyBytes) {
 		try {
 			// 尝试D值
 			return toSm2PrivateParams(privateKeyBytes);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			// ignore
 		}
 
@@ -352,7 +352,7 @@ public class ECKeyUtil {
 		//尝试PKCS#8
 		try {
 			privateKey = KeyUtil.generatePrivateKey("sm2", privateKeyBytes);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			// 尝试PKCS#1
 			privateKey = KeyUtil.generatePrivateKey("sm2", createOpenSSHPrivateKeySpec(privateKeyBytes));
 		}
@@ -373,11 +373,11 @@ public class ECKeyUtil {
 	 * @return {@link ECPublicKeyParameters}
 	 * @since 5.5.9
 	 */
-	public static ECPublicKeyParameters decodePublicKeyParams(byte[] publicKeyBytes) {
+	public static ECPublicKeyParameters decodePublicKeyParams(final byte[] publicKeyBytes) {
 		try {
 			// 尝试Q值
 			return toSm2PublicParams(publicKeyBytes);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			// ignore
 		}
 
@@ -385,7 +385,7 @@ public class ECKeyUtil {
 		//尝试X.509
 		try {
 			publicKey = KeyUtil.generatePublicKey("sm2", publicKeyBytes);
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			// 尝试PKCS#1
 			publicKey = KeyUtil.generatePublicKey("sm2", createOpenSSHPublicKeySpec(publicKeyBytes));
 		}

@@ -16,7 +16,7 @@ public class DataSizeUtil {
 	 * @param text 数据大小字符串，类似于：12KB, 5MB等
 	 * @return bytes大小
 	 */
-	public static long parse(String text) {
+	public static long parse(final String text) {
 		return DataSize.parse(text).toBytes();
 	}
 
@@ -27,11 +27,11 @@ public class DataSizeUtil {
 	 * @param size Long类型大小
 	 * @return 大小
 	 */
-	public static String format(long size) {
+	public static String format(final long size) {
 		if (size <= 0) {
 			return "0";
 		}
-		int digitGroups = Math.min(DataUnit.UNIT_NAMES.length-1, (int) (Math.log10(size) / Math.log10(1024)));
+		final int digitGroups = Math.min(DataUnit.UNIT_NAMES.length-1, (int) (Math.log10(size) / Math.log10(1024)));
 		return new DecimalFormat("#,##0.##")
 				.format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
 	}

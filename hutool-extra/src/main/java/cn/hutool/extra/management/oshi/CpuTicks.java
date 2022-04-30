@@ -26,7 +26,7 @@ public class CpuTicks {
 	 * @param processor   {@link CentralProcessor}
 	 * @param waitingTime 设置等待时间，单位毫秒
 	 */
-	public CpuTicks(CentralProcessor processor, long waitingTime) {
+	public CpuTicks(final CentralProcessor processor, final long waitingTime) {
 		// CPU信息
 		final long[] prevTicks = processor.getSystemCpuLoadTicks();
 		// 这里必须要设置延迟
@@ -47,7 +47,7 @@ public class CpuTicks {
 		return idle;
 	}
 
-	public void setIdle(long idle) {
+	public void setIdle(final long idle) {
 		this.idle = idle;
 	}
 
@@ -55,7 +55,7 @@ public class CpuTicks {
 		return nice;
 	}
 
-	public void setNice(long nice) {
+	public void setNice(final long nice) {
 		this.nice = nice;
 	}
 
@@ -63,7 +63,7 @@ public class CpuTicks {
 		return irq;
 	}
 
-	public void setIrq(long irq) {
+	public void setIrq(final long irq) {
 		this.irq = irq;
 	}
 
@@ -71,7 +71,7 @@ public class CpuTicks {
 		return softIrq;
 	}
 
-	public void setSoftIrq(long softIrq) {
+	public void setSoftIrq(final long softIrq) {
 		this.softIrq = softIrq;
 	}
 
@@ -79,7 +79,7 @@ public class CpuTicks {
 		return steal;
 	}
 
-	public void setSteal(long steal) {
+	public void setSteal(final long steal) {
 		this.steal = steal;
 	}
 
@@ -87,7 +87,7 @@ public class CpuTicks {
 		return cSys;
 	}
 
-	public void setcSys(long cSys) {
+	public void setcSys(final long cSys) {
 		this.cSys = cSys;
 	}
 
@@ -95,7 +95,7 @@ public class CpuTicks {
 		return user;
 	}
 
-	public void setUser(long user) {
+	public void setUser(final long user) {
 		this.user = user;
 	}
 
@@ -103,7 +103,7 @@ public class CpuTicks {
 		return ioWait;
 	}
 
-	public void setIoWait(long ioWait) {
+	public void setIoWait(final long ioWait) {
 		this.ioWait = ioWait;
 	}
 
@@ -139,7 +139,7 @@ public class CpuTicks {
 	 * @return 标记差
 	 * @since 5.7.12
 	 */
-	private static long tick(long[] prevTicks, long[] ticks, CentralProcessor.TickType tickType) {
+	private static long tick(final long[] prevTicks, final long[] ticks, final CentralProcessor.TickType tickType) {
 		return ticks[tickType.getIndex()] - prevTicks[tickType.getIndex()];
 	}
 }

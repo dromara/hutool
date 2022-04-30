@@ -35,7 +35,7 @@ public class UploadSetting {
 	 *
 	 * @param maxFileSize 最大文件大小
 	 */
-	public void setMaxFileSize(long maxFileSize) {
+	public void setMaxFileSize(final long maxFileSize) {
 		this.maxFileSize = maxFileSize;
 	}
 
@@ -52,7 +52,7 @@ public class UploadSetting {
 	 *
 	 * @param memoryThreshold 文件保存到内存的边界
 	 */
-	public void setMemoryThreshold(int memoryThreshold) {
+	public void setMemoryThreshold(final int memoryThreshold) {
 		this.memoryThreshold = memoryThreshold;
 	}
 
@@ -68,7 +68,7 @@ public class UploadSetting {
 	 *
 	 * @param tmpUploadPath 临时目录，绝对路径
 	 */
-	public void setTmpUploadPath(String tmpUploadPath) {
+	public void setTmpUploadPath(final String tmpUploadPath) {
 		this.tmpUploadPath = tmpUploadPath;
 	}
 
@@ -85,7 +85,7 @@ public class UploadSetting {
 	 *
 	 * @param fileExts 文件扩展名列表
 	 */
-	public void setFileExts(String[] fileExts) {
+	public void setFileExts(final String[] fileExts) {
 		this.fileExts = fileExts;
 	}
 
@@ -103,7 +103,7 @@ public class UploadSetting {
 	 *
 	 * @param isAllowFileExts 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
 	 */
-	public void setAllowFileExts(boolean isAllowFileExts) {
+	public void setAllowFileExts(final boolean isAllowFileExts) {
 		this.isAllowFileExts = isAllowFileExts;
 	}
 	// ---------------------------------------------------------------------- Setters and Getters end

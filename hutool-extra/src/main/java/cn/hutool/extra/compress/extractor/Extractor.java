@@ -19,7 +19,7 @@ public interface Extractor extends Closeable {
 	 *
 	 * @param targetDir 目标目录
 	 */
-	default void extract(File targetDir){
+	default void extract(final File targetDir){
 		extract(targetDir, null);
 	}
 

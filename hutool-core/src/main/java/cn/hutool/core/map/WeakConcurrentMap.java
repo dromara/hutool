@@ -29,7 +29,7 @@ public class WeakConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
 	 *
 	 * @param raw {@link ConcurrentMap}实现
 	 */
-	public WeakConcurrentMap(ConcurrentMap<Reference<K>, V> raw) {
+	public WeakConcurrentMap(final ConcurrentMap<Reference<K>, V> raw) {
 		super(raw, ReferenceUtil.ReferenceType.WEAK);
 	}
 }

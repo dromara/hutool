@@ -44,7 +44,7 @@ public class ExcelSaxUtil {
 	 * @return {@link ExcelSaxReader}
 	 * @since 5.4.4
 	 */
-	public static ExcelSaxReader<?> createSaxReader(boolean isXlsx, RowHandler rowHandler) {
+	public static ExcelSaxReader<?> createSaxReader(final boolean isXlsx, final RowHandler rowHandler) {
 		return isXlsx
 				? new Excel07SaxReader(rowHandler)
 				: new Excel03SaxReader(rowHandler);
@@ -59,7 +59,7 @@ public class ExcelSaxUtil {
 	 * @param numFmtString  数字格式名
 	 * @return 数据值
 	 */
-	public static Object getDataValue(CellDataType cellDataType, String value, SharedStrings sharedStrings, String numFmtString) {
+	public static Object getDataValue(CellDataType cellDataType, final String value, final SharedStrings sharedStrings, final String numFmtString) {
 		if (null == value) {
 			return null;
 		}
@@ -86,21 +86,21 @@ public class ExcelSaxUtil {
 				try {
 					final int index = Integer.parseInt(value);
 					result = sharedStrings.getItemAt(index).getString();
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					result = value;
 				}
 				break;
 			case NUMBER:
 				try {
 					result = getNumberValue(value, numFmtString);
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					result = value;
 				}
 				break;
 			case DATE:
 				try {
 					result = getDateValue(value);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					result = value;
 				}
 				break;
@@ -119,11 +119,11 @@ public class ExcelSaxUtil {
 	 * @param numFmtString 数字格式名
 	 * @return 格式化后的值
 	 */
-	public static String formatCellContent(String value, int numFmtIndex, String numFmtString) {
+	public static String formatCellContent(String value, final int numFmtIndex, final String numFmtString) {
 		if (null != numFmtString) {
 			try {
 				value = new DataFormatter().formatRawCellContents(Double.parseDouble(value), numFmtIndex, numFmtString);
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				// ignore
 			}
 		}
@@ -137,7 +137,7 @@ public class ExcelSaxUtil {
 	 * @param ref    当前单元格位置，例如A8
 	 * @return 同一行中两个单元格之间的空单元格数
 	 */
-	public static int countNullCell(String preRef, String ref) {
+	public static int countNullCell(final String preRef, final String ref) {
 		// excel2007最大行数是1048576，最大列数是16384，最后一列列名是XFD
 		// 数字代表列，去掉列信息
 		String preXfd = StrUtil.nullToDefault(preRef, "@").replaceAll("\\d+", "");
@@ -148,10 +148,10 @@ public class ExcelSaxUtil {
 		preXfd = StrUtil.fillBefore(preXfd, CELL_FILL_CHAR, MAX_CELL_BIT);
 		xfd = StrUtil.fillBefore(xfd, CELL_FILL_CHAR, MAX_CELL_BIT);
 
-		char[] preLetter = preXfd.toCharArray();
-		char[] letter = xfd.toCharArray();
+		final char[] preLetter = preXfd.toCharArray();
+		final char[] letter = xfd.toCharArray();
 		// 用字母表示则最多三位，每26个字母进一位
-		int res = (letter[0] - preLetter[0]) * 26 * 26 + (letter[1] - preLetter[1]) * 26 + (letter[2] - preLetter[2]);
+		final int res = (letter[0] - preLetter[0]) * 26 * 26 + (letter[1] - preLetter[1]) * 26 + (letter[2] - preLetter[2]);
 		return res - 1;
 	}
 
@@ -165,11 +165,11 @@ public class ExcelSaxUtil {
 	 * @throws IORuntimeException  IO异常，如流关闭或异常等
 	 * @since 5.1.4
 	 */
-	public static void readFrom(InputStream xmlDocStream, ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
-		XMLReader xmlReader;
+	public static void readFrom(final InputStream xmlDocStream, final ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
+		final XMLReader xmlReader;
 		try {
 			xmlReader = XMLHelper.newXMLReader();
-		} catch (SAXException | ParserConfigurationException e) {
+		} catch (final SAXException | ParserConfigurationException e) {
 			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
 				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
 			} else {
@@ -179,9 +179,9 @@ public class ExcelSaxUtil {
 		xmlReader.setContentHandler(handler);
 		try {
 			xmlReader.parse(new InputSource(xmlDocStream));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			throw new POIException(e);
 		}
 	}
@@ -194,7 +194,7 @@ public class ExcelSaxUtil {
 	 * @return 是否为日期格式
 	 * @since 5.4.8
 	 */
-	public static boolean isDateFormat(CellValueRecordInterface cell, FormatTrackingHSSFListener formatListener) {
+	public static boolean isDateFormat(final CellValueRecordInterface cell, final FormatTrackingHSSFListener formatListener) {
 		final int formatIndex = formatListener.getFormatIndex(cell);
 		final String formatString = formatListener.getFormatString(cell);
 		return isDateFormat(formatIndex, formatString);
@@ -209,7 +209,7 @@ public class ExcelSaxUtil {
 	 * @see ExcelDateUtil#isDateFormat(int, String)
 	 * @since 5.5.3
 	 */
-	public static boolean isDateFormat(int formatIndex, String formatString) {
+	public static boolean isDateFormat(final int formatIndex, final String formatString) {
 		return ExcelDateUtil.isDateFormat(formatIndex, formatString);
 	}
 
@@ -220,7 +220,7 @@ public class ExcelSaxUtil {
 	 * @return 日期
 	 * @since 5.3.6
 	 */
-	public static DateTime getDateValue(String value) {
+	public static DateTime getDateValue(final String value) {
 		return getDateValue(Double.parseDouble(value));
 	}
 
@@ -231,7 +231,7 @@ public class ExcelSaxUtil {
 	 * @return 日期
 	 * @since 4.1.0
 	 */
-	public static DateTime getDateValue(double value) {
+	public static DateTime getDateValue(final double value) {
 		return DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(value, false));
 	}
 
@@ -244,7 +244,7 @@ public class ExcelSaxUtil {
 	 * @return 值，可能为Date或Double或Long
 	 * @since 5.5.0
 	 */
-	public static Object getNumberOrDateValue(CellValueRecordInterface cell, double value, FormatTrackingHSSFListener formatListener) {
+	public static Object getNumberOrDateValue(final CellValueRecordInterface cell, final double value, final FormatTrackingHSSFListener formatListener) {
 		if (isDateFormat(cell, formatListener)) {
 			// 可能为日期格式
 			return getDateValue(value);
@@ -260,7 +260,7 @@ public class ExcelSaxUtil {
 	 * @return 数字，可以是Double、Long
 	 * @since 4.1.0
 	 */
-	private static Number getNumberValue(String value, String numFmtString) {
+	private static Number getNumberValue(final String value, final String numFmtString) {
 		if (StrUtil.isBlank(value)) {
 			return null;
 		}
@@ -275,7 +275,7 @@ public class ExcelSaxUtil {
 	 * @return 数字，可以是Double、Long
 	 * @since 5.5.3
 	 */
-	private static Number getNumberValue(double numValue, String numFmtString) {
+	private static Number getNumberValue(final double numValue, final String numFmtString) {
 		// 普通数字
 		if (null != numFmtString && false == StrUtil.contains(numFmtString, CharUtil.DOT)) {
 			final long longPart = (long) numValue;

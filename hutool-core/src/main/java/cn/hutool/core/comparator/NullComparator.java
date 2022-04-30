@@ -27,13 +27,13 @@ public class NullComparator<T> implements Comparator<T>, Serializable {
 	 * @param comparator 实际比较器
 	 */
 	@SuppressWarnings("unchecked")
-	public NullComparator(boolean nullGreater, Comparator<? super T> comparator) {
+	public NullComparator(final boolean nullGreater, final Comparator<? super T> comparator) {
 		this.nullGreater = nullGreater;
 		this.comparator = (Comparator<T>) comparator;
 	}
 
 	@Override
-	public int compare(T a, T b) {
+	public int compare(final T a, final T b) {
 		if (a == b) {
 			return 0;
 		}if (a == null) {
@@ -46,7 +46,7 @@ public class NullComparator<T> implements Comparator<T>, Serializable {
 	}
 
 	@Override
-	public Comparator<T> thenComparing(Comparator<? super T> other) {
+	public Comparator<T> thenComparing(final Comparator<? super T> other) {
 		Objects.requireNonNull(other);
 		return new NullComparator<>(nullGreater, comparator == null ? other : comparator.thenComparing(other));
 	}
@@ -65,7 +65,7 @@ public class NullComparator<T> implements Comparator<T>, Serializable {
 	 * @return 比较结果，-1:a小于b，0:相等，1:a大于b
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	protected int doCompare(T a, T b) {
+	protected int doCompare(final T a, final T b) {
 		if (null == comparator) {
 			if (a instanceof Comparable && b instanceof Comparable) {
 				return ((Comparable) a).compareTo(b);

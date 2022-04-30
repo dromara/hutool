@@ -16,7 +16,7 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return {@link UserAgent}
 	 */
-	public static UserAgent parse(String userAgentString) {
+	public static UserAgent parse(final String userAgentString) {
 		if(StrUtil.isBlank(userAgentString)){
 			return null;
 		}
@@ -52,8 +52,8 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return 浏览器类型
 	 */
-	private static Browser parseBrowser(String userAgentString) {
-		for (Browser browser : Browser.browers) {
+	private static Browser parseBrowser(final String userAgentString) {
+		for (final Browser browser : Browser.browers) {
 			if (browser.isMatch(userAgentString)) {
 				return browser;
 			}
@@ -67,8 +67,8 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return 引擎类型
 	 */
-	private static Engine parseEngine(String userAgentString) {
-		for (Engine engine : Engine.engines) {
+	private static Engine parseEngine(final String userAgentString) {
+		for (final Engine engine : Engine.engines) {
 			if (engine.isMatch(userAgentString)) {
 				return engine;
 			}
@@ -82,8 +82,8 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return 系统类型
 	 */
-	private static OS parseOS(String userAgentString) {
-		for (OS os : OS.oses) {
+	private static OS parseOS(final String userAgentString) {
+		for (final OS os : OS.oses) {
 			if (os.isMatch(userAgentString)) {
 				return os;
 			}
@@ -97,8 +97,8 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return 平台类型
 	 */
-	private static Platform parsePlatform(String userAgentString) {
-		for (Platform platform : Platform.platforms) {
+	private static Platform parsePlatform(final String userAgentString) {
+		for (final Platform platform : Platform.platforms) {
 			if (platform.isMatch(userAgentString)) {
 				return platform;
 			}

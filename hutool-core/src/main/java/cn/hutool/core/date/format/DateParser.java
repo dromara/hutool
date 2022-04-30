@@ -54,7 +54,7 @@ public interface DateParser extends DateBasic{
 	 * @throws ParseException if the beginning of the specified string cannot be parsed.
 	 * @see java.text.DateFormat#parseObject(String)
 	 */
-	default Object parseObject(String source) throws ParseException{
+	default Object parseObject(final String source) throws ParseException{
 		return parse(source);
 	}
 
@@ -66,7 +66,7 @@ public interface DateParser extends DateBasic{
 	 * @return a {@code java.util.Date} object
 	 * @see java.text.DateFormat#parseObject(String, ParsePosition)
 	 */
-	default Object parseObject(String source, ParsePosition pos){
+	default Object parseObject(final String source, final ParsePosition pos){
 		return parse(source, pos);
 	}
 }

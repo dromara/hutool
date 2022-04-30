@@ -32,7 +32,7 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	 * @param template Velocity的模板对象 {@link org.apache.velocity.Template}
 	 * @return VelocityTemplate
 	 */
-	public static VelocityTemplate wrap(org.apache.velocity.Template template) {
+	public static VelocityTemplate wrap(final org.apache.velocity.Template template) {
 		return (null == template) ? null : new VelocityTemplate(template);
 	}
 
@@ -41,18 +41,18 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	 *
 	 * @param rawTemplate Velocity模板对象
 	 */
-	public VelocityTemplate(org.apache.velocity.Template rawTemplate) {
+	public VelocityTemplate(final org.apache.velocity.Template rawTemplate) {
 		this.rawTemplate = rawTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		rawTemplate.merge(toContext(bindingMap), writer);
 		IoUtil.flush(writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		if(null == charset) {
 			loadEncoding();
 		}
@@ -65,7 +65,7 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	 * @param bindingMap 参数绑定的Map
 	 * @return {@link VelocityContext}
 	 */
-	private VelocityContext toContext(Map<?, ?> bindingMap) {
+	private VelocityContext toContext(final Map<?, ?> bindingMap) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		return new VelocityContext(map);
 	}

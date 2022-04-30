@@ -19,7 +19,7 @@ public interface Hash128<T> extends Hash<T>{
 	Number128 hash128(T t);
 
 	@Override
-	default Number hash(T t){
+	default Number hash(final T t){
 		return hash128(t);
 	}
 }

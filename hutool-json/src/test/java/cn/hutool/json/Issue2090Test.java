@@ -26,32 +26,32 @@ public class Issue2090Test {
 
 	@Test
 	public void parseLocalDateTest(){
-		LocalDate localDate = LocalDate.now();
+		final LocalDate localDate = LocalDate.now();
 		final JSONObject jsonObject = JSONUtil.parseObj(localDate);
 		Assert.assertNotNull(jsonObject.toString());
 	}
 
 	@Test
 	public void toBeanLocalDateTest(){
-		LocalDate d = LocalDate.now();
+		final LocalDate d = LocalDate.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
-		LocalDate d2 = obj.toBean(LocalDate.class);
+		final LocalDate d2 = obj.toBean(LocalDate.class);
 		Assert.assertEquals(d, d2);
 	}
 
 	@Test
 	public void toBeanLocalDateTimeTest(){
-		LocalDateTime d = LocalDateTime.now();
+		final LocalDateTime d = LocalDateTime.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
-		LocalDateTime d2 = obj.toBean(LocalDateTime.class);
+		final LocalDateTime d2 = obj.toBean(LocalDateTime.class);
 		Assert.assertEquals(d, d2);
 	}
 
 	@Test
 	public void toBeanLocalTimeTest(){
-		LocalTime d = LocalTime.now();
+		final LocalTime d = LocalTime.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
-		LocalTime d2 = obj.toBean(LocalTime.class);
+		final LocalTime d2 = obj.toBean(LocalTime.class);
 		Assert.assertEquals(d, d2);
 	}
 

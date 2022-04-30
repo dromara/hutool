@@ -28,7 +28,7 @@ public class TestJob {
 	 */
 	@SuppressWarnings("InfiniteLoopStatement")
 	public void doWhileTest() {
-		String name = Thread.currentThread().getName();
+		final String name = Thread.currentThread().getName();
 		while (true) {
 			Console.log("Job {} while running...", name);
 			ThreadUtil.sleep(2000);

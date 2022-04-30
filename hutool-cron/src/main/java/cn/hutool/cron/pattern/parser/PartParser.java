@@ -43,7 +43,7 @@ public class PartParser {
 	 * @param part 对应解析的部分枚举
 	 * @return 解析器
 	 */
-	public static PartParser of(Part part) {
+	public static PartParser of(final Part part) {
 		return new PartParser(part);
 	}
 
@@ -51,7 +51,7 @@ public class PartParser {
 	 * 构造
 	 * @param part 对应解析的部分枚举
 	 */
-	public PartParser(Part part) {
+	public PartParser(final Part part) {
 		this.part = part;
 	}
 
@@ -67,7 +67,7 @@ public class PartParser {
 	 * @param value 表达式
 	 * @return {@link PartMatcher}
 	 */
-	public PartMatcher parse(String value) {
+	public PartMatcher parse(final String value) {
 		if (isMatchAllStr(value)) {
 			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
 			return new AlwaysTrueMatcher();
@@ -99,11 +99,11 @@ public class PartParser {
 	 * @param value 子表达式值
 	 * @return 值列表
 	 */
-	private List<Integer> parseArray(String value) {
+	private List<Integer> parseArray(final String value) {
 		final List<Integer> values = new ArrayList<>();
 
 		final List<String> parts = StrUtil.split(value, StrUtil.C_COMMA);
-		for (String part : parts) {
+		for (final String part : parts) {
 			CollUtil.addAllIfNotContains(values, parseStep(part));
 		}
 		return values;
@@ -121,11 +121,11 @@ public class PartParser {
 	 * @param value 表达式值
 	 * @return List
 	 */
-	private List<Integer> parseStep(String value) {
+	private List<Integer> parseStep(final String value) {
 		final List<String> parts = StrUtil.split(value, StrUtil.C_SLASH);
-		int size = parts.size();
+		final int size = parts.size();
 
-		List<Integer> results;
+		final List<Integer> results;
 		if (size == 1) {// 普通形式
 			results = parseRange(value, -1);
 		} else if (size == 2) {// 间隔形式
@@ -154,7 +154,7 @@ public class PartParser {
 	 * @param step  步进
 	 * @return List
 	 */
-	private List<Integer> parseRange(String value, int step) {
+	private List<Integer> parseRange(final String value, int step) {
 		final List<Integer> results = new ArrayList<>();
 
 		// 全部匹配形式
@@ -186,8 +186,8 @@ public class PartParser {
 		}
 
 		//Range模式
-		List<String> parts = StrUtil.split(value, '-');
-		int size = parts.size();
+		final List<String> parts = StrUtil.split(value, '-');
+		final int size = parts.size();
 		if (size == 1) {// 普通值
 			final int v1 = parseNumber(value);
 			if (step > 0) {//类似 20/2的形式
@@ -224,7 +224,7 @@ public class PartParser {
 	 * @return 是否为全匹配符
 	 * @since 4.1.18
 	 */
-	private static boolean isMatchAllStr(String value) {
+	private static boolean isMatchAllStr(final String value) {
 		return (1 == value.length()) && ("*".equals(value) || "?".equals(value));
 	}
 
@@ -235,11 +235,11 @@ public class PartParser {
 	 * @return 解析结果
 	 * @throws CronException 当无效数字或无效别名时抛出
 	 */
-	private int parseNumber(String value) throws CronException {
+	private int parseNumber(final String value) throws CronException {
 		int i;
 		try {
 			i = Integer.parseInt(value);
-		} catch (NumberFormatException ignore) {
+		} catch (final NumberFormatException ignore) {
 			i = parseAlias(value);
 		}
 
@@ -267,7 +267,7 @@ public class PartParser {
 	 * @return 解析int值
 	 * @throws CronException 无匹配别名时抛出异常
 	 */
-	private int parseAlias(String name) throws CronException {
+	private int parseAlias(final String name) throws CronException {
 		if ("L".equalsIgnoreCase(name)) {
 			// L表示最大值
 			return part.getMax();

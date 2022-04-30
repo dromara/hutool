@@ -34,7 +34,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 *
 	 * @param rowHandler 行处理器
 	 */
-	public Excel07SaxReader(RowHandler rowHandler) {
+	public Excel07SaxReader(final RowHandler rowHandler) {
 		this.handler = new SheetDataSaxHandler(rowHandler);
 	}
 
@@ -44,38 +44,38 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @param rowHandler 行处理器
 	 * @return this
 	 */
-	public Excel07SaxReader setRowHandler(RowHandler rowHandler) {
+	public Excel07SaxReader setRowHandler(final RowHandler rowHandler) {
 		this.handler.setRowHandler(rowHandler);
 		return this;
 	}
 
 	// ------------------------------------------------------------------------------ Read start
 	@Override
-	public Excel07SaxReader read(File file, int rid) throws POIException {
+	public Excel07SaxReader read(final File file, final int rid) throws POIException {
 		return read(file, RID_PREFIX + rid);
 	}
 
 	@Override
-	public Excel07SaxReader read(File file, String idOrRidOrSheetName) throws POIException {
-		try (OPCPackage open = OPCPackage.open(file, PackageAccess.READ)){
+	public Excel07SaxReader read(final File file, final String idOrRidOrSheetName) throws POIException {
+		try (final OPCPackage open = OPCPackage.open(file, PackageAccess.READ)){
 			return read(open, idOrRidOrSheetName);
-		} catch (InvalidFormatException | IOException e) {
+		} catch (final InvalidFormatException | IOException e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
-	public Excel07SaxReader read(InputStream in, int rid) throws POIException {
+	public Excel07SaxReader read(final InputStream in, final int rid) throws POIException {
 		return read(in, RID_PREFIX + rid);
 	}
 
 	@Override
-	public Excel07SaxReader read(InputStream in, String idOrRidOrSheetName) throws POIException {
+	public Excel07SaxReader read(final InputStream in, final String idOrRidOrSheetName) throws POIException {
 		try (final OPCPackage opcPackage = OPCPackage.open(in)) {
 			return read(opcPackage, idOrRidOrSheetName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} catch (InvalidFormatException e) {
+		} catch (final InvalidFormatException e) {
 			throw new POIException(e);
 		}
 	}
@@ -88,7 +88,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	public Excel07SaxReader read(OPCPackage opcPackage, int rid) throws POIException {
+	public Excel07SaxReader read(final OPCPackage opcPackage, final int rid) throws POIException {
 		return read(opcPackage, RID_PREFIX + rid);
 	}
 
@@ -100,12 +100,12 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	public Excel07SaxReader read(OPCPackage opcPackage, String idOrRidOrSheetName) throws POIException {
+	public Excel07SaxReader read(final OPCPackage opcPackage, final String idOrRidOrSheetName) throws POIException {
 		try {
 			return read(new XSSFReader(opcPackage), idOrRidOrSheetName);
-		} catch (OpenXML4JException e) {
+		} catch (final OpenXML4JException e) {
 			throw new POIException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -119,11 +119,11 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @throws POIException POI异常
 	 * @since 5.4.4
 	 */
-	public Excel07SaxReader read(XSSFReader xssfReader, String idOrRidOrSheetName) throws POIException {
+	public Excel07SaxReader read(final XSSFReader xssfReader, final String idOrRidOrSheetName) throws POIException {
 		// 获取共享样式表，样式非必须
 		try {
 			this.handler.stylesTable = xssfReader.getStylesTable();
-		} catch (IOException | InvalidFormatException ignore) {
+		} catch (final IOException | InvalidFormatException ignore) {
 			// ignore
 		}
 
@@ -147,7 +147,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @throws POIException POI异常
 	 * @since 5.4.4
 	 */
-	private Excel07SaxReader readSheets(XSSFReader xssfReader, String idOrRidOrSheetName) throws POIException {
+	private Excel07SaxReader readSheets(final XSSFReader xssfReader, final String idOrRidOrSheetName) throws POIException {
 		this.handler.sheetIndex = getSheetIndex(xssfReader, idOrRidOrSheetName);
 		InputStream sheetInputStream = null;
 		try {
@@ -169,9 +169,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 					this.handler.rowHandler.doAfterAllAnalysed();
 				}
 			}
-		} catch (RuntimeException e) {
+		} catch (final RuntimeException e) {
 			throw e;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new POIException(e);
 		} finally {
 			IoUtil.close(sheetInputStream);
@@ -192,7 +192,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	 * @return sheet索引，从0开始
 	 * @since 5.5.5
 	 */
-	private int getSheetIndex(XSSFReader xssfReader, String idOrRidOrSheetName) {
+	private int getSheetIndex(final XSSFReader xssfReader, String idOrRidOrSheetName) {
 		// rid直接处理
 		if (StrUtil.startWithIgnoreCase(idOrRidOrSheetName, RID_PREFIX)) {
 			return Integer.parseInt(StrUtil.removePrefixIgnoreCase(idOrRidOrSheetName, RID_PREFIX));
@@ -220,7 +220,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 				rid = ridReader.getRidBySheetIdBase0(sheetIndex);
 				// 如果查找不到对应index，则认为用户传入的直接是rid
 				return ObjUtil.defaultIfNull(rid, sheetIndex);
-			} catch (NumberFormatException ignore) {
+			} catch (final NumberFormatException ignore) {
 				// 非数字，说明非index，且没有对应名称，抛出异常
 			}
 		}

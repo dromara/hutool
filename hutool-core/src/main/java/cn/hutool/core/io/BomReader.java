@@ -37,17 +37,17 @@ public class BomReader extends Reader {
 	 *
 	 * @param in 流
 	 */
-	public BomReader(InputStream in) {
+	public BomReader(final InputStream in) {
 		Assert.notNull(in, "InputStream must be not null!");
 		final BOMInputStream bin = (in instanceof BOMInputStream) ? (BOMInputStream) in : new BOMInputStream(in);
 		try {
 			this.reader = new InputStreamReader(bin, bin.getCharset());
-		} catch (UnsupportedEncodingException ignore) {
+		} catch (final UnsupportedEncodingException ignore) {
 		}
 	}
 
 	@Override
-	public int read(char[] cbuf, int off, int len) throws IOException {
+	public int read(final char[] cbuf, final int off, final int len) throws IOException {
 		return reader.read(cbuf, off, len);
 	}
 

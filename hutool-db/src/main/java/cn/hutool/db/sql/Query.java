@@ -33,7 +33,7 @@ public class Query {
 	 * @return Query
 	 * @since 5.5.3
 	 */
-	public static Query of(Entity where){
+	public static Query of(final Entity where){
 		return new Query(SqlUtil.buildConditions(where), where.getTableName());
 	}
 
@@ -43,7 +43,7 @@ public class Query {
 	 *
 	 * @param tableNames 表名
 	 */
-	public Query(String... tableNames) {
+	public Query(final String... tableNames) {
 		this(null, tableNames);
 		this.tableNames = tableNames;
 	}
@@ -54,7 +54,7 @@ public class Query {
 	 * @param where 条件语句
 	 * @param tableNames 表名
 	 */
-	public Query(Condition[] where, String... tableNames) {
+	public Query(final Condition[] where, final String... tableNames) {
 		this(where, null, tableNames);
 	}
 
@@ -65,7 +65,7 @@ public class Query {
 	 * @param page 分页
 	 * @param tableNames 表名
 	 */
-	public Query(Condition[] where, Page page, String... tableNames) {
+	public Query(final Condition[] where, final Page page, final String... tableNames) {
 		this(null, tableNames, where, page);
 	}
 
@@ -77,7 +77,7 @@ public class Query {
 	 * @param where 条件
 	 * @param page 分页
 	 */
-	public Query(Collection<String> fields, String[] tableNames, Condition[] where, Page page) {
+	public Query(final Collection<String> fields, final String[] tableNames, final Condition[] where, final Page page) {
 		this.fields = fields;
 		this.tableNames = tableNames;
 		this.where = where;
@@ -101,7 +101,7 @@ public class Query {
 	 * @param fields 查询的字段名列表
 	 * @return this
 	 */
-	public Query setFields(Collection<String> fields) {
+	public Query setFields(final Collection<String> fields) {
 		this.fields = fields;
 		return this;
 	}
@@ -112,7 +112,7 @@ public class Query {
 	 * @param fields 查询的字段名列表
 	 * @return this
 	 */
-	public Query setFields(String... fields) {
+	public Query setFields(final String... fields) {
 		this.fields = CollUtil.newArrayList(fields);
 		return this;
 	}
@@ -132,7 +132,7 @@ public class Query {
 	 * @param tableNames 表名
 	 * @return this
 	 */
-	public Query setTableNames(String... tableNames) {
+	public Query setTableNames(final String... tableNames) {
 		this.tableNames = tableNames;
 		return this;
 	}
@@ -152,7 +152,7 @@ public class Query {
 	 * @param where 条件语句
 	 * @return this
 	 */
-	public Query setWhere(Condition... where) {
+	public Query setWhere(final Condition... where) {
 		this.where = where;
 		return this;
 	}
@@ -172,7 +172,7 @@ public class Query {
 	 * @param page 分页对象
 	 * @return this
 	 */
-	public Query setPage(Page page) {
+	public Query setPage(final Page page) {
 		this.page = page;
 		return this;
 	}

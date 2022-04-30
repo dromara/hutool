@@ -18,7 +18,7 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 	 * @return MutableObj
 	 * @since 5.8.0
 	 */
-	public static <T> MutableObj<T> of(T value){
+	public static <T> MutableObj<T> of(final T value){
 		return new MutableObj<>(value);
 	}
 

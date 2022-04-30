@@ -23,7 +23,7 @@ public class JavaFileObjectUtil {
 	 * @param file 文件或目录，文件支持.java、.jar和.zip文件
 	 * @return 所有待编译的 {@link JavaFileObject}
 	 */
-	public static List<JavaFileObject> getJavaFileObjects(File file) {
+	public static List<JavaFileObject> getJavaFileObjects(final File file) {
 		final List<JavaFileObject> result = new ArrayList<>();
 		final String fileName = file.getName();
 
@@ -41,7 +41,7 @@ public class JavaFileObjectUtil {
 	 * @param fileName 文件名
 	 * @return 是否是jar 或 zip 文件
 	 */
-	public static boolean isJarOrZipFile(String fileName) {
+	public static boolean isJarOrZipFile(final String fileName) {
 		return FileNameUtil.isType(fileName, "jar", "zip");
 	}
 
@@ -51,7 +51,7 @@ public class JavaFileObjectUtil {
 	 * @param fileName 文件名
 	 * @return 是否是.java文件
 	 */
-	public static boolean isJavaFile(String fileName) {
+	public static boolean isJavaFile(final String fileName) {
 		return FileNameUtil.isType(fileName, "java");
 	}
 
@@ -61,7 +61,7 @@ public class JavaFileObjectUtil {
 	 * @param file 压缩文件
 	 * @return Java文件对象
 	 */
-	private static List<JavaFileObject> getJavaFileObjectByZipOrJarFile(File file) {
+	private static List<JavaFileObject> getJavaFileObjectByZipOrJarFile(final File file) {
 		final List<JavaFileObject> collection = new ArrayList<>();
 		final ZipFile zipFile = ZipUtil.toZipFile(file, null);
 		ZipUtil.read(zipFile, (zipEntry) -> {

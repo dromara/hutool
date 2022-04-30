@@ -24,8 +24,8 @@ public class FileTypeUtil {
 
 	static {
 		FILE_TYPE_MAP = new ConcurrentSkipListMap<>((s1, s2) -> {
-			int len1 = s1.length();
-			int len2 = s2.length();
+			final int len1 = s1.length();
+			final int len2 = s2.length();
 			if (len1 == len2) {
 				return s1.compareTo(s2);
 			} else {
@@ -93,7 +93,7 @@ public class FileTypeUtil {
 	 * @param extName           文件扩展名
 	 * @return 之前已经存在的文件扩展名
 	 */
-	public static String putFileType(String fileStreamHexHead, String extName) {
+	public static String putFileType(final String fileStreamHexHead, final String extName) {
 		return FILE_TYPE_MAP.put(fileStreamHexHead, extName);
 	}
 
@@ -103,7 +103,7 @@ public class FileTypeUtil {
 	 * @param fileStreamHexHead 文件流头部Hex信息
 	 * @return 移除的文件扩展名
 	 */
-	public static String removeFileType(String fileStreamHexHead) {
+	public static String removeFileType(final String fileStreamHexHead) {
 		return FILE_TYPE_MAP.remove(fileStreamHexHead);
 	}
 
@@ -113,8 +113,8 @@ public class FileTypeUtil {
 	 * @param fileStreamHexHead 文件流头部16进制字符串
 	 * @return 文件类型，未找到为{@code null}
 	 */
-	public static String getType(String fileStreamHexHead) {
-		for (Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
+	public static String getType(final String fileStreamHexHead) {
+		for (final Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
 			if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
 				return fileTypeEntry.getValue();
 			}
@@ -131,7 +131,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in) throws IORuntimeException {
+	public static String getType(final InputStream in) throws IORuntimeException {
 		return getType(IoUtil.readHex28Upper(in));
 	}
 
@@ -152,7 +152,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in, String filename) {
+	public static String getType(final InputStream in, final String filename) {
 		String typeName = getType(in);
 
 		if (null == typeName) {
@@ -208,7 +208,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getType(File file) throws IORuntimeException {
+	public static String getType(final File file) throws IORuntimeException {
 		FileInputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
@@ -225,7 +225,7 @@ public class FileTypeUtil {
 	 * @return 类型
 	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path) throws IORuntimeException {
+	public static String getTypeByPath(final String path) throws IORuntimeException {
 		return getType(FileUtil.file(path));
 	}
 }

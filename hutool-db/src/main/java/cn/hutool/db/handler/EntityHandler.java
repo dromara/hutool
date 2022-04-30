@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 /**
  * Entity对象处理器，只处理第一条数据
- * 
+ *
  * @author loolly
  *
  */
@@ -38,15 +38,15 @@ public class EntityHandler implements RsHandler<Entity>{
 	 *
 	 * @param caseInsensitive 是否大小写不敏感
 	 */
-	public EntityHandler(boolean caseInsensitive) {
+	public EntityHandler(final boolean caseInsensitive) {
 		this.caseInsensitive = caseInsensitive;
 	}
 
 	@Override
-	public Entity handle(ResultSet rs) throws SQLException {
+	public Entity handle(final ResultSet rs) throws SQLException {
 		final ResultSetMetaData  meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
-		
+
 		return rs.next() ? HandleHelper.handleRow(columnCount, meta, rs, this.caseInsensitive) : null;
 	}
 }

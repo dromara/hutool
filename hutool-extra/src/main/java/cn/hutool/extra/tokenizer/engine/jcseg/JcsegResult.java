@@ -23,16 +23,16 @@ public class JcsegResult extends AbstractResult {
 	 * 构造
 	 * @param segment 分词结果
 	 */
-	public JcsegResult(ISegment segment) {
+	public JcsegResult(final ISegment segment) {
 		this.result = segment;
 	}
 
 	@Override
 	protected Word nextWord() {
-		IWord word;
+		final IWord word;
 		try {
 			word = this.result.next();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		if(null == word){

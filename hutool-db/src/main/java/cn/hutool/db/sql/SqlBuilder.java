@@ -42,7 +42,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param wrapper 包装器
 	 * @return SQL构建器
 	 */
-	public static SqlBuilder create(Wrapper wrapper) {
+	public static SqlBuilder create(final Wrapper wrapper) {
 		return new SqlBuilder(wrapper);
 	}
 
@@ -53,7 +53,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return SqlBuilder
 	 * @since 5.5.3
 	 */
-	public static SqlBuilder of(CharSequence sql) {
+	public static SqlBuilder of(final CharSequence sql) {
 		return create().append(sql);
 	}
 
@@ -63,7 +63,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param entity 实体类对象
 	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */
-	public static void validateEntity(Entity entity) throws DbRuntimeException {
+	public static void validateEntity(final Entity entity) throws DbRuntimeException {
 		if (null == entity) {
 			throw new DbRuntimeException("Entity is null !");
 		}
@@ -118,7 +118,7 @@ public class SqlBuilder implements Builder<String> {
 	public SqlBuilder() {
 	}
 
-	public SqlBuilder(Wrapper wrapper) {
+	public SqlBuilder(final Wrapper wrapper) {
 		this.wrapper = wrapper;
 	}
 	// --------------------------------------------------------------- Constructor end
@@ -131,7 +131,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param entity 实体
 	 * @return 自己
 	 */
-	public SqlBuilder insert(Entity entity) {
+	public SqlBuilder insert(final Entity entity) {
 		return this.insert(entity, DialectName.ANSI);
 	}
 
@@ -143,7 +143,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param dialectName 方言名，用于对特殊数据库特殊处理
 	 * @return 自己
 	 */
-	public SqlBuilder insert(Entity entity, DialectName dialectName) {
+	public SqlBuilder insert(final Entity entity, final DialectName dialectName) {
 		return insert(entity, dialectName.name());
 	}
 
@@ -156,7 +156,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return 自己
 	 * @since 5.5.3
 	 */
-	public SqlBuilder insert(Entity entity, String dialectName) {
+	public SqlBuilder insert(final Entity entity, final String dialectName) {
 		// 验证
 		validateEntity(entity);
 
@@ -230,7 +230,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param entity 要更新的实体
 	 * @return 自己
 	 */
-	public SqlBuilder update(Entity entity) {
+	public SqlBuilder update(final Entity entity) {
 		// 验证
 		validateEntity(entity);
 
@@ -260,7 +260,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param fields     查询的字段
 	 * @return 自己
 	 */
-	public SqlBuilder select(boolean isDistinct, String... fields) {
+	public SqlBuilder select(final boolean isDistinct, final String... fields) {
 		return select(isDistinct, Arrays.asList(fields));
 	}
 
@@ -271,7 +271,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param fields     查询的字段
 	 * @return 自己
 	 */
-	public SqlBuilder select(boolean isDistinct, Collection<String> fields) {
+	public SqlBuilder select(final boolean isDistinct, Collection<String> fields) {
 		sql.append("SELECT ");
 		if (isDistinct) {
 			sql.append("DISTINCT ");
@@ -296,7 +296,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param fields 查询的字段
 	 * @return 自己
 	 */
-	public SqlBuilder select(String... fields) {
+	public SqlBuilder select(final String... fields) {
 		return select(false, fields);
 	}
 
@@ -306,7 +306,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param fields 查询的字段
 	 * @return 自己
 	 */
-	public SqlBuilder select(Collection<String> fields) {
+	public SqlBuilder select(final Collection<String> fields) {
 		return select(false, fields);
 	}
 
@@ -338,7 +338,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return 自己
 	 * @since 4.4.4
 	 */
-	public SqlBuilder where(Condition... conditions) {
+	public SqlBuilder where(final Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
 			where(buildCondition(conditions));
 		}
@@ -352,7 +352,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param where WHERE语句之后跟的条件语句字符串
 	 * @return 自己
 	 */
-	public SqlBuilder where(String where) {
+	public SqlBuilder where(final String where) {
 		if (StrUtil.isNotBlank(where)) {
 			sql.append(" WHERE ").append(where);
 		}
@@ -368,7 +368,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return 自身
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> SqlBuilder in(String field, T... values) {
+	public <T> SqlBuilder in(final String field, final T... values) {
 		sql.append(wrapper.wrap(field)).append(" IN ").append("(").append(ArrayUtil.join(values, StrUtil.COMMA)).append(")");
 		return this;
 	}
@@ -399,7 +399,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public SqlBuilder having(Condition... conditions) {
+	public SqlBuilder having(final Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
 			having(buildCondition(conditions));
 		}
@@ -413,7 +413,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param having 条件语句
 	 * @return 自己
 	 */
-	public SqlBuilder having(String having) {
+	public SqlBuilder having(final String having) {
 		if (StrUtil.isNotBlank(having)) {
 			sql.append(" HAVING ").append(having);
 		}
@@ -426,7 +426,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param orders 排序对象
 	 * @return 自己
 	 */
-	public SqlBuilder orderBy(Order... orders) {
+	public SqlBuilder orderBy(final Order... orders) {
 		if (ArrayUtil.isEmpty(orders)) {
 			return this;
 		}
@@ -434,7 +434,7 @@ public class SqlBuilder implements Builder<String> {
 		sql.append(" ORDER BY ");
 		String field;
 		boolean isFirst = true;
-		for (Order order : orders) {
+		for (final Order order : orders) {
 			field = order.getField();
 			if (null != wrapper) {
 				// 包装字段名
@@ -466,7 +466,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param join      内联方式
 	 * @return 自己
 	 */
-	public SqlBuilder join(String tableName, Join join) {
+	public SqlBuilder join(String tableName, final Join join) {
 		if (StrUtil.isBlank(tableName)) {
 			throw new DbRuntimeException("Table name is blank !");
 		}
@@ -489,7 +489,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return this
 	 * @since 5.4.3
 	 */
-	public SqlBuilder on(Condition... conditions) {
+	public SqlBuilder on(final Condition... conditions) {
 		if (ArrayUtil.isNotEmpty(conditions)) {
 			on(buildCondition(conditions));
 		}
@@ -504,7 +504,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param on 条件
 	 * @return 自己
 	 */
-	public SqlBuilder on(String on) {
+	public SqlBuilder on(final String on) {
 		if (StrUtil.isNotBlank(on)) {
 			this.sql.append(" ON ").append(on);
 		}
@@ -518,7 +518,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return this
 	 * @since 4.1.3
 	 */
-	public SqlBuilder insertPreFragment(Object sqlFragment) {
+	public SqlBuilder insertPreFragment(final Object sqlFragment) {
 		if (null != sqlFragment) {
 			this.sql.insert(0, sqlFragment);
 		}
@@ -538,7 +538,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param sqlFragment SQL其它部分片段
 	 * @return this
 	 */
-	public SqlBuilder append(Object sqlFragment) {
+	public SqlBuilder append(final Object sqlFragment) {
 		if (null != sqlFragment) {
 			this.sql.append(sqlFragment);
 		}
@@ -558,7 +558,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return this
 	 * @since 5.5.3
 	 */
-	public SqlBuilder addParams(Object... params) {
+	public SqlBuilder addParams(final Object... params) {
 		if (ArrayUtil.isNotEmpty(params)) {
 			Collections.addAll(this.paramValues, params);
 		}
@@ -571,7 +571,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param query {@link Query}
 	 * @return this
 	 */
-	public SqlBuilder query(Query query) {
+	public SqlBuilder query(final Query query) {
 		return this.select(query.getFields()).from(query.getTableNames()).where(query.getWhere());
 	}
 	// --------------------------------------------------------------- Builder end

@@ -22,7 +22,7 @@ public class EnumerationIter<E> implements IterableIter<E>, Serializable{
 	 * 构造
 	 * @param enumeration {@link Enumeration}对象
 	 */
-	public EnumerationIter(Enumeration<E> enumeration) {
+	public EnumerationIter(final Enumeration<E> enumeration) {
 		this.e = enumeration;
 	}
 

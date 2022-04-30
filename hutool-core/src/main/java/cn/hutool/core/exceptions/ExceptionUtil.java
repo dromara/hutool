@@ -27,7 +27,7 @@ public class ExceptionUtil {
 	 * @param e 异常
 	 * @return 完整消息
 	 */
-	public static String getMessage(Throwable e) {
+	public static String getMessage(final Throwable e) {
 		if (null == e) {
 			return StrUtil.NULL;
 		}
@@ -40,7 +40,7 @@ public class ExceptionUtil {
 	 * @param e 异常
 	 * @return 消息
 	 */
-	public static String getSimpleMessage(Throwable e) {
+	public static String getSimpleMessage(final Throwable e) {
 		return (null == e) ? StrUtil.NULL : e.getMessage();
 	}
 
@@ -52,7 +52,7 @@ public class ExceptionUtil {
 	 * @param throwable 异常
 	 * @return 运行时异常
 	 */
-	public static RuntimeException wrapRuntime(Throwable throwable) {
+	public static RuntimeException wrapRuntime(final Throwable throwable) {
 		if (throwable instanceof RuntimeException) {
 			return (RuntimeException) throwable;
 		}
@@ -66,7 +66,7 @@ public class ExceptionUtil {
 	 * @return 运行时异常
 	 * @since 5.5.2
 	 */
-	public static RuntimeException wrapRuntime(String message) {
+	public static RuntimeException wrapRuntime(final String message) {
 		return new RuntimeException(message);
 	}
 
@@ -80,7 +80,7 @@ public class ExceptionUtil {
 	 * @since 3.3.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Throwable> T wrap(Throwable throwable, Class<T> wrapThrowable) {
+	public static <T extends Throwable> T wrap(final Throwable throwable, final Class<T> wrapThrowable) {
 		if (wrapThrowable.isInstance(throwable)) {
 			return (T) throwable;
 		}
@@ -93,7 +93,7 @@ public class ExceptionUtil {
 	 *
 	 * @param throwable 异常
 	 */
-	public static void wrapAndThrow(Throwable throwable) {
+	public static void wrapAndThrow(final Throwable throwable) {
 		if (throwable instanceof RuntimeException) {
 			throw (RuntimeException) throwable;
 		}
@@ -109,7 +109,7 @@ public class ExceptionUtil {
 	 * @param message 异常消息
 	 * @since 5.5.2
 	 */
-	public static void wrapRuntimeAndThrow(String message) {
+	public static void wrapRuntimeAndThrow(final String message) {
 		throw new RuntimeException(message);
 	}
 
@@ -119,7 +119,7 @@ public class ExceptionUtil {
 	 * @param wrapped 包装的异常
 	 * @return 剥离后的异常
 	 */
-	public static Throwable unwrap(Throwable wrapped) {
+	public static Throwable unwrap(final Throwable wrapped) {
 		Throwable unwrapped = wrapped;
 		while (true) {
 			if (unwrapped instanceof InvocationTargetException) {
@@ -149,7 +149,7 @@ public class ExceptionUtil {
 	 * @return 指定层的堆栈信息
 	 * @since 4.1.4
 	 */
-	public static StackTraceElement getStackElement(int i) {
+	public static StackTraceElement getStackElement(final int i) {
 		return Thread.currentThread().getStackTrace()[i];
 	}
 
@@ -161,7 +161,7 @@ public class ExceptionUtil {
 	 * @return 指定层的堆栈信息
 	 * @since 5.6.6
 	 */
-	public static StackTraceElement getStackElement(String fqcn, int i) {
+	public static StackTraceElement getStackElement(final String fqcn, final int i) {
 		final StackTraceElement[] stackTraceArray = Thread.currentThread().getStackTrace();
 		final int index = ArrayUtil.matchIndex((ele) -> StrUtil.equals(fqcn, ele.getClassName()), stackTraceArray);
 		if(index > 0){
@@ -188,7 +188,7 @@ public class ExceptionUtil {
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
 	 */
-	public static String stacktraceToOneLineString(Throwable throwable) {
+	public static String stacktraceToOneLineString(final Throwable throwable) {
 		return stacktraceToOneLineString(throwable, 3000);
 	}
 
@@ -199,8 +199,8 @@ public class ExceptionUtil {
 	 * @param limit     限制最大长度
 	 * @return 堆栈转为的字符串
 	 */
-	public static String stacktraceToOneLineString(Throwable throwable, int limit) {
-		Map<Character, String> replaceCharToStrMap = new HashMap<>();
+	public static String stacktraceToOneLineString(final Throwable throwable, final int limit) {
+		final Map<Character, String> replaceCharToStrMap = new HashMap<>();
 		replaceCharToStrMap.put(StrUtil.C_CR, StrUtil.SPACE);
 		replaceCharToStrMap.put(StrUtil.C_LF, StrUtil.SPACE);
 		replaceCharToStrMap.put(StrUtil.C_TAB, StrUtil.SPACE);
@@ -214,7 +214,7 @@ public class ExceptionUtil {
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
 	 */
-	public static String stacktraceToString(Throwable throwable) {
+	public static String stacktraceToString(final Throwable throwable) {
 		return stacktraceToString(throwable, 3000);
 	}
 
@@ -225,7 +225,7 @@ public class ExceptionUtil {
 	 * @param limit     限制最大长度
 	 * @return 堆栈转为的字符串
 	 */
-	public static String stacktraceToString(Throwable throwable, int limit) {
+	public static String stacktraceToString(final Throwable throwable, final int limit) {
 		return stacktraceToString(throwable, limit, null);
 	}
 
@@ -237,7 +237,7 @@ public class ExceptionUtil {
 	 * @param replaceCharToStrMap 替换字符为指定字符串
 	 * @return 堆栈转为的字符串
 	 */
-	public static String stacktraceToString(Throwable throwable, int limit, Map<Character, String> replaceCharToStrMap) {
+	public static String stacktraceToString(final Throwable throwable, int limit, final Map<Character, String> replaceCharToStrMap) {
 		final FastByteArrayOutputStream baos = new FastByteArrayOutputStream();
 		throwable.printStackTrace(new PrintStream(baos));
 
@@ -278,7 +278,7 @@ public class ExceptionUtil {
 	 * @since 4.1.13
 	 */
 	@SuppressWarnings("unchecked")
-	public static boolean isCausedBy(Throwable throwable, Class<? extends Exception>... causeClasses) {
+	public static boolean isCausedBy(final Throwable throwable, final Class<? extends Exception>... causeClasses) {
 		return null != getCausedBy(throwable, causeClasses);
 	}
 
@@ -291,10 +291,10 @@ public class ExceptionUtil {
 	 * @since 4.1.13
 	 */
 	@SuppressWarnings("unchecked")
-	public static Throwable getCausedBy(Throwable throwable, Class<? extends Exception>... causeClasses) {
+	public static Throwable getCausedBy(final Throwable throwable, final Class<? extends Exception>... causeClasses) {
 		Throwable cause = throwable;
 		while (cause != null) {
-			for (Class<? extends Exception> causeClass : causeClasses) {
+			for (final Class<? extends Exception> causeClass : causeClasses) {
 				if (causeClass.isInstance(cause)) {
 					return cause;
 				}
@@ -312,7 +312,7 @@ public class ExceptionUtil {
 	 * @return true 来自或者包含
 	 * @since 4.3.2
 	 */
-	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass) {
+	public static boolean isFromOrSuppressedThrowable(final Throwable throwable, final Class<? extends Throwable> exceptionClass) {
 		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true) != null;
 	}
 
@@ -325,7 +325,7 @@ public class ExceptionUtil {
 	 * @return true 来自或者包含
 	 * @since 4.4.1
 	 */
-	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass, boolean checkCause) {
+	public static boolean isFromOrSuppressedThrowable(final Throwable throwable, final Class<? extends Throwable> exceptionClass, final boolean checkCause) {
 		return convertFromOrSuppressedThrowable(throwable, exceptionClass, checkCause) != null;
 	}
 
@@ -338,7 +338,7 @@ public class ExceptionUtil {
 	 * @return 结果为null 不是来自或者包含
 	 * @since 4.3.2
 	 */
-	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass) {
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(final Throwable throwable, final Class<T> exceptionClass) {
 		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true);
 	}
 
@@ -353,7 +353,7 @@ public class ExceptionUtil {
 	 * @since 4.4.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass, boolean checkCause) {
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(final Throwable throwable, final Class<T> exceptionClass, final boolean checkCause) {
 		if (throwable == null || exceptionClass == null) {
 			return null;
 		}
@@ -361,14 +361,14 @@ public class ExceptionUtil {
 			return (T) throwable;
 		}
 		if (checkCause) {
-			Throwable cause = throwable.getCause();
+			final Throwable cause = throwable.getCause();
 			if (cause != null && exceptionClass.isAssignableFrom(cause.getClass())) {
 				return (T) cause;
 			}
 		}
-		Throwable[] throwables = throwable.getSuppressed();
+		final Throwable[] throwables = throwable.getSuppressed();
 		if (ArrayUtil.isNotEmpty(throwables)) {
-			for (Throwable throwable1 : throwables) {
+			for (final Throwable throwable1 : throwables) {
 				if (exceptionClass.isAssignableFrom(throwable1.getClass())) {
 					return (T) throwable1;
 				}

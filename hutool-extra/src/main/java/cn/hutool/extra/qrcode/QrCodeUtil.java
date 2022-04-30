@@ -49,7 +49,7 @@ public class QrCodeUtil {
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, String logoBase64) {
+	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final String logoBase64) {
 		return generateAsBase64(content, qrConfig, imageType, Base64.decode(logoBase64));
 	}
 
@@ -62,7 +62,7 @@ public class QrCodeUtil {
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, byte[] logo) {
+	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final byte[] logo) {
 		return generateAsBase64(content, qrConfig, imageType, ImgUtil.toImage(logo));
 	}
 
@@ -75,7 +75,7 @@ public class QrCodeUtil {
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, Image logo) {
+	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final Image logo) {
 		qrConfig.setImg(logo);
 		return generateAsBase64(content, qrConfig, imageType);
 	}
@@ -92,7 +92,7 @@ public class QrCodeUtil {
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType) {
+	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType) {
 		final BufferedImage img = generate(content, qrConfig);
 		return ImgUtil.toBase64DataUri(img, imageType);
 	}
@@ -106,7 +106,7 @@ public class QrCodeUtil {
 	 * @return 图片的byte[]
 	 * @since 4.0.10
 	 */
-	public static byte[] generatePng(String content, int width, int height) {
+	public static byte[] generatePng(final String content, final int width, final int height) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		generate(content, width, height, ImgUtil.IMAGE_TYPE_PNG, out);
 		return out.toByteArray();
@@ -120,7 +120,7 @@ public class QrCodeUtil {
 	 * @return 图片的byte[]
 	 * @since 4.1.2
 	 */
-	public static byte[] generatePng(String content, QrConfig config) {
+	public static byte[] generatePng(final String content, final QrConfig config) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		generate(content, config, ImgUtil.IMAGE_TYPE_PNG, out);
 		return out.toByteArray();
@@ -135,7 +135,7 @@ public class QrCodeUtil {
 	 * @param targetFile 目标文件，扩展名决定输出格式
 	 * @return 目标文件
 	 */
-	public static File generate(String content, int width, int height, File targetFile) {
+	public static File generate(final String content, final int width, final int height, final File targetFile) {
 		final BufferedImage image = generate(content, width, height);
 		ImgUtil.write(image, targetFile);
 		return targetFile;
@@ -150,7 +150,7 @@ public class QrCodeUtil {
 	 * @return 目标文件
 	 * @since 4.1.2
 	 */
-	public static File generate(String content, QrConfig config, File targetFile) {
+	public static File generate(final String content, final QrConfig config, final File targetFile) {
 		final BufferedImage image = generate(content, config);
 		ImgUtil.write(image, targetFile);
 		return targetFile;
@@ -165,7 +165,7 @@ public class QrCodeUtil {
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param out       目标流
 	 */
-	public static void generate(String content, int width, int height, String imageType, OutputStream out) {
+	public static void generate(final String content, final int width, final int height, final String imageType, final OutputStream out) {
 		final BufferedImage image = generate(content, width, height);
 		ImgUtil.write(image, imageType, out);
 	}
@@ -179,7 +179,7 @@ public class QrCodeUtil {
 	 * @param out       目标流
 	 * @since 4.1.2
 	 */
-	public static void generate(String content, QrConfig config, String imageType, OutputStream out) {
+	public static void generate(final String content, final QrConfig config, final String imageType, final OutputStream out) {
 		final BufferedImage image = generate(content, config);
 		ImgUtil.write(image, imageType, out);
 	}
@@ -192,7 +192,7 @@ public class QrCodeUtil {
 	 * @param height  高度
 	 * @return 二维码图片（黑白）
 	 */
-	public static BufferedImage generate(String content, int width, int height) {
+	public static BufferedImage generate(final String content, final int width, final int height) {
 		return generate(content, new QrConfig(width, height));
 	}
 
@@ -205,7 +205,7 @@ public class QrCodeUtil {
 	 * @param height  高度
 	 * @return 二维码图片（黑白）
 	 */
-	public static BufferedImage generate(String content, BarcodeFormat format, int width, int height) {
+	public static BufferedImage generate(final String content, final BarcodeFormat format, final int width, final int height) {
 		return generate(content, format, new QrConfig(width, height));
 	}
 
@@ -217,7 +217,7 @@ public class QrCodeUtil {
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.2
 	 */
-	public static BufferedImage generate(String content, QrConfig config) {
+	public static BufferedImage generate(final String content, final QrConfig config) {
 		return generate(content, BarcodeFormat.QR_CODE, config);
 	}
 
@@ -231,7 +231,7 @@ public class QrCodeUtil {
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.14
 	 */
-	public static BufferedImage generate(String content, BarcodeFormat format, QrConfig config) {
+	public static BufferedImage generate(final String content, final BarcodeFormat format, final QrConfig config) {
 		final BitMatrix bitMatrix = encode(content, format, config);
 		final BufferedImage image = toImage(bitMatrix, config.foreColor, config.backColor);
 		final Image logoImg = config.img;
@@ -239,8 +239,8 @@ public class QrCodeUtil {
 			// 只有二维码可以贴图
 			final int qrWidth = image.getWidth();
 			final int qrHeight = image.getHeight();
-			int width;
-			int height;
+			final int width;
+			final int height;
 			// 按照最短的边做比例缩放
 			if (qrWidth < qrHeight) {
 				width = qrWidth / config.ratio;
@@ -269,7 +269,7 @@ public class QrCodeUtil {
 	 * @param height  高度
 	 * @return {@link BitMatrix}
 	 */
-	public static BitMatrix encode(String content, int width, int height) {
+	public static BitMatrix encode(final String content, final int width, final int height) {
 		return encode(content, BarcodeFormat.QR_CODE, width, height);
 	}
 
@@ -281,7 +281,7 @@ public class QrCodeUtil {
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
-	public static BitMatrix encode(String content, QrConfig config) {
+	public static BitMatrix encode(final String content, final QrConfig config) {
 		return encode(content, BarcodeFormat.QR_CODE, config);
 	}
 
@@ -294,7 +294,7 @@ public class QrCodeUtil {
 	 * @param height  高度
 	 * @return {@link BitMatrix}
 	 */
-	public static BitMatrix encode(String content, BarcodeFormat format, int width, int height) {
+	public static BitMatrix encode(final String content, final BarcodeFormat format, final int width, final int height) {
 		return encode(content, format, new QrConfig(width, height));
 	}
 
@@ -307,17 +307,17 @@ public class QrCodeUtil {
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
-	public static BitMatrix encode(String content, BarcodeFormat format, QrConfig config) {
+	public static BitMatrix encode(final String content, final BarcodeFormat format, QrConfig config) {
 		final MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 		if (null == config) {
 			// 默认配置
 			config = new QrConfig();
 		}
 
-		BitMatrix bitMatrix;
+		final BitMatrix bitMatrix;
 		try {
 			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints(format));
-		} catch (WriterException e) {
+		} catch (final WriterException e) {
 			throw new QrCodeException(e);
 		}
 
@@ -332,7 +332,7 @@ public class QrCodeUtil {
 	 * @param qrCodeInputstream 二维码输入流
 	 * @return 解码文本
 	 */
-	public static String decode(InputStream qrCodeInputstream) {
+	public static String decode(final InputStream qrCodeInputstream) {
 		return decode(ImgUtil.read(qrCodeInputstream));
 	}
 
@@ -342,7 +342,7 @@ public class QrCodeUtil {
 	 * @param qrCodeFile 二维码文件
 	 * @return 解码文本
 	 */
-	public static String decode(File qrCodeFile) {
+	public static String decode(final File qrCodeFile) {
 		return decode(ImgUtil.read(qrCodeFile));
 	}
 
@@ -352,7 +352,7 @@ public class QrCodeUtil {
 	 * @param image {@link Image} 二维码图片
 	 * @return 解码后的文本
 	 */
-	public static String decode(Image image) {
+	public static String decode(final Image image) {
 		return decode(image, true, false);
 	}
 
@@ -367,7 +367,7 @@ public class QrCodeUtil {
 	 * @return 解码后的文本
 	 * @since 4.3.1
 	 */
-	public static String decode(Image image, boolean isTryHarder, boolean isPureBarcode) {
+	public static String decode(final Image image, final boolean isTryHarder, final boolean isPureBarcode) {
 		return decode(image, buildHints(isTryHarder, isPureBarcode));
 	}
 
@@ -381,7 +381,7 @@ public class QrCodeUtil {
 	 * @return 解码后的文本
 	 * @since 5.7.12
 	 */
-	public static String decode(Image image, Map<DecodeHintType, Object> hints) {
+	public static String decode(final Image image, final Map<DecodeHintType, Object> hints) {
 		final MultiFormatReader formatReader = new MultiFormatReader();
 		formatReader.setHints(hints);
 
@@ -404,10 +404,10 @@ public class QrCodeUtil {
 	 * @return BufferedImage
 	 * @since 4.1.2
 	 */
-	public static BufferedImage toImage(BitMatrix matrix, int foreColor, Integer backColor) {
+	public static BufferedImage toImage(final BitMatrix matrix, final int foreColor, final Integer backColor) {
 		final int width = matrix.getWidth();
 		final int height = matrix.getHeight();
-		BufferedImage image = new BufferedImage(width, height, null == backColor ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		final BufferedImage image = new BufferedImage(width, height, null == backColor ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (matrix.get(x, y)) {
@@ -427,7 +427,7 @@ public class QrCodeUtil {
 	 * @param isPureBarcode 是否使用复杂模式，扫描带logo的二维码设为true
 	 * @return 选项Map
 	 */
-	private static Map<DecodeHintType, Object> buildHints(boolean isTryHarder, boolean isPureBarcode) {
+	private static Map<DecodeHintType, Object> buildHints(final boolean isTryHarder, final boolean isPureBarcode) {
 		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
 		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.NAME_UTF_8);
 
@@ -449,10 +449,10 @@ public class QrCodeUtil {
 	 * @param binarizer    {@link Binarizer}
 	 * @return {@link Result}
 	 */
-	private static Result _decode(MultiFormatReader formatReader, Binarizer binarizer) {
+	private static Result _decode(final MultiFormatReader formatReader, final Binarizer binarizer) {
 		try {
 			return formatReader.decodeWithState(new BinaryBitmap(binarizer));
-		} catch (NotFoundException e) {
+		} catch (final NotFoundException e) {
 			return null;
 		}
 	}

@@ -12,9 +12,9 @@ socketTimeout=0
 socketKeepAlive=false
 
 #---------------------------------- MongoDB实例连接
-[master]
+[master]=
 host = localhost:27017
 
-[slave]
+[slave]=
 host = localhost:27018
 #-----------------------------------------------------

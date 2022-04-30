@@ -45,7 +45,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param initialCapacity 初始容量
 	 * @return this
 	 */
-	public static StrBuilder create(int initialCapacity) {
+	public static StrBuilder create(final int initialCapacity) {
 		return new StrBuilder(initialCapacity);
 	}
 
@@ -56,7 +56,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return this
 	 * @since 4.0.1
 	 */
-	public static StrBuilder create(CharSequence... strs) {
+	public static StrBuilder create(final CharSequence... strs) {
 		return new StrBuilder(strs);
 	}
 
@@ -74,7 +74,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 *
 	 * @param initialCapacity 初始容量
 	 */
-	public StrBuilder(int initialCapacity) {
+	public StrBuilder(final int initialCapacity) {
 		value = new char[initialCapacity];
 	}
 
@@ -84,9 +84,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param strs 初始字符串
 	 * @since 4.0.1
 	 */
-	public StrBuilder(CharSequence... strs) {
+	public StrBuilder(final CharSequence... strs) {
 		this(ArrayUtil.isEmpty(strs) ? DEFAULT_CAPACITY : (totalLength(strs) + DEFAULT_CAPACITY));
-		for (CharSequence str : strs) {
+		for (final CharSequence str : strs) {
 			append(str);
 		}
 	}
@@ -100,7 +100,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param obj 对象
 	 * @return this
 	 */
-	public StrBuilder append(Object obj) {
+	public StrBuilder append(final Object obj) {
 		return insert(this.position, obj);
 	}
 
@@ -111,7 +111,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return this
 	 */
 	@Override
-	public StrBuilder append(char c) {
+	public StrBuilder append(final char c) {
 		return insert(this.position, c);
 	}
 
@@ -121,7 +121,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param src 字符数组
 	 * @return this
 	 */
-	public StrBuilder append(char[] src) {
+	public StrBuilder append(final char[] src) {
 		if (ArrayUtil.isEmpty(src)) {
 			return this;
 		}
@@ -136,17 +136,17 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param length 长度
 	 * @return this
 	 */
-	public StrBuilder append(char[] src, int srcPos, int length) {
+	public StrBuilder append(final char[] src, final int srcPos, final int length) {
 		return insert(this.position, src, srcPos, length);
 	}
 
 	@Override
-	public StrBuilder append(CharSequence csq) {
+	public StrBuilder append(final CharSequence csq) {
 		return insert(this.position, csq);
 	}
 
 	@Override
-	public StrBuilder append(CharSequence csq, int start, int end) {
+	public StrBuilder append(final CharSequence csq, final int start, final int end) {
 		return insert(this.position, csq, start, end);
 	}
 
@@ -159,7 +159,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param obj   对象
 	 * @return this
 	 */
-	public StrBuilder insert(int index, Object obj) {
+	public StrBuilder insert(final int index, final Object obj) {
 		if (obj instanceof CharSequence) {
 			return insert(index, (CharSequence) obj);
 		}
@@ -173,7 +173,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param c     字符
 	 * @return this
 	 */
-	public StrBuilder insert(int index, char c) {
+	public StrBuilder insert(int index, final char c) {
 		if(index < 0){
 			index = this.position + index;
 		}
@@ -196,7 +196,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param src   源数组
 	 * @return this
 	 */
-	public StrBuilder insert(int index, char[] src) {
+	public StrBuilder insert(final int index, final char[] src) {
 		if (ArrayUtil.isEmpty(src)) {
 			return this;
 		}
@@ -214,7 +214,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param length 长度
 	 * @return this
 	 */
-	public StrBuilder insert(int index, char[] src, int srcPos, int length) {
+	public StrBuilder insert(int index, final char[] src, int srcPos, int length) {
 		if (ArrayUtil.isEmpty(src) || srcPos > src.length || length <= 0) {
 			return this;
 		}
@@ -259,7 +259,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 		if (null == csq) {
 			csq = StrUtil.EMPTY;
 		}
-		int len = csq.length();
+		final int len = csq.length();
 		moveDataAfterIndex(index, csq.length());
 		if (csq instanceof String) {
 			((String) csq).getChars(0, len, this.value, index);
@@ -333,7 +333,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param dstBegin 目标起始位置（包括）
 	 * @return this
 	 */
-	public StrBuilder getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
+	public StrBuilder getChars(int srcBegin, int srcEnd, final char[] dst, final int dstBegin) {
 		if (srcBegin < 0) {
 			srcBegin = 0;
 		}
@@ -430,7 +430,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 			end = 0;
 		}
 
-		int len = end - start;
+		final int len = end - start;
 		// 截取中间部分，需要将后半部分复制到删除的开始位置
 		if (len > 0) {
 			System.arraycopy(value, start + len, value, start, this.position - end);
@@ -447,7 +447,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param isReset 是否重置，重置后相当于空的构建器
 	 * @return 生成的字符串
 	 */
-	public String toString(boolean isReset) {
+	public String toString(final boolean isReset) {
 		if (position > 0) {
 			final String s = new String(value, 0, position);
 			if (isReset) {
@@ -492,7 +492,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	}
 
 	@Override
-	public CharSequence subSequence(int start, int end) {
+	public CharSequence subSequence(final int start, final int end) {
 		return subString(start, end);
 	}
 
@@ -502,7 +502,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param start 开始位置（包括）
 	 * @return this
 	 */
-	public String subString(int start) {
+	public String subString(final int start) {
 		return subString(start, this.position);
 	}
 
@@ -513,7 +513,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param end   结束位置（不包括）
 	 * @return this
 	 */
-	public String subString(int start, int end) {
+	public String subString(final int start, final int end) {
 		return new String(this.value, start, end - start);
 	}
 
@@ -525,7 +525,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param index  位置
 	 * @param length 位移长度
 	 */
-	private void moveDataAfterIndex(int index, int length) {
+	private void moveDataAfterIndex(final int index, final int length) {
 		ensureCapacity(Math.max(this.position, index) + length);
 		if (index < this.position) {
 			// 插入位置在已有数据范围内，后移插入位置之后的数据
@@ -542,7 +542,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 *
 	 * @param minimumCapacity 最小容量
 	 */
-	private void ensureCapacity(int minimumCapacity) {
+	private void ensureCapacity(final int minimumCapacity) {
 		// overflow-conscious code
 		if (minimumCapacity - value.length > 0) {
 			expandCapacity(minimumCapacity);
@@ -555,7 +555,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 *
 	 * @param minimumCapacity 需要扩展的最小容量
 	 */
-	private void expandCapacity(int minimumCapacity) {
+	private void expandCapacity(final int minimumCapacity) {
 		int newCapacity = (value.length << 1) + 2;
 		// overflow-conscious code
 		if (newCapacity - minimumCapacity < 0) {
@@ -575,9 +575,9 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return 总长度
 	 * @since 4.0.1
 	 */
-	private static int totalLength(CharSequence... strs) {
+	private static int totalLength(final CharSequence... strs) {
 		int totalLength = 0;
-		for (CharSequence str : strs) {
+		for (final CharSequence str : strs) {
 			totalLength += (null == str ? 0 : str.length());
 		}
 		return totalLength;

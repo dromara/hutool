@@ -31,11 +31,11 @@ public class TinyLog2 extends AbstractLog {
 			Configuration.getLocale(),
 			Configuration.isEscapingEnabled()
 	);
-	public TinyLog2(Class<?> clazz) {
+	public TinyLog2(final Class<?> clazz) {
 		this(null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
-	public TinyLog2(String name) {
+	public TinyLog2(final String name) {
 		this.name = name;
 		this.level = provider.getMinimumLevel().ordinal();
 	}
@@ -52,7 +52,7 @@ public class TinyLog2 extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.TRACE, t, format, arguments);
 	}
 
@@ -63,7 +63,7 @@ public class TinyLog2 extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.DEBUG, t, format, arguments);
 	}
 	// ------------------------------------------------------------------------- Info
@@ -73,7 +73,7 @@ public class TinyLog2 extends AbstractLog {
 	}
 
 	@Override
-	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.INFO, t, format, arguments);
 	}
 
@@ -84,7 +84,7 @@ public class TinyLog2 extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.WARN, t, format, arguments);
 	}
 
@@ -95,18 +95,18 @@ public class TinyLog2 extends AbstractLog {
 	}
 
 	@Override
-	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.ERROR, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+	public void log(final String fqcn, final cn.hutool.log.level.Level level, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, toTinyLevel(level), t, format, arguments);
 	}
 
 	@Override
-	public boolean isEnabled(cn.hutool.log.level.Level level) {
+	public boolean isEnabled(final cn.hutool.log.level.Level level) {
 		return this.level <= toTinyLevel(level).ordinal();
 	}
 
@@ -118,7 +118,7 @@ public class TinyLog2 extends AbstractLog {
 	 * @param format 日志消息模板
 	 * @param arguments 日志消息参数
 	 */
-	private void logIfEnabled(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+	private void logIfEnabled(final String fqcn, final Level level, Throwable t, final String format, final Object... arguments) {
 		// fqcn 无效
 		if(null == t){
 			t = getLastArgumentIfThrowable(arguments);
@@ -133,8 +133,8 @@ public class TinyLog2 extends AbstractLog {
 	 * @return Tinylog的Level
 	 * @since 4.0.3
 	 */
-	private Level toTinyLevel(cn.hutool.log.level.Level level) {
-		Level tinyLevel;
+	private Level toTinyLevel(final cn.hutool.log.level.Level level) {
+		final Level tinyLevel;
 		switch (level) {
 		case TRACE:
 			tinyLevel = Level.TRACE;
@@ -167,7 +167,7 @@ public class TinyLog2 extends AbstractLog {
 	 * @return 最后一个异常参数
 	 * @since 4.0.3
 	 */
-	private static Throwable getLastArgumentIfThrowable(Object... arguments) {
+	private static Throwable getLastArgumentIfThrowable(final Object... arguments) {
 		if (ArrayUtil.isNotEmpty(arguments) && arguments[arguments.length - 1] instanceof Throwable) {
 			return (Throwable) arguments[arguments.length - 1];
 		} else {

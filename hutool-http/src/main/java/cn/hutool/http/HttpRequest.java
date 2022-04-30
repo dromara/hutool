@@ -52,7 +52,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest post(String url) {
+	public static HttpRequest post(final String url) {
 		return of(url).method(Method.POST);
 	}
 
@@ -62,7 +62,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest get(String url) {
+	public static HttpRequest get(final String url) {
 		return of(url).method(Method.GET);
 	}
 
@@ -72,7 +72,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest head(String url) {
+	public static HttpRequest head(final String url) {
 		return of(url).method(Method.HEAD);
 	}
 
@@ -82,7 +82,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest options(String url) {
+	public static HttpRequest options(final String url) {
 		return of(url).method(Method.OPTIONS);
 	}
 
@@ -92,7 +92,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest put(String url) {
+	public static HttpRequest put(final String url) {
 		return of(url).method(Method.PUT);
 	}
 
@@ -103,7 +103,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 3.0.9
 	 */
-	public static HttpRequest patch(String url) {
+	public static HttpRequest patch(final String url) {
 		return of(url).method(Method.PATCH);
 	}
 
@@ -113,7 +113,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest delete(String url) {
+	public static HttpRequest delete(final String url) {
 		return of(url).method(Method.DELETE);
 	}
 
@@ -123,7 +123,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 * @return HttpRequest
 	 */
-	public static HttpRequest trace(String url) {
+	public static HttpRequest trace(final String url) {
 		return of(url).method(Method.TRACE);
 	}
 
@@ -137,7 +137,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.7.18
 	 */
-	public static HttpRequest of(String url) {
+	public static HttpRequest of(final String url) {
 		return of(url, HttpGlobalConfig.isDecodeUrl() ? DEFAULT_CHARSET : null);
 	}
 
@@ -152,7 +152,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.7.18
 	 */
-	public static HttpRequest of(String url, Charset charset) {
+	public static HttpRequest of(final String url, final Charset charset) {
 		return of(UrlBuilder.ofHttp(url, charset));
 	}
 
@@ -163,7 +163,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.8.0
 	 */
-	public static HttpRequest of(UrlBuilder url) {
+	public static HttpRequest of(final UrlBuilder url) {
 		return new HttpRequest(url);
 	}
 
@@ -174,7 +174,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see HttpGlobalConfig#setTimeout(int)
 	 * @since 4.6.2
 	 */
-	public static void setGlobalTimeout(int customTimeout) {
+	public static void setGlobalTimeout(final int customTimeout) {
 		HttpGlobalConfig.setTimeout(customTimeout);
 	}
 
@@ -196,7 +196,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 * @since 4.5.14
 	 */
-	public static void setCookieManager(CookieManager customCookieManager) {
+	public static void setCookieManager(final CookieManager customCookieManager) {
 		GlobalCookieManager.setCookieManager(customCookieManager);
 	}
 
@@ -246,7 +246,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param url {@link UrlBuilder}
 	 */
-	public HttpRequest(UrlBuilder url) {
+	public HttpRequest(final UrlBuilder url) {
 		this.url = Assert.notNull(url, "URL must be not null!");
 		// 给定默认URL编码
 		final Charset charset = url.getCharset();
@@ -274,7 +274,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.1.8
 	 */
-	public HttpRequest setUrl(String url) {
+	public HttpRequest setUrl(final String url) {
 		return setUrl(UrlBuilder.ofHttp(url, this.charset));
 	}
 
@@ -285,7 +285,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.3.1
 	 */
-	public HttpRequest setUrl(UrlBuilder urlBuilder) {
+	public HttpRequest setUrl(final UrlBuilder urlBuilder) {
 		this.url = urlBuilder;
 		return this;
 	}
@@ -303,7 +303,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.1.9
 	 */
-	public HttpRequest setUrlHandler(URLStreamHandler urlHandler) {
+	public HttpRequest setUrlHandler(final URLStreamHandler urlHandler) {
 		this.urlHandler = urlHandler;
 		return this;
 	}
@@ -326,7 +326,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #method(Method)
 	 * @since 4.1.8
 	 */
-	public HttpRequest setMethod(Method method) {
+	public HttpRequest setMethod(final Method method) {
 		return method(method);
 	}
 
@@ -347,7 +347,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param method HTTP方法
 	 * @return HttpRequest
 	 */
-	public HttpRequest method(Method method) {
+	public HttpRequest method(final Method method) {
 		this.method = method;
 		return this;
 	}
@@ -360,7 +360,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param contentType contentType
 	 * @return HttpRequest
 	 */
-	public HttpRequest contentType(String contentType) {
+	public HttpRequest contentType(final String contentType) {
 		header(Header.CONTENT_TYPE, contentType);
 		return this;
 	}
@@ -371,7 +371,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isKeepAlive 是否长连接
 	 * @return HttpRequest
 	 */
-	public HttpRequest keepAlive(boolean isKeepAlive) {
+	public HttpRequest keepAlive(final boolean isKeepAlive) {
 		header(Header.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
 		return this;
 	}
@@ -380,7 +380,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 获取是否为长连接
 	 */
 	public boolean isKeepAlive() {
-		String connection = header(Header.CONNECTION);
+		final String connection = header(Header.CONNECTION);
 		if (connection == null) {
 			return false == HTTP_1_0.equalsIgnoreCase(httpVersion);
 		}
@@ -403,7 +403,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param value 长度
 	 * @return HttpRequest
 	 */
-	public HttpRequest contentLength(int value) {
+	public HttpRequest contentLength(final int value) {
 		header(Header.CONTENT_LENGTH, String.valueOf(value));
 		return this;
 	}
@@ -416,7 +416,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.4.1
 	 */
-	public HttpRequest cookie(Collection<HttpCookie> cookies) {
+	public HttpRequest cookie(final Collection<HttpCookie> cookies) {
 		return cookie(CollUtil.isEmpty(cookies) ? null : cookies.toArray(new HttpCookie[0]));
 	}
 
@@ -428,7 +428,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 3.1.1
 	 */
-	public HttpRequest cookie(HttpCookie... cookies) {
+	public HttpRequest cookie(final HttpCookie... cookies) {
 		if (ArrayUtil.isEmpty(cookies)) {
 			return disableCookie();
 		}
@@ -445,7 +445,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 3.0.7
 	 */
-	public HttpRequest cookie(String cookie) {
+	public HttpRequest cookie(final String cookie) {
 		this.cookie = cookie;
 		return this;
 	}
@@ -481,7 +481,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param value 值
 	 * @return this
 	 */
-	public HttpRequest form(String name, Object value) {
+	public HttpRequest form(final String name, final Object value) {
 		if (StrUtil.isBlank(name) || ObjUtil.isNull(value)) {
 			return this; // 忽略非法的form表单项内容;
 		}
@@ -499,7 +499,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 普通值
-		String strValue;
+		final String strValue;
 		if (value instanceof Iterable) {
 			// 列表对象
 			strValue = CollUtil.join((Iterable<?>) value, ",");
@@ -526,7 +526,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param parameters 参数对，奇数为名，偶数为值
 	 * @return this
 	 */
-	public HttpRequest form(String name, Object value, Object... parameters) {
+	public HttpRequest form(final String name, final Object value, final Object... parameters) {
 		form(name, value);
 
 		for (int i = 0; i < parameters.length; i += 2) {
@@ -541,7 +541,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param formMap 表单内容
 	 * @return this
 	 */
-	public HttpRequest form(Map<String, Object> formMap) {
+	public HttpRequest form(final Map<String, Object> formMap) {
 		if (MapUtil.isNotEmpty(formMap)) {
 			formMap.forEach(this::form);
 		}
@@ -555,7 +555,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.6.7
 	 */
-	public HttpRequest formStr(Map<String, String> formMapStr) {
+	public HttpRequest formStr(final Map<String, String> formMapStr) {
 		if (MapUtil.isNotEmpty(formMapStr)) {
 			formMapStr.forEach(this::form);
 		}
@@ -570,7 +570,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param files 需要上传的文件，为空跳过
 	 * @return this
 	 */
-	public HttpRequest form(String name, File... files) {
+	public HttpRequest form(final String name, final File... files) {
 		if (ArrayUtil.isEmpty(files)) {
 			return this;
 		}
@@ -589,7 +589,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param file 需要上传的文件
 	 * @return this
 	 */
-	public HttpRequest form(String name, File file) {
+	public HttpRequest form(final String name, final File file) {
 		return form(name, file, file.getName());
 	}
 
@@ -602,7 +602,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param fileName 文件名，为空使用文件默认的文件名
 	 * @return this
 	 */
-	public HttpRequest form(String name, File file, String fileName) {
+	public HttpRequest form(final String name, final File file, final String fileName) {
 		if (null != file) {
 			form(name, new FileResource(file, fileName));
 		}
@@ -619,7 +619,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.1.0
 	 */
-	public HttpRequest form(String name, byte[] fileBytes, String fileName) {
+	public HttpRequest form(final String name, final byte[] fileBytes, final String fileName) {
 		if (null != fileBytes) {
 			form(name, new BytesResource(fileBytes, fileName));
 		}
@@ -635,7 +635,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.0.9
 	 */
-	public HttpRequest form(String name, Resource resource) {
+	public HttpRequest form(final String name, final Resource resource) {
 		if (null != resource) {
 			if (false == isKeepAlive()) {
 				keepAlive(true);
@@ -687,7 +687,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param body 请求体
 	 * @return this
 	 */
-	public HttpRequest body(String body) {
+	public HttpRequest body(final String body) {
 		return this.body(body, null);
 	}
 
@@ -704,8 +704,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param contentType 请求体类型，{@code null}表示自动判断类型
 	 * @return this
 	 */
-	public HttpRequest body(String body, String contentType) {
-		byte[] bytes = StrUtil.bytes(body, this.charset);
+	public HttpRequest body(final String body, String contentType) {
+		final byte[] bytes = StrUtil.bytes(body, this.charset);
 		body(bytes);
 		this.form = null; // 当使用body时，停止form的使用
 
@@ -739,7 +739,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param bodyBytes 主体
 	 * @return this
 	 */
-	public HttpRequest body(byte[] bodyBytes) {
+	public HttpRequest body(final byte[] bodyBytes) {
 		if (null != bodyBytes) {
 			this.bodyBytes = bodyBytes;
 		}
@@ -754,7 +754,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param config 配置
 	 * @return this
 	 */
-	public HttpRequest setConfig(HttpConfig config) {
+	public HttpRequest setConfig(final HttpConfig config) {
 		this.config = config;
 		return this;
 	}
@@ -773,7 +773,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setConnectionTimeout(int)
 	 * @see #setReadTimeout(int)
 	 */
-	public HttpRequest timeout(int milliseconds) {
+	public HttpRequest timeout(final int milliseconds) {
 		config.timeout(milliseconds);
 		return this;
 	}
@@ -785,7 +785,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.5.6
 	 */
-	public HttpRequest setConnectionTimeout(int milliseconds) {
+	public HttpRequest setConnectionTimeout(final int milliseconds) {
 		config.setConnectionTimeout(milliseconds);
 		return this;
 	}
@@ -797,7 +797,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.5.6
 	 */
-	public HttpRequest setReadTimeout(int milliseconds) {
+	public HttpRequest setReadTimeout(final int milliseconds) {
 		config.setReadTimeout(milliseconds);
 		return this;
 	}
@@ -819,7 +819,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
-	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
+	public HttpRequest setFollowRedirects(final boolean isFollowRedirects) {
 		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
 	}
 
@@ -831,7 +831,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 3.3.0
 	 */
-	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
+	public HttpRequest setMaxRedirectCount(final int maxRedirectCount) {
 		config.setMaxRedirectCount(maxRedirectCount);
 		return this;
 	}
@@ -843,7 +843,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param hostnameVerifier HostnameVerifier
 	 * @return this
 	 */
-	public HttpRequest setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+	public HttpRequest setHostnameVerifier(final HostnameVerifier hostnameVerifier) {
 		config.setHostnameVerifier(hostnameVerifier);
 		return this;
 	}
@@ -856,7 +856,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.4.5
 	 */
-	public HttpRequest setHttpProxy(String host, int port) {
+	public HttpRequest setHttpProxy(final String host, final int port) {
 		config.setHttpProxy(host, port);
 		return this;
 	}
@@ -867,7 +867,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param proxy 代理 {@link Proxy}
 	 * @return this
 	 */
-	public HttpRequest setProxy(Proxy proxy) {
+	public HttpRequest setProxy(final Proxy proxy) {
 		config.setProxy(proxy);
 		return this;
 	}
@@ -880,7 +880,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param ssf SSLScketFactory
 	 * @return this
 	 */
-	public HttpRequest setSSLSocketFactory(SSLSocketFactory ssf) {
+	public HttpRequest setSSLSocketFactory(final SSLSocketFactory ssf) {
 		config.setSSLSocketFactory(ssf);
 		return this;
 	}
@@ -901,7 +901,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see SSLUtil#createSSLContext(String)
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
-	public HttpRequest setSSLProtocol(String protocol) {
+	public HttpRequest setSSLProtocol(final String protocol) {
 		config.setSSLProtocol(protocol);
 		return this;
 	}
@@ -914,7 +914,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.5.0
 	 */
-	public HttpRequest setRest(boolean isRest) {
+	public HttpRequest setRest(final boolean isRest) {
 		this.isRest = isRest;
 		return this;
 	}
@@ -927,7 +927,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 4.6.5
 	 */
-	public HttpRequest setChunkedStreamingMode(int blockSize) {
+	public HttpRequest setChunkedStreamingMode(final int blockSize) {
 		config.setBlockSize(blockSize);
 		return this;
 	}
@@ -940,7 +940,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #addRequestInterceptor(HttpInterceptor)
 	 * @since 5.7.16
 	 */
-	public HttpRequest addInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+	public HttpRequest addInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
 		return addRequestInterceptor(interceptor);
 	}
 
@@ -951,7 +951,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public HttpRequest addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+	public HttpRequest addRequestInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
 		config.addRequestInterceptor(interceptor);
 		return this;
 	}
@@ -963,7 +963,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public HttpRequest addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
+	public HttpRequest addResponseInterceptor(final HttpInterceptor<HttpResponse> interceptor) {
 		config.addResponseInterceptor(interceptor);
 		return this;
 	}
@@ -997,7 +997,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isAsync 是否异步
 	 * @return this
 	 */
-	public HttpResponse execute(boolean isAsync) {
+	public HttpResponse execute(final boolean isAsync) {
 		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors);
 	}
 
@@ -1008,8 +1008,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param consumer 响应内容处理函数
 	 * @since 5.7.8
 	 */
-	public void then(Consumer<HttpResponse> consumer) {
-		try (HttpResponse response = execute(true)) {
+	public void then(final Consumer<HttpResponse> consumer) {
+		try (final HttpResponse response = execute(true)) {
 			consumer.accept(response);
 		}
 	}
@@ -1024,7 +1024,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param password 密码
 	 * @return this
 	 */
-	public HttpRequest basicAuth(String username, String password) {
+	public HttpRequest basicAuth(final String username, final String password) {
 		return auth(HttpUtil.buildBasicAuth(username, password, charset));
 	}
 
@@ -1039,7 +1039,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 * @since 5.4.6
 	 */
-	public HttpRequest basicProxyAuth(String username, String password) {
+	public HttpRequest basicProxyAuth(final String username, final String password) {
 		return proxyAuth(HttpUtil.buildBasicAuth(username, password, charset));
 	}
 
@@ -1050,7 +1050,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.5.3
 	 */
-	public HttpRequest bearerAuth(String token) {
+	public HttpRequest bearerAuth(final String token) {
 		return auth("Bearer " + token);
 	}
 
@@ -1061,7 +1061,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.2.4
 	 */
-	public HttpRequest auth(String content) {
+	public HttpRequest auth(final String content) {
 		header(Header.AUTHORIZATION, content, true);
 		return this;
 	}
@@ -1073,14 +1073,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 * @since 5.4.6
 	 */
-	public HttpRequest proxyAuth(String content) {
+	public HttpRequest proxyAuth(final String content) {
 		header(Header.PROXY_AUTHORIZATION, content, true);
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
 		sb.append(super.toString());
 		return sb.toString();
@@ -1096,10 +1096,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param responseInterceptors 响应拦截器列表
 	 * @return this
 	 */
-	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain<HttpRequest> requestInterceptors,
-								   HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
+	private HttpResponse doExecute(final boolean isAsync, final HttpInterceptor.Chain<HttpRequest> requestInterceptors,
+								   final HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
 		if (null != requestInterceptors) {
-			for (HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
+			for (final HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
 				interceptor.process(this);
 			}
 		}
@@ -1121,7 +1121,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 拦截响应
 		if (null != responseInterceptors) {
-			for (HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
+			for (final HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
 				interceptor.process(httpResponse);
 			}
 		}
@@ -1195,13 +1195,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isAsync 是否异步
 	 * @return {@link HttpResponse}，无转发返回 {@code null}
 	 */
-	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
+	private HttpResponse sendRedirectIfPossible(final boolean isAsync) {
 		// 手动实现重定向
 		if (config.maxRedirectCount > 0) {
-			int responseCode;
+			final int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// 错误时静默关闭连接
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
@@ -1241,7 +1241,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			} else {
 				this.httpConnection.connect();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// 异常时关闭连接
 			this.httpConnection.disconnectQuietly();
 			throw new IORuntimeException(e);
@@ -1261,7 +1261,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		RequestBody body;
+		final RequestBody body;
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 			body = BytesBody.create(this.bodyBytes);
 		} else {
@@ -1325,7 +1325,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param value 属性值
 	 * @return this
 	 */
-	private HttpRequest putToForm(String name, Object value) {
+	private HttpRequest putToForm(final String name, final Object value) {
 		if (null == name || null == value) {
 			return this;
 		}

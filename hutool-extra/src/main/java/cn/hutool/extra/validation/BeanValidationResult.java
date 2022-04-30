@@ -24,7 +24,7 @@ public class BeanValidationResult {
 	 *
 	 * @param success 是否验证成功
 	 */
-	public BeanValidationResult(boolean success) {
+	public BeanValidationResult(final boolean success) {
 		this.success = success;
 	}
 
@@ -43,7 +43,7 @@ public class BeanValidationResult {
 	 * @param success 是否通过
 	 * @return this
 	 */
-	public BeanValidationResult setSuccess(boolean success) {
+	public BeanValidationResult setSuccess(final boolean success) {
 		this.success = success;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class BeanValidationResult {
 	 * @param errorMessages 错误信息列表
 	 * @return this
 	 */
-	public BeanValidationResult setErrorMessages(List<ErrorMessage> errorMessages) {
+	public BeanValidationResult setErrorMessages(final List<ErrorMessage> errorMessages) {
 		this.errorMessages = errorMessages;
 		return this;
 	}
@@ -74,7 +74,7 @@ public class BeanValidationResult {
 	 * @param errorMessage 错误信息
 	 * @return this
 	 */
-	public BeanValidationResult addErrorMessage(ErrorMessage errorMessage) {
+	public BeanValidationResult addErrorMessage(final ErrorMessage errorMessage) {
 		this.errorMessages.add(errorMessage);
 		return this;
 	}
@@ -100,7 +100,7 @@ public class BeanValidationResult {
 			return propertyName;
 		}
 
-		public void setPropertyName(String propertyName) {
+		public void setPropertyName(final String propertyName) {
 			this.propertyName = propertyName;
 		}
 
@@ -108,7 +108,7 @@ public class BeanValidationResult {
 			return message;
 		}
 
-		public void setMessage(String message) {
+		public void setMessage(final String message) {
 			this.message = message;
 		}
 
@@ -116,7 +116,7 @@ public class BeanValidationResult {
 			return value;
 		}
 
-		public void setValue(Object value) {
+		public void setValue(final Object value) {
 			this.value = value;
 		}
 

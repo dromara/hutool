@@ -22,23 +22,23 @@ public class CronTimer extends Thread implements Serializable {
 	private final long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();
 	/** 定时单元：分 */
 	private final long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
-	
+
 	/** 定时任务是否已经被强制关闭 */
 	private boolean isStop;
 	private final Scheduler scheduler;
-	
+
 	/**
 	 * 构造
 	 * @param scheduler {@link Scheduler}
 	 */
-	public CronTimer(Scheduler scheduler) {
+	public CronTimer(final Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
-	
+
 	@Override
 	public void run() {
 		final long timerUnit = this.scheduler.config.matchSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
-		
+
 		long thisTime = System.currentTimeMillis();
 		long nextTime;
 		long sleep;
@@ -62,7 +62,7 @@ public class CronTimer extends Thread implements Serializable {
 		}
 		log.debug("Hutool-cron timer stopped.");
 	}
-	
+
 	/**
 	 * 关闭定时器
 	 */
@@ -70,7 +70,7 @@ public class CronTimer extends Thread implements Serializable {
 		this.isStop = true;
 		ThreadUtil.interrupt(this, true);
 	}
-	
+
 	/**
 	 * 启动匹配
 	 * @param millis 当前时间
@@ -91,7 +91,7 @@ public class CronTimer extends Thread implements Serializable {
 	 * @return 是否为有效的sleep毫秒数
 	 * @since 5.3.2
 	 */
-	private static boolean isValidSleepMillis(long millis, long timerUnit){
+	private static boolean isValidSleepMillis(final long millis, final long timerUnit){
 		return millis > 0 &&
 				// 防止用户向前调整时间导致的长时间sleep
 				millis < (2 * timerUnit);

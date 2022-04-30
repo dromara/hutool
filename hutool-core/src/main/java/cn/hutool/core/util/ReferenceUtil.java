@@ -28,7 +28,7 @@ public class ReferenceUtil {
 	 * @param referent 被引用对象
 	 * @return {@link Reference}
 	 */
-	public static <T> Reference<T> create(ReferenceType type, T referent) {
+	public static <T> Reference<T> create(final ReferenceType type, final T referent) {
 		return create(type, referent, null);
 	}
 
@@ -41,7 +41,7 @@ public class ReferenceUtil {
 	 * @param queue 引用队列
 	 * @return {@link Reference}
 	 */
-	public static <T> Reference<T> create(ReferenceType type, T referent, ReferenceQueue<T> queue) {
+	public static <T> Reference<T> create(final ReferenceType type, final T referent, final ReferenceQueue<T> queue) {
 		switch (type) {
 		case SOFT:
 			return new SoftReference<>(referent, queue);

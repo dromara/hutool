@@ -13,7 +13,7 @@ public class WeakInterner<T> implements Interner<T>{
 	private final WeakConcurrentMap<T, T> cache = new WeakConcurrentMap<>();
 
 	@Override
-	public T intern(T sample) {
+	public T intern(final T sample) {
 		if(null == sample){
 			return null;
 		}

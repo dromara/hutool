@@ -30,9 +30,9 @@ public class ManifestUtil {
 	 * @return Manifest
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(Class<?> cls) throws IORuntimeException {
-		URL url = ResourceUtil.getResource(null, cls);
-		URLConnection connection;
+	public static Manifest getManifest(final Class<?> cls) throws IORuntimeException {
+		final URL url = ResourceUtil.getResource(null, cls);
+		final URLConnection connection;
 		try {
 			connection = url.openConnection();
 		}catch (final IOException e) {
@@ -40,7 +40,7 @@ public class ManifestUtil {
 		}
 
 		if (connection instanceof JarURLConnection) {
-			JarURLConnection conn = (JarURLConnection) connection;
+			final JarURLConnection conn = (JarURLConnection) connection;
 			return getManifest(conn);
 		}
 		return null;
@@ -53,11 +53,11 @@ public class ManifestUtil {
 	 * @return Manifest
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(File classpathItem) throws IORuntimeException{
+	public static Manifest getManifest(final File classpathItem) throws IORuntimeException{
 		Manifest manifest = null;
 
 		if (classpathItem.isFile()) {
-			try (JarFile jarFile = new JarFile(classpathItem)){
+			try (final JarFile jarFile = new JarFile(classpathItem)){
 				manifest = getManifest(jarFile);
 			} catch (final IOException e) {
 				throw new IORuntimeException(e);
@@ -75,7 +75,7 @@ public class ManifestUtil {
 				}
 			}
 			if (null != manifestFile) {
-				try(FileInputStream fis = new FileInputStream(manifestFile)){
+				try(final FileInputStream fis = new FileInputStream(manifestFile)){
 					manifest = new Manifest(fis);
 				} catch (final IOException e) {
 					throw new IORuntimeException(e);
@@ -93,11 +93,11 @@ public class ManifestUtil {
 	 * @return Manifest
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(JarURLConnection connection) throws IORuntimeException{
+	public static Manifest getManifest(final JarURLConnection connection) throws IORuntimeException{
 		final JarFile jarFile;
 		try {
 			jarFile = connection.getJarFile();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return getManifest(jarFile);
@@ -110,10 +110,10 @@ public class ManifestUtil {
 	 * @return Manifest
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Manifest getManifest(JarFile jarFile) throws IORuntimeException {
+	public static Manifest getManifest(final JarFile jarFile) throws IORuntimeException {
 		try {
 			return jarFile.getManifest();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

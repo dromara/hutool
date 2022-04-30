@@ -24,7 +24,7 @@ public class HttpDownloader {
 	 * @param streamPress   进度条 {@link StreamProgress}
 	 * @return 文本
 	 */
-	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
+	public static String downloadString(final String url, final Charset customCharset, final StreamProgress streamPress) {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		download(url, out, true, streamPress);
 		return null == customCharset ? out.toString() : out.toString(customCharset);
@@ -36,7 +36,7 @@ public class HttpDownloader {
 	 * @param url 请求的url
 	 * @return 文件数据
 	 */
-	public static byte[] downloadBytes(String url) {
+	public static byte[] downloadBytes(final String url) {
 		return requestDownload(url, -1).bodyBytes();
 	}
 
@@ -49,7 +49,7 @@ public class HttpDownloader {
 	 * @param streamProgress  进度条
 	 * @return 文件大小
 	 */
-	public static long downloadFile(String url, File targetFileOrDir, int timeout, StreamProgress streamProgress) {
+	public static long downloadFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
 		return requestDownload(url, timeout).writeBody(targetFileOrDir, streamProgress);
 	}
 
@@ -66,7 +66,7 @@ public class HttpDownloader {
 	 * @return 下载大小
 	 * @since 5.7.12
 	 */
-	public long downloadFile(String url, File targetFileOrDir, String tempFileSuffix, int timeout, StreamProgress streamProgress) {
+	public long downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
 		return requestDownload(url, timeout).writeBody(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
@@ -79,7 +79,7 @@ public class HttpDownloader {
 	 * @param streamProgress  进度条
 	 * @return 文件
 	 */
-	public static File downloadForFile(String url, File targetFileOrDir, int timeout, StreamProgress streamProgress) {
+	public static File downloadForFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
 		return requestDownload(url, timeout).writeBodyForFile(targetFileOrDir, streamProgress);
 	}
 
@@ -92,7 +92,7 @@ public class HttpDownloader {
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 */
-	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
+	public static long download(final String url, final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] is null !");
 
 		return requestDownload(url, -1).writeBody(out, isCloseOut, streamProgress);
@@ -106,7 +106,7 @@ public class HttpDownloader {
 	 * @return HttpResponse
 	 * @since 5.4.1
 	 */
-	private static HttpResponse requestDownload(String url, int timeout) {
+	private static HttpResponse requestDownload(final String url, final int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
 
 		final HttpResponse response = HttpUtil.createGet(url, true)

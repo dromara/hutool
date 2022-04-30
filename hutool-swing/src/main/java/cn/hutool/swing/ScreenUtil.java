@@ -59,7 +59,7 @@ public class ScreenUtil {
 	 * @return 写出到的文件
 	 * @see RobotUtil#captureScreen(File)
 	 */
-	public static File captureScreen(File outFile) {
+	public static File captureScreen(final File outFile) {
 		return RobotUtil.captureScreen(outFile);
 	}
 
@@ -70,7 +70,7 @@ public class ScreenUtil {
 	 * @return 截屏的图片
 	 * @see RobotUtil#captureScreen(Rectangle)
 	 */
-	public static BufferedImage captureScreen(Rectangle screenRect) {
+	public static BufferedImage captureScreen(final Rectangle screenRect) {
 		return RobotUtil.captureScreen(screenRect);
 	}
 
@@ -82,7 +82,7 @@ public class ScreenUtil {
 	 * @return 写出到的文件
 	 * @see RobotUtil#captureScreen(Rectangle, File)
 	 */
-	public static File captureScreen(Rectangle screenRect, File outFile) {
+	public static File captureScreen(final Rectangle screenRect, final File outFile) {
 		return RobotUtil.captureScreen(screenRect, outFile);
 	}
 }

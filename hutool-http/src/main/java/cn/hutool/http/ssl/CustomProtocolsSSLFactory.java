@@ -26,7 +26,7 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 * @param protocols 支持协议列表
 	 * @throws IORuntimeException IO异常
 	 */
-	public CustomProtocolsSSLFactory(String... protocols) throws IORuntimeException {
+	public CustomProtocolsSSLFactory(final String... protocols) throws IORuntimeException {
 		this.protocols = protocols;
 		this.base = SSLUtil.createSSLContext(null).getSocketFactory();
 	}
@@ -49,35 +49,35 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	}
 
 	@Override
-	public SSLSocket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
+	public SSLSocket createSocket(final Socket s, final String host, final int port, final boolean autoClose) throws IOException {
 		final SSLSocket socket = (SSLSocket) base.createSocket(s, host, port, autoClose);
 		resetProtocols(socket);
 		return socket;
 	}
 
 	@Override
-	public Socket createSocket(String host, int port) throws IOException {
+	public Socket createSocket(final String host, final int port) throws IOException {
 		final SSLSocket socket = (SSLSocket) base.createSocket(host, port);
 		resetProtocols(socket);
 		return socket;
 	}
 
 	@Override
-	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+	public Socket createSocket(final String host, final int port, final InetAddress localHost, final int localPort) throws IOException {
 		final SSLSocket socket = (SSLSocket) base.createSocket(host, port, localHost, localPort);
 		resetProtocols(socket);
 		return socket;
 	}
 
 	@Override
-	public Socket createSocket(InetAddress host, int port) throws IOException {
+	public Socket createSocket(final InetAddress host, final int port) throws IOException {
 		final SSLSocket socket = (SSLSocket) base.createSocket(host, port);
 		resetProtocols(socket);
 		return socket;
 	}
 
 	@Override
-	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+	public Socket createSocket(final InetAddress address, final int port, final InetAddress localAddress, final int localPort) throws IOException {
 		final SSLSocket socket = (SSLSocket) base.createSocket(address, port, localAddress, localPort);
 		resetProtocols(socket);
 		return socket;
@@ -88,7 +88,7 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 *
 	 * @param socket SSLSocket
 	 */
-	private void resetProtocols(SSLSocket socket) {
+	private void resetProtocols(final SSLSocket socket) {
 		if (ArrayUtil.isNotEmpty(this.protocols)) {
 			socket.setEnabledProtocols(this.protocols);
 		}

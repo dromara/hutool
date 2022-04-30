@@ -19,7 +19,7 @@ public enum GlobalInterceptor {
 	 * @param interceptor 拦截器实现
 	 * @return this
 	 */
-	synchronized public GlobalInterceptor addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+	synchronized public GlobalInterceptor addRequestInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
 		return this;
 	}
@@ -30,7 +30,7 @@ public enum GlobalInterceptor {
 	 * @param interceptor 拦截器实现
 	 * @return this
 	 */
-	synchronized public GlobalInterceptor addResponseInterceptor(HttpInterceptor<HttpResponse> interceptor) {
+	synchronized public GlobalInterceptor addResponseInterceptor(final HttpInterceptor<HttpResponse> interceptor) {
 		this.responseInterceptors.addChain(interceptor);
 		return this;
 	}
@@ -73,7 +73,7 @@ public enum GlobalInterceptor {
 	 */
 	HttpInterceptor.Chain<HttpRequest> getCopiedRequestInterceptor() {
 		final HttpInterceptor.Chain<HttpRequest> copied = new HttpInterceptor.Chain<>();
-		for (HttpInterceptor<HttpRequest> interceptor : this.requestInterceptors) {
+		for (final HttpInterceptor<HttpRequest> interceptor : this.requestInterceptors) {
 			copied.addChain(interceptor);
 		}
 		return copied;
@@ -86,7 +86,7 @@ public enum GlobalInterceptor {
 	 */
 	HttpInterceptor.Chain<HttpResponse> getCopiedResponseInterceptor() {
 		final HttpInterceptor.Chain<HttpResponse> copied = new HttpInterceptor.Chain<>();
-		for (HttpInterceptor<HttpResponse> interceptor : this.responseInterceptors) {
+		for (final HttpInterceptor<HttpResponse> interceptor : this.responseInterceptors) {
 			copied.addChain(interceptor);
 		}
 		return copied;

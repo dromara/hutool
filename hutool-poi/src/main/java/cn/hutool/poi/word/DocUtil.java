@@ -24,12 +24,12 @@ public class DocUtil {
 	 * @param file docx文件
 	 * @return {@link XWPFDocument}
 	 */
-	public static XWPFDocument create(File file) {
+	public static XWPFDocument create(final File file) {
 		try {
 			return FileUtil.exist(file) ? new XWPFDocument(OPCPackage.open(file)) : new XWPFDocument();
-		} catch (InvalidFormatException e) {
+		} catch (final InvalidFormatException e) {
 			throw new POIException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

@@ -46,7 +46,7 @@ public class Ipv4Util {
 	 * @param mask 掩码
 	 * @return 返回xxx.xxx.xxx.xxx/mask的格式
 	 */
-	public static String formatIpBlock(String ip, String mask) {
+	public static String formatIpBlock(final String ip, final String mask) {
 		return ip + IP_MASK_SPLIT_MARK + getMaskBitByMask(mask);
 	}
 
@@ -57,7 +57,7 @@ public class Ipv4Util {
 	 * @param isAll   true:全量地址，false:可用地址；仅在ipRange为X.X.X.X/X时才生效
 	 * @return IP集
 	 */
-	public static List<String> list(String ipRange, boolean isAll) {
+	public static List<String> list(final String ipRange, final boolean isAll) {
 		if (ipRange.contains(IP_SPLIT_MARK)) {
 			// X.X.X.X-X.X.X.X
 			final String[] range = StrUtil.splitToArray(ipRange, IP_SPLIT_MARK);
@@ -79,7 +79,7 @@ public class Ipv4Util {
 	 * @param isAll   true:全量地址，false:可用地址
 	 * @return 区间地址
 	 */
-	public static List<String> list(String ip, int maskBit, boolean isAll) {
+	public static List<String> list(final String ip, final int maskBit, final boolean isAll) {
 		if (maskBit == IP_MASK_MAX) {
 			final List<String> list = new ArrayList<>();
 			if (isAll) {
@@ -110,7 +110,7 @@ public class Ipv4Util {
 	 * @param ipTo   结束IP
 	 * @return 区间地址
 	 */
-	public static List<String> list(String ipFrom, String ipTo) {
+	public static List<String> list(final String ipFrom, final String ipTo) {
 		final int[] ipf = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, CharUtil.DOT));
 		final int[] ipt = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, CharUtil.DOT));
 
@@ -136,7 +136,7 @@ public class Ipv4Util {
 	 * @param longIP IP的long表示形式
 	 * @return IP V4 地址
 	 */
-	public static String longToIpv4(long longIP) {
+	public static String longToIpv4(final long longIP) {
 		final StringBuilder sb = StrUtil.builder();
 		// 直接右移24位
 		sb.append(longIP >> 24 & 0xFF);
@@ -157,7 +157,7 @@ public class Ipv4Util {
 	 * @param strIP IP V4 地址
 	 * @return long值
 	 */
-	public static long ipv4ToLong(String strIP) {
+	public static long ipv4ToLong(final String strIP) {
 		final Matcher matcher = PatternPool.IPV4.matcher(strIP);
 		if (matcher.matches()) {
 			return matchAddress(matcher);
@@ -176,7 +176,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的字符串表示
 	 */
-	public static String getBeginIpStr(String ip, int maskBit) {
+	public static String getBeginIpStr(final String ip, final int maskBit) {
 		return longToIpv4(getBeginIpLong(ip, maskBit));
 	}
 
@@ -187,7 +187,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的长整型表示
 	 */
-	public static Long getBeginIpLong(String ip, int maskBit) {
+	public static Long getBeginIpLong(final String ip, final int maskBit) {
 		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
 
@@ -198,7 +198,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 终止IP的字符串表示
 	 */
-	public static String getEndIpStr(String ip, int maskBit) {
+	public static String getEndIpStr(final String ip, final int maskBit) {
 		return longToIpv4(getEndIpLong(ip, maskBit));
 	}
 
@@ -209,8 +209,8 @@ public class Ipv4Util {
 	 * @return 掩码位，例如 24
 	 * @throws IllegalArgumentException 子网掩码非法
 	 */
-	public static int getMaskBitByMask(String mask) {
-		Integer maskBit = MaskBit.getMaskBit(mask);
+	public static int getMaskBitByMask(final String mask) {
+		final Integer maskBit = MaskBit.getMaskBit(mask);
 		if (maskBit == null) {
 			throw new IllegalArgumentException("Invalid netmask " + mask);
 		}
@@ -224,7 +224,7 @@ public class Ipv4Util {
 	 * @param isAll   true:全量地址，false:可用地址
 	 * @return 地址总数
 	 */
-	public static int countByMaskBit(int maskBit, boolean isAll) {
+	public static int countByMaskBit(final int maskBit, final boolean isAll) {
 		//如果是可用地址的情况，掩码位小于等于0或大于等于32，则可用地址为0
 		if ((false == isAll) && (maskBit <= 0 || maskBit >= 32)) {
 			return 0;
@@ -240,7 +240,7 @@ public class Ipv4Util {
 	 * @param maskBit 掩码位
 	 * @return 掩码
 	 */
-	public static String getMaskByMaskBit(int maskBit) {
+	public static String getMaskByMaskBit(final int maskBit) {
 		return MaskBit.get(maskBit);
 	}
 
@@ -251,14 +251,14 @@ public class Ipv4Util {
 	 * @param toIp   结束IP
 	 * @return 掩码x.x.x.x
 	 */
-	public static String getMaskByIpRange(String fromIp, String toIp) {
-		long toIpLong = ipv4ToLong(toIp);
-		long fromIpLong = ipv4ToLong(fromIp);
+	public static String getMaskByIpRange(final String fromIp, final String toIp) {
+		final long toIpLong = ipv4ToLong(toIp);
+		final long fromIpLong = ipv4ToLong(fromIp);
 		Assert.isTrue(fromIpLong < toIpLong, "to IP must be greater than from IP!");
 
-		String[] fromIpSplit = StrUtil.splitToArray(fromIp, CharUtil.DOT);
-		String[] toIpSplit = StrUtil.splitToArray(toIp, CharUtil.DOT);
-		StringBuilder mask = new StringBuilder();
+		final String[] fromIpSplit = StrUtil.splitToArray(fromIp, CharUtil.DOT);
+		final String[] toIpSplit = StrUtil.splitToArray(toIp, CharUtil.DOT);
+		final StringBuilder mask = new StringBuilder();
 		for (int i = 0; i < toIpSplit.length; i++) {
 			mask.append(255 - Integer.parseInt(toIpSplit[i]) + Integer.parseInt(fromIpSplit[i])).append(CharUtil.DOT);
 		}
@@ -272,15 +272,15 @@ public class Ipv4Util {
 	 * @param toIp   结束IP
 	 * @return IP数量
 	 */
-	public static int countByIpRange(String fromIp, String toIp) {
-		long toIpLong = ipv4ToLong(toIp);
-		long fromIpLong = ipv4ToLong(fromIp);
+	public static int countByIpRange(final String fromIp, final String toIp) {
+		final long toIpLong = ipv4ToLong(toIp);
+		final long fromIpLong = ipv4ToLong(fromIp);
 		if (fromIpLong > toIpLong) {
 			throw new IllegalArgumentException("to IP must be greater than from IP!");
 		}
 		int count = 1;
-		int[] fromIpSplit = StrUtil.split(fromIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
-		int[] toIpSplit = StrUtil.split(toIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
+		final int[] fromIpSplit = StrUtil.split(fromIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
+		final int[] toIpSplit = StrUtil.split(toIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
 		for (int i = fromIpSplit.length - 1; i >= 0; i--) {
 			count += (toIpSplit[i] - fromIpSplit[i]) * Math.pow(256, fromIpSplit.length - i - 1);
 		}
@@ -293,7 +293,7 @@ public class Ipv4Util {
 	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
 	 * @return true：掩码合法；false：掩码不合法
 	 */
-	public static boolean isMaskValid(String mask) {
+	public static boolean isMaskValid(final String mask) {
 		return MaskBit.getMaskBit(mask) != null;
 	}
 
@@ -303,7 +303,7 @@ public class Ipv4Util {
 	 * @param maskBit 掩码位，例如 24
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
-	public static boolean isMaskBitValid(int maskBit) {
+	public static boolean isMaskBitValid(final int maskBit) {
 		return MaskBit.get(maskBit) != null;
 	}
 
@@ -321,18 +321,18 @@ public class Ipv4Util {
 	 * @return 是否为内网IP
 	 * @since 5.7.18
 	 */
-	public static boolean isInnerIP(String ipAddress) {
-		boolean isInnerIp;
-		long ipNum = ipv4ToLong(ipAddress);
+	public static boolean isInnerIP(final String ipAddress) {
+		final boolean isInnerIp;
+		final long ipNum = ipv4ToLong(ipAddress);
 
-		long aBegin = ipv4ToLong("10.0.0.0");
-		long aEnd = ipv4ToLong("10.255.255.255");
+		final long aBegin = ipv4ToLong("10.0.0.0");
+		final long aEnd = ipv4ToLong("10.255.255.255");
 
-		long bBegin = ipv4ToLong("172.16.0.0");
-		long bEnd = ipv4ToLong("172.31.255.255");
+		final long bBegin = ipv4ToLong("172.16.0.0");
+		final long bEnd = ipv4ToLong("172.31.255.255");
 
-		long cBegin = ipv4ToLong("192.168.0.0");
-		long cEnd = ipv4ToLong("192.168.255.255");
+		final long cBegin = ipv4ToLong("192.168.0.0");
+		final long cEnd = ipv4ToLong("192.168.255.255");
 
 		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
 		return isInnerIp;
@@ -348,7 +348,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 终止IP的长整型表示
 	 */
-	public static Long getEndIpLong(String ip, int maskBit) {
+	public static Long getEndIpLong(final String ip, final int maskBit) {
 		return getBeginIpLong(ip, maskBit)
 				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
@@ -359,7 +359,7 @@ public class Ipv4Util {
 	 * @param matcher 匹配到的Ipv4正则
 	 * @return ipv4对应long
 	 */
-	private static long matchAddress(Matcher matcher) {
+	private static long matchAddress(final Matcher matcher) {
 		long addr = 0;
 		for (int i = 1; i <= 4; ++i) {
 			addr |= Long.parseLong(matcher.group(i)) << 8 * (4 - i);
@@ -375,7 +375,7 @@ public class Ipv4Util {
 	 * @param end    结束IP
 	 * @return 是否在范围内
 	 */
-	private static boolean isInner(long userIp, long begin, long end) {
+	private static boolean isInner(final long userIp, final long begin, final long end) {
 		return (userIp >= begin) && (userIp <= end);
 	}
 	//-------------------------------------------------------------------------------- Private method end

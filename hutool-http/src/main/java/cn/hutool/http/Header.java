@@ -133,7 +133,7 @@ public enum Header {
 
 	private final String value;
 
-	Header(String value) {
+	Header(final String value) {
 		this.value = value;
 	}
 

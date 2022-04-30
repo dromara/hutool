@@ -42,7 +42,7 @@ public class ObjUtil {
 	 * @see #equal(Object, Object)
 	 * @since 5.4.3
 	 */
-	public static boolean equals(Object obj1, Object obj2) {
+	public static boolean equals(final Object obj1, final Object obj2) {
 		return equal(obj1, obj2);
 	}
 
@@ -60,7 +60,7 @@ public class ObjUtil {
 	 * @return 是否相等
 	 * @see Objects#equals(Object, Object)
 	 */
-	public static boolean equal(Object obj1, Object obj2) {
+	public static boolean equal(final Object obj1, final Object obj2) {
 		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
 			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
 		}
@@ -75,7 +75,7 @@ public class ObjUtil {
 	 * @return 是否不等
 	 * @since 3.0.7
 	 */
-	public static boolean notEqual(Object obj1, Object obj2) {
+	public static boolean notEqual(final Object obj1, final Object obj2) {
 		return false == equal(obj1, obj2);
 	}
 
@@ -93,7 +93,7 @@ public class ObjUtil {
 	 * @param obj 被计算长度的对象
 	 * @return 长度
 	 */
-	public static int length(Object obj) {
+	public static int length(final Object obj) {
 		if (obj == null) {
 			return 0;
 		}
@@ -109,7 +109,7 @@ public class ObjUtil {
 
 		int count;
 		if (obj instanceof Iterator) {
-			Iterator<?> iter = (Iterator<?>) obj;
+			final Iterator<?> iter = (Iterator<?>) obj;
 			count = 0;
 			while (iter.hasNext()) {
 				count++;
@@ -118,7 +118,7 @@ public class ObjUtil {
 			return count;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration<?> enumeration = (Enumeration<?>) obj;
+			final Enumeration<?> enumeration = (Enumeration<?>) obj;
 			count = 0;
 			while (enumeration.hasMoreElements()) {
 				count++;
@@ -148,7 +148,7 @@ public class ObjUtil {
 	 * @param element 元素
 	 * @return 是否包含
 	 */
-	public static boolean contains(Object obj, Object element) {
+	public static boolean contains(final Object obj, final Object element) {
 		if (obj == null) {
 			return false;
 		}
@@ -166,9 +166,9 @@ public class ObjUtil {
 		}
 
 		if (obj instanceof Iterator) {
-			Iterator<?> iter = (Iterator<?>) obj;
+			final Iterator<?> iter = (Iterator<?>) obj;
 			while (iter.hasNext()) {
-				Object o = iter.next();
+				final Object o = iter.next();
 				if (equal(o, element)) {
 					return true;
 				}
@@ -176,9 +176,9 @@ public class ObjUtil {
 			return false;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration<?> enumeration = (Enumeration<?>) obj;
+			final Enumeration<?> enumeration = (Enumeration<?>) obj;
 			while (enumeration.hasMoreElements()) {
-				Object o = enumeration.nextElement();
+				final Object o = enumeration.nextElement();
 				if (equal(o, element)) {
 					return true;
 				}
@@ -186,9 +186,9 @@ public class ObjUtil {
 			return false;
 		}
 		if (obj.getClass().isArray() == true) {
-			int len = Array.getLength(obj);
+			final int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
+				final Object o = Array.get(obj, i);
 				if (equal(o, element)) {
 					return true;
 				}
@@ -209,7 +209,7 @@ public class ObjUtil {
 	 * @param obj 对象
 	 * @return 是否为null
 	 */
-	public static boolean isNull(Object obj) {
+	public static boolean isNull(final Object obj) {
 		//noinspection ConstantConditions
 		return null == obj || obj.equals(null);
 	}
@@ -220,7 +220,7 @@ public class ObjUtil {
 	 * @param obj 对象
 	 * @return 是否为null
 	 */
-	public static boolean isNotNull(Object obj) {
+	public static boolean isNotNull(final Object obj) {
 		return false == isNull(obj);
 	}
 
@@ -240,7 +240,7 @@ public class ObjUtil {
 	 * @since 4.5.7
 	 */
 	@SuppressWarnings("rawtypes")
-	public static boolean isEmpty(Object obj) {
+	public static boolean isEmpty(final Object obj) {
 		if (null == obj) {
 			return true;
 		}
@@ -275,7 +275,7 @@ public class ObjUtil {
 	 * @return 是否为空，如果类型不支持，返回true
 	 * @since 4.5.7
 	 */
-	public static boolean isNotEmpty(Object obj) {
+	public static boolean isNotEmpty(final Object obj) {
 		return false == isEmpty(obj);
 	}
 
@@ -310,7 +310,7 @@ public class ObjUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	public static <T> T defaultIfNull(T source, Supplier<? extends T> defaultValueSupplier) {
+	public static <T> T defaultIfNull(final T source, final Supplier<? extends T> defaultValueSupplier) {
 		if (isNull(source)) {
 			return defaultValueSupplier.get();
 		}
@@ -327,7 +327,7 @@ public class ObjUtil {
 	 * @return 处理后的返回值
 	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfNull(Object source, Supplier<? extends T> handle, final T defaultValue) {
+	public static <T> T defaultIfNull(final Object source, final Supplier<? extends T> handle, final T defaultValue) {
 		if (isNotNull(source)) {
 			return handle.get();
 		}
@@ -344,7 +344,7 @@ public class ObjUtil {
 	 * @return 处理后的返回值
 	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfEmpty(String str, Supplier<? extends T> handle, final T defaultValue) {
+	public static <T> T defaultIfEmpty(final String str, final Supplier<? extends T> handle, final T defaultValue) {
 		if (StrUtil.isNotEmpty(str)) {
 			return handle.get();
 		}
@@ -382,7 +382,7 @@ public class ObjUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	public static <T extends CharSequence> T defaultIfEmpty(T str, Supplier<? extends T> defaultValueSupplier) {
+	public static <T extends CharSequence> T defaultIfEmpty(final T str, final Supplier<? extends T> defaultValueSupplier) {
 		if (StrUtil.isEmpty(str)) {
 			return defaultValueSupplier.get();
 		}
@@ -420,7 +420,7 @@ public class ObjUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	public static <T extends CharSequence> T defaultIfBlank(T str, Supplier<? extends T> defaultValueSupplier) {
+	public static <T extends CharSequence> T defaultIfBlank(final T str, final Supplier<? extends T> defaultValueSupplier) {
 		if (StrUtil.isBlank(str)) {
 			return defaultValueSupplier.get();
 		}
@@ -437,7 +437,7 @@ public class ObjUtil {
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
 	 */
-	public static <T> T clone(T obj) {
+	public static <T> T clone(final T obj) {
 		T result = ArrayUtil.clone(obj);
 		if (null == result) {
 			if (obj instanceof Cloneable) {
@@ -460,7 +460,7 @@ public class ObjUtil {
 		T clone = null;
 		try {
 			clone = clone(obj);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// pass
 		}
 		return clone == null ? obj : clone;
@@ -475,7 +475,7 @@ public class ObjUtil {
 	 * @return 克隆后的对象
 	 * @throws UtilException IO异常和ClassNotFoundException封装
 	 */
-	public static <T> T cloneByStream(T obj) {
+	public static <T> T cloneByStream(final T obj) {
 		return SerializeUtil.clone(obj);
 	}
 
@@ -487,7 +487,7 @@ public class ObjUtil {
 	 * @param obj 要被序列化的对象
 	 * @return 序列化后的字节码
 	 */
-	public static <T> byte[] serialize(T obj) {
+	public static <T> byte[] serialize(final T obj) {
 		return SerializeUtil.serialize(obj);
 	}
 
@@ -503,7 +503,7 @@ public class ObjUtil {
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(byte[] bytes) {
+	public static <T> T deserialize(final byte[] bytes) {
 		return SerializeUtil.deserialize(bytes);
 	}
 
@@ -514,7 +514,7 @@ public class ObjUtil {
 	 * @return 是否为基本类型
 	 * @see ClassUtil#isBasicType(Class)
 	 */
-	public static boolean isBasicType(Object object) {
+	public static boolean isBasicType(final Object object) {
 		if (null == object) {
 			return false;
 		}
@@ -529,7 +529,7 @@ public class ObjUtil {
 	 * @param obj 被检查类型
 	 * @return 检查结果，非数字类型和Null将返回true
 	 */
-	public static boolean isValidIfNumber(Object obj) {
+	public static boolean isValidIfNumber(final Object obj) {
 		if (obj instanceof Number) {
 			return NumberUtil.isValidNumber((Number) obj);
 		}
@@ -546,7 +546,7 @@ public class ObjUtil {
 	 * @see java.util.Comparator#compare(Object, Object)
 	 * @since 3.0.7
 	 */
-	public static <T extends Comparable<? super T>> int compare(T c1, T c2) {
+	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2) {
 		return CompareUtil.compare(c1, c2);
 	}
 
@@ -561,7 +561,7 @@ public class ObjUtil {
 	 * @see java.util.Comparator#compare(Object, Object)
 	 * @since 3.0.7
 	 */
-	public static <T extends Comparable<? super T>> int compare(T c1, T c2, boolean nullGreater) {
+	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2, final boolean nullGreater) {
 		return CompareUtil.compare(c1, c2, nullGreater);
 	}
 
@@ -572,7 +572,7 @@ public class ObjUtil {
 	 * @return {@link Class}
 	 * @since 3.0.8
 	 */
-	public static Class<?> getTypeArgument(Object obj) {
+	public static Class<?> getTypeArgument(final Object obj) {
 		return getTypeArgument(obj, 0);
 	}
 
@@ -584,7 +584,7 @@ public class ObjUtil {
 	 * @return {@link Class}
 	 * @since 3.0.8
 	 */
-	public static Class<?> getTypeArgument(Object obj, int index) {
+	public static Class<?> getTypeArgument(final Object obj, final int index) {
 		return ClassUtil.getTypeArgument(obj.getClass(), index);
 	}
 
@@ -600,7 +600,7 @@ public class ObjUtil {
 	 * @return Bean所有字段转为Map后的字符串
 	 * @since 3.2.0
 	 */
-	public static String toString(Object obj) {
+	public static String toString(final Object obj) {
 		if (null == obj) {
 			return StrUtil.NULL;
 		}
@@ -617,7 +617,7 @@ public class ObjUtil {
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 存在{@code null}的数量
 	 */
-	public static int emptyCount(Object... objs) {
+	public static int emptyCount(final Object... objs) {
 		return ArrayUtil.emptyCount(objs);
 	}
 
@@ -629,7 +629,7 @@ public class ObjUtil {
 	 * @since 5.5.3
 	 * @see ArrayUtil#hasNull(Object[])
 	 */
-	public static boolean hasNull(Object... objs) {
+	public static boolean hasNull(final Object... objs) {
 		return ArrayUtil.hasNull(objs);
 	}
 
@@ -640,7 +640,7 @@ public class ObjUtil {
 	 * @return 是否存在
 	 * @see ArrayUtil#hasEmpty(Object...)
 	 */
-	public static boolean hasEmpty(Object... objs) {
+	public static boolean hasEmpty(final Object... objs) {
 		return ArrayUtil.hasEmpty(objs);
 	}
 
@@ -650,7 +650,7 @@ public class ObjUtil {
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都为空
 	 */
-	public static boolean isAllEmpty(Object... objs) {
+	public static boolean isAllEmpty(final Object... objs) {
 		return ArrayUtil.isAllEmpty(objs);
 	}
 
@@ -660,7 +660,7 @@ public class ObjUtil {
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都不为空
 	 */
-	public static boolean isAllNotEmpty(Object... objs) {
+	public static boolean isAllNotEmpty(final Object... objs) {
 		return ArrayUtil.isAllNotEmpty(objs);
 	}
 }

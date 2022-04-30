@@ -11,8 +11,8 @@ public class ConcurrencyTesterTest {
 	@Test
 	@Ignore
 	public void concurrencyTesterTest() {
-		ConcurrencyTester tester = ThreadUtil.concurrencyTest(100, () -> {
-			long delay = RandomUtil.randomLong(100, 1000);
+		final ConcurrencyTester tester = ThreadUtil.concurrencyTest(100, () -> {
+			final long delay = RandomUtil.randomLong(100, 1000);
 			ThreadUtil.sleep(delay);
 			Console.log("{} test finished, delay: {}", Thread.currentThread().getName(), delay);
 		});
@@ -22,7 +22,7 @@ public class ConcurrencyTesterTest {
 	@Test
 	@Ignore
 	public void multiTest(){
-		ConcurrencyTester ct = new ConcurrencyTester(5);
+		final ConcurrencyTester ct = new ConcurrencyTester(5);
 		for(int i=0;i<3;i++){
 			Console.log("开始执行第{}个",i);
 			ct.test(() -> {

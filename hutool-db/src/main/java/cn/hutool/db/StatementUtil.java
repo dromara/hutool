@@ -43,7 +43,7 @@ public class StatementUtil {
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static PreparedStatement fillParams(PreparedStatement ps, Object... params) throws SQLException {
+	public static PreparedStatement fillParams(final PreparedStatement ps, final Object... params) throws SQLException {
 		if (ArrayUtil.isEmpty(params)) {
 			return ps;
 		}
@@ -59,7 +59,7 @@ public class StatementUtil {
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static PreparedStatement fillParams(PreparedStatement ps, Iterable<?> params) throws SQLException {
+	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params) throws SQLException {
 		return fillParams(ps, params, null);
 	}
 
@@ -74,13 +74,13 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 * @since 4.6.7
 	 */
-	public static PreparedStatement fillParams(PreparedStatement ps, Iterable<?> params, Map<Integer, Integer> nullTypeCache) throws SQLException {
+	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params, final Map<Integer, Integer> nullTypeCache) throws SQLException {
 		if (null == params) {
 			return ps;// 无参数
 		}
 
 		int paramIndex = 1;//第一个参数从1计数
-		for (Object param : params) {
+		for (final Object param : params) {
 			setParam(ps, paramIndex++, param, nullTypeCache);
 		}
 		return ps;
@@ -95,7 +95,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.3
 	 */
-	public static PreparedStatement prepareStatement(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, final SqlBuilder sqlBuilder) throws SQLException {
 		return prepareStatement(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
 	}
 
@@ -109,7 +109,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public static PreparedStatement prepareStatement(Connection conn, String sql, Collection<Object> params) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Collection<Object> params) throws SQLException {
 		return prepareStatement(conn, sql, params.toArray(new Object[0]));
 	}
 
@@ -123,7 +123,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public static PreparedStatement prepareStatement(Connection conn, String sql, Object... params) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, String sql, Object... params) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 		sql = sql.trim();
 
@@ -135,7 +135,7 @@ public class StatementUtil {
 		}
 
 		SqlLog.INSTANCE.log(sql, ArrayUtil.isEmpty(params) ? null : params);
-		PreparedStatement ps;
+		final PreparedStatement ps;
 		if (GlobalDbConfig.returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -155,7 +155,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Object[]... paramsBatch) throws SQLException {
 		return prepareStatementForBatch(conn, sql, new ArrayIter<>(paramsBatch));
 	}
 
@@ -169,14 +169,14 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Iterable<Object[]> paramsBatch) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, paramsBatch);
-		PreparedStatement ps = conn.prepareStatement(sql);
+		final PreparedStatement ps = conn.prepareStatement(sql);
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-		for (Object[] params : paramsBatch) {
+		for (final Object[] params : paramsBatch) {
 			fillParams(ps, new ArrayIter<>(params), nullTypeMap);
 			ps.addBatch();
 		}
@@ -194,15 +194,15 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Iterable<String> fields, Entity... entities) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, String sql, final Iterable<String> fields, final Entity... entities) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		sql = sql.trim();
 		SqlLog.INSTANCE.logForBatch(sql);
-		PreparedStatement ps = conn.prepareStatement(sql);
+		final PreparedStatement ps = conn.prepareStatement(sql);
 		//null参数的类型缓存，避免循环中重复获取类型
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-		for (Entity entity : entities) {
+		for (final Entity entity : entities) {
 			fillParams(ps, CollUtil.valuesOfKeys(entity, fields), nullTypeMap);
 			ps.addBatch();
 		}
@@ -219,7 +219,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static CallableStatement prepareCall(Connection conn, String sql, Object... params) throws SQLException {
+	public static CallableStatement prepareCall(final Connection conn, String sql, final Object... params) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		sql = sql.trim();
@@ -237,13 +237,13 @@ public class StatementUtil {
 	 * @return 自增键的值，不存在返回null
 	 * @throws SQLException SQL执行异常
 	 */
-	public static Long getGeneratedKeyOfLong(Statement ps) throws SQLException {
+	public static Long getGeneratedKeyOfLong(final Statement ps) throws SQLException {
 		return getGeneratedKeys(ps, (rs)->{
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
 					generatedKey = rs.getLong(1);
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					// 自增主键不为数字或者为Oracle的rowid，跳过
 				}
 			}
@@ -258,7 +258,7 @@ public class StatementUtil {
 	 * @return 所有主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public static List<Object> getGeneratedKeys(Statement ps) throws SQLException {
+	public static List<Object> getGeneratedKeys(final Statement ps) throws SQLException {
 		return getGeneratedKeys(ps, HandleHelper::handleRowToList);
 	}
 
@@ -271,7 +271,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
 	 */
-	public static <T> T getGeneratedKeys(Statement statement, RsHandler<T> rsHandler) throws SQLException {
+	public static <T> T getGeneratedKeys(final Statement statement, final RsHandler<T> rsHandler) throws SQLException {
 		try (final ResultSet rs = statement.getGeneratedKeys()) {
 			return rsHandler.handle(rs);
 		}
@@ -286,14 +286,14 @@ public class StatementUtil {
 	 * @return 数据类型，默认{@link Types#VARCHAR}
 	 * @since 4.6.7
 	 */
-	public static int getTypeOfNull(PreparedStatement ps, int paramIndex) {
+	public static int getTypeOfNull(final PreparedStatement ps, final int paramIndex) {
 		int sqlType = Types.VARCHAR;
 
 		final ParameterMetaData pmd;
 		try {
 			pmd = ps.getParameterMetaData();
 			sqlType = pmd.getParameterType(paramIndex);
-		} catch (SQLException ignore) {
+		} catch (final SQLException ignore) {
 			// ignore
 			// log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
 		}
@@ -310,7 +310,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	public static void setParam(PreparedStatement ps, int paramIndex, Object param) throws SQLException {
+	public static void setParam(final PreparedStatement ps, final int paramIndex, final Object param) throws SQLException {
 		setParam(ps, paramIndex, param, null);
 	}
 
@@ -326,7 +326,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	private static void setParam(PreparedStatement ps, int paramIndex, Object param, Map<Integer, Integer> nullTypeCache) throws SQLException {
+	private static void setParam(final PreparedStatement ps, final int paramIndex, final Object param, final Map<Integer, Integer> nullTypeCache) throws SQLException {
 		if (null == param) {
 			Integer type = (null == nullTypeCache) ? null : nullTypeCache.get(paramIndex);
 			if (null == type) {

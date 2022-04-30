@@ -22,8 +22,8 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toCollectionTest() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<?> list = (List<?>) Convert.convert(Collection.class, a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<?> list = (List<?>) Convert.convert(Collection.class, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -33,8 +33,8 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toListTest() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<?> list = Convert.toList(a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<?> list = Convert.toList(a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -44,8 +44,8 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toListTest2() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<String> list = Convert.toList(String.class, a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<String> list = Convert.toList(String.class, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -55,8 +55,8 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toListTest3() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<String> list = Convert.toList(String.class, a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<String> list = Convert.toList(String.class, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -66,8 +66,8 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toListTest4() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<String> list = Convert.convert(new TypeReference<List<String>>() {}, a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<String> list = Convert.convert(new TypeReference<List<String>>() {}, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -77,24 +77,24 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void strToListTest() {
-		String a = "a,你,好,123";
-		List<?> list = Convert.toList(a);
+		final String a = "a,你,好,123";
+		final List<?> list = Convert.toList(a);
 		Assert.assertEquals(4, list.size());
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
 		Assert.assertEquals("123", list.get(3));
 
-		String b = "a";
-		List<?> list2 = Convert.toList(b);
+		final String b = "a";
+		final List<?> list2 = Convert.toList(b);
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("a", list2.get(0));
 	}
 
 	@Test
 	public void strToListTest2() {
-		String a = "a,你,好,123";
-		List<String> list = Convert.toList(String.class, a);
+		final String a = "a,你,好,123";
+		final List<String> list = Convert.toList(String.class, a);
 		Assert.assertEquals(4, list.size());
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
@@ -104,19 +104,19 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void numberToListTest() {
-		Integer i = 1;
-		ArrayList<?> list = Convert.convert(ArrayList.class, i);
+		final Integer i = 1;
+		final ArrayList<?> list = Convert.convert(ArrayList.class, i);
 		Assert.assertSame(i, list.get(0));
 
-		BigDecimal b = BigDecimal.ONE;
-		ArrayList<?> list2 = Convert.convert(ArrayList.class, b);
+		final BigDecimal b = BigDecimal.ONE;
+		final ArrayList<?> list2 = Convert.convert(ArrayList.class, b);
 		Assert.assertEquals(b, list2.get(0));
 	}
 
 	@Test
 	public void toLinkedListTest() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		List<?> list = Convert.convert(LinkedList.class, a);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final List<?> list = Convert.convert(LinkedList.class, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));
@@ -126,9 +126,9 @@ public class ConvertToCollectionTest {
 
 	@Test
 	public void toSetTest() {
-		Object[] a = { "a", "你", "好", "", 1 };
-		LinkedHashSet<?> set = Convert.convert(LinkedHashSet.class, a);
-		ArrayList<?> list = CollUtil.newArrayList(set);
+		final Object[] a = { "a", "你", "好", "", 1 };
+		final LinkedHashSet<?> set = Convert.convert(LinkedHashSet.class, a);
+		final ArrayList<?> list = CollUtil.newArrayList(set);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));

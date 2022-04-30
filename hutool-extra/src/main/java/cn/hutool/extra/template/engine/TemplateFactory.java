@@ -44,7 +44,7 @@ public class TemplateFactory {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link TemplateEngine}
 	 */
-	public static TemplateEngine create(TemplateConfig config) {
+	public static TemplateEngine create(final TemplateConfig config) {
 		final TemplateEngine engine = doCreate(config);
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
@@ -57,7 +57,7 @@ public class TemplateFactory {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link TemplateEngine}
 	 */
-	private static TemplateEngine doCreate(TemplateConfig config) {
+	private static TemplateEngine doCreate(final TemplateConfig config) {
 		final Class<? extends TemplateEngine> customEngineClass = config.getCustomEngine();
 		final TemplateEngine engine;
 		if(null != customEngineClass){

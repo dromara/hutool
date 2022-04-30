@@ -23,47 +23,47 @@ public class UserInfoDict implements Serializable {
 	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(final Integer id) {
 		this.id = id;
 	}
 
 	public String getRealName() {
 		return realName;
 	}
-	public void setRealName(String realName) {
+	public void setRealName(final String realName) {
 		this.realName = realName;
 	}
 
 	public String getPhotoPath() {
 		return photoPath;
 	}
-	public void setPhotoPath(String photoPath) {
+	public void setPhotoPath(final String photoPath) {
 		this.photoPath = photoPath;
 	}
 
 	public List<ExamInfoDict> getExamInfoDict() {
 		return examInfoDict;
 	}
-	public void setExamInfoDict(List<ExamInfoDict> examInfoDict) {
+	public void setExamInfoDict(final List<ExamInfoDict> examInfoDict) {
 		this.examInfoDict = examInfoDict;
 	}
 
 	public UserInfoRedundCount getUserInfoRedundCount() {
 		return userInfoRedundCount;
 	}
-	public void setUserInfoRedundCount(UserInfoRedundCount userInfoRedundCount) {
+	public void setUserInfoRedundCount(final UserInfoRedundCount userInfoRedundCount) {
 		this.userInfoRedundCount = userInfoRedundCount;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		UserInfoDict that = (UserInfoDict) o;
+		final UserInfoDict that = (UserInfoDict) o;
 		return Objects.equals(id, that.id) && Objects.equals(realName, that.realName) && Objects.equals(photoPath, that.photoPath) && Objects.equals(examInfoDict, that.examInfoDict);
 	}
 

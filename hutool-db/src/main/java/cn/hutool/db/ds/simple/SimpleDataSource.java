@@ -40,7 +40,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param group 数据源分组
 	 * @return SimpleDataSource
 	 */
-	synchronized public static SimpleDataSource getDataSource(String group) {
+	synchronized public static SimpleDataSource getDataSource(final String group) {
 		return new SimpleDataSource(group);
 	}
 
@@ -66,7 +66,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 *
 	 * @param group 数据库配置文件中的分组
 	 */
-	public SimpleDataSource(String group) {
+	public SimpleDataSource(final String group) {
 		this(null, group);
 	}
 
@@ -76,7 +76,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param setting 数据库配置
 	 * @param group 数据库配置文件中的分组
 	 */
-	public SimpleDataSource(Setting setting, String group) {
+	public SimpleDataSource(Setting setting, final String group) {
 		if (null == setting) {
 			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		}
@@ -103,7 +103,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public SimpleDataSource(String url, String user, String pass) {
+	public SimpleDataSource(final String url, final String user, final String pass) {
 		init(url, user, pass);
 	}
 
@@ -116,7 +116,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param driver JDBC驱动类
 	 * @since 3.1.2
 	 */
-	public SimpleDataSource(String url, String user, String pass, String driver) {
+	public SimpleDataSource(final String url, final String user, final String pass, final String driver) {
 		init(url, user, pass, driver);
 	}
 	// -------------------------------------------------------------------- Constructor end
@@ -128,7 +128,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
-	public void init(String url, String user, String pass) {
+	public void init(final String url, final String user, final String pass) {
 		init(url, user, pass, null);
 	}
 
@@ -141,11 +141,11 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @param driver JDBC驱动类，传入空则自动识别驱动类
 	 * @since 3.1.2
 	 */
-	public void init(String url, String user, String pass, String driver) {
+	public void init(final String url, final String user, final String pass, final String driver) {
 		this.driver = StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url);
 		try {
 			Class.forName(this.driver);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new DbRuntimeException(e, "Get jdbc driver [{}] error!", driver);
 		}
 		this.url = url;
@@ -158,7 +158,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		return driver;
 	}
 
-	public void setDriver(String driver) {
+	public void setDriver(final String driver) {
 		this.driver = driver;
 	}
 
@@ -166,7 +166,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
@@ -174,7 +174,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(final String user) {
 		this.user = user;
 	}
 
@@ -182,7 +182,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		return pass;
 	}
 
-	public void setPass(String pass) {
+	public void setPass(final String pass) {
 		this.pass = pass;
 	}
 
@@ -190,11 +190,11 @@ public class SimpleDataSource extends AbstractDataSource {
 		return connProps;
 	}
 
-	public void setConnProps(Properties connProps) {
+	public void setConnProps(final Properties connProps) {
 		this.connProps = connProps;
 	}
 
-	public void addConnProps(String key, String value){
+	public void addConnProps(final String key, final String value){
 		if(null == this.connProps){
 			this.connProps = new Properties();
 		}
@@ -222,7 +222,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	public Connection getConnection(String username, String password) throws SQLException {
+	public Connection getConnection(final String username, final String password) throws SQLException {
 		return DriverManager.getConnection(this.url, username, password);
 	}
 

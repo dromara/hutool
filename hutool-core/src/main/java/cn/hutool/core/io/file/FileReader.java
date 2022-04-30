@@ -33,7 +33,7 @@ public class FileReader extends FileWrapper {
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 * @return FileReader
 	 */
-	public static FileReader create(File file, Charset charset){
+	public static FileReader create(final File file, final Charset charset){
 		return new FileReader(file, charset);
 	}
 
@@ -42,7 +42,7 @@ public class FileReader extends FileWrapper {
 	 * @param file 文件
 	 * @return FileReader
 	 */
-	public static FileReader create(File file){
+	public static FileReader create(final File file){
 		return new FileReader(file);
 	}
 
@@ -52,7 +52,7 @@ public class FileReader extends FileWrapper {
 	 * @param file 文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 */
-	public FileReader(File file, Charset charset) {
+	public FileReader(final File file, final Charset charset) {
 		super(file, charset);
 		checkFile();
 	}
@@ -62,7 +62,7 @@ public class FileReader extends FileWrapper {
 	 * @param file 文件
 	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
 	 */
-	public FileReader(File file, String charset) {
+	public FileReader(final File file, final String charset) {
 		this(file, CharsetUtil.charset(charset));
 	}
 
@@ -71,7 +71,7 @@ public class FileReader extends FileWrapper {
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 */
-	public FileReader(String filePath, Charset charset) {
+	public FileReader(final String filePath, final Charset charset) {
 		this(FileUtil.file(filePath), charset);
 	}
 
@@ -80,7 +80,7 @@ public class FileReader extends FileWrapper {
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
 	 */
-	public FileReader(String filePath, String charset) {
+	public FileReader(final String filePath, final String charset) {
 		this(FileUtil.file(filePath), CharsetUtil.charset(charset));
 	}
 
@@ -89,7 +89,7 @@ public class FileReader extends FileWrapper {
 	 * 编码使用 {@link FileWrapper#DEFAULT_CHARSET}
 	 * @param file 文件
 	 */
-	public FileReader(File file) {
+	public FileReader(final File file) {
 		this(file, DEFAULT_CHARSET);
 	}
 
@@ -98,7 +98,7 @@ public class FileReader extends FileWrapper {
 	 * 编码使用 {@link FileWrapper#DEFAULT_CHARSET}
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 */
-	public FileReader(String filePath) {
+	public FileReader(final String filePath) {
 		this(filePath, DEFAULT_CHARSET);
 	}
 	// ------------------------------------------------------- Constructor end
@@ -111,21 +111,21 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] readBytes() throws IORuntimeException {
-		long len = file.length();
+		final long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
 			throw new IORuntimeException("File is larger then max array size");
 		}
 
-		byte[] bytes = new byte[(int) len];
+		final byte[] bytes = new byte[(int) len];
 		FileInputStream in = null;
-		int readLength;
+		final int readLength;
 		try {
 			in = new FileInputStream(file);
 			readLength = in.read(bytes);
 			if(readLength < len){
 				throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", len, readLength));
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -152,7 +152,7 @@ public class FileReader extends FileWrapper {
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T extends Collection<String>> T readLines(T collection) throws IORuntimeException {
+	public <T extends Collection<String>> T readLines(final T collection) throws IORuntimeException {
 		BufferedReader reader = null;
 		try {
 			reader = FileUtil.getReader(file, charset);
@@ -165,7 +165,7 @@ public class FileReader extends FileWrapper {
 				collection.add(line);
 			}
 			return collection;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(reader);
@@ -179,7 +179,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public void readLines(LineHandler lineHandler) throws IORuntimeException{
+	public void readLines(final LineHandler lineHandler) throws IORuntimeException{
 		BufferedReader reader = null;
 		try {
 			reader = FileUtil.getReader(file, charset);
@@ -207,13 +207,13 @@ public class FileReader extends FileWrapper {
 	 * @return 从文件中read出的数据
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> T read(ReaderHandler<T> readerHandler) throws IORuntimeException {
+	public <T> T read(final ReaderHandler<T> readerHandler) throws IORuntimeException {
 		BufferedReader reader = null;
 		T result;
 		try {
 			reader = FileUtil.getReader(this.file, charset);
 			result = readerHandler.handle(reader);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(reader);
@@ -240,7 +240,7 @@ public class FileReader extends FileWrapper {
 	public BufferedInputStream getInputStream() throws IORuntimeException {
 		try {
 			return new BufferedInputStream(new FileInputStream(this.file));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -252,7 +252,7 @@ public class FileReader extends FileWrapper {
 	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public long writeToStream(OutputStream out) throws IORuntimeException {
+	public long writeToStream(final OutputStream out) throws IORuntimeException {
 		return writeToStream(out, false);
 	}
 
@@ -265,10 +265,10 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */
-	public long writeToStream(OutputStream out, boolean isCloseOut) throws IORuntimeException {
-		try (FileInputStream in = new FileInputStream(this.file)){
+	public long writeToStream(final OutputStream out, final boolean isCloseOut) throws IORuntimeException {
+		try (final FileInputStream in = new FileInputStream(this.file)){
 			return IoUtil.copy(in, out);
-		}catch (IOException e) {
+		}catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally{
 			if(isCloseOut){

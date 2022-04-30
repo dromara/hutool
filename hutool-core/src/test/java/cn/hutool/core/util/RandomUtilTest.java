@@ -15,19 +15,19 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomEleSetTest(){
-		Set<Integer> set = RandomUtil.randomEleSet(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
+		final Set<Integer> set = RandomUtil.randomEleSet(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(set.size(), 2);
 	}
 
 	@Test
 	public void randomElesTest(){
-		List<Integer> result = RandomUtil.randomEles(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
+		final List<Integer> result = RandomUtil.randomEles(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(result.size(), 2);
 	}
 
 	@Test
 	public void randomDoubleTest() {
-		double randomDouble = RandomUtil.randomDouble(0, 1, 0, RoundingMode.HALF_UP);
+		final double randomDouble = RandomUtil.randomDouble(0, 1, 0, RoundingMode.HALF_UP);
 		Assert.assertTrue(randomDouble <= 1);
 	}
 
@@ -57,7 +57,7 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomChineseTest(){
-		char c = RandomUtil.randomChinese();
+		final char c = RandomUtil.randomChinese();
 		Assert.assertTrue(c > 0);
 	}
 
@@ -67,7 +67,7 @@ public class RandomUtilTest {
 		for (int i = 0; i < 100; i++) {
 			final String s = RandomUtil.randomStringWithoutStr(8, "0IPOL");
 			System.out.println(s);
-			for (char c : "0IPOL".toCharArray()) {
+			for (final char c : "0IPOL".toCharArray()) {
 				Assert.assertFalse(s.contains((String.valueOf(c).toLowerCase(Locale.ROOT))));
 			}
 		}

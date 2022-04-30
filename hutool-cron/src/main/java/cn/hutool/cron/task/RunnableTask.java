@@ -7,8 +7,8 @@ package cn.hutool.cron.task;
  */
 public class RunnableTask implements Task{
 	private final Runnable runnable;
-	
-	public RunnableTask(Runnable runnable) {
+
+	public RunnableTask(final Runnable runnable) {
 		this.runnable = runnable;
 	}
 

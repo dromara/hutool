@@ -21,42 +21,42 @@ public class DbTest {
 
 	@Test
 	public void queryTest() throws SQLException {
-		List<Entity> find = Db.use().query("select * from user where age = ?", 18);
+		final List<Entity> find = Db.use().query("select * from user where age = ?", 18);
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 
 	@Test
 	public void findTest() throws SQLException {
-		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
+		final List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 
 	@Test
 	public void pageTest() throws SQLException {
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
-		List<Entity> page0 = Db.use().page(Entity.create("user"), 0, 3);
+		final List<Entity> page0 = Db.use().page(Entity.create("user"), 0, 3);
 		Assert.assertEquals(3, page0.size());
-		List<Entity> page1 = Db.use().page(Entity.create("user"), 1, 3);
+		final List<Entity> page1 = Db.use().page(Entity.create("user"), 1, 3);
 		Assert.assertEquals(1, page1.size());
 	}
 
 	@Test
 	public void pageTest2() throws SQLException {
-		String sql = "select * from user order by name";
+		final String sql = "select * from user order by name";
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
-		List<Entity> page0 = Db.use().page(
+		final List<Entity> page0 = Db.use().page(
 				sql, Page.of(0, 3));
 		Assert.assertEquals(3, page0.size());
 
-		List<Entity> page1 = Db.use().page(
+		final List<Entity> page1 = Db.use().page(
 				sql, Page.of(1, 3));
 		Assert.assertEquals(1, page1.size());
 	}
 
 	@Test
 	public void pageWithParamsTest() throws SQLException {
-		String sql = "select * from user where name = ?";
-		PageResult<Entity> result = Db.use().page(
+		final String sql = "select * from user where name = ?";
+		final PageResult<Entity> result = Db.use().page(
 				sql, Page.of(0, 3), "张三");
 
 		Assert.assertEquals(2, result.getTotal());
@@ -93,11 +93,11 @@ public class DbTest {
 
 	@Test
 	public void findByTest() throws SQLException {
-		List<Entity> find = Db.use().findBy("user",
+		final List<Entity> find = Db.use().findBy("user",
 				Condition.parse("age", "> 18"),
 				Condition.parse("age", "< 100")
 		);
-		for (Entity entity : find) {
+		for (final Entity entity : find) {
 			StaticLog.debug("{}", entity);
 		}
 		Assert.assertEquals("unitTestUser", find.get(0).get("name"));
@@ -118,7 +118,7 @@ public class DbTest {
 	public void queryFetchTest() throws SQLException {
 		// https://gitee.com/dromara/hutool/issues/I4JXWN
 		Db.use().query((conn->{
-			PreparedStatement ps = conn.prepareStatement("select * from table",
+			final PreparedStatement ps = conn.prepareStatement("select * from table",
 					ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY);
 			ps.setFetchSize(Integer.MIN_VALUE);

@@ -43,7 +43,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @see StrUtil#isBlank(CharSequence)
 	 * @since 3.3.0
 	 */
-	public static boolean isBlankIfStr(Object obj) {
+	public static boolean isBlankIfStr(final Object obj) {
 		if (null == obj) {
 			return true;
 		} else if (obj instanceof CharSequence) {
@@ -74,7 +74,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 如果为字符串是否为空串
 	 * @since 3.3.0
 	 */
-	public static boolean isEmptyIfStr(Object obj) {
+	public static boolean isEmptyIfStr(final Object obj) {
 		if (null == obj) {
 			return true;
 		} else if (obj instanceof CharSequence) {
@@ -90,7 +90,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 *
 	 * @param strs 字符串数组
 	 */
-	public static void trim(String[] strs) {
+	public static void trim(final String[] strs) {
 		if (null == strs) {
 			return;
 		}
@@ -114,7 +114,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param obj 对象
 	 * @return 字符串
 	 */
-	public static String utf8Str(Object obj) {
+	public static String utf8Str(final Object obj) {
 		return str(obj, CharsetUtil.UTF_8);
 	}
 
@@ -129,7 +129,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集
 	 * @return 字符串
 	 */
-	public static String str(Object obj, Charset charset) {
+	public static String str(final Object obj, final Charset charset) {
 		if (null == obj) {
 			return null;
 		}
@@ -156,7 +156,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集
 	 * @return 字符串
 	 */
-	public static String str(byte[] bytes, String charset) {
+	public static String str(final byte[] bytes, final String charset) {
 		return str(bytes, CharsetUtil.charset(charset));
 	}
 
@@ -167,7 +167,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
 	 * @return 解码后的字符串
 	 */
-	public static String str(byte[] data, Charset charset) {
+	public static String str(final byte[] data, final Charset charset) {
 		if (data == null) {
 			return null;
 		}
@@ -185,7 +185,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集
 	 * @return 字符串
 	 */
-	public static String str(Byte[] bytes, String charset) {
+	public static String str(final Byte[] bytes, final String charset) {
 		return str(bytes, CharsetUtil.charset(charset));
 	}
 
@@ -196,12 +196,12 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
 	 * @return 解码后的字符串
 	 */
-	public static String str(Byte[] data, Charset charset) {
+	public static String str(final Byte[] data, final Charset charset) {
 		if (data == null) {
 			return null;
 		}
 
-		byte[] bytes = new byte[data.length];
+		final byte[] bytes = new byte[data.length];
 		Byte dataByte;
 		for (int i = 0; i < data.length; i++) {
 			dataByte = data[i];
@@ -218,7 +218,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集，如果为空使用当前系统字符集
 	 * @return 字符串
 	 */
-	public static String str(ByteBuffer data, String charset) {
+	public static String str(final ByteBuffer data, final String charset) {
 		if (data == null) {
 			return null;
 		}
@@ -233,7 +233,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param charset 字符集，如果为空使用当前系统字符集
 	 * @return 字符串
 	 */
-	public static String str(ByteBuffer data, Charset charset) {
+	public static String str(final ByteBuffer data, Charset charset) {
 		if (null == charset) {
 			charset = Charset.defaultCharset();
 		}
@@ -248,7 +248,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @since 4.1.3
 	 * @see String#valueOf(Object)
 	 */
-	public static String toString(Object obj) {
+	public static String toString(final Object obj) {
 		return String.valueOf(obj);
 	}
 
@@ -259,7 +259,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串 or {@code null}
 	 * @since 5.7.17
 	 */
-	public static String toStringOrNull(Object obj) {
+	public static String toStringOrNull(final Object obj) {
 		return null == obj ? null : obj.toString();
 	}
 
@@ -288,7 +288,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param capacity 初始大小
 	 * @return StringBuilder对象
 	 */
-	public static StringBuilder builder(int capacity) {
+	public static StringBuilder builder(final int capacity) {
 		return new StringBuilder(capacity);
 	}
 
@@ -299,7 +299,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return StrBuilder对象
 	 * @since 4.0.1
 	 */
-	public static StrBuilder strBuilder(int capacity) {
+	public static StrBuilder strBuilder(final int capacity) {
 		return StrBuilder.create(capacity);
 	}
 
@@ -309,7 +309,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param str 字符串
 	 * @return StringReader
 	 */
-	public static StringReader getReader(CharSequence str) {
+	public static StringReader getReader(final CharSequence str) {
 		if (null == str) {
 			return null;
 		}
@@ -333,7 +333,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 反转后的字符串
 	 * @since 3.0.9
 	 */
-	public static String reverse(String str) {
+	public static String reverse(final String str) {
 		return new String(ArrayUtil.reverse(str.toCharArray()));
 	}
 
@@ -349,7 +349,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 填充后的字符串
 	 * @since 3.1.2
 	 */
-	public static String fillBefore(String str, char filledChar, int len) {
+	public static String fillBefore(final String str, final char filledChar, final int len) {
 		return fill(str, filledChar, len, true);
 	}
 
@@ -363,7 +363,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 填充后的字符串
 	 * @since 3.1.2
 	 */
-	public static String fillAfter(String str, char filledChar, int len) {
+	public static String fillAfter(final String str, final char filledChar, final int len) {
 		return fill(str, filledChar, len, false);
 	}
 
@@ -377,13 +377,13 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 填充后的字符串
 	 * @since 3.1.2
 	 */
-	public static String fill(String str, char filledChar, int len, boolean isPre) {
+	public static String fill(final String str, final char filledChar, final int len, final boolean isPre) {
 		final int strLen = str.length();
 		if (strLen > len) {
 			return str;
 		}
 
-		String filledStr = StrUtil.repeat(filledChar, len - strLen);
+		final String filledStr = StrUtil.repeat(filledChar, len - strLen);
 		return isPre ? filledStr.concat(str) : str.concat(filledStr);
 	}
 
@@ -395,7 +395,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 相似度
 	 * @since 3.2.3
 	 */
-	public static double similar(String str1, String str2) {
+	public static double similar(final String str1, final String str2) {
 		return TextSimilarity.similar(str1, str2);
 	}
 
@@ -408,7 +408,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 相似度百分比
 	 * @since 3.2.3
 	 */
-	public static String similar(String str1, String str2, int scale) {
+	public static String similar(final String str1, final String str2, final int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
 	}
 
@@ -431,7 +431,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param map      参数值对
 	 * @return 格式化后的文本
 	 */
-	public static String format(CharSequence template, Map<?, ?> map) {
+	public static String format(final CharSequence template, final Map<?, ?> map) {
 		return format(template, map, true);
 	}
 
@@ -445,7 +445,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 格式化后的文本
 	 * @since 5.4.3
 	 */
-	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
+	public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
 	}
 }

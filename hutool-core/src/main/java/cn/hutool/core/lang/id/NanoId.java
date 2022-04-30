@@ -52,7 +52,7 @@ public class NanoId {
 	 * @param size ID长度
 	 * @return 伪随机的NanoId字符串
 	 */
-	public static String randomNanoId(int size) {
+	public static String randomNanoId(final int size) {
 		return randomNanoId(null, null, size);
 	}
 
@@ -64,7 +64,7 @@ public class NanoId {
 	 * @param size     ID长度
 	 * @return 伪随机的NanoId字符串
 	 */
-	public static String randomNanoId(Random random, char[] alphabet, int size) {
+	public static String randomNanoId(Random random, char[] alphabet, final int size) {
 		if (random == null) {
 			random = DEFAULT_NUMBER_GENERATOR;
 		}

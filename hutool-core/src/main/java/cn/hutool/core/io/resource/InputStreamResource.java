@@ -22,7 +22,7 @@ public class InputStreamResource implements Resource, Serializable {
 	 *
 	 * @param in {@link InputStream}
 	 */
-	public InputStreamResource(InputStream in) {
+	public InputStreamResource(final InputStream in) {
 		this(in, null);
 	}
 
@@ -32,7 +32,7 @@ public class InputStreamResource implements Resource, Serializable {
 	 * @param in {@link InputStream}
 	 * @param name 资源名称
 	 */
-	public InputStreamResource(InputStream in, String name) {
+	public InputStreamResource(final InputStream in, final String name) {
 		this.in = in;
 		this.name = name;
 	}

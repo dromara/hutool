@@ -83,7 +83,7 @@ public class CollUtil {
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
 	 */
-	public static <T> Set<T> emptyIfNull(Set<T> set) {
+	public static <T> Set<T> emptyIfNull(final Set<T> set) {
 		return (null == set) ? Collections.emptySet() : set;
 	}
 
@@ -96,7 +96,7 @@ public class CollUtil {
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
 	 */
-	public static <T> List<T> emptyIfNull(List<T> list) {
+	public static <T> List<T> emptyIfNull(final List<T> list) {
 		return (null == list) ? Collections.emptyList() : list;
 	}
 
@@ -111,7 +111,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2) {
 		if (isEmpty(coll1)) {
 			return new ArrayList<>(coll2);
 		} else if (isEmpty(coll2)) {
@@ -124,7 +124,7 @@ public class CollUtil {
 		final Set<T> elts = newHashSet(coll2);
 		elts.addAll(coll1);
 		int m;
-		for (T t : elts) {
+		for (final T t : elts) {
 			m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
 			for (int i = 0; i < m; i++) {
 				list.add(t);
@@ -146,9 +146,9 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		Collection<T> union = union(coll1, coll2);
-		for (Collection<T> coll : otherColls) {
+		for (final Collection<T> coll : otherColls) {
 			union = union(union, coll);
 		}
 		return union;
@@ -167,7 +167,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link LinkedHashSet}
 	 */
 	@SafeVarargs
-	public static <T> Set<T> unionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Set<T> unionDistinct(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		final Set<T> result;
 		if (isEmpty(coll1)) {
 			result = new LinkedHashSet<>();
@@ -180,7 +180,7 @@ public class CollUtil {
 		}
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (Collection<T> otherColl : otherColls) {
+			for (final Collection<T> otherColl : otherColls) {
 				result.addAll(otherColl);
 			}
 		}
@@ -201,7 +201,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> List<T> unionAll(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		final List<T> result;
 		if (isEmpty(coll1)) {
 			result = new ArrayList<>();
@@ -214,7 +214,7 @@ public class CollUtil {
 		}
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (Collection<T> otherColl : otherColls) {
+			for (final Collection<T> otherColl : otherColls) {
 				result.addAll(otherColl);
 			}
 		}
@@ -233,14 +233,14 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2) {
 		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
 			final ArrayList<T> list = new ArrayList<>(Math.min(coll1.size(), coll2.size()));
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
 			int m;
-			for (T t : elts) {
+			for (final T t : elts) {
 				m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
 				for (int i = 0; i < m; i++) {
 					list.add(t);
@@ -265,12 +265,12 @@ public class CollUtil {
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		Collection<T> intersection = intersection(coll1, coll2);
 		if (isEmpty(intersection)) {
 			return intersection;
 		}
-		for (Collection<T> coll : otherColls) {
+		for (final Collection<T> coll : otherColls) {
 			intersection = intersection(intersection, coll);
 			if (isEmpty(intersection)) {
 				return intersection;
@@ -293,7 +293,7 @@ public class CollUtil {
 	 * @since 5.3.9
 	 */
 	@SafeVarargs
-	public static <T> Set<T> intersectionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Set<T> intersectionDistinct(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		final Set<T> result;
 		if (isEmpty(coll1) || isEmpty(coll2)) {
 			// 有一个空集合就直接返回空
@@ -303,7 +303,7 @@ public class CollUtil {
 		}
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (Collection<T> otherColl : otherColls) {
+			for (final Collection<T> otherColl : otherColls) {
 				if (isNotEmpty(otherColl)) {
 					result.retainAll(otherColl);
 				} else {
@@ -336,7 +336,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 差集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> disjunction(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> Collection<T> disjunction(final Collection<T> coll1, final Collection<T> coll2) {
 		if (isEmpty(coll1)) {
 			return coll2;
 		}
@@ -350,7 +350,7 @@ public class CollUtil {
 		final Set<T> elts = newHashSet(coll2);
 		elts.addAll(coll1);
 		int m;
-		for (T t : elts) {
+		for (final T t : elts) {
 			m = Math.abs(Convert.toInt(map1.get(t), 0) - Convert.toInt(map2.get(t), 0));
 			for (int i = 0; i < m; i++) {
 				result.add(t);
@@ -371,7 +371,7 @@ public class CollUtil {
 	 * @param <T>   元素类型
 	 * @return 单差集
 	 */
-	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> Collection<T> subtract(final Collection<T> coll1, final Collection<T> coll2) {
 		Collection<T> result = ObjUtil.clone(coll1);
 		if (null == result) {
 			result = CollUtil.create(coll1.getClass());
@@ -394,7 +394,7 @@ public class CollUtil {
 	 * @return 单差集
 	 * @since 5.3.5
 	 */
-	public static <T> List<T> subtractToList(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> List<T> subtractToList(final Collection<T> coll1, final Collection<T> coll2) {
 
 		if (isEmpty(coll1)) {
 			return ListUtil.empty();
@@ -405,8 +405,8 @@ public class CollUtil {
 
 		//将被交数用链表储存，防止因为频繁扩容影响性能
 		final List<T> result = new LinkedList<>();
-		Set<T> set = new HashSet<>(coll2);
-		for (T t : coll1) {
+		final Set<T> set = new HashSet<>(coll2);
+		for (final T t : coll1) {
 			if (false == set.contains(t)) {
 				result.add(t);
 			}
@@ -425,7 +425,7 @@ public class CollUtil {
 	 * @see Collection#contains(Object)
 	 * @since 4.1.10
 	 */
-	public static boolean contains(Collection<?> collection, Object value) {
+	public static boolean contains(final Collection<?> collection, final Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
 	}
 
@@ -437,11 +437,11 @@ public class CollUtil {
 	 * @return 果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
 	 * @since 5.7.16
 	 */
-	public static boolean safeContains(Collection<?> collection, Object value) {
+	public static boolean safeContains(final Collection<?> collection, final Object value) {
 
 		try {
 			return contains(collection, value);
-		} catch (ClassCastException | NullPointerException e) {
+		} catch (final ClassCastException | NullPointerException e) {
 			return false;
 		}
 	}
@@ -455,11 +455,11 @@ public class CollUtil {
 	 * @param <T>         值类型
 	 * @return 是否包含自定义规则的值
 	 */
-	public static <T> boolean contains(Collection<T> collection, Predicate<? super T> containFunc) {
+	public static <T> boolean contains(final Collection<T> collection, final Predicate<? super T> containFunc) {
 		if (isEmpty(collection)) {
 			return false;
 		}
-		for (T t : collection) {
+		for (final T t : collection) {
 			if (containFunc.test(t)) {
 				return true;
 			}
@@ -476,18 +476,18 @@ public class CollUtil {
 	 * @see #intersection
 	 * @since 2.1
 	 */
-	public static boolean containsAny(Collection<?> coll1, Collection<?> coll2) {
+	public static boolean containsAny(final Collection<?> coll1, final Collection<?> coll2) {
 		if (isEmpty(coll1) || isEmpty(coll2)) {
 			return false;
 		}
 		if (coll1.size() < coll2.size()) {
-			for (Object object : coll1) {
+			for (final Object object : coll1) {
 				if (coll2.contains(object)) {
 					return true;
 				}
 			}
 		} else {
-			for (Object object : coll2) {
+			for (final Object object : coll2) {
 				if (coll1.contains(object)) {
 					return true;
 				}
@@ -504,7 +504,7 @@ public class CollUtil {
 	 * @return 集合1中是否包含集合2中所有的元素
 	 * @since 4.5.12
 	 */
-	public static boolean containsAll(Collection<?> coll1, Collection<?> coll2) {
+	public static boolean containsAll(final Collection<?> coll1, final Collection<?> coll2) {
 		if (isEmpty(coll1)) {
 			return isEmpty(coll2);
 		}
@@ -517,7 +517,7 @@ public class CollUtil {
 			return false;
 		}
 
-		for (Object object : coll2) {
+		for (final Object object : coll2) {
 			if (false == coll1.contains(object)) {
 				return false;
 			}
@@ -538,7 +538,7 @@ public class CollUtil {
 	 * @return {@link Map}
 	 * @see IterUtil#countMap(Iterator)
 	 */
-	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
+	public static <T> Map<T, Integer> countMap(final Iterable<T> collection) {
 		return IterUtil.countMap(null == collection ? null : collection.iterator());
 	}
 
@@ -553,7 +553,7 @@ public class CollUtil {
 	 * @see IterUtil#join(Iterator, CharSequence, Function)
 	 * @since 5.6.7
 	 */
-	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, Function<T, ? extends CharSequence> func) {
+	public static <T> String join(final Iterable<T> iterable, final CharSequence conjunction, final Function<T, ? extends CharSequence> func) {
 		if (null == iterable) {
 			return null;
 		}
@@ -570,7 +570,7 @@ public class CollUtil {
 	 * @return 连接后的字符串
 	 * @see IterUtil#join(Iterator, CharSequence)
 	 */
-	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
+	public static <T> String join(final Iterable<T> iterable, final CharSequence conjunction) {
 		if (null == iterable) {
 			return null;
 		}
@@ -588,7 +588,7 @@ public class CollUtil {
 	 * @return 连接后的字符串
 	 * @since 5.3.0
 	 */
-	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, String prefix, String suffix) {
+	public static <T> String join(final Iterable<T> iterable, final CharSequence conjunction, final String prefix, final String suffix) {
 		if (null == iterable) {
 			return null;
 		}
@@ -604,13 +604,13 @@ public class CollUtil {
 	 * @param partSize        每部分数据的长度
 	 * @return 切取出的数据或null
 	 */
-	public static <T> List<T> popPart(Stack<T> surplusAlaDatas, int partSize) {
+	public static <T> List<T> popPart(final Stack<T> surplusAlaDatas, final int partSize) {
 		if (isEmpty(surplusAlaDatas)) {
 			return ListUtil.empty();
 		}
 
 		final List<T> currentAlaDatas = new ArrayList<>();
-		int size = surplusAlaDatas.size();
+		final int size = surplusAlaDatas.size();
 		// 切割
 		if (size > partSize) {
 			for (int i = 0; i < partSize; i++) {
@@ -633,13 +633,13 @@ public class CollUtil {
 	 * @param partSize        每部分数据的长度
 	 * @return 切取出的数据或null
 	 */
-	public static <T> List<T> popPart(Deque<T> surplusAlaDatas, int partSize) {
+	public static <T> List<T> popPart(final Deque<T> surplusAlaDatas, final int partSize) {
 		if (isEmpty(surplusAlaDatas)) {
 			return ListUtil.empty();
 		}
 
 		final List<T> currentAlaDatas = new ArrayList<>();
-		int size = surplusAlaDatas.size();
+		final int size = surplusAlaDatas.size();
 		// 切割
 		if (size > partSize) {
 			for (int i = 0; i < partSize; i++) {
@@ -663,7 +663,7 @@ public class CollUtil {
 	 * @return HashSet对象
 	 */
 	@SafeVarargs
-	public static <T> HashSet<T> newHashSet(T... ts) {
+	public static <T> HashSet<T> newHashSet(final T... ts) {
 		return set(false, ts);
 	}
 
@@ -676,7 +676,7 @@ public class CollUtil {
 	 * @since 4.1.10
 	 */
 	@SafeVarargs
-	public static <T> LinkedHashSet<T> newLinkedHashSet(T... ts) {
+	public static <T> LinkedHashSet<T> newLinkedHashSet(final T... ts) {
 		return (LinkedHashSet<T>) set(true, ts);
 	}
 
@@ -689,11 +689,11 @@ public class CollUtil {
 	 * @return HashSet对象
 	 */
 	@SafeVarargs
-	public static <T> HashSet<T> set(boolean isSorted, T... ts) {
+	public static <T> HashSet<T> set(final boolean isSorted, final T... ts) {
 		if (null == ts) {
 			return isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		}
-		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
+		final int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
 		final HashSet<T> set = isSorted ? new LinkedHashSet<>(initialCapacity) : new HashSet<>(initialCapacity);
 		Collections.addAll(set, ts);
 		return set;
@@ -706,7 +706,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return HashSet对象
 	 */
-	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
+	public static <T> HashSet<T> newHashSet(final Collection<T> collection) {
 		return newHashSet(false, collection);
 	}
 
@@ -718,7 +718,7 @@ public class CollUtil {
 	 * @param collection 集合，用于初始化Set
 	 * @return HashSet对象
 	 */
-	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
+	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Collection<T> collection) {
 		return isSorted ? new LinkedHashSet<>(collection) : new HashSet<>(collection);
 	}
 
@@ -731,7 +731,7 @@ public class CollUtil {
 	 * @return HashSet对象
 	 * @since 3.0.8
 	 */
-	public static <T> HashSet<T> newHashSet(boolean isSorted, Iterator<T> iter) {
+	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Iterator<T> iter) {
 		if (null == iter) {
 			return set(isSorted, (T[]) null);
 		}
@@ -751,7 +751,7 @@ public class CollUtil {
 	 * @return HashSet对象
 	 * @since 3.0.8
 	 */
-	public static <T> HashSet<T> newHashSet(boolean isSorted, Enumeration<T> enumeration) {
+	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Enumeration<T> enumeration) {
 		if (null == enumeration) {
 			return set(isSorted, (T[]) null);
 		}
@@ -772,7 +772,7 @@ public class CollUtil {
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLinked) {
+	public static <T> List<T> list(final boolean isLinked) {
 		return ListUtil.list(isLinked);
 	}
 
@@ -786,7 +786,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	@SafeVarargs
-	public static <T> List<T> list(boolean isLinked, T... values) {
+	public static <T> List<T> list(final boolean isLinked, final T... values) {
 		return ListUtil.list(isLinked, values);
 	}
 
@@ -799,7 +799,7 @@ public class CollUtil {
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLinked, Collection<T> collection) {
+	public static <T> List<T> list(final boolean isLinked, final Collection<T> collection) {
 		return ListUtil.list(isLinked, collection);
 	}
 
@@ -813,7 +813,7 @@ public class CollUtil {
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
+	public static <T> List<T> list(final boolean isLinked, final Iterable<T> iterable) {
 		return ListUtil.list(isLinked, iterable);
 	}
 
@@ -827,7 +827,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLinked, Iterator<T> iter) {
+	public static <T> List<T> list(final boolean isLinked, final Iterator<T> iter) {
 		return ListUtil.list(isLinked, iter);
 	}
 
@@ -841,7 +841,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> List<T> list(boolean isLinked, Enumeration<T> enumeration) {
+	public static <T> List<T> list(final boolean isLinked, final Enumeration<T> enumeration) {
 		return ListUtil.list(isLinked, enumeration);
 	}
 
@@ -854,7 +854,7 @@ public class CollUtil {
 	 * @see #toList(Object[])
 	 */
 	@SafeVarargs
-	public static <T> ArrayList<T> newArrayList(T... values) {
+	public static <T> ArrayList<T> newArrayList(final T... values) {
 		return ListUtil.toList(values);
 	}
 
@@ -867,7 +867,7 @@ public class CollUtil {
 	 * @since 4.0.11
 	 */
 	@SafeVarargs
-	public static <T> ArrayList<T> toList(T... values) {
+	public static <T> ArrayList<T> toList(final T... values) {
 		return ListUtil.toList(values);
 	}
 
@@ -878,7 +878,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return ArrayList对象
 	 */
-	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
+	public static <T> ArrayList<T> newArrayList(final Collection<T> collection) {
 		return ListUtil.toList(collection);
 	}
 
@@ -891,7 +891,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 * @since 3.1.0
 	 */
-	public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
+	public static <T> ArrayList<T> newArrayList(final Iterable<T> iterable) {
 		return ListUtil.toList(iterable);
 	}
 
@@ -904,7 +904,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> newArrayList(Iterator<T> iterator) {
+	public static <T> ArrayList<T> newArrayList(final Iterator<T> iterator) {
 		return ListUtil.toList(iterator);
 	}
 
@@ -917,7 +917,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumeration) {
+	public static <T> ArrayList<T> newArrayList(final Enumeration<T> enumeration) {
 		return ListUtil.toList(enumeration);
 	}
 
@@ -932,7 +932,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	@SafeVarargs
-	public static <T> LinkedList<T> newLinkedList(T... values) {
+	public static <T> LinkedList<T> newLinkedList(final T... values) {
 		return ListUtil.toLinkedList(values);
 	}
 
@@ -943,7 +943,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return {@link CopyOnWriteArrayList}
 	 */
-	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
+	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(final Collection<T> collection) {
 		return ListUtil.toCopyOnWriteArrayList(collection);
 	}
 
@@ -957,8 +957,8 @@ public class CollUtil {
 	 * @return {@link BlockingQueue}
 	 * @since 3.3.0
 	 */
-	public static <T> BlockingQueue<T> newBlockingQueue(int capacity, boolean isLinked) {
-		BlockingQueue<T> queue;
+	public static <T> BlockingQueue<T> newBlockingQueue(final int capacity, final boolean isLinked) {
+		final BlockingQueue<T> queue;
 		if (isLinked) {
 			queue = new LinkedBlockingDeque<>(capacity);
 		} else {
@@ -976,8 +976,8 @@ public class CollUtil {
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> create(Class<?> collectionType) {
-		Collection<T> list;
+	public static <T> Collection<T> create(final Class<?> collectionType) {
+		final Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
 			list = new ArrayList<>();
@@ -1011,7 +1011,7 @@ public class CollUtil {
 		else {
 			try {
 				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 无法创建当前类型的对象，尝试创建父类型对象
 				final Class<?> superclass = collectionType.getSuperclass();
 				if (null != superclass && collectionType != superclass) {
@@ -1030,7 +1030,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return {@link ArrayList}
 	 */
-	public static <T> ArrayList<T> distinct(Collection<T> collection) {
+	public static <T> ArrayList<T> distinct(final Collection<T> collection) {
 		if (isEmpty(collection)) {
 			return new ArrayList<>();
 		} else if (collection instanceof Set) {
@@ -1051,7 +1051,7 @@ public class CollUtil {
 	 * @return {@link ArrayList}
 	 * @since 5.8.0
 	 */
-	public static <T, K> List<T> distinct(Collection<T> collection, Function<T, K> uniqueGenerator, boolean override) {
+	public static <T, K> List<T> distinct(final Collection<T> collection, final Function<T, K> uniqueGenerator, final boolean override) {
 		if (isEmpty(collection)) {
 			return new ArrayList<>();
 		}
@@ -1075,7 +1075,7 @@ public class CollUtil {
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 * @see ListUtil#sub(List, int, int)
 	 */
-	public static <T> List<T> sub(List<T> list, int start, int end) {
+	public static <T> List<T> sub(final List<T> list, final int start, final int end) {
 		return ListUtil.sub(list, start, end);
 	}
 
@@ -1091,7 +1091,7 @@ public class CollUtil {
 	 * @see ListUtil#sub(List, int, int, int)
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
+	public static <T> List<T> sub(final List<T> list, final int start, final int end, final int step) {
 		return ListUtil.sub(list, start, end, step);
 	}
 
@@ -1104,7 +1104,7 @@ public class CollUtil {
 	 * @param end        结束位置（不包含）
 	 * @return 截取后的数组，当开始位置超过最大时，返回null
 	 */
-	public static <T> List<T> sub(Collection<T> collection, int start, int end) {
+	public static <T> List<T> sub(final Collection<T> collection, final int start, final int end) {
 		return sub(collection, start, end, 1);
 	}
 
@@ -1119,7 +1119,7 @@ public class CollUtil {
 	 * @return 截取后的数组，当开始位置超过最大时，返回空集合
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sub(Collection<T> collection, int start, int end, int step) {
+	public static <T> List<T> sub(final Collection<T> collection, final int start, final int end, final int step) {
 		if (isEmpty(collection)) {
 			return ListUtil.empty();
 		}
@@ -1136,14 +1136,14 @@ public class CollUtil {
 	 * @param size       每个段的长度
 	 * @return 分段列表
 	 */
-	public static <T> List<List<T>> split(Collection<T> collection, int size) {
+	public static <T> List<List<T>> split(final Collection<T> collection, final int size) {
 		final List<List<T>> result = new ArrayList<>();
 		if (CollUtil.isEmpty(collection)) {
 			return result;
 		}
 
 		ArrayList<T> subList = new ArrayList<>(size);
-		for (T t : collection) {
+		for (final T t : collection) {
 			if (subList.size() >= size) {
 				result.add(subList);
 				subList = new ArrayList<>(size);
@@ -1168,7 +1168,7 @@ public class CollUtil {
 	 * @param editor     编辑器接口，{@code null}返回原集合
 	 * @return 过滤后的集合
 	 */
-	public static <T> Collection<T> edit(Collection<T> collection, Editor<T> editor) {
+	public static <T> Collection<T> edit(final Collection<T> collection, final Editor<T> editor) {
 		if (null == collection || null == editor) {
 			return collection;
 		}
@@ -1179,7 +1179,7 @@ public class CollUtil {
 		}
 
 		T modified;
-		for (T t : collection) {
+		for (final T t : collection) {
 			modified = editor.edit(t);
 			if (null != modified) {
 				collection2.add(modified);
@@ -1202,7 +1202,7 @@ public class CollUtil {
 	 * @return 过滤后的数组
 	 * @since 3.1.0
 	 */
-	public static <T> Collection<T> filterNew(Collection<T> collection, Filter<T> filter) {
+	public static <T> Collection<T> filterNew(final Collection<T> collection, final Filter<T> filter) {
 		if (null == collection || null == filter) {
 			return collection;
 		}
@@ -1220,7 +1220,7 @@ public class CollUtil {
 	 * @since 4.1.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Collection<E>, E> T removeAny(T collection, E... elesRemoved) {
+	public static <T extends Collection<E>, E> T removeAny(final T collection, final E... elesRemoved) {
 		collection.removeAll(newHashSet(elesRemoved));
 		return collection;
 	}
@@ -1235,7 +1235,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Collection<E>, E> T filter(T collection, final Filter<E> filter) {
+	public static <T extends Collection<E>, E> T filter(final T collection, final Filter<E> filter) {
 		return IterUtil.filter(collection, filter);
 	}
 
@@ -1248,7 +1248,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 3.2.2
 	 */
-	public static <T extends Collection<E>, E> T removeNull(T collection) {
+	public static <T extends Collection<E>, E> T removeNull(final T collection) {
 		return filter(collection, Objects::nonNull);
 	}
 
@@ -1261,7 +1261,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 3.2.2
 	 */
-	public static <T extends Collection<E>, E extends CharSequence> T removeEmpty(T collection) {
+	public static <T extends Collection<E>, E extends CharSequence> T removeEmpty(final T collection) {
 		return filter(collection, StrUtil::isNotEmpty);
 	}
 
@@ -1274,7 +1274,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 3.2.2
 	 */
-	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(T collection) {
+	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(final T collection) {
 		return filter(collection, StrUtil::isNotBlank);
 	}
 
@@ -1290,11 +1290,11 @@ public class CollUtil {
 	 * @return 移除结果的集合
 	 * @since 5.7.17
 	 */
-	public static <T extends Collection<E>, E> T removeWithAddIf(T targetCollection, T resultCollection, Predicate<? super E> predicate) {
+	public static <T extends Collection<E>, E> T removeWithAddIf(final T targetCollection, final T resultCollection, final Predicate<? super E> predicate) {
 		Objects.requireNonNull(predicate);
 		final Iterator<E> each = targetCollection.iterator();
 		while (each.hasNext()) {
-			E next = each.next();
+			final E next = each.next();
 			if (predicate.test(next)) {
 				resultCollection.add(next);
 				each.remove();
@@ -1314,7 +1314,7 @@ public class CollUtil {
 	 * @return 移除结果的集合
 	 * @since 5.7.17
 	 */
-	public static <T extends Collection<E>, E> List<E> removeWithAddIf(T targetCollection, Predicate<? super E> predicate) {
+	public static <T extends Collection<E>, E> List<E> removeWithAddIf(final T targetCollection, final Predicate<? super E> predicate) {
 		final List<E> removed = new ArrayList<>();
 		removeWithAddIf(targetCollection, removed, predicate);
 		return removed;
@@ -1328,7 +1328,7 @@ public class CollUtil {
 	 * @param editor     编辑器
 	 * @return 抽取后的新列表
 	 */
-	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor) {
+	public static List<Object> extract(final Iterable<?> collection, final Editor<Object> editor) {
 		return extract(collection, editor, false);
 	}
 
@@ -1343,7 +1343,7 @@ public class CollUtil {
 	 * @see #map(Iterable, Function, boolean)
 	 * @since 4.5.7
 	 */
-	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor, boolean ignoreNull) {
+	public static List<Object> extract(final Iterable<?> collection, final Editor<Object> editor, final boolean ignoreNull) {
 		return map(collection, editor::edit, ignoreNull);
 	}
 
@@ -1359,14 +1359,14 @@ public class CollUtil {
 	 * @return 抽取后的新列表
 	 * @since 5.3.5
 	 */
-	public static <T, R> List<R> map(Iterable<T> collection, Function<? super T, ? extends R> func, boolean ignoreNull) {
+	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> func, final boolean ignoreNull) {
 		final List<R> fieldValueList = new ArrayList<>();
 		if (null == collection) {
 			return fieldValueList;
 		}
 
 		R value;
-		for (T t : collection) {
+		for (final T t : collection) {
 			if (null == t && ignoreNull) {
 				continue;
 			}
@@ -1388,7 +1388,7 @@ public class CollUtil {
 	 * @return 字段值列表
 	 * @since 3.1.0
 	 */
-	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName) {
+	public static List<Object> getFieldValues(final Iterable<?> collection, final String fieldName) {
 		return getFieldValues(collection, fieldName, false);
 	}
 
@@ -1402,7 +1402,7 @@ public class CollUtil {
 	 * @return 字段值列表
 	 * @since 4.5.7
 	 */
-	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName, boolean ignoreNull) {
+	public static List<Object> getFieldValues(final Iterable<?> collection, final String fieldName, final boolean ignoreNull) {
 		return map(collection, bean -> {
 			if (bean instanceof Map) {
 				return ((Map<?, ?>) bean).get(fieldName);
@@ -1423,8 +1423,8 @@ public class CollUtil {
 	 * @return 字段值列表
 	 * @since 4.5.6
 	 */
-	public static <T> List<T> getFieldValues(Iterable<?> collection, final String fieldName, final Class<T> elementType) {
-		List<Object> fieldValues = getFieldValues(collection, fieldName);
+	public static <T> List<T> getFieldValues(final Iterable<?> collection, final String fieldName, final Class<T> elementType) {
+		final List<Object> fieldValues = getFieldValues(collection, fieldName);
 		return Convert.toList(elementType, fieldValues);
 	}
 
@@ -1439,7 +1439,7 @@ public class CollUtil {
 	 * @return 某个字段值与对象对应Map
 	 * @since 5.0.6
 	 */
-	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iterable, String fieldName) {
+	public static <K, V> Map<K, V> fieldValueMap(final Iterable<V> iterable, final String fieldName) {
 		return IterUtil.fieldValueMap(IterUtil.getIter(iterable), fieldName);
 	}
 
@@ -1454,7 +1454,7 @@ public class CollUtil {
 	 * @return 某个字段值与对象对应Map
 	 * @since 5.0.6
 	 */
-	public static <K, V> Map<K, V> fieldValueAsMap(Iterable<?> iterable, String fieldNameForKey, String fieldNameForValue) {
+	public static <K, V> Map<K, V> fieldValueAsMap(final Iterable<?> iterable, final String fieldNameForKey, final String fieldNameForValue) {
 		return IterUtil.fieldValueAsMap(IterUtil.getIter(iterable), fieldNameForKey, fieldNameForValue);
 	}
 
@@ -1467,9 +1467,9 @@ public class CollUtil {
 	 * @return 满足过滤条件的第一个元素
 	 * @since 3.1.0
 	 */
-	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
+	public static <T> T findOne(final Iterable<T> collection, final Filter<T> filter) {
 		if (null != collection) {
-			for (T t : collection) {
+			for (final T t : collection) {
 				if (filter.accept(t)) {
 					return t;
 				}
@@ -1491,7 +1491,7 @@ public class CollUtil {
 	 * @return 满足条件的第一个元素
 	 * @since 3.1.0
 	 */
-	public static <T> T findOneByField(Iterable<T> collection, final String fieldName, final Object fieldValue) {
+	public static <T> T findOneByField(final Iterable<T> collection, final String fieldName, final Object fieldValue) {
 		return findOne(collection, t -> {
 			if (t instanceof Map) {
 				final Map<?, ?> map = (Map<?, ?>) t;
@@ -1513,10 +1513,10 @@ public class CollUtil {
 	 * @param matcher  匹配器，为空则全部匹配
 	 * @return 匹配数量
 	 */
-	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher) {
+	public static <T> int count(final Iterable<T> iterable, final Matcher<T> matcher) {
 		int count = 0;
 		if (null != iterable) {
-			for (T t : iterable) {
+			for (final T t : iterable) {
 				if (null == matcher || matcher.match(t)) {
 					count++;
 				}
@@ -1535,10 +1535,10 @@ public class CollUtil {
 	 * @return 第一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int indexOf(Collection<T> collection, Matcher<T> matcher) {
+	public static <T> int indexOf(final Collection<T> collection, final Matcher<T> matcher) {
 		if (isNotEmpty(collection)) {
 			int index = 0;
-			for (T t : collection) {
+			for (final T t : collection) {
 				if (null == matcher || matcher.match(t)) {
 					return index;
 				}
@@ -1558,7 +1558,7 @@ public class CollUtil {
 	 * @return 最后一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int lastIndexOf(Collection<T> collection, Matcher<T> matcher) {
+	public static <T> int lastIndexOf(final Collection<T> collection, final Matcher<T> matcher) {
 		if (collection instanceof List) {
 			// List的查找最后一个有优化算法
 			return ListUtil.lastIndexOf((List<T>) collection, matcher);
@@ -1566,7 +1566,7 @@ public class CollUtil {
 		int matchIndex = -1;
 		if (isNotEmpty(collection)) {
 			int index = collection.size();
-			for (T t : collection) {
+			for (final T t : collection) {
 				if (null == matcher || matcher.match(t)) {
 					matchIndex = index;
 				}
@@ -1586,11 +1586,11 @@ public class CollUtil {
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
-	public static <T> int[] indexOfAll(Collection<T> collection, Matcher<T> matcher) {
+	public static <T> int[] indexOfAll(final Collection<T> collection, final Matcher<T> matcher) {
 		final List<Integer> indexList = new ArrayList<>();
 		if (null != collection) {
 			int index = 0;
-			for (T t : collection) {
+			for (final T t : collection) {
 				if (null == matcher || matcher.match(t)) {
 					indexList.add(index);
 				}
@@ -1608,7 +1608,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Collection<?> collection) {
+	public static boolean isEmpty(final Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
 
@@ -1622,7 +1622,7 @@ public class CollUtil {
 	 * @return 非空（empty）的原集合或默认集合
 	 * @since 4.6.9
 	 */
-	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, T defaultCollection) {
+	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final T defaultCollection) {
 		return isEmpty(collection) ? defaultCollection : collection;
 	}
 
@@ -1636,7 +1636,7 @@ public class CollUtil {
 	 * @return 非空（empty）的原集合或默认集合
 	 * @since 5.7.15
 	 */
-	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, Supplier<? extends T> supplier) {
+	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final Supplier<? extends T> supplier) {
 		return isEmpty(collection) ? supplier.get() : collection;
 	}
 
@@ -1647,7 +1647,7 @@ public class CollUtil {
 	 * @return 是否为空
 	 * @see IterUtil#isEmpty(Iterable)
 	 */
-	public static boolean isEmpty(Iterable<?> iterable) {
+	public static boolean isEmpty(final Iterable<?> iterable) {
 		return IterUtil.isEmpty(iterable);
 	}
 
@@ -1658,7 +1658,7 @@ public class CollUtil {
 	 * @return 是否为空
 	 * @see IterUtil#isEmpty(Iterator)
 	 */
-	public static boolean isEmpty(Iterator<?> Iterator) {
+	public static boolean isEmpty(final Iterator<?> Iterator) {
 		return IterUtil.isEmpty(Iterator);
 	}
 
@@ -1668,7 +1668,7 @@ public class CollUtil {
 	 * @param enumeration {@link Enumeration}
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Enumeration<?> enumeration) {
+	public static boolean isEmpty(final Enumeration<?> enumeration) {
 		return null == enumeration || false == enumeration.hasMoreElements();
 	}
 
@@ -1680,7 +1680,7 @@ public class CollUtil {
 	 * @see MapUtil#isEmpty(Map)
 	 * @since 5.7.4
 	 */
-	public static boolean isEmpty(Map<?, ?> map) {
+	public static boolean isEmpty(final Map<?, ?> map) {
 		return MapUtil.isEmpty(map);
 	}
 
@@ -1692,7 +1692,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(Collection<?> collection) {
+	public static boolean isNotEmpty(final Collection<?> collection) {
 		return false == isEmpty(collection);
 	}
 
@@ -1703,7 +1703,7 @@ public class CollUtil {
 	 * @return 是否为空
 	 * @see IterUtil#isNotEmpty(Iterable)
 	 */
-	public static boolean isNotEmpty(Iterable<?> iterable) {
+	public static boolean isNotEmpty(final Iterable<?> iterable) {
 		return IterUtil.isNotEmpty(iterable);
 	}
 
@@ -1714,7 +1714,7 @@ public class CollUtil {
 	 * @return 是否为空
 	 * @see IterUtil#isNotEmpty(Iterator)
 	 */
-	public static boolean isNotEmpty(Iterator<?> Iterator) {
+	public static boolean isNotEmpty(final Iterator<?> Iterator) {
 		return IterUtil.isNotEmpty(Iterator);
 	}
 
@@ -1724,7 +1724,7 @@ public class CollUtil {
 	 * @param enumeration {@link Enumeration}
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(Enumeration<?> enumeration) {
+	public static boolean isNotEmpty(final Enumeration<?> enumeration) {
 		return null != enumeration && enumeration.hasMoreElements();
 	}
 
@@ -1736,7 +1736,7 @@ public class CollUtil {
 	 * @see IterUtil#hasNull(Iterable)
 	 * @since 3.0.7
 	 */
-	public static boolean hasNull(Iterable<?> iterable) {
+	public static boolean hasNull(final Iterable<?> iterable) {
 		return IterUtil.hasNull(iterable);
 	}
 
@@ -1748,7 +1748,7 @@ public class CollUtil {
 	 * @see MapUtil#isNotEmpty(Map)
 	 * @since 5.7.4
 	 */
-	public static boolean isNotEmpty(Map<?, ?> map) {
+	public static boolean isNotEmpty(final Map<?, ?> map) {
 		return MapUtil.isNotEmpty(map);
 	}
 
@@ -1769,7 +1769,7 @@ public class CollUtil {
 	 * @return Map
 	 * @since 3.0.4
 	 */
-	public static Map<String, String> zip(String keys, String values, String delimiter, boolean isOrder) {
+	public static Map<String, String> zip(final String keys, final String values, final String delimiter, final boolean isOrder) {
 		return ArrayUtil.zip(StrUtil.splitToArray(keys, delimiter), StrUtil.splitToArray(values, delimiter), isOrder);
 	}
 
@@ -1786,7 +1786,7 @@ public class CollUtil {
 	 * @param delimiter 分隔符
 	 * @return Map
 	 */
-	public static Map<String, String> zip(String keys, String values, String delimiter) {
+	public static Map<String, String> zip(final String keys, final String values, final String delimiter) {
 		return zip(keys, values, delimiter, false);
 	}
 
@@ -1804,7 +1804,7 @@ public class CollUtil {
 	 * @param values 值列表
 	 * @return Map
 	 */
-	public static <K, V> Map<K, V> zip(Collection<K> keys, Collection<V> values) {
+	public static <K, V> Map<K, V> zip(final Collection<K> keys, final Collection<V> values) {
 		if (isEmpty(keys) || isEmpty(values)) {
 			return MapUtil.empty();
 		}
@@ -1831,7 +1831,7 @@ public class CollUtil {
 	 * @return Map
 	 * @see IterUtil#toMap(Iterable)
 	 */
-	public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
+	public static <K, V> HashMap<K, V> toMap(final Iterable<Entry<K, V>> entryIter) {
 		return IterUtil.toMap(entryIter);
 	}
 
@@ -1859,7 +1859,7 @@ public class CollUtil {
 	 * @see MapUtil#of(Object[])
 	 * @since 3.0.8
 	 */
-	public static HashMap<Object, Object> toMap(Object[] array) {
+	public static HashMap<Object, Object> toMap(final Object[] array) {
 		return MapUtil.of(array);
 	}
 
@@ -1871,7 +1871,7 @@ public class CollUtil {
 	 * @param comparator 比较器
 	 * @return treeSet
 	 */
-	public static <T> TreeSet<T> toTreeSet(Collection<T> collection, Comparator<T> comparator) {
+	public static <T> TreeSet<T> toTreeSet(final Collection<T> collection, final Comparator<T> comparator) {
 		final TreeSet<T> treeSet = new TreeSet<>(comparator);
 		treeSet.addAll(collection);
 		return treeSet;
@@ -1886,7 +1886,7 @@ public class CollUtil {
 	 * @param iter {@link Iterator}
 	 * @return {@link Enumeration}
 	 */
-	public static <E> Enumeration<E> asEnumeration(Iterator<E> iter) {
+	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
 		return new IteratorEnumeration<>(iter);
 	}
 
@@ -1900,7 +1900,7 @@ public class CollUtil {
 	 * @return {@link Iterator}
 	 * @see IterUtil#asIterator(Enumeration)
 	 */
-	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
+	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
 		return IterUtil.asIterator(e);
 	}
 
@@ -1925,7 +1925,7 @@ public class CollUtil {
 	 * @return {@link Collection} 或者 {@link ArrayList}
 	 * @since 3.0.9
 	 */
-	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
+	public static <E> Collection<E> toCollection(final Iterable<E> iterable) {
 		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
 	}
 
@@ -1960,7 +1960,7 @@ public class CollUtil {
 	 * @return Map
 	 * @see MapUtil#toListMap(Iterable)
 	 */
-	public static <K, V> Map<K, List<V>> toListMap(Iterable<? extends Map<K, V>> mapList) {
+	public static <K, V> Map<K, List<V>> toListMap(final Iterable<? extends Map<K, V>> mapList) {
 		return MapUtil.toListMap(mapList);
 	}
 
@@ -1994,7 +1994,7 @@ public class CollUtil {
 	 * @return Map列表
 	 * @see MapUtil#toMapList(Map)
 	 */
-	public static <K, V> List<Map<K, V>> toMapList(Map<K, ? extends Iterable<V>> listMap) {
+	public static <K, V> List<Map<K, V>> toMapList(final Map<K, ? extends Iterable<V>> listMap) {
 		return MapUtil.toMapList(listMap);
 	}
 
@@ -2010,7 +2010,7 @@ public class CollUtil {
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
-	public static <K, V> Map<K, V> toMap(Iterable<V> values, Map<K, V> map, Func1<V, K> keyFunc) {
+	public static <K, V> Map<K, V> toMap(final Iterable<V> values, final Map<K, V> map, final Func1<V, K> keyFunc) {
 		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc);
 	}
 
@@ -2028,7 +2028,7 @@ public class CollUtil {
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
-	public static <K, V, E> Map<K, V> toMap(Iterable<E> values, Map<K, V> map, Func1<E, K> keyFunc, Func1<E, V> valueFunc) {
+	public static <K, V, E> Map<K, V> toMap(final Iterable<E> values, final Map<K, V> map, final Func1<E, K> keyFunc, final Func1<E, V> valueFunc) {
 		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc, valueFunc);
 	}
 
@@ -2041,7 +2041,7 @@ public class CollUtil {
 	 * @param value      对象，可能为Iterator、Iterable、Enumeration、Array
 	 * @return 被加入集合
 	 */
-	public static <T> Collection<T> addAll(Collection<T> collection, Object value) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Object value) {
 		return addAll(collection, value, TypeUtil.getTypeArgument(collection.getClass()));
 	}
 
@@ -2057,7 +2057,7 @@ public class CollUtil {
 	 * @return 被加入集合
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> addAll(Collection<T> collection, Object value, Type elementType) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Object value, Type elementType) {
 		if (null == collection || null == value) {
 			return collection;
 		}
@@ -2066,7 +2066,7 @@ public class CollUtil {
 			elementType = Object.class;
 		}
 
-		Iterator iter;
+		final Iterator iter;
 		if (value instanceof Iterator) {
 			iter = (Iterator) value;
 		} else if (value instanceof Iterable) {
@@ -2100,7 +2100,7 @@ public class CollUtil {
 	 * @param iterator   要加入的{@link Iterator}
 	 * @return 原集合
 	 */
-	public static <T> Collection<T> addAll(Collection<T> collection, Iterator<T> iterator) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Iterator<T> iterator) {
 		if (null != collection && null != iterator) {
 			while (iterator.hasNext()) {
 				collection.add(iterator.next());
@@ -2117,7 +2117,7 @@ public class CollUtil {
 	 * @param iterable   要加入的内容{@link Iterable}
 	 * @return 原集合
 	 */
-	public static <T> Collection<T> addAll(Collection<T> collection, Iterable<T> iterable) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Iterable<T> iterable) {
 		if (iterable == null) {
 			return collection;
 		}
@@ -2132,7 +2132,7 @@ public class CollUtil {
 	 * @param enumeration 要加入的内容{@link Enumeration}
 	 * @return 原集合
 	 */
-	public static <T> Collection<T> addAll(Collection<T> collection, Enumeration<T> enumeration) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final Enumeration<T> enumeration) {
 		if (null != collection && null != enumeration) {
 			while (enumeration.hasMoreElements()) {
 				collection.add(enumeration.nextElement());
@@ -2150,7 +2150,7 @@ public class CollUtil {
 	 * @return 原集合
 	 * @since 3.0.8
 	 */
-	public static <T> Collection<T> addAll(Collection<T> collection, T[] values) {
+	public static <T> Collection<T> addAll(final Collection<T> collection, final T[] values) {
 		if (null != collection && null != values) {
 			Collections.addAll(collection, values);
 		}
@@ -2165,8 +2165,8 @@ public class CollUtil {
 	 * @param otherList 其它列表
 	 * @return 此列表
 	 */
-	public static <T> List<T> addAllIfNotContains(List<T> list, List<T> otherList) {
-		for (T t : otherList) {
+	public static <T> List<T> addAllIfNotContains(final List<T> list, final List<T> otherList) {
+		for (final T t : otherList) {
 			if (false == list.contains(t)) {
 				list.add(t);
 			}
@@ -2184,7 +2184,7 @@ public class CollUtil {
 	 * @return 元素值
 	 * @since 4.0.6
 	 */
-	public static <T> T get(Collection<T> collection, int index) {
+	public static <T> T get(final Collection<T> collection, int index) {
 		if (null == collection) {
 			return null;
 		}
@@ -2221,7 +2221,7 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> getAny(Collection<T> collection, int... indexes) {
+	public static <T> List<T> getAny(final Collection<T> collection, final int... indexes) {
 		final int size = collection.size();
 		final ArrayList<T> result = new ArrayList<>();
 		if (collection instanceof List) {
@@ -2253,7 +2253,7 @@ public class CollUtil {
 	 * @see IterUtil#getFirst(Iterable)
 	 * @since 3.0.1
 	 */
-	public static <T> T getFirst(Iterable<T> iterable) {
+	public static <T> T getFirst(final Iterable<T> iterable) {
 		return IterUtil.getFirst(iterable);
 	}
 
@@ -2266,7 +2266,7 @@ public class CollUtil {
 	 * @see IterUtil#getFirst(Iterator)
 	 * @since 3.0.1
 	 */
-	public static <T> T getFirst(Iterator<T> iterator) {
+	public static <T> T getFirst(final Iterator<T> iterator) {
 		return IterUtil.getFirst(iterator);
 	}
 
@@ -2278,7 +2278,7 @@ public class CollUtil {
 	 * @return 最后一个元素
 	 * @since 4.1.10
 	 */
-	public static <T> T getLast(Collection<T> collection) {
+	public static <T> T getLast(final Collection<T> collection) {
 		return get(collection, -1);
 	}
 
@@ -2294,7 +2294,7 @@ public class CollUtil {
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final K... keys) {
 		return MapUtil.valuesOfKeys(map, new ArrayIter<>(keys));
 	}
 
@@ -2309,7 +2309,7 @@ public class CollUtil {
 	 * @return 值列表
 	 * @since 3.0.9
 	 */
-	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterable<K> keys) {
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterable<K> keys) {
 		return valuesOfKeys(map, keys.iterator());
 	}
 
@@ -2324,7 +2324,7 @@ public class CollUtil {
 	 * @return 值列表
 	 * @since 3.0.9
 	 */
-	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterator<K> keys) {
 		return MapUtil.valuesOfKeys(map, keys);
 	}
 
@@ -2342,9 +2342,9 @@ public class CollUtil {
 	 * @return 分页后的段落内容
 	 */
 	@SafeVarargs
-	public static <T> List<T> sortPageAll(int pageNo, int pageSize, Comparator<T> comparator, Collection<T>... colls) {
+	public static <T> List<T> sortPageAll(final int pageNo, final int pageSize, final Comparator<T> comparator, final Collection<T>... colls) {
 		final List<T> list = new ArrayList<>(pageNo * pageSize);
-		for (Collection<T> coll : colls) {
+		for (final Collection<T> coll : colls) {
 			list.addAll(coll);
 		}
 		if (null != comparator) {
@@ -2364,7 +2364,7 @@ public class CollUtil {
 	 * @return 分页后的段落内容
 	 * @since 4.1.20
 	 */
-	public static <T> List<T> page(int pageNo, int pageSize, List<T> list) {
+	public static <T> List<T> page(final int pageNo, final int pageSize, final List<T> list) {
 		return ListUtil.page(pageNo, pageSize, list);
 	}
 
@@ -2376,8 +2376,8 @@ public class CollUtil {
 	 * @param comparator 比较器
 	 * @return treeSet
 	 */
-	public static <T> List<T> sort(Collection<T> collection, Comparator<? super T> comparator) {
-		List<T> list = new ArrayList<>(collection);
+	public static <T> List<T> sort(final Collection<T> collection, final Comparator<? super T> comparator) {
+		final List<T> list = new ArrayList<>(collection);
 		list.sort(comparator);
 		return list;
 	}
@@ -2391,7 +2391,7 @@ public class CollUtil {
 	 * @return 原list
 	 * @see Collections#sort(List, Comparator)
 	 */
-	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
+	public static <T> List<T> sort(final List<T> list, final Comparator<? super T> c) {
 		return ListUtil.sort(list, c);
 	}
 
@@ -2404,7 +2404,7 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sortByProperty(Collection<T> collection, String property) {
+	public static <T> List<T> sortByProperty(final Collection<T> collection, final String property) {
 		return sort(collection, new PropertyComparator<>(property));
 	}
 
@@ -2417,7 +2417,7 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sortByProperty(List<T> list, String property) {
+	public static <T> List<T> sortByProperty(final List<T> list, final String property) {
 		return ListUtil.sortByProperty(list, property);
 	}
 
@@ -2428,7 +2428,7 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.8
 	 */
-	public static List<String> sortByPinyin(Collection<String> collection) {
+	public static List<String> sortByPinyin(final Collection<String> collection) {
 		return sort(collection, new PinyinComparator());
 	}
 
@@ -2439,7 +2439,7 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.8
 	 */
-	public static List<String> sortByPinyin(List<String> list) {
+	public static List<String> sortByPinyin(final List<String> list) {
 		return ListUtil.sortByPinyin(list);
 	}
 
@@ -2453,7 +2453,7 @@ public class CollUtil {
 	 * @return {@link TreeMap}
 	 * @since 3.0.9
 	 */
-	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
+	public static <K, V> TreeMap<K, V> sort(final Map<K, V> map, final Comparator<? super K> comparator) {
 		final TreeMap<K, V> result = new TreeMap<>(comparator);
 		result.putAll(map);
 		return result;
@@ -2469,12 +2469,12 @@ public class CollUtil {
 	 * @return {@link LinkedList}
 	 * @since 3.0.9
 	 */
-	public static <K, V> LinkedHashMap<K, V> sortToMap(Collection<Map.Entry<K, V>> entryCollection, Comparator<Map.Entry<K, V>> comparator) {
-		List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
+	public static <K, V> LinkedHashMap<K, V> sortToMap(final Collection<Map.Entry<K, V>> entryCollection, final Comparator<Map.Entry<K, V>> comparator) {
+		final List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
 		list.sort(comparator);
 
-		LinkedHashMap<K, V> result = new LinkedHashMap<>();
-		for (Map.Entry<K, V> entry : list) {
+		final LinkedHashMap<K, V> result = new LinkedHashMap<>();
+		for (final Map.Entry<K, V> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
@@ -2490,7 +2490,7 @@ public class CollUtil {
 	 * @return {@link LinkedList}
 	 * @since 3.0.9
 	 */
-	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator) {
+	public static <K, V> LinkedHashMap<K, V> sortByEntry(final Map<K, V> map, final Comparator<Map.Entry<K, V>> comparator) {
 		return sortToMap(map.entrySet(), comparator);
 	}
 
@@ -2503,11 +2503,11 @@ public class CollUtil {
 	 * @return 排序后的Set
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <K, V> List<Entry<K, V>> sortEntryToList(Collection<Entry<K, V>> collection) {
-		List<Entry<K, V>> list = new LinkedList<>(collection);
+	public static <K, V> List<Entry<K, V>> sortEntryToList(final Collection<Entry<K, V>> collection) {
+		final List<Entry<K, V>> list = new LinkedList<>(collection);
 		list.sort((o1, o2) -> {
-			V v1 = o1.getValue();
-			V v2 = o2.getValue();
+			final V v1 = o1.getValue();
+			final V v2 = o2.getValue();
 
 			if (v1 instanceof Comparable) {
 				return ((Comparable) v1).compareTo(v2);
@@ -2528,7 +2528,7 @@ public class CollUtil {
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 * @since 5.4.7
 	 */
-	public static <T> void forEach(Iterable<T> iterable, Consumer<T> consumer) {
+	public static <T> void forEach(final Iterable<T> iterable, final Consumer<T> consumer) {
 		if (iterable == null) {
 			return;
 		}
@@ -2542,7 +2542,7 @@ public class CollUtil {
 	 * @param iterator {@link Iterator}
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer) {
+	public static <T> void forEach(final Iterator<T> iterator, final Consumer<T> consumer) {
 		if (iterator == null) {
 			return;
 		}
@@ -2560,7 +2560,7 @@ public class CollUtil {
 	 * @param enumeration {@link Enumeration}
 	 * @param consumer    {@link Consumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer) {
+	public static <T> void forEach(final Enumeration<T> enumeration, final Consumer<T> consumer) {
 		if (enumeration == null) {
 			return;
 		}
@@ -2580,12 +2580,12 @@ public class CollUtil {
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */
-	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
+	public static <K, V> void forEach(final Map<K, V> map, final KVConsumer<K, V> kvConsumer) {
 		if (map == null) {
 			return;
 		}
 		int index = 0;
-		for (Entry<K, V> entry : map.entrySet()) {
+		for (final Entry<K, V> entry : map.entrySet()) {
 			kvConsumer.accept(entry.getKey(), entry.getValue(), index);
 			index++;
 		}
@@ -2599,7 +2599,7 @@ public class CollUtil {
 	 * @param hash       Hash值算法，决定元素放在第几个分组的规则
 	 * @return 分组后的集合
 	 */
-	public static <T> List<List<T>> group(Collection<T> collection, Hash32<T> hash) {
+	public static <T> List<List<T>> group(final Collection<T> collection, Hash32<T> hash) {
 		final List<List<T>> result = new ArrayList<>();
 		if (isEmpty(collection)) {
 			return result;
@@ -2611,7 +2611,7 @@ public class CollUtil {
 
 		int index;
 		List<T> subList;
-		for (T t : collection) {
+		for (final T t : collection) {
 			index = hash.hash32(t);
 			if (result.size() - 1 < index) {
 				while (result.size() - 1 < index) {
@@ -2638,18 +2638,18 @@ public class CollUtil {
 	 * @param fieldName  元素Bean中的字段名，非Bean都放在第一个分组中
 	 * @return 分组列表
 	 */
-	public static <T> List<List<T>> groupByField(Collection<T> collection, final String fieldName) {
+	public static <T> List<List<T>> groupByField(final Collection<T> collection, final String fieldName) {
 		return group(collection, new Hash32<T>() {
 			private final List<Object> fieldNameList = new ArrayList<>();
 
 			@Override
-			public int hash32(T t) {
+			public int hash32(final T t) {
 				if (null == t || false == BeanUtil.isBean(t.getClass())) {
 					// 非Bean放在同一子分组中
 					return 0;
 				}
 				final Object value = ReflectUtil.getFieldValue(t, fieldName);
-				int hash = fieldNameList.indexOf(value);
+				final int hash = fieldNameList.indexOf(value);
 				if (hash < 0) {
 					fieldNameList.add(value);
 					return fieldNameList.size() - 1;
@@ -2668,7 +2668,7 @@ public class CollUtil {
 	 * @return 反转后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> reverse(List<T> list) {
+	public static <T> List<T> reverse(final List<T> list) {
 		return ListUtil.reverse(list);
 	}
 
@@ -2680,7 +2680,7 @@ public class CollUtil {
 	 * @return 反转后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> reverseNew(List<T> list) {
+	public static <T> List<T> reverseNew(final List<T> list) {
 		return ListUtil.reverseNew(list);
 	}
 
@@ -2694,7 +2694,7 @@ public class CollUtil {
 	 * @return 原List
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> setOrAppend(List<T> list, int index, T element) {
+	public static <T> List<T> setOrAppend(final List<T> list, final int index, final T element) {
 		return ListUtil.setOrAppend(list, index, element);
 	}
 
@@ -2706,12 +2706,12 @@ public class CollUtil {
 	 * @return key集合
 	 * @since 4.5.12
 	 */
-	public static <K> Set<K> keySet(Collection<Map<K, ?>> mapCollection) {
+	public static <K> Set<K> keySet(final Collection<Map<K, ?>> mapCollection) {
 		if (isEmpty(mapCollection)) {
 			return new HashSet<>();
 		}
 		final HashSet<K> set = new HashSet<>(mapCollection.size() * 16);
-		for (Map<K, ?> map : mapCollection) {
+		for (final Map<K, ?> map : mapCollection) {
 			set.addAll(map.keySet());
 		}
 
@@ -2726,9 +2726,9 @@ public class CollUtil {
 	 * @return Value集合
 	 * @since 4.5.12
 	 */
-	public static <V> List<V> values(Collection<Map<?, V>> mapCollection) {
+	public static <V> List<V> values(final Collection<Map<?, V>> mapCollection) {
 		final List<V> values = new ArrayList<>();
-		for (Map<?, V> map : mapCollection) {
+		for (final Map<?, V> map : mapCollection) {
 			values.addAll(map.values());
 		}
 
@@ -2744,7 +2744,7 @@ public class CollUtil {
 	 * @see Collections#max(Collection)
 	 * @since 4.6.5
 	 */
-	public static <T extends Comparable<? super T>> T max(Collection<T> coll) {
+	public static <T extends Comparable<? super T>> T max(final Collection<T> coll) {
 		return Collections.max(coll);
 	}
 
@@ -2757,7 +2757,7 @@ public class CollUtil {
 	 * @see Collections#min(Collection)
 	 * @since 4.6.5
 	 */
-	public static <T extends Comparable<? super T>> T min(Collection<T> coll) {
+	public static <T extends Comparable<? super T>> T min(final Collection<T> coll) {
 		return Collections.min(coll);
 	}
 
@@ -2769,7 +2769,7 @@ public class CollUtil {
 	 * @return 只读集合
 	 * @since 5.2.6
 	 */
-	public static <T> Collection<T> unmodifiable(Collection<? extends T> c) {
+	public static <T> Collection<T> unmodifiable(final Collection<? extends T> c) {
 		return Collections.unmodifiableCollection(c);
 	}
 
@@ -2790,7 +2790,7 @@ public class CollUtil {
 	 * @since 5.3.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <E, T extends Collection<E>> T empty(Class<?> collectionClass) {
+	public static <E, T extends Collection<E>> T empty(final Class<?> collectionClass) {
 		if (null == collectionClass) {
 			return (T) Collections.emptyList();
 		}
@@ -2817,8 +2817,8 @@ public class CollUtil {
 	 * @param collections 一个或多个集合
 	 * @since 5.3.6
 	 */
-	public static void clear(Collection<?>... collections) {
-		for (Collection<?> collection : collections) {
+	public static void clear(final Collection<?>... collections) {
+		for (final Collection<?> collection : collections) {
 			if (isNotEmpty(collection)) {
 				collection.clear();
 			}
@@ -2834,7 +2834,7 @@ public class CollUtil {
 	 * @param padObj 填充的对象
 	 * @since 5.3.10
 	 */
-	public static <T> void padLeft(List<T> list, int minLen, T padObj) {
+	public static <T> void padLeft(final List<T> list, final int minLen, final T padObj) {
 		Objects.requireNonNull(list);
 		if (list.isEmpty()) {
 			padRight(list, minLen, padObj);
@@ -2854,7 +2854,7 @@ public class CollUtil {
 	 * @param padObj 填充的对象
 	 * @since 5.3.10
 	 */
-	public static <T> void padRight(Collection<T> list, int minLen, T padObj) {
+	public static <T> void padRight(final Collection<T> list, final int minLen, final T padObj) {
 		Objects.requireNonNull(list);
 		for (int i = list.size(); i < minLen; i++) {
 			list.add(padObj);
@@ -2871,7 +2871,7 @@ public class CollUtil {
 	 * @return 新类型的集合
 	 * @since 5.4.3
 	 */
-	public static <F, T> Collection<T> trans(Collection<F> collection, Function<? super F, ? extends T> function) {
+	public static <F, T> Collection<T> trans(final Collection<F> collection, final Function<? super F, ? extends T> function) {
 		return new TransCollection<>(collection, function);
 	}
 
@@ -2888,7 +2888,7 @@ public class CollUtil {
 	 * @author nick_wys
 	 * @since 5.7.18
 	 */
-	public static <E, K, V> void setValueByMap(Iterable<E> iterable, Map<K, V> map, Function<E, K> keyGenerate, BiConsumer<E, V> biConsumer) {
+	public static <E, K, V> void setValueByMap(final Iterable<E> iterable, final Map<K, V> map, final Function<E, K> keyGenerate, final BiConsumer<E, V> biConsumer) {
 		iterable.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
 	}
 

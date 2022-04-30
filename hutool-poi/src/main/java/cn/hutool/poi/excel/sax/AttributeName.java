@@ -29,7 +29,7 @@ public enum AttributeName {
 	 * @param attributeName 属性
 	 * @return 是否匹配
 	 */
-	public boolean match(String attributeName) {
+	public boolean match(final String attributeName) {
 		return this.name().equals(attributeName);
 	}
 
@@ -39,7 +39,7 @@ public enum AttributeName {
 	 * @param attributes 属性列表
 	 * @return 属性值
 	 */
-	public String getValue(Attributes attributes){
+	public String getValue(final Attributes attributes){
 		return attributes.getValue(name());
 	}
 }

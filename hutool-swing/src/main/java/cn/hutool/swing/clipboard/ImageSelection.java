@@ -23,7 +23,7 @@ public class ImageSelection implements Transferable, Serializable {
 	 *
 	 * @param image 图片
 	 */
-	public ImageSelection(Image image) {
+	public ImageSelection(final Image image) {
 		this.image = image;
 	}
 
@@ -44,7 +44,7 @@ public class ImageSelection implements Transferable, Serializable {
 	 * @return 是否支持
 	 */
 	@Override
-	public boolean isDataFlavorSupported(DataFlavor flavor) {
+	public boolean isDataFlavorSupported(final DataFlavor flavor) {
 		return DataFlavor.imageFlavor.equals(flavor);
 	}
 
@@ -55,7 +55,7 @@ public class ImageSelection implements Transferable, Serializable {
 	 * @return 转换后的对象
 	 */
 	@Override
-	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+	public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
 		if (false == DataFlavor.imageFlavor.equals(flavor)) {
 			throw new UnsupportedFlavorException(flavor);
 		}

@@ -23,13 +23,13 @@ public class RFC3986Test {
 
 	@Test
 	public void encodeQueryPercentTest(){
-		String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=%b", CharsetUtil.UTF_8);
+		final String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=%b", CharsetUtil.UTF_8);
 		Assert.assertEquals("a=%25b", encode);
 	}
 
 	@Test
 	public void encodeQueryWithSafeTest(){
-		String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=%25", CharsetUtil.UTF_8, '%');
+		final String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=%25", CharsetUtil.UTF_8, '%');
 		Assert.assertEquals("a=%25", encode);
 	}
 }

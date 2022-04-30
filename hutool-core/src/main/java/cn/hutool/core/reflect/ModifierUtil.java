@@ -78,7 +78,7 @@ public class ModifierUtil {
 		 *
 		 * @param modifier 修饰符int表示，见{@link Modifier}
 		 */
-		ModifierType(int modifier) {
+		ModifierType(final int modifier) {
 			this.value = modifier;
 		}
 
@@ -99,7 +99,7 @@ public class ModifierUtil {
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
-	public static boolean hasModifier(Class<?> clazz, ModifierType... modifierTypes) {
+	public static boolean hasModifier(final Class<?> clazz, final ModifierType... modifierTypes) {
 		if (null == clazz || ArrayUtil.isEmpty(modifierTypes)) {
 			return false;
 		}
@@ -113,7 +113,7 @@ public class ModifierUtil {
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
-	public static boolean hasModifier(Constructor<?> constructor, ModifierType... modifierTypes) {
+	public static boolean hasModifier(final Constructor<?> constructor, final ModifierType... modifierTypes) {
 		if (null == constructor || ArrayUtil.isEmpty(modifierTypes)) {
 			return false;
 		}
@@ -127,7 +127,7 @@ public class ModifierUtil {
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
-	public static boolean hasModifier(Method method, ModifierType... modifierTypes) {
+	public static boolean hasModifier(final Method method, final ModifierType... modifierTypes) {
 		if (null == method || ArrayUtil.isEmpty(modifierTypes)) {
 			return false;
 		}
@@ -141,7 +141,7 @@ public class ModifierUtil {
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
-	public static boolean hasModifier(Field field, ModifierType... modifierTypes) {
+	public static boolean hasModifier(final Field field, final ModifierType... modifierTypes) {
 		if (null == field || ArrayUtil.isEmpty(modifierTypes)) {
 			return false;
 		}
@@ -154,7 +154,7 @@ public class ModifierUtil {
 	 * @param field 字段
 	 * @return 是否是Public
 	 */
-	public static boolean isPublic(Field field) {
+	public static boolean isPublic(final Field field) {
 		return hasModifier(field, ModifierType.PUBLIC);
 	}
 
@@ -164,7 +164,7 @@ public class ModifierUtil {
 	 * @param method 方法
 	 * @return 是否是Public
 	 */
-	public static boolean isPublic(Method method) {
+	public static boolean isPublic(final Method method) {
 		return hasModifier(method, ModifierType.PUBLIC);
 	}
 
@@ -174,7 +174,7 @@ public class ModifierUtil {
 	 * @param clazz 类
 	 * @return 是否是Public
 	 */
-	public static boolean isPublic(Class<?> clazz) {
+	public static boolean isPublic(final Class<?> clazz) {
 		return hasModifier(clazz, ModifierType.PUBLIC);
 	}
 
@@ -184,7 +184,7 @@ public class ModifierUtil {
 	 * @param constructor 构造
 	 * @return 是否是Public
 	 */
-	public static boolean isPublic(Constructor<?> constructor) {
+	public static boolean isPublic(final Constructor<?> constructor) {
 		return hasModifier(constructor, ModifierType.PUBLIC);
 	}
 
@@ -195,7 +195,7 @@ public class ModifierUtil {
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
-	public static boolean isStatic(Field field) {
+	public static boolean isStatic(final Field field) {
 		return hasModifier(field, ModifierType.STATIC);
 	}
 
@@ -206,7 +206,7 @@ public class ModifierUtil {
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
-	public static boolean isStatic(Method method) {
+	public static boolean isStatic(final Method method) {
 		return hasModifier(method, ModifierType.STATIC);
 	}
 
@@ -217,7 +217,7 @@ public class ModifierUtil {
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
-	public static boolean isStatic(Class<?> clazz) {
+	public static boolean isStatic(final Class<?> clazz) {
 		return hasModifier(clazz, ModifierType.STATIC);
 	}
 
@@ -228,7 +228,7 @@ public class ModifierUtil {
 	 * @return 是否是合成字段
 	 * @since 5.6.3
 	 */
-	public static boolean isSynthetic(Field field) {
+	public static boolean isSynthetic(final Field field) {
 		return field.isSynthetic();
 	}
 
@@ -239,7 +239,7 @@ public class ModifierUtil {
 	 * @return 是否是合成方法
 	 * @since 5.6.3
 	 */
-	public static boolean isSynthetic(Method method) {
+	public static boolean isSynthetic(final Method method) {
 		return method.isSynthetic();
 	}
 
@@ -250,7 +250,7 @@ public class ModifierUtil {
 	 * @return 是否是合成
 	 * @since 5.6.3
 	 */
-	public static boolean isSynthetic(Class<?> clazz) {
+	public static boolean isSynthetic(final Class<?> clazz) {
 		return clazz.isSynthetic();
 	}
 
@@ -261,7 +261,7 @@ public class ModifierUtil {
 	 * @return 是否抽象方法
 	 * @since 5.7.23
 	 */
-	public static boolean isAbstract(Method method) {
+	public static boolean isAbstract(final Method method) {
 		return hasModifier(method, ModifierType.ABSTRACT);
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method start
@@ -272,7 +272,7 @@ public class ModifierUtil {
 	 * @param modifierTypes 修饰符列表，元素不能为空
 	 * @return “与”之后的修饰符
 	 */
-	private static int modifiersToInt(ModifierType... modifierTypes) {
+	private static int modifiersToInt(final ModifierType... modifierTypes) {
 		int modifier = modifierTypes[0].getValue();
 		for (int i = 1; i < modifierTypes.length; i++) {
 			modifier |= modifierTypes[i].getValue();

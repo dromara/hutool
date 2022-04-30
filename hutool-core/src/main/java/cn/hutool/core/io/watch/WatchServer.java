@@ -66,7 +66,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 		//初始化监听
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new WatchException(e);
 		}
 
@@ -83,7 +83,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 *
 	 * @param modifiers 监听选项，例如监听频率等
 	 */
-	public void setModifiers(WatchEvent.Modifier[] modifiers) {
+	public void setModifiers(final WatchEvent.Modifier[] modifiers) {
 		this.modifiers = modifiers;
 	}
 
@@ -93,7 +93,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param path     路径
 	 * @param maxDepth 递归下层目录的最大深度
 	 */
-	public void registerPath(Path path, int maxDepth) {
+	public void registerPath(final Path path, final int maxDepth) {
 		final WatchEvent.Kind<?>[] kinds = ArrayUtil.defaultIfEmpty(this.events, WatchKind.ALL);
 
 		try {
@@ -110,13 +110,13 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 				//遍历所有子目录并加入监听
 				Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), maxDepth, new SimpleFileVisitor<Path>() {
 					@Override
-					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+					public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
 						registerPath(dir, 0);//继续添加目录
 						return super.postVisitDirectory(dir, exc);
 					}
 				});
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			if (false == (e instanceof AccessDeniedException)) {
 				throw new WatchException(e);
 			}
@@ -132,11 +132,11 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
 	 * @since 5.4.0
 	 */
-	public void watch(WatchAction action, Filter<WatchEvent<?>> watchFilter) {
-		WatchKey wk;
+	public void watch(final WatchAction action, final Filter<WatchEvent<?>> watchFilter) {
+		final WatchKey wk;
 		try {
 			wk = watchService.take();
-		} catch (InterruptedException | ClosedWatchServiceException e) {
+		} catch (final InterruptedException | ClosedWatchServiceException e) {
 			// 用户中断
 			close();
 			return;
@@ -144,7 +144,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 
 		final Path currentPath = watchKeyPathMap.get(wk);
 
-		for (WatchEvent<?> event : wk.pollEvents()) {
+		for (final WatchEvent<?> event : wk.pollEvents()) {
 			// 如果监听文件，检查当前事件是否与所监听文件关联
 			if (null != watchFilter && false == watchFilter.accept(event)) {
 				continue;
@@ -162,7 +162,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param watcher     {@link Watcher}
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
 	 */
-	public void watch(Watcher watcher, Filter<WatchEvent<?>> watchFilter) {
+	public void watch(final Watcher watcher, final Filter<WatchEvent<?>> watchFilter) {
 		watch((event, currentPath)->{
 			final WatchEvent.Kind<?> kind = event.kind();
 

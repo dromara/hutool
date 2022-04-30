@@ -6,7 +6,7 @@ import cn.hutool.extra.tokenizer.Word;
 
 /**
  * Ansj分词中的一个单词包装
- * 
+ *
  * @author looly
  *
  */
@@ -17,10 +17,10 @@ public class AnsjWord implements Word {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param term {@link Term}
 	 */
-	public AnsjWord(Term term) {
+	public AnsjWord(final Term term) {
 		this.term = term;
 	}
 
@@ -28,7 +28,7 @@ public class AnsjWord implements Word {
 	public String getText() {
 		return term.getName();
 	}
-	
+
 	@Override
 	public int getStartOffset() {
 		return this.term.getOffe();

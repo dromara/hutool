@@ -30,7 +30,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitPath(CharSequence str) {
+	public static List<String> splitPath(final CharSequence str) {
 		return splitPath(str, 0);
 	}
 
@@ -41,7 +41,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitPathToArray(CharSequence str) {
+	public static String[] splitPathToArray(final CharSequence str) {
 		return toArray(splitPath(str));
 	}
 
@@ -53,7 +53,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitPath(CharSequence str, int limit) {
+	public static List<String> splitPath(final CharSequence str, final int limit) {
 		return split(str, StrUtil.C_SLASH, limit, true, true);
 	}
 
@@ -65,7 +65,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitPathToArray(CharSequence str, int limit) {
+	public static String[] splitPathToArray(final CharSequence str, final int limit) {
 		return toArray(splitPath(str, limit));
 	}
 
@@ -78,7 +78,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrim(CharSequence str, char separator, boolean ignoreEmpty) {
+	public static List<String> splitTrim(final CharSequence str, final char separator, final boolean ignoreEmpty) {
 		return split(str, separator, 0, true, ignoreEmpty);
 	}
 
@@ -92,7 +92,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence str, char separator, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(final CharSequence str, final char separator, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, 0, isTrim, ignoreEmpty);
 	}
 
@@ -106,7 +106,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitTrim(CharSequence str, char separator, int limit, boolean ignoreEmpty) {
+	public static List<String> splitTrim(final CharSequence str, final char separator, final int limit, final boolean ignoreEmpty) {
 		return split(str, separator, limit, true, ignoreEmpty, false);
 	}
 
@@ -121,7 +121,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(final CharSequence str, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
 	}
 
@@ -137,7 +137,7 @@ public class SplitUtil {
 	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
 	 * @since 5.7.14
 	 */
-	public static <R> List<R> split(CharSequence str, char separator, int limit, boolean ignoreEmpty, Function<String, R> mapping) {
+	public static <R> List<R> split(final CharSequence str, final char separator, final int limit, final boolean ignoreEmpty, final Function<String, R> mapping) {
 		return split(str, separator, limit, ignoreEmpty, false, mapping);
 	}
 
@@ -152,7 +152,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitIgnoreCase(CharSequence text, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> splitIgnoreCase(final CharSequence text, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(text, separator, limit, isTrim, ignoreEmpty, true);
 	}
 
@@ -167,7 +167,7 @@ public class SplitUtil {
 	 * @param ignoreCase  是否忽略大小写
 	 * @return 切分后的集合
 	 */
-	public static List<String> split(CharSequence text, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
+	public static List<String> split(final CharSequence text, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
 		return split(text, separator, limit, ignoreEmpty, ignoreCase, trimFunc(isTrim));
 	}
 
@@ -185,8 +185,8 @@ public class SplitUtil {
 	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
 	 * @since 5.7.14
 	 */
-	public static <R> List<R> split(CharSequence text, char separator, int limit, boolean ignoreEmpty,
-									boolean ignoreCase, Function<String, R> mapping) {
+	public static <R> List<R> split(final CharSequence text, final char separator, final int limit, final boolean ignoreEmpty,
+									final boolean ignoreCase, final Function<String, R> mapping) {
 		if (null == text) {
 			return new ArrayList<>(0);
 		}
@@ -205,7 +205,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static String[] splitToArray(final CharSequence str, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
 	}
 
@@ -221,7 +221,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence str, String separator, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(final CharSequence str, final String separator, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, -1, isTrim, ignoreEmpty, false);
 	}
 
@@ -234,7 +234,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrim(CharSequence str, String separator, boolean ignoreEmpty) {
+	public static List<String> splitTrim(final CharSequence str, final String separator, final boolean ignoreEmpty) {
 		return split(str, separator, true, ignoreEmpty);
 	}
 
@@ -249,7 +249,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
 	}
 
@@ -263,7 +263,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrim(CharSequence str, String separator, int limit, boolean ignoreEmpty) {
+	public static List<String> splitTrim(final CharSequence str, final String separator, final int limit, final boolean ignoreEmpty) {
 		return split(str, separator, limit, true, ignoreEmpty);
 	}
 
@@ -278,7 +278,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitIgnoreCase(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> splitIgnoreCase(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, true);
 	}
 
@@ -292,7 +292,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> splitTrimIgnoreCase(CharSequence str, String separator, int limit, boolean ignoreEmpty) {
+	public static List<String> splitTrimIgnoreCase(final CharSequence str, final String separator, final int limit, final boolean ignoreEmpty) {
 		return split(str, separator, limit, true, ignoreEmpty, true);
 	}
 
@@ -309,7 +309,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.2.1
 	 */
-	public static List<String> split(CharSequence text, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase) {
+	public static List<String> split(final CharSequence text, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
 		if (null == text) {
 			return new ArrayList<>(0);
 		}
@@ -328,7 +328,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(CharSequence str, String separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static String[] splitToArray(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
 	}
 
@@ -344,7 +344,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence text, int limit) {
+	public static List<String> split(final CharSequence text, final int limit) {
 		if (null == text) {
 			return new ArrayList<>(0);
 		}
@@ -360,7 +360,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(String str, int limit) {
+	public static String[] splitToArray(final String str, final int limit) {
 		return toArray(split(str, limit));
 	}
 	//---------------------------------------------------------------------------------------------- Split by regex
@@ -376,7 +376,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitByRegex(String text, String separatorRegex, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> splitByRegex(final String text, final String separatorRegex, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		final Pattern pattern = PatternPool.get(separatorRegex);
 		return split(text, pattern, limit, isTrim, ignoreEmpty);
 	}
@@ -393,7 +393,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(String text, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static List<String> split(final String text, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		if (null == text) {
 			return new ArrayList<>(0);
 		}
@@ -412,7 +412,7 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(String str, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty) {
+	public static String[] splitToArray(final String str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return toArray(split(str, separatorPattern, limit, isTrim, ignoreEmpty));
 	}
 	//---------------------------------------------------------------------------------------------- Split by length
@@ -424,11 +424,11 @@ public class SplitUtil {
 	 * @param len  每一个小节的长度
 	 * @return 截取后的字符串数组
 	 */
-	public static String[] splitByLength(CharSequence text, int len) {
+	public static String[] splitByLength(final CharSequence text, final int len) {
 		if (null == text) {
 			return new String[0];
 		}
-		SplitIter splitIter = new SplitIter(text, new LengthFinder(len), -1, false);
+		final SplitIter splitIter = new SplitIter(text, new LengthFinder(len), -1, false);
 		return splitIter.toArray(false);
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method start
@@ -439,7 +439,7 @@ public class SplitUtil {
 	 * @param list List
 	 * @return Array
 	 */
-	private static String[] toArray(List<String> list) {
+	private static String[] toArray(final List<String> list) {
 		return list.toArray(new String[0]);
 	}
 
@@ -449,7 +449,7 @@ public class SplitUtil {
 	 * @param isTrim 是否trim
 	 * @return {@link Function}
 	 */
-	private static Function<String, String> trimFunc(boolean isTrim) {
+	private static Function<String, String> trimFunc(final boolean isTrim) {
 		return (str) -> isTrim ? StrUtil.trim(str) : str;
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end

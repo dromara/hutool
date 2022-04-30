@@ -24,7 +24,7 @@ public class Seven7EntryInputStream extends InputStream {
 	 * @param sevenZFile {@link SevenZFile}
 	 * @param entry      {@link SevenZArchiveEntry}
 	 */
-	public Seven7EntryInputStream(SevenZFile sevenZFile, SevenZArchiveEntry entry) {
+	public Seven7EntryInputStream(final SevenZFile sevenZFile, final SevenZArchiveEntry entry) {
 		this.sevenZFile = sevenZFile;
 		this.size = entry.getSize();
 	}
@@ -33,7 +33,7 @@ public class Seven7EntryInputStream extends InputStream {
 	public int available() throws IOException {
 		try {
 			return Math.toIntExact(this.size);
-		} catch (ArithmeticException e) {
+		} catch (final ArithmeticException e) {
 			throw new IOException("Entry size is too large!(max than Integer.MAX)", e);
 		}
 	}

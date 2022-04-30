@@ -19,7 +19,7 @@ public enum HmacAlgorithm {
 
 	private final String value;
 
-	HmacAlgorithm(String value) {
+	HmacAlgorithm(final String value) {
 		this.value = value;
 	}
 

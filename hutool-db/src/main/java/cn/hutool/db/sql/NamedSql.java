@@ -34,7 +34,7 @@ public class NamedSql {
 	 * @param namedSql 命名占位符的SQL
 	 * @param paramMap 名和参数的对应Map
 	 */
-	public NamedSql(String namedSql, Map<String, Object> paramMap) {
+	public NamedSql(final String namedSql, final Map<String, Object> paramMap) {
 		this.params = new LinkedList<>();
 		parse(namedSql, paramMap);
 	}
@@ -72,7 +72,7 @@ public class NamedSql {
 	 * @param namedSql 命名占位符的SQL
 	 * @param paramMap 名和参数的对应Map
 	 */
-	private void parse(String namedSql, Map<String, Object> paramMap) {
+	private void parse(final String namedSql, final Map<String, Object> paramMap) {
 		if(MapUtil.isEmpty(paramMap)){
 			this.sql = namedSql;
 			return;
@@ -123,7 +123,7 @@ public class NamedSql {
 	 * @param sqlBuilder 结果SQL缓存
 	 * @param paramMap 变量map（非空）
 	 */
-	private void replaceVar(Character nameStartChar, StrBuilder name, StrBuilder sqlBuilder, Map<String, Object> paramMap){
+	private void replaceVar(final Character nameStartChar, final StrBuilder name, final StrBuilder sqlBuilder, final Map<String, Object> paramMap){
 		if(name.isEmpty()){
 			if(null != nameStartChar){
 				// 类似于:的情况，需要补上:
@@ -167,7 +167,7 @@ public class NamedSql {
 	 * @param c 字符
 	 * @return 是否标准字符
 	 */
-	private static boolean isGenerateChar(char c) {
+	private static boolean isGenerateChar(final char c) {
 		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || (c >= '0' && c <= '9');
 	}
 }

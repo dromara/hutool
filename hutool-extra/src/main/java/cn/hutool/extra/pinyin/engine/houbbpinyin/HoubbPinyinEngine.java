@@ -42,7 +42,7 @@ public class HoubbPinyinEngine implements PinyinEngine {
 	 *
 	 * @param format 格式
 	 */
-	public HoubbPinyinEngine(PinyinStyleEnum format) {
+	public HoubbPinyinEngine(final PinyinStyleEnum format) {
 		init(format);
 	}
 
@@ -59,15 +59,15 @@ public class HoubbPinyinEngine implements PinyinEngine {
 	}
 
 	@Override
-	public String getPinyin(char c) {
-		String result;
+	public String getPinyin(final char c) {
+		final String result;
 		result = PinyinHelper.toPinyin(String.valueOf(c), format);
 		return result;
 	}
 
 	@Override
-	public String getPinyin(String str, String separator) {
-		String result;
+	public String getPinyin(final String str, final String separator) {
+		final String result;
 		result = PinyinHelper.toPinyin(str, format, separator);
 		return result;
 	}

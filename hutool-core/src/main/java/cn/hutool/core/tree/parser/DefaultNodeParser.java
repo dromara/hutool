@@ -15,7 +15,7 @@ import java.util.Map;
 public class DefaultNodeParser<T> implements NodeParser<TreeNode<T>, T> {
 
 	@Override
-	public void parse(TreeNode<T> treeNode, Tree<T> tree) {
+	public void parse(final TreeNode<T> treeNode, final Tree<T> tree) {
 		tree.setId(treeNode.getId());
 		tree.setParentId(treeNode.getParentId());
 		tree.setWeight(treeNode.getWeight());

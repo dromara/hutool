@@ -48,7 +48,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public HttpServerRequest(HttpExchange httpExchange) {
+	public HttpServerRequest(final HttpExchange httpExchange) {
 		super(httpExchange);
 	}
 
@@ -121,7 +121,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param headerKey 头信息的KEY
 	 * @return header值
 	 */
-	public String getHeader(Header headerKey) {
+	public String getHeader(final Header headerKey) {
 		return getHeader(headerKey.toString());
 	}
 
@@ -131,7 +131,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param headerKey 头信息的KEY
 	 * @return header值
 	 */
-	public String getHeader(String headerKey) {
+	public String getHeader(final String headerKey) {
 		return getHeaders().getFirst(headerKey);
 	}
 
@@ -142,7 +142,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param charset   字符集
 	 * @return header值
 	 */
-	public String getHeader(String headerKey, Charset charset) {
+	public String getHeader(final String headerKey, final Charset charset) {
 		final String header = getHeader(headerKey);
 		if (null != header) {
 			return CharsetUtil.convert(header, CharsetUtil.ISO_8859_1, charset);
@@ -235,7 +235,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param cookieName Cookie名
 	 * @return HttpCookie对象
 	 */
-	public HttpCookie getCookie(String cookieName) {
+	public HttpCookie getCookie(final String cookieName) {
 		return getCookieMap().get(cookieName);
 	}
 
@@ -272,7 +272,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param charset 编码
 	 * @return 请求
 	 */
-	public String getBody(Charset charset) {
+	public String getBody(final Charset charset) {
 		return StrUtil.str(getBodyBytes(), charset);
 	}
 
@@ -303,7 +303,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 参数值
 	 * @since 5.5.8
 	 */
-	public String getParam(String name){
+	public String getParam(final String name){
 		return getParams().get(name, 0);
 	}
 
@@ -314,7 +314,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 参数值
 	 * @since 5.5.8
 	 */
-	public List<String> getParams(String name){
+	public List<String> getParams(final String name){
 		return getParams().get(name);
 	}
 
@@ -370,7 +370,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
 	 */
-	public String getClientIP(String... otherHeaderNames) {
+	public String getClientIP(final String... otherHeaderNames) {
 		String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
 		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
 			headers = ArrayUtil.addAll(headers, otherHeaderNames);
@@ -391,9 +391,9 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return IP地址
 	 * @since 4.4.1
 	 */
-	public String getClientIPByHeader(String... headerNames) {
+	public String getClientIPByHeader(final String... headerNames) {
 		String ip;
-		for (String header : headerNames) {
+		for (final String header : headerNames) {
 			ip = getHeader(header);
 			if (false == NetUtil.isUnknown(ip)) {
 				return NetUtil.getMultistageReverseProxyIp(ip);
@@ -428,11 +428,11 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.0
 	 */
-	public MultipartFormData parseMultipart(UploadSetting uploadSetting) throws IORuntimeException {
+	public MultipartFormData parseMultipart(final UploadSetting uploadSetting) throws IORuntimeException {
 		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
 			formData.parseRequestStream(getBodyStream(), getCharset());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 

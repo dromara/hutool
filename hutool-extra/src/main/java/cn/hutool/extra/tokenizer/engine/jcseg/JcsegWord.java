@@ -5,7 +5,7 @@ import org.lionsoul.jcseg.IWord;
 
 /**
  * Jcseg分词中的一个单词包装
- * 
+ *
  * @author looly
  *
  */
@@ -16,10 +16,10 @@ public class JcsegWord implements Word {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param word {@link IWord}
 	 */
-	public JcsegWord(IWord word) {
+	public JcsegWord(final IWord word) {
 		this.word = word;
 	}
 
@@ -27,12 +27,12 @@ public class JcsegWord implements Word {
 	public String getText() {
 		return word.getValue();
 	}
-	
+
 	@Override
 	public int getStartOffset() {
 		return word.getPosition();
 	}
-	
+
 	@Override
 	public int getEndOffset() {
 		return getStartOffset() + word.getLength();

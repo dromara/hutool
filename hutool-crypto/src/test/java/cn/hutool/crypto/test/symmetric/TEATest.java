@@ -12,7 +12,7 @@ public class TEATest {
 
 	@Test
 	public void teaTest() {
-		String data = "测试的加密数据 by Hutool";
+		final String data = "测试的加密数据 by Hutool";
 
 		// 密钥必须为128bit
 		final SymmetricCrypto tea = new SymmetricCrypto("TEA", "MyPassword123456".getBytes());
@@ -26,7 +26,7 @@ public class TEATest {
 
 	@Test
 	public void xteaTest() {
-		String data = "测试的加密数据 by Hutool";
+		final String data = "测试的加密数据 by Hutool";
 
 		// 密钥必须为128bit
 		final SymmetricCrypto tea = new SymmetricCrypto("XTEA", "MyPassword123456".getBytes());
@@ -40,7 +40,7 @@ public class TEATest {
 
 	@Test
 	public void xxteaTest() {
-		String data = "测试的加密数据 by Hutool";
+		final String data = "测试的加密数据 by Hutool";
 
 		// 密钥必须为128bit
 		final XXTEA tea = new XXTEA("MyPassword123456".getBytes());

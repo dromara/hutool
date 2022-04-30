@@ -32,7 +32,7 @@ public class AvgPartition<T> extends Partition<T> {
 	 * @param list  被分区的列表
 	 * @param limit 分区个数
 	 */
-	public AvgPartition(List<T> list, int limit) {
+	public AvgPartition(final List<T> list, final int limit) {
 		super(list, list.size() / (limit <= 0 ? 1 : limit));
 		Assert.isTrue(limit > 0, "Partition limit must be > 0");
 		this.limit = limit;
@@ -40,11 +40,11 @@ public class AvgPartition<T> extends Partition<T> {
 	}
 
 	@Override
-	public List<T> get(int index) {
+	public List<T> get(final int index) {
 		final int size = this.size;
 		final int remainder = this.remainder;
 		// 当limit个数超过list的size时，size为0，此时每个分区分1个元素，直到remainder个分配完，剩余分区为[]
-		int start = index * size + Math.min(index, remainder);
+		final int start = index * size + Math.min(index, remainder);
 		int end = start + size;
 		if (index + 1 <= remainder) {
 			// 将remainder个元素平均分布在前面，每个分区分1个

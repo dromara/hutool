@@ -32,7 +32,7 @@ public interface Func0<R> extends Serializable {
 	default R callWithRuntimeException(){
 		try {
 			return call();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

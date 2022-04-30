@@ -62,7 +62,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 * @return JWT
 	 */
-	public static JWT of(String token) {
+	public static JWT of(final String token) {
 		return new JWT(token);
 	}
 
@@ -80,7 +80,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *
 	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 */
-	public JWT(String token) {
+	public JWT(final String token) {
 		this();
 		parse(token);
 	}
@@ -91,7 +91,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
 	 * @return this
 	 */
-	public JWT parse(String token) {
+	public JWT parse(final String token) {
 		final List<String> tokens = splitToken(token);
 		this.tokens = tokens;
 		this.header.parse(tokens.get(0), this.charset);
@@ -105,7 +105,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param charset 编码
 	 * @return this
 	 */
-	public JWT setCharset(Charset charset) {
+	public JWT setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
@@ -116,7 +116,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param key 密钥
 	 * @return this
 	 */
-	public JWT setKey(byte[] key) {
+	public JWT setKey(final byte[] key) {
 		return setSigner(JWTSignerUtil.hs256(key));
 	}
 
@@ -127,7 +127,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param key         密钥
 	 * @return this
 	 */
-	public JWT setSigner(String algorithmId, byte[] key) {
+	public JWT setSigner(final String algorithmId, final byte[] key) {
 		return setSigner(JWTSignerUtil.createSigner(algorithmId, key));
 	}
 
@@ -139,7 +139,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return this
 	 * @since 5.7.2
 	 */
-	public JWT setSigner(String algorithmId, Key key) {
+	public JWT setSigner(final String algorithmId, final Key key) {
 		return setSigner(JWTSignerUtil.createSigner(algorithmId, key));
 	}
 
@@ -151,7 +151,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return this
 	 * @since 5.7.2
 	 */
-	public JWT setSigner(String algorithmId, KeyPair keyPair) {
+	public JWT setSigner(final String algorithmId, final KeyPair keyPair) {
 		return setSigner(JWTSignerUtil.createSigner(algorithmId, keyPair));
 	}
 
@@ -161,7 +161,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param signer 签名算法
 	 * @return this
 	 */
-	public JWT setSigner(JWTSigner signer) {
+	public JWT setSigner(final JWTSigner signer) {
 		this.signer = signer;
 		return this;
 	}
@@ -200,7 +200,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param name 头信息名称
 	 * @return 头信息
 	 */
-	public Object getHeader(String name) {
+	public Object getHeader(final String name) {
 		return this.header.getClaim(name);
 	}
 
@@ -221,7 +221,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param value 头
 	 * @return this
 	 */
-	public JWT setHeader(String name, Object value) {
+	public JWT setHeader(final String name, final Object value) {
 		this.header.setClaim(name, value);
 		return this;
 	}
@@ -232,7 +232,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param headers 头信息
 	 * @return this
 	 */
-	public JWT addHeaders(Map<String, ?> headers) {
+	public JWT addHeaders(final Map<String, ?> headers) {
 		this.header.addHeaders(headers);
 		return this;
 	}
@@ -262,7 +262,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param name 载荷信息名称
 	 * @return 载荷信息
 	 */
-	public Object getPayload(String name) {
+	public Object getPayload(final String name) {
 		return getPayload().getClaim(name);
 	}
 
@@ -274,7 +274,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return this
 	 */
 	@Override
-	public JWT setPayload(String name, Object value) {
+	public JWT setPayload(final String name, final Object value) {
 		this.payload.setClaim(name, value);
 		return this;
 	}
@@ -285,7 +285,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param payloads 载荷信息
 	 * @return this
 	 */
-	public JWT addPayloads(Map<String, ?> payloads) {
+	public JWT addPayloads(final Map<String, ?> payloads) {
 		this.payload.addPayloads(payloads);
 		return this;
 	}
@@ -305,7 +305,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param signer JWT签名器
 	 * @return JWT字符串
 	 */
-	public String sign(JWTSigner signer) {
+	public String sign(final JWTSigner signer) {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
 
 		// 检查头信息中是否有算法信息
@@ -346,7 +346,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @see JWTValidator
 	 * @since 5.7.4
 	 */
-	public boolean validate(long leeway) {
+	public boolean validate(final long leeway) {
 		if (false == verify()) {
 			return false;
 		}
@@ -354,7 +354,7 @@ public class JWT implements RegisteredPayload<JWT> {
 		// 校验时间字段
 		try {
 			JWTValidator.of(this).validateDate(DateUtil.date(), leeway);
-		} catch (ValidateException e) {
+		} catch (final ValidateException e) {
 			return false;
 		}
 
@@ -386,7 +386,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @param token JWT Token
 	 * @return 三部分内容
 	 */
-	private static List<String> splitToken(String token) {
+	private static List<String> splitToken(final String token) {
 		final List<String> tokens = StrUtil.split(token, CharUtil.DOT);
 		if (3 != tokens.size()) {
 			throw new JWTException("The token was expected 3 parts, but got {}.", tokens.size());

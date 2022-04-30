@@ -26,7 +26,7 @@ public enum BasicType {
 		WRAPPER_PRIMITIVE_MAP.put(Long.class, long.class);
 		WRAPPER_PRIMITIVE_MAP.put(Short.class, short.class);
 
-		for (Map.Entry<Class<?>, Class<?>> entry : WRAPPER_PRIMITIVE_MAP.entrySet()) {
+		for (final Map.Entry<Class<?>, Class<?>> entry : WRAPPER_PRIMITIVE_MAP.entrySet()) {
 			PRIMITIVE_WRAPPER_MAP.put(entry.getValue(), entry.getKey());
 		}
 	}
@@ -36,11 +36,11 @@ public enum BasicType {
 	 * @param clazz 原始类
 	 * @return 包装类
 	 */
-	public static Class<?> wrap(Class<?> clazz){
+	public static Class<?> wrap(final Class<?> clazz){
 		if(null == clazz || false == clazz.isPrimitive()){
 			return clazz;
 		}
-		Class<?> result = PRIMITIVE_WRAPPER_MAP.get(clazz);
+		final Class<?> result = PRIMITIVE_WRAPPER_MAP.get(clazz);
 		return (null == result) ? clazz : result;
 	}
 
@@ -49,11 +49,11 @@ public enum BasicType {
 	 * @param clazz 包装类
 	 * @return 原始类
 	 */
-	public static Class<?> unWrap(Class<?> clazz){
+	public static Class<?> unWrap(final Class<?> clazz){
 		if(null == clazz || clazz.isPrimitive()){
 			return clazz;
 		}
-		Class<?> result = WRAPPER_PRIMITIVE_MAP.get(clazz);
+		final Class<?> result = WRAPPER_PRIMITIVE_MAP.get(clazz);
 		return (null == result) ? clazz : result;
 	}
 }

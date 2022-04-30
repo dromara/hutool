@@ -45,7 +45,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @return Session
 	 * @since 4.0.11
 	 */
-	public static Session create(String group) {
+	public static Session create(final String group) {
 		return new Session(DSFactory.get(group));
 	}
 
@@ -55,7 +55,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param ds 数据源
 	 * @return Session
 	 */
-	public static Session create(DataSource ds) {
+	public static Session create(final DataSource ds) {
 		return new Session(ds);
 	}
 
@@ -65,7 +65,7 @@ public class Session extends AbstractDb implements Closeable {
 	 *
 	 * @param ds 数据源
 	 */
-	public Session(DataSource ds) {
+	public Session(final DataSource ds) {
 		this(ds, DialectFactory.getDialect(ds));
 	}
 
@@ -75,7 +75,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param ds 数据源
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
-	public Session(DataSource ds, String driverClassName) {
+	public Session(final DataSource ds, final String driverClassName) {
 		this(ds, DialectFactory.newDialect(driverClassName));
 	}
 
@@ -85,7 +85,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param ds 数据源
 	 * @param dialect 方言
 	 */
-	public Session(DataSource ds, Dialect dialect) {
+	public Session(final DataSource ds, final Dialect dialect) {
 		super(ds, dialect);
 	}
 	// ---------------------------------------------------------------------------- Constructor end
@@ -125,7 +125,7 @@ public class Session extends AbstractDb implements Closeable {
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				log.error(e);
 			}
 		}
@@ -142,7 +142,7 @@ public class Session extends AbstractDb implements Closeable {
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				log.error(e);
 			}
 		}
@@ -155,12 +155,12 @@ public class Session extends AbstractDb implements Closeable {
 	public void quietRollback() {
 		try {
 			getConnection().rollback();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				log.error(e);
 			}
 		}
@@ -172,13 +172,13 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param savepoint 保存点
 	 * @throws SQLException SQL执行异常
 	 */
-	public void rollback(Savepoint savepoint) throws SQLException {
+	public void rollback(final Savepoint savepoint) throws SQLException {
 		try {
 			getConnection().rollback(savepoint);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				log.error(e);
 			}
 		}
@@ -189,15 +189,15 @@ public class Session extends AbstractDb implements Closeable {
 	 *
 	 * @param savepoint 保存点
 	 */
-	public void quietRollback(Savepoint savepoint) {
+	public void quietRollback(final Savepoint savepoint) {
 		try {
 			getConnection().rollback(savepoint);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e);
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				log.error(e);
 			}
 		}
@@ -220,7 +220,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @return 保存点对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public Savepoint setSavepoint(String name) throws SQLException {
+	public Savepoint setSavepoint(final String name) throws SQLException {
 		return getConnection().setSavepoint(name);
 	}
 
@@ -236,7 +236,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param level 隔离级别
 	 * @throws SQLException SQL执行异常
 	 */
-	public void setTransactionIsolation(int level) throws SQLException {
+	public void setTransactionIsolation(final int level) throws SQLException {
 		if (getConnection().getMetaData().supportsTransactionIsolationLevel(level) == false) {
 			throw new SQLException(StrUtil.format("Transaction isolation [{}] not support!", level));
 		}
@@ -250,12 +250,12 @@ public class Session extends AbstractDb implements Closeable {
 	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public void tx(VoidFunc1<Session> func) throws SQLException {
+	public void tx(final VoidFunc1<Session> func) throws SQLException {
 		try {
 			beginTransaction();
 			func.call(this);
 			commit();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			quietRollback();
 			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
 		}
@@ -265,12 +265,12 @@ public class Session extends AbstractDb implements Closeable {
 
 	// ---------------------------------------------------------------------------- Getters and Setters start
 	@Override
-	public Session setWrapper(Character wrapperChar) {
+	public Session setWrapper(final Character wrapperChar) {
 		return (Session) super.setWrapper(wrapperChar);
 	}
 
 	@Override
-	public Session setWrapper(Wrapper wrapper) {
+	public Session setWrapper(final Wrapper wrapper) {
 		return (Session) super.setWrapper(wrapper);
 	}
 
@@ -286,13 +286,13 @@ public class Session extends AbstractDb implements Closeable {
 	}
 
 	@Override
-	public void closeConnection(Connection conn) {
+	public void closeConnection(final Connection conn) {
 		try {
 			if(conn != null && false == conn.getAutoCommit()) {
 				// 事务中的Session忽略关闭事件
 				return;
 			}
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			log.error(e);
 		}
 

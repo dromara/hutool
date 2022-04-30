@@ -21,7 +21,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void ofTest() {
-		String dateStr = "2020-01-23T12:23:56";
+		final String dateStr = "2020-01-23T12:23:56";
 		final DateTime dt = DateUtil.parse(dateStr);
 
 		LocalDateTime of = LocalDateTimeUtil.of(dt);
@@ -64,7 +64,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void parseTest5() {
-		LocalDateTime localDateTime = LocalDateTimeUtil.parse("19940121183604", "yyyyMMddHHmmss");
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("19940121183604", "yyyyMMddHHmmss");
 		Assert.assertEquals("1994-01-21T18:36:04", localDateTime.toString());
 	}
 
@@ -91,7 +91,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
-		LocalDate localDate = LocalDateTimeUtil.parseDate("2020-1-1", "yyyy-M-d");
+		final LocalDate localDate = LocalDateTimeUtil.parseDate("2020-1-1", "yyyy-M-d");
 		Assert.assertEquals("2020-01-01", localDate.toString());
 	}
 
@@ -183,24 +183,24 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void isOverlapTest(){
-		LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
-		LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
+		final LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
+		final LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
 
-		LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
-		LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
+		final LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
+		final LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
 
-		LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
-		LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
+		final LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
+		final LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
 
 		//真实请假数据
-		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
-		LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
+		final LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
+		final LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
 
-		LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
-		LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
+		final LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
+		final LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
 
-		LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
-		LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
+		final LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
+		final LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
 
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
@@ -212,7 +212,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void weekOfYearTest(){
-		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final LocalDate date1 = LocalDate.of(2021, 12, 31);
 		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
 		Assert.assertEquals(52, weekOfYear1);
 
@@ -222,7 +222,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void weekOfYearTest2(){
-		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final LocalDate date1 = LocalDate.of(2022, 1, 31);
 		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
 		Assert.assertEquals(5, weekOfYear1);
 

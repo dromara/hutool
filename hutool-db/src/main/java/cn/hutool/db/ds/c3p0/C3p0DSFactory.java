@@ -34,18 +34,18 @@ public class C3p0DSFactory extends AbstractDSFactory {
 	 *
 	 * @param setting 配置
 	 */
-	public C3p0DSFactory(Setting setting) {
+	public C3p0DSFactory(final Setting setting) {
 		super(DS_NAME, ComboPooledDataSource.class, setting);
 	}
 
 	@Override
-	protected DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		final ComboPooledDataSource ds = new ComboPooledDataSource();
 
 		// remarks等特殊配置，since 5.3.8
 		final Props connProps = new Props();
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);
@@ -58,7 +58,7 @@ public class C3p0DSFactory extends AbstractDSFactory {
 		ds.setJdbcUrl(jdbcUrl);
 		try {
 			ds.setDriverClass(driver);
-		} catch (PropertyVetoException e) {
+		} catch (final PropertyVetoException e) {
 			throw new DbRuntimeException(e);
 		}
 		ds.setUser(user);

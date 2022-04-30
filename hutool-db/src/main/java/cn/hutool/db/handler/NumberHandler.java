@@ -20,7 +20,7 @@ public class NumberHandler implements RsHandler<Number>{
 	}
 
 	@Override
-	public Number handle(ResultSet rs) throws SQLException {
+	public Number handle(final ResultSet rs) throws SQLException {
 		return (null != rs && rs.next()) ? rs.getBigDecimal(1) : null;
 	}
 }

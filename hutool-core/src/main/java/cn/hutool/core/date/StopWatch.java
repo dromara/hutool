@@ -49,7 +49,7 @@ public class StopWatch {
 	 * @return StopWatch
 	 * @since 5.5.2
 	 */
-	public static StopWatch create(String id) {
+	public static StopWatch create(final String id) {
 		return new StopWatch(id);
 	}
 
@@ -94,7 +94,7 @@ public class StopWatch {
 	 *
 	 * @param id 用于标识秒表的唯一ID
 	 */
-	public StopWatch(String id) {
+	public StopWatch(final String id) {
 		this(id, true);
 	}
 
@@ -104,7 +104,7 @@ public class StopWatch {
 	 * @param id           用于标识秒表的唯一ID
 	 * @param keepTaskList 是否在停止后保留任务，{@code false} 表示停止运行后不保留任务
 	 */
-	public StopWatch(String id, boolean keepTaskList) {
+	public StopWatch(final String id, final boolean keepTaskList) {
 		this.id = id;
 		if (keepTaskList) {
 			this.taskList = new ArrayList<>();
@@ -127,7 +127,7 @@ public class StopWatch {
 	 *
 	 * @param keepTaskList 是否在停止后保留任务
 	 */
-	public void setKeepTaskList(boolean keepTaskList) {
+	public void setKeepTaskList(final boolean keepTaskList) {
 		if (keepTaskList) {
 			if (null == this.taskList) {
 				this.taskList = new ArrayList<>();
@@ -152,7 +152,7 @@ public class StopWatch {
 	 * @param taskName 新开始的任务名称
 	 * @throws IllegalStateException 前一个任务没有结束
 	 */
-	public void start(String taskName) throws IllegalStateException {
+	public void start(final String taskName) throws IllegalStateException {
 		if (null != this.currentTaskName) {
 			throw new IllegalStateException("Can't start StopWatch: it's already running");
 		}
@@ -259,7 +259,7 @@ public class StopWatch {
 	 * @return 花费时间
 	 * @since 5.7.16
 	 */
-	public long getTotal(TimeUnit unit){
+	public long getTotal(final TimeUnit unit){
 		return unit.convert(this.totalTimeNanos, TimeUnit.NANOSECONDS);
 	}
 
@@ -384,7 +384,7 @@ public class StopWatch {
 			pf.setMinimumIntegerDigits(2);
 			pf.setGroupingUsed(false);
 
-			for (TaskInfo task : getTaskInfo()) {
+			for (final TaskInfo task : getTaskInfo()) {
 				sb.append(nf.format(task.getTime(unit))).append("  ");
 				sb.append(pf.format((double) task.getTimeNanos() / getTotalTimeNanos())).append("   ");
 				sb.append(task.getTaskName()).append(FileUtil.getLineSeparator());
@@ -397,9 +397,9 @@ public class StopWatch {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(shortSummary());
 		if (null != this.taskList) {
-			for (TaskInfo task : this.taskList) {
+			for (final TaskInfo task : this.taskList) {
 				sb.append("; [").append(task.getTaskName()).append("] took ").append(task.getTimeNanos()).append(" ns");
-				long percent = Math.round(100.0 * task.getTimeNanos() / getTotalTimeNanos());
+				final long percent = Math.round(100.0 * task.getTimeNanos() / getTotalTimeNanos());
 				sb.append(" = ").append(percent).append("%");
 			}
 		} else {
@@ -424,7 +424,7 @@ public class StopWatch {
 		 * @param taskName  任务名称
 		 * @param timeNanos 花费时间（纳秒）
 		 */
-		TaskInfo(String taskName, long timeNanos) {
+		TaskInfo(final String taskName, final long timeNanos) {
 			this.taskName = taskName;
 			this.timeNanos = timeNanos;
 		}
@@ -445,7 +445,7 @@ public class StopWatch {
 		 * @return 任务花费时间
 		 * @since 5.7.16
 		 */
-		public long getTime(TimeUnit unit) {
+		public long getTime(final TimeUnit unit) {
 			return unit.convert(this.timeNanos, TimeUnit.NANOSECONDS);
 		}
 

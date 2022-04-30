@@ -33,7 +33,7 @@ public final class Singleton {
 	 * @param params 构造方法参数
 	 * @return 单例对象
 	 */
-	public static <T> T get(Class<T> clazz, Object... params) {
+	public static <T> T get(final Class<T> clazz, final Object... params) {
 		Assert.notNull(clazz, "Class must be not null !");
 		final String key = buildKey(clazz.getName(), params);
 		return get(key, () -> ReflectUtil.newInstance(clazz, params));
@@ -51,7 +51,7 @@ public final class Singleton {
 	 * @since 5.3.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T get(String key, Func0<T> supplier) {
+	public static <T> T get(final String key, final Func0<T> supplier) {
 		return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
 	}
 
@@ -64,7 +64,7 @@ public final class Singleton {
 	 * @param params    构造参数
 	 * @return 单例对象
 	 */
-	public static <T> T get(String className, Object... params) {
+	public static <T> T get(final String className, final Object... params) {
 		Assert.notBlank(className, "Class name must be not blank !");
 		final Class<T> clazz = ClassUtil.loadClass(className);
 		return get(clazz, params);
@@ -76,7 +76,7 @@ public final class Singleton {
 	 * @param obj 对象
 	 * @since 4.0.7
 	 */
-	public static void put(Object obj) {
+	public static void put(final Object obj) {
 		Assert.notNull(obj, "Bean object must be not null !");
 		put(obj.getClass().getName(), obj);
 	}
@@ -88,7 +88,7 @@ public final class Singleton {
 	 * @param obj 对象
 	 * @since 5.3.3
 	 */
-	public static void put(String key, Object obj) {
+	public static void put(final String key, final Object obj) {
 		POOL.put(key, obj);
 	}
 
@@ -99,7 +99,7 @@ public final class Singleton {
 	 * @param params 构造参数
 	 * @return 是否存在
 	 */
-	public static boolean exists(Class<?> clazz, Object... params){
+	public static boolean exists(final Class<?> clazz, final Object... params){
 		if (null != clazz){
 			final String key = buildKey(clazz.getName(), params);
 			return POOL.containsKey(key);
@@ -121,7 +121,7 @@ public final class Singleton {
 	 *
 	 * @param clazz 类
 	 */
-	public static void remove(Class<?> clazz) {
+	public static void remove(final Class<?> clazz) {
 		if (null != clazz) {
 			remove(clazz.getName());
 		}
@@ -132,7 +132,7 @@ public final class Singleton {
 	 *
 	 * @param key 键
 	 */
-	public static void remove(String key) {
+	public static void remove(final String key) {
 		POOL.remove(key);
 	}
 
@@ -152,7 +152,7 @@ public final class Singleton {
 	 * @param params    参数列表
 	 * @return key
 	 */
-	private static String buildKey(String className, Object... params) {
+	private static String buildKey(final String className, final Object... params) {
 		if (ArrayUtil.isEmpty(params)) {
 			return className;
 		}

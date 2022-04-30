@@ -24,7 +24,7 @@ public class BeanValidatorUtilTest {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(final String name) {
 			this.name = name;
 		}
 
@@ -32,21 +32,21 @@ public class BeanValidatorUtilTest {
 			return address;
 		}
 
-		public void setAddress(String address) {
+		public void setAddress(final String address) {
 			this.address = address;
 		}
 	}
 
 	@Test
 	public void beanValidatorTest() {
-		BeanValidationResult result = ValidationUtil.warpValidate(new TestClass());
+		final BeanValidationResult result = ValidationUtil.warpValidate(new TestClass());
 		Assert.assertFalse(result.isSuccess());
 		Assert.assertEquals(2, result.getErrorMessages().size());
 	}
 
 	@Test
 	public void propertyValidatorTest() {
-		BeanValidationResult result = ValidationUtil.warpValidateProperty(new TestClass(), "name");
+		final BeanValidationResult result = ValidationUtil.warpValidateProperty(new TestClass(), "name");
 		Assert.assertFalse(result.isSuccess());
 		Assert.assertEquals(1, result.getErrorMessages().size());
 	}

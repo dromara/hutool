@@ -21,7 +21,7 @@ public class MvelEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context) {
 		return MVEL.eval(expression, context);
 	}
 }

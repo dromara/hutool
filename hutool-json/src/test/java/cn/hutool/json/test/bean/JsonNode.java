@@ -15,7 +15,7 @@ public class JsonNode implements Serializable {
 	public JsonNode() {
 	}
 
-	public JsonNode(Long id, Integer parentId, String name) {
+	public JsonNode(final Long id, final Integer parentId, final String name) {
 		this.id = id;
 		this.parentId = parentId;
 		this.name = name;

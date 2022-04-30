@@ -23,8 +23,8 @@ public class JSONXMLParser {
 	 * @param keepStrings 如果为{@code true}，则值保持String类型，不转换为数字或boolean
 	 * @throws JSONException 解析异常
 	 */
-	public static void parseJSONObject(JSONObject jo, String xmlStr, boolean keepStrings) throws JSONException {
-		XMLTokener x = new XMLTokener(xmlStr, jo.getConfig());
+	public static void parseJSONObject(final JSONObject jo, final String xmlStr, final boolean keepStrings) throws JSONException {
+		final XMLTokener x = new XMLTokener(xmlStr, jo.getConfig());
 		while (x.more() && x.skipPast("<")) {
 			parse(x, jo, null, keepStrings);
 		}
@@ -39,12 +39,12 @@ public class JSONXMLParser {
 	 * @return true if the close tag is processed.
 	 * @throws JSONException JSON异常
 	 */
-	private static boolean parse(XMLTokener x, JSONObject context, String name, boolean keepStrings) throws JSONException {
-		char c;
+	private static boolean parse(final XMLTokener x, final JSONObject context, final String name, final boolean keepStrings) throws JSONException {
+		final char c;
 		int i;
-		JSONObject jsonobject;
+		final JSONObject jsonobject;
 		String string;
-		String tagName;
+		final String tagName;
 		Object token;
 
 		token = x.nextToken();

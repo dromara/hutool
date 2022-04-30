@@ -35,7 +35,7 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 	 * @param clazz 需要转换的原始
 	 * @throws IllegalArgumentException 传入的转换类型非原始类型时抛出
 	 */
-	public PrimitiveConverter(Class<?> clazz) {
+	public PrimitiveConverter(final Class<?> clazz) {
 		if (null == clazz) {
 			throw new NullPointerException("PrimitiveConverter not allow null target type!");
 		} else if (false == clazz.isPrimitive()) {
@@ -45,12 +45,12 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 	}
 
 	@Override
-	protected Object convertInternal(Object value) {
+	protected Object convertInternal(final Object value) {
 		return PrimitiveConverter.convert(value, this.targetType, this::convertToStr);
 	}
 
 	@Override
-	protected String convertToStr(Object value) {
+	protected String convertToStr(final Object value) {
 		return StrUtil.trim(super.convertToStr(value));
 	}
 
@@ -68,7 +68,7 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 	 * @return 转换结果
 	 * @since 5.5.0
 	 */
-	protected static Object convert(Object value, Class<?> primitiveClass, Function<Object, String> toStringFunc) {
+	protected static Object convert(final Object value, final Class<?> primitiveClass, final Function<Object, String> toStringFunc) {
 		if (byte.class == primitiveClass) {
 			return ObjUtil.defaultIfNull(NumberConverter.convert(value, Byte.class, toStringFunc), 0);
 		} else if (short.class == primitiveClass) {

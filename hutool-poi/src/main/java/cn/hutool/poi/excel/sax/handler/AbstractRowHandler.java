@@ -34,13 +34,13 @@ public abstract class AbstractRowHandler<T> implements RowHandler {
 	 * @param startRowIndex 读取起始行（包含，从0开始计数）
 	 * @param endRowIndex 读取结束行（包含，从0开始计数）
 	 */
-	public AbstractRowHandler(int startRowIndex, int endRowIndex) {
+	public AbstractRowHandler(final int startRowIndex, final int endRowIndex) {
 		this.startRowIndex = startRowIndex;
 		this.endRowIndex = endRowIndex;
 	}
 
 	@Override
-	public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+	public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 		Assert.notNull(convertFunc);
 		if (rowIndex < this.startRowIndex || rowIndex > this.endRowIndex) {
 			return;

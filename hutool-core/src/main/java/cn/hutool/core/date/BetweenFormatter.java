@@ -37,7 +37,7 @@ public class BetweenFormatter implements Serializable {
 	 * @param betweenMs 日期间隔
 	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
 	 */
-	public BetweenFormatter(long betweenMs, Level level) {
+	public BetweenFormatter(final long betweenMs, final Level level) {
 		this(betweenMs, level, 0);
 	}
 
@@ -48,7 +48,7 @@ public class BetweenFormatter implements Serializable {
 	 * @param level         级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
 	 * @param levelMaxCount 格式化级别的最大个数，假如级别个数为1，但是级别到秒，那只显示一个级别
 	 */
-	public BetweenFormatter(long betweenMs, Level level, int levelMaxCount) {
+	public BetweenFormatter(final long betweenMs, final Level level, final int levelMaxCount) {
 		this.betweenMs = betweenMs;
 		this.level = level;
 		this.levelMaxCount = levelMaxCount;
@@ -62,13 +62,13 @@ public class BetweenFormatter implements Serializable {
 	public String format() {
 		final StringBuilder sb = new StringBuilder();
 		if (betweenMs > 0) {
-			long day = betweenMs / DateUnit.DAY.getMillis();
-			long hour = betweenMs / DateUnit.HOUR.getMillis() - day * 24;
-			long minute = betweenMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
+			final long day = betweenMs / DateUnit.DAY.getMillis();
+			final long hour = betweenMs / DateUnit.HOUR.getMillis() - day * 24;
+			final long minute = betweenMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
 
 			final long BetweenOfSecond = ((day * 24 + hour) * 60 + minute) * 60;
-			long second = betweenMs / DateUnit.SECOND.getMillis() - BetweenOfSecond;
-			long millisecond = betweenMs - (BetweenOfSecond + second) * 1000;
+			final long second = betweenMs / DateUnit.SECOND.getMillis() - BetweenOfSecond;
+			final long millisecond = betweenMs - (BetweenOfSecond + second) * 1000;
 
 			final int level = this.level.ordinal();
 			int levelCount = 0;
@@ -116,7 +116,7 @@ public class BetweenFormatter implements Serializable {
 	 *
 	 * @param betweenMs 时长毫秒数
 	 */
-	public void setBetweenMs(long betweenMs) {
+	public void setBetweenMs(final long betweenMs) {
 		this.betweenMs = betweenMs;
 	}
 
@@ -134,7 +134,7 @@ public class BetweenFormatter implements Serializable {
 	 *
 	 * @param level 格式化级别
 	 */
-	public void setLevel(Level level) {
+	public void setLevel(final Level level) {
 		this.level = level;
 	}
 
@@ -176,7 +176,7 @@ public class BetweenFormatter implements Serializable {
 		 *
 		 * @param name 级别名称
 		 */
-		Level(String name) {
+		Level(final String name) {
 			this.name = name;
 		}
 
@@ -202,7 +202,7 @@ public class BetweenFormatter implements Serializable {
 	 * @param levelCount 登记数量
 	 * @return 是否有效
 	 */
-	private boolean isLevelCountValid(int levelCount) {
+	private boolean isLevelCountValid(final int levelCount) {
 		return this.levelMaxCount <= 0 || levelCount < this.levelMaxCount;
 	}
 }

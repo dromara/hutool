@@ -14,10 +14,10 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByCharTest(){
-		String str1 = "a, ,,efedsfs,   ddf,";
+		final String str1 = "a, ,,efedsfs,   ddf,";
 
 		//不忽略""
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new CharFinder(',', false),
 				Integer.MAX_VALUE,
 				false
@@ -27,10 +27,10 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByCharIgnoreCaseTest(){
-		String str1 = "a, ,,eAedsas,   ddf,";
+		final String str1 = "a, ,,eAedsas,   ddf,";
 
 		//不忽略""
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new CharFinder('a', true),
 				Integer.MAX_VALUE,
 				false
@@ -40,9 +40,9 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByCharIgnoreEmptyTest(){
-		String str1 = "a, ,,efedsfs,   ddf,";
+		final String str1 = "a, ,,efedsfs,   ddf,";
 
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new CharFinder(',', false),
 				Integer.MAX_VALUE,
 				true
@@ -54,9 +54,9 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByCharTrimTest(){
-		String str1 = "a, ,,efedsfs,   ddf,";
+		final String str1 = "a, ,,efedsfs,   ddf,";
 
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new CharFinder(',', false),
 				Integer.MAX_VALUE,
 				true
@@ -71,9 +71,9 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByStrTest(){
-		String str1 = "a, ,,efedsfs,   ddf,";
+		final String str1 = "a, ,,efedsfs,   ddf,";
 
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new StrFinder("e", false),
 				Integer.MAX_VALUE,
 				true
@@ -85,9 +85,9 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByPatternTest(){
-		String str1 = "a, ,,efedsfs,   ddf,";
+		final String str1 = "a, ,,efedsfs,   ddf,";
 
-		SplitIter splitIter = new SplitIter(str1,
+		final SplitIter splitIter = new SplitIter(str1,
 				new PatternFinder(Pattern.compile("\\s")),
 				Integer.MAX_VALUE,
 				true
@@ -99,8 +99,8 @@ public class SplitIterTest {
 
 	@Test
 	public void splitByLengthTest(){
-		String text = "1234123412341234";
-		SplitIter splitIter = new SplitIter(text,
+		final String text = "1234123412341234";
+		final SplitIter splitIter = new SplitIter(text,
 				new LengthFinder(4),
 				Integer.MAX_VALUE,
 				false
@@ -112,8 +112,8 @@ public class SplitIterTest {
 
 	@Test
 	public void splitLimitTest(){
-		String text = "55:02:18";
-		SplitIter splitIter = new SplitIter(text,
+		final String text = "55:02:18";
+		final SplitIter splitIter = new SplitIter(text,
 				new CharFinder(':'),
 				3,
 				false
@@ -125,8 +125,8 @@ public class SplitIterTest {
 
 	@Test
 	public void splitToSingleTest(){
-		String text = "";
-		SplitIter splitIter = new SplitIter(text,
+		final String text = "";
+		final SplitIter splitIter = new SplitIter(text,
 				new CharFinder(':'),
 				3,
 				false
@@ -139,8 +139,8 @@ public class SplitIterTest {
 	// 切割字符串是空字符串时报错
 	@Test(expected = IllegalArgumentException.class)
 	public void splitByEmptyTest(){
-		String text = "aa,bb,cc";
-		SplitIter splitIter = new SplitIter(text,
+		final String text = "aa,bb,cc";
+		final SplitIter splitIter = new SplitIter(text,
 				new StrFinder("", false),
 				3,
 				false

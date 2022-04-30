@@ -28,7 +28,7 @@ public class JetbrickTemplate extends AbstractTemplate implements Serializable{
 	 * @param jetTemplate Jetbrick的模板对象 {@link JetTemplate }
 	 * @return JetbrickTemplate
 	 */
-	public static JetbrickTemplate wrap(JetTemplate jetTemplate) {
+	public static JetbrickTemplate wrap(final JetTemplate jetTemplate) {
 		return (null == jetTemplate) ? null : new JetbrickTemplate(jetTemplate);
 	}
 
@@ -37,18 +37,18 @@ public class JetbrickTemplate extends AbstractTemplate implements Serializable{
 	 *
 	 * @param jetTemplate Jetbrick的模板对象 {@link JetTemplate }
 	 */
-	public JetbrickTemplate(JetTemplate jetTemplate) {
+	public JetbrickTemplate(final JetTemplate jetTemplate) {
 		this.rawTemplate = jetTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.render(map, writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.render(map, out);
 	}

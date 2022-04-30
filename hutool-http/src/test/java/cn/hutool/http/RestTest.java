@@ -16,7 +16,7 @@ public class RestTest {
 
 	@Test
 	public void contentTypeTest() {
-		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
+		final HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
 				.body(JSONUtil.createObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
@@ -26,7 +26,7 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void postTest() {
-		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
+		final HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
 				.body(JSONUtil.createObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
@@ -36,7 +36,7 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void postTest2() {
-		String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.createObj()//
+		final String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.createObj()//
 				.set("aaa", "aaaValue")
 				.set("键2", "值2").toString());
 		Console.log(result);
@@ -45,7 +45,7 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void getWithBodyTest() {
-		HttpRequest request = HttpRequest.get("http://localhost:8888/restTest")//
+		final HttpRequest request = HttpRequest.get("http://localhost:8888/restTest")//
 				.header(Header.CONTENT_TYPE, "application/json")
 				.body(JSONUtil.createObj()
 						.set("aaa", "aaaValue")
@@ -56,7 +56,7 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void getWithBodyTest2() {
-		HttpRequest request = HttpRequest.get("https://ad.oceanengine.com/open_api/2/advertiser/info/")//
+		final HttpRequest request = HttpRequest.get("https://ad.oceanengine.com/open_api/2/advertiser/info/")//
 				// Charles代理
 				.setHttpProxy("localhost", 8888)
 				.header("Access-Token","")

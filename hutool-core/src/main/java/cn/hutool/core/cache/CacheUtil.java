@@ -23,7 +23,7 @@ public class CacheUtil {
 	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link FIFOCache}
 	 */
-	public static <K, V> FIFOCache<K, V> newFIFOCache(int capacity, long timeout){
+	public static <K, V> FIFOCache<K, V> newFIFOCache(final int capacity, final long timeout){
 		return new FIFOCache<>(capacity, timeout);
 	}
 
@@ -35,7 +35,7 @@ public class CacheUtil {
 	 * @param capacity 容量
 	 * @return {@link FIFOCache}
 	 */
-	public static <K, V> FIFOCache<K, V> newFIFOCache(int capacity){
+	public static <K, V> FIFOCache<K, V> newFIFOCache(final int capacity){
 		return new FIFOCache<>(capacity);
 	}
 
@@ -48,7 +48,7 @@ public class CacheUtil {
 	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link LFUCache}
 	 */
-	public static <K, V> LFUCache<K, V> newLFUCache(int capacity, long timeout){
+	public static <K, V> LFUCache<K, V> newLFUCache(final int capacity, final long timeout){
 		return new LFUCache<>(capacity, timeout);
 	}
 
@@ -60,7 +60,7 @@ public class CacheUtil {
 	 * @param capacity 容量
 	 * @return {@link LFUCache}
 	 */
-	public static <K, V> LFUCache<K, V> newLFUCache(int capacity){
+	public static <K, V> LFUCache<K, V> newLFUCache(final int capacity){
 		return new LFUCache<>(capacity);
 	}
 
@@ -74,7 +74,7 @@ public class CacheUtil {
 	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link LRUCache}
 	 */
-	public static <K, V> LRUCache<K, V> newLRUCache(int capacity, long timeout){
+	public static <K, V> LRUCache<K, V> newLRUCache(final int capacity, final long timeout){
 		return new LRUCache<>(capacity, timeout);
 	}
 
@@ -86,7 +86,7 @@ public class CacheUtil {
 	 * @param capacity 容量
 	 * @return {@link LRUCache}
 	 */
-	public static <K, V> LRUCache<K, V> newLRUCache(int capacity){
+	public static <K, V> LRUCache<K, V> newLRUCache(final int capacity){
 		return new LRUCache<>(capacity);
 	}
 
@@ -98,7 +98,7 @@ public class CacheUtil {
 	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link TimedCache}
 	 */
-	public static <K, V> TimedCache<K, V> newTimedCache(long timeout){
+	public static <K, V> TimedCache<K, V> newTimedCache(final long timeout){
 		return new TimedCache<>(timeout);
 	}
 
@@ -111,7 +111,7 @@ public class CacheUtil {
 	 * @return {@link WeakCache}
 	 * @since 3.0.7
 	 */
-	public static <K, V> WeakCache<K, V> newWeakCache(long timeout){
+	public static <K, V> WeakCache<K, V> newWeakCache(final long timeout){
 		return new WeakCache<>(timeout);
 	}
 

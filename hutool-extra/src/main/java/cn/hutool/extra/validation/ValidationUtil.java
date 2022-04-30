@@ -26,7 +26,7 @@ public class ValidationUtil {
 	private static final Validator validator;
 
 	static {
-		try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+		try(final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
 			validator = factory.getValidator();
 		}
 	}
@@ -48,7 +48,7 @@ public class ValidationUtil {
 	 * @param groups 校验组
 	 * @return {@link Set}
 	 */
-	public static <T> Set<ConstraintViolation<T>> validate(T bean, Class<?>... groups) {
+	public static <T> Set<ConstraintViolation<T>> validate(final T bean, final Class<?>... groups) {
 		return validator.validate(bean, groups);
 	}
 
@@ -61,7 +61,7 @@ public class ValidationUtil {
 	 * @param groups       验证分组
 	 * @return {@link Set}
 	 */
-	public static <T> Set<ConstraintViolation<T>> validateProperty(T bean, String propertyName, Class<?>... groups) {
+	public static <T> Set<ConstraintViolation<T>> validateProperty(final T bean, final String propertyName, final Class<?>... groups) {
 		return validator.validateProperty(bean, propertyName, groups);
 	}
 
@@ -73,7 +73,7 @@ public class ValidationUtil {
 	 * @param groups 校验组
 	 * @return {@link BeanValidationResult}
 	 */
-	public static <T> BeanValidationResult warpValidate(T bean, Class<?>... groups) {
+	public static <T> BeanValidationResult warpValidate(final T bean, final Class<?>... groups) {
 		return warpBeanValidationResult(validate(bean, groups));
 	}
 
@@ -86,7 +86,7 @@ public class ValidationUtil {
 	 * @param groups       验证分组
 	 * @return {@link BeanValidationResult}
 	 */
-	public static <T> BeanValidationResult warpValidateProperty(T bean, String propertyName, Class<?>... groups) {
+	public static <T> BeanValidationResult warpValidateProperty(final T bean, final String propertyName, final Class<?>... groups) {
 		return warpBeanValidationResult(validateProperty(bean, propertyName, groups));
 	}
 
@@ -96,10 +96,10 @@ public class ValidationUtil {
 	 * @param constraintViolations 校验结果集
 	 * @return {@link BeanValidationResult}
 	 */
-	private static <T> BeanValidationResult warpBeanValidationResult(Set<ConstraintViolation<T>> constraintViolations) {
-		BeanValidationResult result = new BeanValidationResult(constraintViolations.isEmpty());
-		for (ConstraintViolation<T> constraintViolation : constraintViolations) {
-			ErrorMessage errorMessage = new ErrorMessage();
+	private static <T> BeanValidationResult warpBeanValidationResult(final Set<ConstraintViolation<T>> constraintViolations) {
+		final BeanValidationResult result = new BeanValidationResult(constraintViolations.isEmpty());
+		for (final ConstraintViolation<T> constraintViolation : constraintViolations) {
+			final ErrorMessage errorMessage = new ErrorMessage();
 			errorMessage.setPropertyName(constraintViolation.getPropertyPath().toString());
 			errorMessage.setMessage(constraintViolation.getMessage());
 			errorMessage.setValue(constraintViolation.getInvalidValue());

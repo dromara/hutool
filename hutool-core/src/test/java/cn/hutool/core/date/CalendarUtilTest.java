@@ -10,7 +10,7 @@ public class CalendarUtilTest {
 
 	@Test
 	public void formatChineseDate(){
-		Calendar calendar = Objects.requireNonNull(DateUtil.parse("2018-02-24 12:13:14")).toCalendar();
+		final Calendar calendar = Objects.requireNonNull(DateUtil.parse("2018-02-24 12:13:14")).toCalendar();
 		final String chineseDate = CalendarUtil.formatChineseDate(calendar, false);
 		Assert.assertEquals("二〇一八年二月二十四日", chineseDate);
 		final String chineseDateTime = CalendarUtil.formatChineseDate(calendar, true);

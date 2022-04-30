@@ -28,14 +28,14 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 * @param endRowIndex    结束行（包含，从0开始计数）
 	 * @param beanClass      每行对应Bean的类型
 	 */
-	public BeanSheetReader(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> beanClass) {
+	public BeanSheetReader(final int headerRowIndex, final int startRowIndex, final int endRowIndex, final Class<T> beanClass) {
 		mapSheetReader = new MapSheetReader(headerRowIndex, startRowIndex, endRowIndex);
 		this.beanClass = beanClass;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> read(Sheet sheet) {
+	public List<T> read(final Sheet sheet) {
 		final List<Map<String, Object>> mapList = mapSheetReader.read(sheet);
 		if (Map.class.isAssignableFrom(this.beanClass)) {
 			return (List<T>) mapList;
@@ -43,7 +43,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 
 		final List<T> beanList = new ArrayList<>(mapList.size());
 		final CopyOptions copyOptions = CopyOptions.create().setIgnoreError(true);
-		for (Map<String, Object> map : mapList) {
+		for (final Map<String, Object> map : mapList) {
 			beanList.add(BeanUtil.toBean(map, this.beanClass, copyOptions));
 		}
 		return beanList;
@@ -55,7 +55,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 *
 	 * @param cellEditor 单元格值处理接口
 	 */
-	public void setCellEditor(CellEditor cellEditor) {
+	public void setCellEditor(final CellEditor cellEditor) {
 		this.mapSheetReader.setCellEditor(cellEditor);
 	}
 
@@ -64,7 +64,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 *
 	 * @param ignoreEmptyRow 是否忽略空行
 	 */
-	public void setIgnoreEmptyRow(boolean ignoreEmptyRow) {
+	public void setIgnoreEmptyRow(final boolean ignoreEmptyRow) {
 		this.mapSheetReader.setIgnoreEmptyRow(ignoreEmptyRow);
 	}
 
@@ -73,7 +73,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 *
 	 * @param headerAlias 别名Map
 	 */
-	public void setHeaderAlias(Map<String, String> headerAlias) {
+	public void setHeaderAlias(final Map<String, String> headerAlias) {
 		this.mapSheetReader.setHeaderAlias(headerAlias);
 	}
 
@@ -83,7 +83,7 @@ public class BeanSheetReader<T> implements SheetReader<List<T>> {
 	 * @param header 标题
 	 * @param alias  别名
 	 */
-	public void addHeaderAlias(String header, String alias) {
+	public void addHeaderAlias(final String header, final String alias) {
 		this.mapSheetReader.addHeaderAlias(header, alias);
 	}
 }

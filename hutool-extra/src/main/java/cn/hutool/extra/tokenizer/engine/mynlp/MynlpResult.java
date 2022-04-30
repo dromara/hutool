@@ -23,7 +23,7 @@ public class MynlpResult implements Result {
 	 *
 	 * @param sentence 分词结果（中文句子）
 	 */
-	public MynlpResult(Sentence sentence) {
+	public MynlpResult(final Sentence sentence) {
 		this.result = sentence.iterator();
 	}
 

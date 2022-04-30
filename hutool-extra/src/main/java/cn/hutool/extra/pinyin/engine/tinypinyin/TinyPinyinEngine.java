@@ -37,12 +37,12 @@ public class TinyPinyinEngine implements PinyinEngine {
 	 * 构造
 	 * @param config 配置
 	 */
-	public TinyPinyinEngine(Pinyin.Config config){
+	public TinyPinyinEngine(final Pinyin.Config config){
 		Pinyin.init(config);
 	}
 
 	@Override
-	public String getPinyin(char c) {
+	public String getPinyin(final char c) {
 		if(false == Pinyin.isChinese(c)){
 			return String.valueOf(c);
 		}
@@ -50,7 +50,7 @@ public class TinyPinyinEngine implements PinyinEngine {
 	}
 
 	@Override
-	public String getPinyin(String str, String separator) {
+	public String getPinyin(final String str, final String separator) {
 		return Pinyin.toPinyin(str, separator).toLowerCase();
 	}
 

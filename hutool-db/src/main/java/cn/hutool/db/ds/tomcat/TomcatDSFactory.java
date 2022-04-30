@@ -30,12 +30,12 @@ public class TomcatDSFactory extends AbstractDSFactory {
 	 *
 	 * @param setting Setting数据库配置
 	 */
-	public TomcatDSFactory(Setting setting) {
+	public TomcatDSFactory(final Setting setting) {
 		super(DS_NAME, DataSource.class, setting);
 	}
 
 	@Override
-	protected javax.sql.DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting) {
+	protected javax.sql.DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
 		final PoolProperties poolProps = new PoolProperties();
 		poolProps.setUrl(jdbcUrl);
 		poolProps.setDriverClassName(driver);
@@ -45,7 +45,7 @@ public class TomcatDSFactory extends AbstractDSFactory {
 		// remarks等特殊配置，since 5.3.8
 		final Props connProps = new Props();
 		String connValue;
-		for (String key : KEY_CONN_PROPS) {
+		for (final String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);

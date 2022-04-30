@@ -8,14 +8,14 @@ import cn.hutool.log.StaticLog;
 
 /**
  * 接入完成回调，单例使用
- * 
+ *
  * @author looly
  *
  */
 public class AcceptHandler implements CompletionHandler<AsynchronousSocketChannel, AioServer> {
 
 	@Override
-	public void completed(AsynchronousSocketChannel socketChannel, AioServer aioServer) {
+	public void completed(final AsynchronousSocketChannel socketChannel, final AioServer aioServer) {
 		// 继续等待接入（异步）
 		aioServer.accept();
 
@@ -30,7 +30,7 @@ public class AcceptHandler implements CompletionHandler<AsynchronousSocketChanne
 	}
 
 	@Override
-	public void failed(Throwable exc, AioServer aioServer) {
+	public void failed(final Throwable exc, final AioServer aioServer) {
 		StaticLog.error(exc);
 	}
 

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * AIO会话<br>
  * 每个客户端对应一个会话对象
- * 
+ *
  * @author looly
  *
  */
@@ -36,12 +36,12 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @param ioAction IO消息处理类
 	 * @param config 配置项
 	 */
-	public AioSession(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction, SocketConfig config) {
+	public AioSession(final AsynchronousSocketChannel channel, final IoAction<ByteBuffer> ioAction, final SocketConfig config) {
 		this.channel = channel;
 		this.ioAction = ioAction;
 
@@ -53,7 +53,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 获取{@link AsynchronousSocketChannel}
-	 * 
+	 *
 	 * @return {@link AsynchronousSocketChannel}
 	 */
 	public AsynchronousSocketChannel getChannel() {
@@ -62,7 +62,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 获取读取Buffer
-	 * 
+	 *
 	 * @return 读取Buffer
 	 */
 	public ByteBuffer getReadBuffer() {
@@ -71,7 +71,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 获取写Buffer
-	 * 
+	 *
 	 * @return 写Buffer
 	 */
 	public ByteBuffer getWriteBuffer() {
@@ -80,7 +80,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 获取消息处理器
-	 * 
+	 *
 	 * @return {@link IoAction}
 	 */
 	public IoAction<ByteBuffer> getIoAction() {
@@ -89,7 +89,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 获取远程主机（客户端）地址和端口
-	 * 
+	 *
 	 * @return 远程主机（客户端）地址和端口
 	 */
 	public SocketAddress getRemoteAddress() {
@@ -98,7 +98,7 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 读取数据到Buffer
-	 * 
+	 *
 	 * @return this
 	 */
 	public AioSession read() {
@@ -107,11 +107,11 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 读取数据到Buffer
-	 * 
+	 *
 	 * @param handler {@link CompletionHandler}
 	 * @return this
 	 */
-	public AioSession read(CompletionHandler<Integer, AioSession> handler) {
+	public AioSession read(final CompletionHandler<Integer, AioSession> handler) {
 		if (isOpen()) {
 			this.readBuffer.clear();
 			this.channel.read(this.readBuffer, Math.max(this.readTimeout, 0L), TimeUnit.MILLISECONDS, this, handler);
@@ -125,7 +125,7 @@ public class AioSession implements Closeable{
 	 * @param data 数据
 	 * @return this
 	 */
-	public AioSession writeAndClose(ByteBuffer data) {
+	public AioSession writeAndClose(final ByteBuffer data) {
 		write(data);
 		return closeOut();
 	}
@@ -136,7 +136,7 @@ public class AioSession implements Closeable{
 	 * @param data 数据
 	 * @return {@link Future}
 	 */
-	public Future<Integer> write(ByteBuffer data) {
+	public Future<Integer> write(final ByteBuffer data) {
 		return this.channel.write(data);
 	}
 
@@ -147,7 +147,7 @@ public class AioSession implements Closeable{
 	 * @param handler {@link CompletionHandler}
 	 * @return this
 	 */
-	public AioSession write(ByteBuffer data, CompletionHandler<Integer, AioSession> handler) {
+	public AioSession write(final ByteBuffer data, final CompletionHandler<Integer, AioSession> handler) {
 		this.channel.write(data, Math.max(this.writeTimeout, 0L), TimeUnit.MILLISECONDS, this, handler);
 		return this;
 	}
@@ -155,7 +155,7 @@ public class AioSession implements Closeable{
 	/**
 	 * 会话是否打开状态<br>
 	 * 当Socket保持连接时会话始终打开
-	 * 
+	 *
 	 * @return 会话是否打开状态
 	 */
 	public boolean isOpen() {
@@ -164,14 +164,14 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 关闭输出
-	 * 
+	 *
 	 * @return this
 	 */
 	public AioSession closeIn() {
 		if (null != this.channel) {
 			try {
 				this.channel.shutdownInput();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 		}
@@ -180,14 +180,14 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 关闭输出
-	 * 
+	 *
 	 * @return this
 	 */
 	public AioSession closeOut() {
 		if (null != this.channel) {
 			try {
 				this.channel.shutdownOutput();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 		}

@@ -15,7 +15,7 @@ public class CaptchaUtil {
 	 * @param height 图片高
 	 * @return {@link LineCaptcha}
 	 */
-	public static LineCaptcha createLineCaptcha(int width, int height) {
+	public static LineCaptcha createLineCaptcha(final int width, final int height) {
 		return new LineCaptcha(width, height);
 	}
 
@@ -28,7 +28,7 @@ public class CaptchaUtil {
 	 * @param lineCount 干扰线条数
 	 * @return {@link LineCaptcha}
 	 */
-	public static LineCaptcha createLineCaptcha(int width, int height, int codeCount, int lineCount) {
+	public static LineCaptcha createLineCaptcha(final int width, final int height, final int codeCount, final int lineCount) {
 		return new LineCaptcha(width, height, codeCount, lineCount);
 	}
 
@@ -40,7 +40,7 @@ public class CaptchaUtil {
 	 * @return {@link CircleCaptcha}
 	 * @since 3.2.3
 	 */
-	public static CircleCaptcha createCircleCaptcha(int width, int height) {
+	public static CircleCaptcha createCircleCaptcha(final int width, final int height) {
 		return new CircleCaptcha(width, height);
 	}
 
@@ -54,7 +54,7 @@ public class CaptchaUtil {
 	 * @return {@link CircleCaptcha}
 	 * @since 3.2.3
 	 */
-	public static CircleCaptcha createCircleCaptcha(int width, int height, int codeCount, int circleCount) {
+	public static CircleCaptcha createCircleCaptcha(final int width, final int height, final int codeCount, final int circleCount) {
 		return new CircleCaptcha(width, height, codeCount, circleCount);
 	}
 
@@ -66,7 +66,7 @@ public class CaptchaUtil {
 	 * @return {@link ShearCaptcha}
 	 * @since 3.2.3
 	 */
-	public static ShearCaptcha createShearCaptcha(int width, int height) {
+	public static ShearCaptcha createShearCaptcha(final int width, final int height) {
 		return new ShearCaptcha(width, height);
 	}
 
@@ -80,7 +80,7 @@ public class CaptchaUtil {
 	 * @return {@link ShearCaptcha}
 	 * @since 3.3.0
 	 */
-	public static ShearCaptcha createShearCaptcha(int width, int height, int codeCount, int thickness) {
+	public static ShearCaptcha createShearCaptcha(final int width, final int height, final int codeCount, final int thickness) {
 		return new ShearCaptcha(width, height, codeCount, thickness);
 	}
 
@@ -91,7 +91,7 @@ public class CaptchaUtil {
 	 * @param height 高
 	 * @return {@link GifCaptcha}
 	 */
-	public static GifCaptcha createGifCaptcha(int width, int height) {
+	public static GifCaptcha createGifCaptcha(final int width, final int height) {
 		return new GifCaptcha(width, height);
 	}
 
@@ -103,7 +103,7 @@ public class CaptchaUtil {
 	 * @param codeCount 字符个数
 	 * @return {@link GifCaptcha}
 	 */
-	public static GifCaptcha createGifCaptcha(int width, int height, int codeCount) {
+	public static GifCaptcha createGifCaptcha(final int width, final int height, final int codeCount) {
 		return new GifCaptcha(width, height, codeCount);
 	}
 }

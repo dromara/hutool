@@ -13,23 +13,23 @@ import cn.hutool.core.text.StrUtil;
 public class NoResourceException extends IORuntimeException {
 	private static final long serialVersionUID = -623254467603299129L;
 
-	public NoResourceException(Throwable e) {
+	public NoResourceException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public NoResourceException(String message) {
+	public NoResourceException(final String message) {
 		super(message);
 	}
 
-	public NoResourceException(String messageTemplate, Object... params) {
+	public NoResourceException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public NoResourceException(String message, Throwable throwable) {
+	public NoResourceException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public NoResourceException(Throwable throwable, String messageTemplate, Object... params) {
+	public NoResourceException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 
@@ -40,7 +40,7 @@ public class NoResourceException extends IORuntimeException {
 	 * @return 是否为指定类型异常
 	 */
 	@Override
-	public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
+	public boolean causeInstanceOf(final Class<? extends Throwable> clazz) {
 		final Throwable cause = this.getCause();
 		return clazz.isInstance(cause);
 	}

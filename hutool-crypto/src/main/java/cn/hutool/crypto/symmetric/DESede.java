@@ -33,7 +33,7 @@ public class DESede extends SymmetricCrypto {
 	 *
 	 * @param key 密钥
 	 */
-	public DESede(byte[] key) {
+	public DESede(final byte[] key) {
 		super(SymmetricAlgorithm.DESede, key);
 	}
 
@@ -43,7 +43,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
-	public DESede(Mode mode, Padding padding) {
+	public DESede(final Mode mode, final Padding padding) {
 		this(mode.name(), padding.name());
 	}
 
@@ -54,7 +54,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，长度24位
 	 */
-	public DESede(Mode mode, Padding padding, byte[] key) {
+	public DESede(final Mode mode, final Padding padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -67,7 +67,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param iv 偏移向量，加盐
 	 * @since 3.3.0
 	 */
-	public DESede(Mode mode, Padding padding, byte[] key, byte[] iv) {
+	public DESede(final Mode mode, final Padding padding, final byte[] key, final byte[] iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -79,7 +79,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param key 密钥，长度24位
 	 * @since 3.3.0
 	 */
-	public DESede(Mode mode, Padding padding, SecretKey key) {
+	public DESede(final Mode mode, final Padding padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -92,7 +92,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param iv 偏移向量，加盐
 	 * @since 3.3.0
 	 */
-	public DESede(Mode mode, Padding padding, SecretKey key, IvParameterSpec iv) {
+	public DESede(final Mode mode, final Padding padding, final SecretKey key, final IvParameterSpec iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -102,7 +102,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param mode 模式
 	 * @param padding 补码方式
 	 */
-	public DESede(String mode, String padding) {
+	public DESede(final String mode, final String padding) {
 		this(mode, padding, (byte[]) null);
 	}
 
@@ -113,7 +113,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key 密钥，长度24位
 	 */
-	public DESede(String mode, String padding, byte[] key) {
+	public DESede(final String mode, final String padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -125,7 +125,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param key 密钥，长度24位
 	 * @param iv 加盐
 	 */
-	public DESede(String mode, String padding, byte[] key, byte[] iv) {
+	public DESede(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding, SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue(), key), null == iv ? null : new IvParameterSpec(iv));
 	}
 
@@ -136,7 +136,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key 密钥
 	 */
-	public DESede(String mode, String padding, SecretKey key) {
+	public DESede(final String mode, final String padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -148,7 +148,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param key 密钥
 	 * @param iv 加盐
 	 */
-	public DESede(String mode, String padding, SecretKey key, IvParameterSpec iv) {
+	public DESede(final String mode, final String padding, final SecretKey key, final IvParameterSpec iv) {
 		super(StrUtil.format("{}/{}/{}", SymmetricAlgorithm.DESede.getValue(), mode, padding), key, iv);
 	}
 	// ------------------------------------------------------------------------- Constructor end

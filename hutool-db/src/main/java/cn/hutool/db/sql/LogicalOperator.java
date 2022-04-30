@@ -20,7 +20,7 @@ public enum LogicalOperator{
 	 * @return 是否与当前逻辑运算符一致
 	 * @since 3.2.1
 	 */
-	public boolean isSame(String logicalOperatorStr) {
+	public boolean isSame(final String logicalOperatorStr) {
 		if(StrUtil.isBlank(logicalOperatorStr)) {
 			return false;
 		}

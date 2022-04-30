@@ -78,7 +78,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @param reader Reader
 	 * @param config 配置，null则为默认配置
 	 */
-	public CsvParser(final Reader reader, CsvReadConfig config) {
+	public CsvParser(final Reader reader, final CsvReadConfig config) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
 		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
@@ -333,7 +333,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @param currentFields 当前的字段列表（即为行）
 	 * @param field         字段
 	 */
-	private void addField(List<String> currentFields, String field) {
+	private void addField(final List<String> currentFields, String field) {
 		final char textDelimiter = this.config.textDelimiter;
 
 		// 忽略多余引号后的换行符
@@ -356,7 +356,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @return 是否结束
 	 * @since 5.7.4
 	 */
-	private boolean isLineEnd(char c, int preChar) {
+	private boolean isLineEnd(final char c, final int preChar) {
 		return (c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR;
 	}
 
@@ -383,7 +383,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		 */
 		private int limit;
 
-		Buffer(int capacity) {
+		Buffer(final int capacity) {
 			buf = new char[capacity];
 		}
 
@@ -402,11 +402,11 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		 *
 		 * @param reader {@link Reader}
 		 */
-		int read(Reader reader) {
-			int length;
+		int read(final Reader reader) {
+			final int length;
 			try {
 				length = reader.read(this.buf);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 			this.mark = 0;
@@ -440,7 +440,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		 * @param length  追加的长度
 		 * @see #mark()
 		 */
-		void appendTo(StrBuilder builder, int length) {
+		void appendTo(final StrBuilder builder, final int length) {
 			builder.append(this.buf, this.mark, length);
 		}
 	}

@@ -37,7 +37,7 @@ public class ChineseDateTest {
 
 	@Test
 	public void toStringNormalTest(){
-		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-03-1"));
+		final ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-03-1"));
 		Assert.assertEquals("2020-02-08", date.toStringNormal());
 	}
 
@@ -68,7 +68,7 @@ public class ChineseDateTest {
 	@Test
 	public void getFestivalsTest(){
 		// issue#I1XHSF@Gitee，2023-01-20对应农历腊月29，非除夕
-		ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2023-01-20"));
+		final ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2023-01-20"));
 		Assert.assertTrue(StrUtil.isEmpty(chineseDate.getFestivals()));
 	}
 
@@ -85,14 +85,14 @@ public class ChineseDateTest {
 	@Test
 	public void dateTest2(){
 		//noinspection ConstantConditions
-		ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19"));
+		final ChineseDate date = new ChineseDate(DateUtil.parse("2020-10-19"));
 		Assert.assertEquals("庚子鼠年 九月初三", date.toString());
 	}
 
 	@Test
 	public void dateTest2_2(){
 		//noinspection ConstantConditions
-		ChineseDate date = new ChineseDate(DateUtil.parse("2020-07-20"));
+		final ChineseDate date = new ChineseDate(DateUtil.parse("2020-07-20"));
 		Assert.assertEquals("庚子鼠年 五月三十", date.toString());
 	}
 
@@ -100,7 +100,7 @@ public class ChineseDateTest {
 	public void dateTest3(){
 		// 初一，offset为0测试
 		//noinspection ConstantConditions
-		ChineseDate date = new ChineseDate(DateUtil.parse("2099-03-22"));
+		final ChineseDate date = new ChineseDate(DateUtil.parse("2099-03-22"));
 		Assert.assertEquals("己未羊年 闰二月初一", date.toString());
 	}
 
@@ -118,7 +118,7 @@ public class ChineseDateTest {
 	@Test
 	public void getChineseMonthTest2(){
 		//https://github.com/dromara/hutool/issues/2112
-		ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
+		final ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
 		final String chineseMonth = springFestival.getChineseMonth();
 		Assert.assertEquals("一月", chineseMonth);
 	}
@@ -145,9 +145,9 @@ public class ChineseDateTest {
 	@Test
 	public void day19000101Test(){
 		// 1900-01-31之前不支持
-		Date date = DateUtil.parse("1900-01-31");
+		final Date date = DateUtil.parse("1900-01-31");
 		//noinspection ConstantConditions
-		ChineseDate chineseDate = new ChineseDate(date);
+		final ChineseDate chineseDate = new ChineseDate(date);
 		Assert.assertEquals("庚子鼠年 正月初一", chineseDate.toString());
 	}
 

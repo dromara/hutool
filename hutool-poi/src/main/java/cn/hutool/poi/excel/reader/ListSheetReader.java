@@ -25,17 +25,17 @@ public class ListSheetReader extends AbstractSheetReader<List<List<Object>>> {
 	 * @param endRowIndex    结束行（包含，从0开始计数）
 	 * @param aliasFirstLine 是否首行作为标题行转换别名
 	 */
-	public ListSheetReader(int startRowIndex, int endRowIndex, boolean aliasFirstLine) {
+	public ListSheetReader(final int startRowIndex, final int endRowIndex, final boolean aliasFirstLine) {
 		super(startRowIndex, endRowIndex);
 		this.aliasFirstLine = aliasFirstLine;
 	}
 
 	@Override
-	public List<List<Object>> read(Sheet sheet) {
+	public List<List<Object>> read(final Sheet sheet) {
 		final List<List<Object>> resultList = new ArrayList<>();
 
-		int startRowIndex = Math.max(this.startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
-		int endRowIndex = Math.min(this.endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
+		final int startRowIndex = Math.max(this.startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
+		final int endRowIndex = Math.min(this.endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
 		List<Object> rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = readRow(sheet, i);

@@ -17,16 +17,16 @@ public class CRC16CCITTFalse extends CRC16Checksum{
 	}
 
 	@Override
-	public void update(byte[] b, int off, int len) {
+	public void update(final byte[] b, final int off, final int len) {
 		super.update(b, off, len);
 		wCRCin &= 0xffff;
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		for (int i = 0; i < 8; i++) {
-			boolean bit = ((b >> (7 - i) & 1) == 1);
-			boolean c15 = ((wCRCin >> 15 & 1) == 1);
+			final boolean bit = ((b >> (7 - i) & 1) == 1);
+			final boolean c15 = ((wCRCin >> 15 & 1) == 1);
 			wCRCin <<= 1;
 			if (c15 ^ bit)
 				wCRCin ^= WC_POLY;

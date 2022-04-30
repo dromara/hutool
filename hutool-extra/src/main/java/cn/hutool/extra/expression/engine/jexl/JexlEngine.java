@@ -22,12 +22,12 @@ public class JexlEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context) {
 		final MapContext mapContext = new MapContext(context);
 
 		try{
 			return engine.createExpression(expression).evaluate(mapContext);
-		} catch (Exception ignore){
+		} catch (final Exception ignore){
 			// https://gitee.com/dromara/hutool/issues/I4B70D
 			// 支持脚本
 			return engine.createScript(expression).execute(mapContext);

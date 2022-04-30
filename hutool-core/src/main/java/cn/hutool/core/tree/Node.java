@@ -75,7 +75,7 @@ public interface Node<T> extends Comparable<Node<T>>, Serializable {
 
 	@SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
 	@Override
-	default int compareTo(Node node) {
+	default int compareTo(final Node node) {
 		if(null == node){
 			return 1;
 		}

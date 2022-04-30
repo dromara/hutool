@@ -31,7 +31,7 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 	 *
 	 * @param bufferSize 缓存大小
 	 */
-	public ReaderWriterCopier(int bufferSize) {
+	public ReaderWriterCopier(final int bufferSize) {
 		this(bufferSize, -1);
 	}
 
@@ -41,7 +41,7 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 	 * @param bufferSize 缓存大小
 	 * @param count      拷贝总数
 	 */
-	public ReaderWriterCopier(int bufferSize, long count) {
+	public ReaderWriterCopier(final int bufferSize, final long count) {
 		this(bufferSize, count, null);
 	}
 
@@ -52,12 +52,12 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 	 * @param count      拷贝总数
 	 * @param progress   进度条
 	 */
-	public ReaderWriterCopier(int bufferSize, long count, StreamProgress progress) {
+	public ReaderWriterCopier(final int bufferSize, final long count, final StreamProgress progress) {
 		super(bufferSize, count, progress);
 	}
 
 	@Override
-	public long copy(Reader source, Writer target) {
+	public long copy(final Reader source, final Writer target) {
 		Assert.notNull(source, "InputStream is null !");
 		Assert.notNull(target, "OutputStream is null !");
 
@@ -69,7 +69,7 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 		try {
 			size = doCopy(source, target, new char[bufferSize(this.count)], progress);
 			target.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -89,7 +89,7 @@ public class ReaderWriterCopier extends IoCopier<Reader, Writer> {
 	 * @return 拷贝总长度
 	 * @throws IOException IO异常
 	 */
-	private long doCopy(Reader source, Writer target, char[] buffer, StreamProgress progress) throws IOException {
+	private long doCopy(final Reader source, final Writer target, final char[] buffer, final StreamProgress progress) throws IOException {
 		long numToRead = this.count > 0 ? this.count : Long.MAX_VALUE;
 		long total = 0;
 

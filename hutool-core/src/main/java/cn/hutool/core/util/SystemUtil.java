@@ -31,7 +31,7 @@ public class SystemUtil {
 	 * @see System#getProperty(String)
 	 * @see System#getenv(String)
 	 */
-	public static String get(String name, String defaultValue) {
+	public static String get(final String name, final String defaultValue) {
 		return StrUtil.nullToDefault(get(name, false), defaultValue);
 	}
 
@@ -44,11 +44,11 @@ public class SystemUtil {
 	 * @see System#getProperty(String)
 	 * @see System#getenv(String)
 	 */
-	public static String get(String name, boolean quiet) {
+	public static String get(final String name, final boolean quiet) {
 		String value = null;
 		try {
 			value = System.getProperty(name);
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 			if (false == quiet) {
 				Console.error("Caught a SecurityException reading the system property '{}'; " +
 						"the SystemUtil property value will default to null.", name);
@@ -58,7 +58,7 @@ public class SystemUtil {
 		if (null == value) {
 			try {
 				value = System.getenv(name);
-			} catch (SecurityException e) {
+			} catch (final SecurityException e) {
 				if (false == quiet) {
 					Console.error("Caught a SecurityException reading the system env '{}'; " +
 							"the SystemUtil env value will default to null.", name);
@@ -77,7 +77,7 @@ public class SystemUtil {
 	 * @see System#getProperty(String)
 	 * @see System#getenv(String)
 	 */
-	public static String get(String key) {
+	public static String get(final String key) {
 		return get(key, null);
 	}
 
@@ -88,7 +88,7 @@ public class SystemUtil {
 	 * @param defaultValue 默认值
 	 * @return 值
 	 */
-	public static boolean getBoolean(String key, boolean defaultValue) {
+	public static boolean getBoolean(final String key, final boolean defaultValue) {
 		String value = get(key);
 		if (value == null) {
 			return defaultValue;
@@ -109,7 +109,7 @@ public class SystemUtil {
 	 * @param defaultValue 默认值
 	 * @return 值
 	 */
-	public static int getInt(String key, int defaultValue) {
+	public static int getInt(final String key, final int defaultValue) {
 		return Convert.toInt(get(key), defaultValue);
 	}
 
@@ -120,7 +120,7 @@ public class SystemUtil {
 	 * @param defaultValue 默认值
 	 * @return 值
 	 */
-	public static long getLong(String key, long defaultValue) {
+	public static long getLong(final String key, final long defaultValue) {
 		return Convert.toLong(get(key), defaultValue);
 	}
 
@@ -137,7 +137,7 @@ public class SystemUtil {
 	 * @param key   属性名
 	 * @param value 属性值，{@code null}表示移除此属性
 	 */
-	public static void set(String key, String value) {
+	public static void set(final String key, final String value) {
 		if (null == value) {
 			System.clearProperty(key);
 		} else {

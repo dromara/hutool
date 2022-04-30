@@ -129,7 +129,7 @@ public class UserInfo implements Serializable{
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "User Name:        ", getName());
 		ManagementUtil.append(builder, "User Home Dir:    ", getHomeDir());
@@ -151,7 +151,7 @@ public class UserInfo implements Serializable{
 	 * @return 修正后的路径
 	 * @since 5.6.4
 	 */
-	private static String fixPath(String path){
+	private static String fixPath(final String path){
 		return StrUtil.addSuffixIfNot(path, File.separator);
 	}
 }

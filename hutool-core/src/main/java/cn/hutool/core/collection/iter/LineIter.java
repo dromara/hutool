@@ -48,7 +48,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 * @param charset 编码
 	 * @throws IllegalArgumentException reader为null抛出此异常
 	 */
-	public LineIter(InputStream in, Charset charset) throws IllegalArgumentException {
+	public LineIter(final InputStream in, final Charset charset) throws IllegalArgumentException {
 		this(IoUtil.getReader(in, charset));
 	}
 
@@ -58,7 +58,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 * @param reader {@link Reader}对象，不能为null
 	 * @throws IllegalArgumentException reader为null抛出此异常
 	 */
-	public LineIter(Reader reader) throws IllegalArgumentException {
+	public LineIter(final Reader reader) throws IllegalArgumentException {
 		Assert.notNull(reader, "Reader must not be null");
 		this.bufferedReader = IoUtil.getReader(reader);
 	}
@@ -68,7 +68,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	protected String computeNext() {
 		try {
 			while (true) {
-				String line = bufferedReader.readLine();
+				final String line = bufferedReader.readLine();
 				if (line == null) {
 					return null;
 				} else if (isValidLine(line)) {
@@ -76,7 +76,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 				}
 				// 无效行，则跳过进入下一行
 			}
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			close();
 			throw new IORuntimeException(ioe);
 		}
@@ -97,7 +97,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 * @param line 需要验证的行
 	 * @return 是否通过验证
 	 */
-	protected boolean isValidLine(String line) {
+	protected boolean isValidLine(final String line) {
 		return true;
 	}
 }

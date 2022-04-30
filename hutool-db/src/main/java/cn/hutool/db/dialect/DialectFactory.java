@@ -38,7 +38,7 @@ public class DialectFactory implements DriverNamePool{
 	 * @param driverName JDBC驱动类名
 	 * @return 方言
 	 */
-	public static Dialect newDialect(String driverName) {
+	public static Dialect newDialect(final String driverName) {
 		final Dialect dialect = internalNewDialect(driverName);
 		StaticLog.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		return dialect;
@@ -51,7 +51,7 @@ public class DialectFactory implements DriverNamePool{
 	 * @param driverName JDBC驱动类名
 	 * @return 方言
 	 */
-	private static Dialect internalNewDialect(String driverName) {
+	private static Dialect internalNewDialect(final String driverName) {
 		if (StrUtil.isNotBlank(driverName)) {
 			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect();
@@ -162,7 +162,7 @@ public class DialectFactory implements DriverNamePool{
 	 * @param ds 数据源，每一个数据源对应一个唯一方言
 	 * @return {@link Dialect}方言
 	 */
-	public static Dialect getDialect(DataSource ds) {
+	public static Dialect getDialect(final DataSource ds) {
 		Dialect dialect = DIALECT_POOL.get(ds);
 		if(null == dialect) {
 			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
@@ -184,7 +184,7 @@ public class DialectFactory implements DriverNamePool{
 	 * @param ds 数据源
 	 * @return 方言
 	 */
-	public static Dialect newDialect(DataSource ds) {
+	public static Dialect newDialect(final DataSource ds) {
 		return newDialect(DriverUtil.identifyDriver(ds));
 	}
 
@@ -194,7 +194,7 @@ public class DialectFactory implements DriverNamePool{
 	 * @param conn 数据库连接对象
 	 * @return 方言
 	 */
-	public static Dialect newDialect(Connection conn) {
+	public static Dialect newDialect(final Connection conn) {
 		return newDialect(DriverUtil.identifyDriver(conn));
 	}
 

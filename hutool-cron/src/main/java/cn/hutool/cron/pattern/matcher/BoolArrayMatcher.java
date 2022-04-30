@@ -25,11 +25,11 @@ public class BoolArrayMatcher implements PartMatcher {
 	 *
 	 * @param intValueList 匹配值列表
 	 */
-	public BoolArrayMatcher(List<Integer> intValueList) {
+	public BoolArrayMatcher(final List<Integer> intValueList) {
 		Assert.isTrue(CollUtil.isNotEmpty(intValueList), "Values must be not empty!");
 		bValues = new boolean[Collections.max(intValueList) + 1];
 		int min = Integer.MAX_VALUE;
-		for (Integer value : intValueList) {
+		for (final Integer value : intValueList) {
 			min = Math.min(min, value);
 			bValues[value] = true;
 		}
@@ -37,7 +37,7 @@ public class BoolArrayMatcher implements PartMatcher {
 	}
 
 	@Override
-	public boolean match(Integer value) {
+	public boolean match(final Integer value) {
 		if (null == value || value >= bValues.length) {
 			return false;
 		}

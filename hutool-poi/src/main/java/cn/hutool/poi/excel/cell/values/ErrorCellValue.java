@@ -20,7 +20,7 @@ public class ErrorCellValue implements CellValue<String> {
 	 *
 	 * @param cell {@link Cell}
 	 */
-	public ErrorCellValue(Cell cell){
+	public ErrorCellValue(final Cell cell){
 		this.cell = cell;
 	}
 

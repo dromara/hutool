@@ -19,18 +19,18 @@ public abstract class AbstractFilter implements BloomFilter {
 	 *
 	 * @param size 容量
 	 */
-	public AbstractFilter(int size) {
+	public AbstractFilter(final int size) {
 		this.size = size;
 		this.bitSet = new BitSet(size);
 	}
 
 	@Override
-	public boolean contains(String str) {
+	public boolean contains(final String str) {
 		return bitSet.get(Math.abs(hash(str)));
 	}
 
 	@Override
-	public boolean add(String str) {
+	public boolean add(final String str) {
 		final int hash = Math.abs(hash(str));
 		if (bitSet.get(hash)) {
 			return false;

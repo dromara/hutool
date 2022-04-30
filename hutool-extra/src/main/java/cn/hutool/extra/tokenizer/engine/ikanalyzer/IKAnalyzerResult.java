@@ -24,16 +24,16 @@ public class IKAnalyzerResult extends AbstractResult {
 	 *
 	 * @param seg 分词结果
 	 */
-	public IKAnalyzerResult(IKSegmenter seg) {
+	public IKAnalyzerResult(final IKSegmenter seg) {
 		this.seg = seg;
 	}
 
 	@Override
 	protected Word nextWord() {
-		Lexeme next;
+		final Lexeme next;
 		try {
 			next = this.seg.next();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
 		if (null == next) {

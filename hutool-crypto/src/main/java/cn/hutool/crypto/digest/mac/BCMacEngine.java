@@ -23,7 +23,7 @@ public class BCMacEngine implements MacEngine {
 	 * @param params 参数，例如密钥可以用{@link KeyParameter}
 	 * @since 5.8.0
 	 */
-	public BCMacEngine(Mac mac, CipherParameters params) {
+	public BCMacEngine(final Mac mac, final CipherParameters params) {
 		init(mac, params);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
@@ -36,7 +36,7 @@ public class BCMacEngine implements MacEngine {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public BCMacEngine init(Mac mac, CipherParameters params) {
+	public BCMacEngine init(final Mac mac, final CipherParameters params) {
 		mac.init(params);
 		this.mac = mac;
 		return this;
@@ -52,7 +52,7 @@ public class BCMacEngine implements MacEngine {
 	}
 
 	@Override
-	public void update(byte[] in, int inOff, int len) {
+	public void update(final byte[] in, final int inOff, final int len) {
 		this.mac.update(in, inOff, len);
 	}
 

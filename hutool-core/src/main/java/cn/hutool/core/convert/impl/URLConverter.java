@@ -15,7 +15,7 @@ public class URLConverter extends AbstractConverter<URL>{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected URL convertInternal(Object value) {
+	protected URL convertInternal(final Object value) {
 		try {
 			if(value instanceof File){
 				return ((File)value).toURI().toURL();
@@ -25,7 +25,7 @@ public class URLConverter extends AbstractConverter<URL>{
 				return ((URI)value).toURL();
 			}
 			return new URL(convertToStr(value));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// Ignore Exception
 		}
 		return null;

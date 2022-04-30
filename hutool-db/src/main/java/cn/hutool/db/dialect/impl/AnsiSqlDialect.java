@@ -37,19 +37,19 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public void setWrapper(Wrapper wrapper) {
+	public void setWrapper(final Wrapper wrapper) {
 		this.wrapper = wrapper;
 	}
 
 	@Override
-	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
+	public PreparedStatement psForInsert(final Connection conn, final Entity entity) throws SQLException {
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity, this.dialectName());
 
 		return StatementUtil.prepareStatement(conn, insert);
 	}
 
 	@Override
-	public PreparedStatement psForInsertBatch(Connection conn, Entity... entities) throws SQLException {
+	public PreparedStatement psForInsertBatch(final Connection conn, final Entity... entities) throws SQLException {
 		if (ArrayUtil.isEmpty(entities)) {
 			throw new DbRuntimeException("Entities for batch insert is empty !");
 		}
@@ -60,7 +60,7 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForDelete(Connection conn, Query query) throws SQLException {
+	public PreparedStatement psForDelete(final Connection conn, final Query query) throws SQLException {
 		Assert.notNull(query, "query must be not null !");
 
 		final Condition[] where = query.getWhere();
@@ -74,7 +74,7 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException {
+	public PreparedStatement psForUpdate(final Connection conn, final Entity entity, final Query query) throws SQLException {
 		Assert.notNull(query, "query must be not null !");
 
 		final Condition[] where = query.getWhere();
@@ -89,12 +89,12 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForFind(Connection conn, Query query) throws SQLException {
+	public PreparedStatement psForFind(final Connection conn, final Query query) throws SQLException {
 		return psForPage(conn, query);
 	}
 
 	@Override
-	public PreparedStatement psForPage(Connection conn, Query query) throws SQLException {
+	public PreparedStatement psForPage(final Connection conn, final Query query) throws SQLException {
 		Assert.notNull(query, "query must be not null !");
 		if (StrUtil.hasBlank(query.getTableNames())) {
 			throw new DbRuntimeException("Table name must be not empty !");
@@ -105,7 +105,7 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForPage(Connection conn, SqlBuilder sqlBuilder, Page page) throws SQLException {
+	public PreparedStatement psForPage(final Connection conn, SqlBuilder sqlBuilder, final Page page) throws SQLException {
 		// 根据不同数据库在查询SQL语句基础上包装其分页的语句
 		if(null != page){
 			sqlBuilder = wrapPageSql(sqlBuilder.orderBy(page.getOrders()), page);
@@ -122,7 +122,7 @@ public class AnsiSqlDialect implements Dialect {
 	 * @return 分页语句
 	 * @since 3.2.3
 	 */
-	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
+	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
 		return find
 				.append(" limit ")

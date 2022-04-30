@@ -15,7 +15,7 @@ public class HashUtil {
 	 * @param prime 一个质数
 	 * @return hash结果
 	 */
-	public static int additiveHash(String key, int prime) {
+	public static int additiveHash(final String key, final int prime) {
 		int hash, i;
 		for (hash = key.length(), i = 0; i < key.length(); i++) {
 			hash += key.charAt(i);
@@ -30,7 +30,7 @@ public class HashUtil {
 	 * @param prime 质数
 	 * @return hash值
 	 */
-	public static int rotatingHash(String key, int prime) {
+	public static int rotatingHash(final String key, final int prime) {
 		int hash, i;
 		for (hash = key.length(), i = 0; i < key.length(); ++i) {
 			hash = (hash << 4) ^ (hash >> 28) ^ key.charAt(i);
@@ -48,7 +48,7 @@ public class HashUtil {
 	 * @param key 输入字符串
 	 * @return 输出hash值
 	 */
-	public static int oneByOneHash(String key) {
+	public static int oneByOneHash(final String key) {
 		int hash, i;
 		for (hash = 0, i = 0; i < key.length(); ++i) {
 			hash += key.charAt(i);
@@ -68,7 +68,7 @@ public class HashUtil {
 	 * @param key 输入字节数组
 	 * @return 结果hash
 	 */
-	public static int bernstein(String key) {
+	public static int bernstein(final String key) {
 		int hash = 0;
 		int i;
 		for (i = 0; i < key.length(); ++i) {
@@ -85,10 +85,12 @@ public class HashUtil {
 	 * @param tab  tab
 	 * @return hash值
 	 */
-	public static int universal(char[] key, int mask, int[] tab) {
-		int hash = key.length, i, len = key.length;
+	public static int universal(final char[] key, final int mask, final int[] tab) {
+		int hash = key.length;
+		int i;
+		final int len = key.length;
 		for (i = 0; i < (len << 3); i += 8) {
-			char k = key[i >> 3];
+			final char k = key[i >> 3];
 			if ((k & 0x01) == 0) {
 				hash ^= tab[i];
 			}
@@ -125,7 +127,7 @@ public class HashUtil {
 	 * @param tab  tab
 	 * @return hash值
 	 */
-	public static int zobrist(char[] key, int mask, int[][] tab) {
+	public static int zobrist(final char[] key, final int mask, final int[][] tab) {
 		int hash, i;
 		for (hash = key.length, i = 0; i < key.length; ++i) {
 			hash ^= tab[i][key[i]];
@@ -139,10 +141,10 @@ public class HashUtil {
 	 * @param data 数组
 	 * @return hash结果
 	 */
-	public static int fnvHash(byte[] data) {
+	public static int fnvHash(final byte[] data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
-		for (byte b : data) {
+		for (final byte b : data) {
 			hash = (hash ^ b) * p;
 		}
 		hash += hash << 13;
@@ -159,7 +161,7 @@ public class HashUtil {
 	 * @param data 字符串
 	 * @return hash结果
 	 */
-	public static int fnvHash(String data) {
+	public static int fnvHash(final String data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
 		for (int i = 0; i < data.length(); i++) {
@@ -195,8 +197,8 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int rsHash(String str) {
-		int b = 378551;
+	public static int rsHash(final String str) {
+		final int b = 378551;
 		int a = 63689;
 		int hash = 0;
 
@@ -214,7 +216,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int jsHash(String str) {
+	public static int jsHash(final String str) {
 		int hash = 1315423911;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -230,11 +232,11 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int pjwHash(String str) {
-		int bitsInUnsignedInt = 32;
-		int threeQuarters = (bitsInUnsignedInt * 3) / 4;
-		int oneEighth = bitsInUnsignedInt / 8;
-		int highBits = 0xFFFFFFFF << (bitsInUnsignedInt - oneEighth);
+	public static int pjwHash(final String str) {
+		final int bitsInUnsignedInt = 32;
+		final int threeQuarters = (bitsInUnsignedInt * 3) / 4;
+		final int oneEighth = bitsInUnsignedInt / 8;
+		final int highBits = 0xFFFFFFFF << (bitsInUnsignedInt - oneEighth);
 		int hash = 0;
 		int test;
 
@@ -255,7 +257,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int elfHash(String str) {
+	public static int elfHash(final String str) {
 		int hash = 0;
 		int x;
 
@@ -276,8 +278,8 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int bkdrHash(String str) {
-		int seed = 131; // 31 131 1313 13131 131313 etc..
+	public static int bkdrHash(final String str) {
+		final int seed = 131; // 31 131 1313 13131 131313 etc..
 		int hash = 0;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -293,7 +295,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int sdbmHash(String str) {
+	public static int sdbmHash(final String str) {
 		int hash = 0;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -309,7 +311,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int djbHash(String str) {
+	public static int djbHash(final String str) {
 		int hash = 5381;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -325,7 +327,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int dekHash(String str) {
+	public static int dekHash(final String str) {
 		int hash = str.length();
 
 		for (int i = 0; i < str.length(); i++) {
@@ -341,7 +343,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int apHash(String str) {
+	public static int apHash(final String str) {
 		int hash = 0;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -358,10 +360,10 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return Hash值
 	 */
-	public static long tianlHash(String str) {
+	public static long tianlHash(final String str) {
 		long hash;
 
-		int iLength = str.length();
+		final int iLength = str.length();
 		if (iLength == 0) {
 			return 0;
 		}
@@ -405,10 +407,10 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int javaDefaultHash(String str) {
+	public static int javaDefaultHash(final String str) {
 		int h = 0;
 		int off = 0;
-		int len = str.length();
+		final int len = str.length();
 		for (int i = 0; i < len; i++) {
 			h = 31 * h + str.charAt(off++);
 		}
@@ -421,7 +423,7 @@ public class HashUtil {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static long mixHash(String str) {
+	public static long mixHash(final String str) {
 		long hash = str.hashCode();
 		hash <<= 32;
 		hash |= fnvHash(str);
@@ -435,7 +437,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 4.2.2
 	 */
-	public static int identityHashCode(Object obj) {
+	public static int identityHashCode(final Object obj) {
 		return System.identityHashCode(obj);
 	}
 
@@ -446,7 +448,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 4.3.3
 	 */
-	public static int murmur32(byte[] data) {
+	public static int murmur32(final byte[] data) {
 		return MurmurHash.hash32(data);
 	}
 
@@ -457,7 +459,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 4.3.3
 	 */
-	public static long murmur64(byte[] data) {
+	public static long murmur64(final byte[] data) {
 		return MurmurHash.hash64(data);
 	}
 
@@ -468,7 +470,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 4.3.3
 	 */
-	public static long[] murmur128(byte[] data) {
+	public static long[] murmur128(final byte[] data) {
 		return MurmurHash.hash128(data);
 	}
 
@@ -479,7 +481,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 5.2.5
 	 */
-	public static int cityHash32(byte[] data) {
+	public static int cityHash32(final byte[] data) {
 		return CityHash.hash32(data);
 	}
 
@@ -491,7 +493,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 5.2.5
 	 */
-	public static long cityHash64(byte[] data, long seed) {
+	public static long cityHash64(final byte[] data, final long seed) {
 		return CityHash.hash64(data, seed);
 	}
 
@@ -504,7 +506,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 5.2.5
 	 */
-	public static long cityHash64(byte[] data, long seed0, long seed1) {
+	public static long cityHash64(final byte[] data, final long seed0, final long seed1) {
 		return CityHash.hash64(data, seed0, seed1);
 	}
 
@@ -515,7 +517,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 5.2.5
 	 */
-	public static long cityHash64(byte[] data) {
+	public static long cityHash64(final byte[] data) {
 		return CityHash.hash64(data);
 	}
 
@@ -526,7 +528,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 5.2.5
 	 */
-	public static long[] cityHash128(byte[] data) {
+	public static long[] cityHash128(final byte[] data) {
 		return CityHash.hash128(data).getLongArray();
 	}
 
@@ -538,7 +540,7 @@ public class HashUtil {
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 * @since 5.2.5
 	 */
-	public static long[] cityHash128(byte[] data, Number128 seed) {
+	public static long[] cityHash128(final byte[] data, final Number128 seed) {
 		return CityHash.hash128(data, seed).getLongArray();
 	}
 
@@ -549,7 +551,7 @@ public class HashUtil {
 	 * @param seed 种子
 	 * @return hash值
 	 */
-	public static long metroHash64(byte[] data, long seed) {
+	public static long metroHash64(final byte[] data, final long seed) {
 		return MetroHash.hash64(data, seed);
 	}
 
@@ -559,7 +561,7 @@ public class HashUtil {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static long metroHash64(byte[] data) {
+	public static long metroHash64(final byte[] data) {
 		return MetroHash.hash64(data);
 	}
 
@@ -570,7 +572,7 @@ public class HashUtil {
 	 * @param seed 种子
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
-	public static long[] metroHash128(byte[] data, long seed) {
+	public static long[] metroHash128(final byte[] data, final long seed) {
 		return MetroHash.hash128(data, seed).getLongArray();
 	}
 
@@ -580,7 +582,7 @@ public class HashUtil {
 	 * @param data 数据
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
-	public static long[] metroHash128(byte[] data) {
+	public static long[] metroHash128(final byte[] data) {
 		return MetroHash.hash128(data).getLongArray();
 	}
 
@@ -591,8 +593,8 @@ public class HashUtil {
 	 * @return hash结果
 	 * @since 5.8.0
 	 */
-	public static long hfHash(String data) {
-		int length = data.length();
+	public static long hfHash(final String data) {
+		final int length = data.length();
 		long hash = 0;
 
 		for (int i = 0; i < length; i++) {
@@ -613,8 +615,8 @@ public class HashUtil {
 	 * @return hash结果
 	 * @since 5.8.0
 	 */
-	public static long hfIpHash(String data) {
-		int length = data.length();
+	public static long hfIpHash(final String data) {
+		final int length = data.length();
 		long hash = 0;
 		for (int i = 0; i < length; i++) {
 			hash += data.charAt(i % 4) ^ data.charAt(i);

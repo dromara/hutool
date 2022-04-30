@@ -40,7 +40,7 @@ public class InstanceComparator<T> implements Comparator<T> {
 	 *
 	 * @param instanceOrder 用于比较排序的对象类型数组，排序按照数组位置排序
 	 */
-	public InstanceComparator(Class<?>... instanceOrder) {
+	public InstanceComparator(final Class<?>... instanceOrder) {
 		this(false, instanceOrder);
 	}
 
@@ -50,7 +50,7 @@ public class InstanceComparator<T> implements Comparator<T> {
 	 * @param atEndIfMiss   如果不在列表中是否排在后边
 	 * @param instanceOrder 用于比较排序的对象类型数组，排序按照数组位置排序
 	 */
-	public InstanceComparator(boolean atEndIfMiss, Class<?>... instanceOrder) {
+	public InstanceComparator(final boolean atEndIfMiss, final Class<?>... instanceOrder) {
 		Assert.notNull(instanceOrder, "'instanceOrder' array must not be null");
 		this.atEndIfMiss = atEndIfMiss;
 		this.instanceOrder = instanceOrder;
@@ -58,9 +58,9 @@ public class InstanceComparator<T> implements Comparator<T> {
 
 
 	@Override
-	public int compare(T o1, T o2) {
-		int i1 = getOrder(o1);
-		int i2 = getOrder(o2);
+	public int compare(final T o1, final T o2) {
+		final int i1 = getOrder(o1);
+		final int i2 = getOrder(o2);
 		return Integer.compare(i1, i2);
 	}
 
@@ -70,7 +70,7 @@ public class InstanceComparator<T> implements Comparator<T> {
 	 * @param object 对象
 	 * @return 位置，未找到位置根据{@link #atEndIfMiss}取不同值，false返回-1，否则返回列表长度
 	 */
-	private int getOrder(T object) {
+	private int getOrder(final T object) {
 		if (object != null) {
 			for (int i = 0; i < this.instanceOrder.length; i++) {
 				if (this.instanceOrder[i].isInstance(object)) {

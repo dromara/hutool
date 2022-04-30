@@ -35,7 +35,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	 *
 	 * @param initialCapacity 初始大小
 	 */
-	public ConcurrentHashSet(int initialCapacity) {
+	public ConcurrentHashSet(final int initialCapacity) {
 		map = new ConcurrentHashMap<>(initialCapacity);
 	}
 
@@ -45,7 +45,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子。此参数决定数据增长时触发的百分比
 	 */
-	public ConcurrentHashSet(int initialCapacity, float loadFactor) {
+	public ConcurrentHashSet(final int initialCapacity, final float loadFactor) {
 		map = new ConcurrentHashMap<>(initialCapacity, loadFactor);
 	}
 
@@ -56,7 +56,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	 * @param loadFactor 触发因子。此参数决定数据增长时触发的百分比
 	 * @param concurrencyLevel 线程并发度
 	 */
-	public ConcurrentHashSet(int initialCapacity, float loadFactor, int concurrencyLevel) {
+	public ConcurrentHashSet(final int initialCapacity, final float loadFactor, final int concurrencyLevel) {
 		map = new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
 	}
 
@@ -64,14 +64,14 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	 * 从已有集合中构造
 	 * @param iter {@link Iterable}
 	 */
-	public ConcurrentHashSet(Iterable<E> iter) {
+	public ConcurrentHashSet(final Iterable<E> iter) {
 		if(iter instanceof Collection) {
 			final Collection<E> collection = (Collection<E>)iter;
 			map = new ConcurrentHashMap<>((int)(collection.size() / 0.75f));
 			this.addAll(collection);
 		}else {
 			map = new ConcurrentHashMap<>();
-			for (E e : iter) {
+			for (final E e : iter) {
 				this.add(e);
 			}
 		}
@@ -94,18 +94,18 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(final Object o) {
 		//noinspection SuspiciousMethodCalls
 		return map.containsKey(o);
 	}
 
 	@Override
-	public boolean add(E e) {
+	public boolean add(final E e) {
 		return map.put(e, PRESENT) == null;
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(final Object o) {
 		return PRESENT.equals(map.remove(o));
 	}
 

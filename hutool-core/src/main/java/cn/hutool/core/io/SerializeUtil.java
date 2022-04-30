@@ -25,7 +25,7 @@ public class SerializeUtil {
 	 * @return 克隆后的对象
 	 * @throws UtilException IO异常和ClassNotFoundException封装
 	 */
-	public static <T> T clone(T obj) {
+	public static <T> T clone(final T obj) {
 		if (false == (obj instanceof Serializable)) {
 			return null;
 		}
@@ -40,7 +40,7 @@ public class SerializeUtil {
 	 * @param obj 要被序列化的对象
 	 * @return 序列化后的字节码
 	 */
-	public static <T> byte[] serialize(T obj) {
+	public static <T> byte[] serialize(final T obj) {
 		if (false == (obj instanceof Serializable)) {
 			return null;
 		}
@@ -61,7 +61,7 @@ public class SerializeUtil {
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(byte[] bytes) {
+	public static <T> T deserialize(final byte[] bytes) {
 		return IoUtil.readObj(new ByteArrayInputStream(bytes));
 	}
 }

@@ -33,10 +33,10 @@ public interface Func<P, R> extends Serializable {
 	 * @return 函数执行结果
 	 */
 	@SuppressWarnings("unchecked")
-	default R callWithRuntimeException(P... parameters){
+	default R callWithRuntimeException(final P... parameters){
 		try {
 			return call(parameters);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

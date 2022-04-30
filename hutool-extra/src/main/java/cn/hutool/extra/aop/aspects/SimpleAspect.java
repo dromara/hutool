@@ -13,19 +13,19 @@ public class SimpleAspect implements Aspect, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public boolean before(Object target, Method method, Object[] args) {
+	public boolean before(final Object target, final Method method, final Object[] args) {
 		//继承此类后实现此方法
 		return true;
 	}
 
 	@Override
-	public boolean after(Object target, Method method, Object[] args, Object returnVal) {
+	public boolean after(final Object target, final Method method, final Object[] args, final Object returnVal) {
 		//继承此类后实现此方法
 		return true;
 	}
 
 	@Override
-	public boolean afterException(Object target, Method method, Object[] args, Throwable e) {
+	public boolean afterException(final Object target, final Method method, final Object[] args, final Throwable e) {
 		//继承此类后实现此方法
 		return true;
 	}

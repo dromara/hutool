@@ -17,13 +17,13 @@ public class CRC16Ansi extends CRC16Checksum{
 	}
 
 	@Override
-	public void update(int b) {
+	public void update(final int b) {
 		int hi = wCRCin >> 8;
 		hi ^= b;
 		wCRCin = hi;
 
 		for (int i = 0; i < 8; i++) {
-			int flag = wCRCin & 0x0001;
+			final int flag = wCRCin & 0x0001;
 			wCRCin = wCRCin >> 1;
 			if (flag == 1) {
 				wCRCin ^= WC_POLY;

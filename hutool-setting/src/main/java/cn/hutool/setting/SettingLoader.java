@@ -51,7 +51,7 @@ public class SettingLoader {
 	 *
 	 * @param groupedMap GroupedMap
 	 */
-	public SettingLoader(GroupedMap groupedMap) {
+	public SettingLoader(final GroupedMap groupedMap) {
 		this(groupedMap, CharsetUtil.UTF_8, false);
 	}
 
@@ -62,7 +62,7 @@ public class SettingLoader {
 	 * @param charset 编码
 	 * @param isUseVariable 是否使用变量
 	 */
-	public SettingLoader(GroupedMap groupedMap, Charset charset, boolean isUseVariable) {
+	public SettingLoader(final GroupedMap groupedMap, final Charset charset, final boolean isUseVariable) {
 		this.groupedMap = groupedMap;
 		this.charset = charset;
 		this.isUseVariable = isUseVariable;
@@ -74,7 +74,7 @@ public class SettingLoader {
 	 * @param resource 配置文件URL
 	 * @return 加载是否成功
 	 */
-	public boolean load(Resource resource) {
+	public boolean load(final Resource resource) {
 		if (resource == null) {
 			throw new NullPointerException("Null setting url define!");
 		}
@@ -83,7 +83,7 @@ public class SettingLoader {
 		try {
 			settingStream = resource.getStream();
 			load(settingStream);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e, "Load setting error!");
 			return false;
 		} finally {
@@ -99,7 +99,7 @@ public class SettingLoader {
 	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	synchronized public boolean load(InputStream settingStream) throws IOException {
+	synchronized public boolean load(final InputStream settingStream) throws IOException {
 		this.groupedMap.clear();
 		BufferedReader reader = null;
 		try {
@@ -150,7 +150,7 @@ public class SettingLoader {
 	 *
 	 * @param regex 正则
 	 */
-	public void setVarRegex(String regex) {
+	public void setVarRegex(final String regex) {
 		this.varRegex = regex;
 	}
 
@@ -160,7 +160,7 @@ public class SettingLoader {
 	 * @param assignFlag 正则
 	 * @since 4.6.5
 	 */
-	public void setAssignFlag(char assignFlag) {
+	public void setAssignFlag(final char assignFlag) {
 		this.assignFlag = assignFlag;
 	}
 
@@ -170,7 +170,7 @@ public class SettingLoader {
 	 *
 	 * @param absolutePath 设置文件的绝对路径
 	 */
-	public void store(String absolutePath) {
+	public void store(final String absolutePath) {
 		store(FileUtil.touch(absolutePath));
 	}
 
@@ -181,7 +181,7 @@ public class SettingLoader {
 	 * @param file 设置文件
 	 * @since 5.4.3
 	 */
-	public void store(File file) {
+	public void store(final File file) {
 		Assert.notNull(file, "File to store must be not null !");
 		log.debug("Store Setting to [{}]...", file.getAbsolutePath());
 		PrintWriter writer = null;
@@ -198,10 +198,10 @@ public class SettingLoader {
 	 *
 	 * @param writer Writer
 	 */
-	synchronized private void store(PrintWriter writer) {
-		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
+	synchronized private void store(final PrintWriter writer) {
+		for (final Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
-			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {
+			for (final Entry<String, String> entry : groupEntry.getValue().entrySet()) {
 				writer.println(StrUtil.format("{} {} {}", entry.getKey(), this.assignFlag, entry.getValue()));
 			}
 		}
@@ -215,11 +215,11 @@ public class SettingLoader {
 	 * @param value 值
 	 * @return 替换后的字符串
 	 */
-	private String replaceVar(String group, String value) {
+	private String replaceVar(final String group, String value) {
 		// 找到所有变量标识
 		final Set<String> vars = ReUtil.findAll(varRegex, value, 0, new HashSet<>());
 		String key;
-		for (String var : vars) {
+		for (final String var : vars) {
 			key = ReUtil.get(varRegex, var, 1);
 			if (StrUtil.isNotBlank(key)) {
 				// 本分组中查找变量名对应的值

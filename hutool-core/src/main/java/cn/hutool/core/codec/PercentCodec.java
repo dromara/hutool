@@ -63,7 +63,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 	 *
 	 * @param safeCharacters 安全字符，安全字符不被编码
 	 */
-	public PercentCodec(BitSet safeCharacters) {
+	public PercentCodec(final BitSet safeCharacters) {
 		this.safeCharacters = safeCharacters;
 	}
 
@@ -74,12 +74,12 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 	 * @return {@code true}表示安全，否则非安全字符
 	 * @since 6.0.0
 	 */
-	public boolean isSafe(char c) {
+	public boolean isSafe(final char c) {
 		return this.safeCharacters.get(c);
 	}
 
 	@Override
-	public byte[] encode(byte[] bytes) {
+	public byte[] encode(final byte[] bytes) {
 		// 初始容量计算，简单粗暴假设所有byte都需要转义，容量是三倍
 		final ByteBuffer buffer = ByteBuffer.allocate(bytes.length * 3);
 		//noinspection ForLoopReplaceableByForEach
@@ -98,7 +98,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 	 * @param customSafeChar 自定义安全字符
 	 * @return 编码后的字符串
 	 */
-	public String encode(CharSequence path, Charset charset, char... customSafeChar) {
+	public String encode(final CharSequence path, final Charset charset, final char... customSafeChar) {
 		if (null == charset || StrUtil.isEmpty(path)) {
 			return StrUtil.str(path);
 		}
@@ -120,14 +120,14 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 				try {
 					writer.write(c);
 					writer.flush();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					buf.reset();
 					continue;
 				}
 
 				// 兼容双字节的Unicode符处理（如部分emoji）
-				byte[] ba = buf.toByteArray();
-				for (byte toEncode : ba) {
+				final byte[] ba = buf.toByteArray();
+				for (final byte toEncode : ba) {
 					// Converting each byte in the buffer
 					rewrittenPath.append(ESCAPE_CHAR);
 					HexUtil.appendHex(rewrittenPath, toEncode, false);
@@ -172,7 +172,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param codec PercentCodec
 		 * @return PercentCodec
 		 */
-		public static Builder of(PercentCodec codec) {
+		public static Builder of(final PercentCodec codec) {
 			return new Builder(new PercentCodec((BitSet) codec.safeCharacters.clone()));
 		}
 
@@ -182,8 +182,8 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param chars 安全字符合集
 		 * @return PercentCodec
 		 */
-		public static Builder of(CharSequence chars) {
-			Builder builder = of(new PercentCodec());
+		public static Builder of(final CharSequence chars) {
+			final Builder builder = of(new PercentCodec());
 			final int length = chars.length();
 			for (int i = 0; i < length; i++) {
 				builder.addSafe(chars.charAt(i));
@@ -193,7 +193,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 
 		private final PercentCodec codec;
 
-		private Builder(PercentCodec codec) {
+		private Builder(final PercentCodec codec) {
 			this.codec = codec;
 		}
 
@@ -204,7 +204,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param c 字符
 		 * @return this
 		 */
-		public Builder addSafe(char c) {
+		public Builder addSafe(final char c) {
 			codec.safeCharacters.set(c);
 			return this;
 		}
@@ -216,7 +216,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param chars 安全字符
 		 * @return this
 		 */
-		public Builder addSafes(String chars) {
+		public Builder addSafes(final String chars) {
 			final int length = chars.length();
 			for (int i = 0; i < length; i++) {
 				addSafe(chars.charAt(i));
@@ -231,7 +231,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param c 字符
 		 * @return this
 		 */
-		public Builder removeSafe(char c) {
+		public Builder removeSafe(final char c) {
 			codec.safeCharacters.clear(c);
 			return this;
 		}
@@ -242,7 +242,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param otherCodec {@link PercentCodec}
 		 * @return this
 		 */
-		public Builder or(PercentCodec otherCodec) {
+		public Builder or(final PercentCodec otherCodec) {
 			codec.safeCharacters.or(otherCodec.safeCharacters);
 			return this;
 		}
@@ -255,7 +255,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @param encodeSpaceAsPlus 是否将空格编码为+
 		 * @return this
 		 */
-		public Builder setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
+		public Builder setEncodeSpaceAsPlus(final boolean encodeSpaceAsPlus) {
 			codec.encodeSpaceAsPlus = encodeSpaceAsPlus;
 			return this;
 		}

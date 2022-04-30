@@ -32,7 +32,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 	}
 
 	@Override
-	public PreparedStatement psForUpsert(Connection conn, Entity entity, String... keys) throws SQLException {
+	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for Postgres.");
 		SqlBuilder.validateEntity(entity);
 		final SqlBuilder builder = SqlBuilder.create(wrapper);

@@ -19,12 +19,12 @@ public class NumberCellSetter implements CellSetter {
 	 *
 	 * @param value 值
 	 */
-	NumberCellSetter(Number value) {
+	NumberCellSetter(final Number value) {
 		this.value = value;
 	}
 
 	@Override
-	public void setValue(Cell cell) {
+	public void setValue(final Cell cell) {
 		// issue https://gitee.com/dromara/hutool/issues/I43U9G
 		// 避免float到double的精度问题
 		cell.setCellValue(NumberUtil.toDouble(value));

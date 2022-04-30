@@ -38,7 +38,7 @@ public class URLDecoder implements Serializable {
 	 * @param charset 编码
 	 * @return 解码后的字符串
 	 */
-	public static String decodeForPath(String str, Charset charset) {
+	public static String decodeForPath(final String str, final Charset charset) {
 		return decode(str, charset, false);
 	}
 
@@ -54,7 +54,7 @@ public class URLDecoder implements Serializable {
 	 * @param str 包含URL编码后的字符串
 	 * @return 解码后的字符串
 	 */
-	public static String decode(String str) {
+	public static String decode(final String str) {
 		return decode(str, DEFAULT_CHARSET);
 	}
 
@@ -71,7 +71,7 @@ public class URLDecoder implements Serializable {
 	 * @param charset 编码
 	 * @return 解码后的字符串
 	 */
-	public static String decode(String str, Charset charset) {
+	public static String decode(final String str, final Charset charset) {
 		return decode(str, charset, true);
 	}
 
@@ -87,7 +87,7 @@ public class URLDecoder implements Serializable {
 	 * @param isPlusToSpace 是否+转换为空格
 	 * @return 解码后的字符串
 	 */
-	public static String decode(String str, boolean isPlusToSpace) {
+	public static String decode(final String str, final boolean isPlusToSpace) {
 		return decode(str, DEFAULT_CHARSET, isPlusToSpace);
 	}
 
@@ -104,7 +104,7 @@ public class URLDecoder implements Serializable {
 	 * @param charset       编码，{@code null}表示不做编码
 	 * @return 解码后的字符串
 	 */
-	public static String decode(String str, Charset charset, boolean isPlusToSpace) {
+	public static String decode(final String str, final Charset charset, final boolean isPlusToSpace) {
 		if (null == charset) {
 			return str;
 		}
@@ -122,7 +122,7 @@ public class URLDecoder implements Serializable {
 	 * @param bytes url编码的bytes
 	 * @return 解码后的bytes
 	 */
-	public static byte[] decode(byte[] bytes) {
+	public static byte[] decode(final byte[] bytes) {
 		return decode(bytes, true);
 	}
 
@@ -139,7 +139,7 @@ public class URLDecoder implements Serializable {
 	 * @return 解码后的bytes
 	 * @since 5.6.3
 	 */
-	public static byte[] decode(byte[] bytes, boolean isPlusToSpace) {
+	public static byte[] decode(final byte[] bytes, final boolean isPlusToSpace) {
 		if (bytes == null) {
 			return null;
 		}

@@ -19,7 +19,7 @@ public class MathUtil {
 	 * @param m 选择的个数
 	 * @return 排列数
 	 */
-	public static long arrangementCount(int n, int m) {
+	public static long arrangementCount(final int n, final int m) {
 		return Arrangement.count(n, m);
 	}
 
@@ -29,7 +29,7 @@ public class MathUtil {
 	 * @param n 总数
 	 * @return 排列数
 	 */
-	public static long arrangementCount(int n) {
+	public static long arrangementCount(final int n) {
 		return Arrangement.count(n);
 	}
 
@@ -40,7 +40,7 @@ public class MathUtil {
 	 * @param m 选择个数
 	 * @return 所有排列列表
 	 */
-	public static List<String[]> arrangementSelect(String[] datas, int m) {
+	public static List<String[]> arrangementSelect(final String[] datas, final int m) {
 		return new Arrangement(datas).select(m);
 	}
 
@@ -50,7 +50,7 @@ public class MathUtil {
 	 * @param datas 待选列表
 	 * @return 所有排列列表
 	 */
-	public static List<String[]> arrangementSelect(String[] datas) {
+	public static List<String[]> arrangementSelect(final String[] datas) {
 		return new Arrangement(datas).select();
 	}
 
@@ -62,7 +62,7 @@ public class MathUtil {
 	 * @param m 选择的个数
 	 * @return 组合数
 	 */
-	public static long combinationCount(int n, int m) {
+	public static long combinationCount(final int n, final int m) {
 		return Combination.count(n, m);
 	}
 
@@ -73,7 +73,7 @@ public class MathUtil {
 	 * @param m 选择个数
 	 * @return 所有组合列表
 	 */
-	public static List<String[]> combinationSelect(String[] datas, int m) {
+	public static List<String[]> combinationSelect(final String[] datas, final int m) {
 		return new Combination(datas).select(m);
 	}
 
@@ -84,7 +84,7 @@ public class MathUtil {
 	 * @return 金额，单位分
 	 * @since 5.7.11
 	 */
-	public static long yuanToCent(double yuan) {
+	public static long yuanToCent(final double yuan) {
 		return new Money(yuan).getCent();
 	}
 
@@ -95,9 +95,9 @@ public class MathUtil {
 	 * @return 金额，单位元
 	 * @since 5.7.11
 	 */
-	public static double centToYuan(long cent) {
-		long yuan = cent / 100;
-		int centPart = (int) (cent % 100);
+	public static double centToYuan(final long cent) {
+		final long yuan = cent / 100;
+		final int centPart = (int) (cent % 100);
 		return new Money(yuan, centPart).getAmount().doubleValue();
 	}
 }

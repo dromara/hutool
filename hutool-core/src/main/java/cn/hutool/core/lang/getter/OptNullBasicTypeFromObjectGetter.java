@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGetter<K> {
 	@Override
-	default String getStr(K key, String defaultValue) {
+	default String getStr(final K key, final String defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -24,7 +24,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Integer getInt(K key, Integer defaultValue) {
+	default Integer getInt(final K key, final Integer defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -33,7 +33,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Short getShort(K key, Short defaultValue) {
+	default Short getShort(final K key, final Short defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -42,7 +42,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Boolean getBool(K key, Boolean defaultValue) {
+	default Boolean getBool(final K key, final Boolean defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -51,7 +51,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Long getLong(K key, Long defaultValue) {
+	default Long getLong(final K key, final Long defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -60,7 +60,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Character getChar(K key, Character defaultValue) {
+	default Character getChar(final K key, final Character defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -69,7 +69,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Float getFloat(K key, Float defaultValue) {
+	default Float getFloat(final K key, final Float defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -78,7 +78,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Double getDouble(K key, Double defaultValue) {
+	default Double getDouble(final K key, final Double defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -87,7 +87,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Byte getByte(K key, Byte defaultValue) {
+	default Byte getByte(final K key, final Byte defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -96,7 +96,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default BigDecimal getBigDecimal(K key, BigDecimal defaultValue) {
+	default BigDecimal getBigDecimal(final K key, final BigDecimal defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -105,7 +105,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default BigInteger getBigInteger(K key, BigInteger defaultValue) {
+	default BigInteger getBigInteger(final K key, final BigInteger defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -114,7 +114,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default <E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue) {
+	default <E extends Enum<E>> E getEnum(final Class<E> clazz, final K key, final E defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;
@@ -123,7 +123,7 @@ public interface OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGet
 	}
 
 	@Override
-	default Date getDate(K key, Date defaultValue) {
+	default Date getDate(final K key, final Date defaultValue) {
 		final Object obj = getObj(key);
 		if (null == obj) {
 			return defaultValue;

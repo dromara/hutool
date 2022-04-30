@@ -1,11 +1,11 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.util.ArrayUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * 排列A(n, m)<br>
@@ -24,7 +24,7 @@ public class Arrangement implements Serializable {
 	 *
 	 * @param datas 用于排列的数据
 	 */
-	public Arrangement(String[] datas) {
+	public Arrangement(final String[] datas) {
 		this.datas = datas;
 	}
 
@@ -34,7 +34,7 @@ public class Arrangement implements Serializable {
 	 * @param n 总数
 	 * @return 排列数
 	 */
-	public static long count(int n) {
+	public static long count(final int n) {
 		return count(n, n);
 	}
 
@@ -45,7 +45,7 @@ public class Arrangement implements Serializable {
 	 * @param m 选择的个数
 	 * @return 排列数
 	 */
-	public static long count(int n, int m) {
+	public static long count(final int n, final int m) {
 		if (n == m) {
 			return NumberUtil.factorial(n);
 		}
@@ -58,7 +58,7 @@ public class Arrangement implements Serializable {
 	 * @param n 总数
 	 * @return 排列数
 	 */
-	public static long countAll(int n) {
+	public static long countAll(final int n) {
 		long total = 0;
 		for (int i = 1; i <= n; i++) {
 			total += count(n, i);
@@ -81,7 +81,7 @@ public class Arrangement implements Serializable {
 	 * @param m 选择个数
 	 * @return 所有排列列表
 	 */
-	public List<String[]> select(int m) {
+	public List<String[]> select(final int m) {
 		final List<String[]> result = new ArrayList<>((int) count(this.datas.length, m));
 		select(this.datas, new String[m], 0, result);
 		return result;
@@ -109,7 +109,7 @@ public class Arrangement implements Serializable {
 	 * @param resultIndex 选择索引，从0开始
 	 * @param result 最终结果
 	 */
-	private void select(String[] datas, String[] resultList, int resultIndex, List<String[]> result) {
+	private void select(final String[] datas, final String[] resultList, final int resultIndex, final List<String[]> result) {
 		if (resultIndex >= resultList.length) { // 全部选择完时，输出排列结果
 			if (false == result.contains(resultList)) {
 				result.add(Arrays.copyOf(resultList, resultList.length));

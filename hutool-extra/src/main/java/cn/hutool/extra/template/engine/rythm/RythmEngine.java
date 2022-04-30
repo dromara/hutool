@@ -9,7 +9,7 @@ import cn.hutool.extra.template.TemplateEngine;
 /**
  * Rythm模板引擎<br>
  * 文档：http://rythmengine.org/doc/index
- * 
+ *
  * @author looly
  *
  */
@@ -25,19 +25,19 @@ public class RythmEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 模板配置
 	 */
-	public RythmEngine(TemplateConfig config) {
+	public RythmEngine(final TemplateConfig config) {
 		init(config);
 	}
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param engine {@link org.rythmengine.RythmEngine}
 	 */
-	public RythmEngine(org.rythmengine.RythmEngine engine) {
+	public RythmEngine(final org.rythmengine.RythmEngine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -55,12 +55,12 @@ public class RythmEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(org.rythmengine.RythmEngine engine){
+	private void init(final org.rythmengine.RythmEngine engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
@@ -69,7 +69,7 @@ public class RythmEngine implements TemplateEngine {
 
 	/**
 	 * 创建引擎
-	 * 
+	 *
 	 * @param config 模板配置
 	 * @return {@link org.rythmengine.RythmEngine}
 	 */
@@ -77,7 +77,7 @@ public class RythmEngine implements TemplateEngine {
 		if (null == config) {
 			config = new TemplateConfig();
 		}
-		
+
 		final Properties props = new Properties();
 		final String path = config.getPath();
 		if (null != path) {

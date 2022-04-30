@@ -12,14 +12,14 @@ public class StrJoinerTest {
 
 	@Test
 	public void joinIntArrayTest(){
-		int[] a = {1,2,3,4,5};
+		final int[] a = {1,2,3,4,5};
 		final StrJoiner append = StrJoiner.of(",").append(a);
 		Assert.assertEquals("1,2,3,4,5", append.toString());
 	}
 
 	@Test
 	public void joinEmptyTest(){
-		List<String> list = new ArrayList<>();
+		final List<String> list = new ArrayList<>();
 		final StrJoiner append = StrJoiner.of(",").append(list);
 		Assert.assertEquals("", append.toString());
 	}
@@ -81,7 +81,7 @@ public class StrJoinerTest {
 
 	@Test
 	public void lengthTest(){
-		StrJoiner joiner = StrJoiner.of(",", "[", "]");
+		final StrJoiner joiner = StrJoiner.of(",", "[", "]");
 		Assert.assertEquals(joiner.toString().length(), joiner.length());
 
 		joiner.append("123");
@@ -90,9 +90,9 @@ public class StrJoinerTest {
 
 	@Test
 	public void mergeTest(){
-		StrJoiner joiner1 = StrJoiner.of(",", "[", "]");
+		final StrJoiner joiner1 = StrJoiner.of(",", "[", "]");
 		joiner1.append("123");
-		StrJoiner joiner2 = StrJoiner.of(",", "[", "]");
+		final StrJoiner joiner2 = StrJoiner.of(",", "[", "]");
 		joiner1.append("456");
 		joiner1.append("789");
 

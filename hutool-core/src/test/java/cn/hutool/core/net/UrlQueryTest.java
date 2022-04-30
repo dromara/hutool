@@ -17,9 +17,9 @@ public class UrlQueryTest {
 
 	@Test
 	public void parseTest(){
-		String queryStr = "a=1&b=111==";
-		UrlQuery q = new UrlQuery();
-		UrlQuery parse = q.parse(queryStr, Charset.defaultCharset());
+		final String queryStr = "a=1&b=111==";
+		final UrlQuery q = new UrlQuery();
+		final UrlQuery parse = q.parse(queryStr, Charset.defaultCharset());
 		Assert.assertEquals("111==", parse.get("b"));
 		Assert.assertEquals("a=1&b=111==", parse.toString());
 	}
@@ -27,7 +27,7 @@ public class UrlQueryTest {
 	@Test
 	public void ofHttpWithoutEncodeTest(){
 		// charset为null表示不做编码
-		String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
+		final String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
 		final UrlBuilder urlBuilder = UrlBuilder.ofHttpWithoutEncode(url);
 		final String queryStr = urlBuilder.getQueryStr();
 		Assert.assertEquals("imageMogr2/auto-orient/thumbnail/500&pid=259848", queryStr);
@@ -35,16 +35,16 @@ public class UrlQueryTest {
 
 	@Test
 	public void parseTest2(){
-		String requestUrl = "http://192.168.1.1:8080/pc?=d52i5837i4ed=o39-ap9e19s5--=72e54*ll0lodl-f338868d2";
-		UrlQuery q = new UrlQuery();
-		UrlQuery parse = q.parse(requestUrl, Charset.defaultCharset());
+		final String requestUrl = "http://192.168.1.1:8080/pc?=d52i5837i4ed=o39-ap9e19s5--=72e54*ll0lodl-f338868d2";
+		final UrlQuery q = new UrlQuery();
+		final UrlQuery parse = q.parse(requestUrl, Charset.defaultCharset());
 		Assert.assertEquals("=d52i5837i4ed=o39-ap9e19s5--=72e54*ll0lodl-f338868d2", parse.toString());
 	}
 
 	@Test
 	public void parseTest3(){
 		// issue#1688@Github
-		String u = "https://www.baidu.com/proxy";
+		final String u = "https://www.baidu.com/proxy";
 		final UrlQuery query = UrlQuery.of(URLUtil.url(u).getQuery(), Charset.defaultCharset());
 		Assert.assertTrue(MapUtil.isEmpty(query.getQueryMap()));
 	}
@@ -52,7 +52,7 @@ public class UrlQueryTest {
 	@Test
 	public void parseTest4(){
 		// https://github.com/dromara/hutool/issues/1989
-		String queryStr = "imageMogr2/thumbnail/x800/format/jpg";
+		final String queryStr = "imageMogr2/thumbnail/x800/format/jpg";
 		final UrlQuery query = UrlQuery.of(queryStr, CharsetUtil.UTF_8);
 		Assert.assertEquals(queryStr, query.toString());
 	}
@@ -132,14 +132,14 @@ public class UrlQueryTest {
 
 	@Test
 	public void parsePercentTest(){
-		String queryStr = "a%2B=ccc";
+		final String queryStr = "a%2B=ccc";
 		final UrlQuery query = UrlQuery.of(queryStr, null);
 		Assert.assertEquals(queryStr, query.toString());
 	}
 
 	@Test
 	public void parsePercentTest2(){
-		String queryStr = "signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D";
+		final String queryStr = "signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D";
 		final UrlQuery query = UrlQuery.of(queryStr, null);
 		Assert.assertEquals(queryStr, query.toString());
 	}

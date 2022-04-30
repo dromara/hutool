@@ -31,13 +31,13 @@ public class PatternMatcher {
 	 * @param dayOfWeekMatcher  周匹配器
 	 * @param yearMatcher       年匹配器
 	 */
-	public PatternMatcher(PartMatcher secondMatcher,
-						  PartMatcher minuteMatcher,
-						  PartMatcher hourMatcher,
-						  PartMatcher dayOfMonthMatcher,
-						  PartMatcher monthMatcher,
-						  PartMatcher dayOfWeekMatcher,
-						  PartMatcher yearMatcher) {
+	public PatternMatcher(final PartMatcher secondMatcher,
+						  final PartMatcher minuteMatcher,
+						  final PartMatcher hourMatcher,
+						  final PartMatcher dayOfMonthMatcher,
+						  final PartMatcher monthMatcher,
+						  final PartMatcher dayOfWeekMatcher,
+						  final PartMatcher yearMatcher) {
 
 		matchers = new PartMatcher[]{
 				secondMatcher,
@@ -56,7 +56,7 @@ public class PatternMatcher {
 	 * @param part 表达式位置
 	 * @return {@link PartMatcher}
 	 */
-	public PartMatcher get(Part part) {
+	public PartMatcher get(final Part part) {
 		return matchers[part.ordinal()];
 	}
 
@@ -68,7 +68,7 @@ public class PatternMatcher {
 	 * @param fields 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	public boolean match(int[] fields) {
+	public boolean match(final int[] fields) {
 		return match(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]);
 	}
 
@@ -79,7 +79,7 @@ public class PatternMatcher {
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 * @since 5.8.0
 	 */
-	public boolean matchWeek(int dayOfWeekValue) {
+	public boolean matchWeek(final int dayOfWeekValue) {
 		return matchers[5].match(dayOfWeekValue);
 	}
 
@@ -95,7 +95,7 @@ public class PatternMatcher {
 	 * @param year       年
 	 * @return 如果匹配返回 {@code true}, 否则返回 {@code false}
 	 */
-	private boolean match(int second, int minute, int hour, int dayOfMonth, int month, int dayOfWeek, int year) {
+	private boolean match(final int second, final int minute, final int hour, final int dayOfMonth, final int month, final int dayOfWeek, final int year) {
 		return ((second < 0) || matchers[0].match(second)) // 匹配秒（非秒匹配模式下始终返回true）
 				&& matchers[1].match(minute)// 匹配分
 				&& matchers[2].match(hour)// 匹配时
@@ -114,7 +114,7 @@ public class PatternMatcher {
 	 * @param isLeapYear 是否闰年
 	 * @return 是否匹配
 	 */
-	private static boolean matchDayOfMonth(PartMatcher matcher, int dayOfMonth, int month, boolean isLeapYear) {
+	private static boolean matchDayOfMonth(final PartMatcher matcher, final int dayOfMonth, final int month, final boolean isLeapYear) {
 		return ((matcher instanceof DayOfMonthMatcher) //
 				? ((DayOfMonthMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
 				: matcher.match(dayOfMonth));
@@ -141,7 +141,7 @@ public class PatternMatcher {
 	 * @param zone   时区
 	 * @return {@link Calendar}，毫秒数为0
 	 */
-	public Calendar nextMatchAfter(int[] values, TimeZone zone) {
+	public Calendar nextMatchAfter(final int[] values, final TimeZone zone) {
 		final Calendar calendar = Calendar.getInstance(zone);
 		calendar.set(Calendar.MILLISECOND, 0);
 
@@ -173,7 +173,7 @@ public class PatternMatcher {
 	 * @param values 时间字段值，{second, minute, hour, dayOfMonth, month, dayOfWeek, year}
 	 * @return {@link Calendar}，毫秒数为0
 	 */
-	private int[] nextMatchValuesAfter(int[] values) {
+	private int[] nextMatchValuesAfter(final int[] values) {
 		final int[] newValues = values.clone();
 
 		int i = Part.YEAR.ordinal();
@@ -230,7 +230,7 @@ public class PatternMatcher {
 	 * @param values 值数组
 	 * @param toPart 截止的部分
 	 */
-	private void setToMin(int[] values, int toPart) {
+	private void setToMin(final int[] values, final int toPart) {
 		Part part;
 		for (int i = 0; i <= toPart; i++) {
 			part = Part.of(i);
@@ -244,10 +244,10 @@ public class PatternMatcher {
 	 * @param part {@link Part}
 	 * @return 最小值，如果匹配所有，返回对应部分范围的最小值
 	 */
-	private int getMin(Part part) {
-		PartMatcher matcher = get(part);
+	private int getMin(final Part part) {
+		final PartMatcher matcher = get(part);
 
-		int min;
+		final int min;
 		if (matcher instanceof AlwaysTrueMatcher) {
 			min = part.getMin();
 		} else if (matcher instanceof BoolArrayMatcher) {
@@ -271,7 +271,7 @@ public class PatternMatcher {
 	 * @param value    值
 	 * @return {@link Calendar}
 	 */
-	private Calendar setValue(Calendar calendar, Part part, int value) {
+	private Calendar setValue(final Calendar calendar, final Part part, int value) {
 		switch (part) {
 			case MONTH:
 				value -= 1;

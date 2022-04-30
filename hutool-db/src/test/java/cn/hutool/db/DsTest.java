@@ -28,64 +28,64 @@ public class DsTest {
 
 	@Test
 	public void defaultDsTest() throws SQLException {
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void hikariDsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new HikariDSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void druidDsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new DruidDSFactory());
-		DataSource ds = DSFactory.get("test");
+		final DataSource ds = DSFactory.get("test");
 
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void tomcatDsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new TomcatDSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void beeCPDsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new BeeDSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void dbcpDsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new DbcpDSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
 	public void c3p0DsTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
@@ -93,7 +93,7 @@ public class DsTest {
 	public void c3p0DsUserAndPassTest() {
 		// https://gitee.com/dromara/hutool/issues/I4T7XZ
 		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
-		ComboPooledDataSource ds = (ComboPooledDataSource) ((DataSourceWrapper) DSFactory.get("mysql")).getRaw();
+		final ComboPooledDataSource ds = (ComboPooledDataSource) ((DataSourceWrapper) DSFactory.get("mysql")).getRaw();
 		Assert.assertEquals("root", ds.getUser());
 		Assert.assertEquals("123456", ds.getPassword());
 	}
@@ -101,9 +101,9 @@ public class DsTest {
 	@Test
 	public void hutoolPoolTest() throws SQLException {
 		DSFactory.setCurrentDSFactory(new PooledDSFactory());
-		DataSource ds = DSFactory.get("test");
-		Db db = Db.use(ds);
-		List<Entity> all = db.findAll("user");
+		final DataSource ds = DSFactory.get("test");
+		final Db db = Db.use(ds);
+		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 }

@@ -113,8 +113,8 @@ public class ObjectId {
 	 * @param withHyphen 是否包含分隔符
 	 * @return objectId
 	 */
-	public static String next(boolean withHyphen) {
-		byte[] array = nextBytes();
+	public static String next(final boolean withHyphen) {
+		final byte[] array = nextBytes();
 		final StringBuilder buf = new StringBuilder(withHyphen ? 26 : 24);
 		int t;
 		for (int i = 0; i < array.length; i++) {
@@ -141,18 +141,18 @@ public class ObjectId {
 		// 机器码
 		int machinePiece;
 		try {
-			StringBuilder netSb = new StringBuilder();
+			final StringBuilder netSb = new StringBuilder();
 			// 返回机器所有的网络接口
-			Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+			final Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
 			// 遍历网络接口
 			while (e.hasMoreElements()) {
-				NetworkInterface ni = e.nextElement();
+				final NetworkInterface ni = e.nextElement();
 				// 网络接口信息
 				netSb.append(ni.toString());
 			}
 			// 保留后两位
 			machinePiece = netSb.toString().hashCode() << 16;
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			// 出问题随机生成,保留后两位
 			machinePiece = (RandomUtil.randomInt()) << 16;
 		}
@@ -172,13 +172,13 @@ public class ObjectId {
 		int processId;
 		try {
 			processId = RuntimeUtil.getPid();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			processId = RandomUtil.randomInt();
 		}
 
 		final ClassLoader loader = ClassLoaderUtil.getClassLoader();
 		// 返回对象哈希码,无论是否重写hashCode方法
-		int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
+		final int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
 
 		// 进程ID + 对象加载ID
 		// 保留前2位

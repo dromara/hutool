@@ -34,7 +34,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @param key 键
 	 * @return true 无此key或值为{@code null}或{@link JSONNull#NULL}返回{@code false}，其它返回{@code true}
 	 */
-	default boolean isNull(K key) {
+	default boolean isNull(final K key) {
 		return JSONUtil.isNull(this.getObj(key));
 	}
 
@@ -45,7 +45,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @return 字符串类型值
 	 * @since 4.2.2
 	 */
-	default String getStrEscaped(K key) {
+	default String getStrEscaped(final K key) {
 		return getStrEscaped(key, null);
 	}
 
@@ -57,7 +57,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @return 字符串类型值
 	 * @since 4.2.2
 	 */
-	default String getStrEscaped(K key, String defaultValue) {
+	default String getStrEscaped(final K key, final String defaultValue) {
 		return JSONUtil.escape(getStr(key, defaultValue));
 	}
 
@@ -68,7 +68,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为{@code null}，返回{@code null}，非JSONArray类型，尝试转换，转换失败抛出异常
 	 */
-	default JSONArray getJSONArray(K key) {
+	default JSONArray getJSONArray(final K key) {
 		final Object object = this.getObj(key);
 		if (JSONUtil.isNull(object)) {
 			return null;
@@ -87,7 +87,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @param key KEY
 	 * @return JSONObject对象，如果值为{@code null}，返回{@code null}，非JSONObject类型，尝试转换，转换失败抛出异常
 	 */
-	default JSONObject getJSONObject(K key) {
+	default JSONObject getJSONObject(final K key) {
 		final Object object = this.getObj(key);
 		if (JSONUtil.isNull(object)) {
 			return null;
@@ -109,7 +109,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @return Bean对象，如果值为null或者非JSONObject类型，返回null
 	 * @since 3.1.1
 	 */
-	default <T> T getBean(K key, Class<T> beanType) {
+	default <T> T getBean(final K key, final Class<T> beanType) {
 		final JSONObject obj = getJSONObject(key);
 		return (null == obj) ? null : obj.toBean(beanType);
 	}
@@ -124,13 +124,13 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @return Bean的List，如果值为null或者非JSONObject类型，返回null
 	 * @since 5.7.20
 	 */
-	default <T> List<T> getBeanList(K key, Class<T> beanType) {
+	default <T> List<T> getBeanList(final K key, final Class<T> beanType) {
 		final JSONArray jsonArray = getJSONArray(key);
 		return (null == jsonArray) ? null : jsonArray.toList(beanType);
 	}
 
 	@Override
-	default Date getDate(K key, Date defaultValue) {
+	default Date getDate(final K key, final Date defaultValue) {
 		// 默认转换
 		final Object obj = getObj(key);
 		if (JSONUtil.isNull(obj)) {
@@ -164,7 +164,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @return {@link LocalDateTime}
 	 * @since 5.7.7
 	 */
-	default LocalDateTime getLocalDateTime(K key, LocalDateTime defaultValue) {
+	default LocalDateTime getLocalDateTime(final K key, final LocalDateTime defaultValue) {
 		// 默认转换
 		final Object obj = getObj(key);
 		if (JSONUtil.isNull(obj)) {
@@ -201,7 +201,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	default <T> T get(K key, Class<T> type) throws ConvertException {
+	default <T> T get(final K key, final Class<T> type) throws ConvertException {
 		return get(key, type, false);
 	}
 
@@ -216,7 +216,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	default <T> T get(K key, Class<T> type, boolean ignoreError) throws ConvertException {
+	default <T> T get(final K key, final Class<T> type, final boolean ignoreError) throws ConvertException {
 		final Object value = this.getObj(key);
 		if (JSONUtil.isNull(value)) {
 			return null;

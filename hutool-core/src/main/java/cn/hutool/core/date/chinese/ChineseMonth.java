@@ -19,7 +19,7 @@ public class ChineseMonth {
 	 * @return 是否为闰月
 	 * @since 5.4.2
 	 */
-	public static boolean isLeapMonth(int year, int month) {
+	public static boolean isLeapMonth(final int year, final int month) {
 		return month == LunarInfo.leapMonth(year);
 	}
 
@@ -33,7 +33,7 @@ public class ChineseMonth {
 	 * @param isTraditional 是否传统表示，例如一月传统表示为正月
 	 * @return 返回农历月份称呼
 	 */
-	public static String getChineseMonthName(boolean isLeapMonth, int month, boolean isTraditional) {
+	public static String getChineseMonthName(final boolean isLeapMonth, final int month, final boolean isTraditional) {
 		return (isLeapMonth ? "闰" : "") + (isTraditional ? MONTH_NAME_TRADITIONAL : MONTH_NAME)[month - 1] + "月";
 	}
 }

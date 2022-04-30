@@ -3,15 +3,15 @@ package cn.hutool.crypto.asymmetric;
 /**
  * 非对称算法类型<br>
  * see: https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
- * 
+ *
  * @author Looly
  *
  */
 public enum AsymmetricAlgorithm {
 	/** RSA算法 */
-	RSA("RSA"), 
+	RSA("RSA"),
 	/** RSA算法，此算法用了默认补位方式为RSA/ECB/PKCS1Padding */
-	RSA_ECB_PKCS1("RSA/ECB/PKCS1Padding"), 
+	RSA_ECB_PKCS1("RSA/ECB/PKCS1Padding"),
 	/** RSA算法，此算法用了默认补位方式为RSA/ECB/NoPadding */
 	RSA_ECB("RSA/ECB/NoPadding"),
 	/** RSA算法，此算法用了RSA/None/NoPadding */
@@ -23,7 +23,7 @@ public enum AsymmetricAlgorithm {
 	 * 构造
 	 * @param value 算法字符表示，区分大小写
 	 */
-	AsymmetricAlgorithm(String value) {
+	AsymmetricAlgorithm(final String value) {
 		this.value = value;
 	}
 

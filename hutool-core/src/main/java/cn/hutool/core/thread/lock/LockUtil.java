@@ -28,7 +28,7 @@ public class LockUtil {
 	 * @param fair 是否公平锁
 	 * @return {@link ReentrantReadWriteLock}锁
 	 */
-	public static ReentrantReadWriteLock createReadWriteLock(boolean fair) {
+	public static ReentrantReadWriteLock createReadWriteLock(final boolean fair) {
 		return new ReentrantReadWriteLock(fair);
 	}
 

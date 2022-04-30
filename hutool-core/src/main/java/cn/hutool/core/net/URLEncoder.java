@@ -27,7 +27,7 @@ public class URLEncoder {
 	 * @return 编码后的URL
 	 * @throws UtilException UnsupportedEncodingException
 	 */
-	public static String encodeAll(String url) {
+	public static String encodeAll(final String url) {
 		return encodeAll(url, DEFAULT_CHARSET);
 	}
 
@@ -43,7 +43,7 @@ public class URLEncoder {
 	 * @return 编码后的URL
 	 * @throws UtilException UnsupportedEncodingException
 	 */
-	public static String encodeAll(String url, Charset charset) throws UtilException {
+	public static String encodeAll(final String url, final Charset charset) throws UtilException {
 		return RFC3986.UNRESERVED.encode(url, charset);
 	}
 
@@ -55,7 +55,7 @@ public class URLEncoder {
 	 * @param url URL
 	 * @return 编码后的URL
 	 */
-	public static String encodeQuery(String url) {
+	public static String encodeQuery(final String url) {
 		return encodeQuery(url, DEFAULT_CHARSET);
 	}
 
@@ -68,7 +68,7 @@ public class URLEncoder {
 	 * @param charset 编码
 	 * @return 编码后的字符
 	 */
-	public static String encodeQuery(String url, Charset charset) {
+	public static String encodeQuery(final String url, final Charset charset) {
 		return RFC3986.QUERY.encode(url, charset);
 	}
 
@@ -79,12 +79,12 @@ public class URLEncoder {
 	 * @return 编码后的字符串
 	 * @since 4.5.14
 	 */
-	public static String encodeBlank(CharSequence urlStr) {
+	public static String encodeBlank(final CharSequence urlStr) {
 		if (urlStr == null) {
 			return null;
 		}
 
-		int len = urlStr.length();
+		final int len = urlStr.length();
 		final StringBuilder sb = new StringBuilder(len);
 		char c;
 		for (int i = 0; i < len; i++) {

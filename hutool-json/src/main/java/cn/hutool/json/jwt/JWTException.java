@@ -12,27 +12,27 @@ import cn.hutool.core.text.StrUtil;
 public class JWTException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public JWTException(Throwable e) {
+	public JWTException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public JWTException(String message) {
+	public JWTException(final String message) {
 		super(message);
 	}
 
-	public JWTException(String messageTemplate, Object... params) {
+	public JWTException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public JWTException(String message, Throwable cause) {
+	public JWTException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public JWTException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public JWTException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public JWTException(Throwable throwable, String messageTemplate, Object... params) {
+	public JWTException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

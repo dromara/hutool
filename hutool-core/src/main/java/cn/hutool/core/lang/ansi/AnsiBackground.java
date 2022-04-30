@@ -97,7 +97,7 @@ public enum AnsiBackground implements AnsiElement {
 
 	private final String code;
 
-	AnsiBackground(String code) {
+	AnsiBackground(final String code) {
 		this.code = code;
 	}
 

@@ -51,7 +51,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @param protocol 协议
 	 * @return 自身
 	 */
-	public SSLContextBuilder setProtocol(String protocol) {
+	public SSLContextBuilder setProtocol(final String protocol) {
 		if (StrUtil.isNotBlank(protocol)) {
 			this.protocol = protocol;
 		}
@@ -64,7 +64,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @param trustManagers TrustManager列表
 	 * @return 自身
 	 */
-	public SSLContextBuilder setTrustManagers(TrustManager... trustManagers) {
+	public SSLContextBuilder setTrustManagers(final TrustManager... trustManagers) {
 		if (ArrayUtil.isNotEmpty(trustManagers)) {
 			this.trustManagers = trustManagers;
 		}
@@ -77,7 +77,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @param keyManagers JSSE key managers
 	 * @return 自身
 	 */
-	public SSLContextBuilder setKeyManagers(KeyManager... keyManagers) {
+	public SSLContextBuilder setKeyManagers(final KeyManager... keyManagers) {
 		if (ArrayUtil.isNotEmpty(keyManagers)) {
 			this.keyManagers = keyManagers;
 		}
@@ -90,7 +90,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @param secureRandom SecureRandom
 	 * @return 自己
 	 */
-	public SSLContextBuilder setSecureRandom(SecureRandom secureRandom) {
+	public SSLContextBuilder setSecureRandom(final SecureRandom secureRandom) {
 		if (null != secureRandom) {
 			this.secureRandom = secureRandom;
 		}
@@ -116,7 +116,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 * @since 5.7.22
 	 */
 	public SSLContext buildChecked() throws NoSuchAlgorithmException, KeyManagementException {
-		SSLContext sslContext = SSLContext.getInstance(protocol);
+		final SSLContext sslContext = SSLContext.getInstance(protocol);
 		sslContext.init(this.keyManagers, this.trustManagers, this.secureRandom);
 		return sslContext;
 	}
@@ -130,7 +130,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	public SSLContext buildQuietly() throws IORuntimeException {
 		try {
 			return buildChecked();
-		} catch (GeneralSecurityException e) {
+		} catch (final GeneralSecurityException e) {
 			throw new IORuntimeException(e);
 		}
 	}

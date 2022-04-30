@@ -9,8 +9,8 @@ public class DateModifierTest {
 
 	@Test
 	public void truncateTest() {
-		String dateStr = "2017-03-01 22:33:23.123";
-		Date date = DateUtil.parse(dateStr);
+		final String dateStr = "2017-03-01 22:33:23.123";
+		final Date date = DateUtil.parse(dateStr);
 
 		// 毫秒
 		DateTime begin = DateUtil.truncate(date, DateField.MILLISECOND);
@@ -51,26 +51,26 @@ public class DateModifierTest {
 		// 月
 		begin = DateUtil.truncate(date, DateField.MONTH);
 		Assert.assertEquals("2017-03-01 00:00:00.000", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		
+
 		// 年
 		begin = DateUtil.truncate(date, DateField.YEAR);
 		Assert.assertEquals("2017-01-01 00:00:00.000", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
-	
+
 	@Test
 	public void truncateDayOfWeekInMonthTest() {
-		String dateStr = "2017-03-01 22:33:23.123";
-		Date date = DateUtil.parse(dateStr);
+		final String dateStr = "2017-03-01 22:33:23.123";
+		final Date date = DateUtil.parse(dateStr);
 
 		// 天，day of xxx按照day处理
-		DateTime begin = DateUtil.truncate(date, DateField.DAY_OF_WEEK_IN_MONTH);
+		final DateTime begin = DateUtil.truncate(date, DateField.DAY_OF_WEEK_IN_MONTH);
 		Assert.assertEquals("2017-03-01 00:00:00.000", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
 
 	@Test
 	public void ceilingTest() {
-		String dateStr = "2017-03-01 22:33:23.123";
-		Date date = DateUtil.parse(dateStr);
+		final String dateStr = "2017-03-01 22:33:23.123";
+		final Date date = DateUtil.parse(dateStr);
 
 		// 毫秒
 		DateTime begin = DateUtil.ceiling(date, DateField.MILLISECOND);
@@ -111,7 +111,7 @@ public class DateModifierTest {
 		// 月
 		begin = DateUtil.ceiling(date, DateField.MONTH);
 		Assert.assertEquals("2017-03-31 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
-		
+
 		// 年
 		begin = DateUtil.ceiling(date, DateField.YEAR);
 		Assert.assertEquals("2017-12-31 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));

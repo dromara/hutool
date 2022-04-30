@@ -10,27 +10,27 @@ import cn.hutool.core.text.StrUtil;
 public class MailException extends RuntimeException{
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public MailException(Throwable e) {
+	public MailException(final Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public MailException(String message) {
+	public MailException(final String message) {
 		super(message);
 	}
 
-	public MailException(String messageTemplate, Object... params) {
+	public MailException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public MailException(String message, Throwable throwable) {
+	public MailException(final String message, final Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public MailException(String message, Throwable throwable, boolean enableSuppression, boolean writableStackTrace) {
+	public MailException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, throwable, enableSuppression, writableStackTrace);
 	}
 
-	public MailException(Throwable throwable, String messageTemplate, Object... params) {
+	public MailException(final Throwable throwable, final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

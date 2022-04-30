@@ -20,7 +20,7 @@ public class IteratorEnumeration<E> implements Enumeration<E>, Serializable{
 	 * 构造
 	 * @param iterator {@link Iterator}对象
 	 */
-	public IteratorEnumeration(Iterator<E> iterator) {
+	public IteratorEnumeration(final Iterator<E> iterator) {
 		this.iterator = iterator;
 	}
 

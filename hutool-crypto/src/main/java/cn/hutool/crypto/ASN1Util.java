@@ -31,7 +31,7 @@ public class ASN1Util {
 	 * @param elements ASN.1元素
 	 * @return 编码后的bytes
 	 */
-	public static byte[] encodeDer(ASN1Encodable... elements) {
+	public static byte[] encodeDer(final ASN1Encodable... elements) {
 		return encode(ASN1Encoding.DER, elements);
 	}
 
@@ -42,7 +42,7 @@ public class ASN1Util {
 	 * @param elements     ASN.1元素
 	 * @return 编码后的bytes
 	 */
-	public static byte[] encode(String asn1Encoding, ASN1Encodable... elements) {
+	public static byte[] encode(final String asn1Encoding, final ASN1Encodable... elements) {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		encodeTo(asn1Encoding, out, elements);
 		return out.toByteArray();
@@ -55,8 +55,8 @@ public class ASN1Util {
 	 * @param out          输出流
 	 * @param elements     ASN.1元素
 	 */
-	public static void encodeTo(String asn1Encoding, OutputStream out, ASN1Encodable... elements) {
-		ASN1Sequence sequence;
+	public static void encodeTo(final String asn1Encoding, final OutputStream out, final ASN1Encodable... elements) {
+		final ASN1Sequence sequence;
 		switch (asn1Encoding) {
 			case ASN1Encoding.DER:
 				sequence = new DERSequence(elements);
@@ -72,7 +72,7 @@ public class ASN1Util {
 		}
 		try {
 			sequence.encodeTo(out);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -83,11 +83,11 @@ public class ASN1Util {
 	 * @param in ASN.1数据
 	 * @return {@link ASN1Object}
 	 */
-	public static ASN1Object decode(InputStream in) {
+	public static ASN1Object decode(final InputStream in) {
 		final ASN1InputStream asn1In = new ASN1InputStream(in);
 		try {
 			return asn1In.readObject();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -99,7 +99,7 @@ public class ASN1Util {
 	 * @return {@link ASN1Object}的字符串表示形式
 	 * @see ASN1Dump#dumpAsString(Object)
 	 */
-	public static String getDumpStr(InputStream in) {
+	public static String getDumpStr(final InputStream in) {
 		return ASN1Dump.dumpAsString(decode(in));
 	}
 }

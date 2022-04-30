@@ -18,7 +18,7 @@ public class JSONParser {
 	 * @param tokener {@link JSONTokener}
 	 * @return JSONParser
 	 */
-	public static JSONParser of(JSONTokener tokener) {
+	public static JSONParser of(final JSONTokener tokener) {
 		return new JSONParser(tokener);
 	}
 
@@ -29,7 +29,7 @@ public class JSONParser {
 	 *
 	 * @param tokener {@link JSONTokener}
 	 */
-	public JSONParser(JSONTokener tokener) {
+	public JSONParser(final JSONTokener tokener) {
 		this.tokener = tokener;
 	}
 
@@ -41,7 +41,7 @@ public class JSONParser {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
-	public void parseTo(JSONObject jsonObject, Filter<MutablePair<String, Object>> filter) {
+	public void parseTo(final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;
@@ -95,7 +95,7 @@ public class JSONParser {
 	 * @param jsonArray {@link JSONArray}
 	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null} 表示不过滤
 	 */
-	public void parseTo(JSONArray jsonArray, Filter<Mutable<Object>> filter) {
+	public void parseTo(final JSONArray jsonArray, final Filter<Mutable<Object>> filter) {
 		final JSONTokener x = this.tokener;
 
 		if (x.nextClean() != '[') {

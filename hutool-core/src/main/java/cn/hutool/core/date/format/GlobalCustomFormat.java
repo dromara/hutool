@@ -42,7 +42,7 @@ public class GlobalCustomFormat {
 	 * @param format 格式
 	 * @param func   格式化函数
 	 */
-	public static void putFormatter(String format, Function<Date, String> func) {
+	public static void putFormatter(final String format, final Function<Date, String> func) {
 		Assert.notNull(format, "Format must be not null !");
 		Assert.notNull(func, "Function must be not null !");
 		formatterMap.put(format, func);
@@ -54,7 +54,7 @@ public class GlobalCustomFormat {
 	 * @param format 格式
 	 * @param func   解析函数
 	 */
-	public static void putParser(String format, Function<CharSequence, Date> func) {
+	public static void putParser(final String format, final Function<CharSequence, Date> func) {
 		Assert.notNull(format, "Format must be not null !");
 		Assert.notNull(func, "Function must be not null !");
 		parserMap.put(format, func);
@@ -66,7 +66,7 @@ public class GlobalCustomFormat {
 	 * @param format 格式
 	 * @return 是否为自定义格式
 	 */
-	public static boolean isCustomFormat(String format) {
+	public static boolean isCustomFormat(final String format) {
 		return formatterMap.containsKey(format);
 	}
 
@@ -77,7 +77,7 @@ public class GlobalCustomFormat {
 	 * @param format 自定义格式
 	 * @return 格式化后的日期
 	 */
-	public static String format(Date date, CharSequence format) {
+	public static String format(final Date date, final CharSequence format) {
 		if (null != formatterMap) {
 			final Function<Date, String> func = formatterMap.get(format);
 			if (null != func) {
@@ -95,7 +95,7 @@ public class GlobalCustomFormat {
 	 * @param format           自定义格式
 	 * @return 格式化后的日期
 	 */
-	public static String format(TemporalAccessor temporalAccessor, CharSequence format) {
+	public static String format(final TemporalAccessor temporalAccessor, final CharSequence format) {
 		return format(DateUtil.date(temporalAccessor), format);
 	}
 
@@ -106,7 +106,7 @@ public class GlobalCustomFormat {
 	 * @param format  自定义格式
 	 * @return 格式化后的日期
 	 */
-	public static Date parse(CharSequence dateStr, String format) {
+	public static Date parse(final CharSequence dateStr, final String format) {
 		if (null != parserMap) {
 			final Function<CharSequence, Date> func = parserMap.get(format);
 			if (null != func) {

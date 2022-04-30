@@ -46,7 +46,7 @@ public class AES extends SymmetricCrypto {
 	 *
 	 * @param key 密钥
 	 */
-	public AES(byte[] key) {
+	public AES(final byte[] key) {
 		super(SymmetricAlgorithm.AES, key);
 	}
 
@@ -56,7 +56,7 @@ public class AES extends SymmetricCrypto {
 	 * @param key 密钥
 	 * @since 5.5.2
 	 */
-	public AES(SecretKey key) {
+	public AES(final SecretKey key) {
 		super(SymmetricAlgorithm.AES, key);
 	}
 
@@ -66,7 +66,7 @@ public class AES extends SymmetricCrypto {
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
-	public AES(Mode mode, Padding padding) {
+	public AES(final Mode mode, final Padding padding) {
 		this(mode.name(), padding.name());
 	}
 
@@ -77,7 +77,7 @@ public class AES extends SymmetricCrypto {
 	 * @param padding {@link Padding}补码方式
 	 * @param key     密钥，支持三种密钥长度：128、192、256位
 	 */
-	public AES(Mode mode, Padding padding, byte[] key) {
+	public AES(final Mode mode, final Padding padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -90,7 +90,7 @@ public class AES extends SymmetricCrypto {
 	 * @param iv      偏移向量，加盐
 	 * @since 3.3.0
 	 */
-	public AES(Mode mode, Padding padding, byte[] key, byte[] iv) {
+	public AES(final Mode mode, final Padding padding, final byte[] key, final byte[] iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -102,7 +102,7 @@ public class AES extends SymmetricCrypto {
 	 * @param key     密钥，支持三种密钥长度：128、192、256位
 	 * @since 3.3.0
 	 */
-	public AES(Mode mode, Padding padding, SecretKey key) {
+	public AES(final Mode mode, final Padding padding, final SecretKey key) {
 		this(mode, padding, key, (IvParameterSpec) null);
 	}
 
@@ -115,7 +115,7 @@ public class AES extends SymmetricCrypto {
 	 * @param iv      偏移向量，加盐
 	 * @since 4.6.7
 	 */
-	public AES(Mode mode, Padding padding, SecretKey key, byte[] iv) {
+	public AES(final Mode mode, final Padding padding, final SecretKey key, final byte[] iv) {
 		this(mode, padding, key, ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 
@@ -128,7 +128,7 @@ public class AES extends SymmetricCrypto {
 	 * @param paramsSpec 算法参数，例如加盐等
 	 * @since 3.3.0
 	 */
-	public AES(Mode mode, Padding padding, SecretKey key, AlgorithmParameterSpec paramsSpec) {
+	public AES(final Mode mode, final Padding padding, final SecretKey key, final AlgorithmParameterSpec paramsSpec) {
 		this(mode.name(), padding.name(), key, paramsSpec);
 	}
 
@@ -138,7 +138,7 @@ public class AES extends SymmetricCrypto {
 	 * @param mode    模式
 	 * @param padding 补码方式
 	 */
-	public AES(String mode, String padding) {
+	public AES(final String mode, final String padding) {
 		this(mode, padding, (byte[]) null);
 	}
 
@@ -149,7 +149,7 @@ public class AES extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key     密钥，支持三种密钥长度：128、192、256位
 	 */
-	public AES(String mode, String padding, byte[] key) {
+	public AES(final String mode, final String padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -161,7 +161,7 @@ public class AES extends SymmetricCrypto {
 	 * @param key     密钥，支持三种密钥长度：128、192、256位
 	 * @param iv      加盐
 	 */
-	public AES(String mode, String padding, byte[] key, byte[] iv) {
+	public AES(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding,//
 				KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue(), key),//
 				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
@@ -174,7 +174,7 @@ public class AES extends SymmetricCrypto {
 	 * @param padding 补码方式
 	 * @param key     密钥，支持三种密钥长度：128、192、256位
 	 */
-	public AES(String mode, String padding, SecretKey key) {
+	public AES(final String mode, final String padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -186,7 +186,7 @@ public class AES extends SymmetricCrypto {
 	 * @param key        密钥，支持三种密钥长度：128、192、256位
 	 * @param paramsSpec 算法参数，例如加盐等
 	 */
-	public AES(String mode, String padding, SecretKey key, AlgorithmParameterSpec paramsSpec) {
+	public AES(final String mode, final String padding, final SecretKey key, final AlgorithmParameterSpec paramsSpec) {
 		super(StrUtil.format("AES/{}/{}", mode, padding), key, paramsSpec);
 	}
 	//------------------------------------------------------------------------- Constrctor end

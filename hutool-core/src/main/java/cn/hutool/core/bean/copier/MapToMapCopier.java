@@ -26,7 +26,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 	 * @param targetType  目标泛型类型
 	 * @param copyOptions 拷贝选项
 	 */
-	public MapToMapCopier(Map source, Map target, Type targetType, CopyOptions copyOptions) {
+	public MapToMapCopier(final Map source, final Map target, final Type targetType, final CopyOptions copyOptions) {
 		super(source, target, copyOptions);
 		this.targetType = targetType;
 	}

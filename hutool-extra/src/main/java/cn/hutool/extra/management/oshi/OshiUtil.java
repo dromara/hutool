@@ -146,7 +146,7 @@ public class OshiUtil {
 	 * @param waitingTime 设置等待时间，单位毫秒
 	 * @return 系统 CPU 使用率 等信息
 	 */
-	public static CpuInfo getCpuInfo(long waitingTime) {
+	public static CpuInfo getCpuInfo(final long waitingTime) {
 		return new CpuInfo(OshiUtil.getProcessor(), waitingTime);
 	}
 }

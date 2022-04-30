@@ -11,7 +11,7 @@ public class ZipReaderTest {
 	@Test
 	@Ignore
 	public void unzipTest() {
-		File unzip = ZipUtil.unzip("d:/java.zip", "d:/test/java");
+		final File unzip = ZipUtil.unzip("d:/java.zip", "d:/test/java");
 		Console.log(unzip);
 	}
 }

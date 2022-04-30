@@ -31,10 +31,10 @@ public class ConcurentTest {
 	public void findTest() {
 		for(int i = 0; i < 10000; i++) {
 			ThreadUtil.execute(() -> {
-				List<Entity> find;
+				final List<Entity> find;
 				try {
 					find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					throw new DbRuntimeException(e);
 				}
 				Console.log(find);

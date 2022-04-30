@@ -54,7 +54,7 @@ public class HtmlUtil {
 	 * @param text 被转义的文本
 	 * @return 转义后的文本
 	 */
-	public static String escape(String text) {
+	public static String escape(final String text) {
 		return encode(text);
 	}
 
@@ -64,7 +64,7 @@ public class HtmlUtil {
 	 * @param htmlStr 包含转义符的HTML内容
 	 * @return 转换后的字符串
 	 */
-	public static String unescape(String htmlStr) {
+	public static String unescape(final String htmlStr) {
 		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
@@ -80,7 +80,7 @@ public class HtmlUtil {
 	 * @param content 文本
 	 * @return 清除标签后的文本
 	 */
-	public static String cleanHtmlTag(String content) {
+	public static String cleanHtmlTag(final String content) {
 		return content.replaceAll(RE_HTML_MARK, "");
 	}
 
@@ -92,7 +92,7 @@ public class HtmlUtil {
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
-	public static String removeHtmlTag(String content, String... tagNames) {
+	public static String removeHtmlTag(final String content, final String... tagNames) {
 		return removeHtmlTag(content, true, tagNames);
 	}
 
@@ -104,7 +104,7 @@ public class HtmlUtil {
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
-	public static String unwrapHtmlTag(String content, String... tagNames) {
+	public static String unwrapHtmlTag(final String content, final String... tagNames) {
 		return removeHtmlTag(content, false, tagNames);
 	}
 
@@ -117,7 +117,7 @@ public class HtmlUtil {
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
-	public static String removeHtmlTag(String content, boolean withTagContent, String... tagNames) {
+	public static String removeHtmlTag(String content, final boolean withTagContent, final String... tagNames) {
 		String regex;
 		for (String tagName : tagNames) {
 			if (StrUtil.isBlank(tagName)) {
@@ -145,9 +145,9 @@ public class HtmlUtil {
 	 * @param attrs 属性名（不区分大小写）
 	 * @return 处理后的文本
 	 */
-	public static String removeHtmlAttr(String content, String... attrs) {
+	public static String removeHtmlAttr(String content, final String... attrs) {
 		String regex;
-		for (String attr : attrs) {
+		for (final String attr : attrs) {
 			// (?i)     表示忽略大小写
 			// \s*      属性名前后的空白符去除
 			// [^>]+?   属性值，至少有一个非>的字符，>表示标签结束
@@ -166,9 +166,9 @@ public class HtmlUtil {
 	 * @param tagNames 指定标签
 	 * @return 处理后的文本
 	 */
-	public static String removeAllHtmlAttr(String content, String... tagNames) {
+	public static String removeAllHtmlAttr(String content, final String... tagNames) {
 		String regex;
-		for (String tagName : tagNames) {
+		for (final String tagName : tagNames) {
 			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
 			content = content.replaceAll(regex, StrUtil.format("<{}>", tagName));
 		}
@@ -181,12 +181,12 @@ public class HtmlUtil {
 	 * @param text 被编码的文本
 	 * @return 编码后的字符
 	 */
-	private static String encode(String text) {
-		int len;
+	private static String encode(final String text) {
+		final int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StrUtil.EMPTY;
 		}
-		StringBuilder buffer = new StringBuilder(len + (len >> 2));
+		final StringBuilder buffer = new StringBuilder(len + (len >> 2));
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = text.charAt(i);
@@ -205,7 +205,7 @@ public class HtmlUtil {
 	 * @param htmlContent HTML内容
 	 * @return 过滤后的内容
 	 */
-	public static String filter(String htmlContent) {
+	public static String filter(final String htmlContent) {
 		return new HTMLFilter().filter(htmlContent);
 	}
 }

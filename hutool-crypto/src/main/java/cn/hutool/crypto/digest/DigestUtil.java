@@ -22,7 +22,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(byte[] data) {
+	public static byte[] md5(final byte[] data) {
 		return new MD5().digest(data);
 	}
 
@@ -33,7 +33,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(String data, String charset) {
+	public static byte[] md5(final String data, final String charset) {
 		return new MD5().digest(data, charset);
 	}
 
@@ -43,7 +43,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(String data) {
+	public static byte[] md5(final String data) {
 		return md5(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -53,7 +53,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(InputStream data) {
+	public static byte[] md5(final InputStream data) {
 		return new MD5().digest(data);
 	}
 
@@ -63,7 +63,7 @@ public class DigestUtil {
 	 * @param file 被摘要文件
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(File file) {
+	public static byte[] md5(final File file) {
 		return new MD5().digest(file);
 	}
 
@@ -73,7 +73,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
-	public static String md5Hex(byte[] data) {
+	public static String md5Hex(final byte[] data) {
 		return new MD5().digestHex(data);
 	}
 
@@ -84,7 +84,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return MD5摘要的16进制表示
 	 */
-	public static String md5Hex(String data, String charset) {
+	public static String md5Hex(final String data, final String charset) {
 		return new MD5().digestHex(data, charset);
 	}
 
@@ -96,7 +96,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex(String data, Charset charset) {
+	public static String md5Hex(final String data, final Charset charset) {
 		return new MD5().digestHex(data, charset);
 	}
 
@@ -106,7 +106,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
-	public static String md5Hex(String data) {
+	public static String md5Hex(final String data) {
 		return md5Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -116,7 +116,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
-	public static String md5Hex(InputStream data) {
+	public static String md5Hex(final InputStream data) {
 		return new MD5().digestHex(data);
 	}
 
@@ -126,7 +126,7 @@ public class DigestUtil {
 	 * @param file 被摘要文件
 	 * @return MD5摘要的16进制表示
 	 */
-	public static String md5Hex(File file) {
+	public static String md5Hex(final File file) {
 		return new MD5().digestHex(file);
 	}
 
@@ -139,7 +139,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex16(byte[] data) {
+	public static String md5Hex16(final byte[] data) {
 		return new MD5().digestHex16(data);
 	}
 
@@ -151,7 +151,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex16(String data, Charset charset) {
+	public static String md5Hex16(final String data, final Charset charset) {
 		return new MD5().digestHex16(data, charset);
 	}
 
@@ -162,7 +162,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex16(String data) {
+	public static String md5Hex16(final String data) {
 		return md5Hex16(data, CharsetUtil.UTF_8);
 	}
 
@@ -173,7 +173,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex16(InputStream data) {
+	public static String md5Hex16(final InputStream data) {
 		return new MD5().digestHex16(data);
 	}
 
@@ -184,7 +184,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
-	public static String md5Hex16(File file) {
+	public static String md5Hex16(final File file) {
 		return new MD5().digestHex16(file);
 	}
 
@@ -195,7 +195,7 @@ public class DigestUtil {
 	 * @return 16位MD5
 	 * @since 4.4.1
 	 */
-	public static String md5HexTo16(String md5Hex) {
+	public static String md5HexTo16(final String md5Hex) {
 		return md5Hex.substring(8, 24);
 	}
 
@@ -207,7 +207,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要
 	 */
-	public static byte[] sha1(byte[] data) {
+	public static byte[] sha1(final byte[] data) {
 		return new Digester(DigestAlgorithm.SHA1).digest(data);
 	}
 
@@ -218,7 +218,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return SHA-1摘要
 	 */
-	public static byte[] sha1(String data, String charset) {
+	public static byte[] sha1(final String data, final String charset) {
 		return new Digester(DigestAlgorithm.SHA1).digest(data, charset);
 	}
 
@@ -228,7 +228,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
-	public static byte[] sha1(String data) {
+	public static byte[] sha1(final String data) {
 		return sha1(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -238,7 +238,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要
 	 */
-	public static byte[] sha1(InputStream data) {
+	public static byte[] sha1(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA1).digest(data);
 	}
 
@@ -248,7 +248,7 @@ public class DigestUtil {
 	 * @param file 被摘要文件
 	 * @return SHA-1摘要
 	 */
-	public static byte[] sha1(File file) {
+	public static byte[] sha1(final File file) {
 		return new Digester(DigestAlgorithm.SHA1).digest(file);
 	}
 
@@ -258,7 +258,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(byte[] data) {
+	public static String sha1Hex(final byte[] data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
@@ -269,7 +269,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(String data, String charset) {
+	public static String sha1Hex(final String data, final String charset) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data, charset);
 	}
 
@@ -279,7 +279,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(String data) {
+	public static String sha1Hex(final String data) {
 		return sha1Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -289,7 +289,7 @@ public class DigestUtil {
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(InputStream data) {
+	public static String sha1Hex(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
@@ -299,7 +299,7 @@ public class DigestUtil {
 	 * @param file 被摘要文件
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(File file) {
+	public static String sha1Hex(final File file) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(file);
 	}
 
@@ -312,7 +312,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha256(byte[] data) {
+	public static byte[] sha256(final byte[] data) {
 		return new Digester(DigestAlgorithm.SHA256).digest(data);
 	}
 
@@ -324,7 +324,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha256(String data, String charset) {
+	public static byte[] sha256(final String data, final String charset) {
 		return new Digester(DigestAlgorithm.SHA256).digest(data, charset);
 	}
 
@@ -335,7 +335,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha256(String data) {
+	public static byte[] sha256(final String data) {
 		return sha256(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -346,7 +346,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha256(InputStream data) {
+	public static byte[] sha256(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA256).digest(data);
 	}
 
@@ -357,7 +357,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha256(File file) {
+	public static byte[] sha256(final File file) {
 		return new Digester(DigestAlgorithm.SHA256).digest(file);
 	}
 
@@ -368,7 +368,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(byte[] data) {
+	public static String sha256Hex(final byte[] data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
@@ -380,7 +380,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(String data, String charset) {
+	public static String sha256Hex(final String data, final String charset) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data, charset);
 	}
 
@@ -391,7 +391,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(String data) {
+	public static String sha256Hex(final String data) {
 		return sha256Hex(data, CharsetUtil.NAME_UTF_8);
 	}
 
@@ -402,7 +402,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(InputStream data) {
+	public static String sha256Hex(final InputStream data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
@@ -413,7 +413,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(File file) {
+	public static String sha256Hex(final File file) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(file);
 	}
 
@@ -427,7 +427,7 @@ public class DigestUtil {
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, byte[] key) {
+	public static HMac hmac(final HmacAlgorithm algorithm, final byte[] key) {
 		return new HMac(algorithm, key);
 	}
 
@@ -439,7 +439,7 @@ public class DigestUtil {
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key) {
+	public static HMac hmac(final HmacAlgorithm algorithm, final SecretKey key) {
 		return new HMac(algorithm, key);
 	}
 
@@ -450,7 +450,7 @@ public class DigestUtil {
 	 * @return Digester
 	 * @since 4.0.1
 	 */
-	public static Digester digester(DigestAlgorithm algorithm) {
+	public static Digester digester(final DigestAlgorithm algorithm) {
 		return new Digester(algorithm);
 	}
 
@@ -461,7 +461,7 @@ public class DigestUtil {
 	 * @return Digester
 	 * @since 4.2.1
 	 */
-	public static Digester digester(String algorithm) {
+	public static Digester digester(final String algorithm) {
 		return new Digester(algorithm);
 	}
 
@@ -472,7 +472,7 @@ public class DigestUtil {
 	 * @return 加密后的密文
 	 * @since 4.1.1
 	 */
-	public static String bcrypt(String password) {
+	public static String bcrypt(final String password) {
 		return BCrypt.hashpw(password);
 	}
 
@@ -484,7 +484,7 @@ public class DigestUtil {
 	 * @return 是否匹配
 	 * @since 4.1.1
 	 */
-	public static boolean bcryptCheck(String password, String hashed) {
+	public static boolean bcryptCheck(final String password, final String hashed) {
 		return BCrypt.checkpw(password, hashed);
 	}
 }

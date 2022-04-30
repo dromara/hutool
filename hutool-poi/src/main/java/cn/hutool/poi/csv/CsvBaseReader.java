@@ -48,7 +48,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param config 配置项
 	 */
-	public CsvBaseReader(CsvReadConfig config) {
+	public CsvBaseReader(final CsvReadConfig config) {
 		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 	//--------------------------------------------------------------------------------------------- Constructor end
@@ -58,7 +58,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param fieldSeparator 字段分隔符，默认逗号','
 	 */
-	public void setFieldSeparator(char fieldSeparator) {
+	public void setFieldSeparator(final char fieldSeparator) {
 		this.config.setFieldSeparator(fieldSeparator);
 	}
 
@@ -67,7 +67,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param textDelimiter 文本分隔符，文本包装符，默认双引号'"'
 	 */
-	public void setTextDelimiter(char textDelimiter) {
+	public void setTextDelimiter(final char textDelimiter) {
 		this.config.setTextDelimiter(textDelimiter);
 	}
 
@@ -76,7 +76,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param containsHeader 是否首行做为标题行，默认false
 	 */
-	public void setContainsHeader(boolean containsHeader) {
+	public void setContainsHeader(final boolean containsHeader) {
 		this.config.setContainsHeader(containsHeader);
 	}
 
@@ -85,7 +85,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param skipEmptyRows 是否跳过空白行，默认true
 	 */
-	public void setSkipEmptyRows(boolean skipEmptyRows) {
+	public void setSkipEmptyRows(final boolean skipEmptyRows) {
 		this.config.setSkipEmptyRows(skipEmptyRows);
 	}
 
@@ -94,7 +94,7 @@ public class CsvBaseReader implements Serializable {
 	 *
 	 * @param errorOnDifferentFieldCount 每行字段个数不同时是否抛出异常，默认false
 	 */
-	public void setErrorOnDifferentFieldCount(boolean errorOnDifferentFieldCount) {
+	public void setErrorOnDifferentFieldCount(final boolean errorOnDifferentFieldCount) {
 		this.config.setErrorOnDifferentFieldCount(errorOnDifferentFieldCount);
 	}
 
@@ -105,7 +105,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvData read(File file) throws IORuntimeException {
+	public CsvData read(final File file) throws IORuntimeException {
 		return read(file, DEFAULT_CHARSET);
 	}
 
@@ -115,7 +115,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param csvStr CSV字符串
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 */
-	public CsvData readFromStr(String csvStr) {
+	public CsvData readFromStr(final String csvStr) {
 		return read(new StringReader(csvStr));
 	}
 
@@ -125,7 +125,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param csvStr     CSV字符串
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 */
-	public void readFromStr(String csvStr, CsvRowHandler rowHandler) {
+	public void readFromStr(final String csvStr, final CsvRowHandler rowHandler) {
 		read(parse(new StringReader(csvStr)), rowHandler);
 	}
 
@@ -138,7 +138,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvData read(File file, Charset charset) throws IORuntimeException {
+	public CsvData read(final File file, final Charset charset) throws IORuntimeException {
 		return read(Objects.requireNonNull(file.toPath(), "file must not be null"), charset);
 	}
 
@@ -149,7 +149,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvData read(Path path) throws IORuntimeException {
+	public CsvData read(final Path path) throws IORuntimeException {
 		return read(path, DEFAULT_CHARSET);
 	}
 
@@ -161,7 +161,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvData read(Path path, Charset charset) throws IORuntimeException {
+	public CsvData read(final Path path, final Charset charset) throws IORuntimeException {
 		Assert.notNull(path, "path must not be null");
 		return read(FileUtil.getReader(path, charset));
 	}
@@ -173,7 +173,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvData read(Reader reader) throws IORuntimeException {
+	public CsvData read(final Reader reader) throws IORuntimeException {
 		final CsvParser csvParser = parse(reader);
 		final List<CsvRow> rows = new ArrayList<>();
 		read(csvParser, rows::add);
@@ -190,7 +190,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return {@link CsvData}，包含数据列表和行信息
 	 * @throws IORuntimeException IO异常
 	 */
-	public List<Map<String, String>> readMapList(Reader reader) throws IORuntimeException {
+	public List<Map<String, String>> readMapList(final Reader reader) throws IORuntimeException {
 		// 此方法必须包含标题
 		this.config.setContainsHeader(true);
 
@@ -208,7 +208,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param clazz  Bean类型
 	 * @return Bean列表
 	 */
-	public <T> List<T> read(Reader reader, Class<T> clazz) {
+	public <T> List<T> read(final Reader reader, final Class<T> clazz) {
 		// 此方法必须包含标题
 		this.config.setContainsHeader(true);
 
@@ -226,7 +226,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param clazz  Bean类型
 	 * @return Bean列表
 	 */
-	public <T> List<T> read(String csvStr, Class<T> clazz) {
+	public <T> List<T> read(final String csvStr, final Class<T> clazz) {
 		// 此方法必须包含标题
 		this.config.setContainsHeader(true);
 
@@ -242,7 +242,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 * @throws IORuntimeException IO异常
 	 */
-	public void read(Reader reader, CsvRowHandler rowHandler) throws IORuntimeException {
+	public void read(final Reader reader, final CsvRowHandler rowHandler) throws IORuntimeException {
 		read(parse(reader), rowHandler);
 	}
 
@@ -256,7 +256,7 @@ public class CsvBaseReader implements Serializable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	private void read(CsvParser csvParser, CsvRowHandler rowHandler) throws IORuntimeException {
+	private void read(final CsvParser csvParser, final CsvRowHandler rowHandler) throws IORuntimeException {
 		try {
 			while (csvParser.hasNext()){
 				rowHandler.handle(csvParser.next());
@@ -273,7 +273,7 @@ public class CsvBaseReader implements Serializable {
 	 * @return CsvParser
 	 * @throws IORuntimeException IO异常
 	 */
-	protected CsvParser parse(Reader reader) throws IORuntimeException {
+	protected CsvParser parse(final Reader reader) throws IORuntimeException {
 		return new CsvParser(reader, this.config);
 	}
 	//--------------------------------------------------------------------------------------------- Private method start

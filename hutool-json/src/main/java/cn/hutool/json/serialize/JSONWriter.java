@@ -70,7 +70,7 @@ public class JSONWriter extends Writer {
 	 * @param config       JSON选项
 	 * @return JSONWriter
 	 */
-	public static JSONWriter of(Writer writer, int indentFactor, int indent, JSONConfig config) {
+	public static JSONWriter of(final Writer writer, final int indentFactor, final int indent, final JSONConfig config) {
 		return new JSONWriter(writer, indentFactor, indent, config);
 	}
 
@@ -82,7 +82,7 @@ public class JSONWriter extends Writer {
 	 * @param indent       本级别缩进量
 	 * @param config       JSON选项
 	 */
-	public JSONWriter(Writer writer, int indentFactor, int indent, JSONConfig config) {
+	public JSONWriter(final Writer writer, final int indentFactor, final int indent, final JSONConfig config) {
 		this.writer = writer;
 		this.indentFactor = indentFactor;
 		this.indent = indent;
@@ -132,7 +132,7 @@ public class JSONWriter extends Writer {
 	 * @param key 键名
 	 * @return this
 	 */
-	public JSONWriter writeKey(String key) {
+	public JSONWriter writeKey(final String key) {
 		if (needSeparator) {
 			writeRaw(CharUtil.COMMA);
 		}
@@ -148,7 +148,7 @@ public class JSONWriter extends Writer {
 	 * @param value 值
 	 * @return this
 	 */
-	public JSONWriter writeValue(Object value) {
+	public JSONWriter writeValue(final Object value) {
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
@@ -163,7 +163,7 @@ public class JSONWriter extends Writer {
 	 * @return this
 	 * @since 5.7.6
 	 */
-	public JSONWriter writeField(String key, Object value){
+	public JSONWriter writeField(final String key, final Object value){
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
@@ -172,7 +172,7 @@ public class JSONWriter extends Writer {
 	}
 
 	@Override
-	public void write(char[] cbuf, int off, int len) throws IOException {
+	public void write(final char[] cbuf, final int off, final int len) throws IOException {
 		this.writer.write(cbuf, off, len);
 	}
 
@@ -180,7 +180,7 @@ public class JSONWriter extends Writer {
 	public void flush() {
 		try {
 			this.writer.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -197,7 +197,7 @@ public class JSONWriter extends Writer {
 	 * @param value 值
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(Object value) {
+	private JSONWriter writeValueDirect(final Object value) {
 		if (arrayMode) {
 			if (needSeparator) {
 				writeRaw(CharUtil.COMMA);
@@ -217,7 +217,7 @@ public class JSONWriter extends Writer {
 	 * @param value 值
 	 * @return this
 	 */
-	private JSONWriter writeObjValue(Object value) {
+	private JSONWriter writeObjValue(final Object value) {
 		final int indent = indentFactor + this.indent;
 		if (value == null || value instanceof JSONNull) {
 			writeRaw(JSONNull.NULL.toString());
@@ -250,7 +250,7 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param number 数字
 	 */
-	private void writeNumberValue(Number number) {
+	private void writeNumberValue(final Number number) {
 		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
 		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
 		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
@@ -261,7 +261,7 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param value Boolean值
 	 */
-	private void writeBooleanValue(Boolean value) {
+	private void writeBooleanValue(final Boolean value) {
 		writeRaw(value.toString());
 	}
 
@@ -272,11 +272,11 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param jsonString {@link JSONString}
 	 */
-	private void writeJSONStringValue(JSONString jsonString) {
-		String valueStr;
+	private void writeJSONStringValue(final JSONString jsonString) {
+		final String valueStr;
 		try {
 			valueStr = jsonString.toJSONString();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new JSONException(e);
 		}
 		if (null != valueStr) {
@@ -294,10 +294,10 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param csq 字符串
 	 */
-	private void writeStrValue(String csq) {
+	private void writeStrValue(final String csq) {
 		try {
 			JSONUtil.quote(csq, writer);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -307,7 +307,7 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param count 空格数
 	 */
-	private void writeSpace(int count) {
+	private void writeSpace(final int count) {
 		if (indentFactor > 0) {
 			for (int i = 0; i < count; i++) {
 				writeRaw(CharUtil.SPACE);
@@ -333,10 +333,10 @@ public class JSONWriter extends Writer {
 	 * @param csq 字符串
 	 * @return this
 	 */
-	private JSONWriter writeRaw(String csq) {
+	private JSONWriter writeRaw(final String csq) {
 		try {
 			writer.append(csq);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -348,10 +348,10 @@ public class JSONWriter extends Writer {
 	 * @param c 字符串
 	 * @return this
 	 */
-	private JSONWriter writeRaw(char c) {
+	private JSONWriter writeRaw(final char c) {
 		try {
 			writer.write(c);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -364,7 +364,7 @@ public class JSONWriter extends Writer {
 	 * @param format  格式
 	 * @return 日期字符串
 	 */
-	private static String formatDate(Object dateObj, String format) {
+	private static String formatDate(final Object dateObj, final String format) {
 		if (StrUtil.isNotBlank(format)) {
 			final String dateStr;
 			if (dateObj instanceof TemporalAccessor) {
@@ -383,7 +383,7 @@ public class JSONWriter extends Writer {
 		}
 
 		//默认使用时间戳
-		long timeMillis;
+		final long timeMillis;
 		if (dateObj instanceof TemporalAccessor) {
 			timeMillis = TemporalAccessorUtil.toEpochMilli((TemporalAccessor) dateObj);
 		} else if (dateObj instanceof Date) {

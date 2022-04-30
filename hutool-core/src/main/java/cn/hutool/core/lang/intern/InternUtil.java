@@ -34,7 +34,7 @@ public class InternUtil {
 	 * @param isWeak 是否创建使用WeakHashMap实现的Interner
 	 * @return {@link Interner}
 	 */
-	public static Interner<String> createStringInterner(boolean isWeak){
+	public static Interner<String> createStringInterner(final boolean isWeak){
 		return isWeak ? createWeakInterner() : createJdkInterner();
 	}
 }

@@ -24,7 +24,7 @@ public class EnjoyTemplate extends AbstractTemplate implements Serializable {
 	 * @param EnjoyTemplate Enjoy的模板对象 {@link com.jfinal.template.Template}
 	 * @return {@link EnjoyTemplate}
 	 */
-	public static EnjoyTemplate wrap(com.jfinal.template.Template EnjoyTemplate) {
+	public static EnjoyTemplate wrap(final com.jfinal.template.Template EnjoyTemplate) {
 		return (null == EnjoyTemplate) ? null : new EnjoyTemplate(EnjoyTemplate);
 	}
 
@@ -33,17 +33,17 @@ public class EnjoyTemplate extends AbstractTemplate implements Serializable {
 	 *
 	 * @param EnjoyTemplate Enjoy的模板对象 {@link com.jfinal.template.Template}
 	 */
-	public EnjoyTemplate(com.jfinal.template.Template EnjoyTemplate) {
+	public EnjoyTemplate(final com.jfinal.template.Template EnjoyTemplate) {
 		this.rawTemplate = EnjoyTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		rawTemplate.render(bindingMap, writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		rawTemplate.render(bindingMap, out);
 	}
 

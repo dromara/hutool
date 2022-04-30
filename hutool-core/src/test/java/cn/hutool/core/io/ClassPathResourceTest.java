@@ -17,23 +17,23 @@ public class ClassPathResourceTest {
 
 	@Test
 	public void readStringTest() {
-		ClassPathResource resource = new ClassPathResource("test.properties");
-		String content = resource.readUtf8Str();
+		final ClassPathResource resource = new ClassPathResource("test.properties");
+		final String content = resource.readUtf8Str();
 		Assert.assertTrue(StrUtil.isNotEmpty(content));
 	}
 
 	@Test
 	public void readStringTest2() {
 		// 读取classpath根目录测试
-		ClassPathResource resource = new ClassPathResource("/");
-		String content = resource.readUtf8Str();
+		final ClassPathResource resource = new ClassPathResource("/");
+		final String content = resource.readUtf8Str();
 		Assert.assertTrue(StrUtil.isNotEmpty(content));
 	}
 
 	@Test
 	public void readTest() throws IOException {
-		ClassPathResource resource = new ClassPathResource("test.properties");
-		Properties properties = new Properties();
+		final ClassPathResource resource = new ClassPathResource("test.properties");
+		final Properties properties = new Properties();
 		properties.load(resource.getStream());
 
 		Assert.assertEquals("1", properties.get("a"));
@@ -56,7 +56,7 @@ public class ClassPathResourceTest {
 	@Test
 	public void getAbsTest() {
 		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
-		String absPath = resource.getAbsolutePath();
+		final String absPath = resource.getAbsolutePath();
 		Assert.assertTrue(absPath.contains("LICENSE-junit.txt"));
 	}
 }

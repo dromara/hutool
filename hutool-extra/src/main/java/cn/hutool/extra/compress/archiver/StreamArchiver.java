@@ -41,7 +41,7 @@ public class StreamArchiver implements Archiver {
 	 * @param file         归档输出的文件
 	 * @return StreamArchiver
 	 */
-	public static StreamArchiver create(Charset charset, String archiverName, File file) {
+	public static StreamArchiver create(final Charset charset, final String archiverName, final File file) {
 		return new StreamArchiver(charset, archiverName, file);
 	}
 
@@ -53,7 +53,7 @@ public class StreamArchiver implements Archiver {
 	 * @param out          归档输出的流
 	 * @return StreamArchiver
 	 */
-	public static StreamArchiver create(Charset charset, String archiverName, OutputStream out) {
+	public static StreamArchiver create(final Charset charset, final String archiverName, final OutputStream out) {
 		return new StreamArchiver(charset, archiverName, out);
 	}
 
@@ -66,7 +66,7 @@ public class StreamArchiver implements Archiver {
 	 * @param archiverName 归档类型名称，见{@link ArchiveStreamFactory}
 	 * @param file         归档输出的文件
 	 */
-	public StreamArchiver(Charset charset, String archiverName, File file) {
+	public StreamArchiver(final Charset charset, final String archiverName, final File file) {
 		this(charset, archiverName, FileUtil.getOutputStream(file));
 	}
 
@@ -77,11 +77,11 @@ public class StreamArchiver implements Archiver {
 	 * @param archiverName 归档类型名称，见{@link ArchiveStreamFactory}
 	 * @param targetStream 归档输出的流
 	 */
-	public StreamArchiver(Charset charset, String archiverName, OutputStream targetStream) {
+	public StreamArchiver(final Charset charset, final String archiverName, final OutputStream targetStream) {
 		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
 		try {
 			this.out = factory.createArchiveOutputStream(archiverName, targetStream);
-		} catch (ArchiveException e) {
+		} catch (final ArchiveException e) {
 			throw new CompressException(e);
 		}
 
@@ -103,10 +103,10 @@ public class StreamArchiver implements Archiver {
 	 * @throws IORuntimeException IO异常
 	 */
 	@Override
-	public StreamArchiver add(File file, String path, Filter<File> filter) throws IORuntimeException {
+	public StreamArchiver add(final File file, final String path, final Filter<File> filter) throws IORuntimeException {
 		try {
 			addInternal(file, path, filter);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -121,7 +121,7 @@ public class StreamArchiver implements Archiver {
 	public StreamArchiver finish() {
 		try {
 			this.out.finish();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return this;
@@ -131,7 +131,7 @@ public class StreamArchiver implements Archiver {
 	public void close() {
 		try {
 			finish();
-		} catch (Exception ignore) {
+		} catch (final Exception ignore) {
 			//ignore
 		}
 		IoUtil.close(this.out);
@@ -144,7 +144,7 @@ public class StreamArchiver implements Archiver {
 	 * @param path   文件或目录的初始路径，{@code null}表示位于根路径
 	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
 	 */
-	private void addInternal(File file, String path, Filter<File> filter) throws IOException {
+	private void addInternal(final File file, final String path, final Filter<File> filter) throws IOException {
 		if (null != filter && false == filter.accept(file)) {
 			return;
 		}
@@ -164,7 +164,7 @@ public class StreamArchiver implements Archiver {
 			// 目录遍历写入
 			final File[] files = file.listFiles();
 			if(ArrayUtil.isNotEmpty(files)){
-				for (File childFile : files) {
+				for (final File childFile : files) {
 					addInternal(childFile, entryName, filter);
 				}
 			}

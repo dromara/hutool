@@ -22,7 +22,7 @@ import cn.hutool.core.util.CharsetUtil;
 public class SimpleStringResourceLoader extends ResourceLoader {
 
 	@Override
-	public void init(ExtProperties configuration) {
+	public void init(final ExtProperties configuration) {
 	}
 
 	/**
@@ -32,22 +32,22 @@ public class SimpleStringResourceLoader extends ResourceLoader {
 	 * @return 流
 	 * @throws ResourceNotFoundException 资源未找到
 	 */
-	public InputStream getResourceStream(String source) throws ResourceNotFoundException {
+	public InputStream getResourceStream(final String source) throws ResourceNotFoundException {
 		return IoUtil.toStream(source, CharsetUtil.UTF_8);
 	}
 
 	@Override
-	public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException {
+	public Reader getResourceReader(final String source, final String encoding) throws ResourceNotFoundException {
 		return new StringReader(source);
 	}
 
 	@Override
-	public boolean isSourceModified(Resource resource) {
+	public boolean isSourceModified(final Resource resource) {
 		return false;
 	}
 
 	@Override
-	public long getLastModified(Resource resource) {
+	public long getLastModified(final Resource resource) {
 		return 0;
 	}
 

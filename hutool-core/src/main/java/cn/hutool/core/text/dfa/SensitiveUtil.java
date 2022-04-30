@@ -33,7 +33,7 @@ public final class SensitiveUtil {
 	 * @param isAsync        是否异步初始化
 	 * @param sensitiveWords 敏感词列表
 	 */
-	public static void init(final Collection<String> sensitiveWords, boolean isAsync) {
+	public static void init(final Collection<String> sensitiveWords, final boolean isAsync) {
 		if (isAsync) {
 			ThreadUtil.execAsync(() -> {
 				init(sensitiveWords);
@@ -49,7 +49,7 @@ public final class SensitiveUtil {
 	 *
 	 * @param sensitiveWords 敏感词列表
 	 */
-	public static void init(Collection<String> sensitiveWords) {
+	public static void init(final Collection<String> sensitiveWords) {
 		sensitiveTree.clear();
 		sensitiveTree.addWords(sensitiveWords);
 //		log.debug("Sensitive init finished, sensitives: {}", sensitiveWords);
@@ -62,7 +62,7 @@ public final class SensitiveUtil {
 	 * @param isAsync        是否异步初始化
 	 * @param separator      分隔符
 	 */
-	public static void init(String sensitiveWords, char separator, boolean isAsync) {
+	public static void init(final String sensitiveWords, final char separator, final boolean isAsync) {
 		if (StrUtil.isNotBlank(sensitiveWords)) {
 			init(StrUtil.split(sensitiveWords, separator), isAsync);
 		}
@@ -74,7 +74,7 @@ public final class SensitiveUtil {
 	 * @param sensitiveWords 敏感词列表组成的字符串
 	 * @param isAsync        是否异步初始化
 	 */
-	public static void init(String sensitiveWords, boolean isAsync) {
+	public static void init(final String sensitiveWords, final boolean isAsync) {
 		init(sensitiveWords, DEFAULT_SEPARATOR, isAsync);
 	}
 
@@ -85,7 +85,7 @@ public final class SensitiveUtil {
 	 * @param charFilter 过滤函数
 	 * @since 5.4.4
 	 */
-	public static void setCharFilter(Predicate<Character> charFilter) {
+	public static void setCharFilter(final Predicate<Character> charFilter) {
 		if (charFilter != null) {
 			sensitiveTree.setCharFilter(charFilter);
 		}
@@ -97,7 +97,7 @@ public final class SensitiveUtil {
 	 * @param text 文本
 	 * @return 是否包含
 	 */
-	public static boolean containsSensitive(String text) {
+	public static boolean containsSensitive(final String text) {
 		return sensitiveTree.isMatch(text);
 	}
 
@@ -108,7 +108,7 @@ public final class SensitiveUtil {
 	 * @return 敏感词
 	 * @since 5.5.3
 	 */
-	public static FoundWord getFoundFirstSensitive(String text) {
+	public static FoundWord getFoundFirstSensitive(final String text) {
 		return sensitiveTree.matchWord(text);
 	}
 
@@ -119,7 +119,7 @@ public final class SensitiveUtil {
 	 * @return 敏感词
 	 * @since 5.5.3
 	 */
-	public static List<FoundWord> getFoundAllSensitive(String text) {
+	public static List<FoundWord> getFoundAllSensitive(final String text) {
 		return sensitiveTree.matchAllWords(text);
 	}
 
@@ -133,7 +133,7 @@ public final class SensitiveUtil {
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 敏感词
 	 */
-	public static List<FoundWord> getFoundAllSensitive(String text, boolean isDensityMatch, boolean isGreedMatch) {
+	public static List<FoundWord> getFoundAllSensitive(final String text, final boolean isDensityMatch, final boolean isGreedMatch) {
 		return sensitiveTree.matchAllWords(text, -1, isDensityMatch, isGreedMatch);
 	}
 
@@ -144,7 +144,7 @@ public final class SensitiveUtil {
 	 * @return 敏感词过滤处理后的文本
 	 * @since 5.7.21
 	 */
-	public static String sensitiveFilter(String text) {
+	public static String sensitiveFilter(final String text) {
 		return sensitiveFilter(text, true, null);
 	}
 
@@ -156,13 +156,13 @@ public final class SensitiveUtil {
 	 * @param sensitiveProcessor 敏感词处理器，默认按匹配内容的字符数替换成*
 	 * @return 敏感词过滤处理后的文本
 	 */
-	public static String sensitiveFilter(String text, boolean isGreedMatch, SensitiveProcessor sensitiveProcessor) {
+	public static String sensitiveFilter(final String text, final boolean isGreedMatch, SensitiveProcessor sensitiveProcessor) {
 		if (StrUtil.isEmpty(text)) {
 			return text;
 		}
 
 		//敏感词过滤场景下，不需要密集匹配
-		List<FoundWord> foundWordList = getFoundAllSensitive(text, true, isGreedMatch);
+		final List<FoundWord> foundWordList = getFoundAllSensitive(text, true, isGreedMatch);
 		if (CollUtil.isEmpty(foundWordList)) {
 			return text;
 		}
@@ -171,10 +171,10 @@ public final class SensitiveUtil {
 
 		final Map<Integer, FoundWord> foundWordMap = new HashMap<>(foundWordList.size(), 1);
 		foundWordList.forEach(foundWord -> foundWordMap.put(foundWord.getStartIndex(), foundWord));
-		int length = text.length();
-		StringBuilder textStringBuilder = new StringBuilder();
+		final int length = text.length();
+		final StringBuilder textStringBuilder = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			FoundWord fw = foundWordMap.get(i);
+			final FoundWord fw = foundWordMap.get(i);
 			if (fw != null) {
 				textStringBuilder.append(sensitiveProcessor.process(fw));
 				i = fw.getEndIndex();

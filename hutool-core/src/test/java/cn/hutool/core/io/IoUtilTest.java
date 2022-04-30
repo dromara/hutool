@@ -26,9 +26,9 @@ public class IoUtilTest {
 
 	@Test
 	public void readLinesTest() {
-		try (BufferedReader reader = ResourceUtil.getUtf8Reader("test_lines.csv");) {
+		try (final BufferedReader reader = ResourceUtil.getUtf8Reader("test_lines.csv")) {
 			IoUtil.readLines(reader, (LineHandler) Assert::assertNotNull);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

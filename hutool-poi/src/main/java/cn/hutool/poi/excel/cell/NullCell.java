@@ -33,7 +33,7 @@ public class NullCell implements Cell {
 	 * @param row         行
 	 * @param columnIndex 列号，从0开始
 	 */
-	public NullCell(Row row, int columnIndex) {
+	public NullCell(final Row row, final int columnIndex) {
 		this.row = row;
 		this.columnIndex = columnIndex;
 	}
@@ -58,7 +58,7 @@ public class NullCell implements Cell {
 		return this.row;
 	}
 
-	public void setCellType(CellType cellType) {
+	public void setCellType(final CellType cellType) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
@@ -86,37 +86,37 @@ public class NullCell implements Cell {
 	}
 
 	@Override
-	public void setCellValue(double value) {
+	public void setCellValue(final double value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellValue(Date value) {
+	public void setCellValue(final Date value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellValue(LocalDateTime value) {
+	public void setCellValue(final LocalDateTime value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellValue(Calendar value) {
+	public void setCellValue(final Calendar value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellValue(RichTextString value) {
+	public void setCellValue(final RichTextString value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellValue(String value) {
+	public void setCellValue(final String value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellFormula(String formula) throws FormulaParseException, IllegalStateException {
+	public void setCellFormula(final String formula) throws FormulaParseException, IllegalStateException {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
@@ -156,12 +156,12 @@ public class NullCell implements Cell {
 	}
 
 	@Override
-	public void setCellValue(boolean value) {
+	public void setCellValue(final boolean value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
 	@Override
-	public void setCellErrorValue(byte value) {
+	public void setCellErrorValue(final byte value) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
@@ -176,7 +176,7 @@ public class NullCell implements Cell {
 	}
 
 	@Override
-	public void setCellStyle(CellStyle style) {
+	public void setCellStyle(final CellStyle style) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
@@ -196,7 +196,7 @@ public class NullCell implements Cell {
 	}
 
 	@Override
-	public void setCellComment(Comment comment) {
+	public void setCellComment(final Comment comment) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 
@@ -216,7 +216,7 @@ public class NullCell implements Cell {
 	}
 
 	@Override
-	public void setHyperlink(Hyperlink link) {
+	public void setHyperlink(final Hyperlink link) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
 

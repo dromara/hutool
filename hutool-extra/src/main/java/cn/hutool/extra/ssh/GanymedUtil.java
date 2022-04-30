@@ -26,11 +26,11 @@ public class GanymedUtil {
 	 * @param sshPort 端口
 	 * @return {@link Connection}
 	 */
-	public static Connection connect(String sshHost, int sshPort) {
-		Connection conn = new Connection(sshHost, sshPort);
+	public static Connection connect(final String sshHost, final int sshPort) {
+		final Connection conn = new Connection(sshHost, sshPort);
 		try {
 			conn.connect();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return conn;
@@ -45,7 +45,7 @@ public class GanymedUtil {
 	 * @param sshPass 密码
 	 * @return {@link Session}
 	 */
-	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+	public static Session openSession(final String sshHost, final int sshPort, String sshUser, final String sshPass) {
 		// 默认root用户
 		if (StrUtil.isEmpty(sshUser)) {
 			sshUser = "root";
@@ -55,7 +55,7 @@ public class GanymedUtil {
 		try {
 			connect.authenticateWithPassword(sshUser, sshPass);
 			return connect.openSession();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -72,7 +72,7 @@ public class GanymedUtil {
 	 * @param errStream 错误信息输出到的位置
 	 * @return 执行返回结果
 	 */
-	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
+	public static String exec(final Session session, final String cmd, final Charset charset, final OutputStream errStream) {
 		final String result;
 		try {
 			session.execCommand(cmd, charset.name());
@@ -80,7 +80,7 @@ public class GanymedUtil {
 
 			// 错误输出
 			IoUtil.copy(new StreamGobbler(session.getStderr()), errStream);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			close(session);
@@ -100,7 +100,7 @@ public class GanymedUtil {
 	 * @param errStream 错误信息输出到的位置
 	 * @return 执行返回结果
 	 */
-	public static String execByShell(Session session, String cmd, Charset charset, OutputStream errStream) {
+	public static String execByShell(final Session session, final String cmd, final Charset charset, final OutputStream errStream) {
 		final String result;
 		try {
 			session.requestDumbPTY();
@@ -111,7 +111,7 @@ public class GanymedUtil {
 				// 错误输出
 				IoUtil.copy(new StreamGobbler(session.getStderr()), errStream);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			close(session);
@@ -124,7 +124,7 @@ public class GanymedUtil {
 	 *
 	 * @param session 会话通道
 	 */
-	public static void close(Session session) {
+	public static void close(final Session session) {
 		if (session != null) {
 			session.close();
 		}

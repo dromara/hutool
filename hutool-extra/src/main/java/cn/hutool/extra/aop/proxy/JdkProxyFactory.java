@@ -13,7 +13,7 @@ public class JdkProxyFactory extends ProxyFactory {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public <T> T proxy(T target, Aspect aspect) {
+	public <T> T proxy(final T target, final Aspect aspect) {
 		return ProxyUtil.newProxyInstance(//
 				target.getClass().getClassLoader(), //
 				new JdkInterceptor(target, aspect), //

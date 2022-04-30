@@ -35,7 +35,7 @@ public class CipherWrapper {
 	 *
 	 * @param algorithm 算法名称
 	 */
-	public CipherWrapper(String algorithm) {
+	public CipherWrapper(final String algorithm) {
 		this(SecureUtil.createCipher(algorithm));
 	}
 
@@ -44,7 +44,7 @@ public class CipherWrapper {
 	 *
 	 * @param cipher {@link Cipher}
 	 */
-	public CipherWrapper(Cipher cipher) {
+	public CipherWrapper(final Cipher cipher) {
 		this.cipher = cipher;
 	}
 
@@ -64,7 +64,7 @@ public class CipherWrapper {
 	 * @param params {@link AlgorithmParameterSpec}
 	 * @return this
 	 */
-	public CipherWrapper setParams(AlgorithmParameterSpec params) {
+	public CipherWrapper setParams(final AlgorithmParameterSpec params) {
 		this.params = params;
 		return this;
 	}
@@ -75,7 +75,7 @@ public class CipherWrapper {
 	 * @param random 随机数生成器，可自定义随机数种子
 	 * @return this
 	 */
-	public CipherWrapper setRandom(SecureRandom random) {
+	public CipherWrapper setRandom(final SecureRandom random) {
 		this.random = random;
 		return this;
 	}
@@ -98,7 +98,7 @@ public class CipherWrapper {
 	 * @throws InvalidKeyException                无效key
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
-	public CipherWrapper initMode(int mode, Key key)
+	public CipherWrapper initMode(final int mode, final Key key)
 			throws InvalidKeyException, InvalidAlgorithmParameterException {
 		final Cipher cipher = this.cipher;
 		final AlgorithmParameterSpec params = this.params;

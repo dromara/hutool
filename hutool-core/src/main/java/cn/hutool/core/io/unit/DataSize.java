@@ -62,7 +62,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 *
 	 * @param bytes 长度
 	 */
-	private DataSize(long bytes) {
+	private DataSize(final long bytes) {
 		this.bytes = bytes;
 	}
 
@@ -73,7 +73,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param bytes bytes大小，可正可负
 	 * @return this
 	 */
-	public static DataSize ofBytes(long bytes) {
+	public static DataSize ofBytes(final long bytes) {
 		return new DataSize(bytes);
 	}
 
@@ -83,7 +83,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param kilobytes kilobytes大小，可正可负
 	 * @return a DataSize
 	 */
-	public static DataSize ofKilobytes(long kilobytes) {
+	public static DataSize ofKilobytes(final long kilobytes) {
 		return new DataSize(Math.multiplyExact(kilobytes, BYTES_PER_KB));
 	}
 
@@ -93,7 +93,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param megabytes megabytes大小，可正可负
 	 * @return a DataSize
 	 */
-	public static DataSize ofMegabytes(long megabytes) {
+	public static DataSize ofMegabytes(final long megabytes) {
 		return new DataSize(Math.multiplyExact(megabytes, BYTES_PER_MB));
 	}
 
@@ -103,7 +103,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param gigabytes gigabytes大小，可正可负
 	 * @return a DataSize
 	 */
-	public static DataSize ofGigabytes(long gigabytes) {
+	public static DataSize ofGigabytes(final long gigabytes) {
 		return new DataSize(Math.multiplyExact(gigabytes, BYTES_PER_GB));
 	}
 
@@ -113,7 +113,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param terabytes terabytes大小，可正可负
 	 * @return a DataSize
 	 */
-	public static DataSize ofTerabytes(long terabytes) {
+	public static DataSize ofTerabytes(final long terabytes) {
 		return new DataSize(Math.multiplyExact(terabytes, BYTES_PER_TB));
 	}
 
@@ -124,7 +124,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param unit 数据大小单位，null表示默认的BYTES
 	 * @return DataSize
 	 */
-	public static DataSize of(long amount, DataUnit unit) {
+	public static DataSize of(final long amount, DataUnit unit) {
 		if(null == unit){
 			unit = DataUnit.BYTES;
 		}
@@ -139,7 +139,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @return DataSize
 	 * @since 5.4.5
 	 */
-	public static DataSize of(BigDecimal amount, DataUnit unit) {
+	public static DataSize of(final BigDecimal amount, DataUnit unit) {
 		if(null == unit){
 			unit = DataUnit.BYTES;
 		}
@@ -160,7 +160,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @return the parsed DataSize
 	 * @see #parse(CharSequence, DataUnit)
 	 */
-	public static DataSize parse(CharSequence text) {
+	public static DataSize parse(final CharSequence text) {
 		return parse(text, null);
 	}
 
@@ -182,7 +182,7 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param defaultUnit 默认的数据单位
 	 * @return the parsed DataSize
 	 */
-	public static DataSize parse(CharSequence text, DataUnit defaultUnit) {
+	public static DataSize parse(final CharSequence text, final DataUnit defaultUnit) {
 		Assert.notNull(text, "Text must not be null");
 		try {
 			final Matcher matcher = PATTERN.matcher(text);
@@ -190,7 +190,7 @@ public final class DataSize implements Comparable<DataSize> {
 
 			final DataUnit unit = determineDataUnit(matcher.group(3), defaultUnit);
 			return DataSize.of(new BigDecimal(matcher.group(1)), unit);
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			throw new IllegalArgumentException("'" + text + "' is not a valid data size", ex);
 		}
 	}
@@ -201,8 +201,8 @@ public final class DataSize implements Comparable<DataSize> {
 	 * @param defaultUnit 默认单位
 	 * @return {@link DataUnit}
 	 */
-	private static DataUnit determineDataUnit(String suffix, DataUnit defaultUnit) {
-		DataUnit defaultUnitToUse = (defaultUnit != null ? defaultUnit : DataUnit.BYTES);
+	private static DataUnit determineDataUnit(final String suffix, final DataUnit defaultUnit) {
+		final DataUnit defaultUnitToUse = (defaultUnit != null ? defaultUnit : DataUnit.BYTES);
 		return (StrUtil.isNotEmpty(suffix) ? DataUnit.fromSuffix(suffix) : defaultUnitToUse);
 	}
 
@@ -262,7 +262,7 @@ public final class DataSize implements Comparable<DataSize> {
 	}
 
 	@Override
-	public int compareTo(DataSize other) {
+	public int compareTo(final DataSize other) {
 		return Long.compare(this.bytes, other.bytes);
 	}
 
@@ -273,14 +273,14 @@ public final class DataSize implements Comparable<DataSize> {
 
 
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(final Object other) {
 		if (this == other) {
 			return true;
 		}
 		if (other == null || getClass() != other.getClass()) {
 			return false;
 		}
-		DataSize otherSize = (DataSize) other;
+		final DataSize otherSize = (DataSize) other;
 		return (this.bytes == otherSize.bytes);
 	}
 

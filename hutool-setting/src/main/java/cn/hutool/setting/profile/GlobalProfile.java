@@ -20,7 +20,7 @@ public class GlobalProfile {
 	 * @param profile 环境
 	 * @return {@link Profile}
 	 */
-	public static Profile setProfile(String profile) {
+	public static Profile setProfile(final String profile) {
 		return Singleton.get(Profile.class, profile);
 	}
 
@@ -29,7 +29,7 @@ public class GlobalProfile {
 	 * @param settingName 配置文件名，可以忽略默认后者（.setting）
 	 * @return {@link Setting}
 	 */
-	public static Setting getSetting(String settingName) {
+	public static Setting getSetting(final String settingName) {
 		return Singleton.get(Profile.class).getSetting(settingName);
 	}
 	// -------------------------------------------------------------------------------- Static method end

@@ -14,7 +14,7 @@ public class MongoDBTest {
 	@Test
 	@Ignore
 	public void mongoDSTest() {
-		MongoDatabase db = MongoFactory.getDS("master").getDb("test");
+		final MongoDatabase db = MongoFactory.getDS("master").getDb("test");
 		Assert.assertEquals("test", db.getName());
 	}
 }

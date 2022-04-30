@@ -2,7 +2,7 @@ package cn.hutool.extra.ssh;
 
 /**
  * 连接者对象，提供一些连接的基本信息
- * 
+ *
  * @author Luxiaolei
  *
  */
@@ -19,12 +19,12 @@ public class Connector {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param user 用户名
 	 * @param password 密码
 	 * @param group 组
 	 */
-	public Connector(String user, String password, String group) {
+	public Connector(final String user, final String password, final String group) {
 		this.user = user;
 		this.password = password;
 		this.group = group;
@@ -32,13 +32,13 @@ public class Connector {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param host 主机名
 	 * @param port 端口
 	 * @param user 用户名
 	 * @param password 密码
 	 */
-	public Connector(String host, int port, String user, String password) {
+	public Connector(final String host, final int port, final String user, final String password) {
 		this.host = host;
 		this.port = port;
 		this.user = user;
@@ -48,7 +48,7 @@ public class Connector {
 
 	/**
 	 * 获得主机名
-	 * 
+	 *
 	 * @return 主机名
 	 */
 	public String getHost() {
@@ -57,16 +57,16 @@ public class Connector {
 
 	/**
 	 * 设定主机名
-	 * 
+	 *
 	 * @param host 主机名
 	 */
-	public void setHost(String host) {
+	public void setHost(final String host) {
 		this.host = host;
 	}
 
 	/**
 	 * 获得端口号
-	 * 
+	 *
 	 * @return 端口号
 	 */
 	public int getPort() {
@@ -75,16 +75,16 @@ public class Connector {
 
 	/**
 	 * 设定端口号
-	 * 
+	 *
 	 * @param port 端口号
 	 */
-	public void setPort(int port) {
+	public void setPort(final int port) {
 		this.port = port;
 	}
 
 	/**
 	 * 获得用户名
-	 * 
+	 *
 	 * @return 用户名
 	 */
 	public String getUser() {
@@ -93,16 +93,16 @@ public class Connector {
 
 	/**
 	 * 设定用户名
-	 * 
+	 *
 	 * @param name 用户名
 	 */
-	public void setUser(String name) {
+	public void setUser(final String name) {
 		this.user = name;
 	}
 
 	/**
 	 * 获得密码
-	 * 
+	 *
 	 * @return 密码
 	 */
 	public String getPassword() {
@@ -111,16 +111,16 @@ public class Connector {
 
 	/**
 	 * 设定密码
-	 * 
+	 *
 	 * @param password 密码
 	 */
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 
 	/**
 	 * 获得用户组名
-	 * 
+	 *
 	 * @return 用户组
 	 */
 	public String getGroup() {
@@ -129,10 +129,10 @@ public class Connector {
 
 	/**
 	 * 设定用户组名
-	 * 
+	 *
 	 * @param group 用户组
 	 */
-	public void setGroup(String group) {
+	public void setGroup(final String group) {
 		this.group = group;
 	}
 

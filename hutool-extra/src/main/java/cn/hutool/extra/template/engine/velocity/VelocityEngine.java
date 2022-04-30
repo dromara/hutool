@@ -30,7 +30,7 @@ public class VelocityEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public VelocityEngine(TemplateConfig config) {
+	public VelocityEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -39,7 +39,7 @@ public class VelocityEngine implements TemplateEngine {
 	 *
 	 * @param engine {@link org.apache.velocity.app.VelocityEngine}
 	 */
-	public VelocityEngine(org.apache.velocity.app.VelocityEngine engine) {
+	public VelocityEngine(final org.apache.velocity.app.VelocityEngine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -59,7 +59,7 @@ public class VelocityEngine implements TemplateEngine {
 	 *
 	 * @param engine 引擎
 	 */
-	private void init(org.apache.velocity.app.VelocityEngine engine) {
+	private void init(final org.apache.velocity.app.VelocityEngine engine) {
 		this.engine = engine;
 	}
 
@@ -80,7 +80,7 @@ public class VelocityEngine implements TemplateEngine {
 		}
 
 		// 目录前缀
-		String root;
+		final String root;
 		// 自定义编码
 		String charsetStr = null;
 		if (null != this.config) {

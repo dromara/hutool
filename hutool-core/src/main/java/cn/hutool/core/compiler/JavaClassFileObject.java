@@ -29,7 +29,7 @@ class JavaClassFileObject extends SimpleJavaFileObject {
 	 * @param className 编译后的class文件的类名
 	 * @see JavaClassFileManager#getJavaFileForOutput(javax.tools.JavaFileManager.Location, java.lang.String, javax.tools.JavaFileObject.Kind, javax.tools.FileObject)
 	 */
-	protected JavaClassFileObject(String className) {
+	protected JavaClassFileObject(final String className) {
 		super(URLUtil.getStringURI(className.replace(CharUtil.DOT, CharUtil.SLASH) + Kind.CLASS.extension), Kind.CLASS);
 		this.byteArrayOutputStream = new ByteArrayOutputStream();
 	}

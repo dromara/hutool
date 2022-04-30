@@ -21,7 +21,7 @@ public enum TableType {
 	 *
 	 * @param value 值
 	 */
-	TableType(String value) {
+	TableType(final String value) {
 		this.value = value;
 	}
 

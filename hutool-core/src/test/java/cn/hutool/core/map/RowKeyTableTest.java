@@ -32,7 +32,7 @@ public class RowKeyTableTest {
 
 
 		// 获取列
-		Map<Integer, Integer> column = table.getColumn(6);
+		final Map<Integer, Integer> column = table.getColumn(6);
 		Assert.assertEquals(1, column.size());
 		Assert.assertEquals(new Integer(4), column.get(1));
 	}

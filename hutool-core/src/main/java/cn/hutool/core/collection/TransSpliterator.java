@@ -16,25 +16,25 @@ public class TransSpliterator<F, T> implements Spliterator<T> {
 	private final Spliterator<F> fromSpliterator;
 	private final Function<? super F, ? extends T> function;
 
-	public TransSpliterator(Spliterator<F> fromSpliterator, Function<? super F, ? extends T> function) {
+	public TransSpliterator(final Spliterator<F> fromSpliterator, final Function<? super F, ? extends T> function) {
 		this.fromSpliterator = fromSpliterator;
 		this.function = function;
 	}
 
 	@Override
-	public boolean tryAdvance(Consumer<? super T> action) {
+	public boolean tryAdvance(final Consumer<? super T> action) {
 		return fromSpliterator.tryAdvance(
 				fromElement -> action.accept(function.apply(fromElement)));
 	}
 
 	@Override
-	public void forEachRemaining(Consumer<? super T> action) {
+	public void forEachRemaining(final Consumer<? super T> action) {
 		fromSpliterator.forEachRemaining(fromElement -> action.accept(function.apply(fromElement)));
 	}
 
 	@Override
 	public Spliterator<T> trySplit() {
-		Spliterator<F> fromSplit = fromSpliterator.trySplit();
+		final Spliterator<F> fromSplit = fromSpliterator.trySplit();
 		return (fromSplit != null) ? new TransSpliterator<>(fromSplit, function) : null;
 	}
 

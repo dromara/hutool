@@ -41,7 +41,7 @@ public class AlgorithmUtil {
 	 * @param idOrAlgorithm 算法ID或算法名
 	 * @return 算法名
 	 */
-	public static String getAlgorithm(String idOrAlgorithm){
+	public static String getAlgorithm(final String idOrAlgorithm){
 		return ObjUtil.defaultIfNull(getAlgorithmById(idOrAlgorithm), idOrAlgorithm);
 	}
 
@@ -50,7 +50,7 @@ public class AlgorithmUtil {
 	 * @param idOrAlgorithm 算法ID或算法名
 	 * @return 算法ID
 	 */
-	public static String getId(String idOrAlgorithm){
+	public static String getId(final String idOrAlgorithm){
 		return ObjUtil.defaultIfNull(getIdByAlgorithm(idOrAlgorithm), idOrAlgorithm);
 	}
 
@@ -60,7 +60,7 @@ public class AlgorithmUtil {
 	 * @param id JWT算法ID
 	 * @return 算法
 	 */
-	private static String getAlgorithmById(String id) {
+	private static String getAlgorithmById(final String id) {
 		return map.get(id.toUpperCase());
 	}
 
@@ -70,7 +70,7 @@ public class AlgorithmUtil {
 	 * @param algorithm 算法
 	 * @return JWT算法ID
 	 */
-	private static String getIdByAlgorithm(String algorithm) {
+	private static String getIdByAlgorithm(final String algorithm) {
 		return map.getKey(algorithm);
 	}
 }

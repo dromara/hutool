@@ -24,7 +24,7 @@ public class StrFormatter {
 	 * @param argArray   参数列表
 	 * @return 结果
 	 */
-	public static String format(String strPattern, Object... argArray) {
+	public static String format(final String strPattern, final Object... argArray) {
 		return formatWith(strPattern, StrUtil.EMPTY_JSON, argArray);
 	}
 
@@ -43,7 +43,7 @@ public class StrFormatter {
 	 * @return 结果
 	 * @since 5.7.14
 	 */
-	public static String formatWith(String strPattern, String placeHolder, Object... argArray) {
+	public static String formatWith(final String strPattern, final String placeHolder, final Object... argArray) {
 		if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || ArrayUtil.isEmpty(argArray)) {
 			return strPattern;
 		}
@@ -103,7 +103,7 @@ public class StrFormatter {
 	 * @return 格式化后的文本
 	 * @since 5.7.10
 	 */
-	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
+	public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
 		if (null == template) {
 			return null;
 		}
@@ -113,7 +113,7 @@ public class StrFormatter {
 
 		String template2 = template.toString();
 		String value;
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
+		for (final Map.Entry<?, ?> entry : map.entrySet()) {
 			value = StrUtil.utf8Str(entry.getValue());
 			if (null == value && ignoreNull) {
 				continue;

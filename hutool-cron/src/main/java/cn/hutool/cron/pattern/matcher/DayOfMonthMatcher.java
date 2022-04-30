@@ -17,7 +17,7 @@ public class DayOfMonthMatcher extends BoolArrayMatcher {
 	 *
 	 * @param intValueList 匹配的日值
 	 */
-	public DayOfMonthMatcher(List<Integer> intValueList) {
+	public DayOfMonthMatcher(final List<Integer> intValueList) {
 		super(intValueList);
 	}
 
@@ -29,7 +29,7 @@ public class DayOfMonthMatcher extends BoolArrayMatcher {
 	 * @param isLeapYear 是否闰年
 	 * @return 是否匹配
 	 */
-	public boolean match(int value, int month, boolean isLeapYear) {
+	public boolean match(final int value, final int month, final boolean isLeapYear) {
 		return (super.match(value) // 在约定日范围内的某一天
 				//匹配器中用户定义了最后一天（31表示最后一天）
 				|| (value > 27 && match(31) && isLastDayOfMonth(value, month, isLeapYear)));
@@ -47,7 +47,7 @@ public class DayOfMonthMatcher extends BoolArrayMatcher {
 	 * @param isLeapYear 是否闰年
 	 * @return 是否为本月最后一天
 	 */
-	private static boolean isLastDayOfMonth(int value, int month, boolean isLeapYear) {
+	private static boolean isLastDayOfMonth(final int value, final int month, final boolean isLeapYear) {
 		return value == Month.getLastDay(month - 1, isLeapYear);
 	}
 }

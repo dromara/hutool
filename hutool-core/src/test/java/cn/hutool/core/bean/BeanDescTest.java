@@ -13,7 +13,7 @@ public class BeanDescTest {
 
 	@Test
 	public void propDescTes() {
-		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 		Assert.assertEquals("User", desc.getSimpleName());
 
 		Assert.assertEquals("age", desc.getField("age").getName());
@@ -26,9 +26,9 @@ public class BeanDescTest {
 
 	@Test
 	public void propDescTes2() {
-		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
-		PropDesc prop = desc.getProp("name");
+		final PropDesc prop = desc.getProp("name");
 		Assert.assertEquals("name", prop.getFieldName());
 		Assert.assertEquals("getName", prop.getGetter().getName());
 		Assert.assertEquals("setName", prop.getSetter().getName());
@@ -38,7 +38,7 @@ public class BeanDescTest {
 
 	@Test
 	public void propDescOfBooleanTest() {
-		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
 		Assert.assertEquals("isAdmin", desc.getGetter("isAdmin").getName());
 		Assert.assertEquals("setAdmin", desc.getSetter("isAdmin").getName());
@@ -48,7 +48,7 @@ public class BeanDescTest {
 
 	@Test
 	public void propDescOfBooleanTest2() {
-		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
 		Assert.assertEquals("isIsSuper", desc.getGetter("isSuper").getName());
 		Assert.assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
@@ -56,13 +56,13 @@ public class BeanDescTest {
 
 	@Test
 	public void getSetTest() {
-		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
-		User user = new User();
+		final User user = new User();
 		desc.getProp("name").setValue(user, "张三");
 		Assert.assertEquals("张三", user.getName());
 
-		Object value = desc.getProp("name").getValue(user);
+		final Object value = desc.getProp("name").getValue(user);
 		Assert.assertEquals("张三", value);
 	}
 
@@ -77,7 +77,7 @@ public class BeanDescTest {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(final String name) {
 			this.name = name;
 		}
 
@@ -85,7 +85,7 @@ public class BeanDescTest {
 			return age;
 		}
 
-		public User setAge(int age) {
+		public User setAge(final int age) {
 			this.age = age;
 			return this;
 		}
@@ -98,7 +98,7 @@ public class BeanDescTest {
 			return isAdmin;
 		}
 
-		public void setAdmin(boolean isAdmin) {
+		public void setAdmin(final boolean isAdmin) {
 			this.isAdmin = isAdmin;
 		}
 
@@ -106,7 +106,7 @@ public class BeanDescTest {
 			return isSuper;
 		}
 
-		public void setIsSuper(boolean isSuper) {
+		public void setIsSuper(final boolean isSuper) {
 			this.isSuper = isSuper;
 		}
 
@@ -114,7 +114,7 @@ public class BeanDescTest {
 			return gender;
 		}
 
-		public void setGender(boolean gender) {
+		public void setGender(final boolean gender) {
 			this.gender = gender;
 		}
 

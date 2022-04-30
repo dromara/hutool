@@ -9,7 +9,7 @@ public class BiMapTest {
 
 	@Test
 	public void getTest(){
-		BiMap<String, Integer> biMap = new BiMap<>(new HashMap<>());
+		final BiMap<String, Integer> biMap = new BiMap<>(new HashMap<>());
 		biMap.put("aaa", 111);
 		biMap.put("bbb", 222);
 

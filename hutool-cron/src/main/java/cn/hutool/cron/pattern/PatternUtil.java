@@ -22,7 +22,7 @@ class PatternUtil {
 	 * @return 字段值列表
 	 * @since 5.8.0
 	 */
-	static int[] getFields(LocalDateTime dateTime, boolean isMatchSecond) {
+	static int[] getFields(final LocalDateTime dateTime, final boolean isMatchSecond) {
 		final int second = isMatchSecond ? dateTime.getSecond() : -1;
 		final int minute = dateTime.getMinute();
 		final int hour = dateTime.getHour();
@@ -42,7 +42,7 @@ class PatternUtil {
 	 * @return 字段值列表
 	 * @since 5.8.0
 	 */
-	static int[] getFields(Calendar calendar, boolean isMatchSecond) {
+	static int[] getFields(final Calendar calendar, final boolean isMatchSecond) {
 		final int second = isMatchSecond ? calendar.get(Calendar.SECOND) : -1;
 		final int minute = calendar.get(Calendar.MINUTE);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);

@@ -19,16 +19,16 @@ public class Issue2131Test {
 
 	@Test
 	public void strToBean() {
-		GoodsResponse goodsResponse = new GoodsResponse();
-		GoodsItem apple = new GoodsItem().setGoodsId(1L).setGoodsName("apple").setChannel("wechat");
-		GoodsItem pear = new GoodsItem().setGoodsId(2L).setGoodsName("pear").setChannel("jd");
+		final GoodsResponse goodsResponse = new GoodsResponse();
+		final GoodsItem apple = new GoodsItem().setGoodsId(1L).setGoodsName("apple").setChannel("wechat");
+		final GoodsItem pear = new GoodsItem().setGoodsId(2L).setGoodsName("pear").setChannel("jd");
 		final List<GoodsItem> collections = goodsResponse.getCollections();
 		Stream.of(apple, pear).forEach(collections::add);
 
-		String jsonStr = JSONUtil.toJsonStr(goodsResponse);
+		final String jsonStr = JSONUtil.toJsonStr(goodsResponse);
 		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 
-		GoodsResponse result = jsonObject.toBean(GoodsResponse.class);
+		final GoodsResponse result = jsonObject.toBean(GoodsResponse.class);
 		Assert.assertEquals(0, result.getCollections().size());
 	}
 

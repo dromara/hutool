@@ -21,7 +21,7 @@ public class CellLocation implements Serializable {
 	 * @param x 列号，从0开始
 	 * @param y 行号，从0开始
 	 */
-	public CellLocation(int x, int y) {
+	public CellLocation(final int x, final int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -30,7 +30,7 @@ public class CellLocation implements Serializable {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(final int x) {
 		this.x = x;
 	}
 
@@ -38,12 +38,12 @@ public class CellLocation implements Serializable {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(final int y) {
 		this.y = y;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}

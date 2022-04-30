@@ -60,7 +60,7 @@ public class SqlFormatter {
 	private static final String indentString = "    ";
 	private static final String initial = "\n    ";
 
-	public static String format(String source) {
+	public static String format(final String source) {
 		return new FormatProcess(source).perform().trim();
 	}
 
@@ -87,7 +87,7 @@ public class SqlFormatter {
 		String token;
 		String lcToken;
 
-		public FormatProcess(String sql) {
+		public FormatProcess(final String sql) {
 			this.tokens = new StringTokenizer(sql, "()+*/-=<>'`\"[], \n\r\f\t", true);
 		}
 
@@ -307,16 +307,16 @@ public class SqlFormatter {
 			this.parensSinceSelect += 1;
 		}
 
-		private static boolean isFunctionName(String tok) {
+		private static boolean isFunctionName(final String tok) {
 			if(StrUtil.isEmpty(tok)){
 				return true;
 			}
-			char begin = tok.charAt(0);
-			boolean isIdentifier = (Character.isJavaIdentifierStart(begin)) || ('"' == begin);
+			final char begin = tok.charAt(0);
+			final boolean isIdentifier = (Character.isJavaIdentifierStart(begin)) || ('"' == begin);
 			return (isIdentifier) && (!LOGICAL.contains(tok)) && (!END_CLAUSES.contains(tok)) && (!QUANTIFIERS.contains(tok)) && (!DML.contains(tok)) && (!MISC.contains(tok));
 		}
 
-		private static boolean isWhitespace(String token) {
+		private static boolean isWhitespace(final String token) {
 			return " \n\r\f\t".contains(token);
 		}
 

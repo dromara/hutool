@@ -32,7 +32,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 *
 	 * @param file     包文件
 	 */
-	public SevenZExtractor(File file) {
+	public SevenZExtractor(final File file) {
 		this(file, null);
 	}
 
@@ -42,10 +42,10 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param file     包文件
 	 * @param password 密码，null表示无密码
 	 */
-	public SevenZExtractor(File file, char[] password) {
+	public SevenZExtractor(final File file, final char[] password) {
 		try {
 			this.sevenZFile = new SevenZFile(file, password);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -55,7 +55,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 *
 	 * @param in       包流
 	 */
-	public SevenZExtractor(InputStream in) {
+	public SevenZExtractor(final InputStream in) {
 		this(in, null);
 	}
 
@@ -65,7 +65,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param in       包流
 	 * @param password 密码，null表示无密码
 	 */
-	public SevenZExtractor(InputStream in, char[] password) {
+	public SevenZExtractor(final InputStream in, final char[] password) {
 		this(new SeekableInMemoryByteChannel(IoUtil.readBytes(in)), password);
 	}
 
@@ -74,7 +74,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 *
 	 * @param channel  {@link SeekableByteChannel}
 	 */
-	public SevenZExtractor(SeekableByteChannel channel) {
+	public SevenZExtractor(final SeekableByteChannel channel) {
 		this(channel, null);
 	}
 
@@ -84,10 +84,10 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param channel  {@link SeekableByteChannel}
 	 * @param password 密码，null表示无密码
 	 */
-	public SevenZExtractor(SeekableByteChannel channel, char[] password) {
+	public SevenZExtractor(final SeekableByteChannel channel, final char[] password) {
 		try {
 			this.sevenZFile = new SevenZFile(channel, password);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -99,10 +99,10 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 */
 	@Override
-	public void extract(File targetDir, Filter<ArchiveEntry> filter) {
+	public void extract(final File targetDir, final Filter<ArchiveEntry> filter) {
 		try {
 			extractInternal(targetDir, filter);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			close();
@@ -116,9 +116,9 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @return 满足过滤要求的第一个文件的流,无满足条件的文件返回{@code null}
 	 * @since 5.7.14
 	 */
-	public InputStream getFirst(Filter<ArchiveEntry> filter) {
+	public InputStream getFirst(final Filter<ArchiveEntry> filter) {
 		final SevenZFile sevenZFile = this.sevenZFile;
-		for(SevenZArchiveEntry entry : sevenZFile.getEntries()){
+		for(final SevenZArchiveEntry entry : sevenZFile.getEntries()){
 			if(null != filter && false == filter.accept(entry)){
 				continue;
 			}
@@ -128,7 +128,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 
 			try {
 				return sevenZFile.getInputStream(entry);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 		}
@@ -143,7 +143,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @return 文件流，无文件返回{@code null}
 	 * @since 5.7.14
 	 */
-	public InputStream get(String entryName){
+	public InputStream get(final String entryName){
 		return getFirst((entry)-> StrUtil.equals(entryName, entry.getName()));
 	}
 
@@ -154,7 +154,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(File targetDir, Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(final File targetDir, final Filter<ArchiveEntry> filter) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final SevenZFile sevenZFile = this.sevenZFile;
 		SevenZArchiveEntry entry;

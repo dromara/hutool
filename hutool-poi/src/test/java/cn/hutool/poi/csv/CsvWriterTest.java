@@ -32,14 +32,14 @@ public class CsvWriterTest {
 	@Test
 	@Ignore
 	public void issue2255Test(){
-		String fileName = "D:/test/" + new Random().nextInt(100) + "-a.csv";
-		CsvWriter writer = CsvUtil.getWriter(fileName, CharsetUtil.UTF_8);
-		List<String> list = new ArrayList<>();
+		final String fileName = "D:/test/" + new Random().nextInt(100) + "-a.csv";
+		final CsvWriter writer = CsvUtil.getWriter(fileName, CharsetUtil.UTF_8);
+		final List<String> list = new ArrayList<>();
 		for (int i = 0; i < 10000; i++) {
 			list.add(i+"");
 		}
 		Console.log("{} : {}", fileName, list.size());
-		for (String s : list) {
+		for (final String s : list) {
 			writer.writeLine(s);
 		}
 		writer.close();

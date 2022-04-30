@@ -32,7 +32,7 @@ public class MoveVisitor extends SimpleFileVisitor<Path> {
 	 * @param target 目标Path
 	 * @param copyOptions 拷贝（移动）选项
 	 */
-	public MoveVisitor(Path source, Path target, CopyOption... copyOptions) {
+	public MoveVisitor(final Path source, final Path target, final CopyOption... copyOptions) {
 		if(PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)){
 			throw new IllegalArgumentException("Target must be a directory");
 		}
@@ -42,7 +42,7 @@ public class MoveVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+	public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs)
 			throws IOException {
 		initTarget();
 		// 将当前目录相对于源路径转换为相对于目标路径
@@ -56,7 +56,7 @@ public class MoveVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
 			throws IOException {
 		initTarget();
 		Files.move(file, target.resolve(source.relativize(file)), copyOptions);

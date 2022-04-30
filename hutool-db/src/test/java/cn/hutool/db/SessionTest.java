@@ -11,20 +11,20 @@ import java.sql.SQLException;
  *
  */
 public class SessionTest {
-	
+
 	@Test
 	@Ignore
 	public void transTest() {
-		Session session = Session.create("test");
+		final Session session = Session.create("test");
 		try {
 			session.beginTransaction();
 			session.update(Entity.create().set("age", 76), Entity.create("user").set("name", "unitTestUser"));
 			session.commit();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			session.quietRollback();
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {

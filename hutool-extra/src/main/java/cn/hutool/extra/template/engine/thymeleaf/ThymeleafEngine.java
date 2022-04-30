@@ -35,7 +35,7 @@ public class ThymeleafEngine implements TemplateEngine {
 	 *
 	 * @param config 模板配置
 	 */
-	public ThymeleafEngine(TemplateConfig config) {
+	public ThymeleafEngine(final TemplateConfig config) {
 		init(config);
 	}
 
@@ -44,7 +44,7 @@ public class ThymeleafEngine implements TemplateEngine {
 	 *
 	 * @param engine {@link org.thymeleaf.TemplateEngine}
 	 */
-	public ThymeleafEngine(org.thymeleaf.TemplateEngine engine) {
+	public ThymeleafEngine(final org.thymeleaf.TemplateEngine engine) {
 		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -63,12 +63,12 @@ public class ThymeleafEngine implements TemplateEngine {
 	 * 初始化引擎
 	 * @param engine 引擎
 	 */
-	private void init(org.thymeleaf.TemplateEngine engine){
+	private void init(final org.thymeleaf.TemplateEngine engine){
 		this.engine = engine;
 	}
 
 	@Override
-	public Template getTemplate(String resource) {
+	public Template getTemplate(final String resource) {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
@@ -86,7 +86,7 @@ public class ThymeleafEngine implements TemplateEngine {
 			config = new TemplateConfig();
 		}
 
-		ITemplateResolver resolver;
+		final ITemplateResolver resolver;
 		switch (config.getResourceMode()) {
 		case CLASSPATH:
 			final ClassLoaderTemplateResolver classLoaderResolver = new ClassLoaderTemplateResolver();

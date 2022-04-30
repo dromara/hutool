@@ -62,11 +62,11 @@ public class StepReport {
 		return stepId;
 	}
 
-	public void setStepId(int stepId) {
+	public void setStepId(final int stepId) {
 		this.stepId = stepId;
 	}
 
-	public void setResult(String result) {
+	public void setResult(final String result) {
 		this.result = result;
 	}
 
@@ -78,7 +78,7 @@ public class StepReport {
 		return stepName;
 	}
 
-	public void setStepName(String stepName) {
+	public void setStepName(final String stepName) {
 		this.stepName = stepName;
 	}
 
@@ -90,7 +90,7 @@ public class StepReport {
 		return elementName;
 	}
 
-	public void setElementName(String elementName) {
+	public void setElementName(final String elementName) {
 		this.elementName = elementName;
 	}
 
@@ -98,7 +98,7 @@ public class StepReport {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(final String location) {
 		this.location = location;
 	}
 
@@ -106,7 +106,7 @@ public class StepReport {
 		return params;
 	}
 
-	public void setParams(String params) {
+	public void setParams(final String params) {
 		this.params = params;
 	}
 
@@ -114,7 +114,7 @@ public class StepReport {
 		return actionName;
 	}
 
-	public void setActionName(String actionName) {
+	public void setActionName(final String actionName) {
 		this.actionName = actionName;
 	}
 
@@ -122,7 +122,7 @@ public class StepReport {
 		return testTime;
 	}
 
-	public void setTestTime(String testTime) {
+	public void setTestTime(final String testTime) {
 		this.testTime = testTime;
 	}
 
@@ -130,7 +130,7 @@ public class StepReport {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(final boolean status) {
 		this.status = status;
 	}
 
@@ -138,7 +138,7 @@ public class StepReport {
 		return mark;
 	}
 
-	public void setMark(String mark) {
+	public void setMark(final String mark) {
 		this.mark = mark;
 	}
 
@@ -146,7 +146,7 @@ public class StepReport {
 		return screenshot;
 	}
 
-	public void setScreenshot(String screenshot) {
+	public void setScreenshot(final String screenshot) {
 		this.screenshot = screenshot;
 	}
 

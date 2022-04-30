@@ -42,7 +42,7 @@ public class MultipartBody implements RequestBody {
 	 * @param charset 编码
 	 * @return MultipartBody
 	 */
-	public static MultipartBody create(Map<String, Object> form, Charset charset) {
+	public static MultipartBody create(final Map<String, Object> form, final Charset charset) {
 		return new MultipartBody(form, charset);
 	}
 
@@ -61,7 +61,7 @@ public class MultipartBody implements RequestBody {
 	 * @param form    表单
 	 * @param charset 编码
 	 */
-	public MultipartBody(Map<String, Object> form, Charset charset) {
+	public MultipartBody(final Map<String, Object> form, final Charset charset) {
 		this.form = form;
 		this.charset = charset;
 	}
@@ -72,7 +72,7 @@ public class MultipartBody implements RequestBody {
 	 * @param out out流
 	 */
 	@Override
-	public void write(OutputStream out) {
+	public void write(final OutputStream out) {
 		final MultipartOutputStream stream = new MultipartOutputStream(out, this.charset, this.boundary);
 		if (MapUtil.isNotEmpty(this.form)) {
 			this.form.forEach(stream::write);

@@ -30,7 +30,7 @@ public class ClassPathResource extends UrlResource {
 	 *
 	 * @param path 相对于ClassPath的路径
 	 */
-	public ClassPathResource(String path) {
+	public ClassPathResource(final String path) {
 		this(path, null, null);
 	}
 
@@ -40,7 +40,7 @@ public class ClassPathResource extends UrlResource {
 	 * @param path 相对于ClassPath的路径
 	 * @param classLoader {@link ClassLoader}
 	 */
-	public ClassPathResource(String path, ClassLoader classLoader) {
+	public ClassPathResource(final String path, final ClassLoader classLoader) {
 		this(path, classLoader, null);
 	}
 
@@ -50,7 +50,7 @@ public class ClassPathResource extends UrlResource {
 	 * @param path 相对于给定Class的路径
 	 * @param clazz {@link Class} 用于定位路径
 	 */
-	public ClassPathResource(String path, Class<?> clazz) {
+	public ClassPathResource(final String path, final Class<?> clazz) {
 		this(path, null, clazz);
 	}
 
@@ -61,7 +61,7 @@ public class ClassPathResource extends UrlResource {
 	 * @param classLoader {@link ClassLoader}
 	 * @param clazz {@link Class} 用于定位路径
 	 */
-	public ClassPathResource(String pathBaseClassLoader, ClassLoader classLoader, Class<?> clazz) {
+	public ClassPathResource(final String pathBaseClassLoader, final ClassLoader classLoader, final Class<?> clazz) {
 		super((URL) null);
 		Assert.notNull(pathBaseClassLoader, "Path must not be null");
 

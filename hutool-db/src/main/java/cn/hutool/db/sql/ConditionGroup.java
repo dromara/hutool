@@ -23,7 +23,7 @@ public class ConditionGroup extends Condition {
 	 *
 	 * @param conditions 条件列表
 	 */
-	public void addConditions(Condition... conditions) {
+	public void addConditions(final Condition... conditions) {
 		if (null == this.conditions) {
 			this.conditions = conditions;
 		} else {
@@ -38,7 +38,7 @@ public class ConditionGroup extends Condition {
 	 * @return 条件字符串
 	 */
 	@Override
-	public String toString(List<Object> paramValues) {
+	public String toString(final List<Object> paramValues) {
 		if (ArrayUtil.isEmpty(conditions)) {
 			return StrUtil.EMPTY;
 		}

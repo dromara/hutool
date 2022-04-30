@@ -18,7 +18,7 @@ public class HanLPResult implements Result {
 
 	Iterator<Term> result;
 
-	public HanLPResult(List<Term> termList) {
+	public HanLPResult(final List<Term> termList) {
 		this.result = termList.iterator();
 	}
 

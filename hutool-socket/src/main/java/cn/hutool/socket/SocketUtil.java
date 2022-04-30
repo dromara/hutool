@@ -24,13 +24,13 @@ public class SocketUtil {
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @return 远程端的地址信息，包括host和端口，null表示channel为null或者远程主机未连接
 	 */
-	public static SocketAddress getRemoteAddress(AsynchronousSocketChannel channel) {
+	public static SocketAddress getRemoteAddress(final AsynchronousSocketChannel channel) {
 		try {
 			return (null == channel) ? null : channel.getRemoteAddress();
-		} catch (ClosedChannelException e) {
+		} catch (final ClosedChannelException e) {
 			// Channel未打开或已关闭，返回null表示未连接
 			return null;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -42,7 +42,7 @@ public class SocketUtil {
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @return 远程主机是否处于连接状态
 	 */
-	public static boolean isConnected(AsynchronousSocketChannel channel) {
+	public static boolean isConnected(final AsynchronousSocketChannel channel) {
 		return null != getRemoteAddress(channel);
 	}
 
@@ -55,7 +55,7 @@ public class SocketUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static Socket connect(String hostname, int port) throws IORuntimeException {
+	public static Socket connect(final String hostname, final int port) throws IORuntimeException {
 		return connect(hostname, port, -1);
 	}
 
@@ -69,7 +69,7 @@ public class SocketUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static Socket connect(final String hostname, int port, int connectionTimeout) throws IORuntimeException {
+	public static Socket connect(final String hostname, final int port, final int connectionTimeout) throws IORuntimeException {
 		return connect(new InetSocketAddress(hostname, port), connectionTimeout);
 	}
 
@@ -82,7 +82,7 @@ public class SocketUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
-	public static Socket connect(InetSocketAddress address, int connectionTimeout) throws IORuntimeException {
+	public static Socket connect(final InetSocketAddress address, final int connectionTimeout) throws IORuntimeException {
 		final Socket socket = new Socket();
 		try {
 			if (connectionTimeout <= 0) {
@@ -90,7 +90,7 @@ public class SocketUtil {
 			} else {
 				socket.connect(address, connectionTimeout);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return socket;

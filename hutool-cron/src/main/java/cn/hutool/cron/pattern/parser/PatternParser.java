@@ -33,7 +33,7 @@ public class PatternParser {
 	 * @param cronPattern 复合表达式
 	 * @return {@link List}
 	 */
-	public static List<PatternMatcher> parse(String cronPattern) {
+	public static List<PatternMatcher> parse(final String cronPattern) {
 		return parseGroupPattern(cronPattern);
 	}
 
@@ -46,10 +46,10 @@ public class PatternParser {
 	 * @param groupPattern 复合表达式
 	 * @return {@link List}
 	 */
-	private static List<PatternMatcher> parseGroupPattern(String groupPattern) {
+	private static List<PatternMatcher> parseGroupPattern(final String groupPattern) {
 		final List<String> patternList = StrUtil.splitTrim(groupPattern, '|');
 		final List<PatternMatcher> patternMatchers = new ArrayList<>(patternList.size());
-		for (String pattern : patternList) {
+		for (final String pattern : patternList) {
 			patternMatchers.add(parseSingle(pattern));
 		}
 		return patternMatchers;
@@ -61,7 +61,7 @@ public class PatternParser {
 	 * @param pattern 表达式
 	 * @return {@link PatternMatcher}
 	 */
-	private static PatternMatcher parseSingle(String pattern) {
+	private static PatternMatcher parseSingle(final String pattern) {
 		final String[] parts = pattern.split("\\s+");
 		Assert.checkBetween(parts.length, 5, 7,
 				() -> new CronException("Pattern [{}] is invalid, it must be 5-7 parts!", pattern));
@@ -76,7 +76,7 @@ public class PatternParser {
 		final String secondPart = (1 == offset) ? parts[0] : "0";
 
 		// 年
-		PartMatcher yearMatcher;
+		final PartMatcher yearMatcher;
 		if (parts.length == 7) {// 支持年的表达式
 			yearMatcher = YEAR_VALUE_PARSER.parse(parts[6]);
 		} else {// 不支持年的表达式，全部匹配

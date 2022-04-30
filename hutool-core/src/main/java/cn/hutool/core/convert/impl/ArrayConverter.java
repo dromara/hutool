@@ -39,7 +39,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 *
 	 * @param targetType 目标数组类型
 	 */
-	public ArrayConverter(Class<?> targetType) {
+	public ArrayConverter(final Class<?> targetType) {
 		this(targetType, false);
 	}
 
@@ -49,7 +49,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param targetType         目标数组类型
 	 * @param ignoreElementError 是否忽略元素转换错误
 	 */
-	public ArrayConverter(Class<?> targetType, boolean ignoreElementError) {
+	public ArrayConverter(Class<?> targetType, final boolean ignoreElementError) {
 		if (null == targetType) {
 			// 默认Object数组
 			targetType = Object[].class;
@@ -68,7 +68,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	}
 
 	@Override
-	protected Object convertInternal(Object value) {
+	protected Object convertInternal(final Object value) {
 		return value.getClass().isArray() ? convertArrayToArray(value) : convertObjectToArray(value);
 	}
 
@@ -84,7 +84,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param ignoreElementError 是否忽略元素转换错误
 	 * @since 5.4.3
 	 */
-	public void setIgnoreElementError(boolean ignoreElementError) {
+	public void setIgnoreElementError(final boolean ignoreElementError) {
 		this.ignoreElementError = ignoreElementError;
 	}
 
@@ -96,7 +96,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param array 被转换的数组值
 	 * @return 转换后的数组
 	 */
-	private Object convertArrayToArray(Object array) {
+	private Object convertArrayToArray(final Object array) {
 		final Class<?> valueComponentType = ArrayUtil.getComponentType(array);
 
 		if (valueComponentType == targetComponentType) {
@@ -118,7 +118,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param value 被转换值
 	 * @return 转换后的数组
 	 */
-	private Object convertObjectToArray(Object value) {
+	private Object convertObjectToArray(final Object value) {
 		if (value instanceof CharSequence) {
 			if (targetComponentType == char.class || targetComponentType == Character.class) {
 				return convertArrayToArray(value.toString().toCharArray());
@@ -129,7 +129,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 			return convertArrayToArray(strings);
 		}
 
-		Object result;
+		final Object result;
 		if (value instanceof List) {
 			// List转数组
 			final List<?> list = (List<?>) value;
@@ -143,7 +143,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 			result = Array.newInstance(targetComponentType, collection.size());
 
 			int i = 0;
-			for (Object element : collection) {
+			for (final Object element : collection) {
 				Array.set(result, i, convertComponentType(element));
 				i++;
 			}
@@ -181,7 +181,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param value 被转换的值
 	 * @return 数组，只包含一个元素
 	 */
-	private Object[] convertToSingleElementArray(Object value) {
+	private Object[] convertToSingleElementArray(final Object value) {
 		final Object[] singleElementArray = ArrayUtil.newArray(targetComponentType, 1);
 		singleElementArray[0] = convertComponentType(value);
 		return singleElementArray;
@@ -194,7 +194,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @return 转换后的值，转换失败若{@link #ignoreElementError}为true，返回null，否则抛出异常
 	 * @since 5.4.3
 	 */
-	private Object convertComponentType(Object value) {
+	private Object convertComponentType(final Object value) {
 		return Convert.convertWithCheck(this.targetComponentType, value, null, this.ignoreElementError);
 	}
 	// -------------------------------------------------------------------------------------- Private method end

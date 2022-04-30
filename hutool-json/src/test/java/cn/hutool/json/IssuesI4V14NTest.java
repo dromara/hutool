@@ -10,7 +10,7 @@ public class IssuesI4V14NTest {
 
 	@Test
 	public void parseTest(){
-		String str = "{\"A\" : \"A\\nb\"}";
+		final String str = "{\"A\" : \"A\\nb\"}";
 		final JSONObject jsonObject = JSONUtil.parseObj(str);
 		Assert.assertEquals("A\nb", jsonObject.getStr("A"));
 

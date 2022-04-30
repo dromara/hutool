@@ -19,8 +19,8 @@ public class ExcelExtractorUtil {
 	 * @param wb {@link Workbook}
 	 * @return {@link ExcelExtractor}
 	 */
-	public static ExcelExtractor getExtractor(Workbook wb) {
-		ExcelExtractor extractor;
+	public static ExcelExtractor getExtractor(final Workbook wb) {
+		final ExcelExtractor extractor;
 		if (wb instanceof HSSFWorkbook) {
 			extractor = new org.apache.poi.hssf.extractor.ExcelExtractor((HSSFWorkbook) wb);
 		} else {
@@ -38,7 +38,7 @@ public class ExcelExtractorUtil {
 	 * @return Excel文本
 	 * @since 4.1.0
 	 */
-	public static String readAsText(Workbook wb, boolean withSheetName) {
+	public static String readAsText(final Workbook wb, final boolean withSheetName) {
 		final ExcelExtractor extractor = getExtractor(wb);
 		extractor.setIncludeSheetNames(withSheetName);
 		return extractor.getText();

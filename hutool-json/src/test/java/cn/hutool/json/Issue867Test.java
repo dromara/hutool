@@ -9,8 +9,8 @@ public class Issue867Test {
 
 	@Test
 	public void toBeanTest(){
-		String json = "{\"abc_1d\":\"123\",\"abc_d\":\"456\",\"abc_de\":\"789\"}";
-		Test02 bean = JSONUtil.toBean(JSONUtil.parseObj(json),Test02.class);
+		final String json = "{\"abc_1d\":\"123\",\"abc_d\":\"456\",\"abc_de\":\"789\"}";
+		final Test02 bean = JSONUtil.toBean(JSONUtil.parseObj(json),Test02.class);
 		Assert.assertEquals("123", bean.getAbc1d());
 		Assert.assertEquals("456", bean.getAbcD());
 		Assert.assertEquals("789", bean.getAbcDe());

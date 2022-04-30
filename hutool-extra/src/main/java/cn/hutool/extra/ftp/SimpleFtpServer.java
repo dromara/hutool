@@ -62,7 +62,7 @@ public class SimpleFtpServer {
 	 * @param connectionConfig 连接配置
 	 * @return this
 	 */
-	public SimpleFtpServer setConnectionConfig(ConnectionConfig connectionConfig) {
+	public SimpleFtpServer setConnectionConfig(final ConnectionConfig connectionConfig) {
 		this.serverFactory.setConnectionConfig(connectionConfig);
 		return this;
 	}
@@ -82,7 +82,7 @@ public class SimpleFtpServer {
 	 * @param port 端口
 	 * @return this
 	 */
-	public SimpleFtpServer setPort(int port) {
+	public SimpleFtpServer setPort(final int port) {
 		Assert.isTrue(NetUtil.isValidPort(port), "Invalid port!");
 		this.listenerFactory.setPort(port);
 		return this;
@@ -103,10 +103,10 @@ public class SimpleFtpServer {
 	 * @param user FTP用户信息
 	 * @return this
 	 */
-	public SimpleFtpServer addUser(User user) {
+	public SimpleFtpServer addUser(final User user) {
 		try {
 			getUserManager().save(user);
-		} catch (org.apache.ftpserver.ftplet.FtpException e) {
+		} catch (final org.apache.ftpserver.ftplet.FtpException e) {
 			throw new FtpException(e);
 		}
 		return this;
@@ -118,11 +118,11 @@ public class SimpleFtpServer {
 	 * @param homePath 用户路径，匿名用户对此路径有读写权限
 	 * @return this
 	 */
-	public SimpleFtpServer addAnonymous(String homePath) {
-		BaseUser user = new BaseUser();
+	public SimpleFtpServer addAnonymous(final String homePath) {
+		final BaseUser user = new BaseUser();
 		user.setName("anonymous");
 		user.setHomeDirectory(homePath);
-		List<Authority> authorities = new ArrayList<>();
+		final List<Authority> authorities = new ArrayList<>();
 		// 添加用户读写权限
 		authorities.add(new WritePermission());
 		user.setAuthorities(authorities);
@@ -135,10 +135,10 @@ public class SimpleFtpServer {
 	 * @param userName 用户名
 	 * @return this
 	 */
-	public SimpleFtpServer delUser(String userName) {
+	public SimpleFtpServer delUser(final String userName) {
 		try {
 			getUserManager().delete(userName);
-		} catch (org.apache.ftpserver.ftplet.FtpException e) {
+		} catch (final org.apache.ftpserver.ftplet.FtpException e) {
 			throw new FtpException(e);
 		}
 		return this;
@@ -150,7 +150,7 @@ public class SimpleFtpServer {
 	 * @param ssl {@link SslConfiguration}
 	 * @return this
 	 */
-	public SimpleFtpServer setSsl(SslConfiguration ssl) {
+	public SimpleFtpServer setSsl(final SslConfiguration ssl) {
 		this.listenerFactory.setSslConfiguration(ssl);
 		listenerFactory.setImplicitSsl(true);
 		return this;
@@ -163,8 +163,8 @@ public class SimpleFtpServer {
 	 * @param password     密钥文件密码
 	 * @return this
 	 */
-	public SimpleFtpServer setSsl(File keystoreFile, String password) {
-		SslConfigurationFactory sslFactory = new SslConfigurationFactory();
+	public SimpleFtpServer setSsl(final File keystoreFile, final String password) {
+		final SslConfigurationFactory sslFactory = new SslConfigurationFactory();
 		sslFactory.setKeystoreFile(keystoreFile);
 		sslFactory.setKeystorePassword(password);
 		return setSsl(sslFactory.createSslConfiguration());
@@ -176,7 +176,7 @@ public class SimpleFtpServer {
 	 * @param userManager {@link UserManager}
 	 * @return this
 	 */
-	public SimpleFtpServer setUserManager(UserManager userManager) {
+	public SimpleFtpServer setUserManager(final UserManager userManager) {
 		this.serverFactory.setUserManager(userManager);
 		return this;
 	}
@@ -187,7 +187,7 @@ public class SimpleFtpServer {
 	 * @param propertiesFile 配置文件
 	 * @return this
 	 */
-	public SimpleFtpServer setUsersConfig(File propertiesFile) {
+	public SimpleFtpServer setUsersConfig(final File propertiesFile) {
 		final PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
 		userManagerFactory.setFile(propertiesFile);
 		return this.setUserManager(userManagerFactory.createUserManager());
@@ -200,7 +200,7 @@ public class SimpleFtpServer {
 	 * @param ftplet {@link Ftplet}，用户自定义监听规则
 	 * @return this
 	 */
-	public SimpleFtpServer addFtplet(String name, Ftplet ftplet) {
+	public SimpleFtpServer addFtplet(final String name, final Ftplet ftplet) {
 		this.serverFactory.getFtplets().put(name, ftplet);
 		return this;
 	}
@@ -214,7 +214,7 @@ public class SimpleFtpServer {
 		serverFactory.addListener("default", listenerFactory.createListener());
 		try {
 			serverFactory.createServer().start();
-		} catch (org.apache.ftpserver.ftplet.FtpException e) {
+		} catch (final org.apache.ftpserver.ftplet.FtpException e) {
 			throw new cn.hutool.extra.ftp.FtpException(e);
 		}
 	}

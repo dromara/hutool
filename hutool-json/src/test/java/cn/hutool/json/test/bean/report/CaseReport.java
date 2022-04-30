@@ -10,17 +10,17 @@ import java.util.List;
  *
  */
 public class CaseReport {
-	
+
 	/**
 	 * 包含的测试步骤报告
 	 */
 	private List<StepReport> stepReports = new ArrayList<>();
-	
+
 	public List<StepReport> getStepReports() {
 		return stepReports;
 	}
 
-	public void setStepReports(List<StepReport> stepReports) {
+	public void setStepReports(final List<StepReport> stepReports) {
 		this.stepReports = stepReports;
 	}
 

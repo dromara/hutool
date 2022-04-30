@@ -4,7 +4,7 @@ import cn.hutool.http.HttpUtil;
 
 public class DocServerTest {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		HttpUtil.createServer(80)
 				// 设置默认根目录，
 				.setRoot("D:\\workspace\\site\\hutool-site")

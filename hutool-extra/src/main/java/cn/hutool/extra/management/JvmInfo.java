@@ -78,7 +78,7 @@ public class JvmInfo implements Serializable{
 	 */
 	@Override
 	public final String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		ManagementUtil.append(builder, "JavaVM Name:    ", getName());
 		ManagementUtil.append(builder, "JavaVM Version: ", getVersion());

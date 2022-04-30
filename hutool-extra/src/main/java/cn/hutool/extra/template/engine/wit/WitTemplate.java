@@ -26,7 +26,7 @@ public class WitTemplate extends AbstractTemplate implements Serializable{
 	 * @param witTemplate Wit的模板对象 {@link Template}
 	 * @return WitTemplate
 	 */
-	public static WitTemplate wrap(Template witTemplate) {
+	public static WitTemplate wrap(final Template witTemplate) {
 		return (null == witTemplate) ? null : new WitTemplate(witTemplate);
 	}
 
@@ -35,18 +35,18 @@ public class WitTemplate extends AbstractTemplate implements Serializable{
 	 *
 	 * @param witTemplate Wit的模板对象 {@link Template}
 	 */
-	public WitTemplate(Template witTemplate) {
+	public WitTemplate(final Template witTemplate) {
 		this.rawTemplate = witTemplate;
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, Writer writer) {
+	public void render(final Map<?, ?> bindingMap, final Writer writer) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.merge(map, writer);
 	}
 
 	@Override
-	public void render(Map<?, ?> bindingMap, OutputStream out) {
+	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
 		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
 		rawTemplate.merge(map, out);
 	}

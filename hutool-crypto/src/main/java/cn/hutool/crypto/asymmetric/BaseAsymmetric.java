@@ -52,7 +52,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @param publicKey  公钥
 	 * @since 3.1.1
 	 */
-	public BaseAsymmetric(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	public BaseAsymmetric(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		init(algorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
@@ -68,7 +68,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	protected T init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+	protected T init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
 		this.algorithm = algorithm;
 
 		if (null == privateKey && null == publicKey) {
@@ -91,7 +91,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 */
 	@SuppressWarnings("unchecked")
 	public T initKeys() {
-		KeyPair keyPair = KeyUtil.generateKeyPair(this.algorithm);
+		final KeyPair keyPair = KeyUtil.generateKeyPair(this.algorithm);
 		this.publicKey = keyPair.getPublic();
 		this.privateKey = keyPair.getPrivate();
 		return (T) this;
@@ -125,7 +125,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public T setPublicKey(PublicKey publicKey) {
+	public T setPublicKey(final PublicKey publicKey) {
 		this.publicKey = publicKey;
 		return (T) this;
 	}
@@ -156,7 +156,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public T setPrivateKey(PrivateKey privateKey) {
+	public T setPrivateKey(final PrivateKey privateKey) {
 		this.privateKey = privateKey;
 		return (T) this;
 	}
@@ -168,7 +168,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @return this
 	 * @since 5.2.0
 	 */
-	public T setKey(Key key) {
+	public T setKey(final Key key) {
 		Assert.notNull(key, "key must be not null !");
 
 		if (key instanceof PublicKey) {
@@ -185,7 +185,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> implements Serializable
 	 * @param type 类型 {@link KeyType}
 	 * @return {@link Key}
 	 */
-	protected Key getKeyByType(KeyType type) {
+	protected Key getKeyByType(final KeyType type) {
 		switch (type) {
 			case PrivateKey:
 				if (null == this.privateKey) {

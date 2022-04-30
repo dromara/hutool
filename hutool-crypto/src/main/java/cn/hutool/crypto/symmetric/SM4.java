@@ -41,7 +41,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param key 密钥
 	 */
-	public SM4(byte[] key) {
+	public SM4(final byte[] key) {
 		super(ALGORITHM_NAME, key);
 	}
 
@@ -51,7 +51,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 */
-	public SM4(Mode mode, Padding padding) {
+	public SM4(final Mode mode, final Padding padding) {
 		this(mode.name(), padding.name());
 	}
 
@@ -62,7 +62,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param padding {@link Padding}补码方式
 	 * @param key     密钥，支持密钥长度：128位
 	 */
-	public SM4(Mode mode, Padding padding, byte[] key) {
+	public SM4(final Mode mode, final Padding padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -74,7 +74,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
-	public SM4(Mode mode, Padding padding, byte[] key, byte[] iv) {
+	public SM4(final Mode mode, final Padding padding, final byte[] key, final byte[] iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -85,7 +85,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param padding {@link Padding}补码方式
 	 * @param key     密钥，支持密钥长度：128位
 	 */
-	public SM4(Mode mode, Padding padding, SecretKey key) {
+	public SM4(final Mode mode, final Padding padding, final SecretKey key) {
 		this(mode, padding, key, (IvParameterSpec) null);
 	}
 
@@ -97,7 +97,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
-	public SM4(Mode mode, Padding padding, SecretKey key, byte[] iv) {
+	public SM4(final Mode mode, final Padding padding, final SecretKey key, final byte[] iv) {
 		this(mode, padding, key, ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 
@@ -109,7 +109,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
-	public SM4(Mode mode, Padding padding, SecretKey key, IvParameterSpec iv) {
+	public SM4(final Mode mode, final Padding padding, final SecretKey key, final IvParameterSpec iv) {
 		this(mode.name(), padding.name(), key, iv);
 	}
 
@@ -119,7 +119,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param mode    模式
 	 * @param padding 补码方式
 	 */
-	public SM4(String mode, String padding) {
+	public SM4(final String mode, final String padding) {
 		this(mode, padding, (byte[]) null);
 	}
 
@@ -130,7 +130,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param padding 补码方式
 	 * @param key     密钥，支持密钥长度：128位
 	 */
-	public SM4(String mode, String padding, byte[] key) {
+	public SM4(final String mode, final String padding, final byte[] key) {
 		this(mode, padding, key, null);
 	}
 
@@ -142,7 +142,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      加盐
 	 */
-	public SM4(String mode, String padding, byte[] key, byte[] iv) {
+	public SM4(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding,//
 				SecureUtil.generateKey(ALGORITHM_NAME, key),//
 				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
@@ -155,7 +155,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param padding 补码方式
 	 * @param key     密钥，支持密钥长度：128位
 	 */
-	public SM4(String mode, String padding, SecretKey key) {
+	public SM4(final String mode, final String padding, final SecretKey key) {
 		this(mode, padding, key, null);
 	}
 
@@ -167,7 +167,7 @@ public class SM4 extends SymmetricCrypto{
 	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      加盐
 	 */
-	public SM4(String mode, String padding, SecretKey key, IvParameterSpec iv) {
+	public SM4(final String mode, final String padding, final SecretKey key, final IvParameterSpec iv) {
 		super(StrUtil.format("SM4/{}/{}", mode, padding), key, iv);
 	}
 	//------------------------------------------------------------------------- Constrctor end

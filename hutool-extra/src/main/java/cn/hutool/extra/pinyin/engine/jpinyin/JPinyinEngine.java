@@ -34,7 +34,7 @@ public class JPinyinEngine implements PinyinEngine {
 		this(null);
 	}
 
-	public JPinyinEngine(PinyinFormat format){
+	public JPinyinEngine(final PinyinFormat format){
 		init(format);
 	}
 
@@ -48,16 +48,16 @@ public class JPinyinEngine implements PinyinEngine {
 
 
 	@Override
-	public String getPinyin(char c) {
-		String[] results = PinyinHelper.convertToPinyinArray(c, format);
+	public String getPinyin(final char c) {
+		final String[] results = PinyinHelper.convertToPinyinArray(c, format);
 		return ArrayUtil.isEmpty(results) ? String.valueOf(c) : results[0];
 	}
 
 	@Override
-	public String getPinyin(String str, String separator) {
+	public String getPinyin(final String str, final String separator) {
 		try {
 			return PinyinHelper.convertToPinyinString(str, separator, format);
-		} catch (PinyinException e) {
+		} catch (final PinyinException e) {
 			throw new cn.hutool.extra.pinyin.PinyinException(e);
 		}
 	}

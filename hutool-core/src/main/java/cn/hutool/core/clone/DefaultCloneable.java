@@ -19,7 +19,7 @@ public interface DefaultCloneable<T> extends java.lang.Cloneable {
 	default T clone0() {
 		try {
 			return ReflectUtil.invoke(this, "clone");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new CloneRuntimeException(e);
 		}
 	}

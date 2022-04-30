@@ -27,94 +27,94 @@ public class CRUDTest {
 
 	@Test
 	public void findIsNullTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", "is null"));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", "is null"));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findIsNullTest2() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", "= null"));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", "= null"));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findIsNullTest3() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", null));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", null));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findBetweenTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", "between '18' and '40'"));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", "between '18' and '40'"));
 		Assert.assertEquals(1, results.size());
 	}
 
 	@Test
 	public void findByBigIntegerTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", new BigInteger("12")));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", new BigInteger("12")));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findByBigDecimalTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("age", new BigDecimal("12")));
+		final List<Entity> results = db.findAll(Entity.create("user").set("age", new BigDecimal("12")));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("name", "like \"%三%\""));
+		final List<Entity> results = db.findAll(Entity.create("user").set("name", "like \"%三%\""));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest2() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
+		final List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest3() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
+		final List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findInTest() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user").set("id", "in 1,2,3"));
+		final List<Entity> results = db.findAll(Entity.create("user").set("id", "in 1,2,3"));
 		Console.log(results);
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findInTest2() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user")
+		final List<Entity> results = db.findAll(Entity.create("user")
 				.set("id", new Condition("id", new long[]{1, 2, 3})));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findInTest3() throws SQLException {
-		List<Entity> results = db.findAll(Entity.create("user")
+		final List<Entity> results = db.findAll(Entity.create("user")
 				.set("id", new long[]{1, 2, 3}));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findAllTest() throws SQLException {
-		List<Entity> results = db.findAll("user");
+		final List<Entity> results = db.findAll("user");
 		Assert.assertEquals(4, results.size());
 	}
 
 	@Test
 	public void findTest() throws SQLException {
-		List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		final List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
 		Assert.assertFalse(find.isEmpty());
 	}
 
 	@Test
 	public void findActiveTest() {
-		ActiveEntity entity = new ActiveEntity(db, "user");
+		final ActiveEntity entity = new ActiveEntity(db, "user");
 		entity.setFieldNames("name AS name2").load();
 		Assert.assertEquals("user", entity.getTableName());
 		Assert.assertFalse(entity.isEmpty());
@@ -130,64 +130,64 @@ public class CRUDTest {
 	public void crudTest() throws SQLException {
 
 		// 增
-		Long id = db.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
+		final Long id = db.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
 		Assert.assertTrue(id > 0);
-		Entity result = db.get("user", "name", "unitTestUser");
+		final Entity result = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(66, result.getInt("age"));
 
 		// 改
-		int update = db.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
+		final int update = db.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
 		Assert.assertTrue(update > 0);
-		Entity result2 = db.get("user", "name", "unitTestUser");
+		final Entity result2 = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(88, result2.getInt("age"));
 
 		// 删
-		int del = db.del("user", "name", "unitTestUser");
+		final int del = db.del("user", "name", "unitTestUser");
 		Assert.assertTrue(del > 0);
-		Entity result3 = db.get("user", "name", "unitTestUser");
+		final Entity result3 = db.get("user", "name", "unitTestUser");
 		Assert.assertNull(result3);
 	}
 
 	@Test
 	@Ignore
 	public void insertBatchTest() throws SQLException {
-		User user1 = new User();
+		final User user1 = new User();
 		user1.setName("张三");
 		user1.setAge(12);
 		user1.setBirthday("19900112");
 		user1.setGender(true);
 
-		User user2 = new User();
+		final User user2 = new User();
 		user2.setName("李四");
 		user2.setAge(12);
 		user2.setBirthday("19890512");
 		user2.setGender(false);
 
-		Entity data1 = Entity.parse(user1);
+		final Entity data1 = Entity.parse(user1);
 		data1.put("name", null);
-		Entity data2 = Entity.parse(user2);
+		final Entity data2 = Entity.parse(user2);
 
 		Console.log(data1);
 		Console.log(data2);
 
-		int[] result = db.insert(CollUtil.newArrayList(data1, data2));
+		final int[] result = db.insert(CollUtil.newArrayList(data1, data2));
 		Console.log(result);
 	}
 
 	@Test
 	@Ignore
 	public void insertBatchOneTest() throws SQLException {
-		User user1 = new User();
+		final User user1 = new User();
 		user1.setName("张三");
 		user1.setAge(12);
 		user1.setBirthday("19900112");
 		user1.setGender(true);
 
-		Entity data1 = Entity.parse(user1);
+		final Entity data1 = Entity.parse(user1);
 
 		Console.log(data1);
 
-		int[] result = db.insert(CollUtil.newArrayList(data1));
+		final int[] result = db.insert(CollUtil.newArrayList(data1));
 		Console.log(result);
 	}
 
