@@ -15,6 +15,6 @@ key = value
 key2 = value${key}
 
 #中括号开始表示新的分组开始，分组相互独立，键值与其他分组互不影响
-[demo2]=
+[demo2]
 key = value2
 key2 = value
