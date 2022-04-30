@@ -5,7 +5,7 @@ import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.EnumItem;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;

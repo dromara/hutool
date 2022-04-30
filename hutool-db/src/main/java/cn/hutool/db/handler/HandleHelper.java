@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.db.Entity;
 
 import java.lang.reflect.Method;

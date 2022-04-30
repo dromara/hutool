@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.math.NumberUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

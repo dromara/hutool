@@ -9,7 +9,7 @@ import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.reflect.ReflectUtil;

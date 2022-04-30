@@ -1,6 +1,5 @@
 package cn.hutool.core.math;
 
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;

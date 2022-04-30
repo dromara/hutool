@@ -10,7 +10,7 @@ import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
 

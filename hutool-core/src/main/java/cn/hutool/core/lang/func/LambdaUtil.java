@@ -2,7 +2,7 @@ package cn.hutool.core.lang.func;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
 

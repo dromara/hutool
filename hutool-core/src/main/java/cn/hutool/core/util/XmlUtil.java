@@ -591,7 +591,7 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档写出<br>
-	 * 格式化输出逻辑参考：https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java
+	 * 格式化输出逻辑参考：<a href="https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java">https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java</a>
 	 *
 	 * @param source  源
 	 * @param result  目标
@@ -605,7 +605,7 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档写出<br>
-	 * 格式化输出逻辑参考：https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java
+	 * 格式化输出逻辑参考：<a href="https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java">https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java</a>
 	 *
 	 * @param source             源
 	 * @param result             目标
@@ -879,7 +879,7 @@ public class XmlUtil {
 
 	/**
 	 * 创建XPath<br>
-	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
 	 *
 	 * @return {@link XPath}
 	 * @since 3.2.0
@@ -890,7 +890,7 @@ public class XmlUtil {
 
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
 	 *
 	 * @param expression XPath表达式
 	 * @param source     资源，可以是Docunent、Node节点等
@@ -903,7 +903,7 @@ public class XmlUtil {
 
 	/**
 	 * 通过XPath方式读取XML的NodeList<br>
-	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
 	 *
 	 * @param expression XPath表达式
 	 * @param source     资源，可以是Docunent、Node节点等
@@ -916,7 +916,7 @@ public class XmlUtil {
 
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
 	 *
 	 * @param expression XPath表达式
 	 * @param source     资源，可以是Docunent、Node节点等
@@ -929,7 +929,7 @@ public class XmlUtil {
 
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
 	 *
 	 * @param expression XPath表达式
 	 * @param source     资源，可以是Docunent、Node节点等
@@ -948,8 +948,8 @@ public class XmlUtil {
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：<br>
-	 * https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html<br>
-	 * https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/
+	 * <a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a><br>
+	 * <a href="https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/">https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/</a>
 	 *
 	 * @param expression XPath表达式
 	 * @param source     资源，可以是Docunent、Node节点等
@@ -1439,7 +1439,7 @@ public class XmlUtil {
 
 	/**
 	 * 关闭XXE，避免漏洞攻击<br>
-	 * see: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
+	 * see: <a href="https://www.owasp.org/index.php/XML_External_Entity_">https://www.owasp.org/index.php/XML_External_Entity_</a>(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
 	 *
 	 * @param dbf DocumentBuilderFactory
 	 * @return DocumentBuilderFactory
@@ -1476,7 +1476,7 @@ public class XmlUtil {
 
 	/**
 	 * 全局命名空间上下文<br>
-	 * 见：https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/
+	 * 见：<a href="https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/">https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/</a>
 	 */
 	public static class UniversalNamespaceCache implements NamespaceContext {
 		private static final String DEFAULT_NS = "DEFAULT";

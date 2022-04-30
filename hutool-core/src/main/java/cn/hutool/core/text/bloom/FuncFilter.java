@@ -11,11 +11,22 @@ import java.util.function.Function;
 public class FuncFilter extends AbstractFilter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 创建FuncFilter
+	 *
+	 * @param size     最大值
+	 * @param hashFunc Hash函数
+	 * @return
+	 */
+	public static FuncFilter of(int size, Function<String, Number> hashFunc) {
+		return new FuncFilter(size, hashFunc);
+	}
+
 	private final Function<String, Number> hashFunc;
 
 	/**
-	 * @param size   最大值
-	 * @param hashFunc   Hash函数
+	 * @param size     最大值
+	 * @param hashFunc Hash函数
 	 */
 	public FuncFilter(int size, Function<String, Number> hashFunc) {
 		super(size);

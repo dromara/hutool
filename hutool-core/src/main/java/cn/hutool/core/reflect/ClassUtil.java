@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.classloader.ClassLoaderUtil;
@@ -14,7 +14,11 @@ import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

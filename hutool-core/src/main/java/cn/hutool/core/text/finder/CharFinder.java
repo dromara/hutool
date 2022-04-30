@@ -1,7 +1,7 @@
 package cn.hutool.core.text.finder;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 
 /**
  * 字符查找器<br>

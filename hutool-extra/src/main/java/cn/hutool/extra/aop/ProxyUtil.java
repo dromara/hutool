@@ -2,7 +2,7 @@ package cn.hutool.extra.aop;
 
 import cn.hutool.extra.aop.aspects.Aspect;
 import cn.hutool.extra.aop.proxy.ProxyFactory;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;

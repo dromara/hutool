@@ -8,6 +8,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.*;
 

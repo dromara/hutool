@@ -16,7 +16,7 @@ import java.util.ServiceLoader;
  *     2、ClassPath/META-INF/services下创建与接口全限定类名相同的文件
  *     3、文件内容填写实现类的全限定类名
  * </pre>
- * 相关介绍见：https://www.jianshu.com/p/3a3edbcd8f24
+ * 相关介绍见：<a href="https://www.jianshu.com/p/3a3edbcd8f24">https://www.jianshu.com/p/3a3edbcd8f24</a>
  *
  * @author looly
  * @since 5.1.6

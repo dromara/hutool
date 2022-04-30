@@ -1,6 +1,6 @@
 package cn.hutool.poi.excel.cell.setters;
 
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.poi.excel.cell.CellSetter;
 import org.apache.poi.ss.usermodel.Cell;
 

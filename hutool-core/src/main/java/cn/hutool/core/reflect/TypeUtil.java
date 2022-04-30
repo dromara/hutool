@@ -1,8 +1,7 @@
-package cn.hutool.core.util;
+package cn.hutool.core.reflect;
 
-import cn.hutool.core.reflect.ParameterizedTypeImpl;
-import cn.hutool.core.reflect.ActualTypeMapperPool;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

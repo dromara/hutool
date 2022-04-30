@@ -9,7 +9,7 @@ import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 

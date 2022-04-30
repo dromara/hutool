@@ -8,7 +8,7 @@ import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
 

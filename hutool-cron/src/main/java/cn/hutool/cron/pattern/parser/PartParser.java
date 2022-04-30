@@ -3,7 +3,7 @@ package cn.hutool.cron.pattern.parser;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.Month;
 import cn.hutool.core.date.Week;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;

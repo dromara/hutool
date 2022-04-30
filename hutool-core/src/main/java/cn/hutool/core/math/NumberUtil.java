@@ -1,9 +1,12 @@
-package cn.hutool.core.util;
+package cn.hutool.core.math;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.Calculator;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.RandomUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

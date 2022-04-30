@@ -2,8 +2,6 @@ package cn.hutool.core.reflect;
 
 import java.lang.reflect.Type;
 
-import cn.hutool.core.util.TypeUtil;
-
 /**
  * Type类型参考<br>
  * 通过构建一个类型参考子类，可以获取其泛型参数中的Type类型。例如：

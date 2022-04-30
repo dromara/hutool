@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;

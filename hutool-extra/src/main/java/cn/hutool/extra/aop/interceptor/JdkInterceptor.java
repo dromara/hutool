@@ -1,7 +1,7 @@
 package cn.hutool.extra.aop.interceptor;
 
 import cn.hutool.extra.aop.aspects.Aspect;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;

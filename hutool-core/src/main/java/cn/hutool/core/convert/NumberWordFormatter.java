@@ -1,6 +1,6 @@
 package cn.hutool.core.convert;
 
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 
 /**

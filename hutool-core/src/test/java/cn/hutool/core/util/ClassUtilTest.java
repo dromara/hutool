@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.reflect.ClassUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class ClassUtilTest {
 	@Test
 	public void getClassNameTest() {
 		String className = ClassUtil.getClassName(ClassUtil.class, false);
-		Assert.assertEquals("cn.hutool.core.util.ClassUtil", className);
+		Assert.assertEquals("cn.hutool.core.reflect.ClassUtil", className);
 
 		String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
 		Assert.assertEquals("ClassUtil", simpleClassName);

@@ -3,7 +3,7 @@ package cn.hutool.log.dialect.console;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.ansi.AnsiColor;
 import cn.hutool.core.lang.ansi.AnsiEncoder;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.level.Level;
 

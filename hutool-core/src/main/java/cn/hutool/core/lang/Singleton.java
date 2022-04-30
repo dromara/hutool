@@ -2,7 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
 

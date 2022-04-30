@@ -1,6 +1,6 @@
 package cn.hutool.extra.management.oshi;
 
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import oshi.hardware.CentralProcessor;
 
 import java.text.DecimalFormat;

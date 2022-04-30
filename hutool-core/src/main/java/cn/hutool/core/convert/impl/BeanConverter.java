@@ -9,7 +9,7 @@ import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;

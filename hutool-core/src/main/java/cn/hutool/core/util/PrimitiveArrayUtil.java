@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.math.NumberUtil;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;

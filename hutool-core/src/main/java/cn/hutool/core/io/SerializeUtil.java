@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.io;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;

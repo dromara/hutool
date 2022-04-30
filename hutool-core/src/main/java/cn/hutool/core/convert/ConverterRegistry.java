@@ -36,11 +36,11 @@ import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;

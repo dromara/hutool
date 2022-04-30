@@ -4,7 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ByteUtil;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;

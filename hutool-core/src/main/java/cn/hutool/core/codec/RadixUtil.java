@@ -1,10 +1,10 @@
-package cn.hutool.core.util;
+package cn.hutool.core.codec;
 
 /**
  * 进制转换工具类，可以转换为任意进制
  * <p>
  * 把一个十进制整数根据自己定义的进制规则进行转换<br>
- * from：https://gitee.com/loolly/hutool/pulls/260
+ * from：<a href="https://gitee.com/loolly/hutool/pulls/260">https://gitee.com/loolly/hutool/pulls/260</a>
  * <p>
  * 主要应用一下情况：
  * <ul>

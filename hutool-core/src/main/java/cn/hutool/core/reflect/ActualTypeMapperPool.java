@@ -2,7 +2,6 @@ package cn.hutool.core.reflect;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

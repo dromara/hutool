@@ -1,7 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 
 import java.lang.reflect.Type;
 

@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.math.NumberUtil;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteOrder;

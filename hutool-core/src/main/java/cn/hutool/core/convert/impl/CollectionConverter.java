@@ -3,7 +3,7 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Collection;

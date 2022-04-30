@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.mutable;
 
-import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.math.NumberUtil;
 
 /**
  * 可变 {@code byte} 类型

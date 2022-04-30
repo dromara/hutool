@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * 数学相关方法工具类<br>
- * 此工具类与{@link cn.hutool.core.util.NumberUtil}属于一类工具，NumberUtil偏向于简单数学计算的封装，MathUtil偏向复杂数学计算
+ * 此工具类与{@link NumberUtil}属于一类工具，NumberUtil偏向于简单数学计算的封装，MathUtil偏向复杂数学计算
  *
  * @author looly
  * @since 4.0.7

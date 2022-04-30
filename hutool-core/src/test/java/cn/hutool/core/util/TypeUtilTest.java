@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.TypeUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;

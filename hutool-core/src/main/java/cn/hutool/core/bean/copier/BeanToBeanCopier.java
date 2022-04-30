@@ -3,7 +3,7 @@ package cn.hutool.core.bean.copier;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;

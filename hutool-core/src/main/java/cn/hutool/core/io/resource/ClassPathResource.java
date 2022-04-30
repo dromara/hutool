@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.URLUtil;
