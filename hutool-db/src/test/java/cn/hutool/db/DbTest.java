@@ -21,28 +21,28 @@ public class DbTest {
 
 	@Test
 	public void queryTest() {
-		final List<Entity> find = Db.of().query("select * from ofr where age = ?", 18);
+		final List<Entity> find = Db.of().query("select * from user where age = ?", 18);
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 
 	@Test
 	public void findTest() {
-		final List<Entity> find = Db.of().find(Entity.create("ofr").set("age", 18));
+		final List<Entity> find = Db.of().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 
 	@Test
 	public void pageTest() {
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
-		final List<Entity> page0 = Db.of().page(Entity.create("ofr"), 0, 3);
+		final List<Entity> page0 = Db.of().page(Entity.create("user"), Page.of(0, 3));
 		Assert.assertEquals(3, page0.size());
-		final List<Entity> page1 = Db.of().page(Entity.create("ofr"), 1, 3);
+		final List<Entity> page1 = Db.of().page(Entity.create("user"), Page.of(1, 3));
 		Assert.assertEquals(1, page1.size());
 	}
 
 	@Test
 	public void pageTest2() {
-		final String sql = "select * from ofr order by name";
+		final String sql = "select * from user order by name";
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
 		final List<Entity> page0 = Db.of().page(
 				sql, Page.of(0, 3));
@@ -55,7 +55,7 @@ public class DbTest {
 
 	@Test
 	public void pageWithParamsTest() {
-		final String sql = "select * from ofr where name = ?";
+		final String sql = "select * from user where name = ?";
 		final PageResult<Entity> result = Db.of().page(
 				sql, Page.of(0, 3), "张三");
 
@@ -66,50 +66,50 @@ public class DbTest {
 
 	@Test
 	public void countTest() {
-		final long count = Db.of().count("select * from ofr");
+		final long count = Db.of().count("select * from user");
 		Assert.assertEquals(4, count);
 	}
 
 	@Test
 	public void countTest2() {
-		final long count = Db.of().count("select * from ofr order by name DESC");
+		final long count = Db.of().count("select * from user order by name DESC");
 		Assert.assertEquals(4, count);
 	}
 
 	@Test
 	public void findLikeTest() {
 		// 方式1
-		List<Entity> find = Db.of().find(Entity.create("ofr").set("name", "like 王%"));
+		List<Entity> find = Db.of().find(Entity.create("user").set("name", "like 王%"));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 
 		// 方式2
-		find = Db.of().findLike("ofr", "name", "王", Condition.LikeType.StartWith);
+		find = Db.of().findLike("user", "name", "王", Condition.LikeType.StartWith);
 		Assert.assertEquals("王五", find.get(0).get("name"));
 
 		// 方式3
-		find = Db.of().query("select * from ofr where name like ?", "王%");
+		find = Db.of().query("select * from user where name like ?", "王%");
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 
 	@Test
 	public void findByTest() {
-		final List<Entity> find = Db.of().findBy("ofr",
+		final List<Entity> find = Db.of().findBy("user",
 				Condition.parse("age", "> 18"),
 				Condition.parse("age", "< 100")
 		);
 		for (final Entity entity : find) {
 			StaticLog.debug("{}", entity);
 		}
-		Assert.assertEquals("unitTestofr", find.get(0).get("name"));
+		Assert.assertEquals("unitTestUser", find.get(0).get("name"));
 	}
 
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {
 		Db.of().tx(db -> {
-			db.insert(Entity.create("ofr").set("name", "unitTestofr2"));
-			db.update(Entity.create().set("age", 79), Entity.create("ofr").set("name", "unitTestofr2"));
-			db.del("ofr", "name", "unitTestofr2");
+			db.insert(Entity.create("user").set("name", "unitTestuser2"));
+			db.update(Entity.create().set("age", 79), Entity.create("user").set("name", "unitTestuser2"));
+			db.del("user", "name", "unitTestuser2");
 		});
 	}
 

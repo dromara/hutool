@@ -871,21 +871,6 @@ public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionH
 	 * 分页查询<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 *
-	 * @param where      条件实体类（包含表名）
-	 * @param page       页码
-	 * @param numPerPage 每页条目数
-	 * @return 分页结果集
-	 * @throws DbRuntimeException SQL执行异常
-	 * @since 3.2.2
-	 */
-	public PageResult<Entity> page(final Entity where, final int page, final int numPerPage) throws DbRuntimeException {
-		return this.page(where, new Page(page, numPerPage));
-	}
-
-	/**
-	 * 分页查询<br>
-	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
-	 *
 	 * @param where 条件实体类（包含表名）
 	 * @param page  分页对象
 	 * @return 分页结果集
