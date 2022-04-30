@@ -673,21 +673,10 @@ public abstract class AbstractDb<R extends AbstractDb<R>> implements ConnectionH
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public long count(final Entity where) throws DbRuntimeException {
-		return count(where, null);
-	}
-
-	/**
-	 * 结果的条目数
-	 *
-	 * @param where 查询条件
-	 * @return 复合条件的结果数
-	 * @throws DbRuntimeException SQL执行异常
-	 */
-	public long count(final Entity where, final Page page) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return runner.count(conn, Query.of(where).setPage(page));
+			return runner.count(conn, Query.of(where));
 		} finally {
 			this.closeConnection(conn);
 		}

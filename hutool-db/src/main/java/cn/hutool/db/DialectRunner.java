@@ -316,7 +316,9 @@ public class DialectRunner implements Serializable {
 	public PageResult<Entity> page(final Connection conn, final Query query) throws DbRuntimeException {
 		final Page page = query.getPage();
 		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, query)),
+				new PageResult<>(page.getPageNumber(), page.getPageSize(),
+						// 分页查询中总数的查询要去掉分页信息
+						(int) count(conn, query.clone().setPage(null))),
 				this.caseInsensitive);
 		return page(conn, query, pageResultHandler);
 	}

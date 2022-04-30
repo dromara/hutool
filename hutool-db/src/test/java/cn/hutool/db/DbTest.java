@@ -42,15 +42,6 @@ public class DbTest {
 	}
 
 	@Test
-	public void pageTest2() {
-		final long count = Db.of().count(Entity.create("user"), Page.of(1, 3));
-		Assert.assertEquals(1, count);
-
-		final List<Entity> page1 = Db.of().page(Entity.create("user"), Page.of(1, 3));
-		Assert.assertEquals(1, page1.size());
-	}
-
-	@Test
 	public void pageBySqlTest() {
 		final String sql = "select * from user order by name";
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
