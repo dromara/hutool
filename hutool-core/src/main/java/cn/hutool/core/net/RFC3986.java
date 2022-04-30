@@ -14,29 +14,29 @@ public class RFC3986 {
 	/**
 	 * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 	 */
-	public static final PercentCodec GEN_DELIMS = PercentCodec.of(":/?#[]@");
+	public static final PercentCodec GEN_DELIMS = PercentCodec.Builder.of(":/?#[]@").build();
 
 	/**
 	 * sub-delims = "!" / "$" / "{@code &}" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 */
-	public static final PercentCodec SUB_DELIMS = PercentCodec.of("!$&'()*+,;=");
+	public static final PercentCodec SUB_DELIMS = PercentCodec.Builder.of("!$&'()*+,;=").build();
 
 	/**
 	 * reserved = gen-delims / sub-delims<br>
 	 * see：<a href="https://www.ietf.org/rfc/rfc3986.html#section-2.2">https://www.ietf.org/rfc/rfc3986.html#section-2.2</a>
 	 */
-	public static final PercentCodec RESERVED = GEN_DELIMS.orNew(SUB_DELIMS);
+	public static final PercentCodec RESERVED = PercentCodec.Builder.of(GEN_DELIMS).or(SUB_DELIMS).build();
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"<br>
 	 * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-2.3">https://www.ietf.org/rfc/rfc3986.html#section-2.3</a>
 	 */
-	public static final PercentCodec UNRESERVED = PercentCodec.of(unreservedChars());
+	public static final PercentCodec UNRESERVED = PercentCodec.Builder.of(unreservedChars()).build();
 
 	/**
 	 * pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
 	 */
-	public static final PercentCodec PCHAR = UNRESERVED.orNew(SUB_DELIMS).or(PercentCodec.of(":@"));
+	public static final PercentCodec PCHAR = PercentCodec.Builder.of(UNRESERVED).or(SUB_DELIMS).addSafes(":@").build();
 
 	/**
 	 * segment  = pchar<br>
@@ -46,17 +46,17 @@ public class RFC3986 {
 	/**
 	 * segment-nz-nc  = SEGMENT ; non-zero-length segment without any colon ":"
 	 */
-	public static final PercentCodec SEGMENT_NZ_NC = PercentCodec.of(SEGMENT).removeSafe(':');
+	public static final PercentCodec SEGMENT_NZ_NC = PercentCodec.Builder.of(SEGMENT).removeSafe(':').build();
 
 	/**
 	 * path = segment / "/"
 	 */
-	public static final PercentCodec PATH = SEGMENT.orNew(PercentCodec.of("/"));
+	public static final PercentCodec PATH = PercentCodec.Builder.of(SEGMENT).addSafe('/').build();
 
 	/**
 	 * query = pchar / "/" / "?"
 	 */
-	public static final PercentCodec QUERY = PCHAR.orNew(PercentCodec.of("/?"));
+	public static final PercentCodec QUERY = PercentCodec.Builder.of(PCHAR).addSafes("/?").build();
 
 	/**
 	 * fragment     = pchar / "/" / "?"
@@ -67,13 +67,13 @@ public class RFC3986 {
 	 * query中的value<br>
 	 * value不能包含"{@code &}"，可以包含 "="
 	 */
-	public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.of(QUERY).removeSafe('&');
+	public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.Builder.of(QUERY).removeSafe('&').build();
 
 	/**
 	 * query中的key<br>
 	 * key不能包含"{@code &}" 和 "="
 	 */
-	public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.of(QUERY_PARAM_VALUE).removeSafe('=');
+	public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.Builder.of(QUERY_PARAM_VALUE).removeSafe('=').build();
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"

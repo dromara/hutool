@@ -83,4 +83,12 @@ public interface CharPool {
 	 * 字符常量：艾特 {@code '@'}
 	 */
 	char AT = '@';
+	/**
+	 * 字符常量：加号 {@code '+'}
+	 */
+	char PLUS = '+';
+	/**
+	 * 字符常量：百分号 {@code '%'}
+	 */
+	char PERCENT = '%';
 }

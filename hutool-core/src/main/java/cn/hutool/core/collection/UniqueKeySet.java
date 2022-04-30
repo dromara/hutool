@@ -115,9 +115,9 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 		return map.isEmpty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object o) {
-		//noinspection unchecked
 		return map.containsKey(this.uniqueGenerator.apply((V) o));
 	}
 
@@ -151,9 +151,9 @@ public class UniqueKeySet<K, V> extends AbstractSet<V> implements Serializable {
 		return modified;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(Object o) {
-		//noinspection unchecked
 		return null != map.remove(this.uniqueGenerator.apply((V) o));
 	}
 

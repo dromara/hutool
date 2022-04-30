@@ -71,12 +71,12 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param emptyMapBuilder 被包装的自定义Map创建器
 	 */
+	@SuppressWarnings("unchecked")
 	CaseInsensitiveMap(MapBuilder<K, V> emptyMapBuilder) {
 		super(emptyMapBuilder.build(), (key)->{
 			if (key instanceof CharSequence) {
 				key = key.toString().toLowerCase();
 			}
-			//noinspection unchecked
 			return (K) key;
 		});
 	}

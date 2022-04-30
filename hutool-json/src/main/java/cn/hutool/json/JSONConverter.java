@@ -103,6 +103,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @throws ConvertException 转换失败
 	 * @since 5.7.10
 	 */
+	@SuppressWarnings("unchecked")
 	protected static <T> T jsonToBean(Type targetType, Object value, boolean ignoreError) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
@@ -111,7 +112,6 @@ public class JSONConverter implements Converter<JSON> {
 		if(value instanceof JSON){
 			final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
 			if(null != deserializer) {
-				//noinspection unchecked
 				return (T) deserializer.deserialize((JSON) value);
 			}
 

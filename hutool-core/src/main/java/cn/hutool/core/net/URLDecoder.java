@@ -143,7 +143,7 @@ public class URLDecoder implements Serializable {
 		if (bytes == null) {
 			return null;
 		}
-		final ByteArrayOutputStream buffer = new ByteArrayOutputStream(bytes.length);
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream(bytes.length * 3);
 		int b;
 		for (int i = 0; i < bytes.length; i++) {
 			b = bytes[i];

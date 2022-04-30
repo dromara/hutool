@@ -567,6 +567,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @throws UtilException      ClassNotFoundException包装
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
@@ -575,7 +576,6 @@ public class IoUtil extends NioUtil {
 			in.accept(clazz);
 		}
 		try {
-			//noinspection unchecked
 			return (T) in.readObject();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

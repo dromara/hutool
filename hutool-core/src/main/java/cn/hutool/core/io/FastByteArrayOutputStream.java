@@ -103,15 +103,6 @@ public class FastByteArrayOutputStream extends OutputStream {
 
 	/**
 	 * 转为字符串
-	 * @param charsetName 编码
-	 * @return 字符串
-	 */
-	public String toString(String charsetName) {
-		return toString(CharsetUtil.charset(charsetName));
-	}
-
-	/**
-	 * 转为字符串
 	 * @param charset 编码,null表示默认编码
 	 * @return 字符串
 	 */

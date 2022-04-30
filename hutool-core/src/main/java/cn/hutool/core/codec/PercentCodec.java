@@ -1,13 +1,15 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.text.CharPool;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.BitSet;
 
@@ -30,33 +32,11 @@ import java.util.BitSet;
  * @author looly
  * @since 5.7.16
  */
-public class PercentCodec implements Serializable {
+public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 从已知PercentCodec创建PercentCodec，会复制给定PercentCodec的安全字符
-	 *
-	 * @param codec PercentCodec
-	 * @return PercentCodec
-	 */
-	public static PercentCodec of(PercentCodec codec) {
-		return new PercentCodec((BitSet) codec.safeCharacters.clone());
-	}
-
-	/**
-	 * 创建PercentCodec，使用指定字符串中的字符作为安全字符
-	 *
-	 * @param chars 安全字符合集
-	 * @return PercentCodec
-	 */
-	public static PercentCodec of(CharSequence chars) {
-		final PercentCodec codec = new PercentCodec();
-		final int length = chars.length();
-		for (int i = 0; i < length; i++) {
-			codec.addSafe(chars.charAt(i));
-		}
-		return codec;
-	}
+	private static final char DEFAULT_SIZE = 256;
+	private static final char ESCAPE_CHAR = CharPool.PERCENT;
 
 	/**
 	 * 存放安全编码
@@ -75,7 +55,7 @@ public class PercentCodec implements Serializable {
 	 * [a-zA-Z0-9]默认不被编码
 	 */
 	public PercentCodec() {
-		this(new BitSet(256));
+		this(new BitSet(DEFAULT_SIZE));
 	}
 
 	/**
@@ -88,68 +68,33 @@ public class PercentCodec implements Serializable {
 	}
 
 	/**
-	 * 增加安全字符<br>
-	 * 安全字符不被编码
+	 * 检查给定字符是否为安全字符
 	 *
 	 * @param c 字符
-	 * @return this
+	 * @return {@code true}表示安全，否则非安全字符
+	 * @since 6.0.0
 	 */
-	public PercentCodec addSafe(char c) {
-		safeCharacters.set(c);
-		return this;
+	public boolean isSafe(char c) {
+		return this.safeCharacters.get(c);
 	}
 
-	/**
-	 * 移除安全字符<br>
-	 * 安全字符不被编码
-	 *
-	 * @param c 字符
-	 * @return this
-	 */
-	public PercentCodec removeSafe(char c) {
-		safeCharacters.clear(c);
-		return this;
-	}
+	@Override
+	public byte[] encode(byte[] bytes) {
+		// 初始容量计算，简单粗暴假设所有byte都需要转义，容量是三倍
+		final ByteBuffer buffer = ByteBuffer.allocate(bytes.length * 3);
+		//noinspection ForLoopReplaceableByForEach
+		for (int i = 0; i < bytes.length; i++) {
+			encodeTo(buffer, bytes[i]);
+		}
 
-	/**
-	 * 增加安全字符到挡墙的PercentCodec
-	 *
-	 * @param codec PercentCodec
-	 * @return this
-	 */
-	public PercentCodec or(PercentCodec codec) {
-		this.safeCharacters.or(codec.safeCharacters);
-		return this;
-	}
-
-	/**
-	 * 组合当前PercentCodec和指定PercentCodec为一个新的PercentCodec，安全字符为并集
-	 *
-	 * @param codec PercentCodec
-	 * @return 新的PercentCodec
-	 */
-	public PercentCodec orNew(PercentCodec codec) {
-		return of(this).or(codec);
-	}
-
-	/**
-	 * 是否将空格编码为+<br>
-	 * 如果为{@code true}，则将空格编码为"+"，此项只在"application/x-www-form-urlencoded"中使用<br>
-	 * 如果为{@code false}，则空格编码为"%20",此项一般用于URL的Query部分（RFC3986规范）
-	 *
-	 * @param encodeSpaceAsPlus 是否将空格编码为+
-	 * @return this
-	 */
-	public PercentCodec setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
-		this.encodeSpaceAsPlus = encodeSpaceAsPlus;
-		return this;
+		return buffer.array();
 	}
 
 	/**
 	 * 将URL中的字符串编码为%形式
 	 *
-	 * @param path    需要编码的字符串
-	 * @param charset 编码, {@code null}返回原字符串，表示不编码
+	 * @param path           需要编码的字符串
+	 * @param charset        编码, {@code null}返回原字符串，表示不编码
 	 * @param customSafeChar 自定义安全字符
 	 * @return 编码后的字符串
 	 */
@@ -158,7 +103,7 @@ public class PercentCodec implements Serializable {
 			return StrUtil.str(path);
 		}
 
-		final StringBuilder rewrittenPath = new StringBuilder(path.length());
+		final StringBuilder rewrittenPath = new StringBuilder(path.length() * 3);
 		final ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		final OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
 
@@ -184,12 +129,140 @@ public class PercentCodec implements Serializable {
 				byte[] ba = buf.toByteArray();
 				for (byte toEncode : ba) {
 					// Converting each byte in the buffer
-					rewrittenPath.append('%');
+					rewrittenPath.append(ESCAPE_CHAR);
 					HexUtil.appendHex(rewrittenPath, toEncode, false);
 				}
 				buf.reset();
 			}
 		}
 		return rewrittenPath.toString();
+	}
+
+	/**
+	 * 将单一byte转义到{@link ByteBuffer}中
+	 *
+	 * @param buffer {@link ByteBuffer}
+	 * @param b      字符byte
+	 */
+	private void encodeTo(final ByteBuffer buffer, final byte b) {
+		if (safeCharacters.get(b)) {
+			// 跳过安全字符
+			buffer.put(b);
+		} else if (encodeSpaceAsPlus && b == CharPool.SPACE) {
+			// 对于空格单独处理
+			buffer.put((byte) CharPool.PLUS);
+		} else {
+			buffer.put((byte) ESCAPE_CHAR);
+			buffer.put((byte) Base16Codec.CODEC_UPPER.hexDigit(b >> 4));
+			buffer.put((byte) Base16Codec.CODEC_UPPER.hexDigit(b));
+		}
+	}
+
+	/**
+	 * {@link PercentCodec}构建器<br>
+	 * 由于{@link PercentCodec}本身应该是只读对象，因此将此对象的构建放在Builder中
+	 *
+	 * @author looly
+	 * @since 6.0.0
+	 */
+	public static class Builder implements cn.hutool.core.builder.Builder<PercentCodec> {
+		/**
+		 * 从已知PercentCodec创建PercentCodec，会复制给定PercentCodec的安全字符
+		 *
+		 * @param codec PercentCodec
+		 * @return PercentCodec
+		 */
+		public static Builder of(PercentCodec codec) {
+			return new Builder(new PercentCodec((BitSet) codec.safeCharacters.clone()));
+		}
+
+		/**
+		 * 创建PercentCodec，使用指定字符串中的字符作为安全字符
+		 *
+		 * @param chars 安全字符合集
+		 * @return PercentCodec
+		 */
+		public static Builder of(CharSequence chars) {
+			Builder builder = of(new PercentCodec());
+			final int length = chars.length();
+			for (int i = 0; i < length; i++) {
+				builder.addSafe(chars.charAt(i));
+			}
+			return builder;
+		}
+
+		private final PercentCodec codec;
+
+		private Builder(PercentCodec codec) {
+			this.codec = codec;
+		}
+
+		/**
+		 * 增加安全字符<br>
+		 * 安全字符不被编码
+		 *
+		 * @param c 字符
+		 * @return this
+		 */
+		public Builder addSafe(char c) {
+			codec.safeCharacters.set(c);
+			return this;
+		}
+
+		/**
+		 * 增加安全字符<br>
+		 * 安全字符不被编码
+		 *
+		 * @param chars 安全字符
+		 * @return this
+		 */
+		public Builder addSafes(String chars) {
+			final int length = chars.length();
+			for (int i = 0; i < length; i++) {
+				addSafe(chars.charAt(i));
+			}
+			return this;
+		}
+
+		/**
+		 * 移除安全字符<br>
+		 * 安全字符不被编码
+		 *
+		 * @param c 字符
+		 * @return this
+		 */
+		public Builder removeSafe(char c) {
+			codec.safeCharacters.clear(c);
+			return this;
+		}
+
+		/**
+		 * 增加安全字符到当前的PercentCodec
+		 *
+		 * @param otherCodec {@link PercentCodec}
+		 * @return this
+		 */
+		public Builder or(PercentCodec otherCodec) {
+			codec.safeCharacters.or(otherCodec.safeCharacters);
+			return this;
+		}
+
+		/**
+		 * 是否将空格编码为+<br>
+		 * 如果为{@code true}，则将空格编码为"+"，此项只在"application/x-www-form-urlencoded"中使用<br>
+		 * 如果为{@code false}，则空格编码为"%20",此项一般用于URL的Query部分（RFC3986规范）
+		 *
+		 * @param encodeSpaceAsPlus 是否将空格编码为+
+		 * @return this
+		 */
+		public Builder setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
+			codec.encodeSpaceAsPlus = encodeSpaceAsPlus;
+			return this;
+		}
+
+		@Override
+		public PercentCodec build() {
+			return codec;
+		}
 	}
 }

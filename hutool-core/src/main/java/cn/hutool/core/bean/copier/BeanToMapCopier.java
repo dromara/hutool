@@ -34,6 +34,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 		this.targetType = targetType;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map copy() {
 		Class<?> actualEditable = source.getClass();
@@ -73,7 +74,6 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 
 			// 目标赋值
 			if(null != sValue || false == copyOptions.ignoreNullValue){
-				//noinspection unchecked
 				target.put(sFieldName, sValue);
 			}
 		});

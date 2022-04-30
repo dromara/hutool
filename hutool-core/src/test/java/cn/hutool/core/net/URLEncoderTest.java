@@ -21,4 +21,12 @@ public class URLEncoderTest {
 		String encode2 = URLEncoder.encodeQuery(body);
 		Assert.assertEquals("+", encode2);
 	}
+
+	@Test
+	public void encodeEmojiTest(){
+		String emoji = "🐶😊😂🤣";
+		String encode = URLEncoder.encodeAll(emoji);
+		Assert.assertEquals("%F0%9F%90%B6%F0%9F%98%8A%F0%9F%98%82%F0%9F%A4%A3", encode);
+		Assert.assertEquals(emoji, URLDecoder.decode(encode));
+	}
 }

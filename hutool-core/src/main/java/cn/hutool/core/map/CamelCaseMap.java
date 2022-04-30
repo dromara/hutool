@@ -71,12 +71,12 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 *
 	 * @param emptyMapBuilder Map构造器，必须构造空的Map
 	 */
+	@SuppressWarnings("unchecked")
 	CamelCaseMap(MapBuilder<K, V> emptyMapBuilder) {
 		super(emptyMapBuilder.build(), (key) -> {
 			if (key instanceof CharSequence) {
 				key = StrUtil.toCamelCase(key.toString());
 			}
-			//noinspection unchecked
 			return (K) key;
 		});
 	}

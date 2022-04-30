@@ -74,13 +74,13 @@ public class AnnotationUtil {
 	 * @return 注解对象数组
 	 * @since 5.8.0
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
 		final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
 				(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
 		final T[] result = ArrayUtil.newArray(annotationType, annotations.length);
 		for (int i = 0; i < annotations.length; i++) {
-			//noinspection unchecked
 			result[i] = (T) annotations[i];
 		}
 		return result;

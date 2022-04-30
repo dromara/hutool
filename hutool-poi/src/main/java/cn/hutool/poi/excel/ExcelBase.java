@@ -182,6 +182,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @return this
 	 * @since 5.7.10
 	 */
+	@SuppressWarnings("unchecked")
 	public T cloneSheet(int sheetIndex, String newSheetName, boolean setAsCurrentSheet) {
 		Sheet sheet;
 		if (this.workbook instanceof XSSFWorkbook) {
@@ -194,7 +195,6 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		if (setAsCurrentSheet) {
 			this.sheet = sheet;
 		}
-		//noinspection unchecked
 		return (T) this;
 	}
 
@@ -526,9 +526,9 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @param headerAlias 别名Map
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public T setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
-		//noinspection unchecked
 		return (T) this;
 	}
 
@@ -539,6 +539,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @param alias  别名
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public T addHeaderAlias(String header, String alias) {
 		Map<String, String> headerAlias = this.headerAlias;
 		if (null == headerAlias) {
@@ -546,7 +547,6 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		}
 		this.headerAlias = headerAlias;
 		this.headerAlias.put(header, alias);
-		//noinspection unchecked
 		return (T) this;
 	}
 
@@ -556,9 +556,9 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @param header 标题
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public T removeHeaderAlias(String header) {
 		this.headerAlias.remove(header);
-		//noinspection unchecked
 		return (T) this;
 	}
 
@@ -567,9 +567,9 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 *
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public T clearHeaderAlias() {
 		this.headerAlias = null;
-		//noinspection unchecked
 		return (T) this;
 	}
 }

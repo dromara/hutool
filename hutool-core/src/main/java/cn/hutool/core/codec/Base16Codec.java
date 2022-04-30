@@ -23,18 +23,18 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 *
 	 * @param lowerCase 是否小写
 	 */
-	public Base16Codec(boolean lowerCase) {
+	public Base16Codec(final boolean lowerCase) {
 		this.alphabets = (lowerCase ? "0123456789abcdef" : "0123456789ABCDEF").toCharArray();
 	}
 
 	@Override
-	public char[] encode(byte[] data) {
+	public char[] encode(final byte[] data) {
 		final int len = data.length;
 		final char[] out = new char[len << 1];//len*2
 		// two characters from the hex value.
 		for (int i = 0, j = 0; i < len; i++) {
-			out[j++] = alphabets[(0xF0 & data[i]) >>> 4];// 高位
-			out[j++] = alphabets[0x0F & data[i]];// 低位
+			out[j++] = hexDigit(data[i] >> 4);// 高位
+			out[j++] = hexDigit(data[i]);// 低位
 		}
 		return out;
 	}
@@ -79,12 +79,12 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @param ch char值
 	 * @return Unicode表现形式
 	 */
-	public String toUnicodeHex(char ch) {
-		return "\\u" +//
-				alphabets[(ch >> 12) & 15] +//
-				alphabets[(ch >> 8) & 15] +//
-				alphabets[(ch >> 4) & 15] +//
-				alphabets[(ch) & 15];
+	public String toUnicodeHex(final char ch) {
+		return "\\u" +
+				hexDigit(ch >> 12) +
+				hexDigit(ch >> 8) +
+				hexDigit(ch >> 4) +
+				hexDigit(ch);
 	}
 
 	/**
@@ -94,10 +94,21 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @param b       byte
 	 */
 	public void appendHex(StringBuilder builder, byte b) {
-		int high = (b & 0xf0) >>> 4;//高位
-		int low = b & 0x0f;//低位
-		builder.append(alphabets[high]);
-		builder.append(alphabets[low]);
+		//高位
+		builder.append(hexDigit(b >> 4));
+		//低位
+		builder.append(hexDigit(b));
+	}
+
+	/**
+	 * 将byte值转为16进制
+	 *
+	 * @param b byte
+	 * @return hex char
+	 * @since 6.0.0
+	 */
+	public char hexDigit(final int b) {
+		return alphabets[b & 0x0f];
 	}
 
 	/**
@@ -108,7 +119,7 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @return 一个整数
 	 * @throws UtilException 当ch不是一个合法的十六进制字符时，抛出运行时异常
 	 */
-	private static int toDigit(char ch, int index) {
+	private static int toDigit(final char ch, final int index) {
 		int digit = Character.digit(ch, 16);
 		if (digit < 0) {
 			throw new UtilException("Illegal hexadecimal character {} at index {}", ch, index);

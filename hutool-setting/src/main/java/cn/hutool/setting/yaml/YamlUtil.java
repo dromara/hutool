@@ -84,10 +84,10 @@ public class YamlUtil {
 	 * @param isCloseReader 加载完毕后是否关闭{@link Reader}
 	 * @return 加载的内容，默认Map
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T load(Reader reader, Class<T> type, boolean isCloseReader) {
 		Assert.notNull(reader, "Reader must be not null !");
 		if (null == type) {
-			//noinspection unchecked
 			type = (Class<T>) Object.class;
 		}
 

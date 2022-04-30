@@ -7,6 +7,12 @@ import org.junit.Test;
 public class RFC3986Test {
 
 	@Test
+	public void pacharTest(){
+		final String encode = RFC3986.PCHAR.encode("=", CharsetUtil.UTF_8);
+		Assert.assertEquals("=", encode);
+	}
+
+	@Test
 	public void encodeQueryTest(){
 		String encode = RFC3986.QUERY_PARAM_VALUE.encode("a=b", CharsetUtil.UTF_8);
 		Assert.assertEquals("a=b", encode);

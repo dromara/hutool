@@ -53,21 +53,21 @@ public class FuncMap<K, V> extends TransMap<K, V> {
 	 * @param key KEY
 	 * @return 驼峰Key
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected K customKey(Object key) {
 		if (null != this.keyFunc) {
 			return keyFunc.apply(key);
 		}
-		//noinspection unchecked
 		return (K) key;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected V customValue(Object value) {
 		if (null != this.valueFunc) {
 			return valueFunc.apply(value);
 		}
-		//noinspection unchecked
 		return (V) value;
 	}
 }
